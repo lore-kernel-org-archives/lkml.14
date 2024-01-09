@@ -1,148 +1,100 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC5139FFD;
-	Tue,  9 Jan 2024 14:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E7D3A1AA
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQN/zGMe"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d4a980fdedso27293485ad.1;
-        Tue, 09 Jan 2024 06:04:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yTXHxlcb"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-336dcebcdb9so3118012f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:04:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704809074; x=1705413874; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ijQhkKPrA5WhMt4QQQ7nm21kPG9bAnEvYYwAYTNVVhY=;
-        b=OQN/zGMeZdEI8mo0ztyTz71FJ5fu97unzzNllilfsBaIk7lPUN9f+QjHayxIEvcONQ
-         Yv311s6LT2eYh10GmwWrCTilfxpp3Xql6m7KoW28qai09S3gURkbvXMyY9OuEMz5vorv
-         udXarLE9nD4oH5fvBWZzM0nifNz9c8hNK9CXLW26kDZ/kiG30qWI60vjvYPoCdQcbLXs
-         3xC/dHvuspRLgLY0El9+B2+OM64AJJongJycsmaUk6PONZ9cSfy0mhUM1TlFpcoKK2bh
-         O9QqpU7J7X+U0DZrSBzGHJH1Fk5OT10/XYq+Krjq2vjW3dkp0WAcQyvj8RPwuMXE1Sa8
-         P1jQ==
+        d=linaro.org; s=google; t=1704809085; x=1705413885; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y4eDBGUcsDSDL8WR80JtlsXII8Q6J7ftU5c15K+YQyE=;
+        b=yTXHxlcbWCtFzbMEoK7veXkcj5whfB078tGeImE4BKpwXfTnlcqiFHfqCT6twGSO6x
+         ITHUznrxhaWGRCePCuXUxGDN3A/7ymllQ55X7iQFMvPDcg9uMHjkhZA7IL6GV9Aue0Fo
+         3Qm1aXA6PmG/SKQ94GfZ5tICgYfKYx8fkxHPkickj7jPbNbMtwwLsUq4h//eLJ2V9GjC
+         E/MZI/uh0zOb0ljUSTRud5S+OmZP5n3xBzD89ICUxLXTHJ1mcsL14KHgzlEg62U72YCa
+         9IqITrsCzZ1Stwg0dy7ZRR5LCN2LUf/LTQZN6OjMvCsdjAE8Rtb6DJfWO64qNCDM+AKk
+         PvwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704809074; x=1705413874;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ijQhkKPrA5WhMt4QQQ7nm21kPG9bAnEvYYwAYTNVVhY=;
-        b=gvn1ScW8nCCqDCZcW2NWie5zTDIAcFdOYVVhh46tIOhRsgNDYT03qI7WsT5fzqb4gS
-         CycCk98LPqsn77h8b1M4cSrhaz2dPorMwr46zF9ZLkl0zqGPAoMhM6k0TMF8QNflCQ0g
-         NMgHDWg95MXd9OXfmUPGpT36LjJzmoYZRbTxTHK7koDlEToaTJi+GxcMD1QHW4+sYs3h
-         URn0v1f6vUFpAKC+3AsZN1Q+/6uDG2AeOCz52oztj4GacD+4k78mY/qOSWiXridvCENc
-         Xn0w3Vj3d65EV8lXV+TLFopMYcR6vg7hEH+Kij783z/efbzLfqAjT9glgL2OabSMEfHv
-         rrSA==
-X-Gm-Message-State: AOJu0Yz08ZDmP8xTm39hQAmjkOFlbgpjwLEdl5R6tE1AECzcOofsrc5j
-	zbPetuRCZu3v/V16EnPWDkchwbXIDAy60w==
-X-Google-Smtp-Source: AGHT+IF9acRiBuXtnmdP/L/n9HR/N/T4L5LgnpFxlih/9JoSewFxrm6a2SEWXR9hKKXD5TJ31tIzlA==
-X-Received: by 2002:a17:902:7804:b0:1d4:e308:d70b with SMTP id p4-20020a170902780400b001d4e308d70bmr5104104pll.92.1704809073967;
-        Tue, 09 Jan 2024 06:04:33 -0800 (PST)
-Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id jw23-20020a170903279700b001d538b6517asm1818362plb.230.2024.01.09.06.04.31
+        d=1e100.net; s=20230601; t=1704809085; x=1705413885;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y4eDBGUcsDSDL8WR80JtlsXII8Q6J7ftU5c15K+YQyE=;
+        b=XjIBAZDIsHLkMuxRtYSf6ccR+f75jfXMJwfdFL1xFSmY7qZToTs5tVZVdIl2gMjUHX
+         MI74WiwEkVAiffZrB02KYvvZeNpzfRRnKjh+FVHTaW+58hXHLuuCDnJAWO/GsbRsQ/+W
+         ZWh2da1EUz1Ez0zGG8psD0HCI9ihxQ4lrOGtlOkX4FwNFZbEnYVWMVnDLcfnSdMiOuVx
+         XaJQ3sS+qQwaPDDSWBkFO/hpUxuiiB9f5sTyuoNVoSHFj/fpRqO+hIFqE+Dy3uM0VJS0
+         kMcmIl1JriTPnzID8M6wY0r4v/TUai8V/xARL8KdRp1SctPVGp5ZOx5ov4MX0tKzKLL1
+         eSGg==
+X-Gm-Message-State: AOJu0YxQwwNqNeHY2oZ7kpgl/g+JTpwkiudLrws+N21I7TYUCYjziiR8
+	a+5ESAufzNXvRkPT1tFsM74kYPyL+pn7AQ==
+X-Google-Smtp-Source: AGHT+IFMqVBgwU7mE18AKDtOKcW01AIFweyT2he9q5FcoMTAeHwxeFs+tozpNfDbYbb3bPuXZQCNng==
+X-Received: by 2002:adf:fdcc:0:b0:337:5568:363 with SMTP id i12-20020adffdcc000000b0033755680363mr260609wrs.201.1704809085292;
+        Tue, 09 Jan 2024 06:04:45 -0800 (PST)
+Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id z17-20020a5d4c91000000b0033342338a24sm2521337wrs.6.2024.01.09.06.04.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 06:04:33 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	andy@kernel.org
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 5/5] gpio: uapi: clarify using v2 rather than v1
-Date: Tue,  9 Jan 2024 22:02:21 +0800
-Message-Id: <20240109140221.77725-6-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240109140221.77725-1-warthog618@gmail.com>
-References: <20240109140221.77725-1-warthog618@gmail.com>
+        Tue, 09 Jan 2024 06:04:44 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: catalin.marinas@arm.com,
+	will@kernel.org
+Cc: sumit.garg@linaro.org,
+	dianders@chromium.org,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com,
+	andre.draszik@linaro.org,
+	willmcvicker@google.com,
+	peter.griffin@linaro.org,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH] arm64: irq: include <linux/cpumask.h>
+Date: Tue,  9 Jan 2024 14:04:37 +0000
+Message-ID: <20240109140437.3703330-1-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The documentation contains notes like
- This struct is part of ABI v1 and is deprecated.
- Use struct gpio_v2_line_info instead.
+Sorting include files in alphabetic order in
+drivers/tty/serial/samsung.c revealed the following error:
 
-This could be interpreted to mean the structs can be directly
-substituted in v1 calls.  Clarify that the user should use the
-corresponding v2 ioctl() and structs.
+In file included from drivers/tty/serial/samsung_tty.c:24:
+./arch/arm64/include/asm/irq.h:9:43: error: unknown type name ‘cpumask_t’
+    9 | void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
+      |                                           ^~~~~~~~~
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Include cpumask.h to avod unknown type errors for parents of irq.h that
+don't include cpumask.h.
+
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- include/uapi/linux/gpio.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/arm64/include/asm/irq.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index e68a56969f36..103cd3c6c81e 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -333,7 +333,7 @@ struct gpio_v2_line_event {
-  * also be empty if the consumer doesn't set this up
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_info instead.
-+ * Use ABI v2 and &struct gpio_v2_line_info instead.
-  */
- struct gpioline_info {
- 	__u32 line_offset;
-@@ -368,7 +368,7 @@ enum {
-  * at the end of the structure on 64-bit architectures.
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_info_changed instead.
-+ * Use ABI v2 and &struct gpio_v2_line_info_changed instead.
-  */
- struct gpioline_info_changed {
- 	struct gpioline_info info;
-@@ -409,7 +409,7 @@ struct gpioline_info_changed {
-  * a valid anonymous file descriptor representing the request
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_request instead.
-+ * Use ABI v2 and &struct gpio_v2_line_request instead.
-  */
- struct gpiohandle_request {
- 	__u32 lineoffsets[GPIOHANDLES_MAX];
-@@ -431,7 +431,7 @@ struct gpiohandle_request {
-  * @padding: reserved for future use and should be zero filled
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_config instead.
-+ * Use ABI v2 and &struct gpio_v2_line_config instead.
-  */
- struct gpiohandle_config {
- 	__u32 flags;
-@@ -446,7 +446,7 @@ struct gpiohandle_config {
-  * the desired target state
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_values instead.
-+ * Use ABI v2 and &struct gpio_v2_line_values instead.
-  */
- struct gpiohandle_data {
- 	__u8 values[GPIOHANDLES_MAX];
-@@ -471,7 +471,7 @@ struct gpiohandle_data {
-  * valid anonymous file descriptor representing the request
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_request instead.
-+ * Use ABI v2 and &struct gpio_v2_line_request instead.
-  */
- struct gpioevent_request {
- 	__u32 lineoffset;
-@@ -494,7 +494,7 @@ struct gpioevent_request {
-  *  %GPIOEVENT_EVENT_FALLING_EDGE
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_event instead.
-+ * Use ABI v2 and &struct gpio_v2_line_event instead.
-  */
- struct gpioevent_data {
- 	__u64 timestamp;
+diff --git a/arch/arm64/include/asm/irq.h b/arch/arm64/include/asm/irq.h
+index 50ce8b697ff3..d5612bc770da 100644
+--- a/arch/arm64/include/asm/irq.h
++++ b/arch/arm64/include/asm/irq.h
+@@ -5,6 +5,7 @@
+ #ifndef __ASSEMBLER__
+ 
+ #include <asm-generic/irq.h>
++#include <linux/cpumask.h>
+ 
+ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
+ #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
 -- 
-2.39.2
+2.43.0.472.g3155946c3a-goog
 
