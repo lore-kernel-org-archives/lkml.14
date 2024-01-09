@@ -1,198 +1,67 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8784B3D570
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 18:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yngvason.is
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b="UuzbJPPt"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e4582ed74so25202335e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 10:11:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=yngvason.is; s=google; t=1704823914; x=1705428714; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1K35iyXrIjP9JEaVNwNgowQ2gmFwtnlNnPCP001WTzs=;
-        b=UuzbJPPt6/VYdgVQKcYpuRJuDbVBbvuHP3kCmeHoi3EpmcO/wmzm3+edGaTnnbiB1M
-         zzh4XTci7lixZFRj5NKxNcDnlkyQraVmD16qmTNzJNXrLfpTYmAvy3wE0kS4n0z2Ucpd
-         c1wnBDQkQlaIKrBPrwL/ta9zjH3T+cC77cEPg=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6263BB3A
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 18:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7bb454e1d63so381267439f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 10:17:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704823914; x=1705428714;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1K35iyXrIjP9JEaVNwNgowQ2gmFwtnlNnPCP001WTzs=;
-        b=OfyQH/j6OJbDFuXg0UviRLQogcuI1zIs6pwfjVCQd1ZQlNydtf+etubpH1CaBvtP26
-         4jG9d/xn7m1hcPT1/O7JM0NGWLQoD/DQY24Z5GousIhy+nzZZ0TJzNItxVEu8kvW79Ch
-         oG+H7a+SlBwZk079SL1BGe3F8oaB8kgsOFTEAtrJdH6NXe6qWKjfYs0aVQ2ZNBWGpH6q
-         PkvAwvld8KnV2mUrxel+U9uN+i8leA6SQbjqyf8OM8MrXUiGDDUW6YG6mflDltfC+HeZ
-         SbRcVbD9cKHAgQBJFZc7v34unxsUQkDVlWCtqR5FrkMxXRS2JefQ4+b62fFq+rhDXu/1
-         Ceog==
-X-Gm-Message-State: AOJu0Yx8VMRJYnw68cYZ6C+KTyDWiV6KCpmaKJ52WBjIriAlWzewhw1n
-	DorPrHCmPlBIdHX0ljkc8qcKrwy6F63qCw==
-X-Google-Smtp-Source: AGHT+IHCvkhLBDjMnPPg6VS4Uza9HPKoHPU28wAqqAGezxMnCAYYxMWKNpbjFIpaRNQwjFu2XbHG4A==
-X-Received: by 2002:a05:600c:5251:b0:40c:24b1:8d07 with SMTP id fc17-20020a05600c525100b0040c24b18d07mr1582485wmb.192.1704823913857;
-        Tue, 09 Jan 2024 10:11:53 -0800 (PST)
-Received: from andri-workstation.turninn.appdynamic.com ([2a01:8280:aa07:ad:7285:c2ff:fef0:4baf])
-        by smtp.gmail.com with ESMTPSA id n25-20020a05600c3b9900b0040e527602c8sm2104579wms.9.2024.01.09.10.11.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 10:11:53 -0800 (PST)
-From: Andri Yngvason <andri@yngvason.is>
-To: Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org,
-	Simon Ser <contact@emersion.fr>,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	Andri Yngvason <andri@yngvason.is>
-Subject: [PATCH 7/7] drm/i915/display: Add handling for new "preferred color format" property
-Date: Tue,  9 Jan 2024 18:11:04 +0000
-Message-ID: <20240109181104.1670304-8-andri@yngvason.is>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240109181104.1670304-1-andri@yngvason.is>
-References: <20240109181104.1670304-1-andri@yngvason.is>
+        d=1e100.net; s=20230601; t=1704824227; x=1705429027;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mquk6hN27KMTsR9z/GB7mTDogoqyzMeGHcwgy9O7SRw=;
+        b=NKs7sj71u0DzFfvzL4fqgUbD592VzRD34B1G4owNtzihp9hmbMRz7pGhG3eQ7pohtF
+         alLGy9RV6y25J+9qcYP9q+Nb0s347RzouxbzMyfZ1XQPkSNPtEKPdnqkgiaH4o2I4fTg
+         jAQfp7jPOnA+vBK/QefdY6Kb5MolPyrx8ePgoKP8u+N4scRD+3jHDLCIg6+SG9gBXitz
+         9TnfoPdcrdDfTRo1EYx/xPjdDv+2eFMTks7WPt1WYapOF0FKzKCmAoEqVMhItRAhqPvk
+         gfQsWJXCdTTYyoOpx7noU6PCWLQG7YAST/SD+haRkVLxE07+krxCdTuvDfubIpwISKkv
+         xNHw==
+X-Gm-Message-State: AOJu0YwR9DoAHhuCRlOY14DL+DfkAoqDlsY1GuSze369vvgilXXdj+CI
+	G/yU1NYRSK3ru/KnSZX6jGMce/ewIAVaP0x3PL6ItSjwFeY3
+X-Google-Smtp-Source: AGHT+IEZQnABXCenyNgGnqplvmc4QrkSe9Qt76qn9RD2khoyFBeZdp5kgZLrjhRHQ7ZnnuJDzF1+5aiYVwVGywORFcHcA5BvInCD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:4e06:b0:46e:3b37:fec8 with SMTP id
+ ep6-20020a0566384e0600b0046e3b37fec8mr60814jab.6.1704824227588; Tue, 09 Jan
+ 2024 10:17:07 -0800 (PST)
+Date: Tue, 09 Jan 2024 10:17:07 -0800
+In-Reply-To: <0000000000006655c10608ddfb6d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007d7565060e8752d6@google.com>
+Subject: Re: [syzbot] [mm?] general protection fault in __hugetlb_zap_begin
+From: syzbot <syzbot+ec9435c038e451be48ff@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, lizhi.xu@windriver.com, llvm@lists.linux.dev, 
+	mike.kravetz@oracle.com, muchun.song@linux.dev, nathan@kernel.org, 
+	ndesaulniers@google.com, riel@surriel.com, syzkaller-bugs@googlegroups.com, 
+	trix@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Werner Sembach <wse@tuxedocomputers.com>
+syzbot suspects this issue was fixed by commit:
 
-This commit implements the "preferred color format" drm property for the
-Intel GPU driver.
+commit 187da0f8250aa94bd96266096aef6f694e0b4cd2
+Author: Mike Kravetz <mike.kravetz@oracle.com>
+Date:   Tue Nov 14 01:20:33 2023 +0000
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-Co-developed-by: Andri Yngvason <andri@yngvason.is>
-Signed-off-by: Andri Yngvason <andri@yngvason.is>
-Tested-by: Andri Yngvason <andri@yngvason.is>
----
- drivers/gpu/drm/i915/display/intel_dp.c     | 16 ++++++++++------
- drivers/gpu/drm/i915/display/intel_dp_mst.c |  5 +++++
- drivers/gpu/drm/i915/display/intel_hdmi.c   | 12 +++++++++---
- 3 files changed, 24 insertions(+), 9 deletions(-)
+    hugetlb: fix null-ptr-deref in hugetlb_vma_lock_write
 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index c40fe8a847614..f241798660d0b 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -2698,21 +2698,23 @@ intel_dp_compute_output_format(struct intel_encoder *encoder,
- 	struct intel_connector *connector = intel_dp->attached_connector;
- 	const struct drm_display_info *info = &connector->base.display_info;
- 	const struct drm_display_mode *adjusted_mode = &crtc_state->hw.adjusted_mode;
--	bool ycbcr_420_only;
-+	bool ycbcr_420_output;
- 	int ret;
- 
--	ycbcr_420_only = drm_mode_is_420_only(info, adjusted_mode);
-+	ycbcr_420_output = drm_mode_is_420_only(info, adjusted_mode) ||
-+			   (conn_state->preferred_color_format == DRM_COLOR_FORMAT_YCBCR420 &&
-+			    drm_mode_is_420_also(&connector->base.display_info, adjusted_mode));
- 
--	if (ycbcr_420_only && !connector->base.ycbcr_420_allowed) {
-+	crtc_state->sink_format = ycbcr_420_output ? INTEL_OUTPUT_FORMAT_YCBCR420 :
-+						     INTEL_OUTPUT_FORMAT_RGB;
-+
-+	if (ycbcr_420_output && !connector->base.ycbcr_420_allowed) {
- 		drm_dbg_kms(&i915->drm,
- 			    "YCbCr 4:2:0 mode but YCbCr 4:2:0 output not possible. Falling back to RGB.\n");
- 		crtc_state->sink_format = INTEL_OUTPUT_FORMAT_RGB;
--	} else {
--		crtc_state->sink_format = intel_dp_sink_format(connector, adjusted_mode);
- 	}
- 
- 	crtc_state->output_format = intel_dp_output_format(connector, crtc_state->sink_format);
--
- 	ret = intel_dp_compute_link_config(encoder, crtc_state, conn_state,
- 					   respect_downstream_limits);
- 	if (ret) {
-@@ -5912,9 +5914,11 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
- 	intel_attach_broadcast_rgb_property(connector);
- 	if (HAS_GMCH(dev_priv)) {
- 		drm_connector_attach_max_bpc_property(connector, 6, 10);
-+		drm_connector_attach_preferred_color_format_property(connector);
- 		drm_connector_attach_active_color_format_property(connector);
- 	} else if (DISPLAY_VER(dev_priv) >= 5) {
- 		drm_connector_attach_max_bpc_property(connector, 6, 12);
-+		drm_connector_attach_preferred_color_format_property(connector);
- 		drm_connector_attach_active_color_format_property(connector);
- 	}
- 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-index e7574ca0604e6..4a850eb9b8d4d 100644
---- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-@@ -1210,6 +1210,11 @@ static struct drm_connector *intel_dp_add_mst_connector(struct drm_dp_mst_topolo
- 		drm_dbg_kms(&dev_priv->drm, "[%s:%d] HDCP MST init failed, skipping.\n",
- 			    connector->name, connector->base.id);
- 
-+	connector->preferred_color_format_property =
-+		intel_dp->attached_connector->base.preferred_color_format_property;
-+	if (connector->preferred_color_format_property)
-+		drm_connector_attach_preferred_color_format_property(connector);
-+
- 	connector->active_color_format_property =
- 		intel_dp->attached_connector->base.active_color_format_property;
- 	if (connector->active_color_format_property)
-diff --git a/drivers/gpu/drm/i915/display/intel_hdmi.c b/drivers/gpu/drm/i915/display/intel_hdmi.c
-index ce0221f90de92..3030589d245d7 100644
---- a/drivers/gpu/drm/i915/display/intel_hdmi.c
-+++ b/drivers/gpu/drm/i915/display/intel_hdmi.c
-@@ -2214,19 +2214,24 @@ static int intel_hdmi_compute_output_format(struct intel_encoder *encoder,
- 	const struct drm_display_mode *adjusted_mode = &crtc_state->hw.adjusted_mode;
- 	const struct drm_display_info *info = &connector->base.display_info;
- 	struct drm_i915_private *i915 = to_i915(connector->base.dev);
--	bool ycbcr_420_only = drm_mode_is_420_only(info, adjusted_mode);
-+	bool ycbcr_420_output;
- 	int ret;
- 
-+	ycbcr_420_output = drm_mode_is_420_only(info, adjusted_mode) ||
-+			   (conn_state->preferred_color_format == DRM_COLOR_FORMAT_YCBCR420 &&
-+			    drm_mode_is_420_also(&connector->base.display_info, adjusted_mode));
-+
- 	crtc_state->sink_format =
--		intel_hdmi_sink_format(crtc_state, connector, ycbcr_420_only);
-+		intel_hdmi_sink_format(crtc_state, connector, ycbcr_420_output);
- 
--	if (ycbcr_420_only && crtc_state->sink_format != INTEL_OUTPUT_FORMAT_YCBCR420) {
-+	if (ycbcr_420_output && crtc_state->sink_format != INTEL_OUTPUT_FORMAT_YCBCR420) {
- 		drm_dbg_kms(&i915->drm,
- 			    "YCbCr 4:2:0 mode but YCbCr 4:2:0 output not possible. Falling back to RGB.\n");
- 		crtc_state->sink_format = INTEL_OUTPUT_FORMAT_RGB;
- 	}
- 
- 	crtc_state->output_format = intel_hdmi_output_format(crtc_state);
-+
- 	ret = intel_hdmi_compute_clock(encoder, crtc_state, respect_downstream_limits);
- 	if (ret) {
- 		if (crtc_state->sink_format == INTEL_OUTPUT_FORMAT_YCBCR420 ||
-@@ -2613,6 +2618,7 @@ intel_hdmi_add_properties(struct intel_hdmi *intel_hdmi, struct drm_connector *c
- 
- 	if (!HAS_GMCH(dev_priv)) {
- 		drm_connector_attach_max_bpc_property(connector, 8, 12);
-+		drm_connector_attach_preferred_color_format_property(connector);
- 		drm_connector_attach_active_color_format_property(connector);
- 	}
- }
--- 
-2.43.0
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f5054de80000
+start commit:   9b6de136b5f0 Merge tag 'loongarch-fixes-6.7-1' of git://gi..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=52c9552def2a0fdd
+dashboard link: https://syzkaller.appspot.com/bug?extid=ec9435c038e451be48ff
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150a257ce80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13481ff0e80000
 
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: hugetlb: fix null-ptr-deref in hugetlb_vma_lock_write
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
