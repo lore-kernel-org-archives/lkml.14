@@ -1,171 +1,214 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2048.outbound.protection.partner.outlook.cn [139.219.17.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA99D22063;
-	Tue,  9 Jan 2024 07:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DoUbD19AUq7kaiRqYLrbMxQvsadG/r6FeHrxfaz3pLzwFC/uwdMwOsM+mOCsN8tKgdUWFhyS4mQmGaDzqYMwHxcNmae9bBo8qmnIFpyOeA6PphUmt6KdiwKWiR7gFJwF5Wb054wBtnbVnX+ot5+rdcV+nBFw5F+9FBeU29nWcSNFntRev5tI/g0GtzB3yvrhp4TF+QGY79GljkXw0j9Mf+Ip0OxRpMb9LOAJkc0aYHOhwncglUvX669gltT7SEGICagv7WmrjlTzCfK4AjI70DozuwCS1nRD+518Ql3KJiaiLaHGiCU2QT7PI9lpVZlV8hXiEdIQK5Vy931gbC5i1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7vyq7Q+mAltzqMLqBGXH+cOLZ0J3YphmfcQo0OiCMFo=;
- b=crquw/xCLs/FQO8VuDEsMTKk8+KIESXu8t8NuBkbDC5XryNXgKyRp7tN2WZ1JYiNlV5yjfrsZCs6FGdvKoNUe/OT1B1xr3/MiEZIonezYci9RWaEn2g68BB8Dzqw0K2lBUmfFyN2Py0Bcf1X0sPcFhZ7HGyZ28zRLBbeyxaN2+X8GtZYxA8E6krwtnw0nsA8uhoiGmEwVVQ5Mqvww886lfXpwIxkpam7x6v7m9iMDK6ONhE0o2NNR+DadLVevzpdx5kblD9SPRi+CMfcqcguqczmBaz/3jdVnEYVH0Z7pj0xTqLH/u4+6ZYX9Ie85eqH1ARW30E1IveyvTRSe1nr9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:e::20) by BJSPR01MB0529.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:e::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.32; Tue, 9 Jan
- 2024 07:25:44 +0000
-Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
- ([fe80::aaac:167d:8e0d:3acb]) by
- BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn ([fe80::aaac:167d:8e0d:3acb%5])
- with mapi id 15.20.6933.032; Tue, 9 Jan 2024 07:25:44 +0000
-From: ChunHau Tan <chunhau.tan@starfivetech.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "David S . Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh+dt@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>, Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>, Andrew Halaney <ahalaney@redhat.com>,
-	Jisheng Zhang <jszhang@kernel.org>, =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?=
-	<u.kleine-koenig@pengutronix.de>, Russell King <rmk+kernel@armlinux.org.uk>
-CC: Leyfoon Tan <leyfoon.tan@starfivetech.com>, JeeHeng Sia
-	<jeeheng.sia@starfivetech.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 2/2] net: stmmac: Add StarFive JH8100 dwmac support
-Thread-Topic: [PATCH 2/2] net: stmmac: Add StarFive JH8100 dwmac support
-Thread-Index: AQHaQgh2nf3c4aA7dki8/ENX7FGoorDPoBmAgAFzoYA=
-Date: Tue, 9 Jan 2024 07:25:44 +0000
-Message-ID:
- <BJSPR01MB05950484841C3D104EC91DEC9E6AA@BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn>
-References: <20240108075810.14161-1-chunhau.tan@starfivetech.com>
- <20240108075810.14161-3-chunhau.tan@starfivetech.com>
- <1c0474d3-e182-48c8-8ec2-12847c84164b@linaro.org>
-In-Reply-To: <1c0474d3-e182-48c8-8ec2-12847c84164b@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BJSPR01MB0595:EE_|BJSPR01MB0529:EE_
-x-ms-office365-filtering-correlation-id: 8d60b560-33fb-4ee9-c77a-08dc10e43170
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- R4BEhqMyY4y8/FsROFZRTX4FBQ9P2ny6gmHA2uuEo/g80HJhzocL3DFTBD4n3DjOFRAoZ/W4HuPiKykUVf47Yk9LDOZq0LsNSm05AbJ4PRCL//tIq2EQ+0nAGX5ejA2MlISNMqHEMiaop9pj5MfFw6x669W9yvwO8rfFCSts56MSZC+5V6RNQBZQ2mACgZAdqN/nGmR7/TJUz0gwZtVkrdv5ImfMOLqh9M+3dvQHjlp2uszXzUDY/J2Pwvl3rhvKntt3WFNFnXvk+ETU0vo2f4W9aaxN9AU4qnYqwGc8noY2J8QcWHs2pxfY8S2zCFs+9/AsT/KgcLC0JMGOkuChSmNxdgCw64+jz2rjd4hKWcm+VuH+wbfkW+V55YN0rQwb6YxgSNHtZN/wOBa5dMOEd7UolK5EMPfVZh17UOAZpN9UionrpXNerI/neW+XFUTb2+VEBDAebOvdATIDfnqqEu3Whe3BxXNhMnXx731ga+va8SVcgiuLRBfOtnxo1nUahwg/SyN0ujTajkG4y/eGX33Gb2gYZLbf0Kjq+lKYKJb9smgYteoDKQtGKfxlYrIfw/XuROmLrFa5p90YTeMvaw==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(136003)(346002)(366004)(396003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(41300700001)(41320700001)(921011)(71200400001)(7696005)(53546011)(55016003)(9686003)(508600001)(40180700001)(122000001)(33656002)(86362001)(40160700002)(83380400001)(38100700002)(38070700009)(7416002)(2906002)(66476007)(26005)(110136005)(8676002)(8936002)(66556008)(64756008)(66946007)(54906003)(66446008)(5660300002)(4326008)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NnBsOHVOb1NxS29yQ3FsbnBWMFlvU1E0TVkyZTgrRHI2dVJySTFMb1ByQmtt?=
- =?utf-8?B?Wm1RL0N4M05sQmVIL1VTVFpTSVZjSWU5VHY1Q2hVb0cybGw5eUFicUFRMk85?=
- =?utf-8?B?WDl4NUlhS1o1SW0wZVpOV2NjbVVDQ0Q0NDN6dThoWmU3Uk5qT2xWN25vYzhI?=
- =?utf-8?B?TXBqV1dyVGo1VDF4akhaVnBiMDVXUGc2MU52b1BNNUFMR1RzVVEvbU9ucVEw?=
- =?utf-8?B?VEZwQkM4OTc3NlJXWHNwVGcwY0R1UGxSTmVUWkwxOS9xbzI1U1B4VVQrVWdP?=
- =?utf-8?B?RmpYUnE2b0N1WjJGQWp3dVBCZE9OQ1pQM1FFc0tuckk1dDhmMzhxWG1mYkZm?=
- =?utf-8?B?dVpQMWpQQVk4K3VkdldSK3o0d24vaEM0d1BJTE5sZTFNNjE2eW11Zzl0UEtD?=
- =?utf-8?B?SXZmZXdCaFJEa0p4Nmt1TFQvSDJ2c25BczlRSjh3Y21kcnQ4eXRiRFBhQUNx?=
- =?utf-8?B?cnBvQkNPTzdTUnZKb29xaFQ4WDFDa0o5K01OR0tyT2Z5TTJIaEVXeEpxU2NN?=
- =?utf-8?B?V3ZIRE15ZGIrYlB5cjNwYUE5RHI0YVRYaE1Ec1RaOXJxeG1panlQZXNoWERn?=
- =?utf-8?B?MlcxWmZKWXg1ZjhTdWQ5YWlIUmlNVnJNV3MzR2JlSnFVdU5WaE1GdmRjcUFC?=
- =?utf-8?B?UGt1anorMUFVdUhBL25BUWVDNjk5blVyWmRqTTU5UjZ5UkRLcGRvZUplb0RS?=
- =?utf-8?B?TnlpMGpKeUl0cENpaHdnS0hEcWtnZEhhOUJYS2pZbHc5cWZOSFZjNEtxaDFh?=
- =?utf-8?B?T2lYNmRHUXlqVmJhQ2lESlZnZ3FtWWdRaFF4NEZ6QUljQmRqZUpBZzM2T2RB?=
- =?utf-8?B?VDdlWFBrSTE5L0ZaSU1wcVczcmRKRFF3RzFQcHVqSmh6OG1DYXNmbCs4R3lT?=
- =?utf-8?B?Nzl1NTA1U2ZnekxsVjZMb1A2bTJIK2VXNFZldzFXRmJGWnBLQVB0dC9Fa0V0?=
- =?utf-8?B?UWVuMzlXbi9hcEtJZStwOXB0citYUzcrWmhtd21ZT3NxZ3BvR1J6RVB6S0lO?=
- =?utf-8?B?cVBHSmExN040QU1naU1xR2pSdlplT2VrYXQrUnNtS2psSVlEREpBaW5JdE5n?=
- =?utf-8?B?dXZXMGpGNFJURTNPUHFhQVdLdnVpb1ROeU1iNEVVc0tDdzBCZndVTmsxY0Fi?=
- =?utf-8?B?Z0Q4djQ4Z01PSHVpejZUemQ1VE11ZG5sNHdhbllWdUZVM0VOSXZuMTFDY0dN?=
- =?utf-8?B?RlhtaGtsNnFFeU1zVWZtcWg5N0xXN2tSak9Ud2JJUENZTjJOYTF6cHpOV3Ns?=
- =?utf-8?B?R3JDc0VNYlNiN0JzMC9YclBPUDhlSjMvcWtyQ044MkFZU2t3SGVibktsdWlU?=
- =?utf-8?B?c1oyaEM0QmIrTlBSTWwzNkFOM0JtQnBWL0JRdy9KNm1HT3RpRzNsNUlDMVhM?=
- =?utf-8?B?Wm9Ib2t0RlVTSnlMc2E0azZ5RGJqcXp6dUtyQlJ3UkFrallodDc3c09YU3ha?=
- =?utf-8?B?OFdzNUJhdmhzTkk4Tm0vbTUzR0VMRWt6Nzk4QUNlcGw0REFXU3YwWlNSM2xZ?=
- =?utf-8?B?TStObjRteDNoMnM4UWVpSTVKaHdMMHNkNkRvcWJyaS9BbW9oc3hwMFBjZ2c3?=
- =?utf-8?B?RW5hbi8wbGw1MnE4bWwzREFQK2JiaHVqUE54bGJnRGhiNjBkQWoxSXZEd1hv?=
- =?utf-8?B?VlA2SThNc3k1ZmJLeExEWG41RFhCMHpBRUcyOVErR0JzQjN2OC9CNTN5R0tB?=
- =?utf-8?B?VFpXekRvZDJESndlUFBUcFRBaHpzZm1zT1FxZjVEUS91Z1lvWG44QXpPNWh4?=
- =?utf-8?B?dVo1eGErM3lHNlpCak8vQlpyZWJQdEtMRnhpd1VhWDhPeTFoRDJHd29kU0JP?=
- =?utf-8?B?aDdTTU9UMWxCWXhJV2ZoVFVFMEViclVRWHVMNmNqZ1IrR0x4UVRld2lqeENK?=
- =?utf-8?B?Wk9iRkl6ZE9tWmxKc1N1SDZ4UjhnVnYyNklBR1Z6Q0pqaHpPK1NOdGVJQjQ1?=
- =?utf-8?B?N1pQY09ZUDRPVmNQOTExUktxWnVkYm9wVkkzVmFWakpMZzVHSGFLQTlzQ3hH?=
- =?utf-8?B?RGhuZE1LNG45WlZNalpLQ0RRSlI2Zncya0M1VkZ4MkhUaXc0UXBJL3IwTUti?=
- =?utf-8?B?Um5UZm1FQzdKaGh2N2hSNk4xTWJ4emsvTTAxaG8wUWkxUXEzWTgrdEVxRGs4?=
- =?utf-8?B?c3MyT2NOVm12bFZUWDhuek1VbUJvOUN2VXFFNVN3OW03Nk9xVmthTWhJZ0tG?=
- =?utf-8?B?TEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831709455
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 07:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rzR+v8jR"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-28cb3bc3fe7so1800327a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 23:42:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704786179; x=1705390979; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hbh9aOHx7+CSCvz+p9Wnk1Alp9/EgNmTd2TSmQXJErs=;
+        b=rzR+v8jRYlcV6Du2wjV9SWn/leGlSxC2xqyL2rlmiqdSltIK5DjRyYmjpE/pmpJK+O
+         sydKGwyjCh4x6VFYcjoKMhTXDZlJj9k1+ttsomsQxlGv2k8mI5j1nqlxeGIGORjfPq7d
+         JLhDFFHFU1d957w5czZAy/H68MUIK7COMZsSXXn2w2MlrFxq1ERIoWZUfrw3QWfiPdPp
+         U6QWmOWa6jDNlPT0zVTjRFzS2vZWeh/GfW125WTC4ltk7LQ5/Y6R2Xm5zsxLEgGGNpAP
+         d3jQLu4SHPkh+dju8hNV7IiQDsXDzOFzKxRRWlk1pjj73nn/0SiobOs+x7MwDNEyxTaa
+         +A6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704786179; x=1705390979;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hbh9aOHx7+CSCvz+p9Wnk1Alp9/EgNmTd2TSmQXJErs=;
+        b=IeuAZFZMqFhLU9E8wBxoTb1cpDau3WhA2pGjGLZWzJIewcEVADOinSK4dGBfwy6qLB
+         1nInHgZao7dVWfPN5S2o8vnnUFAGa+QqkUcxPEH4l99e7DD54LaA0WAL30QmUoxLmIw1
+         JUsMgFVFzPUM6sXBUGp6noIQWyeQBxrGyULThkiXLPa6Jugi4rBJ3T8IUI5lxXStviup
+         +x8X+Z8oQtolllpWE/R3a4Sm2bKWxE7Tq3vLKC/99dPsqdYZ3moK2t7f3YkrGgEdXJlD
+         sXunCGXOhgpq4oTAQPzB96ukW7HBl5wvpWz7SD24ZPUN3shZLaJvwvOTET3Mn89MgldK
+         f0WA==
+X-Gm-Message-State: AOJu0YyT2kaPk3JWLeujbVWOyFgzhFfYdWjcAcDVT87KH2ryLwuVgnOz
+	9dlDrEdwWXWlPvCYZ773TN1CF6di/jGn
+X-Google-Smtp-Source: AGHT+IFcxvhYW0JAZdJq+N+9m95XOtUpUXsjOgoxUB/mRwSbbeb71nZBw7f0ddc9ml/vx8VlhUFUbA==
+X-Received: by 2002:a17:90b:f0f:b0:28d:9b5b:e70b with SMTP id br15-20020a17090b0f0f00b0028d9b5be70bmr429191pjb.0.1704786178748;
+        Mon, 08 Jan 2024 23:42:58 -0800 (PST)
+Received: from thinkpad ([117.213.102.45])
+        by smtp.gmail.com with ESMTPSA id g7-20020a1709029f8700b001d425d495c9sm1083349plq.190.2024.01.08.23.41.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 23:42:57 -0800 (PST)
+Date: Tue, 9 Jan 2024 13:11:24 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Kalle Valo <kvalo@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peng Fan <peng.fan@nxp.com>, Robert Richter <rrichter@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jim Quinlan <jim2101024@gmail.com>, james.quinlan@broadcom.com,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFC 0/9] PCI: introduce the concept of power sequencing of PCIe
+ devices
+Message-ID: <20240109074124.GA3303@thinkpad>
+References: <20240104130123.37115-1-brgl@bgdev.pl>
+ <a85dbfc3-e327-442a-9aab-5115f86944f7@gmail.com>
+ <CAGXv+5EtvMgbr9oZ7cfnDCDN15BKqgpuiacHHf8_T5kLqYJpJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d60b560-33fb-4ee9-c77a-08dc10e43170
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2024 07:25:44.7227
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lqkYrpwsJ/DFnySfUtUoOSKNqaGVuXwPfAH78vA6ZKdmoXBl60JKATOa8cOT4IRuNAmY8ZLyQLJi3qPX404w/8C0aWTFI4EQQ5t+OCNsA+4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0529
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGXv+5EtvMgbr9oZ7cfnDCDN15BKqgpuiacHHf8_T5kLqYJpJw@mail.gmail.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
-d3NraSA8a3J6eXN6dG9mLmtvemxvd3NraUBsaW5hcm8ub3JnPg0KPiBTZW50OiBNb25kYXksIDgg
-SmFudWFyeSwgMjAyNCA1OjA3IFBNDQo+IFRvOiBDaHVuSGF1IFRhbiA8Y2h1bmhhdS50YW5Ac3Rh
-cmZpdmV0ZWNoLmNvbT47IERhdmlkIFMgLiBNaWxsZXINCj4gPGRhdmVtQGRhdmVtbG9mdC5uZXQ+
-OyBFcmljIER1bWF6ZXQgPGVkdW1hemV0QGdvb2dsZS5jb20+OyBKYWt1Yg0KPiBLaWNpbnNraSA8
-a3ViYUBrZXJuZWwub3JnPjsgUGFvbG8gQWJlbmkgPHBhYmVuaUByZWRoYXQuY29tPjsgUm9iIEhl
-cnJpbmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47IEVtaWwgUmVubmVyIEJlcnRoaW5nIDxrZXJu
-ZWxAZXNtaWwuZGs+OyBSb2IgSGVycmluZw0KPiA8cm9iaEBrZXJuZWwub3JnPjsgS3J6eXN6dG9m
-IEtvemxvd3NraSA8a3J6eXN6dG9mLmtvemxvd3NraStkdEBsaW5hcm8ub3JnPjsNCj4gQ29ub3Ig
-RG9vbGV5IDxjb25vcitkdEBrZXJuZWwub3JnPjsgTWF4aW1lIENvcXVlbGluDQo+IDxtY29xdWVs
-aW4uc3RtMzJAZ21haWwuY29tPjsgQWxleGFuZHJlIFRvcmd1ZQ0KPiA8YWxleGFuZHJlLnRvcmd1
-ZUBmb3NzLnN0LmNvbT47IFNpbW9uIEhvcm1hbiA8aG9ybXNAa2VybmVsLm9yZz47DQo+IEJhcnRv
-c3ogR29sYXN6ZXdza2kgPGJhcnRvc3ouZ29sYXN6ZXdza2lAbGluYXJvLm9yZz47IEFuZHJldyBI
-YWxhbmV5DQo+IDxhaGFsYW5leUByZWRoYXQuY29tPjsgSmlzaGVuZyBaaGFuZyA8anN6aGFuZ0Br
-ZXJuZWwub3JnPjsgVXdlDQo+IEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRy
-b25peC5kZT47IFJ1c3NlbGwgS2luZw0KPiA8cm1rK2tlcm5lbEBhcm1saW51eC5vcmcudWs+DQo+
-IENjOiBMZXlmb29uIFRhbiA8bGV5Zm9vbi50YW5Ac3RhcmZpdmV0ZWNoLmNvbT47IEplZUhlbmcg
-U2lhDQo+IDxqZWVoZW5nLnNpYUBzdGFyZml2ZXRlY2guY29tPjsgbmV0ZGV2QHZnZXIua2VybmVs
-Lm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IGxpbnV4LXN0bTMyQHN0LW1kLW1haWxtYW4uc3Rvcm1yZXBseS5jb207DQo+
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BB
-VENIIDIvMl0gbmV0OiBzdG1tYWM6IEFkZCBTdGFyRml2ZSBKSDgxMDAgZHdtYWMgc3VwcG9ydA0K
-PiANCj4gT24gMDgvMDEvMjAyNCAwODo1OCwgVGFuIENodW4gSGF1IHdyb3RlOg0KPiA+IEFkZCBK
-SDgxMDAgZHdtYWMgc3VwcG9ydC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRhbiBDaHVuIEhh
-dSA8Y2h1bmhhdS50YW5Ac3RhcmZpdmV0ZWNoLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9u
-ZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvZHdtYWMtc3RhcmZpdmUuYyB8IDEgKw0KPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9kd21hYy1zdGFyZml2ZS5jDQo+IGIvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvZHdtYWMtc3RhcmZpdmUuYw0KPiA+IGlu
-ZGV4IDVkNjMwYWZmYjRkMS4uMzczNzE0ZjZlMzgyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
-bmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL2R3bWFjLXN0YXJmaXZlLmMNCj4gPiArKysgYi9k
-cml2ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9kd21hYy1zdGFyZml2ZS5jDQo+ID4g
-QEAgLTE0Niw2ICsxNDYsNyBAQCBzdGF0aWMgaW50IHN0YXJmaXZlX2R3bWFjX3Byb2JlKHN0cnVj
-dA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4NCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVj
-dCBvZl9kZXZpY2VfaWQgc3RhcmZpdmVfZHdtYWNfbWF0Y2hbXSA9IHsNCj4gPiAgCXsgLmNvbXBh
-dGlibGUgPSAic3RhcmZpdmUsamg3MTEwLWR3bWFjIgl9LA0KPiA+ICsJeyAuY29tcGF0aWJsZSA9
-ICJzdGFyZml2ZSxqaDgxMDAtZHdtYWMiCX0sDQo+IA0KPiBObyBkaWZmZXJlbmNlcz8gVGhlbiB3
-aHkgYXJlbid0IHRoZSBkZXZpY2VzIG1hZGUgY29tcGF0aWJsZSB3aXRoIGVhY2gNCj4gb3RoZXI/
-DQpUaGVyZSBpcyBhIGRpZmZlcmVuY2UgYmV0d2VlbiBKSDcxMTAgJiBKSDgxMTAsDQpKSDcxMTAg
-aGFzIHR3byByZXNldCBzaWduYWxzIChhaGIsIHN0bW1hY2V0aCksDQp3aGlsZSBKSDgxMTAgaGFz
-IG9ubHkgb25lIHJlc2V0IHNpZ25hbCAoc3RtbWFjZXRoKSwNCnRoaXMgd2lsbCBiZSBzaG93biBp
-biBkZXZpY2UgdHJlZSBmaWxlLg0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBLcnp5c3p0b2YNCg0K
+On Tue, Jan 09, 2024 at 03:08:32PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Jan 9, 2024 at 12:09 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >
+> > Hello,
+> >
+> > On 1/4/2024 5:01 AM, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > During last year's Linux Plumbers we had several discussions centered
+> > > around the need to power-on PCI devices before they can be detected on
+> > > the bus.
+> > >
+> > > The consensus during the conference was that we need to introduce a
+> > > class of "PCI slot drivers" that would handle the power-sequencing.
+> > >
+> > > After some additional brain-storming with Manivannan and the realization
+> > > that the DT maintainers won't like adding any "fake" nodes not
+> > > representing actual devices, we decided to reuse the existing
+> > > infrastructure provided by the PCIe port drivers.
+> > >
+> > > The general idea is to instantiate platform devices for child nodes of
+> > > the PCIe port DT node. For those nodes for which a power-sequencing
+> > > driver exists, we bind it and let it probe. The driver then triggers a
+> > > rescan of the PCI bus with the aim of detecting the now powered-on
+> > > device. The device will consume the same DT node as the platform,
+> > > power-sequencing device. We use device links to make the latter become
+> > > the parent of the former.
+> > >
+> > > The main advantage of this approach is not modifying the existing DT in
+> > > any way and especially not adding any "fake" platform devices.
+> >
+> > There is prior work in that area which was applied, but eventually reverted:
+> >
+> > https://www.spinics.net/lists/linux-pci/msg119136.html
+> >
+> > and finally re-applied albeit in a different shape:
+> >
+> > https://lore.kernel.org/all/20220716222454.29914-1-jim2101024@gmail.com/
+> >
+> > so we might want to think about how to have pcie-brcmstb.c converted
+> > over your proposed approach. AFAIR there is also pcie-rockchip.c which
+> > has some rudimentary support for voltage regulators of PCIe end-points.
+> 
+> I think the current in-tree approaches mostly target either PCIe slots,
+> whether full size or mini-PCIe or M.2, or soldered-on components that
+> either only have a single power rail, have internal regulators, or have
+> surrounding circuitry that would be incorporated on a PCIe card.
+> 
+> These all have standardized power rails (+12V, +3.3V, +3.3V aux, etc.).
+> 
+
+Right. But ideally, they should also be converted to use this power sequencing
+driver at some point in the future.
+
+> > What does not yet appear in this RFC is support for suspend/resume,
+> > especially for power states where both the RC and the EP might be losing
+> > power. There also needs to be some thoughts given to wake-up enabled
+> > PCIe devices like Wi-Fi which might need to remain powered on to service
+> > Wake-on-WLAN frames if nothing else.
+> >
+
+I don't think it is necessary to add PM support in this series itself. Even
+though PM support is always nice to have or even necessary for controllers
+pulling the power plug during suspend, it makes sense to merge this basic
+implementation and add features on top.
+
+It should be noted that both the controller drivers and the power sequencing
+drivers should be in sync during suspend i.e., if the controller driver decides
+to put the device into D3Cold and turning off the controller power supplies,
+then this driver should also power off the device. But if the controller driver
+decides to keep the device in low power states (ASPM), then this driver
+_should_not_ turn off the device power.
+
+Right now, there is no global policy for controller drivers and each one does a
+different job. IMO this should also be fixed, but that also requires an
+agreement from PM folks.
+
+(Well there is one more entity in this loop, PCIe device drivers... sigh)
+
+> > I sense a potential for a lot of custom power sequencing drivers being
+> > added and ultimately leading to the decision to create a "generic" one
+> > which is entirely driven by Device Tree properties...
+> 
+> We can have one "generic" slot power sequencing driver, which just
+> enables all the power rails together. I would very much like to see that.
+> 
+
+Yeah. And that "generic" driver could be used for simple usecases mentioned
+above.
+
+> I believe the power sequencing in this series is currently targeting more
+> tightly coupled designs that use power rails directly from the PMIC, and
+> thus require more explicit power sequencing.
+> 
+
+Precisely!
+
+- Mani
+
+> ChenYu
+> 
+> 
+> > Thanks for doing this!
+> > --
+> > Florian
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
