@@ -1,190 +1,147 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2088.outbound.protection.outlook.com [40.107.215.88])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2086.outbound.protection.partner.outlook.cn [139.219.146.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D57374F7;
-	Tue,  9 Jan 2024 07:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="iOV11NqV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DED4381BB;
+	Tue,  9 Jan 2024 07:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=We2NS9XzFnHv2vnbmDVuG0fUW131HRf1SmR/miOVwClpmDSsOI0aObe6Q5Gwmu1WUS6JhkAe7ls/gzuyi+m9FSRMrMN6JyaxVIaqZywrkPnwkYG3heICfjRaVgrqOQRJQILhf1ryJOXlhq+Jot6l/96+Ofv/VGNc3erejL4pyuedtlBPYnH8RMvpcn0H+SFKl4+H/uNLUf9N9ChhQAoO4ewfZqMnGcwk8X+dMyTH4h+j/e4P8sZY6y5WFDQJccj8a9v/cZEkU2bsI3N8K7FccWz1UUuOXDONzwh7XGCcK0bcblKd0Fgku9DCmO0zcld1kS9ikTlxZyr22+N8N9tMHg==
+ b=BPHhfrQ/MMjMqSvOodFrjanOxsMAetYTtKmjwOsH8z2UQFLDnavXfsjgNvR2cGfMR2LpLRHjt34q/o/J8U1TyrPQ1mywQZV1P+gzHCj12eHCxokC5X91qytXt9hf0hwPr99pRu6vNfn9qDeZOeEkE9pUF2mJBJJvMWuAjwRUO/jYN8f2+jJl/yY33lf/R1DwvVFUw57WW1yAbmAHXZeFiZpvgwrOIbUiuCBZh2kzNrHQwrdei5SQoI8lwhg7v2g3/RyWT4Y57Zsk9RqKQHdKXi4Zb5E+dHEEp23LE5x00dmqwrym0HLWjACQWg4bRA58Vj5QzCKbNXCuVb3SMQY6XA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oYpFg9mdH6XKuJD9Pi7Zr2ZT/6fjyL6fFPQPXh/DZEk=;
- b=DdGgt989oPXXrrLXwMEs12PjF2rUZ83eqIpftGQ0xBNBLX/QqK7CxEnd+vIfGHmA1epdMX6a+lxnIdiCcFv+1N1olrQAEEa4Esqu/RBHOq74U54tElSXUKu4fRK+KayUaUPbf9T+byBUAZdZAr5SkiJHafPgUsSO+FfR+rEkSCnGKXtkxPu079seASAjCLUZ86X9QECLS7MNj/1mRGSSxXlWG793mDrlqsQt5Tha9F5KTY2epH/DXmTRR2gBTYLNFrSaPaG6Wry4Rz7ZkJckkudqByMf8DRlu2XxgKpObRIM5EcyrXeoDKsR7j81Zu4c/TUh6h+hQIMhgFrI7SMrIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oYpFg9mdH6XKuJD9Pi7Zr2ZT/6fjyL6fFPQPXh/DZEk=;
- b=iOV11NqVn3rBm5vMIL03G0518i5A++l8lq9/p8rRjdJr8xlY8xRxLOSVcBWC6z6/4ICkqznMnf9DXxfg2a3l2P2mTvJNUxLxQ/dZoNJob9UOTQSfyGU7N0Fhtj9O9l2KWvZPQG2ATBNbJ3snO277YcRdEOltAEyMKCRkm2F17278ssysjgs3dRiMqA+3Y8mQrBbtL1QmYu4G5QdJkkA+z2V1hIqhB9LkBjCZwLL7Ajv1P+Zke6nKp5r4Lj/khQhxZrLRSTVwUuoeavPx2P/yJbmXOaqlyXS22qh4af4QRDrlQe6QrkHHNPmqDFYT82tBOc5XiATkSxqhDD4+I+b7FQ==
-Received: from PUZP153CA0016.APCP153.PROD.OUTLOOK.COM (2603:1096:301:c2::18)
- by SEZPR04MB6623.apcprd04.prod.outlook.com (2603:1096:101:92::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
- 2024 07:21:46 +0000
-Received: from HK3PEPF0000021E.apcprd03.prod.outlook.com
- (2603:1096:301:c2:cafe::37) by PUZP153CA0016.outlook.office365.com
- (2603:1096:301:c2::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.6 via Frontend
- Transport; Tue, 9 Jan 2024 07:21:46 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK3PEPF0000021E.mail.protection.outlook.com (10.167.8.40) with Microsoft SMTP
- Server id 15.20.7181.13 via Frontend Transport; Tue, 9 Jan 2024 07:21:46
- +0000
-From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
+ bh=3tSI6bwsql5B2iKsJOZJuslOyuEHljrzwWiX3sGKD/k=;
+ b=UVnDfe3OuJn81MEdzApqsExB5D6xL7u2NM8WbNWdlgTWBjpyst9z3OF98E7oGBshBjrGfko5uhmqUcPdApUzmvxXQAhmbo8XZeyqlT4fwlTvV1qs98SpcuiN14qlrVK7Lcg8CJahEndzzCk9jF0nPeHJDYuG3TA3x/fgx8NZNwPqp1miojj8DIdL/iYAHWomhxOubCXKfbacoHjIiQkaOlywDI/bVd/0mM6Ev4xDBHMnkB/XrlnGzBb8AQzHCxkm7c+9SIwMO52DJ8PC5FoXsc6KYJxHEs26lQfzYkBtH5qEFGIUiUM6Ftgpt3aflsbggmA0Wp1Tuy241XbIyjGs8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:3::6) by NT0PR01MB1133.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:6::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.20; Tue, 9 Jan
+ 2024 07:09:57 +0000
+Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
+ ([fe80::85fc:7fb9:8b00:dd88]) by
+ NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn ([fe80::85fc:7fb9:8b00:dd88%3])
+ with mapi id 15.20.7135.019; Tue, 9 Jan 2024 07:09:57 +0000
+From: Shengyang Chen <shengyang.chen@starfivetech.com>
+To: devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Cc: neil.armstrong@linaro.org,
+	quic_jesszhan@quicinc.com,
+	sam@ravnborg.org,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	wahrenst@gmx.net,
+	dave.stevenson@raspberrypi.com,
+	thierry.reding@gmail.com,
+	changhuang.liang@starfivetech.com,
+	keith.zhao@starfivetech.com,
+	shengyang.chen@starfivetech.com,
+	jack.zhu@starfivetech.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 19/19] ARM: dts: aspeed: yosemite4: support mux to cpld
-Date: Tue,  9 Jan 2024 15:20:51 +0800
-Message-Id: <20240109072053.3980855-20-Delphine_CC_Chiu@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240109072053.3980855-1-Delphine_CC_Chiu@wiwynn.com>
-References: <20240109072053.3980855-1-Delphine_CC_Chiu@wiwynn.com>
+Subject: [PATCH v2 0/2] Add waveshare 7inch touchscreen panel support
+Date: Tue,  9 Jan 2024 15:09:47 +0800
+Message-Id: <20240109070949.23957-1-shengyang.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0013.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510::17) To NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:3::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK3PEPF0000021E:EE_|SEZPR04MB6623:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 2ac978e3-ff02-491b-62d8-08dc10e3a374
+X-MS-TrafficTypeDiagnostic: NT0PR01MB1070:EE_|NT0PR01MB1133:EE_
+X-MS-Office365-Filtering-Correlation-Id: 097b2250-45f2-4524-9847-08dc10e1fc6d
 X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	D4kT2DSyzOB0T5L5G4vBqQ8dFtymdIzAiB5hv7yzKFznJbquQNcENLTKojcEzvDY22FckAh2XJ+bDiLGR2+ErZyhw9d0DL8i/JQL7fAAPM156Sd3Uk3hYfwnKK70StmsRmGz+WKgUKhVYqfGer40tXoJTX7jjZJmtlds47ooqRS5MFQXck9FLUpO1VE99gkog/rSsQ+ufZHq8Zi4Qijoe+gwAk7nBmFnH+sXT88BSVu3LIYd/gxuhEx8ky4xsFvaFFPncgIRtAPzX0CQL5d8HFuP6r52qenQCvBKgDeBs7UVdyBPw1bQ2WvRQ0ahA4e9bGGVh829YAE5MRHy1nHV5d2BHi2qYQFmfmTJhJJ+ffxLc1h8WsTLVXyhovX4GTAEtxJd3Vj1HpwJThvmfBYUyX7CRu6Cn7auKAC2Jb2CdvehcatRPLyIewtDy61l8odUpxjAsc/9txeKAKV9Rh+L6DwIoEykSugaX4q+0g/6Kw2pksaWyQlYUi+Y/G62XmgLpkTZ2kcKjS/vmjDf3g4WsCFZ3LPTDPZXtrQzpT5jEA5EanNfekq764s0gN2lHLnmU7Q8Aet7OpSJK+PJJ40OYPjFX/swCMDLFSkqttIChUnU9MjXK0VEFZ0o/4dOO46JGiGcqCa8E0KvJSw5EJTtjhTVvJDAJ4Wgk7F9m5OX+L5oLS5MgjxwE0zEQ3eaBKUiXsNPxCfHR+x3TLQyoiic/g==
+	E1zSTqNPEo8Ulbqi2hXpZHM+nWxh1z74TgGoITO6tB8uk7/N1RFJwCcNwcQGAPcz77YG9/YQYXGC7pdN/hwwm9WN44m/B+XKvYAmIVZ/eoEGgRErNqFA4hJGlZmVTVIzifu7NGv6jLs7NT9QG4gVKyLeSUTbDfpqSE5ryjmBE9DZu3z2uCdNf2RltvxnRNuWN5qJ5R89ynT3l2gC/RkDtVvedgc5HFkXoIYx6oAMKv/Ezp4VyQ0mOc+nwP213yhsBa+buVkk/D69vi0MhQnThD5qloQkBbWILVSIB/47AGdUTZvifLMLoDcciStl2fyf4CmGHH1+iw/64tCE7pAmRSAAXsQ/c7pqygoL8Vick5ZDIlTy9BsfTIIiP/697nFsMRMJTmIfP6romffVgOt/SjW5gEuP3fewSgYFLV8+4ndvYyTe33dR725hMm7P5CoxAsGaSUwXf4/vThK47x9dX10VZiD7UZ75eVGHVdzOzK2qyilOB2Wm0uTMk6YTOZ0ZrqXkzZCRm6JU3lFYZUsrFmA6OZDlBYNLo+e4XssY9JRFphF7VSdGIsPSOE9/OkN3
 X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(6069001)(4636009)(136003)(376002)(39860400002)(346002)(396003)(230922051799003)(186009)(82310400011)(451199024)(64100799003)(1800799012)(46966006)(36840700001)(81166007)(70206006)(70586007)(356005)(6512007)(36756003)(9316004)(6486002)(6666004)(6506007)(478600001)(5660300002)(86362001)(7416002)(2906002)(8676002)(8936002)(110136005)(36736006)(316002)(4326008)(41300700001)(40480700001)(47076005)(336012)(82740400003)(83380400001)(2616005)(956004)(26005)(1076003)(36860700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 07:21:46.3670
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(39830400003)(366004)(346002)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(66476007)(66946007)(4326008)(66556008)(8936002)(44832011)(36756003)(26005)(2616005)(966005)(6666004)(1076003)(508600001)(8676002)(41320700001)(41300700001)(5660300002)(2906002)(4744005)(7416002)(52116002)(83380400001)(40180700001)(38350700005)(40160700002)(86362001)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?C4m/yr4V5Ax9haXYVQprJJLrMYCriV9J99mqMM4Ez4IVQaszC4NCTs5igbmp?=
+ =?us-ascii?Q?95hjnxQdwTbjXOhxi2tZ0Lc+vuNqs4Z1UHt11extpeBltxkAyHJgXHjt1rpq?=
+ =?us-ascii?Q?hqPD4jC6o8iOZVnH2WahWs+TMyvC/j3RFnixQo/B89RzTK54icWdFi/kma17?=
+ =?us-ascii?Q?ryuEDbOh95S1lc5cNTmbjuGeD8TGwGNxD3fuUD3LoN3l9j5ActIH7VFlm8Sd?=
+ =?us-ascii?Q?Bf6cypFMwSqAUA7Txqf8tEjovIwHOqnnvFcswa+S39puLsAT627JWiUA8iOH?=
+ =?us-ascii?Q?l5A5AjSVJQ3klqCf0o8xRa30ShfuTiIEEGbSpBV4pgZinnKnJjXcaIjGnrTI?=
+ =?us-ascii?Q?OAuGaMXbTymeLYbSgKaYd2x+SEPutdksseK8K+UMzOkXKZlzHtnvIe58pQbW?=
+ =?us-ascii?Q?Xwd9mX/Y3AvdrvM4vtAiwiHG56pWfzkvXcit9Crx60RgSwiN2RNRMQirkqQG?=
+ =?us-ascii?Q?va9I91zzMAVA/gN1ttvajbP0uokGQOI7aqYuBXVRa8F/32hAATdG8PSIr+A/?=
+ =?us-ascii?Q?dErAEbbrLdjeaV1gb282lCFWUMnZmKasalPuPjdzJqaIve+juk6/FXCVvluu?=
+ =?us-ascii?Q?baO0V0vCkVR/VcJBwZFcB14th/Sj/YZVy/5WlNw3qZhMgHItTCLXuLG7f821?=
+ =?us-ascii?Q?tMo0Z7L8W3LGEQI2b4RIWlGC/bp4zD8nE4BovrHjucTrA8tDEIEVaoMHt9bD?=
+ =?us-ascii?Q?x62qEoypmHDGdBP+W/mPcxIfsy9hVdlyJIw/4Ti5fdQWF06ltI9a1MrILYAE?=
+ =?us-ascii?Q?j0MlOkhcnBynnh2UgNKSZU1HpnLnOew5MCQwTOLdIIF9EolXApdOpXVo8Z2E?=
+ =?us-ascii?Q?VeBKP7M0nbYJly/Z6A9zzgarjLaEsJdKJDU1V+20OSRRX9Rw3wNy5xVEiKty?=
+ =?us-ascii?Q?j6qnUzra0M/1G444FOqrLm+Xzs2LQKkkbzkrAukk+1U4W/2atGyTSTNgwcVE?=
+ =?us-ascii?Q?CWzE3KBKvPvN4hZO/AynbzorfspbE8MydSV2FVthbnXA9o9SNLjVleUpQOuS?=
+ =?us-ascii?Q?CF/uzJlSViy+Ad8VGJOVIFpCOF3ZSKH/zFH2OmyeoxWgr5yfr5MJFPj32ou0?=
+ =?us-ascii?Q?nn77xKeUGnjtgslh6sqY9IQdDD89yUfJl59WSS3SsXoT7TXBd7hRkoVfTohP?=
+ =?us-ascii?Q?WIk24/DKEoqInMCuzU+xOj951jqZFOuJG8AJZYbGKyIqHM0tSmpkZliNht4I?=
+ =?us-ascii?Q?feUrK8eDScQHNaa5pVJELdVQeMaOuA1lbSebr91GKDIh0chI/jhnVGE5s2Hs?=
+ =?us-ascii?Q?yE2SWbxA06EIXtuTsLU7ggfF683jFcUbnrz1FIxeiNfYWY7S6dJsBuL0gwQN?=
+ =?us-ascii?Q?Jzr9sJ+rw6a/kgZmsHk7R6WIwzlimcmNM2n0ENz/L1s2WoC+M8Wn6Oe4c42C?=
+ =?us-ascii?Q?96iJUexIWRH0TvQn6MGmhhu71a+651A5g0kbseIjigFDyKQSWeoMbCD57qHH?=
+ =?us-ascii?Q?Zfb+a1Gp5HrEFGlqct9vMHwgdCTljjidK4UFP2/2dA1fl4UqezI1RP8xn3ik?=
+ =?us-ascii?Q?/Cqb7UtaDT7MGvgxi40xpEIbtvN7VRubQVg5VAnPWn3pzKp3Kzov/P+sAgAD?=
+ =?us-ascii?Q?qvyxXO/924Ys9V02/4IJyGNzAgRQuG6cl4mcV+VhkUZV+vBiHSumdZL6ICyh?=
+ =?us-ascii?Q?EJok0pD3IY7prklcHm2zyec=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 097b2250-45f2-4524-9847-08dc10e1fc6d
+X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 07:09:57.0439
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac978e3-ff02-491b-62d8-08dc10e3a374
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK3PEPF0000021E.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR04MB6623
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TlzVIVyFki9ph9Zn/lcTMkPiUgUTi5ZnAiTix4gHxR+/fS3151R7nM8nra9nMcKqKJyfEuHy8EDsTaDLTrYmoOYvPrs7jptrxRxPpUzQw14=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1133
 
-Mux pca9544 to cpld was added on EVT HW schematic design,
-so add dts setting for devices behind mux pca9544 to cpld
+This patchset adds waveshare 7inch touchscreen panel support
+for the StarFive JH7110 SoC.
 
-Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
----
- .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 64 ++++++++++++++-----
- 1 file changed, 49 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-index 8589f7d31ffb..440f735ef059 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-@@ -36,6 +36,10 @@ aliases {
- 		i2c31 = &imux31;
- 		i2c32 = &imux32;
- 		i2c33 = &imux33;
-+		i2c34 = &imux34;
-+		i2c35 = &imux35;
-+		i2c36 = &imux36;
-+		i2c37 = &imux37;
- 	};
- 
- 	chosen {
-@@ -951,24 +955,54 @@ &i2c12 {
- 	status = "okay";
- 	bus-frequency = <400000>;
- 
--	temperature-sensor@48 {
--		compatible = "ti,tmp75";
--		reg = <0x48>;
--	};
-+	i2c-mux@70 {
-+		compatible = "nxp,pca9544";
-+		i2c-mux-idle-disconnect;
-+		reg = <0x70>;
- 
--	eeprom@50 {
--		compatible = "atmel,24c128";
--		reg = <0x50>;
--	};
-+		imux34: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
- 
--	eeprom@54 {
--		compatible = "atmel,24c64";
--		reg = <0x54>;
--	};
-+			temperature-sensor@48 {
-+				compatible = "ti,tmp75";
-+				reg = <0x48>;
-+			};
-+
-+			eeprom@50 {
-+				compatible = "atmel,24c128";
-+				reg = <0x50>;
-+			};
- 
--	rtc@6f {
--		compatible = "nuvoton,nct3018y";
--		reg = <0x6f>;
-+			eeprom@54 {
-+				compatible = "atmel,24c64";
-+				reg = <0x54>;
-+			};
-+
-+			rtc@6f {
-+				compatible = "nuvoton,nct3018y";
-+				reg = <0x6f>;
-+			};
-+		};
-+
-+		imux35: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		imux36: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		imux37: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
- 	};
- };
- 
+changes since v1:
+- Rebased on tag v6.7.
+
+patch 1:
+- Gave up original changing.
+- Changed the commit message.
+- Add compatible in panel-simple.yaml
+
+patch 2:
+- Gave up original changing.
+- Changed the commit message.
+- Add new mode for the panel in panel-simple.c
+
+v1: https://patchwork.kernel.org/project/dri-devel/cover/20231124104451.44271-1-shengyang.chen@starfivetech.com/
+
+Shengyang Chen (2):
+  dt-bindings: display: panel: panel-simple: Add compatible property for
+    waveshare 7inch touchscreen panel
+  gpu: drm: panel: panel-simple: add new display mode for waveshare
+    7inch touchscreen panel
+
+ .../bindings/display/panel/panel-simple.yaml  |  2 ++
+ drivers/gpu/drm/panel/panel-simple.c          | 28 +++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
 -- 
-2.25.1
+2.17.1
 
