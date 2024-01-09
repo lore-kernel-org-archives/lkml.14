@@ -1,81 +1,131 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926ED381CD
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 12:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SRFTF1ul"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-28d80eddc63so1024430a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 04:48:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704804524; x=1705409324; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=equj060FCt2kUxy+zeJ1G6xYNbtT2kIm8VC3uUxQ9x0=;
-        b=SRFTF1ulw2TAO7H8y2gr8dkwuAMEbEb+7jHFj4zkx3AmnqK6w3hMijt2Q0ARZbY19U
-         n28DwBJISHHEiCDTomIJN9XBHsdZbIv1RekOnt6DOkdNQ+qA9i7LqumussR6DX9lXbjo
-         nUBWp94cLqfHr6TQa4qCondjRzmmIHwt8C0Mg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704804524; x=1705409324;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=equj060FCt2kUxy+zeJ1G6xYNbtT2kIm8VC3uUxQ9x0=;
-        b=YL0IJqMl0+F+a392j0h3FtS9f0YIG+XJN72MvdMN998fTfVIyijxQXDKBmOLqR3ZRT
-         Oz2Xx8hGg585W39teHf4nr8E+d7JI53JJK4OFISw68YFUuekqkbTPtftqsbIsAdAHdFl
-         WAdj/8yhYxk7TGrQ/hCBqo1ptw5eb9Kn/pxBkZQ+t4tiGnsRIH6AwI98gk1oD+r0EuHV
-         jeBvrbU9Iip/WRi1C8tvs+DLstFkheryl99YhIyKIviGJboRhHzmcAKY470V15CdwYRc
-         2zb2Tm6Oz2Pi6wm0isa6S//LwGkejusSKLcGjxCf0Pw6PTtQpxjtbcS484CIRtuLXmoM
-         3N4A==
-X-Gm-Message-State: AOJu0Yw8pkyVRF5uW54YrUI2mT82I7w4EQPt8GpXAM7EWiA7ydF3phkK
-	rXUmAvwhNVD8WdQpMG2JJ4nPUvbS0BO/
-X-Google-Smtp-Source: AGHT+IFaKPZTM2YqYrni+6vdDEZ1l2skb9dMVIwfSfVJEvEFl4Gkl73woedlMgZ1EXGQC6+X2xvV7w==
-X-Received: by 2002:a17:90a:17ab:b0:28c:93c5:1f9e with SMTP id q40-20020a17090a17ab00b0028c93c51f9emr2332149pja.63.1704804523918;
-        Tue, 09 Jan 2024 04:48:43 -0800 (PST)
-Received: from google.com (KD124209171220.ppp-bb.dion.ne.jp. [124.209.171.220])
-        by smtp.gmail.com with ESMTPSA id f21-20020a17090a9b1500b0028d9c540b12sm1292899pjp.23.2024.01.09.04.48.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 04:48:43 -0800 (PST)
-Date: Tue, 9 Jan 2024 21:48:38 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v4] media: ucvideo: Add quirk for Logitech Rally Bar
-Message-ID: <20240109124838.GB1012017@google.com>
-References: <20240108-rallybar-v4-1-a7450641e41b@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8F5364AE;
+	Tue,  9 Jan 2024 12:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4T8VHN1DB7z9v5M;
+	Tue,  9 Jan 2024 13:14:56 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 3UZY3QTji_ou; Tue,  9 Jan 2024 13:14:56 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4T8VHN0Hfvz9v2V;
+	Tue,  9 Jan 2024 13:14:56 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 003308B77D;
+	Tue,  9 Jan 2024 13:14:55 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id HBR04NexVvw3; Tue,  9 Jan 2024 13:14:55 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.126])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6EFF18B774;
+	Tue,  9 Jan 2024 13:14:54 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: linux-hardening@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-mm@kvack.org,
+	steven.price@arm.com,
+	Phong Tran <tranmanphong@gmail.com>,
+	mark.rutland@arm.com,
+	Greg KH <greg@kroah.com>
+Subject: [PATCH 0/4] Refactor CONFIG_DEBUG_WX and check_wx_pages debugfs attribute
+Date: Tue,  9 Jan 2024 13:14:34 +0100
+Message-ID: <cover.1704800524.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240108-rallybar-v4-1-a7450641e41b@chromium.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1704802473; l=2144; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=Rosrc8SJ5lP3rVnXrjZMc3fjClOukQO/LV2fzgZVpQs=; b=s3Okt6I7tVLtHH9cIsW0wOp8leAGxF9lRsidic0YqOYcxb/GPUWk/wsLaGOrOrDVlBeQJRl4d A3TZyNi11uFDTOsNtgCv9Dd/0t2LrUpaUdzKjfrAy93UgJ/oTqyg9E5
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On (24/01/08 08:17), Ricardo Ribalda wrote:
-> Logitech Rally Bar devices, despite behaving as UVC cameras, have a
-> different power management system that the other cameras from Logitech.
-> 
-> USB_QUIRK_RESET_RESUME is applied to all the UVC cameras from Logitech
-> at the usb core. Unfortunately, USB_QUIRK_RESET_RESUME causes undesired
-> USB disconnects, that make them completely unusable.
-> 
-> Instead of creating a list for this family of devices in the core, let's
-> create a quirk in the UVC driver.
-> 
-> Fixes: e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all Logitech UVC webcams")
-> Cc: stable@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Refer old discussion at https://lore.kernel.org/lkml/20200422152656.GF676@willie-the-truck/T/#m802eaf33efd6f8d575939d157301b35ac0d4a64f
+And https://github.com/KSPP/linux/issues/35
 
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+This series refactors CONFIG_DEBUG_WX for the 5 architectures
+implementing CONFIG_GENERIC_PTDUMP
+
+First rename stuff in ARM which uses similar names while not
+implementing CONFIG_GENERIC_PTDUMP.
+
+Then define a generic version of debug_checkwx() that calls
+ptdump_check_wx() when CONFIG_DEBUG_WX is set. Call it immediately
+after calling mark_rodata_ro() instead of calling it at the end of
+every mark_rodata_ro().
+
+Then implement a debugfs attribute that can be used to trigger
+a W^X test at anytime and regardless of CONFIG_DEBUG_WX
+
+Christophe Leroy (4):
+  arm: ptdump: Rename CONFIG_DEBUG_WX to CONFIG_ARM_DEBUG_WX
+  arm64, powerpc, riscv, s390, x86: Refactor CONFIG_DEBUG_WX
+  powerpc,s390: Define ptdump_check_wx() regardless of CONFIG_DEBUG_WX
+  ptdump: add check_wx_pages debugfs attribute
+
+ arch/arm/Kconfig.debug          |  2 +-
+ arch/arm/include/asm/ptdump.h   |  6 +++---
+ arch/arm64/include/asm/ptdump.h |  7 -------
+ arch/arm64/mm/mmu.c             |  2 --
+ arch/powerpc/mm/mmu_decl.h      |  6 ------
+ arch/powerpc/mm/pgtable_32.c    |  4 ----
+ arch/powerpc/mm/pgtable_64.c    |  3 ---
+ arch/powerpc/mm/ptdump/ptdump.c | 10 ++++++----
+ arch/riscv/include/asm/ptdump.h | 22 ----------------------
+ arch/riscv/mm/init.c            |  3 ---
+ arch/riscv/mm/ptdump.c          |  1 -
+ arch/s390/include/asm/ptdump.h  | 14 --------------
+ arch/s390/mm/dump_pagetables.c  |  8 ++------
+ arch/s390/mm/init.c             |  2 --
+ arch/x86/include/asm/pgtable.h  |  3 +--
+ arch/x86/mm/dump_pagetables.c   |  3 +++
+ arch/x86/mm/init_32.c           |  2 --
+ arch/x86/mm/init_64.c           |  2 --
+ include/linux/ptdump.h          |  7 +++++++
+ init/main.c                     |  2 ++
+ mm/ptdump.c                     | 19 +++++++++++++++++++
+ 21 files changed, 44 insertions(+), 84 deletions(-)
+ delete mode 100644 arch/riscv/include/asm/ptdump.h
+ delete mode 100644 arch/s390/include/asm/ptdump.h
+
+-- 
+2.41.0
+
