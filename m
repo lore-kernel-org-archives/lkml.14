@@ -1,155 +1,98 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2079.outbound.protection.outlook.com [40.107.104.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16B029435;
-	Tue,  9 Jan 2024 07:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DDAE2D60B
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 07:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rtEKg2rp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GICPR0veMtfMwymAq6vwin7zjCMO7wjxclKwPH5s2SmGk+HH7MqowMw64w+Qg/Pa4qab6hxOWb83bsAyyOIiHSbVOnJgatjYJYJAu6eNkEcG8Q2a/eELHM0XxwCF6cJ2aQaDTvMjE4SsSfBjziLjhA3RVi3a/dZpG5cUONf2h8FRbqgQ3QuvDCRBkrRnQFga3qOVmGsMFELpDLAGc6zQt4AAr+ko4xqpFwGhbm9VwPU7JLkfB/1e7bivQVGkinopen8Z/9utwqUIwIvDwcVTAo/M9S656Z2Um6smFLMoT0O+8OQ3B0gvRyYMMx9ozttw1uY+7FOPQ7EnDqM4f7/0aA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YiTuNLnAMYxl8wl1gM2TmXTvurPxCZe6EOS5AQuW3MU=;
- b=J2M+aoH5x+04qu3ebYOBgHI9M0U8TvJnAQuDrsOTLXiTr0D6pSagLt2OU6PrL4clJ7DHMWZr9Qh83EO+6D1CLjgY0EYy/uUe+jvHhHpf1uO+5JgaWDQJqiJs1gQLkHLkAcwOt7v8wujUS3LSygeQG8tsFrIzqk7od60ouIEpHVKecPoTRBEMz4tP7QYK5PREThPGbZlOw2rKvfC4KPd3BVMTZFtXfERwrdPVdgT+0pDp6DBjpAjk0bAkCY6I7EznzxGR142ismhg3xn1eCVOeMdafRp6YHNEUijUgCDu9fiAJKAxPT/JozPKV5zovVFECJ0J1d4QI9RqoSGCwoa51w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YiTuNLnAMYxl8wl1gM2TmXTvurPxCZe6EOS5AQuW3MU=;
- b=rtEKg2rp6Omre1a/6WLGGJtFf60Mxrjp4/r4gFj5C6fBtSAVkWBAKhoJzd2hDQf3szGdEv+YkR9aH8xZOp80f5s3wBNqJ4JctGdsiUiW6n8jb4noaR230NSXNFyCqZKNQnj1Kn0WTwr0wIhsilis3zsQUqAJGHypxtwVJOZNKfA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9498.eurprd04.prod.outlook.com (2603:10a6:10:360::21)
- by GVXPR04MB9994.eurprd04.prod.outlook.com (2603:10a6:150:11a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21; Tue, 9 Jan
- 2024 07:57:06 +0000
-Received: from DB9PR04MB9498.eurprd04.prod.outlook.com
- ([fe80::2a3c:9a90:b09f:293c]) by DB9PR04MB9498.eurprd04.prod.outlook.com
- ([fe80::2a3c:9a90:b09f:293c%3]) with mapi id 15.20.7159.020; Tue, 9 Jan 2024
- 07:57:05 +0000
-From: Chancel Liu <chancel.liu@nxp.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shengjiu.wang@gmail.com,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Cc: Chancel Liu <chancel.liu@nxp.com>
-Subject: [PATCH 3/3] ASoC: dt-bindings: fsl,micfil: Add compatible string for i.MX95 platform
-Date: Tue,  9 Jan 2024 16:55:51 +0900
-Message-ID: <20240109075551.870001-4-chancel.liu@nxp.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240109075551.870001-1-chancel.liu@nxp.com>
-References: <20240109075551.870001-1-chancel.liu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0184.apcprd06.prod.outlook.com (2603:1096:4:1::16)
- To DB9PR04MB9498.eurprd04.prod.outlook.com (2603:10a6:10:360::21)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ntJSrakW"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d45f182fa2so23347115ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 23:57:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704787050; x=1705391850; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LJaAgkMysyU+rJly+ZLjAMA6XzBdKr1ifp5VcfkkRmI=;
+        b=ntJSrakWiG48I6/vXlFku3TzkbRf+vg8wL8lj5CXWzJ0dx5TUjOTH2Lmz3pQ4Cb5Gy
+         4tjHC9MhSmdQ7UTxm4WvTtZ91C/n7LaX+J6fpvn7KtyIf2Df+xy3ed/UHLn6P83HDxvh
+         yduFZca1LHnicY7AaoYffaW5p5LGekw/13mNQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704787050; x=1705391850;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LJaAgkMysyU+rJly+ZLjAMA6XzBdKr1ifp5VcfkkRmI=;
+        b=FDzxKfv5QN1+3gA4i1xbKsAS5Un3qp9C30CEa2/FBjT7bSKy3xOhn4Px5DLT3nYCeD
+         D5v6L2w7+mqivygLwbaVcwzchShCfLFh/o/W3xASyWxYghtDdcdXaWrQVqOG8/9LNSeb
+         0xQxtANYODwCfio4rclqFiZXIkpZ5kCvU6eZMeth4oJUfobZW5+JoHgy9zsSjcSCJdaO
+         FMM3lwrTJVMj4iz48qORqkJGKRf9IkMaCaYXCJ/f1bGgqCmpUjnChZ4FC0KQIYT/zvIx
+         unAz2pRaysYW3JXuXzuvEsm8fJEnd4p98/CBlaPsr1VGlVCKO7SuC4U4H3Bi7tTsSehu
+         ayRA==
+X-Gm-Message-State: AOJu0YxV1pihAA987FIfgUN8MdX4mnGFkg4xkeOPGg/7LnL2tKaWW0Zs
+	6UMNlDBWvvk9CWybl1qAh83vpYZjMOcc
+X-Google-Smtp-Source: AGHT+IHkdc5SEqOU4j+ZTAsSmX5JM1gcIkgcDn5+o0E0JsF/jrPN5rTqY5Qu8XkZuoCUCMrUd0zVDA==
+X-Received: by 2002:a17:90b:383:b0:28c:e64c:b97f with SMTP id ga3-20020a17090b038300b0028ce64cb97fmr2688891pjb.85.1704787049720;
+        Mon, 08 Jan 2024 23:57:29 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:7b29:709a:867f:fec5])
+        by smtp.gmail.com with ESMTPSA id 15-20020a17090a000f00b0028bbf4c0264sm8420053pja.10.2024.01.08.23.57.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 23:57:29 -0800 (PST)
+Date: Tue, 9 Jan 2024 16:57:26 +0900
+From: Hidenori Kobayashi <hidenorik@chromium.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Tianshu Qiu <tian.shu.qiu@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Yong Zhi <yong.zhi@intel.com>, stable@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] media: staging: ipu3-imgu: Set fields before
+ media_entity_pads_init()
+Message-ID: <20240109075726.4ht5nqrtevzk7yh7@google.com>
+References: <20240109041500.2790754-1-hidenorik@chromium.org>
+ <68ff6c83-b8c7-4bcb-9b94-a33ab83aaf58@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9498:EE_|GVXPR04MB9994:EE_
-X-MS-Office365-Filtering-Correlation-Id: e304fa24-db19-459c-568b-08dc10e89278
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	vkofNcWdj+O+up2GLZ5np4eu5s3HNaVEh7IbRhMJg/cp3evx9IoNHNC+zpeyc8zvqejIHRZksnJPUpgC90BFKptxube0+k5LD4Kos0cCrjdaG/aCRpxYtza0bhuIQMveqwjaMukV3sgkxOWFG9mTy4fEKZ+wIjErjnvInBlaqcglngV7Qhs/GC+BrvGJS43TFiK6qPx9q+w8oPn8Pk03xooEGnx4NPJf5G3KMeHjCH2cMP3mya/zT2IuGE95uXXmM6k0eCbKKcwe/GqrBMFpO7Y+ktSwggxlTBfPVjPeBmiTLVMDEjrFDXNJoJlyDGaqwDmtqPgnV7jSsaa4icYqtZMipBn+0hj/3e4E3HqBy1f+dNcaNQKXTElHBHyoTw4MvNwwFhCGfNt4xyoJ2u2XXQJj2zA9KMrc0sEgPejlzVwpDNA6MAThdvgfRHv+IupPEfCFYB9fIX1Dxfl9FkGIhLc0bLIkzxRe8XUsZYsRilesavjC46jfGrmztnCE90PSIGUp/Rx07VNXxFejkes5r3fWrhof4U5a5jziA7a5CNvaLb/kKV+tbuUPRvb0Jots81UO4HmAtwnJMVBa4iK4gAQfqYTca0EdHCHzL9XlDkpIPTHL2JczdXsPsNFpVQf7pxPAyqmOBlJIhneXxxnAqg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9498.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(39860400002)(346002)(136003)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(1076003)(2616005)(26005)(52116002)(478600001)(6506007)(6666004)(6512007)(6486002)(38100700002)(921011)(36756003)(86362001)(38350700005)(4744005)(2906002)(7416002)(41300700001)(5660300002)(83380400001)(66556008)(4326008)(66946007)(316002)(44832011)(8936002)(8676002)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/00SZLcw10Lw6EpW6HMENymzw1v1PcQNr4cZEABtD9wISjD+g6dFMvURM5En?=
- =?us-ascii?Q?/5T9hFFOjDel28czExp0DpAwDVhoUUd69gPjwLM2Qf5t+bSW8uo/tiesi4U5?=
- =?us-ascii?Q?vxoPUyy2CGpsRnAdV9sf/feetzr+tKLlO6M3cIw6C3IdqzZj8tw/u8euXEki?=
- =?us-ascii?Q?mh1lO0uWHEO/8BcRnudlRukVx5TTzo9kVPO6ZSnB8kaASyxSHcTcdtIbgoet?=
- =?us-ascii?Q?mCyJJXhmXd/3NQIu0xgCDU1lMjg4gdZRZaSauC2hFWcXf1XoWESPbACSjDQq?=
- =?us-ascii?Q?Whvnlyqs9GT+NCq+Ho2f4Qtg6/Z/xqBAqtg2THliQR+lx/XjUPsAqOQYL75H?=
- =?us-ascii?Q?gSUp2EmsO8Q/lfd2vFEnf/VgrXStOvOykPawgPPp9hecpDhAhI+dRkc6xyXr?=
- =?us-ascii?Q?ngcvyF88BKPIysbHeMXS2RPfRe6Ja+3OMbwz7I5QP1GctRntvTYWosBrAAat?=
- =?us-ascii?Q?iBpaKX+j0FGKXUZ7mJou1l/j8Pe4IbnQV64v1SfhSi9dIvKK/TGjNHPi6/WT?=
- =?us-ascii?Q?gpWOdnCGyyl1Smc24otcoCAI+MP4Fkjanxg8IGsvrRiQv613ujs2DT+t3qhd?=
- =?us-ascii?Q?5/2dX8JlrSZKtAAWmVskjDE2limYXuOKniueSpSqejxbSvcQLiQFHfZidDnL?=
- =?us-ascii?Q?vrv3vSrSbTjGdgiZyqdTJznpcLQ35+kBMpD+1fjbaX7XBTvMBKe8YFoAkI1C?=
- =?us-ascii?Q?ghM0j4SUzuFLCFwsOLyfs7uz41q9hcHxXcpGYbhcRMkKPLVaWoc2NIZSCVpW?=
- =?us-ascii?Q?Kmu4qA9z4Ndi9vxI8sTeInEa4vPMRAufywX0W9FASbx9k4VK1fO9AOiJhKlf?=
- =?us-ascii?Q?zV3Ml2wkaKJ0H5y2ufI5NQiju7l8usfAa+ltiLZE8tiJi7DpuXuR/b1Vsmq3?=
- =?us-ascii?Q?J4rn4I7cxvtUF+gauoBDk+UOkRCJNevzTiODzRoLE0aMGH3kJg9w0/rEaUZu?=
- =?us-ascii?Q?hF1E0wcbOiYSm4mILXzNEwLGZXYgVQAgkaL4Xu9pK5SAbzMU0OUQLA/83jGH?=
- =?us-ascii?Q?/hnRjYZpP+gpzrp3UJlU1NxzQPOMh3I8GYOAR1LoZzLa672AOLkWBx2RQJPb?=
- =?us-ascii?Q?cwgfL5vzWfLqclkCqPKs3aGLD82mi3C583tUBE1dkfU9g0dqzwifz3l6RbZ3?=
- =?us-ascii?Q?p0s3php3m5OEeI1ZcrFMqvSt30uzZ3wjkylfwdpAqO/TpgUcA6qrjPMME6Pm?=
- =?us-ascii?Q?0agm0mKBvHaEujHg49xyOgy36XFr6PwwYmZ1JE8fjlgpN1n6Ey+UdsxLvIku?=
- =?us-ascii?Q?aAOmX6NRA6sRnzkBjtZapByM4uuPSW/Ue3Rh1UHEEOooPdU26VZlFdEZzIHI?=
- =?us-ascii?Q?isdlSGxVjobHncy0hmefM0IjoBVqhWJV/le+bXFJ8qMkV6cXGH8Z3GnyN3qa?=
- =?us-ascii?Q?RRjl1ohH01tjoUEXb92nJ1+Zd2PbaQH8VbjnTD0FqNq0GgdaMLoR+id+gk2f?=
- =?us-ascii?Q?wNfnrT1WndG6lJA1pC47arOVudFsAjH01br9MYUjr8lVFqvi41qJrZy6ZybC?=
- =?us-ascii?Q?ExDQVYfYLJJ16nzS6y6Fbo9a1OM8xGT/Er0ukF+eyjjPeX6fjlqh2VmHOBUS?=
- =?us-ascii?Q?YBFV8D8BiuQ3C8f+R1rY2aLv02i9/ndnsj0JFyJg?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e304fa24-db19-459c-568b-08dc10e89278
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9498.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 07:57:05.8891
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FFtHNvQDkHh9LbfS7lue38jPtso6K//iqpaoeqslOQS54TorVQb886JAe8WwKAD+1FQED+0BizWpJuQ2TbtveQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9994
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68ff6c83-b8c7-4bcb-9b94-a33ab83aaf58@moroto.mountain>
 
-Add compatible string "fsl,imx95-micfil" for i.MX95 platform.
+On Tue, Jan 09, 2024 at 10:51:15AM +0300, Dan Carpenter wrote:
+> On Tue, Jan 09, 2024 at 01:14:59PM +0900, Hidenori Kobayashi wrote:
+> > The imgu driver fails to probe because it does not set the pad's flags
+> > before calling media_entity_pads_init(). Fix the initialization order so
+> > that the driver probe succeeds. The ops initialization is also moved
+> > together for readability.
+> > 
+> 
+> Wait, I was really hoping you would include these lines in the commit
+> message:
+> 
+> the imgu driver fails to probe with the following message:
+> 
+> [   14.596315] ipu3-imgu 0000:00:05.0: failed initialize subdev media entity (-22)
+> [   14.596322] ipu3-imgu 0000:00:05.0: failed to register subdev0 ret (-22)
+> [   14.596327] ipu3-imgu 0000:00:05.0: failed to register pipes (-22)
+> [   14.596331] ipu3-imgu 0000:00:05.0: failed to create V4L2 devices (-22)
+> 
+> That's what people will search for when they run intio the problem.
+> Could you please resend a v3?  Normally, editing a commit message is
+> pretty easy, right?
+> 
+> regards,
+> dan carpenter
+> 
+> 
 
-Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
----
- .../devicetree/bindings/sound/fsl,micfil.yaml     | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+Ah, I misunderstood then, sorry. I will add the error lines to the
+commit messages and send a v3.
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl,micfil.yaml b/Documentation/devicetree/bindings/sound/fsl,micfil.yaml
-index b7e605835639..f0d3d11d07d2 100644
---- a/Documentation/devicetree/bindings/sound/fsl,micfil.yaml
-+++ b/Documentation/devicetree/bindings/sound/fsl,micfil.yaml
-@@ -15,10 +15,17 @@ description: |
- 
- properties:
-   compatible:
--    enum:
--      - fsl,imx8mm-micfil
--      - fsl,imx8mp-micfil
--      - fsl,imx93-micfil
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,imx95-micfil
-+          - const: fsl,imx93-micfil
-+
-+      - items:
-+          - enum:
-+              - fsl,imx8mm-micfil
-+              - fsl,imx8mp-micfil
-+              - fsl,imx93-micfil
- 
-   reg:
-     maxItems: 1
--- 
-2.42.0
-
+Hidenori
