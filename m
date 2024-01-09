@@ -1,41 +1,41 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40381446D0;
-	Tue,  9 Jan 2024 19:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7C54776D;
+	Tue,  9 Jan 2024 19:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JsCn3DAO"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409Gxr33016339;
-	Tue, 9 Jan 2024 19:38:06 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="claOXthq"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409Ik2LF020971;
+	Tue, 9 Jan 2024 19:38:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=+Qmhckol3LBZQwJot12EAf5bVy2Rf/uHyT+4To7C3J0
-	=; b=JsCn3DAOL5dGuQbg9AbPFtybTs8AbU3IU2fM3psZaVJd0bp4eXfrdU2bh5F
-	lxw5tC2mrLFKnWXpebotu98uqHEyO28xAVT9DcwzD1HByxVeCsTcn158gnjTsqPI
-	fO/kAuTTIY0qLBYlspE2V740EKQb8L9O4Z+Ln1iP35goGy0SAPdXxBc3a+Zgkndi
-	8Nd1mk0nUBzI0bpD4aZ2OFndYd5KgxMeV0Q/orT+c35hx31z/eYBDxi3Sp0kejxy
-	lWsY9Xcr5DXWB39cvJg+5T91iDLwf9SSTcV1SWGNUrdb9Si5PYM2xfgRt+GOeoLW
-	32vY+VLeVYgS3dzO5Z0vR5rmJNA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh85t0pnu-1
+	:cc; s=qcppdkim1; bh=O0LTS8afF6938T/lQfplnM+8ELHnWjzwe6A6+1vfdHw
+	=; b=claOXthqjhDnvl4cB5HE5bAjfN2ymsPboQB9NJGN3MQOcOErbzT1GIMudKB
+	hNfHsz+SVvtgg3h2/7Eie/+9wleuSNBTiQE/pAebqiF1Hq4ZbB7udWqqI/tzg9gr
+	CVcG5Z53O3tiA+E2k+2nK2KwKPP0C96pUkwlsCMMuzdfW9tCUP9E0AexLk5EKn5k
+	jRWhYtIJhwmfmqA/BsWXkGJPbUJpqFYwaQqMW/3xvaaL8fSWabygVNSLRb46bDg/
+	TzbMjxBlVjsZL2aGHKmAJ0x7ar1iawUEVonUh4BtDLm/aeVEPbcIXfjTV8tOBXas
+	k6+R1O4FGr3KNj7yKRblVaRYcZw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh3me185q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 19:38:06 +0000 (GMT)
+	Tue, 09 Jan 2024 19:38:09 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409Jc5Co030549
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409Jc9DV024695
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jan 2024 19:38:05 GMT
+	Tue, 9 Jan 2024 19:38:09 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 9 Jan 2024 11:38:04 -0800
+ 15.2.1118.40; Tue, 9 Jan 2024 11:38:08 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Tue, 9 Jan 2024 11:38:02 -0800
-Subject: [PATCH v16 24/34] virt: gunyah: Share guest VM dtb configuration
- to Gunyah
+Date: Tue, 9 Jan 2024 11:38:08 -0800
+Subject: [PATCH v16 30/34] virt: gunyah: Add hypercalls for sending
+ doorbell
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,7 +44,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240109-gunyah-v16-24-634904bf4ce9@quicinc.com>
+Message-ID: <20240109-gunyah-v16-30-634904bf4ce9@quicinc.com>
 References: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
 In-Reply-To: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
 To: Alex Elder <elder@linaro.org>,
@@ -84,168 +84,99 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: vUg_t-T6NwaXapDllJE2l2cgFSriSpBt
-X-Proofpoint-GUID: vUg_t-T6NwaXapDllJE2l2cgFSriSpBt
+X-Proofpoint-ORIG-GUID: 6mB1HQ53TyGWybWApgoJAF8XcYPAkg4i
+X-Proofpoint-GUID: 6mB1HQ53TyGWybWApgoJAF8XcYPAkg4i
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 clxscore=1015
- priorityscore=1501 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ priorityscore=1501 mlxlogscore=605 lowpriorityscore=0 mlxscore=0
+ suspectscore=0 impostorscore=0 clxscore=1015 adultscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2311290000 definitions=main-2401090158
 
-Gunyah Resource Manager sets up a virtual machine based on a device tree
-which lives in guest memory. Resource manager requires this memory to be
-provided as a memory parcel for it to read and manipulate. Construct a
-memory parcel, lend it to the virtual machine, and inform resource
-manager about the device tree location (the memory parcel ID and offset
-into the memory parcel).
+Gunyah doorbells allow a virtual machine to signal another using
+interrupts. Add the hypercalls needed to assert the interrupt.
 
+Reviewed-by: Alex Elder <elder@linaro.org>
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/virt/gunyah/vm_mgr.c | 49 ++++++++++++++++++++++++++++++++++++++++++--
- drivers/virt/gunyah/vm_mgr.h | 13 +++++++++++-
- include/uapi/linux/gunyah.h  | 14 +++++++++++++
- 3 files changed, 73 insertions(+), 3 deletions(-)
+ arch/arm64/gunyah/gunyah_hypercall.c | 38 ++++++++++++++++++++++++++++++++++++
+ include/linux/gunyah.h               |  5 +++++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/drivers/virt/gunyah/vm_mgr.c b/drivers/virt/gunyah/vm_mgr.c
-index be2061aa0a06..4379b5ba151e 100644
---- a/drivers/virt/gunyah/vm_mgr.c
-+++ b/drivers/virt/gunyah/vm_mgr.c
-@@ -445,8 +445,27 @@ static int gunyah_vm_start(struct gunyah_vm *ghvm)
- 	ghvm->vmid = ret;
- 	ghvm->vm_status = GUNYAH_RM_VM_STATUS_LOAD;
+diff --git a/arch/arm64/gunyah/gunyah_hypercall.c b/arch/arm64/gunyah/gunyah_hypercall.c
+index 38403dc28c66..3c2672d683ae 100644
+--- a/arch/arm64/gunyah/gunyah_hypercall.c
++++ b/arch/arm64/gunyah/gunyah_hypercall.c
+@@ -37,6 +37,8 @@ EXPORT_SYMBOL_GPL(arch_is_gunyah_guest);
  
--	ret = gunyah_rm_vm_configure(ghvm->rm, ghvm->vmid, ghvm->auth, 0, 0, 0,
--				     0, 0);
-+	ghvm->dtb.parcel_start = ghvm->dtb.config.guest_phys_addr >> PAGE_SHIFT;
-+	ghvm->dtb.parcel_pages = ghvm->dtb.config.size >> PAGE_SHIFT;
-+	/* RM requires the DTB parcel to be lent to guard against malicious
-+	 * modifications while starting VM. Force it so.
-+	 */
-+	ghvm->dtb.parcel.n_acl_entries = 1;
-+	ret = gunyah_gmem_share_parcel(ghvm, &ghvm->dtb.parcel,
-+				       &ghvm->dtb.parcel_start,
-+				       &ghvm->dtb.parcel_pages);
-+	if (ret) {
-+		dev_warn(ghvm->parent,
-+			 "Failed to allocate parcel for DTB: %d\n", ret);
-+		goto err;
-+	}
-+
-+	ret = gunyah_rm_vm_configure(ghvm->rm, ghvm->vmid, ghvm->auth,
-+				     ghvm->dtb.parcel.mem_handle, 0, 0,
-+				     ghvm->dtb.config.guest_phys_addr -
-+					     (ghvm->dtb.parcel_start
-+					      << PAGE_SHIFT),
-+				     ghvm->dtb.config.size);
- 	if (ret) {
- 		dev_warn(ghvm->parent, "Failed to configure VM: %d\n", ret);
- 		goto err;
-@@ -485,6 +504,8 @@ static int gunyah_vm_start(struct gunyah_vm *ghvm)
- 		goto err;
- 	}
+ /* clang-format off */
+ #define GUNYAH_HYPERCALL_HYP_IDENTIFY		GUNYAH_HYPERCALL(0x8000)
++#define GUNYAH_HYPERCALL_BELL_SEND		GUNYAH_HYPERCALL(0x8012)
++#define GUNYAH_HYPERCALL_BELL_SET_MASK		GUNYAH_HYPERCALL(0x8015)
+ #define GUNYAH_HYPERCALL_MSGQ_SEND		GUNYAH_HYPERCALL(0x801B)
+ #define GUNYAH_HYPERCALL_MSGQ_RECV		GUNYAH_HYPERCALL(0x801C)
+ #define GUNYAH_HYPERCALL_ADDRSPACE_MAP		GUNYAH_HYPERCALL(0x802B)
+@@ -64,6 +66,42 @@ void gunyah_hypercall_hyp_identify(
+ }
+ EXPORT_SYMBOL_GPL(gunyah_hypercall_hyp_identify);
  
-+	WARN_ON(gunyah_vm_parcel_to_paged(ghvm, &ghvm->dtb.parcel, ghvm->dtb.parcel_start, ghvm->dtb.parcel_pages));
++/**
++ * gunyah_hypercall_bell_send() - Assert a gunyah doorbell
++ * @capid: capability ID of the doorbell
++ * @new_flags: bits to set on the doorbell
++ * @old_flags: Filled with the bits set before the send call if return value is GUNYAH_ERROR_OK
++ */
++enum gunyah_error gunyah_hypercall_bell_send(u64 capid, u64 new_flags, u64 *old_flags)
++{
++	struct arm_smccc_res res;
 +
- 	ghvm->vm_status = GUNYAH_RM_VM_STATUS_RUNNING;
- 	up_write(&ghvm->status_lock);
- 	return ret;
-@@ -531,6 +552,21 @@ static long gunyah_vm_ioctl(struct file *filp, unsigned int cmd,
- 	long r;
- 
- 	switch (cmd) {
-+	case GUNYAH_VM_SET_DTB_CONFIG: {
-+		struct gunyah_vm_dtb_config dtb_config;
++	arm_smccc_1_1_hvc(GUNYAH_HYPERCALL_BELL_SEND, capid, new_flags, 0, &res);
 +
-+		if (copy_from_user(&dtb_config, argp, sizeof(dtb_config)))
-+			return -EFAULT;
++	if (res.a0 == GUNYAH_ERROR_OK && old_flags)
++		*old_flags = res.a1;
 +
-+		if (overflows_type(dtb_config.guest_phys_addr + dtb_config.size,
-+				   u64))
-+			return -EOVERFLOW;
-+
-+		ghvm->dtb.config = dtb_config;
-+
-+		r = 0;
-+		break;
-+	}
- 	case GUNYAH_VM_START: {
- 		r = gunyah_vm_ensure_started(ghvm);
- 		break;
-@@ -589,6 +625,15 @@ static void _gunyah_vm_put(struct kref *kref)
- 	if (ghvm->vm_status == GUNYAH_RM_VM_STATUS_RUNNING)
- 		gunyah_vm_stop(ghvm);
- 
-+	if (ghvm->vm_status == GUNYAH_RM_VM_STATUS_LOAD) {
-+		ret = gunyah_gmem_reclaim_parcel(ghvm, &ghvm->dtb.parcel,
-+						 ghvm->dtb.parcel_start,
-+						 ghvm->dtb.parcel_pages);
-+		if (ret)
-+			dev_err(ghvm->parent,
-+				"Failed to reclaim DTB parcel: %d\n", ret);
-+	}
-+
- 	gunyah_vm_remove_functions(ghvm);
- 
- 	down_write(&ghvm->bindings_lock);
-diff --git a/drivers/virt/gunyah/vm_mgr.h b/drivers/virt/gunyah/vm_mgr.h
-index a79c11f1c3a5..b2ab2f1bda3a 100644
---- a/drivers/virt/gunyah/vm_mgr.h
-+++ b/drivers/virt/gunyah/vm_mgr.h
-@@ -72,6 +72,13 @@ long gunyah_dev_vm_mgr_ioctl(struct gunyah_rm *rm, unsigned int cmd,
-  * @resource_tickets: List of &struct gunyah_vm_resource_ticket
-  * @auth: Authentication mechanism to be used by resource manager when
-  *        launching the VM
-+ * @dtb: For tracking dtb configuration when launching the VM
-+ * @dtb.config: Location of the DTB in the guest memory
-+ * @dtb.parcel_start: Guest frame number where the memory parcel that we lent to
-+ *                    VM (DTB could start in middle of folio; we lend entire
-+ *                    folio; parcel_start is start of the folio)
-+ * @dtb.parcel_pages: Number of pages lent for the memory parcel
-+ * @dtb.parcel: Data for resource manager to lend the parcel
-  *
-  * Members are grouped by hot path.
-  */
-@@ -101,7 +108,11 @@ struct gunyah_vm {
- 
- 	struct device *parent;
- 	enum gunyah_rm_vm_auth_mechanism auth;
--
-+	struct {
-+		struct gunyah_vm_dtb_config config;
-+		u64 parcel_start, parcel_pages;
-+		struct gunyah_rm_mem_parcel parcel;
-+	} dtb;
- };
- 
- int gunyah_vm_parcel_to_paged(struct gunyah_vm *ghvm,
-diff --git a/include/uapi/linux/gunyah.h b/include/uapi/linux/gunyah.h
-index 1af4c5ae6bc3..a89d9bedf3e5 100644
---- a/include/uapi/linux/gunyah.h
-+++ b/include/uapi/linux/gunyah.h
-@@ -42,6 +42,20 @@ struct gunyah_create_mem_args {
- /*
-  * ioctls for gunyah-vm fds (returned by GUNYAH_CREATE_VM)
-  */
++	return res.a0;
++}
++EXPORT_SYMBOL_GPL(gunyah_hypercall_bell_send);
 +
 +/**
-+ * struct gunyah_vm_dtb_config - Set the location of the VM's devicetree blob
-+ * @guest_phys_addr: Address of the VM's devicetree in guest memory.
-+ * @size: Maximum size of the devicetree including space for overlays.
-+ *        Resource manager applies an overlay to the DTB and dtb_size should
-+ *        include room for the overlay. A page of memory is typicaly plenty.
++ * gunyah_hypercall_bell_set_mask() - Set masks on a Gunyah doorbell
++ * @capid: capability ID of the doorbell
++ * @enable_mask: which bits trigger the receiver interrupt
++ * @ack_mask: which bits are automatically acknowledged when the receiver
++ *            interrupt is ack'd
 + */
-+struct gunyah_vm_dtb_config {
-+	__u64 guest_phys_addr;
-+	__u64 size;
-+};
-+#define GUNYAH_VM_SET_DTB_CONFIG	_IOW(GUNYAH_IOCTL_TYPE, 0x2, struct gunyah_vm_dtb_config)
++enum gunyah_error gunyah_hypercall_bell_set_mask(u64 capid, u64 enable_mask, u64 ack_mask)
++{
++	struct arm_smccc_res res;
 +
- #define GUNYAH_VM_START		_IO(GUNYAH_IOCTL_TYPE, 0x3)
- 
++	arm_smccc_1_1_hvc(GUNYAH_HYPERCALL_BELL_SET_MASK, capid, enable_mask, ack_mask, 0, &res);
++
++	return res.a0;
++}
++EXPORT_SYMBOL_GPL(gunyah_hypercall_bell_set_mask);
++
  /**
+  * gunyah_hypercall_msgq_send() - Send a buffer on a message queue
+  * @capid: capability ID of the message queue to add message
+diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
+index 32ce578220ca..67cb9350ab9e 100644
+--- a/include/linux/gunyah.h
++++ b/include/linux/gunyah.h
+@@ -346,6 +346,11 @@ gunyah_api_version(const struct gunyah_hypercall_hyp_identify_resp *gunyah_api)
+ void gunyah_hypercall_hyp_identify(
+ 	struct gunyah_hypercall_hyp_identify_resp *hyp_identity);
+ 
++enum gunyah_error gunyah_hypercall_bell_send(u64 capid, u64 new_flags,
++					     u64 *old_flags);
++enum gunyah_error gunyah_hypercall_bell_set_mask(u64 capid, u64 enable_mask,
++						 u64 ack_mask);
++
+ /* Immediately raise RX vIRQ on receiver VM */
+ #define GUNYAH_HYPERCALL_MSGQ_TX_FLAGS_PUSH BIT(0)
+ 
 
 -- 
 2.34.1
