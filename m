@@ -1,270 +1,195 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from hi1smtp01.de.adit-jv.com (smtp1.de.adit-jv.com [93.241.18.167])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABEC3A8D5;
-	Tue,  9 Jan 2024 16:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dbed5d2ad18so2430809276.0;
-        Tue, 09 Jan 2024 08:35:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704818149; x=1705422949;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Qa9DWnbwjx/k7ugqNI+qU1geD+bJA8DnKdzTNuHsJk=;
-        b=SqybFPX06k5o6oQM6d0G0vMTeNqE33fyNfhSCdq0P+6f9+a1Pf9PPFJvt1Lf+H5Prq
-         aDLfh5J74KYQaJcOzmhGLhmIfamWF7pCV1ewhB/w0rtOtyIeWvVt/ydiS+dZCwQlAnoq
-         IBsepypffZOapHSYN2cxaox8KSaj0ydtOkUislJc08zenB35XG+OHI2z1aaAFJ188DTR
-         9UTdcKmVuGa1JzNFQ9USd3ZfUmyAT6UXg4SZ5su6s3c5AiLrEIxyPVHoKUgP+rZ5pnXc
-         LRWb6wjDmnhSjVoTO9iGFVSDpMJTSMaLlb2RDPkB1FbD086icZ03GVcwCxnL7BK8EQ3n
-         U4Uw==
-X-Gm-Message-State: AOJu0YxHnZOzixEpQhg8QP/jaDuv7JvjuymxrH/WR9s1JMHCvtGjZJNV
-	waliDEbzbo5Jg4PrIYnJSYV+fS3kZfZDfsD3
-X-Google-Smtp-Source: AGHT+IER1TZ6/6cZ6ZKlFfeXE6n50e/uF5QAVTD2rzp6CxVt73t5JgKva3ZV61KE5Wv2YHsTTO6jHQ==
-X-Received: by 2002:a25:7448:0:b0:dbd:bc3e:55e3 with SMTP id p69-20020a257448000000b00dbdbc3e55e3mr2891316ybc.69.1704818149346;
-        Tue, 09 Jan 2024 08:35:49 -0800 (PST)
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
-        by smtp.gmail.com with ESMTPSA id n7-20020a258087000000b00dbdb03e146bsm787681ybk.51.2024.01.09.08.35.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jan 2024 08:35:48 -0800 (PST)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5e7bb1e0db8so25448437b3.0;
-        Tue, 09 Jan 2024 08:35:48 -0800 (PST)
-X-Received: by 2002:a0d:c407:0:b0:5e2:5d71:56c with SMTP id
- g7-20020a0dc407000000b005e25d71056cmr4209408ywd.32.1704818148221; Tue, 09 Jan
- 2024 08:35:48 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC603A1CE;
+	Tue,  9 Jan 2024 16:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.adit-jv.com
+Received: from hi2exch02.adit-jv.com (hi2exch02.adit-jv.com [10.72.92.28])
+	by hi1smtp01.de.adit-jv.com (Postfix) with ESMTP id 0F427520442;
+	Tue,  9 Jan 2024 17:27:38 +0100 (CET)
+Received: from vmlxhi-118.adit-jv.com (10.72.93.77) by hi2exch02.adit-jv.com
+ (10.72.92.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 9 Jan
+ 2024 17:27:37 +0100
+Date: Tue, 9 Jan 2024 17:27:32 +0100
+From: Hardik Gajjar <hgajjar@de.adit-jv.com>
+To: John Keeping <john@keeping.me.uk>
+CC: Hardik Gajjar <hgajjar@de.adit-jv.com>, <gregkh@linuxfoundation.org>,
+	<stern@rowland.harvard.edu>, <linux-usb@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <erosca@de.adit-jv.com>,
+	<jlayton@kernel.org>, <brauner@kernel.org>
+Subject: Re: [PATCH v3] usb: gadget: f_fs: Add the missing get_alt callback
+Message-ID: <20240109162732.GA22184@vmlxhi-118.adit-jv.com>
+References: <20240102123419.13491-1-hgajjar@de.adit-jv.com>
+ <ZZaTl3mqeCY5xD_d@keeping.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231229074916.53547-1-andrea.righi@canonical.com>
-In-Reply-To: <20231229074916.53547-1-andrea.righi@canonical.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 9 Jan 2024 17:35:36 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV=AKt+mwY7svEq5gFPx41LoSQZ_USME5_MEdWQze13ww@mail.gmail.com>
-Message-ID: <CAMuHMdV=AKt+mwY7svEq5gFPx41LoSQZ_USME5_MEdWQze13ww@mail.gmail.com>
-Subject: Re: [PATCH] kernfs: convert kernfs_idr_lock to an irq safe raw spinlock
-To: Andrea Righi <andrea.righi@canonical.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, linux-kernel@vger.kernel.org, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZZaTl3mqeCY5xD_d@keeping.me.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: hi2exch02.adit-jv.com (10.72.92.28) To
+ hi2exch02.adit-jv.com (10.72.92.28)
 
-Hi Andrea,
+On Thu, Jan 04, 2024 at 11:16:39AM +0000, John Keeping wrote:
+> On Tue, Jan 02, 2024 at 01:34:19PM +0100, Hardik Gajjar wrote:
+> > The Apple CarLife iAP gadget has a descriptor with two alternate
+> > settings. The host sends the set_alt request to configure alt_setting
+> > 0 or 1, and this is verified by the subsequent get_alt request.
+> > 
+> > This patch implements and sets the get_alt callback. Without the
+> > get_alt callback, composite.c abruptly concludes the
+> > USB_REQ_GET/SET_INTERFACE request, assuming only one alt setting
+> > for the endpoint.
+> 
+> I still do not understand what happens if different alternate settings
+> have different endpoints.
+> 
+> Changing the alternate calls ffs_func_eps_disable() /
+> ffs_func_eps_enable() but those functions affect _all_ the configured
+> endpoints.  If f_fs moves to support multiple alternate settings, then
+> isn't there a problem with that behaviour?  Don't we need
+> ffs_func_eps_enable() to enable only the endpoints used by the current
+> alternate setting?
+> 
+> The commit message does not explain why this patch can be as simple as
+> it is and why there is no need to address any wider issues that there
+> seem to be from supporting multiple alternate settings.
+>
+If I understand correctly, for example, there are two alt settings: one with bNumEndpoint 3
+and the other with bNumEndpoint 2. So when there is a request from the host to switch to the
+alt setting that has two endpoints, with this patch, all three endpoints are reset and reconfigured
+again as altsetting one instead of altsetting two. This happens because there is no input yet from
+userspace about the endpoint descriptor for the newly requested alt-settings.
 
-On Fri, Dec 29, 2023 at 8:56=E2=80=AFAM Andrea Righi <andrea.righi@canonica=
-l.com> wrote:
-> bpf_cgroup_from_id() is basically a wrapper to cgroup_get_from_id(),
-> that is relying on kernfs to determine the right cgroup associated to
-> the target id.
->
-> As a kfunc, it has the potential to be attached to any function through
-> BPF, particularly in contexts where certain locks are held.
->
-> However, kernfs is not using an irq safe spinlock for kernfs_idr_lock,
-> that means any kernfs function that is acquiring this lock can be
-> interrupted and potentially hit bpf_cgroup_from_id() in the process,
-> triggering a deadlock.
->
-> For example, it is really easy to trigger a lockdep splat between
-> kernfs_idr_lock and rq->_lock, attaching a small BPF program to
-> __set_cpus_allowed_ptr_locked() that just calls bpf_cgroup_from_id():
->
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
->  WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
->  6.7.0-rc7-virtme #5 Not tainted
->  -----------------------------------------------------
->  repro/131 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
->  ffffffffb2dc4578 (kernfs_idr_lock){+.+.}-{2:2}, at: kernfs_find_and_get_=
-node_by_id+0x1d/0x80
->
->  and this task is already holding:
->  ffff911cbecaf218 (&rq->__lock){-.-.}-{2:2}, at: task_rq_lock+0x50/0xc0
->  which would create a new lock dependency:
->   (&rq->__lock){-.-.}-{2:2} -> (kernfs_idr_lock){+.+.}-{2:2}
->
->  but this new dependency connects a HARDIRQ-irq-safe lock:
->   (&rq->__lock){-.-.}-{2:2}
->
->  ... which became HARDIRQ-irq-safe at:
->    lock_acquire+0xbf/0x2b0
->    _raw_spin_lock_nested+0x2e/0x40
->    scheduler_tick+0x5d/0x170
->    update_process_times+0x9c/0xb0
->    tick_periodic+0x27/0xe0
->    tick_handle_periodic+0x24/0x70
->    __sysvec_apic_timer_interrupt+0x64/0x1a0
->    sysvec_apic_timer_interrupt+0x6f/0x80
->    asm_sysvec_apic_timer_interrupt+0x1a/0x20
->    memcpy+0xc/0x20
->    arch_dup_task_struct+0x15/0x30
->    copy_process+0x1ce/0x1eb0
->    kernel_clone+0xac/0x390
->    kernel_thread+0x6f/0xa0
->    kthreadd+0x199/0x230
->    ret_from_fork+0x31/0x50
->    ret_from_fork_asm+0x1b/0x30
->
->  to a HARDIRQ-irq-unsafe lock:
->   (kernfs_idr_lock){+.+.}-{2:2}
->
->  ... which became HARDIRQ-irq-unsafe at:
->  ...
->    lock_acquire+0xbf/0x2b0
->    _raw_spin_lock+0x30/0x40
->    __kernfs_new_node.isra.0+0x83/0x280
->    kernfs_create_root+0xf6/0x1d0
->    sysfs_init+0x1b/0x70
->    mnt_init+0xd9/0x2a0
->    vfs_caches_init+0xcf/0xe0
->    start_kernel+0x58a/0x6a0
->    x86_64_start_reservations+0x18/0x30
->    x86_64_start_kernel+0xc5/0xe0
->    secondary_startup_64_no_verify+0x178/0x17b
->
->  other info that might help us debug this:
->
->   Possible interrupt unsafe locking scenario:
->
->         CPU0                    CPU1
->         ----                    ----
->    lock(kernfs_idr_lock);
->                                 local_irq_disable();
->                                 lock(&rq->__lock);
->                                 lock(kernfs_idr_lock);
->    <Interrupt>
->      lock(&rq->__lock);
->
->   *** DEADLOCK ***
->
-> Prevent this deadlock condition converting kernfs_idr_lock to a raw irq
-> safe spinlock.
->
-> The performance impact of this change should be negligible and it also
-> helps to prevent similar deadlock conditions with any other subsystems
-> that may depend on kernfs.
->
-> Fixes: 332ea1f697be ("bpf: Add bpf_cgroup_from_id() kfunc")
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+I believe this should not happen in the case of the f_fs gadget because the composite/f_fs driver
+initializes all endpoints of all interfaces during the bind process, creates epfile, and increments the eps count.
+This means that when reinitializing the endpoints during the set_alt, it reinitializes all the endpoints, including
+the endpoints of the proposed alt setting.
 
-Thanks for your patch, which is now commit c312828c37a72fe2
-("kernfs: convert kernfs_idr_lock to an irq safe raw spinlock")
-in driver-core/driver-core-next.
+Userspace drivers need to ensure that they write the correct epfile after switching in altsettings.
+Also, they should make sure that the endpoints are not overridden when defining the descriptor.
+Below is an example of the descriptors we are using from userspace.
 
-Unfortunately this interacts badly with commit 4eff7d62abdeb293 ("Revert
-"mm/kmemleak: move the initialisation of object to __link_object"")
-in v6.7-rc5.
+			// Interface descriptor - fs_descs
+            // interface: 0 band width
+            (byte) 0x09, (byte) 0x04, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0xFF,
+            (byte) 0xF0, (byte) 0x01, (byte) 0x01,
 
-driver-core/driver-core-next is still at v6.7-rc3, so it does not
-yet have commit 4eff7d62abdeb293, and thus still triggers:
+            // interface: alt 1
+            (byte) 0x09, (byte) 0x04, (byte) 0x01, (byte) 0x01, (byte) 0x02, (byte) 0xFF,
+            (byte) 0xF0, (byte) 0x01, (byte) 0x01,
+            //  Endpoint descriptor
+            (byte) 0x07, (byte) 0x05, (byte) 0x81, (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+            (byte) 0x07, (byte) 0x05, (byte) 0x02, (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 
-    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-    [ BUG: Invalid wait context ]
-    6.7.0-rc3-kzm9g-00052-gc312828c37a7 #576 Not tainted
-    -----------------------------
-    swapper/0 is trying to lock:
-    c0c6e3c4 (&zone->lock){....}-{3:3}, at: __rmqueue_pcplist+0x358/0x3c8
-    other info that might help us debug this:
-    context-{5:5}
-    3 locks held by swapper/0:
-     #0: c0bf35a0 (slab_mutex){....}-{4:4}, at:
-kmem_cache_create_usercopy+0xc8/0x2d0
-     #1: c0bfab0c (kmemleak_lock){....}-{2:2}, at: __create_object+0x2c/0x7=
-c
-     #2: dfbc8c90 (&pcp->lock){....}-{3:3}, at:
-get_page_from_freelist+0x1a0/0x684
-    stack backtrace:
-    CPU: 0 PID: 0 Comm: swapper Not tainted
-6.7.0-rc3-kzm9g-00052-gc312828c37a7 #576
-    Hardware name: Generic SH73A0 (Flattened Device Tree)
-     unwind_backtrace from show_stack+0x10/0x14
-     show_stack from dump_stack_lvl+0x68/0x90
-     dump_stack_lvl from __lock_acquire+0x3cc/0x168c
-     __lock_acquire from lock_acquire+0x274/0x30c
-     lock_acquire from _raw_spin_lock_irqsave+0x50/0x64
-     _raw_spin_lock_irqsave from __rmqueue_pcplist+0x358/0x3c8
-     __rmqueue_pcplist from get_page_from_freelist+0x3bc/0x684
-     get_page_from_freelist from __alloc_pages+0xe8/0xad8
-     __alloc_pages from __stack_depot_save+0x160/0x398
-     __stack_depot_save from set_track_prepare+0x48/0x74
-     set_track_prepare from __link_object+0xac/0x204
-     __link_object from __create_object+0x48/0x7c
-     __create_object from kmemleak_alloc+0x2c/0x38
-     kmemleak_alloc from slab_post_alloc_hook.constprop.0+0x9c/0xac
-     slab_post_alloc_hook.constprop.0 from kmem_cache_alloc+0xcc/0x148
-     kmem_cache_alloc from kmem_cache_create_usercopy+0x1c4/0x2d0
-     kmem_cache_create_usercopy from kmem_cache_create+0x1c/0x24
-     kmem_cache_create from kmemleak_init+0x58/0xfc
-     kmemleak_init from mm_core_init+0x244/0x2c8
-     mm_core_init from start_kernel+0x274/0x528
-     start_kernel from 0x0
+            // Interface descriptor - hs_descs
+            // interface: 0 band width
+            (byte) 0x09, (byte) 0x04, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0xFF,
+            (byte) 0xF0, (byte) 0x01, (byte) 0x01,
 
-After merging driver-core/driver-core-next into a tree based on
-v6.7-rc5, or after cherry-picking commit 4eff7d62abdeb293 into
-driver-core/driver-core-next, the above BUG is gone, but a different
-one appears:
+            // Initialize high-speed interface descriptors
+            (byte) 0x09, (byte) 0x04, (byte) 0x01, (byte) 0x01, (byte) 0x02, (byte) 0xFF,
+            (byte) 0xF0, (byte) 0x01, (byte) 0x01,
+            // Initialize high-speed end-point descriptors
+            (byte) 0x07, (byte) 0x05, (byte) 0x81, (byte) 0x02, (byte) 0x00, (byte) 0x02, (byte) 0x00,
+            (byte) 0x07, (byte) 0x05, (byte) 0x02, (byte) 0x02, (byte) 0x00, (byte) 0x02, (byte) 0x01,
 
-    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-    [ BUG: Invalid wait context ]
-    6.7.0-rc5-kzm9g-00251-g655022a45b1c #578 Not tainted
-    -----------------------------
-    swapper/0/0 is trying to lock:
-    dfbcd488 (&c->lock){....}-{3:3}, at: local_lock_acquire+0x0/0xa4
-    other info that might help us debug this:
-    context-{5:5}
-    2 locks held by swapper/0/0:
-     #0: dfbc9c60 (lock){+.+.}-{3:3}, at: local_lock_acquire+0x0/0xa4
-     #1: c0c012a8 (kernfs_idr_lock){....}-{2:2}, at:
-__kernfs_new_node.constprop.0+0x68/0x258
-    stack backtrace:
-    CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-6.7.0-rc5-kzm9g-00251-g655022a45b1c #578
-    Hardware name: Generic SH73A0 (Flattened Device Tree)
-     unwind_backtrace from show_stack+0x10/0x14
-     show_stack from dump_stack_lvl+0x68/0x90
-     dump_stack_lvl from __lock_acquire+0x3cc/0x168c
-     __lock_acquire from lock_acquire+0x274/0x30c
-     lock_acquire from local_lock_acquire+0x28/0xa4
-     local_lock_acquire from ___slab_alloc+0x234/0x8a8
-     ___slab_alloc from __slab_alloc.constprop.0+0x30/0x44
-     __slab_alloc.constprop.0 from kmem_cache_alloc+0x7c/0x148
-     kmem_cache_alloc from radix_tree_node_alloc.constprop.0+0x44/0xdc
-     radix_tree_node_alloc.constprop.0 from idr_get_free+0x110/0x2b8
-     idr_get_free from idr_alloc_u32+0x9c/0x108
-     idr_alloc_u32 from idr_alloc_cyclic+0x50/0xb8
-     idr_alloc_cyclic from __kernfs_new_node.constprop.0+0x88/0x258
-     __kernfs_new_node.constprop.0 from kernfs_create_root+0xbc/0x154
-     kernfs_create_root from sysfs_init+0x18/0x5c
-     sysfs_init from mnt_init+0xc4/0x220
-     mnt_init from vfs_caches_init+0x6c/0x88
-     vfs_caches_init from start_kernel+0x474/0x528
-     start_kernel from 0x0
-
-Reverting commit c312828c37a72fe2 fixes that.
-I have seen this issue on several Renesas arm32 and arm64 platforms.
-
-Also, I am wondering if the issue fixed by commit c312828c37a72fe2
-can still be reproduced on v6.7-rc5 or later?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Please confirm and share your view.
+ 
+> > Signed-off-by: Hardik Gajjar <hgajjar@de.adit-jv.com>
+> > ---
+> > changes since version 1:
+> > 	- improve commit message to indicate why the get_alt callback
+> > 	  is necessary
+> > 	- Link to v1 - https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_all_20231124164435.74727-2D1-2Dhgajjar-40de.adit-2Djv.com_&d=DwICAg&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=SAhjP5GOmrADp1v_EE5jWoSuMlYCIt9gKduw-DCBPLs&m=vWvELMp9SHJnKh1jvRtJiGjnwn47jqfKsAjBDdMGF1-wjK3hGliKdP2ap6Az4efB&s=ajL0PmatFt2otvpDyZsjbMozcLP3OI4VhspIzjoUTLE&e=
+> > 
+> > changes since version 2:
+> > 	- Add the limit to allow set up to 2 alt settings.
+> > 	- Link to v2 - https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_all_20231201145234.97452-2D1-2Dhgajjar-40de.adit-2Djv.com_&d=DwICAg&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=SAhjP5GOmrADp1v_EE5jWoSuMlYCIt9gKduw-DCBPLs&m=vWvELMp9SHJnKh1jvRtJiGjnwn47jqfKsAjBDdMGF1-wjK3hGliKdP2ap6Az4efB&s=BSvxAb0iHeXEhufs_mU2MfCKbsrAwJMe7cCiAZq53yY&e=
+> > ---
+> >  drivers/usb/gadget/function/f_fs.c | 20 +++++++++++++++++++-
+> >  1 file changed, 19 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+> > index efe3e3b85769..22200d618184 100644
+> > --- a/drivers/usb/gadget/function/f_fs.c
+> > +++ b/drivers/usb/gadget/function/f_fs.c
+> > @@ -42,6 +42,7 @@
+> >  #include "configfs.h"
+> >  
+> >  #define FUNCTIONFS_MAGIC	0xa647361 /* Chosen by a honest dice roll ;) */
+> > +#define MAX_ALT_SETTINGS	2		  /* Allow up to 2 alt settings to be set. */
+> >  
+> >  /* Reference counter handling */
+> >  static void ffs_data_get(struct ffs_data *ffs);
+> > @@ -75,6 +76,7 @@ struct ffs_function {
+> >  	short				*interfaces_nums;
+> >  
+> >  	struct usb_function		function;
+> > +	int				cur_alt[MAX_CONFIG_INTERFACES];
+> >  };
+> >  
+> >  
+> > @@ -98,6 +100,7 @@ static int __must_check ffs_func_eps_enable(struct ffs_function *func);
+> >  static int ffs_func_bind(struct usb_configuration *,
+> >  			 struct usb_function *);
+> >  static int ffs_func_set_alt(struct usb_function *, unsigned, unsigned);
+> > +static int ffs_func_get_alt(struct usb_function *f, unsigned int intf);
+> >  static void ffs_func_disable(struct usb_function *);
+> >  static int ffs_func_setup(struct usb_function *,
+> >  			  const struct usb_ctrlrequest *);
+> > @@ -3232,6 +3235,15 @@ static void ffs_reset_work(struct work_struct *work)
+> >  	ffs_data_reset(ffs);
+> >  }
+> >  
+> > +static int ffs_func_get_alt(struct usb_function *f,
+> > +			    unsigned int interface)
+> > +{
+> > +	struct ffs_function *func = ffs_func_from_usb(f);
+> > +	int intf = ffs_func_revmap_intf(func, interface);
+> > +
+> > +	return (intf < 0) ? intf : func->cur_alt[interface];
+> > +}
+> > +
+> >  static int ffs_func_set_alt(struct usb_function *f,
+> >  			    unsigned interface, unsigned alt)
+> >  {
+> > @@ -3239,6 +3251,9 @@ static int ffs_func_set_alt(struct usb_function *f,
+> >  	struct ffs_data *ffs = func->ffs;
+> >  	int ret = 0, intf;
+> >  
+> > +	if (alt > MAX_ALT_SETTINGS)
+> > +		return -EINVAL;
+> > +
+> >  	if (alt != (unsigned)-1) {
+> >  		intf = ffs_func_revmap_intf(func, interface);
+> >  		if (intf < 0)
+> > @@ -3266,8 +3281,10 @@ static int ffs_func_set_alt(struct usb_function *f,
+> >  
+> >  	ffs->func = func;
+> >  	ret = ffs_func_eps_enable(func);
+> > -	if (ret >= 0)
+> > +	if (ret >= 0) {
+> >  		ffs_event_add(ffs, FUNCTIONFS_ENABLE);
+> > +		func->cur_alt[interface] = alt;
+> > +	}
+> >  	return ret;
+> >  }
+> >  
+> > @@ -3574,6 +3591,7 @@ static struct usb_function *ffs_alloc(struct usb_function_instance *fi)
+> >  	func->function.bind    = ffs_func_bind;
+> >  	func->function.unbind  = ffs_func_unbind;
+> >  	func->function.set_alt = ffs_func_set_alt;
+> > +	func->function.get_alt = ffs_func_get_alt;
+> >  	func->function.disable = ffs_func_disable;
+> >  	func->function.setup   = ffs_func_setup;
+> >  	func->function.req_match = ffs_func_req_match;
+> > -- 
+> > 2.17.1
+> > 
