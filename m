@@ -1,65 +1,85 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F272038F9A;
-	Tue,  9 Jan 2024 13:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GLm0jjhZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=HOt3XKn1cL8RiCwi3hZoWQh0woHeYDJpEgyYREq1Hn8=; b=GLm0jjhZJxgMyW7v6lQku4aFI4
-	TUuwdUGIHq8de+u+1HY0EehjLNVA7Ml2PKh38t2EALGEVtRhVv2qCZ25Y3hxoucW5Vt47LrElXYGQ
-	/RnVBvMn0bXWArRk/lkUTbVPGd9X6LEd9nWTeTxLP/UeVxZJ48zx0A5iOT8cdPW/UyFw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rNCZi-004pz2-4i; Tue, 09 Jan 2024 14:55:26 +0100
-Date: Tue, 9 Jan 2024 14:55:26 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Christian Marangi <ansuelsmth@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	William Zhang <william.zhang@broadcom.com>,
-	Anand Gore <anand.gore@broadcom.com>,
-	Kursad Oney <kursad.oney@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	=?iso-8859-1?Q?Fern=E1ndez?= Rojas <noltari@gmail.com>,
-	Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org
-Subject: Re: [net-next PATCH v9 0/5] net: phy: generic polarity + LED support
- for qca808x
-Message-ID: <edfd300f-224f-4ce6-930c-d9419a2077ab@lunn.ch>
-References: <20240105142719.11042-1-ansuelsmth@gmail.com>
- <20240108191427.6455185a@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7142538FA3;
+	Tue,  9 Jan 2024 13:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3bbe78dbd1aso348611b6e.1;
+        Tue, 09 Jan 2024 05:57:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704808660; x=1705413460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JJHgvOFzSW+JX3OnOy35lWmNxPoI3R11S86tQorDHH0=;
+        b=DLrKJHtVG5KsYRHf2FQJXiI7N+CvxcwwV2lrZIxDDYaupXYtwFgr5+U4ImvI9QtAuW
+         g/qBFqd1+LqrHTHjrMGQhMzEfX94kZIUVrnou+KfD+rRgKkGbUwmLpyQudvH72JPUNsu
+         rtb7WPTSjKudrYCkuk9+iB1wN/AO3qb9V1En51rUPYfs3PEwwtW5YIuogkO1L2Lgv80Y
+         hgKVDPvoUYXMcbBgPbm6Ez+9RH5dsXqVAFodKN1KT2IwvGhBxB4c77KrA4tW3x0GDykq
+         bmXUP/aeTqx6ztpDI3oy+4ho3vPwo03rjW5nXr6vN948pLt66jpnzNaPpPuFts9uJo0B
+         HWaQ==
+X-Gm-Message-State: AOJu0YyJ3ntPXy7SpbNyRNgd3gqGybkftZLVxBnekkW0c2g+xu3zIMT5
+	a6G3/muyHb4ebT3rD8STJB/J/k7KEH38w0VbnK8=
+X-Google-Smtp-Source: AGHT+IEFYMQhUKEmFNS7nfNb1EAhYvSqIBMprKgVBkg9Vy+ACaB3INvDtbMYdXs1Ax8YyGBm5pfYkEsl24hSW3bH8X0=
+X-Received: by 2002:a05:6870:65aa:b0:206:5411:f97b with SMTP id
+ fp42-20020a05687065aa00b002065411f97bmr2250765oab.4.1704808660361; Tue, 09
+ Jan 2024 05:57:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240108191427.6455185a@kernel.org>
+References: <20240105181118.116292-1-erick.archer@gmx.com> <b12b56a9-2d20-4802-bbc8-43f4831b3113@embeddedor.com>
+In-Reply-To: <b12b56a9-2d20-4802-bbc8-43f4831b3113@embeddedor.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 9 Jan 2024 14:57:29 +0100
+Message-ID: <CAJZ5v0iXindsbwBJsiknXxLrq=94rq3p=H_ux2pGpqzmjyRWkA@mail.gmail.com>
+Subject: Re: [PATCH] PM / QOS: Use kcalloc() instead of kzalloc()
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Erick Archer <erick.archer@gmx.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Looks like we're missing some tags from DTB maintainers here.
-> Andrew, is there some urgency in getting this merged or can we
-> defer until v6.9?
+On Fri, Jan 5, 2024 at 7:17=E2=80=AFPM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+>
+>
+> On 1/5/24 12:11, Erick Archer wrote:
+> > Use 2-factor multiplication argument form kcalloc() instead
+> > of kzalloc().
+> >
+> > Link: https://github.com/KSPP/linux/issues/162
+> > Signed-off-by: Erick Archer <erick.archer@gmx.com>
+>
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-It can wait.
+Applied as 6.8-rc1 material, thanks!
 
-	Andrew
+> > ---
+> >   drivers/base/power/qos.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/power/qos.c b/drivers/base/power/qos.c
+> > index 8e93167f1783..bd77f6734f14 100644
+> > --- a/drivers/base/power/qos.c
+> > +++ b/drivers/base/power/qos.c
+> > @@ -201,7 +201,7 @@ static int dev_pm_qos_constraints_allocate(struct d=
+evice *dev)
+> >       if (!qos)
+> >               return -ENOMEM;
+> >
+> > -     n =3D kzalloc(3 * sizeof(*n), GFP_KERNEL);
+> > +     n =3D kcalloc(3, sizeof(*n), GFP_KERNEL);
+> >       if (!n) {
+> >               kfree(qos);
+> >               return -ENOMEM;
+> > --
+> > 2.42.0
+> >
+> >
