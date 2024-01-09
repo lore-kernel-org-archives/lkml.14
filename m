@@ -1,40 +1,40 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662A83EA60;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C316F3EA74;
 	Tue,  9 Jan 2024 19:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bnceqlAr"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409IeRwr005755;
-	Tue, 9 Jan 2024 19:37:58 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KlGrxGc5"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409EjSYZ004292;
+	Tue, 9 Jan 2024 19:37:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=4qiqaM4jJd8zGHPZYjmgu0l1JblGJ6sPIsRdN2U0BMc
-	=; b=bnceqlAru+3cNJwcaW3SUuwQZe81XenMVLM7ojxK3lszLcFa1xlkT9yQg6f
-	wg/5uHBN6NJspj68vcNUgNeKW//jAVUQOh9ca6OTkR3M6ESp2mixPzDovwar7YXE
-	3I5jV+1sRTXyFL8Hv0Nx4DV+yVmo6IIeg3eTEub2W5RZQnJ0pv6rEbCmP4Pj8+1I
-	DoiPWetPG+dUQUnTmi4CgMuepnHvjOTjvhkcAdo26tZUg1B9DoRikGB2Mig9C8Cb
-	ln4fpxDbwd9cg/8Em4p19BmwLo7tOJz346lmRnWzdFIZGNEiXmDTS+2VyXhxTfBq
-	zCyOppkUcOSdqKVdIloy47IzoDw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh98m8hqt-1
+	:cc; s=qcppdkim1; bh=jdOcH+5uREAma+X+LuNjKDUhpy77XJ6kXrkSC1c7CX8
+	=; b=KlGrxGc5OBrYUf9bDGI4fqF+5xX3L9z+7BdCf3wizObiiGWcQ51rnfQr6Sp
+	0PRmrqZX1RhiDjht6PYl5TT/p3M6JVBAaMg9gsL/uQym5AuS3KWh9JO6q13aHVH3
+	JOw0AuhV12GqaiezNXvotX0cCR3HLW5GHcl4QnvU7u83QjgOyiVMQSgak8xOMn6G
+	9q0PBaNGpoNzQsY84RM6Vo6BZ0Ox6Hnbr4yZjnp1UQnuhomekFk6vv5f2ygpCKwk
+	p1Rfhs1OJ0wviwLX+eyThMHMtDftjjYntBOfO1f9T9iUCTHWeT3H+zWMNqDk4M/s
+	SpeT4Gvhn/YpDt5HGHfITcvRfCQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgxxbhtdq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 19:37:58 +0000 (GMT)
+	Tue, 09 Jan 2024 19:37:56 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409Jbv3C030413
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409JbtFk024536
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jan 2024 19:37:57 GMT
+	Tue, 9 Jan 2024 19:37:55 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 9 Jan 2024 11:37:56 -0800
+ 15.2.1118.40; Tue, 9 Jan 2024 11:37:54 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Tue, 9 Jan 2024 11:37:50 -0800
-Subject: [PATCH v16 12/34] virt: gunyah: Add resource tickets
+Date: Tue, 9 Jan 2024 11:37:47 -0800
+Subject: [PATCH v16 09/34] gunyah: rsc_mgr: Add VM lifecycle RPC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240109-gunyah-v16-12-634904bf4ce9@quicinc.com>
+Message-ID: <20240109-gunyah-v16-9-634904bf4ce9@quicinc.com>
 References: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
 In-Reply-To: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
 To: Alex Elder <elder@linaro.org>,
@@ -83,294 +83,371 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: -_URcr59O8AG3f6gWqPnDYkWBNleK7zF
-X-Proofpoint-GUID: -_URcr59O8AG3f6gWqPnDYkWBNleK7zF
+X-Proofpoint-ORIG-GUID: l8dGEkiNtnOwwtVWaPmjPcS74FvkOAye
+X-Proofpoint-GUID: l8dGEkiNtnOwwtVWaPmjPcS74FvkOAye
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- malwarescore=0 mlxlogscore=999 suspectscore=0 clxscore=1015 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 phishscore=0 spamscore=0
+ clxscore=1015 mlxscore=0 adultscore=0 impostorscore=0 malwarescore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2311290000 definitions=main-2401090158
 
-Some VM functions need to acquire Gunyah resources. For instance, Gunyah
-vCPUs are exposed to the host as a resource. The Gunyah vCPU function
-will register a resource ticket and be able to interact with the
-hypervisor once the resource ticket is filled.
+Add Gunyah Resource Manager RPC interfaces to launch an unauthenticated
+virtual machine.
 
-Resource tickets are the mechanism for functions to acquire ownership of
-Gunyah resources. Gunyah functions can be created before the VM's
-resources are created and made available to Linux. A resource ticket
-identifies a type of resource and a label of a resource which the ticket
-holder is interested in.
-
-Resources are created by Gunyah as configured in the VM's devicetree
-configuration. Gunyah doesn't process the label and that makes it
-possible for userspace to create multiple resources with the same label.
-Resource ticket owners need to be prepared for populate to be called
-multiple times if userspace created multiple resources with the same
-label.
-
-Reviewed-by: Alex Elder <elder@linaro.org>
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/virt/gunyah/vm_mgr.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
- drivers/virt/gunyah/vm_mgr.h |   7 +++
- include/linux/gunyah.h       |  39 +++++++++++++
- 3 files changed, 173 insertions(+), 1 deletion(-)
+ drivers/virt/gunyah/Makefile      |   2 +-
+ drivers/virt/gunyah/rsc_mgr.h     |  78 +++++++++++++
+ drivers/virt/gunyah/rsc_mgr_rpc.c | 238 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 317 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virt/gunyah/vm_mgr.c b/drivers/virt/gunyah/vm_mgr.c
-index f6e6b5669aae..65badcf6357b 100644
---- a/drivers/virt/gunyah/vm_mgr.c
-+++ b/drivers/virt/gunyah/vm_mgr.c
-@@ -15,6 +15,106 @@
- #include "rsc_mgr.h"
- #include "vm_mgr.h"
+diff --git a/drivers/virt/gunyah/Makefile b/drivers/virt/gunyah/Makefile
+index ceccbbe68b38..47f1fae5419b 100644
+--- a/drivers/virt/gunyah/Makefile
++++ b/drivers/virt/gunyah/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
  
-+int gunyah_vm_add_resource_ticket(struct gunyah_vm *ghvm,
-+				  struct gunyah_vm_resource_ticket *ticket)
-+{
-+	struct gunyah_vm_resource_ticket *iter;
-+	struct gunyah_resource *ghrsc, *rsc_iter;
-+	int ret = 0;
-+
-+	mutex_lock(&ghvm->resources_lock);
-+	list_for_each_entry(iter, &ghvm->resource_tickets, vm_list) {
-+		if (iter->resource_type == ticket->resource_type &&
-+		    iter->label == ticket->label) {
-+			ret = -EEXIST;
-+			goto out;
-+		}
-+	}
-+
-+	if (!try_module_get(ticket->owner)) {
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	list_add(&ticket->vm_list, &ghvm->resource_tickets);
-+	INIT_LIST_HEAD(&ticket->resources);
-+
-+	list_for_each_entry_safe(ghrsc, rsc_iter, &ghvm->resources, list) {
-+		if (ghrsc->type == ticket->resource_type &&
-+		    ghrsc->rm_label == ticket->label) {
-+			if (ticket->populate(ticket, ghrsc))
-+				list_move(&ghrsc->list, &ticket->resources);
-+		}
-+	}
-+out:
-+	mutex_unlock(&ghvm->resources_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(gunyah_vm_add_resource_ticket);
-+
-+void gunyah_vm_remove_resource_ticket(struct gunyah_vm *ghvm,
-+				      struct gunyah_vm_resource_ticket *ticket)
-+{
-+	struct gunyah_resource *ghrsc, *iter;
-+
-+	mutex_lock(&ghvm->resources_lock);
-+	list_for_each_entry_safe(ghrsc, iter, &ticket->resources, list) {
-+		ticket->unpopulate(ticket, ghrsc);
-+		list_move(&ghrsc->list, &ghvm->resources);
-+	}
-+
-+	module_put(ticket->owner);
-+	list_del(&ticket->vm_list);
-+	mutex_unlock(&ghvm->resources_lock);
-+}
-+EXPORT_SYMBOL_GPL(gunyah_vm_remove_resource_ticket);
-+
-+static void gunyah_vm_add_resource(struct gunyah_vm *ghvm,
-+				   struct gunyah_resource *ghrsc)
-+{
-+	struct gunyah_vm_resource_ticket *ticket;
-+
-+	mutex_lock(&ghvm->resources_lock);
-+	list_for_each_entry(ticket, &ghvm->resource_tickets, vm_list) {
-+		if (ghrsc->type == ticket->resource_type &&
-+		    ghrsc->rm_label == ticket->label) {
-+			if (ticket->populate(ticket, ghrsc))
-+				list_add(&ghrsc->list, &ticket->resources);
-+			else
-+				list_add(&ghrsc->list, &ghvm->resources);
-+			/* unconditonal -- we prevent multiple identical
-+			 * resource tickets so there will not be some other
-+			 * ticket elsewhere in the list if populate() failed.
-+			 */
-+			goto found;
-+		}
-+	}
-+	list_add(&ghrsc->list, &ghvm->resources);
-+found:
-+	mutex_unlock(&ghvm->resources_lock);
-+}
-+
-+static void gunyah_vm_clean_resources(struct gunyah_vm *ghvm)
-+{
-+	struct gunyah_vm_resource_ticket *ticket, *titer;
-+	struct gunyah_resource *ghrsc, *riter;
-+
-+	mutex_lock(&ghvm->resources_lock);
-+	if (!list_empty(&ghvm->resource_tickets)) {
-+		dev_warn(ghvm->parent, "Dangling resource tickets:\n");
-+		list_for_each_entry_safe(ticket, titer, &ghvm->resource_tickets,
-+					 vm_list) {
-+			dev_warn(ghvm->parent, "  %pS\n", ticket->populate);
-+			gunyah_vm_remove_resource_ticket(ghvm, ticket);
-+		}
-+	}
-+
-+	list_for_each_entry_safe(ghrsc, riter, &ghvm->resources, list) {
-+		gunyah_rm_free_resource(ghrsc);
-+	}
-+	mutex_unlock(&ghvm->resources_lock);
-+}
-+
- static int gunyah_vm_rm_notification_status(struct gunyah_vm *ghvm, void *data)
- {
- 	struct gunyah_rm_vm_status_payload *payload = data;
-@@ -92,13 +192,18 @@ static __must_check struct gunyah_vm *gunyah_vm_alloc(struct gunyah_rm *rm)
- 	init_rwsem(&ghvm->status_lock);
- 	init_waitqueue_head(&ghvm->vm_status_wait);
- 	ghvm->vm_status = GUNYAH_RM_VM_STATUS_NO_STATE;
-+	mutex_init(&ghvm->resources_lock);
-+	INIT_LIST_HEAD(&ghvm->resources);
-+	INIT_LIST_HEAD(&ghvm->resource_tickets);
+-gunyah_rsc_mgr-y += rsc_mgr.o vm_mgr.o
++gunyah_rsc_mgr-y += rsc_mgr.o rsc_mgr_rpc.o vm_mgr.o
  
- 	return ghvm;
- }
+ obj-$(CONFIG_GUNYAH) += gunyah.o gunyah_rsc_mgr.o
+diff --git a/drivers/virt/gunyah/rsc_mgr.h b/drivers/virt/gunyah/rsc_mgr.h
+index 21318ef25040..205b9ea735e5 100644
+--- a/drivers/virt/gunyah/rsc_mgr.h
++++ b/drivers/virt/gunyah/rsc_mgr.h
+@@ -20,6 +20,84 @@ int gunyah_rm_notifier_unregister(struct gunyah_rm *rm,
+ struct device *gunyah_rm_get(struct gunyah_rm *rm);
+ void gunyah_rm_put(struct gunyah_rm *rm);
  
- static int gunyah_vm_start(struct gunyah_vm *ghvm)
- {
--	int ret;
-+	struct gunyah_rm_hyp_resources *resources;
-+	struct gunyah_resource *ghrsc;
-+	int ret, i, n;
- 
- 	down_write(&ghvm->status_lock);
- 	if (ghvm->vm_status != GUNYAH_RM_VM_STATUS_NO_STATE) {
-@@ -134,6 +239,25 @@ static int gunyah_vm_start(struct gunyah_vm *ghvm)
- 	}
- 	ghvm->vm_status = GUNYAH_RM_VM_STATUS_READY;
- 
-+	ret = gunyah_rm_get_hyp_resources(ghvm->rm, ghvm->vmid, &resources);
-+	if (ret) {
-+		dev_warn(ghvm->parent,
-+			 "Failed to get hypervisor resources for VM: %d\n",
-+			 ret);
-+		goto err;
-+	}
++struct gunyah_rm_vm_exited_payload {
++	__le16 vmid;
++	__le16 exit_type;
++	__le32 exit_reason_size;
++	u8 exit_reason[];
++} __packed;
 +
-+	for (i = 0, n = le32_to_cpu(resources->n_entries); i < n; i++) {
-+		ghrsc = gunyah_rm_alloc_resource(ghvm->rm,
-+						 &resources->entries[i]);
-+		if (!ghrsc) {
-+			ret = -ENOMEM;
-+			goto err;
-+		}
-+
-+		gunyah_vm_add_resource(ghvm, ghrsc);
-+	}
-+
- 	ret = gunyah_rm_vm_start(ghvm->rm, ghvm->vmid);
- 	if (ret) {
- 		dev_warn(ghvm->parent, "Failed to start VM: %d\n", ret);
-@@ -209,6 +333,8 @@ static int gunyah_vm_release(struct inode *inode, struct file *filp)
- 	if (ghvm->vm_status == GUNYAH_RM_VM_STATUS_RUNNING)
- 		gunyah_vm_stop(ghvm);
- 
-+	gunyah_vm_clean_resources(ghvm);
-+
- 	if (ghvm->vm_status != GUNYAH_RM_VM_STATUS_NO_STATE &&
- 	    ghvm->vm_status != GUNYAH_RM_VM_STATUS_LOAD &&
- 	    ghvm->vm_status != GUNYAH_RM_VM_STATUS_RESET) {
-diff --git a/drivers/virt/gunyah/vm_mgr.h b/drivers/virt/gunyah/vm_mgr.h
-index e6cc9aead0b6..0d291f722885 100644
---- a/drivers/virt/gunyah/vm_mgr.h
-+++ b/drivers/virt/gunyah/vm_mgr.h
-@@ -26,6 +26,9 @@ long gunyah_dev_vm_mgr_ioctl(struct gunyah_rm *rm, unsigned int cmd,
-  * @vm_status: Current state of the VM, as last reported by RM
-  * @vm_status_wait: Wait queue for status @vm_status changes
-  * @status_lock: Serializing state transitions
-+ * @resource_lock: Serializing addition of resources and resource tickets
-+ * @resources: List of &struct gunyah_resource that are associated with this VM
-+ * @resource_tickets: List of &struct gunyah_vm_resource_ticket
-  * @auth: Authentication mechanism to be used by resource manager when
-  *        launching the VM
-  *
-@@ -39,9 +42,13 @@ struct gunyah_vm {
- 	enum gunyah_rm_vm_status vm_status;
- 	wait_queue_head_t vm_status_wait;
- 	struct rw_semaphore status_lock;
-+	struct mutex resources_lock;
-+	struct list_head resources;
-+	struct list_head resource_tickets;
- 
- 	struct device *parent;
- 	enum gunyah_rm_vm_auth_mechanism auth;
-+
- };
- 
- #endif
-diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
-index ede8abb1b276..001769100260 100644
---- a/include/linux/gunyah.h
-+++ b/include/linux/gunyah.h
-@@ -10,6 +10,7 @@
- #include <linux/errno.h>
- #include <linux/interrupt.h>
- #include <linux/limits.h>
-+#include <linux/list.h>
- #include <linux/types.h>
- 
- /* Matches resource manager's resource types for VM_GET_HYP_RESOURCES RPC */
-@@ -34,6 +35,44 @@ struct gunyah_resource {
- 	u32 rm_label;
- };
- 
-+struct gunyah_vm;
-+
-+/**
-+ * struct gunyah_vm_resource_ticket - Represents a ticket to reserve access to VM resource(s)
-+ * @vm_list: for @gunyah_vm->resource_tickets
-+ * @resources: List of resource(s) associated with this ticket
-+ *             (members are from @gunyah_resource->list)
-+ * @resource_type: Type of resource this ticket reserves
-+ * @label: Label of the resource from resource manager this ticket reserves.
-+ * @owner: owner of the ticket
-+ * @populate: callback provided by the ticket owner and called when a resource is found that
-+ *            matches @resource_type and @label. Note that this callback could be called
-+ *            multiple times if userspace created mutliple resources with the same type/label.
-+ *            This callback may also have significant delay after gunyah_vm_add_resource_ticket()
-+ *            since gunyah_vm_add_resource_ticket() could be called before the VM starts.
-+ * @unpopulate: callback provided by the ticket owner and called when the ticket owner should no
-+ *              longer use the resource provided in the argument. When unpopulate() returns,
-+ *              the ticket owner should not be able to use the resource any more as the resource
-+ *              might being freed.
-+ */
-+struct gunyah_vm_resource_ticket {
-+	struct list_head vm_list;
-+	struct list_head resources;
-+	enum gunyah_resource_type resource_type;
-+	u32 label;
-+
-+	struct module *owner;
-+	bool (*populate)(struct gunyah_vm_resource_ticket *ticket,
-+			 struct gunyah_resource *ghrsc);
-+	void (*unpopulate)(struct gunyah_vm_resource_ticket *ticket,
-+			   struct gunyah_resource *ghrsc);
++enum gunyah_rm_notification_id {
++	/* clang-format off */
++	GUNYAH_RM_NOTIFICATION_VM_EXITED		 = 0x56100001,
++	GUNYAH_RM_NOTIFICATION_VM_STATUS		 = 0x56100008,
++	/* clang-format on */
 +};
 +
-+int gunyah_vm_add_resource_ticket(struct gunyah_vm *ghvm,
-+				  struct gunyah_vm_resource_ticket *ticket);
-+void gunyah_vm_remove_resource_ticket(struct gunyah_vm *ghvm,
-+				      struct gunyah_vm_resource_ticket *ticket);
++enum gunyah_rm_vm_status {
++	/* clang-format off */
++	GUNYAH_RM_VM_STATUS_NO_STATE		= 0,
++	GUNYAH_RM_VM_STATUS_INIT		= 1,
++	GUNYAH_RM_VM_STATUS_READY		= 2,
++	GUNYAH_RM_VM_STATUS_RUNNING		= 3,
++	GUNYAH_RM_VM_STATUS_PAUSED		= 4,
++	GUNYAH_RM_VM_STATUS_LOAD		= 5,
++	GUNYAH_RM_VM_STATUS_AUTH		= 6,
++	GUNYAH_RM_VM_STATUS_INIT_FAILED		= 8,
++	GUNYAH_RM_VM_STATUS_EXITED		= 9,
++	GUNYAH_RM_VM_STATUS_RESETTING		= 10,
++	GUNYAH_RM_VM_STATUS_RESET		= 11,
++	/* clang-format on */
++};
 +
- /******************************************************************************/
- /* Common arch-independent definitions for Gunyah hypercalls                  */
- #define GUNYAH_CAPID_INVAL U64_MAX
++struct gunyah_rm_vm_status_payload {
++	__le16 vmid;
++	u16 reserved;
++	u8 vm_status;
++	u8 os_status;
++	__le16 app_status;
++} __packed;
++
++int gunyah_rm_alloc_vmid(struct gunyah_rm *rm, u16 vmid);
++int gunyah_rm_dealloc_vmid(struct gunyah_rm *rm, u16 vmid);
++int gunyah_rm_vm_reset(struct gunyah_rm *rm, u16 vmid);
++int gunyah_rm_vm_start(struct gunyah_rm *rm, u16 vmid);
++int gunyah_rm_vm_stop(struct gunyah_rm *rm, u16 vmid);
++
++enum gunyah_rm_vm_auth_mechanism {
++	/* clang-format off */
++	GUNYAH_RM_VM_AUTH_NONE			= 0,
++	GUNYAH_RM_VM_AUTH_QCOM_PIL_ELF		= 1,
++	GUNYAH_RM_VM_AUTH_QCOM_ANDROID_PVM	= 2,
++	/* clang-format on */
++};
++
++int gunyah_rm_vm_configure(struct gunyah_rm *rm, u16 vmid,
++			   enum gunyah_rm_vm_auth_mechanism auth_mechanism,
++			   u32 mem_handle, u64 image_offset, u64 image_size,
++			   u64 dtb_offset, u64 dtb_size);
++int gunyah_rm_vm_init(struct gunyah_rm *rm, u16 vmid);
++
++struct gunyah_rm_hyp_resource {
++	u8 type;
++	u8 reserved;
++	__le16 partner_vmid;
++	__le32 resource_handle;
++	__le32 resource_label;
++	__le64 cap_id;
++	__le32 virq_handle;
++	__le32 virq;
++	__le64 base;
++	__le64 size;
++} __packed;
++
++struct gunyah_rm_hyp_resources {
++	__le32 n_entries;
++	struct gunyah_rm_hyp_resource entries[];
++} __packed;
++
++int gunyah_rm_get_hyp_resources(struct gunyah_rm *rm, u16 vmid,
++				struct gunyah_rm_hyp_resources **resources);
+ 
+ int gunyah_rm_call(struct gunyah_rm *rsc_mgr, u32 message_id,
+ 		   const void *req_buf, size_t req_buf_size, void **resp_buf,
+diff --git a/drivers/virt/gunyah/rsc_mgr_rpc.c b/drivers/virt/gunyah/rsc_mgr_rpc.c
+new file mode 100644
+index 000000000000..141ce0145e91
+--- /dev/null
++++ b/drivers/virt/gunyah/rsc_mgr_rpc.c
+@@ -0,0 +1,238 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include "rsc_mgr.h"
++
++/* Message IDs: VM Management */
++/* clang-format off */
++#define GUNYAH_RM_RPC_VM_ALLOC_VMID		0x56000001
++#define GUNYAH_RM_RPC_VM_DEALLOC_VMID		0x56000002
++#define GUNYAH_RM_RPC_VM_START			0x56000004
++#define GUNYAH_RM_RPC_VM_STOP			0x56000005
++#define GUNYAH_RM_RPC_VM_RESET			0x56000006
++#define GUNYAH_RM_RPC_VM_CONFIG_IMAGE		0x56000009
++#define GUNYAH_RM_RPC_VM_INIT			0x5600000B
++#define GUNYAH_RM_RPC_VM_GET_HYP_RESOURCES	0x56000020
++/* clang-format on */
++
++struct gunyah_rm_vm_common_vmid_req {
++	__le16 vmid;
++	__le16 _padding;
++} __packed;
++
++/* Call: VM_ALLOC */
++struct gunyah_rm_vm_alloc_vmid_resp {
++	__le16 vmid;
++	__le16 _padding;
++} __packed;
++
++/* Call: VM_STOP */
++#define GUNYAH_RM_VM_STOP_FLAG_FORCE_STOP BIT(0)
++
++#define GUNYAH_RM_VM_STOP_REASON_FORCE_STOP 3
++
++struct gunyah_rm_vm_stop_req {
++	__le16 vmid;
++	u8 flags;
++	u8 _padding;
++	__le32 stop_reason;
++} __packed;
++
++/* Call: VM_CONFIG_IMAGE */
++struct gunyah_rm_vm_config_image_req {
++	__le16 vmid;
++	__le16 auth_mech;
++	__le32 mem_handle;
++	__le64 image_offset;
++	__le64 image_size;
++	__le64 dtb_offset;
++	__le64 dtb_size;
++} __packed;
++
++/*
++ * Several RM calls take only a VMID as a parameter and give only standard
++ * response back. Deduplicate boilerplate code by using this common call.
++ */
++static int gunyah_rm_common_vmid_call(struct gunyah_rm *rm, u32 message_id,
++				      u16 vmid)
++{
++	struct gunyah_rm_vm_common_vmid_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++	};
++
++	return gunyah_rm_call(rm, message_id, &req_payload, sizeof(req_payload),
++			      NULL, NULL);
++}
++
++/**
++ * gunyah_rm_alloc_vmid() - Allocate a new VM in Gunyah. Returns the VM identifier.
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: Use 0 to dynamically allocate a VM. A reserved VMID can be supplied
++ *        to request allocation of a platform-defined VM.
++ *
++ * Return: the allocated VMID or negative value on error
++ */
++int gunyah_rm_alloc_vmid(struct gunyah_rm *rm, u16 vmid)
++{
++	struct gunyah_rm_vm_common_vmid_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++	};
++	struct gunyah_rm_vm_alloc_vmid_resp *resp_payload;
++	size_t resp_size;
++	void *resp;
++	int ret;
++
++	ret = gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_ALLOC_VMID, &req_payload,
++			     sizeof(req_payload), &resp, &resp_size);
++	if (ret)
++		return ret;
++
++	if (!vmid) {
++		resp_payload = resp;
++		ret = le16_to_cpu(resp_payload->vmid);
++		kfree(resp);
++	}
++
++	return ret;
++}
++
++/**
++ * gunyah_rm_dealloc_vmid() - Dispose of a VMID
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ */
++int gunyah_rm_dealloc_vmid(struct gunyah_rm *rm, u16 vmid)
++{
++	return gunyah_rm_common_vmid_call(rm, GUNYAH_RM_RPC_VM_DEALLOC_VMID,
++					  vmid);
++}
++
++/**
++ * gunyah_rm_vm_reset() - Reset a VM's resources
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ *
++ * As part of tearing down the VM, request RM to clean up all the VM resources
++ * associated with the VM. Only after this, Linux can clean up all the
++ * references it maintains to resources.
++ */
++int gunyah_rm_vm_reset(struct gunyah_rm *rm, u16 vmid)
++{
++	return gunyah_rm_common_vmid_call(rm, GUNYAH_RM_RPC_VM_RESET, vmid);
++}
++
++/**
++ * gunyah_rm_vm_start() - Move a VM into "ready to run" state
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ *
++ * On VMs which use proxy scheduling, vcpu_run is needed to actually run the VM.
++ * On VMs which use Gunyah's scheduling, the vCPUs start executing in accordance with Gunyah
++ * scheduling policies.
++ */
++int gunyah_rm_vm_start(struct gunyah_rm *rm, u16 vmid)
++{
++	return gunyah_rm_common_vmid_call(rm, GUNYAH_RM_RPC_VM_START, vmid);
++}
++
++/**
++ * gunyah_rm_vm_stop() - Send a request to Resource Manager VM to forcibly stop a VM.
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ */
++int gunyah_rm_vm_stop(struct gunyah_rm *rm, u16 vmid)
++{
++	struct gunyah_rm_vm_stop_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++		.flags = GUNYAH_RM_VM_STOP_FLAG_FORCE_STOP,
++		.stop_reason = cpu_to_le32(GUNYAH_RM_VM_STOP_REASON_FORCE_STOP),
++	};
++
++	return gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_STOP, &req_payload,
++			      sizeof(req_payload), NULL, NULL);
++}
++
++/**
++ * gunyah_rm_vm_configure() - Prepare a VM to start and provide the common
++ *			  configuration needed by RM to configure a VM
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ * @auth_mechanism: Authentication mechanism used by resource manager to verify
++ *                  the virtual machine
++ * @mem_handle: Handle to a previously shared memparcel that contains all parts
++ *              of the VM image subject to authentication.
++ * @image_offset: Start address of VM image, relative to the start of memparcel
++ * @image_size: Size of the VM image
++ * @dtb_offset: Start address of the devicetree binary with VM configuration,
++ *              relative to start of memparcel.
++ * @dtb_size: Maximum size of devicetree binary.
++ */
++int gunyah_rm_vm_configure(struct gunyah_rm *rm, u16 vmid,
++			   enum gunyah_rm_vm_auth_mechanism auth_mechanism,
++			   u32 mem_handle, u64 image_offset, u64 image_size,
++			   u64 dtb_offset, u64 dtb_size)
++{
++	struct gunyah_rm_vm_config_image_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++		.auth_mech = cpu_to_le16(auth_mechanism),
++		.mem_handle = cpu_to_le32(mem_handle),
++		.image_offset = cpu_to_le64(image_offset),
++		.image_size = cpu_to_le64(image_size),
++		.dtb_offset = cpu_to_le64(dtb_offset),
++		.dtb_size = cpu_to_le64(dtb_size),
++	};
++
++	return gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_CONFIG_IMAGE, &req_payload,
++			      sizeof(req_payload), NULL, NULL);
++}
++
++/**
++ * gunyah_rm_vm_init() - Move the VM to initialized state.
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier
++ *
++ * RM will allocate needed resources for the VM.
++ */
++int gunyah_rm_vm_init(struct gunyah_rm *rm, u16 vmid)
++{
++	return gunyah_rm_common_vmid_call(rm, GUNYAH_RM_RPC_VM_INIT, vmid);
++}
++
++/**
++ * gunyah_rm_get_hyp_resources() - Retrieve hypervisor resources (capabilities) associated with a VM
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VMID of the other VM to get the resources of
++ * @resources: Set by gunyah_rm_get_hyp_resources and contains the returned hypervisor resources.
++ *             Caller must free the resources pointer if successful.
++ */
++int gunyah_rm_get_hyp_resources(struct gunyah_rm *rm, u16 vmid,
++				struct gunyah_rm_hyp_resources **resources)
++{
++	struct gunyah_rm_vm_common_vmid_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++	};
++	struct gunyah_rm_hyp_resources *resp;
++	size_t resp_size;
++	int ret;
++
++	ret = gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_GET_HYP_RESOURCES,
++			     &req_payload, sizeof(req_payload), (void **)&resp,
++			     &resp_size);
++	if (ret)
++		return ret;
++
++	if (!resp_size)
++		return -EBADMSG;
++
++	if (resp_size < struct_size(resp, entries, 0) ||
++	    resp_size !=
++		    struct_size(resp, entries, le32_to_cpu(resp->n_entries))) {
++		kfree(resp);
++		return -EBADMSG;
++	}
++
++	*resources = resp;
++	return 0;
++}
 
 -- 
 2.34.1
