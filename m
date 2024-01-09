@@ -1,111 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C9629410;
-	Tue,  9 Jan 2024 09:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CA32E828
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 09:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXDIjDdd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF651C433F1;
-	Tue,  9 Jan 2024 09:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704791241;
-	bh=dSOcicXkDevstKESzuK8GI+KUchpjc7Y4JI1vu4BtEU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dXDIjDddKtKhlVJ1zo6hgzHmmHevF42ed2L6EuK9GEQpiV3/PvamCbvGMvNbN2LnF
-	 feRMKlu20+MmGjZVhqqJ+sZRfSIryZxvFT+KM7cH5wUkBuHcN/1L3pMDlBnB1qn2Vf
-	 68sor1/Pex+OjDtDCTdEk+h4MwikRscwXywxAl1MeON+WWtJ5hA8AConCrti22ocNU
-	 7h3Tt8a/6GtX1q5QefqNWayy2yqH2FFu/FMcxQ8tHfhyaYK4buF/vDIh+adtXdLn+j
-	 +Lp9ZkA29qVtz+Qsw+iFr+FzXByfS5PKBPc/5u5hVwEG6W3+xARtCM1/7iQDhFtxYa
-	 p5aQ8hjU4Ii6g==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AwCvysMn"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e4d778e5eso6489455e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 01:08:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704791282; x=1705396082; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jj5iNAb0vOYUNWOsVLfq/Kug7eJUVIVzh2hyRWQ9KUw=;
+        b=AwCvysMnVtsr48eVgqGW/PjoXAEIMAVqxjxtgNU488yAk3Emg2FaAirTIL4vF99jKy
+         GVbJqP44qutP2j8L+QCu1D080k9cedMcScSVuwrmtLIXgbyVRY0U4mousSVKDs3/GVHN
+         8X7103W4uytsOMZwextInwpNvHJk5eBqmunefOKluAsiFwiVo45XlV3AmzSS4GiNYKnA
+         6daDPp35WIl6ZX9IHNImLnErQKkm6RZLp6saf4eCSUoCG3ULYePG7XEFQh9FHtE+Qif7
+         AsTQ/uWNvYyB27unCU3ieThkecAocXcQLZ69kChQ78mSrBCajfNPzJiN2fNyJLr7fjvf
+         Lv5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704791282; x=1705396082;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jj5iNAb0vOYUNWOsVLfq/Kug7eJUVIVzh2hyRWQ9KUw=;
+        b=ZyGlD/NRjj+sRQBxsI3lv/W1D5EJ2nuzBUpIe6s7bS1bID8UHhoTzHEBXPA5gZvmq2
+         pDWXOrFB1uuXua6/tDQ9ydEgp+Y09S9St6qAfcuK7PvNNv8N7JdBcyQWFrB3VUtmrGLL
+         WIH0+psK+IcEDURk4Pz9C5HlI7ErhPhy8GNO/JE5dGgNdBPZ7sw3mt5sLy8yCL/FJLFB
+         4SblfGh2PtoBQ7rAadeKBHxnwXY7oSBJj5S8KEpwNYLck1FGCeoHsbi2qPEhw+VNXDtc
+         EOiIRQgfcNjhXt7ormX075QUTv4FQe8RpVlTdPK7bYITnhmQHUYEuACwknh+eY7P4ABC
+         KDKw==
+X-Gm-Message-State: AOJu0YzmJcTjIUGkv6YaQ3yn5qHZz3wQnsKLs8zqYq3/Ir/KdcUmhloI
+	y2FuEbd8+TqLlqnPGN2Q4UAP2ujDqsfdZw==
+X-Google-Smtp-Source: AGHT+IFHr1mJqGahwdyos7RzxqemoTzawy21RafqWjIQm4z1Kiyj0E+rFrxLMMz8BuQYnHZmcXR9dQ==
+X-Received: by 2002:a7b:c34d:0:b0:40d:88c8:25ac with SMTP id l13-20020a7bc34d000000b0040d88c825acmr2507343wmj.48.1704791282280;
+        Tue, 09 Jan 2024 01:08:02 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id cw16-20020a056000091000b0033753a61e96sm1828362wrb.108.2024.01.09.01.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 01:08:02 -0800 (PST)
+Date: Tue, 9 Jan 2024 12:07:58 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	linux-hardening@vger.kernel.org, error27@gmail.com,
+	gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+	Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
 	Arnd Bergmann <arnd@arndb.de>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] leds: remove led_init_default_state_get() and devm_led_classdev_register_ext() stubs
-Date: Tue,  9 Jan 2024 10:06:39 +0100
-Message-Id: <20240109090715.982332-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
+ dg_dispatch_as_host()
+Message-ID: <79ca2f85-1f8d-4a12-aa5a-09137033605f@moroto.mountain>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+ <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+ <202401081430.9DAB37B46@keescook>
+ <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Mon, Jan 08, 2024 at 08:05:38PM -0600, Gustavo A. R. Silva wrote:
+> > > Gustavo quoted:
+> > > "Under FORTIFY_SOURCE we should not copy data across multiple members
+> > > in a structure."
+> > > 
+> > > Reported-by: syzkaller <syzkaller@googlegroups.com>
+> > > Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
+> > > Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+> > 
+> > Thanks for getting this fixed!
+> > 
+> > Yeah, it's a "false positive" in the sense that the code was expecting
+> 
+> It's a false positive _bug_, and a legitimate _warning_ coming from fortified
+> memcpy().
 
-These two functions have stub implementations that are called when
-NEW_LEDS and/or LEDS_CLASS are disabled, theorerically allowing drivers
-to optionally use the LED subsystem.
+It really feels like you're trying to sell the cost of this as a good
+thing...  We've already merged fortify so why are you still fighting
+about this?  Now that it's merged, let's just all admit that false
+positives are bad.
 
-However, this has never really worked because a built-in driver is
-unable to link against these functions if the LED class is in a loadable
-module. Heiner ran into this problem with a driver that newly gained
-a LEDS_CLASS dependency and suggested using an IS_REACHABLE() check.
+I feel like once we recognize that actually false positives are bad as
+opposed to good then that's when we start looking for solutions.  In
+Smatch, I have code that silences warnings about cross member writes
+because it was a common source of false positives...
 
-This is the reverse approach, removing the stub entirely to acknowledge
-that it is pointless in its current form, and that not having it avoids
-misleading developers into thinking that they can rely on it.
+The Kconfig entry does not mention the risk of false positives at all
+and it doesn't say anything about turning on fortify along with
+CONFIG_PANIC_ON_OOPS is probably bad.  There are simple things we could
+do to make this less risky.
 
-This survived around 1000 randconfig builds to validate that any callers
-of the interface already have the correct Kconfig dependency already,
-with the exception of the one that Heiner just added.
-
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Link: https://lore.kernel.org/linux-leds/0f6f432b-c650-4bb8-a1b5-fe3372804d52@gmail.com/T/#u
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/linux/leds.h | 19 -------------------
- 1 file changed, 19 deletions(-)
-
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 4754b02d3a2c..7598d472903a 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -82,15 +82,7 @@ struct led_init_data {
- 	bool devname_mandatory;
- };
- 
--#if IS_ENABLED(CONFIG_NEW_LEDS)
- enum led_default_state led_init_default_state_get(struct fwnode_handle *fwnode);
--#else
--static inline enum led_default_state
--led_init_default_state_get(struct fwnode_handle *fwnode)
--{
--	return LEDS_DEFSTATE_OFF;
--}
--#endif
- 
- struct led_hw_trigger_type {
- 	int dummy;
-@@ -279,20 +271,9 @@ static inline int led_classdev_register(struct device *parent,
- 	return led_classdev_register_ext(parent, led_cdev, NULL);
- }
- 
--#if IS_ENABLED(CONFIG_LEDS_CLASS)
- int devm_led_classdev_register_ext(struct device *parent,
- 					  struct led_classdev *led_cdev,
- 					  struct led_init_data *init_data);
--#else
--static inline int
--devm_led_classdev_register_ext(struct device *parent,
--			       struct led_classdev *led_cdev,
--			       struct led_init_data *init_data)
--{
--	return 0;
--}
--#endif
--
- static inline int devm_led_classdev_register(struct device *parent,
- 					     struct led_classdev *led_cdev)
- {
--- 
-2.39.2
+regards,
+dan carpenter
 
