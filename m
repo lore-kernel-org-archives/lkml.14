@@ -1,92 +1,112 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0ACB28EC
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 00:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF683639
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 00:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RolAEsfj"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50e7d6565b5so2532417e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 16:30:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nZQWM+wJ"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e4f7119eeso484065e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 16:34:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704760254; x=1705365054; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zO50hugsTP49JzCek/Fz2sz/IjqHzazxTuZOtrr33Cc=;
-        b=RolAEsfjHrLajGtxSX+oHtXRIviav4kRImNKeHTQfaZu7MTwJoY96YzsI3mj54pBiq
-         eV/sEnlMH3KScPvBAtYnx3inNcS0g/RR78C/ykD2ADTEgnHflcepGC+ZbsOTKg9HxSVB
-         KhmL5GtyBBvFXh6EW1tG5FrL+wykRjHU4MXt0=
+        d=linaro.org; s=google; t=1704760489; x=1705365289; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PG45xY7qdUYvxRUhu1bd0cfdjPVsmY2YVRBeEKS5RT4=;
+        b=nZQWM+wJJ44gefEw18BZ10nMa6oT5ihVpY4jSdEI3SFCEvp8rABNPa0hvK1GP5zih+
+         4NA0Kzc1KXxGFVQyRrBzrvPsDs/k7dQzh6qcGdasnir/ZmeqF/NYRb7HsWczwh8NVSz5
+         dviBHD5UROFTsO5+MGkRy3Wf1/1De9c4V0kNe4i3UhT52i/aqAkXbeVWFG0HOQBJ88eI
+         dqw0qzp0LTHx5ublLvtxnoKi7UENyWpIBBIlLpqrlcHP3tY0rEEtzVaZLATVHujTf/ot
+         GHpiJYd/cd56gdmiG5aTzHONXvIRBWLIXLTrUxsD7wxl2qDvxf2AXc9DRzG12Lt6wZlh
+         WUEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704760254; x=1705365054;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zO50hugsTP49JzCek/Fz2sz/IjqHzazxTuZOtrr33Cc=;
-        b=B3+fvLjWnO99WnviXSXkiFw6ZQ029Gz1kJE4omJjiU8nJRmbkdSGDg5bwN8qffZ41z
-         SGt6lzAKSeCJCQcFemKltdatHGMGpmjBUTZh38nTi3PHTD5X/s3FOTMFuuKzlMody1xb
-         hKz565IxvhsLGN/kl+CVaEDLe/VNCrow2nt+nSLXXlEoLqm1baxw8EKtyLvgaw5nIKgX
-         NFfTEnstxZfpLkaTX6qGSTEPh5hDTzQmXzJH0iZXrXRaXt/lDvLeGJd+dXuAFvUhqE2V
-         jPVYEioZlhLVD+ZK9nfRSKQKblTpLSylYYj1T6RXt3RfO62W4FN17E5gAc9sKbT/G9a1
-         CWcw==
-X-Gm-Message-State: AOJu0YxmpDNwkMw1gj8uozqs/819IXaDF0NKyHCC12I6PRKD796dTZ8C
-	1Ihc+lU8LB4RcQ6ba2sbBRB100BSw/N+meaLHmjEs5/iX1tT564r
-X-Google-Smtp-Source: AGHT+IFxyE5+FxRvqyjIFgJvwYrifNm0opXNzukcex33pjKzhZfJC5OU2ycS4ZpGgJA14zAeAzx1Xw==
-X-Received: by 2002:a05:6512:68c:b0:50e:8ec5:3025 with SMTP id t12-20020a056512068c00b0050e8ec53025mr2366939lfe.95.1704760254740;
-        Mon, 08 Jan 2024 16:30:54 -0800 (PST)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id m5-20020a056512114500b0050e84be8127sm123302lfg.101.2024.01.08.16.30.53
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1704760489; x=1705365289;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PG45xY7qdUYvxRUhu1bd0cfdjPVsmY2YVRBeEKS5RT4=;
+        b=d9E0h7sobDjgJEHc8qKaflmm3gM2jXObovWjvnqNnpi/mED+qalWzgD5EqfdmIbeVD
+         a3Rf2aapraQtiLNTBINBUp/lyr96t6teLywkg2GYJYDoT/gtKpCj1SryiJr4mmLEwrmA
+         7NDbI02zsj2sKOlU1vjL5g6rMXbdjClddOPlFbqixmW0Udt+8MZHx3VRp2M7DBk0nvVu
+         Hx9sHAbbw3IlkPxRgsN8kTM1qXWOvA1fsfRC0UtoPzIt8Nzj2/OvrFEN5iopG9wcRHAg
+         vhfu9F+3mjaz9P9S6/Z6QnooU5o9CYVkI1Xh2kH6HPqA93q1xqw2lt2IJDtdB42ZdEPz
+         JopQ==
+X-Gm-Message-State: AOJu0YzrVdKu+0EBMrC+CNSC8CSU6NRljjePnEuUwjNr7DtTYIoPkjXd
+	qekoqs8pIjSh+CsjX9cHVJMn8kgqpXGWzA==
+X-Google-Smtp-Source: AGHT+IGDQ8FvZzuUdUo9S0hXw8aqSkdIwxxo2l3Q6O2E6tuyGiskmVwFvAIe7TkLE3tqqtpa2dK5Jw==
+X-Received: by 2002:a05:600c:4e01:b0:40e:44aa:2360 with SMTP id b1-20020a05600c4e0100b0040e44aa2360mr1711162wmq.14.1704760488777;
+        Mon, 08 Jan 2024 16:34:48 -0800 (PST)
+Received: from [192.168.100.48] ([37.228.218.3])
+        by smtp.gmail.com with ESMTPSA id fm7-20020a05600c0c0700b0040e4914f28dsm3518325wmb.18.2024.01.08.16.34.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jan 2024 16:30:53 -0800 (PST)
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50e7d6565b5so2532394e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 16:30:53 -0800 (PST)
-X-Received: by 2002:a19:6719:0:b0:50e:cd02:b537 with SMTP id
- b25-20020a196719000000b0050ecd02b537mr85182lfc.11.1704760253453; Mon, 08 Jan
- 2024 16:30:53 -0800 (PST)
+        Mon, 08 Jan 2024 16:34:47 -0800 (PST)
+Message-ID: <0cbedc75-cacf-43f8-a1f9-284546ad548a@linaro.org>
+Date: Tue, 9 Jan 2024 00:34:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202401081028.0E908F9E0A@keescook> <CAHk-=wgznerM-xs+x+krDfE7eVBiy_HOam35rbsFMMOwvYuEKQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgznerM-xs+x+krDfE7eVBiy_HOam35rbsFMMOwvYuEKQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 8 Jan 2024 16:30:36 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whF-ur-8B5_8xgm0h9_=yX_Rz0Owjo4ghRwYVnKr-3z5Q@mail.gmail.com>
-Message-ID: <CAHk-=whF-ur-8B5_8xgm0h9_=yX_Rz0Owjo4ghRwYVnKr-3z5Q@mail.gmail.com>
-Subject: Re: [GIT PULL] execve updates for v6.8-rc1
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>, 
-	Josh Triplett <josh@joshtriplett.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/18] clk: qcom: gcc-sm8250: Set delay for Venus CLK
+ resets
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Manivannan Sadhasivam <mani@kernel.org>
+References: <20240105-topic-venus_reset-v1-0-981c7a624855@linaro.org>
+ <20240105-topic-venus_reset-v1-9-981c7a624855@linaro.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240105-topic-venus_reset-v1-9-981c7a624855@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 8 Jan 2024 at 16:19, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Anyway, I want to repeat: this patch is UNTESTED. It compiles for me.
+On 08/01/2024 12:32, Konrad Dybcio wrote:
+> Some Venus resets may require more time when toggling. Describe that.
 
-Actually, I take that back. I did a clang build, and clang noted that
-my "remove the retval initialization as unnecessary" was wrong,
-because the
+May or does ?
 
-                if (!bprm->fdpath)
-                        goto out_free;
+I'd prefer a strong declaration of where this value came from and why 
+its being added.
 
-code path in alloc_bprm() still wanted that initial -ENOMEM initialization.
+May is ambiguous.
 
-So you need to fix the
+"Downstream has a 150 us delay for this. My own testing shows this to be 
+necessary in upstream"
 
-        int retval;
+Later commits want to add a 1000 us delay. Have all of these delays been 
+tested ?
 
-in alloc_bprm() to be back to the original
+If not please describe where the values come.
 
-        int retval = -ENOMEM;
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
+>   drivers/clk/qcom/gcc-sm8250.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/qcom/gcc-sm8250.c b/drivers/clk/qcom/gcc-sm8250.c
+> index c6c5261264f1..61d01d4c379b 100644
+> --- a/drivers/clk/qcom/gcc-sm8250.c
+> +++ b/drivers/clk/qcom/gcc-sm8250.c
+> @@ -3576,8 +3576,8 @@ static const struct qcom_reset_map gcc_sm8250_resets[] = {
+>   	[GCC_USB3PHY_PHY_PRIM_BCR] = { 0x50004 },
+>   	[GCC_USB3PHY_PHY_SEC_BCR] = { 0x50010 },
+>   	[GCC_USB_PHY_CFG_AHB2PHY_BCR] = { 0x6a000 },
+> -	[GCC_VIDEO_AXI0_CLK_ARES] = { 0xb024, 2 },
+> -	[GCC_VIDEO_AXI1_CLK_ARES] = { 0xb028, 2 },
+> +	[GCC_VIDEO_AXI0_CLK_ARES] = { 0xb024, .bit = 2, .udelay = 150 },
+> +	[GCC_VIDEO_AXI1_CLK_ARES] = { 0xb028, .bit = 2, .udelay = 150 },
+>   };
+>   
+>   static const struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
+> 
 
-but then it might all work.
-
-Again - note the "might". Somebody needs to actually test it.  I may
-try to do that in between pulls.
-
-            Linus
