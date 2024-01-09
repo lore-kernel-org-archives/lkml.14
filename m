@@ -1,94 +1,89 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC6E36B11
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DBA36B17
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="jRE56T1L"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-555f95cc2e4so3166759a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 03:27:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EX/hKgNg"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33687627ad0so2566412f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 03:28:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1704799675; x=1705404475; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oKel/uL1tajPej7Kr+Y3gD2pm0Q/5wlP7q9l4+pRLR8=;
-        b=jRE56T1LeQJAkA6mhHCrJJdZN4io3r5Q1w3lsA3Q5ln52EOtCaCvigxk9b1bKXV0Uc
-         l02SqWOBEwm2aDRxLaY9990nhiSA5bCCcG82N5iXrasCHFLvI//xbMgDEnSApTFTwaIz
-         MSl0tgwuDXnJQAxEyB5RBX4efzT5xCnxG+Eq5WBttWGmroJWSwIZBIRj7t2TRe0e0ToY
-         Qpf93VqfghWjBWrSvIfCg6iHEtX9UAjbvMz4htxGj8R9rgG+Sj0OWoQT1E2nnwbujJxN
-         hFnH3jAgeYx3+0Tlt26MUmgT40Lr3b2vukLkIF832pMOPF7wvUB2JSeGSCXx++3SEnj/
-         0xgw==
+        d=linaro.org; s=google; t=1704799698; x=1705404498; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MnCEbYre5zGye06QU8T4lh4dMbpyA+aXMIBZMhzJpJY=;
+        b=EX/hKgNgJaP2qCnypvuZByHyERm9M8jLMH3wl0+pAp6czoD+ZjZP2plHToEQOZY9vo
+         QfNZdfVxEIh/KoDeyqnYzrQJ+zGRF8ucxVPOgCMzlwEaH3440eDdyUqIFrJ4WytWMaob
+         VbMVtExYlLrrUwG2xXSU8MG924gmxICYl/ig+tLbat8ZnpAixY4Xue/dwujgyr798Zk9
+         o+P2XedxBXYYjbbj8h938hWU9CuJBPY1iVGvph1OJpZNY2mehbEA8Ix1NSK9SUMdTLO3
+         xvvpRFcORM9BqaFrdbfOY5tTVhesy3oAuEihPY0iUzvZqI9cAp0AFe85lUuHDTUMvFPb
+         5r0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704799675; x=1705404475;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oKel/uL1tajPej7Kr+Y3gD2pm0Q/5wlP7q9l4+pRLR8=;
-        b=GryeTwC/mDRBKODpPih2Ertw6kBtB34VqBABM1IfewBo9xA7gViFGGxBZY6EPJUm2k
-         wzl7RsSSZV3NSKuEA+/2ek83P+Fk7b15eW9cdXliPhlmlDy6spdNn9xKx+4FZqEFpTWL
-         U3t6azIQCpzfgn0uo3BO/WjWzKmlezR7AUFXXdvJyzZICWCCAGGuNj+U4e+hPJKy+3l8
-         c0nXD53hBVUfgeTTXxfYoKhNPdJ6tb9Wmc06UrnyuDqIrHS4QCgsjKpZT+ZSRvh/2FUi
-         TRgJY2F4h54FYHMEXDKeTKIXt7D1AlBe/lJbWvnMmmVaaM8cFKJ0ejsPbFdxUXydWt65
-         B3HA==
-X-Gm-Message-State: AOJu0YyYdvJgn8TV39hRY3AW7T1RC14wx7xgGoEGI0aDetESJsZe8jgx
-	XrqVUaZz7EWxi+0CAhxhm/9iyUgr65VnSg==
-X-Google-Smtp-Source: AGHT+IFLDOEYrnaFAb1pvyYayLgZLIaQwOsuzV7aIZuufvzjoaHL+sD2wiqnSgjHvZSMG2kvOL3hGg==
-X-Received: by 2002:a50:bb2f:0:b0:557:188b:eccb with SMTP id y44-20020a50bb2f000000b00557188beccbmr2752722ede.84.1704799675115;
-        Tue, 09 Jan 2024 03:27:55 -0800 (PST)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id b6-20020a0564021f0600b0055678085e27sm847587edb.20.2024.01.09.03.27.54
+        d=1e100.net; s=20230601; t=1704799698; x=1705404498;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MnCEbYre5zGye06QU8T4lh4dMbpyA+aXMIBZMhzJpJY=;
+        b=UuV1mBn9wlUqp1R1/SitahfwDCG1pbsAN0x4dWQuG6Zud+LIhDNLViDzmw7v6YXk27
+         yO3ngXEdJdP9IqqxA0Fw9A75e4gYwSuPV1q3iJ3jCEIxwvZ+AyFKMVg+bksFBDn6f5ik
+         RnxTr7jgBw6C4Ns3pI4N3EHfxJAblTlkP0xKijBAAld0Yv+FeRzaTm1synRG93V3yRAL
+         rVwpNBwju1m/syiF0spNvhpx17bND5YpCkQ5feH18LAtlEkAL8Oc9EHXFJ4Hh37vf00T
+         54hF9nE9PvesvEWWl5EWjXsQ7gAth9/cc9s3uPUs8sWzFHQLUPz6q465Qzl2Joe4DJvJ
+         SXHA==
+X-Gm-Message-State: AOJu0YxMwZHITecDn41AdSA/tBpHYSjzQpFH5d2sqHRn4+NMykxK+3Dh
+	ugLuc+T1WNhZdBhGPEtePPIe2Tnwb6PzgQ==
+X-Google-Smtp-Source: AGHT+IH/1wMAk1aHGTdT12ROSrsiZVhUweuFKxTnb57vuF8GLwso0x6Fm7CR8XF2i/J9O/Vk1hqJOw==
+X-Received: by 2002:adf:f608:0:b0:336:c5b3:6bd9 with SMTP id t8-20020adff608000000b00336c5b36bd9mr408215wrp.61.1704799698133;
+        Tue, 09 Jan 2024 03:28:18 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id c15-20020a5d4ccf000000b00336765e9babsm2151544wrt.83.2024.01.09.03.28.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jan 2024 03:27:54 -0800 (PST)
+        Tue, 09 Jan 2024 03:28:17 -0800 (PST)
+Message-ID: <0c35bb66-cca1-4beb-9042-a72cc3984579@linaro.org>
+Date: Tue, 9 Jan 2024 12:28:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 09 Jan 2024 12:27:54 +0100
-Message-Id: <CYA51QMVFQZF.3NEPC3R2QY2VM@fairphone.com>
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Konrad Dybcio" <konrad.dybcio@linaro.org>, "Andy Gross"
- <agross@kernel.org>, "Bjorn Andersson" <andersson@kernel.org>, "Thara
- Gopinath" <thara.gopinath@gmail.com>, "Herbert Xu"
- <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
- "Rob Herring" <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Bhupesh Sharma" <bhupesh.sharma@linaro.org>
-Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Add Crypto Engine support for SM6350
-X-Mailer: aerc 0.15.2
-References: <20240105-sm6350-qce-v1-0-416e5c7319ac@fairphone.com>
- <c3e82c7a-fc03-44c6-bf83-97dffaf22dba@linaro.org>
-In-Reply-To: <c3e82c7a-fc03-44c6-bf83-97dffaf22dba@linaro.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/6] thermal: netlink: Pass pointers to
+ thermal_notify_tz_trip_up/down()
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>, Linux ACPI <linux-acpi@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
+References: <4556052.LvFx2qVVIh@kreacher> <3295756.44csPzL39Z@kreacher>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <3295756.44csPzL39Z@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon Jan 8, 2024 at 1:40 PM CET, Konrad Dybcio wrote:
-> On 5.01.2024 17:15, Luca Weiss wrote:
-> > Add the compatible and nodes for the QCE found on SM6350 SoC.
-> >=20
-> > Not completely sure how to fully test it but "kcapi-speed --all" shows
-> > no issues. Let me know if I can/should test this more.
->
-> I think I used `cryptsetup benchmark` with and without the ICE enabled
-> a couple years back. IIRC the CPU should be faaar faster but also chug
-> power while at it.
+On 15/12/2023 20:57, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Instead of requiring the callers of thermal_notify_tz_trip_up/down() to
+> provide specific values needed to populate struct param in them, make
+> them extract those values from objects passed by the callers via const
+> pointers.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
 
-Are you sure you mean QCE here (which this patch is about) and not ICE?
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-I'm not aware of them working together somehow but I wouldn't be
-surprised if there's something since I don't know much of this area at
-all.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Regards
-Luca
-
->
-> Konrad
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
