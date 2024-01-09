@@ -1,98 +1,79 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7763A39FEE
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HcP9Zxmu"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5534180f0e9so10479a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:43:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704811425; x=1705416225; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7hTSp/621JuWdOzYoBlVmVqh7hDK5oBkPf++B3jV4j8=;
-        b=HcP9Zxmu9/16084eHJ+NmuGWlYUcc3QFeS8uSSZikkoUXQ2UL34hLVUWuyh8LCzKqo
-         cjOWd9oOovsMQdqebHbAnSNlQ4dwOvx579RlYjeYArqv8zP1jgbFYBC/GxZ4UryfpigA
-         iKnRxmjHY1Sv0SMZpzdwk+E/sxXNheVudyV4VghUE6HoJ1gf2p7pruFQVUPiOPcqzH+m
-         Hc3Ca43z67IPYoB/WQCIYSOrKh5zR17Ajyx+qZKltH/zKdWuAhpZTt4YUWmlSw0fkjJj
-         wqBbs67uGIg65/6wc0iL7qeaU/vz+2uWc6RQkQVu7fSPF0CMqzsSUEMA/Br6QS/wjKQg
-         KgNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704811425; x=1705416225;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7hTSp/621JuWdOzYoBlVmVqh7hDK5oBkPf++B3jV4j8=;
-        b=lwnXp3n4MEsbrjCsbTKKwfFvl62EGQMep3/yLEleUbtYpcxLEymgksmkX1SFwMfcqT
-         LJn2TN098Umr4AL+1t5FT7TSLRTx4jkWy6BzNdIe/SLF3DkLROxpR0c/blRqivF235zs
-         NqKljzImXF1/JJhozEhlAsNyGbL2weKwyysgiLtDMyGUPdAmLRkGgapKY+heDyUfCagC
-         alNpL3uiDRy72gl1Q6Y45CC6hoqceJm868TUlUXIQRb7KjbDqDOZ49zks6DCkBG0pPrZ
-         eOqKMB6pZU2+diHLIWcX38N7Jn8HDMib65p/YgFGdFIu3EWLeVyAmWr0CaYTwNSD3px9
-         Mq2Q==
-X-Gm-Message-State: AOJu0Ywhla8RaSVe6L6koFrbLDM/bxB3OgTjFgAKfmb6HH7rLN0MFyj9
-	Kc+fFaNu9JVtObP5Ln0E282+35o2dDl69cF7jVTi42Utyb1a
-X-Google-Smtp-Source: AGHT+IGCzpJkHmbkISlJEaLGwgFS/54jBbdaQxFTLs2DxUORYa3GyuTiAnd2AjxmVJ16Ps8zGgj4wzF+PsKfXzpopCc=
-X-Received: by 2002:a50:9548:0:b0:554:1b1c:72c4 with SMTP id
- v8-20020a509548000000b005541b1c72c4mr101455eda.1.1704811424481; Tue, 09 Jan
- 2024 06:43:44 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 075AA39ACB
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B048ADA7;
+	Tue,  9 Jan 2024 06:47:20 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.28.161])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B64A3F5A1;
+	Tue,  9 Jan 2024 06:46:33 -0800 (PST)
+Date: Tue, 9 Jan 2024 14:46:30 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: catalin.marinas@arm.com, will@kernel.org, sumit.garg@linaro.org,
+	dianders@chromium.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-team@android.com,
+	andre.draszik@linaro.org, willmcvicker@google.com,
+	peter.griffin@linaro.org
+Subject: Re: [PATCH] arm64: irq: include <linux/cpumask.h>
+Message-ID: <ZZ1cRnjNlryrqAL0@FVFF77S0Q05N.cambridge.arm.com>
+References: <20240109140437.3703330-1-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231223025554.2316836-1-aleksander.lobakin@intel.com> <20231223025554.2316836-6-aleksander.lobakin@intel.com>
-In-Reply-To: <20231223025554.2316836-6-aleksander.lobakin@intel.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 9 Jan 2024 15:43:30 +0100
-Message-ID: <CANn89iLbRnakLSuuoAF7eeN8KGqc7wy0bEgCmHCP1mU6LB912A@mail.gmail.com>
-Subject: Re: [PATCH RFC net-next 05/34] idpf: convert header split mode to
- libie + napi_build_skb()
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
-	Michal Kubiak <michal.kubiak@intel.com>, Larysa Zaremba <larysa.zaremba@intel.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, intel-wired-lan@lists.osuosl.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240109140437.3703330-1-tudor.ambarus@linaro.org>
 
-On Sat, Dec 23, 2023 at 3:58=E2=80=AFAM Alexander Lobakin
-<aleksander.lobakin@intel.com> wrote:
->
-> Currently, idpf uses the following model for the header buffers:
->
-> * buffers are allocated via dma_alloc_coherent();
-> * when receiving, napi_alloc_skb() is called and then the header is
->   copied to the newly allocated linear part.
->
-> This is far from optimal as DMA coherent zone is slow on many systems
-> and memcpy() neutralizes the idea and benefits of the header split.
-> Instead, use libie to create page_pools for the header buffers, allocate
-> them dynamically and then build an skb via napi_build_skb() around them
-> with no memory copy. With one exception...
-> When you enable header split, you except you'll always have a separate
-> header buffer, so that you could reserve headroom and tailroom only
-> there and then use full buffers for the data. For example, this is how
-> TCP zerocopy works -- you have to have the payload aligned to PAGE_SIZE.
-> The current hardware running idpf does *not* guarantee that you'll
-> always have headers placed separately. For example, on my setup, even
-> ICMP packets are written as one piece to the data buffers. You can't
-> build a valid skb around a data buffer in this case.
-> To not complicate things and not lose TCP zerocopy etc., when such thing
-> happens, use the empty header buffer and pull either full frame (if it's
-> short) or the Ethernet header there and build an skb around it. GRO
-> layer will pull more from the data buffer later. This W/A will hopefully
-> be removed one day.
+On Tue, Jan 09, 2024 at 02:04:37PM +0000, Tudor Ambarus wrote:
+> Sorting include files in alphabetic order in
+> drivers/tty/serial/samsung.c revealed the following error:
+> 
+> In file included from drivers/tty/serial/samsung_tty.c:24:
+> ./arch/arm64/include/asm/irq.h:9:43: error: unknown type name 'cpumask_t'
+>     9 | void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
+>       |                                           ^~~~~~~~~
+> 
+> Include cpumask.h to avod unknown type errors for parents of irq.h that
+> don't include cpumask.h.
 
-We definitely want performance numbers here, for systems that truly matter.
+s/avod/avoid/
 
-We spent a lot of time trying to make idpf slightly better than it
-was, we do not want regressions.
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
+>  arch/arm64/include/asm/irq.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/include/asm/irq.h b/arch/arm64/include/asm/irq.h
+> index 50ce8b697ff3..d5612bc770da 100644
+> --- a/arch/arm64/include/asm/irq.h
+> +++ b/arch/arm64/include/asm/irq.h
+> @@ -5,6 +5,7 @@
+>  #ifndef __ASSEMBLER__
+>  
+>  #include <asm-generic/irq.h>
+> +#include <linux/cpumask.h>
 
-Thank you.
+Minor nit: we usually have the <linux/*.h> headers first, then a line space,
+then the <asm/*.h> headers, e.g.
+
+| #include <linux/cpumask.h>
+| 
+| #include <asm-generic/irq.h>
+
+With those changes, the patch itself looks good to me:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+>  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
+>  #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+> -- 
+> 2.43.0.472.g3155946c3a-goog
+> 
