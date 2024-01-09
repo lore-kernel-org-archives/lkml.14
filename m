@@ -1,71 +1,28 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from omta002.cacentral1.a.cloudfilter.net (omta002.cacentral1.a.cloudfilter.net [3.97.99.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194A13209
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 00:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AkXwX/7w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704759880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wBgrmkRdNGMcly6vlN7IHOo4uqMRRCrvatkr8PlQXzA=;
-	b=AkXwX/7wZ5FM3S8fuPTNp8j77KnqDymIIKZ76/UBTbIC1izrVHbqC/uZ6V3YgP6oWvy9Ad
-	423Z0DmXsdL9Z91eh7cKR/m0Ca+3BJeIzCTfPSrn4+pP6jwnUlkKXjZkWuEZNcuyOVGTJS
-	iI2FEysmmK5L4u7DuRR6EvEff1j0NSA=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-411-VSR7N5svP_qxgd09Onklxg-1; Mon, 08 Jan 2024 19:24:33 -0500
-X-MC-Unique: VSR7N5svP_qxgd09Onklxg-1
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6d9bd4fa279so1321376b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 16:24:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704759872; x=1705364672;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wBgrmkRdNGMcly6vlN7IHOo4uqMRRCrvatkr8PlQXzA=;
-        b=juTwk7aLHsJ5ZJV9xScUB27wwdLiVsBWOjqYxRbikKm5cXtslo6rZNIYFiIZpF0OQV
-         i5C8kl93dm65Am2UBB8OqxEtfTcWtR/gXZzdzw8Y1kDhRJIxUNKuTL0Gd3Ro3/foitj5
-         LnacLmGIJkpd5RivwRUtoiNEANRueG8me01zwJfPy9J6ICRhU+T6xEux9jJlc9xrbra+
-         WRVhBqvYC5703Q1414euGvHyslyJpducdmWm5YEuLGZ77aZxTXqhux38QoicsRsaASmy
-         zdohcLKh1VVC1CRdNN+qmES7LGWAeCXgFBePzliu+bTKCZcfSFk8p7omeP7h5RnPslyv
-         XJOg==
-X-Gm-Message-State: AOJu0YwBQqZPTlUH4FZExbtUnNku2TdpVkYdx7+g3S1TFVvvWVHDb4KX
-	Vsm4VukPuVsza1fw+kJNhHoKmPCWWlXF5bsoOlZz5sjFCyRcK9q5CNNW4FBdki0xn0WS46oJxO1
-	1gxv5+p+9ZRElLC/ucikH9nvJSVvbFrav
-X-Received: by 2002:a05:6a20:1044:b0:195:192c:e5a5 with SMTP id gt4-20020a056a20104400b00195192ce5a5mr1584019pzc.56.1704759872390;
-        Mon, 08 Jan 2024 16:24:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFAYwqOIUUbzS4Z6Wh9myf9nF6QYMlenNKzdIdCeZBN2nChQ2/gE/uHykLmJ60rmWnGCpKmUA==
-X-Received: by 2002:a05:6a20:1044:b0:195:192c:e5a5 with SMTP id gt4-20020a056a20104400b00195192ce5a5mr1584007pzc.56.1704759871993;
-        Mon, 08 Jan 2024 16:24:31 -0800 (PST)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id jg11-20020a17090326cb00b001d403f114d2sm459444plb.303.2024.01.08.16.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 16:24:31 -0800 (PST)
-From: Coiby Xu <coxu@redhat.com>
-To: linux-integrity@vger.kernel.org
-Cc: itrymybest80@protonmail.com,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	linux-security-module@vger.kernel.org (open list:SECURITY SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] integrity: eliminate unnecessary "Problem loading X.509 certificate" msg
-Date: Tue,  9 Jan 2024 08:24:28 +0800
-Message-ID: <20240109002429.1129950-1-coxu@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231227044156.166009-1-coxu@redhat.com>
-References: <20231227044156.166009-1-coxu@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1878191
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 00:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dilger.ca
+Received: from shw-obgw-4003a.ext.cloudfilter.net ([10.228.9.183])
+	by cmsmtp with ESMTPS
+	id MwQLrilTOGAIJMzwErFEuj; Tue, 09 Jan 2024 00:25:50 +0000
+Received: from webber.adilger.int ([70.77.200.158])
+	by cmsmtp with ESMTP
+	id MzwDrA0jx0nMNMzwDrMW0D; Tue, 09 Jan 2024 00:25:50 +0000
+X-Authority-Analysis: v=2.4 cv=Qcx1A+Xv c=1 sm=1 tr=0 ts=659c928e
+ a=0Thh8+fbYSyN3T2vM72L7A==:117 a=0Thh8+fbYSyN3T2vM72L7A==:17 a=RPJ6JBhKAAAA:8
+ a=QQdngafKVaWhNDnW0jYA:9 a=fa_un-3J20JGBB2Tu-mn:22
+From: Andreas Dilger <adilger@dilger.ca>
+To: Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>
+Cc: linux-kernel@vger.kernel.org,
+	Andreas Dilger <adilger@dilger.ca>
+Subject: [PATCH v2] checkpatch: ignore deleted lines for comment context
+Date: Mon,  8 Jan 2024 17:25:36 -0700
+Message-Id: <20240109002536.56695-1-adilger@dilger.ca>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,42 +30,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfIKe30+Lirkkrd59KOXxg9WzvL+y/mNDg5+p+ivw9SvC8yMdV8ASfGNtiTxRsGGh3F75Tt5629nnzfW8tibOpsJG72aqp+wpqZw7VjelHKP9v3zt3NyN
+ Os6KOiFg1EBfBG5hbukFB2jOtAp05+CfsIvcDTTK2YfF1UUE1QxBFj7Q2iZBGlnXYQHKzxnMhLvcWub+KhG1OOE2Dd5se1GAwwG+MYSuAmUUL7LwNUN6sEnw
+ 1+dFAxrbyKsX5/fUisSBWDTriXUmpWnpjaCe5fDZkLA4v5PAZTeZ5q9WlZZnV0B3
 
-Currently when the kernel fails to add a cert to the .machine keyring,
-it will throw an error immediately in the function integrity_add_key.
+Don't consider lines being removed by a patch as part of the context.
+Otherwise, false "WARNING: memory barrier without comment" and similar
+warnings can be reported when a comment exists on the previous line.
 
-Since the kernel will try adding to the .platform keyring next or throw
-an error (in the caller of integrity_add_key i.e. add_to_machine_keyring),
-so there is no need to throw an error immediately in integrity_add_key.
+For example, a change like below was previously incorrectly flagged:
 
-Reported-by: itrymybest80@protonmail.com
-Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2239331
-Fixes: d19967764ba8 ("integrity: Introduce a Linux keyring called machine")
-Reviewed-by: Eric Snowberg <eric.snowberg@oracle.com>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
+	/* matched by smp_store_release() in some_function() */
+ -	if (smp_load_acquire(&list->tail) == head))
+ +	if (smp_load_acquire(&list->tail) == head) && flags == 0)
+
+Signed-off-by: Andreas Dilger <adilger@dilger.ca>
 ---
-v2
- - improve patch subject [Mimi]
- - add Fixes tag [Jarkko]
- - add Reviewed-by tag from Eric
----
- security/integrity/digsig.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+  V1 -> V2: don't include extra debugging in 'warn' line
 
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index df387de29bfa..45c3e5dda355 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -179,7 +179,8 @@ static int __init integrity_add_key(const unsigned int id, const void *data,
- 				   KEY_ALLOC_NOT_IN_QUOTA);
- 	if (IS_ERR(key)) {
- 		rc = PTR_ERR(key);
--		pr_err("Problem loading X.509 certificate %d\n", rc);
-+		if (id != INTEGRITY_KEYRING_MACHINE)
-+			pr_err("Problem loading X.509 certificate %d\n", rc);
- 	} else {
- 		pr_notice("Loaded X.509 cert '%s'\n",
- 			  key_ref_to_ptr(key)->description);
+ scripts/checkpatch.pl | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 25fdb7fda112..316a65354718 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -1973,6 +1973,7 @@ sub ctx_locate_comment {
+ 	for (my $linenr = $first_line; $linenr < $end_line; $linenr++) {
+ 		my $line = $rawlines[$linenr - 1];
+ 		#warn "           $line\n";
++		next if ($line =~ /^-/); # ignore lines removed by patch
+ 		if ($linenr == $first_line and $line =~ m@^.\s*\*@) {
+ 			$in_comment = 1;
+ 		}
 -- 
-2.43.0
+2.25.1
 
