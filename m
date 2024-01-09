@@ -1,100 +1,79 @@
-Received: from authsmtp.register.it (authsmtp14.register.it [81.88.48.37])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6A83D38C
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 19:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eventsense.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eventsense.it
-Received: from krn.. ([138.197.190.30])
-	by cmsmtp with ESMTPSA
-	id NI3PrbEZDI6zQNI3UrWDYw; Tue, 09 Jan 2024 20:46:33 +0100
-X-Rid: andrea.fois@eventsense.it@138.197.190.30
-From: Andrea Fois <andrea.fois@eventsense.it>
-To: 
-Cc: andrea.fois@eventsense.it,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Michael Chan <mchan@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	George Shuklin <george.shuklin@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tg3: add new module param to force device power down on reboot
-Date: Tue,  9 Jan 2024 19:45:51 +0000
-Message-Id: <20240109194551.17666-1-andrea.fois@eventsense.it>
-X-Mailer: git-send-email 2.40.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9813D548;
+	Tue,  9 Jan 2024 19:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 54FCA1C006B; Tue,  9 Jan 2024 20:52:33 +0100 (CET)
+Date: Tue, 9 Jan 2024 20:52:32 +0100
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com
+Subject: Re: [PATCH 4.14 0/7] 4.14.336-rc1 review
+Message-ID: <ZZ2kAJ8olTNV6VHJ@duo.ucw.cz>
+References: <20240108141854.158274814@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfPQXaKfWonfFB+huClQ/fRPZupeMxuV2ZGs2JvtZNp6KWdzBy33NZVJ5hWxdsJ0tjVWKiZk64ih5pAuh7HWzC536Jepm3XfweVct7qH53x+FUCMfRxLs
- CuzwR4jkEzE/ew5VpS9clVLigiJOPjNt3FINZMABfH8P70Ak60f138aQX1KtZhnJsAlUts/2A8cHh6VCtuA+aRZVu/fSObtdzN12rjtiVwLSdTiMtFF80pUt
- Th0ZWC4F/G98kYRyLzRP0+qxFAYfRwuVkIh/SRdmHfTuas2hNzyeU/Ps2jcKVIWnYfL/yPGuwsPdIIgUlKBa+YhoE05zLltwoDkogR+wmfVPaDLshljeWVGg
- nz5BaZ+5wDL6E13ZoHouCt/C7ZckrWE2VXRFJUI6aQ4JcnHnrQX2eNe50aPfgvqOaERd+LyeFXk8R6R193K8Iw26BVDXgiOBPwwo0Poxk0PvzxSZfhovrZ6X
- CizoNs56EXflwoE3
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JJ0v5s8WCnbYUXSW"
+Content-Disposition: inline
+In-Reply-To: <20240108141854.158274814@linuxfoundation.org>
 
-The bug #1917471 was fixed in commit 2ca1c94ce0b6 ("tg3: Disable tg3
-device on system reboot to avoid triggering AER") but was reintroduced
-by commit 9fc3bc764334 ("tg3: power down device only on
-SYSTEM_POWER_OFF").
 
-The problem described in #1917471 is still consistently replicable on
-reboots on Dell Servers (i.e. R750xs with BCM5720 LOM), causing NMIs
-(i.e. NMI received for unknown reason 38 on cpu 0) after 9fc3bc764334
-was committed.
+--JJ0v5s8WCnbYUXSW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The problem is detected also by the Lifecycle controller and logged as
-a PCI Bus Error for the device.
+Hi!
 
-As the problems addressed by 2ca1c94ce0b6 and by 9fc3bc764334 requires
-opposite strategies, a new module param "force_pwr_down_on_reboot"
-<bool> is introduced to fix both scenarios:
+> -------------------------------
+> NOTE, this is the LAST 4.14.y-rc release cycle that is going to happen.
+> After this release, this branch will be end-of-life.  You all should
+> have moved to the 4.19.y branch at the very least by now, as this is it,
+> time to stop using this one.
+> -------------------------------
 
-	force_pwr_down_on_reboot = 0/N/n = disable, keep the current
-									   behavior, don't force dev
-									   power down on reboot
+Farewell, 4.14!
 
-	force_pwr_down_on_reboot = 1/Y/y = enable, revert to the
-									   behavior of 2ca1c94ce0b6,
-									   force dev power down on reboot
+> This is the start of the stable review cycle for the 4.14.336 release.
+> There are 7 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Fixes: 9fc3bc764334 ("tg3: power down device only on SYSTEM_POWER_OFF")
-Signed-off-by: Andrea Fois <andrea.fois@eventsense.it>
----
- drivers/net/ethernet/broadcom/tg3.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+CIP testing did not find any problems here:
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index f52830dfb26a..287786357c9b 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -233,6 +233,12 @@ static int tg3_debug = -1;	/* -1 == use TG3_DEF_MSG_ENABLE as value */
- module_param(tg3_debug, int, 0);
- MODULE_PARM_DESC(tg3_debug, "Tigon3 bitmapped debugging message enable value");
- 
-+static bool force_pwr_down_on_reboot;	/* false == Don't force the power down of
-+					 * the device during reboot, only on SYSTEM_POWER_OFF
-+					 */
-+module_param(force_pwr_down_on_reboot, bool, 0x644);
-+MODULE_PARM_DESC(force_pwr_down_on_reboot, "Tigon3 force power down of the device on reboot enable value");
-+
- #define TG3_DRV_DATA_FLAG_10_100_ONLY	0x0001
- #define TG3_DRV_DATA_FLAG_5705_10_100	0x0002
- 
-@@ -18197,7 +18203,7 @@ static void tg3_shutdown(struct pci_dev *pdev)
- 	if (netif_running(dev))
- 		dev_close(dev);
- 
--	if (system_state == SYSTEM_POWER_OFF)
-+	if (system_state == SYSTEM_POWER_OFF || force_pwr_down_on_reboot)
- 		tg3_power_down(tp);
- 
- 	rtnl_unlock();
--- 
-2.40.1
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+4.14.y
 
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
+
+Best regards,
+                                                                Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--JJ0v5s8WCnbYUXSW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZZ2kAAAKCRAw5/Bqldv6
+8sWxAJ9yGwHtql/xsASszfgYPEm+nqe9LQCggpHJSo/bOzeNEhkzgoBfxO2J3aE=
+=6CyZ
+-----END PGP SIGNATURE-----
+
+--JJ0v5s8WCnbYUXSW--
