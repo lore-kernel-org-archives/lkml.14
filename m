@@ -1,545 +1,171 @@
 Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2048.outbound.protection.partner.outlook.cn [139.219.17.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94D09477;
-	Tue,  9 Jan 2024 07:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA99D22063;
+	Tue,  9 Jan 2024 07:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IisVBVwVCo/++08g3i5VHvwbDtOWZUMHLKjyf+J8VH+WedNbIx9nziC0zuiaC5bDu0e2ZO1VmffJ51VuBFctonJ4gPOWcWsKqcFXzYK9ExQR1mk4SNxRb8m0ovaQAodgN3mxCE6NduIQutxRJ0Dm/T2UtoclSbwr1m78d4X5OFmYNh+fVofswcMVa+xEbraCyPoiL7pGvbe/ID38Dq5X4QTa5MFR+obukVAfwB7TR5GYMqgw9DKKlTtdk1SpN+3KG8wnttBK0DHicQr+d0Xvx1kCO97F4A31WND2it97Pkl4ANm2tAzwBfViTGDyCyANMKWsyEs0SoHoLvPNReKKRQ==
+ b=DoUbD19AUq7kaiRqYLrbMxQvsadG/r6FeHrxfaz3pLzwFC/uwdMwOsM+mOCsN8tKgdUWFhyS4mQmGaDzqYMwHxcNmae9bBo8qmnIFpyOeA6PphUmt6KdiwKWiR7gFJwF5Wb054wBtnbVnX+ot5+rdcV+nBFw5F+9FBeU29nWcSNFntRev5tI/g0GtzB3yvrhp4TF+QGY79GljkXw0j9Mf+Ip0OxRpMb9LOAJkc0aYHOhwncglUvX669gltT7SEGICagv7WmrjlTzCfK4AjI70DozuwCS1nRD+518Ql3KJiaiLaHGiCU2QT7PI9lpVZlV8hXiEdIQK5Vy931gbC5i1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RyBNE/c5ohK97c6vvQAsxO3Nu5hkH4bde+VEnNwEOa0=;
- b=BPpzzxH8SxYpCW4xQ0qx6K13BrqMZS98wdSWYDp2eL3YkpDDkONgg2EiqH2AHoRytE6jl3MSIusK91YxTNmd9jSCosaQt9OppTrCNtQexuQmxo0HVqG0EqXsHyCU4jiVv817mfufzDvR417wx5Xo1RGbLX3aR8NbK9QEP95+zK9OusJZqaNYpEDMfMfWQ6RoEj5zgnfm7vK4wFuw0M1ZvCti4COol5SgnyQcKxKu0GT41AnSZ0CE62o9KIBBb/ZB7Gr+Os3QbOShshcJ86xJs0YQGXpGNTA2ScGbFrRqrt1Yld+9CQ2mSUOg2GkgnD4vXWL185LL3k5zaxuUJPVZbw==
+ bh=7vyq7Q+mAltzqMLqBGXH+cOLZ0J3YphmfcQo0OiCMFo=;
+ b=crquw/xCLs/FQO8VuDEsMTKk8+KIESXu8t8NuBkbDC5XryNXgKyRp7tN2WZ1JYiNlV5yjfrsZCs6FGdvKoNUe/OT1B1xr3/MiEZIonezYci9RWaEn2g68BB8Dzqw0K2lBUmfFyN2Py0Bcf1X0sPcFhZ7HGyZ28zRLBbeyxaN2+X8GtZYxA8E6krwtnw0nsA8uhoiGmEwVVQ5Mqvww886lfXpwIxkpam7x6v7m9iMDK6ONhE0o2NNR+DadLVevzpdx5kblD9SPRi+CMfcqcguqczmBaz/3jdVnEYVH0Z7pj0xTqLH/u4+6ZYX9Ie85eqH1ARW30E1IveyvTRSe1nr9w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6) by NT0PR01MB1231.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:e::9) with Microsoft SMTP Server (version=TLS1_2,
+Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::20) by BJSPR01MB0529.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.32; Tue, 9 Jan
- 2024 07:25:27 +0000
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- ([fe80::85fc:7fb9:8b00:dd88]) by
- NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn ([fe80::85fc:7fb9:8b00:dd88%3])
- with mapi id 15.20.7135.019; Tue, 9 Jan 2024 07:25:27 +0000
-From: Shengyang Chen <shengyang.chen@starfivetech.com>
-To: devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Cc: andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	p.zabel@pengutronix.de,
-	tomi.valkeinen@ideasonboard.com,
-	r-ravikumar@ti.com,
-	aford173@gmail.com,
-	rdunlap@infradead.org,
-	u.kleine-koenig@pengutronix.de,
-	bbrezillon@kernel.org,
-	changhuang.liang@starfivetech.com,
-	keith.zhao@starfivetech.com,
-	shengyang.chen@starfivetech.com,
-	jack.zhu@starfivetech.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] gpu: drm: bridge: cadence: Add a driver and platform ops for StarFive JH7110 SoC
-Date: Tue,  9 Jan 2024 15:25:16 +0800
-Message-Id: <20240109072516.24328-3-shengyang.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240109072516.24328-1-shengyang.chen@starfivetech.com>
-References: <20240109072516.24328-1-shengyang.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0008.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510::13) To NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6)
+ 2024 07:25:44 +0000
+Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ ([fe80::aaac:167d:8e0d:3acb]) by
+ BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn ([fe80::aaac:167d:8e0d:3acb%5])
+ with mapi id 15.20.6933.032; Tue, 9 Jan 2024 07:25:44 +0000
+From: ChunHau Tan <chunhau.tan@starfivetech.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "David S . Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh+dt@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>, Andrew Halaney <ahalaney@redhat.com>,
+	Jisheng Zhang <jszhang@kernel.org>, =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?=
+	<u.kleine-koenig@pengutronix.de>, Russell King <rmk+kernel@armlinux.org.uk>
+CC: Leyfoon Tan <leyfoon.tan@starfivetech.com>, JeeHeng Sia
+	<jeeheng.sia@starfivetech.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com"
+	<linux-stm32@st-md-mailman.stormreply.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 2/2] net: stmmac: Add StarFive JH8100 dwmac support
+Thread-Topic: [PATCH 2/2] net: stmmac: Add StarFive JH8100 dwmac support
+Thread-Index: AQHaQgh2nf3c4aA7dki8/ENX7FGoorDPoBmAgAFzoYA=
+Date: Tue, 9 Jan 2024 07:25:44 +0000
+Message-ID:
+ <BJSPR01MB05950484841C3D104EC91DEC9E6AA@BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn>
+References: <20240108075810.14161-1-chunhau.tan@starfivetech.com>
+ <20240108075810.14161-3-chunhau.tan@starfivetech.com>
+ <1c0474d3-e182-48c8-8ec2-12847c84164b@linaro.org>
+In-Reply-To: <1c0474d3-e182-48c8-8ec2-12847c84164b@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BJSPR01MB0595:EE_|BJSPR01MB0529:EE_
+x-ms-office365-filtering-correlation-id: 8d60b560-33fb-4ee9-c77a-08dc10e43170
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ R4BEhqMyY4y8/FsROFZRTX4FBQ9P2ny6gmHA2uuEo/g80HJhzocL3DFTBD4n3DjOFRAoZ/W4HuPiKykUVf47Yk9LDOZq0LsNSm05AbJ4PRCL//tIq2EQ+0nAGX5ejA2MlISNMqHEMiaop9pj5MfFw6x669W9yvwO8rfFCSts56MSZC+5V6RNQBZQ2mACgZAdqN/nGmR7/TJUz0gwZtVkrdv5ImfMOLqh9M+3dvQHjlp2uszXzUDY/J2Pwvl3rhvKntt3WFNFnXvk+ETU0vo2f4W9aaxN9AU4qnYqwGc8noY2J8QcWHs2pxfY8S2zCFs+9/AsT/KgcLC0JMGOkuChSmNxdgCw64+jz2rjd4hKWcm+VuH+wbfkW+V55YN0rQwb6YxgSNHtZN/wOBa5dMOEd7UolK5EMPfVZh17UOAZpN9UionrpXNerI/neW+XFUTb2+VEBDAebOvdATIDfnqqEu3Whe3BxXNhMnXx731ga+va8SVcgiuLRBfOtnxo1nUahwg/SyN0ujTajkG4y/eGX33Gb2gYZLbf0Kjq+lKYKJb9smgYteoDKQtGKfxlYrIfw/XuROmLrFa5p90YTeMvaw==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(136003)(346002)(366004)(396003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(41300700001)(41320700001)(921011)(71200400001)(7696005)(53546011)(55016003)(9686003)(508600001)(40180700001)(122000001)(33656002)(86362001)(40160700002)(83380400001)(38100700002)(38070700009)(7416002)(2906002)(66476007)(26005)(110136005)(8676002)(8936002)(66556008)(64756008)(66946007)(54906003)(66446008)(5660300002)(4326008)(76116006);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?NnBsOHVOb1NxS29yQ3FsbnBWMFlvU1E0TVkyZTgrRHI2dVJySTFMb1ByQmtt?=
+ =?utf-8?B?Wm1RL0N4M05sQmVIL1VTVFpTSVZjSWU5VHY1Q2hVb0cybGw5eUFicUFRMk85?=
+ =?utf-8?B?WDl4NUlhS1o1SW0wZVpOV2NjbVVDQ0Q0NDN6dThoWmU3Uk5qT2xWN25vYzhI?=
+ =?utf-8?B?TXBqV1dyVGo1VDF4akhaVnBiMDVXUGc2MU52b1BNNUFMR1RzVVEvbU9ucVEw?=
+ =?utf-8?B?VEZwQkM4OTc3NlJXWHNwVGcwY0R1UGxSTmVUWkwxOS9xbzI1U1B4VVQrVWdP?=
+ =?utf-8?B?RmpYUnE2b0N1WjJGQWp3dVBCZE9OQ1pQM1FFc0tuckk1dDhmMzhxWG1mYkZm?=
+ =?utf-8?B?dVpQMWpQQVk4K3VkdldSK3o0d24vaEM0d1BJTE5sZTFNNjE2eW11Zzl0UEtD?=
+ =?utf-8?B?SXZmZXdCaFJEa0p4Nmt1TFQvSDJ2c25BczlRSjh3Y21kcnQ4eXRiRFBhQUNx?=
+ =?utf-8?B?cnBvQkNPTzdTUnZKb29xaFQ4WDFDa0o5K01OR0tyT2Z5TTJIaEVXeEpxU2NN?=
+ =?utf-8?B?V3ZIRE15ZGIrYlB5cjNwYUE5RHI0YVRYaE1Ec1RaOXJxeG1panlQZXNoWERn?=
+ =?utf-8?B?MlcxWmZKWXg1ZjhTdWQ5YWlIUmlNVnJNV3MzR2JlSnFVdU5WaE1GdmRjcUFC?=
+ =?utf-8?B?UGt1anorMUFVdUhBL25BUWVDNjk5blVyWmRqTTU5UjZ5UkRLcGRvZUplb0RS?=
+ =?utf-8?B?TnlpMGpKeUl0cENpaHdnS0hEcWtnZEhhOUJYS2pZbHc5cWZOSFZjNEtxaDFh?=
+ =?utf-8?B?T2lYNmRHUXlqVmJhQ2lESlZnZ3FtWWdRaFF4NEZ6QUljQmRqZUpBZzM2T2RB?=
+ =?utf-8?B?VDdlWFBrSTE5L0ZaSU1wcVczcmRKRFF3RzFQcHVqSmh6OG1DYXNmbCs4R3lT?=
+ =?utf-8?B?Nzl1NTA1U2ZnekxsVjZMb1A2bTJIK2VXNFZldzFXRmJGWnBLQVB0dC9Fa0V0?=
+ =?utf-8?B?UWVuMzlXbi9hcEtJZStwOXB0citYUzcrWmhtd21ZT3NxZ3BvR1J6RVB6S0lO?=
+ =?utf-8?B?cVBHSmExN040QU1naU1xR2pSdlplT2VrYXQrUnNtS2psSVlEREpBaW5JdE5n?=
+ =?utf-8?B?dXZXMGpGNFJURTNPUHFhQVdLdnVpb1ROeU1iNEVVc0tDdzBCZndVTmsxY0Fi?=
+ =?utf-8?B?Z0Q4djQ4Z01PSHVpejZUemQ1VE11ZG5sNHdhbllWdUZVM0VOSXZuMTFDY0dN?=
+ =?utf-8?B?RlhtaGtsNnFFeU1zVWZtcWg5N0xXN2tSak9Ud2JJUENZTjJOYTF6cHpOV3Ns?=
+ =?utf-8?B?R3JDc0VNYlNiN0JzMC9YclBPUDhlSjMvcWtyQ044MkFZU2t3SGVibktsdWlU?=
+ =?utf-8?B?c1oyaEM0QmIrTlBSTWwzNkFOM0JtQnBWL0JRdy9KNm1HT3RpRzNsNUlDMVhM?=
+ =?utf-8?B?Wm9Ib2t0RlVTSnlMc2E0azZ5RGJqcXp6dUtyQlJ3UkFrallodDc3c09YU3ha?=
+ =?utf-8?B?OFdzNUJhdmhzTkk4Tm0vbTUzR0VMRWt6Nzk4QUNlcGw0REFXU3YwWlNSM2xZ?=
+ =?utf-8?B?TStObjRteDNoMnM4UWVpSTVKaHdMMHNkNkRvcWJyaS9BbW9oc3hwMFBjZ2c3?=
+ =?utf-8?B?RW5hbi8wbGw1MnE4bWwzREFQK2JiaHVqUE54bGJnRGhiNjBkQWoxSXZEd1hv?=
+ =?utf-8?B?VlA2SThNc3k1ZmJLeExEWG41RFhCMHpBRUcyOVErR0JzQjN2OC9CNTN5R0tB?=
+ =?utf-8?B?VFpXekRvZDJESndlUFBUcFRBaHpzZm1zT1FxZjVEUS91Z1lvWG44QXpPNWh4?=
+ =?utf-8?B?dVo1eGErM3lHNlpCak8vQlpyZWJQdEtMRnhpd1VhWDhPeTFoRDJHd29kU0JP?=
+ =?utf-8?B?aDdTTU9UMWxCWXhJV2ZoVFVFMEViclVRWHVMNmNqZ1IrR0x4UVRld2lqeENK?=
+ =?utf-8?B?Wk9iRkl6ZE9tWmxKc1N1SDZ4UjhnVnYyNklBR1Z6Q0pqaHpPK1NOdGVJQjQ1?=
+ =?utf-8?B?N1pQY09ZUDRPVmNQOTExUktxWnVkYm9wVkkzVmFWakpMZzVHSGFLQTlzQ3hH?=
+ =?utf-8?B?RGhuZE1LNG45WlZNalpLQ0RRSlI2Zncya0M1VkZ4MkhUaXc0UXBJL3IwTUti?=
+ =?utf-8?B?Um5UZm1FQzdKaGh2N2hSNk4xTWJ4emsvTTAxaG8wUWkxUXEzWTgrdEVxRGs4?=
+ =?utf-8?B?c3MyT2NOVm12bFZUWDhuek1VbUJvOUN2VXFFNVN3OW03Nk9xVmthTWhJZ0tG?=
+ =?utf-8?B?TEE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NT0PR01MB1070:EE_|NT0PR01MB1231:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1871c946-213e-4eb4-f41f-08dc10e426c8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	bCm187VP5pnl8t5Sc7ONQN24ZH1BIN8sUUTYcK1oIXwraQxYK9evC76lUv3nPSyjxvhq040lYuIkO/giBNc8ZNq1ajSpCpPeWlddA/tLM9LjI4SNLMhfJxA8GCqQOpCnfXnQ2b0+anbRSa4wX63NdE4wN3HDWnpv0XqDpy3yomZJ374iKQyCOak5MwL2NMMXR+nxPzPJ9dOoGpHWGWiayEgVV7mtyFyVPLzPA7hbBMqqb5uzkF0TV3M7sWSXiFAxe+JJ/1gLL267yacUXRTqk767CuojXBP4+N2vqLjcsZqExD2Ywrt6H+KQhu390+VEpt3Yj3cPj6gJROpIHxaKmvJTZ6YAoiNhKE/bjqHRbT6g6OiOLEN01Ugwl0DeE1MauNnmifkRL6+y3EkQuHgwZQiZWkvKMhj6+9GgnZuXlNmOtTY52IHyc8YE+/oXnWwra+5Ypgec/c6QSTkjurhqeEY+o+sJvp9Xmea/VCWo9whH5egPFHkKW7cmf3biCZudnj2tyHEdaHOYLRBfNb3eVj+uVSI69PYYmG1wx9GhDeviLUZ8dFH7SiLA6VLHATLg
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(366004)(39830400003)(346002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(86362001)(66946007)(40160700002)(36756003)(40180700001)(38100700002)(83380400001)(1076003)(38350700005)(508600001)(52116002)(6666004)(7416002)(8676002)(8936002)(2906002)(66556008)(4326008)(44832011)(5660300002)(66476007)(30864003)(26005)(41300700001)(2616005)(41320700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CrJE1grbSG18oq9ytGs0xx4cX2ufDljgJkpUfGDKkImcy/bYJhwh8s6bn4zU?=
- =?us-ascii?Q?BjSeQqUztZejbw9XpPQJVA5re2ctoJx//e9ONUh7VaCrfxoHZSL9WJ/wVke9?=
- =?us-ascii?Q?ddVzJ1JqG+GrFpSgUMVTLwWOuSzC4G+4otBFZJizILd0H1Gke4En3f7Wf20D?=
- =?us-ascii?Q?TtqfX6Bi3ZTJVh8TLF5oD+Oq3Y6J/bSrrH14cv+yCeRO3+QS7hSb04qytOy0?=
- =?us-ascii?Q?frp5mIxtLUKuWrEO/hnIh7SpFQ9V9gPI/3KtvtUsYzjTMg4pvFykKtWG1CIP?=
- =?us-ascii?Q?vGKcUVZu08ZMifs4dUAajYlXJQ1SJx7X3b1Oi/5IcDWge2kDRYyUDB5yUvP1?=
- =?us-ascii?Q?a0JhZQ6Yea9BF+k1Tzdu4kdqy9eEJCTRsVjrNcE7kVa7U0k06L21455G/SlY?=
- =?us-ascii?Q?NxapKFQZkoiVsqu1e9aDr981O78T+c+TqVfoQ1Ktnc3f2vWXNKM0SUu/G6qB?=
- =?us-ascii?Q?v2djMK/RvfQUNwS6qkS9b/H9SdWBZYgGVSwN6qhOX3A1lGCTdcPCrCrvtUYY?=
- =?us-ascii?Q?MZ7MxbcAbpJuT9N28LbjhEzAPs0n8XKJYTO2SOiKnTuCIS4atSdaHdk2kIAF?=
- =?us-ascii?Q?pykzEF1PVVm8d23ZNU4LgS5vu1efp+7BPxzI6OPjBsEr1BHj/c4GlXsT5fPG?=
- =?us-ascii?Q?+j4fCfM58btEgtMFMy7/8+rQGjqPHu7hXRM8g+ocXgUFf8ZB031CO8/LaOa9?=
- =?us-ascii?Q?V9iKPVz3FQfN/kPpwhMXGaJYJCsoMM21omwhLkYhqzse05L7fGsI9dQwOFWL?=
- =?us-ascii?Q?ImqfBDIHDnDL0TZsMsTfnRIxTrZxoUdWA8AJvsM6R1jXYaVIWJ37H6rS5S83?=
- =?us-ascii?Q?Eaq1Nkqw2c9Pt0wK+NVC6YtZf2gyQY1BZvuxr5KAM/xFUIOU5zn91gAIacEl?=
- =?us-ascii?Q?QhuRNm0jTl7m2k8VD3l68R7ju1NYdV26DqlVRP807KHVEuuHU2X/ucORDCJf?=
- =?us-ascii?Q?vbQT+Ss0uyWE1L+3IZBXFDJpiYmySFNFNLbLSB2oXoB5FzQLJdJXNbrkOYdg?=
- =?us-ascii?Q?kthJkbr9zyeduX7z5gLVQMHoiS//bULJikl/MV8m2eonqFRqFa3jkHu+/555?=
- =?us-ascii?Q?oeF4Mcx6LOXlOXCLwVT65MwUAsFmYJaKlKKNBZCxJxChm/0YxJxYcmLsbl41?=
- =?us-ascii?Q?4pcPQM2jLFHfRad0IIlsEZouxySG9dt4TUwrDdqEcd571FxM2HBAYQrgWDI6?=
- =?us-ascii?Q?Oe1FB4BKVYNzIhKVTxM+Aosw+w3Izz38qG1E3q0OZonxXctEmPjkWIUjmOFM?=
- =?us-ascii?Q?r1Q9PFqwxkjTj4O+bAN/kvHDlhS9dj1bUGgwGaSXIC2For0QSTAnOqfhol2J?=
- =?us-ascii?Q?kKfrkl6+aRV3VYInK83o3qii4KDixcvoHiVB+WZ+ZrOScDxBOe+wQ8vQDlC7?=
- =?us-ascii?Q?mRukx304Plo2MbOfohu0jn4Weto2QTTbmtqjNGwvr16XimF9bQj9Bw9WV+wp?=
- =?us-ascii?Q?7Z/XNEaPdZD6XbAmhf4qSKk5pnzF9LpzlZAHd+62ZMwiKyPhhmARW1DGWZvO?=
- =?us-ascii?Q?iPVLh/o0NhI2Nze2cOjvXzfHTh1PDH2pPZDhU5kz9raPZgKm6PQzBsYrLBMI?=
- =?us-ascii?Q?3Vvt3GtyDMK4GCeEoyPJ+r+QRRJFghV92TyaqQ/b2zFHn1vn9g/4d7SoU/bG?=
- =?us-ascii?Q?NDnvbnriZ+tGEHsPwphSGIM=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1871c946-213e-4eb4-f41f-08dc10e426c8
-X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 07:25:27.0750
+X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d60b560-33fb-4ee9-c77a-08dc10e43170
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2024 07:25:44.7227
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yMFlPADzGlDKts0BLOrlrxw8sLPImz+TpPVawgTso3xBNCWPeJpGlRVdF+6yCpDO4GZScIEnIQGQ9NP4tpkb+rVa7zapBI1NUQOj9qC8tJA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1231
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lqkYrpwsJ/DFnySfUtUoOSKNqaGVuXwPfAH78vA6ZKdmoXBl60JKATOa8cOT4IRuNAmY8ZLyQLJi3qPX404w/8C0aWTFI4EQQ5t+OCNsA+4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0529
 
-From: Keith Zhao <keith.zhao@starfivetech.com>
-
-In order to fit CDNS DSI module in StarFive JH7110 SoC,
-The mainly modification is followed:
-
-1.Add driver for StarFive JH7110 SoC to drive its CDNS DSI module.
-2.Add platform ops in cdns-dsi.c for StarFive JH7110 SoC probing.
-
-Signed-off-by: Keith Zhao <keith.zhao@starfivetech.com>
----
- MAINTAINERS                                   |   8 +
- drivers/gpu/drm/bridge/cadence/Kconfig        |   7 +
- drivers/gpu/drm/bridge/cadence/Makefile       |   1 +
- .../gpu/drm/bridge/cadence/cdns-dsi-core.c    |  29 ++-
- .../gpu/drm/bridge/cadence/cdns-dsi-core.h    |  21 ++
- .../gpu/drm/bridge/cadence/cdns-dsi-jh7110.c  | 193 ++++++++++++++++++
- .../gpu/drm/bridge/cadence/cdns-dsi-jh7110.h  |  16 ++
- 7 files changed, 274 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110.c
- create mode 100644 drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d32920dd943f..a220ea04f5c4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6847,6 +6847,14 @@ F:	Documentation/devicetree/bindings/display/solomon,ssd-common.yaml
- F:	Documentation/devicetree/bindings/display/solomon,ssd13*.yaml
- F:	drivers/gpu/drm/solomon/ssd130x*
- 
-+DRM DRIVERS FOR STARFIVE
-+M:	Keith Zhao <keith.zhao@starfivetech.com>
-+M:	Shengyang Chen <shengyang.chen@starfivetech.com>
-+L:	dri-devel@lists.freedesktop.org
-+S:	Maintained
-+T:	git git://anongit.freedesktop.org/drm/drm-misc
-+F:	drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110*
-+
- DRM DRIVER FOR ST-ERICSSON MCDE
- M:	Linus Walleij <linus.walleij@linaro.org>
- S:	Maintained
-diff --git a/drivers/gpu/drm/bridge/cadence/Kconfig b/drivers/gpu/drm/bridge/cadence/Kconfig
-index cced81633ddc..ad9f572f4720 100644
---- a/drivers/gpu/drm/bridge/cadence/Kconfig
-+++ b/drivers/gpu/drm/bridge/cadence/Kconfig
-@@ -19,6 +19,13 @@ config DRM_CDNS_DSI_J721E
- 	help
- 	  Support J721E Cadence DSI wrapper. The wrapper manages
- 	  the routing of the DSS DPI signal to the Cadence DSI.
-+
-+config DRM_CDNS_DSI_JH7110
-+	bool "JH7110 SOC Cadence DSI support"
-+	default n
-+	help
-+	  Cadence DPI to DSI bridge which is embedded in the
-+	  StarFive JH7110 SoC.
- endif
- 
- config DRM_CDNS_MHDP8546
-diff --git a/drivers/gpu/drm/bridge/cadence/Makefile b/drivers/gpu/drm/bridge/cadence/Makefile
-index c95fd5b81d13..87f603a9f4ad 100644
---- a/drivers/gpu/drm/bridge/cadence/Makefile
-+++ b/drivers/gpu/drm/bridge/cadence/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
- cdns-dsi-y := cdns-dsi-core.o
- cdns-dsi-$(CONFIG_DRM_CDNS_DSI_J721E) += cdns-dsi-j721e.o
-+cdns-dsi-$(CONFIG_DRM_CDNS_DSI_JH7110) += cdns-dsi-jh7110.o
- obj-$(CONFIG_DRM_CDNS_MHDP8546) += cdns-mhdp8546.o
- cdns-mhdp8546-y := cdns-mhdp8546-core.o cdns-mhdp8546-hdcp.o
- cdns-mhdp8546-$(CONFIG_DRM_CDNS_MHDP8546_J721E) += cdns-mhdp8546-j721e.o
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index 7457d38622b0..a8f976f9eeed 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -27,6 +27,10 @@
- #include "cdns-dsi-j721e.h"
- #endif
- 
-+#ifdef CONFIG_DRM_CDNS_DSI_JH7110
-+#include "cdns-dsi-jh7110.h"
-+#endif
-+
- #define IP_CONF				0x0
- #define SP_HS_FIFO_DEPTH(x)		(((x) & GENMASK(30, 26)) >> 26)
- #define SP_LP_FIFO_DEPTH(x)		(((x) & GENMASK(25, 21)) >> 21)
-@@ -552,6 +556,10 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
- 	/* data rate was in bytes/sec, convert to bits/sec. */
- 	phy_cfg->hs_clk_rate = dlane_bps * 8;
- 
-+	if (dsi->platform_ops && dsi->platform_ops->update)
-+		adj_dsi_htotal = dsi->platform_ops->update(dsi, dsi_cfg, phy_cfg,
-+							   dpi_hz, dpi_htotal, dsi_htotal);
-+
- 	dsi_hfp_ext = adj_dsi_htotal - dsi_htotal;
- 	dsi_cfg->hfp += dsi_hfp_ext;
- 	dsi_cfg->htotal = dsi_htotal + dsi_hfp_ext;
-@@ -683,7 +691,7 @@ static void cdns_dsi_bridge_post_disable(struct drm_bridge *bridge)
- 	pm_runtime_put(dsi->base.dev);
- }
- 
--static void cdns_dsi_hs_init(struct cdns_dsi *dsi)
-+void cdns_dsi_hs_init(struct cdns_dsi *dsi)
- {
- 	struct cdns_dsi_output *output = &dsi->output;
- 	u32 status;
-@@ -1026,6 +1034,14 @@ static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
- 
- 	cdns_dsi_init_link(dsi);
- 
-+	/*
-+	 * on JH7110 SoC , when transfer dsi command ,
-+	 * cdns_dsi_hs_init is needed.
-+	 * or the final ret will be error value.
-+	 */
-+	if (dsi->platform_ops && dsi->platform_ops->transfer)
-+		dsi->platform_ops->transfer(dsi);
-+
- 	ret = mipi_dsi_create_packet(&packet, msg);
- 	if (ret)
- 		goto out;
-@@ -1142,6 +1158,9 @@ static int __maybe_unused cdns_dsi_resume(struct device *dev)
- 	clk_prepare_enable(dsi->dsi_p_clk);
- 	clk_prepare_enable(dsi->dsi_sys_clk);
- 
-+	if (dsi->platform_ops && dsi->platform_ops->resume)
-+		dsi->platform_ops->resume(dsi);
-+
- 	return 0;
- }
- 
-@@ -1152,6 +1171,10 @@ static int __maybe_unused cdns_dsi_suspend(struct device *dev)
- 	clk_disable_unprepare(dsi->dsi_sys_clk);
- 	clk_disable_unprepare(dsi->dsi_p_clk);
- 	reset_control_assert(dsi->dsi_p_rst);
-+
-+	if (dsi->platform_ops && dsi->platform_ops->suspend)
-+		dsi->platform_ops->suspend(dsi);
-+
- 	dsi->link_initialized = false;
- 	return 0;
- }
-@@ -1294,6 +1317,10 @@ static const struct of_device_id cdns_dsi_of_match[] = {
- #ifdef CONFIG_DRM_CDNS_DSI_J721E
- 	{ .compatible = "ti,j721e-dsi", .data = &dsi_ti_j721e_ops, },
- #endif
-+#ifdef CONFIG_DRM_CDNS_DSI_JH7110
-+	{ .compatible = "starfive,jh7110-dsi", .data = &dsi_ti_jh7110_ops, },
-+#endif
-+
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, cdns_dsi_of_match);
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.h b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.h
-index ca7ea2da635c..f4491009c977 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.h
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.h
-@@ -53,12 +53,22 @@ struct cdns_dsi;
-  * @deinit: Called in the CDNS DSI remove
-  * @enable: Called at the beginning of CDNS DSI bridge enable
-  * @disable: Called at the end of CDNS DSI bridge disable
-+ * @resume: Called at the resume of CDNS DSI
-+ * @suspend: Called at the suspend of CDNS DSI
-+ * @update: Called at the middle of CDNS DSI bridge enable
-  */
- struct cdns_dsi_platform_ops {
- 	int (*init)(struct cdns_dsi *dsi);
- 	void (*deinit)(struct cdns_dsi *dsi);
- 	void (*enable)(struct cdns_dsi *dsi);
- 	void (*disable)(struct cdns_dsi *dsi);
-+	void (*resume)(struct cdns_dsi *dsi);
-+	void (*suspend)(struct cdns_dsi *dsi);
-+	int (*update)(struct cdns_dsi *dsi, struct cdns_dsi_cfg *dsi_cfg,
-+		      struct phy_configure_opts_mipi_dphy *phy_cfg,
-+		      unsigned long dpi_hz, unsigned long dpi_htotal,
-+		      unsigned long dsi_htotal);
-+	void (*transfer)(struct cdns_dsi *dsi);
- };
- 
- struct cdns_dsi {
-@@ -79,6 +89,17 @@ struct cdns_dsi {
- 	bool link_initialized;
- 	bool phy_initialized;
- 	struct phy *dphy;
-+
-+#ifdef CONFIG_DRM_CDNS_DSI_JH7110
-+	struct clk *apb_clk;
-+	struct clk *txesc_clk;
-+	struct reset_control *dpi_rst;
-+	struct reset_control *apb_rst;
-+	struct reset_control *txesc_rst;
-+	struct reset_control *txbytehs_rst;
-+#endif
- };
- 
-+void cdns_dsi_hs_init(struct cdns_dsi *dsi);
-+
- #endif /* !__CDNS_DSI_H__ */
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110.c
-new file mode 100644
-index 000000000000..654d083f49e1
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110.c
-@@ -0,0 +1,193 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * JH7110 SoC Cadence DSI wrapper
-+ *
-+ * Copyright (C) 2023 StarFive Technology Co., Ltd.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/reset.h>
-+
-+#include "cdns-dsi-jh7110.h"
-+
-+static int cdns_dsi_clock_enable(struct cdns_dsi *dsi, struct device *dev)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(dsi->apb_clk);
-+	if (ret) {
-+		dev_err(dev, "Failed to prepare/enable apb_clk\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(dsi->txesc_clk);
-+	if (ret) {
-+		dev_err(dev, "Failed to prepare/enable txesc_clk\n");
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static void cdns_dsi_clock_disable(struct cdns_dsi *dsi)
-+{
-+	clk_disable_unprepare(dsi->apb_clk);
-+	clk_disable_unprepare(dsi->txesc_clk);
-+}
-+
-+static int cdns_dsi_resets_deassert(struct cdns_dsi *dsi, struct device *dev)
-+{
-+	int ret;
-+
-+	ret = reset_control_deassert(dsi->apb_rst);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to deassert apb_rst\n");
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(dsi->txesc_rst);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to deassert txesc_rst\n");
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(dsi->dpi_rst);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to deassert dpi_rst\n");
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int cdns_dsi_resets_assert(struct cdns_dsi *dsi, struct device *dev)
-+{
-+	int ret;
-+
-+	ret = reset_control_assert(dsi->apb_rst);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to assert apb_rst\n");
-+		return ret;
-+	}
-+
-+	ret = reset_control_assert(dsi->txesc_rst);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to assert txesc_rst\n");
-+		return ret;
-+	}
-+
-+	ret = reset_control_assert(dsi->dpi_rst);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to assert dpi_rst\n");
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int cdns_dsi_get_clock(struct device *dev, struct cdns_dsi *dsi)
-+{
-+	dsi->apb_clk = devm_clk_get(dev, "apb");
-+	if (IS_ERR(dsi->apb_clk))
-+		return PTR_ERR(dsi->apb_clk);
-+
-+	dsi->txesc_clk = devm_clk_get(dev, "txesc");
-+	if (IS_ERR(dsi->txesc_clk))
-+		return PTR_ERR(dsi->txesc_clk);
-+
-+	return 0;
-+}
-+
-+static int cdns_dsi_get_reset(struct device *dev, struct cdns_dsi *dsi)
-+{
-+	dsi->dpi_rst = devm_reset_control_get(dev, "dpi");
-+	if (IS_ERR(dsi->dpi_rst))
-+		return PTR_ERR(dsi->dpi_rst);
-+
-+	dsi->apb_rst = devm_reset_control_get(dev, "apb");
-+	if (IS_ERR(dsi->apb_rst))
-+		return PTR_ERR(dsi->apb_rst);
-+
-+	dsi->txesc_rst = devm_reset_control_get(dev, "txesc");
-+	if (IS_ERR(dsi->txesc_rst))
-+		return PTR_ERR(dsi->txesc_rst);
-+
-+	dsi->txbytehs_rst = devm_reset_control_get(dev, "txbytehs");
-+	if (IS_ERR(dsi->txbytehs_rst))
-+		return PTR_ERR(dsi->txbytehs_rst);
-+
-+	return 0;
-+}
-+
-+static int cdns_dsi_jh7110_init(struct cdns_dsi *dsi)
-+{
-+	int ret;
-+
-+	ret = cdns_dsi_get_clock(dsi->base.dev, dsi);
-+	if (ret)
-+		return ret;
-+
-+	return cdns_dsi_get_reset(dsi->base.dev, dsi);
-+}
-+
-+static void cdns_dsi_jh7110_resume(struct cdns_dsi *dsi)
-+{
-+	int ret;
-+
-+	ret = cdns_dsi_clock_enable(dsi, dsi->base.dev);
-+	if (ret) {
-+		dev_err(dsi->base.dev, "failed to enable clock\n");
-+		return;
-+	}
-+	ret = cdns_dsi_resets_deassert(dsi, dsi->base.dev);
-+	if (ret < 0) {
-+		dev_err(dsi->base.dev, "failed to deassert reset\n");
-+		return;
-+	}
-+}
-+
-+static void cdns_dsi_jh7110_suspend(struct cdns_dsi *dsi)
-+{
-+	int ret;
-+
-+	ret = cdns_dsi_resets_assert(dsi, dsi->base.dev);
-+	if (ret < 0) {
-+		dev_err(dsi->base.dev, "failed to deassert reset\n");
-+		return;
-+	}
-+
-+	cdns_dsi_clock_disable(dsi);
-+}
-+
-+static int cdns_dsi_jh7110_update(struct cdns_dsi *dsi, struct cdns_dsi_cfg *dsi_cfg,
-+				  struct phy_configure_opts_mipi_dphy *phy_cfg,
-+				  unsigned long dpi_hz, unsigned long dpi_htotal,
-+				  unsigned long dsi_htotal)
-+{
-+	unsigned long long dlane_bps;
-+	unsigned long adj_dsi_htotal;
-+	unsigned int lanes = dsi->output.dev->lanes;
-+
-+	phy_cfg->hs_clk_rate = phy_cfg->hs_clk_rate - (phy_cfg->hs_clk_rate % 10000000);
-+	phy_cfg->hs_clk_rate = phy_cfg->hs_clk_rate + 40000000;
-+	dlane_bps = phy_cfg->hs_clk_rate * lanes * dpi_htotal / 8;
-+	adj_dsi_htotal = dlane_bps / dpi_hz;
-+
-+	return adj_dsi_htotal;
-+}
-+
-+static void jh7110_cdns_dsi_hs_init(struct cdns_dsi *dsi)
-+{
-+	cdns_dsi_hs_init(dsi);
-+	reset_control_deassert(dsi->txbytehs_rst);
-+}
-+
-+const struct cdns_dsi_platform_ops dsi_ti_jh7110_ops = {
-+	.init = cdns_dsi_jh7110_init,
-+	.resume = cdns_dsi_jh7110_resume,
-+	.suspend = cdns_dsi_jh7110_suspend,
-+	.update = cdns_dsi_jh7110_update,
-+	.transfer = jh7110_cdns_dsi_hs_init,
-+};
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110.h b/drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110.h
-new file mode 100644
-index 000000000000..15d6a766b502
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-jh7110.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * JH7110 Cadence DSI
-+ *
-+ * Copyright (C) 2022-2023 StarFive Technology Co., Ltd.
-+ * Author: keith.zhao <keith.zhao@starfivetech.com>
-+ */
-+
-+#ifndef __CDNS_DSI_JH7110_H__
-+#define __CDNS_DSI_JH7110_H__
-+
-+#include "cdns-dsi-core.h"
-+
-+extern const struct cdns_dsi_platform_ops dsi_ti_jh7110_ops;
-+
-+#endif /* !__CDNS_DSI_JH7110_H__ */
--- 
-2.17.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
+d3NraSA8a3J6eXN6dG9mLmtvemxvd3NraUBsaW5hcm8ub3JnPg0KPiBTZW50OiBNb25kYXksIDgg
+SmFudWFyeSwgMjAyNCA1OjA3IFBNDQo+IFRvOiBDaHVuSGF1IFRhbiA8Y2h1bmhhdS50YW5Ac3Rh
+cmZpdmV0ZWNoLmNvbT47IERhdmlkIFMgLiBNaWxsZXINCj4gPGRhdmVtQGRhdmVtbG9mdC5uZXQ+
+OyBFcmljIER1bWF6ZXQgPGVkdW1hemV0QGdvb2dsZS5jb20+OyBKYWt1Yg0KPiBLaWNpbnNraSA8
+a3ViYUBrZXJuZWwub3JnPjsgUGFvbG8gQWJlbmkgPHBhYmVuaUByZWRoYXQuY29tPjsgUm9iIEhl
+cnJpbmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47IEVtaWwgUmVubmVyIEJlcnRoaW5nIDxrZXJu
+ZWxAZXNtaWwuZGs+OyBSb2IgSGVycmluZw0KPiA8cm9iaEBrZXJuZWwub3JnPjsgS3J6eXN6dG9m
+IEtvemxvd3NraSA8a3J6eXN6dG9mLmtvemxvd3NraStkdEBsaW5hcm8ub3JnPjsNCj4gQ29ub3Ig
+RG9vbGV5IDxjb25vcitkdEBrZXJuZWwub3JnPjsgTWF4aW1lIENvcXVlbGluDQo+IDxtY29xdWVs
+aW4uc3RtMzJAZ21haWwuY29tPjsgQWxleGFuZHJlIFRvcmd1ZQ0KPiA8YWxleGFuZHJlLnRvcmd1
+ZUBmb3NzLnN0LmNvbT47IFNpbW9uIEhvcm1hbiA8aG9ybXNAa2VybmVsLm9yZz47DQo+IEJhcnRv
+c3ogR29sYXN6ZXdza2kgPGJhcnRvc3ouZ29sYXN6ZXdza2lAbGluYXJvLm9yZz47IEFuZHJldyBI
+YWxhbmV5DQo+IDxhaGFsYW5leUByZWRoYXQuY29tPjsgSmlzaGVuZyBaaGFuZyA8anN6aGFuZ0Br
+ZXJuZWwub3JnPjsgVXdlDQo+IEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRy
+b25peC5kZT47IFJ1c3NlbGwgS2luZw0KPiA8cm1rK2tlcm5lbEBhcm1saW51eC5vcmcudWs+DQo+
+IENjOiBMZXlmb29uIFRhbiA8bGV5Zm9vbi50YW5Ac3RhcmZpdmV0ZWNoLmNvbT47IEplZUhlbmcg
+U2lhDQo+IDxqZWVoZW5nLnNpYUBzdGFyZml2ZXRlY2guY29tPjsgbmV0ZGV2QHZnZXIua2VybmVs
+Lm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc7DQo+IGxpbnV4LXN0bTMyQHN0LW1kLW1haWxtYW4uc3Rvcm1yZXBseS5jb207DQo+
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BB
+VENIIDIvMl0gbmV0OiBzdG1tYWM6IEFkZCBTdGFyRml2ZSBKSDgxMDAgZHdtYWMgc3VwcG9ydA0K
+PiANCj4gT24gMDgvMDEvMjAyNCAwODo1OCwgVGFuIENodW4gSGF1IHdyb3RlOg0KPiA+IEFkZCBK
+SDgxMDAgZHdtYWMgc3VwcG9ydC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRhbiBDaHVuIEhh
+dSA8Y2h1bmhhdS50YW5Ac3RhcmZpdmV0ZWNoLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9u
+ZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvZHdtYWMtc3RhcmZpdmUuYyB8IDEgKw0KPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9kd21hYy1zdGFyZml2ZS5jDQo+IGIvZHJp
+dmVycy9uZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvZHdtYWMtc3RhcmZpdmUuYw0KPiA+IGlu
+ZGV4IDVkNjMwYWZmYjRkMS4uMzczNzE0ZjZlMzgyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
+bmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL2R3bWFjLXN0YXJmaXZlLmMNCj4gPiArKysgYi9k
+cml2ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9kd21hYy1zdGFyZml2ZS5jDQo+ID4g
+QEAgLTE0Niw2ICsxNDYsNyBAQCBzdGF0aWMgaW50IHN0YXJmaXZlX2R3bWFjX3Byb2JlKHN0cnVj
+dA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4NCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBvZl9kZXZpY2VfaWQgc3RhcmZpdmVfZHdtYWNfbWF0Y2hbXSA9IHsNCj4gPiAgCXsgLmNvbXBh
+dGlibGUgPSAic3RhcmZpdmUsamg3MTEwLWR3bWFjIgl9LA0KPiA+ICsJeyAuY29tcGF0aWJsZSA9
+ICJzdGFyZml2ZSxqaDgxMDAtZHdtYWMiCX0sDQo+IA0KPiBObyBkaWZmZXJlbmNlcz8gVGhlbiB3
+aHkgYXJlbid0IHRoZSBkZXZpY2VzIG1hZGUgY29tcGF0aWJsZSB3aXRoIGVhY2gNCj4gb3RoZXI/
+DQpUaGVyZSBpcyBhIGRpZmZlcmVuY2UgYmV0d2VlbiBKSDcxMTAgJiBKSDgxMTAsDQpKSDcxMTAg
+aGFzIHR3byByZXNldCBzaWduYWxzIChhaGIsIHN0bW1hY2V0aCksDQp3aGlsZSBKSDgxMTAgaGFz
+IG9ubHkgb25lIHJlc2V0IHNpZ25hbCAoc3RtbWFjZXRoKSwNCnRoaXMgd2lsbCBiZSBzaG93biBp
+biBkZXZpY2UgdHJlZSBmaWxlLg0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBLcnp5c3p0b2YNCg0K
