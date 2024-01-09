@@ -1,131 +1,96 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FCC381AD;
-	Tue,  9 Jan 2024 11:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OopZzPMe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704799500;
-	bh=Wn4ecH1GNnkPZ7jx7eZ6iiftyWhdMfTiRzbfmCdSNsI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OopZzPMexnJA9WO4ltmJ2GaJf0sLZBuWRX3VOrYwXUgHsZmOcio5QV7DfDGTbkeJg
-	 vSVUsIH0R/IyEo0v0x0twpVhymcDIqQBikyER3Y37OnTqSTupJag5LLq+umN+hbr7k
-	 ATV3Hnga2PrjrNfQne58DqtFCcLF9W+vfU7+adTXmZtsZs6+jfr6to39/pludbD0e5
-	 D5icx+dtpAruHv/OmnuIrjXObjmqyR4LPFYFUDYV1zRQ3v68vyG/meyrWM1+olctTM
-	 4mpWDOf2kMgTnN7se6UxzCIy+VNkpcsjaPTZir6VpJaZ5f3gswuoehb1I364QsE98u
-	 LHwpcm/Ew1d8w==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6EEC63782056;
-	Tue,  9 Jan 2024 11:24:55 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Andrei Vagin <avagin@google.com>,
-	Peter Xu <peterx@redhat.com>,
-	Hugh Dickins <hughd@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	"Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-	=?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: kernel@collabora.com,
-	syzbot+81227d2bd69e9dedb802@syzkaller.appspotmail.com,
-	Sean Christopherson <seanjc@google.com>,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH] fs/proc/task_mmu: move mmu notification mechanism inside mm lock
-Date: Tue,  9 Jan 2024 16:24:42 +0500
-Message-ID: <20240109112445.590736-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.42.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0451729CE3;
+	Tue,  9 Jan 2024 11:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dbdc7ff087fso2017295276.2;
+        Tue, 09 Jan 2024 03:25:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704799527; x=1705404327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A9M4e0KgRG4duwu/WfThya1uTfD/WswypLpOJmDTcgE=;
+        b=BzQmbCP6CGZJ+h0o69z/P+mkozJU1jBrDdoFyX2Rbx0TGpn7hCe84E7LAUSQWXF6Nu
+         uwOdUKuyEv3CYE0Cl9OR8T82tnHx6/5OYROxoXqAn9pK6mGtD5eyxMxU2r1UDymNTP9r
+         db7hhpHhMXgM1y/7KKKa9oOXwR/48FhTQZMTFQFVsBgsazF8CekV5EoyNbxOsz3hi7Rv
+         hJWMsdbminejfpOO6kA6/dlsw05kc4bfyJKAoFqfRB4mV5XPFSazrVXbXufbFFsVtu27
+         tkgFGTwWJlinzF16nn4A//ZabomPV3F2vrbT4zv+fGun8pAVNiLw9nVNT6oEryMIa7pZ
+         Ktog==
+X-Gm-Message-State: AOJu0Ywf9YcUF6XEgwvPxZdXfX2HBnvJPhKq98sFjifSEJS0ZHb50fh2
+	rRwmH9DRBWh/BpeR082m9LfkaWkQfAcxabSP
+X-Google-Smtp-Source: AGHT+IEbvbI7fi9u8m3yA72JueQB1w5sZR0Cs+kHQqdZnSmM7Zm9rC8C3Qi5Bt6KOjQwzF9LLl/I1g==
+X-Received: by 2002:a25:fc1e:0:b0:dbe:aa9f:795b with SMTP id v30-20020a25fc1e000000b00dbeaa9f795bmr2820420ybd.16.1704799526755;
+        Tue, 09 Jan 2024 03:25:26 -0800 (PST)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id a17-20020a25ae11000000b00d9c7bf8f32fsm613719ybj.42.2024.01.09.03.25.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jan 2024 03:25:26 -0800 (PST)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5edfcba97e3so28882277b3.2;
+        Tue, 09 Jan 2024 03:25:26 -0800 (PST)
+X-Received: by 2002:a81:690a:0:b0:5ef:a183:a8a4 with SMTP id
+ e10-20020a81690a000000b005efa183a8a4mr4155660ywc.90.1704799526385; Tue, 09
+ Jan 2024 03:25:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240108181610.2697017-1-leitao@debian.org> <20240108181610.2697017-2-leitao@debian.org>
+In-Reply-To: <20240108181610.2697017-2-leitao@debian.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 9 Jan 2024 12:25:14 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWqnTjHa6KW5g0F8xH50As4Ce+O3a2HaifJtnY1cGrFcQ@mail.gmail.com>
+Message-ID: <CAMuHMdWqnTjHa6KW5g0F8xH50As4Ce+O3a2HaifJtnY1cGrFcQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 01/10] net: fill in MODULE_DESCRIPTION()s for 8390
+To: Breno Leitao <leitao@debian.org>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, netdev@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Move mmu notification mechanism inside mm lock to prevent race condition
-in other components which depend on it. The notifier will invalidate
-memory range. Depending upon the number of iterations, different memory
-ranges would be invalidated.
+Hi Breno,
 
-The following warning would be removed by this patch:
-WARNING: CPU: 0 PID: 5067 at arch/x86/kvm/../../../virt/kvm/kvm_main.c:734 kvm_mmu_notifier_change_pte+0x860/0x960 arch/x86/kvm/../../../virt/kvm/kvm_main.c:734
+On Mon, Jan 8, 2024 at 7:17=E2=80=AFPM Breno Leitao <leitao@debian.org> wro=
+te:
+> W=3D1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> Add descriptions to all the good old 8390 modules and drivers.
+>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-There is no behavioural and performance change with this patch when
-there is no component registered with the mmu notifier.
+Thanks for your patch!
 
-Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs")
-Reported-by: syzbot+81227d2bd69e9dedb802@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/all/000000000000f6d051060c6785bc@google.com/
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- fs/proc/task_mmu.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+> --- a/drivers/net/ethernet/8390/apne.c
+> +++ b/drivers/net/ethernet/8390/apne.c
+> @@ -610,4 +610,5 @@ static int init_pcmcia(void)
+>         return 1;
+>  }
+>
+> +MODULE_DESCRIPTION("National Semiconductor 8390 PCMCIA ethernet driver")=
+;
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 62b16f42d5d2..56c2e7357494 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -2448,13 +2448,6 @@ static long do_pagemap_scan(struct mm_struct *mm, unsigned long uarg)
- 	if (ret)
- 		return ret;
- 
--	/* Protection change for the range is going to happen. */
--	if (p.arg.flags & PM_SCAN_WP_MATCHING) {
--		mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_VMA, 0,
--					mm, p.arg.start, p.arg.end);
--		mmu_notifier_invalidate_range_start(&range);
--	}
--
- 	for (walk_start = p.arg.start; walk_start < p.arg.end;
- 			walk_start = p.arg.walk_end) {
- 		long n_out;
-@@ -2467,8 +2460,20 @@ static long do_pagemap_scan(struct mm_struct *mm, unsigned long uarg)
- 		ret = mmap_read_lock_killable(mm);
- 		if (ret)
- 			break;
-+
-+		/* Protection change for the range is going to happen. */
-+		if (p.arg.flags & PM_SCAN_WP_MATCHING) {
-+			mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_VMA, 0,
-+						mm, walk_start, p.arg.end);
-+			mmu_notifier_invalidate_range_start(&range);
-+		}
-+
- 		ret = walk_page_range(mm, walk_start, p.arg.end,
- 				      &pagemap_scan_ops, &p);
-+
-+		if (p.arg.flags & PM_SCAN_WP_MATCHING)
-+			mmu_notifier_invalidate_range_end(&range);
-+
- 		mmap_read_unlock(mm);
- 
- 		n_out = pagemap_scan_flush_buffer(&p);
-@@ -2494,9 +2499,6 @@ static long do_pagemap_scan(struct mm_struct *mm, unsigned long uarg)
- 	if (pagemap_scan_writeback_args(&p.arg, uarg))
- 		ret = -EFAULT;
- 
--	if (p.arg.flags & PM_SCAN_WP_MATCHING)
--		mmu_notifier_invalidate_range_end(&range);
--
- 	kfree(p.vec_buf);
- 	return ret;
- }
--- 
-2.42.0
+I would write:
 
+    National Semiconductor 8390 Amiga PCMCIA ethernet driver
+
+as this driver does not work on generic platforms with a PCMCIA slot.
+
+>  MODULE_LICENSE("GPL");
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
