@@ -1,34 +1,36 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EFC3BB26;
-	Tue,  9 Jan 2024 14:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BA53C067;
+	Tue,  9 Jan 2024 14:34:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ziv+kSTd"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WOy8RXNK"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=BXc+4WKC8+eb9zNRohZjAGSMHA28vjIGn5u2I+5gdTw=; b=Ziv+kSTd8e4knFsf+cZ4FhSgIg
-	U9pzgaaTvSfxy9LbNi4iN9eaV7kk0SCSH4a9+ukAso1FUS4dPAzlMCz1Lx50nWwL0EKgv1T8LuyV+
-	4AWy423Jd3yuguBwNDUUp5ffII1/mH8tkvvc4IMeS3MLW3ptkF2mGEnUEAB0UtuZqgu6A8TNYuhoW
-	SBu5o8PccwH8QsxCW7CySkGVly2rIndLhiauUKbVVpiMvcvXzORh0hq+bTn6cuXlZLiYH/dYoMOsa
-	vcqVdltFfkgRr9BSJzsTF9KdZjSuxnMbB08s2cQCQwDb7ovAQjvYdJeblntnp2O/VKD3Hu1laZ9hy
-	8q02evYg==;
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=vQE4Vr9H4MhDEQ3ZsfKD//avXDRAF3tvXQ94yS9EaIc=; b=WOy8RXNKs6IkvVSwr390DH5rRe
+	0rst5N0FA/qgl8haZG3WWpgKA98XqBUTBrk6VO84tfKI2gUcXcpXwQNWdwLmkXJ4kLGdQS8yL6k1d
+	YFFIVqft4rvEIVeyqvGjnFTqIiNrNifH3XoCAogibRgbU57ipvSoHdN8OqlAvtrdpZ/iP8zoEKcNl
+	Wpc74Ie6cZstz0i54+BmqZSWqG7rIQ/fZflo7FfJ1OMCcHw1Ql97n2vKjI7g5sIPYm2NnKmVrZP+E
+	uBbWWP25xLMR7PETFxYOVfR+g5nuWaU/y4y10cjIxhvfydceKgEMvwjELoP9fYWoFWYy1W4aa2AZC
+	cUHHeFNQ==;
 Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rNDB0-009xrO-Nf; Tue, 09 Jan 2024 14:33:58 +0000
+	id 1rNDB1-009xrc-BC; Tue, 09 Jan 2024 14:33:59 +0000
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	linux-doc@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/8] Improve buffer head documentation
-Date: Tue,  9 Jan 2024 14:33:49 +0000
-Message-Id: <20240109143357.2375046-1-willy@infradead.org>
+Subject: [PATCH v2 7/8] buffer: Improve bdev_getblk documentation
+Date: Tue,  9 Jan 2024 14:33:56 +0000
+Message-Id: <20240109143357.2375046-8-willy@infradead.org>
 X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20240109143357.2375046-1-willy@infradead.org>
+References: <20240109143357.2375046-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,32 +39,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Turn buffer head documentation into its own document, and make many
-general improvements to the docs.  Obviously there is much more that
-could be done.  Tested with make htmldocs.
+Add some more information about the state of the buffer_head returned.
 
-v2:
- - Incorporate feedback from Randy & Pankaj
- - Add docs for brelse() and bforget()
- - Improve bdev_getblk() docs
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ fs/buffer.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Matthew Wilcox (Oracle) (8):
-  doc: Improve the description of __folio_mark_dirty
-  buffer: Add kernel-doc for block_dirty_folio()
-  buffer: Add kernel-doc for try_to_free_buffers()
-  buffer: Fix __bread and __bread_gfp kernel-doc
-  buffer: Add kernel-doc for brelse() and __brelse()
-  buffer: Add kernel-doc for bforget() and __bforget()
-  buffer: Improve bdev_getblk documentation
-  doc: Split buffer.rst out of api-summary.rst
-
- Documentation/filesystems/api-summary.rst |   3 -
- Documentation/filesystems/index.rst       |   1 +
- fs/buffer.c                               | 165 +++++++++++++---------
- include/linux/buffer_head.h               |  48 +++++--
- mm/page-writeback.c                       |  14 +-
- 5 files changed, 145 insertions(+), 86 deletions(-)
-
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 05b68eccfdcc..562de7e013f7 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1424,6 +1424,11 @@ EXPORT_SYMBOL(__find_get_block);
+  * @size: The size of buffer_heads for this @bdev.
+  * @gfp: The memory allocation flags to use.
+  *
++ * The returned buffer head has its reference count incremented, but is
++ * not locked.  The caller should call brelse() when it has finished
++ * with the buffer.  The buffer may not be uptodate.  If needed, the
++ * caller can bring it uptodate either by reading it or overwriting it.
++ *
+  * Return: The buffer head, or NULL if memory could not be allocated.
+  */
+ struct buffer_head *bdev_getblk(struct block_device *bdev, sector_t block,
 -- 
 2.43.0
 
