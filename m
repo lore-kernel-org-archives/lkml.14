@@ -1,29 +1,57 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131833BB2D;
-	Tue,  9 Jan 2024 17:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD1338DC7;
+	Tue,  9 Jan 2024 17:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="WAxrlsla"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1704820900; x=1705425700; i=wahrenst@gmx.net;
-	bh=I5j3c1xtyvcY6yHIxzxP6AHvUQ/haNIG8AbnATZ4xCE=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=WAxrlslaE2YYEuXqL1/wJfm1+Dxv/TiO56+OyZ0t9szNluOsOK0K9y4K8yfmTXpC
-	 IIZqAYJqPNOL+W/FcIvt2YTfUHpmguktJjaJ+rH63aa3Z3BWFwpNRcPOYwfjBO3Gd
-	 ao7fQ/FXBCFH9knQKgA+3qUupRGYNrpmCYvLzYPFfc5bPWrwM/KX0ZJvxJ0TiMUb0
-	 ZUNvf04ZM1PZ1SvPkW4iAsebVa0zk217ZnOL9oHhIik2QsXj3kZOb2/VKXLqYdtMV
-	 noBjFLatRkBD8wQaLJXRl2p9DptOW+pliQNrd0naCVEA/7/ULaUCblSHmtBECMeDs
-	 IDMcTSWDM0ejpnkCbA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MQ5rU-1raXUS1mls-00M2J6; Tue, 09
- Jan 2024 18:21:40 +0100
-Message-ID: <bb87cc98-ee9b-46b6-bf24-6aa69af1e0e5@gmx.net>
-Date: Tue, 9 Jan 2024 18:21:37 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AaL9xrL8"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 409GvpZo016352;
+	Tue, 9 Jan 2024 17:27:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=pskhbSQo/hE1+s88/LvrJMsOGawm3lUwErhvYaZxIls=;
+ b=AaL9xrL8u8repX5NdOFKPnbkEHc81amJplTZPu8Nsl1mOSJSTdHNrp9qjPl6Jk3taKLr
+ VhW0y8/s5+oXRcLPWDkZqEXRmwLfS6NaJRG4cRqE6NXjgIyvyQBx5e6qYPilhpeVdFID
+ 7TylOzFqPpKeb+1NeE675nr62mwi/2rnJJgRDBgaArPMG+D5MSeqv3xqdjNsu6BgBNb0
+ +v00EPxZC3ENdhTyQYQ7eSwACPjV1wWQb9f/VG7/69g8i/B4DFLPSskyLldzvTUZ1/qr
+ Paa9JX+wM1ILTt5zg33v0J24cFQiGN6ZR+7eXXVd/qK/twRd1VVzNxB1M6JEzpIt9Vwa vQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vha4b0ykv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 17:27:00 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 409Gvq6g016392;
+	Tue, 9 Jan 2024 17:26:59 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vha4b0yjw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 17:26:59 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 409F8FrW000954;
+	Tue, 9 Jan 2024 17:26:58 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vfkdk7qnr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 17:26:58 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 409HQvQv23003800
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 9 Jan 2024 17:26:57 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DC9D45805F;
+	Tue,  9 Jan 2024 17:26:56 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9562858051;
+	Tue,  9 Jan 2024 17:26:47 +0000 (GMT)
+Received: from [9.43.54.75] (unknown [9.43.54.75])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  9 Jan 2024 17:26:47 +0000 (GMT)
+Message-ID: <5c357634-c9c5-4796-9f5c-df00a4a5a523@linux.vnet.ibm.com>
+Date: Tue, 9 Jan 2024 22:56:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,113 +59,239 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Add waveshare 7inch touchscreen panel support
-To: neil.armstrong@linaro.org,
- Shengyang Chen <shengyang.chen@starfivetech.com>,
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: quic_jesszhan@quicinc.com, sam@ravnborg.org, airlied@gmail.com,
- daniel@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, dave.stevenson@raspberrypi.com,
- thierry.reding@gmail.com, changhuang.liang@starfivetech.com,
- keith.zhao@starfivetech.com, jack.zhu@starfivetech.com,
- linux-kernel@vger.kernel.org
-References: <20240109070949.23957-1-shengyang.chen@starfivetech.com>
- <99d7bb85-17b0-4b5e-a6cf-f5957ad92298@linaro.org>
+Subject: Re: [RFC PATCH 7/8] sched/core: boost/unboost in guest scheduler
 Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <99d7bb85-17b0-4b5e-a6cf-f5957ad92298@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hDBW/55DqECknzawCAINwLhUiuFTWNMFk/5p8eDm1ZUOMTxJDoQ
- vlDfvRTRH0WtzbVAtorQN0ZTWd8ThqzdOPm+SFTdNcjbG+04zcKXoYx2cD6Mi21NiGg1+pl
- 4F2psVbZ8sKedzbSl92Rxgf0c52dEb0rGjpb3heAjHNES0zn9a1+BwjSTAIaR9trGo8fz+U
- /0jvABs0d+eUBRf2KEWhQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WzN29zLtn2I=;arJuGjhavmEGEFcpXN9wlSQM1X4
- GcL/1e7F2z6s6HSUFBjtyxsJSfoXk2tqyzMSM2zgVzS8qjm+qgirPySj3axeU4uS45cr6LQsg
- ylk9bqtVE1/LcnhHBVdcIOCN7h2vAghw7r07bKYJGvO9QR823EHygWvs4CyhK3OCJv5wZ82et
- HG4DE6fndf2C4+U22pm4ALomSsoJVRJvbmR+/fFsyRkKXpzgJpd/tOOAuMySfa1vqan/pOi7k
- JKAVDMaMPxiGXn3YJozasFnPSa1JybzS+GhyoiWauzAr4HtuV28TJ5yGETsRNk6r7fgxd8nhj
- vR9yvJpOJ/ekPY6Rn6T2I8ejdECvQf7C+RvrizRzFCOHY0ZzZE7ovp40/6C6SbPRpS5nhf+c2
- KM2hO6u/twsEclS2UqBhy7UwhFJUSw6fUxEIsPtOlUpxRcIpRqfS/lQCYNr4VtF6yHbTx6QAu
- PEvySfdV0qxkbM/8HZab9zRnM7pYoHq32zRlZi23pQnjZzHc2TALOjgJ6fnR1ENsJlweJQ02x
- WoFG/ad8YzLMVDb6BTp97E6XemH4NO74nzRI5qaohJB4omKIb4fIKsD8fPUjHhYYpJaslnNgt
- Tkx1WSi93rGY+3afLXzBpUl/ghcp+OioKM9ncZwgTSNoI4HYC5B8/g7m9OKS9iHxhjvKEQU9V
- xxGLzhun0B4su14Rfl2NF/IfD3oxAJ1KUfxMZfMC6dmvXkyMGF41OyFd8c35KMNW+HJkAMr2v
- BoVTt5ZmKW84umdCyMt9jhnJfWP0icRi0yWm4SowdVA7mKg8YX7djVyKX54/MVOxCNkLBbeF/
- R5Jlmt2k6E9DDtyEUGVUFWTNDwQdEjY1wJgESq3V4/UFuwbm8uBK5YeJCpfUEqtLYChKAw48J
- Bl/aIILgfJFTh8dXqa7ePW8SRvN5kkcH5ElnvDo5W6Zqmt437MziwtU3hkVz07O9nRDNFnYjA
- aAEft4cQdnCBdUbXlhWhO9bQLKw=
+To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc: Suleiman Souhlal <suleiman@google.com>,
+        Masami Hiramatsu <mhiramat@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ben Segall
+ <bsegall@google.com>, Borislav Petkov <bp@alien8.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        "H . Peter Anvin"
+ <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
+        Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Steven Rostedt
+ <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        shrikanth hegde <sshegde@linux.vnet.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        svaidy@linux.vnet.ibm.com
+References: <20231214024727.3503870-1-vineeth@bitbyteword.org>
+ <20231214024727.3503870-8-vineeth@bitbyteword.org>
+From: Shrikanth Hegde <sshegde@linux.vnet.ibm.com>
+In-Reply-To: <20231214024727.3503870-8-vineeth@bitbyteword.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: DgTPp2sVU-KgGTclpFl7KzQAgWQGkLcJ
+X-Proofpoint-ORIG-GUID: oS01Y7vpjosDo7xPi0V0bknViZo2VWkd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-09_09,2024-01-09_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=832 clxscore=1011
+ malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401090141
 
-Hi Neil,
 
-Am 09.01.24 um 12:19 schrieb neil.armstrong@linaro.org:
-> Hi,
->
-> On 09/01/2024 08:09, Shengyang Chen wrote:
->> This patchset adds waveshare 7inch touchscreen panel support
->> for the StarFive JH7110 SoC.
->
-> Could you precise which SKU you're referring to ? is it 19885 =3D>
-> https://www.waveshare.com/7inch-dsi-lcd.htm ?
->
-> Are you sure it requires different timings from the RPi one ? In the
-> Waveshare
-> wiki it explicitly uses the rpi setup (vc4-kms-dsi-7inch) to drive it:
-> https://www.waveshare.com/wiki/7inch_DSI_LCD
-i don't have an anser for your question, but the Raspberry Pi vendor
-tree use different timings than the Mainline kernel:
 
-https://github.com/raspberrypi/linux/commit/222b9baa97cc4c880d040a8c6a5da8=
-0d6a42c8e8
+On 12/14/23 8:17 AM, Vineeth Pillai (Google) wrote:
+> RT or higher priority tasks in guest is considered a critical workload
+> and guest scheduler can request boost/unboost on a task switch and/or a
+> task wakeup. Also share the preempt status of guest vcpu with the host
+> so that host can take decision on boot/unboost.
+> 
+> CONFIG_TRACE_PREEMPT_TOGGLE is enabled for using the function
+> equivalent of preempt_count_{add,sub} to update the shared memory.
+> Another option is to update the preempt_count_{add,sub} macros, but
+> it will be more code churn and complex.
+> 
+> Boost request is lazy, but unboost request is synchronous.
+> 
+> Detect the feature in guest from cpuid flags and use the MSR to pass the
+> GPA of memory location for sharing scheduling information.
+> 
+> Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+> ---
+>  arch/x86/Kconfig                | 13 +++++
+>  arch/x86/include/asm/kvm_para.h |  7 +++
+>  arch/x86/kernel/kvm.c           | 16 ++++++
+>  include/linux/sched.h           | 21 ++++++++
+>  kernel/entry/common.c           |  9 ++++
+>  kernel/sched/core.c             | 93 ++++++++++++++++++++++++++++++++-
+>  6 files changed, 158 insertions(+), 1 deletion(-)
+> 
 
-Additionally the
-arm64/boot/dts/freescale/imx8mm-venice-gw72xx-0x-rpidsi.dtso suggests
-that it uses the Raspberry Pi 7inch, but uses the timings of
-powertip,ph800480t013-idf02 from panel-simple.
 
-Maybe Shengyang could test these timings with the Waveshare touch. At
-the end this rely on a proper implementation on the underlying drivers.
+Wish you all happy new year!
+Sorry for the late reply. Took a while to go through this. 
 
-Sorry, for adding more confusion.
+[...]
+>  /*
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index b47f72b6595f..57f211f1b3d7 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -151,6 +151,71 @@ const_debug unsigned int sysctl_sched_nr_migrate = SCHED_NR_MIGRATE_BREAK;
+>  
+>  __read_mostly int scheduler_running;
+>  
+> +#ifdef CONFIG_PARAVIRT_SCHED
+> +#include <linux/kvm_para.h>
+> +
+> +DEFINE_STATIC_KEY_FALSE(__pv_sched_enabled);
+> +
+> +DEFINE_PER_CPU_DECRYPTED(struct pv_sched_data, pv_sched) __aligned(64);
+> +
+> +unsigned long pv_sched_pa(void)
+> +{
+> +	return slow_virt_to_phys(this_cpu_ptr(&pv_sched));
+> +}
+> +
+> +bool pv_sched_vcpu_boosted(void)
+> +{
+> +	return (this_cpu_read(pv_sched.boost_status) == VCPU_BOOST_BOOSTED);
+> +}
+> +
+> +void pv_sched_boost_vcpu_lazy(void)
+> +{
+> +	this_cpu_write(pv_sched.schedinfo.boost_req, VCPU_REQ_BOOST);
+> +}
+> +
+> +void pv_sched_unboost_vcpu_lazy(void)
+> +{
+> +	this_cpu_write(pv_sched.schedinfo.boost_req, VCPU_REQ_UNBOOST);
+> +}
+> +
+> +void pv_sched_boost_vcpu(void)
+> +{
+> +	pv_sched_boost_vcpu_lazy();
+> +	/*
+> +	 * XXX: there could be a race between the boost_status check
+> +	 *      and hypercall.
+> +	 */
+> +	if (this_cpu_read(pv_sched.boost_status) == VCPU_BOOST_NORMAL)
+> +		kvm_pv_sched_notify_host();
+> +}
+> +
+> +void pv_sched_unboost_vcpu(void)
+> +{
+> +	pv_sched_unboost_vcpu_lazy();
+> +	/*
+> +	 * XXX: there could be a race between the boost_status check
+> +	 *      and hypercall.
+> +	 */
+> +	if (this_cpu_read(pv_sched.boost_status) == VCPU_BOOST_BOOSTED &&
+> +			!preempt_count())
+> +		kvm_pv_sched_notify_host();
+> +}
+> +
+> +/*
+> + * Share the preemption enabled/disabled status with host. This will not incur a
+> + * VMEXIT and acts as a lazy boost/unboost mechanism - host will check this on
+> + * the next VMEXIT for boost/unboost decisions.
+> + * XXX: Lazy unboosting may allow cfs tasks to run on RT vcpu till next VMEXIT.
+> + */
+> +static inline void pv_sched_update_preempt_status(bool preempt_disabled)
+> +{
+> +	if (pv_sched_enabled())
+> +		this_cpu_write(pv_sched.schedinfo.preempt_disabled, preempt_disabled);
+> +}
+> +#else
+> +static inline void pv_sched_update_preempt_status(bool preempt_disabled) {}
+> +#endif
+> +
+>  #ifdef CONFIG_SCHED_CORE
+>  
 
-Regards
->
-> Neil
->
->>
->>
->> changes since v1:
->> - Rebased on tag v6.7.
->>
->> patch 1:
->> - Gave up original changing.
->> - Changed the commit message.
->> - Add compatible in panel-simple.yaml
->>
->> patch 2:
->> - Gave up original changing.
->> - Changed the commit message.
->> - Add new mode for the panel in panel-simple.c
->>
->> v1:
->> https://patchwork.kernel.org/project/dri-devel/cover/20231124104451.442=
-71-1-shengyang.chen@starfivetech.com/
->>
->> Shengyang Chen (2):
->> =C2=A0=C2=A0 dt-bindings: display: panel: panel-simple: Add compatible =
-property
->> for
->> =C2=A0=C2=A0=C2=A0=C2=A0 waveshare 7inch touchscreen panel
->> =C2=A0=C2=A0 gpu: drm: panel: panel-simple: add new display mode for wa=
-veshare
->> =C2=A0=C2=A0=C2=A0=C2=A0 7inch touchscreen panel
->>
->> =C2=A0 .../bindings/display/panel/panel-simple.yaml=C2=A0 |=C2=A0 2 ++
->> =C2=A0 drivers/gpu/drm/panel/panel-simple.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 28 +++++++++++++++++++
->> =C2=A0 2 files changed, 30 insertions(+)
->>
->
+Wouldn't it be better to define a arch hook for this instead? implementation then could 
+follow depending on the architecture. This boosting for vcpu tasks in host may be of 
+interest to other hypervisors as well. 
 
+
+Currently I see there are two places where interaction is taking place for paravirt. 
+1. steal time accounting 
+2. vcpu_is_preempted  
+each architecture seems do this in their own way. So one option is an arch hook for 
+other paravirt interfaces as well. Other option is probably what was discussed. i.e 
+define a framework for paravirt interfaces from the ground up. 
+
+
+We are working on resource limiting aspect of para virtualization on powerVM. 
+Interface for that could be done via hypercall or via VPA (he VPA is a memory structure shared 
+between the hypervisor and OS, defined by PAPR). That would be one more paravirt interface. 
+As you mentioned in the cover letter, I am curious to know if you have tried the resource limiting, 
+since you have overcommit of vCPUs.  
+
+>  DEFINE_STATIC_KEY_FALSE(__sched_core_enabled);
+> @@ -2070,6 +2135,19 @@ unsigned long get_wchan(struct task_struct *p)
+>  
+>  static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+>  {
+> +#ifdef CONFIG_PARAVIRT_SCHED
+> +	/*
+> +	 * TODO: currently request for boosting remote vcpus is not implemented. So
+> +	 * we boost only if this enqueue happens for this cpu.
+> +	 * This is not a big problem though, target cpu gets an IPI and then gets
+> +	 * boosted by the host. Posted interrupts is an exception where target vcpu
+> +	 * will not get boosted immediately, but on the next schedule().
+> +	 */
+> +	if (pv_sched_enabled() && this_rq() == rq &&
+> +			sched_class_above(p->sched_class, &fair_sched_class))
+> +		pv_sched_boost_vcpu_lazy();
+> +#endif
+> +
+>  	if (!(flags & ENQUEUE_NOCLOCK))
+>  		update_rq_clock(rq);
+>  
+> @@ -5835,6 +5913,8 @@ static inline void preempt_latency_start(int val)
+>  #ifdef CONFIG_DEBUG_PREEMPT
+>  		current->preempt_disable_ip = ip;
+>  #endif
+> +		pv_sched_update_preempt_status(true);
+> +
+>  		trace_preempt_off(CALLER_ADDR0, ip);
+>  	}
+>  }
+> @@ -5867,8 +5947,10 @@ NOKPROBE_SYMBOL(preempt_count_add);
+>   */
+>  static inline void preempt_latency_stop(int val)
+>  {
+> -	if (preempt_count() == val)
+> +	if (preempt_count() == val) {
+> +		pv_sched_update_preempt_status(false);
+>  		trace_preempt_on(CALLER_ADDR0, get_lock_parent_ip());
+> +	}
+>  }
+>  
+>  void preempt_count_sub(int val)
+> @@ -6678,6 +6760,15 @@ static void __sched notrace __schedule(unsigned int sched_mode)
+>  	rq->last_seen_need_resched_ns = 0;
+>  #endif
+>  
+> +#ifdef CONFIG_PARAVIRT_SCHED
+> +	if (pv_sched_enabled()) {
+> +		if (sched_class_above(next->sched_class, &fair_sched_class))
+> +			pv_sched_boost_vcpu_lazy();
+> +		else if (next->sched_class == &fair_sched_class)
+> +			pv_sched_unboost_vcpu();
+> +	}
+> +#endif
+> +
+>  	if (likely(prev != next)) {
+>  		rq->nr_switches++;
+>  		/*
