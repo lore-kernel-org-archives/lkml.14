@@ -1,236 +1,78 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521216D6E2;
-	Tue,  9 Jan 2024 07:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4T8NMp6tvqz4f3kjN;
-	Tue,  9 Jan 2024 15:48:22 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 6EB0D1A0272;
-	Tue,  9 Jan 2024 15:48:26 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgBXKBFJ+pxlGV82AQ--.34051S3;
-	Tue, 09 Jan 2024 15:48:26 +0800 (CST)
-Subject: Re: [PATCH v3 2/2] md: simplify md_seq_ops
-To: Yu Kuai <yukuai1@huaweicloud.com>, Song Liu <song@kernel.org>
-Cc: mariusz.tkaczyk@linux.intel.com, xni@redhat.com,
- linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20230927061241.1552837-1-yukuai1@huaweicloud.com>
- <20230927061241.1552837-3-yukuai1@huaweicloud.com>
- <CAPhsuW6sdnJYtE+iy+x=C2qVKzeN18zibx+qQBF4Y=KRsAmTTg@mail.gmail.com>
- <b6a79bb8-e0fc-09b4-90e7-8112100a3fd0@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <753615cc-16d6-3c58-99ee-b5e1f0aa0cde@huaweicloud.com>
-Date: Tue, 9 Jan 2024 15:48:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F82134C3;
+	Tue,  9 Jan 2024 07:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OqNAYoRH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B939C43390;
+	Tue,  9 Jan 2024 07:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1704786576;
+	bh=8bsC+3GiQ/JyD4ov1VIrPnB8eSSmJQCsfVT2D7rax+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OqNAYoRHb/uGuAsEuPgrEmlu7R70ql65q9qoizETbxKOprUTHYACy6yQNqF8N409v
+	 /eJwmuHvRuqbGx4oMgMzhS43HTL4Roceni71noR1FPU0rbX9cHlqUx2FhEmF313bJt
+	 xKttH/+iUgStKHQ7uDjgZ3AkZiNXL4NuRqMydTq8=
+Date: Tue, 9 Jan 2024 08:49:33 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: SilverPlate3 <arielsilver77@gmail.com>
+Cc: forest@alittletooquiet.net, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: vt6655: Fix sparse warning. Restricted cast.
+Message-ID: <2024010937-rental-filled-5ae6@gregkh>
+References: <20240109072704.44582-1-arielsilver77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b6a79bb8-e0fc-09b4-90e7-8112100a3fd0@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXKBFJ+pxlGV82AQ--.34051S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFyrAryDWr43AFy7Ww18AFb_yoWrtFyDpa
-	9xZFWUAr4DZFWrtw4DXa1kua4Fv3ZFqryqgr9rG3s3Cr1jqr9a93W3XrWjvF98uFW8W3Z8
-	Zw4UKFyUWrW8JwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
-	DUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240109072704.44582-1-arielsilver77@gmail.com>
 
-Hi,
-
-在 2024/01/09 9:21, Yu Kuai 写道:
-> Hi,
+On Tue, Jan 09, 2024 at 09:27:04AM +0200, SilverPlate3 wrote:
+> Running 'make M=drivers/staging/vt6655 C=2'
+> causes sparse to generate few warnings.
+> This patch fixes the following warnings by ensuring le64_to_cpu
+> handles only __le64 values, thus dismissing chances of bad endianness.
+> * drivers/staging/vt6655/card.c:302:45: warning: cast to restricted __le64
+> * drivers/staging/vt6655/card.c:336:23: warning: cast to restricted __le64
+> * drivers/staging/vt6655/card.c:804:23: warning: cast to restricted __le64
+> * drivers/staging/vt6655/card.c:831:18: warning: cast to restricted __le64
 > 
-> 在 2024/01/09 7:38, Song Liu 写道:
->> On Tue, Sep 26, 2023 at 11:19 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>>
->>> From: Yu Kuai <yukuai3@huawei.com>
->>>
->>> Before this patch, the implementation is hacky and hard to understand:
->>>
->>> 1) md_seq_start set pos to 1;
->>> 2) md_seq_show found pos is 1, then print Personalities;
->>> 3) md_seq_next found pos is 1, then it update pos to the first mddev;
->>> 4) md_seq_show found pos is not 1 or 2, show mddev;
->>> 5) md_seq_next found pos is not 1 or 2, update pos to next mddev;
->>> 6) loop 4-5 until the last mddev, then md_seq_next update pos to 2;
->>> 7) md_seq_show found pos is 2, then print unused devices;
->>> 8) md_seq_next found pos is 2, stop;
->>>
->>> This patch remove the magic value and use seq_list_start/next/stop()
->>> directly, and move printing "Personalities" to md_seq_start(),
->>> "unsed devices" to md_seq_stop():
->>>
->>> 1) md_seq_start print Personalities, and then set pos to first mddev;
->>> 2) md_seq_show show mddev;
->>> 3) md_seq_next update pos to next mddev;
->>> 4) loop 2-3 until the last mddev;
->>> 5) md_seq_stop print unsed devices;
->>>
->>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->>
->> Just realized this introduced a behavior change:
->>
->> When there is not md devices, before this patch, we have
->>
->> [root@eth50-1 ~]# cat /proc/mdstat
->> Personalities : [raid0] [raid1] [raid10] [raid6] [raid5] [raid4]
->> unused devices: <none>
->>
->> After this patch, "cat /proc/mdstat" returns nothing. This causes
->> some confusion for users who want to read "Personalities" line,
->> for example, the mdadm test suite reads it.
->>
->> I haven't figured out the best fix yet.
+> Signed-off-by: Ariel Silver <arielsilver77@gmail.com>
+
+ From: line doesn't match the signed-off-by line :(
+
+> ---
+>  drivers/staging/vt6655/card.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> Yes, that's a problem. And after reviewing seq_read_iter() in detail, I
-> realize that I also can't use seq_printf() in m->op->start() directly,
-> because if seq buffer overflowed, md_seq_start() can be called more than
-> once.
-> 
-> I'll fix these problems soon.
-How about following patch(already tested)?
+> diff --git a/drivers/staging/vt6655/card.c b/drivers/staging/vt6655/card.c
+> index 350ab8f3778a..5dc2200466b7 100644
+> --- a/drivers/staging/vt6655/card.c
+> +++ b/drivers/staging/vt6655/card.c
+> @@ -292,6 +292,7 @@ bool card_update_tsf(struct vnt_private *priv, unsigned char rx_rate,
+>  {
+>  	u64 local_tsf;
+>  	u64 qwTSFOffset = 0;
+> +	__le64 le_qwTSFOffset = 0;
+>  
+>  	local_tsf = vt6655_get_current_tsf(priv);
+>  
+> @@ -299,7 +300,8 @@ bool card_update_tsf(struct vnt_private *priv, unsigned char rx_rate,
+>  		qwTSFOffset = CARDqGetTSFOffset(rx_rate, qwBSSTimestamp,
+>  						local_tsf);
+>  		/* adjust TSF, HW's TSF add TSF Offset reg */
+> -		qwTSFOffset =  le64_to_cpu(qwTSFOffset);
+> +		le_qwTSFOffset = cpu_to_le64(qwTSFOffset);
+> +		qwTSFOffset = le64_to_cpu(le_qwTSFOffset);
 
-Thanks,
-Kuai
+Are you sure about this?  Please verify just what you are doing here
+please...
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e351e6c51cc7..289d3d89e73d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8135,6 +8135,19 @@ static void status_unused(struct seq_file *seq)
-         seq_printf(seq, "\n");
-  }
+thanks,
 
-+static void status_personalities(struct seq_file *seq)
-+{
-+       struct md_personality *pers;
-+
-+       seq_puts(seq, "Personalities : ");
-+       spin_lock(&pers_lock);
-+       list_for_each_entry(pers, &pers_list, list)
-+               seq_printf(seq, "[%s] ", pers->name);
-+
-+       spin_unlock(&pers_lock);
-+       seq_puts(seq, "\n");
-+}
-+
-  static int status_resync(struct seq_file *seq, struct mddev *mddev)
-  {
-         sector_t max_sectors, resync, res;
-@@ -8273,43 +8286,53 @@ static int status_resync(struct seq_file *seq, 
-struct mddev *mddev)
-         return 1;
-  }
-
-+#define MDDEV_NONE (void *)1
-+
-  static void *md_seq_start(struct seq_file *seq, loff_t *pos)
-         __acquires(&all_mddevs_lock)
-  {
--       struct md_personality *pers;
--
--       seq_puts(seq, "Personalities : ");
--       spin_lock(&pers_lock);
--       list_for_each_entry(pers, &pers_list, list)
--               seq_printf(seq, "[%s] ", pers->name);
--
--       spin_unlock(&pers_lock);
--       seq_puts(seq, "\n");
-         seq->poll_event = atomic_read(&md_event_count);
--
-         spin_lock(&all_mddevs_lock);
-
--       return seq_list_start(&all_mddevs, *pos);
-+       if (!list_empty(&all_mddevs))
-+               return seq_list_start(&all_mddevs, *pos);
-+       else if (*pos == 0)
-+               return MDDEV_NONE;
-+       else
-+               return NULL;
-  }
-
-  static void *md_seq_next(struct seq_file *seq, void *v, loff_t *pos)
-  {
-+       if (v == MDDEV_NONE) {
-+               ++*pos;
-+               return NULL;
-+       }
-+
-         return seq_list_next(v, &all_mddevs, pos);
-  }
-
-  static void md_seq_stop(struct seq_file *seq, void *v)
-         __releases(&all_mddevs_lock)
-  {
--       status_unused(seq);
-         spin_unlock(&all_mddevs_lock);
-  }
-  static int md_seq_show(struct seq_file *seq, void *v)
-  {
--       struct mddev *mddev = list_entry(v, struct mddev, all_mddevs);
-+       struct mddev *mddev;
-         sector_t sectors;
-         struct md_rdev *rdev;
-
-+       if (v == MDDEV_NONE) {
-+               status_personalities(seq);
-+               status_unused(seq);
-+               return 0;
-+       }
-+
-+       mddev = list_entry(v, struct mddev, all_mddevs);
-+       if (mddev == list_first_entry(&all_mddevs, struct mddev, 
-all_mddevs))
-+               status_personalities(seq);
-         if (!mddev_get(mddev))
-                 return 0;
-
-@@ -8385,6 +8408,10 @@ static int md_seq_show(struct seq_file *seq, void *v)
-         }
-         spin_unlock(&mddev->lock);
-         spin_lock(&all_mddevs_lock);
-+
-+       if (mddev == list_last_entry(&all_mddevs, struct mddev, all_mddevs))
-+               status_unused(seq);
-+
-         if (atomic_dec_and_test(&mddev->active))
-                 __mddev_put(mddev);
-
-
-
-
-> 
-> Thanks,
-> Kuai
-> 
->>
->> Thanks,
->> Song
->>
->> .
->>
-> 
-> .
-> 
-
+greg k-h
