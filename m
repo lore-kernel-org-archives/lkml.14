@@ -1,97 +1,73 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFC939AFC;
-	Tue,  9 Jan 2024 14:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE4239FC7;
+	Tue,  9 Jan 2024 14:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpPkypit"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6d9cdd0a5e6so1406603b3a.3;
-        Tue, 09 Jan 2024 06:01:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704808893; x=1705413693; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ztYy0pG5mb/EUI1krEp4S/p84wNzOo5hR+tihGh7i4s=;
-        b=jpPkypit7AEo7Pmy36BF/kYIninjGgEwFsQO/oolRYoK+GsX3d748gEHHHUMuz5S7c
-         313RRLXAbo2leus1oBADuNXgHQE3V6B7fSy7ZJXnZup2wX7aV+pXnZo/yaIuOOnm9Dya
-         RxH0MHwjwwknzeFs/SvcwGMuNOxahCEwQdhewNdKGXPVF0iP1z7g48ecorDan1IRMrMC
-         L/3dITrSE3zEt5ZcUd1zPCe7qiNOEhvwmmPY3mpbIl12qIDWR8zdLj7O+tmfiFeA6b8C
-         7QzT/Sj5ND4AcETq5UgHeDpuknTvYOY0FNdoQRMH9r5yNXaaqxWwM7hVS1ZzSQL6tJle
-         Gk2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704808893; x=1705413693;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ztYy0pG5mb/EUI1krEp4S/p84wNzOo5hR+tihGh7i4s=;
-        b=bTjF/E5y9XDoGpylc3oDThlAlP3jj4MNl7z19a/fmiONcHUYqoMWNP34DnnnThmLO/
-         t3DYZtZP3LPdOWCY6YCGeHhFUxr47vQ8VhpbxjO2mq/g3CTFzWs/UY7H8EhXCpc56plk
-         NIsKZJREMFpBONwA7TyKD0HrMxo/wTW2KbXFe35EjFFnYeXtWbUoWLFxQGP7u6rmqC/8
-         O5n2Eb54E7xN2lk3Bk3wu6i27QtEyXQw4lcx+/GV5t5bFLODbZKeYNaRNDaYr3neEa3C
-         DeauzpECZFmMd9v0vaFJNBLOElEoSi2UlrkMLWOo/W5lmwgMee6t+RXVLfDu1ubUbW4+
-         g6qQ==
-X-Gm-Message-State: AOJu0YzVKq7qGe4eHLKiXPtFqnHZ7o53ckeaYLUKMOopFTDDDhm+JdID
-	Fyy1tuRl7cJUWockhmsRKLQr3H3FYrBEeQ==
-X-Google-Smtp-Source: AGHT+IFu2wBrx1UlnwU1Rv4xXGxgKte8dxiYurI+14HILwPK7gzGiUnBH7pBmZ/pvr4ScLDC3x70vg==
-X-Received: by 2002:a05:6a00:9089:b0:6da:336f:a925 with SMTP id jo9-20020a056a00908900b006da336fa925mr3156965pfb.29.1704808893013;
-        Tue, 09 Jan 2024 06:01:33 -0800 (PST)
-Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006d9accac5c4sm1673697pfh.35.2024.01.09.06.01.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 06:01:32 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	andy@kernel.org,
-	corbet@lwn.net
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 6/7] Documentation: gpio: document gpio-mockup as obsoleted by gpio-sim
-Date: Tue,  9 Jan 2024 21:59:51 +0800
-Message-Id: <20240109135952.77458-7-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240109135952.77458-1-warthog618@gmail.com>
-References: <20240109135952.77458-1-warthog618@gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="benXRy8S"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ReygpUPBEdZ1BRba3KM+g+WyDgtAIJz2xQPrwSClj6s=; b=benXRy8Sd0RZPkpPHP3tvYyP4F
+	/hriQTChaPlBlekykMH+kl8qDiLEslaBxiTp+Nondmdzc2siU1HD05lcQvKdbm3vzoDmnKdkS3Dp+
+	XdLE5DZtVbW5voBHXjDubMIWGkzGPg6eUMg1T9MCuo3o1J4WTFCiMwaaXJdNt1ZYdMPU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rNCfd-004q18-Hg; Tue, 09 Jan 2024 15:01:33 +0100
+Date: Tue, 9 Jan 2024 15:01:33 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: MD Danish Anwar <danishanwar@ti.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Tero Kristo <kristo@kernel.org>, srk@ti.com, r-gunasekaran@ti.com,
+	afd@ti.com
+Subject: Re: [PATCH v2 2/3] arm64: dts: ti: k3-am642-evm: add ICSSG1 Ethernet
+ support
+Message-ID: <70f2b16c-19af-41af-bd7f-255814899477@lunn.ch>
+References: <20231212165832.3933335-1-danishanwar@ti.com>
+ <20231212165832.3933335-3-danishanwar@ti.com>
+ <1a2aba0c-5c4d-4258-b89c-b1be4593d7ff@lunn.ch>
+ <f7dd0868-1eda-4dff-9b9f-ae55f07c7d96@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7dd0868-1eda-4dff-9b9f-ae55f07c7d96@ti.com>
 
-Update the gpio-mockup documentation to note that is has been
-obsoleted by the gpio-sim.
+On Tue, Jan 09, 2024 at 10:53:16AM +0530, MD Danish Anwar wrote:
+> Hi Andrew,
+> 
+> On 13/12/23 6:56 pm, Andrew Lunn wrote:
+> > On Tue, Dec 12, 2023 at 10:28:31PM +0530, MD Danish Anwar wrote:
+> >> ICSSG1 provides dual Gigabit Ethernet support with proper FW loaded.
+> >>
+> >> The ICSSG1 MII0 (RGMII1) has DP83869 PHY attached to it. The ICSSG1 shares
+> >> MII1 (RGMII2) PHY DP83869 with CPSW3g and it's assigned by default to
+> >> CPSW3g. The MDIO access to MII1 (RGMII2) PHY DP83869 is controlled by MDIO
+> >> bus switch and also assigned to CPSW3g. Therefore the ICSSG1 MII1 (RGMII2)
+> >> port is kept disable and ICSSG1 is enabled in single MAC mode by
+> >> default.
+> > 
+> > FYI
+> > 
+> > I want to review all this MII muxing, but it won't be today.
+> 
+> Did you get the chance to review this?
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- Documentation/admin-guide/gpio/gpio-mockup.rst | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Sorry, no.
 
-diff --git a/Documentation/admin-guide/gpio/gpio-mockup.rst b/Documentation/admin-guide/gpio/gpio-mockup.rst
-index 493071da1738..d6e7438a7550 100644
---- a/Documentation/admin-guide/gpio/gpio-mockup.rst
-+++ b/Documentation/admin-guide/gpio/gpio-mockup.rst
-@@ -3,6 +3,14 @@
- GPIO Testing Driver
- ===================
- 
-+.. note::
-+
-+   This module has been obsoleted by the more flexible gpio-sim.rst.
-+   New developments should use that API and existing developments are
-+   encouraged to migrate as soon as possible.
-+   This module will continue to be maintained but no new features will be
-+   added.
-+
- The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
- chips for testing purposes. The lines exposed by these chips can be accessed
- using the standard GPIO character device interface as well as manipulated
--- 
-2.39.2
+I will try to find some time in the next two weeks. During the merge
+window it tends to be quieter.
 
+       Andrew
