@@ -1,47 +1,47 @@
 Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B59374EF
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D253716F
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qLGg2FIW"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40d87df95ddso30032775e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 03:49:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gzKZso9o"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40d5a41143fso31754895e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 03:49:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704800953; x=1705405753; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704800951; x=1705405751; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4vxZPYMLwuWJ+eepzh5PLOjCCW10GHjaMLnopFe+mnk=;
-        b=qLGg2FIWNFJTO5duNtKFA/I8DDtipQG6/nqKK6zscYp09jWjiVC00IFBzxw+9WRm76
-         WtWQeV2k4jg8HBysaF56THI+rHgCuvFfiIybs4AliIeVPoKy3rXfC7KT6eZ8yUaa50HK
-         QV6qMYPgRni6XXvP1ETIzcLJbcnnI54B8f2mQg9l4dMGUgMn5m2KdeLineA4NJ9QfjdV
-         uoGHHQVPW+dAsMyrMlRjGvJVuVIuombswGIMlKa4MoYetRV5RWcNJKvhzZF82zizgTsI
-         TaOrVrJv5R90amXiv7iRUZFq1LpE2XqBkBYXnv7ataQ1mSOCp7yjXOhWr9HarZexme9p
-         uULw==
+        bh=mmp2BpvyTxAcamyi3InOfkuuoCxM3N59/lufaFAw+Ac=;
+        b=gzKZso9ozQXUuUXknRQwUxtyxc+DwTqu5SoIrUguYh2z9R/Q/diDjfoVwZzXSJ2HM1
+         8P3vmTS11ikWQhMCzApIMo73tTcSSsClgMd6UlZ72G12i3NfjHFo14GSUIIzLR6eN0HK
+         ONjxae7oGkPdluzXYA7+Jt6fHhjG5ll/RsBl2MktvRpIPYslspRRXUqcI/Hl/Lyws+ON
+         0hg2qV4Lhj4+f8PjjYyrjCF/UELHBQbTlT1867JcKJtRM1XE57UbPF7enAAHKpbBFzR3
+         XRNUR7eD4tuBCjyQ81wosmwzkI3D7QdMAFwpyrxhGRankyuC/2j0eZPmlwWyg0X17tqh
+         QWKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704800953; x=1705405753;
+        d=1e100.net; s=20230601; t=1704800951; x=1705405751;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4vxZPYMLwuWJ+eepzh5PLOjCCW10GHjaMLnopFe+mnk=;
-        b=h6bnzMuhQfVY4LBgK0cLvi6A+nfhJmf8997ysybkhfzYLWzEn7OEmADeq0rG9qm8LE
-         MHn5SL9c8DObgc9ydV9Ni/axN4oXRU6yZJe2JPtS4doN4Cq8MUer/AGTSHqNfxUKLqIW
-         wBRJvdlv8pSxS1aE5dM6cGTw+V8UDokJNfvjt6RK40vKKRh2eAgypH6qpYY4ZpsfPf/i
-         hgs0HWfL8p+UylsmParKTyVY0ylBVHxvYr8civYhFdtP7Fadkv94XShNve+Nv6pqw5CF
-         9oo5cvY7gN5f3TUBB8WeqcUfqd1u2Pr1j1hffuc+DPSVBwJX+YKoDOKLDsslDW5+CwG5
-         DasA==
-X-Gm-Message-State: AOJu0YyUx/q/9y/Wq5Cw0HyMww0X0C4P1vRmRQ/1em6azFtKIyYNLeZn
-	kJDpAqWFxePC4gNbBes4rpNlT0aaSZ0now==
-X-Google-Smtp-Source: AGHT+IG1DOBapLm3Ix9ZZOZXmRqJWhnU66aeD96cCxaEOIOxQjR2abCWNOUTUmzYv57H2br2SAfcqA==
-X-Received: by 2002:a05:600c:3b89:b0:40e:3a41:5f31 with SMTP id n9-20020a05600c3b8900b0040e3a415f31mr1412996wms.190.1704800953330;
-        Tue, 09 Jan 2024 03:49:13 -0800 (PST)
+        bh=mmp2BpvyTxAcamyi3InOfkuuoCxM3N59/lufaFAw+Ac=;
+        b=C4iVzntYqLeoLmrCXoQ+zgfaiDQPXV0SNUbGYBzM7zTyl+gQHzcS1aEnIi3A+quy4t
+         LvlcPvP76Ttqh+5y4VBOmjWfVm8/Bvsk1RLeBBiFH7zPGe9rZewRzeNcoZzuX4lWbYmF
+         HFpCAcA1f6S4+tt1EQgvK5nDG1Pdh+yM6b7uXGjv48n7Ax5PaZ04jKjiBWXa09WPyNyJ
+         js2/b1s4SSbtWbK4c6QpTCGHUIQ9ko+j1AsDXpXoTEs85Y981Eb/9D68umsjFfHJx7Y1
+         RBlK+Nb01LDnuxvKsl0j39t017feZKDQwn43yY7r3K27E/bt9g0AobuHte5NIlMROpk3
+         PUnw==
+X-Gm-Message-State: AOJu0Yx9x1NMLI6EsPH2vRyg/fOruVU8zkfD9VXtyJoFHDIsXUNDjrRq
+	7oBs4DxBwer5PopbX6pGKhB8Td6egNn9tw==
+X-Google-Smtp-Source: AGHT+IHSMakrUSHIrcnYR6pVA4Us/42RistQJd8RJ5YGq9NmJknJtFm4agS7HU4biZqw9DJh8YArYQ==
+X-Received: by 2002:a05:600c:4f81:b0:40d:5d9a:adc with SMTP id n1-20020a05600c4f8100b0040d5d9a0adcmr2686156wmq.11.1704800951670;
+        Tue, 09 Jan 2024 03:49:11 -0800 (PST)
 Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id bg30-20020a05600c3c9e00b0040d62f89381sm3335699wmb.35.2024.01.09.03.49.12
+        by smtp.gmail.com with ESMTPSA id bg30-20020a05600c3c9e00b0040d62f89381sm3335699wmb.35.2024.01.09.03.49.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 03:49:12 -0800 (PST)
+        Tue, 09 Jan 2024 03:49:11 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: krzysztof.kozlowski+dt@linaro.org,
 	robh+dt@kernel.org,
@@ -64,9 +64,9 @@ Cc: mturquette@baylibre.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>,
 	Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 3/3] clk: samsung: clk-gs101: comply with the new dt cmu_misc clock names
-Date: Tue,  9 Jan 2024 11:49:08 +0000
-Message-ID: <20240109114908.3623645-4-tudor.ambarus@linaro.org>
+Subject: [PATCH v2 1/3] dt-bindings: clock: gs101: rename cmu_misc clock-names
+Date: Tue,  9 Jan 2024 11:49:06 +0000
+Message-ID: <20240109114908.3623645-2-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 In-Reply-To: <20240109114908.3623645-1-tudor.ambarus@linaro.org>
 References: <20240109114908.3623645-1-tudor.ambarus@linaro.org>
@@ -78,30 +78,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The cmu_misc clock-names were renamed to just "bus" and "sss" because
-naming is local to the module, so cmu_misc is implied. As the bindings
-and the device tree have not made a release yet, comply with the
-renamed clocks.
+'bus' and 'ip' are sufficient because naming is local to the module.
+As the bindings have not made a release yet, rename the cmu_misc
+clock-names.
 
+Fixes: 0a910f160638 ("dt-bindings: clock: Add Google gs101 clock management unit bindings")
 Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/clk/samsung/clk-gs101.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/clock/google,gs101-clock.yaml         | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs101.c
-index 0964bb11657f..782993951fff 100644
---- a/drivers/clk/samsung/clk-gs101.c
-+++ b/drivers/clk/samsung/clk-gs101.c
-@@ -2475,7 +2475,7 @@ static const struct samsung_cmu_info misc_cmu_info __initconst = {
- 	.nr_clk_ids		= CLKS_NR_MISC,
- 	.clk_regs		= misc_clk_regs,
- 	.nr_clk_regs		= ARRAY_SIZE(misc_clk_regs),
--	.clk_name		= "dout_cmu_misc_bus",
-+	.clk_name		= "bus",
- };
+diff --git a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+index 3eebc03a309b..ca7fdada3ff2 100644
+--- a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+@@ -85,8 +85,8 @@ allOf:
  
- /* ---- platform_driver ----------------------------------------------------- */
+         clock-names:
+           items:
+-            - const: dout_cmu_misc_bus
+-            - const: dout_cmu_misc_sss
++            - const: bus
++            - const: sss
+ 
+ additionalProperties: false
+ 
 -- 
 2.43.0.472.g3155946c3a-goog
 
