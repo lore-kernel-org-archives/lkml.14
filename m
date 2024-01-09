@@ -1,114 +1,151 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35953D0A0;
-	Tue,  9 Jan 2024 19:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7F03D0A8
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 19:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RxznrmQs"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 409J4d0m002479;
-	Tue, 9 Jan 2024 13:04:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704827079;
-	bh=+qOjCNdwumi7M253pRJB5h08L5CsGro6RhONwxvXlD0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=RxznrmQsX8yQ1AC3oh7NhQTdnQ8dGYs8Yxu0PaLUiR4WxJ6TdQ7tZCS1kVZ1sRtyU
-	 AtDN7dUm/U3ws3jf6EHZ/qVWccOFi548eRAOvItVtlml0sZxykxwSOtggSI/zuR/nZ
-	 clvgtTbbXhJ6QRqD+eJ6T5GK3MsPSPXRgEcWrz/4=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 409J4dA9080614
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 9 Jan 2024 13:04:39 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 9
- Jan 2024 13:04:39 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 9 Jan 2024 13:04:39 -0600
-Received: from [10.249.40.136] ([10.249.40.136])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 409J4bgA086396;
-	Tue, 9 Jan 2024 13:04:38 -0600
-Message-ID: <d0c242ef-bb8f-49d9-bbb0-7922db2c322a@ti.com>
-Date: Tue, 9 Jan 2024 13:04:37 -0600
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Pg1mqblB"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a2821884a09so262178966b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 11:06:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1704827164; x=1705431964; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kchsDNvY+N1Y+L0STMRE2XwLjK0LDqCqr/Bo9NQy0c8=;
+        b=Pg1mqblBSY0YxRY6cBgnp0pEMbCLiW5hI2QnBRxoHUnRLL9hwfomkPMsO1VtrL1kTV
+         uDzD7dSAJ9r7aRIbODzFwNg9Qol6KLmS7T1yeOPRSWmgd7tMkOcW5MorsZ2Wnq5fIVbM
+         2rT3YeR2OAAWQnogT+erjQgEinw1YMQeH8qqc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704827164; x=1705431964;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kchsDNvY+N1Y+L0STMRE2XwLjK0LDqCqr/Bo9NQy0c8=;
+        b=D3Tp2Qk4ioiyK56Kwb7AbwH7io/NSIjWkLDXMWgJFmAO5po8/XlyJTb0Nhy3k+G7tQ
+         9fUGeROIIzWEvCqNqP2XF1JRTWKA9XM6d5e+2kZa22G3ELkkHiQHXD92XX7M8JG11zWU
+         EGDjentFbj7g2bzGcb7+nBu8PxNkoZThvFyF//McyFWHHlUq4Mx5nGvUF6yjQ5ZIyvvY
+         3HO8HBKlbtRfy5/i2+/V58uSvAP0FNzUqel4+/J9ziTANiqnOM7kAUsx1CaikwQl9aoA
+         SPseH75rUAoS8/4gJSM3Gzg9/Gm4vojKRl+s4Z3Y/GXuUtUix4RrED82QJXMxC1heCo8
+         LSdA==
+X-Gm-Message-State: AOJu0Yw4/xH6Pn79tZzFtBKjq+6emHo6qTH87IUubf2QGpl7gRb0hKC9
+	+vJM6PKLAcQELzsfnMSjc0jkeFOy7rEwGN/1J0EVH2LK9ClE2ptL
+X-Google-Smtp-Source: AGHT+IFuHSOp0+SP/+pe9lKLT3C/C6uVTrUrExD4zFvYIqoYejNsV0ahD7RPUgDTUsk5/PDsbG4tsA==
+X-Received: by 2002:a17:906:e94:b0:a28:b8b1:afbd with SMTP id p20-20020a1709060e9400b00a28b8b1afbdmr955283ejf.35.1704827163676;
+        Tue, 09 Jan 2024 11:06:03 -0800 (PST)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
+        by smtp.gmail.com with ESMTPSA id qq10-20020a17090720ca00b00a26f0f49dd2sm1338115ejb.11.2024.01.09.11.06.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jan 2024 11:06:02 -0800 (PST)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a2814fa68eeso264037766b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 11:06:02 -0800 (PST)
+X-Received: by 2002:a17:906:945:b0:a28:ddb2:1fb8 with SMTP id
+ j5-20020a170906094500b00a28ddb21fb8mr991620ejd.61.1704827162252; Tue, 09 Jan
+ 2024 11:06:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/11] dt-bindings: gpu: Rename img,powervr to
- img,powervr-rogue
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Frank Binns
-	<frank.binns@imgtec.com>,
-        Matt Coster <matt.coster@imgtec.com>,
-        "H . Nikolaus
- Schaller" <hns@goldelico.com>,
-        Adam Ford <aford173@gmail.com>,
-        Ivaylo
- Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec
-	<jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren
-	<tony@atomide.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, Paul Cercueil
-	<paul@crapouillou.net>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <linux-omap@vger.kernel.org>,
-        <linux-mips@vger.kernel.org>
-References: <20240109171950.31010-1-afd@ti.com>
- <20240109171950.31010-2-afd@ti.com>
- <11e3afae-76a7-4ebb-82ac-3dca040710dc@linaro.org>
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <11e3afae-76a7-4ebb-82ac-3dca040710dc@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <000000000000a41b82060e875721@google.com>
+In-Reply-To: <000000000000a41b82060e875721@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 9 Jan 2024 11:05:45 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgM=MmqrQC-qgXoSehW=itHaqOUiBfN8jRBGAHn1=D0tg@mail.gmail.com>
+Message-ID: <CAHk-=wgM=MmqrQC-qgXoSehW=itHaqOUiBfN8jRBGAHn1=D0tg@mail.gmail.com>
+Subject: Re: [syzbot] [kernel?] WARNING in signal_wake_up_state
+To: syzbot <syzbot+c6d438f2d77f96cae7c2@syzkaller.appspotmail.com>, 
+	Oleg Nesterov <oleg@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linux-kernel@vger.kernel.org, luto@kernel.org, michael.christie@oracle.com, 
+	mst@redhat.com, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
+	tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/9/24 12:59 PM, Krzysztof Kozlowski wrote:
-> On 09/01/2024 18:19, Andrew Davis wrote:
->> This binding will be used for GPUs starting from Series6 (Rogue)
->> and later. A different binding document will describe Series5.
->> With that the name "img,powervr" is too generic, rename to
->> "img,powervr-rogue" to avoid confusion.
->>
->> Suggested-by: Maxime Ripard <mripard@kernel.org>
->> Signed-off-by: Andrew Davis <afd@ti.com>
->> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
->> Reviewed-by: Frank Binns <frank.binns@imgtec.com>
->> ---
-> 
-> Why do you send new version while we still talk about previous?
-> 
-> Please implement feedback from v1 (and this is v2, so next is v3) or
-> keep discussing.
-> 
+Oleg/Eric, can you make any sense of this?
 
-I agreed with everything you said in the last round (RFC v2) and
-made all requested changes. Did I miss something in this version?
+On Tue, 9 Jan 2024 at 10:18, syzbot
+<syzbot+c6d438f2d77f96cae7c2@syzkaller.appspotmail.com> wrote:
+>
+> The issue was bisected to:
+>
+> commit f9010dbdce911ee1f1af1398a24b1f9f992e0080
 
-Thanks,
-Andrew
+Hmm. This smells more like a "that triggers the problem" than a cause.
 
-> Best regards,
-> Krzysztof
-> 
+Because the warning itself is
+
+> WARNING: CPU: 1 PID: 5069 at kernel/signal.c:771 signal_wake_up_state+0xfa/0x120 kernel/signal.c:771
+
+That's
+
+        lockdep_assert_held(&t->sighand->siglock);
+
+at the top of the function, with the call trace being
+
+>  signal_wake_up include/linux/sched/signal.h:448 [inline]
+
+just a wrapper setting 'state'.
+
+>  zap_process fs/coredump.c:373 [inline]
+
+That's zap_process() that does a
+
+        for_each_thread(start, t) {
+
+and then does a
+
+                        signal_wake_up(t, 1);
+
+on each thread.
+
+>  zap_threads fs/coredump.c:392 [inline]
+
+And this is zap_threads(), which does
+
+        spin_lock_irq(&tsk->sighand->siglock);
+        ...
+                nr = zap_process(tsk, exit_code);
+
+Strange. The sighand->siglock is definitely taken.
+
+The for_each_thread() must be hitting a thread with a different
+sighand, but it's basically a
+
+        list_for_each_entry_rcu(..)
+
+walking over the tsk->signal->thread_head list.
+
+But if CLONE_THREAD is set (so that we share that 'tsk->signal', then
+we always require that CLONE_SIGHAND is also set:
+
+        if ((clone_flags & CLONE_THREAD) && !(clone_flags & CLONE_SIGHAND))
+                return ERR_PTR(-EINVAL);
+
+so we most definitely should have the same ->sighand if we have the
+same ->signal. And that's true very much for that vhost_task_create()
+case too.
+
+So as far as I can see, that bisected commit does add a new case of
+threaded signal handling, but in no way explains the problem.
+
+Is there some odd exit race? The thread is removed with
+
+        list_del_rcu(&p->thread_node);
+
+in __exit_signal -> __unhash_process(), and despite the RCU
+annotations, all these parts seem to hold the right locks too (ie
+sighand->siglock is held by __exit_signal too), so I don't even see
+any delayed de-allocation issue or anything like that.
+
+Thus bringing in Eric/Oleg to see if they see something I miss.
+
+Original email at
+
+    https://lore.kernel.org/all/000000000000a41b82060e875721@google.com/
+
+for your pleasure.
+
+            Linus
