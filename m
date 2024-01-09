@@ -1,82 +1,59 @@
-Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B3C63DB86;
-	Tue,  9 Jan 2024 08:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
-Received: from SIOS1075.ysato.name (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 10BB11C0939;
-	Tue,  9 Jan 2024 17:24:49 +0900 (JST)
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-To: linux-sh@vger.kernel.org
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Damien Le Moal <dlemoal@kernel.org>,
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E384913ACF
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 08:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jne6Vmfs"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2cca8eb0509so28296691fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 00:25:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704788727; x=1705393527; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bF0e2DswE8UKYjFIoLXFl1yZqY+5X+76YD12d4yPwPI=;
+        b=jne6VmfsWnglhZ5hZ/AtzN71O5CFi51tqwOts0LgrWcxhj/8Aq4tHuwIjPQEEMfF9k
+         jkf3HdDJdS4DNQcByP3yF7Xcd1/jO9Dhrl2U5EH5llr2E5sLf9U6SY7iUt6tlBbYNLFq
+         xjseQ52UXLjrmy/dxdaNI+gwDbxGporC+hHrIXJzOcVxeORXCGFssybElXlOBv+gWJHW
+         Y6lskTYWIy0JAxcQjrDHdZlal7Sis/Q8TD80DAapNA7zdsU8cJ2b9gg2NXe41YNSyDYS
+         wSdK1RCoRJL1g2lY+LitfSBMSaDNSfHUGY3E3SnZWn3WoH5eZ20sYDdORhlGMLm4X0+M
+         3vVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704788727; x=1705393527;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bF0e2DswE8UKYjFIoLXFl1yZqY+5X+76YD12d4yPwPI=;
+        b=KCbvlBbOBppEIVbOgwJTY5nhw+KI2MrQYD52HQmdWOX34W1Z0JAT9MuED5U/FQfZng
+         FFUj0zFPocqVQS+rawykaXzEQsizm05bDC20TkxDTyTRFNR2ZxftmYFnUHbrKP4Uos37
+         NEKkwy/7jIBYgX6OGUa1Z4rNyEplW5vNPDGIGwq3L8ublaN3YZ6uIRQigNekI6y/k0Sz
+         YNsqC/tTV9AgGm6ZGAcapTPTz8QJ7oaH5E1HE+AeHfHSXkPGSv/qtlSc9eAA5PbSN0Pi
+         zc2Wi9u9dublR41AeQcYfuEWNhCA6hoTF/yEhVbWwY2b2hXe1DUJKxYuz+yclqCBa3BG
+         mX3A==
+X-Gm-Message-State: AOJu0Yz6v0zoaes2RvOcQszz24tZvv7qhqeCKIUgFOdzzY+EGpGbeBeu
+	oMwxOT8ULqIAD8LQn8XKgIzT8KJYglMvmg==
+X-Google-Smtp-Source: AGHT+IHce9pwoMQCmYuFyy27eF86az3UFNmvuySoMfUb1ulxBX9WdKecXWR4AOlTd2FgpgkGxKdHhQ==
+X-Received: by 2002:a19:f507:0:b0:50e:7c70:fdf0 with SMTP id j7-20020a19f507000000b0050e7c70fdf0mr1673226lfb.85.1704788727037;
+        Tue, 09 Jan 2024 00:25:27 -0800 (PST)
+Received: from krzk-bin.. ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id f2-20020a056402150200b0055732bd1fc0sm683275edw.82.2024.01.09.00.25.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 00:25:26 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Peter Rosin <peda@axentia.se>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lee Jones <lee@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Yang Xiwen <forbidden405@foxmail.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	David Rientjes <rientjes@google.com>,
-	Baoquan He <bhe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Bin Meng <bmeng@tinylab.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-ide@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v6 37/37] sh: j2_defconfig: update
-Date: Tue,  9 Jan 2024 17:23:34 +0900
-Message-Id: <71cffa7cbb24c4d95f05fe937609bff0737e6283.1704788539.git.ysato@users.sourceforge.jp>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1704788539.git.ysato@users.sourceforge.jp>
-References: <cover.1704788539.git.ysato@users.sourceforge.jp>
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: mux: restrict node name suffixes
+Date: Tue,  9 Jan 2024 09:25:11 +0100
+Message-Id: <20240109082511.15278-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,61 +62,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I've changed some symbols related to DeviceTree,
-so let's take care of those changes.
+Make the pattern matching node names a bit stricter to improve DTS
+consistency.  The pattern is restricted to -N suffixes to decimal
+numbers.
 
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 ---
- arch/sh/configs/j2_defconfig | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/arch/sh/configs/j2_defconfig b/arch/sh/configs/j2_defconfig
-index 2eb81ebe3888..cdc8ed244618 100644
---- a/arch/sh/configs/j2_defconfig
-+++ b/arch/sh/configs/j2_defconfig
-@@ -1,18 +1,15 @@
--CONFIG_SMP=y
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
- CONFIG_NO_HZ=y
- CONFIG_HIGH_RES_TIMERS=y
- CONFIG_CPU_SUBTYPE_J2=y
- CONFIG_MEMORY_START=0x10000000
--CONFIG_MEMORY_SIZE=0x04000000
- CONFIG_CPU_BIG_ENDIAN=y
--CONFIG_SH_DEVICE_TREE=y
--CONFIG_SH_JCORE_SOC=y
-+CONFIG_SH_OF_BOARD=y
- CONFIG_HZ_100=y
-+CONFIG_SMP=y
- CONFIG_CMDLINE_OVERWRITE=y
- CONFIG_CMDLINE="console=ttyUL0 earlycon"
--CONFIG_BINFMT_ELF_FDPIC=y
- CONFIG_BINFMT_FLAT=y
- CONFIG_NET=y
- CONFIG_PACKET=y
-@@ -21,7 +18,6 @@ CONFIG_INET=y
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_NETDEVICES=y
--CONFIG_SERIAL_EARLYCON=y
- CONFIG_SERIAL_UARTLITE=y
- CONFIG_SERIAL_UARTLITE_CONSOLE=y
- CONFIG_I2C=y
-@@ -30,8 +26,6 @@ CONFIG_SPI_JCORE=y
- CONFIG_WATCHDOG=y
- CONFIG_MMC=y
- CONFIG_MMC_SPI=y
--CONFIG_CLKSRC_JCORE_PIT=y
--CONFIG_JCORE_AIC=y
- CONFIG_EXT4_FS=y
- CONFIG_VFAT_FS=y
- CONFIG_FAT_DEFAULT_IOCHARSET="ascii"
-@@ -40,3 +34,4 @@ CONFIG_NLS_DEFAULT="utf8"
- CONFIG_NLS_CODEPAGE_437=y
- CONFIG_NLS_ASCII=y
- CONFIG_NLS_UTF8=y
-+CONFIG_INIT_STACK_NONE=y
+Some time ago I did such change treewide, but mux was left out:
+https://lore.kernel.org/all/20230530144851.92059-1-krzysztof.kozlowski@linaro.org/
+---
+ Documentation/devicetree/bindings/mux/mux-controller.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mux/mux-controller.yaml b/Documentation/devicetree/bindings/mux/mux-controller.yaml
+index 8b943082a241..571ad9e13ecf 100644
+--- a/Documentation/devicetree/bindings/mux/mux-controller.yaml
++++ b/Documentation/devicetree/bindings/mux/mux-controller.yaml
+@@ -74,7 +74,7 @@ select:
+ 
+ properties:
+   $nodename:
+-    pattern: '^mux-controller(@.*|-[0-9a-f]+)?$'
++    pattern: '^mux-controller(@.*|-([0-9]|[1-9][0-9]+))?$'
+ 
+   '#mux-control-cells':
+     enum: [ 0, 1 ]
 -- 
-2.39.2
+2.34.1
 
