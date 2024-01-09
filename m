@@ -1,98 +1,125 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A122539AC0;
-	Tue,  9 Jan 2024 14:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-20475bf35a2so596710fac.1;
-        Tue, 09 Jan 2024 06:07:39 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BE139863
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Uj2ZY9TA"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-557678c50feso571353a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:09:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1704809364; x=1705414164; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfBxqDS9hHlXmsmRF9XL3tSKxrM0B3suizklfFVNCPU=;
+        b=Uj2ZY9TA6GFg1CkGdvuthSLcaB+62PRymZtizDPe2vATZmurnhpryKzjHbioMIE0g8
+         vHEGXmxGnELPKrKMyKZacIX0u0sXa/efvWLwKcLNTLOjgCz2eqz6/LanHPL21jIlGg/o
+         W9Ao7AvREwIkEDeZOMEn0RRf58zKU6bcw3xO4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704809258; x=1705414058;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EqF5gaGqpHvHcosofJTzkJSMKdQyTzIwT6UHcAKQaCk=;
-        b=Tz/2lGGbXePRdVsG8Nf86mkTUB9HiOZkj7LH9Vb4Hk5sQOm9S3ITPqmRDOyJmaAcF+
-         UTv5HvGt+kTn1BVEg6wT0AmRqO8Bi3UPfA5Q3aMYhs6c4hilh9HDIQsuZUyyex6kaYb1
-         Up347+s1PzmazRq/HIfqY5WUEORsFO0Fq2jgi7IumPj7T3H0ziaF9yLitjnZps1Z37CD
-         8YXTTSxfqo16IsriDkblc4//MmFuLBeHD9inQMelSmnY++vglxVMQgpAVFRiazRDuKpR
-         AZS3dlRP+BdVfxJ6sGSH+Paq0437rvuUCg+Kc5SMBw64dYbST8OQmK+ZIVGVL47VSQOO
-         +zFg==
-X-Gm-Message-State: AOJu0YzUhwys2kjSaGZ3ALtXZA2kMmKQLc2usiCmEqYMr1EsZZRNNgEX
-	xqgWGJpI9u53k7qx6B2Tb86nBd/HgUfcJkAZzpg=
-X-Google-Smtp-Source: AGHT+IG+8O7C1b4NuN8WT59ADqB4eUOPRViKOqLAz3WiF88mTKrWaBzt3XwkIhu4DaYQgyImVt+LCz0CJVzqnMNvY+c=
-X-Received: by 2002:a05:6871:48f:b0:205:fd47:cd9b with SMTP id
- f15-20020a056871048f00b00205fd47cd9bmr10283311oaj.2.1704809258629; Tue, 09
- Jan 2024 06:07:38 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704809364; x=1705414164;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vfBxqDS9hHlXmsmRF9XL3tSKxrM0B3suizklfFVNCPU=;
+        b=KyiYAO+sTCWdgy8Gbofj6e5EDY98hHVlXMeFc35G1Xe2lUd3wpia5IIJ2FtEO6eugj
+         bF51L0IuIVkwlavsH16GWLH1/5dcFYpOcYySqBold469QEsHdbFc2seJhc/7PlakqPGP
+         DGIr0RU6XPlWIJZ0a+Mt0BN3dyzK4ia5BTgHk/XUovaLeMnrIVzyWwh9bamdhQnyKZfX
+         ExE9dJHc6fMZpiM4RgZYavz/a3TbsmHOihcUAM+c/bItk2K5upJaEdamRDHOYMC7ruh9
+         hGXcE3neig6q7hTiVJVG+fojV4RlpYlQr5ylPh5gzz3xKsVTuRClzy6iNNnZlDpWgogf
+         jlhA==
+X-Gm-Message-State: AOJu0YxCvPAlobpSC12XndDn6Mp8m6DXxVs/t11fZTxQmuDp8zfDj144
+	yrPbwkJT4Y1mcLzeSH1WJC4A85C2AYhZeELI6E52PkAs4xU=
+X-Google-Smtp-Source: AGHT+IFy0E+eIQjrX/iymTN4VUkB9dTkTMY4EJTa9tSrFbeWJr42iW8bPR9nUN+pr7lUJKLaWkgU2Q==
+X-Received: by 2002:a50:cdc5:0:b0:557:4249:44 with SMTP id h5-20020a50cdc5000000b0055742490044mr6444656edj.1.1704809363734;
+        Tue, 09 Jan 2024 06:09:23 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id el10-20020a056402360a00b00557f54cceb6sm907262edb.4.2024.01.09.06.09.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 06:09:23 -0800 (PST)
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: DRI Development <dri-devel@lists.freedesktop.org>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Maxime Ripard <mripard@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH] kernel-doc: document object-like preprocessor macros
+Date: Tue,  9 Jan 2024 15:03:45 +0100
+Message-ID: <20240109140345.3344094-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240107021322.7709-2-benny1091@gmail.com>
-In-Reply-To: <20240107021322.7709-2-benny1091@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 9 Jan 2024 15:07:27 +0100
-Message-ID: <CAJZ5v0jWjTbuaYXMQ7e0xMFki3mEBO2Su3-DPsGwbWjdStQtJQ@mail.gmail.com>
-Subject: Re: [PATCH] acpi/drivers: add DMI exception for ASUS Vivobook E1504GA
- and E1504GAB to resource.c
-To: Ben Mayo <benny1091@gmail.com>
-Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jan 7, 2024 at 3:13=E2=80=AFAM Ben Mayo <benny1091@gmail.com> wrote=
-:
->
-> Asus Vivobook E1504GA and E1504GAB notebooks are affected by bug #216158
-> (DSDT specifies the kbd IRQ as level active-low and using the override
-> changes this to rising edge, stopping the keyboard from working).
-> Users of these notebooks do not have a working keyboard unless they add
-> their DMI information to the struct irq1_level_low_skip_override array
-> in resource.c and compile a custom kernel. This patch will add support
-> for these computers to the linux kernel without requiring the end-user
-> to recompile the kernel.
->
-> Signed-off-by: Ben Mayo <benny1091@gmail.com>
-> ---
->  drivers/acpi/resource.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index 9bd9f79cd409..eb34d201b65f 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -482,6 +482,20 @@ static const struct dmi_system_id irq1_level_low_ski=
-p_override[] =3D {
->                         DMI_MATCH(DMI_BOARD_NAME, "B2502CBA"),
->                 },
->         },
-> +       {
-> +               /* Asus Vivobook E1504GA */
-> +               .matches =3D {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."=
-),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "E1504GA"),
-> +               },
-> +       },
-> +       {
-> +               /* Asus Vivobook E1504GAB */
-> +               .matches =3D {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."=
-),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "E1504GAB"),
-> +               },
-> +       },
->         {
->                 /* LG Electronics 17U70P */
->                 .matches =3D {
-> --
+I had no idea this exists, but Randy pointed out it's been added quite
+a long time ago in cbb4d3e6510b ("scripts/kernel-doc: handle
+object-like macros"). Definitely way before I started to write all the
+drm docs sadly, so there's a few things where I skipped writing
+kernel-doc since I didn't know it was possible.
 
-Applied as 6.8-rc1 material with some edits in the subject and
-changelog (a Link: tag pointing to the bug in question added in
-particular).
+Fix this asap by documenting the two possible kernel-doc flavours for
+preprocessor definitions.
 
-Thanks!
+References: https://lore.kernel.org/dri-devel/dd917333-9ae8-4e76-991d-39b6229ba8ce@infradead.org/
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+ Documentation/doc-guide/kernel-doc.rst | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/Documentation/doc-guide/kernel-doc.rst b/Documentation/doc-guide/kernel-doc.rst
+index 6ad72ac6861b..a966f1fd5c30 100644
+--- a/Documentation/doc-guide/kernel-doc.rst
++++ b/Documentation/doc-guide/kernel-doc.rst
+@@ -341,6 +341,32 @@ Typedefs with function prototypes can also be documented::
+    */
+    typedef void (*type_name)(struct v4l2_ctrl *arg1, void *arg2);
+ 
++Preprocessor defines documentation
++----------------------------------
++
++There are two ways to document preprocessor defines. The first works more or
++less like kernel-doc for functions, including parameters::
++
++  /**
++   * FUNC_NAME() - Brief description
++   * @arg1: description of arg1
++   * @arg2: description of arg2
++   *
++   * Description of the preprocessor function, may have multiple paragraphs.
++   */
++  #define FUNC_NAME(arg1, arg2)
++
++The second type is different and for object-like preprocessor macros without any
++parameters::
++
++  /**
++   * define MACRO - Brief description
++   *
++   * Description of the object-like preprocessor macro, may have multiple
++   * paragraphs.
++   */
++   #define MACRO
++
+ Highlights and cross-references
+ -------------------------------
+ 
+-- 
+2.43.0
+
