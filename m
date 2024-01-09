@@ -1,36 +1,36 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA823BB25;
-	Tue,  9 Jan 2024 18:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE67F3BB4C;
+	Tue,  9 Jan 2024 18:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lfXMYMK2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drgB2zRV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704823221; x=1736359221;
+  t=1704823222; x=1736359222;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=oxuf2qv5qNCQwDrG+FQheyibqpQ4k7NBlmbN6ka5nqM=;
-  b=lfXMYMK2uPAJmEFYDIHSgWra9t91SoSqWPJp6mCjch8lhI0TYaEck9NM
-   8FrpQpbKMkD1Fi9VlBci8z0A6vjdj7RjluUiokGCtxgwslwkWHO/dL7dM
-   UBFRsniJQ9z1PVTDKl4+yUpfqKOQi6WkQZ+5qhDXLPX2a1wjeTcW/mzNO
-   6cmKjOaA6t5VionqWt63KTIRD3l8Ncm5Ae88Jjwcl70nId5zVURxI0wfB
-   ABEvnpqRXAYACj/Ef5BX1yzDX9pbp2SHqW+BGEWWMZIVohyKlh7rUHwo1
-   5ptKHq/Ci3MYq6iqzk3vA/ZUP346FQujjOxQmYUjfKFtW09geAgAVPvGk
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="429458612"
+  bh=q1ovR6+O75gSajU4QJ+Ao6qPau2jMgalmF2X5drMR4I=;
+  b=drgB2zRVjmXqL2vyEt4AwYvpIBX2cquGG9a0s//4YzDWwfTF1kfNzQ2x
+   C6FY1lBkzlr+iC6TZbRZd92MSNSsoj9C0CBQB/tvQnPbrhd2ri4mYjAmw
+   Z4d6WyOiW4J3K4ZKt0m+sPrWhzWCu2UkeziwlUPHGmMdeby+i3tG8HYfy
+   jeVTUAhyPNmBJbT3VWhJKgAmijEJVK6iv4KYo5uRj19pESmrHvvAjGKlD
+   o6YJfMKT6Y9toI61eB6AUtsqCAyL+04QlCUUtT03Pk4VPswHhTTLneE6V
+   2rIJWRpG2NJ7sRlCnLa2fofcZr1SZo0goQXWhL2PDp7ejSfTCLxHBikPm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="429458624"
 X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="429458612"
+   d="scan'208";a="429458624"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 10:00:19 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="852269564"
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="852269567"
 X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="852269564"
+   d="scan'208";a="852269567"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Jan 2024 10:00:18 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 09 Jan 2024 10:00:19 -0800
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: jikos@kernel.org,
 	jic23@kernel.org,
@@ -40,9 +40,9 @@ Cc: linux-input@vger.kernel.org,
 	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v3 1/4] iio: hid-sensor-als: Assign channels dynamically
-Date: Tue,  9 Jan 2024 10:00:04 -0800
-Message-Id: <20240109180007.3373784-2-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v3 3/4] iio: hid-sensor-als: Add light color temperature support
+Date: Tue,  9 Jan 2024 10:00:06 -0800
+Message-Id: <20240109180007.3373784-4-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240109180007.3373784-1-srinivas.pandruvada@linux.intel.com>
 References: <20240109180007.3373784-1-srinivas.pandruvada@linux.intel.com>
@@ -54,158 +54,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Instead of assuming that every channel defined statically by
-als_channels[] is present, assign dynamically based on presence of the
-respective usage id in the descriptor. This will allow to register ALS
-with limited channel support. Append the timestamp as the last channel.
+From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 
-When not all usage ids are present, the scan index is adjusted to
-exclude unsupported channels.
+On some platforms, ambient color sensors also support light color
+temperature. Add support of light color temperature.
 
-There is no intentional function changes done.
-
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
+
+I don't have a system to test this patch.
+Hi Basavraj,
+Please test.
+
 v3:
-Addressed comments from Jonthan:
-	- Remove channel allocation and move to iio_priv()
-	- Parse all usage IDs in a single loop and continue
-	for failure. This way the temperature and chromaticity
-	will not need any special processing to parse usage ids.
-	- Don't leave empty channel indexes
-
+Simplilified as no special processing is required in als_parse_report()
 v2:
-New change
+Original patch from Basavaraj Natikar <Basavaraj.Natikar@amd.com> is
+modified to prevent failure when the new usage id is not found in the
+descriptor.
 
- drivers/iio/light/hid-sensor-als.c | 56 +++++++++++++++++++++---------
- 1 file changed, 39 insertions(+), 17 deletions(-)
+ drivers/iio/light/hid-sensor-als.c | 22 ++++++++++++++++++++++
+ include/linux/hid-sensor-ids.h     |  1 +
+ 2 files changed, 23 insertions(+)
 
 diff --git a/drivers/iio/light/hid-sensor-als.c b/drivers/iio/light/hid-sensor-als.c
-index 5cd27f04b45e..72a7c01c97f8 100644
+index a7bde6b68102..0d54eb59e47d 100644
 --- a/drivers/iio/light/hid-sensor-als.c
 +++ b/drivers/iio/light/hid-sensor-als.c
-@@ -25,17 +25,26 @@ struct als_state {
- 	struct hid_sensor_hub_callbacks callbacks;
- 	struct hid_sensor_common common_attributes;
- 	struct hid_sensor_hub_attribute_info als[CHANNEL_SCAN_INDEX_MAX];
-+	struct iio_chan_spec channels[CHANNEL_SCAN_INDEX_MAX + 1];
- 	struct {
- 		u32 illum[CHANNEL_SCAN_INDEX_MAX];
-+		u32 scan_index[CHANNEL_SCAN_INDEX_MAX];
- 		u64 timestamp __aligned(8);
- 	} scan;
- 	int scale_pre_decml;
- 	int scale_post_decml;
- 	int scale_precision;
- 	int value_offset;
-+	int num_channels;
- 	s64 timestamp;
+@@ -16,6 +16,7 @@
+ enum {
+ 	CHANNEL_SCAN_INDEX_INTENSITY,
+ 	CHANNEL_SCAN_INDEX_ILLUM,
++	CHANNEL_SCAN_INDEX_COLOR_TEMP,
+ 	CHANNEL_SCAN_INDEX_MAX
  };
  
-+/* The order of usage ids must match scan index starting from CHANNEL_SCAN_INDEX_INTENSITY */
-+static const u32 als_usage_ids[] = {
-+	HID_USAGE_SENSOR_LIGHT_ILLUM,
-+	HID_USAGE_SENSOR_LIGHT_ILLUM,
-+};
-+
- static const u32 als_sensitivity_addresses[] = {
- 	HID_USAGE_SENSOR_DATA_LIGHT,
+@@ -43,6 +44,7 @@ struct als_state {
+ static const u32 als_usage_ids[] = {
  	HID_USAGE_SENSOR_LIGHT_ILLUM,
-@@ -216,11 +225,14 @@ static int als_capture_sample(struct hid_sensor_hub_device *hsdev,
- 	struct als_state *als_state = iio_priv(indio_dev);
- 	int ret = -EINVAL;
- 	u32 sample_data = *(u32 *)raw_data;
-+	int scan_index;
+ 	HID_USAGE_SENSOR_LIGHT_ILLUM,
++	HID_USAGE_SENSOR_LIGHT_COLOR_TEMPERATURE,
+ };
  
- 	switch (usage_id) {
- 	case HID_USAGE_SENSOR_LIGHT_ILLUM:
--		als_state->scan.illum[CHANNEL_SCAN_INDEX_INTENSITY] = sample_data;
--		als_state->scan.illum[CHANNEL_SCAN_INDEX_ILLUM] = sample_data;
-+		scan_index = als_state->scan.scan_index[CHANNEL_SCAN_INDEX_INTENSITY];
-+		als_state->scan.illum[scan_index] = sample_data;
-+		scan_index = als_state->scan.scan_index[CHANNEL_SCAN_INDEX_ILLUM];
-+		als_state->scan.illum[scan_index] = sample_data;
+ static const u32 als_sensitivity_addresses[] = {
+@@ -74,6 +76,16 @@ static const struct iio_chan_spec als_channels[] = {
+ 		BIT(IIO_CHAN_INFO_HYSTERESIS_RELATIVE),
+ 		.scan_index = CHANNEL_SCAN_INDEX_ILLUM,
+ 	},
++	{
++		.type = IIO_COLORTEMP,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
++		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_OFFSET) |
++		BIT(IIO_CHAN_INFO_SCALE) |
++		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
++		BIT(IIO_CHAN_INFO_HYSTERESIS) |
++		BIT(IIO_CHAN_INFO_HYSTERESIS_RELATIVE),
++		.scan_index = CHANNEL_SCAN_INDEX_COLOR_TEMP,
++	},
+ 	IIO_CHAN_SOFT_TIMESTAMP(CHANNEL_SCAN_INDEX_TIMESTAMP)
+ };
+ 
+@@ -112,6 +124,11 @@ static int als_read_raw(struct iio_dev *indio_dev,
+ 			min = als_state->als[chan->scan_index].logical_minimum;
+ 			address = HID_USAGE_SENSOR_LIGHT_ILLUM;
+ 			break;
++		case  CHANNEL_SCAN_INDEX_COLOR_TEMP:
++			report_id = als_state->als[chan->scan_index].report_id;
++			min = als_state->als[chan->scan_index].logical_minimum;
++			address = HID_USAGE_SENSOR_LIGHT_COLOR_TEMPERATURE;
++			break;
+ 		default:
+ 			report_id = -1;
+ 			break;
+@@ -235,6 +252,11 @@ static int als_capture_sample(struct hid_sensor_hub_device *hsdev,
+ 		als_state->scan.illum[scan_index] = sample_data;
  		ret = 0;
  		break;
- 	case HID_USAGE_SENSOR_TIME_TIMESTAMP:
-@@ -237,27 +249,39 @@ static int als_capture_sample(struct hid_sensor_hub_device *hsdev,
- /* Parse report which is specific to an usage id*/
- static int als_parse_report(struct platform_device *pdev,
- 				struct hid_sensor_hub_device *hsdev,
--				struct iio_chan_spec *channels,
- 				unsigned usage_id,
- 				struct als_state *st)
- {
--	int ret;
-+	struct iio_chan_spec *channels;
-+	int ret, index = 0;
- 	int i;
- 
-+	channels = st->channels;
-+
- 	for (i = 0; i <= CHANNEL_SCAN_INDEX_ILLUM; ++i) {
- 		ret = sensor_hub_input_get_attribute_info(hsdev,
- 						HID_INPUT_REPORT,
- 						usage_id,
--						HID_USAGE_SENSOR_LIGHT_ILLUM,
-+						als_usage_ids[i],
- 						&st->als[i]);
- 		if (ret < 0)
--			return ret;
--		als_adjust_channel_bit_mask(channels, i, st->als[i].size);
-+			continue;
-+
-+		channels[index] = als_channels[i];
-+		st->scan.scan_index[i] = index;
-+
-+		als_adjust_channel_bit_mask(channels, index, st->als[i].size);
-+		++index;
- 
- 		dev_dbg(&pdev->dev, "als %x:%x\n", st->als[i].index,
- 			st->als[i].report_id);
- 	}
- 
-+	st->num_channels = index;
-+	/* Return success even if one usage id is present */
-+	if (index)
++	case HID_USAGE_SENSOR_LIGHT_COLOR_TEMPERATURE:
++		scan_index = als_state->scan.scan_index[CHANNEL_SCAN_INDEX_COLOR_TEMP];
++		als_state->scan.illum[scan_index] = sample_data;
 +		ret = 0;
-+
- 	st->scale_precision = hid_sensor_format_scale(usage_id,
- 				&st->als[CHANNEL_SCAN_INDEX_INTENSITY],
- 				&st->scale_pre_decml, &st->scale_post_decml);
-@@ -293,15 +317,7 @@ static int hid_als_probe(struct platform_device *pdev)
- 		return ret;
- 	}
++		break;
+ 	case HID_USAGE_SENSOR_TIME_TIMESTAMP:
+ 		als_state->timestamp = hid_sensor_convert_timestamp(&als_state->common_attributes,
+ 								    *(s64 *)raw_data);
+diff --git a/include/linux/hid-sensor-ids.h b/include/linux/hid-sensor-ids.h
+index 13b1e65fbdcc..8af4fb3e0254 100644
+--- a/include/linux/hid-sensor-ids.h
++++ b/include/linux/hid-sensor-ids.h
+@@ -21,6 +21,7 @@
+ #define HID_USAGE_SENSOR_ALS					0x200041
+ #define HID_USAGE_SENSOR_DATA_LIGHT				0x2004d0
+ #define HID_USAGE_SENSOR_LIGHT_ILLUM				0x2004d1
++#define HID_USAGE_SENSOR_LIGHT_COLOR_TEMPERATURE		0x2004d2
  
--	indio_dev->channels = devm_kmemdup(&pdev->dev, als_channels,
--					   sizeof(als_channels), GFP_KERNEL);
--	if (!indio_dev->channels) {
--		dev_err(&pdev->dev, "failed to duplicate channels\n");
--		return -ENOMEM;
--	}
--
- 	ret = als_parse_report(pdev, hsdev,
--			       (struct iio_chan_spec *)indio_dev->channels,
- 			       hsdev->usage,
- 			       als_state);
- 	if (ret) {
-@@ -309,8 +325,14 @@ static int hid_als_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	indio_dev->num_channels =
--				ARRAY_SIZE(als_channels);
-+	/* Add timestamp channel */
-+	als_state->channels[als_state->num_channels] = als_channels[CHANNEL_SCAN_INDEX_TIMESTAMP];
-+	als_state->channels[als_state->num_channels].scan_index = als_state->num_channels;
-+
-+	/* +1 for adding timestamp channel */
-+	indio_dev->num_channels = als_state->num_channels + 1;
-+
-+	indio_dev->channels = als_state->channels;
- 	indio_dev->info = &als_info;
- 	indio_dev->name = name;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
+ /* PROX (200011) */
+ #define HID_USAGE_SENSOR_PROX                                   0x200011
 -- 
 2.43.0
 
