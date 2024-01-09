@@ -1,116 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5C439876
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B016E3984A
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="me+qHDvi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704809822; x=1736345822;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dMfsjjQLQz+MnxTGuMYc96Xmer/aSXSrqNz0HjYB4iQ=;
-  b=me+qHDvi6ynhART2z31QcRu/5TTU0SpAE2ZjG3gQseh+FdTMAetGptFO
-   02Xg0NSh/qeeMeUdahKQ6sGMVwiwSyAmeCx/3sigsh6h9A0QSm4zZ/N7K
-   E8mQahSsYw+b0YiHz6jAVibrkyObrJGH0Hjl+cZJRcZYw/YSbAMAmqOda
-   u3Nb09LADLh8ixzQmY6f9HPcTd2I3xbjDIZcT65xOarrVLuNWH6VsMeJU
-   0ic8l951Hz/wGxw9lRbYHTWX3PViGE9KdskY5a5IlpddfF210P+K9WdCO
-   aQfJ1fbSStNqX3jyYDxLwNYqZi1uKbjYh3qLrydZXQFTfG0c48BQuSNMo
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="388648711"
-X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="388648711"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 06:17:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="758002156"
-X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="758002156"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 09 Jan 2024 06:17:00 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNCtf-0005vK-2k;
-	Tue, 09 Jan 2024 14:16:29 +0000
-Date: Tue, 9 Jan 2024 22:16:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Subject: include/trace/events/nilfs2.h:191:1: sparse: sparse: cast to
- restricted blk_opf_t
-Message-ID: <202401092241.I4mm9OWl-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FaByO4AF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704809899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M3THNFHQS5wwo4cI4QVHpCKin2eJ0VsiVpReOMSRKkw=;
+	b=FaByO4AFMIloAe0Lx4OWS9QUBDg6Klz+ULPtzq0axKDMjaHfJETY1lGdnnKYkz0VuR86t7
+	zdV7IvFLDSpyQ/M6O8USNurgobC0FgXn2FddppIkoSIQq1XsqMT7d6OAd3+4t8oAMJGFq/
+	PoF8mAC/ox/31EfnzDd9cnpSwUuaEX0=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-axC3MfuLMQacYPlSe3Wr4w-1; Tue, 09 Jan 2024 09:18:18 -0500
+X-MC-Unique: axC3MfuLMQacYPlSe3Wr4w-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-554acc951faso1941076a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:18:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704809897; x=1705414697;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M3THNFHQS5wwo4cI4QVHpCKin2eJ0VsiVpReOMSRKkw=;
+        b=IbiRY6J8XE/hSwEopqWXFwED9AKp0SaiHKAL2FakGxtfWKksjR040OOKB+2+CnYsJI
+         D4IWRfdcEuvTf16Q/z0daRwxXchdE8BDl+7HwmP4EoP/VoZ3UWHPLU9KanTSSneNaU+p
+         FjLC6PvTA0Y+Vrj1Oc70VCIQ/aFqB3C+nfzpaN2DsAysWFduMaUqNyxIxUmdNXT5ZHZo
+         /6B/znWhlpD8f6wkBskdrGNmMvmR28y/qTzHRCV+qs+szxcawhAmNGlxrvDXi0a49gUh
+         ks4aB0J6Rb0FdvXB6tMm8nZF+4aLrUwVsYItcFgb+TqdQ+SFCamBJjtKB+rpOdPwdOM0
+         oK2Q==
+X-Gm-Message-State: AOJu0YxTgfmpgILC8GTkUYFPGLj0rmnjz3s62BekZ/nMUuSbq5ByAUwl
+	7hylTukxLUlxpvOteJ5eCvcn+BrtZzGZuk21GDwlJuZer/1bZEwZ6oXvOW3dvCQsAfbPVWIDSQ7
+	GLkXWSOhB2arsIfQnKjtTbDwCH/NiMZU7emxIxvtbbEJWfnc4
+X-Received: by 2002:a50:a69a:0:b0:557:17d5:9afe with SMTP id e26-20020a50a69a000000b0055717d59afemr2594698edc.66.1704809897191;
+        Tue, 09 Jan 2024 06:18:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHnxz/MmvkNTxaoNNw0HTzCCSkv+92BVZ2g1k8dn0fX+gCCKNB5Cu4wEGfVWClLdQrqXvDCk1kHOD1FtOQuk7Q=
+X-Received: by 2002:a50:a69a:0:b0:557:17d5:9afe with SMTP id
+ e26-20020a50a69a000000b0055717d59afemr2594687edc.66.1704809896861; Tue, 09
+ Jan 2024 06:18:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <3277085.44csPzL39Z@natalenko.name> <824573bb-ae01-41b9-8f97-a760ae8f3f18@redhat.com>
+In-Reply-To: <824573bb-ae01-41b9-8f97-a760ae8f3f18@redhat.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Tue, 9 Jan 2024 15:18:05 +0100
+Message-ID: <CAO-hwJ+GLVYzYKUv=NyhEVb-_h_3NAstv6sjL8stqDMkS98j+w@mail.gmail.com>
+Subject: Re: Flood of logitech-hidpp-device messages in v6.7
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Oleksandr Natalenko <oleksandr@natalenko.name>, linux-kernel@vger.kernel.org, 
+	linux-input@vger.kernel.org, =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>, 
+	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
-commit: ed4512590bd5839f8ea9eef1626b0f4db626b1d1 fs/nilfs2: Use the enum req_op and blk_opf_t types
-date:   1 year, 6 months ago
-config: x86_64-randconfig-121-20240107 (https://download.01.org/0day-ci/archive/20240109/202401092241.I4mm9OWl-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240109/202401092241.I4mm9OWl-lkp@intel.com/reproduce)
+On Tue, Jan 9, 2024 at 12:58=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Hi Oleksandr,
+>
+> On 1/9/24 12:45, Oleksandr Natalenko wrote:
+> > Hello Hans et al.
+> >
+> > Starting from v6.7 release I get the following messages repeating in `d=
+mesg` regularly:
+> >
+> > ```
+> > Jan 09 10:05:06 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: Disconnected
+> > Jan 09 10:07:15 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: Disconnected
+> > Jan 09 10:16:51 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: HID++ 4.5 device connected.
+> > Jan 09 10:16:55 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: HID++ 4.5 device connected.
+> > Jan 09 10:16:55 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: HID++ 4.5 device connected.
+> > Jan 09 10:36:31 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: Disconnected
+> > Jan 09 10:37:07 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: HID++ 4.5 device connected.
+> > Jan 09 10:46:21 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: Disconnected
+> > Jan 09 10:48:23 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: Disconnected
+> > Jan 09 11:12:27 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: HID++ 4.5 device connected.
+> > Jan 09 11:12:47 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: HID++ 4.5 device connected.
+> > Jan 09 11:12:47 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: HID++ 4.5 device connected.
+> > Jan 09 11:38:32 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: Disconnected
+> > Jan 09 11:43:32 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: Disconnected
+> > Jan 09 11:45:10 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: HID++ 4.5 device connected.
+> > Jan 09 11:45:11 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: HID++ 4.5 device connected.
+> > Jan 09 11:45:11 spock kernel: logitech-hidpp-device 0003:046D:408A.0005=
+: HID++ 4.5 device connected.
+> > Jan 09 12:31:48 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: Disconnected
+> > Jan 09 12:33:21 spock kernel: logitech-hidpp-device 0003:046D:4051.0006=
+: HID++ 4.5 device connected.
+> > ```
+> >
+> > I've got the following hardware:
+> >
+> > * Bus 006 Device 004: ID 046d:c52b Logitech, Inc. Unifying Receiver
+> > * Logitech MX Keys
+> > * Logitech M510v2
+> >
+> > With v6.6 I do not get those messages.
+> >
+> > I think this is related to 680ee411a98e ("HID: logitech-hidpp: Fix conn=
+ect event race").
+> >
+> > My speculation is that some of the devices enter powersaving state afte=
+r being idle for some time (5 mins?), and then wake up and reconnect once I=
+ touch either keyboard or mouse. I should highlight that everything works j=
+ust fine, it is the flood of messages that worries me.
+> >
+> > Is it expected?
+>
+> Yes this is expected, looking at your logs I see about 10 messages per
+> hour which IMHO is not that bad.
+>
+> I guess we could change things to track we have logged the connect
+> message once and if yes then log future connect messages (and all
+> disconnect messages) at debug level.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401092241.I4mm9OWl-lkp@intel.com/
 
-sparse warnings: (new ones prefixed by >>)
-   fs/nilfs2/segment.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/nilfs2.h):
->> include/trace/events/nilfs2.h:191:1: sparse: sparse: cast to restricted blk_opf_t
->> include/trace/events/nilfs2.h:191:1: sparse: sparse: cast to restricted blk_opf_t
->> include/trace/events/nilfs2.h:191:1: sparse: sparse: restricted blk_opf_t degrades to integer
->> include/trace/events/nilfs2.h:191:1: sparse: sparse: restricted blk_opf_t degrades to integer
+Sounds reasonable to me.
 
-vim +191 include/trace/events/nilfs2.h
+Cheers,
+Benjamin
 
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  190  
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06 @191  TRACE_EVENT(nilfs2_mdt_submit_block,
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  192  	    TP_PROTO(struct inode *inode,
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  193  		     unsigned long ino,
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  194  		     unsigned long blkoff,
-ed4512590bd5839 Bart Van Assche 2022-07-14  195  		     enum req_op mode),
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  196  
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  197  	    TP_ARGS(inode, ino, blkoff, mode),
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  198  
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  199  	    TP_STRUCT__entry(
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  200  		    __field(struct inode *, inode)
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  201  		    __field(unsigned long, ino)
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  202  		    __field(unsigned long, blkoff)
-ed4512590bd5839 Bart Van Assche 2022-07-14  203  		    __field(enum req_op, mode)
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  204  	    ),
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  205  
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  206  	    TP_fast_assign(
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  207  		    __entry->inode = inode;
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  208  		    __entry->ino = ino;
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  209  		    __entry->blkoff = blkoff;
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  210  		    __entry->mode = mode;
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  211  		    ),
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  212  
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  213  	    TP_printk("inode = %p ino = %lu blkoff = %lu mode = %x",
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  214  		      __entry->inode,
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  215  		      __entry->ino,
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  216  		      __entry->blkoff,
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  217  		      __entry->mode)
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  218  );
-a9cd207c23ca4fa Hitoshi Mitake  2015-11-06  219  
 
-:::::: The code at line 191 was first introduced by commit
-:::::: a9cd207c23ca4fa5bd5f1092e867e87542e349a3 nilfs2: add tracepoints for analyzing reading and writing metadata files
+>
+>
+> Jiri, Benjamin, do you have any opinion on this ?
+>
+> Regards,
+>
+> Hans
+>
+>
+>
 
-:::::: TO: Hitoshi Mitake <mitake.hitoshi@lab.ntt.co.jp>
-:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
