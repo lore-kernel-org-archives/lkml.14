@@ -1,162 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2074.outbound.protection.outlook.com [40.107.243.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F7036B1B
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C871E4B1;
+	Tue,  9 Jan 2024 11:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m1SxpyZZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704800461; x=1736336461;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=AoPRblfBYSSpxI4NW0UoohG5awkc5/gNHCwPgvymxJ0=;
-  b=m1SxpyZZ//mAVpPeNxSy2D5FFs5MlhJ5KAlsEwFJu93gDMOdYGRGaahT
-   +fNAAsEhjvjgIGVL89UdNqiR4tq5ch7oh2vRlKYvbxcfo3+d1GdhSFe2o
-   /DMsFcb7GxvKqiyUg+3GfMg6xjcjHLToHoGebd/YVSl2u3iEKKHHVtyF1
-   5m8s8+o0czCvZyfjhZI6inYNsM/FdnO3dbPK1iqePFXKz5J/Bam0zD+ye
-   D/INmEfj14m3+th+kjG6OpHGeCfUvlkQFvDy4AN8Uw+IKOkOxL9cddgwv
-   9Ta6kcXSyRPS8TmcG5ox20Q9WGD1f47Yanos5q5G8HMVBFEKI2orPOuzy
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="4946118"
-X-IronPort-AV: E=Sophos;i="6.04,182,1695711600"; 
-   d="scan'208";a="4946118"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 03:41:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="757957217"
-X-IronPort-AV: E=Sophos;i="6.04,182,1695711600"; 
-   d="scan'208";a="757957217"
-Received: from arunjose-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.37.37])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 03:40:58 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id F2CA710A4E9; Tue,  9 Jan 2024 14:40:54 +0300 (+03)
-Date: Tue, 9 Jan 2024 14:40:54 +0300
-From: kirill.shutemov@linux.intel.com
-To: Jun Miao <jun.miao@intel.com>
-Cc: dave.hansen@linux.intel.com, x86@kernel.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/tdx: Optimize try_accept_memory() to reduce 1GB page
- accepted failed times
-Message-ID: <20240109114054.s2mzvhp2dgbihcvy@box.shutemov.name>
-References: <20240109054824.9023-1-jun.miao@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rkN+8lXg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CNiQViJJjAdqop24KIDcDRRUc3HF5tBaauVNs7fSLXLOtgH0wizhnRb+PAZgDvOjYSlDY4PdpTh8mRYMHoz2sCxpenZinRyfIRYr0mSavEWTLf5nGFyrLK8uTSB0/7pzaY2OGl8vYt3riJwXT8RwNgvmtNSUmROJARbGG1f7TayP10WOXDHbZH7QgcfAjGTElMcs/xqZTCyWQy2EdDLz838M4UZZLt0/bPE8c7RMJMJIMJJNumJxJvM/NLPKl1fNujh+3rx9+a3DsaOMkCdc0tNzHXOM4oxvGkW94U0aUuWDhLLFMJzMXD0IuGNP+5WqMWTlqtm3IbmQv9d3vrAoYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O8HB93j58h4N5WH/j5sNG2izvfB6e2JymbYZgfPH3Pk=;
+ b=XHLW3HM5I9SWd+j/wcwFnpG3oMy7Zdb5RBdWrUpi2jiXwcZVCxON8WEmEHqfRd0vsvkcWePxqp9lOZ2vKg6pbHd28GVaGPJxa1b5aAapyh592s/NUWkoSwVCN8/Yk46vLsiR1tDAuWNyzPU5N01nc4YKvCIjp0HcAe7tXikXOsCrzgJZzhZ65L0lof2anoFuqpRoKQIeinOCW8TtpM6MYF/TGX5v3ijg6955NeyFo75hYJxhgTUHp49A1kA0VL2tSz653UF1Y5AXRe/JEnv9ecV2M3jhZOJhzZvgN2HJsA0YzrUgTTXFrIeI97FwjOD5n1syH5ZsNcNDWu1xE2Kz6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O8HB93j58h4N5WH/j5sNG2izvfB6e2JymbYZgfPH3Pk=;
+ b=rkN+8lXgdAaviyoVKaYO4Klvjq7KOnlD1P39qnkvgy91SLNHzL4lFUWLUr/nJV2j4Qw/kNZw3ISXW2NIf9cen7fGHnaLAlWtSydGLnBd/ZLzgxT/fVxeD1bW18bd9YbWysu/TgLFOhShzmknj6VL8apGra5U/Tu7PXDx8JfQqxxSZsW7olSOqKVj3jcrrh1aH2isCU84lvqopBZALk7jpMoVOwH5Yc+hss5bBoi12SxzJ2Ey7ZjWkWV8S8dp+BifZAXaKW/8oF5zhU49MVyWhjyQTkZrbK+Sf3VVL1VCxib2KREiLvAdm5n4uEUCy+jfqRMIrbF/OwVnRJT9mbwWdw==
+Received: from SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21)
+ by IA0PR12MB8328.namprd12.prod.outlook.com (2603:10b6:208:3dd::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
+ 2024 11:42:37 +0000
+Received: from SA1PR12MB7199.namprd12.prod.outlook.com
+ ([fe80::e23f:7791:dfd2:2a2d]) by SA1PR12MB7199.namprd12.prod.outlook.com
+ ([fe80::e23f:7791:dfd2:2a2d%7]) with mapi id 15.20.7159.020; Tue, 9 Jan 2024
+ 11:42:37 +0000
+From: Ankit Agrawal <ankita@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>, Alex Williamson
+	<alex.williamson@redhat.com>
+CC: Yishai Hadas <yishaih@nvidia.com>, "shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, "kevin.tian@intel.com"
+	<kevin.tian@intel.com>, "eric.auger@redhat.com" <eric.auger@redhat.com>,
+	"brett.creeley@amd.com" <brett.creeley@amd.com>, "horms@kernel.org"
+	<horms@kernel.org>, Aniket Agashe <aniketa@nvidia.com>, Neo Jia
+	<cjia@nvidia.com>, Kirti Wankhede <kwankhede@nvidia.com>, "Tarun Gupta
+ (SW-GPU)" <targupta@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Andy
+ Currid <acurrid@nvidia.com>, Alistair Popple <apopple@nvidia.com>, John
+ Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>, "Anuj Aggarwal
+ (SW-GPU)" <anuaggarwal@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v15 1/1] vfio/nvgrace-gpu: Add vfio pci variant module for
+ grace hopper
+Thread-Topic: [PATCH v15 1/1] vfio/nvgrace-gpu: Add vfio pci variant module
+ for grace hopper
+Thread-Index:
+ AQHaMRy7X+OP5n0180qPNLjY5sy83LCvnbKAgBcsduSAAZ96gIAAEY0AgAAaLACAAFEqAIAABG8AgAiQms4=
+Date: Tue, 9 Jan 2024 11:42:37 +0000
+Message-ID:
+ <SA1PR12MB719969304142495D09BF7204B06A2@SA1PR12MB7199.namprd12.prod.outlook.com>
+References: <20231217191031.19476-1-ankita@nvidia.com>
+ <20231218151717.169f80aa.alex.williamson@redhat.com>
+ <BY5PR12MB3763179CAC0406420AB0C9BAB095A@BY5PR12MB3763.namprd12.prod.outlook.com>
+ <20240102091001.5fcc8736.alex.williamson@redhat.com>
+ <20240103165727.GQ50406@nvidia.com>
+ <20240103110016.5067b42e.alex.williamson@redhat.com>
+ <20240103193356.GU50406@nvidia.com>
+ <20240103172426.0a1f4ae6.alex.williamson@redhat.com>
+ <20240104004018.GW50406@nvidia.com>
+In-Reply-To: <20240104004018.GW50406@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB7199:EE_|IA0PR12MB8328:EE_
+x-ms-office365-filtering-correlation-id: 6260edd7-7234-4fc7-11b1-08dc11081401
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ xuQThxmZEGZLtkEfJfZCCgba4Jd0UCTj4vk6CfavvXYs5BKVj5ZRf9rYE+iF3aC1SZlb/p2RYUJUrKkJLp6dBpnuht+3M+2mL+ttu8wN4yBjei6+QhxbV3PoWhCQF3Q9pvljBwFrtofSjeeXP+2Z43kBX/jeiyhvl/J2z1/1AtwF/Av6XTVOdtDfT5buvU/aKX8mDU09uHxMy0fJJspfvZgHuiO0aFovb6r41EdznJDGSawd62oXloP+2dd9spI6UhJYs4m7h31GzSk2oEaskeeYWMDJEMjPxN+ptQJOEF/kijHb7yS6XWEW3cX3NhfwuBphNQUCoCqnbc8XwTULV0aa8C1+5A0iHVRMAouT0KTWelOeO6Up3EsVvTFRSXaW2swWLIKSmdynUQe8TECcPAlxBiwes4jdFQjRB4GFB2NDNj9TQGwHyd+Y3vTvTnkeSuCB1FgtpckFj3mDkAAnG5ZLKwNEIKT2HwK7ksNSyM9RO390yT970KMVE5hUlZVi2EYLGQAphRyn/JLVRiO40B7oU5Pz+h6ud3aB5VEBnFmSCdTxTqTwmSKt8KsTFxuZx2ob34Jcz/9nAlMj+FH/yq7EwmdBhwAzghYLH4Je1AlRiRIAy0g8i35O+otVfQIB
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7199.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(396003)(136003)(376002)(366004)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(55016003)(83380400001)(91956017)(66946007)(41300700001)(76116006)(33656002)(86362001)(38070700009)(38100700002)(122000001)(26005)(6506007)(9686003)(2906002)(7696005)(66556008)(66476007)(66446008)(64756008)(316002)(110136005)(478600001)(54906003)(71200400001)(8936002)(8676002)(4326008)(52536014)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?8Ef40vc+JW6rMEfFRPG97EBKzdNOC2lxw7yVjrHgucjoL+kfdupYSi98Cf?=
+ =?iso-8859-1?Q?TwIJBiWswjMIHFC8HuHeSzyiwf3hsZkcNwtSWsLdZtJJOT22cjRZYF0Wer?=
+ =?iso-8859-1?Q?EymlavxZKYz0N3+Gx0pvV6Y+v4sWR6wVG6UldrFjXrH1VXYt6q2Q3CGMLF?=
+ =?iso-8859-1?Q?9rrnh+YXeFa5wlHB6OubHTwiE4u3xE7Cl0hYOdhnTck6OUtkuuyiqhggto?=
+ =?iso-8859-1?Q?sl2aMg/HzyOK+wBD8ThkVYkKq17LnGz6p15ELMzzDmlxiPwMWPFOmn7VYf?=
+ =?iso-8859-1?Q?5XLIchNjnn+DcYRYZgycC+lLlwKyeT15Z2SrzJnT/A2OU1ZOv2A4Yjo3em?=
+ =?iso-8859-1?Q?yeE9qA2jbzwaVEPloG80xUqT8lNSwDuLzN5/t4OKLCBK56leYpVWT9Kb3g?=
+ =?iso-8859-1?Q?Ziaqkv8pIpaeCEWojnUCctE4cE0RDOvbPq2NGWG1UYkhMesUy1FrA8sc1e?=
+ =?iso-8859-1?Q?XLfi7xNAsPO2Car5L88ED3dEYs+axuUSW2xjhnRCD50dddWRiFrckaHv3C?=
+ =?iso-8859-1?Q?BryW5xyI2C5PZmcQqfsdW8liLHfcurM3il2E1rX7bMxRKQuKyt/PO/yEdw?=
+ =?iso-8859-1?Q?zD9A34emf9qjZa2jPFO6/a4uEWvjclXkHHICq0fe29IAFsEenpuglkreUF?=
+ =?iso-8859-1?Q?EquUhYckilN76jSotYT+fdeRMJF8nM0u/lR3klv6JqRWyHs/RIES6jGZBQ?=
+ =?iso-8859-1?Q?iNExZhnFz1U24618Z0eJd11cvLuUQGa2h90rDjNpjACwFMX2dM9wkjpPLz?=
+ =?iso-8859-1?Q?9zYKZZoUMpNuaNFepRAiD6MTFlSBWtFh0j6Zu5sKgdebWuFbt5f4nHtoaB?=
+ =?iso-8859-1?Q?/h3xpqVeCSyeGt9boOOL9pSgBK0cgzCBmpvIAwbcEX3mcWkbopFBqdpB8T?=
+ =?iso-8859-1?Q?3Z9vs3G6uvalfd/VhRMc/VLo5V/EH7UQZkQ0E2G576lMXD2MvrlxWVthXz?=
+ =?iso-8859-1?Q?vuHHwhtlqWC/MHSCww6rSPQRlFLh+e1sfINJXfNFBbz8Qz+iNTBHa4ir1N?=
+ =?iso-8859-1?Q?t+NvZoamoHwdWKmi8oCKOO5f+jRbUff90xDrBHAY848FtitB21dz6SwI2L?=
+ =?iso-8859-1?Q?ta0gIm0iE33bYAZjzzqwixNtxbv1u+ndTBSGa7JyKE0KsQ0F24Ets1CvU8?=
+ =?iso-8859-1?Q?t7IEu0NpPtLUdUPZ/bWFke5zPs9557HY5LQkHdDJMflwO7dUCT4lx74IQh?=
+ =?iso-8859-1?Q?G967CEs1WRQDx9/8hhdjjNYwU0GVKEJOds25a8V9MqIhD6xQ0kbvqExVc7?=
+ =?iso-8859-1?Q?rKhicsexGX2ZRx6+RufAs/0p8GH5PNfAxJELLww3qV7MmwTmZYP2+Wc4/+?=
+ =?iso-8859-1?Q?P7Gp6dZD3cJQblRBxqTN8rIHVsCg+GmdLqYnMZEwieD5QmihN5dwhgS97T?=
+ =?iso-8859-1?Q?Z1ykVtBgbsmF5mF/Q0+VeyUTEj/ELfdeznfq4U3oXUqzsjIH36Cxjy/aa1?=
+ =?iso-8859-1?Q?Hda6h2QnuExzeDXeIBVfSyxDZi7veH72xj+W8nf1NwaXSq4KDFsMikFko1?=
+ =?iso-8859-1?Q?GB9YORhFZQ/nTZzI8OhpzfEULhkrG/B9B7HtKA31jKIO5k7C2rm0IkGhU1?=
+ =?iso-8859-1?Q?zpg989vRBElPKjOP8svtjIexfDiTHBHV0giX13/0ODLi6rs7102z9iXn34?=
+ =?iso-8859-1?Q?PfiS1tkWwU1OQ=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240109054824.9023-1-jun.miao@intel.com>
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7199.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6260edd7-7234-4fc7-11b1-08dc11081401
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2024 11:42:37.2597
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SBA1ywaK3kAmlpFfND6MOBuCRtLUYVuCQzWPVAc0MUSQqTmJkkYjjWkShUvZBbRveEr6FCgJOWsTNSBcvO/1RQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8328
 
-On Tue, Jan 09, 2024 at 01:48:24PM +0800, Jun Miao wrote:
-> Since the current TDX module ABI spec TDG.MEM.PAGE.ACCEPT Leaf show:
-> "Level of the Secure EPT leaf entry that maps the private page to be
-> accepted: either 0 (4KB) or 1 (2MB)".
-
-Well, that's true that current implementation supports only 4k and 2M, but
-note reference to "Secure EPT level" table. This as well as size of the
-field suggests that it can be extended to more page levels.
-
-> There is not 1G page accept dynamically, if every time try to accept 1G
-> size but always fail, then cost more time from two cases:
-> 	- When size < 1G, judge failed return 0
-> 	- Really TDCALL<ACCEPT_PAGE> 1G failed when size >= 1G
-> So skip the 1G and optimize it to 2M directly to save time.
-
-Do you actually see issued TDCALL for 1G pages? It shouldn't be the case.
-
-Kernel accepts memory in MAX_ORDER chunks -- 4MiB a time. try_accept_one()
-will fail on alignment check 511 times of 512 and on len check for the
-one. I expected these checks to be within noise compared to TDCALL.
-
-I don't oppose the patch in principal, but let's establish facts first.
-
-> 
-> Run the eatmemory with different memories to get the cost time as follow:
-> 	[root@td-guest ~]# ./eatmemory 8G
-> 	Currently total memory: 100169027584
-> 	Currently avail memory: 99901911040
-> 	Eating 8589934592 bytes in chunks of 1024...
-> 
-> 	  Start time：1704699207487 ms
-> 	  End time：1704699222966 ms
-> 	  Cost time: 15479 ms
->   #
->   # Compare with/without this optimization
->   #
->   # Hardware: ArcherCity Sapphire Rapids 128cores
->   # Test eatmemory: https://github.com/jmiao2018/eatmemory.git
->   # Detail test log link: https://github.com/jmiao2018/eatmemory/blob/master/log-tdx.txt
->   #
->   # Accept Memeory Sizes      Before(ms)       After(ms)      Trigger 1G Failed Times      Reduce Time%
->   # ....................      ..........       .........      .......................	   .............
->   #
-> 		  1G                3414         3402                        751824        -12(-0.035%)
-> 		  2G                3853         3804                       1015126       -349(-0.128%)
-> 		  4G                7773         7561                       1557834       -212(-0.281%)
-> 		  8G               15479        15173                       2633686       -306(-0.201%)
->   		 16G               31527        30379                       4785649      -1148(-0.378%)
->   		 32G               65058        63723                       9087686      -1335(-0.209%)
-> 		 64G              133379       128354                      17693366      -5025(-0.391%)
-> 
-> Co-developed-by: Zhiquan Li <zhiquan1.li@intel.com>
-> Signed-off-by: Jun Miao <jun.miao@intel.com>
-> ---
->  arch/x86/coco/tdx/tdx-shared.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/coco/tdx/tdx-shared.c b/arch/x86/coco/tdx/tdx-shared.c
-> index 1655aa56a0a5..1694b7eba93b 100644
-> --- a/arch/x86/coco/tdx/tdx-shared.c
-> +++ b/arch/x86/coco/tdx/tdx-shared.c
-> @@ -18,7 +18,7 @@ static unsigned long try_accept_one(phys_addr_t start, unsigned long len,
->  	 * Pass the page physical address to the TDX module to accept the
->  	 * pending, private page.
->  	 *
-> -	 * Bits 2:0 of RCX encode page size: 0 - 4K, 1 - 2M, 2 - 1G.
-> +	 * Bits 2:0 of RCX encode page size: 0 - 4K, 1 - 2M.
->  	 */
->  	switch (pg_level) {
->  	case PG_LEVEL_4K:
-> @@ -27,9 +27,6 @@ static unsigned long try_accept_one(phys_addr_t start, unsigned long len,
->  	case PG_LEVEL_2M:
->  		page_size = TDX_PS_2M;
->  		break;
-> -	case PG_LEVEL_1G:
-> -		page_size = TDX_PS_1G;
-> -		break;
->  	default:
->  		return 0;
->  	}
-> @@ -55,11 +52,14 @@ bool tdx_accept_memory(phys_addr_t start, phys_addr_t end)
->  		 * Try larger accepts first. It gives chance to VMM to keep
->  		 * 1G/2M Secure EPT entries where possible and speeds up
->  		 * process by cutting number of hypercalls (if successful).
-> -		 */
-> +		 * Since per current TDX spec, only support for adding 4KB or
-> +		 * 2MB page dynamically.
-> +		 * /
->  
-> -		accept_size = try_accept_one(start, len, PG_LEVEL_1G);
-> -		if (!accept_size)
-> +		if (IS_ALIGNED(start, PMD_SIZE) && len >= PMD_SIZE)
-
-You duplicate checks inside try_to_accept_on().
-
->  			accept_size = try_accept_one(start, len, PG_LEVEL_2M);
-> +
-> +		/* The 4KB page case or accept 2MB page failed case. */
->  		if (!accept_size)
->  			accept_size = try_accept_one(start, len, PG_LEVEL_4K);
->  		if (!accept_size)
-> -- 
-> 2.32.0
-> 
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+I am working to get the code changes suggested in this thread to get=0A=
+to the next version.=0A=
+=0A=
+Moreover based on the other design related comments for BAR approach=0A=
+and support for the enable/disable bit, comments follow.=0A=
+=0A=
+> There are a lot of VMMs and OSs this needs to support so it must all=0A=
+> be consistent. For better or worse the decision was taken for the vPCI=0A=
+> spec to use BAR not ACPI, in part due to feedback from the broader VMM=0A=
+> ecosystem, and informed by future product plans.=0A=
+> =0A=
+> So, if vfio does special regions then qemu and everyone else has to=0A=
+> fix it to meet the spec.=0A=
+=0A=
+Ack, I'm putting this into the commit log as a reason to go with the BAR=0A=
+approach for future reference.=0A=
+=0A=
+>>> I'd suggest we take a look at whether we need to continue to pursue=0A=
+>>> honoring the memory enable bit for these BARs and make a conscious and=
+=0A=
+>>> documented decision if we choose to ignore it.=0A=
+>>=0A=
+>> Let's document it.=0A=
+> Ok, I'd certainly appreciate more background around why it was chosen=0A=
+> to expose the device differently than bare metal in the commit log and=0A=
+> code comments and in particular why we're consciously choosing not to=0A=
+> honor these specific PCI semantics.  Presumably we'd remove the -EIO=0A=
+> from the r/w path based on the memory enable state as well.=0A=
+=0A=
+Ack, will add to the commit log and remove EIO.=0A=
+=0A=
+>> unprogrammed BARs are ignored (ie. not exposed to userspace), so perhaps=
+=0A=
+>> as long as it can be guaranteed that an access with the address space=0A=
+>> enable bit cleared cannot generate a system level fault, we actually=0A=
+>> have no strong argument to strictly enforce the address space bits.=0A=
+>=0A=
+> This is what I think, yes.=0A=
+=0A=
+Ack, so given the access does not cause system level fault, I'll not enforc=
+e=0A=
+the enable/disable bit. Though I'll put this information in the commit log=
+=0A=
+for reference as well and the reason for this choice.=
