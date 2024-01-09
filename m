@@ -1,40 +1,40 @@
 Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC076106
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 02:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392D727460
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 02:53:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="AKUmK74G"
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="S8ASTDJw"
 Received: from cwcc.thunk.org (pool-173-48-82-211.bstnma.fios.verizon.net [173.48.82.211])
 	(authenticated bits=0)
         (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4092rWoH010670
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4092rS4A010559
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 21:53:32 -0500
+	Mon, 8 Jan 2024 21:53:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1704768813; bh=PBXPEjs8S6Xjv3on5qnL4AHB7lIpx2uSn0wufjcExMo=;
+	t=1704768811; bh=xxCiXh6+90OQQa6h13ZMbbjv8glnSyW3gmHzwsuWjrA=;
 	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=AKUmK74GZxhlB3jH8sR8/3W88eLS6EkqBr7ee2A5h0p4AcqTZxcpr9mUXoO+kxIvj
-	 hOxdpXph6dJgZ5jTX+oGBwPe4hoEOVQqeKyts08HaV1yJwCw/Tv9+4/8BR27BcI5R6
-	 WABJ/wQEOZ6RsmH9x0Kt56EosIiwm8UEYcOHSYjXwg6UVnm+Q3wUJxsA41y5RB9JyF
-	 SceqMh+/B59lE817imOWBK+IywhLRy7FWrzGml67C/sNaisCmOV1h2BoJ6Fe4UryLp
-	 8tODtMG/jVMAaA+w5JFUkpsVz1U9+H1uPVf/gZ5LmwBlyIVcO0Mn2E0Ts9NNKiFrea
-	 FamuBpLYWdlDQ==
+	b=S8ASTDJwQWTcL3DYvkPT1fXbJ50omnZmme8y4bVjs+BGDDOew2ZO5b7kL7UnrH3dO
+	 d1DeVsi7SxTh2+WzjUB9D+oqGK1PpPADLPa6yksk0lEOcMJzWlSADHCHsIa11u3MgB
+	 eGQRoHhaArt8xRb5SrTQvI7d45tv+fScdmhr7iUaPnjz2fjxI3jQ87/JjM3Zi2U3Kr
+	 cOXnPYUEJVYbGs+bJyfUT8YOq4UYrp8cmp3HVOdiFaJJpKsE8X51r9ph9jvCW98zRm
+	 ouh9j+RphumPDyyv/MKs6f9Z4k54ybjRatKvXpZ94+wd++osyWzzReyYx+QbUAJJdz
+	 GR/j/UiEoP8+A==
 Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 2BA1E15C0314; Mon,  8 Jan 2024 21:53:28 -0500 (EST)
+	id 1AF7B15C0278; Mon,  8 Jan 2024 21:53:28 -0500 (EST)
 From: "Theodore Ts'o" <tytso@mit.edu>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        Ye Bin <yebin10@huawei.com>
+To: adilger.kernel@dilger.ca, jack@suse.cz, alex@clusterfs.com,
+        linux-ext4@vger.kernel.org, Gou Hao <gouhao@uniontech.com>
 Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        jack@suse.cz
-Subject: Re: [PATCH v2] ext4: fix inconsistent between segment fstrim and full fstrim
-Date: Mon,  8 Jan 2024 21:53:23 -0500
-Message-ID: <170476879011.637731.15498657467622683553.b4-ty@mit.edu>
+        gouhaojake@163.com
+Subject: Re: [PATCH] ext4: improving calculation of 'fe_{len|start}' in mb_find_extent()
+Date: Mon,  8 Jan 2024 21:53:15 -0500
+Message-ID: <170476879011.637731.10342594755395696779.b4-ty@mit.edu>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231216010919.1995851-1-yebin10@huawei.com>
-References: <20231216010919.1995851-1-yebin10@huawei.com>
+In-Reply-To: <20231113082617.11258-1-gouhao@uniontech.com>
+References: <20231113082617.11258-1-gouhao@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,24 +45,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Sat, 16 Dec 2023 09:09:19 +0800, Ye Bin wrote:
-> Suppose we issue two FITRIM ioctls for ranges [0,15] and [16,31] with
-> mininum length of trimmed range set to 8 blocks. If we have say a range of
-> blocks 10-22 free, this range will not be trimmed because it straddles the
-> boundary of the two FITRIM ranges and neither part is big enough. This is a
-> bit surprising to some users that call FITRIM on smaller ranges of blocks
-> to limit impact on the system. Also XFS trims all free space extents that
-> overlap with the specified range so we are inconsistent among filesystems.
-> Let's change ext4_try_to_trim_range() to consider for trimming the whole
-> free space extent that straddles the end of specified range, not just the
-> part of it within the range.
+On Mon, 13 Nov 2023 16:26:17 +0800, Gou Hao wrote:
+> After first execution of mb_find_order_for_block():
+> 
+> 'fe_start' is the value of 'block' passed in mb_find_extent().
+> 
+> 'fe_len' is the difference between the length of order-chunk and
+> remainder of the block divided by order-chunk.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] ext4: fix inconsistent between segment fstrim and full fstrim
-      commit: 3d1aa1169c45aba9d589be1eb4b131f26f0a663c
+[1/1] ext4: improving calculation of 'fe_{len|start}' in mb_find_extent()
+      commit: 2bf5eb2a7c22fc3dd011fda2722fd369b1c4608b
 
 Best regards,
 -- 
