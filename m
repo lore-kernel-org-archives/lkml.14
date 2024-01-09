@@ -1,109 +1,94 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D253716F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A6F37163;
+	Tue,  9 Jan 2024 11:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gzKZso9o"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40d5a41143fso31754895e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 03:49:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/FYUEKH"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40d5b89e2bfso30334515e9.0;
+        Tue, 09 Jan 2024 03:51:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704800951; x=1705405751; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mmp2BpvyTxAcamyi3InOfkuuoCxM3N59/lufaFAw+Ac=;
-        b=gzKZso9ozQXUuUXknRQwUxtyxc+DwTqu5SoIrUguYh2z9R/Q/diDjfoVwZzXSJ2HM1
-         8P3vmTS11ikWQhMCzApIMo73tTcSSsClgMd6UlZ72G12i3NfjHFo14GSUIIzLR6eN0HK
-         ONjxae7oGkPdluzXYA7+Jt6fHhjG5ll/RsBl2MktvRpIPYslspRRXUqcI/Hl/Lyws+ON
-         0hg2qV4Lhj4+f8PjjYyrjCF/UELHBQbTlT1867JcKJtRM1XE57UbPF7enAAHKpbBFzR3
-         XRNUR7eD4tuBCjyQ81wosmwzkI3D7QdMAFwpyrxhGRankyuC/2j0eZPmlwWyg0X17tqh
-         QWKw==
+        d=gmail.com; s=20230601; t=1704801078; x=1705405878; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=e8zorFy37cTsPEwkpmk1vmBCDGkHkthlVR0ZqxNtPSY=;
+        b=h/FYUEKHurohVQQBEyLqeJHhXgbmLfc8QD9KBbm2h6i1Brz6+C8f0eUjHp4yzienR2
+         +tZxjGrkAdOdxRWGNf3c9OphruZxPj43gMCobDmK9JECLu2y7QZrMr6e53YmfIcz2GzN
+         UNDsCkplkUt3Ckv3DlzBe1juhj32i39VC2S/zZy3qUe9/Aj2gr6vx+DyiE94fbTBbKDg
+         5FJ7g5kSwJ6UD1qf/O5NJKmhXpNGwtPgqPkrDYjPEsYvvQ9Eor6SXD4qz33V7JJQc2aV
+         2ZSKwC6e83osbBgxJu48cxevNQgr4g7Mq6LS5zkXklyMWzQydPsBLGzVL+KmCCUdYAjO
+         f4Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704800951; x=1705405751;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mmp2BpvyTxAcamyi3InOfkuuoCxM3N59/lufaFAw+Ac=;
-        b=C4iVzntYqLeoLmrCXoQ+zgfaiDQPXV0SNUbGYBzM7zTyl+gQHzcS1aEnIi3A+quy4t
-         LvlcPvP76Ttqh+5y4VBOmjWfVm8/Bvsk1RLeBBiFH7zPGe9rZewRzeNcoZzuX4lWbYmF
-         HFpCAcA1f6S4+tt1EQgvK5nDG1Pdh+yM6b7uXGjv48n7Ax5PaZ04jKjiBWXa09WPyNyJ
-         js2/b1s4SSbtWbK4c6QpTCGHUIQ9ko+j1AsDXpXoTEs85Y981Eb/9D68umsjFfHJx7Y1
-         RBlK+Nb01LDnuxvKsl0j39t017feZKDQwn43yY7r3K27E/bt9g0AobuHte5NIlMROpk3
-         PUnw==
-X-Gm-Message-State: AOJu0Yx9x1NMLI6EsPH2vRyg/fOruVU8zkfD9VXtyJoFHDIsXUNDjrRq
-	7oBs4DxBwer5PopbX6pGKhB8Td6egNn9tw==
-X-Google-Smtp-Source: AGHT+IHSMakrUSHIrcnYR6pVA4Us/42RistQJd8RJ5YGq9NmJknJtFm4agS7HU4biZqw9DJh8YArYQ==
-X-Received: by 2002:a05:600c:4f81:b0:40d:5d9a:adc with SMTP id n1-20020a05600c4f8100b0040d5d9a0adcmr2686156wmq.11.1704800951670;
-        Tue, 09 Jan 2024 03:49:11 -0800 (PST)
-Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id bg30-20020a05600c3c9e00b0040d62f89381sm3335699wmb.35.2024.01.09.03.49.10
+        d=1e100.net; s=20230601; t=1704801078; x=1705405878;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e8zorFy37cTsPEwkpmk1vmBCDGkHkthlVR0ZqxNtPSY=;
+        b=eJZqrZ3lAF9YkQaho47ra1sOXg/97DBMHSxYzQLd5y4YFKMdSLcV/Xvtrc9ls0vpap
+         B8BP+Xkv9B4/SCGFul/BdOkfKaT0Ip9qzGqWiijWNYZt+x/VBN8aeamRWrLveU3HOQTU
+         FDV720kNgWFub2pPj/pIAT3yk8k2GGgeTyqxX3QBgdXkNqegfnHHGgaHWlaaYNNGw+R1
+         c4QjotzaoJZRz7qXWJKIAEtlReF8EzeT43PLgUvOmJqUdUr7BnRJivJIuRqGxSbZ1f3G
+         0hHLewntr8NgZv1kM0bHFL/RVaKphWbxpL/YYyYh/UNiPJ5b28VYq43Pv2jbN/bRVlpi
+         Gsqg==
+X-Gm-Message-State: AOJu0YyFs270y5KDrdnZL/Mh7LX7Ota0AVmhQd/IgnsBNejbcGWZEvaJ
+	JPNY7LFoQDu4fwQczXpP9eA=
+X-Google-Smtp-Source: AGHT+IF4Oxt1eK3J4/ceekyRc0+o+bLIr0gfQJAzosybtEeRD2xFsf3yE9MiR9sIWEdXxbypk1p2Hw==
+X-Received: by 2002:a05:600c:4d21:b0:40d:94f5:b8f5 with SMTP id u33-20020a05600c4d2100b0040d94f5b8f5mr2578892wmp.139.1704801078190;
+        Tue, 09 Jan 2024 03:51:18 -0800 (PST)
+Received: from skbuf ([188.25.255.36])
+        by smtp.gmail.com with ESMTPSA id m21-20020a05600c3b1500b0040d5c58c41dsm3342978wms.24.2024.01.09.03.51.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 03:49:11 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: krzysztof.kozlowski+dt@linaro.org,
-	robh+dt@kernel.org,
-	peter.griffin@linaro.org
-Cc: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	conor+dt@kernel.org,
-	alim.akhtar@samsung.com,
-	s.nawrocki@samsung.com,
-	tomasz.figa@gmail.com,
-	cw00.choi@samsung.com,
-	semen.protsenko@linaro.org,
+        Tue, 09 Jan 2024 03:51:17 -0800 (PST)
+Date: Tue, 9 Jan 2024 13:51:15 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc: Daniel Golle <daniel@makrotopia.org>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Frank Wunderlich <frank-w@public-files.de>,
+	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
+	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	andre.draszik@linaro.org,
-	kernel-team@android.com,
-	willmcvicker@google.com,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/3] dt-bindings: clock: gs101: rename cmu_misc clock-names
-Date: Tue,  9 Jan 2024 11:49:06 +0000
-Message-ID: <20240109114908.3623645-2-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-In-Reply-To: <20240109114908.3623645-1-tudor.ambarus@linaro.org>
-References: <20240109114908.3623645-1-tudor.ambarus@linaro.org>
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net-next v2 6/7] net: dsa: mt7530: do not set
+ priv->p5_interface on mt7530_setup_port5()
+Message-ID: <20240109115115.yuct3yw4oy6ipd3i@skbuf>
+References: <20231227044347.107291-1-arinc.unal@arinc9.com>
+ <20231227044347.107291-7-arinc.unal@arinc9.com>
+ <20240104154241.rxjins4mi5zkbhia@skbuf>
+ <f9ad000a-2e42-4ddf-89a4-9a3ff452dc4b@arinc9.com>
+ <2793938a-91e1-419d-a011-850756177e31@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2793938a-91e1-419d-a011-850756177e31@arinc9.com>
 
-'bus' and 'ip' are sufficient because naming is local to the module.
-As the bindings have not made a release yet, rename the cmu_misc
-clock-names.
+On Tue, Jan 09, 2024 at 02:42:45PM +0300, Arınç ÜNAL wrote:
+> Running mt7530_setup_port5() from mt753x_phylink_mac_config() multiple
+> times is being prevented which shouldn't be done. That's because of a
+> different reason involving MT7531. I will deal with this with a later
+> patch.
+> 
+> I intend to put this on the patch log.
 
-Fixes: 0a910f160638 ("dt-bindings: clock: Add Google gs101 clock management unit bindings")
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- .../devicetree/bindings/clock/google,gs101-clock.yaml         | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
-index 3eebc03a309b..ca7fdada3ff2 100644
---- a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
-@@ -85,8 +85,8 @@ allOf:
- 
-         clock-names:
-           items:
--            - const: dout_cmu_misc_bus
--            - const: dout_cmu_misc_sss
-+            - const: bus
-+            - const: sss
- 
- additionalProperties: false
- 
--- 
-2.43.0.472.g3155946c3a-goog
-
+Still not clear why it shouldn't be done. Ideally you could come up with
+a plausible hypothesis as to why it's there in the first place, and why
+it's not needed.
