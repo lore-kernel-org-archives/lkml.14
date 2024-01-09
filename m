@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321AC28F1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405AC186E
 	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 00:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CKs330gI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 01240C433B2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYMr5tLw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F3E7C433A6;
 	Tue,  9 Jan 2024 00:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704761258;
-	bh=iZFZppPIG06qGT7Gg6N6jBw5khpDXbzXrB8FqHjvCkc=;
+	bh=dDs91h811gnf4EBOtcB+w2Mv1Gi+FUE86WTP+to5CPg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=CKs330gIG0grIvdnA958SAyy5D+noY2zyvSlhKr6uzVvB8+wO11gMIQMRm5jGv16L
-	 tJqXn0N98cv487mCRdgYxwREDHVMtnc1TH1ne2Q6j3M96BtgDzeSfyCqrw1V6RJzs3
-	 1HI8JZPxUBfzHTrZKSKKj5rFjSZUBpJP9Hm/GCBdpd10JSFHyUaZgkqvOtwg9w81Cw
-	 fT/VdGsjhjBtfb6jBdmsfFGM43DxT2PvULp7iVQHqtX/Q1pwaILexR/OIx4s664btO
-	 jXQK2SNqVny7qijUnbOysbJK8qoBJ7B9rfpPyhzUoiASXRz20KirUK3i9lemj0pg8x
-	 qCmdTQnRFEthQ==
+	b=cYMr5tLwqTu4zYwCIUN8J0i91yVlV0ISOfxlH6DMzG0Qmc5IqQHuHdJ9eG0EDwx2H
+	 o1y4hMZ+mOdv/Ux3agCnoPRMHNaoOAhzdJUAaRIjKr6Lpm26yl0QX3NCqAdiBFBCKI
+	 obt63RsA/9BNcovIjXpuZaSvNPsRnFLjF0wnMug4w6YnBHASWs8lyxvOkTCdkV2ZRC
+	 1RdczcRtaESsxlZPuZAD5Bh3lc7sE9DH+jl+qoc+Zwq3azTsJkbNcEJe62E1uHVhbf
+	 T16KaVlADORlQX3bisC0cCAJ8sjVQl6wXE8a04HcTE1Np6igFtLFaNZJi4UwCLLYS7
+	 0oQRCTBxHnJxw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E5004DFC686;
-	Tue,  9 Jan 2024 00:47:37 +0000 (UTC)
-Subject: Re: [GIT PULL] x86/misc for v6.8
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0EBBBDFC691;
+	Tue,  9 Jan 2024 00:47:38 +0000 (UTC)
+Subject: Re: [GIT PULL] x86/cpu for v6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240106151221.GAZZlt1Vq7yyq/aujW@fat_crate.local>
-References: <20240106151221.GAZZlt1Vq7yyq/aujW@fat_crate.local>
+In-Reply-To: <20240107121528.GAZZqV4GF086iQw1zw@fat_crate.local>
+References: <20240107121528.GAZZqV4GF086iQw1zw@fat_crate.local>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240106151221.GAZZlt1Vq7yyq/aujW@fat_crate.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_misc_for_v6.8
-X-PR-Tracked-Commit-Id: f789383fa34a266d0c1a76f272043a15a8edf733
+X-PR-Tracked-Message-Id: <20240107121528.GAZZqV4GF086iQw1zw@fat_crate.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_cpu_for_v6.8
+X-PR-Tracked-Commit-Id: 232afb557835d6f6859c73bf610bad308c96b131
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 41a80ca4ae2de711e04b399f614f676daf72d938
-Message-Id: <170476125793.27312.9729873971165559311.pr-tracker-bot@kernel.org>
-Date: Tue, 09 Jan 2024 00:47:37 +0000
+X-PR-Merge-Commit-Id: bef91c28f28fe8a36b91e9a39f60054ae1874280
+Message-Id: <170476125805.27312.8990329809733043432.pr-tracker-bot@kernel.org>
+Date: Tue, 09 Jan 2024 00:47:38 +0000
 To: Borislav Petkov <bp@alien8.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Precedence: bulk
@@ -41,12 +41,12 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 6 Jan 2024 16:12:21 +0100:
+The pull request you sent on Sun, 7 Jan 2024 13:15:28 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_misc_for_v6.8
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_cpu_for_v6.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/41a80ca4ae2de711e04b399f614f676daf72d938
+https://git.kernel.org/torvalds/c/bef91c28f28fe8a36b91e9a39f60054ae1874280
 
 Thank you!
 
