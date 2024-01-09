@@ -1,82 +1,96 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E41139877
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GWAUjpmX"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5f2aab1c0c5so29349217b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704810312; x=1705415112; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g0jRmYFxyXqqyod1EILUSU0d1jpB9EyuAxZzGSyEy4U=;
-        b=GWAUjpmXLgTriEEiLRrVxfrU2wZjaOkjPeMk5FO4Q3lvYBUdDBXH7vKUZmcImjLPcU
-         sPSWBFq6u42KqiUAFEMqYgkI8oyBW7foJYsfcZN9C3PvTYX7R7AK+xrfO6fj7PS39tvp
-         SETQqrtbjkk7XsNEoYEivGVdZh15NO1MRxmOPDO3GZbAyUdxSY4gPEf4J+x9e25qEBCI
-         UeTukPGhDxe8wgt+q+0tK8EARS84fbkMEBNZWWesEpPwA5LtJSMAbeC9+Pk+CBihEtz0
-         TwiwYF4pZEw2WLhQKtoNcB2WArKS55YiHL0kMZoDLKVa6h2TFlt+gsYoZwP2h5kHZE6o
-         8miw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB12B39AC0
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5f68e2e1749so25109157b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:27:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704810312; x=1705415112;
+        d=1e100.net; s=20230601; t=1704810439; x=1705415239;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=g0jRmYFxyXqqyod1EILUSU0d1jpB9EyuAxZzGSyEy4U=;
-        b=xGbn4uvsDuKatCfSWDNYw/BleN7514g0ETcDb83mLhP2hvVcwAYVNS6M/r5k1woVtM
-         u+CQne7EIzMVmoqXzdWRHBkHBC1AI+xQeK2q8JyJZLCyxAJpUmXhAsVlMRxzeZQWnPgo
-         0JOv9MtkD6shlHW+Pv3WKzz2uP/MiiKUS703L/8q2UY6WGtOPLJvGYoR1EGzIBrMsn43
-         erK2K1/37dWchJMSZ5yNqDKlAspHhMaf0omhGLtM4M8+7A1Pcu6SdTzqIsZ7SEGgh2av
-         HSUA+rnvDUZBap8bupwKkTcME5zlteoMkJ3UA6TPIM1hRHkmfTL2T8tXVe27Nys/Lm9N
-         SBMg==
-X-Gm-Message-State: AOJu0YwhsKsEOU33f7ani1ja0y49FECLFA7F1MTSr/5S0gAeWL5gMtAZ
-	2tXT7Ncyg1ZZhIgsa8V5dcYiJapYsOwyE1/Ebgwf803QpGGIfQ==
-X-Google-Smtp-Source: AGHT+IFurq3cBuNOgcehIXjqiUCCcK6/Nxe5gbiowFcxxVVg2NwMw2ej6jKJBwkmx6aYWD46obc91hznYms/cHNMqqM=
-X-Received: by 2002:a05:6902:220c:b0:dbd:2ae7:f363 with SMTP id
- dm12-20020a056902220c00b00dbd2ae7f363mr474571ybb.4.1704810312262; Tue, 09 Jan
- 2024 06:25:12 -0800 (PST)
+        bh=BSNpQrjMxu38IObUGMmHZtLYKM7CsitQLNIL1x6OifQ=;
+        b=FpQ8prfUnNtY8/1rbhRAV4mtKqDBY/aUy8/vs+qQ6p7DNy/+rRblf7CKn7h71qT+Te
+         kpQnOmCVSqckTqo0JnZRpxcSnCjJLy0ItOPIpGNVwPDCU8MlE/oY/640Eqro40TydkiD
+         9Bu/k4LybGySA6dzRXvjykhZtOeyqRK+0Li30GpdomusI43Nps7Zs4ZzELgJxgsSwEp9
+         X3Q46xfUN63u5iJ60Gbmcm02FsAvvGkT4p6VyRTPRPtfXwMlKsOMlavYwLsj2yZnaqPM
+         Fqgil6rBMjwRGFdwhpNgK6G7yTyU854XSWyvtEs7M7QMEbNj5ZwMtuQFJeODl0YJE4eT
+         y2FQ==
+X-Gm-Message-State: AOJu0YzdjqljgbvJTk1SEvsax7KJZuiiqeLEPEJM0uOXSWCrx5yE+TH8
+	Yvj1gQaypealTrlfor0o1c7hJZBvXqqnb8F4
+X-Google-Smtp-Source: AGHT+IE8CTcfgQ4F9BRvaF/A1R3DhsyCPdzSpS+FJVlDO6ftDcABhSzqlur8sMgEQnsU1DKVilP01g==
+X-Received: by 2002:a81:4802:0:b0:5ed:90e1:8bf4 with SMTP id v2-20020a814802000000b005ed90e18bf4mr3398454ywa.47.1704810439489;
+        Tue, 09 Jan 2024 06:27:19 -0800 (PST)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
+        by smtp.gmail.com with ESMTPSA id n69-20020a0dcb48000000b005e81c9ec392sm809019ywd.48.2024.01.09.06.27.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jan 2024 06:27:19 -0800 (PST)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dbdbfaab70eso2003862276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:27:19 -0800 (PST)
+X-Received: by 2002:a25:414c:0:b0:dbe:d374:75a7 with SMTP id
+ o73-20020a25414c000000b00dbed37475a7mr2374147yba.123.1704810438889; Tue, 09
+ Jan 2024 06:27:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108201618.2798649-1-dario.binacchi@amarulasolutions.com>
- <20240108201618.2798649-6-dario.binacchi@amarulasolutions.com>
- <CACRpkdb73Qrs6MuiC427f=RnyD=rydH_4xVhBx-2bS8bX0mJCw@mail.gmail.com> <CABGWkvq0kbjDZTZj-PN+Sj3jo7SAx0G5PcTeA9KDfceh4D8_yw@mail.gmail.com>
-In-Reply-To: <CABGWkvq0kbjDZTZj-PN+Sj3jo7SAx0G5PcTeA9KDfceh4D8_yw@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 9 Jan 2024 15:25:00 +0100
-Message-ID: <CACRpkdY99si4+KZAVdHBTYr-3=jDBsphTgUNi9NMhZekEpXsEA@mail.gmail.com>
-Subject: Re: [PATCH v5 5/8] dt-bindings: nt35510: add compatible for FRIDA FRD400B25025-A-CTK
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Sam Ravnborg <sam@ravnborg.org>, Thomas Zimmermann <tzimmermann@suse.de>, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
+References: <20240108093221.1477020-1-daniel@0x0f.com> <20240108093221.1477020-3-daniel@0x0f.com>
+ <CAMuHMdX44A6+BNByuvbCC2gcM5vAipbaGAK7L8Vh8q3tMynBbQ@mail.gmail.com> <CAFr9PXn9wqbxToGDkSenW3XTCMPinUg1a9fHrUDQVhRKC6s5TA@mail.gmail.com>
+In-Reply-To: <CAFr9PXn9wqbxToGDkSenW3XTCMPinUg1a9fHrUDQVhRKC6s5TA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 9 Jan 2024 15:27:05 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVYqojGdKaCkY63mOhxupZ3Ag5+Y-haZZf43wyuCsdKkg@mail.gmail.com>
+Message-ID: <CAMuHMdVYqojGdKaCkY63mOhxupZ3Ag5+Y-haZZf43wyuCsdKkg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] m68k: Fix interrupt stack frames for 68000
+To: Daniel Palmer <daniel@0x0f.com>
+Cc: gerg@linux-m68k.org, fthain@linux-m68k.org, 
+	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 9, 2024 at 1:54=E2=80=AFPM Dario Binacchi
-<dario.binacchi@amarulasolutions.com> wrote:
+Hi Daniel,
 
-> > do you want me to apply patches 5,7,8 to the dri-misc
-(...)
-> Yes, I would appreciate that very much.
+On Tue, Jan 9, 2024 at 3:10=E2=80=AFPM Daniel Palmer <daniel@0x0f.com> wrot=
+e:
+> On Mon, 8 Jan 2024 at 18:56, Geert Uytterhoeven <geert@linux-m68k.org> wr=
+ote:
+> > I think it would be better to use the classic m68k stack frame.
+> > That would pave the way for building a single nommu kernel for
+> > MC680[012346]0 that runs on e.g. any Amiga.
+> > MC68000 and Coldfire are incompatible anyway.
+>
+> While looking at how to do this I realised that the addql #2,%sp in
+> RESTORE_ALL in entry.h will now break the stack frames for those fancy
+> 68010+ users.
+> So that needs to be #ifdef'd to make it only compile for 68000. I saw
+> an error email from the next build stuff so I guess the change has
+> been queued somewhere? If so I should send a fix..
 
-Pushed to drm-misc-next!
+AFAIK it hasn't been applied yet.  These days the bots also test
+patches from mailing lists...
 
-Please submit the DTS files through the ST SoC tree.
+> I'm not sure how to actually make that generic without patching the
+> code at runtime (remove the 68000 specific bit, reserve enough extra
+> space to rewrite the code..) but it's a macro so not so simple.
 
-Yours,
-Linus Walleij
+Or use different entry points depending on CPU type?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
