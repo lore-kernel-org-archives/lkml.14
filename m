@@ -1,107 +1,145 @@
-Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC973DB84;
-	Tue,  9 Jan 2024 21:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alu.unizg.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alu.unizg.hr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="A0iySkjP";
-	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="uk3qDy3M"
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 6403060177;
-	Tue,  9 Jan 2024 22:55:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1704837314; bh=le8QSZjVL3Ipmww56+RTzFLJ8CHP/G7VfB4Ysq97AvA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A0iySkjPKFxAkx51V/9kvsh7jjUudnQ7yu8dADsNKKsUz/7Srh2v5yV0RNRVCl+Ut
-	 KNXHlXrH/2uXfLc0VObiBCO6BqwWrmhDns+lGYft9fVKup4xnYodEfeKeZC80uMNwr
-	 bJ1/rAIhb4RdIRl7QsBMVTERfXTaY9vWqSv3sCNukoT4baUFtjVhI9eHK06EMSa3Q9
-	 hN7H61UjgfjMwYRVCVTBBvEXsZpKsoRgrupXD3x+xa67D/qBbvIHGk02OyxlhdeUTQ
-	 53hW2zDPaBt1ijlv41JVvrOBN4PhQI5QNZQ5XqZ9u3nuRzVmo/u/qSHui/7k0nz/T3
-	 StzhcrqpwTcnQ==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 0o-DVXMEr7rM; Tue,  9 Jan 2024 22:55:12 +0100 (CET)
-Received: from defiant.. (unknown [95.168.105.29])
-	by domac.alu.hr (Postfix) with ESMTPSA id 83B9960171;
-	Tue,  9 Jan 2024 22:55:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1704837312; bh=le8QSZjVL3Ipmww56+RTzFLJ8CHP/G7VfB4Ysq97AvA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uk3qDy3Mul/GE+9ot0q9Qlxi6ZVfZvULptzxHsqIuGJx5DOCsTPa7QhMg9rwsZaT9
-	 soHQpsSEUaNMdy471V4wvMkvEBcCCsnAfqb9e8fUcdZPN5JHi61PhsthjHi9/r1+oc
-	 1sHm3ydujrxulKgpW+3QN2aOqhKVY+Dhup4zddI06ssARQD+hZQ7oGDlQ8lJmRAVEl
-	 sodzvsdTNOvT27ac0mFw0KCr7K5Mgi3ucOH+r4m56NvCMcAEKRVp3p/gIlp5Xu83gW
-	 MSu7ZA5eoGEgJeOgNN3Q9J/IOtbFHKhxY8w2R+soU0L0WLZFkilz4OAVHDwzhmnAa4
-	 3AOJHaTW/aDrQ==
-From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Shuah Khan <shuah@kernel.org>,
-	Paul Elder <paul.elder@pitt.edu>,
-	Alice Ferrazzi <alice.ferrazzi@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v1 2/2] selftest: breakpoints: clear the format string warning and secure the output
-Date: Tue,  9 Jan 2024 22:54:08 +0100
-Message-Id: <20240109215406.18218-3-mirsad.todorovac@alu.unizg.hr>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240109215406.18218-1-mirsad.todorovac@alu.unizg.hr>
-References: <20240109215406.18218-1-mirsad.todorovac@alu.unizg.hr>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E0D3DB84;
+	Tue,  9 Jan 2024 21:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=v0yd.nl
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4T8lCw6nPKz9sd0;
+	Tue,  9 Jan 2024 22:57:48 +0100 (CET)
+Message-ID: <efcc7b97-6bfc-4e5d-8e73-78f2b190fa02@v0yd.nl>
+Date: Tue, 9 Jan 2024 22:57:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
+Subject: Re: [PATCH v3 0/4] Bluetooth: Improve retrying of connection attempts
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, verdre@v0yd.nl
+References: <20240108224614.56900-1-verdre@v0yd.nl>
+ <CABBYNZKV176teECGnGKTCNNo45ZYbCRs=YddETOUMUsJQX5PdA@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CABBYNZKV176teECGnGKTCNNo45ZYbCRs=YddETOUMUsJQX5PdA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4T8lCw6nPKz9sd0
 
-GCC 13.2.0 compiler reported the following warning:
+Hi Luiz,
 
-breakpoint_test.c: In function ‘check_success’:
-breakpoint_test.c:287:17: warning: format not a string literal and no format arguments [-Wformat-security]
-  287 |                 ksft_test_result_pass(msg);
-      |                 ^~~~~~~~~~~~~~~~~~~~~
-breakpoint_test.c:289:17: warning: format not a string literal and no format arguments [-Wformat-security]
-  289 |                 ksft_test_result_fail(msg);
-      |                 ^~~~~~~~~~~~~~~~~~~~~
+On 1/9/24 18:53, Luiz Augusto von Dentz wrote:
+> Hi Jonas,
+> 
+> On Mon, Jan 8, 2024 at 5:46 PM Jonas Dreßler <verdre@v0yd.nl> wrote:
+>>
+>> Since commit 4c67bc74f016 ("[Bluetooth] Support concurrent connect
+>> requests"), the kernel supports trying to connect again in case the
+>> bluetooth card is busy and fails to connect.
+>>
+>> The logic that should handle this became a bit spotty over time, and also
+>> cards these days appear to fail with more errors than just "Command
+>> Disallowed".
+>>
+>> This series refactores the handling of concurrent connection requests
+>> by serializing all "Create Connection" commands for ACL connections
+>> similar to how we do it for LE connections.
+>>
+>> ---
+>>
+>> v1: https://lore.kernel.org/linux-bluetooth/20240102185933.64179-1-verdre@v0yd.nl/
+>> v2: https://lore.kernel.org/linux-bluetooth/20240108183938.468426-1-verdre@v0yd.nl/
+>> v3:
+>>    - Move the new sync function to hci_sync.c as requested by review
+>>    - Abort connection on failure using hci_abort_conn_sync() instead of
+>>      hci_abort_conn()
+>>    - Make the last commit message a bit more precise regarding the meaning
+>>      of BT_CONNECT2 state
+>>
+>> Jonas Dreßler (4):
+>>    Bluetooth: Remove superfluous call to hci_conn_check_pending()
+>>    Bluetooth: hci_event: Use HCI error defines instead of magic values
+>>    Bluetooth: hci_conn: Only do ACL connections sequentially
+>>    Bluetooth: Remove pending ACL connection attempts
+>>
+>>   include/net/bluetooth/hci.h      |  3 ++
+>>   include/net/bluetooth/hci_core.h |  1 -
+>>   include/net/bluetooth/hci_sync.h |  3 ++
+>>   net/bluetooth/hci_conn.c         | 83 +++-----------------------------
+>>   net/bluetooth/hci_event.c        | 29 +++--------
+>>   net/bluetooth/hci_sync.c         | 72 +++++++++++++++++++++++++++
+>>   6 files changed, 93 insertions(+), 98 deletions(-)
+>>
+>> --
+>> 2.43.0
+> 
+> After rebasing and fixing a little bit here and there, see v4, looks
+> like this changes is affecting the following mgmt-tester -s "Pair
+> Device - Power off 1":
+> 
+> Pair Device - Power off 1 - init
+>    Read Version callback
+>      Status: Success (0x00)
+>      Version 1.22
+>    Read Commands callback
+>      Status: Success (0x00)
+>    Read Index List callback
+>      Status: Success (0x00)
+>    Index Added callback
+>      Index: 0x0000
+>    Enable management Mesh interface
+>    Enabling Mesh feature
+>    Read Info callback
+>      Status: Success (0x00)
+>      Address: 00:AA:01:00:00:00
+>      Version: 0x09
+>      Manufacturer: 0x05f1
+>      Supported settings: 0x0001bfff
+>      Current settings: 0x00000080
+>      Class: 0x000000
+>      Name:
+>      Short name:
+>    Mesh feature is enabled
+> Pair Device - Power off 1 - setup
+>    Setup sending Set Bondable (0x0009)
+>    Setup sending Set Powered (0x0005)
+>    Initial settings completed
+>    Test setup condition added, total 1
+>    Client set connectable: Success (0x00)
+>    Test setup condition complete, 0 left
+> Pair Device - Power off 1 - setup complete
+> Pair Device - Power off 1 - run
+>    Sending Pair Device (0x0019)
+> Bluetooth: hci0: command 0x0405 tx timeout
+> Bluetooth: hci0: command 0x0408 tx timeout
+>    Test condition added, total 1
+> Pair Device - Power off 1 - test timed out
+>    Pair Device (0x0019): Disconnected (0x0e)
+> Pair Device - Power off 1 - test not run
+> Pair Device - Power off 1 - teardown
+> Pair Device - Power off 1 - teardown
+>    Index Removed callback
+>      Index: 0x0000
+> Pair Device - Power off 1 - teardown complete
+> Pair Device - Power off 1 - done
+> 
 
-ksft_*() functions are unprotected against potential spurious format specifiers
-in msg.
+Thanks for landing the first two commits!
 
-Protecting the conversion with "%s\n" format string fixes the warning.
+I think this is actually the same issue causing the test failure
+as in the other issue I had:
+https://lore.kernel.org/linux-bluetooth/7cee4e74-3a0c-4b7c-9984-696e646160f8@v0yd.nl/
 
-Fixes: 748e84b79af01 ("kselftest: breakpoints: convert breakpoint_test to TAP13 output")
-Cc: Paul Elder <paul.elder@pitt.edu>
-Cc: Alice Ferrazzi <alice.ferrazzi@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
----
- tools/testing/selftests/breakpoints/breakpoint_test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It seems that the emulator is unable to reply to HCI commands sent
+from the hci_sync machinery, possibly because that is sending things
+on a separate thread?
 
-diff --git a/tools/testing/selftests/breakpoints/breakpoint_test.c b/tools/testing/selftests/breakpoints/breakpoint_test.c
-index 3266cc9293fe..07249251859b 100644
---- a/tools/testing/selftests/breakpoints/breakpoint_test.c
-+++ b/tools/testing/selftests/breakpoints/breakpoint_test.c
-@@ -284,9 +284,9 @@ static void check_success(const char *msg)
- 	nr_tests++;
- 
- 	if (ret)
--		ksft_test_result_pass(msg);
-+		ksft_test_result_pass("%s\n", msg);
- 	else
--		ksft_test_result_fail(msg);
-+		ksft_test_result_fail("%s\n", msg);
- }
- 
- static void launch_instruction_breakpoints(char *buf, int local, int global)
--- 
-2.40.1
-
+Cheers,
+Jonas
