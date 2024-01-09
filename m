@@ -1,47 +1,47 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5053739FDA
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 12:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACAB3A1CE
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 12:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XmA0cchq"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33674f60184so2976122f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 04:58:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SEVdZKUT"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e4d515cdeso8886375e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 04:58:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704805117; x=1705409917; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704805120; x=1705409920; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=76U22CGER4KqXBDXUKva048KHZBhjzcIPjnq3/iJdsQ=;
-        b=XmA0cchqPso2PFLQlH5YpMaKpq58JiSdBnh4J38xOhs6Yte1HG+LPPk/0GfgNa1AKc
-         htRSK1DRHfwSP0ZbiAqkM29mMt8cXxQ/hzEac2ThT93kyjbJWtVMtcDmGqDuGu0lYL8C
-         N92Q0eVcqF5F84i6nY9giWfg5sOWlLtqe9clSZbMr2vF/AgZbAI1b59YitA/0fNTSd55
-         /ErjveA+lOaocoAyPClasFUNGVNSG+vK6ywKTymv0NQsrJfWWlAYAKEabcTov5ICilFR
-         VHGMF0BFmX1vkEqTmtVk+I+u3lzhGGk/Jb8DiJtFHNK1BAbpgFb2rLLxWwkQa+AhA288
-         EKdQ==
+        bh=rl+cJunhX6IbKqc9i8Jlrsr1S+cAXd5kRtgISnUsfXo=;
+        b=SEVdZKUTvrKviMyWxjIOQpSrlwR4M1oPGBvgJFm4U1L+xeSlrcQEiLxeRfSaI0+7UP
+         GropjCHUU9hBrLFpyorTAlgVVNKiqAMz/dL3NkWGinmA+ZEzs6J9fvHG1hvqXP7Zs17B
+         0khNWMjJ73pdZXpZO/Ih58NgMiVe7xoA1OYzIopko9t9ibKp5zTYkOk+iKWGktp6OCUt
+         AEO8M+4Pr6o6uNUgm2Spg/PVISjGpxwIeoNjlqbj0aecV0T6arBv82MWB1gLMFNlk5vV
+         dwkT69MMYPFV25wYKFAV2f2pGc+VvZYkHkyWgxQ2bMkXl5E5VJCK0jxLzeX7l2CRbsUC
+         0Wsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704805117; x=1705409917;
+        d=1e100.net; s=20230601; t=1704805120; x=1705409920;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=76U22CGER4KqXBDXUKva048KHZBhjzcIPjnq3/iJdsQ=;
-        b=IsXL0SCjGZhRYVjdCO8RUqkX9dSVK6JmQXq8XN6nBmdbxwri3iXv3Q22Woyb/7t5Pj
-         cGzhCkTLPajVhhZlcxhIpYBNhoZcPJf5zgUoQZYWYllOftaTYiVc4k9RynSE2nuGLLUh
-         m8HoKiKT2GKs9BFSNNNoFyZOT9WtSwwYWlhFy7F7vp4aZjXY3r8mXJ9U0495cexMaMcO
-         MQ+G+URNNmt7Iwr4hoBp7J1SOT7IHx552+PAwr3MubcRBUxmXKPJpaOS8Kq0SajUxc/8
-         J15Qey4mM/cMl1f96qEK4G7IH3M0WAzfAUZLGeKjA9wXYRrPOWg/J7P6f8sg1uZD8+lO
-         /m8A==
-X-Gm-Message-State: AOJu0YwH2xtbLVwV9OH5oOXPDT+eH5KLtMhEEb0LZ6h7aj5UA5O0awIe
-	xRZC5rl745gpS/vc/BAjdPRuOmC8rldZ2g==
-X-Google-Smtp-Source: AGHT+IGfTVOxZ1Ho2+dMSFGhcbHn85rCRhUsxpYmob34IB77B2T6ZjXcPLNi8PrEkA4cKi8r5HQUrw==
-X-Received: by 2002:a5d:614d:0:b0:336:8d4f:6b1b with SMTP id y13-20020a5d614d000000b003368d4f6b1bmr443504wrt.131.1704805117683;
-        Tue, 09 Jan 2024 04:58:37 -0800 (PST)
+        bh=rl+cJunhX6IbKqc9i8Jlrsr1S+cAXd5kRtgISnUsfXo=;
+        b=FNQS/g9KjjPipCu5hDzjuaT+vESf9hUrjA3VkcrdrOz68bs4tMaoKOUmO/1ZPcG7vL
+         z/m7fEYsOVgglvQppLro0QsGUmyTMme3OejpYm6KidASTEkvhfFg5XW29ecqhuSzzDA5
+         XR7o/09ypkkg5gNCz4+jyilk4BypYgF4ag8qHiJq4oIscgK0D4KmYBdPZvKGTf2thaQ+
+         1cfJnTbknin48LojW/A5mX0CMKhOmokopkcoW+CojTVHRRFzdOCbcEXJUIZbDaLTvYDG
+         wFblcCzxIBODh2VHqeKidjACI5TLgDdQ6bOTxXZ4I+8sJKwoOjpw7lF4Px3DWMzkPOD5
+         O9Kg==
+X-Gm-Message-State: AOJu0YwyycgWcR4xFSyufS1Er6RpZ/gC3Yz58D1ts+zVAIRgZVh72uDT
+	1n7H2BFteG4E/5RZ/7bgiHmpC1TYmSXDwg==
+X-Google-Smtp-Source: AGHT+IGM4okcZVI152BOcasMXhYdX9jgTq0T7snQVg/YN8vpTHLVZYveQbL6tfZF3ag059OEY4+M5g==
+X-Received: by 2002:a05:600c:19c7:b0:40e:530a:7cf2 with SMTP id u7-20020a05600c19c700b0040e530a7cf2mr17946wmq.6.1704805120517;
+        Tue, 09 Jan 2024 04:58:40 -0800 (PST)
 Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id cw16-20020a056000091000b0033753a61e96sm2351302wrb.108.2024.01.09.04.58.36
+        by smtp.gmail.com with ESMTPSA id cw16-20020a056000091000b0033753a61e96sm2351302wrb.108.2024.01.09.04.58.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 04:58:36 -0800 (PST)
+        Tue, 09 Jan 2024 04:58:39 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: peter.griffin@linaro.org,
 	krzysztof.kozlowski+dt@linaro.org,
@@ -67,9 +67,9 @@ Cc: mturquette@baylibre.com,
 	kernel-team@android.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v3 06/12] tty: serial: samsung: add gs101 earlycon support
-Date: Tue,  9 Jan 2024 12:58:08 +0000
-Message-ID: <20240109125814.3691033-7-tudor.ambarus@linaro.org>
+Subject: [PATCH v3 08/12] arm64: dts: exynos: gs101: remove reg-io-width from serial
+Date: Tue,  9 Jan 2024 12:58:10 +0000
+Message-ID: <20240109125814.3691033-9-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 In-Reply-To: <20240109125814.3691033-1-tudor.ambarus@linaro.org>
 References: <20240109125814.3691033-1-tudor.ambarus@linaro.org>
@@ -81,43 +81,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Remove the reg-io-width property in order to comply with the bindings.
+
 The entire bus (PERIC) on which the GS101 serial resides only allows
 32-bit register accesses. The reg-io-width dt property is disallowed
 for the "google,gs101-uart" compatible and instead the iotype is
-inferred from the compatible. Always set UPIO_MEM32 iotype for the
-gs101 earlycon.
+inferred from the compatible.
 
 Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
 v3: collect Peter's R-b tag
-v2: update commit message
+v2: new patch
 
- drivers/tty/serial/samsung_tty.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index a81b61953a28..fed50423b7c1 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -2812,6 +2812,17 @@ OF_EARLYCON_DECLARE(exynos4210, "samsung,exynos4210-uart",
- OF_EARLYCON_DECLARE(artpec8, "axis,artpec8-uart",
- 			s5pv210_early_console_setup);
- 
-+static int __init gs101_early_console_setup(struct earlycon_device *device,
-+					    const char *opt)
-+{
-+	/* gs101 always expects MMIO32 register accesses. */
-+	device->port.iotype = UPIO_MEM32;
-+
-+	return s5pv210_early_console_setup(device, opt);
-+}
-+
-+OF_EARLYCON_DECLARE(gs101, "google,gs101-uart", gs101_early_console_setup);
-+
- /* Apple S5L */
- static int __init apple_s5l_early_console_setup(struct earlycon_device *device,
- 						const char *opt)
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+index d838e3a7af6e..4e5f4c748906 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -366,7 +366,6 @@ usi_uart: usi@10a000c0 {
+ 			serial_0: serial@10a00000 {
+ 				compatible = "google,gs101-uart";
+ 				reg = <0x10a00000 0xc0>;
+-				reg-io-width = <4>;
+ 				interrupts = <GIC_SPI 634
+ 					      IRQ_TYPE_LEVEL_HIGH 0>;
+ 				clocks = <&dummy_clk 0>, <&dummy_clk 0>;
 -- 
 2.43.0.472.g3155946c3a-goog
 
