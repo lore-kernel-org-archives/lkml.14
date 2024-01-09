@@ -1,87 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F4E36084;
-	Tue,  9 Jan 2024 09:54:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9CB34CFF;
+	Tue,  9 Jan 2024 09:56:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FY/IpNaR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78E2EC43399;
-	Tue,  9 Jan 2024 09:54:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uiuI+wXG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA3AC433B1;
+	Tue,  9 Jan 2024 09:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704794075;
-	bh=nUyCPiAyC900yjLJBF6FBZMNZjPj9Z7ekOmNLj96sgo=;
+	s=k20201202; t=1704794204;
+	bh=Qj1F7vQXR5INGTzBCvV9vm+Os3PkCrPsecSk0gcowD8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FY/IpNaRzfxBGF2r5e7bvVmvFEqGVQfKKkzLjdnlIsB8Y70JU/QWm6862DFrkD4Bu
-	 +A927GtZwHQk9M2e9a6zsJYQPQHpncrkSxFjrY+SPEoa9YZzog46jBdJ4sVc9vzT6f
-	 DX5tdeemQ7pzuKbje5CcRIcOKmF5YuGv5S2qpA/gsDRGHXjAYHaSKSVLJLu8x4g1Jn
-	 a95k9c4+BXrNRM3qFcO9wVYDctiRPYwHJWl2nFTd+j+zgqJMKQjY1c56qRBaBxsnp1
-	 VrTw2xHX0wCiZ5n2hGRISQUWivpQfqx7EmB4ee97TsbqhZn/DcUWj81u2KAEo2PeYS
-	 oM8+jCK5VuqPA==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a28b0207c1dso214293466b.3;
-        Tue, 09 Jan 2024 01:54:35 -0800 (PST)
-X-Gm-Message-State: AOJu0YzxhUMmIQXRva2It4QGbZ6YQ0vkuC1tmipw0iRdGq2imoYBmYKe
-	2IAeOFw442WIlGLjUnMVbsSdk+kS6f60mLCCzhQ=
-X-Google-Smtp-Source: AGHT+IEvDGvLc6D4bw2e+BJBgBwS2p8x5UT6WM8XEfurhQgq9Bh61t9DsvH6nkZtagTYGgq74PHclQ23T+XHEalQxf8=
-X-Received: by 2002:a17:906:225c:b0:a28:fdc0:e704 with SMTP id
- 28-20020a170906225c00b00a28fdc0e704mr422802ejr.53.1704794073913; Tue, 09 Jan
- 2024 01:54:33 -0800 (PST)
+	b=uiuI+wXGOgQCsJfodVvD7TtSKMBAuyi1UAeRMEURbK/Ahluvoa5pRYgbG+mUkceAa
+	 ftvRGzM9D5qOPUuDdRXyRdzgnlAQtnfwh8sTmkmCjXkhxeytOWurbIq0JGAZFyMkeH
+	 nXB4GAZG6Q2rfGHE0jzcZNqpBes3dL6iK9+DNN/QkiNAFhiSFxLJO0qluBNfAP4ZOV
+	 Mhtz+ljnpSDLiSUNqKEEr0a79WuGsk4pPbM8WzhDDBOM+rfnu+XAdcrraHtC6nhh4j
+	 x8k6DE6wE75G9OL0IHwjZtA/pCiYon6jVooeJ2fkPSEsTmwMkpbdvyBo+BCc0pKdXl
+	 o3B0bTN5RSq1A==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a28bf46ea11so483159966b.1;
+        Tue, 09 Jan 2024 01:56:44 -0800 (PST)
+X-Gm-Message-State: AOJu0YwB0MqKKkQY0shBAJ9XeZ/A95pyKe1G2FTvJxU7xvOMLIoaVFmA
+	8XhSV4CLal2jE+hE/AJZgpbGOmFsu2uqQZteiCw=
+X-Google-Smtp-Source: AGHT+IGDZ/SZJpnUYzFx9G1HRdVTWUBV4U15+SGj/OVohDcnnqrlVNy+7QIKS/khbP7ZYDsPMVjRIsIZ+zQBmKjnTI8=
+X-Received: by 2002:a17:907:77c1:b0:a2a:a3dc:621b with SMTP id
+ kz1-20020a17090777c100b00a2aa3dc621bmr597168ejc.4.1704794202753; Tue, 09 Jan
+ 2024 01:56:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108032117.215171-1-wangrui@loongson.cn> <CAAhV-H7qGSiXZFybw20p4inLVphtucUgcvw4H=JkSAfCRoe-sA@mail.gmail.com>
-In-Reply-To: <CAAhV-H7qGSiXZFybw20p4inLVphtucUgcvw4H=JkSAfCRoe-sA@mail.gmail.com>
+References: <cover.1701933946.git.zhoubinbin@loongson.cn> <CAAhV-H4yS5nW9Xg1D+FRRa4jv8vGB9auim74NzTjmkw-CC6yZA@mail.gmail.com>
+In-Reply-To: <CAAhV-H4yS5nW9Xg1D+FRRa4jv8vGB9auim74NzTjmkw-CC6yZA@mail.gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 9 Jan 2024 17:54:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4fUbpvTgFFHnndDk=2-eZbNX=9PxJYV6SWON3barRjiQ@mail.gmail.com>
-Message-ID: <CAAhV-H4fUbpvTgFFHnndDk=2-eZbNX=9PxJYV6SWON3barRjiQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
-To: WANG Rui <wangrui@loongson.cn>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Date: Tue, 9 Jan 2024 17:56:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4dPHqA5naqowOKxALWsXWHSVMoUqDC_1F_DE2t9=S28A@mail.gmail.com>
+Message-ID: <CAAhV-H4dPHqA5naqowOKxALWsXWHSVMoUqDC_1F_DE2t9=S28A@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] dt-bindings: interrupt-controller: Fix some
+ loongson,liointc warnings
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>, lvjianmin@loongson.cn, 
+	WANG Xuerui <git@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Squashed and applied, thanks.
+Applied to loongarch-next, thanks.
 
 Huacai
 
-On Mon, Jan 8, 2024 at 12:23=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
+On Fri, Dec 29, 2023 at 11:08=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
+> wrote:
 >
-> No need to split patches.
+> Hi, Rob,
+>
+> Since this series doesn't touch the driver any more, I suppose that
+> this series will go through your dt tree?
 >
 > Huacai
 >
-> On Mon, Jan 8, 2024 at 11:21=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wr=
-ote:
+> On Thu, Dec 7, 2023 at 3:29=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.c=
+n> wrote:
 > >
-> > Enable Rust support for the LoongArch architecture.
+> > Hi all:
 > >
-> > Previous versions:
-> > v0: https://lore.kernel.org/loongarch/20240106065941.180796-1-wangrui@l=
-oongson.cn/
+> > Some liointc-related DTBS_CHECK warnings were found when trying to
+> > introduce the Loongson-2K DTS{I} for LoongArch.
+> > This patch series attempts to fix those warnings.
 > >
-> > Changes in v1:
-> >  - Address htmldocs warning.
+> > Of course, these fixes also apply to MIPS Loongson-2K1000.
 > >
-> > WANG Rui (2):
-> >   Documentation: rust: Add a character to the first column
-> >   LoongArch: Enable initial Rust support
+> > Thanks.
 > >
-> >  Documentation/rust/arch-support.rst | 13 +++++++------
-> >  arch/loongarch/Kconfig              |  1 +
-> >  arch/loongarch/Makefile             |  3 +++
-> >  scripts/generate_rust_target.rs     | 10 ++++++++++
-> >  4 files changed, 21 insertions(+), 6 deletions(-)
+> > -----
+> > V6:
+> > - Drop the 'parent_int_map' related patches following Rob's comment.
+> >
+> > Link to V5:
+> > https://lore.kernel.org/all/cover.1700449792.git.zhoubinbin@loongson.cn=
+/
+> >
+> > V5:
+> > - Add Reviewed-by tag;
+> > patch(1/5):
+> >   - Just drop 'loongson,parent_int_map' instead of marking it as
+> >     deprecated.
+> >
+> > Link to V4:
+> > https://lore.kernel.org/all/cover.1699521866.git.zhoubinbin@loongson.cn=
+/
+> >
+> > V4:
+> > - Add Acked-by tag;
+> > patch(2/5):
+> >   - Just add 'maxitem 2' instead of duplicating the list;
+> > patch(3/5):
+> >   - Rewite commit message for 'interrupt-names'.
+> >
+> > Link to V3:
+> > https://lore.kernel.org/all/cover.1698717154.git.zhoubinbin@loongson.cn=
+/
+> >
+> > V3:
+> > patch(1/5):
+> >   - new patch, 'loongson,parent_int_map' renamed to 'loongson,parent-in=
+t-map';
+> > patch(2/5)(3/5):
+> >   - Separate the change points into separate patches;
+> > patch(4/5):
+> >  - new patch, make sure both parent map forms can be parsed;
+> > patch(5/5):
+> >  - new patch, fix 'loongson,parent_int_map' references in mips loongson
+> >    dts{i}.
+> >
+> > Link to V2:
+> > https://lore.kernel.org/all/20230821061315.3416836-1-zhoubinbin@loongso=
+n.cn/
+> >
+> > V2:
+> > 1. Update commit message;
+> > 2. "interruprt-names" should be "required", the driver gets the parent
+> > interrupts through it;
+> > 3. Add more descriptions to explain the rationale for multiple nodes;
+> > 4. Rewrite if-else statements.
+> >
+> > Link to V1:
+> > https://lore.kernel.org/all/20230815084713.1627520-1-zhoubinbin@loongso=
+n.cn/
+> >
+> > Binbin Zhou (2):
+> >   dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+> >     warning for reg-names
+> >   dt-bindings: interrupt-controller: loongson,liointc: Fix dtbs_check
+> >     warning for interrupt-names
+> >
+> >  .../interrupt-controller/loongson,liointc.yaml | 18 ++++++++++++------
+> >  1 file changed, 12 insertions(+), 6 deletions(-)
 > >
 > > --
-> > 2.43.0
+> > 2.39.3
 > >
