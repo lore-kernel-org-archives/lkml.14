@@ -1,171 +1,89 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400783A1A4
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 15:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B783A1A4;
+	Tue,  9 Jan 2024 15:32:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Veu3ym9i"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6dde3884b92so136312a34.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 07:32:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1704814356; x=1705419156; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F8I3Nv9FKTpOHBsjhQ9rf60s9dsEhGuM1snjGAzQnEc=;
-        b=Veu3ym9inOhrb/N2bO45RDmHxRqO8c8lTo8kdZG3xoU9dqY+YEgP54GoZswDC15RNB
-         uDqnnaduxnCBNZ4DOnrGxdo58Cm0WdB15lSjqxXS7HFth79aSlMfuCAiA4lbQ3LKMBMl
-         /NdFNKmhy8CXoz2pVq5YPpt0jrcZowFCZaucI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704814356; x=1705419156;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F8I3Nv9FKTpOHBsjhQ9rf60s9dsEhGuM1snjGAzQnEc=;
-        b=S3EsTe98sz5/n5BB9Ub9MR7DoJOFeTxaejE3cxjP7cHDd/kPVA1pxyY5MMcuAUVHh5
-         YXqzG3ScC3XwgSjIG5eeNnKygiHmok1zWMEBTh+JCKLL9/1R9iDi+Re/nOBiFX2muboA
-         pIFxgQPKB+o6xoRzM51cPmlbB+PJwmzkV4waYt/VIl36TQx+e7+iOPUlbCfDPAFIPkZv
-         QopgnG8veRXYet0YvLOlXvCyCaWUAMzFjSyBD+A8gqvLUlGaDEdv+K+tY2s4ii3Y7xKC
-         AWvAwl7VAnQV0J8WApu8BP/yAbp1jeleyQt0qsnSLsdj4tW6wxpuzfnC5yYeO0/pOvc0
-         G1Yw==
-X-Gm-Message-State: AOJu0YwIBS+wH3AMqDMB6TdTzf6ZKwe2CNEDuTq/9PsC2m7xKczP6dh4
-	Rm7wS0ZB/pa85GO5RiUDIosy6fFFPmRwEYwuLbLNIo2dBGvpAg==
-X-Google-Smtp-Source: AGHT+IFVZSYOh7KqGAWxb6Y3RR7SLa2W95DrHp1wqSB8p0lrUrWpQNHMCRuUiqdJQJSUT9sxUErFsFH3vkt7h7gnbCc=
-X-Received: by 2002:a05:6870:f152:b0:1fb:23ec:3318 with SMTP id
- l18-20020a056870f15200b001fb23ec3318mr10480037oac.0.1704814356195; Tue, 09
- Jan 2024 07:32:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="urIOvyOe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7EFDC433F1;
+	Tue,  9 Jan 2024 15:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704814371;
+	bh=hDja7E4tLI84/B+LvKvpuGzDwB00YZ742js1mLiw8AE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=urIOvyOeYXKfa+n5L5JpW8d918D2fKc4i1SpRLtvR7WRQDMQ05W6MSBDoqt1ixtO/
+	 hVHMzKuzqzELPV8JUWHykNDc0Dcjte+zJrOyoKKr79ML/O3vPUvX/YU9bzWgZfgvVe
+	 VCT8xwJ6q519RUMfWR0Pf6cUJ5EV9kpk7DZMuWbTQS7Irjra/lyUsknqE1BYsaPC/z
+	 OC8qRED1dePHyyfuL1fJPo2rsu4MmmXDr11qXXun0G5iqbF0CIHbEoNNMfuwA5vY1Z
+	 SQc34JFXkU9rtl/4qrTMTWu0fpaw1eBDItt2B6XgsBEo+u+tHP+PNsLpPLkn6LkojA
+	 sHJ/BCMefuYIg==
+Date: Tue, 9 Jan 2024 08:32:49 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] Compiler Attributes: counted_by: bump compiler versions
+Message-ID: <20240109153249.GA205400@dev-arch.thelio-3990X>
+References: <20240109133633.1103876-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240106032957.1195-1-rdunlap@infradead.org> <944ca2e6-23d9-44a2-a58c-4380e9ee575f@suse.de>
- <dd917333-9ae8-4e76-991d-39b6229ba8ce@infradead.org> <ZZ1DIDjGlHP-tmAi@phenom.ffwll.local>
- <CAKMK7uFbjQ1apr3-XrnWTH=TwRqW_9TDZ-21QAwJtiNB5FZ8dA@mail.gmail.com>
- <10b6ec8a-8b58-43a0-a3f8-c6d354b71ee4@infradead.org> <CAKMK7uHwcXq+gSBx1RdJ84OVS0BheyDJp-c7byhR7EfJ0s+qQA@mail.gmail.com>
- <f6feb944-b0dc-4802-a20a-c3ef39f4b0d5@infradead.org>
-In-Reply-To: <f6feb944-b0dc-4802-a20a-c3ef39f4b0d5@infradead.org>
-From: Daniel Vetter <daniel@ffwll.ch>
-Date: Tue, 9 Jan 2024 16:32:25 +0100
-Message-ID: <CAKMK7uFkcaP6j0MuHuGWrumJJE4G_n62tQSf5NCSWcCMYMjHtw@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/vram-helper: fix kernel-doc warnings
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org, 
-	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240109133633.1103876-1-senozhatsky@chromium.org>
 
-On Tue, 9 Jan 2024 at 16:29, Randy Dunlap <rdunlap@infradead.org> wrote:
->
->
->
-> On 1/9/24 07:25, Daniel Vetter wrote:
-> > On Tue, 9 Jan 2024 at 16:23, Randy Dunlap <rdunlap@infradead.org> wrote:
-> >>
-> >>
-> >>
-> >> On 1/9/24 05:42, Daniel Vetter wrote:
-> >>> On Tue, 9 Jan 2024 at 13:59, Daniel Vetter <daniel@ffwll.ch> wrote:
-> >>>>
-> >>>> On Mon, Jan 08, 2024 at 01:10:12PM -0800, Randy Dunlap wrote:
-> >>>>> Hi Thomas,
-> >>>>>
-> >>>>> On 1/8/24 00:57, Thomas Zimmermann wrote:
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> thanks for the fix.
-> >>>>>>
-> >>>>>> Am 06.01.24 um 04:29 schrieb Randy Dunlap:
-> >>>>>>> Remove the @funcs entry from struct drm_vram_mm to quieten the kernel-doc
-> >>>>>>> warning.
-> >>>>>>>
-> >>>>>>> Use the "define" kernel-doc keyword and an '\' line continuation
-> >>>>>>> to fix another kernel-doc warning.
-> >>>>>>>
-> >>>>>>> drm_gem_vram_helper.h:129: warning: missing initial short description on line:
-> >>>>>>>   * DRM_GEM_VRAM_PLANE_HELPER_FUNCS -
-> >>>>>>> drm_gem_vram_helper.h:185: warning: Excess struct member 'funcs' description in 'drm_vram_mm'
-> >>>>>>>
-> >>>>>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> >>>>>>> Cc: David Airlie <airlied@gmail.com>
-> >>>>>>> Cc: Daniel Vetter <daniel@ffwll.ch>
-> >>>>>>> Cc: dri-devel@lists.freedesktop.org
-> >>>>>>> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> >>>>>>> Cc: Maxime Ripard <mripard@kernel.org>
-> >>>>>>> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> >>>>>>> ---
-> >>>>>>> v2: Add commit description
-> >>>>>>>
-> >>>>>>> base-commit: 610a9b8f49fbcf1100716370d3b5f6f884a2835a
-> >>>>>>>
-> >>>>>>>   include/drm/drm_gem_vram_helper.h |    3 +--
-> >>>>>>>   1 file changed, 1 insertion(+), 2 deletions(-)
-> >>>>>>>
-> >>>>>>> diff -- a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vram_helper.h
-> >>>>>>> --- a/include/drm/drm_gem_vram_helper.h
-> >>>>>>> +++ b/include/drm/drm_gem_vram_helper.h
-> >>>>>>> @@ -126,7 +126,7 @@ drm_gem_vram_plane_helper_cleanup_fb(str
-> >>>>>>>                        struct drm_plane_state *old_state);
-> >>>>>>>     /**
-> >>>>>>> - * DRM_GEM_VRAM_PLANE_HELPER_FUNCS -
-> >>>>>>> + * define DRM_GEM_VRAM_PLANE_HELPER_FUNCS - \
-> >>>>>>
-> >>>>>> Did something change wrt. doc syntax? I think this used to work without warnings. About this 'define': we don't use is in another docs. Can we leave it out here or is this the new syntax?
-> >>>>>>
-> >>>>>
-> >>>>> There are no doc syntax changes that I know of. This is not
-> >>>>> new syntax. It has been around since 2014:
-> >>>>>   cbb4d3e6510b ("scripts/kernel-doc: handle object-like macros")
-> >>>>
-> >>>> I had no idea this exists, thanks a lot for this TIL :-)
-> >>>>
-> >>>> I guess the issue here is that this exists, yay, but it's not documented
-> >>>> with the other here:
-> >>>>
-> >>>> https://dri.freedesktop.org/docs/drm/doc-guide/kernel-doc.html#structure-union-and-enumeration-documentation
-> >>>>
-> >>>> I guess a patch to kernel-doc.rst would be great. Adding some kernel-doc
-> >>>> folks.
-> >>>
-> >>> Ok I went ahead and typed that patch (just we don't waste effort),
-> >>> just waiting for the sphinx build to finish to make sure it looks nice
-> >>> before I send out the patch.
-> >>> -Sima
-> >>
-> >> I sent one a few days ago:
-> >>
-> >> https://lore.kernel.org/lkml/20240107012400.32587-1-rdunlap@infradead.org/
-> >
-> > Could you please also add documentation for function-like macros,
-> > since that's also missing? With that acked-by: me.
-> >
-> > Cheers!
->
-> This is already present:
->
-> Function documentation
-> ----------------------
->
-> The general format of a function and function-like macro kernel-doc comment is::
->
->   /**
->    * function_name() - Brief description of function.
->    * @arg1: Describe the first argument.
->    * @arg2: Describe the second argument.
->    *        One can provide multiple line descriptions
->    *        for arguments.
->
->
-> but the way that you did it makes sense also.
+On Tue, Jan 09, 2024 at 10:36:24PM +0900, Sergey Senozhatsky wrote:
+> Bump compiler versions, as GCC is expected to implement it
+> in version 15 and current clang-18 still has no support for
+> counted_by(). Also fix clang URL - the project has moved
+> to github.
+> 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>  include/linux/compiler_attributes.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+> index 28566624f008..1829c24c3357 100644
+> --- a/include/linux/compiler_attributes.h
+> +++ b/include/linux/compiler_attributes.h
+> @@ -95,11 +95,11 @@
+>  #endif
+>  
+>  /*
+> - * Optional: only supported since gcc >= 14
+> - * Optional: only supported since clang >= 18
+> + * Optional: only supported since gcc >= 15
+> + * Optional: only supported since clang >= 19
 
-Ah missed that it includes wording for function-like macros. On your
-patch as-is:
+It is still possible in theory for this feature to make clang-18, as the
+release/18.x branch is not scheduled to be cut until the fourth Tuesday
+in January, which is two weeks from now. I don't have a good feeling for
+how close that pull request is to being mergeable though, so this is
+fine for now. I assume this won't go to Linus immediately so we would
+have time to change it if necessary.
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+The link change is obviously good.
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+
+I should probably go through and try to update all the other
+review.llvm.org links to GitHub as well...
+
+>   *
+>   *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> - * clang: https://reviews.llvm.org/D148381
+> + * clang: https://github.com/llvm/llvm-project/pull/76348
+>   */
+>  #if __has_attribute(__counted_by__)
+>  # define __counted_by(member)		__attribute__((__counted_by__(member)))
+> -- 
+> 2.43.0.472.g3155946c3a-goog
+> 
