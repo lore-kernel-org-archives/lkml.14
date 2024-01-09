@@ -1,157 +1,173 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375C736AE4
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 09:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rN8rr-0007j3-TQ; Tue, 09 Jan 2024 10:57:55 +0100
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rN8rq-001Rg1-Ht; Tue, 09 Jan 2024 10:57:54 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rN8rq-007r0c-1X;
-	Tue, 09 Jan 2024 10:57:54 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com
-Subject: [RFC net-next v2 3/3] net: dsa: microchip: implement PHY loopback configuration for KSZ8794 and KSZ8873
-Date: Tue,  9 Jan 2024 10:57:53 +0100
-Message-Id: <20240109095753.1872010-4-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240109095753.1872010-1-o.rempel@pengutronix.de>
-References: <20240109095753.1872010-1-o.rempel@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B30933CF4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 10:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvrV83x3"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2cd33336b32so35847761fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 02:04:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704794691; x=1705399491; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=miknyKwLNWMTM/CUdCtv3GjPRYtDM3k634e3VG5YdIA=;
+        b=CvrV83x34Y4EGSGtqAzXFU3lVkrU2llswQ8qKlAXJL5hI5CW8lbqDGyMGx6vOSiRL7
+         Y/NoqNRfmY3EdNr1MMV4SMaW/UZ/O6D96xtqYJYwFFIYS/yTXthUWcIr3640Ianxfc1c
+         tdkQmmEkJGRGLpIXTltOkbhbKMhOBCCPEZZOqbY4TnVv21RAsb1WtKgT7nYXSB1wl8/i
+         xeQPTvgQ5gKLauPwzjJnvrgWeSAlVCAggKrpXq2NdEcnyeWQheYvt3PPaBWPPrCpxUtn
+         ndRaX33Ogci7TY7dqcbvGL78dCSoR1h8S4fURIjVJsuJ7x0P8NIR5beugOJJxrjemswD
+         oDRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704794691; x=1705399491;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=miknyKwLNWMTM/CUdCtv3GjPRYtDM3k634e3VG5YdIA=;
+        b=RF1xSgbNTqcECQPn3xIWy+pkbzphjaKs59Ijd5rBB4fH4uTruUuio0Qsfow2VM2hiH
+         U6SwCyR+0yKYR1qjaoD0GBySflXxeDW23XuB/iAP587hfBV1KJ6IDdmQQqWyW/rFLGqd
+         WSuJNIVuWbJzeD4HabOZKBUAgGUqjcOjjTxgeZpolh6k97urNdwN1ZugKOE338ZmXFF3
+         fsv+BlhNo9Hr6wVUJ/gcbDb/VOLBLp96VtzG1IPGrXKK48Oao1GtpYghQUEAVvQmD/VK
+         RH6BSIngFB5mKxPsK0Jp4h+QefmGkfGT5nhU3AZll6mcrx7H9tbNq2tpGf8keWJPMvxK
+         htCg==
+X-Gm-Message-State: AOJu0YwRhoPYbbaQRPglF0z0o2xkkQdnUmZLIJFDT0t7zYbApOA8KFzC
+	FWEJuqY+5v6tTl0EOGOwW4v9W2FdsZqoJA==
+X-Google-Smtp-Source: AGHT+IF1PQdzWPHmXLfPvFu9bbrKMv2YpXR8bSAhucmKxaDT2gZanTZAhc8UHgp22OlOcsfbgMqWxw==
+X-Received: by 2002:a2e:9b03:0:b0:2cd:4a84:2b2f with SMTP id u3-20020a2e9b03000000b002cd4a842b2fmr1887094lji.57.1704794690930;
+        Tue, 09 Jan 2024 02:04:50 -0800 (PST)
+Received: from [127.0.1.1] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id b24-20020a05651c033800b002cd2cdda9besm314529ljp.50.2024.01.09.02.04.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 02:04:50 -0800 (PST)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Date: Tue, 09 Jan 2024 11:04:49 +0100
+Subject: [PATCH v3] regulator: qcom_smd: Keep one rpm handle for all vregs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240109-rpm_vreg_cleanup-v3-1-fa0201029f78@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAEAanWUC/2WNwQqDMBAFf0Vy7pYkWiU99T9KkRg3GohJ2KgUx
+ H9vKPTU4zyYNwfLSA4zu1cHI9xddjEUqC8VM7MOE4IbCzPJZcMFV0Bp6XfCqTceddgSKDsObY3
+ KytvIijbojDCQDmYuYti8L2MitO797TxfhS3FBdaZUP/eayFlB2tMzvw3dgkCeGM6ZRqrRNs+v
+ Aua4jXSxM7zAwOGyMzGAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.13-dev-0438c
 
-Correct the PHY loopback bit handling in the ksz8_w_phy_bmcr and
-ksz8_r_phy_bmcr functions for KSZ8794 and KSZ8873 variants in the ksz8795
-driver. Previously, the code erroneously used Bit 7 of port register 0xD
-for both chip variants, which is actually for LED configuration. This
-update ensures the correct registers and bits are used for the PHY
-loopback feature:
+For no apparent reason (as there's just one RPM per SoC), all vregs
+currently store a copy of a pointer to smd_rpm. Introduce a single,
+global one to save up on space in each definition.
 
-- For KSZ8794: Use 0xF / Bit 7.
-- For KSZ8873: Use 0xD / Bit 0.
+bloat-o-meter reports a slight uptick:
 
-The lack of loopback support was seen on KSZ8873 system by using
-"ethtool -t lanX". After this patch, the ethtool selftest will work,
-but only if port is not part of a bridge.
+Total: Before=44008, After=44080, chg +0.16%
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+However the saved n * sizeof(ptr) for every dynamically allocated
+regulator quickly makes up for it.
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- drivers/net/dsa/microchip/ksz8795.c     | 36 ++++++++++++++++++++-----
- drivers/net/dsa/microchip/ksz8795_reg.h |  1 +
- 2 files changed, 30 insertions(+), 7 deletions(-)
+Changes in v3:
+- Validate that the global pointer didn't change
+- Update the bloat-o-meter report
+- Link to v2: https://lore.kernel.org/r/20231227-topic-rpm_vreg_cleanup-v2-1-04c79c4f9166@linaro.org
+Changes in v2:
+- Remove unused function argument from rpm_regulator_init_vreg kerneldoc
+- Do NOT add a mutex around the rpm assignment, talked to Dmitry offline
+  and we concluded it makes no sense
+- Link to v1: https://lore.kernel.org/r/20231227-topic-rpm_vreg_cleanup-v1-1-949da0864ac5@linaro.org
+---
+ drivers/regulator/qcom_smd-regulator.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index 51e0194453df..1d8377640a3d 100644
---- a/drivers/net/dsa/microchip/ksz8795.c
-+++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -731,16 +731,25 @@ static int ksz8_r_phy_bmcr(struct ksz_device *dev, u16 port, u16 *val)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+index d1be9568025e..3b7e06b9f5ce 100644
+--- a/drivers/regulator/qcom_smd-regulator.c
++++ b/drivers/regulator/qcom_smd-regulator.c
+@@ -11,11 +11,10 @@
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/soc/qcom/smd-rpm.h>
  
--	if (restart & PORT_PHY_LOOPBACK)
--		*val |= BMCR_LOOPBACK;
++struct qcom_smd_rpm *smd_vreg_rpm;
++
+ struct qcom_rpm_reg {
+ 	struct device *dev;
 -
- 	if (ctrl & PORT_FORCE_100_MBIT)
- 		*val |= BMCR_SPEED100;
+-	struct qcom_smd_rpm *rpm;
+-
+ 	u32 type;
+ 	u32 id;
  
- 	if (ksz_is_ksz88x3(dev)) {
-+		if (restart & KSZ8873_PORT_PHY_LOOPBACK)
-+			*val |= BMCR_LOOPBACK;
-+
- 		if ((ctrl & PORT_AUTO_NEG_ENABLE))
- 			*val |= BMCR_ANENABLE;
- 	} else {
-+		u8 stat3;
-+
-+		ret = ksz_pread8(dev, port, REG_PORT_STATUS_3, &stat3);
-+		if (ret)
-+			return ret;
-+
-+		if (stat3 & PORT_PHY_LOOPBACK)
-+			*val |= BMCR_LOOPBACK;
-+
- 		if (!(ctrl & PORT_AUTO_NEG_DISABLE))
- 			*val |= BMCR_ANENABLE;
+@@ -70,7 +69,7 @@ static int rpm_reg_write_active(struct qcom_rpm_reg *vreg)
+ 	if (!reqlen)
+ 		return 0;
+ 
+-	ret = qcom_rpm_smd_write(vreg->rpm, QCOM_SMD_RPM_ACTIVE_STATE,
++	ret = qcom_rpm_smd_write(smd_vreg_rpm, QCOM_SMD_RPM_ACTIVE_STATE,
+ 				 vreg->type, vreg->id,
+ 				 req, sizeof(req[0]) * reqlen);
+ 	if (!ret) {
+@@ -1384,14 +1383,13 @@ MODULE_DEVICE_TABLE(of, rpm_of_match);
+  * @dev:		Pointer to the top level qcom_smd-regulator PMIC device
+  * @node:		Pointer to the individual qcom_smd-regulator resource
+  *			device node
+- * @rpm:		Pointer to the rpm bus node
+  * @pmic_rpm_data:	Pointer to a null-terminated array of qcom_smd-regulator
+  *			resources defined for the top level PMIC device
+  *
+  * Return: 0 on success, errno on failure
+  */
+ static int rpm_regulator_init_vreg(struct qcom_rpm_reg *vreg, struct device *dev,
+-				   struct device_node *node, struct qcom_smd_rpm *rpm,
++				   struct device_node *node,
+ 				   const struct rpm_regulator_data *pmic_rpm_data)
+ {
+ 	struct regulator_config config = {};
+@@ -1409,7 +1407,6 @@ static int rpm_regulator_init_vreg(struct qcom_rpm_reg *vreg, struct device *dev
  	}
-@@ -1001,8 +1010,7 @@ static int ksz8_w_phy_bmcr(struct ksz_device *dev, u16 port, u16 val)
  
- 	restart = 0;
- 	restart_mask = PORT_LED_OFF | PORT_TX_DISABLE | PORT_AUTO_NEG_RESTART |
--		PORT_POWER_DOWN | PORT_AUTO_MDIX_DISABLE | PORT_FORCE_MDIX |
--		PORT_PHY_LOOPBACK;
-+		PORT_POWER_DOWN | PORT_AUTO_MDIX_DISABLE | PORT_FORCE_MDIX;
+ 	vreg->dev	= dev;
+-	vreg->rpm	= rpm;
+ 	vreg->type	= rpm_data->type;
+ 	vreg->id	= rpm_data->id;
  
- 	if (val & KSZ886X_BMCR_DISABLE_LED)
- 		restart |= PORT_LED_OFF;
-@@ -1022,8 +1030,22 @@ static int ksz8_w_phy_bmcr(struct ksz_device *dev, u16 port, u16 val)
- 	if (val & KSZ886X_BMCR_FORCE_MDI)
- 		restart |= PORT_FORCE_MDIX;
+@@ -1449,6 +1446,11 @@ static int rpm_reg_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
  
--	if (val & BMCR_LOOPBACK)
--		restart |= PORT_PHY_LOOPBACK;
-+	if (ksz_is_ksz88x3(dev)) {
-+		restart_mask |= KSZ8873_PORT_PHY_LOOPBACK;
++	if (smd_vreg_rpm && rpm != smd_vreg_rpm)
++		return dev_err_probe(dev, -EINVAL, "RPM mismatch\n");
 +
-+		if (val & BMCR_LOOPBACK)
-+			restart |= KSZ8873_PORT_PHY_LOOPBACK;
-+	} else {
-+		u8 stat3 = 0;
++	smd_vreg_rpm = rpm;
 +
-+		if (val & BMCR_LOOPBACK)
-+			stat3 |= PORT_PHY_LOOPBACK;
-+
-+		ret = ksz_prmw8(dev, port, REG_PORT_STATUS_3, PORT_PHY_LOOPBACK,
-+				stat3);
-+		if (ret)
-+			return ret;
-+	}
+ 	vreg_data = of_device_get_match_data(dev);
+ 	if (!vreg_data)
+ 		return -ENODEV;
+@@ -1460,8 +1462,7 @@ static int rpm_reg_probe(struct platform_device *pdev)
+ 			return -ENOMEM;
+ 		}
  
- 	return ksz_prmw8(dev, port, regs[P_NEG_RESTART_CTRL], restart_mask,
- 			 restart);
-diff --git a/drivers/net/dsa/microchip/ksz8795_reg.h b/drivers/net/dsa/microchip/ksz8795_reg.h
-index beca974e0171..7c9341ef73b0 100644
---- a/drivers/net/dsa/microchip/ksz8795_reg.h
-+++ b/drivers/net/dsa/microchip/ksz8795_reg.h
-@@ -265,6 +265,7 @@
- #define PORT_AUTO_MDIX_DISABLE		BIT(2)
- #define PORT_FORCE_MDIX			BIT(1)
- #define PORT_MAC_LOOPBACK		BIT(0)
-+#define KSZ8873_PORT_PHY_LOOPBACK	BIT(0)
- 
- #define REG_PORT_1_STATUS_2		0x1E
- #define REG_PORT_2_STATUS_2		0x2E
+-		ret = rpm_regulator_init_vreg(vreg, dev, node, rpm, vreg_data);
+-
++		ret = rpm_regulator_init_vreg(vreg, dev, node, vreg_data);
+ 		if (ret < 0) {
+ 			of_node_put(node);
+ 			return ret;
+
+---
+base-commit: 0f067394dd3b2af3263339cf7183bdb6ee0ac1f8
+change-id: 20240109-rpm_vreg_cleanup-9fdb63e9f25d
+
+Best regards,
 -- 
-2.39.2
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
