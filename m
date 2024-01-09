@@ -1,41 +1,41 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BAA3D3BB;
-	Tue,  9 Jan 2024 19:38:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E07D3D986;
+	Tue,  9 Jan 2024 19:38:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jTlTqzla"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409Gxr7f030302;
-	Tue, 9 Jan 2024 19:37:52 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E6tW3/B+"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409IoBRb003328;
+	Tue, 9 Jan 2024 19:37:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=79hmU2lp1B5mL+vTI4VCC81K4NZ9OnMRLXsigEg7NjA
-	=; b=jTlTqzlaIoNWJ3xWkBqZpGr2TQgOr6wi6b494/cSFWtw7QSSyTqCrtx96LT
-	+ombeaEOt3hRv6ciEFkaP5u4mcpL8hKDry+NnqIHHtl6NAG8ZQQGfxj8iKIf9WaL
-	pZcqabCID5S1f8gc8Voude/n7IkfvqwTS64JD+EzAxvZauvtcbGbKhEVYuwOG9BA
-	mWBMm4QhN9XaGZrc/mXNK2w+LC8WSChTVFbukp7kpmSSmM0r0vwtmMh6F0oTb35/
-	XRX0T1w9PUS5Nr3MI2erJ1rCVscVnuLQbqRUuTBpQyM+A07n70RDXG1pAt3FxGxr
-	IlhBZb2LTRUeput0KGlPLU7jfqg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh98m8hqd-1
+	:cc; s=qcppdkim1; bh=QdXgUydOaam49lWM9hHVQ3unnDzFxn1NJUUWfFsZFDo
+	=; b=E6tW3/B+w/7M7KQyszu7fLxOIA8YVNUOkXkKBqpZecK92jpzWSK+73gjZg9
+	8Dma90uOkX7/19qX+UkCnUezDivGni5SPs+ixExx8dW3odCRFkCq6oGmM/Z+coQu
+	jPTUPSDHRFuwf2JSrx49vyi1yWGirXpb9s2nj9zCEpG/XGpoBDX/hAXdB4ecBDZe
+	47rBlajR9AMHgdXg5YhjC6PNFBLozVGhkCB+pkuiitwU/nPHA5TJtZQYtY7vxEUO
+	KVBZodGA+q7at45H1BO0puz7fNakgfb2yFqTkBlz0v+j5xUPogPHpdjGGn66PMG4
+	zJ0cY33jugoCY5X1hfKOSeYRT3A==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh9bmggct-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 19:37:52 +0000 (GMT)
+	Tue, 09 Jan 2024 19:37:54 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409Jbp4d011905
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409JbrLC024513
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jan 2024 19:37:51 GMT
+	Tue, 9 Jan 2024 19:37:53 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 9 Jan 2024 11:37:50 -0800
+ 15.2.1118.40; Tue, 9 Jan 2024 11:37:52 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Tue, 9 Jan 2024 11:37:41 -0800
-Subject: [PATCH v16 03/34] gunyah: Common types and error codes for Gunyah
- hypercalls
+Date: Tue, 9 Jan 2024 11:37:44 -0800
+Subject: [PATCH v16 06/34] virt: gunyah: msgq: Add hypercalls to send and
+ receive messages
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,7 +44,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240109-gunyah-v16-3-634904bf4ce9@quicinc.com>
+Message-ID: <20240109-gunyah-v16-6-634904bf4ce9@quicinc.com>
 References: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
 In-Reply-To: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
 To: Alex Elder <elder@linaro.org>,
@@ -84,140 +84,116 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: c6Fe_jSNy_BQ31t0hfFNRHbgo2Psl9eu
-X-Proofpoint-GUID: c6Fe_jSNy_BQ31t0hfFNRHbgo2Psl9eu
+X-Proofpoint-ORIG-GUID: 63U6h9UTcv_bPBxoxi0a4YNlTfRwGL0t
+X-Proofpoint-GUID: 63U6h9UTcv_bPBxoxi0a4YNlTfRwGL0t
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- malwarescore=0 mlxlogscore=368 suspectscore=0 clxscore=1015 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ clxscore=1015 spamscore=0 priorityscore=1501 malwarescore=0
+ mlxlogscore=857 adultscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2311290000 definitions=main-2401090158
 
-Add architecture-independent standard error codes, types, and macros for
-Gunyah hypercalls.
+Add hypercalls to send and receive messages on a Gunyah message queue.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Reviewed-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- include/linux/gunyah.h | 106 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 106 insertions(+)
+ arch/arm64/gunyah/gunyah_hypercall.c | 55 ++++++++++++++++++++++++++++++++++++
+ include/linux/gunyah.h               |  8 ++++++
+ 2 files changed, 63 insertions(+)
 
-diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
-new file mode 100644
-index 000000000000..1eab631a49b6
---- /dev/null
-+++ b/include/linux/gunyah.h
-@@ -0,0 +1,106 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+diff --git a/arch/arm64/gunyah/gunyah_hypercall.c b/arch/arm64/gunyah/gunyah_hypercall.c
+index d44663334f38..1302e128be6e 100644
+--- a/arch/arm64/gunyah/gunyah_hypercall.c
++++ b/arch/arm64/gunyah/gunyah_hypercall.c
+@@ -37,6 +37,8 @@ EXPORT_SYMBOL_GPL(arch_is_gunyah_guest);
+ 
+ /* clang-format off */
+ #define GUNYAH_HYPERCALL_HYP_IDENTIFY		GUNYAH_HYPERCALL(0x8000)
++#define GUNYAH_HYPERCALL_MSGQ_SEND		GUNYAH_HYPERCALL(0x801B)
++#define GUNYAH_HYPERCALL_MSGQ_RECV		GUNYAH_HYPERCALL(0x801C)
+ /* clang-format on */
+ 
+ /**
+@@ -58,5 +60,58 @@ void gunyah_hypercall_hyp_identify(
+ }
+ EXPORT_SYMBOL_GPL(gunyah_hypercall_hyp_identify);
+ 
++/**
++ * gunyah_hypercall_msgq_send() - Send a buffer on a message queue
++ * @capid: capability ID of the message queue to add message
++ * @size: Size of @buff
++ * @buff: Address of buffer to send
++ * @tx_flags: See GUNYAH_HYPERCALL_MSGQ_TX_FLAGS_*
++ * @ready: If the send was successful, ready is filled with true if more
++ *         messages can be sent on the queue. If false, then the tx IRQ will
++ *         be raised in future when send can succeed.
 + */
++enum gunyah_error gunyah_hypercall_msgq_send(u64 capid, size_t size, void *buff,
++					     u64 tx_flags, bool *ready)
++{
++	struct arm_smccc_res res;
 +
-+#ifndef _LINUX_GUNYAH_H
-+#define _LINUX_GUNYAH_H
++	arm_smccc_1_1_hvc(GUNYAH_HYPERCALL_MSGQ_SEND, capid, size,
++			  (uintptr_t)buff, tx_flags, 0, &res);
 +
-+#include <linux/errno.h>
-+#include <linux/interrupt.h>
-+#include <linux/limits.h>
++	if (res.a0 == GUNYAH_ERROR_OK)
++		*ready = !!res.a1;
 +
-+/* Matches resource manager's resource types for VM_GET_HYP_RESOURCES RPC */
-+enum gunyah_resource_type {
-+	/* clang-format off */
-+	GUNYAH_RESOURCE_TYPE_BELL_TX	= 0,
-+	GUNYAH_RESOURCE_TYPE_BELL_RX	= 1,
-+	GUNYAH_RESOURCE_TYPE_MSGQ_TX	= 2,
-+	GUNYAH_RESOURCE_TYPE_MSGQ_RX	= 3,
-+	GUNYAH_RESOURCE_TYPE_VCPU	= 4,
-+	GUNYAH_RESOURCE_TYPE_MEM_EXTENT	= 9,
-+	GUNYAH_RESOURCE_TYPE_ADDR_SPACE	= 10,
-+	/* clang-format on */
-+};
-+
-+struct gunyah_resource {
-+	enum gunyah_resource_type type;
-+	u64 capid;
-+	unsigned int irq;
-+};
-+
-+/******************************************************************************/
-+/* Common arch-independent definitions for Gunyah hypercalls                  */
-+#define GUNYAH_CAPID_INVAL U64_MAX
-+#define GUNYAH_VMID_ROOT_VM 0xff
-+
-+enum gunyah_error {
-+	/* clang-format off */
-+	GUNYAH_ERROR_OK				= 0,
-+	GUNYAH_ERROR_UNIMPLEMENTED		= -1,
-+	GUNYAH_ERROR_RETRY			= -2,
-+
-+	GUNYAH_ERROR_ARG_INVAL			= 1,
-+	GUNYAH_ERROR_ARG_SIZE			= 2,
-+	GUNYAH_ERROR_ARG_ALIGN			= 3,
-+
-+	GUNYAH_ERROR_NOMEM			= 10,
-+
-+	GUNYAH_ERROR_ADDR_OVFL			= 20,
-+	GUNYAH_ERROR_ADDR_UNFL			= 21,
-+	GUNYAH_ERROR_ADDR_INVAL			= 22,
-+
-+	GUNYAH_ERROR_DENIED			= 30,
-+	GUNYAH_ERROR_BUSY			= 31,
-+	GUNYAH_ERROR_IDLE			= 32,
-+
-+	GUNYAH_ERROR_IRQ_BOUND			= 40,
-+	GUNYAH_ERROR_IRQ_UNBOUND		= 41,
-+
-+	GUNYAH_ERROR_CSPACE_CAP_NULL		= 50,
-+	GUNYAH_ERROR_CSPACE_CAP_REVOKED		= 51,
-+	GUNYAH_ERROR_CSPACE_WRONG_OBJ_TYPE	= 52,
-+	GUNYAH_ERROR_CSPACE_INSUF_RIGHTS	= 53,
-+	GUNYAH_ERROR_CSPACE_FULL		= 54,
-+
-+	GUNYAH_ERROR_MSGQUEUE_EMPTY		= 60,
-+	GUNYAH_ERROR_MSGQUEUE_FULL		= 61,
-+	/* clang-format on */
-+};
++	return res.a0;
++}
++EXPORT_SYMBOL_GPL(gunyah_hypercall_msgq_send);
 +
 +/**
-+ * gunyah_error_remap() - Remap Gunyah hypervisor errors into a Linux error code
-+ * @gunyah_error: Gunyah hypercall return value
++ * gunyah_hypercall_msgq_recv() - Send a buffer on a message queue
++ * @capid: capability ID of the message queue to add message
++ * @buff: Address of buffer to copy received data into
++ * @size: Size of @buff
++ * @recv_size: If the receive was successful, recv_size is filled with the
++ *             size of data received. Will be <= size.
++ * @ready: If the receive was successful, ready is filled with true if more
++ *         messages are ready to be received on the queue. If false, then the
++ *         rx IRQ will be raised in future when recv can succeed.
 + */
-+static inline int gunyah_error_remap(enum gunyah_error gunyah_error)
++enum gunyah_error gunyah_hypercall_msgq_recv(u64 capid, void *buff, size_t size,
++					     size_t *recv_size, bool *ready)
 +{
-+	switch (gunyah_error) {
-+	case GUNYAH_ERROR_OK:
-+		return 0;
-+	case GUNYAH_ERROR_NOMEM:
-+		return -ENOMEM;
-+	case GUNYAH_ERROR_DENIED:
-+	case GUNYAH_ERROR_CSPACE_CAP_NULL:
-+	case GUNYAH_ERROR_CSPACE_CAP_REVOKED:
-+	case GUNYAH_ERROR_CSPACE_WRONG_OBJ_TYPE:
-+	case GUNYAH_ERROR_CSPACE_INSUF_RIGHTS:
-+		return -EACCES;
-+	case GUNYAH_ERROR_CSPACE_FULL:
-+	case GUNYAH_ERROR_BUSY:
-+	case GUNYAH_ERROR_IDLE:
-+		return -EBUSY;
-+	case GUNYAH_ERROR_IRQ_BOUND:
-+	case GUNYAH_ERROR_IRQ_UNBOUND:
-+	case GUNYAH_ERROR_MSGQUEUE_FULL:
-+	case GUNYAH_ERROR_MSGQUEUE_EMPTY:
-+		return -EIO;
-+	case GUNYAH_ERROR_UNIMPLEMENTED:
-+		return -EOPNOTSUPP;
-+	case GUNYAH_ERROR_RETRY:
-+		return -EAGAIN;
-+	default:
-+		return -EINVAL;
-+	}
-+}
++	struct arm_smccc_res res;
 +
-+#endif
++	arm_smccc_1_1_hvc(GUNYAH_HYPERCALL_MSGQ_RECV, capid, (uintptr_t)buff,
++			  size, 0, &res);
++
++	if (res.a0 == GUNYAH_ERROR_OK) {
++		*recv_size = res.a1;
++		*ready = !!res.a2;
++	}
++
++	return res.a0;
++}
++EXPORT_SYMBOL_GPL(gunyah_hypercall_msgq_recv);
++
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Gunyah Hypervisor Hypercalls");
+diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
+index 33bcbd22d39f..acd70f982425 100644
+--- a/include/linux/gunyah.h
++++ b/include/linux/gunyah.h
+@@ -141,4 +141,12 @@ gunyah_api_version(const struct gunyah_hypercall_hyp_identify_resp *gunyah_api)
+ void gunyah_hypercall_hyp_identify(
+ 	struct gunyah_hypercall_hyp_identify_resp *hyp_identity);
+ 
++/* Immediately raise RX vIRQ on receiver VM */
++#define GUNYAH_HYPERCALL_MSGQ_TX_FLAGS_PUSH BIT(0)
++
++enum gunyah_error gunyah_hypercall_msgq_send(u64 capid, size_t size, void *buff,
++					     u64 tx_flags, bool *ready);
++enum gunyah_error gunyah_hypercall_msgq_recv(u64 capid, void *buff, size_t size,
++					     size_t *recv_size, bool *ready);
++
+ #endif
 
 -- 
 2.34.1
