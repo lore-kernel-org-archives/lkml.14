@@ -1,119 +1,238 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224FA566D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 03:49:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0FE1D682
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 03:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGonJbCR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GjuUvOaz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704772177;
+	s=mimecast20190719; t=1704772185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZTfyJ0n3w4TT5PYd+Uem/XQgjKHsnfqZgaIdLhgNUL8=;
-	b=KGonJbCR5QdxAAb6YDxwMhDOIYt4XyWboCwKoHWvfNNrc0KZcpKPwSuYosTl+rId2LwLz/
-	WQcabgCAuSTREXqaZhURtM/ZYXLsoxP+ONKdygMpvMM2g3X6GuStI+CdJb9ddNp2RyBIfj
-	6TNuuycnDIQ0qTcQ+j6j99US5jAUEx8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-439-Tn6IMJMmOi-BvWKCm98MJg-1; Mon,
- 08 Jan 2024 22:49:31 -0500
-X-MC-Unique: Tn6IMJMmOi-BvWKCm98MJg-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0A56E1C0BB44;
-	Tue,  9 Jan 2024 03:49:28 +0000 (UTC)
-Received: from [10.22.16.105] (unknown [10.22.16.105])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 91EE0492BC9;
-	Tue,  9 Jan 2024 03:49:30 +0000 (UTC)
-Message-ID: <a8023072-0900-4be9-bb34-02850276404b@redhat.com>
-Date: Mon, 8 Jan 2024 22:49:30 -0500
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9pcW2dMN2ZTTnbNrLvy1EmevrgR/jRo6sIe8/KvAytk=;
+	b=GjuUvOazyXLNoy/6msZw9IREua6PKK+ce0V5uTPctYP9zVjApFyh2QwYuv8hKOK7M0dHB+
+	GquyLnx/RbUPxf/EbVsLyqSOOca6jP7C6zrUow3yqlHAWtIuBfmq16kuUCPDgKvFuvYYIp
+	ybHcpME+nqv4LzPpg8qYzfbgru5X+qg=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-412-lUvvM_PhP4aXcr1wFC-03w-1; Mon, 08 Jan 2024 22:49:38 -0500
+X-MC-Unique: lUvvM_PhP4aXcr1wFC-03w-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6800e52d47aso65921606d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 19:49:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704772178; x=1705376978;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9pcW2dMN2ZTTnbNrLvy1EmevrgR/jRo6sIe8/KvAytk=;
+        b=JRJ560UYI3PGPRdYZXHA55zX8y062lFSzDxuuM5t8GM2bWDAiJOzVr3DVfEPHDvGs1
+         chXjbAxMD1ovLHvZXYb++4B3LYVtNNjogxy5Xt39KFrJNtIjwLrNjOw8DrqbspMDjuS/
+         7L2o7+xuMArYncrVPX+Vx3Ui9b2kxy6siMceqLiGpxLDJvcYTZkHAN57rJbujDetjWgi
+         9uaLHDI3zE2KQCBSW+ABh27Yg0hyb0l7xzsK+9haHIaDU6dNdzZNLnIE6PqV7KyBWK5U
+         ZOreoRO9phCtfznWlY/UIJyYFyhYTe0fNRLBHj1S8NjKbUxuRuIUsZR+yb0i4yFnBCsU
+         EJ2Q==
+X-Gm-Message-State: AOJu0Yy8zZ1cQBKlKMdG4JDEd6Y/tU0Q+xR7LGBvexvGXVBRSPZfcEih
+	WJpk5t1K6ZATsZluub12xZjXKGAx9jrqZ1KezA9PDDo7UNr/CSH/iCUyaBI1bP+49Vaj8Ep5Ld+
+	NqQV0mb/7aFdCNG02YHkz4f9smRMm9I7h
+X-Received: by 2002:a05:6214:e67:b0:680:d06b:6734 with SMTP id jz7-20020a0562140e6700b00680d06b6734mr157673qvb.4.1704772178012;
+        Mon, 08 Jan 2024 19:49:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGgO6lHdt9lUqFyrJyBCNn6MpcN9eeknRp+QwwMqF1QJVBsyy9aCS5Siiq8Ba4VTJaFfMSnWg==
+X-Received: by 2002:a05:6214:e67:b0:680:d06b:6734 with SMTP id jz7-20020a0562140e6700b00680d06b6734mr157669qvb.4.1704772177747;
+        Mon, 08 Jan 2024 19:49:37 -0800 (PST)
+Received: from LeoBras.redhat.com ([2804:1b3:a803:26a5:3f32:e12b:5335:3c2d])
+        by smtp.gmail.com with ESMTPSA id b4-20020a056214114400b0067f7c11651esm545117qvt.128.2024.01.08.19.49.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 19:49:37 -0800 (PST)
+From: Leonardo Bras <leobras@redhat.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Kees Cook <keescook@chromium.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Leonardo Bras <leobras@redhat.com>,
+	Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Guo Hui <guohui@uniontech.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/1] arm64: remove unnecessary ifdefs around is_compat_task()
+Date: Tue,  9 Jan 2024 00:46:50 -0300
+Message-ID: <20240109034651.478462-2-leobras@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] lockdep: Add missing graph_unlock in check_prev_add
-Content-Language: en-US
-To: Xuewen Yan <xuewen.yan@unisoc.com>, peterz@infradead.org,
- mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Cc: zhiguo.niu@unisoc.com, ke.wang@unisoc.com, linux-kernel@vger.kernel.org
-References: <20240105060456.15331-1-xuewen.yan@unisoc.com>
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <20240105060456.15331-1-xuewen.yan@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On 1/5/24 01:04, Xuewen Yan wrote:
-> The check_prev_add() is held graph_lock, and it should unlock
-> the graph_lock before return 0.
-> But there is one condition where it will return 0 without unlock,
-> that is:
->
-> /* <prev> is not found in <next>::locks_before */
-> 	return 0;
->
-> So add graph_unlock before return 0.
->
-> Fixes: 3454a36d6a39 ("lockdep: Introduce lock_list::dep")
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> ---
-> Change in V2:
-> -move the graph_unlock to check_prev_add from validate_chain(Boqun)
-> -Add fix tag
-> ---
-> ---
->   kernel/locking/lockdep.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 151bd3de5936..c8602a251bec 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -3178,6 +3178,7 @@ check_prev_add(struct task_struct *curr, struct held_lock *prev,
->   			}
->   
->   			/* <prev> is not found in <next>::locks_before */
-> +			graph_unlock();
->   			return 0;
->   		}
->   	}
+Currently some parts of the codebase will test for CONFIG_COMPAT before
+testing is_compat_task().
 
-There are multiple places in check_prev_add() that will return 0. It 
-will be odd to have just one of them has a graph_unlock(). It makes the 
-code hard to understand. You should insert graph_unlock() in a place 
-that matches the other places where graph_unlock() will be called. My 
-suggestion is as follows:
+is_compat_task() is a inlined function only present on CONFIG_COMPAT.
+On the other hand, for !CONFIG_COMPAT, we have in linux/compat.h:
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3de5936..d9f2df36332c 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3252,7 +3252,7 @@ check_prevs_add(struct task_struct *curr, struct 
-held_loc>
-                 if (hlock->check) {
-                         int ret = check_prev_add(curr, hlock, next, 
-distance, &>
-                         if (!ret)
--                               return 0;
-+                               goto out_bug;
+ #define is_compat_task() (0)
 
-                         /*
-                          * Stop after the first non-trylock entry,
+Since we have this define available in every usage of is_compat_task() for
+!CONFIG_COMPAT, it's unnecessary to keep the ifdefs, since the compiler is
+smart enough to optimize-out those snippets on CONFIG_COMPAT=n
 
-It looks like this bug was first introduced by commit 910b1b2e6d 
-("[PATCH] lockdep: internal locking fixes"). So you may also add a fixes 
-tag.
+This requires some regset code as well as a few other defines to be made
+available on !CONFIG_COMPAT, so some symbols can get resolved before
+getting optimized-out.
 
-Cheers,
-Longman
+Signed-off-by: Leonardo Bras <leobras@redhat.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+---
+Changes since v2:
+- Added Reviewd-by from Arnd
+Link: https://lore.kernel.org/all/20240108174330.472996-2-leobras@redhat.com/
+
+Changes since v1:
+- Move some regset code and other defines outside of CONFIG_COMPAT
+- Closes: https://lore.kernel.org/oe-kbuild-all/202401061219.Y2LD7LTx-lkp@intel.com/
+Link: https://lore.kernel.org/all/20240105041458.126602-3-leobras@redhat.com/
+
+Changes since RFCv1:
+- Removed unnecessary new inlined is_compat_task() for arm64
+- Adjusted commit text and title
+Link: https://lore.kernel.org/all/20240104192433.109983-2-leobras@redhat.com/
+
+ arch/arm64/include/asm/elf.h    | 10 +++++-----
+ arch/arm64/include/asm/fpsimd.h |  2 --
+ arch/arm64/kernel/ptrace.c      |  8 +++-----
+ arch/arm64/kernel/syscall.c     |  5 +----
+ 4 files changed, 9 insertions(+), 16 deletions(-)
+
+diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
+index 97932fbf973d1..3f93f4eef9530 100644
+--- a/arch/arm64/include/asm/elf.h
++++ b/arch/arm64/include/asm/elf.h
+@@ -201,16 +201,16 @@ extern int arch_setup_additional_pages(struct linux_binprm *bprm,
+ #define COMPAT_ELF_PLATFORM		("v8l")
+ #endif
+ 
+-#ifdef CONFIG_COMPAT
+-
+-/* PIE load location for compat arm. Must match ARM ELF_ET_DYN_BASE. */
+-#define COMPAT_ELF_ET_DYN_BASE		0x000400000UL
+-
+ /* AArch32 registers. */
+ #define COMPAT_ELF_NGREG		18
+ typedef unsigned int			compat_elf_greg_t;
+ typedef compat_elf_greg_t		compat_elf_gregset_t[COMPAT_ELF_NGREG];
+ 
++#ifdef CONFIG_COMPAT
++
++/* PIE load location for compat arm. Must match ARM ELF_ET_DYN_BASE. */
++#define COMPAT_ELF_ET_DYN_BASE		0x000400000UL
++
+ /* AArch32 EABI. */
+ #define EF_ARM_EABI_MASK		0xff000000
+ int compat_elf_check_arch(const struct elf32_hdr *);
+diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+index 50e5f25d3024c..94c7ed82fbada 100644
+--- a/arch/arm64/include/asm/fpsimd.h
++++ b/arch/arm64/include/asm/fpsimd.h
+@@ -21,7 +21,6 @@
+ #include <linux/stddef.h>
+ #include <linux/types.h>
+ 
+-#ifdef CONFIG_COMPAT
+ /* Masks for extracting the FPSR and FPCR from the FPSCR */
+ #define VFP_FPSCR_STAT_MASK	0xf800009f
+ #define VFP_FPSCR_CTRL_MASK	0x07f79f00
+@@ -30,7 +29,6 @@
+  * control/status register.
+  */
+ #define VFP_STATE_SIZE		((32 * 8) + 4)
+-#endif
+ 
+ static inline unsigned long cpacr_save_enable_kernel_sve(void)
+ {
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 20d7ef82de90a..27efd66fc1e93 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -173,7 +173,6 @@ static void ptrace_hbptriggered(struct perf_event *bp,
+ 	struct arch_hw_breakpoint *bkpt = counter_arch_bp(bp);
+ 	const char *desc = "Hardware breakpoint trap (ptrace)";
+ 
+-#ifdef CONFIG_COMPAT
+ 	if (is_compat_task()) {
+ 		int si_errno = 0;
+ 		int i;
+@@ -195,7 +194,7 @@ static void ptrace_hbptriggered(struct perf_event *bp,
+ 						  desc);
+ 		return;
+ 	}
+-#endif
++
+ 	arm64_force_sig_fault(SIGTRAP, TRAP_HWBKPT, bkpt->trigger, desc);
+ }
+ 
+@@ -1594,7 +1593,6 @@ static const struct user_regset_view user_aarch64_view = {
+ 	.regsets = aarch64_regsets, .n = ARRAY_SIZE(aarch64_regsets)
+ };
+ 
+-#ifdef CONFIG_COMPAT
+ enum compat_regset {
+ 	REGSET_COMPAT_GPR,
+ 	REGSET_COMPAT_VFP,
+@@ -1851,6 +1849,7 @@ static const struct user_regset_view user_aarch32_ptrace_view = {
+ 	.regsets = aarch32_ptrace_regsets, .n = ARRAY_SIZE(aarch32_ptrace_regsets)
+ };
+ 
++#ifdef CONFIG_COMPAT
+ static int compat_ptrace_read_user(struct task_struct *tsk, compat_ulong_t off,
+ 				   compat_ulong_t __user *ret)
+ {
+@@ -2112,7 +2111,6 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+ 
+ const struct user_regset_view *task_user_regset_view(struct task_struct *task)
+ {
+-#ifdef CONFIG_COMPAT
+ 	/*
+ 	 * Core dumping of 32-bit tasks or compat ptrace requests must use the
+ 	 * user_aarch32_view compatible with arm32. Native ptrace requests on
+@@ -2123,7 +2121,7 @@ const struct user_regset_view *task_user_regset_view(struct task_struct *task)
+ 		return &user_aarch32_view;
+ 	else if (is_compat_thread(task_thread_info(task)))
+ 		return &user_aarch32_ptrace_view;
+-#endif
++
+ 	return &user_aarch64_view;
+ }
+ 
+diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+index 9a70d9746b661..ad198262b9817 100644
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -20,14 +20,11 @@ long sys_ni_syscall(void);
+ 
+ static long do_ni_syscall(struct pt_regs *regs, int scno)
+ {
+-#ifdef CONFIG_COMPAT
+-	long ret;
+ 	if (is_compat_task()) {
+-		ret = compat_arm_syscall(regs, scno);
++		long ret = compat_arm_syscall(regs, scno);
+ 		if (ret != -ENOSYS)
+ 			return ret;
+ 	}
+-#endif
+ 
+ 	return sys_ni_syscall();
+ }
+-- 
+2.43.0
 
