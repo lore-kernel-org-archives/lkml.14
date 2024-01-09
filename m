@@ -1,140 +1,129 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50F63D540
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 19:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489E53D386;
+	Tue,  9 Jan 2024 19:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5zsyK8K"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6d99980b2e0so2894519b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 11:31:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704828716; x=1705433516; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=boBDnUGC8eDAyWfJkqoTtfypKbl4pabOXDd3nFFPUqc=;
-        b=X5zsyK8KYeGlffhodOWhOgK7mNXrS8rtSWu2P/kN/9iLrxCXLtZLRCFsNU93KYMyg1
-         YgCfTE6us/SDYjaVWD3BEfZKgq3klWd9egwpiAz4ZJS06F9USCyXz7+myktIrgqkHYMV
-         Wu8dA9LJZiPgys7XX4sPJh49jpS1qcelLiB9/BrFuYWhra7SicsvPlP74jV5k26W1hoJ
-         BqJ8Usko7QuP009aQUrrXa6MaPeEfg+d1DwiW3aUFi2T3NREKqbi/kbiC3Guhntf6rT8
-         bhQV0gbhIXFv406/NrKQ1I4BRvWpBhVlU/nPrUOMHH0KdzrClaiEJ8MzbydOnl8SA5Cl
-         zlGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704828716; x=1705433516;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=boBDnUGC8eDAyWfJkqoTtfypKbl4pabOXDd3nFFPUqc=;
-        b=fOwnVTmDbC4brAHhXqCAW6kdR2EGki22l7qgHQqKxF8Br9wI07PurLQMy9BDoG5CRg
-         YmXwSskJmwYXzb4duKY6FiDczWQEOX/pH1H536JcjrII1WRI4+KYjmBbCwQXxHykOKDR
-         v8NAhN77xjrK4hNCtpRjLffBc99YjKxcVoqE9Os4mP/fF18gnqPvXrznIQVKeQNRasZ4
-         l+0YPkHgp1xQzkT+teQJ2vDkeMCHdgE6MO7y4mQU55grxPrb6shN5KqWRH+g2gFR713h
-         q5x3HApadj32TudqBkSlP5YXQws7cWsHRrZ7WOQmzMi175vV6TJwfhBHYxGpGDzqCRN3
-         b5Rg==
-X-Gm-Message-State: AOJu0YyK0pbRz3T/sStFPORTcyUNjbZRWQphLmqs0fBx+gQjmSXstQV2
-	6VT/aX8w/DKIab3CQp/G4Ho=
-X-Google-Smtp-Source: AGHT+IEtvrNm37Vvvl0827rIgbrDG58I/0qQbKIDWzn9TwkPcvUu7DXuRPZOfZnXdYNEvE1ghK989w==
-X-Received: by 2002:a05:6a00:80f4:b0:6d9:bf35:768f with SMTP id ei52-20020a056a0080f400b006d9bf35768fmr5370598pfb.46.1704828716163;
-        Tue, 09 Jan 2024 11:31:56 -0800 (PST)
-Received: from localhost.localdomain (c-67-174-241-145.hsd1.ca.comcast.net. [67.174.241.145])
-        by smtp.gmail.com with ESMTPSA id w2-20020a62c702000000b006d9a0059a9asm2173490pfg.172.2024.01.09.11.31.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 11:31:55 -0800 (PST)
-From: Yang Shi <shy828301@gmail.com>
-To: oliver.sang@intel.com,
-	riel@surriel.com,
-	fengwei.yin@intel.com,
-	willy@infradead.org,
-	cl@linux.com,
-	ying.huang@intel.com,
-	akpm@linux-foundation.org
-Cc: shy828301@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 2/2] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE
-Date: Wed, 20 Dec 2023 22:59:43 -0800
-Message-Id: <20231221065943.2803551-2-shy828301@gmail.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20231221065943.2803551-1-shy828301@gmail.com>
-References: <20231221065943.2803551-1-shy828301@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="neBSO6qO"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409Ga5GC010605;
+	Tue, 9 Jan 2024 19:32:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=CLs3YjVYDE1s7FRJYEHsjits3mEdR85aig3ksCqQKco=; b=ne
+	BSO6qO4kBzwhbQ+EG8+UBw2PlrbWtcp2JLfbXhWxuqTZUrjI7S1bb5FYYIKDegjx
+	j162pkIgmvHKf97UvSvawocVkeKVPSWa/iOTiL77aVy6C5zvWkZWC89mwy7bmx1r
+	BWikfg4pTwCN0+LqiF9EpGW/1im6knKgvgcMXWJN9YI7QNw+3GFge0pi0JgOnLxY
+	0OveDYXauv7AqSn6SL475w5c570VIpCTgM1yjeb0EsREkW4hOkUaiPwAVC/WjGSk
+	FQGpRko8+kmpncAIg2kLm5ng8rc7+33Hw3HKEdYBe11U7qn0wh49Z2hmNI7fWoqx
+	5olOzEnOILqXVBpSmjug==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh9ta0dgk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 19:32:56 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409JWsMw029883
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jan 2024 19:32:54 GMT
+Received: from [10.110.21.198] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 9 Jan
+ 2024 11:32:54 -0800
+Message-ID: <ac5db099-b810-4e74-551f-2ee3658482c0@quicinc.com>
+Date: Tue, 9 Jan 2024 11:32:19 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] drm/msm: add a kernel param to select between MDP5
+ and DPU drivers
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Daniel
+ Vetter" <daniel@ffwll.ch>,
+        <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        Stephen Boyd <swboyd@chromium.org>
+References: <20240106-fd-migrate-mdp5-v3-0-3d2750378063@linaro.org>
+ <20240106-fd-migrate-mdp5-v3-3-3d2750378063@linaro.org>
+ <c8d6769b-eb28-337c-fa55-4dae86611da5@quicinc.com>
+ <CAA8EJpoF3uKobGzjHbLMKYvcQbdqYzur7Mn1cNDPyc+wiiZ+SQ@mail.gmail.com>
+ <9807bb4a-98d9-8f4b-b24d-0134f42f6cd3@quicinc.com>
+ <CAA8EJpqmkzOaewrW8tqSV5wz+0zovZx-kpMdVWp_nW_g1KrRzA@mail.gmail.com>
+Content-Language: en-US
+From: Carl Vanderlip <quic_carlv@quicinc.com>
+In-Reply-To: <CAA8EJpqmkzOaewrW8tqSV5wz+0zovZx-kpMdVWp_nW_g1KrRzA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IRIjo5imv_n9jIlKOOTZx4hozVTHrK0V
+X-Proofpoint-ORIG-GUID: IRIjo5imv_n9jIlKOOTZx4hozVTHrK0V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=868
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401090157
 
-From: Yang Shi <yang@os.amperecomputing.com>
+On 1/8/2024 11:07 AM, Dmitry Baryshkov wrote:
+> On Mon, 8 Jan 2024 at 19:57, Carl Vanderlip <quic_carlv@quicinc.com> wrote:
+>> On 1/5/2024 4:38 PM, Dmitry Baryshkov wrote:
+>>> On Sat, 6 Jan 2024 at 02:04, Carl Vanderlip <quic_carlv@quicinc.com> wrote:
+>>>> On 1/5/2024 3:34 PM, Dmitry Baryshkov wrote:
+>>>>> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+>>>>> index 50b65ffc24b1..ef57586fbeca 100644
+>>>>> --- a/drivers/gpu/drm/msm/msm_drv.c
+>>>>> +++ b/drivers/gpu/drm/msm/msm_drv.c
+>>>>> @@ -969,6 +969,37 @@ static int add_components_mdp(struct device *master_dev,
+>>>>>         return 0;
+>>>>>     }
+>>>>>
+>>>>> +#if !IS_REACHABLE(CONFIG_DRM_MSM_MDP5) || !IS_REACHABLE(CONFIG_DRM_MSM_DPU)
+>>>>> +bool msm_disp_drv_should_bind(struct device *dev, bool mdp5_driver)
+>>>>> +{
+>>>>> +     /* If just a single driver is enabled, use it no matter what */
+>>>>> +     return true;
+>>>>> +}
+>>>>
+>>>> This will cause both MDP/DPU probes to return -ENODEV, rather than
+>>>> select the enabled one.
+>>>
+>>> No. The code (e.g. for DPU) is:
+>>>
+>>>          if (!msm_disp_drv_should_bind(&pdev->dev, true))
+>>>                   return -ENODEV;
+>>>
+>>> So the driver returns -ENODEV if msm_disp_drv_should_bind() returns
+>>> false. Which is logical from the function name point of view.
+>>>
+>>
+>> but msm_disp_drv_should_bind() is returning true in the #if !REACHABLE()
+>> case?
+>>
+>> at minimum the comment is incorrect since returning true causes the
+>> driver to NOT be used.
+> 
+> No. Returning _false_ causes the driver to not be used.
+> 
 
-The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
-boundaries") incured regression for stress-ng pthread benchmark [1].
-It is because THP get allocated to pthread's stack area much more possible
-than before.  Pthread's stack area is allocated by mmap without VM_GROWSDOWN
-or VM_GROWSUP flag, so kernel can't tell whether it is a stack area or not.
+Apologies... you are correct.
 
-The MAP_STACK flag is used to mark the stack area, but it is a no-op on
-Linux.  Mapping MAP_STACK to VM_NOHUGEPAGE to prevent from allocating
-THP for such stack area.
+Reviewed-by: Carl Vanderlip <quic_carlv@quicinc.com>
 
-With this change the stack area looks like:
-
-fffd18e10000-fffd19610000 rw-p 00000000 00:00 0
-Size:               8192 kB
-KernelPageSize:        4 kB
-MMUPageSize:           4 kB
-Rss:                  12 kB
-Pss:                  12 kB
-Pss_Dirty:            12 kB
-Shared_Clean:          0 kB
-Shared_Dirty:          0 kB
-Private_Clean:         0 kB
-Private_Dirty:        12 kB
-Referenced:           12 kB
-Anonymous:            12 kB
-KSM:                   0 kB
-LazyFree:              0 kB
-AnonHugePages:         0 kB
-ShmemPmdMapped:        0 kB
-FilePmdMapped:         0 kB
-Shared_Hugetlb:        0 kB
-Private_Hugetlb:       0 kB
-Swap:                  0 kB
-SwapPss:               0 kB
-Locked:                0 kB
-THPeligible:           0
-VmFlags: rd wr mr mw me ac nh
-
-The "nh" flag is set.
-
-[1] https://lore.kernel.org/linux-mm/202312192310.56367035-oliver.sang@intel.com/
-
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Tested-by: Oliver Sang <oliver.sang@intel.com>
-Cc: Yin Fengwei <fengwei.yin@intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Christopher Lameter <cl@linux.com>
-Cc: Huang, Ying <ying.huang@intel.com>
-Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
----
- include/linux/mman.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/mman.h b/include/linux/mman.h
-index 40d94411d492..dc7048824be8 100644
---- a/include/linux/mman.h
-+++ b/include/linux/mman.h
-@@ -156,6 +156,7 @@ calc_vm_flag_bits(unsigned long flags)
- 	return _calc_vm_trans(flags, MAP_GROWSDOWN,  VM_GROWSDOWN ) |
- 	       _calc_vm_trans(flags, MAP_LOCKED,     VM_LOCKED    ) |
- 	       _calc_vm_trans(flags, MAP_SYNC,	     VM_SYNC      ) |
-+	       _calc_vm_trans(flags, MAP_STACK,	     VM_NOHUGEPAGE) |
- 	       arch_calc_vm_flag_bits(flags);
- }
- 
--- 
-2.41.0
-
+-Carl V.
