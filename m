@@ -1,112 +1,99 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF683639
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 00:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C3663B
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 00:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nZQWM+wJ"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e4f7119eeso484065e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 16:34:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704760489; x=1705365289; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PG45xY7qdUYvxRUhu1bd0cfdjPVsmY2YVRBeEKS5RT4=;
-        b=nZQWM+wJJ44gefEw18BZ10nMa6oT5ihVpY4jSdEI3SFCEvp8rABNPa0hvK1GP5zih+
-         4NA0Kzc1KXxGFVQyRrBzrvPsDs/k7dQzh6qcGdasnir/ZmeqF/NYRb7HsWczwh8NVSz5
-         dviBHD5UROFTsO5+MGkRy3Wf1/1De9c4V0kNe4i3UhT52i/aqAkXbeVWFG0HOQBJ88eI
-         dqw0qzp0LTHx5ublLvtxnoKi7UENyWpIBBIlLpqrlcHP3tY0rEEtzVaZLATVHujTf/ot
-         GHpiJYd/cd56gdmiG5aTzHONXvIRBWLIXLTrUxsD7wxl2qDvxf2AXc9DRzG12Lt6wZlh
-         WUEA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hg0sPdI/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704760518;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ARMX4HM6itdBlTBKVKSEXcT1ilseNu4Nvq2nBbOEvW8=;
+	b=hg0sPdI/JzE5QqFTLZ6Q4a6nYm4go4/zGBl3ZqPpTDvRxgyrHz0pXJHQQgQcDpawILzpSe
+	A5Qp2sjp9nQOQVwES7NTW8rRyj6qzi2fJeb+QPSOwfnaJZtR+YJw2Fej5MSTC2itToQ7Ms
+	q9vSq4GgTtBRt3S/j6XfFE90KEXIpBo=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-DYS1LzsiMT-ESyCPToieEA-1; Mon, 08 Jan 2024 19:35:16 -0500
+X-MC-Unique: DYS1LzsiMT-ESyCPToieEA-1
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-5c670f70a37so1958556a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 16:35:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704760489; x=1705365289;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PG45xY7qdUYvxRUhu1bd0cfdjPVsmY2YVRBeEKS5RT4=;
-        b=d9E0h7sobDjgJEHc8qKaflmm3gM2jXObovWjvnqNnpi/mED+qalWzgD5EqfdmIbeVD
-         a3Rf2aapraQtiLNTBINBUp/lyr96t6teLywkg2GYJYDoT/gtKpCj1SryiJr4mmLEwrmA
-         7NDbI02zsj2sKOlU1vjL5g6rMXbdjClddOPlFbqixmW0Udt+8MZHx3VRp2M7DBk0nvVu
-         Hx9sHAbbw3IlkPxRgsN8kTM1qXWOvA1fsfRC0UtoPzIt8Nzj2/OvrFEN5iopG9wcRHAg
-         vhfu9F+3mjaz9P9S6/Z6QnooU5o9CYVkI1Xh2kH6HPqA93q1xqw2lt2IJDtdB42ZdEPz
-         JopQ==
-X-Gm-Message-State: AOJu0YzrVdKu+0EBMrC+CNSC8CSU6NRljjePnEuUwjNr7DtTYIoPkjXd
-	qekoqs8pIjSh+CsjX9cHVJMn8kgqpXGWzA==
-X-Google-Smtp-Source: AGHT+IGDQ8FvZzuUdUo9S0hXw8aqSkdIwxxo2l3Q6O2E6tuyGiskmVwFvAIe7TkLE3tqqtpa2dK5Jw==
-X-Received: by 2002:a05:600c:4e01:b0:40e:44aa:2360 with SMTP id b1-20020a05600c4e0100b0040e44aa2360mr1711162wmq.14.1704760488777;
-        Mon, 08 Jan 2024 16:34:48 -0800 (PST)
-Received: from [192.168.100.48] ([37.228.218.3])
-        by smtp.gmail.com with ESMTPSA id fm7-20020a05600c0c0700b0040e4914f28dsm3518325wmb.18.2024.01.08.16.34.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jan 2024 16:34:47 -0800 (PST)
-Message-ID: <0cbedc75-cacf-43f8-a1f9-284546ad548a@linaro.org>
-Date: Tue, 9 Jan 2024 00:34:46 +0000
+        d=1e100.net; s=20230601; t=1704760515; x=1705365315;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ARMX4HM6itdBlTBKVKSEXcT1ilseNu4Nvq2nBbOEvW8=;
+        b=H36rxp1qauVUxL8I9+i9TAWLSw1I0e8Kyd2oTsNTsoMkxcWedewO34LuWal0G5XYOy
+         RZUrHRFb1NBcvPekT2QwR1UOLQcROzfjQlsDmGNcXsTndl72WbvmCQ15feKbLYGX9tkb
+         6oPUC0TfHjUUgSrC1Kj97H1wfW0o0G3voPbcbcx49w4YhqKlWOT731Fs2hFIH2OMsAq8
+         QVXUVxI6XJbyF6ROIlWkzeSwTl+Bqlz2W0XAfR2rhpXDe8rntwncnUcCk7iOyhD8l2yk
+         IsAeZL57vm+kLLkybCWD5M25G47LjZevac3jDiWFGzi+Q9xITEEsqTimfh+od1jKZ3HS
+         xicg==
+X-Gm-Message-State: AOJu0Yx/LG7S5eqZvGufQK2TaJMpRTBvjdrEZLNUQE2moyFcnSfpTEMv
+	su2jAHX6gR6lqTxBOaU/MZUrfnEkOUW9Z8QEdsz7AbY5BsNIXQ7jgY+TaAl+eGpdv2ndKIAJH0v
+	Y284kLxSiLEwgj498uGN02pX//o9r57ew
+X-Received: by 2002:a05:6a20:65d:b0:199:f2ef:8282 with SMTP id 29-20020a056a20065d00b00199f2ef8282mr122304pzm.100.1704760515684;
+        Mon, 08 Jan 2024 16:35:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFpvMu4Ls9SGUYo6jmphzFnSHZMJQHYOZu5gp20jJVmFV8u2Z+IYHNt7UlyuoeL2/n3onexSQ==
+X-Received: by 2002:a05:6a20:65d:b0:199:f2ef:8282 with SMTP id 29-20020a056a20065d00b00199f2ef8282mr122295pzm.100.1704760515363;
+        Mon, 08 Jan 2024 16:35:15 -0800 (PST)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id b15-20020a17090a12cf00b0028c89122f8asm553134pjg.6.2024.01.08.16.35.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 16:35:15 -0800 (PST)
+Date: Tue, 9 Jan 2024 08:30:03 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: linux-integrity@vger.kernel.org, itrymybest80@protonmail.com, 
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: Re: Re: [PATCH] integrity: don't throw an error immediately when
+ failed to add a cert to the .machine keyring
+Message-ID: <vzys7y22d7zduhcrlqojnavcad5zvxde4axdsgrfpwn3u557iz@cnjbuwkfqiur>
+References: <20231227044156.166009-1-coxu@redhat.com>
+ <39e5612eb2d4dea2759310ccce39c1ad40b5388f.camel@linux.ibm.com>
+ <35tiggwgbrb2sapyykv3umio5l2xqhmzc43wy33dxmz4hyu24c@bprgz7skpxma>
+ <16ae3e51dc4eeb2b2e674b8ff1051ac315fa492c.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/18] clk: qcom: gcc-sm8250: Set delay for Venus CLK
- resets
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Manivannan Sadhasivam <mani@kernel.org>
-References: <20240105-topic-venus_reset-v1-0-981c7a624855@linaro.org>
- <20240105-topic-venus_reset-v1-9-981c7a624855@linaro.org>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240105-topic-venus_reset-v1-9-981c7a624855@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <16ae3e51dc4eeb2b2e674b8ff1051ac315fa492c.camel@linux.ibm.com>
 
-On 08/01/2024 12:32, Konrad Dybcio wrote:
-> Some Venus resets may require more time when toggling. Describe that.
+On Fri, Jan 05, 2024 at 09:59:14AM -0500, Mimi Zohar wrote:
+>On Fri, 2024-01-05 at 21:27 +0800, Coiby Xu wrote:
+>> On Tue, Jan 02, 2024 at 12:54:02PM -0500, Mimi Zohar wrote:
+>> >Hi Coiby,
+>>
+>> Hi Mimi,
+>>
+>> >
+>> >According to https://docs.kernel.org/process/submitting-patches.html,the
+>> summary line should be no more than  70 - 75 characters.
+>>
+>> Thanks for pointing me to this limit! How about
+>> integrity: eliminate harmless error "Problem loading X.509 certificate -126"
+>
+>Still >75.   How about the following?
+>
+>integrity: eliminate unnecessary "Problem loading X.509 certificate" msg
 
-May or does ?
+Thanks, v2 now uses the above subject. I thought the limit applies to
+the "summary phrase" instead of the whole "summary" and a second look
+proved me wrong. 
 
-I'd prefer a strong declaration of where this value came from and why 
-its being added.
-
-May is ambiguous.
-
-"Downstream has a 150 us delay for this. My own testing shows this to be 
-necessary in upstream"
-
-Later commits want to add a 1000 us delay. Have all of these delays been 
-tested ?
-
-If not please describe where the values come.
-
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
->   drivers/clk/qcom/gcc-sm8250.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/qcom/gcc-sm8250.c b/drivers/clk/qcom/gcc-sm8250.c
-> index c6c5261264f1..61d01d4c379b 100644
-> --- a/drivers/clk/qcom/gcc-sm8250.c
-> +++ b/drivers/clk/qcom/gcc-sm8250.c
-> @@ -3576,8 +3576,8 @@ static const struct qcom_reset_map gcc_sm8250_resets[] = {
->   	[GCC_USB3PHY_PHY_PRIM_BCR] = { 0x50004 },
->   	[GCC_USB3PHY_PHY_SEC_BCR] = { 0x50010 },
->   	[GCC_USB_PHY_CFG_AHB2PHY_BCR] = { 0x6a000 },
-> -	[GCC_VIDEO_AXI0_CLK_ARES] = { 0xb024, 2 },
-> -	[GCC_VIDEO_AXI1_CLK_ARES] = { 0xb028, 2 },
-> +	[GCC_VIDEO_AXI0_CLK_ARES] = { 0xb024, .bit = 2, .udelay = 150 },
-> +	[GCC_VIDEO_AXI1_CLK_ARES] = { 0xb028, .bit = 2, .udelay = 150 },
->   };
->   
->   static const struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
-> 
+-- 
+Best regards,
+Coiby
 
