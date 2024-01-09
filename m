@@ -1,89 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D3339AFA;
-	Tue,  9 Jan 2024 16:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mS6hffrM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22925C433C7;
-	Tue,  9 Jan 2024 16:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704818435;
-	bh=xumFkzh9dOhqQuxWQPzQ0UOI+crU8zGpXe3IKeAJiLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mS6hffrM8lke09V6OI+rr+zWeUuXVm+yeEU3pex4lAnkO+QzbfFKtZWS6RNtOfBVA
-	 OXxdShG6OWUaVqBcepdY/kNTyzMMux9hWwpIfT7glq08vpVWPk3rkXSwBOOczEpx1b
-	 5pr4Qd4QM/S8EAeiLqRne6LSZ26SOHa8XR8taeUy/aobdgDP28leKB5rK21zF8f7UC
-	 pt1i/Ex4Iz3Rncmy6J3HMrdl6ZqvjDNIw5Bg5qUnGksuQcVyiDUgrx61b7EJCK5KcW
-	 xxGWa/gsx+kaUpbyWXMbgJxTXbt8ECq4NEHX0IOwMQ72xTcW4QIXD9lV7FB4Qt4D/a
-	 8x83Ov3qSVoaw==
-Date: Tue, 9 Jan 2024 16:40:29 +0000
-From: Conor Dooley <conor@kernel.org>
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Hsin-Yi Wang <hsinyi@chromium.org>,
-	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	jason-ch chen <Jason-ch.Chen@mediatek.com>,
-	Macpaul Lin <macpaul.lin@mediatek.com>,
-	Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>,
-	Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH 1/2] dt-bindings: arm64: mediatek: Add MT7988A and BPI-R4
-Message-ID: <20240109-perennial-darkroom-953f86a05adb@spud>
-References: <20240102205941.29654-1-zajec5@gmail.com>
- <20240108-helium-retriever-043ed3e1dbe0@spud>
- <1a9d7f5b-4a00-4026-81b8-7af3031c6656@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325113A267;
+	Tue,  9 Jan 2024 16:41:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9ECAC433C7;
+	Tue,  9 Jan 2024 16:41:02 +0000 (UTC)
+Date: Tue, 9 Jan 2024 11:42:00 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com
+Subject: Re: [PATCH v10 1/2] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <20240109114200.01367342@gandalf.local.home>
+In-Reply-To: <ZZ1ir0edlY3OzjyC@google.com>
+References: <20240105094729.2363579-1-vdonnefort@google.com>
+	<20240105094729.2363579-2-vdonnefort@google.com>
+	<20240109234230.e99da87104d58fee59ad75c6@kernel.org>
+	<ZZ1ir0edlY3OzjyC@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Bl2E85BvxztBLFCl"
-Content-Disposition: inline
-In-Reply-To: <1a9d7f5b-4a00-4026-81b8-7af3031c6656@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Tue, 9 Jan 2024 15:13:51 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> > > @@ -388,6 +389,7 @@ struct rb_irq_work {
+> > >  	bool				waiters_pending;
+> > >  	bool				full_waiters_pending;
+> > >  	bool				wakeup_full;
+> > > +	bool				is_cpu_buffer;  
+> > 
+> > I think 'is_cpu_buffer' is a bit unclear (or generic),
+> > what about 'meta_page_update'?  
+> 
+> Hum not sure about that change. This was really to identify if parent of
+> rb_irq_work is a cpu_buffer or a trace_buffer. It can be a cpu_buffer regardless
+> of the need to update the meta-page.
+
+Yeah, this was added because the irq_work is called with the rb_work for
+both the cpu_buffer and the global struct tracing_buffer object. The
+meta_page is only available to the cpu_buffer and does not exist on the
+struct trace_buffer, so this is checked before doing a "container_of()" on
+the wrong structure. Both the cpu_buffer and the global buffer call the
+same function with the rb_work structure.
+
+So "is_cpu_buffer" is the right terminology as it's unrelated to the meta page:
+
+struct trace_buffer {
+	[..]
+	struct rb_irq_work	irq_work;
+	[..]
+};
+
+	struct trace_buffer *buffer;
+	buffer->irq_work.is_cpu_buffer = false;
+
+struct ring_buffer_per_cpu {
+	[..]
+	struct rb_irq_work	irq_work;
+	[..]
+}
+
+	struct ring_buffer_per_cpu *cpu_buffer;
+	cpu_buffer->irq_work.is_cpu_buffer = true;
 
 
---Bl2E85BvxztBLFCl
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[..]
+	init_irq_work(&buffer->irq_work.work, rb_wake_up_waiters);
+[..]
+	init_irq_work(&cpu_buffer->irq_work.work, rb_wake_up_waiters);
 
-On Tue, Jan 09, 2024 at 07:12:35AM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
-> Hi Conor,
->=20
-> On 8.01.2024 18:38, Conor Dooley wrote:
-> > On Tue, Jan 02, 2024 at 09:59:40PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
-> > > From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
-> > >=20
-> > > MT7988A is another MediaTek's SoC with just 1 device available right
-> > > now: Banana Pi BPI-R4.
-> >=20
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
->=20
-> I sent V2 meanwhile, could you reply to below PATCH instead, please?
->=20
-> [PATCH V2 1/3] dt-bindings: arm64: mediatek: Add MT7988A and BPI-R4
+// both the buffer and cpu_buffer call rb_wake_up_waiters()
 
-In the future, just give me the message-id in these cases.
+static void rb_wake_up_waiters(struct irq_work *work)
+{
+	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
 
---Bl2E85BvxztBLFCl
-Content-Type: application/pgp-signature; name="signature.asc"
+// This container_of() gets rbwork which is the rb_irq_work structure that
+// both buffer and cpu_buffer have.
 
------BEGIN PGP SIGNATURE-----
+	if (rbwork->is_cpu_buffer) {
+		struct ring_buffer_per_cpu *cpu_buffer;
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ12/QAKCRB4tDGHoIJi
-0pSZAQCakbEDbpyJU1zZrJrksXPLUy1QLurql1JT2lp+rbNL5QD+MXaybdojog9v
-8C36eHKqtqb6uPGDATzIRYl+BUuRRQU=
-=mce9
------END PGP SIGNATURE-----
+		cpu_buffer = container_of(rbwork, struct ring_buffer_per_cpu,
+					  irq_work);
 
---Bl2E85BvxztBLFCl--
+// The above crashes if done by the buffer and not the cpu_buffer.
+// The "is_cpu_buffer" is there to differentiate the two rb_work entities.
+// It is a way to say this is safe to do the above "container_of()".
+
+		/*
+		 * If the waiter is a cpu_buffer, this might be due to a
+		 * userspace mapping. Let's update the meta-page.
+		 */
+		rb_update_meta_page(cpu_buffer);
+	}
+
+
+-- Steve
