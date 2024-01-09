@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405AC186E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875EA568B
 	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 00:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYMr5tLw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F3E7C433A6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcXcTwYY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 579CAC43601;
 	Tue,  9 Jan 2024 00:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704761258;
-	bh=dDs91h811gnf4EBOtcB+w2Mv1Gi+FUE86WTP+to5CPg=;
+	bh=sPXxSEZ9GB/y9X4kws8xeWqOJMPmHhNj07xdrPT9zZk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=cYMr5tLwqTu4zYwCIUN8J0i91yVlV0ISOfxlH6DMzG0Qmc5IqQHuHdJ9eG0EDwx2H
-	 o1y4hMZ+mOdv/Ux3agCnoPRMHNaoOAhzdJUAaRIjKr6Lpm26yl0QX3NCqAdiBFBCKI
-	 obt63RsA/9BNcovIjXpuZaSvNPsRnFLjF0wnMug4w6YnBHASWs8lyxvOkTCdkV2ZRC
-	 1RdczcRtaESsxlZPuZAD5Bh3lc7sE9DH+jl+qoc+Zwq3azTsJkbNcEJe62E1uHVhbf
-	 T16KaVlADORlQX3bisC0cCAJ8sjVQl6wXE8a04HcTE1Np6igFtLFaNZJi4UwCLLYS7
-	 0oQRCTBxHnJxw==
+	b=TcXcTwYYsuNjgCc0xySFf7L3bapjLWARLkVuBhquukzJklcqG3vTq4Og+Nfb+6xto
+	 7odGsJL9/18zbrOM5QO0O2zMXrNZyt/hXrwS9SNjC1LMlVXAM2Aq2BicXatan58OQq
+	 aVmtrUzbDtmjIGi0wDbttRtu/L7cpQQfkcKtk8KS+494x27GTdMILra2B+aKy/zGTs
+	 XALFR/4BVLMt3YdCInuPzEq1TGC5DJb7BPGSQQsr83uaLDG/q8c/ynorBlwWsaIdvz
+	 Gao0Can3mjRZ0p3y4tiNuYLh8efObQuDiFMkENrWFT2TlypiNIyfQC4XIsfb5OaS3x
+	 DXfAFhBI6d/0Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0EBBBDFC691;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 46C24DFC686;
 	Tue,  9 Jan 2024 00:47:38 +0000 (UTC)
-Subject: Re: [GIT PULL] x86/cpu for v6.8
+Subject: Re: [GIT PULL] x86/paravirt for v6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240107121528.GAZZqV4GF086iQw1zw@fat_crate.local>
-References: <20240107121528.GAZZqV4GF086iQw1zw@fat_crate.local>
+In-Reply-To: <20240107220823.GAZZsg18/8q1JNRksh@fat_crate.local>
+References: <20240107220823.GAZZsg18/8q1JNRksh@fat_crate.local>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240107121528.GAZZqV4GF086iQw1zw@fat_crate.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_cpu_for_v6.8
-X-PR-Tracked-Commit-Id: 232afb557835d6f6859c73bf610bad308c96b131
+X-PR-Tracked-Message-Id: <20240107220823.GAZZsg18/8q1JNRksh@fat_crate.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_paravirt_for_v6.8
+X-PR-Tracked-Commit-Id: 7991ed43587d1106315208cc289c851d6915d4a3
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bef91c28f28fe8a36b91e9a39f60054ae1874280
-Message-Id: <170476125805.27312.8990329809733043432.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: fc5e5c5923407b4b312d999af27aaddbdd33c790
+Message-Id: <170476125828.27312.10932425656350115229.pr-tracker-bot@kernel.org>
 Date: Tue, 09 Jan 2024 00:47:38 +0000
 To: Borislav Petkov <bp@alien8.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
@@ -41,12 +41,12 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 7 Jan 2024 13:15:28 +0100:
+The pull request you sent on Sun, 7 Jan 2024 23:08:23 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_cpu_for_v6.8
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_paravirt_for_v6.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bef91c28f28fe8a36b91e9a39f60054ae1874280
+https://git.kernel.org/torvalds/c/fc5e5c5923407b4b312d999af27aaddbdd33c790
 
 Thank you!
 
