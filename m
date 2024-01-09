@@ -1,148 +1,183 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F0ED3715E;
-	Tue,  9 Jan 2024 10:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB2937162
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 10:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FwE6pRuy"
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id 6373F20AEC8A; Tue,  9 Jan 2024 02:51:31 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6373F20AEC8A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704797491;
-	bh=Qh4vCcMbs6V3VMTJ7hXH2GEKRppPqxUeLFTB/Ig1nok=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FwE6pRuyaI+HJkDB3Afk1M4hhFkZwSOQlWfPwZXinmuveNFMzrjnBbyvhUeNLDXdE
-	 N7NHLkaiU/olpqoZ2mqgwZMV5emDY4NEb3+rDHQ4ihr8HG7ZnsASjlOMz/CNEOLQU4
-	 qRgCuvSHZq6rV52WdrNTpoXf4wp8WyW1BQ5LrM1s=
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	longli@microsoft.com,
-	yury.norov@gmail.com,
-	leon@kernel.org,
-	cai.huoqing@linux.dev,
-	ssengar@linux.microsoft.com,
-	vkuznets@redhat.com,
-	tglx@linutronix.de,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: schakrabarti@microsoft.com,
-	paulros@microsoft.com
-Subject: [PATCH 1/4 net-next] cpumask: add cpumask_weight_andnot()
-Date: Tue,  9 Jan 2024 02:51:15 -0800
-Message-Id: <1704797478-32377-2-git-send-email-schakrabarti@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1704797478-32377-1-git-send-email-schakrabarti@linux.microsoft.com>
-References: <1704797478-32377-1-git-send-email-schakrabarti@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="frodQ1WO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704797489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/CmNWkbqIDFvIDkl3GMiU6nPWomwdJGXPThbRcMa9Q8=;
+	b=frodQ1WO2ZBVVj17KpQfNmyYuSKxU6rZLatIi7Jrsc2GWRdEbVotMsplLdNwDntjpfdA3Y
+	n5FNr2VOcsXRlIMg3V5ViWrKHK88cSphuLdTt8uhYUbLSJWc7KXNFNMw4E9Wl9MxPTecjG
+	1QSEWhUwOwLxS4b3iz9RqCpTRKXxFlc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-277-n2x_G9qcPN-bYUOpldvIQw-1; Tue,
+ 09 Jan 2024 05:51:26 -0500
+X-MC-Unique: n2x_G9qcPN-bYUOpldvIQw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 130E738C6240;
+	Tue,  9 Jan 2024 10:51:25 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id AECDC1C060AF;
+	Tue,  9 Jan 2024 10:51:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>, linux-afs@lists.infradead.org,
+    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net] rxrpc: Fix use of Don't Fragment flag
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1570780.1704797483.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jan 2024 10:51:23 +0000
+Message-ID: <1570781.1704797483@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-From: Yury Norov <yury.norov@gmail.com>
+rxrpc normally has the Don't Fragment flag set on the UDP packets it
+transmits, except when it has decided that DATA packets aren't getting
+through - in which case it turns it off just for the DATA transmissions.
+This can be a problem, however, for RESPONSE packets that convey
+authentication and crypto data from the client to the server as ticket may
+be larger than can fit in the MTU.
 
-Similarly to cpumask_weight_and(), cpumask_weight_andnot() is a handy
-helper that may help to avoid creating an intermediate mask just to
-calculate number of bits that set in a 1st given mask, and clear in 2nd
-one.
+In such a case, rxrpc gets itself into an infinite loop as the sendmsg
+returns an error (EMSGSIZE), which causes rxkad_send_response() to return
+-EAGAIN - and the CHALLENGE packet is put back on the Rx queue to retry,
+leading to the I/O thread endlessly attempting to perform the transmission=
+.
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Fix this by disabling DF on RESPONSE packets for now.  The use of DF and
+best data MTU determination needs reconsidering at some point in the
+future.
+
+Reported-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: linux-afs@lists.infradead.org
+cc: netdev@vger.kernel.org
 ---
- include/linux/bitmap.h  | 12 ++++++++++++
- include/linux/cpumask.h | 13 +++++++++++++
- lib/bitmap.c            |  7 +++++++
- 3 files changed, 32 insertions(+)
+ net/rxrpc/ar-internal.h  |    1 +
+ net/rxrpc/local_object.c |   13 ++++++++++++-
+ net/rxrpc/output.c       |    6 ++----
+ net/rxrpc/rxkad.c        |    2 ++
+ 4 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 99451431e4d6..5814e9ee40ba 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -54,6 +54,7 @@ struct device;
-  *  bitmap_full(src, nbits)                     Are all bits set in *src?
-  *  bitmap_weight(src, nbits)                   Hamming Weight: number set bits
-  *  bitmap_weight_and(src1, src2, nbits)        Hamming Weight of and'ed bitmap
-+ *  bitmap_weight_andnot(src1, src2, nbits)     Hamming Weight of andnot'ed bitmap
-  *  bitmap_set(dst, pos, nbits)                 Set specified bit area
-  *  bitmap_clear(dst, pos, nbits)               Clear specified bit area
-  *  bitmap_find_next_zero_area(buf, len, pos, n, mask)  Find bit free area
-@@ -169,6 +170,8 @@ bool __bitmap_subset(const unsigned long *bitmap1,
- unsigned int __bitmap_weight(const unsigned long *bitmap, unsigned int nbits);
- unsigned int __bitmap_weight_and(const unsigned long *bitmap1,
- 				 const unsigned long *bitmap2, unsigned int nbits);
-+unsigned int __bitmap_weight_andnot(const unsigned long *bitmap1,
-+				    const unsigned long *bitmap2, unsigned int nbits);
- void __bitmap_set(unsigned long *map, unsigned int start, int len);
- void __bitmap_clear(unsigned long *map, unsigned int start, int len);
- 
-@@ -425,6 +428,15 @@ unsigned long bitmap_weight_and(const unsigned long *src1,
- 	return __bitmap_weight_and(src1, src2, nbits);
+diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
+index e8e14c6f904d..e8b43408136a 100644
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -1076,6 +1076,7 @@ void rxrpc_send_version_request(struct rxrpc_local *=
+local,
+ /*
+  * local_object.c
+  */
++void rxrpc_local_dont_fragment(const struct rxrpc_local *local, bool set)=
+;
+ struct rxrpc_local *rxrpc_lookup_local(struct net *, const struct sockadd=
+r_rxrpc *);
+ struct rxrpc_local *rxrpc_get_local(struct rxrpc_local *, enum rxrpc_loca=
+l_trace);
+ struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *, enum rxrp=
+c_local_trace);
+diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
+index c553a30e9c83..7a3150482e37 100644
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -36,6 +36,17 @@ static void rxrpc_encap_err_rcv(struct sock *sk, struct=
+ sk_buff *skb, int err,
+ 		return ipv6_icmp_error(sk, skb, err, port, info, payload);
  }
- 
-+static __always_inline
-+unsigned long bitmap_weight_andnot(const unsigned long *src1,
-+				   const unsigned long *src2, unsigned int nbits)
-+{
-+	if (small_const_nbits(nbits))
-+		return hweight_long(*src1 & ~(*src2) & BITMAP_LAST_WORD_MASK(nbits));
-+	return __bitmap_weight_andnot(src1, src2, nbits);
-+}
-+
- static __always_inline void bitmap_set(unsigned long *map, unsigned int start,
- 		unsigned int nbits)
- {
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index cfb545841a2c..228c23eb36d2 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -719,6 +719,19 @@ static inline unsigned int cpumask_weight_and(const struct cpumask *srcp1,
- 	return bitmap_weight_and(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
- }
- 
-+/**
-+ * cpumask_weight_andnot - Count of bits in (*srcp1 & ~*srcp2)
-+ * @srcp1: the cpumask to count bits (< nr_cpu_ids) in.
-+ * @srcp2: the cpumask to count bits (< nr_cpu_ids) in.
-+ *
-+ * Return: count of bits set in both *srcp1 and *srcp2
+ =
+
++/*
++ * Set or clear the Don't Fragment flag on a socket.
 + */
-+static inline unsigned int cpumask_weight_andnot(const struct cpumask *srcp1,
-+						const struct cpumask *srcp2)
++void rxrpc_local_dont_fragment(const struct rxrpc_local *local, bool set)
 +{
-+	return bitmap_weight_andnot(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
++	if (set)
++		ip_sock_set_mtu_discover(local->socket->sk, IP_PMTUDISC_DONT);
++	else
++		ip_sock_set_mtu_discover(local->socket->sk, IP_PMTUDISC_DO);
 +}
 +
- /**
-  * cpumask_shift_right - *dstp = *srcp >> n
-  * @dstp: the cpumask result
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 09522af227f1..b97692854966 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -348,6 +348,13 @@ unsigned int __bitmap_weight_and(const unsigned long *bitmap1,
- }
- EXPORT_SYMBOL(__bitmap_weight_and);
- 
-+unsigned int __bitmap_weight_andnot(const unsigned long *bitmap1,
-+				const unsigned long *bitmap2, unsigned int bits)
-+{
-+	return BITMAP_WEIGHT(bitmap1[idx] & ~bitmap2[idx], bits);
-+}
-+EXPORT_SYMBOL(__bitmap_weight_andnot);
-+
- void __bitmap_set(unsigned long *map, unsigned int start, int len)
- {
- 	unsigned long *p = map + BIT_WORD(start);
--- 
-2.34.1
+ /*
+  * Compare a local to an address.  Return -ve, 0 or +ve to indicate less =
+than,
+  * same or greater than.
+@@ -203,7 +214,7 @@ static int rxrpc_open_socket(struct rxrpc_local *local=
+, struct net *net)
+ 		ip_sock_set_recverr(usk);
+ =
+
+ 		/* we want to set the don't fragment bit */
+-		ip_sock_set_mtu_discover(usk, IP_PMTUDISC_DO);
++		rxrpc_local_dont_fragment(local, true);
+ =
+
+ 		/* We want receive timestamps. */
+ 		sock_enable_timestamps(usk);
+diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
+index 5e53429c6922..a0906145e829 100644
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -494,14 +494,12 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, =
+struct rxrpc_txbuf *txb)
+ 	switch (conn->local->srx.transport.family) {
+ 	case AF_INET6:
+ 	case AF_INET:
+-		ip_sock_set_mtu_discover(conn->local->socket->sk,
+-					 IP_PMTUDISC_DONT);
++		rxrpc_local_dont_fragment(conn->local, false);
+ 		rxrpc_inc_stat(call->rxnet, stat_tx_data_send_frag);
+ 		ret =3D do_udp_sendmsg(conn->local->socket, &msg, len);
+ 		conn->peer->last_tx_at =3D ktime_get_seconds();
+ =
+
+-		ip_sock_set_mtu_discover(conn->local->socket->sk,
+-					 IP_PMTUDISC_DO);
++		rxrpc_local_dont_fragment(conn->local, true);
+ 		break;
+ =
+
+ 	default:
+diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
+index 1bf571a66e02..b52dedcebce0 100644
+--- a/net/rxrpc/rxkad.c
++++ b/net/rxrpc/rxkad.c
+@@ -724,7 +724,9 @@ static int rxkad_send_response(struct rxrpc_connection=
+ *conn,
+ 	serial =3D atomic_inc_return(&conn->serial);
+ 	whdr.serial =3D htonl(serial);
+ =
+
++	rxrpc_local_dont_fragment(conn->local, false);
+ 	ret =3D kernel_sendmsg(conn->local->socket, &msg, iov, 3, len);
++	rxrpc_local_dont_fragment(conn->local, true);
+ 	if (ret < 0) {
+ 		trace_rxrpc_tx_fail(conn->debug_id, serial, ret,
+ 				    rxrpc_tx_point_rxkad_response);
 
