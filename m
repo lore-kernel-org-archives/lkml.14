@@ -1,72 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72DA36AE7
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7621D37143;
+	Tue,  9 Jan 2024 11:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X1DBZYSY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704798517;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jVq6Bvt43xx2ZZr7NjW5k0lYlPpCHdUkD3QuDPePB8I=;
-	b=X1DBZYSYBkJy8jpVpBGxp+1mact9tg9IAURYSqHiyVFusx3ckdDhRvF+OMtITffRegaY1B
-	pVVHfw14MZLfslVUIpnYB4xwGB3R+Z3t3anYsS5W+4OC/o+kt6pjJC6jL+sEjwgY+1Scgu
-	iWFKKHJb1nRUIy29q7wt1GeFkPLCKjk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-237-tJeXuIr2MX6fcUVVyYDIeQ-1; Tue,
- 09 Jan 2024 06:08:34 -0500
-X-MC-Unique: tJeXuIr2MX6fcUVVyYDIeQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 560381C05151;
-	Tue,  9 Jan 2024 11:08:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 83E3740C6EB9;
-	Tue,  9 Jan 2024 11:08:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <ZZyCTPz+uuvgjPIL@casper.infradead.org>
-References: <ZZyCTPz+uuvgjPIL@casper.infradead.org> <CAKXUXMzXN=+hKDPP-RdHKELA_fGA6PcdCj5fXM32qh4Px0Hprg@mail.gmail.com> <1542013.1704750095@warthog.procyon.org.uk>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: dhowells@redhat.com, Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-    linux-cachefs@redhat.com,
-    linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Reference to non-existing CONFIG_NETFS_FSCACHE
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="OU6LGNvO"
+Received: from localhost.ispras.ru (unknown [10.10.165.2])
+	by mail.ispras.ru (Postfix) with ESMTPSA id EE39540737C4;
+	Tue,  9 Jan 2024 11:09:03 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru EE39540737C4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1704798544;
+	bh=dZSYFuprTqfspA6v9+rP8mVuX6czoir5pAkVaXwFN5M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OU6LGNvOv/bPvRC0J1P8GLE/fLpU47BIoftyNVi4GmcnI9K1URhtFoff4lVqj0Hhh
+	 SKbo0piEcmU7EXCN22qQSqrj8cJQdaUcN/UgXpq5UUfTQw2ZAibhGibFNDnlBLBSiy
+	 zji+42Z33Eeo8UppEXj+OETCbcZCJBX2CqUId60k=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Dave Airlie <airlied@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	virtualization@lists.linux-foundation.org,
+	spice-devel@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 5.10 0/1] drm/qxl: fix UAF on handle creation
+Date: Tue,  9 Jan 2024 14:08:24 +0300
+Message-ID: <20240109110827.9458-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1571879.1704798511.1@warthog.procyon.org.uk>
-Date: Tue, 09 Jan 2024 11:08:31 +0000
-Message-ID: <1571880.1704798511@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Transfer-Encoding: 8bit
 
-Matthew Wilcox <willy@infradead.org> wrote:
+The bug `KASAN: slab-use-after-free in qxl_mode_dumb_create` is reproduced
+on 5.10 stable branch.
 
-> > netfs_writepages_begin() has the wait on the fscache folio conditional on
-> > CONFIG_NETFS_FSCACHE - which doesn't exist.
-> > 
-> > Fix it to be conditional on CONFIG_FSCACHE instead.
-> 
-> Why is it conditional at all?  Why don't we have a stub function if
-> CONFIG_FSCACHE is not defined?
+The problem has been fixed by the following patch which can be cleanly
+applied to 5.10. The fix is already included in all stable branches
+starting from 5.15.
 
-At this point, I'd rather just change the #ifdef and then (hopefully) next
-cycle get rid of PG_fscache entirely, rendering this unnecessary.
+Link to the "failed to apply to 5.10" report [1].
 
-David
-
+[1]: https://lore.kernel.org/stable/2023082121-mumps-residency-9108@gregkh/
