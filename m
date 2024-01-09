@@ -1,110 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8822EAF9;
-	Tue,  9 Jan 2024 09:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D70629CF1
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 09:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naGn6h5G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13FA4C433F1;
-	Tue,  9 Jan 2024 09:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704791644;
-	bh=+06NMjLMy7+S0OcYAENUNHQLBwEXKnqYTwCvjFTXoVo=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=naGn6h5G/6LHXS86a+lEsUu6Z0GXyfdbelfib8WBnJgW8wCSOppf2X8p2llo/pSnM
-	 /c3R7m5/EQyL4cwZNRgIVXFQmvp+KJg5lTHNLqL/ztc359qhvQaHOQeRtUOB311KjO
-	 HhQVXTJw3Nhq0BvsCqw7vuEgkGvJfqo7daporh375JTpqat7AX81VZ2ZzVQ3Lan7h8
-	 haEwOfoNrZmYNPjQQB9nyKmx/9LDDWJRW/1qjFZAH1XHihrWapFpeQejQx2JrvOxPN
-	 NbeoHoMkTkaaIOXgmqDbamqDtjHSxyFeYCWwGTb+k2oxYqoGnLfWAWSJBpBhmIXmrs
-	 X/5GNfkYry1hA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,  "David S . Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Rob Herring
- <robh+dt@kernel.org>,  Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley <conor+dt@kernel.org>,
-  Bjorn Andersson <andersson@kernel.org>,  Konrad Dybcio
- <konrad.dybcio@linaro.org>,  Catalin Marinas <catalin.marinas@arm.com>,
-  Will Deacon <will@kernel.org>,  Bjorn Helgaas <bhelgaas@google.com>,
-  Heiko Stuebner <heiko@sntech.de>,  Jernej Skrabec
- <jernej.skrabec@gmail.com>,  Chris Morgan <macromorgan@hotmail.com>,
-  Linus Walleij <linus.walleij@linaro.org>,  Geert Uytterhoeven
- <geert+renesas@glider.be>,  Arnd Bergmann <arnd@arndb.de>,  Neil Armstrong
- <neil.armstrong@linaro.org>,  =?utf-8?Q?N=C3=ADcolas?= F . R . A . Prado
- <nfraprado@collabora.com>,  Marek Szyprowski <m.szyprowski@samsung.com>,
-  Peng Fan <peng.fan@nxp.com>,  Robert Richter <rrichter@amd.com>,  Dan
- Williams <dan.j.williams@intel.com>,  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  Terry Bowman <terry.bowman@amd.com>,
-  Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-  Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,  Huacai
- Chen
- <chenhuacai@kernel.org>,  Alex Elder <elder@linaro.org>,  Srini Kandagatla
- <srinivas.kandagatla@linaro.org>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  linux-wireless@vger.kernel.org,
-  netdev@vger.kernel.org,  devicetree@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-arm-msm@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
-  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFC 7/9] dt-bindings: wireless: ath11k: describe QCA6390
-References: <20240104130123.37115-1-brgl@bgdev.pl>
-	<20240104130123.37115-8-brgl@bgdev.pl>
-	<82a669f5-259d-427c-b290-6fa1470fec79@linaro.org>
-Date: Tue, 09 Jan 2024 11:13:54 +0200
-In-Reply-To: <82a669f5-259d-427c-b290-6fa1470fec79@linaro.org> (Krzysztof
-	Kozlowski's message of "Thu, 4 Jan 2024 16:57:52 +0100")
-Message-ID: <87o7duzx65.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LwPgBZ8F"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4099ExJF002379;
+	Tue, 9 Jan 2024 09:15:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2023-11-20; bh=+xyrwDFS099oTZr80eG8tqlbdegvI+EmzfeYorlmT8s=;
+ b=LwPgBZ8FNFDr95rT4pYF6Jb9Nqwk0ExICiU9LTw94K2MnYwAKMqPES5Gl+aCvrBTSYct
+ avy/AXVkQTv0Ai57iyzSAjwoPBcQAVebzTw5Vd2P5MifynPKWR+VLclqSDUZFofatJCy
+ e2g0siJ4Nc4iaKZmqnZA+PP2ti9ocd/97qw+vHJzmmGQIHOQXMsJP2X9bL3funAg168J
+ rp1qc9trPCBRXDP9l9xw63G/i6G34XtAXm0wvtxxSJIVx+BC8Rl6QFvWHsizZVuG1cwg
+ 1+GtlU1DxhfifcLdypb8Ae0VryLpdb3HCjc56Ax9XFtcYg+sLvxNqHkoETBCzebA/8Vq eg== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vh3bd0020-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 09 Jan 2024 09:15:14 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4098Xsuf006721;
+	Tue, 9 Jan 2024 09:15:13 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vfur3f6rt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 09 Jan 2024 09:15:13 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4099FCea007613;
+	Tue, 9 Jan 2024 09:15:13 GMT
+Received: from jfwang-mac.us.oracle.com (dhcp-10-159-139-172.vpn.oracle.com [10.159.139.172])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3vfur3f6r8-1;
+	Tue, 09 Jan 2024 09:15:12 +0000
+From: Jianfeng Wang <jianfeng.w.wang@oracle.com>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jianfeng Wang <jianfeng.w.wang@oracle.com>
+Subject: [PATCH] mm, oom: Add lru_add_drain() in __oom_reap_task_mm()
+Date: Tue,  9 Jan 2024 01:15:11 -0800
+Message-ID: <20240109091511.8299-1-jianfeng.w.wang@oracle.com>
+X-Mailer: git-send-email 2.42.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-09_03,2024-01-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
+ adultscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401090073
+X-Proofpoint-ORIG-GUID: 89_hUgsNPu7_jKHX54smR6a95sDi_sq1
+X-Proofpoint-GUID: 89_hUgsNPu7_jKHX54smR6a95sDi_sq1
 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> writes:
+The oom_reaper tries to reclaim additional memory owned by the oom
+victim. In __oom_reap_task_mm(), it uses mmu_gather for batched page
+free. After oom_reaper was added, mmu_gather feature introduced
+CONFIG_MMU_GATHER_NO_GATHER (in 'commit 952a31c9e6fa ("asm-generic/tlb:
+Introduce CONFIG_HAVE_MMU_GATHER_NO_GATHER=y")', an option to skip batched
+page free. If set, tlb_batch_pages_flush(), which is responsible for
+calling lru_add_drain(), is skipped during tlb_finish_mmu(). Without it,
+pages could still be held by per-cpu fbatches rather than be freed.
 
-> On 04/01/2024 14:01, Bartosz Golaszewski wrote:
->
->> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
->> index 817f02a8b481..f584c25f4276 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
->> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
->> @@ -16,6 +16,7 @@ description: |
->>  properties:
->>    compatible:
->>      enum:
->> +      - pci17cb,1101  # QCA6390
->>        - pci17cb,1103  # WCN6855
->>  
->>    reg:
->> @@ -27,6 +28,19 @@ properties:
->>        string to uniquely identify variant of the calibration data for designs
->>        with colliding bus and device ids
->>  
->> +  enable-gpios:
->> +    description: GPIO line enabling the ATH11K module when asserted.
->> +    maxItems: 1
->> +
->> +  vddpmu-supply:
->> +    description: VDD_PMU supply regulator handle
->> +
->> +  vddpcie1-supply:
->> +    description: VDD_PCIE1 supply regulator handle
->> +
->> +  vddpcie2-supply:
->> +    description: VDD_PCIE2 supply regulator handle
->
-> Looks like these are valid only for specific variant, so you should have
-> allOf:if:then disallowing other properties when not applicable. The same
-> applies for existing properties which might not exist on qca6390.
+This fix adds lru_add_drain() prior to mmu_gather. This makes the code
+consistent with other cases where mmu_gather is used for freeing pages.
 
-And it would be good to provide more information in the commit log about
-the platforms where this is used, otherwise the context might not be
-clear. Or maybe document that in the bindings file, not sure.
+Signed-off-by: Jianfeng Wang <jianfeng.w.wang@oracle.com>
+---
+ mm/oom_kill.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 9e6071fde34a..e2fcf4f062ea 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -537,6 +537,7 @@ static bool __oom_reap_task_mm(struct mm_struct *mm)
+ 			struct mmu_notifier_range range;
+ 			struct mmu_gather tlb;
+ 
++			lru_add_drain();
+ 			mmu_notifier_range_init(&range, MMU_NOTIFY_UNMAP, 0,
+ 						mm, vma->vm_start,
+ 						vma->vm_end);
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.42.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
