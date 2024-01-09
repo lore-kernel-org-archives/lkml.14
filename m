@@ -1,11 +1,11 @@
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02E6233CE5;
-	Tue,  9 Jan 2024 08:23:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55AEE364CF;
+	Tue,  9 Jan 2024 08:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 1B3CE1C065E;
-	Tue,  9 Jan 2024 17:23:57 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id 9DF471C02ED;
+	Tue,  9 Jan 2024 17:24:00 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -71,9 +71,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v6 10/37] sh: Common PCI Framework driver support.
-Date: Tue,  9 Jan 2024 17:23:07 +0900
-Message-Id: <bdaac527d4bd3638f4506ebaae472464c6842d57.1704788539.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v6 12/37] dt-bindings: pci: pci-sh7751: Add SH7751 PCI
+Date: Tue,  9 Jan 2024 17:23:09 +0900
+Message-Id: <160ee086771703c951c5522d997662aeac122a28.1704788539.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1704788539.git.ysato@users.sourceforge.jp>
 References: <cover.1704788539.git.ysato@users.sourceforge.jp>
@@ -85,85 +85,170 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add New OF based PCI Host driver.
-This driver conflicts some point in legacy PCI driver.
-To resolve the conflict, I made some changes to the legacy driver.
+Renesas SH7751 PCI Controller json-schema.
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/include/asm/io.h  |  6 ++++++
- arch/sh/include/asm/pci.h |  4 ++++
- arch/sh/kernel/iomap.c    | 18 ++++++++++++++++++
- 3 files changed, 28 insertions(+)
+ .../bindings/pci/renesas,sh7751-pci.yaml      | 150 ++++++++++++++++++
+ 1 file changed, 150 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/renesas,sh7751-pci.yaml
 
-diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-index 5429b4169dc8..51312f356fb9 100644
---- a/arch/sh/include/asm/io.h
-+++ b/arch/sh/include/asm/io.h
-@@ -20,6 +20,7 @@
- #include <asm/page.h>
- #include <linux/pgtable.h>
- #include <asm-generic/iomap.h>
-+#include <linux/ioport.h>
- 
- #define __IO_PREFIX     generic
- #include <asm/io_generic.h>
-@@ -319,4 +320,9 @@ unsigned long long poke_real_address_q(unsigned long long addr,
- int valid_phys_addr_range(phys_addr_t addr, size_t size);
- int valid_mmap_phys_addr_range(unsigned long pfn, size_t size);
- 
-+#if defined(CONFIG_PCI) && !defined(CONFIG_GENERIC_IOMAP)
-+#define pci_remap_iospace pci_remap_iospace
-+int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
-+#endif
+diff --git a/Documentation/devicetree/bindings/pci/renesas,sh7751-pci.yaml b/Documentation/devicetree/bindings/pci/renesas,sh7751-pci.yaml
+new file mode 100644
+index 000000000000..45e5a19e7d0f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/renesas,sh7751-pci.yaml
+@@ -0,0 +1,150 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/renesas,sh7751-pci.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- #endif /* __ASM_SH_IO_H */
-diff --git a/arch/sh/include/asm/pci.h b/arch/sh/include/asm/pci.h
-index 54c30126ea17..92b3bd604319 100644
---- a/arch/sh/include/asm/pci.h
-+++ b/arch/sh/include/asm/pci.h
-@@ -2,6 +2,7 @@
- #ifndef __ASM_SH_PCI_H
- #define __ASM_SH_PCI_H
- 
-+#ifndef CONFIG_SH_DEVICE_TREE
- /* Can be used to override the logic in pci_scan_bus for skipping
-    already-configured bus numbers - to be used for buggy BIOSes
-    or architectures with incomplete PCI setup by the loader */
-@@ -88,4 +89,7 @@ static inline int pci_proc_domain(struct pci_bus *bus)
- 	return hose->need_domain_info;
- }
- 
-+#else /* CONFIG_SH_DEVICE_TREE */
-+#include <asm-generic/pci.h>
-+#endif
- #endif /* __ASM_SH_PCI_H */
-diff --git a/arch/sh/kernel/iomap.c b/arch/sh/kernel/iomap.c
-index 0a0dff4e66de..968b15868d9a 100644
---- a/arch/sh/kernel/iomap.c
-+++ b/arch/sh/kernel/iomap.c
-@@ -160,3 +160,21 @@ void iowrite32_rep(void __iomem *addr, const void *src, unsigned long count)
- 	mmio_outsl(addr, src, count);
- }
- EXPORT_SYMBOL(iowrite32_rep);
++title: Renesas SH7751 PCI Host controller
 +
-+#if defined(CONFIG_PCI) && !defined(CONFIG_GENERIC_IOMAP)
-+int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
-+{
-+	unsigned long vaddr = res->start;
++maintainers:
++  - Yoshinori Sato <ysato@users.sourceforge.jp>
 +
-+	if (!(res->flags & IORESOURCE_IO))
-+		return -EINVAL;
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
 +
-+	if (res->end > IO_SPACE_LIMIT)
-+		return -EINVAL;
++properties:
++  compatible:
++    const: renesas,sh7751-pci
 +
-+	__set_io_port_base(phys_addr);
-+	return ioremap_page_range(vaddr, vaddr + resource_size(res), phys_addr,
-+				  pgprot_device(PAGE_KERNEL));
-+}
-+EXPORT_SYMBOL(pci_remap_iospace);
-+#endif
++  reg:
++    minItems: 2
++    maxItems: 2
++
++  reg-names:
++    items:
++      - const: PCI Controller
++      - const: Bus State Controller
++
++  "#interrupt-cells":
++    const: 1
++
++  "#address-cells":
++    const: 3
++
++  "#size-cells":
++    const: 2
++
++  ranges: true
++
++  dma-ranges: true
++
++  interrupt-controller: true
++
++  renesas,bus-arbit-round-robin:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set DMA bus arbitration to round robin.
++
++  pci-command-reg-fast-back-to-back:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI command register Fast Back-to-Back enable bit.
++
++  pci-command-reg-serr:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI command register SERR# enable.
++
++  pci-command-reg-wait-cycle-control:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI command register Wait cycle control bit.
++
++  pci-command-reg-parity-error-response:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI Command register Parity error response bit.
++
++  pci-command-reg-vga-snoop:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI Command register VGA palette snoop bit.
++
++  pci-command-reg-write-invalidate:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI Command register Memory write and invaldate enable bit.
++
++  pci-command-reg-special-cycle:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI Command register Special cycle bit.
++
++  pci-command-reg-bus-master:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI Command register Bus master bit.
++
++  pci-command-reg-memory-space:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI Command register Memory space bit.
++
++  pci-command-reg-io-space:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Set for PCI Command register I/O space bit.
++
++  pci-bar:
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    description: Overwrite to  PCI CONFIG Base Address Registers value.
++    items:
++      items:
++        - description: BAR register number
++        - description: BAR register value
++    minItems: 1
++    maxItems: 6
++
++required:
++  - compatible
++  - reg
++  - "#interrupt-cells"
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
++  - interrupt-map
++  - interrupt-map-mask
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    pci@fe200000 {
++            compatible = "renesas,sh7751-pci";
++            #address-cells = <3>;
++            #size-cells = <2>;
++            #interrupt-cells = <1>;
++            interrupt-controller;
++            device_type = "pci";
++            bus-range = <0 0>;
++            ranges = <0x02000000 0 0xfd000000 0xfd000000 0 0x01000000>,
++                     <0x01000000 0 0x00000000 0xfe240000 0 0x00040000>;
++            dma-ranges = <0x02000000 0 0xc000000 0x0c000000 0 0x04000000>;
++            reg = <0xfe200000 0x0400>,
++                  <0xff800000 0x0100>;
++            interrupt-map = <0x0000 0 0 1 &julianintc 5>,
++                            <0x0000 0 0 2 &julianintc 6>,
++                            <0x0000 0 0 3 &julianintc 7>,
++                            <0x0000 0 0 4 &julianintc 8>,
++                            <0x0800 0 0 1 &julianintc 6>,
++                            <0x0800 0 0 2 &julianintc 7>,
++                            <0x0800 0 0 3 &julianintc 8>,
++                            <0x0800 0 0 4 &julianintc 5>,
++                            <0x1000 0 0 1 &julianintc 7>,
++                            <0x1000 0 0 2 &julianintc 8>,
++                            <0x1000 0 0 3 &julianintc 5>,
++                            <0x1000 0 0 4 &julianintc 6>;
++            pci-bar = <0 0xab000001>, <2 0xd0000000>;
++            pci-command-reg-io-space;
++            interrupt-map-mask = <0x1800 0 0 7>;
++    };
 -- 
 2.39.2
 
