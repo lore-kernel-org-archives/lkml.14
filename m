@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AB03A1AA
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69943A8E7
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:11:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YIPWLvkA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E4SuWMQM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704809492;
+	s=mimecast20190719; t=1704809496;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iDgGk9AqkfdB9KmMB1EEQzESiWoQzRB9G8la+60J3pw=;
-	b=YIPWLvkAeSYtUJyT7jWBdJO0U5+J0cZ2u6l5e1ioGuQYwJ3mhmBs6RmWyK+a6E19Rqfhyu
-	yu4l+begTAv5VeAnM8Rj0E7NrVvBMSZP8tl8PEjxOJHjRHhnW+yw35IfALetISa0KvnC7Q
-	3lxclUYkuE+UyM0dPvCQTyVreWwtfjI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-wnYQVk-1M2mfovKXhcdi5A-1; Tue,
- 09 Jan 2024 09:11:29 -0500
-X-MC-Unique: wnYQVk-1M2mfovKXhcdi5A-1
+	bh=UKkzI2CsoNgX1WJTht9BzlNFsx76EWCSrLu3KlKlb+c=;
+	b=E4SuWMQM8HS7JqSVfUGGGlnnleNjvf/aXGwk7JfjTO3EBz3uhl6v+HUpylpRQfPcRinvie
+	+A4tUlN4/QLLFEbk/c0meccJeGWcrIHiFQoz1b3xEA1/fNQRdOa33H3/VV//HQMsJ40Wb7
+	SbcV5EkwO5fU6wHYn46gp5yetGykggw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-544-laJp76qrNlyENke7orJW9w-1; Tue, 09 Jan 2024 09:11:28 -0500
+X-MC-Unique: laJp76qrNlyENke7orJW9w-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0632338425A4;
-	Tue,  9 Jan 2024 14:11:29 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.226.90])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 19A4151E3;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D8C01185A781;
 	Tue,  9 Jan 2024 14:11:27 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.226.90])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EC87D51E3;
+	Tue,  9 Jan 2024 14:11:26 +0000 (UTC)
 From: Vitaly Kuznetsov <vkuznets@redhat.com>
 To: kvm@vger.kernel.org,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	Sean Christopherson <seanjc@google.com>
 Cc: Oliver Upton <oupton@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] KVM: x86: Make gtod_is_based_on_tsc() return 'bool'
-Date: Tue,  9 Jan 2024 15:11:21 +0100
-Message-ID: <20240109141121.1619463-6-vkuznets@redhat.com>
+Subject: [PATCH 4/5] KVM: selftests: Make hyperv_clock require TSC based system clocksource
+Date: Tue,  9 Jan 2024 15:11:20 +0100
+Message-ID: <20240109141121.1619463-5-vkuznets@redhat.com>
 In-Reply-To: <20240109141121.1619463-1-vkuznets@redhat.com>
 References: <20240109141121.1619463-1-vkuznets@redhat.com>
 Precedence: bulk
@@ -52,31 +52,29 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-gtod_is_based_on_tsc() is boolean in nature, i.e. it returns '1' for good
-clocksources and '0' otherwise. Moreover, its result is used raw by
-kvm_get_time_and_clockread()/kvm_get_walltime_and_clockread() which are
-'bool'.
+KVM sets up Hyper-V TSC page clocksource for its guests when system
+clocksource is 'based on TSC' (see gtod_is_based_on_tsc()), running
+hyperv_clock with any other clocksource leads to imminent failure.
 
-No functional change intended.
+Add the missing requirement to make the test skip gracefully.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/kvm/x86_64/hyperv_clock.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 27e23714e960..2aba11eb58ac 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2507,7 +2507,7 @@ static u64 compute_guest_tsc(struct kvm_vcpu *vcpu, s64 kernel_ns)
- }
+diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_clock.c b/tools/testing/selftests/kvm/x86_64/hyperv_clock.c
+index f5e1e98f04f9..02cc3c560566 100644
+--- a/tools/testing/selftests/kvm/x86_64/hyperv_clock.c
++++ b/tools/testing/selftests/kvm/x86_64/hyperv_clock.c
+@@ -212,6 +212,7 @@ int main(void)
+ 	int stage;
  
- #ifdef CONFIG_X86_64
--static inline int gtod_is_based_on_tsc(int mode)
-+static inline bool gtod_is_based_on_tsc(int mode)
- {
- 	return mode == VDSO_CLOCKMODE_TSC || mode == VDSO_CLOCKMODE_HVCLOCK;
- }
+ 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_HYPERV_TIME));
++	TEST_REQUIRE(sys_clocksource_is_based_on_tsc());
+ 
+ 	vm = vm_create_with_one_vcpu(&vcpu, guest_main);
+ 
 -- 
 2.43.0
 
