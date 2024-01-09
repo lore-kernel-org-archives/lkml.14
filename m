@@ -1,39 +1,49 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB6B38DD6;
-	Tue,  9 Jan 2024 11:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9C9374D9
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VlDz2CRN"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409AkWKS001428;
-	Tue, 9 Jan 2024 11:57:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=HUAeeEbdoLwml3Qkib69/ikNISobITsTP6lTI8OvCmk=; b=Vl
-	Dz2CRNLIP41rtQSIXpewvTH/ElYpzCAnhYLgsH2aReyQhIbPHfNJ+ePgjGr5fhuS
-	BnJKGKBaawgR/41pmshPRRsa2qJ27EFZvGn4wCPnJGFd94GAq27Pu8i40559cV+P
-	3iK+Qfa9xKE07w9QMF2nkM59Fo425nfVMVh0fdF3LEWgeiz3wN2MHggmm4o1R6Mm
-	IR7P9+aU5cONWti8reWMxwJTl425TVZ3FMADHtQ8dUjyAu0hyQCrOrNAYSeWGU9A
-	o+3Wll7mf9VI/im3gMOkXAisElkus13UIoqTRbgJk18SiqTc73p9xNjdSPdllNGw
-	rqsDY1i0TpiH4siYzd8Q==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgwq1rx2r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 11:57:56 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409BvtvV015264
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jan 2024 11:57:55 GMT
-Received: from [10.217.219.221] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 9 Jan
- 2024 03:57:52 -0800
-Message-ID: <5ef9db3d-1e60-4f42-8a5b-52a9800e4707@quicinc.com>
-Date: Tue, 9 Jan 2024 17:27:49 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LOJ5hNV3"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40e52ebd5c2so477695e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 03:58:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704801494; x=1705406294; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JDqHqkYWCvXcpyV9Kf2FI0tycX3cK2Ybt1CYEwNoFFU=;
+        b=LOJ5hNV3TCDSATXaG9YO10Nqmi5PVa/CYqAvYC7/CHL4ZvXIBQJkJyAsnr+O9KzGzE
+         mOZYFi659zT2hU6wtdWGQ6ryBeIMv0XXO7g96i29nGJI23AlL2H+Xg+S/AL4S7Ytqd5h
+         KKPgrkNYSvi8OyJgZAMEH34QnkpNiAbRKIxzGOQW7KOFVZzDEUuD2aUY1ZWRY01FF6ca
+         VgVnyhxJTzm+XOKxKUqJnqPJoqJ5tDNiWOkIl5LXmZ2r7SBQdFkSr4+RePaxtTpAChxx
+         eq+4uwZLAR5R1onej5BmjUq5+tWpSVfkBpruK1aOhpUUvYi+m6xTz5EUdbAsj4wb3fG1
+         Khzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704801494; x=1705406294;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JDqHqkYWCvXcpyV9Kf2FI0tycX3cK2Ybt1CYEwNoFFU=;
+        b=bJKk8aaTkX+Wz+5jPlRywjWZWP9l9YfNywov1GZhC1z23zeR3W8ZesY+kfVLbrClxS
+         xol0QTp1p1E6ARizFELHeLii8oNeX2/nraly/PBuAycbV/Z2c6YHLYnSefrun7pMCAC9
+         kAlHk1X73BcTpA2+JK+hVC3D3Bh8fN+Ps3JEIBkFofw2QhHyKM3MWl2MsSt7F4G6VN3K
+         3Kjoybqk4Y2LoJTy5zfbJo4K34Ddi5C4JIFUEUEY9XXSGexQQGSZlw0v0y8UjONWFVcx
+         k/YFbreLFEg03RT8f5qzqzskNjNQn1+4nfZEdALKECuXB46npCguCs20RdtJNG5gOAn2
+         XTTQ==
+X-Gm-Message-State: AOJu0YzoSPGiRUUVuOKHVUObfY/VPtTaoCD6l51fd+SfwcA1Sy0yta1K
+	bjTGLtJwp2J2dXKHBm5xZ5T55G3Pl2pzwg==
+X-Google-Smtp-Source: AGHT+IGwQMwWl3QXQnxhw1gxOyXaO9axzsxS2FGRFYoTx/J99yyyVOFhY+bi6PDQfHiyjIPTO1B/UA==
+X-Received: by 2002:a05:600c:458d:b0:40d:5b7b:8f18 with SMTP id r13-20020a05600c458d00b0040d5b7b8f18mr2812086wmo.81.1704801494275;
+        Tue, 09 Jan 2024 03:58:14 -0800 (PST)
+Received: from [192.168.2.107] ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id h4-20020a05600c314400b0040d7c3d5454sm14454520wmo.3.2024.01.09.03.58.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jan 2024 03:58:13 -0800 (PST)
+Message-ID: <8a55e1d9-c102-4cdf-8f23-edc40889cf6d@linaro.org>
+Date: Tue, 9 Jan 2024 11:58:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,90 +51,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] usb: core: Prevent null pointer dereference in
- update_port_device_state
+Subject: Re: [PATCH v2 01/12] dt-bindings: clock: google,gs101-clock: add
+ PERIC0 clock management unit
 Content-Language: en-US
-To: Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-CC: Krishna Kurapati <quic_kriskura@quicinc.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20240109061708.26288-1-quic_ugoswami@quicinc.com>
- <3bb51617-81e1-7d19-598d-2b57164320e1@gmail.com>
-From: Udipto Goswami <quic_ugoswami@quicinc.com>
-In-Reply-To: <3bb51617-81e1-7d19-598d-2b57164320e1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rob Herring <robh@kernel.org>
+Cc: peter.griffin@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+ mturquette@baylibre.com, sboyd@kernel.org, conor+dt@kernel.org,
+ andi.shyti@kernel.org, alim.akhtar@samsung.com, gregkh@linuxfoundation.org,
+ jirislaby@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com,
+ cw00.choi@samsung.com, arnd@arndb.de, semen.protsenko@linaro.org,
+ andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-serial@vger.kernel.org, kernel-team@android.com
+References: <20231228125805.661725-1-tudor.ambarus@linaro.org>
+ <20231228125805.661725-2-tudor.ambarus@linaro.org>
+ <20240109040315.GA2619804-robh@kernel.org>
+ <f695f2c0-2d4e-484c-9faa-7d8b28362541@linaro.org>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <f695f2c0-2d4e-484c-9faa-7d8b28362541@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BtjOb8AzAwaf74a8g6BNVskhpdeZaDgv
-X-Proofpoint-ORIG-GUID: BtjOb8AzAwaf74a8g6BNVskhpdeZaDgv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1011 lowpriorityscore=0 suspectscore=0 malwarescore=0
- adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=949 spamscore=0
- bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401090097
 
-Hi Sergei,
 
-On 1/9/2024 3:01 PM, Sergei Shtylyov wrote:
-> On 1/9/24 9:17 AM, Udipto Goswami wrote:
-> 
->> Currently,the function update_port_device_state gets the usb_hub from
->> udev->parent by calling usb_hub_to_struct_hub.
->> However, in case the actconfig or the maxchild is 0, the usb_hub would
->> be NULL and upon further accessing to get port_dev would result in null
->> pointer dereference.
->>
->> Fix this by introducing an if check after the usb_hub is populated.
->>
->> Fixes: 83cb2604f641 ("usb: core: add sysfs entry for usb device state")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Udipto Goswami <quic_ugoswami@quicinc.com>
->> ---
->> v3: Re-wrote the comment for better context.
->> v2: Introduced comment for the if check & CC'ed stable.
->>
->>   drivers/usb/core/hub.c | 20 +++++++++++++++++---
->>   1 file changed, 17 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
->> index ffd7c99e24a3..6b514546e59b 100644
->> --- a/drivers/usb/core/hub.c
->> +++ b/drivers/usb/core/hub.c
->> @@ -2053,9 +2053,23 @@ static void update_port_device_state(struct usb_device *udev)
->>   
->>   	if (udev->parent) {
->>   		hub = usb_hub_to_struct_hub(udev->parent);
->> -		port_dev = hub->ports[udev->portnum - 1];
->> -		WRITE_ONCE(port_dev->state, udev->state);
->> -		sysfs_notify_dirent(port_dev->state_kn);
->> +
->> +		/*
->> +		 * The Link Layer Validation System Driver (lvstest)
->> +		 * has procedure of unbinding the hub before running
->> +		 * the rest of the procedure. This triggers
->> +		 * hub_disconnect will set the hub's maxchild to 0.
-> 
->     I can't parse this sentence, s/th is missing...
-Thanks for the review.
-Maybe this would sound better?
 
-"This triggers hub_disconnect which will set hub's maxchild to 0"
+On 1/9/24 11:09, Krzysztof Kozlowski wrote:
+> On 09/01/2024 05:03, Rob Herring wrote:
+>> On Thu, Dec 28, 2023 at 12:57:54PM +0000, Tudor Ambarus wrote:
+>>> Add dt-schema documentation for the Connectivity Peripheral 0 (PERIC0)
+>>> clock management unit.
+>>>
+>>> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>>> ---
+>>> v2:
+>>> - fix comments as per Sam's suggestion and collect his R-b tag
+>>> - Rob's suggestion of renaming the clock-names to just "bus" and "ip"
+>>>   was not implemented as I felt it affects readability in the driver
+>>>   and consistency with other exynos clock drivers. I will happily update
+>>>   the names in the -rc phase if someone else has a stronger opinion than
+>>>   mine. 
+>>
+>> I'll defer to Krzysztof.
 > 
->> +		 * This would result usb_hub_to_struct_hub in this
->> +		 * function to return NULL.
-> 
->     "This would result in usb_hub_to_struct_hub in this function
-> returning NULL", perhaps?
+> I miss the point why clock-names cannot be fixed now. This is the name
+> of property, not the input clock name.
 
-yah sound better. Will take care of it in next version.
+They can be fixed now. I've just aired the fixes at:
+https://lore.kernel.org/linux-arm-kernel/20240109114908.3623645-1-tudor.ambarus@linaro.org/
+
+Preparing v3 for this patch set to include the updated names here too.
 
 Thanks,
--Udipto
+ta
