@@ -1,253 +1,144 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B343E496
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 21:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436393DB9C
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 21:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VeRHfLRx"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6d9c2db82b0so1739255b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 13:48:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pSgQggyx"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-36074b286d6so20756835ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 13:49:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704836920; x=1705441720; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=izlcXhoLb/FAG4DF0HKozUrvfE6eFhoty+7/u8hPLcM=;
-        b=VeRHfLRxMHXGshvC/XbwlLgYFOZP5QvcpSuOa40jBRXIszv7HfHrzEgcw9MT+ctQWi
-         pHnM0k0iRHHN01Q+yT35MyrkUV9u7g3Y+uCB2hNVU0T42/B7oqv7c56l0jEYAGDyiuYz
-         ZFKWRk0svq//FcDQ1V65oy8uxYAPEvzzX1barYm9KUNidvZT2jL+Q+CwzRpoOKEk6nYf
-         LPBVPB90FPUdMDBvcz8TGg5ZNbMZ64XhocTIsuBDVcMvW89BJaNng3V3rugRQ+mQdFAI
-         V2s1VsuBr77Z39cKIoRSABIqoNvEVRJaSa6cBy0uFo3EUFfB1JyfHXdj7r2mEeboxNsR
-         Ctlg==
+        d=google.com; s=20230601; t=1704836955; x=1705441755; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wo7A9qf9LB8OT3yWghmU76DKbvJhNKbcUKlH0RAw79k=;
+        b=pSgQggyxqdrOEfbKTdGt9A1dJvBEFb3VsNIPstbgBt70UhU6+tp6jucTnrJ1Iiz5Q7
+         Fh1Qq6Kaj/LOVAJsgHPIu1X7Ulo/ruzhLKFRJqiUiPyLGK7WBh/f+LztRTbH1wjuxH+P
+         wx6eEDav1UP/U98UaVmfNu9/5nLJbnla3z6Oeq2MJ5g9f1JQndUJYV7/eoqdgaj04k1h
+         TFNdmclHNWpDRLWF3DSqcANXORykBT0i2ylsz4SDd6c9o6Iqgwkqx5t+sdyQazEXlWB5
+         3lDu/KjFURBjiN91utW/6raS1V80NiG61OU/DJVXbvWqAuTHUuH4Iic+M1ePVSVNUqiK
+         wiPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704836920; x=1705441720;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=izlcXhoLb/FAG4DF0HKozUrvfE6eFhoty+7/u8hPLcM=;
-        b=rb1guiTBYVjf4A9KBYLMIr++pE6lzPP4X+PPSj363ZDSPiVuVuyry20ubw2+opJFOH
-         eYFqKkUBl1lJY1wuSDaIC+lbq6740EeQf3dW6Cjoo0u7FD4xU459M/eWSS29KXQwUV7g
-         Oeb9ni4Mwe9txE7Ejnz96RMGUrNaX/j+cTNvRQjebfo5w9a63uOKAkDFemNcDjNYVcXv
-         EuHMC8y4PqhuPoElsggAY0f/7/Hs3hkIEy9QtfFmLR7gmNztgGS83U0m/RuE8VA7+OnX
-         FPm0p4IFHshOqDFFJnXtcqlpp0g5JpABoNmwqbuH3DsR9OfLi6hkh9jJtMtMEmC5Bc21
-         02AA==
-X-Gm-Message-State: AOJu0YzcywBGAnzbS/ALBMUI0NcDIMOinXdxzXa8ec9Nbr9ViXBcCjxc
-	vGY38Bw+ILRJp66LXAz+hKA=
-X-Google-Smtp-Source: AGHT+IGmU28IlHuXvLqJeWY3xL3CjJVWuDokBZO5qdGk/Fby5t8o6ScmGKz72RCyIwvgo62eI638Xw==
-X-Received: by 2002:a05:6a00:4593:b0:6d9:b75e:ddc3 with SMTP id it19-20020a056a00459300b006d9b75eddc3mr133424pfb.33.1704836920078;
-        Tue, 09 Jan 2024 13:48:40 -0800 (PST)
-Received: from localhost ([2620:10d:c090:400::4:fd50])
-        by smtp.gmail.com with ESMTPSA id j20-20020a056a00235400b006d9bcf301ffsm2111314pfj.194.2024.01.09.13.48.39
+        d=1e100.net; s=20230601; t=1704836955; x=1705441755;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wo7A9qf9LB8OT3yWghmU76DKbvJhNKbcUKlH0RAw79k=;
+        b=rx3oH6zWm4hotXsEs58XIwaPsRMsTjbjG4WZAhTSshJ0e+D5TqvM70eUFbsL8wbWNr
+         fXUcviSoMZylAMxfChdaXytNSflcqJE/uswRafgNYwGOSyEBn8WZCkOH/ngKfzBKyE65
+         f/CuORGrNcAJgNGLqgTRFJ1NEr/hfTMTmASmIszOWueOTTeOuVTjphLdo/oChqSmaENc
+         DhkJ4MHQBBUy32+o5zN7syUXch+TDOf3R/zC+cny3F6yjnYmgwhxm0pDRWy3F8Sw0HKk
+         8N3SnJkZAyfb+SpEIj+VZgKAXHGJ5n7+a5StUAvrWpEx6v7fN9+O0lxEVrDSgCBg2nhb
+         Fk2A==
+X-Gm-Message-State: AOJu0YxAz2aTJTJ57CgvXdECsB8FbiolrKLY/vdULZ6fupKvWlAs18Mw
+	cFNDRyowkc75Qf9+0wntgH9YKHIkDgZD
+X-Google-Smtp-Source: AGHT+IGL4IMYm3sze+Q8vWqEdPeDAvIFBsLjeBFO7fQBnNQmpX0zX+Ih0rK6+6Vtp61CZ8WVjAKCVA==
+X-Received: by 2002:a05:6e02:168c:b0:360:5d99:65b5 with SMTP id f12-20020a056e02168c00b003605d9965b5mr132829ila.21.1704836955117;
+        Tue, 09 Jan 2024 13:49:15 -0800 (PST)
+Received: from google.com (194.225.68.34.bc.googleusercontent.com. [34.68.225.194])
+        by smtp.gmail.com with ESMTPSA id y4-20020a92c984000000b0035ff9825323sm838799iln.30.2024.01.09.13.49.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 13:48:39 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-From: Tejun Heo <tj@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: andrea.righi@canonical.com,
-	ast@kernel.org,
-	linux-kernel@vger.kernel.org,
-	geert@linux-m68k.org,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 3/3] kernfs: RCU protect kernfs_nodes and avoid kernfs_idr_lock in kernfs_find_and_get_node_by_id()
-Date: Tue,  9 Jan 2024 11:48:04 -1000
-Message-ID: <20240109214828.252092-4-tj@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240109214828.252092-1-tj@kernel.org>
-References: <20240109214828.252092-1-tj@kernel.org>
+        Tue, 09 Jan 2024 13:49:14 -0800 (PST)
+Date: Tue, 9 Jan 2024 21:49:10 +0000
+From: Justin Stitt <justinstitt@google.com>
+To: Tanzir Hasan <tanzhasanwork@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nick DeSaulniers <nnn@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 2/2] lib/string: shrink lib/string.i via IWYU
+Message-ID: <20240109214910.oeopqq5j2gyl33dc@google.com>
+References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
+ <20231214-libstringheader-v2-2-0f195dcff204@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231214-libstringheader-v2-2-0f195dcff204@google.com>
 
-The BPF helper bpf_cgroup_from_id() calls kernfs_find_and_get_node_by_id()
-which acquires kernfs_idr_lock, which is an non-raw non-IRQ-safe lock. This
-can lead to deadlocks as bpf_cgroup_from_id() can be called from any BPF
-programs including e.g. the ones that attach to functions which are holding
-the scheduler rq lock.
+Hi,
 
-Consider the following BPF program:
+On Thu, Dec 14, 2023 at 09:06:13PM +0000, tanzirh@google.com wrote:
+> This diff uses an open source tool include-what-you-use (IWYU) to modify
+> the include list changing indirect includes to direct includes.
+> IWYU is implemented using the IWYUScripts github repository which is a tool that is
+> currently undergoing development. These changes seek to improve build times.
+>
+> This change to lib/string.c resulted in a preprocessed size of
+> lib/string.i from 26371 lines to 5259 lines (-80%) for the x86
+> defconfig.
+>
 
-  SEC("fentry/__set_cpus_allowed_ptr_locked")
-  int BPF_PROG(__set_cpus_allowed_ptr_locked, struct task_struct *p,
-	       struct affinity_context *affn_ctx, struct rq *rq, struct rq_flags *rf)
-  {
-	  struct cgroup *cgrp = bpf_cgroup_from_id(p->cgroups->dfl_cgrp->kn->id);
+Tanzir, I wonder if you could include some of the symbol names used for
+some of these more esoteric headers. Let me describe what I mean:
 
-	  if (cgrp) {
-		  bpf_printk("%d[%s] in %s", p->pid, p->comm, cgrp->kn->name);
-		  bpf_cgroup_release(cgrp);
-	  }
-	  return 0;
-  }
+Andy talks about "why <vdso/...>" and perhaps some comments (in your
+patch message, not in the source itself) about which symbols are being
+used from these headers would serve useful. I believe IWYU can generate
+this information and should clear up some confusion or lead to better
+suggestions from reviewers if we understand why a header is being
+included.
 
-__set_cpus_allowed_ptr_locked() is called with rq lock held and the above
-BPF program calls bpf_cgroup_from_id() within leading to the following
-lockdep warning:
+At any rate, this builds for me doing randconfigs on x86_64 with these
+KCONFIG_SEEDs
+1: 0x3DD9D136
+2: 0xB4440EE4
+3: 0x98778270
+4: 0x8C237F26
+5: 0x244F8A64
+6: 0x5A5C5E5C
+7: 0xA77896BC
+8: 0x9B5FF0D5
+9: 0x24F23F6A
+10: 0x35C0A107
 
-  =====================================================
-  WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
-  6.7.0-rc3-work-00053-g07124366a1d7-dirty #147 Not tainted
-  -----------------------------------------------------
-  repro/1620 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-  ffffffff833b3688 (kernfs_idr_lock){+.+.}-{2:2}, at: kernfs_find_and_get_node_by_id+0x1e/0x70
+I applied your patch on top of 5db8752c3b81bd33.
 
-		and this task is already holding:
-  ffff888237ced698 (&rq->__lock){-.-.}-{2:2}, at: task_rq_lock+0x4e/0xf0
-  which would create a new lock dependency:
-   (&rq->__lock){-.-.}-{2:2} -> (kernfs_idr_lock){+.+.}-{2:2}
-  ...
-   Possible interrupt unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(kernfs_idr_lock);
-				 local_irq_disable();
-				 lock(&rq->__lock);
-				 lock(kernfs_idr_lock);
-    <Interrupt>
-      lock(&rq->__lock);
-
-		 *** DEADLOCK ***
-  ...
-  Call Trace:
-   dump_stack_lvl+0x55/0x70
-   dump_stack+0x10/0x20
-   __lock_acquire+0x781/0x2a40
-   lock_acquire+0xbf/0x1f0
-   _raw_spin_lock+0x2f/0x40
-   kernfs_find_and_get_node_by_id+0x1e/0x70
-   cgroup_get_from_id+0x21/0x240
-   bpf_cgroup_from_id+0xe/0x20
-   bpf_prog_98652316e9337a5a___set_cpus_allowed_ptr_locked+0x96/0x11a
-   bpf_trampoline_6442545632+0x4f/0x1000
-   __set_cpus_allowed_ptr_locked+0x5/0x5a0
-   sched_setaffinity+0x1b3/0x290
-   __x64_sys_sched_setaffinity+0x4f/0x60
-   do_syscall_64+0x40/0xe0
-   entry_SYSCALL_64_after_hwframe+0x46/0x4e
-
-Let's fix it by protecting kernfs_node and kernfs_root with RCU and making
-kernfs_find_and_get_node_by_id() acquire rcu_read_lock() instead of
-kernfs_idr_lock.
-
-This adds an rcu_head to kernfs_node making it larger by 16 bytes on 64bit.
-Combined with the preceding rearrange patch, the net increase is 8 bytes.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Andrea Righi <andrea.righi@canonical.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
----
- fs/kernfs/dir.c             | 31 ++++++++++++++++++++-----------
- fs/kernfs/kernfs-internal.h |  2 ++
- include/linux/kernfs.h      |  2 ++
- 3 files changed, 24 insertions(+), 11 deletions(-)
-
-diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-index bce1d7ac95ca..458519e416fe 100644
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -529,6 +529,20 @@ void kernfs_get(struct kernfs_node *kn)
- }
- EXPORT_SYMBOL_GPL(kernfs_get);
- 
-+static void kernfs_free_rcu(struct rcu_head *rcu)
-+{
-+	struct kernfs_node *kn = container_of(rcu, struct kernfs_node, rcu);
-+
-+	kfree_const(kn->name);
-+
-+	if (kn->iattr) {
-+		simple_xattrs_free(&kn->iattr->xattrs, NULL);
-+		kmem_cache_free(kernfs_iattrs_cache, kn->iattr);
-+	}
-+
-+	kmem_cache_free(kernfs_node_cache, kn);
-+}
-+
- /**
-  * kernfs_put - put a reference count on a kernfs_node
-  * @kn: the target kernfs_node
-@@ -557,16 +571,11 @@ void kernfs_put(struct kernfs_node *kn)
- 	if (kernfs_type(kn) == KERNFS_LINK)
- 		kernfs_put(kn->symlink.target_kn);
- 
--	kfree_const(kn->name);
--
--	if (kn->iattr) {
--		simple_xattrs_free(&kn->iattr->xattrs, NULL);
--		kmem_cache_free(kernfs_iattrs_cache, kn->iattr);
--	}
- 	spin_lock(&kernfs_idr_lock);
- 	idr_remove(&root->ino_idr, (u32)kernfs_ino(kn));
- 	spin_unlock(&kernfs_idr_lock);
--	kmem_cache_free(kernfs_node_cache, kn);
-+
-+	call_rcu(&kn->rcu, kernfs_free_rcu);
- 
- 	kn = parent;
- 	if (kn) {
-@@ -575,7 +584,7 @@ void kernfs_put(struct kernfs_node *kn)
- 	} else {
- 		/* just released the root kn, free @root too */
- 		idr_destroy(&root->ino_idr);
--		kfree(root);
-+		kfree_rcu(root, rcu);
- 	}
- }
- EXPORT_SYMBOL_GPL(kernfs_put);
-@@ -715,7 +724,7 @@ struct kernfs_node *kernfs_find_and_get_node_by_id(struct kernfs_root *root,
- 	ino_t ino = kernfs_id_ino(id);
- 	u32 gen = kernfs_id_gen(id);
- 
--	spin_lock(&kernfs_idr_lock);
-+	rcu_read_lock();
- 
- 	kn = idr_find(&root->ino_idr, (u32)ino);
- 	if (!kn)
-@@ -739,10 +748,10 @@ struct kernfs_node *kernfs_find_and_get_node_by_id(struct kernfs_root *root,
- 	if (unlikely(!__kernfs_active(kn) || !atomic_inc_not_zero(&kn->count)))
- 		goto err_unlock;
- 
--	spin_unlock(&kernfs_idr_lock);
-+	rcu_read_unlock();
- 	return kn;
- err_unlock:
--	spin_unlock(&kernfs_idr_lock);
-+	rcu_read_unlock();
- 	return NULL;
- }
- 
-diff --git a/fs/kernfs/kernfs-internal.h b/fs/kernfs/kernfs-internal.h
-index 237f2764b941..b42ee6547cdc 100644
---- a/fs/kernfs/kernfs-internal.h
-+++ b/fs/kernfs/kernfs-internal.h
-@@ -49,6 +49,8 @@ struct kernfs_root {
- 	struct rw_semaphore	kernfs_rwsem;
- 	struct rw_semaphore	kernfs_iattr_rwsem;
- 	struct rw_semaphore	kernfs_supers_rwsem;
-+
-+	struct rcu_head		rcu;
- };
- 
- /* +1 to avoid triggering overflow warning when negating it */
-diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
-index 03c3fb83ab9e..05dcbae7ecbf 100644
---- a/include/linux/kernfs.h
-+++ b/include/linux/kernfs.h
-@@ -224,6 +224,8 @@ struct kernfs_node {
- 	u64			id;
- 
- 	struct kernfs_iattrs	*iattr;
-+
-+	struct rcu_head		rcu;
- };
- 
- /*
--- 
-2.43.0
-
+Tested-by: Justin Stitt <justinstitt@google.com>
+> Link: https://github.com/ClangBuiltLinux/IWYUScripts
+>
+> Signed-off-by: Tanzir Hasan <tanzirh@google.com>
+> ---
+>  lib/string.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/lib/string.c b/lib/string.c
+> index be26623953d2..7fe1acefb1a1 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -16,16 +16,16 @@
+>
+>  #define __NO_FORTIFY
+>  #include <linux/types.h>
+> -#include <linux/string.h>
+> -#include <linux/ctype.h>
+> -#include <linux/kernel.h>
+> -#include <linux/export.h>
+> +#include <linux/bits.h>
+>  #include <linux/bug.h>
+>  #include <linux/errno.h>
+> -#include <linux/slab.h>
+> -
+> +#include <asm/rwonce.h>
+> +#include <linux/linkage.h>
+> +#include <linux/stddef.h>
+> +#include <vdso/limits.h>
+> +#include <linux/string.h>
+> +#include <linux/ctype.h>
+>  #include <asm/unaligned.h>
+> -#include <asm/byteorder.h>
+>  #include <asm/word-at-a-time.h>
+>  #include <asm/page.h>
+>
+>
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
+Thanks
+Justin
