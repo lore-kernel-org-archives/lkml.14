@@ -1,70 +1,158 @@
-Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64046EB8
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 05:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D35717C2
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 05:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="CquAayhZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704778850; bh=gJh5yin306KBoz/bFQCRnrcKDcw76xEERZMrtRO7bn0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CquAayhZLmaY6iLYygVwYzObPrx6XM6t4xHyESDPR0wGyznXHwNhrSv+yfu4wEs1q
-	 A3tehJgry9dKdAK9zZlH/whRrCZBGi4WzuoWi/i7PnfQKbgk6KlOeTbqCeN7b0q/Lf
-	 hSFQRMPKChUP2fVMINidp8ERfXF8feXsR6VT8mIU=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
-	id 8AF96472; Tue, 09 Jan 2024 13:34:47 +0800
-X-QQ-mid: xmsmtpt1704778487timnr9dol
-Message-ID: <tencent_0A35775D67883DED3600968C369A4A207409@qq.com>
-X-QQ-XMAILINFO: OZZSS56D9fAjvwR1Hog5YppyTRZuz+8R+CGNZSQR1PidRmQMGAvlgDs0Cb2H8d
-	 /ljY7rwIym4oGgjpolJ70jbg3jf1VLHsGFEIm8yznJrUF+jjjmSQ0sv6JRnaaoYwLWhkcmM4MWW0
-	 VvVn+YpNiwtITUU5Q52oEz+CL/3ed8LoNX+ZjnwhHlprACHXSMr5xbMJqcZNdhx96y4y5o0xc0hE
-	 +JS5k1L2182lYdv+Y/u2HPWOQ8OT7Zvp6ZJyprdZXi/SOdOpS471NXvjLm28Och8GPahibEv0+nT
-	 6qNaljuUeZgMDP/YyetxxpSxeFWtjMgyvRdKZuysRO+CEWAW83QJIN8RU1tgowYtRLP9xFksb4PJ
-	 RNsMuTUO47Vy3VM+bZRn+hXBbT4FeqWv9GPQ+PH2vzCcGRwYtzslZCa0Qc7RV0vo5qwfWziEjgR2
-	 RdFZMuEPz4iIHPBn1P2ZJDUADG8cT9PnuPPL/bnL8fj0BXF3DdsWTx+aRPdZpE40eIehqpiyxD+y
-	 NXMC/cImLVXhV4qvBGrO3Z4sqYdVtyaGTkW6sluVk6zK37DfhOK/8ZV6QeaW5aPYnJnDXliTTzSi
-	 Q97lWFu6NKIk2TX2ia7Zv3FHT6flHrNLXamYL5eitrjo1CGzXFO3A8YrSL4m0+kQhB81vyil27e4
-	 I8ofV4FhTlaJwf/QInC5cj61znKwYqWKARC6mJAAhuuba1mIUhZ5qmIOAXSI25WBIOvIZam/Eb9a
-	 fj9ANtFAUc1lIT0KXbrbLmkm9T8dtmPJkjnxQ42s2Tw1CbcxVAD8h3GVZJvyJwqklzJeDi9R+0ev
-	 Pi/R1Bbi3nJVD0bDrRlbQtBe4APrCtbE3scWv62Hn8/LB9R8FySsLxd0J5m6Y8711DC1Rl5oj+8Z
-	 MElsKa+QCKjiXFEbM8r6GQBs5HAjL3DM5lQv1fH7QsR8d5xDKbkeeA5OrMJPJVGw==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+f2977222e0e95cec15c8@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bpf?] [net?] WARNING in __sk_msg_free
-Date: Tue,  9 Jan 2024 13:34:48 +0800
-X-OQ-MSGID: <20240109053447.297284-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000aa2f41060e363b2b@google.com>
-References: <000000000000aa2f41060e363b2b@google.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="nb3pvqSF"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a298accc440so283052666b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 21:43:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1704778980; x=1705383780; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xcgdr1I9kndIxRfT90cgq6tEB3GwG2M4TsfK1tAjKE0=;
+        b=nb3pvqSFawouaLEgEjyY6rxyx/UbpR5sjVWebS/VxOfEQNZeenGXahcitQtpvkTSHE
+         G8PzgIp91ILZ3MpZkVdyDiIKJ5foOYop33v1x42ObURVminhKZNjgj4ElcP+ZH2acso5
+         za6h+MfVbrR09xOYGIyVDFb1Bb+18qQqFI3tBZKP8vvZL8IAQnhut8sAi4kwm+FZaXjJ
+         +ghSNDNT61MjZ38o3GJTLohmDGiN6/ZigDWGeeM8IgiEtiJGkIowMajmlv7Wo+365dtT
+         hqfHVC394OltAgjSFi8y5Q94gA6Nfwaj10KwK/TaAqPNb3mlZWZOmXrx2gt7HIGfTI6v
+         15XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704778980; x=1705383780;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xcgdr1I9kndIxRfT90cgq6tEB3GwG2M4TsfK1tAjKE0=;
+        b=fui4VeqasvaBMr6QUMSchQrmEz9ySKoDJE8rlw575e5oKIXWAk9FgNiuQI++C71YKt
+         CMug1RjSVP0hURxHbbYAh5KpFj3R/PcVWeWVNul7ZC27m24HfisHQAl56sYhRBjC+HCV
+         +KEgyLLDEIfadZ7ZLApqdqVTLd/2kzFS8Qd/ql1jNeKG7hxmEFI2OE9JldD/38w8BMLL
+         tU6tlLAGdnNLWfWK7dSwp4+FmCc9k7wOUx4V07qrY6DudBqqYtexN4ppsuyjtTx8ezTQ
+         t3X3GqjwORIgyzQDNb1JggghQeIZrk7mIL6IoIktYNfKlJfIG1e47AjesfkvZsQ93s+p
+         fW3w==
+X-Gm-Message-State: AOJu0YzodQ6Kbs3JZnx9oSTjREDexq1CvqWCw1oISvTZrXO9jjyIJ/6i
+	L6j8N6kDZ/FxzEgBxLcjoCmAMNPLg9x0Lw==
+X-Google-Smtp-Source: AGHT+IGuhQReqUvlv0RJ3ciCIToVLxlJJB3Esmba5Yo60V5bwghrRTOYWBE89ho73FfJ+oSHxrV7gw==
+X-Received: by 2002:a17:907:9483:b0:a28:cde1:43a9 with SMTP id dm3-20020a170907948300b00a28cde143a9mr303838ejc.9.1704778980269;
+        Mon, 08 Jan 2024 21:43:00 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.5])
+        by smtp.gmail.com with ESMTPSA id i12-20020a170906250c00b00a2693ce340csm632804ejb.59.2024.01.08.21.42.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jan 2024 21:42:59 -0800 (PST)
+Message-ID: <f23e9ff2-9792-460f-863e-72c8d44cfbda@tuxon.dev>
+Date: Tue, 9 Jan 2024 07:42:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 13/19] net: ravb: Set config mode in ndo_open
+ and reset mode in ndo_close
+Content-Language: en-US
+To: Sergey Shtylyov <s.shtylyov@omp.ru>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ richardcochran@gmail.com, p.zabel@pengutronix.de,
+ yoshihiro.shimoda.uh@renesas.com, wsa+renesas@sang-engineering.com
+Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, geert+renesas@glider.be,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240105082339.1468817-14-claudiu.beznea.uj@bp.renesas.com>
+ <feb1c87e-a84d-4e61-3e58-f61d5402170d@omp.ru>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <feb1c87e-a84d-4e61-3e58-f61d5402170d@omp.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-please test WARNING in __sk_msg_free
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index e37b4d2e2acd..68dbe821f61d 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -1016,6 +1016,8 @@ static int tls_sw_sendmsg_locked(struct sock *sk, struct msghdr *msg,
- 
- 		msg_pl = &rec->msg_plaintext;
- 		msg_en = &rec->msg_encrypted;
-+		if (msg_pl->sg.end >= MAX_MSG_FRAGS)
-+			return -EINVAL;
- 
- 		orig_size = msg_pl->sg.size;
- 		full_record = false;
+On 08.01.2024 21:28, Sergey Shtylyov wrote:
+> On 1/5/24 11:23 AM, Claudiu wrote:
+> 
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> As some IP variants switch to reset mode (and thus registers content is
+>> lost) when setting clocks (due to module standby functionality) to be able
+>> to implement runtime PM and save more power, set the IP's operating mode to
+>> reset at the end of the probe. Along with it, in the ndo_open API the IP
+>> will be switched to configuration, then operation mode. In the ndo_close
+>> API, the IP will be switched back to reset mode. This allows implementing
+>> runtime PM and, along with it, save more power when the IP is not used.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> ---
+>>
+>> Changes in v3:
+>> - fixed typos in patch description
+>> - in ravb_probe() switch the hardware to reset mode just after phy
+>>   initialization
+>>
+>> Changes in v2:
+>> - none; this patch is new
+>>
+>>
+>>  drivers/net/ethernet/renesas/ravb_main.c | 78 ++++++++++++++----------
+>>  1 file changed, 46 insertions(+), 32 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+>> index 1cc1ecd8d6a8..434b4777de5e 100644
+>> --- a/drivers/net/ethernet/renesas/ravb_main.c
+>> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+> [...]
+>> @@ -2746,11 +2755,6 @@ static int ravb_probe(struct platform_device *pdev)
+>>  	ndev->netdev_ops = &ravb_netdev_ops;
+>>  	ndev->ethtool_ops = &ravb_ethtool_ops;
+>>  
+>> -	/* Set AVB config mode */
+>> -	error = ravb_set_config_mode(ndev);
+>> -	if (error)
+>> -		goto out_rpm_put;
+>> -
+>>  	error = ravb_compute_gti(ndev);
+>>  	if (error)
+>>  		goto out_rpm_put;
+>> @@ -2785,13 +2789,23 @@ static int ravb_probe(struct platform_device *pdev)
+>>  		eth_hw_addr_random(ndev);
+>>  	}
+>>  
+>> +	/* Set config mode as this is needed for PHY initialization. */
+>> +	error = ravb_set_opmode(ndev, CCC_OPC_CONFIG);
+> 
+>    Hm... don't you need this at laest before calling ravb_read_mac_address()
+> just above?
 
+I asked myself this, haven't experienced issues w/ it while working on this
+patch thus I kept it as is. In theory, yes, it should be above that call.
+I'll move it there.
+
+Thank you,
+Claudiu Beznea
+
+> 
+>> +	if (error)
+>> +		goto out_rpm_put;
+>> +
+>>  	/* MDIO bus init */
+>>  	error = ravb_mdio_init(priv);
+>>  	if (error) {
+>>  		dev_err(&pdev->dev, "failed to initialize MDIO\n");
+>> -		goto out_dma_free;
+>> +		goto out_reset_mode;
+>>  	}
+>>  
+>> +	/* Undo previous switch to config opmode. */
+>> +	error = ravb_set_opmode(ndev, CCC_OPC_RESET);
+>> +	if (error)
+>> +		goto out_mdio_release;
+>> +
+>>  	netif_napi_add(ndev, &priv->napi[RAVB_BE], ravb_poll);
+>>  	if (info->nc_queues)
+>>  		netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll);
+> [...]
+> 
+> MBR, Sergey
