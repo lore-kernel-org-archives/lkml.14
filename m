@@ -1,623 +1,204 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745973D0B5;
-	Tue,  9 Jan 2024 19:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305393D39F;
+	Tue,  9 Jan 2024 19:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KeGWyJ6h"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5e7c1012a42so29658997b3.3;
-        Tue, 09 Jan 2024 11:36:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704828962; x=1705433762; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IrBjwxMrG41K/d0qseico/etjE4prp8nctrffKFsGjA=;
-        b=KeGWyJ6hlJVrWDtjX/I+tXJbuhKr5b4OnznK7ApcmC5WNQ2ZXUeUXGvbZqHC6t7fXu
-         2wTTHFXmEpKLX3YXtOx1naNdexHxhWw9+X6yf/qF4jCw7XTUavphkiYO4cYjg9kgmK42
-         Xd/ieebjHjLxLgHRM1C/nKZFAPgA81hujMYS1k8qNvP0pJZ8tA75tJyRMnTqM+KppKzA
-         RtzyfNrxdKcWEgruQ6Rc0W0f3v/94418PhIo9VyppVNCd8sQ1wA8ATOyLt/HQDuVNCyU
-         1bbcA8bHL1VKl+D7RTNjKzr/zkIbqLNuV5yF5NSV9tkKQ9mNW9MkgLmGx3KIaQ6kBxWb
-         MFvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704828962; x=1705433762;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IrBjwxMrG41K/d0qseico/etjE4prp8nctrffKFsGjA=;
-        b=CFlGIoSCYRL29bho7TjtycLF3xvz//AEbpYTmOcWcK3pIpEq52yEXpQLpNVU18I2BO
-         70PceKe5N+2enbKsUoD7QPOX33FA1sVovk4wgKwOyK71bzbnIZvq8Q7Qtye8BRZ+/NZO
-         qVT+YXnngJY4tkPEmGBw6azwDanZbKPssfoIaNzwFdWjQzQBrbsr+67FCqD018JEN6ah
-         frcdKjJmFNvIqlslka8p6BEY8Y4fEwBAkoNRJehtMVYx7cvx6JU91zrDsOt/xKLGOSZg
-         Rjgw2d9YeYrtbXLnZtPE9JtbFF1C6q8aemk/v4ehQvKJ0nXCG05FI5UDnkXnDzimzKlp
-         2DEw==
-X-Gm-Message-State: AOJu0Yxk+CeZk7owHaHxLwgrjJAVrQvBrkyBNn9NBPO1okgMf0mjX+Hi
-	geRBe+3ofLgODHsmdsJhWvFy1WFvpzML2A==
-X-Google-Smtp-Source: AGHT+IEbG1x1MLRaqf4bpsfKyKAeQ6FXOs4dmZSEE06LMsCn82BY0Xjt1s0IfLvyerYz0f+313/lyw==
-X-Received: by 2002:a0d:fec5:0:b0:5f7:a1bb:bf9d with SMTP id o188-20020a0dfec5000000b005f7a1bbbf9dmr3534356ywf.60.1704828962286;
-        Tue, 09 Jan 2024 11:36:02 -0800 (PST)
-Received: from z-Lenovo-Product.lan ([2605:59c8:6244:7610::ece])
-        by smtp.gmail.com with ESMTPSA id l184-20020a8194c1000000b005ecd8995666sm995477ywg.59.2024.01.09.11.36.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 11:36:01 -0800 (PST)
-From: David Ober <dober6023@gmail.com>
-To: linux-hwmon@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jdelvare@suse.com,
-	linux@roeck-us.net,
-	corbet@lwn.net,
-	dober@lenovo.com,
-	mpearson-lenovo@squebb.ca,
-	David Ober <dober6023@gmail.com>
-Subject: [PATCH v3] hwmon:Add MEC172x Micro Chip driver for Lenovo motherboards
-Date: Tue,  9 Jan 2024 14:35:57 -0500
-Message-Id: <20240109193557.4946-1-dober6023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YO5qyhSi"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409GcW81031587;
+	Tue, 9 Jan 2024 19:37:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=lLDuUBmGZvNBtcKj7wbGM3D9GD/JTPUN1398mSvaVtA
+	=; b=YO5qyhSisJBy7bUqFg0nkNPGfLRzIKbQDeG9MAPPgqUiW7vKHtIwoENkQz2
+	n5fu5lqjw3x4/m5OoeWWfpmerLUdwOdjXirXdP16JIIZcl5x6a69s7mA0uVddIIL
+	6DTzU7lGUQA3QjNW4ChDZJd6pJlHtSNCGUtqo7qnTVtD4je0UxIgOdqnubX7xGpU
+	XuzYTmG1CXX2jBxT+XnqPED7YjyavmNlqCMphduUcLs/B+vgUJk48RLtnlm1wMZF
+	mJ/Jh3vEXQ24EF/Hh92nd/k4ozvX86tJtyxHoxOJkpd9h9plP0UMub3Lr+2pTBGI
+	V8UM6u4tT7zdgewLdsE7sMmCpYQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh9u9gdbv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 19:37:51 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409Jbot3011357
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jan 2024 19:37:50 GMT
+Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 9 Jan 2024 11:37:49 -0800
+From: Elliot Berman <quic_eberman@quicinc.com>
+Date: Tue, 9 Jan 2024 11:37:40 -0800
+Subject: [PATCH v16 02/34] dt-bindings: Add binding for gunyah hypervisor
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240109-gunyah-v16-2-634904bf4ce9@quicinc.com>
+References: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
+In-Reply-To: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
+To: Alex Elder <elder@linaro.org>,
+        Srinivas Kandagatla
+	<srinivas.kandagatla@linaro.org>,
+        Murali Nalajal <quic_mnalajal@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        Srivatsa Vaddagiri
+	<quic_svaddagi@quicinc.com>,
+        Carl van Schaik <quic_cvanscha@quicinc.com>,
+        Philip Derrin <quic_pderrin@quicinc.com>,
+        Prakruthi Deepak Heragu
+	<quic_pheragu@quicinc.com>,
+        Jonathan Corbet <corbet@lwn.net>, Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        "Fuad
+ Tabba" <tabba@google.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Andrew
+ Morton" <akpm@linux-foundation.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
+        Elliot Berman
+	<quic_eberman@quicinc.com>,
+        Rob Herring <robh@kernel.org>
+X-Mailer: b4 0.13-dev
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: edcD4wUb0AIlamWiAts9LXox64A9mtS0
+X-Proofpoint-ORIG-GUID: edcD4wUb0AIlamWiAts9LXox64A9mtS0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 bulkscore=0 adultscore=0 suspectscore=0 phishscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401090158
 
-This addition adds in the ability for the system to scan the
-MEC172x EC chip in Lenovo ThinkStation systems to get the
-current fan RPM speeds and the Maximum speed value for each
-fan also provides the current CPU and DIMM thermal status
+The Gunyah Resource Manager applies a devicetree overlay describing the
+virtual platform configuration of the guest VM, such as the message
+queue capability IDs for communicating with the Resource Manager. This
+information is not otherwise discoverable by a VM: the Gunyah hypervisor
+core does not provide a direct interface to discover capability IDs nor
+a way to communicate with RM without having already known the
+corresponding message queue capability ID. Add the DT bindings that
+Gunyah adheres for the hypervisor node and message queues.
 
-Signed-off-by: David Ober <dober6023@gmail.com>
-
-Written by David Ober from Lenovo using this gmail address since
-my corporate email address does not comply with git email
-
-v2 fixed mixcased naming
-v2 add mutex protection
-v2 removed references to ACPI as it is not used
-v2 added comment to explain why returning a -1 is needed
-v3 verify running on a ThinkStation before calling probe function
-V3 replaced empty strings with N/A value in lable arrays
-V3 rename p7_amd to p8 since the name is now changed formally
-V3 removed returning -1 now returns ENODEV
-V3 fixed compiler warning from version 2
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/hwmon/Kconfig             |  10 +
- drivers/hwmon/Makefile            |   1 +
- drivers/hwmon/lenovo-ec-sensors.c | 490 ++++++++++++++++++++++++++++++
- 3 files changed, 501 insertions(+)
- create mode 100644 drivers/hwmon/lenovo-ec-sensors.c
+ .../bindings/firmware/gunyah-hypervisor.yaml       | 82 ++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index ec38c8892158..821741ec0d2f 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -862,6 +862,16 @@ config SENSORS_LAN966X
- 	  This driver can also be built as a module. If so, the module
- 	  will be called lan966x-hwmon.
- 
-+config SENSORS_LENOVO_EC
-+        tristate "Microchip MEC172X Chip for Lenovo ThinkStation"
-+        depends on I2C
-+        help
-+          If you say yes here you get support for LENOVO
-+          EC Sensors on newer ThinkStation systems
-+
-+          This driver can also be built as a module. If so, the module
-+          will be called lenovo_ec_sensors.
-+
- config SENSORS_LINEAGE
- 	tristate "Lineage Compact Power Line Power Entry Module"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index 4ac9452b5430..aa3c2dc390ec 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -104,6 +104,7 @@ obj-$(CONFIG_SENSORS_JC42)	+= jc42.o
- obj-$(CONFIG_SENSORS_K8TEMP)	+= k8temp.o
- obj-$(CONFIG_SENSORS_K10TEMP)	+= k10temp.o
- obj-$(CONFIG_SENSORS_LAN966X)	+= lan966x-hwmon.o
-+obj-$(CONFIG_SENSORS_LENOVO_EC)	+= lenovo-ec-sensors.o
- obj-$(CONFIG_SENSORS_LINEAGE)	+= lineage-pem.o
- obj-$(CONFIG_SENSORS_LOCHNAGAR)	+= lochnagar-hwmon.o
- obj-$(CONFIG_SENSORS_LM63)	+= lm63.o
-diff --git a/drivers/hwmon/lenovo-ec-sensors.c b/drivers/hwmon/lenovo-ec-sensors.c
+diff --git a/Documentation/devicetree/bindings/firmware/gunyah-hypervisor.yaml b/Documentation/devicetree/bindings/firmware/gunyah-hypervisor.yaml
 new file mode 100644
-index 000000000000..731d75e06977
+index 000000000000..cdeb4885a807
 --- /dev/null
-+++ b/drivers/hwmon/lenovo-ec-sensors.c
-@@ -0,0 +1,490 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * HWMON driver for MEC172x chip that publishes some sensor values
-+ * via the embedded controller registers specific to Lenovo Systems.
-+ *
-+ * Copyright (C) 2023 David Ober (Lenovo) <dober@lenovo.com>
-+ *
-+ * EC provides:
-+ * - CPU temperature
-+ * - DIMM temperature
-+ * - Chassis zone temperatures
-+ * - CPU fan RPM
-+ * - DIMM fan RPM
-+ * - Chassis fans RPM
-+ */
++++ b/Documentation/devicetree/bindings/firmware/gunyah-hypervisor.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/firmware/gunyah-hypervisor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/dmi.h>
-+#include <linux/hwmon.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/units.h>
++title: Gunyah Hypervisor
 +
-+#define MCHP_SING_IDX			0x0000
-+#define MCHP_EMI0_APPLICATION_ID	0x090C
-+#define MCHP_EMI0_EC_ADDRESS_LSB	0x0902
-+#define MCHP_EMI0_EC_ADDRESS_MSB	0x0903
-+#define MCHP_EMI0_EC_DATA_BYTE0		0x0904
-+#define MCHP_EMI0_EC_DATA_BYTE1		0x0905
-+#define MCHP_EMI0_EC_DATA_BYTE2		0x0906
-+#define MCHP_EMI0_EC_DATA_BYTE3		0x0907
++maintainers:
++  - Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
++  - Elliot Berman <quic_eberman@quicinc.com>
 +
-+#define io_write8(a, b)	outb_p(b, a)
-+#define io_read8(a)	inb_p(a)
++description: |+
++  Gunyah virtual machines use this information to determine the capability IDs
++  of the message queues used to communicate with the Gunyah Resource Manager.
++  See also: https://github.com/quic/gunyah-resource-manager/blob/develop/src/vm_creation/dto_construct.c
 +
-+static inline uint8_t
-+get_ec_reg(unsigned char page, unsigned char index)
-+{
-+	u8 onebyte;
-+	unsigned short m_index;
-+	unsigned short phy_index = page * 256 + index;
++properties:
++  compatible:
++    const: gunyah-hypervisor
 +
-+	io_write8(MCHP_EMI0_APPLICATION_ID, 0x01);
++  "#address-cells":
++    description: Number of cells needed to represent 64-bit capability IDs.
++    const: 2
 +
-+	m_index = phy_index & 0x7FFC;
-+	io_write8(MCHP_EMI0_EC_ADDRESS_LSB, m_index);
-+	io_write8(MCHP_EMI0_EC_ADDRESS_MSB, m_index >> 8);
++  "#size-cells":
++    description: must be 0, because capability IDs are not memory address
++                  ranges and do not have a size.
++    const: 0
 +
-+	switch (phy_index & 0x0003) {
-+	case 0:
-+		onebyte = io_read8(MCHP_EMI0_EC_DATA_BYTE0);
-+		break;
-+	case 1:
-+		onebyte = io_read8(MCHP_EMI0_EC_DATA_BYTE1);
-+		break;
-+	case 2:
-+		onebyte = io_read8(MCHP_EMI0_EC_DATA_BYTE2);
-+		break;
-+	case 3:
-+		onebyte = io_read8(MCHP_EMI0_EC_DATA_BYTE3);
-+		break;
-+	}
++patternProperties:
++  "^gunyah-resource-mgr(@.*)?":
++    type: object
++    description:
++      Resource Manager node which is required to communicate to Resource
++      Manager VM using Gunyah Message Queues.
 +
-+	io_write8(MCHP_EMI0_APPLICATION_ID, 0x01);  /* write same data to clean */
-+	return onebyte;
-+}
++    properties:
++      compatible:
++        const: gunyah-resource-manager
 +
-+static const char * const systems[] = {
-+	"Tomcat",
-+	"Hornet",
-+	"Falcon",
-+	"Manta_",
-+};
++      reg:
++        items:
++          - description: Gunyah capability ID of the TX message queue
++          - description: Gunyah capability ID of the RX message queue
 +
-+static const char * const lenovo_px_ec_temp_label[] = {
-+	"CPU1",
-+	"CPU2",
-+	"R_DIMM1",
-+	"L_DIMM1",
-+	"R_DIMM2",
-+	"L_DIMM2",
-+	"PCH",
-+	"M2_R",
-+	"M2_Z1R",
-+	"M2_Z2R",
-+	"PCI_Z1",
-+	"PCI_Z2",
-+	"PCI_Z3",
-+	"PCI_Z4",
-+	"AMB",
-+};
++      interrupts:
++        items:
++          - description: Interrupt for the TX message queue
++          - description: Interrupt for the RX message queue
 +
-+static const char * const lenovo_gen_ec_temp_label[] = {
-+	"CPU1",
-+	"N/A",
-+	"R_DIMM",
-+	"L_DIMM",
-+	"N/A",
-+	"N/A",
-+	"PCH",
-+	"M2_R",
-+	"M2_Z1R",
-+	"M2_Z2R",
-+	"PCI_Z1",
-+	"PCI_Z2",
-+	"PCI_Z3",
-+	"PCI_Z4",
-+	"AMB",
-+};
++    additionalProperties: false
 +
-+static const char * const px_ec_fan_label[] = {
-+	"CPU1_Fan",
-+	"CPU2_Fan",
-+	"Front_Fan1-1",
-+	"Front_Fan1-2",
-+	"Front_Fan2",
-+	"Front_Fan3",
-+	"MEM_Fan1",
-+	"MEM_Fan2",
-+	"Rear_Fan1",
-+	"Rear_Fan2",
-+	"Flex_Bay_Fan1",
-+	"Flex_Bay_Fan2",
-+	"Flex_Bay_Fan2",
-+	"PSU_HDD_Fan",
-+	"PSU1_Fan",
-+	"PSU2_Fan",
-+};
++    required:
++      - compatible
++      - reg
++      - interrupts
 +
-+static const char * const p7_ec_fan_label[] = {
-+	"CPU1_Fan",
-+	"N/A",
-+	"HP_CPU_Fan1",
-+	"HP_CPU_Fan2",
-+	"PCIE1_4_Fan",
-+	"PCIE5_7_Fan",
-+	"MEM_Fan1",
-+	"MEM_Fan2",
-+	"Rear_Fan1",
-+	"N/A",
-+	"BCB_Fan",
-+	"Flex_Bay_Fan",
-+	"N/A",
-+	"N/A",
-+	"PSU_Fan",
-+	"N/A",
-+};
++additionalProperties: false
 +
-+static const char * const p5_ec_fan_label[] = {
-+	"CPU_Fan",
-+	"N/A",
-+	"N/A",
-+	"N/A",
-+	"N/A",
-+	"HDD_Fan",
-+	"Duct_Fan1",
-+	"MEM_Fan",
-+	"Rear_Fan",
-+	"N/A",
-+	"Front_Fan",
-+	"Flex_Bay_Fan",
-+	"N/A",
-+	"N/A",
-+	"PSU_Fan",
-+	"N/A",
-+};
++required:
++  - compatible
++  - "#address-cells"
++  - "#size-cells"
 +
-+static const char * const p8_ec_fan_label[] = {
-+	"CPU1_Fan",
-+	"CPU2_Fan",
-+	"HP_CPU_Fan1",
-+	"HP_CPU_Fan2",
-+	"PCIE1_4_Fan",
-+	"PCIE5_7_Fan",
-+	"DIMM1_Fan1",
-+	"DIMM1_Fan2",
-+	"DIMM2_Fan1",
-+	"DIMM2_Fan2",
-+	"Rear_Fan",
-+	"HDD_Bay_Fan",
-+	"Flex_Bay_Fan",
-+	"N/A",
-+	"PSU_Fan",
-+	"N/A",
-+};
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+struct ec_sensors_data {
-+	struct mutex mec_mutex; /* lock for sensors write */
-+	u8 platform_id;
-+	const char *const *fan_labels;
-+	const char *const *temp_labels;
-+};
++    hypervisor {
++        #address-cells = <2>;
++        #size-cells = <0>;
++        compatible = "gunyah-hypervisor";
 +
-+static int
-+lenovo_ec_do_read_temp(struct ec_sensors_data *data, u32 attr, int channel, long *val)
-+{
-+	u8   LSB;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		mutex_lock(&data->mec_mutex);
-+		LSB = get_ec_reg(2, 0x81 + channel);
-+		mutex_unlock(&data->mec_mutex);
-+		if (LSB > 0x40)
-+			*val = (LSB - 0x40) * 1000;
-+		else
-+			return -ENODEV;
-+		return 0;
-+	default:
-+		break;
-+	}
-+	return -EOPNOTSUPP;
-+}
-+
-+static int
-+lenovo_ec_do_read_fan(struct ec_sensors_data *data, u32 attr, int channel, long *val)
-+{
-+	u8    LSB, MSB;
-+
-+	channel *= 2;
-+	switch (attr) {
-+	case hwmon_fan_input:
-+		mutex_lock(&data->mec_mutex);
-+		LSB = get_ec_reg(4, 0x60 + channel);
-+		MSB = get_ec_reg(4, 0x61 + channel);
-+		mutex_unlock(&data->mec_mutex);
-+		if (MSB || LSB) {
-+			mutex_lock(&data->mec_mutex);
-+			LSB = get_ec_reg(4, 0x20 + channel);
-+			MSB = get_ec_reg(4, 0x21 + channel);
-+			mutex_unlock(&data->mec_mutex);
-+			*val = (MSB << 8) + LSB;
-+			return 0;
-+		}
-+		return -ENODATA; /* enodata has the sensors tool mark the FAN speed as N/A */
-+	case hwmon_fan_max:
-+		mutex_lock(&data->mec_mutex);
-+		LSB = get_ec_reg(4, 0x60 + channel);
-+		MSB = get_ec_reg(4, 0x61 + channel);
-+		mutex_unlock(&data->mec_mutex);
-+		if (MSB || LSB) {
-+			mutex_lock(&data->mec_mutex);
-+			LSB = get_ec_reg(4, 0x40 + channel);
-+			MSB = get_ec_reg(4, 0x41 + channel);
-+			mutex_unlock(&data->mec_mutex);
-+			*val = (MSB << 8) + LSB;
-+		} else {
-+			*val = 0;
-+		}
-+		return 0;
-+	case hwmon_fan_min:
-+	case hwmon_fan_div:
-+	case hwmon_fan_alarm:
-+		break;
-+	default:
-+		break;
-+	}
-+	return -EOPNOTSUPP;
-+}
-+
-+static int get_platform(struct ec_sensors_data *data)
-+{
-+	char system_type[6];
-+	int ret = -1;
-+	int idx;
-+
-+	for (idx = 0 ; idx < 6 ; idx++) {
-+		mutex_lock(&data->mec_mutex);
-+		system_type[idx] = get_ec_reg(0xC, 0x10 + idx);
-+		mutex_unlock(&data->mec_mutex);
-+	}
-+
-+	for (idx = 0 ; idx < 4 ; idx++) {
-+		if (!strncmp(systems[idx], system_type, 6)) {
-+			ret = idx;
-+			break;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static int
-+lenovo_ec_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-+			    u32 attr, int channel, const char **str)
-+{
-+	struct ec_sensors_data *state = dev_get_drvdata(dev);
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		*str = state->temp_labels[channel];
-+		break;
-+
-+	case hwmon_fan:
-+		*str = state->fan_labels[channel];
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+	return 0;
-+}
-+
-+static int
-+lenovo_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+		     u32 attr, int channel, long *val)
-+{
-+	struct ec_sensors_data *data = dev_get_drvdata(dev);
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		return lenovo_ec_do_read_temp(data, attr, channel, val);
-+	case hwmon_fan:
-+		return lenovo_ec_do_read_fan(data, attr, channel, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static umode_t
-+lenovo_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
-+			   u32 attr, int channel)
-+{
-+	switch (type) {
-+	case hwmon_temp:
-+		if (attr == hwmon_temp_input || attr == hwmon_temp_label)
-+			return 0444;
-+		break;
-+	case hwmon_fan:
-+		if (attr == hwmon_fan_input || attr == hwmon_fan_max || attr == hwmon_fan_label)
-+			return 0444;
-+		break;
-+	default:
-+		return 0;
-+	}
-+	return 0;
-+}
-+
-+static const struct hwmon_channel_info *lenovo_ec_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX),
-+	NULL
-+};
-+
-+static const struct hwmon_ops lenovo_ec_hwmon_ops = {
-+	.is_visible = lenovo_ec_hwmon_is_visible,
-+	.read = lenovo_ec_hwmon_read,
-+	.read_string = lenovo_ec_hwmon_read_string,
-+};
-+
-+static struct hwmon_chip_info lenovo_ec_chip_info = {
-+	.ops = &lenovo_ec_hwmon_ops,
-+	.info = lenovo_ec_hwmon_info,
-+};
-+
-+static int lenovo_ec_probe(struct platform_device *pdev)
-+{
-+	struct device *hwdev;
-+	struct ec_sensors_data *ec_data;
-+	const struct hwmon_chip_info *chip_info;
-+	struct device *dev = &pdev->dev;
-+
-+	ec_data = devm_kzalloc(dev, sizeof(struct ec_sensors_data), GFP_KERNEL);
-+	if (!ec_data)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, ec_data);
-+
-+	chip_info = &lenovo_ec_chip_info;
-+
-+	mutex_init(&ec_data->mec_mutex);
-+
-+	mutex_lock(&ec_data->mec_mutex);
-+	if (io_read8(MCHP_EMI0_APPLICATION_ID) != 0) { /* check EMI Application BIT */
-+		io_write8(0x90C, io_read8(0x90C)); /* set EMI Application BIT to 0 */
-+	}
-+	io_write8(MCHP_EMI0_EC_ADDRESS_LSB, MCHP_SING_IDX);
-+	io_write8(MCHP_EMI0_EC_ADDRESS_MSB, MCHP_SING_IDX >> 8);
-+	mutex_unlock(&ec_data->mec_mutex);
-+
-+	if ((io_read8(MCHP_EMI0_EC_DATA_BYTE0) == 'M') &&
-+	    (io_read8(MCHP_EMI0_EC_DATA_BYTE1) == 'C') &&
-+	    (io_read8(MCHP_EMI0_EC_DATA_BYTE2) == 'H') &&
-+	    (io_read8(MCHP_EMI0_EC_DATA_BYTE3) == 'P')) {
-+		ec_data->platform_id = get_platform(ec_data);
-+		switch (ec_data->platform_id) {
-+		case 0:
-+			ec_data->fan_labels = px_ec_fan_label;
-+			ec_data->temp_labels = lenovo_px_ec_temp_label;
-+			break;
-+		case 1:
-+			ec_data->fan_labels = p7_ec_fan_label;
-+			ec_data->temp_labels = lenovo_gen_ec_temp_label;
-+			break;
-+		case 2:
-+			ec_data->fan_labels = p5_ec_fan_label;
-+			ec_data->temp_labels = lenovo_gen_ec_temp_label;
-+			break;
-+		case 3:
-+			ec_data->fan_labels = p8_ec_fan_label;
-+			ec_data->temp_labels = lenovo_gen_ec_temp_label;
-+			break;
-+		default:
-+			dev_err(dev, "Unsupported ThinkStation Model");
-+			return -EINVAL;
-+		}
-+
-+		hwdev = devm_hwmon_device_register_with_info(dev, "lenovo_ec",
-+							     ec_data,
-+							     chip_info, NULL);
-+
-+		return PTR_ERR_OR_ZERO(hwdev);
-+	}
-+	return -ENODEV;
-+}
-+
-+static struct platform_driver lenovo_ec_sensors_platform_driver = {
-+	.driver = {
-+		.name	= "lenovo-ec-sensors",
-+	},
-+	.probe = lenovo_ec_probe,
-+};
-+
-+static struct platform_device *lenovo_ec_sensors_platform_device;
-+
-+static int __init lenovo_ec_init(void)
-+{
-+	char const *s;
-+
-+	s = dmi_get_system_info(DMI_PRODUCT_NAME);
-+	if (s && !(strncasecmp(s, "ThinkStation", 12))) {
-+		lenovo_ec_sensors_platform_device =
-+			platform_create_bundle(&lenovo_ec_sensors_platform_driver,
-+					       lenovo_ec_probe, NULL, 0, NULL, 0);
-+
-+		if (IS_ERR(lenovo_ec_sensors_platform_device))
-+			return PTR_ERR(lenovo_ec_sensors_platform_device);
-+
-+		return 0;
-+	}
-+	return -ENODEV;
-+}
-+
-+static void __exit lenovo_ec_exit(void)
-+{
-+	platform_device_unregister(lenovo_ec_sensors_platform_device);
-+	platform_driver_unregister(&lenovo_ec_sensors_platform_driver);
-+}
-+
-+module_init(lenovo_ec_init);
-+module_exit(lenovo_ec_exit);
-+
-+MODULE_AUTHOR("David Ober <dober@lenovo.com>");
-+MODULE_DESCRIPTION("HWMON driver for MEC172x EC sensors on LENOVO motherboards");
-+MODULE_LICENSE("GPL");
++        gunyah-resource-mgr@0 {
++            compatible = "gunyah-resource-manager";
++            interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>, /* TX allowed IRQ */
++                         <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>; /* RX requested IRQ */
++            reg = <0x00000000 0x00000000>, /* TX capability ID */
++                  <0x00000000 0x00000001>; /* RX capability ID */
++        };
++    };
+
 -- 
 2.34.1
 
