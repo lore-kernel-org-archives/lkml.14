@@ -1,136 +1,145 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283F23D962
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 20:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=landley.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD953D57C
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 20:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20230601.gappssmtp.com header.i=@landley-net.20230601.gappssmtp.com header.b="V6uUpAPN"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7bee3761bb4so36970439f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 12:17:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYYyc37K"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e461c1f44so28442895e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 12:19:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20230601.gappssmtp.com; s=20230601; t=1704831465; x=1705436265; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zvygCsnAZQSUX1OyBrWi0tyZLEH0CAk1fXUh+ZaJ3Lo=;
-        b=V6uUpAPN4uvL9v4m6KS3io6GQ4KJl/bVbOf/wTiGg8faPmhxgffs5YUP71+KavZN3p
-         iCTExOw14otoEx2QKRQ7GMWRN99onikdcVxXO+lHbBITaqOUYTDkhohy27kUAD6U/9Oe
-         pD7xRy5H2s9QSZqGM1AFAPIPsq+hG4Fu7WGcFpxV2RyTX3Brjjqib4UW4fOKus45htZ1
-         M0WM6Izr7vv/Sf1IM/z3nwYW6zqXp76JRxweIR67Ulm7HlMo1dWVbJSyNfnG5iqsiyMy
-         znZ7R0ljiOIdmyH++EGTcZJD/r1LMI0Vu7QgmOBJ0cDodf+V7it3+NX384WUIkLvPFkr
-         nxJQ==
+        d=gmail.com; s=20230601; t=1704831592; x=1705436392; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DlYxPCHAYd6STqeLclpo+vdtfpOUSl4elB7ysJ3G/b8=;
+        b=SYYyc37Ky9i8Pww6G3lhD0UPAzdLykKaRIhYXljhexTBzGY1xBk/cbdX9yWZBNBxVb
+         IW5pc/bd2NAQ02hunKE2/W0bJGNPMqgDwxqT3QPBtL3UuoR96Kf74GLRzwkfgDYfQ2ZO
+         pk5vmgd0kBReJKvo/fj6QShBOfT4rymznzwY9t4UH+r22RXwz/S5dJT5/sb43mLSzFrd
+         DB1ZYjwPUrbJQhivWBwpzLWT8azg+YX+t0YEVvoJYbE+cdDmfxhox/92lhp+2xv8vhU4
+         0nI5BvW1Kyz/f2vGLbEGzoagDYuh39Pigg+jnOLTI/okYMBf1qID61Gajl0L6yTG7whT
+         JtJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704831465; x=1705436265;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zvygCsnAZQSUX1OyBrWi0tyZLEH0CAk1fXUh+ZaJ3Lo=;
-        b=eyZtnCbLfxtQ2Snme5vX6nOwaQ4piUHmlHkVTsmIpRkXsElU4SKBOJJ92/QoQCAv8q
-         1jWylmDVpMm3Jhj4o3zsF4S5gYQzwBL4iBARwfIqwOJmvpYv8rI1VZfgKJ/rGZaFNlwC
-         LRmP7f1LO2kiy6af4OTnDMHNh5giIdgwGCb4czmJC2AHU5L2rMXMTMYsvGItRBsGDvyh
-         7qonjb9T0OCFWpnCuYrjErYNd7x38hO/KVG+YStOh6X/EzFE6yQkpShtKWFMQz8SFV9D
-         BeClq+SMjxxeqLD6N5rzHY+H/4u9ifxegqOE4nmctSpSNwz2JPHF349/f5aRLcxhbMn0
-         Wu6g==
-X-Gm-Message-State: AOJu0YxZSImGBL/g+pwgVnFBCZellpZBxi7B+pO4BLmuiYhfDlPybakn
-	Q0Uo1zsXz84B2eGFT89U5sezSIjhBFAOhQ==
-X-Google-Smtp-Source: AGHT+IHJDeszorYY5GFrmlMsgPhnGqSSgFTpBWcziFxtkUG5t0gPVrqEY0fdimh0r8UPafEYZce6pw==
-X-Received: by 2002:a6b:7e08:0:b0:7bc:4215:da28 with SMTP id i8-20020a6b7e08000000b007bc4215da28mr5504732iom.42.1704831465186;
-        Tue, 09 Jan 2024 12:17:45 -0800 (PST)
-Received: from [172.16.32.83] ([198.232.126.202])
-        by smtp.gmail.com with ESMTPSA id q5-20020a02a305000000b0046e4506fa75sm13527jai.26.2024.01.09.12.17.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jan 2024 12:17:44 -0800 (PST)
-Message-ID: <a3d7f5ae-56c6-9cd8-2cda-2d50d12be9c4@landley.net>
-Date: Tue, 9 Jan 2024 14:24:22 -0600
+        d=1e100.net; s=20230601; t=1704831592; x=1705436392;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DlYxPCHAYd6STqeLclpo+vdtfpOUSl4elB7ysJ3G/b8=;
+        b=Tl5+sOuybkIbpQ4z5y0j4xqUjit76Lrk1bw7o0gCv3VxorZ8FNTl02JTITKSmUTac6
+         FIAcK/YAY4jMuEFupn27EploWAhItPULox0gNHSS8lCO9eu6dDJgpcZV+aoKkgAGiDSq
+         zYzqb7E85+GMlHc2bxdrs25C/JPudl3tmtDvp3iSo9/PoEzbfcgG6qDomdE1oGGn9ZSP
+         xF91lyjk+mFtiwUkCgYMiVM2hubbQKFcSNOtON4zbE8Zv9M+QYImhMAMQCGQCqkC2r5p
+         RWd2LufhzhY/r+QFYRvWZE5qWQz9TWRxoW8jhfM0rNL9vTCfVdg7F6Q1cpo0lgPir949
+         /sUg==
+X-Gm-Message-State: AOJu0Yxo9UttWtlCFQJMnXUkHy+iBdtmCQe5eaUw5aMYJ5TnNSVIbYG/
+	E5SahbcYse4orGEX+JTci6U=
+X-Google-Smtp-Source: AGHT+IG1OMh03D58GI/XQbXMBGYnExJPieRU875c4MCxuqXF5c3yyX/E2Wz0vuSvYaovhTFRA8ZM/Q==
+X-Received: by 2002:a05:600c:205a:b0:40e:46e1:e3e9 with SMTP id p26-20020a05600c205a00b0040e46e1e3e9mr1923451wmg.122.1704831591554;
+        Tue, 09 Jan 2024 12:19:51 -0800 (PST)
+Received: from jernej-laptop.localnet (213-161-3-116.dynamic.telemach.net. [213.161.3.116])
+        by smtp.gmail.com with ESMTPSA id n33-20020a05600c3ba100b0040e398f8cafsm4740297wms.31.2024.01.09.12.19.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 12:19:51 -0800 (PST)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Lee Jones <lee@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Andre Przywara <andre.przywara@arm.com>,
+ Jianzhang Mai <maijianzhang@allwinnertech.com>
+Subject: Re: [PATCH] mfd: sun4i-gpadc: adaptation interrupt number
+Date: Tue, 09 Jan 2024 21:19:48 +0100
+Message-ID: <3201556.5fSG56mABF@jernej-laptop>
+In-Reply-To: <ZYuFbUUus9apiCpq@debian.cyg>
+References: <ZYuFbUUus9apiCpq@debian.cyg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: Call for nommu LTP maintainer [was: Re: [PATCH 00/36] Remove
- UCLINUX from LTP]
-Content-Language: en-US
-To: Petr Vorel <pvorel@suse.cz>
-Cc: Cyril Hrubis <chrubis@suse.cz>, Geert Uytterhoeven
- <geert@linux-m68k.org>, ltp@lists.linux.it, Li Wang <liwang@redhat.com>,
- Andrea Cervesato <andrea.cervesato@suse.com>,
- Greg Ungerer <gerg@linux-m68k.org>, Jonathan Corbet <corbet@lwn.net>,
- Randy Dunlap <rdunlap@infradead.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Christophe Lyon <christophe.lyon@linaro.org>,
- linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- linux-riscv <linux-riscv@lists.infradead.org>,
- Linux-sh list <linux-sh@vger.kernel.org>,
- automated-testing@lists.yoctoproject.org, buildroot@buildroot.org,
- Niklas Cassel <niklas.cassel@wdc.com>
-References: <20240103015240.1065284-1-pvorel@suse.cz>
- <CAMuHMdXGwyS-CL0vLdUP4Z4YEYhmcmDyC3YdGCnS=jFkqASqvw@mail.gmail.com>
- <20240103114957.GD1073466@pevik>
- <CAMuHMdX0s0gLRoPtjJmDnSmZ_MNY590dN+JxM1HKAL1g_bjX+w@mail.gmail.com>
- <ZZVOhlGPg5KRyS-F@yuki> <5a1f1ff3-8a61-67cf-59a9-ce498738d912@landley.net>
- <20240105131135.GA1484621@pevik>
- <90c1ddc1-c608-30fc-d5aa-fdf63c90d055@landley.net>
- <20240108090338.GA1552643@pevik>
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <20240108090338.GA1552643@pevik>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 1/8/24 03:03, Petr Vorel wrote:
-> Hi Rob, all,
+Dne sreda, 27. december 2023 ob 03:01:17 CET je Fuyao Kashizuku napisal(a):
+> The identifiers are used as IRQ resource numbers, where 0 is treated
+> specially.
 > 
-> [ Added Niklas Cassel, who is maintainer of qemu_riscv64_nommu_virt_defconfig in
-> buildroot ]
-
-Hi Niklas!
-
->> Buildroot also apparently has an LTP package selectable in menuconfig:
+> This fixes sun4i-gpadc-iio probe failed when request irq.
 > 
->> https://github.com/buildroot/buildroot/tree/master/package/ltp-testsuite
+> The backstack:
+> 	WARNING: CPU: 3 PID: 1 at drivers/base/platform.c:451
+> 	__platform_get_irq_byname+0xb8/0xc4
+> 	0 is an invalid IRQ number
+> 	Modules linked in:
+> 	CPU: 3 PID: 1 Comm: swapper/0 Not tainted 6.7.0-rc6 #9
+> 	Hardware name: Allwinner sun8i Family
+> 	 unwind_backtrace
+> 	 show_stack
+> 	 dump_stack_lvl
+> 	 __warn
+> 	 warn_slowpath_fmt
+> 	 __platform_get_irq_byname
+> 	 platform_get_irq_byname
+> 	 sun4i_irq_init
+> 	 sun4i_gpadc_probe
+> 	 platform_probe
+> 	 really_probe
+> 	 __driver_probe_device
+> 	 driver_probe_device
+> 	 __driver_attach
+> 	 bus_for_each_dev
+> 	 bus_add_driver
+> 	 driver_register
+> 	 do_one_initcall
+> 	 do_initcall_level
+> 	 do_initcalls
+> 	 kernel_init_freeable
+> 	 kernel_init
 > 
->> But I haven't tried it...
+> Log reports:
+> sun4i-gpadc-iio sun6i-a31-gpadc-iio.0: error -EINVAL: IRQ FIFO_DATA_PENDING
+> not found
+> sun4i-gpadc-iio: probe of sun6i-a31-gpadc-iio.0 failed with error -22
 > 
-> I'm the maintainer of the LTP package in buildroot in my private time.
-> BTW I spent quite a lot of time fixing LTP (and some other system packages,
-> e.g. nfs-utils) compilation on some old legacy architectures reported via
-> http://autobuild.buildroot.net/ I've never used in the reality.
-> But I certainly don't have time to drive nommu support in my private time.
-> I don't even have an interest, I don't use any nommu device.
+> Signed-off-by: Fuyao Kashizuku <fuyao@sjterm.com>
 
-I do, but I've never done much with LTP, and I have my hands full with toybox
-and mkroot already.
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-> Therefore nobody who is not involved in nommu will not find a time to support it
-> in LTP (support does not mean just to add the functionality to the new C API,
-> but run tests on nommu and fix failing bugs). I suppose nobody is paid to work
-> on nommu platforms, it would have to be a hobby project, right?
+Best regards,
+Jernej
 
-A bunch of people are paid to work on nommu platforms, and I've worked with them
-a bunch, but none of them talk to linux-kernel. They find the culture toxic,
-insular, and categorically dismissive of their interests.
+> ---
+> Changes in v2:
+>  - Fix the commit message.
+>  - Add the backstack.
+>  - Add the log reports.
+>  - Use the correct full name and email address.
+>  - Correct the subsystem to mfd.
+>  - Link to v1: https://lore.kernel.org/lkml/YwdhTlk+9h+9Mrwm@scg/
+> 
+>  include/linux/mfd/sun4i-gpadc.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+> index ea0ccf33a459..021f820f9d52 100644
+> --- a/include/linux/mfd/sun4i-gpadc.h
+> +++ b/include/linux/mfd/sun4i-gpadc.h
+> @@ -81,8 +81,8 @@
+>  #define SUN4I_GPADC_TEMP_DATA				0x20
+>  #define SUN4I_GPADC_DATA				0x24
+>  
+> -#define SUN4I_GPADC_IRQ_FIFO_DATA			0
+> -#define SUN4I_GPADC_IRQ_TEMP_DATA			1
+> +#define SUN4I_GPADC_IRQ_FIFO_DATA			1
+> +#define SUN4I_GPADC_IRQ_TEMP_DATA			2
+>  
+>  /* 10s delay before suspending the IP */
+>  #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
+> 
 
-For example, cortex-m is a large nommu platform on which vendors support Linux
-BSPs, but notice how page 8 of
-https://www.microsemi.com/document-portal/doc_view/132181-linux-cortex-m-users-manual
-points at a cross compiler toolchain from _2010_ and page 4 says they're booting
-a 2.6.33 kernel?
 
-I'm a bit weird in that I try to get CURRENT stuff to work on nommu, and a lot
-of people have been happy to consume my work, but getting any of them to post
-directly to linux-kernel is like pulling teeth.
 
-> But as I said, if anybody from nommu decides to maintain it in LTP, I'll try to
-> support him in my free time (review patches, give advices). And if nobody
-> stands, this patchset which removes the support in the old API will be merged
-> after next LTP release (in the end of January).
 
-What does the API migration do? Is there a page on it ala OABI vs EABI in arm or
-something?
-
-Rob
