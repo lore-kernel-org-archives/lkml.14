@@ -1,37 +1,37 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DD43BB4D;
-	Tue,  9 Jan 2024 15:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0B13C464;
+	Tue,  9 Jan 2024 15:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QyYIjM0g"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409Er2tg000860;
-	Tue, 9 Jan 2024 15:49:23 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZCdZWWKB"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409FDnQ7018236;
+	Tue, 9 Jan 2024 15:49:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=liHucfX2xMzQKqbz5UJBmDnlLnI/IKgbK0PiZ9KXaXw=; b=Qy
-	YIjM0gxsfFsJBG7LrBhgKmAZL6DFvq8jv9JptWS1iamyZRnsPJJiyXM/qrq9WPHc
-	mHHKgIzyJj/yHnYffTAbZxAk76lEAh3MrzjQ3NEIVJdxrD63jsKyTzvygftwB1Ja
-	knSkZ//hxyPOqva9Nb2dkY4MwV03dbLxPwY4Q2cjFfaVJXvJmn3e8bP+nGDIgB+8
-	TjBVHIl5xOTeC+FjHeSc/711zbx7O/btGDjwUHCTxBhyW7COPyVbvzbn4taenmj5
-	9XxkLZHnut+y7UdDLXU3Wih6hj6s9zFBrVmMlCbJ4utfZXkGbeF903lVpYNvwRQD
-	SFDIUH4D4HQv64xy6ttg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh3me0nwb-1
+	qcppdkim1; bh=vjk2Urixu2/24Wsx4Wue00+ZuZNr9bHOHHjk7+a7zW4=; b=ZC
+	dZWWKBAUQB66a5T0lVHq2MGWHEs/abSry1VZJk6xYyBiRpwhG8eoS2QmWE71+4e0
+	iUiUbXuNNut+anKJyJLsX0BuNbhb86Bikb3WLEV9TvC31Szd6xpymclLWcCUYU2u
+	RhDJR1REY+2xgLOe1A9dipnXNEM7T4S9w+xFHKeJ92NFDiptqo97JsaG0QdCg1ly
+	4Vn+tbCDIaErP84aGTeRY/XGlt3woZKw5aVVW8vRBVCNHp2mEbzL2TI0CXl0MmLh
+	LTDJrWa1mpUF+V25cbojnwMxoS1uxoXfQblK+rMygcNXvEKxdqetd8CbaiRiFx54
+	SqifK1dJTCrDFrTLFqvQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgw1k1e9k-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 15:49:23 +0000 (GMT)
+	Tue, 09 Jan 2024 15:49:34 +0000 (GMT)
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409FnMUm002592
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409FnXfW027104
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jan 2024 15:49:22 GMT
+	Tue, 9 Jan 2024 15:49:33 GMT
 Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
  nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 9 Jan 2024 07:49:17 -0800
+ 15.2.1118.40; Tue, 9 Jan 2024 07:49:28 -0800
 From: Mukesh Ojha <quic_mojha@quicinc.com>
 To: <corbet@lwn.net>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
@@ -42,9 +42,9 @@ To: <corbet@lwn.net>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
 CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Mukesh Ojha
 	<quic_mojha@quicinc.com>
-Subject: [PATCH v7 08/12] pstore/ram: Add dynamic ramoops region support through commandline
-Date: Tue, 9 Jan 2024 21:01:56 +0530
-Message-ID: <20240109153200.12848-9-quic_mojha@quicinc.com>
+Subject: [PATCH v7 10/12] soc: qcom: register ramoops region with APSS minidump
+Date: Tue, 9 Jan 2024 21:01:58 +0530
+Message-ID: <20240109153200.12848-11-quic_mojha@quicinc.com>
 X-Mailer: git-send-email 2.43.0.254.ga26002b62827
 In-Reply-To: <20240109153200.12848-1-quic_mojha@quicinc.com>
 References: <20240109153200.12848-1-quic_mojha@quicinc.com>
@@ -60,245 +60,147 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: BI1su_t4u_jaBjZDhL9SBdoZbjVXvq7R
-X-Proofpoint-GUID: BI1su_t4u_jaBjZDhL9SBdoZbjVXvq7R
+X-Proofpoint-GUID: h4HEgvBOae1pmWhu9AhKKUv83a4KTTzS
+X-Proofpoint-ORIG-GUID: h4HEgvBOae1pmWhu9AhKKUv83a4KTTzS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 mlxscore=0
- suspectscore=0 impostorscore=0 clxscore=1015 adultscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ impostorscore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2311290000 definitions=main-2401090128
 
-The reserved memory region for ramoops is assumed to be at a fixed
-and known location when read from the devicetree. This may not be
-required for something like Qualcomm's minidump which is interested
-in knowing addresses of ramoops region but it does not put hard
-requirement of address being fixed as most of it's SoC does not
-support warm reset and does not use pstorefs at all instead it has
-firmware way of collecting ramoops region if it gets to know the
-address and register it with apss minidump table which is sitting
-in shared memory region in DDR and firmware will have access to
-these table during reset and collects it on crash of SoC.
-
-So, add the support of reserving ramoops region to be dynamically
-allocated early during boot if it is request through command line
-via 'dyn_ramoops_size=<size>' and fill up reserved resource structure
-and export the structure, so that it can be read by ramoops driver.
+Register ramoops region with APSS minidump so that
+these region gets captured on system crash.
 
 Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- Documentation/admin-guide/ramoops.rst | 23 +++++++++-
- fs/pstore/Kconfig                     | 15 ++++++
- fs/pstore/ram.c                       | 66 +++++++++++++++++++++++++--
- include/linux/pstore_ram.h            |  5 ++
- init/main.c                           |  2 +
- 5 files changed, 107 insertions(+), 4 deletions(-)
+ drivers/soc/qcom/qcom_minidump.c | 75 ++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
-index e9f85142182d..517b00981e99 100644
---- a/Documentation/admin-guide/ramoops.rst
-+++ b/Documentation/admin-guide/ramoops.rst
-@@ -33,6 +33,13 @@ memory are implementation defined, and won't work on many ARMs such as omaps.
- Setting ``mem_type=2`` attempts to treat the memory region as normal memory,
- which enables full cache on it. This can improve the performance.
+diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
+index c0f76a51d0e8..c847cca1d999 100644
+--- a/drivers/soc/qcom/qcom_minidump.c
++++ b/drivers/soc/qcom/qcom_minidump.c
+@@ -18,8 +18,10 @@
+ #include <linux/mutex.h>
+ #include <linux/platform_device.h>
+ #include <linux/printk.h>
++#include <linux/pstore_ram.h>
+ #include <linux/soc/qcom/smem.h>
+ #include <linux/string.h>
++#include <linux/workqueue.h>
+ #include <soc/qcom/qcom_minidump.h>
  
-+Ramoops supports its memory to be allocated dynamically during early boot
-+for plaforms that does not have support for warm boot i.e., no assurance
-+of Ram content will be preserved across boot and for these platform
-+giving static Ramoops memory is not necessary as it has separate backend
-+mechanism to retrieve ramoops content on system failure. More about
-+how to enable Dynamic ramoops in ``Setting the parameters`` A.b section.
+ #include "qcom_minidump_internal.h"
+@@ -56,12 +58,20 @@ struct minidump_elfhdr {
+  * @dev: Minidump backend device
+  * @apss_data: APSS driver data
+  * @md_lock: Lock to protect access to APSS minidump table
++ * @work: Minidump work for any required execution in process context.
+  */
+ struct minidump {
+ 	struct minidump_elfhdr	 elf;
+ 	struct device		 *dev;
+ 	struct minidump_ss_data	 *apss_data;
+ 	struct mutex		 md_lock;
++	struct work_struct	 work;
++};
 +
- The memory area is divided into ``record_size`` chunks (also rounded down to
- power of two) and each kmesg dump writes a ``record_size`` chunk of
- information.
-@@ -59,7 +66,7 @@ Setting the parameters
- 
- Setting the ramoops parameters can be done in several different manners:
- 
-- A. Use the module parameters (which have the names of the variables described
-+ A.a  Use the module parameters (which have the names of the variables described
-  as before). For quick debugging, you can also reserve parts of memory during
-  boot and then use the reserved memory for ramoops. For example, assuming a
-  machine with > 128 MB of memory, the following kernel command line will tell
-@@ -68,6 +75,20 @@ Setting the ramoops parameters can be done in several different manners:
- 
- 	mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1
- 
-+ A.b  Ramoops memory can be also be dynamically reserve by Kernel and in such
-+ scenario ``mem_address`` i.e, Ramoops base address can be anywhere in the RAM
-+ instead of being fixed and predefined. A separate command line option
-+ ``dyn_ramoops_size=<size>`` and kernel config CONFIG_PSTORE_DYNAMIC_RAMOOPS
-+ is provided to facilitate Dynamic Ramoops memory reservation during early boot.
-+ The command line option and the config should only be used in the presence of
-+ separate backend which knows how to recover Dynamic Ramoops region otherwise
-+ regular ramoops functionality will be impacted.
-+ ``mem_size`` should not be used if Dynamic Ramoops support is requested and if
-+ both are given ``mem_size`` value is overwritten with ``dyn_ramoops_size`` value
-+ i.e, Dynamic Ramoops takes precedence::
-+
-+	dyn_ramoops_size=2M ramoops.console_size=2097152
-+
-  B. Use Device Tree bindings, as described in
-  ``Documentation/devicetree/bindings/reserved-memory/ramoops.yaml``.
-  For example::
-diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index 3acc38600cd1..2f2bb483fd85 100644
---- a/fs/pstore/Kconfig
-+++ b/fs/pstore/Kconfig
-@@ -81,6 +81,21 @@ config PSTORE_RAM
- 
- 	  For more information, see Documentation/admin-guide/ramoops.rst.
- 
-+config PSTORE_DYNAMIC_RAMOOPS
-+	bool "Reserve ramoops region dynamically"
-+	select PSTORE_RAM
-+	help
-+	  This enables the dynamic reservation of ramoops region for a special case
-+	  where there is no requirement to access the logs from pstorefs on next boot
-+	  instead there is separate backend mechanism like minidump present which has
-+	  awareness about the dynamic ramoops region and can recover the logs. This is
-+	  enabled via command line parameter dyn_ramoops_size=<size> and should not be
-+	  used in absence of separate backend which knows how to recover this dynamic
-+	  region.
-+
-+	  Note whenever this config is selected ramoops driver will be build statically
-+	  into kernel.
-+
- config PSTORE_ZONE
- 	tristate
- 	depends on PSTORE
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 88b34fdbf759..795a8300631e 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -20,6 +20,7 @@
- #include <linux/compiler.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/memblock.h>
- #include <linux/mm.h>
- 
- #include "internal.h"
-@@ -103,6 +104,59 @@ struct ramoops_context {
++static LIST_HEAD(apss_md_rlist);
++struct md_region_list {
++	struct qcom_minidump_region md_region;
++	struct list_head list;
  };
  
- static struct platform_device *dummy;
-+static struct resource dyn_ramoops_res = {
-+	.name  = "ramoops",
-+	.start = 0,
-+	.end   = 0,
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_NONE,
-+};
-+static int dyn_ramoops_size;
-+
-+#ifdef CONFIG_PSTORE_DYNAMIC_RAMOOPS
-+static int __init parse_dyn_ramoops_size(char *p)
+ /*
+@@ -530,6 +540,52 @@ static int qcom_apss_md_table_init(struct minidump *md,
+ 	return 0;
+ }
+ 
++static int register_ramoops_region(const char *name, int id, void *vaddr,
++				   phys_addr_t paddr, size_t size)
 +{
-+	char *tmp;
++	struct qcom_minidump_region *md_region;
++	struct md_region_list *mdr_list;
++	int ret;
 +
-+	dyn_ramoops_size = memparse(p, &tmp);
-+	if (p == tmp) {
-+		pr_err("ramoops: memory size expected\n");
-+		dyn_ramoops_size = 0;
-+		return -EINVAL;
++	mdr_list = kzalloc(sizeof(*mdr_list), GFP_KERNEL);
++	if (!mdr_list)
++		return -ENOMEM;
++
++	md_region = &mdr_list->md_region;
++	scnprintf(md_region->name, sizeof(md_region->name), "K%s%d", name, id);
++	md_region->virt_addr = vaddr;
++	md_region->phys_addr = paddr;
++	md_region->size = size;
++	ret = qcom_minidump_region_register(md_region);
++	if (ret < 0) {
++		pr_err("failed to register region in minidump: err: %d\n", ret);
++		return ret;
 +	}
++
++	list_add(&mdr_list->list, &apss_md_rlist);
 +
 +	return 0;
 +}
-+early_param("dyn_ramoops_size", parse_dyn_ramoops_size);
 +
-+/*
-+ * setup_dynamic_ramoops() - reserves memory for dynamic ramoops
-+ *
-+ * This enable dynamic reserve memory support for ramoops through
-+ * command line.
-+ */
-+void __init setup_dynamic_ramoops(void)
++static void register_ramoops_minidump_cb(struct work_struct *work)
 +{
-+	unsigned long long ramoops_base;
-+	unsigned long long ramoops_size;
-+
-+	if (!dyn_ramoops_size)
-+		return;
-+
-+	ramoops_base = memblock_phys_alloc_range(dyn_ramoops_size, SMP_CACHE_BYTES,
-+						 0, MEMBLOCK_ALLOC_NOLEAKTRACE);
-+	if (!ramoops_base) {
-+		pr_err("cannot allocate ramoops dynamic memory (size:0x%llx).\n",
-+			ramoops_size);
-+		dyn_ramoops_size = 0;
-+		return;
-+	}
-+
-+	dyn_ramoops_res.start = ramoops_base;
-+	dyn_ramoops_res.end = ramoops_base + dyn_ramoops_size - 1;
-+	insert_resource(&iomem_resource, &dyn_ramoops_res);
++	register_ramoops_info_notifier(register_ramoops_region);
 +}
-+#endif
- 
- static int ramoops_pstore_open(struct pstore_info *psi)
- {
-@@ -915,13 +969,19 @@ static void __init ramoops_register_dummy(void)
- 
- 	/*
- 	 * Prepare a dummy platform data structure to carry the module
--	 * parameters. If mem_size isn't set, then there are no module
--	 * parameters, and we can skip this.
-+	 * parameters.
-+	 *
-+	 * dyn_ramoops_size takes precedence over mem_size if it is
-+	 * enabled and valid.
- 	 */
--	if (!mem_size)
-+	if (!dyn_ramoops_size && !mem_size)
- 		return;
- 
- 	pr_info("using module parameters\n");
-+	if (dyn_ramoops_size) {
-+		mem_size = dyn_ramoops_size;
-+		mem_address = dyn_ramoops_res.start;
++
++static void qcom_ramoops_minidump_unregister(void)
++{
++	struct md_region_list *mdr_list;
++	struct md_region_list *tmp;
++
++	list_for_each_entry_safe(mdr_list, tmp, &apss_md_rlist, list) {
++		struct qcom_minidump_region *region;
++
++		region = &mdr_list->md_region;
++		qcom_minidump_region_unregister(region);
++		list_del(&mdr_list->list);
 +	}
++}
++
+ static void qcom_apss_md_table_exit(struct minidump_ss_data *mdss_data)
+ {
+ 	memset(mdss_data->md_ss_toc, cpu_to_le32(0), sizeof(*mdss_data->md_ss_toc));
+@@ -575,6 +631,22 @@ static int qcom_apss_minidump_probe(struct platform_device *pdev)
  
- 	memset(&pdata, 0, sizeof(pdata));
- 	pdata.mem_size = mem_size;
-diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
-index 9d65ff94e216..1efff7a38333 100644
---- a/include/linux/pstore_ram.h
-+++ b/include/linux/pstore_ram.h
-@@ -39,4 +39,9 @@ struct ramoops_platform_data {
- 	struct persistent_ram_ecc_info ecc_info;
- };
+ 	platform_set_drvdata(pdev, md);
  
-+#ifdef CONFIG_PSTORE_DYNAMIC_RAMOOPS
-+void __init setup_dynamic_ramoops(void);
-+#else
-+static inline void __init setup_dynamic_ramoops(void) {}
-+#endif
- #endif
-diff --git a/init/main.c b/init/main.c
-index f0b7e21ac67f..9d9fb27a2176 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -100,6 +100,7 @@
- #include <linux/stackdepot.h>
- #include <linux/randomize_kstack.h>
- #include <linux/moduleloader.h>
-+#include <linux/pstore_ram.h>
- #include <net/net_namespace.h>
++	/*
++	 * Use separate context for registering ramoops region via workqueue
++	 * as minidump probe can get called in same context of platform device
++	 * register call from smem driver and further call to qcom_smem_minidump_ready()
++	 * can return -EPROBE_DEFER as __smem->minidump is not yet initialised because
++	 * of same context.
++	 *
++	 * qcom_apss_minidump_probe()
++	 *   register_ramoops_minidump_cb()
++	 *     register_ramoops_region()
++	 *       qcom_minidump_region_register()
++	 *         qcom_smem_minidump_ready()
++	 */
++	INIT_WORK(&md->work, register_ramoops_minidump_cb);
++	schedule_work(&md->work);
++
+ 	return ret;
+ }
  
- #include <asm/io.h>
-@@ -896,6 +897,7 @@ void start_kernel(void)
- 	pr_notice("%s", linux_banner);
- 	early_security_init();
- 	setup_arch(&command_line);
-+	setup_dynamic_ramoops();
- 	setup_boot_config();
- 	setup_command_line(command_line);
- 	setup_nr_cpu_ids();
+@@ -582,6 +654,9 @@ static void qcom_apss_minidump_remove(struct platform_device *pdev)
+ {
+ 	struct minidump *md = platform_get_drvdata(pdev);
+ 
++	flush_work(&md->work);
++	qcom_ramoops_minidump_unregister();
++	unregister_ramoops_info_notifier(register_ramoops_minidump_cb);
+ 	qcom_apss_md_table_exit(md->apss_data);
+ }
+ 
 -- 
 2.43.0.254.ga26002b62827
 
