@@ -1,117 +1,147 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183CF39AE0;
-	Tue,  9 Jan 2024 13:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-204b216e4easo593571fac.1;
-        Tue, 09 Jan 2024 05:02:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704805376; x=1705410176;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QWME94cXQ/3qVZMyQj3YnPKl2hXPE6WytxavIt7lCh0=;
-        b=imbBs1oiI+Pn1L4XIqLytOCX7iYPTsjQkbASA2Jduys9MqOYJvSbOHso1UKMt92EkK
-         pNKgD+x9iVTD+VCKxzyT9bWM2s1Bhfc0R0QgpUTYv7QoqL3qaWQrBkySR3bIKIsVeziB
-         gBND03DoZaQvRRhdL+Vyz8UnR+eHOflXPpCLnb9Cc2KGHMGzVcTL5yxnrk8Y+dw1svI6
-         jAr5I3Lnb956gV+VIeCT720SmGukCTgNBuV8HSw17mgzGHh0uqg+3c94kT+X59qYn2kg
-         ZxP9wg29AbBTcfJtBSyHEKZD0TxoASKhdN2Ub43/d6BRXefE0zyoD6PslabAvy0iI5KX
-         f3zg==
-X-Gm-Message-State: AOJu0Yyb/iTK1FO5pileIOTftIpHLsbQORmaW8VTilGE3rXJQaJ5Nhut
-	nTTjX7rA9AssPbv+PrncOSRslN2S2v5K1Hh3ilc=
-X-Google-Smtp-Source: AGHT+IFryTIKHNahRMGT+oOV3hKW5nX7DZhG/prkg0H7s69ydmCbMN2o9hSeknDo7pXrIA7UzM0/bis5ZXEThVs0gQA=
-X-Received: by 2002:a05:6870:c115:b0:204:9066:c34f with SMTP id
- f21-20020a056870c11500b002049066c34fmr10003149oad.5.1704805376024; Tue, 09
- Jan 2024 05:02:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AABE38DD2;
+	Tue,  9 Jan 2024 13:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHAI8SDJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2201DC433F1;
+	Tue,  9 Jan 2024 13:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704805490;
+	bh=j8OwOeSlBjiqEk2Nw87AuVBZrWAQiK3wI8z6JPGw9oA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bHAI8SDJfJLxz8/aNq12L19/RJF5nIE9HNKcB+hjNjfTisnG4OtRiAH6PYld0WsE8
+	 gsI0xiyARTGyM0wCOeD37tYB6zMnmQ5JT1SSesIO4ijgKz5k2g4ht/l0s/gdIvkueQ
+	 hE2xvDQ1rFABvvzDlRiTfJo369Pt1h3Ao3r7qRgq5a9omzjEe6td6inLIs95sIda/o
+	 4XHDHspAaXeyeFWNxV0b30o2wF8nk/FX4xohuIYhoEtYp+726tGTsfLDT8VBuFCLbm
+	 YvnRWOHm3Mf8vKAasAdbZCMrzhDFLppNA6jOzdfXo4dAyFiyasjWAD5P6DVe/ukRcS
+	 htV79TECyXXeA==
+Date: Tue, 9 Jan 2024 22:04:45 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com
+Subject: Re: [PATCH v10 0/2] Introducing trace buffer mapping by user-space
+Message-Id: <20240109220445.5683e4af0cea6b034945b2bb@kernel.org>
+In-Reply-To: <20240105094729.2363579-1-vdonnefort@google.com>
+References: <20240105094729.2363579-1-vdonnefort@google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240109094112.2871346-1-daniel.lezcano@linaro.org> <20240109094112.2871346-2-daniel.lezcano@linaro.org>
-In-Reply-To: <20240109094112.2871346-2-daniel.lezcano@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 9 Jan 2024 14:02:44 +0100
-Message-ID: <CAJZ5v0iL9PhG5e8f9rAL05FHT6TnhSYx6=XOFdgnBtbC--ZZ9w@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] thermal/debugfs: Add thermal debugfs information
- for mitigation episodes
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: rjw@rjwysocki.net, lukasz.luba@arm.com, rui.zhang@intel.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 9, 2024 at 10:41=E2=80=AFAM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> The mitigation episodes are recorded. A mitigation episode happens
-> when the first trip point is crossed the way up and then the way
-> down. During this episode other trip points can be crossed also and
-> are accounted for this mitigation episode. The interesting information
-> is the average temperature at the trip point, the undershot and the
-> overshot. The standard deviation of the mitigated temperature will be
-> added later.
->
-> The thermal debugfs directory structure tries to stay consistent with
-> the sysfs one but in a very simplified way:
->
-> thermal/
->  `-- thermal_zones
->      |-- 0
->      |   `-- mitigations
->      `-- 1
->          `-- mitigations
->
-> The content of the mitigations file has the following format:
->
-> ,-Mitigation at 349988258us, duration=3D130136ms
-> | trip |     type | temp(=C2=B0mC) | hyst(=C2=B0mC) |  duration  |  avg(=
-=C2=B0mC) |  min(=C2=B0mC) |  max(=C2=B0mC) |
-> |    0 |  passive |     65000 |      2000 |     130136 |     68227 |     =
-62500 |     75625 |
-> |    1 |  passive |     75000 |      2000 |     104209 |     74857 |     =
-71666 |     77500 |
-> ,-Mitigation at 272451637us, duration=3D75000ms
-> | trip |     type | temp(=C2=B0mC) | hyst(=C2=B0mC) |  duration  |  avg(=
-=C2=B0mC) |  min(=C2=B0mC) |  max(=C2=B0mC) |
-> |    0 |  passive |     65000 |      2000 |      75000 |     68561 |     =
-62500 |     75000 |
-> |    1 |  passive |     75000 |      2000 |      60714 |     74820 |     =
-70555 |     77500 |
-> ,-Mitigation at 238184119us, duration=3D27316ms
-> | trip |     type | temp(=C2=B0mC) | hyst(=C2=B0mC) |  duration  |  avg(=
-=C2=B0mC) |  min(=C2=B0mC) |  max(=C2=B0mC) |
-> |    0 |  passive |     65000 |      2000 |      27316 |     73377 |     =
-62500 |     75000 |
-> |    1 |  passive |     75000 |      2000 |      19468 |     75284 |     =
-69444 |     77500 |
-> ,-Mitigation at 39863713us, duration=3D136196ms
-> | trip |     type | temp(=C2=B0mC) | hyst(=C2=B0mC) |  duration  |  avg(=
-=C2=B0mC) |  min(=C2=B0mC) |  max(=C2=B0mC) |
-> |    0 |  passive |     65000 |      2000 |     136196 |     73922 |     =
-62500 |     75000 |
-> |    1 |  passive |     75000 |      2000 |      91721 |     74386 |     =
-69444 |     78125 |
->
-> More information for a better understanding of the thermal behavior
-> will be added after. The idea is to give detailed statistics
-> information about the undershots and overshots, the temperature speed,
-> etc... As all the information in a single file is too much, the idea
-> would be to create a directory named with the mitigation timestamp
-> where all data could be added.
->
-> Please note this code is immune against trip ordering but not against
-> a trip temperature change while a mitigation is happening. However,
-> this situation should be extremely rare, perhaps not happening and we
-> might question ourselves if something should be done in the core
-> framework for other components first.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Hi Vincent,
 
-Both patches in the series look good to me now, so I'll queue them up
-for 6.8-rc1.
+On Fri,  5 Jan 2024 09:47:27 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Thanks!
+> The tracing ring-buffers can be stored on disk or sent to network
+> without any copy via splice. However the later doesn't allow real time
+> processing of the traces. A solution is to give userspace direct access
+> to the ring-buffer pages via a mapping. An application can now become a
+> consumer of the ring-buffer, in a similar fashion to what trace_pipe
+> offers.
+
+I think this is very nice feature. But this series seems just a feature,
+no document and no example code. Can you add 2 patches to add those?
+I know libtracefs already provide a support code, but I think it is
+better to have a test code under tools/testing/selftests/ring_buffer.
+
+I also wonder what happen if other operation (e.g. taking snapshot) happens
+while mmaping the ring buffer.
+
+Thank you,
+
+> 
+> Support for this new feature in libtracefs can be found here:
+> 
+>   https://lore.kernel.org/all/20231228201100.78aae259@rorschach.local.home
+> 
+> Vincent
+> 
+> v9 -> v10:
+>   * Refactor rb_update_meta_page()
+>   * In-loop declaration for foreach_subbuf_page()
+>   * Check for cpu_buffer->mapped overflow
+> 
+> v8 -> v9:
+>   * Fix the unlock path in ring_buffer_map()
+>   * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
+>   * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
+> 
+> v7 -> v8:
+>   * Drop the subbufs renaming into bpages
+>   * Use subbuf as a name when relevant
+> 
+> v6 -> v7:
+>   * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
+>   * Support for subbufs
+>   * Rename subbufs into bpages
+> 
+> v5 -> v6:
+>   * Rebase on next-20230802.
+>   * (unsigned long) -> (void *) cast for virt_to_page().
+>   * Add a wait for the GET_READER_PAGE ioctl.
+>   * Move writer fields update (overrun/pages_lost/entries/pages_touched)
+>     in the irq_work.
+>   * Rearrange id in struct buffer_page.
+>   * Rearrange the meta-page.
+>   * ring_buffer_meta_page -> trace_buffer_meta_page.
+>   * Add meta_struct_len into the meta-page.
+> 
+> v4 -> v5:
+>   * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+> 
+> v3 -> v4:
+>   * Add to the meta-page:
+>        - pages_lost / pages_read (allow to compute how full is the
+> 	 ring-buffer)
+>        - read (allow to compute how many entries can be read)
+>        - A reader_page struct.
+>   * Rename ring_buffer_meta_header -> ring_buffer_meta
+>   * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
+>   * Properly consume events on ring_buffer_map_get_reader_page() with
+>     rb_advance_reader().
+> 
+> v2 -> v3:
+>   * Remove data page list (for non-consuming read)
+>     ** Implies removing order > 0 meta-page
+>   * Add a new meta page field ->read
+>   * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
+> 
+> v1 -> v2:
+>   * Hide data_pages from the userspace struct
+>   * Fix META_PAGE_MAX_PAGES
+>   * Support for order > 0 meta-page
+>   * Add missing page->mapping.
+> 
+> ---
+> 
+> Vincent Donnefort (2):
+>   ring-buffer: Introducing ring-buffer mapping functions
+>   tracing: Allow user-space mapping of the ring-buffer
+> 
+>  include/linux/ring_buffer.h     |   7 +
+>  include/uapi/linux/trace_mmap.h |  31 +++
+>  kernel/trace/ring_buffer.c      | 384 +++++++++++++++++++++++++++++++-
+>  kernel/trace/trace.c            |  79 ++++++-
+>  4 files changed, 497 insertions(+), 4 deletions(-)
+>  create mode 100644 include/uapi/linux/trace_mmap.h
+> 
+> 
+> base-commit: 3cb3091138ca0921c4569bcf7ffa062519639b6a
+> -- 
+> 2.43.0.472.g3155946c3a-goog
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
