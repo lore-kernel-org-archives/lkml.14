@@ -1,66 +1,85 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AC722063;
-	Tue,  9 Jan 2024 08:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAD729410;
+	Tue,  9 Jan 2024 08:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PKD6vNYD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 41022240002;
-	Tue,  9 Jan 2024 08:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1704787827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NsnJZM8mE/E1TbZzElehXy7zAO8n/tIH97gjvK7JStQ=;
-	b=PKD6vNYD/FbOVrUM3CYaa+zlkv7q4fQjwQ4CYAGkUu9dbRT/gSc9SMnDfXX6QArEjRa3dv
-	YYWiXEh4wfbE9gkVcLCaIjIexTO0perzPNa/rCUBpP7HSJVEq2oWDDU5uc9pfj/gk5H96z
-	m8C1vNj4qP1x8f71peSujRM26olrEq5PX3+nEBIlE8PnD3RdVFpm0gms2jkyt/YqHpYd16
-	2FSRphA573USMrXhtNtpZdKzJ1JJg9/a3rEqnmcIc3C4QeUY8HhZctRi3rU8ZUyoKxo0K1
-	Oi3wyrABs+N+EyQohINnOEYD6z5OWHGhk+ehyiuPxerrZ8RUw9EwldBraT1tpg==
-Date: Tue, 9 Jan 2024 09:10:24 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
- linux-next@vger.kernel.org, conor.culhane@silvaco.com, imx@lists.linux.dev,
- joe@perches.com, linux-i3c@lists.infradead.org,
- zbigniew.lukwinski@linux.intel.com
-Subject: Re: [PATCH 1/1] i3c: master: fix kernel-doc check warning
-Message-ID: <20240109091024.40fd1dfb@xps-13>
-In-Reply-To: <20240109052548.2128133-1-Frank.Li@nxp.com>
-References: <20240109052548.2128133-1-Frank.Li@nxp.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="FSe3mU1j"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40967CDR025033;
+	Tue, 9 Jan 2024 00:10:51 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=zLW6cbF3
+	JrGJxn4kgxx++71eFi2X1lzPoT/sA8ETBds=; b=FSe3mU1jXa3hVoPn3TkaDHdP
+	mAZjocthhQ/fmdAcGRFGv0ALDzSAZ/gVDCnFm9cTLsx6bi0DMgF4WTtO7qtN4NAF
+	bL4+6yv8hWdLV/YdmQeZAHpAtINF3kstafclrkCD+z1a22/yAYURf5h6og8yq7Fw
+	pxIzOWO7dj0sgqt/SejXs7KMuOeux+DGRPdeqd1czJ19Tuoo4oEWHF2uG/ZnfR8g
+	LWSHTsNzZFipAzb08+uDBHQU4sOrJLm6dltKUNmgFN8RT5u2HGzlnsYpzqFGuW4e
+	vfS2MxzL7vXJEMDLX8uOWnERWoqWUfCVDRymPi1QcHYSaIWpitKi18UXKBmmBg==
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vgptf2hgc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 00:10:50 -0800 (PST)
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 9 Jan
+ 2024 00:10:48 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
+ Transport; Tue, 9 Jan 2024 00:10:48 -0800
+Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
+	by maili.marvell.com (Postfix) with ESMTP id 482ED3F70B4;
+	Tue,  9 Jan 2024 00:10:46 -0800 (PST)
+From: Elad Nachman <enachman@marvell.com>
+To: <gregkh@linuxfoundation.org>,
+        rowland.harvard.edu@mx0b-0016f401.pphosted.com, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <enachman@marvell.com>
+Subject: [PATCH v3 0/2] usb: host: Add ac5 to EHCI Orion
+Date: Tue, 9 Jan 2024 10:10:42 +0200
+Message-ID: <20240109081044.10515-1-enachman@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: zqmC9T8YyQFuydgE9YVdS51K4jIKgMvo
+X-Proofpoint-GUID: zqmC9T8YyQFuydgE9YVdS51K4jIKgMvo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
 
-Hi Frank,
+From: Elad Nachman <enachman@marvell.com>
 
-Frank.Li@nxp.com wrote on Tue,  9 Jan 2024 00:25:48 -0500:
+Add support for ac5 to the EHCI Orion platform driver.
+The ac5 SOC has DDR starting at offset 0x2_0000_0000,
+Hence it requires a larger than 32-bit DMA mask to operate.
+Move the dma mask to be pointed by the OF match data, and
+use that match data when initializng the DMA mask.
+Add dt bindings compatible string to identify the AC5 SOC,
+so the driver will know when to apply this different dma mask.
 
-> Fix warning found by
-> 	'scripts/kernel-doc -v -none include/linux/i3c/master.h'
->=20
-> include/linux/i3c/master.h:457: warning: Function parameter or member 'en=
-able_hotjoin' not described in 'i3c_master_controller_ops'
-> include/linux/i3c/master.h:457: warning: Function parameter or member 'di=
-sable_hotjoin' not described in 'i3c_master_controller_ops'
-> include/linux/i3c/master.h:499: warning: Function parameter or member 'ho=
-tjoin' not described in 'i3c_master_controller'
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+v3:
+   1) Combine dt bindings and driver pathces into a single patchset.
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+v2:
+   1) Fix compiler warning
 
-Thanks,
-Miqu=C3=A8l
+Elad Nachman (2):
+  dt-bindings: usb: Add Marvell ac5
+  usb: host: Add ac5 to EHCI Orion
+
+ .../devicetree/bindings/usb/generic-ehci.yaml |  1 +
+ drivers/usb/host/ehci-orion.c                 | 19 +++++++++++++++----
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+-- 
+2.25.1
