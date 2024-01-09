@@ -1,174 +1,75 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-8faa.mail.infomaniak.ch (smtp-8faa.mail.infomaniak.ch [83.166.143.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9226D39842;
-	Tue,  9 Jan 2024 13:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fx2gKLx0"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2cd0d05838fso32743541fa.1;
-        Tue, 09 Jan 2024 05:42:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704807720; x=1705412520; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2o/iVAspJoPe7wwOlMbx4e7jS1dNzyLr6xVTp3jus74=;
-        b=Fx2gKLx0oJf8sNNdjYerp9XZs+0TVIWaBd75SqtnT6irnzgFyjH6ZgLDmu/Fk9QEw/
-         F8Q6dP4cs+T9crQRMSdZQzBlaVL6SLetWm6AKmfcSCunW0yklv2X5tXZKQnSuV8sKt/t
-         mY2Yzn/c37f+PyFwIKFv2vWubc46Ec3uFPhgcg7mRFObFf4TMUv8QDw10azZkxzhircr
-         PKPi0XwTDsCJuFYslRWSgA6M9e5bRkbEWDPVw3j3BXovG1zpjHyiTzGTPB2eaVfjEQBx
-         R13RzVhsqMY+w+4fMVR879e3FLD55xUjwVKPqv2ruyBHrKDUKx2JqeBVgVRty2L6ZVr3
-         VUjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704807720; x=1705412520;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2o/iVAspJoPe7wwOlMbx4e7jS1dNzyLr6xVTp3jus74=;
-        b=aBOVNdevccy4vF7B4/q8QcMYy9wg+dFhEpk+a3RTVz9Y3dF9dx3SZeKuS3l7EdPesz
-         w6M3XMYLiQCUEOEZ4O4tXqWe4rA5M4J2rQ+qbZkgES/ogHBAoIAn9gEwOcYQhI02yQyN
-         QPnlFj0uYWIF3jNtrZs77O2tyeL5kfuI5v+PGn+DEv8MvHCgHUsQ3In/OHbzedbVtHpn
-         k9E/y4THoqmT4XnoI15j+7K1m+vuAGPxFcVfIAZmQWJLSCtoov7hkuJcg1QmzFxdr5DR
-         mA7/poYcaxrAvCcb7bccioB+XOd73cswzlMu3sJVb6osuuKZZs+ZK5cWzFMnNR9H8c3V
-         bOng==
-X-Gm-Message-State: AOJu0Yxtx9ePOQ9ZhGHj7Ol25jT7bKh0WLkpfBkpVibKtbuf5VMNrvYs
-	SvBhXhzwiWv0NSS+xoN/iRgvz2u3z8Xeln2Afco=
-X-Google-Smtp-Source: AGHT+IHUtifv+RQldaVvD3tr60Zdyo2DCLNb52fzX/CgtibgnJ8LP3jhRLNEKVqax5ZhAKk3dSY3vezkhqyI38Si+zw=
-X-Received: by 2002:a2e:a0cb:0:b0:2cc:7d70:fa45 with SMTP id
- f11-20020a2ea0cb000000b002cc7d70fa45mr2495792ljm.27.1704807720240; Tue, 09
- Jan 2024 05:42:00 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507AE39846
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 13:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4T8X4r6stQzMqKGF;
+	Tue,  9 Jan 2024 13:35:56 +0000 (UTC)
+Received: from unknown by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4T8X4r2wzbzMppDb;
+	Tue,  9 Jan 2024 14:35:56 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Quentin Schulz <foss+kernel@0leil.net>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Subject: [PATCH 1/2] arm64: dts: rockchip: add spi controller aliases on rk3399
+Date: Tue,  9 Jan 2024 14:35:43 +0100
+Message-ID: <20240109-rk3399-spi-aliases-v1-1-2009e44e734a@theobroma-systems.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240109-rk3399-spi-aliases-v1-0-2009e44e734a@theobroma-systems.com>
+References: <20240109-rk3399-spi-aliases-v1-0-2009e44e734a@theobroma-systems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240105025625.125895-1-clancy_shang@163.com> <CABBYNZJRTfDUizZ=+JDGT3rZDRJ1HCvYBssrCfgrxOm4U8d-Qw@mail.gmail.com>
- <5ebcd5f1.2a8d.18ced8b011e.Coremail.clancy_shang@163.com>
-In-Reply-To: <5ebcd5f1.2a8d.18ced8b011e.Coremail.clancy_shang@163.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 9 Jan 2024 08:41:45 -0500
-Message-ID: <CABBYNZ+GBcoru9F82BNfkr-R8Tv4psEjpKqLWxqRDnr=Ny_nxw@mail.gmail.com>
-Subject: Re: Re: [PATCH] Bluetooth: hci_sync: Fix BLE devices were unable to
- disable the wakeup function
-To: clancy_shang <clancy_shang@163.com>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhongjun.yu@quectel.com, Clancy Shang <clancy.shang@quectel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: quoted-printable
+X-Infomaniak-Routing: alpha
 
-Hi Clancy,
-
-On Tue, Jan 9, 2024 at 4:26=E2=80=AFAM clancy_shang <clancy_shang@163.com> =
-wrote:
->
-> Hi Luiz Augusto von Dentz,
->
-> Thanks for you suggestions. is the patch has been accepted? or need me mo=
-dify as your suggested and resend to you?
-
-It has been applied already:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.gi=
-t/commit/?id=3D0bcd317e8b31833d36cd9843902905aafbd70017
-
-> Kind regards,
->
-> Clancy
->
->
->
->
->
->
->
-> At 2024-01-05 23:21:59, "Luiz Augusto von Dentz" <luiz.dentz@gmail.com> w=
-rote:
-> >Hi Clancy,
-> >
-> >On Thu, Jan 4, 2024 at 9:56=E2=80=AFPM <clancy_shang@163.com> wrote:
-> >>
-> >> From: Clancy Shang <clancy.shang@quectel.com>
-> >>
-> >> when BLE master enter suspend,  it does not delete the peripheral that
-> >> in acceptlist. so if disable the wakeup function, the BLE master scans=
- with
-> >> basic filter next time, the peripheral can be scanned which is unexpec=
-ted
-> >>
-> >> Signed-off-by: Clancy Shang <clancy.shang@quectel.com>
-> >> ---
-> >>  net/bluetooth/hci_sync.c | 10 ++++++++++
-> >>  1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-> >> index d85a7091a116..abc7f614da5f 100644
-> >> --- a/net/bluetooth/hci_sync.c
-> >> +++ b/net/bluetooth/hci_sync.c
-> >> @@ -2533,6 +2533,7 @@ static u8 hci_update_accept_list_sync(struct hci=
-_dev *hdev)
-> >>         struct bdaddr_list *b, *t;
-> >>         u8 num_entries =3D 0;
-> >>         bool pend_conn, pend_report;
-> >> +       struct hci_conn_params *conn_params;
-> >>         u8 filter_policy;
-> >>         size_t i, n;
-> >>         int err;
-> >> @@ -2585,6 +2586,15 @@ static u8 hci_update_accept_list_sync(struct hc=
-i_dev *hdev)
-> >>                         continue;
-> >>                 }
-> >>
-> >> +               conn_params =3D hci_conn_params_lookup(hdev, &b->bdadd=
-r, b->bdaddr_type);
-> >> +               /* During suspend, only wakeable devices can be in acc=
-eptlist */
-> >> +               if (conn_params && hdev->suspended &&
-> >> +                   !(conn_params->flags & HCI_CONN_FLAG_REMOTE_WAKEUP=
-)) {
-> >> +                       hci_le_del_accept_list_sync(hdev, &b->bdaddr,
-> >> +                                                   b->bdaddr_type);
-> >> +                       continue;
-> >> +               }
-> >
-> >This might require a lock since that is not a copy of the conn_params
-> >which can be updated concurrently, so perhaps something like the
-> >following is might be safer:
-> >
-> >diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-> >index b3141e3f9cf6..eeb73a54fd26 100644
-> >--- a/net/bluetooth/hci_sync.c
-> >+++ b/net/bluetooth/hci_sync.c
-> >@@ -2206,8 +2206,11 @@ static int hci_le_add_accept_list_sync(struct
-> >hci_dev *hdev,
-> >
-> >        /* During suspend, only wakeable devices can be in acceptlist */
-> >        if (hdev->suspended &&
-> >-           !(params->flags & HCI_CONN_FLAG_REMOTE_WAKEUP))
-> >+           !(params->flags & HCI_CONN_FLAG_REMOTE_WAKEUP)) {
-> >+               hci_le_del_accept_list_sync(hdev, &params->bdaddr,
-> >+                                           params->bdaddr_type);
-> >                return 0;
-> >+       }
-> >
-> >        /* Select filter policy to accept all advertising */
-> >        if (*num_entries >=3D hdev->le_accept_list_size)
-> >
-> >>                 num_entries++;
-> >>         }
-> >>
-> >> --
-> >> 2.25.1
-> >>
-> >
-> >
-> >--
-> >Luiz Augusto von Dentz
-
-
-
---=20
-Luiz Augusto von Dentz
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>=0D
+=0D
+There are 6 SPI controllers on RK3399 and they are all numbered in the=0D
+TRM, so let's add the appropriate aliases to the main DTSI so that any=0D
+RK3399-based board doesn't need to define the aliases themselves to=0D
+benefit from stable SPI indices in userspace.=0D
+=0D
+Cc: Quentin Schulz <foss+kernel@0leil.net>=0D
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>=0D
+---=0D
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++=0D
+ 1 file changed, 6 insertions(+)=0D
+=0D
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts=
+/rockchip/rk3399.dtsi=0D
+index da0dfb237f853..7b04ba526fd59 100644=0D
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi=0D
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi=0D
+@@ -34,6 +34,12 @@ aliases {=0D
+ 		serial2 =3D &uart2;=0D
+ 		serial3 =3D &uart3;=0D
+ 		serial4 =3D &uart4;=0D
++		spi0 =3D &spi0;=0D
++		spi1 =3D &spi1;=0D
++		spi2 =3D &spi2;=0D
++		spi3 =3D &spi3;=0D
++		spi4 =3D &spi4;=0D
++		spi5 =3D &spi5;=0D
+ 	};=0D
+ =0D
+ 	cpus {=0D
+=0D
+-- =0D
+2.43.0=0D
+=0D
