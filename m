@@ -1,138 +1,122 @@
-Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2063.outbound.protection.outlook.com [40.107.212.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EBC3C694;
-	Tue,  9 Jan 2024 19:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alu.unizg.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alu.unizg.hr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F6E3D0CD;
+	Tue,  9 Jan 2024 19:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="NNW4P0j0";
-	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="WfvsBawM"
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 3A2C360177;
-	Tue,  9 Jan 2024 20:23:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1704828217; bh=Y42GFyRmBuoPGe7vrd1pFvKR4nPAFlTjEu6yMmACWMk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NNW4P0j0tjh5YVjXiM7hl7aw1XnMcLEB9FfoKb9OKCf9HLcJlyVg2Bgmjy1pt30mf
-	 xKEx/p//SmZn7CfFvAd1xHbsCEfipYvUB7IziFxdDfT8TUiGIYd9VyWM9UbrImhLvc
-	 VmJ2As9DBXOtGEMdbZaK8GBFYal6f4TMF1jeQeqIfW6W+CnXxVDQKiC//skxkvccR9
-	 ybMjpT+xzh2GDsh9E4nEwnUurPB2QqJjHYJLppiGeZV5JMIzKqDOBo3aDBXD44/maI
-	 guHifM9mQnHiTQeUOfKlmpx+9aZMheabiqg7msFn9aPCz8jlsUD7YoP8UkhcpKvLRX
-	 isfO9ZpfllsjQ==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id hy5WhOkhQeps; Tue,  9 Jan 2024 20:23:35 +0100 (CET)
-Received: from [192.168.239.51] (unknown [95.168.105.29])
-	by domac.alu.hr (Postfix) with ESMTPSA id 7E10960171;
-	Tue,  9 Jan 2024 20:23:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1704828215; bh=Y42GFyRmBuoPGe7vrd1pFvKR4nPAFlTjEu6yMmACWMk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WfvsBawM++od7CGSyM2LakCZVm9nXUPx07XHmbDwGPaE9ITsvnQOneOBXOnL7B1+Z
-	 Gd2BZz6/BQ3b6ubVaUdjpUPt8fn9wITqVp9xNRSrk4IzI7jhqU+lCfrMrYdYAwhIxl
-	 O9eApr+5RZDQLwWadDfQymoqZhnUtJb1hu1fzEVlQ39IQfiLnUe/4DdkNADtRTCSvD
-	 33jXdCuKVxB8lL7jHNoNyKf/rj4NmLWfpPXFghCPfsThDm9T+TRerazFBAqHJSJsJU
-	 itmOOeyZa8KXqtysYAcMgzv0HKJnI14Sex+jPmKsOihF2naMal9Ox6ZBE+A3XSMGWh
-	 6HugKS2lNrGkw==
-Message-ID: <056c0162-10cd-4402-999a-02dec87b34ad@alu.unizg.hr>
-Date: Tue, 9 Jan 2024 20:23:33 +0100
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="eWaId/QD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CNMuQ3RqwLARfpgNg+2bYpcqQnAz81NjSMypbR3cWhAb3mpuDCO6OgkLU9IMdx75IzszjnnNeG3EAfaehNNzZ5YQ+LKeYT/h6Hf9FFVSUbp5VMwy1bu84Dkopf9OdXVtrYjtFuClXi/sqUX4Rtac4zNnF9BrJHmLpsRFkcwNmPwhJNplkUSwEBaRFi4Qm+E6/53egUdpbXxYcganFp7Djz5UnKAAJSRJtDO7yrMA6a2rzaxtUKv6AiNZQN/4titV11mddW1Xw/2pX4dSwFKZO+fyIEsWQuw3PHCb1BwkEwRtVd+6N1h8++U20EtPxexnpu9DBuvdT99+riBEvcu+vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CFl34CDZeuQ/Ua+KK1MpJMTf95Xw+2Fae2Wfl3NcrwQ=;
+ b=S1o5Cvh5Icm2RMxXwpjs7YAkNILDyjW4GpUye33t83hYzKTAmKZk+EwL1xOmUR/1Medjg7iYtDZmhK3DP0eujER3JVQ/M+cjuQXjvN9DBgBaIFSJmWWth796VTzpT/327DB1vwR9qjaKFOjeUBUogVxVnndgquOMAXPSDCS5Ijo10i9GxzYOCoQEPkg+OwCFuzcxFsFj/XHFPo3Q8tiN+SGot5goYsHvT7fFiCMiiMzwbPUr1OjgK0D0dE9/ojPYlPsyZAtMqEArpoq4+mXN9Sqqz+7RkHioyO13LTN8Ch/BD2FdQT08486giMXj8U162xMVqDifH53eUJA5rYHR3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CFl34CDZeuQ/Ua+KK1MpJMTf95Xw+2Fae2Wfl3NcrwQ=;
+ b=eWaId/QDgLu/S9AXDwhYIqBxih3rACQ5mgl6+0/NJK1fLWORV0SMBOMUH5LyTtfOwCqRkpfF9ZKaywfzjpmGBMpRj6sRQxKmk4HpD2IfaAUMILkTTsqK4O8+3mRXbgdPVUTzdufRZxHvrrKfmmhcxkvWZpIBelAAiYbC9kF4/rT2WBm87xyutmqyimlH1mb9EbwZ/nemkoyOugj7ynJp2k9bUDKYbxwOLluKmUspKW7/LPk133zAbmypsskW34LQtbV6hVz72VLsMHkoiQ1s+UPaiiaY1PwrNgqs3CsqWSiydaSKTLIBHOmn76Gx/oFtl6nwIjDfs7uWNSyY5P4Yhw==
+Received: from SJ0PR03CA0136.namprd03.prod.outlook.com (2603:10b6:a03:33c::21)
+ by PH7PR12MB6786.namprd12.prod.outlook.com (2603:10b6:510:1ac::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
+ 2024 19:24:04 +0000
+Received: from MWH0EPF000989EC.namprd02.prod.outlook.com
+ (2603:10b6:a03:33c:cafe::74) by SJ0PR03CA0136.outlook.office365.com
+ (2603:10b6:a03:33c::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23 via Frontend
+ Transport; Tue, 9 Jan 2024 19:24:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ MWH0EPF000989EC.mail.protection.outlook.com (10.167.241.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.14 via Frontend Transport; Tue, 9 Jan 2024 19:24:03 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 9 Jan 2024
+ 11:23:47 -0800
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 9 Jan 2024
+ 11:23:47 -0800
+Received: from msst-build.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server id 15.2.986.41 via Frontend
+ Transport; Tue, 9 Jan 2024 11:23:45 -0800
+From: Besar Wicaksono <bwicaksono@nvidia.com>
+To: <acme@redhat.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<john.g.garry@oracle.com>, <james.clark@arm.com>, <mike.leach@linaro.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<namhyung@kernel.org>, <irogers@google.com>, <alisaidi@amazon.com>,
+	<vsethi@nvidia.com>, <rwiley@nvidia.com>, <ywan@nvidia.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<treding@nvidia.com>, <jonathanh@nvidia.com>, Besar Wicaksono
+	<bwicaksono@nvidia.com>
+Subject: [PATCH v1 0/3] arm64: Support Neoverse-V2 for Perf Arm SPE
+Date: Tue, 9 Jan 2024 13:23:07 -0600
+Message-ID: <20240109192310.16234-1-bwicaksono@nvidia.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] kselftest: alsa: Fix a couple of format specifiers
- and function parameters
-Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>
-Cc: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Shuah Khan <shuah@kernel.org>
-References: <20240107173704.937824-1-mirsad.todorovac@alu.unizg.hr>
- <87le8yr3rf.wl-tiwai@suse.de>
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-Autocrypt: addr=mirsad.todorovac@alu.unizg.hr; keydata=
- xjMEYp0QmBYJKwYBBAHaRw8BAQdAI14D1/OE3jLBYycg8HaOJOYrvEaox0abFZtJf3vagyLN
- Nk1pcnNhZCBHb3JhbiBUb2Rvcm92YWMgPG1pcnNhZC50b2Rvcm92YWNAYWx1LnVuaXpnLmhy
- PsKPBBMWCAA3FiEEdCs8n09L2Xwp/ytk6p9/SWOJhIAFAmKdEJgFCQ0oaIACGwMECwkIBwUV
- CAkKCwUWAgMBAAAKCRDqn39JY4mEgIf/AP9hx09nve6VH6D/F3m5jRT5m1lzt5YzSMpxLGGU
- vGlI4QEAvOvGI6gPCQMhuQQrOfRr1CnnTXeaXHhlp9GaZEW45QzOOARinRCZEgorBgEEAZdV
- AQUBAQdAqJ1CxZGdTsiS0cqW3AvoufnWUIC/h3W2rpJ+HUxm61QDAQgHwn4EGBYIACYWIQR0
- KzyfT0vZfCn/K2Tqn39JY4mEgAUCYp0QmQUJDShogAIbDAAKCRDqn39JY4mEgIMnAQDPKMJJ
- fs8+QnWS2xx299NkVTRsZwfg54z9NIvH5L3HiAD9FT3zfHfvQxIViWEzcj0q+FLWoRkOh02P
- Ny0lWTyFlgc=
-Organization: Academy of Fine Arts, University of Zagreb
-In-Reply-To: <87le8yr3rf.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989EC:EE_|PH7PR12MB6786:EE_
+X-MS-Office365-Filtering-Correlation-Id: b2b75b1e-5153-4cc1-bbc6-08dc11488a6a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	sZrK74vLQbh/rKBvRFjkTh/WPxwjXUEIp6JREf51rHx2MQTFEDlS6hkmdEkhppjvE21e+obvAKWfVI3jSqvJ7X6dCerJdrcfuMvuFpP++c8rdaoNj3g5JfSk1UEx+3h1Xcn1+VNprU6l+FiMGVxDINMAITsajwY/Ci+ZN8MmsqUDiW0Klx4StJRZwk/bLoepqL7ke71Yn0PQG56Y9M1Tw7qNqzm2fek9Rx1TK01W2iHD6XiGRqpffkZ7VUfNkG7kRkMWRzEGompv6hoKAgHVpJKL5c+BMMVg58mREDVnfRenvveBBxXzRNUjWdaHRY/l+ywY5ZQWctRBUMYaYcG1d2eQku2zOvh2CDfCvBc9/dDQF/cTTrcV5iU6/LKMdshBFZTW40vkUlPhZrD8jyicMSjsPsnDSA1hgR7Tdxkrwz6W7YEm+JNuv+7J4pYZvVV8yR+fGVqFJBaVTinfSpEl67Js6n+IFevqM2Hn8vxQEje3hev5+Zpu7oJMkT9u9/YwE7VV4OjYxCnPedqEVEfb3OQPVqWipTmbulCzQDvchoRLsEMTsoRnlgJ15y3qY/d4z9jlNR7ILuDqJvofkir7GReRMsTyVPSapa7JlrRY6vyGYj3+YT89gym0Bq0rOJynWWhs5d94Xgk17g6zXDJKru22kyWkvmZsrZMSE7uxzYlASkatf+GCm0ZXOKo5Dvs46VMHcSdEVETA+D7HP2sUH6cMsXkDnPVh5lmkvfRdxLAhxTA8so1H4LRVhvTZVbPE2XdDjIPex92BRUn7UqOPz55VsWGX5fxP+vUER2QyWYw=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(346002)(396003)(39860400002)(230922051799003)(186009)(451199024)(82310400011)(64100799003)(1800799012)(36840700001)(46966006)(40470700004)(316002)(107886003)(336012)(2616005)(1076003)(426003)(26005)(82740400003)(47076005)(36860700001)(8936002)(8676002)(5660300002)(4744005)(7416002)(6636002)(2906002)(478600001)(54906003)(7696005)(6666004)(4326008)(110136005)(70206006)(70586007)(921011)(41300700001)(356005)(7636003)(36756003)(86362001)(40480700001)(40460700003)(2101003)(83996005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 19:24:03.5461
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2b75b1e-5153-4cc1-bbc6-08dc11488a6a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989EC.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6786
 
-On 1/9/2024 3:16 PM, Takashi Iwai wrote:
-> On Sun, 07 Jan 2024 18:37:00 +0100,
-> Mirsad Todorovac wrote:
->>
->> Minor fixes of compiler warnings and one bug in the number of parameters which
->> would not crash the test but it is better fixed for correctness sake.
->>
->> As the general climate in the Linux kernel community is to fix all compiler
->> warnings, this could be on the right track, even if only in the testing suite.
->>
->> Changelog:
->>
->> v1 -> v2:
->> - Compared to v1, commit subject lines have been adjusted to reflect the style
->>    of the subsystem, as suggested by Mark.
->> - 1/4 was already acked and unchanged (adjusted the subject line as suggested)
->>    (code unchanged)
->> - 2/4 was acked with suggestion to adjust the subject line (done).
->>    (code unchanged)
->> - 3/4 The format specifier was changed from %d to %u as suggested.
->> - The 4/4 submitted for review (in the v1 it was delayed by an omission).
->>    (code unchanged)
->>
->> Mirsad Todorovac (4):
->>    kselftest/alsa - mixer-test: fix the number of parameters to
->>      ksft_exit_fail_msg()
->>    kselftest/alsa - mixer-test: Fix the print format specifier warning
->>    kselftest/alsa - mixer-test: Fix the print format specifier warning
->>    kselftest/alsa - conf: Stringify the printed errno in sysfs_get()
-> 
-> Applied all patches now.  Thanks.
-> 
-> 
-> Takashi
+This series support Neoverse-V2 CPU in Perf Arm SPE.
+The first patch adds the Neoverse-V2 part number in kernel header.
+The second patch syncs the kernel change to the tools header.
+The third patch adds Neoverse-V2 into perf's Neoverse SPE data source list.
 
-No, thanks to you for your patient work. I realise that there are roughly
-2,000 patch emails each day.
+Besar Wicaksono (3):
+  arm64: Add Neoverse-V2 part
+  tools headers arm64: Add Neoverse-V2 part
+  perf arm-spe: Add Neoverse-V2 to neoverse list
 
-This might seem like sugarcoating, but I realise the developers are under
-a great stress having to evaluate such number of patches each day. The kernel
-is now close to 35+ Mlines and I do not underestimate this work.
-
-I'm nowhere close to understanding all subsystems, but I recognise the need
-to be disciplined to make the maintainer's job easier and feasible in the
-long run.
-
-The time invested in the Linux kernel and operating system is a gift that
-keeps on giving :-)
-
-Regards,
-Mirsad
+ arch/arm64/include/asm/cputype.h       | 2 ++
+ tools/arch/arm64/include/asm/cputype.h | 2 ++
+ tools/perf/util/arm-spe.c              | 1 +
+ 3 files changed, 5 insertions(+)
 
 
+base-commit: d988c9f511af71a3445b6a4f3a2c67208ff8e480
 -- 
-Mirsad Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
+2.17.1
 
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
-tel. +385 (0)1 3711 451
-mob. +385 91 57 88 355
