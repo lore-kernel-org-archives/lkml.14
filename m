@@ -1,92 +1,136 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE773D541
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 20:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283F23D962
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 20:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=landley.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myH0n18e"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-336c8ab0b20so3184975f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 12:15:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=landley-net.20230601.gappssmtp.com header.i=@landley-net.20230601.gappssmtp.com header.b="V6uUpAPN"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7bee3761bb4so36970439f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 12:17:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704831354; x=1705436154; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MQBuQHYjeBWmqCwTGH4YkN69mVB+VC/t7tF3wqgLXWM=;
-        b=myH0n18eAKxpvut3gHEp6WZXm051QjYL3F2Jh+U5T927OjliOIBAQUrhbeuRdUYXTA
-         NM+hMAx2WNQyq4YvRuguOxmZHCLHsygpxqI8gGPkvSddKVPOlX7Q/rxZx+Q3D+Ruc3au
-         Smes7WOUo44lEdL3vmDxpPx4kgSOV+9wUCTwTeKt7S6WB8W4IYXgBvn4jV6rTmxvNV6S
-         RqUZKKC2KXulnIyZI3TpN/knNjAleYU49nqClQVZQ6AmeY9KlX57T0toPtq5SD1go7Rj
-         Qxn5NEpvYJfDAyzoTMYiG6xKvlJgsYJ8O9OOjLjzoVhuoU/udCoSgyn3TJPKeynNDkOW
-         0oAA==
+        d=landley-net.20230601.gappssmtp.com; s=20230601; t=1704831465; x=1705436265; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zvygCsnAZQSUX1OyBrWi0tyZLEH0CAk1fXUh+ZaJ3Lo=;
+        b=V6uUpAPN4uvL9v4m6KS3io6GQ4KJl/bVbOf/wTiGg8faPmhxgffs5YUP71+KavZN3p
+         iCTExOw14otoEx2QKRQ7GMWRN99onikdcVxXO+lHbBITaqOUYTDkhohy27kUAD6U/9Oe
+         pD7xRy5H2s9QSZqGM1AFAPIPsq+hG4Fu7WGcFpxV2RyTX3Brjjqib4UW4fOKus45htZ1
+         M0WM6Izr7vv/Sf1IM/z3nwYW6zqXp76JRxweIR67Ulm7HlMo1dWVbJSyNfnG5iqsiyMy
+         znZ7R0ljiOIdmyH++EGTcZJD/r1LMI0Vu7QgmOBJ0cDodf+V7it3+NX384WUIkLvPFkr
+         nxJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704831354; x=1705436154;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MQBuQHYjeBWmqCwTGH4YkN69mVB+VC/t7tF3wqgLXWM=;
-        b=VgITvplmviq96YliP+Z9E5vzB91SNZKDbgEZd3THi4ox1mGjdDay4VTa4hGxM1Dv1t
-         dDFspcGx57FDPQdtJAKPBcWqzW5sDVD522G6g0B0uEKlQ5EpAJT/nIUOFyCTkzh6mO4q
-         x5HvXrliHhPz2LcFC8J831+1v+XUtDI0En2vmPNrd9C030B6K9DvkphzGzq3zwoGP+vC
-         edFvuVYPwuZI7SBuoGsL8cqKF+LzbH5avxg5rSNoXu0FOPPM3BY3xlZLXwu96OiNxu5y
-         /WnAuW2BxCES1Yz+t9L4j68UZ+M2yU3lxsfi83vqJs6ROHW+0K3ci9F4YIIl6a5Gg3mi
-         qr+A==
-X-Gm-Message-State: AOJu0YwrdxbxctjchYFtcSW5ZpdN6ptJ4sJBdEsNwp7ARAR6Req03PJe
-	XakCPTc2CG6pWFPhw7NFBUg=
-X-Google-Smtp-Source: AGHT+IE4R7zgERsrbs9fWbJ69vzmnx8iBlzpLeYPnFGrt0JnjOw8UGQcz7XjE6871uIgRVOA/YyG7Q==
-X-Received: by 2002:a05:6000:543:b0:336:ec62:ea8b with SMTP id b3-20020a056000054300b00336ec62ea8bmr841769wrf.63.1704831354380;
-        Tue, 09 Jan 2024 12:15:54 -0800 (PST)
-Received: from jernej-laptop.localnet (213-161-3-116.dynamic.telemach.net. [213.161.3.116])
-        by smtp.gmail.com with ESMTPSA id cr8-20020a05600004e800b00336673a4153sm3191685wrb.80.2024.01.09.12.15.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 12:15:54 -0800 (PST)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>,
- Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, kernel@pengutronix.de
-Subject:
- Re: [PATCH 10/12] mailbox: sun6i-msgbox: Convert to platform remove callback
- returning void
-Date: Tue, 09 Jan 2024 21:15:52 +0100
-Message-ID: <3783111.kQq0lBPeGt@jernej-laptop>
-In-Reply-To:
- <2db7ef94aa35587980697405ec373e0b7bb70466.1703710628.git.u.kleine-koenig@pengutronix.de>
-References:
- <cover.1703710628.git.u.kleine-koenig@pengutronix.de>
- <2db7ef94aa35587980697405ec373e0b7bb70466.1703710628.git.u.kleine-koenig@pengutronix.de>
+        d=1e100.net; s=20230601; t=1704831465; x=1705436265;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zvygCsnAZQSUX1OyBrWi0tyZLEH0CAk1fXUh+ZaJ3Lo=;
+        b=eyZtnCbLfxtQ2Snme5vX6nOwaQ4piUHmlHkVTsmIpRkXsElU4SKBOJJ92/QoQCAv8q
+         1jWylmDVpMm3Jhj4o3zsF4S5gYQzwBL4iBARwfIqwOJmvpYv8rI1VZfgKJ/rGZaFNlwC
+         LRmP7f1LO2kiy6af4OTnDMHNh5giIdgwGCb4czmJC2AHU5L2rMXMTMYsvGItRBsGDvyh
+         7qonjb9T0OCFWpnCuYrjErYNd7x38hO/KVG+YStOh6X/EzFE6yQkpShtKWFMQz8SFV9D
+         BeClq+SMjxxeqLD6N5rzHY+H/4u9ifxegqOE4nmctSpSNwz2JPHF349/f5aRLcxhbMn0
+         Wu6g==
+X-Gm-Message-State: AOJu0YxZSImGBL/g+pwgVnFBCZellpZBxi7B+pO4BLmuiYhfDlPybakn
+	Q0Uo1zsXz84B2eGFT89U5sezSIjhBFAOhQ==
+X-Google-Smtp-Source: AGHT+IHJDeszorYY5GFrmlMsgPhnGqSSgFTpBWcziFxtkUG5t0gPVrqEY0fdimh0r8UPafEYZce6pw==
+X-Received: by 2002:a6b:7e08:0:b0:7bc:4215:da28 with SMTP id i8-20020a6b7e08000000b007bc4215da28mr5504732iom.42.1704831465186;
+        Tue, 09 Jan 2024 12:17:45 -0800 (PST)
+Received: from [172.16.32.83] ([198.232.126.202])
+        by smtp.gmail.com with ESMTPSA id q5-20020a02a305000000b0046e4506fa75sm13527jai.26.2024.01.09.12.17.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jan 2024 12:17:44 -0800 (PST)
+Message-ID: <a3d7f5ae-56c6-9cd8-2cda-2d50d12be9c4@landley.net>
+Date: Tue, 9 Jan 2024 14:24:22 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Call for nommu LTP maintainer [was: Re: [PATCH 00/36] Remove
+ UCLINUX from LTP]
+Content-Language: en-US
+To: Petr Vorel <pvorel@suse.cz>
+Cc: Cyril Hrubis <chrubis@suse.cz>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, ltp@lists.linux.it, Li Wang <liwang@redhat.com>,
+ Andrea Cervesato <andrea.cervesato@suse.com>,
+ Greg Ungerer <gerg@linux-m68k.org>, Jonathan Corbet <corbet@lwn.net>,
+ Randy Dunlap <rdunlap@infradead.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Christophe Lyon <christophe.lyon@linaro.org>,
+ linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ linux-riscv <linux-riscv@lists.infradead.org>,
+ Linux-sh list <linux-sh@vger.kernel.org>,
+ automated-testing@lists.yoctoproject.org, buildroot@buildroot.org,
+ Niklas Cassel <niklas.cassel@wdc.com>
+References: <20240103015240.1065284-1-pvorel@suse.cz>
+ <CAMuHMdXGwyS-CL0vLdUP4Z4YEYhmcmDyC3YdGCnS=jFkqASqvw@mail.gmail.com>
+ <20240103114957.GD1073466@pevik>
+ <CAMuHMdX0s0gLRoPtjJmDnSmZ_MNY590dN+JxM1HKAL1g_bjX+w@mail.gmail.com>
+ <ZZVOhlGPg5KRyS-F@yuki> <5a1f1ff3-8a61-67cf-59a9-ce498738d912@landley.net>
+ <20240105131135.GA1484621@pevik>
+ <90c1ddc1-c608-30fc-d5aa-fdf63c90d055@landley.net>
+ <20240108090338.GA1552643@pevik>
+From: Rob Landley <rob@landley.net>
+In-Reply-To: <20240108090338.GA1552643@pevik>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Dne sreda, 27. december 2023 ob 22:02:38 CET je Uwe Kleine-K=F6nig napisal(=
-a):
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
->=20
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
->=20
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+On 1/8/24 03:03, Petr Vorel wrote:
+> Hi Rob, all,
+> 
+> [ Added Niklas Cassel, who is maintainer of qemu_riscv64_nommu_virt_defconfig in
+> buildroot ]
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Hi Niklas!
 
-Best regards,
-Jernej
+>> Buildroot also apparently has an LTP package selectable in menuconfig:
+> 
+>> https://github.com/buildroot/buildroot/tree/master/package/ltp-testsuite
+> 
+>> But I haven't tried it...
+> 
+> I'm the maintainer of the LTP package in buildroot in my private time.
+> BTW I spent quite a lot of time fixing LTP (and some other system packages,
+> e.g. nfs-utils) compilation on some old legacy architectures reported via
+> http://autobuild.buildroot.net/ I've never used in the reality.
+> But I certainly don't have time to drive nommu support in my private time.
+> I don't even have an interest, I don't use any nommu device.
 
+I do, but I've never done much with LTP, and I have my hands full with toybox
+and mkroot already.
 
+> Therefore nobody who is not involved in nommu will not find a time to support it
+> in LTP (support does not mean just to add the functionality to the new C API,
+> but run tests on nommu and fix failing bugs). I suppose nobody is paid to work
+> on nommu platforms, it would have to be a hobby project, right?
+
+A bunch of people are paid to work on nommu platforms, and I've worked with them
+a bunch, but none of them talk to linux-kernel. They find the culture toxic,
+insular, and categorically dismissive of their interests.
+
+For example, cortex-m is a large nommu platform on which vendors support Linux
+BSPs, but notice how page 8 of
+https://www.microsemi.com/document-portal/doc_view/132181-linux-cortex-m-users-manual
+points at a cross compiler toolchain from _2010_ and page 4 says they're booting
+a 2.6.33 kernel?
+
+I'm a bit weird in that I try to get CURRENT stuff to work on nommu, and a lot
+of people have been happy to consume my work, but getting any of them to post
+directly to linux-kernel is like pulling teeth.
+
+> But as I said, if anybody from nommu decides to maintain it in LTP, I'll try to
+> support him in my free time (review patches, give advices). And if nobody
+> stands, this patchset which removes the support in the old API will be merged
+> after next LTP release (in the end of January).
+
+What does the API migration do? Is there a page on it ala OABI vs EABI in arm or
+something?
+
+Rob
