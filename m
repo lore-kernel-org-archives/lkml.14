@@ -1,177 +1,270 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89523A297;
-	Tue,  9 Jan 2024 15:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA67D39FE4;
+	Tue,  9 Jan 2024 15:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLypg5GB"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5e89ba9810aso24792167b3.2;
-        Tue, 09 Jan 2024 07:47:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704815262; x=1705420062; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=iq9+BPAn/FzkMzpLSI81D5gJEH0V/XExU3YR5f63LHU=;
-        b=SLypg5GBkVYcbeoOM1Vgctv4rWmZeNILc6vPxR8rDZAhofY5Df6KqAUoLij4z+4a5o
-         a+llltjvgiCNvZabdQEoaEjcyQT/FoEIdzCOJWznrhKYwcHre9dcmBCTJuaH6UUqHXfi
-         8E1OCs0AGqMfJYdPCyNp5KpQ/BqME5UR6JfTC8xqFV0b7yt9klYuLHuqqBiF7WzOoMGl
-         unmbvn4B5RMqwzPHRGgcz46sX5zgMwd8q1DIvvBzR0tat5XSlUvFuU9dlIC8gOJvXcVT
-         xXpo9lir+7kd6m2AK78o487ndafrQb9ZkIR11vIpomg0ck0Seis6HBnO8zUrh2z0pxkT
-         I2pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704815262; x=1705420062;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iq9+BPAn/FzkMzpLSI81D5gJEH0V/XExU3YR5f63LHU=;
-        b=WtP3UXsER5M6UNA2X/NIvldMEGKNSUN8kC00tFEMIdE8BZS8Tl78/GgjpmYjkbcU7j
-         kZ3aiy02WBfRt0T3W6AlaKyB2YLdX2KL7g3lvq82PKY88e/X4LQaabxIDxA/aNSJVp3c
-         xFx3DB1JYrBRV0pd+8nzasG48FDF0rF4SrbjJPEWRNMX6GAocfecHuAg/ykBBJgaJTTA
-         1AcdOMSjeBo97MehXDjd36KNDRCo7eiUbbeeefmka+u8jvZH+vwZJ3mPM8RiAxJSnPqZ
-         eDeo8IjEH2zdkIHAHrHdzzikf2t/0pMVAyx61seYZKiH8ei6AcP9QJr4K6uBcYh6Et1q
-         yZ4Q==
-X-Gm-Message-State: AOJu0YzjNK92OyzH48rkCMkaOrshzIFPdpF0QpMO+SzpWrruDW4O84ak
-	Lrfey0nSLcSxH8vsok0VUiAfxkrg+Ds=
-X-Google-Smtp-Source: AGHT+IHpR4oPu6yXgvLmk6PNDfqi/dJksmLI62y+lSvUkX52CzNHyniwBvd+yAcGfm2mFBCwdorKGw==
-X-Received: by 2002:a0d:fa84:0:b0:5de:7ec5:808d with SMTP id k126-20020a0dfa84000000b005de7ec5808dmr4016996ywf.77.1704815262594;
-        Tue, 09 Jan 2024 07:47:42 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h3-20020a81b403000000b005d36f6c7836sm821477ywi.104.2024.01.09.07.47.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jan 2024 07:47:41 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <5004d63d-905b-4297-aa8e-23c9ccaa3444@roeck-us.net>
-Date: Tue, 9 Jan 2024 07:47:39 -0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="htZLQXpV"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409FUEAY029090;
+	Tue, 9 Jan 2024 15:48:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=xcI6k51
+	O7VFgfEcPaTpOQZKrE3COVXYA0Fzjf2+weKM=; b=htZLQXpV3s0gbRBi01ce9Oq
+	+KrO4FxCfQ4QC/A0RTeJ22LMF1+au/Rir5uN22b/dMKk2aHSiItzNMxqiMQgSdTu
+	7ZvBFTQQs76tyMG2UJznBK8JGc60XkZs3Un/l6iyaK0apA3YQM/iaW7LV/wRbu7F
+	7NoX3+to/+8z6xO8y3VnDsUcBL9QErAHVQ+dDHk8f3oBG/Qb57SF6jOnFYlvu+FJ
+	P40VWAoP84yw0VVMZ2XkcD7TB9i1twgfEd4W9Nq3EQak7L1jrDcH85iEsbwv1KIu
+	4Z8BUyyIr3C67z0KaZ7rTT4RrrJy4ew3akzc7Er9DQrzJfPOojjL+xaTzb0zIWg=
+	=
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgr1shyqh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 15:48:38 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409FmbGm014629
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jan 2024 15:48:37 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 9 Jan 2024 07:48:32 -0800
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+To: <corbet@lwn.net>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>, <vigneshr@ti.com>,
+        <nm@ti.com>, <matthias.bgg@gmail.com>, <kgene@kernel.org>,
+        <alim.akhtar@samsung.com>, <bmasney@redhat.com>
+CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mukesh Ojha
+	<quic_mojha@quicinc.com>
+Subject: [PATCH v7 00/12] Add Qualcomm Minidump driver related support
+Date: Tue, 9 Jan 2024 21:01:48 +0530
+Message-ID: <20240109153200.12848-1-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.43.0.254.ga26002b62827
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: USB PD TYPEC - FUSB302B port controller hard reset issue
-Content-Language: en-US
-To: Suniel Mahesh <sunil@amarulasolutions.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, USB list <linux-usb@vger.kernel.org>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Da Xue <da.xue@libretech.co>,
- Da Xue <da@lessconfused.com>, Da Xue <da@libre.computer>,
- Kyle Tso <kyletso@google.com>, RD Babiera <rdbabiera@google.com>
-References: <CAM+7aWvmmyyLN5YHuJhg_X402OFmP_sVe6h_mr5tURjv0Ti5vQ@mail.gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <CAM+7aWvmmyyLN5YHuJhg_X402OFmP_sVe6h_mr5tURjv0Ti5vQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Jg9FOwt-cjzA4jz2OhvZC1wy8FJ9KhiF
+X-Proofpoint-GUID: Jg9FOwt-cjzA4jz2OhvZC1wy8FJ9KhiF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 priorityscore=1501 suspectscore=0
+ bulkscore=0 impostorscore=0 adultscore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401090128
 
-On 1/8/24 23:17, Suniel Mahesh wrote:
-> Hi Guenter/Heikki/Greg and all,
-> 
-> This email is a narrowed version of the earlier discussion at:
-> https://lore.kernel.org/all/CAM+7aWt7hJSmJQ78Fes0jMcrF9E8yhN=sDgYuU-hBxO0+1Uj0g@mail.gmail.com/T/
-> 
-> Please guide/suggest on why the FUSB302B port controller on a target board
-> is getting reset(hard reset) on reception of a 0x0 packet from source(PD Wall
-> charger 100W - 20V@5A).
-> 
-> log when reset:
-> 
-> [    1.599049] FUSB302: IRQ: 0x80, a: 0x00, b: 0x00, status0: 0x83
-> [    1.602836] FUSB302: IRQ: 0x00, a: 0x40, b: 0x00, status0: 0x83
-> [    1.606210] TCPM: tcpm_pd_event_handler: in TCPM_CC_EVENT
-> [    1.968179] FUSB302: IRQ: 0x80, a: 0x00, b: 0x00, status0: 0x83
-> [    2.133140] FUSB302: IRQ: 0x41, a: 0x04, b: 0x00, status0: 0x93
-> [    2.133704] FUSB302: IRQ: PD tx success
-> [    2.136046] FUSB302: PD message header: 161
-> [    2.136392] FUSB302: PD message len: 0
-> [    2.136845] TCPM: PD TX complete, status: 0
-> [    2.139382] FUSB302: IRQ: 0x51, a: 0x00, b: 0x00, status0: 0x93
-> [    2.142192] FUSB302: IRQ: 0x51, a: 0x00, b: 0x01, status0: 0x93
-> [    2.142804] FUSB302: IRQ: PD sent good CRC
-> [    2.145274] FUSB302: PD message header: 1a3
-> [    2.145674] FUSB302: PD message len: 0
-> [    2.146072] FUSB302: fusb302_pd_read_message: to tcpm_pd_receive
-> [    2.146478] TCPM: PD RX, header: 0x1a3 [1]
-> [    2.147042] TCPM: tcpm_pd_ctrl_request: type:0x3
-> [    2.147435] TCPM: tcpm_pd_ctrl_request: case PD_CTRL_ACCEPT
-> [    2.146309] TCPM: tcpm_pd_ctrl_request: case SOFT_RESET_SEND
-> [    2.148266] TCPM: tcpm_pd_rx_handler: done
-> [    2.158196] FUSB302: IRQ: 0x51, a: 0x00, b: 0x01, status0: 0x93
-> [    2.158600] FUSB302: IRQ: PD sent good CRC
-> [    2.161283] FUSB302: PD message header: 0
-> [    2.161710] FUSB302: PD message len: 0
-> [    2.162092] FUSB302: fusb302_pd_read_message: to tcpm_pd_receive
-> [    2.162608] TCPM: PD RX, header: 0x0 [1]
-> [    2.163181] TCPM: tcpm_pd_rx_handler: done
-> [    2.179843] FUSB302: IRQ: 0x41, a: 0x01, b: 0x00, status0: 0x83
-> [    2.180314] FUSB302: IRQ: PD received hardreset: interrupta: 1
-> [    2.181125] FUSB302: fusb302_pd_reset:
-> [    2.182597] TCPM: tcpm_pd_event_handler:
-> [    2.182937] TCPM: tcpm_pd_event_handler: TCPM_RESET_EVENT
-> [    2.183292] TCPM: _tcpm_pd_hard_reset: Received hard reset
-> [    2.183770] TCPM: _tcpm_pd_hard_reset:
-> 
-> Let me know if you need anymore details.
-> 
+Hi,
 
-AFAICS the wall charger sends a hard reset request, which is honored.
-This seems to work as intended to me. What is interesting though is that
-I don't see a "Unrecognized extended message type" in the log,
-suggesting that the message id is 0 and matches the previous
-message ID. This would cause the message to be ignored.
+Just for information,
+We have recently presented at LPC2023
+Abstract and PDF here:
+https://lpc.events/event/17/contributions/1468/
 
-I don't really know what do do with this. All I can say is that
-the charger should not send a message with header==0x0. It looks like
-there is no response sent to this message, which is possibly the
-reason why the charger sends the hard reset request. But that doesn't
-give us a hint what we should or even could do in this situation.
+Video:
+https://www.youtube.com/watch?v=3vL3gtAu84s
 
-Guenter
+For testing this series should be applied on top of below series
+https://lore.kernel.org/lkml/1704727654-13999-1-git-send-email-quic_mojha@quicinc.com/
+
+Patch 1 deals in detail documentation on minidump.
+Patch 2-4 refactors minidump existing layout and separate it from remoteproc files.
+Patch 6 is the Qualcomm apss minidump driver.
+Patch 7-10 Enable support to reserve dynamic ramoops and the support to
+  register ramoops region with minidump.
+Patch 11-12 enable support to enable multiple download mode
+
+Changes in v7:
+ - Addressed comment made by [Pavan.K] to use generic notifiers.
+ - Addresses comment made on Dynamic ramoops about error handling.
+ - Significant change minidump documentation suggested by [Bryan O'Donoghue]
+ - Added Reviewed by from [Bagas]
+ - Renamed ramoops notifiers.
+
+Changes in v6: https://lore.kernel.org/lkml/1700864395-1479-1-git-send-email-quic_mojha@quicinc.com/
+ - Accumalated the feedback received on v5 and rebase v5 versions in v6.
+ - Removed the exported function as there is no current users of them.
+ - Applied [Pavan.K] suggestion on caller/callee placement of dynamic ramoops reserve memory.
+ - Addressed [krzysztof] comment on sizeof() and to have qcom_apss_md_table_exit().
+ - Addressed [Bagas.S] comment on minidump doc.
+ - Tried to implement [Kees] suggestion in slight different way with callback registration
+   with ramoops instead of pstore core.
+
+Change in rebase v5: https://lore.kernel.org/lkml/1694429639-21484-1-git-send-email-quic_mojha@quicinc.com/
+ - Rebased it on latest tag available on linux-next
+ - Added missed Poovendhan sign-off on 15/17 and tested-by tag from
+   Kathiravan. Thanks to him for testing and reminding me of missing sign-off.
+
+Changes in v5: https://lore.kernel.org/lkml/1694290578-17733-1-git-send-email-quic_mojha@quicinc.com/
+ - On suggestion from Pavan.k, to have single function call for minidump collection
+   from remoteproc driver, separated the logic to have separate minidump file called
+   qcom_rproc_minidump.c and also renamed the function from qcom_minidump() to
+   qcom_rproc_minidump(); however, dropped his suggestion about rework on lazy deletion
+   during region unregister in this series, will pursue it in next series.
+
+ - To simplify the minidump driver, removed the complication for frontend and different
+   backend from Greg suggestion, will pursue this once main driver gets mainlined.
+
+ - Move the dynamic ramoops region allocation from Device tree approach to command line
+   approch with the introduction command line parsing and memblock reservation during
+   early boot up; Not added documentation about it yet, will add if it gets positive
+   response.
+
+ - Exporting linux banner from kernel to make minidump build also as module, however,
+   minidump is a debug module and should be kernel built to get most debug information
+   from kernel.
+
+ - Tried to address comments given on dload patch series.
+
+Changes in v4: https://lore.kernel.org/lkml/1687955688-20809-1-git-send-email-quic_mojha@quicinc.com/
+ - Redesigned the driver and divided the driver into front end and backend (smem) so
+   that any new backend can be attached easily to avoid code duplication.
+ - Patch reordering as per the driver and subsystem to easier review of the code.
+ - Removed minidump specific code from remoteproc to minidump smem based driver.
+ - Enabled the all the driver as modules.
+ - Address comments made on documentation and yaml and Device tree file [Krzysztof/Konrad]
+ - Address comments made qcom_pstore_minidump driver and given its Device tree
+   same set of properties as ramoops. [Luca/Kees]
+ - Added patch for MAINTAINER file.
+ - Include defconfig change as one patch as per [Krzysztof] suggestion.
+ - Tried to remove the redundant file scope variables from the module as per [Krzysztof] suggestion.
+ - Addressed comments made on dload mode patch v6 version
+   https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+
+Changes in v3: https://lore.kernel.org/lkml/1683133352-10046-1-git-send-email-quic_mojha@quicinc.com/
+ - Addressed most of the comments by Srini on v2 and refactored the minidump driver.
+    - Added platform device support
+    - Unregister region support.
+ - Added update region for clients.
+ - Added pending region support.
+ - Modified the documentation guide accordingly.
+ - Added qcom_pstore_ramdump client driver which happen to add ramoops platform
+   device and also registers ramoops region with minidump.
+ - Added download mode patch series with this minidump series.
+    https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+
+Changes in v2: https://lore.kernel.org/lkml/1679491817-2498-1-git-send-email-quic_mojha@quicinc.com/
+ - Addressed review comment made by [quic_tsoni/bmasney] to add documentation.
+ - Addressed comments made by [srinivas.kandagatla]
+ - Dropped pstore 6/6 from the last series, till i get conclusion to get pstore
+   region in minidump.
+ - Fixed issue reported by kernel test robot.
+
+Changes in v1: https://lore.kernel.org/lkml/1676978713-7394-1-git-send-email-quic_mojha@quicinc.com/
+
+Minidump is a best effort mechanism to collect useful and predefined data
+for first level of debugging on end user devices running on Qualcomm SoCs.
+It is built on the premise that System on Chip (SoC) or subsystem part of
+SoC crashes, due to a range of hardware and software bugs.
+
+Qualcomm devices in engineering mode provides a mechanism for generating
+full system ramdumps for post mortem debugging. But in some cases it's
+however not feasible to capture the entire content of RAM. The minidump
+mechanism provides the means for selecting which snippets should be
+included in the ramdump.
+
+The core of SMEM based minidump feature is part of Qualcomm's boot
+firmware code. It initializes shared memory (SMEM), which is a part of
+DDR and allocates a small section of SMEM to minidump table i.e also
+called global table of content (G-ToC). Each subsystem (APSS, ADSP, ...)
+has their own table of segments to be included in the minidump and all
+get their reference from G-ToC. Each segment/region has some details
+like name, physical address and it's size etc. and it could be anywhere
+scattered in the DDR.
+
+Existing upstream Qualcomm remoteproc driver[1] already supports SMEM
+based minidump feature for remoteproc instances like ADSP, MODEM, ...
+where predefined selective segments of subsystem region can be dumped
+as part of coredump collection which generates smaller size artifacts
+compared to complete coredump of subsystem on crash.
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/remoteproc/qcom_common.c#n142
+
+In addition to managing and querying the APSS minidump description,
+the Linux driver maintains a ELF header in a segment. This segment
+gets updated with section/program header whenever a new entry gets
+registered.
+
+Testing of these patches has been done on sm8450 target after enabling config like
+CONFIG_PSTORE_RAM/CONFIG_PSTORE_CONSOLE and once the device boots up.
+
+ echo mini > /sys/module/qcom_scm/parameters/download_mode
+
+Try crashing it via devmem2 0xf11c000(this is known to create xpu violation and
+and put the device in download mode) on command prompt.
+
+Default storage type is set to via USB, so minidump would be downloaded with the
+help of x86_64 machine (running PCAT tool) attached to Qualcomm device which has
+backed minidump boot firmware support.
+
+This will make the device go to download mode and collect the minidump on to the
+attached x86 machine running the Qualcomm PCAT tool(This comes as part Qualcomm
+package manager kit).
+
+After that we will see a bunch of predefined registered region as binary blobs files
+starts with md_* downloaded on the x86 machine on given location in PCAT tool from
+the target device, more about this can be found in qualcomm minidump guide patch.
+
+Mukesh Ojha (12):
+  docs: qcom: Add qualcomm minidump guide
+  soc: qcom: Add qcom_rproc_minidump module
+  remoteproc: qcom_q6v5_pas: Use qcom_rproc_minidump()
+  remoteproc: qcom: Remove minidump related data from qcom_common.c
+  init: export linux_banner data variable
+  soc: qcom: Add Qualcomm APSS minidump kernel driver
+  MAINTAINERS: Add entry for minidump related files
+  pstore/ram: Add dynamic ramoops region support through commandline
+  pstore/ram: Add ramoops information notifier support
+  soc: qcom: register ramoops region with APSS minidump
+  firmware: qcom_scm: Refactor code to support multiple dload mode
+  firmware/qcom: qcom_scm: Add multiple download mode support
+
+ Documentation/admin-guide/index.rst         |   1 +
+ Documentation/admin-guide/qcom_minidump.rst | 318 +++++++++
+ Documentation/admin-guide/ramoops.rst       |  23 +-
+ MAINTAINERS                                 |  10 +
+ drivers/firmware/qcom/Kconfig               |  11 -
+ drivers/firmware/qcom/qcom_scm.c            |  62 +-
+ drivers/remoteproc/Kconfig                  |   1 +
+ drivers/remoteproc/qcom_common.c            | 160 -----
+ drivers/remoteproc/qcom_q6v5_pas.c          |   3 +-
+ drivers/soc/qcom/Kconfig                    |  23 +
+ drivers/soc/qcom/Makefile                   |   2 +
+ drivers/soc/qcom/qcom_minidump.c            | 681 ++++++++++++++++++++
+ drivers/soc/qcom/qcom_minidump_internal.h   |  74 +++
+ drivers/soc/qcom/qcom_rproc_minidump.c      | 111 ++++
+ drivers/soc/qcom/smem.c                     |  20 +
+ fs/pstore/Kconfig                           |  15 +
+ fs/pstore/ram.c                             | 181 +++++-
+ include/linux/init.h                        |   3 +
+ include/linux/pstore_ram.h                  |  17 +
+ include/linux/soc/qcom/smem.h               |   2 +
+ include/soc/qcom/qcom_minidump.h            |  41 ++
+ init/main.c                                 |   2 +
+ init/version-timestamp.c                    |   3 +
+ 23 files changed, 1579 insertions(+), 185 deletions(-)
+ create mode 100644 Documentation/admin-guide/qcom_minidump.rst
+ create mode 100644 drivers/soc/qcom/qcom_minidump.c
+ create mode 100644 drivers/soc/qcom/qcom_minidump_internal.h
+ create mode 100644 drivers/soc/qcom/qcom_rproc_minidump.c
+ create mode 100644 include/soc/qcom/qcom_minidump.h
+
+-- 
+2.43.0.254.ga26002b62827
 
