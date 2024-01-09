@@ -1,134 +1,103 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2760A24B58;
-	Tue,  9 Jan 2024 08:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3210364CA
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 08:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="L/j5WFUq"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4098HbKT023141;
-	Tue, 9 Jan 2024 08:27:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=tmQVfu8T5g6r8ZBSS0dsgBYtzWye/vB2luydVgb+9DM=;
- b=L/j5WFUqBVicQU+3D0zeyhp/9/ERM4u2/xPoUmgbzEWfMDsmb29zsCaMH8+rEt9F5WA1
- LT0lX3cMZAAGWO9U7cd00UgGZTnDAdxYvRt6rW2TMBI0GcrPJ0bjh+QVGB05O1bcPfAA
- IEZc2bFMkhHJYckI7qHC+5vlikuqWoYEZ15YOWwCLgozuqJWC6NvT0a9oLkHj7Pcb2e2
- zGFVICOqwgfiMZDXjxnH/FQcHKePz4VTaWRT1M7SeLTh16PeQD6dqCsUAXb8sAaEhFsw
- fLu57zBjS9kHixafPTAPhjiD3nZJieMBTpxxg63c6qsMicqyWV0B3Wr0HC658kYtv69D 1A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vh2gf08hb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 08:27:53 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4098JI4F028404;
-	Tue, 9 Jan 2024 08:27:52 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vh2gf08gv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 08:27:52 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4095WLWj000926;
-	Tue, 9 Jan 2024 08:27:52 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vfkdk52m3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 08:27:52 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4098RlQb25756350
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Jan 2024 08:27:47 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0B9DB20043;
-	Tue,  9 Jan 2024 08:27:47 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6413C20040;
-	Tue,  9 Jan 2024 08:27:46 +0000 (GMT)
-Received: from [9.171.15.166] (unknown [9.171.15.166])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Jan 2024 08:27:46 +0000 (GMT)
-Message-ID: <d5c3d69e-3405-4cf2-a2e7-0dad7d941e0c@linux.ibm.com>
-Date: Tue, 9 Jan 2024 09:27:46 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnkKTu8n"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2b4aba3a8aso36021466b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 00:28:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704788917; x=1705393717; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=12NVFfjg6W1Zi5ETWmGcRAxyHlBNBpcW/SmCJ7rMyZU=;
+        b=OnkKTu8n9LL9OHSXgNKZ4jtSuOJwJVa3ck1wZGyDmNKYHJDZLxtRDuGkwIfgfvbnjy
+         ELXwALawZJLrfVc8NjUSHmD/sToyKeFXu1O581es978LX4R12W0/huVbDT/S9iG11MWf
+         hS7N5St7sDKwwIH96z3FpvA0cBldxPWyT3m/mE1qWOotTsnxIGRIXoqRuDFfGtiQoj79
+         AELvuS+vRpBjemjPkxNwXW+jCrWfcfQyof5BJFn2MX/JF4bhQbuHiP6hzvLfoskQPLj1
+         Xc+L7nZY8BUMJsTkjB4yUCT8fmKvxclDjJ3Q+ox1QdkAsBhc/SqN6rnrTA635uRv2vfW
+         VvOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704788917; x=1705393717;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=12NVFfjg6W1Zi5ETWmGcRAxyHlBNBpcW/SmCJ7rMyZU=;
+        b=cNtBVpj16z8g0FTBiN3SxVqYOKnisZrdgTMeIGM1U7dSEQFl1oXBjdnZoTVmMkMfD4
+         Tsj5lOF7aEU/AaOpUYp5IlW5hUCJnMu+BK8AZvvxe8D6+eStiTMqJ6t+xyMexVybIIGG
+         X+N+5SEfVS6FY+QoNjXmQEePjZJTzK8DfJTbsIAX9gbXe4Y4nI1ssjyhiIsciKnuzCrQ
+         uMY+UXcAQeu2gGOqmitAiOLERm6EsgLAfWz75KQj7JXWQcpYtMcbkoFeYgJiWePLxFAj
+         Cw0ibkE6XY39URpxUOsZDp84QbSLVi1y3cTF/S9zBQvFhit+tUeEbQSYcpTjxf3PoRCd
+         8Juw==
+X-Gm-Message-State: AOJu0YzjmKOt50iaZHJW6W4u7fpMT6SlIP69/1VmnAsD3SXg2YF96DdT
+	gXfbicgxGjOP1LcQ8Bn9+ub+O8dK3Hg=
+X-Google-Smtp-Source: AGHT+IEtdNDiWhR6Lu2MoNrRV+FFwaUB7OCLNoQuEFe+Y3ttvz8IzAsXcdQRFDZ2Qh+f5KFc9714Pg==
+X-Received: by 2002:a17:907:c1a:b0:a28:d0c5:535 with SMTP id ga26-20020a1709070c1a00b00a28d0c50535mr429135ejc.110.1704788916640;
+        Tue, 09 Jan 2024 00:28:36 -0800 (PST)
+Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
+        by smtp.gmail.com with ESMTPSA id a23-20020a17090640d700b00a2a9dddb308sm753383ejk.121.2024.01.09.00.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 00:28:36 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Tue, 9 Jan 2024 09:28:33 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [GIT PULL] x86/mm changes for v6.8
+Message-ID: <ZZ0DsS7LGJO0NAq6@gmail.com>
+References: <ZZvd5KZKVXAtM1+F@gmail.com>
+ <CAHk-=wi9aEe9BuiM2DQNsGoUg=ZeQS6EfOs+0pz3kTZ=qvf=pg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/6] s390/vfio-ap: reset queues removed from guest's AP
- configuration
-To: Anthony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc: jjherne@linux.ibm.com, borntraeger@de.ibm.com, pasic@linux.ibm.com,
-        pbonzini@redhat.com, imbrenda@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <20231212212522.307893-1-akrowiak@linux.ibm.com>
- <11ac008c-9bea-4b34-bc4b-e0d7e7ed9bef@linux.ibm.com>
-Content-Language: en-US
-From: Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; keydata=
- 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
-In-Reply-To: <11ac008c-9bea-4b34-bc4b-e0d7e7ed9bef@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: fG1fh5tD5JHuOemtKglaevYVIVKCNvTD
-X-Proofpoint-GUID: i6e-3WEvesPxlczIFYvaLbSxmyp2gXwS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-09_03,2024-01-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- priorityscore=1501 clxscore=1011 mlxlogscore=470 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 phishscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401090065
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wi9aEe9BuiM2DQNsGoUg=ZeQS6EfOs+0pz3kTZ=qvf=pg@mail.gmail.com>
 
-On 1/8/24 17:52, Anthony Krowiak wrote:
-> PING!
+
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Mon, 8 Jan 2024 at 03:35, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >  - Robustify pfn_to_kaddr()
+> >
+> >  - Improve the __untagged_addr() code: RIP-relative addresses are fine these days
+> >    and generate better code, and update misleading/outdated comments as well.
 > 
-You're waiting for review of the last patch, right?
+> This does not even compile for me.
+> 
+>   arch/x86/include/asm/uaccess_64.h: In function ‘__untagged_addr’:
+>   arch/x86/include/asm/uaccess_64.h:25:28: error: implicit declaration
+> of function ‘__my_cpu_var’; did you mean ‘put_cpu_var’?
+> [-Werror=implicit-function-declaration]
+> 
+> WTH?
+> 
+> Maybe this has worked in your tree by mistake because there was some
+> branch dependency that just happened to work out because you had
+> merged things in a different order.
+> 
+> But that would very much not be ok regardless. Those branches should
+> be tested independently, and clearly they were not.
 
+Sorry about that and agreed. Indeed the build failure was hidden by another 
+branch, and while I did test-build and test-boot the x86/mm branch before 
+sending it out, but my test config didn't have CONFIG_ADDRESS_MASKING=y ... 
+which ... masked the build failure. The bots that do per-tree testing 
+didn't catch this either.
+
+I've now sorted it out in our trees, will send the new x86/mm in a few days.
+
+Thanks,
+
+	Ingo
