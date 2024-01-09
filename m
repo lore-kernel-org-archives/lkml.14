@@ -1,73 +1,101 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE4239FC7;
-	Tue,  9 Jan 2024 14:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B994E38FB7;
+	Tue,  9 Jan 2024 14:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="benXRy8S"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ReygpUPBEdZ1BRba3KM+g+WyDgtAIJz2xQPrwSClj6s=; b=benXRy8Sd0RZPkpPHP3tvYyP4F
-	/hriQTChaPlBlekykMH+kl8qDiLEslaBxiTp+Nondmdzc2siU1HD05lcQvKdbm3vzoDmnKdkS3Dp+
-	XdLE5DZtVbW5voBHXjDubMIWGkzGPg6eUMg1T9MCuo3o1J4WTFCiMwaaXJdNt1ZYdMPU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rNCfd-004q18-Hg; Tue, 09 Jan 2024 15:01:33 +0100
-Date: Tue, 9 Jan 2024 15:01:33 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: MD Danish Anwar <danishanwar@ti.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Tero Kristo <kristo@kernel.org>, srk@ti.com, r-gunasekaran@ti.com,
-	afd@ti.com
-Subject: Re: [PATCH v2 2/3] arm64: dts: ti: k3-am642-evm: add ICSSG1 Ethernet
- support
-Message-ID: <70f2b16c-19af-41af-bd7f-255814899477@lunn.ch>
-References: <20231212165832.3933335-1-danishanwar@ti.com>
- <20231212165832.3933335-3-danishanwar@ti.com>
- <1a2aba0c-5c4d-4258-b89c-b1be4593d7ff@lunn.ch>
- <f7dd0868-1eda-4dff-9b9f-ae55f07c7d96@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFqpjVcQ"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6d9bd63ec7fso1411555b3a.2;
+        Tue, 09 Jan 2024 06:01:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704808908; x=1705413708; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FC/8g7ZpWpj5XGSBITdvk8s0jNFEaS2+hXn9GTWkyls=;
+        b=eFqpjVcQc5nMDh1ei/DndWYaBYETtrbr4oYBhhImyay+qf7aBBC5efYEiOFPQuWqnP
+         hUtZiR1C50aKiwGhjMgYWn6k5rh2/9oMXRRVbusM5vr4Ix8roufWhj9kL9nepPwEoS5l
+         VWWsNsl9TpvxUu0lC9MTMBtWowUPPP2U6h/bWqZllZQPomHa4S7kD2ImGcWsu4N0Kxas
+         7fr6Kx3Pax8U8dtpy3oUQAqb1HyfDkdNEJbGIVUGju3z+5Nhtq/+aYAzgGS1wpF4lHs0
+         JM2ay59QLhOyvqW3b6RoyVEeEay2D9Qzi4z7lgYkFozAiMJ7CDEVSIGF/bQ/0FKgWPor
+         SpaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704808908; x=1705413708;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FC/8g7ZpWpj5XGSBITdvk8s0jNFEaS2+hXn9GTWkyls=;
+        b=P26wPCsSF9I4OUdcoY1APmjr94HYVn1YOnKKJGz3di4NuCt7/oLus67Qk+lzFFGh4Y
+         A11gBEOvt8SV7Wq5RXF44OLlVM2mFhmwRoFBo7qA3LnqiMlzVzzqzfvbXAD7Mfh6548v
+         kD5Z1AU+UH0kTAUfXb0Mr0MMdzpLznoTpSeu6YW9aPtZV5pQu+RKsqi4S5v1cPO6FOXg
+         7aH6HYPDYPcz0++R27lhLExvBluc0u6UdrG56FSokTHFfEyK/jE3MmhNlT1At0hC5oNm
+         PaMFoink9r/rU1YcOIjytMEUfVcwhQViHzBUp6DtJu7p+wh0Ggqc4LMoCWqDJtah9aWw
+         Ak1A==
+X-Gm-Message-State: AOJu0YxoJzhNG8kF5K3A4QLJyqp9N4rfLTCSW7majKPWnNDJgKZRnstg
+	i76Lv+JW9EZFfX2Fc2xRCw5CDCajzHre8g==
+X-Google-Smtp-Source: AGHT+IEVssHtiESKXpR+knixhH3RM0dJ0WL/8knFJz8d2Ip0hq7H0EzMPLcgxXq5uGv49Ep0Qp4+pg==
+X-Received: by 2002:a05:6a21:1f25:b0:194:d82d:83cc with SMTP id ry37-20020a056a211f2500b00194d82d83ccmr2326988pzb.108.1704808907555;
+        Tue, 09 Jan 2024 06:01:47 -0800 (PST)
+Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006d9accac5c4sm1673697pfh.35.2024.01.09.06.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 06:01:47 -0800 (PST)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	andy@kernel.org,
+	corbet@lwn.net
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 7/7] Documentation: gpio: move gpio-mockup into deprecated section
+Date: Tue,  9 Jan 2024 21:59:52 +0800
+Message-Id: <20240109135952.77458-8-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240109135952.77458-1-warthog618@gmail.com>
+References: <20240109135952.77458-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7dd0868-1eda-4dff-9b9f-ae55f07c7d96@ti.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 09, 2024 at 10:53:16AM +0530, MD Danish Anwar wrote:
-> Hi Andrew,
-> 
-> On 13/12/23 6:56 pm, Andrew Lunn wrote:
-> > On Tue, Dec 12, 2023 at 10:28:31PM +0530, MD Danish Anwar wrote:
-> >> ICSSG1 provides dual Gigabit Ethernet support with proper FW loaded.
-> >>
-> >> The ICSSG1 MII0 (RGMII1) has DP83869 PHY attached to it. The ICSSG1 shares
-> >> MII1 (RGMII2) PHY DP83869 with CPSW3g and it's assigned by default to
-> >> CPSW3g. The MDIO access to MII1 (RGMII2) PHY DP83869 is controlled by MDIO
-> >> bus switch and also assigned to CPSW3g. Therefore the ICSSG1 MII1 (RGMII2)
-> >> port is kept disable and ICSSG1 is enabled in single MAC mode by
-> >> default.
-> > 
-> > FYI
-> > 
-> > I want to review all this MII muxing, but it won't be today.
-> 
-> Did you get the chance to review this?
+The gpio-mockup has been obsoleted by the gpio-sim, so relocate its
+documentation into the deprecated section of the admin-guide book.
 
-Sorry, no.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ Documentation/admin-guide/gpio/deprecated.rst | 1 +
+ Documentation/admin-guide/gpio/index.rst      | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-I will try to find some time in the next two weeks. During the merge
-window it tends to be quieter.
+diff --git a/Documentation/admin-guide/gpio/deprecated.rst b/Documentation/admin-guide/gpio/deprecated.rst
+index 683d7d23e62a..8503ea2f54d5 100644
+--- a/Documentation/admin-guide/gpio/deprecated.rst
++++ b/Documentation/admin-guide/gpio/deprecated.rst
+@@ -9,4 +9,5 @@ Deprecated GPIO APIs
+ 
+     Character Device Userspace API (v1) <../../userspace-api/gpio/chardev_v1>
+     Sysfs Interface <../../userspace-api/gpio/sysfs>
++    Mockup Testing Module <gpio-mockup>
+ 
+diff --git a/Documentation/admin-guide/gpio/index.rst b/Documentation/admin-guide/gpio/index.rst
+index 8489b8a3991f..573682212a56 100644
+--- a/Documentation/admin-guide/gpio/index.rst
++++ b/Documentation/admin-guide/gpio/index.rst
+@@ -9,7 +9,6 @@ GPIO
+ 
+     Character Device Userspace API <../../userspace-api/gpio/chardev>
+     gpio-aggregator
+-    gpio-mockup
+     gpio-sim
+     Deprecated APIs <deprecated>
+ 
+-- 
+2.39.2
 
-       Andrew
