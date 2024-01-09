@@ -1,146 +1,306 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2061.outbound.protection.outlook.com [40.107.20.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AB6646;
-	Tue,  9 Jan 2024 05:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AD5A5C
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 05:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CIVO2ejF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KrCNSIVHZ9Ku8Qmhy6EvPfwrm0UafTnKNezHT6e7pqvkBvclF6HAE/a4hHbZvFsyCIr5wvWvL0GpfszgqqZg92K+zw43ZvU36Y7yvb7UmXqtq9+m8/SMvqCqSv2W1IMay8kiqmFURzo52pJ9HO7OaejYBL6Zf3YMYOmjh67D1d/41oeT/Hs9A/MmIeLTIJkmx5ck6B/eHwLFnwV6nfzoCTd2adC1Q9OlhFWoWpbFMTwuhLksdUFoLiLLdkcZouBU2wvIhWk1xhHXhx2EgF/sF7fEFZZvjgv+CFQOWu3+k1WRRJYEXs585+/fa0MjxhGoxLOvool1EC/vM4apGNJiZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VJBAg9at4SySdpk0H41dhzwrh0m9WEbs/M7wyHIadEo=;
- b=nnaV+bDf5VTUFoSUnrRptmTChYioz6squmDgpDVffiYUs2cHQ1TIqwcW5VFieErJLvGpdk4KrDUlbRe5ry5Net3smJdkDjiUoyv8baiJtH5dsxcDgAWdmCmFRXR83rdW73Zt2PQ1RfUBdtEp9prkTY+wngM6Rx3ZrZGe5VdbARUaEvf2Of6/R/vx76HLcFHfPF/6VLW5wkS+GPcboo0i8SUoCgwqc8Ar3yJN+VLQI7M4MUT5H/iCoqw/7a7c20TbFx6pCR9NyDP38nGFSCXndgYTH6de+Yk11/+k5Kt2JzAXYsdIe9KVgodbVbQGa3CcIhCquvmLPymmiHFzeOM6mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VJBAg9at4SySdpk0H41dhzwrh0m9WEbs/M7wyHIadEo=;
- b=CIVO2ejFGdB9HhMD/LpLV6YUYuAWoVYbMpgMN/98XADc28BQ6utZrnSdjTvckRyeUz3cX5+8NTgo93xbevjgYYwLX6ndxKkHBMCR1ljdm16CgZyhicSNy7gV7ebAZbeFNuvitYN5fvVOs5kPYiJFlbv9KRarnhV9LI9W3N6cOIo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB7511.eurprd04.prod.outlook.com (2603:10a6:20b:23f::5)
- by PAXPR04MB8110.eurprd04.prod.outlook.com (2603:10a6:102:1bd::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
- 2024 05:26:05 +0000
-Received: from AS8PR04MB7511.eurprd04.prod.outlook.com
- ([fe80::8ee3:bac5:a2da:d469]) by AS8PR04MB7511.eurprd04.prod.outlook.com
- ([fe80::8ee3:bac5:a2da:d469%4]) with mapi id 15.20.7159.020; Tue, 9 Jan 2024
- 05:26:05 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: alexandre.belloni@bootlin.com,
-	linux-kernel@vger.kernel.org,
-	linux-next@vger.kernel.org
-Cc: conor.culhane@silvaco.com,
-	imx@lists.linux.dev,
-	joe@perches.com,
-	linux-i3c@lists.infradead.org,
-	miquel.raynal@bootlin.com,
-	zbigniew.lukwinski@linux.intel.com
-Subject: [PATCH 1/1] i3c: master: fix kernel-doc check warning
-Date: Tue,  9 Jan 2024 00:25:48 -0500
-Message-Id: <20240109052548.2128133-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR11CA0064.namprd11.prod.outlook.com
- (2603:10b6:a03:80::41) To AS8PR04MB7511.eurprd04.prod.outlook.com
- (2603:10a6:20b:23f::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vvovzs7n"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78315243c11so195193785a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 21:35:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704778548; x=1705383348; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SIl79HDk54ZYmitK/DrqoBI4jJQ+S6e1dOWl834lXwQ=;
+        b=Vvovzs7nEYzEskSUjnL6QDXptsQgJGBUxDblEotraDfQ+kXcTqucHEz5ssvsbHGw8I
+         XjEVLM6hKqGVhOySBefxe0GnNYoSAgIR3ARxu2sr5S9vUbj9FobD8heG4ecCUt4oMEbw
+         LjinMfNteZ41zmo4AtOJynHDbsMiiLzAi65SOCg06Oxws6nji8CPAP9TGbaP9GF0qESK
+         FxrH1R+y47OTAHziVXrJDDHGTI+88RpP4d/bST0yG2hGPEpMyEyQDbWDBDNdDH9xfHyU
+         Y7FWqk12DggPYWRFpJ/kzNeTPE5Av6bO3zY5i7Uq1SBFnh0NP4blHQRUIm2yi73TZcQ6
+         ItkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704778548; x=1705383348;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SIl79HDk54ZYmitK/DrqoBI4jJQ+S6e1dOWl834lXwQ=;
+        b=AYFEL9utnIoRj0PUot0ktCx54NHLetVkMqprCSaIcii+U42tt6sk5fvxiz6wuMydn0
+         5u9wd/Aya3Oe2yKum/n71NI7xMXIoAOjDlwKO3ac4k4UBnspraCH0/ZRDlTDOvxe1Wco
+         bzywygrahCywepkzZxbfbgdV9t+eIX/MMkXW8eTjBrH7FbmbzUx5C+nmrEC7V2N0/ssF
+         iYz7QL59yYlMXK8viMz9mseXu76HW3zo1jdn44+ujjOpyyrLM8OXOQb/g4zxFof11Img
+         p+Jqg/VODi1B5l9SxzYPEykkNTqOFd4H5W9GdzyQAPSXbfJ1NhJyQeXBiRQP0lD5vWuq
+         P+Wg==
+X-Gm-Message-State: AOJu0Yynk8ZWaf0Q9BPNzJrgobcqHkCN+weRxKampAN3x71fa22TcUze
+	oIc99dK0hDiv17e9zEF3b9k=
+X-Google-Smtp-Source: AGHT+IGbpAnz6BygmXnwSfeWVK1x4I0AT8gJ4U+Z3s0IErcl7Xnw5ICV36XdHqZFPhcYe3+J4vV4vQ==
+X-Received: by 2002:a05:620a:1a9c:b0:783:19ed:bb09 with SMTP id bl28-20020a05620a1a9c00b0078319edbb09mr3557371qkb.153.1704778548310;
+        Mon, 08 Jan 2024 21:35:48 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id qp28-20020a05620a389c00b0077d66e5b2e6sm523459qkn.3.2024.01.08.21.35.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 21:35:47 -0800 (PST)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailauth.nyi.internal (Postfix) with ESMTP id 5641827C005A;
+	Tue,  9 Jan 2024 00:35:47 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Tue, 09 Jan 2024 00:35:47 -0500
+X-ME-Sender: <xms:MtucZSFkvBfE561ZiQlPq5xn3G1BsjPTj-BXestvaLZ_js6axRYqKg>
+    <xme:MtucZTVkjpFb5ez7c2g82SbnOvhMEOLbML4FUJgk0H0CN_tOA_yX4lKoMG7kf74RR
+    bifLHZ_XmxjuYjUmw>
+X-ME-Received: <xmr:MtucZcKg5DWBnxdoCOnKKkl7PwT2dUN3ZT7gOZ01jH1N6IdvtB52X6z8Pw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehkedgkeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeortddttdejnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhepffelkeefudethfekhfehkefhledvjefggedvjeejffduleektdffieev
+    jeettedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:MtucZcEqgg7bWKoXqLqlNH1p70dVz4z11_0lK7SpO7sKNP2CRhtvAA>
+    <xmx:MtucZYVeBSRCVDXgTY47m2RBmsKNrp88s-SVmrS1KBh9fkI0nZSlYQ>
+    <xmx:MtucZfNYtyKTcjDjkFl9KyzUfgFYD2PIVJsNiYAU4hHT93o8Asi9qA>
+    <xmx:M9ucZco95UeTiTiw30guQqryck46nFwKKRReCcSMSVkiUFqEaUvBGw>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Jan 2024 00:35:46 -0500 (EST)
+Date: Mon, 8 Jan 2024 21:35:44 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, peterz@infradead.org,
+	mingo@redhat.com, will@kernel.org, longman@redhat.com,
+	ke.wang@unisoc.com, zhiguo.niu@unisoc.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lock/lockdep: Add missing graph_unlock in validate_chain
+Message-ID: <ZZzbMFwTepKaVDHc@Boquns-Mac-mini.home>
+References: <20240104054030.14733-1-xuewen.yan@unisoc.com>
+ <ZZcJ-3MXF4BPqPtL@boqun-archlinux>
+ <CAB8ipk9+BAFOa_4Dm2hs-bpfmMC_LHkaAb=JUVBq1CChX11wzA@mail.gmail.com>
+ <ZZwivt2C7-oxuMJS@boqun-archlinux>
+ <CAB8ipk-E63myUvW7X=kX7t0_zW9wyBOcseyyh_tjOJNpzz=fZQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB7511:EE_|PAXPR04MB8110:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19e97e04-0030-4615-1058-08dc10d37a50
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	BJvWeYvJzLKWimwPoguKgaOWQbiWkCI/gca1i6XZUXHZu1cHL8CUF4FOsc6Pa0JWd5Jk6yx7pkXRMSTnXSm/shqzdQMC0gIl4Yz0NrKyFq52OzWvYS//AIbHddIHcpxlHddMtewuVWB/chBqC58Uw749vPobyQWZQTWtL/M22o4ieMIwLM/tJCfH7OXj7w2IaRo2tfF+SmLYLQbX47Njo/UpqS+IvlWw1J4IE/tbAZ2V8YOGeDnfCjQKcRWR3qF7dlJ4/nFnA1p9CduR6KSBxz4tIuQB+s58/USrwa8kh5ACMXx2QtR8oaf8XycXuEjp+141hxA9+o9sZqJ9BC7/OCW7m69u+eI8VVtelufZJOuFjozZdH/Z2Jib4iCWwC4QP/QTYaIsntDM6a6x84vKG7xZHedB/2TQLBq+8O+btj7l5PUHrGlRO19hmu4Rhtw6st1f8t+gSLq+84ppNcMLaNXIwdr9NBs3vhy7/lfzt/pJzIS0ONr4QsSYpqgMvcuCFm97gQ50/uXwONHz5n7vIh5mr4XlmUOvxrx4HhZiHglSMR5uga9AGDGMOXdALMO7z4hX7tC6uwza15+Y82Q1t4SNvuupNlLIT1Vcoj9HSejQ4w2QsP2ObQo2/D2bC1c3quVnk/LgpYTEUF+iODrCATk4g3+n79/fhfUbri20/OM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB7511.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(346002)(376002)(136003)(230922051799003)(230173577357003)(230273577357003)(1800799012)(451199024)(186009)(64100799003)(2906002)(38350700005)(5660300002)(41300700001)(83380400001)(478600001)(6486002)(26005)(2616005)(1076003)(38100700002)(52116002)(6506007)(6512007)(6666004)(8676002)(8936002)(4326008)(36756003)(86362001)(66946007)(66556008)(66476007)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?is5CA8i7i13JA+soXlJDr3baFZ/qyCY13jZHLz+XItT8w5grv+eJa9ObF3Yb?=
- =?us-ascii?Q?O7/8LUe3WAcBNGQvtoqSV3nkRJRb9XyAQQNaFWyal9IgCT5GP0Sn3GX6PnDb?=
- =?us-ascii?Q?Ha/E6UYKGE6igekAORXBjBLq4tGkQBsJUiPzW5XQ8Dw/oF4SIROs/m+QGq/W?=
- =?us-ascii?Q?ecYK/4DzioInjbn/ZSxRzAJQxYFxWRgpMXce7eBaHg1qRxVjkUC2+CNbWGBN?=
- =?us-ascii?Q?FYa8FH1OR2Ej0AlS4UIiG3eWP+lkyDQDogCt04i84NEtSVKfOP3+9KwQXEc4?=
- =?us-ascii?Q?jXr2DrtBQ0AZqm/jJy78N2rpeEe0mWAvgcrzre/rH8hP8/lKooVfGBWZhqZy?=
- =?us-ascii?Q?x+sbzX+oImQ/On83KeOBES7h+4ftMuOUZ9ukPvTHoEjHx28fO4D80fGkFq4m?=
- =?us-ascii?Q?1r3KxkR5Iudoe9fBJvYeNwmxHQxmm2nDzK1+2py3WEKLi8XxCm759YCgfcI9?=
- =?us-ascii?Q?V5PzBQdDeVwG0v9ByRpxyBpzaCyPn1ri4Qg4azXxg7phL02JVbLSpO7Iqf2i?=
- =?us-ascii?Q?67YwkXGelKJM6U6N5MIyq7JlzFGV165F6O3isyyQLmWgI9lzRB2NUWeOpcjx?=
- =?us-ascii?Q?uYBhMwKBj+4fhUJ9d3O3gxA/gTDXIc7+jzFykBlP/1yzPuDQ20BWtku2n4co?=
- =?us-ascii?Q?O2npmDLU4O6Y+xOVh5Za0piTF6fd6bHlspmUNXU4K7Q4VdYjxXdbYPSA+bNS?=
- =?us-ascii?Q?Mn4nexyZTt3dtPXfDLKkmLNU6bzIKoGSfeB6Hi/IdJDidXmVLx2O4AexmRaU?=
- =?us-ascii?Q?z4kbL6jMMXLawqpORg4lEJmbp0A1hFsompJBERqhio1DfKVEiwvfG8utYrep?=
- =?us-ascii?Q?lBg0FIRVsljwtKMXdFWu53GQ8bKsrmGsdQOpbZ9GbmpsWPdmbuPv0ON4d1Js?=
- =?us-ascii?Q?8MnJgLU1rBsmpYCBwVqm8xmDo9CRUKj49YwqFEDl+AsGO2oj5ngjc0JK3SOj?=
- =?us-ascii?Q?j1wgJvy4Gs8Qh1ibWhQT6GPL6EjZjrYYs6REpGpz/Hplo1PCKUqrx2zEo1Qu?=
- =?us-ascii?Q?wm1ztNuhmAq32rQxReWxJ3jOSy2KtrD1TUYpoe5HmIIL/LU5gqdmXU7gnroY?=
- =?us-ascii?Q?/1dJdL3v3Ln/sjr4I26xjNkO80bNQ9Pu4jsC3rUnU8aupfN5XmnkVhUnRHd5?=
- =?us-ascii?Q?JednSB1EN7uKfLRBp4nrfOV1nnx3o/WWP1rzvUpVm3spYHRh8aXQJpnmKWAm?=
- =?us-ascii?Q?gi9JVNCqYF8suRSfoWIwIID6UjQndoS39fZkvga5BIZrYRpjjEauWX5cOXcV?=
- =?us-ascii?Q?f6z2ZhDZqoLqt7vOrGbor4XvqFlsBl9yk/QQ5S+rMCz4Vf1qbM175j9XkzbI?=
- =?us-ascii?Q?cxa9Hj2JGYCJkA0Bky6nVvL2tRAyEJqp3QfDb33icR9cRbZbKFyGSSHLxGAi?=
- =?us-ascii?Q?5eNzkNEmpkGOV+uBPt67HXuwDPZGJn7TRY4YltUH9QVUXs/4VyRgSuxK1Sw3?=
- =?us-ascii?Q?lXus/ibB6HYLAX2+aJ3aSYxDztkg1zXBTmwxfLzQZBGXNZFz6V7Rny0tIQUo?=
- =?us-ascii?Q?uBrqWrFMMaIISB3l0AH9nPg8DtjCmvb3eBePCXxV9Gj0F6SLxMc1EEbnkZpY?=
- =?us-ascii?Q?+a7phMjgDm6pvxsTJ2ea4uYKwGVXMCcv+eyDIUsD?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19e97e04-0030-4615-1058-08dc10d37a50
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB7511.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 05:26:05.7447
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HYAQuXbGeFZca7CuUC635RW+jxyrIvnXkmYajsM2dhUy2qoJf48IVNHPILzSzJiO3xe0M/r+EDIEXyPwFuJTZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8110
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAB8ipk-E63myUvW7X=kX7t0_zW9wyBOcseyyh_tjOJNpzz=fZQ@mail.gmail.com>
 
-Fix warning found by
-	'scripts/kernel-doc -v -none include/linux/i3c/master.h'
+On Tue, Jan 09, 2024 at 10:55:11AM +0800, Xuewen Yan wrote:
+> Hi boqun
+> 
+> On Tue, Jan 9, 2024 at 12:30 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > On Fri, Jan 05, 2024 at 12:46:36PM +0800, Xuewen Yan wrote:
+> > [...]
+> > > >
+> > > > Are you hitting a real issue or this is found by code reading?
+> > >
+> > > Indeed, we hit a real issue:
+> > > One cpu did not call graph_unlock, as a result, caused a deadlock with
+> > > other cpus,
+> > > because any cpu calling raw_spin_lock would get the graph_lock first.
+> > >
+> >
+> > Could you share more details about the real issue you hit? For example,
+> > serial log? I asked because although the graph_unlock() makes logical
+> > sense, but that path should really not hit if lockdep works correctly.
+> 
+> The following is our stack:
+> 
+> first, there is a  scenario in our kernel tree:
+> get mutexA lock-->get rcu lock-->get mutexB lock
+> As a result, there is a warning about the chain:
+> 
+> [    7.344848][ T1@C0] reboot: Restarting system with command
+> 'userrequested,recovery'
+> [    7.354028][ T1@C0]
+> [    7.354358][ T1@C0] =============================
+> [    7.354967][ T1@C0] [ BUG: Invalid wait context ]
+> [    7.355580][ T1@C0] 6.6.5-0-g53d4f6ea5e56-dirty-ab000013 #1
+> Tainted: G        W
+> [    7.356720][ T1@C0] -----------------------------
+> [    7.357326][ T1@C0] init/1 is trying to lock:
+> [    7.357894][ T1@C0] ffffffc07b0b5310 (kmsg_buf_lock){+.+.}-{3:3},
+> at: last_kmsg_handler+0x60/0xb8
+> [    7.359244][ T1@C0] other info that might help us debug this:
+> [    7.359982][ T1@C0] context-{4:4}
+> [    7.360420][ T1@C0] 2 locks held by init/1:
+> [    7.360967][ T1@C0]  #0: ffffffc08234d0b8
+> (system_transition_mutex){+.+.}-{3:3}, at:
+> __arm64_sys_reboot+0x130/0x27c
+> [    7.362353][ T1@C0]  #1: ffffffc0823c9a18
+> (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire+0x0/0x38
+> [    7.363568][ T1@C0] stack backtrace:
+> [    7.364038][ T1@C0] CPU: 0 PID: 1 Comm: init Tainted: G        W
+>       6.6.5-android14-0-g53d4f6ea5e56-dirty-ab000013 #1
+> [    7.365453][ T1@C0] Hardware name: Unisoc ***-base Board (DT)
+> [    7.366238][ T1@C0] Call trace:
+> [    7.366652][ T1@C0]  dump_backtrace+0xf8/0x148
+> [    7.367244][ T1@C0]  show_stack+0x20/0x30
+> [    7.367779][ T1@C0]  dump_stack_lvl+0x60/0x84
+> [    7.368372][ T1@C0]  __lock_acquire+0xc2c/0x3288
+> [    7.368982][ T1@C0]  lock_acquire+0x124/0x2b0
+> [    7.369556][ T1@C0]  __mutex_lock+0xa0/0xbfc
+> [    7.370122][ T1@C0]  mutex_lock_nested+0x2c/0x38
+> [    7.370730][ T1@C0]  last_kmsg_handler+0x60/0xb8 <<<<get mutex B
+> [    7.371494][ T1@C0]  kmsg_dump+0xf0/0x16c   <<<<rcu lock
+> [    7.372028][ T1@C0]  kernel_restart+0x100/0x11c
+> [    7.372626][ T1@C0]  __arm64_sys_reboot+0x1a8/0x27c
+> [    7.373270][ T1@C0]  invoke_syscall+0x60/0x11c
+> [    7.373857][ T1@C0]  el0_svc_common+0xb4/0xf0
+> [    7.374434][ T1@C0]  do_el0_svc+0x24/0x30
+> [    7.374967][ T1@C0]  el0_svc+0x50/0xe4
+> [    7.375467][ T1@C0]  el0t_64_sync_handler+0x68/0xbc
+> [    7.376109][ T1@C0]  el0t_64_sync+0x1a8/0x1ac
+> 
+> This warning should be caused by the order of taking the lock.
+> But when CONFIG_PREEMPT_RCU is turned on, I think it is reasonable to
+> take the mutex after taking the rcu-lock.
 
-include/linux/i3c/master.h:457: warning: Function parameter or member 'enable_hotjoin' not described in 'i3c_master_controller_ops'
-include/linux/i3c/master.h:457: warning: Function parameter or member 'disable_hotjoin' not described in 'i3c_master_controller_ops'
-include/linux/i3c/master.h:499: warning: Function parameter or member 'hotjoin' not described in 'i3c_master_controller'
+Thanks for the information, but...
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- include/linux/i3c/master.h | 3 +++
- 1 file changed, 3 insertions(+)
+No, the rule of CONFIG_PREEMPT_RCU is allowing only implicit preemption
+in RCU read-side critical sections. So calling mutex after taking RCU
+read_lock() is illegal.
 
-diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-index 65b8965968af2..1cbf0baca65fe 100644
---- a/include/linux/i3c/master.h
-+++ b/include/linux/i3c/master.h
-@@ -426,6 +426,8 @@ struct i3c_bus {
-  *		      for a future IBI
-  *		      This method is mandatory only if ->request_ibi is not
-  *		      NULL.
-+ * @enable_hotjoin: enable hot join event detect.
-+ * @disable_hotjoin: disable hot join event detect.
-  */
- struct i3c_master_controller_ops {
- 	int (*bus_init)(struct i3c_master_controller *master);
-@@ -467,6 +469,7 @@ struct i3c_master_controller_ops {
-  * @ops: master operations. See &struct i3c_master_controller_ops
-  * @secondary: true if the master is a secondary master
-  * @init_done: true when the bus initialization is done
-+ * @hotjoin: true if the master support hotjoin
-  * @boardinfo.i3c: list of I3C  boardinfo objects
-  * @boardinfo.i2c: list of I2C boardinfo objects
-  * @boardinfo: board-level information attached to devices connected on the bus
--- 
-2.34.1
+See the comments before rcu_read_lock():
 
+ * In preemptible RCU implementations (PREEMPT_RCU) in CONFIG_PREEMPTION
+ * kernel builds, RCU read-side critical sections may be preempted,
+ * but explicit blocking is illegal.
+
+> Maybe the logic of check_wait_context needs to be modified？
+> 
+> And then it occurs the following stack:
+> 
+> core0 get rdp_gp->nocb_gp_lock and then try to get graph_lock:
+> 
+> -000|queued_spin_lock_slowpath(lock = 0xFFFFFFC08291BBC8, val = 0)
+> -001|queued_spin_lock()
+> -001|lockdep_lock()
+> -001|graph_lock()
+> -002|lookup_chain_cache_add()
+> -002|validate_chain()
+> -003|lock_acquire(lock = 0xFFFFFF817F211D98, subclass = 0, trylock =
+> 0, read = 0, check = 1, nest_lock = 0x0, ip = 18446743800981533176)
+> -004|__raw_spin_lock_irqsave()
+>     |  lock = 0xFFFFFF817F211D80 -> (
+>     |    raw_lock = (
+>     |      val = (counter = 0),
+>     |      locked = 0,
+>     |      pending = 0,
+>     |      locked_pending = 0,
+>     |      tail = 0),
+>     |    magic = 3735899821,
+>     |    owner_cpu = 4294967295,
+>     |    owner = 0xFFFFFFFFFFFFFFFF,
+>     |    dep_map = (key = 0xFFFFFFC082F12C88, class_cache =
+> (0xFFFFFFC0825378E0, 0x0), name = 0xFFFFFFC081541039, wait_type_outer
+> = 0, wait_type_inner = 2, lock_type = 0))
+>     |  flags = 0
+>     |
+>  110|
+> -004|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F211D80)
+> -005|lock_timer_base(inline)
+> -005|__mod_timer.llvm.7968396489078322347(timer = 0xFFFFFF817F2A88D0,
+> expires = 4294893461, options = 0)
+> -006|mod_timer(inline)
+> -006|wake_nocb_gp_defer(inline)
+> -006|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F2A8680, was_alldone = ?, flags = ?)
+> -007|__call_rcu_common(inline)
+> -007|call_rcu(head = 0xFFFFFFC0822E0B58, func = ?)
+> -008|call_rcu_hurry(inline)
+> -008|rcu_sync_call(inline)
+> -008|rcu_sync_func(rhp = 0xFFFFFFC0822E0B58)
+> -009|rcu_do_batch(rdp = 0xFFFFFF817F266680)
+> -010|nocb_cb_wait(inline)
+> -010|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F266680)
+> -011|kthread(_create = 0xFFFFFF8080363740)
+> -012|ret_from_fork(asm)
+> 
+> However, the grapg_lock is owned by core1, and it try to get
+> rdp_gp->nocb_gp_lock, and it caused the deadlock.
+> But we do not see where the core do not unlock the graph_lock:
+> 
+
+Right, this is the key point. There is a static variable tracking the
+owner task of graph-lock:
+
+static struct task_struct *__owner;
+
+are you able to find some information from the coredump?
+
+> -000|queued_spin_lock_slowpath(lock = 0xFFFFFF817F2A8A80, val = ?)
+> -001|queued_spin_lock(inline)
+> -001|do_raw_spin_lock(lock = 0xFFFFFF817F2A8A80)
+> -002|__raw_spin_lock_irqsave(inline)
+> -002|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F2A8A80)
+> -003|wake_nocb_gp_defer(inline)
+> -003|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F30B680, was_alldone = ?, flags = ?)
+> -004|__call_rcu_common(inline)
+> -004|call_rcu(head = 0xFFFFFFC082EECC28, func = ?)
+> -005|call_rcu_zapped(inline)
+> -005|free_zapped_rcu(ch = ?)
+> -006|rcu_do_batch(rdp = 0xFFFFFF817F245680)
+> -007|nocb_cb_wait(inline)
+> -007|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F245680)
+> -008|kthread(_create = 0xFFFFFF80803122C0)
+> -009|ret_from_fork(asm)
+> 
+> Based on this, we read the lockdep code, and found the check_prev_add's logic.
+> 
+> But now we reproduce the scenario although we add the graph_unlock in
+> check_prev_add().
+
+If you have a reliable reproduce then could you try the following debug
+code?
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index e85b5ad3e206..a313fcc78e8e 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -466,6 +466,8 @@ static __always_inline void lockdep_recursion_finish(void)
+ {
+        if (WARN_ON_ONCE(__this_cpu_dec_return(lockdep_recursion)))
+                __this_cpu_write(lockdep_recursion, 0);
++
++       BUG_ON(__owner == current);
+ }
+
+ void lockdep_set_selftest_task(struct task_struct *task)
+
+This may tell you which code path in lockdep forgot to unlock the graph
+lock.
+
+> So this is not the root-cause of our problem. And we are also still debugging.
+
+That matches my expectation: that "return 0" should never hit. So the
+problem may be somewhere any else.
+
+Regards,
+BOqun
+
+> We would be very grateful if you could give us some suggestions.
+> 
+> Thanks!
+> 
+> ---
+> BRs
+> xuewen
+> 
+> 
+> > Thanks!
+> >
+> > Regards,
+> > Boqun
+> >
+> > > Thanks!
