@@ -1,102 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE96D38F9A
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 16:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D3339AFA;
+	Tue,  9 Jan 2024 16:40:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TezDVAY1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704818351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gALjVpnW2FKki+TZoBpk1J20dJjfEldE4c8nd18BouY=;
-	b=TezDVAY1qj/rDpPFhc71Zattm/pw5RIwXVXdKrh2PhA//tvDbUaZZVckI+AWtz0p7wqcT7
-	ca1sCaqrbOzg15QERV2SgbZJWbMgYfxvo+5kng790Z1gOvN6oej5xjqfkI86uHD8zHtktO
-	CCHlRf0UKNh+8yDmN17v5pGT84kcrlQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-9pVJLRnBOb-uYCDMV09uJg-1; Tue, 09 Jan 2024 11:39:05 -0500
-X-MC-Unique: 9pVJLRnBOb-uYCDMV09uJg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AA16583152B;
-	Tue,  9 Jan 2024 16:39:04 +0000 (UTC)
-Received: from [10.22.9.97] (unknown [10.22.9.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 66CC82949;
-	Tue,  9 Jan 2024 16:39:04 +0000 (UTC)
-Message-ID: <9bed61e4-7c08-4c61-a7e4-bdd39335cec1@redhat.com>
-Date: Tue, 9 Jan 2024 11:39:03 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mS6hffrM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22925C433C7;
+	Tue,  9 Jan 2024 16:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704818435;
+	bh=xumFkzh9dOhqQuxWQPzQ0UOI+crU8zGpXe3IKeAJiLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mS6hffrM8lke09V6OI+rr+zWeUuXVm+yeEU3pex4lAnkO+QzbfFKtZWS6RNtOfBVA
+	 OXxdShG6OWUaVqBcepdY/kNTyzMMux9hWwpIfT7glq08vpVWPk3rkXSwBOOczEpx1b
+	 5pr4Qd4QM/S8EAeiLqRne6LSZ26SOHa8XR8taeUy/aobdgDP28leKB5rK21zF8f7UC
+	 pt1i/Ex4Iz3Rncmy6J3HMrdl6ZqvjDNIw5Bg5qUnGksuQcVyiDUgrx61b7EJCK5KcW
+	 xxGWa/gsx+kaUpbyWXMbgJxTXbt8ECq4NEHX0IOwMQ72xTcW4QIXD9lV7FB4Qt4D/a
+	 8x83Ov3qSVoaw==
+Date: Tue, 9 Jan 2024 16:40:29 +0000
+From: Conor Dooley <conor@kernel.org>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	jason-ch chen <Jason-ch.Chen@mediatek.com>,
+	Macpaul Lin <macpaul.lin@mediatek.com>,
+	Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>,
+	Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH 1/2] dt-bindings: arm64: mediatek: Add MT7988A and BPI-R4
+Message-ID: <20240109-perennial-darkroom-953f86a05adb@spud>
+References: <20240102205941.29654-1-zajec5@gmail.com>
+ <20240108-helium-retriever-043ed3e1dbe0@spud>
+ <1a9d7f5b-4a00-4026-81b8-7af3031c6656@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] workqueue: Add rcu lock check after work execute end
-Content-Language: en-US
-To: Xuewen Yan <xuewen.yan@unisoc.com>, tj@kernel.org, jiangshanlai@gmail.com
-Cc: linux-kernel@vger.kernel.org, ke.wang@unisoc.com
-References: <20240109111014.2689-1-xuewen.yan@unisoc.com>
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <20240109111014.2689-1-xuewen.yan@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Bl2E85BvxztBLFCl"
+Content-Disposition: inline
+In-Reply-To: <1a9d7f5b-4a00-4026-81b8-7af3031c6656@gmail.com>
 
-On 1/9/24 06:10, Xuewen Yan wrote:
-> Now the workqueue just check the atomic and lock after
-> work execute end. However, sometimes, drivers's work
-> may don't unlock rcu after call rcu_read_lock().
-> And as a result, it would cause rcu stall, but the rcu stall warning
-> can not dump the work func, because the work has finished.
->
-> In order to quickly discover those works that do not call
-> rcu_read_unlock after rcu_read_lock(). Add the rcu lock check.
->
-> Use rcu_preempt_depth() to check the work's rcu status,
-> Normally, this value is 0. If this value is bigger than 0,
-> it means that the rcu lock is still held after the work ends.
-> At this time, we print err info and print the work func.
->
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> ---
->   kernel/workqueue.c | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> index 2989b57e154a..a5a0df824df1 100644
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -2634,11 +2634,12 @@ __acquires(&pool->lock)
->   	lock_map_release(&lockdep_map);
->   	lock_map_release(&pwq->wq->lockdep_map);
->   
-> -	if (unlikely(in_atomic() || lockdep_depth(current) > 0)) {
-> -		pr_err("BUG: workqueue leaked lock or atomic: %s/0x%08x/%d\n"
-> +	if (unlikely(in_atomic() || lockdep_depth(current) > 0) ||
-> +		rcu_preempt_depth() > 0) {
 
-The rcu_preempt_depth() check should be within the unlikely() helper. 
-Other than that, it looks good to me.
+--Bl2E85BvxztBLFCl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
-Longman
+On Tue, Jan 09, 2024 at 07:12:35AM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
+> Hi Conor,
+>=20
+> On 8.01.2024 18:38, Conor Dooley wrote:
+> > On Tue, Jan 02, 2024 at 09:59:40PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
+> > > From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> > >=20
+> > > MT7988A is another MediaTek's SoC with just 1 device available right
+> > > now: Banana Pi BPI-R4.
+> >=20
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> I sent V2 meanwhile, could you reply to below PATCH instead, please?
+>=20
+> [PATCH V2 1/3] dt-bindings: arm64: mediatek: Add MT7988A and BPI-R4
 
-> +		pr_err("BUG: workqueue leaked lock or atomic: %s/0x%08x/%d/%d\n"
->   		       "     last function: %ps\n",
-> -		       current->comm, preempt_count(), task_pid_nr(current),
-> -		       worker->current_func);
-> +		       current->comm, preempt_count(), rcu_preempt_depth(),
-> +		       task_pid_nr(current), worker->current_func);
->   		debug_show_held_locks(current);
->   		dump_stack();
->   	}
+In the future, just give me the message-id in these cases.
 
+--Bl2E85BvxztBLFCl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ12/QAKCRB4tDGHoIJi
+0pSZAQCakbEDbpyJU1zZrJrksXPLUy1QLurql1JT2lp+rbNL5QD+MXaybdojog9v
+8C36eHKqtqb6uPGDATzIRYl+BUuRRQU=
+=mce9
+-----END PGP SIGNATURE-----
+
+--Bl2E85BvxztBLFCl--
