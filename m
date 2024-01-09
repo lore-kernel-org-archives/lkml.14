@@ -1,158 +1,173 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C333608B
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 09:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C30BA45;
+	Tue,  9 Jan 2024 09:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bw5RWdGG"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ccbc328744so31638761fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 01:43:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704793381; x=1705398181; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FeB2WNn4H4jWlw/Xw5gvB0Tvd8i01mZv8HHnVnUvBXo=;
-        b=Bw5RWdGGs/6C01cf55UsdZY3Yy8cL+6B7zQITbPK9t5NtSI3jMNPzp76FWzCrhBjPB
-         3mFTzxi1yi3g/khEq4L+2X1+Sfon/4OY36oNfMFBBABetIOJ8mvuNknVG+w9UGe5YCsx
-         VEuC7w+mNgQ16ao/5blLUCXnDVEs5xfalV0hdct1iZkkF21FLUsPtUCm+OzFXLsWRfFr
-         rb/+4thA479/kx/p+qJ98bdmoO+h7wQqTepRukKdhpQvibvv8ivbPIRGW+QhCIc9eYD6
-         dDxno4W2K55SX+zlE5myrCiHBmSay5tE1gXq8D4h66zJs9+JjIQieSafrobIUGry4JYM
-         Ed3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704793381; x=1705398181;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FeB2WNn4H4jWlw/Xw5gvB0Tvd8i01mZv8HHnVnUvBXo=;
-        b=ryCoZAzPfYqAmx7ppvy2LY4vNg3n4kbsvGekGTqOXeWENWcCtNFWmFEfEVb48M16QO
-         0KfC0Hj8n3Bp3aqP7ndXFMgQzfisebPJJUat0eGAnjj+p8puuIwkh7PI9kZr8s7V8jUg
-         9C6VqyPOqHSwD/g9k0j3/wQQTk6hFgp2Fg4257ftWotYMuM37sO8plkjUyJOJIsRrAN9
-         yZPMjDux7vmog+jCzU1vn9pGkym7iSBpoMpvK6WofD9wj+s/iRLxBFJG1ABX8SLkYyCs
-         hMnvAL3xePPAGJSeFyIpIUNSw6bi0azneIcBg+zs5VwVz7Lty0mkI200f3Bt6Elag1f8
-         rU9A==
-X-Gm-Message-State: AOJu0YzY64t9MRCqQgx9Zps7O75IvTgQD8x0I4/hElou7ng7minUc3GK
-	GvOmB7C31N628rSDiEiCdxOMIvpi79v4MQolOug=
-X-Google-Smtp-Source: AGHT+IEF77NlmfvikY97ga0rs3UJEAa2FaNio+f/Bwi+B7ECk24W0ukg4RSpGGSwjiEPHtBYUlmz+sjhqHSbbO9+hV0=
-X-Received: by 2002:a2e:960a:0:b0:2cd:2ac6:9685 with SMTP id
- v10-20020a2e960a000000b002cd2ac69685mr2293997ljh.92.1704793380802; Tue, 09
- Jan 2024 01:43:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sDbA/5To"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4098bL5c001344;
+	Tue, 9 Jan 2024 09:44:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=26z/r7QxDnFtFAUCTROyBwwWOvN7pyqyOM2zc9V1Dj0=;
+ b=sDbA/5To12520VCHEHJOxXdzy6phnqROMSo29BOHVJ6Aup9wb83q9m/9IYiPshzoWtMk
+ 4z0ohV4OKIMbeyeUCEo2EOni8tJWuZmcYf0WgKOX360HMYmOef7EvXP1QOUz+RNGqgsy
+ EjDPa2nTmrHqK+8RdNTJe3bDSwR2zJdIvJQmjVhLXktYxq22dqG8U5ZXu3JShMcmBnAK
+ E41ca8ePAV40OvVAYeS+mL0ptEovtFvX6e+szA6DoV+HSxTFmBRzR8bq3TOWm2Q409LI
+ 3P8Ffn+K4PgvlaY1n3VUwXYJTmdXeF4kCnaquPoj2JubQHiJqfUnnTeFwKbnnZs9bQZf 8Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vh2sp9jax-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 09:44:58 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 409908US013177;
+	Tue, 9 Jan 2024 09:44:57 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vh2sp9hpu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 09:44:56 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4097rtWZ004407;
+	Tue, 9 Jan 2024 09:41:01 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vfjpknktx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 09:41:01 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4099expC39977436
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 9 Jan 2024 09:40:59 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 644D120043;
+	Tue,  9 Jan 2024 09:40:59 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BBCB320040;
+	Tue,  9 Jan 2024 09:40:57 +0000 (GMT)
+Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.109.253.82])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  9 Jan 2024 09:40:57 +0000 (GMT)
+Date: Tue, 9 Jan 2024 15:10:54 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>,
+        Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org,
+        glandvador@yahoo.com, bugzilla@eyal.emu.id.au
+Subject: Re: [PATCH 1/1] ext4: fallback to complex scan if aligned scan
+ doesn't work
+Message-ID: <ZZ0Upv7ZLwf0BMOC@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+References: <cover.1702455010.git.ojaswin@linux.ibm.com>
+ <ee033f6dfa0a7f2934437008a909c3788233950f.1702455010.git.ojaswin@linux.ibm.com>
+ <20240104152717.rj7mmmij77q3mbiu@quack3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102175338.62012-1-ryncsn@gmail.com> <20240102175338.62012-5-ryncsn@gmail.com>
- <878r54b6ae.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAMgjq7B7iShnLaiT-0MBGEMdVS65bupx_NshjM0ssLmhJm0CFQ@mail.gmail.com>
- <87edes9smm.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <87edes9smm.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 9 Jan 2024 17:42:43 +0800
-Message-ID: <CAMgjq7AzUOgaJGSZ6BBLvF0j27FAzOpaFYi+WZCrC_7KPYrJNg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] mm/swap: always account swapped in page into
- current memcg
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Chris Li <chrisl@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
-	Yosry Ahmed <yosryahmed@google.com>, David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104152717.rj7mmmij77q3mbiu@quack3>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: oLGtudBlBM9LqGTjhP0iLbSK-4_HD4Ui
+X-Proofpoint-GUID: cw738cPN1tciPvm7lGAuk0sFFT7SHZGz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-09_03,2024-01-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
+ adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2401090077
 
-Huang, Ying <ying.huang@intel.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=888=E6=97=
-=A5=E5=91=A8=E4=B8=80 15:46=E5=86=99=E9=81=93=EF=BC=9A
->
-> Kairui Song <ryncsn@gmail.com> writes:
->
-> > Huang, Ying <ying.huang@intel.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=885=E6=
-=97=A5=E5=91=A8=E4=BA=94 15:16=E5=86=99=E9=81=93=EF=BC=9A
-> >>
-> >> Kairui Song <ryncsn@gmail.com> writes:
-> >>
-> >> > From: Kairui Song <kasong@tencent.com>
-> >> >
-> >> > Currently, mem_cgroup_swapin_charge_folio is always called with
-> >> > mm argument as NULL, except in swapin_direct.
-> >> >
-> >> > swapin_direct is used when swapin should skip readahead and
-> >> > swapcache (SWP_SYNCHRONOUS_IO). Other caller paths of
-> >> > mem_cgroup_swapin_charge_folio are for swapin that should
-> >> > not skip readahead and cache.
-> >> >
-> >> > This could cause swapin charging to behave differently depending
-> >> > on swap device. This currently didn't happen because the only call
-> >> > path of swapin_direct is the direct anon page fault path, where mm
-> >> > equals to current->mm, but will no longer be true if swapin_direct
-> >> > is shared and have other callers (eg, swapoff).
-> >> >
-> >> > So make swapin_direct also passes NULL for mm, no feature change.
-> >> >
-> >> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> >> > ---
-> >> >  mm/swap_state.c | 2 +-
-> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> >
-> >> > diff --git a/mm/swap_state.c b/mm/swap_state.c
-> >> > index 6130de8d5226..d39c5369da21 100644
-> >> > --- a/mm/swap_state.c
-> >> > +++ b/mm/swap_state.c
-> >> > @@ -881,7 +881,7 @@ struct folio *swapin_direct(swp_entry_t entry, g=
-fp_t gfp_mask,
-> >> >       folio =3D vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0,
-> >> >                               vma, vmf->address, false);
-> >> >       if (folio) {
-> >> > -             if (mem_cgroup_swapin_charge_folio(folio, vma->vm_mm,
-> >> > +             if (mem_cgroup_swapin_charge_folio(folio, NULL,
-> >> >                                                  GFP_KERNEL, entry))=
- {
-> >> >                       folio_put(folio);
-> >> >                       return NULL;
-> >>
-> >> I think that why not provide "mm" when it's available?  For
-> >> swapin_direct() called by do_swap_page(), mm can be provided.  While,
-> >> for swapin_direct() called by shmem swapin, mm will be NULL.  We can
-> >> even provide "mm" for __read_swap_cache_async() for VMA based swapin a=
-nd
-> >> for the fault address for cluster swapin.
-> >
-> > Hi, Ying.
-> >
-> > Thanks for the comment.
-> >
-> > Without modifying too much code, providing mm here will change swapin
-> > charge behaviour on swapoff, we discussed it previously:
-> > https://lkml.org/lkml/2023/11/19/320
->
-> It's better to use "lore" for kernel email link, for example,
->
-> https://lore.kernel.org/lkml/20231119194740.94101-24-ryncsn@gmail.com/
->
-> This is more readable than the above link.
+On Thu, Jan 04, 2024 at 04:27:17PM +0100, Jan Kara wrote:
+> On Fri 15-12-23 16:49:50, Ojaswin Mujoo wrote:
+> > Currently in case the goal length is a multiple of stripe size we use
+> > ext4_mb_scan_aligned() to find the stripe size aligned physical blocks.
+> > In case we are not able to find any, we again go back to calling
+> > ext4_mb_choose_next_group() to search for a different suitable block
+> > group. However, since the linear search always begins from the start,
+> > most of the times we end up with the same BG and the cycle continues.
+> > 
+> > With large fliesystems, the CPU can be stuck in this loop for hours
+> > which can slow down the whole system. Hence, until we figure out a
+> > better way to continue the search (rather than starting from beginning)
+> > in ext4_mb_choose_next_group(), lets just fallback to
+> > ext4_mb_complex_scan_group() in case aligned scan fails, as it is much
+> > more likely to find the needed blocks.
+> > 
+> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+> 
+> If I understand the difference right, the problem is that while
+> ext4_mb_choose_next_group() guarantees large enough free space extent for
+> the CR_GOAL_LEN_FAST or CR_BEST_AVAIL_LEN passes, it does not guaranteed
+> large enough *aligned* free space extent. Thus for non-aligned allocations
+> we can fail only due to a race with another allocating process but with
+> aligned allocations we can consistently fail in ext4_mb_scan_aligned() and
+> thus livelock in the allocation loop.
+> 
+> If my understanding is correct, feel free to add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> 
+> 								Honza
 
-Hi Ying,
+Hey Jan,
 
-Thanks for your advice.
+Yes you are correct, thanks for the review.
 
->
-> > If we want to avoid the behavior change, we have to extend all direct
-> > and indirect callers of mem_cgroup_swapin_charge_folio to accept a
-> > standalone mm argument (including swapin_direct, swap_vma_readahead,
-> > swap_cluster_readahead, __read_swap_cache_async, swapin_entry_mpol,
-> > read_swap_cache_async, and some other path may need more audit), and
-> > sort things our case by case. I'm not sure if that's a good idea...
-> >
-> > Simply dropping it here seems the easiest way to avoid such change.
->
-> OK.  Didn't realize that they are related directly.  It appears that we
-> always pass NULL as mm to mem_cgroup_swapin_charge_folio().  If so,
-> please just remove the parameter.
+As you said, it's theoretically possible to livelock during non stripe
+scenarios as well, but the probability of getting stuck for any
+significant amount of time is really really less. I'm not sure if that
+is enough to justify adding some logic to optimize the search for such
+scenarios as that might need more involved code changes.
 
-Yes, that's also what I wanted.
-
->
-> --
-> Best Regards,
-> Huang, Ying
+Regards,
+ojaswin
+> 
+> 
+> 
+> > ---
+> >  fs/ext4/mballoc.c | 21 +++++++++++++--------
+> >  1 file changed, 13 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> > index d72b5e3c92ec..63f12ec02485 100644
+> > --- a/fs/ext4/mballoc.c
+> > +++ b/fs/ext4/mballoc.c
+> > @@ -2895,14 +2895,19 @@ ext4_mb_regular_allocator(struct ext4_allocation_context *ac)
+> >  			ac->ac_groups_scanned++;
+> >  			if (cr == CR_POWER2_ALIGNED)
+> >  				ext4_mb_simple_scan_group(ac, &e4b);
+> > -			else if ((cr == CR_GOAL_LEN_FAST ||
+> > -				 cr == CR_BEST_AVAIL_LEN) &&
+> > -				 sbi->s_stripe &&
+> > -				 !(ac->ac_g_ex.fe_len %
+> > -				 EXT4_B2C(sbi, sbi->s_stripe)))
+> > -				ext4_mb_scan_aligned(ac, &e4b);
+> > -			else
+> > -				ext4_mb_complex_scan_group(ac, &e4b);
+> > +			else {
+> > +				bool is_stripe_aligned = sbi->s_stripe &&
+> > +					!(ac->ac_g_ex.fe_len %
+> > +					  EXT4_B2C(sbi, sbi->s_stripe));
+> > +
+> > +				if ((cr == CR_GOAL_LEN_FAST ||
+> > +				     cr == CR_BEST_AVAIL_LEN) &&
+> > +				    is_stripe_aligned)
+> > +					ext4_mb_scan_aligned(ac, &e4b);
+> > +
+> > +				if (ac->ac_status == AC_STATUS_CONTINUE)
+> > +					ext4_mb_complex_scan_group(ac, &e4b);
+> > +			}
+> >  
+> >  			ext4_unlock_group(sb, group);
+> >  			ext4_mb_unload_buddy(&e4b);
+> > -- 
+> > 2.39.3
+> > 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
