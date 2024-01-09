@@ -1,42 +1,43 @@
 Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60073C06A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22F23C067
 	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 18:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3607d60e4c8so29840525ab.2
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-35fcba1d1caso24583175ab.0
         for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 10:17:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704824255; x=1705429055;
+        d=1e100.net; s=20230601; t=1704824254; x=1705429054;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=RiahJxs7SPtt+UudYmhc+t36HoMS9MKqIrVEkKF6S2U=;
-        b=gTnzBtgNI6Uu/owiS8pAR1uyIRR7IikY3pzWA/KlEusuj13qdmHr2I2+7KOPXWcAKN
-         Ta4XXw9gYYrEo974K+nd3o1sS+96N5+36xY37L4sn1Hw2rGCwzdYWenP75f9TFWacmqM
-         gQkuzChnQ0b1AX7zxENSvq9mtngcquzmPzJn7c4YUHjrIbw18HFGSbdkuqmeWBgn9qJr
-         ka6EPuQYX6e7KO99/eDG2lTJZwNy34KUBQfsAuvpkHotQ7muKeSbXYoH89BIr+ZXd2hJ
-         4eBLjv39vKfa5yhUrLBn+7AUAAMAddC6/ijP175aksihsgh49fNKhSBGQrDf3NTfNEGH
-         Z20A==
-X-Gm-Message-State: AOJu0YzQPhBy2AlF12HD4OxFTrgw9i0yByWt2gMIe5Kqy3+iZNvCf/xS
-	5Em/x8GIoOFf0ul9feAM45AcdHSuqN6FWb2JJ0t+hj1FLHE8
-X-Google-Smtp-Source: AGHT+IEht9I3VrjRx9VKsqPry6iSom3FtiB9hpIwihdDWriWj3Fo4UygZb8QcsO3QrSrJ7HD4rBxNAf+ymvvMJ1/XPdDkfHW3UeK
+        bh=9q9BQ0S8Z7KHiPZJPX58CFOxs6oGvr+J2FtFtceRXv0=;
+        b=CCyxd8Eju8ybFeAeUe32RwgDEnA98Km0SEzJfNnhjYK3bmIKmLJdv4eJGfaKzDIV5L
+         tANjzd86h/tS59rXCbH4jo3XlcZHRGFGbNGZjtIOcJI/VaH2x+jLKUCc3n4kVNz0onu8
+         wPLdY6kxVL3Dbk6wtyAJ2P99kIRwNlYqP2hp2spUJ3jLLpVq4meMp/gw92fpiYxNimOo
+         WojO0WtZ5PvhYcnHiPg9on+1ihHYT4+acMm2yF3Fma4rTI6mXzogd7nAPLc/9NeuCEfm
+         69QIQjIcoq85ZIMo56RnE3zVYGP+KusFFl5fGV599m/tVCjC1pceEk6G3G3J/2KEUGow
+         DjPg==
+X-Gm-Message-State: AOJu0Yy8475f+FerGMud2brg3is6UhayVebc3DPLimryBAoxT5K8nlxu
+	Jpz8HZVOdO/QRFAfkqiNyU5APYRCi1OXinaIOZXh4tUaeuSi
+X-Google-Smtp-Source: AGHT+IECh7dq0OJhdu8BR4nOMYRpySyGF6OM/CdT6o9s8bEHo6jBLQw5MJf6QeztWdaW1EZtQb1wH5mfqwa7rqayCf9EC4qZfJKz
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:17cb:b0:360:f2c:cde6 with SMTP id
- z11-20020a056e0217cb00b003600f2ccde6mr755040ilu.6.1704824255096; Tue, 09 Jan
- 2024 10:17:35 -0800 (PST)
-Date: Tue, 09 Jan 2024 10:17:35 -0800
+X-Received: by 2002:a05:6e02:2163:b0:35f:affb:bd7b with SMTP id
+ s3-20020a056e02216300b0035faffbbd7bmr663388ilv.2.1704824254628; Tue, 09 Jan
+ 2024 10:17:34 -0800 (PST)
+Date: Tue, 09 Jan 2024 10:17:34 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000212ec9060e8754e2@google.com>
-Subject: [syzbot] [hfs?] KMSAN: uninit-value in hfsplus_lookup
-From: syzbot <syzbot+91db973302e7b18c7653@syzkaller.appspotmail.com>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Message-ID: <0000000000001a0a38060e875458@google.com>
+Subject: [syzbot] [ntfs3?] KMSAN: uninit-value in longest_match_std (2)
+From: syzbot <syzbot+08d8956768c96a2c52cf@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
@@ -44,37 +45,40 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    861deac3b092 Linux 6.7-rc7
+HEAD commit:    610a9b8f49fb Linux 6.7-rc8
 git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=103d9131e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c7078a6b901aa3
-dashboard link: https://syzkaller.appspot.com/bug?extid=91db973302e7b18c7653
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=11a0f711e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e51fe20c3e51ba7f
+dashboard link: https://syzkaller.appspot.com/bug?extid=08d8956768c96a2c52cf
 compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15dd9e81e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134b9595e80000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141f845ee80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1413cf11e80000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0ea60ee8ed32/disk-861deac3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6d69fdc33021/vmlinux-861deac3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/f0158750d452/bzImage-861deac3.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/77e776893084/mount_0.gz
+disk image: https://storage.googleapis.com/syzbot-assets/28ecdd56de1e/disk-610a9b8f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3c5afc17c174/vmlinux-610a9b8f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/96ff79b2992d/bzImage-610a9b8f.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/689e00cd89ff/mount_0.gz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+91db973302e7b18c7653@syzkaller.appspotmail.com
+Reported-by: syzbot+08d8956768c96a2c52cf@syzkaller.appspotmail.com
 
-loop0: detected capacity change from 0 to 1024
+ntfs3: loop0: Failed to initialize $Extend/$ObjId.
 =====================================================
-BUG: KMSAN: uninit-value in hfsplus_lookup+0x66b/0xef0 fs/hfsplus/dir.c:83
- hfsplus_lookup+0x66b/0xef0 fs/hfsplus/dir.c:83
- lookup_open fs/namei.c:3455 [inline]
- open_last_lookups fs/namei.c:3546 [inline]
- path_openat+0x27d3/0x5c70 fs/namei.c:3776
- do_filp_open+0x20d/0x590 fs/namei.c:3809
- do_sys_openat2+0x1bf/0x2f0 fs/open.c:1437
- do_sys_open fs/open.c:1452 [inline]
- __do_sys_creat fs/open.c:1528 [inline]
- __se_sys_creat fs/open.c:1522 [inline]
- __x64_sys_creat+0xe6/0x140 fs/open.c:1522
+BUG: KMSAN: uninit-value in longest_match_std+0x5d9/0xe00 fs/ntfs3/lznt.c:60
+ longest_match_std+0x5d9/0xe00 fs/ntfs3/lznt.c:60
+ compress_chunk fs/ntfs3/lznt.c:170 [inline]
+ compress_lznt+0x41b/0xef0 fs/ntfs3/lznt.c:336
+ ni_write_frame+0xf89/0x1c80 fs/ntfs3/frecord.c:2839
+ ntfs_compress_write+0x2521/0x3b70 fs/ntfs3/file.c:995
+ ntfs_file_write_iter+0x89b/0xd30 fs/ntfs3/file.c:1081
+ call_write_iter include/linux/fs.h:2020 [inline]
+ new_sync_write fs/read_write.c:491 [inline]
+ vfs_write+0x8ef/0x1490 fs/read_write.c:584
+ ksys_write+0x20f/0x4c0 fs/read_write.c:637
+ __do_sys_write fs/read_write.c:649 [inline]
+ __se_sys_write fs/read_write.c:646 [inline]
+ __x64_sys_write+0x93/0xd0 fs/read_write.c:646
  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
  do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
  entry_SYSCALL_64_after_hwframe+0x63/0x6b
@@ -82,39 +86,27 @@ BUG: KMSAN: uninit-value in hfsplus_lookup+0x66b/0xef0 fs/hfsplus/dir.c:83
 Uninit was created at:
  __alloc_pages+0x9a4/0xe00 mm/page_alloc.c:4591
  alloc_pages_mpol+0x62b/0x9d0 mm/mempolicy.c:2133
- alloc_pages+0x1be/0x1e0 mm/mempolicy.c:2204
- alloc_slab_page mm/slub.c:1870 [inline]
- allocate_slab mm/slub.c:2017 [inline]
- new_slab+0x421/0x1570 mm/slub.c:2070
- ___slab_alloc+0x13db/0x33d0 mm/slub.c:3223
- __slab_alloc mm/slub.c:3322 [inline]
- __slab_alloc_node mm/slub.c:3375 [inline]
- slab_alloc_node mm/slub.c:3468 [inline]
- slab_alloc mm/slub.c:3486 [inline]
- __kmem_cache_alloc_lru mm/slub.c:3493 [inline]
- kmem_cache_alloc_lru+0x552/0x970 mm/slub.c:3509
- alloc_inode_sb include/linux/fs.h:2937 [inline]
- hfsplus_alloc_inode+0x5a/0xc0 fs/hfsplus/super.c:627
- alloc_inode+0x83/0x440 fs/inode.c:261
- iget_locked+0x2dd/0xe80 fs/inode.c:1316
- hfsplus_iget+0x59/0xaf0 fs/hfsplus/super.c:64
- hfsplus_btree_open+0x13e/0x1d00 fs/hfsplus/btree.c:150
- hfsplus_fill_super+0x1113/0x26f0 fs/hfsplus/super.c:473
- mount_bdev+0x3d7/0x560 fs/super.c:1650
- hfsplus_mount+0x4d/0x60 fs/hfsplus/super.c:641
- legacy_get_tree+0x110/0x290 fs/fs_context.c:662
- vfs_get_tree+0xa5/0x520 fs/super.c:1771
- do_new_mount+0x68d/0x1550 fs/namespace.c:3337
- path_mount+0x73d/0x1f20 fs/namespace.c:3664
- do_mount fs/namespace.c:3677 [inline]
- __do_sys_mount fs/namespace.c:3886 [inline]
- __se_sys_mount+0x725/0x810 fs/namespace.c:3863
- __x64_sys_mount+0xe4/0x140 fs/namespace.c:3863
+ alloc_pages mm/mempolicy.c:2204 [inline]
+ folio_alloc+0x1da/0x380 mm/mempolicy.c:2211
+ filemap_alloc_folio+0xa5/0x430 mm/filemap.c:974
+ __filemap_get_folio+0xa5a/0x1760 mm/filemap.c:1918
+ pagecache_get_page+0x4a/0x1a0 mm/folio-compat.c:99
+ find_or_create_page include/linux/pagemap.h:740 [inline]
+ ntfs_get_frame_pages+0xdc/0x9f0 fs/ntfs3/file.c:794
+ ntfs_compress_write+0x1b0b/0x3b70 fs/ntfs3/file.c:944
+ ntfs_file_write_iter+0x89b/0xd30 fs/ntfs3/file.c:1081
+ call_write_iter include/linux/fs.h:2020 [inline]
+ new_sync_write fs/read_write.c:491 [inline]
+ vfs_write+0x8ef/0x1490 fs/read_write.c:584
+ ksys_write+0x20f/0x4c0 fs/read_write.c:637
+ __do_sys_write fs/read_write.c:649 [inline]
+ __se_sys_write fs/read_write.c:646 [inline]
+ __x64_sys_write+0x93/0xd0 fs/read_write.c:646
  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
  do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
  entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-CPU: 0 PID: 5008 Comm: syz-executor168 Not tainted 6.7.0-rc7-syzkaller #0
+CPU: 0 PID: 4999 Comm: syz-executor227 Not tainted 6.7.0-rc8-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
 =====================================================
 
