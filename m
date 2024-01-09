@@ -1,58 +1,39 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C570C38FAD
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 13:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1141838F9F;
+	Tue,  9 Jan 2024 13:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lTE00hu/"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6d9b5c4f332so1315952b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 05:36:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704807412; x=1705412212; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W1OkkIDMSc8Q0KyW2jakNuTKvRC/V38TH1jOx19EXCA=;
-        b=lTE00hu//yULAJtT0+gY0IvWIvKUhgz6YH22b9FfpuMjjfyhxPa4Ew/B/jn2VXVAoN
-         duxAaZSqg8nNbnhg/nUdtJLi8o14MBp82Ts0Z9GB2+GMNLKXKoUej8P/z18dBCAb0CZn
-         jkjKMYH0HvI7gwVWEILjlPb3iGg0FFHO9zK5k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704807412; x=1705412212;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W1OkkIDMSc8Q0KyW2jakNuTKvRC/V38TH1jOx19EXCA=;
-        b=V/FtarvyO85pgH3/4CzAv9y04Vo50MTIyb1a/dy0x2z897xFk91OyCQ7t0Z/5Hpbet
-         J2vB/4jyWgqBLO6SmEXE85pqmRwpD6LViBOeIUa1Ej+jHZIicBJlwZ4O9B5sLUwUOhBm
-         Q3wda4zHO0P0yLIHq861PTiinLoUmdRFxw72WzYyvmAsBIuez1gw5SUVGQy1YY23nX1m
-         +Ku2dlKjJLKlZgqPCPFpIE2jFvsbc/Kd/x+1JhG23AhNgvYCbnXVK6VYJYkQTvoIeZ1q
-         2xAFrT12n1WLyTkAERAtHxgyeiSGFhH8n8BHMSROu09++FAivAoDpye6ZHqMuUyrFVTX
-         naqA==
-X-Gm-Message-State: AOJu0YwIgHry9KK2imRWrxAdGb0zGXyT7cuLO6sEcZkAEpXTD3SJwrCt
-	i3lRgICna1Ck0RtsPWObrYsMQbmP1L0q
-X-Google-Smtp-Source: AGHT+IGjwjOduo3sVvMklylvN3XYhL/ktYo2abqFN5x1SN3P9np4ra0Um4OeWouTXow82nwY84Gm5Q==
-X-Received: by 2002:aa7:8c18:0:b0:6da:27f1:b8dd with SMTP id c24-20020aa78c18000000b006da27f1b8ddmr2452353pfd.0.1704807412116;
-        Tue, 09 Jan 2024 05:36:52 -0800 (PST)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:e7f6:5139:c752:8303])
-        by smtp.gmail.com with ESMTPSA id t185-20020a6281c2000000b006d97f80c4absm1727934pfd.41.2024.01.09.05.36.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 05:36:51 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="Rl1Ovwlq"
+Received: from localhost.ispras.ru (unknown [10.10.165.2])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 5CB2240737DD;
+	Tue,  9 Jan 2024 13:37:15 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 5CB2240737DD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1704807436;
+	bh=TdzphiKewiAEGb5mVeNRXY8JwRsEqxcS+5rYPinKWAY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Rl1OvwlqxuwvpisiP4VBWnGLxvuCidOwAPlrS6WQp+tgypcJOmosmZNGPAyUSSXKn
+	 l01p+tt421gxRXq14syQ/JhWyMnZkzlmbwsDeenhMvaKkPVNsoclgqx30ksVstFfV2
+	 kFLKJvkOV5udxD91wDb77P3lvTpiIURTuGsdMbtQ=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Namjae Jeon <linkinjeon@kernel.org>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Steve French <sfrench@samba.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tom Talpey <tom@talpey.com>,
+	Ronnie Sahlberg <lsahlber@redhat.com>,
+	Hyunchul Lee <hyc.lee@gmail.com>,
+	linux-cifs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH] Compiler Attributes: counted_by: bump compiler versions
-Date: Tue,  9 Jan 2024 22:36:24 +0900
-Message-ID: <20240109133633.1103876-1-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+	Alexey Khoroshilov <khoroshilov@ispras.ru>,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] ksmbd: free ppace array on error in parse_dacl
+Date: Tue,  9 Jan 2024 16:34:27 +0300
+Message-ID: <20240109133429.31752-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,35 +42,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Bump compiler versions, as GCC is expected to implement it
-in version 15 and current clang-18 still has no support for
-counted_by(). Also fix clang URL - the project has moved
-to github.
+Free the ppace array if one of the init_acl_state() calls inside
+parse_dacl() fails. At the moment the function may fail only due to the
+memory allocation errors so it's highly unlikely in this case but
+nevertheless a fix is needed.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Found by Linux Verification Center (linuxtesting.org).
+
+Fixes: e2f34481b24d ("cifsd: add server-side procedures for SMB3")
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
 ---
- include/linux/compiler_attributes.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/smb/server/smbacl.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 28566624f008..1829c24c3357 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -95,11 +95,11 @@
- #endif
+diff --git a/fs/smb/server/smbacl.c b/fs/smb/server/smbacl.c
+index 1164365533f0..e6d0537cab49 100644
+--- a/fs/smb/server/smbacl.c
++++ b/fs/smb/server/smbacl.c
+@@ -406,11 +406,14 @@ static void parse_dacl(struct mnt_idmap *idmap,
+ 		return;
  
- /*
-- * Optional: only supported since gcc >= 14
-- * Optional: only supported since clang >= 18
-+ * Optional: only supported since gcc >= 15
-+ * Optional: only supported since clang >= 19
-  *
-  *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-- * clang: https://reviews.llvm.org/D148381
-+ * clang: https://github.com/llvm/llvm-project/pull/76348
-  */
- #if __has_attribute(__counted_by__)
- # define __counted_by(member)		__attribute__((__counted_by__(member)))
+ 	ret = init_acl_state(&acl_state, num_aces);
+-	if (ret)
++	if (ret) {
++		kfree(ppace);
+ 		return;
++	}
+ 	ret = init_acl_state(&default_acl_state, num_aces);
+ 	if (ret) {
+ 		free_acl_state(&acl_state);
++		kfree(ppace);
+ 		return;
+ 	}
+ 
 -- 
-2.43.0.472.g3155946c3a-goog
+2.43.0
 
