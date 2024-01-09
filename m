@@ -1,501 +1,280 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D68E3C6A4;
-	Tue,  9 Jan 2024 19:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0894D3D0A0
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 19:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="2Z9qGnjy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB75C433C7;
-	Tue,  9 Jan 2024 19:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1704827060;
-	bh=Eap1vhUpzX5HcSA3JwR74MM1WrPdfly7YndILs0trNU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=2Z9qGnjyNruUGCiAmdX4/wsthRaCXpHP6K7rG/jd05fbdFeussBk7n+zo51ubrRY0
-	 lp58fuhYmxz7SyCLoblW9dI4OoK7bIBxTUD0w5trrH4vtacTq8ZYATt4OanlmAKvOo
-	 g4Mz4HFL63MeBPhpDYxN3P2YszAZWFUSqIO36Kts=
-Date: Tue, 9 Jan 2024 11:04:20 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="H0LC0X38"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e4d1e0e5eso12641885e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 11:05:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704827117; x=1705431917; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zhF4jyFgcyCg0O1jhyIaL8gFGwc/DO+6T7JgJQErQjk=;
+        b=H0LC0X38aD5Wgjm3DxGq7jYUKpgnEHrdIaB9M9TwLUncqbcDGXV+V9k+5Jhuum2qT9
+         o//MwsLZs0US/2IZ9kvCReR2SGLBCc3fDnMMWlJbEnCISOjplhX5t1q8vZzrszqMw80Z
+         LqdtKM5ElmpjqYDVtmfqNv7jpVBDabirVgHn4zd7c2LeTHj/0DT6NIlzx+5Dpyec3rHp
+         MDNOjT8SNIGq/SXNffXFByWpZdvmrQ0xOBBHDBpjYimV1C7Ga3m/4XwdhRpIaXCgDHBq
+         gFLx9GZnerGoJEQlvLUrZsQEAIb3WOCY/USIaTb+Ow1YlxfFLYqfOO85/w8vhY+fD/Vx
+         AyPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704827117; x=1705431917;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zhF4jyFgcyCg0O1jhyIaL8gFGwc/DO+6T7JgJQErQjk=;
+        b=tSPOARKvKyHRTo6p4hvYuCOZstleyK3VyKY2PNUChz7hw2SQ77/yg5sQyW1QY/Swjd
+         BCpMzgZuWai9BQ6ZohQ7l8QQhEp05c/m17fPULQewMkLFy6RUqoxokPmDkB2FhISN2bx
+         A1Bornr7ooak2PfiaHzmh0MZEpyz4S+ogjRsxPIxiTHi1462IV/SWBvWlSno8Q21PAva
+         eNWuke9rcd/+sx/tRBAZkarwbF9qSiMzMasjkcRTCXj/HDFNWxorJP9GZkQZq2aL+G74
+         YO6d5GRlqRHg+j2Ns8L4qhxhE7mJoSCbB+7/1WL0MKZsxjvoVeL7x1F7LXBeW2FioIuM
+         yruQ==
+X-Gm-Message-State: AOJu0Ywlm4G1BipvvHJd4Kks0mF7jguXaVF5IURlcOlnKul+EDHhmZgh
+	22OrdaiW/o0uE07TUU2bw1UyNzKfIBfiiw==
+X-Google-Smtp-Source: AGHT+IEgDunyayHEsda9Q6L2F2gmaVkydXdLsBCiekAOHpKhoojijICJ7m5fqvwVosnQTQpczwhTag==
+X-Received: by 2002:a05:600c:45ce:b0:40c:2ba6:81e with SMTP id s14-20020a05600c45ce00b0040c2ba6081emr3080290wmo.121.1704827117034;
+        Tue, 09 Jan 2024 11:05:17 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f70b:9940:beaa:1728])
+        by smtp.gmail.com with ESMTPSA id jb6-20020a05600c54e600b0040e49045e0asm4380919wmb.48.2024.01.09.11.05.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 11:05:16 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mm@kvack.org, mm-commits@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL] non-MM updates for 6.8-rc1
-Message-Id: <20240109110420.dcdefe80d76257d9ff645a32@linux-foundation.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: updates for v6.8-rc1
+Date: Tue,  9 Jan 2024 20:05:14 +0100
+Message-Id: <20240109190514.45830-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Linus, please merge this cycle's batch of non-MM patches, thanks.
+Linus,
 
+Here's the main pull-request for this merge window from the GPIO subsystem.
+We have two new drivers, an assortment of updates and cleanups to many others,
+and first part of the big rework of the core GPIOLIB that's currently underway.
 
-There is one known forthcoming build issue which is not accompanied by
-a merge issue.  This, and its linux-next resolution is:
+Add to that some code shrink in the character device module and updates to DT
+bindings and that's pretty much it.
 
-next-next tree, drivers/net/phy/aquantia/aquantia_firmware.c:
-	https://lkml.kernel.org/r/20231221130946.7ed9a805@canb.auug.org.au
+There's a pull from Greg's branch for a new device property accessor that's
+used by one of the GPIO driver and another from Andy's Intel tree. The pinctrl
+commits in this PR have been Acked by Linus Walleij.
 
+Details are in the signed tag.
 
+Please pull,
+Bartosz Golaszewski
 
-Forthcoming merge issues and their linux-next resolutions are:
+The following changes since commit 861deac3b092f37b2c5e6871732f3e11486f7082:
 
-asm-generic tree, arch/mips/include/asm/traps.h
-	https://lkml.kernel.org/r/20231205090546.7dffe3aa@canb.auug.org.au
-
-iommu tree, arch/Kconfig
-	https://lkml.kernel.org/r/20231213124302.2a6281af@canb.auug.org.au
-
-mips tree, arch/mips/kernel/traps.c
-	https://lkml.kernel.org/r/20240102090812.4243eb88@canb.auug.org.au
-
-
-
-
-The following changes since commit 4376807bf2d5371c3e00080c972be568c3f8a7d1:
-
-  mm/mglru: reclaim offlined memcgs harder (2023-12-12 17:20:20 -0800)
+  Linux 6.7-rc7 (2023-12-23 16:25:56 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-nonmm-stable-2024-01-09-10-33
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.8-rc1
 
-for you to fetch changes up to 6dff315972640bfe542e2d044933751afd8e6c4a:
+for you to fetch changes up to 1979a28075470ef82472a5656ecc969f901e0d3b:
 
-  crash_core: fix and simplify the logic of crash_exclude_mem_range() (2024-01-05 10:45:25 -0800)
-
-----------------------------------------------------------------
-Quite a lot of kexec work this time around.  Many singleton patches in
-many places.  The notable patch series are:
-
-- nilfs2 folio conversion from Matthew Wilcox in "nilfs2: Folio
-  conversions for file paths".
-
-- Additional nilfs2 folio conversion from Ryusuke Konishi in "nilfs2:
-  Folio conversions for directory paths".
-
-- IA64 remnant removal in Heiko Carstens's "Remove unused code after
-  IA-64 removal".
-
-- Arnd Bergmann has enabled the -Wmissing-prototypes warning everywhere
-  in "Treewide: enable -Wmissing-prototypes".  This had some followup
-  fixes:
-
-  - Nathan Chancellor has cleaned up the hexagon build in the series
-    "hexagon: Fix up instances of -Wmissing-prototypes".
-
-  - Nathan also addressed some s390 warnings in "s390: A couple of
-    fixes for -Wmissing-prototypes".
-
-  - Arnd Bergmann addresses the same warnings for MIPS in his series
-    "mips: address -Wmissing-prototypes warnings".
-
-- Baoquan He has made kexec_file operate in a top-down-fitting manner
-  similar to kexec_load in the series "kexec_file: Load kernel at top of
-  system RAM if required"
-
-- Baoquan He has also added the self-explanatory "kexec_file: print out
-  debugging message if required".
-
-- Some checkstack maintenance work from Tiezhu Yang in the series
-  "Modify some code about checkstack".
-
-- Douglas Anderson has disentangled the watchdog code's logging when
-  multiple reports are occurring simultaneously.  The series is "watchdog:
-  Better handling of concurrent lockups".
-
-- Yuntao Wang has contributed some maintenance work on the crash code in
-  "crash: Some cleanups and fixes".
+  gpiolib: replace the GPIO device mutex with a read-write semaphore (2024-01-04 10:29:16 +0100)
 
 ----------------------------------------------------------------
-Ahelenia Ziemiańska (1):
-      kernel: relay: remove relay_file_splice_read dead code, doesn't work
+gpio updates for v6.8
 
-Andrew Morton (1):
-      merge mm-hotfixes-stable into mm-nonmm-stable to pick up depended-upon changes
+Core GPIOLIB:
+- protect the global list of GPIO devices with a read-write semaphore as
+  it is rarely modified but can be traversed by multiple readers at once
+- remove GPIO devices from the global list when they are *unregistered*
+  and not when they are *released* (which only happens when the last
+  reference is dropped) as this may lead to a successful lookup of an
+  unregistered device
+- remove the unnecessary "extra_checks" switch
+- rename functions that are called with a lock taken
+- remove duplicate includes
 
-Ariel Miculas (1):
-      docs: filesystems: document the squashfs specific mount options
+Character device handling:
+- use locking guards to reduce the code size
+- allocate the big linereq structure using the more suitable kvzalloc()
+- redulce the size of critical sections
+- improve documentation
+- move the debounce_period_us field out of struct gpio_desc
 
-Arnd Bergmann (27):
-      arch: turn off -Werror for architectures with known warnings
-      mips: decompress: fix add missing prototypes
-      mips: add asm/syscalls.h header
-      mips: add missing declarations for trap handlers
-      mips: rs870e: stop exporting local functions
-      mips: signal: move sigcontext declarations to header
-      mips: mark local function static if possible
-      mips: move build_tlb_refill_handler() prototype
-      mips: move jump_label_apply_nops() declaration to header
-      mips: unhide uasm_in_compat_space_p() declaration
-      mips: fix setup_zero_pages() prototype
-      mips: fix tlb_init() prototype
-      mips: move cache declarations into header
-      mips: add missing declarations
-      mips: spram: fix missing prototype warning for spram_config
-      mips: mt: include asm/mips_mt.h
-      mips: suspend: include linux/suspend.h as needed
-      mips: hide conditionally unused functions
-      mips: smp: fix setup_profiling_timer() prototype
-      mips: kexec: include linux/reboot.h
-      ida: make 'ida_dump' static
-      jffs2: mark __jffs2_dbg_superblock_counts() static
-      sched: fair: move unused stub functions to header
-      x86: sta2x11: include header for sta2x11_get_instance() prototype
-      usb: fsl-mph-dr-of: mark fsl_usb2_mpc5121_init() static
-      mips: fix r3k_cache_init build regression
-      Makefile.extrawarn: turn on missing-prototypes globally
+New drivers:
+- Nuvoton NPCM SGPIO driver for BMC NPCM7xx/NPCM8xx
+- Realtek DHC (Digital Home Center) SoC GPIO driver
 
-Bagas Sanjaya (1):
-      MAINTAINERS: remove Ohad Ben-Cohen from hwspinlock subsystem
+Driver improvements:
+- replace gpiochip_is_requested() with a safer alternative in the form of
+  gpiochip_dup_line_label() as the former returns a pointer to a string that
+  can be deleted
+- implement the dbg_show() callback in gpio-sim
+- improve the coding style for local variables by removing unnecessary tabs
+- use generic device properties instead of OF variants in gpio-mmio
+- use the preferred coding style for __free() in gpio-mockup
+- reuse PM ops from the gpio-tangier in gpio-elkhartlake
+- rework PM and use cleanup helpers in gpio-tangier
+- fix the EIC configuration in gpio-pmic-eic-sprd
+- remove the unneeded call to platform_set_drvdata() in gpio-sifive
+- use generic GPIO helpers for driver callbacks in gpio-dwapb
+- add clock support on certain pins of gpio-ixp4xx
+- don't use the core-specific DEBUG_GPIO switch in drivers
+- kerneldoc improvements
 
-Baoquan He (10):
-      resource: add walk_system_ram_res_rev()
-      kexec_file: load kernel at top of system RAM if required
-      kexec_file: add kexec_file flag to control debug printing
-      kexec_file: print out debugging message if required
-      kexec_file, x86: print out debugging message if required
-      kexec_file, arm64: print out debugging message if required
-      kexec_file, riscv: print out debugging message if required
-      kexec_file, power: print out debugging message if required
-      kexec_file, parisc: print out debugging message if required
-      riscv, kexec: fix the ifdeffery for AFLAGS_kexec_relocate.o
+DT bindings:
+- add bindings for the new Realtek and Nuvoton devices
+- allow gpio-ranges in gpio-dwapb
+- support GPIO hogs in gpio-rockchip
+- describe the label property in gpio-zynqmp-modepin
 
-Bjorn Andersson (1):
-      scripts/decode_stacktrace.sh: strip unexpected CR from lines
+Other:
+- header cleanups
+- forward declarations cleanups
 
-Colin Ian King (1):
-      scripts/spelling.txt: add more spellings to spelling.txt
+----------------------------------------------------------------
+Andrei Coardos (1):
+      gpio: sifive: remove unneeded call to platform_set_drvdata()
 
-Dongmin Lee (1):
-      kernel/reboot: explicitly notify if halt occurred instead of power off
+Andy Shevchenko (4):
+      Merge patch series "Use the standard _PM_OPS() export macro in Intel Tangier GPIO driver"
+      device property: Implement device_is_big_endian()
+      gpio: mmio: Make use of device properties
+      gpio: mmio: Clean up headers
 
-Douglas Anderson (4):
-      watchdog/hardlockup: adopt softlockup logic avoiding double-dumps
-      watchdog/softlockup: use printk_cpu_sync_get_irqsave() to serialize reporting
-      watchdog/hardlockup: use printk_cpu_sync_get_irqsave() to serialize reporting
-      watchdog: if panicking and we dumped everything, don't re-enable dumping
+Bartosz Golaszewski (30):
+      gpio: mockup: initialize a managed pointer in place
+      gpiolib: provide gpio_device_get_label()
+      Merge branch 'gpio/device_get_label_for_pinctrl' into gpio/for-next
+      gpio: sysfs: fix forward declaration of struct gpio_device
+      gpio: sim: fix the email address in MODULE_AUTHOR()
+      gpiolib: provide gpiochip_dup_line_label()
+      gpio: wm831x: use gpiochip_dup_line_label()
+      gpio: wm8994: use gpiochip_dup_line_label()
+      gpio: stmpe: use gpiochip_dup_line_label()
+      pinctrl: abx500: use gpiochip_dup_line_label()
+      pinctrl: nomadik: use gpiochip_dup_line_label()
+      pinctrl: baytrail: use gpiochip_dup_line_label()
+      pinctrl: sppctl: use gpiochip_dup_line_label()
+      gpiolib: use gpiochip_dup_line_label() in for_each helpers
+      gpiolib: remove gpiochip_is_requested()
+      Merge tag 'gpio-remove-gpiochip_is_requested-for-v6.8-rc1' into gpio/for-next
+      gpio: sim: implement the dbg_show() callback
+      gpiolib: allocate memory atomically with a spinlock held
+      gpio: xilinx: remove excess kernel doc
+      gpiolib: rename static functions that are called with the lock taken
+      gpiolib: use a mutex to protect the list of GPIO devices
+      Merge tag 'device_is_big_endian-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core into gpio/for-next
+      Merge tag 'intel-gpio-v6.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
+      Merge tag 'v6.7-rc7' into gpio/for-next
+      gpio: tps65219: don't use CONFIG_DEBUG_GPIO
+      gpiolib: remove extra_checks
+      gpiolib: drop tabs from local variable declarations
+      gpio: sysfs: drop tabs from local variable declarations
+      gpiolib: remove the GPIO device from the list when it's unregistered
+      gpiolib: replace the GPIO device mutex with a read-write semaphore
 
-Heiko Carstens (5):
-      arch: remove ARCH_THREAD_STACK_ALLOCATOR
-      arch: remove ARCH_TASK_STRUCT_ALLOCATOR
-      arch: remove ARCH_TASK_STRUCT_ON_STACK
-      checkstack: sort output by size and function name
-      checkstack: allow to pass MINSTACKSIZE parameter
+Emil Renner Berthing (2):
+      dt-bindings: gpio: dwapb: allow gpio-ranges
+      gpio: dwapb: Use generic request, free and set_config
 
-Kevin Hao (2):
-      fork: remove redundant TASK_UNINTERRUPTIBLE
-      nilfs2: add missing set_freezable() for freezable kthread
+Heiko Stuebner (1):
+      dt-bindings: gpio: rockchip: add a pattern for gpio hogs
 
-Kuan-Ying Lee (3):
-      scripts/gdb/stackdepot: rename pool_index to pools_num
-      scripts/gdb: remove exception handling and refine print format
-      scripts/checkstack.pl: fix no space expression between sp and offset
+Jim Liu (2):
+      dt-bindings: gpio: add NPCM sgpio driver bindings
+      gpio: nuvoton: Add Nuvoton NPCM sgpio driver
 
-Li Zhe (1):
-      softlockup: serialized softlockup's log
+Kent Gibson (9):
+      gpiolib: cdev: relocate debounce_period_us from struct gpio_desc
+      gpiolib: remove debounce_period_us from struct gpio_desc
+      gpiolib: cdev: fully adopt guard() and scoped_guard()
+      gpiolib: cdev: improve documentation of get/set values
+      gpiolib: cdev: reduce locking in gpio_desc_to_lineinfo()
+      gpiolib: cdev: include overflow.h
+      gpiolib: cdev: allocate linereq using kvzalloc()
+      gpiolib: cdev: replace locking wrappers for config_mutex with guards
+      gpiolib: cdev: replace locking wrappers for gpio_device with guards
 
-Mark Rutland (1):
-      kcov: remove stale RANDOMIZE_BASE text
+Linus Walleij (1):
+      gpio: ixp4xx: Handle clock output on pin 14 and 15
 
-Mathis Marion (1):
-      lib: crc_ccitt_false() is identical to crc_itu_t()
+Michal Simek (1):
+      dt-bindings: gpio: modepin: Describe label property
 
-Matthew Wilcox (Oracle) (35):
-      nilfs2: add nilfs_end_folio_io()
-      nilfs2: convert nilfs_abort_logs to use folios
-      nilfs2: convert nilfs_segctor_complete_write to use folios
-      nilfs2: convert nilfs_forget_buffer to use a folio
-      nilfs2: convert to nilfs_folio_buffers_clean()
-      nilfs2: convert nilfs_writepage() to use a folio
-      nilfs2: convert nilfs_mdt_write_page() to use a folio
-      nilfs2: convert to nilfs_clear_folio_dirty()
-      nilfs2: convert to __nilfs_clear_folio_dirty()
-      nilfs2: convert nilfs_segctor_prepare_write to use folios
-      nilfs2: convert nilfs_page_mkwrite() to use a folio
-      nilfs2: convert nilfs_mdt_create_block to use a folio
-      nilfs2: convert nilfs_mdt_submit_block to use a folio
-      nilfs2: convert nilfs_gccache_submit_read_data to use a folio
-      nilfs2: convert nilfs_btnode_create_block to use a folio
-      nilfs2: convert nilfs_btnode_submit_block to use a folio
-      nilfs2: convert nilfs_btnode_delete to use a folio
-      nilfs2: convert nilfs_btnode_prepare_change_key to use a folio
-      nilfs2: convert nilfs_btnode_commit_change_key to use a folio
-      nilfs2: convert nilfs_btnode_abort_change_key to use a folio
-      nilfs2: remove page_address() from nilfs_set_link
-      nilfs2: remove page_address() from nilfs_add_link
-      nilfs2: remove page_address() from nilfs_delete_entry
-      nilfs2: return the mapped address from nilfs_get_page()
-      nilfs2: pass the mapped address to nilfs_check_page()
-      nilfs2: switch to kmap_local for directory handling
-      nilfs2: add nilfs_get_folio()
-      nilfs2: convert nilfs_readdir to use a folio
-      nilfs2: convert nilfs_find_entry to use a folio
-      nilfs2: convert nilfs_rename() to use folios
-      nilfs2: convert nilfs_add_link() to use a folio
-      nilfs2: convert nilfs_empty_dir() to use a folio
-      nilfs2: convert nilfs_make_empty() to use a folio
-      nilfs2: convert nilfs_prepare_chunk() and nilfs_commit_chunk() to folios
-      nilfs2: convert nilfs_page_bug() to nilfs_folio_bug()
+Raag Jadav (4):
+      gpio: tangier: use EXPORT_NS_GPL_SIMPLE_DEV_PM_OPS() helper
+      gpio: elkhartlake: reuse pm_ops from Intel Tangier driver
+      gpio: tangier: unexport suspend/resume handles
+      gpio: tangier: simplify locking using cleanup helpers
 
-Nathan Chancellor (21):
-      hexagon: uaccess: remove clear_user_hexagon()
-      hexagon: mm: mark paging_init() as static
-      hexagon: mm: include asm/setup.h for setup_arch_memory()'s prototype
-      hexagon: smp: mark handle_ipi() and start_secondary() as static
-      hexagon: vm_fault: mark do_page_fault() as static
-      hexagon: vm_fault: include asm/vm_fault.h for prototypes
-      hexagon: vm_tlb: include asm/tlbflush.h for prototypes
-      hexagon: time: include asm/time.h for prototypes
-      hexagon: time: mark time_init_deferred() as static
-      hexagon: time: include asm/delay.h for prototypes
-      hexagon: signal: switch to SYSCALL_DEFINE0 for sys_rt_sigreturn()
-      hexagon: reset: include linux/reboot.h for prototypes
-      hexagon: process: include linux/cpu.h for arch_cpu_idle() prototype
-      hexagon: process: add internal prototype for do_work_pending()
-      hexagon: vdso: include asm/elf.h for arch_setup_additional_pages() prototype
-      hexagon: vm_events: remove unused dummy_handler()
-      hexagon: irq: add prototype for arch_do_IRQ()
-      hexagon: traps: remove sys_syscall()
-      hexagon: traps: add internal prototypes for functions only called from asm
-      s390/dasd: remove dasd_stats_generic_show()
-      s390/traps: only define is_valid_bugaddr() under CONFIG_GENERIC_BUG
+Randy Dunlap (1):
+      gpio: max730x: don't use kernel-doc marker for regular comment
 
-Oleg Nesterov (3):
-      introduce for_other_threads(p, t)
-      kernel/signal.c: simplify force_sig_info_to_task(), kill recalc_sigpending_and_wake()
-      __ptrace_unlink: kill the obsolete "FIXME" code
+Rob Herring (1):
+      dt-bindings: gpio: brcmstb: drop unneeded quotes
 
-Philipp Stanner (1):
-      fs/nilfs2: use standard array-copy-function
-
-Phillip Lougher (1):
-      Squashfs: fix variable overflow triggered by sysbot
-
-Randy Dunlap (8):
-      rapidio/tsi721: fix kernel-doc warnings
-      freevxfs: bmap: fix kernel-doc warnings
-      freevxfs: immed: fix kernel-doc param name
-      freevxfs: lookup: fix function params kernel-doc
-      init/Kconfig: move more items into the EXPERT menu
-      usr/Kconfig: fix typos of "its"
-      stacktrace: fix kernel-doc typo
-      nilfs2: cpfile: fix some kernel-doc warnings
-
-Ryusuke Konishi (3):
-      nilfs2: move page release outside of nilfs_delete_entry and nilfs_set_link
-      nilfs2: eliminate staggered calls to kunmap in nilfs_rename
-      nilfs2: switch WARN_ONs to warning output in nilfs_sufile_do_free()
-
-Sergey Senozhatsky (1):
-      checkpatch: do not require an empty line before error injection
-
-Stephen Rothwell (1):
-      powerpc: pmd_move_must_withdraw() is only needed for CONFIG_TRANSPARENT_HUGEPAGE
-
-Tanzir Hasan (1):
-      lib/trace_readwrite.c:: replace asm-generic/io with linux/io
-
-Tiezhu Yang (5):
-      scripts/checkstack.pl: remove ia64 support
-      scripts/checkstack.pl: add min_stack to the usage comment
-      scripts/checkstack.pl: match all stack sizes for some archs
-      scripts/checkstack.pl: change min_stack to 512 by default
-      docs: submit-checklist: remove all of "make namespacecheck"
-
-Uros Bizjak (1):
-      kexec: use atomic_try_cmpxchg in crash_kexec
-
-Uwe Kleine-König (1):
-      lib: add note about process exit message for DEBUG_STACK_USAGE
+Tzuyi Chang (2):
+      dt-bindings: gpio: realtek: Add realtek,rtd-gpio
+      gpio: rtd: Add support for Realtek DHC(Digital Home Center) RTD SoCs
 
 Wang Jinchao (1):
-      crash_core: remove duplicated including of kexec.h
+      gpiolib: remove duplicate inclusions
 
-Youling Tang (3):
-      scripts/decodecode: add support for LoongArch
-      checkstack: add loongarch support for scripts/checkstack.pl
-      kdump: remove redundant DEFAULT_CRASH_KERNEL_LOW_SIZE
+Wenhua Lin (1):
+      gpio: pmic-eic-sprd: Configure the bit corresponding to the EIC through offset
 
-Yuntao Wang (11):
-      kexec: use ALIGN macro instead of open-coding it
-      x86/kexec: simplify the logic of mem_region_callback()
-      kexec: modify the meaning of the end parameter in kimage_is_destination_range()
-      kexec_file: fix incorrect temp_start value in locate_mem_hole_top_down()
-      x86/kexec: use pr_err() instead of kexec_dprintk() when an error occurs
-      x86/kexec: fix incorrect argument passed to kexec_dprintk()
-      x86/kexec: fix incorrect end address passed to kernel_ident_mapping_init()
-      kexec_core: fix the assignment to kimage->control_page
-      x86/crash: remove the unused image parameter from prepare_elf_headers()
-      x86/crash: use SZ_1M macro instead of hardcoded value
-      crash_core: fix and simplify the logic of crash_exclude_mem_range()
-
- CREDITS                                            |   3 +
- .../driver-api/surface_aggregator/ssh.rst          |   2 +-
- Documentation/filesystems/squashfs.rst             |  60 +++++
- Documentation/translations/ja_JP/SubmitChecklist   |   4 +-
- .../zh_CN/process/submit-checklist.rst             |   3 +-
- .../zh_TW/process/submit-checklist.rst             |   3 +-
- MAINTAINERS                                        |   4 +-
- Makefile                                           |   6 +-
- arch/Kconfig                                       |  13 --
- arch/alpha/lib/Makefile                            |   1 -
- arch/alpha/mm/Makefile                             |   2 -
- arch/arm64/kernel/kexec_image.c                    |   6 +-
- arch/arm64/kernel/machine_kexec.c                  |  26 +--
- arch/arm64/kernel/machine_kexec_file.c             |  12 +-
- arch/hexagon/include/asm/irq.h                     |   3 +
- arch/hexagon/kernel/process.c                      |   2 +
- arch/hexagon/kernel/reset.c                        |   1 +
- arch/hexagon/kernel/signal.c                       |   2 +-
- arch/hexagon/kernel/smp.c                          |   4 +-
- arch/hexagon/kernel/time.c                         |   4 +-
- arch/hexagon/kernel/traps.c                        |  11 +-
- arch/hexagon/kernel/vdso.c                         |   1 +
- arch/hexagon/kernel/vm_events.c                    |   7 -
- arch/hexagon/mm/init.c                             |   3 +-
- arch/hexagon/mm/uaccess.c                          |   8 -
- arch/hexagon/mm/vm_fault.c                         |   3 +-
- arch/hexagon/mm/vm_tlb.c                           |   1 +
- arch/mips/Kbuild                                   |   6 -
- arch/mips/boot/compressed/dbg.c                    |   2 +
- arch/mips/boot/compressed/decompress.c             |  16 +-
- arch/mips/boot/compressed/decompress.h             |  24 ++
- arch/mips/boot/compressed/string.c                 |   1 +
- arch/mips/include/asm/cache.h                      |   6 +
- arch/mips/include/asm/jump_label.h                 |   3 +
- arch/mips/include/asm/mach-loongson64/mmzone.h     |   1 -
- arch/mips/include/asm/mmzone.h                     |   2 +
- arch/mips/include/asm/processor.h                  |   2 +
- arch/mips/include/asm/r4kcache.h                   |   4 +
- arch/mips/include/asm/setup.h                      |   1 +
- arch/mips/include/asm/signal.h                     |   1 +
- arch/mips/include/asm/smp.h                        |   2 +
- arch/mips/include/asm/spram.h                      |   2 +-
- arch/mips/include/asm/syscalls.h                   |  33 +++
- arch/mips/include/asm/tlbex.h                      |   1 +
- arch/mips/include/asm/traps.h                      |  24 ++
- arch/mips/include/asm/uasm.h                       |   2 -
- arch/mips/kernel/cpu-probe.c                       |   1 -
- arch/mips/kernel/cpu-r3k-probe.c                   |   1 -
- arch/mips/kernel/linux32.c                         |   1 +
- arch/mips/kernel/machine_kexec.c                   |   1 +
- arch/mips/kernel/mips-cm.c                         |   2 +-
- arch/mips/kernel/mips-mt-fpaff.c                   |   1 +
- arch/mips/kernel/mips-mt.c                         |   1 +
- arch/mips/kernel/module.c                          |   3 +-
- arch/mips/kernel/r4k-bugs64.c                      |   1 +
- arch/mips/kernel/signal-common.h                   |   3 +
- arch/mips/kernel/signal.c                          |   1 +
- arch/mips/kernel/signal32.c                        |   1 +
- arch/mips/kernel/signal_n32.c                      |   4 +-
- arch/mips/kernel/signal_o32.c                      |   1 +
- arch/mips/kernel/smp.c                             |   3 +
- arch/mips/kernel/spram.c                           |   1 +
- arch/mips/kernel/syscall.c                         |   1 +
- arch/mips/kernel/traps.c                           |   2 -
- arch/mips/kernel/unaligned.c                       |   1 +
- arch/mips/mm/c-r4k.c                               |   6 +-
- arch/mips/mm/cache.c                               |  15 +-
- arch/mips/mm/fault.c                               |   1 +
- arch/mips/mm/init.c                                |   1 +
- arch/mips/mm/pgtable-64.c                          |   2 +
- arch/mips/mm/tlb-r3k.c                             |   4 +-
- arch/mips/mm/tlb-r4k.c                             |   6 +-
- arch/mips/power/cpu.c                              |   1 +
- arch/mips/power/hibernate.c                        |   1 +
- arch/parisc/kernel/kexec_file.c                    |   8 +-
- arch/powerpc/kexec/core_64.c                       |   3 +-
- arch/powerpc/kexec/elf_64.c                        |   8 +-
- arch/powerpc/kexec/file_load_64.c                  |  18 +-
- arch/powerpc/mm/book3s64/pgtable.c                 |   2 +
- arch/riscv/kernel/Makefile                         |   2 +-
- arch/riscv/kernel/elf_kexec.c                      |  11 +-
- arch/riscv/kernel/machine_kexec.c                  |  26 ---
- arch/s390/kernel/traps.c                           |   2 +
- arch/sparc/kernel/Makefile                         |   1 -
- arch/sparc/lib/Makefile                            |   1 -
- arch/sparc/mm/Makefile                             |   1 -
- arch/sparc/prom/Makefile                           |   1 -
- arch/x86/kernel/crash.c                            |  16 +-
- arch/x86/kernel/kexec-bzimage64.c                  |  23 +-
- arch/x86/kernel/machine_kexec_64.c                 |   7 +-
- arch/x86/pci/sta2x11-fixup.c                       |   1 +
- drivers/mfd/Kconfig                                |   2 +-
- drivers/mfd/rave-sp.c                              |   4 +-
- drivers/platform/mips/rs780e-acpi.c                |  12 +-
- drivers/platform/surface/aggregator/Kconfig        |   2 +-
- drivers/rapidio/devices/tsi721.c                   |  67 ++++--
- drivers/rapidio/devices/tsi721_dma.c               |   4 +-
- drivers/s390/block/dasd.c                          |   6 -
- drivers/usb/host/fsl-mph-dr-of.c                   |   2 +-
- fs/exec.c                                          |   3 +-
- fs/freevxfs/vxfs_bmap.c                            |   8 +-
- fs/freevxfs/vxfs_immed.c                           |   2 +-
- fs/freevxfs/vxfs_lookup.c                          |   3 +-
- fs/jffs2/debug.c                                   |   2 +-
- fs/nilfs2/btnode.c                                 |  62 +++---
- fs/nilfs2/cpfile.c                                 |  28 ++-
- fs/nilfs2/dir.c                                    | 244 ++++++++++-----------
- fs/nilfs2/file.c                                   |  28 +--
- fs/nilfs2/gcinode.c                                |   4 +-
- fs/nilfs2/inode.c                                  |  11 +-
- fs/nilfs2/ioctl.c                                  |  10 +-
- fs/nilfs2/mdt.c                                    |  23 +-
- fs/nilfs2/namei.c                                  |  38 ++--
- fs/nilfs2/nilfs.h                                  |  20 +-
- fs/nilfs2/page.c                                   |  93 ++++----
- fs/nilfs2/page.h                                   |  12 +-
- fs/nilfs2/segment.c                                | 158 ++++++-------
- fs/nilfs2/sufile.c                                 |   9 +-
- fs/squashfs/file.c                                 |   3 +-
- fs/squashfs/file_direct.c                          |   6 +-
- include/linux/crash_core.h                         |   6 -
- include/linux/crc-ccitt.h                          |   7 -
- include/linux/init_task.h                          |   7 -
- include/linux/ioport.h                             |   3 +
- include/linux/kexec.h                              |   9 +-
- include/linux/sched.h                              |   2 -
- include/linux/sched/signal.h                       |   4 +-
- include/linux/surface_aggregator/serial_hub.h      |   4 +-
- include/uapi/linux/kexec.h                         |   1 +
- init/Kconfig                                       | 102 +++++----
- init/init_task.c                                   |  10 +-
- kernel/crash_core.c                                |  89 +++-----
- kernel/fork.c                                      |  28 +--
- kernel/kexec_core.c                                |  21 +-
- kernel/kexec_file.c                                |  20 +-
- kernel/ptrace.c                                    |  13 +-
- kernel/reboot.c                                    |  17 +-
- kernel/relay.c                                     | 162 --------------
- kernel/resource.c                                  |  57 +++++
- kernel/sched/fair.c                                |  13 --
- kernel/sched/sched.h                               |  11 +
- kernel/signal.c                                    |  28 +--
- kernel/stacktrace.c                                |   2 +-
- kernel/watchdog.c                                  |  40 +++-
- lib/Kconfig.debug                                  |   6 +-
- lib/crc-ccitt.c                                    |  55 -----
- lib/test_ida.c                                     |   2 +-
- lib/trace_readwrite.c                              |   2 +-
- mm/highmem.c                                       |   2 -
- scripts/Makefile.extrawarn                         |   4 +-
- scripts/checkpatch.pl                              |   2 +-
- scripts/checkstack.pl                              |  45 ++--
- scripts/decode_stacktrace.sh                       |   3 +
- scripts/decodecode                                 |   5 +
- scripts/gdb/linux/page_owner.py                    |  58 +++--
- scripts/gdb/linux/slab.py                          |   3 +-
- scripts/gdb/linux/stackdepot.py                    |   6 +-
- scripts/spelling.txt                               |  14 ++
- security/integrity/ima/ima_kexec.c                 |   4 +-
- usr/Kconfig                                        |   6 +-
- 160 files changed, 1110 insertions(+), 1155 deletions(-)
- create mode 100644 arch/mips/boot/compressed/decompress.h
- create mode 100644 arch/mips/include/asm/syscalls.h
-
+ .../bindings/gpio/brcm,brcmstb-gpio.yaml           |   2 +-
+ .../devicetree/bindings/gpio/nuvoton,sgpio.yaml    |  87 +++
+ .../devicetree/bindings/gpio/realtek,rtd-gpio.yaml |  69 +++
+ .../bindings/gpio/rockchip,gpio-bank.yaml          |   7 +
+ .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml |   2 +
+ .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    |   3 +
+ drivers/gpio/Kconfig                               |  20 +
+ drivers/gpio/Makefile                              |   2 +
+ drivers/gpio/gpio-dwapb.c                          |  13 +-
+ drivers/gpio/gpio-elkhartlake.c                    |  14 +-
+ drivers/gpio/gpio-ixp4xx.c                         |  51 +-
+ drivers/gpio/gpio-max730x.c                        |   2 +-
+ drivers/gpio/gpio-mmio.c                           |  53 +-
+ drivers/gpio/gpio-mockup.c                         |   3 +-
+ drivers/gpio/gpio-npcm-sgpio.c                     | 619 +++++++++++++++++++
+ drivers/gpio/gpio-pmic-eic-sprd.c                  |  19 +-
+ drivers/gpio/gpio-rtd.c                            | 604 +++++++++++++++++++
+ drivers/gpio/gpio-sifive.c                         |   1 -
+ drivers/gpio/gpio-sim.c                            |  24 +-
+ drivers/gpio/gpio-stmpe.c                          |   6 +-
+ drivers/gpio/gpio-tangier.c                        |  63 +-
+ drivers/gpio/gpio-tangier.h                        |   4 +-
+ drivers/gpio/gpio-tps65219.c                       |  18 +-
+ drivers/gpio/gpio-wm831x.c                         |  14 +-
+ drivers/gpio/gpio-wm8994.c                         |  13 +-
+ drivers/gpio/gpio-xilinx.c                         |   1 -
+ drivers/gpio/gpiolib-cdev.c                        | 667 ++++++++++-----------
+ drivers/gpio/gpiolib-sysfs.c                       | 110 ++--
+ drivers/gpio/gpiolib-sysfs.h                       |  10 +-
+ drivers/gpio/gpiolib.c                             | 274 +++++----
+ drivers/gpio/gpiolib.h                             |   7 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c           |  11 +-
+ drivers/pinctrl/nomadik/pinctrl-abx500.c           |   9 +-
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c          |   6 +-
+ drivers/pinctrl/sunplus/sppctl.c                   |  10 +-
+ include/linux/gpio/driver.h                        |  43 +-
+ include/linux/property.h                           |  26 +
+ 37 files changed, 2185 insertions(+), 702 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-npcm-sgpio.c
+ create mode 100644 drivers/gpio/gpio-rtd.c
