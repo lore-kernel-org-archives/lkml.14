@@ -1,65 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp85.cstnet.cn [159.226.251.85])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC3138DE0;
-	Tue,  9 Jan 2024 11:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QA0hOQoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC48CC433C7;
-	Tue,  9 Jan 2024 11:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704800699;
-	bh=ZHek6cnUD/06G1ff9DHO+IrMfmDIWNNJ3OElbgXKZgk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QA0hOQoZdvG+WySnNIvWkgT88AHPzZr7yQU3E1sn49Tk+Qsvq3qJN4RpQYU+no2rN
-	 ZlsayES1RLtYXz0X2zQaiphsEuOhr0UAVwx2iRNrfNHwvlJ/8aprhL2YQygSNMMUTb
-	 0ejbhQHt85PRQsgNTm64r5KQ9qrJY9pGGGFVGWL0=
-Date: Tue, 9 Jan 2024 12:44:56 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Stanley =?utf-8?B?Q2hhbmdb5piM6IKy5b63XQ==?= <stanley_chang@realtek.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Rob Herring <robh@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
-	Alan Stern <stern@rowland.harvard.edu>, Roy Luo <royluo@google.com>,
-	Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
-	Flavio Suligoi <f.suligoi@asem.it>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH v4 4/4] usb: core: add phy notify connect and disconnect
-Message-ID: <2024010925-splendid-thorn-3221@gregkh>
-References: <20231213031203.4911-1-stanley_chang@realtek.com>
- <20231213031203.4911-4-stanley_chang@realtek.com>
- <bdb2c10798124e228b8562576d73b881@realtek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08360374C4;
+	Tue,  9 Jan 2024 11:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
+Received: from mengjingzi$iie.ac.cn ( [114.245.34.24] ) by
+ ajax-webmail-APP-13 (Coremail) ; Tue, 9 Jan 2024 19:45:27 +0800 (GMT+08:00)
+Date: Tue, 9 Jan 2024 19:45:27 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: "Greg KH" <gregkh@linuxfoundation.org>, brauner@kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: proposal to refine capability checks when _rlimit_overlimit()
+ is true
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
+ Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
+In-Reply-To: <20240103173002.GB136592@mit.edu>
+References: <1a8ed7bd.c96e.18ccd4ee4d1.Coremail.mengjingzi@iie.ac.cn>
+ <2024010353-legwarmer-flap-869d@gregkh> <20240103173002.GB136592@mit.edu>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bdb2c10798124e228b8562576d73b881@realtek.com>
+Message-ID: <7d2df0e7.174cd.18cee0ab373.Coremail.mengjingzi@iie.ac.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:twCowADX38_YMZ1lkGcFAA--.51763W
+X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiCRELE2Wc6oLuzQABsz
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On Tue, Jan 09, 2024 at 02:08:57AM +0000, Stanley Chang[昌育德] wrote:
-> Hi Greg,
-> 
-> Please help review these series of patches.
-
-I was hoping that someone else would review these, which didn't seem to
-happen at all, which is odd for something that I thought many others
-wanted to see merged.
-
-It will have to wait until after 6.8-rc1 is out.  To also help this out,
-please help review other changes that are submitted to the lists as that
-will reduce the maintainer load here.
-
-And again, if anyone else cares to see these merged, please help review
-them, the Cc: list here is very long...
-
-thanks,
-
-greg k-h
+SSB1bmRlcnN0YW5kIGNoYW5nZSB0aGUgY29kZSBoZXJlIG1heSBhZmZlY3QgdGhlIHdvcmxkIG91
+dHNpZGUgdGhlCmtlcm5lbC4gQW5kIHRoZXJlIG1pZ2h0IGJlIHVzZWFiaWxpdHkgaXNzdWVzIHdo
+ZW4gYXBwbGljYXRpb25zIGluIAp1c2Vyc3BhY2UgYXJlIG5vdCB1cGRhdGVkLiBCdXQgdGhlIGdv
+b2QgbmV3cyBpcyB0aGF0IHRoZSAKbW9kaWZpY2F0aW9uJ3MgaW1wYWN0IG9uIHVzZXJzcGFjZSBp
+cyByZWxhdGl2ZWx5IGNvbnRhaW5lZC4gCkhlcmUncyBhIGJyZWFrZG93bjogCgoxLiBVc2FnZSBz
+dGF0aXN0aWNzIGZvciB0aGUgbGF0ZXN0IHZlcnNpb24gb2YgVWJ1bnR1IHNob3cgdGhhdCAKICAg
+YXBwbGljYXRpb25zIGhhdmUgbGltaXRlZCB1c2Ugb2YgY2FwYWJpbGl0eS4gCiAgICAgICAgKDEp
+IFVuZGVyIHRoZSBkZWZhdWx0IGNvbmZpZ3VyYXRpb24sIG9ubHkgMjggcHJvY2Vzc2VzIGluIAog
+ICAgICAgICAgICBVYnVudHUgMjIuMDQgTFRTIHdlcmUgZm91bmQgdG8gaGF2ZSBjYXBhYmlsaXR5
+LCB3aXRoIDE1IAogICAgICAgICAgICBydW5uaW5nIGFzIHJvb3QgYW5kIHVuYWZmZWN0ZWQgYnkg
+dGhlIHByb3Bvc2VkIGNoYW5nZS4gCiAgICAgICAgKDIpIEFtb25nIHRoZSA1OWsgcGFja2FnZXMg
+b24gVWJ1bnR1IDIxLjEwLCBvbmx5IDI5IHByb2dyYW1zIAogICAgICAgICAgICB3ZXJlIGNvbmZp
+Z3VyZWQgd2l0aCBjYXBhYmlsaXR5LlsxXQoKMi4gRm9yIHByb2dyYW1zIHRoYXQgdXNlIGNhcGFi
+aWxpdHksIGl0IGlzIG5vdCBjb21wbGljYXRlZCBmb3IgZGV2ZWxvcGVycwogICBvciBzeXNhZG1p
+biB0byByZWNvbmZpZ3VyZSBpdC4gUHJvZ3JhbXMgdXNpbmcgY2FwYWJpbGl0eSBjYW4gYmUgCiAg
+IGNhdGVnb3JpemVkIGludG8gdHdvIHR5cGVzOiAKICAgICAgICAoMSkgdGhvc2Ugc3RhcnRlZCBi
+eSByb290IGhhdmUgZnVsbCBjYXBhYmlsaXR5IGJ5IGRlZmF1bHQsIHdoaWNoIAogICAgICAgICAg
+ICBjYW4gYmUgY2hhbmdlZCB3aXRoIHRoZSBwcmN0bCBzeXN0ZW0gY2FsbC4KICAgICAgICAoMikg
+YW5kIHRob3NlIHdpdGggY2FwYWJpbGl0aWVzIGNvbmZpZ3VyZWQgZGlyZWN0bHkgb24gdGhlIAog
+ICAgICAgICAgICBleGVjdXRhYmxlIGZpbGUgY2FuIGJlIG1vZGlmaWVkIGJ5IHNlY2FwIGNvbW1h
+bmQgZGlyZWN0bHkuCgpTbyB0aGUga2V5IHRvIHVzaW5nIGNhcGFiaWxpdHkgaXMgdG8gY2hvb3Nl
+IHRoZSBsZWFzdCBwcml2aWxlZ2UgdGhhdCAKd2lsbCBhY2NvbXBsaXNoIHRoZSBmdW5jdGlvbi4g
+VGhpcyBjYW4ndCBiZSBkb25lIHdpdGhvdXQgdGhlIGtlcm5lbCdzIApjbGVhciBkZWxpbmVhdGlv
+biBvZiBwcml2aWxlZ2VzLgoKVGhpcyBjaGFuZ2Ugd2lsbCBtYWtlIGl0IGNsZWFyIHRoYXQgaWYg
+eW91IG9ubHkgbmVlZCB0byBjcm9zcyBzeXN0ZW0gCmxpbWl0cywgdGhlbiBzeXNfcmVzb3VyY2Ug
+aXMgdGhlIGNhcGFiaWxpdHkgeW91IG5lZWQuIFRoaXMgbWF5IGNhdXNlIApzb21lIHByb2Nlc3Nl
+cyB0aGF0IGFyZSB1c2luZyBzeXNfYWRtaW4gdG8gYnlwYXNzIGxpbWl0cyB0byBmYWlsLCBidXQg
+CmZyb20gYSBsZWFzdCBwcml2aWxlZ2UgcG9pbnQgb2YgdmlldywgaXQgbWF5IGJlIGdvb2QgdG8g
+cmVkdWNlIHRoZSAKdW5uZWNlc3NhcnkgdXNlIG9mIHN5c19hZG1pbi4KCkJlc3QgcmVnYXJkcywK
+SmluZ3ppCgpbMV0gSGFzYW4sIE1kIE1laGVkaSwgU2V5ZWRoYW1lZCBHaGF2YW1uaWEsIGFuZCBN
+aWNoYWxpcyBQb2x5Y2hyb25ha2lzLiAKICAgICJEZWNhcDogRGVwcml2aWxlZ2luZyBwcm9ncmFt
+cyBieSByZWR1Y2luZyB0aGVpciBjYXBhYmlsaXRpZXMuIiAKICAgIFByb2NlZWRpbmdzIG9mIHRo
+ZSAyNXRoIEludGVybmF0aW9uYWwgU3ltcG9zaXVtIG9uIFJlc2VhcmNoIGluIEF0dGFja3MsCiAg
+ICBJbnRydXNpb25zIGFuZCBEZWZlbnNlcy4gMjAyMi4K
