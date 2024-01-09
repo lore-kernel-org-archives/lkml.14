@@ -1,108 +1,149 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6862228F1
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 02:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DED5390;
+	Tue,  9 Jan 2024 02:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyRzwz9L"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3366ddd1eddso2626889f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 18:52:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704768754; x=1705373554; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ppkSdH3z1kt6voFQDn4E9SzAVclK+/ku7jNGmWCT8sQ=;
-        b=gyRzwz9LE+fPAvkEvZyWjAP6Dc3kYo8wwA22+g26K96Q2T/4SOSni+e0fy5EPgHo9Y
-         ZGUOMh8/E2QqUijbWZRJtgQ4yqmAg4TBiVHy7JYfy45qeb4CytUOGs88U+jdnAJR97Pl
-         U5CGiLZnXt44XJw3kRPzEbT+/cfFbyY0BoVvQAHw2x2GCOYE7eSEA9ZMgkshKp5//qvC
-         Y4R3q233q2MBsi785ulbCIT59IuYOAvTGRH3fBwzEQm+JDHWVbgxtJX1MOg3qwkI777y
-         ELkHLNbF7rMeyj0onuk5Yv5Vh8zfeP268aGD9yNga1yG9hwtfEwr+6d959pk8z+U5FCc
-         BVog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704768754; x=1705373554;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ppkSdH3z1kt6voFQDn4E9SzAVclK+/ku7jNGmWCT8sQ=;
-        b=xFCxUHCYwF5d5tNdqSLb9/phJG37VigLwkz8DPu2d6vVaadx3JsWIaEx12fvaxn6+P
-         K81OSWFeMoA/PEpfelhGAnUw87SPFvf8yFJS9fZqbfUh+SVSzMDfkZEHXoUalXZftzXe
-         TzRxaZ/ma0sxchvzaC0ZwfOoG5PzMT8c/gtbTEupPB6e1Qa6WjwgS4oLwrRak6TzsvCI
-         Kp59cnfchfWXxYj5nOFCjTnom5WtwCj5hALIiVqCz35P3OCVxNt/GdsZnfZIlRsJzFvL
-         CiXxEsNf+PU2FPZ+BgU6wEr68PKMlhfmoIfqSnESBP/N/ovk7Cg04GVl3mQc2FsbdafN
-         +y5w==
-X-Gm-Message-State: AOJu0YxGS+BA9/SL8ouKKnw1hZG/am1k2a/SgETq9nNqZMiX5jq2zoHp
-	n1x/wJxWJosH33YI5vxeYWss5ZE42nP1EuwIXWw=
-X-Google-Smtp-Source: AGHT+IGtn1fnIUdzHd6Qz1fAfiHmb6ZGBhgzjDw4ZpcE5gUgTHfBMMAVs6MZWeFte5JvO48iuqTlb8itIHbnqp6nw5I=
-X-Received: by 2002:a05:6000:dc9:b0:337:57da:4a9b with SMTP id
- dw9-20020a0560000dc900b0033757da4a9bmr86668wrb.187.1704768754315; Mon, 08 Jan
- 2024 18:52:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jjdx1tjv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704768778; x=1736304778;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UArfAUbovcI7fB2bfs6Ng4TVNlajHZ5AT7kwEtscyUg=;
+  b=jjdx1tjvfHfTH+kkGtl6BsNAydiNm1thk1R3ntqMRuJvrI0xW0PDl/Yc
+   lqrNnzcY/xvv3Dl3Ykccqw4xPSwOLliomTroBANablAUCjVid9Rzw4/Wf
+   4uoL1JdlN8WynpxZ3FL6HN+5qQrCrRdE155tSUwLgLc3cZIyxYCRAp58F
+   5SXrbxmq13/8xpkkQsyPtrU0JkRLlmcF2f+76gfeYD3h35I/b9VY8DrLt
+   vjMYHBnXok3eTVSRdeLpzd09lhZUiDmWhGCtS72ejBtvxnNumUMmk2QDl
+   fXNsvA1kitQJHyCYCmVOO7PLDTomWuFPTLkjiUxDn018a8Ci3D1BM6A8Q
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="4844584"
+X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
+   d="scan'208";a="4844584"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 18:52:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="905002419"
+X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
+   d="scan'208";a="905002419"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by orsmga004.jf.intel.com with ESMTP; 08 Jan 2024 18:52:53 -0800
+Message-ID: <8071d34f-e247-41b4-bd50-f68e58d84902@linux.intel.com>
+Date: Tue, 9 Jan 2024 10:47:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJNi4rO+Dw5qYDtyJVbuo0OqAoXpGq_Qq6xjH9cvMCAUnW+77g@mail.gmail.com>
- <CAJNi4rMHtM=39jzkzwqt++kVpSp0=XfDrVdY94WoW6B34oKwDA@mail.gmail.com>
- <ZZb2f0U4qTWDjCGj@FVFF77S0Q05N.cambridge.arm.com> <CAJNi4rOpzmQAW1Fjst-Em=SQ7q8QsQh0PWhVxUizrOW9JukOgQ@mail.gmail.com>
- <ZZvS8rigFJR8L56c@FVFF77S0Q05N>
-In-Reply-To: <ZZvS8rigFJR8L56c@FVFF77S0Q05N>
-From: richard clark <richard.xnu.clark@gmail.com>
-Date: Tue, 9 Jan 2024 10:52:23 +0800
-Message-ID: <CAJNi4rNTzkuZeya8f=tBVOn_dqgLbLf1A+3X4vHqiSa_sgDbUA@mail.gmail.com>
-Subject: Re: undefined reference to `__aarch64_cas4_sync' error on arm64
- native build
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: gcc-help@gcc.gnu.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Longfang Liu <liulongfang@huawei.com>, Yan Zhao <yan.y.zhao@intel.com>,
+ iommu@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 12/14] iommu: Use refcount for fault data access
+To: Jason Gunthorpe <jgg@ziepe.ca>
+References: <20231220012332.168188-1-baolu.lu@linux.intel.com>
+ <20231220012332.168188-13-baolu.lu@linux.intel.com>
+ <20240105160913.GG50608@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240105160913.GG50608@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 8, 2024 at 6:51=E2=80=AFPM Mark Rutland <mark.rutland@arm.com> =
-wrote:
+On 1/6/24 12:09 AM, Jason Gunthorpe wrote:
+> On Wed, Dec 20, 2023 at 09:23:30AM +0800, Lu Baolu wrote:
+>> The per-device fault data structure stores information about faults
+>> occurring on a device. Its lifetime spans from IOPF enablement to
+>> disablement. Multiple paths, including IOPF reporting, handling, and
+>> responding, may access it concurrently.
+>>
+>> Previously, a mutex protected the fault data from use after free. But
+>> this is not performance friendly due to the critical nature of IOPF
+>> handling paths.
+>>
+>> Refine this with a refcount-based approach. The fault data pointer is
+>> obtained within an RCU read region with a refcount. The fault data
+>> pointer is returned for usage only when the pointer is valid and a
+>> refcount is successfully obtained. The fault data is freed with
+>> kfree_rcu(), ensuring data is only freed after all RCU critical regions
+>> complete.
+>>
+>> An iopf handling work starts once an iopf group is created. The handling
+>> work continues until iommu_page_response() is called to respond to the
+>> iopf and the iopf group is freed. During this time, the device fault
+>> parameter should always be available. Add a pointer to the device fault
+>> parameter in the iopf_group structure and hold the reference until the
+>> iopf_group is freed.
+>>
+>> Make iommu_page_response() static as it is only used in io-pgfault.c.
+>>
+>> Co-developed-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> Tested-by: Yan Zhao <yan.y.zhao@intel.com>
+>> ---
+>>   include/linux/iommu.h      |  17 +++--
+>>   drivers/iommu/io-pgfault.c | 129 +++++++++++++++++++++++--------------
+>>   drivers/iommu/iommu-sva.c  |   2 +-
+>>   3 files changed, 90 insertions(+), 58 deletions(-)
+> 
+> This looks basically Ok
+> 
+>> +/* Caller must hold a reference of the fault parameter. */
+>> +static void iopf_put_dev_fault_param(struct iommu_fault_param *fault_param)
+>> +{
+>> +	if (refcount_dec_and_test(&fault_param->users))
+>> +		kfree_rcu(fault_param, rcu);
+>> +}
+> 
+> [..]
+> 
+>> @@ -402,10 +429,12 @@ int iopf_queue_add_device(struct iopf_queue *queue, struct device *dev)
+>>   	INIT_LIST_HEAD(&fault_param->faults);
+>>   	INIT_LIST_HEAD(&fault_param->partial);
+>>   	fault_param->dev = dev;
+>> +	refcount_set(&fault_param->users, 1);
+>> +	init_rcu_head(&fault_param->rcu);
+> 
+> No need to do init_rcu_head() when only using it for calling
+> kfree_rcu()
 
->
-> This is due to a difference in default options between the two compilers;=
- the
-> kernel isn't linked against libc in either case.
->
-> Your native compiler evidently has -moutline-atomics enabled in its defau=
-lt
-> options. With that enabled, the builtin atomics generate calls to out-of-=
-line
-> functions which the kernel itself does not provide, and hence those resul=
-t in a
-> link-time error.
->
-> Your cross-compiler evidently does not have -moutline-atomics enabled in =
-its
-> default options. Without that enabled, the builtin atomics generate inlin=
-e
-> atomic instructions rather than function calls. Since these don't depend =
-on
-> external functions there's no link-time error.
->
-> If you pass 'mno-outline-atomics' to your native compiler, the problem sh=
-ould
-> disappear.
->
-Right, this should be the root cause, just pass 'mno-outline-atomics'
-to my native compiler, the kernel link time issue doesn't show. But, I
-test a userland application with '__sync_val_compare_and_swap' used,
-for the 'aarch64-linux-gnu-gcc test.c', the 'nm a.out' will output:
-...
-0000000000000960 t __aarch64_cas4_sync
-0000000000011011 B __aarch64_have_lse_atomics
-...
-From the above output, seems the cross compiler has
-'-moutline-atomics' enabled by default, also with
-'aarch64-linux-gnu-gcc -mno-outline-atomics test.c', the 'nm a.out'
-doesn't show the '_aarch64_cas4_sync'. The same result for the native
-build for the same test.c, this result can't explain why the
-cross-compile linux kernel will not generate the link time error,...
+Removed.
 
->
-> Mark.
+> 
+>> @@ -454,8 +485,10 @@ int iopf_queue_remove_device(struct iopf_queue *queue, struct device *dev)
+>>   	list_for_each_entry_safe(iopf, next, &fault_param->partial, list)
+>>   		kfree(iopf);
+>>   
+>> -	param->fault_param = NULL;
+>> -	kfree(fault_param);
+>> +	/* dec the ref owned by iopf_queue_add_device() */
+>> +	rcu_assign_pointer(param->fault_param, NULL);
+>> +	if (refcount_dec_and_test(&fault_param->users))
+>> +		kfree_rcu(fault_param, rcu);
+> 
+> Why open code iopf_put_dev_fault_param()? Just call it.
+
+Done.
+
+> 
+> With those:
+> 
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> 
+> Jason
+
+Thank you very much!
+
+Best regards,
+baolu
+
