@@ -1,164 +1,81 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A680439AC6
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="wYw0VBic"
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com [209.85.210.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 6E5B43F737
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1704810501;
-	bh=H46EXvdjyBOKeFgyWr6G7nw/iea+GVPfzJMh//6f0l8=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=wYw0VBicWVEY80nMARto7s3zWLgiE7jqx06jsZhkwTo6yxLtRXA2u6waqR8CGnPfg
-	 w3t4jM9BBDPOkJxZLg2phYbF4w2nqcGLrCqNF2B1CedBdto8FiKGpyYOzsc1e4Skta
-	 +j/dtjDcM0H7A7om6jRJPtcVZYHx2nmWoc9QWkk5jUb1Ulu9hdThla72cj+htJDZya
-	 xPM6SqgHe+BxKnhpNftvIkAAa6My7qvGkYvXGhKtI5dvsXfwU5kEpSEKec3T/2lQkz
-	 4eUBcu1d0cTPUJlzZDvbJwW2PTeQpCXh0Vnawzxo3GPUHjvIMIqOURsabYDnWTd3WY
-	 9b63TRat0GVPA==
-Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-6ddec7b52e7so141211a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:28:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCCA39AC0;
+	Tue,  9 Jan 2024 14:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a29a4f610b1so313004666b.3;
+        Tue, 09 Jan 2024 06:29:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704810500; x=1705415300;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H46EXvdjyBOKeFgyWr6G7nw/iea+GVPfzJMh//6f0l8=;
-        b=aSSmoD65e80YItkLw4MzdMJ7F+kdennuv1Uq8Yny5ISVA0YyjeMzsgYQfimpT8Wm/d
-         wvlmqRaeFoD7ucpfI0D9m7SsNKvjRGharmvzP4qOFUL+pHcCHX5fEiq2bMv+uLIZsp7N
-         +wApvofe/W1cungSl5wzuIKlYm5BMdmyhzFxZ1QNuwU+2yJRixU+F4uN63Li7/YzJZuh
-         yIBuPobxIwDL9ltB8oCh5BOGCT7EhIBDbxAeQKO2vWVuILBzQ5vsXEehsamuyiIuxlY4
-         nClPVmXPoM9242Ex2JEGBeyLHkPFQDpVGjfsHfSqHJ8JeT3g9KPrsQjQjt0jmKOC5TKg
-         Tomg==
-X-Gm-Message-State: AOJu0YxuvlBkogvNk0V+RsUEtd7HzTqfb50WA0TlTOcNThCpRLEjUzEh
-	L3OewqZZ9EK0jG/psi2+n63Gz+ahSNluHCC4YK1VubFg/1azi5/6KkAk6ayr71vZKV16CA3vP73
-	306xY80IXiBx4N3I+RIz7VFQv41lipIwxrcQ5Hkask53c5zeqvAU+p/aU7pGBiUYA
-X-Received: by 2002:a05:6358:418b:b0:174:ec56:4220 with SMTP id w11-20020a056358418b00b00174ec564220mr3565156rwc.21.1704810500016;
-        Tue, 09 Jan 2024 06:28:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHWXJDf3n8xAk97y9T0ad5uwG5IytT1BWqKuFjuM6xdYu3hwumma4StJ7ZRSYHehkU19Ir2VYgRlhfzGCyE8vA=
-X-Received: by 2002:a05:6358:418b:b0:174:ec56:4220 with SMTP id
- w11-20020a056358418b00b00174ec564220mr3565129rwc.21.1704810499691; Tue, 09
- Jan 2024 06:28:19 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 9 Jan 2024 06:28:19 -0800
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20240109-tiptoeing-twirl-ebb943e17a29@wendy>
-References: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
- <20240103132852.298964-4-emil.renner.berthing@canonical.com>
- <20240108-majorette-overtly-4ec65d0a15e9@spud> <CAJM55Z_2zhELW3E7p94J05We17xTC2Rejs5AigNJOHCGHVr_zg@mail.gmail.com>
- <20240109-tiptoeing-twirl-ebb943e17a29@wendy>
+        d=1e100.net; s=20230601; t=1704810571; x=1705415371;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4PLkRHcOKx8awD/I3nMGKYisxvVR6qD6c46F0HsyxRw=;
+        b=vtwa+Bxf7qekrkIQ35l02ilpD7BbuUyOkGpQbiO91M11Wjh/c9isD+Nfz1L275qKck
+         DEdPrOlwHFo69ls4Tl6/0H6S1Z5OSbBKziD/BX+QyNifaWampqmUCkhzCrdbTZvtQm2x
+         fKtKWy+VZCDQJmi+2tOfysK8xhFqFpH8K578rn58zDmyJDoYjaWB8ycM+NBP0QNrN/J0
+         OR4kCAwsxBzZM7R9+muof0K0ELW8JZVkbbwpqbOiw3EZt69aQKUTWitHbppG4etVkBsh
+         I7IW6I6aZ93Yiwj0Uu2nCwgZ9JOiJ8lM23Rb/Po89vXnty9Z8fQqKx9GtTqdGwQ6ImJ5
+         C24w==
+X-Gm-Message-State: AOJu0YwdqggbnMgHRXwclEzlQ4GR9qC7r3QUti4KRdOJL1UTvE2kvOXZ
+	H49Ox19XptrKBh0wBVjKkBg=
+X-Google-Smtp-Source: AGHT+IFoxfghl1pIrxobwdNW/Zvb8Bx6H2qL5iIng++P5tlvUO0keU6//vD7/PRG9YOxcLjf1HQjAA==
+X-Received: by 2002:a17:907:318c:b0:a2a:c162:16cc with SMTP id xe12-20020a170907318c00b00a2ac16216ccmr748818ejb.62.1704810570559;
+        Tue, 09 Jan 2024 06:29:30 -0800 (PST)
+Received: from gmail.com (fwdproxy-cln-002.fbsv.net. [2a03:2880:31ff:2::face:b00c])
+        by smtp.gmail.com with ESMTPSA id c24-20020a170906529800b00a27aabff0dcsm1114447ejm.179.2024.01.09.06.29.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 06:29:30 -0800 (PST)
+Date: Tue, 9 Jan 2024 06:29:28 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	Greg Ungerer <gerg@linux-m68k.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 01/10] net: fill in MODULE_DESCRIPTION()s for
+ 8390
+Message-ID: <ZZ1YSDBBUYR/Zn2j@gmail.com>
+References: <20240108181610.2697017-1-leitao@debian.org>
+ <20240108181610.2697017-2-leitao@debian.org>
+ <CAMuHMdWqnTjHa6KW5g0F8xH50As4Ce+O3a2HaifJtnY1cGrFcQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Tue, 9 Jan 2024 06:28:19 -0800
-Message-ID: <CAJM55Z9Ka3hiNmgFuy01Yd0YyxL-SzS=A7S3k84=B1xABKbJhA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] riscv: dts: thead: Add TH1520 pin control nodes
-To: Conor Dooley <conor.dooley@microchip.com>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: Conor Dooley <conor@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Drew Fustini <dfustini@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWqnTjHa6KW5g0F8xH50As4Ce+O3a2HaifJtnY1cGrFcQ@mail.gmail.com>
 
-Conor Dooley wrote:
-> On Tue, Jan 09, 2024 at 04:02:01AM -0800, Emil Renner Berthing wrote:
-> > Conor Dooley wrote:
-> > > On Wed, Jan 03, 2024 at 02:28:40PM +0100, Emil Renner Berthing wrote:
-> > > > Add nodes for pin controllers on the T-Head TH1520 RISC-V SoC.
-> > > >
-> > > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> > > > ---
-> > > >  .../boot/dts/thead/th1520-beaglev-ahead.dts   |  4 ++++
-> > > >  .../dts/thead/th1520-lichee-module-4a.dtsi    |  4 ++++
-> > > >  arch/riscv/boot/dts/thead/th1520.dtsi         | 24 +++++++++++++++++++
-> > > >  3 files changed, 32 insertions(+)
-> > > >
-> > > > diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > index 70e8042c8304..6c56318a8705 100644
-> > > > --- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > +++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > @@ -44,6 +44,10 @@ &osc_32k {
-> > > >  	clock-frequency = <32768>;
-> > > >  };
-> > > >
-> > > > +&aonsys_clk {
-> > > > +	clock-frequency = <73728000>;
-> > > > +};
-> > > > +
-> > > >  &apb_clk {
-> > > >  	clock-frequency = <62500000>;
-> > > >  };
-> > > > diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > index a802ab110429..9865925be372 100644
-> > > > --- a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > +++ b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > @@ -25,6 +25,10 @@ &osc_32k {
-> > > >  	clock-frequency = <32768>;
-> > > >  };
-> > > >
-> > > > +&aonsys_clk {
-> > > > +	clock-frequency = <73728000>;
-> > > > +};
-> > > > +
-> > > >  &apb_clk {
-> > > >  	clock-frequency = <62500000>;
-> > > >  };
-> > > > diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-> > > > index ba4d2c673ac8..e65a306ff575 100644
-> > > > --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> > > > +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> > > > @@ -134,6 +134,12 @@ osc_32k: 32k-oscillator {
-> > > >  		#clock-cells = <0>;
-> > > >  	};
-> > > >
-> > > > +	aonsys_clk: aonsys-clk {
-> > > > +		compatible = "fixed-clock";
-> > > > +		clock-output-names = "aonsys_clk";
-> > > > +		#clock-cells = <0>;
-> > > > +	};
-> > >
-> > > Did this stuff sneak into this commit accidentally?
+On Tue, Jan 09, 2024 at 12:25:14PM +0100, Geert Uytterhoeven wrote:
+> Hi Breno,
+> 
+> On Mon, Jan 8, 2024 at 7:17 PM Breno Leitao <leitao@debian.org> wrote:
+> > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> > Add descriptions to all the good old 8390 modules and drivers.
 > >
-> > Not really by accident no. It turns out the clock tree has gates for the bus
-> > clock of each pinctrl block and I think it's better to add this clock
-> > dependency to the bindings and driver up front.
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> 
+> Thanks for your patch!
+> 
+> > --- a/drivers/net/ethernet/8390/apne.c
+> > +++ b/drivers/net/ethernet/8390/apne.c
+> > @@ -610,4 +610,5 @@ static int init_pcmcia(void)
+> >         return 1;
+> >  }
+> >
+> > +MODULE_DESCRIPTION("National Semiconductor 8390 PCMCIA ethernet driver");
 >
-> Maybe if I had looked a wee bit more deeply I would've noticed that it
-> was used there, but it's always good to mention the rationale in the
-> commit message so that it's more obvious why you're doin it.
+> I would write:
+> 
+>     National Semiconductor 8390 Amiga PCMCIA ethernet driver
+> 
+> as this driver does not work on generic platforms with a PCMCIA slot.
 
-You absolutely right. I forgot to update the commit message.
-
-> > Since there is not yet any clock driver the initial device tree for the TH1520
-> > included the dummy apb_clk that two of the pinctrl blocks derive their clock
-> > from, but not the "aonsys" clock needed by the "always-on" pinctrl. I thought
-> > it was better to add this dummy clock with the only (so far) user of it, but if
-> > you have a better idea, let me know.
->
-> No, that's fine. I was just wondering why there was an unmentioned set
-> of clocks being added. If they're stubbed fixed clocks I dunno if it
-> makes sense to add them to the board.dts/module.dtsi files though. Where
-> do the initial values come from for the rates? Out of reset values or
-> set by firmware that may vary from board to board?
-
-The vendor u-boot sets the PLLs different from the reset values. For now I
-think it's the same code for every board using the Lichee Pi 4A module (and
-probably also for the BeagleV Ahead), but it might still make sense to move the
-freqency to the board instead of the module device tree.
-
-/Emil
+Thanks. I will update and send a v2.
