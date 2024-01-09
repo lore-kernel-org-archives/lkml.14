@@ -1,51 +1,109 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6D73B782;
-	Tue,  9 Jan 2024 17:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id bd827d036604c4fd; Tue, 9 Jan 2024 17:43:37 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id D20BF66910A;
-	Tue,  9 Jan 2024 17:43:36 +0100 (CET)
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
-Subject: [PATCH v1 0/2] thermal: core: Cleanups related to the netlink I/F
-Date: Tue, 09 Jan 2024 17:39:35 +0100
-Message-ID: <2193991.irdbgypaU6@kreacher>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0D439FFB;
+	Tue,  9 Jan 2024 17:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTN1lVvY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99345C433C7;
+	Tue,  9 Jan 2024 17:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704822333;
+	bh=iLrzdYBIYAF2icG88gnfun1VCs7gyCvoUntx2WxcflY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KTN1lVvYt+sxgLnAnShFtOh5SYiXBGLKW201AsN0rLeuIWwyT8JfgC7RkDmfc0Zqh
+	 eB/RCuM5yG5AokQ3GaZwrzLdTB7fL7altDzzuFle66ftbVNwalS09GGpSOis/CVuNA
+	 XkBLX9n0k6+L4AVD27kQ/uJcKqaFX7YM7tx3wKm9KRII7bgEUQJybwd2Nh7LojBneG
+	 40A/a29VBdNxn4699Ckf89MEYJeuYspScPSXB1ulpJp84yzoHK1Wg8SR+wNJF3Bgzw
+	 o4AGnCjPT9K+Gss3m1Xt7KFPge+LQGgPsp1jVqvKlcFpAVs/pW7CnWWIFpwGsKaEjd
+	 2xLdYq3oDID5A==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50ea8fbf261so3518648e87.2;
+        Tue, 09 Jan 2024 09:45:33 -0800 (PST)
+X-Gm-Message-State: AOJu0YxUc4uG69dYeBJCQWkFw+Lz0Kg2IrnO3/Pt0WEOX1yKmGSLiZ0g
+	xBuNIHuDC63Ly6NlKpevY9fIsyOUQNN+gea35t0=
+X-Google-Smtp-Source: AGHT+IE6xl9/11+pJwbRZXMWjfKQh8kCA8gvAM5PMX16ALisz3EF6ZZBwrPXyifXN/8urgCTFvhA6BLsbaCK5mBWCyc=
+X-Received: by 2002:a19:910d:0:b0:50e:7846:7acf with SMTP id
+ t13-20020a19910d000000b0050e78467acfmr2231281lfd.34.1704822331809; Tue, 09
+ Jan 2024 09:45:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+References: <20240109095637.35934-1-alessandro.carminati@gmail.com>
+In-Reply-To: <20240109095637.35934-1-alessandro.carminati@gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Tue, 9 Jan 2024 09:45:20 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW4vDX70-n3n0wk4XsX7+-kmG=GZZ5PHBr=EO3A7Ju2kZg@mail.gmail.com>
+Message-ID: <CAPhsuW4vDX70-n3n0wk4XsX7+-kmG=GZZ5PHBr=EO3A7Ju2kZg@mail.gmail.com>
+Subject: Re: [RFC PATCH] find_vma BPF test: increase length CPU computation
+To: "Alessandro Carminati (Red Hat)" <alessandro.carminati@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Shuah Khan <shuah@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehledgledtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeeipdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehsrhhinhhivhgrshdrphgrnhgurhhuvhgruggrsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprhhuihdriihhrghnghesihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhm
-X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
+Content-Transfer-Encoding: quoted-printable
 
-Hi Everyone,
+On Tue, Jan 9, 2024 at 1:57=E2=80=AFAM Alessandro Carminati (Red Hat)
+<alessandro.carminati@gmail.com> wrote:
+>
+> Some aarch64 systems running a PREEMPT_RT patched kernel, needs
+> more time to complete the test.
+> This change mirrors:
+> commit ba83af059153 ("Improve stability of find_vma BPF test")
+> addressing similar requirements and allowing the QTI SA8775P based
+> systems, and others, to complete the test when running RT kernel.
+>
+> Signed-off-by: Alessandro Carminati (Red Hat) <alessandro.carminati@gmail=
+.com>
+> ---
+>  tools/testing/selftests/bpf/prog_tests/find_vma.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/find_vma.c b/tools/te=
+sting/selftests/bpf/prog_tests/find_vma.c
+> index 5165b38f0e59..43d62db8d57b 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/find_vma.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/find_vma.c
+> @@ -51,7 +51,7 @@ static void test_find_vma_pe(struct find_vma *skel)
+>         struct bpf_link *link =3D NULL;
+>         volatile int j =3D 0;
+>         int pfd, i;
+> -       const int one_bn =3D 1000000000;
+> +       const int dummy_wait =3D 2500000000;
 
-The first patch in this series is a replacement for
+2500000000 is bigger than INT_MAX.
 
-https://lore.kernel.org/linux-pm/7628882.EvYhyI6sBW@kreacher/
+>
+>         pfd =3D open_pe();
+>         if (pfd < 0) {
+> @@ -68,10 +68,10 @@ static void test_find_vma_pe(struct find_vma *skel)
+>         if (!ASSERT_OK_PTR(link, "attach_perf_event"))
+>                 goto cleanup;
+>
+> -       for (i =3D 0; i < one_bn && find_vma_pe_condition(skel); ++i)
+> +       for (i =3D 0; i < dummy_wait && find_vma_pe_condition(skel); ++i)
+>                 ++j;
 
-and it doesn't remove the unused functions as Daniel noticed that they really
-aren't used by mistake.
+So we will skip this loop. Right?
 
-The second one is just a code layout change based on the first one.
-
-Thanks!
+Thanks,
+Song
 
 
-
+>
+> -       test_and_reset_skel(skel, -EBUSY /* in nmi, irq_work is busy */, =
+i =3D=3D one_bn);
+> +       test_and_reset_skel(skel, -EBUSY /* in nmi, irq_work is busy */, =
+i =3D=3D dummy_wait);
+>  cleanup:
+>         bpf_link__destroy(link);
+>         close(pfd);
+> --
+> 2.34.1
+>
