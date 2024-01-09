@@ -1,64 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63C339AC0;
-	Tue,  9 Jan 2024 14:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PtJmAIXF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7681FC433C7;
-	Tue,  9 Jan 2024 14:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704810469;
-	bh=5UKutk+ST+B6lxLgZc3b+MyL/xXT4h1umGkakQFzmn0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PtJmAIXFOXHRxRTjpft2PmPErgltsZmhAjEByylyN+TPbLoDprQzs8rEDSnzbKN0H
-	 9yJIXIPF5o1FbOPcBKSssCpzKGrPQ7RX77M1MtfQVaxnOA6URaVU/C24QD5MtIzfZ8
-	 gsxtIHXRLvqc6+QMv6Zzykx1NerEkTlCZIW1ZaLPiSeJh5ADNoeffYBVbs8Q2+hCDk
-	 m2y3M/kcfBwTDpFv0siu+kS/X0lxMSq9oSBhC07sw/IViFstTrZk/jeZI2DImhliPi
-	 4KXN1MBCEuaN8hca5SLJ0MSspDeAvJvNFbu5zdEO8IarsI4rqaqj80gmPt0uN54fcH
-	 lTe+s4ksOGAHw==
-From: Christian Brauner <brauner@kernel.org>
-To: Jay <merqqcury@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] fs: fix a typo in attr.c
-Date: Tue,  9 Jan 2024 15:27:04 +0100
-Message-ID: <20240109-amtssiegel-erdboden-02a6731745a9@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240109072927.29626-1-merqqcury@gmail.com>
-References: <20240109072927.29626-1-merqqcury@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F3339AEE;
+	Tue,  9 Jan 2024 14:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bc21303a35so344595b6e.0;
+        Tue, 09 Jan 2024 06:27:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704810471; x=1705415271;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=speyU9W4fgWPfDREd0VxrelBC2TKMQY2s8f/k65X9Vw=;
+        b=bw9jgu+zGNUQlHaiKashSgUWtwWHannAqm0zuLNGcZ/xe0aF5TN8JL31gceXLqinIS
+         VS/2jQdQ1MM5sHEZsafXgYRSUCUeWY2Y/se9rCbNlhj1VOsyH8GLlSaiUUJa5t46IBDt
+         2WfPRqwgqC2p2aWO4HPj9G/db4ks+hYe3WWLGGc/OGJGfmfWbhNb7u1GpuWZW/VyW8Xv
+         5j406FOqbwtuXtD3zzujhc1j5nN7yOXSbs25yzmoMmh8mKv3oFFSES/sYxtxn1HJuD40
+         zAiajycqfdUoRrMbg6fgPLxeFOwVMfEm+p0+rlfSO44hrwSFlW2imAhjSwKM1DxWZcRA
+         qUNg==
+X-Gm-Message-State: AOJu0YzX1DRYsxTGQiUup+8WcNdVhXWoYK2x7+zcX5qH2/crH6UE6fwp
+	A4sNGYrVktzHI2WNmehn0Ase8EIESE+0YMrtYVw=
+X-Google-Smtp-Source: AGHT+IHY1jFISnsaNGMvSmCaJqgqyDbrcVYMQaLmXNN65Tot1RoyyJ/7Y1Qsx35HBWPmk/RBi3ZHclzvWQyOB3wOZ1s=
+X-Received: by 2002:a05:6808:30a2:b0:3bd:3bf4:8a0f with SMTP id
+ bl34-20020a05680830a200b003bd3bf48a0fmr2316881oib.4.1704810471272; Tue, 09
+ Jan 2024 06:27:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=839; i=brauner@kernel.org; h=from:subject:message-id; bh=5UKutk+ST+B6lxLgZc3b+MyL/xXT4h1umGkakQFzmn0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTODb+hZil4+MT8F3lTbRJznToLutMFujIrEiw+VDyZy 3m8mS2no5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCIl2xgZFoe66Lr91Aplyv1T vH9ZHus+gwZbGb//mncVtrvw3+2tZGT47n1mXXBZ18NHn7a8WsJY8eh+1jmrrKYtF8PmXVl9QZ+ LDwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+References: <20230905104721.52199-1-lpieralisi@kernel.org> <20231227110038.55453-1-lpieralisi@kernel.org>
+ <20231227110038.55453-2-lpieralisi@kernel.org>
+In-Reply-To: <20231227110038.55453-2-lpieralisi@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 9 Jan 2024 15:27:40 +0100
+Message-ID: <CAJZ5v0ik38AkaK6UVkSg9gOOztVzhFotCWBPhvowvRvozoAUVg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] ACPICA: MADT: Add GICC online capable bit handling
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Robert Moore <robert.moore@intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
+	Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Fang Xiang <fangxiang3@xiaomi.com>, Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 09 Jan 2024 15:29:27 +0800, Jay wrote:
-> The word "filesytem" should be "filesystem"
-> 
-> 
+On Wed, Dec 27, 2023 at 12:00=E2=80=AFPM Lorenzo Pieralisi
+<lpieralisi@kernel.org> wrote:
+>
+> ACPICA commit 16f0befdeddf25756f317907798192bbaa417e5e
+>
+> Implement code to handle the GICC online capable bit management
+> added into ACPI v6.5.
+>
+> Link: https://github.com/acpica/acpica/commit/16f0befd
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Robert Moore <robert.moore@intel.com>
+> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> ---
+>  include/acpi/actbl2.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+> index 3751ae69432f..2b4dd2c3348f 100644
+> --- a/include/acpi/actbl2.h
+> +++ b/include/acpi/actbl2.h
+> @@ -1046,6 +1046,7 @@ struct acpi_madt_generic_interrupt {
+>  /* ACPI_MADT_ENABLED                    (1)      Processor is usable if =
+set */
+>  #define ACPI_MADT_PERFORMANCE_IRQ_MODE  (1<<1) /* 01: Performance Interr=
+upt Mode */
+>  #define ACPI_MADT_VGIC_IRQ_MODE         (1<<2) /* 02: VGIC Maintenance I=
+nterrupt mode */
+> +#define ACPI_MADT_GICC_ONLINE_CAPABLE   (1<<3) /* 03: Processor is onlin=
+e capable  */
+>
+>  /* 12: Generic Distributor (ACPI 5.0 + ACPI 6.0 changes) */
+>
+> --
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+Applied as 6.8-rc1 material along with the [2/3].
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] fs: fix a typo in attr.c
-      https://git.kernel.org/vfs/vfs/c/6aad0d7ba166
+Thanks!
