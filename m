@@ -1,186 +1,275 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F7A39E
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CC226AFD
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=konsulko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=konsulko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eo6xdvC9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704810725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=T4PbYrmacdkxUZGDudl2g58tiJlad9NdV+LI2jnLDRI=;
-	b=Eo6xdvC9+H/V77Bs9jYD+AVqBzssR1ekRw765GZvJr7lR770pcenPelX75alXJ/4xlC7Iz
-	DLLlNQ6HEi2vLNSrmsG+LCkfCLfE2uHCiz3mvL9Pc1G3NeWkaKD2XUS0f6UlfLniIEunJK
-	w8fLh3Sc3ZzkjTryoMuisNDID2Dxmhk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-Ia7ILSYLND2q9wuualNwBw-1; Tue, 09 Jan 2024 09:32:02 -0500
-X-MC-Unique: Ia7ILSYLND2q9wuualNwBw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9F9D2811E9E;
-	Tue,  9 Jan 2024 14:32:01 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6A85E2166B32;
-	Tue,  9 Jan 2024 14:32:00 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
-    "David S.
- Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>, linux-afs@lists.infradead.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2] rxrpc: Fix use of Don't Fragment flag
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="ttBibp+7"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bbd6e3795eso2724212b6e.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:33:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google; t=1704810833; x=1705415633; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KndaEanNVFQPZ7Lw6pt5cv26Ibm+dtDXNTXdZgR28WQ=;
+        b=ttBibp+7cqncCuWlkMmYZ8MY29t/RxYrj9ZUVNUrZ7HvDF4jXvcuqEfUZDDs+7s4UW
+         3fQaNz9jIbSuOq/zN79PVAEdidiofG7EY7NZVipF5eS5DFK1D64bIpsJHevcZ2duUMxf
+         A1G5m7h26PH0WmPdze9FdrgmSI7x5VnuMsCac=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704810833; x=1705415633;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KndaEanNVFQPZ7Lw6pt5cv26Ibm+dtDXNTXdZgR28WQ=;
+        b=VhIekWKeiyvozFC/1CD1N4pEDmB1Sm/wb4lP1dUahGs9UEJ77zN6s1Hg8D6pBcfSh1
+         zMGmhLvoq289AL9wksI3SJvNgcIKoGLrKFToEmCBPKnJNz0AIvMC5DUGdfQqSNIN/cvK
+         yn2NP8FYno2vQvw9hRVATMcM2yimpxKxOwC6QY+fUHVr6q252FP4K4xhEIJUVnrkVw7L
+         0495UDXtgLd5wVYD38cgdOV6+t3Yaqk5yUD3CJWKN6+i8l9DY6kmn8nbJ2Wc1PPz4Kb0
+         yDUYdHzr9hCSMRIeS7UmgPVpBc5CcV/Sv4hj0Wxrc+bFs21l3tHXTFRtUhPJQ3PZm6cC
+         GdIg==
+X-Gm-Message-State: AOJu0YyyHLbdKBehhSKZQmGdQfPWxudWCnG3JZvkOwYfeVqs04gj5Xai
+	ZeYRLQczhlNCL12t0qExDLZx1Z055uiYzw==
+X-Google-Smtp-Source: AGHT+IGuTLpONWsP7VKq5UjGPl/Es4KMJFkKp6ldUZWiWuDm0uOjRn5jMKDhiVkKUbu7uGjUSn0xCg==
+X-Received: by 2002:a05:6808:318a:b0:3ba:8e3:f4f4 with SMTP id cd10-20020a056808318a00b003ba08e3f4f4mr7530220oib.107.1704810832929;
+        Tue, 09 Jan 2024 06:33:52 -0800 (PST)
+Received: from bill-the-cat (2603-6081-7b00-3119-0000-0000-0000-1002.res6.spectrum.com. [2603:6081:7b00:3119::1002])
+        by smtp.gmail.com with ESMTPSA id eh14-20020a056214186e00b0068112217ecasm833392qvb.117.2024.01.09.06.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 06:33:52 -0800 (PST)
+Date: Tue, 9 Jan 2024 09:33:49 -0500
+From: Tom Rini <trini@konsulko.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Simon Glass <sjg@chromium.org>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	U-Boot Mailing List <u-boot@lists.denx.de>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Terrell <terrelln@fb.com>, linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	workflows@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 2/2] arm64: boot: Support Flat Image Tree
+Message-ID: <20240109143349.GR1610741@bill-the-cat>
+References: <20231202035511.487946-1-sjg@chromium.org>
+ <20231202035511.487946-3-sjg@chromium.org>
+ <20231213121353.GA31326@willie-the-truck>
+ <CAFLszTjfmSx1YMqzb2TsQf7sP4KrcQB=X7DY_HxRQp0J5HAppQ@mail.gmail.com>
+ <CAK7LNAQRCDC03e=TVO=k4FuD2a2RdTy7yLr3UptQjVCX7pM1CA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1580268.1704810719.1@warthog.procyon.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0FoRISOaCA+A7e3o"
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQRCDC03e=TVO=k4FuD2a2RdTy7yLr3UptQjVCX7pM1CA@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+
+
+--0FoRISOaCA+A7e3o
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jan 2024 14:31:59 +0000
-Message-ID: <1580269.1704810719@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-    =
+On Tue, Jan 09, 2024 at 11:01:42PM +0900, Masahiro Yamada wrote:
+> Hi Simon,
+>=20
+>=20
+> On Wed, Jan 3, 2024 at 8:47=E2=80=AFAM Simon Glass <sjg@chromium.org> wro=
+te:
+> >
+> > Hi Masahiro,
+> >
+> > On Wed, Dec 13, 2023 at 5:14=E2=80=AFAM Will Deacon <will@kernel.org> w=
+rote:
+> > >
+> > > On Fri, Dec 01, 2023 at 08:54:42PM -0700, Simon Glass wrote:
+> > > > Add a script which produces a Flat Image Tree (FIT), a single file
+> > > > containing the built kernel and associated devicetree files.
+> > > > Compression defaults to gzip which gives a good balance of size and
+> > > > performance.
+> > > >
+> > > > The files compress from about 86MB to 24MB using this approach.
+> > > >
+> > > > The FIT can be used by bootloaders which support it, such as U-Boot
+> > > > and Linuxboot. It permits automatic selection of the correct
+> > > > devicetree, matching the compatible string of the running board with
+> > > > the closest compatible string in the FIT. There is no need for
+> > > > filenames or other workarounds.
+> > > >
+> > > > Add a 'make image.fit' build target for arm64, as well. Use
+> > > > FIT_COMPRESSION to select a different algorithm.
+> > > >
+> > > > The FIT can be examined using 'dumpimage -l'.
+> > > >
+> > > > This features requires pylibfdt (use 'pip install libfdt'). It also
+> > > > requires compression utilities for the algorithm being used. Suppor=
+ted
+> > > > compression options are the same as the Image.xxx files. For now th=
+ere
+> > > > is no way to change the compression other than by editing the rule =
+for
+> > > > $(obj)/image.fit
+> > > >
+> > > > While FIT supports a ramdisk / initrd, no attempt is made to support
+> > > > this here, since it must be built separately from the Linux build.
+> > > >
+> > > > Signed-off-by: Simon Glass <sjg@chromium.org>
+> > > > ---
+> > > >
+> > > > Changes in v9:
+> > > > - Move the compression control into Makefile.lib
+> > > >
+> > > > Changes in v8:
+> > > > - Drop compatible string in FDT node
+> > > > - Correct sorting of MAINTAINERS to before ARM64 PORT
+> > > > - Turn compress part of the make_fit.py comment in to a sentence
+> > > > - Add two blank lines before parse_args() and setup_fit()
+> > > > - Use 'image.fit: dtbs' instead of BUILD_DTBS var
+> > > > - Use '$(<D)/dts' instead of '$(dir $<)dts'
+> > > > - Add 'mkimage' details Documentation/process/changes.rst
+> > > > - Allow changing the compression used
+> > > > - Tweak cover letter since there is only one clean-up patch
+> > > >
+> > > > Changes in v7:
+> > > > - Add Image as a dependency of image.fit
+> > > > - Drop kbuild tag
+> > > > - Add dependency on dtbs
+> > > > - Drop unnecessary path separator for dtbs
+> > > > - Rebase to -next
+> > > >
+> > > > Changes in v5:
+> > > > - Drop patch previously applied
+> > > > - Correct compression rule which was broken in v4
+> > > >
+> > > > Changes in v4:
+> > > > - Use single quotes for UIMAGE_NAME
+> > > >
+> > > > Changes in v3:
+> > > > - Drop temporary file image.itk
+> > > > - Drop patch 'Use double quotes for image name'
+> > > > - Drop double quotes in use of UIMAGE_NAME
+> > > > - Drop unnecessary CONFIG_EFI_ZBOOT condition for help
+> > > > - Avoid hard-coding "arm64" for the DT architecture
+> > > >
+> > > > Changes in v2:
+> > > > - Drop patch previously applied
+> > > > - Add .gitignore file
+> > > > - Move fit rule to Makefile.lib using an intermediate file
+> > > > - Drop dependency on CONFIG_EFI_ZBOOT
+> > > > - Pick up .dtb files separately from the kernel
+> > > > - Correct pylint too-many-args warning for write_kernel()
+> > > > - Include the kernel image in the file count
+> > > > - Add a pointer to the FIT spec and mention of its wide industry us=
+age
+> > > > - Mention the kernel version in the FIT description
+> > > >
+> > > >  Documentation/process/changes.rst |   9 +
+> > > >  MAINTAINERS                       |   7 +
+> > > >  arch/arm64/Makefile               |   7 +-
+> > > >  arch/arm64/boot/.gitignore        |   1 +
+> > > >  arch/arm64/boot/Makefile          |   6 +-
+> > > >  scripts/Makefile.lib              |  16 ++
+> > > >  scripts/make_fit.py               | 291 ++++++++++++++++++++++++++=
+++++
+> > > >  7 files changed, 334 insertions(+), 3 deletions(-)
+> > > >  create mode 100755 scripts/make_fit.py
+> > >
+> > > I'll need Masahiro's Ack on the scripts/ changes before I can take th=
+is
+> > > one.
+> >
+> > Any thoughts on this request, please?
+> >
+> > Regards,
+> > Simon
+> >
+>=20
+>=20
+>=20
+> As I mentioned before, I am concerned with having
+> the same "compatible" entries, with different contents,
+> as you use the "compatible" string as an ID to selecting
+> the target config node, right?
+>=20
+>=20
+>=20
+>=20
+>=20
+> $ fdtdump  arch/arm64/boot/image.fit
+>=20
+>         ...
+>=20
+>         conf-10 {
+>             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
+> "tq,am642-tqma6442l", "ti,am642";
+>             description =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL carrier=
+ board";
+>             fdt =3D "fdt-10";
+>             kernel =3D "kernel";
+>         };
+>=20
+>         ...
+>=20
+>         conf-25 {
+>             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
+> "tq,am642-tqma6442l", "ti,am642";
+>             description =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL carrier=
+ board";
+>             fdt =3D "fdt-25";
+>             kernel =3D "kernel";
+>         };
 
-rxrpc normally has the Don't Fragment flag set on the UDP packets it
-transmits, except when it has decided that DATA packets aren't getting
-through - in which case it turns it off just for the DATA transmissions.
-This can be a problem, however, for RESPONSE packets that convey
-authentication and crypto data from the client to the server as ticket may
-be larger than can fit in the MTU.
+I had asked Rob a while ago about if having the same compatible for two
+functionally different machines is a feature, or a bug, and I don't
+think either of us fully agreed either way. I'd be leaning towards
+saying the above example is a bug in the dts files, it's just not been a
+bug people have worried about before due to (sadly) how little the
+top-level compatible has been used.
 
-In such a case, rxrpc gets itself into an infinite loop as the sendmsg
-returns an error (EMSGSIZE), which causes rxkad_send_response() to return
--EAGAIN - and the CHALLENGE packet is put back on the Rx queue to retry,
-leading to the I/O thread endlessly attempting to perform the transmission=
-.
+--=20
+Tom
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20
+> --=20
+> Best Regards
+> Masahiro Yamada
 
-Fix this by disabling DF on RESPONSE packets for now.  The use of DF and
-best data MTU determination needs reconsidering at some point in the
-future.
+--=20
+Tom
 
-Reported-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: linux-afs@lists.infradead.org
-cc: netdev@vger.kernel.org
----
- net/rxrpc/ar-internal.h  |    1 +
- net/rxrpc/local_object.c |   13 ++++++++++++-
- net/rxrpc/output.c       |    6 ++----
- net/rxrpc/rxkad.c        |    2 ++
- 4 files changed, 17 insertions(+), 5 deletions(-)
+--0FoRISOaCA+A7e3o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index e8e14c6f904d..e8b43408136a 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -1076,6 +1076,7 @@ void rxrpc_send_version_request(struct rxrpc_local *=
-local,
- /*
-  * local_object.c
-  */
-+void rxrpc_local_dont_fragment(const struct rxrpc_local *local, bool set)=
-;
- struct rxrpc_local *rxrpc_lookup_local(struct net *, const struct sockadd=
-r_rxrpc *);
- struct rxrpc_local *rxrpc_get_local(struct rxrpc_local *, enum rxrpc_loca=
-l_trace);
- struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *, enum rxrp=
-c_local_trace);
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index c553a30e9c83..7a3150482e37 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -36,6 +36,17 @@ static void rxrpc_encap_err_rcv(struct sock *sk, struct=
- sk_buff *skb, int err,
- 		return ipv6_icmp_error(sk, skb, err, port, info, payload);
- }
- =
+-----BEGIN PGP SIGNATURE-----
 
-+/*
-+ * Set or clear the Don't Fragment flag on a socket.
-+ */
-+void rxrpc_local_dont_fragment(const struct rxrpc_local *local, bool set)
-+{
-+	if (set)
-+		ip_sock_set_mtu_discover(local->socket->sk, IP_PMTUDISC_DONT);
-+	else
-+		ip_sock_set_mtu_discover(local->socket->sk, IP_PMTUDISC_DO);
-+}
-+
- /*
-  * Compare a local to an address.  Return -ve, 0 or +ve to indicate less =
-than,
-  * same or greater than.
-@@ -203,7 +214,7 @@ static int rxrpc_open_socket(struct rxrpc_local *local=
-, struct net *net)
- 		ip_sock_set_recverr(usk);
- =
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmWdWUMACgkQFHw5/5Y0
+tywKZQv9E6Suvs8TGK4s6Y2tSOz3YdMeCLMOPVuGXp/0Duv37bRe86JoJEsBtoRg
+V/Mh5pUlhEzjemCpKbbacBrtDTnCtME59FjkhnTPM+P4UND7ghA1UVvD5/+0a/m0
+PbvZsm3U2H5yJygYGqhYNOQm1SZGj5erfzxalNZtIoVCgUeVuXrBQ3NO6EwVEx81
+VgXq1TFRiX+SJ61lSDvWSJX4/T51ED30k9/UAILCkmnDPza84WhiEdGBwc2EksJ9
+3P2KCOTM/iyhzJSFXUV1pvO/kvLej0inNejaowQ3YyeG2g855EALltR7MBdIBpe4
+hhdFq+1jviO5mN4TtSBXrk1b+HqFL73adbemUduJnnRQXnQnnDmeZtDJFIGKyJxA
+hQB2lc7MBHc0KLs/A/yi4tp82IlE/S+DmL+2x1Bf99XNydSER5Jlp/DCkE7rBz7C
+vTY/kl3z2krvdS5m82BOY0c9muA/908zhpXr6zkov1yvgEM0V7Oyt61M5DQjZEdb
+fmjpGQb0
+=GoFt
+-----END PGP SIGNATURE-----
 
- 		/* we want to set the don't fragment bit */
--		ip_sock_set_mtu_discover(usk, IP_PMTUDISC_DO);
-+		rxrpc_local_dont_fragment(local, true);
- =
-
- 		/* We want receive timestamps. */
- 		sock_enable_timestamps(usk);
-diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-index 5e53429c6922..a0906145e829 100644
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -494,14 +494,12 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, =
-struct rxrpc_txbuf *txb)
- 	switch (conn->local->srx.transport.family) {
- 	case AF_INET6:
- 	case AF_INET:
--		ip_sock_set_mtu_discover(conn->local->socket->sk,
--					 IP_PMTUDISC_DONT);
-+		rxrpc_local_dont_fragment(conn->local, false);
- 		rxrpc_inc_stat(call->rxnet, stat_tx_data_send_frag);
- 		ret =3D do_udp_sendmsg(conn->local->socket, &msg, len);
- 		conn->peer->last_tx_at =3D ktime_get_seconds();
- =
-
--		ip_sock_set_mtu_discover(conn->local->socket->sk,
--					 IP_PMTUDISC_DO);
-+		rxrpc_local_dont_fragment(conn->local, true);
- 		break;
- =
-
- 	default:
-diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
-index 1bf571a66e02..b52dedcebce0 100644
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -724,7 +724,9 @@ static int rxkad_send_response(struct rxrpc_connection=
- *conn,
- 	serial =3D atomic_inc_return(&conn->serial);
- 	whdr.serial =3D htonl(serial);
- =
-
-+	rxrpc_local_dont_fragment(conn->local, false);
- 	ret =3D kernel_sendmsg(conn->local->socket, &msg, iov, 3, len);
-+	rxrpc_local_dont_fragment(conn->local, true);
- 	if (ret < 0) {
- 		trace_rxrpc_tx_fail(conn->debug_id, serial, ret,
- 				    rxrpc_tx_point_rxkad_response);
-
+--0FoRISOaCA+A7e3o--
