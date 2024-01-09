@@ -1,15 +1,15 @@
-Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7151C2206B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F0F38F9E
 	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 13:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
 Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4T8X4r2xfJzMpnRY;
-	Tue,  9 Jan 2024 13:35:56 +0000 (UTC)
-Received: from unknown by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4T8X4q4PnjzMpnPk;
-	Tue,  9 Jan 2024 14:35:55 +0100 (CET)
+	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4T8X4s3hdRzMqB7W;
+	Tue,  9 Jan 2024 13:35:57 +0000 (UTC)
+Received: from unknown by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4T8X4r6qsSzMpnPh;
+	Tue,  9 Jan 2024 14:35:56 +0100 (CET)
 From: Quentin Schulz <foss+kernel@0leil.net>
 To: Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -21,10 +21,12 @@ Cc: Quentin Schulz <foss+kernel@0leil.net>,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Subject: [PATCH 0/2] arm64: dts: rockchip: add SPI controller aliases to RK3399
-Date: Tue,  9 Jan 2024 14:35:42 +0100
-Message-ID: <20240109-rk3399-spi-aliases-v1-0-2009e44e734a@theobroma-systems.com>
+Subject: [PATCH 2/2] arm64: dts: rockchip: remove duplicate SPI aliases for helios64
+Date: Tue,  9 Jan 2024 14:35:44 +0100
+Message-ID: <20240109-rk3399-spi-aliases-v1-2-2009e44e734a@theobroma-systems.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240109-rk3399-spi-aliases-v1-0-2009e44e734a@theobroma-systems.com>
+References: <20240109-rk3399-spi-aliases-v1-0-2009e44e734a@theobroma-systems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,29 +38,34 @@ X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: quoted-printable
 X-Infomaniak-Routing: alpha
 
-There are 6 SPI controllers on RK3399 and they are all numbered in the=0D
-TRM, so let's add the appropriate aliases to the main DTSI so that any=0D
-RK3399-based board doesn't need to define the aliases themselves to=0D
-benefit from stable SPI indices in userspace.=0D
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>=0D
 =0D
-Helios64 is the only RK3399-based device that defined aliases for SPI=0D
-controllers, but since they are now in RK3399 main DTSI, let's remove=0D
-the duplication.=0D
+An earlier commit defined an alias for all SPI controllers found on the=0D
+RK3399, so there's no need to duplicate the aliases in helios64's device=0D
+tree.=0D
 =0D
+Cc: Quentin Schulz <foss+kernel@0leil.net>=0D
 Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>=0D
 ---=0D
-Quentin Schulz (2):=0D
-      arm64: dts: rockchip: add spi controller aliases on rk3399=0D
-      arm64: dts: rockchip: remove duplicate SPI aliases for helios64=0D
-=0D
  arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts | 3 ---=0D
- arch/arm64/boot/dts/rockchip/rk3399.dtsi               | 6 ++++++=0D
- 2 files changed, 6 insertions(+), 3 deletions(-)=0D
----=0D
-base-commit: 9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e=0D
-change-id: 20240109-rk3399-spi-aliases-a2ce468a04a3=0D
+ 1 file changed, 3 deletions(-)=0D
 =0D
-Best regards,=0D
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts b/arch/=
+arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts=0D
+index 1eb287a3f8c03..d664ac18a941e 100644=0D
+--- a/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts=0D
++++ b/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts=0D
+@@ -21,9 +21,6 @@ / {=0D
+ 	aliases {=0D
+ 		mmc0 =3D &sdmmc;=0D
+ 		mmc1 =3D &sdhci;=0D
+-		spi1 =3D &spi1;=0D
+-		spi2 =3D &spi2;=0D
+-		spi5 =3D &spi5;=0D
+ 	};=0D
+ =0D
+ 	avdd_0v9_s0: avdd-0v9-s0 {=0D
+=0D
 -- =0D
-Quentin Schulz <quentin.schulz@theobroma-systems.com>=0D
+2.43.0=0D
 =0D
