@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657FB3E484
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C973E487
 	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 23:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWm38TCT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 406E1C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmkI/Ezz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 554CCC433A6;
 	Tue,  9 Jan 2024 23:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704843713;
-	bh=BIeClIideJDJM0aEfD3JSraZPbFaOzHQgchYyRu4few=;
+	bh=Je3NMIwkcRM+RxSMehX2MUFdyKYQbqQBv3ZfMg/ndoY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=iWm38TCTGcbGY47JLfYdy8XpBkFPvXF7ZDRwnYpLFfAAsQxk/btGwBL2GoVqsPHw5
-	 zI1gbMTM5r66875H3os+WFpRRBJ/ALspmSmkBFMiSpgWs5UcOwbVx6iBMEuKT3bd+o
-	 34hCcymkXLAOUzmx6pc34lbv4UA1+wcuTkY/wGdvBhHfZ9kRA4xVXdtVeOZ/xCAVOt
-	 UTfSpE6MdL+HPDTCF1MItTCEQCBTZ+uMdTkEraysv8lNJWhPFpmZDA0w7CrTuVkYN3
-	 ojokPx0FjIVu+A30quWyNdXdHF2MYE2FAlLXkBBzzKA8GWrDvGnJ8Td799M1dTeuDs
-	 YcV/ri7ItaCHQ==
+	b=nmkI/EzzWwmZ2q0HBOV+vtEX0iA95dRsjiLSiRRpFVm1cPbQ0UqFVqD7IEQTfrVTn
+	 YsatKh4v8rfKthasFOc3cdp514fhw8XPdxIw4ln+ZqctMIK7Pp+ZGEPa/WIfUvl/hO
+	 G3GCbBvTtCUcj4k67sJKMpWN2/zKp7YOP9LR9NhCGHd+nAGucZAsvT7IFjIozqXOMg
+	 Q0YEq2vHyEKKNDUnhs0Ln+1cJmvLNh8/MTSTu+S0wNItEiheA6aOUS/xdQiK7Sbq0w
+	 GHVhXz/M/PMNXOHq3N45CtHYsElG9EBa6jjdZoZd77tgLtMzQpXMoU9AxmAUbBXkvB
+	 AUFctRrZlVKNw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 28338C4166F;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 44B23C4167D;
 	Tue,  9 Jan 2024 23:41:53 +0000 (UTC)
-Subject: Re: [GIT PULL] regmap updates for v6.8
+Subject: Re: [GIT PULL] regulator updates for v6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240107223748.885ECC433C8@smtp.kernel.org>
-References: <20240107223748.885ECC433C8@smtp.kernel.org>
+In-Reply-To: <20240107223803.33F1BC433C7@smtp.kernel.org>
+References: <20240107223803.33F1BC433C7@smtp.kernel.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240107223748.885ECC433C8@smtp.kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.8
-X-PR-Tracked-Commit-Id: 3b201c9af7c0cad2e8311d96c0c1b399606c70fa
+X-PR-Tracked-Message-Id: <20240107223803.33F1BC433C7@smtp.kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-v6.8
+X-PR-Tracked-Commit-Id: 1cadc04c1a1ac5015c2eb0fadfabf4b61bbe167e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 83130ff423d61b018e1018cfa9ca5c1511b5f33b
-Message-Id: <170484371316.10226.4640767494714743189.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: da96801729b43eb6229425a23b7bdf6045685251
+Message-Id: <170484371327.10226.1901922768551284228.pr-tracker-bot@kernel.org>
 Date: Tue, 09 Jan 2024 23:41:53 +0000
 To: Mark Brown <broonie@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 07 Jan 2024 22:37:36 +0000:
+The pull request you sent on Sun, 07 Jan 2024 22:37:54 +0000:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.8
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-v6.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/83130ff423d61b018e1018cfa9ca5c1511b5f33b
+https://git.kernel.org/torvalds/c/da96801729b43eb6229425a23b7bdf6045685251
 
 Thank you!
 
