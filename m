@@ -1,128 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02DD3D86;
-	Tue,  9 Jan 2024 03:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agEMEu1T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704771697; x=1736307697;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0LdLdd5VFFhLorx8pbQnlS22X5wJJoCIwyGO5I6Dq9A=;
-  b=agEMEu1TNril1O3jlbBCjBr6ne98c9odINZ2FWUST+vjAwn6MdnqMiBg
-   xoIp3BdOMd2ziVK14cKmRuEUl4knqkFw4Pz+zyiKKIhgRIFNAhHw2KOxc
-   M/dsnd0sncJkBW/g6C/EX3CTv3ofiXlXNy+70LD9LU2VSovKxjCl6J87T
-   OD0mK1qNC6pZzqRaLUwhc/eTOXy+LHmfbAsswL8hVkELA8QoXUfFxCCuM
-   Hhzw+Doz1zFMwNLmqlhRnxFio93vdumvO1BSenQrprpvkORhCy+pJSDGH
-   0NSANstjXGkJtkfb0hApieXATjvlAQGRsj6Rrbl9E3DG/UetUF+VZ0xJT
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="16667563"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="16667563"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 19:41:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="852024581"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="852024581"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Jan 2024 19:41:32 -0800
-Message-ID: <91c2add2-3015-4935-9dd5-d4e42aff473a@linux.intel.com>
-Date: Tue, 9 Jan 2024 11:36:19 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9650479C4;
+	Tue,  9 Jan 2024 03:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6dac8955af0so1076512b3a.0;
+        Mon, 08 Jan 2024 19:42:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704771722; x=1705376522;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aRtasBW72KfoDwZ/WxCb0AK88cwbM9CGvhgyqKmj2qs=;
+        b=oBJAecOx7AA74JCFSt03I2pARts5YSFqLgkYpYI3rauTHW5qM4zqRbFkqcRLNJCpqY
+         ImYIFnWlPL9iV5DUrViCVui1quqC3bYY3PPMrSTOZxbxg/cNvYb99QMU6TTCno9ovlNa
+         hsAy60H2zBhsaOtMetEDc8uTaiSnCiDPpXjx25AsfT3eRKAWyEV/NcnG/yj4hNnuPCL4
+         C/cKo+1wyKVqJGuitWBujN22qoUF3IQLMJhjkIqmWibMSBi7b8XWenQdzknNpkNv2pwT
+         i+cP7u0UEKszKvhPhEvAHiTqtCM3XrlRfOR6OCcD/dPcLT4UiHKVGABW479brZkUM9hO
+         vHhQ==
+X-Gm-Message-State: AOJu0Yx7zcMdbOdmHIrVjqKDFG3X6Mz/l9cts/8dfOk+Ozl15Sx4M859
+	d6DZtZevG1wnNkknRSwDbA0=
+X-Google-Smtp-Source: AGHT+IHchAv9sUUY0pJ4PrEniWjBi8YeT0i2qc5gw9KP4S2TS/MsQ6NTHv9pqKerKBoV9HB7dpFcKw==
+X-Received: by 2002:a05:6a00:3a25:b0:6d9:bf50:1c94 with SMTP id fj37-20020a056a003a2500b006d9bf501c94mr2546935pfb.9.1704771721845;
+        Mon, 08 Jan 2024 19:42:01 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id kt3-20020a056a004ba300b006d9aa04574csm603224pfb.52.2024.01.08.19.42.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 19:42:01 -0800 (PST)
+Date: Tue, 9 Jan 2024 12:41:59 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, ilpo.jarvinen@linux.intel.com,
+	vigneshr@ti.com, r-gunasekaran@ti.com, srk@ti.com
+Subject: Re: [PATCH v3] PCI: keystone: Fix race condition when initializing
+ PHYs
+Message-ID: <20240109034159.GA3301517@rocinante>
+References: <20230927041845.1222080-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Longfang Liu <liulongfang@huawei.com>, Yan Zhao <yan.y.zhao@intel.com>,
- iommu@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 13/14] iommu: Improve iopf_queue_remove_device()
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@ziepe.ca>
-References: <20231220012332.168188-1-baolu.lu@linux.intel.com>
- <20231220012332.168188-14-baolu.lu@linux.intel.com>
- <20240105162540.GH50608@ziepe.ca>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240105162540.GH50608@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230927041845.1222080-1-s-vadapalli@ti.com>
 
-On 1/6/24 12:25 AM, Jason Gunthorpe wrote:
-> On Wed, Dec 20, 2023 at 09:23:31AM +0800, Lu Baolu wrote:
->> -int iopf_queue_remove_device(struct iopf_queue *queue, struct device *dev)
->> +void iopf_queue_remove_device(struct iopf_queue *queue, struct device *dev)
->>   {
->> -	int ret = 0;
->>   	struct iopf_fault *iopf, *next;
->> +	struct iommu_page_response resp;
->>   	struct dev_iommu *param = dev->iommu;
->>   	struct iommu_fault_param *fault_param;
->> +	const struct iommu_ops *ops = dev_iommu_ops(dev);
->>   
->>   	mutex_lock(&queue->lock);
->>   	mutex_lock(&param->lock);
->>   	fault_param = rcu_dereference_check(param->fault_param,
->>   					    lockdep_is_held(&param->lock));
->> -	if (!fault_param) {
->> -		ret = -ENODEV;
->> -		goto unlock;
->> -	}
->> -
->> -	if (fault_param->queue != queue) {
->> -		ret = -EINVAL;
->> -		goto unlock;
->> -	}
->>   
->> -	if (!list_empty(&fault_param->faults)) {
->> -		ret = -EBUSY;
->> +	if (WARN_ON(!fault_param || fault_param->queue != queue))
->>   		goto unlock;
->> -	}
->> -
->> -	list_del(&fault_param->queue_list);
->>   
->> -	/* Just in case some faults are still stuck */
->> +	mutex_lock(&fault_param->lock);
->>   	list_for_each_entry_safe(iopf, next, &fault_param->partial, list)
->>   		kfree(iopf);
->>   
->> +	list_for_each_entry_safe(iopf, next, &fault_param->faults, list) {
->> +		memset(&resp, 0, sizeof(struct iommu_page_response));
->> +		resp.pasid = iopf->fault.prm.pasid;
->> +		resp.grpid = iopf->fault.prm.grpid;
->> +		resp.code = IOMMU_PAGE_RESP_INVALID;
-> 
-> I would probably move the resp and iopf variables into here:
-> 
-> 		struct iopf_fault *iopf = &group->last_fault;
-> 		struct iommu_page_response resp = {
-> 			.pasid = iopf->fault.prm.pasid,
-> 			.grpid = iopf->fault.prm.grpid,
-> 			.code = IOMMU_PAGE_RESP_INVALID
-> 		};
-> 
-> (and call the other one partial_iopf)
+Hello,
 
-Yours looks better. Done.
-
+> The PCI driver invokes the PHY APIs using the ks_pcie_enable_phy()
+> function. The PHY in this case is the Serdes. It is possible that the
+> PCI instance is configured for 2 lane operation across two different
+> Serdes instances, using 1 lane of each Serdes. In such a configuration,
+> if the reference clock for one Serdes is provided by the other Serdes,
+> it results in a race condition. After the Serdes providing the reference
+> clock is initialized by the PCI driver by invoking its PHY APIs, it is
+> not guaranteed that this Serdes remains powered on long enough for the
+> PHY APIs based initialization of the dependent Serdes. In such cases,
+> the PLL of the dependent Serdes fails to lock due to the absence of the
+> reference clock from the former Serdes which has been powered off by the
+> PM Core.
 > 
-> But this looks fine either way
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Fix this by obtaining reference to the PHYs before invoking the PHY
+> initialization APIs and releasing reference after the initialization is
+> complete.
 
-Thank you very much!
+Applied to controller/keystone, thank you!
 
-Best regards,
-baolu
+[1/1] PCI: keystone: Fix race condition when initializing PHYs
+      https://git.kernel.org/pci/pci/c/c12ca110c613
+
+	Krzysztof
