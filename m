@@ -1,80 +1,104 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1141838F9F;
-	Tue,  9 Jan 2024 13:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257332206B
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 13:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fooishbar.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="Rl1Ovwlq"
-Received: from localhost.ispras.ru (unknown [10.10.165.2])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 5CB2240737DD;
-	Tue,  9 Jan 2024 13:37:15 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 5CB2240737DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1704807436;
-	bh=TdzphiKewiAEGb5mVeNRXY8JwRsEqxcS+5rYPinKWAY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Rl1OvwlqxuwvpisiP4VBWnGLxvuCidOwAPlrS6WQp+tgypcJOmosmZNGPAyUSSXKn
-	 l01p+tt421gxRXq14syQ/JhWyMnZkzlmbwsDeenhMvaKkPVNsoclgqx30ksVstFfV2
-	 kFLKJvkOV5udxD91wDb77P3lvTpiIURTuGsdMbtQ=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Namjae Jeon <linkinjeon@kernel.org>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Steve French <sfrench@samba.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Tom Talpey <tom@talpey.com>,
-	Ronnie Sahlberg <lsahlber@redhat.com>,
-	Hyunchul Lee <hyc.lee@gmail.com>,
-	linux-cifs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] ksmbd: free ppace array on error in parse_dacl
-Date: Tue,  9 Jan 2024 16:34:27 +0300
-Message-ID: <20240109133429.31752-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20230601.gappssmtp.com header.i=@fooishbar-org.20230601.gappssmtp.com header.b="xAt013FQ"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bbebe6191bso2759287b6e.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 05:38:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20230601.gappssmtp.com; s=20230601; t=1704807499; x=1705412299; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7mDLa1lDA9I4zsDt/vUi7Q5DM723KSTf2pIxDEMdeEE=;
+        b=xAt013FQ0cnwm2q0cqlfPmezjtYXDSEPqvyCEM9VomZlxc9PV6X93nBZ21mo6eA4vq
+         13uZZbimjCx2zbiYZq1SMS6TkSMGpjg9/alsKd92TkAzrs5EzN5rdJzWXr8h9Cv4Ks+W
+         6cz0Wod6cyl/nF2BKCngJGdt1sWNsr6h0LQGRqfTSfGPz50Rc6plwMSE355QdDjkPGVm
+         EKGZpWBMkAQdzwMu82QS1OBMC0hCmau/uL7LXWg2NdslTSzOkpxpPNUs67nE2KtiSb97
+         yUPdjkUBPCy5YflhjfJofVALnwtQ4XmCRdZTzsnewRzmzR1K3kyYuJoIqhBkRzx8N8k7
+         b1WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704807499; x=1705412299;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7mDLa1lDA9I4zsDt/vUi7Q5DM723KSTf2pIxDEMdeEE=;
+        b=ESgOvi+YZnrGmrYkaoQIN4zGBOLZKiZ/vHnQvcsAo2k8mKKQWtJgaJMoetjzJY5CuX
+         dwwXJvb1DmgL9657khYW6qHwDE3LCot8WXwYFh3h29J20PTSHqU/h02sFIJMMHaSzRbK
+         AkmEDvSHOw3chndGR6ykwQWD6vkBbJUtSnwLQhWQT4xPQbJ8ZTVR9Bhh9iRHJBhon3ob
+         IX3GCJiJKtINk/A6R+y0SSn+FljGTDmf2yNAGZawyNKaOrTIypaktWupDZQA2SXW2SI5
+         ocUPvWLM9TaRK8xedvSy5kNWgVwGW/b6N9ysRUH2z+BIgcJfn3ZV8i8LAAUx4wDAxVV3
+         ElWA==
+X-Gm-Message-State: AOJu0Yy1MrugXGh75H530u3+6pu37fuaP7OqGiAlNjjFMQuygUKq8fiM
+	D8Cbao6uyHfVLGOvPCdj31jwFObsH3Psw0X0o1AlJlpBJg4yaw==
+X-Google-Smtp-Source: AGHT+IEiIF+TOwHH0WeGea/W9p977jXEPA2RPNa5wHtj/r0Fwo02EIRShmM0F605PcR5+mNqG3weRRapKtHQAzzaPtk=
+X-Received: by 2002:a05:6808:3185:b0:3bb:d83a:99a8 with SMTP id
+ cd5-20020a056808318500b003bbd83a99a8mr8896956oib.58.1704807499107; Tue, 09
+ Jan 2024 05:38:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231220121110.1441160-1-vignesh.raman@collabora.com>
+In-Reply-To: <20231220121110.1441160-1-vignesh.raman@collabora.com>
+From: Daniel Stone <daniel@fooishbar.org>
+Date: Tue, 9 Jan 2024 13:38:08 +0000
+Message-ID: <CAPj87rOMPioOK0r74vcnVkXusm6Nah6KNUWyxYgpVLdkMNtW2g@mail.gmail.com>
+Subject: Re: [PATCH v1 0/8] drm/ci: Add support for GPU and display testing
+To: Helen Koike <helen.koike@collabora.com>, Dave Airlie <airlied@gmail.com>, 
+	Sima Vetter <daniel@ffwll.ch>, Daniel Stone <daniels@collabora.com>, Emma Anholt <emma@anholt.net>, 
+	linux-rockchip <linux-rockchip@lists.infradead.org>, guilherme.gallo@collabora.com, 
+	sergi.blanch.torne@collabora.com, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	David Heidelberg <david.heidelberg@collabora.com>, Rob Clark <robdclark@gmail.com>, 
+	linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-Free the ppace array if one of the init_acl_state() calls inside
-parse_dacl() fails. At the moment the function may fail only due to the
-memory allocation errors so it's highly unlikely in this case but
-nevertheless a fix is needed.
+Hi,
 
-Found by Linux Verification Center (linuxtesting.org).
+On Wed, 20 Dec 2023 at 12:11, Vignesh Raman <vignesh.raman@collabora.com> wrote:
+> Some ARM SOCs have a separate display controller and GPU, each with
+> different drivers. For mediatek mt8173, the GPU driver is powervr,
+> and the display driver is mediatek. In the case of mediatek mt8183,
+> the GPU driver is panfrost, and the display driver is mediatek.
+> With rockchip rk3288/rk3399, the GPU driver is panfrost, while the
+> display driver is rockchip. For amlogic meson, the GPU driver is
+> panfrost, and the display driver is meson.
+>
+> IGT tests run various tests with different xfails and can test both
+> GPU devices and KMS/display devices. Currently, in drm-ci for MediaTek,
+> Rockchip, and Amlogic Meson platforms, only the GPU driver is tested.
+> This leads to incomplete coverage since the display is never tested on
+> these platforms. This commit series adds support in drm-ci to run tests
+> for both GPU and display drivers for MediaTek, Rockchip, and Amlogic
+> Meson platforms.
 
-Fixes: e2f34481b24d ("cifsd: add server-side procedures for SMB3")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- fs/smb/server/smbacl.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Thanks a lot for these. The patches need to be squashed to be
+bisectable though. For example, patch #2 changes the MTK job names and
+adds more jobs, but the corresponding xfail updates only come in #7
+and #8. This means we have a span of a few patches where we don't have
+useful test results.
 
-diff --git a/fs/smb/server/smbacl.c b/fs/smb/server/smbacl.c
-index 1164365533f0..e6d0537cab49 100644
---- a/fs/smb/server/smbacl.c
-+++ b/fs/smb/server/smbacl.c
-@@ -406,11 +406,14 @@ static void parse_dacl(struct mnt_idmap *idmap,
- 		return;
- 
- 	ret = init_acl_state(&acl_state, num_aces);
--	if (ret)
-+	if (ret) {
-+		kfree(ppace);
- 		return;
-+	}
- 	ret = init_acl_state(&default_acl_state, num_aces);
- 	if (ret) {
- 		free_acl_state(&acl_state);
-+		kfree(ppace);
- 		return;
- 	}
- 
--- 
-2.43.0
+A better sequencing would be something like:
+  1. add ANX7625 config
+  2. refactor _existing_ MTK display jobs to use YAML includes, change
+the existing job name, and rename the existing xfail set, remove
+IGT_FORCE_DRIVER from the script since it's now set by the job
+  3. add MTK Panfrost+PVR GPU jobs with new xfails, add xfail entry to
+MAINTAINERS
+  4+5: same as 2+3 but for Amlogic
+  6+7: same as 2+3 but for Rockchip
 
+Then the separate rename/update xfail commits just disappear, as does
+the removal of IGT_FORCE_DRIVER, because it's just done incrementally
+as part of the commits which change the related functionality. It's
+extremely important that every change can work standalone, instead of
+introducing intermediate breakage which is only fixed in later commits
+in the series.
+
+Cheers,
+Daniel
