@@ -1,126 +1,158 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2063.outbound.protection.outlook.com [40.107.223.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31A73D0DB;
-	Tue,  9 Jan 2024 19:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36733D384
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 19:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZJTNoF5G"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T3Wh2PWzERRhfRQ6xYN4kGwy4aAvTHVVBxkdBfZj3T5WcqpqQxRcCMwHV4bF0El0cPE7yieXhKqOF5nQ3IaieWruuMj+stsIkBcAEgbgq0DrttjGNLYrImcKTaWOfReP1xPF72zWnhXPQJkLm0Wsg8KRRzd7vZH/2J50EkRFBM4K4TDaZ40Ys4C6qAsq6yy2UkF4cRKRThtEyqI7rEk5l5rFtdY112cXCVOEuwX4eL3RgabFKQmlVcHn3JycRC3mLl77huzgTAPcMFIBGWBHWjCQ2QhqL3ODXUFUeUNMINzZ6I/Acj61YnsvWwa6Fy8Hk15/GEiz4uxxQqgwvlBdcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XChYkO+yKDyMgr93oBR8OotlVDAG5byYbo5xcIbbFV8=;
- b=jJ3vPRtGE7BcR9LLs/X9puIyjGFyeVqIZ2lpGuvrWaPNhFtd1W5fNgdFMpVVDMbD1W8dnK2f2SAHbELA+NONnBBlXZK+nxBK2r8Fa5mExuipaFN/gDzyct9twIhTKk0GxntY5526B12MtfB43NPfVcza3nLKsyzrBNMlPOPbhlzybeUpDgYGp37y70H2SEYLJsDtVvpdep+VGG/K7MbaWZynstUmBy98R62rhtngqJwbSwAdLuwIDZf8qXQBDTf5nT1EMbsKiXnkmNklWU4F/EDVvX98SnPbquMMd+wixTm2s135ySUmJX/NlbUlGDJwdBUN5z/UTluoopLm7ZfABw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XChYkO+yKDyMgr93oBR8OotlVDAG5byYbo5xcIbbFV8=;
- b=ZJTNoF5G+4wvB9hAPSGl5Sd84XJP9IXlTbLAfMU5FvUKHTe2lh+lBplzvEgvboCmMvzOelFlcikEzHNQKLpnlh0U/+8fgUylvlC+iRLG0oDduABAntol6HFiylXUm6tpwprjLjOM/psg1HPnLKM0AixslNr/cN4u7BAq7og5T27BBAqAgWpDI20D8KHnvp1Cg8mvDuNW0C2EeyffZMOkg7kgHTuK3YFwACe5vBQIfOxuC1SgPi8kkquitDPmskjfFb6oUx+P8ioquLjqWfDzmrLNXT4mLy9lTNN2KQ+XiyqMkBGPRExLb5a94y39+U655zc1P+kvT1rP6uO3LOh22g==
-Received: from MW4PR03CA0071.namprd03.prod.outlook.com (2603:10b6:303:b6::16)
- by SA1PR12MB8599.namprd12.prod.outlook.com (2603:10b6:806:254::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 9 Jan
- 2024 19:25:52 +0000
-Received: from MWH0EPF000989E8.namprd02.prod.outlook.com
- (2603:10b6:303:b6:cafe::b5) by MW4PR03CA0071.outlook.office365.com
- (2603:10b6:303:b6::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23 via Frontend
- Transport; Tue, 9 Jan 2024 19:25:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- MWH0EPF000989E8.mail.protection.outlook.com (10.167.241.135) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7181.13 via Frontend Transport; Tue, 9 Jan 2024 19:25:49 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 9 Jan 2024
- 11:25:29 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 9 Jan 2024
- 11:25:29 -0800
-Received: from msst-build.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server id 15.2.986.41 via Frontend
- Transport; Tue, 9 Jan 2024 11:25:27 -0800
-From: Besar Wicaksono <bwicaksono@nvidia.com>
-To: <acme@redhat.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<john.g.garry@oracle.com>, <james.clark@arm.com>, <mike.leach@linaro.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<namhyung@kernel.org>, <irogers@google.com>, <alisaidi@amazon.com>,
-	<vsethi@nvidia.com>, <rwiley@nvidia.com>, <ywan@nvidia.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<treding@nvidia.com>, <jonathanh@nvidia.com>, Besar Wicaksono
-	<bwicaksono@nvidia.com>
-Subject: [PATCH v1 3/3] perf arm-spe: Add Neoverse-V2 to neoverse list
-Date: Tue, 9 Jan 2024 13:23:10 -0600
-Message-ID: <20240109192310.16234-4-bwicaksono@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240109192310.16234-1-bwicaksono@nvidia.com>
-References: <20240109192310.16234-1-bwicaksono@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FbVwqtDr"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d4a980fdedso30294455ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 11:26:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704828398; x=1705433198; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tWGAvgNyPrCP6S8aBabx+ZENJ2NrYrg15XqP+XNv/GM=;
+        b=FbVwqtDrvNVqibdGhc57SicrI2/BhrpqQAzYTdlNsfakfa2I1TiRhqa0z0H6H9+zMi
+         rh7Rvn40BdJcM+jsY6YuzInkKyc2hmqL9PPlCR1utTFgYqzTupX33fQlbszFP4VqFUx3
+         1hNGztlMx4nQmICbQvCQl380yA5MFbeEqXLBMqfOpYTkeVq7uVBwBRuf5898Om/Q9Zq8
+         ij+6dvgoW21jmEortRvUp4/ejtBaXFWBkMpnJvvKy5+iHZgH9Z1St8wGEumPMcf7QU16
+         Y8MArGNoYtOZdop/tl3Mr+CjStGXn0G3zKZuI2T6h5IvU6+oprsthwmxfgANgcgIpRrd
+         YsGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704828398; x=1705433198;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tWGAvgNyPrCP6S8aBabx+ZENJ2NrYrg15XqP+XNv/GM=;
+        b=iRy2M04PUbVDPY+yssWy3EcMTG9draSCDKhzdoqp2A/qHuDxsmveHdcvxTaV/Cw5hO
+         g1ajaUX+qSF08HSvTEqrYcr218sf4Gmzh2NrHXMu+hBqPNfy3Kkd90lNalJ/9ojV8Ysy
+         WZlVZYLJkdtULo68SgH98ukJAs/VgT6YLp5C39tr8rYDWgg94hrNve823fb7Y7j0yVlv
+         /jH+d2XEs1W/C7BrKccegvj86Xxsflg9I5t8g6yE+Bo9br/7BZtqGWtUjkw660pY3E4S
+         cO4fSq6hQN0m7lE/9PsMOm1tjtetzPn8IosypqaCB864iMJHfigluqulxHYEP4dlZ534
+         cXCQ==
+X-Gm-Message-State: AOJu0YyvmS52Vjy713N1XLOsevOmugV3+zHjRT9zlxaZuiTTLG3Tphzg
+	+IdGoRqEnD/2DDZvT2Q+qQoOQrjtcdQ1I6+CsWgqS/yc
+X-Google-Smtp-Source: AGHT+IGeHWnACBI86ysZjUvBUzyhEWCqDealnC0YM7jsADwLVegpnk3Sp/z9+BbT2k8upokHBOlO8dskoIt66rfubcI=
+X-Received: by 2002:a17:90a:4610:b0:28c:fa83:9222 with SMTP id
+ w16-20020a17090a461000b0028cfa839222mr3474126pjg.21.1704828398093; Tue, 09
+ Jan 2024 11:26:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E8:EE_|SA1PR12MB8599:EE_
-X-MS-Office365-Filtering-Correlation-Id: 977489fd-c5a1-4355-5d6d-08dc1148c9b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	RLPglGza1Zzzy4ur4P1WiVhhxOC8mDpifUtUT2YKoeKY1mQfBF+l0Jd6k6G29TglmWG4vK9fOIq2L0jgSsEwyndMfPGCKNGOXTW/HkQu9t8uB/AWLAzdMCZSk+6RxrVjUdKwwpB1on+GKKMJf0a87d/7DZG44OTe+3KcCUZ2TSKfvulwkbDUi0nEovzhYRmRAdXgpGrmKZHIFXY5JON/9Ew2NLQMWAzxuv+L2ga/hOUSramxqgdBV783DaRkWX6PVcAkxrZ9hIPOAOS1RgLmkZnUjeoC+w/Z1Cx/0GuiA0YcJf7qr3y5bTAz/3Ls7uxmXBP6NQoW12IIXwP+eG9qgEnFQYbiYbQJc8YRzUyVtMZfUrP2PDfRfY2K0dOLBhEHdQibWlyIkCnRZZh1IBQuWai0qfE4M+niLUfF0btbbG9LhfwRd8dUQnaq8/fpX7Elpq+dyj2CaxGCg9TFhMC61waaep/9e50mtaujMKzgGb7FdteecXNlDQrWnGLHU4Bmg9G24muzzHvBm95OS+tFYCxXP5HxDs5IqqKnCN5uElpjXnBbkN6uqYX93CGKv65J1HLnIZYK2kT/WLKDgBNfLjiySmMY7XLs/J2jSzLHILlEXPdptqFVu6HVu8YWBAnTCeeadp+HVTaFtKG0BbAYzphT6GxRU+8E8DUDUAu2O8p9kb9WROGqeOgDA97I39COwTiNBs2BQOJM/swYJuGekEUd92bMF/Bl4A3ujzrUDos5pJb1ucD6a9RVtZunkGRB38MHfqzD8+hekWvOc0MyHUjVO6Z6oxD0YcdFbN2DSAyeJ+KYU7nd/2+0QmIf8J2b
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(39860400002)(376002)(136003)(230922051799003)(64100799003)(451199024)(186009)(82310400011)(1800799012)(36840700001)(40470700004)(46966006)(40460700003)(40480700001)(336012)(426003)(1076003)(2616005)(26005)(478600001)(6666004)(7696005)(82740400003)(921011)(36756003)(86362001)(7636003)(356005)(7416002)(4744005)(70586007)(5660300002)(41300700001)(47076005)(36860700001)(107886003)(2906002)(110136005)(8936002)(54906003)(316002)(70206006)(6636002)(4326008)(8676002)(2101003)(83996005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2024 19:25:49.7915
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 977489fd-c5a1-4355-5d6d-08dc1148c9b7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000989E8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8599
+References: <000000000000ef988f060e876862@google.com>
+In-Reply-To: <000000000000ef988f060e876862@google.com>
+From: Yang Shi <shy828301@gmail.com>
+Date: Tue, 9 Jan 2024 11:26:26 -0800
+Message-ID: <CAHbLzkoYJ9yr4pVKRbsSELmtwZm+CXNYMcpt--D4DFTogn30Eg@mail.gmail.com>
+Subject: Re: [syzbot] [mm?] WARNING in hpage_collapse_scan_pmd
+To: syzbot <syzbot+ed79e0896ae923de13fa@syzkaller.appspotmail.com>, 
+	Peter Xu <peterx@redhat.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add Neoverse-V2 MIDR to neoverse_spe range list.
+On Tue, Jan 9, 2024 at 10:23=E2=80=AFAM syzbot
+<syzbot+ed79e0896ae923de13fa@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    5eff55d725a4 Merge tag 'platform-drivers-x86-v6.7-7' of g=
+i..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D17472409e8000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D655f8abe9fe69=
+b3b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Ded79e0896ae923d=
+e13fa
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/496bf4f0c628/dis=
+k-5eff55d7.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/43482bd7ec93/vmlinu=
+x-5eff55d7.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/fa81d2743202/b=
+zImage-5eff55d7.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+ed79e0896ae923de13fa@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 35 at arch/x86/include/asm/pgtable.h:403 pte_uffd_wp=
+ arch/x86/include/asm/pgtable.h:403 [inline]
+> WARNING: CPU: 1 PID: 35 at arch/x86/include/asm/pgtable.h:403 hpage_colla=
+pse_scan_pmd+0x233e/0x4fe0 mm/khugepaged.c:1309
+> Modules linked in:
+> CPU: 1 PID: 35 Comm: khugepaged Not tainted 6.7.0-rc8-syzkaller-00055-g5e=
+ff55d725a4 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 11/17/2023
+> RIP: 0010:pte_uffd_wp arch/x86/include/asm/pgtable.h:403 [inline]
 
-Signed-off-by: Besar Wicaksono <bwicaksono@nvidia.com>
----
- tools/perf/util/arm-spe.c | 1 +
- 1 file changed, 1 insertion(+)
+Khugepaged saw a uffd wp PTE is writable. Khugepaged just scans the
+page table at this stage, so it sounds like something is out of sync?
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index afbd5869f6bf..936d2222e6d7 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -413,6 +413,7 @@ static const struct midr_range neoverse_spe[] = {
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
-+	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
- 	{},
- };
- 
--- 
-2.17.1
+Cc'ed Peter.
 
+> RIP: 0010:hpage_collapse_scan_pmd+0x233e/0x4fe0 mm/khugepaged.c:1309
+> Code: 24 d8 00 00 00 49 81 c6 00 10 00 00 4c 3b b4 24 f0 00 00 00 0f 83 a=
+8 06 00 00 e8 bd 72 9d ff e9 61 fc ff ff e8 b3 72 9d ff 90 <0f> 0b 90 41 bc=
+ 09 00 00 00 45 31 f6 e9 45 f4 ff ff e8 9c 72 9d ff
+> RSP: 0018:ffffc90000abf780 EFLAGS: 00010293
+> RAX: ffffffff81f1073d RBX: 0000000000000002 RCX: ffff8880142f1dc0
+> RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
+> RBP: ffffc90000abfbf0 R08: ffffffff81f0ea47 R09: 1ffffd400022a006
+> R10: dffffc0000000000 R11: fffff9400022a007 R12: 00000000203ea000
+> R13: 1ffff92000157f14 R14: 00000000455eac67 R15: 00000000000001ea
+> FS:  0000000000000000(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f942157a038 CR3: 000000008cd03000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  khugepaged_scan_mm_slot mm/khugepaged.c:2415 [inline]
+>  khugepaged_do_scan mm/khugepaged.c:2503 [inline]
+>  khugepaged+0x9bf/0x17a0 mm/khugepaged.c:2559
+>  kthread+0x2d3/0x370 kernel/kthread.c:388
+>  ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+>  </TASK>
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+>
