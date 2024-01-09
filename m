@@ -1,97 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391153A1C2;
-	Tue,  9 Jan 2024 16:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318483A1C4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 16:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aHgQfZLp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704817524; x=1736353524;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=pqvftV7jqXdOf/U1WVzf1rrU3Eu0865Q2QbvOkuWV+k=;
-  b=aHgQfZLp7SjKiOVe0Tmb6hSxRpQZT7O7+n/aLA0I1bw6vKk2O4vMQN41
-   WOMyD5yV1hcsWWVInnpZk+y7QDJZGnO+Ygn61zc52Pymea+0SgMidG7tT
-   vO8UEapvAms2bqhvYoj0gYYcvEZT4FfUgR/6dQ7pKHHaI1kifiLngi1XP
-   grXYPwV5x9q40+GF60Upr//Egm0410qbpSyj02LKgPyE2Gv9IFc58v3pc
-   S05vQZ28DUlRkx/V7Z3Y5bNoCzApk1c0xAsY3YCihZAQrphP7SXv694Ck
-   WhTge4Mhj3ER8Etd8t96Iyf4veXNI/AzKrek1U2NeBX4z3TSZWmoU+N0H
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="484427254"
-X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="484427254"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 08:25:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="16334102"
-Received: from rohitpra-mobl1.amr.corp.intel.com ([10.212.96.32])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 08:25:23 -0800
-Message-ID: <30948df0bebe6d37d722b4ca4ab5feba7b7c0895.camel@linux.intel.com>
-Subject: Re: [PATCH v1] crypto: iaa - Remove unnecessary
- debugfs_create_dir() error check in iaa_crypto_debugfs_init()
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
-To: Minjie Du <duminjie@vivo.com>, Herbert Xu <herbert@gondor.apana.org.au>,
-  "David S. Miller" <davem@davemloft.net>, "open list:INTEL IAA CRYPTO
- DRIVER" <linux-crypto@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>
-Cc: opensource.kernel@vivo.com
-Date: Tue, 09 Jan 2024 10:25:21 -0600
-In-Reply-To: <20240109021916.20960-1-duminjie@vivo.com>
-References: <20240109021916.20960-1-duminjie@vivo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yzzA21IB"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9ef2422cso3306683276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 08:28:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704817688; x=1705422488; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5OuBSK2ue8Kgm1k8HYnk3iBNLImCMNlra+LgIioncU=;
+        b=yzzA21IByFPLyQzVXsFpW/hisjZetZ4FJaOWOSFOwPJQCToW9XcidnmPI5Bb5wEOaS
+         3G9cjVUoTTI1ZZYqteaVG2jj9X4HTpHJPj+t4e0LCNnvSX6xGf71ceQQ4oWrwB7OcbMc
+         qpxPSt+bGMpLjEB8/7ztdrh2iGtex1wtETo1BvvYczEOWLJb/rVktZfaC1LgKyiTKLYl
+         2aPah1P3Eh07H0NbBi30i7rrPzMZ1QZ4tp9E8fjXv5dgWkD/r0+3axOXFoB+64e67wzW
+         bGI31Tr7gdQ0nLJ/yVtNo6I3YvHEP8omg4kTlxMOWVZkIqrJ9Z4fd6UK2w9KWEJjxeGq
+         RLHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704817688; x=1705422488;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5OuBSK2ue8Kgm1k8HYnk3iBNLImCMNlra+LgIioncU=;
+        b=o8XNwhRAQMl8CYJ/9QnvPWpUtg4G2UPWSrJTS0Znds48tkSJU+Bs7oyCEDYMVeeaQB
+         LNPZrzKwZeaeMKHcJpUOXRHlYJD+yo5xdmB/LICSn/YghrCttkD3dcpvu9r72BqakeqK
+         r1o3gRWkTRT3DDNVw2G5sC/oJM58jvnt4pFr179UsbO7rA/SCjBqXVW0Urwn7h628lTm
+         gkuXTLgTS0nX+jJTTbkrDr8lHd/ARG/AuVf4fRkWWsOHszwXkquodYlpCnMwZhaF/L6L
+         diJFf1LHjpPdutpxmxp68hTy3cWUl3P/iFpL8ql+FjsT6e9WwX+RgTIApG8bwGUw+auG
+         AkSQ==
+X-Gm-Message-State: AOJu0YyeQ6l3hOLKz/T03WT6m4z7kmA+p5M7PC2S2q7yDsDuGj/o4p1s
+	YndXwwHN5gNh2BffyXafe3aFMIPYW7pzgzizZA==
+X-Google-Smtp-Source: AGHT+IFSDvWVPac68q4BzCp/M7oq0Dprmnoi25LHdAWG2rkmmNus3vqOs8OrjdJwg44iO8Kai9BqtK53kUw=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:8186:0:b0:dbc:1b48:dc1e with SMTP id
+ p6-20020a258186000000b00dbc1b48dc1emr211467ybk.2.1704817688232; Tue, 09 Jan
+ 2024 08:28:08 -0800 (PST)
+Date: Tue, 9 Jan 2024 08:28:06 -0800
+In-Reply-To: <20240109112445.590736-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20240109112445.590736-1-usama.anjum@collabora.com>
+Message-ID: <ZZ10FqvnVWIbyo-9@google.com>
+Subject: Re: [PATCH] fs/proc/task_mmu: move mmu notification mechanism inside
+ mm lock
+From: Sean Christopherson <seanjc@google.com>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Andrei Vagin <avagin@google.com>, Peter Xu <peterx@redhat.com>, Hugh Dickins <hughd@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Kefeng Wang <wangkefeng.wang@huawei.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	"=?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?=" <mirq-linux@rere.qmqm.pl>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Arnd Bergmann <arnd@arndb.de>, kernel@collabora.com, 
+	syzbot+81227d2bd69e9dedb802@syzkaller.appspotmail.com, stable@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, 2024-01-09 at 10:19 +0800, Minjie Du wrote:
-> This patch removes the debugfs_create_dir() error checking in
-> iaa_crypto_debugfs_init(). Because the debugfs_create_dir() is
-> developed
-> in a way that the caller can safely handle the errors that
-> occur during the creation of DebugFS nodes.
->=20
-> Signed-off-by: Minjie Du <duminjie@vivo.com>
-
-Acked-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-
-Thanks Minjie,
-
-Tom
-
-
+On Tue, Jan 09, 2024, Muhammad Usama Anjum wrote:
+> Move mmu notification mechanism inside mm lock to prevent race condition
+> in other components which depend on it. The notifier will invalidate
+> memory range. Depending upon the number of iterations, different memory
+> ranges would be invalidated.
+> 
+> The following warning would be removed by this patch:
+> WARNING: CPU: 0 PID: 5067 at arch/x86/kvm/../../../virt/kvm/kvm_main.c:734 kvm_mmu_notifier_change_pte+0x860/0x960 arch/x86/kvm/../../../virt/kvm/kvm_main.c:734
+> 
+> There is no behavioural and performance change with this patch when
+> there is no component registered with the mmu notifier.
+> 
+> Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs")
+> Reported-by: syzbot+81227d2bd69e9dedb802@syzkaller.appspotmail.com
+> Link: https://lore.kernel.org/all/000000000000f6d051060c6785bc@google.com/
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 > ---
-> =C2=A0drivers/crypto/intel/iaa/iaa_crypto_stats.c | 2 --
-> =C2=A01 file changed, 2 deletions(-)
->=20
-> diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-> b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-> index 2e3b7b73af20..cbf87d0effe3 100644
-> --- a/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-> +++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-> @@ -275,8 +275,6 @@ int __init iaa_crypto_debugfs_init(void)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return -ENODEV;
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0iaa_crypto_debugfs_root =
-=3D debugfs_create_dir("iaa_crypto",
-> NULL);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!iaa_crypto_debugfs_root)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0return -ENOMEM;
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0debugfs_create_u64("max_c=
-omp_delay_ns", 0644,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 iaa_crypto_debugfs_root,
-> &max_comp_delay_ns);
+>  fs/proc/task_mmu.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 62b16f42d5d2..56c2e7357494 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -2448,13 +2448,6 @@ static long do_pagemap_scan(struct mm_struct *mm, unsigned long uarg)
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* Protection change for the range is going to happen. */
+> -	if (p.arg.flags & PM_SCAN_WP_MATCHING) {
+> -		mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_VMA, 0,
+> -					mm, p.arg.start, p.arg.end);
+> -		mmu_notifier_invalidate_range_start(&range);
+> -	}
+> -
+>  	for (walk_start = p.arg.start; walk_start < p.arg.end;
+>  			walk_start = p.arg.walk_end) {
+>  		long n_out;
 
+Nit, might be worth moving
+
+		struct mmu_notifier_range range;
+
+inside the loop to guard against stale usage, but that's definitely optional.
+
+Reviewed-by: Sean Christopherson <seanjc@google.com>
