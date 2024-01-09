@@ -1,141 +1,128 @@
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB8A4418
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 03:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02DD3D86;
+	Tue,  9 Jan 2024 03:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="fRksbHJv";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="fRksbHJv"
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id AD89FC01C; Tue,  9 Jan 2024 04:39:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1704771571; bh=EFsqeQpoVPi+aLXOF4MlH5LIHnl+EleljLHKqEwD79Q=;
-	h=From:Date:Subject:To:Cc:From;
-	b=fRksbHJvrUIsLT1B1lrcqnKV5j5kDaPZKepCkUWhW0MrY7S0h+AObVryIK5C2UxS+
-	 w+IR2MSydMJu+KRGLTq/JBC3NsHBywuTLQHmOMkOkIeRi4aI4Gh/BUwFqfFFZx1QGt
-	 u6e88Swvu2vCh6yP5Xifv3OWxUdK5C+Um0VzNJQQiN4ZvSYcksm1BLseUehFHpwO7q
-	 v+BjWfqEPV46OloDm27nynlL47r67jS+BS/X9BfAzEUhwI7OO+OqAv2/GXYL20iBi2
-	 Ye0zANyZaNFvTUjf/HUZrwlmdKKfXZrUHHtRFE8p1oSJmFz4ZdQ8/EM1u8/gJkF1oy
-	 QmBS2WytYD3aQ==
-X-Spam-Level: 
-Received: from gaia (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id E38EDC009;
-	Tue,  9 Jan 2024 04:39:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1704771571; bh=EFsqeQpoVPi+aLXOF4MlH5LIHnl+EleljLHKqEwD79Q=;
-	h=From:Date:Subject:To:Cc:From;
-	b=fRksbHJvrUIsLT1B1lrcqnKV5j5kDaPZKepCkUWhW0MrY7S0h+AObVryIK5C2UxS+
-	 w+IR2MSydMJu+KRGLTq/JBC3NsHBywuTLQHmOMkOkIeRi4aI4Gh/BUwFqfFFZx1QGt
-	 u6e88Swvu2vCh6yP5Xifv3OWxUdK5C+Um0VzNJQQiN4ZvSYcksm1BLseUehFHpwO7q
-	 v+BjWfqEPV46OloDm27nynlL47r67jS+BS/X9BfAzEUhwI7OO+OqAv2/GXYL20iBi2
-	 Ye0zANyZaNFvTUjf/HUZrwlmdKKfXZrUHHtRFE8p1oSJmFz4ZdQ8/EM1u8/gJkF1oy
-	 QmBS2WytYD3aQ==
-Received: from [127.0.0.2] (localhost.lan [::1])
-	by gaia (OpenSMTPD) with ESMTP id 444fb58d;
-	Tue, 9 Jan 2024 03:39:25 +0000 (UTC)
-From: Dominique Martinet <asmadeus@codewreck.org>
-Date: Tue, 09 Jan 2024 12:39:03 +0900
-Subject: [PATCH] 9p: Fix read/write debug statements to report server reply
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agEMEu1T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704771697; x=1736307697;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0LdLdd5VFFhLorx8pbQnlS22X5wJJoCIwyGO5I6Dq9A=;
+  b=agEMEu1TNril1O3jlbBCjBr6ne98c9odINZ2FWUST+vjAwn6MdnqMiBg
+   xoIp3BdOMd2ziVK14cKmRuEUl4knqkFw4Pz+zyiKKIhgRIFNAhHw2KOxc
+   M/dsnd0sncJkBW/g6C/EX3CTv3ofiXlXNy+70LD9LU2VSovKxjCl6J87T
+   OD0mK1qNC6pZzqRaLUwhc/eTOXy+LHmfbAsswL8hVkELA8QoXUfFxCCuM
+   Hhzw+Doz1zFMwNLmqlhRnxFio93vdumvO1BSenQrprpvkORhCy+pJSDGH
+   0NSANstjXGkJtkfb0hApieXATjvlAQGRsj6Rrbl9E3DG/UetUF+VZ0xJT
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="16667563"
+X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
+   d="scan'208";a="16667563"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 19:41:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="852024581"
+X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
+   d="scan'208";a="852024581"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Jan 2024 19:41:32 -0800
+Message-ID: <91c2add2-3015-4935-9dd5-d4e42aff473a@linux.intel.com>
+Date: Tue, 9 Jan 2024 11:36:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Longfang Liu <liulongfang@huawei.com>, Yan Zhao <yan.y.zhao@intel.com>,
+ iommu@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 13/14] iommu: Improve iopf_queue_remove_device()
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@ziepe.ca>
+References: <20231220012332.168188-1-baolu.lu@linux.intel.com>
+ <20231220012332.168188-14-baolu.lu@linux.intel.com>
+ <20240105162540.GH50608@ziepe.ca>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240105162540.GH50608@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240109-9p-rw-trace-v1-1-327178114257@codewreck.org>
-X-B4-Tracking: v=1; b=H4sIANe/nGUC/x2NywrCMBAAf6Xs2YUkrY/4K8XDJq52D8ayG6pQ+
- u+mHodhmBWMVdjg2q2gvIjJuzTwhw7yROXJKPfGEFwYnHcR44z6waqUGfPJH2N/ccO599CKRMa
- YlEqe9uZFVll3MSs/5PvfjLdt+wH3x0NkdgAAAA==
-To: Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>, 
- Al Viro <viro@zeniv.linux.org.uk>
-Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.13-dev-f371f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2350;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=KH8+UxTTncKHAbh6u8Ig6CCfYanqBKjiLNUI96FwBaY=;
- b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBlnL/tDqMymOF9w2pbjX/AeHsc+Ybi+GBNnx0Av
- lRGjwbiw8yJAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZZy/7QAKCRCrTpvsapjm
- cAFvEAC43BlpyofxewTGb+IY8PzerfCuFZNfuYNsYsdWtsyzVaIEM+PuQzaIckYPPCQzh1HdNRn
- PbkfEg0bGVb4A9539pYrHx4vo666UGlQQO1yf/P/Hli2bZxxe7IrwN+N5/k5q6fKBEJ0Vd6W4OK
- rB9eVL5WDe7tSecvbBEqqccwXNWE+P0RziuWLCCmAj5mevbQWFhPA2lZXYCwRYSiDQ3BVXiUOXe
- rOKfw8g9RE8mKkdaiHkSmhoCvkhvqEjniHxK6hYfBnoCPHIUxBku0jvKx+AiK2l+zS3ARb6qpcS
- +/fzUM25Z7XnBgEHREKAs21KmBlIPFJMrajNFxLDFK1ndhjUSRyhU+6XdaLUq6GYoB2jzxwnSbt
- CW5YLgMUco90tsOPsuRhd9ltuF2oLro2RBu77NESnulLKZaoruWEQp/GLWFkilPztJ19cdCcmdK
- wi2Zr5cSn5rTKtf3G+x7B75vksP16PbWC9CRyJgovwcJQXolmmojwDHd5ACMW4WNIPgRnBh+mXf
- FFkMqLyo6H7dxA/JO7QVOoaYofoj7VdgJk8n60ZohpS5MTR69WaoXkwwXYo5XA0QWz0hY1qcwiS
- lLKnyjo6E90RUQ8KTnzhp7LB3JgcZT7rPZbV7DBMQQTxeKmNEffVu8FNwNcPdi2OCe/QbMIjWsd
- Iamx1EMp5mwY02Q==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
 
-Previous conversion to iov missed these debug statements which would now
-always print the requested size instead of the actual server reply.
+On 1/6/24 12:25 AM, Jason Gunthorpe wrote:
+> On Wed, Dec 20, 2023 at 09:23:31AM +0800, Lu Baolu wrote:
+>> -int iopf_queue_remove_device(struct iopf_queue *queue, struct device *dev)
+>> +void iopf_queue_remove_device(struct iopf_queue *queue, struct device *dev)
+>>   {
+>> -	int ret = 0;
+>>   	struct iopf_fault *iopf, *next;
+>> +	struct iommu_page_response resp;
+>>   	struct dev_iommu *param = dev->iommu;
+>>   	struct iommu_fault_param *fault_param;
+>> +	const struct iommu_ops *ops = dev_iommu_ops(dev);
+>>   
+>>   	mutex_lock(&queue->lock);
+>>   	mutex_lock(&param->lock);
+>>   	fault_param = rcu_dereference_check(param->fault_param,
+>>   					    lockdep_is_held(&param->lock));
+>> -	if (!fault_param) {
+>> -		ret = -ENODEV;
+>> -		goto unlock;
+>> -	}
+>> -
+>> -	if (fault_param->queue != queue) {
+>> -		ret = -EINVAL;
+>> -		goto unlock;
+>> -	}
+>>   
+>> -	if (!list_empty(&fault_param->faults)) {
+>> -		ret = -EBUSY;
+>> +	if (WARN_ON(!fault_param || fault_param->queue != queue))
+>>   		goto unlock;
+>> -	}
+>> -
+>> -	list_del(&fault_param->queue_list);
+>>   
+>> -	/* Just in case some faults are still stuck */
+>> +	mutex_lock(&fault_param->lock);
+>>   	list_for_each_entry_safe(iopf, next, &fault_param->partial, list)
+>>   		kfree(iopf);
+>>   
+>> +	list_for_each_entry_safe(iopf, next, &fault_param->faults, list) {
+>> +		memset(&resp, 0, sizeof(struct iommu_page_response));
+>> +		resp.pasid = iopf->fault.prm.pasid;
+>> +		resp.grpid = iopf->fault.prm.grpid;
+>> +		resp.code = IOMMU_PAGE_RESP_INVALID;
+> 
+> I would probably move the resp and iopf variables into here:
+> 
+> 		struct iopf_fault *iopf = &group->last_fault;
+> 		struct iommu_page_response resp = {
+> 			.pasid = iopf->fault.prm.pasid,
+> 			.grpid = iopf->fault.prm.grpid,
+> 			.code = IOMMU_PAGE_RESP_INVALID
+> 		};
+> 
+> (and call the other one partial_iopf)
 
-Write also added a loop in a much older commit but we didn't report
-these, while reads do report each iteration -- it's more coherent to
-keep reporting all requests to server so move that at the same time.
+Yours looks better. Done.
 
-Fixes: 7f02464739da ("9p: convert to advancing variant of iov_iter_get_pages_alloc()")
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
- net/9p/client.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> But this looks fine either way
+> 
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-diff --git a/net/9p/client.c b/net/9p/client.c
-index e265a0ca6bdd..f7e90b4769bb 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1583,7 +1583,7 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 		received = rsize;
- 	}
- 
--	p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", count);
-+	p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", received);
- 
- 	if (non_zc) {
- 		int n = copy_to_iter(dataptr, received, to);
-@@ -1609,9 +1609,6 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 	int total = 0;
- 	*err = 0;
- 
--	p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu count %zd\n",
--		 fid->fid, offset, iov_iter_count(from));
--
- 	while (iov_iter_count(from)) {
- 		int count = iov_iter_count(from);
- 		int rsize = fid->iounit;
-@@ -1623,6 +1620,9 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 		if (count < rsize)
- 			rsize = count;
- 
-+		p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu count %d (/%d)\n",
-+			 fid->fid, offset, rsize, count);
-+
- 		/* Don't bother zerocopy for small IO (< 1024) */
- 		if (clnt->trans_mod->zc_request && rsize > 1024) {
- 			req = p9_client_zc_rpc(clnt, P9_TWRITE, NULL, from, 0,
-@@ -1650,7 +1650,7 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 			written = rsize;
- 		}
- 
--		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", count);
-+		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", written);
- 
- 		p9_req_put(clnt, req);
- 		iov_iter_revert(from, count - written - iov_iter_count(from));
-
----
-base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
-change-id: 20240109-9p-rw-trace-c61593804731
+Thank you very much!
 
 Best regards,
--- 
-Dominique Martinet | Asmadeus
-
+baolu
