@@ -1,122 +1,485 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1D13716B;
-	Tue,  9 Jan 2024 11:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCD0374C4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="DGqhDSB4"
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id 633D062DD19A;
-	Tue,  9 Jan 2024 12:45:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1704800748;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GYrQJyub"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704801200;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=a70FyQBxFFn5JMG0Q0O4V6pTeF/ihUmX4t9eLgwGQF0=;
-	b=DGqhDSB4nGcCz1L/RON79NbamG4X/0oPyGnwnny6lfWxgIHTP/puu8xt2PgR79CtpJmYsv
-	mRl230oLNKyo699ndw3aPSHNgdddA4dBttlQRbiF1l/Bl6LUjfiyKu0uSbQIpYVpNovUUr
-	diazVmBU8quAK6UVw0fJO5kcxnVVfOY=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org
-Cc: linux-input@vger.kernel.org,
- Filipe =?ISO-8859-1?Q?La=EDns?= <lains@riseup.net>,
- Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Hans de Goede <hdegoede@redhat.com>
-Subject: Flood of logitech-hidpp-device messages in v6.7
-Date: Tue, 09 Jan 2024 12:45:37 +0100
-Message-ID: <3277085.44csPzL39Z@natalenko.name>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uWykiAzYI8tXVV+Ad41feoAfblC8lASjDQRFQkJCixk=;
+	b=GYrQJyubiPT6FCA9xr+w4dBYIR4c1Rq0M6GdfOGO12RozX6GAwibuU5PJ9fseTBziI5Prf
+	u5uHrxxfQgwihDUgPlhWRwpuCVRgO7fSujOHHo413W63WRXbiMjXwCnAfv4Sa/u72QoF3M
+	ZnROWavgWC4LDU4sBi9Uy1uYVAX8XSM=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-652-zLpl_1kgN6m7WQmF9mZx9Q-1; Tue, 09 Jan 2024 06:53:19 -0500
+X-MC-Unique: zLpl_1kgN6m7WQmF9mZx9Q-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7816bea8d28so677908585a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 03:53:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704801199; x=1705405999;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uWykiAzYI8tXVV+Ad41feoAfblC8lASjDQRFQkJCixk=;
+        b=vbbCrHlQSrnbZPVZv7xIuyzbuDYfmH7dIRQv1iddU+yDi8odIcvWfj0snD6UIMZAAp
+         ADzE3LEYwKAvjtUV/KcycWmf9jsJRBOrK/24SXMJK6C+XS0GKTv1hdlOFuDID2LutGwn
+         L+AySPz6dUuQUPVcXPLwtZ1DAPPtZPsyf+eRsLMsSQCmvFBOMKlMxZ7FjpOcJGEH+0Ii
+         weiDo/PfH17NSR2Qy/H9rc8vs86cS5dMWG/B+/uKZd8Emic6xBnYtf/KSDF4RsuGp44j
+         geK0G/OSnx00slZoDLoH/UPw4T1bCZMzym6tGsPOMgKY9ubND42uq2fNbe98Vm+Vn4lo
+         QFLQ==
+X-Gm-Message-State: AOJu0Yzeg6jBzt3KtS6uki8btyUWNCUW4+xrRjJCMDVpijOMln3u7bMd
+	ucJnTKC4dVNjEOOY8+qN2EvKFotip1hC37sVq63Yub1xrRZQ8rUq90kOqZX4/Kzy+IgRlChPI9t
+	dmpAeWJ775AzBilwZ7TyqIcHbP8pWphI=
+X-Received: by 2002:a05:620a:51d6:b0:77f:8d29:e2f0 with SMTP id cx22-20020a05620a51d600b0077f8d29e2f0mr701041qkb.72.1704801198781;
+        Tue, 09 Jan 2024 03:53:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHw1Y1t4/1OtO/y32HlTNtfB0RHN3WZlmUi7pkibtlUsHwQzb8AadJ9rqjlFLwRv8PB11gyIw==
+X-Received: by 2002:a05:620a:51d6:b0:77f:8d29:e2f0 with SMTP id cx22-20020a05620a51d600b0077f8d29e2f0mr701029qkb.72.1704801198366;
+        Tue, 09 Jan 2024 03:53:18 -0800 (PST)
+Received: from [192.168.9.34] (net-2-34-31-72.cust.vodafonedsl.it. [2.34.31.72])
+        by smtp.gmail.com with ESMTPSA id f21-20020a05620a15b500b00781eb1e7779sm730238qkk.94.2024.01.09.03.53.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jan 2024 03:53:18 -0800 (PST)
+Message-ID: <09b30741-b2eb-484a-bfe6-e1964d282e23@redhat.com>
+Date: Tue, 9 Jan 2024 12:53:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart8321016.T7Z3S40VBb";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-
---nextPart8321016.T7Z3S40VBb
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org
-Subject: Flood of logitech-hidpp-device messages in v6.7
-Date: Tue, 09 Jan 2024 12:45:37 +0100
-Message-ID: <3277085.44csPzL39Z@natalenko.name>
-MIME-Version: 1.0
-
-Hello Hans et al.
-
-Starting from v6.7 release I get the following messages repeating in `dmesg` regularly:
-
-```
-Jan 09 10:05:06 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
-Jan 09 10:07:15 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: Disconnected
-Jan 09 10:16:51 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
-Jan 09 10:16:55 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
-Jan 09 10:16:55 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
-Jan 09 10:36:31 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
-Jan 09 10:37:07 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
-Jan 09 10:46:21 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
-Jan 09 10:48:23 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: Disconnected
-Jan 09 11:12:27 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
-Jan 09 11:12:47 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
-Jan 09 11:12:47 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
-Jan 09 11:38:32 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
-Jan 09 11:43:32 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: Disconnected
-Jan 09 11:45:10 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
-Jan 09 11:45:11 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
-Jan 09 11:45:11 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
-Jan 09 12:31:48 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
-Jan 09 12:33:21 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
-```
-
-I've got the following hardware:
-
-* Bus 006 Device 004: ID 046d:c52b Logitech, Inc. Unifying Receiver
-* Logitech MX Keys
-* Logitech M510v2
-
-With v6.6 I do not get those messages.
-
-I think this is related to 680ee411a98e ("HID: logitech-hidpp: Fix connect event race").
-
-My speculation is that some of the devices enter powersaving state after being idle for some time (5 mins?), and then wake up and reconnect once I touch either keyboard or mouse. I should highlight that everything works just fine, it is the flood of messages that worries me.
-
-Is it expected?
-
-Thank you.
-
--- 
-Oleksandr Natalenko (post-factum)
---nextPart8321016.T7Z3S40VBb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmWdMeEACgkQil/iNcg8
-M0u9kRAAmQK0aeOpOEO+/c+yK/Yo1nWVpA+8lwE9ymnqlMMnkd25LWsW1CCda7bw
-h3UGk4Hcn4X9Ljop2mmt8k1IycWUlKAdUpTM/qwHu/PygH9OfHwa/TyUYjMqQrYR
-zz36lg77GrfjVN0RlkUNG2lcQmJbV8lv5hjzvKLiAVWl7zR7qoK8Xnw22xvwqcgo
-UsxYdQjU08jj1IU7jgcHVatXBSVIfHqozZ5dxtLCxwC/rupkWcLo5Ag1v5wMfzR+
-wnQkQcBG0gFeoWvqC7yRZ2sr885eABJnEvUsEehz5I31Y4fJ/mrnXefMX/Y2e9L2
-JWssOo5R0eT8AuS6+aB2CrrYLONEA9TTqPwOjQxoR3bZxWMmlW4rJrgk84XNde2g
-AyV25a1zeXBU+ka/dhUM8r1cDrBso/eokMnYhKUxRcqQ8qoy8B3DIogunGFa/OAI
-6KUmKnASo8YzySDz+wGm+lY3SG8bcjhnVSoIo1DihG9IUbdaZF0y47eYLoHeuTQ5
-lPPosqG/o0pIBbpW/3xAYY1og5aGAyvhIOyX+6dfjTTRhdXB/cCySayyEAoxP+mY
-/TL3kMOT9IM869afydLTOlsS+ivkj2Q0ahkJyhXpAKmN7aSeGK7tHSixmj8fWL3a
-FrcVWVpChXHSq8w1QBeSHhVj/0AsO6qFHgXIiaiJR2QnOv+xcRs=
-=nVhh
------END PGP SIGNATURE-----
-
---nextPart8321016.T7Z3S40VBb--
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 1/1] fpga: add an owner and use it to take the
+ low-level module's refcount
+Content-Language: en-US
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+ Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
+References: <20240105231526.109247-1-marpagan@redhat.com>
+ <20240105231526.109247-2-marpagan@redhat.com>
+ <ZZu7Uf3kC1i3zho3@yilunxu-OptiPlex-7050>
+ <c2026945-76ab-4224-b3af-b6991e16d282@redhat.com>
+ <ZZzOPwV5laWA0Jv/@yilunxu-OptiPlex-7050>
+From: Marco Pagani <marpagan@redhat.com>
+In-Reply-To: <ZZzOPwV5laWA0Jv/@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
+
+On 09/01/24 05:40, Xu Yilun wrote:
+> On Mon, Jan 08, 2024 at 06:24:55PM +0100, Marco Pagani wrote:
+>>
+>>
+>> On 2024-01-08 10:07, Xu Yilun wrote:
+>>> On Sat, Jan 06, 2024 at 12:15:26AM +0100, Marco Pagani wrote:
+>>>> Add a module owner field to the fpga_manager struct to take the
+>>>> low-level control module refcount instead of assuming that the parent
+>>>> device has a driver and using its owner pointer. The owner is now
+>>>> passed as an additional argument at registration time. To this end,
+>>>> the functions for registration have been modified to take an additional
+>>>> owner parameter and renamed to avoid conflicts. The old function names
+>>>> are now used for helper macros that automatically set the module that
+>>>> registers the fpga manager as the owner. This ensures compatibility
+>>>> with existing low-level control modules and reduces the chances of
+>>>> registering a manager without setting the owner.
+>>>>
+>>>> To detect when the owner module pointer becomes stale, set the mops
+>>>> pointer to null during fpga_mgr_unregister() and test it before taking
+>>>> the module's refcount. Use a mutex to protect against a crash that can
+>>>> happen if __fpga_mgr_get() gets suspended between testing the mops
+>>>> pointer and taking the refcount while the low-level module is being
+>>>> unloaded.
+>>>>
+>>>> Other changes: opportunistically move put_device() from __fpga_mgr_get()
+>>>> to fpga_mgr_get() and of_fpga_mgr_get() to improve code clarity since
+>>>> the device refcount in taken in these functions.
+>>>>
+>>>> Fixes: 654ba4cc0f3e ("fpga manager: ensure lifetime with of_fpga_mgr_get")
+>>>> Suggested-by: Xu Yilun <yilun.xu@intel.com>
+>>>> Signed-off-by: Marco Pagani <marpagan@redhat.com>
+>>>> ---
+>>>>  drivers/fpga/fpga-mgr.c       | 93 ++++++++++++++++++++++-------------
+>>>>  include/linux/fpga/fpga-mgr.h | 80 +++++++++++++++++++++++++++---
+>>>>  2 files changed, 134 insertions(+), 39 deletions(-)
+>>>>
+>>>> diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
+>>>> index 06651389c592..d7bfbdfdf2fc 100644
+>>>> --- a/drivers/fpga/fpga-mgr.c
+>>>> +++ b/drivers/fpga/fpga-mgr.c
+>>>> @@ -664,20 +664,20 @@ static struct attribute *fpga_mgr_attrs[] = {
+>>>>  };
+>>>>  ATTRIBUTE_GROUPS(fpga_mgr);
+>>>>  
+>>>> -static struct fpga_manager *__fpga_mgr_get(struct device *dev)
+>>>> +static struct fpga_manager *__fpga_mgr_get(struct device *mgr_dev)
+>>>>  {
+>>>>  	struct fpga_manager *mgr;
+>>>>  
+>>>> -	mgr = to_fpga_manager(dev);
+>>>> +	mgr = to_fpga_manager(mgr_dev);
+>>>>  
+>>>> -	if (!try_module_get(dev->parent->driver->owner))
+>>>> -		goto err_dev;
+>>>> +	mutex_lock(&mgr->mops_mutex);
+>>>>  
+>>>> -	return mgr;
+>>>> +	if (!mgr->mops || !try_module_get(mgr->mops_owner))
+>>>
+>>> Why move the owner out of struct fpga_manager_ops? The owner within the
+>>> ops struct makes more sense to me, it better illustrates what the mutex
+>>> is protecting.
+>>>
+>>
+>> I think having the owner in fpga_manager_ops made sense when it was
+>> meant to be set while initializing the struct in the low-level module.
+>> However, since the owner is now passed as an argument and set at
+>> registration time, keeping it in the FPGA manager context seems more
+>> straightforward to me.
+> 
+> That's OK. But then why not directly check mops_owner here?
+>
+
+We can do that, but it would impose a precondition since it would not
+allow registering a manager with a NULL ops owner. In that case, I think
+we need to make the precondition explicit and add a check in
+fpga_mgr_register_*() that prevents registering a manager with a NULL ops
+owner. Otherwise, the programmer could register a manager that cannot be
+taken.
+ 
+>>
+>>  
+>>>> +		mgr = ERR_PTR(-ENODEV);
+>>>>  
+>>>> -err_dev:
+>>>> -	put_device(dev);
+>>>> -	return ERR_PTR(-ENODEV);
+>>>> +	mutex_unlock(&mgr->mops_mutex);
+>>>> +
+>>>> +	return mgr;
+>>>>  }
+>>>>  
+>>>>  static int fpga_mgr_dev_match(struct device *dev, const void *data)
+>>>> @@ -693,12 +693,18 @@ static int fpga_mgr_dev_match(struct device *dev, const void *data)
+>>>>   */
+>>>>  struct fpga_manager *fpga_mgr_get(struct device *dev)
+>>>>  {
+>>>> -	struct device *mgr_dev = class_find_device(&fpga_mgr_class, NULL, dev,
+>>>> -						   fpga_mgr_dev_match);
+>>>> +	struct fpga_manager *mgr;
+>>>> +	struct device *mgr_dev;
+>>>> +
+>>>> +	mgr_dev = class_find_device(&fpga_mgr_class, NULL, dev, fpga_mgr_dev_match);
+>>>>  	if (!mgr_dev)
+>>>>  		return ERR_PTR(-ENODEV);
+>>>>  
+>>>> -	return __fpga_mgr_get(mgr_dev);
+>>>> +	mgr = __fpga_mgr_get(mgr_dev);
+>>>> +	if (IS_ERR(mgr))
+>>>> +		put_device(mgr_dev);
+>>>> +
+>>>> +	return mgr;
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(fpga_mgr_get);
+>>>>  
+>>>> @@ -711,13 +717,18 @@ EXPORT_SYMBOL_GPL(fpga_mgr_get);
+>>>>   */
+>>>>  struct fpga_manager *of_fpga_mgr_get(struct device_node *node)
+>>>>  {
+>>>> -	struct device *dev;
+>>>> +	struct fpga_manager *mgr;
+>>>> +	struct device *mgr_dev;
+>>>>  
+>>>> -	dev = class_find_device_by_of_node(&fpga_mgr_class, node);
+>>>> -	if (!dev)
+>>>> +	mgr_dev = class_find_device_by_of_node(&fpga_mgr_class, node);
+>>>> +	if (!mgr_dev)
+>>>>  		return ERR_PTR(-ENODEV);
+>>>>  
+>>>> -	return __fpga_mgr_get(dev);
+>>>> +	mgr = __fpga_mgr_get(mgr_dev);
+>>>> +	if (IS_ERR(mgr))
+>>>> +		put_device(mgr_dev);
+>>>> +
+>>>> +	return mgr;
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(of_fpga_mgr_get);
+>>>>  
+>>>> @@ -727,7 +738,7 @@ EXPORT_SYMBOL_GPL(of_fpga_mgr_get);
+>>>>   */
+>>>>  void fpga_mgr_put(struct fpga_manager *mgr)
+>>>>  {
+>>>> -	module_put(mgr->dev.parent->driver->owner);
+>>>> +	module_put(mgr->mops_owner);
+>>>>  	put_device(&mgr->dev);
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(fpga_mgr_put);
+>>>> @@ -766,9 +777,10 @@ void fpga_mgr_unlock(struct fpga_manager *mgr)
+>>>>  EXPORT_SYMBOL_GPL(fpga_mgr_unlock);
+>>>>  
+>>>>  /**
+>>>> - * fpga_mgr_register_full - create and register an FPGA Manager device
+>>>> + * __fpga_mgr_register_full - create and register an FPGA Manager device
+>>>>   * @parent:	fpga manager device from pdev
+>>>>   * @info:	parameters for fpga manager
+>>>> + * @owner:	owner module containing the ops
+>>>>   *
+>>>>   * The caller of this function is responsible for calling fpga_mgr_unregister().
+>>>>   * Using devm_fpga_mgr_register_full() instead is recommended.
+>>>> @@ -776,7 +788,8 @@ EXPORT_SYMBOL_GPL(fpga_mgr_unlock);
+>>>>   * Return: pointer to struct fpga_manager pointer or ERR_PTR()
+>>>>   */
+>>>>  struct fpga_manager *
+>>>> -fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info)
+>>>> +__fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
+>>>> +			 struct module *owner)
+>>>>  {
+>>>>  	const struct fpga_manager_ops *mops = info->mops;
+>>>>  	struct fpga_manager *mgr;
+>>>> @@ -803,6 +816,9 @@ fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *in
+>>>>  	}
+>>>>  
+>>>>  	mutex_init(&mgr->ref_mutex);
+>>>> +	mutex_init(&mgr->mops_mutex);
+>>>> +
+>>>> +	mgr->mops_owner = owner;
+>>>>  
+>>>>  	mgr->name = info->name;
+>>>>  	mgr->mops = info->mops;
+>>>> @@ -841,14 +857,15 @@ fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *in
+>>>>  
+>>>>  	return ERR_PTR(ret);
+>>>>  }
+>>>> -EXPORT_SYMBOL_GPL(fpga_mgr_register_full);
+>>>> +EXPORT_SYMBOL_GPL(__fpga_mgr_register_full);
+>>>>  
+>>>>  /**
+>>>> - * fpga_mgr_register - create and register an FPGA Manager device
+>>>> + * __fpga_mgr_register - create and register an FPGA Manager device
+>>>>   * @parent:	fpga manager device from pdev
+>>>>   * @name:	fpga manager name
+>>>>   * @mops:	pointer to structure of fpga manager ops
+>>>>   * @priv:	fpga manager private data
+>>>> + * @owner:	owner module containing the ops
+>>>>   *
+>>>>   * The caller of this function is responsible for calling fpga_mgr_unregister().
+>>>>   * Using devm_fpga_mgr_register() instead is recommended. This simple
+>>>> @@ -859,8 +876,8 @@ EXPORT_SYMBOL_GPL(fpga_mgr_register_full);
+>>>>   * Return: pointer to struct fpga_manager pointer or ERR_PTR()
+>>>>   */
+>>>>  struct fpga_manager *
+>>>> -fpga_mgr_register(struct device *parent, const char *name,
+>>>> -		  const struct fpga_manager_ops *mops, void *priv)
+>>>> +__fpga_mgr_register(struct device *parent, const char *name,
+>>>> +		    const struct fpga_manager_ops *mops, void *priv, struct module *owner)
+>>>>  {
+>>>>  	struct fpga_manager_info info = { 0 };
+>>>>  
+>>>> @@ -868,9 +885,9 @@ fpga_mgr_register(struct device *parent, const char *name,
+>>>>  	info.mops = mops;
+>>>>  	info.priv = priv;
+>>>>  
+>>>> -	return fpga_mgr_register_full(parent, &info);
+>>>> +	return __fpga_mgr_register_full(parent, &info, owner);
+>>>>  }
+>>>> -EXPORT_SYMBOL_GPL(fpga_mgr_register);
+>>>> +EXPORT_SYMBOL_GPL(__fpga_mgr_register);
+>>>>  
+>>>>  /**
+>>>>   * fpga_mgr_unregister - unregister an FPGA manager
+>>>> @@ -888,6 +905,12 @@ void fpga_mgr_unregister(struct fpga_manager *mgr)
+>>>>  	 */
+>>>>  	fpga_mgr_fpga_remove(mgr);
+>>>>  
+>>>> +	mutex_lock(&mgr->mops_mutex);
+>>>> +
+>>>> +	mgr->mops = NULL;
+> 
+> Same here, is it better set mgr->mops_owner = NULL?
+> 
+>>>> +
+>>>> +	mutex_unlock(&mgr->mops_mutex);
+>>>> +
+>>>>  	device_unregister(&mgr->dev);
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(fpga_mgr_unregister);
+>>>> @@ -900,9 +923,10 @@ static void devm_fpga_mgr_unregister(struct device *dev, void *res)
+>>>>  }
+>>>>  
+>>>>  /**
+>>>> - * devm_fpga_mgr_register_full - resource managed variant of fpga_mgr_register()
+>>>> + * __devm_fpga_mgr_register_full - resource managed variant of fpga_mgr_register()
+>>>>   * @parent:	fpga manager device from pdev
+>>>>   * @info:	parameters for fpga manager
+>>>> + * @owner:	owner module containing the ops
+>>>>   *
+>>>>   * Return:  fpga manager pointer on success, negative error code otherwise.
+>>>>   *
+>>>> @@ -910,7 +934,8 @@ static void devm_fpga_mgr_unregister(struct device *dev, void *res)
+>>>>   * function will be called automatically when the managing device is detached.
+>>>>   */
+>>>>  struct fpga_manager *
+>>>> -devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info)
+>>>> +__devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
+>>>> +			      struct module *owner)
+>>>>  {
+>>>>  	struct fpga_mgr_devres *dr;
+>>>>  	struct fpga_manager *mgr;
+>>>> @@ -919,7 +944,7 @@ devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_inf
+>>>>  	if (!dr)
+>>>>  		return ERR_PTR(-ENOMEM);
+>>>>  
+>>>> -	mgr = fpga_mgr_register_full(parent, info);
+>>>> +	mgr = __fpga_mgr_register_full(parent, info, owner);
+>>>>  	if (IS_ERR(mgr)) {
+>>>>  		devres_free(dr);
+>>>>  		return mgr;
+>>>> @@ -930,14 +955,15 @@ devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_inf
+>>>>  
+>>>>  	return mgr;
+>>>>  }
+>>>> -EXPORT_SYMBOL_GPL(devm_fpga_mgr_register_full);
+>>>> +EXPORT_SYMBOL_GPL(__devm_fpga_mgr_register_full);
+>>>>  
+>>>>  /**
+>>>> - * devm_fpga_mgr_register - resource managed variant of fpga_mgr_register()
+>>>> + * __devm_fpga_mgr_register - resource managed variant of fpga_mgr_register()
+>>>>   * @parent:	fpga manager device from pdev
+>>>>   * @name:	fpga manager name
+>>>>   * @mops:	pointer to structure of fpga manager ops
+>>>>   * @priv:	fpga manager private data
+>>>> + * @owner:	owner module containing the ops
+>>>>   *
+>>>>   * Return:  fpga manager pointer on success, negative error code otherwise.
+>>>>   *
+>>>> @@ -946,8 +972,9 @@ EXPORT_SYMBOL_GPL(devm_fpga_mgr_register_full);
+>>>>   * device is detached.
+>>>>   */
+>>>>  struct fpga_manager *
+>>>> -devm_fpga_mgr_register(struct device *parent, const char *name,
+>>>> -		       const struct fpga_manager_ops *mops, void *priv)
+>>>> +__devm_fpga_mgr_register(struct device *parent, const char *name,
+>>>> +			 const struct fpga_manager_ops *mops, void *priv,
+>>>> +			 struct module *owner)
+>>>>  {
+>>>>  	struct fpga_manager_info info = { 0 };
+>>>>  
+>>>> @@ -955,9 +982,9 @@ devm_fpga_mgr_register(struct device *parent, const char *name,
+>>>>  	info.mops = mops;
+>>>>  	info.priv = priv;
+>>>>  
+>>>> -	return devm_fpga_mgr_register_full(parent, &info);
+>>>> +	return __devm_fpga_mgr_register_full(parent, &info, owner);
+>>>>  }
+>>>> -EXPORT_SYMBOL_GPL(devm_fpga_mgr_register);
+>>>> +EXPORT_SYMBOL_GPL(__devm_fpga_mgr_register);
+>>>>  
+>>>>  static void fpga_mgr_dev_release(struct device *dev)
+>>>>  {
+>>>> diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
+>>>> index 54f63459efd6..967540311462 100644
+>>>> --- a/include/linux/fpga/fpga-mgr.h
+>>>> +++ b/include/linux/fpga/fpga-mgr.h
+>>>> @@ -201,6 +201,8 @@ struct fpga_manager_ops {
+>>>>   * @state: state of fpga manager
+>>>>   * @compat_id: FPGA manager id for compatibility check.
+>>>>   * @mops: pointer to struct of fpga manager ops
+>>>> + * @mops_mutex: protects mops from low-level module removal
+> 
+> Same here, change the doc if needed.
+> 
+>>>> + * @mops_owner: module containing the mops
+>>>>   * @priv: low level driver private date
+>>>>   */
+>>>>  struct fpga_manager {
+>>>> @@ -210,6 +212,8 @@ struct fpga_manager {
+>>>>  	enum fpga_mgr_states state;
+>>>>  	struct fpga_compat_id *compat_id;
+>>>>  	const struct fpga_manager_ops *mops;
+>>>> +	struct mutex mops_mutex;
+>>>> +	struct module *mops_owner;
+>>>>  	void *priv;
+>>>>  };
+>>>>  
+>>>> @@ -222,6 +226,7 @@ void fpga_image_info_free(struct fpga_image_info *info);
+>>>>  int fpga_mgr_load(struct fpga_manager *mgr, struct fpga_image_info *info);
+>>>>  
+>>>>  int fpga_mgr_lock(struct fpga_manager *mgr);
+>>>> +
+>>>
+>>> Why adding a line?
+>>>
+>>
+>> I'll remove the line.
+>>  
+>>>>  void fpga_mgr_unlock(struct fpga_manager *mgr);
+>>>>  
+>>>>  struct fpga_manager *of_fpga_mgr_get(struct device_node *node);
+>>>> @@ -230,18 +235,81 @@ struct fpga_manager *fpga_mgr_get(struct device *dev);
+>>>>  
+>>>>  void fpga_mgr_put(struct fpga_manager *mgr);
+>>>>  
+>>>> +/**
+>>>> + * fpga_mgr_register_full - create and register an FPGA Manager device
+>>>> + * @parent:	fpga manager device from pdev
+>>>> + * @info:	parameters for fpga manager
+>>>> + *
+>>>> + * The caller of this function is responsible for calling fpga_mgr_unregister().
+>>>> + * Using devm_fpga_mgr_register_full() instead is recommended.
+>>>> + *
+>>>> + * Return: pointer to struct fpga_manager pointer or ERR_PTR()
+>>>> + */
+>>>
+>>> No need to duplicate the doc, just remove it.
+>>> Same for the rest of code.
+>>
+>> Do you mean keeping the kernel-doc comments only for the __fpga_mgr_*
+>> functions in fpga-mgr.c?
+>>
+>>>
+>>>> +#define fpga_mgr_register_full(parent, info) \
+>>>> +	__fpga_mgr_register_full(parent, info, THIS_MODULE)
+>>>> +
+>>>
+>>> Delete the line, and ...
+>>>
+>>>>  struct fpga_manager *
+>>>> -fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
+>>>> +__fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
+>>>> +			 struct module *owner);
+>>>
+>>> Add a line here, to make the related functions packed.
+>>> Same for the rest of code.
+>>
+>> Do you prefer having the macro just above the function prototype? Like:
+>>
+>> #define devm_fpga_mgr_register(parent, name, mops, priv) \
+>> 	__devm_fpga_mgr_register(parent, name, mops, priv, THIS_MODULE)
+>> struct fpga_manager *
+>> __devm_fpga_mgr_register(struct device *parent, const char *name,
+>> 			 const struct fpga_manager_ops *mops, void *priv,
+>> 			 struct module *owner);
+> 
+> Yes, that's it.
+
+My only concern is that if we keep the kernel-doc comments only for the
+__fpga_mgr_register* functions in fpga-mgr.c, we would not get the docs
+for the helper macros that are the most likely to be used.
+
+
+>> [...]
+
+
+Thanks,
+Marco
 
