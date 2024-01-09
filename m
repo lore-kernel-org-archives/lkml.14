@@ -1,101 +1,237 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C907D38DFE
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 16:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5202438DFE;
+	Tue,  9 Jan 2024 16:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l1G8A7Db"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2cd46e7ae8fso33024331fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 08:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704819150; x=1705423950; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZHbFSGdNqTkp4QL+EEPj5Pdc3ELkei7bVgDOsu4SrZc=;
-        b=l1G8A7Db2iY1HReJ4End0SU67nLu1cDL7BUGjWPXokXHYfHOmE7c9mK5/pOWxzNYK6
-         RcYfwXc57B6eXgxUdmpYuYN7sZLn6Wr4rJUhLK4u8rpG6GWNtQcGpd53TR6NerPHuI9Q
-         BWQtzdEGugtENxwslX3pGzFKk+R+Ma+9sRYXI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704819150; x=1705423950;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZHbFSGdNqTkp4QL+EEPj5Pdc3ELkei7bVgDOsu4SrZc=;
-        b=VfF2fhqWrGyKeVL5/fMipBGWP5zwfZOWx7nZ1EtGoZoWn0JosUxOzDk/bT1/l2+DIp
-         RgVRg6Sq1kNzg6haXwvOVyCWhu/6vy3M0horqv61MC6Qvan9MySedOVEvc2tm8Ve1Th2
-         4nawV43aZxdlQ22U2Yj6wTxOqApvGfIsHmYBHR2+PInRZxr96Bj3zB3mZnjV29gixG+X
-         rZEpYn9suI80KT1k+Jem638+XCcnh7gS4tivL9LI7MFp7I3rNByTIPRfKX2rGmFgoHhJ
-         AawG1X00ow2fir1iAaXMjeXY18okHu8mkaxsosrP+OVBAScYSS+x6142kyolywSqgOpW
-         cnCQ==
-X-Gm-Message-State: AOJu0Yx6RbztIk9vxUVEXazTKYH16c7ZocWx5BUcuSJV+/pJlfRAgh7G
-	ovLmgXtC3okf9eNloWr6P/lNTjcQMrXT7MY5ThLOh/I0mba4OhM=
-X-Google-Smtp-Source: AGHT+IEChS4pKf+RIW3jHgP599i13sd0QaZGq+MHR+nI6tbch+/C0BTgBFJZQqj3ms8RmhXlIJUENg==
-X-Received: by 2002:ac2:520c:0:b0:50e:cf8:b168 with SMTP id a12-20020ac2520c000000b0050e0cf8b168mr1143135lfl.208.1704819149706;
-        Tue, 09 Jan 2024 08:52:29 -0800 (PST)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
-        by smtp.gmail.com with ESMTPSA id a3-20020a17090680c300b00a2a4a6e1bc5sm1200600ejx.204.2024.01.09.08.52.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jan 2024 08:52:28 -0800 (PST)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40e43e55b87so68555e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 08:52:28 -0800 (PST)
-X-Received: by 2002:a05:600c:3b2a:b0:40e:35d0:1fef with SMTP id
- m42-20020a05600c3b2a00b0040e35d01fefmr15464wms.1.1704819148582; Tue, 09 Jan
- 2024 08:52:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yy3bMx4/"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 409Gr5Xm016878;
+	Tue, 9 Jan 2024 10:53:05 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1704819185;
+	bh=iHiTjx8NHZJnPof+njozBL2G+dd0BsVHIjNWCy6rIek=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Yy3bMx4/Yzf97w86aOfBS4akux9QB2Kuo5MatkVOI+0K9M8kchw4Oqto7TtkbrtMr
+	 2tL48v1DNa2NdNWNJhQccC9k8qy3/pfg9p32n89F6nuLNtgezOFNwohAzj0oVfL94Z
+	 NuMDjG5qfsIWUm0HKnL/gbstXMeEoeb6OaUgdHkA=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 409Gr57x031093
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 9 Jan 2024 10:53:05 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 9
+ Jan 2024 10:53:05 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 9 Jan 2024 10:53:05 -0600
+Received: from [10.249.40.136] ([10.249.40.136])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 409Gr3gb015005;
+	Tue, 9 Jan 2024 10:53:03 -0600
+Message-ID: <c3664f43-431a-421f-8d2a-a3d2cc6f8777@ti.com>
+Date: Tue, 9 Jan 2024 10:53:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109120528.1292601-1-treapking@chromium.org>
-In-Reply-To: <20240109120528.1292601-1-treapking@chromium.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 9 Jan 2024 08:52:12 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WjjH3BCDf-OnX=zdk201uMu+YJvKVBhVmMa4GqNinacw@mail.gmail.com>
-Message-ID: <CAD=FV=WjjH3BCDf-OnX=zdk201uMu+YJvKVBhVmMa4GqNinacw@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/bridge: parade-ps8640: Ensure bridge is suspended
- in .post_disable()
-To: Pin-yen Lin <treapking@chromium.org>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 02/11] dt-bindings: gpu: Add PowerVR Series5 SGX
+ GPUs
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Frank Binns
+	<frank.binns@imgtec.com>,
+        Matt Coster <matt.coster@imgtec.com>,
+        "H . Nikolaus
+ Schaller" <hns@goldelico.com>,
+        Adam Ford <aford173@gmail.com>,
+        Ivaylo
+ Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec
+	<jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren
+	<tony@atomide.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>, Paul Cercueil
+	<paul@crapouillou.net>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <linux-omap@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>
+References: <20240108183302.255055-1-afd@ti.com>
+ <20240108183302.255055-3-afd@ti.com>
+ <e68b3b0c-7a03-4771-b6e8-c1a263e31425@linaro.org>
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <e68b3b0c-7a03-4771-b6e8-c1a263e31425@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi,
+On 1/9/24 5:32 AM, Krzysztof Kozlowski wrote:
+> On 08/01/2024 19:32, Andrew Davis wrote:
+>> The Imagination PowerVR Series5 "SGX" GPU is part of several SoCs from
+>> multiple vendors. Describe how the SGX GPU is integrated in these SoC,
+>> including register space and interrupts. Clocks, reset, and power domain
+>> information is SoC specific.
+>>
+>> Signed-off-by: Andrew Davis <afd@ti.com>
+>> ---
+>>   .../bindings/gpu/img,powervr-sgx.yaml         | 124 ++++++++++++++++++
+>>   MAINTAINERS                                   |   1 +
+>>   2 files changed, 125 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpu/img,powervr-sgx.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-sgx.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-sgx.yaml
+>> new file mode 100644
+>> index 0000000000000..bb821e1184de9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-sgx.yaml
+>> @@ -0,0 +1,124 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +# Copyright (c) 2023 Imagination Technologies Ltd.
+> 
+> Your email has @TI domain, are you sure you attribute your copyrights to
+> Imagination?
+> 
 
-On Tue, Jan 9, 2024 at 4:05=E2=80=AFAM Pin-yen Lin <treapking@chromium.org>=
- wrote:
->
-> The ps8640 bridge seems to expect everything to be power cycled at the
-> disable process, but sometimes ps8640_aux_transfer() holds the runtime
-> PM reference and prevents the bridge from suspend.
->
-> Prevent that by introducing a mutex lock between ps8640_aux_transfer()
-> and .post_disable() to make sure the bridge is really powered off.
->
-> Fixes: 826cff3f7ebb ("drm/bridge: parade-ps8640: Enable runtime power man=
-agement")
-> Signed-off-by: Pin-yen Lin <treapking@chromium.org>
-> ---
->
-> Changes in v2:
-> - Use mutex instead of the completion and autosuspend hack
->
->  drivers/gpu/drm/bridge/parade-ps8640.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+The file started as a copy/paste from a IMG copyrighted file, even
+though it is now almost completely re-written I've left their (c)
+for good measure. I'll add an additional TI (c).
 
-This looks OK to me now.
+> ...
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks: true
+> 
+> Missing min/maxItems
+> 
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+These are set in the allOf/if/then blocks below, seems
+if I don't set them to at least something here then I get
+a warning:
 
-I'll let it stew on the mailing list for ~1 week and then land it in
-drm-misc-fixes unless there are additional comments.
+    'clock-names', 'clocks' do not match any of the regexes: 'pinctrl-[0-9]+'
 
--Doug
+even if I define them in the allOf block below. I don't
+know what the min/max should be until I check the compatible
+in the allOf block.
+
+>> +
+>> +  clock-names:
+>> +    minItems: 1
+>> +    items:
+>> +      - const: core
+>> +      - const: mem
+>> +      - const: sys
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +
+>> +additionalProperties: false
+> 
+> This goes after allOf: block.
+> 
+
+ACK
+
+>> +
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            const: ti,am6548-gpu
+>> +    then:
+>> +      required:
+>> +        - power-domains
+>> +    else:
+>> +      properties:
+>> +        power-domains: false
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - allwinner,sun6i-a31-gpu
+>> +              - ingenic,jz4780-gpu
+>> +    then:
+>> +      allOf:
+>> +        - if:
+> 
+> I don't understand why do you need to embed allOf inside another allOf.
+> The upper (outer) if:then: looks entirely useless.
+> 
+
+It is so that both compatibles falls through to having
+clock being required.
+
+Logic in YAML always seems messy to me, here it is in pseudo C:
+
+if (compatible == allwinner,sun6i-a31-gpu ||
+     compatible == ingenic,jz4780-gpu) {
+	if (compatible == allwinner,sun6i-a31-gpu)
+		clocks: ...
+	if (compatible == ingenic,jz4780-gpu)
+		clocks: ...
+	required:
+		- clocks
+		- clock-names
+} else { /* disallow for all others */
+	properties:
+		clocks: false
+		clock-names: false
+}
+
+Now if I had an "else if" that didn't force the indention to keep
+growing I would have used that. (does one exist?) I also cannot
+simply add the clock properties only for the two compats need
+them for the reasons above and so must add them unconditionally
+before then explicitly disable them in a catch-all else path.
+
+Andrew
+
+>> +            properties:
+>> +              compatible:
+>> +                contains:
+>> +                  const: allwinner,sun6i-a31-gpu
+>> +          then:
+>> +            properties:
+>> +              clocks:
+>> +                minItems: 2
+>> +                maxItems: 2
+>> +              clock-names:
+>> +                minItems: 2
+>> +                maxItems: 2
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
