@@ -1,175 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0668235EFC
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 09:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C6733CED;
+	Tue,  9 Jan 2024 09:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+lFp5EM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704793082;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ky5q4Lye4xDM1EU7ISSxxpSTjWDC6pdqfZjOsW+ZzgY=;
-	b=L+lFp5EMAHkSe5GhHIXcs3Tv3nYVkO5pjnVtd6zNOg+1HV379WH4At7S95gB73imojxpQ9
-	lqdnr4hjqopfz+lZv6rzKLJLy7u3GzV174gW34HO21h6tqxWy4VlEVjEDQ80p4gIDSRbPG
-	EfakmV85qIr4L7x5zq5h0iugi2SQgV8=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-504-llCnPQgNNVC6Qc2zUdI76w-1; Tue, 09 Jan 2024 04:38:01 -0500
-X-MC-Unique: llCnPQgNNVC6Qc2zUdI76w-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4299cbf080bso2699111cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 01:38:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704793080; x=1705397880;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ky5q4Lye4xDM1EU7ISSxxpSTjWDC6pdqfZjOsW+ZzgY=;
-        b=sYHBqlcQL9RisvoRRu90bH6rH9kOJssiZWXYErxYgZgXuxhkPSH/2BYEgcm+F4bRam
-         j/EPfZvR6WpYto5aeNP89qYlxuumNogx5ird4gZ6Pnstpfp+ajsjFR50X1w4ZeY/6ftY
-         9yZchtcmu0aeFV7mRqNwN578NfOWposh4yqXzt/T7GJ2GlPm/0WIoLg/O7MXRnHcc0K8
-         VaADNJbXkfmNHeygb53r4FTrgr3HlhNdWlR4pgzNijhECLTjq2vQjTm3Y3aQovhIyma5
-         U7phhGi5L1+jT/F0JkouWw0EjnssFCDgwNBZqH36xPLh5GS1bSX4OlSwPYxIeM6zVoJ+
-         FWYg==
-X-Gm-Message-State: AOJu0Yw/fqq4BKfx/BQ6KPUQf2M/YHAJaZ76nM62avHK6jkZSBF5M2zS
-	03NUZAlpD9yIY0NzmShiozPhdOyWMrbIa4BwcYEBqKw6z7BCgLxF/TsqPfJWtbxxSZEApGBIZaf
-	E72vDmBArs9qYt563kMDGt2ZSxyhDe8vs
-X-Received: by 2002:ac8:7e96:0:b0:429:7bf4:f6df with SMTP id w22-20020ac87e96000000b004297bf4f6dfmr11145563qtj.4.1704793080548;
-        Tue, 09 Jan 2024 01:38:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH7DZjLgo1mS+4fbiobPrucDM8xf3Zq3INpPYhYQwz3yTpWNUvJ5BzG6Y3jQpGhehseYzzM4w==
-X-Received: by 2002:ac8:7e96:0:b0:429:7bf4:f6df with SMTP id w22-20020ac87e96000000b004297bf4f6dfmr11145547qtj.4.1704793080276;
-        Tue, 09 Jan 2024 01:38:00 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id g8-20020ac84808000000b0042987870887sm708466qtq.10.2024.01.09.01.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 01:38:00 -0800 (PST)
-Message-ID: <da747c7ca3424cfa5a0d7ecf1733dc1a7303a9ee.camel@redhat.com>
-Subject: Re: [PATCH v2 1/2] platform_device: add devres function region-reqs
-From: Philipp Stanner <pstanner@redhat.com>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org, Fabio Estevam <festevam@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Takashi Iwai <tiwai@suse.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, Mark
- Brown <broonie@kernel.org>, NXP Linux Team <linux-imx@nxp.com>,  Thomas
- Zimmermann <tzimmermann@suse.de>, Laurentiu Palcu
- <laurentiu.palcu@oss.nxp.com>, David Gow <davidgow@google.com>,  Shawn Guo
- <shawnguo@kernel.org>, David Airlie <airlied@gmail.com>, Pengutronix Kernel
- Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Lucas
- Stach <l.stach@pengutronix.de>
-Date: Tue, 09 Jan 2024 10:37:56 +0100
-In-Reply-To: <ixywpvuwlhdpv6szvssipy2ygjhzdvt6nrbcppy4yx5ix5b3is@pq7s6hpse2ni>
-References: <20240108092042.16949-2-pstanner@redhat.com>
-	 <20240108092042.16949-3-pstanner@redhat.com>
-	 <hywkbwwwkddbd5vye366bhz64dlpet4chv3kzwfu5dx6rvvix6@2jnk3xx6vfiy>
-	 <404aea6b7bb7874064153044f04f3b8f6fccb97b.camel@redhat.com>
-	 <ixywpvuwlhdpv6szvssipy2ygjhzdvt6nrbcppy4yx5ix5b3is@pq7s6hpse2ni>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="JYu9tX9H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1704793121; bh=AzERsTe4iifZ3yUxSLa14M3+lHAO7HrXuc1YkqElR1I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=JYu9tX9HyQ6ZzgNrIz1+4dLBY7BdEZvoAKZg+mBz3Li748ZbeSI8mIUrSyx1PDODp
+	 dkgXAN5H/oMOMxuZo/5wI5pF+WH4N8m++DkOVNwPQzFBZl/Myixc/VytEjMlI3jchm
+	 6o0P9fwk26UCXsSB3ZeKOL5aodC01ICtc4DDnG6w=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id 82294E65; Tue, 09 Jan 2024 17:32:34 +0800
+X-QQ-mid: xmsmtpt1704792754tcw7rzjbi
+Message-ID: <tencent_146C309740E8F6ECD2CC5C7ADA6E202D450A@qq.com>
+X-QQ-XMAILINFO: MIAHdi1iQo+zj8Otn7YvBohfHC0fy23kZUcjScuxcWltv+1S+IIhq/kbnNDf5T
+	 GhanIkVQQJXJU7tPy0AJTngditIH2sJHKy7HQHmHrLAyqdBL5AHzgc+q6Uu0GYF1pIfJQdkv2U50
+	 UcbVHHEX6hYCV2MOLUOI8XoJDISPmYBW9423K3jiIfEW0hEu9I9c0XzwC38f9F2x9Jvlq0OXzuby
+	 egR29jdSZBvqh6tnEyHTW7AFUfcAzT5Y1dqmZTXgXvSmxf6cwMgYtVXHJNr9zYcY7mICncpeG9aY
+	 6mc2Ez0iql9DxmacuRJih9b/ysD3o3hl04EJRkG4GOxbPG0U4sup8ImCDplbnmbqhOnAWfCzNr/e
+	 0RFsAI0Mo/TdMN04/4UXm0Tgv7KbvqEMjsI/y7qtoAd/cPlT2hLcOIhiFUbOpCr1IqXRYds97Dch
+	 qDSnD/62T2VoGE49XJzDaYJa4vbCD27EZFV7PqugTXb166AOEJYJLRD4d7YqtGv0AcdQ8ZnjL+cC
+	 iY93pghBzpGkYyOBa0j6D7Voq1j4RVI9SV1JS0vucBnvTp5Sj9MpHHEPykOGvpAN8UNVueek6IHc
+	 vXitgVbHJOeMFklNkzDeov/fZqpWdpxuHThmFdfWrF4PXzAtyvDUlzQ9W5Tm2edhYyCC5awAvPZs
+	 GJmRqvoX32loEPDTBCm0w5oJh7As4Lzn6WlI9ATzhyUbAN5stO+/o7q8JB/Cdt0UjCm9iF+nzK5p
+	 0QT0fKlXprk17TJ0Y9b7gYHGhPMbp7PxZmhHBY85OFNPw7jK+RAbTwI9HJLm5w5+kqNi5KfyVTp6
+	 kKX6DUM4pqobwatVJFGEve0JP/GU0Qj/I3eNH+rUukLc6V3SjAc/e2N3eno0rHuki3yqGzBrEQ7G
+	 jc9NQda98nQ7TnPQHZLaw0hYFIikBZH+GtZS3a38LYwSxfzAMRDSWexgE4Lj1LoLzIyslX/f0F
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+f2977222e0e95cec15c8@syzkaller.appspotmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	borisp@nvidia.com,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	davem@davemloft.net,
+	dhowells@redhat.com,
+	edumazet@google.com,
+	jakub@cloudflare.com,
+	john.fastabend@gmail.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] tls: fix WARNING in __sk_msg_free
+Date: Tue,  9 Jan 2024 17:32:35 +0800
+X-OQ-MSGID: <20240109093234.561184-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000aa2f41060e363b2b@google.com>
+References: <000000000000aa2f41060e363b2b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Yo!
+Syzbot constructed 32 scatterlists, and the data members in struct sk_msg_sg 
+can only store a maximum of MAX_MSG_FRAGS scatterlists.
+However, the value of MAX_MSG_FRAGS=CONFIG_MAX_SKB_FRAG is less than 32, which
+leads to the warning reported here.
 
-On Mon, 2024-01-08 at 12:46 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Mon, Jan 08, 2024 at 10:45:31AM +0100, Philipp Stanner wrote:
-> > On Mon, 2024-01-08 at 10:37 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > Other than that I indifferent if this is a good idea. There are
-> > > so many
-> > > helpers around these functions ...
-> >=20
-> > Around which, the devres functions in general? There are, but
-> > that's
-> > kind of the point, unless we'd want everyone to call into the
-> > lowest
-> > level region-request functions with their own devres callbacks.
-> >=20
-> > In any case: What would your suggestion be, should parties who
-> > can't
-> > (without restructuring very large parts of their code) ioremap()
-> > and
-> > request() simultaneously just not use devres? See my patch #2
-> > Or is there another way to reach that goal that I'm not aware of?
->=20
-> This wasn't a constructive feedback unfortunately and more a feeling
-> than a measurable criticism. To actually improve the state, maybe
-> first
-> check what helpers are actually there, how they are used and if they
-> are
-> suitable to what they are used for.
->=20
-> Having many helpers is a hint that the usage is complicated. Is that
-> because the situation is complicated, or is this just a big pile of
-> inconsistency that can be simplified and consolidated?
+Prevent similar issues from occurring by checking whether sg.end is greater 
+than MAX_MSG_FRAGS.
 
-I thought about that and tend to believe that you are right in this
-case. The reason being that there'd be very few callers to such a
-wrapper.
-We have the functions for doing pure requests and pure ioremaps, so
-that should be sufficient.
+Reported-and-tested-by: syzbot+f2977222e0e95cec15c8@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ net/tls/tls_sw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I think we can do sth like this in the rare cases where someone needs
-to request without (immediately) mapping:
-
-
-struct dcss_dev *dcss_dev_create(struct device *dev, bool hdmi_output)
-{
-	struct platform_device *pdev =3D to_platform_device(dev);
-	int ret;
-	struct resource *res;
-	struct dcss_dev *dcss;
-	const struct dcss_type_data *devtype;
-	resource_size_t res_len;
-
-	devtype =3D of_device_get_match_data(dev);
-	if (!devtype) {
-		dev_err(dev, "no device match found\n");
-		return ERR_PTR(-ENODEV);
-	}
-
-	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-	if (!res) {
-		dev_err(dev, "cannot get memory resource\n");
-		return ERR_PTR(-EINVAL);
-	}
-
-	res_len =3D res->end - res->start;
-	if (!devm_request_mem_region(pdev->dev, res->start, res_len, "dcss")) {
-		dev_err(dev, "cannot request memory region\n");
-		return ERR_PTR(-EBUSY);
-	}
-
-
-And then do the associated devm_ioremap()s where they're needed.
-
-
-So I'd 'close' this patch series and handle it entirely through my dcss
-patch-series.
-
-Thx for the feedback
-
-P.
-
-
->=20
-> Also I think there are helpers that take a resource type parameter
-> (as
-> your function) and others hard code it in the function name. Maybe
-> unifying that would be nice, too.
->=20
-> Best regards
-> Uwe
->=20
+diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
+index e37b4d2e2acd..68dbe821f61d 100644
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -1016,6 +1016,8 @@ static int tls_sw_sendmsg_locked(struct sock *sk, struct msghdr *msg,
+ 
+ 		msg_pl = &rec->msg_plaintext;
+ 		msg_en = &rec->msg_encrypted;
++		if (msg_pl->sg.end >= MAX_MSG_FRAGS)
++			return -EINVAL;
+ 
+ 		orig_size = msg_pl->sg.size;
+ 		full_record = false;
+-- 
+2.43.0
 
