@@ -1,99 +1,84 @@
-Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45472CA7;
-	Tue,  9 Jan 2024 07:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=datenfreihafen.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9FFBE50;
+	Tue,  9 Jan 2024 07:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=datenfreihafen.org header.i=@datenfreihafen.org header.b="Oe5pkjpg"
-Received: from [192.168.2.51] (p4fe71516.dip0.t-ipconnect.de [79.231.21.22])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: stefan@datenfreihafen.org)
-	by proxima.lasnet.de (Postfix) with ESMTPSA id AF4D2C0A59;
-	Tue,  9 Jan 2024 08:25:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=datenfreihafen.org;
-	s=2021; t=1704785122;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VNe9ZlBCrsGQDNGRO/EZYFgSAuSM/viVxnwrUNsgIog=;
-	b=Oe5pkjpgoKtGNFVYkuPB99brMpJOImAsWBaA2eqU5WenfyHYMW/iExHsG3KdCmcR7asSQS
-	Lg8VXIGL/72NQT5t8Njvky4asduboskvoh7LvGqo5QqAVFjCxJd1+bF51/6f4Nl6QpIPLd
-	IOrKnZ5aTYyhcvr82Jr+4jiQTOI6FjJ5nVo8ZpVGs4Idyva6rViUn8vDD9qREyYB1ZCO2g
-	eglJUHJXUIUFgZhKH7uaLmC/splfX5LkMwIYq46Du9Cfz6y8IFzlb5hA6nwP4GO4M9ATD2
-	58aiPeK/8ESezJgCVfcTgc1kry/iiAbC6h67PC4hnYdiVW+rGJDySR+wlm2jmQ==
-Message-ID: <45711bec-e0f3-43c2-b8f2-b9a55654710b@datenfreihafen.org>
-Date: Tue, 9 Jan 2024 08:25:21 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3CzXvWf"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d427518d52so18461005ad.0;
+        Mon, 08 Jan 2024 23:30:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704785449; x=1705390249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=krqLKG5UOqxyA1Aens1gk3nu0vyc0FzjmHFyZVfO4sQ=;
+        b=H3CzXvWfsdtqlBgFC8wyDQezrLf7W0GFC3GBzLPqNXPMZMX4wf1x7YGsMEXq82CHek
+         DNQEjKZE/SILq1WVQ8R1QqMTBUOwp3l8ObgUTQHtWRWf0mkYUDmBNMQnFnRvl9eiIFrD
+         wZdpMWt8HduDlXl50slfpRWPWj6ynV1L+RFJCKxDJJMZ+wEcXEBbjl3A5CRv157CRfHI
+         qvgOTTddFdd4nJwSTIyW3c+sJeuj1FIXJxGVqCh86wVbFVj+mGH6SB0iXvhicHk/ziZt
+         9Vuvbfcw6lnthl8xayROXQ+ou8eQV9Uie38KyCCX9a68DqsOIvNAk3xDXv6eqEVGmju3
+         U/AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704785449; x=1705390249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=krqLKG5UOqxyA1Aens1gk3nu0vyc0FzjmHFyZVfO4sQ=;
+        b=uOIqx1Nq3BZJ1cn0JcYVNeR1j2icpVZ0HsSrzwHxNJmOE13Fly72FGHx2xJmKxPJBS
+         AQyzoQFlxyrSJ463iurBo7KQ6JCUk9feURSRETWbCqtAu66Di1itqhyExdkUmTDoWR+3
+         NPPYKeqaJg6WeTJCvM51kmML4K7+6e6v2l3D4VtYk2JUTD8moOhh3OaKlyl3NmVodj9e
+         +pKeg6N+ZtzAPOjG77uC2VbindM6A7B2MbJnu/oQGwlGh24O0MLXfHhkjWkkXmp3ttIH
+         MDoepNrhYSdohQgLjmvmA1nWDZLtCqv0Ti8Tj4AXfbgHghZPHcgNe1ip1ifC30u6eydh
+         QWKw==
+X-Gm-Message-State: AOJu0YyAkVOR0BVNiOrRDgE7AH/AkLfdTIPuVlQhsvMUBo0CupulXoJH
+	xH8JABc1uoVfAoDB/+9L4Gg=
+X-Google-Smtp-Source: AGHT+IGpFWBlcdY5FaNQrKFpFhcSn0cIbZ3a5D4qqLtg9NET2pkZuiznPpTh0sWukiB0SrG0/88v7w==
+X-Received: by 2002:a17:902:a70b:b0:1d4:b37a:e08d with SMTP id w11-20020a170902a70b00b001d4b37ae08dmr335428plq.25.1704785448705;
+        Mon, 08 Jan 2024 23:30:48 -0800 (PST)
+Received: from jay.. ([140.116.245.228])
+        by smtp.gmail.com with ESMTPSA id jk11-20020a170903330b00b001d4b1d190e3sm1066127plb.58.2024.01.08.23.30.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 23:30:48 -0800 (PST)
+From: Jay <merqqcury@gmail.com>
+To: viro@zeniv.linux.org.uk
+Cc: brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jay <merqqcury@gmail.com>
+Subject: [PATCH] fs: fix a typo in attr.c
+Date: Tue,  9 Jan 2024 15:29:27 +0800
+Message-Id: <20240109072927.29626-1-merqqcury@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 06/10] net: fill in MODULE_DESCRIPTION()s for
- ieee802154
-Content-Language: en-US
-To: Breno Leitao <leitao@debian.org>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- Alexander Aring <alex.aring@gmail.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: netdev@vger.kernel.org,
- "open list:IEEE 802.15.4 SUBSYSTEM" <linux-wpan@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240108181610.2697017-1-leitao@debian.org>
- <20240108181610.2697017-7-leitao@debian.org>
-From: Stefan Schmidt <stefan@datenfreihafen.org>
-In-Reply-To: <20240108181610.2697017-7-leitao@debian.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello.
+The word "filesytem" should be "filesystem"
 
-On 08.01.24 19:16, Breno Leitao wrote:
-> W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> Add descriptions to ieee802154 modules.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->   net/ieee802154/6lowpan/core.c | 1 +
->   net/ieee802154/socket.c       | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/net/ieee802154/6lowpan/core.c b/net/ieee802154/6lowpan/core.c
-> index 2c087b7f17c5..b88f6a96d961 100644
-> --- a/net/ieee802154/6lowpan/core.c
-> +++ b/net/ieee802154/6lowpan/core.c
-> @@ -280,5 +280,6 @@ static void __exit lowpan_cleanup_module(void)
->   
->   module_init(lowpan_init_module);
->   module_exit(lowpan_cleanup_module);
-> +MODULE_DESCRIPTION("IPv6 over Low power Wireless Personal Area Network IEEE802154.4 core");
+Signed-off-by: Jay <merqqcury@gmail.com>
+---
+ fs/attr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If we want to nitpick you could write it as IEEE 802.15.4.
+diff --git a/fs/attr.c b/fs/attr.c
+index bdf5deb06..b05869bcd 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -352,7 +352,7 @@ int may_setattr(struct mnt_idmap *idmap, struct inode *inode,
+ EXPORT_SYMBOL(may_setattr);
+ 
+ /**
+- * notify_change - modify attributes of a filesytem object
++ * notify_change - modify attributes of a filesystem object
+  * @idmap:	idmap of the mount the inode was found from
+  * @dentry:	object affected
+  * @attr:	new attributes
+-- 
+2.34.1
 
->   MODULE_LICENSE("GPL");
->   MODULE_ALIAS_RTNL_LINK("lowpan");
-> diff --git a/net/ieee802154/socket.c b/net/ieee802154/socket.c
-> index 00302e8b9615..db8df6e26159 100644
-> --- a/net/ieee802154/socket.c
-> +++ b/net/ieee802154/socket.c
-> @@ -1137,4 +1137,5 @@ module_init(af_ieee802154_init);
->   module_exit(af_ieee802154_remove);
->   
->   MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("IEEE802154.4 socket interface");
->   MODULE_ALIAS_NETPROTO(PF_IEEE802154);
-
-Same here.
-
-Besides this:
-
-Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
-
-regards
-Stefan Schmidt
