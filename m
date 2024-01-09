@@ -1,137 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF803B790;
-	Tue,  9 Jan 2024 17:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF4A3B791;
+	Tue,  9 Jan 2024 17:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F7p42TT/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704822569; x=1736358569;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9JaBJEThfVeRad1fTNZ0HBs7xNR4uGdV5+hV83rZ1mc=;
-  b=F7p42TT/2CbL/oGaROGXG5bLtV8d/bAVHUlDbQlNdjD3QsxHtACvBInd
-   cjWESVlI9TZ6kyopUkXVl4Ydv1osYYC2mF6zMvMzVyHPd5XDosyjXgE8T
-   6SjnH11r6whFzbKhVFRQPVMzaiQbiKWOMzkDZ1zFjrgXYnHi2M49ISAYT
-   pS4R89s+acQ4YL1eC7G8MwQC2Qi4QUjVxF8qE6MYRZyiz9kuObYoSY28M
-   OJI2dslZEuVe3SbGiZQhAyrMyvJYKFtouZIipNuoG6sn5IE+lQdSJE78H
-   gDWAs62pFrJIiALZeaeQaU5j7xFYlgr1EO5d6oikvhhhel+x5+Tgukrul
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="5631083"
-X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="5631083"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 09:49:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="16358727"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by fmviesa002.fm.intel.com with ESMTP; 09 Jan 2024 09:49:10 -0800
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: rafael@kernel.org,
-	viresh.kumar@linaro.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] cpufreq: intel_pstate: Update Meteor Lake hybrid scaling factor
-Date: Tue,  9 Jan 2024 09:48:48 -0800
-Message-Id: <20240109174848.3373231-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IKO7qMKx"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409GkB0U028504;
+	Tue, 9 Jan 2024 17:51:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=ZmeqfSPvC7Bv+kCgq903PCt4cgzCuJBO+6rEz+xvOvg
+	=; b=IKO7qMKxCxHBXVOM0kXsCcd/ry1qpdyL8WVRLMKW/FeKD0IUtKZv1BnpqWp
+	ZKagkYEW7C4TBibKUUuyP1DGa61RZkbASZeQYAhGLi8BQerovI4qeA35120tdy2C
+	D2SpGY+vEu7fARl9l+n4oyZXLxtzvxs3jF1CtuX4igUzK08BUgWze4NWu5p9U2/k
+	ldBwK6eikRAwdGaBbGV0p2WEsnBdcOMXA3VuQNCxKXNJkk7Nnc3JzQVGNAxgk4Wt
+	+8tvyLxgIALmuYOUEhkAdpWZ5fcr4Jai9EMLv1hmSf706V7xRb67dOJt3P/fH8gs
+	Qh6G1tS96/qj1mpr3AK/ejXfRww==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh9vfg5cp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 17:51:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409Hp74l024978
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jan 2024 17:51:07 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 9 Jan
+ 2024 09:51:07 -0800
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Tue, 9 Jan 2024 09:51:04 -0800
+Subject: [PATCH 2/3] wifi: ath12k: Add missing qmi_txn_cancel() calls
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240109-qmi-cleanup-v1-2-607b10858566@quicinc.com>
+References: <20240109-qmi-cleanup-v1-0-607b10858566@quicinc.com>
+In-Reply-To: <20240109-qmi-cleanup-v1-0-607b10858566@quicinc.com>
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
+CC: <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+X-Mailer: b4 0.12.3
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: cdlhSYGWwiIn3D7fdWfRr7om5iFcGJ8N
+X-Proofpoint-ORIG-GUID: cdlhSYGWwiIn3D7fdWfRr7om5iFcGJ8N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ impostorscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401090144
 
-On some Meteor Lake platforms, maximum one core turbo frequency is not
-observed. During hybrid performance to frequency conversion, the maximum
-frequency is 100 MHz less. This results in requesting maximum frequency
-100 MHz less.
+Per the QMI documentation "A client calling qmi_txn_init() must call
+either qmi_txn_wait() or qmi_txn_cancel() to free up the allocated
+resources."
 
-For example when the max one core turbo is 4.9 GHz:
-MSR HWP_CAPABILITIES shows highest performance ratio for P-core is 0x3E.
-With the current scaling factor of 78741 (1.27x for converting frequency
-to performance) results in max frequency of 4.8 GHz. This results in
-capping the max scaling frequency as 4.8 GHz, which is 100 MHz less than
-the desired.
+Unfortunately, in most of the ath12k messaging functions, when
+qmi_send_request() fails, the function returns without performing the
+necessary cleanup. So update those functions to call qmi_txn_cancel()
+when qmi_send_request() fails.
 
-Add capability to define per CPU model specific scaling factor and define
-scaling factor of 80000 (1.25x for converting frequency to performance for
-P-cores) for Meteor Lake.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+No functional changes, compile tested only.
 ---
- drivers/cpufreq/intel_pstate.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath12k/qmi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index a534a1f7f1ee..843b3409f12b 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -302,7 +302,10 @@ static bool hwp_forced __read_mostly;
- 
- static struct cpufreq_driver *intel_pstate_driver __read_mostly;
- 
--#define HYBRID_SCALING_FACTOR	78741
-+#define HYBRID_SCALING_FACTOR		78741
-+#define HYBRID_SCALING_FACTOR_MTL	80000
-+
-+static int hybrid_scaling_factor = HYBRID_SCALING_FACTOR;
- 
- static inline int core_get_scaling(void)
- {
-@@ -422,7 +425,7 @@ static int intel_pstate_cppc_get_scaling(int cpu)
- 	 */
- 	if (!ret && cppc_perf.nominal_perf && cppc_perf.nominal_freq &&
- 	    cppc_perf.nominal_perf * 100 != cppc_perf.nominal_freq)
--		return HYBRID_SCALING_FACTOR;
-+		return hybrid_scaling_factor;
- 
- 	return core_get_scaling();
- }
-@@ -1968,7 +1971,7 @@ static int hwp_get_cpu_scaling(int cpu)
- 	smp_call_function_single(cpu, hybrid_get_type, &cpu_type, 1);
- 	/* P-cores have a smaller perf level-to-freqency scaling factor. */
- 	if (cpu_type == 0x40)
--		return HYBRID_SCALING_FACTOR;
-+		return hybrid_scaling_factor;
- 
- 	/* Use default core scaling for E-cores */
- 	if (cpu_type == 0x20)
-@@ -3398,6 +3401,11 @@ static const struct x86_cpu_id intel_epp_balance_perf[] = {
- 	{}
- };
- 
-+static const struct x86_cpu_id intel_hybrid_scaling_factor[] = {
-+	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L, HYBRID_SCALING_FACTOR_MTL),
-+	{}
-+};
-+
- static int __init intel_pstate_init(void)
- {
- 	static struct cpudata **_all_cpu_data;
-@@ -3488,9 +3496,16 @@ static int __init intel_pstate_init(void)
- 
- 	if (hwp_active) {
- 		const struct x86_cpu_id *id = x86_match_cpu(intel_epp_balance_perf);
-+		const struct x86_cpu_id *hybrid_id = x86_match_cpu(intel_hybrid_scaling_factor);
- 
- 		if (id)
- 			epp_values[EPP_INDEX_BALANCE_PERFORMANCE] = id->driver_data;
-+
-+		if (hybrid_id) {
-+			hybrid_scaling_factor = hybrid_id->driver_data;
-+			pr_debug("hybrid scaling factor:%d\n", hybrid_scaling_factor);
-+		}
-+
+diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
+index 180e86c2a10c..1f2df2e3fbce 100644
+--- a/drivers/net/wireless/ath/ath12k/qmi.c
++++ b/drivers/net/wireless/ath/ath12k/qmi.c
+@@ -1977,6 +1977,7 @@ static int ath12k_qmi_host_cap_send(struct ath12k_base *ab)
+ 			       QMI_WLANFW_HOST_CAP_REQ_MSG_V01_MAX_LEN,
+ 			       qmi_wlanfw_host_cap_req_msg_v01_ei, &req);
+ 	if (ret < 0) {
++		qmi_txn_cancel(&txn);
+ 		ath12k_warn(ab, "Failed to send host capability request,err = %d\n", ret);
+ 		goto out;
  	}
- 
- 	mutex_lock(&intel_pstate_driver_lock);
+@@ -2040,6 +2041,7 @@ static int ath12k_qmi_fw_ind_register_send(struct ath12k_base *ab)
+ 			       QMI_WLANFW_IND_REGISTER_REQ_MSG_V01_MAX_LEN,
+ 			       qmi_wlanfw_ind_register_req_msg_v01_ei, req);
+ 	if (ret < 0) {
++		qmi_txn_cancel(&txn);
+ 		ath12k_warn(ab, "Failed to send indication register request, err = %d\n",
+ 			    ret);
+ 		goto out;
+@@ -2114,6 +2116,7 @@ static int ath12k_qmi_respond_fw_mem_request(struct ath12k_base *ab)
+ 			       QMI_WLANFW_RESPOND_MEM_REQ_MSG_V01_MAX_LEN,
+ 			       qmi_wlanfw_respond_mem_req_msg_v01_ei, req);
+ 	if (ret < 0) {
++		qmi_txn_cancel(&txn);
+ 		ath12k_warn(ab, "qmi failed to respond memory request, err = %d\n",
+ 			    ret);
+ 		goto out;
+@@ -2229,6 +2232,7 @@ static int ath12k_qmi_request_target_cap(struct ath12k_base *ab)
+ 			       QMI_WLANFW_CAP_REQ_MSG_V01_MAX_LEN,
+ 			       qmi_wlanfw_cap_req_msg_v01_ei, &req);
+ 	if (ret < 0) {
++		qmi_txn_cancel(&txn);
+ 		ath12k_warn(ab, "qmi failed to send target cap request, err = %d\n",
+ 			    ret);
+ 		goto out;
+@@ -2572,6 +2576,7 @@ static int ath12k_qmi_wlanfw_m3_info_send(struct ath12k_base *ab)
+ 			       QMI_WLANFW_M3_INFO_REQ_MSG_V01_MAX_MSG_LEN,
+ 			       qmi_wlanfw_m3_info_req_msg_v01_ei, &req);
+ 	if (ret < 0) {
++		qmi_txn_cancel(&txn);
+ 		ath12k_warn(ab, "qmi failed to send M3 information request, err = %d\n",
+ 			    ret);
+ 		goto out;
+@@ -2618,6 +2623,7 @@ static int ath12k_qmi_wlanfw_mode_send(struct ath12k_base *ab,
+ 			       QMI_WLANFW_WLAN_MODE_REQ_MSG_V01_MAX_LEN,
+ 			       qmi_wlanfw_wlan_mode_req_msg_v01_ei, &req);
+ 	if (ret < 0) {
++		qmi_txn_cancel(&txn);
+ 		ath12k_warn(ab, "qmi failed to send mode request, mode: %d, err = %d\n",
+ 			    mode, ret);
+ 		goto out;
+@@ -2709,6 +2715,7 @@ static int ath12k_qmi_wlanfw_wlan_cfg_send(struct ath12k_base *ab)
+ 			       QMI_WLANFW_WLAN_CFG_REQ_MSG_V01_MAX_LEN,
+ 			       qmi_wlanfw_wlan_cfg_req_msg_v01_ei, req);
+ 	if (ret < 0) {
++		qmi_txn_cancel(&txn);
+ 		ath12k_warn(ab, "qmi failed to send wlan config request, err = %d\n",
+ 			    ret);
+ 		goto out;
+
 -- 
-2.43.0
+2.42.0
 
