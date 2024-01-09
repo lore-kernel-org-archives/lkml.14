@@ -1,106 +1,118 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F17F3EA9F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 21:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rNJpY-000832-VC; Tue, 09 Jan 2024 22:40:16 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rNJpO-001Z2m-Fk; Tue, 09 Jan 2024 22:40:06 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rNJpO-0066FS-12;
-	Tue, 09 Jan 2024 22:40:06 +0100
-Date: Tue, 9 Jan 2024 22:40:05 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Thomas Gleixner <tglx@linutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, 
-	Heiko Stuebner <heiko@sntech.de>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Chris Morgan <macromorgan@hotmail.com>, Yang Xiwen <forbidden405@foxmail.com>, 
-	Sebastian Reichel <sre@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, David Rientjes <rientjes@google.com>, 
-	Baoquan He <bhe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Azeem Shaikh <azeemshaikh38@gmail.com>, Javier Martinez Canillas <javierm@redhat.com>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Palmer Dabbelt <palmer@rivosinc.com>, 
-	Bin Meng <bmeng@tinylab.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Jacky Huang <ychuang3@nuvoton.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v6 26/37] dt-bindings: vendor-prefixes:  Add smi
-Message-ID: <c2f7yketm64rqryiq5ldl6gosdot5qv36sf4lqbe3erb2azoh2@k6dml2j4amp5>
-References: <cover.1704788539.git.ysato@users.sourceforge.jp>
- <c8aaf67e3fcdb7e60632c53a784691aabfc7733e.1704788539.git.ysato@users.sourceforge.jp>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D5A3F8F1
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 21:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RNWn93Rj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=D47kuEUuvY/SrXunoNEbi3Kkq7SL6IKph7l39rRXOkA=; b=RNWn93RjQaoOeXeMsl8H+OA4py
+	NXoKNEhNNHWWuomGV6O8Wr2hOdVYNb7AJxYDZCw6AXMhIj71E1JaZYENde6tEe8+OXgQjpyYiFiok
+	avPWrWxjLKnrJdyKsoUWbpEdQZgQA3R4/pTyTIyo8KBQENc1bDN30WVklnA1woOQ00FBYVp6LRVV9
+	bHBbDJN050IGQmSdZ1jeu+hwWDQDlG1Mq6Ti4Q7YToN7o+6WmquSGmIAqtTNJUbqMF0XAsIzSCreX
+	+LJnKXMBRISm8WJjS+T8K6MHVdp2K+460zdXI9aOLFtdgjKhEXVv7A7AJMj1EAUjdqnwHuSaLX2cV
+	Kzk1+xsQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rNJrH-00AMnq-PL; Tue, 09 Jan 2024 21:42:03 +0000
+Date: Tue, 9 Jan 2024 21:42:03 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	Suren Baghdasaryan <surenb@google.com>,
+	"Liam R. Howlett" <liam.howlett@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [RFC] Sleep waiting for an rwsem to be unlocked
+Message-ID: <ZZ29q3x3I0Z3dQ8y@casper.infradead.org>
+References: <ZZ1+ZicgN8dZ3zj3@casper.infradead.org>
+ <04d23913-fb0e-4f47-9e6c-dae50ee28a3a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="k3wplihoehcx5dum"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c8aaf67e3fcdb7e60632c53a784691aabfc7733e.1704788539.git.ysato@users.sourceforge.jp>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <04d23913-fb0e-4f47-9e6c-dae50ee28a3a@redhat.com>
 
+On Tue, Jan 09, 2024 at 04:04:08PM -0500, Waiman Long wrote:
+> On 1/9/24 12:12, Matthew Wilcox wrote:
+> > The problem we're trying to solve is a lock-free walk of
+> > /proc/$pid/maps. If the process is modifying the VMAs at the same time
+> > the reader is walking them, it can see garbage.  For page faults, we
+> > handle this by taking the mmap_lock for read and retrying the page fault
+> > (excluding any further modifications).
+> > 
+> > We don't want to take that approach for the maps file.  The monitoring
+> > task may have a significantly lower process priority, and so taking
+> > the mmap_lock for read can block it for a significant period of time.
+> > The obvious answer is to do some kind of backoff+sleep.  But we already
+> > have a wait queue, so why not use it?
+> > 
+> > I haven't done the rwbase version; this is just a demonstration of what
+> > we could do.  It's also untested other than by compilation.  It might
+> > well be missing something.
+> 
+> It is not clear what exactly is the purpose of this new API. Are you just
 
---k3wplihoehcx5dum
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+... really?  I wrote it out in the part you quoted, and I wrote it out
+differently in the kernel-doc for the function:
 
-Hello,
++ * rwsem_wait_killable - Wait for current write lock holder to release lock
++ * @sem: The semaphore to wait on.
++ *
++ * This is equivalent to calling down_read(); up_read() but avoids the
++ * possibility that the thread will be preempted while holding the lock
++ * causing threads that want to take the lock for writes to block.  The
++ * intended use case is for lockless readers who notice an inconsistent
++ * state and want to wait for the current writer to finish.
 
-not a complete review, I just note that there is a duplicate space in
-the Subject. You might want to fix for the next patch round.
+Something I forgot to add was that we only guarantee that _a_ writer
+finished; another writer may have the lock when the function returns.
 
-Best regards
-Uwe
+> waiting in the rwsem wait queue until it gets waken up without taking a read
+> or write lock? I see two issues at the moment.
+> 
+> 1) The handoff processing should exclude the new RWSEM_WAITING_FOR_RELEASE
+> waiter types.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Hmm.  I thought I'd done that by only incrementing 'woken' for
+RWSEM_WAITING_FOR_READ types.
 
---k3wplihoehcx5dum
-Content-Type: application/pgp-signature; name="signature.asc"
+> 2) If the rwsem is free, it should call rwsem_wake() again to wake up the
+> next waiter, like what is being done in up_write().
 
------BEGIN PGP SIGNATURE-----
+because the wait queue might have a waiter followed by a writer?  I
+think calling rwsem_wake() again is probably a bad idea as it will
+defeat the MAX_READERS_WAKEUP limit.  Probably rwsem_mark_wake()
+needs to handle that case itself; maybe something like this?
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWdvTUACgkQj4D7WH0S
-/k42/Qf+OiUMdWX7ofxy3BcrM4WDosGYD3v051cAkDrM1UU7vn14H4nDlTp0AkUx
-pzhs+r4x5ivYAv9c4UHIXeQOUWIaPLpY2tXJ1SPG5v9qUMxDVvFk28mGM1iidoM4
-hunvGv2nwhdTCDVUSm04aY5nebXW1S7mB4FfTr8A6pNVkYKhuHh92Pk7kS9cvA4f
-2N3ldtz2sW+Qm6s8+Hp2+VGkyD1jnwKgBscsap9G9g54+5TtukrFmNayfApLXoOQ
-+kiDrlWzjgencsnRqEVCL8tOjVRiw3f+e9LhRK9df/ebNVLs4CHsxS6Ao1pM0LF9
-+e1Wi0ZIExYHQKEGMuiBgD83DdWU5w==
-=MXKF
------END PGP SIGNATURE-----
++++ b/kernel/locking/rwsem.c
+@@ -419,6 +419,7 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
 
---k3wplihoehcx5dum--
+        lockdep_assert_held(&sem->wait_lock);
+
++again:
+        /*
+         * Take a peek at the queue head waiter such that we can determine
+         * the wakeup(s) to perform.
+@@ -542,6 +543,12 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
+                 */
+                if (oldcount & RWSEM_FLAG_HANDOFF)
+                        adjustment -= RWSEM_FLAG_HANDOFF;
++       } else {
++               /*
++                * Everybody we woke was a waiter, not a reader.  Wake the
++                * first writer instead.
++                */
++               goto again;
+        }
+
+        if (adjustment)
+
