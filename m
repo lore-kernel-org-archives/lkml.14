@@ -1,180 +1,124 @@
-Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C90364A3;
-	Tue,  9 Jan 2024 10:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19041364D0
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 10:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Z4h6tGUu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="swZvUjVR"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 4255E58098D;
-	Tue,  9 Jan 2024 05:15:05 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 09 Jan 2024 05:15:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1704795305;
-	 x=1704802505; bh=GabU/xJKPT7prMOI8ftxVSLypGy/Wo5U52O4xaZUqdU=; b=
-	Z4h6tGUutV+LgpasMnunV6k3fxPBKR0pgIFigmfW8zl48tJ1/IvZASco4mODLM0z
-	MoWjgQ/+MztBbf0TCCF/aBEF0/zfCgH5OPKEI2bf4gGhhUeekWTNcWFwX4nywkZ3
-	jdfL9AVRVxAeXXmvtdsKEX+oxgX0Y5/B0BCa8dQ0IXCgxjQ9Zo+uQmUGqjAx6DnC
-	XygT2jR3/5df3dJyKQn4kOCbi63JFLzcCi8r9z240tjLg+ayFQSd6LWPacu4gMx0
-	irin0QbqwzWtpbG3182P3Airfbh6nsXxLXWp/AYil49d6d1jnbLVUt1xSvR1Jj5A
-	pP2x1T10sygiw8Cj3etJCA==
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="OcYdcY4P";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="6RJT0bNe"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id D30393200A6D;
+	Tue,  9 Jan 2024 05:15:12 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 09 Jan 2024 05:15:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1704795312; x=1704881712; bh=jiFgbsRxbL
+	2i/YExxo4L0AnzxDWdv2RQgtBIi3ZydVc=; b=OcYdcY4Pn4pDs10N555cxwsrB5
+	7MYlDy4snSnfMqtvvXMpvLCQow0e9nSkV3TdOV7nG1YHetTbGvZXSe/5K1kl0Of6
+	FqnEQgxdgt/shl8hQ+6pfJBXKqHpFxHp0XnU3MxJ0sB0MgVPJjGf9bbbHF5wLypE
+	Jz8OPv7qUF7BPzy2a02S7DvAHX9ivuD6KX78Q0jPQ40vI82SZoXmhN2/zvj3DfZ2
+	9TSqT6v3dzosVpa2s6iwZ7hRh/Dr9D8VEOI3CTl/2umpLmxL2DC9+IJoMCNjb+I0
+	t9HnyU0K+LtYfcCocWGz4Sie6cvRNvD7SpJ/fqWChVIpQu4EI6l5JOd2Kv8Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704795305; x=
-	1704802505; bh=GabU/xJKPT7prMOI8ftxVSLypGy/Wo5U52O4xaZUqdU=; b=s
-	wZvUjVRe0D7N+aiUQHGG3QiIvViin3sLtWwfIdkt7EI0VfJB6zGKieph+wImrD6J
-	zBj5YpkGXO4p2gfaXxuw/EDf05gEs8EUZTB3oMQ6ObZg1Z+wpZtyP4IUX2egZW63
-	AgvzzlEBJRleiIGvv7drHp+hVqdt0Ndy4yDfdOJSjt+L4siT/IExM5Fn6pjDD8Qv
-	duWq9ksk+GoEDg1aK7qwBrZCbsRWc60eFH464gwGb54BhLp9t8YXZXFxNuILoACB
-	A07K9fIspS5x0u3Xp+L/j/QdmNeQ8w93tGK11hgyNM9RaPcvzUDPid4Qjmt9V/Zs
-	iDK8XZIZByLYfFaieWBuw==
-X-ME-Sender: <xms:qBydZR9DtETz_bcvQVIDNmlIKjmvOJOLLL6iK3H3q9KivDSGIh2RfA>
-    <xme:qBydZVuKmD9S2pbT4oLRrA87zkKRqCeu8lYXUhBtQ0k-0Mz3WNHa4d6JwEOHOW09r
-    sGg6VBOdw-INvdHHQQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehledgudefucetufdoteggodetrfdotf
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1704795312; x=1704881712; bh=jiFgbsRxbL2i/YExxo4L0AnzxDWd
+	v2RQgtBIi3ZydVc=; b=6RJT0bNeR58ALZuQeTvdJa043vM7vKYalVIuOF7Incqz
+	8bf8lB0cKTBzE8K/b1P9tekPJFBiMShwLcc2ax2CNVP95ZFtc1xnUaNzyoiwu3B4
+	WJUMrS4fO3c1BEXBA31O798K8iErmZ8NfB9jX+cQHVfVzDkJa6qYJoJY5Ng0Si51
+	hWdf1rGYOwwoIrXHXhgE5kk5oO7QqRuOTRCIX+QmCz7FkO8tpPt9oMU6xFcpKJyv
+	kjY+V2A5V2vEdnG/mpcnaThmSPmE7QcSVM6IApMj+0SY18TL2g8tUkr3xNhDX88J
+	uWaCHOENoNa/fQGmG2t6Vundx+sOKhWebgXMHvMR+g==
+X-ME-Sender: <xms:sBydZUYhrFaf-tRPOAGFZrY4QBHYraCElijOTokxQNY0ZHsuH5Nafw>
+    <xme:sBydZfYqrTUYjF7PmoJyI-oMZ0B5dlAwRBaibpkK5870EuYuR6PKU1Rqpm4k7VTX-
+    gDpO9lv_zLUd8kBmiI>
+X-ME-Received: <xmr:sBydZe-mfFVb1-zbj2HOZHRKKE6hSiXC2WpCZG9vwMp6Y9hmtoo9MmCQWH6IXiM_wHyPD-XO3D-UdjatCC9nXkHpJWU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehledguddvucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:qBydZfAChY1QCOCKocXEOygo63nG2MbRcZJCMZh2DamPOM3hY1AF6A>
-    <xmx:qBydZVdMadwW5mTTH9ko2uwX4stlvn66b9_oEBH94j_fHxojp_1OPw>
-    <xmx:qBydZWNv44H7I1yuzq-uP6ckUN5jOba2iHrR840F4ao48cIcy42MBw>
-    <xmx:qRydZQCJOskKJ1JpIMSSNhulYMBdADX_KU8hfNGAJUaawu3HApF7yg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 6BD14B6008F; Tue,  9 Jan 2024 05:15:04 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1364-ga51d5fd3b7-fm-20231219.001-ga51d5fd3
+    cujfgurhepfhgfhffvvefuffgjkfggtgesghdtreertdertdenucfhrhhomhepifgrrhih
+    ucftohhokhgrrhguuceoghgrrhihrhhoohhkrghrugesfhgrshhtmhgrihhlrdhorhhgqe
+    enucggtffrrghtthgvrhhnpeeileehheehtdeiveduffdugfdtgfevjeffudfgtefgteff
+    udfhhffftedvieeggeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehgrghrhihrohhokhgrrhgusehfrghsthhmrghilhdrohhrgh
+X-ME-Proxy: <xmx:sBydZeo5Rc8CWryXx69Q0FneWpq85ePxLSujGxCsnD9H53YMf_zpAQ>
+    <xmx:sBydZfqoff7IHgzpbFYlii23-NiAT_70Bjvo68_Hxq_rJT2jgFdSdw>
+    <xmx:sBydZcQqsFSdvdpH_dpBG_62x6xXy8YXfW325pPN2myIGArvGocenA>
+    <xmx:sBydZW0bE0lKyJZLeC7Cgy_3CeAuWUmPt60xcEbRp5mtL39Rkm-EGA>
+Feedback-ID: ifd194980:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Jan 2024 05:15:11 -0500 (EST)
+References: <20240109033234.570-1-garyrookard@fastmail.org>
+ <2024010919-wand-footgear-80cb@gregkh>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Gary Rookard <garyrookard@fastmail.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] staging: rtl8192e: rename variable cur_bw_40mhz
+Date: Tue, 09 Jan 2024 05:11:31 -0500
+In-reply-to: <2024010919-wand-footgear-80cb@gregkh>
+Message-ID: <87o7durexp.fsf@fastmail.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <5904461c-ca3c-4eb1-a44a-876872234545@app.fastmail.com>
-In-Reply-To: <87bk9uzum9.fsf@kernel.org>
-References: <20240104130123.37115-1-brgl@bgdev.pl>
- <20240104130123.37115-9-brgl@bgdev.pl>
- <15443d5d-6544-45d0-afeb-b23e6a041ecf@quicinc.com>
- <87jzoizwz7.fsf@kernel.org>
- <CAGXv+5FhYY+qyyT8wxY5DggvWPibfM2ypHVKQbsJZ30VkZDAkQ@mail.gmail.com>
- <87bk9uzum9.fsf@kernel.org>
-Date: Tue, 09 Jan 2024 11:14:43 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kalle Valo" <kvalo@kernel.org>, "Chen-Yu Tsai" <wenst@chromium.org>
-Cc: "Jeff Johnson" <quic_jjohnson@quicinc.com>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konrad.dybcio@linaro.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- "Jernej Skrabec" <jernej.skrabec@gmail.com>,
- "Chris Morgan" <macromorgan@hotmail.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Neil Armstrong" <neil.armstrong@linaro.org>,
- =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>,
- "Peng Fan" <peng.fan@nxp.com>, "Robert Richter" <rrichter@amd.com>,
- "Dan Williams" <dan.j.williams@intel.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
- "Terry Bowman" <terry.bowman@amd.com>,
- "Kuppuswamy Sathyanarayanan"
- <sathyanarayanan.kuppuswamy@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Huacai Chen" <chenhuacai@kernel.org>, "Alex Elder" <elder@linaro.org>,
- "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFC 8/9] PCI/pwrseq: add a pwrseq driver for QCA6390
-Content-Type: text/plain;charset=utf-8
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
+
+--=-=-=
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 9, 2024, at 11:09, Kalle Valo wrote:
-> Chen-Yu Tsai <wenst@chromium.org> writes:
->> On Tue, Jan 9, 2024 at 5:18=E2=80=AFPM Kalle Valo <kvalo@kernel.org> =
-wrote:
->>> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
->>>
->>> > On 1/4/2024 5:01 AM, Bartosz Golaszewski wrote:
->>> >> diff --git a/drivers/pci/pcie/pwrseq/Kconfig b/drivers/pci/pcie/p=
-wrseq/Kconfig
->>> >> index 010e31f432c9..f9fe555b8506 100644
->>> >> --- a/drivers/pci/pcie/pwrseq/Kconfig
->>> >> +++ b/drivers/pci/pcie/pwrseq/Kconfig
->>> >> @@ -6,3 +6,14 @@ menuconfig PCIE_PWRSEQ
->>> >>      help
->>> >>        Say yes here to enable support for PCIe power sequencing
->>> >>        drivers.
->>> >> +
->>> >> +if PCIE_PWRSEQ
->>> >> +
->>> >> +config PCIE_PWRSEQ_QCA6390
->>> >> +    tristate "PCIe Power Sequencing driver for QCA6390"
->>> >> +    depends on ARCH_QCOM || COMPILE_TEST
->>> >> +    help
->>> >> +      Enable support for the PCIe power sequencing driver for the
->>> >> +      ath11k module of the QCA6390 WLAN/BT chip.
->>> >> +
->>> >> +endif
->>> >
->>> > As I mentioned in the 5/9 patch I'm concerned that the current
->>> > definition of PCIE_PWRSEQ and PCIE_PWRSEQ_QCA6390 will effectively=
- hide
->>> > the fact that QCA6390 may need additional configuration since the =
-menu
->>> > item will only show up if you have already enabled PCIE_PWRSEQ.
->>> > Yes I see that these are set in the defconfig in 9/9 but I'm conce=
-rned
->>> > about the more generic case.
->>> >
->>> > I'm wondering if there should be a separate config QCA6390 within =
-ath11k
->>> > which would then select PCIE_PWRSEQ and PCIE_PWRSEQ_QCA6390
->>>
->>> Or is it possible to provide an optional dependency in Kconfig (I gu=
-ess
->>
->> imply PCIE_PWRSEQ
->> imply PCIE_PWRSEQ_QCA6390
->> ?
+
+Greg KH <gregkh@linuxfoundation.org> writes:
+
+> On Mon, Jan 08, 2024 at 10:32:34PM -0500, Gary Rookard wrote:
+>> Changes from v3 include
+>> Rename from  millihertz(mhz) Megahertz(MHz)
+>> cur_bw_40mhz -> cur_bw_40MHz
 >
-> Nice, I had forgotten imply altogether. Would 'imply
-> PCIE_PWRSEQ_QCA6390' in ath11k Kconfig be enough to address Jeff's
-> concern?
+> This belongs below the --- line, not above it, right?
+>
+> thanks,
+>
+> greg k-h
+=2D-
+Yes, of course.
+I'll fix it up and resubmit
 
-Please don't use imply (ever), it doesn't normally do
-what you want. In this case, the only effect the
-'imply' has is to change the default of the PCIE_PWRSEQ_QCA6390
-option when a defconfig contains QCA6390.
+Regards,
+Gary
 
-If this is indeed what you want, it's still better to do the
-equivalent expression in PCIE_PWRSEQ_QCA6390 rather than ATH11K:
+=2D-=20
+Sent with my mu4e on Void GNU/Linux.
 
-config PCIE_PWRSEQ_QCA6390
-      tristate "PCIe Power Sequencing driver for QCA6390"
-      default ATH11K && ARCH_QCOM
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-      Arnd
+-----BEGIN PGP SIGNATURE-----
+
+iQJNBAEBCAA3FiEE1kC7bOvmQRqDVDSVKPZpkA66T0EFAmWdHKIZHGdhcnlyb29r
+YXJkQGZhc3RtYWlsLm9yZwAKCRAo9mmQDrpPQSsTEACNZupylAULNygyC7byjNze
+Qa4uJTcz2uo/m4FHbwCmPThmPE9aYd90Qv05HVCT1jMShkOkg6GqfaAOmqWDdrfW
+iMoWSPvXFgECzGDgbqQZq4smjifq28mAmOYG8Yje4vZIEz7LXz9ciuWDSgW2Gox0
+OT9UDbpzjJv4OZMWrOFK/ah9FzFwjScNvGPrX2kBBCMc4iM4seiIHle2HPEFMwJZ
+PIbZ6am24TJgKY3URvbgbfdqKXSnP/j0rFSUsyoYCs/Cd0FYlGpXVEaZ7O8D11kO
+/H6luMClIQ11+nf+unFFnezKTGu39srs/Ol7KADMVciXz4SPw1piExiE4UWDGj02
+pLCmlu7SanvJtqxyN/1pqe81V8QQ0/nxQE/Eiue5yzpOGYlNgfYHFZEBM0qCsVuf
+j9Fi9bvO0011nnuqSmw1b+Q/wmlfLHMuMBa+hMi6pDMYahQnsnZULrrW4XXvAgFl
+XtIBars0Xcvou8G7iCA+b6w32DtMOVdC7dvizO7AejE+oIOJpjUMNmWDZqFAuCpx
+qb3gOPTrnJw8XWS0UT/AU2QUc+fEe0nUCP977AbC5NeU926fp3+oT0yxVKOZ+UHB
+WVacVlsKsY9yAgeSQBkhiUVG2FJSO/iNSG0/jdeyc0qasG08un1p8uNwg0oWMZyE
+JCQcdqTCzzk9Q8GTjtvZeA==
+=yOPM
+-----END PGP SIGNATURE-----
+--=-=-=--
