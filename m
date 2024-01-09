@@ -1,73 +1,70 @@
 Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB3F3C087
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFAD3C08D
 	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 18:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35f49926297so42618605ab.3
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35fc6976630so30400555ab.0
         for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 10:20:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1704824431; x=1705429231;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=aDfkJh4CRLmymMpjdIE8nKjRY2p4UY3rWbj/huMJ/to=;
-        b=Q/WqaQ9UiaZmlqcn2RWEerECeeHYHU0uaZsQrt0C1erPXqePcydZmcVtQLEHwrZjuX
-         +xQhpLonfirQG70YHjjHMmyyLVm111b5hxHm2fuAzKin+sDes7PsGpiGtdK/kQgHWIXf
-         SABI/ZWR7mUXIujgbTrba4gCKIePcNTI3IoPW/cpKicQIaMUuXWCfsy9tbWnZRr5sHy9
-         ul1RYu43EYguARQVPkVOjQrryfkHgn2mxD/zPU5yFx1D9Xr7t/qwoikOFVlHnyAmjjZB
-         0APANnkRUiU8rxEK/QRJauObTP9AJKRNGEmGwKHMeKhIxlD3y4tpZ0d9KSnnbmlrYj40
-         o8vQ==
-X-Gm-Message-State: AOJu0Yw/25vNazTgA4VEGOjgx0ZUPbOQbJshfupE0bVEgkHWa0R+MHEg
-	3/LX0mF8ZKoQyutKhCdAOTonZq44L8dxChAhlXChvOX4w/jr
-X-Google-Smtp-Source: AGHT+IEQxDTQ/g5ZvU4myL1nDx6Nthpqw+BO0n8TxSeMmUjwKZ4FpI8goW0Ol2pNaeQ26aBgBdoYFA3TePP3Jg9huWLyI6lsSk1C
+        bh=yvQasGYS7JeZM71OBn9LpU6STXgLDvufVBcAyw3BJIk=;
+        b=MvvuL+HPzfCjtPhKem8Bs8JgSaRqqoZNKPtpWi87hHRA4/a0cpyKR3SuXykvVvDmcT
+         upr9caiwYrtLr2rMoVzFckcsRTEGrJ8xOi030sJV2Nh82Ps1JJr3KGskNnj/Rg4LIs7y
+         fUJvo46a4AhkWTWZ753wI334hihQ79nB626jSDSzwfctUD18J9q9InWL0AP7HBxZlqeK
+         CpmJVvK293QccgxrB95QIxOoZTga5enl6pO27/doNZN7W8+T1Eq1nR0zGEg5imhKx8lg
+         zoOCALaCj5P8DqrnRILPl/wZGtqt7KqCX6/x609UFO8yn4w2ou+8DMfdXlel7rEE0tou
+         rA+Q==
+X-Gm-Message-State: AOJu0YwA2CO7oLSAc0YzmsTygi+V6XS+e3paCcLcrJhkzfvr0/bRWfQj
+	AQO9D0S3Z1k8rLJxNrSefGMpoLBV2omdbnGlJiEvJbSDj7Xj
+X-Google-Smtp-Source: AGHT+IHicLTkVmxbHefZ7xBioSjR0j/UwEhFWoVf1oYBo7LNuotHW1wcOCkjG6u2rHh0oRNeYu2aFSZNiA1B4aVU4ZwWlDX35dfp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d9a:b0:360:a0a1:a959 with SMTP id
- h26-20020a056e021d9a00b00360a0a1a959mr146282ila.5.1704824431223; Tue, 09 Jan
+X-Received: by 2002:a92:c549:0:b0:360:5cc5:8ded with SMTP id
+ a9-20020a92c549000000b003605cc58dedmr946086ilj.3.1704824431402; Tue, 09 Jan
  2024 10:20:31 -0800 (PST)
 Date: Tue, 09 Jan 2024 10:20:31 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a0adbe060e875ee7@google.com>
-Subject: [syzbot] Monthly block report (Jan 2024)
-From: syzbot <syzbot+list8e080b639b2ad05d5cd9@syzkaller.appspotmail.com>
-To: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Message-ID: <000000000000a36811060e875e14@google.com>
+Subject: [syzbot] Monthly bpf report (Jan 2024)
+From: syzbot <syzbot+listfa7dbe69051a666b7429@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, linux-kernel@vger.kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello block maintainers/developers,
+Hello bpf maintainers/developers,
 
-This is a 31-day syzbot report for the block subsystem.
+This is a 31-day syzbot report for the bpf subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/block
+https://syzkaller.appspot.com/upstream/s/bpf
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 25 issues are still open and 88 have been fixed so far.
+During the period, 2 new issues were detected and 0 were fixed.
+In total, 15 issues are still open and 200 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref Crashes Repro Title
-<1> 3044    Yes   WARNING in blk_rq_map_user_iov
-                  https://syzkaller.appspot.com/bug?extid=a532b03fdfee2c137666
-<2> 475     Yes   INFO: task hung in blkdev_put (4)
-                  https://syzkaller.appspot.com/bug?extid=9a29d5e745bd7523c851
-<3> 365     Yes   general protection fault in bio_first_folio
-                  https://syzkaller.appspot.com/bug?extid=8b23309d5788a79d3eea
-<4> 144     Yes   INFO: task hung in blkdev_fallocate
-                  https://syzkaller.appspot.com/bug?extid=39b75c02b8be0a061bfc
-<5> 45      Yes   KASAN: use-after-free Read in __dev_queue_xmit (5)
-                  https://syzkaller.appspot.com/bug?extid=b7be9429f37d15205470
-<6> 34      Yes   INFO: task hung in nbd_add_socket (2)
-                  https://syzkaller.appspot.com/bug?extid=cbb4b1ebc70d0c5a8c29
-<7> 26      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<8> 12      Yes   INFO: task hung in bdev_release
-                  https://syzkaller.appspot.com/bug?extid=4da851837827326a7cd4
+<1> 8166    Yes   possible deadlock in task_fork_fair
+                  https://syzkaller.appspot.com/bug?extid=1a93ee5d329e97cfbaff
+<2> 21      Yes   BUG: unable to handle kernel NULL pointer dereference in sk_msg_recvmsg
+                  https://syzkaller.appspot.com/bug?extid=84f695756ed0c4bb3aba
+<3> 19      Yes   WARNING in __mark_chain_precision (3)
+                  https://syzkaller.appspot.com/bug?extid=4d6330e14407721955eb
+<4> 3       Yes   INFO: rcu detected stall in sys_newfstatat (4)
+                  https://syzkaller.appspot.com/bug?extid=1c02a56102605204445c
+<5> 2       Yes   UBSAN: shift-out-of-bounds in adjust_reg_min_max_vals
+                  https://syzkaller.appspot.com/bug?extid=46700eea57ecc7f84776
+<6> 1       Yes   INFO: rcu detected stall in sys_unshare (9)
+                  https://syzkaller.appspot.com/bug?extid=872bccd9a68c6ba47718
 
 ---
 This report is generated by a bot. It may contain errors.
