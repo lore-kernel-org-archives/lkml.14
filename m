@@ -1,40 +1,40 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66DF3D99E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8D53D991;
 	Tue,  9 Jan 2024 19:38:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E+VAyyYo"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409FdruR011442;
-	Tue, 9 Jan 2024 19:37:55 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GOglusOe"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 409G7qqM002215;
+	Tue, 9 Jan 2024 19:37:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=qTohYqnlkOS9djmdgfBSDZ+nbkISb+SqC3fLuzzxepU
-	=; b=E+VAyyYorxHmshatDCMLH8ECLlsp+HATu5eUsuW9WvRcqDyq1NDkpxtWszx
-	RHJlAVhKQ+uwSwk4chnb8S/lO8t/55fWatsjXJC0lu3d14aKHGROyivUJhyZtiiZ
-	A3UFNMX67OSG1hnqLTGBzG/fmpsDzZ3pwMcbcqgsLPEXEQks60CJku80OS9uEm5B
-	QoID6o+GrEInIhyg8KBQgcgBSO/ZQQhNtrrq6uO1PY2Xc+c5TUQ/9oFkQTGDec2z
-	hxyspICVouuIPol88vuUI9A0XpgfctWs7Yp7MuxRlyIfQjkUelwLwdpx84YsK9W7
-	gMYoxDfkV22GY8eH9YeY3Fupunw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh3me184r-1
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=7ug5TU7F82LcNw
+	QtTVSfS75VgpnhLh5FKpuomjGLO1I=; b=GOglusOeI3mPOuRrv22CfCC+VQtC/3
+	G29S7tT+fhWTLwD0ss9EaqQu8ZxBOqFvOqz/COiTuTd7VEj7lKqtsGaCCsm6qUyQ
+	DCJ9+HsuvihQ/sVPA2Szrka51T3oUHOa/piYfXN++tSsHiAvRuLRqoXc2+hMSHij
+	tn316Q0wGLwjlR8yrVEWSdH8hvqyxyBiXZ4FCgO33hBCfHKFU3Ozrnfx8OrQSkbl
+	KZWb9LN39XR6n5vvRaL2W1dna5LDEzPpcIoVqfBT2fretHY82sZ1GpreEb9i3BTp
+	zKKniBcRc+y38v1axQbgXlAB4P6mKDY9aqgcU2DUEzyyqwZFyLVAtHFw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgwx39w7a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 19:37:55 +0000 (GMT)
+	Tue, 09 Jan 2024 19:37:50 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409JbsPw011911
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409JbnVw024493
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jan 2024 19:37:54 GMT
+	Tue, 9 Jan 2024 19:37:49 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 9 Jan 2024 11:37:53 -0800
+ 15.2.1118.40; Tue, 9 Jan 2024 11:37:48 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Tue, 9 Jan 2024 11:37:46 -0800
-Subject: [PATCH v16 08/34] gunyah: vm_mgr: Introduce basic VM Manager
+Subject: [PATCH v16 00/34] Drivers for Gunyah hypervisor
+Date: Tue, 9 Jan 2024 11:37:38 -0800
+Message-ID: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,9 +43,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240109-gunyah-v16-8-634904bf4ce9@quicinc.com>
-References: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
-In-Reply-To: <20240109-gunyah-v16-0-634904bf4ce9@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAIKgnWUC/zXMQQ7CIBCF4as0sxYDNFDqqvcwXUwollkICraxa
+ bi72Ojy/Xn5dsgukctwaXZIbqVMMdQh9KkB6zHMjtFUA0guWyG5YfMSNvSsVxItdlobx6GeH8n
+ d6H1I17FuT/kV03bAq1Df/DOE+hu1M85EL1FNppPY8uG5kKVgzzbeYSylfAC3psXloQAAAA==
 To: Alex Elder <elder@linaro.org>,
         Srinivas Kandagatla
 	<srinivas.kandagatla@linaro.org>,
@@ -77,333 +77,281 @@ CC: <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
         Elliot Berman
-	<quic_eberman@quicinc.com>
+	<quic_eberman@quicinc.com>,
+        Rob Herring <robh@kernel.org>
 X-Mailer: b4 0.13-dev
 X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lzNTDnqHMufbCm4ApLHJgRhpzW9et7Xt
-X-Proofpoint-GUID: lzNTDnqHMufbCm4ApLHJgRhpzW9et7Xt
+X-Proofpoint-GUID: q_fpMI9ptxSJbAbW5sMQiF4hkF6NT7se
+X-Proofpoint-ORIG-GUID: q_fpMI9ptxSJbAbW5sMQiF4hkF6NT7se
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 mlxscore=0
- suspectscore=0 impostorscore=0 clxscore=1015 adultscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401090158
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ adultscore=0 spamscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
+ impostorscore=0 clxscore=1011 bulkscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
+ definitions=main-2401090158
 
-Gunyah VM manager is a kernel moduel which exposes an interface to
-Gunyah userspace to load, run, and interact with other Gunyah virtual
-machines. The interface is a character device at /dev/gunyah.
+Gunyah is a Type-1 hypervisor independent of any high-level OS kernel,
+and runs in a higher CPU privilege level. It does not depend on any
+lower-privileged OS kernel/code for its core functionality. This
+increases its security and can support a much smaller trusted computing
+base than a Type-2 hypervisor. Gunyah is designed for isolated virtual
+machine use cases and to support launching trusted+isolated virtual
+machines from a relatively less trusted host virtual machine.
 
-Add a basic VM manager driver. Upcoming patches will add more ioctls
-into this driver.
+Gunyah is an open source hypervisor. The source repo is available at
+https://github.com/quic/gunyah-hypervisor.
 
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Alex Elder <elder@linaro.org>
-Co-developed-by: Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
-Signed-off-by: Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
+The diagram below shows the architecture for AArch64.
+
+::
+
+         VM A                    VM B
+     +-----+ +-----+  | +-----+ +-----+ +-----+
+     |     | |     |  | |     | |     | |     |
+ EL0 | APP | | APP |  | | APP | | APP | | APP |
+     |     | |     |  | |     | |     | |     |
+     +-----+ +-----+  | +-----+ +-----+ +-----+
+ ---------------------|-------------------------
+     +--------------+ | +----------------------+
+     |              | | |                      |
+ EL1 | Linux Kernel | | |Linux kernel/Other OS |   ...
+     |              | | |                      |
+     +--------------+ | +----------------------+
+ --------hvc/smc------|------hvc/smc------------
+     +----------------------------------------+
+     |                                        |
+ EL2 |            Gunyah Hypervisor           |
+     |                                        |
+     +----------------------------------------+
+
+Gunyah provides these following features.
+
+- Threads and Scheduling: The scheduler schedules virtual CPUs (VCPUs)
+  on physical CPUs and enables time-sharing of the CPUs.
+- Memory Management: Gunyah tracks memory ownership and use of all
+  memory under its control. It provides low level dynamic memory
+  management APIs on top of which higher level donation, lending and sharing
+  is built. Gunyah provides strong VM memory isolation for trusted VMs.
+- Interrupt Virtualization: Interrupts are managed by the hypervisor
+  and are routed directly to the assigned VM.
+- Inter-VM Communication: There are several different mechanisms
+  provided for communicating between VMs.
+- Device Virtualization: Para-virtualization of devices is supported
+  using inter-VM communication and virtio primitives. Low level architecture
+  features and devices such as cpu timers, interrupt controllers are supported
+  with hardware virtualization and emulation where required.
+- Resource Manager: Gunyah supports a "root" VM that initially owns all
+  VM memory and IO resources. The Gunyah Resource Manager is the default
+  bundled root VM and provides high-level services including dynamic VM
+  management and secure memory donation, lending and sharing.
+
+This series adds the basic framework for detecting that Linux is running
+under Gunyah as a virtual machine, communication with the Gunyah
+Resource Manager, and a sample virtual machine manager capable of
+launching virtual machines.
+
+Changes in v16:
+ - Fleshed out memory reclaim while VM is running
+ - Documentation and comments
+
+Changes in v15:
+https://lore.kernel.org/r/20231215-gunyah-v15-0-192a5d872a30@quicinc.com
+ - First implementation of virtual machines backed by guestmemfd and
+using demand paging to provide memory instead of all up front.
+ - Use message queue hypercalls directly instead of traversing through
+mailbox framework.
+
+Changes in v14: https://lore.kernel.org/all/20230613172054.3959700-1-quic_eberman@quicinc.com/
+ - Coding/cosmetic tweaks suggested by Alex
+ - Mark IRQs as wake-up capable
+
+Changes in v13:
+https://lore.kernel.org/all/20230509204801.2824351-1-quic_eberman@quicinc.com/
+ - Tweaks to message queue driver to address race condition between IRQ
+and mailbox registration
+ - Allow removal of VM functions by function-specific comparison --
+specifically to allow
+   removing irqfd by label only and not requiring original FD to be
+provided.
+
+Changes in v12:
+https://lore.kernel.org/all/20230424231558.70911-1-quic_eberman@quicinc.com/
+ - Stylistic/cosmetic tweaks suggested by Alex
+ - Remove patch "virt: gunyah: Identify hypervisor version" and squash
+the
+   check that we're running under a reasonable Gunyah hypervisor into RM
+driver
+ - Refactor platform hooks into a separate module per suggestion from
+Srini
+ - GFP_KERNEL_ACCOUNT and account_locked_vm() for page pinning
+ - enum-ify related constants
+
+Changes in v11:
+https://lore.kernel.org/all/20230304010632.2127470-1-quic_eberman@quicinc.com/
+ - Rename struct gh_vm_dtb_config:gpa -> guest_phys_addr & overflow
+checks for this
+ - More docstrings throughout
+ - Make resp_buf and resp_buf_size optional
+ - Replace deprecated idr with xarray
+ - Refconting on misc device instead of RM's platform device
+ - Renaming variables, structs, etc. from gunyah_ -> gh_
+ - Drop removal of user mem regions
+ - Drop mem_lend functionality; to converge with restricted_memfd later
+
+Changes in v10:
+https://lore.kernel.org/all/20230214211229.3239350-1-quic_eberman@quicinc.com/
+ - Fix bisectability (end result of series is same, --fixups applied to
+wrong commits)
+ - Convert GH_ERROR_* and GH_RM_ERROR_* to enums
+ - Correct race condition between allocating/freeing user memory
+ - Replace offsetof with struct_size
+ - Series-wide renaming of functions to be more consistent
+ - VM shutdown & restart support added in vCPU and VM Manager patches
+ - Convert VM function name (string) to type (number)
+ - Convert VM function argument to value (which could be a pointer) to
+remove memory wastage for arguments
+ - Remove defensive checks of hypervisor correctness
+ - Clean ups to ioeventfd as suggested by Srivatsa
+
+Changes in v9:
+https://lore.kernel.org/all/20230120224627.4053418-1-quic_eberman@quicinc.com/
+ - Refactor Gunyah API flags to be exposed as feature flags at kernel
+level
+ - Move mbox client cleanup into gunyah_msgq_remove()
+ - Simplify gh_rm_call return value and response payload
+ - Missing clean-up/error handling/little endian fixes as suggested by
+Srivatsa and Alex in v8 series
+
+Changes in v8:
+https://lore.kernel.org/all/20221219225850.2397345-1-quic_eberman@quicinc.com/
+ - Treat VM manager as a library of RM
+ - Add patches 21-28 as RFC to support proxy-scheduled vCPUs and
+necessary bits to support virtio
+   from Gunyah userspace
+
+Changes in v7:
+https://lore.kernel.org/all/20221121140009.2353512-1-quic_eberman@quicinc.com/
+ - Refactor to remove gunyah RM bus
+ - Refactor allow multiple RM device instances
+ - Bump UAPI to start at 0x0
+ - Refactor QCOM SCM's platform hooks to allow
+CONFIG_QCOM_SCM=Y/CONFIG_GUNYAH=M combinations
+
+Changes in v6:
+https://lore.kernel.org/all/20221026185846.3983888-1-quic_eberman@quicinc.com/
+ - *Replace gunyah-console with gunyah VM Manager*
+ - Move include/asm-generic/gunyah.h into include/linux/gunyah.h
+ - s/gunyah_msgq/gh_msgq/
+ - Minor tweaks and documentation tidying based on comments from Jiri,
+Greg, Arnd, Dmitry, and Bagas.
+
+Changes in v5
+https://lore.kernel.org/all/20221011000840.289033-1-quic_eberman@quicinc.com/
+ - Dropped sysfs nodes
+ - Switch from aux bus to Gunyah RM bus for the subdevices
+ - Cleaning up RM console
+
+Changes in v4:
+https://lore.kernel.org/all/20220928195633.2348848-1-quic_eberman@quicinc.com/
+ - Tidied up documentation throughout based on questions/feedback received
+ - Switched message queue implementation to use mailboxes
+ - Renamed "gunyah_device" as "gunyah_resource"
+
+Changes in v3:
+https://lore.kernel.org/all/20220811214107.1074343-1-quic_eberman@quicinc.com/
+ - /Maintained/Supported/ in MAINTAINERS
+ - Tidied up documentation throughout based on questions/feedback received
+ - Moved hypercalls into arch/arm64/gunyah/; following hyper-v's implementation
+ - Drop opaque typedefs
+ - Move sysfs nodes under /sys/hypervisor/gunyah/
+ - Moved Gunyah console driver to drivers/tty/
+ - Reworked gh_device design to drop the Gunyah bus.
+
+Changes in v2: https://lore.kernel.org/all/20220801211240.597859-1-quic_eberman@quicinc.com/
+ - DT bindings clean up
+ - Switch hypercalls to follow SMCCC 
+
+v1: https://lore.kernel.org/all/20220223233729.1571114-1-quic_eberman@quicinc.com/
+
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- Documentation/userspace-api/ioctl/ioctl-number.rst |  1 +
- drivers/virt/gunyah/Makefile                       |  2 +-
- drivers/virt/gunyah/rsc_mgr.c                      | 51 ++++++++++++
- drivers/virt/gunyah/vm_mgr.c                       | 94 ++++++++++++++++++++++
- drivers/virt/gunyah/vm_mgr.h                       | 28 +++++++
- include/uapi/linux/gunyah.h                        | 23 ++++++
- 6 files changed, 198 insertions(+), 1 deletion(-)
+Elliot Berman (34):
+      docs: gunyah: Introduce Gunyah Hypervisor
+      dt-bindings: Add binding for gunyah hypervisor
+      gunyah: Common types and error codes for Gunyah hypercalls
+      virt: gunyah: Add hypercalls to identify Gunyah
+      virt: gunyah: Add hypervisor driver
+      virt: gunyah: msgq: Add hypercalls to send and receive messages
+      gunyah: rsc_mgr: Add resource manager RPC core
+      gunyah: vm_mgr: Introduce basic VM Manager
+      gunyah: rsc_mgr: Add VM lifecycle RPC
+      gunyah: vm_mgr: Add VM start/stop
+      virt: gunyah: Translate gh_rm_hyp_resource into gunyah_resource
+      virt: gunyah: Add resource tickets
+      gunyah: vm_mgr: Add framework for VM Functions
+      virt: gunyah: Add hypercalls for running a vCPU
+      virt: gunyah: Add proxy-scheduled vCPUs
+      gunyah: Add hypercalls for demand paging
+      gunyah: rsc_mgr: Add memory parcel RPC
+      virt: gunyah: Add interfaces to map memory into guest address space
+      gunyah: rsc_mgr: Add platform ops on mem_lend/mem_reclaim
+      virt: gunyah: Add Qualcomm Gunyah platform ops
+      virt: gunyah: Implement guestmemfd
+      virt: gunyah: Add ioctl to bind guestmem to VMs
+      virt: gunyah: guestmem: Initialize RM mem parcels from guestmem
+      virt: gunyah: Share guest VM dtb configuration to Gunyah
+      gunyah: rsc_mgr: Add RPC to enable demand paging
+      mm/interval_tree: Export iter_first/iter_next
+      virt: gunyah: Enable demand paging
+      gunyah: rsc_mgr: Add RPC to set VM boot context
+      virt: gunyah: Allow userspace to initialize context of primary vCPU
+      virt: gunyah: Add hypercalls for sending doorbell
+      virt: gunyah: Add irqfd interface
+      virt: gunyah: Add IO handlers
+      virt: gunyah: Add ioeventfd
+      MAINTAINERS: Add Gunyah hypervisor drivers section
 
-diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-index d8b6cb1a3636..91e01925a41b 100644
---- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-+++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-@@ -137,6 +137,7 @@ Code  Seq#    Include File                                           Comments
- 'F'   DD     video/sstfb.h                                           conflict!
- 'G'   00-3F  drivers/misc/sgi-gru/grulib.h                           conflict!
- 'G'   00-0F  xen/gntalloc.h, xen/gntdev.h                            conflict!
-+'G'   00-0F  linux/gunyah.h                                          conflict!
- 'H'   00-7F  linux/hiddev.h                                          conflict!
- 'H'   00-0F  linux/hidraw.h                                          conflict!
- 'H'   01     linux/mei.h                                             conflict!
-diff --git a/drivers/virt/gunyah/Makefile b/drivers/virt/gunyah/Makefile
-index c2308389f551..ceccbbe68b38 100644
---- a/drivers/virt/gunyah/Makefile
-+++ b/drivers/virt/gunyah/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--gunyah_rsc_mgr-y += rsc_mgr.o
-+gunyah_rsc_mgr-y += rsc_mgr.o vm_mgr.o
- 
- obj-$(CONFIG_GUNYAH) += gunyah.o gunyah_rsc_mgr.o
-diff --git a/drivers/virt/gunyah/rsc_mgr.c b/drivers/virt/gunyah/rsc_mgr.c
-index a3578a0c10b4..45f9514cfe0e 100644
---- a/drivers/virt/gunyah/rsc_mgr.c
-+++ b/drivers/virt/gunyah/rsc_mgr.c
-@@ -10,8 +10,10 @@
- #include <linux/notifier.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/miscdevice.h>
- 
- #include "rsc_mgr.h"
-+#include "vm_mgr.h"
- 
- /* clang-format off */
- #define RM_RPC_API_VERSION_MASK		GENMASK(3, 0)
-@@ -118,6 +120,7 @@ struct gunyah_rm_message {
-  * @send_lock: synchronization to allow only one request to be sent at a time
-  * @send_ready: completed when we know Tx message queue can take more messages
-  * @nh: notifier chain for clients interested in RM notification messages
-+ * @miscdev: /dev/gunyah
-  */
- struct gunyah_rm {
- 	struct device *dev;
-@@ -133,6 +136,8 @@ struct gunyah_rm {
- 	struct mutex send_lock;
- 	struct completion send_ready;
- 	struct blocking_notifier_head nh;
-+
-+	struct miscdevice miscdev;
- };
- 
- /**
-@@ -617,6 +622,36 @@ int gunyah_rm_notifier_unregister(struct gunyah_rm *rm,
- }
- EXPORT_SYMBOL_GPL(gunyah_rm_notifier_unregister);
- 
-+struct device *gunyah_rm_get(struct gunyah_rm *rm)
-+{
-+	return get_device(rm->miscdev.this_device);
-+}
-+EXPORT_SYMBOL_GPL(gunyah_rm_get);
-+
-+void gunyah_rm_put(struct gunyah_rm *rm)
-+{
-+	put_device(rm->miscdev.this_device);
-+}
-+EXPORT_SYMBOL_GPL(gunyah_rm_put);
-+
-+static long gunyah_dev_ioctl(struct file *filp, unsigned int cmd,
-+			     unsigned long arg)
-+{
-+	struct miscdevice *miscdev = filp->private_data;
-+	struct gunyah_rm *rm = container_of(miscdev, struct gunyah_rm, miscdev);
-+
-+	return gunyah_dev_vm_mgr_ioctl(rm, cmd, arg);
-+}
-+
-+static const struct file_operations gunyah_dev_fops = {
-+	/* clang-format off */
-+	.owner		= THIS_MODULE,
-+	.unlocked_ioctl	= gunyah_dev_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
-+	.llseek		= noop_llseek,
-+	/* clang-format on */
-+};
-+
- static int gunyah_platform_probe_capability(struct platform_device *pdev,
- 					    int idx,
- 					    struct gunyah_resource *ghrsc)
-@@ -702,9 +737,24 @@ static int gunyah_rm_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	rm->miscdev.name = "gunyah";
-+	rm->miscdev.minor = MISC_DYNAMIC_MINOR;
-+	rm->miscdev.fops = &gunyah_dev_fops;
-+
-+	ret = misc_register(&rm->miscdev);
-+	if (ret)
-+		return ret;
-+
- 	return 0;
- }
- 
-+static void gunyah_rm_remove(struct platform_device *pdev)
-+{
-+	struct gunyah_rm *rm = platform_get_drvdata(pdev);
-+
-+	misc_deregister(&rm->miscdev);
-+}
-+
- static const struct of_device_id gunyah_rm_of_match[] = {
- 	{ .compatible = "gunyah-resource-manager" },
- 	{}
-@@ -713,6 +763,7 @@ MODULE_DEVICE_TABLE(of, gunyah_rm_of_match);
- 
- static struct platform_driver gunyah_rm_driver = {
- 	.probe = gunyah_rm_probe,
-+	.remove_new = gunyah_rm_remove,
- 	.driver = {
- 		.name = "gunyah_rsc_mgr",
- 		.of_match_table = gunyah_rm_of_match,
-diff --git a/drivers/virt/gunyah/vm_mgr.c b/drivers/virt/gunyah/vm_mgr.c
-new file mode 100644
-index 000000000000..e9dff733e35e
---- /dev/null
-+++ b/drivers/virt/gunyah/vm_mgr.c
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#define pr_fmt(fmt) "gunyah_vm_mgr: " fmt
-+
-+#include <linux/anon_inodes.h>
-+#include <linux/file.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
-+
-+#include <uapi/linux/gunyah.h>
-+
-+#include "rsc_mgr.h"
-+#include "vm_mgr.h"
-+
-+static __must_check struct gunyah_vm *gunyah_vm_alloc(struct gunyah_rm *rm)
-+{
-+	struct gunyah_vm *ghvm;
-+
-+	ghvm = kzalloc(sizeof(*ghvm), GFP_KERNEL);
-+	if (!ghvm)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ghvm->parent = gunyah_rm_get(rm);
-+	ghvm->rm = rm;
-+
-+	return ghvm;
-+}
-+
-+static int gunyah_vm_release(struct inode *inode, struct file *filp)
-+{
-+	struct gunyah_vm *ghvm = filp->private_data;
-+
-+	gunyah_rm_put(ghvm->rm);
-+	kfree(ghvm);
-+	return 0;
-+}
-+
-+static const struct file_operations gunyah_vm_fops = {
-+	.owner = THIS_MODULE,
-+	.release = gunyah_vm_release,
-+	.llseek = noop_llseek,
-+};
-+
-+static long gunyah_dev_ioctl_create_vm(struct gunyah_rm *rm, unsigned long arg)
-+{
-+	struct gunyah_vm *ghvm;
-+	struct file *file;
-+	int fd, err;
-+
-+	/* arg reserved for future use. */
-+	if (arg)
-+		return -EINVAL;
-+
-+	ghvm = gunyah_vm_alloc(rm);
-+	if (IS_ERR(ghvm))
-+		return PTR_ERR(ghvm);
-+
-+	fd = get_unused_fd_flags(O_CLOEXEC);
-+	if (fd < 0) {
-+		err = fd;
-+		goto err_destroy_vm;
-+	}
-+
-+	file = anon_inode_getfile("gunyah-vm", &gunyah_vm_fops, ghvm, O_RDWR);
-+	if (IS_ERR(file)) {
-+		err = PTR_ERR(file);
-+		goto err_put_fd;
-+	}
-+
-+	fd_install(fd, file);
-+
-+	return fd;
-+
-+err_put_fd:
-+	put_unused_fd(fd);
-+err_destroy_vm:
-+	gunyah_rm_put(ghvm->rm);
-+	kfree(ghvm);
-+	return err;
-+}
-+
-+long gunyah_dev_vm_mgr_ioctl(struct gunyah_rm *rm, unsigned int cmd,
-+			     unsigned long arg)
-+{
-+	switch (cmd) {
-+	case GUNYAH_CREATE_VM:
-+		return gunyah_dev_ioctl_create_vm(rm, arg);
-+	default:
-+		return -ENOTTY;
-+	}
-+}
-diff --git a/drivers/virt/gunyah/vm_mgr.h b/drivers/virt/gunyah/vm_mgr.h
-new file mode 100644
-index 000000000000..50790d402676
---- /dev/null
-+++ b/drivers/virt/gunyah/vm_mgr.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _GUNYAH_VM_MGR_PRIV_H
-+#define _GUNYAH_VM_MGR_PRIV_H
-+
-+#include <linux/device.h>
-+
-+#include <uapi/linux/gunyah.h>
-+
-+#include "rsc_mgr.h"
-+
-+long gunyah_dev_vm_mgr_ioctl(struct gunyah_rm *rm, unsigned int cmd,
-+			     unsigned long arg);
-+
-+/**
-+ * struct gunyah_vm - Main representation of a Gunyah Virtual machine
-+ * @rm: Pointer to the resource manager struct to make RM calls
-+ * @parent: For logging
-+ */
-+struct gunyah_vm {
-+	struct gunyah_rm *rm;
-+	struct device *parent;
-+};
-+
-+#endif
-diff --git a/include/uapi/linux/gunyah.h b/include/uapi/linux/gunyah.h
-new file mode 100644
-index 000000000000..ac338ec4b85d
---- /dev/null
-+++ b/include/uapi/linux/gunyah.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-+/*
-+ * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _UAPI_LINUX_GUNYAH_H
-+#define _UAPI_LINUX_GUNYAH_H
-+
-+/*
-+ * Userspace interface for /dev/gunyah - gunyah based virtual machine
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/ioctl.h>
-+
-+#define GUNYAH_IOCTL_TYPE 'G'
-+
-+/*
-+ * ioctls for /dev/gunyah fds:
-+ */
-+#define GUNYAH_CREATE_VM _IO(GUNYAH_IOCTL_TYPE, 0x0) /* Returns a Gunyah VM fd */
-+
-+#endif
+ .../bindings/firmware/gunyah-hypervisor.yaml       |  82 ++
+ Documentation/userspace-api/ioctl/ioctl-number.rst |   1 +
+ Documentation/virt/gunyah/index.rst                | 134 +++
+ Documentation/virt/gunyah/message-queue.rst        |  68 ++
+ Documentation/virt/index.rst                       |   1 +
+ MAINTAINERS                                        |  12 +
+ arch/arm64/Kbuild                                  |   1 +
+ arch/arm64/gunyah/Makefile                         |   3 +
+ arch/arm64/gunyah/gunyah_hypercall.c               | 279 ++++++
+ arch/arm64/include/asm/gunyah.h                    |  57 ++
+ drivers/virt/Kconfig                               |   2 +
+ drivers/virt/Makefile                              |   1 +
+ drivers/virt/gunyah/Kconfig                        |  47 +
+ drivers/virt/gunyah/Makefile                       |   9 +
+ drivers/virt/gunyah/guest_memfd.c                  | 960 ++++++++++++++++++++
+ drivers/virt/gunyah/gunyah.c                       |  52 ++
+ drivers/virt/gunyah/gunyah_ioeventfd.c             | 139 +++
+ drivers/virt/gunyah/gunyah_irqfd.c                 | 190 ++++
+ drivers/virt/gunyah/gunyah_platform_hooks.c        | 115 +++
+ drivers/virt/gunyah/gunyah_qcom.c                  | 218 +++++
+ drivers/virt/gunyah/gunyah_vcpu.c                  | 584 ++++++++++++
+ drivers/virt/gunyah/rsc_mgr.c                      | 948 ++++++++++++++++++++
+ drivers/virt/gunyah/rsc_mgr.h                      | 144 +++
+ drivers/virt/gunyah/rsc_mgr_rpc.c                  | 586 +++++++++++++
+ drivers/virt/gunyah/vm_mgr.c                       | 976 +++++++++++++++++++++
+ drivers/virt/gunyah/vm_mgr.h                       | 153 ++++
+ drivers/virt/gunyah/vm_mgr_mem.c                   | 321 +++++++
+ include/linux/gunyah.h                             | 482 ++++++++++
+ include/uapi/linux/gunyah.h                        | 378 ++++++++
+ mm/interval_tree.c                                 |   3 +
+ 30 files changed, 6946 insertions(+)
+---
+base-commit: bffdfd2e7e63175ae261131a620f809d946cf9a7
+change-id: 20231208-gunyah-952aca7668e0
 
+Best regards,
 -- 
-2.34.1
+Elliot Berman <quic_eberman@quicinc.com>
 
