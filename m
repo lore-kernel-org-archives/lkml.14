@@ -1,119 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914B84C3C6
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeDcPZYq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B85F1C433C7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749FA4C3C4;
 	Wed, 10 Jan 2024 15:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704902190;
-	bh=Mev9R+M1cLaYjYBU2ZgT5jQ2ZNfBaieaMpJ0LyeLUqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IeDcPZYqZH/yosqHy6J0lKKIXTr87XKELYPhOa4vt9rK8HdOlohar0v95Bx8OTdGH
-	 qFkCOu0OtN6mz/BohFHwbJekpq/cRig3FNJMy81gq7ZjCx4Q+GqZRFbdFk2LWKfLwU
-	 UqW8AC16aRfgHhoGD+CVoZibaW2tuPgF5iuMbzilseJNpgvVjFgYAZrwuFPgEB78OG
-	 WV0NkkyJ+qt57r+azS6oThayuTFamklZZWYXTFl52aiYMK+5hVeAsy/CZ3k7mu4Zvw
-	 gsotv0QM55jZHaZKlclvTSBRs5wPTZS/GgIMp2z1pttlcZwrYyX+zCDFpfpMi3TWWO
-	 PcI2MR49Yy+Rw==
-Date: Wed, 10 Jan 2024 16:56:27 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Michal Wajdeczko <michal.wajdeczko@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Javier Martinez Canillas <javierm@redhat.com>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>
-Subject: Re: [PATCH v4 6/6] drm/tests: managed: Add a simple test for
- drmm_managed_release
-Message-ID: <2mgrb5lrm5oskkcauhdbegdb5jwhqx6unzlaltz6e2bzaqrzyr@dnkbsr3ykj7k>
-References: <20240105101324.26811-1-michal.winiarski@intel.com>
- <20240105101324.26811-7-michal.winiarski@intel.com>
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+	id CF337776; Wed, 10 Jan 2024 09:47:46 -0600 (CST)
+Date: Wed, 10 Jan 2024 09:47:46 -0600
+From: "Serge E. Hallyn" <serge@hallyn.com>
+To: Li zeming <zeming@nfschina.com>
+Cc: serge@hallyn.com, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: =?utf-8?Q?capability?=
+ =?utf-8?B?OiBSZW1vdmUgdW5uZWNlc3Nhcnkg4oCYMOKAmQ==?= values from ret
+Message-ID: <20240110154746.GA92832@mail.hallyn.com>
+References: <20231228030854.11689-1-zeming@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="low44rvsz3fnl7ut"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240105101324.26811-7-michal.winiarski@intel.com>
+In-Reply-To: <20231228030854.11689-1-zeming@nfschina.com>
 
+On Thu, Dec 28, 2023 at 11:08:54AM +0800, Li zeming wrote:
+> The ret variable is assigned when it does not need to be defined, as it
+> has already been assigned before use.
+> 
+> Signed-off-by: Li zeming <zeming@nfschina.com>
 
---low44rvsz3fnl7ut
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is true, so the patch would fine now.  But it has not always been
+the case, and a future patch could add code at the start which makes it
+no longer true.  While I'd hope we would easily catch that, I'm just not
+sure it's worth it.  In fact I'm curious - does the compiler recognize
+this situation and optimize the = 0 away?
 
-On Fri, Jan 05, 2024 at 11:13:24AM +0100, Micha=C5=82 Winiarski wrote:
-> Add a simple test that checks whether the action is indeed called right
-> away and that it is not called on the final drm_dev_put().
->=20
-> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
 > ---
->  drivers/gpu/drm/tests/drm_managed_test.c | 28 ++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/tests/drm_managed_test.c b/drivers/gpu/drm/t=
-ests/drm_managed_test.c
-> index c1fc1f0aac9b2..91863642efc13 100644
-> --- a/drivers/gpu/drm/tests/drm_managed_test.c
-> +++ b/drivers/gpu/drm/tests/drm_managed_test.c
-> @@ -41,6 +41,33 @@ static void drm_test_managed_run_action(struct kunit *=
-test)
->  	KUNIT_EXPECT_TRUE_MSG(test, priv->action_done, "Release action was not =
-called");
->  }
-> =20
-> +/*
-> + * The test verifies that the release action is called immediately when
-> + * drmm_release_action is called and that it is not called for a second =
-time
-> + * when the device is released.
-> + */
-> +static void drm_test_managed_release_action(struct kunit *test)
-> +{
-> +	struct managed_test_priv *priv =3D test->priv;
+>  kernel/capability.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/capability.c b/kernel/capability.c
+> index dac4df77e376e..ed8a983e21da4 100644
+> --- a/kernel/capability.c
+> +++ b/kernel/capability.c
+> @@ -140,7 +140,7 @@ static inline int cap_get_target_pid(pid_t pid, kernel_cap_t *pEp,
+>   */
+>  SYSCALL_DEFINE2(capget, cap_user_header_t, header, cap_user_data_t, dataptr)
+>  {
+> -	int ret = 0;
 > +	int ret;
-> +
-> +	ret =3D drmm_add_action_or_reset(priv->drm, drm_action, priv);
-> +	KUNIT_EXPECT_EQ(test, ret, 0);
-> +
-> +	ret =3D drm_dev_register(priv->drm, 0);
-> +	KUNIT_ASSERT_EQ(test, ret, 0);
-> +
-> +	drmm_release_action(priv->drm, drm_action, priv);
-> +	KUNIT_EXPECT_TRUE_MSG(test, priv->action_done, "Release action was not =
-called");
-> +	priv->action_done =3D false;
-> +
-> +	drm_dev_unregister(priv->drm);
-> +	drm_kunit_helper_free_device(test, priv->drm->dev);
-> +
-> +	KUNIT_EXPECT_FALSE_MSG(test, priv->action_done,
-> +			       "Unexpected release action call during cleanup");
-> +}
-> +
-
-I guess we can have something simpler if we switch action_done to a
-counter and just check that the counter didn't increase.
-
-And I think the custom messages should be removed there too.
-
-Maxime
-
---low44rvsz3fnl7ut
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZZ6+KwAKCRDj7w1vZxhR
-xTSyAP9WBatDxCR53O+71y/N+u/TGRvmdsq04Tz8iV4qA/vs8wD9E/+kUzgF0hBT
-sPyni9+ICPNJdDcxH9Yh9B/2rk4Z6AY=
-=1Mfc
------END PGP SIGNATURE-----
-
---low44rvsz3fnl7ut--
+>  	pid_t pid;
+>  	unsigned tocopy;
+>  	kernel_cap_t pE, pI, pP;
+> -- 
+> 2.18.2
