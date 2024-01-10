@@ -1,129 +1,74 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114DA41205
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H/dSOAFw"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50e7f58c5fbso5109980e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:00:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704884440; x=1705489240; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RfeKeWELsUXSOsoX/4w9IRfss9fiLzU6vIaJLnkhKk8=;
-        b=H/dSOAFwvou2rKPgvKuitSKE7egPG9TAs/Uo9L0LPZt7LR05d2IyDHbS/QWbnOfH2b
-         +ba2tcq/QkjdNY04fuMHG4BkQiT7GLGv0Q3fZCoLlqZWxyIzYTynC6cS2R2RedlTHE7V
-         fbV7WeKKDJlEzhMFDE47Tvq2SK05v+fMIFHl+JSoSQFfsLK2FMKxkCsmYRaow96dMRrg
-         ZePhGjrZ9WfpEx6hqr/YGKgEaFX7FjkzFcBQsPpnG+ZbkTinRM6M0Y9QaL/pwHaKGrGJ
-         o0gRN+CHi/O+Qe2EUOxOSeZ+XM6S0ewy7UZ3FHqRELSglNf/35twUalWuKqB/wk2GyVB
-         UtCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704884440; x=1705489240;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RfeKeWELsUXSOsoX/4w9IRfss9fiLzU6vIaJLnkhKk8=;
-        b=sxp8DIavWJgOuw2NocRXzC3b5w9KX2LyaMWrb1cyok6+AMKsWAYjovNvI8rhJa9Nqd
-         2Dc044Y39LRna1Jeqb14wNputCCXJxzumq/ORoKLHYxiL3oEO4oN//GUzoI+mCkbn5jE
-         PsGZuL5pnQXxf0em7GhfyybjhuvyG/ac+lmvveUmzg4zGtEQPXVQRuVy5WGyBcJQkX28
-         j3fz5z4DUpQwyI1DHdgNTLULfH1wbA+l9H+ANi5elVfsn04U9JiZ2oJFn3IWWqF0h2b4
-         ZDIWW+oe6atWopMCS/pcV0bbYk7Aid3efytVvRrivbSPJxPoVZ1wAwuCs4ObZjXr/K8B
-         pHag==
-X-Gm-Message-State: AOJu0Yy4JYhfD6CXxhpj894uth/ZigddZtIBoivvFHdERVSrAAdrT2a7
-	RfFYNE+0cDQW8bPguqzW+M1OdmfjJUNXUQ==
-X-Google-Smtp-Source: AGHT+IHxHBhrhaM+rqV9BsRHT6XAftzD06A/BcYSyyty/0KA0tCunnAFj1XF5aWGoLi7Er3fmNTdWg==
-X-Received: by 2002:a19:9117:0:b0:50e:7be9:52fb with SMTP id t23-20020a199117000000b0050e7be952fbmr326167lfd.82.1704884439955;
-        Wed, 10 Jan 2024 03:00:39 -0800 (PST)
-Received: from [172.30.205.119] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id eo30-20020a056512481e00b0050e7ed9585asm617280lfb.233.2024.01.10.03.00.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 03:00:39 -0800 (PST)
-Message-ID: <36f9eac0-3086-4d18-9879-02738e99d262@linaro.org>
-Date: Wed, 10 Jan 2024 12:00:35 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCF640C12;
+	Wed, 10 Jan 2024 11:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from hamburger.collabora.co.uk (hamburger.collabora.co.uk [IPv6:2a01:4f8:1c1c:f269::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id 9A8313780C21;
+	Wed, 10 Jan 2024 11:01:25 +0000 (UTC)
+From: "Shreeya Patel" <shreeya.patel@collabora.com>
+In-Reply-To: <20240108150602.976232871@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240108150602.976232871@linuxfoundation.org>
+Date: Wed, 10 Jan 2024 11:01:25 +0000
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, "Gustavo Padovan" <gustavo.padovan@collabora.com>, kernel@collabora.com
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/5] iommu/arm-smmu: re-enable context caching in smmu
- reset operation
-Content-Language: en-US
-To: Bibek Kumar Patro <quic_bibekkum@quicinc.com>, will@kernel.org,
- robin.murphy@arm.com, joro@8bytes.org, dmitry.baryshkov@linaro.org,
- jsnitsel@redhat.com, quic_bjorande@quicinc.com, mani@kernel.org,
- quic_eberman@quicinc.com, robdclark@chromium.org,
- u.kleine-koenig@pengutronix.de, robh@kernel.org, vladimir.oltean@nxp.com,
- quic_pkondeti@quicinc.com, quic_molvera@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- qipl.kernel.upstream@quicinc.com
-References: <20240109114220.30243-1-quic_bibekkum@quicinc.com>
- <20240109114220.30243-2-quic_bibekkum@quicinc.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240109114220.30243-2-quic_bibekkum@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <465c-659e7900-3-3d0c2840@20656236>
+Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?6=2E6?= 000/124] 
+ =?utf-8?q?6=2E6=2E11-rc1?= review
+User-Agent: SOGoMail 5.9.1
+Content-Transfer-Encoding: quoted-printable
 
+On Monday, January 08, 2024 20:37 IST, Greg Kroah-Hartman <gregkh@linux=
+foundation.org> wrote:
 
+> This is the start of the stable review cycle for the 6.6.11 release.
+> There are 124 patches in this series, all will be posted as a respons=
+e
+> to this one.  If anyone has any issues with these being applied, plea=
+se
+> let me know.
+>=20
+> Responses should be made by Wed, 10 Jan 2024 15:05:35 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6=
+.11-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
+.git linux-6.6.y
+> and the diffstat can be found below.
+>=20
 
-On 1/9/24 12:42, Bibek Kumar Patro wrote:
-> Default MMU-500 reset operation disables context caching in
-> prefetch buffer. It is however expected for context banks using
-> the ACTLR register to retain their prefetch value during reset
-> and runtime suspend.
-> 
-> Replace default MMU-500 reset operation with Qualcomm specific reset
-> operation which envelope the default reset operation and re-enables
-> context caching in prefetch buffer for Qualcomm SoCs.
-> 
-> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-> ---
->   drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 37 ++++++++++++++++++++--
->   1 file changed, 34 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> index 549ae4dba3a6..000e207346af 100644
-> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> @@ -14,6 +14,16 @@
-> 
->   #define QCOM_DUMMY_VAL	-1
-> 
-> +/*
-> + * SMMU-500 TRM defines BIT(0) as CMTLB (Enable context caching in the
-> + * macro TLB) and BIT(1) as CPRE (Enable context caching in the prefetch
-> + * buffer). The remaining bits are implementation defined and vary across
-> + * SoCs.
-> + */
-> +
-> +#define CPRE			(1 << 1)
-> +#define CMTLB			(1 << 0)
-> +
->   static struct qcom_smmu *to_qcom_smmu(struct arm_smmu_device *smmu)
->   {
->   	return container_of(smmu, struct qcom_smmu, smmu);
-> @@ -376,11 +386,32 @@ static int qcom_smmu_def_domain_type(struct device *dev)
->   	return match ? IOMMU_DOMAIN_IDENTITY : 0;
->   }
-> 
-> +static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
-> +{
-> +	int ret;
-> +	u32 val;
-> +	int i;
-> +
-> +	ret = arm_mmu500_reset(smmu);
-> +
-> +	if (ret)
-Weird empty line.. Please remove it in the next revision since you're
-already going to send a new one..
+Please find the KernelCI report for linux-6.6.y below :-
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+## stable-rc HEAD for linux-6.6.y:
 
-Konrad
+Date: 2024-01-08
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
+git/log/?h=3Dc52463eb66c8ae86cf354c700d80ae02fd9a1eda
+
+## Build failures:
+
+No build failures seen for the stable-rc/linux-6.6.y commit head \o/
+
+## Boot failures:
+
+No **new** boot failures seen for the stable-rc/linux-6.6.y commit head=
+ \o/
+
+Tested-by: kernelci.org bot <bot@kernelci.org>
+
+Thanks,
+Shreeya Patel
+
