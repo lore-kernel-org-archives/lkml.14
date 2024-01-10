@@ -1,53 +1,110 @@
-Received: from m16.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6241747F52;
-	Wed, 10 Jan 2024 11:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFCB364AF;
+	Wed, 10 Jan 2024 11:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="d+vYhm+x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=jEqwjJoRoQCCeu+dixorWIss5lV/TiYmbhQI2BeIEXc=; b=d
-	+vYhm+xUiZNDBRCtNeMpNdgJ7m/YFB8aHnjnHY6oDOlzhqykWh7PuBrO+eEYanSZ
-	zYSv5rsGpzWjVMv4gVekX2e0rrLfQ1vAU/VWdsre6b8C83i2kSaApLt/SdTFe4HW
-	8h824b/SSKiI35NwlohE+YAvTl9ABiD23XNrfmTEQw=
-Received: from 00107082$163.com ( [111.35.187.31] ) by
- ajax-webmail-wmsvr-40-123 (Coremail) ; Wed, 10 Jan 2024 19:30:32 +0800
- (CST)
-Date: Wed, 10 Jan 2024 19:30:32 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Jozsef Kadlecsik" <kadlec@netfilter.org>
-Cc: ale.crismani@automattic.com, xiaolinkui@kylinos.cn, pablo@netfilter.org, 
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org
-Subject: Re: Performance regression in ip_set_swap on 6.1.69
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <661cb613.7974.18cf30c4a42.Coremail.00107082@163.com>
-References: <C0829B10-EAA6-4809-874E-E1E9C05A8D84@automattic.com>
- <20240110102342.4978-1-00107082@163.com>
- <a4dfc3d9-f028-7ab4-c3a7-11dcbb12e377@netfilter.org>
- <661cb613.7974.18cf30c4a42.Coremail.00107082@163.com>
-X-NTES-SC: AL_Qu2bBvSTuUoo5CmdYOkZnEYQheY4XMKyuPkg1YJXOp80kSTmyAAyYmBOL2D/1e+BMj63rwevWzZqxOdYd7Z0QZDC0yMsda23NgC0PJBtoqjt
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcvTS9li"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC577C433C7;
+	Wed, 10 Jan 2024 11:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704886286;
+	bh=YijeE4lMHSCVvcttYBU3SInp/YKSJPvaHdxLhi+JtYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pcvTS9liGZeeFspyq8/b0JP1ZkBzGDTEnjvFv15DiD0vtEfUNzgIeodJnmxMDN8U3
+	 rpYqy5NlhOXHJU6Ik3NTqDlmO+slV461IW+8mVSp5niGHKBvMSktqvxS2hqTG83yYp
+	 Wu/D1yXDI70WeKACfCWat8Rc4SdYV0mpTR0xCGPKImGfTcHj2Y6tFGEaTZQUnbD525
+	 uRQjZAKcoRiV+ip19HJhkNyUEJ0ni65fbN8/DTiGHVpsPeF/ooL2i+EY8LSQkQ9a0k
+	 3it3s8ZktOm2N2mV9Pa89bDBR/sX1N7OHYVkGk2rF5mGFQ1+pmEtAuLffIoVycpSGq
+	 1FSG1BXbJ96ew==
+Date: Wed, 10 Jan 2024 11:31:21 +0000
+From: Conor Dooley <conor@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Robbin Ehn <rehn@rivosinc.com>,
+	Gianluca Guida <gianluca@rivosinc.com>
+Subject: Re: [PATCH v2 4/6] riscv: add ISA extension parsing for Zacas
+Message-ID: <20240110-creed-sturdily-c93c15fc6549@spud>
+References: <20231220155723.684081-1-cleger@rivosinc.com>
+ <20231220155723.684081-5-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <2992e057.7d98.18cf3236780.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD33zDZf55lM5wiAA--.20534W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAJhqmVOBjN97AAHsp
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ltx+3bcvQMB0flo+"
+Content-Disposition: inline
+In-Reply-To: <20231220155723.684081-5-cleger@rivosinc.com>
 
-CgpBdCAyMDI0LTAxLTEwIDE5OjA1OjE4LCAiRGF2aWQgV2FuZyIgPDAwMTA3MDgyQDE2My5jb20+
-IHdyb3RlOgo+Cj4KPk15IHRlc3QgY29kZSBpcyBhcyBmb2xsb3dpbmcsIGl0IHdvdWxkIHN0cmVz
-cyBzd2FwcGluZyBpcHNldCAnZm9vJyB3aXRoICdiYXInOyAoZm9vL2JhciBpcHNldCBuZWVkcyB0
-byBiZSBjcmVhdGVkIGJlZm9yZSB0aGUgdGVzdC4pCj5XaXRoIGxhdGVzdCA2LjcsIHRoZSBzdHJl
-c3Mgd291bGQgdGFrZSBhYm91dCAxODAgc2Vjb25kcyB0byBmaW5pc2gsIGJ1dCB3aXRoIGBzeW5j
-aHJvbml6ZV9yY3VgIHJlbW92ZWQsIGl0IG9ubHkgdG9vayAzc2Vjb25kcy4KCkNvcnJlY3Rpb24s
-ICB3aXRoICdzeW5jaHJvbml6ZV9yY3UnIHJlbW92ZWQsIGl0IG9ubHkgdG9vayBhYm91dCAwLjAz
-IHNlY29uZHMKPgo+Cj5EYXZpZAo=
+
+--ltx+3bcvQMB0flo+
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Dec 20, 2023 at 04:57:20PM +0100, Cl=E9ment L=E9ger wrote:
+> Add parsing for Zacas ISA extension which was ratified recently in the
+> riscv-zacas manual.
+>=20
+> Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
+
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+> ---
+>  arch/riscv/include/asm/hwcap.h | 1 +
+>  arch/riscv/kernel/cpufeature.c | 1 +
+>  2 files changed, 2 insertions(+)
+>=20
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwca=
+p.h
+> index 3b31efe2f716..34f86424d743 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -85,6 +85,7 @@
+>  #define RISCV_ISA_EXT_ZVFHMIN		70
+>  #define RISCV_ISA_EXT_ZFA		71
+>  #define RISCV_ISA_EXT_ZTSO		72
+> +#define RISCV_ISA_EXT_ZACAS		73
+> =20
+>  #define RISCV_ISA_EXT_MAX		128
+>  #define RISCV_ISA_EXT_INVALID		U32_MAX
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index 3eb48a0eecb3..9a9d915b5bb2 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -259,6 +259,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D {
+>  	__RISCV_ISA_EXT_DATA(zihintntl, RISCV_ISA_EXT_ZIHINTNTL),
+>  	__RISCV_ISA_EXT_DATA(zihintpause, RISCV_ISA_EXT_ZIHINTPAUSE),
+>  	__RISCV_ISA_EXT_DATA(zihpm, RISCV_ISA_EXT_ZIHPM),
+> +	__RISCV_ISA_EXT_DATA(zacas, RISCV_ISA_EXT_ZACAS),
+>  	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
+>  	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
+>  	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
+> --=20
+> 2.43.0
+>=20
+
+--ltx+3bcvQMB0flo+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ6ACQAKCRB4tDGHoIJi
+0v55AQDZdKqZq0LPpzAGZXePq06kU+fz6HskHPlQ+h2crRlRAwEAsHn72UEtafAE
+4seP9ykxgZVOQtsIOdfyUSSVCueHwwA=
+=imzt
+-----END PGP SIGNATURE-----
+
+--ltx+3bcvQMB0flo+--
