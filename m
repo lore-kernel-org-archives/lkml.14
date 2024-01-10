@@ -1,97 +1,104 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D78F3C47B
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D22B3A1B5
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HVu9vGoo"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5c6bd3100fcso1586602a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 23:38:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NRMK08S2"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3376555b756so2126767f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 23:40:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704872290; x=1705477090; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i425ufsZh8gIC4EBfEiOE+XzwKt6U3xEd+yozxFH/RE=;
-        b=HVu9vGoosoF9bE53T4yps36VAZK7f/+VRm3UKFtgke1cMXhiPSthcPnpYfVTs7IrpM
-         HxrHZoF55fWViBKTGr80uwiFvOJdHqxmGDqRow97U0vtZNxDNzlLXCftVuiGtEwIa/zB
-         oi5WS7KkHnis+cr8bXb9/DVVPDIG8odtsyC8yCrb1Ga7dZ7A+igeUK5RJwNCvyTOUlx/
-         c56ioCKr1feyrLdgL6Ppokq+UUC9hDmbjTXZLMb4+W+WcRYfOrps8j4A0q3u36lHU1jT
-         8FJFO39SGNGAl+Lu7htW3m6kcjQQTTSha/+BVuMxufli0x+QFezKRl5WnrYFNNeAgdC3
-         e2vQ==
+        d=linaro.org; s=google; t=1704872410; x=1705477210; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NLPe7rN96jPmcBQ+yEx7r8GzqAJEfJNRmgl3HhO41JE=;
+        b=NRMK08S2mCTi6UNBwrhBRDxsxThiYHvB3GHnuM7LVmCQboaDHD8uoZD8JCbb3Tb6wZ
+         7dbcn1dqiqytm/5vpvhYkDmcBzIHJkB6iDb8HtIaSNI1eBLkAnCt+Gz8tNw2ouWmcGyd
+         IK7Jeubr4dTFoccpXm50C2XtasOKLiqYS7Uxl47Gqo6VmttqVI7ws81Cp+XuTXg9+WR1
+         K6fVtt7RxfbwsUKw3Lr7+z/mDp4N5V1ECQAM3mdSaPhkeBGqed2IzzkfgE/HU1f6bAwm
+         MgiIaJhWgjrYuJPPuzW/4zGa0Io8jQAeqx+J2yYdA31b++dQXCxsKDrdGIoO5VjEL72B
+         Z0Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704872290; x=1705477090;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i425ufsZh8gIC4EBfEiOE+XzwKt6U3xEd+yozxFH/RE=;
-        b=RsMFPJnpf5WL+fsqgGwpJHIAB3ScTbnSlG2RWGPvnJhQefDfe4U4kW5IZAui5pHIBX
-         H6KkpHuEFAMEg5/Pifjkkap+rrbCQuTLwPeiVs++wYIJrgrWVv9NALnYtD9Gmj74yzSS
-         uvpa4mJokliROmKk9uxxpnh3/fj66o+aLKwyDPEScIJVBXrjCXJPPv+Fepni9EQ9zJR9
-         pCW+UkubLvnCPnGIxqnkaw9DH5FrcACf1YXoBa29dju4nf6XR9BmosOvtQbMdR/Zbevw
-         2JLnYBYdhdmpnl2X7EMRt48KjxBv+d00VWCTnphLEkOHX7s80RjDTzJnEqpHN8NyYGXP
-         TzSw==
-X-Gm-Message-State: AOJu0YxmKjn6djAWkvEN0Ax+3q+PQlbhBDXMve0T7e1gLIn3rmj5i4ai
-	x9lSSeU9kP46q2D6XNpih/OeNd6TF5XvSQ==
-X-Google-Smtp-Source: AGHT+IGfhQOZcG6qDB0jtaoLNaZ0xjm2ldvzf/3kNf8p1FfAMSmZmP4rLbwFsZr3Q9tyCoxfpeJwiA==
-X-Received: by 2002:a05:6a20:6697:b0:199:7fab:f7f6 with SMTP id o23-20020a056a20669700b001997fabf7f6mr359628pzh.41.1704872289901;
-        Tue, 09 Jan 2024 23:38:09 -0800 (PST)
-Received: from localhost ([122.172.81.83])
-        by smtp.gmail.com with ESMTPSA id ga18-20020a17090b039200b0028d2521dc53sm786438pjb.46.2024.01.09.23.38.08
+        d=1e100.net; s=20230601; t=1704872410; x=1705477210;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NLPe7rN96jPmcBQ+yEx7r8GzqAJEfJNRmgl3HhO41JE=;
+        b=tiyYzG0GS9nE+kzYCCu/Xyl/DL5tbpI3q3QtQJ7u9qvPGWVG8yVE84RnOLjQDGZdQB
+         ypvZ50zL2UcYC+6nwGe9McJ3d2aBWrv5lUXzJShYv+BJ4uCidXNJ65+2zCKVx24Y8hdd
+         rh6UWpXXtvHXkIY03PM7QH+qFgs3cO3jNhOzpO2P8Qk7lYZCVgsvn3Qv/C2iTsijuSL+
+         6+5EXojAaFpMWChatPF0EBdbH3j3GtVyyAJGaPn8rdPkOnkY/bVm+pBBqR2Ex5lTH7QV
+         V3T78o/kgza5NuNxZiGDOuw2+GHH08XbzSGfIwNzkTcgvvXYzjM3Kb3qvM2r7ppM5Epo
+         2ZNQ==
+X-Gm-Message-State: AOJu0YzVOlaXyexx78zMFiA7haO1NG/RXVHgrSxDJ6N/Dc4wE09z5NLI
+	ShxYeutfIqxm65D0AVGX/PIZFydpJxaIVA==
+X-Google-Smtp-Source: AGHT+IEWGg/TtsHpb+8OZcJ3s5rg1vjUJ0YbvyUGPN2Et40F9kQT6rgF5c9MQnw9Vlk0josWMt/8Vw==
+X-Received: by 2002:adf:fec1:0:b0:337:64eb:1c4 with SMTP id q1-20020adffec1000000b0033764eb01c4mr1098496wrs.7.1704872409835;
+        Tue, 09 Jan 2024 23:40:09 -0800 (PST)
+Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id n10-20020a5d420a000000b0033719111458sm4148928wrq.36.2024.01.09.23.40.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 23:38:09 -0800 (PST)
-Date: Wed, 10 Jan 2024 13:08:07 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, agross@kernel.org,
-	andersson@kernel.org, konrad.dybcio@linaro.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, mani@kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, rafael@kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-	quic_ramkri@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v5 5/5] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20240110073807.sqwmsyr6nmigg6zc@vireshk-i7>
-References: <20231102053013.7yt7pxin5awlu7w7@vireshk-i7>
- <20231102120950.GA115288@bhelgaas>
- <20231103051247.u4cnckzstcvs4lf5@vireshk-i7>
- <15a98ec0-214b-218b-1e3c-c09f770fce2e@quicinc.com>
- <0ba9f2af-169e-a9a2-9ae4-4c6a70b0a94e@quicinc.com>
- <20240110065757.xde2nvpr3z7c4isu@vireshk-i7>
- <376b3716-46ff-2324-73fc-f3afa3f7af1c@quicinc.com>
+        Tue, 09 Jan 2024 23:40:09 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	mark.rutland@arm.com
+Cc: swboyd@chromium.org,
+	dianders@chromium.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH v2] arm64: irq: include <linux/cpumask.h>
+Date: Wed, 10 Jan 2024 07:40:07 +0000
+Message-ID: <20240110074007.4020016-1-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <376b3716-46ff-2324-73fc-f3afa3f7af1c@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 10-01-24, 12:42, Krishna Chaitanya Chundru wrote:
-> At present we are not changing the link width after link is initialized, but
-> we have plans to
-> 
-> add support change link width dynamically at runtime.
+Sorting include files in alphabetic order in
+drivers/tty/serial/samsung.c revealed the following error:
 
-Hmm okay.
+In file included from drivers/tty/serial/samsung_tty.c:24:
+./arch/arm64/include/asm/irq.h:9:43: error: unknown type name ‘cpumask_t’
+    9 | void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
+      |                                           ^~~~~~~~~
 
-> So, I think it is better to have ICC BW voting in the driver itself.
+Include cpumask.h to avoid unknown type errors for parents of irq.h that
+don't include cpumask.h.
 
-I guess it is better to have more entries in the OPP table then.. 15-20 OPPs
-isn't too many to be honest.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+v2:
+- fix typo, s/avod/avoid
+- include the linux header first and then add a new line to differentiate
+  from the asm header
+- collect Mark's Acked-by tag
 
-Replicating code is the last thing I would like to do.
+ arch/arm64/include/asm/irq.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Maybe you can show the different layouts of the OPP table if you are concerned.
-We can then see if it is getting too much or not.
-
+diff --git a/arch/arm64/include/asm/irq.h b/arch/arm64/include/asm/irq.h
+index 50ce8b697ff3..e93548914c36 100644
+--- a/arch/arm64/include/asm/irq.h
++++ b/arch/arm64/include/asm/irq.h
+@@ -4,6 +4,8 @@
+ 
+ #ifndef __ASSEMBLER__
+ 
++#include <linux/cpumask.h>
++
+ #include <asm-generic/irq.h>
+ 
+ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
 -- 
-viresh
+2.43.0.472.g3155946c3a-goog
+
