@@ -1,81 +1,163 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.65.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622E847A58;
-	Wed, 10 Jan 2024 10:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEVeTbYb"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5f0c0ca5ef1so39824217b3.2;
-        Wed, 10 Jan 2024 02:49:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704883780; x=1705488580; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nkyAuv09jckrb1xtJ7Sn9m5uY5gMhi9Dyi8024qOado=;
-        b=iEVeTbYbUGnuNg/OARaHQc1dkH2wlTGkrw5/TIenxuFDpm8xkWFLHK/BPB5uNY/RFi
-         Z9k66nf4AXzcvNeUsYed49KcZdgftSgaop2Y7Pg5SLL+3+qpJ86iKDoTjYaLcMoAcdP5
-         WGJsHdVl5ejDnjsbB6gg5fyqC0MHsosXUvFhbAqHbZn/n1wQDAbfQtpNc5/AWyIw0mQu
-         zLZjBNjvTHHYX52bVrEiCSMhc0P3qSMxcwQD+7UESZ3zyIBRSB/q+7b3bZqJeMVXnt1y
-         ehkbAKSibKkyYnv4P0ij8tJtui5HsE8OnNWWx1tcuSN4biCAtqSAMbxJvSfWeP9IcmT6
-         wnng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704883780; x=1705488580;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nkyAuv09jckrb1xtJ7Sn9m5uY5gMhi9Dyi8024qOado=;
-        b=GOWA2P4Ipf8vewYKN2dvW415CHmEk+6ut7r9zas2RiUcrI2bJsld0UwSKCmzRyOW8q
-         CGYgMl+I2CGRcqGnB6YnSBA3YHhMw+bXkA9c//+PdAM2voed+iMXla+/6jB/DHoGdrJq
-         7bimL7+hVhcyCRbzNXSCNZrZzXAXxVL1UEU3Uc9RzhPjYePWp7vj+AeG39U8hBy5TEzE
-         ckGHjZDZCEUpVQKKrereGe/Mr4+AlwpFwol+PDr7p5ZgrPX3gFjdyvR9N47UKqBwTzA0
-         8WubDYcSMjKs6GylaBzjztScID7v7iEjLe6eWCIPgal+sD+u+z6gYhyOiEb8uArqj5sy
-         NxeQ==
-X-Gm-Message-State: AOJu0YxTfDZWW3Eve+vzV2HFvPN1oe0RBE8cAgyurnKC8uQ27b0adNtR
-	tvvC8/DNYSvnE8KDL/ecYziFXp9QaX2Exnide0M=
-X-Google-Smtp-Source: AGHT+IFeCydfST7aDCwuFPDsuw2cwzVOE8Fv3I4KKk4ctjbM0/io4Cl/D+NT6BNGEexZTsX+/kt1LFfmucwY15LWnKw=
-X-Received: by 2002:a81:6d0f:0:b0:5e8:8053:70d1 with SMTP id
- i15-20020a816d0f000000b005e8805370d1mr793142ywc.50.1704883780409; Wed, 10 Jan
- 2024 02:49:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3084047A6F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tinylab.org
+X-QQ-mid: bizesmtp72t1704883746tldabub3
+Received: from ubuntu1.. ( [221.226.144.218])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 10 Jan 2024 18:49:04 +0800 (CST)
+X-QQ-SSF: 01200000000000B0B000000A0000000
+X-QQ-FEAT: U4uNK7LTfdqXYB2ToMtJLJ8+FJ8X+0ubq/JvtvJPoyrv7YmBWN6qqiKxSdBXd
+	IT2aGPQ5BL4kdR8KXdvkjNASv50uYGfhnhM/7oqOondEo7XPMWdwg2Arx3WCFheQWfv+RUA
+	y+mFM28hPPNoDB/Y4OB8TpJ8Es6huXwhlG+IxT0TSgfzYDx9fzfX5j3JI3Kq61XeAKkfKDb
+	ND4xTPAfCuZWEjwYSJmUdz8v8pszn2pq9u96/8z+qIk47qwZ2nhcOPMpDgfnFA8ebQCQO0E
+	AUIYbkNQNeYgslkv7qTDVR7DSAb+G+9ct9w4lUAdASph8Y+tYisM2O0LwONCX3MHaItcRmT
+	wuCyFd5h26gwQADdgjob610BDTWBjQzTh6PNbEM
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 13203849688828320885
+From: Song Shuai <songshuaishuai@tinylab.org>
+To: peterz@infradead.org,
+	jpoimboe@kernel.org,
+	jbaron@akamai.com,
+	rostedt@goodmis.org,
+	ardb@kernel.org,
+	songshuaishuai@tinylab.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] static_call: make selftest available for out-of-line SC
+Date: Wed, 10 Jan 2024 18:48:54 +0800
+Message-Id: <20240110104854.292752-1-songshuaishuai@tinylab.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108032117.215171-1-wangrui@loongson.cn> <ZZ2fn0scbDKBXWe5@boqun-archlinux>
- <CAHirt9iox8FGV2wrMyxwFRjab2avfOcyLKvBc9K=AqiHxqHXKg@mail.gmail.com>
- <ZZ38XMQw18mw2sTA@Boquns-Mac-mini.home> <CAHirt9jQSVvBF=1wc=sT9FxngeSP30P4FDpu8m0JH_0fOPSO-w@mail.gmail.com>
-In-Reply-To: <CAHirt9jQSVvBF=1wc=sT9FxngeSP30P4FDpu8m0JH_0fOPSO-w@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 10 Jan 2024 11:49:29 +0100
-Message-ID: <CANiq72=X3cggAn0HLMi7jVFAfypBhog=ZkPB57yfaX4ZUzT-HA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
-To: WANG Rui <wangrui@loongson.cn>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-2
 
-On Wed, Jan 10, 2024 at 3:49=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wrot=
-e:
->
-> LLVM 17 doesn't work. The minimum LLVM version required for LoongArch
-> is 18.0.0. This is the reason why we have updated the
-> scripts/min-tool-version.sh. [1]
->
-> [1] https://lore.kernel.org/loongarch/20240108033138.217032-1-wangrui@loo=
-ngson.cn/
+Static call selftest should be built once HAVE_STATIC_CALL is configured.
+but it's now bonded with HAVE_STATIC_CALL_INLINE.
 
-Thanks! Is this targeted at 6.9?
+Move selftest to static_call.c making it available for out-of-line SC.
 
-Cheers,
-Miguel
+Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
+---
+ kernel/static_call.c        | 44 +++++++++++++++++++++++++++++++++++++
+ kernel/static_call_inline.c | 42 -----------------------------------
+ 2 files changed, 44 insertions(+), 42 deletions(-)
+
+diff --git a/kernel/static_call.c b/kernel/static_call.c
+index e9c3e69f3837..b1e1b4573201 100644
+--- a/kernel/static_call.c
++++ b/kernel/static_call.c
+@@ -1,8 +1,52 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/static_call.h>
++#include <linux/init.h>
+ 
+ long __static_call_return0(void)
+ {
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(__static_call_return0);
++
++#ifdef CONFIG_STATIC_CALL_SELFTEST
++
++static int func_a(int x)
++{
++	return x+1;
++}
++
++static int func_b(int x)
++{
++	return x+2;
++}
++
++DEFINE_STATIC_CALL(sc_selftest, func_a);
++
++static struct static_call_data {
++      int (*func)(int);
++      int val;
++      int expect;
++} static_call_data [] __initdata = {
++      { NULL,   2, 3 },
++      { func_b, 2, 4 },
++      { func_a, 2, 3 }
++};
++
++static int __init test_static_call_init(void)
++{
++      int i;
++
++      for (i = 0; i < ARRAY_SIZE(static_call_data); i++ ) {
++	      struct static_call_data *scd = &static_call_data[i];
++
++              if (scd->func)
++                      static_call_update(sc_selftest, scd->func);
++
++              WARN_ON(static_call(sc_selftest)(scd->val) != scd->expect);
++      }
++
++      return 0;
++}
++early_initcall(test_static_call_init);
++
++#endif /* CONFIG_STATIC_CALL_SELFTEST */
+diff --git a/kernel/static_call_inline.c b/kernel/static_call_inline.c
+index 639397b5491c..3e65bfafe559 100644
+--- a/kernel/static_call_inline.c
++++ b/kernel/static_call_inline.c
+@@ -512,45 +512,3 @@ int __init static_call_init(void)
+ }
+ early_initcall(static_call_init);
+ 
+-#ifdef CONFIG_STATIC_CALL_SELFTEST
+-
+-static int func_a(int x)
+-{
+-	return x+1;
+-}
+-
+-static int func_b(int x)
+-{
+-	return x+2;
+-}
+-
+-DEFINE_STATIC_CALL(sc_selftest, func_a);
+-
+-static struct static_call_data {
+-      int (*func)(int);
+-      int val;
+-      int expect;
+-} static_call_data [] __initdata = {
+-      { NULL,   2, 3 },
+-      { func_b, 2, 4 },
+-      { func_a, 2, 3 }
+-};
+-
+-static int __init test_static_call_init(void)
+-{
+-      int i;
+-
+-      for (i = 0; i < ARRAY_SIZE(static_call_data); i++ ) {
+-	      struct static_call_data *scd = &static_call_data[i];
+-
+-              if (scd->func)
+-                      static_call_update(sc_selftest, scd->func);
+-
+-              WARN_ON(static_call(sc_selftest)(scd->val) != scd->expect);
+-      }
+-
+-      return 0;
+-}
+-early_initcall(test_static_call_init);
+-
+-#endif /* CONFIG_STATIC_CALL_SELFTEST */
+-- 
+2.39.2
+
