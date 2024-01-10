@@ -1,151 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2067.outbound.protection.outlook.com [40.107.101.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCE6210B
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F456107;
+	Wed, 10 Jan 2024 03:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XV6ANEau"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704855982; x=1736391982;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=ZewTevJw56ig0XC0uD4jZoysKT9xWByRTaoA4LMz9rg=;
-  b=XV6ANEauco2YgQqr8zfOx1jHeM/5aOyxpybhu79Roo4a/aTm17UVJ1Au
-   5M7ubTxQEGwkmHftCPNtTcPQTp/fKAPfVG9yD3aJ1VJTcrNKuRNzWfKqN
-   JvOSqKc9NKNBhJbnDvOn0b78/UfuooysYutJm3MViwi4gU35RrqEUj1BH
-   R4saLu4+tPeW5fqb7pINYQQmLliGogb9MjCL4AdW9j5LNrTySQOeu0/rX
-   F6ertpUTa7Gxk3RMQ6sATum6AmpYUfLIwjc/Ea4QkXbfhuD+muzibHcRz
-   vXF34w2N3pbrFaKQbgljOLMTGpT0+14MrwJibQ8uwhHGe/DBUZe+cORWt
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="429579934"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="429579934"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 19:06:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="816196509"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="816196509"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 09 Jan 2024 19:06:18 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNOv2-0006WU-1J;
-	Wed, 10 Jan 2024 03:06:16 +0000
-Date: Wed, 10 Jan 2024 11:06:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Brian King <brking@linux.vnet.ibm.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	John Garry <john.g.garry@oracle.com>
-Subject: drivers/scsi/ipr.c:5430:6: warning: variable 'ioasc' set but not used
-Message-ID: <202401101004.fcxlPdWI-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="X+n90wPi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I52n9vFY2w1nLYISY7ukZpDlTDultrU9N8jx7zY6vSpA67ocUXSeTMzhx0/2aezCZUXboib+4UW1tnHGRNrFHPFQnVZsKbCyBhbTcO+xsCERY7LUjIn8fZLYuoiqIbQDiKBBf+YnELchIEUgWVdB40sv//eNjxXa58Op23phqAspG0azxRONhcAATkd+uzPm/KFOthydix9HeSe4NpqHzqcQuEbg0k5AURG9XSw4BZYj5Qic80sb1tDrGr0HrD3uaYj0FkIJi3e2IUeM5BAsrBHrRultvpyo9fWWByhLAHA5IqrTKiz8NIENUdmrGy4uKgIGwTinJxMYHS9WZvJHaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3YemQ/+hHIzt9VIbsAiazc1kPHx6Gwab+tXjpgpLAl4=;
+ b=T+ADdqR9LJ2jr2rkHnzEStHR+9kszo9QZ2ywcXgIMrSyCN6OE6cFMIEime4Tm8YxAN3v3N5R7qeuc3V/KrfRMC3BDVpnS/aPz8fBZGsNTici56ctzkNXv20cKjC63wk7kgKLoYTgSC6ZI5gIknBC2wvVpauYrZ/g+S7Bw8sYqUt4abRW1L4Qjrr8h1bxwSvaDIhzYPhDE3Q1fMO33iyi0+HbXSvVEDLSNp0d/NhFBOZr7Cyxze/poK1DiXi9khN2rZO47Q7V1gUT1ZIfQSFiygrPLJLkoTaUfGRP9ZeO1EDRVVRW4xaW9v3SuuR1+IEgHx4BbWzt4GozwRuap8rONA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3YemQ/+hHIzt9VIbsAiazc1kPHx6Gwab+tXjpgpLAl4=;
+ b=X+n90wPiOyNKflT2VzHECjSrOV8XwaELCgJXk2HGWY//H/JsgvkYwpKzQIai0UaQDNNuIXW0jAbXs3cGswfq8fH/po0d+1XfauH2wQwHCDtlJqx7OaxsBhD2f4/nJi6aKn5g9C4aXVI54QLd+pNTDiF0gCoIaBHjhjXIuPbQYjDNJdpWpiNTA97/zNXhfEZqVmvWdl4aWVgaH9+KxJgdfcbrI4t1djOowXMxb5382pa2FQAv83yb0My/b3x0TeRgs3bfKZL1I7hX7E0CoxIgtGCym6m2GS4M0NcmWIrIjPbWxBijpfwgOr/w6rw3IgqifbbD6q1Zz9IjO+qKDk+wfw==
+Received: from DM6PR04CA0013.namprd04.prod.outlook.com (2603:10b6:5:334::18)
+ by DM4PR12MB5149.namprd12.prod.outlook.com (2603:10b6:5:390::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
+ 2024 03:07:46 +0000
+Received: from DS3PEPF000099E1.namprd04.prod.outlook.com
+ (2603:10b6:5:334:cafe::e4) by DM6PR04CA0013.outlook.office365.com
+ (2603:10b6:5:334::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23 via Frontend
+ Transport; Wed, 10 Jan 2024 03:07:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ DS3PEPF000099E1.mail.protection.outlook.com (10.167.17.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.14 via Frontend Transport; Wed, 10 Jan 2024 03:07:46 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 9 Jan 2024
+ 19:07:33 -0800
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Tue, 9 Jan 2024 19:07:32 -0800
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server id 15.2.986.41 via Frontend
+ Transport; Tue, 9 Jan 2024 19:07:28 -0800
+From: Vidya Sagar <vidyas@nvidia.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+	<bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <will@kernel.org>, <frowand.list@gmail.com>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
+	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V2 0/2] Add support to preserve boot config in the DT flow
+Date: Wed, 10 Jan 2024 08:37:23 +0530
+Message-ID: <20240110030725.710547-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099E1:EE_|DM4PR12MB5149:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1196278-e039-4c89-ca9d-08dc1189521a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	W96fggc0fakjyuX9wRLCH9JxEmBu5i0El+tGjEohuxfoPhzk7Qw2BsZJK1N2lQFEuNaaraeFhOOOBTDsBBpNJHx8KdqKH1qbgFpzjZnmr5cGhP7saoDHWWRJPKRji5Y88aNBUBaQXa7RZrDLZptrso/A7XpNnxH1du1IF7U1EgM4X5mG9NuhiLeN0VmPlOEIJnS+qBAjThP6C/GTfFfqWzJqCHEGOFhn1zdWf1Equ2s3zYZEmFshHR1dOwVztr6bsSfFA18UDheqLi2tkwJl2RPWIKaevyPYUSZgrtGhH5xiZvIs3AhHz1aDTS28IBEXPWn9dcw1+1RDfdgYUG7JRhh/S4IndvZhJSNfKgJaX4IBLi0YYH/s73coBbf0YKVqcof/Y6zDbwuyclhS4GOqJ7qT0Fh16SqgwxqrtlVV8CnKJQFEjygVET2zY8mqbAhiKrKJbjPIO2YD8rDlXCJaSPoVjBsO1/TFl60W6IJruyIkhV48K2vwR6QssSKabopLOLUWFQpfwhEoZ1NGF0NwGXFXZ9K+VN5OPgt1gA/DZQmNhtG3muum5BrLKvZiCZqKJpExX5cn3nBoJHI5MEcN9UZ0mVbf81bku3lEYqpZNaIOQqHVQyDiQAcgCrqZIvrGfHDiqwhA7lBPOl/weg72b7uGkI+S3H7JqQzYFC0yfqxFw7msNZOQhbz+OmO41e09DAUN3Q6n2bAwoGqfrIOTW9JZ8qBIH3vSbl6/ZSO7ywlCdlVTbgNX5zwFBC5mgh9s
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(346002)(396003)(136003)(230922051799003)(186009)(82310400011)(451199024)(1800799012)(64100799003)(46966006)(40470700004)(36840700001)(316002)(54906003)(336012)(426003)(110136005)(36860700001)(8936002)(8676002)(47076005)(36756003)(6666004)(7696005)(83380400001)(40460700003)(4326008)(40480700001)(70206006)(70586007)(26005)(2616005)(1076003)(478600001)(7416002)(4744005)(2906002)(5660300002)(82740400003)(41300700001)(86362001)(7636003)(356005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 03:07:46.4040
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1196278-e039-4c89-ca9d-08dc1189521a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099E1.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5149
 
-Hi Brian,
+Add support to preserve the boot configuration of the PCIe bridges per
+host bridge basis based on the presence of the DT flag "preserve-boot-config"
+in the respective host bridge node. The existing "linux,pci-probe-only" works
+at a system level and can't be used at a single host bridge granularity.
+Also, the support for preserving the boot configuration per host bridge basis
+is already present for the ACPI based boot flow and this patch series extends
+that support for the DT based boot flow.
 
-FYI, the error/warning still remains.
+V2:
+* Addressed issues reported by kernel test robot <lkp@intel.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ab27740f76654ed58dd32ac0ba0031c18a6dea3b
-commit: 65a15d6560dff065339f6cac91de4beded60fe3f scsi: ipr: Remove SATA support
-date:   9 months ago
-config: i386-buildonly-randconfig-002-20240107 (https://download.01.org/0day-ci/archive/20240110/202401101004.fcxlPdWI-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240110/202401101004.fcxlPdWI-lkp@intel.com/reproduce)
+Vidya Sagar (2):
+  dt-bindings: Add PCIe "preserve-boot-config" property
+  PCI: Add support for "preserve-boot-config" property
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401101004.fcxlPdWI-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/scsi/ipr.c:1104:15: warning: variable 'proto' set but not used [-Wunused-but-set-variable]
-    1104 |         unsigned int proto;
-         |                      ^
-   drivers/scsi/ipr.c:1261:15: warning: variable 'proto' set but not used [-Wunused-but-set-variable]
-    1261 |         unsigned int proto;
-         |                      ^
-   drivers/scsi/ipr.c:4417:29: warning: variable 'res' set but not used [-Wunused-but-set-variable]
-    4417 |         struct ipr_resource_entry *res;
-         |                                    ^
->> drivers/scsi/ipr.c:5430:6: warning: variable 'ioasc' set but not used [-Wunused-but-set-variable]
-    5430 |         u32 ioasc;
-         |             ^
-   4 warnings generated.
-
-
-vim +/ioasc +5430 drivers/scsi/ipr.c
-
-3feeb89d40cc0ab Wayne Boyer                 2009-10-20  5426  
-b53d124a154d002 wenxiong@linux.vnet.ibm.com 2013-01-11  5427  static int ipr_process_hrrq(struct ipr_hrr_queue *hrr_queue, int budget,
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5428  						struct list_head *doneq)
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5429  {
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11 @5430  	u32 ioasc;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5431  	u16 cmd_index;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5432  	struct ipr_cmnd *ipr_cmd;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5433  	struct ipr_ioa_cfg *ioa_cfg = hrr_queue->ioa_cfg;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5434  	int num_hrrq = 0;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5435  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5436  	/* If interrupts are disabled, ignore the interrupt */
-56d6aa33d3f6847 wenxiong@linux.vnet.ibm.com 2013-01-11  5437  	if (!hrr_queue->allow_interrupts)
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5438  		return 0;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5439  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5440  	while ((be32_to_cpu(*hrr_queue->hrrq_curr) & IPR_HRRQ_TOGGLE_BIT) ==
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5441  	       hrr_queue->toggle_bit) {
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5442  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5443  		cmd_index = (be32_to_cpu(*hrr_queue->hrrq_curr) &
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5444  			     IPR_HRRQ_REQ_RESP_HANDLE_MASK) >>
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5445  			     IPR_HRRQ_REQ_RESP_HANDLE_SHIFT;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5446  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5447  		if (unlikely(cmd_index > hrr_queue->max_cmd_id ||
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5448  			     cmd_index < hrr_queue->min_cmd_id)) {
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5449  			ipr_isr_eh(ioa_cfg,
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5450  				"Invalid response handle from IOA: ",
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5451  				cmd_index);
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5452  			break;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5453  		}
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5454  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5455  		ipr_cmd = ioa_cfg->ipr_cmnd_list[cmd_index];
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5456  		ioasc = be32_to_cpu(ipr_cmd->s.ioasa.hdr.ioasc);
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5457  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5458  		ipr_trc_hook(ipr_cmd, IPR_TRACE_FINISH, ioasc);
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5459  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5460  		list_move_tail(&ipr_cmd->queue, doneq);
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5461  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5462  		if (hrr_queue->hrrq_curr < hrr_queue->hrrq_end) {
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5463  			hrr_queue->hrrq_curr++;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5464  		} else {
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5465  			hrr_queue->hrrq_curr = hrr_queue->hrrq_start;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5466  			hrr_queue->toggle_bit ^= 1u;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5467  		}
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5468  		num_hrrq++;
-b53d124a154d002 wenxiong@linux.vnet.ibm.com 2013-01-11  5469  		if (budget > 0 && num_hrrq >= budget)
-b53d124a154d002 wenxiong@linux.vnet.ibm.com 2013-01-11  5470  			break;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5471  	}
-b53d124a154d002 wenxiong@linux.vnet.ibm.com 2013-01-11  5472  
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5473  	return num_hrrq;
-05a6538a9a20499 wenxiong@linux.vnet.ibm.com 2013-01-11  5474  }
-b53d124a154d002 wenxiong@linux.vnet.ibm.com 2013-01-11  5475  
-
-:::::: The code at line 5430 was first introduced by commit
-:::::: 05a6538a9a204999e0c0f7faee00b81b334f4fc7 [SCSI] ipr: Add support for MSI-X and distributed completion
-
-:::::: TO: wenxiong@linux.vnet.ibm.com <wenxiong@linux.vnet.ibm.com>
-:::::: CC: James Bottomley <JBottomley@Parallels.com>
+ Documentation/devicetree/bindings/pci/pci.txt |  4 ++++
+ drivers/pci/controller/pci-host-common.c      |  5 ++++-
+ drivers/pci/of.c                              | 18 ++++++++++++++++++
+ drivers/pci/probe.c                           |  2 +-
+ include/linux/of_pci.h                        |  6 ++++++
+ 5 files changed, 33 insertions(+), 2 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
