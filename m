@@ -1,78 +1,78 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A2C1FA6
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D44A1FA6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="gJPLWTpe"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bc4f49a3b6so4093330b6e.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 19:21:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VnNPi8ES"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-28c23a0df1eso2062743a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 19:28:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1704856864; x=1705461664; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1704857281; x=1705462081; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gj6N1efk3sr0CxuJFT4Q8DbyNJU3YuHTNbSj/LQf1lo=;
-        b=gJPLWTpeRGoQq/KxGYpgxSCNxuJgltXG5/iuAPw/ugglEeX2CIqYwhtb6VtH7M6Cqi
-         vMnavgSeG3iN3+URxbkm6YP2BZFVR+h4KGvizgX+dgercYPYzHF+eGI3z8mL2NwL4IXE
-         u1/gVAi7VcpX/A3Iy33+TcS9qRr269ZmGjhWhILuF5obaMzpdjnSQzYeUGWeEUKHSqpm
-         mV4CC8fTXKvh5ndk5dhG/hFeSzzwEq5t//oaWWrqKp3Nd4K61bG7oLIXdbJPIUD56RM3
-         Y8z7m3+c40bEi0KYs7d4WarfryZYV6IrRSjMD14WcqtE6TvlNlbvuMazrXo6zfnUGlHZ
-         odIA==
+        bh=LmHQeP0vkxtfvKhUYEtyUhBg1iWakI0fi5SAJQmRJk4=;
+        b=VnNPi8ESSWzjOkf/BEcsKSlq+NmIkw06+WJONVn9ICEswQ+veIup2YsLTWbLeXk1aM
+         5ec29kmnxzSZZsQxZlH16E4OUM04KfR4dOAov7Mglkg726ICvaPQX1ym6V3Dz4OjvUQ/
+         jMl9wul5kW290oUrugx6zaWyTIpPTJfv/Dyk7WsM+wuOqbjueqsWcfCYt0NUhCExp5US
+         XB/4UmqiYNBvzfg12JMouYzzCInMRJBQs0IFUjHjkV5w/TPF2PP/rVAuWH+zo15kOnMZ
+         t9jXHDreuxsCiz2FxBDF2qQeJzwsR17lhrrvTHwTDF6ZBJ/footFQe+XmsfmVBqjcRqL
+         k0VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704856864; x=1705461664;
+        d=1e100.net; s=20230601; t=1704857281; x=1705462081;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gj6N1efk3sr0CxuJFT4Q8DbyNJU3YuHTNbSj/LQf1lo=;
-        b=LcD08PFl1mUVSgrMXJyw5kUq6tiMyGoL1wE/H5jXtmBzUQ15feYJjG92I05Cb/vADq
-         t/15Y7hPV4y55gtvUwHBowazpky3xnWpu0rXSqlrriS3it2EmMvSpSw6DKmVTYe8UgUC
-         cdpIiq80qqy3EpdjrBj/k7RDiXoTW91lR/G70ITv4KUM1r8di4o03Q8yqCiau0jzLI6A
-         xk6pMxTnh6PcqaW6u8MKOYom1ZtfattnWrR3C/GBdM8v64ZkbbFlsFubxAMtsrCJUO0O
-         p+I440j/JUm8to64+UiHNnSXldNBgWDL+mNlnXrjfMYzkOMlkApzdAjKGdvjN0q3fpO2
-         EwLQ==
-X-Gm-Message-State: AOJu0YxZQ0Bzvc2c/23e//tQMytNvay9ygPoqGa8JF8zkBgj26XMZeDb
-	LY+sNZHOTJaTfizbX+EXNvoXP3lGdrDHKyPomIe4l5CBPkT4noqQdME0gGs=
-X-Google-Smtp-Source: AGHT+IGqXBEnKCM1dvGMoY/czMMwAslKtHfI0G8Legil0uTORf6Ps32W3HONIOQQ6Wj1YhsNUXuxTrWSMk4LPpxazTg=
-X-Received: by 2002:a05:6808:1919:b0:3bc:9167:4e62 with SMTP id
- bf25-20020a056808191900b003bc91674e62mr507670oib.40.1704856864530; Tue, 09
- Jan 2024 19:21:04 -0800 (PST)
+        bh=LmHQeP0vkxtfvKhUYEtyUhBg1iWakI0fi5SAJQmRJk4=;
+        b=XOcRx1di+i4JGoeLB2NhLvePmmTPClsWedzsI44BtSgFkRR23VYgYjhARd1oDb3zS+
+         dJ0g+MCZm9AhvSH3V6p3uFn53dSegidfb5dkFR5kpvOoALBqySxVkOFYOICSR37MsizR
+         dcbGt6afYQb5qtrBbuHfbX202f5lrHHmcHQzyysGIbDah2uxQNF8V5Cq+oaLdQKL2nTy
+         F+Aps5dTpxv2S1LIleX1fKGxTK6sStP1EEiz5iWLzueJJHSs8VdtfLIeD1ZVA9Xzflf6
+         mGk83TdzGVjLKhmRyyoi+clMoPE1pKugLoIfu2Tux4OlLXKlZSqCtK5/JQ4nKxQJRZuh
+         j48g==
+X-Gm-Message-State: AOJu0YyGg2C1EbPuV2XWj1463GZVgk5nHHtSI6/UDbITVhbkaxubuW9m
+	kcdVc6Jt9oHkk0FmHD/6/mHTlGnWyaIwzPLDk5uIOXM+5qtg
+X-Google-Smtp-Source: AGHT+IF27DiaczlYFILU/RHYpoznkULFIUjMXHiMAHYqtzlVUZr2n4os6ENUCEt3jfhAxw20K/LutHE5YEYDJgy4qfQ=
+X-Received: by 2002:a17:90b:117:b0:28c:7ca2:ee49 with SMTP id
+ p23-20020a17090b011700b0028c7ca2ee49mr167498pjz.54.1704857281474; Tue, 09 Jan
+ 2024 19:28:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109111025.1320976-1-maxime.coquelin@redhat.com> <20240109111025.1320976-3-maxime.coquelin@redhat.com>
-In-Reply-To: <20240109111025.1320976-3-maxime.coquelin@redhat.com>
+References: <20240109111025.1320976-1-maxime.coquelin@redhat.com> <20240109111025.1320976-4-maxime.coquelin@redhat.com>
+In-Reply-To: <20240109111025.1320976-4-maxime.coquelin@redhat.com>
 From: Yongji Xie <xieyongji@bytedance.com>
-Date: Wed, 10 Jan 2024 11:20:53 +0800
-Message-ID: <CACycT3sjYzh7Df9M1Bfxk_pWc7Am6AmjQv8_vu6fA2fhP2+7mg@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] vduse: Temporarily fail if control queue feature requested
+Date: Wed, 10 Jan 2024 11:27:50 +0800
+Message-ID: <CACycT3sLjx1b9BjijP0ofM6OZkgRHk92VunGQcAweguBPzN1Dg@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] vduse: enable Virtio-net device type
 To: Maxime Coquelin <maxime.coquelin@redhat.com>
 Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
 	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
 	virtualization <virtualization@lists.linux-foundation.org>, 
 	linux-kernel <linux-kernel@vger.kernel.org>, David Marchand <david.marchand@redhat.com>, 
-	Cindy Lu <lulu@redhat.com>
+	Cindy Lu <lulu@redhat.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, Jan 9, 2024 at 7:10=E2=80=AFPM Maxime Coquelin
 <maxime.coquelin@redhat.com> wrote:
 >
-> Virtio-net driver control queue implementation is not safe
-> when used with VDUSE. If the VDUSE application does not
-> reply to control queue messages, it currently ends up
-> hanging the kernel thread sending this command.
+> This patch adds Virtio-net device type to the supported
+> devices types.
 >
-> Some work is on-going to make the control queue
-> implementation robust with VDUSE. Until it is completed,
-> let's fail features check if control-queue feature is
-> requested.
+> Initialization fails if the device does not support
+> VIRTIO_F_VERSION_1 feature, in order to guarantee the
+> configuration space is read-only. It also fails with
+> -EPERM if the CAP_NET_ADMIN is missing.
 >
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> Reviewed-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
 > Signed-off-by: Maxime Coquelin <maxime.coquelin@redhat.com>
 
 Reviewed-by: Xie Yongji <xieyongji@bytedance.com>
@@ -81,43 +81,58 @@ Thanks,
 Yongji
 
 > ---
->  drivers/vdpa/vdpa_user/vduse_dev.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/vdpa/vdpa_user/vduse_dev.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 >
 > diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/=
 vduse_dev.c
-> index a5af6d4077b8..00f3f562ab5d 100644
+> index 00f3f562ab5d..8924bbc55635 100644
 > --- a/drivers/vdpa/vdpa_user/vduse_dev.c
 > +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-> @@ -8,6 +8,7 @@
->   *
->   */
+> @@ -143,6 +143,7 @@ static struct workqueue_struct *vduse_irq_bound_wq;
 >
-> +#include "linux/virtio_net.h"
->  #include <linux/init.h>
->  #include <linux/module.h>
->  #include <linux/cdev.h>
-> @@ -28,6 +29,7 @@
->  #include <uapi/linux/virtio_config.h>
->  #include <uapi/linux/virtio_ids.h>
->  #include <uapi/linux/virtio_blk.h>
-> +#include <uapi/linux/virtio_ring.h>
->  #include <linux/mod_devicetable.h>
+>  static u32 allowed_device_id[] =3D {
+>         VIRTIO_ID_BLOCK,
+> +       VIRTIO_ID_NET,
+>  };
 >
->  #include "iova_domain.h"
-> @@ -1680,6 +1682,9 @@ static bool features_is_valid(struct vduse_dev_conf=
-ig *config)
->         if ((config->device_id =3D=3D VIRTIO_ID_BLOCK) &&
->                         (config->features & BIT_ULL(VIRTIO_BLK_F_CONFIG_W=
-CE)))
->                 return false;
-> +       else if ((config->device_id =3D=3D VIRTIO_ID_NET) &&
-> +                       (config->features & BIT_ULL(VIRTIO_NET_F_CTRL_VQ)=
+>  static inline struct vduse_dev *vdpa_to_vduse(struct vdpa_device *vdpa)
+> @@ -1686,6 +1687,10 @@ static bool features_is_valid(struct vduse_dev_con=
+fig *config)
+>                         (config->features & BIT_ULL(VIRTIO_NET_F_CTRL_VQ)=
 ))
-> +               return false;
+>                 return false;
 >
+> +       if ((config->device_id =3D=3D VIRTIO_ID_NET) &&
+> +                       !(config->features & BIT_ULL(VIRTIO_F_VERSION_1))=
+)
+> +               return false;
+> +
 >         return true;
 >  }
+>
+> @@ -1793,6 +1798,10 @@ static int vduse_create_dev(struct vduse_dev_confi=
+g *config,
+>         int ret;
+>         struct vduse_dev *dev;
+>
+> +       ret =3D -EPERM;
+> +       if ((config->device_id =3D=3D VIRTIO_ID_NET) && !capable(CAP_NET_=
+ADMIN))
+> +               goto err;
+> +
+>         ret =3D -EEXIST;
+>         if (vduse_find_dev(config->name))
+>                 goto err;
+> @@ -2036,6 +2045,7 @@ static const struct vdpa_mgmtdev_ops vdpa_dev_mgmtd=
+ev_ops =3D {
+>
+>  static struct virtio_device_id id_table[] =3D {
+>         { VIRTIO_ID_BLOCK, VIRTIO_DEV_ANY_ID },
+> +       { VIRTIO_ID_NET, VIRTIO_DEV_ANY_ID },
+>         { 0 },
+>  };
+>
 > --
 > 2.43.0
 >
