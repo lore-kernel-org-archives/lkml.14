@@ -1,155 +1,174 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40BF482FC;
-	Wed, 10 Jan 2024 13:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDF448794;
+	Wed, 10 Jan 2024 13:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PP3DVEC/"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50e7f58c5fbso5283982e87.1;
-        Wed, 10 Jan 2024 05:10:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704892213; x=1705497013; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dcp3BdvYnFjEQy7q3wABGIgUqH9mmv2OBJ3xCim2kMY=;
-        b=PP3DVEC/TCmIqGDc3WbZW+M7kWv7ZjvaG/wD4ErVV3iLTD+oIS25qLCx2vnmuSVaUi
-         d8t/YQAdgQDi1toDdpfzywxbiKKFg6478mq2egPuqAAxKERJIEzwRZhgyVTbSbJuEqJP
-         yCCDzIH3gFBu/p/ooSUO3O+utB9f6jCyfNi+V53mWcy9CVtZzBTsHb5ysNw/P1UJcsMA
-         GXF40qDaciu5RzZCArIfNSz/s4v1YmUgw2LfJqt56Wwz/UUo5SPSGSCxDfsb6u1Mca1s
-         LFWR9CKE6sVJgGlBpVIXz2wdnA2g18WnUNzNDYYVeRcn3tFrfCCExdzBliPsu5gdNS9M
-         anSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704892213; x=1705497013;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dcp3BdvYnFjEQy7q3wABGIgUqH9mmv2OBJ3xCim2kMY=;
-        b=joEgOZjTKTJFMwA/AexTUWWeRo3eCp6WX3kOupbMrtaZJp+wcV00/otycMI+/72tYO
-         iqXLbOE/8vcvHO4Qfhn8kpSzdiEfJImnLjhDXji3mkBp0qAL4XgbTYUdZotZltaQP46D
-         O1+wHFi/ezlWV3isREYS989J4fyRtnMUNZi0tOvRE1UBrNsJAAh+OybDmEOwYwNoVVWU
-         pjqsTBVtKhGosvEzkhILmsE3/ZeQUcZoyYfbbnUMcTQazWR5mYMbnYw+xx8qzSSXsypW
-         6vPR6HWDDJTr1fsJDeyNZYmz4xtxkd6mZDoXT3erSRh2hF9PlRyyKxP9gWPCVl5pl/Lj
-         fwag==
-X-Gm-Message-State: AOJu0Yxi29Wbz5c2SuO96IabKRYY/xXRiYfGxUSutBCyTtb1d51FFbEC
-	YNhPgl32/gBRdvJHlWgkzlo=
-X-Google-Smtp-Source: AGHT+IETwxojo0uhH0QtUD/lTz3fm8rpHRKidhtMuw5Jxb2NGO+a6RYpyBJ5linEVx7czgUHB+Te6w==
-X-Received: by 2002:a19:ca0b:0:b0:50e:bb4d:e502 with SMTP id a11-20020a19ca0b000000b0050ebb4de502mr452352lfg.122.1704892212552;
-        Wed, 10 Jan 2024 05:10:12 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id u21-20020a170906069500b00a2a67731f31sm2075239ejb.109.2024.01.10.05.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 05:10:12 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 10 Jan 2024 14:10:10 +0100
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Florent Revest <revest@chromium.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ftrace: Fix DIRECT_CALLS to use SAVE_REGS by default
-Message-ID: <ZZ6XMk-k6NL0eInV@krava>
-References: <170484558617.178953.1590516949390270842.stgit@devnote2>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="iUpM9xzc";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="iUpM9xzc"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BA0981F8AB;
+	Wed, 10 Jan 2024 13:11:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1704892280; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=+Z6GZnazkXvmT3ykqKVkZG08FG2RukNYcIfqOb3XcwI=;
+	b=iUpM9xzct678dCYvhoRdWNBfjO7m2Bzrp9+ZOD36Q1MUfFwUDVkxxFWMKWm0wlcOJpODuE
+	4+wwDdJgUKkiUHR+e7xwCpZtjgKr6XDLk+x7ONRW8hjQIST9T3VOsDNDhIhaAC98EI83GN
+	Q0aXN/ZdgzJqMfLLx7WaqjAAzahQ/6k=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1704892280; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=+Z6GZnazkXvmT3ykqKVkZG08FG2RukNYcIfqOb3XcwI=;
+	b=iUpM9xzct678dCYvhoRdWNBfjO7m2Bzrp9+ZOD36Q1MUfFwUDVkxxFWMKWm0wlcOJpODuE
+	4+wwDdJgUKkiUHR+e7xwCpZtjgKr6XDLk+x7ONRW8hjQIST9T3VOsDNDhIhaAC98EI83GN
+	Q0aXN/ZdgzJqMfLLx7WaqjAAzahQ/6k=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4427713786;
+	Wed, 10 Jan 2024 13:01:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5dbcDTaVnmVhcwAAD6G6ig
+	(envelope-from <nik.borisov@suse.com>); Wed, 10 Jan 2024 13:01:42 +0000
+From: Nikolay Borisov <nik.borisov@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: arnd@arndb.de,
+	linux-api@vger.kernel.org,
+	Richard Palethorpe <rpalethorpe@suse.com>,
+	Nikolay Borisov <nik.borisov@suse.com>
+Subject: [PATCH RESEND] x86/entry/ia32: Ensure s32 is sign extended to s64
+Date: Wed, 10 Jan 2024 15:01:22 +0200
+Message-Id: <20240110130122.3836513-1-nik.borisov@suse.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170484558617.178953.1590516949390270842.stgit@devnote2>
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [4.68 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 R_MISSING_CHARSET(2.50)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.02)[54.51%]
+X-Spam-Score: 4.68
+X-Spam-Level: ****
+Authentication-Results: smtp-out2.suse.de;
+	none
 
-On Wed, Jan 10, 2024 at 09:13:06AM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> The commit 60c8971899f3 ("ftrace: Make DIRECT_CALLS work WITH_ARGS
-> and !WITH_REGS") changed DIRECT_CALLS to use SAVE_ARGS when there
-> are multiple ftrace_ops at the same function, but since the x86 only
-> support to jump to direct_call from ftrace_regs_caller, when we set
-> the function tracer on the same target function on x86, ftrace-direct
-> does not work as below (this actually works on arm64.)
-> 
-> At first, insmod ftrace-direct.ko to put a direct_call on
-> 'wake_up_process()'.
-> 
->  # insmod kernel/samples/ftrace/ftrace-direct.ko
->  # less trace
-> ...
->           <idle>-0       [006] ..s1.   564.686958: my_direct_func: waking up rcu_preempt-17
->           <idle>-0       [007] ..s1.   564.687836: my_direct_func: waking up kcompactd0-63
->           <idle>-0       [006] ..s1.   564.690926: my_direct_func: waking up rcu_preempt-17
->           <idle>-0       [006] ..s1.   564.696872: my_direct_func: waking up rcu_preempt-17
->           <idle>-0       [007] ..s1.   565.191982: my_direct_func: waking up kcompactd0-63
-> 
-> Setup a function filter to the 'wake_up_process' too, and enable it.
-> 
->  # cd /sys/kernel/tracing/
->  # echo wake_up_process > set_ftrace_filter
->  # echo function > current_tracer
->  # less trace
-> ...
->           <idle>-0       [006] ..s3.   686.180972: wake_up_process <-call_timer_fn
->           <idle>-0       [006] ..s3.   686.186919: wake_up_process <-call_timer_fn
->           <idle>-0       [002] ..s3.   686.264049: wake_up_process <-call_timer_fn
->           <idle>-0       [002] d.h6.   686.515216: wake_up_process <-kick_pool
->           <idle>-0       [002] d.h6.   686.691386: wake_up_process <-kick_pool
-> 
-> Then, only function tracer is shown on x86.
-> But if you enable 'kprobe on ftrace' event (which uses SAVE_REGS flag)
-> on the same function, it is shown again.
-> 
->  # echo 'p wake_up_process' >> dynamic_events
->  # echo 1 > events/kprobes/p_wake_up_process_0/enable
->  # echo > trace
->  # less trace
-> ...
->           <idle>-0       [006] ..s2.  2710.345919: p_wake_up_process_0: (wake_up_process+0x4/0x20)
->           <idle>-0       [006] ..s3.  2710.345923: wake_up_process <-call_timer_fn
->           <idle>-0       [006] ..s1.  2710.345928: my_direct_func: waking up rcu_preempt-17
->           <idle>-0       [006] ..s2.  2710.349931: p_wake_up_process_0: (wake_up_process+0x4/0x20)
->           <idle>-0       [006] ..s3.  2710.349934: wake_up_process <-call_timer_fn
->           <idle>-0       [006] ..s1.  2710.349937: my_direct_func: waking up rcu_preempt-17
-> 
-> To fix this issue, use SAVE_REGS flag for multiple ftrace_ops flag of
-> direct_call by default.
+From: Richard Palethorpe <rpalethorpe@suse.com>
 
-nice catch
+Presently ia32 registers stored in ptregs are unconditionally cast to
+unsigned int by the ia32 stub. They are then cast to long when passed
+to __se_sys*, but will not be sign extended.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+This takes the sign of the syscall argument into account in the ia32
+stub. It still casts to unsigned int to avoid implementation specific
+behavior. However then casts to int or unsigned int as necessary. So
+that the following cast to long sign extends the value.
 
-jirka
+This fixes the io_pgetevents02 LTP test when compiled with
+-m32. Presently the systemcall io_pgetevents_time64 unexpectedly
+accepts -1 for the maximum number of events. It doesn't appear other
+systemcalls with signed arguments are effected because they all have
+compat variants defined and wired up. A less general solution is to
+wire up the systemcall:
+https://lore.kernel.org/ltp/20210921130127.24131-1-rpalethorpe@suse.com/
 
-> 
-> Fixes: 60c8971899f3 ("ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/ftrace.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index b01ae7d36021..c060d5b47910 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5325,7 +5325,17 @@ static LIST_HEAD(ftrace_direct_funcs);
->  
->  static int register_ftrace_function_nolock(struct ftrace_ops *ops);
->  
-> +/*
-> + * If there are multiple ftrace_ops, use SAVE_REGS by default, so that direct
-> + * call will be jumped from ftrace_regs_caller. Only if the architecture does
-> + * not support ftrace_regs_caller but direct_call, use SAVE_ARGS so that it
-> + * jumps from ftrace_caller for multiple ftrace_ops.
-> + */
-> +#ifndef HAVE_DYNAMIC_FTRACE_WITH_REGS
->  #define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_ARGS)
-> +#else
-> +#define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_REGS)
-> +#endif
->  
->  static int check_direct_multi(struct ftrace_ops *ops)
->  {
-> 
+Fixes: ebeb8c82ffaf ("syscalls/x86: Use 'struct pt_regs' based syscall calling for IA32_EMULATION and x32")
+Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
+---
+
+This patch has been sent previously by Richard back in 2021 [0]. However it
+seems to have been dropped at some point and never merged. So I'm resending again
+to consider it for merging given that io_pgetevents_time64 LTP test still fails.
+
+
+[0] https://lore.kernel.org/all/20210927161955.28494-1-rpalethorpe@suse.com/
+
+ arch/x86/include/asm/syscall_wrapper.h | 25 +++++++++++++++++++++----
+ include/linux/syscalls.h               |  1 +
+ 2 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
+index 21f9407be5d3..7e88705e907f 100644
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -58,12 +58,29 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
+ 		,,regs->di,,regs->si,,regs->dx				\
+ 		,,regs->r10,,regs->r8,,regs->r9)			\
+
++
++/* SYSCALL_PT_ARGS is Adapted from s390x */
++#define SYSCALL_PT_ARG6(m, t1, t2, t3, t4, t5, t6)			\
++	SYSCALL_PT_ARG5(m, t1, t2, t3, t4, t5), m(t6, (regs->bp))
++#define SYSCALL_PT_ARG5(m, t1, t2, t3, t4, t5)				\
++	SYSCALL_PT_ARG4(m, t1, t2, t3, t4),  m(t5, (regs->di))
++#define SYSCALL_PT_ARG4(m, t1, t2, t3, t4)				\
++	SYSCALL_PT_ARG3(m, t1, t2, t3),  m(t4, (regs->si))
++#define SYSCALL_PT_ARG3(m, t1, t2, t3)					\
++	SYSCALL_PT_ARG2(m, t1, t2), m(t3, (regs->dx))
++#define SYSCALL_PT_ARG2(m, t1, t2)					\
++	SYSCALL_PT_ARG1(m, t1), m(t2, (regs->cx))
++#define SYSCALL_PT_ARG1(m, t1) m(t1, (regs->bx))
++#define SYSCALL_PT_ARGS(x, ...) SYSCALL_PT_ARG##x(__VA_ARGS__)
++
++#define __SC_COMPAT_CAST(t, a)						\
++	(__typeof(__builtin_choose_expr(__TYPE_IS_L(t), 0, 0U)))	\
++	(unsigned int)a
++
+ /* Mapping of registers to parameters for syscalls on i386 */
+ #define SC_IA32_REGS_TO_ARGS(x, ...)					\
+-	__MAP(x,__SC_ARGS						\
+-	      ,,(unsigned int)regs->bx,,(unsigned int)regs->cx		\
+-	      ,,(unsigned int)regs->dx,,(unsigned int)regs->si		\
+-	      ,,(unsigned int)regs->di,,(unsigned int)regs->bp)
++	SYSCALL_PT_ARGS(x, __SC_COMPAT_CAST,				\
++			__MAP(x, __SC_TYPE, __VA_ARGS__))		\
+
+ #define __SYS_STUB0(abi, name)						\
+ 	long __##abi##_##name(const struct pt_regs *regs);		\
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 5c0dbef55792..80a059cab260 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -128,6 +128,7 @@ struct mnt_id_req;
+ #define __TYPE_IS_LL(t) (__TYPE_AS(t, 0LL) || __TYPE_AS(t, 0ULL))
+ #define __SC_LONG(t, a) __typeof(__builtin_choose_expr(__TYPE_IS_LL(t), 0LL, 0L)) a
+ #define __SC_CAST(t, a)	(__force t) a
++#define __SC_TYPE(t, a)	t
+ #define __SC_ARGS(t, a)	a
+ #define __SC_TEST(t, a) (void)BUILD_BUG_ON_ZERO(!__TYPE_IS_LL(t) && sizeof(t) > sizeof(long))
+
+--
+2.34.1
+
