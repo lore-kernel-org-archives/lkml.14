@@ -1,76 +1,76 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D89048797
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 12:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E5347F7B;
+	Wed, 10 Jan 2024 12:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="HVAgopfK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1704890794; x=1736426794;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NOI1de7t6pyVOs6jsOoRo4x39WzrGdDD2xRLy0QjDOY=;
-  b=HVAgopfKJ3unPSMT3wLyeLVKXvyA5biGCmSTf+0e3QUN0b2BBaqRTgxj
-   /Kuc6bX7TiipNWm5ZFKIMcW7zv+Up7/ZHFSOQ7fbbe3Qxw5UurkakL7gU
-   1y5fWmY7WbRbB689tmzfXnOW04PpNV0DV9yq+yIuAXhOy0bYne9tkHdWd
-   w0FGqwmOTlHa84wTVW2RUOTQINYaw4NOtjYBjuMhP0xOsI87sjuvqFzMV
-   DXgnc0utL7GYAL5hqKKOIzzU7dqvg8pdb0apyGk2xd4yIJCJsBElPpHQn
-   D58wC5VipYGk/X69Q9QwKlyeoIdLZCFjrXpY4NNNdoLhIBMqBtUvgynbk
-   w==;
-X-IronPort-AV: E=Sophos;i="6.04,184,1695679200"; 
-   d="scan'208";a="34829298"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 10 Jan 2024 13:46:31 +0100
-Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 6D807280075;
-	Wed, 10 Jan 2024 13:46:31 +0100 (CET)
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] regmap: debugfs: runtime resume a device when reading registers
-Date: Wed, 10 Jan 2024 13:46:31 +0100
-Message-ID: <7625183.EvYhyI6sBW@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <3bc9c762-3573-4d8b-bfcf-6c8e91938dcd@sirena.org.uk>
-References: <20240110095358.473663-1-alexander.stein@ew.tq-group.com> <3bc9c762-3573-4d8b-bfcf-6c8e91938dcd@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Hiutukme"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=kTy81ad9pKvtG9ddZ38Ph0EzVsfouY5XMECMPqCF5ZQ=; b=HiutukmeGHcFQXD7yqG1H/8syS
+	TscaDe5jgVUGUAcam3tly4Cnmr+g+DfNvWh690STzoXL+eygLzGgoSDUssm+LfAw5zVEKoowUUU0E
+	xg917ouaRSv3XyYmGggxggwLCKr5QBVKe0xnUHyOQ3CdAC8CRYJ/UePsEnI7Xfps8x28kCA+kwsXs
+	T8WZSCz29kxh3yXb/kOE9KjJ9ZF4sqF5ALi6f/BmQ9RkwcCSecf+cKoF7cwiJbdjahvTGQAM8Aekc
+	yxrixBLKL4K5+KC4RKojB7hSxifDQZVpdIvUlXrr0VRokXwymm2naFrNf2S44yV+INcDePolYuSqA
+	Y1sZXzAA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46746)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rNXzZ-0005Pc-1Y;
+	Wed, 10 Jan 2024 12:47:33 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rNXzc-0005Jz-8s; Wed, 10 Jan 2024 12:47:36 +0000
+Date: Wed, 10 Jan 2024 12:47:36 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+Subject: Re: [0/2] ARM: Adjustments for init_atags_procfs()
+Message-ID: <ZZ6R6KSQo9ph3ARZ@shell.armlinux.org.uk>
+References: <6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de>
+ <562a6f99-3f8e-9a77-e519-b668e24dced2@web.de>
+ <b3c42397-c879-4381-aa96-c7887e81c068@web.de>
+ <7dd19987-6590-4756-a929-1ff01503ad1c@web.de>
+ <ZZ6MZl14bcIaCaQn@shell.armlinux.org.uk>
+ <1c38e495-5c9c-4ff8-b453-93b882dd2c4c@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c38e495-5c9c-4ff8-b453-93b882dd2c4c@web.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Am Mittwoch, 10. Januar 2024, 13:23:17 CET schrieb Mark Brown:
-> On Wed, Jan 10, 2024 at 10:53:58AM +0100, Alexander Stein wrote:
-> > If the registers shall be read from device, runtime resume it in order
-> > to enable a possiblly attached power domain before accessing the device.
->=20
-> The idea is that the debugfs interface isn't supposed to be disruptive
-> to the thing being debugged.  It would be better to detect if there will
-> be problems and report the status as busy.
+On Wed, Jan 10, 2024 at 01:44:01PM +0100, Markus Elfring wrote:
+> >>> Is this patch series still in review queues?
+> >>
+> >> See also:
+> >> https://lore.kernel.org/cocci/562a6f99-3f8e-9a77-e519-b668e24dced2@web.de/
+> >> https://sympa.inria.fr/sympa/arc/cocci/2023-03/msg00098.html
+> >
+> > I suspect no one looked at it, sorry.
+> 
+> Special mailing list settings probably influenced this situation.
+> 
+> >                                       I don't catch everything that is
+> > on the mailing list. Looks fine to me but it needs to end up in the
+> > patch system to be applied.
+> 
+> Can you collaborate also with mentioned mailing list archive interfaces?
 
-In my case the device is actually unused, runtime suspended, thus disabled=
-=20
-power domain. That's totally different to busy. In this case dumping the=20
-registers is non-disruptive, unless you account enabling/disabling the powe=
-r=20
-domain as well. Any attached clock is already enabled/disabled, but power=20
-domains are not.
+Err what? Sorry, I don't understand your comment.
 
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
