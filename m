@@ -1,192 +1,183 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp2-kfki.kfki.hu (smtp2-kfki.kfki.hu [148.6.0.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED8A4CB34;
-	Wed, 10 Jan 2024 16:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qmws0A1G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704903743;
-	bh=fWksZuLZmBIAQaeN87h+Fg9aj3iHVlHAOWhw+aWFtaI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qmws0A1G1dDswCVMuYycXSg3Uv1G54mgUifepkTH3kieXHd6decqVrVAnSTlZYqLr
-	 NaSDuGxB0hOarSnsLnfp/dtIsAQD2SKaPguZaVXYFy46ohJwpI7TOYH4sY7cX/BAMY
-	 5JXkJ4sPhuZREaZlppHK7VXTf0P1mNcKlmiqACGQ3pdAfJaXGVMb9M+61HkAXkaztZ
-	 fDcZ3sm4PnlBjzKyV4LH9axRKU3mvHVHDor3NMLCecThpnEfqIWffPH0O702azJpkQ
-	 HvNCIYOE+h9TnwnpDCJsLaJ0YGt2imaUd1heQA1ex7t1j17JUIOKYbeFzmOBZnJ5A1
-	 RNecLUMnZmrWQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 84E8E37809D0;
-	Wed, 10 Jan 2024 16:22:22 +0000 (UTC)
-Message-ID: <ffc8a175-64e6-410a-9340-07f98226d6ca@collabora.com>
-Date: Wed, 10 Jan 2024 17:22:21 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63F74CB3D;
+	Wed, 10 Jan 2024 16:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=netfilter.org
+Received: from localhost (localhost [127.0.0.1])
+	by smtp2.kfki.hu (Postfix) with ESMTP id 0089DCC0120;
+	Wed, 10 Jan 2024 17:14:33 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at smtp2.kfki.hu
+Received: from smtp2.kfki.hu ([127.0.0.1])
+	by localhost (smtp2.kfki.hu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP; Wed, 10 Jan 2024 17:14:30 +0100 (CET)
+Received: from blackhole.kfki.hu (blackhole.szhk.kfki.hu [148.6.240.2])
+	by smtp2.kfki.hu (Postfix) with ESMTP id 17D41CC011E;
+	Wed, 10 Jan 2024 17:14:30 +0100 (CET)
+Received: by blackhole.kfki.hu (Postfix, from userid 1000)
+	id 11436343167; Wed, 10 Jan 2024 17:14:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by blackhole.kfki.hu (Postfix) with ESMTP id 0F06C343166;
+	Wed, 10 Jan 2024 17:14:30 +0100 (CET)
+Date: Wed, 10 Jan 2024 17:14:30 +0100 (CET)
+From: Jozsef Kadlecsik <kadlec@netfilter.org>
+To: David Wang <00107082@163.com>
+cc: ale.crismani@automattic.com, xiaolinkui@kylinos.cn, pablo@netfilter.org, 
+    linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org
+Subject: Re: Performance regression in ip_set_swap on 6.1.69
+In-Reply-To: <661cb613.7974.18cf30c4a42.Coremail.00107082@163.com>
+Message-ID: <956ec7cd-16ef-7f72-dad8-dfa2ec5f4d77@netfilter.org>
+References: <C0829B10-EAA6-4809-874E-E1E9C05A8D84@automattic.com> <20240110102342.4978-1-00107082@163.com> <a4dfc3d9-f028-7ab4-c3a7-11dcbb12e377@netfilter.org> <661cb613.7974.18cf30c4a42.Coremail.00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: mediatek: Add initial MT7981B and Xiaomi
- AX3000T
-Content-Language: en-US
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Daniel Golle <daniel@makrotopia.org>, Hsin-Yi Wang <hsinyi@chromium.org>,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- jason-ch chen <Jason-ch.Chen@mediatek.com>,
- Macpaul Lin <macpaul.lin@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-References: <20240110095118.25598-1-zajec5@gmail.com>
- <20240110095118.25598-2-zajec5@gmail.com>
- <34bda5e0-0587-459b-b31c-46112b1b10fa@collabora.com>
- <557cf463-5ffa-4d81-8b38-44f610b26163@gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <557cf463-5ffa-4d81-8b38-44f610b26163@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Il 10/01/24 16:41, Rafał Miłecki ha scritto:
-> On 10.01.2024 14:38, AngeloGioacchino Del Regno wrote:
->> Il 10/01/24 10:51, Rafał Miłecki ha scritto:
->>> From: Rafał Miłecki <rafal@milecki.pl>
->>>
->>> MT7981B (AKA MediaTek Filogic 820) is a dual-core ARM Cortex-A53 SoC.
->>> One of market devices using this SoC is Xiaomi AX3000T.
->>>
->>> This is initial contribution with basic SoC support. More hardware block
->>> will get added later. Some will need their bindings (like auxadc).
->>>
->>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
->>> ---
->>>   arch/arm64/boot/dts/mediatek/Makefile         |   1 +
->>>   .../dts/mediatek/mt7981b-xiaomi-ax3000t.dts   |  15 +++
->>>   arch/arm64/boot/dts/mediatek/mt7981b.dtsi     | 108 ++++++++++++++++++
->>>   3 files changed, 124 insertions(+)
->>>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
->>>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7981b.dtsi
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile 
->>> b/arch/arm64/boot/dts/mediatek/Makefile
->>> index 0a189d5d8006..8bff11acfe1f 100644
->>> --- a/arch/arm64/boot/dts/mediatek/Makefile
->>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
->>> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
->>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-xiaomi-ax3000t.dtb
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3.dtb
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-emmc.dtbo
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-nand.dtbo
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts 
->>> b/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
->>> new file mode 100644
->>> index 000000000000..a314c3e05e50
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
->>> @@ -0,0 +1,15 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
->>> +
->>> +/dts-v1/;
->>> +
->>> +#include "mt7981b.dtsi"
->>> +
->>> +/ {
->>> +    compatible = "xiaomi,ax3000t", "mediatek,mt7981b";
->>> +    model = "Xiaomi AX3000T";
->>> +
->>> +    memory@40000000 {
->>> +        reg = <0 0x40000000 0 0x10000000>;
->>> +        device_type = "memory";
->>> +    };
->>> +};
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi 
->>> b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
->>> new file mode 100644
->>> index 000000000000..ce878ad55204
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
->>> @@ -0,0 +1,108 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
->>> +
->>> +#include <dt-bindings/clock/mediatek,mt7981-clk.h>
->>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +
->>> +/ {
->>> +    compatible = "mediatek,mt7981b";
->>> +    interrupt-parent = <&gic>;
->>> +    #address-cells = <2>;
->>> +    #size-cells = <2>;
->>> +
->>> +    cpus {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +
->>> +        cpu@0 {
->>> +            compatible = "arm,cortex-a53";
->>> +            reg = <0x0>;
->>> +            device_type = "cpu";
->>> +            enable-method = "psci";
->>> +        };
->>> +
->>> +        cpu@1 {
->>> +            compatible = "arm,cortex-a53";
->>> +            reg = <0x1>;
->>> +            device_type = "cpu";
->>> +            enable-method = "psci";
->>> +        };
->>> +    };
->>> +
->>> +    oscillator-40m {
->>> +        compatible = "fixed-clock";
->>> +        clock-frequency = <40000000>;
->>> +        clock-output-names = "clkxtal";
->>> +        #clock-cells = <0>;
->>> +    };
->>> +
->>> +    psci {
->>> +        compatible = "arm,psci-0.2";
->>
->> PSCI 0.2? I invite you to check a kernel log for a string like this one:
->>
->> `PSCIv%d.%d detected in firmware`
->> ...because of course if it says v1.0, this should be "arm,psci-1.0".
->>
->> This is just a nitpick anyway, so you can already get my
->>
->> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>
->> P.S.: but please, confirm or deny that PSCI thing ASAP :-)
->> P.P.S.: For next time - I'd be happy if you could add a cover letter to your
->> patch series..!
+Hi,
+
+On Wed, 10 Jan 2024, David Wang wrote:
+
+> At 2024-01-10 18:35:02, "Jozsef Kadlecsik" <kadlec@netfilter.org> wrote:
+> >On Wed, 10 Jan 2024, David Wang wrote:
+> >
+> >> I confirmed this on 6.7 that this was introduced by commit 
+> >> 28628fa952fefc7f2072ce6e8016968cc452b1ba with following changes:
+> >> 
+> >> 	 static inline void
+> >> 	@@ -1397,6 +1394,9 @@ static int ip_set_swap(struct sk_buff *skb, const struct nfnl_info *info,
+> >> 		ip_set(inst, to_id) = from;
+> >> 		write_unlock_bh(&ip_set_ref_lock);
+> >> 	 
+> >> 	+       /* Make sure all readers of the old set pointers are completed. */
+> >> 	+       synchronize_rcu();
+> >> 	+
+> >> 		return 0;
+> >> 	 }
+> >> 
+> >> synchronize_rcu causes the delay, and its usage here is very confusing, 
+> >> there is no reclaimer code after it.
+> >
+> >As I'm seeing just the end of the discussion, please send a full report of 
+> >the problem and how to reproduce it.
+> >
 > 
-> You were right, good catch!
+> This was reported in 
+> https://lore.kernel.org/lkml/C0829B10-EAA6-4809-874E-E1E9C05A8D84@automattic.com/ 
+> by ale.crismani@automattic.com Just out of interest of performance 
+> issues, I tried to reproduce it with a test stressing ipset_swap:
 > 
-> [    0.000000] psci: probing for conduit method from DT.
-> [    0.000000] psci: PSCIv1.1 detected in firmware.
-> [    0.000000] psci: Using standard PSCI v0.2 function IDs
-> [    0.000000] psci: MIGRATE_INFO_TYPE not supported.
-> [    0.000000] psci: SMC Calling Convention v1.0
+> My test code is as following, it would stress swapping ipset 'foo' with 
+> 'bar'; (foo/bar ipset needs to be created before the test.) With latest 
+> 6.7, the stress would take about 180 seconds to finish, but with 
+> `synchronize_rcu` removed, it only took 3seconds.
 > 
-> I'll fix that in V2. Thanks!
 > 
+> ```
+> unsigned char mbuffer[4096];
+> int main() {
+> 	int err;
+> 	int sock = socket(AF_NETLINK, SOCK_RAW, NETLINK_NETFILTER);
+> 	if (sock<0) {
+> 		perror("Fail to create socket");
+> 		return 1;
+> 	}
+> 	struct sockaddr_nl addr = {
+> 		.nl_family = AF_NETLINK,
+> 		.nl_pad = 0,
+> 		.nl_pid = 0,
+> 		.nl_groups = 0
+> 	};
+> 	struct sockaddr raddr = {0};
+> 	socklen_t rsize;
+> 	int seq = 0x12345678;
+> 	err = bind(sock, (struct sockaddr*)&addr, sizeof(addr));
+> 	if (err) {
+> 		perror("Fail to bind");
+> 		return 1;
+> 	}
+> 	err = getsockname(sock, &raddr, &rsize);
+> 	if (err) {
+> 		perror("Fail to getsockname");
+> 		return 1;
+> 	}
+> 	unsigned char buf[64];
+> 	struct nlmsghdr *phdr;
+> 	struct nfgenmsg *pnfg;
+> 	struct nlattr *pnla;
+> 	unsigned int total;
+> 	ssize_t rz;
+> 	struct iovec iovs;
+> 	iovs.iov_base = mbuffer;
+> 	iovs.iov_len = sizeof(mbuffer);
+> 	struct msghdr msg = {0};
+> 	msg.msg_name = &addr;
+> 	msg.msg_namelen = sizeof(addr);
+> 	msg.msg_iov = &iovs;
+> 	msg.msg_iovlen = 1;
+> 
+> 	memset(buf, 0, sizeof(buf));
+> 	total = 0;
+> 	phdr = (struct nlmsghdr*)(buf+total);
+> 	total += sizeof(struct nlmsghdr);
+> 	phdr->nlmsg_type=NFNL_SUBSYS_IPSET<<8|IPSET_CMD_PROTOCOL;
+> 	phdr->nlmsg_seq = seq;
+> 	phdr->nlmsg_flags = NLM_F_REQUEST;
+> 	pnfg = (struct nfgenmsg*)(buf+total);
+> 	total += sizeof(struct nfgenmsg);
+> 	pnfg->nfgen_family=AF_INET;
+>     	pnfg->version= NFNETLINK_V0;
+> 	pnfg->res_id=htons(0);
+> 	pnla = (struct nlattr *)(buf+total);
+> 	pnla->nla_len = 5;
+> 	pnla->nla_type = 1;
+> 	buf[total+sizeof(struct nlattr)]=0x06;
+> 	total+=8;
+> 	phdr->nlmsg_len = total;
+> 	rz = sendto(sock, buf, total, 0, (struct sockaddr*)&addr, sizeof(addr));
+> 	rz = recvmsg(sock, &msg, 0);
+> 
+> 	pnla = (struct nlattr *)(buf+total);
+> 	pnla->nla_len = 8;
+> 	pnla->nla_type = 2;
+> 	char *p = buf+(total+sizeof(struct nlattr));
+> 	p[0]='f'; p[1]='o'; p[2]='o'; p[3]=0;
+> 	total+=8;
+> 	pnla = (struct nlattr *)(buf+total);
+> 	pnla->nla_len = 8;
+> 	pnla->nla_type = 3;
+> 	p = buf+(total+sizeof(struct nlattr));
+> 	p[0]='b'; p[1]='a'; p[2]='r'; p[3]=0;
+> 	total+=8;
+> 	phdr->nlmsg_type = NFNL_SUBSYS_IPSET<<8|IPSET_CMD_SWAP;
+> 	phdr->nlmsg_flags = NLM_F_REQUEST|NLM_F_ACK;
+> 	phdr->nlmsg_len = total;
+> 
+> 	
+> 	for (int i=0; i<10000; i++) {
+> 		// stress swap foo bar
+> 		phdr->nlmsg_seq++;
+> 		sendto(sock, buf, total, 0, (struct sockaddr*)&addr, sizeof(addr));
+> 		recvmsg(sock, &msg, 0);
+> 	}
+> 
+> 	close(sock);
+> 	return 0;
+> }
+> ```
 
-Cool! You're welcome!
+Thanks, I'll look into it. The race condition fix between swap/destroy and 
+kernel side add/del/test had several versions, either penalizing destroy 
+or swap. Finally swap seemed to be the less intrusive. I'm going to 
+explore other possibilities.
 
-For v1.1 it's still "arm,psci-1.0" btw :-)
-You can keep my R-b tag with that compatible change, no need to drop it.
-
-Cheers,
-Angelo
-
+Best regards,
+Jozsef
+-- 
+E-mail  : kadlec@blackhole.kfki.hu, kadlecsik.jozsef@wigner.hu
+PGP key : https://wigner.hu/~kadlec/pgp_public_key.txt
+Address : Wigner Research Centre for Physics
+          H-1525 Budapest 114, POB. 49, Hungary
