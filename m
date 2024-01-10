@@ -1,93 +1,150 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F894D13F;
-	Wed, 10 Jan 2024 22:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DC94D13F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 22:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UDAebcMD"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40AMav8t003608;
-	Wed, 10 Jan 2024 16:36:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704926217;
-	bh=JVXHGIOSU6hzsUeI0AuBXrAHp/rtmd5pOO9mdvCiweQ=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=UDAebcMDIziq/O9qOajvmsHPxbC4TS6NEsuR4Sv++8CIGu9W0CFw6U1eqfcgwTSHU
-	 BSs4p04FO1bkxD2NeCigieNO86aLvBaB7SsdZ1kL4j1w74DQazda79qMqO71IfQsO/
-	 jK/XFF4b3u1U6csKl1tOQyrSGiR04Kfp9xaPMsk4=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40AMav5h107905
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 10 Jan 2024 16:36:57 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
- Jan 2024 16:36:57 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 10 Jan 2024 16:36:57 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40AMavCr005709;
-	Wed, 10 Jan 2024 16:36:57 -0600
-Date: Wed, 10 Jan 2024 16:36:57 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Julien Panis <jpanis@baylibre.com>,
-        Pierre Gondois <pierre.gondois@arm.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 02/16] arm64: dts: ti: k3-am62a7: Add MIT license along
- with GPL-2.0
-Message-ID: <20240110223657.pkochl4c5skf3w3h@amendment>
-References: <20240110140903.4090946-1-nm@ti.com>
- <20240110140903.4090946-3-nm@ti.com>
- <10e8c81f-0ebe-441e-b80b-9bf4df7ff782@linaro.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UlNCwhmr"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5cdfbd4e8caso3472258a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:41:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704926479; x=1705531279; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vdU8XQ8hAn2X9CvWueVcEm806lEJ5ho/XsvrIs44ZKs=;
+        b=UlNCwhmrwZb1gcpWKFkUQexXpz9lwM27XJMS3GUMYQ8erbXkktwQIvmHAm1MWkWcBa
+         5+pa8vuu/SHk77aE98Fw7yJj1UJ8MjsUXunWfRUw7XlBdjU+lrBvmMOnFgAcNMy5CK6C
+         qDuM5TeK3jgDXBL8r9dKVM4z76e/yAoXsUSCE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704926479; x=1705531279;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vdU8XQ8hAn2X9CvWueVcEm806lEJ5ho/XsvrIs44ZKs=;
+        b=qPjFDQpK4wFvFHqo6re6JiK445FU2KFgEGp4LJFITJ2sJhYDX8aQM3Dr8P8X2DFHmb
+         3vfhqD9AbkKLoKMH38YSxOZ0Nz7nbDxrHML22QvJLp9yGXlAd82oDsHisSgTJ3lvhc7c
+         qTLbyneMzlbjT51SFAAaLPg6BIha5n/oq8zgHLF277stM3WIGTC2flzsPtAYg4mhb9r9
+         Fwt8wpwjxjkXP1/2Uu5r7LtGgq4LUFV+Wl1bbFnfbSbhf1cwJrgd7Yrb5c37Xt5fwTKU
+         7dpyFFrx4rXH2ZCd5DAMGXISAwslbEEdYtD2MGUPDKKubLP8Y+CpvtPYWuKWe4PeqTlB
+         yntg==
+X-Gm-Message-State: AOJu0YygbnyLdVkaYzshRwS21Ixbz+RhIEUrK1tVSg+cJ2lhFBGtmoLR
+	lUVGv0dkhWK/Q40nBtzIWvV2duqzgsek
+X-Google-Smtp-Source: AGHT+IHp847lM7oeKuciJE8ldA5qlj6UWszN7QW4GPZK7rdK1qWeVVXe7fVH+4XSitoofTTZv6Ep0g==
+X-Received: by 2002:a05:6a20:429b:b0:199:40a9:6716 with SMTP id o27-20020a056a20429b00b0019940a96716mr152336pzj.27.1704926479657;
+        Wed, 10 Jan 2024 14:41:19 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ff26-20020a056a002f5a00b006da73b90fe4sm4123314pfb.14.2024.01.10.14.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 14:41:19 -0800 (PST)
+Date: Wed, 10 Jan 2024 14:41:18 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH] dmaengine: usb-dmac: Avoid format-overflow warning
+Message-ID: <202401101437.48C52CF6@keescook>
+References: <20240110222210.193479-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <10e8c81f-0ebe-441e-b80b-9bf4df7ff782@linaro.org>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20240110222210.193479-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On 21:41-20240110, Krzysztof Kozlowski wrote:
-> On 10/01/2024 15:08, Nishanth Menon wrote:
-> > Modify license to include dual licensing as GPL-2.0-only OR MIT
-> > license for SoC and TI evm device tree files. This allows for Linux
-> > kernel device tree to be used in other Operating System ecosystems
-> > such as Zephyr or FreeBSD.
-> > 
-> > While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync with
-> > latest SPDX conventions (GPL-2.0 is deprecated).
-> > 
-> > While at this, update the TI copyright year to sync with current year to
-> > indicate license change (and add it at least for one file which was
-> > missing TI copyright).
-> > 
-> > Cc: Julien Panis <jpanis@baylibre.com>
-> > Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > Cc: Pierre Gondois <pierre.gondois@arm.com>
+On Wed, Jan 10, 2024 at 10:22:10PM +0000, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> I guess I am listed here due to some contributions, so copyrights. In
-> such case, I agree for relicensing to "GPL-2.0-only OR MIT".
+> gcc points out that the fix-byte buffer might be too small:
+> drivers/dma/sh/usb-dmac.c: In function 'usb_dmac_probe':
+> drivers/dma/sh/usb-dmac.c:720:34: warning: '%u' directive writing between 1 and 10 bytes into a region of size 3 [-Wformat-overflow=]
+>   720 |         sprintf(pdev_irqname, "ch%u", index);
+>       |                                  ^~
+> In function 'usb_dmac_chan_probe',
+>     inlined from 'usb_dmac_probe' at drivers/dma/sh/usb-dmac.c:814:9:
+> drivers/dma/sh/usb-dmac.c:720:31: note: directive argument in the range [0, 4294967294]
+>   720 |         sprintf(pdev_irqname, "ch%u", index);
+>       |                               ^~~~~~
+> drivers/dma/sh/usb-dmac.c:720:9: note: 'sprintf' output between 4 and 13 bytes into a destination of size 5
+>   720 |         sprintf(pdev_irqname, "ch%u", index);
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Maximum number of channels for USB-DMAC as per the driver is 1-99 so use
+> u8 instead of unsigned int/int for DMAC channel indexing and make the
+> pdev_irqname string long enough to avoid the warning.
+> 
+> While at it use scnprintf() instead of sprintf() to make the code more
+> robust.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thank you. And, yep, you are explicitly called out since you had one
-or more patch modifying or adding content in the affected file.
+This looks like good fixes; thanks! I see n_channels is sanity checked
+during the probe in usb_dmac_chan_probe(), so this looks good.
+
+(Is there a reason not to also change n_channels to a u8?)
+
+-Kees
+
+> ---
+>  drivers/dma/sh/usb-dmac.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
+> index a9b4302f6050..f7cd0cad056c 100644
+> --- a/drivers/dma/sh/usb-dmac.c
+> +++ b/drivers/dma/sh/usb-dmac.c
+> @@ -706,10 +706,10 @@ static const struct dev_pm_ops usb_dmac_pm = {
+>  
+>  static int usb_dmac_chan_probe(struct usb_dmac *dmac,
+>  			       struct usb_dmac_chan *uchan,
+> -			       unsigned int index)
+> +			       u8 index)
+>  {
+>  	struct platform_device *pdev = to_platform_device(dmac->dev);
+> -	char pdev_irqname[5];
+> +	char pdev_irqname[6];
+>  	char *irqname;
+>  	int ret;
+>  
+> @@ -717,7 +717,7 @@ static int usb_dmac_chan_probe(struct usb_dmac *dmac,
+>  	uchan->iomem = dmac->iomem + USB_DMAC_CHAN_OFFSET(index);
+>  
+>  	/* Request the channel interrupt. */
+> -	sprintf(pdev_irqname, "ch%u", index);
+> +	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
+>  	uchan->irq = platform_get_irq_byname(pdev, pdev_irqname);
+>  	if (uchan->irq < 0)
+>  		return -ENODEV;
+> @@ -768,8 +768,8 @@ static int usb_dmac_probe(struct platform_device *pdev)
+>  	const enum dma_slave_buswidth widths = USB_DMAC_SLAVE_BUSWIDTH;
+>  	struct dma_device *engine;
+>  	struct usb_dmac *dmac;
+> -	unsigned int i;
+>  	int ret;
+> +	u8 i;
+>  
+>  	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
+>  	if (!dmac)
+> @@ -869,7 +869,7 @@ static void usb_dmac_chan_remove(struct usb_dmac *dmac,
+>  static void usb_dmac_remove(struct platform_device *pdev)
+>  {
+>  	struct usb_dmac *dmac = platform_get_drvdata(pdev);
+> -	int i;
+> +	u8 i;
+>  	for (i = 0; i < dmac->n_channels; ++i)
+>  		usb_dmac_chan_remove(dmac, &dmac->channels[i]);
+> -- 
+> 2.34.1
+> 
 
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Kees Cook
