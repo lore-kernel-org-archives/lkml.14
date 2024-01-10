@@ -1,113 +1,115 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709794F88A;
-	Wed, 10 Jan 2024 23:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E2B8F7A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 23:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JJ/EtR29"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1704927820;
-	bh=t6qTg4+hvafGldknVqf3jODmxC5jGlYpKg7EK7DM02M=;
-	h=Date:From:To:Cc:Subject:From;
-	b=JJ/EtR29eTIsbcJ588Zmtjz2E6jDXJrZsaKITXfKkha3WYLh+UQKLPn+17s7MGqbb
-	 SyX/y77pWDfbgDRIuZaRErnDJm22EF6RgzZsTRTWevVdiapW5zd/qhoaklg1F06TmR
-	 ZwBoxy2KEaZ+tkTy9ajA8pcQCUhL0zx43j4fxByi9jk1QWXBtlq1FKaUAg/pzgceSS
-	 Oaz/mXSKGOlevIpo2UM51GfRFMXC5OGmKTK1XnS0ac7f9cZC06DljBwVoc0Jr8ATs9
-	 ceqfC++/oWbPwncv3h1m05S60dCo+EiIGYnrtJPTHSQr5KhcI2wsuixvdDwJ4GU57b
-	 c4enJvJ7Ob2ew==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T9NdR3XJNz4x43;
-	Thu, 11 Jan 2024 10:03:38 +1100 (AEDT)
-Date: Thu, 11 Jan 2024 10:03:37 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Sterba <dsterba@suse.cz>
-Cc: Christian Brauner <brauner@kernel.org>, David Sterba <dsterba@suse.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Qu Wenruo <wqu@suse.com>
-Subject: linux-next: manual merge of the btrfs tree with Linus' tree
-Message-ID: <20240111100337.3e9ef25c@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtsmdAj0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704928114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p3Qug8q0VdY7pMyGvBvH86zD2vvdUwG2qbAIxxKPiWA=;
+	b=UtsmdAj0N7TFSfUX95rfkk9JHuUm00VTu74drfjx3KWj4OW+KXMeFmHySvOj8v1BEnVh7W
+	kG0T61eIsOzUBXTfeFZyj7LKtF640B9yZgtrP1FB9z+uiXILHjr8/993+QG3fGUm7lFC9Q
+	68WBNj5A57icuNBQ1TG1oU2eAS1xgNk=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-5-W6OkS7MGe8fNKVTH-7pw-1; Wed, 10 Jan 2024 18:08:27 -0500
+X-MC-Unique: 5-W6OkS7MGe8fNKVTH-7pw-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-78319f5d6edso607860385a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:08:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704928106; x=1705532906;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p3Qug8q0VdY7pMyGvBvH86zD2vvdUwG2qbAIxxKPiWA=;
+        b=RoyB6hY7paXlS8nmhogpY0j6s4stmC7lf49ckdlK1Ok+6h8CEewA5uUK1H4T1Qzq/a
+         vjMuNtd30a7DdVvvzeqcA2yoi2Jhs4m+bWbGXnTU/d97UP5EFwBAFWL85GfFTBbZDLs3
+         fEQF6dgwbCfBr7GnV8pg1Ww3SeqpTanwVL4yMVc4Z03ExUN0v+aklUrE8cIwxJR5eLMY
+         PEPUbR+RzlB1MRI2fI40G4TbS6xFIjiWiwMI8nfl3IXeXowr+l2DG+WUTMRE4VliGwkx
+         FZcRbFXK92QCQpEWdtuVtM1NvkVm9yXKik/F2HtRoiRzjMX96zEAjFyzrPREuFI2QR5O
+         d/Kg==
+X-Gm-Message-State: AOJu0YwW7pZ4E0g9xBO4bRZR078sNqgXSyP2ZR0kCrA5emwKTiwZoT8d
+	iFaf+UQaqXsCqEkFM3870WxXYuf1FLwon3L+1Q+iIRkbCrge4Xq3VSDOMNDjrMYpHYvE4mHQD1/
+	A9/na7BG8FTpWK7oTS1TtOGP8EoTbJids
+X-Received: by 2002:a37:e115:0:b0:783:3063:14cf with SMTP id c21-20020a37e115000000b00783306314cfmr383104qkm.27.1704928106731;
+        Wed, 10 Jan 2024 15:08:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGuM5rPjkuVXFa7BTYo2SzUslbZHD0cP9S1YfZwwNkGMlaLA3tFb0mZaZybBtJdmhh7S0/60g==
+X-Received: by 2002:a37:e115:0:b0:783:3063:14cf with SMTP id c21-20020a37e115000000b00783306314cfmr383092qkm.27.1704928106481;
+        Wed, 10 Jan 2024 15:08:26 -0800 (PST)
+Received: from optiplex-fbsd ([76.152.42.226])
+        by smtp.gmail.com with ESMTPSA id w2-20020a05620a094200b0077dd463da60sm1940682qkw.126.2024.01.10.15.08.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 15:08:26 -0800 (PST)
+Date: Wed, 10 Jan 2024 18:08:23 -0500
+From: Rafael Aquini <aquini@redhat.com>
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Audra Mitchell <audra@redhat.com>, linux-kernel@vger.kernel.org,
+	tj@kernel.org, jiangshanlai@gmail.com,
+	hirokazu.yamauchi.hk@hitachi.com, ddouwsma@redhat.com,
+	loberman@redhat.com, raquini@redhat.com
+Subject: Re: [PATCH v2] workqueue.c: Increase workqueue name length
+Message-ID: <ZZ8jZ3J63jf4Ap3y@optiplex-fbsd>
+References: <20231215193954.1785069-1-audra@redhat.com>
+ <20240110202959.249296-1-audra@redhat.com>
+ <2f0efed5-f9f3-4a5c-9fd4-a4837cada298@prevas.dk>
+ <ZZ8RtfKCmOQqj5KC@optiplex-fbsd>
+ <f5ded466-cbe1-4a46-b042-1c65839c9e02@prevas.dk>
+ <ZZ8a1RvwpDZvwfg9@optiplex-fbsd>
+ <ace8c8db-ff33-465f-9415-dfcb1c522f4f@prevas.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lLfBhIqmLWmkcJpHWEd/qNC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ace8c8db-ff33-465f-9415-dfcb1c522f4f@prevas.dk>
 
---Sig_/lLfBhIqmLWmkcJpHWEd/qNC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 10, 2024 at 11:52:38PM +0100, Rasmus Villemoes wrote:
+> On 10/01/2024 23.31, Rafael Aquini wrote:
+> > On Wed, Jan 10, 2024 at 11:06:22PM +0100, Rasmus Villemoes wrote:
+> >> On 10/01/2024 22.52, Rafael Aquini wrote:
+> 
+> >>> The extra vsnprintf call is required because the return of the existing 
+> >>> vsnprintf() is going to be already capped by sizeof(wq->name).
+> >>
+> >> No, it is not. vsnprintf() returns the length of the would-be-created
+> >> string if the buffer was big enough. That is independent of whether one
+> >> does a dummy NULL,0 call or just calls it with a real, but possibly too
+> >> small, buffer.
+> >>
+> >> This is true for userspace (as required by posix) as well as the kernel
+> >> implementation of vsnprintf(). What makes you think otherwise?
+> >>
+> > 
+> > this snippet from PRINTF(3) man page
+> > 
+> > RETURN VALUE
+> >        Upon successful return, these functions return the number of characters 
+> >        printed (excluding the null byte used to end output to strings).
+> > 
+> 
+> Assuming we have the same man pages installed, try reading the very next
+> paragraph:
+> 
+>  The functions snprintf() and vsnprintf() do not write  more  than  size
+>  bytes  (including the terminating null byte ('\0')).  If the output was
+>  truncated due to this limit, then the return value  is  the  number  of
+>  characters  (excluding the terminating null byte) which would have been
+>  written to the final string if enough space had been available.   Thus,
+>  a  return  value  of  size or more means that the output was truncated.
+> 
+> How else would you even expect the vsnprintf(NULL, 0, ...) thing to work?
+>
 
-Hi all,
+OK, that's my bad! Sorry for the noise.
+-- Rafael 
 
-FIXME: Add owner of second tree to To:
-       Add author(s)/SOB of conflicting commits.
-
-Today's linux-next merge of the btrfs tree got a conflict in:
-
-  fs/btrfs/extent_io.c
-
-between commits:
-
-  affc5af36bbb ("Merge tag 'for-6.8-tag' of git://git.kernel.org/pub/scm/li=
-nux/kernel/git/kdave/linux")
-  600f111ef51d ("fs: Rename mapping private members")
-
-from Linus' tree and commit:
-
-  08236d11031b ("btrfs: cache folio size and shift in extent_buffer")
-
-from the btrfs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/btrfs/extent_io.c
-index cfd2967f04a2,c8aabe3be169..000000000000
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@@ -3677,7 -3668,9 +3668,9 @@@ reallocate
-  		 * and free the allocated page.
-  		 */
-  		folio =3D eb->folios[i];
-+ 		eb->folio_size =3D folio_size(folio);
-+ 		eb->folio_shift =3D folio_shift(folio);
- -		spin_lock(&mapping->private_lock);
- +		spin_lock(&mapping->i_private_lock);
-  		/* Should not fail, as we have preallocated the memory */
-  		ret =3D attach_extent_buffer_folio(eb, folio, prealloc);
-  		ASSERT(!ret);
-
---Sig_/lLfBhIqmLWmkcJpHWEd/qNC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWfIkkACgkQAVBC80lX
-0GypFwgAl5YNYuk4e0ljNREu1f9sb1MwxPNZYf9yeVDZYb2AqRu4ccHcSj5g5/Lz
-FFb32Sx9dr7p80CTTMpt/Vx+RJie2B0QnXKi6MxSOHUOvxHix28j1PfJMYGCMRFE
-7FLxaDbSU4Zwkyuergma2qy9fiWUitpxLXnbl19uPOqAzVJSOYeTq8DsfK5upS9E
-TKbR63+wOpaqExPWICu6dGvvmbUFizi438ckdnQuczqsLVwEqEz8/PYKEgj8XTZR
-5EskRvoiuTkwmeHXU+/w7t89BA10GSLFwmDTgbb++KqFf4Hnts3sRM5/gYiRRNTB
-sf2qqDeqimxeC2N78sRHYb8XdYEOzw==
-=ycui
------END PGP SIGNATURE-----
-
---Sig_/lLfBhIqmLWmkcJpHWEd/qNC--
