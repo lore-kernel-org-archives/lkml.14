@@ -1,171 +1,328 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A5148787
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F87148CE1;
+	Wed, 10 Jan 2024 11:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mWFAff6h"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e5521dab6so7745795e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:57:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyxYWGWt"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e5508ecb9so11461415e9.3;
+        Wed, 10 Jan 2024 03:58:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704887878; x=1705492678; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nk5CcraP8tb0HLUYKKWn5feJXh3b9PprQEz09+8nh94=;
-        b=mWFAff6hlAJfcJYKtTHBD1ri2vNE7cjYzc7coMBpTdkhNuoGBf1sB9L8Kfv7na/jTr
-         mFPibPdlc5snztvZAd7xkh6iVRXMNYiRWESbz5BCJPsONt9GkEABdZB4gwHjGvca3SOS
-         vqnbv3DPOXWyCnG+oGg7b57Og0yNfPz1BjO3QtZbsCTLLnHb7r2TkFbUgZ2T6dM2+mjp
-         OPUNFjo84BuTeUj1hg1G++sbpkA7sc5dVhW9L4apx2uVJV88UPizj1uedezwhOZuxeLf
-         wnYhoiMua/cYY0bMeDTNKruy2KLSJMX/b5VIBjkpLcF7Bi9PbYQcJCrKbjsj7VSsjt9e
-         iq0w==
+        d=gmail.com; s=20230601; t=1704887882; x=1705492682; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ko49eBT0bsmiNT0TgfCjFuObXjhyGn77qOLTB3IbfiE=;
+        b=OyxYWGWtvrdA4Y7kfT/5R+0GEXTIQFceaHkuuSTU/OTsfKmxUvMIoG0ohMypFWyTAn
+         ZqonWPAGt/lsXA17GuOaD8Yl6ZQvzl2Vuo6KJ5JB4ay6yFDMIh59f+rgfZoB8gq08Yg/
+         +BZjcMlUEBh7AU3pXmrkE/dxNTqvfwyZ8GnkWnf2fgWMyeZVKopAJW0I8g4y1f2kshPK
+         QBpG14K4SAa+WMXmTrBVRtQuf5Ga7hAPHccoc/p3r6ZK/QuOhD9hM5fgz7Ej26Tpt5B+
+         wWWYKfYNfllRSbUQLI6Xx4QgM980vtFjotOLi099iejUdKzB2v8l66fERJwhc6/EhKuY
+         z7QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704887878; x=1705492678;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nk5CcraP8tb0HLUYKKWn5feJXh3b9PprQEz09+8nh94=;
-        b=PEMfIIpMSRl2abso2fN35edC7xrde8UiNvtvIMJ1oPBEBysI5t7xBj1tlnV0pVAL8Z
-         AXSzXhyZ2omhUnhvbOFOdxrKWsZpOdSm/mAdu4p/C5uY4IoYSemhexw67YsRA1LK5BAm
-         OH0IoB2IuuqbSaBh0SU6jKPwCB1LS9uxieIyLHgJEvWrXfOJf2a4cP7pBsJYXoC0EcHX
-         sgJ+rvO1f0ZatuDylUzgdoD9Lzrxr9pJnPe6wJMVpQR+C+fa1KvBukDTHcJVRtG/26SF
-         qEda6DmzgYp7Dts9Th1zhddRcOIPLip5R+fDEJSf9XH63OU71ixq8dbY6zkBOPqya/Vr
-         CTKw==
-X-Gm-Message-State: AOJu0YyLmDnZA1y7Ewm8fKq7AbZRaeYefK4WN/x6t3f2YNkqCiuGxjH5
-	+v3eebKJvLxTEZgsCobGExN6HdZ8rp6a3Q==
-X-Google-Smtp-Source: AGHT+IHspS3WBHNq8pc7wZVlvwZCg/EF5lgWNe6VwhEdGt3wjVjh3C6jYUZHj3niz7zmNxfUOpodKw==
-X-Received: by 2002:a05:600c:1c13:b0:40e:5332:1939 with SMTP id j19-20020a05600c1c1300b0040e53321939mr598054wms.50.1704887877866;
-        Wed, 10 Jan 2024 03:57:57 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id j17-20020a05600c1c1100b0040c46719966sm1973854wms.25.2024.01.10.03.57.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 03:57:57 -0800 (PST)
-Message-ID: <3f18b997-46a7-466c-ad89-10dbafe2708d@linaro.org>
-Date: Wed, 10 Jan 2024 12:57:54 +0100
+        d=1e100.net; s=20230601; t=1704887882; x=1705492682;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ko49eBT0bsmiNT0TgfCjFuObXjhyGn77qOLTB3IbfiE=;
+        b=PCiNp67O+8RBMhSOU6+BOPtREJBElvnfsuxHCtaGTrORUxucA5FV8l+XFT/N6BqOjT
+         ipAWVl6V4vLhxfC1SI3re2RQ32q/aL0F95w9Ljn4avESm2lppVo9dYl8Kwczwyr28YBm
+         gibqCxiHKzH10UAEorHOn/BxWWa8zKWUzJyJl+saHHm+KONqSGQghoJbREovl5xone6b
+         Hc8NyWtf0FHSZLuTfNZarC2I52/hN3pzL02uCsChA5R4drqxdsGChbnsBNzPgUGcey3x
+         U8XTWMaUT701M9CVNAbRYKWMm4UYX6IeE4E9RU7zFwrUMICLEybypekdsmdS7wtxxjdX
+         ruLA==
+X-Gm-Message-State: AOJu0Yw9VNwbLAXVFEBOEq812zvDA39/047NEZniSdibxLSuW+r7JGuJ
+	EoAdeBvrd1DFInMXFxTynTY=
+X-Google-Smtp-Source: AGHT+IFTBf3L+5mbjfTpW/9Gbb3IIOoMzQAF4ws/8bw6KvOSKwNWhnWy/x7SqqHR9Zw+lpXTSL4zSw==
+X-Received: by 2002:a05:600c:154e:b0:40e:4672:5227 with SMTP id f14-20020a05600c154e00b0040e46725227mr472520wmg.96.1704887882271;
+        Wed, 10 Jan 2024 03:58:02 -0800 (PST)
+Received: from localhost.localdomain ([78.209.40.150])
+        by smtp.googlemail.com with ESMTPSA id f17-20020a05600c155100b0040d62f89381sm1962136wmg.35.2024.01.10.03.57.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 03:58:02 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [net-next RFC PATCH 2/5] net: phy: qcom: create and move functions to shared library
+Date: Wed, 10 Jan 2024 12:57:32 +0100
+Message-ID: <20240110115741.17300-3-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240110115741.17300-1-ansuelsmth@gmail.com>
+References: <20240110115741.17300-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] arm64: dts: qcom: ipq5332: Add RDP441 board device
- tree
-Content-Language: en-US
-To: Luo Jie <quic_luoj@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- quic_kkumarcs@quicinc.com, quic_suruchia@quicinc.com, quic_soni@quicinc.com,
- quic_pavir@quicinc.com, quic_souravp@quicinc.com, quic_linchen@quicinc.com,
- quic_leiwei@quicinc.com
-References: <20240110112059.2498-1-quic_luoj@quicinc.com>
- <20240110112059.2498-6-quic_luoj@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240110112059.2498-6-quic_luoj@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/01/2024 12:20, Luo Jie wrote:
-> From: Lei Wei <quic_leiwei@quicinc.com>
-> 
-> RDP441 board has onboard QCA8386 switch and 10G SFP port.
-> 
-> Signed-off-by: Lei Wei <quic_leiwei@quicinc.com>
-> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts | 51 +++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts b/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-> index 846413817e9a..d51968e9d601 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-> +++ b/arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts
-> @@ -12,6 +12,15 @@
->  / {
->  	model = "Qualcomm Technologies, Inc. IPQ5332 MI01.2";
->  	compatible = "qcom,ipq5332-ap-mi01.2", "qcom,ipq5332";
-> +
-> +	soc@0 {
+Create and move functions to shared library in preparation for qca83xx
+PHY Family to be detached from at803x driver.
 
-Nope, DTS does not define soc nodes.
+Only the shared defines are moved to the shared qcom.h header.
 
-> +		sfp1: sfp-1 {
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
+ drivers/net/phy/qcom/Kconfig        |  4 ++
+ drivers/net/phy/qcom/Makefile       |  1 +
+ drivers/net/phy/qcom/at803x.c       | 75 +----------------------------
+ drivers/net/phy/qcom/qcom-phy-lib.c | 53 ++++++++++++++++++++
+ drivers/net/phy/qcom/qcom.h         | 34 +++++++++++++
+ 5 files changed, 94 insertions(+), 73 deletions(-)
+ create mode 100644 drivers/net/phy/qcom/qcom-phy-lib.c
+ create mode 100644 drivers/net/phy/qcom/qcom.h
 
-Why is this soc? Where is the MMIO address?
-
-> +			compatible = "sff,sfp";
-> +			i2c-bus = <&blsp1_i2c1>;
-> +			los-gpios = <&tlmm 45 GPIO_ACTIVE_HIGH>;
-> +			tx-disable-gpios = <&tlmm 24 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
->  };
->  
->  &blsp1_i2c1 {
-> @@ -63,3 +72,45 @@ data-pins {
->  		};
->  	};
->  };
-> +
-> +&qcom_ppe {
-> +	qcom,port_phyinfo {
-
-Eh... We talk now about basics: please don't post downstream code, but
-first clean it up from all the junk. All the basic issues which you have
-in downstream and which we do not accept upstream.
-
-I do not believe that this code passed internal review.
-
-NAK.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/net/phy/qcom/Kconfig b/drivers/net/phy/qcom/Kconfig
+index 2c274fbbe410..fe47cc7c94d2 100644
+--- a/drivers/net/phy/qcom/Kconfig
++++ b/drivers/net/phy/qcom/Kconfig
+@@ -1,6 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++config QCOM_NET_PHYLIB
++	tristate
++
+ config AT803X_PHY
+ 	tristate "Qualcomm Atheros AR803X PHYs and QCA833x PHYs"
++	select QCOM_NET_PHYLIB
+ 	depends on REGULATOR
+ 	help
+ 	  Currently supports the AR8030, AR8031, AR8033, AR8035 and internal
+diff --git a/drivers/net/phy/qcom/Makefile b/drivers/net/phy/qcom/Makefile
+index 6a68da8aaa7b..bfba2ed7db27 100644
+--- a/drivers/net/phy/qcom/Makefile
++++ b/drivers/net/phy/qcom/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_QCOM_NET_PHYLIB)	+= qcom-phy-lib.o
+ obj-$(CONFIG_AT803X_PHY)	+= at803x.o
+diff --git a/drivers/net/phy/qcom/at803x.c b/drivers/net/phy/qcom/at803x.c
+index 992497310fba..2e0df55da5e1 100644
+--- a/drivers/net/phy/qcom/at803x.c
++++ b/drivers/net/phy/qcom/at803x.c
+@@ -22,6 +22,8 @@
+ #include <linux/sfp.h>
+ #include <dt-bindings/net/qca-ar803x.h>
+ 
++#include "qcom.h"
++
+ #define AT803X_SPECIFIC_FUNCTION_CONTROL	0x10
+ #define AT803X_SFC_ASSERT_CRS			BIT(11)
+ #define AT803X_SFC_FORCE_LINK			BIT(10)
+@@ -84,9 +86,6 @@
+ #define AT803X_REG_CHIP_CONFIG			0x1f
+ #define AT803X_BT_BX_REG_SEL			0x8000
+ 
+-#define AT803X_DEBUG_ADDR			0x1D
+-#define AT803X_DEBUG_DATA			0x1E
+-
+ #define AT803X_MODE_CFG_MASK			0x0F
+ #define AT803X_MODE_CFG_BASET_RGMII		0x00
+ #define AT803X_MODE_CFG_BASET_SGMII		0x01
+@@ -103,19 +102,6 @@
+ #define AT803X_PSSR				0x11	/*PHY-Specific Status Register*/
+ #define AT803X_PSSR_MR_AN_COMPLETE		0x0200
+ 
+-#define AT803X_DEBUG_ANALOG_TEST_CTRL		0x00
+-#define QCA8327_DEBUG_MANU_CTRL_EN		BIT(2)
+-#define QCA8337_DEBUG_MANU_CTRL_EN		GENMASK(3, 2)
+-#define AT803X_DEBUG_RX_CLK_DLY_EN		BIT(15)
+-
+-#define AT803X_DEBUG_SYSTEM_CTRL_MODE		0x05
+-#define AT803X_DEBUG_TX_CLK_DLY_EN		BIT(8)
+-
+-#define AT803X_DEBUG_REG_HIB_CTRL		0x0b
+-#define   AT803X_DEBUG_HIB_CTRL_SEL_RST_80U	BIT(10)
+-#define   AT803X_DEBUG_HIB_CTRL_EN_ANY_CHANGE	BIT(13)
+-#define   AT803X_DEBUG_HIB_CTRL_PS_HIB_EN	BIT(15)
+-
+ #define AT803X_DEBUG_REG_3C			0x3C
+ 
+ #define AT803X_DEBUG_REG_GREEN			0x3D
+@@ -393,24 +379,6 @@ MODULE_DESCRIPTION("Qualcomm Atheros AR803x and QCA808X PHY driver");
+ MODULE_AUTHOR("Matus Ujhelyi");
+ MODULE_LICENSE("GPL");
+ 
+-enum stat_access_type {
+-	PHY,
+-	MMD
+-};
+-
+-struct at803x_hw_stat {
+-	const char *string;
+-	u8 reg;
+-	u32 mask;
+-	enum stat_access_type access_type;
+-};
+-
+-static struct at803x_hw_stat qca83xx_hw_stats[] = {
+-	{ "phy_idle_errors", 0xa, GENMASK(7, 0), PHY},
+-	{ "phy_receive_errors", 0x15, GENMASK(15, 0), PHY},
+-	{ "eee_wake_errors", 0x16, GENMASK(15, 0), MMD},
+-};
+-
+ struct at803x_ss_mask {
+ 	u16 speed_mask;
+ 	u8 speed_shift;
+@@ -439,45 +407,6 @@ struct at803x_context {
+ 	u16 led_control;
+ };
+ 
+-static int at803x_debug_reg_write(struct phy_device *phydev, u16 reg, u16 data)
+-{
+-	int ret;
+-
+-	ret = phy_write(phydev, AT803X_DEBUG_ADDR, reg);
+-	if (ret < 0)
+-		return ret;
+-
+-	return phy_write(phydev, AT803X_DEBUG_DATA, data);
+-}
+-
+-static int at803x_debug_reg_read(struct phy_device *phydev, u16 reg)
+-{
+-	int ret;
+-
+-	ret = phy_write(phydev, AT803X_DEBUG_ADDR, reg);
+-	if (ret < 0)
+-		return ret;
+-
+-	return phy_read(phydev, AT803X_DEBUG_DATA);
+-}
+-
+-static int at803x_debug_reg_mask(struct phy_device *phydev, u16 reg,
+-				 u16 clear, u16 set)
+-{
+-	u16 val;
+-	int ret;
+-
+-	ret = at803x_debug_reg_read(phydev, reg);
+-	if (ret < 0)
+-		return ret;
+-
+-	val = ret & 0xffff;
+-	val &= ~clear;
+-	val |= set;
+-
+-	return phy_write(phydev, AT803X_DEBUG_DATA, val);
+-}
+-
+ static int at803x_write_page(struct phy_device *phydev, int page)
+ {
+ 	int mask;
+diff --git a/drivers/net/phy/qcom/qcom-phy-lib.c b/drivers/net/phy/qcom/qcom-phy-lib.c
+new file mode 100644
+index 000000000000..7192184429b7
+--- /dev/null
++++ b/drivers/net/phy/qcom/qcom-phy-lib.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/phy.h>
++#include <linux/module.h>
++
++#include "qcom.h"
++
++MODULE_DESCRIPTION("Qualcomm PHY driver Common Functions");
++MODULE_AUTHOR("Matus Ujhelyi");
++MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
++MODULE_LICENSE("GPL");
++
++int at803x_debug_reg_read(struct phy_device *phydev, u16 reg)
++{
++	int ret;
++
++	ret = phy_write(phydev, AT803X_DEBUG_ADDR, reg);
++	if (ret < 0)
++		return ret;
++
++	return phy_read(phydev, AT803X_DEBUG_DATA);
++}
++EXPORT_SYMBOL_GPL(at803x_debug_reg_read);
++
++int at803x_debug_reg_mask(struct phy_device *phydev, u16 reg,
++			  u16 clear, u16 set)
++{
++	u16 val;
++	int ret;
++
++	ret = at803x_debug_reg_read(phydev, reg);
++	if (ret < 0)
++		return ret;
++
++	val = ret & 0xffff;
++	val &= ~clear;
++	val |= set;
++
++	return phy_write(phydev, AT803X_DEBUG_DATA, val);
++}
++EXPORT_SYMBOL_GPL(at803x_debug_reg_mask);
++
++int at803x_debug_reg_write(struct phy_device *phydev, u16 reg, u16 data)
++{
++	int ret;
++
++	ret = phy_write(phydev, AT803X_DEBUG_ADDR, reg);
++	if (ret < 0)
++		return ret;
++
++	return phy_write(phydev, AT803X_DEBUG_DATA, data);
++}
++EXPORT_SYMBOL_GPL(at803x_debug_reg_write);
+diff --git a/drivers/net/phy/qcom/qcom.h b/drivers/net/phy/qcom/qcom.h
+new file mode 100644
+index 000000000000..e7a874df16fd
+--- /dev/null
++++ b/drivers/net/phy/qcom/qcom.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#define AT803X_DEBUG_ANALOG_TEST_CTRL		0x00
++#define QCA8327_DEBUG_MANU_CTRL_EN		BIT(2)
++#define QCA8337_DEBUG_MANU_CTRL_EN		GENMASK(3, 2)
++#define AT803X_DEBUG_RX_CLK_DLY_EN		BIT(15)
++
++#define AT803X_DEBUG_SYSTEM_CTRL_MODE		0x05
++#define AT803X_DEBUG_TX_CLK_DLY_EN		BIT(8)
++
++#define AT803X_DEBUG_REG_HIB_CTRL		0x0b
++#define   AT803X_DEBUG_HIB_CTRL_SEL_RST_80U	BIT(10)
++#define   AT803X_DEBUG_HIB_CTRL_EN_ANY_CHANGE	BIT(13)
++#define   AT803X_DEBUG_HIB_CTRL_PS_HIB_EN	BIT(15)
++
++#define AT803X_DEBUG_ADDR			0x1D
++#define AT803X_DEBUG_DATA			0x1E
++
++enum stat_access_type {
++	PHY,
++	MMD
++};
++
++struct at803x_hw_stat {
++	const char *string;
++	u8 reg;
++	u32 mask;
++	enum stat_access_type access_type;
++};
++
++int at803x_debug_reg_read(struct phy_device *phydev, u16 reg);
++int at803x_debug_reg_mask(struct phy_device *phydev, u16 reg,
++			  u16 clear, u16 set);
++int at803x_debug_reg_write(struct phy_device *phydev, u16 reg, u16 data);
+-- 
+2.43.0
 
