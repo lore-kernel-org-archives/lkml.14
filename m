@@ -1,132 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809214BAA5
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798FD4BAA0;
+	Wed, 10 Jan 2024 14:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MFMLifwQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704898567; x=1736434567;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=F3WiUFbxHTe7eB0jKLKknHEdlY9fonsHIWBBHR4FDH0=;
-  b=MFMLifwQxZI11JHF7HOvT52xSO3F0cySgeIGG+JwxdsngolR6/02YBs4
-   LbsukiWayriq9fG0hEJ4PTwhYcVV8wkKDukVIwHXZOhGz61KJ/oUqPJ5s
-   isapLn/c6Ri2wq0Dn+DQp6T4DZ/IeRkMwvO+YWG/ZOzHVnhsQrYjSAo3Q
-   XUR/uCFCEJkyrq5Gyg2Q4ps6Zv/U50AhjTV+ALYE27s+pl1AEe9zkYtZR
-   TKevRgg5zXbsBMPFwliE5Blc2GUx16TP9Rr62KO0eCaxPIWZljlFsVkos
-   FKsWaPWdHotSJ1Xpk1b0yUYP4VcwooQQdqL9Jo2NXWtS9o93Mc7GK9kX/
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="11884696"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="11884696"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 06:56:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="16673378"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 10 Jan 2024 06:56:04 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNZzt-000798-2j;
-	Wed, 10 Jan 2024 14:56:01 +0000
-Date: Wed, 10 Jan 2024 22:55:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vlad Buslov <vladbu@nvidia.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-	Maor Dickman <maord@nvidia.com>, Roi Dayan <roid@nvidia.com>
-Subject: drivers/net/ethernet/mellanox/mlx5/core/esw/bridge.c:1833:4:
- warning: 'snprintf' will always be truncated; specified size is 80, but
- format string expands to at least 94
-Message-ID: <202401102205.XmxWrS5y-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MteIaRGu"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a28fb463a28so426528666b.3;
+        Wed, 10 Jan 2024 06:56:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704898564; x=1705503364; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C63BDPk/7WHx0usrsZtg8+fUN103VfNMkfDwnaCswfU=;
+        b=MteIaRGu5giZh8Saaib2gtY6NDuPusXuxzw3+mJLbVVhKeV6VMOTgwXuo4WNjgPT9+
+         ZgoGURRqUXcnTwdUjbq2wdkwpk3UZ6AhDtlxgD3UNTvfQBBCcEguF09qnF+OuKh6jkZm
+         URV6kyPBviqje15BlSoYXT0XAjDrmQagClFBnoZseqoH1TiL9yUMw9nOrjiEKMoER3kJ
+         GO+imJpv6GxEoM8rsT6MiMKHmyaBmxQunqFe1TEJyt5goMCggpaElmkMcBnhbI8OhrsX
+         9a9ZePxZDHLU8uQeRnEXHUv7520dMO2bj5y5Hcb1NFF2BfQSFVB+QvPIXV+T/CZ5SXNU
+         0ISA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704898564; x=1705503364;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C63BDPk/7WHx0usrsZtg8+fUN103VfNMkfDwnaCswfU=;
+        b=K5T6YaFGoJ3BdCt08wGsXztu70S8FAywA3byJ/FAQL5E6AuXx4Axpeyy1oZG8NLIng
+         a58b1RrWSdTVB1D2jUCPqWmFgrf07kauGCFX+BxVU1HNSt/uuJ5a/Kvreff8gqcqi1dI
+         XRz5wuMYphVeFiE1xq3xPnh6HmWX/RM8z9IBN5k/DqxKgU4jDwgQwmAXroQ9MqW4IdDb
+         TKnVtx1xob11YIV1isM2VN9tcc6LosAHDVKFtAhUhBQNW3IsfTW81byGNr/ukJNDx9zW
+         3iFss/2Pwv7nT8npmWlw83H3G4sExnSsj+rRzpfYrlhVkimmI15qrhWnBNz0N3TqapST
+         noVA==
+X-Gm-Message-State: AOJu0Yxig3WsMqCzthkt7e28dMQIGX1QGHTap78d6jAJxs7Fxy/HFiXB
+	JQbIDwFvyeMUXgd+n8d7bIQ=
+X-Google-Smtp-Source: AGHT+IEfQ0aiJnEbthSrMkSjQB/zdjUuuUCY/fvSQUuGh/Yx6TJvuSg9tAQCv4MEbcccXdr1VJhfyA==
+X-Received: by 2002:a17:906:189:b0:a28:da0f:b7b4 with SMTP id 9-20020a170906018900b00a28da0fb7b4mr691778ejb.13.1704898564560;
+        Wed, 10 Jan 2024 06:56:04 -0800 (PST)
+Received: from andrea.wind3.hub ([31.189.29.12])
+        by smtp.gmail.com with ESMTPSA id bm3-20020a170906c04300b00a2a4efe7d3dsm2161032ejb.79.2024.01.10.06.56.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 06:56:04 -0800 (PST)
+From: Andrea Parri <parri.andrea@gmail.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	mathieu.desnoyers@efficios.com,
+	paulmck@kernel.org,
+	corbet@lwn.net
+Cc: mmaas@google.com,
+	hboehm@google.com,
+	striker@us.ibm.com,
+	charlie@rivosinc.com,
+	rehn@rivosinc.com,
+	linux-riscv@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH v3 1/4] membarrier: riscv: Add full memory barrier in switch_mm()
+Date: Wed, 10 Jan 2024 15:55:30 +0100
+Message-Id: <20240110145533.60234-2-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240110145533.60234-1-parri.andrea@gmail.com>
+References: <20240110145533.60234-1-parri.andrea@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ab27740f76654ed58dd32ac0ba0031c18a6dea3b
-commit: 70f0302b3f2053b64a6a653a76a20cb95438dc85 net/mlx5: Bridge, implement mdb offload
-date:   9 months ago
-config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20240110/202401102205.XmxWrS5y-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 7e186d366d6c7def0543acc255931f617e76dff0)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240110/202401102205.XmxWrS5y-lkp@intel.com/reproduce)
+The membarrier system call requires a full memory barrier after storing
+to rq->curr, before going back to user-space.  The barrier is only
+needed when switching between processes: the barrier is implied by
+mmdrop() when switching from kernel to userspace, and it's not needed
+when switching from userspace to kernel.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401102205.XmxWrS5y-lkp@intel.com/
+Rely on the feature/mechanism ARCH_HAS_MEMBARRIER_CALLBACKS and on the
+primitive membarrier_arch_switch_mm(), already adopted by the PowerPC
+architecture, to insert the required barrier.
 
-All warnings (new ones prefixed by >>):
+Fixes: fab957c11efe2f ("RISC-V: Atomic and Locking Code")
+Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ MAINTAINERS                         |  2 +-
+ arch/riscv/Kconfig                  |  1 +
+ arch/riscv/include/asm/membarrier.h | 31 +++++++++++++++++++++++++++++
+ arch/riscv/mm/context.c             |  2 ++
+ kernel/sched/core.c                 |  5 +++--
+ 5 files changed, 38 insertions(+), 3 deletions(-)
+ create mode 100644 arch/riscv/include/asm/membarrier.h
 
->> drivers/net/ethernet/mellanox/mlx5/core/esw/bridge.c:1833:4: warning: 'snprintf' will always be truncated; specified size is 80, but format string expands to at least 94 [-Wformat-truncation-non-kprintf]
-    1833 |                         NL_SET_ERR_MSG_FMT_MOD(extack,
-         |                         ^
-   include/linux/netlink.h:130:2: note: expanded from macro 'NL_SET_ERR_MSG_FMT_MOD'
-     130 |         NL_SET_ERR_MSG_FMT((extack), KBUILD_MODNAME ": " fmt, ##args)
-         |         ^
-   include/linux/netlink.h:115:6: note: expanded from macro 'NL_SET_ERR_MSG_FMT'
-     115 |         if (snprintf(__extack->_msg_buf, NETLINK_MAX_FMTMSG_LEN,               \
-         |             ^
-   1 warning generated.
-
-
-vim +/snprintf +1833 drivers/net/ethernet/mellanox/mlx5/core/esw/bridge.c
-
-  1805	
-  1806	int mlx5_esw_bridge_port_mdb_add(u16 vport_num, u16 esw_owner_vhca_id, const unsigned char *addr,
-  1807					 u16 vid, struct mlx5_esw_bridge_offloads *br_offloads,
-  1808					 struct netlink_ext_ack *extack)
-  1809	{
-  1810		struct mlx5_esw_bridge_vlan *vlan;
-  1811		struct mlx5_esw_bridge_port *port;
-  1812		struct mlx5_esw_bridge *bridge;
-  1813		int err;
-  1814	
-  1815		port = mlx5_esw_bridge_port_lookup(vport_num, esw_owner_vhca_id, br_offloads);
-  1816		if (!port) {
-  1817			esw_warn(br_offloads->esw->dev,
-  1818				 "Failed to lookup bridge port to add MDB (MAC=%pM,vport=%u)\n",
-  1819				 addr, vport_num);
-  1820			NL_SET_ERR_MSG_FMT_MOD(extack,
-  1821					       "Failed to lookup bridge port to add MDB (MAC=%pM,vport=%u)\n",
-  1822					       addr, vport_num);
-  1823			return -EINVAL;
-  1824		}
-  1825	
-  1826		bridge = port->bridge;
-  1827		if (bridge->flags & MLX5_ESW_BRIDGE_VLAN_FILTERING_FLAG && vid) {
-  1828			vlan = mlx5_esw_bridge_vlan_lookup(vid, port);
-  1829			if (!vlan) {
-  1830				esw_warn(br_offloads->esw->dev,
-  1831					 "Failed to lookup bridge port vlan metadata to create MDB (MAC=%pM,vid=%u,vport=%u)\n",
-  1832					 addr, vid, vport_num);
-> 1833				NL_SET_ERR_MSG_FMT_MOD(extack,
-  1834						       "Failed to lookup bridge port vlan metadata to create MDB (MAC=%pM,vid=%u,vport=%u)\n",
-  1835						       addr, vid, vport_num);
-  1836				return -EINVAL;
-  1837			}
-  1838		}
-  1839	
-  1840		err = mlx5_esw_bridge_port_mdb_attach(port, addr, vid);
-  1841		if (err) {
-  1842			NL_SET_ERR_MSG_FMT_MOD(extack, "Failed to add MDB (MAC=%pM,vid=%u,vport=%u)\n",
-  1843					       addr, vid, vport_num);
-  1844			return err;
-  1845		}
-  1846	
-  1847		return 0;
-  1848	}
-  1849	
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a7c4cf8201e01..0f8cec504b2ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13815,7 +13815,7 @@ M:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+ M:	"Paul E. McKenney" <paulmck@kernel.org>
+ L:	linux-kernel@vger.kernel.org
+ S:	Supported
+-F:	arch/powerpc/include/asm/membarrier.h
++F:	arch/*/include/asm/membarrier.h
+ F:	include/uapi/linux/membarrier.h
+ F:	kernel/sched/membarrier.c
+ 
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index cd4c9a204d08c..33d9ea5fa392f 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -27,6 +27,7 @@ config RISCV
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_HAS_KCOV
++	select ARCH_HAS_MEMBARRIER_CALLBACKS
+ 	select ARCH_HAS_MMIOWB
+ 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_PMEM_API
+diff --git a/arch/riscv/include/asm/membarrier.h b/arch/riscv/include/asm/membarrier.h
+new file mode 100644
+index 0000000000000..6c016ebb5020a
+--- /dev/null
++++ b/arch/riscv/include/asm/membarrier.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _ASM_RISCV_MEMBARRIER_H
++#define _ASM_RISCV_MEMBARRIER_H
++
++static inline void membarrier_arch_switch_mm(struct mm_struct *prev,
++					     struct mm_struct *next,
++					     struct task_struct *tsk)
++{
++	/*
++	 * Only need the full barrier when switching between processes.
++	 * Barrier when switching from kernel to userspace is not
++	 * required here, given that it is implied by mmdrop(). Barrier
++	 * when switching from userspace to kernel is not needed after
++	 * store to rq->curr.
++	 */
++	if (IS_ENABLED(CONFIG_SMP) &&
++	    likely(!(atomic_read(&next->membarrier_state) &
++		     (MEMBARRIER_STATE_PRIVATE_EXPEDITED |
++		      MEMBARRIER_STATE_GLOBAL_EXPEDITED)) || !prev))
++		return;
++
++	/*
++	 * The membarrier system call requires a full memory barrier
++	 * after storing to rq->curr, before going back to user-space.
++	 * Matches a full barrier in the proximity of the membarrier
++	 * system call entry.
++	 */
++	smp_mb();
++}
++
++#endif /* _ASM_RISCV_MEMBARRIER_H */
+diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
+index 217fd4de61342..ba8eb3944687c 100644
+--- a/arch/riscv/mm/context.c
++++ b/arch/riscv/mm/context.c
+@@ -323,6 +323,8 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	if (unlikely(prev == next))
+ 		return;
+ 
++	membarrier_arch_switch_mm(prev, next, task);
++
+ 	/*
+ 	 * Mark the current MM context as inactive, and the next as
+ 	 * active.  This is at least used by the icache flushing
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a708d225c28e8..711dc753f7216 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6670,8 +6670,9 @@ static void __sched notrace __schedule(unsigned int sched_mode)
+ 		 *
+ 		 * Here are the schemes providing that barrier on the
+ 		 * various architectures:
+-		 * - mm ? switch_mm() : mmdrop() for x86, s390, sparc, PowerPC.
+-		 *   switch_mm() rely on membarrier_arch_switch_mm() on PowerPC.
++		 * - mm ? switch_mm() : mmdrop() for x86, s390, sparc, PowerPC,
++		 *   RISC-V.  switch_mm() relies on membarrier_arch_switch_mm()
++		 *   on PowerPC and on RISC-V.
+ 		 * - finish_lock_switch() for weakly-ordered
+ 		 *   architectures where spin_unlock is a full barrier,
+ 		 * - switch_to() for arm64 (weakly-ordered, spin_unlock
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
