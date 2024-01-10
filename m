@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E8023B1;
-	Wed, 10 Jan 2024 01:30:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC45360B1;
+	Wed, 10 Jan 2024 01:31:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFiBdeFH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1245FC433B1;
-	Wed, 10 Jan 2024 01:30:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJ08/Grm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9EAB2C433C7;
+	Wed, 10 Jan 2024 01:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704850257;
-	bh=WZy2Ojvfd4hEiVr6j2zeNqb4HntQE+agdWnmyqdEy4g=;
+	s=k20201202; t=1704850265;
+	bh=cWHK+od9zX++31pEh4jLKyCEE3QsgqyI78w09wDtO+U=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=OFiBdeFHcyaFpKj7gTOAyiCcse+gNku99p73VVfZfA+Kuqr8JuvtCCtWK4CoALt9D
-	 TErys7+aE2U11pPhcU5XOXDXWH7Q6Lt0TqfjtWroJ7F4B3/7/bLtY+p8e0fw8DyRH4
-	 +P1RXchbCFHSRsm+XCnfPWMuo8xF7FNOknWbGXjmvTO8rTw2n64uRcvOf2JPtw4Wxo
-	 hrGyPUkX/copHG9IKabHpfAp8XauYZiA/qKDhYFKNntYb9ij8M+JjzIMrmFsuCVYIt
-	 pDlnZzwM5qX1e5VeVo2R0YMusQqkzfn/uITg3CAsL1Q1czvsydrSbxYNDlejoraR/C
-	 FAA1nw16IC5lg==
+	b=HJ08/GrmsC1/n+0yJOmRwwa54diNeZO9rlCJ1ZmCz3D2t6jT4OZQ7Ccmo7zEjcBZ7
+	 7MnOf+9USp0WFM7FmdKNR3UmRPQnXFhr8kmBSLVcJfFk3qAYjjb5tfAjntdm56n3KY
+	 khMKpWsU+cZS6iuUwTXpydFKO/T/aSZebhS4EFOhUAjMGvzMR6SIenYAbFG1bnF/Cr
+	 lyuWTjv24uUVqsf9V7KubO3c9OAL6jJYJ4bKRz83elpK6K5RQPFRF5e2JBIXAcQyfV
+	 IOrXdDhonzSMVLVyMdrs8dT0fUm1lHDqqwbGuQcqyk3ThMspW6ySjiuMBVUZV+UjOb
+	 pNRRIDi5uV3Tw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EC852C4167D;
-	Wed, 10 Jan 2024 01:30:56 +0000 (UTC)
-Subject: Re: [GIT PULL] Kselftest next update for Linux 6.8-rc1
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8E014C4167D;
+	Wed, 10 Jan 2024 01:31:05 +0000 (UTC)
+Subject: Re: [GIT PULL] chrome-platform changes for v6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <1998098c-2a04-4354-b804-c3e99143d273@linuxfoundation.org>
-References: <1998098c-2a04-4354-b804-c3e99143d273@linuxfoundation.org>
-X-PR-Tracked-List-Id: <linux-kselftest.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1998098c-2a04-4354-b804-c3e99143d273@linuxfoundation.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-next-6.8-rc1
-X-PR-Tracked-Commit-Id: ee9793be08b1a1c29308a099c01790a3befb390a
+In-Reply-To: <ZZu5uEwX6QgokecO@google.com>
+References: <ZZu5uEwX6QgokecO@google.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZZu5uEwX6QgokecO@google.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-for-v6.8
+X-PR-Tracked-Commit-Id: 57eb6dcd32cf6b49c38eff81e60e8fd471aa05a8
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ab27740f76654ed58dd32ac0ba0031c18a6dea3b
-Message-Id: <170485025696.7649.7029531638600456767.pr-tracker-bot@kernel.org>
-Date: Wed, 10 Jan 2024 01:30:56 +0000
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, skhan@linuxfoundation.org, shuah <shuah@kernel.org>, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 3efcce4a9ec0d2f47ad7c501d0b072c12a1706af
+Message-Id: <170485026557.7649.15280250040995063848.pr-tracker-bot@kernel.org>
+Date: Wed, 10 Jan 2024 01:31:05 +0000
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: torvalds@linux-foundation.org, pmalani@chromium.org, bleung@chromium.org, groeck@chromium.org, tzungbi@kernel.org, linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Tue, 9 Jan 2024 12:21:35 -0700:
+The pull request you sent on Mon, 8 Jan 2024 17:00:40 +0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-next-6.8-rc1
+> https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-for-v6.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ab27740f76654ed58dd32ac0ba0031c18a6dea3b
+https://git.kernel.org/torvalds/c/3efcce4a9ec0d2f47ad7c501d0b072c12a1706af
 
 Thank you!
 
