@@ -1,168 +1,109 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BF64CDFE
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 17:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yngvason.is
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B22A482DC
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 17:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b="Jz+qf70N"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5f68e2e1749so37481137b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:15:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m5ikuyqK"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5cedfc32250so2051851a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:16:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=yngvason.is; s=google; t=1704906941; x=1705511741; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=soA68yzNvfZQWAZpekpt7a4WMrI7QKSPg81VAUrEcdk=;
-        b=Jz+qf70N+aD/VJDBA/N6PCu6Ej7+G/yjAMcVPpV78KxzEUe8Hx7xIhKVDqo4V9e8bY
-         d5fTJNjaNjtDw9konWdK7MFcWEg2hviCK61lry5j/H2Hx4fGVi3aTe9lZG33Xo5pSd2f
-         NGrSwCfzHUmFMj27pxSeeyua00wdxhk/FjC9A=
+        d=linaro.org; s=google; t=1704907002; x=1705511802; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VXsgZeZk30dEfxW3tPiQAYJjaj/9MuHpTHNgKt9eeeE=;
+        b=m5ikuyqKoHuz4dT0u5bmme3wuGBzecE0n57tf7RQHELo7EaiZi0RJUCumdEfwrxF3C
+         Ic+pKGoADUceK6y3tmIvTNB8ktPc/TjF5HFBa0wvfPbTC5tQXTwZsXJz3yB3FhwsKor+
+         H7Y814cQaFWh1nRXaRMjEpAVYgeQOvi+EG3Lz8Tv0Jg16HDMtUxswsRBlacOUrgMBbqM
+         c+EeZNLoBHwjjGHTeM37kfZAzuuvveNwGM8MdXRM2JlaVwOm8Pa1zZZ90ftJf1FCwVKp
+         2gnSxUYoOU5xVocXCd5HY7OP0llc4FwLevHIlXqGlgWMpZxu60hvkmyUdnXGglMwFl/B
+         Atvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704906941; x=1705511741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=soA68yzNvfZQWAZpekpt7a4WMrI7QKSPg81VAUrEcdk=;
-        b=ReIz/FwOivciEU3vauT6FWWQQjdSCbFhEBR2B8NG7Z0JKRxFbtcNcE2vLtEAVBMcrb
-         Ga9JbOJEbKcn/DR5wamjnRpzyjaW+yBwtMOIOIJXhqhee1wInNPMR9I/80/MnhbIViBQ
-         eoX+3V61NbgdtrsXLvGOsZcWjFpFz2VPC2N+UIU3/Y5PI5uJ38MY9WUIt8h4F2chW1wm
-         1Bo0pxIRlMWbSDn4y/kqkL+iwtF4A+06u0ypfrnsJaqUti/ciSwJVWbDPhfA6d6rOgN7
-         WRnZ7Y2d2ISvbr1eltQNli+/sqHPu/W4F2APygSDR457x9qimbNbtiOIJGxBwvTu3ajq
-         lSIQ==
-X-Gm-Message-State: AOJu0YyNK8cSdebb89erh5l4gtGqA6srIMle/pbS0/xHSeJjk2x93vjQ
-	/7Ot19GIbLKIn8TgfeKOj/4/0S9ECmS3mRwEiuZT786WiHFfyQ==
-X-Google-Smtp-Source: AGHT+IHiky3usvBUSr+P0G2IWOFzW7FhkFV4p161NhBmHRzD0jPC+3YufPeJf4yAtPY54W3fFgqqqnXHnsEneuJfO8U=
-X-Received: by 2002:a0d:e28e:0:b0:5d7:1940:7d7a with SMTP id
- l136-20020a0de28e000000b005d719407d7amr1188461ywe.81.1704906941193; Wed, 10
- Jan 2024 09:15:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704907002; x=1705511802;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VXsgZeZk30dEfxW3tPiQAYJjaj/9MuHpTHNgKt9eeeE=;
+        b=pjko8Vah3R+3mqH642FtpwgWvkChppmBdMWucDcT+MYCFYtwghRGp5m+ChT2K9zTRs
+         VT09/OyV8cqsDx2aEOUe96vyTlxUqm1QvPQRhoFS5qc+KyvvYrHGL1DcR/uWsxj09+OY
+         lUzyIWGKbdfR2jhyQTH6kuKSSICBC8rkv/W7cpgH9KIFRvrlX6tmFc9JS71pUdIjROpy
+         2Egey3+VtLAWNTEXm22Pf7ZZpXVsuSdSK14OLGZAIMdW41GSh1YKKEmQbHJ5MnrMxIcK
+         Sr/X/AgclGWfRL2wg33NeoNLe+rfSFdduRfvF+shOt08GrB9bhKsHUMc/jdIXasvaQkZ
+         TxXg==
+X-Gm-Message-State: AOJu0YyRrJWpK+EY0UTxWtjfZ7ACnxVJ9zb3cmPCsVbE4jy7ivkQIxOl
+	9bMUZN7IN6OkA+n7Ttp0KrapHt5hWUWJ6n6bUJtv9HB0+ydQmg==
+X-Google-Smtp-Source: AGHT+IFBT9QzKLS0KB+KvNjaxxTca/gF9GRfN2coCvArMm5ZJVazlS1qXaFEe9/EiKmvfzHpJstCw5pvdq8FPhCqAcg=
+X-Received: by 2002:a05:6a20:7da0:b0:199:c888:2af4 with SMTP id
+ v32-20020a056a207da000b00199c8882af4mr1156814pzj.90.1704907002226; Wed, 10
+ Jan 2024 09:16:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109181104.1670304-1-andri@yngvason.is> <20240109181104.1670304-4-andri@yngvason.is>
- <ZZ57Nl3CnRMPcfbj@phenom.ffwll.local> <CAFNQBQzo17cK4M-S=Mje8Lxub9Y74xFGj7iEq57vKJr47oiz5Q@mail.gmail.com>
- <CAKMK7uGhMCwbztGdEmG4gFgpyhw6j-JFow-AaprFxcX710=qXA@mail.gmail.com> <67808818-ee34-4d04-ad90-cd5c6eb9bb26@tuxedocomputers.com>
-In-Reply-To: <67808818-ee34-4d04-ad90-cd5c6eb9bb26@tuxedocomputers.com>
-From: Andri Yngvason <andri@yngvason.is>
-Date: Wed, 10 Jan 2024 17:15:05 +0000
-Message-ID: <CAFNQBQyg+yXSJRtZtyHXMfyBOYrQpU0R0XFUJLcof9rakrBYQA@mail.gmail.com>
-Subject: Re: [PATCH 3/7] drm/amd/display: Add handling for new "active color
- format" property
-To: Werner Sembach <wse@tuxedocomputers.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>, Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, Simon Ser <contact@emersion.fr>
+References: <20240110131707.437301-1-keisuke.nishimura@inria.fr> <20240110131707.437301-2-keisuke.nishimura@inria.fr>
+In-Reply-To: <20240110131707.437301-2-keisuke.nishimura@inria.fr>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Wed, 10 Jan 2024 18:16:30 +0100
+Message-ID: <CAKfTPtAVBv3aaev+X0Nx3TZGYK1X4f+qyfUX2z_oehQg6yPx-Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2 RESEND] sched/fair: take into account scheduling
+ domain in select_idle_core()
+To: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Julia Lawall <julia.lawall@inria.fr>, 
+	Xunlei Pang <xlpang@linux.alibaba.com>, Abel Wu <wuyun.abel@bytedance.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Werner,
-
-mi=C3=B0., 10. jan. 2024 kl. 13:14 skrifa=C3=B0i Werner Sembach <wse@tuxedo=
-computers.com>:
+On Wed, 10 Jan 2024 at 14:19, Keisuke Nishimura
+<keisuke.nishimura@inria.fr> wrote:
 >
-> Hi,
+> When picking out a CPU on a task wakeup, select_idle_core() has to take
+> into account the scheduling domain where the function looks for the CPU.
+> This is because the "isolcpus" kernel command line option can remove CPUs
+> from the domain to isolate them from other SMT siblings.
 >
-> Am 10.01.24 um 14:09 schrieb Daniel Vetter:
-> > On Wed, 10 Jan 2024 at 13:53, Andri Yngvason <andri@yngvason.is> wrote:
-> >> mi=C3=B0., 10. jan. 2024 kl. 11:10 skrifa=C3=B0i Daniel Vetter <daniel=
-@ffwll.ch>:
-> >>> On Tue, Jan 09, 2024 at 06:11:00PM +0000, Andri Yngvason wrote:
-> >>>> +     /* Extract information from crtc to communicate it to userspac=
-e as connector properties */
-> >>>> +     for_each_new_connector_in_state(state, connector, new_con_stat=
-e, i) {
-> >>>> +             struct drm_crtc *crtc =3D new_con_state->crtc;
-> >>>> +             struct dc_stream_state *stream;
-> >>>> +
-> >>>> +             if (crtc) {
-> >>>> +                     new_crtc_state =3D drm_atomic_get_new_crtc_sta=
-te(state, crtc);
-> >>>> +                     dm_new_crtc_state =3D to_dm_crtc_state(new_crt=
-c_state);
-> >>>> +                     stream =3D dm_new_crtc_state->stream;
-> >>>> +
-> >>>> +                     if (stream) {
-> >>>> +                             drm_connector_set_active_color_format_=
-property(connector,
-> >>>> +                                     convert_dc_pixel_encoding_into=
-_drm_color_format(
-> >>>> +                                             dm_new_crtc_state->str=
-eam->timing.pixel_encoding));
-> >>>> +                     }
-> >>>> +             } else {
-> >>>> +                     drm_connector_set_active_color_format_property=
-(connector, 0);
-> >>> Just realized an even bigger reason why your current design doesn't w=
-ork:
-> >>> You don't have locking here.
-> >>>
-> >>> And you cannot grab the required lock, which is
-> >>> drm_dev->mode_config.mutex, because that would result in deadlocks. S=
-o
-> >>> this really needs to use the atomic state based design I've described=
-.
-> >>>
-> >> Maybe we should just drop "actual color format" and instead fail the
-> >> modeset if the "preferred color format" property cannot be satisfied?
-> >> It seems like the simplest thing to do here, though it is perhaps less
-> >> convenient for userspace. In that case, the "preferred color format"
-> >> property should just be called "color format".
-> > Yeah that's more in line with how other atomic properties work. This
-> > way userspace can figure out what works with a TEST_ONLY commit too.
-> > And for this to work you probably want to have an "automatic" setting
-> > too.
-> > -Sima
+> This change replaces the set of CPUs allowed to run the task from
+> p->cpus_ptr by the intersection of p->cpus_ptr and sched_domain_span(sd)
+> which is stored in the cpus argument provided by select_idle_cpu.
 >
-> The problem with TEST_ONLY probing is that color format settings are
-> interdependent: https://gitlab.freedesktop.org/drm/amd/-/issues/476#note_=
-966634
+> Fixes: 9fe1f127b913 ("sched/fair: Merge select_idle_core/cpu()")
+> Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+> Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+
+> ---
+> v2: - Changed the log message to mention only isolcpus
 >
-> So changing any other setting may require every color format to be TEST_O=
-NLY
-> probed again.
+>  kernel/sched/fair.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-
-If we put a bit map containing the possible color formats into
-drm_mode_mode_info (I'm thinking that it could go into flags), we'd be
-able to eliminate a bunch of combinations early on. Do you think that
-would make things more bearable?
-
-I'm thinking, something like this:
-diff --git a/include/uapi/drm/drm_mode.h b/include/uapi/drm/drm_mode.h
-index 128d09138ceb3..59980803cb89e 100644
---- a/include/uapi/drm/drm_mode.h
-+++ b/include/uapi/drm/drm_mode.h
-@@ -124,6 +124,13 @@ extern "C" {
- #define  DRM_MODE_FLAG_PIC_AR_256_135 \
-                        (DRM_MODE_PICTURE_ASPECT_256_135<<19)
-
-+/* Possible color formats (4 bits) */
-+#define DRM_MODE_FLAG_COLOR_FORMAT_MASK (0x0f << 22)
-+#define DRM_MODE_FLAG_COLOR_FORMAT_RGB (1 << 22)
-+#define DRM_MODE_FLAG_COLOR_FORMAT_YCBCR444 (1 << 23)
-+#define DRM_MODE_FLAG_COLOR_FORMAT_YCBCR422 (1 << 24)
-+#define DRM_MODE_FLAG_COLOR_FORMAT_YCBCR420 (1 << 25)
-+
- #define  DRM_MODE_FLAG_ALL     (DRM_MODE_FLAG_PHSYNC |         \
-                                 DRM_MODE_FLAG_NHSYNC |         \
-                                 DRM_MODE_FLAG_PVSYNC |         \
-@@ -136,7 +143,8 @@ extern "C" {
-                                 DRM_MODE_FLAG_HSKEW |          \
-                                 DRM_MODE_FLAG_DBLCLK |         \
-                                 DRM_MODE_FLAG_CLKDIV2 |        \
--                                DRM_MODE_FLAG_3D_MASK)
-+                                DRM_MODE_FLAG_3D_MASK |        \
-+                                DRM_MODE_FLAG_COLOR_FORMAT_MASK)
-
- /* DPMS flags */
- /* bit compatible with the xorg definitions. */
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 66457d4b8965..e2b4e0396af8 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7289,7 +7289,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+>                 if (!available_idle_cpu(cpu)) {
+>                         idle = false;
+>                         if (*idle_cpu == -1) {
+> -                               if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
+> +                               if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, cpus)) {
+>                                         *idle_cpu = cpu;
+>                                         break;
+>                                 }
+> @@ -7297,7 +7297,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+>                         }
+>                         break;
+>                 }
+> -               if (*idle_cpu == -1 && cpumask_test_cpu(cpu, p->cpus_ptr))
+> +               if (*idle_cpu == -1 && cpumask_test_cpu(cpu, cpus))
+>                         *idle_cpu = cpu;
+>         }
+>
+> --
+> 2.34.1
+>
