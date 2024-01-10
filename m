@@ -1,143 +1,115 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1F44A98B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599C04A987;
 	Wed, 10 Jan 2024 13:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TZxskO5+"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5ebca94cf74so37826147b3.0;
-        Wed, 10 Jan 2024 05:47:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704894474; x=1705499274; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F+Dl/Il2vrbZxDbYc+SRyVGBLpDYXTxt7Tb1vd4cwvQ=;
-        b=TZxskO5+F7i7ifTYtAahV9igz+0F75UmIFJavM8g3O2w79eklotRxdyQn1ynyCCmiK
-         CLifijie7qm4DBswaqrrEuHwfZof8mws3m4v/1jjJyj2O8bPL3A4UMjp1VauWzSfzgyY
-         x/Kb4LJAHJdJHUJ/JPHnELTDJS0QnPVIrVkKfc/VsZoA265dQphwLjfkoD7DH7EEBixn
-         p9rtzP2aSS7oHopeCEUSS9JttrVzCVjHwnELvGszluCVSZKsz9cMWtLzCWSetifcj+co
-         wnHty9fTnU7TrHIXCHmU5pLNFIlI7LOX9cCz5OQhf7CEITfYfn9wCfDZE68umatKF6ax
-         yGWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704894474; x=1705499274;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F+Dl/Il2vrbZxDbYc+SRyVGBLpDYXTxt7Tb1vd4cwvQ=;
-        b=obYMQAK43LLfZiSXbGj0DX4dTma4fqBtPrhGFJtCDBeMK4AJT7eEi4w2zCY/1Ilh76
-         aNKhWmnMr70+VT2L01Z4+2gyHnzi//J9MaCXUKBj5VWbjSDIuMIp7kEWMi6rr8Q+L9jy
-         EqlTzJtw5/FiXmvYvNONH5TNAx5RiNXD+fX/72OVPdv19DkJ9yY6YformEscnSlwtXR8
-         IBlJpKgG/3Y80/k7Os9sGtuPfoKr4Lsf1uPUidSZ2Roo/e5xNAH9ktfdk/DmJT4mf5WL
-         vhMMV/0DpZMd11gyUNC0yoCJ635Rt0GlAKT9DFkgTt9EEUTg5497lvyMt9qFbuwGBEAb
-         pS2w==
-X-Gm-Message-State: AOJu0YzkksytFsTkXdoyRIe1GC8nv7D5nE24tq31QcVw3gXPQ7rvC4kl
-	UDy0vwP9QIuvME/xY6itLHTEQbDhf/8AyN0JfWQ=
-X-Google-Smtp-Source: AGHT+IF5GSh+GAYoRYse0osNDKjpebp3XYF6+cNYz6K9Yfp6hvlCj7DACrSbLrXqYpd5qwBs2GWfV/3aVWO2g9Owgg8=
-X-Received: by 2002:a0d:eb07:0:b0:5f9:25b:398b with SMTP id
- u7-20020a0deb07000000b005f9025b398bmr855139ywe.52.1704894473970; Wed, 10 Jan
- 2024 05:47:53 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+Received: from localhost ([80.140.206.200]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mr8SG-1qqzKS0cH0-00oBtt; Wed, 10 Jan 2024 14:34:22 +0100
+Date: Wed, 10 Jan 2024 14:34:19 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Markus Elfring <Markus.Elfring@web.de>, 
+	linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+Subject: Re: Re: [0/2] ARM: Adjustments for init_atags_procfs()
+Message-ID: <vltzbtbcuzrfgjoeg5oovdyoe34fnhte25uhb3gln56pzvmqzb@5u7u7cwgzzen>
+References: <6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de>
+ <562a6f99-3f8e-9a77-e519-b668e24dced2@web.de>
+ <b3c42397-c879-4381-aa96-c7887e81c068@web.de>
+ <7dd19987-6590-4756-a929-1ff01503ad1c@web.de>
+ <ZZ6MZl14bcIaCaQn@shell.armlinux.org.uk>
+ <1c38e495-5c9c-4ff8-b453-93b882dd2c4c@web.de>
+ <ZZ6R6KSQo9ph3ARZ@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108135421.684263-1-tmaimon77@gmail.com> <20240108135421.684263-2-tmaimon77@gmail.com>
- <20240109170830.GA2772086-robh@kernel.org>
-In-Reply-To: <20240109170830.GA2772086-robh@kernel.org>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Wed, 10 Jan 2024 15:47:42 +0200
-Message-ID: <CAP6Zq1jCHVrFfRa6c3DZ4t2aaJTkWukeEkia0AqhzppC0mjbfg@mail.gmail.com>
-Subject: Re: [PATCH v22 1/8] dt-bindings: clock: npcm845: Add reference 25m
- clock property
-To: Rob Herring <robh@kernel.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com, joel@jms.id.au, 
-	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5omxkbyuztlvommc"
+Content-Disposition: inline
+In-Reply-To: <ZZ6R6KSQo9ph3ARZ@shell.armlinux.org.uk>
+X-Provags-ID: V03:K1:742zGJqrsTcPdmXqkg5IqwvNg66u0oPuuKZ7EwzpxdRtA0kmo/O
+ xV4QlMlgrEVflGmBPdhFlHJ1h90Uhm8SV3lXRYxkcFkrN1M+KYfSlJm6J6VW3gTbbIko/9p
+ /zuscFVts6U8n4rkKOe6yA4jZGbZ8/2LCjVEUsC6QTanRqfjmuOOEcVbj4pqLbXYCWSQGvl
+ RvpgSS1x28Ttf6e5kcvPA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:c0YYenV97Ok=;Po7rqHU4Q9YlYXi+PgjTKPwGXj2
+ DX+It2d+/TnXFrXHCytyr+K6YNwrVTXpwZNClK9HkH7JFqL5dA1IBDsGMPlPC2UoghDiZPhpL
+ t2QMYnuoV/F0Jet2HAlN6R+PO7fsrr0KlZ7xl2mfsladOT+drtZwMgGA5y5a6oAU5tYx69rj4
+ ioiY1vZLgmk67MafWHNJp20Hx+rp13IQNnZd1Nko+MSLDclaPpsWVaSEkSMLMovrtyj51Oe6D
+ tCENXRBe7198T0yh1AWj8kV7g8lBElfaynGOgbTuHB/T/fG0LMQq9s6K9jTge7ZZPsO4q0vMZ
+ yV22R2DNYC7FlKkfCwyfftmDY/gYgaaotkhPVFCUJ7AwjfMfT/PPgM9wDCJqOP+vV5XTEeWYy
+ xyBcqPj8HmBGgN/KXrMjK1smJFsIcZGADYg2E5pymc5o+QN7RmUAbY5SyWzHC3ezY8k7Bfhfg
+ X0FLpI8Bk8hTlyfFNvg2WoiVRYCfAqtQk5imBbNp/tbPCA9eROSpGZWwCuBIH6PW3XAHBzyIN
+ nXNWgXHOtq+Pp6b+Tw2aLTHCxJK5Wh4IAjgmm+Shw+9gDd7TA9EqGpTJfGIcHSxBUhfDt2s1W
+ y6uVfVGC2o+ip+Z3NsjbxRkat6tc6u/IsGHwRn6E52Lqq4ZkVuyDlA5r3iKq5NDFpo0cR7hd0
+ Q/B82tmvSe+lhJHhM9Fh681/K+MB5fHogTje9SNs3xvzT5FghZtiDapWf3c/gL10ha7EA50Cp
+ dqj1usnUGu9FuodDqN74lqlGnqB1z7dB4mjmHoLxpEzrYOyPhoZf3JoqMy+7HQLZBylyWo6Mi
+ tt5Akf9sZot70CNI9t7vOY8OY+Uu2nVir9VP1YrcBv3sm7sQ4d3awOi321FivkjRuxt4uHiXV
+ 1xnUBOFkQloi/9w==
 
-Hi Rob,
 
-Thanks for your comment.
+--5omxkbyuztlvommc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 9 Jan 2024 at 19:08, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Jan 08, 2024 at 03:54:14PM +0200, Tomer Maimon wrote:
-> > The NPCM8XX clock driver uses 25Mhz external clock, therefor adding
->
-> therefore
->
-> > refclk property.
->
-> 'refclk' is not a property.
->
-> >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> > ---
-> >  .../bindings/clock/nuvoton,npcm845-clk.yaml      | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml b/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> > index b901ca13cd25..0b642bfce292 100644
-> > --- a/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> > +++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> > @@ -21,6 +21,14 @@ properties:
-> >    reg:
-> >      maxItems: 1
-> >
-> > +  clocks:
-> > +    items:
-> > +      - description: 25Mhz referance clock
->
-> reference
->
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: refclk
-> > +
-> >    '#clock-cells':
-> >      const: 1
-> >      description:
-> > @@ -30,12 +38,20 @@ properties:
-> >  required:
-> >    - compatible
-> >    - reg
-> > +  - clocks
-> > +  - clock-names
->
-> New required properties are an ABI break. That's fine if you explain why
-> that's okay in the commit msg.
-What do you mean?
-Could I add the new required properties to the required list?
->
->
-> >    - '#clock-cells'
-> >
-> >  additionalProperties: false
-> >
-> >  examples:
-> >    - |
-> > +    refclk: refclk-25mhz {
-> > +        compatible = "fixed-clock";
-> > +        #clock-cells = <0>;
-> > +        clock-frequency = <25000000>;
-> > +    };
->
-> Examples don't need to show providers.
->
-> > +
-> >      ahb {
-> >          #address-cells = <2>;
-> >          #size-cells = <2>;
-> > --
-> > 2.34.1
-> >
+On 24/01/10 12:47PM, Russell King (Oracle) wrote:
+> On Wed, Jan 10, 2024 at 01:44:01PM +0100, Markus Elfring wrote:
+> > >>> Is this patch series still in review queues?
+> > >>
+> > >> See also:
+> > >> https://lore.kernel.org/cocci/562a6f99-3f8e-9a77-e519-b668e24dced2@w=
+eb.de/
+> > >> https://sympa.inria.fr/sympa/arc/cocci/2023-03/msg00098.html
+> > >
+> > > I suspect no one looked at it, sorry.
+> >=20
+> > Special mailing list settings probably influenced this situation.
+> >=20
+> > >                                       I don't catch everything that is
+> > > on the mailing list. Looks fine to me but it needs to end up in the
+> > > patch system to be applied.
+> >=20
+> > Can you collaborate also with mentioned mailing list archive interfaces?
+>=20
+> Err what? Sorry, I don't understand your comment.
 
-Best regards,
+I am just generally following along here, but to give some context it
+seems like Markus is banned from posting to various kernel mailing
+lists[0][1][2].
 
-Tomer
+Cheers,
+Chris
+
+[0]: https://lkml.org/lkml/2023/6/19/38
+[1]: https://lore.kernel.org/lkml/CAHC9VhREfdgiCji=3DuEeCrc4w1kPGfnWGKnJuUY=
+KXwTApdneSjQ@mail.gmail.com/T/#m1a55ecc3205045fe63ab0f12451705df911d31a0
+[2]: https://lore.kernel.org/all/20200629081039.GA1221843@kroah.com/
+
+--5omxkbyuztlvommc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmWenNsACgkQwEfU8yi1
+JYV+IRAAqZtbPL/0aDr8ZwGVzBNCdqRCpqhLKHVKyD/NWSlxf+qKZrcY2KsFpU2M
+Ino+YfJaDWdztG9kAgrR3Vp+XZ5W2739lQE6x+aXcqbbi/aY9f780Yg0Ne5HOWMI
+dXFxS08wOkqjBYVJjwgyF7QKO7Wv0REDd/Zo8Wm+YblnOaI0AX/HgrrAZUPuUCjV
+XGPfHOt5KH3gDVo499SomDlke1gFdL65P2zFjxUNjAvOtHxJT3OBGRSV5lCwEqK7
+akFzh02n2zZM14v4H7WOqShsnTPTr1eUa0z2LV7P43xlMzWkB2MvfwFCbOQm0UGI
+DmG9Lpc3jdrgBt/rUgvATwbI2iTV4BgT+JxPhYtnXlps0tOs4S+iPMLYQi1xtZxY
+m6ZGbQbWl+cNtpOPgUYiF3gCt0e4Fz6eMEWwUtcFWTVjL98vvH3HWXZVtcMj0Dff
+KY2d6FTqe5eLCDNH7XmAtGUXJjH08QTrcbHZjqNTqp5t7pnpal9bxHG0dOl7ohTm
+r73AgAIr3noT0QYujzHT3ddv+1d7wl5zDtXsO0fi+v8iQ3N8CewtK5fCblcppkoi
+Aauh5otlMsgmWSPhFHkML3ZedsE4UlYVE0D5ZMMFKaZc0gyWnotEdeOXGU2KbwLm
+1oDS0k6LzcxZB7414DzhAoz6uHVX6VfJwPVlgZkV4rxbtz6azus=
+=Xpvc
+-----END PGP SIGNATURE-----
+
+--5omxkbyuztlvommc--
