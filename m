@@ -1,110 +1,280 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27F54BA81
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5e784ce9bb8so33949857b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:18:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704899930; x=1705504730;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iI/Hu6Gs4/tJXvwOT57UbLfYusspd0Zm1u4JsSZ3X3A=;
-        b=SJFouqWMMndMKJLGGgQFk4k9ayrBygizHnsSMH+ToBB9nm07MrzlXi7tjy2zCF72Ag
-         iPBL6QUkAoJeS6NDyyKhr12oX0PU4HSQYyg225rTnjfsfmGZ6xlCRo48FXKtARDlHeMS
-         7JhmQMqHmGWYii8WO3y1149NJL6SvP74MX3PZt2f+4lvBWeNq1N77CJ7YePiACmY5pGz
-         TOGzCMrMjKJXFOOWjODCYhtD5OPvMe8B9y3l2IUnfhaq8rnmJ5AQjRN5a/EquoDHsax8
-         oIVyWgklzHv9ysneBF8zDjxDiUnJoPajPi83JvORGCiG1sKVMC1SwEvq9+BtMAjHh63v
-         aTxw==
-X-Gm-Message-State: AOJu0YynPwMAtng+nvaYIWKs2UYX/oBI+VAFMvCTKfZ5k6ng8Vg6NJkW
-	kcE9IkThpYoJ3YOW5m2r9KXgwTlKswA+Uw==
-X-Google-Smtp-Source: AGHT+IF6UJfpr+GSZXs0tBH4wQsz3W/YAhX9KNz0AdZ/zV5JN5IBwtYv/LXVAOXe6jjqR00d5JjMKg==
-X-Received: by 2002:a81:9243:0:b0:5e5:3342:c600 with SMTP id j64-20020a819243000000b005e53342c600mr158700ywg.9.1704899930548;
-        Wed, 10 Jan 2024 07:18:50 -0800 (PST)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
-        by smtp.gmail.com with ESMTPSA id p71-20020a0de64a000000b005d8ce4ca469sm1638135ywe.99.2024.01.10.07.18.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 07:18:50 -0800 (PST)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5f2aab1c0c5so40111037b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:18:50 -0800 (PST)
-X-Received: by 2002:a81:9982:0:b0:5e7:7811:84e9 with SMTP id
- q124-20020a819982000000b005e7781184e9mr128070ywg.35.1704899929856; Wed, 10
- Jan 2024 07:18:49 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9FD14C3A6;
+	Wed, 10 Jan 2024 15:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE32C2F4;
+	Wed, 10 Jan 2024 07:19:56 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F3933F64C;
+	Wed, 10 Jan 2024 07:19:09 -0800 (PST)
+Date: Wed, 10 Jan 2024 15:19:07 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: sudeep.holla@arm.com, mturquette@baylibre.com, sboyd@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ranjani.vaidyanathan@nxp.com,
+	glen.wienecke@nxp.com, nitin.garg_3@nxp.com, chuck.cannon@nxp.com,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH V2 1/2] firmware: arm_scmi: clock: implement get
+ permissions
+Message-ID: <ZZ61a9IUZk4YMpQM@pluto>
+References: <20231207093345.581048-1-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109214828.252092-1-tj@kernel.org> <20240109214828.252092-3-tj@kernel.org>
-In-Reply-To: <20240109214828.252092-3-tj@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 10 Jan 2024 16:18:36 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWD==XWQrcZVfxaL0wSjG5hFPoUubpi6mjrJSPU+nOoJg@mail.gmail.com>
-Message-ID: <CAMuHMdWD==XWQrcZVfxaL0wSjG5hFPoUubpi6mjrJSPU+nOoJg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kernfs: Rearrange kernfs_node fields to reduce its
- size on 64bit
-To: Tejun Heo <tj@kernel.org>
-Cc: gregkh@linuxfoundation.org, andrea.righi@canonical.com, ast@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231207093345.581048-1-peng.fan@oss.nxp.com>
 
-Hi Tejun,
+On Thu, Dec 07, 2023 at 05:33:44PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
 
-On Tue, Jan 9, 2024 at 10:49=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
-> Moving .flags and .mode right below .hash makes kernfs_node smaller by 8
-> bytes on 64bit.
->
-> Signed-off-by: Tejun Heo <tj@kernel.org>
+Hi Peng,
 
-Thanks for your patch!
+a few remarks down below, but generally LGTM.
 
-> --- a/include/linux/kernfs.h
-> +++ b/include/linux/kernfs.h
-> @@ -206,6 +206,9 @@ struct kernfs_node {
->
->         const void              *ns;    /* namespace tag */
->         unsigned int            hash;   /* ns + name hash */
-> +       unsigned short          flags;
-> +       umode_t                 mode;
+>> Subject: Re: [PATCH V2 1/2] firmware: arm_scmi: clock: implement get permissions
+
+till now we never added a <proto>: tag just "firmware: arm_scmi:",
+capitalizing the first word. (not saying that using "clock:" is bad but
+since we never used till now...), as an example
+
+	firmware: arm_scmi: Implement Clock get permissions
+
+
+> ARM SCMI Spec 3.2 introduces Clock Get Permission command. This patch
+> is to add the support. Add three bool entries to scmi_clock_info to
+> indicate the operation is forbidden or not. If the CLOCK_GET_PERMISSIONS
+> command is not supported, the three bool variables will default
+> set to false, otherwise they will be set according to the return result
+> of CLOCK_GET_PERMISSIONS.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+> 
+> V2:
+>  Take Cristian's suggestion, https://lore.kernel.org/all/ZWiqqfQ73tezFmSk@pluto/
+> 
+>  drivers/firmware/arm_scmi/clock.c | 53 +++++++++++++++++++++++++++++++
+>  include/linux/scmi_protocol.h     |  4 +++
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+> index 98511a3aa367..0e048530bea2 100644
+> --- a/drivers/firmware/arm_scmi/clock.c
+> +++ b/drivers/firmware/arm_scmi/clock.c
+> @@ -25,8 +25,13 @@ enum scmi_clock_protocol_cmd {
+>  	CLOCK_POSSIBLE_PARENTS_GET = 0xC,
+>  	CLOCK_PARENT_SET = 0xD,
+>  	CLOCK_PARENT_GET = 0xE,
+> +	CLOCK_GET_PERMISSIONS = 0xF,
+>  };
+>  
+> +#define CLOCK_STATE_CONTROL_ALLOWED	BIT(31)
+> +#define CLOCK_PARENT_CONTROL_ALLOWED	BIT(30)
+> +#define CLOCK_RATE_CONTROL_ALLOWED	BIT(29)
 > +
->         union {
->                 struct kernfs_elem_dir          dir;
->                 struct kernfs_elem_symlink      symlink;
-> @@ -220,8 +223,6 @@ struct kernfs_node {
->          */
->         u64                     id;
->
-> -       unsigned short          flags;
-> -       umode_t                 mode;
->         struct kernfs_iattrs    *iattr;
+>  enum clk_state {
+>  	CLK_STATE_DISABLE,
+>  	CLK_STATE_ENABLE,
+> @@ -46,6 +51,7 @@ struct scmi_msg_resp_clock_attributes {
+>  #define SUPPORTS_RATE_CHANGE_REQUESTED_NOTIF(x)	((x) & BIT(30))
+>  #define SUPPORTS_EXTENDED_NAMES(x)		((x) & BIT(29))
+>  #define SUPPORTS_PARENT_CLOCK(x)		((x) & BIT(28))
+> +#define SUPPORTS_GET_PERMISSIONS(x)		((x) & BIT(1))
+>  	u8 name[SCMI_SHORT_NAME_MAX_SIZE];
+>  	__le32 clock_enable_latency;
+>  };
+> @@ -281,6 +287,35 @@ static int scmi_clock_possible_parents(const struct scmi_protocol_handle *ph, u3
+>  	return ret;
+>  }
+>  
+> +static int
+> +scmi_clock_get_permissions(const struct scmi_protocol_handle *ph, u32 clk_id,
+> +			   struct scmi_clock_info *clk)
+> +{
+> +	struct scmi_xfer *t;
+> +	u32 perm;
+> +	int ret;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, CLOCK_GET_PERMISSIONS,
+> +				      sizeof(clk_id), sizeof(perm), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	put_unaligned_le32(clk_id, t->tx.buf);
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret) {
+> +		perm = get_unaligned_le32(t->rx.buf);
+> +
+> +		clk->state_ctrl_forbidden = !(perm & CLOCK_STATE_CONTROL_ALLOWED);
+> +		clk->rate_ctrl_forbidden = !(perm & CLOCK_RATE_CONTROL_ALLOWED);
+> +		clk->parent_ctrl_forbidden = !(perm & CLOCK_PARENT_CONTROL_ALLOWED);
+> +	}
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+>  static int scmi_clock_attributes_get(const struct scmi_protocol_handle *ph,
+>  				     u32 clk_id, struct scmi_clock_info *clk,
+>  				     u32 version)
+> @@ -307,6 +342,7 @@ static int scmi_clock_attributes_get(const struct scmi_protocol_handle *ph,
+>  		if (PROTOCOL_REV_MAJOR(version) >= 0x2)
+>  			latency = le32_to_cpu(attr->clock_enable_latency);
+>  		clk->enable_latency = latency ? : U32_MAX;
+> +		clk->attributes = attributes;
 
-Note that there is now a hole at the end of the structure on 32-bit
-architectures
-where the alignment of u64 is 8 bytes.
+Exposing the full attributes is NOT needed anymore now you have the bools right ?
 
-Hence, sizeof(struct kernfs_node) grew from 104 to 112 bytes on (at
-least) arm32 and rv32.
-It did shrink by 8 bytes on amd64, arm64, mips64, and rv64.
-Size is unchanged on ia32, m68k and sh.
+>  	}
+>  
+>  	ph->xops->xfer_put(ph, t);
+> @@ -327,6 +363,8 @@ static int scmi_clock_attributes_get(const struct scmi_protocol_handle *ph,
+>  			clk->rate_change_requested_notifications = true;
+>  		if (SUPPORTS_PARENT_CLOCK(attributes))
+>  			scmi_clock_possible_parents(ph, clk_id, clk);
+> +		if (SUPPORTS_GET_PERMISSIONS(attributes))
+> +			scmi_clock_get_permissions(ph, clk_id, clk);
+>  	}
+>  
+>  	return ret;
+> @@ -499,6 +537,10 @@ static int scmi_clock_rate_set(const struct scmi_protocol_handle *ph,
+>  	struct scmi_xfer *t;
+>  	struct scmi_clock_set_rate *cfg;
+>  	struct clock_info *ci = ph->get_priv(ph);
+> +	struct scmi_clock_info *clk = ci->clk + clk_id;
+> +
 
-I didn't check any other architectures.
+This lacks a check on the provided clk_id bounds (just in case the
+calling SCMI driver misbehaves)....in other protocols we have some
+common internal helper to lookup a domain by id safely, it was still just
+not added till today in Clock since not so much needed.
 
-Gr{oetje,eeting}s,
+This seems not to be the case anymore, so today I posted this trivial:
 
-                        Geert
+https://lore.kernel.org/linux-arm-kernel/20240110120916.2482603-1-cristian.marussi@arm.com/
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Please rebase on this and just use it also on this patch like::
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--->8---
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+index 51b21ce97cd5..01b372ac205f 100644
+--- a/drivers/firmware/arm_scmi/clock.c
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -549,7 +549,11 @@ static int scmi_clock_rate_set(const struct scmi_protocol_handle *ph,
+ 	struct scmi_xfer *t;
+ 	struct scmi_clock_set_rate *cfg;
+ 	struct clock_info *ci = ph->get_priv(ph);
+-	struct scmi_clock_info *clk = ci->clk + clk_id;
++	struct scmi_clock_info *clk;
++
++	clk = scmi_clock_domain_lookup(ci, clk_id);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
+ 
+ 	if (clk->rate_ctrl_forbidden)
+ 		return -EACCES;
+@@ -724,7 +728,11 @@ static int scmi_clock_enable(const struct scmi_protocol_handle *ph, u32 clk_id,
+ 			     bool atomic)
+ {
+ 	struct clock_info *ci = ph->get_priv(ph);
+-	struct scmi_clock_info *clk = ci->clk + clk_id;
++	struct scmi_clock_info *clk;
++
++	clk = scmi_clock_domain_lookup(ci, clk_id);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
+ 
+ 	if (clk->state_ctrl_forbidden)
+ 		return -EACCES;
+@@ -737,7 +745,11 @@ static int scmi_clock_disable(const struct scmi_protocol_handle *ph, u32 clk_id,
+ 			      bool atomic)
+ {
+ 	struct clock_info *ci = ph->get_priv(ph);
+-	struct scmi_clock_info *clk = ci->clk + clk_id;
++	struct scmi_clock_info *clk;
++
++	clk = scmi_clock_domain_lookup(ci, clk_id);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
+ 
+ 	if (clk->state_ctrl_forbidden)
+ 		return -EACCES;
+---8<-------
+
+
+> +	if (clk->rate_ctrl_forbidden)
+> +		return -EACCES;
+>  
+>  	ret = ph->xops->xfer_get_init(ph, CLOCK_RATE_SET, sizeof(*cfg), 0, &t);
+>  	if (ret)
+> @@ -585,6 +627,9 @@ scmi_clock_set_parent(const struct scmi_protocol_handle *ph, u32 clk_id,
+>  	if (parent_id >= clk->num_parents)
+>  		return -EINVAL;
+>  
+> +	if (clk->parent_ctrl_forbidden)
+> +		return -EACCES;
+> +
+>  	ret = ph->xops->xfer_get_init(ph, CLOCK_PARENT_SET,
+>  				      sizeof(*cfg), 0, &t);
+>  	if (ret)
+> @@ -668,6 +713,10 @@ static int scmi_clock_enable(const struct scmi_protocol_handle *ph, u32 clk_id,
+>  			     bool atomic)
+>  {
+>  	struct clock_info *ci = ph->get_priv(ph);
+> +	struct scmi_clock_info *clk = ci->clk + clk_id;
+
+Ditto.
+
+> +
+> +	if (clk->state_ctrl_forbidden)
+> +		return -EACCES;
+>  
+>  	return ci->clock_config_set(ph, clk_id, CLK_STATE_ENABLE,
+>  				    NULL_OEM_TYPE, 0, atomic);
+> @@ -677,6 +726,10 @@ static int scmi_clock_disable(const struct scmi_protocol_handle *ph, u32 clk_id,
+>  			      bool atomic)
+>  {
+>  	struct clock_info *ci = ph->get_priv(ph);
+> +	struct scmi_clock_info *clk = ci->clk + clk_id;
+Ditto.
+> +
+> +	if (clk->state_ctrl_forbidden)
+> +		return -EACCES;
+>  
+>  	return ci->clock_config_set(ph, clk_id, CLK_STATE_DISABLE,
+>  				    NULL_OEM_TYPE, 0, atomic);
+> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+> index f2f05fb42d28..ad75784b567b 100644
+> --- a/include/linux/scmi_protocol.h
+> +++ b/include/linux/scmi_protocol.h
+> @@ -47,6 +47,9 @@ struct scmi_clock_info {
+>  	bool rate_discrete;
+>  	bool rate_changed_notifications;
+>  	bool rate_change_requested_notifications;
+> +	bool state_ctrl_forbidden;
+> +	bool rate_ctrl_forbidden;
+> +	bool parent_ctrl_forbidden;
+>  	union {
+>  		struct {
+>  			int num_rates;
+> @@ -60,6 +63,7 @@ struct scmi_clock_info {
+>  	};
+>  	int num_parents;
+>  	u32 *parents;
+> +	u32 attributes;
+
+Ditto. Drop this.
+
+Thanks,
+Cristian
+
