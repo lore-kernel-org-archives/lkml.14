@@ -1,181 +1,112 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2C046BA6;
-	Wed, 10 Jan 2024 10:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1C946BA6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:26:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="QMRWzH1e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1704882399; x=1736418399;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5WUd7zZW6vaz2VFpcySRfwde2JHnsfcvgGymaZA0H0s=;
-  b=QMRWzH1e9gW+jYSuJIF5GsdSF5RBrlor7KuSCb0kOw6fIqNq8uSVkzSu
-   1Y/90fiPzybFg++BmPNYwWkFlmNzmrBIY98uCXc4dFXrPlpGQDyK8ZAqD
-   URLReSa7ZeG2AUSbczMvjmsb2PM6Eomr7k4ge3FIYTfGbxvO+GLcYLshb
-   pxoHJpZSeuDLdiNUie/M4qswfkkX/b/OjSzfyTlvqII6yytoFXvW6ROPk
-   3x6sS8Sql1A5kGo8/g4hNQUYkDAKjNCHqAjZxW7rx2J2LTBrjtjc8TA3P
-   yrtMOPgIq5At0KhdnYHa+C6mGI9hOg1FXQTyWk33DV4YHI4LWWEulQuVK
-   w==;
-X-CSE-ConnectionGUID: 5D2eo3saR72tqfGaKhDyVQ==
-X-CSE-MsgGUID: P1+T+hWdTWqrrzrBB18h6g==
-X-ThreatScanner-Verdict: Negative
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="14511322"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 10 Jan 2024 03:26:35 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 10 Jan 2024 03:26:25 -0700
-Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 10 Jan 2024 03:26:17 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
-	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<lee@kernel.org>, <thierry.reding@gmail.com>,
-	<u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>
-CC: Dharma Balasubiramani <dharma.b@microchip.com>
-Subject: [PATCH 3/3] dt-bindings: atmel,hlcdc: convert pwm bindings to json-schema
-Date: Wed, 10 Jan 2024 15:55:35 +0530
-Message-ID: <20240110102535.246177-4-dharma.b@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240110102535.246177-1-dharma.b@microchip.com>
-References: <20240110102535.246177-1-dharma.b@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMM4k/SM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA0BC433C7;
+	Wed, 10 Jan 2024 10:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704882414;
+	bh=u0i2FaVQlYbTLnWyHEIAv2lNsR9XhIwGw/u5AT2iYxI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=EMM4k/SMS/MJdNAJ/5RgLZiJOmTiYQxja4QuNj2EQ/gmtXKJyX+iDkJLek81nZURv
+	 LqRL8dmmie0ZSNDOAaqlhlyBzqXEpoETaUFlUpMIk0tM6z5HF4kJ0qOqobNh3HIGPP
+	 iB+wJ1hiyufll73xHdcLdCAMFjt2sFFED5Ch5YTsBuMdSWbjes3xC+ySZMQ1HUWDPc
+	 XGGeirJBMv/FCNHQfk5Otp+IKsy91rYUN6yq4VfqXqo3E9mdvilyYvxPKmTkpXX0ve
+	 nmviqBfe9YOxv+QhRqoJGcqqYaY4pqfaIjp/zFd5MjUD5UCu3Mm9wF+7PazAlF3nV6
+	 oI5jhaAnHPk1Q==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 52479CE0AB0; Wed, 10 Jan 2024 02:26:54 -0800 (PST)
+Date: Wed, 10 Jan 2024 02:26:54 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
+	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org
+Subject: Re: [BUG] allmodconfig build error in next-20240108
+Message-ID: <3a10ef2b-acbe-4d80-805a-e947e15e5db3@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <45ad1d0f-a10f-483e-848a-76a30252edbe@paulmck-laptop>
+ <20240109095757.1313b2d9@canb.auug.org.au>
+ <341a4955-0cdd-48d0-bfbd-cc6f6f09df37@paulmck-laptop>
+ <atbx7mspjbymkzgstk4l64qz3uky3wpmx4isrfg3ixgtvebdd2@cktpe4ejfk7k>
+ <20240110081155.48bb0cbd@oak>
+ <d61dfe52-9567-4f62-98f5-5c1e00cb4708@paulmck-laptop>
+ <20240110095822.3ba3d979@canb.auug.org.au>
+ <3d14049c-d44c-4b33-9933-0f96055b8a70@paulmck-laptop>
+ <20240110160335.2bad7d54@oak>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20240110160335.2bad7d54@oak>
 
-Convert device tree bindings for Atmel's HLCDC PWM controller to YAML
-format.
+On Wed, Jan 10, 2024 at 04:03:51PM +1100, Stephen Rothwell wrote:
+> Hi Paul,
+> 
+> On Tue, 9 Jan 2024 19:46:27 -0800 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> >
+> > On Wed, Jan 10, 2024 at 09:58:22AM +1100, Stephen Rothwell wrote:
+> > >
+> > > Maybe that line "subdir-ccflags-y += $(call cc-option, -Wstringop-overflow)"
+> > > should just be removed as the setting of that option has been moved to the
+> > > normal C flags in the top level Makefile (out of Makefile.extrawarn).  
+> > 
+> > If you meant like this, no joy.  :-(
+> 
+> Actually I meant the one in drivers/gpu/drm/xe/Makefile
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
- .../bindings/pwm/atmel,hlcdc-pwm.yaml         | 62 +++++++++++++++++++
- .../bindings/pwm/atmel-hlcdc-pwm.txt          | 29 ---------
- 2 files changed, 62 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+Like this?  That does work as shown below, thank you!
 
-diff --git a/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml b/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
-new file mode 100644
-index 000000000000..99eaad55ccb3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2024 Microchip Technology, Inc. and its subsidiaries
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/atmel,hlcdc-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atmel's HLCDC (High-end LCD Controller) PWM driver
-+
-+maintainers:
-+  - Nicolas Ferre <nicolas.ferre@microchip.com>
-+  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-+  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
-+
-+description: |
-+  Device-Tree bindings for Atmel's HLCDC PWM driver. The Atmel HLCDC PWM is a
-+  subdevice of the HLCDC MFD device.
-+  # See ../mfd/atmel,hlcdc.yaml for more details.
-+
-+properties:
-+  compatible:
-+    const: atmel,hlcdc-pwm
-+
-+  pinctrl-names:
-+    const: default
-+
-+  pinctrl-0: true
-+
-+  "#pwm-cells":
-+    const: 3
-+    description: |
-+      This PWM chip uses the default 3 cells bindings defined in pwm.yaml in
-+      this directory.
-+
-+required:
-+  - compatible
-+  - pinctrl-names
-+  - pinctrl-0
-+  - "#pwm-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/at91.h>
-+    #include <dt-bindings/pwm/pwm.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    hlcdc: hlcdc@f0030000 {
-+      compatible = "atmel,sama5d3-hlcdc";
-+      reg = <0xf0030000 0x2000>;
-+      clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
-+      clock-names = "periph_clk","sys_clk", "slow_clk";
-+      interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-+
-+      hlcdc_pwm: hlcdc-pwm {
-+        compatible = "atmel,hlcdc-pwm";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_lcd_pwm>;
-+        #pwm-cells = <3>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-deleted file mode 100644
-index afa501bf7f94..000000000000
---- a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--Device-Tree bindings for Atmel's HLCDC (High-end LCD Controller) PWM driver
--
--The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
--See ../mfd/atmel-hlcdc.txt for more details.
--
--Required properties:
-- - compatible: value should be one of the following:
--   "atmel,hlcdc-pwm"
-- - pinctr-names: the pin control state names. Should contain "default".
-- - pinctrl-0: should contain the pinctrl states described by pinctrl
--   default.
-- - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
--   bindings defined in pwm.yaml in this directory.
--
--Example:
--
--	hlcdc: hlcdc@f0030000 {
--		compatible = "atmel,sama5d3-hlcdc";
--		reg = <0xf0030000 0x2000>;
--		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
--		clock-names = "periph_clk","sys_clk", "slow_clk";
--
--		hlcdc_pwm: hlcdc-pwm {
--			compatible = "atmel,hlcdc-pwm";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_pwm>;
--			#pwm-cells = <3>;
--		};
--	};
--- 
-2.25.1
+							Thanx, Paul
 
+------------------------------------------------------------------------
+
+drm/xe: Fix build bug for GCC 11
+
+Building drivers/gpu/drm/xe/xe_gt_pagefault.c with GCC 11 results
+in the following build errors:
+
+./include/linux/fortify-string.h:57:33: error: writing 16 bytes into a region of size 0 [-Werror=stringop-overflow=]
+   57 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+./include/linux/fortify-string.h:644:9: note: in expansion of macro ‘__underlying_memcpy’
+  644 |         __underlying_##op(p, q, __fortify_size);                        \
+      |         ^~~~~~~~~~~~~
+./include/linux/fortify-string.h:689:26: note: in expansion of macro ‘__fortify_memcpy_chk’
+  689 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/xe/xe_gt_pagefault.c:340:17: note: in expansion of macro ‘memcpy’
+  340 |                 memcpy(pf_queue->data + pf_queue->tail, msg, len * sizeof(u32));
+      |                 ^~~~~~
+In file included from drivers/gpu/drm/xe/xe_device_types.h:17,
+                 from drivers/gpu/drm/xe/xe_vm_types.h:16,
+                 from drivers/gpu/drm/xe/xe_bo.h:13,
+                 from drivers/gpu/drm/xe/xe_gt_pagefault.c:16:
+drivers/gpu/drm/xe/xe_gt_types.h:102:25: note: at offset [1144, 265324] into destination object ‘tile’ of size 8
+  102 |         struct xe_tile *tile;
+      |                         ^~~~
+
+Fix these by removing -Wstringop-overflow from drm/xe builds.
+
+Suggested-by: Stephen Rothwell <sfr@rothwell.id.au>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
+index 53bd2a8ba1ae..efcf0ab7a1a6 100644
+--- a/drivers/gpu/drm/xe/Makefile
++++ b/drivers/gpu/drm/xe/Makefile
+@@ -17,7 +17,6 @@ subdir-ccflags-y += $(call cc-option, -Wunused-const-variable)
+ subdir-ccflags-y += $(call cc-option, -Wpacked-not-aligned)
+ subdir-ccflags-y += $(call cc-option, -Wformat-overflow)
+ subdir-ccflags-y += $(call cc-option, -Wformat-truncation)
+-subdir-ccflags-y += $(call cc-option, -Wstringop-overflow)
+ subdir-ccflags-y += $(call cc-option, -Wstringop-truncation)
+ # The following turn off the warnings enabled by -Wextra
+ ifeq ($(findstring 2, $(KBUILD_EXTRA_WARN)),)
