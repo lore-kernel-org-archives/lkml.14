@@ -1,47 +1,47 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75584F1FC
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856774F618
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Y3XOe08z"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5988e377264so889029eaf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:51:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tMK+bB8F"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5986d902ae6so1389409eaf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:51:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704916275; x=1705521075; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704916277; x=1705521077; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UVV1rLtkyln7lfj7tpHcJX2VNB5e7ezkKOUrM/UkYLc=;
-        b=Y3XOe08zJIN6pC3VWbJnk6shnya36LvTiwlT1mpPDBn7HF6W7lf55XtJoLyT01z4Ni
-         kLDrI640BFKYOJV+twIgmxSRyCcIlvgFHw3W3UXoSvqpVwqCdKSP0SodzMi2Nvvr1zk+
-         UZJWRTofD9NbokV1MbC5UAnqAKovP7bc5l8DlzzMdk/vyEoBCwylfHHCh4vUnt8c8CeY
-         3NDrgUiZf6ry3YQaYkeQRQ8KDaW6gnD1blzmY8a6btcB2xN0pez+Ab+s/g29MFhVAVmx
-         koGztaKC54dA6BdPzUJdMwSL1ONMegSuZ13H4StO3j800zWjP90Lc0AWtwnxZHUJ/zme
-         CJcA==
+        bh=uvLBZp36pzTyMACXtPdvGno5nE8Tc/vk1PKJFHFwqlw=;
+        b=tMK+bB8FHUKWiY4R5vG+otH2Fl8/4TA2DGMPe9VOBfcGgN3nUeqsw/qbpPo2uF5O0P
+         rrDr4JWl/LJ39a0Rij2SrdeJI1CkjT+3FlDkDe2XCrkhldMAwVgkFNomcSGEL+WfaLXX
+         Dsi4JwQLnY685n5mlP+IyYnJj11sMQXoUxxIqY9iDF6JSVDf7Tuncxw5LYIFa4g2BfpX
+         omQYBiMX8ztrcb+yVkYB3rtHRrcQltIhGXGG1rjg75WVgLwcTG+DkO6pnRcRA1crjZjZ
+         kivj4PZ278PM3jkAQfQExZK7azpKD0SskdULDLWz3kiJ+pZykeylEuO4N4ofg+Qll9Et
+         S7Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704916275; x=1705521075;
+        d=1e100.net; s=20230601; t=1704916277; x=1705521077;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UVV1rLtkyln7lfj7tpHcJX2VNB5e7ezkKOUrM/UkYLc=;
-        b=hGbWZN16mrHsPjWgF6HwvO9kTkyfBE3N+cDJZ3YIRBQsFiIaXxEtYEe1mQerqrHRRc
-         bcvxCrhXevli9h83TqSYN7J3fQysUUAzpWnCv+jKmKAVq8jwEqgconxYo2eDrW9aWWm6
-         +1Lc+FJr+ZChephISkgnR7QWapT7TPMIocisO6fKXllacM6RGdrfHuDyJytvuxQn+QFg
-         Eg6v26M4q0SqNTYd4sUSoCiDtXQ+bsrlULK8a/ZM2YDES3Te/Am6iR0DWchgIR6Ez/Il
-         QfQtdTiJOrrBx2NsPDOq0MB04P8qtQjWjuKa/P1NqY1gTIEbZ/G1VTbiCx9uPsSgJ61L
-         cduA==
-X-Gm-Message-State: AOJu0YxAx/rAcEI82sfT2ho/+WgqnZLo4+7xhgPEAqiPQtlcmCAjVYah
-	A5A0F4ZKH8CpWjUM111Ms2p2eTiNEinbmg==
-X-Google-Smtp-Source: AGHT+IGunDU9MSgs9fgHQVRozSUhKU17YNl+rYChXl6jqrO/GSOVN5G2k4xbC6HDR6Xk6s49R7pFjg==
-X-Received: by 2002:a05:6820:1c89:b0:594:6b95:4218 with SMTP id ct9-20020a0568201c8900b005946b954218mr145662oob.1.1704916274825;
-        Wed, 10 Jan 2024 11:51:14 -0800 (PST)
+        bh=uvLBZp36pzTyMACXtPdvGno5nE8Tc/vk1PKJFHFwqlw=;
+        b=WkKD6aqUDCwq51E82+Cb/NK7WHf+U0eTOroojVCBIT6lcJuxTa2fE4/PALHOulGfbA
+         p2V73D8OXMdXRpNI059+4SzHxJkUPDFEWSnSDXXFQqjLjug1B5sIQk3fj+eTOKYMR+1F
+         Y6KlnXt/hPy9Wx1judg50csTduAdTZfpXN90rpvMCugm76wGxrOCH4DX9vLm7WtKRhTF
+         G1C3krjdiWCrP0Der53JODHp7bGfICWlhg6j5w28z+iciO2JsH2VKb/RkY/eJYuMeZ2i
+         dbkW6fTwn6RMiEZ+ptZ3YxD5GWF8YrxE0X35Oue1jhQFfC03g7batMhmlhXrIgmhzKkJ
+         dvtQ==
+X-Gm-Message-State: AOJu0YxGAq4/DchXle10RBY/Z5fGuUKACGpCc9zSFI6H/SJ3zdqEekga
+	QiSovYFwB0BaWZwbXvIJjvz+6WCNLKcaQA==
+X-Google-Smtp-Source: AGHT+IFbclB6k8E5/ylz/wBfLjmVg+ND+S+SfqvTYYmbBTtTdhhQGPaDPGrmNj5Z07W3EBq+SgmL3Q==
+X-Received: by 2002:a4a:3543:0:b0:598:1fa3:80b9 with SMTP id w3-20020a4a3543000000b005981fa380b9mr76085oog.14.1704916277632;
+        Wed, 10 Jan 2024 11:51:17 -0800 (PST)
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 187-20020a4a0dc4000000b00595b35927a3sm938513oob.39.2024.01.10.11.51.13
+        by smtp.gmail.com with ESMTPSA id 187-20020a4a0dc4000000b00595b35927a3sm938513oob.39.2024.01.10.11.51.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 11:51:14 -0800 (PST)
+        Wed, 10 Jan 2024 11:51:17 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
 To: Mark Brown <broonie@kernel.org>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -61,9 +61,9 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	linux-doc@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 06/13] iio: buffer: add hardware triggered buffer support
-Date: Wed, 10 Jan 2024 13:49:47 -0600
-Message-ID: <20240109-axi-spi-engine-series-3-v1-6-e42c6a986580@baylibre.com>
+Subject: [PATCH 09/13] bus: auxiliary: increase AUXILIARY_NAME_SIZE
+Date: Wed, 10 Jan 2024 13:49:50 -0600
+Message-ID: <20240109-axi-spi-engine-series-3-v1-9-e42c6a986580@baylibre.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
 References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
@@ -77,147 +77,32 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-This adds a new mode INDIO_HW_BUFFER_TRIGGERED to the IIO subsystem.
+The auxiliary bus uses names in the form of "module_name.device_name"
+for matching devices to drivers. Since the module name is the actual
+module name, it can be quite long which doesn't leave enough room for
+the device name.
 
-This mode is essentially the hardware version of INDIO_BUFFER_TRIGGERED
-where the trigger has the semantics of INDIO_HARDWARE_TRIGGERED and the
-buffer has the semantics of INDIO_BUFFER_HARDWARE.
-
-So basically INDIO_HW_BUFFER_TRIGGERED is the same as
-INDIO_BUFFER_HARDWARE except that it also enables the trigger when the
-buffer is enabled.
+This patch increases the size AUXILIARY_NAME_SIZE to 64 to allow for
+both a ~32 character module name and a ~32 character device name.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/iio/industrialio-buffer.c | 43 ++++++++++++++++++++++++++++++++++++---
- include/linux/iio/iio.h           | 16 ++++++++++++---
- 2 files changed, 53 insertions(+), 6 deletions(-)
+ include/linux/mod_devicetable.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 176d31d9f9d8..ffee3043c65a 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -27,6 +27,7 @@
- #include <linux/iio/sysfs.h>
- #include <linux/iio/buffer.h>
- #include <linux/iio/buffer_impl.h>
-+#include <linux/iio/trigger.h>
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index f458469c5ce5..4bd2d20067b6 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -861,7 +861,7 @@ struct mhi_device_id {
+ 	kernel_ulong_t driver_data;
+ };
  
- static const char * const iio_endian_prefix[] = {
- 	[IIO_BE] = "be",
-@@ -867,8 +868,17 @@ static int iio_verify_update(struct iio_dev *indio_dev,
- 					insert_buffer->watermark);
- 	}
+-#define AUXILIARY_NAME_SIZE 32
++#define AUXILIARY_NAME_SIZE 64
+ #define AUXILIARY_MODULE_PREFIX "auxiliary:"
  
--	/* Definitely possible for devices to support both of these. */
--	if ((modes & INDIO_BUFFER_TRIGGERED) && indio_dev->trig) {
-+	/* Definitely possible for devices to support all of these. */
-+	if (modes & INDIO_HW_BUFFER_TRIGGERED) {
-+		/*
-+		 * Keep things simple for now and only allow a single buffer to
-+		 * be connected in hardware mode.
-+		 */
-+		if (insert_buffer && !list_empty(&iio_dev_opaque->buffer_list))
-+			return -EINVAL;
-+		config->mode = INDIO_HW_BUFFER_TRIGGERED;
-+		strict_scanmask = true;
-+	} else if ((modes & INDIO_BUFFER_TRIGGERED) && indio_dev->trig) {
- 		config->mode = INDIO_BUFFER_TRIGGERED;
- 	} else if (modes & INDIO_BUFFER_HARDWARE) {
- 		/*
-@@ -1107,11 +1117,21 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
- 		}
- 	}
- 
-+	if (iio_dev_opaque->currentmode == INDIO_HW_BUFFER_TRIGGERED) {
-+		struct iio_trigger *trig = indio_dev->trig;
-+
-+		if (trig->ops && trig->ops->set_trigger_state) {
-+			ret = trig->ops->set_trigger_state(trig, true);
-+			if (ret)
-+				goto err_disable_buffers;
-+		}
-+	}
-+
- 	if (iio_dev_opaque->currentmode == INDIO_BUFFER_TRIGGERED) {
- 		ret = iio_trigger_attach_poll_func(indio_dev->trig,
- 						   indio_dev->pollfunc);
- 		if (ret)
--			goto err_disable_buffers;
-+			goto err_disable_hw_trigger;
- 	}
- 
- 	if (indio_dev->setup_ops->postenable) {
-@@ -1130,6 +1150,16 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
- 		iio_trigger_detach_poll_func(indio_dev->trig,
- 					     indio_dev->pollfunc);
- 	}
-+err_disable_hw_trigger:
-+	if (iio_dev_opaque->currentmode == INDIO_HW_BUFFER_TRIGGERED) {
-+		struct iio_trigger *trig = indio_dev->trig;
-+
-+		if (trig->ops && trig->ops->set_trigger_state) {
-+			ret = trig->ops->set_trigger_state(trig, false);
-+			if (ret)
-+				return ret;
-+		}
-+	}
- err_disable_buffers:
- 	buffer = list_prepare_entry(tmp, &iio_dev_opaque->buffer_list, buffer_list);
- 	list_for_each_entry_continue_reverse(buffer, &iio_dev_opaque->buffer_list,
-@@ -1174,6 +1204,13 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
- 					     indio_dev->pollfunc);
- 	}
- 
-+	if (iio_dev_opaque->currentmode == INDIO_HW_BUFFER_TRIGGERED) {
-+		struct iio_trigger *trig = indio_dev->trig;
-+
-+		if (trig->ops && trig->ops->set_trigger_state)
-+			trig->ops->set_trigger_state(trig, false);
-+	}
-+
- 	list_for_each_entry(buffer, &iio_dev_opaque->buffer_list, buffer_list) {
- 		ret2 = iio_buffer_disable(buffer, indio_dev);
- 		if (ret2 && !ret)
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index d0ce3b71106a..16f62bd38041 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -366,6 +366,11 @@ s64 iio_get_time_ns(const struct iio_dev *indio_dev);
-  * they must be managed by the core, but without the entire interrupts/poll
-  * functions burden. Interrupts are irrelevant as the data flow is hardware
-  * mediated and distributed.
-+ * @INDIO_HW_BUFFER_TRIGGERED: Very unusual mode.
-+ * This is similar to INDIO_BUFFER_TRIGGERED but everything is done in hardware
-+ * therefore there are no poll functions attached. It also implies the semantics
-+ * of both INDIO_HARDWARE_TRIGGERED for the trigger and INDIO_BUFFER_HARDWARE
-+ * for the buffer.
-  */
- #define INDIO_DIRECT_MODE		0x01
- #define INDIO_BUFFER_TRIGGERED		0x02
-@@ -373,14 +378,19 @@ s64 iio_get_time_ns(const struct iio_dev *indio_dev);
- #define INDIO_BUFFER_HARDWARE		0x08
- #define INDIO_EVENT_TRIGGERED		0x10
- #define INDIO_HARDWARE_TRIGGERED	0x20
-+#define INDIO_HW_BUFFER_TRIGGERED	0x40
- 
--#define INDIO_ALL_BUFFER_MODES					\
--	(INDIO_BUFFER_TRIGGERED | INDIO_BUFFER_HARDWARE | INDIO_BUFFER_SOFTWARE)
-+#define INDIO_ALL_BUFFER_MODES		\
-+	(INDIO_BUFFER_TRIGGERED		\
-+	 | INDIO_BUFFER_HARDWARE	\
-+	 | INDIO_BUFFER_SOFTWARE	\
-+	 | INDIO_HW_BUFFER_TRIGGERED)
- 
- #define INDIO_ALL_TRIGGERED_MODES	\
- 	(INDIO_BUFFER_TRIGGERED		\
- 	 | INDIO_EVENT_TRIGGERED	\
--	 | INDIO_HARDWARE_TRIGGERED)
-+	 | INDIO_HARDWARE_TRIGGERED	\
-+	 | INDIO_HW_BUFFER_TRIGGERED)
- 
- #define INDIO_MAX_RAW_ELEMENTS		4
- 
+ struct auxiliary_device_id {
 
 -- 
 2.43.0
