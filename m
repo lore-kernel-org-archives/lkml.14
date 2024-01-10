@@ -1,138 +1,118 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76DF47F44
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="aXWv6Vmz"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40d4f5d902dso42927945e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:55:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1704887722; x=1705492522; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p22+unadpjiuSy6RGYATC6dS70dMkUd0mDAJ61uro9I=;
-        b=aXWv6VmzjH5x7RWHFSyBQC5qfCLssOfMva95/wI6S21LP0NBkVvstfZR+Gqm1V6dow
-         KwsUt7hIY+F6IUPzZm1B2HAGtVmARYUMAO2Hx1Wx/i4jyWSRYgrKjr2Uq1WMbm53/Rw/
-         Ro8oQlAI6R8ATShhNYSEF/LBT4CLSR3ED3A7JL1F1EcT9uYYXuCXWcN9XRRYisPH+Kxf
-         sxG0vLB5BW7rfn9ddWHmAHWfLnPz2AJpm5kDjQu9Df7RbAuZNb2A3kbFjbpk/Wpuo+sw
-         jFwbXWEyex7fi5dwz+eDjCQuBxUFwfg26XM1x3iRM8CL9DZfzsqTKdKt/hi8+GKJlvfj
-         LelQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7544038DE0;
+	Wed, 10 Jan 2024 11:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a2a1a584e8bso407307166b.1;
+        Wed, 10 Jan 2024 03:55:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704887722; x=1705492522;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p22+unadpjiuSy6RGYATC6dS70dMkUd0mDAJ61uro9I=;
-        b=MqKGKTC+IMG/ygBUGcRGn5uKzyh5tGr6akGVyxkxBmn6c9BB3BpYVb5pk6oMsauyUy
-         6T8hWSrevo3z7ML3RPKGtU6A4JaXuCqWnVxGtpbzy3ssNrLc8XHJRHGr1Fkuj8p+bxZN
-         KpRQx7bf21mWxjWvfWtHcBNl+Ti0RjUUMkgB3Ov6y7rdNVWkdKAU+ceTaM2rttloANHC
-         jXswLn33QpQfvpDDPDtMWOdqYZzCulRsK23ZPVF6KDeNhhTXQayd0qCwJD7Ndam6yHgF
-         ooJue/RsIP1/RYS2f8Sf80c+YOdAleVapuGGAXp7yw/bX2pGyvGrNy/nFkxamjgO6qIR
-         C9Pg==
-X-Gm-Message-State: AOJu0YxphbDpxWs6KK3gSXAiC0tDrC2Xtv6WTKE5C5jhB3gI/FB1KtMj
-	c/jVNqiT+44QX1728uqmaQD7HcfyXVd1Sg==
-X-Google-Smtp-Source: AGHT+IEce4ODuGwcEn2BKXeEu1OoSU3T5p4yP+WdC1xjqjakHlYuOMiREbeBunnkwWykVuXti0AI4A==
-X-Received: by 2002:a05:600c:84ca:b0:40e:52ce:f05 with SMTP id er10-20020a05600c84ca00b0040e52ce0f05mr482062wmb.70.1704887721880;
-        Wed, 10 Jan 2024 03:55:21 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.5])
-        by smtp.gmail.com with ESMTPSA id g4-20020adfa484000000b00336344c3c3fsm4739160wrb.90.2024.01.10.03.55.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 03:55:21 -0800 (PST)
-Message-ID: <3e430f8e-b327-485f-ae19-6f1938083dd3@tuxon.dev>
-Date: Wed, 10 Jan 2024 13:55:18 +0200
+        d=1e100.net; s=20230601; t=1704887746; x=1705492546;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p4iKGaZccjg1i1z4b53D4lvLZtxTImDFeDZiPP01Gww=;
+        b=ovDBX8WblbhXjSPwtaRmGoKQgRAC824TN9Vl+ZK8ptUaeraLeFbIPmnwQ35ID05vpQ
+         1eOkfHAIesecTZEXCQcJk03bBxynWhCAJVElkZTsOmEXCXp+KV1ZVZ1hsN0gz4nHVOkU
+         CBDQ37i4vu9Guff5+n46lU8SVaVqpJJwbd0/D8i3Oufhg6pEfyCikQwbmW2/yn08X/2f
+         zAr8kOYllFgbYK6PZutssGMdPKXFs189iaopKM6OtO2+mlhxKeswAJ5QKLT6OYmN2qcA
+         S1j2PjHmirK7UJp+bROxFFCwGtnCaq/u7H+XHUiGAoiPbrmfib+ux/9q/EbXSRMlSzUc
+         702Q==
+X-Gm-Message-State: AOJu0YxA+EsnFeuXQ1eZwbGM6XJxH8KPRTMaXElgrzVNd4fMz6BlXcNS
+	V/03Oh3fHWpo+7vtbYYlRbU=
+X-Google-Smtp-Source: AGHT+IFmAe2+SZr6Pc6/cb4mqYYBt0goGvCGNC6eFy+acfj9VZH4n6c910KO3L9RmEJ0pZnI3SKBAg==
+X-Received: by 2002:a17:906:16cb:b0:a2b:9f69:95b8 with SMTP id t11-20020a17090616cb00b00a2b9f6995b8mr475672ejd.76.1704887746594;
+        Wed, 10 Jan 2024 03:55:46 -0800 (PST)
+Received: from gmail.com (fwdproxy-cln-011.fbsv.net. [2a03:2880:31ff:b::face:b00c])
+        by smtp.gmail.com with ESMTPSA id ld12-20020a170906f94c00b00a2362c5e3dbsm1998949ejb.151.2024.01.10.03.55.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 03:55:46 -0800 (PST)
+Date: Wed, 10 Jan 2024 03:55:44 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: jpoimboe@kernel.org, mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
+	x86@kernel.org, leit@meta.com, linux-kernel@vger.kernel.org,
+	pawan.kumar.gupta@linux.intel.com, bpf@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v6 00/13] x86/bugs: Add a separate config for each
+ mitigation
+Message-ID: <ZZ6FwMTRppSa2eOG@gmail.com>
+References: <20231121160740.1249350-1-leitao@debian.org>
+ <ZZ5p3vdnTtU5TeJe@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 08/19] net: ravb: Move the IRQs get and
- request in the probe function
-Content-Language: en-US
-To: Sergey Shtylyov <s.shtylyov@omp.ru>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- richardcochran@gmail.com, p.zabel@pengutronix.de,
- yoshihiro.shimoda.uh@renesas.com, wsa+renesas@sang-engineering.com
-Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, geert+renesas@glider.be,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com>
- <20240105082339.1468817-9-claudiu.beznea.uj@bp.renesas.com>
- <02548b1b-d32c-78b1-f1b6-5fdb505d31bb@omp.ru>
- <ee783b61-95fc-44ab-a311-0ca7d058ac39@tuxon.dev>
- <dce944a1-9557-9ab0-d30d-7a51a47c6d96@omp.ru>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <dce944a1-9557-9ab0-d30d-7a51a47c6d96@omp.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZ5p3vdnTtU5TeJe@gmail.com>
 
+On Wed, Jan 10, 2024 at 10:56:46AM +0100, Ingo Molnar wrote:
+> 
+> * Breno Leitao <leitao@debian.org> wrote:
+> 
+> > Currently, the CONFIG_SPECULATION_MITIGATIONS is halfway populated,
+> > where some mitigations have entries in Kconfig, and they could be
+> > modified, while others mitigations do not have Kconfig entries, and
+> > could not be controlled at build time.
+> > 
+> > The fact of having a fine grained control can help in a few ways:
+> > 
+> > 1) Users can choose and pick only mitigations that are important for
+> > their workloads.
+> > 
+> > 2) Users and developers can choose to disable mitigations that mangle
+> > the assembly code generation, making it hard to read.
+> > 
+> > 3) Separate configs for just source code readability,
+> > so that we see *which* butt-ugly piece of crap code is for what
+> > reason.
+> > 
+> > Important to say, if a mitigation is disabled at compilation time, it
+> > could be enabled at runtime using kernel command line arguments.
+> > 
+> > Discussion about this approach:
+> > https://lore.kernel.org/all/CAHk-=wjTHeQjsqtHcBGvy9TaJQ5uAm5HrCDuOD9v7qA9U1Xr4w@mail.gmail.com/
+> > and
+> > https://lore.kernel.org/lkml/20231011044252.42bplzjsam3qsasz@treble/
+> > 
+> > In order to get the missing mitigations, some clean up was done.
+> > 
+> > 1) Get a namespace for mitigations, prepending MITIGATION to the Kconfig
+> > entries.
+> > 
+> > 2) Adding the missing mitigations, so, the mitigations have entries in the
+> > Kconfig that could be easily configure by the user.
+> > 
+> > With this patchset applied, all configs have an individual entry under
+> > CONFIG_SPECULATION_MITIGATIONS, and all of them starts with CONFIG_MITIGATION.
+> 
+> Yeah, so:
+> 
+>  - I took this older series and updated it to current upstream, and made
+>    sure all renames were fully done: there were two new Kconfig option
+>    uses, which I integrated into the series. (Sorry about the delay, holiday & stuff.)
+> 
+>  - I also widened the renames to comments and messages, which were not
+>    always covered.
+> 
+>  - Then I took this cover letter and combined it with a more high level
+>    description of the reasoning behind this series I wrote up, and added it
+>    to patch #1. (see it below.)
+> 
+>  - Then I removed the changelog repetition from the other patches and just
+>    referred them back to patch #1.
+> 
+>  - Then I stuck the resulting updated series into tip:x86/bugs, without the 
+>    last 3 patches that modify behavior.
 
+Thanks for your work. I am currently reviwing the tip branch and the
+merge seems go so far.
 
-On 09.01.2024 22:47, Sergey Shtylyov wrote:
-> On 1/8/24 11:58 AM, claudiu beznea wrote:
-> 
-> [...]
->>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>
->>>> The runtime PM implementation will disable clocks at the end of
->>>> ravb_probe(). As some IP variants switch to reset mode as a result of
->>>> setting module standby through clock disable APIs, to implement runtime PM
->>>> the resource parsing and requesting are moved in the probe function and IP
->>>> settings are moved in the open function. This is done because at the end of
->>>> the probe some IP variants will switch anyway to reset mode and the
->>>> registers content is lost. Also keeping only register specific operations
->>>> in the ravb_open()/ravb_close() functions will make them faster.
->>>>
->>>> Commit moves IRQ requests to ravb_probe() to have all the IRQs ready when
->>>> the interface is open. As now IRQs gets and requests are in a single place
->>>> there is no need to keep intermediary data (like ravb_rx_irqs[] and
->>>> ravb_tx_irqs[] arrays or IRQs in struct ravb_private).
->>>
->>>    There's one thing that you probably didn't take into account: after
->>> you call request_irq(), you should be able to handle your IRQ as it's
->>> automatically unmasked, unless you pass IRQF_NO_AUTOEN to request_irq().
->>> Your device may be held i reset or even powered off but if you pass IRQF_SHARED to request_irq() (you do in a single IRQ config), you must
->>> be prepared to get your device's registers read (in order to ascertain
-> 
->    And, at least on arm32, reading a powered off (or not clocked?) device's
-> register causes an imprecise external abort exception -- which results in a
-> kernel oops...
-> 
->>> whether it's your IRQ or not). And you can't even pass IRQF_NO_AUTOEN
->>> along with IRQF_SHARED, according to my reading of the IRQ code...
->>
->> Good point!
->>
->>>> This is a preparatory change to add runtime PM support for all IP variants.
->>>
->>>   I don't readily see why this is necessary for the full-fledged RPM
->>> support...
->>
->> I tried to speed up the ravb_open()/ravb_close() but missed the IRQF_SHARED
-> 
->    I doubt that optimizing ravb_{open,close}() is worth pursuing, frankly...
-> 
->> IRQ. As there is only one IRQ requested w/ IRQF_SHARED, are you OK with
->> still keeping the rest of IRQs handled as proposed by this patch?
-> 
->    I'm not, as this doesn't really seem necessary for your main goal.
-> It's not clear in what state U-Boot leaves EtherAVB...
+Regarding the last 3 patches, what are the next steps?
 
-Ok. One other reason I did this is, as commit message states, to keep
-resource parsing and allocation/freeing in probe/remove and hardware
-settings in open/close.
-
-Anyway, I'll revert all the changes IRQ related.
-
-Thank you,
-Claudiu Beznea
-
-> 
-> [...]
-> 
-> MBR, Sergey
+Thank you!
+Breno
