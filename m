@@ -1,86 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86B947A73
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B694655D;
+	Wed, 10 Jan 2024 11:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjvX9ZLf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704885060; x=1736421060;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=X5QEjl0DJ9jDmcuH+SDJ2ODSt3udQokya7z4e6MJXk8=;
-  b=UjvX9ZLfMhvPJAiuxztgs2TdjangfA2j3mnmFlrjTQEM5wZrPnyBJVVl
-   9eraK4/KKrMYY9bLfIHQ1E7d+1wWD7pfdSpYOEFPRg4b4g7C35i5umc3b
-   gZ9Uq3LefC6hEemp27jEEZurUD0qzj374On8FdR4DKUAXbDeypbuqAaMi
-   NNudo58u5+ApBuE0P9dAVAtcrGoq+Cq8bgNM55BTo5E1r1sCwZhq75N6L
-   IN+mrZ1twrj5nWuj5l3l1F+eJtKxRCc+edCyd/YBNTTpHxp/AEfV0eXe4
-   uhxrXzbl6rHm7zzhwNOxvg6ulnMEk4OgOu4S4NA//bD4sRnimCdg6UwNY
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="5229477"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="5229477"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 03:10:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="816312527"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="816312527"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 10 Jan 2024 03:10:57 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNWU3-0006us-1p;
-	Wed, 10 Jan 2024 11:10:55 +0000
-Date: Wed, 10 Jan 2024 19:10:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: drivers/base/regmap/regmap-raw-ram.c:24:24: sparse: sparse: cast to
- restricted __be16
-Message-ID: <202401101945.4P5qaf35-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qra71X0N"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3bb9d54575cso3395518b6e.2;
+        Wed, 10 Jan 2024 03:11:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704885087; x=1705489887; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=omsWh5uQriFHqDpOaip7ABA2fSXEYznPIN/MC/otOtM=;
+        b=Qra71X0NqjL0tomyMOjyq/OY7i5fyT6gyjAcoO0RTZjmJBzPlntswtXwOgGZefMA3c
+         IcAGlAvrNCzCXj86YOFrPoYk+xqN4Eu15ot+fRa4f2DNcM2faHYrgj4Ahi4WBYPWrApe
+         PiF3RBfWw3E3bn8xlmSJi2qT4gjijdsgI03CJ23uOGrJVLm1Fl9moPXAmw/j8wUGvVgv
+         ONYwXAgIdhyZzcxYNOciyCwpgOOPfrHwY1yC9loKNGK0us7gYYzpSOJ3rD0epD/reO9M
+         dl6YSfpmNgx+vmi4V0l/F6sPAnTEfwBlXa6GCpVgY0T6xyoKhhPj6f52Ac8neAYbY90g
+         DpCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704885087; x=1705489887;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=omsWh5uQriFHqDpOaip7ABA2fSXEYznPIN/MC/otOtM=;
+        b=EGAbtQMDXsp3Oa50BjuK7Qj0a5xfjGk0NCT1BD1YfgvEOPDB34NsIjGFmRmUng0VB0
+         JlIjMI8nJTVcfUaAFJnElfn7CCutTCm4EOLVzlJoHRQ+5juV+ckkhvkxkjgOrhtIZeNn
+         JcasNenif12yJeeKpL7ELpxUqSeCzm0n3CI4Q7qdvsQEQ6JAv4ESpNJFQWZaFtjHbP3e
+         b+R1iuHfYfttjApoqRnUcZjCVa/KAAOl1Chy2jo2sM7/ANX+VKJYtpv0xDasLDSOOSb2
+         0Y9cO0b945tnPBEfPudTcEvWj60Nd0nHkV8k1oFjyV6tKqTPzWFmbdiq6sapsyt6W/Ne
+         6NHg==
+X-Gm-Message-State: AOJu0Yzss5KKs0rtq/RU1LD0MO6B+XVEBNi3dN+TTwmRWTV8cfa1ZztL
+	fTjPqHHEcogL+bKfeegQqq3dsUYa8yOGmCVHWco=
+X-Google-Smtp-Source: AGHT+IGvKV2nwCLqCBAalddYmFFIryTSRVfx6vhcnyr1cLuJVJ8AxgBHTnqa8yFEd9OVlV5VyRZ92ZZ97Yiq3wdxsug=
+X-Received: by 2002:a05:6808:1b20:b0:3bd:4bb7:4213 with SMTP id
+ bx32-20020a0568081b2000b003bd4bb74213mr435165oib.7.1704885087209; Wed, 10 Jan
+ 2024 03:11:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240109135952.77458-1-warthog618@gmail.com> <CAHp75Ve05bAK-ehZZ7XSci5VqR18cCb=hgnbFKXwy2QPkxo=pw@mail.gmail.com>
+ <20240109234518.GA7839@rigel> <9e33f7dc-deee-4165-bc10-ad77f38b270a@oracle.com>
+In-Reply-To: <9e33f7dc-deee-4165-bc10-ad77f38b270a@oracle.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 10 Jan 2024 13:10:51 +0200
+Message-ID: <CAHp75Vc8UN2kyxGtV0tCF+xcRLAxg0qijTvHWXXtdTA9nY-h3w@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Documentation: gpio: add character device userspace
+ API documentation
+To: Vegard Nossum <vegard.nossum@oracle.com>
+Cc: Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, brgl@bgdev.pl, 
+	linus.walleij@linaro.org, andy@kernel.org, corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ab27740f76654ed58dd32ac0ba0031c18a6dea3b
-commit: 65dd2f671875b1d97b6fa9bcf7677f5e1c55f776 regmap: Provide a ram backed regmap with raw support
-date:   7 months ago
-config: x86_64-randconfig-123-20240106 (https://download.01.org/0day-ci/archive/20240110/202401101945.4P5qaf35-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240110/202401101945.4P5qaf35-lkp@intel.com/reproduce)
+On Wed, Jan 10, 2024 at 10:16=E2=80=AFAM Vegard Nossum <vegard.nossum@oracl=
+e.com> wrote:
+> On 10/01/2024 00:45, Kent Gibson wrote:
+> > On Tue, Jan 09, 2024 at 10:00:26PM +0200, Andy Shevchenko wrote:
+> >> On Tue, Jan 9, 2024 at 4:00=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> >>
+> >> May we actually state in the documentation that sysfs is subject to
+> >> remove at some point?
+> >
+> > So formally define what "deprecated" means?
+> > Is that covered in the higher level documentation somewhere?
+> > If so I'm more than happy to provide a reference.
+>
+> We have a few files that may be relevant here, that I'm aware of:
+>
+> 1) https://docs.kernel.org/admin-guide/sysfs-rules.html
+>
+> documents some general assumptions that userspace can make about the
+> stability of sysfs and its files
+>
+> 2) https://docs.kernel.org/admin-guide/abi.html
+>
+> This is the public-facing, somewhat machine-readable repository of what
+> is supposed to be the kernel's ABI/API, including "obsolete" and
+> "removed" interfaces.
+>
+> 3) Documentation/ABI/README
+>
+> describes the process of deprecating an interface
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401101945.4P5qaf35-lkp@intel.com/
+Yes and GPIO currently is under obsolete section with also this:
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/base/regmap/regmap-raw-ram.c:24:24: sparse: sparse: cast to restricted __be16
->> drivers/base/regmap/regmap-raw-ram.c:26:24: sparse: sparse: cast to restricted __le16
+"This ABI is deprecated and will be removed after 2020. It is replaced
+with the GPIO character device."
 
-vim +24 drivers/base/regmap/regmap-raw-ram.c
+https://docs.kernel.org/admin-guide/abi-obsolete.html#symbols-under-sys-cla=
+ss
 
-    18	
-    19	static unsigned int decode_reg(enum regmap_endian endian, const void *reg)
-    20	{
-    21		const u16 *r = reg;
-    22	
-    23		if (endian == REGMAP_ENDIAN_BIG)
-  > 24			return be16_to_cpu(*r);
-    25		else
-  > 26			return le16_to_cpu(*r);
-    27	}
-    28	
+So, proposed cleanup series should probably rely on this documentation
+among other existing descriptions of sysfs GPIO.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+With Best Regards,
+Andy Shevchenko
