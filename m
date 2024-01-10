@@ -1,96 +1,89 @@
-Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A9B4BA9F;
-	Wed, 10 Jan 2024 15:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="WlBcJDH1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-	s=202305; t=1704899965;
-	bh=N3nJ0C540bT8WS6Z8HcIxixzWR9wSwd0zry2yrndudg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WlBcJDH1lCsMwgEDQmVenG7bwKkUoeVq9ziwcPEUO1dQ4Dk9PFxWKxbZ5DfMf8boQ
-	 IjPj7vYwHwrj5s54nji76vncIMvpcWqhK5M97QoNYCpjiERoQwBfAJipT981yRTzT/
-	 bt6SnphWZxSiqcbhLD+snre1MX7yQ4v4VZ+d+tZeYGlFuadZyubtHDtgfI/5vBDaoN
-	 4jPj3esZVFedLw8BSHLZ9Mim51LQZO0O8rY9l3WpZiP9g4+sEf17pmOugqORiTbdC/
-	 Lvvb8f4Z3MvR507czyVNUsDwGVsSR1LqYOFmy7bJ8342LsPryS+Rihoy6bgLEdyx4+
-	 4bCYOY+WbDSLw==
-Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 111A614CD4;
-	Wed, 10 Jan 2024 16:19:25 +0100 (CET)
-Date: Wed, 10 Jan 2024 16:19:24 +0100
-From: 
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH v2 09/11] fuse: file: limit splice_read to virtiofs
-Message-ID: <2wob4ovppjywxmpl5rvuzpktltdlyto5czpglb5il5cehkel6m@tarta.nabijaczleweli.xyz>
-References: <cover.1703126594.git.nabijaczleweli@nabijaczleweli.xyz>
- <9b5cd13bc9e9c570978ec25b25ba5e4081b3d56b.1703126594.git.nabijaczleweli@nabijaczleweli.xyz>
- <CAJfpegugS1y4Lwznju+qD2K-kBEctxU5ABCnaE2eOGhtFFZUYg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088404C3C0;
+	Wed, 10 Jan 2024 15:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [113.118.191.185])
+	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 669888000C6;
+	Wed, 10 Jan 2024 23:11:14 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH v2 2/2] arm64: dts: qcom: ipq6018: enable sdhci node
+Date: Wed, 10 Jan 2024 23:10:40 +0800
+Message-Id: <20240110151040.2155938-3-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240110151040.2155938-1-amadeus@jmu.edu.cn>
+References: <20240110151040.2155938-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="isq32hemhww3wwiu"
-Content-Disposition: inline
-In-Reply-To: <CAJfpegugS1y4Lwznju+qD2K-kBEctxU5ABCnaE2eOGhtFFZUYg@mail.gmail.com>
-User-Agent: NeoMutt/20231221-2-4202cf-dirty
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSB5NVhkeSUlKSUxDH0tITlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKSFVKSkNVSkJKVUpDTllXWRYaDxIVHRRZQVlLVUtVS1VLWQY+
+X-HM-Tid: 0a8cf3ed74d4b03akuuu669888000c6
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTo6Iyo*CTwZIioqVhE3DRY8
+	MDBPCSJVSlVKTEtPQ0JCT0xOT0tKVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
+	SFVKSkNVSkJKVUpDTllXWQgBWUFJTU5INwY+
 
+Enable mmc device found on ipq6018 devices.
+This node supports both eMMC and SD cards.
 
---isq32hemhww3wwiu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested with:
+  eMMC (HS200)
+  SD Card (SDR50/SDR104)
 
-On Wed, Jan 10, 2024 at 02:43:04PM +0100, Miklos Szeredi wrote:
-> On Thu, 21 Dec 2023 at 04:09, Ahelenia Ziemia=C5=84ska
-> <nabijaczleweli@nabijaczleweli.xyz> wrote:
-> > Potentially-blocking splice_reads are allowed for normal filesystems
-> > like NFS because they're blessed by root.
-> >
-> > FUSE is commonly used suid-root, and allows anyone to trivially create
-> > a file that, when spliced from, will just sleep forever with the pipe
-> > lock held.
-> >
-> > The only way IPC to the fusing process could be avoided is if
-> > !(ff->open_flags & FOPEN_DIRECT_IO) and the range was already cached
-> > and we weren't past the end. Just refuse it.
-> How is this not going to cause regressions out there?
-In "[PATCH v2 14/11] fuse: allow splicing to trusted mounts only"
-splicing is re-enabled for mounts made by the real root.
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+---
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-> We need to find an alternative to refusing splice, since this is not
-> going to fly, IMO.
-The alternative is to not hold the lock. See the references in the
-cover letter for why this wasn't done. IMO a potential slight perf
-hit flies more than a total exclusion on the pipe.
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 5e1277fea725..39fb38914a1e 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -436,6 +436,28 @@ dwc_1: usb@7000000 {
+ 			};
+ 		};
+ 
++		sdhc: mmc@7804000 {
++			compatible = "qcom,ipq6018-sdhci", "qcom,sdhci-msm-v5";
++			reg = <0x0 0x7804000 0x0 0x1000>,
++			      <0x0 0x7805000 0x0 0x1000>;
++			reg-names = "hc", "cqhci";
++
++			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
++
++			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
++				 <&gcc GCC_SDCC1_APPS_CLK>,
++				 <&xo>;
++			clock-names = "iface", "core", "xo";
++			resets = <&gcc GCC_SDCC1_BCR>;
++			max-frequency = <192000000>;
++			mmc-ddr-1_8v;
++			mmc-hs200-1_8v;
++
++			status = "disabled";
++		};
++
+ 		blsp_dma: dma-controller@7884000 {
+ 			compatible = "qcom,bam-v1.7.0";
+ 			reg = <0x0 0x07884000 0x0 0x2b000>;
+-- 
+2.25.1
 
---isq32hemhww3wwiu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmWetXwACgkQvP0LAY0m
-WPHIwQ//fiIyHHVfimlyIEoId+cH17Lz5J3ZKEGBCJPUG9SG6u8qdgPid/iNV3fm
-DP+x8A/oMbyeqLKh6GB3NwvrL8VOReuutMyNfxj9VmjaaV8rKq+g0CstpBTgOYuj
-lA1KQ6k99btF1+zGXynutHQXTjf1krcTqnZ9+HFn0ejWIMa49ECFFxwoQLZ8DUH6
-8kOgxMwE0Ar3hcq+zLsAXrUe5OUEUAGXqmMwpdomnaAi132G3MzT3cTL0JbuRtO8
-kWdCgHFYCjMxKc00COyq9fcEoOmCpOctN0Uae+lsO74Ukb8o4VPr5w6mYPKEDnH9
-ZPiqKoIJ1ek36CBPLGt9Mtr8LZO3REnRqDIp1g62O5eqN6kqYgK4qE8tf0ifkOWg
-U/LoA/00MUOf4zyx5JoGHCVUCYrY9AnXYS5+nK1vDrR0F3m5iNkBy3OsKcvIEXqG
-KTLOa+Jvn+W4L7539uyEkqKOpZAJfd5IT0IRnsxH38zvx9Rv7sGykn8vsT/Md8uk
-wP6kJH448KE3TVePPc6QOAaK9qpcC4bu2Y5MvJX1CJM6Co27miyrId6WIbkz7umg
-nmE7h3E6IlfKBCCgFT5CNBEx6z7mvDmQf4q7SayFz/f9kLNbRuQb4D4caYWJ6QPK
-luPGvzp/UtbfHs7IXFKwtCDH5+4POrlVprj31R6YPJfOC+gnBmk=
-=lQIA
------END PGP SIGNATURE-----
-
---isq32hemhww3wwiu--
