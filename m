@@ -1,80 +1,128 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-190c.mail.infomaniak.ch (smtp-190c.mail.infomaniak.ch [185.125.25.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E584D105
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 17:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF4C4CDE3
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 17:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RGkElYkx"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d3ea8d0f9dso158375ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:50:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704909021; x=1705513821; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ziX4iAyQd6HuMoejvtTa4o/24+LLm+GeIG6etI51RFw=;
-        b=RGkElYkxQBgBJkizvSkQMJOVLAS/Rb/Kepoa5WqZhH2V+qYL2wa5vDpervBAc0M09E
-         +mKHacKxWgjrRd3ILvbdSh3kF7xjtbLhnCGHY9bfw3IDz0X+nanlLW6ytJP7wvhAL2nX
-         2Yy7angzUm+GDmpQ9p2M+ZDUURDMW2uK/+6WKyACxLauMlSdGTCL33YhydIYuGtPg4iG
-         Ht+TCkNTNwMi75caTg0zZXPgXU2q3NdGfp/DRIAMre1qx1AimDHAoNRRGEo3CLkJ/Z5Q
-         ZF7M0NxXVxhoAH6B2IP9PJIaG92fRzBTJ0eAQkPl0Z9vpLDFGM8MVQzImPFKgHBcjOIO
-         LUfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704909021; x=1705513821;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ziX4iAyQd6HuMoejvtTa4o/24+LLm+GeIG6etI51RFw=;
-        b=rJkfwluYrFcimfFb3aaDgLzHk+BQhJiROOq8/utInM1/P0LHNIxljaBYUAksmorsUr
-         Ioz/kWvUxOdlDLu9ifeEPvWNMB9gXVotMQKIe/pvVwHiAUvmt1DTkHrhun5cCrUxQPZP
-         44vHnAJtVlqcaKFXkGLF1G2Fg19S5FukrLH/+hIURL1WleuVefaeF93Mm+90VSZ3Xlt2
-         U4ZC1ponoOLQ10+2dIOeOx2CHr7o13vD3omj1EDOBMaqmTgwLulkJUJuXN2dRmDMemd+
-         6OGD5nU6vsl3gT8m4vqRM6S0O6KmHRYruJbKFnXegSkinPxKmpd4OfW3IsWlQsakXCKN
-         xdtw==
-X-Gm-Message-State: AOJu0YxzED97FJDX2nq6eE4roTCcZfmP5ddcxiDJqBa0wF3+KqOVNJoE
-	LliOKbjCUAAhYiXLMRiB/vN58mPly/Gqzz5khCZRqJsyp3U/ZO3C7qAKVdex0mpVMPQPyIcNt9N
-	ReiNUDD3mYqJWK8yRlDHQ+aawbC4/uv8dvLpBr7iCe7bc6NC4aw==
-X-Google-Smtp-Source: AGHT+IEJ1kVbKPySZnD2kKeOBfKyCBhNXAuJLGSkzYysePXX7J9uu7bfnYGIqnXlWDnqA8f4ASaYZl73K0Ijv1kIfTA=
-X-Received: by 2002:a17:902:da8c:b0:1d4:c2bd:eff1 with SMTP id
- j12-20020a170902da8c00b001d4c2bdeff1mr7544plx.8.1704909020628; Wed, 10 Jan
- 2024 09:50:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="kBYpqGxV"
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4T9FZf4l5gzMq2gW;
+	Wed, 10 Jan 2024 17:45:46 +0000 (UTC)
+Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4T9FZd3ZfbzMpnPd;
+	Wed, 10 Jan 2024 18:45:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1704908746;
+	bh=G5UFwkuB9at7CXYuZiEPj276AzMRMHTS9mqXhp2SDFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kBYpqGxVebuHel4FHnvPsz28PrmlgCi3JxwQpNy2iHj3KRecmruXXAw9DOGC790q3
+	 bdTOUJSkAnnEQOt4iTnsKujEzPVKIQqFB3BFyFtSnFyxVyDhxBSajY9ipCjmvu/XAV
+	 H32C7s/tbZ70huz87vT/mqmE3yshpVzy5zrgCdEI=
+Date: Wed, 10 Jan 2024 18:45:43 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Hu Yadi <hu.yadi@h3c.com>
+Cc: jmorris@namei.org, serge@hallyn.com, shuah@kernel.org, 
+	mathieu.desnoyers@efficios.com, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, 514118380@qq.com, 
+	berlin@h3c.com
+Subject: Re: [PATCH] selftests/landlock:Fix two build issues
+Message-ID: <20240110.ob2roh1Xai9y@digikod.net>
+References: <20240110070854.7077-1-hu.yadi@h3c.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220214505.2303297-1-almasrymina@google.com>
- <20231220214505.2303297-3-almasrymina@google.com> <20231221232343.qogdsoavt7z45dfc@google.com>
- <CAHS8izOp_m9SyPjNth-iYBXH2qQQpc9PuZaHbpUL=H0W=CVHgQ@mail.gmail.com> <20240104134424.399fee0a@kernel.org>
-In-Reply-To: <20240104134424.399fee0a@kernel.org>
-From: Shakeel Butt <shakeelb@google.com>
-Date: Wed, 10 Jan 2024 09:50:08 -0800
-Message-ID: <CALvZod4xbQr0gZdfXYNTaS11d2T2hHpXxi5Lfyt=y+TcDseOhg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 2/3] net: introduce abstraction for network memory
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Mina Almasry <almasrymina@google.com>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, David Howells <dhowells@redhat.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240110070854.7077-1-hu.yadi@h3c.com>
+X-Infomaniak-Routing: alpha
 
-On Thu, Jan 4, 2024 at 1:44=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wro=
-te:
->
-[...]
->
-> You seem to be trying hard to make struct netmem a thing.
-> Perhaps you have a reason I'm not getting?
+On Wed, Jan 10, 2024 at 03:08:54PM +0800, Hu Yadi wrote:
+> From: "Hu.Yadi" <hu.yadi@h3c.com>
+> 
+> Two issues comes up  while building selftest/landlock:
+> 
+> the first one is as to gettid
+> 
+> net_test.c: In function ‘set_service’:
+> net_test.c:91:45: warning: implicit declaration of function ‘gettid’; did you mean ‘getgid’? [-Wimplicit-function-declaration]
+>     "_selftests-landlock-net-tid%d-index%d", gettid(),
+>                                              ^~~~~~
+>                                              getgid
+> net_test.c:(.text+0x4e0): undefined reference to `gettid'
+> 
+> the second is compiler error
+> gcc -Wall -O2 -isystem   fs_test.c -lcap -o /home/linux/tools/testing/selftests/landlock/fs_test
+> fs_test.c:4575:9: error: initializer element is not constant
+>   .mnt = mnt_tmp,
+>          ^~~~~~~
 
-Mina already went with your suggestion and that is fine. To me, struct
-netmem is more aesthetically aligned with the existing struct
-encoded_page approach, but I don't have a strong opinion one way or
-the other. However it seems like you have a stronger preference for
-__bitwise approach. Is there a technical reason or just aesthetic?
+What is the version of GCC (and headers) and on which system (and
+version) are you building these tests?
+
+> 
+> this patch is to fix them
+> 
+> Signed-off-by: Hu.Yadi <hu.yadi@h3c.com>
+> Suggested-by: Jiao <jiaoxupo@h3c.com>
+> Reviewed-by:Berlin <berlin@h3c.com>
+> ---
+>  tools/testing/selftests/landlock/fs_test.c  | 5 ++++-
+>  tools/testing/selftests/landlock/net_test.c | 3 +--
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/selftests/landlock/fs_test.c
+> index 18e1f86a6234..93eb40a09073 100644
+> --- a/tools/testing/selftests/landlock/fs_test.c
+> +++ b/tools/testing/selftests/landlock/fs_test.c
+> @@ -4572,7 +4572,10 @@ FIXTURE_VARIANT(layout3_fs)
+>  /* clang-format off */
+>  FIXTURE_VARIANT_ADD(layout3_fs, tmpfs) {
+>  	/* clang-format on */
+> -	.mnt = mnt_tmp,
+> +	.mnt = {
+> +		.type = "tmpfs",
+> +        	.data = "size=4m,mode=700",
+
+When applying this patch we get: "space before tab in indent"
+
+> +	},
+>  	.file_path = file1_s1d1,
+>  };
+>  
+> diff --git a/tools/testing/selftests/landlock/net_test.c b/tools/testing/selftests/landlock/net_test.c
+> index 929e21c4db05..8fb357de8c55 100644
+> --- a/tools/testing/selftests/landlock/net_test.c
+> +++ b/tools/testing/selftests/landlock/net_test.c
+> @@ -18,7 +18,6 @@
+>  #include <sys/prctl.h>
+>  #include <sys/socket.h>
+>  #include <sys/un.h>
+> -
+>  #include "common.h"
+>  
+>  const short sock_port_start = (1 << 10);
+> @@ -88,7 +87,7 @@ static int set_service(struct service_fixture *const srv,
+>  	case AF_UNIX:
+>  		srv->unix_addr.sun_family = prot.domain;
+>  		sprintf(srv->unix_addr.sun_path,
+> -			"_selftests-landlock-net-tid%d-index%d", gettid(),
+> +			"_selftests-landlock-net-tid%ld-index%d", syscall(SYS_gettid),
+
+You sent another patch that "replace SYS_<syscall> with __NR_<syscall>".
+Why not here?
+
+Please follow the same approach:
+https://git.kernel.org/stable/c/87129ef13603ae46c82bcd09eed948acf0506dbb
+
+>  			index);
+>  		srv->unix_addr_len = SUN_LEN(&srv->unix_addr);
+>  		srv->unix_addr.sun_path[0] = '\0';
+> -- 
+> 2.23.0
+> 
+> 
