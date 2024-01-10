@@ -1,93 +1,87 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1096B6FB1
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 05:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465FDD512;
+	Wed, 10 Jan 2024 05:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SbOv9znO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1704863033;
-	bh=8PQdV+sCXBurfHsJgRraVqjZBsjUZXo3blKQWPD3jkE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SbOv9znOZ76Pxvok7owHDDRU65apx+cX1S2fv+Zr2uTbmzqJygaP5sRjwuAOwTI3s
-	 i8tvi++Fuq+P3O8nwdGkl6zlhcWf9tnqzclC3vABucVKu5XTpS697oczH4bQQnUIgd
-	 x31gxDJg2bjKBTRQ4DbRV8euM9DVVrrgYvJNFx93VuANlVVsu7JlRBeyIneC5R6OJ0
-	 33fMrurpn7+4X9eWU3HTDwifCkFnvIAVhKg28O5FS4tiAJi8QLjf+lEkIKwr4Q9u+o
-	 KksEOJ+3A5X/fLNzJoTHm+av7HCeGetb5cLhdOnTmiRZgHY6OJ6QoZOjL1wMErIrjR
-	 AOduCWQU9migA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T8wgX5ynHz4wcZ;
-	Wed, 10 Jan 2024 16:03:52 +1100 (AEDT)
-Date: Wed, 10 Jan 2024 16:03:51 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
- linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org
-Subject: Re: [BUG] allmodconfig build error in next-20240108
-Message-ID: <20240110160335.2bad7d54@oak>
-In-Reply-To: <3d14049c-d44c-4b33-9933-0f96055b8a70@paulmck-laptop>
-References: <45ad1d0f-a10f-483e-848a-76a30252edbe@paulmck-laptop>
-	<20240109095757.1313b2d9@canb.auug.org.au>
-	<341a4955-0cdd-48d0-bfbd-cc6f6f09df37@paulmck-laptop>
-	<atbx7mspjbymkzgstk4l64qz3uky3wpmx4isrfg3ixgtvebdd2@cktpe4ejfk7k>
-	<20240110081155.48bb0cbd@oak>
-	<d61dfe52-9567-4f62-98f5-5c1e00cb4708@paulmck-laptop>
-	<20240110095822.3ba3d979@canb.auug.org.au>
-	<3d14049c-d44c-4b33-9933-0f96055b8a70@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YDDeqim8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704863074; x=1736399074;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=k64/f9r7Qp36i1XX1i9jcMtrmGXtcJyhgHq6uyIFl64=;
+  b=YDDeqim8fSjoE4zYkzLIvVa6FjWGHOs9v7u6o3goFL/oiEY+QLiTCpqx
+   iJRFjdMGAMJPZjpBU1wqTifvhewGw31VgIGNtMWshdnilxmLcQ7ASaVrs
+   Wt5ZSOF5jYvYKsgXCVzldNC4ywvJ5XaxsPOFiO4XBtTxm5faUm9eIBuPk
+   0zxUCNn2k4Ozyk935r/FHB4DRb0Rx7//R4qAAOVFXVI6vkTA7ahsCMKYF
+   juk+nVCu8oDx5lBXLMLCEUVvFmlNl+ga9MAMR0BtTuGAzRgpIvJrgd0Yb
+   shvRdxj5k4TLEMyhm5MvOLnqKgLeeCDvVkp7EIbqcmAZm68PGHDs1mcpG
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="429596918"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="429596918"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 21:04:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="16511841"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa002.fm.intel.com with ESMTP; 09 Jan 2024 21:04:30 -0800
+Message-ID: <a2e507b3-a018-44d8-9e92-459670505bcd@linux.intel.com>
+Date: Wed, 10 Jan 2024 12:59:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Qi2gBvZmhSjDhm_0pAGQggf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v10 1/5] iommu/vt-d: add pci_dev parameter to
+ qi_submit_sync and refactor callers
+Content-Language: en-US
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, kevin.tian@intel.com,
+ bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
+ robin.murphy@arm.com, lukas@wunner.de
+References: <20231228170206.720675-1-haifeng.zhao@linux.intel.com>
+ <20231228170206.720675-2-haifeng.zhao@linux.intel.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20231228170206.720675-2-haifeng.zhao@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/Qi2gBvZmhSjDhm_0pAGQggf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 12/29/23 1:02 AM, Ethan Zhao wrote:
+> Signed-off-by: Ethan Zhao<haifeng.zhao@linux.intel.com>
 
-Hi Paul,
+Please don't leave the message body empty. You should describe why do
+you want to add the change in this patch.
 
-On Tue, 9 Jan 2024 19:46:27 -0800 "Paul E. McKenney" <paulmck@kernel.org> w=
-rote:
->
-> On Wed, Jan 10, 2024 at 09:58:22AM +1100, Stephen Rothwell wrote:
-> >
-> > Maybe that line "subdir-ccflags-y +=3D $(call cc-option, -Wstringop-ove=
-rflow)"
-> > should just be removed as the setting of that option has been moved to =
-the
-> > normal C flags in the top level Makefile (out of Makefile.extrawarn). =
-=20
->=20
-> If you meant like this, no joy.  :-(
+> ---
+>   drivers/iommu/intel/dmar.c          | 45 +++++++++++++++++++++--------
+>   drivers/iommu/intel/iommu.c         | 26 +++++------------
+>   drivers/iommu/intel/iommu.h         | 17 +++++------
+>   drivers/iommu/intel/irq_remapping.c |  2 +-
+>   drivers/iommu/intel/pasid.c         | 11 ++-----
+>   drivers/iommu/intel/svm.c           | 13 ++++-----
+>   6 files changed, 58 insertions(+), 56 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+> index 23cb80d62a9a..3d661f2b7946 100644
+> --- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -1344,7 +1344,7 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>    * can be part of the submission but it will not be polled for completion.
+>    */
+>   int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
+> -		   unsigned int count, unsigned long options)
+> +		   unsigned int count, unsigned long options, struct pci_dev *pdev)
 
-Actually I meant the one in drivers/gpu/drm/xe/Makefile
+How about adding a bit in options parameter to tell whether the @pdev is
+valid?
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Qi2gBvZmhSjDhm_0pAGQggf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWeJTcACgkQAVBC80lX
-0GxmEQf/dbbKDm5FsKocV5j89ymwcJw+M6c12PRQs4dpqD7LtxyPDykHF1Ct9/Qi
-Ex0YC+kaYYPytGHd/f6Hpop94MeALH8VSDruTp++pOQmef9wH799wRy+O0yHkYcY
-8oDUL7WIh/EsBm4cIS4AuuHt+NFDNkGy3N44Inb+gu//w101oK4vCNfLmWgQwy3g
-7aCNHsO0bQzFQa5OV/lE9o+EFF9hbzHJfhj6W2EwUkHLbbGJI7m9wX00BLLdPJ0X
-j5gT1dzSrCNbLG9QLDZ3wUzvuBlUZxn5GWxSBjUe3Jm89E2nUNkRiHb32WGWfmdq
-/Lb54WC7OmY8ldE/j3pmkVQTeQehLw==
-=DgtH
------END PGP SIGNATURE-----
-
---Sig_/Qi2gBvZmhSjDhm_0pAGQggf--
+Best regards,
+baolu
