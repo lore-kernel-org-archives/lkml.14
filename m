@@ -1,104 +1,84 @@
-Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A464CB4E;
-	Wed, 10 Jan 2024 17:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610DC38D
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 17:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="f9SIZXN/"
-Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx0.riseup.net (Postfix) with ESMTPS id 4T9FRX2QMFz9x54;
-	Wed, 10 Jan 2024 17:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1704908376; bh=/3ieUSPDCtVqH9T3w3PB7MTKo77k/gatkBOL9tmqqsc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=f9SIZXN/UtWynuh574nJRON412qgn99Gc/E9x6iFR/aiiI6U0zWyUFdBlyGvVwqtc
-	 Z0ne9S8flYNNjdS6NPFsV1m0tuvgw8EB8A1kCQKVQjrU26a0GCur4iXa/gtSQhlXHB
-	 4FqR2YybKt3XvIxjZlhb1FlE8X6IM11qOApF30Mw=
-X-Riseup-User-ID: 9C3CCADC7C9C36867288DF9C044829AFC3062AC692DF9283689F2DA18DCAC7E7
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4T9FRT4Wn3zFsZS;
-	Wed, 10 Jan 2024 17:39:33 +0000 (UTC)
-From: Arthur Grillo <arthurgrillo@riseup.net>
-Date: Wed, 10 Jan 2024 14:39:28 -0300
-Subject: [PATCH v3] Documentation: KUnit: Update the instructions on how to
- test static functions
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nqkkL4Rc"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cc9fa5e8e1so51150431fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704908444; x=1705513244; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hh6Goy7NRtSRzQyxaJrI0RtgCTicSCtruZk0IoQJBRY=;
+        b=nqkkL4RcRCH5ufNXbHWGnxSoi46EXvz3Jq65MvlJ1rvX3fliG5y/SWj7ez4mPYLGfH
+         DDzG8KohbBUkqdX2KH+KSVYUSWV8rPUbS6gISFAuul7d7fuzHWiQUwkMSJ/OrUUCJVc2
+         yivCWneWJQM1jWYM+34g+ijczbZcn9u8S5mXShHS6pmuaVqXB3xFyWU/Lmva11LuhIn5
+         Q8c2jbT60eSc31nQa1pwqzgERbFr7e+Q8MN35+3iL5jBdKmVln5dNuSQE35KXRN/u7p9
+         u8Yfzr4moganbFSKFIIGwHzpJkzdzeNnoVGjL+1Pk4aLT2oLGpqKkS8E2aDsEN4sctzL
+         V+rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704908444; x=1705513244;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hh6Goy7NRtSRzQyxaJrI0RtgCTicSCtruZk0IoQJBRY=;
+        b=cwNC4fvBZ1gnQHyfy/4z3bcq2cm+pVQzdJFSDn8AaexksQh/1KvnRHEMYzalJfxCxO
+         oPu9S12qQxKXPNatLa0b6nEffpqY89Zb8ki5PqcjFMZkunQq6PHX6DSbK5gU01gM5VRk
+         8cN5JvW3DbCdTqVPAtbe7HFinBpsSb3J//IYB2RcP+ZlW8ngsTLi0GHcCFxF3tCpuqK0
+         L06jkauBCPT5e42gsea+ewfZR9RKalMtY0peJTwNmqGGaJHIzxvIgTRx6vsxT8UOhUSv
+         /0EvK/Tc2YnUNU2l5/ii6V72YqpSO1SBHzscw4rxcU44VJaseW+W+z0Mq3qOsO2BUhQn
+         IbXQ==
+X-Gm-Message-State: AOJu0Yw7yjJ5LSoBqoHg519lzbqaNgfOilMEzYc+MrcBxxKaDrusLMQP
+	2VIbylZ9nk2+SThf245Ssr5eQmzlrFATwQ==
+X-Google-Smtp-Source: AGHT+IEYAF/qKxWaXqzKRy2E22Nw/2yDlQi3jF92SjU+pffbCOmE6KDgmi6npRBp4cYRZGyr+gEJkQ==
+X-Received: by 2002:a05:6512:124b:b0:50e:7410:d5b0 with SMTP id fb11-20020a056512124b00b0050e7410d5b0mr731181lfb.28.1704908444428;
+        Wed, 10 Jan 2024 09:40:44 -0800 (PST)
+Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id a27-20020a195f5b000000b0050e8cd014d7sm741726lfj.16.2024.01.10.09.40.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jan 2024 09:40:44 -0800 (PST)
+Message-ID: <dd06a04a-ba02-40a8-b5f5-0457085c202b@linaro.org>
+Date: Wed, 10 Jan 2024 18:40:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sm7225-fairphone-fp4: Switch firmware
+ ext to .mbn
+To: Luca Weiss <luca.weiss@fairphone.com>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240110-fp4-mbn-v1-1-45e7e33b1834@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240110-fp4-mbn-v1-1-45e7e33b1834@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240110-kunit-doc-export-v3-1-9b4221763401@riseup.net>
-X-B4-Tracking: v=1; b=H4sIAE/WnmUC/4XNzQ6CMAzA8VchOzuzD0XGyfcwHpB20phsZBsLh
- vDuDm5eND39m/TXhUUMhJG11cICZorkXQl9qFg/dO6JnKA0U0KdhBQNf02OEgffc5xHHxJH7KU
- 1UnSP+sLK2RjQ0ryTt3vpgWLy4b1/yHLb/sCy5GWk0XUDVoCpr4EiTuPRYWKbltU/QRWhsQpAa
- 3O2CF/Cuq4fMVVnAfMAAAA=
-To: Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Arthur Grillo <arthurgrillo@riseup.net>
 
-Now that we have the VISIBLE_IF_KUNIT and EXPORT_SYMBOL_IF_KUNIT macros,
-update the instructions to recommend this way of testing static
-functions.
 
-Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
----
-Changes in v3:
-- Maintain the old '#include' way
-- Link to v2: https://lore.kernel.org/r/20240108-kunit-doc-export-v2-1-8f2dd3395fed@riseup.net
 
-Changes in v2:
-- Fix #if condition
-- Link to v1: https://lore.kernel.org/r/20240108-kunit-doc-export-v1-1-119368df0d96@riseup.net
----
- Documentation/dev-tools/kunit/usage.rst | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+On 1/10/24 16:21, Luca Weiss wrote:
+> Specify the file name for the squashed/non-split firmware with the .mbn
+> extension instead of the split .mdt. The kernel can load both but the
+> squashed version is preferred in dts nowadays.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index c27e1646ecd9..8e35b94a17ec 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -671,8 +671,23 @@ Testing Static Functions
- ------------------------
- 
- If we do not want to expose functions or variables for testing, one option is to
--conditionally ``#include`` the test file at the end of your .c file. For
--example:
-+conditionally export the used symbol. For example:
-+
-+.. code-block:: c
-+
-+	/* In my_file.c */
-+
-+	VISIBLE_IF_KUNIT int do_interesting_thing();
-+	EXPORT_SYMBOL_IF_KUNIT(do_interesting_thing);
-+
-+	/* In my_file.h */
-+
-+	#if IS_ENABLED(CONFIG_KUNIT)
-+		int do_interesting_thing(void);
-+	#endif
-+
-+Alternatively, you could conditionally ``#include`` the test file at the end of
-+your .c file. For example:
- 
- .. code-block:: c
- 
+Thanks!
 
----
-base-commit: eeb8e8d9f124f279e80ae679f4ba6e822ce4f95f
-change-id: 20240108-kunit-doc-export-eec1f910ab67
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Best regards,
--- 
-Arthur Grillo <arthurgrillo@riseup.net>
-
+Konrad
