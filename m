@@ -1,99 +1,118 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375A44D582;
-	Wed, 10 Jan 2024 18:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EC81E4A6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 18:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Altj7fFE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ygJO/yfS/kYURGo632XL+UAKC6HRU0bCt+QfkkSA/jQ=; b=Altj7fFEgmnst3pkUyvqp/ev10
-	l8KOLFzehOuc1jSUkQ/pKC5Dr5WSCqjyO67puXiqXG1Sz+x+DYTyX5m1XDJsdvqRFRJdccIXFuwtZ
-	f3qUcAw+XChvxpSGtvl7S7pfLiUaFbjj+Xh2mm6OKniuh+4h3rSm82IA/KeANy4uD3lgyUrGlgcyF
-	lQCz+bnsqvqzTHaGbcXe4jrGT1DPToEkIdTYVW9oRXAgc0gJxQ/fofdHYIA902JAW0+rMS/wQvQ3E
-	/FDlBX3atzL92Ci3v6VVOqAagyqzTsYJq57SCv1sASq7QTsfYPsFsATL+ejKr+3FsxbtfXePkCoy8
-	vxb/pohQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40166)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rNdMB-0005hi-25;
-	Wed, 10 Jan 2024 18:31:15 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rNdM7-0005XE-DA; Wed, 10 Jan 2024 18:31:11 +0000
-Date: Wed, 10 Jan 2024 18:31:11 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Richard van Schagen <richard@routerhints.com>,
-	Richard van Schagen <vschagen@cs.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
-	erkin.bozoglu@xeront.com, mithat.guner@xeront.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next 08/30] net: dsa: mt7530: change p{5,6}_interface
- to p{5,6}_configured
-Message-ID: <ZZ7ib5WWyH4TyirS@shell.armlinux.org.uk>
-References: <ZHy2jQLesdYFMQtO@shell.armlinux.org.uk>
- <0542e150-5ff4-5f74-361a-1a531d19eb7d@arinc9.com>
- <7c224663-7588-988d-56cb-b9de5b43b504@arinc9.com>
- <20230610175553.hle2josd5s5jfhjo@skbuf>
- <22fba48c-054d-ff0a-ae2c-b38f192b26f7@arinc9.com>
- <9308fa1a-6de3-490b-9aeb-eb207b0432df@arinc9.com>
- <9308fa1a-6de3-490b-9aeb-eb207b0432df@arinc9.com>
- <20240110142721.vuthnnwhmuvghiw4@skbuf>
- <b47311f8-315d-46d9-bd5b-757141708a3f@arinc9.com>
- <20240110180525.wwxkkoqam37oqm2f@skbuf>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FMGBdkCd"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-557535489d0so5196932a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:34:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704911682; x=1705516482; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h+79PBe1CaM3kL/+sGAaA8TQXREzbo/JCsExVphnqkI=;
+        b=FMGBdkCdEs2wMT13KMcwWPv17EpuhZNsOyUmlaiWdMqRP+uqZYWvlqyHCDEN8nn1wZ
+         B5r1umd+1bw95zhaBCXgTOKZt0/p/Kr6RgRKlLc9lBYY/7YCgeKG27bpA4NNkXB/dkja
+         7/i3trOn1RIsHctNEvSRQwrZiCBhn6tbOB59A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704911682; x=1705516482;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h+79PBe1CaM3kL/+sGAaA8TQXREzbo/JCsExVphnqkI=;
+        b=M1lAvBSZvvRDq+w7YQZMMjU7pjm9ko7XoT44vHpDvHcfxnQfH0vbAnJaFZhVOqDACs
+         9nWRwAMF7rbMTFA81In7kwCdDUVeHoAPpQs+lMPPiKzHdlE3ixbHJbjOGE5Pf5yvRfVP
+         8FRXLiL6Q8TSCmeTMGA/+CaWbuRK7k70wDHzo1Nm4GT7yKy39W0dVccwW+hJ3sy5dD2h
+         nSBtYw+DzDfmiWSwFU3zea+2kGLkwMLlrwY4Vr13pQxBO9rYquOsqiKHg2R9hYsBvz0T
+         SCv/l3UyWWGwKO597OpxWO+kdWL8wR91euTD+NkcMzQaZtmVkfSsyBtPo5kvZ8keHal2
+         DxQQ==
+X-Gm-Message-State: AOJu0YysQLoEu6NlfpsKhfYtsaVNkdClK7j8LQx1RXxQiqhXBwcvvxHy
+	KXAVk3smb/MRRepYABfzC0iUUMZBMQlmJ4wyGvtM0OtKDl8LhO4=
+X-Google-Smtp-Source: AGHT+IH3vx0er/dsL7RrZfuowWhy9N5xwrYGMGAyfC2fJQaKC6G6A8z0wJ5mlex31jaGSyIjf2OuGw==
+X-Received: by 2002:a50:aa9b:0:b0:557:e00f:a499 with SMTP id q27-20020a50aa9b000000b00557e00fa499mr617796edc.78.1704911681875;
+        Wed, 10 Jan 2024 10:34:41 -0800 (PST)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id x17-20020aa7d391000000b00556cf695da0sm2219373edq.78.2024.01.10.10.34.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jan 2024 10:34:41 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-553e36acfbaso891a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:34:41 -0800 (PST)
+X-Received: by 2002:aa7:cd70:0:b0:557:1142:d5bb with SMTP id
+ ca16-20020aa7cd70000000b005571142d5bbmr12737edb.4.1704911680835; Wed, 10 Jan
+ 2024 10:34:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240110180525.wwxkkoqam37oqm2f@skbuf>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20240103003355.747335-1-kai.heng.feng@canonical.com>
+ <CAD=FV=VmGNB5dP5WO7=txNDScNfhCDEsfFFivXqz+PH6rt=x8g@mail.gmail.com> <CAAd53p4gPkbDyNLiYGtcvqWwEgBqVhri+qgh+=Ha0xsVfYy92g@mail.gmail.com>
+In-Reply-To: <CAAd53p4gPkbDyNLiYGtcvqWwEgBqVhri+qgh+=Ha0xsVfYy92g@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 10 Jan 2024 10:34:23 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WwCL0Z4rOMGD+i2zOTZMz6qi_Ctm_wWC2sbv0STGi8AQ@mail.gmail.com>
+Message-ID: <CAD=FV=WwCL0Z4rOMGD+i2zOTZMz6qi_Ctm_wWC2sbv0STGi8AQ@mail.gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: Remove SET_POWER SLEEP on system suspend
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: jikos@kernel.org, benjamin.tissoires@redhat.com, 
+	Maxime Ripard <mripard@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Johan Hovold <johan+linaro@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 08:05:25PM +0200, Vladimir Oltean wrote:
-> On Wed, Jan 10, 2024 at 08:15:20PM +0300, Arınç ÜNAL wrote:
-> > __builtin_return_address(1) doesn't seem to work. I'm running this on arm64.
-> 
-> I can't tell you why either, I'm sorry. I can just point to the
-> documentation, which does specify that "On some machines it may be
-> impossible to determine the return address of any function other than
-> the current one". If somebody knows what this depends on, feel free to
-> interject.
-> https://gcc.gnu.org/onlinedocs/gcc/Return-Address.html
-> 
-> On my NXP LS1028A (also arm64) plus clang-16 compiler, __builtin_return_address()
-> does work with multiple nesting levels.
+Hi,
 
-gcc will probably need to be using frame pointers so it can walk the
-stack, if gcc even implements non-zero values to
-__builtin_return_address(). Without frame pointers, it would need an
-unwinder.
+On Tue, Jan 9, 2024 at 11:31=E2=80=AFPM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> > I'd also note that I'm really not sure what ChromeOS dark resume has
+> > to do with anything here. Dark resume is used for certain types of
+> > events that wakeup the system where we can identify that the event
+> > shouldn't turn the screen on, then we do some processing, then we go
+> > back to sleep. I'm nearly certain that a trackpad / touchscreen wakeup
+> > event would never qualify for "dark resume". If we see a
+> > trackpad/touchscreen event then we'll wakeup the system. If the system
+> > is in a state where trackpad/touchscreen events shouldn't wake us up
+> > then we disable those wakeups before going to suspend...
+>
+> Doesn't Dark Resume use wakeup count to decide whether the system
+> should wake up or go back to suspend?
+> For this case the input report is empty, hence wakeup count remains
+> the same after the wakeup. I assumed Dark Resume will check the wakeup
+> count and decide to put the system back to suspend.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Ah, I understand now. So you're saying that the issue wouldn't be so
+bad (or maybe we wouldn't notice it) on systems with dark resume.
+However, even with dark resume we're not in a super great shape. Doing
+a dark resume isn't exactly a lightweight operation, since it can take
+a bit of time to resume the system, realize that there were no wakeup
+events, and then go back to sleep. I'm not a total expert on dark
+resume, but I believe that even with dark resume, there may also be
+artifacts that a user might notice (like perhaps USB devices powering
+up or perhaps the suspend LED on the system showing that we're not in
+suspend anymore).
+
+
+> > It seems to me like the board you're testing on has some strange bug
+> > and that bug should be fixed, or (in the worst case) you should send a
+> > patch to detect this broken touchpad and disable wakeup for it.
+>
+> It's desired to keep the wakeup capability, disabling wakeup isn't ideal =
+here.
+> I'll write a patch to use touchpad specific quirk instead of applying
+> the change universally.
+
+Thanks! I'd also be curious if this is a problem for everyone with the
+Cirque touchpad or if it's board-specific. I could imagine the
+behavior you describe as coming about due to a missing or
+misconfigured pull resistor on the IRQ line. ...or perhaps a pull
+resistor pulling up to the wrong voltage rail...
+
+-Doug
