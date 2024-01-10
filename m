@@ -1,104 +1,126 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BE24E1DE
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 20:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5276C2AE87;
+	Wed, 10 Jan 2024 20:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iUiyZqNg"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3376555b756so2685261f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 12:19:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704917977; x=1705522777; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v4Y5idhJN/b2YA/7tKi246i77Vd1olII45Is7/rbOJ0=;
-        b=iUiyZqNgCnFkVto3hQiKF8VyOixXcMQPDYSayqSXXz9gCSepPHH2O9AO6sKb6iAOZH
-         gGm792ekOZKOQ+3ThkQS4eVNh5QGy8+yopc6EKkqsE2BjSXnPi1E+vxp/ErE99BW0GUa
-         k5GSUkKUEBWbt9F6C/xLO41qhzIY9NkDtRGLicIEY/3p77ZJPdX7EGsqM+wA7Azqehoj
-         DhP3fIvLdBJvaoyX0OTTXXDUuYIbgfL47vzoTDThaJPaOYjI/mzOQ4zuokneJQHFoCMa
-         xdrIlVvgRln6IOMxuX0UDHcnw8YudZvooEN6rwY/HE425OjErwJO5wwnYJkk7yxxyTKx
-         vxUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704917977; x=1705522777;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v4Y5idhJN/b2YA/7tKi246i77Vd1olII45Is7/rbOJ0=;
-        b=KZVlVvdJrloK3BJ6F6gcGncX0zLkyDs4LUDGce/EmlKjYxa8y873zgSKu+WImL1COC
-         /EMsBeJrBiEjvS66+KPK2wBZwkvuXDTxgne1WKMf3AdQ3C1ICstkMGi0yzM3k67Xx7s0
-         Qw+hhq1qGJuPe4pbVn78y32YuveP63iyXjpsPHUPk0G1LWGJSf0oOn1WPIi57DIITXU6
-         BBloWiRskAqkop+Bi64BT8BJwdxnn1W2ZLJJ8KF55Q/DeZCgwy8fIksiMjDvoq7fRN38
-         DPcACPZYy70NmMPmo1s9s/7yXTP9uG3dBT2oET9LkOqjerlj5nh2/nRc4sVs+hFITe9N
-         W2pQ==
-X-Gm-Message-State: AOJu0YzXJW98beAPlDRCtt+0tT7VK7tFMyE4vTYfS9lKpw9jix+W4A6d
-	aWmLbbhWveeWK8vUYd5/FSu4UvjQ0aSa9l5WbHSpjTQYNB0=
-X-Google-Smtp-Source: AGHT+IG3HiAJlzmqFtXtKgjd2ICz2/cUda1a20KPRN8RDLfnmQlfE0i2/PldCAJPpMqIQtYSd6VysQ==
-X-Received: by 2002:adf:fc90:0:b0:336:9ab3:dc47 with SMTP id g16-20020adffc90000000b003369ab3dc47mr8037wrr.42.1704917976732;
-        Wed, 10 Jan 2024 12:19:36 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id g8-20020a5d46c8000000b003372befd19bsm5636334wrs.104.2024.01.10.12.19.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 12:19:36 -0800 (PST)
-Date: Wed, 10 Jan 2024 23:19:28 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: Rengarajan S <rengarajan.s@microchip.com>,
-	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
-	Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] serial: 8250_pci1xxxx: fix off by one in
- pci1xxxx_process_read_data()
-Message-ID: <05465217-174e-4888-a6ab-6251f4a9920b@moroto.mountain>
-References: <ZZ7vIfj7Jgh-pJn8@moroto>
- <20240110144605.2a8813d4bfaff1a55edb9938@hugovil.com>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Ev5cfX5o"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id ACE85120019;
+	Wed, 10 Jan 2024 23:12:26 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru ACE85120019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1704917546;
+	bh=ZsEVEKBfXgYOp70GvXu8cfrdsdoWzBIzHkZd6g+E03o=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=Ev5cfX5oNuTHckqSCunuiKGIBPdCYP/9L50pG8Ndo27B+Jp3jBlgXK3l04/aFM1fd
+	 2qxsJLPw0ZjOtyQb8JQkYNqnhUs4KAYwNpa80uWPKo9uJteEKNHRdDDevuXboqCdkR
+	 JGoDxOkkfQQiN8oiId9KTXHhYqoEVAdGHbAivFxWtpTJ9Ndyy0P8qrq1xG+qorlz+h
+	 JnG5bJOgr7+8tpdMTwpWufuk7LUd30Aiowu8eY4sJXt+zWLc+ubsIzAFPBhcVOL+1B
+	 gF8CFz75Xp88z/PNYu5xcyx19SWHn+vXvgRDTxQb/UCv/nhxEqjPqH1Da7H9/CoOFA
+	 geeJw/fZMiwfA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Wed, 10 Jan 2024 23:12:26 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 10 Jan 2024 23:12:26 +0300
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: <narmstrong@baylibre.com>, <neil.armstrong@linaro.org>,
+	<clabbe@baylibre.com>, <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <khilman@baylibre.com>, <jbrunet@baylibre.com>,
+	<artin.blumenstingl@googlemail.com>
+CC: <linux-crypto@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kernel@salutedevices.com>, Alexey
+ Romanov <avromanov@salutedevices.com>, Jan Dakinevich
+	<yvdakinevich@salutedevices.com>
+Subject: [PATCH v1 02/24] drivers: crypto: meson: make CLK controller optional
+Date: Wed, 10 Jan 2024 23:11:18 +0300
+Message-ID: <20240110201216.18016-3-avromanov@salutedevices.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20240110201216.18016-1-avromanov@salutedevices.com>
+References: <20240110201216.18016-1-avromanov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240110144605.2a8813d4bfaff1a55edb9938@hugovil.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 182544 [Jan 10 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/01/10 17:01:00 #23071477
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Wed, Jan 10, 2024 at 02:46:05PM -0500, Hugo Villeneuve wrote:
-> Hi,
-> it is not simply a matter of adding "fix" to the title.
-> 
-> You must explain what and why vs. how.
-> 
-> Please see:
->   https://cbea.ms/git-commit/#why-not-how
-> 
-> for some guidelines on writing a good commit message.
-> 
+Not all Amlogic SoC's uses CLK controller.
 
-If you can't understand why a buffer overflow is bad then I honestly
-don't know what to say...
+Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+Signed-off-by: Jan Dakinevich <yvdakinevich@salutedevices.com>
+---
+ drivers/crypto/amlogic/amlogic-gxl-core.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-When I was a newbie, I encountered a driver which was written in
-terrible style.  And I thought why do people allow it???  This is
-garbage and it's messing up the Linux kernel with its bad style.
-
-But after I got older, I realized that he was the only person with that
-hardware and the only person who cared about it.   If I started fighting
-with him about style then he would leave.  He was a quirky guy with bad
-taste but he was still making useful contributions so it was better to
-tolerate him.
-
-These days I'm the old quirky guy.  If you want to fight with me about
-commit messages, that's fine.  I can easily just add you to my list of
-subsystems which only receive bug reports instead of patches.  (I think
-only BPF is on the list currently because it's annoying to track the
-bpf vs bpf-next tree).
-
-Feel free to re-write this patch however you want and give me
-Reported-by credit.
-
-regards,
-dan carpenter
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
+index a5df061f9890..e5f504fb477e 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-core.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+@@ -248,16 +248,10 @@ static int meson_crypto_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "Cannot request MMIO err=%d\n", err);
+ 		return err;
+ 	}
+-	mc->busclk = devm_clk_get(&pdev->dev, "blkmv");
++	mc->busclk = devm_clk_get_optional_enabled(&pdev->dev, "blkmv");
+ 	if (IS_ERR(mc->busclk)) {
+ 		err = PTR_ERR(mc->busclk);
+-		dev_err(&pdev->dev, "Cannot get core clock err=%d\n", err);
+-		return err;
+-	}
+-
+-	err = clk_prepare_enable(mc->busclk);
+-	if (err != 0) {
+-		dev_err(&pdev->dev, "Cannot prepare_enable busclk\n");
++		dev_err(&pdev->dev, "Cannot get and enable core clock err=%d\n", err);
+ 		return err;
+ 	}
+ 
+@@ -279,7 +273,6 @@ static int meson_crypto_probe(struct platform_device *pdev)
+ 	meson_unregister_algs(mc);
+ error_flow:
+ 	meson_free_chanlist(mc, mc->flow_cnt - 1);
+-	clk_disable_unprepare(mc->busclk);
+ 	return err;
+ }
+ 
+@@ -295,7 +288,6 @@ static int meson_crypto_remove(struct platform_device *pdev)
+ 
+ 	meson_free_chanlist(mc, mc->flow_cnt - 1);
+ 
+-	clk_disable_unprepare(mc->busclk);
+ 	return 0;
+ }
+ 
+-- 
+2.30.1
 
