@@ -1,78 +1,86 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3843FB33
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806E73FB33;
+	Wed, 10 Jan 2024 19:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oGvqgTZ+"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40d5336986cso58417225e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704913658; x=1705518458; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+P+xtDPwcW5Zm5Sc54Zw2llE/L7aQj0xQovZZhL7NkQ=;
-        b=oGvqgTZ+JwBFhUDlM/eSPcQBXFf8eOSdeuLauP7A4I/1wAK3mVCU62g6JBATi686Sv
-         efXvnkdRjBxN4ouEnHxGIQ+J0Ea6WJPJs2sTF1IEsiIs28kKlS4ThYXPhrF7dYGTVRFo
-         iN0EN74ZdY1Ogv1ZB5fqO2adKNG4pACPmjdjJ665XB4r/hShI2gLwO/PpYpHW9eRvdEO
-         tpmh+B5SJdwa5zo4iL8h0S6zlAG6OQL4UQfH9YROFOSkR9wgTmwww2Exj2/8l3IAH9Ag
-         mcjcRxoJVApkDVOseXIl3hw9+GOBkE5AHYlUMjgc7TmWQgMR5PhmQcyR9NwbdWvLvuHL
-         gXjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704913658; x=1705518458;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+P+xtDPwcW5Zm5Sc54Zw2llE/L7aQj0xQovZZhL7NkQ=;
-        b=d/bU24xnySgbSBggmZmjrZaJ4WvVC7ya9MMg/o6uJZiFlEjr1vU8F+mr14t7nNha+y
-         UHOmXUNaWqF6GfwKxew4/QRf4jw1Z66mhDcQHe6NX+va/5TyrCjFlGeT6d3lQofX3lbK
-         eOmhjObpzDIETx+R14EyguyI/PXrzVa7o8GP9DMSS8KayDucR2AMZJ4qdFntjNc9bWd5
-         lrdHgAp077RskkhktHeTMKnHWDd1XbDF9GDRpckvZOBPL33qUlgGNt+8DXujeUlSS5Va
-         rVL4gBqhCmmJJlyphKcLkCrEOhIsDVrydYDj40d7hvB5osfM4zawBx7chfUoJTk5tU1Z
-         v16w==
-X-Gm-Message-State: AOJu0YyFaCKbDgEjCzZFC+bnlFr/WzvgVrEx3iqOXa/pHScqlrRcOI/7
-	prn3LWrz8rES14PLZnHfGqHxFX4O9xnHnw==
-X-Google-Smtp-Source: AGHT+IFpLbItD8Z0qoB13nhD+qE/NzgQAw7SjExTsvUdRvHQVeLo7hpj5s59mQtb2/k4pxwcECaNkQ==
-X-Received: by 2002:a05:600c:1908:b0:40e:45a3:dcb7 with SMTP id j8-20020a05600c190800b0040e45a3dcb7mr769999wmq.116.1704913658186;
-        Wed, 10 Jan 2024 11:07:38 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id z6-20020a05600c0a0600b0040e49045e0asm3102410wmp.48.2024.01.10.11.07.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 11:07:38 -0800 (PST)
-Date: Wed, 10 Jan 2024 22:07:34 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-cachefs@redhat.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] netfs, fscache: Prevent Oops in fscache_put_cache()
-Message-ID: <6ec71521-66ec-4da8-ad3e-2037cdde4287@moroto.mountain>
-References: <9872f991-56a8-4915-b9b0-53accd6db0ef@moroto.mountain>
- <1788108.1704913300@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XpOTEBKk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=AhrsHTa+ABmANvCwYnlTgj7bU1iI/SJ2QKWl7MaF2eI=; b=XpOTEBKk50dvdKPplMoujqdzBj
+	Gy2Xi3ahaSODc+/m9ivpaIFd+h2cLDGb69vJ4P3/XfLUbTvG+aeDK2vPfN1eYRmOxbyhi1og7nZ6I
+	SmnrrmVoIl1iM9RDLzh8opWCklNvlOfId5uMR4ic79lysP82Nn2s6cSgtnjA+PM8z7kSaxfPwj3oc
+	wCXkj/bhCCn4hK2OzAEOgMNOl/IqbPC/kbum0iQFjeoEtRP+Ypp9NoVVfVtMrDPU5SGvJcd0VHMh+
+	vrrsQNaQeOWQvm4BRf34PmUZBWxPnw3nJI+ByeBhImcfW4NZQKmCHSLkKbn11dpUtqt2FjMPv7peM
+	RFzLl2PA==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rNdwE-00Dbl8-10;
+	Wed, 10 Jan 2024 19:08:30 +0000
+Message-ID: <a759c808-a14c-4370-b47a-7db908fa3127@infradead.org>
+Date: Wed, 10 Jan 2024 11:08:29 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1788108.1704913300@warthog.procyon.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] membarrier: Create
+ Documentation/scheduler/membarrier.rst
+Content-Language: en-US
+To: Andrea Parri <parri.andrea@gmail.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ mathieu.desnoyers@efficios.com, paulmck@kernel.org, corbet@lwn.net,
+ mmaas@google.com, hboehm@google.com, striker@us.ibm.com,
+ charlie@rivosinc.com, rehn@rivosinc.com, linux-riscv@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240110145533.60234-1-parri.andrea@gmail.com>
+ <20240110145533.60234-3-parri.andrea@gmail.com>
+ <63046420-264a-4e7c-b45c-17f0486ba4d9@infradead.org>
+ <ZZ7qiIDFDEMEfNiS@andrea>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <ZZ7qiIDFDEMEfNiS@andrea>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 10, 2024 at 07:01:40PM +0000, David Howells wrote:
-> Dan Carpenter <dan.carpenter@linaro.org> wrote:
+
+
+On 1/10/24 11:05, Andrea Parri wrote:
+> Hi Randy,
 > 
-> >  	zero = __refcount_dec_and_test(&cache->ref, &ref);
-> > -	trace_fscache_cache(debug_id, ref - 1, where);
-> > +	trace_fscache_cache(cache->debug_id, ref - 1, where);
+>>> +MEMBARRIER_CMD_{PRIVATE,GLOBAL}_EXPEDITED - Architecture requirements
+>>> +=====================================================================
+>>> +
+>>> +Memory barriers before updating rq->curr
+>>> +----------------------------------------
+>>> +
+>>> +The command requires each architecture to have a full memory barrier after
+>>> +coming from user-space, before updating rq->curr.  This barrier is implied
+>>> +by the sequence rq_lock(); smp_mb__after_spinlock() in __schedule().  The
+>>> +barrier matches a full barrier in the proximity of the membarrier system
+>>> +call exit, cf. membarrier_{private,global}_expedited().
+>>> +
+>>
+>> What does "The command" refer to above and below, please?
 > 
-> You can't do that if !zero.  cache may be deallocated between the two lines.
+> The term was meant to refer to any of MEMBARRIER_CMD_PRIVATE_EXPEDITED and
+> MEMBARRIER_CMD_GLOBAL_EXPEDITED (from the section title); FWIW, this seems
+> to align with the terminology adopted in MEMBARRIER(2) for example.
 
-Ah...  Right.  I misread what was going on in the latter part of the
-function.  Sorry, I'll resend.
+I see.
 
-regards,
-dan carpenter
+> Mmh, unless I get a better idea, I'll expand those occurrences to:
+> 
+>   "The commands MEMBARRIER_CMD_PRIVATE_EXPEDITED and MEMBARRIER_CMD_GLOBAL_EXPEDIDED
+>    require [...]"
+                                                                            _EXPEDITED
 
+OK, that's better IMO. Thanks.
+
+-- 
+#Randy
