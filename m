@@ -1,93 +1,102 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A954D109
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 17:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="jQnQ7Blj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Tlm8HNK9gWUhS12CM9y1YxeQQner0p1cxWc16J5vCuM=;
-  b=jQnQ7BljNKzFV9iwU0QVMeF3NaHzYfpXf2ajwnqb91fPu0iflqGeBTGS
-   XdoXbzf2R3YS726GJ75Y6dveIww0jYpPdlEFOTDTyvHu1T80GfKstpwfm
-   +YbKdvfKH28Rro1iyd6li9g++r+s9L2Y8W0O7yUEdc5MHVKVRdV3kR2LT
-   w=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=keisuke.nishimura@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.04,184,1695679200"; 
-   d="scan'208";a="145952116"
-Received: from dt-aponte.paris.inria.fr (HELO [128.93.67.66]) ([128.93.67.66])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 18:57:25 +0100
-Message-ID: <8d9e076c-8505-4538-83f5-506ccf62f7a9@inria.fr>
-Date: Wed, 10 Jan 2024 18:57:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667DB4D584;
+	Wed, 10 Jan 2024 17:58:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8156C43399;
+	Wed, 10 Jan 2024 17:58:17 +0000 (UTC)
+Date: Wed, 10 Jan 2024 17:58:15 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Ido Schimmel <idosch@idosch.org>, joro@8bytes.org, will@kernel.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	zhangzekun11@huawei.com, john.g.garry@oracle.com,
+	dheerajkumar.srivastava@amd.com, jsnitsel@redhat.com
+Subject: Re: [PATCH v3 0/2] iommu/iova: Make the rcache depot properly
+ flexible
+Message-ID: <ZZ7atzgT6_kOvWnJ@arm.com>
+References: <cover.1694535580.git.robin.murphy@arm.com>
+ <ZY1osaGLyT-sdKE8@shredder>
+ <c9cf02b5-7add-46ea-8db1-46fdce191c1c@arm.com>
+ <ZZ2AqZT4dD-s01q9@shredder>
+ <ab22c439-e7da-49b5-b20b-856daf376c02@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2 RESEND] sched/fair: take into account scheduling
- domain in select_idle_smt()
-Content-Language: en-US
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Julia Lawall <julia.lawall@inria.fr>, Xunlei Pang
- <xlpang@linux.alibaba.com>, Abel Wu <wuyun.abel@bytedance.com>
-References: <20240110131707.437301-1-keisuke.nishimura@inria.fr>
- <CAKfTPtCgqkUUtWMknyHrNeb994V_L4T9bxV9A=bUXCQu-+S1SQ@mail.gmail.com>
-From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
-In-Reply-To: <CAKfTPtCgqkUUtWMknyHrNeb994V_L4T9bxV9A=bUXCQu-+S1SQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab22c439-e7da-49b5-b20b-856daf376c02@arm.com>
 
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 533547e3c90a..66457d4b8965 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -7311,13 +7311,19 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
->>   /*
->>    * Scan the local SMT mask for idle CPUs.
->>    */
->> -static int select_idle_smt(struct task_struct *p, int target)
->> +static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
->>   {
->>          int cpu;
->>
->>          for_each_cpu_and(cpu, cpu_smt_mask(target), p->cpus_ptr) {
->>                  if (cpu == target)
->>                          continue;
->> +               /*
->> +                * Check if the CPU is in the LLC scheduling domain of @target.
->> +                * Due to isolcpus, there is no guarantee that all the siblings are in the domain.
->> +                */
->> +               if (!cpumask_test_cpu(cpu, sched_domain_span(sd)))
+On Wed, Jan 10, 2024 at 12:48:06PM +0000, Robin Murphy wrote:
+> On 2024-01-09 5:21 pm, Ido Schimmel wrote:
+> > On Mon, Jan 08, 2024 at 05:35:26PM +0000, Robin Murphy wrote:
+> > > Hmm, we've got what looks to be a set of magazines forming a plausible depot
+> > > list (or at least the tail end of one):
+> > > 
+> > > ffff8881411f9000 -> ffff8881261c1000
+> > > 
+> > > ffff8881261c1000 -> ffff88812be26400
+> > > 
+> > > ffff88812be26400 -> ffff8188392ec000
+> > > 
+> > > ffff8188392ec000 -> ffff8881a5301000
+> > > 
+> > > ffff8881a5301000 -> NULL
+> > > 
+> > > which I guess has somehow become detached from its rcache->depot without
+> > > being freed properly? However I'm struggling to see any conceivable way that
+> > > could happen which wouldn't already be more severely broken in other ways as
+> > > well (i.e. either general memory corruption or someone somehow still trying
+> > > to use the IOVA domain while it's being torn down).
+> > 
+> > The machine is running a debug kernel that among other things has KASAN
+> > enabled, but there are no traces in the kernel log so there is no memory
+> > corruption that I'm aware of.
+> > 
+> > > Out of curiosity, does reverting just patch #2 alone make a difference?
+> > 
+> > Will try and let you know.
+> > 
+> > > And is your workload doing anything "interesting" in relation to IOVA
+> > > domain lifetimes, like creating and destroying SR-IOV virtual
+> > > functions, changing IOMMU domain types via sysfs, or using that
+> > > horrible vdpa thing, or are you seeing this purely from regular driver
+> > > DMA API usage?
+> > 
+> > The machine is running networking related tests, but it is not using
+> > SR-IOV, VMs or VDPA so there shouldn't be anything "interesting" as far
+> > as IOMMU is concerned.
+> > 
+> > The two networking drivers on the machine are "igb" for the management
+> > port and "mlxsw" for the data ports (the machine is a physical switch).
+> > I believe the DMA API usage in the latter is quite basic and I don't
+> > recall any DMA related problems with this driver since it was first
+> > accepted upstream in 2015.
 > 
-> commit df3cb4ea1fb6 ("sched/fair: Fix wrong cpu selecting from isolated domain")
-> also checked if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
+> Thanks for the clarifications, that seems to rule out all the most
+> confusingly impossible scenarios, at least.
 > 
-> Why didn't you also re-add this test ?
-> 
-> 
+> The best explanation I've managed to come up with is a false-positive race
+> dependent on the order in which kmemleak scans the relevant objects. Say we
+> have the list as depot -> A -> B -> C; the rcache object is scanned and sees
+> the pointer to magazine A, but then A is popped *before* kmemleak scans it,
+> such that when it is then scanned, its "next" pointer has already been
+> wiped, thus kmemleak never observes any reference to B, so it appears that B
+> and (transitively) C are "leaked".
 
-Thank you for your comment. This is because the iterator "for_each_cpu_and(cpu, 
-cpu_smt_mask(target), p->cpus_ptr)" ensures that cpu is included in p->cpus_ptr.
+Transient false positives are possible, especially as the code doesn't
+use a double-linked list (for the latter, kmemleak does checksumming and
+detects the prev/next change, defers the reporting until the object
+becomes stable). That said, if a new scan is forced (echo scan >
+/sys/kernel/debug/kmemleak), are the same objects still listed as leaks?
+If yes, they may not be transient.
 
-The iterator has changed. FYI, here is the change made in commit df3cb4ea1fb6:
+If it is indeed transient, I think a better fix than kmemleak_not_leak()
+is to add a new API, something like kmemleak_mark_transient() which
+resets the checksum, skips the object reporting for one scan.
 
-         for_each_cpu(cpu, cpu_smt_mask(target)) {
--               if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-+               if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
-+                   !cpumask_test_cpu(cpu, sched_domain_span(sd)))
-                         continue;
-                 if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
-
-best,
-Keisuke
-
+-- 
+Catalin
