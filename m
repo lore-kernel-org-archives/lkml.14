@@ -1,105 +1,89 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5AC4F8AB;
-	Wed, 10 Jan 2024 22:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7E24F8BE
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 22:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="Oy0kMQ1S"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=jQkbXT4Xowi1pUvDT3eJyshgYO6r+Y/l3CsarSMIz3E=; b=Oy0kMQ1SLcT7pvbxS7wqM7uk5p
-	Qq7t8743wKI5BIdoPu/TLDlXenb/DniQt7AMa+5LjVUDE2XvXHgrPUx+5o/N4enh4YE8Lq9C8x0L+
-	m81XcR/ifiaSAWAq1fq+QtYn7ZFbMHmnR2L54W1hfvBb5e7B1GLRLe94uW2I5sMIIk6w=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:39930 helo=pettiford)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1rNhGI-0001iS-NK; Wed, 10 Jan 2024 17:41:27 -0500
-Date: Wed, 10 Jan 2024 17:41:26 -0500
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Rengarajan S <rengarajan.s@microchip.com>, Kumaravel Thiagarajan
- <kumaravel.thiagarajan@microchip.com>, Tharun Kumar P
- <tharunkumar.pasumarthi@microchip.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Message-Id: <20240110174126.a8beefee0e871d61de363018@hugovil.com>
-In-Reply-To: <05465217-174e-4888-a6ab-6251f4a9920b@moroto.mountain>
-References: <ZZ7vIfj7Jgh-pJn8@moroto>
-	<20240110144605.2a8813d4bfaff1a55edb9938@hugovil.com>
-	<05465217-174e-4888-a6ab-6251f4a9920b@moroto.mountain>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WIwmPBaN"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a28bf46ea11so824411166b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:41:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1704926494; x=1705531294; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=k35Q5QIp5MyCO5VamMpz/sosd3XUE8jfAcVkkJ5lw8w=;
+        b=WIwmPBaN+fnxhCnsUZpFRiiAwkdKy40erGNezc9/qpWeTaUS7a8SXq2I9uQw2PaFkk
+         PUSvzS3Dt/MzEr979OxwuibZwYo3C2xBhHl8sGIBIU92xyYtwjw8y3Ns6jqlAKzVnWEd
+         1JPkxG0oxotNg4uvCk+D5ek2s/VMyKE4emPh4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704926494; x=1705531294;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k35Q5QIp5MyCO5VamMpz/sosd3XUE8jfAcVkkJ5lw8w=;
+        b=ZtEU0IrlX93DvGIQkaE17yXb3ZhvZAxs5Cz2kgTRZvGg8GYdWPmxZ4ccC/+rrSEYcN
+         V+osPqO9BoqSnJ+EfQVyGDILE1DaGeVMrjFCFkLrtiivBx/Yky7hwpyfs4+AyfmFswbp
+         LI+/8PPiFLUUOyCwIESCxDR7Nzf2MH4qy3wxi7PEWjPaPJBqtc3t0lTaXPLhnl0YlB7T
+         wSyYxPGTzI7fEyQ1YwSMeooSueCrggg9FsgdcEWUKkV/Jr7R8nKHT126Zt2UsGTcT+7p
+         0rTKx8Yo7f96wnPekjCd0nqA1akOJ0MK7eHumYFv/XrLJD3vGChh1fS16iVqYV29J7eg
+         sYSw==
+X-Gm-Message-State: AOJu0YxQIUMRnJuCCLxAW1WcP0dBRyCCZEfBWy5bWsZzoayzyqAS7R1Q
+	kWdNwmIW79wUlWGOr2FsfinM6N9u+xHUM+dKE5qIQ6UMHv/w2vbq
+X-Google-Smtp-Source: AGHT+IG9VSi409USpyKYbUV0j0ICoFJvK87emHDKRmy7wNFQLKBCwJ0em+lf2BM1aZpfyr86R7z49w==
+X-Received: by 2002:a17:906:a142:b0:a27:d309:b6b8 with SMTP id bu2-20020a170906a14200b00a27d309b6b8mr171973ejb.35.1704926494517;
+        Wed, 10 Jan 2024 14:41:34 -0800 (PST)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
+        by smtp.gmail.com with ESMTPSA id le15-20020a170907170f00b00a2a0212cfe1sm2485362ejc.50.2024.01.10.14.41.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jan 2024 14:41:34 -0800 (PST)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a28da6285c1so841066166b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:41:33 -0800 (PST)
+X-Received: by 2002:a17:906:b115:b0:a28:c04e:315b with SMTP id
+ u21-20020a170906b11500b00a28c04e315bmr174538ejy.13.1704926493632; Wed, 10 Jan
+ 2024 14:41:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-	* -3.1 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH v2] serial: 8250_pci1xxxx: fix off by one in
- pci1xxxx_process_read_data()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+MIME-Version: 1.0
+References: <ZTz9RpZxfxysYCmt@gmail.com> <ZZwBi/YmnMqm7zrO@gmail.com> <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 10 Jan 2024 14:41:16 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
+Message-ID: <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
+Subject: Re: [GIT PULL] Scheduler changes for v6.8
+To: Ingo Molnar <mingo@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 10 Jan 2024 23:19:28 +0300
-Dan Carpenter <dan.carpenter@linaro.org> wrote:
+On Wed, 10 Jan 2024 at 14:19, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Just a note that I'm currently bisecting into this merge for a
+> horrendous performance regression.
+>
+> It makes my empty kernel build go from 22 seconds to 44 seconds, and
+> makes a full kernel build enormously slower too.
+>
+> I haven't finished the bisection, but it's now inside *just* this
+> pull, so I can already tell that I'm going to revert something in
+> here, because this has been making my merge window miserable.
 
-> On Wed, Jan 10, 2024 at 02:46:05PM -0500, Hugo Villeneuve wrote:
-> > Hi,
-> > it is not simply a matter of adding "fix" to the title.
-> > 
-> > You must explain what and why vs. how.
-> > 
-> > Please see:
-> >   https://cbea.ms/git-commit/#why-not-how
-> > 
-> > for some guidelines on writing a good commit message.
-> > 
-> 
-> If you can't understand why a buffer overflow is bad then I honestly
-> don't know what to say...
+It's one of these two:
 
-Hi Dan,
-I am also an old quirky guy, and pretty much know why a buffer overflow
-is bad :)
+  f12560779f9d sched/cpufreq: Rework iowait boost
+  9c0b4bb7f630 sched/cpufreq: Rework schedutil governor performance estimation
 
-My whole point was only related to the title of the commit
-message, not the body of the commit message, which explained well
-enough the problem and the solution, or the code fix itself.
+one more boot to go, then I'll try to revert whichever causes my
+machine to perform horribly much worse.
 
-Regards,
-Hugo Villeneuve
-
-
-> When I was a newbie, I encountered a driver which was written in
-> terrible style.  And I thought why do people allow it???  This is
-> garbage and it's messing up the Linux kernel with its bad style.
-> 
-> But after I got older, I realized that he was the only person with that
-> hardware and the only person who cared about it.   If I started fighting
-> with him about style then he would leave.  He was a quirky guy with bad
-> taste but he was still making useful contributions so it was better to
-> tolerate him.
-> 
-> These days I'm the old quirky guy.  If you want to fight with me about
-> commit messages, that's fine.  I can easily just add you to my list of
-> subsystems which only receive bug reports instead of patches.  (I think
-> only BPF is on the list currently because it's annoying to track the
-> bpf vs bpf-next tree).
-> 
-> Feel free to re-write this patch however you want and give me
-> Reported-by credit.
-> 
-> regards,
-> dan carpenter
+             Linus
