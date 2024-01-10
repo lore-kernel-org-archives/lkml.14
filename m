@@ -1,81 +1,112 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFDA3F8FA;
-	Wed, 10 Jan 2024 11:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1702B47F61
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIRujL+s"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dbed4b84667so3254560276.0;
-        Wed, 10 Jan 2024 03:20:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="owOMXJMe"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40b5155e154so52315205e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:20:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704885625; x=1705490425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FW1K//afvn0Nho0TscAWU/eSRLYGsm+Sr/mW3eupyTw=;
-        b=EIRujL+sEX/mfgo4owObIZYzq0Rfpr21ttYFXqC+ljQECOPr6PCaqpCgXBgK97YMV+
-         Pq2gEjUtxoYPpYSgO2HobeymfYr4wpR5lJ1/SLtnUipi8u2blZfhelD5Vo6oE9ZLDTqa
-         2yssjYYV+xMFlf/Qrf0fh2JnquED9HVW6o98unj7zLttuXFOsDBVtdoDK1sTtoIQ9j/+
-         60FFRUMnEATLOY+E+xa4W0b+iMtQnUsCXFfFrOB3MC1CuOKmIiaXBDZeRpuTfbn6hHXB
-         BbEl8pctMDoElCKhHeaLyv1ZFSYbNz8s+UzBtpYMNSdxw1Rq+CmvEbWQn/9/rsuKOyTO
-         GiJw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704885632; x=1705490432; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=vlqGHcDi/Sy4uBIl5Jnr3cngTZ3e/jHWYQNYtZZtTZE=;
+        b=owOMXJMeofa3oGLWuav2HeouMg7Kk20O8ydAAjBLgIwIHRLxsyOqgrY4eHB7GKGzIX
+         rQVLHRUnfg0DIPb5rH4VJn5wN++fX73XucgaZkA1bFYFuAeVVYF5jnGYZC+JUnCdPKFV
+         zrdJ+tNvYZ8xDqfcaJwY3zpayAXwPKTW7vdWvk3Lp7TAnx5hoK4a9PiWXaspTo8vba7+
+         F7XWJ4EpkA+o7NPAD3HrKuV0cxXDRYobTSnzIHDFhMQVMQrRG042F4t5hkOcSS539m1t
+         Fm3rcLi1AHCq0OS/3D0zn4IQAw8LabfUN9At4RKrDwpsnIpqzRsKB/nESQzI1kWweHP7
+         skaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704885625; x=1705490425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FW1K//afvn0Nho0TscAWU/eSRLYGsm+Sr/mW3eupyTw=;
-        b=hdd/c1QPxUmfvphE3VIcPRN56KrR+iT7fhVwNFwXW5W1ByYvpD19mbIJr5CqkKzaKr
-         Ob+wo6Y77VFS0C8Jy5ev44LkHZfJ7QsgzL8dThLAnBfALykMm951aT6xaqUN4GtdavP3
-         YNWg4oxjIYVRGSodw2TDFcEGLjWqzzqB4qJqAD5i45YdpU0kj1eqBstlMxp+tglnZaNP
-         AaGTZiWLTzmK0pqIG8hXUZmgh6adHe9cs2amb72zr8+KJoyXk/Io3WbFpVbxtHvnXHKt
-         NX7Ki5hN9jvwVRUmWgGZTzPTvZU90HEUY7cacTs+kvc7eWXJyujf0oBNobgq1i3ZbuGD
-         hdmA==
-X-Gm-Message-State: AOJu0YzFq7Vmvn5pga3UE6gFW7BTmOzUDcMKW/rsZYTuwwFYyDde+5bD
-	8O/JtK1HiMKalS8SnVeSyId4x9rJJV3GYS/g5VY=
-X-Google-Smtp-Source: AGHT+IHaa7xcgtCKMUHH4aDoyZhwFwZccl2P3DTlnAJLFyjFE/VpE1rrAyZzbqN6y/vAIhj6iEM0E8WaN6WqUlUJkC0=
-X-Received: by 2002:a5b:d47:0:b0:dbe:ab05:a610 with SMTP id
- f7-20020a5b0d47000000b00dbeab05a610mr615185ybr.36.1704885625150; Wed, 10 Jan
- 2024 03:20:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704885632; x=1705490432;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vlqGHcDi/Sy4uBIl5Jnr3cngTZ3e/jHWYQNYtZZtTZE=;
+        b=CI3BT5CUOlOWLoC8ejCEj7UeFKRmoW9q1FCRsmfWEn76VahiYy5MDKfSUZWxXv5LZR
+         TDh5Df4osh0Y7L3hb3hQ8NY8df50Z7jpvw68hXSYsJMwFnFFwgWXh8wnxIXM3/1ta6Cl
+         iKGrZOvNIIVSDiheLBnDRf4S/V1r9nL5H7b6YOclWDZCNHshV6CIqwR4LHzcyQ/sSzDF
+         Ybe17gjAWSal1jzCrQyO4DJA+1NL1T1bsGH2IPEmaeCsXNplzHa51FhkVbqlK/+swSPI
+         KRZ2QL397YfWwjKHerOEV0dfhF6FvQ+vf9PQopM26tuKIcm9d4kjeyxAkHlMVzm010OW
+         MUIg==
+X-Gm-Message-State: AOJu0YyoPBUugr5teX6JRbWkfBSkxodDp7DQKViQIICgZKT6tsN3zgQU
+	xghAjDQapasgp7/dNPAnvLU40wf/im7vRQ==
+X-Google-Smtp-Source: AGHT+IHbFpGfeZfC9AI5PuT+WFKOB6Wfi932nxWEAg0oL5APRSxrD72gbhMFpBecRdk6idA3QUls+A==
+X-Received: by 2002:a05:600c:198a:b0:40e:3b3a:aeb0 with SMTP id t10-20020a05600c198a00b0040e3b3aaeb0mr455216wmq.156.1704885632252;
+        Wed, 10 Jan 2024 03:20:32 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:9eb:66c9:5f1b:87ab])
+        by smtp.gmail.com with ESMTPSA id n15-20020a05600c3b8f00b0040d5a5c523csm1858810wms.1.2024.01.10.03.20.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 03:20:31 -0800 (PST)
+References: <20240109213812.558492-1-krzysztof.kozlowski@linaro.org>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Mark Brown
+ <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: dt-bindings: dai-common: Narrow possible
+ sound-dai-cells
+Date: Wed, 10 Jan 2024 12:07:30 +0100
+In-reply-to: <20240109213812.558492-1-krzysztof.kozlowski@linaro.org>
+Message-ID: <1ja5pdzb7k.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240106065941.180796-1-wangrui@loongson.cn> <CANiq72=M5TrUL+9Z0nqKKcD=KHwyDA79fNYHgU2EJ+7u6Ct8qw@mail.gmail.com>
- <CAHirt9hd4W25p1kVNYXbEXrLj6NgT5r=EPWsoOmHZzS1qGR-yA@mail.gmail.com>
-In-Reply-To: <CAHirt9hd4W25p1kVNYXbEXrLj6NgT5r=EPWsoOmHZzS1qGR-yA@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 10 Jan 2024 12:20:13 +0100
-Message-ID: <CANiq72nw2UHd3Kek-Fmvk_3zE=z56wYJVQJq_syYagru5+wo8g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Enable initial Rust support
-To: WANG Rui <wangrui@loongson.cn>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Mon, Jan 8, 2024 at 4:22=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wrote=
-:
+
+On Tue 09 Jan 2024 at 22:38, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
+
+> Instead of accepting any value for sound-dai-cells, the common DAI
+> properties schema should narrow them to sane choice.
 >
-> Thanks for your comments. I noticed that the refactoring of the build
-> system to support the use of Rust built-in targets is still ongoing.
-> Could this take some time? In the meantime, let's proceed with the
-> generation method.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
 
-My pleasure! If you mean the first patch of the arm64 series I linked,
-we have been waiting for a while for that to get merged (hopefully
-6.9?). So, yeah, as you say, it is probably best to continue with this
-and then you can change it later after the arm64 series lands. Thanks!
+Adding a constraint solely based on current usage feels wrong.
 
-Cheers,
-Miguel
+A DAI provider in its generic form must have the sound-dai-cells to
+provide one. It says nothing about how many parameters an actual device
+might need. That is the idea behind this binding.
+
+It is up to the device specific bindings to define that value.
+
+If restricting things here is really important, defaulting to 0 (with a
+comment explaining it) and letting actual devices then override the
+value would feel less 'made up'
+
+> ---
+>
+> Mostly sound-dai-cells are 0 or 1, but
+> Documentation/devicetree/bindings/sound/amlogic,aiu.yaml has value of 2.
+> ---
+>  Documentation/devicetree/bindings/sound/dai-common.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/sound/dai-common.yaml b/Documentation/devicetree/bindings/sound/dai-common.yaml
+> index 1aed2f0f1775..6db35887cbe6 100644
+> --- a/Documentation/devicetree/bindings/sound/dai-common.yaml
+> +++ b/Documentation/devicetree/bindings/sound/dai-common.yaml
+> @@ -13,6 +13,7 @@ allOf:
+>    - $ref: component-common.yaml#
+>  
+>  properties:
+> -  '#sound-dai-cells': true
+> +  '#sound-dai-cells':
+> +    enum: [0, 1, 2]
+>  
+>  additionalProperties: true
+
+
+-- 
+Jerome
