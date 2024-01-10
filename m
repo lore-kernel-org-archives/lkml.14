@@ -1,86 +1,127 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E404CE1D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 22:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707334CE1D;
+	Wed, 10 Jan 2024 22:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CYXg4ZNP"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-555e07761acso5620221a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:19:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704925172; x=1705529972; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1pn+yGlQbDvVpIEQ51Lj63hjmKrdoB01ABnRTe1WXO8=;
-        b=CYXg4ZNPeBah6O/diokgPMR+p4RY6KyF1d9t5oxf5jYTduGslBcqbp5eddaaa7sqdQ
-         In4+nxPy25RpMxqgE2+D4CI5HOoWPqxovmPCf3YTkpeEULsY+orcxzgB3Koz+ofNjNWg
-         8dhLL6znU1DGkut9FSLT/uFJTbBDYBMfe5Wak=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704925172; x=1705529972;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1pn+yGlQbDvVpIEQ51Lj63hjmKrdoB01ABnRTe1WXO8=;
-        b=aN773XhGpIDHH3gjIAT/w8Z79pYHhi+B20eoeFFZD6dILS0GoB8pgU55ZcEQmBoswP
-         GIti5souL18V9+gh5iBy/oHuLs1+jpO+naVKDtHqZ12zOGN4ILddda5zQmROcglcsfr8
-         U3TcS631zCI8e27Hb6oSnjIcz8VGiBi6ZPs0iUyTYmd3dGyoBjTcOqa486tzd+ZH/3fY
-         hwYCJE5eBCxRmqjn1lwYgp+t0XUx8dt7gL6/740G4+cgV099Ryc50YCwZT4hoXVupBci
-         lh+DX9fP7Q/Qn+UpFrTdYNgHQraYYmm+kiET6236kqdPnoHL690eKmCfe+UMhg9kAfEL
-         afUg==
-X-Gm-Message-State: AOJu0Yxrkg+2F/L8rgl1soCUpKsbzCf0I9X72yxYd1dPoYXWxsadhPzT
-	wYPPt9pnt52JkEI0Six5x1MIAUfR9VkmX9ObkfD+b18pMRdY/DyH
-X-Google-Smtp-Source: AGHT+IEyAPK8hk3wkYV8KwI58Jfhhld/6bO4Wp65D/GETQNo8IQppOQkgfk7MaZEPsdKk0lWt0EZXg==
-X-Received: by 2002:a05:6402:26cf:b0:556:ef38:9b04 with SMTP id x15-20020a05640226cf00b00556ef389b04mr46413edd.122.1704925172692;
-        Wed, 10 Jan 2024 14:19:32 -0800 (PST)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
-        by smtp.gmail.com with ESMTPSA id s7-20020a056402014700b005576f4471besm2396853edu.42.2024.01.10.14.19.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 14:19:30 -0800 (PST)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a28cc85e6b5so549691066b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:19:29 -0800 (PST)
-X-Received: by 2002:a17:907:3a08:b0:a1c:b6f8:6987 with SMTP id
- fb8-20020a1709073a0800b00a1cb6f86987mr57694ejc.16.1704925169419; Wed, 10 Jan
- 2024 14:19:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FqCD0nKH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1704925368;
+	bh=Wo4Mp1A7ns+9PBY4a2oxRYPubeQSBQsRulo2OhT3c7o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FqCD0nKHHxoewLiQS37cjmM2fUDSmra8JEJaTm1gngJhbRpeubH5+hPrYjfPKmMLN
+	 5Tx8+9fTz3THom3tfn5gstSSr58Tv+EgJ+CWi/jWwGhoExIl7x59VgvPlds5lXa76K
+	 BFAdi8jRQq6THFCS9XYh0eHoZ6k4tbA1Go8mIEBql+/CzKiEs80AM2pfon2tb1PeSr
+	 FOEVFcrpPS4wclyP+pjE8u8qZpa2wZ+hud6ZKz2nWWD98TYExqG9VVTYRZ5yspqy6V
+	 oH5MR/be7ol6xO7fsO/kck6dGsXeSYlNBsfWdcvN6so/PnSLiqI5TlyETTbEyaNHMq
+	 aaYamp1KjLEPQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T9MkJ2JsYz4wxx;
+	Thu, 11 Jan 2024 09:22:47 +1100 (AEDT)
+Date: Thu, 11 Jan 2024 09:22:46 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the asm-generic tree with the mm
+ tree
+Message-ID: <20240111092246.10ba37af@canb.auug.org.au>
+In-Reply-To: <20231205090546.7dffe3aa@canb.auug.org.au>
+References: <20231205090546.7dffe3aa@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZTz9RpZxfxysYCmt@gmail.com> <ZZwBi/YmnMqm7zrO@gmail.com>
-In-Reply-To: <ZZwBi/YmnMqm7zrO@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 10 Jan 2024 14:19:11 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
-Message-ID: <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Scheduler changes for v6.8
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/.Gd64o/4MFJ7UuxtDOxM92N";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, 8 Jan 2024 at 06:07, Ingo Molnar <mingo@kernel.org> wrote:
->
-> Please pull the latest sched/core git tree from:
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-2024-01-08
+--Sig_/.Gd64o/4MFJ7UuxtDOxM92N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Just a note that I'm currently bisecting into this merge for a
-horrendous performance regression.
+Hi all,
 
-It makes my empty kernel build go from 22 seconds to 44 seconds, and
-makes a full kernel build enormously slower too.
+On Tue, 5 Dec 2023 09:05:46 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>=20
+> Today's linux-next merge of the asm-generic tree got a conflict in:
+>=20
+>   arch/mips/include/asm/traps.h
+>=20
+> between commit:
+>=20
+>   6b281b05cbcc ("mips: add missing declarations for trap handlers")
+>=20
+> from the mm tree and commit:
+>=20
+>   23f8c1823bd4 ("arch: add do_page_fault prototypes")
+>=20
+> from the asm-generic tree.
+>=20
+>=20
+> diff --cc arch/mips/include/asm/traps.h
+> index 2c2b26f1e464,d4d9f8a8fdea..000000000000
+> --- a/arch/mips/include/asm/traps.h
+> +++ b/arch/mips/include/asm/traps.h
+> @@@ -39,28 -39,7 +39,30 @@@ extern char except_vec_nmi[]
+>   	register_nmi_notifier(&fn##_nb);				\
+>   })
+>  =20
+>  +asmlinkage void do_ade(struct pt_regs *regs);
+>  +asmlinkage void do_be(struct pt_regs *regs);
+>  +asmlinkage void do_ov(struct pt_regs *regs);
+>  +asmlinkage void do_fpe(struct pt_regs *regs, unsigned long fcr31);
+>  +asmlinkage void do_bp(struct pt_regs *regs);
+>  +asmlinkage void do_tr(struct pt_regs *regs);
+>  +asmlinkage void do_ri(struct pt_regs *regs);
+>  +asmlinkage void do_cpu(struct pt_regs *regs);
+>  +asmlinkage void do_msa_fpe(struct pt_regs *regs, unsigned int msacsr);
+>  +asmlinkage void do_msa(struct pt_regs *regs);
+>  +asmlinkage void do_mdmx(struct pt_regs *regs);
+>  +asmlinkage void do_watch(struct pt_regs *regs);
+>  +asmlinkage void do_mcheck(struct pt_regs *regs);
+>  +asmlinkage void do_mt(struct pt_regs *regs);
+>  +asmlinkage void do_dsp(struct pt_regs *regs);
+>  +asmlinkage void do_reserved(struct pt_regs *regs);
+>  +asmlinkage void do_ftlb(void);
+>  +asmlinkage void do_gsexc(struct pt_regs *regs, u32 diag1);
+>  +asmlinkage void do_daddi_ov(struct pt_regs *regs);
+>  +
+>  +asmlinkage void cache_parity_error(void);
+>  +asmlinkage void ejtag_exception_handler(struct pt_regs *regs);
+>  +asmlinkage void __noreturn nmi_exception_handler(struct pt_regs *regs);
+> + asmlinkage void do_page_fault(struct pt_regs *regs,
+> + 	unsigned long write, unsigned long address);
+>  =20
+>   #endif /* _ASM_TRAPS_H */
 
-I haven't finished the bisection, but it's now inside *just* this
-pull, so I can already tell that I'm going to revert something in
-here, because this has been making my merge window miserable.
+This is now a conflict between the asm-generic tree and Linus' tree.
 
-You've been warned,
+--=20
+Cheers,
+Stephen Rothwell
 
-                Linus
+--Sig_/.Gd64o/4MFJ7UuxtDOxM92N
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWfGLYACgkQAVBC80lX
+0Gw8kwf9Hol3IDHWryGa9fEXsiDz7efGVKK5gGjdPFyE13n3/wya4nR8WlyzzpM4
+yTaeN0M8TxcxT61kIwtRge5wtH5q+FP8BObSAaUr3ixh3SnZMogUS56DwTHBMsZw
+1a80oQzQqQ51ARgcGtrOQER68ZkjMsFtWwMk4oaZKgqZoquR+67QgrjaFCTfCraI
+9ek1xlNXq/YEPbWrpeQHnNmoRSffZbvT8v55lgIwsMBC1q6YD+T0MC1FNcbaKbB4
+Qm4jd+4s8BKU79nbmloQ6B+RhwHFOJ55S4OWoANXHBal+GKqvj9QSnArxgN6Kd0s
+mjn6tqk1JKQl/zPrQqtlLB7/jSfNtQ==
+=6QX7
+-----END PGP SIGNATURE-----
+
+--Sig_/.Gd64o/4MFJ7UuxtDOxM92N--
