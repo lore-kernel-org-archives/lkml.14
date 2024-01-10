@@ -1,49 +1,49 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99525487A5
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3F24878E
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="MFyST6Py"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e5508ecb9so12412245e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 05:20:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="qWJO5Fcv"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e43e48a16so38375025e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 05:23:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1704892822; x=1705497622; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1704893009; x=1705497809; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YCkcD8LjRksDas2PtB8JO47e3MMJedookR84ZvoZyac=;
-        b=MFyST6Py6D6ev3dlzQ1fiUFvB93vMMhbBXy1A20u1nMLJfRRFBqB06UduA88eZLsnr
-         2+2cufqDBFdWANXQP1eMhTAogXwOGy+MUztrqAoat1JOeX9XyfWAMONtIkob1YEg/Mac
-         4AeLI8g1oJMPAG2dauT8yfLa3OKKss5pzao35u2OJ2HnsqSLlHt/BzOcUOCiAH2TJY66
-         o+CiB6SVQ//HIvvO70oJrII65qBpGS1odPvuTq/5OEzbmiBX9/AyN1SQ3XfSYrkN2fcS
-         ee35NVeC+lZi2aNFDQZGFz12R3PqUnNvH6zI3LjRCndukKMx868w5MlLy3rqBiIV68ub
-         Vofw==
+        bh=O3vvYZYcLBGVzCX2v+61ff7z1fByqRgon9zQFLKBVcI=;
+        b=qWJO5FcvC0Hb/uc8dq5XKMIWEgS6jv5FYnMJTr+F/rXbA49rdKOtimFpVlZ9EFujds
+         mFqvyv7/KeYU5h91mw/Rz9tvF0AYYKl4vIuYzvd1jDCHi9KSIxJG+EY76SjtgZOg5YPc
+         jTKD1Zmy6VENt7tp0CPKhjoQOMMkpvZnY8WTe8xCZmr3UrzkKaWWTDL85I0F9TQUwDVj
+         JGdJHVIAc9yhE+xbcs6cy0l78Z66TKMS2NNZ2I9pgd5cwB+VxVoROAFTK5V3vMoceGlE
+         abTZdULko/O3UMX0bazgVvEU8OpojQAndOQkoY6UGBPeudUukO4HNWe+eqNrc4SVLkmd
+         +WUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704892822; x=1705497622;
+        d=1e100.net; s=20230601; t=1704893009; x=1705497809;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YCkcD8LjRksDas2PtB8JO47e3MMJedookR84ZvoZyac=;
-        b=vGOQovYf+e1JN6cRun6zZcSaL2kEE3a3ThYskOcg/P98VbVcW2JW+uXNMQHB7M751M
-         vQihUzEUQkr5xICthDv0YUaXnRjpOKZNw6Xgv1YjbNTBL24A6pIGaaJjRFSRR0NqJyNF
-         CFMOqRLKwTPeOljy9JBrxDmpGb/c3DTrqKh6/6zu0DXODmw62Gx2PDAZpNDywrrZam/G
-         RhgdhECzTw6SSjsyqm1X4Q/1u4aQBc9Jx0d3wKzcDG4sVpZCz5V2TIh2thtx1v3opRp/
-         cukr6KUD9azRN/tSj6xZ6IbHmoxVb7NRan5kVtvd5obn+XU+leAKAiFY3S8qo/SxoV6y
-         +7/w==
-X-Gm-Message-State: AOJu0Yx6umWkTgjW3bmTO3Rc2yn8r4hXeSn7A//iDA0SQlokRHUPkNK8
-	no/yt8fIxJwIDv1mkb5TZt7/tsZk18OQmQ==
-X-Google-Smtp-Source: AGHT+IEUPnL34ET99Hj/hIbknkQ8fEWGM+WKPwQzx8/5fT7oXahWMojBXFdXXo1XxGp6qARdTIUlJw==
-X-Received: by 2002:a05:600c:5014:b0:40d:91b9:436b with SMTP id n20-20020a05600c501400b0040d91b9436bmr611598wmr.183.1704892821813;
-        Wed, 10 Jan 2024 05:20:21 -0800 (PST)
+        bh=O3vvYZYcLBGVzCX2v+61ff7z1fByqRgon9zQFLKBVcI=;
+        b=prY6SpHvGTBM/khuwFBNcsu76vG8HSTNWJvxPnreTKtWPNykQZkRj6o5kBkunzi1gA
+         Q7vnQ4cIe8AUY0CvOrwwjXuGMMZyWKqQXBQ8b8goD5dbWA/ybfrw6+sj1M+rzTuU4PYF
+         /K+2IIShWfZJPNPUHLM+X83/9zZiXQsK27RBBw3E4hpY6M4YfSYLtabFXomDLhbSeL/g
+         AAvLrZQBt/LiuzavMTXDF2NgiZoVtR29Dunn9JirGrZkwC+HJ40gk9mioxfd3HnP4Nrz
+         YRzZwvRUg+yNBIPLTBIlqDIgOmTmSIctiFKtdr2w4QUQVaPy16K44QET/3NdUVAK4HDN
+         88/Q==
+X-Gm-Message-State: AOJu0Yw0iw2C9G9GXtrSDlmUrKJpFnKg4RO1sLfIJQF5Pkp1/JYDOX52
+	LyVD87j/f7MgEEcG+PUiMPdMwJm8d7WiFx7dlzUaUGPPlJE=
+X-Google-Smtp-Source: AGHT+IFAwq/bheKWmRnntdqLqvLLayLt2wZUTEq3FW7gSNhgG3QB52kWOrSLBBVIqmwfFKNcY4tsEg==
+X-Received: by 2002:a1c:4c08:0:b0:40d:8780:2aff with SMTP id z8-20020a1c4c08000000b0040d87802affmr494807wmf.131.1704893008882;
+        Wed, 10 Jan 2024 05:23:28 -0800 (PST)
 Received: from [192.168.50.4] ([82.78.167.5])
-        by smtp.gmail.com with ESMTPSA id n16-20020a05600c4f9000b0040d62f97e3csm2200114wmq.10.2024.01.10.05.20.20
+        by smtp.gmail.com with ESMTPSA id v21-20020a05600c445500b0040e3bdff98asm2159730wmn.23.2024.01.10.05.23.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 05:20:21 -0800 (PST)
-Message-ID: <c0b5ca41-c145-4adc-86c0-067e5043523b@tuxon.dev>
-Date: Wed, 10 Jan 2024 15:20:19 +0200
+        Wed, 10 Jan 2024 05:23:28 -0800 (PST)
+Message-ID: <2f52d6a4-40db-4636-a1b4-e95328a2e3b3@tuxon.dev>
+Date: Wed, 10 Jan 2024 15:23:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,84 +51,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: phy: micrel: populate .soft_reset for KSZ9131
+Subject: Re: [PATCH net-next v3 19/19] net: ravb: Add runtime PM support
 Content-Language: en-US
-To: Andrew Lunn <andrew@lunn.ch>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, yuiko.oshino@microchip.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Sergey Shtylyov <s.shtylyov@omp.ru>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ richardcochran@gmail.com, p.zabel@pengutronix.de,
+ yoshihiro.shimoda.uh@renesas.com, wsa+renesas@sang-engineering.com
+Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, geert+renesas@glider.be,
  Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240105085242.1471050-1-claudiu.beznea.uj@bp.renesas.com>
- <ZZfPOky2p/ZJMKCQ@shell.armlinux.org.uk>
- <a2651f98-b598-4a05-9e05-d2912eeb55d2@lunn.ch>
+References: <20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240105082339.1468817-20-claudiu.beznea.uj@bp.renesas.com>
+ <6c53095c-2d63-d6d3-e233-a7709a6e48b1@omp.ru>
 From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <a2651f98-b598-4a05-9e05-d2912eeb55d2@lunn.ch>
+In-Reply-To: <6c53095c-2d63-d6d3-e233-a7709a6e48b1@omp.ru>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi, Andrew, Russell,
 
-On 05.01.2024 16:36, Andrew Lunn wrote:
-> On Fri, Jan 05, 2024 at 09:43:22AM +0000, Russell King (Oracle) wrote:
->> On Fri, Jan 05, 2024 at 10:52:42AM +0200, Claudiu wrote:
->>> The order of PHY-related operations in ravb_open() is as follows:
->>> ravb_open() ->
->>>   ravb_phy_start() ->
->>>     ravb_phy_init() ->
->>>       of_phy_connect() ->
->>>         phy_connect_direct() ->
->>> 	  phy_attach_direct() ->
->>> 	    phy_init_hw() ->
->>> 	      phydev->drv->soft_reset()
->>> 	      phydev->drv->config_init()
->>> 	      phydev->drv->config_intr()
->>> 	    phy_resume()
->>> 	      kszphy_resume()
->>>
->>> The order of PHY-related operations in ravb_close is as follows:
->>> ravb_close() ->
->>>   phy_stop() ->
->>>     phy_suspend() ->
->>>       kszphy_suspend() ->
->>>         genphy_suspend()
->>> 	  // set BMCR_PDOWN bit in MII_BMCR
+
+On 09.01.2024 21:53, Sergey Shtylyov wrote:
+> On 1/5/24 11:23 AM, Claudiu wrote:
+> 
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >>
->> Andrew,
+>> Add runtime PM support for the ravb driver. As the driver is used by
+>> different IP variants, with different behaviors, to be able to have the
+>> runtime PM support available for all devices, the preparatory commits
+>> moved all the resources parsing and allocations in the driver's probe
+>> function and kept the settings for ravb_open(). This is due to the fact
+>> that on some IP variants-platforms tuples disabling/enabling the clocks
+>> will switch the IP to the reset operation mode where registers' content is
+>> lost and reconfiguration needs to be done. For this the rabv_open()
+>> function enables the clocks, switches the IP to configuration mode, applies
+>> all the registers settings and switches the IP to the operational mode. At
+>> the end of ravb_open() IP is ready to send/receive data.
 >>
->> This looks wrong to me - shouldn't we be resuming the PHY before
->> attempting to configure it?
+>> In ravb_close() necessary reverts are done (compared with ravb_open()), the
+>> IP is switched to reset mode and clocks are disabled.
+>>
+>> The ethtool APIs or IOCTLs that might execute while the interface is down
+>> are either cached (and applied in ravb_open()) or rejected (as at that time
+>> the IP is in reset mode). Keeping the IP in the reset mode also increases
+>> the power saved (according to the hardware manual).
+>>
+>> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> [...]
 > 
-> Hummm. The opposite of phy_stop() is phy_start(). So it would be the
-> logical order to perform the resume as the first action of
-> phy_start(), not phy_attach_direct().
+>> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+>> index e909960fbc30..e99351fe8d7f 100644
+>> --- a/drivers/net/ethernet/renesas/ravb_main.c
+>> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+> [...]
+>> @@ -2233,7 +2243,14 @@ static int ravb_close(struct net_device *ndev)
+>>  	ravb_get_stats(ndev);
+>>  
+>>  	/* Set reset mode. */
+>> -	return ravb_set_opmode(ndev, CCC_OPC_RESET);
+>> +	error = ravb_set_opmode(ndev, CCC_OPC_RESET);
+>> +	if (error)
+>> +		return error;
+>> +
+>> +	pm_runtime_mark_last_busy(dev);
+>> +	pm_runtime_put_autosuspend(dev);
 > 
-> In phy_connect_direct(), we don't need the PHY to be operational
-> yet. That happens with phy_start().
-> 
-> The standard says:
-> 
->   22.2.4.1.5 Power down
-> 
->   The PHY may be placed in a low-power consumption state by setting
->   bit 0.11 to a logic one. Clearing bit 0.11 to zero allows normal
->   operation. The specific behavior of a PHY in the power-down state is
->   implementation specific. While in the power-down state, the PHY
->   shall respond to management transactions.
-> 
-> So i would say this PHY is broken, its not responding to all
-> management transactions. So in that respect, Claudiu fix is correct.
-> 
-> But i also somewhat agree with you, this looks wrong, but in a
-> different way to how you see it. However, moving the phy_resume() to
-> phy_start() seems a bit risky. So i'm not sure we should actually do
-> that.
+>    BTW, doesn't make sense to check/return the result?
 
-It's not clear to me if you both agree with this fix. Could you please let
-me know?
-
-Thank you,
-Claudiu Beznea
+Most users of this are not checking return code, I followed this pattern,
+too. But, yes, would be better to check it, AFAICT.
 
 > 
-> 	Andrew
+>> +
+>> +	return 0;
+>>  }
+>>  
+>>  static int ravb_hwtstamp_get(struct net_device *ndev, struct ifreq *req)
+> [...]
+> 
+> MBR, Sergey
