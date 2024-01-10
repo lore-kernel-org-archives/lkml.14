@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C366364C5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40165364D7
 	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 01:31:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gEW+We9R"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 03244C433A6;
-	Wed, 10 Jan 2024 01:31:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSQwp0fA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1950CC433B2;
+	Wed, 10 Jan 2024 01:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704850266;
-	bh=DJuidrvUYciWTEy85d/BbC7qoSN0XIxrWGpxyTQomVc=;
+	bh=bBEtsrH7a1D3POWKZvxyb898rlHNfC3WzAtRV+kqIFU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=gEW+We9RbQmNuTSx+3iFF+IJJiQcn0bTKI6geHLA8E8PQwXu4c2njyF6BmxO+hnLc
-	 dz0LCZ0lDN4q73UE5yWtmoRw04032Vk9obrpxckhxigbj5U51a4D/NyGx9FqlJBT4b
-	 NfsSIG3VwP8LrFw41bvvtUyo4EG8aXK9P2pXgU2Ylt+FOC1sF+MDAzFM+WxP9YTkBW
-	 Tywdin+ELtujNucv80mYT+r+0QbymnSRVs7ZAltGBdzaA98qyQcFR01WtNkLcPoHBF
-	 BOs/BSNadACsBNpJQX+/acK/GbJ1lok1SmlsRgAVMYBB5XxI2aV6t9xLhs3/aT7/aD
-	 igWlI2Xi7B7KA==
+	b=uSQwp0fAX1F9KPtAExF1AoQLFkuWjZ62wdnSwP7xbsOZ7o/3FfBeTPJiETKYU5DPH
+	 HZjnt8uG4uV1za9+xlBjQ6mBSale5NJE5q9BRjz3lJ6eC0bOmaMV3s4o0235/D0taQ
+	 ZUdzew03V6uKm7qEwM4M9zp4CLhGOm4D/nAus8lJZncZ5lBuRwHKngsV8z2H+Vla4j
+	 7qTW1VuUdwFzZ+3tK4sAegy9yh+BM2kKcUuwa4lEO+EB12v8v+wDLwZb86CrFDp5sF
+	 4+P2qzsSnMEhQHBg6uLp/NgBCkbnwio9Rj/tIgWobxRvRl7vQUrOA2WNDJDsX+Iiyg
+	 HwRVaEmqOhDGw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DCF9DDFC690;
-	Wed, 10 Jan 2024 01:31:05 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.8-1
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 08C1EC4167D;
+	Wed, 10 Jan 2024 01:31:06 +0000 (UTC)
+Subject: Re: [GIT PULL] IPMI bug fixes for 6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <8fc798ad-7235-467e-a31f-a79ae33a4324@redhat.com>
-References: <8fc798ad-7235-467e-a31f-a79ae33a4324@redhat.com>
+In-Reply-To: <ZZv/gs97F3xQwOGQ@mail.minyard.net>
+References: <ZZv/gs97F3xQwOGQ@mail.minyard.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <8fc798ad-7235-467e-a31f-a79ae33a4324@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.8-1
-X-PR-Tracked-Commit-Id: 236f7d8034ff401d02fa6d74bae494a2b54e1834
+X-PR-Tracked-Message-Id: <ZZv/gs97F3xQwOGQ@mail.minyard.net>
+X-PR-Tracked-Remote: https://github.com/cminyard/linux-ipmi.git tags/for-linus-6.8-1
+X-PR-Tracked-Commit-Id: 9bd9fbd9032a3b7e9ea916d6e58ba0116e0621be
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5fda5698c289b2ff21d53d935c43351c424f8388
-Message-Id: <170485026590.7649.4971732105513415464.pr-tracker-bot@kernel.org>
-Date: Wed, 10 Jan 2024 01:31:05 +0000
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andy Shevchenko <andy@kernel.org>, LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+X-PR-Merge-Commit-Id: 7c6a3fc925b63d5201f1c11b93193d8a466a7d89
+Message-Id: <170485026602.7649.10847066916193973045.pr-tracker-bot@kernel.org>
+Date: Wed, 10 Jan 2024 01:31:06 +0000
+To: Corey Minyard <minyard@acm.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, openipmi-developer@lists.sourceforge.net
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 8 Jan 2024 13:04:50 +0100:
+The pull request you sent on Mon, 8 Jan 2024 07:58:26 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.8-1
+> https://github.com/cminyard/linux-ipmi.git tags/for-linus-6.8-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5fda5698c289b2ff21d53d935c43351c424f8388
+https://git.kernel.org/torvalds/c/7c6a3fc925b63d5201f1c11b93193d8a466a7d89
 
 Thank you!
 
