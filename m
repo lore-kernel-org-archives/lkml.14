@@ -1,49 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB9848797;
-	Wed, 10 Jan 2024 14:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3490481A0;
+	Wed, 10 Jan 2024 14:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J5IfoyvQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704895508; x=1736431508;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SWsVBP9cH1tPvG/nm5K35e0TZLa1y3pyiKzTVosVQgs=;
-  b=J5IfoyvQj8rfI1q3F64ikezYOc9WmxMkjRU8pBJ7l/+VubWzKpTJDE18
-   XkdIvEcwt5Cy4GB4K1uiSSdgwZY0MZwkTXk9qdYv3vQmzosvmubEFJY8J
-   xt950ebP5QpwaXpWSlNYkuPxi/FeNNtCncOflfsxvr7oRzPPFBUm5M6+9
-   xbDZwKC+ZreqKffG2VXFctwhTuDOwBFJn3hXLyn34xPiyJaBr0/QOmLgl
-   3H/fEtmyABxzhuADGI1I6MNVGCY1Kvdh4ITXdT7XfgPSabgwnMJGNUu5I
-   w2mfrHtNfLmR0LPf1XRce2blvZ0f2aHkIvzQ7g+lNF7yf+bJGIkWXrShD
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="397382779"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="397382779"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 06:05:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="905546712"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="905546712"
-Received: from kpurta-mobl.ger.corp.intel.com (HELO localhost) ([10.252.37.105])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 06:05:05 -0800
-Date: Wed, 10 Jan 2024 15:05:01 +0100
-From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Linux PM <linux-pm@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PM: sleep: Restore asynchronous device resume
- optimization
-Message-ID: <ZZ6kDVD3p4KdR9Cs@linux.intel.com>
-References: <10423008.nUPlyArG6x@kreacher>
- <ZZ5zcBBEv7qupIdE@linux.intel.com>
- <CAJZ5v0gp6uETgLNHxDnSd4h_0ois7J2AC7soJJVv18B99GmxcQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LRbkosC1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=wg+JdhHtLxWgbjYOBxwa3B4vfuHrxB0uyCssl4auPW4=; b=LRbkosC13u2I7bkYFIw4sqCyvh
+	9HCHCRVLUn3GBBOt52/uPG37UrgeiN1JevHWLK6glkyC15bOj0tTvERkX8qBYy/r+u2zIuRLz5b8Q
+	p2VvNr89OLMxlrg7bthZTogLljM2k4P1sYdRlA5Je/puq6WSYJ94gkjnvxUHPGO/hRbZ+AZi+JY0i
+	alIIb03exo/yAlz485/n8ggvDbYdDFYtt2MBRwiwHFau6fahmZIAeGnewD/UO8EvwFQQZFK1xuRoy
+	E9toHUJCoAM+QI4o1qIpC8uguGsnbfPBDk/GbUDFHpLfcn2/TWUh24xywA7oPSVafjAODbp57xu0b
+	xlSIayUw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39980)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rNZF1-0005Um-34;
+	Wed, 10 Jan 2024 14:07:35 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rNZF3-0005My-3Q; Wed, 10 Jan 2024 14:07:37 +0000
+Date: Wed, 10 Jan 2024 14:07:37 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+Subject: Re: [0/2] ARM: Adjustments for init_atags_procfs()
+Message-ID: <ZZ6kqV79ckeZ7JUj@shell.armlinux.org.uk>
+References: <6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de>
+ <562a6f99-3f8e-9a77-e519-b668e24dced2@web.de>
+ <b3c42397-c879-4381-aa96-c7887e81c068@web.de>
+ <7dd19987-6590-4756-a929-1ff01503ad1c@web.de>
+ <ZZ6MZl14bcIaCaQn@shell.armlinux.org.uk>
+ <1c38e495-5c9c-4ff8-b453-93b882dd2c4c@web.de>
+ <ZZ6R6KSQo9ph3ARZ@shell.armlinux.org.uk>
+ <09c4cb2e-967b-4d0e-b5c6-f959e80290d9@web.de>
+ <ZZ6gq5sOFf33GhM7@shell.armlinux.org.uk>
+ <89406360-b6ee-455c-a575-031b87cf41ae@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,14 +53,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gp6uETgLNHxDnSd4h_0ois7J2AC7soJJVv18B99GmxcQ@mail.gmail.com>
+In-Reply-To: <89406360-b6ee-455c-a575-031b87cf41ae@web.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Jan 10, 2024 at 01:33:07PM +0100, Rafael J. Wysocki wrote:
-> > I would consider different naming just to make clear this
-> > is regarding async call, in_progress looks too generic for me.
+On Wed, Jan 10, 2024 at 03:00:11PM +0100, Markus Elfring wrote:
+> >> Are you going to pick any patches up from linked information sources?
+> >
+> > No. Did you read my first reply which told you how patches get applied
+> > to arch/arm? If you didn't, your patch won't get applied.
 > 
-> OK, what about async_in_progress?
-Sure, that better.
+> Do you request a resend of affected patches here?
 
-Regards
-Stanislaw
+Welcome to my /dev/null mailbox. It has plenty of space. Feel free to
+continue sending your claptrap there. Rest assured I won't read it
+anymore.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
