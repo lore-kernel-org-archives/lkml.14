@@ -1,7 +1,7 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6953D4BABE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3673EA80
 	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -9,23 +9,23 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNajS-0007JI-A4; Wed, 10 Jan 2024 16:43:06 +0100
+	id 1rNajS-0007JL-EX; Wed, 10 Jan 2024 16:43:06 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNajR-001jUb-B5; Wed, 10 Jan 2024 16:43:05 +0100
+	id 1rNajS-001jUk-1Y; Wed, 10 Jan 2024 16:43:06 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNajR-006c4L-0s;
+	id 1rNajR-006c4X-38;
 	Wed, 10 Jan 2024 16:43:05 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Michael Ellerman <mpe@ellerman.id.au>
 Cc: linuxppc-dev@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/7] macintosh: windfarm_pm112: Convert to platform remove callback returning void
-Date: Wed, 10 Jan 2024 16:42:49 +0100
-Message-ID:  <eac991c7f2267237382f77bc15c016ff62e1fbb7.1704900449.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 5/7] macintosh: windfarm_pm81: Convert to platform remove callback returning void
+Date: Wed, 10 Jan 2024 16:42:52 +0100
+Message-ID:  <725a17c7fb1bbe6d827b38bbee40494aebf9c06d.1704900449.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1704900449.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1704900449.git.u.kleine-koenig@pengutronix.de>
@@ -36,7 +36,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1592; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=EDHxRAEtSZEx4PMN+NHAvrn9dvdslr8ymxAgEO6mM54=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlnrr6o9vZrpebD10MOZdZmw5FqvDRtlGuQv/Ny lxuC0t+3OuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZZ66+gAKCRCPgPtYfRL+ Tp7yB/44+RH1GGupIvmLoyJcQ16OpEyinOqC00OpPqyfAfbw3z9vVNi/5wuWHkgslkcesPpl8Ja efsFt7RPCCjg8rdtgPd4oW1Yf+6msVDzFuDp2fQ/yLPyaUhv4k2h74bYqoRkXhblqA3PNkGAjYa +s44DBpjCinsW2hbVAA15PG2s5LSIDJ5n4hVIf5/b7TwHJKi4mvgNpP6tk6zm2wDmb84SIztiVe k9dQKxbdZPgP6b1tKyasQ4ZjfKS7SnGJwH001v1DeS1AYBrD8322Skl6B6gC4DLZcW36LIfgnMO ppZKVTjOgghEXntnJ1uLoichovITKRqWsC4jJ8PhtoVc3wOK
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1754; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=JIumVAh3vPYREF//u7bkB7EN6JDIcq7JQV0/55+tgig=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlnrr9cGJf6iwan3BelkYvjxz1rORpYhL3KQpVA H9WZZ5TI1WJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZZ66/QAKCRCPgPtYfRL+ TriLB/wMDX8j2YkG3CwhSFKfGseVipaO6qkUR7ahpC0Up2CnkrqOwZAobIsf3dw0Y/01I0ZNjtc 8+8LchW5znSHRLxrlQBxaCoeN1dKsRNtzRRkf+vHnAQ53cG9J3OLv7hBL1J+2WtgT6nrZ8VjLqX U1RKwAMSzpK1UzOZs1BUrfpXhNQNigflasKZUFYTfDP/uHGRtATepZ/SNqMKG0XZ9kSbVVrDEcj uNzXxdWCArERgcm9ufu+623M897Wzo6B46xttPUtXAdDQ/PsS2x6iITCaoSlbxFiffqIswxbLyE 0BzKDEr3DmmT0xNnzNC2zLxFrOt+ZszHMFOat94qUpmNvHGT
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,29 +59,35 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/macintosh/windfarm_pm112.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/macintosh/windfarm_pm81.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/macintosh/windfarm_pm112.c b/drivers/macintosh/windfarm_pm112.c
-index d1dec314ae30..876b4d8cbe37 100644
---- a/drivers/macintosh/windfarm_pm112.c
-+++ b/drivers/macintosh/windfarm_pm112.c
-@@ -662,16 +662,14 @@ static int wf_pm112_probe(struct platform_device *dev)
+diff --git a/drivers/macintosh/windfarm_pm81.c b/drivers/macintosh/windfarm_pm81.c
+index 257fb2c695c5..404d2454e33d 100644
+--- a/drivers/macintosh/windfarm_pm81.c
++++ b/drivers/macintosh/windfarm_pm81.c
+@@ -724,7 +724,7 @@ static int wf_smu_probe(struct platform_device *ddev)
  	return 0;
  }
  
--static int wf_pm112_remove(struct platform_device *dev)
-+static void wf_pm112_remove(struct platform_device *dev)
+-static int wf_smu_remove(struct platform_device *ddev)
++static void wf_smu_remove(struct platform_device *ddev)
  {
- 	wf_unregister_client(&pm112_events);
--	/* should release all sensors and controls */
+ 	wf_unregister_client(&wf_smu_events);
+ 
+@@ -761,13 +761,11 @@ static int wf_smu_remove(struct platform_device *ddev)
+ 	/* Destroy control loops state structures */
+ 	kfree(wf_smu_sys_fans);
+ 	kfree(wf_smu_cpu_fans);
+-
 -	return 0;
  }
  
- static struct platform_driver wf_pm112_driver = {
- 	.probe = wf_pm112_probe,
--	.remove = wf_pm112_remove,
-+	.remove_new = wf_pm112_remove,
+ static struct platform_driver wf_smu_driver = {
+-        .probe = wf_smu_probe,
+-        .remove = wf_smu_remove,
++	.probe = wf_smu_probe,
++	.remove_new = wf_smu_remove,
  	.driver = {
  		.name = "windfarm",
  	},
