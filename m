@@ -1,82 +1,84 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6E023C1;
-	Wed, 10 Jan 2024 06:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 40A6hTvK005132;
-	Wed, 10 Jan 2024 14:43:34 +0800 (GMT-8)
-	(envelope-from hu.yadi@h3c.com)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
-	by mail.maildlp.com (Postfix) with ESMTP id B77D22005AD1;
-	Wed, 10 Jan 2024 14:47:53 +0800 (CST)
-Received: from localhost.localdomain (10.99.206.12) by
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.27; Wed, 10 Jan 2024 14:43:34 +0800
-From: Hu Yadi <hu.yadi@h3c.com>
-To: <jmorris@namei.org>, <serge@hallyn.com>, <shuah@kernel.org>,
-        <mathieu.desnoyers@efficios.com>
-CC: <linux-api@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <514118380@qq.com>,
-        "Hu.Yadi" <hu.yadi@h3c.com>
-Subject: [PATCH] selftests/move_mount_set_group:Make tests build with old libc
-Date: Wed, 10 Jan 2024 14:40:40 +0800
-Message-ID: <20240110064040.16043-1-hu.yadi@h3c.com>
-X-Mailer: git-send-email 2.17.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AD5364A9
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 06:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3D475E0003;
+	Wed, 10 Jan 2024 06:47:48 +0000 (UTC)
+Message-ID: <d6be9a6a-4eab-49bd-8e4e-774646994cd3@ghiti.fr>
+Date: Wed, 10 Jan 2024 07:47:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 40A6hTvK005132
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] RISC-V: only flush icache when it has VM_EXEC set
+Content-Language: en-US
+To: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Conor Dooley <conor.dooley@microchip.com>, Jisheng Zhang
+ <jszhang@kernel.org>, Andrew Waterman <andrew@sifive.com>
+References: <tencent_6D851035F6F2FD0B5A69FB391AE39AC6300A@qq.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <tencent_6D851035F6F2FD0B5A69FB391AE39AC6300A@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-From: "Hu.Yadi" <hu.yadi@h3c.com>
+Hi Yangyu,
 
-Replace SYS_<syscall> with __NR_<syscall>.  Using the __NR_<syscall>
-notation, provided by UAPI, is useful to build tests on systems without
-the SYS_<syscall> definitions.
+On 09/01/2024 19:48, Yangyu Chen wrote:
+> As I-Cache flush on current RISC-V needs to send IPIs to every CPU cores
+> in the system is very costly, limiting flush_icache_mm to be called only
+> when vma->vm_flags has VM_EXEC can help minimize the frequency of these
+> operations. It improves performance and reduces disturbances when
 
-Replace SYS_move_mount with __NR_move_mount
 
-Signed-off-by: Hu.Yadi <hu.yadi@h3c.com>
-Suggested-by:jiaoxupo@h3c.com
-Reviewed-by:berlin@h3c.com
----
- .../move_mount_set_group/move_mount_set_group_test.c          | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Which platform did you test this patchset? Do you have any measurement 
+of the performance improvements?
 
-diff --git a/tools/testing/selftests/move_mount_set_group/move_mount_set_group_test.c b/tools/testing/selftests/move_mount_set_group/move_mount_set_group_test.c
-index 50ed5d475dd1..bcf51d785a37 100644
---- a/tools/testing/selftests/move_mount_set_group/move_mount_set_group_test.c
-+++ b/tools/testing/selftests/move_mount_set_group/move_mount_set_group_test.c
-@@ -218,7 +218,7 @@ static bool move_mount_set_group_supported(void)
- 	if (mount(NULL, SET_GROUP_FROM, NULL, MS_SHARED, 0))
- 		return -1;
- 
--	ret = syscall(SYS_move_mount, AT_FDCWD, SET_GROUP_FROM,
-+	ret = syscall(__NR_move_mount, AT_FDCWD, SET_GROUP_FROM,
- 		      AT_FDCWD, SET_GROUP_TO, MOVE_MOUNT_SET_GROUP);
- 	umount2("/tmp", MNT_DETACH);
- 
-@@ -363,7 +363,7 @@ TEST_F(move_mount_set_group, complex_sharing_copying)
- 		       CLONE_VM | CLONE_FILES); ASSERT_GT(pid, 0);
- 	ASSERT_EQ(wait_for_pid(pid), 0);
- 
--	ASSERT_EQ(syscall(SYS_move_mount, ca_from.mntfd, "",
-+	ASSERT_EQ(syscall(__NR_move_mount, ca_from.mntfd, "",
- 			  ca_to.mntfd, "", MOVE_MOUNT_SET_GROUP
- 			  | MOVE_MOUNT_F_EMPTY_PATH | MOVE_MOUNT_T_EMPTY_PATH),
- 		  0);
--- 
-2.23.0
+
+> copy_from_user_page is needed such as profiling with perf.
+>
+> For I-D coherence concerns, it will not fail if such a page adds VM_EXEC
+> flags in the future since we have checked it in the __set_pte_at function.
+>
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> ---
+>   arch/riscv/include/asm/cacheflush.h | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
+> index 3cb53c4df27c..915f532dc336 100644
+> --- a/arch/riscv/include/asm/cacheflush.h
+> +++ b/arch/riscv/include/asm/cacheflush.h
+> @@ -33,8 +33,11 @@ static inline void flush_dcache_page(struct page *page)
+>    * so instead we just flush the whole thing.
+>    */
+>   #define flush_icache_range(start, end) flush_icache_all()
+> -#define flush_icache_user_page(vma, pg, addr, len) \
+> -	flush_icache_mm(vma->vm_mm, 0)
+> +#define flush_icache_user_page(vma, pg, addr, len)	\
+> +do {							\
+> +	if (vma->vm_flags & VM_EXEC)			\
+> +		flush_icache_mm(vma->vm_mm, 0);		\
+> +} while (0)
+>   
+>   #ifdef CONFIG_64BIT
+>   #define flush_cache_vmap(start, end)	flush_tlb_kernel_range(start, end)
+
+
+Otherwise, it looks good to me, so you can add:
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
 
