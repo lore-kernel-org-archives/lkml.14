@@ -1,140 +1,161 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479083B787
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B863B199;
+	Wed, 10 Jan 2024 09:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LuFTYoR0"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40e490c2115so16382545e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 01:06:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704877559; x=1705482359; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YGn05+FOp2S6kGAYx1CC3XYu3wPlmxWSpkBFMyATYt8=;
-        b=LuFTYoR0IVXxHT8hgg40KLgFQv/7HjpvXeQpUc0kqD/O5qwK1o0lJaubSjFPttny+a
-         L2LnyGzzX1Nd8VEhdgv8kLsFa8+Sk0G/mxONzDOeTCA+oeETh+yb205SKK9fEwyrOz/r
-         NbP+fod4TV/pgT4vVIh5FcAc7ALRUqeaVs6CEGkjxuHaFSLAl+OyKuNvsCxAGyKPIAZx
-         Nz81QNsioQ5Wu31sW9Hcoak8HFBjFeSLIoSAd21NpoZptNl4A/GbThS71Xp/jajRDlsD
-         YvVbDxch2gbfQzN9ecsRDUMv27HJhNl/JmhUVewklc3RAyL1KWtJJ02EeRVDCZRLVN7I
-         WC3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704877559; x=1705482359;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YGn05+FOp2S6kGAYx1CC3XYu3wPlmxWSpkBFMyATYt8=;
-        b=Iub1ej4TUOuXiVGFCKMKQRuaFCgQ8haJumXrKZZNvwef8wQKFgGJuq6O5PxjMIbvCU
-         6aVgI5oYirGRixXFPtwYaKF2Eb2r//YP2e6v/b0ruZzN8pbBCoAXdPgHFCaNEq2031sI
-         BDOCPiRGK/b95vvrWUyYCVF3wiOFLgT3Pv98vFkJafMsvh1TM5ZRwU+1/xfcVUBFi6tf
-         ufIy1+rvZoiU1VGaz/hxTPnCH7z3VOccwf/eYnYGqZpFQ6GKbH4LRugcMJdMuWTHY4Pf
-         tQ7DAej9/lq0CATlj1LiocujFVQj3UlzV6rb+oLq/A2cJzYaHamNjpVAdhH/8bo2dlrl
-         ZooA==
-X-Gm-Message-State: AOJu0YxG8vGypdOnUJGTYudpNTAXDyCLpnFb9qXqIZmVQXJcQ8EVHy1X
-	wj/iakNU5/ija6C/BKtSE31nK0ZgpA+btQ==
-X-Google-Smtp-Source: AGHT+IEFouJoUbml6X/7HBn2vGnyrbIlj3qsE0X5+d3U6eg+CtsrfuuLfyDPpRGpHb1rp2//5OPqsQ==
-X-Received: by 2002:a05:600c:1e84:b0:40e:4a73:f6b7 with SMTP id be4-20020a05600c1e8400b0040e4a73f6b7mr374107wmb.150.1704877559419;
-        Wed, 10 Jan 2024 01:05:59 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:5dee:51de:9349:2adf? ([2a01:e0a:982:cbb0:5dee:51de:9349:2adf])
-        by smtp.gmail.com with ESMTPSA id fs14-20020a05600c3f8e00b0040e38b7cfdasm1412519wmb.4.2024.01.10.01.05.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 01:05:58 -0800 (PST)
-Message-ID: <80b898a0-1f44-4623-9df2-edccb9307098@linaro.org>
-Date: Wed, 10 Jan 2024 10:05:57 +0100
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BuAxzrXT"
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+	id D83FA20B3CC1; Wed, 10 Jan 2024 01:08:19 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D83FA20B3CC1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1704877699;
+	bh=VGPAJ+VlAmIxbqE8tAHckUZUwj1fM6R7OZbw7bjWzS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BuAxzrXTnPC0ZeAKe/PvtdnWrbkAIpLsexS72rloAJrewEhopaweCME4r5BwZRptA
+	 gYFE9eMieWSfoUvTFmvUM29QV5ovH8/8qZGpPWGr9JqI6kWok81hDPXl5piWT+99zO
+	 XA9NZ17spy7tGGiVBmZRsQXbWwICS7wJJeqHeDiw=
+Date: Wed, 10 Jan 2024 01:08:19 -0800
+From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	"yury.norov@gmail.com" <yury.norov@gmail.com>,
+	"leon@kernel.org" <leon@kernel.org>,
+	"cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Souradeep Chakrabarti <schakrabarti@microsoft.com>,
+	Paul Rosswurm <paulros@microsoft.com>
+Subject: Re: [PATCH 3/4 net-next] net: mana: add a function to spread IRQs
+ per CPUs
+Message-ID: <20240110090819.GA5436@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1704797478-32377-1-git-send-email-schakrabarti@linux.microsoft.com>
+ <1704797478-32377-4-git-send-email-schakrabarti@linux.microsoft.com>
+ <SN6PR02MB4157CB3CB55A17255AE61BF6D46A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <MW1PEPF0000E6910254736DF77F99E04DD4CA6A2@MW1PEPF0000E691.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: panel: panel-simple: Add
- compatible property for waveshare 7inch touchscreen panel
-Content-Language: en-US, fr
-To: Conor Dooley <conor@kernel.org>,
- Shengyang Chen <shengyang.chen@starfivetech.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- quic_jesszhan@quicinc.com, sam@ravnborg.org, airlied@gmail.com,
- daniel@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, wahrenst@gmx.net, dave.stevenson@raspberrypi.com,
- thierry.reding@gmail.com, changhuang.liang@starfivetech.com,
- keith.zhao@starfivetech.com, jack.zhu@starfivetech.com,
- linux-kernel@vger.kernel.org
-References: <20240109070949.23957-1-shengyang.chen@starfivetech.com>
- <20240109070949.23957-2-shengyang.chen@starfivetech.com>
- <20240109-worsening-material-fae02ff4e611@spud>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <20240109-worsening-material-fae02ff4e611@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW1PEPF0000E6910254736DF77F99E04DD4CA6A2@MW1PEPF0000E691.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 09/01/2024 17:32, Conor Dooley wrote:
-> On Tue, Jan 09, 2024 at 03:09:48PM +0800, Shengyang Chen wrote:
->> The waveshare 7" 800x480 panel is a clone of Raspberry Pi 7" 800x480 panel
->> It can be drived by Raspberry Pi panel's process but it needs different
->> timing from Raspberry Pi panel. Add compatible property for it.
->>
->> Signed-off-by: Keith Zhao <keith.zhao@starfivetech.com>
->> Signed-off-by: Shengyang Chen <shengyang.chen@starfivetech.com>
->> ---
->>   .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
->> index 11422af3477e..02f6b1b2ddc9 100644
->> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
->> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
->> @@ -335,6 +335,8 @@ properties:
->>         - vivax,tpc9150-panel
->>           # VXT 800x480 color TFT LCD panel
->>         - vxt,vl050-8048nt-c01
->> +        # Waveshare 7" (800x480) touchscreen LCD panel
->> +      - waveshare,7inch-touchscreen
+On Tue, Jan 09, 2024 at 08:20:31PM +0000, Haiyang Zhang wrote:
 > 
-> Is "7inch-touchscreen" really a specific enough identifier for this
-> device?
-
-Waveshare has very precise SKUs, this should be something like waveshare,7inch-dsi-sku19885 perhaps
-
-Neil
-
 > 
->>           # Winstar Display Corporation 3.5" QVGA (320x240) TFT LCD panel
->>         - winstar,wf35ltiacd
->>           # Yes Optoelectronics YTC700TLAG-05-201C 7" TFT LCD panel
->> -- 
->> 2.17.1
->>
-
+> > -----Original Message-----
+> > From: Michael Kelley <mhklinux@outlook.com>
+> > Sent: Tuesday, January 9, 2024 2:23 PM
+> > To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>; KY Srinivasan
+> > <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
+> > wei.liu@kernel.org; Dexuan Cui <decui@microsoft.com>;
+> > davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+> > pabeni@redhat.com; Long Li <longli@microsoft.com>; yury.norov@gmail.com;
+> > leon@kernel.org; cai.huoqing@linux.dev; ssengar@linux.microsoft.com;
+> > vkuznets@redhat.com; tglx@linutronix.de; linux-hyperv@vger.kernel.org;
+> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > rdma@vger.kernel.org
+> > Cc: Souradeep Chakrabarti <schakrabarti@microsoft.com>; Paul Rosswurm
+> > <paulros@microsoft.com>
+> > Subject: RE: [PATCH 3/4 net-next] net: mana: add a function to spread IRQs per
+> > CPUs
+> > 
+> > [Some people who received this message don't often get email from
+> > mhklinux@outlook.com. Learn why this is important at
+> > https://aka.ms/LearnAboutSenderIdentification ]
+> > 
+> > From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com> Sent:
+> > Tuesday, January 9, 2024 2:51 AM
+> > >
+> > > From: Yury Norov <yury.norov@gmail.com>
+> > >
+> > > Souradeep investigated that the driver performs faster if IRQs are
+> > > spread on CPUs with the following heuristics:
+> > >
+> > > 1. No more than one IRQ per CPU, if possible;
+> > > 2. NUMA locality is the second priority;
+> > > 3. Sibling dislocality is the last priority.
+> > >
+> > > Let's consider this topology:
+> > >
+> > > Node            0               1
+> > > Core        0       1       2       3
+> > > CPU       0   1   2   3   4   5   6   7
+> > >
+> > > The most performant IRQ distribution based on the above topology
+> > > and heuristics may look like this:
+> > >
+> > > IRQ     Nodes   Cores   CPUs
+> > > 0       1       0       0-1
+> > > 1       1       1       2-3
+> > > 2       1       0       0-1
+> > > 3       1       1       2-3
+> > > 4       2       2       4-5
+> > > 5       2       3       6-7
+> > > 6       2       2       4-5
+> > > 7       2       3       6-7
+> > 
+> > I didn't pay attention to the detailed discussion of this issue
+> > over the past 2 to 3 weeks during the holidays in the U.S., but
+> > the above doesn't align with the original problem as I understood
+> > it.  I thought the original problem was to avoid putting IRQs on
+> > both hyper-threads in the same core, and that the perf
+> > improvements are based on that configuration.  At least that's
+> > what the commit message for Patch 4/4 in this series says.
+> > 
+> > The above chart results in 8 IRQs being assigned to the 8 CPUs,
+> > probably with 1 IRQ per CPU.   At least on x86, if the affinity
+> > mask for an IRQ contains multiple CPUs, matrix_find_best_cpu()
+> > should balance the IRQ assignments between the CPUs in the mask.
+> > So the original problem is still present because both hyper-threads
+> > in a core are likely to have an IRQ assigned.
+> > 
+> > Of course, this example has 8 IRQs and 8 CPUs, so assigning an
+> > IRQ to every hyper-thread may be the only choice.  If that's the
+> > case, maybe this just isn't a good example to illustrate the
+> > original problem and solution.  But even with a better example
+> > where the # of IRQs is <= half the # of CPUs in a NUMA node,
+> > I don't think the code below accomplishes the original intent.
+> > 
+> > Maybe I've missed something along the way in getting to this
+> > version of the patch.  Please feel free to set me straight. :-)
+> > 
+> > Michael
+> 
+> I have the same question as Michael. Also, I'm asking Souradeep
+> in another channel: So, the algorithm still uses up all current 
+> NUMA node before moving on to the next NUMA node, right?
+> 
+> Except each IRQ is affinitized to 2 CPUs. 
+> For example, a system with 2 IRQs:
+> IRQ     Nodes   Cores  CPUs
+> 0       1       0      0-1
+> 1       1       1      2-3
+>  
+> Is this performing better than the algorithm in earlier patches? like below:
+> IRQ     Nodes   Cores  CPUs
+> 0       1       0      0
+> 1       1       1      2
+> 
+The details for this approach has been shared by Yury later in this thread.
+The main intention with this approach is kernel may pick any
+sibling for the IRQ.
+> Thanks,
+> - Haiyang
