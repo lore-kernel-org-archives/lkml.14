@@ -1,47 +1,47 @@
 Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24DB4F1E4
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:51:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418DD50254
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RVhbHay3"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-598890b5b9dso896448eaf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:51:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cbfW3zrC"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-598a5448ef5so270389eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:51:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704916274; x=1705521074; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704916280; x=1705521080; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Rtpyz2iiOS/zOtpHDt2wgyhpTSxFEj3qm5hO7mpmzwg=;
-        b=RVhbHay3gZyrSslLRfgAYADLWalPcSPtBDp7BVCF9F1ZMIMLM8mbVk1fMMFvyqu78Q
-         k/BXeSo+wB7PBtmpUv8XMJd8+sKVrGI4S02Q+IlcKGA9i8IctV4ZN0z4eKtJYVfYltMQ
-         70PAT/TgF/0CsxQJsYT32O6HsdKLzVTS1uZGBNA35LV0ZH3zAsnLu9QF2bwAz3enXSHg
-         04J5AJLKgHiDtSph6Zu0HWhqV3SPhZGzTyB9DNBVttheqPJG2b7VQU/i6t8vdjptvqo3
-         YwLjrWhe5BPRzw5OejuUoBQXgGSqquenj/NOprpsTytVgvLjq/uWF4Dh0XPkrK9bXZli
-         Wj5Q==
+        bh=EAfisbraTIzPK5DNS+hXkieTeMFvO6LSXMmUPvgA/Yc=;
+        b=cbfW3zrCzDrC2BsJDrvGh2OelkTFByfUxrTt4miiSoq3fT2DmiaOTNftPRWZpCoOMx
+         d2gRMxkafALFBhuUMrgpW94onVz/j6zq9twsooZAcfDJjKfKEzZgraYwAbGXhD6Zghsq
+         jJx0T8rDjFrVaUrO+t8X0MvaVxOgQ1xgAUgJ7fvEBYdarHT4UnehFRbSfLRMMDBJXRTn
+         K9GOLzBYfxx6vyu/gIx8rYr65+rrnCasMncpBEp/1+vTM69O9WL8Au56+V2Lkx0qVqFO
+         oWYSHYXHlXnI4J7I5KebEWMiw2meBOD2gser2+Kfzy+h/VdaDE9HkkEk7D0wSLUYyIdz
+         MmRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704916274; x=1705521074;
+        d=1e100.net; s=20230601; t=1704916280; x=1705521080;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Rtpyz2iiOS/zOtpHDt2wgyhpTSxFEj3qm5hO7mpmzwg=;
-        b=A/EXctEZda/r4lCvktbKytjv1PoelWfGmKs3SwpPlFKrgdpWZFlA1Hzk+BOhgZ0+kr
-         do+xX37GRe0GM8sbZtGL6iNbq/7U7QAcUn2r90Zg1cnEWONKcwcJRxv1oyaqf6YPQeKm
-         cbt4Pl5JBk074klBC7yGH28vQL+UYoTdAQXG+jGRjNsdJqdK8gvP9iz5TPgZaGFPJlnj
-         RY79jkSD/y1WwB3PMRbd1V9tVy/nqdNK6gmXQzW9I7vrVNrdgzZGcdPhPfSReggmPaX7
-         lrLUzc9FMn3zy/30egiZE18pdt8vxZUHMyIqtH32rpNb8pslR8mxZCDMWcDEoJxHMdVf
-         iuKg==
-X-Gm-Message-State: AOJu0Yz43vRRDbHHjwVYFsxG2VM6A+AChTgDyDI93J+c+uh3CvHFKluE
-	sFLgVXB6m4A4cFOp62GLiZXy/L4Wskys7w==
-X-Google-Smtp-Source: AGHT+IHc4sNQXYEuciW9GRpQ8zDDHu5jhYMUf3CF7UcMErZxuLOTHOlO+9T2OSQ/blaf7Jl7ugn6bw==
-X-Received: by 2002:a4a:d2c7:0:b0:594:12f5:81f3 with SMTP id j7-20020a4ad2c7000000b0059412f581f3mr102811oos.8.1704916273902;
-        Wed, 10 Jan 2024 11:51:13 -0800 (PST)
+        bh=EAfisbraTIzPK5DNS+hXkieTeMFvO6LSXMmUPvgA/Yc=;
+        b=VVWtVYp+WxiOuBn8aK91EVcotEuzCA1zkqTyEykJDOwrENJNUs64sjX4H0kbiqPg58
+         u/UYbYeofU3wxd+X6AmTaY3lkZlBLSmLjB9OgC15e5J+QicqKWFAPqVztzDFG3IAAonq
+         NLfGH/MzkMknt5YQ9hX7K+sTmIXC3xPrVC9YuqHrUEWm8tLENHREzXQ4EPcqmSpkQnXz
+         cMVhM8O+tlLsAMujuZe0wW2DMdwGLETGXGzbru3JvdqRjrJTfGODZWF0c6dXsKFw6OrW
+         nJDhLx4eBVdrk8rpVVmPyRp6eusVpvQeBhLLOe8wlJxj//oMY6ur6XLKeS7Busfq9m5/
+         Vfqw==
+X-Gm-Message-State: AOJu0YzIFvBqEpx32weLE+QWJx8IcFECUOvH4CAN7eGvTKS/l+PIp13h
+	FTRRpLRqoqMDPMktiB1keufwhPDzuIU8K1oS4kE9T6nAzKo=
+X-Google-Smtp-Source: AGHT+IHTumG0RvNmGteYGaGu6Rft2bQuoGUvLiP+GdymDcLixB0l11q6v2G9HH89HiPnDLtdCilfmg==
+X-Received: by 2002:a4a:3503:0:b0:590:2b6d:a862 with SMTP id l3-20020a4a3503000000b005902b6da862mr94634ooa.15.1704916280323;
+        Wed, 10 Jan 2024 11:51:20 -0800 (PST)
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 187-20020a4a0dc4000000b00595b35927a3sm938513oob.39.2024.01.10.11.51.13
+        by smtp.gmail.com with ESMTPSA id 187-20020a4a0dc4000000b00595b35927a3sm938513oob.39.2024.01.10.11.51.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 11:51:13 -0800 (PST)
+        Wed, 10 Jan 2024 11:51:20 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
 To: Mark Brown <broonie@kernel.org>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -60,11 +60,10 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	devicetree@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>
-Subject: [PATCH 05/13] spi: axi-spi-engine: add SPI offload support
-Date: Wed, 10 Jan 2024 13:49:46 -0600
-Message-ID: <20240109-axi-spi-engine-series-3-v1-5-e42c6a986580@baylibre.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 12/13] iio: offload: add new PWM triggered DMA buffer driver
+Date: Wed, 10 Jan 2024 13:49:53 -0600
+Message-ID: <20240109-axi-spi-engine-series-3-v1-12-e42c6a986580@baylibre.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
 References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
@@ -78,372 +77,310 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-This adds an implementation of the SPI offload_ops to the AXI SPI Engine
-driver to provide offload support.
+This adds a new driver for handling SPI offloading using a PWM as the
+trigger and DMA for the received data. This will be used by ADCs in
+conjunction with SPI controllers with offloading support to be able
+to sample at high rates without CPU intervention.
 
-Offload lookup is done by device property lookup. SPI Engine commands
-and tx data  are recorded by writing to offload-specific FIFOs in the
-SPI Engine hardware.
-
-Co-developed-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/spi/spi-axi-spi-engine.c | 270 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 270 insertions(+)
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ .../iio/buffer/industrialio-hw-triggered-buffer.c  |   1 +
+ drivers/iio/offload/Kconfig                        |  21 ++
+ drivers/iio/offload/Makefile                       |   2 +
+ drivers/iio/offload/iio-pwm-triggered-dma-buffer.c | 212 +++++++++++++++++++++
+ 6 files changed, 238 insertions(+)
 
-diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index 58280dd1c901..1d7ddc867b50 100644
---- a/drivers/spi/spi-axi-spi-engine.c
-+++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -2,9 +2,11 @@
- /*
-  * SPI-Engine SPI controller driver
-  * Copyright 2015 Analog Devices Inc.
-+ * Copyright 2023 BayLibre, SAS
-  *  Author: Lars-Peter Clausen <lars@metafoo.de>
-  */
- 
-+#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/idr.h>
- #include <linux/interrupt.h>
-@@ -38,11 +40,22 @@
- #define SPI_ENGINE_REG_SDI_DATA_FIFO		0xe8
- #define SPI_ENGINE_REG_SDI_DATA_FIFO_PEEK	0xec
- 
-+#define SPI_ENGINE_MAX_NUM_OFFLOADS		32
-+
-+#define SPI_ENGINE_REG_OFFLOAD_CTRL(x)		(0x100 + (SPI_ENGINE_MAX_NUM_OFFLOADS * x))
-+#define SPI_ENGINE_REG_OFFLOAD_STATUS(x)	(0x104 + (SPI_ENGINE_MAX_NUM_OFFLOADS * x))
-+#define SPI_ENGINE_REG_OFFLOAD_RESET(x)		(0x108 + (SPI_ENGINE_MAX_NUM_OFFLOADS * x))
-+#define SPI_ENGINE_REG_OFFLOAD_CMD_FIFO(x)	(0x110 + (SPI_ENGINE_MAX_NUM_OFFLOADS * x))
-+#define SPI_ENGINE_REG_OFFLOAD_SDO_FIFO(x)	(0x114 + (SPI_ENGINE_MAX_NUM_OFFLOADS * x))
-+
- #define SPI_ENGINE_INT_CMD_ALMOST_EMPTY		BIT(0)
- #define SPI_ENGINE_INT_SDO_ALMOST_EMPTY		BIT(1)
- #define SPI_ENGINE_INT_SDI_ALMOST_FULL		BIT(2)
- #define SPI_ENGINE_INT_SYNC			BIT(3)
- 
-+#define SPI_ENGINE_OFFLOAD_CTRL_ENABLE		BIT(0)
-+#define SPI_ENGINE_OFFLOAD_STATUS_ENABLED	BIT(0)
-+
- #define SPI_ENGINE_CONFIG_CPHA			BIT(0)
- #define SPI_ENGINE_CONFIG_CPOL			BIT(1)
- #define SPI_ENGINE_CONFIG_3WIRE			BIT(2)
-@@ -76,6 +89,10 @@
- #define SPI_ENGINE_CMD_SYNC(id) \
- 	SPI_ENGINE_CMD(SPI_ENGINE_INST_MISC, SPI_ENGINE_MISC_SYNC, (id))
- 
-+/* default sizes - can be changed when SPI Engine firmware is compiled */
-+#define SPI_ENGINE_OFFLOAD_CMD_FIFO_SIZE	16
-+#define SPI_ENGINE_OFFLOAD_SDO_FIFO_SIZE	16
-+
- struct spi_engine_program {
- 	unsigned int length;
- 	uint16_t instructions[];
-@@ -107,6 +124,10 @@ struct spi_engine_message_state {
- 	u8 sync_id;
- };
- 
-+struct spi_engine_offload {
-+	unsigned int index;
-+};
-+
- struct spi_engine {
- 	struct clk *clk;
- 	struct clk *ref_clk;
-@@ -119,6 +140,9 @@ struct spi_engine {
- 	struct spi_controller *controller;
- 
- 	unsigned int int_enable;
-+
-+	struct spi_offload offloads[SPI_ENGINE_MAX_NUM_OFFLOADS];
-+	struct spi_engine_offload offload_priv[SPI_ENGINE_MAX_NUM_OFFLOADS];
- };
- 
- static void spi_engine_program_add_cmd(struct spi_engine_program *p,
-@@ -603,6 +627,239 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
- 	return 0;
+diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+index 52eb46ef84c1..56738282d82f 100644
+--- a/drivers/iio/Kconfig
++++ b/drivers/iio/Kconfig
+@@ -90,6 +90,7 @@ source "drivers/iio/imu/Kconfig"
+ source "drivers/iio/light/Kconfig"
+ source "drivers/iio/magnetometer/Kconfig"
+ source "drivers/iio/multiplexer/Kconfig"
++source "drivers/iio/offload/Kconfig"
+ source "drivers/iio/orientation/Kconfig"
+ source "drivers/iio/test/Kconfig"
+ if IIO_TRIGGER
+diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+index 9622347a1c1b..20acf5e1a4a7 100644
+--- a/drivers/iio/Makefile
++++ b/drivers/iio/Makefile
+@@ -34,6 +34,7 @@ obj-y += imu/
+ obj-y += light/
+ obj-y += magnetometer/
+ obj-y += multiplexer/
++obj-y += offload/
+ obj-y += orientation/
+ obj-y += position/
+ obj-y += potentiometer/
+diff --git a/drivers/iio/buffer/industrialio-hw-triggered-buffer.c b/drivers/iio/buffer/industrialio-hw-triggered-buffer.c
+index 7a8a71066b0e..a2fae6059616 100644
+--- a/drivers/iio/buffer/industrialio-hw-triggered-buffer.c
++++ b/drivers/iio/buffer/industrialio-hw-triggered-buffer.c
+@@ -86,6 +86,7 @@ static int iio_hw_trigger_buffer_probe(struct auxiliary_device *adev,
  }
  
-+static struct spi_offload *spi_engine_offload_get(struct spi_device *spi,
-+						  unsigned int index)
-+{
-+	struct spi_controller *host = spi->controller;
-+	struct spi_engine *spi_engine = spi_controller_get_devdata(host);
-+	struct spi_offload *offload;
-+	u32 vals[SPI_ENGINE_MAX_NUM_OFFLOADS];
-+	int ret;
+ static const struct auxiliary_device_id iio_hw_trigger_buffer_id_table[] = {
++	{ .name = "pwm-triggered-dma-buffer.triggered-buffer" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(auxiliary, iio_hw_trigger_buffer_id_table);
+diff --git a/drivers/iio/offload/Kconfig b/drivers/iio/offload/Kconfig
+new file mode 100644
+index 000000000000..760c0cfe0e9c
+--- /dev/null
++++ b/drivers/iio/offload/Kconfig
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# SPI offload handlers for Industrial I/O
++#
++# When adding new entries keep the list in alphabetical order
 +
-+	/* Use the adi,offloads array to find the offload at index. */
++menu "SPI offload handlers"
 +
-+	if (index >= ARRAY_SIZE(vals))
-+		return ERR_PTR(-EINVAL);
++config IIO_PWM_TRIGGERED_DMA_BUFFER
++	tristate "PWM trigger and DMA buffer connected to SPI offload"
++	select AUXILIARY_BUS
++	select IIO_BUFFER_DMAENGINE
++	help
++	  Provides a periodic hardware trigger via a PWM connected to the
++	  trigger input of a SPI offload and a hardware buffer implemented
++	  via DMA connected to the data output stream the a SPI offload.
 +
-+	ret = device_property_read_u32_array(&spi->dev, "adi,offloads", vals,
-+					     index + 1);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
++	  To compile this driver as a module, choose M here: the
++	  module will be called "iio-pwm-triggered-dma-buffer".
 +
-+	if (vals[index] >= SPI_ENGINE_MAX_NUM_OFFLOADS)
-+		return ERR_PTR(-EINVAL);
++endmenu
+diff --git a/drivers/iio/offload/Makefile b/drivers/iio/offload/Makefile
+new file mode 100644
+index 000000000000..7300ce82f066
+--- /dev/null
++++ b/drivers/iio/offload/Makefile
+@@ -0,0 +1,2 @@
 +
-+	offload = &spi_engine->offloads[vals[index]];
++obj-$(CONFIG_IIO_PWM_TRIGGERED_DMA_BUFFER) := iio-pwm-triggered-dma-buffer.o
+diff --git a/drivers/iio/offload/iio-pwm-triggered-dma-buffer.c b/drivers/iio/offload/iio-pwm-triggered-dma-buffer.c
+new file mode 100644
+index 000000000000..970ea82316f6
+--- /dev/null
++++ b/drivers/iio/offload/iio-pwm-triggered-dma-buffer.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Platform driver for a PWM trigger and DMA buffer connected to a SPI
++ * controller offload instance implementing the iio-hw-triggered-buffer
++ * interface.
++ *
++ * Copyright (C) 2023 Analog Devices, Inc.
++ * Copyright (C) 2023 BayLibre, SAS
++ */
 +
-+	return offload;
-+}
++#include <linux/auxiliary_bus.h>
++#include <linux/pwm.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/platform_device.h>
++#include <linux/iio/buffer.h>
++#include <linux/iio/hw_triggered_buffer_impl.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/trigger.h>
++#include <linux/iio/sysfs.h>
++#include <linux/iio/buffer-dmaengine.h>
++#include <linux/sysfs.h>
 +
-+static int spi_engine_offload_prepare(struct spi_offload *offload,
-+				      struct spi_message *msg)
-+{
-+	struct spi_controller *host = offload->controller;
-+	struct spi_engine_offload *priv = offload->priv;
-+	struct spi_engine *spi_engine = spi_controller_get_devdata(host);
-+	struct spi_engine_program p_dry, *p __free(kfree) = NULL;
-+	struct spi_transfer *xfer;
-+	void __iomem *cmd_addr;
-+	void __iomem *sdo_addr;
-+	size_t tx_word_count = 0;
-+	unsigned int i;
-+
-+	/* count total number of tx words in message */
-+	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
-+		if (!xfer->tx_buf)
-+			continue;
-+
-+		if (xfer->bits_per_word <= 8)
-+			tx_word_count += xfer->len;
-+		else if (xfer->bits_per_word <= 16)
-+			tx_word_count += xfer->len / 2;
-+		else
-+			tx_word_count += xfer->len / 4;
-+	}
-+
-+	/* REVISIT: could get actual size from devicetree if needed */
-+	if (tx_word_count > SPI_ENGINE_OFFLOAD_SDO_FIFO_SIZE)
-+		return -EINVAL;
-+
-+	spi_engine_precompile_message(msg);
-+
-+	/* dry run to get length */
-+	p_dry.length = 0;
-+	spi_engine_compile_message(msg, true, &p_dry);
-+
-+	/* REVISIT: could get actual size from devicetree if needed */
-+	if (p_dry.length > SPI_ENGINE_OFFLOAD_CMD_FIFO_SIZE)
-+		return -EINVAL;
-+
-+	p = kzalloc(sizeof(*p) + sizeof(*p->instructions) * p_dry.length, GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	spi_engine_compile_message(msg, false, p);
-+
-+	cmd_addr = spi_engine->base + SPI_ENGINE_REG_OFFLOAD_CMD_FIFO(priv->index);
-+	sdo_addr = spi_engine->base + SPI_ENGINE_REG_OFFLOAD_SDO_FIFO(priv->index);
-+
-+	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
-+		if (!xfer->tx_buf)
-+			continue;
-+
-+		if (xfer->bits_per_word <= 8) {
-+			const u8 *buf = xfer->tx_buf;
-+
-+			for (i = 0; i < xfer->len; i++)
-+				writel_relaxed(buf[i], sdo_addr);
-+		} else if (xfer->bits_per_word <= 16) {
-+			const u16 *buf = xfer->tx_buf;
-+
-+			for (i = 0; i < xfer->len / 2; i++)
-+				writel_relaxed(buf[i], sdo_addr);
-+		} else {
-+			const u32 *buf = xfer->tx_buf;
-+
-+			for (i = 0; i < xfer->len / 4; i++)
-+				writel_relaxed(buf[i], sdo_addr);
-+		}
-+	}
-+
-+	for (i = 0; i < p->length; i++)
-+		writel_relaxed(p->instructions[i], cmd_addr);
-+
-+	return 0;
-+}
-+
-+static void spi_engine_offload_unprepare(struct spi_offload *offload)
-+{
-+	struct spi_controller *host = offload->controller;
-+	struct spi_engine_offload *priv = offload->priv;
-+	struct spi_engine *spi_engine = spi_controller_get_devdata(host);
-+
-+	writel_relaxed(1, spi_engine->base +
-+			  SPI_ENGINE_REG_OFFLOAD_RESET(priv->index));
-+	writel_relaxed(0, spi_engine->base +
-+			  SPI_ENGINE_REG_OFFLOAD_RESET(priv->index));
-+}
-+
-+static int spi_engine_offload_enable(struct spi_offload *offload)
-+{
-+	struct spi_controller *host = offload->controller;
-+	struct spi_engine_offload *priv = offload->priv;
-+	struct spi_engine *spi_engine = spi_controller_get_devdata(host);
-+	unsigned int reg;
-+
-+	reg = readl_relaxed(spi_engine->base +
-+			    SPI_ENGINE_REG_OFFLOAD_CTRL(priv->index));
-+	reg |= SPI_ENGINE_OFFLOAD_CTRL_ENABLE;
-+	writel_relaxed(reg, spi_engine->base +
-+			    SPI_ENGINE_REG_OFFLOAD_CTRL(priv->index));
-+
-+	return 0;
-+}
-+
-+static void spi_engine_offload_disable(struct spi_offload *offload)
-+{
-+	struct spi_controller *host = offload->controller;
-+	struct spi_engine_offload *priv = offload->priv;
-+	struct spi_engine *spi_engine = spi_controller_get_devdata(host);
-+	unsigned int reg;
-+
-+	reg = readl_relaxed(spi_engine->base +
-+			    SPI_ENGINE_REG_OFFLOAD_CTRL(priv->index));
-+	reg &= ~SPI_ENGINE_OFFLOAD_CTRL_ENABLE;
-+	writel_relaxed(reg, spi_engine->base +
-+			    SPI_ENGINE_REG_OFFLOAD_CTRL(priv->index));
-+}
-+
-+static const struct spi_controller_offload_ops spi_engine_offload_ops = {
-+	.get = spi_engine_offload_get,
-+	.prepare = spi_engine_offload_prepare,
-+	.unprepare = spi_engine_offload_unprepare,
-+	.enable = spi_engine_offload_enable,
-+	.disable = spi_engine_offload_disable,
++struct iio_pwm_triggered_dma_buffer {
++	struct iio_hw_triggered_buffer_device hw;
++	struct pwm_device *pwm;
 +};
 +
-+static void spi_engine_offload_release(void *p)
-+{
-+	struct spi_offload *offload = p;
-+	struct platform_device *pdev = container_of(offload->dev,
-+						    struct platform_device, dev);
++static const struct iio_trigger_ops iio_pwm_triggered_dma_buffer_ops;
 +
-+	offload->dev = NULL;
-+	platform_device_unregister(pdev);
++static int iio_pwm_triggered_dma_buffer_set_state(struct iio_trigger *trig, bool state)
++{
++	struct iio_pwm_triggered_dma_buffer *st = iio_trigger_get_drvdata(trig);
++
++	if (state)
++		return pwm_enable(st->pwm);
++
++	pwm_disable(st->pwm);
++
++	return 0;
 +}
 +
-+/**
-+ * devm_spi_engine_register_offload() - Registers platform device for offload.
-+ *
-+ * @dev: The parent platform device node.
-+ * @offload: The offload firmware node.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int devm_spi_engine_register_offload(struct device *dev,
-+					    struct spi_engine *spi_engine,
-+					    struct fwnode_handle *fwnode)
++static int iio_pwm_triggered_dma_buffer_validate_device(struct iio_trigger *trig,
++							struct iio_dev *indio_dev)
 +{
-+	struct platform_device_info pdevinfo = {
-+		.parent = dev,
-+		.name = "offload",
-+		.fwnode = fwnode,
-+	};
-+	struct platform_device *pdev;
-+	struct spi_offload *offload;
-+	u32 index;
-+	int ret;
++	/* Don't allow assigning trigger via sysfs. */
++	return -EINVAL;
++}
 +
-+	ret = fwnode_property_read_u32(fwnode, "reg", &index);
++static const struct iio_trigger_ops iio_pwm_triggered_dma_buffer_ops = {
++	.set_trigger_state = iio_pwm_triggered_dma_buffer_set_state,
++	.validate_device = iio_pwm_triggered_dma_buffer_validate_device,
++};
++
++static u32 axi_spi_engine_offload_pwm_trigger_get_rate(struct iio_trigger *trig)
++{
++	struct iio_pwm_triggered_dma_buffer *st = iio_trigger_get_drvdata(trig);
++	u64 period_ns = pwm_get_period(st->pwm);
++
++	if (period_ns)
++		return DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, period_ns);
++
++	return 0;
++}
++
++static int
++axi_spi_engine_offload_set_samp_freq(struct iio_pwm_triggered_dma_buffer *st,
++				     u32 requested_hz)
++{
++	int period_ns;
++
++	if (requested_hz == 0)
++		return -EINVAL;
++
++	period_ns = DIV_ROUND_UP(NSEC_PER_SEC, requested_hz);
++
++	/*
++	 * FIXME: We really just need a clock, not a PWM. The current duty cycle
++	 * value is a hack to work around the edge vs. level offload trigger
++	 * issue in the ADI AXI SPI Engine firmware.
++	 */
++	return pwm_config(st->pwm, 10, period_ns);
++}
++
++static ssize_t sampling_frequency_show(struct device *dev,
++				       struct device_attribute *attr, char *buf)
++{
++	struct iio_trigger *trig = to_iio_trigger(dev);
++
++	return sysfs_emit(buf, "%u\n",
++			  axi_spi_engine_offload_pwm_trigger_get_rate(trig));
++}
++
++static ssize_t sampling_frequency_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t len)
++{
++	struct iio_trigger *trig = to_iio_trigger(dev);
++	struct iio_pwm_triggered_dma_buffer *st = iio_trigger_get_drvdata(trig);
++	int ret;
++	u32 val;
++
++	ret = kstrtou32(buf, 10, &val);
 +	if (ret)
 +		return ret;
 +
-+	if (index >= SPI_ENGINE_MAX_NUM_OFFLOADS)
-+		return -EINVAL;
++	ret = axi_spi_engine_offload_set_samp_freq(st, val);
++	if (ret)
++		return ret;
 +
-+	pdevinfo.id = index;
-+
-+	pdev = platform_device_register_full(&pdevinfo);
-+	if (IS_ERR(pdev))
-+		return PTR_ERR(pdev);
-+
-+	offload = &spi_engine->offloads[index];
-+	offload->dev = &pdev->dev;
-+
-+	return devm_add_action_or_reset(dev, spi_engine_offload_release, offload);
++	return len;
 +}
 +
-+/**
-+ * spi_engine_offload_populate() - Registers platform device for each offload instance.
-+ * @host: The SPI controller.
-+ * @spi_engine: The SPI engine.
-+ * @dev: The parent platform device.
-+ */
-+static void spi_engine_offload_populate(struct spi_controller *host,
-+					struct spi_engine *spi_engine,
-+					struct device *dev)
++static DEVICE_ATTR_RW(sampling_frequency);
++
++static struct attribute *iio_pwm_triggered_dma_buffer_attrs[] = {
++	&dev_attr_sampling_frequency.attr,
++	NULL
++};
++
++ATTRIBUTE_GROUPS(iio_pwm_triggered_dma_buffer);
++
++static void iio_pwm_triggered_dma_buffer_adev_release(struct device *dev)
 +{
-+	struct fwnode_handle *offloads;
-+	struct fwnode_handle *child;
++}
++
++static void iio_pwm_triggered_dma_buffer_unregister_adev(void *adev)
++{
++	auxiliary_device_delete(adev);
++	auxiliary_device_uninit(adev);
++}
++
++static int iio_pwm_triggered_dma_buffer_probe(struct platform_device *pdev)
++{
++	struct iio_pwm_triggered_dma_buffer *st;
++	struct auxiliary_device *adev;
 +	int ret;
 +
-+	/* offloads are optional */
-+	offloads = device_get_named_child_node(dev, "offloads");
-+	if (!offloads)
-+		return;
++	st = devm_kzalloc(&pdev->dev, sizeof(*st), GFP_KERNEL);
++	if (!st)
++		return -ENOMEM;
 +
-+	fwnode_for_each_available_child_node(offloads, child) {
-+		ret = devm_spi_engine_register_offload(dev, spi_engine, child);
-+		if (ret)
-+			dev_warn(dev, "failed to register offload: %d\n", ret);
++	st->pwm = devm_pwm_get(&pdev->dev, NULL);
++	if (IS_ERR(st->pwm))
++		return dev_err_probe(&pdev->dev, PTR_ERR(st->pwm),
++				     "failed to get PWM\n");
++
++	st->hw.buffer = devm_iio_dmaengine_buffer_alloc(&pdev->dev, "rx");
++	if (IS_ERR(st->hw.buffer))
++		return dev_err_probe(&pdev->dev, PTR_ERR(st->hw.buffer),
++				     "failed to allocate buffer\n");
++
++	st->hw.trig = devm_iio_trigger_alloc(&pdev->dev, "%s-%s-pwm-trigger",
++					     dev_name(pdev->dev.parent),
++					     dev_name(&pdev->dev));
++	if (!st->hw.trig)
++		return -ENOMEM;
++
++	st->hw.trig->ops = &iio_pwm_triggered_dma_buffer_ops;
++	st->hw.trig->dev.parent = &pdev->dev;
++	st->hw.trig->dev.groups = iio_pwm_triggered_dma_buffer_groups;
++	iio_trigger_set_drvdata(st->hw.trig, st);
++
++	/* start with a reasonable default value */
++	ret = axi_spi_engine_offload_set_samp_freq(st, 1000);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "failed to set sampling frequency\n");
++
++	ret = devm_iio_trigger_register(&pdev->dev, st->hw.trig);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "failed to register trigger\n");
++
++	adev = &st->hw.adev;
++	adev->name = "triggered-buffer";
++	adev->dev.parent = &pdev->dev;
++	adev->dev.release = iio_pwm_triggered_dma_buffer_adev_release;
++	adev->id = 0;
++
++	ret = auxiliary_device_init(adev);
++	if (ret)
++		return ret;
++
++	ret = auxiliary_device_add(adev);
++	if (ret) {
++		auxiliary_device_uninit(adev);
++		return ret;
 +	}
 +
-+	fwnode_handle_put(offloads);
++	return devm_add_action_or_reset(&pdev->dev,
++			iio_pwm_triggered_dma_buffer_unregister_adev, adev);
 +}
 +
- static void spi_engine_timeout(struct timer_list *timer)
- {
- 	struct spi_engine *spi_engine = from_timer(spi_engine, timer, watchdog_timer);
-@@ -633,6 +890,7 @@ static int spi_engine_probe(struct platform_device *pdev)
- 	unsigned int version;
- 	int irq;
- 	int ret;
-+	int i;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
-@@ -670,6 +928,15 @@ static int spi_engine_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	for (i = 0; i < SPI_ENGINE_MAX_NUM_OFFLOADS; i++) {
-+		struct spi_engine_offload *priv = &spi_engine->offload_priv[i];
-+		struct spi_offload *offload = &spi_engine->offloads[i];
++static const struct of_device_id iio_pwm_triggered_dma_buffer_match_table[] = {
++	{ .compatible = "adi,spi-offload-pwm-trigger-dma-buffer" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, iio_pwm_triggered_dma_buffer_match_table);
 +
-+		priv->index = i;
-+		offload->controller = host;
-+		offload->priv = priv;
-+	}
++static struct platform_driver iio_pwm_triggered_dma_buffer_driver = {
++	.probe = iio_pwm_triggered_dma_buffer_probe,
++	.driver = {
++		.name = "iio-pwm-triggered-dma-buffer",
++		.of_match_table = iio_pwm_triggered_dma_buffer_match_table,
++	},
++};
++module_platform_driver(iio_pwm_triggered_dma_buffer_driver);
 +
- 	writel_relaxed(0x00, spi_engine->base + SPI_ENGINE_REG_RESET);
- 	writel_relaxed(0xff, spi_engine->base + SPI_ENGINE_REG_INT_PENDING);
- 	writel_relaxed(0x00, spi_engine->base + SPI_ENGINE_REG_INT_ENABLE);
-@@ -692,6 +959,7 @@ static int spi_engine_probe(struct platform_device *pdev)
- 	host->prepare_message = spi_engine_prepare_message;
- 	host->unprepare_message = spi_engine_unprepare_message;
- 	host->num_chipselect = 8;
-+	host->offload_ops = &spi_engine_offload_ops;
- 
- 	if (host->max_speed_hz == 0)
- 		return dev_err_probe(&pdev->dev, -EINVAL, "spi_clk rate is 0");
-@@ -702,6 +970,8 @@ static int spi_engine_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, host);
- 
-+	spi_engine_offload_populate(host, spi_engine, &pdev->dev);
-+
- 	return 0;
- }
- 
++MODULE_AUTHOR("David Lechner <dlechner@baylibre.com>");
++MODULE_DESCRIPTION("AXI SPI Engine Offload PWM Trigger");
++MODULE_LICENSE("GPL");
 
 -- 
 2.43.0
