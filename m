@@ -1,47 +1,26 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0413FEC;
-	Wed, 10 Jan 2024 15:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="in3sKJOw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A30C433C7;
-	Wed, 10 Jan 2024 15:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704901213;
-	bh=aOTgTnA8nEO8OVvqATRlcEqMBOCoeOSc2xVIPjbo8SQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=in3sKJOwfgN7F0JSNIXK8D9g4a6GmKrI9jocfChwTfMwgGmUKnnnmWdsqHVukn3cu
-	 CoMrOrc9irVLHHOeYfet2aPT7hRGGvHw3DFURO7Xb0T6yfyEJIZUk6b8+rzSR0GOij
-	 7sLECEmhcp10a86mFl89Y5IUtjMY2/sMaq+VP33WyhaDzUtG+ayk4Wn4Or7hh9qbb8
-	 OfRdzLiFs7hmTUz7hHVW5XtgVsujaEFJVs9XmaQE3twz6ICICAshoVE5vGabiO98KY
-	 xnwWaQevXX38VQkn7IHW5Wb4MC7B91Njg32SxFwP03XuOVzH+VmL3QHDx1UaB/Y8kW
-	 alUKmcAYdd3gQ==
-Date: Wed, 10 Jan 2024 15:40:06 +0000
-From: Simon Horman <horms@kernel.org>
-To: Suraj Jaiswal <quic_jsuraj@quicinc.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-	Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	Prasad Sodagudi <psodagud@quicinc.com>,
-	Andrew Halaney <ahalaney@redhat.com>, Rob Herring <robh@kernel.org>,
-	kernel@quicinc.com
-Subject: Re: [PATCH net-next v8 0/3] Ethernet DWMAC5 fault IRQ support
-Message-ID: <20240110154006.GG9296@kernel.org>
-References: <20240110111649.2256450-1-quic_jsuraj@quicinc.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC6B4BA8F;
+	Wed, 10 Jan 2024 15:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 819312F4;
+	Wed, 10 Jan 2024 07:41:15 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBF743F64C;
+	Wed, 10 Jan 2024 07:40:27 -0800 (PST)
+Date: Wed, 10 Jan 2024 15:40:25 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: sudeep.holla@arm.com, mturquette@baylibre.com, sboyd@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ranjani.vaidyanathan@nxp.com,
+	glen.wienecke@nxp.com, nitin.garg_3@nxp.com, chuck.cannon@nxp.com,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH V2 2/2] clk: scmi: support state_ctrl_forbidden
+Message-ID: <ZZ66adlVpON9zVbH@pluto>
+References: <20231207093345.581048-1-peng.fan@oss.nxp.com>
+ <20231207093345.581048-2-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,29 +29,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240110111649.2256450-1-quic_jsuraj@quicinc.com>
+In-Reply-To: <20231207093345.581048-2-peng.fan@oss.nxp.com>
 
-On Wed, Jan 10, 2024 at 04:46:46PM +0530, Suraj Jaiswal wrote:
-> From: Suraj Jaiswal <jsuraj@qti.qualcomm.com>
+On Thu, Dec 07, 2023 at 05:33:45PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Add support to listen Ethernet HW common safery IRQ for correctable and 
-> uncorrectable fault. The safety IRQ will be triggered for ECC(error
-> correction code), DPP(data path parity, FSM(finite state machine) error.
+> Some clocks may exported to linux, while those clocks are not allowed
+> to configure by Linux. For example:
+> 
 
-Hi Suraj,
+Hi,
 
-[original text from Jakub]
+> SYS_CLK1-----
+>              \
+> 	     --MUX--->MMC1_CLK
+>              /
+> SYS_CLK2-----
+> 
+> MMC1 needs set parent, so SYS_CLK1 and SYS_CLK2 are exported to Linux,
+> then the clk propagation will touch SYS_CLK1 or SYS_CLK2.
+> So we need bypass the failure for SYS_CLK1 or SYS_CLK2 when enable
+> the clock of MMC1.
+> 
 
-## Form letter - net-next-closed
 
-The merge window for v6.8 has begun and therefore net-next is closed
-for new drivers, features, code refactoring and optimizations.
-We are currently accepting bug fixes only.
+So I was puzzled a bit at first (as said) by the fact that here we
+silently swallow the failure if the SCMI Clock cannot be disabled, BUT
+then I spotted in include/linux/clk.h
 
-Please repost when net-next reopens on or after 21st January.
+	/**
+	 * clk_enable - inform the system when the clock source should be running.
+	 * @clk: clock source
+	 *
+	 * If the clock can not be enabled/disabled, this should return success.
 
-RFC patches sent for review only are obviously welcome at any time.
+...so I suppose it is fine for the CLK framework at the end.
 
-See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
---
-pw-bot: defer
+My next remaining question is why are you not doing the same when
+(ret == -EACCES && clk->info->state_ctrl_forbidden) for atomic_ops ?
+
+I.e. in:
+
+	clk-scmi.c::static int scmi_clk_atomic_enable(struct clk_hw *hw)
+
+Any particular reason (beside not needing it in your particular case...)
+
+Thanks,
+Cristian
+
