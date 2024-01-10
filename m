@@ -1,66 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1965A4CB5E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D261B4CB5D
 	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CXj99WHU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E99B7C43390;
-	Wed, 10 Jan 2024 15:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704901925;
-	bh=XlltqPfa8Akiky7w8TdLIafVMR4SvWgI44ZmWOSsDio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CXj99WHU/eYfD584OTSaFWnR04ME0zWX+oeIjgO67pzMAljFt3LQSs7xHQ7JBuUxi
-	 FYdMOHLvl1R8SpsPgPeoUAFHRaQNPyl00DbEwVdsga9zDhyh25f1i86Ja6Sbo5ZOmw
-	 lhWUyyCjw09dwPspC92tyffkjxp/vMhKm5R36Rwc=
-Date: Wed, 10 Jan 2024 16:52:02 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: andrea.righi@canonical.com, ast@kernel.org,
-	linux-kernel@vger.kernel.org, geert@linux-m68k.org
-Subject: Re: [PATCHSET driver-core-next] kernfs: Protect
- kernfs_find_and_get_node_by_id() with RCU
-Message-ID: <2024011038-drainer-goofiness-9745@gregkh>
-References: <20240109214828.252092-1-tj@kernel.org>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EvKF0Duy"
+X-UUID: 2c6d6cfcafd011ee9e680517dc993faa-20240110
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=rVf/KyCe3y2w+HtApnhWHSc0RRmauZP3HVSAozjLxco=;
+	b=EvKF0DuyyzRJVmWZEZnSiF+3zaRXOXa6F3a6ahy6mU31Zinq3KdwU+llkyEHbqUFColuS3uzGVR66TMgwh/t1HVMg3X0MLRpUFGNj4MuGra9PSL2ykpY24xL69C+aF/5Q4QnaZgnj1Ak5R/2w+PNcVxcbA3TLqV0UgjyWy+hb/g=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:b141a33c-e76f-4747-9cc6-b5dbbab174ef,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:5d391d7,CLOUDID:f13d347f-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
+	DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 2c6d6cfcafd011ee9e680517dc993faa-20240110
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1242431257; Wed, 10 Jan 2024 23:51:52 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 10 Jan 2024 23:51:51 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 10 Jan 2024 23:51:51 +0800
+From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Chun-Kuang Hu
+	<chunkuang.hu@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Jason-ch Chen
+	<jason-ch.chen@mediatek.com>, Johnson Wang <johnson.wang@mediatek.com>,
+	"Jason-JH . Lin" <jason-jh.lin@mediatek.com>, Singo Chang
+	<singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>, Shawn Sung
+	<shawn.sung@mediatek.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jason-jh Lin
+	<jason-jh.lin@mediatek.corp-partner.google.com>
+Subject: [PATCH 0/2] Change GCE hardware timeout to software timeout
+Date: Wed, 10 Jan 2024 23:51:46 +0800
+Message-ID: <20240110155148.6383-1-jason-jh.lin@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240109214828.252092-1-tj@kernel.org>
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--5.263700-8.000000
+X-TMASE-MatchedRID: q3F3psOzl9ySm4maZcPB3bMjW/sniEQKKVrLOZD1BXT7efdnqtsaEwNx
+	WPxQqGxCIivmPMAFRzSor0AhuwYJneHxFb2pjr4bXP5rFAucBUGy4iyjvVWTop2iHEDAUb20o8W
+	MkQWv6iXBcIE78YqRWo6HM5rqDwqtgZFlHm/gtnY0ATtLIYswSE9/RQmUBCjZHpPDPfgQysA2V8
+	IOje1GckMMprcbiest
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--5.263700-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: 6C97B50913820EDC4F53C26FD1119DCA9248F4935C41D9B043801622779BF2CB2000:8
+X-MTK: N
 
-On Tue, Jan 09, 2024 at 11:48:01AM -1000, Tejun Heo wrote:
-> The BPF helper bpf_cgroup_from_id() calls kernfs_find_and_get_node_by_id()
-> which acquires kernfs_idr_lock, which is an non-raw non-IRQ-safe lock.
-> kernfs_idr_lock used to be a non-irq-safe lock which could lead to deadlocks
-> as bpf_cgroup_from_id() can be called from any BPF programs including e.g.
-> the ones that attach to functions which are holding the scheduler rq lock.
-> 
-> To resolve the situation dad3fb67ca1c ("kernfs: convert kernfs_idr_lock to
-> an irq safe raw spinlock") converted kernfs_idr_lock to an irq-safe raw
-> spinlock. However, this was also broken as we call idr_alloc*() while
-> holding the lock and idr itself uses an non-irq-safe lock and also calls
-> into memory allocator.
-> 
-> Let's instead RCU protect kernfs_node and kernfs_root so that
-> kernfs_find_and_get_node_by_id() can use rcu_read_lock() instead of
-> kernfs_idr_lock. While this unfortunately increases the size of kernfs_node,
-> it's the most straightforward thing to do and there likely are other places
-> that can take advantage of RCU protection and improve scalability too.
-> 
-> Please see the patch descriptions for more details.
-> 
-> This patchset is on top of the current driver-core-next - dad3fb67ca1c
-> ("kernfs: convert kernfs_idr_lock to an irq safe raw spinlock"), and also
-> available in the following git branch.
-> 
->  git://git.kernel.org/pub/scm/linux/kernel/git/tj/misc.git kernfs-use-rcu
+From: Jason-jh Lin <jason-jh.lin@mediatek.corp-partner.google.com>
 
-Thanks, I'll take the first patch now, for -rc1, and then the other 2
-after that to give some testing time.
+Since the max value of GCE hardware interrupt timeout for wait and poll
+instructions is about 1760ms.
+It is not enough for the use case of ISP driver below:
+GCE Thread A: wait for SOF and set event 1.
+GCE Thread B: wait for event 1 and set event 2.
+GCE Thread C: wait for event 2 and set event 3.
+GCE Thread D: wait for event 3 and set event 4.
+GCE Thread E: wait for event 4 and set EOF.
+If all GCE Threads start at the same time, the latest GCE Thread E will
+wait for event more than 2 seconds.
 
-greg k-h
+Therefore, we changed the hardware timeout to software timeout, making it
+longer, more certain, and making it configurable by CMDQ client drivers.
+
+Jason-JH.Lin (2):
+  mailbox: mtk-cmdq: Change GCE hardware timeout to software timeout
+  mailbox: mtk-cmdq: Add set GCE thread timeout interface
+
+ drivers/mailbox/mtk-cmdq-mailbox.c       | 183 +++++++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h |   4 +
+ 2 files changed, 187 insertions(+)
+
+-- 
+2.18.0
+
