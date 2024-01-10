@@ -1,135 +1,112 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AF153808
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 20:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9196537FD
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 20:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bUtYgltG"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a2c375d2430so11724166b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 12:41:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704919280; x=1705524080; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5c2P75I6tH5xbB+BZT/E99LYv9vZ1bxMQav6GFha8Ao=;
-        b=bUtYgltGglxRvzUoSVa2VOnO6jOSjWo0/USUqoo/PSiwwp6qrbqGCM4XmcBKhBr4Xq
-         Om/Eny/MqzuedqMtziuDTjgvMWsYS9TDqVe+a1yLKOneYYSojZCE8WCxs8bvADbzbqfQ
-         UZQJcUhYaRdc0S/jzEXLfeBpBwKmqOFBXa1DbaT9ANL6A1gcL0Dnd2HccJelx0/glD4s
-         aG+x3wCfJVU76TgNxeAi2eMUy4F6CmZK/hlehEmNRD3nascJIZZYbIewkPl13N70XTxC
-         xarFK9wLfRA7CC8fkricCmFKKCHhGPIP4C9lHWD1nq1rXsbNoFv1XsjrqII0j+vg05AY
-         sqvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704919280; x=1705524080;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5c2P75I6tH5xbB+BZT/E99LYv9vZ1bxMQav6GFha8Ao=;
-        b=rEknpjiV1xNer7l5O82NT91mKjg2tpdFXy+glMo+CCfUPxcR8SFIHK5MFnG5MKFUdY
-         OwQFM/dnCs0Nztk0JRr3u0oZahdrvT07BRY7NQhd1pCefSXANe1vx37ifCMCwv6CWCUe
-         hh6IzT4o8LvGvRGN9jn9hRfQwVuICuxSJ4Ozk5po+R1ne84fKz+1sPrqWDByS3nxwH/h
-         gpNM4B72sXJIQk2GZhIILwnf1+sDTcgOQL7DdjHRVefPfA/N3bKXObtrz/uaraQIikbX
-         NrEfooP7esBu7a26xY37qP/8LvVtPudliEtwSmU09XGCEC00s9vZL8MfHYLEhijLbgIp
-         UCOA==
-X-Gm-Message-State: AOJu0YxXctCyBqC2o60kfNaQ4QRWoHZdATaHdkP+KnEA7PlabRu0FS5v
-	Ev+6S5qTKqyVQ9zysVeNy2+2NjXZWXvMGZ/TWnRArYiEElk=
-X-Google-Smtp-Source: AGHT+IH+06sD7ze/FrzJsUWZKdUbGpTCPdLN+CWNg9h+KYMZzro3g3AdYbnWNhvgFkB8V9jUs0t3mQ==
-X-Received: by 2002:a17:906:2a44:b0:a28:b71d:ac5b with SMTP id k4-20020a1709062a4400b00a28b71dac5bmr37652eje.131.1704919279694;
-        Wed, 10 Jan 2024 12:41:19 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id bw8-20020a170906c1c800b00a269b4692a9sm2422964ejb.84.2024.01.10.12.41.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 12:41:18 -0800 (PST)
-Message-ID: <1a293c69-c767-4640-a9c0-fe8544fb96ba@linaro.org>
-Date: Wed, 10 Jan 2024 21:41:17 +0100
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="QfuJRDsj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r//zchEx"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id D4BCC5C0186;
+	Wed, 10 Jan 2024 15:41:21 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 10 Jan 2024 15:41:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1704919281;
+	 x=1705005681; bh=eFODf4Agdpx7lXjTCz0ChZngiyTF6lfwBZodPbLs9O8=; b=
+	QfuJRDsjgTWPUaX4VyOHvxcWV0NBJGHZTpQ9CHKysjhnJb2pFdQKJ9CUkgPUHu9B
+	+3YljebfGjgaTS44P7S2FRTjJWe0WwOmhYwso3gdZ4E+h3oxQJnT+kijFpzHeYHe
+	3M0yGeg2ivI6PG5RVxVk1tBTYSNf6pKD6bpUxArcYjGleU0zdcgNxviF5htTzBX4
+	4NMZHrdMS6fJE6+PmWwIolb066RxyC13iPtBctmMrJ6aJlcWAn6ODg+2BC5fskWx
+	DAaJyqNSUySXoyDzGfVTU/zzpfAzUS6/0PkzagU845zoFA8jZ1Q2G2wFm+aQGMX/
+	ZgG6KE4ITX48Aq6/sRyDFw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704919281; x=
+	1705005681; bh=eFODf4Agdpx7lXjTCz0ChZngiyTF6lfwBZodPbLs9O8=; b=r
+	//zchExsAsSp9UXHyVoFYqwHrtFViiH67HL5WMP36/IxR6WSQ9jZVFiDMsAhQrR6
+	5D+bI4Nd/mWCJNPF769JzO0URLya832S3T0z/SbyGL9BUkdZWpdrtOOO2H0qvQby
+	goFm6teCdaKPqxaQ4ILxrakfjL8SU68lUIx00vFOjdG3HK/myH2wDeDhtS+SPnmw
+	gvPQ8T0w81Vc5Z5eX8sjnXigho2rO3rC8m0Q1A18i7KHMv3SWd2xZoictHSGP5Tu
+	0rltAqmDKKuQsnb4XznYYuat+GgQDRG8xgTfXDthFroU84nxgF/lp3o+QjwSRP2d
+	CSRU66X6BC5RPkVSQcBwQ==
+X-ME-Sender: <xms:8QCfZQn8NKvqbcZt51jwUpF6rBdjMZf3SKH5XkWCHRP1FpESV1KKBQ>
+    <xme:8QCfZf2BQe4VV2oebCLY5C43VlN8qdXV1xkfdehf8-Pqyf0KfHdKAtI5Y7x1NYY64
+    E_-dfue2UnZ7nM2MW4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeiuddgudefjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeejgefhuedtjeejheduveegheevudffjeekhfevfefgtedtheegieeludef
+    uedvhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:8QCfZer-SX90K6S_kkqjjsvGru2SH84o4L6thC9vgVmxbLens-EUoA>
+    <xmx:8QCfZckxI94IJKEzZtrkC0GTiMOrLqO7MbVrmmUihxccThR3txOMlw>
+    <xmx:8QCfZe2MRqNjNKxiQZQChDm83BakzSvuhvsHCoE4iN4GYudTkaVe4Q>
+    <xmx:8QCfZXgXg8KB546WzOudEdtiYmPnjLLcD1xtxu14JNaAhwkdlzd2ng>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 7F993B6008D; Wed, 10 Jan 2024 15:41:21 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1374-gc37f3abe3d-fm-20240102.001-gc37f3abe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/16] arm64: dts: ti: k3-am625: Add MIT license along
- with GPL-2.0
-Content-Language: en-US
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tero Kristo <kristo@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Guillaume La Roque <glaroque@baylibre.com>,
- Julien Panis <jpanis@baylibre.com>, Pierre Gondois <pierre.gondois@arm.com>,
- Roger Quadros <rogerq@kernel.org>, Ronald Wahl <ronald.wahl@raritan.com>,
- Sarah Walker <sarah.walker@imgtec.com>, Tony Lindgren <tony@atomide.com>
-References: <20240110140903.4090946-1-nm@ti.com>
- <20240110140903.4090946-4-nm@ti.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240110140903.4090946-4-nm@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-Id: <c7cb5834-1cf9-48ae-968a-d2807b6b9467@app.fastmail.com>
+In-Reply-To: <f8ed4fe9-edcc-1cdf-65cc-7cc9d4f913a4@lio96.de>
+References: <f8ed4fe9-edcc-1cdf-65cc-7cc9d4f913a4@lio96.de>
+Date: Wed, 10 Jan 2024 21:41:00 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Thomas Voegtle" <tv@lio96.de>, linux-kernel@vger.kernel.org
+Subject: Re: Build error kernel/cgroup/rstat.c on v6.7-1959-gaffc5af36bbb
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 10/01/2024 15:08, Nishanth Menon wrote:
-> Modify license to include dual licensing as GPL-2.0-only OR MIT
-> license for SoC and TI evm device tree files. This allows for Linux
-> kernel device tree to be used in other Operating System ecosystems
-> such as Zephyr or FreeBSD.
-> 
-> While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
-> with latest SPDX conventions (GPL-2.0 is deprecated).
-> 
-> While at this, update the TI copyright year to sync with current year
-> to indicate license change (and add it at least for one file which was
-> missing TI copyright).
+On Wed, Jan 10, 2024, at 20:50, Thomas Voegtle wrote:
+> Hello,
+>
+> building v6.7-1959-gaffc5af36bbb I get this:
+>
+> ...
+>    CALL    scripts/checksyscalls.sh
+>    DESCEND objtool
+>    INSTALL libsubcmd_headers
+>    CC      kernel/cgroup/rstat.o
+> kernel/cgroup/rstat.c:218:22: error: no previous prototype for
+> =E2=80=98bpf_rstat_flush=E2=80=99 [-Werror=3Dmissing-prototypes]
+>   __weak noinline void bpf_rstat_flush(struct cgroup *cgrp,
+>                        ^~~~~~~~~~~~~~~
+>
+>
+> git bisects points to:
+>
+> commit 0fcb70851fbfea1776ae62f67c503fef8f0292b9 (refs/bisect/bad)
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Thu Nov 23 12:05:06 2023 +0100
+>
+>      Makefile.extrawarn: turn on missing-prototypes globally
+>
+>
+> My config is attached.
+> openSUSE Leap 15.5 x86_64 with gcc 7.5.0
+>
+>
+> Is this already known?
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+There is a workaround in linux-next, see commit
+15fb6f2b6c4c ("bpf: Add __bpf_hook_{start,end} macros")
 
-Best regards,
-Krzysztof
+I assume this will be merged soon.
 
+     Arnd
