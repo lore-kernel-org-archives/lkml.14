@@ -1,120 +1,196 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB934C3C1
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4C14C3B0;
+	Wed, 10 Jan 2024 15:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="KKa53fjT"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5f254d1a6daso41774937b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:40:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H379gDj5"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-556c3f0d6c5so5064456a12.2;
+        Wed, 10 Jan 2024 07:41:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1704901232; x=1705506032; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LPGs8xHU/Ucg5Eh2JZyutJ+LL1G8nkiyKu0z2j3NLks=;
-        b=KKa53fjTn04VQapmEVUvycTK11UxmiduDSZSxaRsfLTeEqGdjEiPDB4O44flAEyXWO
-         9l1fx6RWB4+zsjb0cWVUWttn7q5FiP2W7UTd8xwsfSwjfCu0rkYnHYSbK5gXS9H3ZZ47
-         9E780qvoxt9oMunEsQViqYjoZV77+6y5+8I2rWubSkKpxJi0QpMB4oRQd9CRcJOxwzwI
-         qB9LTu+nI0/6De1vSYB7ketQIGCQ6geo5EazSyztXpECQx1Ndh4g9YOS6VC3H5LljGjD
-         L4WefNz8NSqHygOMd9hntsUgrO3qPixjJIFb/hpkoc7T7x7TCbKSaEJiRvVXpwpF7pVJ
-         f8cg==
+        d=gmail.com; s=20230601; t=1704901310; x=1705506110; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KsR/ATrfPdIgLGIZ2coCrOAOA9UzCcQEuLMVPEYRm48=;
+        b=H379gDj5Fr3y3dhqbYqYutsgayjMME/FLi2jbzF8S2MqTq9Z4YlCNINvSi8Btb023y
+         zD3W+gP0eBIL2YVHdLITntwRd21fyJGcbyc2iz59gMbFPdpCSGNPYdCmAng/o3Ebp1CK
+         Ysm5uqAK0LS6uWTHYT08H60oWNryArl3R7oMdRFrTgpbOSz5F2fffZZsa5ajL+As2Kmb
+         xI95ntWv7gDZ2UH1nSiEHB6L/3eOQ75TDHEHCS6Fme2mfscqq/OuKrtCQL811DNDmi9E
+         bUylz9kjIQakfW4EkE/qr2fPJ0bQgJoqVKRJcvz8D3ifME1KpIYIwRWGTDczHtoBlgnl
+         uWKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704901232; x=1705506032;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LPGs8xHU/Ucg5Eh2JZyutJ+LL1G8nkiyKu0z2j3NLks=;
-        b=srZwZQpwFEsKl7Hjo/5YYEnRpfu+MDGMlRlkGOOId/SsD0i/gUZaYZVf0Wmpd9TXqH
-         +G/JSYjV0/K9VDCO5pOxVLxby7Wwplh/ur+gU8uSQWlj3Lgjs0x+/HoCxnCEjv3ZJeJc
-         OtrvWZzf0i6PQccpUlPkOZ0lBXnddnBrWt7keCL+DfNcKET77L+Ld1T3jTuMHkLfbjOF
-         RvueKTaCPURflqXSAR4Cy9Gu3zrMnInNKJIzUH2Uy/9IWFPHNaTTfsavFDCIy6C9P+HS
-         JnPUuhTrOIY29T47YDyREhjj3F5UdEjUnkd79W4Cv60YRSaJXJwyuSzGiF4Z5QOIu1dw
-         JeBQ==
-X-Gm-Message-State: AOJu0YxyO9QSOCstY491qe0DAuqMejanHAmZc1+QJ4EM7EUYNy8us5Ft
-	VCdM+oAduE6wGuNMgaMmD7Qd5oa2BXxFKZSmHhTnt0VH4E/zRA==
-X-Google-Smtp-Source: AGHT+IF3vwgXP+/dR+6Cre95yDBOCvCKUvPN+8p+eOxlmkEAHXCPDmxPbjW3qAtObCha7Zy3a4evkw==
-X-Received: by 2002:a0d:c604:0:b0:5ef:fa4f:eec3 with SMTP id i4-20020a0dc604000000b005effa4feec3mr1203377ywd.25.1704901232075;
-        Wed, 10 Jan 2024 07:40:32 -0800 (PST)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id cj26-20020a05690c0b1a00b005f96476ad64sm1410278ywb.86.2024.01.10.07.40.31
+        d=1e100.net; s=20230601; t=1704901310; x=1705506110;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KsR/ATrfPdIgLGIZ2coCrOAOA9UzCcQEuLMVPEYRm48=;
+        b=a99jC/9LnFmKD/fY5AAuT7jH5JURkvAEARJ1VOumCnTjNrkzrKXKzfrItw5DQLmYjc
+         S7vXgVyTszXOT5bzynrW0iSsjVaz1cGsiAaz37byhxtJw0BSR1p9FT7T9TDWdXa5O6mO
+         rZCPDyaANXNSQEyiAPA2+whiJNWk9B34nS3quW6SPC/eGLNyDG93bK/jujzwHXXHJF/2
+         77tjwHwNhVloSVL04PGMZzV8BIF/wBbwvuQBi/ns6G6Ht0qG3ZdjZMRe8I5IBcH6js9D
+         zL0pi47XWUjijzHTCekxH17Wh6KxnXt/8T5+zdPiVZ6qw5bWXqqjztRO9uLewGr89oOg
+         yqBA==
+X-Gm-Message-State: AOJu0Yz2gojlqy02OyL1JU3xM+xGf0NrlLLM66p7YPV+wzsnZ2823HVk
+	f0QYiDf1H5AwUV6oXYE1Qks=
+X-Google-Smtp-Source: AGHT+IEpzs8YcWbD9Zfpq1vhLm5OkWGSL3+lkBeN5CTV4dvVJhPvEdFa+MGe40p0nNRxX1INZDFyPQ==
+X-Received: by 2002:a17:907:6016:b0:a28:a79e:7f5b with SMTP id fs22-20020a170907601600b00a28a79e7f5bmr362566ejc.221.1704901309935;
+        Wed, 10 Jan 2024 07:41:49 -0800 (PST)
+Received: from [192.168.26.149] (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.googlemail.com with ESMTPSA id g19-20020a170906349300b00a2a2426728bsm2223958ejb.178.2024.01.10.07.41.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 07:40:31 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5e7409797a1so40703997b3.0;
-        Wed, 10 Jan 2024 07:40:31 -0800 (PST)
-X-Received: by 2002:a0d:d102:0:b0:5e8:dcdd:973e with SMTP id
- t2-20020a0dd102000000b005e8dcdd973emr1186189ywd.39.1704901231212; Wed, 10 Jan
- 2024 07:40:31 -0800 (PST)
+        Wed, 10 Jan 2024 07:41:49 -0800 (PST)
+Message-ID: <557cf463-5ffa-4d81-8b38-44f610b26163@gmail.com>
+Date: Wed, 10 Jan 2024 16:41:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231106092202.11127-1-tomeu@tomeuvizoso.net> <569e39a0-b91c-46f1-b55d-c9324d66339b@linaro.org>
- <1jy1fb9n7d.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jy1fb9n7d.fsf@starbuckisacylon.baylibre.com>
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Wed, 10 Jan 2024 16:40:19 +0100
-X-Gmail-Original-Message-ID: <CAAObsKCnbH8nWPx0_OiZur=iXyobCpZ-9EOYkpUch48oOus0_w@mail.gmail.com>
-Message-ID: <CAAObsKCnbH8nWPx0_OiZur=iXyobCpZ-9EOYkpUch48oOus0_w@mail.gmail.com>
-Subject: Re: [PATCH RESEND] arm64: dts: VIM3: Set the rates of the clocks for
- the NPU
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, linux-kernel@vger.kernel.org, 
-	Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kevin Hilman <khilman@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"moderated list:ARM/Amlogic Meson SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:ARM/Amlogic Meson SoC support" <linux-amlogic@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: Add initial MT7981B and Xiaomi
+ AX3000T
+Content-Language: en-US
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Daniel Golle <daniel@makrotopia.org>, Hsin-Yi Wang <hsinyi@chromium.org>,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ jason-ch chen <Jason-ch.Chen@mediatek.com>,
+ Macpaul Lin <macpaul.lin@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20240110095118.25598-1-zajec5@gmail.com>
+ <20240110095118.25598-2-zajec5@gmail.com>
+ <34bda5e0-0587-459b-b31c-46112b1b10fa@collabora.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+In-Reply-To: <34bda5e0-0587-459b-b31c-46112b1b10fa@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 6, 2023 at 11:43=E2=80=AFAM Jerome Brunet <jbrunet@baylibre.com=
-> wrote:
->
->
-> On Mon 06 Nov 2023 at 10:26, Neil Armstrong <neil.armstrong@linaro.org> w=
-rote:
->
-> > On 06/11/2023 10:22, Tomeu Vizoso wrote:
->
-> patch title is misleading. It does not target the vim3 only but all g12
-> and sm1 HWs.
->
-> It should start with "arm64: dts: amlogic: g12: " instead
+On 10.01.2024 14:38, AngeloGioacchino Del Regno wrote:
+> Il 10/01/24 10:51, Rafał Miłecki ha scritto:
+>> From: Rafał Miłecki <rafal@milecki.pl>
+>>
+>> MT7981B (AKA MediaTek Filogic 820) is a dual-core ARM Cortex-A53 SoC.
+>> One of market devices using this SoC is Xiaomi AX3000T.
+>>
+>> This is initial contribution with basic SoC support. More hardware block
+>> will get added later. Some will need their bindings (like auxadc).
+>>
+>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+>> ---
+>>   arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+>>   .../dts/mediatek/mt7981b-xiaomi-ax3000t.dts   |  15 +++
+>>   arch/arm64/boot/dts/mediatek/mt7981b.dtsi     | 108 ++++++++++++++++++
+>>   3 files changed, 124 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
+>>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+>> index 0a189d5d8006..8bff11acfe1f 100644
+>> --- a/arch/arm64/boot/dts/mediatek/Makefile
+>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+>> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
+>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-xiaomi-ax3000t.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-emmc.dtbo
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-nand.dtbo
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts b/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
+>> new file mode 100644
+>> index 000000000000..a314c3e05e50
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
+>> @@ -0,0 +1,15 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "mt7981b.dtsi"
+>> +
+>> +/ {
+>> +    compatible = "xiaomi,ax3000t", "mediatek,mt7981b";
+>> +    model = "Xiaomi AX3000T";
+>> +
+>> +    memory@40000000 {
+>> +        reg = <0 0x40000000 0 0x10000000>;
+>> +        device_type = "memory";
+>> +    };
+>> +};
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+>> new file mode 100644
+>> index 000000000000..ce878ad55204
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+>> @@ -0,0 +1,108 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+>> +
+>> +#include <dt-bindings/clock/mediatek,mt7981-clk.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +    compatible = "mediatek,mt7981b";
+>> +    interrupt-parent = <&gic>;
+>> +    #address-cells = <2>;
+>> +    #size-cells = <2>;
+>> +
+>> +    cpus {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        cpu@0 {
+>> +            compatible = "arm,cortex-a53";
+>> +            reg = <0x0>;
+>> +            device_type = "cpu";
+>> +            enable-method = "psci";
+>> +        };
+>> +
+>> +        cpu@1 {
+>> +            compatible = "arm,cortex-a53";
+>> +            reg = <0x1>;
+>> +            device_type = "cpu";
+>> +            enable-method = "psci";
+>> +        };
+>> +    };
+>> +
+>> +    oscillator-40m {
+>> +        compatible = "fixed-clock";
+>> +        clock-frequency = <40000000>;
+>> +        clock-output-names = "clkxtal";
+>> +        #clock-cells = <0>;
+>> +    };
+>> +
+>> +    psci {
+>> +        compatible = "arm,psci-0.2";
+> 
+> PSCI 0.2? I invite you to check a kernel log for a string like this one:
+> 
+> `PSCIv%d.%d detected in firmware`
+> ...because of course if it says v1.0, this should be "arm,psci-1.0".
+> 
+> This is just a nitpick anyway, so you can already get my
+> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+> P.S.: but please, confirm or deny that PSCI thing ASAP :-)
+> P.P.S.: For next time - I'd be happy if you could add a cover letter to your
+> patch series..!
 
-Thanks, have fixed and resent.
+You were right, good catch!
 
-Cheers,
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+[    0.000000] psci: SMC Calling Convention v1.0
 
-Tomeu
+I'll fix that in V2. Thanks!
 
-> >> Otherwise they are left at 24MHz and the NPU runs very slowly.
-> >> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> >> Suggested-by: Lucas Stach <l.stach@pengutronix.de>
-> >> ---
-> >>   arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 3 +++
-> >>   1 file changed, 3 insertions(+)
-> >> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> >> b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> >> index ff68b911b729..9d5eab6595d0 100644
-> >> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> >> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> >> @@ -2502,6 +2502,9 @@ npu: npu@ff100000 {
-> >>              clocks =3D <&clkc CLKID_NNA_CORE_CLK>,
-> >>                       <&clkc CLKID_NNA_AXI_CLK>;
-> >>              clock-names =3D "core", "bus";
-> >> +            assigned-clocks =3D <&clkc CLKID_NNA_CORE_CLK>,
-> >> +                              <&clkc CLKID_NNA_AXI_CLK>;
-> >> +            assigned-clock-rates =3D <800000000>, <800000000>;
-> >>              resets =3D <&reset RESET_NNA>;
-> >>              status =3D "disabled";
-> >>      };
-> >
-> > Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
->
