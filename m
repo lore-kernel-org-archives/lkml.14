@@ -1,157 +1,198 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527B24E1C8;
-	Wed, 10 Jan 2024 20:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C7F4F885;
+	Wed, 10 Jan 2024 20:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="ETK2hyk9"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 9A47B12001A;
-	Wed, 10 Jan 2024 23:12:28 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 9A47B12001A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1704917548;
-	bh=1he/c2G0yVN+BRzRmBqXeVPHKserzYkABpzO0rRQ7Gs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=ETK2hyk9o1f7Ds1MCi9GXH0o4P+SvujhxiZbe5S1yuU3m079zSGsOOuk/oN9xmpQG
-	 MT/nyFB0NcibRq3p4jDVkGsJnDS7BwuaSufTQfI3THJ3t/dvrnR1BTANV2A861hfCR
-	 bghO1vAmIiQE7DE80Q2o89iVmfxs2yQQjuLA+V/qfFXPD4U58XTMsH8mwPcbObXQH6
-	 X0zY0BlvbFCFeMiTucxMXTCLSg9qMCoCjIQ/HvoOvmjMT2H681QHjCm8wN9mQ2Pk4R
-	 j/jItqV3+7YD/eL7I53bNHhpb0br1yWKc1O4juaeacT9iHnqzJo6pXWsT3gWV0RyZG
-	 aPedMz7OSRoQA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 10 Jan 2024 23:12:28 +0300 (MSK)
-Received: from localhost.localdomain (100.64.160.123) by
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 10 Jan 2024 23:12:27 +0300
-From: Alexey Romanov <avromanov@salutedevices.com>
-To: <narmstrong@baylibre.com>, <neil.armstrong@linaro.org>,
-	<clabbe@baylibre.com>, <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<artin.blumenstingl@googlemail.com>
-CC: <linux-crypto@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kernel@salutedevices.com>, Alexey
- Romanov <avromanov@salutedevices.com>, Jan Dakinevich
-	<yvdakinevich@salutedevices.com>
-Subject: [PATCH v1 04/24] drivers: crypto: meson: add MMIO helpers
-Date: Wed, 10 Jan 2024 23:11:20 +0300
-Message-ID: <20240110201216.18016-5-avromanov@salutedevices.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240110201216.18016-1-avromanov@salutedevices.com>
-References: <20240110201216.18016-1-avromanov@salutedevices.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kUEFH0Y1"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40AK8qBa015886;
+	Wed, 10 Jan 2024 20:19:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=NgCE54sEzeUce6C/KiC9M0zAoiO6fbBzNGjrx8pUiLE=; b=kU
+	EFH0Y134OQMi7pJYBTNbEfdPmPPZm6O4eDm1+ykwDemfQtUjJhSnXu1HuQ0ZABTs
+	YlicfOOsaJIvhGs47dMrSbQZAXTvzs8CltbbPKcWILtqs/mj00Gv2i7Jkstg2/vr
+	xqZNQ5+5prVw+VlaswHXT7APWdnbDvbgzzD3xMailYwlbbSkw7H2+VgievYgR5uD
+	sOXK4WgLXbdiD82daOBH18rYbuF4gXbKtvEa8OvyLY/QRGsPEiKm6s/okOzpiwAE
+	g4IUQIsFICGbCp6KmPRzVd0Dejdin36EMBVWvLuPYrwasUFTTdfrVPmc4LzPe0Zs
+	EQR4EnO4FTUKPIs5qvKA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhsb2hf1w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Jan 2024 20:19:56 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40AKJtXW026511
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Jan 2024 20:19:55 GMT
+Received: from [10.110.5.89] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 10 Jan
+ 2024 12:19:53 -0800
+Message-ID: <92892988-bb77-4075-812e-19f6112f436e@quicinc.com>
+Date: Wed, 10 Jan 2024 12:19:29 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 182544 [Jan 10 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.3
-X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/01/10 17:01:00 #23071477
-X-KSMG-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 2/2] net: stmmac: TBS support for platform driver
+Content-Language: en-US
+To: Rohan G Thomas <rohan.g.thomas@intel.com>,
+        "David S . Miller"
+	<davem@davemloft.net>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        "Jose
+ Abreu" <joabreu@synopsys.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "Serge
+ Semin" <fancer.lancer@gmail.com>,
+        Andrew Halaney <ahalaney@redhat.com>, <elder@linaro.org>
+CC: <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_bhaviks@quicinc.com>,
+        <kernel.upstream@quicinc.com>
+References: <20230927130919.25683-1-rohan.g.thomas@intel.com>
+ <20230927130919.25683-3-rohan.g.thomas@intel.com>
+From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
+In-Reply-To: <20230927130919.25683-3-rohan.g.thomas@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: -pA_WXnVrm5JzPP1OM40hLBadBDWBoIa
+X-Proofpoint-GUID: -pA_WXnVrm5JzPP1OM40hLBadBDWBoIa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 spamscore=0 malwarescore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1011 mlxscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401100161
 
-Add MMIO access helpers: meson_dma_start() and meson_dma_ready().
+Qualcomm had similar discussions with respect to enabling of TBS for a particular queue. 
+We had similar discussion on these terms yesterday with Redhat. Adding Andrew from Redhat here 
 
-Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
-Signed-off-by: Jan Dakinevich <yvdakinevich@salutedevices.com>
----
- drivers/crypto/amlogic/amlogic-gxl-cipher.c |  2 +-
- drivers/crypto/amlogic/amlogic-gxl-core.c   | 24 ++++++++++++++++-----
- drivers/crypto/amlogic/amlogic-gxl.h        |  2 ++
- 3 files changed, 22 insertions(+), 6 deletions(-)
+What we discovered as part of the discussions is listed below. 
 
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-index 58de925caae7..7ea88a9f78a5 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-@@ -225,7 +225,7 @@ static int meson_cipher(struct skcipher_request *areq)
- 
- 	reinit_completion(&mc->chanlist[flow].complete);
- 	mc->chanlist[flow].status = 0;
--	writel(mc->chanlist[flow].t_phy | 2, mc->base + ((mc->pdata->descs_reg + flow) << 2));
-+	meson_dma_start(mc, flow);
- 	wait_for_completion_interruptible_timeout(&mc->chanlist[flow].complete,
- 						  msecs_to_jiffies(500));
- 	if (mc->chanlist[flow].status == 0) {
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-index a83c00922b48..78b70c17862d 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-@@ -20,18 +20,32 @@
- 
- #include "amlogic-gxl.h"
- 
-+void meson_dma_start(struct meson_dev *mc, int flow)
-+{
-+	u32 offset = (mc->pdata->descs_reg + flow) << 2;
-+
-+	writel(mc->chanlist[flow].t_phy | 2, mc->base + offset);
-+}
-+
-+static bool meson_dma_ready(struct meson_dev *mc, int flow)
-+{
-+	u32 offset = (mc->pdata->status_reg + flow) << 2;
-+	u32 data = readl(mc->base + offset);
-+
-+	if (data)
-+		writel_relaxed(0xF, mc->base + offset);
-+
-+	return data;
-+}
-+
- static irqreturn_t meson_irq_handler(int irq, void *data)
- {
- 	struct meson_dev *mc = (struct meson_dev *)data;
- 	int flow;
--	u32 p;
- 
- 	for (flow = 0; flow < mc->flow_cnt; flow++) {
- 		if (mc->chanlist[flow].irq == irq) {
--			p = readl(mc->base + ((mc->pdata->status_reg + flow) << 2));
--			if (p) {
--				writel_relaxed(0xF, mc->base +
--					      ((mc->pdata->status_reg + flow) << 2));
-+			if (meson_dma_ready(mc, flow)) {
- 				mc->chanlist[flow].status = 1;
- 				complete(&mc->chanlist[flow].complete);
- 				return IRQ_HANDLED;
-diff --git a/drivers/crypto/amlogic/amlogic-gxl.h b/drivers/crypto/amlogic/amlogic-gxl.h
-index c8ba726ccc8b..80b7a2492168 100644
---- a/drivers/crypto/amlogic/amlogic-gxl.h
-+++ b/drivers/crypto/amlogic/amlogic-gxl.h
-@@ -163,6 +163,8 @@ struct meson_alg_template {
- #endif
- };
- 
-+void meson_dma_start(struct meson_dev *mc, int flow);
-+
- int meson_enqueue(struct crypto_async_request *areq, u32 type);
- 
- int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
--- 
-2.30.1
+1. Today upstream stmmac code is designed in such a way that TBS flag is put as
+part of queue configurations(see below snippet) and as well know that stmmac queue 
+configuration comes from the dtsi file. 
 
+//ndo_open => stmmac_open
+int tbs_en = priv->plat->tx_queues_cfg[chan].tbs_en;(comes from tx_queues_cfg)
+
+/* Setup per-TXQ tbs flag before TX descriptor alloc */
+tx_q->tbs |= tbs_en ? STMMAC_TBS_AVAIL : 0;
+
+2. There is a no way to do this dynamically from user space because we don't have any 
+API exposed which can do it from user space and also TBS rely on special descriptors 
+aka enhanced desc this cannot be done run time and stmmac has to be aware of it before 
+we do DMA/MAC/MTL start. To do this dynamically would only mean stopping DMA/MAC/MTL 
+realloc resources for enhanced desc and the starting MAC/DMA/MTL. This means we are 
+disrupting other traffic(By stopping MAC block).
+
+3. I dont think there is a way we can enable this dynamically today. I would like upstream 
+community to share your thoughts as well.
+
+4. I agree with Rohan's patch here and want upstream community to accept it. This will allow
+use to configure the queues where TBS needs to be enabled as hardcoding in the code unless upstream
+has better way to this using userspace.
+
+Please let us know if you think otherwise. 
+
+
+On 9/27/2023 6:09 AM, Rohan G Thomas wrote:
+> Enable Time Based Scheduling(TBS) support for Tx queues through the
+> stmmac platform driver. For this a new per-queue tx-config property,
+> tbs-enabled is added to the devicetree.
+> 
+> Commit 7eadf57290ec ("net: stmmac: pci: Enable TBS on GMAC5 IPK PCI
+> entry") enables similar support for the stmmac pci driver.
+> 
+> Also add check whether TBS support is available for a Tx DMA channel
+> before enabling TBS support for that Tx DMA channel.
+> 
+> Signed-off-by: Rohan G Thomas <rohan.g.thomas@intel.com>
+> ---
+>  .../net/ethernet/stmicro/stmmac/stmmac_main.c | 25 +++++++++++++++----
+>  .../ethernet/stmicro/stmmac/stmmac_platform.c |  4 +++
+>  2 files changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 81b6f3ecdf92..7333f0640b3d 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -3773,12 +3773,18 @@ stmmac_setup_dma_desc(struct stmmac_priv *priv, unsigned int mtu)
+>  		dma_conf->dma_rx_size = DMA_DEFAULT_RX_SIZE;
+>  
+>  	/* Earlier check for TBS */
+> -	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++) {
+> -		struct stmmac_tx_queue *tx_q = &dma_conf->tx_queue[chan];
+> -		int tbs_en = priv->plat->tx_queues_cfg[chan].tbs_en;
+> +	if (priv->dma_cap.tbssel) {
+> +		/* TBS is available only for tbs_ch_num of Tx DMA channels,
+> +		 * starting from the highest Tx DMA channel.
+> +		 */
+> +		chan = priv->dma_cap.number_tx_channel - priv->dma_cap.tbs_ch_num;
+> +		for (; chan < priv->plat->tx_queues_to_use; chan++) {
+> +			struct stmmac_tx_queue *tx_q = &dma_conf->tx_queue[chan];
+> +			int tbs_en = priv->plat->tx_queues_cfg[chan].tbs_en;
+>  
+> -		/* Setup per-TXQ tbs flag before TX descriptor alloc */
+> -		tx_q->tbs |= tbs_en ? STMMAC_TBS_AVAIL : 0;
+> +			/* Setup per-TXQ tbs flag before TX descriptor alloc */
+> +			tx_q->tbs |= tbs_en ? STMMAC_TBS_AVAIL : 0;
+> +		}
+>  	}
+>  
+>  	ret = alloc_dma_desc_resources(priv, dma_conf);
+> @@ -7505,6 +7511,15 @@ int stmmac_dvr_probe(struct device *device,
+>  		}
+>  	}
+>  
+> +	/* If TBS feature is supported(i.e. tbssel is true), then at least 1 Tx
+> +	 * DMA channel supports TBS. So if tbs_ch_num is 0 and tbssel is true,
+> +	 * assume all Tx DMA channels support TBS. TBS_CH field, which gives
+> +	 * number of Tx DMA channels with TBS support is only available only for
+> +	 * DW xGMAC IP. For other DWMAC IPs all Tx DMA channels can support TBS.
+> +	 */
+> +	if (priv->dma_cap.tbssel && !priv->dma_cap.tbs_ch_num)
+> +		priv->dma_cap.tbs_ch_num = priv->dma_cap.number_tx_channel;
+> +
+>  	ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
+>  	ndev->watchdog_timeo = msecs_to_jiffies(watchdog);
+>  #ifdef STMMAC_VLAN_TAG_USED
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> index 843bd8804bfa..6c0191c84071 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> @@ -279,6 +279,10 @@ static int stmmac_mtl_setup(struct platform_device *pdev,
+>  		plat->tx_queues_cfg[queue].coe_unsupported =
+>  			of_property_read_bool(q_node, "snps,coe-unsupported");
+>  
+> +		/* Select TBS for supported queues */
+> +		plat->tx_queues_cfg[queue].tbs_en =
+> +			of_property_read_bool(q_node, "snps,tbs-enabled");
+> +
+>  		queue++;
+>  	}
+>  	if (queue != plat->tx_queues_to_use) {
