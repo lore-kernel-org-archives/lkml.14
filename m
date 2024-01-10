@@ -1,87 +1,119 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36924CB20;
-	Wed, 10 Jan 2024 15:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914B84C3C6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DvO7RhNe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0290C40E016C;
-	Wed, 10 Jan 2024 15:56:11 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jhy-WvyI-ZKl; Wed, 10 Jan 2024 15:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1704902168; bh=9AXlWCYHyGlZWoMBjnEdXnJNXAAZdOZ1mMO8CIYljuM=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeDcPZYq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B85F1C433C7;
+	Wed, 10 Jan 2024 15:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704902190;
+	bh=Mev9R+M1cLaYjYBU2ZgT5jQ2ZNfBaieaMpJ0LyeLUqQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DvO7RhNeuoKySKUfs6PH0zwrctKvn30zN4ZJDSb4SJEyCcf/+ZUAT51AnHdipMAh7
-	 rm0RrWrys+aUa/IzTcaKG3XQZypPVKlUvek2MEpQmkr+NuF5q9tRLpICGdc0/QWziU
-	 MwU/PkCLVGULD/bD5kg83YuJkvlWJO6QsaEenRoEObBox8gQVQvOU+FYNLztanY1Yq
-	 Rg6EiSfJWGaWHw6zbN51AyuRDr+Gta1viaxdbG/MHFJN8DQlIaS0GDhyhpuBGYXiZd
-	 QXHYO3b1r66t6qXOhXGV1ZPN+Ftm4y7/vGYv1NcEhVaqZtGue97HlNS0yT53vMp/+/
-	 o7gi4l2nlH6zVoGaNly8UNIs8TfMAcJxu/jPx6VwPlFgpkLdPWqcg2r1CCH+l9I1vn
-	 IUn3st1d8C838EjqjP+1VkwM0KrZDrQw2voJaJIKrvOM15E1+WhXiIbZBgaHOPcc90
-	 FXp61xtJLgEtlnKTodZAGCn+aXb9dm7jz+fiSKkzJlKzi7V+fiUMnpIsARIk/0FffF
-	 xdLIK8mYSVKwdgB00rWb/VTCt9noXUDjeGEYMbMPWGTF19zJxZNDhLwTBK8Px0bF8u
-	 CXpBdrtdMuIoGpqfvJx9e+EmE4Yrut8ZwqkQGOad2y15r9Q0D4m1gM7uN3plRwBes3
-	 XjO8/dwgOZn6I30W6HVlZEXA=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 73DF440E01A9;
-	Wed, 10 Jan 2024 15:55:30 +0000 (UTC)
-Date: Wed, 10 Jan 2024 16:55:23 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Michael Roth <michael.roth@amd.com>, x86@kernel.org,
-	kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de,
-	hpa@zytor.com, ardb@kernel.org, pbonzini@redhat.com,
-	seanjc@google.com, vkuznets@redhat.com, jmattson@google.com,
-	luto@kernel.org, dave.hansen@linux.intel.com, slp@redhat.com,
-	pgonda@google.com, peterz@infradead.org,
-	srinivas.pandruvada@linux.intel.com, rientjes@google.com,
-	tobin@ibm.com, vbabka@suse.cz, kirill@shutemov.name,
-	ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com, liam.merwick@oracle.com, zhi.a.wang@intel.com,
-	Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v1 07/26] x86/fault: Add helper for dumping RMP entries
-Message-ID: <20240110155523.GEZZ696yxCY-oOvygR@fat_crate.local>
-References: <20231230161954.569267-1-michael.roth@amd.com>
- <20231230161954.569267-8-michael.roth@amd.com>
- <20240110111344.GBZZ576DpwHHs997Zl@fat_crate.local>
- <625926f9-6c45-4242-ac62-8f36abfcb099@amd.com>
- <20240110152745.GDZZ63cekYEDqdajjO@fat_crate.local>
- <9e3a6d33-cc04-46cb-b97d-e903a263800f@amd.com>
+	b=IeDcPZYqZH/yosqHy6J0lKKIXTr87XKELYPhOa4vt9rK8HdOlohar0v95Bx8OTdGH
+	 qFkCOu0OtN6mz/BohFHwbJekpq/cRig3FNJMy81gq7ZjCx4Q+GqZRFbdFk2LWKfLwU
+	 UqW8AC16aRfgHhoGD+CVoZibaW2tuPgF5iuMbzilseJNpgvVjFgYAZrwuFPgEB78OG
+	 WV0NkkyJ+qt57r+azS6oThayuTFamklZZWYXTFl52aiYMK+5hVeAsy/CZ3k7mu4Zvw
+	 gsotv0QM55jZHaZKlclvTSBRs5wPTZS/GgIMp2z1pttlcZwrYyX+zCDFpfpMi3TWWO
+	 PcI2MR49Yy+Rw==
+Date: Wed, 10 Jan 2024 16:56:27 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Michal Wajdeczko <michal.wajdeczko@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Javier Martinez Canillas <javierm@redhat.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>
+Subject: Re: [PATCH v4 6/6] drm/tests: managed: Add a simple test for
+ drmm_managed_release
+Message-ID: <2mgrb5lrm5oskkcauhdbegdb5jwhqx6unzlaltz6e2bzaqrzyr@dnkbsr3ykj7k>
+References: <20240105101324.26811-1-michal.winiarski@intel.com>
+ <20240105101324.26811-7-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="low44rvsz3fnl7ut"
+Content-Disposition: inline
+In-Reply-To: <20240105101324.26811-7-michal.winiarski@intel.com>
+
+
+--low44rvsz3fnl7ut
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9e3a6d33-cc04-46cb-b97d-e903a263800f@amd.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 09:51:04AM -0600, Tom Lendacky wrote:
-> I'm only suggesting getting rid of the else that prints "..." when the entry
-> is all zeroes. Printing the non-zero entries would still occur.
+On Fri, Jan 05, 2024 at 11:13:24AM +0100, Micha=C5=82 Winiarski wrote:
+> Add a simple test that checks whether the action is indeed called right
+> away and that it is not called on the final drm_dev_put().
+>=20
+> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> ---
+>  drivers/gpu/drm/tests/drm_managed_test.c | 28 ++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_managed_test.c b/drivers/gpu/drm/t=
+ests/drm_managed_test.c
+> index c1fc1f0aac9b2..91863642efc13 100644
+> --- a/drivers/gpu/drm/tests/drm_managed_test.c
+> +++ b/drivers/gpu/drm/tests/drm_managed_test.c
+> @@ -41,6 +41,33 @@ static void drm_test_managed_run_action(struct kunit *=
+test)
+>  	KUNIT_EXPECT_TRUE_MSG(test, priv->action_done, "Release action was not =
+called");
+>  }
+> =20
+> +/*
+> + * The test verifies that the release action is called immediately when
+> + * drmm_release_action is called and that it is not called for a second =
+time
+> + * when the device is released.
+> + */
+> +static void drm_test_managed_release_action(struct kunit *test)
+> +{
+> +	struct managed_test_priv *priv =3D test->priv;
+> +	int ret;
+> +
+> +	ret =3D drmm_add_action_or_reset(priv->drm, drm_action, priv);
+> +	KUNIT_EXPECT_EQ(test, ret, 0);
+> +
+> +	ret =3D drm_dev_register(priv->drm, 0);
+> +	KUNIT_ASSERT_EQ(test, ret, 0);
+> +
+> +	drmm_release_action(priv->drm, drm_action, priv);
+> +	KUNIT_EXPECT_TRUE_MSG(test, priv->action_done, "Release action was not =
+called");
+> +	priv->action_done =3D false;
+> +
+> +	drm_dev_unregister(priv->drm);
+> +	drm_kunit_helper_free_device(test, priv->drm->dev);
+> +
+> +	KUNIT_EXPECT_FALSE_MSG(test, priv->action_done,
+> +			       "Unexpected release action call during cleanup");
+> +}
+> +
 
-Sure, one should be able to to infer that the missing entries are null.
+I guess we can have something simpler if we switch action_done to a
+counter and just check that the counter didn't increase.
 
-:-)
+And I think the custom messages should be removed there too.
 
--- 
-Regards/Gruss,
-    Boris.
+Maxime
 
-https://people.kernel.org/tglx/notes-about-netiquette
+--low44rvsz3fnl7ut
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZZ6+KwAKCRDj7w1vZxhR
+xTSyAP9WBatDxCR53O+71y/N+u/TGRvmdsq04Tz8iV4qA/vs8wD9E/+kUzgF0hBT
+sPyni9+ICPNJdDcxH9Yh9B/2rk4Z6AY=
+=1Mfc
+-----END PGP SIGNATURE-----
+
+--low44rvsz3fnl7ut--
