@@ -1,78 +1,168 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0EE4A99D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404CD4BAAC
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TU9tom3t";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LE8tyCvo"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1704899655;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DYxPD8fW6h0wbUUVw6JrkcqjQHlAPF5MkYZvHwp5j/I=;
-	b=TU9tom3tTpdrkhNIJmNMPy4y9LPdmMMSH8yUM2P8PmJLU5qUEodyIh/PEZsMJBCerSJnAC
-	gBzL+5wj9416oW7jUHqqZJbrkzGiOTWJq0wd0j4emI/wlpq7JOAZuYOyJbAbHKYEuwQGef
-	vl57Rk6mBG7PZFbINihwfqzMkkUpVd+jemUz5rjXHYipmAGPqYuyHjeVMw0Ca0O3qz7Qcp
-	x+cyCvcRDEVIOi3IOwqMfYHlWHeTdEOdFlsMrNl6n9rWsVtESqyggtUd8za/1plTEpHRgI
-	3HoKbFSGy73uKQ1W/S0PbQH32UNZtN8IeQbFqlLmWkAsG0UlMSwjCNgIm2IOHA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1704899655;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DYxPD8fW6h0wbUUVw6JrkcqjQHlAPF5MkYZvHwp5j/I=;
-	b=LE8tyCvoVRPo6vazb4xNYFvY4Hkp5+yJNjMVDjlxDfjFihA9xBiQQoSvzM5Oc8b6BT9kKU
-	jss/dlBJ4tMtoHBw==
-To: "Zhang, Rui" <rui.zhang@intel.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Cc: "jgross@suse.com" <jgross@suse.com>, "x86@kernel.org" <x86@kernel.org>,
- "arjan@linux.intel.com" <arjan@linux.intel.com>, "kprateek.nayak@amd.com"
- <kprateek.nayak@amd.com>, "Tang, Feng" <feng.tang@intel.com>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "ray.huang@amd.com"
- <ray.huang@amd.com>, "andrew.cooper3@citrix.com"
- <andrew.cooper3@citrix.com>, "Sivanich, Dimitri"
- <dimitri.sivanich@hpe.com>, "paulmck@kernel.org" <paulmck@kernel.org>,
- "Mehta, Sohil" <sohil.mehta@intel.com>, "andy@infradead.org"
- <andy@infradead.org>
-Subject: Re: [patch 37/53] x86/cpu: Detect real BSP on crash kernels
-In-Reply-To: <87frz5jmnl.ffs@tglx>
-References: <20230807130108.853357011@linutronix.de>
- <20230807135028.381851690@linutronix.de>
- <7443f3200ef0be756566059e8c9b0657f3cefcff.camel@intel.com>
- <871qarlvub.ffs@tglx> <87y1czkdlg.ffs@tglx>
- <ff58623cdf63dc75fc245fd18ee776465f4bb3b8.camel@intel.com>
- <87frz5jmnl.ffs@tglx>
-Date: Wed, 10 Jan 2024 16:14:15 +0100
-Message-ID: <87a5pdjk54.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="ASB0evTS"
+Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-40e43e489e4so47907175e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:14:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1704899657; x=1705504457; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5Sy3lixVdO+ssOCBS2YWjdDhiY4KhMhsBIz9dLLKsi4=;
+        b=ASB0evTSIyJ8rkwyCgCQB8gDS1MCsjrs8/UyM1tuBnDUmNTEioQH826cFFsRzEQ22f
+         EAo6E4bvBxQRW2elm9IoRYviJCmaPSXWYwfkwdBuxFKf7bTyHZJfPju2QOCr5uhCfI5W
+         AA3FpKt1LVeru6hveBIIsKi37ts+ygrHk1A+ugBDNcmDf1x/0do+Jf7QWM5gRGLkCK/e
+         g503dt0Hcz1WyA4QBK1e7hemkiW+n7UKFzlXtnNAKDv7rxlb/riZUPfUm7E8/3fYDYR5
+         Y9YYDRMrOBzEeP0ttaFQE9DBru0FB0ezPko7GURpB+Y7r15OfyarrWN8gqxRX8X2LUxO
+         37zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704899657; x=1705504457;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Sy3lixVdO+ssOCBS2YWjdDhiY4KhMhsBIz9dLLKsi4=;
+        b=H29SYyU7H/PDJqTxqblXTKPxAqqpz0HiTQepjdImz53G+l/58bQgobdOA6JXTBmllF
+         HeFAZ8qIcB62XR9j4owEkC5EvZ+m6/nnhMsFGmutrvxE7FVtzuQ+V93uNpEDZsaW7RYI
+         snVH1r2AOBH/guZF7gxdmTjI9VWccC+cMDMvgh2FKoj6XcFORlzHW6qbueommNaIJ7dX
+         +/4+ayQBLz/NOIZQC2qPMfSI6xNrR/gXLtqQy6UwCRvMJKTH76UbHn5U6dddvDX0nDCy
+         tiWyzTz6CL5DqUU/hvaY1IyN8n0H6NivzuF1i8KB6NsP1Sg6DpBODJAhfoXOjOjsTEJh
+         L8OQ==
+X-Gm-Message-State: AOJu0YxMdcNzdyCAvff7PpxLfCWCBfgumDip2f0XRQxXQJ71XR+tHCRB
+	7ixQ7GVV1NxqaAP4kRl+tqF2mCeD6ZxfMw==
+X-Google-Smtp-Source: AGHT+IGVu1Xwg6HHebOGdxAq74eDIEF0T/L/qFlmD5lnH0vOca8XN01eTTuA9zLK7Yh+9y4To+F4xA==
+X-Received: by 2002:a05:600c:310f:b0:40e:3ab9:102d with SMTP id g15-20020a05600c310f00b0040e3ab9102dmr661174wmo.181.1704899657574;
+        Wed, 10 Jan 2024 07:14:17 -0800 (PST)
+Received: from otso.luca.vpn.lucaweiss.eu (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id jx22-20020a170906ca5600b00a27a25afaf2sm2174517ejb.98.2024.01.10.07.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 07:14:17 -0800 (PST)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Wed, 10 Jan 2024 16:14:08 +0100
+Subject: [PATCH v2 1/4] dt-bindings: display: panel: Add Himax HX83112A
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240110-fp4-panel-v2-1-8ad11174f65b@fairphone.com>
+References: <20240110-fp4-panel-v2-0-8ad11174f65b@fairphone.com>
+In-Reply-To: <20240110-fp4-panel-v2-0-8ad11174f65b@fairphone.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Andy Gross <agross@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Luca Weiss <luca.weiss@fairphone.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
 
-On Wed, Jan 10 2024 at 15:19, Thomas Gleixner wrote:
->> This is the order in MADT,
->> $ cat apic.dsl  | grep x2Apic
->> [030h 0048   4]          Processor x2Apic ID : 00000010
->> [040h 0064   4]          Processor x2Apic ID : 00000011
-...
->> and this is the order in Linux (from CPU0 to CPUN)
->>       x2APIC ID of logical processor = 0x20 (32)
->>       x2APIC ID of logical processor = 0x10 (16)
->
-> What a mess...
+Himax HX83112A is a display driver IC used to drive LCD DSI panels.
+Describe it.
 
-And clearly not according to the spec
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+ .../bindings/display/panel/himax,hx83112a.yaml     | 75 ++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-  "The second is that platform firmware should list the boot processor
-   as the first processor entry in the MADT."
+diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx83112a.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx83112a.yaml
+new file mode 100644
+index 000000000000..22f58f1da9fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/himax,hx83112a.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/himax,hx83112a.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Himax HX83112A-based DSI display panels
++
++maintainers:
++  - Luca Weiss <luca.weiss@fairphone.com>
++
++description:
++  The Himax HX83112A is a generic DSI Panel IC used to control
++  LCD panels.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: fairphone,fp4-hx83112a-djn
++      - const: himax,hx83112a
++
++  vdd1-supply:
++    description: Digital voltage rail
++
++  vsn-supply:
++    description: Positive source voltage rail
++
++  vsp-supply:
++    description: Negative source voltage rail
++
++  reg: true
++  port: true
++
++required:
++  - compatible
++  - reg
++  - reset-gpios
++  - vdd1-supply
++  - vsn-supply
++  - vsp-supply
++  - port
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        panel@0 {
++            compatible = "fairphone,fp4-hx83112a-djn", "himax,hx83112a";
++            reg = <0>;
++
++            backlight = <&pm6150l_wled>;
++            reset-gpios = <&pm6150l_gpios 9 GPIO_ACTIVE_LOW>;
++
++            vdd1-supply = <&vreg_l1e>;
++            vsn-supply = <&pm6150l_lcdb_ncp>;
++            vsp-supply = <&pm6150l_lcdb_ldo>;
++
++            port {
++                panel_in_0: endpoint {
++                    remote-endpoint = <&dsi0_out>;
++                };
++            };
++        };
++    };
++
++...
 
-Oh well. There are reasons why this is written the way it is.
+-- 
+2.43.0
+
