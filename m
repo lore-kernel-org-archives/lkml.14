@@ -1,140 +1,215 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2067.outbound.protection.outlook.com [40.107.95.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656434F882
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 21:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B463BB53;
+	Wed, 10 Jan 2024 21:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="eISlyelm"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3366e78d872so4931334f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:34:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1704922457; x=1705527257; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ULJlgsbYbFdx3cKG7esKuUDjzGCjCZ7y1LhDjw4dP0A=;
-        b=eISlyelm/bqLfb6AhL8zLj51CBIuxKZ9rfdDrVZzuRe4l/CXHePYiSpGDj+MoNKjBQ
-         mASKJsKalWq2Cj36U0MnUiF8W2/mZZu+VDxE0p2FASb7TmWRi+xi0LITuBUT41N1nB5F
-         lhG5Ubi8GOLOUJ4WvEd19YtTdL9MOFclADguEpwD/uzmR9eG/YXGX4zH8GO39oPW1r5R
-         D/dvzw158H5wpOQ2wL4HIcxwED6KfRv7/wPCPfAUn1unppVzEo6gqt8KlnCdG6bqQk2Z
-         TBpMphxItqV8jc26ZV3zpZJZ7le2yVJDRIkCxtHudhQO4unZWDr+83/W8CMIWd1OP59Q
-         PBCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704922457; x=1705527257;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ULJlgsbYbFdx3cKG7esKuUDjzGCjCZ7y1LhDjw4dP0A=;
-        b=HKuhqBGcBFZNS8qn/4XUqUsiZBDzz4AmURQCZA6E+yeb6MTuXzY1MNo1CRHA03up1G
-         YRwJerVn3piuLrbCUOcY2y0mQ6AZG51flBDrd/VvcuaK1NlqS6lLiJAMiSpqqhAhg18Q
-         Frk4CYVtkNBnNVOgVJxleMkKi5XDsZP15+LRwnPQl2ioOa5fAUfR2vvAXCzh6ZFmbIeP
-         pKoXKmwAJ/sbsOA+u6J/zOHeVjGJ/LiA8no3GAbO0554DpvMqyMOTsZaBM5ajJcrjMIl
-         BRxm7+x16pBUanfzc05Q9fT8e+LOG4gbUCvh9z6UtjS0EWI1nPu5/8X6mpo7KSG6KdTE
-         ERxg==
-X-Gm-Message-State: AOJu0Yzps+WvSmXKiRGrlUVPAypELdtiWEy3okIaBEeBiFbP5A9UyeAz
-	Z/J35sqvP04YmIef8Vsk5CgNtSzwywNn
-X-Google-Smtp-Source: AGHT+IGHWhbaDD4IwqxDfw9jHTHkuUKjQBNNUmn/8eVs+uq7aRefvD7j/ILYF+UvNVbHn3mv4iVq8A==
-X-Received: by 2002:adf:f64f:0:b0:336:c434:5c20 with SMTP id x15-20020adff64f000000b00336c4345c20mr25026wrp.149.1704922457598;
-        Wed, 10 Jan 2024 13:34:17 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j17-20020adfea51000000b0033660f75d08sm5686611wrn.116.2024.01.10.13.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 13:34:16 -0800 (PST)
-From: Dmitry Safonov <dima@arista.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Dmitry Safonov <dima@arista.com>,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
-	Dmitry Safonov <0x7f454c46@gmail.com>
-Subject: [PATCH] selftests/net/tcp-ao: Use LDLIBS instead of LDFLAGS
-Date: Wed, 10 Jan 2024 21:34:10 +0000
-Message-ID: <20240110-tcp_ao-selftests-makefile-v1-1-aa07d043f052@arista.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PT1W18J7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cUs7VQhXhcB5Y1Jmmo1mA92oV5NErAw24tbPVjQkt1QeefoiByNnUBd1HPMz0b6q7JDLfMffm+8WYhgWwl/ozX6LLi2NBy/Fnk/1MD5+i0ORA9/a4UyK/BE53lvuwRQ+9Q9mv/3RJONelXHWjzyFXns4ubnRZby2m1aP0o9pMRkPg/0qTADaFJ4iOC3x6Ye7zg7vS9104v8zgLu4XH/CXlvKyXhVFLnQZybahgpcqpwXNYGMz9MRi1C+TugveIe2WOQZCpPKBPmVkUrAauwQlyn1GGg+RQFduZ/Gp2KzetU+POBobMTmkJdn8oNkKk6Ap4ldIhakJtXF7f4rI3wrhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jrY+QZb5Ca8Ow9rg7UNssdhiW6V06EIOjAd+S0ikrVM=;
+ b=ZthjIqeY+NUVrRrBjxndTwd/KzfJb7d5j8j+jbu40EFS5YqLTr9j3gR+u5LA7FpbFI/ok8/2SCSabxDuFjB7liP5leYEpyyixCixMYM9WZ/cVmX4wj9UnI4Tx7XNnbcCeFY9jL/DVYLYJeEv0rdqgx4zzV8i40N3F3ekq8e/cZSrm6KXgMleMGjG/iFlgKSSNsvoM+iOgUS5tSLR6UJwUHoYyX0wVJZBNho1+18vV96x4vyE2Up4DxUZD3EgqdPvniFVOB4xyxfNI1wMP6BWmdpjRuZ1vNzWJnpIZP/rmIzO473bp22wlrwSmUW4Qyx+xrO8fRH06YGnSq3oADKzlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jrY+QZb5Ca8Ow9rg7UNssdhiW6V06EIOjAd+S0ikrVM=;
+ b=PT1W18J7n3hgOuUmmuY9YgRyclrAsS3D4awCh9creseB5KEK5dT0Gz0GiOLTGFmwXJswkl1kRa7Ki48ZMNgsoazrVRt5/tpNPxtLg8jU1ORkRNcUpVGgiKINOx5KJXy+gB0yuR2L6EwPqE8jzgyKx37q60l2e97SNSrlXs6BeX4=
+Received: from MW2PR16CA0025.namprd16.prod.outlook.com (2603:10b6:907::38) by
+ DM4PR12MB6470.namprd12.prod.outlook.com (2603:10b6:8:b8::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.17; Wed, 10 Jan 2024 21:35:59 +0000
+Received: from CO1PEPF000042AC.namprd03.prod.outlook.com
+ (2603:10b6:907:0:cafe::d3) by MW2PR16CA0025.outlook.office365.com
+ (2603:10b6:907::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18 via Frontend
+ Transport; Wed, 10 Jan 2024 21:35:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CO1PEPF000042AC.mail.protection.outlook.com (10.167.243.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.14 via Frontend Transport; Wed, 10 Jan 2024 21:35:58 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 10 Jan
+ 2024 15:35:58 -0600
+Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
+ Transport; Wed, 10 Jan 2024 15:35:57 -0600
+From: Tanmay Shah <tanmay.shah@amd.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <michal.simek@amd.com>, <ben.levinsky@amd.com>,
+	<tanmay.shah@amd.com>
+CC: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 2/3] dts: zynqmp: add properties for TCM in remoteproc
+Date: Wed, 10 Jan 2024 13:35:04 -0800
+Message-ID: <20240110213504.3626468-3-tanmay.shah@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240110213504.3626468-1-tanmay.shah@amd.com>
+References: <20240110213504.3626468-1-tanmay.shah@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.13-dev-b6b4b
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1704922450; l=2675; i=dima@arista.com; s=20231212; h=from:subject:message-id; bh=jOEuqyTW483yTy2cXCaxWhi99+o9vEjXDhzO6CQSOWA=; b=fC9CsSMSOCG1M+izUI7BZ21j+Sjv1Pv5AgqclfGnYKUnkC+G4GIygOQfa85B570ArTNpDdeOe avefNzHNYi9DgxCtqYgoAHI9MmxtdzMXB4Hd9iy6lHxZ+QElE3iTFk7
-X-Developer-Key: i=dima@arista.com; a=ed25519; pk=hXINUhX25b0D/zWBKvd6zkvH7W2rcwh/CH6cjEa3OTk=
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AC:EE_|DM4PR12MB6470:EE_
+X-MS-Office365-Filtering-Correlation-Id: 657a2b81-4409-420f-b95e-08dc122422bc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	obMPdar1N/lJK3Cv3mk7QQgQy/RO86V7C6uslwUxRbecOrMfx7XnS3zr4GiM4ThRYBCsNsbxoyv2Iqfnt12ZwT611lo+0urAD+7yc2Cmox3FcjpstdpwoZ3w6l0vyao2WUyy6nAlr8quPTBA+AUpGLpHFNlOZlFo578gZHaR5BnZgN35vgDJjsI/YTUhd/ZGUgzGcipzmDvI7giY3DHx8ueogqZ/Bb+N4rG+74OEFreaFe3Z026Xla2A5jKMrg7ufzQr9ayQGdi9jwfwpivbxKJmcFrdQfZvQOAwzFM/6KyYH6/ECtrIL3DmkhhYdGxZkcOb2yBlJGsPJ33f9YlFQCAIA0EnsX06JL2zeQBh14n4gmKnFowV52ozX74V/aFolxfV1XUJ5+onxrqvZiADpRWyOHJYxjqYXoK74NffwBa9T9Q91gIhpWQGXxu7/jPZfx1Wh8Qkp4ANCmS+OF+Z5fzbFp2gkYczb9PDdc245JTQKsOSc1lvFTpE1yvoqLcg5FxG877+MLkEuGigVE85aqR5MhkJTgcx935xv9nJ+d8bD+0ipr27BCc7vkS9+kX1wXkRXOnclGry2WQLIS/dvQY9lSKPewz8V+NDjGfYcWiTPmo2R8ystxUXs6uE+Zik+h8Nrfyb4bj/rhz37ZPVFBWieSR/67l9I5FTfoyytCWk40JdgdR1NGyImryTd/yz+xmrKFGfM//uTZrbykL3xpe4gFe88nYWUJ0Wsgyg4zrDQryxSftZorSj2yl5NbhgaOpc4jyWzAEUJGB4DQzgwA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(39860400002)(136003)(376002)(230922051799003)(451199024)(1800799012)(186009)(82310400011)(64100799003)(40470700004)(46966006)(36840700001)(82740400003)(356005)(81166007)(36756003)(40480700001)(40460700003)(7049001)(86362001)(426003)(336012)(83380400001)(1076003)(2616005)(26005)(70206006)(70586007)(110136005)(54906003)(478600001)(6666004)(316002)(8676002)(8936002)(47076005)(36860700001)(2906002)(41300700001)(44832011)(4326008)(5660300002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 21:35:58.9277
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 657a2b81-4409-420f-b95e-08dc122422bc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000042AC.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6470
 
-The rules to link selftests are:
+Add properties as per new bindings in zynqmp remoteproc node
+to represent TCM address and size.
 
-> $(OUTPUT)/%_ipv4: %.c
-> 	$(LINK.c) $^ $(LDLIBS) -o $@
->
-> $(OUTPUT)/%_ipv6: %.c
-> 	$(LINK.c) -DIPV6_TEST $^ $(LDLIBS) -o $@
+This patch also adds alternative remoteproc node to represent
+remoteproc cluster in split mode. By default lockstep mode is
+enabled and users should disable it before using split mode
+dts. Both device-tree nodes can't be used simultaneously one
+of them must be disabled. For zcu102-1.0 and zcu102-1.1 board
+remoteproc split mode dts node is enabled and lockstep mode
+dts is disabled.
 
-The intel test robot uses only selftest's Makefile, not the top linux
-Makefile:
-
-> make W=1 O=/tmp/kselftest -C tools/testing/selftests
-
-So, $(LINK.c) is determined by environment, rather than by kernel
-Makefiles. On my machine (as well as other people that ran tcp-ao
-selftests) GNU/Make implicit definition does use $(LDFLAGS):
-
-> [dima@Mindolluin ~]$ make -p -f/dev/null | grep '^LINK.c\>'
-> make: *** No targets.  Stop.
-> LINK.c = $(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
-
-But, according to build robot report, it's not the case for them.
-While I could just avoid using pre-defined $(LINK.c), it's also used by
-selftests/lib.mk by default.
-
-Anyways, according to GNU/Make documentation [1], I should have used
-$(LDLIBS) instead of $(LDFLAGS) in the first place, so let's just do it:
-
-> LDFLAGS
->     Extra flags to give to compilers when they are supposed to invoke
->     the linker, ‘ld’, such as -L. Libraries (-lfoo) should be added
->     to the LDLIBS variable instead.
-> LDLIBS
->     Library flags or names given to compilers when they are supposed
->     to invoke the linker, ‘ld’. LOADLIBES is a deprecated (but still
->     supported) alternative to LDLIBS. Non-library linker flags, such
->     as -L, should go in the LDFLAGS variable.
-
-[1]: https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
-
-Fixes: cfbab37b3da0 ("selftests/net: Add TCP-AO library")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401011151.veyYTJzq-lkp@intel.com/
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
 ---
- tools/testing/selftests/net/tcp_ao/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/tcp_ao/Makefile b/tools/testing/selftests/net/tcp_ao/Makefile
-index 8e60bae67aa9..522d991e310e 100644
---- a/tools/testing/selftests/net/tcp_ao/Makefile
-+++ b/tools/testing/selftests/net/tcp_ao/Makefile
-@@ -52,5 +52,5 @@ $(OUTPUT)/%_ipv6: %.c
+Changes in v9:
+  - fix rproc lockstep dts
+
+
+ .../boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts  |  8 +++
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi        | 58 +++++++++++++++++--
+ 2 files changed, 61 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
+index c8f71a1aec89..495ca94b45db 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
+@@ -14,6 +14,14 @@ / {
+ 	compatible = "xlnx,zynqmp-zcu102-rev1.0", "xlnx,zynqmp-zcu102", "xlnx,zynqmp";
+ };
  
- $(OUTPUT)/icmps-accept_ipv4: CFLAGS+= -DTEST_ICMPS_ACCEPT
- $(OUTPUT)/icmps-accept_ipv6: CFLAGS+= -DTEST_ICMPS_ACCEPT
--$(OUTPUT)/bench-lookups_ipv4: LDFLAGS+= -lm
--$(OUTPUT)/bench-lookups_ipv6: LDFLAGS+= -lm
-+$(OUTPUT)/bench-lookups_ipv4: LDLIBS+= -lm
-+$(OUTPUT)/bench-lookups_ipv6: LDLIBS+= -lm
-
----
-base-commit: 8cb47d7cd090a690c1785385b2f3d407d4a53ad0
-change-id: 20240110-tcp_ao-selftests-makefile-3dafb1e96df8
-
-Best regards,
++&rproc_split {
++	status = "okay";
++};
++
++&rproc_lockstep {
++	status = "disabled";
++};
++
+ &eeprom {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index b61fc99cd911..cfdd1f68501f 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -247,19 +247,67 @@ fpga_full: fpga-full {
+ 		ranges;
+ 	};
+ 
+-	remoteproc {
++	rproc_lockstep: remoteproc@ffe00000 {
+ 		compatible = "xlnx,zynqmp-r5fss";
+ 		xlnx,cluster-mode = <1>;
+ 
+-		r5f-0 {
++		#address-cells = <2>;
++		#size-cells = <2>;
++
++		ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x20000>,
++			 <0x0 0x20000 0x0 0xffe20000 0x0 0x20000>;
++
++		r5f@0 {
++			compatible = "xlnx,zynqmp-r5f";
++			reg = <0x0 0x0 0x0 0x20000>, <0x0 0x20000 0x0 0x20000>;
++			reg-names = "atcm", "btcm";
++			power-domains = <&zynqmp_firmware PD_RPU_0>,
++					<&zynqmp_firmware PD_R5_0_ATCM>,
++					<&zynqmp_firmware PD_R5_0_BTCM>;
++			memory-region = <&rproc_0_fw_image>;
++		};
++
++		r5f@1 {
++			compatible = "xlnx,zynqmp-r5f";
++			reg = <0x1 0x0 0x0 0x10000>, <0x1 0x20000 0x0 0x10000>;
++			reg-names = "atcm", "btcm";
++			power-domains = <&zynqmp_firmware PD_RPU_1>,
++					<&zynqmp_firmware PD_R5_1_ATCM>,
++					<&zynqmp_firmware PD_R5_1_BTCM>;
++			memory-region = <&rproc_1_fw_image>;
++		};
++	};
++
++	rproc_split: remoteproc-split@ffe00000 {
++		status = "disabled";
++		compatible = "xlnx,zynqmp-r5fss";
++		xlnx,cluster-mode = <0>;
++
++		#address-cells = <2>;
++		#size-cells = <2>;
++
++		ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x10000>,
++			 <0x0 0x20000 0x0 0xffe20000 0x0 0x10000>,
++			 <0x1 0x0 0x0 0xffe90000 0x0 0x10000>,
++			 <0x1 0x20000 0x0 0xffeb0000 0x0 0x10000>;
++
++		r5f@0 {
+ 			compatible = "xlnx,zynqmp-r5f";
+-			power-domains = <&zynqmp_firmware PD_RPU_0>;
++			reg = <0x0 0x0 0x0 0x10000>, <0x0 0x20000 0x0 0x10000>;
++			reg-names = "atcm", "btcm";
++			power-domains = <&zynqmp_firmware PD_RPU_0>,
++					<&zynqmp_firmware PD_R5_0_ATCM>,
++					<&zynqmp_firmware PD_R5_0_BTCM>;
+ 			memory-region = <&rproc_0_fw_image>;
+ 		};
+ 
+-		r5f-1 {
++		r5f@1 {
+ 			compatible = "xlnx,zynqmp-r5f";
+-			power-domains = <&zynqmp_firmware PD_RPU_1>;
++			reg = <0x1 0x0 0x0 0x10000>, <0x1 0x20000 0x0 0x10000>;
++			reg-names = "atcm", "btcm";
++			power-domains = <&zynqmp_firmware PD_RPU_1>,
++					<&zynqmp_firmware PD_R5_1_ATCM>,
++					<&zynqmp_firmware PD_R5_1_BTCM>;
+ 			memory-region = <&rproc_1_fw_image>;
+ 		};
+ 	};
 -- 
-Dmitry Safonov <dima@arista.com>
+2.25.1
 
