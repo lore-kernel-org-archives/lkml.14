@@ -1,59 +1,63 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2092.outbound.protection.outlook.com [40.107.20.92])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2085.outbound.protection.partner.outlook.cn [139.219.17.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C767A495C5;
-	Wed, 10 Jan 2024 13:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=virtuozzo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=virtuozzo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="t5KG4HTM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9575E4BA9D;
+	Wed, 10 Jan 2024 13:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fjae62TxSt7lzUwzpwwwy2enMSdLVIaern2InCoyz7BhTzk3S8oX8QqYWtAy0cHAX9LabMMR3g4BpD+kOQ+Nm6RXIgKe9TdDP/sV0ONBHEoNunzAq5EvRPVaI5Lc2d8qXhtp7j4SuiSAwq0VmOVLE8QPBSr1t3GK8IUVjm6qQomqA5wUfc+OndT9zCrCpEiWKmeNuEMhVrcMWmYNm03+mTPzWIdBzvWaR4kI9Xs+pevlt13SIj7kzp20zIOIKG2OMXceBxzNuBGj6xCenLgBCU2fDHKpV33BG/eHehtRo0JnPrrbTruG/pSzpH0wE1gCgP9TD/t/VyVMvF/KKKh8bw==
+ b=n3WuTMMhk9YXFux5EoMxZoZY1HP/PvX9QDaNPjwp291DnPBeX5MHiJ5AzCHl2GGRMfEMaM6EXfoCPcK6DfC0jMTrvVMYlL4CXpcFkfNMgoZ6g2XMjwf+hCa6FmQZTBmD4JQxdH79vqGQl6Y5L5IEhO9O3InUIh1O/W5KE1vJAHJZ9WGpGLHWqKH073QBWawWCnxvJOtTxdCaMtgj8whXVtDh1g7Va8uyq4gObubVGvQCYhEVXKt0KFIB39MaP0a6oelZiWpI/YNtqW1MkkPEC5IukHGDjIXUiokQqQTbnOTkLnQRez5EPu4cQsgER7VWGwcJVJM/Q9J263QJCMGdYg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IWYHKqKa42xFEGod0ASMSyIyp8a5/PJWi8Htbuz+xTk=;
- b=C7K8jxRqhTSWbx+kw24n2Xbum5DnUKzWulotjKDFepUqAQaPo6MVEod2WL4H9jw4fuQyg6LymjXBJ1SHMdeH6FYpP+NSXodS29eTd+kEuKdbzT9PTZFiAg+al0XuZreFQFrImYqyeyfi7WmUHLZ6luwGflpL/fFnbyJRjjZ76ZXIV+VhDgDC7EsVH2vxUVhAZXTtmjvgk0cMsbzHNcHYtmVXZsOik5gbQCkta4Dw6b7QaYnfiGOjjHBTZo/zbzDlTXBClWgz4o92sbyKqRALOecXMuywtvASuUX81w0bJOsq9hdeARXlFuIRC7EBCGfduxJ+CQSbYWe8+QUfAJo9pg==
+ bh=YO8QgPB0DL3mNzO74IYllMWQSIgnCbvtWOpkstTomR8=;
+ b=bj4RHGcE7oZBCErxpHWhZ1CFb5Q6T9WrqS+NcpsSq3oE6+e84lW6f+UdL0iK5xwmD9L0Ne/NRCCHNb1LYG7XlO0rSflNvegGsEP6JX4Gpwv2UJ71sD7HYy0sbdvAis9KHc+fSdrC32IcoNPmkUnxSHdGM9UOU0s+I94eISYoIbm/lJJ77bMG17aoJfT17mLnw0HsNXXmMUafRsOurp5dzVqGLK2X2nZDvI3NQgW30NvbErFethKZ8uDfwU6ePgXMHa7DiMZ9/w3m62UEwoDj/eOuAGhZVZH7N0I3BWtxfNK9bI96KRh3QUaDRFuOQUW1w/JoePOSXMwGvAOl7nkYfw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IWYHKqKa42xFEGod0ASMSyIyp8a5/PJWi8Htbuz+xTk=;
- b=t5KG4HTML+BAQdyenECRUa4RX64x3H3VEIL3QuyLx2rC5e1ZCsxVq7kjODSeT4tT9fQ0d2L2yTCfoyWWQ3p8HiqiJWX3LdrmSpD6l2jNsjCQoQbxSlpO0JXF+2zWQlq0x7UYA3EaXoeFZH2uEZOgE3wO435eNYfFql5bAnAqXhHLGMvHzcAEebd4NsU7BEE5QcX+gbZRG4dxE/8hrx3d/SDLRsGnox3TIrG0HZh/CWqUqag3RD7OVOHtAypAA2QNZd6kTmPauD2feeGZ9YjLLqaF8abzTsKq3Wv63zJ/Z5WqsxNflDjpDfq7hj82i+TFLjSzr9snl0uLYKHupybE1A==
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=virtuozzo.com;
-Received: from DU0PR08MB9003.eurprd08.prod.outlook.com (2603:10a6:10:471::13)
- by PAXPR08MB7468.eurprd08.prod.outlook.com (2603:10a6:102:2b6::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
- 2024 13:48:22 +0000
-Received: from DU0PR08MB9003.eurprd08.prod.outlook.com
- ([fe80::72c4:98fc:4d1b:b9ba]) by DU0PR08MB9003.eurprd08.prod.outlook.com
- ([fe80::72c4:98fc:4d1b:b9ba%5]) with mapi id 15.20.7181.015; Wed, 10 Jan 2024
- 13:48:22 +0000
-Message-ID: <367b1642-c09a-4bc6-ac63-7692b716174d@virtuozzo.com>
-Date: Wed, 10 Jan 2024 21:48:15 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] netfilter: nfnetlink_log: use proper helper for
- fetching physinif
-Content-Language: en-US
-To: Florian Westphal <fw@strlen.de>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@openvz.org
-References: <20240110110451.5473-1-ptikhomirov@virtuozzo.com>
- <20240110110451.5473-2-ptikhomirov@virtuozzo.com>
- <20240110133333.GA24888@breakpoint.cc>
-From: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-In-Reply-To: <20240110133333.GA24888@breakpoint.cc>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: KL1PR0401CA0001.apcprd04.prod.outlook.com
- (2603:1096:820:f::6) To DU0PR08MB9003.eurprd08.prod.outlook.com
- (2603:10a6:10:471::13)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:f::16) by BJSPR01MB0626.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:10::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.33; Wed, 10 Jan
+ 2024 13:32:38 +0000
+Received: from BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+ ([fe80::3862:65b4:c857:c4a6]) by
+ BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn ([fe80::3862:65b4:c857:c4a6%4])
+ with mapi id 15.20.7135.033; Wed, 10 Jan 2024 13:32:38 +0000
+From: Sia Jee Heng <jeeheng.sia@starfivetech.com>
+To: kernel@esmil.dk,
+	conor@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de,
+	emil.renner.berthing@canonical.com,
+	hal.feng@starfivetech.com,
+	xingyu.wu@starfivetech.com
+Cc: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	jeeheng.sia@starfivetech.com,
+	leyfoon.tan@starfivetech.com,
+	Joshua Yeong <joshua.yeong@starfivetech.com>
+Subject: [RFC v3 15/16] reset: starfive: Add StarFive JH8100 reset driver
+Date: Wed, 10 Jan 2024 21:31:27 +0800
+Message-Id: <20240110133128.286657-16-jeeheng.sia@starfivetech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240110133128.286657-1-jeeheng.sia@starfivetech.com>
+References: <20240110133128.286657-1-jeeheng.sia@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BJXPR01CA0067.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:12::34) To BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:f::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,144 +65,228 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR08MB9003:EE_|PAXPR08MB7468:EE_
-X-MS-Office365-Filtering-Correlation-Id: a198e0d9-5e56-4092-e27f-08dc11e2cf9b
+X-MS-TrafficTypeDiagnostic: BJSPR01MB0561:EE_|BJSPR01MB0626:EE_
+X-MS-Office365-Filtering-Correlation-Id: 25f06df8-1f59-4d99-1072-08dc11e09cbe
 X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	UY39PyeBazRES2G3Lu0OTLgT+qHCDTvgHa/hEcu3V/YRiiVzg1H6VDjHOSDrnliwwTKUvD6M18FPCrEgS9EttFG1zYvLt1ybGu4Kqu1S20WKiFyx90piFeJz/W5bcehJoBSCa5FlsuZmltxj2+6y3Lys1r1aCoZD3atpuKAUS8AGriNSKjrydj80RFq3mL54d6dfhgEBz8pq9mbq5OjnYvcxmIaleOB6ZDsoZDs5owf3xQuudpiveDgl9BuC4oC3puOuLD4ROdQL3Hrk5Y9hFkGYbp3OLAk4xKlj7IzKuLL+WimZEJEwWcpEjMca/kQh5lt0vvlAiu1D54ZXOC3vlHMgSDm5YeZmefpoY/xVVvO9gqfv8wBuCX5XbFMv+GS65GUQE9y8N/DbrIcDkrTPpDnEkYbGP0Ssyw9wVbR4QiPC3RhRxr+/HumXV4pdPbkzJ8JMOrscXBSJsEI08OpW0sbzsXMYWaGeFKsMWNwITmQRDpd1mbAGLu+h2AkhSWjCMtahxn4Xv7/YQ6sL+Vjl69TOzUWMIp4asEMgLNMEDNXZwpJAa2dbSsyaQbgp5yU/9lNIXE2OfLwFrIhx9ZTXWlv6CfXeXu0DGeOB4kFEuViudRq5+qX8GMtO1eB+Gxw1Gsl/Nf5hZJJbHmAw+SzEiA==
+	IK/FKAHbPXIfDEbw2o0H6fxY0JwJ83+UJ/xjdV8eixfbxy/HLriAMWRcHaz7fiSW57IpUO+/kH6PLNRvx+wnHSi20jGMgK0lbDCN4+Aa3q2l+7WZOLGtJyMAGUlHrXZhZH9wrOsWHdJAdhbZYDgmG934Weg6NAPa1FqbHMA6XcGuYoJyAk2Zh8ZSV0SQjhFcKMz5Ftt9aX0xhyMaQkqdrPGNN6yUnizWe9w2sA4+Q7V5J0hfjIYcvyfZPTfsNo2hrEwGe2S4QbchJE23C64SfWsHzZ8pJnSEGBhighr2SIpRoNdqKNSRNPgPWipjBCmf4VpJIHYlG8u1QxgebidQz/ZBWhWmVNTheeP9CPJitepk6AULYlCVeM3VSikkIgcC0vc5q4eMumHniDytRbKos+KsNmQuJZlVLEpHtK4n5GDRFBnxAEOCoqCr9uqXCZysQFf/FGwqsCDy6l1oTF9Zphh++dHl8Oc4nEsz0kNXgE+iR3QpRjXEJMmynwsXjDtDKEcy4qE7cRawQ+xSR6NPTL6xM4CuVrr7iCZ+bQFoBULUzbeiXXjh78SElABtQ28g0cEuoRGIp7uz5POWaCGlDQ==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR08MB9003.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39850400004)(366004)(136003)(346002)(376002)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(31686004)(83380400001)(41300700001)(66946007)(36756003)(86362001)(31696002)(38100700002)(2616005)(6506007)(107886003)(53546011)(6512007)(6486002)(2906002)(54906003)(66556008)(66476007)(6916009)(316002)(6666004)(478600001)(4326008)(8676002)(5660300002)(8936002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(136003)(346002)(396003)(366004)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(921011)(26005)(107886003)(52116002)(2616005)(41320700001)(6666004)(83380400001)(1076003)(86362001)(40160700002)(40180700001)(38100700002)(36756003)(38350700005)(5660300002)(7416002)(4326008)(55236004)(6636002)(66556008)(66476007)(66946007)(41300700001)(2906002)(8936002)(8676002)(508600001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WWRFY1hBV3VZTUFkT29pQmZlYm9UUy8yZW1FOGNJOVFSbmVRaEpPSkJrODhD?=
- =?utf-8?B?aUpZYUxBbGVGbzhvU1d0bTRMNFZaT3F2RnNqZW1GL3BiY0hjdUJlblpWcitY?=
- =?utf-8?B?V1RaY0ZhWWFPQWlCM2VJQmwwbVVOQWVvZXc0V2xPOWxwSFdlNytuRWdmbFIr?=
- =?utf-8?B?MmxqNE0rb1NXTVBtNVMraWM1Nkoxa3pzU0NPcmtqcGhYNW1jWFMyZ3hjS00x?=
- =?utf-8?B?eWwrNkRBVlNqOUhoTkxsNTFOTlQ1cWcxZGUxMTA2U1R0NWgyK0wxODY3NHFJ?=
- =?utf-8?B?NDZPVzV3Y0VxZXF6a09HQlhGU3UyWG5EUVphU2lkY0E5aDdJVk1PbTRmNW94?=
- =?utf-8?B?REplQTlCZnhNR3pDM2UveEo1MnBkamxINTI1ODJXRlMwSERJdUEwWGRGMlVo?=
- =?utf-8?B?UXRUVGhlaUdsTUFBZ2ltVnpjT3RsWVhuVlFhSzVNaFBwS1FUMkRmeDNXNG9v?=
- =?utf-8?B?Mmx3dU1mVkcrWnpoL2dmbERVZmQ4MlFaMUJYM1ZjbENIZGx0dnNVWFd3eFRl?=
- =?utf-8?B?Q0N2M1VmSnJiUlBRYTdyWGJwZ1IwR2lYN1VadWlCdkRTS29ZWmFYR2Z5YWRN?=
- =?utf-8?B?M1pxU01aUndjZ2hGaWh2aHlrQ1luSlRGaWUzV1JjSDNIYU56RW9mU1FsMzZG?=
- =?utf-8?B?NDhhYW5DbHVDU2RIOEk1VTdNSGZ6ZFdYd3loSjZJVCtSMVU0cVAvRWlBd3Rw?=
- =?utf-8?B?KzhDN3RCSzJKMkwxYU9VRzUxVkZCQ0ZSSzBjOUxWRHRlbTM4RFJ5NzdYbEZl?=
- =?utf-8?B?SXR0RUlKcnZaMGd4MG1WVXBkaVFCQVRWVld2bWltWDB4Z2M1Y0RJaTN2b3BC?=
- =?utf-8?B?YWtaOHI0VzM1dW9WV0pIcHVOa3ErSFAzUTlDVFlIbkR5NSsrdUtxaWlLenlH?=
- =?utf-8?B?RkFadmgxVUV0N3pKV3NOYTFFMjQwSEFWNmY3WDZObGxGNkhWTkhVSEJXZU5Y?=
- =?utf-8?B?TER6c3Y1ZEFNU1A4eDdaTEdaZEwyZnhOd2xCVklGbG4zdWdBdHBlNVk4Q2dt?=
- =?utf-8?B?Z0NzQk1icW02N3hteVFOQnlQN1RnajFnZ0hMajRpN1NSN3FrUE03NHVwZUZK?=
- =?utf-8?B?VC9HVmQ3U0hkbXBLS29IU2NaT29vUzduTWlWc3lpV2c2b1hkZWhXZWJaZjF1?=
- =?utf-8?B?NkQwTXMwbGxHZ3ZvVGsyTk5KZFp3RzFBaGUySHA5bngvWk9vMm5hN1hlMlNi?=
- =?utf-8?B?RmR1ZGhPZG5ndDJ4OWNYZGFkYmtWaWJTaHNiVlFrbW8xT0lvd0VYSW1MUTY4?=
- =?utf-8?B?emhnNWs1WVhoSFFzTktVNEI4N2pZVjByZDg4U29ZOXVPaU1ZajNVTUx5K3Fy?=
- =?utf-8?B?TjB5L3ZwbHlJOHJBbGVuUUQvZGVPb3lwSWxCK0RHOXZLLzNaZnZ0RlhDVmM4?=
- =?utf-8?B?eCt5WG5GS0RGb2pSQ3lOZDRHVEZFT0YvK2xkYW5IQ3MvZy9SNFpDVlBuV0tp?=
- =?utf-8?B?NWo2enBvc1EwOXpCUzlyNVRGVUZMRUxFV3VLbFM4YTNaWDlBdmNqNmFKOER2?=
- =?utf-8?B?RHVJbUlmdE1nYWxEUkcybVU2S0JGajJkNXIweHpObjlyTlltQkVnbDI5VTBM?=
- =?utf-8?B?a2M3aDdBVURZcGZweDJaVFlMbjZNSVhicEYwS2tJaTc5UnVPMUUwZUVRM2lD?=
- =?utf-8?B?Z3lHK0NZbDZLWGpzVmNpcm0wUnM5MWZ6cHZpaVFmbExUaFJMTTdCcVM1SU1V?=
- =?utf-8?B?SGN0bFZsb0lDTDh4dlM5RTIvUW91UklHWnlDcU93SFNIYjd6OWRlbVY3anpt?=
- =?utf-8?B?T3U3cDFPenNQd2FmNG5VeGZhNEFRZXl3M2pzVUZ4WlYxU3kxR2o5WWZtUXRa?=
- =?utf-8?B?VURYWFhIQVJ5YW5mK3l4NGxOaEdLR1AxcTVBL0xpVmZyZUtYUU9JVE91WFMy?=
- =?utf-8?B?Y2ZpS2hoSHNaYVdRNzJBc2Q4a2t0b01DM3ROQlIvVWZEMmo5dTMxMXdzVXpX?=
- =?utf-8?B?cGZpZ1h3WjRxSzRmdU5Rd293Z01VcDJwdGxuYVVsN0FmNEJrdy9FeERIT1J6?=
- =?utf-8?B?NEJiTVlwYmI2dFRtWkZjU0h1cU5jZE92NWI5ZURTYUgyaC84YmRsRDllbENL?=
- =?utf-8?B?Y3NFZUJXVlVJci9RTzBJTHRJZHYzcm1iVmlKVmJGaURQTVhZSDZWZ1lnblJt?=
- =?utf-8?B?b0xpeDZXSE5ENFdGaG9RaDhEK3hXUWE0eTc3V3lmTjdZSDV5UmNMWE9BQWpR?=
- =?utf-8?B?UkdMdFR1Qk41ZFlWOVFhTE93blNVZ3RjZzJua2VYS1pqU3RvaDZGSXN0dVBI?=
- =?utf-8?B?bzVsTXVCbVVnbWNGYnZNeTNoV3dBPT0=?=
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a198e0d9-5e56-4092-e27f-08dc11e2cf9b
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR08MB9003.eurprd08.prod.outlook.com
+	=?us-ascii?Q?jrbUYTYvpKMo2+TttEdIKIZOtnvXAYbhv+wduPONwx+wgVH+o524Kbay68tu?=
+ =?us-ascii?Q?s5GS8A471VzSf/SXQ5BQCxBu5pDbS+x3hwdReKAsJBPtwh5xHQwZjNh9TNML?=
+ =?us-ascii?Q?V1DZz60a8MHgyrqk9+zet9Dh0zSkchHdc0IQAJ/WwtAwqh0SBcJBH/LRf9f+?=
+ =?us-ascii?Q?VROuiNB6lU29Bk3sg70bIat3W5ivgtE9alUwqiOjftOiD/oxkm9gcipK2EKh?=
+ =?us-ascii?Q?lYlLokYiVfecixL1RlJgEtH2rtioy079Co38YJy2NhIdZZ41eYetZecvg9Q9?=
+ =?us-ascii?Q?tQuw6mSdQ9Vpm4DxAnna7agUfYnAShjVsmW94LXm/U33kAssYn5A1qG9KrVj?=
+ =?us-ascii?Q?Zo+h4TzIBFvnia9dCr3TDWuhryhQckeSW/WupmIho0cl0VdLmwSA9cmMSHNX?=
+ =?us-ascii?Q?GUrY7ieHTQn3ylYLBR8sVUsLv9OenbnpmBneF3EVX7NeoPNLT7sk98eKjwyo?=
+ =?us-ascii?Q?dlOf/yQVF4NRSYlfCsaW/KAsbesPVThUi4xiXAFS8CrD0i8I2XefF1c/vbPz?=
+ =?us-ascii?Q?50Tt7Af659CyucQY85jcieT/sZ9PPFSBR91Nr2ML0ul4P2DPY6BrH+a5tV1/?=
+ =?us-ascii?Q?YgMsVlR/Duj0zab7nvlsIPKAVlrU7cQc3A76HTJUu3B8e1Tc7eCwQMOMPUYS?=
+ =?us-ascii?Q?LcSqHTAQGDLjvPgG8V4CkrgwWr0o4EqhL+IERo3h5vnFVU0igpPhBc5UA/RN?=
+ =?us-ascii?Q?/FDJWztIgKEk40bBpEQ3AgFhQ4uOAP6J5Uf1hL6x/mv+JFU1UdMs70V5q94N?=
+ =?us-ascii?Q?4V9ruRsyhLUlkp4V3oOuiO3DdVCR6FdsKXNt/Bh0lL+PuuhhB7g+jqKSrpee?=
+ =?us-ascii?Q?gs2MdhrF7MCNHGRVCSgh/lBFydq5Q0SM+IFkxmPxOWTwGB33b0UuBkkWqRb+?=
+ =?us-ascii?Q?1efdFHdGLBtfK6bWM9u2WeXQJP7sEGgBrF9P4QS1qJm0sSxzu+pZtxuxAb5o?=
+ =?us-ascii?Q?wKERzPCyDrZM0vrcSjJFg1zggOQzkLBVdr93BHDFmn89mHYonMxfnYYcKvuh?=
+ =?us-ascii?Q?+1JtWTq7hM8UoIahlSTpsq5AQks7ApFyDPdBybzzt6H7j1vG0uK9NLMB7b4c?=
+ =?us-ascii?Q?GmN/Y5gR8ywifyovo16I/DtsgIu77BzJwSY6PwWEeACUqlNX+iJTkNALXE+k?=
+ =?us-ascii?Q?aJefKECeTjoR8q/3Q1M8O13p/JhvHw7l0zbzdlhrmsSARySotEitCiJleEP6?=
+ =?us-ascii?Q?+r3zI9C/KMXQTNWNuKMmX9Wx8dBhwPajmemsWSopThdz6LfUl6SNdyWamBz7?=
+ =?us-ascii?Q?4JF5I9rqtTrdrJFG6vn3P0Q7c29kRXf+GPwq8Q1UoYd7TUZZYa9LikwH/Qp8?=
+ =?us-ascii?Q?kGDQtFrcpoT5cf1Mz5MHISLlmNbuobafxkFqa3lG7u4fZ/EoobAR+x1VIptx?=
+ =?us-ascii?Q?I0cZD+bvQQNn1WfA8TeDGqtUfKw8u7FXXrg0ODVV/HohNJZgJ2lBf6XEoWmB?=
+ =?us-ascii?Q?b2hHNbzryz95TMtdFQnpOsImspu2JoUrTEPPNFnceNMJYnFTZnIsmCCDtfqu?=
+ =?us-ascii?Q?7Bg9osYrLtMP12+D5DM7fPHkdYZPrHJmDDbRe7S98XtmNUAkoA4EK474S5dC?=
+ =?us-ascii?Q?WU9hR7JqBvMNCod7rsZJgKN2nTh/SIayG7PXpKid09hHYG99jw3HYocyc8py?=
+ =?us-ascii?Q?gPfS2D/tj8v8NB2v/r4AUf0=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25f06df8-1f59-4d99-1072-08dc11e09cbe
+X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 13:48:22.6340
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 13:32:38.1633
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DawzuBZeAHSqGEotznUkYJFtDBn/pP/AR7kdz9obBgcMOU5ohgvHDmb2FIJtIzouGkN+MfNtkFLShNDkiGI9yrRPDzl1US9lkQQw2LswAfk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB7468
+X-MS-Exchange-CrossTenant-UserPrincipalName: riynAunmpxO78lkCC2f00nG9127gQC23hyCnUm6KAmrzRD9FZWo5UlvHZyBfnTWOMJUxUzAIVeqSqpMeKMVafsS1Td2/RQQrfTagsp88j2g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0626
 
+Add auxiliary reset driver to support StarFive JH8100 SoC.
 
+Co-developed-by: Joshua Yeong <joshua.yeong@starfivetech.com>
+Signed-off-by: Joshua Yeong <joshua.yeong@starfivetech.com>
+Signed-off-by: Sia Jee Heng <jeeheng.sia@starfivetech.com>
+Reviewed-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
+---
+ MAINTAINERS                                   |   7 ++
+ drivers/reset/starfive/Kconfig                |   8 ++
+ drivers/reset/starfive/Makefile               |   2 +
+ .../reset/starfive/reset-starfive-jh8100.c    | 108 ++++++++++++++++++
+ 4 files changed, 125 insertions(+)
+ create mode 100644 drivers/reset/starfive/reset-starfive-jh8100.c
 
-On 10/01/2024 21:33, Florian Westphal wrote:
-> Pavel Tikhomirov <ptikhomirov@virtuozzo.com> wrote:
->> We don't use physindev in __build_packet_message except for getting
->> physinif from it. So let's switch to nf_bridge_get_physinif to get what
->> we want directly.
->>
->> Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
->> ---
->>   net/netfilter/nfnetlink_log.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/net/netfilter/nfnetlink_log.c b/net/netfilter/nfnetlink_log.c
->> index f03f4d4d7d889..134e05d31061e 100644
->> --- a/net/netfilter/nfnetlink_log.c
->> +++ b/net/netfilter/nfnetlink_log.c
->> @@ -508,7 +508,7 @@ __build_packet_message(struct nfnl_log_net *log,
->>   					 htonl(br_port_get_rcu(indev)->br->dev->ifindex)))
->>   				goto nla_put_failure;
->>   		} else {
->> -			struct net_device *physindev;
->> +			int physinif;
->>   
->>   			/* Case 2: indev is bridge group, we need to look for
->>   			 * physical device (when called from ipv4) */
->> @@ -516,10 +516,10 @@ __build_packet_message(struct nfnl_log_net *log,
->>   					 htonl(indev->ifindex)))
->>   				goto nla_put_failure;
->>   
->> -			physindev = nf_bridge_get_physindev(skb);
->> -			if (physindev &&
->> +			physinif = nf_bridge_get_physinif(skb);
->> +			if (physinif &&
->>   			    nla_put_be32(inst->skb, NFULA_IFINDEX_PHYSINDEV,
->> -					 htonl(physindev->ifindex)))
->> +					 htonl(physinif)))
-> 
-> I think you can drop this patch and make the last patch pass
-> nf_bridge_info->physinif directly.
-
-The whole Idea of this patch was to replace nf_bridge_get_physindev with 
-nf_bridge_get_physinif before the patch which propagates net, so that we 
-don't need to propagate net first and then in later patch remove it when 
-replacing with nf_bridge_get_physinif.
-
-But I spoiled it by forgetting to remove net propagation to 
-__build_packet_message...
-
-Is it ok if I leave this patch as is, but instead remove:
-
-diff --git a/net/netfilter/nfnetlink_log.c b/net/netfilter/nfnetlink_log.c
-index 134e05d31061e..ad93dd77e6071 100644
---- a/net/netfilter/nfnetlink_log.c
-+++ b/net/netfilter/nfnetlink_log.c
-@@ -463,7 +463,8 @@ __build_packet_message(struct nfnl_log_net *log,
-                         const struct net_device *outdev,
-                         const char *prefix, unsigned int plen,
-                         const struct nfnl_ct_hook *nfnl_ct,
--                       struct nf_conn *ct, enum ip_conntrack_info ctinfo)
-+                       struct nf_conn *ct, enum ip_conntrack_info ctinfo,
-+                       struct net *net)
-  {
-         struct nfulnl_msg_packet_hdr pmsg;
-         struct nlmsghdr *nlh;
-@@ -804,7 +805,7 @@ nfulnl_log_packet(struct net *net,
-
-         __build_packet_message(log, inst, skb, data_len, pf,
-                                 hooknum, in, out, prefix, plen,
--                               nfnl_ct, ct, ctinfo);
-+                               nfnl_ct, ct, ctinfo, net);
-
-         if (inst->qlen >= qthreshold)
-                 __nfulnl_flush(inst);
-
-from third patch?
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c5d563594e34..d74cb78cbb90 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20738,6 +20738,13 @@ F:	Documentation/devicetree/bindings/clock/starfive,jh81*.yaml
+ F:	drivers/clk/starfive/clk-starfive-jh81*
+ F:	include/dt-bindings/clock/starfive?jh81*.h
+ 
++STARFIVE JH8100 RESET CONTROLLER DRIVERS
++M:	Sia Jee Heng <jeeheng.sia@starfivetech.com>
++M:	Ley Foon Tan <leyfoon.tan@starfivetech.com>
++S:	Maintained
++F:	drivers/reset/starfive/reset-starfive-jh81*
++F:	include/dt-bindings/reset/starfive?jh81*.h
++
+ STATIC BRANCH/CALL
+ M:	Peter Zijlstra <peterz@infradead.org>
+ M:	Josh Poimboeuf <jpoimboe@kernel.org>
+diff --git a/drivers/reset/starfive/Kconfig b/drivers/reset/starfive/Kconfig
+index 29fbcf1a7d83..88d050044d52 100644
+--- a/drivers/reset/starfive/Kconfig
++++ b/drivers/reset/starfive/Kconfig
+@@ -19,3 +19,11 @@ config RESET_STARFIVE_JH7110
+ 	default ARCH_STARFIVE
+ 	help
+ 	  This enables the reset controller driver for the StarFive JH7110 SoC.
++
++config RESET_STARFIVE_JH8100
++	bool "StarFive JH8100 Reset Driver"
++	depends on AUXILIARY_BUS && CLK_STARFIVE_JH8100_SYS
++	select RESET_STARFIVE_COMMON
++	default ARCH_STARFIVE
++	help
++	  This enables the reset controller driver for the StarFive JH8100 SoC.
+diff --git a/drivers/reset/starfive/Makefile b/drivers/reset/starfive/Makefile
+index 582e4c160bd4..ede1fc1c9601 100644
+--- a/drivers/reset/starfive/Makefile
++++ b/drivers/reset/starfive/Makefile
+@@ -3,3 +3,5 @@ obj-$(CONFIG_RESET_STARFIVE_COMMON)		+= reset-starfive-common.o
+ 
+ obj-$(CONFIG_RESET_STARFIVE_JH7100)		+= reset-starfive-jh7100.o
+ obj-$(CONFIG_RESET_STARFIVE_JH7110)		+= reset-starfive-jh7110.o
++
++obj-$(CONFIG_RESET_STARFIVE_JH8100)		+= reset-starfive-jh8100.o
+diff --git a/drivers/reset/starfive/reset-starfive-jh8100.c b/drivers/reset/starfive/reset-starfive-jh8100.c
+new file mode 100644
+index 000000000000..a14418653608
+--- /dev/null
++++ b/drivers/reset/starfive/reset-starfive-jh8100.c
+@@ -0,0 +1,108 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Reset driver for the StarFive JH8100 SoC
++ *
++ * Copyright (C) 2023 StarFive Technology Co., Ltd.
++ */
++
++#include <dt-bindings/reset/starfive,jh8100-crg.h>
++#include <linux/auxiliary_bus.h>
++#include <soc/starfive/reset-starfive-common.h>
++
++#include "reset-starfive-common.h"
++
++#define JH8100_SYSRST_NUM_RESETS	(JH8100_SYSRST_HD_AUDIO + 1)
++#define JH8100_NWRST_NUM_RESETS		(JH8100_NWRST_MERAK1_TVSENSOR + 1)
++#define JH8100_NERST_NUM_RESETS		(JH8100_NERST_DUBHE_TVSENSOR + 1)
++#define JH8100_SWRST_NUM_RESETS		(JH8100_SWRST_DDR_TVSENSOR + 1)
++#define JH8100_AONRST_NUM_RESETS	(JH8100_AONRST_IRQ_CTRL + 1)
++
++struct jh8100_reset_info {
++	unsigned int nr_resets;
++	unsigned int assert_offset;
++	unsigned int status_offset;
++};
++
++static const struct jh8100_reset_info jh8100_sys_info = {
++	.nr_resets = JH8100_SYSRST_NUM_RESETS,
++	.assert_offset = 0x1B4,
++	.status_offset = 0x1B8,
++};
++
++static const struct jh8100_reset_info jh8100_sys_nw_info = {
++	.nr_resets = JH8100_NWRST_NUM_RESETS,
++	.assert_offset = 0xA4,
++	.status_offset = 0xA8,
++};
++
++static const struct jh8100_reset_info jh8100_sys_ne_info = {
++	.nr_resets = JH8100_NERST_NUM_RESETS,
++	.assert_offset = 0x2BC,
++	.status_offset = 0x2C4,
++};
++
++static const struct jh8100_reset_info jh8100_sys_sw_info = {
++	.nr_resets = JH8100_SWRST_NUM_RESETS,
++	.assert_offset = 0x28,
++	.status_offset = 0x2C,
++};
++
++static const struct jh8100_reset_info jh8100_aon_info = {
++	.nr_resets = JH8100_AONRST_NUM_RESETS,
++	.assert_offset = 0x104,
++	.status_offset = 0x108,
++};
++
++static int jh8100_reset_probe(struct auxiliary_device *adev,
++			      const struct auxiliary_device_id *id)
++{
++	struct jh8100_reset_info *info = (struct jh8100_reset_info *)
++					 (id->driver_data);
++	struct starfive_reset_adev *rdev = to_starfive_reset_adev(adev);
++	void __iomem *base = rdev->base;
++
++	if (!info || !base)
++		return -ENODEV;
++
++	return reset_starfive_register(&adev->dev,
++					      adev->dev.parent->of_node,
++					      base + info->assert_offset,
++					      base + info->status_offset, NULL,
++					      info->nr_resets, NULL);
++}
++
++static const struct auxiliary_device_id jh8100_reset_ids[] = {
++	{
++		.name = "clk_starfive_jh8100_sys.rst-sys",
++		.driver_data = (kernel_ulong_t)&jh8100_sys_info,
++	},
++	{
++		.name = "clk_starfive_jh8100_sys.rst-nw",
++		.driver_data = (kernel_ulong_t)&jh8100_sys_nw_info,
++	},
++	{
++		.name = "clk_starfive_jh8100_sys.rst-ne",
++		.driver_data = (kernel_ulong_t)&jh8100_sys_ne_info,
++	},
++	{
++		.name = "clk_starfive_jh8100_sys.rst-sw",
++		.driver_data = (kernel_ulong_t)&jh8100_sys_sw_info,
++	},
++	{
++		.name = "clk_starfive_jh8100_sys.rst-aon",
++		.driver_data = (kernel_ulong_t)&jh8100_aon_info,
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(auxiliary, jh8100_reset_ids);
++
++static struct auxiliary_driver jh8100_reset_driver = {
++	.probe		= jh8100_reset_probe,
++	.id_table	= jh8100_reset_ids,
++};
++module_auxiliary_driver(jh8100_reset_driver);
++
++MODULE_AUTHOR("Joshua Yeong <joshua.yeong@starfivetech.com>");
++MODULE_AUTHOR("Sia Jee Heng <jeeheng.sia@starfivetech.com>");
++MODULE_DESCRIPTION("StarFive JH8100 reset driver");
++MODULE_LICENSE("GPL");
 -- 
-Best regards, Tikhomirov Pavel
-Senior Software Developer, Virtuozzo.
+2.34.1
+
