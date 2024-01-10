@@ -1,125 +1,126 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413D948CEE
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D2F48CEC;
+	Wed, 10 Jan 2024 13:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="y3+hvngN"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e4d64a431so20335355e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 05:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704894773; x=1705499573; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=themo8s+HXqyxpgjBM6NORapLKrMIQiVth0mwG53rLo=;
-        b=y3+hvngNmPsn6hqUV99dAuheUyhmGTAijbYwOevArvML+1zWX7g1IiJf2ArJvGjk0K
-         +T4KXX4djkhTbJxBpzaWhTcGfcpLBJV0b35S/Ashle6fAJlCaQsEtv3O+LB8QIr4dAl0
-         XniqdYK24E9vSYLMMoHxRK3sxMdOCegeOYk7fy8ZX0kXB0t5NqOH4LIxeaO9O3ENSjt3
-         OwlgLMdVmSWaHB42swGslAAiIR7+Awofewd99ShxX0SwyddveoX2u36QfGwxA++G5pQC
-         qgSqMVZmg65a6fLRbw6sdQZ1vG507lUcioiX8IGC0d5pFuJf+QvXZ9YqO8HJ3SMe2cFK
-         KyDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704894773; x=1705499573;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=themo8s+HXqyxpgjBM6NORapLKrMIQiVth0mwG53rLo=;
-        b=AtmYUtdX2EaOqZek9IJC/YR/Ygy3qkHUDLZSe6uzA/3nFEeCvD72OwsOB7vhiCFAFA
-         lhDqvWyJj5PK2/KHhY1NGhcKCaK317Q9hoIA/tNTaPWvTtEfaIasVlFBlONJ+aXr1yF0
-         MuKEHDC9wcmHPMqiG5GlacIzvr/yUoQ/yrsNUYnJTFVRTVHdsEfKBzFrqXvj8vQhQGzu
-         GJrZ9Sbqc2y7Oj/cndAe4rWGMmSOgilyq/hiTH0TW4qiUP2jQKyHAVSTedtL9NO9fEMN
-         STgI3LNTWMtUx8sa8uh9I+++qY1zUziItBia1+UTy1ErGikQy9MzGXmihqcPoAFQk6xd
-         4XhA==
-X-Gm-Message-State: AOJu0YwXGymaRNT6/lKvHYNrjCstz94BRi6LgwbQWwsNHsSPns53soFm
-	JrMd3xunnIjDywdV1jwt/gXZss04yhMvKA==
-X-Google-Smtp-Source: AGHT+IHJdPq1h8G5DKGs2+2xbIgnmb8R6SdOjzR086/2taHu/6ADSyJ8vbkWE1mHKaxbyE8ENzTmxA==
-X-Received: by 2002:a05:600c:4452:b0:40e:40fc:6d43 with SMTP id v18-20020a05600c445200b0040e40fc6d43mr683325wmn.98.1704894773482;
-        Wed, 10 Jan 2024 05:52:53 -0800 (PST)
-Received: from localhost ([2a01:e0a:3c5:5fb1:9eb:66c9:5f1b:87ab])
-        by smtp.gmail.com with ESMTPSA id h5-20020a05600c314500b0040d7c3d5454sm2272062wmo.3.2024.01.10.05.52.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 05:52:53 -0800 (PST)
-References: <20240109213812.558492-1-krzysztof.kozlowski@linaro.org>
- <1ja5pdzb7k.fsf@starbuckisacylon.baylibre.com>
- <7e312b05-857f-40a6-a1a1-a954dfea7044@sirena.org.uk>
- <f9f5df54-dbeb-4246-b30f-52f3db7d94b3@linaro.org>
- <3b1b956b-985c-45f2-bda3-018aaf897295@sirena.org.uk>
- <445daac6-841a-4335-9b53-689e5bd2530c@linaro.org>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dt-bindings: dai-common: Narrow possible
- sound-dai-cells
-Date: Wed, 10 Jan 2024 14:36:01 +0100
-In-reply-to: <445daac6-841a-4335-9b53-689e5bd2530c@linaro.org>
-Message-ID: <1jjzohxpl7.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1LOsVQs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C05C433C7;
+	Wed, 10 Jan 2024 13:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704894796;
+	bh=jlMp/lpi2wGBwS24WgYMjKdamYROtFScTQ27uHssC90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p1LOsVQsdC6C0Ev+AVzJ6qcas/m9YtdmXZwSJirqRWZMAASZHZJSzm7BmlZbb3LdO
+	 A/+bAeG0/3+OvM5+cG3kismKx4ZWGKn9JGzIXmqx/+uWOLXL5stNY1cFlhmF+/XbPm
+	 G46Ip3Z39F6OLqeeTO3FPoUDZZ1nTvXcuaAIw0oinmOzZnKy7lr6UCFQbldsJR1fiy
+	 43crXl/NLmVHV8fhegmrW9mp4Do+WkH8a8emgIkguxqtP88veZRVVeRBN7psiKffOz
+	 DPaDY6BBtVBeUr3JrbJvvBYkIt6SH2Sh6V9ecRAT38GHi1JHQJ5At/sogKFLzig3So
+	 PapKmX/sgVHoQ==
+Date: Wed, 10 Jan 2024 13:53:11 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Jisheng Zhang <jszhang@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] riscv: dts: starfive: add Milkv Mars board device
+ tree
+Message-ID: <20240110-eternal-proofing-8a33201ff727@spud>
+References: <20231202153353.635-1-jszhang@kernel.org>
+ <CAJM55Z-9Y=QitvAX+z=XTTMM0CGRzGMD5z0H_Bzv=Q85b49rpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ggN6li4P/Qv8olF8"
+Content-Disposition: inline
+In-Reply-To: <CAJM55Z-9Y=QitvAX+z=XTTMM0CGRzGMD5z0H_Bzv=Q85b49rpQ@mail.gmail.com>
 
 
-On Wed 10 Jan 2024 at 14:24, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
+--ggN6li4P/Qv8olF8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On 10/01/2024 13:57, Mark Brown wrote:
->> On Wed, Jan 10, 2024 at 01:51:03PM +0100, Krzysztof Kozlowski wrote:
->>> On 10/01/2024 12:37, Mark Brown wrote:
->>>> On Wed, Jan 10, 2024 at 12:07:30PM +0100, Jerome Brunet wrote:
->> 
->>>>> If restricting things here is really important, defaulting to 0 (with a
->>>>> comment explaining it) and letting actual devices then override the
->>>>> value would feel less 'made up'
->> 
->>> Wait, what do you mean by "letting actual devices then override"? It's
->>> already like this. Nothing changed. What do you refer to?
->> 
->> The suggestion is that instead of limiting to 1 and having one device
->
-> Nothing limits here to 0. I limit from all technically possible values
-> to reasonable subset.
->
->> override limit to 0 and have all the devices that need 1 override as
->> well.
->
-> I don't think that actual default value for this should be provided.
-> This should be conscious choice when writing bindings and driver.
-> Similarly we do already for some other #cells:
-> #io-channel-cells, address/size-cells (dtschema), #mux-control-cells and
-> others.
->
-> I agree we do not restrict all of them, though. However I do not see
-> single reason to allow developers use 3 as #sound-dai-cells.
->
+On Sat, Dec 02, 2023 at 02:07:50PM -0800, Emil Renner Berthing wrote:
+> Jisheng Zhang wrote:
+> > The Milkv Mars is a development board based on the Starfive JH7110 SoC.
+> > The board features:
+> >
+> > - JH7110 SoC
+> > - 1/2/4/8 GiB LPDDR4 DRAM
+> > - AXP15060 PMIC
+> > - 40 pin GPIO header
+> > - 3x USB 3.0 host port
+> > - 1x USB 2.0 host port
+> > - 1x M.2 E-Key
+> > - 1x eMMC slot
+> > - 1x MicroSD slot
+> > - 1x QSPI Flash
+> > - 1x 1Gbps Ethernet port
+> > - 1x HDMI port
+> > - 1x 2-lane DSI and 1x 4-lane DSI
+> > - 1x 2-lane CSI
+> >
+> > patch1 adds 'cpus' label
+> > patch2 adds "milkv,mars" board dt-binding
+> > patch3 adds the devicetree file describing the currently supported
+> > features:
+> > Namely PMIC, UART, I2C, GPIO, SD card, QSPI Flash, eMMC and Ethernet.
+> >
+> > Since v1:
+> >  - add two new patches which add "cpus" label and board dt-binding
+> >  - adopt Krzysztof's suggestions, thanks
+> >
+> > Hi Conor,
+> >
+> > I see you have sent a patch which moves the timebase-frequency property
+> > to soc dtsi, but this series doesn't rebase on that. I can update it
+> > once your patch is merged.
+>=20
+> Hi Jisheng,
+>=20
+> Thanks for working on this! On the JH7110 the mtime derives almost direct=
+ly
+> from the external oscillator like this:
+>=20
+> osc (24MHz) -> rtc_toggle (div 6) -> mtime (4MHz)
+>=20
+> So to me it makes sense to define the timebase-frequency in the same file=
+ as
+> the frequency of the external oscillator.
+>=20
+> In general it looks good, but if you do
+>=20
+>   diff -Naur jh7110-{starfive-visionfive-2.dtsi,milkv-mars.dts}
+>=20
+> you'll see that those two files are almost identical. Even external clock
+> speeds and all the pin configuration are the same. I'd strongly prefer to=
+ have
+> all that factored out in a common .dtsi so fixes don't get out of sync.
 
-Similarly, I do not see a reason to forbid it.
-Submitter should not have to update the generic bindings every time we
-come up with something new.
+I'm gonna mark this as changes requested on patchwork because of this
+comment. LMK if you don't think this is worth another version Emil.
 
-I agree allowing 0, 1, 2 is a reasonable choice, for now. However it is
-not correct and has not technical justification.
-Trying to list every possibly value for something that is not limited
-is bound to be wrong.
+Cheers,
+Conor.
 
-The commit description says you don't want to accept any value.
-A default value is an alternate way to do that.
-It does not require a justification because it is just convenience.
+--ggN6li4P/Qv8olF8
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If someone fail to it document properly, it will be picked up by the
-checking scripts.
+-----BEGIN PGP SIGNATURE-----
 
-> Best regards,
-> Krzysztof
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ6hRwAKCRB4tDGHoIJi
+0ogBAP4x6iIaTIAS0a/hkKmtjptbBiq1ANLlQfOZxqAPiMlsUwEA5dWpLAZgdPrE
+K8VcCEsLp5nb905zt+fOFYC1bPFoEQY=
+=aqtW
+-----END PGP SIGNATURE-----
 
-
--- 
-Jerome
+--ggN6li4P/Qv8olF8--
