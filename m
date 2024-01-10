@@ -1,37 +1,31 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465FDD512;
-	Wed, 10 Jan 2024 05:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE638CA4A;
+	Wed, 10 Jan 2024 05:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YDDeqim8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704863074; x=1736399074;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=k64/f9r7Qp36i1XX1i9jcMtrmGXtcJyhgHq6uyIFl64=;
-  b=YDDeqim8fSjoE4zYkzLIvVa6FjWGHOs9v7u6o3goFL/oiEY+QLiTCpqx
-   iJRFjdMGAMJPZjpBU1wqTifvhewGw31VgIGNtMWshdnilxmLcQ7ASaVrs
-   Wt5ZSOF5jYvYKsgXCVzldNC4ywvJ5XaxsPOFiO4XBtTxm5faUm9eIBuPk
-   0zxUCNn2k4Ozyk935r/FHB4DRb0Rx7//R4qAAOVFXVI6vkTA7ahsCMKYF
-   juk+nVCu8oDx5lBXLMLCEUVvFmlNl+ga9MAMR0BtTuGAzRgpIvJrgd0Yb
-   shvRdxj5k4TLEMyhm5MvOLnqKgLeeCDvVkp7EIbqcmAZm68PGHDs1mcpG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="429596918"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="429596918"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 21:04:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="16511841"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa002.fm.intel.com with ESMTP; 09 Jan 2024 21:04:30 -0800
-Message-ID: <a2e507b3-a018-44d8-9e92-459670505bcd@linux.intel.com>
-Date: Wed, 10 Jan 2024 12:59:16 +0800
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="N+ySi0IK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704863388;
+	bh=LF9k27EaTdGjd/ELz7vnWNnV+yYPr8oFSfpOovS9tS4=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=N+ySi0IKD5ADkKwT8bG/Ac6HiBfnqkCLqhnG+tWYaE3X1eLfqHgSxepKY/TSAXvQ/
+	 8tx54XbuO/qoYNuCe2rI/4g8tl+uQGlXQGEQD3bemrSO9lrTK+JM+mkXc7g2i+6VB8
+	 3AFbb2wEqD67WPjpIV8fpKhf7THQ3VlW/gQKGhkjcMJR+koNF24XPP15OgktjY+pSh
+	 2P3OqI43EdyHUNtAoZw3Jlc6l+cO6XT8Aj83hJXbYG8X3jyP28VIQ8wFiqt8kW7/Uu
+	 jtXlc20SUrZBWUONMlIQR74ey6RR7XxCqBsZ/g3MS176YHGP9jOAK78E2f+g077nvJ
+	 24/RRxEA/cE3Q==
+Received: from [100.96.234.34] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D61233780C1F;
+	Wed, 10 Jan 2024 05:09:42 +0000 (UTC)
+Message-ID: <e000707c-79ce-4ef9-a42c-52997d14c08d@collabora.com>
+Date: Wed, 10 Jan 2024 10:09:48 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,49 +33,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v10 1/5] iommu/vt-d: add pci_dev parameter to
- qi_submit_sync and refactor callers
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Subject: Re: [v5.15] WARNING in kvm_arch_vcpu_ioctl_run
 Content-Language: en-US
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>, kevin.tian@intel.com,
- bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
- robin.murphy@arm.com, lukas@wunner.de
-References: <20231228170206.720675-1-haifeng.zhao@linux.intel.com>
- <20231228170206.720675-2-haifeng.zhao@linux.intel.com>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20231228170206.720675-2-haifeng.zhao@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: syzbot <syzbot+412c9ae97b4338c5187e@syzkaller.appspotmail.com>,
+ bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, jarkko@kernel.org,
+ jmattson@google.com, joro@8bytes.org, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org, mingo@redhat.com,
+ pbonzini@redhat.com, seanjc@google.com, syzkaller-lts-bugs@googlegroups.com,
+ tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+ x86@kernel.org
+References: <000000000000c237b7060e875640@google.com>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <000000000000c237b7060e875640@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/29/23 1:02 AM, Ethan Zhao wrote:
-> Signed-off-by: Ethan Zhao<haifeng.zhao@linux.intel.com>
-
-Please don't leave the message body empty. You should describe why do
-you want to add the change in this patch.
-
-> ---
->   drivers/iommu/intel/dmar.c          | 45 +++++++++++++++++++++--------
->   drivers/iommu/intel/iommu.c         | 26 +++++------------
->   drivers/iommu/intel/iommu.h         | 17 +++++------
->   drivers/iommu/intel/irq_remapping.c |  2 +-
->   drivers/iommu/intel/pasid.c         | 11 ++-----
->   drivers/iommu/intel/svm.c           | 13 ++++-----
->   6 files changed, 58 insertions(+), 56 deletions(-)
+On 1/9/24 11:18 PM, syzbot wrote:
+> This bug is marked as fixed by commit:
+> KVM: x86: Remove WARN sanity check on hypervisor timer vs. UNINITIALIZED vCPU
 > 
-> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-> index 23cb80d62a9a..3d661f2b7946 100644
-> --- a/drivers/iommu/intel/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -1344,7 +1344,7 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
->    * can be part of the submission but it will not be polled for completion.
->    */
->   int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
-> -		   unsigned int count, unsigned long options)
-> +		   unsigned int count, unsigned long options, struct pci_dev *pdev)
+> But I can't find it in the tested trees[1] for more than 90 days.
+Just found out that the fix hasn't been back ported to this kernel. The fix
+could be backported and sent to be included in this stable kernel.
 
-How about adding a bit in options parameter to tell whether the @pdev is
-valid?
+#syz unfix
 
-Best regards,
-baolu
+> Is it a correct commit? Please update it by replying:
+> 
+> #syz fix: exact-commit-title
+> 
+> Until then the bug is still considered open and new crashes with
+> the same signature are ignored.
+> 
+> Kernel: Linux 5.15
+> Dashboard link: https://syzkaller.appspot.com/bug?extid=412c9ae97b4338c5187e
+> 
+> ---
+> [1] I expect the commit to be present in:
+> 
+> 1. linux-5.15.y branch of
+> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+
+-- 
+BR,
+Muhammad Usama Anjum
