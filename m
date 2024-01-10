@@ -1,205 +1,219 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084D057313;
-	Wed, 10 Jan 2024 23:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CCB4F895;
+	Wed, 10 Jan 2024 23:23:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtQg7j3p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1EBC433C7;
-	Wed, 10 Jan 2024 23:14:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNReH0wJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72AFEC43390;
+	Wed, 10 Jan 2024 23:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704928499;
-	bh=fW8f1kPNQnVkNZGs8Z1MR+JZ9aRPSsMtuYxNiBUsgdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RtQg7j3pFlz65bHoDwiRmQL1CVaCVpugasl6HJIxrq7rS3umMsaR6VnT1f5pA033f
-	 iDg6fCu8pJuZwF/aDYxLKdx99YdJnk3pugsMPK48efhkovNv8t298I5OMNFEmJHg1T
-	 3JYQb+FyLJgJI/U7sOeNlnDElDvvxnHKOFkvJLyUW0TjHaoVap1u5kswi2RU5sl20o
-	 nLuESbnjLptBVIIeWdCrCSYtm/lH/LEFnqnvAjfC1NBlQqlENeDT60SfA6NxPDhzaU
-	 Bxm311DHHd4K/+kHPQ6iBUQ+zKsFi4pMQCTS+VE8+xTc/xvK4AxseVg3ezNbGkvLnR
-	 riBrTl//mUXXQ==
-Received: (nullmailer pid 2980300 invoked by uid 1000);
-	Wed, 10 Jan 2024 23:14:56 -0000
-Date: Wed, 10 Jan 2024 17:14:56 -0600
-From: Rob Herring <robh@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Frank Rowand <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, linux-spi@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/13] spi: dt-bindings: adi,axi-spi-engine: add offload
- bindings
-Message-ID: <20240110231456.GB2854345-robh@kernel.org>
-References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
- <20240109-axi-spi-engine-series-3-v1-4-e42c6a986580@baylibre.com>
+	s=k20201202; t=1704928983;
+	bh=x+w3oS3UhL7Vx+JhSVwAGMUyc6c3MUicRQeEyi0a494=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fNReH0wJNcL4MzFLG+g+B/+K+qB9poY7YDJiALaRnCwADfHQ8CU8pgRPrwMwJSJH4
+	 dEQ9tXc/vvjvm7oq++nuXfTtzg1GjSls2YxH1duBJ9M9eFJtnGmmnqNKWUTA4gZV6d
+	 2QZgwmI5zs76zLh4TKRb6mTaM7TE8zB80bT9/jnfPtCtv/EkZGKUEZMp6nZvFJm0Hk
+	 +jztAVCs7lURmtVzvsC1y9WSu5j7rIoDgCNMgveRI7eiTb4m3RxOJ8ka5gZZpYAVSZ
+	 sgvgoNwsDS5/6rv8yasMCixiv3fNReKZoOZW9q9bjgjVPTAV4I7U93VUqP3IzS+Fkf
+	 x8PsC1gyPBmrw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Peng Fan <peng.fan@nxp.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Fabio Estevam <festevam@denx.de>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH] dmaengine: fsl-edma: fix Makefile logic
+Date: Thu, 11 Jan 2024 00:03:42 +0100
+Message-Id: <20240110232255.1099757-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240109-axi-spi-engine-series-3-v1-4-e42c6a986580@baylibre.com>
 
-On Wed, Jan 10, 2024 at 01:49:45PM -0600, David Lechner wrote:
-> The ADI AXI SPI Engine driver supports offloading SPI transfers to
-> hardware. This is essentially a feature that allows recording an
-> arbitrary sequence of SPI transfers and then playing them back with
-> no CPU intervention via a hardware trigger.
-> 
-> This adds the bindings for this feature. Each SPI Engine instance
-> can have from 0 to 32 offload instances. Each offload instance has a
-> trigger input and a data stream output. As an example, this could be
-> used with an ADC SPI peripheral. In this case the trigger is connected
-> to a PWM/clock to determine the sampling rate for the ADC and the output
-> stream is connected to a DMA channel to pipe the sample data to memory.
-> 
-> SPI peripherals act as consumers of the offload instances. Typically,
-> one SPI peripheral will be connected to one offload instance. But to
-> make the bindings future-proof, the property is an array.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Is there some sort of arbitration between multiple offload engines on 
-the same chip select? If not, I don't see how it would work.
+A change to remove some unnecessary exports ended up removing some
+necessary ones as well, and caused a build regression by trying to
+link a single source file into two separate modules:
 
-I think this whole thing could be simplified down to just 3 
-SPI controller properties: pwms, dmas, and adi,offload-cs-map. Each 
-property is has entries equal the number of offload engines. The last 
-one maps an offload engine to a SPI chip-select.
+scripts/Makefile.build:243: drivers/dma/Makefile: fsl-edma-common.o is added to multiple modules: fsl-edma mcf-edma
 
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  .../spi/adi,axi-spi-engine-peripheral-props.yaml   | 24 +++++++++++
->  .../bindings/spi/adi,axi-spi-engine.yaml           | 49 +++++++++++++++++++++-
->  .../bindings/spi/spi-peripheral-props.yaml         |  1 +
->  3 files changed, 73 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/adi,axi-spi-engine-peripheral-props.yaml b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine-peripheral-props.yaml
-> new file mode 100644
-> index 000000000000..19b685fc3b39
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine-peripheral-props.yaml
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/adi,axi-spi-engine-peripheral-props.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Peripheral properties for Analog Devices AXI SPI Engine Controller
-> +
-> +maintainers:
-> +  - Michael Hennerich <Michael.Hennerich@analog.com>
-> +  - Nuno Sá <nuno.sa@analog.com>
-> +
-> +properties:
-> +  adi,offloads:
-> +    description:
-> +      List of AXI SPI Engine offload instances assigned to this peripheral.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    maxItems: 32
-> +    items:
-> +      items:
-> +        - minimum: 0
-> +          maximum: 31
+While the two drivers cannot be used on the same CPU architecture,
+building both is still possible for compile testing.
 
-This defines a matrix. You want:
+Fixes: 66aac8ea0a6c ("dmaengine: fsl-edma: clean up EXPORT_SYMBOL_GPL in fsl-edma-common.c")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/dma/Makefile          |  8 ++++----
+ drivers/dma/fsl-edma-common.c | 17 +++++++++++++++++
+ 2 files changed, 21 insertions(+), 4 deletions(-)
 
-minItems: 1
-maxItems: 32
-items:
-  maximum: 31
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index dfd40d14e408..302b7b0fbb8e 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -31,10 +31,10 @@ obj-$(CONFIG_DW_AXI_DMAC) += dw-axi-dmac/
+ obj-$(CONFIG_DW_DMAC_CORE) += dw/
+ obj-$(CONFIG_DW_EDMA) += dw-edma/
+ obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
+-obj-$(CONFIG_FSL_DMA) += fsldma.o
+-fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o
+-obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
+-mcf-edma-objs := mcf-edma-main.o fsl-edma-common.o
++obj-$(CONFIG_FSL_DMA) += fsldma.o fsl-edma-common.o
++fsl-edma-objs := fsl-edma-main.o
++obj-$(CONFIG_FSL_EDMA) += fsl-edma.o fsl-edma-common.o
++mcf-edma-objs := mcf-edma-main.o
+ obj-$(CONFIG_MCF_EDMA) += mcf-edma.o
+ obj-$(CONFIG_FSL_QDMA) += fsl-qdma.o
+ obj-$(CONFIG_FSL_RAID) += fsl_raid.o
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index b53f46245c37..05b31985a93b 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -67,6 +67,7 @@ void fsl_edma_tx_chan_handler(struct fsl_edma_chan *fsl_chan)
+ 
+ 	spin_unlock(&fsl_chan->vchan.lock);
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_tx_chan_handler);
+ 
+ static void fsl_edma3_enable_request(struct fsl_edma_chan *fsl_chan)
+ {
+@@ -159,6 +160,7 @@ void fsl_edma_disable_request(struct fsl_edma_chan *fsl_chan)
+ 		iowrite8(EDMA_CEEI_CEEI(ch), regs->ceei);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_disable_request);
+ 
+ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+ 			   u32 off, u32 slot, bool enable)
+@@ -212,6 +214,7 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 	else
+ 		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
+ 
+ static unsigned int fsl_edma_get_tcd_attr(enum dma_slave_buswidth addr_width)
+ {
+@@ -235,6 +238,7 @@ void fsl_edma_free_desc(struct virt_dma_desc *vdesc)
+ 			      fsl_desc->tcd[i].ptcd);
+ 	kfree(fsl_desc);
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_free_desc);
+ 
+ int fsl_edma_terminate_all(struct dma_chan *chan)
+ {
+@@ -255,6 +259,7 @@ int fsl_edma_terminate_all(struct dma_chan *chan)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_terminate_all);
+ 
+ int fsl_edma_pause(struct dma_chan *chan)
+ {
+@@ -270,6 +275,7 @@ int fsl_edma_pause(struct dma_chan *chan)
+ 	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_pause);
+ 
+ int fsl_edma_resume(struct dma_chan *chan)
+ {
+@@ -285,6 +291,7 @@ int fsl_edma_resume(struct dma_chan *chan)
+ 	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_resume);
+ 
+ static void fsl_edma_unprep_slave_dma(struct fsl_edma_chan *fsl_chan)
+ {
+@@ -345,6 +352,7 @@ int fsl_edma_slave_config(struct dma_chan *chan,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_slave_config);
+ 
+ static size_t fsl_edma_desc_residue(struct fsl_edma_chan *fsl_chan,
+ 		struct virt_dma_desc *vdesc, bool in_progress)
+@@ -425,6 +433,7 @@ enum dma_status fsl_edma_tx_status(struct dma_chan *chan,
+ 
+ 	return fsl_chan->status;
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_tx_status);
+ 
+ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
+ 				  struct fsl_edma_hw_tcd *tcd)
+@@ -644,6 +653,7 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cyclic(
+ 
+ 	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_prep_dma_cyclic);
+ 
+ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
+ 		struct dma_chan *chan, struct scatterlist *sgl,
+@@ -740,6 +750,7 @@ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
+ 
+ 	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_prep_slave_sg);
+ 
+ struct dma_async_tx_descriptor *fsl_edma_prep_memcpy(struct dma_chan *chan,
+ 						     dma_addr_t dma_dst, dma_addr_t dma_src,
+@@ -762,6 +773,7 @@ struct dma_async_tx_descriptor *fsl_edma_prep_memcpy(struct dma_chan *chan,
+ 
+ 	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_prep_memcpy);
+ 
+ void fsl_edma_xfer_desc(struct fsl_edma_chan *fsl_chan)
+ {
+@@ -797,6 +809,7 @@ void fsl_edma_issue_pending(struct dma_chan *chan)
+ 
+ 	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_issue_pending);
+ 
+ int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
+ {
+@@ -807,6 +820,7 @@ int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
+ 				32, 0);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_alloc_chan_resources);
+ 
+ void fsl_edma_free_chan_resources(struct dma_chan *chan)
+ {
+@@ -830,6 +844,7 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan)
+ 	fsl_chan->is_sw = false;
+ 	fsl_chan->srcid = 0;
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_free_chan_resources);
+ 
+ void fsl_edma_cleanup_vchan(struct dma_device *dmadev)
+ {
+@@ -841,6 +856,7 @@ void fsl_edma_cleanup_vchan(struct dma_device *dmadev)
+ 		tasklet_kill(&chan->vchan.task);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_cleanup_vchan);
+ 
+ /*
+  * On the 32 channels Vybrid/mpc577x edma version, register offsets are
+@@ -877,5 +893,6 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
+ 		edma->regs.inth = edma->membase + EDMA64_INTH;
+ 	}
+ }
++EXPORT_SYMBOL_GPL(fsl_edma_setup_regs);
+ 
+ MODULE_LICENSE("GPL v2");
+-- 
+2.39.2
 
-(0 is already the min).
-
-> +
-> +additionalProperties: true
-> diff --git a/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.yaml b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.yaml
-> index d48faa42d025..69f3261bab47 100644
-> --- a/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.yaml
-> +++ b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.yaml
-> @@ -21,6 +21,23 @@ maintainers:
->  allOf:
->    - $ref: /schemas/spi/spi-controller.yaml#
->  
-> +$defs:
-> +  offload:
-> +    description:
-> +      Describes the connections of the trigger input and the data output stream
-> +      of one or more offload instances.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          Index of the offload instance.
-> +        items:
-> +          - minimum: 0
-> +            maximum: 31
-> +
-> +    required:
-> +      - reg
-> +
->  properties:
->    compatible:
->      const: adi,axi-spi-engine-1.00.a
-> @@ -41,6 +58,22 @@ properties:
->        - const: s_axi_aclk
->        - const: spi_clk
->  
-> +  offloads:
-> +    type: object
-> +    description: Zero or more offloads supported by the controller.
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^offload@[0-8a-f]+$":
-> +        type: object
-> +        $ref: '#/$defs/offload'
-> +
->  required:
->    - compatible
->    - reg
-> @@ -62,5 +95,19 @@ examples:
->          #address-cells = <1>;
->          #size-cells = <0>;
->  
-> -        /* SPI devices */
-> +        offloads {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            offload@0 {
-> +                compatible = "adi,example-offload";
-
-No fake examples please. This should give you a warning.
-
-> +                reg = <0>;
-> +            };
-> +        };
-> +
-> +        adc@0 {
-> +            compatible = "adi,example-adc";
-> +            reg = <0>;
-> +            adi,offloads = <0>;
-> +        };
->      };
-> diff --git a/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml b/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
-> index 1c8e71c18234..7beb5a3798a5 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
-> +++ b/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
-> @@ -132,6 +132,7 @@ properties:
->  
->  # The controller specific properties go here.
->  allOf:
-> +  - $ref: adi,axi-spi-engine-peripheral-props.yaml#
->    - $ref: arm,pl022-peripheral-props.yaml#
->    - $ref: cdns,qspi-nor-peripheral-props.yaml#
->    - $ref: samsung,spi-peripheral-props.yaml#
-> 
-> -- 
-> 2.43.0
-> 
