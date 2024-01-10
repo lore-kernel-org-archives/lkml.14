@@ -1,76 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0250D4F890;
-	Wed, 10 Jan 2024 21:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9F04F5E8
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 21:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV/+YMoO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C01ECC43390;
-	Wed, 10 Jan 2024 21:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704921934;
-	bh=Ax58DmDjPNW74NGwRvhHHGsYqpwIGIZxv4FkZoGcxV4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=WV/+YMoOvCEyWpaRpYZfa87kc6mbQ0JnVBbDnIG5yf/huJPTEyQwx8cXxan8KxinN
-	 6sNBXfQFoVBxzqwDGumSVysnHcLmYq9nvcNjV5hKJ7VVI/muQ0GlHvgx+x3+niVmq9
-	 RuxS7Zd6MOXiXUhr0aTG2YCs+G4j0caWW01HTd+aL1Hy5Lw/lJ9cj/lZOsySBKvQWB
-	 er+OO8VqSbL3cviSAhyf8p2dZWVLVPhS4OLTE6iChmLPRf4MhEPa0XRlj+JhQFQ55u
-	 m/xZtqRUdeC3VwXCXxl9xZQ9TjdHsXZYksEUz4gTQpIoWVCmyU/4A+oymlcDeOrDbP
-	 DQq9jAA3AdwNQ==
-Received: (nullmailer pid 2648568 invoked by uid 1000);
-	Wed, 10 Jan 2024 21:25:28 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RAAXTCPL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1704922364;
+	bh=tgziCic+NT5BA2vVRmJ/AxzBuhtBizO4+06TNabdICI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RAAXTCPLjCTNDrlnh70AUQacIaXdTj3mQMcc4h4KRNW7D8xI9Oa8sXlsV8BRuo+Qt
+	 qgIWxWDMEtq3BZOPnqvOhhHV2qkOf7yKOh++ABCr2usM7TDaZsvHNeq+55CpSMdDSj
+	 enRLZKmstvJpLVWmTIfrBj+xJaXe2hDQIcefYwFMcOWc7n65Ar46osKSPQ56Pi332K
+	 hoPY57YevgcTIUAT4hQ6hxYd+eS78W3hNhz+XyesySEdTxmLadKjpA9FMvccjwZ6vh
+	 G8nJUpodvi0rXb5y4RQWpqQUJzPEFq0tBk57vB+WVr3efNKKBfiW5LXIxHK5GImrdY
+	 xcRI4JPcH2WNA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T9LcV636wz4wcc;
+	Thu, 11 Jan 2024 08:32:42 +1100 (AEDT)
+Date: Thu, 11 Jan 2024 08:32:42 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, Boqun
+ Feng <boqun.feng@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, Paul McKenney
+ <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Waiman Long <longman@redhat.com>, WANG
+ Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>, Will Drewry
+ <wad@chromium.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [GIT PULL] header cleanups for 6.8
+Message-ID: <20240111083215.1e5298f4@oak>
+In-Reply-To: <ualbkbj75ulsbwbjuphntw7ztb45r2q7iysvxvklmyv5ndnvh7@zxr56mv33vyv>
+References: <ualbkbj75ulsbwbjuphntw7ztb45r2q7iysvxvklmyv5ndnvh7@zxr56mv33vyv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Alexey Romanov <avromanov@salutedevices.com>
-Cc: kernel@salutedevices.com, herbert@gondor.apana.org.au, davem@davemloft.net, neil.armstrong@linaro.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, narmstrong@baylibre.com, clabbe@baylibre.com, jbrunet@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, artin.blumenstingl@googlemail.com
-In-Reply-To: <20240110201216.18016-17-avromanov@salutedevices.com>
-References: <20240110201216.18016-1-avromanov@salutedevices.com>
- <20240110201216.18016-17-avromanov@salutedevices.com>
-Message-Id: <170492192887.2648505.6187306596898979418.robh@kernel.org>
-Subject: Re: [PATCH v1 16/24] dt-bindings: crypto: meson: add new
- compatibles
-Date: Wed, 10 Jan 2024 15:25:28 -0600
+Content-Type: multipart/signed; boundary="Sig_/tmnL2H+ZIxa/u./tNlrenwK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/tmnL2H+ZIxa/u./tNlrenwK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 10 Jan 2024 23:11:32 +0300, Alexey Romanov wrote:
-> Now we can use crypto driver at G12A/G12B/S4/A1/SM1/AXG.
-> 
-> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
-> ---
->  .../devicetree/bindings/crypto/amlogic,gxl-crypto.yaml          | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Hi Kent,
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+On Wed, 10 Jan 2024 16:19:17 -0500 Kent Overstreet <kent.overstreet@linux.d=
+ev> wrote:
+>
+> There were two merge conflicts in arch headers in next; they looked
+> pretty trivial. But now I'm wondering - do we have standard
+> tools/process for recording what the merge conflict and resolution were?
+> I'm sure we must.
 
-yamllint warnings/errors:
+For simple conflicts (like these) the easiest thing to do is just provide
+lore URLs to my notifications:
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.example.dtb: crypto-engine@c883e000: compatible: ['amlogic,gxl-crypto'] is too short
-	from schema $id: http://devicetree.org/schemas/crypto/amlogic,gxl-crypto.yaml#
+https://lore.kernel.org/all/20231218170015.6018162e@canb.auug.org.au/
+https://lore.kernel.org/all/20231218170547.5714468f@canb.auug.org.au/
 
-doc reference errors (make refcheckdocs):
+for more complex cases, you might want to do the merge with Linus' tree in a
+temporary branch of your tree and add a note pointing that out in case Linus
+wants to check his own resolutions against yours.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240110201216.18016-17-avromanov@salutedevices.com
+--=20
+Cheers,
+Stephen Rothwell
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+--Sig_/tmnL2H+ZIxa/u./tNlrenwK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+-----BEGIN PGP SIGNATURE-----
 
-pip3 install dtschema --upgrade
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWfDPoACgkQAVBC80lX
+0Gy9PQf+P4yruHSDMzYIO5JA6UGhjunRM7cUcAyAIAitj+iSdy96KvWkNLmq5I0E
+7ax4ahojE063Xs+n01v4iHsjE3TWRJtnyjOTPGMppA8SroZZKFrigp0YcSKM2vn1
+y6DAvn2vbtX7Og0rmC2i9vfNEfuTFPuWbyAQoGRgmHrvFsm2kT5qYJZyQYunZL7J
+ZH31TnyOoX2Naisop+g4E5S0x6lhr7SUrSoNv9993aLEBQVKDrUH5IjxTjRqtudE
+3fz5JC7U/KnlMP3pg/HYmN/YlkcJt1M7pe4bjWuefxW8ZsiFpEMTpePLTvlPJ7rP
+4jSLo6U7ULrKYehjDlO/9Qg0J3qlnA==
+=zANN
+-----END PGP SIGNATURE-----
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+--Sig_/tmnL2H+ZIxa/u./tNlrenwK--
