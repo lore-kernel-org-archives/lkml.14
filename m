@@ -1,146 +1,137 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E271D3EA8B
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eLG2in3T"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FVnQnbFO6L82E8sRMU93S3jm5ePWrcqQ3C0L8frX5rIvwysHQti4Qg70q2pmXDHB6NrDuf3ehdwQO1iedrdEDkRwYw5KT8VIo75C8yGliXSMkdL7sRPFQdwy64wTxE7eF91K2o0tk/UdG58hp5ORw0YdcpAHS4TSGf7C5aZwB2E7HQXGi/yLZERnPmCSYCFxneIzLcg6Bznox+Z42pm/UEUBATsA8bNhAgX3YQEA/ilJdovtF9krKoKC3IWnJltoE/QEJHbVCysI7gBp1Z9q75cm5djzXXj1s8rRLOG64cTDmjVwrdCLBrw4LKXVLBaiSmnz3CxV19f7Kv/TZwihxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RlNQyoxzY+Wi5nmdDaMQA5mOdyGEOSzOl0U+uSSPLWM=;
- b=FDIi7uLLLvJIzmZO5hQMKqu1T4vXqHquVbiiEI1g3t+SgV9AZmEuelDFd9O0jH0MiSNOU6pnqHG0/pEqyRiMKxblGPTJSOlM5Msto2EF/7T4aiLETr2yzSuQTmSbmZmbr2muX63Gt2+iC4iqZFTDyR5dF7G1UbPsOjYMt8CJ9tWgCpyjg3H/bjYmkFSc5Ohq8imqM/lvgz/L52aA+7I4bbdSg0RqE22t2hmYBMJ1e9/X8KCN94mCsBFHvbtVNDAzGPmbBtZT6MN5ELAE2HWVv83mcJ2HNTo4jG6ntQPCG7i2akXX2HmkvUcAPjAf8/VFaQ1x8/THJV4yT7g7Pb1yAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RlNQyoxzY+Wi5nmdDaMQA5mOdyGEOSzOl0U+uSSPLWM=;
- b=eLG2in3TvVt2QijxDLedti/N4RwvDKle4mTy8As1Yq5I2RNYs96piI3PPvpSkl9ozMABs9Sd77QjzrSGEyqHMR6awYbFPNxwRGKDBrML+JDf8hAwB3zmQKLC2u5vHFWwy/nCwApsfKnP2w4elW1J+Xyk5rDMlbJooN7BSsG0EYk=
-Received: from DM6PR01CA0014.prod.exchangelabs.com (2603:10b6:5:296::19) by
- LV8PR12MB9336.namprd12.prod.outlook.com (2603:10b6:408:208::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Wed, 10 Jan
- 2024 09:45:16 +0000
-Received: from CY4PEPF0000EE37.namprd05.prod.outlook.com
- (2603:10b6:5:296:cafe::53) by DM6PR01CA0014.outlook.office365.com
- (2603:10b6:5:296::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18 via Frontend
- Transport; Wed, 10 Jan 2024 09:45:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE37.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.14 via Frontend Transport; Wed, 10 Jan 2024 09:45:15 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 10 Jan
- 2024 03:45:08 -0600
-Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34
- via Frontend Transport; Wed, 10 Jan 2024 03:45:04 -0600
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>, <vkoul@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <yung-chuan.liao@linux.intel.com>,
-	<pierre-louis.bossart@linux.intel.com>, <Basavaraj.Hiregoudar@amd.com>,
-	<Sunil-kumar.Dommati@amd.com>, <vinod.koul@intel.com>,
-	<venkataprasad.potturu@amd.com>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-	Sanyog Kale <sanyog.r.kale@intel.com>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 02/13] drivers: soundwire: amd: update license
-Date: Wed, 10 Jan 2024 15:14:05 +0530
-Message-ID: <20240110094416.853610-3-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240110094416.853610-1-Vijendar.Mukunda@amd.com>
-References: <20240110094416.853610-1-Vijendar.Mukunda@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC863EA96;
+	Wed, 10 Jan 2024 09:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4T92vJ1Zscz1Q7gB;
+	Wed, 10 Jan 2024 17:44:28 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 83AA018006F;
+	Wed, 10 Jan 2024 17:45:12 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 10 Jan
+ 2024 17:45:11 +0800
+Subject: Re: [PATCH net-next 3/6] mm/page_alloc: use initial zero offset for
+ page_frag_alloc_align()
+To: Alexander Duyck <alexander.duyck@gmail.com>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>
+References: <20240103095650.25769-1-linyunsheng@huawei.com>
+ <20240103095650.25769-4-linyunsheng@huawei.com>
+ <f4abe71b3439b39d17a6fb2d410180f367cadf5c.camel@gmail.com>
+ <74c9a3a1-5204-f79a-95ff-5c108ec6cf2a@huawei.com>
+ <CAKgT0Uf=hFrXLzDFaOxs_j9yYP7aQCmi=wjUyuop3FBv2vzgCA@mail.gmail.com>
+ <f138193c-30e0-b1ba-1735-5f569230724b@huawei.com>
+ <CAKgT0UcujEktOnHx7mxWd+Jah1J9mHFWnTx35vc3x25uUadxaA@mail.gmail.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <b77ef32e-64b9-2e4f-8041-ccb46dea4caa@huawei.com>
+Date: Wed, 10 Jan 2024 17:45:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAKgT0UcujEktOnHx7mxWd+Jah1J9mHFWnTx35vc3x25uUadxaA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE37:EE_|LV8PR12MB9336:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6782c12b-8211-4e19-b834-08dc11c0d98a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	PixZ8LxlXxLdSU5PnPD8tp2p1QpAi8ZB5n5BFyAgonfZFkSp/J+J3ozxVbLX1JE0li4l9mOjPHUUmuUFEiL9XhdNAiXOJy3m6aVzmfvgAiQW1dAYIJ+BntktAtJ3uv1fkzaGQ91OQ0pFZnND0uIiw5aKJyZS5eGQX3Db3WKrlz+K+/or8N0WfKLrN4O91JqbvvZoZEwTVjXmC7bMP/DLXeyvD0hWnXea79ALPfOy52MfxblB9DUutJKYuqKNMdVSdrHz/WgIjbMmTcG9XPkgiLs661hKdcYHcYsYb6cnTLYBu/GsPr7Z0KUIsDIQBLmPEGGTRYFwF9YnveJf9I9zJJRsDSQnz0V65wbKH0HX9im9mdkzyKczSoUS7WF6fZTeLOtS/z9rRegLSlAbU7EZIATEGyDFRg7cY3x/Ms61vWOU8BgJgEbx0EquCLU0keTg+gG7ZS6hxMo1XgbRdc8SyUBEKoYKUm/1W/wlvRf8eRaAUz5LGMDjXVb2xyFpuyYAUXPGcWY3LDGJqDB+pRVgUNsOVY2jKK1UdHzdxSh3xO68uysS37eYERbktgjdSMb6fxcGvWeryqDViCJ/oaTQYuAqa4BH8VkPBiaCIsT/fG3NdVi5XoufsZGyVCWsLQBNr0NKABWpjSE0lpzy491dGCk8YwWS1fI27V3LJxb3OMcM/xP2/zxvHyFL04m8jA1+4CinNgKEXzFz1oATptO/9KiQuqhaVEli0HkyOPhMJvq7rzu7CxFW3zlf3vQ0fg/fLFA4mvhLmIoxnxjoSPf3jw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(346002)(376002)(396003)(230922051799003)(451199024)(1800799012)(82310400011)(186009)(64100799003)(40470700004)(46966006)(36840700001)(47076005)(83380400001)(26005)(336012)(426003)(1076003)(2616005)(82740400003)(36860700001)(4326008)(8676002)(5660300002)(15650500001)(8936002)(41300700001)(2906002)(478600001)(7696005)(54906003)(70206006)(70586007)(316002)(110136005)(36756003)(356005)(81166007)(86362001)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 09:45:15.9970
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6782c12b-8211-4e19-b834-08dc11c0d98a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE37.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9336
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-Update license to dual license to align with Sound Open Firmware (SOF)
-driver as SOF uses dual license.
+On 2024/1/9 23:37, Alexander Duyck wrote:
+> On Tue, Jan 9, 2024 at 3:22 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>
+>> On 2024/1/9 0:25, Alexander Duyck wrote:
+>>> On Mon, Jan 8, 2024 at 12:59 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>
+>> ...
+>>
+>>>
+>>>>>
+>>>>> 2. By starting at the end and working toward zero we can use built in
+>>>>> functionality of the CPU to only have to check and see if our result
+>>>>> would be signed rather than having to load two registers with the
+>>>>> values and then compare them which saves us a few cycles. In addition
+>>>>> it saves us from having to read both the size and the offset for every
+>>>>> page.
+>>>>
+>>>> I suppose the above is ok if we only use the page_frag_alloc*() API to
+>>>> allocate memory for skb->data, not for the frag in skb_shinfo(), as by
+>>>> starting at the end and working toward zero, it means we can not do skb
+>>>> coalescing.
+>>>>
+>>>> As page_frag_alloc*() is returning va now, I am assuming most of users
+>>>> is using the API for skb->data, I guess it is ok to drop this patch for
+>>>> now.
+>>>>
+>>>> If we allow page_frag_alloc*() to return struct page, we might need this
+>>>> patch to enable coalescing.
+>>>
+>>> I would argue this is not the interface for enabling coalescing. This
+>>> is one of the reasons why this is implemented the way it is. When you
+>>> are aligning fragments you aren't going to be able to coalesce the
+>>> frames anyway as the alignment would push the fragments apart.
+>>
+>> It seems the alignment requirement is the same for the same user of a page_frag
+>> instance, so the aligning does not seem to be a problem for coalescing?
+> 
+> I'm a bit confused as to what coalescing you are referring to. If you
+> can provide a link it would be useful.
+> 
+> The problem is page_frag is a very generic item and can be generated
+> from a regular page on NICs that can internally reuse the same page
+> instance for multiple buffers. So it is possible to coalesce page
+> frags, however it is very unlikely to be coalescing them in the case
+> of them being used for skb buffers since it would require aligned
+> payloads on the network in order to really make it work without
+> hardware intervention of some sort and on such devices they are likely
+> allocating entire pages instead of page frags for the buffers.
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- drivers/soundwire/amd_manager.c   | 4 ++--
- drivers/soundwire/amd_manager.h   | 2 +-
- include/linux/soundwire/sdw_amd.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+The main usecase in my mind is the page_frag used in the tx part for
+networking if we are able to unify the page_frag and page_frag_cache in
+the future:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/net/ipv4/tcp.c#L1183
 
-diff --git a/drivers/soundwire/amd_manager.c b/drivers/soundwire/amd_manager.c
-index 3a99f6dcdfaf..afa2d83b7e69 100644
---- a/drivers/soundwire/amd_manager.c
-+++ b/drivers/soundwire/amd_manager.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- /*
-  * SoundWire AMD Manager driver
-  *
-@@ -1207,5 +1207,5 @@ module_platform_driver(amd_sdw_driver);
- 
- MODULE_AUTHOR("Vijendar.Mukunda@amd.com");
- MODULE_DESCRIPTION("AMD SoundWire driver");
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("Dual BSD/GPL");
- MODULE_ALIAS("platform:" DRV_NAME);
-diff --git a/drivers/soundwire/amd_manager.h b/drivers/soundwire/amd_manager.h
-index 5f040151a259..f57165bbb9d9 100644
---- a/drivers/soundwire/amd_manager.h
-+++ b/drivers/soundwire/amd_manager.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
-+/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
- /*
-  * Copyright (C) 2023 Advanced Micro Devices, Inc. All rights reserved.
-  */
-diff --git a/include/linux/soundwire/sdw_amd.h b/include/linux/soundwire/sdw_amd.h
-index 41dd64941cef..56b4117c087a 100644
---- a/include/linux/soundwire/sdw_amd.h
-+++ b/include/linux/soundwire/sdw_amd.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
-+/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
- /*
-  * Copyright (C) 2023 Advanced Micro Devices, Inc. All rights reserved.
-  */
--- 
-2.34.1
+Do you think if it makes sense to unify them using below unified struct,
+and provide API for returning 'page' and 'va' as page_pool does now?
+It may mean we need to add one pointer to the new struct and are not able
+do some trick for performance, I suppose that is ok as there are always
+some trade off for maintainability and evolvability?
 
+struct page_frag {
+        struct *page;
+	void *va;
+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+	__u16 offset;
+	__u16 size;
+#else
+	__u32 offset;
+#endif
+	/* we maintain a pagecount bias, so that we dont dirty cache line
+	 * containing page->_refcount every time we allocate a fragment.
+	 */
+	unsigned int		pagecnt_bias;
+	bool pfmemalloc;
+};
+
+
+Another usecase that is not really related is: hw may be configured with
+a small BD buf size, for 2K and configured with a big mtu size or have
+hw gro enabled, for 4K pagesize, that means we may be able to reduce the
+number of the frag num to half as it is usually the case that two
+consecutive BD pointing to the same page. I implemented a POC in hns3
+long time ago using the frag implememtation in page_pool, it did show
+some obvious peformance gain, But as the priority shifts, I have not
+been able to continue that POC yet.
+
+> 
+> .
+> 
