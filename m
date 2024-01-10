@@ -1,132 +1,142 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437503F8D1;
-	Wed, 10 Jan 2024 10:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E173F8EE;
+	Wed, 10 Jan 2024 10:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwI3ofdf"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50e7abe4be4so5045576e87.2;
-        Wed, 10 Jan 2024 02:07:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704881248; x=1705486048; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SR6M2098v0XZKYvDuASrOI/XGr4kL2jFyhf8PM2BbNw=;
-        b=SwI3ofdfwcJ/FDheRATOXy/Jn+zyxHrxdrevkHr9WGTaql9k9DUkbt+n+8Iq1I3XoQ
-         F/4QTQFQKdawCQcVenL+TWTpdMj5610LlL0PW1Z1r9cQVWrPl1pwJBlV7J0quoZaIcaN
-         Had7a4h5yLn+BcK/31ln1WZrzahLVQ0zYVMhtt/62ii97eY4P2vs1v0rKIt/XAluFjWV
-         BnrLLh8VV5CsTw058eJ7I5BcUsGGfH4jAc6wh8eRoDxpcAlka9MT2woi+4UqUe8q9Rw8
-         JIxSlz+SDxcJlZCbjwc5O0MQs22JY1RtFIRVsoU1L/bt/OpKNmaCDH2QqaPw7eo7HLam
-         GLjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704881248; x=1705486048;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SR6M2098v0XZKYvDuASrOI/XGr4kL2jFyhf8PM2BbNw=;
-        b=BYNws01s+999Ce0sIoVbk9GsjP2pLGzV5qHaU+ChJpHwZ1rOyK/4S8o+avwimwyonS
-         t0gfKcHyydJvitn2u/ixm3otqz4JkxWz3ZlB2Hhmm6mtgEBXwoep3EKKTvSiShT8x7iD
-         MMp1ZzX2egvZSEO0QfZtxdXbOE6fOa9oo1CIauWgn91unI2WF7QQxK9dVmUzsEpqWch5
-         pIfkwRsD7che01FFTLPWQnx4CUOwgyXfvl8WK4h6J5BnJTTmNxnhFT4bzVwTf7yg3lPT
-         lXyypFS8WpcpdFzgxwDpq5jDHAXdrEo/rq2Zt5RjyFF5RWTtFIVHTgvAwwIn9Yyxt1LV
-         VczA==
-X-Gm-Message-State: AOJu0Yx9UYrDEQiTuvOWBesN5Gow/Et7O4jtXDc9k832dP2vI+efqBdy
-	ecueY9mluJs2EMVGMeBkIysHMgiyuPA=
-X-Google-Smtp-Source: AGHT+IGRzpOjx7vBzDQr3le3sMnRtt4uyNGxurLvy98yPfdzRhOgihZNG95mn6VhJ5ZTJkdGylDAtw==
-X-Received: by 2002:a05:6512:3f16:b0:50e:51fa:1d3b with SMTP id y22-20020a0565123f1600b0050e51fa1d3bmr407331lfa.93.1704881247980;
-        Wed, 10 Jan 2024 02:07:27 -0800 (PST)
-Received: from drtxq0yyyyyyyyyyyyybt-3.rev.dnainternet.fi (drtxq0yyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:7426:df00::3])
-        by smtp.gmail.com with ESMTPSA id h41-20020a0565123ca900b0050e7fe37a29sm614232lfv.200.2024.01.10.02.07.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 02:07:26 -0800 (PST)
-Date: Wed, 10 Jan 2024 12:07:08 +0200
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [PATCH 0/3] KUnit tests for the IIO GTS helpers
-Message-ID: <cover.1704881096.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P7miL0Wl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qlFwx6Pm"
+Date: Wed, 10 Jan 2024 10:09:49 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1704881390;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JId4SGEGz5ch0TnskMoRNJewoUsPUVGadpg6PGO/KzY=;
+	b=P7miL0WldKYLbcA5WHjWnyJcZ3+7C3HK3PFHhV/R13lRZAXqhmIDWfOyIL4vWB1ILBg0qj
+	hbBu1hxrn4deVIXG8NxMClu6B0CoSOrGExUVcojTAgbUStBYFrE5dTa/ZCkuyHry3k+8yS
+	OZjaX4l8yX8kReNnFxB+7HPkahdigctdH0uVe9eIw772DlQSN/3DqP3c/onazhPr56WPmk
+	y6zqeu5ECLn5e4VJTxXZkyfrdVQo6ZzndLj4BVYJzsG63Ln9Nhp7WKbF5uZvnu1Sdu8kQf
+	mMXmsjvOPQpd6lMKDBd+iXjlF0vYFL2OyWSNnS5bN30L5vpsFzp6O4vnhwV23g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1704881390;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JId4SGEGz5ch0TnskMoRNJewoUsPUVGadpg6PGO/KzY=;
+	b=qlFwx6Pm0Xs041MbpQ4o764BMZ65treUoJlIdaxjhlTkoi8wXXseAfl5gEJLqQ9WcgQ3ui
+	xhia1/mT63671fBw==
+From: "tip-bot2 for Breno Leitao" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/bugs] x86/bugs: Rename CONFIG_CPU_IBRS_ENTRY =>
+ CONFIG_MITIGATION_IBRS_ENTRY
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Breno Leitao <leitao@debian.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20231121160740.1249350-9-leitao@debian.org>
+References: <20231121160740.1249350-9-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="doWc2m8A9KjyRIVC"
-Content-Disposition: inline
+Message-ID: <170488138945.398.3983840684873331469.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the x86/bugs branch of tip:
 
---doWc2m8A9KjyRIVC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     1da8d2172ce5175118929363fe568e41f24ad3d6
+Gitweb:        https://git.kernel.org/tip/1da8d2172ce5175118929363fe568e41f24ad3d6
+Author:        Breno Leitao <leitao@debian.org>
+AuthorDate:    Tue, 21 Nov 2023 08:07:35 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 10 Jan 2024 10:52:29 +01:00
 
-Add some KUnit tests for the IIO GTS helpers.
+x86/bugs: Rename CONFIG_CPU_IBRS_ENTRY       => CONFIG_MITIGATION_IBRS_ENTRY
 
-These tests were originally part of the BU27034 ALS sensor driver series.
-https://lore.kernel.org/all/cover.1679915278.git.mazziesaccount@gmail.com/
+Step 8/10 of the namespace unification of CPU mitigations related Kconfig options.
 
-Merging the tests was postponed because we lacked of a good generic way
-of creating tests devices for testing the devm managed interfaces. Now we
-have kunit_device APIs being merged (seems like they'll be part of the
-v6.8-rc1) so precondition for merging these tests are (being) met.
+Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20231121160740.1249350-9-leitao@debian.org
+---
+ arch/x86/Kconfig           | 2 +-
+ arch/x86/entry/calling.h   | 4 ++--
+ arch/x86/kernel/cpu/bugs.c | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-The series is based on
-commit ab27740f7665 ("Merge tag 'linux_kselftest-next-6.8-rc1' of git://git=
-=2Ekernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest")
-in Linus' tree.
-
-I can rebase and resend when v6.8-rc1 is out if needed.
-
-Matti Vaittinen (3):
-  iio: gts-helper: Fix division loop
-  iio: test: test gain-time-scale helpers
-  MAINTAINERS: add IIO GTS tests
-
- MAINTAINERS                           |   1 +
- drivers/iio/industrialio-gts-helper.c |   5 +-
- drivers/iio/test/Kconfig              |  14 +
- drivers/iio/test/Makefile             |   1 +
- drivers/iio/test/iio-test-gts.c       | 517 ++++++++++++++++++++++++++
- 5 files changed, 535 insertions(+), 3 deletions(-)
- create mode 100644 drivers/iio/test/iio-test-gts.c
-
-
-base-commit: ab27740f76654ed58dd32ac0ba0031c18a6dea3b
---=20
-2.43.0
-
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---doWc2m8A9KjyRIVC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmWebEYACgkQeFA3/03a
-ocWIsggAvk3U6xNGSi3Nc9yQXaMjcgzBys/Wp55CWVnmB+lZrXkHzdXueRwVuvU9
-wDo/vvT3xOCMe8wbgYgqa8lBvDgG5mtHyJPxmiDeshso8kF7jjyGcX8XEk+IQAzJ
-wGl53sAXKor43awwkmbm04YffbZPMtsXWVBGzBX1ePb3Qu///sGUu3z4zrl1rs48
-o+OeXPxdPSNGuUmd/39LTCk8kFkxtZANuX0aGfTLDfArbrFZVcBkalTtdMF9AzcL
-e0myy76JEPKeBLlprM3mMJo7VCShR4fb923VVV1wOvgaU50+QFb3wk86OWiMHniE
-2PiXqeSaK0AdPmbYVUHNQrizQT5yBw==
-=zMqG
------END PGP SIGNATURE-----
-
---doWc2m8A9KjyRIVC--
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 77b8769..60d38df 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2561,7 +2561,7 @@ config MITIGATION_IBPB_ENTRY
+ 	help
+ 	  Compile the kernel with support for the retbleed=ibpb mitigation.
+ 
+-config CPU_IBRS_ENTRY
++config MITIGATION_IBRS_ENTRY
+ 	bool "Enable IBRS on kernel entry"
+ 	depends on CPU_SUP_INTEL && X86_64
+ 	default y
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 7ac2d6f..39e069b 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -303,7 +303,7 @@ For 32-bit we have the following conventions - kernel is built with
+  * Assumes x86_spec_ctrl_{base,current} to have SPEC_CTRL_IBRS set.
+  */
+ .macro IBRS_ENTER save_reg
+-#ifdef CONFIG_CPU_IBRS_ENTRY
++#ifdef CONFIG_MITIGATION_IBRS_ENTRY
+ 	ALTERNATIVE "jmp .Lend_\@", "", X86_FEATURE_KERNEL_IBRS
+ 	movl	$MSR_IA32_SPEC_CTRL, %ecx
+ 
+@@ -332,7 +332,7 @@ For 32-bit we have the following conventions - kernel is built with
+  * regs. Must be called after the last RET.
+  */
+ .macro IBRS_EXIT save_reg
+-#ifdef CONFIG_CPU_IBRS_ENTRY
++#ifdef CONFIG_MITIGATION_IBRS_ENTRY
+ 	ALTERNATIVE "jmp .Lend_\@", "", X86_FEATURE_KERNEL_IBRS
+ 	movl	$MSR_IA32_SPEC_CTRL, %ecx
+ 
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 2580368..e11bacb 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1439,7 +1439,7 @@ static enum spectre_v2_mitigation_cmd __init spectre_v2_parse_cmdline(void)
+ 		return SPECTRE_V2_CMD_AUTO;
+ 	}
+ 
+-	if (cmd == SPECTRE_V2_CMD_IBRS && !IS_ENABLED(CONFIG_CPU_IBRS_ENTRY)) {
++	if (cmd == SPECTRE_V2_CMD_IBRS && !IS_ENABLED(CONFIG_MITIGATION_IBRS_ENTRY)) {
+ 		pr_err("%s selected but not compiled in. Switching to AUTO select\n",
+ 		       mitigation_options[i].option);
+ 		return SPECTRE_V2_CMD_AUTO;
+@@ -1565,7 +1565,7 @@ static void __init spectre_v2_select_mitigation(void)
+ 			break;
+ 		}
+ 
+-		if (IS_ENABLED(CONFIG_CPU_IBRS_ENTRY) &&
++		if (IS_ENABLED(CONFIG_MITIGATION_IBRS_ENTRY) &&
+ 		    boot_cpu_has_bug(X86_BUG_RETBLEED) &&
+ 		    retbleed_cmd != RETBLEED_CMD_OFF &&
+ 		    retbleed_cmd != RETBLEED_CMD_STUFF &&
