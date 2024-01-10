@@ -1,112 +1,76 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE53639FEF;
-	Wed, 10 Jan 2024 07:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 40A7BA94013595;
-	Wed, 10 Jan 2024 15:11:10 +0800 (GMT-8)
-	(envelope-from hu.yadi@h3c.com)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
-	by mail.maildlp.com (Postfix) with ESMTP id DD8812004BA6;
-	Wed, 10 Jan 2024 15:15:29 +0800 (CST)
-Received: from localhost.localdomain (10.99.206.12) by
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.27; Wed, 10 Jan 2024 15:11:11 +0800
-From: Hu Yadi <hu.yadi@h3c.com>
-To: <jmorris@namei.org>, <serge@hallyn.com>, <shuah@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <mic@digikod.net>
-CC: <linux-api@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <514118380@qq.com>,
-        <berlin@h3c.com>, "Hu.Yadi" <hu.yadi@h3c.com>
-Subject: [PATCH] selftests/landlock:Fix two build issues
-Date: Wed, 10 Jan 2024 15:08:54 +0800
-Message-ID: <20240110070854.7077-1-hu.yadi@h3c.com>
-X-Mailer: git-send-email 2.17.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696F536AFE
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXPjv9Lh"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-553ba2f0c8fso4311192a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 23:13:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704870789; x=1705475589; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=85ywecMwMu1AdtOzRqPMq0CMfn7XBj3f6oyEvV9h868=;
+        b=cXPjv9LhGjNqdF4l18e0fT3sfTUr9s3DSRKJIWocWyS7gHfv2N5j8bLXGkzcYOIB1a
+         X1dErwyilpwHRUddF5Fog0dBBnlfYi61ksvZGfW+wAKnrmpncPMbU04YjVIm6bMVAvpW
+         pSkRh5qNrUlwgv2o1NMTFyU+Mhay2oqqgn8UH+74hS596QWbZdGWMT8bGbxwsStONd41
+         9yjnVs3wtJ8JmOIt02yM8W7evz0w9tim+5oVjy2uTQpC1XV1Uk+HGxk7g9CawwghOzZG
+         +hADDNWUwrKZK5Uwdab7B9fiQA4vJLP/gtu3qlseFz3nuhi5EYGmjmfdDp9fVinEM5ud
+         aKNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704870789; x=1705475589;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=85ywecMwMu1AdtOzRqPMq0CMfn7XBj3f6oyEvV9h868=;
+        b=AnQEc/LYAVhxUHtl1Xh6NM8uT9MVmGz9w4ZKT3ly0pGzQUvEmKfJcDveDdVdZaJKsc
+         Hn8Xf108hQN6XzAVDe0H0qOc9LpPGMqVp+qnzu9lQ9mo4TPQTosZfLoR4R7plcxZBW7t
+         Wmq7qWp0YFzvFzXlsDHSmqYQiF9E6QWOXNJ9SBczhYzXE+gBCLL1hEBkFRvDCfvXqNDR
+         xruKjtep/AHZppAtv9YgwFGZyyTk0oMhHGNd7kZ0haT8cLzSxOXcpVkCUvQrSqLHLTtB
+         8bAc56F9/a1vFalatQQPMOFHaPeDx8vAEb/GuVluQRW/EAUH1vgEBtLGx+IfYOOeDPL2
+         VPuA==
+X-Gm-Message-State: AOJu0YyKQ4IZeNSdwirps4RgvAMjOXh0Ts9WR4uUBJCNtlf1gnsdmU8o
+	yg/PqMSpLcZrNlvh3AmEZA==
+X-Google-Smtp-Source: AGHT+IF4YJHlFjRRGVxF2qE37e0ua2Nd2i8n12Gp5w1Kot/zNKM4puzluWiLzGWuX/5y6awnkl66KA==
+X-Received: by 2002:a50:bb6d:0:b0:554:51a4:a00 with SMTP id y100-20020a50bb6d000000b0055451a40a00mr94414ede.66.1704870789480;
+        Tue, 09 Jan 2024 23:13:09 -0800 (PST)
+Received: from p183 ([46.53.248.125])
+        by smtp.gmail.com with ESMTPSA id es13-20020a056402380d00b00557535489adsm1734767edb.37.2024.01.09.23.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 23:13:09 -0800 (PST)
+Date: Wed, 10 Jan 2024 10:13:07 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: David Howells <dhowells@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, pinskia@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/45] C++: Convert the kernel to C++
+Message-ID: <aed64ce6-3765-4099-8211-032d4722f184@p183>
+References: <3465e0c6-f5b2-4c42-95eb-29361481f805@zytor.com>
+ <152261521484.30503.16131389653845029164.stgit@warthog.procyon.org.uk>
+ <1681813.1704843645@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 40A7BA94013595
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1681813.1704843645@warthog.procyon.org.uk>
 
-From: "Hu.Yadi" <hu.yadi@h3c.com>
+On Tue, Jan 09, 2024 at 11:40:45PM +0000, David Howells wrote:
+> There was also a problem with leaving gaps in static array initialisation and
+> a problem with statically initialising fields out of order (with respect to
+> the order they're declared in the struct declaration).  Possibly these have
+> been fixed in g++.
 
-Two issues comes up  while building selftest/landlock:
+They weren't :-(
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113124
 
-the first one is as to gettid
+Right now g++ hard errors some patterns of C99 inititialisation which
+clang++ allows (with warnings which can be turned off).
 
-net_test.c: In function ‘set_service’:
-net_test.c:91:45: warning: implicit declaration of function ‘gettid’; did you mean ‘getgid’? [-Wimplicit-function-declaration]
-    "_selftests-landlock-net-tid%d-index%d", gettid(),
-                                             ^~~~~~
-                                             getgid
-net_test.c:(.text+0x4e0): undefined reference to `gettid'
-
-the second is compiler error
-gcc -Wall -O2 -isystem   fs_test.c -lcap -o /home/linux/tools/testing/selftests/landlock/fs_test
-fs_test.c:4575:9: error: initializer element is not constant
-  .mnt = mnt_tmp,
-         ^~~~~~~
-
-this patch is to fix them
-
-Signed-off-by: Hu.Yadi <hu.yadi@h3c.com>
-Suggested-by: Jiao <jiaoxupo@h3c.com>
-Reviewed-by:Berlin <berlin@h3c.com>
----
- tools/testing/selftests/landlock/fs_test.c  | 5 ++++-
- tools/testing/selftests/landlock/net_test.c | 3 +--
- 2 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/selftests/landlock/fs_test.c
-index 18e1f86a6234..93eb40a09073 100644
---- a/tools/testing/selftests/landlock/fs_test.c
-+++ b/tools/testing/selftests/landlock/fs_test.c
-@@ -4572,7 +4572,10 @@ FIXTURE_VARIANT(layout3_fs)
- /* clang-format off */
- FIXTURE_VARIANT_ADD(layout3_fs, tmpfs) {
- 	/* clang-format on */
--	.mnt = mnt_tmp,
-+	.mnt = {
-+		.type = "tmpfs",
-+        	.data = "size=4m,mode=700",
-+	},
- 	.file_path = file1_s1d1,
- };
- 
-diff --git a/tools/testing/selftests/landlock/net_test.c b/tools/testing/selftests/landlock/net_test.c
-index 929e21c4db05..8fb357de8c55 100644
---- a/tools/testing/selftests/landlock/net_test.c
-+++ b/tools/testing/selftests/landlock/net_test.c
-@@ -18,7 +18,6 @@
- #include <sys/prctl.h>
- #include <sys/socket.h>
- #include <sys/un.h>
--
- #include "common.h"
- 
- const short sock_port_start = (1 << 10);
-@@ -88,7 +87,7 @@ static int set_service(struct service_fixture *const srv,
- 	case AF_UNIX:
- 		srv->unix_addr.sun_family = prot.domain;
- 		sprintf(srv->unix_addr.sun_path,
--			"_selftests-landlock-net-tid%d-index%d", gettid(),
-+			"_selftests-landlock-net-tid%ld-index%d", syscall(SYS_gettid),
- 			index);
- 		srv->unix_addr_len = SUN_LEN(&srv->unix_addr);
- 		srv->unix_addr.sun_path[0] = '\0';
--- 
-2.23.0
-
+However, clang++ doesn't believe in pointer arithmetic on void*.
