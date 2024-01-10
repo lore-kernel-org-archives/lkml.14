@@ -1,87 +1,111 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F2A4F89C;
-	Wed, 10 Jan 2024 21:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EF84F5EB
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 21:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fATdJl5O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704920900;
-	bh=noDFINTUJw7LAeahmfm3fQbOwo432AdB3LzyaJ+7kRs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fATdJl5Obq39/BQX/tzMPIr9P1qEn2ATIxmvZ12H1B7w2KNZ6XkA7mq7STR8tszwD
-	 3VsWoUuKq+O4JRpj38WWpljzEGFDwHwGMH0H1LDrYS0tGZv+yvTro8mk9YVbXV0map
-	 XK2UdZ/Ryu7R9D/bq8Eh8GHSdPmnOSmtOFTF96mnnXo7+SHPxGEo2+e+284jSOK0O4
-	 /qRyBTuDTz9FaESOA6TqXMi07k5A8B+0PInSYOLB8X3OEZHQJ8XahsKWyNGIdydVuz
-	 f2fxWMe5elCLj8EYlhErwL5SOqLMtHj/Jt1weedGa1IhePKoncPQZmCJQ5xySYeaiP
-	 EaE0Bv9x0wC+g==
-Received: from localhost.localdomain (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E6D8D378148C;
-	Wed, 10 Jan 2024 21:08:13 +0000 (UTC)
-From: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: kernel@collabora.com,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: defconfig: Enable PSTORE_RAM
-Date: Wed, 10 Jan 2024 18:05:03 -0300
-Message-ID: <20240110210600.787703-3-nfraprado@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240110210600.787703-1-nfraprado@collabora.com>
-References: <20240110210600.787703-1-nfraprado@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rRDNLOzI"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40e4afe9ea7so1345e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:10:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704921007; x=1705525807; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0dBlfe0ai2/9qnOVJT7Cr9v3swK0leKtoIMht6HfIU8=;
+        b=rRDNLOzIiXSOzioXfKQkfA5eOus1qZsfOzk1snEsyTecSdZXKLKrs8N7OWu+agHFUW
+         F/VZ0HVe6SpI31YoKeZwjvy24qCcznW5REcWmhH+1LbPwWzwsoyrQUM1NT5JWhkt0SEh
+         qOU9jRd/nIfYeKYuex3CB0S0u1Kbba6Ei7Q4LeKNYMD8I34CRUk5p+jdA1ROB7JQ3ojz
+         4gMNmmEtuGk9X7oC4m3tEnKxK7b6B5u4spsz2UWTpye/BK0wng69jHCS/RJR2YGRZf6F
+         /ctBK0Qrv5m3LJeJbHB7ZIutMbGePeb41dRAeaO9fvJIxnDJw63SHHCRtKtIRPYRO5Ip
+         smQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704921007; x=1705525807;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0dBlfe0ai2/9qnOVJT7Cr9v3swK0leKtoIMht6HfIU8=;
+        b=n2vkLgARs6qTG7V77iTKqhh5vCf0YVL+9f6fSCCOVQuIatD/3coFzOC39xxUIGLDr4
+         fbt3m4ijtSQxl9PPvJsAR67HK7KYOAuf9yh5zfitDGbdmwqIIgaLHQfKfC8Tly4zsgnj
+         qIX4Rfoc3JRYS/BkuhlR+QfeW/zJBTl7RoOvml3AFrBHomlhYUG06z4qRyKFjV4rvB03
+         sQQMUqdy2B522FdKHL3Zbd4pOJOUI7fOyyLAFyvMFlMFjFO7cVx7qXqN5AY8i5TlBTv4
+         Pthe7gxvzErXYNjOnHyUMHmGaLdts7//Bbz3nhXfbSUY6XMEZtbiVEg+93DBhq9yZusy
+         2TUw==
+X-Gm-Message-State: AOJu0Yy+rlvINaGqPhiNM7hfgGc88XjZBp7B56wXxbxUa2Rz+n0hSYF3
+	JC10J2S4sIDsVxKLQ8a86c/tOh5OHVw2PyoYWDLGk5bOORoyT0+Vg1Px6Zb4LP646XCbEDS+z2D
+	B4rMUPe3jK5/o/zOTtIbCWsuXM3yv9muX6PIh
+X-Google-Smtp-Source: AGHT+IHsAggDnwF7TsHK2T7smnyeA48DXI2a46o7MmsiupRvXAiMBgCqaHhlnBsI7Z9bP9EmbmAIt/9dbXM0bef0tPs=
+X-Received: by 2002:a05:600c:3b09:b0:40e:490c:48a9 with SMTP id
+ m9-20020a05600c3b0900b0040e490c48a9mr7775wms.3.1704921006606; Wed, 10 Jan
+ 2024 13:10:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <dd938a86-38d9-4d62-abd0-1df80395fbbd@moroto.mountain>
+In-Reply-To: <dd938a86-38d9-4d62-abd0-1df80395fbbd@moroto.mountain>
+From: Rae Moar <rmoar@google.com>
+Date: Wed, 10 Jan 2024 16:09:55 -0500
+Message-ID: <CA+GJov7P_ypZ58TrWoMSSQyt6fdoGyYTqbfEuU7v_ZHFSOczKA@mail.gmail.com>
+Subject: Re: [PATCH] kunit: device: Fix a NULL vs IS_ERR() check in init()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: "davidgow@google.com" <davidgow@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
+	Maxime Ripard <mripard@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enable PSTORE_RAM, that is the ramoops driver, in the defconfig, to
-allow logging and retrieving panics and oopses to/from RAM automatically
-for platforms that have a ramoops reserved memory node in DT.
+On Wed, Jan 10, 2024 at 1:55=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> The root_device_register() function does not return NULL, it returns
+> error pointers.  Fix the check to match.
+>
+> Fixes: d03c720e03bd ("kunit: Add APIs for managing devices")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+This change looks good to me! We could check for IS_ERR_OR_NULL
+instead but this change is more correct and is also how others check
+root_device_register().
 
----
+Reviewed-by: Rae Moar <rmoar@google.com>
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Thanks!
+Rae
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index d48659217bb4..0b0ef6877a12 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1589,6 +1589,7 @@ CONFIG_HUGETLBFS=y
- CONFIG_CONFIGFS_FS=y
- CONFIG_EFIVAR_FS=y
- CONFIG_SQUASHFS=y
-+CONFIG_PSTORE_RAM=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=y
- CONFIG_NFS_V4_1=y
--- 
-2.43.0
 
+> ---
+>  lib/kunit/device.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/kunit/device.c b/lib/kunit/device.c
+> index f5371287b375..074c6dd2e36a 100644
+> --- a/lib/kunit/device.c
+> +++ b/lib/kunit/device.c
+> @@ -45,8 +45,8 @@ int kunit_bus_init(void)
+>         int error;
+>
+>         kunit_bus_device =3D root_device_register("kunit");
+> -       if (!kunit_bus_device)
+> -               return -ENOMEM;
+> +       if (IS_ERR(kunit_bus_device))
+> +               return PTR_ERR(kunit_bus_device);
+>
+>         error =3D bus_register(&kunit_bus_type);
+>         if (error)
+> --
+> 2.43.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "KUnit Development" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kunit-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/kunit-dev/dd938a86-38d9-4d62-abd0-1df80395fbbd%40moroto.mountain.
