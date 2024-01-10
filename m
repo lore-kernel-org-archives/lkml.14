@@ -1,275 +1,183 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742613FEF
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 04:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fiEa4OsP"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40A1qbdo008950;
-	Wed, 10 Jan 2024 04:09:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=PN/94FNaJE5gXuuzukilNXUTnIvClfuno9VY3Eps0R8=;
- b=fiEa4OsPs7mzzWN6LJLSNGojGvo1Jd61aFcftfiU+A741rz2mJCMWN5i+R9ZmYn09Lou
- jjQDU7U7Znd7KAxCH98MDn8BKpxYTm6LgF5RiV0oc4cz/Q4mwhRgJlqOsNDqg772rEEB
- X7tdTzLGZAvpQDzb7yTw/ihX/R7j/8Zx3eXAKoq2QvCgimc1MmZT79QS9G5Bp+Q1WAJP
- uA+ygcomKtkhSW5tZ0LUcMK/e5mgjltgU86MsbFTZRb4/LdlAdmGF3HzUNrMNDX1gQ+Z
- I1T3W2ER0szME8cBpJ35Q7zKJmoaTbFsPpzE6mfVbkdsToVyGIFTCPel3MRBFvRUxM++ Vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vhhxytac6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 04:09:24 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40A41KHw022734;
-	Wed, 10 Jan 2024 04:09:23 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vhhxytabj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 04:09:23 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40A3AoRI000893;
-	Wed, 10 Jan 2024 04:09:22 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vfkdkansb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 04:09:22 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40A49KhL24707790
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Jan 2024 04:09:20 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA8B420043;
-	Wed, 10 Jan 2024 04:09:20 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C835E20040;
-	Wed, 10 Jan 2024 04:09:19 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 10 Jan 2024 04:09:19 +0000 (GMT)
-Received: from [10.61.2.106] (haven.au.ibm.com [9.192.254.114])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 845DE60218;
-	Wed, 10 Jan 2024 15:09:17 +1100 (AEDT)
-Message-ID: <55c57f88-9975-4510-b6bc-7e78462e0a62@linux.ibm.com>
-Date: Wed, 10 Jan 2024 15:09:17 +1100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438AF53A6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 04:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dmgNY8Dc"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cda3e35b26so1294136a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 20:13:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1704859979; x=1705464779; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qPJTr1gKO9CQEF9M7280592AuMLZ8kCM6wDFyZe2n94=;
+        b=dmgNY8DcvXONd9dC7v3C+7y/tPZqfsWeSv1GoXrpzGZkpNY5dImJ4g9o/1KtdHFUyh
+         18jVWwwntU34z9YovtBYUuBgGqr2qFCCAdeROB+jo7r/QHLAnb7nkh/DQsHCCBTQWH/z
+         jebwRMyGlfk4cHez150UhxyPz7aquCgEvNMvk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704859979; x=1705464779;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qPJTr1gKO9CQEF9M7280592AuMLZ8kCM6wDFyZe2n94=;
+        b=P0DCK0OOcd7CL/yxC9MJdyyVrbb0x2nz6R2XFh0vMHNhSk9n22jj5qV0ZdHLiHyayI
+         XnscCplfm3s2yKmwHB4LsfkbZOAU3ssVf2eBCLVif7di5BVNQIJWTcJkzeO2lEPzi+Df
+         p1ayyFmLptyjX7YyA2CRvFBkQ+gfRwt73WVOPo1VTZSnaxHmjk8qGmWzF6iP3LS2H8pR
+         tTVAzLp4M/jqNp9Ag4pdXBUHApPi0zFy9lXZuslV2qsHgOwSF9zF+dXp6ZzH7gRsE3L0
+         tbX4opNaz+2Rah4Dm0qSZ5dlSza9YYHWgAo1eyLxq3QP1lBSWfE/dSzpkDjQhSt55EfO
+         5fbg==
+X-Gm-Message-State: AOJu0YzFk0l67acT+0CIZVkirEZw2XvHMmdM3ZZ7k0r62VK8Pnj9U21K
+	rG2IJKP4EphUSYMcVY1pUD+kygzms+8y9R7YPynGQrpefhby
+X-Google-Smtp-Source: AGHT+IGAY4LzAnYW3GSqcXVFvpY+k/SVuRrlQpOIqRu4FCBZEx3HXwZXt2FczVPkJhZ6UwXrx7+5D5ZLzElAU+KVkMc=
+X-Received: by 2002:a17:90b:230c:b0:28c:4a6:2190 with SMTP id
+ mt12-20020a17090b230c00b0028c04a62190mr186187pjb.10.1704859979458; Tue, 09
+ Jan 2024 20:12:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/13] powerpc/string: Add KMSAN support
-Content-Language: en-US
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "glider@google.com" <glider@google.com>,
-        "elver@google.com"
- <elver@google.com>,
-        "dvyukov@google.com" <dvyukov@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "npiggin@gmail.com" <npiggin@gmail.com>
-Cc: "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-        "iii@linux.ibm.com" <iii@linux.ibm.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20231214055539.9420-1-nicholas@linux.ibm.com>
- <20231214055539.9420-13-nicholas@linux.ibm.com>
- <2f35548a-bdbd-4c37-8f60-cebeb381a7af@csgroup.eu>
-From: Nicholas Miehlbradt <nicholas@linux.ibm.com>
-In-Reply-To: <2f35548a-bdbd-4c37-8f60-cebeb381a7af@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Z0gqHeXQBF-DTvYR8mq_KFNHfNuG0Tvm
-X-Proofpoint-ORIG-GUID: 7207fUxSVPuK1YLYSW2F-TQqKjaebXMm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-09_13,2024-01-09_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
- adultscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401100031
+References: <20240109194551.17666-1-andrea.fois@eventsense.it> <d8ed4af1-5c83-4895-9fc3-9aea25724fd9@gmail.com>
+In-Reply-To: <d8ed4af1-5c83-4895-9fc3-9aea25724fd9@gmail.com>
+From: Pavan Chebbi <pavan.chebbi@broadcom.com>
+Date: Wed, 10 Jan 2024 09:42:47 +0530
+Message-ID: <CALs4sv2_JZd5K-ZgBkjL=QpXVEXnoJrjuqwwKg0+jo2-4taHJw@mail.gmail.com>
+Subject: Re: [PATCH] tg3: add new module param to force device power down on reboot
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Andrea Fois <andrea.fois@eventsense.it>, Michael Chan <mchan@broadcom.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	George Shuklin <george.shuklin@gmail.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000007ee665060e8fa514"
 
+--0000000000007ee665060e8fa514
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jan 10, 2024 at 2:01=E2=80=AFAM Heiner Kallweit <hkallweit1@gmail.c=
+om> wrote:
+>
+> On 09.01.2024 20:45, Andrea Fois wrote:
+> > The bug #1917471 was fixed in commit 2ca1c94ce0b6 ("tg3: Disable tg3
+> > device on system reboot to avoid triggering AER") but was reintroduced
+> > by commit 9fc3bc764334 ("tg3: power down device only on
+> > SYSTEM_POWER_OFF").
+> >
+> > The problem described in #1917471 is still consistently replicable on
+> > reboots on Dell Servers (i.e. R750xs with BCM5720 LOM), causing NMIs
+> > (i.e. NMI received for unknown reason 38 on cpu 0) after 9fc3bc764334
+> > was committed.
+> >
+> > The problem is detected also by the Lifecycle controller and logged as
+> > a PCI Bus Error for the device.
+> >
+> > As the problems addressed by 2ca1c94ce0b6 and by 9fc3bc764334 requires
+> > opposite strategies, a new module param "force_pwr_down_on_reboot"
+> > <bool> is introduced to fix both scenarios:
+> >
+> Adding module parameters is discouraged. What I see could try:
+Ack.
+>
+> - limit 9fc3bc764334 to the specific machine type mentioned in the
+>   commit message (based DMI info)
+> - 2ca1c94ce0b6 performs two actions: power down tg3 and disable device
+>   Based on the commit description disabling the device might be sufficien=
+t.
 
-On 14/12/2023 8:25 pm, Christophe Leroy wrote:
-> 
-> 
-> Le 14/12/2023 à 06:55, Nicholas Miehlbradt a écrit :
->> KMSAN expects functions __mem{set,cpy,move} so add aliases pointing to
->> the respective functions.
->>
->> Disable use of architecture specific memset{16,32,64} to ensure that
->> metadata is correctly updated and strn{cpy,cmp} and mem{chr,cmp} which
->> are implemented in assembly and therefore cannot be instrumented to
->> propagate/check metadata.
->>
->> Alias calls to mem{set,cpy,move} to __msan_mem{set,cpy,move} in
->> instrumented code to correctly propagate metadata.
->>
->> Signed-off-by: Nicholas Miehlbradt <nicholas@linux.ibm.com>
->> ---
->>    arch/powerpc/include/asm/kmsan.h               |  7 +++++++
->>    arch/powerpc/include/asm/string.h              | 18 ++++++++++++++++--
->>    arch/powerpc/lib/Makefile                      |  2 ++
->>    arch/powerpc/lib/mem_64.S                      |  5 ++++-
->>    arch/powerpc/lib/memcpy_64.S                   |  2 ++
->>    .../selftests/powerpc/copyloops/asm/kmsan.h    |  0
->>    .../selftests/powerpc/copyloops/linux/export.h |  1 +
->>    7 files changed, 32 insertions(+), 3 deletions(-)
->>    create mode 100644 tools/testing/selftests/powerpc/copyloops/asm/kmsan.h
->>
->> diff --git a/arch/powerpc/include/asm/kmsan.h b/arch/powerpc/include/asm/kmsan.h
->> index bc84f6ff2ee9..fc59dc24e170 100644
->> --- a/arch/powerpc/include/asm/kmsan.h
->> +++ b/arch/powerpc/include/asm/kmsan.h
->> @@ -7,6 +7,13 @@
->>    #ifndef _ASM_POWERPC_KMSAN_H
->>    #define _ASM_POWERPC_KMSAN_H
->>    
->> +#ifdef CONFIG_KMSAN
->> +#define EXPORT_SYMBOL_KMSAN(fn) SYM_FUNC_ALIAS(__##fn, fn) \
->> +				EXPORT_SYMBOL(__##fn)
->> +#else
->> +#define EXPORT_SYMBOL_KMSAN(fn)
->> +#endif
->> +
->>    #ifndef __ASSEMBLY__
->>    #ifndef MODULE
->>    
->> diff --git a/arch/powerpc/include/asm/string.h b/arch/powerpc/include/asm/string.h
->> index 60ba22770f51..412626ce619b 100644
->> --- a/arch/powerpc/include/asm/string.h
->> +++ b/arch/powerpc/include/asm/string.h
->> @@ -4,7 +4,7 @@
->>    
->>    #ifdef __KERNEL__
->>    
->> -#ifndef CONFIG_KASAN
->> +#if !defined(CONFIG_KASAN) && !defined(CONFIG_KMSAN)
->>    #define __HAVE_ARCH_STRNCPY
->>    #define __HAVE_ARCH_STRNCMP
->>    #define __HAVE_ARCH_MEMCHR
->> @@ -56,8 +56,22 @@ void *__memmove(void *to, const void *from, __kernel_size_t n);
->>    #endif /* CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX */
->>    #endif /* CONFIG_KASAN */
->>    
->> +#ifdef CONFIG_KMSAN
->> +
->> +void *__memset(void *s, int c, __kernel_size_t count);
->> +void *__memcpy(void *to, const void *from, __kernel_size_t n);
->> +void *__memmove(void *to, const void *from, __kernel_size_t n);
->> +
-> 
-> The same is done for KASAN, can't you reuse it ?
-> 
-I tried this but I believe it makes the file more disorganised and 
-difficult to edit since there ends up being a set of definitions for 
-each intersection of features e.g. the definitions needed for both KASAN 
-and KMSAN, just KASAN, just KMSAN, etc.
+I think the second suggestion could be a better solution. Helps to
+solve the issue 9fc3bc764334 is trying to fix.
+But I am not sure how easy it is to test. As I recall, Goerge was
+unable to reach out to the author of 2ca1c94ce0b6 when he wanted to
+test his patch for regression.
+We did discuss the risk of this regression.
+https://patchwork.kernel.org/project/netdevbpf/patch/20231101130418.44164-1=
+-george.shuklin@gmail.com/
+Unfortunately, looks like it has come true :(
 
-This way it's clearer what each sanitizer needs and changing definitions 
-for one one sanitizer won't require refactors affecting other sanitizers.
+--0000000000007ee665060e8fa514
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
->> +#ifdef __SANITIZE_MEMORY__
->> +#include <linux/kmsan_string.h>
->> +#define memset __msan_memset
->> +#define memcpy __msan_memcpy
->> +#define memmove __msan_memmove
->> +#endif
-> 
-> Will that work as you wish ?
-> What about the calls to memset() or memcpy() emited directly by GCC ?
-> 
-These are handled by the compiler instrumentation which replaces these 
-with calls to the instrumented equivalent.
-
->> +#endif /* CONFIG_KMSAN */
->> +
->>    #ifdef CONFIG_PPC64
->> -#ifndef CONFIG_KASAN
->> +#if !defined(CONFIG_KASAN) && !defined(CONFIG_KMSAN)
->>    #define __HAVE_ARCH_MEMSET32
->>    #define __HAVE_ARCH_MEMSET64
->>    
->> diff --git a/arch/powerpc/lib/Makefile b/arch/powerpc/lib/Makefile
->> index 51ad0397c17a..fc3ea3eebbd6 100644
->> --- a/arch/powerpc/lib/Makefile
->> +++ b/arch/powerpc/lib/Makefile
->> @@ -32,9 +32,11 @@ obj-y += code-patching.o feature-fixups.o pmem.o
->>    obj-$(CONFIG_CODE_PATCHING_SELFTEST) += test-code-patching.o
->>    
->>    ifndef CONFIG_KASAN
->> +ifndef CONFIG_KMSAN
->>    obj-y	+=	string.o memcmp_$(BITS).o
->>    obj-$(CONFIG_PPC32)	+= strlen_32.o
->>    endif
->> +endif
->>    
->>    obj-$(CONFIG_PPC32)	+= div64.o copy_32.o crtsavres.o
->>    
->> diff --git a/arch/powerpc/lib/mem_64.S b/arch/powerpc/lib/mem_64.S
->> index 6fd06cd20faa..a55f2fac49b3 100644
->> --- a/arch/powerpc/lib/mem_64.S
->> +++ b/arch/powerpc/lib/mem_64.S
->> @@ -9,8 +9,9 @@
->>    #include <asm/errno.h>
->>    #include <asm/ppc_asm.h>
->>    #include <asm/kasan.h>
->> +#include <asm/kmsan.h>
->>    
->> -#ifndef CONFIG_KASAN
->> +#if !defined(CONFIG_KASAN) && !defined(CONFIG_KMSAN)
->>    _GLOBAL(__memset16)
->>    	rlwimi	r4,r4,16,0,15
->>    	/* fall through */
->> @@ -96,6 +97,7 @@ _GLOBAL_KASAN(memset)
->>    	blr
->>    EXPORT_SYMBOL(memset)
->>    EXPORT_SYMBOL_KASAN(memset)
->> +EXPORT_SYMBOL_KMSAN(memset)
->>    
->>    _GLOBAL_TOC_KASAN(memmove)
->>    	cmplw	0,r3,r4
->> @@ -140,3 +142,4 @@ _GLOBAL(backwards_memcpy)
->>    	b	1b
->>    EXPORT_SYMBOL(memmove)
->>    EXPORT_SYMBOL_KASAN(memmove)
->> +EXPORT_SYMBOL_KMSAN(memmove)
->> diff --git a/arch/powerpc/lib/memcpy_64.S b/arch/powerpc/lib/memcpy_64.S
->> index b5a67e20143f..1657861618cc 100644
->> --- a/arch/powerpc/lib/memcpy_64.S
->> +++ b/arch/powerpc/lib/memcpy_64.S
->> @@ -8,6 +8,7 @@
->>    #include <asm/asm-compat.h>
->>    #include <asm/feature-fixups.h>
->>    #include <asm/kasan.h>
->> +#include <asm/kmsan.h>
->>    
->>    #ifndef SELFTEST_CASE
->>    /* For big-endian, 0 == most CPUs, 1 == POWER6, 2 == Cell */
->> @@ -228,3 +229,4 @@ END_FTR_SECTION_IFCLR(CPU_FTR_UNALIGNED_LD_STD)
->>    #endif
->>    EXPORT_SYMBOL(memcpy)
->>    EXPORT_SYMBOL_KASAN(memcpy)
->> +EXPORT_SYMBOL_KMSAN(memcpy)
->> diff --git a/tools/testing/selftests/powerpc/copyloops/asm/kmsan.h b/tools/testing/selftests/powerpc/copyloops/asm/kmsan.h
->> new file mode 100644
->> index 000000000000..e69de29bb2d1
->> diff --git a/tools/testing/selftests/powerpc/copyloops/linux/export.h b/tools/testing/selftests/powerpc/copyloops/linux/export.h
->> index e6b80d5fbd14..6379624bbf9b 100644
->> --- a/tools/testing/selftests/powerpc/copyloops/linux/export.h
->> +++ b/tools/testing/selftests/powerpc/copyloops/linux/export.h
->> @@ -2,3 +2,4 @@
->>    #define EXPORT_SYMBOL(x)
->>    #define EXPORT_SYMBOL_GPL(x)
->>    #define EXPORT_SYMBOL_KASAN(x)
->> +#define EXPORT_SYMBOL_KMSAN(x)
+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
+OltyqaGBuzv+bJTUL+bmV7E4QBLIqGt4jVr1R9hJdH6KxXwJdyfHZ9C6qXmoe2NQhiFUyBOJ0wgk
+dB9Z1IU7nCwvNKYg2JMoJs93tIgbhPJg/D7pqW8gabkCAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
+BB0wG4EZcGF2YW4uY2hlYmJpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
+HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUEV6y/89alKPoFbKUaJXsvWu5
+fdowDQYJKoZIhvcNAQELBQADggEBAEHSIB6g652wVb+r2YCmfHW47Jo+5TuCBD99Hla8PYhaWGkd
+9HIyD3NPhb6Vb6vtMWJW4MFGQF42xYRrAS4LZj072DuMotr79rI09pbOiWg0FlRRFt6R9vgUgebu
+pWSH7kmwVXcPtY94XSMMak4b7RSKig2mKbHDpD4bC7eGlwl5RxzYkgrHtMNRmHmQor5Nvqe52cFJ
+25Azqtwvjt5nbrEd81iBmboNTEnLaKuxbbCtLaMEP8xKeDjAKnNOqHUMps0AsQT8c0EGq39YHpjp
+Wn1l67VU0rMShbEFsiUf9WYgE677oinpdm0t2mdCjxr35tryxptoTZXKHDxr/Yy6l6ExggJtMIIC
+aQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
+EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwV/XkICjVscn4SNZMw
+DQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIEigIftzTWjkE0opR+5Az7Am7287E2M/
+dtCuMlYeEaEqMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDEx
+MDA0MTI1OVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQC
+ATANBgkqhkiG9w0BAQEFAASCAQA2eKYB8R/gbzFpnnfl9ulUZDrc518ErUdHn5sCh8HVzMKsDv+Y
+XlBbw/Z/fV0DtM5BHuaFmCOQhvnrAVA+wPGkAkJUZNtPlC+EguN8QO0/lM9cvvQPKroRSawHv4D2
+CUtuaoqkpRE6Ep7SGXBRGQb86kvf908pnA8NTkDDTPPlEuVwkE7/I7uLy6wwojGqD9x0LUssO1LD
+t7k65VCLv1TWXVyAOuQzEfD+ZXvDqHrNkOsVQWjOYRHBnKujy+jI0+qOKgiTYVy5stgw30BXHCBz
+kA00Gx3s7RaXNOvJP5mKOze5It5zF4bCs9CA4iz1ARkJd38AKfzyfVaEnpkOXc73
+--0000000000007ee665060e8fa514--
