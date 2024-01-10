@@ -1,82 +1,100 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15E647F6F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4299d95547eso12318911cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 05:05:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB3348790
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mXWcgmJE"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50ea98440a7so4052940e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 05:05:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704891952; x=1705496752; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r3fYiUXc8cxYAbqnzO/jzfI53DkZ5gWWk2eUOw5iFG0=;
+        b=mXWcgmJET9cdsw54wZbtBpfD523o75hayqx4fcRd0lMFNxElQwh3VBOcfMxo2g8o4x
+         gvnPXiOV/o4TkEaWMzFwukbzFG7KFtt1gCDArWQiWJGlorEVLWVQSUSVJclmV953Sqay
+         G07QWgYXdwD8cnL4RQf/d/CwsH5zuLQAG//sY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704891944; x=1705496744;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1704891952; x=1705496752;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h0CYESXWRwPl8oqvteNiSuteSyQk0Ky/r564akScXfg=;
-        b=q6GKmPRI3UinucRWzsgygtv+4Hw2YL8eRdYsJGfuGgl/YQMdLCY/y9HhfT0G/eIxdt
-         fB73bE8SYQ+/sSvQxWPhodLBxsyN10gbEOaWY+POxm5efRR7HfpB5qb75ZcYNAOQkPq7
-         C2/dCUSkwq7pAjWKD3Taq4Vk/iIdRhCmFY+EHBs8lHRxNoVvVSFuo1QS/drBOA5hNu4B
-         mHn3cLrC4hpTwp5fSTKNLx70U15n3hmRz80ZTO2jX5GWVHO+eP/6xM4sZlFftHRltw7Q
-         VzTZlH1gKHd4B6pPq8+cJN5/7LVUKIE6eJQdD/9WxrDeASwgcZokfh7eY34xJJM+yPCQ
-         YOkA==
-X-Gm-Message-State: AOJu0YwYTUBCQw5dsnFfAQv8aGLNJB8XBnNiAMItAvpRwH/pbzUp3V7J
-	X1z2RKuhxa3m7UdaccCO6Cg=
-X-Google-Smtp-Source: AGHT+IHe1RvNMYGKzjKIDeQa10bovKXWOKkurYaCsJ4WPcjbUKsAuCGpiIgF0NtedlK05DRgEHQERA==
-X-Received: by 2002:ac8:5d89:0:b0:429:85d9:d5f1 with SMTP id d9-20020ac85d89000000b0042985d9d5f1mr909495qtx.93.1704891944386;
-        Wed, 10 Jan 2024 05:05:44 -0800 (PST)
-Received: from Belldandy-Slimbook.tail03774.ts.net ([32.221.209.96])
-        by smtp.gmail.com with ESMTPSA id i3-20020a05622a08c300b00427e2ec0bd0sm1774371qte.73.2024.01.10.05.05.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 05:05:43 -0800 (PST)
-From: Neal Gompa <neal@gompa.dev>
-To: jirislaby@kernel.org
-Cc: dhowells@redhat.com,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	pinskia@gmail.com,
-	kent.overstreet@linux.dev,
-	Neal Gompa <neal@gompa.dev>
-Subject: Re: [PATCH 00/45] C++: Convert the kernel to C++
-Date: Wed, 10 Jan 2024 08:04:53 -0500
-Message-ID: <20240110130456.142763-1-neal@gompa.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <938ebce3-74c5-4fcf-9de3-849271d3581d@kernel.org>
-References: <938ebce3-74c5-4fcf-9de3-849271d3581d@kernel.org>
+        bh=r3fYiUXc8cxYAbqnzO/jzfI53DkZ5gWWk2eUOw5iFG0=;
+        b=kaPUgs8CU13d7q4LM7+Px1YB9xkfqtbQ8a/9gbjY0kKJEXhfJM5JRtnRBDKjHb7RMM
+         VSh2TsjqiHmXP3IxZAL0G3gDbqUSGBY6NeT4ordGQREkiKVlFPOkwWLCfT2gJz5NSlyz
+         tFkI1MuqISgzlSMHxmOlvc2IiEXoxiUJaEcdphCYzlVaTYrkFVW6ATq+VWysSDPgcPkE
+         YksdDH++UGYkiUArbQEJ/oAOjALUAnTEHF+rDWe54uxGz5FKGaGTmjqIs5b5z2mn8bTb
+         95/X3rWIwEdBALKsQxjwb2U0Ne+ekBEb/fxdCQomQeUmT78s9ZZJsuGMufbcNZ3yVWHM
+         jqng==
+X-Gm-Message-State: AOJu0YykxCUnKTeXSoOM+52qsii+ocjIbO75ocvsHWRrpGP3Pj9fvluS
+	5CZtxtaLsWXwybiG90cg8qTphTatO483WGRMvanpqvqiLTIj
+X-Google-Smtp-Source: AGHT+IFt9LtNMkMXZ6gNCxpiVlWpHHtlffylW5vVhnpe8vQkXxImIXJrH2WKUU6ZxRLJSX5+oOPbkg==
+X-Received: by 2002:ac2:410a:0:b0:50e:80d3:55f4 with SMTP id b10-20020ac2410a000000b0050e80d355f4mr234568lfi.131.1704891951998;
+        Wed, 10 Jan 2024 05:05:51 -0800 (PST)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
+        by smtp.gmail.com with ESMTPSA id ch19-20020a170906c2d300b00a2b091e93aesm2048007ejb.115.2024.01.10.05.05.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jan 2024 05:05:51 -0800 (PST)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3373a30af67so3829489f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 05:05:51 -0800 (PST)
+X-Received: by 2002:adf:f604:0:b0:336:6422:708d with SMTP id
+ t4-20020adff604000000b003366422708dmr349222wrp.116.1704891950857; Wed, 10 Jan
+ 2024 05:05:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20231228054630.3595093-1-tfiga@chromium.org> <CAK7LNATBipJtprjvvRVYg8JcYOFXQdpLEyEc+4+8j1PtBQ+PUg@mail.gmail.com>
+In-Reply-To: <CAK7LNATBipJtprjvvRVYg8JcYOFXQdpLEyEc+4+8j1PtBQ+PUg@mail.gmail.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Date: Wed, 10 Jan 2024 22:05:33 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5C3vAUJhKiQ1LPkZv3dJxNvK4QinRezV9Q8rz_Ov6FSUQ@mail.gmail.com>
+Message-ID: <CAAFQd5C3vAUJhKiQ1LPkZv3dJxNvK4QinRezV9Q8rz_Ov6FSUQ@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: menuconfig: Make hidden options show as dim
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jesse Taube <Mr.Bossman075@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hey all,
+On Fri, Dec 29, 2023 at 1:10=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
+>
+> On Thu, Dec 28, 2023 at 2:46=E2=80=AFPM Tomasz Figa <tfiga@chromium.org> =
+wrote:
+> >
+> > When hidden options are toggled on (using 'z'), the number of options
+> > on the screen can be overwhelming and may make it hard to distinguish
+> > between available and hidden ones. Make them easier to distinguish by
+> > displaying the hidden one as dim (using the A_DIM curses attribute).
+> >
+> > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+>
+>
+>
+> Do you think this is useful?
+>
+> This changes the color only when you select a hidden item.
+>
+>
+> For unselected items, you cannot distinguish hidden ones,
+> as A_DIM has no effect to black text.
+>
+>
 
-I would like to speak in support of this too. It is not uncommon
-to see operating systems code written in C++ (notable examples are
-Haiku OS, Serenity OS, and Zircon/Fuschia) and I do feel that there
-are benefits to C++ for Linux code. Modern C++ (such as C++14 and
-newer), offers a lot of nice base language features that can make
-some of the kind of stuff that Linux does easier (as H. Peter Anvin
-has detailed in his post[1]).
+Hmm, are you sure about that? For me it seems to dim the text. it
+seems to be also used in the existing code for dlg.button_inactive.atr
+of the mono theme:
 
-While I personally have some experience in a variety of programming
-languages, C++ and Python are my preferred tools, and I would
-personally be much more interested in contributing in C++ than in C.
-I imagine there are a lot of other folks out there who feel the same,
-but just don't feel like they can say it. I'll stick my neck out for
-those who won't. ;)
+https://elixir.bootlin.com/linux/latest/source/scripts/kconfig/lxdialog/uti=
+l.c#L26
 
-Even though this started out as a "joke"[2], I really would like to
-see C++ code permitted in Linux.
-
-Thanks in advance and best regards,
-Neal
-
-[1]: https://lore.kernel.org/lkml/3465e0c6-f5b2-4c42-95eb-29361481f805@zytor.com/
-[2]: https://lore.kernel.org/lkml/152261521484.30503.16131389653845029164.stgit@warthog.procyon.org.uk/
-
-
--- 
-真実はいつも一つ！/ Always, there's only one truth!
+Best regards,
+Tomasz
