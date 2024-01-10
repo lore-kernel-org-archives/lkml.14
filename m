@@ -1,49 +1,49 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A57B58232
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 20:42:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766344F1E7
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 20:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g2fzHrdn"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55817a12ad8so2350174a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 12:42:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ITZ49Vws"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3373bc6d625so4113292f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 12:44:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704919338; x=1705524138; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704919439; x=1705524239; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=moMdQyvpZb+yFFmaeKOhLAtjlEHiINBt0+BiPqeeG+o=;
-        b=g2fzHrdnRhEXmPXIRhLwZqiiZeIfSgNBFuHjBd9Q0myjSVYWf+WcMKIOUxxmECbrn+
-         e9lVYVyQwTuuvVEcf18F4wbqwjSw3DQGq5OIthwXquPkA7wxoaqJJjug0HeqMwzAstqE
-         5Rd0tZ+L12mwlvg5yAncAOO5XrMhLAQDyVqLv0wEd4JQO1yN2ef9DFRAXuhsC6ya9pjX
-         7YC3tSrUgMzYL/q6Ak0OsqdJpcOyTC9POjxZcZ2/97ml6QWvm5SXYwM2oCSKXC8dBx3a
-         sQqBQdy3mPnO0OtsduKumQrda2L/rGzHjrFJ/ScVKebkcN/V87wyopq5F4RoezoRVUX4
-         WLTQ==
+        bh=gMeSaWB3mBAvtjNkA6eGhsBguuVj7QZcpMfuJTXudxI=;
+        b=ITZ49VwsmussKe+8nSouGlf7cH+/hTHh3COaMozwFHNR5AocbA+lfLHwSpbnu+dlf2
+         PIL5f6vEeFfDC6bR6VWFSExJKu5tfaqEHdJnwl3RlBB1eVWJEK6oRih9eg8rlLIp3eci
+         dAJo5mVOPM8vUIZxn3yRGOansEGFAvDIc2muk2c8aWEKzrysRWN8mPvkqzGvBlzNQ+L9
+         vlPxz4QXih0l/5nFFNYucgfDWjZ5ekKEhlqYj7p9qzTxZzq2CdbI/C8NOKJEaQSOOnib
+         ZMJddQp1WgA2bZGbQpz2ydUl3eT2J4ZtNiaNfNIvyvdsjI4dtNkgZUv1Am6BYhOA4qsp
+         pgwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704919338; x=1705524138;
+        d=1e100.net; s=20230601; t=1704919439; x=1705524239;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=moMdQyvpZb+yFFmaeKOhLAtjlEHiINBt0+BiPqeeG+o=;
-        b=KDift6R3l1qbBfHP6iZxt78VBCgTi77gw8MO0CyyorooYlukITFzZVkxLQauuQl63Y
-         yoXYUpz/RavUZpcSZWXILhxwOdEcVZILQT0JS2ZvKoyfGPT0lelQMZXzTJS0hd3Bw+zk
-         XYf4OK31L00ZwahJxpId04bUBGiRcrl/jYx7Jgbb2KYGfxN3uQS2GVZyK8m6p6CWQr6q
-         afF1Ud3rRXQgXiUmZQp4UOZW40gxwf1dPENfHzFBl6ER3/lC0FyEy24bYXCUygogvo4V
-         N9USx4y6dVXpHlI1zWBXmyb1J1+iLNPxHIADt4vksUWoS2KO5G4n67ofd1gMUdpLxqYY
-         ZH4g==
-X-Gm-Message-State: AOJu0YzDNRssBh2bi7qow9Q7cy8hYoFvDbReqf7KXMprEuPyzFgDI73I
-	GWmWloZ+ncmwrlTdyqhnmIxKfOCpRWgkbA==
-X-Google-Smtp-Source: AGHT+IEYPY+dI8vXySHn4mlRA5lrxAWNMaxi+jEyuOHkqd+GmfAOscy5J3HhUxAurzuXTXob65f/6g==
-X-Received: by 2002:aa7:c646:0:b0:557:17d5:9afe with SMTP id z6-20020aa7c646000000b0055717d59afemr28093edr.66.1704919338581;
-        Wed, 10 Jan 2024 12:42:18 -0800 (PST)
+        bh=gMeSaWB3mBAvtjNkA6eGhsBguuVj7QZcpMfuJTXudxI=;
+        b=qellQmen2aGbnbDh09VQtG63EPMWfawGyiNwdpMCVkbqW56AqscTbETjVu3cSP9FyY
+         mT9o606QkyCOKVJNb+zsKTeAxLqphUWsjk17yyuSrfY9hlYXs57dkTMP8XcGR0rjLRdP
+         4No9XEeoIZitJooUh98OY9JDTJnlQazFWDXEYphGQt4d0Y5ZvYSMznrq+9xIUs5k15mq
+         KlDvcC83FQ/thWsuLcGQ09JAqaaGgVDfh8BTKDcfkfOoIRYGtw+aCpWcTtqSl/QAqoDh
+         FZwV2InHpmF9UEHqVBVmDL9hJN4pJFNtS3mhkGKM9S/ZfdKrgwGMwvdGsgD2e/7NU4RG
+         471Q==
+X-Gm-Message-State: AOJu0YxztDTvihykVn9cf8FHC1rWnxRYIYuU7URX1KWTzRHpgPG/gjqK
+	19GgGMANTd7L8oxRGqm2UdWsV8wkyiZC2w==
+X-Google-Smtp-Source: AGHT+IFwa5sPlTNLRtgIzXRgzmENBDJvDYcW59BfLsiLOVACZSzNbAu47yMbVTATfbooPy3hVeDNtg==
+X-Received: by 2002:a5d:4a92:0:b0:337:33a:c880 with SMTP id o18-20020a5d4a92000000b00337033ac880mr42365wrq.26.1704919438773;
+        Wed, 10 Jan 2024 12:43:58 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id i25-20020aa7c719000000b005571c7e4934sm2321714edq.93.2024.01.10.12.42.16
+        by smtp.gmail.com with ESMTPSA id i25-20020aa7c719000000b005571c7e4934sm2321714edq.93.2024.01.10.12.43.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 12:42:17 -0800 (PST)
-Message-ID: <c89cf35d-35d0-450c-b6b5-e28183d3eb40@linaro.org>
-Date: Wed, 10 Jan 2024 21:42:15 +0100
+        Wed, 10 Jan 2024 12:43:57 -0800 (PST)
+Message-ID: <0f976e76-9f6b-4ec2-a39f-96ccb90f1a55@linaro.org>
+Date: Wed, 10 Jan 2024 21:43:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,20 +51,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/16] arm64: dts: ti: beagle*: Add MIT license along with
- GPL-2.0
+Subject: Re: [PATCH 1/6] dt-bindings: iio: pressure: honeywell,hsc030pa.yaml
+ add spi props
 Content-Language: en-US
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tero Kristo <kristo@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+To: Petre Rodan <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Ayush Singh
- <ayushdevel1325@gmail.com>, Jason Kridner <jkridner@beagleboard.org>,
- Robert Nelson <robertcnelson@gmail.com>, Tony Lindgren <tony@atomide.com>,
- Wadim Egorov <w.egorov@phytec.de>
-References: <20240110140903.4090946-1-nm@ti.com>
- <20240110140903.4090946-14-nm@ti.com>
+ Conor Dooley <conor+dt@kernel.org>
+References: <20240110172306.31273-1-petre.rodan@subdimension.ro>
+ <20240110172306.31273-2-petre.rodan@subdimension.ro>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -110,39 +107,15 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240110140903.4090946-14-nm@ti.com>
+In-Reply-To: <20240110172306.31273-2-petre.rodan@subdimension.ro>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/01/2024 15:09, Nishanth Menon wrote:
-> Modify license to include dual licensing as GPL-2.0-only OR MIT
-> license for device trees belonging to BeagleBoard.org Foundation
-> platforms. This allows for Linux kernel device tree to be used in
-> other Operating System ecosystems such as Zephyr or FreeBSD.
-> 
-> While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
-> with latest SPDX conventions (GPL-2.0 is deprecated).
-> 
-> While at this, update the copyright year to sync with current year
-> to indicate license change.
-> 
-> Cc: Ayush Singh <ayushdevel1325@gmail.com>
-> Cc: Jason Kridner <jkridner@beagleboard.org>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Cc: Robert Nelson <robertcnelson@gmail.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Wadim Egorov <w.egorov@phytec.de>
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
->  .../boot/dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso      | 4 ++--
->  .../boot/dts/ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso | 4 ++--
->  arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts            | 6 +++---
->  arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts        | 8 ++++----
->  4 files changed, 11 insertions(+), 11 deletions(-)
+On 10/01/2024 18:22, Petre Rodan wrote:
+> Add spi-peripheral-props.yaml requirement
 
+This we see. What we do not see is: why? Please fix commit msg.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
