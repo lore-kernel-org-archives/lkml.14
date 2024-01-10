@@ -1,147 +1,122 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348BE4D588;
-	Wed, 10 Jan 2024 19:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B244EB22
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NgrvD+9+"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40AHsQTF022052;
-	Wed, 10 Jan 2024 19:23:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=nrhDrGFKIB8w2f04JA38b
-	fiMatM+Hu0hgpaDjz3dieM=; b=NgrvD+9+RjJym5sNKEzicNITuWtyU+TPfhW4+
-	0B5x/QECXFaxewlSMRrouj3hViRI56CTq47N4uOhSYBeRO7XmjXHR3mRKYOmoYdy
-	oL+I3ygFBx0mfCdWrx65c3kuTm0EcFk8epQJoeax/hZsE9geJQoBOkgMlQnZggW7
-	QWwg1sBUPwAIRh6zL3r97pmU7DItrFq8bhyS/RWFp5SSsSNncp7uF2SMqD7WClAa
-	mDHszgMh0XiWFROdzeRPAN9apKjRhZhfCkmrn24Kuoy+VuNtVgV9ThwZvk9xhtAo
-	fwxCvyuUDTETOxab23ulVXfQoDfk/ntxKB1bJkSZfA3mWnKPA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhuak0yty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 19:23:31 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40AJNURT008042
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 19:23:30 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 10 Jan 2024 11:23:30 -0800
-Date: Wed, 10 Jan 2024 11:23:29 -0800
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-CC: Wesley Cheng <quic_wcheng@quicinc.com>, Johan Hovold <johan@kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Felipe Balbi
-	<balbi@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 11/12] usb: dwc3: qcom: Flatten the Qualcomm dwc3 binding
- and implementation
-Message-ID: <20240110192329.GN1315173@hu-bjorande-lv.qualcomm.com>
-References: <20231016-dwc3-refactor-v1-0-ab4a84165470@quicinc.com>
- <20231016-dwc3-refactor-v1-11-ab4a84165470@quicinc.com>
- <1c706807-a216-47cd-a1f6-0546bec27242@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fG4/0U93"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbed179f0faso3709628276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:24:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704914655; x=1705519455; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=00Yi17YMYf+/drsG/cIwBnmgomwMdlxbviIy1sqifXU=;
+        b=fG4/0U933WQXj73VK2hsqaHJiCASBCtnDnooc40hmELV7E9JmZBdSXEax5C5ecTIts
+         Kgy2G6O6GVJNM3GNN7hH/3MxaG8VKGl1I9b6hs3BaT7P0jUCewAinzE0xoSchFyNE49o
+         e/VGIH2X25jywU4gAv/uxgUaRV1gaPW802gzIDsgzpCuJyO0w3FpZuVFJrLhyPPyapPO
+         5djdgTsAcya7Eqm+bZSI98XhfGXm0cIm/VX5d3VosPlgKhfKfwcP8f7W7QoMkykTZFv+
+         krpeoK+aZFLocvqJaI1HhYabG0HFa3fIffBc2n1OFC/LTO6z5muglYoTxjejyAmdG0Dx
+         hU1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704914655; x=1705519455;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=00Yi17YMYf+/drsG/cIwBnmgomwMdlxbviIy1sqifXU=;
+        b=htud+k9WFGFrLFr0aNyW9BCedn70pfk0fjuVj9ks0CnWA/bMR5aXCabyaUbNIE88ck
+         n0DBl2XqoO6+aElSzeEQ5v+bpcpL1fm7esk0IMz9paB5K2KtukPucnU3aZHwoa29OS6h
+         dK+3NjFEcHVTudLIuc/Vpyb9fbUfosPc4wnsZEqY2r23hKDnvTMfDUOWQd0sDKeo49Bf
+         OJInP5TRLef0y6NQ18ahIvPjJ8H//rUVLjq8GwAAhN+ort5feGG8AxezrqovEhXfiUip
+         xZWT0sfN75sICqah/kzOODUSr+wnia9dIdeA+HYr7uQk5mWPyg/hvbSDekkkuVdMo47P
+         IUIA==
+X-Gm-Message-State: AOJu0YyjMbZL8iBvZHRLmBMtjgwGFgN+4A2XaqV3mKoaqOqvxSjcx5Eu
+	NNw02Any/PTBY9Zb5tjCDbYcAHBODxa9EEDy4GJqJDs0Zf+g
+X-Google-Smtp-Source: AGHT+IGK59DptdLBDkoMvQ5Mq82HCYvcaLO4aXCyrQUiVlQWIeFXtW818NFvZMbl9+P3PeQrUjB7YlAScK90ulv7518=
+X-Received: by 2002:a25:a121:0:b0:dbd:e213:4122 with SMTP id
+ z30-20020a25a121000000b00dbde2134122mr359240ybh.35.1704914654914; Wed, 10 Jan
+ 2024 11:24:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1c706807-a216-47cd-a1f6-0546bec27242@quicinc.com>
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: uOGjTk5EMndLSvJkqKLYerTH2kYHN0Ls
-X-Proofpoint-ORIG-GUID: uOGjTk5EMndLSvJkqKLYerTH2kYHN0Ls
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=469
- impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0 suspectscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401100154
+References: <931f2e6d-30a1-5f10-e879-65cb11c89b85@google.com> <20231222154037.62823-1-henry.hj@antgroup.com>
+In-Reply-To: <20231222154037.62823-1-henry.hj@antgroup.com>
+From: Yuanchu Xie <yuanchu@google.com>
+Date: Wed, 10 Jan 2024 11:24:02 -0800
+Message-ID: <CAJj2-QG3jJcA=71n5imx+OjhMapPMN-1bfT5XQRjswxOPG9MvA@mail.gmail.com>
+Subject: Re: [RFC v2] mm: Multi-Gen LRU: fix use mm/page_idle/bitmap
+To: Henry Huang <henry.hj@antgroup.com>
+Cc: rientjes@google.com, akpm@linux-foundation.org, 
+	=?UTF-8?B?6LCI6Ym06ZSL?= <henry.tjf@antgroup.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	=?UTF-8?B?5pyx6L6JKOiMtuawtCk=?= <teawater@antgroup.com>, yuzhao@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 08:43:23AM +0530, Krishna Kurapati PSSNV wrote:
-> 
-> 
-> On 10/17/2023 8:41 AM, Bjorn Andersson wrote:
-> > The USB block found in most Qualcomm platforms is modelled as three
-> > different independent device drivers, and represented in DeviceTree as
-> > two layered nodes. But as shown by the already existing layering
-> > violations in the Qualcomm glue driver they can not be operated
-> > independently.
-> > 
-> > In the current model, the probing of the core is asynchronous, and in a
-> > number of places there's risk that the driver dereferences NULL
-> > pointers, as it peeks into the core's drvdata.
-> > 
-> > There is also no way, in the current design to make the core notify the
-> > glue upon DRD mode changes. Among the past proposals have been attempts
-> > to provide a callback registration API, but as there is no way to know
-> > when the core is probed this doesn't work.
-> > 
-> > Based on the recent refactoring its now possible to instantiate the glue
-> > and core from a single representation of the DWC3 IP-block. This will
-> > also allow for the glue to pass a callback to be called for DRD mode
-> > changes.
-> > 
-> > The only overlapping handling between the Qualcomm glue and the core is
-> > the release of reset, which is left to the core to handle.
-> > 
-> 
-> Hi Bjorn,
-> 
->  I think the reset has to be handled by glue itself. I was testing this
-> series and found one issue:
-> 
->  During suspend, we suspend core first which will assert the reset and then
-> suspend the glue which will disable the clocks. This path doesn't seem to
-> have a problem somehow even in flattened implementation.
-> 
->  During resume, we resume the glue first and then resume the core. During
-> resume of glue, we enable the clocks and at this point, the reset is still
-> kept asserted causing the clocks to never turn ON leading to a crash. This
-> is the case in flattened implementation only as in normal case, the reset is
-> handled by glue and we never meddle with reset other than the time of
-> probing.
-> 
-> I tried to check if we explicitly de-assert the reset during start of resume
-> sequence of glue (in addition to the de-assertion present in core) and
-> things worked out fine. But if I try to balance the reset count and add an
-> assert at end of suspend sequence of glue (in addition to the assertion
-> present in core), then it crashes complaining a double assertion happened.
-> So double de-asserting is not causing a problem but double asserting is
-> causing an issue.
-> 
+On Fri, Dec 22, 2023 at 7:40=E2=80=AFAM Henry Huang <henry.hj@antgroup.com>=
+ wrote:
+> > - are pages ever shared between different memcg hierarchies?  You
+> >   mentioned sharing between processes in A and A/B, but I'm wondering
+> >   if there is sharing between two different memcg hierarchies where roo=
+t
+> >   is the only common ancestor?
+>
+> Yes, there is a another really common case:
+> If docker graph driver is overlayfs, different docker containers use the
+> same image, or share same low layers, would share file cache of public bi=
+n or
+> lib(i.e libc.so).
+Does this present a problem with setting memcg limits or OOMs? It
+seems like deterministically charging shared pages would be highly
+desirable. Mina Almasry previously proposed a memcg=3D mount option to
+implement deterministic charging[1], but it wasn't a generic sharing
+mechanism. Nonetheless, the problem remains, and it would be
+interesting to learn if this presents any issues for you.
 
-You're right. I looked at it briefly but ended up moving the reset
-handling in the wrong direction...
-
-I expect that in any scenario where a glue driver is used the core can
-not control the reset. So far we've dealt with this by just not telling
-the core about the reset.
-
-Thanks,
-Bjorn
-
-> Regards,
-> Krishna,
+[1] https://lore.kernel.org/linux-mm/20211120045011.3074840-1-almasrymina@g=
+oogle.com/
+>
+> > - do you anticipate a shorter scan period at some point?  Proactively
+> >   reclaiming all memory colder than one hour is a long time :)  Are you
+> >   concerned at all about the cost of doing your current idle bit
+> >   harvesting approach becoming too expensive if you significantly reduc=
+e
+> >   the scan period?
+>
+> We don't want the owner of the application to feel a significant
+> performance downgrade when using swap. There is a high risk to reclaim pa=
+ges
+> which idle age are less than 1 hour. We have internal test and
+> data analysis to support it.
+>
+> We disabled global swappiness and memcg swapinness.
+> Only proactive reclaim can swap anon pages.
+>
+> What's more, we see that mglru has a more efficient way to scan pte acces=
+s bit.
+> We perferred to use mglru scan help us scan and select idle pages.
+I'm working on a kernel driver/per-memcg interface to perform aging
+with MGLRU, including configuration for the MGLRU page scanning
+optimizations. I suspect scanning the PTE accessed bits for pages
+charged to a foreign memcg ad-hoc has some performance implications,
+and the more general solution is to charge in a predetermined way,
+which makes the scanning on behalf of the foreign memcg a bit cleaner.
+This is possible nonetheless, but a bit hacky. Let me know you have
+any ideas.
+>
+> > - is proactive reclaim being driven by writing to memory.reclaim, by
+> >   enforcing a smaller memory.high, or something else?
+>
+> Because all pages info and idle age are stored in userspace, kernel can't=
+ get
+> these information directly. We have a private patch include a new reclaim=
+ interface
+> to support reclaim pages with specific pfns.
+Thanks for sharing! It's been enlightening to learn about different
+prod environments.
