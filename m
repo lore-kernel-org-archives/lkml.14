@@ -1,212 +1,353 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8374D596
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804784D135
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cwRmSYe8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="A6G1OK3d"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40AHuFFZ013759;
-	Wed, 10 Jan 2024 19:02:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=VSgqL8fxgdGS4Ui+EL2Xl04XhTM9mXTC3F5bkf6j0E4=;
- b=cwRmSYe8A1FWnn3vgResFIHZVWqb4kHX8UDGVyzmZPY4QALJR44WetZStqfQvx2Zx8Uz
- dDlQhUKF/asv+SbsMkBMZMB+FA22F00WGKbeQX9M6/yuGlaRQkGYHnPnNB4M17jSHuz5
- apsTF25jp2JGnqemjJfl9j6GX275b7QM1YvK28y7UzMocs8jo4tzCk7M/sHnmZ7+ZGd4
- QLmBGcX2zQCrBrKJCerLvA35qsq2pBhvcj995YlmZW4vwm0prbfZ74IgxRp3i2D9RnhB
- GUWi4j8Qiep7o+Rae1kBSzmJ5+9+ep4uOikK+rMYswysuh8JnLFC+uwH9BsJDh2mzltQ 8Q== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vhs1x1456-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Jan 2024 19:02:08 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40AIhNPH035185;
-	Wed, 10 Jan 2024 19:02:08 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vfuu6j01u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Jan 2024 19:02:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V9dLYsPDvG8CUyic/MzzuFOGyFOoOh0pq+msST/aFNml37EhwuyYqvVres9Ero469Bi1UFuPoQpRETfmdoQe6ZKjl+3GfqG+YaheFXDFfLctC0ofbWWEvTXJ5fvYLl7zrFa+Xsy4WavCd3vkETe5s/2WcDg6mGwV6snpXFEDjSWL1eY9+eJKZzyr0HPcxZ6qVdsSdMvrK5YKlSm1+HQAVbzEKisoKCxMxLD3K8f7zvMrn50l5y+cDvDdYK/pa9FM1nFvEdn3zKF+Om0RuBIJ91sBJftRWmPIZYb6Rpa6dD4nQRbFZVebFIXJzh48VDBm2iT2IV0OZ/DRng+pAG+5AQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VSgqL8fxgdGS4Ui+EL2Xl04XhTM9mXTC3F5bkf6j0E4=;
- b=aFc782N76VNqynjy/hO6A0fFg9sd5x7gFuetLj9avE9ItV2TXqEEOzP4eOkp49jSHHLytErwJ5VL0lmMEOTT+js/eSdruWd9B1z2cLNETqxZo6pHZDU4zMaZiuUcB+ZaayHr2HGWymKqLvkjFtzwlvYjL9ZDuLkHUYxRfI8C53JXdn2cVlHQpNKKyyGhvZHaGIMDr+8CAK/JCIYaALrpXhRfhfKF8jwvExFW8ZbVnJf83Pub+xunEmYkShpFtWA/v72UolQwLnrpNfRLxOaVuhA0MSvuaiis2RpBaM2x22lwaDG0EQK7Luw4WW1kRKmR6WDjRBuCNHFPOymXuquHyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DrIxpTz3"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a28f66dc7ffso988846866b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:03:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VSgqL8fxgdGS4Ui+EL2Xl04XhTM9mXTC3F5bkf6j0E4=;
- b=A6G1OK3df/GyXjf/GVFjNui5kFk9qKjWZ2N4+rsXOxrmEqig8KfR3878KIF2kM2Y/P0giloBu0GsqDdJzy2U4/4bVuw+xmxM5K2jDBuKW5BR14vgqcYpnAKcdosIGlKP+F51tkQAeZrEIJVuQHYqFoXcZ4GbAlWhHzPbNxbYa/U=
-Received: from MN2SPR01MB0026.namprd10.prod.outlook.com (2603:10b6:208:cf::18)
- by SA2PR10MB4732.namprd10.prod.outlook.com (2603:10b6:806:fa::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.17; Wed, 10 Jan
- 2024 19:02:05 +0000
-Received: from MN2SPR01MB0026.namprd10.prod.outlook.com
- ([fe80::7dbd:113e:6ce0:23d3]) by MN2SPR01MB0026.namprd10.prod.outlook.com
- ([fe80::7dbd:113e:6ce0:23d3%7]) with mapi id 15.20.7181.015; Wed, 10 Jan 2024
- 19:02:05 +0000
-Message-ID: <1d866f1b-94b3-43ec-8f4c-2de31b82d3d1@oracle.com>
-Date: Wed, 10 Jan 2024 11:02:03 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm, oom: Add lru_add_drain() in __oom_reap_task_mm()
-To: Michal Hocko <mhocko@suse.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20240109091511.8299-1-jianfeng.w.wang@oracle.com>
- <ZZ5Zb3FYqY8FZgB3@tiehlicka>
-Content-Language: en-US
-From: Jianfeng Wang <jianfeng.w.wang@oracle.com>
-In-Reply-To: <ZZ5Zb3FYqY8FZgB3@tiehlicka>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR05CA0012.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::25) To MN2SPR01MB0026.namprd10.prod.outlook.com
- (2603:10b6:208:cf::18)
+        d=suse.com; s=google; t=1704913418; x=1705518218; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MW6HcicYJXEMmiKPUj92QCUpCKt9gXfWakdsfMe2Co8=;
+        b=DrIxpTz3JwT/BsCRQvuh+6hy4Ik32HkM32xWxAVnjWqWhPG484Oe+7Q85S3Ws31OYD
+         RHXjsR/V7JrKSB1r8ZJRa8NZcOlY1amydDBGDhRPiHwUDO9unJgKoa+2wFuzZSheRpuM
+         J++npLhZ/Ovj4cUjxtB6lQDQnJCYn3w+sCvK3axi+DUYtDXrQcDmujJkjMV78OMPbdti
+         4HpRh+XFE5MX62mjmR5++jygUSC+8O3yejIJDVCkr2X91BHu1esKAlkp2TfXG1TtZBx0
+         Ht1CbPhfyYqJ+qMnT8QyPFsgad+V6uPCBUtfLZdGVI1y+WuWM61oNl3/QLk8HwoG+wNR
+         hjYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704913418; x=1705518218;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MW6HcicYJXEMmiKPUj92QCUpCKt9gXfWakdsfMe2Co8=;
+        b=Z2+7IkNoXp8z46zWgr75w2PS9webb+PRp7OmfMHlV7nrHWNX8K9vS6sMmjNb0eM8Gg
+         BWY7eF1IMVNpnhrPiWgoq+cnmUyMlRWFKBE64VIogfW8OLLNFUzTs4nH2Kq+HNq1plpy
+         LSC3ca87EClT4l3iyg7mB3PJCDnSQfWuva91/x7nrsdyS4R+zfLS3LHdmPBtpjeUEcvQ
+         sYSlNVmkriGsKTNXCbQgW7MwzQoSXrBLljLRe4Crfe8SrfqletcWIxK4seMw6JBCkMW/
+         biV8CFNGTHDAyOpLzn9RiPIyqAFPQU/8mS68iEgbGsxv2Faoi8F23LdTbHtBAtG3rMGF
+         FW3Q==
+X-Gm-Message-State: AOJu0YzBGoZvLvV63jaQqOQ8rehAWrrH8xoAzBPXHXOvLv0ztrtRb23F
+	7Q0DzLSBlpghARWjmz7AjyeFAVcZvyLktbhRGaxMV8Qogw4=
+X-Google-Smtp-Source: AGHT+IH7C0oOjaNf1MRtCex6TPsLjtW/LsKYg3+etlmy5u4vTtYpCcZE0h32QPvlHn2PCmeT73ahYg==
+X-Received: by 2002:a17:907:1049:b0:a2b:42a:8e6 with SMTP id oy9-20020a170907104900b00a2b042a08e6mr552610ejb.21.1704913417783;
+        Wed, 10 Jan 2024 11:03:37 -0800 (PST)
+Received: from ?IPv6:2804:30c:1668:b300:8fcd:588d:fb77:ed04? ([2804:30c:1668:b300:8fcd:588d:fb77:ed04])
+        by smtp.gmail.com with ESMTPSA id mj22-20020a17090b369600b0028be0ec6e76sm1983906pjb.28.2024.01.10.11.03.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 11:03:37 -0800 (PST)
+Message-ID: <8c9698b7cabf76e783a0a1a6368de0c11134e659.camel@suse.com>
+Subject: Re: [PATCH v1 2/5] livepatch: Add klp-convert tool
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Petr Mladek <pmladek@suse.com>, Lukas Hruska <lhruska@suse.cz>
+Cc: Miroslav Benes <mbenes@suse.cz>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+ Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-kbuild@vger.kernel.org, Josh Poimboeuf
+ <jpoimboe@redhat.com>
+Date: Wed, 10 Jan 2024 16:03:32 -0300
+In-Reply-To: <ZZgEHFIbfCbSWy4N@alley>
+References: <20231106162513.17556-1-lhruska@suse.cz>
+	 <20231106162513.17556-3-lhruska@suse.cz> <ZZgEHFIbfCbSWy4N@alley>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2SPR01MB0026:EE_|SA2PR10MB4732:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1837f3f5-1b44-424a-ea73-08dc120ea306
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	V/P3aa4Unx2Uv2QG9V0n37hIlY+r8Meg0Vjd0XDaAduk6wAH5Z+xOVU+CD+SFTWNpCgvwaGnKrWUQxf7lGv60RPPu6kcvXIHKQTHBZxTsOytqn3yOg9eT+iDblNXj8g1mbLP0jAOYGezxogxo+JxW52CRxeaW4IAnNhwKoNcjMZIJ5i8P07bY6MTmN9a9ScDF4F0/GHEORgfpROuXkBiEtmKvwmbjQJaDcdhluCItDT70ZUOp6zsRYECz9NdOy7kPpOzwFfCUixkRmceoHEyIkA3MhyqEXazWpyHS8W9H7HSAzfb568aINkMxZntiJGc9iaSQrzNAnJ7wJi8zRvwAknQi7Aef8fa6LzaR1RcbwAdUPjLiA4gr29YfEy4yA3Qd3BEvgle+tkt2nWOl+P7XSsSRkpuleP/QSl08F4NjKk2qDRBWPDH4nymTKBBEscSjGI3h/NDTZ8PW1W46gcvpQf80zNK6p4gzbntwxEQ9n+CPcY2D7miozIScmUVWD2eZZQUgRqhVZyms1sYnXVoPbsw1dAgZCKY99nz3tD/UJ3rJHahkbkZMTo3q3AnPYhbi1NnXo8im7vET+V9d8XBvc7eqdxdLtamPc8UDljBH8fJ8akfqLZhuzhyMP6He1XVlke7wzknjgR4QFNZ9uea1Q==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2SPR01MB0026.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(39860400002)(136003)(346002)(396003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(31686004)(41300700001)(2906002)(4326008)(66899024)(53546011)(6506007)(478600001)(36756003)(6512007)(8936002)(8676002)(5660300002)(38100700002)(31696002)(66476007)(66556008)(26005)(6916009)(66946007)(2616005)(6486002)(86362001)(316002)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?ZWQvaXRSV0l4MFhaYldXei9hUk5MNGxoWGlmbm1uMXhvdkNFTHVUVCtNa1Jx?=
- =?utf-8?B?SzAwK3QrYjNEL1dsMlFaRzRGcFpMNzkwZXBWUS9qUnM0MTh5WWRJUUZrOU9o?=
- =?utf-8?B?bFVpNHF5NldYVVdSbTJGVDcwaGt1Y3JWYVRxU3hBL2JzaUlOcWkrc1k0Zjgr?=
- =?utf-8?B?dktQcDJIdHVqRFE3clIwcklhM1ZaUTBHL21GR0pVZEs2Q1FaQXYyV01VaEc0?=
- =?utf-8?B?L05UMjcyWGhrYzdyQ2hXcUFHNXBtQk5GS29wZW9zdk1FUzJpSzdsZ0d5TW0y?=
- =?utf-8?B?dzAraG50VDQ4Rm9sNG9lYlJ5QnBaODRQc0J6cGxBSk0xbUFTcGdlK1hPbktm?=
- =?utf-8?B?NmZPY2Q3dE52Sks3cFlNc1g3QXBhUTA3VDZhNlY5ZVF6dVF0cjNxeFRHaWpo?=
- =?utf-8?B?MzBFMjRZK1NLb3Nwek5vdEV5UmRLRDFLb3BEOTVMMFIzMm1TdDROZEc1R1h3?=
- =?utf-8?B?Y1d1ZHVFdGRTZC9IQVRxSklsLzJMOVc4NGpqbXR1OE9NZ1FmcEpCQnhGNVQ5?=
- =?utf-8?B?WG14REV1MC84QVMybkFja29BR1JLUEVIL25sSmtSdXM1Q2VOY3VGYllJazJo?=
- =?utf-8?B?aHlRNEc3eVRnemVHUW1acEJSRyt4b096c1FaNUNtak5TcGxHR2RINlBORDRj?=
- =?utf-8?B?NkVBOGZ5TFB1cU1sbHhySU93V1JIOENTbmI4dVMvWU9Qczc0SnZFZ2FUdGIr?=
- =?utf-8?B?WDRvakJoVFh2QXE3ZWVseitjV2dFSkJGWGpxc0hhSlU2b3ZoOFIrOWl0eDBF?=
- =?utf-8?B?V1RUMWJPS3FqMlhyQ0lHV3dBZ0ZaTU5XL2VmZ2Eyb0NNY0t0NVFmK0YrZlRZ?=
- =?utf-8?B?TkNPOVlTbDN0Ulk4R1pXQzlZNnZGRHJveDdKV2RQUjNpcExMdUVTNldKaHJi?=
- =?utf-8?B?L2JWSENIdHVCbFU1a3ZWcWlZNXlSdzFrMUlLSDR3WTZ1N0JMS0YwcVRhMFNC?=
- =?utf-8?B?Y1pCWVJIS29WbkZVR05TcFF2OVlnUG9NRlBqRkdEUGxtZEVyTURmUkFKYXQy?=
- =?utf-8?B?NS8zNTcxZHU4MnJDNEt2dStzVE9DTWEwSGVqbzVGTGNzUyt3bWRqaVVqT01R?=
- =?utf-8?B?eDRhZXFqSGsyTnJvTll4cDMxaFE1dXlZanVMUHJqSGpFa3NCTDluWUluVGRG?=
- =?utf-8?B?VjhLRXFUNWJ3YnBPN2FSVGxYUTJHRWJrdjZpT2p1UFkvOGhZcnhiVWJSRjc0?=
- =?utf-8?B?SHVoV3RQSDhrcUdxemlSa3VtM0tsZ0ZwQWxWZjVUM1dVTnYrbHJTazVERDdy?=
- =?utf-8?B?NTJ5NGE2TVRGN2g3RWpnb00zUjVCZFl6bVJmOUo2NHRhVnB1dFZIbWVyODNH?=
- =?utf-8?B?TkprSXp1aTRRRFNoblFxUUxuOGdwZFJMWGtoclB5d21IRE9uOFU3amF2VU5B?=
- =?utf-8?B?amoxMkpKRURJZkp3T0tGUDZFMGZMcHZ3RkZEakxlWE82YmZNSitNQzg4dTFt?=
- =?utf-8?B?bzgzeGdSRHZJalZmUG4yV1lvWFZpZHU5MHJFbG9hTkoyQ3JxTVFFTFFFbmV4?=
- =?utf-8?B?TG5HVFRUUUREUlBZS0g3YnpHa1pVa2xSbW1CWkMzYklVU0ZpVnBEMWFvckhw?=
- =?utf-8?B?MzNYME1SSDFmaXpkUm83VkdMdFZYb1BhTm0zdCt2a2d2eG9taDFXUkNEci9L?=
- =?utf-8?B?NFhMU0djanA3YWJMczBVQlNDWW1yV2JnK0pOMmR5R1prT1FQamJDS04rc25z?=
- =?utf-8?B?L05rb2VxVGtjb3dPcXI4U2tzT3Y5dXFpbmhXOW5vbTZOcVMwV3FqOEZ5Q0Iy?=
- =?utf-8?B?dGVkV1Q4eUZ3ZldEZGlJaE9WUkJwU2JiN1B3NWV1TlJkRUN5SEF3eVNiUTI5?=
- =?utf-8?B?RWtwWVhmNU5vK28ybG94QjFtK1ZPU2x2S2tVZmNhUVI1QTFTZ09GemwvNTNw?=
- =?utf-8?B?bWNKMEdwdDBmOEpLN0xyTzA5V0xZV2lTeUV5TmRLZSt1SU5iTE1tV3R4Ykds?=
- =?utf-8?B?RnoxRUJ0M3M3eWpJc1RNeW0xYU1xM002LzhzYjc1YlZlZlJjVGJsTkNSM3Zw?=
- =?utf-8?B?b2cxcUpjbnBRUW9SdXdRSG4vRVJSZ1B0d0dvYlFtSmM2NzRndWpvZHkrdTk0?=
- =?utf-8?B?TUdtMEVhbk5kdFZWM1pXNmlhaEtGbmxSY0VPZVh3TmQ1RTg1Z2NsNzdPYWRJ?=
- =?utf-8?B?UlpvMDRtWmNzdCt4dFA3N3Y5eERXOXJUeXMyWTErcXFYL2RSYTZIUTVYN0ls?=
- =?utf-8?B?VEE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	YnECjRuwQa44UiS3DC5xZle9DJ+yxJuogJcnF0JIuGgyUjdl58UpYYh3k4zsjyOk/NM814x9xh47wajSMpvWgSfr9vckrIjrrNFDh2hNgZ1d2y/SY//6M+V11qirUXbJxkyLsuUCo0ZkOFnbvAXEGhgv/u+q8/M1F2UCNcGI/PzsA8/leJ+qWqgJMLqNrJKhvwlvjJpp8s4GayZa7qo+7H4szLyNHd8ViR8liCHG3obYvhtwAEFRZszfkXXidJbt8hCQuF4WgAOwo3Q7OKxc5hVWi+9yTegOmObaIpTqRGLbydDdbhf459AjjWXvxzrxcWE3ohdY0W/TCqsCbJZ+agQVjuL8XkBJvMo1tL7/jXqucphOlyTwPWOpFXJERUNQTF5Wryiqvw2esvWzKgH6I1bStM0NVs5eUyVYtdxG3IH06y/BWiWTkRUIwUOf2oPpNYhfZdnph/phiIB2y5LmWiDYzuH209Ak+1JhzgEu0Y4LsbD+FvBizmMEbcAoUT4QIEP04zMU+ivk1X1P4hUWyBrsLLIL9yprpJDBTDDj6J+iq54P9aLUFKv2cGmZKwjjuZCgeWf1he1hxH3FrbinQX7BNTqV8jeDqPh4h25HW+8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1837f3f5-1b44-424a-ea73-08dc120ea306
-X-MS-Exchange-CrossTenant-AuthSource: MN2SPR01MB0026.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 19:02:05.5576
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SgUjk97G21OzrySsi4m4EuNwIdjk+bwPwzVVIOWO0TA5jdC1eyDKFyF3yY6cbYXKEZXvYCYHYHfo97xgyV7dQm27APRolf9AUHxLKeAUw5Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4732
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-10_10,2024-01-10_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401100150
-X-Proofpoint-ORIG-GUID: 377hpacGuYWh-AfQOTnnX9-ZgMOMA6sG
-X-Proofpoint-GUID: 377hpacGuYWh-AfQOTnnX9-ZgMOMA6sG
 
-On 1/10/24 12:46 AM, Michal Hocko wrote:
-> On Tue 09-01-24 01:15:11, Jianfeng Wang wrote:
->> The oom_reaper tries to reclaim additional memory owned by the oom
->> victim. In __oom_reap_task_mm(), it uses mmu_gather for batched page
->> free. After oom_reaper was added, mmu_gather feature introduced
->> CONFIG_MMU_GATHER_NO_GATHER (in 'commit 952a31c9e6fa ("asm-generic/tlb:
->> Introduce CONFIG_HAVE_MMU_GATHER_NO_GATHER=y")', an option to skip batched
->> page free. If set, tlb_batch_pages_flush(), which is responsible for
->> calling lru_add_drain(), is skipped during tlb_finish_mmu(). Without it,
->> pages could still be held by per-cpu fbatches rather than be freed.
->>
->> This fix adds lru_add_drain() prior to mmu_gather. This makes the code
->> consistent with other cases where mmu_gather is used for freeing pages.
-> 
-> Does this fix any actual problem or is this pure code consistency thing?
-> I am asking because it doesn't make much sense to me TBH, LRU cache
-> draining is usually important when we want to ensure that cached pages
-> are put to LRU to be dealt with because otherwise the MM code wouldn't
-> be able to deal with them. OOM reaper doesn't necessarily run on the
-> same CPU as the oom victim so draining on a local CPU doesn't
-> necessarily do anything for the victim's pages.
-> 
-> While this patch is not harmful I really do not see much point in adding
-> the local draining here. Could you clarify please?
-> 
-It targets the case described in the patch's commit message: oom_killer
-thinks that it 'reclaims' pages while pages are still held by per-cpu
-fbatches with a ref count.
+On Fri, 2024-01-05 at 14:29 +0100, Petr Mladek wrote:
+> On Mon 2023-11-06 17:25:10, Lukas Hruska wrote:
+> > Livepatches need to access external symbols which can't be handled
+> > by the normal relocation mechanism. It is needed for two types
+> > of symbols:
+> >=20
+> > =C2=A0 + Symbols which can be local for the original livepatched
+> > function.
+> > =C2=A0=C2=A0=C2=A0 The alternative implementation in the livepatch sees=
+ them
+> > =C2=A0=C2=A0=C2=A0 as external symbols.
+> >=20
+> > =C2=A0 + Symbols in modules which are exported via EXPORT_SYMBOL*().
+> > They
+> > =C2=A0=C2=A0=C2=A0 must be handled special way otherwise the livepatch =
+module
+> > would
+> > =C2=A0=C2=A0=C2=A0 depend on the livepatched one. Loading such livepatc=
+h would
+> > cause
+> > =C2=A0=C2=A0=C2=A0 loading the other module as well.
+> >=20
+> > The address of these symbols can be found via kallsyms. Or they can
+>=20
+> Please, remove the extra space at the end of the line.
+>=20
+> > be relocated using livepatch specific relocation sections as
+> > specified
+> > in Documentation/livepatch/module-elf-format.txt.
+> >=20
+> > Currently, there is no trivial way to embed the required
+> > information as
+> > requested in the final livepatch elf object. klp-convert solves
+> > this
+> > problem by using annotations in the elf object to convert the
+> > relocation
+> > accordingly to the specification, enabling it to be handled by the
+> > livepatch loader.
+> >=20
+> > Given the above, create scripts/livepatch to hold tools developed
+> > for
+> > livepatches and add source files for klp-convert there.
+> >=20
+> > Allow to annotate such external symbols in the livepatch by a macro
+> > KLP_RELOC_SYMBOL(). It will create symbol with all needed
+> > metadata. For example:
+> >=20
+> > =C2=A0 extern char *saved_command_line \
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 KLP_RELOC_SYMBOL(vmlinux, vmlinux,
+> > saved_command_line, 0);
+> >=20
+> > would create symbol
+> >=20
+> > $>readelf -r -W <compiled livepatch module>:
+> > Relocation section '.rela.text' at offset 0x32e60 contains 10
+> > entries:
+> > =C2=A0=C2=A0=C2=A0 Offset=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 Info=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Type=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Symbol's
+> > Value=C2=A0 Symbol's Name + Addend
+> > [...]
+> > 0000000000000068=C2=A0 0000003c00000002 R_X86_64_PC32=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > 0000000000000000 .klp.sym.rela.vmlinux.vmlinux.saved_command_line,0
+> > - 4
+> > [...]
+> >=20
+> >=20
+> > Also add scripts/livepatch/klp-convert. The tool transforms symbols
+> > created by KLP_RELOC_SYMBOL() to object specific rela sections
+> > and rela entries which would later be proceed when the livepatch
+> > or the livepatched object is loaded.
+> >=20
+> > For example, klp-convert would replace the above symbols with:
+>=20
+> s/above symbols/above symbol/
+>=20
+> > $> readelf -r -W <livepatch_module_proceed_by_klp_convert>
+> > Relocation section '.klp.rela.vmlinux.text' at offset 0x5cb60
+> > contains 1 entry:
+> > =C2=A0=C2=A0=C2=A0 Offset=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 Info=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Type=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Symbol's
+> > Value=C2=A0 Symbol's Name + Addend
+> > 0000000000000068=C2=A0 0000003c00000002 R_X86_64_PC32=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > 0000000000000000 .klp.sym.vmlinux.saved_command_line,0 - 4
+> >=20
+> > klp-convert relies on libelf and on a list implementation. Add
+> > files
+> > scripts/livepatch/elf.c and scripts/livepatch/elf.h, which are a
+> > libelf
+> > interfacing layer and scripts/livepatch/list.h, which is a list
+> > implementation.
+> >=20
+> > Update Makefiles to correctly support the compilation of the new
+> > tool,
+> > update MAINTAINERS file and add a .gitignore file.
+> >=20
+> > ---
+> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
+=C2=A0 1 +
+> > =C2=A0include/linux/livepatch.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 19 +
+> > =C2=A0scripts/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0scripts/livepatch/.gitignore=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0scripts/livepatch/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
+=C2=A0 5 +
+> > =C2=A0scripts/livepatch/elf.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 817
+> > ++++++++++++++++++++++++++++++++
+> > =C2=A0scripts/livepatch/elf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0 73 +++
+>=20
+> I see a similar code in
+>=20
+> =C2=A0=C2=A0=C2=A0 tools/objtool/elf.c
+> =C2=A0=C2=A0=C2=A0 tools/objtool/include/objtool/elf.h
+>=20
+> Both variants have been written by Josh. I wonder if we could share
+> one implementation. Josh?
+>=20
+> > =C2=A0scripts/livepatch/klp-convert.c | 283 +++++++++++
+> > =C2=A0scripts/livepatch/klp-convert.h |=C2=A0 42 ++
+> > =C2=A0scripts/livepatch/list.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 391 +++++++++++++++
+>=20
+> And probably also the list.h
 
-I admit that pages may sit on a different core(s). Given that
-doing remote calls to all CPUs with lru_add_drain_all() is expensive,
-this line of code can be helpful if it happens to give back a few pages
-to the system right away without the overhead, especially when oom is
-involved. Plus, it also makes the code consistent with other places
-using mmu_gather feature to free pages in batch.
+I understand that code that live on tools/ are usually self contained,
+so I'm not sure how can this code be shared. Is it advisable to add
+list.h, elf.h to tools/include/tools? I'm not sure about the elf.c
+tough.
 
---JW
+>=20
+> > =C2=A010 files changed, 1633 insertions(+)
+> > =C2=A0create mode 100644 scripts/livepatch/.gitignore
+> > =C2=A0create mode 100644 scripts/livepatch/Makefile
+> > =C2=A0create mode 100644 scripts/livepatch/elf.c
+> > =C2=A0create mode 100644 scripts/livepatch/elf.h
+> > =C2=A0create mode 100644 scripts/livepatch/klp-convert.c
+> > =C2=A0create mode 100644 scripts/livepatch/klp-convert.h
+> > =C2=A0create mode 100644 scripts/livepatch/list.h
+> >=20
+> > --- /dev/null
+> > +++ b/scripts/livepatch/klp-convert.c
+> > @@ -0,0 +1,283 @@
+> [...]
+> > +/* Converts rela symbol names */
+> > +static bool convert_symbol(struct symbol *s)
+> > +{
+> > +	char lp_obj_name[MODULE_NAME_LEN];
+> > +	char sym_obj_name[MODULE_NAME_LEN];
+> > +	char sym_name[KSYM_NAME_LEN];
+> > +	char *klp_sym_name;
+> > +	unsigned long sym_pos;
+> > +	int poslen;
+> > +	unsigned int length;
+> > +
+> > +	static_assert(MODULE_NAME_LEN <=3D 56, "Update limit in the
+> > below sscanf()");
+>=20
+> IMHO, there should be "< 56" instead of "<=3D 56". The sscanf is
+> limited by %55.
+>=20
+> Also we should check KSYM_NAME_LEN. Similar to to check in
+> klp_resolve_symbols()
+>=20
+> 	static_assert(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN !=3D 512,
+> 		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Update limit in the below sscanf()");
+>=20
+> > +
+> > +	if (sscanf(s->name, KLP_SYM_RELA_PREFIX
+> > "%55[^.].%55[^.].%511[^,],%lu",
+> > +			lp_obj_name, sym_obj_name, sym_name,
+> > &sym_pos) !=3D 4) {
+> > +		WARN("Invalid format of symbol (%s)\n", s->name);
+> > +		return false;
+> > +	}
+> > +
+> > +	poslen =3D calc_digits(sym_pos);
+> > +
+> > +	length =3D strlen(KLP_SYM_PREFIX) + strlen(sym_obj_name)
+> > +		 + strlen(sym_name) + sizeof(poslen) + 3;
+> > +
+> > +	klp_sym_name =3D calloc(1, length);
+> > +	if (!klp_sym_name) {
+> > +		WARN("Memory allocation failed (%s%s.%s,%lu)\n",
+> > KLP_SYM_PREFIX,
+> > +				sym_obj_name, sym_name, sym_pos);
+> > +		return false;
+> > +	}
+> > +
+> > +	if (safe_snprintf(klp_sym_name, length, KLP_SYM_PREFIX
+> > "%s.%s,%lu",
+> > +			=C2=A0 sym_obj_name, sym_name, sym_pos)) {
+> > +
+> > +		WARN("Length error (%s%s.%s,%lu)", KLP_SYM_PREFIX,
+> > +				sym_obj_name, sym_name, sym_pos);
+> > +		free(klp_sym_name);
+> > +		return false;
+> > +	}
+> > +
+> > +	s->name =3D klp_sym_name;
+> > +	s->sec =3D NULL;
+> > +	s->sym.st_name =3D -1;
+> > +	s->sym.st_shndx =3D SHN_LIVEPATCH;
+> > +
+> > +	return true;
+> > +}
+> > +
+> > diff --git a/scripts/livepatch/klp-convert.h
+> > b/scripts/livepatch/klp-convert.h
+> > new file mode 100644
+> > index 000000000000..34842c50c711
+> > --- /dev/null
+> > +++ b/scripts/livepatch/klp-convert.h
+> > @@ -0,0 +1,42 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2016 Josh Poimboeuf <jpoimboe@redhat.com>
+> > + * Copyright (C) 2017 Joao Moreira=C2=A0=C2=A0 <jmoreira@suse.de>
+> > + *
+> > + */
+> > +
+> > +#define SHN_LIVEPATCH		0xff20
+> > +#define SHF_RELA_LIVEPATCH	0x00100000
+> > +#define MODULE_NAME_LEN		(64 - sizeof(GElf_Addr))
+> > +#define WARN(format, ...) \
+> > +	fprintf(stderr, "klp-convert: " format "\n",
+> > ##__VA_ARGS__)
+> > +
+> > +struct sympos {
+> > +	char *symbol_name;
+> > +	char *object_name;
+> > +	char *loading_obj_name;
+> > +	int pos;
+> > +};
+>=20
+> It seems that this structure is not longer used.
+>=20
+> > +/*
+> > + * klp-convert uses macros and structures defined in the linux
+> > sources
+> > + * package (see include/uapi/linux/livepatch.h). To prevent the
+> > + * dependency when building locally, they are defined below. Also
+> > notice
+> > + * that these should match the definitions from the targeted
+> > kernel.
+> > + */
+> > +
+> > +#define KLP_RELA_PREFIX			".klp.rela."
+> > +#define KLP_SYM_RELA_PREFIX		".klp.sym.rela."
+> > +#define KLP_SYM_PREFIX			".klp.sym."
+> > +
+> > +#ifndef __packed
+> > +#define __packed=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __attribute=
+__((packed))
+> > +#endif
+> > +
+> > +struct klp_module_reloc {
+> > +	union {
+> > +		void *sym;
+> > +		uint64_t sym64;	/* Force 64-bit width */
+> > +	};
+> > +	uint32_t sympos;
+> > +} __packed;
+>=20
+> And this one as well.
+>=20
+> I do not see any other obvious problem. And it seems to work
+> at least for the later added sample module.
 
->> Signed-off-by: Jianfeng Wang <jianfeng.w.wang@oracle.com>
->> ---
->>  mm/oom_kill.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
->> index 9e6071fde34a..e2fcf4f062ea 100644
->> --- a/mm/oom_kill.c
->> +++ b/mm/oom_kill.c
->> @@ -537,6 +537,7 @@ static bool __oom_reap_task_mm(struct mm_struct *mm)
->>  			struct mmu_notifier_range range;
->>  			struct mmu_gather tlb;
->>  
->> +			lru_add_drain();
->>  			mmu_notifier_range_init(&range, MMU_NOTIFY_UNMAP, 0,
->>  						mm, vma->vm_start,
->>  						vma->vm_end);
->> -- 
->> 2.42.1
->>
-> 
+I agree with Petr in all his other comments. With the comments
+addressed, you can add:
+
+Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+
+>=20
+> Best Regards,
+> Petr
+
