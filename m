@@ -1,117 +1,214 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704AC3EA9E;
-	Wed, 10 Jan 2024 09:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23C23EA9F;
+	Wed, 10 Jan 2024 09:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RA0XWxP/"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40A8ctMN016855;
-	Wed, 10 Jan 2024 09:56:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=Js4kw6Z7/PgHtkYTNH23saebQTFsZ2uq7LYKYHCHAV4=; b=RA
-	0XWxP/ZGS7IEeihqTnztDTaR8XcfsYXzw0AhpYWZhlTwmNYEkX6j39VzCPyw3oBx
-	GAY8d+ZotwSeNSLywkVXACq+wTUgDX/DCxel1B9QZZQERGxeZB1L7idChP0t/lh1
-	1RHcbQGuPd9TUb5qPno0721ofmEyzOmuUkHV6nP61pvMfs3n6HCYOM3EXK3/zFGg
-	U0nQbvUCqHiPmlAolLQNq/ahoS1y+xdA66ysjerC55al4847GUfb7vjPkTIdtPZ1
-	tb7A+a2bdXC26bUEnDIJ11aSteQWtFhz7VO0xXffUuh4oQ/muDXBdj+ic3bw+LCI
-	p0F+lLmjEH5/P3ubCquw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhkem0p4p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 09:56:33 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40A9uWNk031376
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 09:56:32 GMT
-Received: from hu-uaggarwa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 10 Jan 2024 01:56:29 -0800
-From: Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        "Uttkarsh
- Aggarwal" <quic_uaggarwa@quicinc.com>
-Subject: [RFC PATCH] usb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend
-Date: Wed, 10 Jan 2024 15:25:32 +0530
-Message-ID: <20240110095532.4776-1-quic_uaggarwa@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8ibeTC8"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-50e7b273352so4116178e87.1;
+        Wed, 10 Jan 2024 01:56:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704880610; x=1705485410; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NpW13ArSUR3hiGaGG4MBnpyKypHsipH6j/gs/ejQL1g=;
+        b=L8ibeTC8T3qVuLihUWPlaWUJbkLeC2xm+e4BN89Y6d5MrX7Fl4K7FHSRXtJaE+QFfi
+         +qg4WJfLnLcwGkcPi6JGxbSkR2+3QpJyhhEYMI9O5vgYUdznpt9ZHQV1bd9QcaTTNgbw
+         KQYogJOJn1Id6ZMNz1LKrxhCJPeB6EoSvdl12By9qbKdtujko4dfJBwurY95kMEJsoeT
+         xAWBS9Z7OvlcfsCTIkF2X+AlgJi6mNxMBfwAQK2s61bE+RpNsdpHmyi6T4qWUPbfIxII
+         1g6k5kvzrRSzWg27+ZzK4l3PkI/ZVKPZlHdURL16E+v3FicCwh+iYsEh0bwsJfQu3NLK
+         RQXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704880610; x=1705485410;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NpW13ArSUR3hiGaGG4MBnpyKypHsipH6j/gs/ejQL1g=;
+        b=Ae7aCHZna1lJQTsi8fzWzlkTLLsnHlEpHnrdGbpShM4RyoQjRmSECDPUeQY7MSG2C3
+         6MVDkYamPK41Iy2r7u8PiNjPzUc9dkbiNw198UrHHJLrUIIUi8TyOL2wygAQ4XCJWRZt
+         7wt/KRIqRotMVqgOfZ9sCJPxK2hyXKKdI412i638UG63VAkBb4TM7B6X33knFlYnBOxX
+         2N9WTTUf/3d9MIf41lKeNtgpGRNH6UiJzAu6g2XtQ/ZTKC0Jy1OZIka4bdxDBT5l8/N8
+         ubzIGoI+2bCBOosjl0Ztd2xomEIt2nvWisJQ0p6GnhzZcXHGoTgiQxNVWKYxv+8vF6Rw
+         NcsA==
+X-Gm-Message-State: AOJu0YwvbHBfxya1yBcFDFdP/xgLAfK1H/edd61TPFTTYz8J//TyqsID
+	fIS+AuQllYOJlZdv8/ENarw=
+X-Google-Smtp-Source: AGHT+IFZX1SYitdtL/PrGHK/QPZ4ajIdAjRbAxPJ8ut2kihr+QX5/b+FNeiGkhlOo5ECcM2O5oqMDQ==
+X-Received: by 2002:a05:6512:3b8b:b0:50e:4389:12c5 with SMTP id g11-20020a0565123b8b00b0050e438912c5mr395125lfv.14.1704880610146;
+        Wed, 10 Jan 2024 01:56:50 -0800 (PST)
+Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
+        by smtp.gmail.com with ESMTPSA id l4-20020a170906a40400b00a2bfd60c6a8sm126314ejz.80.2024.01.10.01.56.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 01:56:48 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 10 Jan 2024 10:56:46 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: jpoimboe@kernel.org, mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
+	x86@kernel.org, leit@meta.com, linux-kernel@vger.kernel.org,
+	pawan.kumar.gupta@linux.intel.com, bpf@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v6 00/13] x86/bugs: Add a separate config for each
+ mitigation
+Message-ID: <ZZ5p3vdnTtU5TeJe@gmail.com>
+References: <20231121160740.1249350-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: mbs42UuGAXrU9ZJOx4Rvp_0Hob1r80-a
-X-Proofpoint-GUID: mbs42UuGAXrU9ZJOx4Rvp_0Hob1r80-a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- mlxlogscore=471 impostorscore=0 phishscore=0 bulkscore=1 suspectscore=0
- lowpriorityscore=1 spamscore=0 priorityscore=1501 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401100081
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231121160740.1249350-1-leitao@debian.org>
 
-In current scenario if Plug-out and Plug-In performed continuously
-there could be a chance while checking for dwc->gadget_driver in
-dwc3_gadget_suspend, a NULL pointer dereference may occur.
 
-Call Stack:
+* Breno Leitao <leitao@debian.org> wrote:
 
-	CPU1:                           CPU2:
-	gadget_unbind_driver            dwc3_suspend_common
-	dw3_gadget_stop                 dwc3_gadget_suspend
-                                        dwc3_disconnect_gadget
+> Currently, the CONFIG_SPECULATION_MITIGATIONS is halfway populated,
+> where some mitigations have entries in Kconfig, and they could be
+> modified, while others mitigations do not have Kconfig entries, and
+> could not be controlled at build time.
+> 
+> The fact of having a fine grained control can help in a few ways:
+> 
+> 1) Users can choose and pick only mitigations that are important for
+> their workloads.
+> 
+> 2) Users and developers can choose to disable mitigations that mangle
+> the assembly code generation, making it hard to read.
+> 
+> 3) Separate configs for just source code readability,
+> so that we see *which* butt-ugly piece of crap code is for what
+> reason.
+> 
+> Important to say, if a mitigation is disabled at compilation time, it
+> could be enabled at runtime using kernel command line arguments.
+> 
+> Discussion about this approach:
+> https://lore.kernel.org/all/CAHk-=wjTHeQjsqtHcBGvy9TaJQ5uAm5HrCDuOD9v7qA9U1Xr4w@mail.gmail.com/
+> and
+> https://lore.kernel.org/lkml/20231011044252.42bplzjsam3qsasz@treble/
+> 
+> In order to get the missing mitigations, some clean up was done.
+> 
+> 1) Get a namespace for mitigations, prepending MITIGATION to the Kconfig
+> entries.
+> 
+> 2) Adding the missing mitigations, so, the mitigations have entries in the
+> Kconfig that could be easily configure by the user.
+> 
+> With this patchset applied, all configs have an individual entry under
+> CONFIG_SPECULATION_MITIGATIONS, and all of them starts with CONFIG_MITIGATION.
 
-CPU1 basically clears the variable and CPU2 checks the variable.
-Consider CPU1 is running and right before gadget_driver is cleared
-and in parallel CPU2 executes dwc3_gadget_suspend where it finds
-dwc->gadget_driver which is not NULL and resumes execution and then
-CPU1 completes execution. CPU2 executes dwc3_disconnect_gadget where
-it checks dwc->gadget_driver is already NULL because of which the
-NULL pointer deference occur.
+Yeah, so:
 
-To prevent this, moving NULL pointer check inside of spin_lock.
+ - I took this older series and updated it to current upstream, and made
+   sure all renames were fully done: there were two new Kconfig option
+   uses, which I integrated into the series. (Sorry about the delay, holiday & stuff.)
 
-Signed-off-by: Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>
----
- drivers/usb/dwc3/gadget.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ - I also widened the renames to comments and messages, which were not
+   always covered.
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 019368f8e9c4..564976b3e2b9 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -4709,15 +4709,13 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
- 	unsigned long flags;
- 	int ret;
- 
--	if (!dwc->gadget_driver)
--		return 0;
--
- 	ret = dwc3_gadget_soft_disconnect(dwc);
- 	if (ret)
- 		goto err;
- 
- 	spin_lock_irqsave(&dwc->lock, flags);
--	dwc3_disconnect_gadget(dwc);
-+	if (dwc->gadget_driver)
-+		dwc3_disconnect_gadget(dwc);
- 	spin_unlock_irqrestore(&dwc->lock, flags);
- 
- 	return 0;
--- 
-2.17.1
+ - Then I took this cover letter and combined it with a more high level
+   description of the reasoning behind this series I wrote up, and added it
+   to patch #1. (see it below.)
 
+ - Then I removed the changelog repetition from the other patches and just
+   referred them back to patch #1.
+
+ - Then I stuck the resulting updated series into tip:x86/bugs, without the 
+   last 3 patches that modify behavior.
+
+ - You might notice the somewhat weird extra whitespaces in the titles - 
+   I've done that so that it all looks tidy in the shortlog:
+
+   Breno Leitao (10):
+      x86/bugs: Rename CONFIG_GDS_FORCE_MITIGATION => CONFIG_MITIGATION_GDS_FORCE
+      x86/bugs: Rename CONFIG_CPU_IBPB_ENTRY       => CONFIG_MITIGATION_IBPB_ENTRY
+      x86/bugs: Rename CONFIG_CALL_DEPTH_TRACKING  => CONFIG_MITIGATION_CALL_DEPTH_TRACKING
+      x86/bugs: Rename CONFIG_PAGE_TABLE_ISOLATION => CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+      x86/bugs: Rename CONFIG_RETPOLINE            => CONFIG_MITIGATION_RETPOLINE
+      x86/bugs: Rename CONFIG_SLS                  => CONFIG_MITIGATION_SLS
+      x86/bugs: Rename CONFIG_CPU_UNRET_ENTRY      => CONFIG_MITIGATION_UNRET_ENTRY
+      x86/bugs: Rename CONFIG_CPU_IBRS_ENTRY       => CONFIG_MITIGATION_IBRS_ENTRY
+      x86/bugs: Rename CONFIG_CPU_SRSO             => CONFIG_MITIGATION_SRSO
+      x86/bugs: Rename CONFIG_RETHUNK              => CONFIG_MITIGATION_RETHUNK
+
+I think the resulting tree is all mostly good, but still I'd like to see 
+just the 10 pure low-risk renames done in this first step, to not carry too 
+much of this around unnecessarily - maybe even send it Linuswards in this 
+cycle if it's problem-free - without any real regression risk to upstream.
+
+Thanks,
+
+	Ingo
+
+=============================>
+commit be83e809ca67bca98fde97ad6b9344237963220b
+Author: Breno Leitao <leitao@debian.org>
+Date:   Tue Nov 21 08:07:28 2023 -0800
+
+    x86/bugs: Rename CONFIG_GDS_FORCE_MITIGATION => CONFIG_MITIGATION_GDS_FORCE
+    
+    So the CPU mitigations Kconfig entries - there's 10 meanwhile - are named
+    in a historically idiosyncratic and hence rather inconsistent fashion
+    and have become hard to relate with each other over the years:
+    
+       https://lore.kernel.org/lkml/20231011044252.42bplzjsam3qsasz@treble/
+    
+    When they were introduced we never expected that we'd eventually have
+    about a dozen of them, and that more organization would be useful,
+    especially for Linux distributions that want to enable them in an
+    informed fashion, and want to make sure all mitigations are configured
+    as expected.
+    
+    For example, the current CONFIG_SPECULATION_MITIGATIONS namespace is only
+    halfway populated, where some mitigations have entries in Kconfig, and
+    they could be modified, while others mitigations do not have Kconfig entries,
+    and can not be controlled at build time.
+    
+    Fine-grained control over these Kconfig entries can help in a number of ways:
+    
+      1) Users can choose and pick only mitigations that are important for
+         their workloads.
+    
+      2) Users and developers can choose to disable mitigations that mangle
+         the assembly code generation, making it hard to read.
+    
+      3) Separate Kconfigs for just source code readability,
+         so that we see *which* butt-ugly piece of crap code is for what
+         reason...
+    
+    In most cases, if a mitigation is disabled at compilation time, it
+    can still be enabled at runtime using kernel command line arguments.
+    
+    This is the first patch of an initial series that renames various
+    mitigation related Kconfig options, unifying them under a single
+    CONFIG_MITIGATION_* namespace:
+    
+        CONFIG_GDS_FORCE_MITIGATION => CONFIG_MITIGATION_GDS_FORCE
+        CONFIG_CPU_IBPB_ENTRY       => CONFIG_MITIGATION_IBPB_ENTRY
+        CONFIG_CALL_DEPTH_TRACKING  => CONFIG_MITIGATION_CALL_DEPTH_TRACKING
+        CONFIG_PAGE_TABLE_ISOLATION => CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+        CONFIG_RETPOLINE            => CONFIG_MITIGATION_RETPOLINE
+        CONFIG_SLS                  => CONFIG_MITIGATION_SLS
+        CONFIG_CPU_UNRET_ENTRY      => CONFIG_MITIGATION_UNRET_ENTRY
+        CONFIG_CPU_IBRS_ENTRY       => CONFIG_MITIGATION_IBRS_ENTRY
+        CONFIG_CPU_SRSO             => CONFIG_MITIGATION_SRSO
+        CONFIG_RETHUNK              => CONFIG_MITIGATION_RETHUNK
+    
+    Implement step 1/10 of the namespace unification of CPU mitigations related
+    Kconfig options and rename CONFIG_GDS_FORCE_MITIGATION to
+    CONFIG_MITIGATION_GDS_FORCE.
+    
+    [ mingo: Rewrote changelog for clarity. ]
+    
+    Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
+    Signed-off-by: Breno Leitao <leitao@debian.org>
+    Signed-off-by: Ingo Molnar <mingo@kernel.org>
+    Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+    Cc: Linus Torvalds <torvalds@linux-foundation.org>
+    Link: https://lore.kernel.org/r/20231121160740.1249350-2-leitao@debian.org
