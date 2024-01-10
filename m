@@ -1,88 +1,46 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAF247795
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86B947A73
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Zic2V0Wi"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a28cfca3c45so101984466b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:10:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1704885049; x=1705489849; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3QlF0rRTBRD1E5jWA0kISaH2vZgtmpP2AfnIty3q4TQ=;
-        b=Zic2V0Wiuaq4gTl+N44n1XUP4UA1b65X7cROPZrdK7Gqx47g5fLdSzeGowGK2w0ltl
-         uTESACfTbt+JNpPh9ddtNWuMI73YHi5io0MAfsmKunlxPRRwTNRSp2bYVyDrMF7fMGpL
-         RoqKUlYthJIDIg9/RPtT8+1Qn54W2C18gvfU0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704885049; x=1705489849;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3QlF0rRTBRD1E5jWA0kISaH2vZgtmpP2AfnIty3q4TQ=;
-        b=CtNNoOA4iUSuyP8wqVyQ8jcMUK+RsR0zRn3D5AmkJMjnNtt8oW7KPelJF3Sb+6hfxQ
-         Abj2Gf7S3m7kf5nB4lSvUh6z+knHvDjw+YiLG/JRSXGbmVJ6u3qd6NAMllZ9zfwk/nEx
-         l1DkGDJi6Oy8r/Q3eIzD20qmR0m7tN9r9FbERXU5bGSepFAk+NpCOv/Vr6NyNMqy3wD8
-         L7D4FR5FXKiFQr7WETSx2+QJ2c7vwrzgOMRNPX7pr2FPmK2zfMChV32Ot5fWR7jMKWjI
-         BD0jK58KRTcN0pqFjIUBZcGgkN9m1aQQeUZeYMAQbKASr8vcKV/e3sFjWDeYj/WGO90g
-         2a2w==
-X-Gm-Message-State: AOJu0YyBtrwxyPQUgoqiqlAUdHspZ+KA3aI6zORrbvZK91ANpTMtHqgU
-	gu6VoFMQPnJNUAPkfNpeEynJBxQzKc9T0Q==
-X-Google-Smtp-Source: AGHT+IH17mNNLFHB3A8wZSZTcWuwmMBTnERZR6Mu2RaoActQZZYYvzEUdcGN2VlFuia3B3Yo7xfaKw==
-X-Received: by 2002:a17:907:9445:b0:a27:7701:f16 with SMTP id dl5-20020a170907944500b00a2777010f16mr1131131ejc.7.1704885048816;
-        Wed, 10 Jan 2024 03:10:48 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id m27-20020a1709062adb00b00a269f8e8869sm1976817eje.128.2024.01.10.03.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 03:10:48 -0800 (PST)
-Date: Wed, 10 Jan 2024 12:10:46 +0100
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Andri Yngvason <andri@yngvason.is>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	Simon Ser <contact@emersion.fr>,
-	Werner Sembach <wse@tuxedocomputers.com>
-Subject: Re: [PATCH 3/7] drm/amd/display: Add handling for new "active color
- format" property
-Message-ID: <ZZ57Nl3CnRMPcfbj@phenom.ffwll.local>
-Mail-Followup-To: Andri Yngvason <andri@yngvason.is>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	Simon Ser <contact@emersion.fr>,
-	Werner Sembach <wse@tuxedocomputers.com>
-References: <20240109181104.1670304-1-andri@yngvason.is>
- <20240109181104.1670304-4-andri@yngvason.is>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjvX9ZLf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704885060; x=1736421060;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=X5QEjl0DJ9jDmcuH+SDJ2ODSt3udQokya7z4e6MJXk8=;
+  b=UjvX9ZLfMhvPJAiuxztgs2TdjangfA2j3mnmFlrjTQEM5wZrPnyBJVVl
+   9eraK4/KKrMYY9bLfIHQ1E7d+1wWD7pfdSpYOEFPRg4b4g7C35i5umc3b
+   gZ9Uq3LefC6hEemp27jEEZurUD0qzj374On8FdR4DKUAXbDeypbuqAaMi
+   NNudo58u5+ApBuE0P9dAVAtcrGoq+Cq8bgNM55BTo5E1r1sCwZhq75N6L
+   IN+mrZ1twrj5nWuj5l3l1F+eJtKxRCc+edCyd/YBNTTpHxp/AEfV0eXe4
+   uhxrXzbl6rHm7zzhwNOxvg6ulnMEk4OgOu4S4NA//bD4sRnimCdg6UwNY
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="5229477"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="5229477"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 03:10:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="816312527"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="816312527"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 10 Jan 2024 03:10:57 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rNWU3-0006us-1p;
+	Wed, 10 Jan 2024 11:10:55 +0000
+Date: Wed, 10 Jan 2024 19:10:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: drivers/base/regmap/regmap-raw-ram.c:24:24: sparse: sparse: cast to
+ restricted __be16
+Message-ID: <202401101945.4P5qaf35-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,126 +49,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240109181104.1670304-4-andri@yngvason.is>
-X-Operating-System: Linux phenom 6.5.0-4-amd64 
 
-On Tue, Jan 09, 2024 at 06:11:00PM +0000, Andri Yngvason wrote:
-> From: Werner Sembach <wse@tuxedocomputers.com>
-> 
-> This commit implements the "active color format" drm property for the AMD
-> GPU driver.
-> 
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Signed-off-by: Andri Yngvason <andri@yngvason.is>
-> Tested-by: Andri Yngvason <andri@yngvason.is>
-> ---
->  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 42 ++++++++++++++++++-
->  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  4 ++
->  2 files changed, 45 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 10e041a3b2545..b44d06c3b1706 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -6882,6 +6882,24 @@ int convert_dc_color_depth_into_bpc(enum dc_color_depth display_color_depth)
->  	return 0;
->  }
->  
-> +static int convert_dc_pixel_encoding_into_drm_color_format(
-> +	enum dc_pixel_encoding display_pixel_encoding)
-> +{
-> +	switch (display_pixel_encoding) {
-> +	case PIXEL_ENCODING_RGB:
-> +		return DRM_COLOR_FORMAT_RGB444;
-> +	case PIXEL_ENCODING_YCBCR422:
-> +		return DRM_COLOR_FORMAT_YCBCR422;
-> +	case PIXEL_ENCODING_YCBCR444:
-> +		return DRM_COLOR_FORMAT_YCBCR444;
-> +	case PIXEL_ENCODING_YCBCR420:
-> +		return DRM_COLOR_FORMAT_YCBCR420;
-> +	default:
-> +		break;
-> +	}
-> +	return 0;
-> +}
-> +
->  static int dm_encoder_helper_atomic_check(struct drm_encoder *encoder,
->  					  struct drm_crtc_state *crtc_state,
->  					  struct drm_connector_state *conn_state)
-> @@ -7436,8 +7454,10 @@ void amdgpu_dm_connector_init_helper(struct amdgpu_display_manager *dm,
->  				adev->mode_info.underscan_vborder_property,
->  				0);
->  
-> -	if (!aconnector->mst_root)
-> +	if (!aconnector->mst_root) {
->  		drm_connector_attach_max_bpc_property(&aconnector->base, 8, 16);
-> +		drm_connector_attach_active_color_format_property(&aconnector->base);
-> +	}
->  
->  	aconnector->base.state->max_bpc = 16;
->  	aconnector->base.state->max_requested_bpc = aconnector->base.state->max_bpc;
-> @@ -8969,6 +8989,26 @@ static void amdgpu_dm_atomic_commit_tail(struct drm_atomic_state *state)
->  		kfree(dummy_updates);
->  	}
->  
-> +	/* Extract information from crtc to communicate it to userspace as connector properties */
-> +	for_each_new_connector_in_state(state, connector, new_con_state, i) {
-> +		struct drm_crtc *crtc = new_con_state->crtc;
-> +		struct dc_stream_state *stream;
-> +
-> +		if (crtc) {
-> +			new_crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
-> +			dm_new_crtc_state = to_dm_crtc_state(new_crtc_state);
-> +			stream = dm_new_crtc_state->stream;
-> +
-> +			if (stream) {
-> +				drm_connector_set_active_color_format_property(connector,
-> +					convert_dc_pixel_encoding_into_drm_color_format(
-> +						dm_new_crtc_state->stream->timing.pixel_encoding));
-> +			}
-> +		} else {
-> +			drm_connector_set_active_color_format_property(connector, 0);
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ab27740f76654ed58dd32ac0ba0031c18a6dea3b
+commit: 65dd2f671875b1d97b6fa9bcf7677f5e1c55f776 regmap: Provide a ram backed regmap with raw support
+date:   7 months ago
+config: x86_64-randconfig-123-20240106 (https://download.01.org/0day-ci/archive/20240110/202401101945.4P5qaf35-lkp@intel.com/config)
+compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240110/202401101945.4P5qaf35-lkp@intel.com/reproduce)
 
-Just realized an even bigger reason why your current design doesn't work:
-You don't have locking here.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401101945.4P5qaf35-lkp@intel.com/
 
-And you cannot grab the required lock, which is
-drm_dev->mode_config.mutex, because that would result in deadlocks. So
-this really needs to use the atomic state based design I've described.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/base/regmap/regmap-raw-ram.c:24:24: sparse: sparse: cast to restricted __be16
+>> drivers/base/regmap/regmap-raw-ram.c:26:24: sparse: sparse: cast to restricted __le16
 
-A bit a tanget, but it would be really good to add a lockdep assert into
-drm_object_property_set_value, that at least for atomic drivers and
-connectors the above lock must be held for changing property values. But
-it will be quite a bit of audit to make sure all current users obey that
-rule.
+vim +24 drivers/base/regmap/regmap-raw-ram.c
 
-Cheers, Sima
-> +		}
-> +	}
-> +
->  	/**
->  	 * Enable interrupts for CRTCs that are newly enabled or went through
->  	 * a modeset. It was intentionally deferred until after the front end
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> index 11da0eebee6c4..a4d1b3ea8f81c 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> @@ -600,6 +600,10 @@ dm_dp_add_mst_connector(struct drm_dp_mst_topology_mgr *mgr,
->  	if (connector->max_bpc_property)
->  		drm_connector_attach_max_bpc_property(connector, 8, 16);
->  
-> +	connector->active_color_format_property = master->base.active_color_format_property;
-> +	if (connector->active_color_format_property)
-> +		drm_connector_attach_active_color_format_property(&aconnector->base);
-> +
->  	connector->vrr_capable_property = master->base.vrr_capable_property;
->  	if (connector->vrr_capable_property)
->  		drm_connector_attach_vrr_capable_property(connector);
-> -- 
-> 2.43.0
-> 
+    18	
+    19	static unsigned int decode_reg(enum regmap_endian endian, const void *reg)
+    20	{
+    21		const u16 *r = reg;
+    22	
+    23		if (endian == REGMAP_ENDIAN_BIG)
+  > 24			return be16_to_cpu(*r);
+    25		else
+  > 26			return le16_to_cpu(*r);
+    27	}
+    28	
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
