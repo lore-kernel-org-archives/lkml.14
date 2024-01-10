@@ -1,92 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20F4495CC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADAC48CD2;
 	Wed, 10 Jan 2024 13:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1jPPPfb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14496C433C7;
-	Wed, 10 Jan 2024 13:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704894507;
-	bh=Mpj9MmpWsZ0QXa3z+JG9y8iO9570kyRUme6G8UyY3ns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V1jPPPfbtZjWicjR/pXvV3fvfEd+WTpUYKesK1ver/unl0yUXsY4TkjQIutQjBRsP
-	 rP/Oz0q/0h14UEjOgFaxFG624+eWlJ/AO+ivv3TYC1sZnL+hL4/+Alo/46tP000hXg
-	 zplNZ64lLrfkj8J9hOzdzzP2smKm7MeEZ/IYISeNp94tvvX509RdtM1WHeyhjMm5jx
-	 6PVp6J9lR2f0adpYnosG4kNDW+C6yKAzSmFoUpH39oONuTUSb402zXo2PYbzqdDyDw
-	 8BKfIvBQaR2VfeSzJy9k28uur98lcaUtFQRjhOYk1Xziu9Q+q1jecwOjEuD67FrH9y
-	 AnuUlci6GEj1Q==
-Date: Wed, 10 Jan 2024 13:48:20 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: akpm@linux-foundation.org, llvm@lists.linux.dev,
-	patches@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-efi@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-mm@kvack.org, bridge@lists.linux.dev, netdev@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/3] arch and include: Update LLVM Phabricator links
-Message-ID: <20240110-apostle-trident-533d4c2c9c97@spud>
-References: <20240109-update-llvm-links-v1-0-eb09b59db071@kernel.org>
- <20240109-update-llvm-links-v1-2-eb09b59db071@kernel.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hvxRyBv2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704893918;
+	bh=SgeTmy9vWKtca0Vyjva4J6wsQuy5/arJ5kyVli3Wyhc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hvxRyBv2rN52qUOdhsThMmZY46Lu8JPBT67MHEWZGEdwDVv2zjhDaMeApPxWzVSg5
+	 MXSdj9XvLeuHPnm5OrW7W+xrHYTkJf3lG76WzvoqeU+63BFuq27oOZkIYNn8IBhDUN
+	 9EIBF3iNk7GpA8bobjb3TKIYkyfGb9IGHrK3WPCs4EfYLY8wzgMyzCYwUqm5HJtN32
+	 lSgVcm+ReFE9eX+UVtMCUviOI9Y0DicPifaw6hj+sLT/vZX6n8ZB2bqgfRlkmWm6aw
+	 5kFVW/g07pLX1sr/qL7aCUh74zOdWb5zO10ILCyRong6SiOJl1hN4tbumiIILWdR2Z
+	 KM5ScTEWWNigQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1AE913780C1F;
+	Wed, 10 Jan 2024 13:38:37 +0000 (UTC)
+Message-ID: <34bda5e0-0587-459b-b31c-46112b1b10fa@collabora.com>
+Date: Wed, 10 Jan 2024 14:38:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="p6SYI+U6gP5vpK1M"
-Content-Disposition: inline
-In-Reply-To: <20240109-update-llvm-links-v1-2-eb09b59db071@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: Add initial MT7981B and Xiaomi
+ AX3000T
+Content-Language: en-US
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Daniel Golle <daniel@makrotopia.org>, Hsin-Yi Wang <hsinyi@chromium.org>,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ jason-ch chen <Jason-ch.Chen@mediatek.com>,
+ Macpaul Lin <macpaul.lin@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20240110095118.25598-1-zajec5@gmail.com>
+ <20240110095118.25598-2-zajec5@gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240110095118.25598-2-zajec5@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
---p6SYI+U6gP5vpK1M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jan 09, 2024 at 03:16:30PM -0700, Nathan Chancellor wrote:
-> reviews.llvm.org was LLVM's Phabricator instances for code review. It
-> has been abandoned in favor of GitHub pull requests. While the majority
-> of links in the kernel sources still work because of the work Fangrui
-> has done turning the dynamic Phabricator instance into a static archive,
-> there are some issues with that work, so preemptively convert all the
-> links in the kernel sources to point to the commit on GitHub.
->=20
-> Most of the commits have the corresponding differential review link in
-> the commit message itself so there should not be any loss of fidelity in
-> the relevant information.
->=20
-> Link: https://discourse.llvm.org/t/update-on-github-pull-requests/71540/1=
-72
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Il 10/01/24 10:51, Rafał Miłecki ha scritto:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> MT7981B (AKA MediaTek Filogic 820) is a dual-core ARM Cortex-A53 SoC.
+> One of market devices using this SoC is Xiaomi AX3000T.
+> 
+> This is initial contribution with basic SoC support. More hardware block
+> will get added later. Some will need their bindings (like auxadc).
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 > ---
+>   arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+>   .../dts/mediatek/mt7981b-xiaomi-ax3000t.dts   |  15 +++
+>   arch/arm64/boot/dts/mediatek/mt7981b.dtsi     | 108 ++++++++++++++++++
+>   3 files changed, 124 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index 0a189d5d8006..8bff11acfe1f 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-xiaomi-ax3000t.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-emmc.dtbo
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-nand.dtbo
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts b/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
+> new file mode 100644
+> index 000000000000..a314c3e05e50
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7981b-xiaomi-ax3000t.dts
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +
+> +/dts-v1/;
+> +
+> +#include "mt7981b.dtsi"
+> +
+> +/ {
+> +	compatible = "xiaomi,ax3000t", "mediatek,mt7981b";
+> +	model = "Xiaomi AX3000T";
+> +
+> +	memory@40000000 {
+> +		reg = <0 0x40000000 0 0x10000000>;
+> +		device_type = "memory";
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> new file mode 100644
+> index 000000000000..ce878ad55204
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> @@ -0,0 +1,108 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +
+> +#include <dt-bindings/clock/mediatek,mt7981-clk.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "mediatek,mt7981b";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0>;
+> +			device_type = "cpu";
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu@1 {
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x1>;
+> +			device_type = "cpu";
+> +			enable-method = "psci";
+> +		};
+> +	};
+> +
+> +	oscillator-40m {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <40000000>;
+> +		clock-output-names = "clkxtal";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
 
->  arch/riscv/Kconfig              | 2 +-
->  arch/riscv/include/asm/ftrace.h | 2 +-
+PSCI 0.2? I invite you to check a kernel log for a string like this one:
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+`PSCIv%d.%d detected in firmware`
+...because of course if it says v1.0, this should be "arm,psci-1.0".
+
+This is just a nitpick anyway, so you can already get my
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+P.S.: but please, confirm or deny that PSCI thing ASAP :-)
+P.P.S.: For next time - I'd be happy if you could add a cover letter to your
+patch series..!
 
 Cheers,
-Conor.
-
---p6SYI+U6gP5vpK1M
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ6gJAAKCRB4tDGHoIJi
-0mIlAQCj5ZP6QEhEswWYjX38obn/p3pF8mt+Ve+vlBnVEhAW8QD8ClRvKxDiajR5
-Zp8ES/FLDyH/QJ5QjGuYLP5PATLeFAY=
-=SqXc
------END PGP SIGNATURE-----
-
---p6SYI+U6gP5vpK1M--
+Angelo
