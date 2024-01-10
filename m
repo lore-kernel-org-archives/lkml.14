@@ -1,108 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048454D589
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938D1481D8;
+	Wed, 10 Jan 2024 11:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Agtz1M7D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704887122; x=1736423122;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3hr8WKe3hLRmQmvxepGB6Y30XVCdzwD/ynaPZtClRaU=;
-  b=Agtz1M7DVualQghZ4zcpwpcoeN22cLhbsgq/1DIjFQVY2YTLmi4LtBHy
-   10dTfF9tliZHp2vFw5Fl/OKmUX9lSpkkLNLIWPfi0mmlO1IionVBxPjxR
-   LAh2xlllt+6FCESpi8+p0kkK3qBCfzG2wqRR66ZiTeqoy91nBdwNlp3ko
-   JDBls9oHKB9g7S5KpVdo1bPiSxFBGRHFSod+Sf2dPJ06R1fKxmmG4p3Mo
-   Hjiy7Cw2lMGAjQP7zPEnQSqlWBJYFZc6ilUWiQHQbM44xV8dZ4Lv93aSJ
-   5HSs8eDtvX2FJ9/DdOBCdXUqQABO17GxDgA//csQy4CbDWR+I7BJR6GxG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="397345288"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="397345288"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 03:45:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="901127739"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="901127739"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 03:45:19 -0800
-Date: Wed, 10 Jan 2024 03:45:13 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Kevin Loughlin <kevinloughlin@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Ze Gao <zegao2021@gmail.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-coco@lists.linux.dev,
-	Adam Dunlap <acdunlap@google.com>, Peter Gonda <pgonda@google.com>,
-	Jacob Xu <jacobhxu@google.com>,
-	Sidharth Telang <sidtelang@google.com>
-Subject: Re: [RFC PATCH] x86/sev: x86/sev: enforce PC-relative addressing in
- clang
-Message-ID: <ZZ6DSdaaoYKzgp4K@tassilo>
-References: <20240110012640.1335694-1-kevinloughlin@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLwF6iOZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78416C433F1;
+	Wed, 10 Jan 2024 11:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704887142;
+	bh=S/z7kOMa1mLCKAIZYScj7foQYgH8MuVqxG2x+pBnoP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OLwF6iOZda2QsR+0ay907aPfJdRVX5QxwmYrafJ9+0PYIJ1FI3C//dkfazc7/vPNL
+	 Noh34eSo4ExG0Ouhx3UQK5+bmE905x2keBJknkaNG54jVzNc5l106Qg6zLFaYrgF++
+	 szmT9ABw7aZvTLb5mJoUeHleB6h+KLznfB7Acev2waoOOsSU7hQOyKhBiHURFLffgj
+	 dDIr2TKVfFLd3STepoJcISvHe2RtsswH0t8UGLSvdtaAoR+Tw82x32qpH+kzaaTfYu
+	 Y4RUXBluJQuOO5mqa3JuJ76ZSmlNNyHJbiurKkngvZZpLRFctghK5Q8HeG+0jDbqsf
+	 I0sEuutS3nsLg==
+Date: Wed, 10 Jan 2024 12:45:36 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as default
+ ownership
+Message-ID: <20240110-murren-extra-cd1241aae470@brauner>
+References: <20240103203246.115732ec@gandalf.local.home>
+ <20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
+ <20240105095954.67de63c2@gandalf.local.home>
+ <20240107-getrickst-angeeignet-049cea8cad13@brauner>
+ <20240107132912.71b109d8@rorschach.local.home>
+ <20240108-ortsrand-ziehen-4e9a9a58e708@brauner>
+ <20240108102331.7de98cab@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240110012640.1335694-1-kevinloughlin@google.com>
+In-Reply-To: <20240108102331.7de98cab@gandalf.local.home>
 
-On Wed, Jan 10, 2024 at 01:26:39AM +0000, Kevin Loughlin wrote:
-> SEV/SME code can execute prior to page table fixups for kernel
-
-That seems to be fundamental problem.
-
-> relocation. However, as with global variables accessed in
-> __startup_64(), clang does not currently generate PC-relative accesses
-> for SEV/SME global variables, causing certain flavors of SEV hosts and
-> guests to crash.
-
-And that's a hack to work around it.
-
+On Mon, Jan 08, 2024 at 10:23:31AM -0500, Steven Rostedt wrote:
+> On Mon, 8 Jan 2024 12:04:54 +0100
+> Christian Brauner <brauner@kernel.org> wrote:
 > 
-> While an attempt was made to force PC-relative addressing for certain
-> global SEV/SME variables via inline assembly (see snp_cpuid_get_table()
-> for example), PC-relative addressing must be pervasively-enforced for
-> SEV/SME global variables that can be accessed prior to page table
-> fixups.
+> > > > IOW, the inode_permission() in lookup_one_len() that eventfs does is
+> > > > redundant and just wrong.  
+> > > 
+> > > I don't think so.  
+> > 
+> > I'm very well aware that the dentries and inode aren't created during
+> > mkdir but the completely directory layout is determined. You're just
+> > splicing in dentries and inodes during lookup and readdir.
+> > 
+> > If mkdir /sys/kernel/tracing/instances/foo has succeeded and you later
+> > do a lookup/readdir on
+> > 
+> > ls -al /sys/kernel/tracing/instances/foo/events
+> > 
+> > Why should the creation of the dentries and inodes ever fail due to a
+> > permission failure?
 > 
-> To avoid the error-prone approach of manually referencing each SEV/SME
-> global variable via a general form of snp_cpuid_get_table(), it is
-> preferable to use compiler flags for position-independent code (ex:
+> They shouldn't.
+> 
+> > The vfs did already verify that you had the required
+> > permissions to list entries in that directory. Why should filling up
+> > /sys/kernel/tracing/instances/foo/events ever fail then? It shouldn't
+> > That tracefs instance would be half-functional. And again, right now
+> > that inode_permission() check cannot even fail.
+> 
+> And it shouldn't. But without dentries and inodes, how does VFS know what
+> is allowed to open the files?
 
-But if gcc doesn't support it then it doesn't work.
+So say you do:
 
-It seems your approach with incompatible execution models between
-the compilers is just a recipe for future patches only working
-on one of the compilers because most code submitters probably
-won't test both.
+mkdir /sys/kernel/tracing/instances/foo
 
-It would be better to at least use a unified execution model, if you want
-to extend the hack and not fix the underlying issue.
+After this has returned we know everything we need to know about the new
+tracefs instance including the ownership and the mode of all inodes in
+/sys/kernel/tracing/instances/foo/events/* and below precisely because
+ownership is always inherited from the parent dentry and recorded in the
+metadata struct eventfs_inode.
 
--Andi
+So say someone does:
+
+open("/sys/kernel/tracing/instances/foo/events/xfs");
+
+and say this is the first time that someone accesses that events/
+directory.
+
+When the open pathwalk is done, the vfs will determine via
+
+[1] may_lookup(inode_of(events))
+
+whether you are able to list entries such as "xfs" in that directory.
+The vfs checks inode_permission(MAY_EXEC) on "events" and if that holds
+it ends up calling i_op->eventfs_root_lookup(events).
+
+At this point tracefs/eventfs adds the inodes for all entries in that
+"events" directory including "xfs" based on the metadata it recorded
+during the mkdir. Since now someone is actually interested in them. And
+it initializes the inodes with ownership and everything and adds the
+dentries that belong into that directory.
+
+Nothing here depends on the permissions of the caller. The only
+permission that mattered was done in the VFS in [1]. If the caller has
+permissions to enter a directory they can lookup and list its contents.
+And its contents where determined/fixed etc when mkdir was called.
+
+So we just need to add the required objects into the caches (inode,
+dentry) whose addition we intentionally defered until someone actually
+needed them.
+
+So, eventfs_root_lookup() now initializes the inodes with the ownership
+from the stored metadata or from the parent dentry and splices in inodes
+and dentries. No permission checking is needed for this because it is
+always a recheck of what the vfs did in [1].
+
+We now return to the vfs and path walk continues to the final component
+that you actually want to open which is that "xfs" directory in this
+example. We check the permissions on that inode via may_open("xfs") and
+we open that directory returning an fd to userspace ultimately.
+
+(I'm going by memory since I need to step out the door.)
