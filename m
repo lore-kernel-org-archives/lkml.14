@@ -1,179 +1,113 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF20B48CCE;
-	Wed, 10 Jan 2024 14:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E6120FD;
+	Wed, 10 Jan 2024 14:56:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xz1tkqRl"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cd1232a2c7so49697731fa.0;
-        Wed, 10 Jan 2024 06:55:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCb0wLcz"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a28f66dc7ffso931711566b.0;
+        Wed, 10 Jan 2024 06:56:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704898506; x=1705503306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5OgyR+ukWv0ZDFT7MD1S3e5qHTjIQxas4XOabhlAMc4=;
-        b=Xz1tkqRl0b3sFvvn1W1mOfJxhECpXK8wNH8ix+7RjLxjf3V5TjVjuYwjzQEyVgNPk5
-         2Ndf77AcgtF+cdzLf9k4IgqDPpFaXLLDS91tceQGBJnVgRTTpnB3iXjISpvxaz199XYM
-         TcqkEwD8Dfg03wbQZLf2IZHe/JPgeocJ/LlxGyB/ZuTDNBtN6MHppwwhwG7XuB7co6he
-         BRsSyZLNifDes11e+9eeSyg2UvTFLG695yFc1qY0JanwrUyDkHG37edEYVGBvRnxUzYz
-         7pyLmtJup+1zCvczCBuRloC7AT5WJzV6/n82JrBsO5BhoViN60ED2H2hL51Gnll7eQdx
-         sC9w==
+        d=gmail.com; s=20230601; t=1704898561; x=1705503361; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZT2eSHWPMa0CfkUYcyephB76FUQGzAdMqHMJhGcnqGg=;
+        b=lCb0wLczBNn5sxiqtBNUhHVj2vGxeFyLnH1AG2Nw954aIIJ0CAGybPDJbHoJ6BNk0+
+         IlAsJuy7JHvOWOWmb+c5WEcscIrm94j0Z081UHPJagvq2bfQzHbBDhqagFrWc6Wk2bBt
+         KVyy8IzUDRIM2mVduZL5lde8baDOdxUVL14tHZht4a00fwteexmD901aR68U6PtkM3Qt
+         ELUyRsnql0w1Dp3AmesQEUe0AtKzsT7OWmhl5dGmzk2Qa6XNYaZtszJGCOslTHJz9t0o
+         5rjHNKCc0H3J0GdmZ5Lx1aUbABZCW1ROFsBw+CoLBQ6au3bbyGWl5eEG5zHIfbjhsGzx
+         9Baw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704898506; x=1705503306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5OgyR+ukWv0ZDFT7MD1S3e5qHTjIQxas4XOabhlAMc4=;
-        b=LrJppwqBwJIhnrMhV+PA5+vpbPevs03tqCHtdwpZzcaq5daKZy8Nk48nJnAyESqzuv
-         qD2ceAEmZlGKP/N3ehRz8IVGyiCO7LAS5mPfrngG8knNqU1KJdBOMhrH9IU5byGohKbJ
-         ox0pDgY+EHSP4N/ALWZIzreSv6aNkH8kbdjrfVT8D06a8WonpjjqxtOpWEZZ/Jw7xTN6
-         JYWgwkoX8DE3h+ZHYo6skghBmYyWPr7qLM4Neu6zNgDPuXcJiF3jXyPo7heCAY62F44I
-         MplcOyaPW/TQAL6xmzmb4rBDQ4jpxBrfx+jrHdrFeUcb57YfRbC9sqgEIoZA5q0tI+Fs
-         yq5w==
-X-Gm-Message-State: AOJu0YxDRjvie4xRYXhyqnKrwo5mKOFyvb7Ha8b13CpzNlfobm/kZALL
-	lE0XwJ9IZ5HF+MzdLU0/lB6VSXcXLC2JdLtlA9jaJkUj
-X-Google-Smtp-Source: AGHT+IH5zqO057mcocJ4I+GZxwLsrDWD8i7g35DwdFAwR9pfBQNmh3d7p+YMnEe0KuudH+4klSpSupj07kho3Jh0HfQ=
-X-Received: by 2002:a2e:9dd8:0:b0:2cd:16fe:da17 with SMTP id
- x24-20020a2e9dd8000000b002cd16feda17mr609164ljj.71.1704898505430; Wed, 10 Jan
- 2024 06:55:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704898561; x=1705503361;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZT2eSHWPMa0CfkUYcyephB76FUQGzAdMqHMJhGcnqGg=;
+        b=jMeNHiAFaVx+PSHgWMSc2sYDkWRO1Rzx04zH4YIY4MdQvKXKI/0cXYoZk4sFwIOoMC
+         If3peo2eIfVGpkZxkB87SxLw0XmgILlNaN2MdQNJ8D9uvD/LyNhLMDkx1O1CCWtkAfRb
+         tYAvdJfylQnW8oatx9+fr96MkOp6I1B8t594u+UIR5yiz+M+CpBGfa1EDa90lg0I5Eha
+         kFIr0oqi5rhI1FQ6C9Wb7Pu0KGdbmSN/B94WCF1T/bq8wB108oy1EQYDXc52sNcjU0D6
+         coyeNoOzIIH81CY+02AzPf1j4NUnsMq48q1rN99r60zoWl9BmqjSj0FKrUEO4GGyC202
+         Oc7w==
+X-Gm-Message-State: AOJu0YxbUbj6EdgERQsfuUq30FX5AvU2XyoBmhqyhZPy1gFNpSmY1oCU
+	jUyOUoadgmK1/jO/j+3ZGOM=
+X-Google-Smtp-Source: AGHT+IHrjyyhLlNqwU8/0GdBQslEryV7QKCfwc4yBbC9sDbUDW7k3PCxt9OHW7khy/4PiPOl6+oPtQ==
+X-Received: by 2002:a17:907:9307:b0:a2a:dc24:849 with SMTP id bu7-20020a170907930700b00a2adc240849mr226303ejc.43.1704898561190;
+        Wed, 10 Jan 2024 06:56:01 -0800 (PST)
+Received: from andrea.wind3.hub ([31.189.29.12])
+        by smtp.gmail.com with ESMTPSA id bm3-20020a170906c04300b00a2a4efe7d3dsm2161032ejb.79.2024.01.10.06.55.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 06:56:00 -0800 (PST)
+From: Andrea Parri <parri.andrea@gmail.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	mathieu.desnoyers@efficios.com,
+	paulmck@kernel.org,
+	corbet@lwn.net
+Cc: mmaas@google.com,
+	hboehm@google.com,
+	striker@us.ibm.com,
+	charlie@rivosinc.com,
+	rehn@rivosinc.com,
+	linux-riscv@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH v3 0/4] membarrier: riscv: Core serializing command
+Date: Wed, 10 Jan 2024 15:55:29 +0100
+Message-Id: <20240110145533.60234-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109182218.193804-1-robdclark@gmail.com> <ZZ52YNc-TkeG7PZO@phenom.ffwll.local>
-In-Reply-To: <ZZ52YNc-TkeG7PZO@phenom.ffwll.local>
-From: Rob Clark <robdclark@gmail.com>
-Date: Wed, 10 Jan 2024 06:54:53 -0800
-Message-ID: <CAF6AEGusfKGou-=4y4CDd99x6TgJ1ZhAmnKwQJs1k6s8Bu07SQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "drm/msm/gpu: Push gpu lock down past runpm"
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
-	Rob Clark <robdclark@chromium.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	open list <linux-kernel@vger.kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 10, 2024 at 2:50=E2=80=AFAM Daniel Vetter <daniel@ffwll.ch> wro=
-te:
->
-> On Tue, Jan 09, 2024 at 10:22:17AM -0800, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > This reverts commit abe2023b4cea192ab266b351fd38dc9dbd846df0.
-> >
-> > Changing the locking order means that scheduler/msm_job_run() can race
-> > with the recovery kthread worker, with the result that the GPU gets an
-> > extra runpm get when we are trying to power it off.  Leaving the GPU in
-> > an unrecovered state.
->
-> The recovery kthread is supposed to stop all the relevant schedulers,
-> which should remove any possible race conditions. So unless there's more
-> going on, or you have your own recovery kthread (don't, reuse the one fro=
-m
-> the scheduler with your own work items, that's why you can provide that)
-> this looks like an incomplete/incorrect explanation ... ?
->
-> Slightly confused
+Changes since v2 ([1]):
+  - amaned inline comments
+  - drop ARCH_HAS_MEMBARRIER, create membarrrier.rst
 
-msm still uses it's own recovery, which pre-dates the scheduler
-conversion.  At one point (a yr or two back?) I started looking at
-integrating recovery w/ scheduler.. at the time I think you talked me
-out of it, but I don't remember the reason
+Changes since v1 ([2]):
+  - add smp_mb() in switch_mm()
+  - introduce ARCH_HAS_MEMBARRIER, amend documentation
 
-BR,
--R
+Changes since RFC ([3]):
+  - introduce prepare_sync_core_cmd()
+  - fix nosmp builds
 
-> -Sima
->
-> >
-> > I'll need to come up with a different scheme for appeasing lockdep.
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/msm_gpu.c        | 11 +++++------
-> >  drivers/gpu/drm/msm/msm_ringbuffer.c |  7 +++++--
-> >  2 files changed, 10 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gp=
-u.c
-> > index 095390774f22..655002b21b0d 100644
-> > --- a/drivers/gpu/drm/msm/msm_gpu.c
-> > +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> > @@ -751,12 +751,14 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct m=
-sm_gem_submit *submit)
-> >       struct msm_ringbuffer *ring =3D submit->ring;
-> >       unsigned long flags;
-> >
-> > -     pm_runtime_get_sync(&gpu->pdev->dev);
-> > +     WARN_ON(!mutex_is_locked(&gpu->lock));
-> >
-> > -     mutex_lock(&gpu->lock);
-> > +     pm_runtime_get_sync(&gpu->pdev->dev);
-> >
-> >       msm_gpu_hw_init(gpu);
-> >
-> > +     submit->seqno =3D submit->hw_fence->seqno;
-> > +
-> >       update_sw_cntrs(gpu);
-> >
-> >       /*
-> > @@ -781,11 +783,8 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct ms=
-m_gem_submit *submit)
-> >       gpu->funcs->submit(gpu, submit);
-> >       gpu->cur_ctx_seqno =3D submit->queue->ctx->seqno;
-> >
-> > -     hangcheck_timer_reset(gpu);
-> > -
-> > -     mutex_unlock(&gpu->lock);
-> > -
-> >       pm_runtime_put(&gpu->pdev->dev);
-> > +     hangcheck_timer_reset(gpu);
-> >  }
-> >
-> >  /*
-> > diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.c b/drivers/gpu/drm/msm=
-/msm_ringbuffer.c
-> > index e0ed27739449..548f5266a7d3 100644
-> > --- a/drivers/gpu/drm/msm/msm_ringbuffer.c
-> > +++ b/drivers/gpu/drm/msm/msm_ringbuffer.c
-> > @@ -21,8 +21,6 @@ static struct dma_fence *msm_job_run(struct drm_sched=
-_job *job)
-> >
-> >       msm_fence_init(submit->hw_fence, fctx);
-> >
-> > -     submit->seqno =3D submit->hw_fence->seqno;
-> > -
-> >       mutex_lock(&priv->lru.lock);
-> >
-> >       for (i =3D 0; i < submit->nr_bos; i++) {
-> > @@ -35,8 +33,13 @@ static struct dma_fence *msm_job_run(struct drm_sche=
-d_job *job)
-> >
-> >       mutex_unlock(&priv->lru.lock);
-> >
-> > +     /* TODO move submit path over to using a per-ring lock.. */
-> > +     mutex_lock(&gpu->lock);
-> > +
-> >       msm_gpu_submit(gpu, submit);
-> >
-> > +     mutex_unlock(&gpu->lock);
-> > +
-> >       return dma_fence_get(submit->hw_fence);
-> >  }
-> >
-> > --
-> > 2.43.0
-> >
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+[1] https://lore.kernel.org/lkml/20231211094414.8078-1-parri.andrea@gmail.com/
+[2] https://lore.kernel.org/lkml/20231127103235.28442-1-parri.andrea@gmail.com/
+[3] https://lore.kernel.org/lkml/20230803040111.5101-1-parri.andrea@gmail.com/
+
+Andrea Parri (4):
+  membarrier: riscv: Add full memory barrier in switch_mm()
+  membarrier: Create Documentation/scheduler/membarrier.rst
+  locking: Introduce prepare_sync_core_cmd()
+  membarrier: riscv: Provide core serializing command
+
+ .../membarrier-sync-core/arch-support.txt     | 18 ++++++-
+ Documentation/scheduler/index.rst             |  1 +
+ Documentation/scheduler/membarrier.rst        | 37 ++++++++++++++
+ MAINTAINERS                                   |  4 +-
+ arch/riscv/Kconfig                            |  4 ++
+ arch/riscv/include/asm/membarrier.h           | 50 +++++++++++++++++++
+ arch/riscv/include/asm/sync_core.h            | 29 +++++++++++
+ arch/riscv/mm/context.c                       |  2 +
+ include/linux/sync_core.h                     | 16 +++++-
+ init/Kconfig                                  |  3 ++
+ kernel/sched/core.c                           | 16 ++++--
+ kernel/sched/membarrier.c                     | 13 +++--
+ 12 files changed, 183 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/scheduler/membarrier.rst
+ create mode 100644 arch/riscv/include/asm/membarrier.h
+ create mode 100644 arch/riscv/include/asm/sync_core.h
+
+-- 
+2.34.1
+
