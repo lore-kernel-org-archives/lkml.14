@@ -1,13 +1,13 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088404C3C0;
-	Wed, 10 Jan 2024 15:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448F44C3D1;
+	Wed, 10 Jan 2024 15:19:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
 Received: from amadeus-Vostro-3710.lan (unknown [113.118.191.185])
-	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 669888000C6;
-	Wed, 10 Jan 2024 23:11:14 +0800 (CST)
+	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id A189680009E;
+	Wed, 10 Jan 2024 23:11:02 +0800 (CST)
 From: Chukun Pan <amadeus@jmu.edu.cn>
 To: Bjorn Andersson <andersson@kernel.org>
 Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -17,12 +17,10 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH v2 2/2] arm64: dts: qcom: ipq6018: enable sdhci node
-Date: Wed, 10 Jan 2024 23:10:40 +0800
-Message-Id: <20240110151040.2155938-3-amadeus@jmu.edu.cn>
+Subject: [PATCH v2 0/2] arm64: dts: qcom: ipq8074: add MicroSD node
+Date: Wed, 10 Jan 2024 23:10:38 +0800
+Message-Id: <20240110151040.2155938-1-amadeus@jmu.edu.cn>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240110151040.2155938-1-amadeus@jmu.edu.cn>
-References: <20240110151040.2155938-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,60 +28,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSB5NVhkeSUlKSUxDH0tITlUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKSFVKSkNVSkJKVUpDTllXWRYaDxIVHRRZQVlLVUtVS1VLWQY+
-X-HM-Tid: 0a8cf3ed74d4b03akuuu669888000c6
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDT08dVklDT0NJH0hNTksYSVUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKSFVKSkNVSkJKVUpDTllXWRYaDxIVHRRZQVlPS0hVSkpLSEpDVUpLS1VLWQY+
+X-HM-Tid: 0a8cf3ed46e4b03akuuua189680009e
 X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTo6Iyo*CTwZIioqVhE3DRY8
-	MDBPCSJVSlVKTEtPQ0JCT0xOT0tKVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	SFVKSkNVSkJKVUpDTllXWQgBWUFJTU5INwY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mhw6MAw5HDwoECo*PRIdDRYe
+	PRAKFExVSlVKTEtPQ0JCT01IT0hKVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
+	SFVKSkNVSkJKVUpDTllXWQgBWUFKSU9CNwY+
 
-Enable mmc device found on ipq6018 devices.
-This node supports both eMMC and SD cards.
+> Changes from v2:
+> * arm64: dts: qcom: ipq6018: add LDOA2 regulator
+> No Changes:
+> * arm64: dts: qcom: ipq8074: add MicroSD node
 
-Tested with:
-  eMMC (HS200)
-  SD Card (SDR50/SDR104)
-
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 5e1277fea725..39fb38914a1e 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -436,6 +436,28 @@ dwc_1: usb@7000000 {
- 			};
- 		};
- 
-+		sdhc: mmc@7804000 {
-+			compatible = "qcom,ipq6018-sdhci", "qcom,sdhci-msm-v5";
-+			reg = <0x0 0x7804000 0x0 0x1000>,
-+			      <0x0 0x7805000 0x0 0x1000>;
-+			reg-names = "hc", "cqhci";
-+
-+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+
-+			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
-+				 <&gcc GCC_SDCC1_APPS_CLK>,
-+				 <&xo>;
-+			clock-names = "iface", "core", "xo";
-+			resets = <&gcc GCC_SDCC1_BCR>;
-+			max-frequency = <192000000>;
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
-+
-+			status = "disabled";
-+		};
-+
- 		blsp_dma: dma-controller@7884000 {
- 			compatible = "qcom,bam-v1.7.0";
- 			reg = <0x0 0x07884000 0x0 0x2b000>;
 -- 
 2.25.1
 
