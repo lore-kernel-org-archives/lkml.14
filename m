@@ -1,37 +1,37 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478F948CD0;
-	Wed, 10 Jan 2024 11:43:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B6448CD5;
+	Wed, 10 Jan 2024 11:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mnTObix7"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40A8uJcV019169;
-	Wed, 10 Jan 2024 11:42:14 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LlpN2E90"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40AAhKar012709;
+	Wed, 10 Jan 2024 11:42:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=KXa545erCC7IL/SR3Q1tYN9da3OhrBWH5vwzqsjR1kk=; b=mn
-	TObix73RwHCs9yIHc+2g5h++yXZz1gq1U45WV07B1DEG3F4+W4FgNrNz6nKaS8X6
-	RBSnFNNlC3TYp8qoLItz7hJbMO1iJ/EDq1AQrgQOutVTEMYBy4Gh1g6MKI5TdRaV
-	4dd5ZyQY5LD4WqcctGU/yXY+XO6BUVMfRGeR03bWwCBwZP6eMQxPQjMYiS673JIL
-	WhE5NFxrMV3oqnoUxQmKCppR+7KUr4bgpK7d949O8sUuhzakdfsorrzb6PDvweKc
-	AR8+GZh+aiOpmOqL2tkzglk5mEdZmjZo4kUKPwtfsOg9m80dYMDyxvYODSHy925H
-	mOLb0RaRRm6B1s9VfQPA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh9vfj5xy-1
+	qcppdkim1; bh=f0yjLvxIsBNyj7tkXEpAgfEIKkE98nJGHq3ch3fPuRQ=; b=Ll
+	pN2E90DgC54xYx8+rxUCX9usWwaqBH3H/lvFKvEmVTkXwtxXp8bUKnjCjsESPRoa
+	nRf3f87H/jjYDFfYsAt96eVlA78CbJtE33ONRJ6pnuiCfSH3MfNSZx0HwuI33k3p
+	Ayz726c1Wf98rVsD9zInLMaHcJtplCvACMdqVlIDtQjToClXU37wWoZf/znTjx6d
+	YaWNMejCHXGcfojLIDBBduCNEi0YyZ5DzIXS79SXSe/zyfmIjvGl1OUkQJcmA4Oj
+	jzwVrgcAue7ajeHOfmCgrgwKOe7JNSJlrQ2lK9I0e2nc4kCfAdHhDlNh/u2QLrQQ
+	eFTOt1utM321a7dPs1ew==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhsqyr480-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 11:42:12 +0000 (GMT)
+	Wed, 10 Jan 2024 11:42:38 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40ABfuQJ019414
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40ABgaEJ019519
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 11:41:56 GMT
+	Wed, 10 Jan 2024 11:42:36 GMT
 Received: from akronite-sh-dev02.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 10 Jan 2024 03:41:46 -0800
+ 15.2.1118.40; Wed, 10 Jan 2024 03:42:26 -0800
 From: Luo Jie <quic_luoj@quicinc.com>
 To: <agross@kernel.org>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
@@ -54,9 +54,9 @@ CC: <netdev@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <quic_soni@quicinc.com>, <quic_pavir@quicinc.com>,
         <quic_souravp@quicinc.com>, <quic_linchen@quicinc.com>,
         <quic_leiwei@quicinc.com>
-Subject: [PATCH net-next 05/20] net: ethernet: qualcomm: Add PPE queue management config
-Date: Wed, 10 Jan 2024 19:40:17 +0800
-Message-ID: <20240110114033.32575-6-quic_luoj@quicinc.com>
+Subject: [PATCH net-next 09/20] net: ethernet: qualcomm: Add PPE queue config
+Date: Wed, 10 Jan 2024 19:40:21 +0800
+Message-ID: <20240110114033.32575-10-quic_luoj@quicinc.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240110114033.32575-1-quic_luoj@quicinc.com>
 References: <20240110114033.32575-1-quic_luoj@quicinc.com>
@@ -72,321 +72,334 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9TXgj9jodKNsLq6Ckt0_0WO-00vA_jJW
-X-Proofpoint-ORIG-GUID: 9TXgj9jodKNsLq6Ckt0_0WO-00vA_jJW
+X-Proofpoint-GUID: MTo69q-kg4TgpbdIfTjb0y9PQ9RO-K0a
+X-Proofpoint-ORIG-GUID: MTo69q-kg4TgpbdIfTjb0y9PQ9RO-K0a
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
- impostorscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 phishscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2311290000 definitions=main-2401100096
 
-QM(queue management) config decides the length of queue and the
-threshold to drop packet, there are two kinds of queue, unicast
-queue and multicast queue to transmit different type of packet.
+Assign the default queue base for the physical port. Each physical port
+has an independent profile. The egress queue ID is decided by queue
+base, priority class offset and hash class offset.
+
+1. The queue base is configured based on the destination port or CPU
+code or service code.
+
+2. The maximum priority offset is decided by the range of the DRR
+available for the physical port, which is from the device tree scheduler
+resource.
+
+3. The hash class offset is configured as 0 by default, which can be
+adjusted by the EDMA driver for load balance on the CPU cores.
 
 Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 ---
- drivers/net/ethernet/qualcomm/ppe/ppe.c      | 158 ++++++++++++++++++-
- drivers/net/ethernet/qualcomm/ppe/ppe_regs.h | 106 +++++++++++++
- 2 files changed, 263 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qualcomm/ppe/ppe.c      | 98 ++++++++++++++++++++
+ drivers/net/ethernet/qualcomm/ppe/ppe_ops.c  | 79 ++++++++++++++++
+ drivers/net/ethernet/qualcomm/ppe/ppe_ops.h  | 34 +++++++
+ drivers/net/ethernet/qualcomm/ppe/ppe_regs.h | 16 ++++
+ 4 files changed, 227 insertions(+)
 
 diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe.c b/drivers/net/ethernet/qualcomm/ppe/ppe.c
-index 94fa13dd17da..122e325b407d 100644
+index 75c24a87e2be..dd032a158231 100644
 --- a/drivers/net/ethernet/qualcomm/ppe/ppe.c
 +++ b/drivers/net/ethernet/qualcomm/ppe/ppe.c
-@@ -475,10 +475,166 @@ static int of_parse_ppe_bm(struct ppe_device *ppe_dev,
- 	return ret;
+@@ -1017,6 +1017,98 @@ static int of_parse_ppe_config(struct ppe_device *ppe_dev,
+ 	return of_parse_ppe_scheduler(ppe_dev, ppe_node);
  }
  
-+static int of_parse_ppe_qm(struct ppe_device *ppe_dev,
-+			   struct device_node *ppe_node)
++static int ppe_qm_init(struct ppe_device *ppe_dev)
 +{
-+	union ppe_ac_uni_queue_cfg_u uni_queue_cfg;
-+	union ppe_ac_mul_queue_cfg_u mul_queue_cfg;
-+	union ppe_ac_grp_cfg_u group_cfg;
-+	struct device_node *qm_node;
-+	int ret, cnt, queue_id;
-+	u32 *cfg;
++	const struct ppe_queue_ops *ppe_queue_ops;
++	struct ppe_queue_ucast_dest queue_dst;
++	int profile_id, priority, res, class;
 +
-+	qm_node = of_get_child_by_name(ppe_node, "queue-management-config");
-+	if (!qm_node)
-+		return dev_err_probe(ppe_dev->dev, -ENODEV,
-+				     "Fail to get queue-management-config\n");
++	ppe_queue_ops = ppe_queue_config_ops_get();
 +
-+	cnt = of_property_count_u32_elems(qm_node, "qcom,group-config");
-+	if (cnt < 0)
-+		return dev_err_probe(ppe_dev->dev, -ENODEV,
-+				     "Fail to get qcom,group-config\n");
-+
-+	cfg = kmalloc_array(cnt, sizeof(*cfg), GFP_KERNEL | __GFP_ZERO);
-+	if (!cfg)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_u32_array(qm_node, "qcom,group-config", cfg, cnt);
-+	if (ret) {
-+		dev_err(ppe_dev->dev, "Fail to get qcom,group-config\n");
-+		goto parse_qm_err;
-+	}
-+
-+	/* Parse QM group config:
-+	 * qcom,group-config = <group total prealloc ceil resume_off>;
++	/* Initialize the PPE queue base ID and queue priority for each
++	 * physical port, the egress queue ID is decided by the queue
++	 * base ID added by the queue priority class and RSS hash class.
 +	 *
-+	 * For packet enqueue, there are two kinds of buffer type available,
-+	 * queue based buffer and group(shared) buffer, the queue based buffer
-+	 * is used firstly, then shared buffer used.
-+	 *
-+	 * Maximum 4 groups buffer supported by PPE.
++	 * Each physical port has the independent profile ID, so that
++	 * each physical port can be configured with the independent
++	 * queue base and queue priority class and RSS hash class.
 +	 */
-+	ret = 0;
-+	while ((cnt - ret) / 5) {
-+		memset(&group_cfg, 0, sizeof(group_cfg));
++	profile_id = 0;
++	while (profile_id < PPE_SCHEDULER_PORT_NUM) {
++		memset(&queue_dst, 0, sizeof(queue_dst));
 +
-+		ppe_read_tbl(ppe_dev, PPE_AC_GRP_CFG_TBL +
-+			     PPE_AC_GRP_CFG_TBL_INC * cfg[ret],
-+			     group_cfg.val, sizeof(group_cfg.val));
++		/* The device tree property of queue-config is as below,
++		 * <queue_base queue_num group prealloc ceil weight
++		 * resume_off dynamic>;
++		 */
++		res = ppe_scheduler_res[profile_id].ucastq[0];
++		queue_dst.dest_port = profile_id;
 +
-+		group_cfg.bf.limit = cfg[ret + 1];
-+		group_cfg.bf.prealloc_limit = cfg[ret + 2];
-+		group_cfg.bf.dp_thrd_0 = cfg[ret + 3] & 0x3f;
-+		group_cfg.bf.dp_thrd_1 = cfg[ret + 3] >> 7;
-+		group_cfg.bf.grn_resume = cfg[ret + 4];
++		/* Configure queue base ID and profile ID that is same as
++		 * physical port ID.
++		 */
++		if (ppe_queue_ops->queue_ucast_base_set)
++			ppe_queue_ops->queue_ucast_base_set(ppe_dev,
++							    queue_dst,
++							    res,
++							    profile_id);
 +
-+		ppe_write_tbl(ppe_dev, PPE_AC_GRP_CFG_TBL +
-+			      PPE_AC_GRP_CFG_TBL_INC * cfg[ret],
-+			      group_cfg.val, sizeof(group_cfg.val));
-+		ret += 5;
-+	}
++		/* Queue maximum priority supported by each phiscal port */
++		res = ppe_scheduler_res[profile_id].l0cdrr[1] -
++		      ppe_scheduler_res[profile_id].l0cdrr[0];
 +
-+	cnt = of_property_count_u32_elems(qm_node, "qcom,queue-config");
-+	if (cnt < 0) {
-+		dev_err(ppe_dev->dev, "Fail to get qcom,queue-config\n");
-+		goto parse_qm_err;
-+	}
++		priority = 0;
++		while (priority < PPE_QUEUE_PRI_MAX) {
++			if (priority > res)
++				class = res;
++			else
++				class = priority;
 +
-+	cfg = krealloc_array(cfg, cnt, sizeof(*cfg), GFP_KERNEL | __GFP_ZERO);
-+	if (!cfg) {
-+		ret = -ENOMEM;
-+		goto parse_qm_err;
-+	}
-+
-+	ret = of_property_read_u32_array(qm_node, "qcom,queue-config", cfg, cnt);
-+	if (ret) {
-+		dev_err(ppe_dev->dev, "Fail to get qcom,queue-config\n");
-+		goto parse_qm_err;
-+	}
-+
-+	/* Parse queue based config:
-+	 * qcom,queue-config = <queue_base queue_num group prealloc
-+	 * ceil weight resume_off dynamic>;
-+	 *
-+	 * There are totally 256(queue id 0-255) unicast queues and 44(256-299)
-+	 * multicast queues available in PPE, each queue is assigned the
-+	 * dedicated buffer and ceil to drop packet, the unicast queue supports
-+	 * static configured ceil value and dynamic ceil value that is adjusted
-+	 * according to the available group buffers, multicast queue only supports
-+	 * static ceil.
-+	 */
-+	ret = 0;
-+	while ((cnt - ret) / 8) {
-+		queue_id = 0;
-+		while (queue_id < cfg[ret + 1]) {
-+			if (cfg[ret] + queue_id < PPE_AC_UNI_QUEUE_CFG_TBL_NUM) {
-+				memset(&uni_queue_cfg, 0, sizeof(uni_queue_cfg));
-+
-+				ppe_read_tbl(ppe_dev, PPE_AC_UNI_QUEUE_CFG_TBL +
-+					     PPE_AC_UNI_QUEUE_CFG_TBL_INC * (cfg[ret] + queue_id),
-+					     uni_queue_cfg.val, sizeof(uni_queue_cfg.val));
-+
-+				uni_queue_cfg.bf.ac_grp_id = cfg[ret + 2];
-+				uni_queue_cfg.bf.prealloc_limit = cfg[ret + 3];
-+				uni_queue_cfg.bf.shared_ceiling = cfg[ret + 4];
-+				uni_queue_cfg.bf.shared_weight = cfg[ret + 5];
-+				uni_queue_cfg.bf.grn_resume = cfg[ret + 6];
-+				uni_queue_cfg.bf.shared_dynamic = cfg[ret + 7];
-+				uni_queue_cfg.bf.ac_en = 1;
-+
-+				ppe_write_tbl(ppe_dev, PPE_AC_UNI_QUEUE_CFG_TBL +
-+					      PPE_AC_UNI_QUEUE_CFG_TBL_INC * (cfg[ret] + queue_id),
-+					      uni_queue_cfg.val, sizeof(uni_queue_cfg.val));
-+			} else {
-+				memset(&mul_queue_cfg, 0, sizeof(mul_queue_cfg));
-+
-+				ppe_read_tbl(ppe_dev, PPE_AC_MUL_QUEUE_CFG_TBL +
-+					     PPE_AC_MUL_QUEUE_CFG_TBL_INC * (cfg[ret] + queue_id),
-+					     mul_queue_cfg.val, sizeof(mul_queue_cfg.val));
-+
-+				mul_queue_cfg.bf.ac_grp_id = cfg[ret + 2];
-+				mul_queue_cfg.bf.prealloc_limit = cfg[ret + 3];
-+				mul_queue_cfg.bf.shared_ceiling = cfg[ret + 4];
-+				mul_queue_cfg.bf.grn_resume = cfg[ret + 6];
-+				mul_queue_cfg.bf.ac_en = 1;
-+
-+				ppe_write_tbl(ppe_dev, PPE_AC_MUL_QUEUE_CFG_TBL +
-+					      PPE_AC_MUL_QUEUE_CFG_TBL_INC * (cfg[ret] + queue_id),
-+					      mul_queue_cfg.val, sizeof(mul_queue_cfg.val));
-+			}
-+
-+			ppe_mask(ppe_dev, PPE_ENQ_OPR_TBL +
-+				 PPE_ENQ_OPR_TBL_INC * (cfg[ret] + queue_id),
-+				 PPE_ENQ_OPR_TBL_DEQ_DISABLE, 0);
-+
-+			ppe_mask(ppe_dev, PPE_DEQ_OPR_TBL +
-+				 PPE_DEQ_OPR_TBL_INC * (cfg[ret] + queue_id),
-+				 PPE_ENQ_OPR_TBL_DEQ_DISABLE, 0);
-+
-+			queue_id++;
++			if (ppe_queue_ops->queue_ucast_pri_class_set)
++				ppe_queue_ops->queue_ucast_pri_class_set(ppe_dev,
++									 profile_id,
++									 priority,
++									 class);
++			priority++;
 +		}
-+		ret += 8;
++
++		/* Configure the queue RSS hash class value as 0 by default,
++		 * which can be configured as the value same as the ARM CPU
++		 * core number to distribute traffic for the traffic load balance.
++		 */
++		priority = 0;
++		while (priority < PPE_QUEUE_HASH_MAX) {
++			if (ppe_queue_ops->queue_ucast_hash_class_set)
++				ppe_queue_ops->queue_ucast_hash_class_set(ppe_dev,
++									  profile_id,
++									  priority,
++									  0);
++			priority++;
++		}
++
++		profile_id++;
 +	}
 +
-+	/* Enable queue counter */
-+	ret = ppe_mask(ppe_dev, PPE_EG_BRIDGE_CONFIG,
-+		       PPE_EG_BRIDGE_CONFIG_QUEUE_CNT_EN,
-+		       PPE_EG_BRIDGE_CONFIG_QUEUE_CNT_EN);
-+parse_qm_err:
-+	kfree(cfg);
-+	return ret;
++	/* Redirect ARP reply packet with the max priority on CPU port, which
++	 * keeps the ARP reply with highest priority received by EDMA when
++	 * there is heavy traffic.
++	 */
++	memset(&queue_dst, 0, sizeof(queue_dst));
++	queue_dst.cpu_code_en = true;
++	queue_dst.cpu_code = 101;
++	res = ppe_scheduler_res[0].ucastq[0];
++	priority = ppe_scheduler_res[0].l0cdrr[1] - ppe_scheduler_res[0].l0cdrr[0];
++	if (ppe_queue_ops->queue_ucast_base_set)
++		ppe_queue_ops->queue_ucast_base_set(ppe_dev, queue_dst, res, priority);
++
++	return 0;
 +}
 +
- static int of_parse_ppe_config(struct ppe_device *ppe_dev,
- 			       struct device_node *ppe_node)
++static int ppe_dev_hw_init(struct ppe_device *ppe_dev)
++{
++	return ppe_qm_init(ppe_dev);
++}
++
+ static int qcom_ppe_probe(struct platform_device *pdev)
  {
--	return of_parse_ppe_bm(ppe_dev, ppe_node);
-+	int ret;
-+
-+	ret = of_parse_ppe_bm(ppe_dev, ppe_node);
+ 	struct ppe_device *ppe_dev;
+@@ -1059,6 +1151,12 @@ static int qcom_ppe_probe(struct platform_device *pdev)
+ 				     ret,
+ 				     "of parse ppe failed\n");
+ 
++	ret = ppe_dev_hw_init(ppe_dev);
 +	if (ret)
-+		return ret;
++		return dev_err_probe(&pdev->dev,
++				     ret,
++				     "ppe device hw init failed\n");
 +
-+	return of_parse_ppe_qm(ppe_dev, ppe_node);
+ 	ppe_dev->is_ppe_probed = true;
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_ops.c b/drivers/net/ethernet/qualcomm/ppe/ppe_ops.c
+index 7853c2fdcc63..eaa3f1e7b525 100644
+--- a/drivers/net/ethernet/qualcomm/ppe/ppe_ops.c
++++ b/drivers/net/ethernet/qualcomm/ppe/ppe_ops.c
+@@ -194,9 +194,88 @@ static int ppe_queue_scheduler_get(struct ppe_device *ppe_dev,
+ 		return -EINVAL;
  }
  
- static int qcom_ppe_probe(struct platform_device *pdev)
++static int ppe_queue_ucast_base_set(struct ppe_device *ppe_dev,
++				    struct ppe_queue_ucast_dest queue_dst,
++				    int queue_base, int profile_id)
++{
++	u32 reg_val;
++	int index;
++
++	if (queue_dst.service_code_en)
++		index = 2048 + (queue_dst.src_profile << 8) + queue_dst.service_code;
++	else if (queue_dst.cpu_code_en)
++		index = 1024 + (queue_dst.src_profile << 8) + queue_dst.cpu_code;
++	else
++		index = (queue_dst.src_profile << 8) + queue_dst.dest_port;
++
++	reg_val = FIELD_PREP(PPE_UCAST_QUEUE_MAP_TBL_PROFILE_ID, profile_id) |
++		  FIELD_PREP(PPE_UCAST_QUEUE_MAP_TBL_QUEUE_ID, queue_base);
++
++	return ppe_write(ppe_dev, PPE_UCAST_QUEUE_MAP_TBL + index * PPE_UCAST_QUEUE_MAP_TBL_INC,
++			 reg_val);
++}
++
++static  int ppe_queue_ucast_base_get(struct ppe_device *ppe_dev,
++				     struct ppe_queue_ucast_dest queue_dst,
++				     int *queue_base, int *profile_id)
++{
++	u32 reg_val;
++	int index;
++
++	if (queue_dst.service_code_en)
++		index = 2048 + (queue_dst.src_profile << 8) + queue_dst.service_code;
++	else if (queue_dst.cpu_code_en)
++		index = 1024 + (queue_dst.src_profile << 8) + queue_dst.cpu_code;
++	else
++		index = (queue_dst.src_profile << 8) + queue_dst.dest_port;
++
++	ppe_read(ppe_dev, PPE_UCAST_QUEUE_MAP_TBL + index * PPE_UCAST_QUEUE_MAP_TBL_INC, &reg_val);
++
++	*queue_base = FIELD_GET(PPE_UCAST_QUEUE_MAP_TBL_QUEUE_ID, reg_val);
++	*profile_id = FIELD_GET(PPE_UCAST_QUEUE_MAP_TBL_PROFILE_ID, reg_val);
++
++	return 0;
++}
++
++static int ppe_queue_ucast_pri_class_set(struct ppe_device *ppe_dev,
++					 int profile_id,
++					 int priority,
++					 int class_offset)
++{
++	u32 reg_val;
++	int index;
++
++	index = (profile_id << 4) + priority;
++	reg_val = FIELD_PREP(PPE_UCAST_PRIORITY_MAP_TBL_CLASS, class_offset);
++
++	return ppe_write(ppe_dev,
++			 PPE_UCAST_PRIORITY_MAP_TBL + index * PPE_UCAST_PRIORITY_MAP_TBL_INC,
++			 reg_val);
++}
++
++static int ppe_queue_ucast_hash_class_set(struct ppe_device *ppe_dev,
++					  int profile_id,
++					  int rss_hash,
++					  int class_offset)
++{
++	u32 reg_val;
++	int index;
++
++	index = (profile_id << 4) + rss_hash;
++	reg_val = FIELD_PREP(PPE_UCAST_HASH_MAP_TBL_HASH, class_offset);
++
++	return ppe_write(ppe_dev,
++			 PPE_UCAST_HASH_MAP_TBL + index * PPE_UCAST_HASH_MAP_TBL_INC,
++			 reg_val);
++}
++
+ static const struct ppe_queue_ops qcom_ppe_queue_config_ops = {
+ 	.queue_scheduler_set = ppe_queue_scheduler_set,
+ 	.queue_scheduler_get = ppe_queue_scheduler_get,
++	.queue_ucast_base_set = ppe_queue_ucast_base_set,
++	.queue_ucast_base_get = ppe_queue_ucast_base_get,
++	.queue_ucast_pri_class_set = ppe_queue_ucast_pri_class_set,
++	.queue_ucast_hash_class_set = ppe_queue_ucast_hash_class_set,
+ };
+ 
+ const struct ppe_queue_ops *ppe_queue_config_ops_get(void)
+diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_ops.h b/drivers/net/ethernet/qualcomm/ppe/ppe_ops.h
+index 4980e3fed1c0..181dbd4a3d90 100644
+--- a/drivers/net/ethernet/qualcomm/ppe/ppe_ops.h
++++ b/drivers/net/ethernet/qualcomm/ppe/ppe_ops.h
+@@ -10,6 +10,9 @@
+ #ifndef __PPE_OPS_H__
+ #define __PPE_OPS_H__
+ 
++#define PPE_QUEUE_PRI_MAX		16
++#define PPE_QUEUE_HASH_MAX		256
++
+ /* PPE hardware QoS configurations used to dispatch the packet passed
+  * through PPE, the scheduler supports DRR(deficit round robin with the
+  * weight) and SP(strict priority).
+@@ -27,6 +30,21 @@ struct ppe_qos_scheduler_cfg {
+ 	int drr_frame_mode;
+ };
+ 
++/* The egress queue ID can be decided by service code, CPU code and
++ * egress port.
++ *
++ * service code has the highest priority to decide queue base, then
++ * CPU code, finally egress port when all are enabled.
++ */
++struct ppe_queue_ucast_dest {
++	int src_profile;
++	bool service_code_en;
++	int service_code;
++	bool cpu_code_en;
++	int cpu_code;
++	int dest_port;
++};
++
+ /* The operations are used to configure the PPE queue related resource */
+ struct ppe_queue_ops {
+ 	int (*queue_scheduler_set)(struct ppe_device *ppe_dev,
+@@ -39,6 +57,22 @@ struct ppe_queue_ops {
+ 				   int level,
+ 				   int *port,
+ 				   struct ppe_qos_scheduler_cfg *scheduler_cfg);
++	int (*queue_ucast_base_set)(struct ppe_device *ppe_dev,
++				    struct ppe_queue_ucast_dest queue_dst,
++				    int queue_base,
++				    int profile_id);
++	int (*queue_ucast_base_get)(struct ppe_device *ppe_dev,
++				    struct ppe_queue_ucast_dest queue_dst,
++				    int *queue_base,
++				    int *profile_id);
++	int (*queue_ucast_pri_class_set)(struct ppe_device *ppe_dev,
++					 int profile_id,
++					 int priority,
++					 int class_offset);
++	int (*queue_ucast_hash_class_set)(struct ppe_device *ppe_dev,
++					  int profile_id,
++					  int rss_hash,
++					  int class_offset);
+ };
+ 
+ const struct ppe_queue_ops *ppe_queue_config_ops_get(void);
 diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-index e11d8f2a26b7..3e75b75fa48c 100644
+index 10daa70f28e9..9fdb9592b44b 100644
 --- a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
 +++ b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-@@ -7,6 +7,14 @@
- #ifndef __PPE_REGS_H__
- #define __PPE_REGS_H__
- 
-+#define PPE_EG_BRIDGE_CONFIG					0x20044
-+#define PPE_EG_BRIDGE_CONFIG_QUEUE_CNT_EN			BIT(2)
-+
-+#define PPE_DEQ_OPR_TBL						0x430000
-+#define PPE_DEQ_OPR_TBL_NUM					300
-+#define PPE_DEQ_OPR_TBL_INC					0x10
-+#define PPE_ENQ_OPR_TBL_DEQ_DISABLE				BIT(0)
-+
- #define PPE_BM_PORT_FC_MODE					0x600100
- #define PPE_BM_PORT_FC_MODE_NUM					15
- #define PPE_BM_PORT_FC_MODE_INC					4
-@@ -46,4 +54,102 @@ union ppe_bm_port_fc_cfg_u {
+@@ -148,6 +148,22 @@ union ppe_bm_port_fc_cfg_u {
  	struct ppe_bm_port_fc_cfg bf;
  };
  
-+#define PPE_AC_UNI_QUEUE_CFG_TBL				0x848000
-+#define PPE_AC_UNI_QUEUE_CFG_TBL_NUM				256
-+#define PPE_AC_UNI_QUEUE_CFG_TBL_INC				0x10
++#define PPE_UCAST_QUEUE_MAP_TBL					0x810000
++#define PPE_UCAST_QUEUE_MAP_TBL_NUM				3072
++#define PPE_UCAST_QUEUE_MAP_TBL_INC				0x10
++#define PPE_UCAST_QUEUE_MAP_TBL_PROFILE_ID			GENMASK(3, 0)
++#define PPE_UCAST_QUEUE_MAP_TBL_QUEUE_ID			GENMASK(11, 4)
 +
-+/* PPE unicast queue(0-255) configurations, the threshold supports to be
-+ * configured static or dynamic.
-+ *
-+ * For dynamic threshold, the queue threshold depends on the remain buffer.
-+ */
-+struct ppe_ac_uni_queue_cfg {
-+	u32 ac_en:1,
-+	    wred_en:1,
-+	    force_ac_en:1,
-+	    color_aware:1,
-+	    ac_grp_id:2,
-+	    prealloc_limit:11,
-+	    shared_dynamic:1,
-+	    shared_weight:3,
-+	    shared_ceiling:11;
-+	u32 gap_grn_grn_min:11,
-+	    gap_grn_yel_max:11,
-+	    gap_grn_yel_min_0:10;
-+	u32 gap_grn_yel_min_1:1,
-+	    gap_grn_red_max:11,
-+	    gap_grn_red_min:11,
-+	    red_resume_0:9;
-+	u32 red_resume_1:2,
-+	    yel_resume:11,
-+	    grn_resume:11,
-+	    res0:8;
-+};
++#define PPE_UCAST_HASH_MAP_TBL					0x830000
++#define PPE_UCAST_HASH_MAP_TBL_NUM				4096
++#define PPE_UCAST_HASH_MAP_TBL_INC				0x10
++#define PPE_UCAST_HASH_MAP_TBL_HASH				GENMASK(7, 0)
 +
-+union ppe_ac_uni_queue_cfg_u {
-+	u32 val[4];
-+	struct ppe_ac_uni_queue_cfg bf;
-+};
++#define PPE_UCAST_PRIORITY_MAP_TBL				0x842000
++#define PPE_UCAST_PRIORITY_MAP_TBL_NUM				256
++#define PPE_UCAST_PRIORITY_MAP_TBL_INC				0x10
++#define PPE_UCAST_PRIORITY_MAP_TBL_CLASS			GENMASK(3, 0)
 +
-+#define PPE_AC_MUL_QUEUE_CFG_TBL				0x84a000
-+#define PPE_AC_MUL_QUEUE_CFG_TBL_NUM				44
-+#define PPE_AC_MUL_QUEUE_CFG_TBL_INC				0x10
-+
-+/* PPE multicast queue(256-299) configurations, the mutlicast queues are
-+ * fixed to the PPE ports, which only support static threshold.
-+ */
-+struct ppe_ac_mul_queue_cfg {
-+	u32 ac_en:1,
-+	    force_ac_en:1,
-+	    color_aware:1,
-+	    ac_grp_id:2,
-+	    prealloc_limit:11,
-+	    shared_ceiling:11,
-+	    gap_grn_yel_0:5;
-+	u32 gap_grn_yel_1:6,
-+	    gap_grn_red:11,
-+	    red_resume:11,
-+	    yel_resume_0:4;
-+	u32 yel_resume_1:7,
-+	    grn_resume:11,
-+	    res0:14;
-+};
-+
-+union ppe_ac_mul_queue_cfg_u {
-+	u32 val[3];
-+	struct ppe_ac_mul_queue_cfg bf;
-+};
-+
-+#define PPE_AC_GRP_CFG_TBL					0x84c000
-+#define PPE_AC_GRP_CFG_TBL_NUM					4
-+#define PPE_AC_GRP_CFG_TBL_INC					0x10
-+
-+/* PPE admission control of group configurations */
-+struct ppe_ac_grp_cfg {
-+	u32 ac_en:1,
-+	    force_ac_en:1,
-+	    color_aware:1,
-+	    gap_grn_red:11,
-+	    gap_grn_yel:11,
-+	    dp_thrd_0:7;
-+	u32 dp_thrd_1:4,
-+	    limit:11,
-+	    red_resume:11,
-+	    yel_resume_0:6;
-+	u32 yel_resume_1:5,
-+	    grn_resume:11,
-+	    prealloc_limit:11,
-+	    res0:5;
-+};
-+
-+union ppe_ac_grp_cfg_u {
-+	u32 val[3];
-+	struct ppe_ac_grp_cfg bf;
-+};
-+
-+#define PPE_ENQ_OPR_TBL						0x85c000
-+#define PPE_ENQ_OPR_TBL_NUM					300
-+#define PPE_ENQ_OPR_TBL_INC					0x10
-+#define PPE_ENQ_OPR_TBL_ENQ_DISABLE				BIT(0)
-+
- #endif
+ #define PPE_AC_UNI_QUEUE_CFG_TBL				0x848000
+ #define PPE_AC_UNI_QUEUE_CFG_TBL_NUM				256
+ #define PPE_AC_UNI_QUEUE_CFG_TBL_INC				0x10
 -- 
 2.42.0
 
