@@ -1,194 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF8C64C3B8;
-	Wed, 10 Jan 2024 14:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13BF92F4;
-	Wed, 10 Jan 2024 06:11:23 -0800 (PST)
-Received: from [10.57.87.179] (unknown [10.57.87.179])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CB843F5A1;
-	Wed, 10 Jan 2024 06:10:34 -0800 (PST)
-Message-ID: <14e5634b-721a-4444-8825-967d807b71b7@arm.com>
-Date: Wed, 10 Jan 2024 14:11:57 +0000
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A604C60B;
+	Wed, 10 Jan 2024 14:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRycpO1R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C4EC433F1;
+	Wed, 10 Jan 2024 14:10:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704895840;
+	bh=eY10UxSczupCveV5wCR/tuzRKmbvyyPqzGr7zHPzSe4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oRycpO1REDWemAYzGCy71bi5syZzypvnGLZFml/7L23ZdPXbJpGrpExWnEYXVnhCO
+	 3QIukT2p021LLY324GJ0hpNzicFUCNt93DPJKDfrlS2EMhc/QEvtZIEZAHHnkYh/Sa
+	 QfnbtplBKkJCY+DN876SM5sljL9/BzO6tzfDg0KFozNjo+86DDQ/TTJehbcVXbyWBo
+	 IVx77egR2tIh6V+zn7nZL2IP1k2fHe4brbrsBL9f0PeZwTqE2xKI3mfmnwsp2YfiwA
+	 puIskItzVWI6OT27l2oRmyFe+IFvFOzRa7Kd2BMlQUN4YBnEQXeSaZ+5eSekV+kAz9
+	 CCHIBlaYc3TUw==
+Date: Wed, 10 Jan 2024 21:57:50 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] riscv: dts: starfive: add Milkv Mars board device
+ tree
+Message-ID: <ZZ6iXsDJVs3FIrOl@xhacker>
+References: <20231202153353.635-1-jszhang@kernel.org>
+ <CAJM55Z-9Y=QitvAX+z=XTTMM0CGRzGMD5z0H_Bzv=Q85b49rpQ@mail.gmail.com>
+ <20240110-eternal-proofing-8a33201ff727@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 11/23] PM: EM: Add API for updating the runtime
- modifiable EM
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- dietmar.eggemann@arm.com, rui.zhang@intel.com, amit.kucheria@verdurent.com,
- amit.kachhap@gmail.com, daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
- len.brown@intel.com, pavel@ucw.cz, mhiramat@kernel.org, qyousef@layalina.io,
- wvw@google.com
-References: <20240104171553.2080674-1-lukasz.luba@arm.com>
- <20240104171553.2080674-12-lukasz.luba@arm.com>
- <CAJZ5v0hqRkDmhRBfB4g-2EH2piv-KOQdwad7rVoSK8FzZKg=TA@mail.gmail.com>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0hqRkDmhRBfB4g-2EH2piv-KOQdwad7rVoSK8FzZKg=TA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240110-eternal-proofing-8a33201ff727@spud>
 
-
-
-On 1/4/24 19:47, Rafael J. Wysocki wrote:
-> I don't really like using the API TLA in patch subjects, because it
-> does not really say much.  IMO a subject like this would be better:
+On Wed, Jan 10, 2024 at 01:53:11PM +0000, Conor Dooley wrote:
+> On Sat, Dec 02, 2023 at 02:07:50PM -0800, Emil Renner Berthing wrote:
+> > Jisheng Zhang wrote:
+> > > The Milkv Mars is a development board based on the Starfive JH7110 SoC.
+> > > The board features:
+> > >
+> > > - JH7110 SoC
+> > > - 1/2/4/8 GiB LPDDR4 DRAM
+> > > - AXP15060 PMIC
+> > > - 40 pin GPIO header
+> > > - 3x USB 3.0 host port
+> > > - 1x USB 2.0 host port
+> > > - 1x M.2 E-Key
+> > > - 1x eMMC slot
+> > > - 1x MicroSD slot
+> > > - 1x QSPI Flash
+> > > - 1x 1Gbps Ethernet port
+> > > - 1x HDMI port
+> > > - 1x 2-lane DSI and 1x 4-lane DSI
+> > > - 1x 2-lane CSI
+> > >
+> > > patch1 adds 'cpus' label
+> > > patch2 adds "milkv,mars" board dt-binding
+> > > patch3 adds the devicetree file describing the currently supported
+> > > features:
+> > > Namely PMIC, UART, I2C, GPIO, SD card, QSPI Flash, eMMC and Ethernet.
+> > >
+> > > Since v1:
+> > >  - add two new patches which add "cpus" label and board dt-binding
+> > >  - adopt Krzysztof's suggestions, thanks
+> > >
+> > > Hi Conor,
+> > >
+> > > I see you have sent a patch which moves the timebase-frequency property
+> > > to soc dtsi, but this series doesn't rebase on that. I can update it
+> > > once your patch is merged.
+> > 
+> > Hi Jisheng,
+> > 
+> > Thanks for working on this! On the JH7110 the mtime derives almost directly
+> > from the external oscillator like this:
+> > 
+> > osc (24MHz) -> rtc_toggle (div 6) -> mtime (4MHz)
+> > 
+> > So to me it makes sense to define the timebase-frequency in the same file as
+> > the frequency of the external oscillator.
+> > 
+> > In general it looks good, but if you do
+> > 
+> >   diff -Naur jh7110-{starfive-visionfive-2.dtsi,milkv-mars.dts}
+> > 
+> > you'll see that those two files are almost identical. Even external clock
+> > speeds and all the pin configuration are the same. I'd strongly prefer to have
+> > all that factored out in a common .dtsi so fixes don't get out of sync.
 > 
-> "PM: EM: Introduce em_dev_update_perf_domain() for EM updates"
+> I'm gonna mark this as changes requested on patchwork because of this
+> comment. LMK if you don't think this is worth another version Emil.
 
-Fair enough
+Yeah a new version is needed. And I think it's a bit late for this
+window, so the new version will be out once v6.8-rc1 is out.
 
-> 
-> On Thu, Jan 4, 2024 at 6:15 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
->>
->> Add API function em_dev_update_perf_domain() which allows to safely
->> change the EM.
-> 
-> "... which allows the EM to be changed safely."
+Thanks
 
-OK
-
-> 
-> New paragraph:
-> 
->> The concurrent modifiers are protected by the mutex
->> to serialize them. Removal of the old memory is asynchronous and
->> handled by the RCU mechanisms.
-> 
-> "Concurrent updaters are serialized with a mutex and the removal of
-> memory that will not be used any more is carried out with the help of
-> RCU."
-
-OK
-
-> 
->>
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->> ---
->>   include/linux/energy_model.h |  8 +++++++
->>   kernel/power/energy_model.c  | 41 ++++++++++++++++++++++++++++++++++++
->>   2 files changed, 49 insertions(+)
->>
->> diff --git a/include/linux/energy_model.h b/include/linux/energy_model.h
->> index 753d70d0ce7e..f33257ed83fd 100644
->> --- a/include/linux/energy_model.h
->> +++ b/include/linux/energy_model.h
->> @@ -183,6 +183,8 @@ struct em_data_callback {
->>
->>   struct em_perf_domain *em_cpu_get(int cpu);
->>   struct em_perf_domain *em_pd_get(struct device *dev);
->> +int em_dev_update_perf_domain(struct device *dev,
->> +                             struct em_perf_table __rcu *new_table);
->>   int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
->>                                  struct em_data_callback *cb, cpumask_t *span,
->>                                  bool microwatts);
->> @@ -376,6 +378,12 @@ struct em_perf_table __rcu *em_allocate_table(struct em_perf_domain *pd)
->>          return NULL;
->>   }
->>   static inline void em_free_table(struct em_perf_table __rcu *table) {}
->> +static inline
->> +int em_dev_update_perf_domain(struct device *dev,
->> +                             struct em_perf_table __rcu *new_table)
->> +{
->> +       return -EINVAL;
->> +}
->>   #endif
->>
->>   #endif
->> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
->> index bbc406db0be1..496dc00835c6 100644
->> --- a/kernel/power/energy_model.c
->> +++ b/kernel/power/energy_model.c
->> @@ -220,6 +220,47 @@ static int em_allocate_perf_table(struct em_perf_domain *pd,
->>          return 0;
->>   }
->>
->> +/**
->> + * em_dev_update_perf_domain() - Update runtime EM table for a device
->> + * @dev                : Device for which the EM is to be updated
->> + * @table      : The new EM table that is going to be used from now
-> 
-> This is called "new_table" below.
-
-good catch
-
-> 
->> + *
->> + * Update EM runtime modifiable table for the @dev using the provided @table.
->> + *
->> + * This function uses mutex to serialize writers, so it must not be called
-> 
-> "uses a mutex"
-
-OK
-
-> 
->> + * from non-sleeping context.
-> 
-> "a non-sleeping context".
-
-OK
-
-> 
->> + *
->> + * Return 0 on success or a proper error in case of failure.
-> 
-> It is not clear what "a proper error" means.  It would be better to
-> simply say "or an error code on failure" IMO.
-
-Agree, I'll change it.
-
-> 
->> + */
->> +int em_dev_update_perf_domain(struct device *dev,
->> +                             struct em_perf_table __rcu *new_table)
->> +{
->> +       struct em_perf_table __rcu *old_table;
->> +       struct em_perf_domain *pd;
->> +
->> +       /* Serialize update/unregister or concurrent updates */
->> +       mutex_lock(&em_pd_mutex);
->> +
->> +       if (!dev || !dev->em_pd) {
-> 
-> dev need not be checked under the lock.
-
-True, I will put it about the lock.
-
-> 
->> +               mutex_unlock(&em_pd_mutex);
->> +               return -EINVAL;
->> +       }
->> +       pd = dev->em_pd;
->> +
->> +       em_table_inc(new_table);
->> +
->> +       old_table = pd->em_table;
->> +       rcu_assign_pointer(pd->em_table, new_table);
->> +
->> +       em_cpufreq_update_efficiencies(dev, new_table->state);
->> +
->> +       em_table_dec(old_table);
->> +
->> +       mutex_unlock(&em_pd_mutex);
->> +       return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(em_dev_update_perf_domain);
->> +
->>   static int em_create_runtime_table(struct em_perf_domain *pd)
->>   {
->>          struct em_perf_table __rcu *table;
->> --
-
-
-Thank you for the review!
-
-Regards,
-Lukasz
