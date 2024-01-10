@@ -1,156 +1,120 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390B04689
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 02:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.219.174])
-	by gateway (Coremail) with SMTP id _____8BxHLsPAZ5lYLQDAA--.3203S3;
-	Wed, 10 Jan 2024 10:29:35 +0800 (CST)
-Received: from mail-yb1-f174.google.com (unknown [209.85.219.174])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axqt0MAZ5lQwgKAA--.26941S3;
-	Wed, 10 Jan 2024 10:29:34 +0800 (CST)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dbd715ed145so2676749276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 18:29:34 -0800 (PST)
-X-Gm-Message-State: AOJu0YwLSgqU839JRqu+XGqh0shyjcpxQVhiHZZeOj1kwriIKtzuNwm9
-	H1uPfS1h396akX7NI5+PX8G7yG2PeF7yKI0ChBSrGAppN/iw3A==
-X-Google-Smtp-Source: AGHT+IGFu70ifP6sZpWVKvAz9jkvhFQs0aK9sfB9mzmNZLo6qnO/qlrCw7c+TfeqTmvh2JMP1DwvoCXJuMWwzU2xTgI=
-X-Received: by 2002:a05:6902:351:b0:dbd:5b5e:820b with SMTP id
- e17-20020a056902035100b00dbd5b5e820bmr195849ybs.98.1704853772254; Tue, 09 Jan
- 2024 18:29:32 -0800 (PST)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FBE23B1
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 02:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cz1CR0Zl"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd1aeb1bf3so33830101fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 18:54:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704855240; x=1705460040; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oD7bzsVHDyZVaIw1WEtjfdf6X1QN0YaIlFCaqqO1VuM=;
+        b=Cz1CR0ZlUXtm/1br5zpPr0knRFNgPojPMyIRWibhoPQGfb6mtXFKjqcBTWRbxZRzAQ
+         f9XBLtZfPqB1ZUbqmIEkg3IW1+dQR0FbCEh+gtSU0bLPvJ8OvFlFIc2Xd9sn8Ia6DsWA
+         g2qzByq2yudBTo516XsjuPspfOmfxAQQJoczStNWkj52FvLKnLYI3AcHTh9SccL3hLJW
+         rlLE2/pdsLro5lCnD9qcjCs/vELr832CUIpptDmLhjo32I/xz3W1mobxo9KkvVH6zwVR
+         eoGSDS7qQf+FrPbTokv1WaW8EChMLRnKFRZuukJhviazKnm6rtWxtETdwydd8aOt4nj/
+         l+Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704855240; x=1705460040;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oD7bzsVHDyZVaIw1WEtjfdf6X1QN0YaIlFCaqqO1VuM=;
+        b=MfuW7vvNhiM+Ism4pBertuHNYMlAfME1bJI/dYqhn5heJ9zV0uJXB1X2YVa+zNkYhy
+         FfDSkzXc2EAtlREp8w539O+V4K6ZUHyqlxo0uz2xEI5WhnK7acO3Wb1TCUwJYT6FQtWX
+         SaM2PKVySuEAQlyP3K1Og8Gq7WUuu5qgAeangP7SLB0Dj8lEa5wfimBjmheNxgQ6U4Hw
+         4yhhESF9nvIRxIRE52f28jF4jkwCnjr3TAQjZ3U8VlS0uWOLg2qUrRW9jFf4jF1qOUMu
+         f8aPYAOE2ETc1Ff79UNHmmWYOjO4MJZGodc3qSoJo6h+be1fZLaA2glZ2VEYOG9iudbj
+         6qGg==
+X-Gm-Message-State: AOJu0YwkE+Kz1Jsaxt291w6tiZePjpRYcJ3N9GWxQx1oF07tBgjpiVJB
+	rOSh5g58HqcdC53uSJtAwWttNNJ2nglxIOKYQOUyjN7dUXPTL/Rz
+X-Google-Smtp-Source: AGHT+IHQN4O+MHJ48DV2x61/acZugFlcfT7v1vm9DSTQ8kXrGy6Cxt3Ro+CwkAH+vOJyvBwx5pmwfXX0VubD6jIlWFU=
+X-Received: by 2002:a2e:a90a:0:b0:2cd:6ea2:bff9 with SMTP id
+ j10-20020a2ea90a000000b002cd6ea2bff9mr1180838ljq.21.1704855239938; Tue, 09
+ Jan 2024 18:53:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108032117.215171-1-wangrui@loongson.cn> <ZZ2fn0scbDKBXWe5@boqun-archlinux>
- <CAHirt9iox8FGV2wrMyxwFRjab2avfOcyLKvBc9K=AqiHxqHXKg@mail.gmail.com> <ZZ38XMQw18mw2sTA@Boquns-Mac-mini.home>
-In-Reply-To: <ZZ38XMQw18mw2sTA@Boquns-Mac-mini.home>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Wed, 10 Jan 2024 10:29:21 +0800
-X-Gmail-Original-Message-ID: <CAHirt9jQSVvBF=1wc=sT9FxngeSP30P4FDpu8m0JH_0fOPSO-w@mail.gmail.com>
-Message-ID: <CAHirt9jQSVvBF=1wc=sT9FxngeSP30P4FDpu8m0JH_0fOPSO-w@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+References: <20240102175338.62012-1-ryncsn@gmail.com> <20240102175338.62012-7-ryncsn@gmail.com>
+ <87a5pg9qno.fsf@yhuang6-desk2.ccr.corp.intel.com>
+In-Reply-To: <87a5pg9qno.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Wed, 10 Jan 2024 10:53:42 +0800
+Message-ID: <CAMgjq7Ce6sCSTRd==N3ihrAcvVd2ggszdZuTwxDbFYcBWzcE_g@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] mm/swap: handle swapcache lookup in swapin_entry
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Chris Li <chrisl@kernel.org>, Hugh Dickins <hughd@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8Axqt0MAZ5lQwgKAA--.26941S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZFW3tF4xtr43Jw1xZw1kWFX_yoW8urW3p3
-	y7ZFn0kr4kGr13Jrna9w15WF1Yyw1fKr97X3WDJryxKr90yr1qyrWxtrW3Wa4DZry8CFW0
-	vr1Uu3ZxJF1UAwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
-	WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
-	DUUUU
-X-Gw-Check: e078b1bea2556669
 
-On Wed, Jan 10, 2024 at 10:09=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> =
-wrote:
+Huang, Ying <ying.huang@intel.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=888=E6=97=
+=A5=E5=91=A8=E4=B8=80 16:28=E5=86=99=E9=81=93=EF=BC=9A
 >
-> On Wed, Jan 10, 2024 at 09:41:38AM +0800, WANG Rui wrote:
-> > Hi Boqun,
-> >
-> > On Wed, Jan 10, 2024 at 3:35=E2=80=AFAM Boqun Feng <boqun.feng@gmail.co=
-m> wrote:
-> > >
-> > > Hi,
-> > >
-> > > Thanks for the patch.
-> > >
-> > > On Mon, Jan 08, 2024 at 11:21:15AM +0800, WANG Rui wrote:
-> > > > Enable Rust support for the LoongArch architecture.
-> > > >
-> > >
-> > > Could you share how you build and test? For example, I wonder the cla=
-ng
-> > > or gcc version you used and bindgen version you used. Thanks.
-> >
-> > You are welcome! The versions I'm using are listed in
-> > scripts/min-tool-version.sh, and I have tested Rust samples and the
-> > rnull block driver.
-> >
-> > llvm: main branch (ea3c7b3397f8de8e885ea7cd1ed5138ec4a72d50)
+> Kairui Song <ryncsn@gmail.com> writes:
 >
-> This means the LLVM support is yet to release? Or does LLVM 17 also
-> work?
-
-LLVM 17 doesn't work. The minimum LLVM version required for LoongArch
-is 18.0.0. This is the reason why we have updated the
-scripts/min-tool-version.sh. [1]
-
-[1] https://lore.kernel.org/loongarch/20240108033138.217032-1-wangrui@loong=
-son.cn/
-
-Regards,
-Rui
-
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > Since all callers of swapin_entry need to check the swap cache first, w=
+e
+> > can merge this common routine into swapin_entry, so it can be shared an=
+d
+> > optimized later.
+> >
+> > Also introduce a enum to better represent possible swap cache usage, an=
+d
+> > add some comments about it, make the usage of swap cache easier to
+> > understand.
 >
-> Regards,
-> Boqun
+> I don't find any benefit to do this.  The code line number isn't
+> reduced.  The concept of swap cache isn't hided either.
+
+Hi Ying
+
+Thanks for the comments.
+
+Maybe I should squash this with the following commit? The following
+commit want to do cache lookup in swapin_entry to avoid a redundant
+shadow lookup, it can help to improve the performance by about 4% for
+swapin path. So it need to return a enum to represent cache status.
+
+Further more, note the comments added here:
+
++/*
++ * Caller of swapin_entry may need to know the cache lookup result:
++ *
++ * SWAP_CACHE_HIT: cache hit, cached folio is retured.
++ * SWAP_CACHE_MISS: cache miss, folio is allocated, read from swap device
++ *                  and adde to swap cache, but still may return a cached
++ *                  folio if raced (check __read_swap_cache_async).
++ * SWAP_CACHE_BYPASS: cache miss, folio is new allocated and read
++ *                    from swap device bypassing the cache.
++ */
+
+SWAP_CACHE_MISS might be inaccurate, this is not an issue introduced
+by this commit, but better exposed. May worth a fix later. So far I
+can see two benefits fixing it:
+- More accurate maj/min page fault count.
+- Note the PageHWPoison check in do_swap_page, it ignored the race
+case, if a page getting poisoned is raced with swapcache then it may
+not work as expected.
+
+These are all minor issue indeed, some other optimization might also
+be doable, but at least a comment might be helpful.
+
+> --
+> Best Regards,
+> Huang, Ying
 >
-> > rustc: 1.74.1
-> > bindgen: 0.65.1
-> >
-> > Here are the build steps:
-> >
-> > 1. Build llvm
-> > 2. Install rust, rust-src (using rustup) and bindgen
-> > 3. Build kernel
-> >
-> > For more details, refer to Documentation/rust/quick-start.rst; there
-> > is nothing special about it.
-> >
-> > Regards,
-> > Rui
-> >
-> > >
-> > > Regards,
-> > > Boqun
-> > >
-> > > > Previous versions:
-> > > > v0: https://lore.kernel.org/loongarch/20240106065941.180796-1-wangr=
-ui@loongson.cn/
-> > > >
-> > > > Changes in v1:
-> > > >  - Address htmldocs warning.
-> > > >
-> > > > WANG Rui (2):
-> > > >   Documentation: rust: Add a character to the first column
-> > > >   LoongArch: Enable initial Rust support
-> > > >
-> > > >  Documentation/rust/arch-support.rst | 13 +++++++------
-> > > >  arch/loongarch/Kconfig              |  1 +
-> > > >  arch/loongarch/Makefile             |  3 +++
-> > > >  scripts/generate_rust_target.rs     | 10 ++++++++++
-> > > >  4 files changed, 21 insertions(+), 6 deletions(-)
-> > > >
-> > > > --
-> > > > 2.43.0
-> > > >
-> > >
-> >
->
-
-
---=20
-WANG Rui
-
