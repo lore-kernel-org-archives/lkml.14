@@ -1,98 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E524C3C8
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 16:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96E34C614;
+	Wed, 10 Jan 2024 16:05:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IxkDRf8S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704902681;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x1DSZje46czRQcMPRczBvCQW247SDADA2c7DsKeOHPc=;
-	b=IxkDRf8S9Ht9ggMpVJ/UMzCrsaGqoFfP4unqcs+EoRcd0FGz8x+v8Z3uZdbL7bOjkeoMT6
-	LwkA2lamP/MwbevvKi/0lw/DiZ9oVHn2hPK/QejbQ37mfwmXS6oRrwuHY+Odow1HOG1hqD
-	3UWNYhCD8P9y4De4hkPvYixTuEKDCso=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-237-Nnfzvt3fMIafSlUxoPodVw-1; Wed,
- 10 Jan 2024 11:04:38 -0500
-X-MC-Unique: Nnfzvt3fMIafSlUxoPodVw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E5A64380628C;
-	Wed, 10 Jan 2024 16:04:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.80])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 65D24C15E6A;
-	Wed, 10 Jan 2024 16:04:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 10 Jan 2024 17:03:24 +0100 (CET)
-Date: Wed, 10 Jan 2024 17:03:20 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: syzbot <syzbot+c6d438f2d77f96cae7c2@syzkaller.appspotmail.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, luto@kernel.org,
-	michael.christie@oracle.com, mst@redhat.com, peterz@infradead.org,
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: Re: [syzbot] [kernel?] WARNING in signal_wake_up_state
-Message-ID: <20240110160319.GA21002@redhat.com>
-References: <000000000000a41b82060e875721@google.com>
- <CAHk-=wgM=MmqrQC-qgXoSehW=itHaqOUiBfN8jRBGAHn1=D0tg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0Nh8JmS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FF9C433C7;
+	Wed, 10 Jan 2024 16:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704902704;
+	bh=59+le7fXjctIPbpN9qB4BCB8QpLgl+kvZFwrdOVqGm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A0Nh8JmSeLh/gTbSgK2b8WTCaIEeipH7goasBhQCrfZRmSBahEj7Ky+DgX3NKgGY9
+	 XmMx0nZ48ovzcOigjXBme91g0Flmneme/+y8Qq3/scWgw7C4pAq7i5AmjZU7FkFuiO
+	 DHpMk91c0Dnv/NF0jVcLrOwtsVFeUJHovwkCSyLBGpX85CtJ0eYMHlHEfRwNIqrkhC
+	 Gh10IjhW7kGVzJzIXkqKEXxHUEQfn01/05HGM/fE9vnioT2NkjFONmYLfW10uVjAGX
+	 7ejdWnX5AEX+aztvzw0Z3hCwdNjAdIJE8B5f5XbmRGnxEMEjuJaC9KtQLlfE+rSVdI
+	 4viU2fkU8tuew==
+Date: Wed, 10 Jan 2024 16:04:58 +0000
+From: Conor Dooley <conor@kernel.org>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	jason-ch chen <Jason-ch.Chen@mediatek.com>,
+	Macpaul Lin <macpaul.lin@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH 1/2] dt-bindings: arm64: mediatek: Add MT7981B and Xiaomi
+ AX3000T
+Message-ID: <20240110-commend-scrunch-847e224918c6@spud>
+References: <20240110095118.25598-1-zajec5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nFyTv1x5d4o5hpfV"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgM=MmqrQC-qgXoSehW=itHaqOUiBfN8jRBGAHn1=D0tg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <20240110095118.25598-1-zajec5@gmail.com>
 
-On 01/09, Linus Torvalds wrote:
->
-> Oleg/Eric, can you make any sense of this?
->
-> On Tue, 9 Jan 2024 at 10:18, syzbot
-> <syzbot+c6d438f2d77f96cae7c2@syzkaller.appspotmail.com> wrote:
-> >
-> > The issue was bisected to:
-> >
-> > commit f9010dbdce911ee1f1af1398a24b1f9f992e0080
->
-> Hmm. This smells more like a "that triggers the problem" than a cause.
->
-> Because the warning itself is
->
-> > WARNING: CPU: 1 PID: 5069 at kernel/signal.c:771 signal_wake_up_state+0xfa/0x120 kernel/signal.c:771
->
-> That's
->
->         lockdep_assert_held(&t->sighand->siglock);
 
-I have a fever, possibly I am totally confused, but this commit added
+--nFyTv1x5d4o5hpfV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-+               /* Don't require de_thread to wait for the vhost_worker */
-+               if ((t->flags & (PF_IO_WORKER | PF_USER_WORKER)) != PF_USER_WORKER)
-+                       count++;
+On Wed, Jan 10, 2024 at 10:51:17AM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>=20
+> MT7981B (AKA Filogic 820) is MediaTek's dual-core ARM Cortex-A53 SoC.
+> One of market devices using this SoC is Xiaomi AX3000T.
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 
-into zap_other_threads().
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-So it seems the caller can do unshare_sighand() before vhost thread exits and
-actually unshare ->sighand because oldsighand->count > 1.
+Cheers,
+Conor.
 
-This is already very wrong (plus it seems this breaks the signal->notify_count
-logic). IIRC I even tried to argue with this change... not sure.
+--nFyTv1x5d4o5hpfV
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And this can explain the warning, this task can start the coredump after exec
-and hit vhost_worker with the old sighand != current->sighand.
+-----BEGIN PGP SIGNATURE-----
 
-Oleg.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ7AKgAKCRB4tDGHoIJi
+0m1ZAP9HShIib21NY/hwAr4GUciP78tQnAWEozG/x6/G0PZt9AD+KcxphqD4ptPZ
+d2WQOFJ3JjaujTk+7/mNVeIdBsQMDA0=
+=2AMC
+-----END PGP SIGNATURE-----
 
+--nFyTv1x5d4o5hpfV--
