@@ -1,265 +1,422 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB89A4E1CA;
-	Wed, 10 Jan 2024 14:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E76495C5;
+	Wed, 10 Jan 2024 14:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IOmkYYse"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40AE97RM037953;
-	Wed, 10 Jan 2024 08:09:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704895747;
-	bh=1TUaU5gWQ03/IkCqPSd9Gu2bzpk8j38xpiaWeQRjiDA=;
-	h=From:To:CC:Subject:Date;
-	b=IOmkYYsedjsyHlwT8wXOyS8G8N+5xz/f4MVZRTVYWnFb6QrCIKoKXyYzDrkSHsuTF
-	 80nB1JKPMiotMDN+V2WCXp5BFkxdfRvWcxp2Q3hO5L7Ago6d1YpsT2oMLHd/jrXO1x
-	 MJtCaw2BGBzTvb8Y1jmUJy2CWxsI/gDAZy9UgN8U=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40AE9628026312
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 10 Jan 2024 08:09:06 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
- Jan 2024 08:09:06 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 10 Jan 2024 08:09:06 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40AE960M041047;
-	Wed, 10 Jan 2024 08:09:06 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Apelete Seketeli
-	<aseketeli@baylibre.com>,
-        Ayush Singh <ayushdevel1325@gmail.com>,
-        Chao Zeng
-	<chao.zeng@siemens.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Esteban Blanc <eblanc@baylibre.com>,
-        Garrett Giordano <ggiordano@phytec.com>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Jan Kiszka
-	<jan.kiszka@siemens.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Jerome
- Neanne <jneanne@baylibre.com>,
-        Julien Panis <jpanis@baylibre.com>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Le Jin <le.jin@siemens.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Peng Fan
-	<peng.fan@nxp.com>, Pierre Gondois <pierre.gondois@arm.com>,
-        Robert Nelson
-	<robertcnelson@gmail.com>,
-        Rob Herring <robh@kernel.org>, Roger Quadros
-	<rogerq@kernel.org>,
-        Ronald Wahl <ronald.wahl@raritan.com>,
-        Sarah Walker
-	<sarah.walker@imgtec.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Tony Lindgren <tony@atomide.com>, Wadim Egorov <w.egorov@phytec.de>
-Subject: [PATCH 00/16] arm64: dts: ti: Additional licensing and clarification
-Date: Wed, 10 Jan 2024 08:08:47 -0600
-Message-ID: <20240110140903.4090946-1-nm@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TYQ6n5xg"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D920D20AECA9;
+	Wed, 10 Jan 2024 06:10:01 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D920D20AECA9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1704895801;
+	bh=Bx6tpgbJ7znSR0iIVezjMBXLyqJuhwxy1SofVQ/JPvw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TYQ6n5xgLYzvwXzwRXHkniE+tEWgLDTHg81bu4RjBUSBaxtaIEDCh3i1pGZQkfndT
+	 NaIfEX81DNwWbIZX36q83QA3GYzqzf+SlKgbP92uYZbqSUAlX8B4J5QgZFhuZuWlWE
+	 N4aJtpYkMa38CIaE575e1F7ywfzYsb5E1VnwtOrI=
+From: Konstantin Taranov <kotaranov@linux.microsoft.com>
+To: kotaranov@microsoft.com,
+	longli@microsoft.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH next 1/1] Introduce three helper functions to clean mana_ib code
+Date: Wed, 10 Jan 2024 06:09:54 -0800
+Message-Id: <1704895794-3501-1-git-send-email-kotaranov@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-As part of my 2023 LPC talk[1] about the difficulty in ensuring
-device tree is same across multiple s/w ecosystems, I mentioned about
-Licensing, and Rob had indicated that other SoC vendors have MIT
-license option that allows co-existance with Apache.
+From: Konstantin Taranov <kotaranov@microsoft.com>
 
-So, bunch of internal paper work later (during which GPL-2.0-only
-had to be retained due to certain user community), here is the
-update to sync TI K3 device trees with addition of MIT license in
-addition to existing GPL-2.0 license.
+This patch aims to address two issues in mana_ib:
+1) Unsafe and inconsistent access to gdma_dev and  gdma_context
+2) Code repetitions
 
-After querying BeagleBoard Foundation folks, they'd also like to
-follow suit, so those platforms have been added to the list as well.
+As a rule of thumb, functions should not access gdma_dev directly
 
-While at this, clarify existing licenses to be compatible with latest
-SPDX specifications for iot2050 and phycore.
+Introduced functions:
+1) mdev_to_gc
+2) mana_ib_get_netdev
+3) mana_ib_install_cq_cb
 
-verdin platforms look already sane, so no action required there.
 
-The CC list is based on (Since I am representing @ti.com for this
-series):
-git log --no-merges --pretty="%ae" $files|grep -v "@ti.com"|sort -u
+Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+---
+ drivers/infiniband/hw/mana/cq.c      | 23 ++++++++++++++--
+ drivers/infiniband/hw/mana/main.c    | 40 ++++++++++------------------
+ drivers/infiniband/hw/mana/mana_ib.h | 17 ++++++++++++
+ drivers/infiniband/hw/mana/mr.c      | 13 +++------
+ drivers/infiniband/hw/mana/qp.c      | 36 ++++++-------------------
+ 5 files changed, 63 insertions(+), 66 deletions(-)
 
-Requesting Acked by from the CC list at the earliest so that we can
-merge this for rc1 window for next.
+diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana/cq.c
+index 83ebd0705..255e74ab7 100644
+--- a/drivers/infiniband/hw/mana/cq.c
++++ b/drivers/infiniband/hw/mana/cq.c
+@@ -16,7 +16,7 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	int err;
+ 
+ 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
+-	gc = mdev->gdma_dev->gdma_context;
++	gc = mdev_to_gc(mdev);
+ 
+ 	if (udata->inlen < sizeof(ucmd))
+ 		return -EINVAL;
+@@ -81,7 +81,7 @@ int mana_ib_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata)
+ 	int err;
+ 
+ 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
+-	gc = mdev->gdma_dev->gdma_context;
++	gc = mdev_to_gc(mdev);
+ 
+ 	err = mana_ib_gd_destroy_dma_region(mdev, cq->gdma_region);
+ 	if (err) {
+@@ -107,3 +107,22 @@ void mana_ib_cq_handler(void *ctx, struct gdma_queue *gdma_cq)
+ 	if (cq->ibcq.comp_handler)
+ 		cq->ibcq.comp_handler(&cq->ibcq, cq->ibcq.cq_context);
+ }
++
++int mana_ib_install_cq_cb(struct mana_ib_dev *mdev, struct mana_ib_cq *cq)
++{
++	struct gdma_context *gc = mdev_to_gc(mdev);
++	struct gdma_queue *gdma_cq;
++
++	/* Create CQ table entry */
++	WARN_ON(gc->cq_table[cq->id]);
++	gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
++	if (!gdma_cq)
++		return -ENOMEM;
++
++	gdma_cq->cq.context = cq;
++	gdma_cq->type = GDMA_CQ;
++	gdma_cq->cq.callback = mana_ib_cq_handler;
++	gdma_cq->id = cq->id;
++	gc->cq_table[cq->id] = gdma_cq;
++	return 0;
++}
+diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+index faca09245..29dd2438d 100644
+--- a/drivers/infiniband/hw/mana/main.c
++++ b/drivers/infiniband/hw/mana/main.c
+@@ -8,13 +8,10 @@
+ void mana_ib_uncfg_vport(struct mana_ib_dev *dev, struct mana_ib_pd *pd,
+ 			 u32 port)
+ {
+-	struct gdma_dev *gd = &dev->gdma_dev->gdma_context->mana;
+ 	struct mana_port_context *mpc;
+ 	struct net_device *ndev;
+-	struct mana_context *mc;
+ 
+-	mc = gd->driver_data;
+-	ndev = mc->ports[port];
++	ndev = mana_ib_get_netdev(&dev->ib_dev, port);
+ 	mpc = netdev_priv(ndev);
+ 
+ 	mutex_lock(&pd->vport_mutex);
+@@ -31,14 +28,11 @@ void mana_ib_uncfg_vport(struct mana_ib_dev *dev, struct mana_ib_pd *pd,
+ int mana_ib_cfg_vport(struct mana_ib_dev *dev, u32 port, struct mana_ib_pd *pd,
+ 		      u32 doorbell_id)
+ {
+-	struct gdma_dev *mdev = &dev->gdma_dev->gdma_context->mana;
+ 	struct mana_port_context *mpc;
+-	struct mana_context *mc;
+ 	struct net_device *ndev;
+ 	int err;
+ 
+-	mc = mdev->driver_data;
+-	ndev = mc->ports[port];
++	ndev = mana_ib_get_netdev(&dev->ib_dev, port);
+ 	mpc = netdev_priv(ndev);
+ 
+ 	mutex_lock(&pd->vport_mutex);
+@@ -79,17 +73,17 @@ int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
+ 	struct gdma_create_pd_req req = {};
+ 	enum gdma_pd_flags flags = 0;
+ 	struct mana_ib_dev *dev;
+-	struct gdma_dev *mdev;
++	struct gdma_context *gc;
+ 	int err;
+ 
+ 	dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
+-	mdev = dev->gdma_dev;
++	gc = mdev_to_gc(dev);
+ 
+ 	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_PD, sizeof(req),
+ 			     sizeof(resp));
+ 
+ 	req.flags = flags;
+-	err = mana_gd_send_request(mdev->gdma_context, sizeof(req), &req,
++	err = mana_gd_send_request(gc, sizeof(req), &req,
+ 				   sizeof(resp), &resp);
+ 
+ 	if (err || resp.hdr.status) {
+@@ -119,17 +113,17 @@ int mana_ib_dealloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
+ 	struct gdma_destory_pd_resp resp = {};
+ 	struct gdma_destroy_pd_req req = {};
+ 	struct mana_ib_dev *dev;
+-	struct gdma_dev *mdev;
++	struct gdma_context *gc;
+ 	int err;
+ 
+ 	dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
+-	mdev = dev->gdma_dev;
++	gc = mdev_to_gc(dev);
+ 
+ 	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_PD, sizeof(req),
+ 			     sizeof(resp));
+ 
+ 	req.pd_handle = pd->pd_handle;
+-	err = mana_gd_send_request(mdev->gdma_context, sizeof(req), &req,
++	err = mana_gd_send_request(gc, sizeof(req), &req,
+ 				   sizeof(resp), &resp);
+ 
+ 	if (err || resp.hdr.status) {
+@@ -206,13 +200,11 @@ int mana_ib_alloc_ucontext(struct ib_ucontext *ibcontext,
+ 	struct ib_device *ibdev = ibcontext->device;
+ 	struct mana_ib_dev *mdev;
+ 	struct gdma_context *gc;
+-	struct gdma_dev *dev;
+ 	int doorbell_page;
+ 	int ret;
+ 
+ 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
+-	dev = mdev->gdma_dev;
+-	gc = dev->gdma_context;
++	gc = mdev_to_gc(mdev);
+ 
+ 	/* Allocate a doorbell page index */
+ 	ret = mana_gd_allocate_doorbell_page(gc, &doorbell_page);
+@@ -238,7 +230,7 @@ void mana_ib_dealloc_ucontext(struct ib_ucontext *ibcontext)
+ 	int ret;
+ 
+ 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
+-	gc = mdev->gdma_dev->gdma_context;
++	gc = mdev_to_gc(mdev);
+ 
+ 	ret = mana_gd_destroy_doorbell_page(gc, mana_ucontext->doorbell);
+ 	if (ret)
+@@ -322,15 +314,13 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
+ 	size_t max_pgs_create_cmd;
+ 	struct gdma_context *gc;
+ 	size_t num_pages_total;
+-	struct gdma_dev *mdev;
+ 	unsigned long page_sz;
+ 	unsigned int tail = 0;
+ 	u64 *page_addr_list;
+ 	void *request_buf;
+ 	int err;
+ 
+-	mdev = dev->gdma_dev;
+-	gc = mdev->gdma_context;
++	gc = mdev_to_gc(dev);
+ 	hwc = gc->hwc.driver_data;
+ 
+ 	/* Hardware requires dma region to align to chosen page size */
+@@ -426,10 +416,8 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
+ 
+ int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev, u64 gdma_region)
+ {
+-	struct gdma_dev *mdev = dev->gdma_dev;
+-	struct gdma_context *gc;
++	struct gdma_context *gc = mdev_to_gc(dev);
+ 
+-	gc = mdev->gdma_context;
+ 	ibdev_dbg(&dev->ib_dev, "destroy dma region 0x%llx\n", gdma_region);
+ 
+ 	return mana_gd_destroy_dma_region(gc, gdma_region);
+@@ -447,7 +435,7 @@ int mana_ib_mmap(struct ib_ucontext *ibcontext, struct vm_area_struct *vma)
+ 	int ret;
+ 
+ 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
+-	gc = mdev->gdma_dev->gdma_context;
++	gc = mdev_to_gc(mdev);
+ 
+ 	if (vma->vm_pgoff != 0) {
+ 		ibdev_dbg(ibdev, "Unexpected vm_pgoff %lu\n", vma->vm_pgoff);
+@@ -531,7 +519,7 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
+ 	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
+ 	req.hdr.dev_id = dev->gdma_dev->dev_id;
+ 
+-	err = mana_gd_send_request(dev->gdma_dev->gdma_context, sizeof(req),
++	err = mana_gd_send_request(mdev_to_gc(dev), sizeof(req),
+ 				   &req, sizeof(resp), &resp);
+ 
+ 	if (err) {
+diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
+index 6bdc0f549..6b15b2ab5 100644
+--- a/drivers/infiniband/hw/mana/mana_ib.h
++++ b/drivers/infiniband/hw/mana/mana_ib.h
+@@ -142,6 +142,22 @@ struct mana_ib_query_adapter_caps_resp {
+ 	u32 max_inline_data_size;
+ }; /* HW Data */
+ 
++static inline struct gdma_context *mdev_to_gc(struct mana_ib_dev *mdev)
++{
++	return mdev->gdma_dev->gdma_context;
++}
++
++static inline struct net_device *mana_ib_get_netdev(struct ib_device *ibdev, u32 port)
++{
++	struct mana_ib_dev *mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
++	struct gdma_context *gc = mdev_to_gc(mdev);
++	struct mana_context *mc = gc->mana.driver_data;
++
++	if (port < 1 || port > mc->num_ports)
++		return NULL;
++	return mc->ports[port - 1];
++}
++
+ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
+ 				 mana_handle_t *gdma_region);
+ 
+@@ -188,6 +204,7 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 		      struct ib_udata *udata);
+ 
+ int mana_ib_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata);
++int mana_ib_install_cq_cb(struct mana_ib_dev *mdev, struct mana_ib_cq *cq);
+ 
+ int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata);
+ int mana_ib_dealloc_pd(struct ib_pd *ibpd, struct ib_udata *udata);
+diff --git a/drivers/infiniband/hw/mana/mr.c b/drivers/infiniband/hw/mana/mr.c
+index 351207c60..ee4d4f834 100644
+--- a/drivers/infiniband/hw/mana/mr.c
++++ b/drivers/infiniband/hw/mana/mr.c
+@@ -30,12 +30,9 @@ static int mana_ib_gd_create_mr(struct mana_ib_dev *dev, struct mana_ib_mr *mr,
+ {
+ 	struct gdma_create_mr_response resp = {};
+ 	struct gdma_create_mr_request req = {};
+-	struct gdma_dev *mdev = dev->gdma_dev;
+-	struct gdma_context *gc;
++	struct gdma_context *gc = mdev_to_gc(dev);
+ 	int err;
+ 
+-	gc = mdev->gdma_context;
+-
+ 	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_MR, sizeof(req),
+ 			     sizeof(resp));
+ 	req.pd_handle = mr_params->pd_handle;
+@@ -77,12 +74,9 @@ static int mana_ib_gd_destroy_mr(struct mana_ib_dev *dev, u64 mr_handle)
+ {
+ 	struct gdma_destroy_mr_response resp = {};
+ 	struct gdma_destroy_mr_request req = {};
+-	struct gdma_dev *mdev = dev->gdma_dev;
+-	struct gdma_context *gc;
++	struct gdma_context *gc = mdev_to_gc(dev);
+ 	int err;
+ 
+-	gc = mdev->gdma_context;
+-
+ 	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_MR, sizeof(req),
+ 			     sizeof(resp));
+ 
+@@ -164,8 +158,7 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
+ 	return &mr->ibmr;
+ 
+ err_dma_region:
+-	mana_gd_destroy_dma_region(dev->gdma_dev->gdma_context,
+-				   dma_region_handle);
++	mana_gd_destroy_dma_region(mdev_to_gc(dev), dma_region_handle);
+ 
+ err_umem:
+ 	ib_umem_release(mr->umem);
+diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+index e6d063d45..e889c798f 100644
+--- a/drivers/infiniband/hw/mana/qp.c
++++ b/drivers/infiniband/hw/mana/qp.c
+@@ -17,12 +17,10 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 	struct mana_cfg_rx_steer_resp resp = {};
+ 	mana_handle_t *req_indir_tab;
+ 	struct gdma_context *gc;
+-	struct gdma_dev *mdev;
+ 	u32 req_buf_size;
+ 	int i, err;
+ 
+-	gc = dev->gdma_dev->gdma_context;
+-	mdev = &gc->mana;
++	gc = mdev_to_gc(dev);
+ 
+ 	req_buf_size =
+ 		sizeof(*req) + sizeof(mana_handle_t) * MANA_INDIRECT_TABLE_SIZE;
+@@ -39,7 +37,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 	req->rx_enable = 1;
+ 	req->update_default_rxobj = 1;
+ 	req->default_rxobj = default_rxobj;
+-	req->hdr.dev_id = mdev->dev_id;
++	req->hdr.dev_id = gc->mana.dev_id;
+ 
+ 	/* If there are more than 1 entries in indirection table, enable RSS */
+ 	if (log_ind_tbl_size)
+@@ -106,7 +104,6 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 	struct gdma_queue **gdma_cq_allocated;
+ 	mana_handle_t *mana_ind_table;
+ 	struct mana_port_context *mpc;
+-	struct gdma_queue *gdma_cq;
+ 	unsigned int ind_tbl_size;
+ 	struct net_device *ndev;
+ 	struct mana_ib_cq *cq;
+@@ -231,19 +228,11 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 		mana_ind_table[i] = wq->rx_object;
+ 
+ 		/* Create CQ table entry */
+-		WARN_ON(gc->cq_table[cq->id]);
+-		gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
+-		if (!gdma_cq) {
+-			ret = -ENOMEM;
++		ret = mana_ib_install_cq_cb(mdev, cq);
++		if (!ret)
+ 			goto fail;
+-		}
+-		gdma_cq_allocated[i] = gdma_cq;
+ 
+-		gdma_cq->cq.context = cq;
+-		gdma_cq->type = GDMA_CQ;
+-		gdma_cq->cq.callback = mana_ib_cq_handler;
+-		gdma_cq->id = cq->id;
+-		gc->cq_table[cq->id] = gdma_cq;
++		gdma_cq_allocated[i] = gc->cq_table[cq->id];
+ 	}
+ 	resp.num_entries = i;
+ 
+@@ -409,18 +398,9 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
+ 	send_cq->id = cq_spec.queue_index;
+ 
+ 	/* Create CQ table entry */
+-	WARN_ON(gc->cq_table[send_cq->id]);
+-	gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
+-	if (!gdma_cq) {
+-		err = -ENOMEM;
++	err = mana_ib_install_cq_cb(mdev, send_cq);
++	if (err)
+ 		goto err_destroy_wq_obj;
+-	}
+-
+-	gdma_cq->cq.context = send_cq;
+-	gdma_cq->type = GDMA_CQ;
+-	gdma_cq->cq.callback = mana_ib_cq_handler;
+-	gdma_cq->id = send_cq->id;
+-	gc->cq_table[send_cq->id] = gdma_cq;
+ 
+ 	ibdev_dbg(&mdev->ib_dev,
+ 		  "ret %d qp->tx_object 0x%llx sq id %llu cq id %llu\n", err,
+@@ -442,7 +422,7 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
+ 
+ err_release_gdma_cq:
+ 	kfree(gdma_cq);
+-	gd->gdma_context->cq_table[send_cq->id] = NULL;
++	gc->cq_table[send_cq->id] = NULL;
+ 
+ err_destroy_wq_obj:
+ 	mana_destroy_wq_obj(mpc, GDMA_SQ, qp->tx_object);
 
-Series based on: next-20240109
-
-Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc: Apelete Seketeli <aseketeli@baylibre.com>
-Cc: Ayush Singh <ayushdevel1325@gmail.com>
-Cc: Chao Zeng <chao.zeng@siemens.com>
-Cc: Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc: Esteban Blanc <eblanc@baylibre.com>
-Cc: Garrett Giordano <ggiordano@phytec.com>
-Cc: Guillaume La Roque <glaroque@baylibre.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Jason Kridner <jkridner@beagleboard.org>
-Cc: Jerome Neanne <jneanne@baylibre.com>
-Cc: Julien Panis <jpanis@baylibre.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Le Jin <le.jin@siemens.com>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Pierre Gondois <pierre.gondois@arm.com>
-Cc: Robert Nelson <robertcnelson@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Roger Quadros <rogerq@kernel.org>
-Cc: Ronald Wahl <ronald.wahl@raritan.com>
-Cc: Sarah Walker <sarah.walker@imgtec.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Wadim Egorov <w.egorov@phytec.de>
-
-Nishanth Menon (16):
-  arm64: dts: ti: Use https for urls
-  arm64: dts: ti: k3-am62a7: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-am625: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-am62p: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-am64: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-am65: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-j7200: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-j721e: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-j721s2: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-j784s4: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-pinctrl: Add MIT license along with GPL-2.0
-  arm64: dts: ti: k3-serdes: Add MIT license along with GPL-2.0
-  arm64: dts: ti: beagle*: Add MIT license along with GPL-2.0
-  arm64: dts: ti: iot2050*: Clarify GPL-2.0 as GPL-2.0-only
-  arm64: dts: ti: phycore*: Clarify GPL-2.0 as GPL-2.0-only
-  arm64: dts: ti: Makefile: Clarify GPL-2.0 as GPL-2.0-only
-
- arch/arm64/boot/dts/ti/Makefile                           | 2 +-
- arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts                  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi                  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62-mcu.dtsi                   | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi           | 2 +-
- arch/arm64/boot/dts/ti/k3-am62-thermal.dtsi               | 5 ++++-
- arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi                | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62.dtsi                       | 4 ++--
- .../boot/dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso      | 4 ++--
- .../boot/dts/ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso | 4 ++--
- arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts            | 6 +++---
- arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts     | 2 +-
- arch/arm64/boot/dts/ti/k3-am625-sk.dts                    | 4 ++--
- arch/arm64/boot/dts/ti/k3-am625.dtsi                      | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi                 | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi                  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi              | 5 ++++-
- arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi               | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62a.dtsi                      | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62a7-sk.dts                   | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62a7.dtsi                     | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62p-main.dtsi                 | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi                  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62p-thermal.dtsi              | 5 ++++-
- arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi               | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62p.dtsi                      | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts                   | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62p5.dtsi                     | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi            | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso       | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso       | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am62x-sk-hdmi-audio.dtso        | 4 ++--
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi                  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am64-mcu.dtsi                   | 4 ++--
- arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi           | 2 +-
- arch/arm64/boot/dts/ti/k3-am64-thermal.dtsi               | 5 ++++-
- arch/arm64/boot/dts/ti/k3-am64.dtsi                       | 4 ++--
- arch/arm64/boot/dts/ti/k3-am642-evm.dts                   | 4 ++--
- arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts  | 2 +-
- arch/arm64/boot/dts/ti/k3-am642-sk.dts                    | 4 ++--
- arch/arm64/boot/dts/ti/k3-am642.dtsi                      | 4 ++--
- arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi    | 2 +-
- arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg2.dtsi    | 2 +-
- arch/arm64/boot/dts/ti/k3-am65-iot2050-common.dtsi        | 2 +-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi                  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi                   | 4 ++--
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi                | 4 ++--
- arch/arm64/boot/dts/ti/k3-am65.dtsi                       | 4 ++--
- arch/arm64/boot/dts/ti/k3-am652.dtsi                      | 4 ++--
- .../arm64/boot/dts/ti/k3-am6528-iot2050-basic-common.dtsi | 2 +-
- arch/arm64/boot/dts/ti/k3-am6528-iot2050-basic-pg2.dts    | 2 +-
- arch/arm64/boot/dts/ti/k3-am6528-iot2050-basic.dts        | 2 +-
- .../dts/ti/k3-am654-base-board-rocktech-rk101-panel.dtso  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts            | 4 ++--
- arch/arm64/boot/dts/ti/k3-am654-icssg2.dtso               | 4 ++--
- arch/arm64/boot/dts/ti/k3-am654-idk.dtso                  | 4 ++--
- arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi   | 5 ++++-
- arch/arm64/boot/dts/ti/k3-am654.dtsi                      | 4 ++--
- .../boot/dts/ti/k3-am6548-iot2050-advanced-common.dtsi    | 2 +-
- arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-m2.dts  | 2 +-
- arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-pg2.dts | 2 +-
- arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced.dts     | 2 +-
- arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts          | 4 ++--
- arch/arm64/boot/dts/ti/k3-am68-sk-som.dtsi                | 4 ++--
- arch/arm64/boot/dts/ti/k3-am69-sk.dts                     | 4 ++--
- arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts     | 4 ++--
- .../arm64/boot/dts/ti/k3-j7200-evm-quad-port-eth-exp.dtso | 4 ++--
- arch/arm64/boot/dts/ti/k3-j7200-main.dtsi                 | 4 ++--
- arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi           | 4 ++--
- arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi               | 4 ++--
- arch/arm64/boot/dts/ti/k3-j7200-thermal.dtsi              | 5 ++++-
- arch/arm64/boot/dts/ti/k3-j7200.dtsi                      | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts        | 8 ++++----
- arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts     | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721e-evm-gesi-exp-board.dtso   | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721e-evm-pcie0-ep.dtso         | 4 ++--
- .../arm64/boot/dts/ti/k3-j721e-evm-quad-port-eth-exp.dtso | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi                 | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi           | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721e-sk.dts                    | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi               | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721e-thermal.dtsi              | 5 ++++-
- arch/arm64/boot/dts/ti/k3-j721e.dtsi                      | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts    | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721s2-evm-gesi-exp-board.dtso  | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721s2-evm-pcie1-ep.dtso        | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi                | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi          | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721s2-som-p0.dtsi              | 4 ++--
- arch/arm64/boot/dts/ti/k3-j721s2-thermal.dtsi             | 5 ++++-
- arch/arm64/boot/dts/ti/k3-j721s2.dtsi                     | 4 ++--
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts                  | 4 ++--
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi                | 4 ++--
- arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi          | 4 ++--
- arch/arm64/boot/dts/ti/k3-j784s4-thermal.dtsi             | 5 ++++-
- arch/arm64/boot/dts/ti/k3-j784s4.dtsi                     | 4 ++--
- arch/arm64/boot/dts/ti/k3-pinctrl.h                       | 4 ++--
- arch/arm64/boot/dts/ti/k3-serdes.h                        | 4 ++--
- 99 files changed, 204 insertions(+), 177 deletions(-)
-
-[1] https://www.youtube.com/watch?v=kr-Yd56so9M
-    https://lpc.events/event/17/contributions/1547/
+base-commit: d24b923f1d696ddacb09f0f2d1b1f4f045cfe65e
+prerequisite-patch-id: 1b5d35ba40b675d080bfbe6a0e73b0dd163f4a03
 -- 
 2.43.0
 
-PS: TI internal record: 00010588
