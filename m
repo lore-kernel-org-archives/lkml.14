@@ -1,48 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9A1138F;
-	Wed, 10 Jan 2024 16:03:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4340C433F1;
-	Wed, 10 Jan 2024 16:03:08 +0000 (UTC)
-Date: Wed, 10 Jan 2024 11:04:08 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
- <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
- default ownership
-Message-ID: <20240110110408.13b3f107@gandalf.local.home>
-In-Reply-To: <20240110105251.48334598@gandalf.local.home>
-References: <20240103203246.115732ec@gandalf.local.home>
-	<20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
-	<20240105095954.67de63c2@gandalf.local.home>
-	<20240107-getrickst-angeeignet-049cea8cad13@brauner>
-	<20240107132912.71b109d8@rorschach.local.home>
-	<20240108-ortsrand-ziehen-4e9a9a58e708@brauner>
-	<20240108102331.7de98cab@gandalf.local.home>
-	<20240110-murren-extra-cd1241aae470@brauner>
-	<20240110080746.50f7767d@gandalf.local.home>
-	<20240110105251.48334598@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E2A4CB33;
+	Wed, 10 Jan 2024 16:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJqRFiB3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43118C43394;
+	Wed, 10 Jan 2024 16:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704902597;
+	bh=wxt5E37GpoAUW7+xtOpR1biWeJ1ynUtUPy5bRry8n0w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=LJqRFiB3mlGh1+j4qu4hv8AFXbWTnTmwx0EMXFoxarsuALChaldVkrHnYsktMMU0Z
+	 NvFc3cQqKSdWAJwq8HiD9mfs7a2tmKWhn4Ctq7N1EnchsRqqaKMli0TseJTrAW9mlg
+	 NCq8XcjgB/OL1xZbkUYlWwsehSFqHZ16h1p2fJfVoglMzhivx+a6U9W3qkHScqjr76
+	 OpPeRciHO91c+MNGLb9pkAPiB3BrrmhYIzageHXugtfmzIllp+B5mquPrZ7iIysXKC
+	 cscmenbgfx3EvY+oSMu13QDQYFd9limyajnBuhS31kaxsWdpf79JbaqSzcWAHEyzVK
+	 2accJDBoZ7Asg==
+From: Mark Brown <broonie@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ matthias.bgg@gmail.com, u.kleine-koenig@pengutronix.de, 
+ kuninori.morimoto.gx@renesas.com, trevor.wu@mediatek.com, 
+ jernej.skrabec@gmail.com, claudiu.beznea@tuxon.dev, robh@kernel.org, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20240110105757.539089-1-angelogioacchino.delregno@collabora.com>
+References: <20240110105757.539089-1-angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH] ASoC: mediatek: mt8195: Remove afe-dai component and
+ rework codec link
+Message-Id: <170490259398.18995.11219791852170871212.b4-ty@kernel.org>
+Date: Wed, 10 Jan 2024 16:03:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-5c066
 
-On Wed, 10 Jan 2024 10:52:51 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 10 Jan 2024 11:57:57 +0100, AngeloGioacchino Del Regno wrote:
+> Remove the extra 'mt8195-afe-pcm-dai' component, register the DAI
+> drivers to the main AFE component, and rework the DAI linking between
+> the headset codec (RT5682/RT5682S) and the TDM interface in the probe
+> function to stop assigning name, relying on the of_node of the codec.
+> Also replace the COMP_DUMMY codec entry with a COMP_EMPTY for the
+> ETDM2_IN and remove it entirely from ETDM1_OUT to fix the registration
+> flow for this sound card.
+> 
+> [...]
 
-> I'll apply this patch too, as it appears to work with this code.
+Applied to
 
-I meant "appears to work without this code".
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
--- Steve
+Thanks!
+
+[1/1] ASoC: mediatek: mt8195: Remove afe-dai component and rework codec link
+      commit: e70b8dd26711704b1ff1f1b4eb3d048ba69e29da
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
