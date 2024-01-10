@@ -1,30 +1,16 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37AC48CEE;
-	Wed, 10 Jan 2024 13:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="rgs21n+s"
-Received: from [192.168.42.20] (p5de453e7.dip0.t-ipconnect.de [93.228.83.231])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 9B8652FC0057;
-	Wed, 10 Jan 2024 14:51:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1704894704;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=45PF4SKouCDbeha7fnHOqQp65vlx3cmuT9w/Tvpf/YY=;
-	b=rgs21n+sRKB7C+ayhXpDXTrqzvo0Luly1w7G34zfcM9HUxfrG5fXNFLB0V7bELGpLMvHn8
-	SRfNuSzXKJ6QQ2xqJMmqzgEUyOZsfRxiz7RvB7jbAA2oxqymxScVTk13AzKeZTeAobWXas
-	VYgRhZjeEs/EcO6t3Suw5bghQuiACe8=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <dd140606-6786-4c4f-9e39-448a4df72bb5@tuxedocomputers.com>
-Date: Wed, 10 Jan 2024 14:51:44 +0100
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 750EF47A67;
+	Wed, 10 Jan 2024 13:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FF282F4;
+	Wed, 10 Jan 2024 05:53:06 -0800 (PST)
+Received: from [10.57.87.179] (unknown [10.57.87.179])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 850643F5A1;
+	Wed, 10 Jan 2024 05:52:18 -0800 (PST)
+Message-ID: <2a8aa860-17dc-442a-a4ed-8f7c387b15ba@arm.com>
+Date: Wed, 10 Jan 2024 13:53:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,69 +18,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] i8042: Add forcenorestore quirk to leave
- controller untouched even on s3
+Subject: Re: [PATCH v5 15/23] PM: EM: Optimize em_cpu_energy() and remove
+ division
 Content-Language: en-US
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: hdegoede@redhat.com, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240104183118.779778-1-wse@tuxedocomputers.com>
- <20240104183118.779778-2-wse@tuxedocomputers.com>
- <ZZ2_KMGdokHNWcNL@google.com>
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <ZZ2_KMGdokHNWcNL@google.com>
+To: Qais Yousef <qyousef@layalina.io>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ rafael@kernel.org, dietmar.eggemann@arm.com, rui.zhang@intel.com,
+ amit.kucheria@verdurent.com, amit.kachhap@gmail.com,
+ daniel.lezcano@linaro.org, viresh.kumar@linaro.org, len.brown@intel.com,
+ pavel@ucw.cz, mhiramat@kernel.org, wvw@google.com
+References: <20231129110853.94344-1-lukasz.luba@arm.com>
+ <20231129110853.94344-16-lukasz.luba@arm.com>
+ <20231228180647.rwz4u7ebk5p2hjcr@airbuntu>
+ <d9bea2d0-3869-4f08-8eb8-0ca33ce525ea@arm.com>
+ <20240104192355.mrtqnek2cyw7rlkd@airbuntu>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20240104192355.mrtqnek2cyw7rlkd@airbuntu>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
-Am 09.01.24 um 22:48 schrieb Dmitry Torokhov:
-> Hi Werner,
->
-> On Thu, Jan 04, 2024 at 07:31:17PM +0100, Werner Sembach wrote:
->> On s3 resume the i8042 driver tries to restore the controller to a known
->> state by reinitializing things, however this can confuse the controller
->> with different effects. Mostly occasionally unresponsive keyboards after
->> resume.
+
+On 1/4/24 19:23, Qais Yousef wrote:
+> On 01/02/24 11:47, Lukasz Luba wrote:
+>>> Did you see a problem or just being extra cautious here?
 >>
->> These issues do not rise on s0ix resume as here the controller is assumed
->> to preserved its state from before suspend.
->>
->> This patch adds a quirk for devices where the reinitialization on s3 resume
->> is not needed and might be harmful as described above. It does this by
->> using the s0ix resume code path at selected locations.
->>
->> This new quirk goes beyond what the preexisting reset=never quirk does,
->> which only skips some reinitialization steps.
-> I think the original change mentioned not only issues on resume, but
-> also after boot, which this one does not address, at least directly, so
-> I am not sure if this patch is the proper replacement.
+>> There is no problem, 'cost' is a private coefficient for EAS only.
+> 
+> Let me  ask differently, what goes wrong if you don't increase the resolution
+> here? Why is it necessary?
+> 
 
-The original change introduced issues after boot and fixed issues after resume.
 
-The new quirk fixes the issues after resume without introducing issues after boot.
+When you have 800mW at CPU capacity 1024, then the value is small (below
+1 thousand).
+Example:
+power = 800000 uW
+cost = 800000 / 1024 = 781
 
-The issues after boot where only affecting the NHxxRZQ and the N1xxCU iirc.
+While I know from past that sometimes OPPs might have close voltage
+values and a rounding could occur and make some OPPs inefficient
+while they aren't.
 
->
-> I would also like to understand better what exact step is troublesome,
-> as I would be surprised if any interaction with the keyboard
-> controller while suspending causes the issue to manifest. Is it enough,
-> by chance, to skip restoring MUX mode and reset?
+This is what would happen when we have the 1x resolution:
+/sys/kernel/debug/energy_model/cpu4/ps:1008000/cost:551
+/sys/kernel/debug/energy_model/cpu4/ps:1200000/cost:644
+/sys/kernel/debug/energy_model/cpu4/ps:1416000/cost:744
+/sys/kernel/debug/energy_model/cpu4/ps:1512000/cost:851
+/sys/kernel/debug/energy_model/cpu4/ps:408000/cost:493
+/sys/kernel/debug/energy_model/cpu4/ps:600000/cost:493
+/sys/kernel/debug/energy_model/cpu4/ps:816000/cost:493
+The bottom 3 OPPs have the same 'cost' thus 2 OPPs are in-efficient,
+which is not true (see below).
 
-SERIO_QUIRK_NOMUX and SERIO_QUIRK_RESET_ALWAYS are required in the old fix for 
-the resume issues to go away (I don't know if SERIO_QUIRK_NOLOOP and 
-SERIO_QUIRK_NOPNP are required, I threw them in just in case because we were 
-running them already on the device, so they where somewhat "field proven" to not 
-break things).
+This is what would happen when we have the 10x resolution:
+/sys/kernel/debug/energy_model/cpu4/ps:1008000/cost:5513
+/sys/kernel/debug/energy_model/cpu4/ps:1200000/cost:6443
+/sys/kernel/debug/energy_model/cpu4/ps:1416000/cost:7447
+/sys/kernel/debug/energy_model/cpu4/ps:1512000/cost:8514
+/sys/kernel/debug/energy_model/cpu4/ps:408000/cost:4934
+/sys/kernel/debug/energy_model/cpu4/ps:600000/cost:4933
+/sys/kernel/debug/energy_model/cpu4/ps:816000/cost:4934
+Here the OPP with 600MHz is more efficient than 408MHz,
+which is true. So only 408MHz will be marked as in-efficient OPP.
 
-However while SERIO_QUIRK_NOMUX and SERIO_QUIRK_RESET_ALWAYS for themself did 
-not individually introduce the boot problem, in combination they did.
 
-That was all I was able to find out back when I tested the old quirks.
+This is what would happen when we have the 100x resolution:
+/sys/kernel/debug/energy_model/cpu4/ps:1008000/cost:55137
+/sys/kernel/debug/energy_model/cpu4/ps:1200000/cost:64433
+/sys/kernel/debug/energy_model/cpu4/ps:1416000/cost:74473
+/sys/kernel/debug/energy_model/cpu4/ps:1512000/cost:85140
+/sys/kernel/debug/energy_model/cpu4/ps:408000/cost:49346
+/sys/kernel/debug/energy_model/cpu4/ps:600000/cost:49331
+/sys/kernel/debug/energy_model/cpu4/ps:816000/cost:49346
+The higher (100x) resolution does not bring that much in
+practice.
 
->
-> Also, shoudl this system use s2idle by chance?
-N1xxCU is s3 only (intel 10th gen clevo)
->
-> Thanks.
->
+If you have other questions, let's continue on v6 series.
