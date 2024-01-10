@@ -1,219 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CCB4F895;
-	Wed, 10 Jan 2024 23:23:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9914F1E4B6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 23:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNReH0wJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72AFEC43390;
-	Wed, 10 Jan 2024 23:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704928983;
-	bh=x+w3oS3UhL7Vx+JhSVwAGMUyc6c3MUicRQeEyi0a494=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fNReH0wJNcL4MzFLG+g+B/+K+qB9poY7YDJiALaRnCwADfHQ8CU8pgRPrwMwJSJH4
-	 dEQ9tXc/vvjvm7oq++nuXfTtzg1GjSls2YxH1duBJ9M9eFJtnGmmnqNKWUTA4gZV6d
-	 2QZgwmI5zs76zLh4TKRb6mTaM7TE8zB80bT9/jnfPtCtv/EkZGKUEZMp6nZvFJm0Hk
-	 +jztAVCs7lURmtVzvsC1y9WSu5j7rIoDgCNMgveRI7eiTb4m3RxOJ8ka5gZZpYAVSZ
-	 sgvgoNwsDS5/6rv8yasMCixiv3fNReKZoOZW9q9bjgjVPTAV4I7U93VUqP3IzS+Fkf
-	 x8PsC1gyPBmrw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Peng Fan <peng.fan@nxp.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Fabio Estevam <festevam@denx.de>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: [PATCH] dmaengine: fsl-edma: fix Makefile logic
-Date: Thu, 11 Jan 2024 00:03:42 +0100
-Message-Id: <20240110232255.1099757-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NfcnyHaz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704929241;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SrNHEIe3ea+e/UXJPqy7LTP7mhEx2H+CbelvED2S6dg=;
+	b=NfcnyHazphUWURZH5d3sLNcRFUCjxrEZJRRLi66TYBPSjjSgSbiy5cOBsqE8urXjoCsdad
+	+DWhsd1JA/xhondZGcy5RoDjMH1eUQwwTMlH8JMMkF3uh1O1N5aPTijhhzpbGAlvvE9nCm
+	MHS3OndGWV3sfpEWqs6JCs/bacdwgjk=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-203-tSTPyTOVOJWoaDYhW2N9DA-1; Wed, 10 Jan 2024 18:27:20 -0500
+X-MC-Unique: tSTPyTOVOJWoaDYhW2N9DA-1
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-6ddef85cad4so1595501a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:27:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704929239; x=1705534039;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SrNHEIe3ea+e/UXJPqy7LTP7mhEx2H+CbelvED2S6dg=;
+        b=wLB3r9YGd7wIr1iWIrDoX7ahOGmvjm0WHn2JdviVDTKF8G8Q9VrBOS213UEtsZhg/N
+         F6FqklKe93jRBgyBAMR3m6ObmqENL+SOlousIccpwIMRV4P+yfMooLAiF5/Ht3XnEYQX
+         X27s93BhLh+9dj+4n99la5+kKR4pW160hqevtge0DKXGue409FjTFx8yY9owK3Fxazap
+         d/mui9BTjFEntjYj+pkSvojOdV/x3Iu9YVYS/UbGy8GhzReS3ebSmz5Siri8ShTcq1l3
+         W1WfWa3iwO8fbrUowEygMi+WkIgOKmUqESQzucfl6jkJ4mWUjw2br4Ad8Y/Il8fnMEjm
+         EBfQ==
+X-Gm-Message-State: AOJu0YymU9LDKEPYv+U0W1BVmGHtYZDyrvcGM8E7FFiCkeBioi+6tF8b
+	grlEN2XPwGtLH2LikUzAzT5lZxWyOnTtENjmNF8lS4A3wvMaOr8hdUK/fj72JkULM6GaRr6i7dJ
+	I5GX1vfk8RSSD77BhmVv9a9jcdA+zGKCJ
+X-Received: by 2002:a05:6830:1114:b0:6da:531d:9af2 with SMTP id w20-20020a056830111400b006da531d9af2mr406997otq.10.1704929239322;
+        Wed, 10 Jan 2024 15:27:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG2C6jpBhPHNx973PLEU/pQRswb7lqo3Py9HGD/W0KEfAfyz3J8fHg+rAd2j5LDlltJSi4l0g==
+X-Received: by 2002:a05:6830:1114:b0:6da:531d:9af2 with SMTP id w20-20020a056830111400b006da531d9af2mr406985otq.10.1704929239066;
+        Wed, 10 Jan 2024 15:27:19 -0800 (PST)
+Received: from redhat.com ([38.15.60.12])
+        by smtp.gmail.com with ESMTPSA id w10-20020a9d70ca000000b006dec024acffsm115655otj.57.2024.01.10.15.27.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 15:27:18 -0800 (PST)
+Date: Wed, 10 Jan 2024 16:27:16 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Yishai Hadas <yishaih@nvidia.com>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Kevin Tian <kevin.tian@intel.com>, Jason Gunthorpe
+ <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, Shameer Kolothum
+ <shameerali.kolothum.thodi@huawei.com>, kvm@vger.kernel.org,
+ virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio: fix virtio-pci dependency
+Message-ID: <20240110162716.64d37d66.alex.williamson@redhat.com>
+In-Reply-To: <20240109075731.2726731-1-arnd@kernel.org>
+References: <20240109075731.2726731-1-arnd@kernel.org>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue,  9 Jan 2024 08:57:19 +0100
+Arnd Bergmann <arnd@kernel.org> wrote:
 
-A change to remove some unnecessary exports ended up removing some
-necessary ones as well, and caused a build regression by trying to
-link a single source file into two separate modules:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The new vfio-virtio driver already has a dependency on VIRTIO_PCI_ADMIN_LEGACY,
+> but that is a bool symbol and allows vfio-virtio to be built-in even if
+> virtio-pci itself is a loadable module. This leads to a link failure:
+> 
+> aarch64-linux-ld: drivers/vfio/pci/virtio/main.o: in function `virtiovf_pci_probe':
+> main.c:(.text+0xec): undefined reference to `virtio_pci_admin_has_legacy_io'
+> aarch64-linux-ld: drivers/vfio/pci/virtio/main.o: in function `virtiovf_pci_init_device':
+> main.c:(.text+0x260): undefined reference to `virtio_pci_admin_legacy_io_notify_info'
+> aarch64-linux-ld: drivers/vfio/pci/virtio/main.o: in function `virtiovf_pci_bar0_rw':
+> main.c:(.text+0x6ec): undefined reference to `virtio_pci_admin_legacy_common_io_read'
+> aarch64-linux-ld: main.c:(.text+0x6f4): undefined reference to `virtio_pci_admin_legacy_device_io_read'
+> aarch64-linux-ld: main.c:(.text+0x7f0): undefined reference to `virtio_pci_admin_legacy_common_io_write'
+> aarch64-linux-ld: main.c:(.text+0x7f8): undefined reference to `virtio_pci_admin_legacy_device_io_write'
+> 
+> Add another explicit dependency on the tristate symbol.
+> 
+> Fixes: eb61eca0e8c3 ("vfio/virtio: Introduce a vfio driver over virtio devices")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/vfio/pci/virtio/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/pci/virtio/Kconfig b/drivers/vfio/pci/virtio/Kconfig
+> index fc3a0be9d8d4..bd80eca4a196 100644
+> --- a/drivers/vfio/pci/virtio/Kconfig
+> +++ b/drivers/vfio/pci/virtio/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config VIRTIO_VFIO_PCI
+>          tristate "VFIO support for VIRTIO NET PCI devices"
+> -        depends on VIRTIO_PCI_ADMIN_LEGACY
+> +        depends on VIRTIO_PCI && VIRTIO_PCI_ADMIN_LEGACY
+>          select VFIO_PCI_CORE
+>          help
+>            This provides support for exposing VIRTIO NET VF devices which support
 
-scripts/Makefile.build:243: drivers/dma/Makefile: fsl-edma-common.o is added to multiple modules: fsl-edma mcf-edma
+Applied to vfio next branch for v6.8.  Thanks!
 
-While the two drivers cannot be used on the same CPU architecture,
-building both is still possible for compile testing.
-
-Fixes: 66aac8ea0a6c ("dmaengine: fsl-edma: clean up EXPORT_SYMBOL_GPL in fsl-edma-common.c")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/dma/Makefile          |  8 ++++----
- drivers/dma/fsl-edma-common.c | 17 +++++++++++++++++
- 2 files changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index dfd40d14e408..302b7b0fbb8e 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -31,10 +31,10 @@ obj-$(CONFIG_DW_AXI_DMAC) += dw-axi-dmac/
- obj-$(CONFIG_DW_DMAC_CORE) += dw/
- obj-$(CONFIG_DW_EDMA) += dw-edma/
- obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
--obj-$(CONFIG_FSL_DMA) += fsldma.o
--fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o
--obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
--mcf-edma-objs := mcf-edma-main.o fsl-edma-common.o
-+obj-$(CONFIG_FSL_DMA) += fsldma.o fsl-edma-common.o
-+fsl-edma-objs := fsl-edma-main.o
-+obj-$(CONFIG_FSL_EDMA) += fsl-edma.o fsl-edma-common.o
-+mcf-edma-objs := mcf-edma-main.o
- obj-$(CONFIG_MCF_EDMA) += mcf-edma.o
- obj-$(CONFIG_FSL_QDMA) += fsl-qdma.o
- obj-$(CONFIG_FSL_RAID) += fsl_raid.o
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index b53f46245c37..05b31985a93b 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -67,6 +67,7 @@ void fsl_edma_tx_chan_handler(struct fsl_edma_chan *fsl_chan)
- 
- 	spin_unlock(&fsl_chan->vchan.lock);
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_tx_chan_handler);
- 
- static void fsl_edma3_enable_request(struct fsl_edma_chan *fsl_chan)
- {
-@@ -159,6 +160,7 @@ void fsl_edma_disable_request(struct fsl_edma_chan *fsl_chan)
- 		iowrite8(EDMA_CEEI_CEEI(ch), regs->ceei);
- 	}
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_disable_request);
- 
- static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
- 			   u32 off, u32 slot, bool enable)
-@@ -212,6 +214,7 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	else
- 		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
- 
- static unsigned int fsl_edma_get_tcd_attr(enum dma_slave_buswidth addr_width)
- {
-@@ -235,6 +238,7 @@ void fsl_edma_free_desc(struct virt_dma_desc *vdesc)
- 			      fsl_desc->tcd[i].ptcd);
- 	kfree(fsl_desc);
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_free_desc);
- 
- int fsl_edma_terminate_all(struct dma_chan *chan)
- {
-@@ -255,6 +259,7 @@ int fsl_edma_terminate_all(struct dma_chan *chan)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_terminate_all);
- 
- int fsl_edma_pause(struct dma_chan *chan)
- {
-@@ -270,6 +275,7 @@ int fsl_edma_pause(struct dma_chan *chan)
- 	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_pause);
- 
- int fsl_edma_resume(struct dma_chan *chan)
- {
-@@ -285,6 +291,7 @@ int fsl_edma_resume(struct dma_chan *chan)
- 	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_resume);
- 
- static void fsl_edma_unprep_slave_dma(struct fsl_edma_chan *fsl_chan)
- {
-@@ -345,6 +352,7 @@ int fsl_edma_slave_config(struct dma_chan *chan,
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_slave_config);
- 
- static size_t fsl_edma_desc_residue(struct fsl_edma_chan *fsl_chan,
- 		struct virt_dma_desc *vdesc, bool in_progress)
-@@ -425,6 +433,7 @@ enum dma_status fsl_edma_tx_status(struct dma_chan *chan,
- 
- 	return fsl_chan->status;
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_tx_status);
- 
- static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
- 				  struct fsl_edma_hw_tcd *tcd)
-@@ -644,6 +653,7 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cyclic(
- 
- 	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_prep_dma_cyclic);
- 
- struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
- 		struct dma_chan *chan, struct scatterlist *sgl,
-@@ -740,6 +750,7 @@ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
- 
- 	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_prep_slave_sg);
- 
- struct dma_async_tx_descriptor *fsl_edma_prep_memcpy(struct dma_chan *chan,
- 						     dma_addr_t dma_dst, dma_addr_t dma_src,
-@@ -762,6 +773,7 @@ struct dma_async_tx_descriptor *fsl_edma_prep_memcpy(struct dma_chan *chan,
- 
- 	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_prep_memcpy);
- 
- void fsl_edma_xfer_desc(struct fsl_edma_chan *fsl_chan)
- {
-@@ -797,6 +809,7 @@ void fsl_edma_issue_pending(struct dma_chan *chan)
- 
- 	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_issue_pending);
- 
- int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
- {
-@@ -807,6 +820,7 @@ int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
- 				32, 0);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_alloc_chan_resources);
- 
- void fsl_edma_free_chan_resources(struct dma_chan *chan)
- {
-@@ -830,6 +844,7 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan)
- 	fsl_chan->is_sw = false;
- 	fsl_chan->srcid = 0;
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_free_chan_resources);
- 
- void fsl_edma_cleanup_vchan(struct dma_device *dmadev)
- {
-@@ -841,6 +856,7 @@ void fsl_edma_cleanup_vchan(struct dma_device *dmadev)
- 		tasklet_kill(&chan->vchan.task);
- 	}
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_cleanup_vchan);
- 
- /*
-  * On the 32 channels Vybrid/mpc577x edma version, register offsets are
-@@ -877,5 +893,6 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
- 		edma->regs.inth = edma->membase + EDMA64_INTH;
- 	}
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_setup_regs);
- 
- MODULE_LICENSE("GPL v2");
--- 
-2.39.2
+Alex
 
