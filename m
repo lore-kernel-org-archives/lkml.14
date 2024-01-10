@@ -1,55 +1,57 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C531639ADD
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1E039AF4
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhgH1Zz8"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d3eae5c1d7so18988035ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 23:28:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ak4OHJZG"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59879109c33so907762eaf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 23:29:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704871700; x=1705476500; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704871749; x=1705476549; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t4hCFMRY+A+NO1qDRBfwFR3Up1EWuonnTR8ubqV932Y=;
-        b=hhgH1Zz8QSLw7+klksPcSZjQC+Rs/kxhi8+NYfE4HeXksgyrjEfcuYMTgOebxcNIWM
-         0LP4HzMDfpOF6EJ0cUQnlnnrtTz0P/AFYsmryRJZ9s3ZtSUYblpADn2+J92cyqPDO+Zp
-         YoGZqx2rDAx91DcxdyTwo16NSlMRXkecj4yv7dO9hhrKtDo/9IiJzLR/DlHJG8eDqRlg
-         8Pbgx5Ves5kLY/MDsc0rmDAk5ihGekKLNWlxpEnMppvB6TfHpnMzIsneruuZEFNtPkko
-         H1QjFUO4E/LUC86OSzZy+ZwslCRNHleiQ9tMScoXz7DsffshoiRDVJAurP1ceA9oocGF
-         x6ig==
+        bh=Wo2ow3R5rRd9qIwMEMsgAnkS6j0WPS9tTieV0e+8cjc=;
+        b=ak4OHJZG0U+Gm+9znDg742WwHTekzoLHC0hUsY3HWxdn4+Z++frQkXK7d4OfDy7Kdx
+         CUs47DfLOXf3obL/l8UKgjzY9Dg51fQO8bwacOjZELK4LsAAJ8DhW04ZLltkz8xKJlKL
+         sfXITp1nIc6vy6bvRhtDHw4tcB9tYAFYBZrgIi1lH3vFpjOycmsa6oHFqkBj9sD8udFt
+         StATYFxZAGppFhtCm5J/KiVTBdynp7ulCm9RoG6vEpmqHm4vowt7VoCMH3y7z0rMVdP7
+         dxU0wGyfjNpcesUXCeELSzgqAy4gXA7zNzBcfQSD9miyW2JiaFaBhRs8uXsSd6uvo7m5
+         An9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704871700; x=1705476500;
+        d=1e100.net; s=20230601; t=1704871749; x=1705476549;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=t4hCFMRY+A+NO1qDRBfwFR3Up1EWuonnTR8ubqV932Y=;
-        b=sg+mCJgxXB9IwY8FJI5R0T8iBmsTFpekIyJpsrwJMVX0gy1QxUygb5OqTG2/oF1i8U
-         FkbInzBrvZuTgDCxpHx5gQaNfPsQLfXqEqNXrRfRlb/kdjhYeSx3KFsFuKSKnrv0uUpd
-         qkBictMKsqWiF9Wcc6nMTTGXerXeov0hMdB5kVX+2F6u7pwJfct9upb9nES/fT+tm9fW
-         +z6Md1I5jdpkOfW0YxiAcemjKTcX0Q+FdVY3p8QfyFzeKUecn8B+jl5kF2mdHh5Zdx09
-         6ljD7phYOlQxGSSJTyDoh2ocOVgr12WvoGO21d2IlWWfxiSOvAtoqdVyAtrxkV1ooxfR
-         I7fw==
-X-Gm-Message-State: AOJu0YyMf3mQ51f3S6fStaUGEQb5142OZqxp3USP0lV+HaKx1m5sfcSI
-	H2eBVeZtsxjG9MAlJcYjqJ0=
-X-Google-Smtp-Source: AGHT+IFzzbpaiYlnb1p+D+kIsrNquq3WKGZsYPPZZ3iMUy/KRJdb8QHeSnRfrMsXlrn4SUaG/AA7vQ==
-X-Received: by 2002:a17:903:1252:b0:1d4:5a7d:21e4 with SMTP id u18-20020a170903125200b001d45a7d21e4mr496708plh.6.1704871700060;
-        Tue, 09 Jan 2024 23:28:20 -0800 (PST)
-Received: from mgyee-VirtualBox ([47.152.33.114])
-        by smtp.gmail.com with ESMTPSA id p4-20020a1709028a8400b001d4c9c9be42sm2929136plo.151.2024.01.09.23.28.19
+        bh=Wo2ow3R5rRd9qIwMEMsgAnkS6j0WPS9tTieV0e+8cjc=;
+        b=NS6HeZXt7OljIeVFqQwHIBUX3vEMT+t0Hsp2M+m8U/ITM6LXhYHsvoz7SwRZhUnzLD
+         uqel3u76Ho0LK9Kb6udga1YhF+yg178v4C8SAvnTGU03ExSg5J9J85TL39tDD68WMonb
+         Nimlc8fn8w5XQqyTt2MbMsxNkW+l+3c+mwjo1XJLFj28LefBGasMdYAOf0PDlzf2auzw
+         KFFhbhBjtNJiedf65p2DKNRialIQSIcxqmB5oMCmKrGcpe5aH5XIlhjRH2gw2SLeNj2w
+         vEEM3WuidH6hN37+owzIp0ojBODqaEcmtkqT0P5xIiJBJxe8Q1nUtlRsHSG19s3N12iB
+         yntg==
+X-Gm-Message-State: AOJu0YzDPnbgqaVjK5pZ4a6MIViJ0S1w9FVIjROYQozyZt+UCzwTMw+K
+	gsVW5Cp/Mqqgc3q/J3vZZeNt973tbx4SGA==
+X-Google-Smtp-Source: AGHT+IFBaMUQIrZ5GE8hoUnVwohwAlLo7uTYGkTzq+F0FKAwPL8/m4gCZV61h+d7TvAYjRrRkyIYZg==
+X-Received: by 2002:a05:6358:e4a3:b0:175:61e3:4ca8 with SMTP id by35-20020a056358e4a300b0017561e34ca8mr550444rwb.44.1704871748972;
+        Tue, 09 Jan 2024 23:29:08 -0800 (PST)
+Received: from localhost ([122.172.81.83])
+        by smtp.gmail.com with ESMTPSA id fh12-20020a056a00390c00b006d0d90edd2csm2842919pfb.42.2024.01.09.23.29.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 23:28:19 -0800 (PST)
-Date: Tue, 9 Jan 2024 23:28:17 -0800
-From: Matthias Yee <mgyee9@gmail.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: vt6655: fix open parentheses alignment
-Message-ID: <ZZ5HEVvaGwaiGLWz@mgyee-VirtualBox>
-References: <20240109205933.3221-1-mgyee9@gmail.com>
- <0efd34ef-1543-448d-a690-64e156607441@moroto.mountain>
+        Tue, 09 Jan 2024 23:29:08 -0800 (PST)
+Date: Wed, 10 Jan 2024 12:59:06 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Sibi Sankar <quic_sibis@quicinc.com>
+Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, rafael@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_mdtipton@quicinc.com,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/3] firmware: arm_scmi: Add perf_opp_xlate interface
+Message-ID: <20240110072906.7vnqykkcw3rkhoxa@vireshk-i7>
+References: <20240108140118.1596-1-quic_sibis@quicinc.com>
+ <20240108140118.1596-3-quic_sibis@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,21 +60,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0efd34ef-1543-448d-a690-64e156607441@moroto.mountain>
+In-Reply-To: <20240108140118.1596-3-quic_sibis@quicinc.com>
 
-On Wed, Jan 10, 2024 at 09:53:53AM +0300, Dan Carpenter wrote:
-> On Tue, Jan 09, 2024 at 12:59:34PM -0800, Matthias Yee wrote:
-> > Adjusted whitespace to fix checkpatch warning Alignment Should Match Open Parenthesis.
-> > 
-> > Signed-off-by: Matthias Yee <mgyee9@gmail.com>
-> > ---
-> > Changes in v2:
-> > - line wrapped commit message
+On 08-01-24, 19:31, Sibi Sankar wrote:
+> Add a new perf_opp_xlate interface to the existing perf_ops to translate
+> a given perf index to frequency.
 > 
-> Nope.  It's still 86 characters.
+> This can be used by the cpufreq driver and framework to determine the
+> throttled frequency from a given perf index and apply HW pressure
+> accordingly.
 > 
+> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> ---
+>  drivers/firmware/arm_scmi/perf.c | 21 +++++++++++++++++++++
+>  include/linux/scmi_protocol.h    |  3 +++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+> index c167bb5e3607..f26390924e1c 100644
+> --- a/drivers/firmware/arm_scmi/perf.c
+> +++ b/drivers/firmware/arm_scmi/perf.c
+> @@ -964,6 +964,26 @@ static int scmi_notify_support(const struct scmi_protocol_handle *ph, u32 domain
+>  	return 0;
+>  }
+>  
+> +static int scmi_perf_opp_xlate(const struct scmi_protocol_handle *ph, u32 domain,
+> +			       int idx, unsigned long *freq)
+> +{
+> +	struct perf_dom_info *dom;
+> +
+> +	dom = scmi_perf_domain_lookup(ph, domain);
+> +	if (IS_ERR(dom))
+> +		return PTR_ERR(dom);
+> +
+> +	if (idx >= dom->opp_count)
+> +		return -ERANGE;
+> +
+> +	if (!dom->level_indexing_mode)
+> +		*freq = dom->opp[idx].perf * dom->mult_factor;
+> +	else
+> +		*freq = dom->opp[idx].indicative_freq * dom->mult_factor;
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct scmi_perf_proto_ops perf_proto_ops = {
+>  	.num_domains_get = scmi_perf_num_domains_get,
+>  	.info_get = scmi_perf_info_get,
+> @@ -979,6 +999,7 @@ static const struct scmi_perf_proto_ops perf_proto_ops = {
+>  	.fast_switch_possible = scmi_fast_switch_possible,
+>  	.power_scale_get = scmi_power_scale_get,
+>  	.perf_notify_support = scmi_notify_support,
+> +	.perf_opp_xlate = scmi_perf_opp_xlate,
 
-Oops, just fixed it. Sorry about that, still new to this.
+The use of "opp" here is a bit confusing as this doesn't have anything to do
+with the OPP framework and you are only getting the frequency out of it after
+all.
 
-thanks,
-matthias
+-- 
+viresh
