@@ -1,298 +1,508 @@
-Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D121481D1
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: by air.basealt.ru (Postfix, from userid 490)
-	id 64BAD2F2027C; Wed, 10 Jan 2024 10:41:42 +0000 (UTC)
-X-Spam-Level: 
-Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
-	by air.basealt.ru (Postfix) with ESMTPSA id 2AE302F20285;
-	Wed, 10 Jan 2024 10:41:28 +0000 (UTC)
-From: kovalev@altlinux.org
-To: bryantan@vmware.com,
-	vdasa@vmware.com,
-	pv-drivers@vmware.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org
-Cc: kovalev@altlinux.org,
-	nickel@altlinux.org,
-	oficerovas@altlinux.org,
-	dutyrok@altlinux.org
-Subject: [PATCH 0/1] misc/vmw_vmci: fix filling of the msg and msg_payload in dg_info struct
-Date: Wed, 10 Jan 2024 13:40:41 +0300
-Message-Id: <20240110104042.31865-1-kovalev@altlinux.org>
-X-Mailer: git-send-email 2.33.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE572482D6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MpVvBSWx"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-557678c50feso818862a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 02:48:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1704883680; x=1705488480; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C+qZeuaWTWVR2GNELf3bh21gU+G+3ouJJGGegnUo4u8=;
+        b=MpVvBSWxd+syVDZwFIyAZzAZ2pTndWs0wDnTPOFwkeSEL6aqChGdtoVgZenJtKk8O9
+         zAgmgqoL1LzbZDIRzsCSWnt/56UtfAyDNm707iLW63c+9qR4UyRfruCXAdWgXMrhsgK2
+         XUCDQWkT6b6rRGZG93NJrWeY2upjrjCuxEbSM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704883680; x=1705488480;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C+qZeuaWTWVR2GNELf3bh21gU+G+3ouJJGGegnUo4u8=;
+        b=K0NMffdPv11Keu/ZfD4ajAvrqpqYEv2Tkt4Jv92k+tUjDKJMPAz0uv+mXLAXWp6kUV
+         lgmyGANFB+wNZ0X2JiSafPZvX7hFFKVfyihQFCQjyfvRfrmpaQp+gHMiGN7ioC1lbrtJ
+         FCkzOIgef8d8lYbDYB8Nthu1SXNAfEm7Qcz0I/EpeWsZCDJlOvgSIBlHsz2UcHquOYXt
+         N2/j2976jEq294dCLf35VwhsHxcZyg0LN3Pdo+om/v5FhwxTK0Fw0T0pUX6T6dELUTUy
+         4P/Oq6CudIb8ErXK/1daQFWY13Qr3SBtEHAPa2OEVW1kPwtl6xNM5G/TrfJTd5B3WJ86
+         GgTg==
+X-Gm-Message-State: AOJu0Yx6HH4wJVs8PjvbyPgfkkY3KgCbZiGVb+wQE7IfR5pbmYxwK9ph
+	/gKMlL1n0faeLvM5w/UE4uVhMnbFOUVFCQ==
+X-Google-Smtp-Source: AGHT+IFDoMaM95651axDNn2Xefy+pLPUZ6pL+i//Un1SRlqb8vlxbpTLkrNSFBNOJKJOoWtzzSZwDg==
+X-Received: by 2002:a17:907:2597:b0:a27:4531:719f with SMTP id ad23-20020a170907259700b00a274531719fmr873908ejc.2.1704883679938;
+        Wed, 10 Jan 2024 02:47:59 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id v27-20020a170906181b00b00a2ae0aa9002sm1963891eje.40.2024.01.10.02.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 02:47:59 -0800 (PST)
+Date: Wed, 10 Jan 2024 11:47:57 +0100
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Julia Zhang <julia.zhang@amd.com>
+Cc: Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>, David Airlie <airlied@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+	virtualization@lists.linux-foundation.org,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
+	Erik Faye-Lund <kusmabite@gmail.com>,
+	Marek =?utf-8?B?T2zFocOhaw==?= <marek.olsak@amd.com>,
+	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+	Honglei Huang <honglei1.huang@amd.com>,
+	Chen Jiqian <Jiqian.Chen@amd.com>, Huang Rui <ray.huang@amd.com>,
+	Daniel Stone <daniels@collabora.com>
+Subject: Re: [PATCH 1/1] drm/virtio: Implement RESOURCE_GET_LAYOUT ioctl
+Message-ID: <ZZ513SSvYSElj1D2@phenom.ffwll.local>
+Mail-Followup-To: Julia Zhang <julia.zhang@amd.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>, David Airlie <airlied@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+	virtualization@lists.linux-foundation.org,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Erik Faye-Lund <kusmabite@gmail.com>,
+	Marek =?utf-8?B?T2zFocOhaw==?= <marek.olsak@amd.com>,
+	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+	Honglei Huang <honglei1.huang@amd.com>,
+	Chen Jiqian <Jiqian.Chen@amd.com>, Huang Rui <ray.huang@amd.com>,
+	Daniel Stone <daniels@collabora.com>
+References: <20231221100016.4022353-1-julia.zhang@amd.com>
+ <20231221100016.4022353-2-julia.zhang@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231221100016.4022353-2-julia.zhang@amd.com>
+X-Operating-System: Linux phenom 6.5.0-4-amd64 
 
-Warning detected by tracking mechanisms __fortify_memcpy_chk, added 2021-04=
--20.
-The proposed patch (PATCH 1/1) introduces changes to meet the new requireme=
-nts.
+On Thu, Dec 21, 2023 at 06:00:16PM +0800, Julia Zhang wrote:
+> From: Daniel Stone <daniels@collabora.com>
+> 
+> Add a new ioctl to allow the guest VM to discover how the guest
+> actually allocated the underlying buffer, which allows buffers to
+> be used for GL<->Vulkan interop and through standard window systems.
+> It's also a step towards properly supporting modifiers in the guest.
+> 
+> Signed-off-by: Daniel Stone <daniels@collabora.com>
+> Co-developed-by: Julia Zhang <julia.zhang@amd.com> # support query
+> stride before it's created
+> Signed-off-by: Julia Zhang <julia.zhang@amd.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.c   |  1 +
+>  drivers/gpu/drm/virtio/virtgpu_drv.h   | 22 ++++++++-
+>  drivers/gpu/drm/virtio/virtgpu_ioctl.c | 66 ++++++++++++++++++++++++++
+>  drivers/gpu/drm/virtio/virtgpu_kms.c   |  8 +++-
+>  drivers/gpu/drm/virtio/virtgpu_vq.c    | 63 ++++++++++++++++++++++++
+>  include/uapi/drm/virtgpu_drm.h         | 21 ++++++++
+>  include/uapi/linux/virtio_gpu.h        | 30 ++++++++++++
+>  7 files changed, 208 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> index 4334c7608408..98061b714b98 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> @@ -148,6 +148,7 @@ static unsigned int features[] = {
+>  	VIRTIO_GPU_F_RESOURCE_UUID,
+>  	VIRTIO_GPU_F_RESOURCE_BLOB,
+>  	VIRTIO_GPU_F_CONTEXT_INIT,
+> +	VIRTIO_GPU_F_RESOURCE_QUERY_LAYOUT,
+>  };
+>  static struct virtio_driver virtio_gpu_driver = {
+>  	.feature_table = features,
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index 96365a772f77..bb5edcfeda54 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -214,6 +214,16 @@ struct virtio_gpu_drv_cap_cache {
+>  	atomic_t is_valid;
+>  };
+>  
+> +struct virtio_gpu_query_info {
+> +	uint32_t num_planes;
+> +	uint64_t modifier;
+> +	struct {
+> +		uint64_t offset;
+> +		uint32_t stride;
+> +	} planes[VIRTIO_GPU_MAX_RESOURCE_PLANES];
+> +	atomic_t is_valid;
+> +};
+> +
+>  struct virtio_gpu_device {
+>  	struct drm_device *ddev;
+>  
+> @@ -246,6 +256,7 @@ struct virtio_gpu_device {
+>  	bool has_resource_blob;
+>  	bool has_host_visible;
+>  	bool has_context_init;
+> +	bool has_resource_query_layout;
+>  	struct virtio_shm_region host_visible_region;
+>  	struct drm_mm host_visible_mm;
+>  
+> @@ -277,7 +288,7 @@ struct virtio_gpu_fpriv {
+>  };
+>  
+>  /* virtgpu_ioctl.c */
+> -#define DRM_VIRTIO_NUM_IOCTLS 12
+> +#define DRM_VIRTIO_NUM_IOCTLS 13
+>  extern struct drm_ioctl_desc virtio_gpu_ioctls[DRM_VIRTIO_NUM_IOCTLS];
+>  void virtio_gpu_create_context(struct drm_device *dev, struct drm_file *file);
+>  
+> @@ -420,6 +431,15 @@ virtio_gpu_cmd_set_scanout_blob(struct virtio_gpu_device *vgdev,
+>  				uint32_t width, uint32_t height,
+>  				uint32_t x, uint32_t y);
+>  
+> +int
+> +virtio_gpu_cmd_get_resource_layout(struct virtio_gpu_device *vgdev,
+> +				   struct virtio_gpu_query_info *bo_info,
+> +				   uint32_t width,
+> +				   uint32_t height,
+> +				   uint32_t format,
+> +				   uint32_t bind,
+> +				   uint32_t hw_res_handle);
+> +
+>  /* virtgpu_display.c */
+>  int virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev);
+>  void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev);
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> index b24b11f25197..216c04314177 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> @@ -107,6 +107,9 @@ static int virtio_gpu_getparam_ioctl(struct drm_device *dev, void *data,
+>  	case VIRTGPU_PARAM_SUPPORTED_CAPSET_IDs:
+>  		value = vgdev->capset_id_mask;
+>  		break;
+> +	case VIRTGPU_PARAM_RESOURCE_QUERY_LAYOUT:
+> +		value = vgdev->has_resource_query_layout ? 1 : 0;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -668,6 +671,65 @@ static int virtio_gpu_context_init_ioctl(struct drm_device *dev,
+>  	return ret;
+>  }
+>  
+> +static int virtio_gpu_resource_query_layout_ioctl(struct drm_device *dev,
+> +						  void *data,
+> +						  struct drm_file *file)
+> +{
+> +	struct drm_virtgpu_resource_query_layout *args = data;
+> +	struct virtio_gpu_device *vgdev = dev->dev_private;
+> +	struct drm_gem_object *obj = NULL;
+> +	struct virtio_gpu_object *bo = NULL;
+> +	struct virtio_gpu_query_info bo_info = {0};
+> +	int ret = 0;
+> +	int i;
+> +
+> +	if (!vgdev->has_resource_query_layout) {
+> +		DRM_ERROR("failing: no RQL on host\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (args->handle > 0) {
+> +		obj = drm_gem_object_lookup(file, args->handle);
+> +		if (obj == NULL) {
+> +			DRM_ERROR("invalid handle 0x%x\n", args->handle);
+> +			return -ENOENT;
+> +		}
+> +		bo = gem_to_virtio_gpu_obj(obj);
+> +	}
+> +
+> +	ret = virtio_gpu_cmd_get_resource_layout(vgdev, &bo_info, args->width,
+> +						 args->height, args->format,
+> +						 args->bind, bo ? bo->hw_res_handle : 0);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = wait_event_timeout(vgdev->resp_wq,
+> +				 atomic_read(&bo_info.is_valid),
+> +				 5 * HZ);
+> +	if (!ret)
+> +		goto out;
+> +
+> +valid:
+> +	smp_rmb();
 
-The reproducer (repro.c) was generated using the syzkaller program and mini=
-mized
-(Thanks Alexander Ofitserov <oficerovas@altlinux.org>):
+Please, please no hand-rolling of coherency/synchronization primitives
+without writing an entire paper about why this is correct.
 
-#define _GNU_SOURCE
+I've done a full-length talk about this:
 
-#include <endian.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
-#include <unistd.h>
+https://blog.ffwll.ch/2023/07/eoss-prague-locking-engineering.html
 
-uint64_t r[1] =3D {0xffffffffffffffff};
+See the "Level 3: Lockless Tricks" section here:
 
-int main(void)
-{
-        syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 7ul, 0x32ul, -1, 0ul);
-        memset((void *)0x20000000ul, 0x0, 0x1000000ul);
+https://blog.ffwll.ch/2022/08/locking-hierarchy.html
 
-        intptr_t res =3D 0;
-        res =3D syscall(__NR_socket, 0x28ul, 2ul, 0);
-        if (res !=3D -1)
-                r[0] =3D res;
-        *(uint16_t*)0x20000000 =3D 0x28;
-        *(uint16_t*)0x20000002 =3D 0;
-        *(uint32_t*)0x20000004 =3D 1;
-        *(uint32_t*)0x20000008 =3D 2;
-        *(uint32_t*)0x2000000c =3D 0;
-        syscall(__NR_connect, r[0], 0x20000000ul, 0x10ul);
+To fix this please just use a struct completion, which is practically what
+you hand-roll here.
 
-        // struct msghdr*
-        // 0x20000440ul - 0x20000447ul - msg_name
-        // 0x20000448ul - 0x20000449ul - msg_len
-        // 0x20000450ul - ptr to msg_iov
-        // 0x20000458ul - msg_iovlen
-        *(uint64_t*)0x20000450 =3D 0x20000400;
-        *(uint8_t*)0x20000448 =3D 0xFF;
-        *(uint64_t*)0x20000458 =3D 1;
-        *(uint64_t*)0x20000460 =3D 0x20010000;
-        *(uint64_t*)0x20000468 =3D 0;
+Since I looked, on the patch itself: It would be good to add a lot more
+context to this, like the userspace work and why exactly the kernel has to
+be in the business of knowing all this stuff. Because generally it really
+should not, ever: Userspace allocates buffers, userspace better knows how
+it allocated its buffers and should share that through userspace protocol
+(like wayland linux-dmabuf or x11 dri2/3). Why virtio breaks this needs a
+big explainer imo.
 
-        // 0x20000400 - ptr to iov_base
-        // 0x20000408 - iov_len
-        *(uint64_t*)0x20000400 =3D 0x20000900;
-        strcpy((char *)0x20000900, "AAAAAA");
-        *(uint64_t*)0x20000408 =3D 0x10000;
+Thanks, Sima
 
-        syscall(__NR_sendmsg, r[0], 0x20000440ul, 0ul);
-        return 0;
-}
+> +	WARN_ON(atomic_read(&bo_info.is_valid));
+> +	args->num_planes = bo_info.num_planes;
+> +	args->modifier = bo_info.modifier;
+> +	for (i = 0; i < args->num_planes; i++) {
+> +		args->planes[i].offset = bo_info.planes[i].offset;
+> +		args->planes[i].stride = bo_info.planes[i].stride;
+> +	}
+> +	for (; i < VIRTIO_GPU_MAX_RESOURCE_PLANES; i++) {
+> +		args->planes[i].offset = 0;
+> +		args->planes[i].stride = 0;
+> +	}
+> +	ret = 0;
+> +
+> +out:
+> +	if (obj)
+> +		drm_gem_object_put(obj);
+> +	return ret;
+> +}
+> +
+>  struct drm_ioctl_desc virtio_gpu_ioctls[DRM_VIRTIO_NUM_IOCTLS] = {
+>  	DRM_IOCTL_DEF_DRV(VIRTGPU_MAP, virtio_gpu_map_ioctl,
+>  			  DRM_RENDER_ALLOW),
+> @@ -707,4 +769,8 @@ struct drm_ioctl_desc virtio_gpu_ioctls[DRM_VIRTIO_NUM_IOCTLS] = {
+>  
+>  	DRM_IOCTL_DEF_DRV(VIRTGPU_CONTEXT_INIT, virtio_gpu_context_init_ioctl,
+>  			  DRM_RENDER_ALLOW),
+> +
+> +	DRM_IOCTL_DEF_DRV(VIRTGPU_RESOURCE_QUERY_LAYOUT,
+> +			  virtio_gpu_resource_query_layout_ioctl,
+> +			  DRM_RENDER_ALLOW),
+>  };
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> index 5a3b5aaed1f3..4f34f4145910 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> @@ -175,6 +175,9 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
+>  	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_RESOURCE_BLOB)) {
+>  		vgdev->has_resource_blob = true;
+>  	}
+> +	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_RESOURCE_QUERY_LAYOUT)) {
+> +		vgdev->has_resource_query_layout = true;
+> +	}
+>  	if (virtio_get_shm_region(vgdev->vdev, &vgdev->host_visible_region,
+>  				  VIRTIO_GPU_SHM_ID_HOST_VISIBLE)) {
+>  		if (!devm_request_mem_region(&vgdev->vdev->dev,
+> @@ -204,8 +207,9 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
+>  		 vgdev->has_resource_blob ? '+' : '-',
+>  		 vgdev->has_host_visible ? '+' : '-');
+>  
+> -	DRM_INFO("features: %ccontext_init\n",
+> -		 vgdev->has_context_init ? '+' : '-');
+> +	DRM_INFO("features: %ccontext_init %cresource_query_layout\n",
+> +		 vgdev->has_context_init ? '+' : '-',
+> +		 vgdev->has_resource_query_layout ? '+' : '-');
+>  
+>  	ret = virtio_find_vqs(vgdev->vdev, 2, vqs, callbacks, names, NULL);
+>  	if (ret) {
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> index b1a00c0c25a7..26998a3ac4c2 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> @@ -1302,3 +1302,66 @@ void virtio_gpu_cmd_set_scanout_blob(struct virtio_gpu_device *vgdev,
+>  
+>  	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
+>  }
+> +
+> +static void virtio_gpu_cmd_get_resource_layout_cb(struct virtio_gpu_device *vgdev,
+> +						  struct virtio_gpu_vbuffer *vbuf)
+> +{
+> +	struct virtio_gpu_resp_resource_layout *resp =
+> +		(struct virtio_gpu_resp_resource_layout *)vbuf->resp_buf;
+> +	struct virtio_gpu_query_info *bo_info = vbuf->resp_cb_data;
+> +	int i;
+> +
+> +	vbuf->resp_cb_data = NULL;
+> +
+> +	if (resp->hdr.type != VIRTIO_GPU_RESP_OK_RESOURCE_LAYOUT) {
+> +		atomic_set(&bo_info->is_valid, 0);
+> +		goto out;
+> +	}
+> +
+> +	bo_info->modifier = le64_to_cpu(resp->modifier);
+> +	bo_info->num_planes = le32_to_cpu(resp->num_planes);
+> +	for (i = 0; i < bo_info->num_planes; i++) {
+> +		bo_info->planes[i].stride = le32_to_cpu(resp->planes[i].stride);
+> +		bo_info->planes[i].offset = le32_to_cpu(resp->planes[i].offset);
+> +	}
+> +	smp_wmb();
+> +	atomic_set(&bo_info->is_valid, 1);
+> +
+> +out:
+> +	wake_up_all(&vgdev->resp_wq);
+> +}
+> +
+> +int virtio_gpu_cmd_get_resource_layout(struct virtio_gpu_device *vgdev,
+> +				       struct virtio_gpu_query_info *bo_info,
+> +				       uint32_t width,
+> +				       uint32_t height,
+> +				       uint32_t format,
+> +				       uint32_t bind,
+> +				       uint32_t hw_res_handle)
+> +{
+> +	struct virtio_gpu_resource_query_layout *cmd_p;
+> +	struct virtio_gpu_vbuffer *vbuf;
+> +	void *resp_buf;
+> +
+> +	resp_buf = kzalloc(sizeof(struct virtio_gpu_resp_resource_layout),
+> +			   GFP_KERNEL);
+> +	if (!resp_buf)
+> +		return -ENOMEM;
+> +
+> +	cmd_p = virtio_gpu_alloc_cmd_resp
+> +		(vgdev, &virtio_gpu_cmd_get_resource_layout_cb, &vbuf,
+> +		 sizeof(*cmd_p), sizeof(struct virtio_gpu_resp_resource_layout),
+> +		 resp_buf);
+> +	memset(cmd_p, 0, sizeof(*cmd_p));
+> +
+> +	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_RESOURCE_QUERY_LAYOUT);
+> +	cmd_p->resource_id = cpu_to_le32(hw_res_handle);
+> +	cmd_p->width = cpu_to_le32(width);
+> +	cmd_p->height = cpu_to_le32(height);
+> +	cmd_p->format = cpu_to_le32(format);
+> +	cmd_p->bind = cpu_to_le32(bind);
+> +	vbuf->resp_cb_data = bo_info;
+> +
+> +	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
+> +	return 0;
+> +}
+> diff --git a/include/uapi/drm/virtgpu_drm.h b/include/uapi/drm/virtgpu_drm.h
+> index b1d0e56565bc..66f7c0fa1d4d 100644
+> --- a/include/uapi/drm/virtgpu_drm.h
+> +++ b/include/uapi/drm/virtgpu_drm.h
+> @@ -48,6 +48,7 @@ extern "C" {
+>  #define DRM_VIRTGPU_GET_CAPS  0x09
+>  #define DRM_VIRTGPU_RESOURCE_CREATE_BLOB 0x0a
+>  #define DRM_VIRTGPU_CONTEXT_INIT 0x0b
+> +#define DRM_VIRTGPU_RESOURCE_QUERY_LAYOUT 0x0c
+>  
+>  #define VIRTGPU_EXECBUF_FENCE_FD_IN	0x01
+>  #define VIRTGPU_EXECBUF_FENCE_FD_OUT	0x02
+> @@ -97,6 +98,7 @@ struct drm_virtgpu_execbuffer {
+>  #define VIRTGPU_PARAM_CROSS_DEVICE 5 /* Cross virtio-device resource sharing  */
+>  #define VIRTGPU_PARAM_CONTEXT_INIT 6 /* DRM_VIRTGPU_CONTEXT_INIT */
+>  #define VIRTGPU_PARAM_SUPPORTED_CAPSET_IDs 7 /* Bitmask of supported capability set ids */
+> +#define VIRTGPU_PARAM_RESOURCE_QUERY_LAYOUT 8 /* DRM_VIRTGPU_RESOURCE_QUERY_LAYOUT (also needs cap) */
+>  
+>  struct drm_virtgpu_getparam {
+>  	__u64 param;
+> @@ -211,6 +213,21 @@ struct drm_virtgpu_context_init {
+>  	__u64 ctx_set_params;
+>  };
+>  
+> +#define VIRTIO_GPU_MAX_RESOURCE_PLANES 4
+> +struct drm_virtgpu_resource_query_layout {
+> +	__u32 handle;
+> +	__u32 width;
+> +	__u32 height;
+> +	__u32 format;
+> +	__u32 bind;
+> +	__u32 num_planes;
+> +	__u64 modifier;
+> +	struct {
+> +		__u64 offset;
+> +		__u32 stride;
+> +	} planes[VIRTIO_GPU_MAX_RESOURCE_PLANES];
+> +};
+> +
+>  /*
+>   * Event code that's given when VIRTGPU_CONTEXT_PARAM_POLL_RINGS_MASK is in
+>   * effect.  The event size is sizeof(drm_event), since there is no additional
+> @@ -261,6 +278,10 @@ struct drm_virtgpu_context_init {
+>  	DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_CONTEXT_INIT,		\
+>  		struct drm_virtgpu_context_init)
+>  
+> +#define DRM_IOCTL_VIRTGPU_RESOURCE_QUERY_LAYOUT				\
+> +	DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_RESOURCE_QUERY_LAYOUT,	\
+> +		struct drm_virtgpu_resource_query_layout)
+> +
+>  #if defined(__cplusplus)
+>  }
+>  #endif
+> diff --git a/include/uapi/linux/virtio_gpu.h b/include/uapi/linux/virtio_gpu.h
+> index f556fde07b76..547575232376 100644
+> --- a/include/uapi/linux/virtio_gpu.h
+> +++ b/include/uapi/linux/virtio_gpu.h
+> @@ -65,6 +65,11 @@
+>   */
+>  #define VIRTIO_GPU_F_CONTEXT_INIT        4
+>  
+> +/*
+> + * VIRTIO_GPU_CMD_RESOURCE_QUERY_LAYOUT
+> + */
+> +#define VIRTIO_GPU_F_RESOURCE_QUERY_LAYOUT 5
+> +
+>  enum virtio_gpu_ctrl_type {
+>  	VIRTIO_GPU_UNDEFINED = 0,
+>  
+> @@ -95,6 +100,7 @@ enum virtio_gpu_ctrl_type {
+>  	VIRTIO_GPU_CMD_SUBMIT_3D,
+>  	VIRTIO_GPU_CMD_RESOURCE_MAP_BLOB,
+>  	VIRTIO_GPU_CMD_RESOURCE_UNMAP_BLOB,
+> +	VIRTIO_GPU_CMD_RESOURCE_QUERY_LAYOUT,
+>  
+>  	/* cursor commands */
+>  	VIRTIO_GPU_CMD_UPDATE_CURSOR = 0x0300,
+> @@ -108,6 +114,7 @@ enum virtio_gpu_ctrl_type {
+>  	VIRTIO_GPU_RESP_OK_EDID,
+>  	VIRTIO_GPU_RESP_OK_RESOURCE_UUID,
+>  	VIRTIO_GPU_RESP_OK_MAP_INFO,
+> +	VIRTIO_GPU_RESP_OK_RESOURCE_LAYOUT,
+>  
+>  	/* error responses */
+>  	VIRTIO_GPU_RESP_ERR_UNSPEC = 0x1200,
+> @@ -453,4 +460,27 @@ struct virtio_gpu_resource_unmap_blob {
+>  	__le32 padding;
+>  };
+>  
+> +/* VIRTIO_GPU_CMD_RESOURCE_QUERY_LAYOUT */
+> +struct virtio_gpu_resource_query_layout {
+> +	struct virtio_gpu_ctrl_hdr hdr;
+> +	__le32 resource_id;
+> +	__le32 width;
+> +	__le32 height;
+> +	__le32 format;
+> +	__le32 bind;
+> +};
+> +
+> +
+> +/* VIRTIO_GPU_RESP_OK_RESOURCE_LAYOUT */
+> +#define VIRTIO_GPU_RES_MAX_PLANES 4
+> +struct virtio_gpu_resp_resource_layout {
+> +	struct virtio_gpu_ctrl_hdr hdr;
+> +	__le64 modifier;
+> +	__le32 num_planes;
+> +	struct virtio_gpu_resource_plane {
+> +		__le64 offset;
+> +		__le32 stride;
+> +	} planes[VIRTIO_GPU_RES_MAX_PLANES];
+> +};
+> +
+>  #endif
+> -- 
+> 2.34.1
+> 
 
-$ gcc repro.c -o repro
-$ ./repro
-
-# dmesg (linux kernel 6.6.6):
------
-[   38.036309] Guest personality initialized and is inactive
-[   38.036380] VMCI host device registered (name=3Dvmci, major=3D10, minor=
-=3D122)
-[   38.036381] Initialized host personality
-[   38.037987] NET: Registered PF_VSOCK protocol family
-[   38.073027] ------------[ cut here ]------------
-[   38.073034] memcpy: detected field-spanning write (size 65560) of single=
- field "&dg_info->msg" at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 2=
-4)
-[   38.073103] WARNING: CPU: 9 PID: 3976 at drivers/misc/vmw_vmci/vmci_data=
-gram.c:237 vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
-[   38.073135] Modules linked in: vsock_loopback vmw_vsock_virtio_transport=
-_common vmw_vsock_vmci_transport vsock vmw_vmci ccm rfcomm cmac algif_hash =
-algif_skcipher af_alg af_packet qrtr bnep uvcvideo btusb uvc btrtl videobuf=
-2_vmalloc videobuf2_memops btintel videobuf2_v4l2 btbcm btmtk usbhid videod=
-ev bluetooth videobuf2_common mc ecdh_generic joydev snd_sof_pci_intel_tgl =
-snd_sof_intel_hda_common soundwire_intel soundwire_generic_allocation coret=
-emp snd_sof_intel_hda_mlink intel_uncore_frequency soundwire_cadence intel_=
-uncore_frequency_common intel_tcc_cooling snd_sof_intel_hda snd_sof_pci x86=
-_pkg_temp_thermal snd_sof_xtensa_dsp intel_powerclamp snd_sof snd_sof_utils=
- snd_soc_hdac_hda kvm_intel snd_hda_ext_core snd_soc_acpi_intel_match snd_s=
-oc_acpi snd_hda_codec_hdmi soundwire_bus snd_soc_core kvm hid_multitouch nl=
-s_utf8 snd_hda_codec_realtek hid_generic snd_compress nls_cp866 ac97_bus iw=
-lmvm spi_pxa2xx_platform 8250_dw iTCO_wdt snd_pcm_dmaengine irqbypass dw_dm=
-ac snd_hda_codec_generic vfat rtsx_pci_sdmmc intel_pmc_bxt
-[   38.073247]  crct10dif_pclmul fat ledtrig_audio snd_hda_intel crc32_pclm=
-ul mei_hdcp iTCO_vendor_support mmc_core intel_rapl_msr crc32c_intel snd_in=
-tel_dspcfg mac80211 ghash_clmulni_intel snd_intel_sdw_acpi sha512_ssse3 sha=
-256_ssse3 snd_hda_codec sha1_ssse3 aesni_intel processor_thermal_device_pci=
- processor_thermal_device snd_hda_core crypto_simd processor_thermal_rfim i=
-ntel_lpss_pci i2c_hid_acpi ucsi_acpi cryptd libarc4 iwlwifi pcspkr xhci_pci=
- processor_thermal_mbox intel_lpss ideapad_laptop i2c_hid xhci_pci_renesas =
-i2c_i801 mei_me typec_ucsi snd_hwdep idma64 processor_thermal_rapl typec sp=
-arse_keymap wmi_bmof tiny_power_button cfg80211 snd_pcm i2c_smbus platform_=
-profile rtsx_pci xhci_hcd mei virt_dma intel_rapl_common thermal hid roles =
-fan button int3403_thermal battery rfkill int340x_thermal_zone int3400_ther=
-mal acpi_thermal_rel intel_pmc_core pinctrl_tigerlake acpi_pad ac sch_fq_co=
-del vboxvideo drm_vram_helper drm_ttm_helper vboxsf vboxguest snd_seq_midi =
-snd_seq_midi_event snd_seq snd_rawmidi snd_seq_device
-[   38.073342]  snd_timer snd soundcore msr fuse dm_mod efi_pstore efivarfs=
- ip_tables x_tables autofs4 i915 hwmon i2c_algo_bit drm_buddy ttm evdev drm=
-_display_helper input_leds serio_raw cec rc_core intel_gtt video wmi
-[   38.073375] CPU: 9 PID: 3976 Comm: eee.out Not tainted 6.6.6-un-def-alt1=
- #1
-[   38.073381] Hardware name: LENOVO 82X8/LNVNB161216, BIOS LTCN30WW 11/08/=
-2023
-[   38.073384] RIP: 0010:vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
-[   38.073405] Code: 38 fd ff ff 80 3d 5c 96 00 00 00 75 87 48 c7 c2 58 0b =
-6b c1 4c 89 ee 48 c7 c7 a0 0b 6b c1 c6 05 42 96 00 00 01 e8 18 c0 a1 c5 <0f=
-> 0b e9 63 ff ff ff e8 1c 5e 65 c6 83 cd ff e9 fe fc ff ff f0 ff
-[   38.073410] RSP: 0018:ffffc9000279fb58 EFLAGS: 00010246
-[   38.073415] RAX: 0000000000000000 RBX: ffff88811a9c0000 RCX: 00000000000=
-00000
-[   38.073418] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
-00000
-[   38.073421] RBP: ffff888165540000 R08: 0000000000000000 R09: 00000000000=
-00000
-[   38.073423] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881655=
-40030
-[   38.073425] R13: 0000000000010018 R14: ffff8881090a2a00 R15: ffff88811a9=
-c0018
-[   38.073428] FS:  00007f3a36bec580(0000) GS:ffff8882a7a40000(0000) knlGS:=
-0000000000000000
-[   38.073432] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   38.073435] CR2: 000055b6120cf008 CR3: 000000010db62000 CR4: 00000000007=
-50ee0
-[   38.073438] PKRU: 55555554
-[   38.073440] Call Trace:
-[   38.073446]  <TASK>
-[   38.073448]  ? vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
-[   38.073467]  ? __warn+0x7d/0x130
-[   38.073482]  ? vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
-[   38.073503]  ? report_bug+0x17e/0x1b0
-[   38.073514]  ? handle_bug+0x60/0xb0
-[   38.073523]  ? exc_invalid_op+0x13/0x70
-[   38.073531]  ? asm_exc_invalid_op+0x16/0x20
-[   38.073540]  ? vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
-[   38.073559]  ? vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
-[   38.073577]  vmci_transport_dgram_enqueue+0xb5/0x150 [vmw_vsock_vmci_tra=
-nsport]
-[   38.073596]  vsock_dgram_sendmsg+0xcf/0x180 [vsock]
-[   38.073618]  ____sys_sendmsg+0x376/0x3b0
-[   38.073629]  ? copy_msghdr_from_user+0x6d/0xb0
-[   38.073635]  ___sys_sendmsg+0x86/0xe0
-[   38.073642]  ? filemap_map_pages+0x423/0x570
-[   38.073653]  ? vmci_resource_add+0xde/0x170 [vmw_vmci]
-[   38.073674]  ? __pfx_vmci_transport_recv_dgram_cb+0x10/0x10 [vmw_vsock_v=
-mci_transport]
-[   38.073689]  ? do_fault+0x296/0x470
-[   38.073697]  __sys_sendmsg+0x57/0xb0
-[   38.073704]  do_syscall_64+0x59/0x90
-[   38.073711]  ? count_memcg_events.constprop.0+0x3a/0x70
-[   38.073717]  ? handle_mm_fault+0x9e/0x300
-[   38.073724]  ? do_user_addr_fault+0x33d/0x680
-[   38.073733]  ? sched_clock+0xc/0x30
-[   38.073740]  ? get_vtime_delta+0xf/0xc0
-[   38.073750]  ? ct_kernel_exit.isra.0+0x71/0x90
-[   38.073759]  ? __ct_user_enter+0x5a/0xd0
-[   38.073765]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-[   38.073771] RIP: 0033:0x7f3a36b0cd49
-[   38.073776] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 =
-89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48=
-> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ef 70 0d 00 f7 d8 64 89 01 48
-[   38.073780] RSP: 002b:00007ffea38c4a08 EFLAGS: 00000217 ORIG_RAX: 000000=
-000000002e
-[   38.073784] RAX: ffffffffffffffda RBX: 000055b6120ce2d0 RCX: 00007f3a36b=
-0cd49
-[   38.073787] RDX: 0000000000000000 RSI: 0000000020000440 RDI: 00000000000=
-00003
-[   38.073790] RBP: 00007ffea38c4a20 R08: 00007ffea38c4b10 R09: 00007ffea38=
-c4b10
-[   38.073792] R10: 00007ffea38c4b10 R11: 0000000000000217 R12: 000055b6120=
-ce060
-[   38.073795] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000=
-00000
-[   38.073799]  </TASK>
-[   38.073801] ---[ end trace 0000000000000000 ]---
------
-
-To assess the performance losses when using a new patch, the kernel was bui=
-lded with the
-patch below and the reproducer was launched several times:
-
-diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/=
-vmci_datagram.c
-index 6d42f3b99c6f46..b078364d5c9b23 100644
---- a/drivers/misc/vmw_vmci/vmci_datagram.c
-+++ b/drivers/misc/vmw_vmci/vmci_datagram.c
-@@ -234,6 +234,17 @@ static int dg_dispatch_as_host(u32 context_id, struct =
-vmci_datagram *dg)
-=20
-                        dg_info->in_dg_host_queue =3D true;
-                        dg_info->entry =3D dst_entry;
-+                       u32 i;
-+                       printk("memcpy: init i=3D%d\n",i);
-+                       for(i=3D0; i<1000000000;i++){
-+                               memcpy(&dg_info->msg, dg, 24);
-+                       }
-+                       printk("memcpy: old i=3D%d\n",i);
-+                       for(i=3D0; i<1000000000;i++){
-+                               memcpy(&dg_info->msg, dg, 12);
-+                               memcpy(dg_info->msg_payload, VMCI_DG_PAYLOA=
-D(dg), 12);
-+                       }
-+                       printk("memcpy: new i=3D%d\n",i);
-                        memcpy(&dg_info->msg, dg, VMCI_DG_HEADERSIZE);
-                        if (dg->payload_size) {
-                                memcpy(dg_info->msg_payload, VMCI_DG_PAYLOA=
-D(dg), dg->payload_size);
-
-=3D=3D=3D=3D=3D=3D=3D
-Reproducing
-=3D=3D=3D=3D=3D=3D=3D
-# dmesg -w
-----
-[  181.415379] Guest personality initialized and is inactive
-[  181.415659] VMCI host device registered (name=3Dvmci, major=3D10, minor=
-=3D122)
-[  181.415665] Initialized host personality
-[  181.422766] NET: Registered PF_VSOCK protocol family
-[  181.468022] memcpy: init i=3D0
-[  183.020694] memcpy: old i=3D1000000000
-[  184.572458] memcpy: new i=3D1000000000
-[  196.009873] memcpy: init i=3D0
-[  197.562651] memcpy: old i=3D1000000000
-[  199.118132] memcpy: new i=3D1000000000
-[  206.543691] memcpy: init i=3D0
-[  208.781697] memcpy: old i=3D1000000000
-[  211.020229] memcpy: new i=3D1000000000
-----
-
-$ node=20
-Welcome to Node.js v16.19.1.
-Type ".help" for more information.
-> 183.020694 - 181.468022 //old
-1.5526720000000012
-> 184.572458 - 183.020694 // new
-1.55176400000002
->
-> 197.562651 - 196.009873 // old
-1.5527779999999893
-> 199.118132 - 197.562651 // new
-1.5554810000000145
->
-> 208.781697 - 206.543691 // old
-2.238006000000013=20
-> 211.020229 - 208.781697 // new
-2.238531999999992
->
-
-Based on a rather primitive performance assessment, the results do not diff=
-er
-much, and given the loss of warning output in a one-time function call, the
-difference will be significant.
-
-[PATCH 1/1] misc/vmw_vmci: fix filling of the msg and msg_payload in dg_inf=
-o struct
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
