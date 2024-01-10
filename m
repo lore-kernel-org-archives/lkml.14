@@ -1,92 +1,88 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0E6482E0;
-	Wed, 10 Jan 2024 11:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5BB4A9AC
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="u3oXSrGq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1704887119; x=1705491919; i=markus.elfring@web.de;
-	bh=nO4zB4EcAAo5LoPaa+ofqegpVkTeHLcDqcmcZocT6mE=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=u3oXSrGqMkqB+Fz860SVm583IZDXAo82TtA0+q3MKm1sp7Mpsy9OFLh8bwjc+rdU
-	 vUHT7wYN/O+gZVn0C4ndzUf7VLdiM/Ix6VM9O5H9juPlV+oKS4unydvUvtMaj1b9U
-	 ZfF1tVzlhYCdvpAefQTkDBunWeu8mwX59g2tlURm8c0NC4qI+8uQ6bCZNP+vBIRSs
-	 1prbm19eGB4HkxhOl2oYlVtIcg57OZVeLLaOJiot544mB0HxiyPoSeoOBcHcoNLgr
-	 5E4zTa5pUaUxL7N7r+oHTEWK2EbQBemOWcJePTYZCRktkGiCAxCHig+NfPCJbOOtS
-	 mskQwOQuFBtMhTFz9g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N0Zo6-1r0O0B1QA8-00wcIt; Wed, 10
- Jan 2024 12:45:19 +0100
-Message-ID: <30a0618f-e115-47a5-89a9-3806c75e604d@web.de>
-Date: Wed, 10 Jan 2024 12:45:14 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7jZh31g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704887202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ZJYdODU3wiLWDtYGGvI8tT8GVp8sktVt/9zuVN5SknQ=;
+	b=c7jZh31gepuKYIsXrc9IbKXghnn1PAy9jCdmAZntbFeNG8eSRtWZHpQdpXLk4BCbNha149
+	SNxoAEPeUCWB1bF+KSvR6UflFwT5Gu3NR5HfEfzmeJQJ9b0ZZFAsjVUCb53wLXQt44FwGM
+	bLN24VfeNNB8bZtD0+LK02WMeKGDA4U=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-626-b6ny7NZ1M_ChO9SnTGNcbg-1; Wed, 10 Jan 2024 06:46:39 -0500
+X-MC-Unique: b6ny7NZ1M_ChO9SnTGNcbg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CBD1C830F97;
+	Wed, 10 Jan 2024 11:46:38 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.232])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E7071C060AF;
+	Wed, 10 Jan 2024 11:46:36 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: [PATCH] sched/isolation: Warn about missing isolcpus mask
+Date: Wed, 10 Jan 2024 12:46:10 +0100
+Message-ID: <20240110114610.1941474-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] perf/x86/intel/pt: Adjustments for pt_pmu_hw_init()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: kernel-janitors@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
- Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
-References: <6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de>
- <d9c673f9-2c32-282f-f261-b4d5762409bb@web.de>
-In-Reply-To: <d9c673f9-2c32-282f-f261-b4d5762409bb@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9BlZaD60AkKnVzOB54qG8EG/JliLvKzC6Ve1nFkUHR+QCcwGiDZ
- zcVrGWtqV2ap3b9QBhbk+w+quJBKOx/wP73RnVZ6RfU+Ezt/KQWnTJSlEBG6pU6qMXBEQIW
- FAcN1pdTlCdE7AzUOjIBFh18XJU2FlI5M4YXR8Cv/sY5o8VIsW/kyr3L+hmTX3YQw2tpyYK
- aQtS0ZIZxbLHWlJGvquTQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:O9VFBO7l3do=;GBZDJI70NujW61S/P9XwBCmdHbu
- 2bRvmHWf0e0fDratRYKhLsLtTYSwpU8BmXRn7aw9ZbqFEbU2YwOmeOhPyrKoo7tf1gyCrQiDz
- Q2+mFaqsWflYmyAh6qx6hCr6OIfphmokWLPTgYXBrTUqQLzYzw0EgUjlJ2Wtn4EgjvmoI5xBI
- +S/PzvsvyfgTgWBI54KZjd+njBhKy4PQzM2vYwPq3fD9oCcCidLJxLB0PTOk0SfLU6dXQJHjw
- mTtWuyB6fUTUByJsWKLyNkJwOA+HfQuESpeBk6gcrH0pX3CosBYsWrRYOsqjd4y/kELaf/u1A
- nk1IXegYvWcEWxwIzJ2UeBJ1AUB4t/KE6W5B0DbWaq+A/NHcfTRzSJdsS0kR0XZC7h4Xc/fhe
- 8pwLnE6JwIRNMHaoACPvntPUSOa+x9pavCXASzqy/+1qsJqPvCG6fB74MaOh3+XNSXlRQxehK
- CQgmrrkMHRrrjdzgeBsbEbh+bqtk7FMRrbGsyR+QXz3JiaK0i/XECay8dFA07eFiR6byODpAq
- orrleJmZw0NuVd7qXdKKgseNzZASQn9RDTfehn2DNbvzcYij+W2KykM8vBAW0J/wdxYGF7iUE
- mkdpmWQwQkNyDzO1/SQ8EAjauyDABOOpqXYPHWMPnkgG0NgCtlt1S5fWWXYYlRIN6VLe5mtQ3
- XTQzWNEadVSJ496aZg51Spho7CA6zSocsD7P5LVCYG9uorJ2sKvnzoZ71aXJMLadEq52c7CHS
- 7GhN8wJcuGFAVmcgsh6ZZ/t+L6UvF09EDZxKyVoF2YnQ5yaqeljXtzpO8+Cojr//G6kZtv+Ec
- e82DgdtpvjdPolEK7jZP74n27r8S2BVZgCEzHZiju7xBDxU2H8WVPoXhWOmLcV5+8t02DPM83
- KnETeZdLHyJ9CJvgOhaSZ5msYOYy+0w5eNsEP13uYFW+SkxSxx97++UMAlvmo09eRvrwXCh0G
- WjMMnqAB7iy8HCHBUAbT/pEiFNc=
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-> Date: Tue, 28 Mar 2023 20:34:32 +0200
->
-> A few update suggestions were taken into account
-> from static source code analysis.
->
-> Markus Elfring (2):
->   Use -ENOMEM directly for a return statement
->   Return directly after a failed kzalloc()
->
->  arch/x86/events/intel/pt.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+Since an empty string is a valid cpulist, this cmdline option does not
+trigger any warnings:
 
-Is this patch series still in review queues?
+  isolcpus=domain,
 
-See also:
-https://lore.kernel.org/cocci/d9c673f9-2c32-282f-f261-b4d5762409bb@web.de/
-https://sympa.inria.fr/sympa/arc/cocci/2023-03/msg00101.html
+housekeeping_setup() just carries on and we end up with the housekeeping
+mask being all CPUs in the system.
 
-Regards,
-Markus
+Check that there *is* a cpulist and that it isn't empty.
+
+Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+---
+ kernel/sched/isolation.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 373d42c707bc5..aa20cd1702199 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -120,7 +120,8 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
+ 	}
+ 
+ 	alloc_bootmem_cpumask_var(&non_housekeeping_mask);
+-	if (cpulist_parse(str, non_housekeeping_mask) < 0) {
++	if (cpulist_parse(str, non_housekeeping_mask) < 0 ||
++	    cpumask_empty(non_housekeeping_mask)) {
+ 		pr_warn("Housekeeping: nohz_full= or isolcpus= incorrect CPU range\n");
+ 		goto free_non_housekeeping_mask;
+ 	}
+-- 
+2.43.0
+
