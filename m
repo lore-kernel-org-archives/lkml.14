@@ -1,84 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562D4481BC;
-	Wed, 10 Jan 2024 11:57:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D275A47F7A;
+	Wed, 10 Jan 2024 11:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbSGwV4Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5538C433F1;
-	Wed, 10 Jan 2024 11:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704887875;
-	bh=GKca1HsX6awgTvyvYloYbP0iiufJSLHo67+h3IFogD0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=NbSGwV4QHrYZtRcQUhUadF8s/kTlJjjW2jEmUW2irTffjvNE70LySk8rWiJdZ+yl7
-	 2GsZ0xUSMWvsWOpGCCBr5oacMXr1qfxDMoNGnQhtncFxDf8zItEODikEnmrDXZtso1
-	 fapQw7vW8L5eQxp+zd5gq/P878Simawt2KjubhHk+xcI2uFFjXJD5CiVlteU8Yv2hv
-	 xa/FCE+T2ijWY0xCyOnCKsa8DDhipM1FGNGlENHvsjurdwxbiK0lIx8lMhC8PugFpA
-	 gRLoNRNzRdh4Iq6P+R/9IetTpzB+qkXmS7qO4fb+zwd2BYJIfBRSAgiP6wcRcntWED
-	 aWWM8ift3m0rQ==
-Received: (nullmailer pid 942200 invoked by uid 1000);
-	Wed, 10 Jan 2024 11:57:49 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHDqerK7"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e5508ecb9so11459775e9.3;
+        Wed, 10 Jan 2024 03:57:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704887873; x=1705492673; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VmiLt44BBIGX7+/Kr067RQ8AjOyThzAc6HnwtGL3adk=;
+        b=QHDqerK7grmlo2hxhiGv7yljPa6Wg3MaRd8r/nPswBy+kuU9Pw31FSgY+p7QwHF1Jg
+         j1pB0e5m1CCeooo4KcEb1g71QOVYY8qft3QXB4cdSDNkYbhxaqF3M9JlDdVdYWsFyYmm
+         2J9G8o+qc7as6XhA6RfW3KIAACx8ok+1PhxgKNX/xYzn4FOvTQipsdeDnrgbL+Vt1Sv0
+         KWzTUCuDW7xrWzp2D3b/i/3yDtqKD0N/OLDame2NnYtplCR3ZQ2H6JDlk59uQ5HPlc69
+         r0wtvPC8R8cPUl4vvqalBKHSHG0LCz4UDAJ+e4l3nXtuW3U5uSTDDRiS+vFgbnp2blPS
+         PytQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704887873; x=1705492673;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VmiLt44BBIGX7+/Kr067RQ8AjOyThzAc6HnwtGL3adk=;
+        b=juoZUnOa2+b3pDF/w5SpNgZHGBmXQM203trF5HyIBAQtdUcGgsD/ueXXa5dLIzuug3
+         Wh5XWFJbLZPN9Q/kNl1wMQKATNYGLMvhKWf3a0Ny9YtL0xdthWhzkhyhXNLjSaUmKiel
+         fLyolTWYPiLbnzoWdnsvIzAnLzy75qlF2Ba2SdYdJMUbGT0Hfxms4oRuvBTAwoGlPGbj
+         bJt0mBZIIC5CyS0njQqfUHe7qkO/OLqrHhOz8gajb/Ac5zB/fbb551wAvEnioDkAFiuU
+         lv2Jn16zt+gWVKzNCQ68Ah5Z3GG6X+0mldT6iORRR8Htk35yvHdK4ehGFjOrJDi+upBM
+         dVpw==
+X-Gm-Message-State: AOJu0Yy1oVIhcFwQqULRPMxbAi9ZOO3+6JBVVO3Yy4kehpDe1K34FZb8
+	MfWBVq0YdHo9RFJv1cw6lQY=
+X-Google-Smtp-Source: AGHT+IGuzbNI2Scm2re8bIAeZQDghXQWwwz53yu7mEA1YkjKYKgqc5t0SIG5uI0slY60bOsnh1LYCg==
+X-Received: by 2002:a05:600c:3acd:b0:40d:7259:4730 with SMTP id d13-20020a05600c3acd00b0040d72594730mr567427wms.58.1704887872772;
+        Wed, 10 Jan 2024 03:57:52 -0800 (PST)
+Received: from localhost.localdomain ([78.209.40.150])
+        by smtp.googlemail.com with ESMTPSA id f17-20020a05600c155100b0040d62f89381sm1962136wmg.35.2024.01.10.03.57.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 03:57:52 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [net-next RFC PATCH 0/5] net: phy: split at803x
+Date: Wed, 10 Jan 2024 12:57:30 +0100
+Message-ID: <20240110115741.17300-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: linux-kernel@vger.kernel.org, tzimmermann@suse.de, conor+dt@kernel.org, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, claudiu.beznea@tuxon.dev, nicolas.ferre@microchip.com, lee@kernel.org, airlied@gmail.com, sam@ravnborg.org, thierry.reding@gmail.com, bbrezillon@kernel.org, u.kleine-koenig@pengutronix.de, maarten.lankhorst@linux.intel.com, alexandre.belloni@bootlin.com, mripard@kernel.org, linux-pwm@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
-In-Reply-To: <20240110102535.246177-3-dharma.b@microchip.com>
-References: <20240110102535.246177-1-dharma.b@microchip.com>
- <20240110102535.246177-3-dharma.b@microchip.com>
-Message-Id: <170488786949.942181.15403969242765460725.robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT
- schema format
-Date: Wed, 10 Jan 2024 05:57:49 -0600
+Content-Transfer-Encoding: 8bit
 
+(This depends on [1] that has been fully reviwed but still
+has to be merged in net-next)
 
-On Wed, 10 Jan 2024 15:55:34 +0530, Dharma Balasubiramani wrote:
-> Convert the atmel,hlcdc binding to DT schema format.
-> 
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> ---
->  .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 106 ++++++++++++++++++
->  .../devicetree/bindings/mfd/atmel-hlcdc.txt   |  56 ---------
->  2 files changed, 106 insertions(+), 56 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-> 
+This is the last patchset of a long series of cleanup and
+preparation to make at803x better maintainable and permit
+the addition of other QCOM PHY Families.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+A shared library modules is created since many QCOM PHY share
+similar/exact implementation and are reused.
 
-yamllint warnings/errors:
+After this patch, qca808x will be further generalized as LED
+and cable test function are also used by the QCA807x PHYs.
+This is just for reference and the additional function move will
+be done on the relates specific series.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml:
-Error in referenced schema matching $id: http://devicetree.org/schemas/pwm/atmel,hlcdc-pwm.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/atmel/atmel,hlcdc-dc.example.dtb: hlcdc@f0030000: hlcdc-pwm: False schema does not allow {'compatible': ['atmel,hlcdc-pwm'], 'pinctrl-names': ['default'], 'pinctrl-0': [[4294967295]], '#pwm-cells': [[3]]}
-	from schema $id: http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/atmel,hlcdc.example.dtb: hlcdc@f0030000: hlcdc-pwm: False schema does not allow {'compatible': ['atmel,hlcdc-pwm'], 'pinctrl-names': ['default'], 'pinctrl-0': [[4294967295]], '#pwm-cells': [[3]]}
-	from schema $id: http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
-Documentation/devicetree/bindings/mfd/atmel,hlcdc.example.dtb: /example-0/hlcdc@f0030000/hlcdc-pwm: failed to match any schema with compatible: ['atmel,hlcdc-pwm']
+[1] https://lore.kernel.org/lkml/16cf006b-e9fe-4e09-b58d-49ce19c09879@lunn.ch/T/
 
-doc reference errors (make refcheckdocs):
+Christian Marangi (5):
+  net: phy: move at803x PHY driver to dedicated directory
+  net: phy: qcom: create and move functions to shared library
+  net: phy: qcom: deatch qca83xx PHY driver from at803x
+  net: phy: qcom: move additional functions to shared library
+  net: phy: qcom: detach qca808x PHY driver from at803x
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240110102535.246177-3-dharma.b@microchip.com
+ drivers/net/phy/Kconfig             |    7 +-
+ drivers/net/phy/Makefile            |    2 +-
+ drivers/net/phy/at803x.c            | 2757 ---------------------------
+ drivers/net/phy/qcom/Kconfig        |   22 +
+ drivers/net/phy/qcom/Makefile       |    5 +
+ drivers/net/phy/qcom/at803x.c       | 1142 +++++++++++
+ drivers/net/phy/qcom/qca808x.c      |  934 +++++++++
+ drivers/net/phy/qcom/qca83xx.c      |  275 +++
+ drivers/net/phy/qcom/qcom-phy-lib.c |  429 +++++
+ drivers/net/phy/qcom/qcom.h         |  118 ++
+ 10 files changed, 2927 insertions(+), 2764 deletions(-)
+ delete mode 100644 drivers/net/phy/at803x.c
+ create mode 100644 drivers/net/phy/qcom/Kconfig
+ create mode 100644 drivers/net/phy/qcom/Makefile
+ create mode 100644 drivers/net/phy/qcom/at803x.c
+ create mode 100644 drivers/net/phy/qcom/qca808x.c
+ create mode 100644 drivers/net/phy/qcom/qca83xx.c
+ create mode 100644 drivers/net/phy/qcom/qcom-phy-lib.c
+ create mode 100644 drivers/net/phy/qcom/qcom.h
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.43.0
 
