@@ -1,148 +1,127 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2049.outbound.protection.outlook.com [40.107.237.49])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59E63F8C7
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF42A3F8FF;
+	Wed, 10 Jan 2024 09:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uEg2izlF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZtQ0q+HWZGVTJaiGC9gtlWz5o1U4FPY+Wy9gXAyDCtGWfc9AB4TBh013KXntOlKf7AHuYEgD27I2dxcphgp5FBmZR8US3h1+FT8B3aTxaybJVcgeA0QNOrDgHOtV4LF7Inxn8yiHNPlkgX4bTTZiqus5F19+PoenrnC7JAvsAw5+MXnMRT2QxrAdUuOxDPM+k1VoeeSkcbVKhHHoRCOT6X9j9A9PjS1YtR52rtfRQvB65gkvGsaZRD+iQrL8iVwS44MKJ2sY9miWVdPyqwjf6JhU++fKKojP4o351M1jLYtgAinSiov8gNPNYwGmzVjiD8e+TwwO5/JSCpITPZg2+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xXMnVkdAg8WfloOGPFMB6DzaP0QH3hdEz7mtCAjvdY4=;
- b=P4iCt+aIxhG33XgVkQaBxc7k/ROw+hyNMJHDdisHv5g7Fv5loc2z+ce/0SOpUrfkXiFBEAgkdy2Kk2nGcIdKCeItrPrOa80xAZAC7zOeq2dcNBmDCV7Vq6nxA6iff4FqF/d6tpN61bxr7DlQZvgDyNpSda1GdgE5RfcLSS+b8W96qaWAWNl+bE1E5/R1boKSgN+A8Ah9Nm9Yi8pQHVbc4o9uLcM/5KpKo1svIFd748poeJxdLGi7WPpzfTawqZc8PfJI1MgZZfLyspPWBfoPwr22t2hKnKOSsLDZyZR7oSkDP6T8ogxc/PaaDcddDDJ6UXzo9rbmKHsZUiqzs/4Y2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=chromium.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xXMnVkdAg8WfloOGPFMB6DzaP0QH3hdEz7mtCAjvdY4=;
- b=uEg2izlF7gy/rWa911JuR9Rbmnfm1PLlWfq0XmTzlBhRzpYe2NMkc9GNm6W52b+DfDt++ErUXC1q7Le4qc3R2kMbtCluYSt+KMAUHfVktIYac7tYliVd/Q7VGle2H3mm9aUvuXklWB5y1wR7G+FACn3SkochNtlrvOqwKPQYNOs=
-Received: from SJ0PR03CA0175.namprd03.prod.outlook.com (2603:10b6:a03:338::30)
- by DM6PR12MB4960.namprd12.prod.outlook.com (2603:10b6:5:1bc::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
- 2024 09:57:28 +0000
-Received: from MWH0EPF000971E2.namprd02.prod.outlook.com
- (2603:10b6:a03:338:cafe::75) by SJ0PR03CA0175.outlook.office365.com
- (2603:10b6:a03:338::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18 via Frontend
- Transport; Wed, 10 Jan 2024 09:57:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E2.mail.protection.outlook.com (10.167.243.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.14 via Frontend Transport; Wed, 10 Jan 2024 09:57:27 +0000
-Received: from jenkins-julia.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 10 Jan
- 2024 03:57:22 -0600
-From: Julia Zhang <julia.zhang@amd.com>
-To: Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
-	<olvaffe@gmail.com>, David Airlie <airlied@redhat.com>, Gerd Hoffmann
-	<kraxel@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <amd-gfx@lists.freedesktop.org>,
-	<virtualization@lists.linux-foundation.org>
-CC: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>, Daniel Vetter
-	<daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, Erik Faye-Lund
-	<kusmabite@gmail.com>, =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?=
-	<marek.olsak@amd.com>, Pierre-Eric Pelloux-Prayer
-	<pierre-eric.pelloux-prayer@amd.com>, Honglei Huang <honglei1.huang@amd.com>,
-	Chen Jiqian <Jiqian.Chen@amd.com>, Huang Rui <ray.huang@amd.com>, Julia Zhang
-	<julia.zhang@amd.com>
-Subject: [PATCH 1/1] drm/virtio: Implement device_attach
-Date: Wed, 10 Jan 2024 17:56:28 +0800
-Message-ID: <20240110095627.227454-2-julia.zhang@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240110095627.227454-1-julia.zhang@amd.com>
-References: <20240110095627.227454-1-julia.zhang@amd.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gwSvrbps"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40A9kKas018787;
+	Wed, 10 Jan 2024 09:57:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=tsVnBji+CX6UauGvaGmTOaJaiIeGC7M8aqQ1BW98I7w=; b=gw
+	SvrbpsKk55/zJT4EPjitawV0cNpu4NCERuTjIABtRfrLrOzT1Y5ZqMG4xwN3Fa80
+	rNWbJHH1y7B63ZE1Qz9chBijNsiU7s0qvLLtmZCeD+N6II7coGEW4IRUdXeM3tB0
+	s4ylmf/oMoTRac0+8bB67vzVegEN1LEi8L5baaYusBTdawqlj7yleD6BwVKZHwhm
+	cW//lAdiDm1nw54cIOdoukaY9iH9wLCEZL7Snd0h5j0O0bbc3tlO2EeqDuyfEm0T
+	hpDtgqlPwwVLp+TG01HiAXpzEVy3F1OPcRv7u6lJEdvSHS6EHoAuOBgwW+q7p0iM
+	aZvKrHsE5vERQd6eW01Q==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhq2h086y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Jan 2024 09:57:51 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40A9voiW003332
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Jan 2024 09:57:50 GMT
+Received: from [10.217.219.221] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 10 Jan
+ 2024 01:57:47 -0800
+Message-ID: <556f3d87-1a38-423a-82c0-c7471b232e43@quicinc.com>
+Date: Wed, 10 Jan 2024 15:27:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E2:EE_|DM6PR12MB4960:EE_
-X-MS-Office365-Filtering-Correlation-Id: af03c550-8888-41a2-c12c-08dc11c28d76
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	YssyQKpVwJpAwj2yvE1Ex6tcd69/iELwXcTclJC0sQCk6F8vwVecAv9WWunkBq1OgwBddCdiqw1J8y3Qx8VtLy7encAtuhrXdloxiRulOrlKxBtwGsl39Xj1HmhnG4FSaCPeusop0kYSU0kGdAWtKo5CCrHLkzeDIznkeaXkNWt7VFtRObEdOQMdabP6E/72OtUd/wy7EHEixH3p1cA/9yNxLS0p+MxVfJmOqI4FZNJkxlftQSx1x/DlvzSsD4sOYgjPFvOOg2GqTohBFUzcKq0Jjnovv66yRspk/lVeaovnBj+rBl5ZIiVhkGSNstH4PNM9R/5BJuUm2JUVmr24vLEsDFdOh1fR7JQxkQGmUw5T40k4AOyliawAlyUlvVe+JRcgrEnTSvQPmAicil3gDNp0THCsd/j3iaiSajdw4RyPK/lbnoncN2JDHi1v5TBUTCbKTqWYFTLqgF40/zuqHAzZWcQQZ+U7MHYMX5rGbh549HDDj2Zk4LLXCcCaA6PCuXhQQNYtbtXKo48in7HtSkUpbngxK4iq4tr9NDI/UCPNw9Gr9vZZ3Ph/odM2X5TjsLQthUzeTbA1hcAS0+k3cvkwZeXdPp9kDiLuhQjxhca6uUYaXZw0ET7Oi3U2b9kyUUulmLVRaQBysqLn/VKncP+Nr/rK/XL7sQ5FOiC13XjBvErsgFxj0wX7MfP9vi6in0o8bIYiMaNQ5xAVUW+dsoForjgexaD/NN470YIArBtT9uSdwRlXDVbd9at9AY8jMCS1e4SbJxGugDNwIziksA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(346002)(39860400002)(396003)(230922051799003)(451199024)(64100799003)(1800799012)(82310400011)(186009)(46966006)(36840700001)(40470700004)(47076005)(356005)(5660300002)(7416002)(2906002)(81166007)(41300700001)(36756003)(86362001)(82740400003)(40480700001)(36860700001)(40460700003)(8936002)(8676002)(4326008)(478600001)(7696005)(83380400001)(70206006)(110136005)(316002)(54906003)(70586007)(16526019)(336012)(426003)(1076003)(26005)(44832011)(2616005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 09:57:27.3059
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: af03c550-8888-41a2-c12c-08dc11c28d76
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E2.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4960
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] usb: core: Prevent null pointer dereference in
+ update_port_device_state
+Content-Language: en-US
+To: Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+CC: Krishna Kurapati <quic_kriskura@quicinc.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20240110091422.25347-1-quic_ugoswami@quicinc.com>
+ <4e272d5d-ec19-7621-1346-4363b0070b1c@gmail.com>
+From: Udipto Goswami <quic_ugoswami@quicinc.com>
+In-Reply-To: <4e272d5d-ec19-7621-1346-4363b0070b1c@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ngUbGCKc8h2k2BZeLif8b7s_wTo8zi-5
+X-Proofpoint-ORIG-GUID: ngUbGCKc8h2k2BZeLif8b7s_wTo8zi-5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 suspectscore=0
+ mlxlogscore=604 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401100081
 
-drm_gem_map_attach() requires drm_gem_object_funcs.get_sg_table to be
-implemented, or else return ENOSYS. Virtio has no get_sg_table
-implemented for vram object. To fix this, add a new device_attach to
-call drm_gem_map_attach() for shmem object and return 0 for vram object
-instead of calling drm_gem_map_attach for both of these two kinds of
-object.
 
-Signed-off-by: Julia Zhang <julia.zhang@amd.com>
----
- drivers/gpu/drm/virtio/virtgpu_prime.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
-index 44425f20d91a..f0b0ff6f3813 100644
---- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-@@ -71,6 +71,18 @@ static void virtgpu_gem_unmap_dma_buf(struct dma_buf_attachment *attach,
- 	drm_gem_unmap_dma_buf(attach, sgt, dir);
- }
- 
-+static int virtgpu_gem_device_attach(struct dma_buf *dma_buf,
-+				     struct dma_buf_attachment *attach)
-+{
-+	struct drm_gem_object *obj = attach->dmabuf->priv;
-+	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-+
-+	if (virtio_gpu_is_vram(bo))
-+		return 0;
-+
-+	return drm_gem_map_attach(dma_buf, attach);
-+}
-+
- static const struct virtio_dma_buf_ops virtgpu_dmabuf_ops =  {
- 	.ops = {
- 		.cache_sgt_mapping = true,
-@@ -83,7 +95,7 @@ static const struct virtio_dma_buf_ops virtgpu_dmabuf_ops =  {
- 		.vmap = drm_gem_dmabuf_vmap,
- 		.vunmap = drm_gem_dmabuf_vunmap,
- 	},
--	.device_attach = drm_gem_map_attach,
-+	.device_attach = virtgpu_gem_device_attach,
- 	.get_uuid = virtgpu_virtio_get_uuid,
- };
- 
--- 
-2.34.1
+On 1/10/2024 2:52 PM, Sergei Shtylyov wrote:
+> On 1/10/24 12:14 PM, Udipto Goswami wrote:
+> 
+>> Currently,the function update_port_device_state gets the usb_hub from
+> 
+>     Need space between comma and "the"...
+got it.
+> 
+>> udev->parent by calling usb_hub_to_struct_hub.
+>> However, in case the actconfig or the maxchild is 0, the usb_hub would
+>> be NULL and upon further accessing to get port_dev would result in null
+>> pointer dereference.
+>>
+>> Fix this by introducing an if check after the usb_hub is populated.
+>>
+>> Fixes: 83cb2604f641 ("usb: core: add sysfs entry for usb device state")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Udipto Goswami <quic_ugoswami@quicinc.com>
+> [...]
+> 
+>> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+>> index ffd7c99e24a3..5ba1875e6bf4 100644
+>> --- a/drivers/usb/core/hub.c
+>> +++ b/drivers/usb/core/hub.c
+>> @@ -2053,9 +2053,22 @@ static void update_port_device_state(struct usb_device *udev)
+>>   
+>>   	if (udev->parent) {
+>>   		hub = usb_hub_to_struct_hub(udev->parent);
+>> -		port_dev = hub->ports[udev->portnum - 1];
+>> -		WRITE_ONCE(port_dev->state, udev->state);
+>> -		sysfs_notify_dirent(port_dev->state_kn);
+>> +
+>> +		/*
+>> +		 * The Link Layer Validation System Driver (lvstest)
+>> +		 * has step to unbind the hub before running the rest
+>> +		 * of the procedure. This triggers hub_disconnect which
+>> +		 * will set the hub's maxchild to 0, further resulting
+> 
+>     Resulting in.
 
+got it.
+> 
+>> +		 * usb_hub_to_struct_hub returning NULL.
+>> +		 *
+>> +		 * Add if check to avoid running into NULL pointer
+>> +		 * de-reference.
+> 
+>     This is obvious from the code below, I think...
+ok will remove this.
+
+Thanks,
+-Udipto
