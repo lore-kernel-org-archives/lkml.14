@@ -1,113 +1,67 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB2C48794
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 184E848CC0
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="tFOiG5JG"
-Received: from [192.168.42.20] (p5de453e7.dip0.t-ipconnect.de [93.228.83.231])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id C562B2FC005B;
-	Wed, 10 Jan 2024 14:14:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1704892461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D3XXWzf6RfsompBPEpJXXqoA3QY72hJE9BCknBlltgU=;
-	b=tFOiG5JGP63gUPxytuSaXh/9yy7SdS7kKoiE7F9gkO9wjO53+5d/H/jqPdNpMuqTjvGHft
-	5DQe+5DPNJez8uLzSscCUnvJ3yoCroj6fr/rGUf0B+1bO27Wyr7h0rL9JcST9M0Q94BjTG
-	ZJXjiUdQlmZjvUbgXnM+Tij+l93L6nA=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <67808818-ee34-4d04-ad90-cd5c6eb9bb26@tuxedocomputers.com>
-Date: Wed, 10 Jan 2024 14:14:20 +0100
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="oSjWTJ2M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=SnWxI
+	IZoT2+9NwtCVXP3nMqr5IrKTVI4AnhzowzhThg=; b=oSjWTJ2MWRA8ilepHlsrK
+	EM+qxn8N2dujb3rUqu21ybEU8k3XcUJDXupOlGvu2nNvfa5gsFi+oqXbYzG37tiM
+	QqacMYDE0iuJ+1sZDWaGrgP8NFnkpX5B9KnUYsVFaD6+sjlObv5ra1Lgt2JYylqj
+	Hc8npjbg+0MzqYdsZ6atW4=
+Received: from ubuntu.lan (unknown [120.229.70.208])
+	by gzga-smtp-mta-g0-2 (Coremail) with SMTP id _____wDHD60ujZ5lR2ZVAA--.7604S2;
+	Wed, 10 Jan 2024 20:27:28 +0800 (CST)
+From: Junwen Wu <wudaemon@163.com>
+To: bristot@redhat.com
+Cc: bsegall@google.com,
+	dietmar.eggemann@arm.com,
+	juri.lelli@redhat.com,
+	laoar.shao@gmail.com,
+	linux-kernel@vger.kernel.org,
+	mgorman@suse.de,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	vincent.guittot@linaro.org,
+	vschneid@redhat.com,
+	wudaemon@163.com
+Subject: Re: [PATCH v3] sched/stats: Fix rt/dl task's sched latency statistics error in sched_stat_wait trace_point
+Date: Wed, 10 Jan 2024 12:27:26 +0000
+Message-Id: <20240110122726.4309-1-wudaemon@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <87d33909-ef8c-43a6-a556-d01fe692d5cd@redhat.com>
+References: <87d33909-ef8c-43a6-a556-d01fe692d5cd@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/7] drm/amd/display: Add handling for new "active color
- format" property
-Content-Language: en-US
-To: Daniel Vetter <daniel@ffwll.ch>, Andri Yngvason <andri@yngvason.is>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- Simon Ser <contact@emersion.fr>
-References: <20240109181104.1670304-1-andri@yngvason.is>
- <20240109181104.1670304-4-andri@yngvason.is>
- <ZZ57Nl3CnRMPcfbj@phenom.ffwll.local>
- <CAFNQBQzo17cK4M-S=Mje8Lxub9Y74xFGj7iEq57vKJr47oiz5Q@mail.gmail.com>
- <CAKMK7uGhMCwbztGdEmG4gFgpyhw6j-JFow-AaprFxcX710=qXA@mail.gmail.com>
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <CAKMK7uGhMCwbztGdEmG4gFgpyhw6j-JFow-AaprFxcX710=qXA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHD60ujZ5lR2ZVAA--.7604S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjTRMFALUUUUU
+X-CM-SenderInfo: 5zxgtvxprqqiywtou0bp/xtbBzRRhbWVOBWrIugAAsj
 
-Hi,
+>This error happens when the rt task balances off the source CPU because
+>the dequeue operation is not updating the sched_statistics. So, follow
+>update_stats_wait_end_fair() and update the stats. Do the same for
+>SCHED_DEADLINE.
 
-Am 10.01.24 um 14:09 schrieb Daniel Vetter:
-> On Wed, 10 Jan 2024 at 13:53, Andri Yngvason <andri@yngvason.is> wrote:
->> mið., 10. jan. 2024 kl. 11:10 skrifaði Daniel Vetter <daniel@ffwll.ch>:
->>> On Tue, Jan 09, 2024 at 06:11:00PM +0000, Andri Yngvason wrote:
->>>> +     /* Extract information from crtc to communicate it to userspace as connector properties */
->>>> +     for_each_new_connector_in_state(state, connector, new_con_state, i) {
->>>> +             struct drm_crtc *crtc = new_con_state->crtc;
->>>> +             struct dc_stream_state *stream;
->>>> +
->>>> +             if (crtc) {
->>>> +                     new_crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
->>>> +                     dm_new_crtc_state = to_dm_crtc_state(new_crtc_state);
->>>> +                     stream = dm_new_crtc_state->stream;
->>>> +
->>>> +                     if (stream) {
->>>> +                             drm_connector_set_active_color_format_property(connector,
->>>> +                                     convert_dc_pixel_encoding_into_drm_color_format(
->>>> +                                             dm_new_crtc_state->stream->timing.pixel_encoding));
->>>> +                     }
->>>> +             } else {
->>>> +                     drm_connector_set_active_color_format_property(connector, 0);
->>> Just realized an even bigger reason why your current design doesn't work:
->>> You don't have locking here.
->>>
->>> And you cannot grab the required lock, which is
->>> drm_dev->mode_config.mutex, because that would result in deadlocks. So
->>> this really needs to use the atomic state based design I've described.
->>>
->> Maybe we should just drop "actual color format" and instead fail the
->> modeset if the "preferred color format" property cannot be satisfied?
->> It seems like the simplest thing to do here, though it is perhaps less
->> convenient for userspace. In that case, the "preferred color format"
->> property should just be called "color format".
-> Yeah that's more in line with how other atomic properties work. This
-> way userspace can figure out what works with a TEST_ONLY commit too.
-> And for this to work you probably want to have an "automatic" setting
-> too.
-> -Sima
+>[ feel free to change ]
 
-The problem with TEST_ONLY probing is that color format settings are 
-interdependent: https://gitlab.freedesktop.org/drm/amd/-/issues/476#note_966634
+ok
 
-So changing any other setting may require every color format to be TEST_ONLY 
-probed again.
 
-Greetings
-
-Werner
+>> +	/*
+>> +	 * Mark the end of the wait period
+>> +	 * if dequeueing a waiting task.
+>> +	 */
+>make this a single line comment.
+ok
+--
+Best regards
 
