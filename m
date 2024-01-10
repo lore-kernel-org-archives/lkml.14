@@ -1,108 +1,148 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5AFF47783;
-	Wed, 10 Jan 2024 11:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B3C47762;
+	Wed, 10 Jan 2024 11:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="U1l3qcfN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=YHPHa6lI7ulwF/VQxtQSdh+CgpP4GiUJm8wJujo0FgA=; b=U
-	1l3qcfN6y2ClwuQ5jJRBm8XKgLjCfMKhSGMs7jfHOdSLc7aJKnf/YKcmVKmNDm0F
-	IKpXk+3zaK6fET03h58lwsZaeAxeIDC+A8FkCi79d1coFbvyh724HYKS1c5c6GEQ
-	tGM69xHlXiO9ySlGrHqOaEx+Bu8sk0evRvYj4MRdys=
-Received: from 00107082$163.com ( [111.35.187.31] ) by
- ajax-webmail-wmsvr-40-111 (Coremail) ; Wed, 10 Jan 2024 19:05:18 +0800
- (CST)
-Date: Wed, 10 Jan 2024 19:05:18 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Jozsef Kadlecsik" <kadlec@netfilter.org>
-Cc: ale.crismani@automattic.com, xiaolinkui@kylinos.cn, pablo@netfilter.org, 
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org
-Subject: Re: Performance regression in ip_set_swap on 6.1.69
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <a4dfc3d9-f028-7ab4-c3a7-11dcbb12e377@netfilter.org>
-References: <C0829B10-EAA6-4809-874E-E1E9C05A8D84@automattic.com>
- <20240110102342.4978-1-00107082@163.com>
- <a4dfc3d9-f028-7ab4-c3a7-11dcbb12e377@netfilter.org>
-X-NTES-SC: AL_Qu2bBvSTu08q7iGcZ+kXn0oTju85XMCzuv8j3YJeN500oCTM9h4wYWNDD1XMwcyXEC2urASTcwRc5sJZXbRYT7I/mqXA/s1P7vyBZXIpuFBy
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D/6yxlr8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704885005;
+	bh=opfjRhVHCA5uWTnxeh45vbr3mHfSSMHaqalR6SccCOI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=D/6yxlr8V5vU3xvkd9oO0PJqihGbovndB0pXsrcsxWe5fhIBvnSnP+ktzFPVlUeWE
+	 RDnmBNBCDYlq2MKxs++cBLGHfptUKdCLbwP5rabk2dDDmOx77m/2kUF+2t0dglKpP2
+	 BI8Lb6IKkBeO6U+TwjbEnTqjSC3T0bGu4R5L5GILqJaier/HyaRUfv/ZhtIKSPQsY4
+	 Z4zr6ZD2ijVcJN6HJRHzy0CYN6ecNiFZScA6ajXxzRxNutgl6HiB2HEZTdaizxnnfT
+	 EW2znBdh5ogyKNLt/mnWI9jezRRurlUFdrez1Yk1DIccZuArMslJNRmY3cgrfyxfxq
+	 ChSxIxyqPy/tw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 40B6A3780C21;
+	Wed, 10 Jan 2024 11:10:05 +0000 (UTC)
+Message-ID: <679f35f9-3265-4b2f-8de5-df9460881de6@collabora.com>
+Date: Wed, 10 Jan 2024 12:10:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <661cb613.7974.18cf30c4a42.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3_zLveZ5l6msmAA--.17544W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAJhqmVOBjN97AAEsq
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] arm64: dts: mediatek: mt8186: Increase CCI
+ frequency
+To: =?UTF-8?B?Q2h1bi1KZW4gVHNlbmcgKOabvuS/iuS7gSk=?=
+ <Chun-Jen.Tseng@mediatek.com>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "wenst@chromium.org" <wenst@chromium.org>,
+ "robh+dt@kernel.org" <robh+dt@kernel.org>,
+ "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ Project_Global_Chrome_Upstream_Group
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>
+References: <20230914121035.17320-1-chun-jen.tseng@mediatek.com>
+ <20230914121035.17320-2-chun-jen.tseng@mediatek.com>
+ <c9881e63-a52a-4d14-895e-9a14d31004e3@collabora.com>
+ <894594bd2adb156fa8f290f4e603edbccdbbcdab.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <894594bd2adb156fa8f290f4e603edbccdbbcdab.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-CgpBdCAyMDI0LTAxLTEwIDE4OjM1OjAyLCAiSm96c2VmIEthZGxlY3NpayIgPGthZGxlY0BuZXRm
-aWx0ZXIub3JnPiB3cm90ZToKPk9uIFdlZCwgMTAgSmFuIDIwMjQsIERhdmlkIFdhbmcgd3JvdGU6
-Cj4KPj4gSSBjb25maXJtZWQgdGhpcyBvbiA2LjcgdGhhdCB0aGlzIHdhcyBpbnRyb2R1Y2VkIGJ5
-IGNvbW1pdCAKPj4gMjg2MjhmYTk1MmZlZmM3ZjIwNzJjZTZlODAxNjk2OGNjNDUyYjFiYSB3aXRo
-IGZvbGxvd2luZyBjaGFuZ2VzOgo+PiAKPj4gCSBzdGF0aWMgaW5saW5lIHZvaWQKPj4gCUBAIC0x
-Mzk3LDYgKzEzOTQsOSBAQCBzdGF0aWMgaW50IGlwX3NldF9zd2FwKHN0cnVjdCBza19idWZmICpz
-a2IsIGNvbnN0IHN0cnVjdCBuZm5sX2luZm8gKmluZm8sCj4+IAkJaXBfc2V0KGluc3QsIHRvX2lk
-KSA9IGZyb207Cj4+IAkJd3JpdGVfdW5sb2NrX2JoKCZpcF9zZXRfcmVmX2xvY2spOwo+PiAJIAo+
-PiAJKyAgICAgICAvKiBNYWtlIHN1cmUgYWxsIHJlYWRlcnMgb2YgdGhlIG9sZCBzZXQgcG9pbnRl
-cnMgYXJlIGNvbXBsZXRlZC4gKi8KPj4gCSsgICAgICAgc3luY2hyb25pemVfcmN1KCk7Cj4+IAkr
-Cj4+IAkJcmV0dXJuIDA7Cj4+IAkgfQo+PiAKPj4gc3luY2hyb25pemVfcmN1IGNhdXNlcyB0aGUg
-ZGVsYXksIGFuZCBpdHMgdXNhZ2UgaGVyZSBpcyB2ZXJ5IGNvbmZ1c2luZywgCj4+IHRoZXJlIGlz
-IG5vIHJlY2xhaW1lciBjb2RlIGFmdGVyIGl0Lgo+Cj5BcyBJJ20gc2VlaW5nIGp1c3QgdGhlIGVu
-ZCBvZiB0aGUgZGlzY3Vzc2lvbiwgcGxlYXNlIHNlbmQgYSBmdWxsIHJlcG9ydCBvZiAKPnRoZSBw
-cm9ibGVtIGFuZCBob3cgdG8gcmVwcm9kdWNlIGl0Lgo+CgpUaGlzIHdhcyByZXBvcnRlZCBpbiBo
-dHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sL0MwODI5QjEwLUVBQTYtNDgwOS04NzRFLUUxRTlD
-MDVBOEQ4NEBhdXRvbWF0dGljLmNvbS8gYnkgYWxlLmNyaXNtYW5pQGF1dG9tYXR0aWMuY29tCkp1
-c3Qgb3V0IG9mIGludGVyZXN0IG9mIHBlcmZvcm1hbmNlIGlzc3VlcywgIEkgdHJpZWQgdG8gcmVw
-cm9kdWNlIGl0IHdpdGggYSB0ZXN0IHN0cmVzc2luZyBpcHNldF9zd2FwOgoKTXkgdGVzdCBjb2Rl
-IGlzIGFzIGZvbGxvd2luZywgaXQgd291bGQgc3RyZXNzIHN3YXBwaW5nIGlwc2V0ICdmb28nIHdp
-dGggJ2Jhcic7IChmb28vYmFyIGlwc2V0IG5lZWRzIHRvIGJlIGNyZWF0ZWQgYmVmb3JlIHRoZSB0
-ZXN0LikKV2l0aCBsYXRlc3QgNi43LCB0aGUgc3RyZXNzIHdvdWxkIHRha2UgYWJvdXQgMTgwIHNl
-Y29uZHMgdG8gZmluaXNoLCBidXQgd2l0aCBgc3luY2hyb25pemVfcmN1YCByZW1vdmVkLCBpdCBv
-bmx5IHRvb2sgM3NlY29uZHMuCgoKYGBgCnVuc2lnbmVkIGNoYXIgbWJ1ZmZlcls0MDk2XTsKaW50
-IG1haW4oKSB7CglpbnQgZXJyOwoJaW50IHNvY2sgPSBzb2NrZXQoQUZfTkVUTElOSywgU09DS19S
-QVcsIE5FVExJTktfTkVURklMVEVSKTsKCWlmIChzb2NrPDApIHsKCQlwZXJyb3IoIkZhaWwgdG8g
-Y3JlYXRlIHNvY2tldCIpOwoJCXJldHVybiAxOwoJfQoJc3RydWN0IHNvY2thZGRyX25sIGFkZHIg
-PSB7CgkJLm5sX2ZhbWlseSA9IEFGX05FVExJTkssCgkJLm5sX3BhZCA9IDAsCgkJLm5sX3BpZCA9
-IDAsCgkJLm5sX2dyb3VwcyA9IDAKCX07CglzdHJ1Y3Qgc29ja2FkZHIgcmFkZHIgPSB7MH07Cglz
-b2NrbGVuX3QgcnNpemU7CglpbnQgc2VxID0gMHgxMjM0NTY3ODsKCWVyciA9IGJpbmQoc29jaywg
-KHN0cnVjdCBzb2NrYWRkciopJmFkZHIsIHNpemVvZihhZGRyKSk7CglpZiAoZXJyKSB7CgkJcGVy
-cm9yKCJGYWlsIHRvIGJpbmQiKTsKCQlyZXR1cm4gMTsKCX0KCWVyciA9IGdldHNvY2tuYW1lKHNv
-Y2ssICZyYWRkciwgJnJzaXplKTsKCWlmIChlcnIpIHsKCQlwZXJyb3IoIkZhaWwgdG8gZ2V0c29j
-a25hbWUiKTsKCQlyZXR1cm4gMTsKCX0KCXVuc2lnbmVkIGNoYXIgYnVmWzY0XTsKCXN0cnVjdCBu
-bG1zZ2hkciAqcGhkcjsKCXN0cnVjdCBuZmdlbm1zZyAqcG5mZzsKCXN0cnVjdCBubGF0dHIgKnBu
-bGE7Cgl1bnNpZ25lZCBpbnQgdG90YWw7Cglzc2l6ZV90IHJ6OwoJc3RydWN0IGlvdmVjIGlvdnM7
-Cglpb3ZzLmlvdl9iYXNlID0gbWJ1ZmZlcjsKCWlvdnMuaW92X2xlbiA9IHNpemVvZihtYnVmZmVy
-KTsKCXN0cnVjdCBtc2doZHIgbXNnID0gezB9OwoJbXNnLm1zZ19uYW1lID0gJmFkZHI7Cgltc2cu
-bXNnX25hbWVsZW4gPSBzaXplb2YoYWRkcik7Cgltc2cubXNnX2lvdiA9ICZpb3ZzOwoJbXNnLm1z
-Z19pb3ZsZW4gPSAxOwoKCW1lbXNldChidWYsIDAsIHNpemVvZihidWYpKTsKCXRvdGFsID0gMDsK
-CXBoZHIgPSAoc3RydWN0IG5sbXNnaGRyKikoYnVmK3RvdGFsKTsKCXRvdGFsICs9IHNpemVvZihz
-dHJ1Y3Qgbmxtc2doZHIpOwoJcGhkci0+bmxtc2dfdHlwZT1ORk5MX1NVQlNZU19JUFNFVDw8OHxJ
-UFNFVF9DTURfUFJPVE9DT0w7CglwaGRyLT5ubG1zZ19zZXEgPSBzZXE7CglwaGRyLT5ubG1zZ19m
-bGFncyA9IE5MTV9GX1JFUVVFU1Q7CglwbmZnID0gKHN0cnVjdCBuZmdlbm1zZyopKGJ1Zit0b3Rh
-bCk7Cgl0b3RhbCArPSBzaXplb2Yoc3RydWN0IG5mZ2VubXNnKTsKCXBuZmctPm5mZ2VuX2ZhbWls
-eT1BRl9JTkVUOwogICAgCXBuZmctPnZlcnNpb249IE5GTkVUTElOS19WMDsKCXBuZmctPnJlc19p
-ZD1odG9ucygwKTsKCXBubGEgPSAoc3RydWN0IG5sYXR0ciAqKShidWYrdG90YWwpOwoJcG5sYS0+
-bmxhX2xlbiA9IDU7CglwbmxhLT5ubGFfdHlwZSA9IDE7CglidWZbdG90YWwrc2l6ZW9mKHN0cnVj
-dCBubGF0dHIpXT0weDA2OwoJdG90YWwrPTg7CglwaGRyLT5ubG1zZ19sZW4gPSB0b3RhbDsKCXJ6
-ID0gc2VuZHRvKHNvY2ssIGJ1ZiwgdG90YWwsIDAsIChzdHJ1Y3Qgc29ja2FkZHIqKSZhZGRyLCBz
-aXplb2YoYWRkcikpOwoJcnogPSByZWN2bXNnKHNvY2ssICZtc2csIDApOwoKCXBubGEgPSAoc3Ry
-dWN0IG5sYXR0ciAqKShidWYrdG90YWwpOwoJcG5sYS0+bmxhX2xlbiA9IDg7CglwbmxhLT5ubGFf
-dHlwZSA9IDI7CgljaGFyICpwID0gYnVmKyh0b3RhbCtzaXplb2Yoc3RydWN0IG5sYXR0cikpOwoJ
-cFswXT0nZic7IHBbMV09J28nOyBwWzJdPSdvJzsgcFszXT0wOwoJdG90YWwrPTg7CglwbmxhID0g
-KHN0cnVjdCBubGF0dHIgKikoYnVmK3RvdGFsKTsKCXBubGEtPm5sYV9sZW4gPSA4OwoJcG5sYS0+
-bmxhX3R5cGUgPSAzOwoJcCA9IGJ1ZisodG90YWwrc2l6ZW9mKHN0cnVjdCBubGF0dHIpKTsKCXBb
-MF09J2InOyBwWzFdPSdhJzsgcFsyXT0ncic7IHBbM109MDsKCXRvdGFsKz04OwoJcGhkci0+bmxt
-c2dfdHlwZSA9IE5GTkxfU1VCU1lTX0lQU0VUPDw4fElQU0VUX0NNRF9TV0FQOwoJcGhkci0+bmxt
-c2dfZmxhZ3MgPSBOTE1fRl9SRVFVRVNUfE5MTV9GX0FDSzsKCXBoZHItPm5sbXNnX2xlbiA9IHRv
-dGFsOwoKCQoJZm9yIChpbnQgaT0wOyBpPDEwMDAwOyBpKyspIHsKCQkvLyBzdHJlc3Mgc3dhcCBm
-b28gYmFyCgkJcGhkci0+bmxtc2dfc2VxKys7CgkJc2VuZHRvKHNvY2ssIGJ1ZiwgdG90YWwsIDAs
-IChzdHJ1Y3Qgc29ja2FkZHIqKSZhZGRyLCBzaXplb2YoYWRkcikpOwoJCXJlY3Ztc2coc29jaywg
-Jm1zZywgMCk7Cgl9CgoJY2xvc2Uoc29jayk7CglyZXR1cm4gMDsKfQpgYGAKCj5CZXN0IHJlZ2Fy
-ZHMsCj5Kb3pzZWYKCkRhdmlkCg==
+Il 10/01/24 06:44, Chun-Jen Tseng (曾俊仁) ha scritto:
+> On Wed, 2023-11-29 at 14:22 +0100, AngeloGioacchino Del Regno wrote:
+>> Il 14/09/23 14:10, Mark Tseng ha scritto:
+>>> The original CCI OPP table's lowest frequency 500 MHz is too low
+>>> and causes
+>>> system stalls. Increase the frequency range to 1.05 GHz ~ 1.4 GHz
+>>> and adjust
+>>> the OPPs accordingly.
+>>>
+>>> Fixes: 32dfbc03fc26 ("arm64: dts: mediatek: mt8186: Add CCI node
+>>> and CCI OPP table")
+>>>
+>>> Signed-off-by: Mark Tseng <chun-jen.tseng@mediatek.com>
+>>
+>> You ignored my comment [1] on the v1 of this patch.
+>>
+>> Besides, I think that you should at least keep the 500MHz frequency
+>> for a
+>> sleep-only/idle OPP to save power.
+>>
+>> It would also be helpful to understand why you chose this new
+>> frequency range,
+>> so if you can, please put some numbers in the commit description,
+>> showing the
+>> stall in terms of requested BW vs actual BW (as I'd imagine that a 2x
+>> increase
+>> in CCI frequency means that we need *twice* the bandwidth compared to
+>> what we
+>> have for the workloads that are stalling the system).
+>>
+> Hi AngeloGioacchino Del Regno,
+> 
+> Thanks your reminder this issue. After ajdustment CCI OPP, we also do
+> power test benchmark and the result is PASS.
+> 
+
+Sorry but `PASS` is not a number; I actually wanted a before and after power
+consumption measurement in microwatts.
+
+> The original CCI table has stall issue.  When the Big CPU frequency set
+> on 2.05G and CCI frequency keep on 500MHz then run CTS MediaTest will
+> system stall then trigger watchdog reset SoC.
+> 
+> The CPU and CCI frequency setting are not in the same driver. So it
+> will have timing issue cause CPU stall side effect.
+> 
+
+Are you trying to fix a frequency setting delay/desync with raising the
+frequency of the CCI?
+That's not the right way of doing it.
+
+Asserting that we have a timing issue because the two frequency settings
+are not done by the same driver is borderline wrong - but anyway - if there
+is a frequency setting timing issue because of the interaction between the
+two drivers (cpufreq/ccifreq), the right way of eliminating the stall is to
+actually solve the root cause of that.
+
+I'm insisting on this because if there's a "timing issue" this means that
+even though the "base" CCI frequency is higher, during a scaling up operation
+depending on how much the CCI gets flooded, you might *either*:
+  - Have this same stall issue again, and/or
+  - Have performance issues/drops while waiting for the CCI to scale up.
+
+Even though you may not (or may...) get a stall issue again with this change,
+you will surely get (very short) temporary performance drops during scaling up.
+
+....and this is why your CCI frequency increase solution does *not* resolve
+this issue, but only partially mitigates it.
+
+That should get solved, not partially mitigated.
+
+Besides that, can you please tell me how to replicate the stall issue, making
+me able to better understand what's going on here?
+
+Regards,
+Angelo
+
+> BRs,
+> 
+> Mark Tseng
+> 
+>> [1]:
+>> https://lore.kernel.org/all/799325f5-29b5-f0c0-16ea-d47c06830ed3@collabora.com/
+>>
+>> Regards,
+>> Angelo
+
