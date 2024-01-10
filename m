@@ -1,69 +1,89 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017393F8F1
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55D546525;
+	Wed, 10 Jan 2024 10:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0fGjliuc"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40e4afe9ea7so33085e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 02:26:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704882362; x=1705487162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e2mX1mh3rNqNne9tNDzhN4xY1fsjnh+ojT0izFC+U7M=;
-        b=0fGjliucmpnXI+Y91Hnbol0BCPcJ9+AEOm+7LhKwux+ux21l+yeGpLi2PO65Hn6iR3
-         xN13dLD64weFzTJEgHzYvbtPfOp2DJ7vEyTPX5ZV5dlTDftStLOY8hQB+cpmd5IrVFe/
-         pRrpGHEsKQ8QFcglWaonp72Tgsie41NeEPQRYXgjP67Bm828vTQ4lnJMI2VwbgIXOwyA
-         N0iIl3tQ7pTNPbfrkJvofwRYjpHjSSVRsZMInH5Aw+2vfOEcX8JzVBNg0NX/AJOIaj+9
-         zdIIjaRCowrfDM2ml9Lhaxuz9fCfg0HpDaFxkYHJn3OuUDSs4W8pMQYXZksgpyBnKgj5
-         Uz0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704882362; x=1705487162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e2mX1mh3rNqNne9tNDzhN4xY1fsjnh+ojT0izFC+U7M=;
-        b=E+ZqHdAulZDhsBpWnQ1cS0G5MFhKOvmCxbtlR1Dxboedbe8TeJ2E1SHDGGIw2r+D9H
-         SuIPdiD3+wBTYSdQNEPM4/Ro1Ff/DCrM7JvMIxKEBylOgarIFEvg6jX5m/A45oJNkyL5
-         Ly2cK0AbT01NBeZMz6JZspkxg5cF88hRzq00XTuoO8cV6r3VZx58wiW1qSHD2wxAfAIt
-         c6Jv9yfIqDyHbLsOxQ9GE304Lt1dmwUFYOT5Fq25SnrShqHwXXBYFMOKWOt+u7tUCDXy
-         q0Th2UcprtveeZvRpJ5v29uxLiuWKH0V83cQkzrRp+8frI/NPqPSgIkLz8qhkw96CM9Y
-         jgDw==
-X-Gm-Message-State: AOJu0Ywj6TXPKvBIFSNd7mMTf4f/89cvJ070sz3hZCryHm1a2u5/kxjC
-	WrSOAnE5SBUY/4C67Yi06qJaigON3VzmwcvNoqn+Bz6FqPDp
-X-Google-Smtp-Source: AGHT+IErl8hJGq1W3zjVyvsN0hUhsZgbrKc0QOwyz56OnXnouGgTlK7BYf8TX26SkUkGu3Ly7bNVkmMo2vvJGHfLJ24=
-X-Received: by 2002:a05:600c:4f93:b0:40e:490c:48a9 with SMTP id
- n19-20020a05600c4f9300b0040e490c48a9mr130976wmq.3.1704882362035; Wed, 10 Jan
- 2024 02:26:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YHOxF9Gs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1704882392; x=1736418392;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1E6SGPMyspfxdGXcr6MF97yBDgvECpeTUGECKTrub6g=;
+  b=YHOxF9Gsx59laybDjb12lEx3ZkPbQJWojXy6+0GY6rf19Gns9Sy1pW1+
+   DcXxRCmAlVkD5S6iS2wdhlNeArKqOjgA3IA3akjC4loBPlDUHqi8tSj3Q
+   JXg98genbAmcRCmaLdmkI44ESvHhPh4nLvn1oFbJRbP9ocR84VxArIoUR
+   9+Y1l/amMNYhsn/JbzZBHQRO6Ven6ambjjtanlw1bC/8WVeVAZOa9hHMg
+   rIFFN/l6lTwk8c+VEzno3QEzbPXMLO3wvsjZ0FpkqcNB/Ry4HFFLVdGbR
+   dK4twe/WkoFyalzp0EjvlbeIdThPDpEyi1ENYNFbIbd08iqf7xNVEPWaK
+   g==;
+X-CSE-ConnectionGUID: 4FLeVdXIRtGRQjBQXLr/AA==
+X-CSE-MsgGUID: t5Eg5YbQRdCgP9shtgUuhw==
+X-ThreatScanner-Verdict: Negative
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="181745210"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 10 Jan 2024 03:26:24 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 10 Jan 2024 03:26:00 -0700
+Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 10 Jan 2024 03:25:53 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<lee@kernel.org>, <thierry.reding@gmail.com>,
+	<u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>
+CC: Dharma Balasubiramani <dharma.b@microchip.com>
+Subject: [PATCH 0/3] Convert Microchip's HLCDC Text based DT bindings to JSON schema
+Date: Wed, 10 Jan 2024 15:55:32 +0530
+Message-ID: <20240110102535.246177-1-dharma.b@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109031204.15552-1-menglong8.dong@gmail.com> <CADxym3azdds6dRDdvofHj1cxZ1QxcN1S8EkrLtYtKy4opoPrFw@mail.gmail.com>
-In-Reply-To: <CADxym3azdds6dRDdvofHj1cxZ1QxcN1S8EkrLtYtKy4opoPrFw@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 10 Jan 2024 11:25:50 +0100
-Message-ID: <CANn89i+G-4=70KA4DBJqmFRXH9T3_eaOUmVVDBDH9NWY2PNzwQ@mail.gmail.com>
-Subject: Re: [PATCH] net: tcp: accept old ack during closing
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, 
-	pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, Jan 10, 2024 at 4:08=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
-.com> wrote:
->
+Converted the text bindings to YAML and validated them using following commands
 
->
-> Oops, It should be "SKB_DR_SET(reason, NOT_SPECIFIED);" here.
-> Sorry that I shouldn't be too confident to compile it.
->
+$ make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
+$ make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
 
-net-next is closed, come back in ~two weeks, thanks.
+Dharma Balasubiramani (3):
+  dt-bindings: display: convert Atmel's HLCDC to DT schema
+  dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
+  dt-bindings: atmel,hlcdc: convert pwm bindings to json-schema
+
+ .../display/atmel/atmel,hlcdc-dc.yaml         | 133 ++++++++++++++++++
+ .../bindings/display/atmel/hlcdc-dc.txt       |  75 ----------
+ .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 106 ++++++++++++++
+ .../devicetree/bindings/mfd/atmel-hlcdc.txt   |  56 --------
+ .../bindings/pwm/atmel,hlcdc-pwm.yaml         |  62 ++++++++
+ .../bindings/pwm/atmel-hlcdc-pwm.txt          |  29 ----
+ 6 files changed, 301 insertions(+), 160 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/atmel/atmel,hlcdc-dc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+
+-- 
+2.25.1
+
