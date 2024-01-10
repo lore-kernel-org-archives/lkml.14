@@ -1,148 +1,115 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2040.outbound.protection.outlook.com [40.107.237.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B3C47762;
-	Wed, 10 Jan 2024 11:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1099240C07
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D/6yxlr8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704885005;
-	bh=opfjRhVHCA5uWTnxeh45vbr3mHfSSMHaqalR6SccCOI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=D/6yxlr8V5vU3xvkd9oO0PJqihGbovndB0pXsrcsxWe5fhIBvnSnP+ktzFPVlUeWE
-	 RDnmBNBCDYlq2MKxs++cBLGHfptUKdCLbwP5rabk2dDDmOx77m/2kUF+2t0dglKpP2
-	 BI8Lb6IKkBeO6U+TwjbEnTqjSC3T0bGu4R5L5GILqJaier/HyaRUfv/ZhtIKSPQsY4
-	 Z4zr6ZD2ijVcJN6HJRHzy0CYN6ecNiFZScA6ajXxzRxNutgl6HiB2HEZTdaizxnnfT
-	 EW2znBdh5ogyKNLt/mnWI9jezRRurlUFdrez1Yk1DIccZuArMslJNRmY3cgrfyxfxq
-	 ChSxIxyqPy/tw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 40B6A3780C21;
-	Wed, 10 Jan 2024 11:10:05 +0000 (UTC)
-Message-ID: <679f35f9-3265-4b2f-8de5-df9460881de6@collabora.com>
-Date: Wed, 10 Jan 2024 12:10:04 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="090pK9T9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jfZtOEdKPRujDZBpKQoggK+bw234MX7gO6MXKHDGpIZVeVx+09bjnVvhamDg9IL66pNf9cBiJRNLmaDJETWq/RxISQoDUNdxt0KBLOLsAlFWLraVYHnjMNoN5DOdqdR9S/9MsHXfzzouYur0nBKY4CYgGUf00B8vNO+jvohKX1+0j+5QULK6eTF5uJCV9XG1jGlc009+J3nUgA3I0+LOBpfBLiY9ktlJDmeeNL+G1D1exlWoFalANNU2tcYXGXNE8xFeVRAK3XcgCJVSoeRVUSpHIVDqp2IDImybgJN4h+W1OhDiAXRYRDPsJk6G/Nz6eYuURgigiD2etMMRYIOpVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/cOE6gEG4Rh5N57xCK2a+LraEjxxwobm9S1nK1Uz+HI=;
+ b=jIvNSZL3W9hSjrvum5gUcu/MCWSHMmqqmznGQ5AUhhCUet8G7yz66gIXnWBcUevafhedIPXlq9PqAgHMKpzGXxw8eJ+gFFMr1jY8y2Vb+S5eCqIf8XhywV0XMLJAvromvIS00qgzJQqUW93HqaR5bf+iDTjAzPl8PX2zcfjvJ0YCnRH+CM1Ka76HJQWqcx9LcT6DMxxiqb57EoFXKbdFX9KSWPqYXv8ivu+eFxeEm9EssW8cM3pFhkYe/ndrI3AIPoTe881aEahaGR+DR6XJs+bwcQ7mIfF4Geh/1eYzpbUE15BXtsMslDjXKDvKPX/6Dq743GmBex9j+qb7jGtgbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/cOE6gEG4Rh5N57xCK2a+LraEjxxwobm9S1nK1Uz+HI=;
+ b=090pK9T94Uc4PvkKW79ysmuRyTe+MPw0MLHzMQYsd4jJr9Lf8GA/8a76Q7YitM3fqWZPBwAnVxA0MpCMPoWzK8M78iq4sw6nDeurCprapr9nKf1WldU+cHUWfR0RjQEQNgjtS3R6IsA+Xs6TzKqq7kxEkx3G59hjHq2d88t5wos=
+Received: from CY5PR20CA0016.namprd20.prod.outlook.com (2603:10b6:930:3::19)
+ by DM4PR12MB7696.namprd12.prod.outlook.com (2603:10b6:8:100::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
+ 2024 11:10:40 +0000
+Received: from CY4PEPF0000E9D4.namprd03.prod.outlook.com
+ (2603:10b6:930:3:cafe::6a) by CY5PR20CA0016.outlook.office365.com
+ (2603:10b6:930:3::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18 via Frontend
+ Transport; Wed, 10 Jan 2024 11:10:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9D4.mail.protection.outlook.com (10.167.241.147) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.14 via Frontend Transport; Wed, 10 Jan 2024 11:10:40 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 10 Jan
+ 2024 05:10:38 -0600
+From: Michal Simek <michal.simek@amd.com>
+To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+	<michal.simek@xilinx.com>, <git@xilinx.com>
+CC: Russell King <linux@armlinux.org.uk>, "moderated list:ARM
+ SUB-ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] ARM: zynq: Remove clk/zynq.h header
+Date: Wed, 10 Jan 2024 12:10:35 +0100
+Message-ID: <d7b129c8e3f867c2fda5fb0adbb1983103c5be5e.1704885029.git.michal.simek@amd.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] arm64: dts: mediatek: mt8186: Increase CCI
- frequency
-To: =?UTF-8?B?Q2h1bi1KZW4gVHNlbmcgKOabvuS/iuS7gSk=?=
- <Chun-Jen.Tseng@mediatek.com>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "wenst@chromium.org" <wenst@chromium.org>,
- "robh+dt@kernel.org" <robh+dt@kernel.org>,
- "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- Project_Global_Chrome_Upstream_Group
- <Project_Global_Chrome_Upstream_Group@mediatek.com>
-References: <20230914121035.17320-1-chun-jen.tseng@mediatek.com>
- <20230914121035.17320-2-chun-jen.tseng@mediatek.com>
- <c9881e63-a52a-4d14-895e-9a14d31004e3@collabora.com>
- <894594bd2adb156fa8f290f4e603edbccdbbcdab.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <894594bd2adb156fa8f290f4e603edbccdbbcdab.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=575; i=michal.simek@amd.com; h=from:subject:message-id; bh=RAcTP7dic5cJVbZTHa2C8q+324FvduJzQXkoZiYqddY=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtR51WrlD943TIj99VTmm7pYRPLk7l/mTxdJ9vQdn3lG/ 7LChBUOHbEsDIJMDLJiiizSNlfO7K2cMUX44mE5mDmsTCBDGLg4BWAiXyQZ5kr21VQ0X5m67qZs 8YEvTxalr/om/IBhfm6Et903JpHeGYkzd/3l7+vPW8J7CAA=
+X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D4:EE_|DM4PR12MB7696:EE_
+X-MS-Office365-Filtering-Correlation-Id: c56304ff-b62d-4a25-2da5-08dc11ccc7f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	0zbrt1MFFF7KCYuD4iNOVnhJTdtJg2JM21/SF1cgEKbkV9tVkjODoMnRtvXJU22ECj0KHAsVi9ueMFX5iZXbZ9nyvzanRyurgUvTs1wQAryWwajUIcBsed33+BzG99E7HCxBsPh633TbW9x71teM/ptk01RT0UF4iX1LtOrJChORth1E/I0VI0mGsowPjITnjTBrzESFl4piYqwB+oY9i4+Hv7vGqwfKQMX+pP+QIntfWIs5DUfezDE4sviW+zzW9p2vAOblxjUO/nPYmJJz5eowgmO07QW/V0IsEu/GgDfuNP0c52ntERza+Z4oeg82eSRH60jhp70kyGJQoPvFpc9NhqjwJd+1G2dyXY6pcmr7SJhB7J6H74RFSO0Q/IOaqga7MNISLkc+aRcc5m9u8OXea/T1XH5q/7P3ONHcmLTL99i6cUPnHoi+y77beXKrKJf/95ztsv1uff045SZR30iHI3vQKwW64hjSF5fAAZZf7bQaQq//mfcrgkTobS6hdKJbwpIdRGETNolA2pE1S4Oa1HZD+Oz0OTUihGVePl/b610zOGZS+QVkwWogC5zBFWIwFo8cQif7NQ78PPDk582/qwg+nZxVKl+f+pG6YaRnT99Qzy8YFQP8h0C8Y6I/gWqEnXX5Q+yVM8CAfc4kbZyuDz1l0wkHnjyQnv1pfFlVOO88eXatjzOrbN43Y7Hw4l+YB8f5Hj5UMQb346zXTGhCop+B4TBx1NHiutMiZG6NkyqP6+JnblnIKTSYK9qJWBl/NrZ309qDP6t1IsDHU69AYWlywNHHB2yKdZVr84I=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(376002)(396003)(39860400002)(230922051799003)(1800799012)(82310400011)(186009)(64100799003)(451199024)(46966006)(40470700004)(36840700001)(40480700001)(40460700003)(83380400001)(70206006)(41300700001)(70586007)(356005)(36756003)(86362001)(81166007)(36860700001)(82740400003)(47076005)(16526019)(426003)(26005)(2616005)(336012)(110136005)(2906002)(478600001)(316002)(6666004)(44832011)(8676002)(8936002)(4326008)(4744005)(5660300002)(54906003)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 11:10:40.4277
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c56304ff-b62d-4a25-2da5-08dc11ccc7f3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9D4.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7696
 
-Il 10/01/24 06:44, Chun-Jen Tseng (曾俊仁) ha scritto:
-> On Wed, 2023-11-29 at 14:22 +0100, AngeloGioacchino Del Regno wrote:
->> Il 14/09/23 14:10, Mark Tseng ha scritto:
->>> The original CCI OPP table's lowest frequency 500 MHz is too low
->>> and causes
->>> system stalls. Increase the frequency range to 1.05 GHz ~ 1.4 GHz
->>> and adjust
->>> the OPPs accordingly.
->>>
->>> Fixes: 32dfbc03fc26 ("arm64: dts: mediatek: mt8186: Add CCI node
->>> and CCI OPP table")
->>>
->>> Signed-off-by: Mark Tseng <chun-jen.tseng@mediatek.com>
->>
->> You ignored my comment [1] on the v1 of this patch.
->>
->> Besides, I think that you should at least keep the 500MHz frequency
->> for a
->> sleep-only/idle OPP to save power.
->>
->> It would also be helpful to understand why you chose this new
->> frequency range,
->> so if you can, please put some numbers in the commit description,
->> showing the
->> stall in terms of requested BW vs actual BW (as I'd imagine that a 2x
->> increase
->> in CCI frequency means that we need *twice* the bandwidth compared to
->> what we
->> have for the workloads that are stalling the system).
->>
-> Hi AngeloGioacchino Del Regno,
-> 
-> Thanks your reminder this issue. After ajdustment CCI OPP, we also do
-> power test benchmark and the result is PASS.
-> 
+slcr.c is not having any reference to clock that's why remove it.
 
-Sorry but `PASS` is not a number; I actually wanted a before and after power
-consumption measurement in microwatts.
+Signed-off-by: Michal Simek <michal.simek@amd.com>
+---
 
-> The original CCI table has stall issue.  When the Big CPU frequency set
-> on 2.05G and CCI frequency keep on 500MHz then run CTS MediaTest will
-> system stall then trigger watchdog reset SoC.
-> 
-> The CPU and CCI frequency setting are not in the same driver. So it
-> will have timing issue cause CPU stall side effect.
-> 
+ arch/arm/mach-zynq/slcr.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Are you trying to fix a frequency setting delay/desync with raising the
-frequency of the CCI?
-That's not the right way of doing it.
-
-Asserting that we have a timing issue because the two frequency settings
-are not done by the same driver is borderline wrong - but anyway - if there
-is a frequency setting timing issue because of the interaction between the
-two drivers (cpufreq/ccifreq), the right way of eliminating the stall is to
-actually solve the root cause of that.
-
-I'm insisting on this because if there's a "timing issue" this means that
-even though the "base" CCI frequency is higher, during a scaling up operation
-depending on how much the CCI gets flooded, you might *either*:
-  - Have this same stall issue again, and/or
-  - Have performance issues/drops while waiting for the CCI to scale up.
-
-Even though you may not (or may...) get a stall issue again with this change,
-you will surely get (very short) temporary performance drops during scaling up.
-
-....and this is why your CCI frequency increase solution does *not* resolve
-this issue, but only partially mitigates it.
-
-That should get solved, not partially mitigated.
-
-Besides that, can you please tell me how to replicate the stall issue, making
-me able to better understand what's going on here?
-
-Regards,
-Angelo
-
-> BRs,
-> 
-> Mark Tseng
-> 
->> [1]:
->> https://lore.kernel.org/all/799325f5-29b5-f0c0-16ea-d47c06830ed3@collabora.com/
->>
->> Regards,
->> Angelo
+diff --git a/arch/arm/mach-zynq/slcr.c b/arch/arm/mach-zynq/slcr.c
+index 9765b3f4c2fc..c517cd4a7737 100644
+--- a/arch/arm/mach-zynq/slcr.c
++++ b/arch/arm/mach-zynq/slcr.c
+@@ -10,7 +10,6 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_address.h>
+ #include <linux/regmap.h>
+-#include <linux/clk/zynq.h>
+ #include "common.h"
+ 
+ /* register offsets */
+-- 
+2.36.1
 
