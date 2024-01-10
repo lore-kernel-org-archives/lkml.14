@@ -1,108 +1,144 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtpout39.security-mail.net (smtpout39.security-mail.net [85.31.212.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31743F8D9;
-	Wed, 10 Jan 2024 10:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571103F8D6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MZUF+eVm"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AC5AA40E01B2;
-	Wed, 10 Jan 2024 09:59:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id t_Tn0inSc1pY; Wed, 10 Jan 2024 09:59:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1704880797; bh=KJvIW3wGLgeykBglh9gfqqbtZfBEiY8fY9XU3XU6k20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MZUF+eVmMir+M1csoIULZxfauukcd7CIuBhSBhwBfhowq36E2RXi4e9gJ75fzZH9b
-	 Wg6xn7brRPR4AwnRuCsq63ewIR/Xd7XFj67bgKbdKeb989Hgb9jGSZeUDdRLdfG7kB
-	 WfsISTeUpUhK+LnBQkmPsNRbT0sOMv8Q8OQfrD6QLCHN/DQZpoTReSw82F5WpR//qZ
-	 BnysNvbWGF31/Flzzv+uQLZQE9GP/i48XSZWOFnCIeLTv0UDkMM8XwpEpUSjbtQ+in
-	 ytNul1/xz+BxbQ+322LEQcEVeh5I7sKfUzvQ/3PHa/BiTQX2YsmDlKSn3r3FJ2HEVo
-	 tAfW05x8P5pbsC5YfiyRWtBfpkQFgr8M1DaPYLouuX8BfM/HMK15n6sIPb++WoPywo
-	 yf2277q5vXXIdpe+FL1J6T2SCJH/lQEIdnLhwgQ4zFJxtufCyWXcVgfMax9BHQYREq
-	 ptClxSF7ifxh6Z2ojSIgdLXQx1zVF8cnZaJw6qS1Uokypca32F5hO6k6w/j62w1xNH
-	 Hv9ZDY3ZSUdUrwC+hrnXWhglinSkchD9uqSyz/Pu05OogRBjymaUWH2mLgixn8o8X5
-	 a29JrS9ZsD6e1pt0bQjQlLXa4MC3q7a7wr2jbO3L2uGQ2u7+Ec5IaMh9WP0uztwh3O
-	 IfOfk0ue5sI4yXGKrvIRn+f4=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 22F3940E0196;
-	Wed, 10 Jan 2024 09:59:19 +0000 (UTC)
-Date: Wed, 10 Jan 2024 10:59:12 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Michael Roth <michael.roth@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
-	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
-	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com, liam.merwick@oracle.com, zhi.a.wang@intel.com,
-	Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v1 07/26] x86/fault: Add helper for dumping RMP entries
-Message-ID: <20240110095912.GAZZ5qcFXYgvPrCdRI@fat_crate.local>
-References: <20231230161954.569267-1-michael.roth@amd.com>
- <20231230161954.569267-8-michael.roth@amd.com>
+	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="GpuBT+yZ";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="syw5P1GD"
+Received: from localhost (fx303.security-mail.net [127.0.0.1])
+	by fx303.security-mail.net (Postfix) with ESMTP id 4435330F3E6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:58:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
+	s=sec-sig-email; t=1704880698;
+	bh=JaSKp2aG6giJAY0X0ecFU6SrPUtjSggGRFIGTKn6ZFw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=GpuBT+yZe4qcoNK40AvDpISlCvNMm7PsgHeMxHw4vVC7DV4V9yzjThkHJvVoTrlcy
+	 cNxJQEe25Im9xaWGf81a/exVZksLxeRHiOxSIuwkEYw9jxpojiqomD88NmGbo6Oc1k
+	 88k75qxgoFi1W0Guqi69/fP4fsDSewmsF9KbReJM=
+Received: from fx303 (fx303.security-mail.net [127.0.0.1]) by
+ fx303.security-mail.net (Postfix) with ESMTP id F33D130EC28; Wed, 10 Jan
+ 2024 10:58:17 +0100 (CET)
+Received: from FRA01-PR2-obe.outbound.protection.outlook.com
+ (mail-pr2fra01on0100.outbound.protection.outlook.com [104.47.24.100]) by
+ fx303.security-mail.net (Postfix) with ESMTPS id 4A11030EF84; Wed, 10 Jan
+ 2024 10:58:17 +0100 (CET)
+Received: from MR1P264MB1890.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:13::5)
+ by MRZP264MB1943.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:e::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Wed, 10 Jan
+ 2024 09:58:15 +0000
+Received: from MR1P264MB1890.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::1300:32a9:2172:a2a]) by MR1P264MB1890.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::1300:32a9:2172:a2a%7]) with mapi id 15.20.7181.015; Wed, 10 Jan 2024
+ 09:58:15 +0000
+X-Virus-Scanned: E-securemail
+Secumail-id: <26bb.659e6a39.490b4.0>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BoT3eqB0AbyB2eZc3dRekP5EPyxC8Rur+g12ydJATtmSbUeiJlrikn0R834QzzeC815Qy3N8WV0bUHOwmgx0eCuXCObXx3onmp1XdbSgYTW/UJJQssDFDL6iNMCmk4o4aCOULRT6KJ+RRaQrxWjbbi12fHD8it9CdaIhCZ5zxJffr+1B24i1lu7BzTTySacVd5Hw7t1aglEtCyiPsgq+W4jtAJdJIL1W+OLG6V7nTSIDviAta2dtvUkCATKWEqMDmmdtSpavCT1mhb+CmfDaf6nJLCwgGBxQRh2rgH5Dax2Pb5UCB4trBJRy6+UuooKGr0xN9UkSu8fay6myed5Zvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microsoft.com; s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LrnCcpUA2xIUTMK2QQOZoliwACtwKUVIvf3A98o6tPI=;
+ b=Q2MM9PLUURqKHk+aJH/ugJEe63r6ef2qlLPAIYUF/f3SDcxpXyawNGJlT2FXkJBqph8d9KHbAOEnpRGZb7LhYcj2qskI/8dsijd8SYytwQAyddNTIcdsfj/kMQa3p86JsTTVradVEBhwjhu/DLb/e8MfmdCZ2qNdNsnKkgep7Jt6SSxP7rtSBv2ALuhBs98fOrCth538JZC2wJvupzvQtf3mOqj7pl+y/sd/xbrX12pjcz8dLmtubsdsYhnA1Oeq9ryDWblrjZJ6cwMJvf98ETtrJtsTG1JV9xBrTzDmvJTkd6u9IiPhF0RNtxEM5NqJ4SxYYPpwWwgXc0B/bFLVXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
+ header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LrnCcpUA2xIUTMK2QQOZoliwACtwKUVIvf3A98o6tPI=;
+ b=syw5P1GDvu6MqcrQiuVfj2pPEiiDNRdrYhFa6EcvhyKDA7Cv5sXbFaEvp9qWt74qIwt+9lXN9loaO16fITX8hZ8pGAncpMClJ0OzQGeWIs5f0eaisZV8mpZ/5dVt4i3jq8Z/JgWQO/GsVOQ126WqDBU0KGLLIT0lP2QVfsu4O4aqNAuzmGG7gx7aNuAwJV/yebYpE9xnL33+E5MLJTq/nDS4azM33HhnP8kiT0tnnYEkQnqcSGBMyORTl8uoMpiZs4YmDPhul6WTbq2yTzGwysTgIWsEFn47v7720z/snZXKK7UN7qjMgaoFZMjgTWw2K21yJ+IN5auHKxfClM8qhA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kalrayinc.com;
+Message-ID: <8ffc6434-31e4-4331-a3e7-ac925362774b@kalrayinc.com>
+Date: Wed, 10 Jan 2024 10:58:13 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 000/150] 6.1.72-rc1 review
+Content-Language: en-us, fr
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, Jonathan Borne
+ <jborne@kalrayinc.com>, Julian Vetter <jvetter@kalrayinc.com>
+References: <20240108153511.214254205@linuxfoundation.org>
+From: Yann Sionneau <ysionneau@kalrayinc.com>
+In-Reply-To: <20240108153511.214254205@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PA7P264CA0533.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:3db::25) To MR1P264MB1890.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:501:13::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231230161954.569267-8-michael.roth@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MR1P264MB1890:EE_|MRZP264MB1943:EE_
+X-MS-Office365-Filtering-Correlation-Id: d920afdc-cc6c-4eef-bf9b-08dc11c2a9e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lOSG0uOkQuOWo5b8dW0Yanyf2szrot7jctyTDhLuhXnglBakBRRba3LHgs2kgO94BW+4EzVZgE1YE80cdhsHi12tkM0MKD/X4g7HT4+YU4AbOs73VhpiuXvvu5qtXUFfSkZ9cW7Fem6KoeibbUmZK7LXyfINxp1mZc85Ye8EsJohwtboqE1SsBJNSgIz4lVoUlBhlyhpRgSnQZW5RPN2e4VduHHG3kQFN3RyLf1QRZJnfaXVcM+je0tUWaZ1+6T+yugqqDw09e5EuuNIxyM52IZ6bWB1BTGTL+dFukp5QZxA5/JOnf8E3PohvUN2U/8rKmF5UUyUvauc3CyW0cm/O4sNQgZ8j2lac6ofv6RJgcie03pIfCz91hdGqeYW73rCIes6ohwTIpglm6Sj8TTvFx2By9zxaPYbJ8LBQdBn4X/Yi0wa4aoJtuHqUQ+mBUU8W/Z2LKIewhmBJwKCjZARlBd2XDnsbXxG1yb4C6J3kBEaTj6SUeT8+0seAwYHsGN5U7ykD8fp9LGd80XEY6zxqhgkCcBglpiqdbT68qVCWALCk/yXcwxgteL0kKmlpIO56lluF/wJYa3Xb6mXwERslsgzLhd1lyfO0N/CsA4EmPa7kHA+ycP9bnnWYYL3iTwn006I0770wFXpjng2GWE9xQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MR1P264MB1890.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(39850400004)(366004)(136003)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(5660300002)(7416002)(478600001)(966005)(6486002)(2616005)(53546011)(6506007)(6512007)(86362001)(31696002)(8936002)(8676002)(41300700001)(66946007)(316002)(36756003)(66556008)(66476007)(54906003)(107886003)(38100700002)(4326008)(31686004)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: og8Shd0iJGNHKCAmvkSq8xYJNK/tTQOvnF+UCN8Zf45SDb9T/DazqtiAbWxe+/W9D4Esq8NFizuAulg4Fp+zzFDiOCIE+QQGtEWeHvmtBH2JWczgcqjaSlV7QXM/80vZIfc05Lq9VBJcqniCZDJnyKOpxOIWTvn+z+pzQVyEk5TlDdJs3+42hbado+Cnu5S/Etm7LEKDVjR9AOU1NSdgkX2fDI1jyPW4LE/LcLqc8I4SlzDxYKgF1Sea6NRMCVg9/qweGLqTcmB5gkPGcjsF2sEL1w3M5LenamvcndYMlpiZ8bq8DrEa9j4JinFh3bgWgl/8XdeKJyQI5w7YFySk8hcZ32DIF80VF1AMe9MTsRBG9P2mqyknFiI8k6b9GJqOHJOj9cuWf1/+B8IuOJcu+HtWMOV7KciwAB/gbECqUXVCVAcDe78D7Ve2oZ2fcntnu+pNdgO9PZNQWzKnlkJ1RDW2+t+cDREW814YCaSnZObMFuyaGq4U3iRrwxrX6dM2VTQjYJfGYnnZqWarQSIi/Uu3uqQNd43Koc/wV34hxvbBA8eBzBKAJo9T4IPjTmH/rr6sbLzs289ULt7tpP5yCi+L7y+cw6/pbcf8/wX4B7PSRJR3RWnYSbhvO7iLQJkls/K2xCPIo3xwqwSQ6LyCHAY7biMuOp1oP9KpR76DrEkbAMD7fSQIEenxvFwiBxhUDIaO3poECgzuIMuE8LMumxkx+eOZMX+hW5IzUqWlv1hNl0mv0Bs4gbecPPruslXtNMxstpnjQYXyOhe1s3lFVfWKiAHTO+HrE7cR26ASnPTEvW6ipqat7T5n1a2S79ZJ4ePrshgHQTFp0FJ84zOAGqQntwXyz23150Fq2lID5K6s8WE+RW7xyEojvFyL1KM/WAmui0SejNCde3XBWwlWOKkMG2JXu6wU+Oeihpq9SWnJutXJK+DfgWXpi9cc1g/u
+ RK+Z9T7nXuyzyWf4hxvdb2kITq11+TiJ0S0FwaGVMXi85kb7SbhtiTYRCMJd0RIp1Iy7V9VsBouSGuyw5rPEsWPywW3xsmqzbqUAW7J1nPvU4kxyOaozQB+DRDD+SamdTqb/uyOUugtlbOKJwHONMEcHPBkEY6ZQhRJVB5zQ8F6jpkT3Gw1RnCzd0+EQdT2SfP1gneAcd8LVal3Cp/m+8qWSW4jNspaqt1h0XRQ5KVNIdFQNdIu4wx3QWv1G4rSzMaTQrNSZXK5fNFqJAZmW/oGKUltfr6FH1B7e0WB/AR64fIK756y13NZDM5nnsoJLSegRZLzsKhvN6JlU2wySUVGknTmxMpJH8THwVOIbpAz9o6I0MIErdLKuYQcw6DwxZB79NMmnZkFhL5mo1JpGlDZShltEPoX4FCr7lrtC8gQqIF8vhuu4afqSi4P5WKZTgfH22jN7lZLXbWcKmFKHpSexMd55gL9ryBeFEMisMJTqpbLKpynYiVhluESI0YZjuvu+mELyZE+J9DO3MElE+ZFTmT0PwDdBVCken9uSh5TkknvPzzucjQoV4zbQq207wkU3Z1iuBn8DdOEt5KQnyes7iW/BIZVm+6PtMKjBnqNZIDQEGnPFooXfJEM91NyBP71x6w3jH0V0pCLVITfXi2XSGVCXJ9Dnu+GCbsk5VQfSGK7LjM6p7MfKpcJJS6LiOtJOc32b62N9Cp/PJZIxug==
+X-OriginatorOrg: kalrayinc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d920afdc-cc6c-4eef-bf9b-08dc11c2a9e3
+X-MS-Exchange-CrossTenant-AuthSource: MR1P264MB1890.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 09:58:15.2751
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gZHCQ+rXACe99wDhUTPfienHLIvVf8jMpdioNJSpaAMODOBaIj4WBQtOs46/GdmjZ8xlc6b4Sfl+f1MJEjeWOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRZP264MB1943
+X-ALTERMIMEV2_out: done
 
-On Sat, Dec 30, 2023 at 10:19:35AM -0600, Michael Roth wrote:
-> +void snp_dump_hva_rmpentry(unsigned long hva)
-> +{
-> +	unsigned int level;
-> +	pgd_t *pgd;
-> +	pte_t *pte;
-> +
-> +	pgd = __va(read_cr3_pa());
-> +	pgd += pgd_index(hva);
-> +	pte = lookup_address_in_pgd(pgd, hva, &level);
-> +
-> +	if (!pte) {
-> +		pr_info("Can't dump RMP entry for HVA %lx: no PTE/PFN found\n", hva);
-> +		return;
-> +	}
-> +
-> +	dump_rmpentry(pte_pfn(*pte));
-> +}
-> +EXPORT_SYMBOL_GPL(snp_dump_hva_rmpentry);
+Hi Greg,
 
-show_fault_oops() - the only caller of this - is builtin code and thus
-doesn't need symbol exports. Symbol exports are only for module code.
+On 08/01/2024 16:34, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.72 release.
+> There are 150 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 10 Jan 2024 15:34:37 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.72-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> thanks,
 
----
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index a8cf33b7da71..31154f087fb0 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -339,4 +339,3 @@ void snp_dump_hva_rmpentry(unsigned long hva)
- 
- 	dump_rmpentry(pte_pfn(*pte));
- }
--EXPORT_SYMBOL_GPL(snp_dump_hva_rmpentry);
+I tested 6.1.72-rc1 on Kalray kvx arch (not upstream yet), just to let you know everything works in our CI.
 
--- 
-Regards/Gruss,
-    Boris.
+It ran on real hw (k200 and k200lp boards), on qemu as well as on our internal instruction set simulator (ISS).
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Tests were run on several interfaces/drivers (usb, qsfp ethernet, eMMC, PCIe endpoint+RC, SPI, remoteproc, uart, iommu). LTP and uClibc-ng testsuites are also run without any regression.
+
+Everything looks fine to us.
+
+Tested-by: Yann Sionneau <ysionneau@kalrayinc.com>
+
+Thanks a lot!
+
+-- 
+
+Yann
+
+
+
+
