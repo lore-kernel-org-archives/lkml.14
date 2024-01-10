@@ -1,189 +1,180 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BA11C2D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 02:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E6B17C6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 02:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshtriplett.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joshtriplett.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DiEzwTk6"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3bd3b34a58dso1005423b6e.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 18:19:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704853177; x=1705457977; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BDxSSelDpoPAQNyNUVcKc0KClc7DkRzMA025xPQnKWc=;
-        b=DiEzwTk68TMzOlv3pMYJg1FUXAoA45aG7e1rUzbT3KbM6XbhruQJrg6FXadOtSlx7H
-         Gqydin0PG65VdOgYjtiatstfZdm/rpR2MlPyk8A2fUGnJsgkXaksO8kicyI2aOJT8VTj
-         0Y3xxlqZEzvml7DrMZydujBppYtPxtufsSBDQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704853177; x=1705457977;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BDxSSelDpoPAQNyNUVcKc0KClc7DkRzMA025xPQnKWc=;
-        b=xCMAYrNz+3JSqJsDBTcW8yAktOExjBMt8UHtGM8gwacXxmGoi1xsSmEON4DKPcLKu8
-         nc1qUsmksGLeUNtdifrguLtgtcFzMwUhXzyXK0a9bIIKD1ijzVoP6w+veltrSbGXQesq
-         wo39MX4gMj4CzgJl+OnQMvXzdFLZLE2+makkJ6xCubh04njtrNi7SuirQSpLqNQw9hx0
-         EMa5fGQaR2c8vQ1/6hFpt8hZT+TyEQ27vU3bMEWovYoqfrUIhqfg4EFlsPqv1Kd4uBeR
-         3BHWBgga2B+CBzrXhtEWO/AWF515RdxusbvGwVjKBX0Le/l+d42x+ObqZfIMjIlmHKuL
-         zGJA==
-X-Gm-Message-State: AOJu0YwUKrkGs95+gNPDwCu05UVovwkXAozFjFio66T0Qws/6mYBdFbv
-	V4dzmiJb6Tzd8093MyP3z8CLLPMIxoM0+ZxFXGpH6eWiQw==
-X-Google-Smtp-Source: AGHT+IFKHS5gDIO09q4/OhKTSjfjm+tc4wEqOP2FsjkQaw+kuulPuiBk57t/oQBggGgZgoQQef8G/A==
-X-Received: by 2002:a05:6808:1289:b0:3bc:316b:e5a8 with SMTP id a9-20020a056808128900b003bc316be5a8mr394036oiw.54.1704853177387;
-        Tue, 09 Jan 2024 18:19:37 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:9106:7b1d:78f7:d925])
-        by smtp.gmail.com with UTF8SMTPSA id y13-20020aa7854d000000b006d9bb4400f0sm2337199pfn.88.2024.01.09.18.19.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jan 2024 18:19:36 -0800 (PST)
-From: David Stevens <stevensd@chromium.org>
-X-Google-Original-From: David Stevens <stevensd@google.com>
-To: "Michael S . Tsirkin" <mst@redhat.com>,
-	David Hildenbrand <david@redhat.com>
-Cc: virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	David Stevens <stevensd@chromium.org>
-Subject: [PATCH v3] virtio_balloon: stay awake while adjusting balloon
-Date: Wed, 10 Jan 2024 11:19:25 +0900
-Message-ID: <20240110021925.1137333-1-stevensd@google.com>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+	dkim=pass (2048-bit key) header.d=joshtriplett.org header.i=@joshtriplett.org header.b="IZvpS5rb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lQj9qlMX"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailout.west.internal (Postfix) with ESMTP id 837823200ADA;
+	Tue,  9 Jan 2024 21:21:28 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Tue, 09 Jan 2024 21:21:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	joshtriplett.org; h=cc:cc:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1704853288;
+	 x=1704939688; bh=+EPYgfAmtFY42lGNnY07XOeiD5ZtD7yHEq0BdfanLnY=; b=
+	IZvpS5rbsMV7m6VAvFsfpOeHPlCMEVUvtgGeXM4opGKmVYvXehQd6zXiMunzAbBu
+	FZBuUx0TK3VTYkk/sqvWag8qM0sxTgwd4zNFQV32V3vAeC4j2zONn7Mg4kuXhMCt
+	iGd4S0gLUlaUBbHYl8ckCl1cn0eoKWN2W+WWQrauZTVq89f+POWTBXYKaHzfcTEE
+	w++b611gwJW+qyu1VIyBnfuSrBHkMDZyQwckgmg0Cl08hQo3cntpw0R9IbZXm5J7
+	5c/9KM2WSupLGr+apZhB5o972y333c3rrC3D8zWlg19Z2VmU2S0k5saTKnag31E4
+	ZaHF3GkvuaUfxv/l4TIdlg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1704853288; x=1704939688; bh=+EPYgfAmtFY42lGNnY07XOeiD5Zt
+	D7yHEq0BdfanLnY=; b=lQj9qlMXrRILtujM/EurCRX6rSUm+eMPqjd0pCHdPPir
+	1kA2WIS2eT3eAWq/m8Wsr31H0vzvBpndxrTyp3DuWoubJQC3FYC5mvxCJrNc6WRr
+	+dAnFYC3lkLwnEDWNflyp5f547ZfaASf1GmZR+rFcyYQi2ItPCG1EfT+nPSjHVLp
+	CDFroTHX67jXqczFveLR6RY1kEL85f2tbnCfY/SnCY9hRJ1cSQaMk0TcS2A9g0dH
+	jVaJm+GArb5iVgZJHJ6ZtrnfcMJbpyRjbhIPBFc5eFHJZu0jAcIiAcMUU0Oiom9x
+	EXO2qy6Kux+xIA7MZcfBa2TEpkIB0CFntqPXnPO7HA==
+X-ME-Sender: <xms:J_-dZacK69KUD8_D_ft_9KzCsPF2zvXyepfenhEbIvU9mMqSvzUJWw>
+    <xme:J_-dZUOvj-U4eLJ52Lh95tW95vwX08aRvqoNMhelUtzPyWiXj_TG9xqTPYI0w4nj_
+    D0Oc0IzcQNSiSDF98s>
+X-ME-Received: <xmr:J_-dZbgpyHgrqJEvfPx9dy8POFhQG6ZW5kJvBngRhARv4WLZr9e91KTETA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeitddggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesmhdtreertddtvdenucfhrhhomheplfhoshhh
+    ucfvrhhiphhlvghtthcuoehjohhshhesjhhoshhhthhrihhplhgvthhtrdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpedtffffvdeuleeifeevleeltddtueffheelffdvveetjeevueff
+    fffhgeettefhfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjohhshhesjhhoshhhthhrihhplhgvthhtrdhorhhg
+X-ME-Proxy: <xmx:J_-dZX9_OI3LlBxWzTlkYUIRX1g4UGDRCsII4A9BmR5ZqMJXPjjCyA>
+    <xmx:J_-dZWsn8somVRMYKdyKaHj-SkK3telWllcbEMHE-3h4caaBc48Grw>
+    <xmx:J_-dZeGGD5pHMsPD5lR2CHvXy-HiyGTWGfjUzg7WaG0PcNaTFfqdGQ>
+    <xmx:KP-dZaKH86N9nXlyosxGXQbJk_gy_cIUfX8x_nq3evlViEq1wylDgQ>
+Feedback-ID: i83e94755:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Jan 2024 21:21:27 -0500 (EST)
+Date: Tue, 9 Jan 2024 18:21:26 -0800
+From: Josh Triplett <josh@joshtriplett.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>
+Subject: Re: [GIT PULL] execve updates for v6.8-rc1
+Message-ID: <ZZ3_Jmb1sb2wQWO_@localhost>
+References: <202401081028.0E908F9E0A@keescook>
+ <CAHk-=wgznerM-xs+x+krDfE7eVBiy_HOam35rbsFMMOwvYuEKQ@mail.gmail.com>
+ <D01C78AC-830C-4D73-9E9F-7FD38CEF2E82@kernel.org>
+ <ZZ2W_xzCSyOgltad@localhost>
+ <CAHk-=wi75tFVtZdzFRr4hsDeUKmeACbgD46rLe+2bcd=4mHBBw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8ZxgmFvOhzj0HYkM"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi75tFVtZdzFRr4hsDeUKmeACbgD46rLe+2bcd=4mHBBw@mail.gmail.com>
 
-From: David Stevens <stevensd@chromium.org>
 
-A virtio_balloon's parent device may be configured so that a
-configuration change interrupt is a wakeup event. Extend the processing
-of such a wakeup event until the balloon finishes inflating or deflating
-by calling pm_stay_awake/pm_relax in the virtio_balloon driver. Note
-that these calls are no-ops if the parent device doesn't support wakeup
-events or if the wakeup events are not enabled.
+--8ZxgmFvOhzj0HYkM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This change allows the guest to use system power states such as s2idle
-without running the risk the virtio_balloon's cooperative memory
-management becoming unresponsive to the host's requests.
+I'm not going to spend a lot of time and energy attempting to argue that
+spawnbench is a representative benchmark, or that scheduling overhead is
+a relevant part of program launch.
 
-Signed-off-by: David Stevens <stevensd@chromium.org>
----
-v2->v3:
- - Use _irq spinlock functions with adjustment_lock in workqueue, since
-   the lock is accessed in an interrupt context.
-v1 -> v2:
- - Use adjustment_signal_pending flag instead of a sequence number
- - Call pm_stay_awake/pm_relax on parent device instead of adding a wake
-   event to the virtio balloon device
+Instead, here are some numbers from Linus's suggested benchmark
+(modified to use execvpe, and to count down rather than up so it doesn't
+need two arguments; modified version and benchmark driver script
+attached; compiled with `musl-gcc -Wall -O3 -s -static`):
 
- drivers/virtio/virtio_balloon.c | 57 +++++++++++++++++++++++++++------
- 1 file changed, 47 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 1fe93e93f5bc..fa710e6c505a 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -119,6 +119,11 @@ struct virtio_balloon {
- 	/* Free page reporting device */
- 	struct virtqueue *reporting_vq;
- 	struct page_reporting_dev_info pr_dev_info;
-+
-+	/* State for keeping the wakeup_source active while adjusting the balloon */
-+	spinlock_t adjustment_lock;
-+	bool adjustment_signal_pending;
-+	bool adjustment_in_progress;
- };
- 
- static const struct virtio_device_id id_table[] = {
-@@ -437,6 +442,31 @@ static void virtio_balloon_queue_free_page_work(struct virtio_balloon *vb)
- 	queue_work(vb->balloon_wq, &vb->report_free_page_work);
- }
- 
-+static void start_update_balloon_size(struct virtio_balloon *vb)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&vb->adjustment_lock, flags);
-+	vb->adjustment_signal_pending = true;
-+	if (!vb->adjustment_in_progress) {
-+		vb->adjustment_in_progress = true;
-+		pm_stay_awake(vb->vdev->dev.parent);
-+	}
-+	spin_unlock_irqrestore(&vb->adjustment_lock, flags);
-+
-+	queue_work(system_freezable_wq, &vb->update_balloon_size_work);
-+}
-+
-+static void end_update_balloon_size(struct virtio_balloon *vb)
-+{
-+	spin_lock_irq(&vb->adjustment_lock);
-+	if (!vb->adjustment_signal_pending && vb->adjustment_in_progress) {
-+		vb->adjustment_in_progress = false;
-+		pm_relax(vb->vdev->dev.parent);
-+	}
-+	spin_unlock_irq(&vb->adjustment_lock);
-+}
-+
- static void virtballoon_changed(struct virtio_device *vdev)
- {
- 	struct virtio_balloon *vb = vdev->priv;
-@@ -444,8 +474,7 @@ static void virtballoon_changed(struct virtio_device *vdev)
- 
- 	spin_lock_irqsave(&vb->stop_update_lock, flags);
- 	if (!vb->stop_update) {
--		queue_work(system_freezable_wq,
--			   &vb->update_balloon_size_work);
-+		start_update_balloon_size(vb);
- 		virtio_balloon_queue_free_page_work(vb);
- 	}
- 	spin_unlock_irqrestore(&vb->stop_update_lock, flags);
-@@ -476,19 +505,25 @@ static void update_balloon_size_func(struct work_struct *work)
- 
- 	vb = container_of(work, struct virtio_balloon,
- 			  update_balloon_size_work);
--	diff = towards_target(vb);
- 
--	if (!diff)
--		return;
-+	spin_lock_irq(&vb->adjustment_lock);
-+	vb->adjustment_signal_pending = false;
-+	spin_unlock_irq(&vb->adjustment_lock);
- 
--	if (diff > 0)
--		diff -= fill_balloon(vb, diff);
--	else
--		diff += leak_balloon(vb, -diff);
--	update_balloon_size(vb);
-+	diff = towards_target(vb);
-+
-+	if (diff) {
-+		if (diff > 0)
-+			diff -= fill_balloon(vb, diff);
-+		else
-+			diff += leak_balloon(vb, -diff);
-+		update_balloon_size(vb);
-+	}
- 
- 	if (diff)
- 		queue_work(system_freezable_wq, work);
-+	else
-+		end_update_balloon_size(vb);
- }
- 
- static int init_vqs(struct virtio_balloon *vb)
-@@ -992,6 +1027,8 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 			goto out_unregister_oom;
- 	}
- 
-+	spin_lock_init(&vb->adjustment_lock);
-+
- 	virtio_device_ready(vdev);
- 
- 	if (towards_target(vb))
--- 
-2.43.0.472.g3155946c3a-goog
+With no patch (for-next/execve before the top two patches,
+21ca59b365c091d583f36ac753eaa8baf947be6f):
 
+=== With only PATH ===
+0.32user 4.08system 0:04.55elapsed 96%CPU (0avgtext+0avgdata 1280maxresident)k
+0inputs+0outputs (0major+1294599minor)pagefaults 0swaps
+
+=== With 64 extra environment variables ===
+0.29user 5.33system 0:05.76elapsed 97%CPU (0avgtext+0avgdata 1280maxresident)k
+0inputs+0outputs (0major+1312477minor)pagefaults 0swaps
+
+
+With my fastpath patch (for-next/execve,
+0a8a952a75f2c5c140939c1616423e240677666c):
+
+=== With only PATH ===
+0.27user 2.40system 0:02.73elapsed 98%CPU (0avgtext+0avgdata 1152maxresident)k
+0inputs+0outputs (0major+695002minor)pagefaults 0swaps
+
+=== With 64 extra environment variables ===
+0.29user 2.59system 0:02.94elapsed 98%CPU (0avgtext+0avgdata 1152maxresident)k
+0inputs+0outputs (0major+712606minor)pagefaults 0swaps
+
+
+With Linus's fastpath patch ("no patch" with Linus's applied, and the
+followup -ENOMEM fix applied):
+
+=== With only PATH ===
+0.28user 2.44system 0:02.80elapsed 97%CPU (0avgtext+0avgdata 1152maxresident)k
+0inputs+0outputs (0major+694706minor)pagefaults 0swaps
+
+=== With 64 extra environment variables ===
+0.29user 2.68system 0:03.06elapsed 97%CPU (0avgtext+0avgdata 1152maxresident)k
+0inputs+0outputs (0major+712431minor)pagefaults 0swaps
+
+
+I can reliably reproduce the differences between these three kernels;
+the differences are well outside the noise. Both fastpaths are *much*
+faster than the baseline, but the double-lookup version is still
+consistently faster than the single-lookup version.
+
+I'm sure it's *possible* to create a benchmark in which the
+single-lookup version is faster. But in this benchmark of *just*
+execvpe, it's still the case that double-lookup is faster, for *some*
+reason.
+
+I agree that it *shouldn't* be, and yet.
+
+--8ZxgmFvOhzj0HYkM
+Content-Type: text/x-csrc; charset=us-ascii
+Content-Disposition: attachment; filename="t-linus-modified.c"
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(int argc, char **argv, char **envp)
+{
+	char buffer[12];
+	int n;
+
+	if (argc != 2)
+		return 1;
+	n = atoi(argv[1]);
+	if (n <= 0)
+		return 0;
+	snprintf(buffer, sizeof(buffer), "%d", n-1);
+	argv[1] = buffer;
+	execvpe("t", argv, envp);
+	return 3;
+}
+
+--8ZxgmFvOhzj0HYkM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=bench
+
+#!/bin/sh
+
+echo === With only PATH ===
+/usr/bin/time env -i PATH=/home/josh/.local/bin:/usr/lib/ccache:/sbin:/bin:/usr/sbin:/usr/bin:. t 100000
+
+echo
+echo === With 64 extra environment variables ===
+/usr/bin/time env -i $(seq 1 64 | sed 's/.*/x&=&/') PATH=/home/josh/.local/bin:/usr/lib/ccache:/sbin:/bin:/usr/sbin:/usr/bin:. t 100000
+
+--8ZxgmFvOhzj0HYkM--
