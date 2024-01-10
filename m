@@ -1,144 +1,121 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55454F601;
-	Wed, 10 Jan 2024 22:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5113350241
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 22:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5wSflxF"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e4f692d06so14706805e9.1;
-        Wed, 10 Jan 2024 14:23:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704925417; x=1705530217; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X/QfoypIDMO0K2Ndnvr0HB3tyVcDqG7prMuOY7ywE+0=;
-        b=M5wSflxFA6hBL0MG8HWJrcWPsCO93dZS5Xtw7PUZdF5GmRWF+5PheI4uQYVn/qaA5J
-         ehBtNVjnCIhdUvktSaPYik56l71xhWWB7S/Ndf6TfEjDPZUPnIo4+Jn+hu+KBzk6oH0M
-         lEPD+L8NbVbdGEl5PHu/Ny9vQNMCI9NefDvc+Dfmk+CNV+nBreMZhfUKDQh2+SgwbE4I
-         EbaWbxZVF2q1pqEgPCw0qpAtHSX2s8MOs3Xt+U5l8u8Wdf/VZTZK3Y11UG6wfgW4b0hK
-         2XrJ7oPf1+skl7+cn2pCsIDo65zfSydu4OaXDCtyYd5jNB3ux3dSlOT7FqwR9KK3KtIt
-         sOJg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jEvgD3ZH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704925449;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fBOWuD+AHY9IJNnA7VqxZgcnrcyqcpD70bfuMsWeGQY=;
+	b=jEvgD3ZHuS3Hmu7ciiWvF/yoeTwYdMJ6pwZxOugz4QttpVQzJrQz5rbI4Pd/VrcZGu1eBJ
+	yqkq7O/WA5mUua+g48xxGg7XqOCwzVVdpZyQzuMt01qDbDGWS9sffSOmQYxqSQ7TQp7ONc
+	dKL5rCmd6eQOkyqoB5wPtNQOq2XqSEE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-pzmDWmo2NZ-zgHUhhjjPXw-1; Wed, 10 Jan 2024 17:24:08 -0500
+X-MC-Unique: pzmDWmo2NZ-zgHUhhjjPXw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40e566259e3so8895875e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:24:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704925417; x=1705530217;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X/QfoypIDMO0K2Ndnvr0HB3tyVcDqG7prMuOY7ywE+0=;
-        b=f22ifJIgQhKIgZjVpBQFKvTKS9OmG273YSazQx8us9FPtkS6sI7tsENJ3ilssVgYzw
-         Tj8x8qxu1xkHz2GwYHcaPaqOlLf55i0lPzvZNA+J+4OWq114EQQy2JdICJ1K8TNqZFDH
-         eg6mV4Gisz0KSOV2X9nMuOpz8/ruiTmvi5BP8hVtMOOHW9/qRyj7ow2t9DraigeKOWT8
-         ihlE5wM/t45HFnfXphYUqjFDOMQY6s3wF4FLWHfA4lg8reu9tglJLYzZguVvM7Gpfyhq
-         GgXHNVMaCYA5gnQ2g5jHtswuzo227IyiHYvp3pduLXVRevN6SWJsLVwpRHa5/cqGp8/K
-         LYfQ==
-X-Gm-Message-State: AOJu0Yzvo2yqDdnIyULV8yKAVyCYVnfpirqiHmbtbqzfWSUFDrbcGmJF
-	b/D2Wcu6t/rAqf64b1tRBYU=
-X-Google-Smtp-Source: AGHT+IEQSzkrGcyzOzDt5HHZwxk+SVLjbEhbbOLOo1a99znKrBnoXfptSw+f92Jwo0GKCKhxJYyVRg==
-X-Received: by 2002:a05:600c:a12:b0:40d:8a05:33a4 with SMTP id z18-20020a05600c0a1200b0040d8a0533a4mr74502wmp.33.1704925416622;
-        Wed, 10 Jan 2024 14:23:36 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2500:a01:3989:437:3f03:172f])
-        by smtp.gmail.com with ESMTPSA id v21-20020a05600c445500b0040e3bdff98asm3494498wmn.23.2024.01.10.14.23.35
+        d=1e100.net; s=20230601; t=1704925446; x=1705530246;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fBOWuD+AHY9IJNnA7VqxZgcnrcyqcpD70bfuMsWeGQY=;
+        b=ke5HvYORxKlKUDrapCAdoceegvQr5OcGQNw5cOCErqlBRydT0drJ4PKaBm+7j4JDEL
+         wZ46cmQKkgonPedADkHmhXVcUdsr+EMVaBHYGLUB4aoeLc8HKgQuBKSF8p8Ek7x64Ew4
+         qaXvO+qbr8+qddWItGbj5Tnm4VJbLApIiqtaM1IxFxUm+XFBhl3//xCZOTdA0ZJX0iQl
+         k5Den5DTXhplkz14CbGRByxz7CAZCI9bA8dbNRdJDO1G94lrVmipv0aCGMtbOkOT1XvB
+         rQj4CS57mRAip811jaofLG+4V9+kghX8EZwMwdvQPNdePQtfrXMA3VvMgLMjUv5ebH0C
+         sbbQ==
+X-Gm-Message-State: AOJu0YyMlt6koeWDHSsyTrDfWfd8u+vPq0qoMvn1qvA+1V1ny9zV761a
+	trWVc9zOpb5x/wGbqfqnpct4itrfpvCmMA0uLFBN98896MniU4lpUSGbZ3s4b6edeR78QtRGCE7
+	EMcmiib/9wUntx+9yKrHek4OXbr4z8P459gCIdfKv
+X-Received: by 2002:a05:600c:4513:b0:40d:72b9:4403 with SMTP id t19-20020a05600c451300b0040d72b94403mr53599wmo.179.1704925446472;
+        Wed, 10 Jan 2024 14:24:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHiLiNT7yBh6m9iddoQfphuCX3lPnIYZ1lLGnv3FnzjuC2FJxsefP3JW1UmZHgl2mqZVRb2ZQ==
+X-Received: by 2002:a05:600c:4513:b0:40d:72b9:4403 with SMTP id t19-20020a05600c451300b0040d72b94403mr53592wmo.179.1704925445992;
+        Wed, 10 Jan 2024 14:24:05 -0800 (PST)
+Received: from redhat.com ([2a06:c701:73ef:4100:2cf6:9475:f85:181e])
+        by smtp.gmail.com with ESMTPSA id s8-20020a05600c45c800b0040e527602c8sm3593896wmo.9.2024.01.10.14.24.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 14:23:36 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] dmaengine: usb-dmac: Avoid format-overflow warning
-Date: Wed, 10 Jan 2024 22:22:10 +0000
-Message-Id: <20240110222210.193479-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 10 Jan 2024 14:24:05 -0800 (PST)
+Date: Wed, 10 Jan 2024 17:24:02 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Steve Sistare <steven.sistare@oracle.com>
+Cc: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	Jason Wang <jasowang@redhat.com>,
+	Si-Wei Liu <si-wei.liu@oracle.com>,
+	Eugenio Perez Martin <eperezma@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Dragos Tatulea <dtatulea@nvidia.com>, Eli Cohen <elic@nvidia.com>,
+	Xie Yongji <xieyongji@bytedance.com>
+Subject: Re: [RFC V1 01/13] vhost-vdpa: count pinned memory
+Message-ID: <20240110172306-mutt-send-email-mst@kernel.org>
+References: <1704919215-91319-1-git-send-email-steven.sistare@oracle.com>
+ <1704919215-91319-2-git-send-email-steven.sistare@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1704919215-91319-2-git-send-email-steven.sistare@oracle.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Wed, Jan 10, 2024 at 12:40:03PM -0800, Steve Sistare wrote:
+> Remember the count of pinned memory for the device.
+> 
+> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
 
-gcc points out that the fix-byte buffer might be too small:
-drivers/dma/sh/usb-dmac.c: In function 'usb_dmac_probe':
-drivers/dma/sh/usb-dmac.c:720:34: warning: '%u' directive writing between 1 and 10 bytes into a region of size 3 [-Wformat-overflow=]
-  720 |         sprintf(pdev_irqname, "ch%u", index);
-      |                                  ^~
-In function 'usb_dmac_chan_probe',
-    inlined from 'usb_dmac_probe' at drivers/dma/sh/usb-dmac.c:814:9:
-drivers/dma/sh/usb-dmac.c:720:31: note: directive argument in the range [0, 4294967294]
-  720 |         sprintf(pdev_irqname, "ch%u", index);
-      |                               ^~~~~~
-drivers/dma/sh/usb-dmac.c:720:9: note: 'sprintf' output between 4 and 13 bytes into a destination of size 5
-  720 |         sprintf(pdev_irqname, "ch%u", index);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Can we have iommufd support in vdpa so we do not keep extending these hacks?
 
-Maximum number of channels for USB-DMAC as per the driver is 1-99 so use
-u8 instead of unsigned int/int for DMAC channel indexing and make the
-pdev_irqname string long enough to avoid the warning.
 
-While at it use scnprintf() instead of sprintf() to make the code more
-robust.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/dma/sh/usb-dmac.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-index a9b4302f6050..f7cd0cad056c 100644
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -706,10 +706,10 @@ static const struct dev_pm_ops usb_dmac_pm = {
- 
- static int usb_dmac_chan_probe(struct usb_dmac *dmac,
- 			       struct usb_dmac_chan *uchan,
--			       unsigned int index)
-+			       u8 index)
- {
- 	struct platform_device *pdev = to_platform_device(dmac->dev);
--	char pdev_irqname[5];
-+	char pdev_irqname[6];
- 	char *irqname;
- 	int ret;
- 
-@@ -717,7 +717,7 @@ static int usb_dmac_chan_probe(struct usb_dmac *dmac,
- 	uchan->iomem = dmac->iomem + USB_DMAC_CHAN_OFFSET(index);
- 
- 	/* Request the channel interrupt. */
--	sprintf(pdev_irqname, "ch%u", index);
-+	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
- 	uchan->irq = platform_get_irq_byname(pdev, pdev_irqname);
- 	if (uchan->irq < 0)
- 		return -ENODEV;
-@@ -768,8 +768,8 @@ static int usb_dmac_probe(struct platform_device *pdev)
- 	const enum dma_slave_buswidth widths = USB_DMAC_SLAVE_BUSWIDTH;
- 	struct dma_device *engine;
- 	struct usb_dmac *dmac;
--	unsigned int i;
- 	int ret;
-+	u8 i;
- 
- 	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
- 	if (!dmac)
-@@ -869,7 +869,7 @@ static void usb_dmac_chan_remove(struct usb_dmac *dmac,
- static void usb_dmac_remove(struct platform_device *pdev)
- {
- 	struct usb_dmac *dmac = platform_get_drvdata(pdev);
--	int i;
-+	u8 i;
- 
- 	for (i = 0; i < dmac->n_channels; ++i)
- 		usb_dmac_chan_remove(dmac, &dmac->channels[i]);
--- 
-2.34.1
+> ---
+>  drivers/vhost/vdpa.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+> index da7ec77cdaff..10fb95bcca1a 100644
+> --- a/drivers/vhost/vdpa.c
+> +++ b/drivers/vhost/vdpa.c
+> @@ -59,6 +59,7 @@ struct vhost_vdpa {
+>  	int in_batch;
+>  	struct vdpa_iova_range range;
+>  	u32 batch_asid;
+> +	long pinned_vm;
+>  };
+>  
+>  static DEFINE_IDA(vhost_vdpa_ida);
+> @@ -893,6 +894,7 @@ static void vhost_vdpa_pa_unmap(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
+>  			unpin_user_page(page);
+>  		}
+>  		atomic64_sub(PFN_DOWN(map->size), &dev->mm->pinned_vm);
+> +		v->pinned_vm -= PFN_DOWN(map->size);
+>  		vhost_vdpa_general_unmap(v, map, asid);
+>  		vhost_iotlb_map_free(iotlb, map);
+>  	}
+> @@ -975,9 +977,10 @@ static int vhost_vdpa_map(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
+>  		return r;
+>  	}
+>  
+> -	if (!vdpa->use_va)
+> +	if (!vdpa->use_va) {
+>  		atomic64_add(PFN_DOWN(size), &dev->mm->pinned_vm);
+> -
+> +		v->pinned_vm += PFN_DOWN(size);
+> +	}
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.39.3
 
