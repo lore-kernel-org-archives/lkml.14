@@ -1,88 +1,99 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0C04D582
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 18:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6074D13B
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 18:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FmQ7WIj2"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40d5336986cso58065945e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:42:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TTVXsC5F"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-429bdb17616so15931cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:45:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704912119; x=1705516919; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l3HxkPxdBK1lXd88gyjH7DsIkkBoMbuVmr437RwfE1I=;
-        b=FmQ7WIj2Qb/it2bvlvsFv23+BrZxrEavTAm9V7+geJw/r1oN+vzQTFXPD5B5iKcR8k
-         sdm/HLpaWdJBfXIB64u1ECAWu5DqhjFOsjqKiul05tal/0C3s7OG7mJwvROCcvOGXbP/
-         PbuftZU1sIUdtgN+iYz+CHv76GfvF1MOwJwthCCvX/U2dkSaSiwbehTKBZWJSffuc+y5
-         DftTx640Bl15uewmFBh9ZdsXIHPjJsw0nLoOHsonvENtvOjPIanANqeAVdi14fArPoiy
-         9OEVRkdqa45FrybwzsJ1u5JJm3pTroGA+vly/uSus4bcTG01JsDHmW45XK5LunM4OIeG
-         PBYg==
+        d=google.com; s=20230601; t=1704912315; x=1705517115; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r3Eh3vWd3uLjS4vTvLciXZgkfWKFz3UWutS6XF/j3R4=;
+        b=TTVXsC5Fh6eVl8Sh95GDMtjgMD/b2rBDi6chTfjGFBM6OoMekEw3KnEckkRXOgSj04
+         O+wFZVM6JxT+fG2Tmzu6PvNOSnKShZ5rIyKEFTCXkn/eNEkfB7IL3L8bw0hM9rgbAyvB
+         W+y+6hdkxb5jjeKNE1YSqlkuzaIa0NeRqbXSlSzOrmg/Q+XyJ5oiSU/YpLJDmpVwFd0X
+         +8ByoXimM0g+s1rFOmurdfYS3lLgcWCgRQfW2O99Sp6sXjNv3Ohvoz3euXitGMaxWrLJ
+         4naYTbQ5544BgX+D5Von5RRvZWBMRB82OcomWaLiNbJqxe+kt9KCOzFSNpRtHmvWujrM
+         Qr6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704912119; x=1705516919;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3HxkPxdBK1lXd88gyjH7DsIkkBoMbuVmr437RwfE1I=;
-        b=MF/5KQceflDdr2WwBpqRqJNV08lXi/OlUhO8Ro3ZRITcpdVWmLfL2Q5Qi1khddGJ9E
-         NO4kLEaU7IMqPbNv/ea8u/3FCUjFLlErrvrDdr431Wioyl4YexfkCXIxB3RfhS6K83Sn
-         YJfKiDFpp7h7xhRqrsCYAzrBR+cCLPUssrmsVLeY95cLWr5WZyt4dyOa1Xhv8Rzf1qUe
-         0eYBul/+rz7GajRndaST/VhFTXJm34u0UM9E3TsIwtsU18CTuxZnSnJqSFMWcY7Ryydk
-         +axwvYc7g9fh2EPsmn2FO5mOL5ywsMoPvT3oKbJ4ZdCo8vLwscn2c5fSCmwzd5AzwO56
-         rGhQ==
-X-Gm-Message-State: AOJu0YxrFpgULrOCqbyQ8TOYoKACUt/ur34qny4cdUM4HjO2Q1hHFxlM
-	XcQgxI8dx+UAHErguPjw/mDJb3d6by9sMw==
-X-Google-Smtp-Source: AGHT+IES+g1sC7b6OzWxWSSixdTsH+FX0WM6FCEUVb4ZC/UPgLyUuJv1+Fl18jMeM7lrniunOBA7jA==
-X-Received: by 2002:a05:600c:4e8f:b0:40e:4b48:57d4 with SMTP id f15-20020a05600c4e8f00b0040e4b4857d4mr689256wmq.180.1704912119155;
-        Wed, 10 Jan 2024 10:41:59 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id n40-20020a05600c3ba800b0040e541ddcb1sm3081607wms.33.2024.01.10.10.41.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 10:41:59 -0800 (PST)
-Date: Wed, 10 Jan 2024 21:41:55 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Karan Tilak Kumar <kartilak@cisco.com>
-Cc: Satish Kharat <satishkh@cisco.com>,
-	Sesidhar Baddela <sebaddel@cisco.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Arulprabhu Ponnusamy <arulponn@cisco.com>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] scsi: fnic: unlock on error path in fnic_queuecommand()
-Message-ID: <5360fa20-74bc-4c22-a78e-ea8b18c5410d@moroto.mountain>
+        d=1e100.net; s=20230601; t=1704912315; x=1705517115;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r3Eh3vWd3uLjS4vTvLciXZgkfWKFz3UWutS6XF/j3R4=;
+        b=TPSZwyIna6qOeOEmzMrIBCyGtBWtDMEQn9+smk62YkLHgURx2xuT/0sh/TqFv3LgTd
+         fuwuTAjSlH+8cpJHZG/KD5oje2yapIb+k2pG2CDHh8aH1LrpzbeeReGAq+y4tHKh3EDT
+         8Bh5mdXFohoh4Yn860OVDbChhnxvRPVk/IcnXKf/h9yf0lBXCop+LPHkrQ7jRI5qigiF
+         Q9gPUw9RmupDalcAiqQ0siWSZVn7rrZ40POPSKx65dmO6JWE4Z0MvpSdIJ7TFYC5Ygu4
+         f223mt834pNKQQkQZbHlhYv7zmtzhgcJ1vqwYgEN7LfCOsJa7X2baoii8oQVKRu1yxJ/
+         4sbg==
+X-Gm-Message-State: AOJu0YxfYXgFshfzZmN+LP8L/5niAHNfONlBJbEFM7YBFG02XB7Hv5+Q
+	7NXDTFHlWC1ojrEBYXPjklqEDfTiZb0qazEuZO/DF8L59/nS
+X-Google-Smtp-Source: AGHT+IH1g5oAkA/mXv6S15A1WyjlDf9P6tGy0rPvYtU+BuRDJsscMQ1qY1dsO/ODnyLO6ERHe77CJ8mkYXE3Bk4LEFE=
+X-Received: by 2002:ac8:5d4b:0:b0:429:8c96:3710 with SMTP id
+ g11-20020ac85d4b000000b004298c963710mr14700qtx.9.1704912314663; Wed, 10 Jan
+ 2024 10:45:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <20240109011455.1061529-1-almasrymina@google.com> <20240109011455.1061529-2-almasrymina@google.com>
+In-Reply-To: <20240109011455.1061529-2-almasrymina@google.com>
+From: Shakeel Butt <shakeelb@google.com>
+Date: Wed, 10 Jan 2024 10:45:00 -0800
+Message-ID: <CALvZod4Ngqn0scEM9JhRCav88ZFB=LLmTiLj9fd_04moCLTsyg@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v5 1/2] net: introduce abstraction for
+ network memory
+To: Mina Almasry <almasrymina@google.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Call spin_unlock_irqrestore(&fnic->wq_copy_lock[hwq], flags) before
-returning.
+On Mon, Jan 8, 2024 at 5:15=E2=80=AFPM Mina Almasry <almasrymina@google.com=
+> wrote:
+>
+> Add the netmem_ref type, an abstraction for network memory.
+>
+> To add support for new memory types to the net stack, we must first
+> abstract the current memory type. Currently parts of the net stack
+> use struct page directly:
+>
+> - page_pool
+> - drivers
+> - skb_frag_t
+>
+> Originally the plan was to reuse struct page* for the new memory types,
+> and to set the LSB on the page* to indicate it's not really a page.
+> However, for compiler type checking we need to introduce a new type.
+>
+> netmem_ref is introduced to abstract the underlying memory type.
+> Currently it's a no-op abstraction that is always a struct page
+> underneath. In parallel there is an undergoing effort to add support
+> for devmem to the net stack:
+>
+> https://lore.kernel.org/netdev/20231208005250.2910004-1-almasrymina@googl=
+e.com/
+>
+> netmem_ref can be pointers to different underlying memory types, and the
+> low bits are set to indicate the memory type. Helpers are provided
+> to convert netmem pointers to the underlying memory type (currently only
+> struct page). In the devmem series helpers are provided so that calling
+> code can use netmem without worrying about the underlying memory type
+> unless absolutely necessary.
+>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+>
 
-Fixes: c81df08cd294 ("scsi: fnic: Add support for multiqueue (MQ) in fnic driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/scsi/fnic/fnic_scsi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
-index 4d6db4509e75..8d7fc5284293 100644
---- a/drivers/scsi/fnic/fnic_scsi.c
-+++ b/drivers/scsi/fnic/fnic_scsi.c
-@@ -546,6 +546,7 @@ int fnic_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *sc)
- 	if (fnic->sw_copy_wq[hwq].io_req_table[blk_mq_unique_tag_to_tag(mqtag)] != NULL) {
- 		WARN(1, "fnic<%d>: %s: hwq: %d tag 0x%x already exists\n",
- 				fnic->fnic_num, __func__, hwq, blk_mq_unique_tag_to_tag(mqtag));
-+		spin_unlock_irqrestore(&fnic->wq_copy_lock[hwq], flags);
- 		return SCSI_MLQUEUE_HOST_BUSY;
- 	}
- 
--- 
-2.42.0
-
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
