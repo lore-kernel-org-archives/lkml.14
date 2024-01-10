@@ -1,31 +1,34 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C989D4C62D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990CD4CB55
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNajS-0007JK-A6; Wed, 10 Jan 2024 16:43:06 +0100
+	id 1rNajS-0007JH-A6; Wed, 10 Jan 2024 16:43:06 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNajR-001jUh-PQ; Wed, 10 Jan 2024 16:43:05 +0100
+	id 1rNajR-001jUY-4g; Wed, 10 Jan 2024 16:43:05 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNajR-006c4T-2J;
+	id 1rNajR-006c4H-0C;
 	Wed, 10 Jan 2024 16:43:05 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org,
+Cc: Rob Herring <robh@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	linuxppc-dev@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] macintosh: windfarm_pm72: Convert to platform remove callback returning void
-Date: Wed, 10 Jan 2024 16:42:51 +0100
-Message-ID:  <0406f1db35f23f66fa8a5f8c756fa456601795c4.1704900449.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 1/7] macintosh: therm_windtunnel: Convert to platform remove callback returning void
+Date: Wed, 10 Jan 2024 16:42:48 +0100
+Message-ID:  <74b35a7183dead9cb8359b38356e1a70e720c53e.1704900449.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1704900449.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1704900449.git.u.kleine-koenig@pengutronix.de>
@@ -36,7 +39,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1583; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=aw806HvRXreeZA5T9PNUL536MWa1crg4mYwzubfZCqM=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlnrr8BWOzxqiESpUlKHCPvCHKSw6PyFt6YKTab bdc2G3052iJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZZ66/AAKCRCPgPtYfRL+ Tg/4CAClfdt/GaZ8eDUKP58DKL1Azfj+Hgi4v2X0clejkOaCg6LPMMu3E2Gk9+yUxfdZqdYhpZj sRWWI3WAC8nU4IjVBsT3k5Qt8sChQRoyYiA0SIvOZ8IZjbmWx5M9rLnaovj+ES8igoru/LtB7+r 8ecAZegjb09AqiVm/f3rz6PMsT6Dy5iCdq+fBkgnuvLVXZMBxlOKo37tPoQB9VbYOgfxOqIXgfk kiS8NxZosinnOR0wwr5P50CoW2aahylxzcFS9UhQ5hFsy78MGFsGMIJiZlX3At/kCSaN36GVaXH Ux/lkNTzYhpbViGyvqhDy06cNGUSxUvVg7qfnM3QIbcji5Nk
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1673; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=wIMIdTe+K947pJ7HyIvyj/RU52wHIptwgMFUY9QCPbU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlnrr5l0AtXlvqg8+OuSJ+g70r7wMj9tyeZPwiL 4EQGUfHGDCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZZ66+QAKCRCPgPtYfRL+ TtSgB/9nM0q7cqw2P3IaAJfMIWn+HNub1qIM8irQgmtAYZoKYkV59mB1pn5cLYY5yTBoYpZw95y mZiFfHFxG7AGS8Nq7Zj24IosVpvniBmrf/lkglLBMi4ruTzHZIE2XzWLFW2k9Md4nOc5usr9eb5 jmt3DbKLni6966NyStqEWQX7l4CVa/3CVk4pIwSOHyfjg+MEDjUGe7xrq3701MoQEEvVmC+Q9Sj mNA7qCdfIr0vljW6fgkFS74QllLKwPm/69+834WAoqriP1KCp8kcuL0FgQrEXDdEeAR+s6ooTHU yPRPx0O1hP8adVAAMwnhR2FnVyXVlPXycVkzdsiPMQ4vFQDf
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,33 +62,35 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/macintosh/windfarm_pm72.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/macintosh/therm_windtunnel.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/macintosh/windfarm_pm72.c b/drivers/macintosh/windfarm_pm72.c
-index e21f973551cc..14fa1e9ac3e0 100644
---- a/drivers/macintosh/windfarm_pm72.c
-+++ b/drivers/macintosh/windfarm_pm72.c
-@@ -775,17 +775,14 @@ static int wf_pm72_probe(struct platform_device *dev)
- 	return 0;
+diff --git a/drivers/macintosh/therm_windtunnel.c b/drivers/macintosh/therm_windtunnel.c
+index 3c1b29476ce2..37cdc6931f6d 100644
+--- a/drivers/macintosh/therm_windtunnel.c
++++ b/drivers/macintosh/therm_windtunnel.c
+@@ -481,11 +481,9 @@ static int therm_of_probe(struct platform_device *dev)
+ 	return -ENODEV;
  }
  
--static int wf_pm72_remove(struct platform_device *dev)
-+static void wf_pm72_remove(struct platform_device *dev)
+-static int
+-therm_of_remove( struct platform_device *dev )
++static void therm_of_remove(struct platform_device *dev)
  {
- 	wf_unregister_client(&pm72_events);
--
--	/* should release all sensors and controls */
+ 	i2c_del_driver( &g4fan_driver );
 -	return 0;
  }
  
- static struct platform_driver wf_pm72_driver = {
- 	.probe	= wf_pm72_probe,
--	.remove	= wf_pm72_remove,
-+	.remove_new = wf_pm72_remove,
- 	.driver	= {
- 		.name = "windfarm",
+ static const struct of_device_id therm_of_match[] = {{
+@@ -501,7 +499,7 @@ static struct platform_driver therm_of_driver = {
+ 		.of_match_table = therm_of_match,
  	},
+ 	.probe		= therm_of_probe,
+-	.remove		= therm_of_remove,
++	.remove_new	= therm_of_remove,
+ };
+ 
+ struct apple_thermal_info {
 -- 
 2.43.0
 
