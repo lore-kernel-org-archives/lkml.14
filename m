@@ -1,226 +1,242 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2090.outbound.protection.outlook.com [40.107.117.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E243A8C6;
-	Wed, 10 Jan 2024 08:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A93D3987D
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 08:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qjBrksVJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RY4cswgs";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qjBrksVJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RY4cswgs"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1F65B21E17;
-	Wed, 10 Jan 2024 08:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704877184; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0GtM+U/m1/8CwPcl+4EBtNE2sj1pzKEolTyiwmoL/Us=;
-	b=qjBrksVJ7ayqtT+hHMQ3E32pBal7nh9Y3++2UcNMq4F1aQ3R606xDvDXyS+8yjW8lBsHyI
-	zAW5/0Mpb1ig+YsUu+Cz467VrCMZ8P/EL0QCo9fUb6+aYrPjF4yCSvFvSD3XKPexpTJLzA
-	+575X+EQKkKnU9eakb6GIjaE4bFTFB4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704877184;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0GtM+U/m1/8CwPcl+4EBtNE2sj1pzKEolTyiwmoL/Us=;
-	b=RY4cswgsDRFXGOkmPW9cy8ROFg9IKH3nV+B1DI5nTja1CXyN+Fuu1V6t+BKZ6incmHbQow
-	/wczs5i4KHO89nBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704877184; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0GtM+U/m1/8CwPcl+4EBtNE2sj1pzKEolTyiwmoL/Us=;
-	b=qjBrksVJ7ayqtT+hHMQ3E32pBal7nh9Y3++2UcNMq4F1aQ3R606xDvDXyS+8yjW8lBsHyI
-	zAW5/0Mpb1ig+YsUu+Cz467VrCMZ8P/EL0QCo9fUb6+aYrPjF4yCSvFvSD3XKPexpTJLzA
-	+575X+EQKkKnU9eakb6GIjaE4bFTFB4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704877184;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0GtM+U/m1/8CwPcl+4EBtNE2sj1pzKEolTyiwmoL/Us=;
-	b=RY4cswgsDRFXGOkmPW9cy8ROFg9IKH3nV+B1DI5nTja1CXyN+Fuu1V6t+BKZ6incmHbQow
-	/wczs5i4KHO89nBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CCB0E13786;
-	Wed, 10 Jan 2024 08:59:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MHKKMX9cnmVXewAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 10 Jan 2024 08:59:43 +0000
-Message-ID: <7234513d-45c9-4bda-a537-4278387cedc4@suse.cz>
-Date: Wed, 10 Jan 2024 09:59:43 +0100
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="TUsp0rqa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cTW+Nmz+wb70zlX/Fh/mT5Z3P3MApywBN0z0NpQB9Xkl+07aVJW7Mia6Ck9PjNXGMCUjHcGGAdf/KQm1jkFg/pri88za2kx5MYtG6gONWTd5pw8OymW/s+GYay1WDEnNenvDEPwSjZSoCYnoG6eHlJkCDDssvVC+4ySeCdi/jQk4VIgUe1EOm9StRO/TgnWM69ZalFwO5NDrD//A9P3l1Xbd1A3pORW5fey7ULtwHntVXZDkxmQJ5eg8t+bL0HndSKmGigs6RfvPKbrLNfQ3CZ1Ou6mJ0I7Opmqh7+1oXT1OZmKqfzulMcRiFCMkPrLVlol7JwMkiTmvtnAjKtpOcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rtbclN8Jy24/ACtT2+yCilA0LOK9Ph27zza71V9+Ruc=;
+ b=QJodKA8/zb1fLOGJ77ViPOYWGTye6eN9lkkakt4OCsuzN5bqaNNRNcJqIAfmM9MsRh4ODZcDkESmxbHSxDBrMJd8odqWTXkLRa4ez2L9SmzUClpV6wEKlh4uBa69u3GZHjJczTkY8VeeWPpHotPTbrVka5lEwzMMVNh+r3ouwNxk8WqJGFsbsYrTIRbmDOmNuzzUa2aAokWkbaBBqJrYKPBopuGtQkFFMSiT7IZxP6KlYLRg5XIbnGMcLTtlTHS2hNleO0lEMyK0xQZANNzWbQ6zBU4r1ni5dN8g0Bgj9aIviz/4d4Tso4uwzs159gjkWzLcMjmsJoyYlK7gp9Rxdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rtbclN8Jy24/ACtT2+yCilA0LOK9Ph27zza71V9+Ruc=;
+ b=TUsp0rqacNh+zEm1J/BC2/gYwLQZv9k8c2O/EUcO17bbE3NpAe9MAq+Jt6UQWWSvmI3eouugZPHlxpDBeHBAVSHR/ibhrnssRy9PmXggmtApcit11ONu78qEOu3jFqeXb82J0n8HQBQViPsRGVhOB2HStfRBQ45JxqNRxsGHYucQsQOfTSH59nEKhhXVRKIvnWta9v9rRvbpTT0dHn8E/skzo3rFuuzfsjd7NwxEyTwxdYZGxyeNQyjalYo3VSdr3xpZWBIVBK0cI/IZDFixCb6Qo9yLjfYkcw8rc+eV1+89SLxubuCqfEgTc4ONrBJDFJJabJto9VJww+HaHye5Rg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by JH0PR06MB7082.apcprd06.prod.outlook.com (2603:1096:990:68::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
+ 2024 08:59:44 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::6e05:7a08:4656:761f]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::6e05:7a08:4656:761f%4]) with mapi id 15.20.7159.020; Wed, 10 Jan 2024
+ 08:59:44 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>
+Cc: Yangtao Li <frank.li@vivo.com>,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] f2fs: compress: reserve blocks on released compress inode while writing
+Date: Wed, 10 Jan 2024 02:10:08 -0700
+Message-Id: <20240110091009.138206-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGXP274CA0014.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::26)
+ To SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 15/26] x86/sev: Introduce snp leaked pages list
-To: "Kalra, Ashish" <ashish.kalra@amd.com>,
- Michael Roth <michael.roth@amd.com>, x86@kernel.org
-Cc: kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org,
- linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
- tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de,
- thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org,
- pbonzini@redhat.com, seanjc@google.com, vkuznets@redhat.com,
- jmattson@google.com, luto@kernel.org, dave.hansen@linux.intel.com,
- slp@redhat.com, pgonda@google.com, peterz@infradead.org,
- srinivas.pandruvada@linux.intel.com, rientjes@google.com, tobin@ibm.com,
- bp@alien8.de, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
- jarkko@kernel.org, nikunj.dadhania@amd.com, pankaj.gupta@amd.com,
- liam.merwick@oracle.com, zhi.a.wang@intel.com
-References: <20231230161954.569267-1-michael.roth@amd.com>
- <20231230161954.569267-16-michael.roth@amd.com>
- <f221ad9d-6fc3-466b-bacf-23986b8655f5@suse.cz>
- <5cdd2093-b007-404d-96a8-89b3aa6e6e4b@amd.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <5cdd2093-b007-404d-96a8-89b3aa6e6e4b@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 1F65B21E17
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=qjBrksVJ;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=RY4cswgs
-X-Spam-Score: -4.50
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 R_RATELIMIT(0.00)[to_ip_from(RLisu716frudqkg98kczdd9eac)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[37];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|JH0PR06MB7082:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff5213ad-b0de-4aa6-2798-08dc11ba7d11
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Znhj9+JQOgwLzmuiaggT6lxyrCF/kIwhGAy2MMA/p6B7ilcf2oCe4pEbGoPrW/6QhoNqVMMrS+y0QARmrBAbVmjKxa+DdbL+L1snHv1ThMgkPKwxie5jwVOkrrTmqbQk713NTog0Y3HfBgXhAv7cnZWUJ5qh5jKR+5j3/y993usdNX4qlxNHKp6DAr+P7adCQfNr+2lB09CKR1acaYS5A6yJ99e74KaB7gGV4V68inQswj/NJ+edxO0ZTWrOw+QThQ0daHmU4tCQVzhQggviUj66vIcIgqLfIQkApwazHv+FW5m53RDmv6TeuLrFDNSU6jxmGy4o9cJxh9oqfoRTs6LF8WYk2hShZqpgfIscotkU89e0NXr13OVPxdQmvRfv1gBLTbAGrCqb5vRp21Dtcv+xilRoxU+mixBwDSt6rJIUcah2SyRqINTwaQh3E78jUSb71AsRmm8Q0g5TktjOgAhp3KtweEwNmlEJHmnwF0OW1cOXZ0FJ1E5H5pG37Dkb8ZWZG8F9Ek+J+qFrZSS7J4zk6YuJqhfs7Mqen2k4b23ZMWShP8Al8BygnJXklSdvt5sL8huUjl+6ygBOp9wUGH8lL8+P4625kEZ5+6Ma0OGyYSQ357Vfcb0e4KBIADrZ
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(346002)(396003)(376002)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(478600001)(66556008)(83380400001)(66476007)(66946007)(52116002)(6506007)(6512007)(6666004)(41300700001)(36756003)(6486002)(26005)(1076003)(110136005)(316002)(2616005)(38100700002)(4326008)(8936002)(8676002)(5660300002)(86362001)(38350700005)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ExB0O7UiGYOexeUc1UP3VVxJDC9FfAIgrtEfdcmfdwBtTT5suAH6vwwOB110?=
+ =?us-ascii?Q?Tvt97l9syXiLtgWkJ5r+kefFGnm/dXvzq37XNJB0XUNpc0LRfAtx5to+Cjgq?=
+ =?us-ascii?Q?xyOa8s55BPeqQVQrHMzoIUxX5V9uN3+Z/uzspeJjtPhfOzb0T6GlTasWZLlG?=
+ =?us-ascii?Q?QAo0C9uofd69KMpHkV/4sIPvwpYNYdN09YK2OC3wwhbWwsQ6wjasIaOo8mXA?=
+ =?us-ascii?Q?l2W9iiAwsV0wK2lVql+9utY55h//WRLKbBzE0a794a/639p9EjSFm8Zp2w49?=
+ =?us-ascii?Q?l80/u/aI4hGEjJZjU3m/pjr7JK2GJ+oU6Y0Pn+3oW0Vz94OMpzNCcEnVc9QC?=
+ =?us-ascii?Q?MaSuctBkQj2fSKTCzdbMm0p4ou4pOIT5ffWa5qagRZ6K9kzELh9jLJtXUO5a?=
+ =?us-ascii?Q?3qCe+okbmiNuf0rIOLXd3OcIzDUhzxhHNCgs1EMLlBIIA+lMkgmf8nEZRpw+?=
+ =?us-ascii?Q?l68m2SYYECKnBIZLUIVXDbfqz8zBtbicYh6h18Aqu+S0sLOJNhK+fa5NF0wB?=
+ =?us-ascii?Q?CcQi+jcakx1fSuyb7Q2pUtFOSAoJMG4yByBOGgRnwQgfO1QhpTQFea3QWo5j?=
+ =?us-ascii?Q?p1rQ3+YL8ZHJ3VIaz6foPl148uuaXyJu+HzZKjed7qemVK+1y1NI0isdPf6w?=
+ =?us-ascii?Q?XfKbQ+6lHVu2Pe18fr4R13osM1DH1P7kS7xFRY/MykidqTusBo0fYjehX4Qq?=
+ =?us-ascii?Q?LHh09IRJUl2nHmdqKxazHdtU4REwDM83ial/G+4cVW+XlJtaAYScs8D6KPf2?=
+ =?us-ascii?Q?dBpfvQAW63czXctmRF8tdVqnL6JG4ggA6mf1FNo2kGtierfsxeCG2K0jn9oG?=
+ =?us-ascii?Q?8Qu5r3Ll1YXWqOoTkH6IoiuvluGCxn2vEcC2Pcv+duT56fcgQ/y3OL7bYjcV?=
+ =?us-ascii?Q?SwLUAz4jkGW02jRiXC4RH6sZn1XC4UIcDP+VKRfXw6ANz+RGOSW4Ji0hLJ1O?=
+ =?us-ascii?Q?2lhqM1SFUxhPJ2EXUKKZ7EPVGY3fbzNNAItvXBSfLthXLDsjFCHRWZLIHyOR?=
+ =?us-ascii?Q?PMcIHCdwUhdodTYQmr9D/hi046MqsvTcaJKR8jq8chjHxcAjj62pywglxA5L?=
+ =?us-ascii?Q?mZu/TwU7heGRjVgfllFLBDZkx1MyUvcCClQ5mvw/8pl3tf6TANMdQduk/iiv?=
+ =?us-ascii?Q?/Yd9XK4bQRGxFGnUfOa9doiTQEKp7laI4twP+SMBBwJMaeKC1CdnosF6R5hE?=
+ =?us-ascii?Q?hHjy+q9vf34RFZqhK4MVm6npUa6DsmGyRy4USjE3JOyctybVcyTyW2pryR2D?=
+ =?us-ascii?Q?6oF2nkBTjYBM0+lB6MhwLdZrry+p8O4xykTKr3QrqeSLZPg9ARyM9ZOQhK9X?=
+ =?us-ascii?Q?Due+5+gAdweJyHYpJ4o9eo8yrsjHzCabTTzniC1drIsvmW4RDsD0XhK0hHyl?=
+ =?us-ascii?Q?gtlVhP8ObytdUy0WjEwrWsRe+rZ3ue9DA8NN5IwCPbU9mkUFNgxrNXcK6gSy?=
+ =?us-ascii?Q?T5fu1+dJA7/jK06e8Wuvyb4uEUnmk5oK7DoMta5LLoT7XTor8nhAqOYYL0E4?=
+ =?us-ascii?Q?An7p+R0viWOYhbDJ4J0vEsCYCXhr6+NmDoAz4ELN4NAFDTxvIABbfscfsA7J?=
+ =?us-ascii?Q?XfkSSW9px3scdGsXHtL0kFETgZuzZSoWMi7ACXlr?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff5213ad-b0de-4aa6-2798-08dc11ba7d11
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 08:59:44.2226
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7Uk4b9zyKh/l+PbkWONBMJgkLd6WwzchsO50g21Y79LrhMz+BZC2/NpqTq7sdxCAg7frls/zYSp/6SeJVuag7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7082
 
-On 1/9/24 23:19, Kalra, Ashish wrote:
-> Hello Vlastimil,
-> 
-> On 1/8/2024 4:45 AM, Vlastimil Babka wrote:
->> On 12/30/23 17:19, Michael Roth wrote:
->>> From: Ashish Kalra <ashish.kalra@amd.com>
->>>
->>> Pages are unsafe to be released back to the page-allocator, if they
->>> have been transitioned to firmware/guest state and can't be reclaimed
->>> or transitioned back to hypervisor/shared state. In this case add
->>> them to an internal leaked pages list to ensure that they are not freed
->>> or touched/accessed to cause fatal page faults.
->>>
->>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
->>> [mdr: relocate to arch/x86/virt/svm/sev.c]
->>> Signed-off-by: Michael Roth <michael.roth@amd.com>
->> Hi, sorry I didn't respond in time to the last mail discussing previous
->> version in
->> https://lore.kernel.org/all/8c1fd8da-912a-a9ce-9547-107ba8a450fc@amd.com/
->> due to upcoming holidays.
->>
->> I would rather avoid the approach of allocating container objects:
->> - it's allocating memory when effectively losing memory, a dangerous thing
->> - are all the callers and their context ok with GFP_KERNEL?
->> - GFP_KERNEL_ACCOUNT seems wrong, why would we be charging this to the
->> current process, it's probably not its fault the pages are leaked? Also the
->> charging can fail?
->> - given the benefit of having leaked pages on a list is basically just
->> debugging (i.e. crash dump or drgn inspection) this seems too heavy
->>
->> I think it would be better and sufficient to use page->lru for order-0 and
->> head pages, and simply skip tail pages (possibly with adjusted warning
->> message for that case).
->>
->> Vlastimil
->>
->> <snip
-> 
-> Considering the above thoughts, this is updated version of 
-> snp_leak_pages(), looking forward to any review comments/feedback you 
-> have on the same:
-> 
-> void snp_leak_pages(u64 pfn, unsigned int npages)
-> {
->          struct page *page = pfn_to_page(pfn);
-> 
->          pr_debug("%s: leaking PFN range 0x%llx-0x%llx\n", __func__, 
-> pfn, pfn + npages);
-> 
->          spin_lock(&snp_leaked_pages_list_lock);
->          while (npages--) {
->                  /*
->                   * Reuse the page's buddy list for chaining into the leaked
->                   * pages list. This page should not be on a free list 
-> currently
->                   * and is also unsafe to be added to a free list.
->                   */
->                  if ((likely(!PageCompound(page))) || (PageCompound(page) &&
->                      !PageTail(page) && compound_head(page) == page))
+Reserve blocks on released compress inode while writing, so
+compressed files with released space are allowed to be rewritten.
 
-This is unnecessarily paranoid wrt that compound_head(page) test, but OTOH
-doesn't handle the weird case when we're leaking less than whole compound
-page (if that can even happen). So I'd suggest:
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
+---
+ fs/f2fs/file.c | 86 ++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 51 insertions(+), 35 deletions(-)
 
-while (npages) {
-
-  if ((likely(!PageCompound(page))) || (PageHead(page) && compound_nr(page)
-<= npages))
-	list_add_tail(&page->buddy_list, ...)
-  }
-
-  ... (no change from yours)
-
-  npages--;
-}
-
-(or an equivalent for()) perhaps
-
->                          /*
->                           * Skip inserting tail pages of compound page as
->                           * page->buddy_list of tail pages is not usable.
->                           */
->                          list_add_tail(&page->buddy_list, 
-> &snp_leaked_pages_list);
->                  sev_dump_rmpentry(pfn);
->                  snp_nr_leaked_pages++;
->                  pfn++;
->                  page++;
->          }
->          spin_unlock(&snp_leaked_pages_list_lock);
-> }
-> 
-> Thanks, Ashish
-> 
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 15dabeac4690..749b5af17141 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3612,39 +3612,15 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+ 	return reserved_blocks;
+ }
+ 
+-static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
++static int f2fs_reserve_file(struct inode *inode, unsigned int *blocks)
+ {
+-	struct inode *inode = file_inode(filp);
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	pgoff_t page_idx = 0, last_idx;
+ 	unsigned int reserved_blocks = 0;
+ 	int ret;
+ 
+-	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
+-		return -EOPNOTSUPP;
+-
+-	if (!f2fs_compressed_file(inode))
+-		return -EINVAL;
+-
+-	if (f2fs_readonly(sbi->sb))
+-		return -EROFS;
+-
+-	ret = mnt_want_write_file(filp);
+-	if (ret)
+-		return ret;
+-
+-	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
+-		goto out;
+-
+ 	f2fs_balance_fs(F2FS_I_SB(inode), true);
+ 
+-	inode_lock(inode);
+-
+-	if (!is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
+-		ret = -EINVAL;
+-		goto unlock_inode;
+-	}
+-
+ 	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 	filemap_invalidate_lock(inode->i_mapping);
+ 
+@@ -3688,14 +3664,8 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 		clear_inode_flag(inode, FI_COMPRESS_RELEASED);
+ 		inode->i_ctime = current_time(inode);
+ 		f2fs_mark_inode_dirty_sync(inode, true);
+-	}
+-unlock_inode:
+-	inode_unlock(inode);
+-out:
+-	mnt_drop_write_file(filp);
+-
+-	if (ret >= 0) {
+-		ret = put_user(reserved_blocks, (u64 __user *)arg);
++		if (blocks)
++			*blocks = reserved_blocks;
+ 	} else if (reserved_blocks &&
+ 			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
+ 		set_sbi_flag(sbi, SBI_NEED_FSCK);
+@@ -3710,6 +3680,49 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 	return ret;
+ }
+ 
++static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
++{
++	struct inode *inode = file_inode(filp);
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
++	unsigned int reserved_blocks = 0;
++	int ret;
++
++	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
++		return -EOPNOTSUPP;
++
++	if (!f2fs_compressed_file(inode))
++		return -EINVAL;
++
++	if (f2fs_readonly(sbi->sb))
++		return -EROFS;
++
++	ret = mnt_want_write_file(filp);
++	if (ret)
++		return ret;
++
++	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
++		goto out;
++
++	inode_lock(inode);
++
++	if (!is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
++		ret = -EINVAL;
++		goto unlock_inode;
++	}
++
++	ret = f2fs_reserve_file(inode, &reserved_blocks);
++
++unlock_inode:
++	inode_unlock(inode);
++out:
++	mnt_drop_write_file(filp);
++
++	if (ret >= 0)
++		ret = put_user(reserved_blocks, (u64 __user *)arg);
++
++	return ret;
++}
++
+ static int f2fs_secure_erase(struct block_device *bdev, struct inode *inode,
+ 		pgoff_t off, block_t block, block_t len, u32 flags)
+ {
+@@ -4412,8 +4425,11 @@ static ssize_t f2fs_write_checks(struct kiocb *iocb, struct iov_iter *from)
+ 	if (IS_IMMUTABLE(inode))
+ 		return -EPERM;
+ 
+-	if (is_inode_flag_set(inode, FI_COMPRESS_RELEASED))
+-		return -EPERM;
++	if (is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
++		err = f2fs_reserve_file(inode, NULL);
++		if (err < 0)
++			return err;
++	}
+ 
+ 	count = generic_write_checks(iocb, from);
+ 	if (count <= 0)
+-- 
+2.39.0
 
