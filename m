@@ -1,90 +1,111 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C913E50242
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 22:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAF54EB35
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 22:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tx7vuGA5"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40d5097150fso4495e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:24:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704925489; x=1705530289; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F0h3PsV4VSVU0yPwyd2pbqdsw4enf8nEiC2KN4jc7hY=;
-        b=Tx7vuGA5iRNsy8tfas7D6V6F3iJdEEtNsqFt6fV7cMsn2hpdBHICB7qWbSZugIm23U
-         i6ZrDGkLiZlIe9fSsqVa35aY0IAOKEyFyAN99/xB40UQDS9xa4meVO48ZSYQ/8uLZweq
-         ySqcn1QKzfzBAVG8J0VImKMn14R7R08dyxf73kaQacij8zKEuICmxTCI9i2bOgiWLxQR
-         2LHxhEYaaDxgutOhdwCQmEu+oztqFvSiru4LG4eLxqEXLLSmr4X7PstJcjyjWPNtIft0
-         JI1McXytMl2JgQFpgC8Gb9FMP5/Ug2pBpAsbpZ4GZS7Guu9ZnmCaz/fjZRWXNBKAO79N
-         RT+w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eCO2jIRI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704925525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LbvHor4sr0xWUt5flKWQxxo/1Tbqrvytr+t1oavL/pw=;
+	b=eCO2jIRIut2UlVaoH93BzJg5itwQbnNx4ZvLhZ4JCIVk2pQjaOy9CV1TnapkYAg1mnZxIX
+	kfXhxokPUz/svHSIBheEwFy0naDBrRGL/MrtbMGtDyIFsBmkHNCoX4GGQUQtngD8mGBJpP
+	6Zg1p2uIoDFVFXaX0cUnUeLrS2zHL6I=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-563-RfvVgGqnPDaVS5kMSz0uuw-1; Wed, 10 Jan 2024 17:25:23 -0500
+X-MC-Unique: RfvVgGqnPDaVS5kMSz0uuw-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3368c707b03so2704267f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:25:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704925489; x=1705530289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F0h3PsV4VSVU0yPwyd2pbqdsw4enf8nEiC2KN4jc7hY=;
-        b=XYgv1Ww/NvoEg3soQgaWHEfShqUB6Syv768KFKkPOMBNWSXdXrfQyfjUjs7JbZQULF
-         luKDJqZTjlL5MXZX+gys7odLMKmUIr0JmAsgZcv6zFoVj/IfiGHCYB6vouF5Jgv2D5ja
-         L+Z9Orwwj5ZVEjgVaVoLkENZ39d3n7QuFZ7Ihi6RK9TzDePTX00m8q8lnCAVAnhAYm0R
-         /Uf/10w/NXvuJo9Y63JfUJNxeQgVrW28QQMD/7SMNi6cU3QBjmKXYhPNLOKQM2vc51Yd
-         rEV8n/3wXP5XxEtsxOBi1mRyxB4lMtloPVg6u5M/iM5xB1ENX6GzLuc1EYzll5K/3dMg
-         qtmQ==
-X-Gm-Message-State: AOJu0Yy2kgyPUdBanush4gpdwasmWhBPhmiTW6IGSEzQYEvedz4F06HE
-	JYQ3Zzbxtf3IfKPFZ5+2MRoDE7JihUNu4n25BX2esxGXuVTa0pbfbf90D1C14ZXH/wlY9BUrPV2
-	pohySTl3nPsytH2A6HGnGKqUEv7k+9VhYIXg=
-X-Google-Smtp-Source: AGHT+IEBX5O5ZsPQ2m9kbqpp1r7L+nI2qqr8MRQ4FFqtOYKab83LNhv4h8spRuPazYChQChpktvIdvxs4azjuV1OCGk=
-X-Received: by 2002:a05:600c:3541:b0:40e:47de:97ac with SMTP id
- i1-20020a05600c354100b0040e47de97acmr57984wmq.2.1704925488813; Wed, 10 Jan
- 2024 14:24:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704925522; x=1705530322;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LbvHor4sr0xWUt5flKWQxxo/1Tbqrvytr+t1oavL/pw=;
+        b=dd2i1JGwGU4iwkixtgoRCukEaB8NvIBLNrEiV5x535lJHgG+jWwS+1iGckEylUxqrh
+         Shr1XaNqr/ZOsAlflXrY4ZyuqJQliPe2OFhFPpHSHgoL5UsEJoc6/C8mEAOEmuCGazCU
+         5WmhsBHgAXkWsut6/O65/zTyj82WEwEF033X/763u6f64IaDyKW+otYf3mMX3msCDgNC
+         B2ZSOc4/Q0TmUOGjw281usICCOGejTXMIOlJKEN9dv0fktzXo/w9rRUXBnT6UatTNE4D
+         mTj2STYNcMQPyKjIV029qg8ZXhXbC9F6AFcxueME7ab1HOWK/7I6vZ62uDQ4mm73JtJx
+         U01g==
+X-Gm-Message-State: AOJu0YyxxdTlw7ANjAPf9xm4hClDhCeyFQDQmkJOlNtDsMmx8O9hwvml
+	lMPWeEJeVrTp5TBThp9bAz95mZED6Z1raEDmcvQcK3svci1NkgBt/GQ0UkmpF5NN38lVE+xb2kZ
+	KVcYqFLKSHOH1RLb+Z9WsBM2PaF8AeXmJ
+X-Received: by 2002:a05:6000:18d1:b0:336:6c01:4a92 with SMTP id w17-20020a05600018d100b003366c014a92mr75187wrq.1.1704925522586;
+        Wed, 10 Jan 2024 14:25:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG4bG5HIN2EOROQjKy4ly5IS5OGPCjThp6MgjKpTRQ9pvJ7CGd8hXcoyJdZJ1RPWE28zwrdpA==
+X-Received: by 2002:a05:6000:18d1:b0:336:6c01:4a92 with SMTP id w17-20020a05600018d100b003366c014a92mr75179wrq.1.1704925522280;
+        Wed, 10 Jan 2024 14:25:22 -0800 (PST)
+Received: from redhat.com ([2a06:c701:73ef:4100:2cf6:9475:f85:181e])
+        by smtp.gmail.com with ESMTPSA id b9-20020a5d4b89000000b003366aad3564sm5807985wrt.30.2024.01.10.14.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 14:25:21 -0800 (PST)
+Date: Wed, 10 Jan 2024 17:25:19 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Cindy Lu <lulu@redhat.com>
+Cc: jasowang@redhat.com, yi.l.liu@intel.com, jgg@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [RFC v1 0/8] vhost-vdpa: add support for iommufd
+Message-ID: <20240110172459-mutt-send-email-mst@kernel.org>
+References: <20231103171641.1703146-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220001856.3710363-1-jstultz@google.com> <20231220001856.3710363-9-jstultz@google.com>
- <xhsmh7ckqjwuf.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-In-Reply-To: <xhsmh7ckqjwuf.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: John Stultz <jstultz@google.com>
-Date: Wed, 10 Jan 2024 14:24:36 -0800
-Message-ID: <CANDhNCqOcDqJ3kYbVZ-qEBCHBZSC5BkecR0jqh=ssettgr=PSw@mail.gmail.com>
-Subject: Re: [PATCH v7 08/23] sched: Split scheduler and execution contexts
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, 
-	Youssef Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Metin Kaya <Metin.Kaya@arm.com>, Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com, 
-	"Connor O'Brien" <connoro@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231103171641.1703146-1-lulu@redhat.com>
 
-On Wed, Jan 3, 2024 at 6:49=E2=80=AFAM Valentin Schneider <vschneid@redhat.=
-com> wrote:
-> On 19/12/23 16:18, John Stultz wrote:
-> > NOTE: Peter previously mentioned he didn't like the name
-> > "rq_selected()", but I've not come up with a better alternative.
-> > I'm very open to other name proposals.
-> >
->
-> I got used to the naming relatively quickly. It "should" be rq_pick()
-> (i.e. what did the last pick_next_task() return for that rq), but that
-> naming is unfortunately ambiguous (is it doing a pick itself?), so I thin=
-k
-> "selected" works.
+On Sat, Nov 04, 2023 at 01:16:33AM +0800, Cindy Lu wrote:
+> 
+> Hi All
+> This code provides the iommufd support for vdpa device
+> This code fixes the bugs from the last version and also add the asid support. rebase on kernel
+> v6,6-rc3
+> Test passed in the physical device (vp_vdpa), but  there are still some problems in the emulated device (vdpa_sim_net), 
+> I will continue working on it
+> 
+> The kernel code is
+> https://gitlab.com/lulu6/vhost/-/tree/iommufdRFC_v1
+> 
+> Signed-off-by: Cindy Lu <lulu@redhat.com>
 
-Thanks for that feedback! I guess rq_picked() might be an alternative
-to your suggestion of rq_pick(), but selected still sounds better to
-me.
+Was this abandoned?
 
-thanks
--john
+> 
+> Cindy Lu (8):
+>   vhost/iommufd: Add the functions support iommufd
+>   Kconfig: Add the new file vhost/iommufd
+>   vhost: Add 3 new uapi to support iommufd
+>   vdpa: Add new vdpa_config_ops to support iommufd
+>   vdpa_sim :Add support for iommufd
+>   vdpa: change the map/unmap process to support iommufd
+>   vp_vdpa::Add support for iommufd
+>   iommu: expose the function iommu_device_use_default_domain
+> 
+>  drivers/iommu/iommu.c             |   2 +
+>  drivers/vdpa/vdpa_sim/vdpa_sim.c  |   8 ++
+>  drivers/vdpa/virtio_pci/vp_vdpa.c |   4 +
+>  drivers/vhost/Kconfig             |   1 +
+>  drivers/vhost/Makefile            |   1 +
+>  drivers/vhost/iommufd.c           | 178 +++++++++++++++++++++++++
+>  drivers/vhost/vdpa.c              | 210 +++++++++++++++++++++++++++++-
+>  drivers/vhost/vhost.h             |  21 +++
+>  include/linux/vdpa.h              |  38 +++++-
+>  include/uapi/linux/vhost.h        |  66 ++++++++++
+>  10 files changed, 525 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/vhost/iommufd.c
+> 
+> -- 
+> 2.34.3
+
