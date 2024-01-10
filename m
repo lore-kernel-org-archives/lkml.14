@@ -1,49 +1,29 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0710247A45
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7D6405C3;
+	Wed, 10 Jan 2024 10:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Du61n+9K"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50e741123acso4375473e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 02:58:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704884308; x=1705489108; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KQl3ayL9sqF0LP6sySgVGCkUNXjL2bpTn4VJ6Si9uJw=;
-        b=Du61n+9K+eYAURDjp6ifN3pf9DVIi9ZGODzDlm4sMcB6f+8NjL3mFkL0DdQfXmQ0L6
-         lvcdAlhFYY8e03vfAQSKupu612PN7fmOd5JWXHbLgAUeYURtputJ0FO/V69/zO5eKKhJ
-         EJdHbQBsUIEUpxkFOBr/LIem60NuOjCKG68PT26Oxf+pss+yd34M0/iBP1rriLGUp3lh
-         0Y1dLgXOYrRtcUWHcQU+ECp+YF2/u2CZnXjQk9PQLu9oUhhrCf1aYy4zf4f9b9u/x1ZY
-         EGjL+V+AZHaRa1epYHuJzLKeSGaBnkWOIyObcbTIEEvXMb12Il/y5WlPICAiirzFbmVz
-         w8GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704884308; x=1705489108;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KQl3ayL9sqF0LP6sySgVGCkUNXjL2bpTn4VJ6Si9uJw=;
-        b=DXYiFntM6m1eE9r/JvzLtIiO1lQp97SBeoZ8+xaAK0f3FLDu+FoOYBiYdnN/eivAKq
-         crp2Ar7W889jzw4ymCDipelj1jUC6FPuMsZu8jOe91+sPqYQ6mlho9t8xaWHDwW42OgW
-         owRVzJNtHvHuN59D4KHMKCKiNbu9pfwR4GAV8rUMuirFRpouo4QGyweEu1Bi6F3NBKBr
-         5qtR9g23KQCGuJjxmuDoD3hVEG//lQJ3fh4cu/GGDa+QWyZtjYFCtl/oNJv8XXLKQ0Co
-         iXBPu4pWtaqa/BpXnboC3q3MnU/2rgYEOxO+2R1gJMutrYPy/aegt1K1VLlU6J+4ZRgT
-         BmdA==
-X-Gm-Message-State: AOJu0Yyu57gh6lj2pKX0Tl3nC1eSgDIjq1AgFJcpdZW/6u5VsfEoZ1fO
-	6qAMXT1Ek39E82dIdYM5RrhQfahcd0iCzw==
-X-Google-Smtp-Source: AGHT+IGQgra7b8A3guiBeFlLtpRtNPD7srNEqn1+qqwRBRSmoYj0FHlUHQUVTHZRC0a4Jj7cAmxmog==
-X-Received: by 2002:a05:6512:4811:b0:50e:cbf1:d2f8 with SMTP id eo17-20020a056512481100b0050ecbf1d2f8mr256193lfb.134.1704884308105;
-        Wed, 10 Jan 2024 02:58:28 -0800 (PST)
-Received: from [172.30.205.119] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id b13-20020ac2562d000000b0050e7f5cffa6sm617421lff.273.2024.01.10.02.58.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 02:58:27 -0800 (PST)
-Message-ID: <3fdc6e74-d817-4341-bf64-9096608990d6@linaro.org>
-Date: Wed, 10 Jan 2024 11:58:24 +0100
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="SDpSBKZA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1704884304; x=1705489104; i=markus.elfring@web.de;
+	bh=tY5224BW7/3IjkY5UwNCaDae9HcTzJg5/+WPa3JcuU4=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=SDpSBKZAnOLO3DFkJSvDRCP293a6xEV68IB5KjSUmeLQn5G4RGABZ7Pd5CyWKf4I
+	 Q2sE5dWpeDpbOqiDad3drrZks7wKlPPPiCr6DgxUJ1tEusfbAqjNHWk5cfMLkoCc4
+	 URHjcWQ4vtPw7lAGih6Vnzv7VG1lY53DpYE4COO8srVccjcJLs8HXvxY+jp57zre3
+	 45F612Ya5EPcj6WejT+ac55rk78BY+achTNU7vrJ0TxxVuzhqj34Bq8QiJnwehq9t
+	 1XQpn90idWpEEKbpmvCDLfDKrKVzZ2Qatr8snAvQ6OXtATlynlIzFp5t3ZbqFEHlJ
+	 sfBoaPM8vTSGBxjnHg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MK56y-1rbCKE26Pu-00LvHW; Wed, 10
+ Jan 2024 11:58:24 +0100
+Message-ID: <82054a0a-72e5-45b2-8808-e411a9587406@web.de>
+Date: Wed, 10 Jan 2024 11:58:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,43 +31,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm7225-fairphone-fp4: Enable
- display and GPU
-Content-Language: en-US
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20240105-fp4-panel-v1-0-1afbabc55276@fairphone.com>
- <20240105-fp4-panel-v1-3-1afbabc55276@fairphone.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240105-fp4-panel-v1-3-1afbabc55276@fairphone.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: Drivers: hv: vmbus: One function call less in
+ create_gpadl_header() after error detection
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ "cocci@inria.fr" <cocci@inria.fr>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <6d97cafb-ad7c-41c1-9f20-41024bb18515@web.de>
+ <SN6PR02MB4157AA51AD8AEBB24D0668B7D4692@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <SN6PR02MB4157AA51AD8AEBB24D0668B7D4692@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KCTONhzZ1zvlF5SZjQrJ7BayTBtq1VFeyAJQcMCYzcZztdwB970
+ tEgvF8y4qMkcyeF40hwN74l8dTUTfEuqSbmmuIziS5yNHZbcp6Fw7IWEGTXtO3+M3+lw0DA
+ DmLy5NDffGEuZW00nKLPaCCVV63M3VxI9TKeohJLxoXysSNiz2p58g4OTXbXmRZJIXzRJ+2
+ IXj5ko0xyxr8zm9N/277A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8VsTKgjF7kw=;gQzASWqNdbCpILehGdiYjzn+qi4
+ Br75jSeb/C5j0J96bJCnxCHa5kEwVCBf/zernQWtcDavb6tASaSu8+X5ACzeCO3MrknR+5upl
+ wxCh8AciATerCMiC9WbikoycuNIpYW2Lg0U2Kq/mUQbpxIAWBD1U8I84p4Pnw7x7JemDS2tbj
+ NS4Pa7zZ+Sp4ogozFvgNj8RZyEz9VAAQ32Y5uT1qsxfIaUAMK2CxiNT7lyFOKccZTny86yAv7
+ 1p3jzyENhzS4nqKzPznntbcjur6R65yu0WVYh46jAmHJsA02FDxjGLfciqd51zE0diCYORJA/
+ ZD7hj3pJVDlavAG7LtMBuoiGcpgHKmXxRduvYbAsOYWedeGG3nKyzv+x5yiri+Bf3xIaos+aK
+ 7VfbEyMHB0/nLhibxGvQrZaLp65/BU1W/Rt9owh+WvQ7nflWwIYIYFeNHwL+c52oaxql2Cu47
+ yUldPpDTBzK14O8ze5lIJNk941HpeqlFfhAPqVnwTOhcxSCstmJuGZyoWK2j+n0iwrBaemS+9
+ qLRY9FEe6C9ADF7cVhzn9s+0RbNFAF4wekeyJorapvQlQytgeJtoVBtRx5MPtlSg+Bi7spPNt
+ MBm/KC1sxlPUQQYq5hl7aZUhCW2WdHw7zVQvLgDXdND9bhlogJNnFLsfjV1CDVz89MTlPjEsg
+ LjHWoqFRKVLTXSitUcAWCk6u1cZXP3Md71eUHTueQjTY21+lzwacl970ZfyaEIsa75rQ16823
+ cSaD11Fh4n3VysK9nDfsGXNJPw/aLJZY4xOVtBV+4wkZ2stwUpNuyoS7Q+GRfjMJu2Oge/shX
+ VRiwrs8YgydN+mJv4GMSglRkzFkTwdKTEStolt0+swgKtkmNOkxmb+WE7wJY0imnBLTZCJUA4
+ QqlziK/M4gU48REOqJt5YG9EUdefuK3VRjfQoW5Ya7fT+KLVzv+8Ycr1gJmv/3VVAq7zM6lAP
+ WVWJjmrSYW+NP9vEXdm6pqgj0Lc=
 
+>> The kfree() function was called in two cases by
+>> the create_gpadl_header() function during error handling
+>> even if the passed variable contained a null pointer.
+>> This issue was detected by using the Coccinelle software.
+>>
+>> Thus use another label.
+>
+> Interestingly, there's a third case in this function where
+> "goto nomem" is done, and in this case, msgbody is NULL.
+> Does Coccinelle not complain about that case as well?
+>
+> As I'm sure you know, the code is correct as is, because kfree()
+> checks for a NULL argument.  So this is really an exercise in
+> making Coccinelle happy.  To me, the additional label is
+> incremental complexity for someone to deal with when
+> reading the code at some time in the future.  So I'd vote for
+> leaving the code as is.  But it's not a big deal either way.  I
+> can see you've been cleaning up a lot of Coccinelle-reported
+> issues across the kernel, most of which result in code
+> simplifications.  If leaving this unchanged causes you problems,
+> then I won't object (though perhaps that 3rd "goto nomem"
+> should be dealt with as well for consistency).
 
+How do you think about the clarification approach
+=E2=80=9CReconsidering kfree() calls for null pointers (with SmPL)=E2=80=
+=9D?
+https://lore.kernel.org/cocci/6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de/
+https://sympa.inria.fr/sympa/arc/cocci/2023-03/msg00096.html
 
-On 1/5/24 15:29, Luca Weiss wrote:
-> Add the description for the display panel found on this phone and remove
-> the simple-framebuffer that was in place until now
-
-Why? They should be able to coexist with a smooth-ish handoff
-
-[...]
-
->   
-> +&gmu {
-> +	status = "okay";
-
-Please kick the disablement from the SoC dtsi instead, it won't
-probe without the GPU being enabled
-
-Konrad
+Regards,
+Markus
