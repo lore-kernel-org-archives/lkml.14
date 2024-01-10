@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC45360B1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F72364A6;
 	Wed, 10 Jan 2024 01:31:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJ08/Grm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9EAB2C433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUereXWJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C122DC43390;
 	Wed, 10 Jan 2024 01:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704850265;
-	bh=cWHK+od9zX++31pEh4jLKyCEE3QsgqyI78w09wDtO+U=;
+	bh=pBIcTt53KRlk1Dia/kfJlnnNUQio9EI7rDm4qnZIv9Q=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=HJ08/GrmsC1/n+0yJOmRwwa54diNeZO9rlCJ1ZmCz3D2t6jT4OZQ7Ccmo7zEjcBZ7
-	 7MnOf+9USp0WFM7FmdKNR3UmRPQnXFhr8kmBSLVcJfFk3qAYjjb5tfAjntdm56n3KY
-	 khMKpWsU+cZS6iuUwTXpydFKO/T/aSZebhS4EFOhUAjMGvzMR6SIenYAbFG1bnF/Cr
-	 lyuWTjv24uUVqsf9V7KubO3c9OAL6jJYJ4bKRz83elpK6K5RQPFRF5e2JBIXAcQyfV
-	 IOrXdDhonzSMVLVyMdrs8dT0fUm1lHDqqwbGuQcqyk3ThMspW6ySjiuMBVUZV+UjOb
-	 pNRRIDi5uV3Tw==
+	b=DUereXWJ/DyA5eCL33uMe7xY/0/e7sqwpZwPQv+PkjesO7hdSXnvq6QwIb4Fo5EcA
+	 zwqKh4zqHMPMt7EnmUSdDXL4HnSgtx9bumYlaTb1roysWUOliFFZL7HUXMkVU4/4Cd
+	 1HHB2DKVvDyFu2+b8itqQvhISHov7Ss9wOJ0e8iZFO2CJ6usF68dEZ/jEAzPASG9OG
+	 kMh4Bm7iPeFDiBxyZ+sdpNv2/Gi0N1cJqnyCn/ucCfQFdk0kvkHbAQ1qzVKowb+ZC0
+	 BFUgtVxSmuT7OBaIrxRSvwmAJwMSUBWTmu2QuG/74SpyP95QLPIDsstk/pqalUbFka
+	 Iki9PWqWFhb6g==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8E014C4167D;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AFFD0C4166F;
 	Wed, 10 Jan 2024 01:31:05 +0000 (UTC)
-Subject: Re: [GIT PULL] chrome-platform changes for v6.8
+Subject: Re: [GIT PULL] chrome-platform-firmware changes for v6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZZu5uEwX6QgokecO@google.com>
-References: <ZZu5uEwX6QgokecO@google.com>
+In-Reply-To: <ZZu6Na7lHZj2KU0h@google.com>
+References: <ZZu6Na7lHZj2KU0h@google.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZZu5uEwX6QgokecO@google.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-for-v6.8
-X-PR-Tracked-Commit-Id: 57eb6dcd32cf6b49c38eff81e60e8fd471aa05a8
+X-PR-Tracked-Message-Id: <ZZu6Na7lHZj2KU0h@google.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-firmware-for-v6.8
+X-PR-Tracked-Commit-Id: 09aeaabebdafbcf4afd1c481beaff37ecbc6b023
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3efcce4a9ec0d2f47ad7c501d0b072c12a1706af
-Message-Id: <170485026557.7649.15280250040995063848.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: b9b56eb280451ccfd42e9e554e83c6202a2d286b
+Message-Id: <170485026571.7649.14637982180786171153.pr-tracker-bot@kernel.org>
 Date: Wed, 10 Jan 2024 01:31:05 +0000
 To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: torvalds@linux-foundation.org, pmalani@chromium.org, bleung@chromium.org, groeck@chromium.org, tzungbi@kernel.org, linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
+Cc: torvalds@linux-foundation.org, briannorris@chromium.org, jwerner@chromium.org, groeck@chromium.org, tzungbi@kernel.org, linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 8 Jan 2024 17:00:40 +0800:
+The pull request you sent on Mon, 8 Jan 2024 17:02:45 +0800:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-for-v6.8
+> https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-firmware-for-v6.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3efcce4a9ec0d2f47ad7c501d0b072c12a1706af
+https://git.kernel.org/torvalds/c/b9b56eb280451ccfd42e9e554e83c6202a2d286b
 
 Thank you!
 
