@@ -1,66 +1,104 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24FC4776F;
-	Wed, 10 Jan 2024 10:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945FE3FB38
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yngvason.is
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="S8+AufQw"
-From: Tobias Schramm <t.schramm@manjaro.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1704881410;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=77sXWLAHqXDVC5wRoMijHbBW+M2cd0clYpjD4I2uM1s=;
-	b=S8+AufQwFw2PeVpUuBfxpb15QbqWsJSS3MOKhgpnHZGiPFfX8HA8DDjZbkwI7G7WAzrL7s
-	0D3p/ZSGuJ9Lx5PkwhATDeizVaQfgv52zTSZGrwlcCoKtNo0j07Um+oZIWMfU73tAgFNiR
-	7dHWbcVWhHjYogIbB5H3bIFy1TD2MBk5KXAdXVzSMtBYgAp5+sK/m62GbYdrgI/YT1TMqN
-	m2U2tU/APcpPSkms1Anf2+cZop399rh0mntUqn2Mg0Zq8t1e152fV/msaPZoVKCRK2z4ib
-	PfEfopv6rS0Qiquf+vgFwqMYax0gdul6MM/Ml1SuK2EBNmiXbGgfNnnhfFo/Jw==
-To: Mark Greer <mgreer@animalcreek.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH] dt-bindings: nfc: ti,trf7970a: fix usage example
-Date: Wed, 10 Jan 2024 11:09:13 +0100
-Message-ID: <20240110100913.587849-1-t.schramm@manjaro.org>
+	dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b="b/nLsLCA"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5fa52e173f7so4024727b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 02:12:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=yngvason.is; s=google; t=1704881528; x=1705486328; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=96G7DIyssciX4jnAzNrTPlryo3sWO8sgy39soI2lLIM=;
+        b=b/nLsLCAxAz4HMcmxX32IaIq+DjkSZlvvcu2fPIHOixPYIXTBOgnFvTg7ng+JnyVvc
+         xJJwd+LuDFQYXKEMK+IfLCIxZJuWXc7sCs1sAICVNY6D/+gaTXFHkFax/0bjVS6fVnfB
+         jFZm1oZ0lPSMicbx6XtnpmsrdWzTohus5jTvQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704881528; x=1705486328;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=96G7DIyssciX4jnAzNrTPlryo3sWO8sgy39soI2lLIM=;
+        b=rpILV5lWapZP/5f1ObyHTVM0m84ug+iHGF/BegVFIVwPgDYeRg+b77OG6ueAJ3Dl/a
+         Xx2h9dgMf5hWnb39ispTVHNzzjVKC7SgOiNl1jOMOEXcnKX/4cDPUXDYh7kHHm3S/q6O
+         zfn7vbVhNdUaDvkLSRAHpMEWv6JRTJrEtLj3kIiBFl8XpLd8n3Y4rxEnYBiv5W9JGp9e
+         dz0dBPeqgkw0wlfQ7AxdGK+ZHpufQ+b7abuKdTr8tjbUFHpS4GYG/ewSgTE/6hksreiW
+         p3R1DjvBk0tpfVxthnWQR6o0c6AqheHm9g2MASgGV60KfPBSOTpPQsbMDS60jzQutqz+
+         3iCg==
+X-Gm-Message-State: AOJu0YwWe9X58itWnw1AA5wCk4qZeGaKObp0zGzbKk3xZEEarjN1g+l6
+	jiODhYTVmPN+m9tTrFCyCmWm2XqDgSeiDMKhX5tEoXnTZruKZw==
+X-Google-Smtp-Source: AGHT+IGS4RF/sw1vbqlkX/KGSnVK4rjCwYusB936/yIZemFr40lAz/v1ty4wbuIZQF+WlPwAE3a+cK+ILR852Vcqmd4=
+X-Received: by 2002:a25:f822:0:b0:dbf:227a:a2c with SMTP id
+ u34-20020a25f822000000b00dbf227a0a2cmr504361ybd.126.1704881528497; Wed, 10
+ Jan 2024 02:12:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=t.schramm@manjaro.org smtp.mailfrom=t.schramm@manjaro.org
+References: <20240109181104.1670304-1-andri@yngvason.is> <20240109181104.1670304-6-andri@yngvason.is>
+ <qdwv7sagqs5nmmsy5lko5hypldanfodafyzamrs3loj3n7jzlr@n5bacxkknkj4>
+In-Reply-To: <qdwv7sagqs5nmmsy5lko5hypldanfodafyzamrs3loj3n7jzlr@n5bacxkknkj4>
+From: Andri Yngvason <andri@yngvason.is>
+Date: Wed, 10 Jan 2024 10:11:32 +0000
+Message-ID: <CAFNQBQzijyE4wR34AOLM45m+ryx128igVKO9zPJ5-M3afFQMxQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] drm/uAPI: Add "preferred color format" drm property
+ as setting for userspace
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, Simon Ser <contact@emersion.fr>, 
+	Werner Sembach <wse@tuxedocomputers.com>, Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The TRF7970A is a SPI device, not I2C.
+Hi,
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
----
- Documentation/devicetree/bindings/net/nfc/ti,trf7970a.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+mi=C3=B0., 10. jan. 2024 kl. 09:27 skrifa=C3=B0i Maxime Ripard <mripard@ker=
+nel.org>:
+> On Tue, Jan 09, 2024 at 06:11:02PM +0000, Andri Yngvason wrote:
+> > From: Werner Sembach <wse@tuxedocomputers.com>
+> >
+> > Add a new general drm property "preferred color format" which can be us=
+ed
+> > by userspace to tell the graphic drivers to which color format to use.
+> >
+> > Possible options are:
+> >     - auto (default/current behaviour)
+> >     - rgb
+> >     - ycbcr444
+> >     - ycbcr422 (not supported by both amdgpu and i915)
+> >     - ycbcr420
+> >
+> > In theory the auto option should choose the best available option for t=
+he
+> > current setup, but because of bad internal conversion some monitors loo=
+k
+> > better with rgb and some with ycbcr444.
+>
+> I looked at the patch and I couldn't find what is supposed to happen if
+> you set it to something else than auto, and the driver can't match that.
+> Are we supposed to fallback to the "auto" behaviour, or are we suppose
+> to reject the mode entirely?
+>
+> The combination with the active output format property suggests the
+> former, but we should document it explicitly.
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/ti,trf7970a.yaml b/Documentation/devicetree/bindings/net/nfc/ti,trf7970a.yaml
-index 9cc236ec42f2..d0332eb76ad2 100644
---- a/Documentation/devicetree/bindings/net/nfc/ti,trf7970a.yaml
-+++ b/Documentation/devicetree/bindings/net/nfc/ti,trf7970a.yaml
-@@ -73,7 +73,7 @@ examples:
-     #include <dt-bindings/gpio/gpio.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
- 
--    i2c {
-+    spi {
-         #address-cells = <1>;
-         #size-cells = <0>;
- 
--- 
-2.43.0
+It is also my understanding that it should fall back to the "auto"
+behaviour. I will add this to the documentation.
 
+Thanks,
+Andri
