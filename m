@@ -1,37 +1,37 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB7847F63;
-	Wed, 10 Jan 2024 11:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B36547F63;
+	Wed, 10 Jan 2024 11:44:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="olybZN85"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40A8eLkC020792;
-	Wed, 10 Jan 2024 11:43:38 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PZcGDNpU"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40AAhJ54012660;
+	Wed, 10 Jan 2024 11:43:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=/dgiYyq5vxUPou7DP/kFT/Rv+s01GrxEpagrJuG98FQ=; b=ol
-	ybZN85xQyZjr8JFPxTOjWrXc0NON3FEpeis9Ogxk/6ekJa+1DogK5ztFih/i9/Gz
-	MqqQqsJvyZrQnjDZGgj14TQjLksMYBXlJraCYi4RKRKEMkiLXgMjcKGgUthgPx4a
-	XhdkG98LMyWypBW/NhiiNwo9DOZC7sxkFldI/UFstbfD/DzKjnurEPTxOKdnbOHu
-	0RzgEDeLu21fP/rOrIMhriuLvUP9YPV7z+XRdfmGa21foBVKuxUcMno6BecP8GmC
-	xd3tJbbOWx1aD1iUL+vJsjLjWRBiy31OJ5xe0BlNN4GTkzupydcrweJFCi9k1Ttu
-	ZQgKjJMVfOyTnBvihVpw==
+	qcppdkim1; bh=mR0EQunaFH97FyG1JaAfwzha9HvZ8unUPHG4d5bgYm8=; b=PZ
+	cGDNpUKDe0AjzqPjYeNAInfGqMBFuLQZtG6RnN53FNRRNFNwtHKjvrET54D40tKz
+	HLNb4F3FlbHx3CxU7t2YLWxl5nBLlAPuQnsNZBqduz1gBW4cUKWiMy6ZGiSOK3D1
+	BVTfh6feWBqkuQ56XgZ6EU2AVXpD7lpJ1QvAxtE2O76xVaH/BpsgrklFB2hfZsNb
+	OuYRXtkA31XlZf4cTtDkJOoim202vpPoKPNVcO0XONwdeGQpcpoJngnf/SNTFhjx
+	GxF/M6awEQMG9xHSl4t6mhFKTkIXvvaqgjQHmXw1vY80c254P7YEJoODo8BaIdfS
+	QpbWlHLaQF8N8gLw5ODA==
 Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vh9evt8wy-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhsqyr4by-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 11:43:38 +0000 (GMT)
+	Wed, 10 Jan 2024 11:43:58 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40ABhbiV020379
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40ABhuXu020445
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 11:43:37 GMT
+	Wed, 10 Jan 2024 11:43:56 GMT
 Received: from akronite-sh-dev02.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 10 Jan 2024 03:43:26 -0800
+ 15.2.1118.40; Wed, 10 Jan 2024 03:43:46 -0800
 From: Luo Jie <quic_luoj@quicinc.com>
 To: <agross@kernel.org>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
@@ -54,9 +54,9 @@ CC: <netdev@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <quic_soni@quicinc.com>, <quic_pavir@quicinc.com>,
         <quic_souravp@quicinc.com>, <quic_linchen@quicinc.com>,
         <quic_leiwei@quicinc.com>
-Subject: [PATCH net-next 15/20] net: ethernet: qualcomm: Add PPE debugfs counters
-Date: Wed, 10 Jan 2024 19:40:27 +0800
-Message-ID: <20240110114033.32575-16-quic_luoj@quicinc.com>
+Subject: [PATCH net-next 17/20] net: ethernet: qualcomm: Add PPE UNIPHY support for phylink
+Date: Wed, 10 Jan 2024 19:40:29 +0800
+Message-ID: <20240110114033.32575-18-quic_luoj@quicinc.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240110114033.32575-1-quic_luoj@quicinc.com>
 References: <20240110114033.32575-1-quic_luoj@quicinc.com>
@@ -72,1363 +72,1153 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: xDhMHNgXx0Ucdc1-NaxYH2Befo0bPjYP
-X-Proofpoint-ORIG-GUID: xDhMHNgXx0Ucdc1-NaxYH2Befo0bPjYP
+X-Proofpoint-GUID: UzY1SN_vGJVQmRfWn1VIHp-WRDy6hzEd
+X-Proofpoint-ORIG-GUID: UzY1SN_vGJVQmRfWn1VIHp-WRDy6hzEd
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 suspectscore=0 clxscore=1015 spamscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 phishscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2311290000 definitions=main-2401100096
 
-The PPE counter is checked with the command below.
-"cat /sys/kernel/debug/ppe/packet_counter"
+From: Lei Wei <quic_leiwei@quicinc.com>
 
+This driver adds support for PPE UNIPHY initialization and UNIPHY
+PCS operations which used by phylink.
+
+PPE supports maximum 6 GMAC or XGMAC ports which can be connected
+with maximum 3 UNIPHYs. The UNIPHY registers and provides raw clock
+to feeds NCCSS clocks to provide different clocks to PPE ports in
+different link speed.
+
+Signed-off-by: Lei Wei <quic_leiwei@quicinc.com>
 Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 ---
  drivers/net/ethernet/qualcomm/ppe/Makefile    |   2 +-
- drivers/net/ethernet/qualcomm/ppe/ppe.c       |   8 +
- .../net/ethernet/qualcomm/ppe/ppe_debugfs.c   | 953 ++++++++++++++++++
- .../net/ethernet/qualcomm/ppe/ppe_debugfs.h   |  25 +
- drivers/net/ethernet/qualcomm/ppe/ppe_regs.h  | 256 +++++
+ drivers/net/ethernet/qualcomm/ppe/ppe.c       |  25 +
+ drivers/net/ethernet/qualcomm/ppe/ppe.h       |   2 +
+ .../net/ethernet/qualcomm/ppe/ppe_uniphy.c    | 789 ++++++++++++++++++
+ .../net/ethernet/qualcomm/ppe/ppe_uniphy.h    | 227 +++++
  include/linux/soc/qcom/ppe.h                  |   1 +
- 6 files changed, 1244 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.c
- create mode 100644 drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.h
+ 6 files changed, 1045 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/qualcomm/ppe/ppe_uniphy.c
+ create mode 100644 drivers/net/ethernet/qualcomm/ppe/ppe_uniphy.h
 
 diff --git a/drivers/net/ethernet/qualcomm/ppe/Makefile b/drivers/net/ethernet/qualcomm/ppe/Makefile
-index c00265339aa7..516ea23443ab 100644
+index 516ea23443ab..487f62d5e38c 100644
 --- a/drivers/net/ethernet/qualcomm/ppe/Makefile
 +++ b/drivers/net/ethernet/qualcomm/ppe/Makefile
 @@ -4,4 +4,4 @@
  #
  
  obj-$(CONFIG_QCOM_PPE) += qcom-ppe.o
--qcom-ppe-objs := ppe.o ppe_ops.o
-+qcom-ppe-objs := ppe.o ppe_ops.o ppe_debugfs.o
+-qcom-ppe-objs := ppe.o ppe_ops.o ppe_debugfs.o
++qcom-ppe-objs := ppe.o ppe_ops.o ppe_debugfs.o ppe_uniphy.o
 diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe.c b/drivers/net/ethernet/qualcomm/ppe/ppe.c
-index d0e0fa9d5609..71973bce2cd2 100644
+index 04f80589c05b..21040efe71fc 100644
 --- a/drivers/net/ethernet/qualcomm/ppe/ppe.c
 +++ b/drivers/net/ethernet/qualcomm/ppe/ppe.c
-@@ -17,6 +17,7 @@
- #include "ppe.h"
+@@ -18,6 +18,7 @@
  #include "ppe_regs.h"
  #include "ppe_ops.h"
-+#include "ppe_debugfs.h"
+ #include "ppe_debugfs.h"
++#include "ppe_uniphy.h"
  
  #define PPE_SCHEDULER_PORT_NUM		8
  #define MPPE_SCHEDULER_PORT_NUM		3
-@@ -1328,11 +1329,18 @@ static int qcom_ppe_probe(struct platform_device *pdev)
+@@ -176,6 +177,26 @@ int ppe_type_get(struct ppe_device *ppe_dev)
+ 	return ppe_dev_priv->ppe_type;
+ }
  
++struct clk **ppe_clock_get(struct ppe_device *ppe_dev)
++{
++	struct ppe_data *ppe_dev_priv = ppe_dev->ppe_priv;
++
++	if (!ppe_dev_priv)
++		return NULL;
++
++	return ppe_dev_priv->clk;
++}
++
++struct reset_control **ppe_reset_get(struct ppe_device *ppe_dev)
++{
++	struct ppe_data *ppe_dev_priv = ppe_dev->ppe_priv;
++
++	if (!ppe_dev_priv)
++		return NULL;
++
++	return ppe_dev_priv->rst;
++}
++
+ static int ppe_clock_set_enable(struct ppe_device *ppe_dev,
+ 				enum ppe_clk_id clk_id, unsigned long rate)
+ {
+@@ -1405,6 +1426,10 @@ static int qcom_ppe_probe(struct platform_device *pdev)
+ 				     ret,
+ 				     "ppe device hw init failed\n");
+ 
++	ppe_dev->uniphy = ppe_uniphy_setup(pdev);
++	if (IS_ERR(ppe_dev->uniphy))
++		return dev_err_probe(&pdev->dev, ret, "ppe uniphy initialization failed\n");
++
  	ppe_dev->ppe_ops = &qcom_ppe_ops;
  	ppe_dev->is_ppe_probed = true;
-+	ppe_debugfs_setup(ppe_dev);
-+
- 	return 0;
- }
+ 	ppe_debugfs_setup(ppe_dev);
+diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe.h b/drivers/net/ethernet/qualcomm/ppe/ppe.h
+index 828d467540c9..45b70f47cd21 100644
+--- a/drivers/net/ethernet/qualcomm/ppe/ppe.h
++++ b/drivers/net/ethernet/qualcomm/ppe/ppe.h
+@@ -173,6 +173,8 @@ struct ppe_scheduler_port_resource {
+ };
  
- static int qcom_ppe_remove(struct platform_device *pdev)
- {
-+	struct ppe_device *ppe_dev;
-+
-+	ppe_dev = platform_get_drvdata(pdev);
-+	ppe_debugfs_teardown(ppe_dev);
-+
- 	return 0;
- }
+ int ppe_type_get(struct ppe_device *ppe_dev);
++struct clk **ppe_clock_get(struct ppe_device *ppe_dev);
++struct reset_control **ppe_reset_get(struct ppe_device *ppe_dev);
  
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.c b/drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.c
+ int ppe_write(struct ppe_device *ppe_dev, u32 reg, unsigned int val);
+ int ppe_read(struct ppe_device *ppe_dev, u32 reg, unsigned int *val);
+diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_uniphy.c b/drivers/net/ethernet/qualcomm/ppe/ppe_uniphy.c
 new file mode 100644
-index 000000000000..a72c0eed9142
+index 000000000000..3a2b6fc77a9c
 --- /dev/null
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.c
-@@ -0,0 +1,953 @@
++++ b/drivers/net/ethernet/qualcomm/ppe/ppe_uniphy.c
+@@ -0,0 +1,789 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 + */
 +
-+/* PPE debugfs routines for display of PPE counters useful for debug. */
++/* PPE UNIPHY clock register and UNIPHY PCS operations for phylink.
++ *
++ * The PPE UNIPHY block is specifically used by PPE to connect the PPE MAC
++ * with the external PHYs or SFPs or Switches (fixed link). The PPE UNIPHY
++ * block includes serdes, PCS or XPCS and the control logic to support PPE
++ * ports to work in different interface mode and different link speed.
++ *
++ * The PPE UNIPHY block provides raw clock as the parent clock to NSSCC
++ * clocks and the NSSCC clocks can be configured to generate different
++ * port Tx and Rx clocks to PPE ports in different port link speed.
++ */
 +
-+#include <linux/seq_file.h>
-+#include <linux/debugfs.h>
++#include <linux/clk.h>
++#include <linux/reset.h>
++#include <linux/clk-provider.h>
 +#include <linux/soc/qcom/ppe.h>
-+#include "ppe_debugfs.h"
-+#include "ppe_regs.h"
 +#include "ppe.h"
++#include "ppe_uniphy.h"
 +
-+static const char * const ppe_cpucode[] = {
-+	"Forwarding to CPU",
-+	"Unknown L2 protocol exception redirect/copy to CPU",
-+	"PPPoE wrong version or wrong type exception redirect/copy to CPU",
-+	"PPPoE wrong code exception redirect/copy to CPU",
-+	"PPPoE unsupported PPP protocol exception redirect/copy to CPU",
-+	"IPv4 wrong version exception redirect/copy to CPU",
-+	"IPv4 small IHL exception redirect/copy to CPU",
-+	"IPv4 with option exception redirect/copy to CPU",
-+	"IPv4 header incomplete exception redirect/copy to CPU",
-+	"IPv4 bad total length exception redirect/copy to CPU",
-+	"IPv4 data incomplete exception redirect/copy to CPU",
-+	"IPv4 fragment exception redirect/copy to CPU",
-+	"IPv4 ping of death exception redirect/copy to CPU",
-+	"IPv4 small TTL exception redirect/copy to CPU",
-+	"IPv4 unknown IP protocol exception redirect/copy to CPU",
-+	"IPv4 checksum error exception redirect/copy to CPU",
-+	"IPv4 invalid SIP exception redirect/copy to CPU",
-+	"IPv4 invalid DIP exception redirect/copy to CPU",
-+	"IPv4 LAND attack exception redirect/copy to CPU",
-+	"IPv4 AH header incomplete exception redirect/copy to CPU",
-+	"IPv4 AH header cross 128-byte exception redirect/copy to CPU",
-+	"IPv4 ESP header incomplete exception redirect/copy to CPU",
-+	"IPv6 wrong version exception redirect/copy to CPU",
-+	"IPv6 header incomplete exception redirect/copy to CPU",
-+	"IPv6 bad total length exception redirect/copy to CPU",
-+	"IPv6 data incomplete exception redirect/copy to CPU",
-+	"IPv6 with extension header exception redirect/copy to CPU",
-+	"IPv6 small hop limit exception redirect/copy to CPU",
-+	"IPv6 invalid SIP exception redirect/copy to CPU",
-+	"IPv6 invalid DIP exception redirect/copy to CPU",
-+	"IPv6 LAND attack exception redirect/copy to CPU",
-+	"IPv6 fragment exception redirect/copy to CPU",
-+	"IPv6 ping of death exception redirect/copy to CPU",
-+	"IPv6 with more than 2 extension headers exception redirect/copy to CPU",
-+	"IPv6 unknown last next header exception redirect/copy to CPU",
-+	"IPv6 mobility header incomplete exception redirect/copy to CPU",
-+	"IPv6 mobility header cross 128-byte exception redirect/copy to CPU",
-+	"IPv6 AH header incomplete exception redirect/copy to CPU",
-+	"IPv6 AH header cross 128-byte exception redirect/copy to CPU",
-+	"IPv6 ESP header incomplete exception redirect/copy to CPU",
-+	"IPv6 ESP header cross 128-byte exception redirect/copy to CPU",
-+	"IPv6 other extension header incomplete exception redirect/copy to CPU",
-+	"IPv6 other extension header cross 128-byte exception redirect/copy to CPU",
-+	"TCP header incomplete exception redirect/copy to CPU",
-+	"TCP header cross 128-byte exception redirect/copy to CPU",
-+	"TCP same SP and DP exception redirect/copy to CPU",
-+	"TCP small data offset redirect/copy to CPU",
-+	"TCP flags VALUE/MASK group 0 exception redirect/copy to CPU",
-+	"TCP flags VALUE/MASK group 1 exception redirect/copy to CPU",
-+	"TCP flags VALUE/MASK group 2 exception redirect/copy to CPU",
-+	"TCP flags VALUE/MASK group 3 exception redirect/copy to CPU",
-+	"TCP flags VALUE/MASK group 4 exception redirect/copy to CPU",
-+	"TCP flags VALUE/MASK group 5 exception redirect/copy to CPU",
-+	"TCP flags VALUE/MASK group 6 exception redirect/copy to CPU",
-+	"TCP flags VALUE/MASK group 7 exception redirect/copy to CPU",
-+	"TCP checksum error exception redirect/copy to CPU",
-+	"UDP header incomplete exception redirect/copy to CPU",
-+	"UDP header cross 128-byte exception redirect/copy to CPU",
-+	"UDP same SP and DP exception redirect/copy to CPU",
-+	"UDP bad length exception redirect/copy to CPU",
-+	"UDP data incomplete exception redirect/copy to CPU",
-+	"UDP checksum error exception redirect/copy to CPU",
-+	"UDP-Lite header incomplete exception redirect/copy to CPU",
-+	"UDP-Lite header cross 128-byte exception redirect/copy to CPU",
-+	"UDP-Lite same SP and DP exception redirect/copy to CPU",
-+	"UDP-Lite checksum coverage value 0-7 exception redirect/copy to CPU",
-+	"UDP-Lite checksum coverage value too big exception redirect/copy to CPU",
-+	"UDP-Lite checksum coverage value cross 128-byte exception redirect/copy to CPU",
-+	"UDP-Lite checksum error exception redirect/copy to CPU",
-+	"Fake L2 protocol packet redirect/copy to CPU",
-+	"Fake MAC header packet redirect/copy to CPU",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"L2 MRU checking fail redirect/copy to CPU",
-+	"L2 MTU checking fail redirect/copy to CPU",
-+	"IP prefix broadcast redirect/copy to CPU",
-+	"L3 MTU checking fail redirect/copy to CPU",
-+	"L3 MRU checking fail redirect/copy to CPU",
-+	"ICMP redirect/copy to CPU",
-+	"IP to me routing TTL 1 redirect/copy to CPU",
-+	"IP to me routing TTL 0 redirect/copy to CPU",
-+	"Flow service code loop redirect/copy to CPU",
-+	"Flow de-accelerate redirect/copy to CPU",
-+	"Flow source interface check fail redirect/copy to CPU",
-+	"Flow sync toggle mismatch redirect/copy to CPU",
-+	"MTU check fail if DF set redirect/copy to CPU",
-+	"PPPoE multicast redirect/copy to CPU",
-+	"Flow MTU check fail redirect/copy to cpu",
-+	"Flow MTU DF check fail redirect/copy to CPU",
-+	"UDP CHECKSUM ZERO redirect/copy to CPU",
-+	"Reserved",
-+	"EAPoL packet redirect/copy to CPU",
-+	"PPPoE discovery packet redirect/copy to CPU",
-+	"IGMP packet redirect/copy to CPU",
-+	"ARP request packet redirect/copy to CPU",
-+	"ARP reply packet redirect/copy to CPU",
-+	"DHCPv4 packet redirect/copy to CPU",
-+	"Reserved",
-+	"LINKOAM packet redirect/copy to CPU",
-+	"Reserved",
-+	"Reserved",
-+	"MLD packet redirect/copy to CPU",
-+	"NS packet redirect/copy to CPU",
-+	"NA packet redirect/copy to CPU",
-+	"DHCPv6 packet redirect/copy to CPU",
-+	"Reserved",
-+	"Reserved",
-+	"PTP sync packet redirect/copy to CPU",
-+	"PTP follow up packet redirect/copy to CPU",
-+	"PTP delay request packet redirect/copy to CPU",
-+	"PTP delay response packet redirect/copy to CPU",
-+	"PTP delay request packet redirect/copy to CPU",
-+	"PTP delay response packet redirect/copy to CPU",
-+	"PTP delay response follow up packet redirect/copy to CPU",
-+	"PTP announce packet redirect/copy to CPU",
-+	"PTP management packet redirect/copy to CPU",
-+	"PTP signaling packet redirect/copy to CPU",
-+	"PTP message reserved type 0 packet redirect/copy to CPU",
-+	"PTP message reserved type 1 packet redirect/copy to CPU",
-+	"PTP message reserved type 2 packet redirect/copy to CPU",
-+	"PTP message reserved type 3 packet redirect/copy to CPU",
-+	"PTP message reserved type packet redirect/copy to CPU",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"IPv4 source guard unknown packet redirect/copy to CPU",
-+	"IPv6 source guard unknown packet redirect/copy to CPU",
-+	"ARP source guard unknown packet redirect/copy to CPU",
-+	"ND source guard unknown packet redirect/copy to CPU",
-+	"IPv4 source guard violation packet redirect/copy to CPU",
-+	"IPv6 source guard violation packet redirect/copy to CPU",
-+	"ARP source guard violation packet redirect/copy to CPU",
-+	"ND source guard violation packet redirect/copy to CPU",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"L3 route host mismatch action redirect/copy to CPU",
-+	"L3 flow SNAT action redirect/copy to CPU",
-+	"L3 flow DNAT action redirect/copy to CPU",
-+	"L3 flow routing action redirect/copy to CPU",
-+	"L3 flow bridging action redirect/copy to CPU",
-+	"L3 multicast bridging action redirect/copy to CPU",
-+	"L3 route preheader routing action redirect/copy to CPU",
-+	"L3 route preheader SNAPT action redirect/copy to CPU",
-+	"L3 route preheader DNAPT action redirect/copy to CPU",
-+	"L3 route preheader SNAT action redirect/copy to CPU",
-+	"L3 route preheader DNAT action redirect/copy to CPU",
-+	"L3 no route preheader NAT action redirect/copy to CPU",
-+	"L3 no route preheader NAT error redirect/copy to CPU",
-+	"L3 route action redirect/copy to CPU",
-+	"L3 no route action redirect/copy to CPU",
-+	"L3 no route next hop invalid action redirect/copy to CPU",
-+	"L3 no route preheader action redirect/copy to CPU",
-+	"L3 bridge action redirect/copy to CPU",
-+	"L3 flow action redirect/copy to CPU",
-+	"L3 flow miss action redirect/copy to CPU",
-+	"L2 new MAC address redirect/copy to CPU",
-+	"L2 hash violation redirect/copy to CPU",
-+	"L2 station move redirect/copy to CPU",
-+	"L2 learn limit redirect/copy to CPU",
-+	"L2 SA lookup action redirect/copy to CPU",
-+	"L2 DA lookup action redirect/copy to CPU",
-+	"APP_CTRL action redirect/copy to CPU",
-+	"INGRESS_VLAN filter  action redirect/copy to CPU",
-+	"INGRSS VLAN translation miss redirect/copy to CPU",
-+	"EGREE VLAN filter redirect/copy to CPU",
-+	"Pre-IPO action",
-+	"Post-IPO action",
-+	"Service code action",
-+	"L3 route Pre-IPO action redirect/copy to CPU",
-+	"L3 route Pre-IPO snapt action redirect/copy to CPU",
-+	"L3 route Pre-IPO dnapt action redirect/copy to CPU",
-+	"L3 route Pre-IPO snat action redirect/copy to CPU",
-+	"L3 route Pre-IPO dnat action redirect/copy to CPU",
-+	"Tl L3 if check fail redirect/copy to CPU",
-+	"TL vlan check fail redirect/copy to CPU",
-+	"TL PPPoE Multicast termination redirect/copy to CPU",
-+	"TL de-acceleration redirect/copy to CPU",
-+	"TL UDP checksum zero redirect/copy to CPU",
-+	"TL TTL exceed redirect/copy to CPU",
-+	"TL LPM interface check fail redirect/copy to CPU",
-+	"TL LPM vlan check fail redirect/copy to CPU",
-+	"TL map src check fail redirect/copy to CPU",
-+	"TL map dst check fail redirect/copy to CPU",
-+	"TL map UDP checksum zero redirect/copy to CPU",
-+	"TL map non TCP/UDP redirect/copy to CPU",
-+	"TL forward cmd action redirect/copy to CPU",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"L2 Pre IPO action redirect/copy to CPU",
-+	"L2 tunnel context check invalid redirect/copy to CPU",
-+	"Reserved",
-+	"Reserved",
-+	"Tunnel decap ecn redirect/copy to CPU",
-+	"Tunnel decap inner packet too short redirect/copy to CPU",
-+	"Tunnel VXLAN header exception redirect/copy to CPU",
-+	"Tunnel VXLAN-GPE header exception redirect/copy to CPU",
-+	"Tunnel GENEVE header exception redirect/copy to CPU",
-+	"Tunnel GRE header exception redirect/copy to CPU",
-+	"Reserved",
-+	"Tunnel decap unknown inner type redirect/copy to CPU",
-+	"Tunnel parser VXLAN flag exception redirect/copy to CPU",
-+	"Tunnel parser VXLAN-GPE flag exception redirect/copy to CPU",
-+	"Tunnel parser GRE flag exception redirect/copy to CPU",
-+	"Tunnel parser GENEVE flag exception redirect/copy to CPU",
-+	"Tunnel parser PROGRAM0 exception redirect/copy to CPU",
-+	"Tunnel parser PROGRAM1 exception redirect/copy to CPU",
-+	"Tunnel parser PROGRAM2 exception redirect/copy to CPU",
-+	"Tunnel parser PROGRAM3 exception redirect/copy to CPU",
-+	"Tunnel parser PROGRAM4 exception redirect/copy to CPU",
-+	"Tunnel parser PROGRAM5 exception redirect/copy to CPU",
-+	"Trap for flooding",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Reserved",
-+	"Egress mirror to CPU",
-+	"Ingress mirror to CPU",
++/* UNIPHY clock direction */
++enum {
++	UNIPHY_RX = 0,
++	UNIPHY_TX,
 +};
 +
-+static const char * const ppe_dropcode[] = {
-+	"None",
-+	"Unknown L2 protocol exception drop",
-+	"PPPoE wrong version or wrong type exception drop",
-+	"PPPoE unsupported PPP protocol exception  drop",
-+	"IPv4 wrong version exception drop",
-+	"IPv4 small IHL or header incomplete or data incomplete exception drop",
-+	"IPv4 with option exception drop",
-+	"IPv4 bad total length exception drop",
-+	"IPv4 fragment exception drop",
-+	"IPv4 ping of death exception drop",
-+	"IPv4 small TTL exception drop",
-+	"IPv4 unknown IP protocol exception drop",
-+	"IPv4 checksum error exception drop",
-+	"IPv4 invalid SIP/DIP exception drop",
-+	"IPv4 LAND attack exception drop",
-+	"IPv4 AH or ESP header incomplete or AH header cross 128 byte exception drop",
-+	"IPv6 wrong version exception drop",
-+	"IPv6 header or data incomplete exception drop",
-+	"IPv6 bad payload length exception drop",
-+	"IPv6 with extension header exception drop",
-+	"IPv6 small hop limit exception drop",
-+	"IPv6 invalid SIP/DIP exception drop",
-+	"IPv6 LAND attack exception drop",
-+	"IPv6 fragment exception drop",
-+	"IPv6 ping of death exception drop",
-+	"IPv6 with more than 2 extension headers or unknown last next header exception drop",
-+	"IPv6 AH/ESP/other extension/mobility header incomplete/cross 128 bytes exception drop",
-+	"TCP header incomplete or cross 128 byte or small data offset exception drop",
-+	"TCP same SP and DP exception drop",
-+	"TCP flags VALUE/MASK group 0/1/2/3/4/5/6/7 exception drop",
-+	"TCP checksum error exception drop",
-+	"UDP header incomplete or cross 128 byte or data incomplete exception drop",
-+	"UDP same SP and DP exception drop",
-+	"UDP bad length exception drop",
-+	"UDP checksum error exception drop",
-+	"UDP-Lite header incomplete/same SP and DP/checksum coverage invalid value exception drop",
-+	"UDP-Lite checksum error exception drop",
-+	"L3 route Pre-IPO action exception drop",
-+	"L3 route  Pre-IPO snapt action exception drop",
-+	"L3 route Pre-IPO dnapt action exception drop",
-+	"L3 route Pre-IPO snat action exception drop",
-+	"L3 route Pre-IPO dnat action exception drop",
-+	"Tl L3 if check fail exception drop",
-+	"TL vlan check fail exception drop",
-+	"TL PPPoE Multicast termination exception drop",
-+	"TL de-acceleration exception drop",
-+	"TL UDP checksum zero exception drop",
-+	"TL TTL exceed exception drop",
-+	"TL LPM interface check fail exception drop",
-+	"TL LPM vlan check fail exception drop",
-+	"TL map src check fail exception drop",
-+	"TL map dst check fail exception drop",
-+	"TL map UDP checksum zero exception drop",
-+	"TL map non TCP/UDP exception drop",
-+	"L2 Pre IPO action redirect/copy to CPU",
-+	"L2 tunnel context check invalid redirect/copy to CPU",
-+	"Reserved",
-+	"Reserved",
-+	"Tunnel decap ecn exception drop",
-+	"Tunnel decap inner packet too short exception drop",
-+	"Tunnel VXLAN header exception drop",
-+	"Tunnel VXLAN-GPE header exception drop",
-+	"Tunnel GENEVE header exception drop",
-+	"Tunnel GRE header exception drop",
-+	"Reserved",
-+	"Tunnel decap unknown inner type exception drop",
-+	"Tunnel parser VXLAN, VXLAN-GPE, GRE or GENEVE flag exception drop",
-+	"Tunnel parser PROGRAM0~ PROGRAM5 exception drop",
-+	"TL forward cmd action exception drop",
-+	"L3 multicast bridging action",
-+	"L3 no route with preheader NAT action",
-+	"L3 no route with preheader NAT action error configuration",
-+	"L3 route action drop",
-+	"L3 no route action drop",
-+	"L3 no route next hop invalid action drop",
-+	"L3 no route preheader action drop",
-+	"L3 bridge action drop",
-+	"L3 flow action drop",
-+	"L3 flow miss action drop",
-+	"L2 MRU checking fail drop",
-+	"L2 MTU checking fail drop",
-+	"L3 IP prefix broadcast drop",
-+	"L3 MTU checking fail drop",
-+	"L3 MRU checking fail drop",
-+	"L3 ICMP redirect drop",
-+	"Fake MAC header indicated packet not routing or bypass L3 edit drop",
-+	"L3 IP route TTL zero drop",
-+	"L3 flow service code loop drop",
-+	"L3 flow de-accelerate drop",
-+	"L3 flow source interface check fail drop",
-+	"Flow toggle mismatch exception drop",
-+	"MTU check exception if DF set drop",
-+	"PPPoE multicast packet with IP routing enabled drop",
-+	"IPv4 SG unknown drop",
-+	"IPv6 SG unknown drop",
-+	"ARP SG unknown drop",
-+	"ND SG unknown drop",
-+	"IPv4 SG violation drop",
-+	"IPv6 SG violation drop",
-+	"ARP SG violation drop",
-+	"ND SG violation drop",
-+	"L2 new MAC address drop",
-+	"L2 hash violation drop",
-+	"L2 station move drop",
-+	"L2 learn limit drop",
-+	"L2 SA lookup action drop",
-+	"L2 DA lookup action drop",
-+	"APP_CTRL action drop",
-+	"Ingress VLAN filtering action drop",
-+	"Ingress VLAN translation miss drop",
-+	"Egress VLAN filtering drop",
-+	"Pre-IPO entry hit action drop",
-+	"Post-IPO entry hit action drop",
-+	"Multicast SA or broadcast SA drop",
-+	"No destination drop",
-+	"STG ingress filtering drop",
-+	"STG egress filtering drop",
-+	"Source port filter drop",
-+	"Trunk select fail drop",
-+	"TX MAC disable drop",
-+	"Ingress VLAN tag format drop",
-+	"CRC error drop",
-+	"PAUSE frame drop",
-+	"Promiscuous drop",
-+	"Isolation drop",
-+	"Management packet APP_CTRL drop",
-+	"Fake L2 protocol indicated packet not routing or bypass L3 edit drop",
-+	"Policing drop",
++/* UNIPHY clock data type */
++struct clk_uniphy {
++	struct clk_hw hw;
++	u8 index;
++	u8 dir;
++	unsigned long rate;
 +};
 +
-+static int ppe_prx_drop_counter_get(struct ppe_device *ppe_dev,
-+				    struct seq_file *seq)
++#define to_clk_uniphy(_hw)		container_of(_hw, struct clk_uniphy, hw)
++/* UNIPHY clock rate */
++#define UNIPHY_CLK_RATE_125M		125000000
++#define UNIPHY_CLK_RATE_312P5M		312500000
++
++static void ppe_uniphy_write(struct ppe_uniphy *uniphy, u32 val, u32 reg)
 +{
-+	int i, tag;
++	if (reg >= UNIPHY_INDIRECT_ADDR_START) {
++		writel(FIELD_GET(UNIPHY_INDIRECT_ADDR_HIGH, reg),
++		       uniphy->base + UNIPHY_INDIRECT_AHB_ADDR);
++		writel(val, uniphy->base + UNIPHY_INDIRECT_DATA_ADDR(reg));
++	} else {
++		writel(val, uniphy->base + reg);
++	}
++}
++
++static u32 ppe_uniphy_read(struct ppe_uniphy *uniphy, u32 reg)
++{
++	if (reg >= UNIPHY_INDIRECT_ADDR_START) {
++		writel(FIELD_GET(UNIPHY_INDIRECT_ADDR_HIGH, reg),
++		       uniphy->base + UNIPHY_INDIRECT_AHB_ADDR);
++		return readl(uniphy->base + UNIPHY_INDIRECT_DATA_ADDR(reg));
++	} else {
++		return readl(uniphy->base + reg);
++	}
++}
++
++static int ppe_uniphy_mask(struct ppe_uniphy *uniphy, u32 reg, u32 mask, u32 set)
++{
 +	u32 val;
 +
-+	/* The counter for the packet dropped because of no buffer available,
-+	 * no need to release the buffer.
-+	 */
-+	PREFIX_S("PRX_DROP_CNT", "SILENT_DROP:");
-+	tag = 0;
-+	for (i = 0; i < PPE_DROP_CNT_NUM; i++) {
-+		ppe_read(ppe_dev, PPE_DROP_CNT + i * PPE_DROP_CNT_INC, &val);
++	val = ppe_uniphy_read(uniphy, reg);
++	val &= ~mask;
++	val |= set;
++	ppe_uniphy_write(uniphy, val, reg);
 +
-+		if (val > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
++	return 0;
++}
++
++static unsigned long clk_uniphy_recalc_rate(struct clk_hw *hw,
++					    unsigned long parent_rate)
++{
++	struct clk_uniphy *uniphy = to_clk_uniphy(hw);
++
++	return uniphy->rate;
++}
++
++static int clk_uniphy_determine_rate(struct clk_hw *hw,
++				     struct clk_rate_request *req)
++{
++	if (req->rate <= UNIPHY_CLK_RATE_125M)
++		req->rate = UNIPHY_CLK_RATE_125M;
++	else
++		req->rate = UNIPHY_CLK_RATE_312P5M;
++
++	return 0;
++}
++
++static int clk_uniphy_set_rate(struct clk_hw *hw, unsigned long rate,
++			       unsigned long parent_rate)
++{
++	struct clk_uniphy *uniphy = to_clk_uniphy(hw);
++
++	if (rate != UNIPHY_CLK_RATE_125M && rate != UNIPHY_CLK_RATE_312P5M)
++		return -1;
++
++	uniphy->rate = rate;
++
++	return 0;
++}
++
++static const struct clk_ops clk_uniphy_ops = {
++	.recalc_rate = clk_uniphy_recalc_rate,
++	.determine_rate = clk_uniphy_determine_rate,
++	.set_rate = clk_uniphy_set_rate,
++};
++
++static struct clk_uniphy uniphy0_gcc_rx_clk = {
++	.hw.init = &(struct clk_init_data){
++		.name = "uniphy0_gcc_rx_clk",
++		.ops = &clk_uniphy_ops,
++	},
++	.index = 0,
++	.dir = UNIPHY_RX,
++	.rate = UNIPHY_CLK_RATE_125M,
++};
++
++static struct clk_uniphy uniphy0_gcc_tx_clk = {
++	.hw.init = &(struct clk_init_data){
++		.name = "uniphy0_gcc_tx_clk",
++		.ops = &clk_uniphy_ops,
++	},
++	.index = 0,
++	.dir = UNIPHY_TX,
++	.rate = UNIPHY_CLK_RATE_125M,
++};
++
++static struct clk_uniphy uniphy1_gcc_rx_clk = {
++	.hw.init = &(struct clk_init_data){
++		.name = "uniphy1_gcc_rx_clk",
++		.ops = &clk_uniphy_ops,
++	},
++	.index = 1,
++	.dir = UNIPHY_RX,
++	.rate = UNIPHY_CLK_RATE_312P5M,
++};
++
++static struct clk_uniphy uniphy1_gcc_tx_clk = {
++	.hw.init = &(struct clk_init_data){
++		.name = "uniphy1_gcc_tx_clk",
++		.ops = &clk_uniphy_ops,
++	},
++	.index = 1,
++	.dir = UNIPHY_TX,
++	.rate = UNIPHY_CLK_RATE_312P5M,
++};
++
++static struct clk_uniphy uniphy2_gcc_rx_clk = {
++	.hw.init = &(struct clk_init_data){
++		.name = "uniphy2_gcc_rx_clk",
++		.ops = &clk_uniphy_ops,
++	},
++	.index = 2,
++	.dir = UNIPHY_RX,
++	.rate = UNIPHY_CLK_RATE_312P5M,
++};
++
++static struct clk_uniphy uniphy2_gcc_tx_clk = {
++	.hw.init = &(struct clk_init_data){
++		.name = "uniphy2_gcc_tx_clk",
++		.ops = &clk_uniphy_ops,
++	},
++	.index = 2,
++	.dir = UNIPHY_TX,
++	.rate = UNIPHY_CLK_RATE_312P5M,
++};
++
++static struct clk_hw *uniphy_raw_clks[] = {
++	&uniphy0_gcc_rx_clk.hw, &uniphy0_gcc_tx_clk.hw,
++	&uniphy1_gcc_rx_clk.hw, &uniphy1_gcc_tx_clk.hw,
++	&uniphy2_gcc_rx_clk.hw, &uniphy2_gcc_tx_clk.hw,
++};
++
++int ppe_uniphy_port_gcc_clock_en_set(struct ppe_uniphy *uniphy, int port, bool enable)
++{
++	struct clk **clock = ppe_clock_get(uniphy->ppe_dev);
++	enum ppe_clk_id rx_id, tx_id;
++	int err = 0;
++
++	rx_id = PPE_UNIPHY_PORT1_RX_CLK + ((port - 1) << 1);
++	tx_id = PPE_UNIPHY_PORT1_TX_CLK + ((port - 1) << 1);
++
++	if (enable) {
++		if (!IS_ERR(clock[rx_id])) {
++			err = clk_prepare_enable(clock[rx_id]);
++			if (err) {
++				dev_err(uniphy->ppe_dev->dev,
++					"Failed to enable uniphy port %d rx_clk(%d)\n",
++					port, rx_id);
++				return err;
 +			}
-+
-+			CNT_ONE_TYPE(val, "port", i);
 +		}
-+	}
 +
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_prx_bm_drop_counter_get(struct ppe_device *ppe_dev,
-+				       struct seq_file *seq)
-+{
-+	union ppe_drop_stat_u drop_stat;
-+	int i, tag;
-+
-+	/* The counter for the packet dropped because of no enough buffer
-+	 * to cache packet, some buffer allocated for the part of packet.
-+	 */
-+	PREFIX_S("PRX_BM_DROP_CNT", "OVERFLOW_DROP:");
-+	tag = 0;
-+	for (i = 0; i < PPE_DROP_STAT_NUM; i++) {
-+		memset(&drop_stat, 0, sizeof(drop_stat));
-+		ppe_read_tbl(ppe_dev, PPE_DROP_STAT + PPE_DROP_STAT_INC * i,
-+			     drop_stat.val, sizeof(drop_stat.val));
-+
-+		if (drop_stat.bf.pkt_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
++		if (!IS_ERR(clock[tx_id])) {
++			err = clk_prepare_enable(clock[tx_id]);
++			if (err) {
++				dev_err(uniphy->ppe_dev->dev,
++					"Failed to enable uniphy port %d tx_clk(%d)\n",
++					port, tx_id);
++				return err;
 +			}
-+
-+			CNT_ONE_TYPE(drop_stat.bf.pkt_cnt, "port", i);
 +		}
++	} else {
++		clk_disable_unprepare(clock[rx_id]);
++		clk_disable_unprepare(clock[tx_id]);
 +	}
 +
-+	seq_putc(seq, '\n');
 +	return 0;
 +}
 +
-+static int ppe_prx_bm_port_counter_get(struct ppe_device *ppe_dev,
-+				       struct seq_file *seq)
++static int ppe_uniphy_interface_gcc_clock_en_set(struct ppe_uniphy *uniphy, bool enable)
 +{
-+	int used_cnt, react_cnt;
-+	int i, tag;
-+	u32 val;
++	int ppe_type = ppe_type_get(uniphy->ppe_dev);
++	int port = 0;
 +
-+	/* This is read only counter, which can't be flused. */
-+	PREFIX_S("PRX_BM_PORT_CNT", "USED/REACT:");
-+	tag = 0;
-+	for (i = 0; i < PPE_BM_USED_CNT_NUM; i++) {
-+		ppe_read(ppe_dev, PPE_BM_USED_CNT + i * PPE_BM_USED_CNT_INC, &val);
-+		used_cnt = FIELD_GET(PPE_BM_USED_CNT_VAL, val);
++	switch (uniphy->index) {
++	case 2:
++		ppe_uniphy_port_gcc_clock_en_set(uniphy, PPE_PORT6, enable);
++		break;
++	case 1:
++		if (ppe_type == PPE_TYPE_APPE)
++			ppe_uniphy_port_gcc_clock_en_set(uniphy, PPE_PORT5, enable);
++		else if (ppe_type == PPE_TYPE_MPPE)
++			ppe_uniphy_port_gcc_clock_en_set(uniphy, PPE_PORT2, enable);
++		break;
++	case 0:
++		if (ppe_type == PPE_TYPE_APPE) {
++			for (port = PPE_PORT1; port <= PPE_PORT4; port++)
++				ppe_uniphy_port_gcc_clock_en_set(uniphy, port, enable);
++		} else if (ppe_type == PPE_TYPE_MPPE) {
++			ppe_uniphy_port_gcc_clock_en_set(uniphy, PPE_PORT1, enable);
++		}
++		break;
++	default:
++		break;
++	}
 +
-+		ppe_read(ppe_dev, PPE_BM_REACT_CNT + i * PPE_BM_REACT_CNT_INC, &val);
-+		react_cnt = FIELD_GET(PPE_BM_REACT_CNT_VAL, val);
++	return 0;
++}
 +
-+		if (used_cnt > 0 || react_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
++static int ppe_uniphy_gcc_xpcs_reset(struct ppe_uniphy *uniphy, bool enable)
++{
++	struct reset_control **reset = ppe_reset_get(uniphy->ppe_dev);
++	enum ppe_rst_id id = PPE_UNIPHY0_XPCS_RST + uniphy->index;
++
++	if (IS_ERR(reset[id]))
++		return PTR_ERR(reset[id]);
++
++	if (enable)
++		return reset_control_assert(reset[id]);
++	else
++		return reset_control_deassert(reset[id]);
++}
++
++static int ppe_uniphy_gcc_software_reset(struct ppe_uniphy *uniphy)
++{
++	struct reset_control **reset = ppe_reset_get(uniphy->ppe_dev);
++	int ppe_type = ppe_type_get(uniphy->ppe_dev);
++	unsigned int index = uniphy->index;
++	int err = 0, port = 0;
++
++	/* Assert uniphy sys reset control */
++	if (!IS_ERR(reset[PPE_UNIPHY0_SYS_RST + index])) {
++		err = reset_control_assert(reset[PPE_UNIPHY0_SYS_RST + index]);
++		if (err)
++			return err;
++	}
++
++	/* Assert uniphy port reset control */
++	switch (ppe_type) {
++	case PPE_TYPE_APPE:
++		if (index == 0) {
++			for (port = PPE_PORT1; port <= PPE_PORT4; port++) {
++				if (!IS_ERR(reset[PPE_UNIPHY_PORT1_DIS + port - 1])) {
++					err = reset_control_assert(reset[PPE_UNIPHY_PORT1_DIS +
++								   port - 1]);
++					if (err)
++						return err;
++				}
 +			}
-+
-+			CNT_TWO_TYPE(used_cnt, react_cnt, "port", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_ipx_pkt_counter_get(struct ppe_device *ppe_dev,
-+				   struct seq_file *seq)
-+{
-+	u32 val, tunnel_val;
-+	int i, tag;
-+
-+	PREFIX_S("IPR_PKT_CNT", "TPRX/IPRX:");
-+	tag = 0;
-+	for (i = 0; i < PPE_IPR_PKT_CNT_NUM; i++) {
-+		ppe_read(ppe_dev, PPE_TPR_PKT_CNT + i * PPE_IPR_PKT_CNT_INC, &tunnel_val);
-+		ppe_read(ppe_dev, PPE_IPR_PKT_CNT + i * PPE_IPR_PKT_CNT_INC, &val);
-+
-+		if (tunnel_val > 0 || val > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
-+
-+			CNT_TWO_TYPE(tunnel_val, val, "port", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_port_rx_counter_get(struct ppe_device *ppe_dev,
-+				   struct seq_file *seq)
-+{
-+	union ppe_phy_port_rx_cnt_tbl_u phy_port_rx_cnt;
-+	int i, tag;
-+
-+	PREFIX_S("PORT_RX_CNT", "RX/RX_DROP:");
-+	tag = 0;
-+	for (i = 0; i < PPE_PHY_PORT_RX_CNT_TBL_NUM; i++) {
-+		memset(&phy_port_rx_cnt, 0, sizeof(phy_port_rx_cnt));
-+		ppe_read_tbl(ppe_dev, PPE_PHY_PORT_RX_CNT_TBL + PPE_PHY_PORT_RX_CNT_TBL_INC * i,
-+			     phy_port_rx_cnt.val, sizeof(phy_port_rx_cnt.val));
-+
-+		if (phy_port_rx_cnt.bf.pkt_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
-+
-+			CNT_TWO_TYPE(phy_port_rx_cnt.bf.pkt_cnt, phy_port_rx_cnt.bf.drop_pkt_cnt_0 |
-+			       phy_port_rx_cnt.bf.drop_pkt_cnt_1 << 24, "port", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_vp_rx_counter_get(struct ppe_device *ppe_dev,
-+				 struct seq_file *seq)
-+{
-+	union ppe_port_rx_cnt_tbl_u port_rx_cnt;
-+	int i, tag;
-+
-+	PREFIX_S("VPORT_RX_CNT", "RX/RX_DROP:");
-+	tag = 0;
-+	for (i = 0; i < PPE_PORT_RX_CNT_TBL_NUM; i++) {
-+		memset(&port_rx_cnt, 0, sizeof(port_rx_cnt));
-+		ppe_read_tbl(ppe_dev, PPE_PORT_RX_CNT_TBL + PPE_PORT_RX_CNT_TBL_INC * i,
-+			     port_rx_cnt.val, sizeof(port_rx_cnt.val));
-+
-+		if (port_rx_cnt.bf.pkt_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
-+
-+			CNT_TWO_TYPE(port_rx_cnt.bf.pkt_cnt, port_rx_cnt.bf.drop_pkt_cnt_0 |
-+			       port_rx_cnt.bf.drop_pkt_cnt_1 << 24, "port", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_pre_l2_counter_get(struct ppe_device *ppe_dev,
-+				  struct seq_file *seq)
-+{
-+	union ppe_pre_l2_cnt_tbl_u pre_l2_cnt;
-+	int i, tag;
-+
-+	PREFIX_S("PRE_L2_CNT", "RX/RX_DROP:");
-+	tag = 0;
-+	for (i = 0; i < PPE_PRE_L2_CNT_TBL_NUM; i++) {
-+		memset(&pre_l2_cnt, 0, sizeof(pre_l2_cnt));
-+		ppe_read_tbl(ppe_dev, PPE_PRE_L2_CNT_TBL + PPE_PRE_L2_CNT_TBL_INC * i,
-+			     pre_l2_cnt.val, sizeof(pre_l2_cnt.val));
-+
-+		if (pre_l2_cnt.bf.pkt_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
-+
-+			CNT_TWO_TYPE(pre_l2_cnt.bf.pkt_cnt, pre_l2_cnt.bf.drop_pkt_cnt_0 |
-+			       pre_l2_cnt.bf.drop_pkt_cnt_1 << 24, "vsi", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_vlan_counter_get(struct ppe_device *ppe_dev,
-+				struct seq_file *seq)
-+{
-+	union ppe_vlan_cnt_u vlan_cnt;
-+	int i, tag;
-+
-+	PREFIX_S("VLAN_CNT", "RX:");
-+	tag = 0;
-+	for (i = 0; i < PPE_VLAN_CNT_TBL_NUM; i++) {
-+		memset(&vlan_cnt, 0, sizeof(vlan_cnt));
-+		ppe_read_tbl(ppe_dev, PPE_VLAN_CNT_TBL + PPE_VLAN_CNT_TBL_INC * i,
-+			     vlan_cnt.val, sizeof(vlan_cnt.val));
-+
-+		if (vlan_cnt.bf.pkt_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
-+
-+			CNT_ONE_TYPE(vlan_cnt.bf.pkt_cnt, "vsi", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_cpu_code_counter_get(struct ppe_device *ppe_dev,
-+				    struct seq_file *seq)
-+{
-+	union ppe_drop_cpu_cnt_u drop_cpu_cnt;
-+	int i;
-+
-+	PREFIX_S("CPU_CODE_CNT", "CODE:");
-+	for (i = 0; i < PPE_DROP_CPU_CNT_TBL_NUM; i++) {
-+		memset(&drop_cpu_cnt, 0, sizeof(drop_cpu_cnt));
-+		ppe_read_tbl(ppe_dev, PPE_DROP_CPU_CNT_TBL + PPE_DROP_CPU_CNT_TBL_INC * i,
-+			     drop_cpu_cnt.val, sizeof(drop_cpu_cnt.val));
-+
-+		/* entry index i = cpucode when i < 256;
-+		 * entry index i = 256 + dropcode * 8 + port & 7 when i > =256.
-+		 */
-+		if (!drop_cpu_cnt.bf.pkt_cnt)
-+			continue;
-+
-+		if (i < 256)
-+			CNT_CPU_CODE(drop_cpu_cnt.bf.pkt_cnt, ppe_cpucode[i], i);
-+		else
-+			CNT_DROP_CODE(drop_cpu_cnt.bf.pkt_cnt,
-+				      ppe_dropcode[(i - 256) / 8],
-+				      (i - 256) % 8, (i - 256) / 8);
-+
-+		seq_putc(seq, '\n');
-+		PREFIX_S("", "");
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_eg_vsi_counter_get(struct ppe_device *ppe_dev,
-+				  struct seq_file *seq)
-+{
-+	union ppe_eg_vsi_cnt_tbl_u eg_vsi_cnt;
-+	int i, tag;
-+
-+	PREFIX_S("EG_VSI_CNT", "TX:");
-+	tag = 0;
-+	for (i = 0; i < PPE_EG_VSI_COUNTER_TBL_NUM; i++) {
-+		memset(&eg_vsi_cnt, 0, sizeof(eg_vsi_cnt));
-+		ppe_read_tbl(ppe_dev, PPE_EG_VSI_COUNTER_TBL + PPE_EG_VSI_COUNTER_TBL_INC * i,
-+			     eg_vsi_cnt.val, sizeof(eg_vsi_cnt.val));
-+
-+		if (eg_vsi_cnt.bf.pkt_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
-+
-+			CNT_ONE_TYPE(eg_vsi_cnt.bf.pkt_cnt, "vsi", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_vp_tx_counter_get(struct ppe_device *ppe_dev,
-+				 struct seq_file *seq)
-+{
-+	union ppe_vport_tx_counter_tbl_u vport_tx_counter;
-+	union ppe_vport_tx_drop_u vport_tx_drop;
-+	int i, tag;
-+
-+	PREFIX_S("VPORT_TX_CNT", "TX/TX_DROP:");
-+	tag = 0;
-+	for (i = 0; i < PPE_VPORT_TX_COUNTER_TBL_NUM; i++) {
-+		memset(&vport_tx_counter, 0, sizeof(vport_tx_counter));
-+		memset(&vport_tx_drop, 0, sizeof(vport_tx_drop));
-+
-+		ppe_read_tbl(ppe_dev, PPE_VPORT_TX_COUNTER_TBL + PPE_VPORT_TX_COUNTER_TBL_INC * i,
-+			     vport_tx_counter.val, sizeof(vport_tx_counter.val));
-+		ppe_read_tbl(ppe_dev, PPE_VPORT_TX_DROP_CNT_TBL + PPE_VPORT_TX_DROP_CNT_TBL_INC * i,
-+			     vport_tx_drop.val, sizeof(vport_tx_drop.val));
-+
-+		if (vport_tx_counter.bf.pkt_cnt > 0 || vport_tx_drop.bf.pkt_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
-+
-+			CNT_TWO_TYPE(vport_tx_counter.bf.pkt_cnt,
-+				     vport_tx_drop.bf.pkt_cnt, "port", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_port_tx_counter_get(struct ppe_device *ppe_dev,
-+				   struct seq_file *seq)
-+{
-+	union ppe_port_tx_counter_tbl_u port_tx_counter;
-+	union ppe_port_tx_drop_u port_tx_drop;
-+	int i, tag;
-+
-+	PREFIX_S("PORT_TX_CNT", "TX/TX_DROP:");
-+	tag = 0;
-+	for (i = 0; i < PPE_PORT_TX_COUNTER_TBL_NUM; i++) {
-+		memset(&port_tx_counter, 0, sizeof(port_tx_counter));
-+		memset(&port_tx_drop, 0, sizeof(port_tx_drop));
-+
-+		ppe_read_tbl(ppe_dev, PPE_PORT_TX_COUNTER_TBL + PPE_PORT_TX_COUNTER_TBL_INC * i,
-+			     port_tx_counter.val, sizeof(port_tx_counter.val));
-+		ppe_read_tbl(ppe_dev, PPE_PORT_TX_DROP_CNT_TBL + PPE_PORT_TX_DROP_CNT_TBL_INC * i,
-+			     port_tx_drop.val, sizeof(port_tx_drop.val));
-+
-+		if (port_tx_counter.bf.pkt_cnt > 0 || port_tx_drop.bf.pkt_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
-+
-+			CNT_TWO_TYPE(port_tx_counter.bf.pkt_cnt,
-+				     port_tx_drop.bf.pkt_cnt, "port", i);
-+		}
-+	}
-+
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
-+
-+static int ppe_queue_tx_counter_get(struct ppe_device *ppe_dev,
-+				    struct seq_file *seq)
-+{
-+	union ppe_queue_tx_counter_tbl_u queue_tx_counter;
-+	u32 val, pend_cnt;
-+	int i, tag;
-+
-+	PREFIX_S("QUEUE_TX_CNT", "TX/PEND:");
-+	tag = 0;
-+	for (i = 0; i < PPE_QUEUE_TX_COUNTER_TBL_NUM; i++) {
-+		memset(&queue_tx_counter, 0, sizeof(queue_tx_counter));
-+		ppe_read_tbl(ppe_dev, PPE_QUEUE_TX_COUNTER_TBL + PPE_QUEUE_TX_COUNTER_TBL_INC * i,
-+			     queue_tx_counter.val, sizeof(queue_tx_counter.val));
-+
-+		if (i < PPE_AC_UNI_QUEUE_CFG_TBL_NUM) {
-+			ppe_read(ppe_dev, PPE_AC_UNI_QUEUE_CNT_TBL +
-+				 PPE_AC_UNI_QUEUE_CNT_TBL_INC * i, &val);
-+			pend_cnt = FIELD_GET(PPE_AC_UNI_QUEUE_CNT_TBL_PEND_CNT, val);
 +		} else {
-+			ppe_read(ppe_dev, PPE_AC_MUL_QUEUE_CNT_TBL +
-+				 PPE_AC_MUL_QUEUE_CNT_TBL_INC *
-+				 (i - PPE_AC_UNI_QUEUE_CFG_TBL_NUM), &val);
-+			pend_cnt = FIELD_GET(PPE_AC_MUL_QUEUE_CNT_TBL_PEND_CNT, val);
++			if (!IS_ERR(reset[PPE_UNIPHY0_SOFT_RST + index])) {
++				err = reset_control_assert(reset[PPE_UNIPHY0_SOFT_RST + index]);
++				if (err)
++					return err;
++			}
++		}
++		break;
++	case PPE_TYPE_MPPE:
++		if (!IS_ERR(reset[PPE_UNIPHY_PORT1_RX_RST + (index << 1)])) {
++			err = reset_control_assert(reset[PPE_UNIPHY_PORT1_RX_RST + (index << 1)]);
++			if (err)
++				return err;
 +		}
 +
-+		if (queue_tx_counter.bf.pkt_cnt > 0 || pend_cnt > 0) {
-+			tag++;
-+			if (!(tag % 4)) {
-+				seq_putc(seq, '\n');
-+				PREFIX_S("", "");
-+			}
++		if (!IS_ERR(reset[PPE_UNIPHY_PORT1_TX_RST + (index << 1)])) {
++			err = reset_control_assert(reset[PPE_UNIPHY_PORT1_TX_RST + (index << 1)]);
++			if (err)
++				return err;
++		}
++		break;
++	default:
++		break;
++	}
++	fsleep(100000);
 +
-+			CNT_TWO_TYPE(queue_tx_counter.bf.pkt_cnt, pend_cnt, "queue", i);
++	/* Deassert uniphy sys reset control */
++	if (!IS_ERR(reset[PPE_UNIPHY0_SYS_RST + index])) {
++		err = reset_control_deassert(reset[PPE_UNIPHY0_SYS_RST + index]);
++		if (err)
++			return err;
++	}
++
++	/* Deassert uniphy port reset control */
++	switch (ppe_type) {
++	case PPE_TYPE_APPE:
++		if (index == 0) {
++			for (port = PPE_PORT1; port <= PPE_PORT4; port++) {
++				if (!IS_ERR(reset[PPE_UNIPHY_PORT1_DIS + port - 1])) {
++					err = reset_control_deassert(reset[PPE_UNIPHY_PORT1_DIS +
++								     port - 1]);
++					if (err)
++						return err;
++				}
++			}
++		} else {
++			if (!IS_ERR(reset[PPE_UNIPHY0_SOFT_RST + index])) {
++				err = reset_control_deassert(reset[PPE_UNIPHY0_SOFT_RST + index]);
++				if (err)
++					return err;
++			}
++		}
++		break;
++	case PPE_TYPE_MPPE:
++		if (!IS_ERR(reset[PPE_UNIPHY_PORT1_RX_RST + (index << 1)])) {
++			err = reset_control_deassert(reset[PPE_UNIPHY_PORT1_RX_RST + (index << 1)]);
++			if (err)
++				return err;
++		}
++
++		if (!IS_ERR(reset[PPE_UNIPHY_PORT1_TX_RST + (index << 1)])) {
++			err = reset_control_deassert(reset[PPE_UNIPHY_PORT1_TX_RST + (index << 1)]);
++			if (err)
++				return err;
++		}
++		break;
++	default:
++		break;
++	}
++	fsleep(100000);
++
++	return err;
++}
++
++int ppe_uniphy_autoneg_complete_check(struct ppe_uniphy *uniphy, int port)
++{
++	u32 reg, val;
++	int channel, ret;
++
++	if (uniphy->interface == PHY_INTERFACE_MODE_USXGMII ||
++	    uniphy->interface == PHY_INTERFACE_MODE_QUSGMII) {
++		/* Only uniphy0 may have multi channels */
++		channel = (uniphy->index == 0) ? (port - 1) : 0;
++		reg = (channel == 0) ? VR_MII_AN_INTR_STS_ADDR :
++		       VR_MII_AN_INTR_STS_CHANNEL_ADDR(channel);
++
++		/* Wait auto negotiation complete */
++		ret = read_poll_timeout(ppe_uniphy_read, val,
++					(val & CL37_ANCMPLT_INTR),
++					1000, 100000, true,
++					uniphy, reg);
++		if (ret) {
++			dev_err(uniphy->ppe_dev->dev,
++				"uniphy %d auto negotiation timeout\n", uniphy->index);
++			return ret;
++		}
++
++		/* Clear auto negotiation complete interrupt */
++		ppe_uniphy_mask(uniphy, reg, CL37_ANCMPLT_INTR, 0);
++	}
++
++	return 0;
++}
++
++int ppe_uniphy_speed_set(struct ppe_uniphy *uniphy, int port, int speed)
++{
++	u32 reg, val;
++	int channel;
++
++	if (uniphy->interface == PHY_INTERFACE_MODE_USXGMII ||
++	    uniphy->interface == PHY_INTERFACE_MODE_QUSGMII) {
++		/* Only uniphy0 may have multiple channels */
++		channel = (uniphy->index == 0) ? (port - 1) : 0;
++
++		reg = (channel == 0) ? SR_MII_CTRL_ADDR :
++		       SR_MII_CTRL_CHANNEL_ADDR(channel);
++
++		switch (speed) {
++		case SPEED_100:
++			val = USXGMII_SPEED_100;
++			break;
++		case SPEED_1000:
++			val = USXGMII_SPEED_1000;
++			break;
++		case SPEED_2500:
++			val = USXGMII_SPEED_2500;
++			break;
++		case SPEED_5000:
++			val = USXGMII_SPEED_5000;
++			break;
++		case SPEED_10000:
++			val = USXGMII_SPEED_10000;
++			break;
++		case SPEED_10:
++			val = USXGMII_SPEED_10;
++			break;
++		default:
++			val = 0;
++			break;
++		}
++
++		ppe_uniphy_mask(uniphy, reg, USXGMII_SPEED_MASK, val);
++	}
++
++	return 0;
++}
++
++int ppe_uniphy_duplex_set(struct ppe_uniphy *uniphy, int port, int duplex)
++{
++	u32 reg;
++	int channel;
++
++	if (uniphy->interface == PHY_INTERFACE_MODE_USXGMII &&
++	    uniphy->interface == PHY_INTERFACE_MODE_QUSGMII) {
++		/* Only uniphy0 may have multiple channels */
++		channel = (uniphy->index == 0) ? (port - 1) : 0;
++
++		reg = (channel == 0) ? SR_MII_CTRL_ADDR :
++		       SR_MII_CTRL_CHANNEL_ADDR(channel);
++
++		ppe_uniphy_mask(uniphy, reg, USXGMII_DUPLEX_FULL,
++				(duplex == DUPLEX_FULL) ? USXGMII_DUPLEX_FULL : 0);
++	}
++
++	return 0;
++}
++
++int ppe_uniphy_adapter_reset(struct ppe_uniphy *uniphy, int port)
++{
++	int channel;
++
++	/* Only uniphy0 may have multiple channels */
++	channel = (uniphy->index == 0) ? (port - 1) : 0;
++
++	switch (uniphy->interface) {
++	case PHY_INTERFACE_MODE_USXGMII:
++	case PHY_INTERFACE_MODE_QUSGMII:
++		if (channel == 0)
++			ppe_uniphy_mask(uniphy,
++					VR_XS_PCS_DIG_CTRL1_ADDR,
++					USRA_RST, USRA_RST);
++		else
++			ppe_uniphy_mask(uniphy,
++					VR_MII_DIG_CTRL1_CHANNEL_ADDR(channel),
++					CHANNEL_USRA_RST, CHANNEL_USRA_RST);
++		break;
++	case PHY_INTERFACE_MODE_SGMII:
++	case PHY_INTERFACE_MODE_1000BASEX:
++	case PHY_INTERFACE_MODE_2500BASEX:
++	case PHY_INTERFACE_MODE_QSGMII:
++		ppe_uniphy_mask(uniphy,
++				UNIPHY_CHANNEL_INPUT_OUTPUT_4_ADDR(channel),
++				NEWADDEDFROMHERE_CH_ADP_SW_RSTN, 0);
++		ppe_uniphy_mask(uniphy,
++				UNIPHY_CHANNEL_INPUT_OUTPUT_4_ADDR(channel),
++				NEWADDEDFROMHERE_CH_ADP_SW_RSTN,
++				NEWADDEDFROMHERE_CH_ADP_SW_RSTN);
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++static int ppe_pcs_config(struct phylink_pcs *pcs, unsigned int mode,
++			  phy_interface_t interface,
++			  const unsigned long *advertising,
++			  bool permit_pause_to_mac)
++{
++	struct ppe_uniphy *uniphy = pcs_to_ppe_uniphy(pcs);
++	unsigned long rate = 0;
++	int ret, channel = 0;
++	u32 val = 0;
++
++	if (uniphy->interface == interface)
++		return 0;
++
++	uniphy->interface = interface;
++
++	/* Disable gcc uniphy interface clock */
++	ppe_uniphy_interface_gcc_clock_en_set(uniphy, false);
++
++	/* Assert gcc uniphy xpcs reset control */
++	ppe_uniphy_gcc_xpcs_reset(uniphy, true);
++
++	/* Configure uniphy mode */
++	switch (interface) {
++	case PHY_INTERFACE_MODE_USXGMII:
++	case PHY_INTERFACE_MODE_10GBASER:
++	case PHY_INTERFACE_MODE_QUSGMII:
++		rate = UNIPHY_CLK_RATE_312P5M;
++		ppe_uniphy_mask(uniphy, UNIPHY_MODE_CTRL_ADDR,
++				USXGMII_MODE_CTRL_MASK, USXGMII_MODE_CTRL);
++		break;
++	case PHY_INTERFACE_MODE_2500BASEX:
++		rate = UNIPHY_CLK_RATE_312P5M;
++		ppe_uniphy_mask(uniphy, UNIPHY_MODE_CTRL_ADDR,
++				SGMIIPLUS_MODE_CTRL_MASK, SGMIIPLUS_MODE_CTRL);
++		break;
++	case PHY_INTERFACE_MODE_SGMII:
++	case PHY_INTERFACE_MODE_1000BASEX:
++		rate = UNIPHY_CLK_RATE_125M;
++		ppe_uniphy_mask(uniphy, UNIPHY_MODE_CTRL_ADDR,
++				SGMII_MODE_CTRL_MASK, SGMII_MODE_CTRL);
++		break;
++	case PHY_INTERFACE_MODE_QSGMII:
++		rate = UNIPHY_CLK_RATE_125M;
++		ppe_uniphy_mask(uniphy, UNIPHY_MODE_CTRL_ADDR,
++				QSGMII_MODE_CTRL_MASK, QSGMII_MODE_CTRL);
++		break;
++	default:
++		break;
++	}
++
++	if (interface == PHY_INTERFACE_MODE_QUSGMII)
++		ppe_uniphy_mask(uniphy, UNIPHY_QP_USXG_OPITON1_ADDR,
++				GMII_SRC_SEL, GMII_SRC_SEL);
++
++	if (interface == PHY_INTERFACE_MODE_10GBASER)
++		ppe_uniphy_mask(uniphy, UNIPHY_LINK_DETECT_ADDR,
++				DETECT_LOS_FROM_SFP, UNIPHY_10GR_LINK_LOSS);
++
++	/* Reset uniphy gcc software reset control */
++	ppe_uniphy_gcc_software_reset(uniphy);
++
++	/* Wait uniphy calibration completion */
++	ret = read_poll_timeout(ppe_uniphy_read, val,
++				(val & MMD1_REG_CALIBRATION_DONE_REG),
++				1000, 100000, true,
++				uniphy, UNIPHY_OFFSET_CALIB_4_ADDR);
++	if (ret) {
++		dev_err(uniphy->ppe_dev->dev,
++			"uniphy %d calibration timeout\n", uniphy->index);
++		return ret;
++	}
++
++	/* Enable gcc uniphy interface clk */
++	ppe_uniphy_interface_gcc_clock_en_set(uniphy, true);
++
++	/* Deassert gcc uniphy xpcs reset control */
++	if (interface == PHY_INTERFACE_MODE_USXGMII ||
++	    interface == PHY_INTERFACE_MODE_10GBASER ||
++		interface == PHY_INTERFACE_MODE_QUSGMII)
++		ppe_uniphy_gcc_xpcs_reset(uniphy, false);
++
++	if (interface == PHY_INTERFACE_MODE_USXGMII ||
++	    interface == PHY_INTERFACE_MODE_QUSGMII) {
++		/* Wait 10gr link up */
++		ret = read_poll_timeout(ppe_uniphy_read, val,
++					(val & SR_XS_PCS_KR_STS1_PLU),
++					1000, 100000, true,
++					uniphy, SR_XS_PCS_KR_STS1_ADDR);
++		if (ret)
++			dev_warn(uniphy->ppe_dev->dev,
++				 "uniphy %d 10gr linkup timeout\n", uniphy->index);
++
++		/* Enable usxgmii */
++		ppe_uniphy_mask(uniphy, VR_XS_PCS_DIG_CTRL1_ADDR, USXGMII_EN, USXGMII_EN);
++
++		if (interface == PHY_INTERFACE_MODE_QUSGMII) {
++			/* XPCS set quxgmii mode */
++			ppe_uniphy_mask(uniphy, VR_XS_PCS_DIG_STS_ADDR, AM_COUNT, QUXGMII_AM_COUNT);
++			ppe_uniphy_mask(uniphy, VR_XS_PCS_KR_CTRL_ADDR, USXG_MODE, QUXGMII_MODE);
++			/* XPCS software reset */
++			ppe_uniphy_mask(uniphy, VR_XS_PCS_DIG_CTRL1_ADDR, VR_RST, VR_RST);
++		}
++
++		/* Enable autoneg complete interrupt and 10M/100M 8bit mii width */
++		ppe_uniphy_mask(uniphy, VR_MII_AN_CTRL_ADDR,
++				MII_AN_INTR_EN | MII_CTRL, MII_AN_INTR_EN | MII_CTRL);
++
++		if (interface == PHY_INTERFACE_MODE_QUSGMII) {
++			for (channel = 1; channel <= 3; channel++)
++				ppe_uniphy_mask(uniphy, VR_MII_AN_CTRL_CHANNEL_ADDR(channel),
++						MII_AN_INTR_EN | MII_CTRL,
++						MII_AN_INTR_EN | MII_CTRL);
++			/* Disable TICD */
++			ppe_uniphy_mask(uniphy, VR_XAUI_MODE_CTRL_ADDR, IPG_CHECK, IPG_CHECK);
++			for (channel = 1; channel <= 3; channel++)
++				ppe_uniphy_mask(uniphy, VR_XAUI_MODE_CTRL_CHANNEL_ADDR(channel),
++						IPG_CHECK, IPG_CHECK);
++		}
++
++		/* Enable autoneg ability and usxgmii 10g speed and full duplex */
++		ppe_uniphy_mask(uniphy, SR_MII_CTRL_ADDR,
++				USXGMII_SPEED_MASK | AN_ENABLE | USXGMII_DUPLEX_FULL,
++				USXGMII_SPEED_10000 | AN_ENABLE | USXGMII_DUPLEX_FULL);
++		if (interface == PHY_INTERFACE_MODE_QUSGMII) {
++			for (channel = 1; channel <= 3; channel++)
++				ppe_uniphy_mask(uniphy, SR_MII_CTRL_CHANNEL_ADDR(channel),
++						USXGMII_SPEED_MASK | AN_ENABLE |
++						USXGMII_DUPLEX_FULL,
++						USXGMII_SPEED_10000 | AN_ENABLE |
++						USXGMII_DUPLEX_FULL);
++
++			/* Enable eee transparent mode */
++			ppe_uniphy_mask(uniphy, VR_XS_PCS_EEE_MCTRL0_ADDR,
++					MULT_FACT_100NS | SIGN_BIT,
++					FIELD_PREP(MULT_FACT_100NS, 0x1) | SIGN_BIT);
++			ppe_uniphy_mask(uniphy, VR_XS_PCS_EEE_TXTIMER_ADDR,
++					TSL_RES | T1U_RES | TWL_RES,
++					UNIPHY_XPCS_TSL_TIMER |
++					UNIPHY_XPCS_T1U_TIMER | UNIPHY_XPCS_TWL_TIMER);
++			ppe_uniphy_mask(uniphy, VR_XS_PCS_EEE_RXTIMER_ADDR,
++					RES_100U | TWR_RES,
++					UNIPHY_XPCS_100US_TIMER | UNIPHY_XPCS_TWR_TIMER);
++
++			ppe_uniphy_mask(uniphy, VR_XS_PCS_EEE_MCTRL1_ADDR,
++					TRN_LPI | TRN_RXLPI, TRN_LPI | TRN_RXLPI);
++			ppe_uniphy_mask(uniphy, VR_XS_PCS_EEE_MCTRL0_ADDR,
++					LTX_EN | LRX_EN, LTX_EN | LRX_EN);
 +		}
 +	}
 +
-+	seq_putc(seq, '\n');
-+	return 0;
-+}
++	/* Set uniphy raw clk rate */
++	clk_set_rate(uniphy_raw_clks[(uniphy->index << 1) + UNIPHY_RX]->clk,
++		     rate);
++	clk_set_rate(uniphy_raw_clks[(uniphy->index << 1) + UNIPHY_TX]->clk,
++		     rate);
 +
-+static int ppe_packet_counter_show(struct seq_file *seq, void *v)
-+{
-+	struct ppe_device *ppe_dev = seq->private;
-+
-+	ppe_prx_drop_counter_get(ppe_dev, seq);
-+	ppe_prx_bm_drop_counter_get(ppe_dev, seq);
-+	ppe_prx_bm_port_counter_get(ppe_dev, seq);
-+	ppe_ipx_pkt_counter_get(ppe_dev, seq);
-+	ppe_port_rx_counter_get(ppe_dev, seq);
-+	ppe_vp_rx_counter_get(ppe_dev, seq);
-+	ppe_pre_l2_counter_get(ppe_dev, seq);
-+	ppe_vlan_counter_get(ppe_dev, seq);
-+	ppe_cpu_code_counter_get(ppe_dev, seq);
-+	ppe_eg_vsi_counter_get(ppe_dev, seq);
-+	ppe_vp_tx_counter_get(ppe_dev, seq);
-+	ppe_port_tx_counter_get(ppe_dev, seq);
-+	ppe_queue_tx_counter_get(ppe_dev, seq);
++	dev_info(uniphy->ppe_dev->dev,
++		 "ppe pcs config uniphy index %d, interface %s\n",
++		 uniphy->index, phy_modes(interface));
 +
 +	return 0;
 +}
 +
-+static int ppe_packet_counter_open(struct inode *inode, struct file *file)
++static void ppe_pcs_get_state(struct phylink_pcs *pcs,
++			      struct phylink_link_state *state)
 +{
-+	return single_open(file, ppe_packet_counter_show, inode->i_private);
-+}
-+
-+static ssize_t ppe_packet_counter_clear(struct file *file,
-+					const char __user *buf,
-+					size_t count, loff_t *pos)
-+{
-+	union ppe_port_tx_counter_tbl_u port_tx_counter;
-+	union ppe_vport_tx_counter_tbl_u vport_tx_counter;
-+	union ppe_queue_tx_counter_tbl_u queue_tx_counter;
-+	union ppe_phy_port_rx_cnt_tbl_u phy_port_rx_cnt;
-+	union ppe_port_rx_cnt_tbl_u port_rx_cnt;
-+	union ppe_pre_l2_cnt_tbl_u pre_l2_cnt;
-+	union ppe_eg_vsi_cnt_tbl_u eg_vsi_cnt;
-+	union ppe_vport_tx_drop_u vport_tx_drop;
-+	union ppe_port_tx_drop_u port_tx_drop;
-+	union ppe_drop_cpu_cnt_u drop_cpu_cnt;
-+	union ppe_drop_stat_u drop_stat;
-+	union ppe_vlan_cnt_u vlan_cnt;
-+	struct ppe_device *ppe_dev;
++	struct ppe_uniphy *uniphy = pcs_to_ppe_uniphy(pcs);
 +	u32 val;
-+	int i;
 +
-+	memset(&drop_stat, 0, sizeof(drop_stat));
-+	memset(&vlan_cnt, 0, sizeof(vlan_cnt));
-+	memset(&pre_l2_cnt, 0, sizeof(pre_l2_cnt));
-+	memset(&port_tx_drop, 0, sizeof(port_tx_drop));
-+	memset(&eg_vsi_cnt, 0, sizeof(eg_vsi_cnt));
-+	memset(&port_tx_counter, 0, sizeof(port_tx_counter));
-+	memset(&vport_tx_counter, 0, sizeof(vport_tx_counter));
-+	memset(&queue_tx_counter, 0, sizeof(queue_tx_counter));
-+	memset(&vport_tx_drop, 0, sizeof(vport_tx_drop));
-+	memset(&drop_cpu_cnt, 0, sizeof(drop_cpu_cnt));
-+	memset(&port_rx_cnt, 0, sizeof(port_rx_cnt));
-+	memset(&phy_port_rx_cnt, 0, sizeof(phy_port_rx_cnt));
-+
-+	val = 0;
-+	ppe_dev = file_inode(file)->i_private;
-+	for (i = 0; i < PPE_DROP_CNT_NUM; i++)
-+		ppe_write(ppe_dev, PPE_DROP_CNT + i * PPE_DROP_CNT_INC, val);
-+
-+	for (i = 0; i < PPE_DROP_STAT_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_DROP_STAT + PPE_DROP_STAT_INC * i,
-+			      drop_stat.val, sizeof(drop_stat.val));
-+
-+	for (i = 0; i < PPE_IPR_PKT_CNT_NUM; i++)
-+		ppe_write(ppe_dev, PPE_IPR_PKT_CNT + i * PPE_IPR_PKT_CNT_INC, val);
-+
-+	for (i = 0; i < PPE_VLAN_CNT_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_VLAN_CNT_TBL + PPE_VLAN_CNT_TBL_INC * i,
-+			      vlan_cnt.val, sizeof(vlan_cnt.val));
-+
-+	for (i = 0; i < PPE_PRE_L2_CNT_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_PRE_L2_CNT_TBL + PPE_PRE_L2_CNT_TBL_INC * i,
-+			      pre_l2_cnt.val, sizeof(pre_l2_cnt.val));
-+
-+	for (i = 0; i < PPE_PORT_TX_DROP_CNT_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_PORT_TX_DROP_CNT_TBL + PPE_PORT_TX_DROP_CNT_TBL_INC * i,
-+			      port_tx_drop.val, sizeof(port_tx_drop.val));
-+
-+	for (i = 0; i < PPE_EG_VSI_COUNTER_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_EG_VSI_COUNTER_TBL + PPE_EG_VSI_COUNTER_TBL_INC * i,
-+			      eg_vsi_cnt.val, sizeof(eg_vsi_cnt.val));
-+
-+	for (i = 0; i < PPE_PORT_TX_COUNTER_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_PORT_TX_COUNTER_TBL + PPE_PORT_TX_COUNTER_TBL_INC * i,
-+			      port_tx_counter.val, sizeof(port_tx_counter.val));
-+
-+	for (i = 0; i < PPE_VPORT_TX_COUNTER_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_VPORT_TX_COUNTER_TBL + PPE_VPORT_TX_COUNTER_TBL_INC * i,
-+			      vport_tx_counter.val, sizeof(vport_tx_counter.val));
-+
-+	for (i = 0; i < PPE_QUEUE_TX_COUNTER_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_QUEUE_TX_COUNTER_TBL + PPE_QUEUE_TX_COUNTER_TBL_INC * i,
-+			      queue_tx_counter.val, sizeof(queue_tx_counter.val));
-+
-+	ppe_write(ppe_dev, PPE_EPE_DBG_IN_CNT, val);
-+	ppe_write(ppe_dev, PPE_EPE_DBG_OUT_CNT, val);
-+
-+	for (i = 0; i < PPE_VPORT_TX_DROP_CNT_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_VPORT_TX_DROP_CNT_TBL +
-+			      PPE_VPORT_TX_DROP_CNT_TBL_INC * i,
-+			      vport_tx_drop.val, sizeof(vport_tx_drop.val));
-+
-+	for (i = 0; i < PPE_DROP_CPU_CNT_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_DROP_CPU_CNT_TBL + PPE_DROP_CPU_CNT_TBL_INC * i,
-+			      drop_cpu_cnt.val, sizeof(drop_cpu_cnt.val));
-+
-+	for (i = 0; i < PPE_PORT_RX_CNT_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_PORT_RX_CNT_TBL + PPE_PORT_RX_CNT_TBL_INC * i,
-+			      port_rx_cnt.val, sizeof(port_rx_cnt.val));
-+
-+	for (i = 0; i < PPE_PHY_PORT_RX_CNT_TBL_NUM; i++)
-+		ppe_write_tbl(ppe_dev, PPE_PHY_PORT_RX_CNT_TBL + PPE_PHY_PORT_RX_CNT_TBL_INC * i,
-+			      phy_port_rx_cnt.val, sizeof(phy_port_rx_cnt.val));
-+
-+	return count;
++	switch (state->interface) {
++	case PHY_INTERFACE_MODE_10GBASER:
++		val = ppe_uniphy_read(uniphy, SR_XS_PCS_KR_STS1_ADDR);
++		state->link = (val & SR_XS_PCS_KR_STS1_PLU) ? 1 : 0;
++		state->duplex = DUPLEX_FULL;
++		state->speed = SPEED_10000;
++		state->pause |= (MLO_PAUSE_RX | MLO_PAUSE_TX);
++		break;
++	case PHY_INTERFACE_MODE_2500BASEX:
++		val = ppe_uniphy_read(uniphy, UNIPHY_CHANNEL0_INPUT_OUTPUT_6_ADDR);
++		state->link = (val & NEWADDEDFROMHERE_CH0_LINK_MAC) ? 1 : 0;
++		state->duplex = DUPLEX_FULL;
++		state->speed = SPEED_2500;
++		state->pause |= (MLO_PAUSE_RX | MLO_PAUSE_TX);
++		break;
++	case PHY_INTERFACE_MODE_1000BASEX:
++	case PHY_INTERFACE_MODE_SGMII:
++		val = ppe_uniphy_read(uniphy, UNIPHY_CHANNEL0_INPUT_OUTPUT_6_ADDR);
++		state->link = (val & NEWADDEDFROMHERE_CH0_LINK_MAC) ? 1 : 0;
++		state->duplex = (val & NEWADDEDFROMHERE_CH0_DUPLEX_MODE_MAC) ?
++			DUPLEX_FULL : DUPLEX_HALF;
++		if (FIELD_GET(NEWADDEDFROMHERE_CH0_SPEED_MODE_MAC, val) == UNIPHY_SPEED_10M)
++			state->speed = SPEED_10;
++		else if (FIELD_GET(NEWADDEDFROMHERE_CH0_SPEED_MODE_MAC, val) == UNIPHY_SPEED_100M)
++			state->speed = SPEED_100;
++		else if (FIELD_GET(NEWADDEDFROMHERE_CH0_SPEED_MODE_MAC, val) == UNIPHY_SPEED_1000M)
++			state->speed = SPEED_1000;
++		state->pause |= (MLO_PAUSE_RX | MLO_PAUSE_TX);
++		break;
++	default:
++		break;
++	}
 +}
 +
-+static const struct file_operations ppe_debugfs_packet_counter_fops = {
-+	.owner   = THIS_MODULE,
-+	.open    = ppe_packet_counter_open,
-+	.read    = seq_read,
-+	.llseek  = seq_lseek,
-+	.release = single_release,
-+	.write   = ppe_packet_counter_clear,
++static void ppe_pcs_an_restart(struct phylink_pcs *pcs)
++{
++}
++
++static const struct phylink_pcs_ops ppe_pcs_ops = {
++	.pcs_get_state = ppe_pcs_get_state,
++	.pcs_config = ppe_pcs_config,
++	.pcs_an_restart = ppe_pcs_an_restart,
 +};
 +
-+int ppe_debugfs_setup(struct ppe_device *ppe_dev)
++static void uniphy_clk_release_provider(void *res)
 +{
-+	ppe_dev->debugfs_root = debugfs_create_dir("ppe", NULL);
-+	debugfs_create_file("packet_counter", 0444,
-+			    ppe_dev->debugfs_root,
-+			    ppe_dev,
-+			    &ppe_debugfs_packet_counter_fops);
-+	return 0;
++	of_clk_del_provider(res);
 +}
 +
-+void ppe_debugfs_teardown(struct ppe_device *ppe_dev)
++struct ppe_uniphy *ppe_uniphy_setup(struct platform_device *pdev)
 +{
-+	debugfs_remove_recursive(ppe_dev->debugfs_root);
-+	ppe_dev->debugfs_root = NULL;
++	struct clk_hw_onecell_data *uniphy_clk_data = NULL;
++	struct device_node *np;
++	struct ppe_device *ppe_dev = platform_get_drvdata(pdev);
++	struct ppe_uniphy *uniphy;
++	int i, ret, clk_num = 0;
++
++	np = of_get_child_by_name(pdev->dev.of_node, "qcom-uniphy");
++	if (!np) {
++		dev_err(&pdev->dev, "Failed to find uniphy node\n");
++		return ERR_PTR(-ENODEV);
++	}
++
++	/* Register uniphy raw clock */
++	clk_num = of_property_count_strings(np, "clock-output-names");
++	if (clk_num < 0) {
++		dev_err(&pdev->dev, "%pOFn: invalid clock output count\n", np);
++		goto err_node_put;
++	}
++
++	uniphy_clk_data = devm_kzalloc(&pdev->dev,
++				       struct_size(uniphy_clk_data, hws, clk_num),
++				       GFP_KERNEL);
++	if (!uniphy_clk_data) {
++		ret = -ENOMEM;
++		goto err_node_put;
++	}
++
++	uniphy_clk_data->num = clk_num;
++	for (i = 0; i < clk_num; i++) {
++		ret = of_property_read_string_index(np, "clock-output-names", i,
++						    (const char **)&uniphy_raw_clks[i]->init->name);
++		if (ret) {
++			dev_err(&pdev->dev, "invalid clock name @ %pOFn\n", np);
++			goto err_node_put;
++		}
++
++		ret = devm_clk_hw_register(&pdev->dev, uniphy_raw_clks[i]);
++		if (ret)
++			goto err_node_put;
++		uniphy_clk_data->hws[i] = uniphy_raw_clks[i];
++	}
++
++	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, uniphy_clk_data);
++	if (ret)
++		goto err_node_put;
++
++	ret = devm_add_action_or_reset(&pdev->dev, uniphy_clk_release_provider, np);
++	if (ret)
++		goto err_node_put;
++
++	/* Initialize each uniphy structure */
++	uniphy = devm_kzalloc(&pdev->dev, sizeof(*uniphy) * (clk_num >> 1), GFP_KERNEL);
++	if (!uniphy) {
++		ret = -ENOMEM;
++		goto err_node_put;
++	}
++
++	for (i = 0; i < (clk_num >> 1); i++) {
++		uniphy[i].base = devm_of_iomap(&pdev->dev, np, i, NULL);
++		if (IS_ERR(uniphy[i].base)) {
++			ret = PTR_ERR(uniphy[i].base);
++			goto err_node_put;
++		}
++		uniphy[i].index = i;
++		uniphy[i].interface = PHY_INTERFACE_MODE_NA;
++		uniphy[i].ppe_dev = ppe_dev;
++		uniphy[i].pcs.ops = &ppe_pcs_ops;
++		uniphy[i].pcs.poll = true;
++	}
++	of_node_put(np);
++	return uniphy;
++
++err_node_put:
++	of_node_put(np);
++	return ERR_PTR(ret);
 +}
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.h b/drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.h
+diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_uniphy.h b/drivers/net/ethernet/qualcomm/ppe/ppe_uniphy.h
 new file mode 100644
-index 000000000000..97463216d5af
+index 000000000000..ec547e520937
 --- /dev/null
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.h
-@@ -0,0 +1,25 @@
++++ b/drivers/net/ethernet/qualcomm/ppe/ppe_uniphy.h
+@@ -0,0 +1,227 @@
 +/* SPDX-License-Identifier: GPL-2.0-only
 + *
 + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 + */
 +
-+/* PPE debugfs counters setup. */
++/* PPE UNIPHY functions and UNIPHY hardware registers declarations. */
 +
-+#ifndef __PPE_DEBUGFS_H__
-+#define __PPE_DEBUGFS_H__
++#ifndef _PPE_UNIPHY_H_
++#define _PPE_UNIPHY_H_
 +
-+#define PREFIX_S(desc, cnt_type) \
-+	seq_printf(seq, "%-16s %16s", desc, cnt_type)
-+#define CNT_ONE_TYPE(cnt, str, index) \
-+	seq_printf(seq, "%10u(%s=%04d)", cnt, str, index)
-+#define CNT_TWO_TYPE(cnt, cnt1, str, index) \
-+	seq_printf(seq, "%10u/%u(%s=%04d)", cnt, cnt1, str, index)
-+#define CNT_CPU_CODE(cnt, str, index) \
-+	seq_printf(seq, "%10u(%s),cpucode:%d", cnt, str, index)
-+#define CNT_DROP_CODE(cnt, str, port, index) \
-+	seq_printf(seq, "%10u(port=%d:%s),dropcode:%d", cnt, port, str, index)
++#include <linux/phylink.h>
 +
-+int ppe_debugfs_setup(struct ppe_device *ppe_dev);
-+void ppe_debugfs_teardown(struct ppe_device *ppe_dev);
++#define UNIPHY_INDIRECT_ADDR_START			0x8000
++#define UNIPHY_INDIRECT_AHB_ADDR			0x83fc
++#define UNIPHY_INDIRECT_ADDR_HIGH			GENMASK(20, 8)
++#define UNIPHY_INDIRECT_ADDR_LOW			GENMASK(7, 0)
++#define UNIPHY_INDIRECT_DATA_ADDR(reg)			(FIELD_PREP(GENMASK(15, 10), 0x20) | \
++							FIELD_PREP(GENMASK(9, 2), \
++							FIELD_GET(UNIPHY_INDIRECT_ADDR_LOW, reg)))
 +
-+#endif
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-index ef12037ffed5..98bf19f974ce 100644
---- a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-@@ -19,6 +19,105 @@
- #define PPE_RX_FIFO_CFG_INC					4
- #define PPE_RX_FIFO_CFG_THRSH					GENMASK(2, 0)
- 
-+#define PPE_DROP_CNT						0xb024
-+#define PPE_DROP_CNT_NUM					8
-+#define PPE_DROP_CNT_INC					4
-+#define PPE_DROP_CNT_PKT_CNT					GENMASK(31, 0)
++/* [register] UNIPHY_MISC2 */
++#define UNIPHY_MISC2_ADDR				0x218
++#define PHY_MODE					GENMASK(6, 4)
++#define USXGMII_PHY_MODE				(FIELD_PREP(PHY_MODE, 0x7))
++#define SGMII_PLUS_PHY_MODE				(FIELD_PREP(PHY_MODE, 0x5))
++#define SGMII_PHY_MODE					(FIELD_PREP(PHY_MODE, 0x3))
 +
-+#define PPE_DROP_STAT						0xe000
-+#define PPE_DROP_STAT_NUM					30
-+#define PPE_DROP_STAT_INC					0x10
-+#define PPE_DROP_STAT_PKT_CNT					GENMASK(31, 0)
++/* [register] UNIPHY_MODE_CTRL */
++#define UNIPHY_MODE_CTRL_ADDR				0x46c
++#define NEWADDEDFROMHERE_CH0_AUTONEG_MODE		BIT(0)
++#define NEWADDEDFROMHERE_CH1_CH0_SGMII			BIT(1)
++#define NEWADDEDFROMHERE_CH4_CH1_0_SGMII		BIT(2)
++#define NEWADDEDFROMHERE_SGMII_EVEN_LOW			BIT(3)
++#define NEWADDEDFROMHERE_CH0_MODE_CTRL_25M		GENMASK(6, 4)
++#define NEWADDEDFROMHERE_CH0_QSGMII_SGMII		BIT(8)
++#define NEWADDEDFROMHERE_CH0_PSGMII_QSGMII		BIT(9)
++#define NEWADDEDFROMHERE_SG_MODE			BIT(10)
++#define NEWADDEDFROMHERE_SGPLUS_MODE			BIT(11)
++#define NEWADDEDFROMHERE_XPCS_MODE			BIT(12)
++#define NEWADDEDFROMHERE_USXG_EN			BIT(13)
++#define NEWADDEDFROMHERE_SW_V17_V18			BIT(15)
++#define USXGMII_MODE_CTRL_MASK				GENMASK(12, 8)
++#define USXGMII_MODE_CTRL				NEWADDEDFROMHERE_XPCS_MODE
++#define TEN_GR_MODE_CTRL_MASK				GENMASK(12, 8)
++#define TEN_GR_MODE_CTRL				NEWADDEDFROMHERE_XPCS_MODE
++#define QUSGMII_MODE_CTRL_MASK				GENMASK(12, 8)
++#define QUSGMII_MODE_CTRL				NEWADDEDFROMHERE_XPCS_MODE
++#define SGMIIPLUS_MODE_CTRL_MASK			(NEWADDEDFROMHERE_CH0_AUTONEG_MODE | \
++								GENMASK(12, 8))
++#define SGMIIPLUS_MODE_CTRL				NEWADDEDFROMHERE_SGPLUS_MODE
++#define QSGMII_MODE_CTRL_MASK				(NEWADDEDFROMHERE_CH0_AUTONEG_MODE | \
++								GENMASK(12, 8))
++#define QSGMII_MODE_CTRL				NEWADDEDFROMHERE_CH0_PSGMII_QSGMII
++#define SGMII_MODE_CTRL_MASK				(NEWADDEDFROMHERE_CH0_AUTONEG_MODE | \
++								GENMASK(12, 8))
++#define SGMII_MODE_CTRL					NEWADDEDFROMHERE_SG_MODE
 +
-+/* BM port drop counter */
-+struct ppe_drop_stat {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
++/* [register] UNIPHY_CHANNEL_INPUT_OUTPUT_4 */
++#define UNIPHY_CHANNEL0_INPUT_OUTPUT_4_ADDR		0x480
++#define NEWADDEDFROMHERE_CH0_ADP_SW_RSTN		BIT(11)
++#define UNIPHY_CHANNEL1_INPUT_OUTPUT_4_ADDR		0x498
++#define NEWADDEDFROMHERE_CH1_ADP_SW_RSTN		BIT(11)
++#define UNIPHY_CHANNEL2_INPUT_OUTPUT_4_ADDR		0x4b0
++#define NEWADDEDFROMHERE_CH2_ADP_SW_RSTN		BIT(11)
++#define UNIPHY_CHANNEL3_INPUT_OUTPUT_4_ADDR		0x4c8
++#define NEWADDEDFROMHERE_CH3_ADP_SW_RSTN		BIT(11)
++#define UNIPHY_CHANNEL4_INPUT_OUTPUT_4_ADDR		0x4e0
++#define NEWADDEDFROMHERE_CH4_ADP_SW_RSTN		BIT(11)
++#define UNIPHY_CHANNEL_INPUT_OUTPUT_4_ADDR(x)		(0x480 + 0x18 * (x))
++#define NEWADDEDFROMHERE_CH_ADP_SW_RSTN			BIT(11)
++
++/* [register] UNIPHY_CHANNEL_INPUT_OUTPUT_6 */
++#define UNIPHY_CHANNEL0_INPUT_OUTPUT_6_ADDR		0x488
++#define NEWADDEDFROMHERE_CH0_LINK_MAC			BIT(7)
++#define NEWADDEDFROMHERE_CH0_DUPLEX_MODE_MAC		BIT(6)
++#define NEWADDEDFROMHERE_CH0_SPEED_MODE_MAC		GENMASK(5, 4)
++#define NEWADDEDFROMHERE_CH0_PAUSE_MAC			BIT(3)
++#define NEWADDEDFROMHERE_CH0_ASYM_PAUSE_MAC		BIT(2)
++#define NEWADDEDFROMHERE_CH0_TX_PAUSE_EN_MAC		BIT(1)
++#define NEWADDEDFROMHERE_CH0_RX_PAUSE_EN_MAC		BIT(0)
++#define UNIPHY_SPEED_10M				0
++#define UNIPHY_SPEED_100M				1
++#define UNIPHY_SPEED_1000M				2
++
++/* [register] UNIPHY_INSTANCE_LINK_DETECT */
++#define UNIPHY_LINK_DETECT_ADDR				0x570
++#define DETECT_LOS_FROM_SFP				GENMASK(8, 6)
++#define UNIPHY_10GR_LINK_LOSS				(FIELD_PREP(DETECT_LOS_FROM_SFP, 0x7))
++
++/* [register] UNIPHY_QP_USXG_OPITON1 */
++#define UNIPHY_QP_USXG_OPITON1_ADDR			0x584
++#define GMII_SRC_SEL					BIT(0)
++
++/* [register] UNIPHY_OFFSET_CALIB_4 */
++#define UNIPHY_OFFSET_CALIB_4_ADDR			0x1e0
++#define MMD1_REG_CALIBRATION_DONE_REG			BIT(7)
++#define UNIPHY_CALIBRATION_DONE				0x1
++
++/* [register] UNIPHY_PLL_RESET */
++#define UNIPHY_PLL_RESET_ADDR				0x780
++#define UPHY_ANA_EN_SW_RSTN				BIT(6)
++
++/* [register] SR_XS_PCS_KR_STS1 */
++#define SR_XS_PCS_KR_STS1_ADDR				0x30020
++#define SR_XS_PCS_KR_STS1_PLU				BIT(12)
++
++/* [register] VR_XS_PCS_DIG_CTRL1 */
++#define VR_XS_PCS_DIG_CTRL1_ADDR			0x38000
++#define USXGMII_EN					BIT(9)
++#define USRA_RST					BIT(10)
++#define VR_RST						BIT(15)
++
++/* [register] VR_XS_PCS_EEE_MCTRL0 */
++#define VR_XS_PCS_EEE_MCTRL0_ADDR			0x38006
++#define LTX_EN						BIT(0)
++#define LRX_EN						BIT(1)
++#define SIGN_BIT					BIT(6)
++#define MULT_FACT_100NS					GENMASK(11, 8)
++
++/* [register] VR_XS_PCS_KR_CTRL */
++#define VR_XS_PCS_KR_CTRL_ADDR	0x38007
++#define USXG_MODE					GENMASK(12, 10)
++#define QUXGMII_MODE					(FIELD_PREP(USXG_MODE, 0x5))
++
++/* [register] VR_XS_PCS_EEE_TXTIMER */
++#define VR_XS_PCS_EEE_TXTIMER_ADDR			0x38008
++#define TSL_RES						GENMASK(5, 0)
++#define T1U_RES						GENMASK(7, 6)
++#define TWL_RES						GENMASK(12, 8)
++#define UNIPHY_XPCS_TSL_TIMER				(FIELD_PREP(TSL_RES, 0xa))
++#define UNIPHY_XPCS_T1U_TIMER				(FIELD_PREP(TSL_RES, 0x3))
++#define UNIPHY_XPCS_TWL_TIMER				(FIELD_PREP(TSL_RES, 0x16))
++
++/* [register] VR_XS_PCS_EEE_RXTIMER  */
++#define VR_XS_PCS_EEE_RXTIMER_ADDR			0x38009
++#define RES_100U					GENMASK(7, 0)
++#define TWR_RES						GENMASK(13, 8)
++#define UNIPHY_XPCS_100US_TIMER				(FIELD_PREP(RES_100U, 0xc8))
++#define UNIPHY_XPCS_TWR_TIMER				(FIELD_PREP(RES_100U, 0x1c))
++
++/* [register] VR_XS_PCS_DIG_STS */
++#define VR_XS_PCS_DIG_STS_ADDR				0x3800a
++#define AM_COUNT					GENMASK(14, 0)
++#define QUXGMII_AM_COUNT				(FIELD_PREP(AM_COUNT, 0x6018))
++
++/* [register] VR_XS_PCS_EEE_MCTRL1 */
++#define VR_XS_PCS_EEE_MCTRL1_ADDR			0x3800b
++#define TRN_LPI						BIT(0)
++#define TRN_RXLPI					BIT(8)
++
++/* [register] VR_MII_1_DIG_CTRL1 */
++#define VR_MII_DIG_CTRL1_CHANNEL1_ADDR			0x1a8000
++#define VR_MII_DIG_CTRL1_CHANNEL2_ADDR			0x1b8000
++#define VR_MII_DIG_CTRL1_CHANNEL3_ADDR			0x1c8000
++#define VR_MII_DIG_CTRL1_CHANNEL_ADDR(x)		(0x1a8000 + 0x10000 * ((x) - 1))
++#define CHANNEL_USRA_RST				BIT(5)
++
++/* [register] VR_MII_AN_CTRL */
++#define VR_MII_AN_CTRL_ADDR				0x1f8001
++#define VR_MII_AN_CTRL_CHANNEL1_ADDR			0x1a8001
++#define VR_MII_AN_CTRL_CHANNEL2_ADDR			0x1b8001
++#define VR_MII_AN_CTRL_CHANNEL3_ADDR			0x1c8001
++#define VR_MII_AN_CTRL_CHANNEL_ADDR(x)			(0x1a8001 + 0x10000 * ((x) - 1))
++#define MII_AN_INTR_EN					BIT(0)
++#define MII_CTRL					BIT(8)
++
++/* [register] VR_MII_AN_INTR_STS */
++#define VR_MII_AN_INTR_STS_ADDR				0x1f8002
++#define VR_MII_AN_INTR_STS_CHANNEL1_ADDR		0x1a8002
++#define VR_MII_AN_INTR_STS_CHANNEL2_ADDR		0x1b8002
++#define VR_MII_AN_INTR_STS_CHANNEL3_ADDR		0x1c8002
++#define VR_MII_AN_INTR_STS_CHANNEL_ADDR(x)		(0x1a8002 + 0x10000 * ((x) - 1))
++#define CL37_ANCMPLT_INTR				BIT(0)
++
++/* [register] VR_XAUI_MODE_CTRL */
++#define VR_XAUI_MODE_CTRL_ADDR				0x1f8004
++#define VR_XAUI_MODE_CTRL_CHANNEL1_ADDR			0x1a8004
++#define VR_XAUI_MODE_CTRL_CHANNEL2_ADDR			0x1b8004
++#define VR_XAUI_MODE_CTRL_CHANNEL3_ADDR			0x1c8004
++#define VR_XAUI_MODE_CTRL_CHANNEL_ADDR(x)		(0x1a8004 + 0x10000 * ((x) - 1))
++#define IPG_CHECK					BIT(0)
++
++/* [register] SR_MII_CTRL */
++#define SR_MII_CTRL_ADDR				0x1f0000
++#define SR_MII_CTRL_CHANNEL1_ADDR			0x1a0000
++#define SR_MII_CTRL_CHANNEL2_ADDR			0x1b0000
++#define SR_MII_CTRL_CHANNEL3_ADDR			0x1c0000
++#define SR_MII_CTRL_CHANNEL_ADDR(x)			(0x1a0000 + 0x10000 * ((x) - 1))
++#define AN_ENABLE					BIT(12)
++#define USXGMII_DUPLEX_FULL				BIT(8)
++#define USXGMII_SPEED_MASK				(BIT(13) | BIT(6) | BIT(5))
++#define USXGMII_SPEED_10000				(BIT(13) | BIT(6))
++#define USXGMII_SPEED_5000				(BIT(13) | BIT(5))
++#define USXGMII_SPEED_2500				BIT(5)
++#define USXGMII_SPEED_1000				BIT(6)
++#define USXGMII_SPEED_100				BIT(13)
++#define USXGMII_SPEED_10				0
++
++/* PPE UNIPHY data type */
++struct ppe_uniphy {
++	void __iomem *base;
++	struct ppe_device *ppe_dev;
++	unsigned int index;
++	phy_interface_t interface;
++	struct phylink_pcs pcs;
 +};
 +
-+union ppe_drop_stat_u {
-+	u32 val[3];
-+	struct ppe_drop_stat bf;
-+};
++#define pcs_to_ppe_uniphy(_pcs)				container_of(_pcs, struct ppe_uniphy, pcs)
 +
-+#define PPE_EPE_DBG_IN_CNT					0x26054
-+#define PPE_EPE_DBG_IN_CNT_NUM					1
-+#define PPE_EPE_DBG_IN_CNT_INC					0x4
++struct ppe_uniphy *ppe_uniphy_setup(struct platform_device *pdev);
 +
-+#define PPE_EPE_DBG_OUT_CNT					0x26070
-+#define PPE_EPE_DBG_OUT_CNT_NUM					1
-+#define PPE_EPE_DBG_OUT_CNT_INC					0x4
++int ppe_uniphy_speed_set(struct ppe_uniphy *uniphy,
++			 int port, int speed);
 +
-+#define PPE_EG_VSI_COUNTER_TBL					0x41000
-+#define PPE_EG_VSI_COUNTER_TBL_NUM				64
-+#define PPE_EG_VSI_COUNTER_TBL_INC				0x10
++int ppe_uniphy_duplex_set(struct ppe_uniphy *uniphy,
++			  int port, int duplex);
 +
-+/* Egress VLAN counter */
-+struct ppe_eg_vsi_cnt_tbl {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
-+};
++int ppe_uniphy_adapter_reset(struct ppe_uniphy *uniphy,
++			     int port);
 +
-+union ppe_eg_vsi_cnt_tbl_u {
-+	u32 val[3];
-+	struct ppe_eg_vsi_cnt_tbl bf;
-+};
++int ppe_uniphy_autoneg_complete_check(struct ppe_uniphy *uniphy,
++				      int port);
 +
-+#define PPE_PORT_TX_COUNTER_TBL					0x45000
-+#define PPE_PORT_TX_COUNTER_TBL_NUM				8
-+#define PPE_PORT_TX_COUNTER_TBL_INC				0x10
++int ppe_uniphy_port_gcc_clock_en_set(struct ppe_uniphy *uniphy,
++				     int port, bool enable);
 +
-+/* Port TX counter */
-+struct ppe_port_tx_counter_tbl {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
-+};
-+
-+union ppe_port_tx_counter_tbl_u {
-+	u32 val[3];
-+	struct ppe_port_tx_counter_tbl bf;
-+};
-+
-+#define PPE_VPORT_TX_COUNTER_TBL				0x47000
-+#define PPE_VPORT_TX_COUNTER_TBL_NUM				256
-+#define PPE_VPORT_TX_COUNTER_TBL_INC				0x10
-+
-+/* Virtual port TX counter */
-+struct ppe_vport_tx_counter_tbl {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
-+};
-+
-+union ppe_vport_tx_counter_tbl_u {
-+	u32 val[3];
-+	struct ppe_vport_tx_counter_tbl bf;
-+};
-+
-+#define PPE_QUEUE_TX_COUNTER_TBL				0x4a000
-+#define PPE_QUEUE_TX_COUNTER_TBL_NUM				300
-+#define PPE_QUEUE_TX_COUNTER_TBL_INC				0x10
-+
-+/* Queue counter */
-+struct ppe_queue_tx_counter_tbl {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
-+};
-+
-+union ppe_queue_tx_counter_tbl_u {
-+	u32 val[3];
-+	struct ppe_queue_tx_counter_tbl bf;
-+};
-+
- #define PPE_RSS_HASH_MASK					0xb4318
- #define PPE_RSS_HASH_MASK_NUM					1
- #define PPE_RSS_HASH_MASK_INC					4
-@@ -196,6 +295,143 @@ union ppe_mru_mtu_ctrl_cfg_u {
- #define PPE_IN_L2_SERVICE_TBL_RX_CNT_EN				BIT(30)
- #define PPE_IN_L2_SERVICE_TBL_TX_CNT_EN				BIT(31)
- 
-+#define PPE_PORT_RX_CNT_TBL					0x150000
-+#define PPE_PORT_RX_CNT_TBL_NUM					256
-+#define PPE_PORT_RX_CNT_TBL_INC					0x20
-+
-+/* Port RX counter */
-+struct ppe_port_rx_cnt_tbl {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    drop_pkt_cnt_0:24;
-+	u32 drop_pkt_cnt_1:8,
-+	    drop_byte_cnt_0:24;
-+	u32 drop_byte_cnt_1:16,
-+	    res0:16;
-+};
-+
-+union ppe_port_rx_cnt_tbl_u {
-+	u32 val[5];
-+	struct ppe_port_rx_cnt_tbl bf;
-+};
-+
-+#define PPE_PHY_PORT_RX_CNT_TBL					0x156000
-+#define PPE_PHY_PORT_RX_CNT_TBL_NUM				8
-+#define PPE_PHY_PORT_RX_CNT_TBL_INC				0x20
-+
-+/* Physical port RX and RX drop counter */
-+struct ppe_phy_port_rx_cnt_tbl {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    drop_pkt_cnt_0:24;
-+	u32 drop_pkt_cnt_1:8,
-+	    drop_byte_cnt_0:24;
-+	u32 drop_byte_cnt_1:16,
-+	    res0:16;
-+};
-+
-+union ppe_phy_port_rx_cnt_tbl_u {
-+	u32 val[5];
-+	struct ppe_phy_port_rx_cnt_tbl bf;
-+};
-+
-+#define PPE_DROP_CPU_CNT_TBL					0x160000
-+#define PPE_DROP_CPU_CNT_TBL_NUM				1280
-+#define PPE_DROP_CPU_CNT_TBL_INC				0x10
-+
-+/* counter for the packet to CPU port */
-+struct ppe_drop_cpu_cnt {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
-+};
-+
-+union ppe_drop_cpu_cnt_u {
-+	u32 val[3];
-+	struct ppe_drop_cpu_cnt bf;
-+};
-+
-+#define PPE_VLAN_CNT_TBL					0x178000
-+#define PPE_VLAN_CNT_TBL_NUM					64
-+#define PPE_VLAN_CNT_TBL_INC					0x10
-+
-+/* VLAN counter */
-+struct ppe_vlan_cnt {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
-+};
-+
-+union ppe_vlan_cnt_u {
-+	u32 val[3];
-+	struct ppe_vlan_cnt bf;
-+};
-+
-+#define PPE_PRE_L2_CNT_TBL					0x17c000
-+#define PPE_PRE_L2_CNT_TBL_NUM					64
-+#define PPE_PRE_L2_CNT_TBL_INC					0x20
-+
-+/* PPE L2 counter */
-+struct ppe_pre_l2_cnt_tbl {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    drop_pkt_cnt_0:24;
-+	u32 drop_pkt_cnt_1:8,
-+	    drop_byte_cnt_0:24;
-+	u32 drop_byte_cnt_1:16,
-+	    res0:16;
-+};
-+
-+union ppe_pre_l2_cnt_tbl_u {
-+	u32 val[5];
-+	struct ppe_pre_l2_cnt_tbl bf;
-+};
-+
-+#define PPE_PORT_TX_DROP_CNT_TBL				0x17d000
-+#define PPE_PORT_TX_DROP_CNT_TBL_NUM				8
-+#define PPE_PORT_TX_DROP_CNT_TBL_INC				0x10
-+
-+/* Port TX drop counter */
-+struct ppe_port_tx_drop_cnt {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
-+};
-+
-+union ppe_port_tx_drop_u {
-+	u32 val[3];
-+	struct ppe_port_tx_drop_cnt bf;
-+};
-+
-+#define PPE_VPORT_TX_DROP_CNT_TBL				0x17e000
-+#define PPE_VPORT_TX_DROP_CNT_TBL_NUM				256
-+#define PPE_VPORT_TX_DROP_CNT_TBL_INC				0x10
-+
-+/* Virtual port TX counter */
-+struct ppe_vport_tx_drop_cnt {
-+	u32 pkt_cnt;
-+	u32 byte_cnt_0;
-+	u32 byte_cnt_1:8,
-+	    res0:24;
-+};
-+
-+union ppe_vport_tx_drop_u {
-+	u32 val[3];
-+	struct ppe_vport_tx_drop_cnt bf;
-+};
-+
-+#define PPE_TPR_PKT_CNT						0x1d0080
-+#define PPE_IPR_PKT_CNT						0x1e0080
-+#define PPE_IPR_PKT_CNT_NUM					8
-+#define PPE_IPR_PKT_CNT_INC					4
-+#define PPE_IPR_PKT_CNT_PKT_CNT					GENMASK(31, 0)
-+
- #define PPE_TL_SERVICE_TBL					0x306000
- #define PPE_TL_SERVICE_TBL_NUM					256
- #define PPE_TL_SERVICE_TBL_INC					4
-@@ -318,6 +554,16 @@ union ppe_ring_q_map_cfg_u {
- #define PPE_BM_PORT_GROUP_ID_INC				4
- #define PPE_BM_PORT_GROUP_ID_SHARED_GROUP_ID			GENMASK(1, 0)
- 
-+#define PPE_BM_USED_CNT						0x6001c0
-+#define PPE_BM_USED_CNT_NUM					15
-+#define PPE_BM_USED_CNT_INC					0x4
-+#define PPE_BM_USED_CNT_VAL					GENMASK(10, 0)
-+
-+#define PPE_BM_REACT_CNT					0x600240
-+#define PPE_BM_REACT_CNT_NUM					15
-+#define PPE_BM_REACT_CNT_INC					0x4
-+#define PPE_BM_REACT_CNT_VAL					GENMASK(8, 0)
-+
- #define PPE_BM_SHARED_GROUP_CFG					0x600290
- #define PPE_BM_SHARED_GROUP_CFG_NUM				4
- #define PPE_BM_SHARED_GROUP_CFG_INC				4
-@@ -456,6 +702,16 @@ union ppe_ac_grp_cfg_u {
- 	struct ppe_ac_grp_cfg bf;
- };
- 
-+#define PPE_AC_UNI_QUEUE_CNT_TBL				0x84e000
-+#define PPE_AC_UNI_QUEUE_CNT_TBL_NUM				256
-+#define PPE_AC_UNI_QUEUE_CNT_TBL_INC				0x10
-+#define PPE_AC_UNI_QUEUE_CNT_TBL_PEND_CNT			GENMASK(12, 0)
-+
-+#define PPE_AC_MUL_QUEUE_CNT_TBL				0x852000
-+#define PPE_AC_MUL_QUEUE_CNT_TBL_NUM				44
-+#define PPE_AC_MUL_QUEUE_CNT_TBL_INC				0x10
-+#define PPE_AC_MUL_QUEUE_CNT_TBL_PEND_CNT			GENMASK(12, 0)
-+
- #define PPE_ENQ_OPR_TBL						0x85c000
- #define PPE_ENQ_OPR_TBL_NUM					300
- #define PPE_ENQ_OPR_TBL_INC					0x10
++#endif /* _PPE_UNIPHY_H_ */
 diff --git a/include/linux/soc/qcom/ppe.h b/include/linux/soc/qcom/ppe.h
-index 70ee192d9ef0..268109c823ad 100644
+index 268109c823ad..d3cb18df33fa 100644
 --- a/include/linux/soc/qcom/ppe.h
 +++ b/include/linux/soc/qcom/ppe.h
-@@ -17,6 +17,7 @@ struct ppe_device {
- 	struct device *dev;
- 	struct regmap *regmap;
- 	struct ppe_device_ops *ppe_ops;
-+	struct dentry *debugfs_root;
+@@ -20,6 +20,7 @@ struct ppe_device {
+ 	struct dentry *debugfs_root;
  	bool is_ppe_probed;
  	void *ppe_priv;
++	void *uniphy;
  };
+ 
+ /* PPE operations, which is used by the external driver like Ethernet
 -- 
 2.42.0
 
