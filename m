@@ -1,148 +1,136 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A270B3F8CC
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 08:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E8F3FB39
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 08:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="kiby5FwE"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a28b1095064so407352966b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 00:07:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SvQQ0u8D"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40e43e489e4so43064355e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 00:08:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1704874071; x=1705478871; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=07GZlbDEPiZyBFQar7cofI0kUTpkas/bOfqyP7AOZqE=;
-        b=kiby5FwEN7Th7AvFQ6wQ6MC5n7EhshD4f9AAKBoeSAqlGJ4GD3HC0cITelHp/6tOs5
-         EJiiUsm63FKVIWvXEUxNQFXM6G/DQEq+wd9dUDaMKmyxpy4CzQhoGIcWPeby3gdoaKpz
-         dYQ+0WO+KuM+UZb0xnnwAGg+/yuLkAtU/jHMs=
+        d=linaro.org; s=google; t=1704874083; x=1705478883; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=18onmT8kvZ7gg4EOu5RWr8v/3MvP/Hv+MH9CkNR/0WY=;
+        b=SvQQ0u8DT0Khjm1B9Sg1Um6uqICVm4Ak/cN3DahJnyumn9La+ksYU8OkS0KQYar25A
+         r60pcX9PAJEmWfWpbIFZxRbBkYmuRLRcbgL0HTfl2o9UzEG242iYyP22sxXuHUFopqZM
+         ijCKr25M4HOaotYRc4Q+vM3tv1WnVb/hPY4hdm0HDc+Bdo3Xk03kYxPSTnDuUFSO3IQh
+         DE+r3p/Y+gnw7Qk9EOcPHTC2wl3TyDRKZagU9GUgoyADP135Nh34QGtIP7s+A3upcoyR
+         wnONrybBO3jBw/4WFzEJ0VQPeNohcSGLJLRUXvtDa0z2cGZH5NnqbsgZ4tuaWi1o6utP
+         jisw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704874071; x=1705478871;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=07GZlbDEPiZyBFQar7cofI0kUTpkas/bOfqyP7AOZqE=;
-        b=PC7R3pqNJlMAiqZWDgk5mrVqMUABJiTO4Tvgq8oBMcm2eN8QZMVkQ5c6pAXxrOUs8G
-         oiyyZ7dwkvDtgWdIY61qCtUordeJJk3GO2kTWkOy3rPJTCyX6n3em9azBXpp8vBWoy9z
-         2HjvAlY2ySohxC/OzWtdp3t4DvnfQhHz09YEZEhx9/5D3WWzQAwkSABM+iyEUfqwOX55
-         JwOTPmA3ex5uW17gPNILvlgWdiKyujEEHIZkGJNkDL/2uHc6bqSR9bH7kBsKAhBw6lnx
-         A0es7fEdjeONb4VqDVrzdllyyNRXu+gCb+pamLAUKfzNEaz7K+2PHtTJ0aBKuG1EW6pu
-         iSDQ==
-X-Gm-Message-State: AOJu0Yz9jSKV9BCmoZrNNlCpgLhBqPpfe6NrhGvUC4CBrTOyDGQG1uqa
-	7B+ftWjb1nJ67pfLmBtFXYN8r/ttxMGa2O4xtPn3I3ccT4k=
-X-Google-Smtp-Source: AGHT+IEFFlg9zphutdwdZcQW4+nCpj3cJCRmln2zt04qEVrAYuLIVYgN9bHEfVgAzm3MZro6KFOzBw==
-X-Received: by 2002:a17:906:590e:b0:a23:3aff:2a05 with SMTP id h14-20020a170906590e00b00a233aff2a05mr170486ejq.112.1704874071791;
-        Wed, 10 Jan 2024 00:07:51 -0800 (PST)
-Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-87-2-38-81.retail.telecomitalia.it. [87.2.38.81])
-        by smtp.gmail.com with ESMTPSA id v12-20020a1709061dcc00b00a2af672cdd8sm1833341ejh.161.2024.01.10.00.07.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 00:07:51 -0800 (PST)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-amarula@amarulasolutions.com,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Peter Rosin <peda@axentia.se>,
-	Rob Herring <robh+dt@kernel.org>,
-	Sean Nyekjaer <sean@geanix.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v6 5/5] ARM: dts: add stm32f769-disco-mb1225-revb03-mb1166-reva09
-Date: Wed, 10 Jan 2024 09:05:51 +0100
-Message-ID: <20240110080729.3238251-6-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240110080729.3238251-1-dario.binacchi@amarulasolutions.com>
-References: <20240110080729.3238251-1-dario.binacchi@amarulasolutions.com>
+        d=1e100.net; s=20230601; t=1704874083; x=1705478883;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=18onmT8kvZ7gg4EOu5RWr8v/3MvP/Hv+MH9CkNR/0WY=;
+        b=QBbu6/z4w6loTEUDoMhMphezXVscpAyc4nqtaLp6X7Y8FK79LLARemS8329rZKlLSm
+         s1hLJ7rsgebqqWJ3mfzj6z5RWhA8AWXTmDGFtCyiksaOy3jivSaRk9feTuvGXIr2fCf/
+         d12p3JHd657GPjcI4uD0MCxyNv3g6OaP03dSw8KK99ipTsKZq5ILAbzJ+x6eDyqJjYCC
+         MuEcfGRzo+vXM4JYo9dvUd0M95l7RzF5AxHPJLtPDmP2QnTdPkx5swPORbmU9U95yDLF
+         XNf1KNzQh7Z4jnGD2viTjyk7ZY47TP8ZSLxe/aarEvbeog0/G8OY7UCltCl0NToIW23Z
+         VChw==
+X-Gm-Message-State: AOJu0YxfyPyjp3u72d2uOLMaUGwoBhr5u96oE96Teg9SRS2xk0Ghiaxn
+	GSGDgo4B/jnBQxrtVeM9Ms5qxQvO71ilVYYJgxaVIXIg2x0=
+X-Google-Smtp-Source: AGHT+IEnEoMK6jAgo0ZVcM/+QdcenMiKU/9mNLBH5UAdGVviCbrl39mjLQPfkwPq/0mL+v6OHi7lKQ==
+X-Received: by 2002:a05:600c:3155:b0:40d:aa42:b4cb with SMTP id h21-20020a05600c315500b0040daa42b4cbmr363750wmo.171.1704874083693;
+        Wed, 10 Jan 2024 00:08:03 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id bh21-20020a05600c3d1500b0040d987aae3esm1233597wmb.13.2024.01.10.00.08.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jan 2024 00:08:02 -0800 (PST)
+Message-ID: <f2a8d55e-2048-4d81-92dc-4533dc02a604@linaro.org>
+Date: Wed, 10 Jan 2024 09:08:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/12] tty: serial: samsung: set UPIO_MEM32 iotype for
+ gs101
+Content-Language: en-US
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, peter.griffin@linaro.org,
+ krzysztof.kozlowski+dt@linaro.org, gregkh@linuxfoundation.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+ conor+dt@kernel.org, andi.shyti@kernel.org, alim.akhtar@samsung.com,
+ jirislaby@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com,
+ cw00.choi@samsung.com, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org,
+ andre.draszik@linaro.org, kernel-team@android.com, willmcvicker@google.com
+References: <20240109125814.3691033-1-tudor.ambarus@linaro.org>
+ <20240109125814.3691033-6-tudor.ambarus@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240109125814.3691033-6-tudor.ambarus@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-As reported in the section 8.3 (i. e. Board revision history) of document
-UM2033 (i. e. Discovery kit with STM32F769NI MCU) these are the changes
-related to the board revisions addressed by the patch:
-- Board MB1225 revision B-03:
-  - Memory MICRON MT48LC4M32B2B5-6A replaced by ISSI IS42S32400F-6BL
-- Board MB1166 revision A-09:
-  - LCD FRIDA FRD397B25009-D-CTK replaced by FRIDA FRD400B25025-A-CTK
+On 09/01/2024 13:58, Tudor Ambarus wrote:
+> GS101's Connectivity Peripheral blocks (peric0/1 blocks) which
+> include the I3C and USI (I2C, SPI, UART) only allow 32-bit
+> register accesses.
+> 
+> Instead of specifying the reg-io-width = 4 everywhere, for each node,
+> the requirement should be deduced from the compatible.
+> 
+> Infer UPIO_MEM32 iotype from the "google,gs101-uart" compatible.
+> Update the uart info name to be GS101 specific in order to
+> differentiate from the other exynos platforms. All the other settings
+> are not changed.
+> 
 
-The patch only adds the DTS support for the new display which belongs to
-to the Novatek NT35510-based panel family.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-
----
-
-Changes in v6:
-- Drop patches
-  - [5/8] dt-bindings: nt35510: add compatible for FRIDA FRD400B25025-A-CTK
-  - [7/8] drm/panel: nt35510: move hardwired parameters to configuration
-  - [8/8] drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK
-  because applied by the maintainer Linus Walleij
-
-Changes in v5:
-- Replace GPIOD_ASIS with GPIOD_OUT_HIGH in the call to devm_gpiod_get_optional().
-
-Changes in v2:
-- Change the status of panel_backlight node to "disabled"
-- Delete backlight property from panel0 node.
-- Re-write the patch [8/8] "drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK"
-  in the same style as the original driver.
-
- arch/arm/boot/dts/st/Makefile                  |  1 +
- ...2f769-disco-mb1225-revb03-mb1166-reva09.dts | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+)
- create mode 100644 arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts
-
-diff --git a/arch/arm/boot/dts/st/Makefile b/arch/arm/boot/dts/st/Makefile
-index 7892ad69b441..390dbd300a57 100644
---- a/arch/arm/boot/dts/st/Makefile
-+++ b/arch/arm/boot/dts/st/Makefile
-@@ -23,6 +23,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
- 	stm32f469-disco.dtb \
- 	stm32f746-disco.dtb \
- 	stm32f769-disco.dtb \
-+	stm32f769-disco-mb1225-revb03-mb1166-reva09.dts \
- 	stm32429i-eval.dtb \
- 	stm32746g-eval.dtb \
- 	stm32h743i-eval.dtb \
-diff --git a/arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts b/arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts
-new file mode 100644
-index 000000000000..014cac192375
---- /dev/null
-+++ b/arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2023 Dario Binacchi <dario.binacchi@amarulasolutions.com>
-+ */
-+
-+#include "stm32f769-disco.dts"
-+
-+&panel_backlight {
-+	status = "disabled";
-+};
-+
-+&panel0 {
-+	compatible = "frida,frd400b25025", "novatek,nt35510";
-+	vddi-supply = <&vcc_3v3>;
-+	vdd-supply = <&vcc_3v3>;
-+	/delete-property/backlight;
-+	/delete-property/power-supply;
-+};
--- 
-2.43.0
+Best regards,
+Krzysztof
 
