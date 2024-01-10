@@ -1,375 +1,205 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8DC55C20
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 23:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084D057313;
+	Wed, 10 Jan 2024 23:14:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="b3mpLX9I"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7ba9f1cfe94so143629239f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:14:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704928491; x=1705533291; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EWlgYeXsuNgCyW020s2adM6IRYxW5Wo3bqNd72j3CD8=;
-        b=b3mpLX9IR04q3fo1KSVhKlfE7WHG8btk6hk80eth7A6L/fmk8tNVz8c7NOzjde0HzB
-         BBOzrznrMxG+GV3x6pTDbsrup5RmILBJJibgBHzxUK5u+OMEWCAsy1nuX6l8jNhqtVce
-         P+estBYnQZsZGPckdU2+S6ioc0oqaxSWdtGt1Fu7lJmPtSonw6ITKnPi6UkpZWXgsbrQ
-         F5x70aVkATQkjKo3zjfKsTazt912DNfI2k8nC9Sud5EAGLusD6PtbvNYcY7uTByxjx+T
-         rDVA095M5gyujcQaxtnT3IKJQ7kBgAYUqot1lFNpgQjoXpipeZUR5mADn4y9tP5cxaEB
-         Ou/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704928491; x=1705533291;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EWlgYeXsuNgCyW020s2adM6IRYxW5Wo3bqNd72j3CD8=;
-        b=s7gS6CXAM8Uobqt/zrX25ctUbYE1nKN6eSCQK+bGG/iEpAousG/k8n69XZr90jN+Vv
-         fRsL+VikP01WmM4imViPKQHZ0JXhpR8y6dEFT9sd5w2GKvR0462lik2h6kPZ8+jw9DZh
-         jzmDpaVtwstNwD93M2ak4aQVEetAyJnyrhCq3mTN0NBqpIFCNeFgjdBg6L4gNybW4Ndp
-         gUjrCrlyEMotCmYwezMkewdYVuLUrflG4qyz/eAo+/FYDpp9x/G6yN5dgv9+N2U91SAA
-         IITgsiMDiIzqCXzAVhz/S9Y3gJbTtBr2Od8j4HbigHBZEXZMlaoI+qkO9OsaQIw9MwNf
-         08Eg==
-X-Gm-Message-State: AOJu0Yxft2eOW/mxzc6Xy0+mlQMCv5eJmx/B+292zAGJqTfoMBu9iBTx
-	hjdGNvZDjyJcg0M6PEXKimRw2eXm1kJpcxeG40eUsRO96oI=
-X-Google-Smtp-Source: AGHT+IEPb09LsphlDq1Rk8zGKNQaGPFqSiA8IfRYfePxNk48f+I1mTYlmenfwuqtcwnKtflOaUT0Xg==
-X-Received: by 2002:a05:6e02:1d8c:b0:35f:bea3:bd00 with SMTP id h12-20020a056e021d8c00b0035fbea3bd00mr751045ila.14.1704928491538;
-        Wed, 10 Jan 2024 15:14:51 -0800 (PST)
-Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id co13-20020a0566383e0d00b0046e3b925818sm1185503jab.37.2024.01.10.15.14.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 15:14:51 -0800 (PST)
-From: Atish Patra <atishp@rivosinc.com>
-To: linux-kernel@vger.kernel.org
-Cc: Atish Patra <atishp@rivosinc.com>,
-	Anup Patel <anup@brainfault.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Guo Ren <guoren@kernel.org>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	kvm-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Will Deacon <will@kernel.org>,
-	Vladimir Isaev <vladimir.isaev@syntacore.com>
-Subject: [v3 09/10] RISC-V: KVM: Add perf sampling support for guests
-Date: Wed, 10 Jan 2024 15:13:58 -0800
-Message-Id: <20240110231359.1239367-10-atishp@rivosinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240110231359.1239367-1-atishp@rivosinc.com>
-References: <20240110231359.1239367-1-atishp@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtQg7j3p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1EBC433C7;
+	Wed, 10 Jan 2024 23:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704928499;
+	bh=fW8f1kPNQnVkNZGs8Z1MR+JZ9aRPSsMtuYxNiBUsgdQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RtQg7j3pFlz65bHoDwiRmQL1CVaCVpugasl6HJIxrq7rS3umMsaR6VnT1f5pA033f
+	 iDg6fCu8pJuZwF/aDYxLKdx99YdJnk3pugsMPK48efhkovNv8t298I5OMNFEmJHg1T
+	 3JYQb+FyLJgJI/U7sOeNlnDElDvvxnHKOFkvJLyUW0TjHaoVap1u5kswi2RU5sl20o
+	 nLuESbnjLptBVIIeWdCrCSYtm/lH/LEFnqnvAjfC1NBlQqlENeDT60SfA6NxPDhzaU
+	 Bxm311DHHd4K/+kHPQ6iBUQ+zKsFi4pMQCTS+VE8+xTc/xvK4AxseVg3ezNbGkvLnR
+	 riBrTl//mUXXQ==
+Received: (nullmailer pid 2980300 invoked by uid 1000);
+	Wed, 10 Jan 2024 23:14:56 -0000
+Date: Wed, 10 Jan 2024 17:14:56 -0600
+From: Rob Herring <robh@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Frank Rowand <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, linux-spi@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/13] spi: dt-bindings: adi,axi-spi-engine: add offload
+ bindings
+Message-ID: <20240110231456.GB2854345-robh@kernel.org>
+References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
+ <20240109-axi-spi-engine-series-3-v1-4-e42c6a986580@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240109-axi-spi-engine-series-3-v1-4-e42c6a986580@baylibre.com>
 
-KVM enables perf for guest via counter virtualization. However, the
-sampling can not be supported as there is no mechanism to enabled
-trap/emulate scountovf in ISA yet. Rely on the SBI PMU snapshot
-to provide the counter overflow data via the shared memory.
+On Wed, Jan 10, 2024 at 01:49:45PM -0600, David Lechner wrote:
+> The ADI AXI SPI Engine driver supports offloading SPI transfers to
+> hardware. This is essentially a feature that allows recording an
+> arbitrary sequence of SPI transfers and then playing them back with
+> no CPU intervention via a hardware trigger.
+> 
+> This adds the bindings for this feature. Each SPI Engine instance
+> can have from 0 to 32 offload instances. Each offload instance has a
+> trigger input and a data stream output. As an example, this could be
+> used with an ADC SPI peripheral. In this case the trigger is connected
+> to a PWM/clock to determine the sampling rate for the ADC and the output
+> stream is connected to a DMA channel to pipe the sample data to memory.
+> 
+> SPI peripherals act as consumers of the offload instances. Typically,
+> one SPI peripheral will be connected to one offload instance. But to
+> make the bindings future-proof, the property is an array.
 
-In case of sampling event, the host first guest the LCOFI interrupt
-and injects to the guest via irq filtering mechanism defined in AIA
-specification. Thus, ssaia must be enabled in the host in order to
-use perf sampling in the guest. No other AIA dpeendancy w.r.t kernel
-is required.
+Is there some sort of arbitration between multiple offload engines on 
+the same chip select? If not, I don't see how it would work.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
----
- arch/riscv/include/asm/csr.h          |  3 +-
- arch/riscv/include/asm/kvm_vcpu_pmu.h |  3 ++
- arch/riscv/include/uapi/asm/kvm.h     |  1 +
- arch/riscv/kvm/aia.c                  |  5 ++
- arch/riscv/kvm/vcpu.c                 |  8 +--
- arch/riscv/kvm/vcpu_onereg.c          |  9 +++-
- arch/riscv/kvm/vcpu_pmu.c             | 70 +++++++++++++++++++++++++--
- 7 files changed, 89 insertions(+), 10 deletions(-)
+I think this whole thing could be simplified down to just 3 
+SPI controller properties: pwms, dmas, and adi,offload-cs-map. Each 
+property is has entries equal the number of offload engines. The last 
+one maps an offload engine to a SPI chip-select.
 
-diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-index 88cdc8a3e654..bec09b33e2f0 100644
---- a/arch/riscv/include/asm/csr.h
-+++ b/arch/riscv/include/asm/csr.h
-@@ -168,7 +168,8 @@
- #define VSIP_TO_HVIP_SHIFT	(IRQ_VS_SOFT - IRQ_S_SOFT)
- #define VSIP_VALID_MASK		((_AC(1, UL) << IRQ_S_SOFT) | \
- 				 (_AC(1, UL) << IRQ_S_TIMER) | \
--				 (_AC(1, UL) << IRQ_S_EXT))
-+				 (_AC(1, UL) << IRQ_S_EXT) | \
-+				 (_AC(1, UL) << IRQ_PMU_OVF))
- 
- /* AIA CSR bits */
- #define TOPI_IID_SHIFT		16
-diff --git a/arch/riscv/include/asm/kvm_vcpu_pmu.h b/arch/riscv/include/asm/kvm_vcpu_pmu.h
-index 586bab84be35..8cb21a4f862c 100644
---- a/arch/riscv/include/asm/kvm_vcpu_pmu.h
-+++ b/arch/riscv/include/asm/kvm_vcpu_pmu.h
-@@ -36,6 +36,7 @@ struct kvm_pmc {
- 	bool started;
- 	/* Monitoring event ID */
- 	unsigned long event_idx;
-+	struct kvm_vcpu *vcpu;
- };
- 
- /* PMU data structure per vcpu */
-@@ -50,6 +51,8 @@ struct kvm_pmu {
- 	bool init_done;
- 	/* Bit map of all the virtual counter used */
- 	DECLARE_BITMAP(pmc_in_use, RISCV_KVM_MAX_COUNTERS);
-+	/* Bit map of all the virtual counter overflown */
-+	DECLARE_BITMAP(pmc_overflown, RISCV_KVM_MAX_COUNTERS);
- 	/* The address of the counter snapshot area (guest physical address) */
- 	gpa_t snapshot_addr;
- 	/* The actual data of the snapshot */
-diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-index d6b7a5b95874..d5aea43bc797 100644
---- a/arch/riscv/include/uapi/asm/kvm.h
-+++ b/arch/riscv/include/uapi/asm/kvm.h
-@@ -139,6 +139,7 @@ enum KVM_RISCV_ISA_EXT_ID {
- 	KVM_RISCV_ISA_EXT_ZIHPM,
- 	KVM_RISCV_ISA_EXT_SMSTATEEN,
- 	KVM_RISCV_ISA_EXT_ZICOND,
-+	KVM_RISCV_ISA_EXT_SSCOFPMF,
- 	KVM_RISCV_ISA_EXT_MAX,
- };
- 
-diff --git a/arch/riscv/kvm/aia.c b/arch/riscv/kvm/aia.c
-index a944294f6f23..0f0a9d11bb5f 100644
---- a/arch/riscv/kvm/aia.c
-+++ b/arch/riscv/kvm/aia.c
-@@ -545,6 +545,9 @@ void kvm_riscv_aia_enable(void)
- 	enable_percpu_irq(hgei_parent_irq,
- 			  irq_get_trigger_type(hgei_parent_irq));
- 	csr_set(CSR_HIE, BIT(IRQ_S_GEXT));
-+	/* Enable IRQ filtering for overflow interrupt only if sscofpmf is present */
-+	if (__riscv_isa_extension_available(NULL, RISCV_ISA_EXT_SSCOFPMF))
-+		csr_write(CSR_HVIEN, BIT(IRQ_PMU_OVF));
- }
- 
- void kvm_riscv_aia_disable(void)
-@@ -558,6 +561,8 @@ void kvm_riscv_aia_disable(void)
- 		return;
- 	hgctrl = get_cpu_ptr(&aia_hgei);
- 
-+	if (__riscv_isa_extension_available(NULL, RISCV_ISA_EXT_SSCOFPMF))
-+		csr_clear(CSR_HVIEN, BIT(IRQ_PMU_OVF));
- 	/* Disable per-CPU SGEI interrupt */
- 	csr_clear(CSR_HIE, BIT(IRQ_S_GEXT));
- 	disable_percpu_irq(hgei_parent_irq);
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index b5ca9f2e98ac..f83f0226439f 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -382,7 +382,8 @@ int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
- 	if (irq < IRQ_LOCAL_MAX &&
- 	    irq != IRQ_VS_SOFT &&
- 	    irq != IRQ_VS_TIMER &&
--	    irq != IRQ_VS_EXT)
-+	    irq != IRQ_VS_EXT &&
-+	    irq != IRQ_PMU_OVF)
- 		return -EINVAL;
- 
- 	set_bit(irq, vcpu->arch.irqs_pending);
-@@ -397,14 +398,15 @@ int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
- int kvm_riscv_vcpu_unset_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
- {
- 	/*
--	 * We only allow VS-mode software, timer, and external
-+	 * We only allow VS-mode software, timer, counter overflow and external
- 	 * interrupts when irq is one of the local interrupts
- 	 * defined by RISC-V privilege specification.
- 	 */
- 	if (irq < IRQ_LOCAL_MAX &&
- 	    irq != IRQ_VS_SOFT &&
- 	    irq != IRQ_VS_TIMER &&
--	    irq != IRQ_VS_EXT)
-+	    irq != IRQ_VS_EXT &&
-+	    irq != IRQ_PMU_OVF)
- 		return -EINVAL;
- 
- 	clear_bit(irq, vcpu->arch.irqs_pending);
-diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
-index fc34557f5356..1eaaa919aa61 100644
---- a/arch/riscv/kvm/vcpu_onereg.c
-+++ b/arch/riscv/kvm/vcpu_onereg.c
-@@ -36,6 +36,7 @@ static const unsigned long kvm_isa_ext_arr[] = {
- 	/* Multi letter extensions (alphabetically sorted) */
- 	KVM_ISA_EXT_ARR(SMSTATEEN),
- 	KVM_ISA_EXT_ARR(SSAIA),
-+	KVM_ISA_EXT_ARR(SSCOFPMF),
- 	KVM_ISA_EXT_ARR(SSTC),
- 	KVM_ISA_EXT_ARR(SVINVAL),
- 	KVM_ISA_EXT_ARR(SVNAPOT),
-@@ -88,6 +89,7 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsigned long ext)
- 	case KVM_RISCV_ISA_EXT_I:
- 	case KVM_RISCV_ISA_EXT_M:
- 	case KVM_RISCV_ISA_EXT_SSTC:
-+	case KVM_RISCV_ISA_EXT_SSCOFPMF:
- 	case KVM_RISCV_ISA_EXT_SVINVAL:
- 	case KVM_RISCV_ISA_EXT_SVNAPOT:
- 	case KVM_RISCV_ISA_EXT_ZBA:
-@@ -117,8 +119,13 @@ void kvm_riscv_vcpu_setup_isa(struct kvm_vcpu *vcpu)
- 	for (i = 0; i < ARRAY_SIZE(kvm_isa_ext_arr); i++) {
- 		host_isa = kvm_isa_ext_arr[i];
- 		if (__riscv_isa_extension_available(NULL, host_isa) &&
--		    kvm_riscv_vcpu_isa_enable_allowed(i))
-+		    kvm_riscv_vcpu_isa_enable_allowed(i)) {
-+			/* Sscofpmf depends on interrupt filtering defined in ssaia */
-+			if (host_isa == RISCV_ISA_EXT_SSCOFPMF &&
-+			    !__riscv_isa_extension_available(NULL, RISCV_ISA_EXT_SSAIA))
-+				continue;
- 			set_bit(host_isa, vcpu->arch.isa);
-+		}
- 	}
- }
- 
-diff --git a/arch/riscv/kvm/vcpu_pmu.c b/arch/riscv/kvm/vcpu_pmu.c
-index b3112c23ad33..063e11685340 100644
---- a/arch/riscv/kvm/vcpu_pmu.c
-+++ b/arch/riscv/kvm/vcpu_pmu.c
-@@ -229,6 +229,47 @@ static int kvm_pmu_validate_counter_mask(struct kvm_pmu *kvpmu, unsigned long ct
- 	return 0;
- }
- 
-+static void kvm_riscv_pmu_overflow(struct perf_event *perf_event,
-+				   struct perf_sample_data *data,
-+				   struct pt_regs *regs)
-+{
-+	struct kvm_pmc *pmc = perf_event->overflow_handler_context;
-+	struct kvm_vcpu *vcpu = pmc->vcpu;
-+	struct kvm_pmu *kvpmu = vcpu_to_pmu(vcpu);
-+	struct riscv_pmu *rpmu = to_riscv_pmu(perf_event->pmu);
-+	u64 period;
-+
-+	/*
-+	 * Stop the event counting by directly accessing the perf_event.
-+	 * Otherwise, this needs to deferred via a workqueue.
-+	 * That will introduce skew in the counter value because the actual
-+	 * physical counter would start after returning from this function.
-+	 * It will be stopped again once the workqueue is scheduled
-+	 */
-+	rpmu->pmu.stop(perf_event, PERF_EF_UPDATE);
-+
-+	/*
-+	 * The hw counter would start automatically when this function returns.
-+	 * Thus, the host may continue to interrupt and inject it to the guest
-+	 * even without the guest configuring the next event. Depending on the hardware
-+	 * the host may have some sluggishness only if privilege mode filtering is not
-+	 * available. In an ideal world, where qemu is not the only capable hardware,
-+	 * this can be removed.
-+	 * FYI: ARM64 does this way while x86 doesn't do anything as such.
-+	 * TODO: Should we keep it for RISC-V ?
-+	 */
-+	period = -(local64_read(&perf_event->count));
-+
-+	local64_set(&perf_event->hw.period_left, 0);
-+	perf_event->attr.sample_period = period;
-+	perf_event->hw.sample_period = period;
-+
-+	set_bit(pmc->idx, kvpmu->pmc_overflown);
-+	kvm_riscv_vcpu_set_interrupt(vcpu, IRQ_PMU_OVF);
-+
-+	rpmu->pmu.start(perf_event, PERF_EF_RELOAD);
-+}
-+
- static long kvm_pmu_create_perf_event(struct kvm_pmc *pmc, struct perf_event_attr *attr,
- 				      unsigned long flags, unsigned long eidx,
- 				      unsigned long evtdata)
-@@ -248,7 +289,7 @@ static long kvm_pmu_create_perf_event(struct kvm_pmc *pmc, struct perf_event_att
- 	 */
- 	attr->sample_period = kvm_pmu_get_sample_period(pmc);
- 
--	event = perf_event_create_kernel_counter(attr, -1, current, NULL, pmc);
-+	event = perf_event_create_kernel_counter(attr, -1, current, kvm_riscv_pmu_overflow, pmc);
- 	if (IS_ERR(event)) {
- 		pr_err("kvm pmu event creation failed for eidx %lx: %ld\n", eidx, PTR_ERR(event));
- 		return PTR_ERR(event);
-@@ -473,6 +514,12 @@ int kvm_riscv_vcpu_pmu_ctr_start(struct kvm_vcpu *vcpu, unsigned long ctr_base,
- 		}
- 	}
- 
-+	/* The guest have serviced the interrupt and starting the counter again */
-+	if (test_bit(IRQ_PMU_OVF, vcpu->arch.irqs_pending)) {
-+		clear_bit(pmc_index, kvpmu->pmc_overflown);
-+		kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_PMU_OVF);
-+	}
-+
- out:
- 	retdata->err_val = sbiret;
- 
-@@ -539,7 +586,13 @@ int kvm_riscv_vcpu_pmu_ctr_stop(struct kvm_vcpu *vcpu, unsigned long ctr_base,
- 			else if (pmc->perf_event)
- 				pmc->counter_val += perf_event_read_value(pmc->perf_event,
- 									  &enabled, &running);
--			/* TODO: Add counter overflow support when sscofpmf support is added */
-+			/*
-+			 * The counter and overflow indicies in the snapshot region are w.r.to
-+			 * cbase. Modify the set bit in the counter mask instead of the pmc_index
-+			 * which indicates the absolute counter index.
-+			 */
-+			if (test_bit(pmc_index, kvpmu->pmc_overflown))
-+				kvpmu->sdata->ctr_overflow_mask |= (1UL << i);
- 			kvpmu->sdata->ctr_values[i] = pmc->counter_val;
- 			kvm_vcpu_write_guest(vcpu, kvpmu->snapshot_addr, kvpmu->sdata,
- 					     sizeof(struct riscv_pmu_snapshot_data));
-@@ -548,15 +601,20 @@ int kvm_riscv_vcpu_pmu_ctr_stop(struct kvm_vcpu *vcpu, unsigned long ctr_base,
- 		if (flags & SBI_PMU_STOP_FLAG_RESET) {
- 			pmc->event_idx = SBI_PMU_EVENT_IDX_INVALID;
- 			clear_bit(pmc_index, kvpmu->pmc_in_use);
-+			clear_bit(pmc_index, kvpmu->pmc_overflown);
- 			if (snap_flag_set) {
- 				/* Clear the snapshot area for the upcoming deletion event */
- 				kvpmu->sdata->ctr_values[i] = 0;
-+				/*
-+				 * Only clear the given counter as the caller is responsible to
-+				 * validate both the overflow mask and configured counters.
-+				 */
-+				kvpmu->sdata->ctr_overflow_mask &= ~(1UL << i);
- 				kvm_vcpu_write_guest(vcpu, kvpmu->snapshot_addr, kvpmu->sdata,
- 						     sizeof(struct riscv_pmu_snapshot_data));
- 			}
- 		}
- 	}
--
- out:
- 	retdata->err_val = sbiret;
- 
-@@ -699,6 +757,7 @@ void kvm_riscv_vcpu_pmu_init(struct kvm_vcpu *vcpu)
- 		pmc = &kvpmu->pmc[i];
- 		pmc->idx = i;
- 		pmc->event_idx = SBI_PMU_EVENT_IDX_INVALID;
-+		pmc->vcpu = vcpu;
- 		if (i < kvpmu->num_hw_ctrs) {
- 			pmc->cinfo.type = SBI_PMU_CTR_TYPE_HW;
- 			if (i < 3)
-@@ -731,13 +790,14 @@ void kvm_riscv_vcpu_pmu_deinit(struct kvm_vcpu *vcpu)
- 	if (!kvpmu)
- 		return;
- 
--	for_each_set_bit(i, kvpmu->pmc_in_use, RISCV_MAX_COUNTERS) {
-+	for_each_set_bit(i, kvpmu->pmc_in_use, RISCV_KVM_MAX_COUNTERS) {
- 		pmc = &kvpmu->pmc[i];
- 		pmc->counter_val = 0;
- 		kvm_pmu_release_perf_event(pmc);
- 		pmc->event_idx = SBI_PMU_EVENT_IDX_INVALID;
- 	}
--	bitmap_zero(kvpmu->pmc_in_use, RISCV_MAX_COUNTERS);
-+	bitmap_zero(kvpmu->pmc_in_use, RISCV_KVM_MAX_COUNTERS);
-+	bitmap_zero(kvpmu->pmc_overflown, RISCV_KVM_MAX_COUNTERS);
- 	memset(&kvpmu->fw_event, 0, SBI_PMU_FW_MAX * sizeof(struct kvm_fw_event));
- 	kvm_pmu_clear_snapshot_area(vcpu);
- }
--- 
-2.34.1
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  .../spi/adi,axi-spi-engine-peripheral-props.yaml   | 24 +++++++++++
+>  .../bindings/spi/adi,axi-spi-engine.yaml           | 49 +++++++++++++++++++++-
+>  .../bindings/spi/spi-peripheral-props.yaml         |  1 +
+>  3 files changed, 73 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/adi,axi-spi-engine-peripheral-props.yaml b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine-peripheral-props.yaml
+> new file mode 100644
+> index 000000000000..19b685fc3b39
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine-peripheral-props.yaml
+> @@ -0,0 +1,24 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/adi,axi-spi-engine-peripheral-props.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Peripheral properties for Analog Devices AXI SPI Engine Controller
+> +
+> +maintainers:
+> +  - Michael Hennerich <Michael.Hennerich@analog.com>
+> +  - Nuno Sá <nuno.sa@analog.com>
+> +
+> +properties:
+> +  adi,offloads:
+> +    description:
+> +      List of AXI SPI Engine offload instances assigned to this peripheral.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    maxItems: 32
+> +    items:
+> +      items:
+> +        - minimum: 0
+> +          maximum: 31
 
+This defines a matrix. You want:
+
+minItems: 1
+maxItems: 32
+items:
+  maximum: 31
+
+(0 is already the min).
+
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.yaml b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.yaml
+> index d48faa42d025..69f3261bab47 100644
+> --- a/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.yaml
+> +++ b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.yaml
+> @@ -21,6 +21,23 @@ maintainers:
+>  allOf:
+>    - $ref: /schemas/spi/spi-controller.yaml#
+>  
+> +$defs:
+> +  offload:
+> +    description:
+> +      Describes the connections of the trigger input and the data output stream
+> +      of one or more offload instances.
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          Index of the offload instance.
+> +        items:
+> +          - minimum: 0
+> +            maximum: 31
+> +
+> +    required:
+> +      - reg
+> +
+>  properties:
+>    compatible:
+>      const: adi,axi-spi-engine-1.00.a
+> @@ -41,6 +58,22 @@ properties:
+>        - const: s_axi_aclk
+>        - const: spi_clk
+>  
+> +  offloads:
+> +    type: object
+> +    description: Zero or more offloads supported by the controller.
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^offload@[0-8a-f]+$":
+> +        type: object
+> +        $ref: '#/$defs/offload'
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -62,5 +95,19 @@ examples:
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+>  
+> -        /* SPI devices */
+> +        offloads {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            offload@0 {
+> +                compatible = "adi,example-offload";
+
+No fake examples please. This should give you a warning.
+
+> +                reg = <0>;
+> +            };
+> +        };
+> +
+> +        adc@0 {
+> +            compatible = "adi,example-adc";
+> +            reg = <0>;
+> +            adi,offloads = <0>;
+> +        };
+>      };
+> diff --git a/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml b/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
+> index 1c8e71c18234..7beb5a3798a5 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
+> +++ b/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
+> @@ -132,6 +132,7 @@ properties:
+>  
+>  # The controller specific properties go here.
+>  allOf:
+> +  - $ref: adi,axi-spi-engine-peripheral-props.yaml#
+>    - $ref: arm,pl022-peripheral-props.yaml#
+>    - $ref: cdns,qspi-nor-peripheral-props.yaml#
+>    - $ref: samsung,spi-peripheral-props.yaml#
+> 
+> -- 
+> 2.43.0
+> 
