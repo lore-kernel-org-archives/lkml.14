@@ -1,247 +1,298 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290EA4776F;
-	Wed, 10 Jan 2024 10:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WzANpSHr"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40A8rFQr009947;
-	Wed, 10 Jan 2024 11:47:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=pd/0B5jTj4kUlVqaQGMkPh1qMzUtukifBnVR6GXqFNQ=; b=Wz
-	ANpSHrgflutKE6TCzlOPshDYnNEK91nchgcHMsrEMn6onbnRJQiAffYQYl5JjdOP
-	kSRNKDXFUEkuACpjKMAe1g3ChXJUxhUgkICMyUbDSKgEFCXv2FKw6E8OXrcICaBu
-	s8Bm81JuLt9mtfoIccQygduzJF+2CEwNn7s8u2AL5Qh/u5NAUsIEwwbK6zMBqXlj
-	yOFpBnQJx2A0cFSe2TcvHfb3w2KbfBz2YejAHd9XlOW7aizzQC1mHNsRQ+pkbg6D
-	Zfux0OGiUabnfBZ57G5x+2u0mjBZKO05xyTkkBJGuKm06vnqzhkHFrXE//DXAqAB
-	C25NAYv9lv9CuwTjkBDg==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vfjpnwk0v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 11:47:03 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6E91210002A;
-	Wed, 10 Jan 2024 11:47:03 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6052826C046;
-	Wed, 10 Jan 2024 11:47:03 +0100 (CET)
-Received: from localhost (10.201.20.120) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 10 Jan
- 2024 11:47:02 +0100
-From: Hugues Fruchet <hugues.fruchet@foss.st.com>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>,
-        Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>,
-        Laurent Pinchart
-	<laurent.pinchart+renesas@ideasonboard.com>,
-        Daniel Almeida
-	<daniel.almeida@collabora.com>,
-        Benjamin Mugnier
-	<benjamin.mugnier@foss.st.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Mauro
- Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>
-CC: Hugues Fruchet <hugues.fruchet@foss.st.com>,
-        Marco Felsch
-	<m.felsch@pengutronix.de>,
-        Adam Ford <aford173@gmail.com>
-Subject: [RESEND PATCH v6 3/5] media: hantro: add support for STM32MP25 VENC
-Date: Wed, 10 Jan 2024 11:46:40 +0100
-Message-ID: <20240110104642.532011-4-hugues.fruchet@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240110104642.532011-1-hugues.fruchet@foss.st.com>
-References: <20240110104642.532011-1-hugues.fruchet@foss.st.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D121481D1
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 10:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: by air.basealt.ru (Postfix, from userid 490)
+	id 64BAD2F2027C; Wed, 10 Jan 2024 10:41:42 +0000 (UTC)
+X-Spam-Level: 
+Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
+	by air.basealt.ru (Postfix) with ESMTPSA id 2AE302F20285;
+	Wed, 10 Jan 2024 10:41:28 +0000 (UTC)
+From: kovalev@altlinux.org
+To: bryantan@vmware.com,
+	vdasa@vmware.com,
+	pv-drivers@vmware.com,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org
+Cc: kovalev@altlinux.org,
+	nickel@altlinux.org,
+	oficerovas@altlinux.org,
+	dutyrok@altlinux.org
+Subject: [PATCH 0/1] misc/vmw_vmci: fix filling of the msg and msg_payload in dg_info struct
+Date: Wed, 10 Jan 2024 13:40:41 +0300
+Message-Id: <20240110104042.31865-1-kovalev@altlinux.org>
+X-Mailer: git-send-email 2.33.8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+Content-Transfer-Encoding: quoted-printable
 
-Add support for STM32MP25 VENC video hardware encoder.
-Support of JPEG encoding.
-VENC has its own reset/clock/irq.
+Warning detected by tracking mechanisms __fortify_memcpy_chk, added 2021-04=
+-20.
+The proposed patch (PATCH 1/1) introduces changes to meet the new requireme=
+nts.
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Signed-off-by: Hugues Fruchet <hugues.fruchet@foss.st.com>
----
- .../media/platform/verisilicon/hantro_drv.c   |  1 +
- .../media/platform/verisilicon/hantro_hw.h    |  1 +
- .../platform/verisilicon/stm32mp25_vpu_hw.c   | 90 +++++++++++++++++++
- 3 files changed, 92 insertions(+)
+The reproducer (repro.c) was generated using the syzkaller program and mini=
+mized
+(Thanks Alexander Ofitserov <oficerovas@altlinux.org>):
 
-diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/drivers/media/platform/verisilicon/hantro_drv.c
-index fe8e2240324c..34b123dafd89 100644
---- a/drivers/media/platform/verisilicon/hantro_drv.c
-+++ b/drivers/media/platform/verisilicon/hantro_drv.c
-@@ -738,6 +738,7 @@ static const struct of_device_id of_hantro_match[] = {
- #endif
- #ifdef CONFIG_VIDEO_HANTRO_STM32MP25
- 	{ .compatible = "st,stm32mp25-vdec", .data = &stm32mp25_vdec_variant, },
-+	{ .compatible = "st,stm32mp25-venc", .data = &stm32mp25_venc_variant, },
- #endif
- 	{ /* sentinel */ }
- };
-diff --git a/drivers/media/platform/verisilicon/hantro_hw.h b/drivers/media/platform/verisilicon/hantro_hw.h
-index 0b4806f67630..7737320cc8cc 100644
---- a/drivers/media/platform/verisilicon/hantro_hw.h
-+++ b/drivers/media/platform/verisilicon/hantro_hw.h
-@@ -409,6 +409,7 @@ extern const struct hantro_variant rk3588_vpu981_variant;
- extern const struct hantro_variant sama5d4_vdec_variant;
- extern const struct hantro_variant sunxi_vpu_variant;
- extern const struct hantro_variant stm32mp25_vdec_variant;
-+extern const struct hantro_variant stm32mp25_venc_variant;
- 
- extern const struct hantro_postproc_ops hantro_g1_postproc_ops;
- extern const struct hantro_postproc_ops hantro_g2_postproc_ops;
-diff --git a/drivers/media/platform/verisilicon/stm32mp25_vpu_hw.c b/drivers/media/platform/verisilicon/stm32mp25_vpu_hw.c
-index 6af6edcb6650..833821120b20 100644
---- a/drivers/media/platform/verisilicon/stm32mp25_vpu_hw.c
-+++ b/drivers/media/platform/verisilicon/stm32mp25_vpu_hw.c
-@@ -9,6 +9,8 @@
-  */
- 
- #include "hantro.h"
-+#include "hantro_jpeg.h"
-+#include "hantro_h1_regs.h"
- 
- /*
-  * Supported formats.
-@@ -55,6 +57,67 @@ static const struct hantro_fmt stm32mp25_vdec_fmts[] = {
- 	},
- };
- 
-+static const struct hantro_fmt stm32mp25_venc_fmts[] = {
-+	{
-+		.fourcc = V4L2_PIX_FMT_YUV420M,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = ROCKCHIP_VPU_ENC_FMT_YUV420P,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV12M,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = ROCKCHIP_VPU_ENC_FMT_YUV420SP,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_YUYV,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = ROCKCHIP_VPU_ENC_FMT_YUYV422,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_UYVY,
-+		.codec_mode = HANTRO_MODE_NONE,
-+		.enc_fmt = ROCKCHIP_VPU_ENC_FMT_UYVY422,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_JPEG,
-+		.codec_mode = HANTRO_MODE_JPEG_ENC,
-+		.max_depth = 2,
-+		.header_size = JPEG_HEADER_SIZE,
-+		.frmsize = {
-+			.min_width = 96,
-+			.max_width = FMT_4K_WIDTH,
-+			.step_width = MB_DIM,
-+			.min_height = 96,
-+			.max_height = FMT_4K_HEIGHT,
-+			.step_height = MB_DIM,
-+		},
-+	},
-+};
-+
-+static irqreturn_t stm32mp25_venc_irq(int irq, void *dev_id)
-+{
-+	struct hantro_dev *vpu = dev_id;
-+	enum vb2_buffer_state state;
-+	u32 status;
-+
-+	status = vepu_read(vpu, H1_REG_INTERRUPT);
-+	state = (status & H1_REG_INTERRUPT_FRAME_RDY) ?
-+		VB2_BUF_STATE_DONE : VB2_BUF_STATE_ERROR;
-+
-+	vepu_write(vpu, H1_REG_INTERRUPT_BIT, H1_REG_INTERRUPT);
-+
-+	hantro_irq_done(vpu, state);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void stm32mp25_venc_reset(struct hantro_ctx *ctx)
-+{
-+	struct hantro_dev *vpu = ctx->dev;
-+
-+	reset_control_reset(vpu->resets);
-+}
-+
- /*
-  * Supported codec ops.
-  */
-@@ -74,6 +137,14 @@ static const struct hantro_codec_ops stm32mp25_vdec_codec_ops[] = {
- 	},
- };
- 
-+static const struct hantro_codec_ops stm32mp25_venc_codec_ops[] = {
-+	[HANTRO_MODE_JPEG_ENC] = {
-+		.run = hantro_h1_jpeg_enc_run,
-+		.reset = stm32mp25_venc_reset,
-+		.done = hantro_h1_jpeg_enc_done,
-+	},
-+};
-+
- /*
-  * Variants.
-  */
-@@ -94,3 +165,22 @@ const struct hantro_variant stm32mp25_vdec_variant = {
- 	.clk_names = stm32mp25_vdec_clk_names,
- 	.num_clocks = ARRAY_SIZE(stm32mp25_vdec_clk_names),
- };
-+
-+static const struct hantro_irq stm32mp25_venc_irqs[] = {
-+	{ "venc", stm32mp25_venc_irq },
-+};
-+
-+static const char * const stm32mp25_venc_clk_names[] = {
-+	"venc-clk"
-+};
-+
-+const struct hantro_variant stm32mp25_venc_variant = {
-+	.enc_fmts = stm32mp25_venc_fmts,
-+	.num_enc_fmts = ARRAY_SIZE(stm32mp25_venc_fmts),
-+	.codec = HANTRO_JPEG_ENCODER,
-+	.codec_ops = stm32mp25_venc_codec_ops,
-+	.irqs = stm32mp25_venc_irqs,
-+	.num_irqs = ARRAY_SIZE(stm32mp25_venc_irqs),
-+	.clk_names = stm32mp25_venc_clk_names,
-+	.num_clocks = ARRAY_SIZE(stm32mp25_venc_clk_names)
-+};
--- 
-2.25.1
+#define _GNU_SOURCE
+
+#include <endian.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+uint64_t r[1] =3D {0xffffffffffffffff};
+
+int main(void)
+{
+        syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 7ul, 0x32ul, -1, 0ul);
+        memset((void *)0x20000000ul, 0x0, 0x1000000ul);
+
+        intptr_t res =3D 0;
+        res =3D syscall(__NR_socket, 0x28ul, 2ul, 0);
+        if (res !=3D -1)
+                r[0] =3D res;
+        *(uint16_t*)0x20000000 =3D 0x28;
+        *(uint16_t*)0x20000002 =3D 0;
+        *(uint32_t*)0x20000004 =3D 1;
+        *(uint32_t*)0x20000008 =3D 2;
+        *(uint32_t*)0x2000000c =3D 0;
+        syscall(__NR_connect, r[0], 0x20000000ul, 0x10ul);
+
+        // struct msghdr*
+        // 0x20000440ul - 0x20000447ul - msg_name
+        // 0x20000448ul - 0x20000449ul - msg_len
+        // 0x20000450ul - ptr to msg_iov
+        // 0x20000458ul - msg_iovlen
+        *(uint64_t*)0x20000450 =3D 0x20000400;
+        *(uint8_t*)0x20000448 =3D 0xFF;
+        *(uint64_t*)0x20000458 =3D 1;
+        *(uint64_t*)0x20000460 =3D 0x20010000;
+        *(uint64_t*)0x20000468 =3D 0;
+
+        // 0x20000400 - ptr to iov_base
+        // 0x20000408 - iov_len
+        *(uint64_t*)0x20000400 =3D 0x20000900;
+        strcpy((char *)0x20000900, "AAAAAA");
+        *(uint64_t*)0x20000408 =3D 0x10000;
+
+        syscall(__NR_sendmsg, r[0], 0x20000440ul, 0ul);
+        return 0;
+}
+
+$ gcc repro.c -o repro
+$ ./repro
+
+# dmesg (linux kernel 6.6.6):
+-----
+[   38.036309] Guest personality initialized and is inactive
+[   38.036380] VMCI host device registered (name=3Dvmci, major=3D10, minor=
+=3D122)
+[   38.036381] Initialized host personality
+[   38.037987] NET: Registered PF_VSOCK protocol family
+[   38.073027] ------------[ cut here ]------------
+[   38.073034] memcpy: detected field-spanning write (size 65560) of single=
+ field "&dg_info->msg" at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 2=
+4)
+[   38.073103] WARNING: CPU: 9 PID: 3976 at drivers/misc/vmw_vmci/vmci_data=
+gram.c:237 vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
+[   38.073135] Modules linked in: vsock_loopback vmw_vsock_virtio_transport=
+_common vmw_vsock_vmci_transport vsock vmw_vmci ccm rfcomm cmac algif_hash =
+algif_skcipher af_alg af_packet qrtr bnep uvcvideo btusb uvc btrtl videobuf=
+2_vmalloc videobuf2_memops btintel videobuf2_v4l2 btbcm btmtk usbhid videod=
+ev bluetooth videobuf2_common mc ecdh_generic joydev snd_sof_pci_intel_tgl =
+snd_sof_intel_hda_common soundwire_intel soundwire_generic_allocation coret=
+emp snd_sof_intel_hda_mlink intel_uncore_frequency soundwire_cadence intel_=
+uncore_frequency_common intel_tcc_cooling snd_sof_intel_hda snd_sof_pci x86=
+_pkg_temp_thermal snd_sof_xtensa_dsp intel_powerclamp snd_sof snd_sof_utils=
+ snd_soc_hdac_hda kvm_intel snd_hda_ext_core snd_soc_acpi_intel_match snd_s=
+oc_acpi snd_hda_codec_hdmi soundwire_bus snd_soc_core kvm hid_multitouch nl=
+s_utf8 snd_hda_codec_realtek hid_generic snd_compress nls_cp866 ac97_bus iw=
+lmvm spi_pxa2xx_platform 8250_dw iTCO_wdt snd_pcm_dmaengine irqbypass dw_dm=
+ac snd_hda_codec_generic vfat rtsx_pci_sdmmc intel_pmc_bxt
+[   38.073247]  crct10dif_pclmul fat ledtrig_audio snd_hda_intel crc32_pclm=
+ul mei_hdcp iTCO_vendor_support mmc_core intel_rapl_msr crc32c_intel snd_in=
+tel_dspcfg mac80211 ghash_clmulni_intel snd_intel_sdw_acpi sha512_ssse3 sha=
+256_ssse3 snd_hda_codec sha1_ssse3 aesni_intel processor_thermal_device_pci=
+ processor_thermal_device snd_hda_core crypto_simd processor_thermal_rfim i=
+ntel_lpss_pci i2c_hid_acpi ucsi_acpi cryptd libarc4 iwlwifi pcspkr xhci_pci=
+ processor_thermal_mbox intel_lpss ideapad_laptop i2c_hid xhci_pci_renesas =
+i2c_i801 mei_me typec_ucsi snd_hwdep idma64 processor_thermal_rapl typec sp=
+arse_keymap wmi_bmof tiny_power_button cfg80211 snd_pcm i2c_smbus platform_=
+profile rtsx_pci xhci_hcd mei virt_dma intel_rapl_common thermal hid roles =
+fan button int3403_thermal battery rfkill int340x_thermal_zone int3400_ther=
+mal acpi_thermal_rel intel_pmc_core pinctrl_tigerlake acpi_pad ac sch_fq_co=
+del vboxvideo drm_vram_helper drm_ttm_helper vboxsf vboxguest snd_seq_midi =
+snd_seq_midi_event snd_seq snd_rawmidi snd_seq_device
+[   38.073342]  snd_timer snd soundcore msr fuse dm_mod efi_pstore efivarfs=
+ ip_tables x_tables autofs4 i915 hwmon i2c_algo_bit drm_buddy ttm evdev drm=
+_display_helper input_leds serio_raw cec rc_core intel_gtt video wmi
+[   38.073375] CPU: 9 PID: 3976 Comm: eee.out Not tainted 6.6.6-un-def-alt1=
+ #1
+[   38.073381] Hardware name: LENOVO 82X8/LNVNB161216, BIOS LTCN30WW 11/08/=
+2023
+[   38.073384] RIP: 0010:vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
+[   38.073405] Code: 38 fd ff ff 80 3d 5c 96 00 00 00 75 87 48 c7 c2 58 0b =
+6b c1 4c 89 ee 48 c7 c7 a0 0b 6b c1 c6 05 42 96 00 00 01 e8 18 c0 a1 c5 <0f=
+> 0b e9 63 ff ff ff e8 1c 5e 65 c6 83 cd ff e9 fe fc ff ff f0 ff
+[   38.073410] RSP: 0018:ffffc9000279fb58 EFLAGS: 00010246
+[   38.073415] RAX: 0000000000000000 RBX: ffff88811a9c0000 RCX: 00000000000=
+00000
+[   38.073418] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
+00000
+[   38.073421] RBP: ffff888165540000 R08: 0000000000000000 R09: 00000000000=
+00000
+[   38.073423] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881655=
+40030
+[   38.073425] R13: 0000000000010018 R14: ffff8881090a2a00 R15: ffff88811a9=
+c0018
+[   38.073428] FS:  00007f3a36bec580(0000) GS:ffff8882a7a40000(0000) knlGS:=
+0000000000000000
+[   38.073432] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   38.073435] CR2: 000055b6120cf008 CR3: 000000010db62000 CR4: 00000000007=
+50ee0
+[   38.073438] PKRU: 55555554
+[   38.073440] Call Trace:
+[   38.073446]  <TASK>
+[   38.073448]  ? vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
+[   38.073467]  ? __warn+0x7d/0x130
+[   38.073482]  ? vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
+[   38.073503]  ? report_bug+0x17e/0x1b0
+[   38.073514]  ? handle_bug+0x60/0xb0
+[   38.073523]  ? exc_invalid_op+0x13/0x70
+[   38.073531]  ? asm_exc_invalid_op+0x16/0x20
+[   38.073540]  ? vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
+[   38.073559]  ? vmci_datagram_dispatch+0x378/0x3c0 [vmw_vmci]
+[   38.073577]  vmci_transport_dgram_enqueue+0xb5/0x150 [vmw_vsock_vmci_tra=
+nsport]
+[   38.073596]  vsock_dgram_sendmsg+0xcf/0x180 [vsock]
+[   38.073618]  ____sys_sendmsg+0x376/0x3b0
+[   38.073629]  ? copy_msghdr_from_user+0x6d/0xb0
+[   38.073635]  ___sys_sendmsg+0x86/0xe0
+[   38.073642]  ? filemap_map_pages+0x423/0x570
+[   38.073653]  ? vmci_resource_add+0xde/0x170 [vmw_vmci]
+[   38.073674]  ? __pfx_vmci_transport_recv_dgram_cb+0x10/0x10 [vmw_vsock_v=
+mci_transport]
+[   38.073689]  ? do_fault+0x296/0x470
+[   38.073697]  __sys_sendmsg+0x57/0xb0
+[   38.073704]  do_syscall_64+0x59/0x90
+[   38.073711]  ? count_memcg_events.constprop.0+0x3a/0x70
+[   38.073717]  ? handle_mm_fault+0x9e/0x300
+[   38.073724]  ? do_user_addr_fault+0x33d/0x680
+[   38.073733]  ? sched_clock+0xc/0x30
+[   38.073740]  ? get_vtime_delta+0xf/0xc0
+[   38.073750]  ? ct_kernel_exit.isra.0+0x71/0x90
+[   38.073759]  ? __ct_user_enter+0x5a/0xd0
+[   38.073765]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+[   38.073771] RIP: 0033:0x7f3a36b0cd49
+[   38.073776] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 =
+89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48=
+> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ef 70 0d 00 f7 d8 64 89 01 48
+[   38.073780] RSP: 002b:00007ffea38c4a08 EFLAGS: 00000217 ORIG_RAX: 000000=
+000000002e
+[   38.073784] RAX: ffffffffffffffda RBX: 000055b6120ce2d0 RCX: 00007f3a36b=
+0cd49
+[   38.073787] RDX: 0000000000000000 RSI: 0000000020000440 RDI: 00000000000=
+00003
+[   38.073790] RBP: 00007ffea38c4a20 R08: 00007ffea38c4b10 R09: 00007ffea38=
+c4b10
+[   38.073792] R10: 00007ffea38c4b10 R11: 0000000000000217 R12: 000055b6120=
+ce060
+[   38.073795] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000=
+00000
+[   38.073799]  </TASK>
+[   38.073801] ---[ end trace 0000000000000000 ]---
+-----
+
+To assess the performance losses when using a new patch, the kernel was bui=
+lded with the
+patch below and the reproducer was launched several times:
+
+diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/=
+vmci_datagram.c
+index 6d42f3b99c6f46..b078364d5c9b23 100644
+--- a/drivers/misc/vmw_vmci/vmci_datagram.c
++++ b/drivers/misc/vmw_vmci/vmci_datagram.c
+@@ -234,6 +234,17 @@ static int dg_dispatch_as_host(u32 context_id, struct =
+vmci_datagram *dg)
+=20
+                        dg_info->in_dg_host_queue =3D true;
+                        dg_info->entry =3D dst_entry;
++                       u32 i;
++                       printk("memcpy: init i=3D%d\n",i);
++                       for(i=3D0; i<1000000000;i++){
++                               memcpy(&dg_info->msg, dg, 24);
++                       }
++                       printk("memcpy: old i=3D%d\n",i);
++                       for(i=3D0; i<1000000000;i++){
++                               memcpy(&dg_info->msg, dg, 12);
++                               memcpy(dg_info->msg_payload, VMCI_DG_PAYLOA=
+D(dg), 12);
++                       }
++                       printk("memcpy: new i=3D%d\n",i);
+                        memcpy(&dg_info->msg, dg, VMCI_DG_HEADERSIZE);
+                        if (dg->payload_size) {
+                                memcpy(dg_info->msg_payload, VMCI_DG_PAYLOA=
+D(dg), dg->payload_size);
+
+=3D=3D=3D=3D=3D=3D=3D
+Reproducing
+=3D=3D=3D=3D=3D=3D=3D
+# dmesg -w
+----
+[  181.415379] Guest personality initialized and is inactive
+[  181.415659] VMCI host device registered (name=3Dvmci, major=3D10, minor=
+=3D122)
+[  181.415665] Initialized host personality
+[  181.422766] NET: Registered PF_VSOCK protocol family
+[  181.468022] memcpy: init i=3D0
+[  183.020694] memcpy: old i=3D1000000000
+[  184.572458] memcpy: new i=3D1000000000
+[  196.009873] memcpy: init i=3D0
+[  197.562651] memcpy: old i=3D1000000000
+[  199.118132] memcpy: new i=3D1000000000
+[  206.543691] memcpy: init i=3D0
+[  208.781697] memcpy: old i=3D1000000000
+[  211.020229] memcpy: new i=3D1000000000
+----
+
+$ node=20
+Welcome to Node.js v16.19.1.
+Type ".help" for more information.
+> 183.020694 - 181.468022 //old
+1.5526720000000012
+> 184.572458 - 183.020694 // new
+1.55176400000002
+>
+> 197.562651 - 196.009873 // old
+1.5527779999999893
+> 199.118132 - 197.562651 // new
+1.5554810000000145
+>
+> 208.781697 - 206.543691 // old
+2.238006000000013=20
+> 211.020229 - 208.781697 // new
+2.238531999999992
+>
+
+Based on a rather primitive performance assessment, the results do not diff=
+er
+much, and given the loss of warning output in a one-time function call, the
+difference will be significant.
+
+[PATCH 1/1] misc/vmw_vmci: fix filling of the msg and msg_payload in dg_inf=
+o struct
 
