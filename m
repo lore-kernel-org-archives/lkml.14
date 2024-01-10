@@ -1,97 +1,80 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC824B5A1;
-	Wed, 10 Jan 2024 14:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T990f3nsfz6K977;
-	Wed, 10 Jan 2024 22:19:30 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 78450140B38;
-	Wed, 10 Jan 2024 22:22:06 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 10 Jan
- 2024 14:22:05 +0000
-Date: Wed, 10 Jan 2024 14:22:05 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Ira Weiny <ira.weiny@intel.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>, "Davidlohr Bueso" <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>, "Alison Schofield"
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ard
- Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v5 4/9] cxl/events: Remove passing a UUID to known event
- traces
-Message-ID: <20240110142205.0000164e@Huawei.com>
-In-Reply-To: <659dd8f467dbe_5cee29456@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20231220-cxl-cper-v5-0-1bb8a4ca2c7a@intel.com>
-	<20231220-cxl-cper-v5-4-1bb8a4ca2c7a@intel.com>
-	<20240108132325.00000e9c@Huawei.com>
-	<659dd8f467dbe_5cee29456@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C03495E2
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cz5SThqY"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5e82f502a4cso32958637b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 06:23:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704896618; x=1705501418; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U1KahT73zVp8kQdnLgcee+QY1qSTfdyvfyvMO4J8j1I=;
+        b=Cz5SThqYORp/zxP+prH/2JlTZ39DV0p6zkreFSSe9bvXG5b7SWBj5Bzq3rDbv45HIV
+         EYZrEw+KM+K6y5WL5r87nrxedutzYOHotYGGvp4SPqB2nnXjP3evguV73rgz3CpS96DP
+         MBrlKCTDbqDWusR/mb7JvRjgyrguz1hysu7thOEzQ5QGkNuXs+awEwTeAnFAEyhTvB8j
+         +zHI2+uxeGkQP53uwY956t+jdsPIwiRr9DkQKKe0Eo4qztLwsXA7BOzRTTVpTs29pSWq
+         nfAiXmFPy3+VKfpGAglGPOBvuCiY6ra/Jy8WAkRLlgOfRgmGl8Z8FxLmyoRTNYVD8dyO
+         F+1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704896618; x=1705501418;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U1KahT73zVp8kQdnLgcee+QY1qSTfdyvfyvMO4J8j1I=;
+        b=gOC6xXHkELP4wtZQ9/kLpofYPbp2xkqDmPAB1rd9F6p34f4y4yLvYeI3mUo30VKqM1
+         vQux2ocFmRpsYcOIx3JvC4qZ+R5ngVbLN47I8AbKeVdxmRMqJTLUsX2BbCmoTw/UGnyj
+         uT0ypUJZ1NNYF7Gbd46+Jl3NIBWExVoVk+j4jdajjJIHSd4KcpOJGN0eDK9GGh89tpho
+         vgBp6VsJMao/c8ON1Op5Rcef+yBu8X3wpvB4cvx2ZXie3imXdVMalDIkpX5b1sQxIBzV
+         ej9J6pZchNg93H9oFQPLsmjx8EZOdR0uIQJG7Yx5OEGa7L7cKN1IHRkdVocErcFTyKwi
+         HnqA==
+X-Gm-Message-State: AOJu0YztZeQ0ucPC8Fm7P1WQ3rx6ud28W1Wj6u/geDpq/47Hs5vQC6wW
+	XjfzcfDP6M65CtIiErBSTtuu1K5trj+WHIsK2WjaiVCXW7irZA==
+X-Google-Smtp-Source: AGHT+IGoBJrdSouc5G7V0M3BWF91ljY07dml4dK3g0/CQgBFTa1LMhmxdzyUhzpB+ebjkM6xeu0Y06QNYW0hjlJzlH8=
+X-Received: by 2002:a0d:d207:0:b0:5ef:767e:11fe with SMTP id
+ u7-20020a0dd207000000b005ef767e11femr881955ywd.4.1704896618427; Wed, 10 Jan
+ 2024 06:23:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <20240104-pinctrl-scmi-v2-0-a9bd86ab5a84@nxp.com> <20240104-pinctrl-scmi-v2-2-a9bd86ab5a84@nxp.com>
+In-Reply-To: <20240104-pinctrl-scmi-v2-2-a9bd86ab5a84@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 10 Jan 2024 15:23:26 +0100
+Message-ID: <CACRpkdZggU=P8pjcrRLZtS=yYjeS1+FT=gsRf7jq3ehLb4sEiw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: firmware: arm,scmi: support pinctrl protocol
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	AKASHI Takahiro <takahiro.akashi@linaro.org>, Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 9 Jan 2024 15:38:28 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Thu, Jan 4, 2024 at 11:44=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
+m> wrote:
 
-> Jonathan Cameron wrote:
-> > On Wed, 20 Dec 2023 16:17:31 -0800
-> > Ira Weiny <ira.weiny@intel.com> wrote:
-> >   
-> > > The UUID data is redundant in the known event trace types.  The addition
-> > > of static defines allows the trace macros to create the UUID data inside
-> > > the trace thus removing unnecessary code.
-> > > 
-> > > Have well known trace events use static data to set the uuid field based
-> > > on the event type.
-> > > 
-> > > Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > >   
-> >   
-> > >  	TP_STRUCT__entry(
-> > >  		CXL_EVT_TP_entry
-> > > @@ -422,7 +424,8 @@ TRACE_EVENT(cxl_dram,
-> > >  	),
-> > >  
-> > >  	TP_fast_assign(
-> > > -		CXL_EVT_TP_fast_assign(cxlmd, log, uuid, rec->hdr);
-> > > +		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> > > +		memcpy(&__entry->hdr_uuid, &CXL_EVENT_DRAM_UUID, sizeof(uuid_t));  
-> > 
-> > Hmm. Why not
-> > 
-> > 		__entry->hdr_uuid = CXL_EVENT_DRAM_UUID;
-> > ?
-> > 
-> > Compiler should be able to squish the stuff in the define down to data as as the
-> > UUID generation logic is pretty simple.
-> > 
-> > I've not emulated the cper records for these yet, so not tested that works beyond
-> > compiling.  
-> 
-> We can follow on with this conversion later as I see other usage of uuid
-> copying in trace events (bcache for instance). Although I probably would
-> not replace it with straight assignment and instead use the uuid_copy()
-> helper. Otherwise, why do {uuid,guid}_copy() helpers exist?
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> Add SCMI v3.2 pinctrl protocol bindings and example.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-To copy unknown uuids and guids where the compiler can't optimize things
-nearly as well because it can't see the values. 
+This looks good to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Jonathan
-
+Yours,
+Linus Walleij
