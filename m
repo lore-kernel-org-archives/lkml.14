@@ -1,101 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4908947774;
-	Wed, 10 Jan 2024 12:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA3A3FB07;
+	Wed, 10 Jan 2024 12:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmIwlg4J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA3D3C43394;
-	Wed, 10 Jan 2024 12:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704889233;
-	bh=5t7pM8zZp6AKeeGGHlgcvmEhkhNLjDXqWLj2E37NZaQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JmIwlg4J8TzENN9/bveFVYUMVYadO/6DfyGrnoQyW40XH+Yz+io37DRGWFqY3qSXV
-	 vGbUXDRtbz7gJW1foTqagTXeNi1VNF3aaeRRPY6/d55/tLKPV2PTab380YP6bbTNRm
-	 Nzg2Ax8uy4EjB5CJgqkcrojBFEgBefLGJKdlVumvZqUH9qGADFBv/6cXbgOOtsoCoY
-	 4JxY8VvYs1gfYdviqAMk/MIY1xOWDshdOO5MjB6iSo3dZvBgKDQKfAeBa1+8vl57qo
-	 DOTAMP8D7hHXMRcTPtXcGQ17JecozVTkRkndve5ExnvlhZEqGMcBppIpw0ex3gHh6V
-	 SqUhmTZl/Kwug==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rNXZP-00AVKC-91;
-	Wed, 10 Jan 2024 12:20:31 +0000
-Date: Wed, 10 Jan 2024 12:20:30 +0000
-Message-ID: <867ckh9y7l.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Ruidong Tian <tianruidong@linux.alibaba.com>
-Cc: kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	oliver.upton@linux.dev,
-	james.morse@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org
-Subject: Re: [PATCH] KVM: arm64: Add missing ERX*_EL1 registers
-In-Reply-To: <20240110075739.8291-1-tianruidong@linux.alibaba.com>
-References: <20240110075739.8291-1-tianruidong@linux.alibaba.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqwrGhw2"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5e86fc3f1e2so36080527b3.0;
+        Wed, 10 Jan 2024 04:20:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704889255; x=1705494055; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u/XOirxmS0fe3j5M8XRku3KwS+azLbDAKTxIaDOOT14=;
+        b=WqwrGhw2XPa5MdOFJUuM/ttuWhal471USxxLd3ygIT/hq5Ziw1GJS8XM/YK2ugjuvs
+         pq3RvDJW7HG6usLiricwvrrlPHPvdHSSsSfD7rOkT0Y+/HKhVkwErDg/fZi/zQ8uGiJZ
+         zFf8Sl2L5AJ6UGkN6QP8FDn7z60P8Fd5K8IxydARoL9VLIbfuXqYFk+dtqdvGY5Y8bU0
+         y9alE1QJRLGUMn9rwC8mhNV1YnXO8DlzkrBwtzKvRsLbpeXicIN6VNjXS4yEDvaN/+SB
+         hVFDOPx44reBzTortPlHeYMIDVCJ5psz8MYQVMYEDE06723YzWCXWC4iG0bmnUenQkGH
+         ieOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704889255; x=1705494055;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u/XOirxmS0fe3j5M8XRku3KwS+azLbDAKTxIaDOOT14=;
+        b=xJU6CTm3bUlYONNkrT9AHy7c7A0/cgK+xJmxu9p9HVmxCXjB+jqDHFRJU8mhdwfmqp
+         DHFvcX39ISdIpr0fqI+1Meo9whqiIzVj2NQAWwdqGRYgFt4aNaNqoFHB2Gsxj9C/1mE8
+         DzwgvL4mDVbxJhmOugjrlBy6uzClac3biVe9pULq9ooU/FSWBLkE1axvtvD/WQ/8//zu
+         1KHBA6/ANHcHBsucx2P4TJSlReSS1/+w61gIr/cWcPfOkfrdTBkO3E6l45iMbWHX9+p4
+         YoXuX73GaSHdHZOT5Q/cjLNrzQzFrop9GveVsNN9ZBndfaKm5f/CMeweoR/ZclPteGRp
+         ZwPQ==
+X-Gm-Message-State: AOJu0Yyr+b/izqSXoGx1aEnHAn0A3/3xn1jjxDHmqEjH7zdYuh/ljvAA
+	zGdZTjD61f5H0x1Lv6PNYG9MzPaBFgrZElnKziPM8oLu5Qw=
+X-Google-Smtp-Source: AGHT+IGmh0w0a9gIrXitUOWSCXkUFS87CA4AASH+f6Om4lV3z6f70ohUq+jtlbcET5Ky3S/3zHPr/VJqX3DUHfVAUhs=
+X-Received: by 2002:a81:8885:0:b0:5f1:3298:611 with SMTP id
+ y127-20020a818885000000b005f132980611mr940074ywf.48.1704889255114; Wed, 10
+ Jan 2024 04:20:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tianruidong@linux.alibaba.com, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20240109135952.77458-1-warthog618@gmail.com> <20240109135952.77458-2-warthog618@gmail.com>
+ <CA+kSVo_347gS+w_7ZXFDi9qDtT1aw15qoWRJZAVSkfbHShz7kQ@mail.gmail.com>
+In-Reply-To: <CA+kSVo_347gS+w_7ZXFDi9qDtT1aw15qoWRJZAVSkfbHShz7kQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 10 Jan 2024 14:20:18 +0200
+Message-ID: <CAHp75VdQFE8aA0wmDZ6KSE8xfKptzXasQz=AdzQpSRr2gwt6wQ@mail.gmail.com>
+Subject: Re: [PATCH 1/7] Documentation: gpio: add chardev userspace API documentation
+To: Phil Howard <phil@gadgetoid.com>
+Cc: Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, brgl@bgdev.pl, 
+	linus.walleij@linaro.org, andy@kernel.org, corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 10 Jan 2024 07:57:39 +0000,
-Ruidong Tian <tianruidong@linux.alibaba.com> wrote:
-> 
-> Commit 464f2164da7e ("arm64: Add missing ERX*_EL1 encodings") add some
-> new RAS registers. Trap them to kvm.
+On Wed, Jan 10, 2024 at 1:40=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wr=
+ote:
+> On Tue, 9 Jan 2024 at 14:00, Kent Gibson <warthog618@gmail.com> wrote:
 
-Well, they *are* already trapped by virtue of HCR_EL2.FIEN being
-0. They are lacking a trap handler though.
+...
 
-> 
-> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
-> ---
->  arch/arm64/kvm/sys_regs.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 30253bd19917..76a9ba155d58 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -2389,8 +2389,13 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  	{ SYS_DESC(SYS_ERXCTLR_EL1), trap_raz_wi },
->  	{ SYS_DESC(SYS_ERXSTATUS_EL1), trap_raz_wi },
->  	{ SYS_DESC(SYS_ERXADDR_EL1), trap_raz_wi },
-> +	{ SYS_DESC(SYS_ERXPFGF_EL1), trap_raz_wi },
-> +	{ SYS_DESC(SYS_ERXPFGCTL_EL1), trap_raz_wi },
-> +	{ SYS_DESC(SYS_ERXPFGCDN_EL1), trap_raz_wi },
->  	{ SYS_DESC(SYS_ERXMISC0_EL1), trap_raz_wi },
->  	{ SYS_DESC(SYS_ERXMISC1_EL1), trap_raz_wi },
-> +	{ SYS_DESC(SYS_ERXMISC2_EL1), trap_raz_wi },
-> +	{ SYS_DESC(SYS_ERXMISC3_EL1), trap_raz_wi },
->  
->  	MTE_REG(TFSR_EL1),
->  	MTE_REG(TFSRE0_EL1),
+> > +   Read Documentation/driver-api/gpio/drivers-on-gpio.rst to avoid rei=
+nventing
+> > +   kernel wheels in userspace.
+>
+> I realise this is in part an emotional response, but very much
+> "citation needed" on
+> this one. While I believe Kernel drivers for things are a good idea, I
+> don't believe
+> userspace libraries are necessarily bad or wrong. They might be the first
+> experience a future kernel dev has with hardware. Either way there are mu=
+ltiple
+> ecosystems of userspace drivers both existing and thriving right now, and=
+ there
+> are good reasons to reinvent kernel wheels in userspace.
+>
+> At least some of these reasons relate to the (incorrectly assumed)
+> insurmountable
+> nature of kernel development vs just throwing together some Python. Inclu=
+ding
+> this loaded language just serves to reinforce that.
+>
+> You catch more flies with honey than with vinegar, so I'd probably soften=
+ to:
+>
+> Before abusing userspace APIs to bitbash drivers for your hardware you sh=
+ould
+> read Documentation/driver-api/gpio/drivers-on-gpio.rst to see if your dev=
+ice has
+> an existing kernel driver. If not, please consider contributing one.
 
-If my reading of the ARM ARM is correct, these registers only exist if
-FEAT_RASv1p1 is implemented. Which means that we shouldn't handle
-those as RAZ/WI unconditionally, but instead check for what we
-advertise to the guest and handle it accordingly.
+I believe this note was motivated by the quite popular pyGPIO for RPi
+and MRAA for some platforms, which are the examples of how _not_ do
+things.
 
-Thanks,
+...
 
-	M.
+> > +Each chip supports a number of GPIO lines,
+> > +:c:type:`chip.lines<gpiochip_info>`. Lines on the chip are identified =
+by an
+> > +``offset`` in the range from 0 to ``chip.lines - 1``, i.e. `[0,chip.li=
+nes)`.
+>
+> I don't recognise this syntax "`[0,chip.lines)`", typo, or me being cluel=
+ess?
 
--- 
-Without deviation from the norm, progress is not possible.
+It's called "open interval", a mathematical term.
+
+...
+
+> > +    -  -  ``EFAULT``
+
+Wondering if these constants can be referenced via % and if it makes sense.
+
+...
+
+> > +The size of the kernel event buffer is fixed at the time of line reque=
+st
+> > +creation, and can be influenced by the
+> > +:c:type:`request.event_buffer_size<gpio_v2_line_request>`.
+> > +The default size is 16 times the number of lines requested.
+>
+> This might explain why I could never quite get high-speed pulse counting =
+to feel
+> right. Thank you!
+
+GPIO is just not a good tool for this kind of measurement.
+
+--=20
+With Best Regards,
+Andy Shevchenko
