@@ -1,104 +1,116 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485004878D;
-	Wed, 10 Jan 2024 13:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B4D487A4
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mz+pWCaQ"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-429b7910697so2824201cf.1;
-        Wed, 10 Jan 2024 05:19:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="GUzQu5kV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704892759; x=1705497559; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=liSzDRZehByCujutdLomxYVsOIIXj62EeJs6zgUIbJ8=;
-        b=Mz+pWCaQc/2MCe71Ji4K1RPrdSGnL350uFqBcCKfWHicrQJvpCaqhVvWzn86eRMoeA
-         ejAqeKvbvh0w1nU6BayMuq9k2P+BHiUQl87cHjhlmE+pyslPkxlebwCWKUaX6ftQEWV+
-         r/WN4Ff7fhySvTD7aT8mIOB1xb6DBHc6Ld2fwota6ZfHVviFYXv8pZ/RaP7Zhp3UXEmb
-         fURKIdI9fdp2e9ZQozI/Oopnf2dwiGcUBUWOsPbZvBG2ynvh2+/QxZfH2kM+0B865TD1
-         qDiE54hXpa1FeMnGP0NsEnoIBBWmDb0rguaO15QeNIzWc839Lq8dSdZLxwXbwCS9o/Oz
-         3XIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704892759; x=1705497559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=liSzDRZehByCujutdLomxYVsOIIXj62EeJs6zgUIbJ8=;
-        b=Hceex1st0Ojyu7WtA/spyz1e7Gm8sZ35H3kD3DS+Za574F/qxIzZKX91dq06ZufNgB
-         mFdKf2hNPWUw3k6K5BGfJPSq4Qe6Cq5uToZlBwe2H/2+7vcYp9fRMlNi6H9Uq2VFWFML
-         oS1CRO1a8H47PaAtgPHZtH3yhx7wHLlwVp+LadRKXhmjlK6rPYgcOOiNFNFIuVBoKo6I
-         xwyqcBdV2qc3/ZYW2j7S+BUm9ljeWcfjuPYJsRKNWWquqglAqtV8bk3VczCu2/7R3Gi0
-         Rm/uIuPJCRBvi+2V9fxFHOLW0M+fVo1ovPNamhkWuucJQn2gk+uQQDsEeRyXeXg77Ald
-         DM0Q==
-X-Gm-Message-State: AOJu0Yz+5NDfERzf2sr6Noc/EMD2upz9uG4Q925+9QrQBNv/dNo2Ychv
-	PaumJ1+kukvFZUhhfga9to5H0tTBtD9069slQyQ=
-X-Google-Smtp-Source: AGHT+IGcrrq+I8hwbxPBmCgLqJ5ycxNtTDl/NpLbNNik/6JjZSHy04GALI6d2ZjfKUVwNJdXG6BXLL4eANYYYtYNHCc=
-X-Received: by 2002:a05:6214:ac9:b0:67f:59a8:5d7f with SMTP id
- g9-20020a0562140ac900b0067f59a85d7fmr75196qvi.44.1704892759178; Wed, 10 Jan
- 2024 05:19:19 -0800 (PST)
+  d=inria.fr; s=dc;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EUmA/Ml2ZG5TgPL4Phe8RcBWKwy7XONuxaFT8AYnGuo=;
+  b=GUzQu5kVy6UIaZfNVDqWcHNtAT0u075oMEhf3pL0s18r0ul/3I4xkdYw
+   GnuRPGCy8qRE1IshcnvsAcRXdX/UJ4nAguoyQfld3/HRU1QQYO982hZHh
+   Nl7Fe7m6KSWJ3YRkxS7aqr7fpfDIA0cXjssNLkGU1lA39jmpBoBLTa9QT
+   o=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=keisuke.nishimura@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.04,184,1695679200"; 
+   d="scan'208";a="145881888"
+Received: from dt-aponte.paris.inria.fr (HELO keisuke-XPS-13-7390.tailde312.ts.net) ([128.93.67.66])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 14:19:45 +0100
+From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-kernel@vger.kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Xunlei Pang <xlpang@linux.alibaba.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Keisuke Nishimura <keisuke.nishimura@inria.fr>
+Subject: [PATCH v2 1/2 RESEND] sched/fair: take into account scheduling domain in select_idle_smt()
+Date: Wed, 10 Jan 2024 14:17:06 +0100
+Message-Id: <20240110131707.437301-1-keisuke.nishimura@inria.fr>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de> <87b65f8e-abde-2aff-4da8-df6e0b464677@web.de>
- <05d334af-1a0f-4498-b57d-36a783288f07@web.de> <CAOQ4uxiRaTQyT1nxeRD7B89=VuA+KKEqi01LL1kqfJ17-qKKpw@mail.gmail.com>
- <d912872a-e70a-4e5d-aabe-26f289507f44@web.de>
-In-Reply-To: <d912872a-e70a-4e5d-aabe-26f289507f44@web.de>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 10 Jan 2024 15:19:07 +0200
-Message-ID: <CAOQ4uxjsuYy8BzgaHXaNa-S0+HZ_P-Fb1UEgOkbrdxQPz0Y6rQ@mail.gmail.com>
-Subject: Re: [0/4] overlayfs: Adjustments for ovl_fill_super()
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-unionfs@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 10, 2024 at 3:01=E2=80=AFPM Markus Elfring <Markus.Elfring@web.=
-de> wrote:
->
-> >> See also:
-> >> https://lore.kernel.org/cocci/87b65f8e-abde-2aff-4da8-df6e0b464677@web=
-.de/
-> >> https://sympa.inria.fr/sympa/arc/cocci/2023-03/msg00115.html
-> >
-> > I will queue cleanup patches 1-2,
->
-> Thanks for this positive feedback.
+When picking out a CPU on a task wakeup, select_idle_smt() has to take
+into account the scheduling domain of @target. This is because the
+"isolcpus" kernel command line option can remove CPUs from the domain to
+isolate them from other SMT siblings.
 
-Sorry, these patches do not apply to master branch and patch 1
-is no longer correct in master branch and the new mount api changes.
+This fix checks if the candidate CPU is in the target scheduling domain.
 
->
->
-> >                                   but I do not like patches 3/4 and 4/4=
-.
-> > I do not think that they make the code better to read or maintain.
->
-> I would appreciate if the details for such change reluctance can be clari=
-fied better.
+The commit df3cb4ea1fb6 ("sched/fair: Fix wrong cpu selecting from isolated
+domain") originally proposed this fix by adding the check of the scheduling
+domain in the loop. However, the commit 3e6efe87cd5cc ("sched/fair: Remove
+redundant check in select_idle_smt()") accidentally removed the check.
+This commit brings the check back.
 
-patch 3:
-I much rather a single error handling label that takes care of
-all the cleanups - it is harder to make mistakes and jump to
-the wrong label when adding new error conditions.
+Fixes: 3e6efe87cd5c ("sched/fair: Remove redundant check in select_idle_smt()")
+Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+---
+v2: - Changed the log message to mention only isolcpus
+    - Moved the check in the loop according to the original fix
 
-patch 4:
-Overlayfs uses this coding style all over the place
+ kernel/sched/fair.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-  err =3D -ENOMEM;
-  ofs->creator_cred =3D cred =3D prepare_creds();
-  if (!cred)
-      goto out_free_ofs;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 533547e3c90a..66457d4b8965 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7311,13 +7311,19 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+ /*
+  * Scan the local SMT mask for idle CPUs.
+  */
+-static int select_idle_smt(struct task_struct *p, int target)
++static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+ {
+ 	int cpu;
+ 
+ 	for_each_cpu_and(cpu, cpu_smt_mask(target), p->cpus_ptr) {
+ 		if (cpu == target)
+ 			continue;
++		/*
++		 * Check if the CPU is in the LLC scheduling domain of @target.
++		 * Due to isolcpus, there is no guarantee that all the siblings are in the domain.
++		 */
++		if (!cpumask_test_cpu(cpu, sched_domain_span(sd)))
++			continue;
+ 		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
+ 			return cpu;
+ 	}
+@@ -7341,7 +7347,7 @@ static inline int select_idle_core(struct task_struct *p, int core, struct cpuma
+ 	return __select_idle_cpu(core, p);
+ }
+ 
+-static inline int select_idle_smt(struct task_struct *p, int target)
++static inline int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+ {
+ 	return -1;
+ }
+@@ -7591,7 +7597,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 		has_idle_core = test_idle_cores(target);
+ 
+ 		if (!has_idle_core && cpus_share_cache(prev, target)) {
+-			i = select_idle_smt(p, prev);
++			i = select_idle_smt(p, sd, prev);
+ 			if ((unsigned int)i < nr_cpumask_bits)
+ 				return i;
+ 		}
+-- 
+2.34.1
 
-I don't see the benefit in making err =3D -ENOMEM conditional.
-I don't see the style after your patch as clearly better than before.
-
-Thanks,
-Amir.
