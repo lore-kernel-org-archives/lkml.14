@@ -1,85 +1,100 @@
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8134E1BA;
-	Wed, 10 Jan 2024 19:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id CC66485BC5;
-	Wed, 10 Jan 2024 20:08:49 +0100 (CET)
-From: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	=?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-	Lubomir Rintel <lkundrak@v3.sk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: phone-devel@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	Karel Balej <balejk@matfyz.cz>,
-	David Wronek <david@mainlining.org>,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 9/9] MAINTAINERS: add myself as Marvell PXA1908 maintainer
-Date: Wed, 10 Jan 2024 20:08:16 +0100
-Message-ID: <20240110190816.430-1-duje.mihanovic@skole.hr>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240110-pxa1908-lkml-v8-0-fea768a59474@skole.hr>
-References: <20240110-pxa1908-lkml-v8-0-fea768a59474@skole.hr>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF614E1BA;
+	Wed, 10 Jan 2024 19:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="TpQ+dFrB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=x5OoD7LDB+eOxQrGKVf5GoRlWflkCg8BImPGaKiaic0=; b=TpQ+dFrBOHWSt37kDizuvoIi50
+	IE+lWrloFW8FskmBT1w1NPZk6E7VB8tgm9YfW4eo5biZ3xvv8uNPKCnYH2D9aTxVON9pjYRre+Bay
+	03AClvXGl3sh4lYNaWy0TXaLTdzpNgHEwnarOKMEr7bo5kBt3YLkAwfNZq3AeRDtQbbk=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:48230 helo=pettiford)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1rNdzP-0008DC-Br; Wed, 10 Jan 2024 14:11:47 -0500
+Date: Wed, 10 Jan 2024 14:11:46 -0500
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Rengarajan S <rengarajan.s@microchip.com>, Kumaravel Thiagarajan
+ <kumaravel.thiagarajan@microchip.com>, Tharun Kumar P
+ <tharunkumar.pasumarthi@microchip.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Message-Id: <20240110141146.6422e7517fe7e07a833b66df@hugovil.com>
+In-Reply-To: <59f8aa13-3f88-4174-8e20-aa4467e7adac@moroto.mountain>
+References: <59f8aa13-3f88-4174-8e20-aa4467e7adac@moroto.mountain>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+	* -3.1 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH] serial: 8250_pci1xxxx: off by one in
+ pci1xxxx_process_read_data()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-Add myself as the maintainer for Marvell PXA1908 SoC support.
+On Wed, 10 Jan 2024 21:52:28 +0300
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> These > comparisons should be >= to prevent writing one element beyond
+> the end of the rx_buff[] array.  The buffer has RX_BUF_SIZE[] elements.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bcacd665f259..374df772aeff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2344,6 +2344,15 @@ F:	drivers/irqchip/irq-mvebu-*
- F:	drivers/pinctrl/mvebu/
- F:	drivers/rtc/rtc-armada38x.c
- 
-+ARM/Marvell PXA1908 SOC support
-+M:	Duje Mihanović <duje.mihanovic@skole.hr>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+T:	git https://gitlab.com/LegoLivesMatter/linux
-+F:	arch/arm64/boot/dts/marvell/pxa1908*
-+F:	drivers/clk/mmp/clk-of-pxa1908.c
-+F:	include/dt-bindings/clock/marvell,pxa1908.h
-+
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
- M:	Sean Wang <sean.wang@mediatek.com>
--- 
-2.43.0
+Hi,
+your commit title message is very confusing and doesn't hint that this
+is a bug fix (or a potential bug fix)...
+
+Hugo Villeneuve
 
 
+> 
+> Fixes: aba8290f368d ("8250: microchip: pci1xxxx: Add Burst mode reception support in uart driver for writing into FIFO")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> From static analysis, not testing.
+> 
+>  drivers/tty/serial/8250/8250_pci1xxxx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_pci1xxxx.c b/drivers/tty/serial/8250/8250_pci1xxxx.c
+> index 558c4c7f3104..cd258922bd78 100644
+> --- a/drivers/tty/serial/8250/8250_pci1xxxx.c
+> +++ b/drivers/tty/serial/8250/8250_pci1xxxx.c
+> @@ -302,7 +302,7 @@ static void pci1xxxx_process_read_data(struct uart_port *port,
+>  	 * to read, the data is received one byte at a time.
+>  	 */
+>  	while (valid_burst_count--) {
+> -		if (*buff_index > (RX_BUF_SIZE - UART_BURST_SIZE))
+> +		if (*buff_index >= (RX_BUF_SIZE - UART_BURST_SIZE))
+>  			break;
+>  		burst_buf = (u32 *)&rx_buff[*buff_index];
+>  		*burst_buf = readl(port->membase + UART_RX_BURST_FIFO);
+> @@ -311,7 +311,7 @@ static void pci1xxxx_process_read_data(struct uart_port *port,
+>  	}
+>  
+>  	while (*valid_byte_count) {
+> -		if (*buff_index > RX_BUF_SIZE)
+> +		if (*buff_index >= RX_BUF_SIZE)
+>  			break;
+>  		rx_buff[*buff_index] = readb(port->membase +
+>  					     UART_RX_BYTE_FIFO);
+> -- 
+> 2.43.0
+> 
+> 
