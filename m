@@ -1,235 +1,142 @@
-Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3394A9A9
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 16:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:46712)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rNbB6-00B1sd-Da; Wed, 10 Jan 2024 09:11:40 -0700
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:45244 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rNbB5-00AifK-3O; Wed, 10 Jan 2024 09:11:40 -0700
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: syzbot <syzbot+c6d438f2d77f96cae7c2@syzkaller.appspotmail.com>,  Oleg
- Nesterov <oleg@redhat.com>,  linux-kernel@vger.kernel.org,
-  luto@kernel.org,  michael.christie@oracle.com,  mst@redhat.com,
-  peterz@infradead.org,  syzkaller-bugs@googlegroups.com,
-  tglx@linutronix.de
-References: <000000000000a41b82060e875721@google.com>
-	<CAHk-=wgM=MmqrQC-qgXoSehW=itHaqOUiBfN8jRBGAHn1=D0tg@mail.gmail.com>
-Date: Wed, 10 Jan 2024 10:11:01 -0600
-In-Reply-To: <CAHk-=wgM=MmqrQC-qgXoSehW=itHaqOUiBfN8jRBGAHn1=D0tg@mail.gmail.com>
-	(Linus Torvalds's message of "Tue, 9 Jan 2024 11:05:45 -0800")
-Message-ID: <87frz5184q.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35F43FE3D
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 16:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="ul80SHaO"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-557dcb0f870so3228899a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 08:32:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1704904358; x=1705509158; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qw6sqCsRLXOTZBxcH2QDjDIvOAhestSnQEBPI9xVsMU=;
+        b=ul80SHaOA9BEWpK3//kZVGh8z97V4xwiCIwueuLt/httZbtCgIqtZkfSk1yO1qNXt5
+         ACv1LaqhuFN69sUyt9WIfVlACHuE5pCHPuFvULS9C75ub7NwWbMpF5Kp5MEeMtFE3s52
+         r9Pdin1oTRH0fmwFsk8cvF0WQ7E0iptXNkU9KEo3hute75d7SnGyjiqV3IBJWkZcLSlA
+         HOVZDZA3H4jND8r5hqyVem2i/5F7iGEBhtChk8WOY7VM3TMx1OBlEpHEAis/64HrPjld
+         gGB93K/WCitXTP4BOwesIWT3EVYbngoei1ZbdI1mTfX59OByD2Igy/3HtPERAiqCfXQ2
+         NOkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704904358; x=1705509158;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qw6sqCsRLXOTZBxcH2QDjDIvOAhestSnQEBPI9xVsMU=;
+        b=mBMN+XzZONsCKxcLxm3kV1J/a8M3ZGgRQGTR7vRC525OkkuSZwmMY0GGB/bkuyWwl8
+         Gi5+TKW66YLwPCqdwAc9NZrUbhYLk9lQvZMLPOCeVcxEg/RqzmGeaMRXAjphjyXV/iNo
+         HjxNAxF8KrU0E3/rZP9gAgnNjWFKpNL0gt3ca+rg1HfmrJ/EXx8qP1gz3Nwa6/lFKwX+
+         jDm3Pn7HLSs3DDSjeN9IcUhTaxcz4b3QCozGy8S58zh255MGaMrJtw66tdFFidXOJ7BX
+         FfZ0hMvGAHKT8MzYSdcoA0PZiPL5Q5fRk+9I6/rC03MWTWQO3YQmLBT6dvLtB28jormd
+         GdvA==
+X-Gm-Message-State: AOJu0YzdgP1POfdvRuE8lAoADJQykFQL7Q94nug22yZoH3F/pdUQz06a
+	3wteMZK8qarJKMukXiFcBr4VvAuPu48Vtg==
+X-Google-Smtp-Source: AGHT+IGkRx43IbE6erT6jpTixBSiBu9Z8tPzgRjElhhOR9pTbivGBzdwnwFs1MZ6B4vwrRVqGKzFZw==
+X-Received: by 2002:a50:9b1a:0:b0:540:4c04:ab94 with SMTP id o26-20020a509b1a000000b005404c04ab94mr620640edi.42.1704904357603;
+        Wed, 10 Jan 2024 08:32:37 -0800 (PST)
+Received: from localhost (host-213-179-129-39.customer.m-online.net. [213.179.129.39])
+        by smtp.gmail.com with ESMTPSA id i12-20020a05640200cc00b005557a9395e1sm2136484edu.47.2024.01.10.08.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 08:32:36 -0800 (PST)
+Date: Wed, 10 Jan 2024 17:32:35 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: quic_subashab@quicinc.com, quic_stranche@quicinc.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v1] net: qualcomm: rmnet: fix global oob in
+ rmnet_policy
+Message-ID: <ZZ7Go2Y2fURBU974@nanopsycho>
+References: <20240110061400.3356108-1-linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-XM-SPF: eid=1rNbB5-00AifK-3O;;;mid=<87frz5184q.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1/bo6umY1wkDowtM1WLxbtDV0aWW3HwnrM=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-Spam-Level: *****
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.5000]
-	*  0.5 XMGappySubj_01 Very gappy subject
-	*  1.2 LotsOfNums_01 BODY: Lots of long strings of numbers
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	*  1.2 XM_Multi_Part_URI URI: Long-Multi-Part URIs
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa06 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.2 XMLngstWrd_01 words over 55 charachters don't exist
-	*  0.2 XMLngstWrd_04 words over 85 charachters don't exist
-	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-	*  0.2 XMLngstWrd_02 words over 65 charachters don't exist
-	*  0.4 FVGT_m_MULTI_ODD Contains multiple odd letter combinations
-	*  0.2 XMLngstWrd_00 words over 45 charachters don't exist
-	*  0.2 XMLngstWrd_03 words over 75 charachters don't exist
-	*  1.1 GB_FAKE_RF_SHORT Fake reply or forward with url shortener
-X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: *****;Linus Torvalds <torvalds@linux-foundation.org>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 723 ms - load_scoreonly_sql: 0.04 (0.0%),
-	signal_user_changed: 9 (1.3%), b_tie_ro: 8 (1.1%), parse: 1.12 (0.2%),
-	extract_message_metadata: 26 (3.5%), get_uri_detail_list: 4.5 (0.6%),
-	tests_pri_-2000: 32 (4.4%), tests_pri_-1000: 2.6 (0.4%),
-	tests_pri_-950: 1.26 (0.2%), tests_pri_-900: 1.01 (0.1%),
-	tests_pri_-90: 163 (22.5%), check_bayes: 161 (22.3%), b_tokenize: 16
-	(2.2%), b_tok_get_all: 47 (6.5%), b_comp_prob: 7 (0.9%),
-	b_tok_touch_all: 87 (12.0%), b_finish: 0.94 (0.1%), tests_pri_0: 472
-	(65.2%), check_dkim_signature: 0.61 (0.1%), check_dkim_adsp: 2.4
-	(0.3%), poll_dns_idle: 0.57 (0.1%), tests_pri_10: 2.2 (0.3%),
-	tests_pri_500: 11 (1.5%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [syzbot] [kernel?] WARNING in signal_wake_up_state
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240110061400.3356108-1-linma@zju.edu.cn>
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+Wed, Jan 10, 2024 at 07:14:00AM CET, linma@zju.edu.cn wrote:
+>The variable rmnet_link_ops assign a *bigger* maxtype which leads to a
+>global out-of-bounds read when parsing the netlink attributes. See bug
+>trace below:
+>
+>==================================================================
+>BUG: KASAN: global-out-of-bounds in validate_nla lib/nlattr.c:386 [inline]
+>BUG: KASAN: global-out-of-bounds in __nla_validate_parse+0x24af/0x2750 lib/nlattr.c:600
+>Read of size 1 at addr ffffffff92c438d0 by task syz-executor.6/84207
+>
+>CPU: 0 PID: 84207 Comm: syz-executor.6 Tainted: G                 N 6.1.0 #3
+>Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+>Call Trace:
+> <TASK>
+> __dump_stack lib/dump_stack.c:88 [inline]
+> dump_stack_lvl+0x8b/0xb3 lib/dump_stack.c:106
+> print_address_description mm/kasan/report.c:284 [inline]
+> print_report+0x172/0x475 mm/kasan/report.c:395
+> kasan_report+0xbb/0x1c0 mm/kasan/report.c:495
+> validate_nla lib/nlattr.c:386 [inline]
+> __nla_validate_parse+0x24af/0x2750 lib/nlattr.c:600
+> __nla_parse+0x3e/0x50 lib/nlattr.c:697
+> nla_parse_nested_deprecated include/net/netlink.h:1248 [inline]
+> __rtnl_newlink+0x50a/0x1880 net/core/rtnetlink.c:3485
+> rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3594
+> rtnetlink_rcv_msg+0x43c/0xd70 net/core/rtnetlink.c:6091
+> netlink_rcv_skb+0x14f/0x410 net/netlink/af_netlink.c:2540
+> netlink_unicast_kernel net/netlink/af_netlink.c:1319 [inline]
+> netlink_unicast+0x54e/0x800 net/netlink/af_netlink.c:1345
+> netlink_sendmsg+0x930/0xe50 net/netlink/af_netlink.c:1921
+> sock_sendmsg_nosec net/socket.c:714 [inline]
+> sock_sendmsg+0x154/0x190 net/socket.c:734
+> ____sys_sendmsg+0x6df/0x840 net/socket.c:2482
+> ___sys_sendmsg+0x110/0x1b0 net/socket.c:2536
+> __sys_sendmsg+0xf3/0x1c0 net/socket.c:2565
+> do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+> do_syscall_64+0x3b/0x90 arch/x86/entry/common.c:80
+> entry_SYSCALL_64_after_hwframe+0x63/0xcd
+>RIP: 0033:0x7fdcf2072359
+>Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 19 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+>RSP: 002b:00007fdcf13e3168 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+>RAX: ffffffffffffffda RBX: 00007fdcf219ff80 RCX: 00007fdcf2072359
+>RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
+>RBP: 00007fdcf20bd493 R08: 0000000000000000 R09: 0000000000000000
+>R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+>R13: 00007fffbb8d7bdf R14: 00007fdcf13e3300 R15: 0000000000022000
+> </TASK>
+>
+>The buggy address belongs to the variable:
+> rmnet_policy+0x30/0xe0
+>
+>The buggy address belongs to the physical page:
+>page:0000000065bdeb3c refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x155243
+>flags: 0x200000000001000(reserved|node=0|zone=2)
+>raw: 0200000000001000 ffffea00055490c8 ffffea00055490c8 0000000000000000
+>raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+>page dumped because: kasan: bad access detected
+>
+>Memory state around the buggy address:
+> ffffffff92c43780: f9 f9 f9 f9 00 00 00 02 f9 f9 f9 f9 00 00 00 07
+> ffffffff92c43800: f9 f9 f9 f9 00 00 00 05 f9 f9 f9 f9 06 f9 f9 f9
+>>ffffffff92c43880: f9 f9 f9 f9 00 00 00 00 00 00 f9 f9 f9 f9 f9 f9
+>                                                 ^
+> ffffffff92c43900: 00 00 00 00 00 00 00 00 07 f9 f9 f9 f9 f9 f9 f9
+> ffffffff92c43980: 00 00 00 07 f9 f9 f9 f9 00 00 00 05 f9 f9 f9 f9
+>
+>According to the comment of `nla_parse_nested_deprecated`, the maxtype
+>should be len(destination array) - 1. Hence use `IFLA_RMNET_MAX` here.
+>
+>Fixes: 14452ca3b5ce ("net: qualcomm: rmnet: Export mux_id and flags to netlink")
+>Signed-off-by: Lin Ma <linma@zju.edu.cn>
 
-> Oleg/Eric, can you make any sense of this?
->
-> On Tue, 9 Jan 2024 at 10:18, syzbot
-> <syzbot+c6d438f2d77f96cae7c2@syzkaller.appspotmail.com> wrote:
->>
->> The issue was bisected to:
->>
->> commit f9010dbdce911ee1f1af1398a24b1f9f992e0080
->
-> Hmm. This smells more like a "that triggers the problem" than a cause.
->
-> Because the warning itself is
->
->> WARNING: CPU: 1 PID: 5069 at kernel/signal.c:771 signal_wake_up_state+0x=
-fa/0x120 kernel/signal.c:771
->
-> That's
->
->         lockdep_assert_held(&t->sighand->siglock);
->
-> at the top of the function, with the call trace being
->
->>  signal_wake_up include/linux/sched/signal.h:448 [inline]
->
-> just a wrapper setting 'state'.
->
->>  zap_process fs/coredump.c:373 [inline]
->
-> That's zap_process() that does a
->
->         for_each_thread(start, t) {
->
-> and then does a
->
->                         signal_wake_up(t, 1);
->
-> on each thread.
->
->>  zap_threads fs/coredump.c:392 [inline]
->
-> And this is zap_threads(), which does
->
->         spin_lock_irq(&tsk->sighand->siglock);
->         ...
->                 nr =3D zap_process(tsk, exit_code);
->
-> Strange. The sighand->siglock is definitely taken.
->
-> The for_each_thread() must be hitting a thread with a different
-> sighand, but it's basically a
->
->         list_for_each_entry_rcu(..)
->
-> walking over the tsk->signal->thread_head list.
->
-> But if CLONE_THREAD is set (so that we share that 'tsk->signal', then
-> we always require that CLONE_SIGHAND is also set:
->
->         if ((clone_flags & CLONE_THREAD) && !(clone_flags & CLONE_SIGHAND=
-))
->                 return ERR_PTR(-EINVAL);
->
-> so we most definitely should have the same ->sighand if we have the
-> same ->signal. And that's true very much for that vhost_task_create()
-> case too.
->
-> So as far as I can see, that bisected commit does add a new case of
-> threaded signal handling, but in no way explains the problem.
->
-> Is there some odd exit race? The thread is removed with
->
->         list_del_rcu(&p->thread_node);
->
-> in __exit_signal -> __unhash_process(), and despite the RCU
-> annotations, all these parts seem to hold the right locks too (ie
-> sighand->siglock is held by __exit_signal too), so I don't even see
-> any delayed de-allocation issue or anything like that.
->
-> Thus bringing in Eric/Oleg to see if they see something I miss.
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
 
-I expect this would take going through the rest of the reproducer
-to see what is going on.
-Hmm.  The reproducer is in something other than C:
+Btw, any idea why this rmnet thing, which clearly looks like a
+softdevice, is in vendor directory where drivers for real devices should
+reside?
 
-> # https://syzkaller.appspot.com/bug?id=3Db7640dae2467568f05425b289a1f004f=
-aa2dc292
-> # See https://goo.gl/kgGztJ for information about syzkaller reproducers.
-> #{"repeat":true,"procs":1,"slowdown":1,"sandbox":"","sandbox_arg":0,"clos=
-e_fds":false}
-> r0 =3D openat$vnet(0xffffffffffffff9c, &(0x7f0000000040), 0x2, 0x0)
-> ioctl$int_in(r0, 0x40000000af01, 0x0)
-> r1 =3D memfd_create(&(0x7f0000000400)=3D'\xa3\x9fn\xb4dR\x04i5\x02\xac\xc=
-e\xe1\x88\x9d[@8\xd7\xce\x1f 9I\x7f\x15\x1d\x93=3D\xb5\xe7\\\'L\xe6\xd2\x8e=
-\xbc)JtTDq\x81\xcf\x81\xba\xe51\xf5 \xc8\x10>\xc9\\\x85\x17L\xbf\xcf\x91\xd=
-fM\xf3\x02^T*\x00\x02\xb9~B\x9f\xacl\x1d3\x06o\xf8\x16H\xaa*\x02\xf7\xfb\x0=
-6\xf1\x83\x92\xa8\xc2\xcb\xae\xb0\xb4\x93\xb8\x04\xf1\x99\xc2yY+\xd9y\x8a\x=
-d5b\xe8\"q\x1b0)\xccm\xacz\xc1\xadd\x9b6a\xf3\xdds\xbb\x88\xff\b\x85\xb3s\x=
-00\x0e\xbcfvi\x85\xfc.|\xd4h\xec\x82o\x8e\x93\x11\xc1\xd4\xae\x05\x17=3D\xd=
-9R\xd0\xd4\x90\xcf\x9b\xdc\xaeV\x88\x94\x9f\xe3\xefqi\xed\xa8w\xbe\xd0\xd0-=
-tBl\x9e+\xd3\xed\xce\x9f\x83\x86\xf9\x12\x16Ts\x80\x13]C\xfb`\xc2`\xf7\x1a\=
-x00\x00\x00\x00\x00\x00\x00k\xae\xcb\x1a.\xc2\x8f\xd1x4]PZ\x9e\xd5Y\xf0L\xa=
-4\xbc\x84\xf6\x04L\xff0\x8b\\*\xf9,\xb6\r\x97\xedy\xe0\x8a\xe2\x8ck\xc6S\xc=
-3g\xb9\x1a\xf8\x8f \x9d\x00u7\xd8\'\xf1E\xa4(Q\x80Fy\xb5\xe4q\xc9\xff \xd8\=
-x9d\xad\x11\xf8m\xd3\xbc\x9e\x10D\x7f!\xca\x0ev\x15h$\x01\xdd\xe5\xce\xf8*\=
-xb3\x01\x85\a\xe4qv&\x9c\xac\x9aN~o\xe5\x89\xd5\a\x9f\f\x1f\xc2e/\x8d\x1e\n=
-\xd0_\xbd!^\xa46\xb8j\xc0x\n\xdb\xe1\xa3\xd6\xae;\r\x92@\xa5I\x88Z1F\xf0\x1=
-at\t\xd0\x8a\x04m\x06\xf3BL\xffS\x9eY\xf4\xb0U \xf8\xd00\x88y\xebX\x92\xd5\=
-xbb\xa1h7\xf3\xe0\x0f\xbd\x02\xe4%\xf9\xb1\x87\x8aM\xfeG\xb2L\xbd\x92-\xcd\=
-x1f\xf4\xe1,\xb7G|\xec\"\xa2\xab\xf6\x84\xe0\xcf1\x9a', 0x0)
-> write$binfmt_elf32(r1, &(0x7f0000000140)=3DANY=3D[@ANYBLOB=3D"7f454c46600=
-0002ed8e4f97765ce27b90300060000000000000000b738000000000035f4c38422a3bc8220=
-000500000004020300b300000000002a002400b3d7c52ebf31a8d5c8c3c6cb00000009e500d=
-5ffffff05ffffff03004f9ef4"], 0xd8)
-> execveat(r1, &(0x7f0000000000)=3D'\x00', 0x0, 0x0, 0x1000)
-
-If I read that correctly it is intending to put an elf32 executable into
-a memfd and then execute it.
-
-Exec will possibly unshare SIGHAND struct if there is still a reference
-to it from somewhere else to ensure the new process has a clean one.
-
-But all of the other threads should get shutdown by de_thread before any
-of that happens.  And de_thread should take care of the weird non-leader
-execve case as well.  So after that point the process really should
-be single threaded.  Which is why de_thread is the point of no return.
-
-That whole interrupt comes in, and a fatal signal is processed
-scenario is confusing.
-
-Hmm.  That weird vnet ioctl at the beginning must be what is starting
-the vhost logic.  So I guess it makes sense if the signal is received
-by the magic vhost thread.
-
-Perhaps there is some weird vhost logic where the thread lingers.
-
-Ugh.  I seem to remember a whole conversation about the vhost logic
-(immediately after it was merged) and how it had a bug where it exited
-differently from everything else.  I remember people figuring it was
-immediately ok, after the code was merged, and because everything had to
-be performed as root, and no one actually uses the vhost logic like
-that.  It has been long enough I thought that would have been sorted
-out by now.
-
-Looking back to refresh my memory at the original conversation:
-https://lore.kernel.org/all/20230601183232.8384-1-michael.christie@oracle.c=
-om/
-
-The bisect is 100% correct, and this was a known issue with that code at
-the time it was merged.
-
-I will let someone else take it from here.
-
-Eric
