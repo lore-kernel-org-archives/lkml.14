@@ -1,44 +1,37 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30DB48CC0
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+Received: from m16.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A80634878E
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 13:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="N8XaOJlo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LJsF1MczUBjnXyCG7xyNVeCxEmhd1IW5HePVhZ5oNug=;
-  b=N8XaOJloTgmNOhwBhqTGhet3S9Q7nfE+d0qNpWLxdblZR8jRJ4Jek6Hk
-   pCCxFrkDl9O3ifX3nEcY6KYel2O1SVyuA4uEe2+qs8YP9bwkIoxNoQPMc
-   kQkMu94vOmSY/3h9EFjp5M2Y1puYSjSnsBDoqDcAC3M98tKIK7gEp9rvW
-   o=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=keisuke.nishimura@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.04,184,1695679200"; 
-   d="scan'208";a="145881889"
-Received: from dt-aponte.paris.inria.fr (HELO keisuke-XPS-13-7390.tailde312.ts.net) ([128.93.67.66])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 14:19:45 +0100
-From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Xunlei Pang <xlpang@linux.alibaba.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>
-Subject: [PATCH v2 2/2 RESEND] sched/fair: take into account scheduling domain in select_idle_core()
-Date: Wed, 10 Jan 2024 14:17:07 +0100
-Message-Id: <20240110131707.437301-2-keisuke.nishimura@inria.fr>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UuX2BVFl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=mpOgP
+	P0xKV58Qwv7Ooq5G/jaeJlpdbbBCzuHowdlvv0=; b=UuX2BVFlGAm6NfqTBZn+I
+	g6gN0Jpcwamy4N4xWewIlxBbMXUdqnb3MjOuSE3zfmDg+yAO2C5I/zjlDEY8HGeV
+	clOdBy26Vq0T13dr2b4bSIZQY9z3YGcIqCPagKPpPt5pKjxqya0oRnHKcmVPYeTg
+	GFTkxOnIab3Oll9a239IPo=
+Received: from ubuntu.lan (unknown [120.229.70.208])
+	by gzga-smtp-mta-g0-0 (Coremail) with SMTP id _____wDXX5RumZ5l+HlXAA--.7591S2;
+	Wed, 10 Jan 2024 21:19:44 +0800 (CST)
+From: Junwen Wu <wudaemon@163.com>
+To: bristot@redhat.com,
+	mingo@redhat.com,
+	laoar.shao@gmail.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com
+Cc: mgorman@suse.de,
+	vschneid@redhat.com,
+	linux-kernel@vger.kernel.org,
+	Junwen Wu <wudaemon@163.com>
+Subject: [PATCH v4] sched/stats: Fix rt/dl task's sched latency statistics error in sched_stat_wait trace_point
+Date: Wed, 10 Jan 2024 13:19:40 +0000
+Message-Id: <20240110131940.42979-1-wudaemon@163.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240110131707.437301-1-keisuke.nishimura@inria.fr>
-References: <20240110131707.437301-1-keisuke.nishimura@inria.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,47 +39,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXX5RumZ5l+HlXAA--.7591S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CF15CF4fWw1UKw1DAFy5Jwb_yoW8Cryfp3
+	yDGaykJw4qg3yjgw4UZr4Du3yrWwn3J342gF93GayftF4Yyr1Yq3ZaqFW3XFZ09r95CF12
+	qr409rZrKw409F7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piX4S7UUUUU=
+X-CM-SenderInfo: 5zxgtvxprqqiywtou0bp/1tbisQphbWVOA-hZVAADsp
 
-When picking out a CPU on a task wakeup, select_idle_core() has to take
-into account the scheduling domain where the function looks for the CPU.
-This is because the "isolcpus" kernel command line option can remove CPUs
-from the domain to isolate them from other SMT siblings.
+The sched_stat_wait tracepoint is showing unreasonably long
+latencies for real-time tasks. For example:
 
-This change replaces the set of CPUs allowed to run the task from
-p->cpus_ptr by the intersection of p->cpus_ptr and sched_domain_span(sd)
-which is stored in the cpus argument provided by select_idle_cpu.
+sched_stat_wait: comm=rcu_preempt pid=14 delay=4936139545261 [ns]
 
-Fixes: 9fe1f127b913 ("sched/fair: Merge select_idle_core/cpu()")
-Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
-Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+This error happens when the rt task balances off the source CPU because
+the dequeue operation is not updating the sched_statistics. So, follow
+update_stats_wait_end_fair() and update the stats. Do the same for
+SCHED_DEADLINE.
+
+Signed-off-by: Junwen Wu <wudaemon@163.com>
 ---
-v2: - Changed the log message to mention only isolcpus
+ kernel/sched/deadline.c | 5 ++++-
+ kernel/sched/rt.c       | 4 ++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 66457d4b8965..e2b4e0396af8 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7289,7 +7289,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
- 		if (!available_idle_cpu(cpu)) {
- 			idle = false;
- 			if (*idle_cpu == -1) {
--				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
-+				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, cpus)) {
- 					*idle_cpu = cpu;
- 					break;
- 				}
-@@ -7297,7 +7297,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
- 			}
- 			break;
- 		}
--		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, p->cpus_ptr))
-+		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, cpus))
- 			*idle_cpu = cpu;
- 	}
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index b28114478b82..4a9aad291fb9 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1558,10 +1558,13 @@ update_stats_dequeue_dl(struct dl_rq *dl_rq, struct sched_dl_entity *dl_se,
+ 			int flags)
+ {
+ 	struct task_struct *p = dl_task_of(dl_se);
++	struct rq *rq = rq_of_dl_rq(dl_rq);
  
+ 	if (!schedstat_enabled())
+ 		return;
+-
++	/*  Mark the end of the wait period if dequeueing a waiting task.*/
++	if (p && (p != rq->curr))
++		 update_stats_wait_end_dl(dl_rq, dl_se);
+ 	if ((flags & DEQUEUE_SLEEP)) {
+ 		unsigned int state;
+ 
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 6aaf0a3d6081..5cb3a54d6b13 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1360,12 +1360,16 @@ update_stats_dequeue_rt(struct rt_rq *rt_rq, struct sched_rt_entity *rt_se,
+ 			int flags)
+ {
+ 	struct task_struct *p = NULL;
++	struct rq *rq = rq_of_rt_se(rt_se);
+ 
+ 	if (!schedstat_enabled())
+ 		return;
+ 
+ 	if (rt_entity_is_task(rt_se))
+ 		p = rt_task_of(rt_se);
++	/* Mark the end of the wait period if dequeueing a waiting task. */
++	if (p && (p != rq->curr))
++		update_stats_wait_end_rt(rt_rq, rt_se);
+ 
+ 	if ((flags & DEQUEUE_SLEEP) && p) {
+ 		unsigned int state;
 -- 
 2.34.1
 
