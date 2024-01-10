@@ -1,192 +1,145 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C783DBB9
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CfAGiVER"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240110092430epoutp03b0d90a127c9d581f968396e548142e1b~o8h4ePW-v1306713067epoutp03x
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:24:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240110092430epoutp03b0d90a127c9d581f968396e548142e1b~o8h4ePW-v1306713067epoutp03x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1704878670;
-	bh=hsT6D1g4JFIvVfkmGFP/Iv6DgAadOcCdaVOlpdYZlUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CfAGiVERDjmuC8AWurfvnVhqbiOLXbEdV0ciRR9/xuMN/rbi14SZimBRYRfyg6yIP
-	 g2z+TgzAKp/YyzSzQpFVOMjHNxbgSqXL0iNzvhF0cOwA//s6OQsXkbCFktlPUIBcmz
-	 ubkeFqqI9A5PHTdy8tYoOPntf7XW6eu1Oh0DOYsM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240110092429epcas5p32d7f35a663c752c1560b42c4d73c1cd7~o8h4GDnnh2952029520epcas5p3p;
-	Wed, 10 Jan 2024 09:24:29 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4T92SD32Ksz4x9Q1; Wed, 10 Jan
-	2024 09:24:28 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	0F.46.10009.C426E956; Wed, 10 Jan 2024 18:24:28 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240110091327epcas5p493e0d77a122a067b6cd41ecbf92bd6eb~o8YPDMiN00474004740epcas5p4n;
-	Wed, 10 Jan 2024 09:13:27 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240110091327epsmtrp13e63a79e5ce91e2b41b4816341a182aa~o8YPBjbAm2711427114epsmtrp1Y;
-	Wed, 10 Jan 2024 09:13:27 +0000 (GMT)
-X-AuditID: b6c32a4a-261fd70000002719-10-659e624c6128
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D2.81.08755.6BF5E956; Wed, 10 Jan 2024 18:13:27 +0900 (KST)
-Received: from localhost.localdomain (unknown [109.105.118.124]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240110091325epsmtip25c47ed3fafff53ce94c4fa9bfe70a03f~o8YNthfy12061220612epsmtip2Z;
-	Wed, 10 Jan 2024 09:13:25 +0000 (GMT)
-From: Xiaobing Li <xiaobing.li@samsung.com>
-To: asml.silence@gmail.com
-Cc: axboe@kernel.dk, linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
-	kun.dou@samsung.com, peiwei.li@samsung.com, joshi.k@samsung.com,
-	kundan.kumar@samsung.com, wenwen.chen@samsung.com, ruyi.zhang@samsung.com,
-	xiaobing.li@samsung.com
-Subject: Re: Re: [PATCH v6] io_uring: Statistics of the true utilization of
- sq threads.
-Date: Wed, 10 Jan 2024 17:05:23 +0800
-Message-ID: <20240110090523.1612321-1-xiaobing.li@samsung.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <c9505525-54d9-4610-a47a-5f8d2d3f8de6@gmail.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6B8C320E;
+	Wed, 10 Jan 2024 09:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 730C62F4;
+	Wed, 10 Jan 2024 01:26:51 -0800 (PST)
+Received: from [10.57.87.179] (unknown [10.57.87.179])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F108D3F64C;
+	Wed, 10 Jan 2024 01:26:03 -0800 (PST)
+Message-ID: <821be71b-97e8-444a-900b-48fc5d88829f@arm.com>
+Date: Wed, 10 Jan 2024 09:27:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMJsWRmVeSWpSXmKPExsWy7bCmlq5P0rxUg+cLBSzmrNrGaLH6bj+b
-	xbvWcywWR/+/ZbP41X2X0WLrl6+sFpd3zWGzeLaX0+LL4e/sFmcnfGC1mLplB5NFR8tlRgce
-	j52z7rJ7XD5b6tG3ZRWjx+dNcgEsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
-	5koKeYm5qbZKLj4Bum6ZOUCHKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKTAr0
-	ihNzi0vz0vXyUkusDA0MjEyBChOyM1507mYqmCRXsW7ZObYGxtkSXYycHBICJhKb7u5i72Lk
-	4hAS2M0oMfnEZ2YI5xOjxP+WFqjMN0aJlsbjTDAtP1d3QyX2Mkoc3HOQDcL5yiixd9FTZpAq
-	NgFtievruli7GDk4RASkJH7f5QCpYQaZ9H79GrAaYYFIic5v58GmsgioSky9vJMVxOYVsJO4
-	cOoAK8Q2eYnFO5aD1XMK2Eq0/JzMDlEjKHFy5hMWEJsZqKZ562ywuyUEOjkkZrWeY4ZodpE4
-	cOEbO4QtLPHq+BYoW0riZX8blF0scaTnOytEcwOjxPTbV6ES1hL/ruxhAfmAWUBTYv0ufYiw
-	rMTUU+uYIBbzSfT+fgINFl6JHfNgbFWJ1ZceskDY0hKvG35DxT0kNt7czQZiCwlMYJTYvCh9
-	AqPCLCT/zELyzyyEzQsYmVcxSqYWFOempxabFhjlpZbDozk5P3cTIzi1anntYHz44IPeIUYm
-	DsZDjBIczEoivAqf56QK8aYkVlalFuXHF5XmpBYfYjQFBvhEZinR5Hxgcs8riTc0sTQwMTMz
-	M7E0NjNUEud93To3RUggPbEkNTs1tSC1CKaPiYNTqoFJVKD8i/bcJVu8d790XFhc8fex4VGV
-	64HynOnN0/TalT9xTvF7G94f/PqygWzc98NrdeR5zN7XsM0zfN72SHtC6/fT/HUfpz1bwama
-	cOOFyOnNViYe/S+9BNbdaHp+Ycb/I+duzC99JjXXtEK7xPXVbANZERlxg1U7kyc3zr3R8/33
-	6k+bql0jvR6em9ptt7N69XrPpZsfqc5KnDQvv/PK2j+MOxS2t8hFHrnhume6uJFM94nPW+4I
-	tyx9In34mNzRuqN3LtYFMJ7VUt2cctyF9VCt+Ke5GtKddUW9z7VclpgxmOzqY2P7ZzCl2Wva
-	o7dXdujLMf9ePV9jQxHD/NN6jmfvVktrVHBV3Dd/pFhxT4mlOCPRUIu5qDgRAMc7vbg2BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsWy7bCSvO72+HmpBksWM1rMWbWN0WL13X42
-	i3et51gsjv5/y2bxq/suo8XWL19ZLS7vmsNm8Wwvp8WXw9/ZLc5O+MBqMXXLDiaLjpbLjA48
-	Hjtn3WX3uHy21KNvyypGj8+b5AJYorhsUlJzMstSi/TtErgyXnTuZiqYJFexbtk5tgbG2RJd
-	jJwcEgImEj9Xd7N3MXJxCAnsZpT49+8tSxcjB1BCWuLPn3KIGmGJlf+eQ9V8ZpT4/fwoG0iC
-	TUBb4vq6LlaQehEBKYnfdzlAapgFmpgk+h41MoLUCAuESxxsvgVmswioSky9vJMVxOYVsJO4
-	cOoAK8QCeYnFO5Yzg9icArYSLT8ns4PYQgI2EnObn0DVC0qcnPmEBcRmBqpv3jqbeQKjwCwk
-	qVlIUgsYmVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgQHvpbmDsbtqz7oHWJk4mA8
-	xCjBwawkwqvweU6qEG9KYmVValF+fFFpTmrxIUZpDhYlcV7xF70pQgLpiSWp2ampBalFMFkm
-	Dk6pBqYdzkf0rWpKfpravP5nflXj+dVv1S6ZfxQ/7lJQ9r6s3pR9+c9Crg+TAiRnrZ+mEHBx
-	25/N21Vlt18SvPHdlj2+0qi3ZqM649Edf9+qpt9iqD5tdufIulqGqe7VKkmZUlE62W/eMjDt
-	vjJhStoSnVecM2V0i/c+fiTD3al76rqi57vQjWc2KD+pXr926ebqFZc+lSZdX1nos6r08a6V
-	mbcDZNjW16xyDHq+fMq2V2UdoXU8e8vtszcIGcw4VP+ej92ksvKu58SeSQ7yZ/tm7QnxkTDc
-	dP/v5SmuNjOzp98//NnLK3TzU0l//nALh9DHprYTlpXGOLm39N7t4jZ6GX4i/MkWsztF+5aL
-	lsy+Iy2nxFKckWioxVxUnAgAuLFFxOsCAAA=
-X-CMS-MailID: 20240110091327epcas5p493e0d77a122a067b6cd41ecbf92bd6eb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240110091327epcas5p493e0d77a122a067b6cd41ecbf92bd6eb
-References: <c9505525-54d9-4610-a47a-5f8d2d3f8de6@gmail.com>
-	<CGME20240110091327epcas5p493e0d77a122a067b6cd41ecbf92bd6eb@epcas5p4.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V6] thermal/core/power_allocator: avoid thermal cdev can
+ not be reset
+Content-Language: en-US
+To: Di Shen <di.shen@unisoc.com>
+Cc: linux-pm@vger.kernel.org, rui.zhang@intel.com, rafael@kernel.org,
+ daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, wvw@google.com,
+ tkjos@google.com, xuewen.yan@unisoc.com, zhanglyra@gmail.com,
+ orsonzhai@gmail.com
+References: <20240109112736.32566-1-di.shen@unisoc.com>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20240109112736.32566-1-di.shen@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 1/5/24 04:02 AM, Pavel Begunkov wrote:
->On 1/3/24 05:49, Xiaobing Li wrote:
->> On 12/30/23 9:27 AM, Pavel Begunkov wrote:
->>> Why it uses jiffies instead of some task run time?
->>> Consequently, why it's fine to account irq time and other
->>> preemption? (hint, it's not)
->>>
->>> Why it can't be done with userspace and/or bpf? Why
->>> can't it be estimated by checking and tracking
->>> IORING_SQ_NEED_WAKEUP in userspace?
->>>
->>> What's the use case in particular? Considering that
->>> one of the previous revisions was uapi-less, something
->>> is really fishy here. Again, it's a procfs file nobody
->>> but a few would want to parse to use the feature.
->>>
->>> Why it just keeps aggregating stats for the whole
->>> life time of the ring? If the workload changes,
->>> that would either totally screw the stats or would make
->>> it too inert to be useful. That's especially relevant
->>> for long running (days) processes. There should be a
->>> way to reset it so it starts counting anew.
->> 
->> Hi, Jens and Pavel,
->> I carefully read the questions you raised.
->> First of all, as to why I use jiffies to statistics time, it
->> is because I have done some performance tests and found that
->> using jiffies has a relatively smaller loss of performance
->> than using task run time. Of course, using task run time is
->
->How does taking a measure for task runtime looks like? I expect it to
->be a simple read of a variable inside task_struct, maybe with READ_ONCE,
->in which case the overhead shouldn't be realistically measurable. Does
->it need locking?
+Hi Di,
 
-The task runtime I am talking about is similar to this:
-start = get_system_time(current);
-do_io_part();
-sq->total_time += get_system_time(current) - start;
+On 1/9/24 11:27, Di Shen wrote:
+> Commit 0952177f2a1f ("thermal/core/power_allocator: Update once
+> cooling devices when temp is low") adds an update flag to avoid
+> the thermal event is triggered when there is no need, and
+> thermal cdev would be updated once when temperature is low.
+> 
+> But when the trips are writable, and switch_on_temp is set
+> to be a higher value, the cooling device state may not be
+> reset to 0, because last_temperature is smaller than the
+> switch_on_temp.
+> 
+> For example:
+> First:
+> switch_on_temp=70 control_temp=85;
+> Then userspace change the trip_temp:
+> switch_on_temp=45 control_temp=55 cur_temp=54
+> 
+> Then userspace reset the trip_temp:
+> switch_on_temp=70 control_temp=85 cur_temp=57 last_temp=54
+> 
+> At this time, the cooling device state should be reset to 0.
+> However, because cur_temp(57) < switch_on_temp(70)
+> last_temp(54) < switch_on_temp(70)  ---->  update = false,
+> update is false, the cooling device state can not be reset.
+> 
+> Considering tz->passive can also be represented the temperature
+> status, this patch modifies the update flag with tz->passive.
+> 
+> When the first time the temperature drops below switch_on, the
+> states of cooling devices can be reset once(because tz->passive = 1),
+> and the tz->passive is updated to 0. In the next round, because
+> tz->passive is 0, the cdev->state would not be updated.
+> 
+> By using the tz->passive as the "update" flag, the issue above
+> can be solved, and the cooling devices can be update only once
+> when the temperature is low.
+> 
+> Fixes: <0952177f2a1f> (thermal/core/power_allocator: Update once cooling devices when temp is low)
 
-Currently, it is not possible to obtain the execution time of a piece of 
-code by a simple read of a variable inside task_struct. 
-Or do you have any good ideas?
+This should be:
+Fixes: 0952177f2a1f ("thermal/core/power_allocator: Update once cooling 
+devices when temp is low")
+Cc: <stable@vger.kernel.org> # v5.13+
 
->> indeed more accurate.  But in fact, our requirements for
->> accuracy are not particularly high, so after comprehensive
->
->I'm looking at it as a generic feature for everyone, and the
->accuracy behaviour is dependent on circumstances. High load
->networking spends quite a good share of CPU in softirq, and
->preemption would be dependent on config, scheduling, pinning,
->etc.
+> Signed-off-by: Di Shen <di.shen@unisoc.com>
+> 
+> ---
+> V6:
+> Compared to the previous version:
+> - Not change the thermal core.
+> - Not add new variables and function.
+> - Use tz->passive as "update" flag to indicates whether the cooling
+>    device should be reset.
+> 
+> V5: [5]
+> - Simplify the reset ops, make it no return value and no specific
+>    trip ID as argument.
+> - Extend the commit message.
+> 
+> V4: [4]
+> - Compared to V3, handle it in thermal core instead of in governor.
+> - Add an ops to the governor structure, and call it when a trip
+>    point is changed.
+> - Define reset ops for power allocator.
+> 
+> V3: [3]
+> - Add fix tag.
+> 
+> V2: [2]
+> - Compared to v1, do not revert.
+> - Add a variable(last_switch_on_temp) in power_allocator_params
+>    to record the last switch_on_temp value.
+> - Adds a function to renew the update flag and update the
+>    last_switch_on_temp when thermal trips are writable.
+> 
+> V1: [1]
+> - Revert commit 0952177f2a1f.
+> 
+> [1] https://lore.kernel.org/all/20230309135515.1232-1-di.shen@unisoc.com/
+> [2] https://lore.kernel.org/all/20230315093008.17489-1-di.shen@unisoc.com/
+> [3] https://lore.kernel.org/all/20230320095620.7480-1-di.shen@unisoc.com/
+> [4] https://lore.kernel.org/all/20230619063534.12831-1-di.shen@unisoc.com/
+> [5] https://lore.kernel.org/all/20230710033234.28641-1-di.shen@unisoc.com/
+> ---
+> ---
+>   drivers/thermal/gov_power_allocator.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
+> index 83d4f451b1a9..931cd88425e4 100644
+> --- a/drivers/thermal/gov_power_allocator.c
+> +++ b/drivers/thermal/gov_power_allocator.c
+> @@ -693,7 +693,7 @@ static int power_allocator_throttle(struct thermal_zone_device *tz,
+>   
+>   	trip = params->trip_switch_on;
+>   	if (trip && tz->temperature < trip->temperature) {
+> -		update = tz->last_temperature >= trip->temperature;
+> +		update = tz->passive;
+>   		tz->passive = 0;
+>   		reset_pid_controller(params);
+>   		allow_maximum_power(tz, update);
 
-Yes, I quite agree that the accuracy behaviour is dependent on circumstances.
-In fact, judging from some test results we have done, the current solution 
-can basically meet everyone's requirements, and the error in the calculation 
-result of utilization is estimated to be within 0.5%.
+That small change LGTM.
 
+Please send v7 and add Wei as 'Suggested-by:' for this compact solution
+suggestion.
 
->> consideration, we finally chose to use jiffies.
->> Of course, if you think that a little more performance loss
->> here has no impact, I can use task run time instead, but in
->> this case, does the way of calculating sqpoll thread timeout
->> also need to be changed, because it is also calculated through
->> jiffies.
->
->That's a good point. It doesn't have to change unless you're
->directly inferring the idle time parameter from those two
->time values rather than using the ratio. E.g. a simple
->bisection of the idle time based on the utilisation metric
->shouldn't change. But that definitely raises the question
->what idle_time parameter should exactly mean, and what is
->more convenient for algorithms.
-
-We think that idle_time represents the time spent by the sqpoll thread 
-except for submitting IO.
-
-In a ring, it may take time M to submit IO, or it may not submit IO in the 
-entire cycle. Then we can optimize the efficiency of the sqpoll thread in 
-two directions. The first is to reduce the number of rings that no IO submit,
-The second is to increase the time M to increase the proportion of time 
-submitted IO in the ring.
-In order to observe the CPU ratio of sqthread's actual processing IO part, 
-we need this patch.
+Regards,
+Lukasz
