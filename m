@@ -1,141 +1,162 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CD34BAB0;
-	Wed, 10 Jan 2024 15:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2195C4BAB0;
+	Wed, 10 Jan 2024 15:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ADB3nMVw"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40AEnpx2010921;
-	Wed, 10 Jan 2024 15:54:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=M1x94nggq8LdhSeujsxvuxzsQ7Q9QHrmlhYOHEI3Q5I=;
- b=ADB3nMVw2jnagow3OGDsz5wj4T8CHn+QOEO+qJiiUJPww7ssOJaPcDb4exn0TnIisWlK
- zK/GBbmPDX22TjEy2KJNWhy/ny4CwFCZMx+cNDJjEJQoSxsTZfGE4aFdJvg2uMm5AAPr
- 0zMlF0z631CfdGGlJSo3vc6m/4ceZwbH04NBhoFRBf1/SDk0o2Rfl3i5xI3WBMLM019Q
- r/PQmBqKJW0yKIHXkEuBsST+WVUA6gp/ObZk4fmMDfoAb4AajLPP25qkJ4oRdpWsu9ci
- xhS/8TgcCjtlueqdowPm+3c5h8JNvhKz56phj9in4ly0APo9Py0wBfparzAmyiQav9SE Cw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vhtygp6nw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 15:54:23 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40AFToc5012080;
-	Wed, 10 Jan 2024 15:54:22 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vhtygp6n6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 15:54:22 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40AFPEGN023399;
-	Wed, 10 Jan 2024 15:54:21 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vfj6np45c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 15:54:21 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40AFsK8U34734678
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Jan 2024 15:54:20 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6D5F958060;
-	Wed, 10 Jan 2024 15:54:20 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D1B745803F;
-	Wed, 10 Jan 2024 15:54:19 +0000 (GMT)
-Received: from [9.24.12.86] (unknown [9.24.12.86])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 10 Jan 2024 15:54:19 +0000 (GMT)
-Message-ID: <385b06e9-1daa-408a-a0ed-7b09d7d539df@linux.ibm.com>
-Date: Wed, 10 Jan 2024 09:54:19 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 7/8] tpm: tis-i2c: Add more compatible strings
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Conor Dooley <conor@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
-        andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
-        jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, johannes.holland@infineon.com, broonie@kernel.org,
-        patrick.rudolph@9elements.com, vincent@vtremblay.dev,
-        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
-        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
-        festevam@denx.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-hardening@vger.kernel.org, geissonator@yahoo.com
-References: <20231212164004.1683589-1-ninad@linux.ibm.com>
- <20231212164004.1683589-8-ninad@linux.ibm.com>
- <20231212-avid-grill-dbead068fac8@spud>
- <73381bb0-7fa7-4a9e-88df-ab0063058e26@roeck-us.net>
- <20231212-mouth-choice-40a83caa34ec@spud>
- <2946fbb1-2a47-4d21-83dc-8e45bf6ba5a9@roeck-us.net>
- <60c8bbdb-4e08-44f0-88d4-ab164d4843b5@linux.ibm.com>
- <20240109-pep-coerce-2a86ae88753d@spud>
- <01974929-dfbf-4989-ba39-369e521827d0@linux.ibm.com>
- <3d194e84-bf1a-48e4-a376-e5c327c6508d@linaro.org>
- <2dd37d2b-28da-4e73-9047-61ec5d64bdb5@linux.ibm.com>
- <edbefdfd-eb59-4d86-ad07-feb066a21082@linaro.org>
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <edbefdfd-eb59-4d86-ad07-feb066a21082@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ClzU1lg6nO0jo1U0wZR4R1Ct_tngOkk0
-X-Proofpoint-ORIG-GUID: yRfIySWjXJbIE0eYhTmuHQKN9CUs3ttz
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IwkwTOZt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vRFh6QaK";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LxJpvf6b";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4djvRbWr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0D5D921DAA;
+	Wed, 10 Jan 2024 15:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704902167;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UdRDAcSG2IDlJ6wJ1MdreWcR1qBg5i+HYtCzFm8Eaw4=;
+	b=IwkwTOZtv7ajVhA/5CvKHdyniAKga32pMta2wOp8nXr3cudKUgTomYjcSG3gs3b9rRMg4d
+	PhAWUJll8pYexlQuBSWuZnhzihzmXwM+w/jRiD54/f/TliUVxmy8HMte1F0fQ912ZfVajK
+	MF0uVflO1BO8vtRry6RXx1Nv2VwzaK8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704902167;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UdRDAcSG2IDlJ6wJ1MdreWcR1qBg5i+HYtCzFm8Eaw4=;
+	b=vRFh6QaKZLCtewgzrn/xS+Xef4VEaTfMmB/vzV7jc4JfDCgf/yj1YGJ8I1nciByEJ6p2Zb
+	ktPAj0XOfIWfwiCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704902165;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UdRDAcSG2IDlJ6wJ1MdreWcR1qBg5i+HYtCzFm8Eaw4=;
+	b=LxJpvf6bvAJILRNeexKQvYPfazdQ+6AL1IsUmFMkQvMUE/CxCxBDYRSVn/USsWZfujmMOb
+	ZxlrLJ/oML+5dZsfegyh8QVFa6BrqZ1+od/YoMhCSJuKDxAKoRKRXvgzMo5VR3tUT9hioI
+	k7xn69NRi2tflzKdFyF9qiRteXdwfmw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704902165;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UdRDAcSG2IDlJ6wJ1MdreWcR1qBg5i+HYtCzFm8Eaw4=;
+	b=4djvRbWro38jKXhPTJlPnJNlJrXQrB0GBsZGY6L7MyexqJ2BtloG2vvxYJFe3F/5A+eQEW
+	VqVoETZCx2gYDDAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D86EE13786;
+	Wed, 10 Jan 2024 15:56:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id y6pxNBS+nmWmHgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 10 Jan 2024 15:56:04 +0000
+Date: Wed, 10 Jan 2024 16:55:46 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+33f23b49ac24f986c9e8@syzkaller.appspotmail.com, clm@fb.com,
+	daniel@iogearbox.net, dsterba@suse.com, john.fastabend@gmail.com,
+	josef@toxicpanda.com, linux-btrfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liujian56@huawei.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] btrfs: fix oob Read in getname_kernel
+Message-ID: <20240110155545.GW28693@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <tencent_44CA0665C9836EF9EEC80CB9E7E206DF5206@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-10_07,2024-01-10_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 malwarescore=0 suspectscore=0 mlxlogscore=999
- bulkscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0
- impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2401100128
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_44CA0665C9836EF9EEC80CB9E7E206DF5206@qq.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.71 / 50.00];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	 TO_DN_SOME(0.00)[];
+	 DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_TO(0.00)[qq.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,qq.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[33f23b49ac24f986c9e8];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[appspotmail.com:email,qq.com:email,suse.cz:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[syzkaller.appspotmail.com,fb.com,iogearbox.net,suse.com,gmail.com,toxicpanda.com,vger.kernel.org,huawei.com,googlegroups.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Score: -2.71
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 0D5D921DAA
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=LxJpvf6b;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=4djvRbWr
 
-Hello Krzysztof,
+On Tue, Dec 19, 2023 at 06:19:10PM +0800, Edward Adam Davis wrote:
+> If ioctl does not pass in the correct tgtdev_name string, oob will occur because
+> "\0" cannot be found.
+> 
+> Reported-and-tested-by: syzbot+33f23b49ac24f986c9e8@syzkaller.appspotmail.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> ---
+>  fs/btrfs/dev-replace.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/btrfs/dev-replace.c b/fs/btrfs/dev-replace.c
+> index f9544fda38e9..e7e96e57f682 100644
+> --- a/fs/btrfs/dev-replace.c
+> +++ b/fs/btrfs/dev-replace.c
+> @@ -730,7 +730,7 @@ static int btrfs_dev_replace_start(struct btrfs_fs_info *fs_info,
+>  int btrfs_dev_replace_by_ioctl(struct btrfs_fs_info *fs_info,
+>  			    struct btrfs_ioctl_dev_replace_args *args)
+>  {
+> -	int ret;
+> +	int ret, len;
+>  
+>  	switch (args->start.cont_reading_from_srcdev_mode) {
+>  	case BTRFS_IOCTL_DEV_REPLACE_CONT_READING_FROM_SRCDEV_MODE_ALWAYS:
+> @@ -740,8 +740,10 @@ int btrfs_dev_replace_by_ioctl(struct btrfs_fs_info *fs_info,
+>  		return -EINVAL;
+>  	}
+>  
+> +	len = strnlen(args->start.tgtdev_name, BTRFS_DEVICE_PATH_NAME_MAX + 1);
+>  	if ((args->start.srcdevid == 0 && args->start.srcdev_name[0] == '\0') ||
+> -	    args->start.tgtdev_name[0] == '\0')
+> +	    args->start.tgtdev_name[0] == '\0' ||
+> +	    len == BTRFS_DEVICE_PATH_NAME_MAX + 1)
 
-
-On 1/10/24 09:37, Krzysztof Kozlowski wrote:
-> On 10/01/2024 15:31, Ninad Palsule wrote:
->> Hello Krzysztof,
->>
->>
->>
->>>>>> I have send it as a separate commit. https://lore.kernel.org/linux-kernel/20231214144954.3833998-1-ninad@linux.ibm.com/
->>>>> Why did you do that? It now just adds undocumented compatibles to the
->>>>> driver. Please, as Rob requested, work with Lukas on his series to make
->>>>> sure that these devices are documented.
->>>> I think krzysztof kozlowski suggested to send these patches separately:
->>>> https://lore.kernel.org/linux-kernel/1c5ace65-2fd8-4503-b22f-e0f564d1c83f@linaro.org/
->>>>
->>>> Did I misunderstood it? Do you guys want me to include that commit again?
->>> My comment was in DTS thread under specific DTS patch. How did you
->>> figure out it applies to driver and bindings? This does not make sense.
->> Sorry for the misunderstanding. Where do you want me to add driver
->> patch? Before all DTS patches or after all DTS patches?
-> Does not matter, why do you insist on combining them with DTS? Drivers
-> and bindings are going together. DTS better separate, although depending
-> on the case can be together.
->
-I have combined DTS and Driver because DTS was using compatibility 
-string which is not upstream yet hence I thought it is logical to send 
-it under same patchset.
-
-Conor and Rob, Do you have preference?
-
-Thanks & Regards,
-
-Ninad Palsule
-
+I think srcdev_name would have to be checked the same way, but instead
+of strnlen I'd do memchr(name, 0, BTRFS_DEVICE_PATH_NAME_MAX). The check
+for 0 in [0] is probably pointless, it's just a shortcut for an empty
+buffer. We expect a valid 0-terminated string, which could be an invalid
+path but that will be found out later when opening the block device.
