@@ -1,90 +1,119 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CE447F5E;
-	Wed, 10 Jan 2024 11:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C5C32C66
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 11:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="Tzfpi8yu"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 36DB0C0004;
-	Wed, 10 Jan 2024 11:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1704886204;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CSqO5eCZ27MS2fADuP5ThwfLEsbc8s+DlvDx2BBPL9k=;
-	b=Tzfpi8yuk+TImYcUywQQIvFFpb91SjmS/Ouw4VxsSkKzJYC8O8pINGX9ZiuhuFPx76S8MP
-	U0Wi4gkUhaAaxwL5hPdzb50wFg23My4q65d4VZlhj4qID9HOZ7DiFQnQqnmVC+T89ofRpM
-	dUA4DVECweXkce6hnMN8egguyQviZZSAmR+M6WthOF75YBd0tnqDw5ejsZAup7Ie11i1Uu
-	UFNdQwyX15P67nNAfNJPcVnkTfGxZuXGjKmN28/kHW4fU8a6vu+mo1m21ASjCqVe/Lwm+g
-	5Q+t4YJQJne3IgPPWP9IW8vFuddLKx4pyL0EGJGiuN/A9ca9hxoV1sIEj3FjNw==
-Message-ID: <ad2df325-2a48-4a81-be13-be8230b7aa8a@arinc9.com>
-Date: Wed, 10 Jan 2024 14:29:57 +0300
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="oa4UMU8f"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5572a9b3420so8511854a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:30:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1704886238; x=1705491038; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wtz+7SKzz9hrXYk9v1Im5ZeLktUFRpb9DhH87gAT8QU=;
+        b=oa4UMU8f9mjsL1+9gLAnQGc7qlR2gvwXI9/2liENhu3hG/shWwOHGHJeoZZoVO3/OT
+         /XfrHKnYvym70kLKh/tXF67jhJ3vflPY0FmhdnWQYZ34ok3Iz07vFLcR9n8sBxdXDiN0
+         QSZw/ACvCG94iRPlKJ0XmEishyC34ym2aJp+VPeFsd1+OcOSdeKE87xdFGo/46Hc25e4
+         +IVgNrsaD081SIBU2fSwifGJD5Ud8OjaHz1dEiCZABig8o3WO37nEFkwr+HkNlK8KXLZ
+         MAthXvUbhbklKN/8XvWXlJrLj9N0mYPZpKNHejZ06m1NyDyXewJjBHRgKXW8TUyXnhbc
+         tQGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704886238; x=1705491038;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Wtz+7SKzz9hrXYk9v1Im5ZeLktUFRpb9DhH87gAT8QU=;
+        b=TJZBEWNjp7ZhtbBKyCUAIXSfH3+/n5VeuEp5zWmf+bGa7cruHImHr4i9jC5mV2JPt2
+         uHKUmgPLHxkMnZ84a8L9YTsKgN4V1uCmOFGx+C7HFNOPpR1h48D1/b5YB+XK6Z9W9cAS
+         x93p48YyON17YmKm6uZ0Ey2l4tp4j79chEUV68FwwOK/6C0YCsbOOhPtVgszK81+pFPI
+         Qyx1XbJC/P+IjnciK5+HnFckvKOYdT5HXWXuTCPqQPq+UoMHXCihYKVOxXf+VY+IMBDa
+         Az344SlcavS0bHgeovzKXnd3Rxu0Uo3XY2kfpKlWucM8A1+fh+s61omP8Tg01wbNn70R
+         HswA==
+X-Gm-Message-State: AOJu0Yyt8ZSqqgZTaCsSc1UWgTrwX3JTaTtx2IyizKG3pDXt8jW12mAp
+	XeKsiCNl5Kwzi1OXNRX5pm+SBMukfsmGNw==
+X-Google-Smtp-Source: AGHT+IEB3j3STyR03J4HjEjLzAll3scW8AwBkIZIUi1cKmGpqPuNFR86aXfkJfwks7yIurkH8kGntA==
+X-Received: by 2002:a17:906:f82:b0:a28:26e9:a13d with SMTP id q2-20020a1709060f8200b00a2826e9a13dmr919135ejj.55.1704886238293;
+        Wed, 10 Jan 2024 03:30:38 -0800 (PST)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id hb21-20020a170906b89500b00a28d438a1b0sm1992896ejb.83.2024.01.10.03.30.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jan 2024 03:30:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 6/7] net: dsa: mt7530: do not set
- priv->p5_interface on mt7530_setup_port5()
-Content-Language: en-US
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Daniel Golle <daniel@makrotopia.org>,
- Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Russell King <linux@armlinux.org.uk>,
- Frank Wunderlich <frank-w@public-files.de>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20231227044347.107291-1-arinc.unal@arinc9.com>
- <20231227044347.107291-7-arinc.unal@arinc9.com>
- <20240104154241.rxjins4mi5zkbhia@skbuf>
- <f9ad000a-2e42-4ddf-89a4-9a3ff452dc4b@arinc9.com>
- <2793938a-91e1-419d-a011-850756177e31@arinc9.com>
- <20240109115115.yuct3yw4oy6ipd3i@skbuf>
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <20240109115115.yuct3yw4oy6ipd3i@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 10 Jan 2024 12:30:37 +0100
+Message-Id: <CYAZQD6AWM6J.10P13VNGRYNPR@fairphone.com>
+Cc: "Konrad Dybcio" <konrad.dybcio@linaro.org>, "Neil Armstrong"
+ <neil.armstrong@linaro.org>, "Jessica Zhang" <quic_jesszhan@quicinc.com>,
+ "Sam Ravnborg" <sam@ravnborg.org>, "David Airlie" <airlied@gmail.com>,
+ "Daniel Vetter" <daniel@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Thomas Zimmermann"
+ <tzimmermann@suse.de>, "Rob Herring" <robh+dt@kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Bjorn Andersson" <andersson@kernel.org>,
+ <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm7225-fairphone-fp4: Enable
+ display and GPU
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Maxime Ripard" <mripard@kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240105-fp4-panel-v1-0-1afbabc55276@fairphone.com>
+ <20240105-fp4-panel-v1-3-1afbabc55276@fairphone.com>
+ <3fdc6e74-d817-4341-bf64-9096608990d6@linaro.org>
+ <CYAZ37LBKG4E.2096GKVUXN8Y2@fairphone.com>
+ <2zkiop7xg7w4vkpjpol25qna5wwbq4ja5o6iwuqh25m34k6mgd@aemrbzqgx2oe>
+In-Reply-To: <2zkiop7xg7w4vkpjpol25qna5wwbq4ja5o6iwuqh25m34k6mgd@aemrbzqgx2oe>
 
-On 9.01.2024 14:51, Vladimir Oltean wrote:
-> On Tue, Jan 09, 2024 at 02:42:45PM +0300, Arınç ÜNAL wrote:
->> Running mt7530_setup_port5() from mt753x_phylink_mac_config() multiple
->> times is being prevented which shouldn't be done. That's because of a
->> different reason involving MT7531. I will deal with this with a later
->> patch.
->>
->> I intend to put this on the patch log.
-> 
-> Still not clear why it shouldn't be done. Ideally you could come up with
-> a plausible hypothesis as to why it's there in the first place, and why
-> it's not needed.
+On Wed Jan 10, 2024 at 12:23 PM CET, Maxime Ripard wrote:
+> On Wed, Jan 10, 2024 at 12:00:23PM +0100, Luca Weiss wrote:
+> > On Wed Jan 10, 2024 at 11:58 AM CET, Konrad Dybcio wrote:
+> > >
+> > >
+> > > On 1/5/24 15:29, Luca Weiss wrote:
+> > > > Add the description for the display panel found on this phone and r=
+emove
+> > > > the simple-framebuffer that was in place until now
+> > >
+> > > Why? They should be able to coexist with a smooth-ish handoff
+> >=20
+> > Does that work upstream? I'm aware that downstream can do this but
+> > thought this was still missing upstream.
+>
+> It depends what you call smooth-ish I guess, but KMS handles the
+> handover just fine. You're likely to get a flicker during the transition
+> though.
 
-I can't tell why it's there. Russell did analyse why it's not needed [1]
-and my test [2] confirms it.
+Right, seems to work. Also visually looks okay.
 
-This patch is about removing the unnecessary setting of priv->p5_interface
-on mt7530_setup_port5() which I believe I have already explained. I would
-like to get into the details of priv->p5_interface and priv->p6_interface
-when I remove them along with cpu_port_config().
+fairphone-fp4:~$ dmesg | grep "frame buffer device"
+[    0.250511] Console: switching to colour frame buffer device 135x146
+[    0.284146] simple-framebuffer a0000000.framebuffer: [drm] fb0: simpledr=
+mdrmfb frame buffer device
+[    2.576712] Console: switching to colour frame buffer device 135x146
+[    2.604907] msm_dpu ae01000.display-controller: [drm] fb0: msmdrmfb fram=
+e buffer device
 
-That said, I will refrain from including the last paragraph on the patch
-log.
+I thought before that having two outputs like this would cause two
+different framebuffers/display devices to appear, but yeah as I said
+seems okay. Will change in v2.
 
-[1] https://lore.kernel.org/netdev/ZHy2jQLesdYFMQtO@shell.armlinux.org.uk/
-[2] https://lore.kernel.org/netdev/9308fa1a-6de3-490b-9aeb-eb207b0432df@arinc9.com/
+Regards
+Luca
 
-Arınç
+>
+> Either way, the DT isn't the right place to choose, you should enable
+> both, and the distro will choose its policy through configuration.
+>
+> Maxime
+
