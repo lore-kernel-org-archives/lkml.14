@@ -1,242 +1,86 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2090.outbound.protection.outlook.com [40.107.117.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A93D3987D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 08:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF873B18A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="TUsp0rqa"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cTW+Nmz+wb70zlX/Fh/mT5Z3P3MApywBN0z0NpQB9Xkl+07aVJW7Mia6Ck9PjNXGMCUjHcGGAdf/KQm1jkFg/pri88za2kx5MYtG6gONWTd5pw8OymW/s+GYay1WDEnNenvDEPwSjZSoCYnoG6eHlJkCDDssvVC+4ySeCdi/jQk4VIgUe1EOm9StRO/TgnWM69ZalFwO5NDrD//A9P3l1Xbd1A3pORW5fey7ULtwHntVXZDkxmQJ5eg8t+bL0HndSKmGigs6RfvPKbrLNfQ3CZ1Ou6mJ0I7Opmqh7+1oXT1OZmKqfzulMcRiFCMkPrLVlol7JwMkiTmvtnAjKtpOcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rtbclN8Jy24/ACtT2+yCilA0LOK9Ph27zza71V9+Ruc=;
- b=QJodKA8/zb1fLOGJ77ViPOYWGTye6eN9lkkakt4OCsuzN5bqaNNRNcJqIAfmM9MsRh4ODZcDkESmxbHSxDBrMJd8odqWTXkLRa4ez2L9SmzUClpV6wEKlh4uBa69u3GZHjJczTkY8VeeWPpHotPTbrVka5lEwzMMVNh+r3ouwNxk8WqJGFsbsYrTIRbmDOmNuzzUa2aAokWkbaBBqJrYKPBopuGtQkFFMSiT7IZxP6KlYLRg5XIbnGMcLTtlTHS2hNleO0lEMyK0xQZANNzWbQ6zBU4r1ni5dN8g0Bgj9aIviz/4d4Tso4uwzs159gjkWzLcMjmsJoyYlK7gp9Rxdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rtbclN8Jy24/ACtT2+yCilA0LOK9Ph27zza71V9+Ruc=;
- b=TUsp0rqacNh+zEm1J/BC2/gYwLQZv9k8c2O/EUcO17bbE3NpAe9MAq+Jt6UQWWSvmI3eouugZPHlxpDBeHBAVSHR/ibhrnssRy9PmXggmtApcit11ONu78qEOu3jFqeXb82J0n8HQBQViPsRGVhOB2HStfRBQ45JxqNRxsGHYucQsQOfTSH59nEKhhXVRKIvnWta9v9rRvbpTT0dHn8E/skzo3rFuuzfsjd7NwxEyTwxdYZGxyeNQyjalYo3VSdr3xpZWBIVBK0cI/IZDFixCb6Qo9yLjfYkcw8rc+eV1+89SLxubuCqfEgTc4ONrBJDFJJabJto9VJww+HaHye5Rg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by JH0PR06MB7082.apcprd06.prod.outlook.com (2603:1096:990:68::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
- 2024 08:59:44 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::6e05:7a08:4656:761f]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::6e05:7a08:4656:761f%4]) with mapi id 15.20.7159.020; Wed, 10 Jan 2024
- 08:59:44 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>
-Cc: Yangtao Li <frank.li@vivo.com>,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: compress: reserve blocks on released compress inode while writing
-Date: Wed, 10 Jan 2024 02:10:08 -0700
-Message-Id: <20240110091009.138206-1-frank.li@vivo.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SGXP274CA0014.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::26)
- To SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXbENs5B"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-336c9acec03so3598908f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 01:01:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704877275; x=1705482075; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sRArHkRqDcxNs+rnRnHFE+VoKiAC9DnbvICFMUk3Z2M=;
+        b=DXbENs5BFN72Wqk30EE7wA8mRoVm1ae9pro+Etdlz3kLUXCSrPxaMvMOTkZC3X/WIi
+         MlT3fDVg5NeebSi/ERMM86RClEUjmhzEFx0ZonICrETJrTWRFo44q/pKyvBs3fKwmPdw
+         aqVd4PVnowF3P0zkQhVWnhJvvQvstXsCVs6Y12//9Nm95leycYfBNrZAFn3DK8YVXAFr
+         O4sRenq1zbpYCM7JTgtVVbu8pmtA/s97uTNHHfpXKdBg1ODOuUf+BKwCB89mYDSpDMDX
+         XytJ6How76QJABIwdvkV6yHi23hOJUcHnRNKgkEUUe5hgsR4kcDyGColFx8EuXy5kOLo
+         sOfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704877275; x=1705482075;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sRArHkRqDcxNs+rnRnHFE+VoKiAC9DnbvICFMUk3Z2M=;
+        b=C/BXbKUenKTNl9q8Kdfcc5RRCywNFny8iTsqci/CpcDtv+dbI+tUqrqmDP7hVi/FhN
+         GQF2N1+rEA/7uj68mZAXuwPXl3I84tC6jW0ha/59DPxowaCT0efjmECBfvIJEM0jQmFR
+         Yd9L1GIGgB4bbeXx0c9DaXGfOKm1ki8FiFgJcB4c+ToASARUBQXZbMZl7K4H+mh2JYBV
+         Mh/cDzznpCc5hjRWghFxjRVwBIdaO4/q/tujjWMYJRjAdrWO9pipIM8RHTkSX7O58PMt
+         jwrghepDr2xUlaZnQK0/D2Zm06JEP6F0y+fAKe26LTrlvm22hx0k25yLzs6knuXA4pTy
+         1sZQ==
+X-Gm-Message-State: AOJu0YwhYKG4wdkWNVlJGH6CHPuwoBjVTpXGFulINNyb3tiXCAosnTXp
+	zjnEBo3T0T0Hrj/lEN7ZSxq/f6aIRAY=
+X-Google-Smtp-Source: AGHT+IFhI1QbnljNAJQKeqKLpITxAghwB7HYxYq8Sy7FJYkGMYEi2GM9/WUDUrqUHiMgyYz/d+eq+g==
+X-Received: by 2002:adf:e508:0:b0:336:616f:c1ea with SMTP id j8-20020adfe508000000b00336616fc1eamr337105wrm.90.1704877274667;
+        Wed, 10 Jan 2024 01:01:14 -0800 (PST)
+Received: from localhost.localdomain ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id c2-20020a056000104200b0033642a9a1eesm4348171wrx.21.2024.01.10.01.01.14
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 10 Jan 2024 01:01:14 -0800 (PST)
+From: Levi Yun <ppbuk5246@gmail.com>
+To: james.morse@arm.com,
+	pierre.gondois@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Levi Yun <ppbuk5246@gmail.com>
+Subject: [PATCH] firmware/arm_sdei: Fix invalid argument to unregister private events.
+Date: Wed, 10 Jan 2024 09:01:07 +0000
+Message-ID: <20240110090107.26323-1-ppbuk5246@gmail.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|JH0PR06MB7082:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff5213ad-b0de-4aa6-2798-08dc11ba7d11
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Znhj9+JQOgwLzmuiaggT6lxyrCF/kIwhGAy2MMA/p6B7ilcf2oCe4pEbGoPrW/6QhoNqVMMrS+y0QARmrBAbVmjKxa+DdbL+L1snHv1ThMgkPKwxie5jwVOkrrTmqbQk713NTog0Y3HfBgXhAv7cnZWUJ5qh5jKR+5j3/y993usdNX4qlxNHKp6DAr+P7adCQfNr+2lB09CKR1acaYS5A6yJ99e74KaB7gGV4V68inQswj/NJ+edxO0ZTWrOw+QThQ0daHmU4tCQVzhQggviUj66vIcIgqLfIQkApwazHv+FW5m53RDmv6TeuLrFDNSU6jxmGy4o9cJxh9oqfoRTs6LF8WYk2hShZqpgfIscotkU89e0NXr13OVPxdQmvRfv1gBLTbAGrCqb5vRp21Dtcv+xilRoxU+mixBwDSt6rJIUcah2SyRqINTwaQh3E78jUSb71AsRmm8Q0g5TktjOgAhp3KtweEwNmlEJHmnwF0OW1cOXZ0FJ1E5H5pG37Dkb8ZWZG8F9Ek+J+qFrZSS7J4zk6YuJqhfs7Mqen2k4b23ZMWShP8Al8BygnJXklSdvt5sL8huUjl+6ygBOp9wUGH8lL8+P4625kEZ5+6Ma0OGyYSQ357Vfcb0e4KBIADrZ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(346002)(396003)(376002)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(478600001)(66556008)(83380400001)(66476007)(66946007)(52116002)(6506007)(6512007)(6666004)(41300700001)(36756003)(6486002)(26005)(1076003)(110136005)(316002)(2616005)(38100700002)(4326008)(8936002)(8676002)(5660300002)(86362001)(38350700005)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ExB0O7UiGYOexeUc1UP3VVxJDC9FfAIgrtEfdcmfdwBtTT5suAH6vwwOB110?=
- =?us-ascii?Q?Tvt97l9syXiLtgWkJ5r+kefFGnm/dXvzq37XNJB0XUNpc0LRfAtx5to+Cjgq?=
- =?us-ascii?Q?xyOa8s55BPeqQVQrHMzoIUxX5V9uN3+Z/uzspeJjtPhfOzb0T6GlTasWZLlG?=
- =?us-ascii?Q?QAo0C9uofd69KMpHkV/4sIPvwpYNYdN09YK2OC3wwhbWwsQ6wjasIaOo8mXA?=
- =?us-ascii?Q?l2W9iiAwsV0wK2lVql+9utY55h//WRLKbBzE0a794a/639p9EjSFm8Zp2w49?=
- =?us-ascii?Q?l80/u/aI4hGEjJZjU3m/pjr7JK2GJ+oU6Y0Pn+3oW0Vz94OMpzNCcEnVc9QC?=
- =?us-ascii?Q?MaSuctBkQj2fSKTCzdbMm0p4ou4pOIT5ffWa5qagRZ6K9kzELh9jLJtXUO5a?=
- =?us-ascii?Q?3qCe+okbmiNuf0rIOLXd3OcIzDUhzxhHNCgs1EMLlBIIA+lMkgmf8nEZRpw+?=
- =?us-ascii?Q?l68m2SYYECKnBIZLUIVXDbfqz8zBtbicYh6h18Aqu+S0sLOJNhK+fa5NF0wB?=
- =?us-ascii?Q?CcQi+jcakx1fSuyb7Q2pUtFOSAoJMG4yByBOGgRnwQgfO1QhpTQFea3QWo5j?=
- =?us-ascii?Q?p1rQ3+YL8ZHJ3VIaz6foPl148uuaXyJu+HzZKjed7qemVK+1y1NI0isdPf6w?=
- =?us-ascii?Q?XfKbQ+6lHVu2Pe18fr4R13osM1DH1P7kS7xFRY/MykidqTusBo0fYjehX4Qq?=
- =?us-ascii?Q?LHh09IRJUl2nHmdqKxazHdtU4REwDM83ial/G+4cVW+XlJtaAYScs8D6KPf2?=
- =?us-ascii?Q?dBpfvQAW63czXctmRF8tdVqnL6JG4ggA6mf1FNo2kGtierfsxeCG2K0jn9oG?=
- =?us-ascii?Q?8Qu5r3Ll1YXWqOoTkH6IoiuvluGCxn2vEcC2Pcv+duT56fcgQ/y3OL7bYjcV?=
- =?us-ascii?Q?SwLUAz4jkGW02jRiXC4RH6sZn1XC4UIcDP+VKRfXw6ANz+RGOSW4Ji0hLJ1O?=
- =?us-ascii?Q?2lhqM1SFUxhPJ2EXUKKZ7EPVGY3fbzNNAItvXBSfLthXLDsjFCHRWZLIHyOR?=
- =?us-ascii?Q?PMcIHCdwUhdodTYQmr9D/hi046MqsvTcaJKR8jq8chjHxcAjj62pywglxA5L?=
- =?us-ascii?Q?mZu/TwU7heGRjVgfllFLBDZkx1MyUvcCClQ5mvw/8pl3tf6TANMdQduk/iiv?=
- =?us-ascii?Q?/Yd9XK4bQRGxFGnUfOa9doiTQEKp7laI4twP+SMBBwJMaeKC1CdnosF6R5hE?=
- =?us-ascii?Q?hHjy+q9vf34RFZqhK4MVm6npUa6DsmGyRy4USjE3JOyctybVcyTyW2pryR2D?=
- =?us-ascii?Q?6oF2nkBTjYBM0+lB6MhwLdZrry+p8O4xykTKr3QrqeSLZPg9ARyM9ZOQhK9X?=
- =?us-ascii?Q?Due+5+gAdweJyHYpJ4o9eo8yrsjHzCabTTzniC1drIsvmW4RDsD0XhK0hHyl?=
- =?us-ascii?Q?gtlVhP8ObytdUy0WjEwrWsRe+rZ3ue9DA8NN5IwCPbU9mkUFNgxrNXcK6gSy?=
- =?us-ascii?Q?T5fu1+dJA7/jK06e8Wuvyb4uEUnmk5oK7DoMta5LLoT7XTor8nhAqOYYL0E4?=
- =?us-ascii?Q?An7p+R0viWOYhbDJ4J0vEsCYCXhr6+NmDoAz4ELN4NAFDTxvIABbfscfsA7J?=
- =?us-ascii?Q?XfkSSW9px3scdGsXHtL0kFETgZuzZSoWMi7ACXlr?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff5213ad-b0de-4aa6-2798-08dc11ba7d11
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 08:59:44.2226
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7Uk4b9zyKh/l+PbkWONBMJgkLd6WwzchsO50g21Y79LrhMz+BZC2/NpqTq7sdxCAg7frls/zYSp/6SeJVuag7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7082
+Content-Transfer-Encoding: 8bit
 
-Reserve blocks on released compress inode while writing, so
-compressed files with released space are allowed to be rewritten.
+To unregister private events in device freeze, it should call
+cpuhp_remove_state with sdei_hp_state not sdei_entry_point.
+otherwise, it seems to fail on cpuhp_cb_check.
 
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
+Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
 ---
- fs/f2fs/file.c | 86 ++++++++++++++++++++++++++++++--------------------
- 1 file changed, 51 insertions(+), 35 deletions(-)
+ drivers/firmware/arm_sdei.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 15dabeac4690..749b5af17141 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3612,39 +3612,15 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
- 	return reserved_blocks;
- }
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index 285fe7ad490d..3e8051fe8296 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -763,7 +763,7 @@ static int sdei_device_freeze(struct device *dev)
+ 	int err;
  
--static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
-+static int f2fs_reserve_file(struct inode *inode, unsigned int *blocks)
- {
--	struct inode *inode = file_inode(filp);
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	pgoff_t page_idx = 0, last_idx;
- 	unsigned int reserved_blocks = 0;
- 	int ret;
+ 	/* unregister private events */
+-	cpuhp_remove_state(sdei_entry_point);
++	cpuhp_remove_state(sdei_hp_state);
  
--	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
--		return -EOPNOTSUPP;
--
--	if (!f2fs_compressed_file(inode))
--		return -EINVAL;
--
--	if (f2fs_readonly(sbi->sb))
--		return -EROFS;
--
--	ret = mnt_want_write_file(filp);
--	if (ret)
--		return ret;
--
--	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
--		goto out;
--
- 	f2fs_balance_fs(F2FS_I_SB(inode), true);
- 
--	inode_lock(inode);
--
--	if (!is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
--		ret = -EINVAL;
--		goto unlock_inode;
--	}
--
- 	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
- 	filemap_invalidate_lock(inode->i_mapping);
- 
-@@ -3688,14 +3664,8 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 		clear_inode_flag(inode, FI_COMPRESS_RELEASED);
- 		inode->i_ctime = current_time(inode);
- 		f2fs_mark_inode_dirty_sync(inode, true);
--	}
--unlock_inode:
--	inode_unlock(inode);
--out:
--	mnt_drop_write_file(filp);
--
--	if (ret >= 0) {
--		ret = put_user(reserved_blocks, (u64 __user *)arg);
-+		if (blocks)
-+			*blocks = reserved_blocks;
- 	} else if (reserved_blocks &&
- 			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
-@@ -3710,6 +3680,49 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 	return ret;
- }
- 
-+static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
-+{
-+	struct inode *inode = file_inode(filp);
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-+	unsigned int reserved_blocks = 0;
-+	int ret;
-+
-+	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
-+		return -EOPNOTSUPP;
-+
-+	if (!f2fs_compressed_file(inode))
-+		return -EINVAL;
-+
-+	if (f2fs_readonly(sbi->sb))
-+		return -EROFS;
-+
-+	ret = mnt_want_write_file(filp);
-+	if (ret)
-+		return ret;
-+
-+	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
-+		goto out;
-+
-+	inode_lock(inode);
-+
-+	if (!is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
-+		ret = -EINVAL;
-+		goto unlock_inode;
-+	}
-+
-+	ret = f2fs_reserve_file(inode, &reserved_blocks);
-+
-+unlock_inode:
-+	inode_unlock(inode);
-+out:
-+	mnt_drop_write_file(filp);
-+
-+	if (ret >= 0)
-+		ret = put_user(reserved_blocks, (u64 __user *)arg);
-+
-+	return ret;
-+}
-+
- static int f2fs_secure_erase(struct block_device *bdev, struct inode *inode,
- 		pgoff_t off, block_t block, block_t len, u32 flags)
- {
-@@ -4412,8 +4425,11 @@ static ssize_t f2fs_write_checks(struct kiocb *iocb, struct iov_iter *from)
- 	if (IS_IMMUTABLE(inode))
- 		return -EPERM;
- 
--	if (is_inode_flag_set(inode, FI_COMPRESS_RELEASED))
--		return -EPERM;
-+	if (is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
-+		err = f2fs_reserve_file(inode, NULL);
-+		if (err < 0)
-+			return err;
-+	}
- 
- 	count = generic_write_checks(iocb, from);
- 	if (count <= 0)
+ 	err = sdei_unregister_shared();
+ 	if (err)
 -- 
-2.39.0
+2.41.0
 
