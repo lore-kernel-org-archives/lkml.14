@@ -1,422 +1,521 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E76495C5;
-	Wed, 10 Jan 2024 14:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TYQ6n5xg"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D920D20AECA9;
-	Wed, 10 Jan 2024 06:10:01 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D920D20AECA9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704895801;
-	bh=Bx6tpgbJ7znSR0iIVezjMBXLyqJuhwxy1SofVQ/JPvw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TYQ6n5xgLYzvwXzwRXHkniE+tEWgLDTHg81bu4RjBUSBaxtaIEDCh3i1pGZQkfndT
-	 NaIfEX81DNwWbIZX36q83QA3GYzqzf+SlKgbP92uYZbqSUAlX8B4J5QgZFhuZuWlWE
-	 N4aJtpYkMa38CIaE575e1F7ywfzYsb5E1VnwtOrI=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH next 1/1] Introduce three helper functions to clean mana_ib code
-Date: Wed, 10 Jan 2024 06:09:54 -0800
-Message-Id: <1704895794-3501-1-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+Received: from connect.vanmierlo.com (fieber.vanmierlo.com [84.243.197.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9F64E1D5;
+	Wed, 10 Jan 2024 14:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vanmierlo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vanmierlo.com
+X-Footer: dmFubWllcmxvLmNvbQ==
+Received: from roundcube.vanmierlo.com ([192.168.37.37])
+	(authenticated user m.brock@vanmierlo.com)
+	by connect.vanmierlo.com (Kerio Connect 10.0.3 patch 1) with ESMTPA;
+	Wed, 10 Jan 2024 14:39:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Date: Wed, 10 Jan 2024 14:39:46 +0100
+From: Maarten Brock <m.brock@vanmierlo.com>
+To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
+Cc: git@amd.com, michal.simek@amd.com, gregkh@linuxfoundation.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, jirislaby@kernel.org,
+ linux-arm-kernel@lists.infradead.org, radhey.shyam.pandey@amd.com,
+ srinivas.goud@amd.com, shubhrajyoti.datta@amd.com, manion05gk@gmail.com
+Subject: Re: [PATCH V8 3/3] tty: serial: uartps: Add rs485 support to uartps
+ driver
+In-Reply-To: <20240110111107.3645284-4-manikanta.guntupalli@amd.com>
+References: <20240110111107.3645284-1-manikanta.guntupalli@amd.com>
+ <20240110111107.3645284-4-manikanta.guntupalli@amd.com>
+Message-ID: <6302479f8f991c98d55b2f887c0f356f@vanmierlo.com>
+X-Sender: m.brock@vanmierlo.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+Manikanta Guntupalli wrote on 2024-01-10 12:11:
+> Changes for V8:
+> Use hrtimer instead of timer list.
+> Simplify cdns_rs485_tx_setup() and cdns_rs485_rx_setup().
+> Update argument of cdns_rts_gpio_enable() in cdns_uart_set_mctrl().
+> Add cdns_calc_after_tx_delay() to calculate required delay after tx.
+> Add hrtimer setup in cdns_rs485_config().
+> Move enable TX Empty interrupt and rs485 rx callback scheduling part to
+> cdns_uart_handle_tx().
+> ---
+>  drivers/tty/serial/xilinx_uartps.c | 241 ++++++++++++++++++++++++++++-
+>  1 file changed, 233 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/xilinx_uartps.c
+> b/drivers/tty/serial/xilinx_uartps.c
+> index aafcc2179e0e..3247fd3e91fd 100644
+> --- a/drivers/tty/serial/xilinx_uartps.c
+> +++ b/drivers/tty/serial/xilinx_uartps.c
+> @@ -193,6 +195,10 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+>   * @clk_rate_change_nb:	Notifier block for clock changes
+>   * @quirks:		Flags for RXBS support.
+>   * @cts_override:	Modem control state override
+> + * @gpiod_rts:		Pointer to the gpio descriptor
+> + * @rs485_tx_started:	RS485 tx state
+> + * @tx_timer:		Timer for tx
 
-This patch aims to address two issues in mana_ib:
-1) Unsafe and inconsistent access to gdma_dev and  gdma_context
-2) Code repetitions
+start_tx_timer ?
 
-As a rule of thumb, functions should not access gdma_dev directly
+> + * @stop_tx_timer:	Timer for stop tx
+>   */
+>  struct cdns_uart {
+>  	struct uart_port	*port;
+> @@ -203,10 +209,22 @@ struct cdns_uart {
+>  	struct notifier_block	clk_rate_change_nb;
+>  	u32			quirks;
+>  	bool cts_override;
+> +	struct gpio_desc	*gpiod_rts;
+> +	bool			rs485_tx_started;
+> +	struct hrtimer		tx_timer;
+> +	struct hrtimer		stop_tx_timer;
+>  };
+>  struct cdns_platform_data {
+>  	u32 quirks;
+>  };
+> +
+> +struct serial_rs485 cdns_rs485_supported = {
+> +	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND |
+> +		 SER_RS485_RTS_AFTER_SEND,
+> +	.delay_rts_before_send = 1,
+> +	.delay_rts_after_send = 1,
+> +};
+> +
+>  #define to_cdns_uart(_nb) container_of(_nb, struct cdns_uart, \
+>  		clk_rate_change_nb)
+> 
+> @@ -305,6 +323,55 @@ static void cdns_uart_handle_rx(void *dev_id,
+> unsigned int isrstatus)
+>  	tty_flip_buffer_push(&port->state->port);
+>  }
+> 
+> +/**
+> + * cdns_rts_gpio_enable - Configure RTS/GPIO to high/low
+> + * @cdns_uart: Handle to the cdns_uart
+> + * @enable: Value to be set to RTS/GPIO
+> + */
+> +static void cdns_rts_gpio_enable(struct cdns_uart *cdns_uart, bool 
+> enable)
+> +{
+> +	u32 val;
+> +
+> +	if (cdns_uart->gpiod_rts) {
+> +		gpiod_set_value(cdns_uart->gpiod_rts, enable);
+> +	} else {
+> +		val = readl(cdns_uart->port->membase + CDNS_UART_MODEMCR);
+> +		if (enable)
+> +			val &= ~CDNS_UART_MODEMCR_RTS;
+> +		else
+> +			val |= CDNS_UART_MODEMCR_RTS;
+> +		writel(val, cdns_uart->port->membase + CDNS_UART_MODEMCR);
+> +	}
+> +}
+> +
+> +/**
+> + * cdns_rs485_tx_setup - Tx setup specific to rs485
+> + * @cdns_uart: Handle to the cdns_uart
+> + */
+> +static void cdns_rs485_tx_setup(struct cdns_uart *cdns_uart)
+> +{
+> +	bool enable;
+> +
+> +	enable = cdns_uart->port->rs485.flags & SER_RS485_RTS_ON_SEND;
+> +	cdns_rts_gpio_enable(cdns_uart, enable);
+> +
+> +	cdns_uart->rs485_tx_started = true;
+> +}
+> +
+> +/**
+> + * cdns_rs485_rx_setup - Rx setup specific to rs485
+> + * @cdns_uart: Handle to the cdns_uart
+> + */
+> +static void cdns_rs485_rx_setup(struct cdns_uart *cdns_uart)
+> +{
+> +	bool enable;
+> +
+> +	enable = cdns_uart->port->rs485.flags & SER_RS485_RTS_AFTER_SEND;
+> +	cdns_rts_gpio_enable(cdns_uart, enable);
+> +
+> +	cdns_uart->rs485_tx_started = false;
+> +}
+> +
+>  /**
+>   * cdns_uart_tx_empty -  Check whether TX is empty
+>   * @port: Handle to the uart port structure
+> @@ -320,6 +387,37 @@ static unsigned int cdns_uart_tx_empty(struct
+> uart_port *port)
+>  	return (status == CDNS_UART_SR_TXEMPTY) ? TIOCSER_TEMT : 0;
+>  }
+> 
+> +/**
+> + * cdns_rs485_rx_callback - Timer rx callback handler for rs485.
+> + * @t: Handle to the hrtimer structure
+> + */
+> +static enum hrtimer_restart cdns_rs485_rx_callback(struct hrtimer *t)
+> +{
+> +	struct cdns_uart *cdns_uart = container_of(t, struct cdns_uart, 
+> tx_timer);
+> +
+> +	/*
+> +	 * Default Rx should be setup, because Rx signaling path
+> +	 * need to enable to receive data.
+> +	 */
+> +	cdns_rs485_rx_setup(cdns_uart);
+> +
+> +	return HRTIMER_NORESTART;
+> +}
+> +
+> +/**
+> + * cdns_calc_after_tx_delay - calculate delay required for after tx.
+> + * @cdns_uart: Handle to the cdns_uart
+> + */
+> +static u64 cdns_calc_after_tx_delay(struct cdns_uart *cdns_uart)
+> +{
+> +	/*
+> +	 * Frame time + stop bit time + rs485.delay_rts_after_send
+> +	 */
+> +	return cdns_uart->port->frame_time
+> +	       + DIV_ROUND_UP(cdns_uart->port->frame_time, 7)
+> +	       + (u64)cdns_uart->port->rs485.delay_rts_after_send * 
+> NSEC_PER_MSEC;
+> +}
+> +
+>  /**
+>   * cdns_uart_handle_tx - Handle the bytes to be Txed.
 
-Introduced functions:
-1) mdev_to_gc
-2) mana_ib_get_netdev
-3) mana_ib_install_cq_cb
+s/Txed/transmitted
 
+>   * @dev_id: Id of the UART port
+> @@ -328,6 +426,7 @@ static unsigned int cdns_uart_tx_empty(struct
+> uart_port *port)
+>  static void cdns_uart_handle_tx(void *dev_id)
+>  {
+>  	struct uart_port *port = (struct uart_port *)dev_id;
+> +	struct cdns_uart *cdns_uart = port->private_data;
+>  	struct circ_buf *xmit = &port->state->xmit;
+>  	unsigned int numbytes;
 
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
----
- drivers/infiniband/hw/mana/cq.c      | 23 ++++++++++++++--
- drivers/infiniband/hw/mana/main.c    | 40 ++++++++++------------------
- drivers/infiniband/hw/mana/mana_ib.h | 17 ++++++++++++
- drivers/infiniband/hw/mana/mr.c      | 13 +++------
- drivers/infiniband/hw/mana/qp.c      | 36 ++++++-------------------
- 5 files changed, 63 insertions(+), 66 deletions(-)
+I recommend to also check uart_tx_stopped() for disabling the TXEMPTY 
+interrupt.
 
-diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana/cq.c
-index 83ebd0705..255e74ab7 100644
---- a/drivers/infiniband/hw/mana/cq.c
-+++ b/drivers/infiniband/hw/mana/cq.c
-@@ -16,7 +16,7 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	int err;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mdev->gdma_dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	if (udata->inlen < sizeof(ucmd))
- 		return -EINVAL;
-@@ -81,7 +81,7 @@ int mana_ib_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata)
- 	int err;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mdev->gdma_dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	err = mana_ib_gd_destroy_dma_region(mdev, cq->gdma_region);
- 	if (err) {
-@@ -107,3 +107,22 @@ void mana_ib_cq_handler(void *ctx, struct gdma_queue *gdma_cq)
- 	if (cq->ibcq.comp_handler)
- 		cq->ibcq.comp_handler(&cq->ibcq, cq->ibcq.cq_context);
- }
-+
-+int mana_ib_install_cq_cb(struct mana_ib_dev *mdev, struct mana_ib_cq *cq)
-+{
-+	struct gdma_context *gc = mdev_to_gc(mdev);
-+	struct gdma_queue *gdma_cq;
-+
-+	/* Create CQ table entry */
-+	WARN_ON(gc->cq_table[cq->id]);
-+	gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
-+	if (!gdma_cq)
-+		return -ENOMEM;
-+
-+	gdma_cq->cq.context = cq;
-+	gdma_cq->type = GDMA_CQ;
-+	gdma_cq->cq.callback = mana_ib_cq_handler;
-+	gdma_cq->id = cq->id;
-+	gc->cq_table[cq->id] = gdma_cq;
-+	return 0;
-+}
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index faca09245..29dd2438d 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -8,13 +8,10 @@
- void mana_ib_uncfg_vport(struct mana_ib_dev *dev, struct mana_ib_pd *pd,
- 			 u32 port)
- {
--	struct gdma_dev *gd = &dev->gdma_dev->gdma_context->mana;
- 	struct mana_port_context *mpc;
- 	struct net_device *ndev;
--	struct mana_context *mc;
- 
--	mc = gd->driver_data;
--	ndev = mc->ports[port];
-+	ndev = mana_ib_get_netdev(&dev->ib_dev, port);
- 	mpc = netdev_priv(ndev);
- 
- 	mutex_lock(&pd->vport_mutex);
-@@ -31,14 +28,11 @@ void mana_ib_uncfg_vport(struct mana_ib_dev *dev, struct mana_ib_pd *pd,
- int mana_ib_cfg_vport(struct mana_ib_dev *dev, u32 port, struct mana_ib_pd *pd,
- 		      u32 doorbell_id)
- {
--	struct gdma_dev *mdev = &dev->gdma_dev->gdma_context->mana;
- 	struct mana_port_context *mpc;
--	struct mana_context *mc;
- 	struct net_device *ndev;
- 	int err;
- 
--	mc = mdev->driver_data;
--	ndev = mc->ports[port];
-+	ndev = mana_ib_get_netdev(&dev->ib_dev, port);
- 	mpc = netdev_priv(ndev);
- 
- 	mutex_lock(&pd->vport_mutex);
-@@ -79,17 +73,17 @@ int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
- 	struct gdma_create_pd_req req = {};
- 	enum gdma_pd_flags flags = 0;
- 	struct mana_ib_dev *dev;
--	struct gdma_dev *mdev;
-+	struct gdma_context *gc;
- 	int err;
- 
- 	dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	mdev = dev->gdma_dev;
-+	gc = mdev_to_gc(dev);
- 
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_PD, sizeof(req),
- 			     sizeof(resp));
- 
- 	req.flags = flags;
--	err = mana_gd_send_request(mdev->gdma_context, sizeof(req), &req,
-+	err = mana_gd_send_request(gc, sizeof(req), &req,
- 				   sizeof(resp), &resp);
- 
- 	if (err || resp.hdr.status) {
-@@ -119,17 +113,17 @@ int mana_ib_dealloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
- 	struct gdma_destory_pd_resp resp = {};
- 	struct gdma_destroy_pd_req req = {};
- 	struct mana_ib_dev *dev;
--	struct gdma_dev *mdev;
-+	struct gdma_context *gc;
- 	int err;
- 
- 	dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	mdev = dev->gdma_dev;
-+	gc = mdev_to_gc(dev);
- 
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_PD, sizeof(req),
- 			     sizeof(resp));
- 
- 	req.pd_handle = pd->pd_handle;
--	err = mana_gd_send_request(mdev->gdma_context, sizeof(req), &req,
-+	err = mana_gd_send_request(gc, sizeof(req), &req,
- 				   sizeof(resp), &resp);
- 
- 	if (err || resp.hdr.status) {
-@@ -206,13 +200,11 @@ int mana_ib_alloc_ucontext(struct ib_ucontext *ibcontext,
- 	struct ib_device *ibdev = ibcontext->device;
- 	struct mana_ib_dev *mdev;
- 	struct gdma_context *gc;
--	struct gdma_dev *dev;
- 	int doorbell_page;
- 	int ret;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	dev = mdev->gdma_dev;
--	gc = dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	/* Allocate a doorbell page index */
- 	ret = mana_gd_allocate_doorbell_page(gc, &doorbell_page);
-@@ -238,7 +230,7 @@ void mana_ib_dealloc_ucontext(struct ib_ucontext *ibcontext)
- 	int ret;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mdev->gdma_dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	ret = mana_gd_destroy_doorbell_page(gc, mana_ucontext->doorbell);
- 	if (ret)
-@@ -322,15 +314,13 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 	size_t max_pgs_create_cmd;
- 	struct gdma_context *gc;
- 	size_t num_pages_total;
--	struct gdma_dev *mdev;
- 	unsigned long page_sz;
- 	unsigned int tail = 0;
- 	u64 *page_addr_list;
- 	void *request_buf;
- 	int err;
- 
--	mdev = dev->gdma_dev;
--	gc = mdev->gdma_context;
-+	gc = mdev_to_gc(dev);
- 	hwc = gc->hwc.driver_data;
- 
- 	/* Hardware requires dma region to align to chosen page size */
-@@ -426,10 +416,8 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 
- int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev, u64 gdma_region)
- {
--	struct gdma_dev *mdev = dev->gdma_dev;
--	struct gdma_context *gc;
-+	struct gdma_context *gc = mdev_to_gc(dev);
- 
--	gc = mdev->gdma_context;
- 	ibdev_dbg(&dev->ib_dev, "destroy dma region 0x%llx\n", gdma_region);
- 
- 	return mana_gd_destroy_dma_region(gc, gdma_region);
-@@ -447,7 +435,7 @@ int mana_ib_mmap(struct ib_ucontext *ibcontext, struct vm_area_struct *vma)
- 	int ret;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mdev->gdma_dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	if (vma->vm_pgoff != 0) {
- 		ibdev_dbg(ibdev, "Unexpected vm_pgoff %lu\n", vma->vm_pgoff);
-@@ -531,7 +519,7 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
- 	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
- 	req.hdr.dev_id = dev->gdma_dev->dev_id;
- 
--	err = mana_gd_send_request(dev->gdma_dev->gdma_context, sizeof(req),
-+	err = mana_gd_send_request(mdev_to_gc(dev), sizeof(req),
- 				   &req, sizeof(resp), &resp);
- 
- 	if (err) {
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 6bdc0f549..6b15b2ab5 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -142,6 +142,22 @@ struct mana_ib_query_adapter_caps_resp {
- 	u32 max_inline_data_size;
- }; /* HW Data */
- 
-+static inline struct gdma_context *mdev_to_gc(struct mana_ib_dev *mdev)
-+{
-+	return mdev->gdma_dev->gdma_context;
-+}
-+
-+static inline struct net_device *mana_ib_get_netdev(struct ib_device *ibdev, u32 port)
-+{
-+	struct mana_ib_dev *mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
-+	struct gdma_context *gc = mdev_to_gc(mdev);
-+	struct mana_context *mc = gc->mana.driver_data;
-+
-+	if (port < 1 || port > mc->num_ports)
-+		return NULL;
-+	return mc->ports[port - 1];
-+}
-+
- int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 				 mana_handle_t *gdma_region);
- 
-@@ -188,6 +204,7 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		      struct ib_udata *udata);
- 
- int mana_ib_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata);
-+int mana_ib_install_cq_cb(struct mana_ib_dev *mdev, struct mana_ib_cq *cq);
- 
- int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata);
- int mana_ib_dealloc_pd(struct ib_pd *ibpd, struct ib_udata *udata);
-diff --git a/drivers/infiniband/hw/mana/mr.c b/drivers/infiniband/hw/mana/mr.c
-index 351207c60..ee4d4f834 100644
---- a/drivers/infiniband/hw/mana/mr.c
-+++ b/drivers/infiniband/hw/mana/mr.c
-@@ -30,12 +30,9 @@ static int mana_ib_gd_create_mr(struct mana_ib_dev *dev, struct mana_ib_mr *mr,
- {
- 	struct gdma_create_mr_response resp = {};
- 	struct gdma_create_mr_request req = {};
--	struct gdma_dev *mdev = dev->gdma_dev;
--	struct gdma_context *gc;
-+	struct gdma_context *gc = mdev_to_gc(dev);
- 	int err;
- 
--	gc = mdev->gdma_context;
--
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_MR, sizeof(req),
- 			     sizeof(resp));
- 	req.pd_handle = mr_params->pd_handle;
-@@ -77,12 +74,9 @@ static int mana_ib_gd_destroy_mr(struct mana_ib_dev *dev, u64 mr_handle)
- {
- 	struct gdma_destroy_mr_response resp = {};
- 	struct gdma_destroy_mr_request req = {};
--	struct gdma_dev *mdev = dev->gdma_dev;
--	struct gdma_context *gc;
-+	struct gdma_context *gc = mdev_to_gc(dev);
- 	int err;
- 
--	gc = mdev->gdma_context;
--
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_MR, sizeof(req),
- 			     sizeof(resp));
- 
-@@ -164,8 +158,7 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
- 	return &mr->ibmr;
- 
- err_dma_region:
--	mana_gd_destroy_dma_region(dev->gdma_dev->gdma_context,
--				   dma_region_handle);
-+	mana_gd_destroy_dma_region(mdev_to_gc(dev), dma_region_handle);
- 
- err_umem:
- 	ib_umem_release(mr->umem);
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index e6d063d45..e889c798f 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -17,12 +17,10 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 	struct mana_cfg_rx_steer_resp resp = {};
- 	mana_handle_t *req_indir_tab;
- 	struct gdma_context *gc;
--	struct gdma_dev *mdev;
- 	u32 req_buf_size;
- 	int i, err;
- 
--	gc = dev->gdma_dev->gdma_context;
--	mdev = &gc->mana;
-+	gc = mdev_to_gc(dev);
- 
- 	req_buf_size =
- 		sizeof(*req) + sizeof(mana_handle_t) * MANA_INDIRECT_TABLE_SIZE;
-@@ -39,7 +37,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 	req->rx_enable = 1;
- 	req->update_default_rxobj = 1;
- 	req->default_rxobj = default_rxobj;
--	req->hdr.dev_id = mdev->dev_id;
-+	req->hdr.dev_id = gc->mana.dev_id;
- 
- 	/* If there are more than 1 entries in indirection table, enable RSS */
- 	if (log_ind_tbl_size)
-@@ -106,7 +104,6 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 	struct gdma_queue **gdma_cq_allocated;
- 	mana_handle_t *mana_ind_table;
- 	struct mana_port_context *mpc;
--	struct gdma_queue *gdma_cq;
- 	unsigned int ind_tbl_size;
- 	struct net_device *ndev;
- 	struct mana_ib_cq *cq;
-@@ -231,19 +228,11 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 		mana_ind_table[i] = wq->rx_object;
- 
- 		/* Create CQ table entry */
--		WARN_ON(gc->cq_table[cq->id]);
--		gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
--		if (!gdma_cq) {
--			ret = -ENOMEM;
-+		ret = mana_ib_install_cq_cb(mdev, cq);
-+		if (!ret)
- 			goto fail;
--		}
--		gdma_cq_allocated[i] = gdma_cq;
- 
--		gdma_cq->cq.context = cq;
--		gdma_cq->type = GDMA_CQ;
--		gdma_cq->cq.callback = mana_ib_cq_handler;
--		gdma_cq->id = cq->id;
--		gc->cq_table[cq->id] = gdma_cq;
-+		gdma_cq_allocated[i] = gc->cq_table[cq->id];
- 	}
- 	resp.num_entries = i;
- 
-@@ -409,18 +398,9 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 	send_cq->id = cq_spec.queue_index;
- 
- 	/* Create CQ table entry */
--	WARN_ON(gc->cq_table[send_cq->id]);
--	gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
--	if (!gdma_cq) {
--		err = -ENOMEM;
-+	err = mana_ib_install_cq_cb(mdev, send_cq);
-+	if (err)
- 		goto err_destroy_wq_obj;
--	}
--
--	gdma_cq->cq.context = send_cq;
--	gdma_cq->type = GDMA_CQ;
--	gdma_cq->cq.callback = mana_ib_cq_handler;
--	gdma_cq->id = send_cq->id;
--	gc->cq_table[send_cq->id] = gdma_cq;
- 
- 	ibdev_dbg(&mdev->ib_dev,
- 		  "ret %d qp->tx_object 0x%llx sq id %llu cq id %llu\n", err,
-@@ -442,7 +422,7 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 
- err_release_gdma_cq:
- 	kfree(gdma_cq);
--	gd->gdma_context->cq_table[send_cq->id] = NULL;
-+	gc->cq_table[send_cq->id] = NULL;
- 
- err_destroy_wq_obj:
- 	mana_destroy_wq_obj(mpc, GDMA_SQ, qp->tx_object);
+-	if (uart_circ_empty(xmit)) {
++	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
++		/* Disable the TX Empty interrupt */
+		writel(CDNS_UART_IXR_TXEMPTY, port->membase + CDNS_UART_IDR);
+		return;
+	}
 
-base-commit: d24b923f1d696ddacb09f0f2d1b1f4f045cfe65e
-prerequisite-patch-id: 1b5d35ba40b675d080bfbe6a0e73b0dd163f4a03
--- 
-2.43.0
+> @@ -347,6 +446,16 @@ static void cdns_uart_handle_tx(void *dev_id)
+> 
+>  	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+>  		uart_write_wakeup(port);
+> +
+> +	/* Enable the TX Empty interrupt */
+> +	writel(CDNS_UART_IXR_TXEMPTY, cdns_uart->port->membase + 
+> CDNS_UART_IER);
+> +
+> +	if (cdns_uart->port->rs485.flags & SER_RS485_ENABLED &&
+> +	    (uart_circ_empty(xmit) || uart_tx_stopped(port))) {
+> +		cdns_uart->tx_timer.function = &cdns_rs485_rx_callback;
+> +		hrtimer_start(&cdns_uart->tx_timer,
+> +			      ns_to_ktime(cdns_calc_after_tx_delay(cdns_uart)), 
+> HRTIMER_MODE_REL);
+> +	}
+>  }
+> 
+>  /**
+> @@ -579,6 +688,21 @@ static int cdns_uart_clk_notifier_cb(struct
+> notifier_block *nb,
+>  }
+>  #endif
+> 
+> +/**
+> + * cdns_rs485_tx_callback - Timer tx callback handler for rs485.
+> + * @t: Handle to the hrtimer structure
+> + */
+> +static enum hrtimer_restart cdns_rs485_tx_callback(struct hrtimer *t)
+> +{
+> +	struct cdns_uart *cdns_uart = container_of(t, struct cdns_uart, 
+> tx_timer);
+> +
+> +	uart_port_lock(cdns_uart->port);
+> +	cdns_uart_handle_tx(cdns_uart->port);
+> +	uart_port_unlock(cdns_uart->port);
+> +
+> +	return HRTIMER_NORESTART;
+> +}
+> +
+>  /**
+>   * cdns_uart_start_tx -  Start transmitting bytes
+>   * @port: Handle to the uart port structure
+> @@ -586,6 +710,7 @@ static int cdns_uart_clk_notifier_cb(struct
+> notifier_block *nb,
+>  static void cdns_uart_start_tx(struct uart_port *port)
+>  {
+>  	unsigned int status;
+> +	struct cdns_uart *cdns_uart = port->private_data;
+> 
+>  	if (uart_tx_stopped(port))
+>  		return;
+> @@ -604,10 +729,38 @@ static void cdns_uart_start_tx(struct uart_port 
+> *port)
+> 
+
+Maybe add comment here that the following clears the interrupt flag.
+
+>  	writel(CDNS_UART_IXR_TXEMPTY, port->membase + CDNS_UART_ISR);
+> 
+> +	if (cdns_uart->port->rs485.flags & SER_RS485_ENABLED) {
+> +		if (!cdns_uart->rs485_tx_started) {
+> +			cdns_uart->tx_timer.function = &cdns_rs485_tx_callback;
+> +			cdns_rs485_tx_setup(cdns_uart);
+
+Move cdns_rs485_tx_setup() out of this if clause to make sure DE is 
+always active.
+
+> +			return hrtimer_start(&cdns_uart->tx_timer,
+> +					     ms_to_ktime(port->rs485.delay_rts_before_send),
+> +					     HRTIMER_MODE_REL);
+> +		} else {
+> +			if (hrtimer_get_remaining(&cdns_uart->tx_timer))
+> +				hrtimer_cancel(&cdns_uart->tx_timer);
+
+You intend to stop the timer for cdns_rs485_rx_callback() here, but...
+What if the tx_timer is started for cdns_rs485_tx_callback()?
+
+> +		}
+> +	}
+>  	cdns_uart_handle_tx(port);
+> +}
+> 
+> -	/* Enable the TX Empty interrupt */
+> -	writel(CDNS_UART_IXR_TXEMPTY, port->membase + CDNS_UART_IER);
+> +/**
+> + * cdns_rs485_stop_tx_callback - Timer stop tx callback handler for 
+> rs485.
+> + * @t: Handle to the timer list structure
+> + */
+> +static enum hrtimer_restart cdns_rs485_stop_tx_callback(struct hrtimer 
+> *t)
+> +{
+> +	unsigned int regval;
+> +	struct cdns_uart *cdns_uart = container_of(t, struct cdns_uart,
+> stop_tx_timer);
+> +
+> +	cdns_rs485_rx_setup(cdns_uart);
+> +
+> +	regval = readl(cdns_uart->port->membase + CDNS_UART_CR);
+> +	regval |= CDNS_UART_CR_TX_DIS;
+> +	/* Disable the transmitter */
+> +	writel(regval, cdns_uart->port->membase + CDNS_UART_CR);
+> +
+> +	return HRTIMER_NORESTART;
+>  }
+> 
+>  /**
+> @@ -617,11 +770,21 @@ static void cdns_uart_start_tx(struct uart_port 
+> *port)
+>  static void cdns_uart_stop_tx(struct uart_port *port)
+>  {
+>  	unsigned int regval;
+> +	struct cdns_uart *cdns_uart = port->private_data;
+> 
+> -	regval = readl(port->membase + CDNS_UART_CR);
+> -	regval |= CDNS_UART_CR_TX_DIS;
+> -	/* Disable the transmitter */
+> -	writel(regval, port->membase + CDNS_UART_CR);
+> +	if (cdns_uart->port->rs485.flags & SER_RS485_ENABLED) {
+> +		if (cdns_uart->rs485_tx_started)
+> +			hrtimer_start(&cdns_uart->stop_tx_timer,
+> +				      ns_to_ktime(cdns_calc_after_tx_delay(cdns_uart)),
+> +				      HRTIMER_MODE_REL);
+
+Why do you want to wait here? Should disabling the transmitter not be 
+enough?
+My guess and hope is that it will result in the current transmission 
+running to
+completion and then fire the TXEMPTY interrupt which will then start the 
+timer for
+cdns_rs485_rx_callback(). I see no need for a separate timer here.
+
+> +		else
+> +			cdns_rs485_stop_tx_callback(&cdns_uart->stop_tx_timer);
+> +	} else {
+> +		regval = readl(port->membase + CDNS_UART_CR);
+> +		regval |= CDNS_UART_CR_TX_DIS;
+> +		/* Disable the transmitter */
+> +		writel(regval, port->membase + CDNS_UART_CR);
+> +	}
+>  }
+> 
+>  /**
+> @@ -829,6 +992,9 @@ static int cdns_uart_startup(struct uart_port 
+> *port)
+>  		(CDNS_UART_CR_TXRST | CDNS_UART_CR_RXRST))
+>  		cpu_relax();
+> 
+> +	if (cdns_uart->port->rs485.flags & SER_RS485_ENABLED)
+> +		cdns_rs485_rx_setup(cdns_uart);
+> +
+>  	/*
+>  	 * Clear the RX disable bit and then set the RX enable bit to enable
+>  	 * the receiver.
+> @@ -888,6 +1054,7 @@ static void cdns_uart_shutdown(struct uart_port 
+> *port)
+>  {
+>  	int status;
+>  	unsigned long flags;
+> +	struct cdns_uart *cdns_uart = port->private_data;
+> 
+>  	uart_port_lock_irqsave(port, &flags);
+> 
+> @@ -903,6 +1070,11 @@ static void cdns_uart_shutdown(struct uart_port 
+> *port)
+>  	uart_port_unlock_irqrestore(port, flags);
+> 
+>  	free_irq(port->irq, port);
+> +
+> +	if (cdns_uart->port->rs485.flags & SER_RS485_ENABLED) {
+> +		hrtimer_cancel(&cdns_uart->tx_timer);
+> +		hrtimer_cancel(&cdns_uart->stop_tx_timer);
+> +	}
+
+Should you not do this much earlier in this function?
+
+>  }
+> 
+>  /**
+> @@ -1032,7 +1204,7 @@ static void cdns_uart_set_mctrl(struct uart_port
+> *port, unsigned int mctrl)
+>  	mode_reg &= ~CDNS_UART_MR_CHMODE_MASK;
+> 
+>  	if (mctrl & TIOCM_RTS)
+> -		val |= CDNS_UART_MODEMCR_RTS;
+> +		cdns_rts_gpio_enable(cdns_uart_data, mctrl & TIOCM_RTS);
+
+Move this out of the if clause so the gpio can also get cleared.
+On top of that it should be inverted.
+But if there is no gpio defined this call will create a glitch on the 
+RTS pin.
+cdns_rts_gpio_enable() can set CDNS_UART_MODEMCR_RTS to lower the RTS 
+pin and
+then val will clear CDNS_UART_MODEMCR_RTS again leaving the RTS pin 
+high.
+I suggest to use this instead:
+	if (mctrl & TIOCM_RTS)
+		val |= CDNS_UART_MODEMCR_RTS;
++	if (cdns_uart->gpiod_rts) {
++		gpiod_set_value(cdns_uart->gpiod_rts, !(mctrl & TIOCM_RTS));
+
+>  	if (mctrl & TIOCM_DTR)
+>  		val |= CDNS_UART_MODEMCR_DTR;
+>  	if (mctrl & TIOCM_LOOP)
+> @@ -1455,6 +1627,42 @@ MODULE_DEVICE_TABLE(of, cdns_uart_of_match);
+>  /* Temporary variable for storing number of instances */
+>  static int instances;
+> 
+> +/**
+> + * cdns_rs485_config - Called when an application calls TIOCSRS485 
+> ioctl.
+> + * @port: Pointer to the uart_port structure
+> + * @termios: Pointer to the ktermios structure
+> + * @rs485: Pointer to the serial_rs485 structure
+> + *
+> + * Return: 0
+> + */
+> +static int cdns_rs485_config(struct uart_port *port, struct ktermios 
+> *termios,
+> +			     struct serial_rs485 *rs485)
+> +{
+> +	u32 val;
+> +	struct cdns_uart *cdns_uart = port->private_data;
+> +
+> +	if (rs485->flags & SER_RS485_ENABLED) {
+> +		dev_dbg(port->dev, "Setting UART to RS485\n");
+> +		/* Make sure auto RTS is disabled */
+> +		val = readl(port->membase + CDNS_UART_MODEMCR);
+> +		val &= ~CDNS_UART_MODEMCR_FCM;
+> +		writel(val, port->membase + CDNS_UART_MODEMCR);
+> +
+> +		/* Timer setup */
+> +		hrtimer_init(&cdns_uart->tx_timer, CLOCK_MONOTONIC, 
+> HRTIMER_MODE_REL);
+> +		hrtimer_init(&cdns_uart->stop_tx_timer, CLOCK_MONOTONIC, 
+> HRTIMER_MODE_REL);
+> +		cdns_uart->tx_timer.function = &cdns_rs485_tx_callback;
+> +		cdns_uart->stop_tx_timer.function = &cdns_rs485_stop_tx_callback;
+> +
+> +		/* Disable transmitter and make Rx setup*/
+> +		cdns_uart_stop_tx(port);
+> +	} else {
+> +		hrtimer_cancel(&cdns_uart->tx_timer);
+> +		hrtimer_cancel(&cdns_uart->stop_tx_timer);
+> +	}
+> +	return 0;
+> +}
+> +
+>  /**
+>   * cdns_uart_probe - Platform driver probe
+>   * @pdev: Pointer to the platform device structure
+> @@ -1597,9 +1805,23 @@ static int cdns_uart_probe(struct 
+> platform_device *pdev)
+>  	port->private_data = cdns_uart_data;
+>  	port->read_status_mask = CDNS_UART_IXR_TXEMPTY | CDNS_UART_IXR_RXTRIG 
+> |
+>  			CDNS_UART_IXR_OVERRUN | CDNS_UART_IXR_TOUT;
+> +	port->rs485_config = cdns_rs485_config;
+> +	port->rs485_supported = cdns_rs485_supported;
+>  	cdns_uart_data->port = port;
+>  	platform_set_drvdata(pdev, port);
+> 
+> +	rc = uart_get_rs485_mode(port);
+> +	if (rc)
+> +		goto err_out_clk_notifier;
+> +
+> +	cdns_uart_data->gpiod_rts = devm_gpiod_get_optional(&pdev->dev, 
+> "rts",
+> +							    GPIOD_OUT_LOW);
+> +	if (IS_ERR(cdns_uart_data->gpiod_rts)) {
+> +		rc = PTR_ERR(cdns_uart_data->gpiod_rts);
+> +		dev_err(port->dev, "xuartps: devm_gpiod_get_optional failed\n");
+> +		goto err_out_clk_notifier;
+> +	}
+> +
+>  	pm_runtime_use_autosuspend(&pdev->dev);
+>  	pm_runtime_set_autosuspend_delay(&pdev->dev, 
+> UART_AUTOSUSPEND_TIMEOUT);
+>  	pm_runtime_set_active(&pdev->dev);
+> @@ -1618,6 +1840,8 @@ static int cdns_uart_probe(struct platform_device 
+> *pdev)
+>  		console_port = port;
+>  	}
+>  #endif
+> +	if (cdns_uart_data->port->rs485.flags & SER_RS485_ENABLED)
+> +		cdns_rs485_rx_setup(cdns_uart_data);
+> 
+>  	rc = uart_add_one_port(&cdns_uart_uart_driver, port);
+>  	if (rc) {
+> @@ -1646,6 +1870,7 @@ static int cdns_uart_probe(struct platform_device 
+> *pdev)
+>  	pm_runtime_disable(&pdev->dev);
+>  	pm_runtime_set_suspended(&pdev->dev);
+>  	pm_runtime_dont_use_autosuspend(&pdev->dev);
+> +err_out_clk_notifier:
+>  #ifdef CONFIG_COMMON_CLK
+>  	clk_notifier_unregister(cdns_uart_data->uartclk,
+>  			&cdns_uart_data->clk_rate_change_nb);
+
+This is getting big and some modifications are not rs485 related.
+I suggest to split them and get those applied first.
+My first modification would be to add support for the rts gpio.
+
+Kind regards,
+Maarten Brock
 
