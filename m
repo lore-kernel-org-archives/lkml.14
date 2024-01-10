@@ -1,86 +1,119 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7EE4CDE0;
-	Wed, 10 Jan 2024 18:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9CC4D114;
+	Wed, 10 Jan 2024 18:24:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h56S5/UN"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5e7409797a1so42652537b3.0;
-        Wed, 10 Jan 2024 10:20:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWpzSQJ0"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33694bf8835so3760664f8f.3;
+        Wed, 10 Jan 2024 10:24:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704910836; x=1705515636; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IiZM2DBC2hxsgD1bO1IIo8YWHN+uFraLDJ3bquLyLXc=;
-        b=h56S5/UNHZJn92L0ttpi07Trvn8TcnGr3aG1PwkI+4BPE+9mlcMI1s6XwjXvmAs33w
-         h6cOCUf2XhDu5Ievx2lH8uCxdrAdShgU4s4nqUhr8pq2Xt3fdONXcUe5LlkS2gYQMZg3
-         E5SqDwEAod7kdM+Bz5wQR/FNh9fGil+DxVP1zEvivYOKNR2vpAz4FaG/aRwww7R8r0Vg
-         MqSiUdlDdLUix9SdTa0lUB/QouUsju3Wv4u6mqPyBJXYurD9rl7itjM3zEiyTTzKfnMG
-         jbflMC3cypHykOngq4IuuUqth2psZ7Pra/arogh2+vHm98HRxCCm1IotLFNp8HXeqyCP
-         zCbw==
+        d=gmail.com; s=20230601; t=1704911041; x=1705515841; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=81LggYl8Ad3OaI7g/+M//8UHKQbJy2MjL1R0gwI6OsE=;
+        b=bWpzSQJ0oiyB7KT4uSqfOwYQIAatlLnCzGwY1XgVTBcXnsyUpxnQ2+AeDZFVb1o197
+         bei2+k6cplQr3Av/qit7eej7NzASwePZ//+E2gSogdZJNkrKWastFzhKgcRknIxrGvCt
+         fbn9GE2Ac74eg/2NMUFOc+kCjTwIdBBkXNRgUzaYLV+bbxcl3tPkhPt1f17XrWhuiAfu
+         9DJjb99J6dFbwZlfAcEPpueeHgGSXP7sp9cvFbNX5RlON9sgBBka9C5Zx9H70clX0z1d
+         Rs3uByz5WTyvrNbvg7E5aCMReHEOa1qw5/ComUCcweUy0wG0f3A0f25ZHp9RnaLPq/X7
+         Ki6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704910836; x=1705515636;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IiZM2DBC2hxsgD1bO1IIo8YWHN+uFraLDJ3bquLyLXc=;
-        b=RzNOki3Vtud1pFDgPuVysZZFovCAoVvhWyXDJlLv97Rg5lODOhtNPlOy2ryUemnV8+
-         J9/on3WP7mAwQX5HYUP6BO8mLmJp/KnAscrZTpqjtr1eIcT859QBCNy8Jev9WIAq5uWq
-         7VIq0WJ/Uu/QdWQi2L7piwt1Sob2GDGlSUquGphI0+fyGSgysrNTxTeIvfxsDRjXTwKh
-         G0Zr3aCPBB1pfrP7OKGGLlVAq8CsofsVt2SUjPruHY4ilXqjFyxhq5sKseCz6uVWm8Cx
-         ke/uE62ysr11zDVSs3cHF3Ug9syjMxFMuSRuPhdpIQN6PfWrlsZlCeRJp+1+EuTCWffK
-         KCsQ==
-X-Gm-Message-State: AOJu0Yx2KpPIoeV9pAxJNFCH71WgTF7bp6GxTFM1si5JW/qRH5M8TmP7
-	fYfcqlpDYInZyFsYxwGDz/QVnn4XdV+vf3Kkcdk=
-X-Google-Smtp-Source: AGHT+IG6qWhoyZ+fToSKpyzhVm3lGpXdrO/8GggvUr1nvI/2oGWXQMC3FAUtdhvFZgoHwmUFXSNEo2Ro5vF0CYz2Hf0=
-X-Received: by 2002:a81:4523:0:b0:5f8:420e:468d with SMTP id
- s35-20020a814523000000b005f8420e468dmr35606ywa.47.1704910836404; Wed, 10 Jan
- 2024 10:20:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704911041; x=1705515841;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=81LggYl8Ad3OaI7g/+M//8UHKQbJy2MjL1R0gwI6OsE=;
+        b=aaRWguPSP/lPbDShlcl9tJ8YBOA9YiKC3eAjJNCyGp+5L06IJHMVUQQ1cyUHCwLRuP
+         YHTDRNQTVUUtGzFQ/XKKn4K33B8UMhn6IjeFUHPsoM/zmvHahPT+8cy8rQIppN9EaYy2
+         P16q6n2HeEXhpERdve7I/fgKXsZfd4b0qjt/ctUQIZ9qIhU3oIikCPmFsbnJevBXnk2M
+         mM3h6fbbzg3cToGAuaX7oqaK9HJlf6kVKHLxEtIjDRFPyS9ZiCMj7puqT1t8aKQB9VJx
+         mJ/QuGsl47k5zEvnZvB8lGOSjUyuJ0xYNGA5oXu3QuCdh1oXnbZ0s1k0k1smSjijT6HF
+         VCTA==
+X-Gm-Message-State: AOJu0Yw5sxYuNz98XLlbCbozds8lQKBBnkRTJvF7uFMZRIeRgy2XcPsb
+	NlSUgEAnp9RDekakiM7Jne4=
+X-Google-Smtp-Source: AGHT+IHLwo386qOHgtlGpo5mH/d/XbKdDKeCID+7bVxNsNhEiOdF/O31xP8hq13jV9oOdwkmS7u7Rw==
+X-Received: by 2002:a05:6000:1e85:b0:336:ca46:2ce1 with SMTP id dd5-20020a0560001e8500b00336ca462ce1mr624602wrb.122.1704911041215;
+        Wed, 10 Jan 2024 10:24:01 -0800 (PST)
+Received: from skbuf ([188.25.255.36])
+        by smtp.gmail.com with ESMTPSA id r4-20020adff104000000b00336a0c083easm5469692wro.53.2024.01.10.10.23.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 10:24:00 -0800 (PST)
+Date: Wed, 10 Jan 2024 20:23:58 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Simon Horman <horms@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Frank Wunderlich <frank-w@public-files.de>,
+	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
+	mithat.guner@xeront.com, erkin.bozoglu@xeront.com
+Subject: Re: [PATCH net-next 07/15] net: dsa: mt7530: do not run
+ mt7530_setup_port5() if port 5 is disabled
+Message-ID: <20240110182358.ci7pg7ipcbsjxqjf@skbuf>
+References: <a2826485-70a6-4ba7-89e1-59e68e622901@arinc9.com>
+ <90fde560-054e-4188-b15c-df2e082d3e33@moroto.mountain>
+ <20231207184015.u7uoyfhdxiyuw6hh@skbuf>
+ <9b729dab-aebc-4c0c-a5e1-164845cd0948@suswa.mountain>
+ <20231208184652.k2max4kf7r3fgksg@skbuf>
+ <c3a0fc6a-825c-4de3-b5cf-b454a6d4d3cf@arinc9.com>
+ <48b664fb-edf9-4170-abde-2eb99e04f0e5@suswa.mountain>
+ <2ad136ed-be3a-407f-bf3c-5faf664b927c@arinc9.com>
+ <20240109145740.3vbtkuowiwedz5hx@skbuf>
+ <0a086b5f-b319-4f08-9513-a38c214e1da7@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231223205813.32083-1-tintinm2017@gmail.com> <87o7eg607d.fsf@meer.lwn.net>
- <ZYpb6Woh45ZnEvCP@archie.me> <CAJjsb4reD_TVWRFonp90xXD4Ye2OOfOd894PzmfMKaP3qFkbYg@mail.gmail.com>
- <87jzohoy02.fsf@meer.lwn.net>
-In-Reply-To: <87jzohoy02.fsf@meer.lwn.net>
-From: Attreyee M <tintinm2017@gmail.com>
-Date: Wed, 10 Jan 2024 23:50:24 +0530
-Message-ID: <CAJjsb4omO_0+EMBX-g1jnxUeYsPr=uWCtwHCxUjmLirdVAUGLg@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/livepatch: Update terminology in livepatch
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, jpoimboe@kernel.org, jikos@kernel.org, 
-	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0a086b5f-b319-4f08-9513-a38c214e1da7@arinc9.com>
 
-As Bagas Sanjaya wrote in the email before about the change, I thought
-the reason was explained.
-I am sorry that I didn't respond to it thinking that.
+On Wed, Jan 10, 2024 at 10:26:54AM +0300, Arınç ÜNAL wrote:
+> > Are there existing systems that use PHY muxing? The possible problem I
+> > see is breaking those boards which have a phy-handle on gmac5, if the
+> > mt7530 driver is no longer going to modify its HWTRAP register.
+> 
+> Ah see, for PHY muxing, the driver actually wants the phy-handle to be put
+> on the SoC MAC, and the PHY to be defined on the SoC ethernet's MDIO bus.
+> We don't even define gmac5 as a port on the switch dt-bindings.
 
-Thank you
-Attreyee Mukherjee
+I noticed that from the code already. Maybe I shouldn't have said
+"gmac5" when I meant "the GMAC attached to switch port 5, aka GMAC0".
+I was under the impression that you were also using this slightly
+incorrect terminology, to keep a numerical association between the CPU
+port number and its directly attached GMAC.
 
-On Wed, 10 Jan 2024 at 23:45, Jonathan Corbet <corbet@lwn.net> wrote:
->
-> Attreyee M <tintinm2017@gmail.com> writes:
->
-> > Hello maintainers,
-> >
-> > I wanted to ask if this patch of mine is accepted as of now.
->
-> You never responded to the question that is still quoted in your
-> (unfortunately top-posted) email:
->
-> > So this is a classic example of saying what you have done, but not why.
-> > What makes this a change that we want?
->
-> So no, not accepted.  Even with a proper changelog, though, I'm not sure
-> I see the value in that particular change.
->
-> jon
+> While none of the DTs on the Linux repository utilise this, some of the
+> mt7621 DTs on OpenWrt do. The change in behaviour will only be that phy0/4
+> will be inaccessible from the SoC MAC's network interface. I de-facto
+> maintain the mt7621 device tree source files there. I intend to revert it
+> along with adding port 5 as a CPU port so that the conduit changing feature
+> becomes available.
+
+If OpenWrt kernels are always shipped in tandem with updated device
+trees (i.e. no Arm SystemReady IR platforms, where the DT is provided by
+U-Boot), I won't oppose to retracting features described via DT if their
+platform maintainers agree in a wide enough circle that the breakage is
+manageable.
+
+BTW, besides OpenWrt, what other software is deployed on these SoCs
+typically?
