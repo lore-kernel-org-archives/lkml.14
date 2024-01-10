@@ -1,135 +1,145 @@
-Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D5A23D5;
-	Wed, 10 Jan 2024 03:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EC823B1
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 03:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fle9INwo"
-Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-dbdc7ff087fso2876794276.2;
-        Tue, 09 Jan 2024 19:08:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fxdK1hJc"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5f00bef973aso35094127b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 19:11:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704856115; x=1705460915; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MFF4djnEjNRjNb/Z2lhzWjzj1NHxohVp1JZl91La+1g=;
-        b=fle9INwotfwTOsSaBtUyxkLmiV2ebl2+6PlZxiKohlwCBmwFC7L7PqKvvJoLRbb4+I
-         sF0uXNvFAH/vOLVDi+spw0toppvLIpxDHPNF8lXMOkIJ3fobDn0wffBfJP45UYMjaE1B
-         rGpOP/Ev33RiP49E6nDfcqSRyctMy1FmXfi7uxsORDWjl8Z9W2BlsWSKR76zSu6EfuJk
-         OOBW5ebvE++lZ9d32msUKsCTktgj7IhJH+RyLBSRhIpDmuMKuNeZFi03+7RvyDP7A9pa
-         ly79JZjpuVZBSeampL7vIPP+ndhN/ltGNi3DO1A6TYWeVQcUNRmYYHU7rESF2GGC7eJW
-         Pd1g==
+        d=linaro.org; s=google; t=1704856304; x=1705461104; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4d6kdLM2zyfXppW2Q5zuzpAXCPsQmw5b1RArNBQ9sVU=;
+        b=fxdK1hJckKgGXMK0xg1E+A+rE0ItGHJJ81GA9w4EHyGU8UJGq2yNTrvTyiKkukdF3d
+         s/c211krNhhx3Tc8UgfaMP4Ian1AjizSQ4wlufo9QCNpNb5o0wtd+l/cZAoxlcw1OMI5
+         +iYNkCajkqIWvJ65RlMGRnlWwnwmN3uztyWiQ1Wl8ykwkV4LMJaqJEHzmQUsHP1h+f8M
+         hzjhwtG8gUjPXYLFi9vHjE+zT+YRVT69zFXEQtOUn1ojzMD6nFnEIx/CmDgd78gYfyYf
+         TSn/6z57q7nsBe1lue+WGJf4gI/qOH+a4tjsoXx7Bo2G5kpgQHQRb3BBqjJQpSrp0Sxl
+         5Gcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704856115; x=1705460915;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MFF4djnEjNRjNb/Z2lhzWjzj1NHxohVp1JZl91La+1g=;
-        b=EAzr4NMNAEfrtWKtFmwMqmPn7nYPKh9m6j1GQW5oS6vvp8d4YgXeDZ8ahFdb36eVnS
-         gsjITWFt2tBmCUwvoU7Byj9Iln7P0pFhqguYe7jgNFLlebr2Wehf2teroEn8cGjiz9yu
-         ZaXzjFKWvJt7faq44P+Yt9vfQ5V8vmHUC2UEh6+XhSmrudqlkNlkPseiKWbl8ejc2m9S
-         WMQhC1WSy2BtiuZ4GCCRHnJaXFlmFVOmZUEIMXL/X8Ks3sdOA5hpfgSj28sHLkmayXfj
-         dTQ0UAn8ZLA93eulmHu8C6xpCAgBiWC0+hNugmtfQTYZ9dbvqqQWTsOJgSjJhKdjwjdH
-         mYtA==
-X-Gm-Message-State: AOJu0Yx5XlHob6Iv/iLnuHdlStahvqVfu917mm2lfyxsS/cTf11wTy6u
-	cx5Vkp9TSQ8Jk6bZxlcmBQc4zNsXmVTBKdkXIQ6DW5fxHiqp66wM
-X-Google-Smtp-Source: AGHT+IGrzlkbOChlJ1fL+Av9xopiJJoeeo9wO6yazpGlFCCuK5Me2frpoYSokfDFh0bDQxSzqciQ7NNZAP3FJV+pTvs=
-X-Received: by 2002:a5b:808:0:b0:dbd:b176:5796 with SMTP id
- x8-20020a5b0808000000b00dbdb1765796mr253001ybp.86.1704856114764; Tue, 09 Jan
- 2024 19:08:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704856304; x=1705461104;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4d6kdLM2zyfXppW2Q5zuzpAXCPsQmw5b1RArNBQ9sVU=;
+        b=UkGcb8MT9xPrJmknmo6Zkpbf6os+1E31KihnxOzCx83oU2uR8i78Rsj/wgq48JEj+0
+         2CP1UkpzXgRXamC5wqaaK0QGksOywk9ZBCNlb9nL0AKbRA5Ob4u12ozz2evYARFHC0MM
+         9wxDxoX9XgEjFwjABJNZH5xQgQozsiSkee8nrYmDJFXFfLFc89Sh8H+tjvjIvYTC62+7
+         9e2IQk02yMv3qyA9oXOQJjYH6nW1rExnHxW5Z43f9VnKTpRMuAv90YhDZCHSpMUO1YBO
+         3X2N4PUHNjh+qSfyd/EZtzCgl7z+QfBjWfaE5fSZry1xy2dMKGFwBHUVLirk6v+bbwV3
+         Iy7A==
+X-Gm-Message-State: AOJu0YxKhlflpbYqKmftqlBBOoFp0s5jS/MOMZGNMQFc7jLuEFhE8A1j
+	NMsW/07cPUh9ka5y4RE0OQunYHVXme09
+X-Google-Smtp-Source: AGHT+IExGw+hfQ3V07Z4sxUL0Zg/OgE7HO0brqGsNbKIQpRdruQQOOldw8LcAacx3e3s35Nb3rvCtg==
+X-Received: by 2002:a81:9142:0:b0:5f7:d06c:7464 with SMTP id i63-20020a819142000000b005f7d06c7464mr435219ywg.61.1704856303904;
+        Tue, 09 Jan 2024 19:11:43 -0800 (PST)
+Received: from thinkpad ([2409:40f4:8:c69c:51f1:be5e:dfa1:6e66])
+        by smtp.gmail.com with ESMTPSA id mj22-20020a17090b369600b0028be0ec6e76sm259409pjb.28.2024.01.09.19.11.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 19:11:43 -0800 (PST)
+Date: Wed, 10 Jan 2024 08:41:37 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+	"gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"quic_bjorande@quicinc.com" <quic_bjorande@quicinc.com>,
+	"fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
+	"vidyas@nvidia.com" <vidyas@nvidia.com>
+Subject: Re: [PATCH v7 0/2] PCI: designware-ep: Fix DBI access before core
+ init
+Message-ID: <20240110031137.GA2630@thinkpad>
+References: <20231120084014.108274-1-manivannan.sadhasivam@linaro.org>
+ <20240107072707.GC3450972@rocinante>
+ <ZZ2JXMhdOI1Upabx@x1-carbon>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109031204.15552-1-menglong8.dong@gmail.com>
-In-Reply-To: <20240109031204.15552-1-menglong8.dong@gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 10 Jan 2024 11:08:23 +0800
-Message-ID: <CADxym3azdds6dRDdvofHj1cxZ1QxcN1S8EkrLtYtKy4opoPrFw@mail.gmail.com>
-Subject: Re: [PATCH] net: tcp: accept old ack during closing
-To: edumazet@google.com
-Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, 
-	pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZZ2JXMhdOI1Upabx@x1-carbon>
 
-On Tue, Jan 9, 2024 at 11:12=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
-.com> wrote:
->
-> For now, the packet with an old ack is not accepted if we are in
-> FIN_WAIT1 state, which can cause retransmission. Taking the following
-> case as an example:
->
->     Client                               Server
->       |                                    |
->   FIN_WAIT1(Send FIN, seq=3D10)          FIN_WAIT1(Send FIN, seq=3D20, ac=
-k=3D10)
->       |                                    |
->       |                                Send ACK(seq=3D21, ack=3D11)
->    Recv ACK(seq=3D21, ack=3D11)
->       |
->    Recv FIN(seq=3D20, ack=3D10)
->
-> In the case above, simultaneous close is happening, and the FIN and ACK
-> packet that send from the server is out of order. Then, the FIN will be
-> dropped by the client, as it has an old ack. Then, the server has to
-> retransmit the FIN, which can cause delay if the server has set the
-> SO_LINGER on the socket.
->
-> Old ack is accepted in the ESTABLISHED and TIME_WAIT state, and I think
-> it should be better to keep the same logic.
->
-> In this commit, we accept old ack in FIN_WAIT1/FIN_WAIT2/CLOSING/LAST_ACK
-> states. Maybe we should limit it to FIN_WAIT1 for now?
->
-> Signed-off-by: Menglong Dong <menglong8.dong@gmail.com>
-> ---
->  net/ipv4/tcp_input.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
->
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index df7b13f0e5e0..b2b19421de8b 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -6699,17 +6699,21 @@ int tcp_rcv_state_process(struct sock *sk, struct=
- sk_buff *skb)
->                 return 0;
->
->         /* step 5: check the ACK field */
-> -       acceptable =3D tcp_ack(sk, skb, FLAG_SLOWPATH |
-> -                                     FLAG_UPDATE_TS_RECENT |
-> -                                     FLAG_NO_CHALLENGE_ACK) > 0;
-> +       reason =3D tcp_ack(sk, skb, FLAG_SLOWPATH |
-> +                                 FLAG_UPDATE_TS_RECENT |
-> +                                 FLAG_NO_CHALLENGE_ACK);
->
-> -       if (!acceptable) {
-> +       if (reason <=3D 0) {
->                 if (sk->sk_state =3D=3D TCP_SYN_RECV)
->                         return 1;       /* send one RST */
-> -               tcp_send_challenge_ack(sk);
-> -               SKB_DR_SET(reason, TCP_OLD_ACK);
-> -               goto discard;
-> +               /* accept old ack during closing */
-> +               if (reason < 0) {
-> +                       tcp_send_challenge_ack(sk);
-> +                       reason =3D -reason;
-> +                       goto discard;
-> +               }
->         }
-> +       SKB_DR_SET(NOT_SPECIFIED);
+On Tue, Jan 09, 2024 at 05:58:53PM +0000, Niklas Cassel wrote:
+> On Sun, Jan 07, 2024 at 04:27:07PM +0900, Krzysztof Wilczyński wrote:
+> > Hello,
+> 
+> Hello Krzysztof, Manivannan,
+> 
+> > 
+> > > This series is the continuation of previous work by Vidya Sagar [1] to fix the
+> > > issues related to accessing DBI register space before completing the core
+> > > initialization in some EP platforms like Tegra194/234 and Qcom SM8450.
+> > 
+> > Applied to controller/dwc-ep, thank you!
+> > 
+> > [01/02] PCI: designware-ep: Fix DBI access before core init
+> >         https://git.kernel.org/pci/pci/c/d3d13b00a2cf
+> > [02/02] PCI: designware-ep: Move pci_epc_init_notify() inside dw_pcie_ep_init_complete()
+> >         https://git.kernel.org/pci/pci/c/a171e1d60dad
+> > 
+> > 	Krzysztof
+> 
+> Considering that we know that this series introduces new problems
+> for drivers with a .core_init_notifier (i.e. tegra and qcom), see:
+> https://lore.kernel.org/linux-pci/ZWYmX8Y%2F7Q9WMxES@x1-carbon/
+> 
+> Do we really want to apply this series as is?
+> 
+> 
 
-Oops, It should be "SKB_DR_SET(reason, NOT_SPECIFIED);" here.
-Sorry that I shouldn't be too confident to compile it.
+Niklas, I think I explained it in this thread itself. Let me reiterate here
+again.
 
->         switch (sk->sk_state) {
->         case TCP_SYN_RECV:
->                 tp->delivered++; /* SYN-ACK delivery isn't tracked in tcp=
-_ack */
-> --
-> 2.39.2
->
+The fact that you are seeing the dmaengine warnings is due to function drivers
+not releasing the channels properly. It is not the job of the DWC driver to
+release the channels. The channels are requested by the function drivers [1]
+and they _should_ release them when the channels are no longer required.
+
+I know that the PCI_EPF_TEST driver is not doing so and so you are seeing the
+warnings. But I do not have a device to test that function driver. Qcom
+platforms use a dedicated function driver and that releases the channels when it
+gets the LINK_DOWN event from EPC [2].
+
+So my conclusion is that the issue is there even without this series. If you
+still want me to fix the EPF_TEST driver, I can submit a change, but someone has
+to test it.
+
+- Mani
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/endpoint/functions/pci-epf-test.c#n229
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/endpoint/functions/pci-epf-mhi.c#n563
+
+> Reading the patch, it appears that (at least some) tegra and
+> qcom boards currently causes a whole system hang, which IIUC,
+> renders those boards unusable.
+> 
+> So perhaps the new issues introduced by this series is preferable
+> to a whole system hang.
+> 
+> As such, I can understand the urgency to merge this series.
+> However, at the very least, I think that it might be worth amending
+> the commit message to mention that this will currently not deregister
+> the dma device in a clean way, leading to e.g. superfluous entries in
+> /sys/class/dma/ and debugfs warnings being printed to dmesg.
+> 
+> 
+> Kind regards,
+> Niklas
+
+-- 
+மணிவண்ணன் சதாசிவம்
