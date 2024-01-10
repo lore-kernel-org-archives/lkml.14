@@ -1,78 +1,100 @@
-Received: from mail.astralinux.ru (mail.astralinux.ru [217.74.38.119])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDED48CCE;
-	Wed, 10 Jan 2024 13:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.astralinux.ru (Postfix) with ESMTP id C7B1B18692DF;
-	Wed, 10 Jan 2024 16:46:34 +0300 (MSK)
-Received: from mail.astralinux.ru ([127.0.0.1])
-	by localhost (rbta-msk-vsrv-mail01.astralinux.ru [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id gVFb5WEP5ieC; Wed, 10 Jan 2024 16:46:34 +0300 (MSK)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.astralinux.ru (Postfix) with ESMTP id 7D93F18692D1;
-	Wed, 10 Jan 2024 16:46:34 +0300 (MSK)
-X-Virus-Scanned: amavisd-new at astralinux.ru
-Received: from mail.astralinux.ru ([127.0.0.1])
-	by localhost (rbta-msk-vsrv-mail01.astralinux.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id lEysMdup5VIp; Wed, 10 Jan 2024 16:46:34 +0300 (MSK)
-Received: from rbta-msk-lt-302690.astralinux.ru (unknown [10.177.234.199])
-	by mail.astralinux.ru (Postfix) with ESMTPSA id 4CE9C18659DD;
-	Wed, 10 Jan 2024 16:46:33 +0300 (MSK)
-From: Alexandra Diupina <adiupina@astralinux.ru>
-To: Nishanth Menon <nm@ti.com>
-Cc: Alexandra Diupina <adiupina@astralinux.ru>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] clk: keystone: sci-clk: check devm_kmalloc_array() return value
-Date: Wed, 10 Jan 2024 16:46:21 +0300
-Message-Id: <20240110134621.17209-1-adiupina@astralinux.ru>
-X-Mailer: git-send-email 2.30.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C24048CD0;
+	Wed, 10 Jan 2024 13:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hjet6GO3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DB3C433C7;
+	Wed, 10 Jan 2024 13:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704895026;
+	bh=KX4nMw3GLOvc32C67PKcjUg1rWDpL+ovEal4aND4JEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hjet6GO3YR2W/KNak5Dfzl4DlIFe81vwMyh5cdGSuKAmJo1bsESDB8fTLfmFUi2qL
+	 UgYjMA/dOQ79uKwHJHIA0N7ZPqo2zNGyamShnHfn8rrTIFZm2kgHGG3OiBj1aBLVr1
+	 IshXzjOubebWFuCpULUHCd5yZCFi047L05OSWtdYA/Ev0oYyHbwoDeaEaExYTNPGfs
+	 v43xRDSRL1qe7SSNUaNL6iiOw9b5MPxWvdrUfsXo5cBkGQMMTTh7C8hY6zxm6loNlO
+	 Ozuuv8aCoOBsjXQtL8M3Bf6zDth0/5iLlqi/J8NA8jzcaWZjiFlq3pHuMsMkp5Hhnb
+	 jE99hI63dNV6A==
+Date: Wed, 10 Jan 2024 13:57:01 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	kernel@collabora.com
+Subject: Re: [PATCH v6 0/4] Enable networking support for StarFive JH7100 SoC
+Message-ID: <20240110-quaking-unlisted-dcae7229a9f8@spud>
+References: <20231220211743.2490518-1-cristian.ciocaltea@collabora.com>
+ <CAJM55Z9tKQ_hpxrGUq1Rx1kxzzs-dyd=4yT1z=8B7KQ=CZ4mjA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tCGlZoctadBRtAPJ"
+Content-Disposition: inline
+In-Reply-To: <CAJM55Z9tKQ_hpxrGUq1Rx1kxzzs-dyd=4yT1z=8B7KQ=CZ4mjA@mail.gmail.com>
+
+
+--tCGlZoctadBRtAPJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-devm_kmalloc_array() may return NULL, so
-check return value to avoid null pointer
-dereferencing
+On Tue, Dec 26, 2023 at 02:38:26PM -0600, Emil Renner Berthing wrote:
+> Cristian Ciocaltea wrote:
+> > This patch series adds ethernet support for the StarFive JH7100 SoC and
+> > makes it available for the StarFive VisionFive V1 and BeagleV Starlight
+> > boards, although I could only validate on the former SBC.  Thank you Em=
+il
+> > and Geert for helping with tests on BeagleV!
+> >
+> > The work is heavily based on the reference implementation [1] and depen=
+ds
+> > on the SiFive Composable Cache controller and non-coherent DMA support
+> > provided by Emil via [2] and [3].
+> >
+> > *Update 1*: As of next-20231214, dependencies [2] & [3] have been merge=
+d.
+> >
+> > *Update 2*: Since v5, the dwmac patches will be handled via [4], while =
+the
+> >             clock patches subset via [5].
+>=20
+> I'm not sure my rb my sense when I'm listed as a co-developer, but this v=
+ersion
+> looks good to me:
+>=20
+> Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Cool, thanks. Cristian, can you ping this series once the binding gets
+picked up by the netdev folks after the merge window closes?
 
-Fixes: 3c13933c6033 ("clk: keystone: sci-clk: add support for dynamically=
- probing clocks")
-Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
----
- drivers/clk/keystone/sci-clk.c | 3 +++
- 1 file changed, 3 insertions(+)
+Cheers,
+Conor.
 
-diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-cl=
-k.c
-index 35fe197dd303..a2fa24e4f88a 100644
---- a/drivers/clk/keystone/sci-clk.c
-+++ b/drivers/clk/keystone/sci-clk.c
-@@ -459,6 +459,9 @@ static int ti_sci_scan_clocks_from_fw(struct sci_clk_=
-provider *provider)
- 			tmp_clks =3D devm_kmalloc_array(dev, max_clks + 64,
- 						      sizeof(sci_clk),
- 						      GFP_KERNEL);
-+			if (!tmp_clks)
-+				return -ENOMEM;
-+
- 			memcpy(tmp_clks, clks, max_clks * sizeof(sci_clk));
- 			if (max_clks)
- 				devm_kfree(dev, clks);
---=20
-2.30.2
+--tCGlZoctadBRtAPJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ6iLQAKCRB4tDGHoIJi
+0kbPAP0dbSyLIRPKeMG1shbfbFYtzw73fBt52A+2sdrLbJM5aAD+PQu/udrSe+dz
+2BrPH1XVoW3NkL079PPlz/HGQidT8AA=
+=z7mA
+-----END PGP SIGNATURE-----
+
+--tCGlZoctadBRtAPJ--
