@@ -1,52 +1,68 @@
-Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C3E4C608;
-	Wed, 10 Jan 2024 15:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A354C3BD
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 15:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="LFL9ceFd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1704902183;
-	bh=wQOXJIJsJ7TK3AdRldjWOw0I/FRpUAQIImnC0W7okJk=;
-	h=From:To:Cc:Subject:Date;
-	b=LFL9ceFdkgvzsuoC9RKNS4/j9v+H8n9ohcAoCU5J+LRtzUr/l18WqmDCAodMQ0F0y
-	 X/aDu9XUxQzy9HK4XNERxNei2AI6/DpPFaMTj4ajETiLk6UESfEnY6LA8q3Eaed6/8
-	 9A5v0IqrnC3pWATXdmr6j0j0kPgtVvrWoCLz5tIc=
-Received: from localhost.localdomain ([2409:8a60:2a63:2f30:ff74:6daa:56dc:111e])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id BF136234; Wed, 10 Jan 2024 23:47:49 +0800
-X-QQ-mid: xmsmtpt1704901669t7kbz5a5d
-Message-ID: <tencent_0BAA2DEAF9208D49987457E6583F9BE79507@qq.com>
-X-QQ-XMAILINFO: NojR6Ao/DkEDBb1YCk5PeOKZPS2yurQUYj2r9Yt9x6JBtQEZbkp7fGPKYGatb4
-	 D2hHpJqq3ojfDXxgFtDWZ2S1X4YqciNh/aHgaP92FnaBybEEp4TWDkViTWHlWPH1ZOgfdijpkudJ
-	 JMAc9lsHucXr5iu7urC20Ynepgueni8EKxqNOuwgtSkZWAdCpJVaVljsKjr8bnHgG80zfS9WiqsE
-	 hHRRFPzbkxRH4O8YR2J8hsLsD9q8EbFVkoiyCfAVB3Ku4ECWV2quS+knS23nmckn4rQZOUrnAZbH
-	 9XFr7EKYFmtoM3lyAeQy95qYXZPKbiq+ve3kZRx5p4p0TCp4/Too0W9Cl7U5ghe+W434fqcJIu53
-	 cj9ZGRT3vhcIOrWxPL5ASVIGXKvlaYzyYoNub3XugxbDqPXCgXDNAaSv2HZasAYznwPWvojB4jbo
-	 F2e+s989VDEp/5K/4+SRTUOLEXGiNtUqYcxZny1/Wv3GbNza9aSXXba9UU3RGOGKTxGla5RzV6A8
-	 idbc/04xaEMjkqFQQ/k7JeDZNlQVEUOK0NjIUeN3QSOWM/tWW9/9v2IG4NUkUEbj6n22eacudrEv
-	 Tm4rdb4PGyZsa4aykGAPa4MVJSNKSd6WnDOgKWMXPDKpduvW7FXGmJ3/W2uWI18P3aayjGicZz4P
-	 v44eELgdWqEBjH4Uh0E+I6poip2dl1UxEQMRgayyKf4VNySL4ItZDvPhB5C8WgBtdDBx5uvhPJB6
-	 IE99UI9Qyt3+HrH31BGW2dlV7koxePm+AJPJW4HthCS21xsKug7wssLTYqHHT8v5o/wWMRPSf4aF
-	 PvVMOyAM6blZiz4T4VoxefzTatnp+vcQfnuOl3CBoPwW8rfPZAkEEFFfnOTpubKxeSX8eW1IARHd
-	 PxwV8u+fCBvEiDInIWtLO1nWQS0wx5H9pu9nqLBRJleR+h2UskxoycDZgCKvEePau1YMGDpx+rMm
-	 4kY3tqKGy7QnJ+lUL0N6DQqmtzcg1MauQvODf8GKE6yp14nJrbIDyxI4tpUa+nyZQ8b66JaTcxc0
-	 qa06QDSw==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: wenyang.linux@foxmail.com
-To: Christian Brauner <brauner@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WMrsvWd1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704902397;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XQnGeG1QGEu/QBtp4/TBUL4MRasK2rgYQhSF+ZicemU=;
+	b=WMrsvWd17oLCmT/9W6JkzBX+p+Dwzb92qj4j0s9uP0n4VX1sypNbxsfYP8DxSPwXQAFEae
+	bWJRlV7xpx51URsfSw9KX7i/TRIMQymeXTlobh+GH5Dhrm3K3Kw2bL08krkh9TP4tNpkUd
+	6NhQlHlUaYKwcnXiNK/1FMYx3q8ttHc=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-246-RA40ty5YMICD3bgqUv1APQ-1; Wed, 10 Jan 2024 10:59:56 -0500
+X-MC-Unique: RA40ty5YMICD3bgqUv1APQ-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7831be985c0so517707985a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 07:59:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704902395; x=1705507195;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XQnGeG1QGEu/QBtp4/TBUL4MRasK2rgYQhSF+ZicemU=;
+        b=rs68l/Gpp+9CTjJc5fHODR6OWWEI6dVj6fr+Osoz4oaXOtISKBN38umrEBdve24Zu2
+         lhZ40lt4AWcmMvu2kw1HQ8ole9lp6dzrZYIHFPKvnYNmKd52dhqhd4KZCuFOh0OxHGjC
+         fuyK/ixyzxYgOBdaZf8LAtOZ9cfSOVqW42xMV6x6lcH/olt+V2KDkUs36Z+oKOb+DX/I
+         W49miRCcw/t4I0MGOQrAkd8IlwriCXbq5yYtRB4y4RoVROQeWA1VK0dUciMqIxjH43JQ
+         DPUpqzMwyJi6WvlzpePtN3wdHH09QyDRDKQjmhPEwf/W2c6sBRgCegDBaRoPRFF5Z9Pz
+         COhg==
+X-Gm-Message-State: AOJu0YwZwBk52JJPH2BKKVdN7RoCoXS1yfCAafIaAgQxYZenQrwtcjLE
+	en6h00kABCTKVoENh2/djftOFKNnxFzusmHKQF8uwqyyPqiDkFCjBediCngXn3oX4itS3EUlKVL
+	VOwJSP/AoMG0St7YRTXRXznt6pzJC1pM=
+X-Received: by 2002:a05:620a:5604:b0:781:a2bc:3211 with SMTP id vu4-20020a05620a560400b00781a2bc3211mr1186465qkn.128.1704902395537;
+        Wed, 10 Jan 2024 07:59:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH/bzCATczOMB0vRgD1epB1FaXF/PgxKumauea4s3H5r12+zW5Kxf78GIo1oE4XXqbp03PmNA==
+X-Received: by 2002:a05:620a:5604:b0:781:a2bc:3211 with SMTP id vu4-20020a05620a560400b00781a2bc3211mr1186454qkn.128.1704902395222;
+        Wed, 10 Jan 2024 07:59:55 -0800 (PST)
+Received: from klayman.redhat.com (net-2-34-31-72.cust.vodafonedsl.it. [2.34.31.72])
+        by smtp.gmail.com with ESMTPSA id z11-20020a05620a08cb00b00783206b9fedsm1691930qkz.86.2024.01.10.07.59.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 07:59:54 -0800 (PST)
+From: Marco Pagani <marpagan@redhat.com>
+To: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Rae Moar <rmoar@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: Marco Pagani <marpagan@redhat.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] eventfd: add a BUILD_BUG_ON() to ensure consistency between EFD_SEMAPHORE and the uapi
-Date: Wed, 10 Jan 2024 23:47:40 +0800
-X-OQ-MSGID: <20240110154740.41888-1-wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
+Subject: [PATCH v4] kunit: run test suites only after module initialization completes
+Date: Wed, 10 Jan 2024 16:59:47 +0100
+Message-ID: <20240110155948.90964-1-marpagan@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,34 +71,131 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Wen Yang <wenyang.linux@foxmail.com>
+Commit 2810c1e99867 ("kunit: Fix wild-memory-access bug in
+kunit_free_suite_set()") fixed a wild-memory-access bug that could have
+happened during the loading phase of test suites built and executed as
+loadable modules. However, it also introduced a problematic side effect
+that causes test suites modules to crash when they attempt to register
+fake devices.
 
-introduce a BUILD_BUG_ON to check that the EFD_SEMAPHORE is equal to its
-definition in the uapi file, just like EFD_CLOEXEC and EFD_NONBLOCK.
+When a module is loaded, it traverses the MODULE_STATE_UNFORMED and
+MODULE_STATE_COMING states before reaching the normal operating state
+MODULE_STATE_LIVE. Finally, when the module is removed, it moves to
+MODULE_STATE_GOING before being released. However, if the loading
+function load_module() fails between complete_formation() and
+do_init_module(), the module goes directly from MODULE_STATE_COMING to
+MODULE_STATE_GOING without passing through MODULE_STATE_LIVE.
 
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+This behavior was causing kunit_module_exit() to be called without
+having first executed kunit_module_init(). Since kunit_module_exit() is
+responsible for freeing the memory allocated by kunit_module_init()
+through kunit_filter_suites(), this behavior was resulting in a
+wild-memory-access bug.
+
+Commit 2810c1e99867 ("kunit: Fix wild-memory-access bug in
+kunit_free_suite_set()") fixed this issue by running the tests when the
+module is still in MODULE_STATE_COMING. However, modules in that state
+are not fully initialized, lacking sysfs kobjects. Therefore, if a test
+module attempts to register a fake device, it will inevitably crash.
+
+This patch proposes a different approach to fix the original
+wild-memory-access bug while restoring the normal module execution flow
+by making kunit_module_exit() able to detect if kunit_module_init() has
+previously initialized the tests suite set. In this way, test modules
+can once again register fake devices without crashing.
+
+This behavior is achieved by checking whether mod->kunit_suites is a
+virtual or direct mapping address. If it is a virtual address, then
+kunit_module_init() has allocated the suite_set in kunit_filter_suites()
+using kmalloc_array(). On the contrary, if mod->kunit_suites is still
+pointing to the original address that was set when looking up the
+.kunit_test_suites section of the module, then the loading phase has
+failed and there's no memory to be freed.
+
+v4:
+- rebased on 6.8
+- noted that kunit_filter_suites() must return a virtual address
+v3:
+- add a comment to clarify why the start address is checked
+v2:
+- add include <linux/mm.h>
+
+Fixes: 2810c1e99867 ("kunit: Fix wild-memory-access bug in kunit_free_suite_set()")
+Reviewed-by: David Gow <davidgow@google.com>
+Tested-by: Rae Moar <rmoar@google.com>
+Tested-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Signed-off-by: Marco Pagani <marpagan@redhat.com>
 ---
- fs/eventfd.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/kunit/executor.c |  4 ++++
+ lib/kunit/test.c     | 14 +++++++++++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 93848573c877..c1f5d71e7197 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -502,6 +502,7 @@ static int do_eventfd(unsigned int count, int flags)
- 	/* Check the EFD_* constants for consistency.  */
- 	BUILD_BUG_ON(EFD_CLOEXEC != O_CLOEXEC);
- 	BUILD_BUG_ON(EFD_NONBLOCK != O_NONBLOCK);
-+	BUILD_BUG_ON(EFD_SEMAPHORE != (1 << 0));
+diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+index 717b9599036b..689fff2b2b10 100644
+--- a/lib/kunit/executor.c
++++ b/lib/kunit/executor.c
+@@ -146,6 +146,10 @@ void kunit_free_suite_set(struct kunit_suite_set suite_set)
+ 	kfree(suite_set.start);
+ }
  
- 	if (flags & ~EFD_FLAGS_SET)
- 		return -EINVAL;
++/*
++ * Filter and reallocate test suites. Must return the filtered test suites set
++ * allocated at a valid virtual address or NULL in case of error.
++ */
+ struct kunit_suite_set
+ kunit_filter_suites(const struct kunit_suite_set *suite_set,
+ 		    const char *filter_glob,
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index f95d2093a0aa..31a5a992e646 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -17,6 +17,7 @@
+ #include <linux/panic.h>
+ #include <linux/sched/debug.h>
+ #include <linux/sched.h>
++#include <linux/mm.h>
+ 
+ #include "debugfs.h"
+ #include "device-impl.h"
+@@ -801,12 +802,19 @@ static void kunit_module_exit(struct module *mod)
+ 	};
+ 	const char *action = kunit_action();
+ 
++	/*
++	 * Check if the start address is a valid virtual address to detect
++	 * if the module load sequence has failed and the suite set has not
++	 * been initialized and filtered.
++	 */
++	if (!suite_set.start || !virt_addr_valid(suite_set.start))
++		return;
++
+ 	if (!action)
+ 		__kunit_test_suites_exit(mod->kunit_suites,
+ 					 mod->num_kunit_suites);
+ 
+-	if (suite_set.start)
+-		kunit_free_suite_set(suite_set);
++	kunit_free_suite_set(suite_set);
+ }
+ 
+ static int kunit_module_notify(struct notifier_block *nb, unsigned long val,
+@@ -816,12 +824,12 @@ static int kunit_module_notify(struct notifier_block *nb, unsigned long val,
+ 
+ 	switch (val) {
+ 	case MODULE_STATE_LIVE:
++		kunit_module_init(mod);
+ 		break;
+ 	case MODULE_STATE_GOING:
+ 		kunit_module_exit(mod);
+ 		break;
+ 	case MODULE_STATE_COMING:
+-		kunit_module_init(mod);
+ 		break;
+ 	case MODULE_STATE_UNFORMED:
+ 		break;
+
+base-commit: 539e582a375dedee95a4fa9ca3f37cdb25c441ec
 -- 
-2.25.1
+2.43.0
 
