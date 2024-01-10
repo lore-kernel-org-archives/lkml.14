@@ -1,128 +1,144 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6F7482FE
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 12:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850DB48CCF
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 12:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="s20dKFSX"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7cc7bae27b5so1303554241.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 04:55:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FpNyWzxX"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bbd7d60729so3576649b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 04:55:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704891329; x=1705496129; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Ee+hHkfAfIFS6WHvmIg35YEx3vQHJAhovJ3w3cPXwo=;
-        b=s20dKFSXv9X0Dth46Eq9po8i1zw++gJAeAovANgJUWtSt/94qMDdNE6z161bIEdp2Z
-         atELqW/ToP33dGrkoHBTOChulkv8Cw7Kv4FTMAuyypFZUkfrX5/Kh6YB3DlBueZvYdEp
-         hzs/zmifuFPCqPeNZwb1WQVnPJHOBHxMIazawurhzd9sIsPVuFMU+IygCX8PilCPsQUr
-         6rZIP5SHmB3SL+0nfD6hPl1tSEpU7f7BOl8k2oh7MKxCiO5WWpJ4hE5B1l1pVP8bf94c
-         1gmLonYfjIGcPzZ8dzA2N7wL0S6x5gcjnngKgw86LHphKpQvU/fy+Ut4dVwNSwtJoZS8
-         MS1Q==
+        d=linaro.org; s=google; t=1704891350; x=1705496150; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i6TzB+1S72/tbeouoEj+W3sOgNQQ58sp+mssNH666Es=;
+        b=FpNyWzxXN1REYnq2mIumKIpjcrBTOgBt0JRij+7kBWtBo9i+LYCSM960zt7VC4C3bR
+         vvVBaO2wsRonGSbHNUZMHd4eCgmiFZdxcS9vt1nv8CYiKR4V7t91vgt2uHxxe4Hfl/jx
+         OkpAfcWgzirdiaUszKjbNM0PuEQER8wrGRvlvb0Jnx0Xv44h0xsW495e0yYv7ISZy4W0
+         hpoi3kXoX8zbQ/UKecxhgG0Z151KzcHGJHBenuPCumekle0roi7agFDRDc3uk5Ujz4nS
+         a0mEpbYDE0ILngc/EA9Ydy9F1vFu0j328xqAQ6HrlycVGzBLig3eO8aixZHP8obVGgRI
+         W2RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704891329; x=1705496129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7Ee+hHkfAfIFS6WHvmIg35YEx3vQHJAhovJ3w3cPXwo=;
-        b=QflhRUofXWVHJtjLnbxXNgFwdUykFbkLBZrtirPjDyhw0SouObeOUVW2pBvhHzX+F2
-         5+3eBIt4I8PLjm64jd/yF6kfnCQtAO8gmRzTu6lHooM8brnNzHp1WVbe8/4LLzh0eEak
-         ly6NuqQD3P2P++dE9ROuZoOhFitEc3nGCONeB9GODbvTzQ95L/gw0KCkbVwCpvTweIfT
-         RDFXevCpkJYmnxVbYVPXBYnw/J0UXsM9g0/u51hDaJaCRbqvxxjyRcCT4dpfnWg3bF4N
-         D/YExWodtwpVf2pCx07kBRTmnh7T09xyNqY0qh7AYrxc/CL2a8RE53OISDCrPFTocgVF
-         xTmg==
-X-Gm-Message-State: AOJu0YxBBnprKakexrvhIJhu9ZGd4i2hHZWsreUtBkD9+BZgFYPV8TW/
-	0yL944tRJulnX+68UGt4TMWIh4lNPbq0janIhA8AO11e4bLu6g==
-X-Google-Smtp-Source: AGHT+IFJf1lA0zydsqWg4MMlDwI7GY7aqZwXYX8MZwXUGKbgxRrG/GbjToxomMdYf3iIjG2NRkt8G9T0sjS/5fZgDGY=
-X-Received: by 2002:a05:6102:6248:b0:466:fd31:def8 with SMTP id
- gd8-20020a056102624800b00466fd31def8mr866005vsb.55.1704891329157; Wed, 10 Jan
- 2024 04:55:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704891350; x=1705496150;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i6TzB+1S72/tbeouoEj+W3sOgNQQ58sp+mssNH666Es=;
+        b=iFwvlpwN7S3WDac1QS3Kw4OiVs3zBBSWhTXRqHBBvpM93oZ3IF8YBCas6xuER0lsbw
+         umNvvH+4TA2d12S8kuAtXTm/7xtNu90aLp3dxYRbIVxt/VOdN6le/Rn5/ssV1TtOFJVQ
+         TiNTZz2aE4riQQg48cpsO9TmzvoA/apIGf7EE6dw8msQPQAqd6Bh5AM2v6Tdn5xJUz/I
+         NO87S0Mht6mVeSNppGQj6rnONcdvpunfJ0pOTXQBuy4g4KbxY0uw48wPOccYvuw+49nI
+         aoxm6Y990Zj1GtH7qCptYJ/LtD3k8bC9U1FUP8+Q0DzYB6QNEubE4kJoy3RNFOBrhaGM
+         H56g==
+X-Gm-Message-State: AOJu0YxkyYgvmmREGWxFSsmNv44wNxBrqr8+DDamm1Q9a7/kqt8r0O98
+	DwuE7fhwT78GFA69i3e7wYfOMHRJVP46vw==
+X-Google-Smtp-Source: AGHT+IEgtcj5HA/BznSC6a3oApaQxYzWJ2JZ5y0CrJqTQizybxpFHZlmbrOs2X7X9QrtSXq4r+wWVQ==
+X-Received: by 2002:a05:6808:1a03:b0:3bc:3046:94b1 with SMTP id bk3-20020a0568081a0300b003bc304694b1mr1309823oib.99.1704891350471;
+        Wed, 10 Jan 2024 04:55:50 -0800 (PST)
+Received: from debian-dev (211-75-219-200.hinet-ip.hinet.net. [211.75.219.200])
+        by smtp.gmail.com with ESMTPSA id ff26-20020a056a002f5a00b006da73b90fe4sm3539241pfb.14.2024.01.10.04.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 04:55:49 -0800 (PST)
+Date: Wed, 10 Jan 2024 20:55:44 +0800
+From: Leo Yan <leo.yan@linaro.org>
+To: Ruidong Tian <tianruidong@linux.alibaba.com>
+Cc: linux-kernel@vger.kernel.org, james.clark@arm.com,
+	coresight@lists.linaro.org, suzuki.poulose@arm.com,
+	mike.leach@linaro.org, alexander.shishkin@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, al.grant@arm.com,
+	mathieu.poirier@linaro.org, tor@ti.com, acme@redhat.com
+Subject: Re: [PATCH v2 1/1] perf scripts python: arm-cs-trace-disasm.py: add
+ option to print virtual address
+Message-ID: <20240110125544.GG44@debian-dev>
+References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
+ <20240110025617.66646-1-tianruidong@linux.alibaba.com>
+ <20240110025617.66646-2-tianruidong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104130123.37115-1-brgl@bgdev.pl> <20240104130123.37115-4-brgl@bgdev.pl>
- <20240109144327.GA10780@wunner.de>
-In-Reply-To: <20240109144327.GA10780@wunner.de>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 10 Jan 2024 13:55:18 +0100
-Message-ID: <CAMRc=MdXO6c6asvRSn_Z8-oFS48hroT+dazGKB6WWY1_Zu7f1Q@mail.gmail.com>
-Subject: Re: [RFC 3/9] PCI/portdrv: create platform devices for child OF nodes
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>, 
-	Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Terry Bowman <terry.bowman@amd.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240110025617.66646-2-tianruidong@linux.alibaba.com>
 
-On Tue, Jan 9, 2024 at 3:43=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrote=
-:
->
-> On Thu, Jan 04, 2024 at 02:01:17PM +0100, Bartosz Golaszewski wrote:
-> > In order to introduce PCIe power-sequencing, we need to create platform
-> > devices for child nodes of the port driver node. They will get matched
-> > against the pwrseq drivers (if one exists) and then the actuak PCIe
-> > device will reuse the node once it's detected on the bus.
-> [...]
-> > --- a/drivers/pci/pcie/portdrv.c
-> > +++ b/drivers/pci/pcie/portdrv.c
-> > @@ -715,7 +716,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
-> >               pm_runtime_allow(&dev->dev);
-> >       }
-> >
-> > -     return 0;
-> > +     return devm_of_platform_populate(&dev->dev);
-> >  }
->
-> I think this belongs in of_pci_make_dev_node(), portdrv seems totally
-> the wrong place.  Note that you're currently calling this for RCECs
-> (Root Complex Event Collectors) as well, which is likely not what
-> you want.
->
+Hi Ruidong,
 
-of_pci_make_dev_node() is only called when the relevant PCI device is
-instantiated which doesn't happen until it's powered-up and scanned -
-precisely the problem I'm trying to address.
+On Wed, Jan 10, 2024 at 10:56:17AM +0800, Ruidong Tian wrote:
+> arm-cs-trace-disasm just print offset for library dso now:
+> 
+>     0000000000002200 <memcpy>:
+>         2200: d503201f      nop
+>         2204: 8b020024      add     x4, x1, x2
+>         2208: 8b020005      add     x5, x0, x2
+> 
+> Add a option `-a` to print virtual offset other than offset:
+> 
+>     # perf script -s scripts/python/arm-cs-trace-disasm.py -- -d llvm-objdump -a
+>     ...
+>     ffffb4c23200 <memcpy>:
+>         ffffb4c23200: d503201f      nop
+>         ffffb4c23204: 8b020024      add     x4, x1, x2
+>         ffffb4c23208: 8b020005      add     x5, x0, x2
+>     ...
+> 
+> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Calling this for whomever isn't really a problem though, is it? We
-will create a platform device alright - if it's defined on the DT -
-and at worst it won't match against any driver. It seems harmless IMO.
+I only gave suggestion, it's no need to add my SoB and this might break
+the SoB chain and rejected by maintainers.
 
-> devm functions can't be used in the PCI core, so symmetrically call
-> of_platform_unpopulate() from of_pci_remove_node().
+So with removing my SoB, the patch is fine for me:
 
-I don't doubt what you're saying is true (I've seen worse things) but
-this is the probe() callback of a driver using the driver model. Why
-wouldn't devres work?
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-Bart
+I would like to suggest you to resend patch set v2 with all patches
+- though patches 02 and 03 have no any change, but it would be easier
+for maintainers to pick up the whole patches (especially this can save
+time with b4 tool).
 
->
-> Thanks,
->
-> Lukas
->
+Thanks,
+Leo
+
+> ---
+>  tools/perf/scripts/python/arm-cs-trace-disasm.py | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> index d973c2baed1c..78419498237e 100755
+> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> @@ -36,7 +36,10 @@ option_list = [
+>  		    help="Set path to objdump executable file"),
+>  	make_option("-v", "--verbose", dest="verbose",
+>  		    action="store_true", default=False,
+> -		    help="Enable debugging log")
+> +		    help="Enable debugging log"),
+> +	make_option("-a", "--vaddr", dest="vaddr",
+> +			action="store_true", default=False,
+> +			help="Enable virtual address")
+>  ]
+>  
+>  parser = OptionParser(option_list=option_list)
+> @@ -108,6 +111,14 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
+>  			m = disasm_re.search(line)
+>  			if m is None:
+>  				continue
+> +
+> +		# Replace offset with virtual address
+> +		if (options.vaddr == True):
+> +			offset = re.search(r"^\s*([0-9a-fA-F]+)", line).group()
+> +			if offset:
+> +				virt_addr = dso_start + int(offset, 16)
+> +				line = line.replace(offset.lstrip(), "%x" % virt_addr)
+> +
+>  		print("\t" + line)
+>  
+>  def print_sample(sample):
+> -- 
+> 2.33.1
+> 
