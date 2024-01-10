@@ -1,78 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7DC4CDE1;
-	Wed, 10 Jan 2024 14:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8rvpcHO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CA2C433F1;
-	Wed, 10 Jan 2024 14:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704896000;
-	bh=ubT3JpCdUdX478eUAkGKG4N/VQnjYxl/ajam8KuCzW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n8rvpcHO+s4fz4TNsN/HyfY+EIuzENurVJp3ihv32jRMWh3bE5uRVQ6yn6TDagupv
-	 AK+L8u0WZmOWZeJKFpLzri36x03PmKAbtEsHTGABMWcA5CnL1Yao6Kh6m/kS/F5UFP
-	 IJ5LBTyhV023i+Ds4OxmscnIxA0mja58bmWf7sszIrKcEjtp9A+oki/mICAftF25o0
-	 vc+dOdx+Tk/A7zsoH9ASJXqLKcottwvx0Paqx/QHCtG8hweuQC/p9/0Dh8g2M94KOP
-	 wxOAjGIw5oq+T5OGqRrrs5PeEkdml7/gM4bdYpuQL7KWSZaV4qLlw0tgu/8Z9w4WDG
-	 osLhuF9hoT/0w==
-Date: Wed, 10 Jan 2024 14:13:13 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Chen Wang <unicornxw@gmail.com>
-Cc: aou@eecs.berkeley.edu, chao.wei@sophgo.com,
-	krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-	palmer@dabbelt.com, paul.walmsley@sifive.com,
-	richardcochran@gmail.com, robh+dt@kernel.org, sboyd@kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com,
-	guoren@kernel.org, jszhang@kernel.org, inochiama@outlook.com,
-	samuel.holland@sifive.com, Chen Wang <unicorn_wang@outlook.com>
-Subject: Re: [PATCH v7 4/4] riscv: dts: add clock generator for Sophgo SG2042
- SoC
-Message-ID: <20240110-sedative-reggae-389839cef8c4@spud>
-References: <cover.1704694903.git.unicorn_wang@outlook.com>
- <25650372c373b15309cd9f3822306838e556d3c7.1704694903.git.unicorn_wang@outlook.com>
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 170454CDE1
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 14:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 40AEA6vC017173;
+	Wed, 10 Jan 2024 08:10:07 -0600
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 40AEA6Zg017172;
+	Wed, 10 Jan 2024 08:10:06 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Wed, 10 Jan 2024 08:10:05 -0600
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: richard clark <richard.xnu.clark@gmail.com>
+Cc: Xi Ruoyao <xry111@xry111.site>, Mark Rutland <mark.rutland@arm.com>,
+        gcc-help@gcc.gnu.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: undefined reference to `__aarch64_cas4_sync' error on arm64 native build
+Message-ID: <20240110141005.GL19790@gate.crashing.org>
+References: <ZZb2f0U4qTWDjCGj@FVFF77S0Q05N.cambridge.arm.com> <CAJNi4rOpzmQAW1Fjst-Em=SQ7q8QsQh0PWhVxUizrOW9JukOgQ@mail.gmail.com> <ZZvS8rigFJR8L56c@FVFF77S0Q05N> <fb6c8253fd90e66c036a85954c3299bc2c047473.camel@xry111.site> <CAJNi4rPj0Wc7ByqrS-GVLUUEnOFPZi8A5nLLCEEJErqAe16EZw@mail.gmail.com> <9aef98eed96ed32962ce90499291cb30ad5e3e14.camel@xry111.site> <20240109074843.GI19790@gate.crashing.org> <4ee8067e72028b070d92e10fa33ddde3a498cb48.camel@xry111.site> <20240109082647.GJ19790@gate.crashing.org> <CAJNi4rM_w5JKjug1PtV+tHyk11DUhRJ-K1pSDE6P1x8KSU2wrg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nm/CphfyKzDGNTF4"
-Content-Disposition: inline
-In-Reply-To: <25650372c373b15309cd9f3822306838e556d3c7.1704694903.git.unicorn_wang@outlook.com>
-
-
---nm/CphfyKzDGNTF4
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAJNi4rM_w5JKjug1PtV+tHyk11DUhRJ-K1pSDE6P1x8KSU2wrg@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 
-On Mon, Jan 08, 2024 at 02:49:53PM +0800, Chen Wang wrote:
+On Wed, Jan 10, 2024 at 01:59:53PM +0800, richard clark wrote:
+> A ported driver in linux kernel calls '__sync_val_compare_and_swap',
 
-> +	cgi: oscillator {
-> +		compatible = "fixed-clock";
-> +		clock-output-names = "cgi";
-> +		#clock-cells = <0>;
-> +	};
+That is a builtin function.  It does not necessarily expand to an actual
+function call.  aarch64 will typically expand it to inline code.
 
-Where does the name "cgi" come from and what does it mean?
-Clock Generator Input? Does the sg2042 documentation call it that?
+> the cross-compiler 'aarch64-linux-gnu-gcc' doesn't complain
+> '__aarch64_cas1_sync' undefined reference, but the native compiler
+> will complain. As Mark mentioned, I double check that both cross and
+> native compiler should have  ''-moutline-atomics' option enabled, do
+> you know the reason for that?
 
-Cheers,
-Conor.
+Ah, so you are requesting external functions.
 
---nm/CphfyKzDGNTF4
-Content-Type: application/pgp-signature; name="signature.asc"
+I am no aarch64 expert, but apparently there were some problems in
+GCC 11, maybe that is what you saw?  Or with some distros, anyway.
 
------BEGIN PGP SIGNATURE-----
+It also matters if you have ARMv8.1-A enabled, the LSE instructions.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ6l+QAKCRB4tDGHoIJi
-0qa+AQCAkXm3hnS/5roeUv9wiqA5TkGqnJfy0iNrxNKOnLioewEA+fTdCxQZM2mJ
-WwMBMSTwB4ADTuG2ZWVcgoFa66ptYw4=
-=MhZh
------END PGP SIGNATURE-----
+Open a GCC bug report if you have more details?  Thanks,
 
---nm/CphfyKzDGNTF4--
+
+Segher
