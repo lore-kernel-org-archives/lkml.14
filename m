@@ -1,189 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD47D50F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 04:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CE363A0;
+	Wed, 10 Jan 2024 04:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WtpAnYUu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704861447; x=1736397447;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dMN2k2IxkPv3stiLNe2/1XzpPBynojvgQm4Rwd7yxRY=;
-  b=WtpAnYUuCocSj4+OmwwxMypcyv3D9zW9tZhTmrAOgcQYrnrhS+7C5IpO
-   2TfQofjX+3NddIozyst363IMDe7GJt88qnTQWpWgm1s5+eqEiYhHr/kmg
-   FIP10/k9aFPuKoRiO8Vqvio7/t8jThThvDYehdCnaByNg9VerK3MYm61K
-   weB9WPZYrdzS+8r/CXJtYJ1AwRX5L0r4av2ifG72NXTc+tQtpFkmSbOgo
-   5a+Ispsv+1TQHFyYDLOyaoARno2zYEpBcYYpBKMTAcDyZhzsF2zzXJ8g4
-   zj8cMX1PofYhGPQR5aCM1HkICIy9LMGgF+ZIGyqaUaJb5DHNBXPznxEev
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="388846604"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="388846604"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 20:37:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="955241614"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="955241614"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 09 Jan 2024 20:37:21 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNQL8-0006b0-31;
-	Wed, 10 Jan 2024 04:37:18 +0000
-Date: Wed, 10 Jan 2024 12:36:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Philipp Stanner <pstanner@redhat.com>,
-	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>
-Subject: Re: [PATCH v2 1/2] drm/dcss: request memory region
-Message-ID: <202401101201.yVs3iqFU-lkp@intel.com>
-References: <20240109102032.16165-2-pstanner@redhat.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Awwk7A2T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1704861692; bh=wjCMeyJPmdmkcN4hbqi6emvp6R0v43JLk24xb1h44Tc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Awwk7A2T4PzATkIkg6KwLHhAQqxm4XQMobVT7EFyJ+Xw5grOEfSXUpHNeqivg6gCl
+	 29eeez/yPkpT3YYR3hBi5Fp/XyiJz1MtzXAtM070ORmHE1C049xYXBGKjVDBdQW/uV
+	 BIluLEfzd9Bz50N+4IwJo2zB72Id/GRsyPeW5epc=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id A5F0C6B3; Wed, 10 Jan 2024 12:41:31 +0800
+X-QQ-mid: xmsmtpt1704861691tlezr7gms
+Message-ID: <tencent_64ED1B1C2576BA24BB29337D9EC41B454B08@qq.com>
+X-QQ-XMAILINFO: OZsapEVPoiO6SFt+zmNyHqZ+98z5/Sl6tJh+uAFU3n/CCrp1ZxWj3pw3W5MnrV
+	 ZSWzA3IGY1gHqDuqcXB6CWYh1HO2WgC9bjwwsUQMcENCiF2yiVXRq537wpEoWHZbYPlQnbIuOubX
+	 RxKmhKwfWqESoVEN7aeVThYoRM5XCLf7Tv/dW3YmaD9fjkQbKr+5QKFawmQKyz68L4DaBkAl/ErD
+	 6gGB3OCN1qLMz3I4MbIkq6Fyw6Whzx4sDlxqk6peIhHd8Jo7BIkwhccdJNJPzXf6Cbc7HoWbuYe7
+	 sK6QJS8itlMd1sg0q6ms/cbyqpYHp6RpAhccZsr+Gc4rFN51x1v1yP+ZcSCh0C2iLPnHua4Vk5Pc
+	 qgzj8R4Z5MH3LjknHk3weX6Fz64XSnFqO7uPp/5jaVRogwgtae4Lhex41b5T7D9NLsck1Qfv9Zw0
+	 QficAWHhJrMlWSHhOKlIjFl/Yf5rDn6EPDDVaOd3TEXHp5qEOgTihWmK8tUeBYQxMOjrBejL0atG
+	 RAWnKtRnDzwC3Ese03fh6tZksjPjchVrR4X7k9zBwstFM0QZNj3bAXlJkW7/dDH1yHlXU8ZoBT9A
+	 dhms9CUobb3sBhonJGROo8cvTHXQ7KDAMn6MHBp6xXkWQO82sFi8DWztd/1hjXSbR5iNdLlHh+El
+	 ELDhsq67NQlu8Q5p4WrLdnuWfqlKuM9o7zk6MoJq6HDCApemHY4Y22TWcbqsxTnYzAgtjFUZU4k+
+	 98FZFB6OWYk/sTzCiJJiBJtkhS0jzhjN8N46EVHgJZqiRhZ+BMl7i0nJ1RN8iQG/e7MHiFfhe8TS
+	 YIpnnuWvLs17S/ih3LTc+ijb52VJ4MG4juz/dwBhSfjuuEf2v1YW5axkJepij5EYYcNIKIJgeTi0
+	 EQiaZEG758Ojuhi7q/BvDLHcysj6mgmv4EJokrRqkjaNrfP8JByGE3C+WPF5nCUA==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+91db973302e7b18c7653@syzkaller.appspotmail.com
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] fs/hfsplus: fix uninit-value in hfsplus_lookup
+Date: Wed, 10 Jan 2024 12:41:31 +0800
+X-OQ-MSGID: <20240110044130.1484750-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000212ec9060e8754e2@google.com>
+References: <000000000000212ec9060e8754e2@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240109102032.16165-2-pstanner@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Philipp,
+Add created_date initialization in hfsplus_iget().
 
-kernel test robot noticed the following build errors:
+Reported-and-tested-by: syzbot+91db973302e7b18c7653@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/hfsplus/super.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-[auto build test ERROR on v6.7]
-[also build test ERROR on linus/master next-20240109]
-[cannot apply to drm-misc/drm-misc-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/drm-dcss-request-memory-region/20240109-182239
-base:   v6.7
-patch link:    https://lore.kernel.org/r/20240109102032.16165-2-pstanner%40redhat.com
-patch subject: [PATCH v2 1/2] drm/dcss: request memory region
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20240110/202401101201.yVs3iqFU-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 7e186d366d6c7def0543acc255931f617e76dff0)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240110/202401101201.yVs3iqFU-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401101201.yVs3iqFU-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/gpu/drm/imx/dcss/dcss-dev.c:188:31: error: passing 'struct device' to parameter of incompatible type 'struct device *'; take the address with &
-     188 |         if (!devm_request_mem_region(pdev->dev, res->start, res_len, "dcss")) {
-         |                                      ^~~~~~~~~
-         |                                      &
-   include/linux/ioport.h:306:24: note: expanded from macro 'devm_request_mem_region'
-     306 |         __devm_request_region(dev, &iomem_resource, (start), (n), (name))
-         |                               ^~~
-   include/linux/ioport.h:308:63: note: passing argument to parameter 'dev' here
-     308 | extern struct resource * __devm_request_region(struct device *dev,
-         |                                                               ^
-   1 error generated.
-
-
-vim +188 drivers/gpu/drm/imx/dcss/dcss-dev.c
-
-   165	
-   166	struct dcss_dev *dcss_dev_create(struct device *dev, bool hdmi_output)
-   167	{
-   168		struct platform_device *pdev = to_platform_device(dev);
-   169		int ret;
-   170		struct resource *res;
-   171		struct dcss_dev *dcss;
-   172		const struct dcss_type_data *devtype;
-   173		resource_size_t res_len;
-   174	
-   175		devtype = of_device_get_match_data(dev);
-   176		if (!devtype) {
-   177			dev_err(dev, "no device match found\n");
-   178			return ERR_PTR(-ENODEV);
-   179		}
-   180	
-   181		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-   182		if (!res) {
-   183			dev_err(dev, "cannot get memory resource\n");
-   184			return ERR_PTR(-EINVAL);
-   185		}
-   186	
-   187		res_len = res->end - res->start;
- > 188		if (!devm_request_mem_region(pdev->dev, res->start, res_len, "dcss")) {
-   189			dev_err(dev, "cannot request memory region\n");
-   190			return ERR_PTR(-EBUSY);
-   191		}
-   192	
-   193		dcss = kzalloc(sizeof(*dcss), GFP_KERNEL);
-   194		if (!dcss)
-   195			return ERR_PTR(-ENOMEM);
-   196	
-   197		dcss->dev = dev;
-   198		dcss->devtype = devtype;
-   199		dcss->hdmi_output = hdmi_output;
-   200	
-   201		ret = dcss_clks_init(dcss);
-   202		if (ret) {
-   203			dev_err(dev, "clocks initialization failed\n");
-   204			goto err;
-   205		}
-   206	
-   207		dcss->of_port = of_graph_get_port_by_id(dev->of_node, 0);
-   208		if (!dcss->of_port) {
-   209			dev_err(dev, "no port@0 node in %pOF\n", dev->of_node);
-   210			ret = -ENODEV;
-   211			goto clks_err;
-   212		}
-   213	
-   214		dcss->start_addr = res->start;
-   215	
-   216		ret = dcss_submodules_init(dcss);
-   217		if (ret) {
-   218			of_node_put(dcss->of_port);
-   219			dev_err(dev, "submodules initialization failed\n");
-   220			goto clks_err;
-   221		}
-   222	
-   223		init_completion(&dcss->disable_completion);
-   224	
-   225		pm_runtime_set_autosuspend_delay(dev, 100);
-   226		pm_runtime_use_autosuspend(dev);
-   227		pm_runtime_set_suspended(dev);
-   228		pm_runtime_allow(dev);
-   229		pm_runtime_enable(dev);
-   230	
-   231		return dcss;
-   232	
-   233	clks_err:
-   234		dcss_clks_release(dcss);
-   235	
-   236	err:
-   237		kfree(dcss);
-   238	
-   239		return ERR_PTR(ret);
-   240	}
-   241	
-
+diff --git a/fs/hfsplus/super.c b/fs/hfsplus/super.c
+index 1986b4f18a90..a95a6a2246a3 100644
+--- a/fs/hfsplus/super.c
++++ b/fs/hfsplus/super.c
+@@ -73,6 +73,7 @@ struct inode *hfsplus_iget(struct super_block *sb, unsigned long ino)
+ 	HFSPLUS_I(inode)->flags = 0;
+ 	HFSPLUS_I(inode)->extent_state = 0;
+ 	HFSPLUS_I(inode)->rsrc_inode = NULL;
++	HFSPLUS_I(inode)->create_date = 0;
+ 	atomic_set(&HFSPLUS_I(inode)->opencnt, 0);
+ 
+ 	if (inode->i_ino >= HFSPLUS_FIRSTUSER_CNID ||
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
+
