@@ -1,183 +1,223 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E14656B80
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 21:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6535D58116
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 21:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RCucMcQV"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5e7c1012a42so55023557b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:04:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705007058; x=1705611858; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BZBM9DHTMRa5r9o/EOHYBsOH+N+oJgezGzR9/BcPyBA=;
-        b=RCucMcQVSqfQFlmmPdKzjKcHChkEzqq1eGhDOueJV5NOYXx/dCBwjTBUDsu8rDzSpa
-         GTwmuK4xuahgPNPs4C+Hlrm5sL61/3YSMpKFBwlNkwvX9o2UgBKcoxKdKWzYgtIfddz/
-         lus4eKgPBN+Ezv3YWsQolBD0bI/nuuOIhUxk2H9V9KiUmDMIlK85a6hf0sW81/iXnJqr
-         kGLnAxnLKWDIXdoUhG9Q4CHJA1Wapzt6AkoEXQ3rbVgsCII+aY79RUde15FR46pb4+4z
-         PWMp7NP1QLIHQxTbrjl4faBZajV7CoBRVW5wPii+a2oj1VmtipnpDH5vG1exMjEQqH6X
-         /0HQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VysnEL1J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705007185;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jL8WTqzaplUlKbEhGjmjhkxdmTGzcgEtUgapc4raQqc=;
+	b=VysnEL1JHdkcVlpo33lcCTYvgEm8dn/v7dWs+27dIg/nOMSxiTbJi4STxE5/H10fJfBKGM
+	O7C8W1d0MtFFaYWIjC8z0/0npwt0P0JnwtLWLl31wHh0lxedchI7w8zr/1pL6G9kZNIc55
+	RiTBbJmP+h1qbUW+ReDqiDBO0baoMPQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-458-sJjhUCLDNhSfvpOSrYgGwg-1; Thu, 11 Jan 2024 16:06:23 -0500
+X-MC-Unique: sJjhUCLDNhSfvpOSrYgGwg-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3368698efbdso3093736f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:06:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705007058; x=1705611858;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BZBM9DHTMRa5r9o/EOHYBsOH+N+oJgezGzR9/BcPyBA=;
-        b=rJBFnKkjXE1avEO+HM00ntJMdgDNdIRZlBD6YpLmZSbglXKYf1vgqVYqeSRoZHkFcl
-         px60OqizkSxCUO89bRG5qpbWDGs5wcnYuUqIpg0rUfKGf1SKV5HKAhm1NM666+wesj+T
-         NVAx5NQIPT3fkf9HEr02dcDy/o5s+ACw1sL5B/d6LzkgJ7qOVVAeJ5BBMBboB5Yl8baw
-         t625h6xlz21NmwFm+aJtLdbaH4vR6oH4gYSZ5BYJcTjUe1qncRfNcBtbzmTUbdBT3tdW
-         FZaHv5kWLIHejx3NQqZyusQT5d2xUfm55u+2mqEmIg2RgvqGNopHHm8KcE6vHO1dqsxk
-         fsfw==
-X-Gm-Message-State: AOJu0YwYG1CXCh0eMwqT4J208nz/SEAaTYVxHglLv/tlVuDgyu7CNzxb
-	Q+9FocqvTVWb2x9HF+kwnTNTVTM/lStjnXuB4xaVH0mZ10eN
-X-Google-Smtp-Source: AGHT+IFU4vD3qg9bo1/N+GrmostDVqHnqU0mqNePYQwXjQmDgut8e6ATb+n1Jg+lw2BRcgjE9YjbaH/XiOpxGxGcl3s=
-X-Received: by 2002:a81:c80e:0:b0:5f1:e1f:fe7a with SMTP id
- n14-20020a81c80e000000b005f10e1ffe7amr399574ywi.10.1705007057927; Thu, 11 Jan
- 2024 13:04:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705007182; x=1705611982;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jL8WTqzaplUlKbEhGjmjhkxdmTGzcgEtUgapc4raQqc=;
+        b=kKKiZFYX3vLGT8Rgmxc+q5Utm98GV6YmBuoyq/RTmdHRRe04IX/xvn26sz8LkqAO3R
+         RfuE5aUilp4qlyF4YkmB01ORqHpiCBLbDKjPYdYrOvYmw6kPLhpc7zXByNV8/3djj9Cq
+         YQh6j8X6D9qsSpR7H2EndU+vBMWUIbA8zqJMPHlzQPMel/6SshSvc+qQhx99Oe99rsvC
+         w5vGqDwrA1I5Syn6fMMCL9HSGh+PcMO/ENGBWpx1q55gnmB0qfiyqGLgFO0+KFRo8XSU
+         wWRMFqxoDIUYamSYj3fwbirB/bCb3cDZ6zzTvudiRS6/MpkSma1aw6D5E/RFqnloi4CN
+         P+yg==
+X-Gm-Message-State: AOJu0Yy3/VyzYnCArg7oSrjY1cc4+YGbyzTgxXgeGyk1qF8/q+Lv+HaM
+	hQpQ9KMxzMvJ4ZqtUiNwymiBMxcf+29ZTTUfttMNjL5L2/2GOmwa/JO2X4u98LHMq2mYC2eJyXd
+	1iUMyR4jAdem4I7RF/9IkKbixppgPnHL4
+X-Received: by 2002:a5d:46c6:0:b0:336:7077:c8c4 with SMTP id g6-20020a5d46c6000000b003367077c8c4mr181345wrs.139.1705007182666;
+        Thu, 11 Jan 2024 13:06:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG1+pNWAmmC6YT6CmMYQRRdpgOQnrUIWZIENoGNnBJ7g+O5FhKTi8a4v+Eoykd3whtTrSwp5A==
+X-Received: by 2002:a5d:46c6:0:b0:336:7077:c8c4 with SMTP id g6-20020a5d46c6000000b003367077c8c4mr181338wrs.139.1705007182276;
+        Thu, 11 Jan 2024 13:06:22 -0800 (PST)
+Received: from ?IPV6:2003:cb:c747:f900:6099:1901:b863:450f? (p200300cbc747f90060991901b863450f.dip0.t-ipconnect.de. [2003:cb:c747:f900:6099:1901:b863:450f])
+        by smtp.gmail.com with ESMTPSA id i6-20020adff306000000b003377e22ffdcsm2047588wro.85.2024.01.11.13.06.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 13:06:21 -0800 (PST)
+Message-ID: <15ce90cd-ff0b-4bc3-bee4-880bee3200ae@redhat.com>
+Date: Thu, 11 Jan 2024 22:06:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <00000000000011d709060eadffd3@google.com> <CAJuCfpG-8w_KQ8bWvSr=GrXM+Jx3YKn5DqTFJU2MaMojML_a-A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mm?] kernel BUG in move_pages
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: syzbot <syzbot+705209281e36404998f6@syzkaller.appspotmail.com>,
+ Peter Xu <peterx@redhat.com>, aarcange@redhat.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ syzkaller-bugs@googlegroups.com
+References: <00000000000011d709060eadffd3@google.com>
+ <CAJuCfpG-8w_KQ8bWvSr=GrXM+Jx3YKn5DqTFJU2MaMojML_a-A@mail.gmail.com>
  <CAJuCfpFfKYn+G1+puQ0KxzWCnbfFT51tKwV8MnrP7YZcJAORwg@mail.gmail.com>
  <CAJuCfpHTAAPEjMLrcxyG8zW7HA47EinB8CQfKGmBw7gGxqQ=vA@mail.gmail.com>
- <5ed23cf3-eedd-44aa-a498-d2a9ab046535@redhat.com> <CAJuCfpG5T71Sc46pB2eGpV7TreMZX2VZ-kDfaNmtn+etP0q9JA@mail.gmail.com>
+ <5ed23cf3-eedd-44aa-a498-d2a9ab046535@redhat.com>
+ <CAJuCfpG5T71Sc46pB2eGpV7TreMZX2VZ-kDfaNmtn+etP0q9JA@mail.gmail.com>
  <bf9dbc58-35c4-4a35-b194-6d8d9e7e4923@redhat.com>
-In-Reply-To: <bf9dbc58-35c4-4a35-b194-6d8d9e7e4923@redhat.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 11 Jan 2024 21:04:06 +0000
-Message-ID: <CAJuCfpGRA7KJhMBneqAj+dw=rQReU7PyR1r34yqrNSoa-RUKbg@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] kernel BUG in move_pages
-To: David Hildenbrand <david@redhat.com>
-Cc: syzbot <syzbot+705209281e36404998f6@syzkaller.appspotmail.com>, 
-	Peter Xu <peterx@redhat.com>, aarcange@redhat.com, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <CAJuCfpGRA7KJhMBneqAj+dw=rQReU7PyR1r34yqrNSoa-RUKbg@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAJuCfpGRA7KJhMBneqAj+dw=rQReU7PyR1r34yqrNSoa-RUKbg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 11, 2024 at 9:00=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 11.01.24 21:20, Suren Baghdasaryan wrote:
-> > On Thu, Jan 11, 2024 at 6:58=E2=80=AFPM David Hildenbrand <david@redhat=
-.com> wrote:
-> >>
-> >> On 11.01.24 19:34, Suren Baghdasaryan wrote:
-> >>> On Thu, Jan 11, 2024 at 8:44=E2=80=AFAM Suren Baghdasaryan <surenb@go=
-ogle.com> wrote:
-> >>>>
-> >>>> On Thu, Jan 11, 2024 at 8:40=E2=80=AFAM Suren Baghdasaryan <surenb@g=
-oogle.com> wrote:
-> >>>>>
-> >>>>> On Thu, Jan 11, 2024 at 8:25=E2=80=AFAM syzbot
-> >>>>> <syzbot+705209281e36404998f6@syzkaller.appspotmail.com> wrote:
-> >>>>>>
-> >>>>>> Hello,
-> >>>>>>
-> >>>>>> syzbot found the following issue on:
-> >>>>>>
-> >>>>>> HEAD commit:    e2425464bc87 Add linux-next specific files for 202=
-40105
-> >>>>>> git tree:       linux-next
-> >>>>>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D14941c=
-dee80000
-> >>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D4056b9=
-349f3da8c9
-> >>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=3D70520928=
-1e36404998f6
-> >>>>>> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutil=
-s for Debian) 2.40
-> >>>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D125d=
-0a09e80000
-> >>>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15bc73=
-31e80000
-> >>>>>>
-> >>>>>> Downloadable assets:
-> >>>>>> disk image: https://storage.googleapis.com/syzbot-assets/2f738185e=
-2cf/disk-e2425464.raw.xz
-> >>>>>> vmlinux: https://storage.googleapis.com/syzbot-assets/b248fcf4ea46=
-/vmlinux-e2425464.xz
-> >>>>>> kernel image: https://storage.googleapis.com/syzbot-assets/a9945c8=
-223f4/bzImage-e2425464.xz
-> >>>>>>
-> >>>>>> The issue was bisected to:
-> >>>>>>
-> >>>>>> commit adef440691bab824e39c1b17382322d195e1fab0
-> >>>>>> Author: Andrea Arcangeli <aarcange@redhat.com>
-> >>>>>> Date:   Wed Dec 6 10:36:56 2023 +0000
-> >>>>>>
-> >>>>>>       userfaultfd: UFFDIO_MOVE uABI
-> >>>>>>
-> >>>>>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D11c=
-b6ea9e80000
-> >>>>>> final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D13c=
-b6ea9e80000
-> >>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=3D15cb6e=
-a9e80000
-> >>>>>>
-> >>>>>> IMPORTANT: if you fix the issue, please add the following tag to t=
-he commit:
-> >>>>>> Reported-by: syzbot+705209281e36404998f6@syzkaller.appspotmail.com
-> >>>>>> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-> >>>>>>
-> >>>>>>    do_one_initcall+0x128/0x680 init/main.c:1237
-> >>>>>>    do_initcall_level init/main.c:1299 [inline]
-> >>>>>>    do_initcalls init/main.c:1315 [inline]
-> >>>>>>    do_basic_setup init/main.c:1334 [inline]
-> >>>>>>    kernel_init_freeable+0x692/0xc30 init/main.c:1552
-> >>>>>>    kernel_init+0x1c/0x2a0 init/main.c:1442
-> >>>>>>    ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
-> >>>>>>    ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
-> >>>>>> ------------[ cut here ]------------
-> >>>>>> kernel BUG at include/linux/page-flags.h:1035!
-> >>>>>> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> >>>>>> CPU: 0 PID: 5068 Comm: syz-executor191 Not tainted 6.7.0-rc8-next-=
-20240105-syzkaller #0
-> >>>>>> Hardware name: Google Google Compute Engine/Google Compute Engine,=
- BIOS Google 11/17/2023
-> >>>>>> RIP: 0010:PageAnonExclusive include/linux/page-flags.h:1035 [inlin=
-e]
-> >>>>>
-> >>>>>   From a quick look, I think the new ioctl is being used against a
-> >>>>> file-backed page and that's why PageAnonExclusive() throws this err=
-or.
-> >>>>> I'll confirm if this is indeed the case and will add checks for tha=
-t
-> >>>>> case. Thanks!
-> >>>>
-> >>>> Hmm. Looking at the reproducer it does not look like a file-backed
-> >>>> memory... Anyways, I'm on it.
-> >>>
-> >>> Looks like the test is trying to move the huge_zero_page. Wonder how
-> >>> we should handle this. Just fail or do something else? Adding David
-> >>> and Peter for feedback.
-> >>
-> >> You'll need some special-casing to handle that. But it should be fairl=
-y
-> >> easy.
-> >
-> > Ok, so should we treat zeropage the same as PAE and map destination
-> > PTE/PMD to zeropage while clearing source PTE/PMD?
->
-> Likely yes. So it's transparent for user space what we are moving. (this
-> sounds like an easy case to not require a prior write access just to
-> move it)
+On 11.01.24 22:04, Suren Baghdasaryan wrote:
+> On Thu, Jan 11, 2024 at 9:00 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 11.01.24 21:20, Suren Baghdasaryan wrote:
+>>> On Thu, Jan 11, 2024 at 6:58 PM David Hildenbrand <david@redhat.com> wrote:
+>>>>
+>>>> On 11.01.24 19:34, Suren Baghdasaryan wrote:
+>>>>> On Thu, Jan 11, 2024 at 8:44 AM Suren Baghdasaryan <surenb@google.com> wrote:
+>>>>>>
+>>>>>> On Thu, Jan 11, 2024 at 8:40 AM Suren Baghdasaryan <surenb@google.com> wrote:
+>>>>>>>
+>>>>>>> On Thu, Jan 11, 2024 at 8:25 AM syzbot
+>>>>>>> <syzbot+705209281e36404998f6@syzkaller.appspotmail.com> wrote:
+>>>>>>>>
+>>>>>>>> Hello,
+>>>>>>>>
+>>>>>>>> syzbot found the following issue on:
+>>>>>>>>
+>>>>>>>> HEAD commit:    e2425464bc87 Add linux-next specific files for 20240105
+>>>>>>>> git tree:       linux-next
+>>>>>>>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=14941cdee80000
+>>>>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=4056b9349f3da8c9
+>>>>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=705209281e36404998f6
+>>>>>>>> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+>>>>>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125d0a09e80000
+>>>>>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15bc7331e80000
+>>>>>>>>
+>>>>>>>> Downloadable assets:
+>>>>>>>> disk image: https://storage.googleapis.com/syzbot-assets/2f738185e2cf/disk-e2425464.raw.xz
+>>>>>>>> vmlinux: https://storage.googleapis.com/syzbot-assets/b248fcf4ea46/vmlinux-e2425464.xz
+>>>>>>>> kernel image: https://storage.googleapis.com/syzbot-assets/a9945c8223f4/bzImage-e2425464.xz
+>>>>>>>>
+>>>>>>>> The issue was bisected to:
+>>>>>>>>
+>>>>>>>> commit adef440691bab824e39c1b17382322d195e1fab0
+>>>>>>>> Author: Andrea Arcangeli <aarcange@redhat.com>
+>>>>>>>> Date:   Wed Dec 6 10:36:56 2023 +0000
+>>>>>>>>
+>>>>>>>>        userfaultfd: UFFDIO_MOVE uABI
+>>>>>>>>
+>>>>>>>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11cb6ea9e80000
+>>>>>>>> final oops:     https://syzkaller.appspot.com/x/report.txt?x=13cb6ea9e80000
+>>>>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=15cb6ea9e80000
+>>>>>>>>
+>>>>>>>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>>>>>>>> Reported-by: syzbot+705209281e36404998f6@syzkaller.appspotmail.com
+>>>>>>>> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+>>>>>>>>
+>>>>>>>>     do_one_initcall+0x128/0x680 init/main.c:1237
+>>>>>>>>     do_initcall_level init/main.c:1299 [inline]
+>>>>>>>>     do_initcalls init/main.c:1315 [inline]
+>>>>>>>>     do_basic_setup init/main.c:1334 [inline]
+>>>>>>>>     kernel_init_freeable+0x692/0xc30 init/main.c:1552
+>>>>>>>>     kernel_init+0x1c/0x2a0 init/main.c:1442
+>>>>>>>>     ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+>>>>>>>>     ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+>>>>>>>> ------------[ cut here ]------------
+>>>>>>>> kernel BUG at include/linux/page-flags.h:1035!
+>>>>>>>> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+>>>>>>>> CPU: 0 PID: 5068 Comm: syz-executor191 Not tainted 6.7.0-rc8-next-20240105-syzkaller #0
+>>>>>>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+>>>>>>>> RIP: 0010:PageAnonExclusive include/linux/page-flags.h:1035 [inline]
+>>>>>>>
+>>>>>>>    From a quick look, I think the new ioctl is being used against a
+>>>>>>> file-backed page and that's why PageAnonExclusive() throws this error.
+>>>>>>> I'll confirm if this is indeed the case and will add checks for that
+>>>>>>> case. Thanks!
+>>>>>>
+>>>>>> Hmm. Looking at the reproducer it does not look like a file-backed
+>>>>>> memory... Anyways, I'm on it.
+>>>>>
+>>>>> Looks like the test is trying to move the huge_zero_page. Wonder how
+>>>>> we should handle this. Just fail or do something else? Adding David
+>>>>> and Peter for feedback.
+>>>>
+>>>> You'll need some special-casing to handle that. But it should be fairly
+>>>> easy.
+>>>
+>>> Ok, so should we treat zeropage the same as PAE and map destination
+>>> PTE/PMD to zeropage while clearing source PTE/PMD?
+>>
+>> Likely yes. So it's transparent for user space what we are moving. (this
+>> sounds like an easy case to not require a prior write access just to
+>> move it)
+> 
+> Ok, working on it. split_huge_pmd() already knows how to split
+> huge_zero_page but I think I'll need special handling in both
+> move_pages_pte() and move_pages_huge_pmd().
 
-Ok, working on it. split_huge_pmd() already knows how to split
-huge_zero_page but I think I'll need special handling in both
-move_pages_pte() and move_pages_huge_pmd().
+A PTE-mapped huge zeropage is just a page table populated with the 
+ordinary shared zeropage. Are you moving the ordinary shared zeropage as 
+well? If not, you should do so for consistency (or not do either :) ).
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+-- 
+Cheers,
+
+David / dhildenb
+
