@@ -1,276 +1,77 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C801426C;
-	Thu, 11 Jan 2024 10:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T9gZf0gDvz6K8Kq;
-	Thu, 11 Jan 2024 18:17:14 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C7501400CD;
-	Thu, 11 Jan 2024 18:19:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 11 Jan
- 2024 10:19:50 +0000
-Date: Thu, 11 Jan 2024 10:19:49 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC: "Russell King (Oracle)" <linux@armlinux.org.uk>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, <acpica-devel@lists.linuxfoundation.org>,
-	<linux-csky@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-ia64@vger.kernel.org>, <linux-parisc@vger.kernel.org>, Salil Mehta
-	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	<jianyong.wu@arm.com>, <justin.he@arm.com>, James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 01/21] ACPI: Only enumerate enabled (or
- functional) devices
-Message-ID: <20240111101949.000075dc@Huawei.com>
-In-Reply-To: <20240102143925.00004361@Huawei.com>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
-	<ZXxxa+XZjPZtNfJ+@shell.armlinux.org.uk>
-	<20231215161539.00000940@Huawei.com>
-	<5760569.DvuYhMxLoT@kreacher>
-	<20240102143925.00004361@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F4812E60
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 10:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="C2dgKMm1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1704968452; x=1705573252; i=efault@gmx.de;
+	bh=QPbVmelpM5dGwFNf433SrjsCCVj7Z+uNG08B8wuFktk=;
+	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:
+	 References;
+	b=C2dgKMm1/RMbwvks7ZE2gmTCCUpM7Q5wy3LW1Ehomg+k0omH/JJeLcQD5Ktti1ph
+	 llDeJgLWElm2XfMrIvEe5/iMUFtbxgkJR1uVLwzZwRxbUqEcP8CZbzw3umMRNHYa8
+	 AAjcVJ+ZItBo53HuiSd3E1MXOqizCU3AVOuYmHOapRGwKJKP9VjWN0rPyqyQXrXxr
+	 O6Ns2ic/rgIVtfNGcUa1SmqMNW5dU9uRg9fPdAURAEf5mDV1BQTH3RdXs16GbvHU4
+	 TzGpbFTumwqfyEvpIyrri6hQkQBaPBHth5L76LcJp9hXpcExDz4y1F5NToq7xnK6I
+	 5vrZqalxD4aOsXiitQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from homer.fritz.box ([185.146.50.137]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MeU4s-1qnRUu0F9Q-00aSQ0; Thu, 11
+ Jan 2024 11:20:52 +0100
+Message-ID: <06aa6b4faf3332d8138022afdcb61b83d848704a.camel@gmx.de>
+Subject: Re: fallout: 0fcb70851fbf ("Makefile.extrawarn: turn on
+ missing-prototypes globally")
+From: Mike Galbraith <efault@gmx.de>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Date: Thu, 11 Jan 2024 11:20:51 +0100
+In-Reply-To: <ed6820e1-d294-4e70-ba3e-459311e4a8b5@app.fastmail.com>
+References: <f8e84ac04537b2c7d02c1515d2f94f7c66216a04.camel@gmx.de>
+	 <ed6820e1-d294-4e70-ba3e-459311e4a8b5@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-Provags-ID: V03:K1:UX3VkkXUUc1ug0zBUzKIXnvwomuGRpYHQbeqhhW9e6ZFel/pvDP
+ PrAwpkYPfhH5eJqpy9lt5DAo0eeShG2KI8ulyAMw9Cb+DihZpwKQ2CNzug4Q8w+fOn70w8C
+ +NC+vE9veG1jf5EiKNukoKA8Ol+qT2nCiUZrtxSnXhKag25rmaVVGRoqWK06JOU5AI2XS9B
+ K53iUepPFwZKvCSgaDsyg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:L01Dgd/XJCo=;g1zSbzHg+T2nks/Oh/kyigjKH61
+ PXRrNBXGr+DhXOLgz4K2BfBQ0IarMzm1er0Db5Ye4Vo6mFJaoA+yNxyr7DWV/aGu2subLmtHU
+ cD0gmvsHaFOovE8OHjeqdadoQhNUD4g3n0NV8jYLNC8hBGXg3EFlu/6lt+BRAwrZ9DzA0OvET
+ ZEMMDj1u0w8Sw5b6dKo5fqUoQ1fGgEz+Shij0ISEioL+5v19GpHGcEFg0kGlFQI9Cd2KmhQbK
+ PwlyEg+cEcu8Fl9s5VpwXR11boMAgVJCNnOGXmxian6OCM1IJe4RQPnwap46oWFldCidvuWvj
+ QSjrfjgy3eXl6hiSft4R6vQCPRg01zZjUL9D7Gx13xRg+3Q3s+VHw1+VoBtRJ5E2tEcWLCsvT
+ q9iKzCWiAfNgX/6Lg4Vlb97DyydQNtait0B5jUzRHUbLuZh0TxqIutrq/PZOw2mpVpqn4+ghi
+ T2TcKmx9EWa+EDOU3wAVbdRI1nZ8TL4Mwnff7HyApl8yDwgA6irkfg/VUsUvE0mv8F4lgRpys
+ 7OgETAR4ZiHUqPJugiokw9Q85rPfK91DPR1QaYRhm5+Y/49jXwaMjE1fueFHz9QixSyhNEdif
+ vPopxGGA8V6mzygXv+aRpsLNy1s3qnU/KkfZgLER/xW++5Oi27CzDKEClMeWc6aho77o3EONJ
+ kRmPWlR6KjKkdeJKMuzUPIQeco0eoTEe/5CqOQUhOL/5zkIx3SwEHVlTE2h6zHfrqkabhtSgB
+ DIfW0yN7K/8eobc6IqcdWd2RPy5kFGn0u8P115brGxpj+FM73//1nY+5DO/k9hIlZxpj0UrRH
+ PLdOO60hczh1tm/Iz6DFUk2380zxNRzv3NkjONEmyi4KNCrqXjjTLKrE2x4NDiOw3vZqJJ8kH
+ /iOJUcno2ixgX79axmkgE8UgF3wwsKG2JtfzA3CQ0cJw4v38x9v2Lm/5tR8P5mwljoYhisRX9
+ 22NC7g==
 
-On Tue, 2 Jan 2024 14:39:25 +0000
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Thu, 2024-01-11 at 10:03 +0100, Arnd Bergmann wrote:
+> On Thu, Jan 11, 2024, at 08:09, Mike Galbraith wrote:
+> > Greetings,
+> >
+> > FYI, $subject inspires moaning in kernel/bpf with attached config.
+>
+> You may need to wait for 689b097a06ba ("compiler-gcc: Suppress
+> -Wmissing-prototypes warning for all supported GCC") to hit mainline,
+> or add the prototypes.
 
-> On Fri, 15 Dec 2023 20:47:31 +0100
-> "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
->=20
-> > On Friday, December 15, 2023 5:15:39 PM CET Jonathan Cameron wrote: =20
-> > > On Fri, 15 Dec 2023 15:31:55 +0000
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > >    =20
-> > > > On Thu, Dec 14, 2023 at 07:37:10PM +0100, Rafael J. Wysocki wrote: =
-  =20
-> > > > > On Thu, Dec 14, 2023 at 7:16=E2=80=AFPM Rafael J. Wysocki <rafael=
-@kernel.org> wrote:     =20
-> > > > > >
-> > > > > > On Thu, Dec 14, 2023 at 7:10=E2=80=AFPM Russell King (Oracle)
-> > > > > > <linux@armlinux.org.uk> wrote:     =20
-> > > > > > > I guess we need something like:
-> > > > > > >
-> > > > > > >         if (device->status.present)
-> > > > > > >                 return device->device_type !=3D ACPI_BUS_TYPE=
-_PROCESSOR ||
-> > > > > > >                        device->status.enabled;
-> > > > > > >         else
-> > > > > > >                 return device->status.functional;
-> > > > > > >
-> > > > > > > so we only check device->status.enabled for processor-type de=
-vices?     =20
-> > > > > >
-> > > > > > Yes, something like this.     =20
-> > > > >=20
-> > > > > However, that is not sufficient, because there are
-> > > > > ACPI_BUS_TYPE_DEVICE devices representing processors.
-> > > > >=20
-> > > > > I'm not sure about a clean way to do it ATM.     =20
-> > > >=20
-> > > > Ok, how about:
-> > > >=20
-> > > > static bool acpi_dev_is_processor(const struct acpi_device *device)
-> > > > {
-> > > > 	struct acpi_hardware_id *hwid;
-> > > >=20
-> > > > 	if (device->device_type =3D=3D ACPI_BUS_TYPE_PROCESSOR)
-> > > > 		return true;
-> > > >=20
-> > > > 	if (device->device_type !=3D ACPI_BUS_TYPE_DEVICE)
-> > > > 		return false;
-> > > >=20
-> > > > 	list_for_each_entry(hwid, &device->pnp.ids, list)
-> > > > 		if (!strcmp(ACPI_PROCESSOR_OBJECT_HID, hwid->id) ||
-> > > > 		    !strcmp(ACPI_PROCESSOR_DEVICE_HID, hwid->id))
-> > > > 			return true;
-> > > >=20
-> > > > 	return false;
-> > > > }
-> > > >=20
-> > > > and then:
-> > > >=20
-> > > > 	if (device->status.present)
-> > > > 		return !acpi_dev_is_processor(device) || device->status.enabled;
-> > > > 	else
-> > > > 		return device->status.functional;
-> > > >=20
-> > > > ?
-> > > >    =20
-> > > Changing it to CPU only for now makes sense to me and I think this co=
-de snippet should do the
-> > > job.  Nice and simple.   =20
-> >=20
-> > Well, except that it does checks that are done elsewhere slightly
-> > differently, which from the maintenance POV is not nice.
-> >=20
-> > Maybe something like the appended patch (untested). =20
->=20
-> Hi Rafael,
->=20
-> As far as I can see that's functionally equivalent, so looks good to me.
-> I'm not set up to test this today though, so will defer to Russell on whe=
-ther
-> there is anything missing
->=20
-> Thanks for putting this together.
+Yeah, 689b097a06ba squelched it.
 
-This is rather embarrassing...
-
-I span this up on a QEMU instance with some prints to find out we need
-the !acpi_device_is_processor() restriction.
-On my 'random' test setup it fails on one device. ACPI0017 - which I
-happen to know rather well. It's the weird pseudo device that lets
-a CXL aware OS know there is a CEDT table to probe.
-
-Whilst I really don't like that hack (it is all about making software
-distribution of out of tree modules easier rather than something
-fundamental), I'm the CXL QEMU maintainer :(
-
-Will fix that, but it shows there is at least one broken firmware out
-there.
-
-On plus side, Rafael's code seems to work as expected and lets that
-buggy firwmare carry on working :) So lets pretend the bug in qemu
-is a deliberate test case!
-
-Jonathan
-
-p.s. My test setup blows up later for an unrelated reason with latest
-kernel, so I'll be off debugging that for a while :(
-
-
->=20
-> Jonathan
->=20
-> >=20
-> > ---
-> >  drivers/acpi/acpi_processor.c |   11 +++++++++++
-> >  drivers/acpi/internal.h       |    3 +++
-> >  drivers/acpi/scan.c           |   24 +++++++++++++++++++++++-
-> >  3 files changed, 37 insertions(+), 1 deletion(-)
-> >=20
-> > Index: linux-pm/drivers/acpi/acpi_processor.c
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/acpi/acpi_processor.c
-> > +++ linux-pm/drivers/acpi/acpi_processor.c
-> > @@ -644,6 +644,17 @@ static struct acpi_scan_handler processo
-> >  	},
-> >  };
-> > =20
-> > +bool acpi_device_is_processor(const struct acpi_device *adev)
-> > +{
-> > +	if (adev->device_type =3D=3D ACPI_BUS_TYPE_PROCESSOR)
-> > +		return true;
-> > +
-> > +	if (adev->device_type !=3D ACPI_BUS_TYPE_DEVICE)
-> > +		return false;
-> > +
-> > +	return acpi_scan_check_handler(adev, &processor_handler);
-> > +}
-> > +
-> >  static int acpi_processor_container_attach(struct acpi_device *dev,
-> >  					   const struct acpi_device_id *id)
-> >  {
-> > Index: linux-pm/drivers/acpi/internal.h
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/acpi/internal.h
-> > +++ linux-pm/drivers/acpi/internal.h
-> > @@ -62,6 +62,8 @@ void acpi_sysfs_add_hotplug_profile(stru
-> >  int acpi_scan_add_handler_with_hotplug(struct acpi_scan_handler *handl=
-er,
-> >  				       const char *hotplug_profile_name);
-> >  void acpi_scan_hotplug_enabled(struct acpi_hotplug_profile *hotplug, b=
-ool val);
-> > +bool acpi_scan_check_handler(const struct acpi_device *adev,
-> > +			     struct acpi_scan_handler *handler);
-> > =20
-> >  #ifdef CONFIG_DEBUG_FS
-> >  extern struct dentry *acpi_debugfs_dir;
-> > @@ -133,6 +135,7 @@ int acpi_bus_register_early_device(int t
-> >  const struct acpi_device *acpi_companion_match(const struct device *de=
-v);
-> >  int __acpi_device_uevent_modalias(const struct acpi_device *adev,
-> >  				  struct kobj_uevent_env *env);
-> > +bool acpi_device_is_processor(const struct acpi_device *adev);
-> > =20
-> >  /* -------------------------------------------------------------------=
--------
-> >                                    Power Resource
-> > Index: linux-pm/drivers/acpi/scan.c
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/acpi/scan.c
-> > +++ linux-pm/drivers/acpi/scan.c
-> > @@ -1938,6 +1938,19 @@ static bool acpi_scan_handler_matching(s
-> >  	return false;
-> >  }
-> > =20
-> > +bool acpi_scan_check_handler(const struct acpi_device *adev,
-> > +			     struct acpi_scan_handler *handler)
-> > +{
-> > +	struct acpi_hardware_id *hwid;
-> > +
-> > +	list_for_each_entry(hwid, &adev->pnp.ids, list) {
-> > +		if (acpi_scan_handler_matching(handler, hwid->id, NULL))
-> > +			return true;
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> >  static struct acpi_scan_handler *acpi_scan_match_handler(const char *i=
-dstr,
-> >  					const struct acpi_device_id **matchid)
-> >  {
-> > @@ -2410,7 +2423,16 @@ bool acpi_dev_ready_for_enumeration(cons
-> >  	if (device->flags.honor_deps && device->dep_unmet)
-> >  		return false;
-> > =20
-> > -	return acpi_device_is_present(device);
-> > +	if (device->status.functional)
-> > +		return true;
-> > +
-> > +	if (!device->status.present)
-> > +		return false;
-> > +
-> > +	if (device->status.enabled)
-> > +		return true; /* Fast path. */
-> > +
-> > +	return !acpi_device_is_processor(device);
-> >  }
-> >  EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
-> > =20
-> >=20
-> >=20
-> >  =20
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+	-Mike
