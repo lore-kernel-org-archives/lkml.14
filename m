@@ -1,200 +1,111 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E49256D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31327F9;
+	Thu, 11 Jan 2024 06:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Jj/9k2Tx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=r0vUj6pGIqiH+JcHde
-	OSlMJWZuECSyT0n3RL5XfY9A8=; b=Jj/9k2Tx1hOHFZahBwBIiGAPuIam5CaiOD
-	lPjqNGa6Z+t/aN6AX1/7/Xtz5Hei5jNbN5d+kor7nKfD+wmaCe/7TF2QqEO9HgzL
-	M+FcjLyRoSBWV7S2luKqkGQZcK/7LGtB1Z157eoIt5FlFhcdEvqK8TVCsh3xHQ9/
-	TxvmPC+cA=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wDXX79Lip9lMYsyAA--.20534S2;
-	Thu, 11 Jan 2024 14:27:23 +0800 (CST)
-From: chenxuebing <chenxb_99091@126.com>
-To: christian.koenig@amd.com,
-	alexander.deucher@amd.com,
-	Xinhui.Pan@amd.com,
-	daniel@ffwll.ch,
-	airlied@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	chenxuebing <chenxb_99091@126.com>
-Subject: [PATCH] drm/amdgpu: Clean up errors in displayobject.h
-Date: Thu, 11 Jan 2024 06:27:21 +0000
-Message-Id: <20240111062721.8519-1-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wDXX79Lip9lMYsyAA--.20534S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3XFW5trWUJFyxGw1rXFWUArb_yoWxXFW7pF
-	1jvr4DArZ5J3WjqrWUX39YvF95Ja1UCr1xKr9xWrnxtr1vg3ZrZr95t348Aa4Iqr4kKF4f
-	J3WUGFnxZrW5J37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UjPfdUUUUU=
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiWQ1ixWVLYUHeCwAAso
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BQG5HhLs"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40B5SNMd032044;
+	Thu, 11 Jan 2024 06:32:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=ccmGKm86GpZ6Fq
+	5Uw5JYt8QY72ZfravmrIVbyepEw/c=; b=BQG5HhLsi4MSh96Pz0uUtMKzCfhTEk
+	SYigs/bEGp1Oleb7p/1i2b1JnGPHAm2GIovosvCXjgcg0D005W5elYgXE2+aW7o0
+	28pLU0KApWb5c0I/qt4zjnQNQbZHDJegbW3Ea819QHswpXzRuohmnou6xW8gPdTq
+	VZ6z6ec5N0ftXJpy3TKESgjT4uRfCw31Oc619oEqiY3KUhxVgGbkzYk5yPex+MJh
+	TZexHaTElUDJgG2XNQRkWOGeEagk6MUMeLUkyp6TpGhSuYuB8z8csuVGz4W9HOCt
+	wQ2BtFRITHN+d1EY/h31fy7YHc7K9Cadg2UkmurlSeLRZy49/P2eE9NA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhuak254n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 06:32:38 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40B6WbYj023430
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 06:32:37 GMT
+Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 10 Jan 2024 22:32:32 -0800
+From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Subject: [PATCH v2 0/3] clk: qcom: Add dfs support for QUPv3 RCGs on SM8150
+Date: Thu, 11 Jan 2024 12:02:27 +0530
+Message-ID: <20240111-sm8150-dfs-support-v2-0-6edb44c83d3b@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHuLn2UC/32NQQ6CMBBFr0Jm7ZhOgUBceQ/DAsogs4BiBxoN4
+ e5WDuDyveS/v4NyEFa4ZTsEjqLi5wT2koEb2/nJKH1isMYWhkyBOtVUGuwHRd2WxYcVTV05pqr
+ Kqc4hDZfAg7zP6KNJPIquPnzOj0g/+zcXCQ22JXM39I46svfXJk5md3V+guY4ji+vxiFUtgAAA
+ A==
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Taniya Das
+	<quic_tdas@quicinc.com>, Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Ajit Pandey
+	<quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: YNFYFgaqpkUgHs84X3jCl2A7jsD8bfmW
+X-Proofpoint-ORIG-GUID: YNFYFgaqpkUgHs84X3jCl2A7jsD8bfmW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=764
+ impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0 suspectscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401110051
 
-Fix the following errors reported by checkpatch:
+Add dfs support and missing resets for SM8150 global clock
+controller.
 
-ERROR: spaces required around that '=' (ctx:WxV)
-ERROR: space prohibited after that open parenthesis '('
-
-Signed-off-by: chenxuebing <chenxb_99091@126.com>
+Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
 ---
- drivers/gpu/drm/amd/include/displayobject.h | 72 ++++++++++-----------
- 1 file changed, 36 insertions(+), 36 deletions(-)
+Changes in v2:
+- Use dev_err_probe instead of dev_err.
+- Remove Fixes tags as there are no bug fixes, but just updates.
+- Link to v1: https://lore.kernel.org/r/20240104-sm8150-dfs-support-v1-0-a5eebfdc1b12@quicinc.com
 
-diff --git a/drivers/gpu/drm/amd/include/displayobject.h b/drivers/gpu/drm/amd/include/displayobject.h
-index 0f9529c40496..ce0c13e4e336 100644
---- a/drivers/gpu/drm/amd/include/displayobject.h
-+++ b/drivers/gpu/drm/amd/include/displayobject.h
-@@ -38,20 +38,20 @@
- * Display Object Type Definition 
- *****************************************************/
- enum display_object_type {
--DISPLAY_OBJECT_TYPE_NONE						=0x00,
--DISPLAY_OBJECT_TYPE_GPU							=0x01,
--DISPLAY_OBJECT_TYPE_ENCODER						=0x02,
--DISPLAY_OBJECT_TYPE_CONNECTOR					=0x03
-+DISPLAY_OBJECT_TYPE_NONE = 0x00,
-+DISPLAY_OBJECT_TYPE_GPU	= 0x01,
-+DISPLAY_OBJECT_TYPE_ENCODER = 0x02,
-+DISPLAY_OBJECT_TYPE_CONNECTOR = 0x03
- };
- 
- /****************************************************
- * Encorder Object Type Definition 
- *****************************************************/
- enum encoder_object_type {
--ENCODER_OBJECT_ID_NONE							 =0x00,
--ENCODER_OBJECT_ID_INTERNAL_UNIPHY				 =0x01,
--ENCODER_OBJECT_ID_INTERNAL_UNIPHY1				 =0x02,
--ENCODER_OBJECT_ID_INTERNAL_UNIPHY2				 =0x03,
-+ENCODER_OBJECT_ID_NONE = 0x00,
-+ENCODER_OBJECT_ID_INTERNAL_UNIPHY = 0x01,
-+ENCODER_OBJECT_ID_INTERNAL_UNIPHY1 = 0x02,
-+ENCODER_OBJECT_ID_INTERNAL_UNIPHY2 = 0x03,
- };
- 
- 
-@@ -60,14 +60,14 @@ ENCODER_OBJECT_ID_INTERNAL_UNIPHY2				 =0x03,
- *****************************************************/
- 
- enum connector_object_type {
--CONNECTOR_OBJECT_ID_NONE						  =0x00, 
--CONNECTOR_OBJECT_ID_SINGLE_LINK_DVI_D			  =0x01,
--CONNECTOR_OBJECT_ID_DUAL_LINK_DVI_D				  =0x02,
--CONNECTOR_OBJECT_ID_HDMI_TYPE_A					  =0x03,
--CONNECTOR_OBJECT_ID_LVDS						  =0x04,
--CONNECTOR_OBJECT_ID_DISPLAYPORT					  =0x05,
--CONNECTOR_OBJECT_ID_eDP							  =0x06,
--CONNECTOR_OBJECT_ID_OPM							  =0x07
-+CONNECTOR_OBJECT_ID_NONE = 0x00, 
-+CONNECTOR_OBJECT_ID_SINGLE_LINK_DVI_D = 0x01,
-+CONNECTOR_OBJECT_ID_DUAL_LINK_DVI_D = 0x02,
-+CONNECTOR_OBJECT_ID_HDMI_TYPE_A = 0x03,
-+CONNECTOR_OBJECT_ID_LVDS = 0x04,
-+CONNECTOR_OBJECT_ID_DISPLAYPORT	= 0x05,
-+CONNECTOR_OBJECT_ID_eDP = 0x06,
-+CONNECTOR_OBJECT_ID_OPM = 0x07
- };
- 
- 
-@@ -81,24 +81,24 @@ CONNECTOR_OBJECT_ID_OPM							  =0x07
- *****************************************************/
- 
- enum object_enum_id {
--OBJECT_ENUM_ID1									  =0x01,
--OBJECT_ENUM_ID2									  =0x02,
--OBJECT_ENUM_ID3									  =0x03,
--OBJECT_ENUM_ID4									  =0x04,
--OBJECT_ENUM_ID5									  =0x05,
--OBJECT_ENUM_ID6									  =0x06
-+OBJECT_ENUM_ID1 = 0x01,
-+OBJECT_ENUM_ID2 = 0x02,
-+OBJECT_ENUM_ID3 = 0x03,
-+OBJECT_ENUM_ID4 = 0x04,
-+OBJECT_ENUM_ID5	= 0x05,
-+OBJECT_ENUM_ID6	= 0x06
- };
- 
- /****************************************************
- *Object ID Bit definition 
- *****************************************************/
- enum object_id_bit {
--OBJECT_ID_MASK									  =0x00FF,
--ENUM_ID_MASK									  =0x0F00,
--OBJECT_TYPE_MASK								  =0xF000,
--OBJECT_ID_SHIFT									  =0x00,
--ENUM_ID_SHIFT									  =0x08,
--OBJECT_TYPE_SHIFT								  =0x0C
-+OBJECT_ID_MASK = 0x00FF,
-+ENUM_ID_MASK = 0x0F00,
-+OBJECT_TYPE_MASK = 0xF000,
-+OBJECT_ID_SHIFT = 0x00,
-+ENUM_ID_SHIFT = 0x08,
-+OBJECT_TYPE_SHIFT = 0x0C
- };
- 
- 
-@@ -106,7 +106,7 @@ OBJECT_TYPE_SHIFT								  =0x0C
- * GPU Object definition - Shared with BIOS
- *****************************************************/
- enum gpu_objet_def {
--GPU_ENUM_ID1                            = (DISPLAY_OBJECT_TYPE_GPU << OBJECT_TYPE_SHIFT | OBJECT_ENUM_ID1 << ENUM_ID_SHIFT)
-+GPU_ENUM_ID1 = (DISPLAY_OBJECT_TYPE_GPU << OBJECT_TYPE_SHIFT | OBJECT_ENUM_ID1 << ENUM_ID_SHIFT)
- };
- 
- /****************************************************
-@@ -114,27 +114,27 @@ GPU_ENUM_ID1                            = (DISPLAY_OBJECT_TYPE_GPU << OBJECT_TYP
- *****************************************************/
- 
- enum encoder_objet_def {
--ENCODER_INTERNAL_UNIPHY_ENUM_ID1         = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-+ENCODER_INTERNAL_UNIPHY_ENUM_ID1 = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
-                                                  ENCODER_OBJECT_ID_INTERNAL_UNIPHY << OBJECT_ID_SHIFT),
- 
--ENCODER_INTERNAL_UNIPHY_ENUM_ID2         = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-+ENCODER_INTERNAL_UNIPHY_ENUM_ID2 = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-                                                  OBJECT_ENUM_ID2 << ENUM_ID_SHIFT |\
-                                                  ENCODER_OBJECT_ID_INTERNAL_UNIPHY << OBJECT_ID_SHIFT),
- 
--ENCODER_INTERNAL_UNIPHY1_ENUM_ID1        = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-+ENCODER_INTERNAL_UNIPHY1_ENUM_ID1 = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
-                                                  ENCODER_OBJECT_ID_INTERNAL_UNIPHY1 << OBJECT_ID_SHIFT),
- 
--ENCODER_INTERNAL_UNIPHY1_ENUM_ID2        = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-+ENCODER_INTERNAL_UNIPHY1_ENUM_ID2 = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-                                                  OBJECT_ENUM_ID2 << ENUM_ID_SHIFT |\
-                                                  ENCODER_OBJECT_ID_INTERNAL_UNIPHY1 << OBJECT_ID_SHIFT),
- 
--ENCODER_INTERNAL_UNIPHY2_ENUM_ID1        = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-+ENCODER_INTERNAL_UNIPHY2_ENUM_ID1 = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
-                                                  ENCODER_OBJECT_ID_INTERNAL_UNIPHY2 << OBJECT_ID_SHIFT),
- 
--ENCODER_INTERNAL_UNIPHY2_ENUM_ID2        = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-+ENCODER_INTERNAL_UNIPHY2_ENUM_ID2 = (DISPLAY_OBJECT_TYPE_ENCODER << OBJECT_TYPE_SHIFT |\
-                                                  OBJECT_ENUM_ID2 << ENUM_ID_SHIFT |\
-                                                  ENCODER_OBJECT_ID_INTERNAL_UNIPHY2 << OBJECT_ID_SHIFT)
- };
-@@ -151,7 +151,7 @@ CONNECTOR_LVDS_ENUM_ID1	= (DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
-                                                  CONNECTOR_OBJECT_ID_LVDS << OBJECT_ID_SHIFT),
- 
- 
--CONNECTOR_eDP_ENUM_ID1	= (DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
-+CONNECTOR_eDP_ENUM_ID1 = (DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
-                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
-                                                  CONNECTOR_OBJECT_ID_eDP << OBJECT_ID_SHIFT),
- 
+---
+Satya Priya Kakitapalli (3):
+      clk: qcom: gcc-sm8150: Register QUPv3 RCGs for DFS on SM8150
+      dt-bindings: clock: qcom,gcc-sm8150: Add gcc video resets for sm8150
+      clk: qcom: gcc-sm8150: Add gcc video resets for sm8150
+
+ drivers/clk/qcom/gcc-sm8150.c               | 352 +++++++++++++++++-----------
+ include/dt-bindings/clock/qcom,gcc-sm8150.h |   3 +
+ 2 files changed, 215 insertions(+), 140 deletions(-)
+---
+base-commit: ab0b3e6ef50d305278b1971891cf1d82ab050b35
+change-id: 20240104-sm8150-dfs-support-087ce1773183
+
+Best regards,
 -- 
-2.17.1
+Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
 
