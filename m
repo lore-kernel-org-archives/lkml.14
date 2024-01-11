@@ -1,54 +1,32 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107D12E47;
-	Thu, 11 Jan 2024 10:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD22B12E47;
+	Thu, 11 Jan 2024 10:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UniYFP67"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704967348; x=1736503348;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aq7/NBSBsP1a6bhCozJ0konwlEKNIZaN14AkP6FPIOI=;
-  b=UniYFP67RWvJa4DGpyOhDB3JuPOVyFZftxGtmvA4HVSARw8PB23Q0r3/
-   TkpGmiPVL1LsX/KMPH+YBsBhmVv6N89LMSquSn954NG7bHudVKLjX4VTG
-   OZdOq+hctFYRCoaNgH9q315YpxqzF80sC0/MboNwON2N4pp8RbpwztPWJ
-   mLvU4C2O6N4sCbpO7sPF2bvXof/lpp/iZU6LGtB6rBYwYvMrORPSkHqle
-   9Re2dIZ8pDmqoEk69npFTBGPdvEkRyinpgpdX9AJ/L5TyeIjrFmbqCOiJ
-   ga/PtvHixuZs+mCslpkJBurkxXRiVkBcD1wPBQ1fd2NbFZvfGd/+Ce6z1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="12157120"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="12157120"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 02:02:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="905898121"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="905898121"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jan 2024 02:02:23 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNrtE-00086m-21;
-	Thu, 11 Jan 2024 10:02:20 +0000
-Date: Thu, 11 Jan 2024 18:01:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frank Li <Frank.Li@nxp.com>, robh@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	alexandre.belloni@bootlin.com, conor.culhane@silvaco.com,
-	gregkh@linuxfoundation.org, imx@lists.linux.dev,
-	jirislaby@kernel.org, joe@perches.com,
-	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, miquel.raynal@bootlin.com,
-	zbigniew.lukwinski@linux.intel.com, devicetree@vger.kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org
-Subject: Re: [PATCH v2 4/7] i3c: target: add svc target controller support
-Message-ID: <202401111724.LiPgx2yU-lkp@intel.com>
-References: <20240110175221.2335480-5-Frank.Li@nxp.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vE1AA7fU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE793C433C7;
+	Thu, 11 Jan 2024 10:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1704967397;
+	bh=XKju82+bUIQUC2/IEKI3rWnSmsS5G+w7eqtJG86hh90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vE1AA7fUthH45yZcRUBa4OzJIYWGm2k2UED9/2miba5n74LCLpqMXf3CcA56sdNwd
+	 RIjFQwZwSuqpk/s6FCLAQSGE9bEsCRc9uq0drr43QB+1NTB5heMTEzweqs+s0U1WMV
+	 INM5Zrvf1NpL4bcpYm9UnSqoHRliv8nfYP8xIl50=
+Date: Thu, 11 Jan 2024 11:03:14 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kunwu Chan <chentao@kylinos.cn>
+Cc: joel@jms.id.au, andrew@codeconstruct.com.au,
+	andriy.shevchenko@linux.intel.com, linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kunwu.chan@hotmail.com,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: gadget: aspeed: Check return value of kasprintf in
+ ast_vhub_alloc_epn
+Message-ID: <2024011132-gigolo-cornmeal-844f@gregkh>
+References: <20231122014212.304254-1-chentao@kylinos.cn>
+ <2023112236-bullseye-pranker-491e@gregkh>
+ <346b631c-8b46-4b41-9188-8cbaaa1ff178@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,184 +35,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240110175221.2335480-5-Frank.Li@nxp.com>
+In-Reply-To: <346b631c-8b46-4b41-9188-8cbaaa1ff178@kylinos.cn>
 
-Hi Frank,
+On Thu, Jan 11, 2024 at 05:31:35PM +0800, Kunwu Chan wrote:
+> Sorry, I didn't find out about this email until now because it was
+> intercepted by my company's email server.
+> 
+> On 2023/11/22 20:10, Greg KH wrote:
+> > On Wed, Nov 22, 2023 at 09:42:12AM +0800, Kunwu Chan wrote:
+> > > kasprintf() returns a pointer to dynamically allocated memory
+> > > which can be NULL upon failure. Ensure the allocation was successful
+> > > by checking the pointer validity.
+> > > 
+> > > Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> > > ---
+> > >   drivers/usb/gadget/udc/aspeed-vhub/epn.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/epn.c b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
+> > > index 148d7ec3ebf4..e0854e878411 100644
+> > > --- a/drivers/usb/gadget/udc/aspeed-vhub/epn.c
+> > > +++ b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
+> > > @@ -826,6 +826,8 @@ struct ast_vhub_ep *ast_vhub_alloc_epn(struct ast_vhub_dev *d, u8 addr)
+> > >   	ep->vhub = vhub;
+> > >   	ep->ep.ops = &ast_vhub_epn_ops;
+> > >   	ep->ep.name = kasprintf(GFP_KERNEL, "ep%d", addr);
+> > > +	if (!ep->ep.name)
+> > > +		return NULL;
+> > 
+> > This will break things if this ever triggers.  How was this tested?  The
+> It's my fault, I think it's too simplistic. Compiled test only.
+> Cause I don't know how to test effectively. I didn't find a way to test this
+> in 'Documentation/usb/gadget-testing.rst'.
+> > "slot" for this device will still be seen as used and so the resources
+> > never freed and then you can run out of space for real devices, right?
+> > 
+> > Looks like the other error handling in this function below this call is
+> > also broken, can you fix that up too?Yes, after reading the relevant code, I found that this is indeed a problem.
+> So I write the v2 patch below, but the same question bothering me, about how
+> to test effectively and what hardware equipment is needed? I'm new to this
+> area, do you have any suggestions?
 
-kernel test robot noticed the following build warnings:
+That is up to you, but you need to test stuff like this if you wish to
+change it as your previous patch obviously would have broken things.
 
-[auto build test WARNING on tty/tty-testing]
-[also build test WARNING on tty/tty-next tty/tty-linus robh/for-next linus/master v6.7 next-20240111]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+good luck!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/i3c-add-target-mode-support/20240111-015711
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
-patch link:    https://lore.kernel.org/r/20240110175221.2335480-5-Frank.Li%40nxp.com
-patch subject: [PATCH v2 4/7] i3c: target: add svc target controller support
-config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20240111/202401111724.LiPgx2yU-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 9bde5becb44ea071f5e1fa1f5d4071dc8788b18c)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240111/202401111724.LiPgx2yU-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401111724.LiPgx2yU-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:24:
-   In file included from include/linux/mm.h:1084:
-   In file included from include/linux/huge_mm.h:8:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:186:1: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     186 | _SIG_SET_OP(signotset, _sig_not)
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/signal.h:176:10: note: expanded from macro '_SIG_SET_OP'
-     176 |         case 2: set->sig[1] = op(set->sig[1]);                          \
-         |                 ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/i3c/target/svc-i3c-target.c:14:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:24:
-   In file included from include/linux/mm.h:1084:
-   In file included from include/linux/huge_mm.h:8:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:197:10: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     197 |         case 2: set->sig[1] = 0;
-         |                 ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/i3c/target/svc-i3c-target.c:14:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:24:
-   In file included from include/linux/mm.h:1084:
-   In file included from include/linux/huge_mm.h:8:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:210:10: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     210 |         case 2: set->sig[1] = -1;
-         |                 ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/i3c/target/svc-i3c-target.c:14:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:24:
-   In file included from include/linux/mm.h:1084:
-   In file included from include/linux/huge_mm.h:8:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:241:10: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     241 |         case 2: set->sig[1] = 0;
-         |                 ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/i3c/target/svc-i3c-target.c:14:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/powerpc/include/asm/hardirq.h:6:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/powerpc/include/asm/io.h:24:
-   In file included from include/linux/mm.h:1084:
-   In file included from include/linux/huge_mm.h:8:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:254:10: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     254 |         case 2: set->sig[1] = -1;
-         |                 ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   drivers/i3c/target/svc-i3c-target.c:211:40: warning: no previous prototype for function 'svc_i3c_get_features' [-Wmissing-prototypes]
-     211 | const struct i3c_target_ctrl_features *svc_i3c_get_features(struct i3c_target_ctrl *ctrl)
-         |                                        ^
-   drivers/i3c/target/svc-i3c-target.c:211:7: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     211 | const struct i3c_target_ctrl_features *svc_i3c_get_features(struct i3c_target_ctrl *ctrl)
-         |       ^
-         | static 
->> drivers/i3c/target/svc-i3c-target.c:268:63: warning: omitting the parameter name in a function definition is a C23 extension [-Wc23-extensions]
-     268 | static int svc_i3c_target_queue(struct i3c_request *req, gfp_t)
-         |                                                               ^
-   drivers/i3c/target/svc-i3c-target.c:666:5: warning: no previous prototype for function 'svc_i3c_fifo_status' [-Wmissing-prototypes]
-     666 | int svc_i3c_fifo_status(struct i3c_target_ctrl *ctrl, bool tx)
-         |     ^
-   drivers/i3c/target/svc-i3c-target.c:666:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     666 | int svc_i3c_fifo_status(struct i3c_target_ctrl *ctrl, bool tx)
-         | ^
-         | static 
-   52 warnings and 5 errors generated.
-
-
-vim +268 drivers/i3c/target/svc-i3c-target.c
-
-   267	
- > 268	static int svc_i3c_target_queue(struct i3c_request *req, gfp_t)
-   269	{
-   270		struct svc_i3c_target *svc;
-   271		struct list_head *q;
-   272		unsigned long flags;
-   273		spinlock_t *lk;
-   274	
-   275		svc = dev_get_drvdata(&req->ctrl->dev);
-   276		if (!svc)
-   277			return -EINVAL;
-   278	
-   279		if (req->tx) {
-   280			q = &svc->txq;
-   281			lk = &svc->txq_lock;
-   282		} else {
-   283			q = &svc->rxq;
-   284			lk = &svc->rxq_lock;
-   285		}
-   286	
-   287		spin_lock_irqsave(lk, flags);
-   288		list_add_tail(&req->list, q);
-   289		spin_unlock_irqrestore(lk, flags);
-   290	
-   291		if (req->tx)
-   292			svc_i3c_fill_txfifo(svc);
-   293	
-   294		if (req->tx)
-   295			writel_relaxed(I3C_SINT_TXSEND, svc->regs + I3C_SINTSET);
-   296		else
-   297			writel_relaxed(I3C_SINT_RXPEND, svc->regs + I3C_SINTSET);
-   298	
-   299		return 0;
-   300	}
-   301	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+greg k-h
