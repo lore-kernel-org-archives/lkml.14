@@ -1,274 +1,80 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A19EBB
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 03:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D17EBB
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 03:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="AUSH1xUX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=8J0w2ghUyXOdF5LTPu
-	3UvlD3m19T2E9D3BhoiJlLJBw=; b=AUSH1xUXtg8HZKUEz3/6Zvt+E+mX+PiQxv
-	48pOTbRidrVcRhtiX9ZSK22+Gy2ZCBUWGFnysY7XnirqWs4OGx2+CPyEigfpEf0q
-	nWDdnILpVAi3+bZA2PqTkFzG04CquZKxbNOAknKmgi84HnE2o7GVOkYTxHdNq0Ej
-	IAz89lobk=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wDnL7KyXZ9lOq6dAA--.28033S2;
-	Thu, 11 Jan 2024 11:17:06 +0800 (CST)
-From: chenxuebing <chenxb_99091@126.com>
-To: airlied@gmail.com,
-	Xinhui.Pan@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	chenxuebing <chenxb_99091@126.com>
-Subject: [PATCH] drm/amdgpu: Clean up errors in atombios.h
-Date: Thu, 11 Jan 2024 03:17:05 +0000
-Message-Id: <20240111031705.7225-1-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wDnL7KyXZ9lOq6dAA--.28033S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Cr48AryrZw43GFWxAFy7KFg_yoWDZFWDpF
-	4UAa47G3W8try5Gr1DXr4qvr97G3srJr18Xry8Xwn3Ww1UGw1Uta42yF1ktFWkJF13tw13
-	XF1qqw15Zr4jyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRRbyNUUUUU=
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiHBlixWV2zz+dwAAAsc
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V6sCyQaU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704943239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5ySxIr9158TeBUa4+brfKytrmL8cNYEATrtS2LGdz8E=;
+	b=V6sCyQaUqb0tVq30yQG91Tqe4V8QEP9j3WpM6d1rUFq2+fPUkov1D6Kh8v/toVmHn6D28i
+	oo9rmKGC38bMLchRHhXkR1icDwtAl3PftPwx7Mhoqxsjov+2etF9Tlgor6/obdd7C85UP9
+	A1R8+GaL/QT7UJf0hpmJ6XXVaUr1wfI=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-361-nho-GnQmNQWnqAXcjjEE5Q-1; Wed, 10 Jan 2024 22:20:38 -0500
+X-MC-Unique: nho-GnQmNQWnqAXcjjEE5Q-1
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6d9dfc1fc38so4133833b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:20:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704943236; x=1705548036;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5ySxIr9158TeBUa4+brfKytrmL8cNYEATrtS2LGdz8E=;
+        b=h7/zWGUhbjdNy7A9mcMKhQonBTmu1QrlAqWT6t2iDHtW02M3wZ400zVmRoBjOQMfR0
+         YeRKGlqgeR4SBqXw6FUGfoMd41KWoJSw5U3R+Ox7q2GVRKd1y/y58loHCF68yLyxuwD/
+         m/svWMaSSwYvdbqneqH+WCu3uNsecsw8itqkPp2AkOpup2kfBdRYWwL5IFeCGSAT+ybR
+         mY3amkTf8j+pILlIWbtCA4k2ulGY90zANNkcZctVUxiQAbcATVlfrSWXXGgp1TFOBw1V
+         FkhDVmR8mxc9zhaxthvVOMIye6LrwwBo4FbC3tSk5gOPWAWstt/TrCV/Y3YSXYvamOmJ
+         YbjQ==
+X-Gm-Message-State: AOJu0YysF2axl0BrI0Uiu2WolK6sAZ/Myoz9Kb0/YnCrC8cRt/AOq16u
+	aVkC7ylZBF2KJWlC0fpq8Ra+Z6w9mCX6phkvwJ4jAfdw+h0PrNUp7pQWEFjWBU5RFln5K16pIj2
+	eVESLcLAThqpfMfgNnoaDvEQreP4SY7wZRKxjoJ4ZEavHsRGuww6XqF5P
+X-Received: by 2002:a05:6a21:3b4a:b0:199:f3f7:1906 with SMTP id zy10-20020a056a213b4a00b00199f3f71906mr197808pzb.4.1704943236614;
+        Wed, 10 Jan 2024 19:20:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFb//iOIGwN9CPQkZdv0a02qYPN9GCk/FREn+oyN1EysZc3rGY+TX2fdifK8FhGRGGABtZPAG7pGCnTcjuBzA4=
+X-Received: by 2002:a05:6a21:3b4a:b0:199:f3f7:1906 with SMTP id
+ zy10-20020a056a213b4a00b00199f3f71906mr197798pzb.4.1704943236351; Wed, 10 Jan
+ 2024 19:20:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <2035137075.1083380.1704867762955.JavaMail.zimbra@sjtu.edu.cn>
+In-Reply-To: <2035137075.1083380.1704867762955.JavaMail.zimbra@sjtu.edu.cn>
+From: Jason Wang <jasowang@redhat.com>
+Date: Thu, 11 Jan 2024 11:20:25 +0800
+Message-ID: <CACGkMEvqg3cqbPDvYe3qAh2BQKNbKYim27or08WsxCAMHmYO6g@mail.gmail.com>
+Subject: Re: [PATCH] driver/virtio: Add Memory Balloon Support for SEV/SEV-ES
+To: Zheyun Shen <szy0127@sjtu.edu.cn>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
+	mst <mst@redhat.com>, david <david@redhat.com>, xuanzhuo@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix the following errors reported by checkpatch:
+On Wed, Jan 10, 2024 at 2:23=E2=80=AFPM Zheyun Shen <szy0127@sjtu.edu.cn> w=
+rote:
+>
+> For now, SEV pins guest's memory to avoid swapping or
+> moving ciphertext, but leading to the inhibition of
+> Memory Ballooning.
+>
+> In Memory Ballooning, only guest's free pages will be relocated
+> in balloon inflation and deflation, so the difference of plaintext
+> doesn't matter to guest.
 
-ERROR: open brace '{' following struct go on the same line
-ERROR: space required after that close brace '}'
+This seems only true if the page is zeroed, is this true here?
 
-Signed-off-by: chenxuebing <chenxb_99091@126.com>
----
- drivers/gpu/drm/amd/include/atombios.h | 74 +++++++++++---------------
- 1 file changed, 30 insertions(+), 44 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/include/atombios.h b/drivers/gpu/drm/amd/include/atombios.h
-index b78360a71bc9..f01a2bdad699 100644
---- a/drivers/gpu/drm/amd/include/atombios.h
-+++ b/drivers/gpu/drm/amd/include/atombios.h
-@@ -205,19 +205,17 @@
- // And the pointer actually points to this header.
- /****************************************************************************/
- 
--typedef struct _ATOM_COMMON_TABLE_HEADER
--{
-+typedef struct _ATOM_COMMON_TABLE_HEADER {
-   USHORT usStructureSize;
-   UCHAR  ucTableFormatRevision;   //Change it when the Parser is not backward compatible
-   UCHAR  ucTableContentRevision;  //Change it only when the table needs to change but the firmware
-                                   //Image can't be updated, while Driver needs to carry the new table!
--}ATOM_COMMON_TABLE_HEADER;
-+} ATOM_COMMON_TABLE_HEADER;
- 
- /****************************************************************************/
- // Structure stores the ROM header.
- /****************************************************************************/
--typedef struct _ATOM_ROM_HEADER
--{
-+typedef struct _ATOM_ROM_HEADER {
-   ATOM_COMMON_TABLE_HEADER      sHeader;
-   UCHAR  uaFirmWareSignature[4];    //Signature to distinguish between Atombios and non-atombios,
-                                     //atombios should init it as "ATOM", don't change the position
-@@ -236,11 +234,10 @@ typedef struct _ATOM_ROM_HEADER
-   USHORT usMasterDataTableOffset;   //Offest for SW to get all data table offsets, Don't change the position
-   UCHAR  ucExtendedFunctionCode;
-   UCHAR  ucReserved;
--}ATOM_ROM_HEADER;
-+} ATOM_ROM_HEADER;
- 
- 
--typedef struct _ATOM_ROM_HEADER_V2_1
--{
-+typedef struct _ATOM_ROM_HEADER_V2_1 {
-   ATOM_COMMON_TABLE_HEADER      sHeader;
-   UCHAR  uaFirmWareSignature[4];    //Signature to distinguish between Atombios and non-atombios,
-                                     //atombios should init it as "ATOM", don't change the position
-@@ -260,7 +257,7 @@ typedef struct _ATOM_ROM_HEADER_V2_1
-   UCHAR  ucExtendedFunctionCode;
-   UCHAR  ucReserved;
-   ULONG  ulPSPDirTableOffset;
--}ATOM_ROM_HEADER_V2_1;
-+} ATOM_ROM_HEADER_V2_1;
- 
- 
- //==============================Command Table Portion====================================
-@@ -269,7 +266,7 @@ typedef struct _ATOM_ROM_HEADER_V2_1
- /****************************************************************************/
- // Structures used in Command.mtb
- /****************************************************************************/
--typedef struct _ATOM_MASTER_LIST_OF_COMMAND_TABLES{
-+typedef struct _ATOM_MASTER_LIST_OF_COMMAND_TABLES {
-   USHORT ASIC_Init;                              //Function Table, used by various SW components,latest version 1.1
-   USHORT GetDisplaySurfaceSize;                  //Atomic Table,  Used by Bios when enabling HW ICON
-   USHORT ASIC_RegistersInit;                     //Atomic Table,  indirectly used by various SW components,called from ASIC_Init
-@@ -351,7 +348,7 @@ typedef struct _ATOM_MASTER_LIST_OF_COMMAND_TABLES{
-   USHORT ProcessAuxChannelTransaction;           //Function Table,only used by Bios
-   USHORT DPEncoderService;                       //Function Table,only used by Bios
-   USHORT GetVoltageInfo;                         //Function Table,only used by Bios since SI
--}ATOM_MASTER_LIST_OF_COMMAND_TABLES;
-+} ATOM_MASTER_LIST_OF_COMMAND_TABLES;
- 
- // For backward compatible
- #define ReadEDIDFromHWAssistedI2C                ProcessI2cChannelTransaction
-@@ -377,17 +374,15 @@ typedef struct _ATOM_MASTER_LIST_OF_COMMAND_TABLES{
- 
- #define MemoryRefreshConversion                  Gfx_Init
- 
--typedef struct _ATOM_MASTER_COMMAND_TABLE
--{
-+typedef struct _ATOM_MASTER_COMMAND_TABLE {
-   ATOM_COMMON_TABLE_HEADER           sHeader;
-   ATOM_MASTER_LIST_OF_COMMAND_TABLES ListOfCommandTables;
--}ATOM_MASTER_COMMAND_TABLE;
-+} ATOM_MASTER_COMMAND_TABLE;
- 
- /****************************************************************************/
- // Structures used in every command table
- /****************************************************************************/
--typedef struct _ATOM_TABLE_ATTRIBUTE
--{
-+typedef struct _ATOM_TABLE_ATTRIBUTE {
- #if ATOM_BIG_ENDIAN
-   USHORT  UpdatedByUtility:1;         //[15]=Table updated by utility flag
-   USHORT  PS_SizeInBytes:7;           //[14:8]=Size of parameter space in Bytes (multiple of a dword),
-@@ -397,18 +392,17 @@ typedef struct _ATOM_TABLE_ATTRIBUTE
-   USHORT  PS_SizeInBytes:7;           //[14:8]=Size of parameter space in Bytes (multiple of a dword),
-   USHORT  UpdatedByUtility:1;         //[15]=Table updated by utility flag
- #endif
--}ATOM_TABLE_ATTRIBUTE;
-+} ATOM_TABLE_ATTRIBUTE;
- 
- /****************************************************************************/
- // Common header for all command tables.
- // Every table pointed by _ATOM_MASTER_COMMAND_TABLE has this common header.
- // And the pointer actually points to this header.
- /****************************************************************************/
--typedef struct _ATOM_COMMON_ROM_COMMAND_TABLE_HEADER
--{
-+typedef struct _ATOM_COMMON_ROM_COMMAND_TABLE_HEADER {
-   ATOM_COMMON_TABLE_HEADER CommonHeader;
-   ATOM_TABLE_ATTRIBUTE     TableAttribute;
--}ATOM_COMMON_ROM_COMMAND_TABLE_HEADER;
-+} ATOM_COMMON_ROM_COMMAND_TABLE_HEADER;
- 
- /****************************************************************************/
- // Structures used by ComputeMemoryEnginePLLTable
-@@ -435,22 +429,20 @@ typedef struct _ATOM_ADJUST_MEMORY_CLOCK_FREQ
- }ATOM_ADJUST_MEMORY_CLOCK_FREQ;
- #define POINTER_RETURN_FLAG             0x80
- 
--typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS
--{
-+typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS {
-   ULONG   ulClock;        //When returen, it's the re-calculated clock based on given Fb_div Post_Div and ref_div
-   UCHAR   ucAction;       //0:reserved //1:Memory //2:Engine
-   UCHAR   ucReserved;     //may expand to return larger Fbdiv later
-   UCHAR   ucFbDiv;        //return value
-   UCHAR   ucPostDiv;      //return value
--}COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS;
-+} COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS;
- 
--typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V2
--{
-+typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V2 {
-   ULONG   ulClock;        //When return, [23:0] return real clock
-   UCHAR   ucAction;       //0:reserved;COMPUTE_MEMORY_PLL_PARAM:Memory;COMPUTE_ENGINE_PLL_PARAM:Engine. it return ref_div to be written to register
-   USHORT  usFbDiv;          //return Feedback value to be written to register
-   UCHAR   ucPostDiv;      //return post div to be written to register
--}COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V2;
-+} COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V2;
- 
- #define COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_PS_ALLOCATION   COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS
- 
-@@ -472,8 +464,7 @@ typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V2
- #define b3SRIOV_LOAD_UCODE                        0x40       //Use by HV GPU driver only, to load uCode. for ASIC_InitTable SCLK parameter only
- #define b3SRIOV_SKIP_ASIC_INIT                    0x02       //Use by HV GPU driver only, skip ASIC_Init for primary adapter boot. for ASIC_InitTable SCLK parameter only
- 
--typedef struct _ATOM_COMPUTE_CLOCK_FREQ
--{
-+typedef struct _ATOM_COMPUTE_CLOCK_FREQ {
- #if ATOM_BIG_ENDIAN
-   ULONG ulComputeClockFlag:8;                 // =1: COMPUTE_MEMORY_PLL_PARAM, =2: COMPUTE_ENGINE_PLL_PARAM
-   ULONG ulClockFreq:24;                       // in unit of 10kHz
-@@ -481,16 +472,14 @@ typedef struct _ATOM_COMPUTE_CLOCK_FREQ
-   ULONG ulClockFreq:24;                       // in unit of 10kHz
-   ULONG ulComputeClockFlag:8;                 // =1: COMPUTE_MEMORY_PLL_PARAM, =2: COMPUTE_ENGINE_PLL_PARAM
- #endif
--}ATOM_COMPUTE_CLOCK_FREQ;
-+} ATOM_COMPUTE_CLOCK_FREQ;
- 
--typedef struct _ATOM_S_MPLL_FB_DIVIDER
--{
-+typedef struct _ATOM_S_MPLL_FB_DIVIDER {
-   USHORT usFbDivFrac;
-   USHORT usFbDiv;
--}ATOM_S_MPLL_FB_DIVIDER;
-+} ATOM_S_MPLL_FB_DIVIDER;
- 
--typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V3
--{
-+typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V3 {
-   union
-   {
-     ATOM_COMPUTE_CLOCK_FREQ  ulClock;         //Input Parameter
-@@ -501,7 +490,7 @@ typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V3
-   UCHAR   ucPostDiv;                          //Output Parameter
-   UCHAR   ucCntlFlag;                         //Output Parameter
-   UCHAR   ucReserved;
--}COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V3;
-+} COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V3;
- 
- // ucCntlFlag
- #define ATOM_PLL_CNTL_FLAG_PLL_POST_DIV_EN          1
-@@ -511,8 +500,7 @@ typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V3
- 
- 
- // V4 are only used for APU which PLL outside GPU
--typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V4
--{
-+typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V4 {
- #if ATOM_BIG_ENDIAN
-   ULONG  ucPostDiv:8;        //return parameter: post divider which is used to program to register directly
-   ULONG  ulClock:24;         //Input= target clock, output = actual clock
-@@ -520,10 +508,9 @@ typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V4
-   ULONG  ulClock:24;         //Input= target clock, output = actual clock
-   ULONG  ucPostDiv:8;        //return parameter: post divider which is used to program to register directly
- #endif
--}COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V4;
-+} COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V4;
- 
--typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V5
--{
-+typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V5 {
-   union
-   {
-     ATOM_COMPUTE_CLOCK_FREQ  ulClock;         //Input Parameter
-@@ -538,14 +525,13 @@ typedef struct _COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V5
-     UCHAR   ucInputFlag;                      //Input Flags. ucInputFlag[0] - Strobe(1)/Performance(0) mode
-   };
-   UCHAR   ucReserved;
--}COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V5;
-+} COMPUTE_MEMORY_ENGINE_PLL_PARAMETERS_V5;
- 
- 
--typedef struct _COMPUTE_GPU_CLOCK_INPUT_PARAMETERS_V1_6
--{
-+typedef struct _COMPUTE_GPU_CLOCK_INPUT_PARAMETERS_V1_6 {
-   ATOM_COMPUTE_CLOCK_FREQ  ulClock;         //Input Parameter
-   ULONG   ulReserved[2];
--}COMPUTE_GPU_CLOCK_INPUT_PARAMETERS_V1_6;
-+} COMPUTE_GPU_CLOCK_INPUT_PARAMETERS_V1_6;
- 
- //ATOM_COMPUTE_CLOCK_FREQ.ulComputeClockFlag
- #define COMPUTE_GPUCLK_INPUT_FLAG_CLK_TYPE_MASK            0x0f
--- 
-2.17.1
+Thanks
 
