@@ -1,17 +1,17 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2053.outbound.protection.partner.outlook.cn [139.219.17.53])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2046.outbound.protection.partner.outlook.cn [139.219.17.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDF711CAB;
-	Thu, 11 Jan 2024 08:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC1315E9B;
+	Thu, 11 Jan 2024 08:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jh4q8V2nlkwzpbOHB4j4PXedlu0XuaK7aEymfVJJe52r6Zyw7bcfmba3Aq5NTUbSBVfGffQxEQENLEmb4CuAxsdKChTmaReiwZ8jdcOCf/oOtPUhZhmI4sr0sih4v6jvsq/RhBoeHc04Vg3IVhnlY8Uf3cATWnpGSQNuYyuKr/iu3H3y1gKfktku93pRn4kAKr5Zkcj7HHZu0x3Pf7W5GWD0BZmUrDA+A0s4ptTje3bGrGiOor3zTTPTXCqm6zoVaQ+PO/qkFTTGZg5gVlW+ezfw9pCZKr3u/gdTPBjFwf//xPveUySgKjf1voQCgGQs7YQSIfYR1qUci9NU0r4w9w==
+ b=KlSr0XsOdMyMn73tvm+01Y8Er4XgqNeCDAC78kabCHrAKBcWhSXWADrj4ZbGrwjwGFSxmZITRYPF3q+07rOP5wiOzlou9bzcUnpv6JNdDtMuPEc1GlctwABU77h9RYb90BLKd3f/9bA9MpHtM9ilmQbqhLmQDdASoqhNWurKCwoNDvIiEYbwbkO0R+4pxKFxMrNos6HyLbCJd/lvREe9hblkRk5tYCTckFqMbLynCSCu0/Ep7w2AfAW9KQ5c/o0wJPtqgUKlKOKh7Ja9K7PIjyUJOO8H0U8ohtq9iLQ+1B3wi37FNm3qhYsqeQtUA0CO1Zqh7GarC/PsNy1EeCe66g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JMzsKjsZw2SixbzRykWPerHVvDK3lk5KvnsyKCCkru8=;
- b=YYo+i4gCH5lPQEwpajAn9t5MTNVb2ltl/rLw+Otjn5VLD22s6thhBP/nfAUowcInch9QySJWYsMKE68eVWJqozj16SJqbhhTNcYo4SBvCE45VT+66FkDA0vW7YNflEzwLfNcLw45un5hwI0r9xs1Qb8cUNPlZ57l++4mQR6P2E0QCiXacyRnEy6Jn0vfsmPn7W3Po1G1Xf2cSZJEaXKpLV1T1iriBLeVNm6tvmTNN18vgipY3AxADQzjlFfCI+3qVeDsnj327V9bMovpAyWtCPOM1TN9GQVjKYOZ4tgSofC3VCW+DTESJjBYMyBA+Qmbn6jCD8d1FgZML6KSPrcxQA==
+ bh=xSmZQzN78d+etqBy2o5BJkiJz5ehsWeddbIOJIxCv1k=;
+ b=XcNCljYvSydqTN0R3Xz4lGqKIk5RNOEOSEViPAABsOIBYGHey8maBostj5DXcRYEgQjGwj+ll9x0Szhhpqoto9pS3nba8+Ai6zjry6uTxaseEAAFx8ZQcjxJ9dZyK53CZ0/+n2vo0A2SC2SpkAwjDr/jRSANuUtqgKAcb1U2WuSP0Dt+WNRvC3sCRy7dd69mrqSbP7Cj7R8ywHEn9S58deqdEnutk3E5nwrK9hw3tUK2UQc7otngi2b67sOuQ+aAubPi2wDKrK4BzE34A5Do+dz1sZDMvnNEgVbxpQqN+RScJSUx+QgimpzHxXL5MfqvIeEqYeIIX+WaFGRSerZ5wQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -21,11 +21,11 @@ Received: from SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:20::21) by SH0PR01MB0747.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:21::11) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.33; Thu, 11 Jan
- 2024 08:41:29 +0000
+ 2024 08:41:32 +0000
 Received: from SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
  ([fe80::e255:98f3:ba27:8c7d]) by
  SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn ([fe80::e255:98f3:ba27:8c7d%3])
- with mapi id 15.20.7135.033; Thu, 11 Jan 2024 08:41:29 +0000
+ with mapi id 15.20.7135.033; Thu, 11 Jan 2024 08:41:31 +0000
 From: Changhuang Liang <changhuang.liang@starfivetech.com>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -42,9 +42,9 @@ Cc: Jack Zhu <jack.zhu@starfivetech.com>,
 	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-staging@lists.linux.dev
-Subject: [PATCH v2 02/13] media: Documentation: Add description for StarFive ISP metadata formats
-Date: Thu, 11 Jan 2024 00:41:09 -0800
-Message-Id: <20240111084120.16685-3-changhuang.liang@starfivetech.com>
+Subject: [PATCH v2 05/13] staging: media: starfive: Separate buffer from ISP hardware operation
+Date: Thu, 11 Jan 2024 00:41:12 -0800
+Message-Id: <20240111084120.16685-6-changhuang.liang@starfivetech.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240111084120.16685-1-changhuang.liang@starfivetech.com>
 References: <20240111084120.16685-1-changhuang.liang@starfivetech.com>
@@ -61,158 +61,214 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SH0PR01MB0667:EE_|SH0PR01MB0747:EE_
-X-MS-Office365-Filtering-Correlation-Id: 759e6b94-8a80-40df-e313-08dc12811b07
+X-MS-Office365-Filtering-Correlation-Id: ceedce40-7c4b-487e-8f7d-08dc12811c80
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	W47M8Qv860NSnpQQFDhx5P3MgumNBeKcMWwh3dscxsSmXU7ToRIey8SjwqrNOVU7cdfbv4Bx7zpOZ/rhyKJdReaKc6aXh/KWo10mz24wrEkWi0f4mtk0HLau52blz7A5byvW8ap2yB+S5egMj3R5Abb5EYl91kzXIzu3nb3/w1Z4oFkweRwx7lbcxzpW4JP5PwWTn6dw04wqQALzrMxGkfCWCxYlAs6M33PdVmnKmX61UYA5cpZ2o+hh5GNZjFEf922JjG8Zy8Le98cLe9ESN1/curoO/Yt7Q6gJD+jeJl8YzNt22KNpX4pF4mwTxTAEAY1n75OHaW/wELvml9tkobARRglKpIvT0O+SvwSIqqENgQdNJhwp7mLQ/LRynvGZ+1ua4/oW9g95U/ivUs1C3vYxepT0C8s62bk0AXxJsddAkleIBTi6FzTcGxymjADu5X2OW0wB79ufAl/gbMqgDLWm1rkcIe/GXa6cMwhuOqMx5dMnMiaEuexw1aeRzGNEpFKMZK6J0qLCx+X0KUlLCMZRRVugthNF8RgQxEpMGkl/6foX+Fteiu3sFrVRJpxSWm15dS2z+sM44ssesWUQPQ==
+	QLBLq+HNkabaOEBG/2GMNYsucyxUd869gymZW22lwyFI7U6i+FW9mO5Obv/FSp3vn660zGxEKTXIv9gzpmLaroVe3jyd1UqS3bq6HOMyoZoMM0HtzPSmjJ8iZ2SdMAVNLwugDnQQuM5ycyFASrJ+8rLpfuCuptT85hoyy7ViJ0aOLaDj0b0RDKIlUlHttOhUTbFV5+yz3J1QmntUqrStFMBug3vqV2uaTDcqdcWpTjH7lIm12DX/ti/XRy7ES8OqITeJLIgHEVJWK4rRnrflreeBS53g4Qn7mV0tkbvsLVkqGFCd0BqTcI14pvPtnreW/FPVlTd558RJLtwgb4MClk7sV3OoA8RNNRGl5YpczkmID6pI6BzG8dqmFT0q7KBF5oTG05zvW5Wm7fs73BDwM/Ys/l93xH/nLfYwYYIHnc2uNSCNHGL4ncHtRtsiYFqxqFc2ndSK67i12qqwwOp4sMXv5JcHokd06pvhodwPguen19uT+Xhh81c1/Dx8Vwf+udY9OZIiBoywD/hCSmuYJUCCNdM4tY78B0K/TavZuQ5g8Dg4Ioe4cnwPqOp1Fdwp/2oq3AvaUpSuSvR71QhTwA==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(136003)(39830400003)(230922051799003)(186009)(1800799012)(451199024)(64100799003)(6666004)(52116002)(41300700001)(2616005)(508600001)(38100700002)(40160700002)(1076003)(26005)(86362001)(36756003)(921011)(38350700005)(83380400001)(110136005)(54906003)(66556008)(66946007)(66476007)(8676002)(8936002)(41320700001)(4326008)(44832011)(2906002)(40180700001)(5660300002)(7416002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jr2uEuAQ0AsGyP78SwtBqf+lmykfgNZ/+uiYltDp0xvU/3pbCD+w+iDownbe?=
- =?us-ascii?Q?MVSpLyd04qXrBa6zsELHq1pB3/kMGLEM+W/zlSM/k1ETb4xXtP6WqN3k8i5C?=
- =?us-ascii?Q?eMWblTrUOIau37gNyxDSOnIEWjKneA6RzTmZCJL044b24Fq+QGvWoa/FJTq9?=
- =?us-ascii?Q?KPXKANiFRGsQEcWYbJgJ/EsW5KeawHvEpL9CAof7TCKhCkbhpJNHkssywNf7?=
- =?us-ascii?Q?cv31zrmoSg8vk53p4JnrxpdrZS6rsNehRch9QzxuJwLhPvaaspASNPc0rpcl?=
- =?us-ascii?Q?rxtmuTR7dOHvZXBN4LnSaQrzPw9ZJx63YVYc4/FfUKRYo3DlhMN97e8cQf21?=
- =?us-ascii?Q?NjTHFcl+YbIgoneUv8BCipbvKki8toMT9DqI9kMsxmvq5sxWbUjzjNm5dNsH?=
- =?us-ascii?Q?MgUIeI1TSIxZWt7te/1E29uhZxvqSE8owWdIOnDYvyy4rA1CIhEx30RgqnDH?=
- =?us-ascii?Q?0IfXEIoDsLG1g9O9fguLkGYQ7tok30SXVS1Vjrg0iQ5D/N8bYtfdFDbbpGyb?=
- =?us-ascii?Q?4PMJmP0DbAaWb+AUZ+2onigL1RpJzeYH6mf9HgAF8oJAqfpEiUnX5xyoKBPn?=
- =?us-ascii?Q?b3vaW5o/qhqIinIHLC5TJgGW+hVlqP+lRfpJ3fDbLKk0bbn+aWJQKwPasFd3?=
- =?us-ascii?Q?PJX8VVvCjXOyvTwpRn4TOoIAfcN3V7tpnFGLcIERpuMdhUw54K2SUJ55WWc8?=
- =?us-ascii?Q?lACthN2AW0RqNNBPkO8oAinMLxhnoP+2TGs5HVPpmYmq2PfCXAcQSqXA9Voo?=
- =?us-ascii?Q?ZsnpIzdUT4HWnDk2pmYtayvA6TTGwqW6VoVlsZqlaLNFUsRpAKlaMR5Aa9MB?=
- =?us-ascii?Q?HINQvYBJaSzTJa0Hg438W3zgYhNfvXIUiehMROY21bkBq4KdXeYopJg7FoDM?=
- =?us-ascii?Q?OTsSZj39KO8qOeTNQLNUhZ8OVtt6RQWzmSXCcy/jDd625+GpclPrvLC+k3AJ?=
- =?us-ascii?Q?fSlZ9o6mUDjkdPoXvsQf6j+jjr5sLgt1dYFpamBWp1h5B3g8stbSPHopgNb2?=
- =?us-ascii?Q?ZIu0KrmlcIdu2mRI6b3euWxrZ7Y8UTNx4XoUkQZ19fCXq/zXBBXN10HHoAPU?=
- =?us-ascii?Q?qTJG2VM+JLflfsHxt6R/DKqNnHr2qOZSgzyzmOt6e71wIl4JeiiC9tvAqatL?=
- =?us-ascii?Q?IBSrTiDeStKn/GeJ/dvUwQilS53nOJ5m22vrM1gCABQsvxAwJ2kCn93DBfm7?=
- =?us-ascii?Q?0mBoLl/9LuQkts0Z943elT0cd6r1XmPNTd+OOeiy+Xt6epxVVJrYEHt+tPyK?=
- =?us-ascii?Q?H4kYJ3u1LEEO0oW3EYmLuWtqmlodOekU1dePAFg9xvM3wMOgY4FbH9puGxTZ?=
- =?us-ascii?Q?FYMKAHz0HpOYunVMqmSmRB63wieDDY2vLZVadHtidmjCcKm/7cstgnm1qFSL?=
- =?us-ascii?Q?3Wcm3EH2Zni5n3hymmHcvAicpLip/VOFoRBIZRTmAsMSkA/fbxIXZfaAs465?=
- =?us-ascii?Q?r62gScBDQKzS9z0Sdo65AC0ws6X8BdTyj1gBcJU3Dgx8pq8SQy+kWAHWkPyK?=
- =?us-ascii?Q?yeiNZjFr6388oLLLkJFuRUh83TBAhNRhPzI/N6tlvtkYAmkZGf/8xW8WAgrU?=
- =?us-ascii?Q?YXdlMalrbWl6mGdKl54aUykB85n8EDBDk275QRJyWZ0tqdUmR4EEZBmXgfJy?=
- =?us-ascii?Q?yVVpihBz+y2gBiMTkxTekkA=3D?=
+	=?us-ascii?Q?ocgDd2OhZzdCDGoFesvBDBYFGBMdkiF+HUrhID98EXDjrQxRskzL2I/JyI/F?=
+ =?us-ascii?Q?U+rifewxyjdNlhgC8141L61dbtz+N8Fsgav19qVZ+GQlifsDYQf1A5PFHvEy?=
+ =?us-ascii?Q?7WRGIO1ESKz9IiPBMlniX83jsVcEeMJmXTn+e/tvf0ni4Y1Y2IVWREndAhoZ?=
+ =?us-ascii?Q?b8be347lIO6iLUrUAhoOrz90kKgzC11tjEstFbTmrhsJevOog2xitUqVCHnI?=
+ =?us-ascii?Q?AlvIMA3S3JmoXUaLbeXHln4WHo7mT6hj2v62+tk2yA0uF5qeY7SLXDmW0L4w?=
+ =?us-ascii?Q?aNGWkBgZT2GPchLgVCUlR8XT4JaN5P6gILySl4uSQX+DKlZbuRkdLBXUO8UA?=
+ =?us-ascii?Q?x2R+fKsDXRqEcx0H1HnL90Sz24CSybfbJZ1EnyGvGne36YfyQmteeXs/L3Q1?=
+ =?us-ascii?Q?s92O8529hrpUBR2E8ZwQH7xliwXLqUTaWsIAmwmo2u+byATkl+W0MTYrAaGR?=
+ =?us-ascii?Q?R0/jxqnVU5DPLI1B0r5G1cfdGLW4NalO2kND9HQLtU3yhopklmg0bw12oDYZ?=
+ =?us-ascii?Q?VKgxUX2B1FK5eu6x94xbSV87SCum3pWFwzgMmkem7laB9pkPSCLB0Z77nmY7?=
+ =?us-ascii?Q?kC6mrsg4sTLBd/NJ3GyxG7sVJ9P7uXG7DM6wKg4ZM1qEFjbxJHUPz8aetdzQ?=
+ =?us-ascii?Q?kMgFtzOw3JUrrTSUtxcevhkuQBVlCdBfvl+qu72omI2Or1R0mVs5TGevda+Z?=
+ =?us-ascii?Q?hFs6n3ucXnGkJn3PywSyGqhRoDo5nprpHKI/VKl+1LOgbqE8+fz6cN2v/JNd?=
+ =?us-ascii?Q?iMhLt9ZnoKsiBJAKkcAifOMw0W6IaKUALQOEnbpeiSHpnzZyD2sSRcSqAmOy?=
+ =?us-ascii?Q?fOatgnPX5Kp+PIw1vfTT3O9Rd5+lgri9Vg/6lY5tmx8qZDLZoRnmroBps9Mf?=
+ =?us-ascii?Q?lFBemqZjnP/SbLNq9uwSgN7DQEIdnCoUymiCqOQOMw+HIb2DCRCF5L/qcQPO?=
+ =?us-ascii?Q?P0kjVAFTfPW7vYRIIBgtTGtfvu7wT0wjxRFj4TxPsf8CcnrP6wHdxU9Wv2HX?=
+ =?us-ascii?Q?sLEyomoJA3kj9ha2vfhLBcW+Fz0NDKwY4+pyspX8DVBXNpm9pDVg2veIdPVd?=
+ =?us-ascii?Q?wS866InbrRhc2tOVGHYAMm6RhgJM0apsyDzpSe6P92SxMRdGUHsR23ijeXF5?=
+ =?us-ascii?Q?gYg9MwS5OSL5pp4o8IYu2S4yN8Azjt/+o89IzznBSL5xAQ9h3l5t2EVh3k21?=
+ =?us-ascii?Q?unoI3Wqwj6OZ/Ng2m1cl+YBDiLcLl9XIobzj2Uqko1pEREy9/FDnuJ6eSPr+?=
+ =?us-ascii?Q?eSdZzayo1lYdU0TBgKClvLxOuxbWJxzBhLRn2EzJWovQpfUff1K+9fplHAai?=
+ =?us-ascii?Q?dUgatuHl6R1Jz9RMBIgfXEvCfIIy5jM+z6qZ7U4vA0jA3iRxEPNbBbAeI1vG?=
+ =?us-ascii?Q?mTACP5EYSN4nq6HO/Ej7u84J8AyYxzX5Wy602tUCctLDzwXAYNniCtU3GMH3?=
+ =?us-ascii?Q?GP+C+sBykoyI4cAWQP0/jU4ouY3bXufHq0iT2G/N+gZukhMBSMzVAVfrZ2Gi?=
+ =?us-ascii?Q?mWTKm2T/BC8NKzkIBfBYxFhRaA3gQ+tpyjTkzKOip/vgbnxxGzP5r9fg8auM?=
+ =?us-ascii?Q?nz++BrqDiSE5ZvM047ugEZEsPIv7VQqx1BPzGsZcTj3I7kIUNisG4hQLmL/e?=
+ =?us-ascii?Q?vPFbIpP/RADccyEKaOUnY8k=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 759e6b94-8a80-40df-e313-08dc12811b07
+X-MS-Exchange-CrossTenant-Network-Message-Id: ceedce40-7c4b-487e-8f7d-08dc12811c80
 X-MS-Exchange-CrossTenant-AuthSource: SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 08:41:29.4241
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 08:41:31.9245
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Gju2jPok65FiFZm6lOZgigYrAOFzKAF0RyUFLhRFcb3+SXVtjFNvRPfC72TcOBwRtStPJGQwu0mhmWcLjcBlF35IX0FOBA2NnjMfX+NftqJWR0U/dd0rus4LoRUe+ith
+X-MS-Exchange-CrossTenant-UserPrincipalName: Va/s3YfTBqzf7JcxQ4hlSLjdZ7Npr550isS88ip4b7CVHanbXu657E/d/h9xZZmYh+SbsReBHoB5gkIP7ytz7vGTOneRIHrzt++9DlSH/W1hsdyEDBO12XDioWoaoN/5
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SH0PR01MB0747
 
-Add description for V4L2_META_FMT_STF_ISP_PARAMS and
-V4L2_META_FMT_STF_ISP_STAT_3A meta data formats.
+Separate buffer from ISP hardware operation. Convenient to extract the
+buffer be a common file.
+Replace "while" with "if" in stf_buf_done helper function because one
+interrupt signal only handle one video buffer.
 
 Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
 ---
- .../media/v4l/metafmt-starfive-isp.rst        | 75 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 76 insertions(+)
- create mode 100644 Documentation/userspace-api/media/v4l/metafmt-starfive-isp.rst
+ .../media/starfive/camss/stf-capture.c        | 63 +++++++++++--------
+ 1 file changed, 36 insertions(+), 27 deletions(-)
 
-diff --git a/Documentation/userspace-api/media/v4l/metafmt-starfive-isp.rst b/Documentation/userspace-api/media/v4l/metafmt-starfive-isp.rst
-new file mode 100644
-index 000000000000..46c5193f5722
---- /dev/null
-+++ b/Documentation/userspace-api/media/v4l/metafmt-starfive-isp.rst
-@@ -0,0 +1,75 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. _v4l2-meta-fmt-stf-isp-params:
-+
-+.. _v4l2-meta-fmt-stf-isp-stat-3a:
-+
-+*****************************************************************************
-+V4L2_META_FMT_STF_ISP_PARAMS ('stfp'), V4L2_META_FMT_STF_ISP_STAT_3A ('stfs')
-+*****************************************************************************
-+
-+.. jh7110_isp_params_buffer
-+
-+Configuration parameters
-+========================
-+
-+The configuration parameters are passed to the "output_params" metadata output
-+video node, using the :c:type:`v4l2_meta_format` interface. They are formatted
-+as described by the :c:type:`jh7110_isp_params_buffer` structure.
-+
-+.. code-block:: c
-+
-+	struct jh7110_isp_params_buffer {
-+		__u32 enable_setting;
-+		struct jh7110_isp_wb_setting wb_setting;
-+		struct jh7110_isp_car_setting car_setting;
-+		struct jh7110_isp_ccm_setting ccm_setting;
-+		struct jh7110_isp_cfa_setting cfa_setting;
-+		struct jh7110_isp_ctc_setting ctc_setting;
-+		struct jh7110_isp_dbc_setting dbc_setting;
-+		struct jh7110_isp_dnyuv_setting dnyuv_setting;
-+		struct jh7110_isp_gmargb_setting gmargb_setting;
-+		struct jh7110_isp_lccf_setting lccf_setting;
-+		struct jh7110_isp_obc_setting obc_setting;
-+		struct jh7110_isp_oecf_setting oecf_setting;
-+		struct jh7110_isp_r2y_setting r2y_setting;
-+		struct jh7110_isp_sat_setting sat_setting;
-+		struct jh7110_isp_sharp_setting sharp_setting;
-+		struct jh7110_isp_ycrv_setting ycrv_setting;
-+		struct jh7110_isp_sc_setting sc_setting;
-+	};
-+
-+.. jh7110_isp_sc_buffer
-+
-+3A and histogram statistics
-+===========================
-+
-+The ISP1 device collects different statistics over an input Bayer frame.
-+Those statistics are obtained from the "capture_scd" metadata capture video
-+node, using the :c:type:`v4l2_meta_format` interface. They are formatted as
-+described by the :c:type:`jh7110_isp_sc_buffer` structure.
-+
-+.. code-block:: c
-+
-+	struct jh7110_isp_sc_buffer {
-+		__u32 y_histogram[64];
-+		__u32 reserv0[33];
-+		__u32 bright_sc[4096];
-+		__u32 reserv1[96];
-+		__u32 ae_hist_y[128];
-+		__u32 reserv2[511];
-+		__u16 flag;
-+	};
-+
-+The statistics collected are Auto Exposure, AWB (Auto-white balance), Histogram
-+and AF (Auto-focus). See :c:type:`jh7110_isp_sc_buffer` for details of the
-+statistics.
-+
-+The 3A statistics and configuration parameters described here are usually
-+consumed and produced by dedicated user space libraries that comprise the
-+important tuning tools using software control loop.
-+
-+JH7110 ISP uAPI data types
-+======================
-+
-+.. kernel-doc:: include/uapi/linux/jh7110-isp.h
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0b47e88a51dd..3b8565b69ac2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20688,6 +20688,7 @@ L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/admin-guide/media/starfive_camss.rst
- F:	Documentation/devicetree/bindings/media/starfive,jh7110-camss.yaml
-+F:	Documentation/userspace-api/media/v4l/metafmt-starfive-isp.rst
- F:	drivers/staging/media/starfive/camss
- F:	include/uapi/linux/jh7110-isp.h
+diff --git a/drivers/staging/media/starfive/camss/stf-capture.c b/drivers/staging/media/starfive/camss/stf-capture.c
+index 70c24b050a1b..367bdc924fb7 100644
+--- a/drivers/staging/media/starfive/camss/stf-capture.c
++++ b/drivers/staging/media/starfive/camss/stf-capture.c
+@@ -368,7 +368,7 @@ static void stf_buf_flush(struct stf_v_buf *output, enum vb2_buffer_state state)
+ 	}
+ }
  
+-static void stf_buf_done(struct stf_v_buf *output)
++static struct stfcamss_buffer *stf_buf_done(struct stf_v_buf *output)
+ {
+ 	struct stfcamss_buffer *ready_buf;
+ 	u64 ts = ktime_get_ns();
+@@ -376,27 +376,27 @@ static void stf_buf_done(struct stf_v_buf *output)
+ 
+ 	if (output->state == STF_OUTPUT_OFF ||
+ 	    output->state == STF_OUTPUT_RESERVED)
+-		return;
++		return NULL;
+ 
+ 	spin_lock_irqsave(&output->lock, flags);
+ 
+-	while ((ready_buf = stf_buf_get_ready(output))) {
++	ready_buf = stf_buf_get_ready(output);
++	if (ready_buf) {
+ 		ready_buf->vb.vb2_buf.timestamp = ts;
+ 		ready_buf->vb.sequence = output->sequence++;
+-
+-		vb2_buffer_done(&ready_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
+ 	}
+ 
+ 	spin_unlock_irqrestore(&output->lock, flags);
++
++	return ready_buf;
+ }
+ 
+-static void stf_change_buffer(struct stf_v_buf *output)
++static struct stfcamss_buffer *stf_change_buffer(struct stf_v_buf *output)
+ {
+ 	struct stf_capture *cap = container_of(output, struct stf_capture,
+ 					       buffers);
+ 	struct stfcamss *stfcamss = cap->video.stfcamss;
+ 	struct stfcamss_buffer *ready_buf;
+-	dma_addr_t *new_addr;
+ 	unsigned long flags;
+ 	u32 active_index;
+ 
+@@ -404,7 +404,7 @@ static void stf_change_buffer(struct stf_v_buf *output)
+ 	    output->state == STF_OUTPUT_STOPPING ||
+ 	    output->state == STF_OUTPUT_RESERVED ||
+ 	    output->state == STF_OUTPUT_IDLE)
+-		return;
++		return NULL;
+ 
+ 	spin_lock_irqsave(&output->lock, flags);
+ 
+@@ -426,37 +426,37 @@ static void stf_change_buffer(struct stf_v_buf *output)
+ 
+ 	/* Get next buffer */
+ 	output->buf[active_index] = stf_buf_get_pending(output);
+-	if (!output->buf[active_index]) {
+-		new_addr = ready_buf->addr;
++	if (!output->buf[active_index])
+ 		stf_buf_update_on_last(output);
+-	} else {
+-		new_addr = output->buf[active_index]->addr;
++	else
+ 		stf_buf_update_on_next(output);
+-	}
+ 
+-	if (output->state == STF_OUTPUT_STOPPING) {
++	if (output->state == STF_OUTPUT_STOPPING)
+ 		output->last_buffer = ready_buf;
+-	} else {
+-		if (cap->type == STF_CAPTURE_RAW)
+-			stf_set_raw_addr(stfcamss, new_addr[0]);
+-		else if (cap->type == STF_CAPTURE_YUV)
+-			stf_set_yuv_addr(stfcamss, new_addr[0], new_addr[1]);
+-
++	else
+ 		stf_buf_add_ready(output, ready_buf);
+-	}
+ 
+ out_unlock:
+ 	spin_unlock_irqrestore(&output->lock, flags);
++
++	return output->buf[active_index];
+ }
+ 
+ irqreturn_t stf_wr_irq_handler(int irq, void *priv)
+ {
+ 	struct stfcamss *stfcamss = priv;
+ 	struct stf_capture *cap = &stfcamss->captures[STF_CAPTURE_RAW];
++	struct stfcamss_buffer *change_buf;
++	struct stfcamss_buffer *ready_buf;
+ 
+ 	if (atomic_dec_if_positive(&cap->buffers.frame_skip) < 0) {
+-		stf_change_buffer(&cap->buffers);
+-		stf_buf_done(&cap->buffers);
++		change_buf = stf_change_buffer(&cap->buffers);
++		if (change_buf)
++			stf_set_raw_addr(stfcamss, change_buf->addr[0]);
++
++		ready_buf = stf_buf_done(&cap->buffers);
++		if (ready_buf)
++			vb2_buffer_done(&ready_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
+ 	}
+ 
+ 	stf_syscon_reg_set_bit(stfcamss, VIN_INRT_PIX_CFG, U0_VIN_INTR_CLEAN);
+@@ -469,12 +469,16 @@ irqreturn_t stf_isp_irq_handler(int irq, void *priv)
+ {
+ 	struct stfcamss *stfcamss = priv;
+ 	struct stf_capture *cap = &stfcamss->captures[STF_CAPTURE_YUV];
++	struct stfcamss_buffer *ready_buf;
+ 	u32 status;
+ 
+ 	status = stf_isp_reg_read(stfcamss, ISP_REG_ISP_CTRL_0);
+ 	if (status & ISPC_ISP) {
+-		if (status & ISPC_ENUO)
+-			stf_buf_done(&cap->buffers);
++		if (status & ISPC_ENUO) {
++			ready_buf = stf_buf_done(&cap->buffers);
++			if (ready_buf)
++				vb2_buffer_done(&ready_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
++		}
+ 
+ 		stf_isp_reg_write(stfcamss, ISP_REG_ISP_CTRL_0,
+ 				  (status & ~ISPC_INT_ALL_MASK) |
+@@ -488,13 +492,18 @@ irqreturn_t stf_line_irq_handler(int irq, void *priv)
+ {
+ 	struct stfcamss *stfcamss = priv;
+ 	struct stf_capture *cap = &stfcamss->captures[STF_CAPTURE_YUV];
++	struct stfcamss_buffer *change_buf;
+ 	u32 status;
+ 
+ 	status = stf_isp_reg_read(stfcamss, ISP_REG_ISP_CTRL_0);
+ 	if (status & ISPC_LINE) {
+ 		if (atomic_dec_if_positive(&cap->buffers.frame_skip) < 0) {
+-			if ((status & ISPC_ENUO))
+-				stf_change_buffer(&cap->buffers);
++			if ((status & ISPC_ENUO)) {
++				change_buf = stf_change_buffer(&cap->buffers);
++				if (change_buf)
++					stf_set_yuv_addr(stfcamss, change_buf->addr[0],
++							 change_buf->addr[1]);
++			}
+ 		}
+ 
+ 		stf_isp_reg_set_bit(stfcamss, ISP_REG_CSIINTS,
 -- 
 2.25.1
 
