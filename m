@@ -1,70 +1,55 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75F6EA3
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3C220F5;
+	Thu, 11 Jan 2024 02:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="efQQGJpB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=UYqqg+YYMRYSG+zlZs
-	tZepXQitDokxntn9vsV7Aev34=; b=efQQGJpBRsNabI6WsVYUR2dV1yJgJhMsz9
-	JMNBg7km+gx17zENtgP4sGRGC335MaIMbyc64tQmmz3Jb1TWIDdVQGox7dXKUU7A
-	HqJbU3CZvbX7r9rfpl6Bd89f+PQvfL85/miMCYCuGm6UGsRT6PD6dY4YNrsyfYBW
-	WTcrJUphw=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wD3X4X7UJ9lfpacAA--.59335S2;
-	Thu, 11 Jan 2024 10:22:52 +0800 (CST)
-From: chenxuebing <chenxb_99091@126.com>
-To: christian.koenig@amd.com,
-	daniel@ffwll.ch,
-	airlied@gmail.com,
-	Xinhui.Pan@amd.com,
-	alexander.deucher@amd.com
-Cc: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	chenxuebing <chenxb_99091@126.com>
-Subject: [PATCH] drm/amdgpu: Clean up errors in amdgpu_ib.c
-Date: Thu, 11 Jan 2024 02:22:49 +0000
-Message-Id: <20240111022249.6151-1-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3X4X7UJ9lfpacAA--.59335S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtryUWFWDAw1rtrWkKFy7GFg_yoWDCFb_CF
-	WUJrn5Jr13urnFvr12vr45Z34vvF15uF4kWr12qF9ayry7Z3yUKryDKryrXw1ruas7CFnr
-	X3s09rZ8Aa9xujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRRK9atUUUUU==
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiOhhixWVEuXnykAABsH
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kANMSHW9"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5D77BC43390;
+	Thu, 11 Jan 2024 02:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704939837;
+	bh=y2ACpPFSccQ1JP3SiQtx3rLfeUCDd/ESYlYBC7HNyAw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=kANMSHW9rFLyt8wvuUbM4lzRNLd+Og9wn6E4yLE5cTUKgB7j23y2CAX6EDbj+VlPu
+	 QO+rIAPE5y144Yc6nst1EgfL3TxO6IraTJNKhWnB+YblBJr8ZISK1dlFQuXkYklD+5
+	 YxZKIyvwPxrc36WSH7KGYhnZKwAnb8ffIjjDLtrchzlK8GdGSUinDgsnmYIz3hDQvS
+	 i3Oa8Qpsy6Ze+nNDZKIT4e7js6Goqzd/p2xFw9oqdzWJm42HDxt2fEgMO4Tn7kvt+B
+	 J7cHCrIi20lbeAYyrwh6vFuhr63cCuoUlvtuBENbjOSVCM1EeolfAK3UD1/c6n2KL7
+	 UBOX2mpMVMi9g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 49958D8C979;
+	Thu, 11 Jan 2024 02:23:57 +0000 (UTC)
+Subject: Re: [GIT PULL] sysctl changes for v6.8-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZZ1aMZdS5GK1tEfn@bombadil.infradead.org>
+References: <ZZ1aMZdS5GK1tEfn@bombadil.infradead.org>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZZ1aMZdS5GK1tEfn@bombadil.infradead.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/ tags/sysctl-6.8-rc1
+X-PR-Tracked-Commit-Id: 561429807d50aad76f1205b0b1d7b4aacf365d4e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a05aea98d4052dcd63d9d379613058e9e86c76d7
+Message-Id: <170493983729.10151.3045638970272194820.pr-tracker-bot@kernel.org>
+Date: Thu, 11 Jan 2024 02:23:57 +0000
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Joel Granados <joel.granados@gmail.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>, Iurii Zaikin <yzaikin@google.com>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Darrick J. Wong" <djwong@kernel.org>, Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>, mcgrof@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Fix the following errors reported by checkpatch:
+The pull request you sent on Tue, 9 Jan 2024 06:37:37 -0800:
 
-ERROR: do not use assignment in if condition
+> git://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/ tags/sysctl-6.8-rc1
 
-Signed-off-by: chenxuebing <chenxb_99091@126.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a05aea98d4052dcd63d9d379613058e9e86c76d7
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-index 6aa3b1d845ab..440e7aa45c66 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-@@ -191,9 +191,9 @@ int amdgpu_ib_schedule(struct amdgpu_ring *ring, unsigned int num_ibs,
- 	}
- 
- 	need_ctx_switch = ring->current_ctx != fence_ctx;
-+	tmp = amdgpu_sync_get_fence(&job->explicit_sync);
- 	if (ring->funcs->emit_pipeline_sync && job &&
--	    ((tmp = amdgpu_sync_get_fence(&job->explicit_sync)) ||
--	     (amdgpu_sriov_vf(adev) && need_ctx_switch) ||
-+	    (tmp || (amdgpu_sriov_vf(adev) && need_ctx_switch) ||
- 	     amdgpu_vm_need_pipeline_sync(ring, job))) {
- 		need_pipe_sync = true;
- 
+Thank you!
+
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
