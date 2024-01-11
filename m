@@ -1,39 +1,39 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D80D2FD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B501D2FA;
 	Thu, 11 Jan 2024 07:16:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6FRS9yOE"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40B3Odvx006046;
-	Thu, 11 Jan 2024 08:16:08 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Ojnanplm"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40B4K2J3004773;
+	Thu, 11 Jan 2024 08:16:10 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=r6X6BGtuJHlAwq5hKk1XL9iK7bAsTfplYeEEaPUDmGs=; b=6F
-	RS9yOEGe+OvTckP4ahMn3qCFh+aHv9LHCcbrft1f39yPFrrYglisZ+8uEj08/Sgb
-	GmJ3A+bswWTg+lQVMX7vc+TAZtVVI7x/op2p1OZc67/YE8HgCMx8xKLIey2MXeLs
-	RcR7Rj5BMz+QrzA2g0qSV+dhuEg/BqBKpCLEoaF43f4Bu+SMteFOMk2D3OASUCzf
-	E+1USYinCE2sZ4hGEbnmf1TUIRu2rpDELJgO/pbK7F8aXgdoob/IsqO8uRqQAVwi
-	EGlCCk8J6xDLFowobQW1jjQGiV2T6HYeE3KRi39Fn/0Tc/XWsNOzJ1P9mNqzmT9U
-	0DyIxpPhhtcZIoaPbJMg==
+	selector1; bh=kWVxuQlDJiWmda+Q1XzK8yS4wnSXnrhYrb2+tueETYo=; b=Oj
+	nanplm4aX2ITStf3HzMlCuguujptR10nHxjuyBvK+zV4SBCQYfubXMtEbYkOpqu6
+	+ieAsEcC9Z8xilrX3OOe+mJA6rrj94uFXykjPUDR/VqZfVmmvPKbDyFJL2J2/wJv
+	6/yRyPQBKh8c7FuGsYU0hFpu5zZ5+0vKhiIVAV/onY1JBsrz7Hfx8XI5cHvqh7sc
+	yl/78uMEbi0UZCVZ2xrRJZ6zKS1aZNeQNiwN4tXeuh/g/qJ6x0R1tqmb5ZF+ScAv
+	X/OmTqRLamaGbrYc1qIx7bFjLBPFWmOOdr5LwZX+74PNKcT4iG/5XY9UQTOJt+Qp
+	1NUwkt/STUDzI3zfodrw==
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vexrcbmy1-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vey30v355-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 08:16:08 +0100 (CET)
+	Thu, 11 Jan 2024 08:16:10 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3538010004D;
-	Thu, 11 Jan 2024 08:16:08 +0100 (CET)
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1741710004D;
+	Thu, 11 Jan 2024 08:16:10 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2BE4E21A21F;
-	Thu, 11 Jan 2024 08:16:08 +0100 (CET)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0975A21A21F;
+	Thu, 11 Jan 2024 08:16:10 +0100 (CET)
 Received: from localhost (10.201.21.240) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Jan
- 2024 08:16:07 +0100
+ 2024 08:16:09 +0100
 From: <gabriel.fernandez@foss.st.com>
 To: Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd
@@ -49,9 +49,9 @@ To: Michael Turquette <mturquette@baylibre.com>,
 CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 1/3] clk: stm32mp13: use platform device APIs
-Date: Thu, 11 Jan 2024 08:15:34 +0100
-Message-ID: <20240111071536.659409-2-gabriel.fernandez@foss.st.com>
+Subject: [PATCH v8 3/3] arm64: dts: st: add rcc support in stm32mp251
+Date: Thu, 11 Jan 2024 08:15:36 +0100
+Message-ID: <20240111071536.659409-4-gabriel.fernandez@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240111071536.659409-1-gabriel.fernandez@foss.st.com>
 References: <20240111071536.659409-1-gabriel.fernandez@foss.st.com>
@@ -71,167 +71,275 @@ X-Proofpoint-Virus-Version: vendor=baseguard
 
 From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 
-Convert devm_platform_ioremap_resource() and remove unnecessary
-dependency check with SCMI clock driver.
+Add RCC support to manage clocks and resets on the STM32MP251.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 ---
- drivers/clk/stm32/clk-stm32-core.c | 11 +++--
- drivers/clk/stm32/clk-stm32mp13.c  | 72 +++---------------------------
- 2 files changed, 10 insertions(+), 73 deletions(-)
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 132 ++++++++++++++++++++-----
+ 1 file changed, 108 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/clk/stm32/clk-stm32-core.c b/drivers/clk/stm32/clk-stm32-core.c
-index 58705fcad334..1721a3ed7386 100644
---- a/drivers/clk/stm32/clk-stm32-core.c
-+++ b/drivers/clk/stm32/clk-stm32-core.c
-@@ -25,7 +25,6 @@ static int stm32_rcc_clock_init(struct device *dev,
- {
- 	const struct stm32_rcc_match_data *data = match->data;
- 	struct clk_hw_onecell_data *clk_data = data->hw_clks;
--	struct device_node *np = dev_of_node(dev);
- 	struct clk_hw **hws;
- 	int n, max_binding;
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index 96859d098ef8..38ff2c819d17 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -3,7 +3,9 @@
+  * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+  * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+  */
++#include <dt-bindings/clock/st,stm32mp25-rcc.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/st,stm32mp25-rcc.h>
  
-@@ -64,7 +63,7 @@ static int stm32_rcc_clock_init(struct device *dev,
- 			hws[cfg_clock->id] = hw;
- 	}
+ / {
+ 	#address-cells = <2>;
+@@ -35,22 +37,16 @@ arm_wdt: watchdog {
+ 	};
  
--	return of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_data);
- }
+ 	clocks {
+-		ck_flexgen_08: ck-flexgen-08 {
++		clk_rcbsec: clk-rcbsec {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <100000000>;
++			clock-frequency = <64000000>;
+ 		};
  
- int stm32_rcc_init(struct device *dev, const struct of_device_id *match_data,
-@@ -638,7 +637,7 @@ struct clk_hw *clk_stm32_mux_register(struct device *dev,
- 	mux->lock = lock;
- 	mux->clock_data = data->clock_data;
- 
--	err = clk_hw_register(dev, hw);
-+	err = devm_clk_hw_register(dev, hw);
- 	if (err)
- 		return ERR_PTR(err);
- 
-@@ -659,7 +658,7 @@ struct clk_hw *clk_stm32_gate_register(struct device *dev,
- 	gate->lock = lock;
- 	gate->clock_data = data->clock_data;
- 
--	err = clk_hw_register(dev, hw);
-+	err = devm_clk_hw_register(dev, hw);
- 	if (err)
- 		return ERR_PTR(err);
- 
-@@ -680,7 +679,7 @@ struct clk_hw *clk_stm32_div_register(struct device *dev,
- 	div->lock = lock;
- 	div->clock_data = data->clock_data;
- 
--	err = clk_hw_register(dev, hw);
-+	err = devm_clk_hw_register(dev, hw);
- 	if (err)
- 		return ERR_PTR(err);
- 
-@@ -701,7 +700,7 @@ struct clk_hw *clk_stm32_composite_register(struct device *dev,
- 	composite->lock = lock;
- 	composite->clock_data = data->clock_data;
- 
--	err = clk_hw_register(dev, hw);
-+	err = devm_clk_hw_register(dev, hw);
- 	if (err)
- 		return ERR_PTR(err);
- 
-diff --git a/drivers/clk/stm32/clk-stm32mp13.c b/drivers/clk/stm32/clk-stm32mp13.c
-index d4ecb3c34a1b..bf81d7491708 100644
---- a/drivers/clk/stm32/clk-stm32mp13.c
-+++ b/drivers/clk/stm32/clk-stm32mp13.c
-@@ -1536,77 +1536,16 @@ static const struct of_device_id stm32mp13_match_data[] = {
- };
- MODULE_DEVICE_TABLE(of, stm32mp13_match_data);
- 
--static int stm32mp1_rcc_init(struct device *dev)
--{
--	void __iomem *rcc_base;
--	int ret = -ENOMEM;
+-		ck_flexgen_51: ck-flexgen-51 {
++		clk_dsi_txbyte: txbyteclk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
+-		};
 -
--	rcc_base = of_iomap(dev_of_node(dev), 0);
--	if (!rcc_base) {
--		dev_err(dev, "%pOFn: unable to map resource", dev_of_node(dev));
--		goto out;
--	}
--
--	ret = stm32_rcc_init(dev, stm32mp13_match_data, rcc_base);
--out:
--	if (ret) {
--		if (rcc_base)
--			iounmap(rcc_base);
--
--		of_node_put(dev_of_node(dev));
--	}
--
--	return ret;
--}
--
--static int get_clock_deps(struct device *dev)
--{
--	static const char * const clock_deps_name[] = {
--		"hsi", "hse", "csi", "lsi", "lse",
--	};
--	size_t deps_size = sizeof(struct clk *) * ARRAY_SIZE(clock_deps_name);
--	struct clk **clk_deps;
--	int i;
--
--	clk_deps = devm_kzalloc(dev, deps_size, GFP_KERNEL);
--	if (!clk_deps)
--		return -ENOMEM;
--
--	for (i = 0; i < ARRAY_SIZE(clock_deps_name); i++) {
--		struct clk *clk = of_clk_get_by_name(dev_of_node(dev),
--						     clock_deps_name[i]);
--
--		if (IS_ERR(clk)) {
--			if (PTR_ERR(clk) != -EINVAL && PTR_ERR(clk) != -ENOENT)
--				return PTR_ERR(clk);
--		} else {
--			/* Device gets a reference count on the clock */
--			clk_deps[i] = devm_clk_get(dev, __clk_get_name(clk));
--			clk_put(clk);
--		}
--	}
--
--	return 0;
--}
--
- static int stm32mp1_rcc_clocks_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	int ret = get_clock_deps(dev);
-+	void __iomem *base;
+-		ck_icn_ls_mcu: ck-icn-ls-mcu {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
++			clock-frequency = <0>;
+ 		};
+ 	};
  
--	if (!ret)
--		ret = stm32mp1_rcc_init(dev);
--
--	return ret;
--}
--
--static void stm32mp1_rcc_clocks_remove(struct platform_device *pdev)
--{
--	struct device *dev = &pdev->dev;
--	struct device_node *child, *np = dev_of_node(dev);
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (WARN_ON(IS_ERR(base)))
-+		return PTR_ERR(base);
+@@ -122,7 +118,7 @@ usart2: serial@400e0000 {
+ 				compatible = "st,stm32h7-uart";
+ 				reg = <0x400e0000 0x400>;
+ 				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&ck_flexgen_08>;
++				clocks = <&rcc CK_KER_USART2>;
+ 				status = "disabled";
+ 			};
  
--	for_each_available_child_of_node(np, child)
--		of_clk_del_provider(child);
-+	return stm32_rcc_init(dev, stm32mp13_match_data, base);
- }
+@@ -131,7 +127,7 @@ sdmmc1: mmc@48220000 {
+ 				arm,primecell-periphid = <0x00353180>;
+ 				reg = <0x48220000 0x400>, <0x44230400 0x8>;
+ 				interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&ck_flexgen_51>;
++				clocks = <&rcc CK_KER_SDMMC1 >;
+ 				clock-names = "apb_pclk";
+ 				cap-sd-highspeed;
+ 				cap-mmc-highspeed;
+@@ -156,6 +152,94 @@ package_otp@1e8 {
+ 			};
+ 		};
  
- static struct platform_driver stm32mp13_rcc_clocks_driver = {
-@@ -1615,7 +1554,6 @@ static struct platform_driver stm32mp13_rcc_clocks_driver = {
- 		.of_match_table = stm32mp13_match_data,
- 	},
- 	.probe = stm32mp1_rcc_clocks_probe,
--	.remove_new = stm32mp1_rcc_clocks_remove,
- };
- 
- static int __init stm32mp13_clocks_init(void)
++		rcc: clock-controller@44200000 {
++			compatible = "st,stm32mp25-rcc";
++			reg = <0x44200000 0x10000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			clocks =
++				<&scmi_clk CK_SCMI_HSE>,
++				<&scmi_clk CK_SCMI_HSI>,
++				<&scmi_clk CK_SCMI_MSI>,
++				<&scmi_clk CK_SCMI_LSE>,
++				<&scmi_clk CK_SCMI_LSI>,
++				<&scmi_clk CK_SCMI_HSE_DIV2>,
++				<&scmi_clk CK_SCMI_ICN_HS_MCU>,
++				<&scmi_clk CK_SCMI_ICN_LS_MCU>,
++				<&scmi_clk CK_SCMI_ICN_SDMMC>,
++				<&scmi_clk CK_SCMI_ICN_DDR>,
++				<&scmi_clk CK_SCMI_ICN_DISPLAY>,
++				<&scmi_clk CK_SCMI_ICN_HSL>,
++				<&scmi_clk CK_SCMI_ICN_NIC>,
++				<&scmi_clk CK_SCMI_ICN_VID>,
++				<&scmi_clk CK_SCMI_FLEXGEN_07>,
++				<&scmi_clk CK_SCMI_FLEXGEN_08>,
++				<&scmi_clk CK_SCMI_FLEXGEN_09>,
++				<&scmi_clk CK_SCMI_FLEXGEN_10>,
++				<&scmi_clk CK_SCMI_FLEXGEN_11>,
++				<&scmi_clk CK_SCMI_FLEXGEN_12>,
++				<&scmi_clk CK_SCMI_FLEXGEN_13>,
++				<&scmi_clk CK_SCMI_FLEXGEN_14>,
++				<&scmi_clk CK_SCMI_FLEXGEN_15>,
++				<&scmi_clk CK_SCMI_FLEXGEN_16>,
++				<&scmi_clk CK_SCMI_FLEXGEN_17>,
++				<&scmi_clk CK_SCMI_FLEXGEN_18>,
++				<&scmi_clk CK_SCMI_FLEXGEN_19>,
++				<&scmi_clk CK_SCMI_FLEXGEN_20>,
++				<&scmi_clk CK_SCMI_FLEXGEN_21>,
++				<&scmi_clk CK_SCMI_FLEXGEN_22>,
++				<&scmi_clk CK_SCMI_FLEXGEN_23>,
++				<&scmi_clk CK_SCMI_FLEXGEN_24>,
++				<&scmi_clk CK_SCMI_FLEXGEN_25>,
++				<&scmi_clk CK_SCMI_FLEXGEN_26>,
++				<&scmi_clk CK_SCMI_FLEXGEN_27>,
++				<&scmi_clk CK_SCMI_FLEXGEN_28>,
++				<&scmi_clk CK_SCMI_FLEXGEN_29>,
++				<&scmi_clk CK_SCMI_FLEXGEN_30>,
++				<&scmi_clk CK_SCMI_FLEXGEN_31>,
++				<&scmi_clk CK_SCMI_FLEXGEN_32>,
++				<&scmi_clk CK_SCMI_FLEXGEN_33>,
++				<&scmi_clk CK_SCMI_FLEXGEN_34>,
++				<&scmi_clk CK_SCMI_FLEXGEN_35>,
++				<&scmi_clk CK_SCMI_FLEXGEN_36>,
++				<&scmi_clk CK_SCMI_FLEXGEN_37>,
++				<&scmi_clk CK_SCMI_FLEXGEN_38>,
++				<&scmi_clk CK_SCMI_FLEXGEN_39>,
++				<&scmi_clk CK_SCMI_FLEXGEN_40>,
++				<&scmi_clk CK_SCMI_FLEXGEN_41>,
++				<&scmi_clk CK_SCMI_FLEXGEN_42>,
++				<&scmi_clk CK_SCMI_FLEXGEN_43>,
++				<&scmi_clk CK_SCMI_FLEXGEN_44>,
++				<&scmi_clk CK_SCMI_FLEXGEN_45>,
++				<&scmi_clk CK_SCMI_FLEXGEN_46>,
++				<&scmi_clk CK_SCMI_FLEXGEN_47>,
++				<&scmi_clk CK_SCMI_FLEXGEN_48>,
++				<&scmi_clk CK_SCMI_FLEXGEN_49>,
++				<&scmi_clk CK_SCMI_FLEXGEN_50>,
++				<&scmi_clk CK_SCMI_FLEXGEN_51>,
++				<&scmi_clk CK_SCMI_FLEXGEN_52>,
++				<&scmi_clk CK_SCMI_FLEXGEN_53>,
++				<&scmi_clk CK_SCMI_FLEXGEN_54>,
++				<&scmi_clk CK_SCMI_FLEXGEN_55>,
++				<&scmi_clk CK_SCMI_FLEXGEN_56>,
++				<&scmi_clk CK_SCMI_FLEXGEN_57>,
++				<&scmi_clk CK_SCMI_FLEXGEN_58>,
++				<&scmi_clk CK_SCMI_FLEXGEN_59>,
++				<&scmi_clk CK_SCMI_FLEXGEN_60>,
++				<&scmi_clk CK_SCMI_FLEXGEN_61>,
++				<&scmi_clk CK_SCMI_FLEXGEN_62>,
++				<&scmi_clk CK_SCMI_FLEXGEN_63>,
++				<&scmi_clk CK_SCMI_ICN_APB1>,
++				<&scmi_clk CK_SCMI_ICN_APB2>,
++				<&scmi_clk CK_SCMI_ICN_APB3>,
++				<&scmi_clk CK_SCMI_ICN_APB4>,
++				<&scmi_clk CK_SCMI_ICN_APBDBG>,
++				<&scmi_clk CK_SCMI_TIMG1>,
++				<&scmi_clk CK_SCMI_TIMG2>,
++				<&scmi_clk CK_SCMI_PLL3>,
++				<&clk_dsi_txbyte>;
++		};
++
+ 		syscfg: syscon@44230000 {
+ 			compatible = "st,stm32mp25-syscfg", "syscon";
+ 			reg = <0x44230000 0x10000>;
+@@ -174,7 +258,7 @@ gpioa: gpio@44240000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOA>;
+ 				st,bank-name = "GPIOA";
+ 				status = "disabled";
+ 			};
+@@ -185,7 +269,7 @@ gpiob: gpio@44250000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x10000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOB>;
+ 				st,bank-name = "GPIOB";
+ 				status = "disabled";
+ 			};
+@@ -196,7 +280,7 @@ gpioc: gpio@44260000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x20000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOC>;
+ 				st,bank-name = "GPIOC";
+ 				status = "disabled";
+ 			};
+@@ -207,7 +291,7 @@ gpiod: gpio@44270000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x30000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOD>;
+ 				st,bank-name = "GPIOD";
+ 				status = "disabled";
+ 			};
+@@ -218,7 +302,7 @@ gpioe: gpio@44280000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x40000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOE>;
+ 				st,bank-name = "GPIOE";
+ 				status = "disabled";
+ 			};
+@@ -229,7 +313,7 @@ gpiof: gpio@44290000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x50000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOF>;
+ 				st,bank-name = "GPIOF";
+ 				status = "disabled";
+ 			};
+@@ -240,7 +324,7 @@ gpiog: gpio@442a0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x60000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOG>;
+ 				st,bank-name = "GPIOG";
+ 				status = "disabled";
+ 			};
+@@ -251,7 +335,7 @@ gpioh: gpio@442b0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x70000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOH>;
+ 				st,bank-name = "GPIOH";
+ 				status = "disabled";
+ 			};
+@@ -262,7 +346,7 @@ gpioi: gpio@442c0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x80000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOI>;
+ 				st,bank-name = "GPIOI";
+ 				status = "disabled";
+ 			};
+@@ -273,7 +357,7 @@ gpioj: gpio@442d0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x90000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOJ>;
+ 				st,bank-name = "GPIOJ";
+ 				status = "disabled";
+ 			};
+@@ -284,7 +368,7 @@ gpiok: gpio@442e0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0xa0000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOK>;
+ 				st,bank-name = "GPIOK";
+ 				status = "disabled";
+ 			};
+@@ -303,7 +387,7 @@ gpioz: gpio@46200000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOZ>;
+ 				st,bank-name = "GPIOZ";
+ 				st,bank-ioport = <11>;
+ 				status = "disabled";
 -- 
 2.25.1
 
