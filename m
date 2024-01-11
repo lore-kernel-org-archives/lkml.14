@@ -1,84 +1,68 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.7])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B3CFDF61
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="By7FeYAz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=AFybaTdIOLDtKhWkjS
-	fj+9IhSzf1uJELy1AANTtfmo0=; b=By7FeYAzNlDev86pD7wDPMImb7EtMtXVbC
-	noDgGmkQyvvCvvE0JsI5wQ5/LwRKfXqwa+NLVwUIa8IUNFBSdIJSRsXjJuijZS5H
-	o75UmWz7/MXrdATfvctsw9toXtjLgVvdDtl0YtLXgGa/WscIiosW822NJCFsgcdy
-	pSePYl4xE=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD3P_XnjZ9lXE2hAA--.3673S2;
-	Thu, 11 Jan 2024 14:42:47 +0800 (CST)
-From: chenxuebing <chenxb_99091@126.com>
-To: airlied@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	daniel@ffwll.ch,
-	tzimmermann@suse.de
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	chenxuebing <chenxb_99091@126.com>
-Subject: [PATCH] drm: Clean up errors in drm_dp_mst_topology.h
-Date: Thu, 11 Jan 2024 06:42:45 +0000
-Message-Id: <20240111064245.8789-1-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3P_XnjZ9lXE2hAA--.3673S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tFW7Xw43AF43WF43ZFy8uFg_yoW8GrWfpr
-	WqkrZrK34IkanIkw4UZF1Uur4DGan7Xryxtr45Cws3tay5Ar1rX3WUKFy3tr17XFZ2y34f
-	trZ7uF17GF92kw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UFLv_UUUUU=
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiGAtixWVLZWcFvwAAsi
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA7FEADD
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bb454e1d64so465880739f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 22:44:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704955444; x=1705560244;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Go7MHHguEsXDJaMiDiMFUZrkJPCJjs8e6jnOcbKt05k=;
+        b=NCHlsWTb938sIKsN6eqB+bnNcARFRIlYRkZFYwzp2VfdGYZ62tO1ym1H2Wtc1Z9XJJ
+         6xQ5jSJ2QszBoPzRrzuZfvQxX9j1CsYS+ULwGT8cqlzR7zMjcS/wA/x0SAAprBbXI1Ge
+         UBXw0Gwx9c2PlF49NN07+j6JhQuLIFtLFQUpNrtpInq3SFcgB0/6a9QpxisvU97XUdlL
+         frdOX802kzIzPfINK47Fj9WxACINVhLj4nlT31p8+LUDjKWjDUJ6VRxYvr3awN4LJgyZ
+         YfrZzIB7xx86Zuhh72XEXGOeXPsVXb7foz6gNQ3h86ai3mkGQZ1U+fpo1kie+8YcdXGt
+         85FA==
+X-Gm-Message-State: AOJu0Yy4tVtXVpqj4NuX7oaJkfx9jDKzAKoJS05D1ta77A6GfBlGuu/J
+	VC8ACSRGUmMB70uXO+4xPO90Z/pqpGNbnKC1Dagy8Pr4+Xf4
+X-Google-Smtp-Source: AGHT+IHkD2jmO/TL/yOssuiaFNilDxssd908YaoSm12wBNANAvPSwd623sCODi3g2j4cDI1dKtqu1f3WEK5dMfbA4SkkLKacv/vM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:210:b0:46e:50ab:6a4e with SMTP id
+ e16-20020a056638021000b0046e50ab6a4emr31005jaq.3.1704955444335; Wed, 10 Jan
+ 2024 22:44:04 -0800 (PST)
+Date: Wed, 10 Jan 2024 22:44:04 -0800
+In-Reply-To: <000000000000fcfb4a05ffe48213@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009e1b00060ea5df51@google.com>
+Subject: Re: [syzbot] [hfs] general protection fault in tomoyo_check_acl (3)
+From: syzbot <syzbot+28aaddd5a3221d7fd709@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, jmorris@namei.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, paul@paul-moore.com, 
+	penguin-kernel@I-love.SAKURA.ne.jp, penguin-kernel@i-love.sakura.ne.jp, 
+	serge@hallyn.com, syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp, 
+	tomoyo-dev-en-owner@lists.osdn.me, tomoyo-dev-en@lists.osdn.me
+Content-Type: text/plain; charset="UTF-8"
 
-Fix the following errors reported by checkpatch:
+syzbot suspects this issue was fixed by commit:
 
-ERROR: space prohibited before open square bracket '['
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-Signed-off-by: chenxuebing <chenxb_99091@126.com>
----
- drivers/gpu/drm/display/drm_dp_mst_topology.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+    fs: Block writes to mounted block devices
 
-diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/drm/display/drm_dp_mst_topology.c
-index bd6c24d4213c..a4a24ec11b80 100644
---- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
-@@ -100,7 +100,7 @@ static bool drm_dp_mst_port_downstream_of_branch(struct drm_dp_mst_port *port,
- 
- #define DBG_PREFIX "[dp_mst]"
- 
--#define DP_STR(x) [DP_ ## x] = #x
-+#define DP_STR(x)[DP_ ## x] = #x
- 
- static const char *drm_dp_mst_req_type_str(u8 req_type)
- {
-@@ -131,7 +131,7 @@ static const char *drm_dp_mst_req_type_str(u8 req_type)
- }
- 
- #undef DP_STR
--#define DP_STR(x) [DP_NAK_ ## x] = #x
-+#define DP_STR(x)[DP_NAK_ ## x] = #x
- 
- static const char *drm_dp_mst_nak_reason_str(u8 nak_reason)
- {
-@@ -156,7 +156,7 @@ static const char *drm_dp_mst_nak_reason_str(u8 nak_reason)
- }
- 
- #undef DP_STR
--#define DP_STR(x) [DRM_DP_SIDEBAND_TX_ ## x] = #x
-+#define DP_STR(x)[DRM_DP_SIDEBAND_TX_ ## x] = #x
- 
- static const char *drm_dp_mst_sideband_tx_state_str(int state)
- {
--- 
-2.17.1
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15135c0be80000
+start commit:   a901a3568fd2 Merge tag 'iomap-6.5-merge-1' of git://git.ke..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7406f415f386e786
+dashboard link: https://syzkaller.appspot.com/bug?extid=28aaddd5a3221d7fd709
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17b5bb80a80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10193ee7280000
 
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: fs: Block writes to mounted block devices
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
