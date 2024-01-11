@@ -1,126 +1,115 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2040.outbound.protection.outlook.com [40.107.95.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7801F4F5E6;
-	Thu, 11 Jan 2024 16:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3F951004
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nNiOZbv6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MyIDGZTJ2s/7ogacWnFbw4OTgsDCkfFYrPbdTwcOt7FTSRU2fFCFm643hulwcylRrbObES33NfjgDTj7ZdojLxSLPeIHRDo3l21t7AePGJftFfaSSn6cWCisJg8dWKhfjws13I6sLzke+eWhPDcGXnZ1dqmsL2QxrPrxGAIJAqbC0NaSqD+7xaMFZrNvmuiwC4uZOBc2XsxU34QkwOMcPwNEuWrsM4GYhQnKJd6BFVx6x5bouhn8rVGiAOy6racbKfuciBFwj2kBpuqitNk8y5M3PU/6y57aNrEe2V2p//GL5o4NhXLt6Rr44iEUbGPQVmYBhOTM+SchRdBvK5PCXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7KgiVcdlF3SvUWOo1CMyEdMY6v4IUUtsXG+FBDx6If0=;
- b=MBHtPUsMHbAMdZQwQnn1OLfkYsgQiab6/t80z86FXhFgwN4ZDSSNjCitt2gMJP8Bmhanhr4Q8xo07+83jr6A3M84YEYL7khy6bGCTDcdZ56sNOBS+Qj1w/xFM2aQL3q+NSuX38VIfnaTumLHaGfeKqMz0vrYFE7ONO0S7eldMSXTD9UtjadY/BRKTjU67P1hJchMDtqHdacRqG+l7f2zg3VGfialIuH0lWdUfmII6tnuqGRBAlE0HB4fKLsSVXY+XVmX53+r4pDwsaq/uCPMPvoaspYz8+44R2nbc3+2LzBzpsTkHMjxzzdVRJyhnlkcPwbjuxLmeta0joadsD2lSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7KgiVcdlF3SvUWOo1CMyEdMY6v4IUUtsXG+FBDx6If0=;
- b=nNiOZbv6Mo44TdfO+4QvSDRcadGELHaIUHEDkaWZnqzyM+8XrzK2ejSoQBs0CLXCiqprUdSaLxGUApOuT3SqvNqao0ngz4TOjG1h5i3k5JwXhllKI54wHYdgPDFh30wN0igs00iqFV2pYkKdoDw+Q5AvF3s6KxXF2YV1XpjM6sc/3U8x9QYFmE3OxZJT4sEVam5Ohh5w0h26sBea1EtuKsyg+h/MWFTSa5jW4Y1pBXNXr/am8qMHWV1y2OZoIx5tPtnklmOM/806WM9oTkHEI2S0qJNmSWacIe8CsopUSuapObZiDT9rfYl1T5dXJUqAJacjwXyUC/ks8OBzvKvzBg==
-Received: from SA0PR11CA0098.namprd11.prod.outlook.com (2603:10b6:806:d1::13)
- by MN2PR12MB4423.namprd12.prod.outlook.com (2603:10b6:208:24f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Thu, 11 Jan
- 2024 16:55:23 +0000
-Received: from SN1PEPF000252A4.namprd05.prod.outlook.com
- (2603:10b6:806:d1:cafe::17) by SA0PR11CA0098.outlook.office365.com
- (2603:10b6:806:d1::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.19 via Frontend
- Transport; Thu, 11 Jan 2024 16:55:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SN1PEPF000252A4.mail.protection.outlook.com (10.167.242.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7181.14 via Frontend Transport; Thu, 11 Jan 2024 16:55:23 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 11 Jan
- 2024 08:55:11 -0800
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 11 Jan
- 2024 08:55:11 -0800
-Received: from Asurada-Nvidia (10.127.8.9) by mail.nvidia.com (10.129.68.10)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41 via Frontend
- Transport; Thu, 11 Jan 2024 08:55:10 -0800
-Date: Thu, 11 Jan 2024 08:55:08 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Yi Liu <yi.l.liu@intel.com>
-CC: <joro@8bytes.org>, <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<kevin.tian@intel.com>, <robin.murphy@arm.com>, <baolu.lu@linux.intel.com>,
-	<cohuck@redhat.com>, <eric.auger@redhat.com>, <kvm@vger.kernel.org>,
-	<mjrosato@linux.ibm.com>, <chao.p.peng@linux.intel.com>,
-	<yi.y.sun@linux.intel.com>, <peterx@redhat.com>, <jasowang@redhat.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <lulu@redhat.com>,
-	<suravee.suthikulpanit@amd.com>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<zhenzhong.duan@intel.com>, <joao.m.martins@oracle.com>,
-	<xin.zeng@intel.com>, <yan.y.zhao@intel.com>, <j.granados@samsung.com>,
-	<binbin.wu@linux.intel.com>
-Subject: Re: [PATCH v11 3/8] iommu: Add iommu_copy_struct_from_user_array
- helper
-Message-ID: <ZaAdbHbV27msSxtV@Asurada-Nvidia>
-References: <20240111041015.47920-1-yi.l.liu@intel.com>
- <20240111041015.47920-4-yi.l.liu@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plu9v4/7"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40e62e6e3b0so1769465e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:58:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704992334; x=1705597134; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QpB6LSOwWInw7WKvFt3WMNIK3ZW3rfcyuckfXz6cQRQ=;
+        b=plu9v4/7Anr9URaVJXrJg3TULVmuVIpPf6D630eHNhk6A7M/RbHKPdg4auwG6JQtFd
+         dqyLVwKZv+XZTQAd1geyeTQBE6RVckn87mJKyZx4CdjT7xC5nk00RaK7rhn0WGpz7w94
+         9xIhuhCffbt4iWDFJHDZ+9Jo56s7s/1EwyKUTZT+XsqIIkAnc1Aqw+FAidWj4QDR9HsJ
+         eGB5Oa54NqVYgkwr17mfEmvHmV/zueimoSvt7hb4vJAyue6EVV7+LmsC/Jl8ssq/avSf
+         viyJ213ZyeKN50L5bQgc3Ut8EpTWMySCwUXO3rAdKgRrz7Pk4h2aB36+0XINohcDHC2i
+         hB3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704992334; x=1705597134;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QpB6LSOwWInw7WKvFt3WMNIK3ZW3rfcyuckfXz6cQRQ=;
+        b=bC1DZdgPrZt7KQl91fje17Qm5odLMRevbmfQEGamrW0+bvclJN13sONoYiEYUdiWsc
+         o1YQIkjPOUMz6b4nbggGtm9GB/E7ibRYEsx0dnzR5U6Gf1OM/F7SVWzKIncc4M0TyxC7
+         cIJWpKIP/qLxu27ipGVHjIZSNMFGHTKpfs7Odate7GAMhE179qTVHCN6lRVhbmR39Hph
+         ABuw+mvzFxm/9/RzoYafrT+dEHGdjl+pLklXxdvEVBdEIhpHWmfh7jUwIFbZGig+RAL/
+         7C+QIec7CHnYqSOkjyW4r3AIoMzueEc6G9Tz2TyHn6AqgrL+S167HiDLnp88niHjO+Zg
+         RQqg==
+X-Gm-Message-State: AOJu0Yxgr831YgeFlz/UlvLk+gzsQQAu5JdotKjR7/IP9NhDEY00K7T1
+	0wdO/kIvjQGCf3a9F+sty9u4n6uGclrVUw==
+X-Google-Smtp-Source: AGHT+IHr10MovwwZxYwOSZSTo+kUwVxusD/eU0uFA5hQc/nprJ568eBoFh1BNIXBvqXhH2i+kOH1uw==
+X-Received: by 2002:a05:600c:4e15:b0:40e:52d2:ef23 with SMTP id b21-20020a05600c4e1500b0040e52d2ef23mr56768wmq.17.1704992334363;
+        Thu, 11 Jan 2024 08:58:54 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id iv17-20020a05600c549100b0040e5034d8e0sm6501354wmb.43.2024.01.11.08.58.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 08:58:53 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Thu, 11 Jan 2024 17:58:49 +0100
+Subject: [PATCH 1/2] arm64: dts: qcom: sm8650-qrd: add gpio74 as reserved
+ gpio
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240111041015.47920-4-yi.l.liu@intel.com>
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000252A4:EE_|MN2PR12MB4423:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c0ec8a5-45c8-4faf-349e-08dc12c61a29
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	juWp5b0oRQZNRwdjSNOEkhltKU4nRoDjhcKRG//jp94gfOEz+M13Vm0KS5fKR0BVHnL089vCofu1Hhj6qHW30jWpW6I7zw8BbQszNYIKc9y7SkrrAkPN3D9RmA1RWFZib1A5hLe3Wet5oZtYVRAXoXMpob1inSGfcCDi4b8+Or/XiRrX4xabZJZMwUcHt1vkF3tUBltXs/EaIFs6eNIr5VA0Yu0paN7MQnyQJ+nBn47yHmzgokWkVm6UmGrTTJEmWZoAPXvl6omeG2GZUWJq5HXefMZLyrmfK39zDOhwwyzl+IDICvsrHGqrpS4KRqd488fUm9jAC4aTXI518QO+DJZi173CRKhjJ91Tzrr6Z0tvXj0V4rMhpEt6NvOWIbxj/oTnX/g9FQEJycheLpiaAMK5/MJGF3LKEHdeUb2jAUJO5RdNyXMjsnjIXNrI78HswtLgn2yIG5O7TN8DTCL8tZggWPAMCDnIYROXmfvM4Ms//2N1o0J3K7+YyrN/uDB5kaBJW6yUdXZsdsCafj0pdTdGuXY9EBUYZtqhjkBxyNPpKWetCJU06kulxBnx5WmtA7oaI2STTxd5fJ48OqcSETCdhDqAF0qXkBtiw73IVjrPuWMek3JwFq/Gq0/6aEi0yeSPSIaqeciX6h3tGtbN8SpocoTOQ3MEzblCKKhv3xz94txCCpg9Nkl7MoId30hkiuvUwsx6Fv+HEgE9DboLGTps98aw8mXO+Xfgu1HlR/2ENo/QcKZqWrUAxBHa/SsP
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(396003)(346002)(376002)(230922051799003)(64100799003)(186009)(82310400011)(451199024)(1800799012)(40470700004)(46966006)(36840700001)(336012)(4326008)(426003)(9686003)(47076005)(7416002)(26005)(36860700001)(4744005)(8676002)(82740400003)(5660300002)(478600001)(2906002)(33716001)(54906003)(8936002)(6916009)(316002)(70586007)(41300700001)(70206006)(7636003)(356005)(86362001)(55016003)(40480700001)(40460700003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 16:55:23.0093
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c0ec8a5-45c8-4faf-349e-08dc12c61a29
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000252A4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4423
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240111-topic-sm8650-upstream-qrd-fix-gpio-reserved-v1-1-fad39b4c5def@linaro.org>
+References: <20240111-topic-sm8650-upstream-qrd-fix-gpio-reserved-v1-0-fad39b4c5def@linaro.org>
+In-Reply-To: <20240111-topic-sm8650-upstream-qrd-fix-gpio-reserved-v1-0-fad39b4c5def@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Georgi Djakov <djakov@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1107;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=Ld7ubk2A1iIOznHh2Zvoty4uvkikoaHqPcyq6CJCAKI=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBloB5L0Z35o6Eulbs8a34zu6lP0svEinf4Gl7P6wyO
+ N6uFHe+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZaAeSwAKCRB33NvayMhJ0RE5D/
+ 48yvbQvibhYdFKg/IC1LJ5SEjjVa7BVM8+sceE8DCK2b+DINrY45sCb/QHcN1ii29UCu8R69ycjD2g
+ /vCw3RFqZXnpRbZfWHMtt+051vu+L6QlsaaEZfb5HCuK2YpsYsAVN/yOmlg9bXFmzJNVX6IqSbiEDp
+ GHR5JSFg4kWIgtsWZLS+kHf1WG4VynAsyaJQt64eAV+JC5by3VVyayiCWdQsoljrADZqgpGE2p8ATb
+ Nm32/6ocDjkGPpC/XUj21X2Mh3ZyKmfrwQIUFPdHhgW19P59lZHj8fRrThPM7nauRXFrgUlyjelIgo
+ tv+g5DgvZQx1V9rQxy6V+otIu9EHYC072+2NKD79JUcAiTlBE77JDxx73pOjUqOjlaiSOeZgfjwf7t
+ X2LEpp1mdefz1eDsUqXswF2hECOUk3Z/GlFJ2x0UYMP2n5T7PzP+i1a/mpUWab1MhcOBLuQhLBBMxn
+ 6m2CSlH16gDSwmqJRqJ6JwQoebjduLyZ1kcjpTQG2nBaouJsL3QgAcUnHQn4N9OOOg2pKHFjiPYoHo
+ r0+FUxgWAlWVYg9iR0HZ56mLlRKnOfVUE6WfqVE7tWExtwi0aEmtW0kyGs/FnKGw2QL6nBJ9LcaUpb
+ 3GRbns3PGry9CHpWRmUNzxDP9XhphNWeCLJmpNxiEO4FZCa/qvD16ETrLjeA==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On Wed, Jan 10, 2024 at 08:10:10PM -0800, Yi Liu wrote:
+The TLMM gpio74 is also used to communicate with the secure NFC
+on-board module, some variants of the SM8650-QRD board requires
+this GPIO to be dedicated to the secure firmware and set reserved
+in order to successfully initialize the TLMM GPIOs from HLOS (Linux).
+On the other boards this GPIO is unused so it's still safe to mark
+the GPIO as reserved.
 
-> +#define iommu_copy_struct_from_user_array(kdst, user_array, data_type,   \
-> +                                         index, min_last)                \
-> +       __iommu_copy_struct_from_user_array(kdst, user_array, data_type, \
-> +                                           index, sizeof(*kdst),        \
-> +                                           offsetofend(typeof(*kdst),   \
-> +                                                       min_last))
+Fixes: a834911d50c1 ("arm64: dts: qcom: sm8650: add initial SM8650 QRD dts")
+Reported-by: Georgi Djakov <djakov@kernel.org>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8650-qrd.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+index 592a67a47c78..b9151c2ddf2e 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
++++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+@@ -659,7 +659,7 @@ touchscreen@0 {
  
-There is an extra space before '\' at the 2nd line, making it:
+ &tlmm {
+ 	/* Reserved I/Os for NFC */
+-	gpio-reserved-ranges = <32 8>;
++	gpio-reserved-ranges = <32 8>, <74 1>;
+ 
+ 	bt_default: bt-default-state {
+ 		bt-en-pins {
 
-390 #define iommu_copy_struct_from_user_array(kdst, user_array, data_type,   \
-391                                           index, min_last)                \
-392         __iommu_copy_struct_from_user_array(kdst, user_array, data_type, \
-393                                             index, sizeof(*kdst),        \
-394                                             offsetofend(typeof(*kdst),   \
-395                                                         min_last))
+-- 
+2.34.1
+
