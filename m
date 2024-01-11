@@ -1,156 +1,178 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BACD2101;
-	Thu, 11 Jan 2024 06:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE54E2105;
+	Thu, 11 Jan 2024 06:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+HKG1xL"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d3e8a51e6bso39835755ad.3;
-        Wed, 10 Jan 2024 22:05:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704953146; x=1705557946; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lHGoXIC2FCB2mAKhVqh6NZDuE4LJRbl6RDfBQ0QRmmo=;
-        b=Q+HKG1xLsbBoITDb4YUFsnxMoHpaDEpTOCJwjCqbddCUCI4vcDZ7UWEgokaZHIemXP
-         un/ycE8w5aj6RZVA4Uty5xrL1AZa2RFkgkC5nu8UK1oWcQ2TR5iz86JypqfDWf5MipTX
-         NLFg6XbjJodNGzrMGxeJFg3KHfXBuMbzfWHA4w/yZStQ0amfQWJ6Dwr2GCGKzxf1Jbho
-         PuWcBMlzal+ng/l/TroO4A4/4scy+izDdJ4Fg7Q3H+i3S4nqZXdhbbU/izuMshttjEGh
-         8skdF1g/78HIRkGEJFntsY/Mc+CKX0KxnOdzlE54lfI46sOAhPcDChR53caCOj6vJ8g7
-         SeRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704953146; x=1705557946;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lHGoXIC2FCB2mAKhVqh6NZDuE4LJRbl6RDfBQ0QRmmo=;
-        b=SHGuloj9jn+Oye+Q8eOMnFQYivjuQHjdPhBVziyY8I8lt04B/61eqKSWe6sjPbrAZB
-         pqobOceuHXtZSijPbQmTWsfJM5W6zd4+U9MvsKtErAQeCIZs9E062silyriS+u1nK0a/
-         qhiq0RUPpeA/ssFnqaMXBx1EcjgYutkVRCPWSNgGyilk+wLC7r47EF2uzrN/v2GFROSu
-         DD7wFwPPjY+sLMvQ9pThBEJ4yIJZcEu7gCCvgr2xBmkt1v132kahboPnMcy8tFC9h5j6
-         ohejipr0T/bArW7v/5Go7NVrXzfir/t7TBMt7q9Igyt4zdRBZzN5PdCG2ePwtQQw7uF1
-         T2VQ==
-X-Gm-Message-State: AOJu0YxmExeGcZFS2ZtPZQCYQEU+xZZI0+8lOYUIiDDWqpsLbL2QJ3YB
-	fH777uQEg9NpKnkE2LNJDZjizKmHRsUIvp9YsZ4=
-X-Google-Smtp-Source: AGHT+IH+1q73uvlfGT5vqj6l9FlxKHf19BKYpA8MaR24y+5FzlsjZZl9SiLbskLUCzdqOP3lbR6IitsAoaAGQSftlCY=
-X-Received: by 2002:a17:90a:f513:b0:28d:b4f8:5104 with SMTP id
- cs19-20020a17090af51300b0028db4f85104mr498035pjb.48.1704953146596; Wed, 10
- Jan 2024 22:05:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LVobSU4f"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40B5e1kf022118;
+	Thu, 11 Jan 2024 06:08:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=/6QUE+JTKVJzsM5DjhsgngB9QhhyX2fGpNdXNdgcBSc=; b=LV
+	obSU4fQxCfixukwig4w/EowuyZfFWyhvGAbfNEOEY0mfcbu2+7Xesp98l4fdCWaq
+	Mcj3HDPadDMISsFnlEZZvd4d5tRsfdA5ciZfwpfa+DtKcDBUYMBWxHHuN5u5M95m
+	zdnpCNV5GvKPDJATdBtyzIBG1MLrKP4IJ7SoCLsO6gU995zpnpm/uJilWdxOzKXa
+	PhfUyMUtFrupTeBZ5WPQx0Zcip51hN3OdBrw6Nd55QDP5VrRZzpQGoUxmY/TUDyZ
+	Zr8C6rV48lF/y5KSO41QVPtVGqEo51hIqEPp/s9camoOlqpqJU9dg39DNI4jCt/l
+	/D6WeLqNmpcSGhizyRsA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhuak23g8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 06:08:26 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40B68PaD016302
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 06:08:25 GMT
+Received: from [10.239.133.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 10 Jan
+ 2024 22:08:22 -0800
+Message-ID: <1ae3c5a4-97d9-415e-8dd5-520e00c5e94f@quicinc.com>
+Date: Thu, 11 Jan 2024 14:08:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230914000348.25790-1-michael@allwinnertech.com>
- <CA+Da2qzr0SBu-kUtFTnBqT+OObFOSTFgmU30L3B-Rjv3rYbGKw@mail.gmail.com>
- <CAPDyKFpHw+6vovHRWbhsDwre81U4Uu_X-Wy_viQCZp6nj=5Jkw@mail.gmail.com>
- <aa657a1d-a25d-21a8-4093-ec8fbe298ca2@allwinnertech.com> <CAPDyKFoJpKdsey8dxbs+NpTDDU5fR7h_=JK+aEdD2oeO5W33WQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFoJpKdsey8dxbs+NpTDDU5fR7h_=JK+aEdD2oeO5W33WQ@mail.gmail.com>
-From: Wenchao Chen <wenchao.chen666@gmail.com>
-Date: Thu, 11 Jan 2024 14:05:35 +0800
-Message-ID: <CA+Da2qzsJyy08dfHDK6h0aVfgzbmCM9A=1XE9nkNkr7NQems_Q@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: Add new flag to force hardware reset
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Michael Wu <michael@allwinnertech.com>, adrian.hunter@intel.com, 
-	jinpu.wang@ionos.com, victor.shih@genesyslogic.com.tw, avri.altman@wdc.com, 
-	asuk4.q@gmail.com, f.fainelli@gmail.com, beanhuo@micron.com, 
-	linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sarthak Garg <quic_sartgarg@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight: Add coresight name support
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>, Mike Leach <mike.leach@linaro.org>
+CC: James Clark <james.clark@arm.com>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        Tao Zhang
+	<quic_taozha@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>
+References: <20231228093321.5522-1-quic_jinlmao@quicinc.com>
+ <12ce6e5d-6e4d-fb99-eb82-dece97423bfb@arm.com>
+ <CAJ9a7Vgi=ELOhXNF97KrBtV5ef8khwWqzWKevrYW2RtBBtsppw@mail.gmail.com>
+ <CAL_JsqKYuqKxokDzs3xVWqYZoFfyMwMrLd17DpfCO_x7CXvRZw@mail.gmail.com>
+From: Jinlong Mao <quic_jinlmao@quicinc.com>
+In-Reply-To: <CAL_JsqKYuqKxokDzs3xVWqYZoFfyMwMrLd17DpfCO_x7CXvRZw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aDXdIDVa0rJXl0VcJ7YVHUHWWCD7Xl8w
+X-Proofpoint-ORIG-GUID: aDXdIDVa0rJXl0VcJ7YVHUHWWCD7Xl8w
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=676
+ impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0 suspectscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401110047
 
-On Mon, 6 Nov 2023 at 22:20, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Mon, 6 Nov 2023 at 13:26, Michael Wu <michael@allwinnertech.com> wrote:
-> >
-> > On 9/25/2023 9:59 PM, Ulf Hansson wrote:
-> > > - trimmed cc-list, + Sartak Garg
-> > >
-> > > On Thu, 14 Sept 2023 at 10:00, Wenchao Chen <wenchao.chen666@gmail.com> wrote:
-> > >>
-> > >> On Thu, 14 Sept 2023 at 08:04, Michael Wu <michael@allwinnertech.com> wrote:
-> > >>>
-> > >>> Entering the recovery system itself indicates a transmission error.
-> > >>> In this situation, we intend to execute the mmc_blk_reset function
-> > >>> to clear any anomalies that may be caused by errors. We have previously
-> > >>> discussed with several MMC device manufacturers, and they expressed
-> > >>> their desire for us to reset the device when errors occur to ensure
-> > >>> stable operation. We aim to make this code compatible with all devices
-> > >>> and ensure its stable performance, so we would like to add this patch
-> > >>>
-> > >>> Signed-off-by: Michael Wu <michael@allwinnertech.com>
-> > >>
-> > >> like: https://lore.kernel.org/linux-mmc/20220603051534.22672-1-quic_sartgarg@quicinc.com/
-> > >
-> > > Looks like this series didn't make it. I was awaiting a rebase from
-> > > Sartak to apply it, but apparently something got in his way for a new
-> > > submission.
-> > >
-> > >>
-> > >> You should enable it in the vendor host.
-> > >
-> > > Yes! We don't want unused code in the core. We need a user of it too.
-> > >
-> > > May I suggest that you pick up Sartak's patch for the core and thus
-> > > add another patch for the host driver you care about and then
-> > > re-submit it as a small series.
-> > >
-> > > Kind regards
-> > > Uffe
-> > >
-> > >>
-> > >>> ---
-> > >>>   drivers/mmc/core/block.c | 2 +-
-> > >>>   include/linux/mmc/host.h | 1 +
-> > >>>   2 files changed, 2 insertions(+), 1 deletion(-)
-> > >>>
-> > >>> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-> > >>> index b5b414a71e0b..29fbe0ddeadb 100644
-> > >>> --- a/drivers/mmc/core/block.c
-> > >>> +++ b/drivers/mmc/core/block.c
-> > >>> @@ -1503,7 +1503,7 @@ void mmc_blk_cqe_recovery(struct mmc_queue *mq)
-> > >>>          pr_debug("%s: CQE recovery start\n", mmc_hostname(host));
-> > >>>
-> > >>>          err = mmc_cqe_recovery(host);
-> > >>> -       if (err)
-> > >>> +       if (err || host->cqe_recovery_reset_always)
-> > >>>                  mmc_blk_reset(mq->blkdata, host, MMC_BLK_CQE_RECOVERY);
-> > >>>          mmc_blk_reset_success(mq->blkdata, MMC_BLK_CQE_RECOVERY);
-> > >>>
-> > >>> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> > >>> index 62a6847a3b6f..f578541a06b5 100644
-> > >>> --- a/include/linux/mmc/host.h
-> > >>> +++ b/include/linux/mmc/host.h
-> > >>> @@ -518,6 +518,7 @@ struct mmc_host {
-> > >>>          int                     cqe_qdepth;
-> > >>>          bool                    cqe_enabled;
-> > >>>          bool                    cqe_on;
-> > >>> +       bool                    cqe_recovery_reset_always;
-> > >>>
-> > >>>          /* Inline encryption support */
-> > >>>   #ifdef CONFIG_MMC_CRYPTO
-> > >>> --
-> > >>> 2.29.0
-> > >>>
-> > Dear Ulf,
-> > I have tested Sartak's patch and it is also able to resolve the issue we
-> > are currently facing. Therefore, I would like to inquire about the
-> > expected timeline for merging Sartak's patch.
->
-Hi Sartak
 
-Any updates?
 
-> Hi Michael,
->
-> There is another series [1] that Adrian is working on that is related
-> to the problem in $subject patch. Perhaps you can take a look and try
-> it out instead of Sartak's patch, which seems to have gotten stalled.
->
-> Kind regards
-> Uffe
->
-> [1]
-> https://lore.kernel.org/all/20231103084720.6886-1-adrian.hunter@intel.com/
+On 1/3/2024 11:32 PM, Rob Herring wrote:
+> On Tue, Jan 2, 2024 at 5:05 AM Mike Leach <mike.leach@linaro.org> wrote:
+>>
+>> As James mentions this is clearly a V2 of a previous patch - please
+>> mark as such in future.
+>>
+>> Adding to what James has already said:-
+>>
+>> 1) Mapping between the canonical names used in the drivers and the
+>> information as to the precise device is as easy as running 'ls' on
+>> /sys/bus/coresight/devices:-
+>>
+>> root@linaro-developer:/home/linaro/cs-mods# ls -al /sys/bus/coresight/devices/
+>> total 0
+>> drwxr-xr-x 2 root root 0 Jan  2 11:27 .
+>> drwxr-xr-x 4 root root 0 Jan  2 11:27 ..
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 cti_cpu0 ->
+>> ../../../devices/platform/soc@0/858000.cti/cti_cpu0
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 cti_cpu1 ->
+>> ../../../devices/platform/soc@0/859000.cti/cti_cpu1
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 cti_cpu2 ->
+>> ../../../devices/platform/soc@0/85a000.cti/cti_cpu2
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 cti_cpu3 ->
+>> ../../../devices/platform/soc@0/85b000.cti/cti_cpu3
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 cti_sys0 ->
+>> ../../../devices/platform/soc@0/810000.cti/cti_sys0
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 cti_sys1 ->
+>> ../../../devices/platform/soc@0/811000.cti/cti_sys1
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 etm0 ->
+>> ../../../devices/platform/soc@0/85c000.etm/etm0
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 etm1 ->
+>> ../../../devices/platform/soc@0/85d000.etm/etm1
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 etm2 ->
+>> ../../../devices/platform/soc@0/85e000.etm/etm2
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:27 etm3 ->
+>> ../../../devices/platform/soc@0/85f000.etm/etm3
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:42 funnel0 ->
+>> ../../../devices/platform/soc@0/821000.funnel/funnel0
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:42 funnel1 ->
+>> ../../../devices/platform/soc@0/841000.funnel/funnel1
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:42 replicator0 ->
+>> ../../../devices/platform/soc@0/824000.replicator/replicator0
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:42 tmc_etf0 ->
+>> ../../../devices/platform/soc@0/825000.etf/tmc_etf0
+>> lrwxrwxrwx 1 root root 0 Jan  2 11:42 tmc_etr0 ->
+>> ../../../devices/platform/soc@0/826000.etr/tmc_etr0
+>>
+>>
+>> 2) The patch set must contain the usage and specification in the .yaml
+>>   file(s) of the property used.
+> 
+> For the record, I don't like "coresight-name". I don't have another
+> suggestion because "easy" is not sufficient reasoning for why this is
+> needed.
+
+For example, if we want to configure the trigger and HW events for 
+modem, we can't know which cti or TPDM is for modem from current names.
+
+lrwxrwxrwx    1 root     0                0 Jan  1 00:01 cti_sys0 -> 
+../../../devices/platform/soc@0/138f0000.cti/cti_sys0
+lrwxrwxrwx    1 root     0                0 Jan  1 00:01 cti_sys1 -> 
+../../../devices/platform/soc@0/13900000.cti/cti_sys1
+lrwxrwxrwx    1 root     0                0 Jan  1 00:01 tpdm0 -> 
+../../../devices/platform/soc@0/10b0d000.tpdm/tpdm0
+lrwxrwxrwx    1 root     0                0 Jan  1 00:01 tpdm1 -> 
+../../../devices/platform/soc@0/10c28000.tpdm/tpdm1
+lrwxrwxrwx    1 root     0                0 Jan  1 00:01 tpdm2 -> 
+../../../devices/platform/soc@0/10c29000.tpdm/tpdm2
+
+Thanks
+Jinlong Mao
+> 
+>> However, there was a standard property called 'name' which is
+>> deprecated - see
+>> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html
+>> section 2.3.11. I do not believe that adding another 'name' property
+>> would be accepted by the DT maintainers.
+> 
+> "name" is just the node name for anything in the last 15 years. They
+> used to be separate, but would still mostly be the same. The only case
+> I found with them different was old PowerPC Macs.
+> 
+>> 3) the 'device_node' structure has a 'name' field that contains the
+>> node name in the DT approved "node-name@unit-address" format.
+> 
+> Actually, it is without the unit-address. full_name is with the unit-address.
+> 
+>> This
+>> contains whatever node names you used in the dt.  Why not use this if
+>> a change has to be made and find some conditional to activate it.
+> 
+> Don't go accessing "name" or "full_name" directly. I intend to get rid
+> of "name" and generate it from full_name. So use the accessors and
+> printk specifiers if you need node names.
+> 
+> Rob
