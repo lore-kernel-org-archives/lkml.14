@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB15A48;
-	Thu, 11 Jan 2024 02:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C60010FD
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3vekc8H"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 469A7C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWzUs2fJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 83C27C43390;
 	Thu, 11 Jan 2024 02:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704939846;
-	bh=yu0/jadCE85BuoQBVb4J6sG7Dut+pXfoDwsR3ZfqTlY=;
+	bh=ejh3QJNf6tGgnQWiyJb1xyIKINpT2RhuSi5f2y/RmoM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=N3vekc8HsCnPFOL8+K0S4GPiiFFkbAoTHq5tbov/0t1OruSVNNW9e1zaaUSawe32H
-	 yFvEsXw+GIpaO9rEBc9w5pCXF1BIIznpNWvhfy9lOkSrRFIFV1DmX9dSwNlRb0o1Ni
-	 rmmuv37XvQwszCI7DiE8vUjngLZWQNcRVhAaE+p6u4WGiXLox92Y4myuG1wWEfP8m5
-	 nWnGE8EyOOcOfOMg1+/p3+F0P2u4+qzzNJ95zumBdvCzyuJlFM0ROehk4APbQ6GSwU
-	 xRQFyB9BVVObS52tmEZQPPrL7jUkO3DECpn/N4xzZ2OHmuLq9AnHBSmsEGDdy6nnzA
-	 5oOEQx2LwpBbQ==
+	b=bWzUs2fJ+A+IcY/sxgpD4IHEYDtv9ZWU8sBQffsTf86ITHh9IXSp6nJOrwkghte92
+	 Oc6E5W7bjRYS3NeKchyKeztYJihhpCDHfZOlQTyxQwr3RjLv2nxNeIz3RTlrcfn4Pw
+	 ax1/0H15m6ZpzQ3rU5ugaWb/HyVEzizXu6ZzY9cJGfmOwALLaWTGGiVw9wmfz1jf6F
+	 zgat+D1ZfVjqtjQCuEtky/4pEmp1BUJokvhtRkntQFfZQuuofA50UklLQn/1FRWeXm
+	 BjigepiwjU/4nvZq40CsXJlTX/PLhrfKe6B3CqVKcMN4ER6Js6lGjgnUD4l+Dvx4ik
+	 vflxYZEOu1w1w==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 35F25DFC686;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7008CD8C96F;
 	Thu, 11 Jan 2024 02:24:06 +0000 (UTC)
-Subject: Re: [GIT PULL] ext4 update for 6.8-rc1
+Subject: Re: [GIT PULL] header cleanups for 6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240110203521.GA1013681@mit.edu>
-References: <20240110203521.GA1013681@mit.edu>
+In-Reply-To: <ualbkbj75ulsbwbjuphntw7ztb45r2q7iysvxvklmyv5ndnvh7@zxr56mv33vyv>
+References: <ualbkbj75ulsbwbjuphntw7ztb45r2q7iysvxvklmyv5ndnvh7@zxr56mv33vyv>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240110203521.GA1013681@mit.edu>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus-6.8-rc1
-X-PR-Tracked-Commit-Id: 68da4c44b994aea797eb9821acb3a4a36015293e
+X-PR-Tracked-Message-Id: <ualbkbj75ulsbwbjuphntw7ztb45r2q7iysvxvklmyv5ndnvh7@zxr56mv33vyv>
+X-PR-Tracked-Remote: https://evilpiepirate.org/git/bcachefs.git tags/header_cleanup-2024-01-10
+X-PR-Tracked-Commit-Id: 1e2f2d31997a9496f99e2b43255d6a48b06fbcc2
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0d19d9e14687ff6f43d6c4806ace9ff682d7703f
-Message-Id: <170493984621.10151.11449709295506142100.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 78273df7f646f8daf2604ec714bea0897cd03aae
+Message-Id: <170493984645.10151.5723951748883335656.pr-tracker-bot@kernel.org>
 Date: Thu, 11 Jan 2024 02:24:06 +0000
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ext4 Developers List <linux-ext4@vger.kernel.org>, Linux Kernel Developers List <linux-kernel@vger.kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, Boqun Feng <boqun.feng@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Thomas Gleixner <tglx@linutronix.de>, Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>, Will Drewry <wad@chromium.org>, Suren Baghdasaryan <surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 10 Jan 2024 15:35:21 -0500:
+The pull request you sent on Wed, 10 Jan 2024 16:19:17 -0500:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus-6.8-rc1
+> https://evilpiepirate.org/git/bcachefs.git tags/header_cleanup-2024-01-10
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0d19d9e14687ff6f43d6c4806ace9ff682d7703f
+https://git.kernel.org/torvalds/c/78273df7f646f8daf2604ec714bea0897cd03aae
 
 Thank you!
 
