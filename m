@@ -1,39 +1,64 @@
-Received: from out199-12.us.a.mail.aliyun.com (out199-12.us.a.mail.aliyun.com [47.90.199.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739B83D55F;
-	Thu, 11 Jan 2024 12:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W-PgOvd_1704974485;
-Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W-PgOvd_1704974485)
-          by smtp.aliyun-inc.com;
-          Thu, 11 Jan 2024 20:01:27 +0800
-From: Wen Gu <guwen@linux.alibaba.com>
-To: wintera@linux.ibm.com,
-	wenjia@linux.ibm.com,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	alibuda@linux.alibaba.com,
-	tonylu@linux.alibaba.com,
-	guwen@linux.alibaba.com,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 10/15] net/smc: add operations to merge sndbuf with peer DMB
-Date: Thu, 11 Jan 2024 20:00:31 +0800
-Message-Id: <20240111120036.109903-11-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20240111120036.109903-1-guwen@linux.alibaba.com>
-References: <20240111120036.109903-1-guwen@linux.alibaba.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7773B3D560
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 12:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUHgcmRR"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6d9bee259c5so3248977b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 04:01:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704974506; x=1705579306; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sIff4/qjqGgbNQHbzuveiRWYcCPjJbqX4XzT3I6acIw=;
+        b=kUHgcmRR2kka1rZ0EiqaPf1wlTY3imJ5skDtxXUgs5yvce3fW5YLPXDtk5E25HmMiF
+         nuI6ptdEbML3oSB60R56JRseb8xBIiX29x7mx7CS3RCa02QaddWxMrKgg8anrBSUryE7
+         w0izwuXw4nedKPY8XbfCNMrDIGHL8Ta8ZHnZM8SgBGaNOSH0ipZyxeNa1hNCHIs1zqZG
+         qQfrpYZRwmgpBRVqp/+JdJFfoDwnGgGRW9surTXUryewsxMJC1YriejHd7wJErhlol17
+         ST7bPy0/LaCNd/XBeiblWi+AZcRPF9Q7KMVa/SiO2zdRMQWyAtX4vsv9fziTwNVR5YVe
+         bXYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704974506; x=1705579306;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sIff4/qjqGgbNQHbzuveiRWYcCPjJbqX4XzT3I6acIw=;
+        b=J88HV5JBdfXzPMoeSmn3ZyUZmO1M79zZ6P78dTwEfEaKBcizMSPq6PYPlvYJzwvYO8
+         6PNzeQS6PZCSk7JEf8vQRSgeQZadii21Y4kmEoy4Pox0qRCGtvKhgvLENDIRkAytBA67
+         UIOSoze06UrtXXAQL4QmrVzywGyROBY4WGV2t73Ndxox7nLUXEEO+M4aoltSNZ7b9OlU
+         UMMhvcB3L9R8r2T5vIdTYPFsfJm2lxVY5rNCDQ0V9CQD+6b1BNT101YZLivNWdzk4wt+
+         4rt5CIREHxcuvrFVlXGK+H6ghuYGX5YdokcbAc+oeTI+C4QUqanp54MH09jpTSsjDgFE
+         lthQ==
+X-Gm-Message-State: AOJu0YwcMMnf1uJIHdhRGrPvW24JMm3JkFam6IwWmNMv8zyAo0LajK9M
+	aM9BPHnnYck9D8QGPIXFGME=
+X-Google-Smtp-Source: AGHT+IHIwcpVsvRffzzdKcMfwKpuXiYqxFHzK5mVY0BtKkUvUjWJ2r8wXmQ6FYk/oEAHBWPPRoZSWQ==
+X-Received: by 2002:a05:6a00:301b:b0:6d9:8e17:2ff3 with SMTP id ay27-20020a056a00301b00b006d98e172ff3mr1303063pfb.32.1704974505455;
+        Thu, 11 Jan 2024 04:01:45 -0800 (PST)
+Received: from localhost.localdomain ([203.205.141.12])
+        by smtp.googlemail.com with ESMTPSA id kr12-20020a056a004b4c00b006ce95e37a40sm976696pfb.111.2024.01.11.04.01.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 04:01:45 -0800 (PST)
+From: Ze Gao <zegao2021@gmail.com>
+X-Google-Original-From: Ze Gao <zegao@tencent.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ben Segall <bsegall@google.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Ze Gao <zegao@tencent.com>
+Subject: [RFC PATCH] sched/eevdf: Use tunable knob sysctl_sched_base_slice as explicit time quanta
+Date: Thu, 11 Jan 2024 06:57:46 -0500
+Message-ID: <20240111115745.62813-2-zegao@tencent.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,116 +67,209 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In some scenarios using virtual ISM device, sndbuf can share the same
-physical memory region with peer DMB to avoid data copy from one side
-to the other. In such case the sndbuf is only a descriptor that
-describes the shared memory and does not actually occupy memory, it's
-more like a ghost buffer.
+AFAIS, We've overlooked what role of the concept of time quanta plays
+in EEVDF. According to Theorem 1 in [1], we have
 
-      +----------+                     +----------+
-      | socket A |                     | socket B |
-      +----------+                     +----------+
-            |                               |
-       +--------+                       +--------+
-       | sndbuf |                       |  DMB   |
-       |  desc  |                       |  desc  |
-       +--------+                       +--------+
-            |                               |
-            |                          +----v-----+
-            +-------------------------->  memory  |
-                                       +----------+
+	-r_max < log_k(t) < max(r_max, q)
 
-So here introduces three new SMC-D device operations to check if this
-feature is supported by device, and to {attach|detach} ghost sndbuf to
-peer DMB. For now only loopback-ism supports this.
+cleary we don't want either r_max (the maximum user request) or q (time
+quanta) to be too much big.
 
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+To trade for throughput, in [2] it chooses to do tick preemtion at
+per request boundary (i.e., once a cetain request is fulfilled), which
+means we literally have no concept of time quanta defined anymore.
+Obviously this is no problem if we make
+
+	q = r_i = sysctl_sched_base_slice
+
+just as exactly what we have for now, which actually creates a implict
+quanta for us and works well.
+
+However, with custom slice being possible, the lag bound is subject
+only to the distribution of users requested slices given the fact no
+time quantum is available now and we would pay the cost of losing
+many scheduling opportunities to maintain fairness and responsiveness
+due to [2]. What's worse, we may suffer unexpected unfairness and
+lantecy.
+
+For example, take two cpu bound processes with the same weight and bind
+them to the same cpu, and let process A request for 100ms whereas B
+request for 0.1ms each time (with HZ=1000, sysctl_sched_base_slice=3ms,
+nr_cpu=42).  And we can clearly see that playing with custom slice can
+actually incur unfair cpu bandwidth allocation (10706 whose request
+length is 0.1ms gets more cpu time as well as better latency compared to
+10705. Note you might see the other way around in different machines but
+the allocation inaccuracy retains, and even top can show you the
+noticeble difference in terms of cpu util by per second reporting), which
+is obviously not what we want because that would mess up the nice system
+and fairness would not hold.
+
+			stress-ng-cpu:10705	stress-ng-cpu:10706
+---------------------------------------------------------------------
+Slices(ms)		100			0.1
+Runtime(ms)		4934.206		5025.048
+Switches		58			67
+Average delay(ms)	87.074			73.863
+Maximum delay(ms)	101.998			101.010
+
+In contrast, using sysctl_sched_base_slice as the size of a 'quantum'
+in this patch gives us a better control of the allocation accuracy and
+the avg latency:
+
+			stress-ng-cpu:10584	stress-ng-cpu:10583
+---------------------------------------------------------------------
+Slices(ms)		100			0.1
+Runtime(ms)		4980.309		4981.356
+Switches		1253			1254
+Average delay(ms)	3.990			3.990
+Maximum delay(ms)	5.001			4.014
+
+Furthmore, with sysctl_sched_base_slice = 10ms, we might benefit from
+less switches at the cost of worse delay:
+
+			stress-ng-cpu:11208	stress-ng-cpu:11207
+---------------------------------------------------------------------
+Slices(ms)		100			0.1
+Runtime(ms)		4983.722		4977.035
+Switches		456			456
+Average delay(ms)	10.963			10.939
+Maximum delay(ms)	19.002			21.001
+
+By being able to tune sysctl_sched_base_slice knob, we can achieve
+the goal to strike a good balance between throughput and latency by
+adjusting the frequency of context switches, and the conclusions are
+much close to what's covered in [1] with the explicit definition of
+a time quantum. And it aslo gives more freedom to choose the eligible
+request length range(either through nice value or raw value)
+without worrying about overscheduling or underscheduling too much.
+
+Note this change should introduce no obvious regression because all
+processes have the same request length as sysctl_sched_base_slice as
+in the status quo. And the result of benchmarks proves this as well.
+
+schbench -m2 -F128 -n10	-r90	w/patch	tip/6.7-rc7
+Wakeup  (usec): 99.0th:		3028	95
+Request (usec): 99.0th:		14992	21984
+RPS    (count): 50.0th:		5864	5848
+
+hackbench -s 512 -l 200 -f 25 -P	w/patch	 tip/6.7-rc7
+-g 10 					0.212	0.223
+-g 20					0.415	0.432
+-g 30				 	0.625	0.639
+-g 40					0.852	0.858
+
+[1]: https://dl.acm.org/doi/10.5555/890606
+[2]: https://lore.kernel.org/all/20230420150537.GC4253@hirez.programming.kicks-ass.net/T/#u
+
+Signed-off-by: Ze Gao <zegao@tencent.com>
 ---
- include/net/smc.h |  3 +++
- net/smc/smc_ism.c | 40 ++++++++++++++++++++++++++++++++++++++++
- net/smc/smc_ism.h |  4 ++++
- 3 files changed, 47 insertions(+)
 
-diff --git a/include/net/smc.h b/include/net/smc.h
-index 6273c3a8b24a..01387631d8a6 100644
---- a/include/net/smc.h
-+++ b/include/net/smc.h
-@@ -62,6 +62,9 @@ struct smcd_ops {
- 	int (*register_dmb)(struct smcd_dev *dev, struct smcd_dmb *dmb,
- 			    void *client);
- 	int (*unregister_dmb)(struct smcd_dev *dev, struct smcd_dmb *dmb);
-+	int (*support_dmb_nocopy)(struct smcd_dev *dev);
-+	int (*attach_dmb)(struct smcd_dev *dev, struct smcd_dmb *dmb);
-+	int (*detach_dmb)(struct smcd_dev *dev, u64 token);
- 	int (*add_vlan_id)(struct smcd_dev *dev, u64 vlan_id);
- 	int (*del_vlan_id)(struct smcd_dev *dev, u64 vlan_id);
- 	int (*set_vlan_required)(struct smcd_dev *dev);
-diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
-index 4065ebd2e43d..2d2781724932 100644
---- a/net/smc/smc_ism.c
-+++ b/net/smc/smc_ism.c
-@@ -246,6 +246,46 @@ int smc_ism_register_dmb(struct smc_link_group *lgr, int dmb_len,
- 	return rc;
+Hi peter,
+
+I've been attempting to figure out how eevdf works and how the
+idle of latency-nice would fit in it in future.
+
+After reading [1], code and all the disscusions you guys make, I
+find out the current implemention deliberately does not embrace
+the concept of 'time quanta' mentioned in the paper in [2] and I
+see some likely risks ( or not ?) if we are going to bring in
+custom slices ( raw value or latency nice) support by not having
+one.
+
+Getting my hand dirty gives me some experimental results and it
+shows that user specified slices can actually hurt fairness.
+
+So I decide to engage in and propose this patch to explicitly use
+the tunable knob sysctl_sched_base_slice as time quanta. The
+benchmarks shows no regression as expected though.
+
+Still this is just an immature idea and there should be things I
+am blind of or overlook. IOW I'm unsure if it is a real
+problem indeed. Hope to get some sage insights from you.
+
+Regards,
+                Ze
+ kernel/sched/fair.c | 47 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d7a3c63a2171..1746b224595b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -694,12 +694,13 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+  */
+ static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+-	s64 lag, limit;
++	s64 lag, limit, quanta;
+ 
+ 	SCHED_WARN_ON(!se->on_rq);
+ 	lag = avg_vruntime(cfs_rq) - se->vruntime;
+ 
+-	limit = calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
++	quanta = max_t(u64, TICK_NSEC, sysctl_sched_base_slice);
++	limit = calc_delta_fair(max_t(u64, 2*se->slice, quanta), se);
+ 	se->vlag = clamp(lag, -limit, limit);
  }
  
-+bool smc_ism_support_dmb_nocopy(struct smcd_dev *smcd)
-+{
-+	/* for now only loopback-ism supports
-+	 * merging sndbuf with peer DMB to avoid
-+	 * data copies between them.
-+	 */
-+	return (smcd->ops->support_dmb_nocopy &&
-+		smcd->ops->support_dmb_nocopy(smcd));
-+}
-+
-+int smc_ism_attach_dmb(struct smcd_dev *dev, u64 token,
-+		       struct smc_buf_desc *dmb_desc)
-+{
-+	struct smcd_dmb dmb;
-+	int rc = 0;
-+
-+	if (!dev->ops->attach_dmb)
-+		return -EINVAL;
-+
-+	memset(&dmb, 0, sizeof(dmb));
-+	dmb.dmb_tok = token;
-+	rc = dev->ops->attach_dmb(dev, &dmb);
-+	if (!rc) {
-+		dmb_desc->sba_idx = dmb.sba_idx;
-+		dmb_desc->token = dmb.dmb_tok;
-+		dmb_desc->cpu_addr = dmb.cpu_addr;
-+		dmb_desc->dma_addr = dmb.dma_addr;
-+		dmb_desc->len = dmb.dmb_len;
+@@ -1003,25 +1004,47 @@ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se);
+  */
+ static void update_deadline(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+-	if ((s64)(se->vruntime - se->deadline) < 0)
+-		return;
++	u64 delta_exec;
+ 
+ 	/*
+-	 * For EEVDF the virtual time slope is determined by w_i (iow.
+-	 * nice) while the request time r_i is determined by
+-	 * sysctl_sched_base_slice.
++	 * To allow wakeup preemption to happen in time, we check to
++	 * push deadlines forward by each call.
+ 	 */
+-	se->slice = sysctl_sched_base_slice;
++	if ((s64)(se->vruntime - se->deadline) >= 0) {
++		/*
++		 * For EEVDF the virtual time slope is determined by w_i (iow.
++		 * nice) while the request time r_i is determined by
++		 * sysctl_sched_base_slice.
++		 */
++		se->slice = sysctl_sched_base_slice;
++		/*
++		 * EEVDF: vd_i = ve_i + r_i / w_i
++		 */
++		se->deadline = se->vruntime + calc_delta_fair(se->slice, se);
 +	}
-+	return rc;
-+}
-+
-+int smc_ism_detach_dmb(struct smcd_dev *dev, u64 token)
-+{
-+	if (!dev->ops->detach_dmb)
-+		return -EINVAL;
-+
-+	return dev->ops->detach_dmb(dev, token);
-+}
-+
- static int smc_nl_handle_smcd_dev(struct smcd_dev *smcd,
- 				  struct sk_buff *skb,
- 				  struct netlink_callback *cb)
-diff --git a/net/smc/smc_ism.h b/net/smc/smc_ism.h
-index 6903cd5d4d4d..8ea5ab737c6f 100644
---- a/net/smc/smc_ism.h
-+++ b/net/smc/smc_ism.h
-@@ -48,6 +48,10 @@ int smc_ism_put_vlan(struct smcd_dev *dev, unsigned short vlan_id);
- int smc_ism_register_dmb(struct smc_link_group *lgr, int buf_size,
- 			 struct smc_buf_desc *dmb_desc);
- int smc_ism_unregister_dmb(struct smcd_dev *dev, struct smc_buf_desc *dmb_desc);
-+bool smc_ism_support_dmb_nocopy(struct smcd_dev *smcd);
-+int smc_ism_attach_dmb(struct smcd_dev *dev, u64 token,
-+		       struct smc_buf_desc *dmb_desc);
-+int smc_ism_detach_dmb(struct smcd_dev *dev, u64 token);
- int smc_ism_signal_shutdown(struct smc_link_group *lgr);
- void smc_ism_get_system_eid(u8 **eid);
- u16 smc_ism_get_chid(struct smcd_dev *dev);
++	/*
++	 * Make sysctl_sched_base_slice as the size of a 'quantum' in EEVDF
++	 * so as to avoid overscheduling or underscheduling with arbitrary
++	 * request lengths users specify.
++	 *
++	 * IOW, we now change to make scheduling decisions at per
++	 * max(TICK, sysctl_sched_base_slice) boundary.
++	 */
++	delta_exec = se->sum_exec_runtime - se->prev_sum_exec_runtime;
++	if (delta_exec < sysctl_sched_base_slice)
++		return;
+ 
+ 	/*
+-	 * EEVDF: vd_i = ve_i + r_i / w_i
++	 * We can come here with TIF_NEED_RESCHED already set from wakeup path.
++	 * Check to see if we can save a call to pick_eevdf if it's set already.
+ 	 */
+-	se->deadline = se->vruntime + calc_delta_fair(se->slice, se);
++	if (entity_is_task(se) && test_tsk_need_resched(task_of(se)))
++		return;
+ 
+ 	/*
+-	 * The task has consumed its request, reschedule.
++	 * The task has consumed a quantum, check and reschedule.
+ 	 */
+-	if (cfs_rq->nr_running > 1) {
++	if (cfs_rq->nr_running > 1 && pick_eevdf(cfs_rq) != se) {
+ 		resched_curr(rq_of(cfs_rq));
+ 		clear_buddies(cfs_rq, se);
+ 	}
 -- 
-2.32.0.3.g01195cf9f
+2.41.0
 
