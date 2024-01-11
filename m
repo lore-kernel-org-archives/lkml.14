@@ -1,82 +1,113 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B965714F7E;
-	Thu, 11 Jan 2024 09:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F3010940
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 09:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="kJTPamY8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=qb7VEPoWO8ajGU/TxkKVc2YmRBYx8R6ZQDgTNtF9mho=;
-	t=1704964934; x=1706174534; b=kJTPamY8DNarEBm2RWGesZ5jW4iP9wf44X+LNS+tn8nPvrp
-	I3oP3EuDaGCsTfjz8a2+IXmfM4ga/ZxEa797xj11jtcBVR5FSHSmb5n7odZ6FxrpXbw6lXf8cOxFm
-	PtoR86e93QBGjcfZWqsT6/B8zYDQhU0SX+g/xfm24ZBGPd8LXCzpXVrfbQTTSBH+xX5+XFlxLdRTg
-	EPfvlo7VtLPdEIMfEiy1niek4Ezo/q26AnfCS9qcF8EkgM3bV/Gn5hxxO6Cj9rDLiS8mJnk54fQ9+
-	0+0o1QhEBoCrnbrhvJmDF3cIGKWxb2BogEyPFvl4b4WppqP3GjfmYU7FcddM23Ug==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rNrGD-0000000EybY-2U0Q;
-	Thu, 11 Jan 2024 10:22:01 +0100
-Message-ID: <2cedb42a9eca23c37f03938cbccbd8489d0130d7.camel@sipsolutions.net>
-Subject: Re: [PATCH v5 RESEND 0/5] Regather scattered PCI-Code
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Philipp Stanner <pstanner@redhat.com>, Bjorn Helgaas
- <bhelgaas@google.com>,  Arnd Bergmann <arnd@arndb.de>, Randy Dunlap
- <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,  John Sanpe
- <sanpeqf@gmail.com>, Kent Overstreet <kent.overstreet@gmail.com>, Niklas
- Schnelle <schnelle@linux.ibm.com>, Dave Jiang <dave.jiang@intel.com>,
- Uladzislau Koshchanka <koshchanka@gmail.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Kees Cook
- <keescook@chromium.org>, Rae Moar <rmoar@google.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, "wuqiang.matt" <wuqiang.matt@bytedance.com>, Yury
- Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>, Thomas
- Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
- Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
- dakr@redhat.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arch@vger.kernel.org, stable@vger.kernel.org
-Date: Thu, 11 Jan 2024 10:22:00 +0100
-In-Reply-To: <42cf5ca70c940b3e68c8ad0e4bab6f14f87d4486.camel@redhat.com>
-References: <20240111085540.7740-1-pstanner@redhat.com>
-	 <43478eb70cf5f1120316739803c7622ab5f9e16a.camel@sipsolutions.net>
-	 <42cf5ca70c940b3e68c8ad0e4bab6f14f87d4486.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="Ly0FBnKb"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3bd2a584fbcso2655739b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 01:25:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1704965110; x=1705569910; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oPRsV3mpGhgl4tIUNnxd2xjVM8/07Y43tjO1bvwG0Q8=;
+        b=Ly0FBnKbsSQSQiG2JMCeWs4K3EyGkdwPEaBfNaOnxmgTX/11qpwDbf2c8WRn4u/WYL
+         AVgS0N4ipmlRI2+XE0gw8IkW7ChI8Guhke/r3pRAwFWB8+nyVg1nE8P8ccqquoK7/Gm1
+         vQxGS4tgtgDXcU7YPPNfenJLFDqvsMzDUzY+t25gr4CZCQuhPrs/OWlZKvUQfSxyNKq8
+         PgKME1RPv7ufMJ6aEpTWNsAHjhOk5QT8CWsI8CkROYd59gP0+MSRQjGnfRaShzZfNepe
+         uiSiTj8dKypxT0sfKmT8GbiT74GU5rFLR9NM0RKhkBFK8CSrDKW+8Ez1wwfSd0Pb75QW
+         +0eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704965110; x=1705569910;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oPRsV3mpGhgl4tIUNnxd2xjVM8/07Y43tjO1bvwG0Q8=;
+        b=QeCmu1r1O3+zKEL+rVtB9i7cUze4UZUoCs1Z6m9S3dLBAu/FR5S4lHpHi+3yEdcco9
+         dHRMMcUb5/3QQqWgKjdzMfYobSlSBLr8TvNGlIjmUEdSMQDZgkzmkuy7mD6TmTPVT8lp
+         nYTYLNQYbv61qXAIHEwCq9ew5qbB1or/7029t7W81jZUxRHIygracfM3tIDpLJORGujZ
+         btqf53e4/NAgzKqxePXgvNGgHXlfFqbvBzGq6nyd1Sd478/9uJMUGpBsYxjHa0Bm+IkO
+         Z3hKW1Uyd4BCP1SlWG8b1XACNvcpI41HG4XFxoL87ab4C0FG/eM5uUY5MQX8q7PNsfHr
+         ZfxA==
+X-Gm-Message-State: AOJu0YwON82xGSQh4i68Sm57qbO9ZkihjmGxMQoohAyw+008PkoX6/ue
+	JiZYDmTv7RoVxoiFwTQvmJHNxZfZ06i3Dg==
+X-Google-Smtp-Source: AGHT+IEZJkHdKjVYcCRHPRa0m7EgOIyHW6Fngfug8G8Oi8WGZmvzxa4qkvyzCbfiIZPptwktvdeUhw==
+X-Received: by 2002:a05:6808:1782:b0:3bd:3db7:402d with SMTP id bg2-20020a056808178200b003bd3db7402dmr1032846oib.89.1704965109927;
+        Thu, 11 Jan 2024 01:25:09 -0800 (PST)
+Received: from dread.disaster.area (pa49-180-249-6.pa.nsw.optusnet.com.au. [49.180.249.6])
+        by smtp.gmail.com with ESMTPSA id fa2-20020a056a002d0200b006d9af8c25easm708198pfb.84.2024.01.11.01.25.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 01:25:09 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rNrJD-008tBh-02;
+	Thu, 11 Jan 2024 20:25:07 +1100
+Date: Thu, 11 Jan 2024 20:25:06 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH v3 10/11] mm: vmalloc: Set nr_nodes based on CPUs in a
+ system
+Message-ID: <ZZ+z8vBl645FvxPq@dread.disaster.area>
+References: <20240102184633.748113-1-urezki@gmail.com>
+ <20240102184633.748113-11-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102184633.748113-11-urezki@gmail.com>
 
-On Thu, 2024-01-11 at 10:14 +0100, Philipp Stanner wrote:
-> On Thu, 2024-01-11 at 10:03 +0100, Johannes Berg wrote:
-> > On Thu, 2024-01-11 at 09:55 +0100, Philipp Stanner wrote:
-> > > Second Resend. Would be cool if someone could tell me what I'll
-> > > have to
-> > > do so we can get this merged.
-> >=20
-> > I don't even know who'd merge it, but um doesn't seem appropriate...
->=20
-> UM isn't a recipent, I'd guess it's some mail filter which might make
-> it appear that way :)
+On Tue, Jan 02, 2024 at 07:46:32PM +0100, Uladzislau Rezki (Sony) wrote:
+> A number of nodes which are used in the alloc/free paths is
+> set based on num_possible_cpus() in a system. Please note a
+> high limit threshold though is fixed and corresponds to 128
+> nodes.
 
-Oh. I guess I thought I was CC'ed as UM maintainer :)
+Large CPU count machines are NUMA machines. ALl of the allocation
+and reclaim is NUMA node based i.e. a pgdat per NUMA node.
 
-> The lists I sent this to are
-> linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-> linux-arch@vger.kernel.org, stable@vger.kernel.org
->=20
-> Anyways, PCI is for sure who should merge this, since it's 100% about
-> PCI.
+Shrinkers are also able to be run in a NUMA aware mode so that
+per-node structures can be reclaimed similar to how per-node LRU
+lists are scanned for reclaim.
 
-Sounds good :)
+Hence I'm left to wonder if it would be better to have a vmalloc
+area per pgdat (or sub-node cluster) rather than just base the
+number on CPU count and then have an arbitrary maximum number when
+we get to 128 CPU cores. We can have 128 CPU cores in a
+single socket these days, so not being able to scale the vmalloc
+areas beyond a single socket seems like a bit of a limitation.
 
-johannes
+Scaling out the vmalloc areas in a NUMA aware fashion allows the
+shrinker to be run in numa aware mode, which gets rid of the need
+for the global shrinker to loop over every single vmap area in every
+shrinker invocation. Only the vm areas on the node that has a memory
+shortage need to be scanned and reclaimed, it doesn't need reclaim
+everything globally when a single node runs out of memory.
+
+Yes, this may not give quite as good microbenchmark scalability
+results, but being able to locate each vm area in node local memory
+and have operation on them largely isolated to node-local tasks and
+vmalloc area reclaim will work much better on large multi-socket
+NUMA machines.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
