@@ -1,195 +1,140 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA55F9DF
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EB7BF9EA
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MyiOfUru"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704962916;
-	bh=gflHEkCtZCmwgfIS8rr2o7AExOCHAZTyAKAlUQhbSiA=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=MyiOfUrumz7b5nTsabxHteMpzN7xlDrp6SKJZfTgbB1diocrBU8bbPm/U0n9X/BMs
-	 iBFEJairFm1vyV/EJ2ZvCqkZPquIhRtiSehYH3WPA9B90oKLBtio/woDetCIBwptoY
-	 hOkMwg1BpfMj8g4zLn1rS7sV/6Xzjr75TSqh8QG1WjRQnOZSshtDccDFSDTEXCcoP7
-	 OCWc9fagZho7Kyz0OMHztf0mOCe4jUgER82vo8cCbErepO+UC2ErYZ5VBD+FN8n+FR
-	 k0vlz19II9y6LpO+bL9YBt1lWrsZvJy3t5Rf74LWuApG+gDUBAJJV1b9PSaFxb2wcv
-	 fCy1KPRXZo2DQ==
-Received: from [100.96.234.34] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1B534378140A;
-	Thu, 11 Jan 2024 08:48:31 +0000 (UTC)
-Message-ID: <dd96e476-e1ad-4cb5-b5d1-556f720acd17@collabora.com>
-Date: Thu, 11 Jan 2024 13:48:38 +0500
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AW1ay7qq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=3mOu7B5TwCh/UrgYIi
+	3ICtQsQIqk+hEu+An0A0r7hSw=; b=AW1ay7qqTvcGT6WUmCA0QvWg8WY6fVXao4
+	bclxgHc13473aBhFimqN4S6KxS1rfxa4ancI5KDC4sl10ro1xuzA9ZP0dMufZZca
+	uvI2DcDmY7LMXB+DBiH6dqkSqmvHM+IA676JeLqb5RhqSgAnTQNGhFipKxYQas05
+	rSxiCcGng=
+Received: from localhost.localdomain (unknown [182.148.14.173])
+	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wC3R+YvrJ9lZyuXAA--.19791S2;
+	Thu, 11 Jan 2024 16:52:00 +0800 (CST)
+From: GuoHua Chen <chenguohua_716@163.com>
+To: daniel@ffwll.ch,
+	Xinhui.Pan@amd.com,
+	alexander.deucher@amd.com,
+	airlied@gmail.com,
+	christian.koenig@amd.com
+Cc: dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	GuoHua Chen <chenguohua_716@163.com>
+Subject: [PATCH] drm/radeon: Clean up errors in evergreen.c
+Date: Thu, 11 Jan 2024 08:51:58 +0000
+Message-Id: <20240111085158.12719-1-chenguohua_716@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wC3R+YvrJ9lZyuXAA--.19791S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJF4DGryxZF4xtr4rury3urg_yoWrXr15pr
+	Z7XFyfKrsYy3Z0y3yxAF9rXFWUK3s3Za4IkF43Gw4xua45WryaqFyxu347Aa4UXrW2qa42
+	y3Z8try7XrWFya7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UwFxUUUUUU=
+X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/xtbBEBBi1mVOBlBgeAAAsR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, linmiaohe@huawei.com,
- mike.kravetz@oracle.com, naoya.horiguchi@nec.com, akpm@linux-foundation.org,
- songmuchun@bytedance.com, shy828301@gmail.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, jthoughton@google.com,
- "kernel@collabora.com" <kernel@collabora.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: Re: [PATCH v4 4/4] selftests/mm: add tests for HWPOISON hugetlbfs
- read
-Content-Language: en-US
-To: Sidhartha Kumar <sidhartha.kumar@oracle.com>,
- Jiaqi Yan <jiaqiyan@google.com>
-References: <20230713001833.3778937-1-jiaqiyan@google.com>
- <20230713001833.3778937-5-jiaqiyan@google.com>
- <be3976b5-0a9c-41c6-8160-88e6c1e5d63e@collabora.com>
- <CACw3F51WvZDVCpVg9j4j8WmnmAFOsnK+FZDDoVqhgLqVwhPTCA@mail.gmail.com>
- <e68488e4-764e-4b25-8a47-05bf8976bd19@collabora.com>
- <079335ab-190f-41f7-b832-6ffe7528fd8b@collabora.com>
- <a20e7bdb-7344-306d-e8f5-5ee69af7d5ea@oracle.com>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <a20e7bdb-7344-306d-e8f5-5ee69af7d5ea@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 1/11/24 7:32 AM, Sidhartha Kumar wrote:
-> On 1/10/24 2:15 AM, Muhammad Usama Anjum wrote:
->> On 1/10/24 11:49 AM, Muhammad Usama Anjum wrote:
->>> On 1/6/24 2:13 AM, Jiaqi Yan wrote:
->>>> On Thu, Jan 4, 2024 at 10:27 PM Muhammad Usama Anjum
->>>> <usama.anjum@collabora.com> wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>> I'm trying to convert this test to TAP as I think the failures
->>>>> sometimes go
->>>>> unnoticed on CI systems if we only depend on the return value of the
->>>>> application. I've enabled the following configurations which aren't
->>>>> already
->>>>> present in tools/testing/selftests/mm/config:
->>>>> CONFIG_MEMORY_FAILURE=y
->>>>> CONFIG_HWPOISON_INJECT=m
->>>>>
->>>>> I'll send a patch to add these configs later. Right now I'm trying to
->>>>> investigate the failure when we are trying to inject the poison page by
->>>>> madvise(MADV_HWPOISON). I'm getting device busy every single time. The
->>>>> test
->>>>> fails as it doesn't expect any business for the hugetlb memory. I'm not
->>>>> sure if the poison handling code has issues or test isn't robust enough.
->>>>>
->>>>> ./hugetlb-read-hwpoison
->>>>> Write/read chunk size=0x800
->>>>>   ... HugeTLB read regression test...
->>>>>   ...  ... expect to read 0x200000 bytes of data in total
->>>>>   ...  ... actually read 0x200000 bytes of data in total
->>>>>   ... HugeTLB read regression test...TEST_PASSED
->>>>>   ... HugeTLB read HWPOISON test...
->>>>> [    9.280854] Injecting memory failure for pfn 0x102f01 at process
->>>>> virtual
->>>>> address 0x7f28ec101000
->>>>> [    9.282029] Memory failure: 0x102f01: huge page still referenced by
->>>>> 511
->>>>> users
->>>>> [    9.282987] Memory failure: 0x102f01: recovery action for huge
->>>>> page: Failed
->>>>>   ...  !!! MADV_HWPOISON failed: Device or resource busy
->>>>>   ... HugeTLB read HWPOISON test...TEST_FAILED
->>>>>
->>>>> I'm testing on v6.7-rc8. Not sure if this was working previously or not.
->>>>
->>>> Thanks for reporting this, Usama!
->>>>
->>>> I am also able to repro MADV_HWPOISON failure at "501a06fe8e4c
->>>> (akpm/mm-stable, mm-stable) zswap: memcontrol: implement zswap
->>>> writeback disabling."
->>>>
->>>> Then I checked out the earliest commit "ba91e7e5d15a (HEAD -> Base)
->>>> selftests/mm: add tests for HWPOISON hugetlbfs read". The
->>>> MADV_HWPOISON injection works and and the test passes:
->>>>
->>>>   ... HugeTLB read HWPOISON test...
->>>>   ...  ... expect to read 0x101000 bytes of data in total
->>>>   ...  !!! read failed: Input/output error
->>>>   ...  ... actually read 0x101000 bytes of data in total
->>>>   ... HugeTLB read HWPOISON test...TEST_PASSED
->>>>   ... HugeTLB seek then read HWPOISON test...
->>>>   ...  ... init val=4 with offset=0x102000
->>>>   ...  ... expect to read 0xfe000 bytes of data in total
->>>>   ...  ... actually read 0xfe000 bytes of data in total
->>>>   ... HugeTLB seek then read HWPOISON test...TEST_PASSED
->>>>   ...
->>>>
->>>> [ 2109.209225] Injecting memory failure for pfn 0x3190d01 at process
->>>> virtual address 0x7f75e3101000
->>>> [ 2109.209438] Memory failure: 0x3190d01: recovery action for huge
->>>> page: Recovered
->>>> ...
->>>>
->>>> I think something in between broken MADV_HWPOISON on hugetlbfs, and we
->>>> should be able to figure it out via bisection (and of course by
->>>> reading delta commits between them, probably related to page
->>>> refcount).
->>> Thank you for this information.
->>>
->>>>
->>>> That being said, I will be on vacation from tomorrow until the end of
->>>> next week. So I will get back to this after next weekend. Meanwhile if
->>>> you want to go ahead and bisect the problematic commit, that will be
->>>> very much appreciated.
->>> I'll try to bisect and post here if I find something.
->> Found the culprit commit by bisection:
->>
->> a08c7193e4f18dc8508f2d07d0de2c5b94cb39a3
->> mm/filemap: remove hugetlb special casing in filemap.c
->>
->> hugetlb-read-hwpoison started failing from this patch. I've added the
->> author of this patch to this bug report.
->>
-> Hi Usama,
-> 
-> Thanks for pointing this out. After debugging, the below diff seems to fix
-> the issue and allows the tests to pass again. Could you test it on your
-> configuration as well just to confirm.
-> 
-> Thanks,
-> Sidhartha
-> 
-> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> index 36132c9125f9..3a248e4f7e93 100644
-> --- a/fs/hugetlbfs/inode.c
-> +++ b/fs/hugetlbfs/inode.c
-> @@ -340,7 +340,7 @@ static ssize_t hugetlbfs_read_iter(struct kiocb *iocb,
-> struct iov_iter *to)
->                 } else {
->                         folio_unlock(folio);
-> 
-> -                       if (!folio_test_has_hwpoisoned(folio))
-> +                       if (!folio_test_hwpoison(folio))
->                                 want = nr;
->                         else {
->                                 /*
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index d8c853b35dbb..87f6bf7d8bc1 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -973,7 +973,7 @@ struct page_state {
->  static bool has_extra_refcount(struct page_state *ps, struct page *p,
->                                bool extra_pins)
->  {
-> -       int count = page_count(p) - 1;
-> +       int count = page_count(p) - folio_nr_pages(page_folio(p));
-> 
->         if (extra_pins)
->                 count -= 1;
-> 
-Tested the patch, it fixes the test. Please send this patch.
+Fix the following errors reported by checkpatch:
 
-Tested-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+ERROR: that open brace { should be on the previous line
+ERROR: spaces required around that '&=' (ctx:WxO)
+ERROR: space required before that '~' (ctx:OxV)
+ERROR: space prohibited before that close parenthesis ')'
+ERROR: space required after that ',' (ctx:WxO)
+ERROR: space required before that '&' (ctx:OxV)
+ERROR: need consistent spacing around '*' (ctx:VxW)
 
+Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
+---
+ drivers/gpu/drm/radeon/evergreen.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpu/drm/radeon/evergreen.c b/drivers/gpu/drm/radeon/evergreen.c
+index a424b86008b8..c634dc28e6c3 100644
+--- a/drivers/gpu/drm/radeon/evergreen.c
++++ b/drivers/gpu/drm/radeon/evergreen.c
+@@ -2514,8 +2514,7 @@ static void evergreen_agp_enable(struct radeon_device *rdev)
+ 	WREG32(VM_CONTEXT1_CNTL, 0);
+ }
+ 
+-static const unsigned ni_dig_offsets[] =
+-{
++static const unsigned ni_dig_offsets[] = {
+ 	NI_DIG0_REGISTER_OFFSET,
+ 	NI_DIG1_REGISTER_OFFSET,
+ 	NI_DIG2_REGISTER_OFFSET,
+@@ -2524,8 +2523,7 @@ static const unsigned ni_dig_offsets[] =
+ 	NI_DIG5_REGISTER_OFFSET
+ };
+ 
+-static const unsigned ni_tx_offsets[] =
+-{
++static const unsigned ni_tx_offsets[] = {
+ 	NI_DCIO_UNIPHY0_UNIPHY_TX_CONTROL1,
+ 	NI_DCIO_UNIPHY1_UNIPHY_TX_CONTROL1,
+ 	NI_DCIO_UNIPHY2_UNIPHY_TX_CONTROL1,
+@@ -2534,8 +2532,7 @@ static const unsigned ni_tx_offsets[] =
+ 	NI_DCIO_UNIPHY5_UNIPHY_TX_CONTROL1
+ };
+ 
+-static const unsigned evergreen_dp_offsets[] =
+-{
++static const unsigned evergreen_dp_offsets[] = {
+ 	EVERGREEN_DP0_REGISTER_OFFSET,
+ 	EVERGREEN_DP1_REGISTER_OFFSET,
+ 	EVERGREEN_DP2_REGISTER_OFFSET,
+@@ -2544,8 +2541,7 @@ static const unsigned evergreen_dp_offsets[] =
+ 	EVERGREEN_DP5_REGISTER_OFFSET
+ };
+ 
+-static const unsigned evergreen_disp_int_status[] =
+-{
++static const unsigned evergreen_disp_int_status[] = {
+ 	DISP_INTERRUPT_STATUS,
+ 	DISP_INTERRUPT_STATUS_CONTINUE,
+ 	DISP_INTERRUPT_STATUS_CONTINUE2,
+@@ -2643,7 +2639,7 @@ static void evergreen_blank_dp_output(struct radeon_device *rdev,
+ 		return;
+ 	}
+ 
+-	stream_ctrl &=~EVERGREEN_DP_VID_STREAM_CNTL_ENABLE;
++	stream_ctrl &= ~EVERGREEN_DP_VID_STREAM_CNTL_ENABLE;
+ 	WREG32(EVERGREEN_DP_VID_STREAM_CNTL +
+ 	       evergreen_dp_offsets[dig_fe], stream_ctrl);
+ 
+@@ -2655,7 +2651,7 @@ static void evergreen_blank_dp_output(struct radeon_device *rdev,
+ 		stream_ctrl = RREG32(EVERGREEN_DP_VID_STREAM_CNTL +
+ 				     evergreen_dp_offsets[dig_fe]);
+ 	}
+-	if (counter >= 32 )
++	if (counter >= 32)
+ 		DRM_ERROR("counter exceeds %d\n", counter);
+ 
+ 	fifo_ctrl = RREG32(EVERGREEN_DP_STEER_FIFO + evergreen_dp_offsets[dig_fe]);
+@@ -2716,7 +2712,7 @@ void evergreen_mc_stop(struct radeon_device *rdev, struct evergreen_mc_save *sav
+ 			/*for now we do it this manually*/
+ 			/**/
+ 			if (ASIC_IS_DCE5(rdev) &&
+-			    evergreen_is_dp_sst_stream_enabled(rdev, i ,&dig_fe))
++			    evergreen_is_dp_sst_stream_enabled(rdev, i, &dig_fe))
+ 				evergreen_blank_dp_output(rdev, dig_fe);
+ 			/*we could remove 6 lines below*/
+ 			/* XXX this is a hack to avoid strange behavior with EFI on certain systems */
+@@ -3597,7 +3593,7 @@ static void evergreen_gpu_init(struct radeon_device *rdev)
+ 
+ 	sq_lds_resource_mgmt = RREG32(SQ_LDS_RESOURCE_MGMT);
+ 
+-	sq_gpr_resource_mgmt_1 = NUM_PS_GPRS((rdev->config.evergreen.max_gprs - (4 * 2))* 12 / 32);
++	sq_gpr_resource_mgmt_1 = NUM_PS_GPRS((rdev->config.evergreen.max_gprs - (4 * 2)) * 12 / 32);
+ 	sq_gpr_resource_mgmt_1 |= NUM_VS_GPRS((rdev->config.evergreen.max_gprs - (4 * 2)) * 6 / 32);
+ 	sq_gpr_resource_mgmt_1 |= NUM_CLAUSE_TEMP_GPRS(4);
+ 	sq_gpr_resource_mgmt_2 = NUM_GS_GPRS((rdev->config.evergreen.max_gprs - (4 * 2)) * 4 / 32);
 -- 
-BR,
-Muhammad Usama Anjum
+2.17.1
+
