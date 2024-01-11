@@ -1,39 +1,39 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32EEA10FD
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:01:40 +0000 (UTC)
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2B1120E0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="T2+Ok+A4"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="kCVHS4pt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=0kRJudjq7tmrhqObxO
-	TG1bQVC/NBVuREr9lAMxPysTI=; b=T2+Ok+A4pZh7m5XiIs+3TcxbHFvTibwtKn
-	P8haxL3rLaiHemOBosjbw6blR23uSuPpW1tOu7vmbNpZWzS0xCkEtsp4zuzghHvH
-	1k5fRgtqR9cANB4ZyrTlX9lVGxB1NjYmBjGk82tWOBkvuM85Gd2S9FCznmiAKvip
-	Jnlsqm8RU=
+	s=s110527; h=From:Subject:Date:Message-Id; bh=y6vDa0DRaabKBySXAU
+	ICJ5fEtOO8azvWflhkmAQ8vOg=; b=kCVHS4ptLgNfAVw7b48qFG1QK0YIuxdl3i
+	d2YVZZBHOSY84bx32kZzP2kA+wkEXplg4slEypmtkpw5P3+PEftf5VM87zYa4Ajf
+	cF1knzLybYQHrPoQzIWYWoopLq0vTaZ2TiegmfK3TqfHSfwklnoGQ8oI4BYy2TEA
+	4hAM9qvDA=
 Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wD334L0S59lWQGcAA--.53623S2;
-	Thu, 11 Jan 2024 10:01:25 +0800 (CST)
+	by gzga-smtp-mta-g1-2 (Coremail) with SMTP id _____wDnr615TJ9l1gYtAA--.11544S2;
+	Thu, 11 Jan 2024 10:03:37 +0800 (CST)
 From: chenxuebing <chenxb_99091@126.com>
-To: christian.koenig@amd.com,
+To: alexander.deucher@amd.com,
+	airlied@gmail.com,
 	daniel@ffwll.ch,
 	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	alexander.deucher@amd.com
+	christian.koenig@amd.com
 Cc: amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
 	chenxuebing <chenxb_99091@126.com>
-Subject: [PATCH] drm/amdgpu: Clean up errors in amdgpu_atomfirmware.h
-Date: Thu, 11 Jan 2024 02:01:23 +0000
-Message-Id: <20240111020123.5523-1-chenxb_99091@126.com>
+Subject: [PATCH] drm/amd/amdgpu: Clean up errors in amdgpu_umr.h
+Date: Thu, 11 Jan 2024 02:03:33 +0000
+Message-Id: <20240111020333.5611-1-chenxb_99091@126.com>
 X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD334L0S59lWQGcAA--.53623S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uF1xWrW3Zw17ArWfAFWxtFb_yoW8GF13pF
-	4rJF1UJrZ8u3WrZryUXFWkua4Dt3W0qa48KrW8ZFyYg34qvF95JFyrtF4UAr9xArW8Cw43
-	JFZrA3y8Za4qvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UbF4iUUUUU=
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiWRhixWVLYT17lQAAs6
+X-CM-TRANSID:_____wDnr615TJ9l1gYtAA--.11544S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKr47ZF1rJw1rAw4ruF45Wrg_yoWfZFc_C3
+	yUCa47Xry3XFnIv3W29rWrXr1Dt3WrCFs7Wr1ftasayryxu34UXa4DCry7Xa1I9FnxCF1q
+	q3WFgF15Z3ZrGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUU5CztUUUUU==
+X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiHABixWV2zz4NxQABsQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,26 +42,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 Fix the following errors reported by checkpatch:
 
-ERROR: "foo* bar" should be "foo *bar"
+spaces required around that '=' (ctx:VxV)
 
 Signed-off-by: chenxuebing <chenxb_99091@126.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_umr.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.h
-index c7eb2caec65a..649b5530d8ae 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.h
-@@ -36,7 +36,7 @@ int amdgpu_atomfirmware_get_clock_info(struct amdgpu_device *adev);
- int amdgpu_atomfirmware_get_gfx_info(struct amdgpu_device *adev);
- bool amdgpu_atomfirmware_mem_ecc_supported(struct amdgpu_device *adev);
- bool amdgpu_atomfirmware_sram_ecc_supported(struct amdgpu_device *adev);
--bool amdgpu_atomfirmware_ras_rom_addr(struct amdgpu_device *adev, uint8_t* i2c_address);
-+bool amdgpu_atomfirmware_ras_rom_addr(struct amdgpu_device *adev, uint8_t *i2c_address);
- bool amdgpu_atomfirmware_mem_training_supported(struct amdgpu_device *adev);
- bool amdgpu_atomfirmware_dynamic_boot_config_supported(struct amdgpu_device *adev);
- int amdgpu_atomfirmware_get_fw_reserved_fb_size(struct amdgpu_device *adev);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_umr.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_umr.h
+index 107f9bb0e24f..5b27fc41ffbf 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_umr.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_umr.h
+@@ -69,12 +69,12 @@ struct amdgpu_debugfs_gprwave_data {
+ };
+ 
+ enum AMDGPU_DEBUGFS_REGS2_CMDS {
+-	AMDGPU_DEBUGFS_REGS2_CMD_SET_STATE=0,
++	AMDGPU_DEBUGFS_REGS2_CMD_SET_STATE = 0,
+ 	AMDGPU_DEBUGFS_REGS2_CMD_SET_STATE_V2,
+ };
+ 
+ enum AMDGPU_DEBUGFS_GPRWAVE_CMDS {
+-	AMDGPU_DEBUGFS_GPRWAVE_CMD_SET_STATE=0,
++	AMDGPU_DEBUGFS_GPRWAVE_CMD_SET_STATE = 0,
+ };
+ 
+ //reg2 interface
 -- 
 2.17.1
 
