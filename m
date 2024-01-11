@@ -1,115 +1,139 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400ED11704
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4E0FBE5
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:53:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UlWN2TBl"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5cdbc7bebecso2146147a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 00:53:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DYmmgc9U"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e7e55c0f6so5827700e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 00:53:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704963189; x=1705567989; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T4e6Zeh9ktpPN489K8Bx9njOW7cObEYYxVQYUCbqBhE=;
-        b=UlWN2TBlYF4d6zyMvO4hTEyteoNG2wPzPwxe4FU62cbJrfEVkq8WRdlDcwg87kFlVw
-         CTvV16FqRED2J0k2QcZCz3WuIDaWDMlqY+w+ayStHrsuyNi84WxkMiAulRFAqM6yASL/
-         HZD6W01UfllulFBu93a2clwf32OMzKosvZaaI5L8XU8dx1wwS/6ZNugSvOp7wWDWfVF4
-         L2fd1LgFQBBBkXlhxu9rfPa4l01oNfg+TKfJ9pKKcun3LHapKPZkL1DtybC1UfYwm2NW
-         eHQXecYinzMtoMGn8DljGP+d62BisAIsOBfOxjZV3tA8Nb4kB8S11MZXgKOBFc296gUz
-         J0rw==
+        d=linaro.org; s=google; t=1704963214; x=1705568014; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=01lGEtDxdau3gAhM3+zApps0xo9Z5hzOauxAkYb6JpQ=;
+        b=DYmmgc9Udg9aV1haFpikZp51jdlZVMz9IFwJQCg0BVND4LDfj97xb5V5QVEZGr7vbp
+         OXaBkmccrDpr/vv3yznI1Agsp9fjH11LJo2aTK4Mg4PgtZYKrdRM6dPNgnBt+gVFR0Ch
+         /0cR1UyLB9lWi+tvabLnS9nOqrDz952V4IWmF6O0SQxiDleQ8YoTWHeV49q9PTcu4lsL
+         JoBa0bENqlNPKgzpb/fLKrb/6Pr5ElrhoyPR8igW8MeVUc9bwrH57f/uGU99gp1/CapO
+         lLWWD42/SdBMJgvUHtv66HhokF1aZRt1Ar6s0yoZv0mLKDtnJqFVjllrs/LwdrXJN/8F
+         exVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704963189; x=1705567989;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T4e6Zeh9ktpPN489K8Bx9njOW7cObEYYxVQYUCbqBhE=;
-        b=Pb6RovUGiBL/1MG1qlpxy2FDjDGjwE4YmD8fLqZkUM/H7HLHh9HOxepy7c65vhz4Fb
-         TmY+oXb0tFXtDRPYBP0WvM5Dryq+Ptiw5/VfRRibh1KB7MBtHR11EwIoQwz0xyQIr0zZ
-         8q3RXg7BHGpoJI2sI9ND6bTirC6e2NP4OzsDv+5jwLWeH9SIqgk2fRGflnibgIw1bRDk
-         eP73NJBTvBaOuxNzeUxV0S0P6Qh+gowCPUg5272qlYlTRfprkkkL3ApyBv5A2knKjIwg
-         UAZFUgAD1QwYcjEWDnK3IwuO53bQRiF0wbBzZZRpmt5XjO8u2eBaxM6nHD3hw/ipWGDf
-         y5Uw==
-X-Gm-Message-State: AOJu0YwP+P2XR3rW632gdDb19tKqLYRktYJ9otexRzc1X+P5qGn9qUON
-	GDQO5ukNYZsCS1p5AzP7nVB3gdOtCZoDiLU7Ou1gVLThjunj1Q==
-X-Google-Smtp-Source: AGHT+IHNGEbseD/uH+2yRVuHw+PgTFJ0jqvNru785773g0GXRqbrbkyA3N425zF/5c6ajSU1Yj+Xurk7y2Jlx9/qwME=
-X-Received: by 2002:a17:90a:cb90:b0:28b:c953:77b0 with SMTP id
- a16-20020a17090acb9000b0028bc95377b0mr505334pju.97.1704963189425; Thu, 11 Jan
- 2024 00:53:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704963214; x=1705568014;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=01lGEtDxdau3gAhM3+zApps0xo9Z5hzOauxAkYb6JpQ=;
+        b=GoT5LZgrnOx0FZGLof7lZ4L5COG8MabIxCz66wJASDfg30p2JuOXdHp35cI+EZYqQs
+         AsbHuC6+mgY6EBUy79ysAYfumx5XGIaKV/OeiBKJM8gQuT0jPuCHIfXXQpAenQlqjedW
+         Z3p46IdpAkZMDZ6eVD0t+D+gaBdmCebDwnOZJWFhoA8JjRyY7KCXvFO0a29b27dCueBv
+         ADE0BQRrJgQJW3F8eQlcKZqIRQdSjWSX5ABtVw4zQLer9VECI+Isx2Um7reQBGkoeN80
+         Drj9Hts5Yl4tvgoOE67hX+rtTogynE7sG+lYMZnTpN89NWNK57cGsoLPULKjIsQFYosx
+         qozA==
+X-Gm-Message-State: AOJu0YxA5EeOlW97ecxWU0Rrgab5cuTGcHjpJmz1J+jPsLjj2xxobr81
+	CTmAJVxfnsrLhWqHtETn5ymrr3aX8tkGzNmrBLnsf1GgXmQ=
+X-Google-Smtp-Source: AGHT+IGvk8RsJRaCtASz+jgJVzAGcAzuuEgQ7JIFXiNqf78cH7ppAdAIjvHzo67wiBSkdWlugrU05A==
+X-Received: by 2002:ac2:593b:0:b0:50e:da89:cf07 with SMTP id v27-20020ac2593b000000b0050eda89cf07mr194259lfi.94.1704963213999;
+        Thu, 11 Jan 2024 00:53:33 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id az8-20020a05600c600800b0040e49045e0asm1050480wmb.48.2024.01.11.00.53.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 00:53:32 -0800 (PST)
+Message-ID: <34337634-5a34-4824-9779-bed99b1e213b@linaro.org>
+Date: Thu, 11 Jan 2024 09:53:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110131707.437301-1-keisuke.nishimura@inria.fr>
- <CAKfTPtCgqkUUtWMknyHrNeb994V_L4T9bxV9A=bUXCQu-+S1SQ@mail.gmail.com> <8d9e076c-8505-4538-83f5-506ccf62f7a9@inria.fr>
-In-Reply-To: <8d9e076c-8505-4538-83f5-506ccf62f7a9@inria.fr>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 11 Jan 2024 09:52:53 +0100
-Message-ID: <CAKfTPtDN0X3eern3DDj9JVh10YJ=YX9OHW0HYJscoi+P-4_v4w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2 RESEND] sched/fair: take into account scheduling
- domain in select_idle_smt()
-To: Keisuke Nishimura <keisuke.nishimura@inria.fr>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Julia Lawall <julia.lawall@inria.fr>, 
-	Xunlei Pang <xlpang@linux.alibaba.com>, Abel Wu <wuyun.abel@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] i2c: muxes: pca954x: Allow sharing reset GPIO
+Content-Language: en-US
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, peda@axentia.se,
+ p.zabel@pengutronix.de
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240108041913.7078-1-chris.packham@alliedtelesis.co.nz>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240108041913.7078-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Jan 2024 at 18:57, Keisuke Nishimura
-<keisuke.nishimura@inria.fr> wrote:
->
-> >>
-> >> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> >> index 533547e3c90a..66457d4b8965 100644
-> >> --- a/kernel/sched/fair.c
-> >> +++ b/kernel/sched/fair.c
-> >> @@ -7311,13 +7311,19 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
-> >>   /*
-> >>    * Scan the local SMT mask for idle CPUs.
-> >>    */
-> >> -static int select_idle_smt(struct task_struct *p, int target)
-> >> +static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
-> >>   {
-> >>          int cpu;
-> >>
-> >>          for_each_cpu_and(cpu, cpu_smt_mask(target), p->cpus_ptr) {
-> >>                  if (cpu == target)
-> >>                          continue;
-> >> +               /*
-> >> +                * Check if the CPU is in the LLC scheduling domain of @target.
-> >> +                * Due to isolcpus, there is no guarantee that all the siblings are in the domain.
-> >> +                */
-> >> +               if (!cpumask_test_cpu(cpu, sched_domain_span(sd)))
-> >
-> > commit df3cb4ea1fb6 ("sched/fair: Fix wrong cpu selecting from isolated domain")
-> > also checked if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
-> >
-> > Why didn't you also re-add this test ?
-> >
-> >
->
-> Thank you for your comment. This is because the iterator "for_each_cpu_and(cpu,
-> cpu_smt_mask(target), p->cpus_ptr)" ensures that cpu is included in p->cpus_ptr.
+On 08/01/2024 05:19, Chris Packham wrote:
+> Some hardware designs with multiple PCA954x devices use a reset GPIO
+> connected to all the muxes. Support this configuration by making use of
+> the reset controller framework which can deal with the shared reset
+> GPIOs. Fall back to the old GPIO descriptor method if the reset
+> controller framework is not enabled.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> 
+> Notes:
+>     This patch goes on top of Krzysztof's series adding the GPIO based reset
+>     controller[1]. With this I'm able to correctly describe my hardware
+>     platform in the DTS and have the resets appropriately controlled.
+>     
+>     Krzysztof, I'd be really happy if you included this in your series (if
+>     there is another round) but I'd also be OK with waiting until your
+>     series is in and re-sending this after.
 
-Ah yes indeed. I didn't notice that it was now included in the for_each_cpu_and
+Sure, I can take send it together.
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+>     
+>     [1] - https://lore.kernel.org/lkml/20240105155918.279657-1-krzysztof.kozlowski@linaro.org/
+> 
 
 
->
-> The iterator has changed. FYI, here is the change made in commit df3cb4ea1fb6:
->
->          for_each_cpu(cpu, cpu_smt_mask(target)) {
-> -               if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-> +               if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
-> +                   !cpumask_test_cpu(cpu, sched_domain_span(sd)))
->                          continue;
->                  if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
->
-> best,
-> Keisuke
->
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
