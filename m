@@ -1,138 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD014F8B8;
-	Thu, 11 Jan 2024 16:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1767F4F5E6
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BlBuTy2e"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40BDLenj026594;
-	Thu, 11 Jan 2024 16:00:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=VxOOXNmA3OWQD0kcoMVx3KNZoGxMlXt1SUYjRUxttZQ=; b=Bl
-	BuTy2eMy+obzMsIsAhxFXMUg0N/VjELBLtKuzhl2o06jOnDuD5W1EEaolYRfx1a+
-	AWXxFNMNJ7Dhucd2JEfc9oVj1Cd1eENtmt6onbxRHQ1fgs6l2jSK25rH34F4uamZ
-	9tR3W4HHblkuteABRarSnq9IVPCJ6TSXYjx/APcEM0KWHjczUwr5HkBDnO674R4T
-	n2zRQ7caJAfbp3byFbIU7pFLJqeiRzClSzi9YsdnFpLyyar2oDvjFiL65+hXLDh0
-	W1CFpUx5pK/aWT8HQskBpad9e3ZoDJaVUS70DFLVplKvF9EjNtfIOznrzCdEDkvO
-	InrUH6wyoE/tEQWYv6Qw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vjcvjs03u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 16:00:06 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40BG059C027386
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 16:00:05 GMT
-Received: from [10.253.37.156] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 11 Jan
- 2024 08:00:01 -0800
-Message-ID: <e893c298-fbfa-4ae4-9b76-72a5030a5530@quicinc.com>
-Date: Thu, 11 Jan 2024 23:59:59 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5jmSUMP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704988988;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rvVCPW01Dzjo4BPhuO75nSETzwSq/CqyJjnh4//BiuE=;
+	b=U5jmSUMP0Oop0b9+KOpXgPob2ifnuxBpETVKaPYAG6dVfcVXJ98GMLWkaZQ/KPqcI8IlWo
+	WVhbSoy83k7Yfik2N6iohm1AJIBIxRus/Q2ljcN2BAahiZsH8zYUbswgF697Rq+CbK3T1/
+	Tc72yXy2rjue3igwd2hf15AwOuYWxeA=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-372-TyGL1Cg1MFmmWCJYEjl9aA-1; Thu, 11 Jan 2024 11:03:05 -0500
+X-MC-Unique: TyGL1Cg1MFmmWCJYEjl9aA-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1d56d0a8f85so19643995ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:03:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704988984; x=1705593784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rvVCPW01Dzjo4BPhuO75nSETzwSq/CqyJjnh4//BiuE=;
+        b=vnoewhBFBfu8s2iLVNSWlOAoqpCmw2N7LWQU6FNvxPeALVFKtq6168bz+y/Jhd3N+E
+         QRBrLX+xMQ6D3GFEMxyr5tKkoevnCjDAJcxpXTO4iuDXLxqrEKA8rxvzBYarAKLLPuYQ
+         +HmMI1DvQzuGayZBZQ9Ppqu1oDmxZAvyp08ezk8t8iHqlBgwbtDYUnW08Hse1QL4NPFm
+         8/48n72D0d3zbUG+JXy4lQMMV/PoHNGiTb1ahhoCLgzNzhPEyVj6hvPYQ4naWTR3MJ4F
+         4H0Z7dCaf0LjrFOURoADAABFp/2Ck3ntbX38tgjx+BEeWdsZ6U4YKGVbaiGDwdJE+m+i
+         4Hxw==
+X-Gm-Message-State: AOJu0YwANGH2dhfTRdw7Ht6MS0jg0t5sNTWj6E11RHuM+dpWv0Bcxoeo
+	kZNo2wA+AXaRMKox2dC0d/YWhXPhVjrg2DtiDwBD0C/YdBlHwk/ougkJt07+m9xVaYkLt9+esgQ
+	9rHPMktvqBwgWVU8O+/8N3ts3LecwBYE=
+X-Received: by 2002:a17:902:da8b:b0:1d4:3736:88b0 with SMTP id j11-20020a170902da8b00b001d4373688b0mr1229925plx.55.1704988983852;
+        Thu, 11 Jan 2024 08:03:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGNm+Rq2d75c77QJRbApZkO1GGpd0DVitdQaMbXSLARHJFGIKG0rtK2J7YJtyCFTBbajTf6Bw==
+X-Received: by 2002:a17:902:da8b:b0:1d4:3736:88b0 with SMTP id j11-20020a170902da8b00b001d4373688b0mr1229908plx.55.1704988983482;
+        Thu, 11 Jan 2024 08:03:03 -0800 (PST)
+Received: from klayman.redhat.com (net-2-34-31-72.cust.vodafonedsl.it. [2.34.31.72])
+        by smtp.gmail.com with ESMTPSA id jh18-20020a170903329200b001d4593a2e8fsm1343903plb.83.2024.01.11.08.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 08:03:02 -0800 (PST)
+From: Marco Pagani <marpagan@redhat.com>
+To: Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Tull <atull@opensource.altera.com>
+Cc: Marco Pagani <marpagan@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-fpga@vger.kernel.org
+Subject: [RFC PATCH v5 0/1] fpga: improve protection against low-level control module unloading
+Date: Thu, 11 Jan 2024 17:02:41 +0100
+Message-ID: <20240111160242.149265-1-marpagan@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] arm64: dts: qcom: ipq5332: Add MDIO device tree
-Content-Language: en-US
-To: Andrew Lunn <andrew@lunn.ch>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_suruchia@quicinc.com>,
-        <quic_soni@quicinc.com>, <quic_pavir@quicinc.com>,
-        <quic_souravp@quicinc.com>, <quic_linchen@quicinc.com>,
-        <quic_leiwei@quicinc.com>
-References: <20240110112059.2498-1-quic_luoj@quicinc.com>
- <20240110112059.2498-4-quic_luoj@quicinc.com>
- <4bc0aff5-8a1c-44a6-89d8-460961a61310@lunn.ch>
-From: Jie Luo <quic_luoj@quicinc.com>
-In-Reply-To: <4bc0aff5-8a1c-44a6-89d8-460961a61310@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bGftCSlIlTaROutu9qN3mpoKbeCsOweN
-X-Proofpoint-ORIG-GUID: bGftCSlIlTaROutu9qN3mpoKbeCsOweN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=667 spamscore=0
- adultscore=0 mlxscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
- definitions=main-2401110125
+Content-Transfer-Encoding: 8bit
+
+This RFC proposes a solution to keep protecting the fpga manager against
+the unloading of the low-level control modules while addressing the
+limitations of the current implementation. Currently, the code assumes
+that the low-level module registers a driver for the parent device that
+is later used to take the module's refcount. This proposal removes this
+limitation by adding a module owner field to the fpga_manager struct
+that can be set while registering the manager.
+
+For more context, please refer to these threads:
+https://lore.kernel.org/linux-fpga/ZS6hhlvjUcqyv8zL@yilunxu-OptiPlex-7050
+https://lore.kernel.org/linux-fpga/ZT9qENE9fE3Z0KCW@yilunxu-OptiPlex-7050
+
+v5:
+- Updated the documentation
+- Removed kernel-doc comments for helper macros
+v4:
+- Use helper macros to set the owner module
+v3:
+- Improved locking
+v2:
+- Fixed protection against races during module removal
+
+Marco Pagani (1):
+  fpga: add an owner and use it to take the low-level module's refcount
+
+ Documentation/driver-api/fpga/fpga-mgr.rst | 34 ++++----
+ drivers/fpga/fpga-mgr.c                    | 93 ++++++++++++++--------
+ include/linux/fpga/fpga-mgr.h              | 28 +++++--
+ 3 files changed, 102 insertions(+), 53 deletions(-)
 
 
+base-commit: c849ecb2ae8413f86c84627cb0af06dffce4e215
+-- 
+2.43.0
 
-On 1/10/2024 9:35 PM, Andrew Lunn wrote:
-> On Wed, Jan 10, 2024 at 07:20:56PM +0800, Luo Jie wrote:
->> Add the MDIO device tree of ipq5332.
->>
->> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/ipq5332.dtsi | 44 +++++++++++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq5332.dtsi b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
->> index bc89480820cb..e6c780e69d6e 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq5332.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq5332.dtsi
->> @@ -214,6 +214,38 @@ serial_0_pins: serial0-state {
->>   				drive-strength = <8>;
->>   				bias-pull-up;
->>   			};
->> +
->> +			mdio0_pins: mdio0-state {
->> +				mux_0 {
->> +					pins = "gpio25";
->> +					function = "mdc0";
->> +					drive-strength = <8>;
->> +					bias-disable;
->> +				};
->> +
->> +				mux_1 {
->> +					pins = "gpio26";
->> +					function = "mdio0";
->> +					drive-strength = <8>;
->> +					bias-pull-up;
->> +				};
->> +			};
->> +
->> +			mdio1_pins: mdio1-state {
->> +				mux_0 {
->> +					pins = "gpio27";
->> +					function = "mdc1";
->> +					drive-strength = <8>;
->> +					bias-disable;
->> +				};
->> +
->> +				mux_1 {
->> +					pins = "gpio28";
->> +					function = "mdio1";
->> +					drive-strength = <8>;
->> +					bias-pull-up;
->> +				};
-> 
-> I don't know why i'm asking this, because i don't really expect a
-> usable answer. What sort of MUX is this? Should you be using one of
-> the muxes in drivers/net/mdio/mdio-mux-* or something similar?
-> 
->      Andrew
-
-Sorry for the confusion, the pin nodes are for the MDIO and MDC, these
-PINs are used by the dedicated hardware MDIO block in the SoC. I will 
-update the node name from mux_0 to MDC, mux_1 to MDIO, to make it clear. 
-The driver for this node is drivers/net/mdio/mdio-ipq4019.c, it is not 
-related to the mdio-mux-* code.
