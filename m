@@ -1,112 +1,80 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E377F15EBE
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9609F15E96;
+	Thu, 11 Jan 2024 13:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UTZd9lDa"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a28e31563ebso565375866b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 05:14:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1704978863; x=1705583663; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YCNCVeMrlWJxf5qX+E5fJGrbwnZ87NzyDtVjQyYpgQk=;
-        b=UTZd9lDafTlUTQtNY6vQS/PQVO9sDK+3DpFc++J83gZ+R2H515eoPglREqAYxvqTna
-         HkMoIQI3TzyOob/RqNDNsgusv9WFsEjKaR+4jNlGzPvwInOnn2aEMBcFC3uV/PIxlneY
-         A6xzWOHB3oqdDD+pjZrpodZs7L1TJOH4M9NZAy/L89qSESAt24znxuAC31ApRNwF51Wo
-         OYBsc+FVsHWfx973FShGgNR0gRTL4SJ9srabe4bD9MhjAfozu16nDGyo6NwHBVC+UW2F
-         dQODLnXuUOSUhZjelytJNSK+dtVtIeXb9GRBgxRBECReTHLf1XB56mq/j/K7d9e3eTia
-         1d+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704978863; x=1705583663;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YCNCVeMrlWJxf5qX+E5fJGrbwnZ87NzyDtVjQyYpgQk=;
-        b=vYqh4vodk6bhWJOJA7Cul7kyLBGJ1+GT9BxrcWVufc9UzzAF3tp65smSB43v6pN6Af
-         YEjWBp1TR+npghGp/AKL3MWfKJSXESiGEcPD1c5chagltGlQtO8D3lZj7pKYiNMOE+OI
-         DmyRN4G30kwoEf6qKFhY/mGwlv4bU79va8bcaHkXnJ5XQftExaInXgKczOVfxEoiiHyg
-         l3bUiWm+R9+eyuRQBWtRLdEP4wVFvv/7ppm6pNkHXYBMPH/NIXUIEUFCnIDXT7/6cOqv
-         pPC3OrUO+HUiqdvPzFK5so3gMZTzAC4xXWYouWl3oxaU2l0f0LHUYYw9ZWcjHAs0xSpW
-         kzdw==
-X-Gm-Message-State: AOJu0Yw3URF+m/OvXBn0TUvsdUWKJdgjTiOIafPRVV6MvAjAaba7SOm4
-	STrKh28a06pzfbMiKbgxJAR24P7qwPpZYA==
-X-Google-Smtp-Source: AGHT+IGBVw22W2OzEoJmEk9Elwj9ma9Il/3v/LVT8XzL3+C0bm8CX5rIyMF55d9KmXgQCByhP0JI3g==
-X-Received: by 2002:a17:906:6a05:b0:a28:ac84:5d52 with SMTP id qw5-20020a1709066a0500b00a28ac845d52mr782286ejc.2.1704978863223;
-        Thu, 11 Jan 2024 05:14:23 -0800 (PST)
-Received: from alley ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id u3-20020a1709064ac300b00a269b4692a9sm568895ejt.84.2024.01.11.05.14.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 05:14:23 -0800 (PST)
-Date: Thu, 11 Jan 2024 14:14:20 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	live-patching@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] kselftests: lib.mk: Add TEST_GEN_MODS_DIR variable
-Message-ID: <ZZ_phoS29aNXplC2@alley>
-References: <20240109-send-lp-kselftests-v5-0-364d59a69f12@suse.com>
- <20240109-send-lp-kselftests-v5-1-364d59a69f12@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSZjIf9E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5064C43390;
+	Thu, 11 Jan 2024 13:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704979063;
+	bh=RYqKMbpjBidzOlx6lTN2kCw5Q/l3CzHQ4m76Yj5HwPg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RSZjIf9E2W4q5LKDYPH3GimlYPp2ZLobrWHdSrqIzAAcPh3NJYlTXIkL8SUCbC8Ig
+	 4NyjNGboBTdA9cFE+G7/uYzRDXePcjXS7naKXwMAewmN1fHUjrxoHkECpMqUZds6Jg
+	 cDtJDpUmR7L4ftGvoSHODdNH4q0eYrroago1EMTN8ewn+xL5Uqy1qDj6KUgVf2IA6l
+	 zR1RB1sxBRm3dJV9uNtEcM2FUrQrknVwr08I1Xpvp/4oOf3hBbEDjLHEGk2RrfIIsA
+	 tiI+HhUSntapJk1AstH5zaaQdzewQQlqwrg/IvhgxrMvIMauAXBTuC4QyVIvMyiNVb
+	 i91WlaT7J2p4A==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	Adam Radford <aradford@gmail.com>,
+	Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+	Andre Hedrick <andre@suse.com>,
+	de Melo <acme@conectiva.com.br>,
+	Joel Jacobson <linux@3ware.com>,
+	"PMC-Sierra, Inc" <aacraid@pmc-sierra.com>,
+	Richard Hirst <rhirst@linuxcare.com>
+Subject: [PATCH 0/5] scsi: Replace {v}snprintf() variants with safer alternatives
+Date: Thu, 11 Jan 2024 13:17:21 +0000
+Message-ID: <20240111131732.1815560-1-lee@kernel.org>
+X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240109-send-lp-kselftests-v5-1-364d59a69f12@suse.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue 2024-01-09 21:24:54, Marcos Paulo de Souza wrote:
-> Add TEST_GEN_MODS_DIR variable for kselftests. It can point to
-> a directory containing kernel modules that will be used by
-> selftest scripts.
-> 
-> The modules are built as external modules for the running kernel.
-> As a result they are always binary compatible and the same tests
-> can be used for older or newer kernels.
-> 
-> The build requires "kernel-devel" package to be installed.
-> For example, in the upstream sources, the rpm devel package
-> is produced by "make rpm-pkg"
-> 
-> The modules can be built independently by
-> 
->   make -C tools/testing/selftests/livepatch/
-> 
-> or they will be automatically built before running the tests via
-> 
->   make -C tools/testing/selftests/livepatch/ run_tests
-> 
-> Note that they are _not_ built when running the standalone
-> tests by calling, for example, ./test-state.sh.
-> 
-> Along with TEST_GEN_MODS_DIR, it was necessary to create a new install
-> rule. INSTALL_MODS_RULE is needed because INSTALL_SINGLE_RULE would
-> copy the entire TEST_GEN_MODS_DIR directory to the destination, even
-> the files created by Kbuild to compile the modules. The new install
-> rule copies only the .ko files, as we would expect the gen_tar to work.
-> 
-> Reviewed-by: Joe Lawrence <joe.lawrence@redhat.com>
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+For a far better description of the problem than I could author, see
+Jon's write-up on LWN [1] and/or Alex's on the Kernel Self Protection
+Project [1].
 
-I am not export on kbuild. But it looks reasonable and works for me.
+[0] https://lwn.net/Articles/69419/
+[1] https://github.com/KSPP/linux/issues/105
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Lee Jones (5):
+  scsi: 3w-9xxx: Remove snprintf() from sysfs call-backs and replace
+    with sysfs_emit()
+  scsi: 3w-sas: Remove snprintf() from sysfs call-backs and replace with
+    sysfs_emit()
+  scsi: 3w-xxxx: Remove snprintf() from sysfs call-backs and replace
+    with sysfs_emit()
+  scsi: 53c700: Remove snprintf() from sysfs call-backs and replace with
+    sysfs_emit()
+  scsi: aacraid: aachba: Replace snprintf() with the safer scnprintf()
+    variant
 
-Best Regards,
-Petr
+ drivers/scsi/3w-9xxx.c        |  44 +++++++-------
+ drivers/scsi/3w-sas.c         |  36 ++++++------
+ drivers/scsi/3w-xxxx.c        |  46 +++++++--------
+ drivers/scsi/53c700.c         | 104 +++++++++++++++++-----------------
+ drivers/scsi/aacraid/aachba.c |   6 +-
+ 5 files changed, 118 insertions(+), 118 deletions(-)
+
+Cc: Adam Radford <aradford@gmail.com>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: Andre Hedrick <andre@suse.com>
+Cc: de Melo <acme@conectiva.com.br>
+Cc: Joel Jacobson <linux@3ware.com>
+Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Cc: Richard Hirst <rhirst@linuxcare.com>
+-- 
+2.43.0.275.g3460e3d667-goog
 
