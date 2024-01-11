@@ -1,119 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5B84CB25
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 15:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44FE4EB33;
+	Thu, 11 Jan 2024 15:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jRrSRa2A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704987150;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KzKa5s33X3IKu2M/hTuWcesIvEV9ZEphom5s5UiSxgA=;
-	b=jRrSRa2AAkb6V2K9aKQGknAXkV+JWzufk448BsaeZdq7BFl1dOTE+rNDB5q0+zA/c6ZGXj
-	kSFAMovBomsEYfC3CcnjXw+vffMmid3cXduFHAH6mSWr/X9w2dDFE4mImfJzxWSi4SSD2K
-	xdUfiPAJY0FbKBR7ePmM4fO0ruKJFZQ=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-641-q4DkJja3PaCIqnEumt1lAQ-1; Thu, 11 Jan 2024 10:32:28 -0500
-X-MC-Unique: q4DkJja3PaCIqnEumt1lAQ-1
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1d44a50ab19so12090975ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 07:32:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704987148; x=1705591948;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KzKa5s33X3IKu2M/hTuWcesIvEV9ZEphom5s5UiSxgA=;
-        b=QlHfOcV0XgBH5djzc/ETQ6jv6jbh2oyW724HAMxhtbP9UJrtbpNp6HvUg/FN/s75xK
-         R8857mc77tUyCcFSeiAdhTW5O417fcGgPjBrDCr/x13PBC8RFSqmnOUd0TKPLC0jTqnd
-         GAY02YrkqZ/5eXB1YhKCKjkN/qJ1CFy27ArWUviVlHkhP59AhDZRg7KvEGKF5pqcUB5v
-         OkTCv2XJ68VmmTA+Rqqfa9YKVSWryCjp6xeEqiM6eyS9o/pVoYN5vgIvg1L7j0idxEDO
-         3iYv8Ypa2ECa9p0ex2MTk6XrU+XenfEKOTntBuGaXrNAjwsVo9JWm1jhX4yU2ETy2HWh
-         obuA==
-X-Gm-Message-State: AOJu0Yzi9wEjkhLna0VoxhQSDmPHdDuHOtfb6ijaqk59IuNIsYjx69PF
-	35Nd2svsz73Kei/Zlh7ZUyYT1ZQhePYSb2UhjcHgKYsrzTd1kC946DMWsqeBbNUNrLPGQq8Y9QE
-	xkXIpwBUpmE+uG9gUd3DSNMa/efhlhBYt
-X-Received: by 2002:a17:902:db04:b0:1d3:f36a:9d21 with SMTP id m4-20020a170902db0400b001d3f36a9d21mr2604377plx.4.1704987147873;
-        Thu, 11 Jan 2024 07:32:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFbn18LxwZvVOyuJQJGtvaDTZ6vhKK8BhyP+hkC6mfTUc/QgQYyoPY7OXXHe7LVU1236f3k7A==
-X-Received: by 2002:a17:902:db04:b0:1d3:f36a:9d21 with SMTP id m4-20020a170902db0400b001d3f36a9d21mr2604348plx.4.1704987147537;
-        Thu, 11 Jan 2024 07:32:27 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id kh4-20020a170903064400b001d4c9c9be42sm1295127plb.151.2024.01.11.07.32.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 07:32:26 -0800 (PST)
-Message-ID: <3400ff3fbcd6f310f777be8cceddb253246b87fa.camel@redhat.com>
-Subject: Re: [PATCH v5 RESEND 0/5] Regather scattered PCI-Code
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
- Johannes Berg <johannes@sipsolutions.net>, Randy Dunlap
- <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,  John Sanpe
- <sanpeqf@gmail.com>, Kent Overstreet <kent.overstreet@gmail.com>, Niklas
- Schnelle <schnelle@linux.ibm.com>, Dave Jiang <dave.jiang@intel.com>,
- Uladzislau Koshchanka <koshchanka@gmail.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Kees Cook
- <keescook@chromium.org>, Rae Moar <rmoar@google.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, "wuqiang.matt" <wuqiang.matt@bytedance.com>, Yury
- Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>, Thomas
- Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
- Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
- dakr@redhat.com, linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, stable@vger.kernel.org
-Date: Thu, 11 Jan 2024 16:32:07 +0100
-In-Reply-To: <20240111145338.GA2173492@bhelgaas>
-References: <20240111145338.GA2173492@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jk9DvIOP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704987166; x=1736523166;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PdaGGrwqDgKANv4fennnp3SNYJCXj4mN51AfYb3oMWU=;
+  b=jk9DvIOP1p+4oSaBqZQyacXJPIvutxtMPWKhRQ46SGl1/RaBm9McsWbC
+   gNDtcRw/UGGcCL0wDsaqnIxhimsnekpxlinhR1CuDd1MZyrIlkGoY+8Hp
+   elCicaOQOt6iDERZZ49h3irmdWUCr0YctxpS1oeWkkcczjpQ6YRe4u7fh
+   5Fg5Fa7REm7HVcZMxezK8n2hVr8oj0kGal9nvo1a/2D7vvUAftwYPMrvH
+   x5H1BYfnCk43Te55Vd6dkjaZgcm/TkgenLIB79sZL3wEwROVx34fvUteP
+   kt9XjsW3nZQtQopVAzqaGZ47/j0fHF4FWAtBJrDtbNryoRfFlcrtPrBX2
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="12368657"
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="12368657"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 07:32:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="24356280"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 11 Jan 2024 07:32:42 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rNx23-0008PE-1E;
+	Thu, 11 Jan 2024 15:32:02 +0000
+Date: Thu, 11 Jan 2024 23:30:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bhavin Sharma <bhavin.sharma@siliconsignals.io>, sre@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Bhavin Sharma <bhavin.sharma@siliconsignals.io>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] power: supply: Add STC3117 fuel gauge unit driver
+Message-ID: <202401112330.LVTGnI1p-lkp@intel.com>
+References: <20240106133546.936261-1-bhavin.sharma@siliconsignals.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240106133546.936261-1-bhavin.sharma@siliconsignals.io>
 
-T24gVGh1LCAyMDI0LTAxLTExIGF0IDA4OjUzIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOgo+
-IE9uIFRodSwgSmFuIDExLCAyMDI0IGF0IDA5OjU1OjM1QU0gKzAxMDAsIFBoaWxpcHAgU3Rhbm5l
-ciB3cm90ZToKPiA+IFNlY29uZCBSZXNlbmQuIFdvdWxkIGJlIGNvb2wgaWYgc29tZW9uZSBjb3Vs
-ZCB0ZWxsIG1lIHdoYXQgSSdsbAo+ID4gaGF2ZSB0bwo+ID4gZG8gc28gd2UgY2FuIGdldCB0aGlz
-IG1lcmdlZC4gVGhpcyBpcyBibG9ja2luZyB0aGUgZm9sbG93dXAgd29yawo+ID4gSSd2ZQo+ID4g
-Z290IGluIHRoZSBwaXBlCj4gCj4gVGhpcyBzZWVtcyBQQ0ktZm9jdXNlZCwgYW5kIEknbGwgbG9v
-ayBhdCBtZXJnaW5nIHRoaXMgYWZ0ZXIgdjYuOC1yYzEKPiBpcyB0YWdnZWQgYW5kIHRoZSBtZXJn
-ZSB3aW5kb3cgY2xvc2VzIChwcm9iYWJseSBKYW4gMjEpLsKgIFRoZW4gSSdsbAo+IHJlYmFzZSBp
-dCB0byB2Ni44LXJjMSwgdGlkeSB0aGUgc3ViamVjdCBsaW5lcyB0byBsb29rIGxpa2UgdGhlIHJl
-c3QKPiBvZiBkcml2ZXJzL3BjaS8sIGV0Yy4KCkNvb2whCgpKdXN0IHBpbmcgeW91IGlmIHlvdSBu
-ZWVkIG1lIHRvIGRvIHNvbWV0aGluZwoKUmVnYXJkcywKUC4KCj4gCj4gPiBQaGlsaXBwIFN0YW5u
-ZXIgKDUpOgo+ID4gwqAgbGliL3BjaV9pb21hcC5jOiBmaXggY2xlYW51cCBidWdzIGluIHBjaV9p
-b3VubWFwKCkKPiA+IMKgIGxpYjogbW92ZSBwY2lfaW9tYXAuYyB0byBkcml2ZXJzL3BjaS8KPiA+
-IMKgIGxpYjogbW92ZSBwY2ktc3BlY2lmaWMgZGV2cmVzIGNvZGUgdG8gZHJpdmVycy9wY2kvCj4g
-PiDCoCBwY2k6IG1vdmUgZGV2cmVzIGNvZGUgZnJvbSBwY2kuYyB0byBkZXZyZXMuYwo+ID4gwqAg
-bGliLCBwY2k6IHVuaWZ5IGdlbmVyaWMgcGNpX2lvdW5tYXAoKQo+ID4gCj4gPiDCoE1BSU5UQUlO
-RVJTwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHzCoMKgIDEgLQo+ID4gwqBkcml2ZXJzL3BjaS9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgNSArCj4gPiDCoGRyaXZlcnMvcGNpL01ha2VmaWxlwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDMgKy0KPiA+IMKgZHJpdmVy
-cy9wY2kvZGV2cmVzLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCA0NTAK
-PiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysKPiA+IMKgbGliL3BjaV9pb21hcC5jID0+IGRy
-aXZlcnMvcGNpL2lvbWFwLmMgfMKgIDQ5ICstLQo+ID4gwqBkcml2ZXJzL3BjaS9wY2kuY8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDI0OSAtLS0tLS0tLS0tLS0t
-LQo+ID4gwqBkcml2ZXJzL3BjaS9wY2kuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB8wqAgMjQgKysKPiA+IMKgaW5jbHVkZS9hc20tZ2VuZXJpYy9pby5owqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMjcgKy0KPiA+IMKgaW5jbHVkZS9hc20tZ2VuZXJp
-Yy9pb21hcC5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMjEgKysKPiA+IMKgbGliL0tjb25m
-aWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fMKgwqAgMyAtCj4gPiDCoGxpYi9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMSAtCj4gPiDCoGxpYi9kZXZyZXMuY8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCAyMDggKy0t
-LS0tLS0tLS0tCj4gPiDCoGxpYi9pb21hcC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAyOCArLQo+ID4gwqAxMyBmaWxlcyBjaGFuZ2Vk
-LCA1NjYgaW5zZXJ0aW9ucygrKSwgNTAzIGRlbGV0aW9ucygtKQo+ID4gwqBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9wY2kvZGV2cmVzLmMKPiA+IMKgcmVuYW1lIGxpYi9wY2lfaW9tYXAuYyA9
-PiBkcml2ZXJzL3BjaS9pb21hcC5jICg3NSUpCj4gCgo=
+Hi Bhavin,
 
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on sre-power-supply/for-next]
+[also build test WARNING on robh/for-next linus/master v6.7 next-20240111]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bhavin-Sharma/dt-bindings-power-supply-stc3117-Convert-to-DT-schema-format/20240106-213744
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+patch link:    https://lore.kernel.org/r/20240106133546.936261-1-bhavin.sharma%40siliconsignals.io
+patch subject: [PATCH v2 1/2] power: supply: Add STC3117 fuel gauge unit driver
+config: x86_64-randconfig-r131-20240111 (https://download.01.org/0day-ci/archive/20240111/202401112330.LVTGnI1p-lkp@intel.com/config)
+compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240111/202401112330.LVTGnI1p-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401112330.LVTGnI1p-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/power/supply/stc3117_fuel_gauge.c:31:25: sparse: sparse: symbol 'tmp_client' was not declared. Should it be static?
+>> drivers/power/supply/stc3117_fuel_gauge.c:32:21: sparse: sparse: symbol 'stc_sply' was not declared. Should it be static?
+>> drivers/power/supply/stc3117_fuel_gauge.c:49:19: sparse: sparse: symbol 'stc3117_i2c_driver' was not declared. Should it be static?
+
+vim +/tmp_client +31 drivers/power/supply/stc3117_fuel_gauge.c
+
+    30	
+  > 31	const struct i2c_client *tmp_client;
+  > 32	struct power_supply *stc_sply;
+    33	
+    34	static const struct of_device_id stc3117_of_match[] = {
+    35		{ .compatible = "st,stc3117-fgu" },
+    36		{},
+    37	};
+    38	
+    39	MODULE_DEVICE_TABLE(of, stc3117_of_match);
+    40	
+    41	static const struct i2c_device_id stc3117_id[] = {
+    42		{"stc3117", 0},
+    43		{},
+    44	};
+    45	
+    46	
+    47	MODULE_DEVICE_TABLE(i2c, stc3117_id);
+    48	
+  > 49	struct i2c_driver stc3117_i2c_driver = {
+    50		.driver = {
+    51			.name = "stc3117_i2c_driver",
+    52			.owner = THIS_MODULE,
+    53			.of_match_table = of_match_ptr(stc3117_of_match),
+    54		},
+    55		.probe = stc3117_probe,
+    56		.id_table = stc3117_id,
+    57		.remove = stc3117_dev_remove,
+    58	};
+    59	
+    60	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
