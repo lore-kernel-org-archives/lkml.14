@@ -1,119 +1,128 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F3719B;
-	Thu, 11 Jan 2024 02:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 40B2Y871043214;
-	Thu, 11 Jan 2024 10:34:08 +0800 (GMT-8)
-	(envelope-from hu.yadi@h3c.com)
-Received: from DAG6EX07-IMDC.srv.huawei-3com.com (unknown [10.62.14.16])
-	by mail.maildlp.com (Postfix) with ESMTP id 62E4122D49A4;
-	Thu, 11 Jan 2024 10:38:28 +0800 (CST)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
- DAG6EX07-IMDC.srv.huawei-3com.com (10.62.14.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.27; Thu, 11 Jan 2024 10:34:08 +0800
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
- by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
- mapi id 15.02.1258.027; Thu, 11 Jan 2024 10:34:08 +0800
-From: Huyadi <hu.yadi@h3c.com>
-To: =?utf-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-CC: "jmorris@namei.org" <jmorris@namei.org>,
-        "serge@hallyn.com"
-	<serge@hallyn.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org"
-	<linux-security-module@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>,
-        "514118380@qq.com" <514118380@qq.com>, Huyadi <hu.yadi@h3c.com>
-Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0hdIHNlbGZ0ZXN0cy9sYW5kbG9jazpGaXggdHdvIGJ1?=
- =?utf-8?Q?ild_issues?=
-Thread-Topic: [PATCH] selftests/landlock:Fix two build issues
-Thread-Index: AQHaQ5QxkbjYpIV9GUSOObpENmDqbrDSzGWAgAEYDgA=
-Date: Thu, 11 Jan 2024 02:34:08 +0000
-Message-ID: <9820400d6083428bbab2dfe5d5682d19@h3c.com>
-References: <20240110070854.7077-1-hu.yadi@h3c.com>
- <20240110.ob2roh1Xai9y@digikod.net>
-In-Reply-To: <20240110.ob2roh1Xai9y@digikod.net>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CA910E8;
+	Thu, 11 Jan 2024 02:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iqt2EVyW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704940605; x=1736476605;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0Va+P7X83oGoZ+4IUOYXS7EzUs4E4JPqjUEHp4bqu5U=;
+  b=iqt2EVyWHlxzU65lLKMPUzmsIakxVC7t2J6VbqjVIKYA9LBKtH/Wqt3L
+   eC6rT7FFXjwhBA7Rv3Ds3d0kfWNxwH7Q5c8h8Ou+t0T0q1c9Xyo89+uhM
+   FO9wtoO0Y/pgO+fYQSwbDjoK9uGfQo4RBk/HFMQjG9UA59UYCRXhq1uko
+   NyQeMdq9sjZKWoB5K47gukiTk09YgN6r1+G7Jen/9dOsarboNqkx40/4Y
+   /kIflkiLPyg5gmUXUgQ9mXeacXRKsfT5o7XJhLcWLtDNub4zrcsTuufJG
+   v+TTV+BzYgKcDticjnQIKFpNAWCiRGoy106dmNlkRQjECwUUKCMPmPoAO
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="397588095"
+X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
+   d="scan'208";a="397588095"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 18:36:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="732046535"
+X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
+   d="scan'208";a="732046535"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by orsmga003.jf.intel.com with ESMTP; 10 Jan 2024 18:36:40 -0800
+Message-ID: <65312590-01e1-4f53-a0dc-fc22f75379cd@linux.intel.com>
+Date: Thu, 11 Jan 2024 10:31:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 40B2Y871043214
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v10 5/5] iommu/vt-d: don't loop for timeout ATS
+ Invalidation request forever
+Content-Language: en-US
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, kevin.tian@intel.com,
+ bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
+ robin.murphy@arm.com, lukas@wunner.de
+References: <20231228170504.720794-1-haifeng.zhao@linux.intel.com>
+ <20231228170504.720794-3-haifeng.zhao@linux.intel.com>
+ <aba65111-47c1-4003-b9a9-19c908507c01@linux.intel.com>
+ <53c563ad-b47b-4962-abc7-f0da3a7181d6@linux.intel.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <53c563ad-b47b-4962-abc7-f0da3a7181d6@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-DQotPk9uIFdlZCwgSmFuIDEwLCAyMDI0IGF0IDAzOjA4OjU0UE0gKzA4MDAsIEh1IFlhZGkgd3Jv
-dGU6DQo+PiBGcm9tOiAiSHUuWWFkaSIgPGh1LnlhZGlAaDNjLmNvbT4NCj4+IA0KPj4gVHdvIGlz
-c3VlcyBjb21lcyB1cCAgd2hpbGUgYnVpbGRpbmcgc2VsZnRlc3QvbGFuZGxvY2s6DQo+PiANCj4+
-IHRoZSBmaXJzdCBvbmUgaXMgYXMgdG8gZ2V0dGlkDQo+PiANCj4+IG5ldF90ZXN0LmM6IEluIGZ1
-bmN0aW9uIOKAmHNldF9zZXJ2aWNl4oCZOg0KPj4gbmV0X3Rlc3QuYzo5MTo0NTogd2FybmluZzog
-aW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24g4oCYZ2V0dGlk4oCZOyBkaWQgeW91IG1l
-YW4g4oCYZ2V0Z2lk4oCZPyBbLVdpbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0NCj4+ICAg
-ICAiX3NlbGZ0ZXN0cy1sYW5kbG9jay1uZXQtdGlkJWQtaW5kZXglZCIsIGdldHRpZCgpLA0KPj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+DQo+PiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBnZXRnaWQNCj4+IG5l
-dF90ZXN0LmM6KC50ZXh0KzB4NGUwKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgZ2V0dGlkJw0K
-Pj4gDQo+PiB0aGUgc2Vjb25kIGlzIGNvbXBpbGVyIGVycm9yDQo+PiBnY2MgLVdhbGwgLU8yIC1p
-c3lzdGVtICAgZnNfdGVzdC5jIC1sY2FwIC1vIC9ob21lL2xpbnV4L3Rvb2xzL3Rlc3Rpbmcvc2Vs
-ZnRlc3RzL2xhbmRsb2NrL2ZzX3Rlc3QNCj4+IGZzX3Rlc3QuYzo0NTc1Ojk6IGVycm9yOiBpbml0
-aWFsaXplciBlbGVtZW50IGlzIG5vdCBjb25zdGFudA0KPj4gICAubW50ID0gbW50X3RtcCwNCj4+
-ICAgICAgICAgIF5+fn5+fn4NCj4NCj5XaGF0IGlzIHRoZSB2ZXJzaW9uIG9mIEdDQyAoYW5kIGhl
-YWRlcnMpIGFuZCBvbiB3aGljaCBzeXN0ZW0gKGFuZA0KPnZlcnNpb24pIGFyZSB5b3UgYnVpbGRp
-bmcgdGhlc2UgdGVzdHM/DQoNCmdjYyA3LjMgLyBnbGliYy0yLjI4LyBrZXJuZWwgNC4xOS8gT3Bl
-bkV1bG9yMjAuMDMNCg0KPj4gDQo+PiB0aGlzIHBhdGNoIGlzIHRvIGZpeCB0aGVtDQo+PiANCj4+
-IFNpZ25lZC1vZmYtYnk6IEh1LllhZGkgPGh1LnlhZGlAaDNjLmNvbT4NCj4+IFN1Z2dlc3RlZC1i
-eTogSmlhbyA8amlhb3h1cG9AaDNjLmNvbT4NCj4+IFJldmlld2VkLWJ5OkJlcmxpbiA8YmVybGlu
-QGgzYy5jb20+DQo+PiAtLS0NCj4+ICB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9sYW5kbG9jay9m
-c190ZXN0LmMgIHwgNSArKysrLSAgDQo+PiB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9sYW5kbG9j
-ay9uZXRfdGVzdC5jIHwgMyArLS0NCj4+ICAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
-KSwgMyBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2Vs
-ZnRlc3RzL2xhbmRsb2NrL2ZzX3Rlc3QuYyANCj4+IGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMv
-bGFuZGxvY2svZnNfdGVzdC5jDQo+PiBpbmRleCAxOGUxZjg2YTYyMzQuLjkzZWI0MGEwOTA3MyAx
-MDA2NDQNCj4+IC0tLSBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2xhbmRsb2NrL2ZzX3Rlc3Qu
-Yw0KPj4gKysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbGFuZGxvY2svZnNfdGVzdC5jDQo+
-PiBAQCAtNDU3Miw3ICs0NTcyLDEwIEBAIEZJWFRVUkVfVkFSSUFOVChsYXlvdXQzX2ZzKQ0KPj4g
-IC8qIGNsYW5nLWZvcm1hdCBvZmYgKi8NCj4+ICBGSVhUVVJFX1ZBUklBTlRfQUREKGxheW91dDNf
-ZnMsIHRtcGZzKSB7DQo+PiAgCS8qIGNsYW5nLWZvcm1hdCBvbiAqLw0KPj4gLQkubW50ID0gbW50
-X3RtcCwNCj4+ICsJLm1udCA9IHsNCj4+ICsJCS50eXBlID0gInRtcGZzIiwNCj4+ICsgICAgICAg
-IAkuZGF0YSA9ICJzaXplPTRtLG1vZGU9NzAwIiwNCj4NCj5XaGVuIGFwcGx5aW5nIHRoaXMgcGF0
-Y2ggd2UgZ2V0OiAic3BhY2UgYmVmb3JlIHRhYiBpbiBpbmRlbnQiDQoNClNvcnJ5IGZvciBpbmNv
-bnZlbmllbnQsIEknbGwgcmVzZW5kIGl0IHYyIGFmdGVyIGNoZWNrcGF0Y2gucGwgc2hvd3Mgbm8g
-ZXJyb3IuDQoNCj4+ICsJfSwNCj4+ICAJLmZpbGVfcGF0aCA9IGZpbGUxX3MxZDEsDQo+PiAgfTsN
-Cj4+ICANCj4+IGRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9sYW5kbG9jay9u
-ZXRfdGVzdC5jIA0KPj4gYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9sYW5kbG9jay9uZXRfdGVz
-dC5jDQo+PiBpbmRleCA5MjllMjFjNGRiMDUuLjhmYjM1N2RlOGM1NSAxMDA2NDQNCj4+IC0tLSBh
-L3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2xhbmRsb2NrL25ldF90ZXN0LmMNCj4+ICsrKyBiL3Rv
-b2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2xhbmRsb2NrL25ldF90ZXN0LmMNCj4+IEBAIC0xOCw3ICsx
-OCw2IEBADQo+PiAgI2luY2x1ZGUgPHN5cy9wcmN0bC5oPg0KPj4gICNpbmNsdWRlIDxzeXMvc29j
-a2V0Lmg+DQo+PiAgI2luY2x1ZGUgPHN5cy91bi5oPg0KPj4gLQ0KPj4gICNpbmNsdWRlICJjb21t
-b24uaCINCj4+ICANCj4+ICBjb25zdCBzaG9ydCBzb2NrX3BvcnRfc3RhcnQgPSAoMSA8PCAxMCk7
-IEBAIC04OCw3ICs4Nyw3IEBAIHN0YXRpYyBpbnQgDQo+PiBzZXRfc2VydmljZShzdHJ1Y3Qgc2Vy
-dmljZV9maXh0dXJlICpjb25zdCBzcnYsDQo+PiAgCWNhc2UgQUZfVU5JWDoNCj4+ICAJCXNydi0+
-dW5peF9hZGRyLnN1bl9mYW1pbHkgPSBwcm90LmRvbWFpbjsNCj4+ICAJCXNwcmludGYoc3J2LT51
-bml4X2FkZHIuc3VuX3BhdGgsDQo+PiAtCQkJIl9zZWxmdGVzdHMtbGFuZGxvY2stbmV0LXRpZCVk
-LWluZGV4JWQiLCBnZXR0aWQoKSwNCj4+ICsJCQkiX3NlbGZ0ZXN0cy1sYW5kbG9jay1uZXQtdGlk
-JWxkLWluZGV4JWQiLCBzeXNjYWxsKFNZU19nZXR0aWQpLA0KPg0KPllvdSBzZW50IGFub3RoZXIg
-cGF0Y2ggdGhhdCAicmVwbGFjZSBTWVNfPHN5c2NhbGw+IHdpdGggX19OUl88c3lzY2FsbD4iLg0K
-PldoeSBub3QgaGVyZT8NCj4NCj5QbGVhc2UgZm9sbG93IHRoZSBzYW1lIGFwcHJvYWNoOg0KPmh0
-dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvc3RhYmxlL2MvODcxMjllZjEzNjAzYWU0NmM4MmJjZDA5ZWVk
-OTQ4YWNmMDUwNmRiYg0KDQpHb3QgaXQsIEknbGwgcmVzZW5kIGl0IHYyIGluY2x1ZGluZyB0aGUg
-Zml4IA0KDQo+PiAgCQkJaW5kZXgpOw0KPj4gIAkJc3J2LT51bml4X2FkZHJfbGVuID0gU1VOX0xF
-Tigmc3J2LT51bml4X2FkZHIpOw0KPj4gIAkJc3J2LT51bml4X2FkZHIuc3VuX3BhdGhbMF0gPSAn
-XDAnOw0KPj4gLS0NCj4+IDIuMjMuMA0KPj4gDQo+PiANCg0KIA0K
+On 1/10/24 4:40 PM, Ethan Zhao wrote:
+> 
+> On 1/10/2024 1:28 PM, Baolu Lu wrote:
+>> On 12/29/23 1:05 AM, Ethan Zhao wrote:
+>>> When the ATS Invalidation request timeout happens, the qi_submit_sync()
+>>> will restart and loop for the invalidation request forever till it is
+>>> done, it will block another Invalidation thread such as the fq_timer
+>>> to issue invalidation request, cause the system lockup as following
+>>>
+>>> [exception RIP: native_queued_spin_lock_slowpath+92]
+>>>
+>>> RIP: ffffffffa9d1025c RSP: ffffb202f268cdc8 RFLAGS: 00000002
+>>>
+>>> RAX: 0000000000000101 RBX: ffffffffab36c2a0 RCX: 0000000000000000
+>>>
+>>> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffab36c2a0
+>>>
+>>> RBP: ffffffffab36c2a0 R8: 0000000000000001 R9: 0000000000000000
+>>>
+>>> R10: 0000000000000010 R11: 0000000000000018 R12: 0000000000000000
+>>>
+>>> R13: 0000000000000004 R14: ffff9e10d71b1c88 R15: ffff9e10d71b1980
+>>>
+>>> ORIG_RAX: ffffffffffffffff CS: 0010 SS: 0018
+>>>
+>>> (the left part of exception see the hotplug case of ATS capable device)
+>>>
+>>> If one endpoint device just no response to the ATS Invalidation request,
+>>> but is not gone, it will bring down the whole system, to avoid such
+>>> case, don't try the timeout ATS Invalidation request forever.
+>>>
+>>> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>>> ---
+>>>   drivers/iommu/intel/dmar.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+>>> index 0a8d628a42ee..9edb4b44afca 100644
+>>> --- a/drivers/iommu/intel/dmar.c
+>>> +++ b/drivers/iommu/intel/dmar.c
+>>> @@ -1453,7 +1453,7 @@ int qi_submit_sync(struct intel_iommu *iommu, 
+>>> struct qi_desc *desc,
+>>>       reclaim_free_desc(qi);
+>>>       raw_spin_unlock_irqrestore(&qi->q_lock, flags);
+>>>   -    if (rc == -EAGAIN)
+>>> +    if (rc == -EAGAIN && type !=QI_DIOTLB_TYPE && type != 
+>>> QI_DEIOTLB_TYPE)
+>>>           goto restart;
+>>>         if (iotlb_start_ktime)
+>>
+>> Above is also unnecessary if qi_check_fault() returns -ETIMEDOUT,
+>> instead of -EAGAIN. Or did I miss anything?
+> 
+> It is pro if we fold it into qi_check_fault(), the con is we have to add
+> 
+> more parameter to qi_check_fault(), no need check invalidation type
+> 
+> of QI_DIOTLB_TYPE&QI_DEIOTLB_TYPE in qi_check_fault() ?
+
+No need to check the request type as multiple requests might be batched
+together in a single call. This is also the reason why I asked you to
+add a flag bit to this helper and make the intention explicit, say,
+
+"This includes requests to interact with a PCI endpoint. The device may
+  become unavailable at any time, so do not attempt to retry if ITE is
+  detected and the device has gone away."
+
+Best regards,
+baolu
