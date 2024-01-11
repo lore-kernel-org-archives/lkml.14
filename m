@@ -1,41 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5AF4F89C;
-	Thu, 11 Jan 2024 16:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DA14F8A1;
+	Thu, 11 Jan 2024 16:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvYf1RF6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BD9C433F1;
-	Thu, 11 Jan 2024 16:28:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVEldWFo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 956CDC433C7;
+	Thu, 11 Jan 2024 16:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704990519;
-	bh=wOlw6k8oeC5WKfVf/WyGf04YxAUDhKpIuRBaG8SWzXg=;
+	s=k20201202; t=1704990535;
+	bh=dAHvLx4ykQf5j2gmvDOelggdw+uJittaxBF6vTFPQlA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=hvYf1RF6DuM/eVkHhjtTnrm4XHlLDo7AH1VNzHShDw1mFxJhgPvSmSoODMm2I3D75
-	 Dxh0yBW7wvX9tr5/wPuDviqS9VfriM8H+JjVDIVsoq4J0ypKM+KgzhSCS4KTfZh972
-	 WeFKbC8kWdlzezOM4M3gAgvP/KtoCKDhUlijhfmientVwgiBHTDKuKtLyBP1LdXKr8
-	 KtGRgGaGIkOrYch0RL7PC3sWIVrdkAIbs/6++VdxZtixlW8G9WIHB5zdSQHVnieGyE
-	 iBRNA/w8hR2ZGny1QGQCsF8KYUsisgjyrMqkkO0vdkG1KMOP5857vaZVKGKo0Uv2Ot
-	 DcE/6Heg1ZCVg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [net-next v2] wangxunx: select CONFIG_PHYLINK where needed
-Date: Thu, 11 Jan 2024 17:27:53 +0100
-Message-Id: <20240111162828.68564-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	b=WVEldWFox6syrS6zUzvNTMrBFhW2gYoUG/N9/7C3yay5Ed1fW1wu0DG2oEjwsmu6k
+	 xTLjDE052qpQVeHv89aCkAgs6v6noXP3C95oU32nitwBRorLUqti/5UXhUFKzU2ILX
+	 sPD71yRza8ffO04dv0GGzTqfr0yfLf+SN11jGqm9WFkiABrcXf8Xo7dsg9QHL3JxJz
+	 m4sJgIfwHZdB3C6ZtDRWUS5sv7n9gAmsu1CjhkKxMT6zJ7kF+cqEkm1c5WmSnYMi1N
+	 BtpRo/KmtrAog1Ebt6MuPgs9XpZRMtBzoG/JgEMD/syLPXp0DTwdbAx3tCjXUxmpNe
+	 QOGnmD0kMSEzg==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Sui Jingfeng <suijingfeng@loongson.cn>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] PCI: Fix kernel-doc issues
+Date: Thu, 11 Jan 2024 10:28:50 -0600
+Message-Id: <20240111162850.2177655-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,46 +35,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-The ngbe driver needs phylink:
+Fix kernel-doc issues reported by
+"find include -name \*pci\* | xargs scripts/kernel-doc -none":
 
-arm-linux-gnueabi-ld: drivers/net/ethernet/wangxun/libwx/wx_ethtool.o: in function `wx_nway_reset':
-wx_ethtool.c:(.text+0x458): undefined reference to `phylink_ethtool_nway_reset'
-arm-linux-gnueabi-ld: drivers/net/ethernet/wangxun/ngbe/ngbe_main.o: in function `ngbe_remove':
-ngbe_main.c:(.text+0x7c): undefined reference to `phylink_destroy'
-arm-linux-gnueabi-ld: drivers/net/ethernet/wangxun/ngbe/ngbe_main.o: in function `ngbe_open':
-ngbe_main.c:(.text+0xf90): undefined reference to `phylink_connect_phy'
-arm-linux-gnueabi-ld: drivers/net/ethernet/wangxun/ngbe/ngbe_mdio.o: in function `ngbe_mdio_init':
-ngbe_mdio.c:(.text+0x314): undefined reference to `phylink_create'
+  include/linux/pci.h:731: warning: Function parameter or member 'pdev' not described in 'pci_is_vga'
+  include/linux/pci-epc.h:154: warning: Function parameter or member 'list_lock' not described in 'pci_epc'
+  include/linux/pci-epf.h:83: warning: expecting prototype for struct pci_epf_event_ops. Prototype was for struct pci_epc_event_ops instead
 
-Add the missing Kconfig description for this.
-
-Fixes: bc2426d74aa3 ("net: ngbe: convert phylib to phylink")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
-This addresses a build regression in net-next at the moment, it would be good to
-have the fix merged into net-next before it makes it into mainline.
+ include/linux/pci-epc.h | 2 +-
+ include/linux/pci-epf.h | 2 +-
+ include/linux/pci.h     | 1 +
+ 3 files changed, 3 insertions(+), 2 deletions(-)
 
-v2: As suggested by rmk, remove the PHYLIB reference in the process, since PHYLINK
-    requires that already
----
- drivers/net/ethernet/wangxun/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/wangxun/Kconfig b/drivers/net/ethernet/wangxun/Kconfig
-index 23cd610bd376..85cdbdd44fec 100644
---- a/drivers/net/ethernet/wangxun/Kconfig
-+++ b/drivers/net/ethernet/wangxun/Kconfig
-@@ -26,7 +26,7 @@ config NGBE
- 	tristate "Wangxun(R) GbE PCI Express adapters support"
- 	depends on PCI
- 	select LIBWX
--	select PHYLIB
-+	select PHYLINK
- 	help
- 	  This driver supports Wangxun(R) GbE PCI Express family of
- 	  adapters.
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 5cb694031072..bfe41b03b70c 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -122,7 +122,7 @@ struct pci_epc_mem {
+  * struct pci_epc - represents the PCI EPC device
+  * @dev: PCI EPC device
+  * @pci_epf: list of endpoint functions present in this EPC device
+- * list_lock: Mutex for protecting pci_epf list
++ * @list_lock: Mutex for protecting pci_epf list
+  * @ops: function pointers for performing endpoint operations
+  * @windows: array of address space of the endpoint controller
+  * @mem: first window of the endpoint controller, which corresponds to
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index 3f44b6aec477..92d0b71d33d7 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -68,7 +68,7 @@ struct pci_epf_ops {
+ };
+ 
+ /**
+- * struct pci_epf_event_ops - Callbacks for capturing the EPC events
++ * struct pci_epc_event_ops - Callbacks for capturing the EPC events
+  * @core_init: Callback for the EPC initialization complete event
+  * @link_up: Callback for the EPC link up event
+  * @link_down: Callback for the EPC link down event
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 1a89dc66f89a..eb45087d7e00 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -715,6 +715,7 @@ static inline bool pci_is_bridge(struct pci_dev *dev)
+ 
+ /**
+  * pci_is_vga - check if the PCI device is a VGA device
++ * @pdev: PCI device
+  *
+  * The PCI Code and ID Assignment spec, r1.15, secs 1.4 and 1.1, define
+  * VGA Base Class and Sub-Classes:
 -- 
-2.39.2
+2.34.1
 
