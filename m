@@ -1,100 +1,106 @@
-Received: from m16.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A277F5677
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 07:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3FF6AA1;
+	Thu, 11 Jan 2024 07:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TCaighes"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=YOW7VfZ9Nj3SNmJj7c
-	IFF6NAqYW/zZRZtVM5J4qW1mA=; b=TCaighes8OnfSSaxNZLFTm7mESAvL/nbeK
-	uB3Lvoo14zHDdHXlYJZMOd9crUnQXuc5zBR/QVItMk73OTqtKKYrmCa9FIkp555L
-	ks+f2X9NAhrtWlBccR7MvPwnLdD8jOSgZf3besZH39+sk1R9RsUiSacnPKMfuPCS
-	FHhP1XP1c=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wD3vwEZkp9lweQMAA--.3094S2;
-	Thu, 11 Jan 2024 15:00:42 +0800 (CST)
-From: GuoHua Chen <chenguohua_716@163.com>
-To: tzimmermann@suse.de,
-	airlied@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	daniel@ffwll.ch,
-	mripard@kernel.org,
-	patrik.r.jakobsson@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	GuoHua Chen <chenguohua_716@163.com>
-Subject: [PATCH] drm/gma500: Clean up errors in psb_intel_sdvo.h
-Date: Thu, 11 Jan 2024 07:00:41 +0000
-Message-Id: <20240111070041.9258-1-chenguohua_716@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3vwEZkp9lweQMAA--.3094S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7urWkKF1xKr15XF1xtF4fXwb_yoW8ZF1fpa
-	y3Xw45WF4fJrZFgF4rCF1UJFW5G39rG34agFW7Ww1SqFn7CrW8ZFZYga47Ar98WryrCr1S
-	qF1kt3sxuF18XF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U7KsnUUUUU=
-X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/xtbBEB5i1mVOBk2o0gAAsg
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pu9njGfv"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6db0fdd2b8fso1473339b3a.2;
+        Wed, 10 Jan 2024 23:02:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704956558; x=1705561358; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pxmM/JgsgR/85LH2742vTtx8OCVD3zviSBr+nobGNIs=;
+        b=Pu9njGfvmxcDbQAtVnt0n2nVOTKU4zgSLW8zb6+5At/Umtmi+R64BRghn6WMWeNGwh
+         EI3Op7YXQA+8RDzqISt8NTZZyrjwch3BoIB/h+pmMibZPNoelZLohf/XZGcUst+LLrUz
+         lnS151lfpUx6c3BtP7mlWRPW04/pbTYPIg5d+FKn1mFwU9H+sF1putncI7zSdoVYL81U
+         gPNWPP6WYfac5L0ixshuRkj6HAdrZ4y+KEVlKi2RoKjHC1sWIUHy0bKkXZs53DrxbHZN
+         fl1XhKerPnUfoyk+Ykho2jGyhzL+iKBjypSPx6nzgT5qMI4Nopn9xs9ldXE72JnLXkwO
+         vOqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704956558; x=1705561358;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pxmM/JgsgR/85LH2742vTtx8OCVD3zviSBr+nobGNIs=;
+        b=qOA9oKXb/yrIENoaHsoImFx0kp/x8EZ2+eEgBsy6bgagWFLX04IMoP0EiyJykQOpDR
+         lrmXw1u6K3jrnWQ7XbPQfHVfewaZ+iUovp7XNYawEXzKnQrM0LRJwqso+DuQ1Yrixavz
+         Ob6gZn4wtOExGMrhDa0GdLGSUrMThKgWvO0/HNRGzZT/Q6m9hbQ95/vs+e+VM5fBDuAJ
+         7WjAXIIzJrCvazZyQAfRYcJZ1p6wtm874aF+/3mu+PZ9iKv3t06SkG8QtkYJdnSI0PWQ
+         GzDbxYZawnYA4ncC6KwaubP4z2WtTw4GLhZd82QFbye+4EojpIJGRWGYYXfZjq16TSTb
+         1q9w==
+X-Gm-Message-State: AOJu0YwLg4ZXWWDtdw7qPYa8qKb+2xZ1DRpzrvXktvLtXxXJqOCRlbUU
+	QQZnrOwiVEy8SriCkrt+Kng=
+X-Google-Smtp-Source: AGHT+IErncag6/nGPjlsKvdjtHjsplQiV2fh+JIK3Tfm7UM9GAxbICo7idKXHfSL/m2SE5QrIbcm0A==
+X-Received: by 2002:a05:6a00:6c97:b0:6d9:ad3a:29db with SMTP id jc23-20020a056a006c9700b006d9ad3a29dbmr845552pfb.28.1704956558089;
+        Wed, 10 Jan 2024 23:02:38 -0800 (PST)
+Received: from [172.16.116.58] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id it7-20020a056a00458700b006d9a13b491csm428389pfb.212.2024.01.10.23.02.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jan 2024 23:02:37 -0800 (PST)
+Message-ID: <b32fe5d2-d53d-4663-9b24-02d86bd25b57@gmail.com>
+Date: Thu, 11 Jan 2024 12:32:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/16] arm64: dts: ti: beagle*: Add MIT license along with
+ GPL-2.0
+Content-Language: en-US
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Tero Kristo <kristo@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Jason Kridner <jkridner@beagleboard.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Robert Nelson <robertcnelson@gmail.com>, Tony Lindgren <tony@atomide.com>,
+ Wadim Egorov <w.egorov@phytec.de>
+References: <20240110140903.4090946-1-nm@ti.com>
+ <20240110140903.4090946-14-nm@ti.com>
+From: Ayush Singh <ayushdevel1325@gmail.com>
+In-Reply-To: <20240110140903.4090946-14-nm@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Fix the following errors reported by checkpatch:
+On 10/01/24 19:39, Nishanth Menon wrote:
 
-ERROR: "foo * bar" should be "foo *bar"
-ERROR: "(foo*)" should be "(foo *)"
+> Modify license to include dual licensing as GPL-2.0-only OR MIT
+> license for device trees belonging to BeagleBoard.org Foundation
+> platforms. This allows for Linux kernel device tree to be used in
+> other Operating System ecosystems such as Zephyr or FreeBSD.
+>
+> While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
+> with latest SPDX conventions (GPL-2.0 is deprecated).
+>
+> While at this, update the copyright year to sync with current year
+> to indicate license change.
+>
+> Cc: Ayush Singh <ayushdevel1325@gmail.com>
+> Cc: Jason Kridner <jkridner@beagleboard.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Cc: Robert Nelson <robertcnelson@gmail.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Wadim Egorov <w.egorov@phytec.de>
+>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+>   .../boot/dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso      | 4 ++--
+>   .../boot/dts/ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso | 4 ++--
+>   arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts            | 6 +++---
+>   arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts        | 8 ++++----
+>   4 files changed, 11 insertions(+), 11 deletions(-)
 
-Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
----
- drivers/gpu/drm/gma500/psb_intel_sdvo.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Acked-by: Ayush Singh <ayushdevel1325@gmail.com>
 
-diff --git a/drivers/gpu/drm/gma500/psb_intel_sdvo.c b/drivers/gpu/drm/gma500/psb_intel_sdvo.c
-index e4f914deceba..86802c274e5b 100644
---- a/drivers/gpu/drm/gma500/psb_intel_sdvo.c
-+++ b/drivers/gpu/drm/gma500/psb_intel_sdvo.c
-@@ -451,7 +451,7 @@ static const char *cmd_status_names[] = {
- static bool psb_intel_sdvo_write_cmd(struct psb_intel_sdvo *psb_intel_sdvo, u8 cmd,
- 				 const void *args, int args_len)
- {
--	u8 buf[MAX_ARG_LEN*2 + 2], status;
-+	u8 buf[MAX_ARG_LEN * 2 + 2], status;
- 	struct i2c_msg msgs[MAX_ARG_LEN + 3];
- 	int i, ret;
- 
-@@ -466,16 +466,16 @@ static bool psb_intel_sdvo_write_cmd(struct psb_intel_sdvo *psb_intel_sdvo, u8 c
- 		msgs[i].addr = psb_intel_sdvo->slave_addr;
- 		msgs[i].flags = 0;
- 		msgs[i].len = 2;
--		msgs[i].buf = buf + 2 *i;
--		buf[2*i + 0] = SDVO_I2C_ARG_0 - i;
--		buf[2*i + 1] = ((u8*)args)[i];
-+		msgs[i].buf = buf + 2 * i;
-+		buf[2 * i + 0] = SDVO_I2C_ARG_0 - i;
-+		buf[2 * i + 1] = ((u8 *)args)[i];
- 	}
- 	msgs[i].addr = psb_intel_sdvo->slave_addr;
- 	msgs[i].flags = 0;
- 	msgs[i].len = 2;
--	msgs[i].buf = buf + 2*i;
--	buf[2*i + 0] = SDVO_I2C_OPCODE;
--	buf[2*i + 1] = cmd;
-+	msgs[i].buf = buf + 2 * i;
-+	buf[2 * i + 0] = SDVO_I2C_OPCODE;
-+	buf[2 * i + 1] = cmd;
- 
- 	/* the following two are to read the response */
- 	status = SDVO_I2C_CMD_STATUS;
-@@ -798,7 +798,7 @@ static void psb_intel_sdvo_get_dtd_from_mode(struct psb_intel_sdvo_dtd *dtd,
- 	dtd->part2.reserved = 0;
- }
- 
--static void psb_intel_sdvo_get_mode_from_dtd(struct drm_display_mode * mode,
-+static void psb_intel_sdvo_get_mode_from_dtd(struct drm_display_mode *mode,
- 					 const struct psb_intel_sdvo_dtd *dtd)
- {
- 	mode->hdisplay = dtd->part1.h_active;
--- 
-2.17.1
+
+Ayush Singh
 
