@@ -1,49 +1,95 @@
-Received: from m16.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 350E64A987
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 15:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE611F191;
+	Thu, 11 Jan 2024 15:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IymPfnbK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=47DEQ
-	pj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=; b=IymPfnbKw9TJuzMd+tx9G
-	STDpDmPAOFKwXn6QRnoGxN8/HKiG/spLldOo9xnQiiYehWvwD6AqltGD7afE8yb1
-	GdUnJ4WUkMh8RcKfi6+y9yRHiww48EcymnxTecQsQXoBW45CvGpg7LtPXpo7Ahao
-	1/24iWfvPnIePgaayEIrho=
-Received: from localhost.localdomain (unknown [120.229.70.38])
-	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wD3f+ZeA6Bl1TOrAA--.22580S2;
-	Thu, 11 Jan 2024 23:03:59 +0800 (CST)
-From: Junwen Wu <wudaemon@163.com>
-To: laoar.shao@gmail.com
-Cc: bristot@redhat.com,
-	bsegall@google.com,
-	dietmar.eggemann@arm.com,
-	juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com,
-	wudaemon@163.com
-Subject: Re: [PATCH v4] sched/stats: Fix rt/dl task's sched latency statistics error in sched_stat_wait trace_point
-Date: Thu, 11 Jan 2024 15:03:58 +0000
-Message-Id: <20240111150358.183729-1-wudaemon@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CALOAHbAtXQsqi5ny58NRG9wOmZpOVkCi7yyy-ZtZdTnHZcPz5g@mail.gmail.com>
-References: <CALOAHbAtXQsqi5ny58NRG9wOmZpOVkCi7yyy-ZtZdTnHZcPz5g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="LSfLUfNV"
+Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id EAEEE28392C;
+	Thu, 11 Jan 2024 16:05:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
+	s=gen1; t=1704985540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZJ3MP6ATmvee28CObuFouN18d3lCLkbJd16SrYyeonk=;
+	b=LSfLUfNV6FS3rNsONNFy0FXSj3mOj2FBxr/EgsZ+iudAxmjFiq4Utko0tJmeXez/fWMtM0
+	NJokRw/VcfHfibWYXOoakmWD0Tz3yYUaxulozEj3SqD2DuNUSsfZzBnCcdIuwBrqrOw26h
+	jnW022+Yha8CbbFCL2nbtwGDRMX2Kys=
+Received: from localhost (185-58-42-206.static.masterinter.net [185.58.42.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: karelb)
+	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id A3EB8454CF6;
+	Thu, 11 Jan 2024 16:05:40 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3f+ZeA6Bl1TOrAA--.22580S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjfUbID7UUUUU
-X-CM-SenderInfo: 5zxgtvxprqqiywtou0bp/1tbisQtibWVOBBV0+AABsC
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 11 Jan 2024 16:06:08 +0100
+Message-Id: <CYBYXXCP3O1O.2M5YMCRW3SIMY@gimli.ms.mff.cuni.cz>
+Cc: "Karel Balej" <balejk@matfyz.cz>, "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown"
+ <broonie@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, =?utf-8?q?Duje_Mihanovi=C4=87?=
+ <duje.mihanovic@skole.hr>, <~postmarketos/upstreaming@lists.sr.ht>,
+ <phone-devel@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/5] mfd: 88pm88x: differences with respect to the
+ PMIC RFC series
+To: "Lee Jones" <lee@kernel.org>
+From: "Karel Balej" <karelb@gimli.ms.mff.cuni.cz>
+References: <20231228100208.2932-1-karelb@gimli.ms.mff.cuni.cz>
+ <20231228100208.2932-2-karelb@gimli.ms.mff.cuni.cz>
+ <20240111105426.GA1678981@google.com>
+In-Reply-To: <20240111105426.GA1678981@google.com>
 
+Lee,
 
+On Thu Jan 11, 2024 at 11:54 AM CET, Lee Jones wrote:
+> The subject needs work.  Please tell us what the patches is doing.
+>
+> On Thu, 28 Dec 2023, Karel Balej wrote:
+>
+> > From: Karel Balej <balejk@matfyz.cz>
+>
+> A full an complete commit message is a must.
+
+I have not provided a detailed description here because as I have noted
+in the cover letter, this patch will be squashed into the MFD series. I
+sent it only as a bridge between the two series, sorry for the
+confusion.
+
+> > diff --git a/include/linux/mfd/88pm88x.h b/include/linux/mfd/88pm88x.h
+> > index a34c57447827..9a335f6b9c07 100644
+> > --- a/include/linux/mfd/88pm88x.h
+> > +++ b/include/linux/mfd/88pm88x.h
+> > @@ -49,6 +49,8 @@ struct pm88x_data {
+> >  	unsigned int whoami;
+> >  	struct reg_sequence *presets;
+> >  	unsigned int num_presets;
+> > +	struct mfd_cell *devs;
+> > +	unsigned int num_devs;
+>
+> Why are you adding extra abstraction?
+
+Right, this is probably not necessary now since I'm only implementing
+support for one of the chips - it's just that I keep thinking about it
+as a driver for both of them and thus tend to write it a bit more
+abstractly. Shall I then drop this and also the `presets` member which
+is also chip-specific?
+
+Thank you, best regards,
+K. B.
