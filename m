@@ -1,130 +1,176 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9525D101FB;
-	Thu, 11 Jan 2024 09:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47DFFC1D
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 09:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6dc36e501e1so3434378a34.1;
-        Thu, 11 Jan 2024 01:08:59 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRG7sMkk"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dbf2b5556f9so1371924276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 01:10:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704964205; x=1705569005; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oXjcPmzG/A7mlaieQ9giQPRodlEupSyhDif0JeD6lQU=;
+        b=KRG7sMkkw9MO86lsNRzo0dsgMN1fgnO9f2MqL3qQ8ZHcdkCOLnBxL4NZ9eGnHayLh6
+         J/G7gHv9DNAc5AKJhXxWlK4fA6bEMvtM8gV5dQPajrN8ckob4TLbQzkqzz0PbO6xU4CL
+         I00Q0WqB0u9WWmBbI+u6iwwumQuUzGJZ4Zr2dy9pgN6eUzoA3RPTriM5ecgqXOLt4j9e
+         TyDmNwS0wdzNZLaCEpvjUA7yywcUH+77c6AtNNd7H5NUpgL7Uu6wRr+c9/joFARTYjbP
+         bQdr/pCtADJULYO9tZkd+qMTuutsWY7TsiNTTFVQan+HSKrLoFeq9TXJOjYSlHcPL+Cm
+         jLxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704964138; x=1705568938;
+        d=1e100.net; s=20230601; t=1704964205; x=1705569005;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7s8mOe6yBrTL8Dc+4RBtqbm0YylyeY2R2uNKT3a55V8=;
-        b=Lyd+IrHoz6Nk7QLTjKdRssSu1eWUG5FOwduoh/dDzxVjxAdrQne23pmfdHmFXnSEEB
-         LZYNwAtfLOeKpYCLy4zf57XGb+YgIKT3jtTCe47IYVeMWx4AY4A7m7BAJ1LbCf75bIJl
-         EmTGDPE5tao+wpyt7Nn4y0nFnpouitemvEfqC0wo3B3WeDcdXYUv35KkFsmjFsMD2VSD
-         MMdZh634CWICqQK4IBDyVTNzFTB1hNQZwwQutOW00aECBOthrx0DCTjFNhCMG+f21eti
-         9LhfFLkXRLHEWSdJHZaB+ih622fExGvGkPZKbji0p93FAnhUl2tsUomu7s9+VfFXU6rD
-         qkPQ==
-X-Gm-Message-State: AOJu0Yxhgkwy7QqED6vEknsfy1mW31Ns3CWLrqN4MBQpEboMSZzgtnkN
-	9Y2Lc4BaTdqvcilssQL1GuHLc7GYcvkXYA==
-X-Google-Smtp-Source: AGHT+IE6wcozzThLKTxEe+RwwmuuBKAGvcbNTPskMBgyKIQ2pNnoMJBMr4L4SOPTDBtUsp2PKYGnqg==
-X-Received: by 2002:a81:a747:0:b0:5f6:e673:3f1c with SMTP id e68-20020a81a747000000b005f6e6733f1cmr301977ywh.98.1704963669071;
-        Thu, 11 Jan 2024 01:01:09 -0800 (PST)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
-        by smtp.gmail.com with ESMTPSA id g189-20020a0df6c6000000b005a4da74b869sm246045ywf.139.2024.01.11.01.01.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jan 2024 01:01:08 -0800 (PST)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5e7f0bf46a2so48228847b3.1;
-        Thu, 11 Jan 2024 01:01:08 -0800 (PST)
-X-Received: by 2002:a81:bc50:0:b0:5f3:6024:53c with SMTP id
- b16-20020a81bc50000000b005f36024053cmr322891ywl.32.1704963668540; Thu, 11 Jan
- 2024 01:01:08 -0800 (PST)
+        bh=oXjcPmzG/A7mlaieQ9giQPRodlEupSyhDif0JeD6lQU=;
+        b=G0rK/F/jD2bWxbLJcalGODXIa1PSF853fMiEUQlaxxsH2Ijb2770wlQgvLsd1DPaH7
+         EcP7nqwBjet70gibsfGH/bhPojsErHS0WqtB7J2ZSEOyIjnvcyPdP97SK2FceGZblGmt
+         /vkxJWh421JABgCpXckGoteNIjVqYc95b7F28fFha2K26JG9KOPkXNI8YiycxYi7zKhw
+         c5BHdqUiU7g4qW75I9AyUakUX5ZedFagJob2qz5tUSRwgCUxI2w8fYKBrl2PK5UHa++q
+         3IQSRlrQWOi8QcUioq/l9ssDpY31U55l2oP1BE26TDf/F4UcKYOLK7xSJVaZhTRT6hNg
+         KHVA==
+X-Gm-Message-State: AOJu0YwORxw6TpoowlDaxOLbDvjb4WjBX3U/0sgvobFHC/vl2bTk8RTu
+	SFdO39Fdci5HV+1CYIbuooV50Yqsw8HFW3ykmHP7Zc4bgXA01fy9
+X-Google-Smtp-Source: AGHT+IE4mcy7QGOY4i1Yr3rQGg5S+FuyePKgtStKpiklcSlnUuoIo4BONjaCFhJ0DazKy1raPRL1X2pu+KuJC2vd4U0=
+X-Received: by 2002:a25:8005:0:b0:dbc:b48e:6426 with SMTP id
+ m5-20020a258005000000b00dbcb48e6426mr789726ybk.110.1704964205393; Thu, 11 Jan
+ 2024 01:10:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110222717.193719-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240110222717.193719-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 11 Jan 2024 10:00:53 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX4bv0dtJ-G1o9by91RmP3DH1HQKvDL51g_25Yq=Yd2LQ@mail.gmail.com>
-Message-ID: <CAMuHMdX4bv0dtJ-G1o9by91RmP3DH1HQKvDL51g_25Yq=Yd2LQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: sh: rz-dmac: Avoid format-overflow warning
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240111070652.71717-1-pranavsubbu@gmail.com> <2024011144-silica-viral-9e79@gregkh>
+ <CAP1Lp88vEZJtd69Njf9uZ5VXypwZ-5vLdBHf2xoLSpqmeyEQiA@mail.gmail.com>
+In-Reply-To: <CAP1Lp88vEZJtd69Njf9uZ5VXypwZ-5vLdBHf2xoLSpqmeyEQiA@mail.gmail.com>
+From: Pranav Athreya <pranavsubbu@gmail.com>
+Date: Thu, 11 Jan 2024 14:39:54 +0530
+Message-ID: <CAP1Lp8-CP-uELVam=18oADOEvL_13wXkTyDLHKbjQe1ZyxiG9g@mail.gmail.com>
+Subject: Re: [PATCH] staging: vt6655: Remove extra blank lines between code blocks
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Forest Bond <forest@alittletooquiet.net>, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
+My apologies, resending this as plain text.
 
-On Wed, Jan 10, 2024 at 11:27=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.=
-com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Greg,
+
+Thank you for reviewing my patch! Shall I amend the commit and send a
+revision of the patch?
+If I understand you correctly, I should remove all mention of the
+.mod.c file from the commit,
+which will leave the new text as such:
+
+Adhere to Linux kernel coding style.
+
+Reported by checkpatch:
+
+drivers/staging/vt6655/rxtx.h:22: CHECK: Please don't use multiple blank li=
+nes
+
+Signed-off-by: Pranav Athreya <pranavsubbu@gmail.com>
+---
+ drivers/staging/vt6655/rxtx.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/staging/vt6655/rxtx.h b/drivers/staging/vt6655/rxtx.h
+index a67757c9bb5c..be1e5180d57b 100644
+--- a/drivers/staging/vt6655/rxtx.h
++++ b/drivers/staging/vt6655/rxtx.h
+@@ -19,7 +19,6 @@
+ #define DEFAULT_MSDU_LIFETIME_RES_64us 8000 /* 64us */
+ #define DEFAULT_MGN_LIFETIME_RES_64us  125  /* 64us */
+
+-
+ /*---------------------  Export Definitions -------------------------*/
+
+ /*---------------------  Export Variables  --------------------------*/
+
+Yours Sincerely,
+
+Pranav.
+
+Yours Sincerely,
+
+Pranav.
+
+
+On Thu, Jan 11, 2024 at 2:33=E2=80=AFPM Pranav Athreya <pranavsubbu@gmail.c=
+om> wrote:
 >
-> The max channel count for RZ DMAC is 16, hence use u8 instead of unsigned
-> int and make the pdev_irqname string long enough to avoid the warning.
-
-Note that the danger lies into someone changing
-RZ_DMAC_MAX_CHANNELS later...
-
-> This fixes the below issue:
-> drivers/dma/sh/rz-dmac.c: In function =E2=80=98rz_dmac_probe=E2=80=99:
-> drivers/dma/sh/rz-dmac.c:770:34: warning: =E2=80=98%u=E2=80=99 directive =
-writing between 1 and 10 bytes into a region of size 3 [-Wformat-overflow=
-=3D]
->   770 |         sprintf(pdev_irqname, "ch%u", index);
->       |                                  ^~
-> In function =E2=80=98rz_dmac_chan_probe=E2=80=99,
->     inlined from =E2=80=98rz_dmac_probe=E2=80=99 at drivers/dma/sh/rz-dma=
-c.c:910:9:
-> drivers/dma/sh/rz-dmac.c:770:31: note: directive argument in the range [0=
-, 4294967294]
->   770 |         sprintf(pdev_irqname, "ch%u", index);
->       |                               ^~~~~~
-> drivers/dma/sh/rz-dmac.c:770:9: note: =E2=80=98sprintf=E2=80=99 output be=
-tween 4 and 13 bytes into a destination of size 5
->   770 |         sprintf(pdev_irqname, "ch%u", index);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> Greg,
 >
-> While at it use scnprintf() instead of sprintf() to make the code
-> more robust.
+> Thank you for reviewing my patch! Shall I amend the commit and send a rev=
+ision of the patch?
+> If I understand you correctly, I should remove all mention of the .mod.c =
+file from the commit,
+> which will leave the new text as such:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Some nits below...
-
-> --- a/drivers/dma/sh/rz-dmac.c
-> +++ b/drivers/dma/sh/rz-dmac.c
-> @@ -845,9 +845,9 @@ static int rz_dmac_probe(struct platform_device *pdev=
-)
->         struct dma_device *engine;
->         struct rz_dmac *dmac;
->         int channel_num;
-> -       unsigned int i;
->         int ret;
->         int irq;
-> +       u8 i;
-
-Personally, I'm not much a fan of making loop counters smaller than
-(unsigned) int.  If you do go this way, you should change channel_num
-to u8, too, just like i in rz_dmac_remove().
-
+> Adhere to Linux kernel coding style.
 >
->         dmac =3D devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
->         if (!dmac)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> Reported by checkpatch:
+>
+> drivers/staging/vt6655/rxtx.h:22: CHECK: Please don't use multiple blank =
+lines
+>
+> Signed-off-by: Pranav Athreya <pranavsubbu@gmail.com>
+> ---
+>  drivers/staging/vt6655/rxtx.h | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/staging/vt6655/rxtx.h b/drivers/staging/vt6655/rxtx.=
+h
+> index a67757c9bb5c..be1e5180d57b 100644
+> --- a/drivers/staging/vt6655/rxtx.h
+> +++ b/drivers/staging/vt6655/rxtx.h
+> @@ -19,7 +19,6 @@
+>  #define DEFAULT_MSDU_LIFETIME_RES_64us 8000 /* 64us */
+>  #define DEFAULT_MGN_LIFETIME_RES_64us  125  /* 64us */
+>
+> -
+>  /*---------------------  Export Definitions -------------------------*/
+>
+>  /*---------------------  Export Variables  --------------------------*/
+>
+>
+> Yours Sincerely,
+>
+> Pranav.
+>
+>
+> On Thu, Jan 11, 2024 at 12:52=E2=80=AFPM Greg Kroah-Hartman <gregkh@linux=
+foundation.org> wrote:
+>>
+>> On Thu, Jan 11, 2024 at 12:36:52PM +0530, Pranav Athreya wrote:
+>> > Adhere to Linux kernel coding style.
+>> >
+>> > Reported by checkpatch:
+>> >
+>> > drivers/staging/vt6655/rxtx.h:22: CHECK: Please don't use multiple bla=
+nk lines
+>> >
+>> > drivers/staging/vt6655/vt6655_stage.mod.c:38: CHECK: Please don't use =
+multiple blank lines
+>> > ^Ignore the blank lines in vt6655_stage.mod.c since *.mod.c files
+>> > are included in .gitignore.
+>>
+>> *.mod.c files are not something that you can change, and are not in your
+>> patch either:
+>>
+>> > Signed-off-by: Pranav Athreya <pranavsubbu@gmail.com>
+>> > ---
+>> >  drivers/staging/vt6655/rxtx.h | 1 -
+>> >  1 file changed, 1 deletion(-)
+>>
+>> So the text is not correct :(
+>>
+>> thanks,
+>>
+>> greg k-h
