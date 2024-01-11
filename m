@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C214B5DD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EB24CB5E
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kDDG1Idg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CEFDCC43330;
-	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/3EBLIO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C818C4167E;
+	Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704984637;
-	bh=9FCkSsWMxgSl2xN45f2zMDQn+WFyj8ygw9+oME9RILw=;
+	s=k20201202; t=1704984638;
+	bh=iGnhSFR4oy8vML/vLeOSYSO2FOyqacVWkaXJJeDyNUM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kDDG1Idg184euvVFC9dvpy+WY3Dbc5IuDz1ZOQAtAh7ZQo+fCVzD69aJEOXx4Kma/
-	 TXOoG+hLZVttYmgEWGPbG6IZG2t2Ox6NroG9sT5ccnIdMCs5JJW5IsevZE5oS/3qko
-	 1IRyAGcL2un6j0C4GYzbQzJ/3DYk+aRhYOX/z8ayXTyQhjh7UXHgZrvsD3lpDjS3a4
-	 SKkxtURMJBNVu+1NCb/G0fmxpSfJ3jplaSq0iOkSewlI8wkUUTsvQAWh4dOC2czXWj
-	 N8byp1bKmhW2OtAvovnOIPkjBxUBgX6pwfuJD2LpWvJzbWbV52qoruXPX9y5DwDcgj
-	 J9zSBwq0yZtMQ==
+	b=i/3EBLIOo6blQ/RTham11oq8xEbA+ix9e1GUFP3qr5Km+lP4dFbNgj8zfhJWUc6wn
+	 Gw6IIhtXLXdCmd8hKsAR80QhMetUXYHI2tA9Dy5/1Y3GPw5zywjjHLSPOogx3QW8OY
+	 4W6TqQByS4uC2WiNITnApAg1Hi647lv+u1b7Hd8VeQ8fVwtkRaAMLmSMcEsOHz6Tsh
+	 0/oqIa6vmzPmxY4Ud8xRbNUD/nbafrwlkRkYXd7YKnrg/GRn1yXayYYatPaqksCbGj
+	 HDt+A9yiXCY6tBVw0Ee2oN6kRT9p3Tc5Rn7RUJt1kvXoQo9t4Pfqz7K7SniATUKiVZ
+	 GQRYFXvMmcYWg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BAE18D8C976;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ED18FD8C975;
 	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,43 +28,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 0/2] riscv: enable EFFICIENT_UNALIGNED_ACCESS and
- DCACHE_WORD_ACCESS
+Subject: Re: [PATCH] riscv; fix __user annotation in save_v_state()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170498463776.20080.6132478533788411387.git-patchwork-notify@kernel.org>
+ <170498463796.20080.14961218265938269771.git-patchwork-notify@kernel.org>
 Date: Thu, 11 Jan 2024 14:50:37 +0000
-References: <20231225044207.3821-1-jszhang@kernel.org>
-In-Reply-To: <20231225044207.3821-1-jszhang@kernel.org>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
- ebiggers@kernel.org, conor.dooley@microchip.com, dqfext@gmail.com
+References: <20231123142708.261733-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20231123142708.261733-1-ben.dooks@codethink.co.uk>
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Mon, 25 Dec 2023 12:42:05 +0800 you wrote:
-> Some riscv implementations such as T-HEAD's C906, C908, C910 and C920
-> support efficient unaligned access, for performance reason we want
-> to enable HAVE_EFFICIENT_UNALIGNED_ACCESS on these platforms. To
-> avoid performance regressions on non efficient unaligned access
-> platforms, HAVE_EFFICIENT_UNALIGNED_ACCESS can't be globally selected.
+On Thu, 23 Nov 2023 14:27:08 +0000 you wrote:
+> The save_v_state() is technically sending a __user pointer through
+> __put_user() and thus is generating a sparse warning so force the
+> value to be "void *" to fix:
 > 
-> To solve this problem, runtime code patching based on the detected
-> speed is a good solution. But that's not easy, it involves lots of
-> work to modify vairous subsystems such as net, mm, lib and so on.
-> This can be done step by step.
+> arch/riscv/kernel/signal.c:94:16: warning: incorrect type in initializer (different address spaces)
+> arch/riscv/kernel/signal.c:94:16:    expected void *__val
+> arch/riscv/kernel/signal.c:94:16:    got void [noderef] __user *[assigned] datap
+> Fixes:  8ee0b41898fa26f66e32 ("riscv: signal: Add sigcontext save/restore for vector")
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,1/2] riscv: introduce RISCV_EFFICIENT_UNALIGNED_ACCESS
-    https://git.kernel.org/riscv/c/b6da6cbe13eb
-  - [v4,2/2] riscv: select DCACHE_WORD_ACCESS for efficient unaligned access HW
-    https://git.kernel.org/riscv/c/d0fdc20b0429
+  - riscv; fix __user annotation in save_v_state()
+    https://git.kernel.org/riscv/c/869436dae72a
 
 You are awesome, thank you!
 -- 
