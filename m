@@ -1,39 +1,39 @@
-Received: from m16.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55482FC02
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:32:53 +0000 (UTC)
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8575C10A14
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fw+AI9iV"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pR+FxTnY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=hIIhJMzptMNoGjn+eB
-	6+tS402J6MeF/y18vxlmoiacU=; b=fw+AI9iVomMHhAjUctpac32C9CXrLB4EU/
-	J7YOg3q4dr/uzgK7xlqI2+awoVzvYrIlt2xrxoHH95cHxrh9p3o4qGAOifuFwDJO
-	gJtE9MgL+XgaN5NMscWCEe/rhYPp8Wm6NESaUhYbmrLVUwYYJyCTaUO/fjy7svM1
-	hsMvKvP/Q=
+	s=s110527; h=From:Subject:Date:Message-Id; bh=yIzZtNZgUk+hSg+LRm
+	vyXhs5mkbZ/NoO0/JblU6W9xQ=; b=pR+FxTnYzQfJ26kf7/SYkr44nWiV0torxa
+	S24RKhmDyBfnUeC9FVTisuJqbJOyFvcoYE2H/H1nSHATAZ7knm3gQUnERlCQ3Ry7
+	YiTrQe/LYBXmWAXjuExiRdNE0H7jaLl29tI5gyvAODd7Z+mRGYANZkcAPXdodJxF
+	WJHnO2hJg=
 Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-5 (Coremail) with SMTP id _____wD3P2elp59lm66VAA--.22689S2;
-	Thu, 11 Jan 2024 16:32:37 +0800 (CST)
+	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wDnjxEVpJ9lJ0sRAA--.4258S2;
+	Thu, 11 Jan 2024 16:17:25 +0800 (CST)
 From: GuoHua Chen <chenguohua_716@163.com>
 To: daniel@ffwll.ch,
 	Xinhui.Pan@amd.com,
-	alexander.deucher@amd.com,
 	airlied@gmail.com,
-	christian.koenig@amd.com
-Cc: dri-devel@lists.freedesktop.org,
+	christian.koenig@amd.com,
+	alexander.deucher@amd.com
+Cc: linux-kernel@vger.kernel.org,
 	amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
 	GuoHua Chen <chenguohua_716@163.com>
-Subject: [PATCH] drm/radeon: Clean up errors in radeon_audio.c
-Date: Thu, 11 Jan 2024 08:32:35 +0000
-Message-Id: <20240111083235.12152-1-chenguohua_716@163.com>
+Subject: [PATCH] drm/radeon: Clean up errors in rv6xx_dpm.h
+Date: Thu, 11 Jan 2024 08:17:24 +0000
+Message-Id: <20240111081724.11578-1-chenguohua_716@163.com>
 X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3P2elp59lm66VAA--.22689S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tFy5Xry5ZFyxGr4UJryDtrb_yoW8tryrpa
-	17ua9YyrZIk34DWryxAFZxJFWYgw1kJa1xZrWDuw1fG393tryDXa4aqryUCFyrJFyFgay7
-	tr1kKw12v3Wvkr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UFdgAUUUUU=
-X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/xtbBEg1i1mVOBk-vRgAAsg
+X-CM-TRANSID:_____wDnjxEVpJ9lJ0sRAA--.4258S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKFWDZrWxuFy5Kry8JFWfuFg_yoWfWFb_Gr
+	n7Xa93CrW7uryv9F1xArsIyrWIv398uFs3G3W8KF43J347X3WxZ3srZF9rX345JF4xAFn7
+	Ka1vgFyfCrs3WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUj2YLDUUUUU==
+X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/1tbiqBZi1mVOBlBo9wAAso
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,55 +42,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 Fix the following errors reported by checkpatch:
 
-ERROR: "foo* bar" should be "foo *bar"
 ERROR: that open brace { should be on the previous line
 
 Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
 ---
- drivers/gpu/drm/radeon/radeon_audio.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/radeon/atombios_crtc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_audio.c b/drivers/gpu/drm/radeon/radeon_audio.c
-index 91b58fbc2be7..74753bb26d33 100644
---- a/drivers/gpu/drm/radeon/radeon_audio.c
-+++ b/drivers/gpu/drm/radeon/radeon_audio.c
-@@ -37,15 +37,14 @@
+diff --git a/drivers/gpu/drm/radeon/atombios_crtc.c b/drivers/gpu/drm/radeon/atombios_crtc.c
+index ade13173921b..ecebebe2e7a6 100644
+--- a/drivers/gpu/drm/radeon/atombios_crtc.c
++++ b/drivers/gpu/drm/radeon/atombios_crtc.c
+@@ -213,8 +213,7 @@ static void atombios_enable_crtc_memreq(struct drm_crtc *crtc, int state)
+ 	atom_execute_table(rdev->mode_info.atom_context, index, (uint32_t *)&args);
+ }
  
- void dce6_audio_enable(struct radeon_device *rdev, struct r600_audio_pin *pin,
- 		u8 enable_mask);
--struct r600_audio_pin* r600_audio_get_pin(struct radeon_device *rdev);
--struct r600_audio_pin* dce6_audio_get_pin(struct radeon_device *rdev);
-+struct r600_audio_pin *r600_audio_get_pin(struct radeon_device *rdev);
-+struct r600_audio_pin *dce6_audio_get_pin(struct radeon_device *rdev);
- static void radeon_audio_hdmi_mode_set(struct drm_encoder *encoder,
- 	struct drm_display_mode *mode);
- static void radeon_audio_dp_mode_set(struct drm_encoder *encoder,
- 	struct drm_display_mode *mode);
- 
--static const u32 pin_offsets[7] =
+-static const u32 vga_control_regs[6] =
 -{
-+static const u32 pin_offsets[7] = {
- 	(0x5e00 - 0x5e00),
- 	(0x5e18 - 0x5e00),
- 	(0x5e30 - 0x5e00),
-@@ -361,7 +360,7 @@ static void radeon_audio_write_latency_fields(struct drm_encoder *encoder,
- 		radeon_encoder->audio->write_latency_fields(encoder, connector, mode);
- }
- 
--struct r600_audio_pin* radeon_audio_get_pin(struct drm_encoder *encoder)
-+struct r600_audio_pin *radeon_audio_get_pin(struct drm_encoder *encoder)
- {
- 	struct radeon_device *rdev = encoder->dev->dev_private;
- 	struct radeon_encoder *radeon_encoder = to_radeon_encoder(encoder);
-@@ -528,7 +527,7 @@ static void radeon_audio_calc_cts(unsigned int clock, int *CTS, int *N, int freq
- 		*N, *CTS, freq);
- }
- 
--static const struct radeon_hdmi_acr* radeon_audio_acr(unsigned int clock)
-+static const struct radeon_hdmi_acr *radeon_audio_acr(unsigned int clock)
- {
- 	static struct radeon_hdmi_acr res;
- 	u8 i;
++static const u32 vga_control_regs[6] = {
+ 	AVIVO_D1VGA_CONTROL,
+ 	AVIVO_D2VGA_CONTROL,
+ 	EVERGREEN_D3VGA_CONTROL,
 -- 
 2.17.1
 
