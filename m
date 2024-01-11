@@ -1,74 +1,113 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF563168A4;
-	Thu, 11 Jan 2024 11:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B48915482;
+	Thu, 11 Jan 2024 11:35:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="JPTfchJ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=Ulg5o6CoaKeBaKtAlG
-	T8y9PQKh25ahXJQd5/WZA3rzA=; b=JPTfchJ5VXgqMWK2ki1mdaYp9JqCh18nEd
-	9maxfCsBvt7m5wI3y9VTb29dRC3mSEY+8YDX5R+8XfpZmLGTDbgRU6mmPmEsAVy4
-	0J1ZQptl6GNzXsPJvc3xMDrO6FOSLwPMQHh6DGKzQDAHi8HckoIBwf32g1iEd8zt
-	a+Ev90Xhg=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wD3vyva0Z9lmSM5AA--.46639S2;
-	Thu, 11 Jan 2024 19:32:42 +0800 (CST)
-From: XueBing Chen <chenxb_99091@126.com>
-To: jejb@linux.ibm.com,
-	aacraid@microsemi.com,
-	martin.petersen@oracle.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	XueBing Chen <chenxb_99091@126.com>
-Subject: [PATCH] scsi: aacraid: Clean up errors in commsup.c
-Date: Thu, 11 Jan 2024 11:32:40 +0000
-Message-Id: <20240111113240.15985-1-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3vyva0Z9lmSM5AA--.46639S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZFyUWFy3Kw17JF13Zr4fZrb_yoWDCrXE9r
-	4xXFyxuF4UuF13Cr17ur43ZFyavayDur4rurW2qry7XryvvrWUArn8ZrnxZ34Fgw48AF1U
-	Kwn7XFn3Arn29jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRiqXd5UUUUU==
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiWRxixWVLYUW8GwACsN
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IvFJ3gZn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69AFEC433F1;
+	Thu, 11 Jan 2024 11:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704972955;
+	bh=aBdXrdu7Fc3ywB3LGukHqXOp/HVe7tj8vpqYpP1GRMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IvFJ3gZnJZmOW4n1hDb23BAssZ0EUOybEz7w/eZDwzNSg5bilSn8XI9BXJJ93D/0d
+	 o09I04nLNlA3Cow6eZT+PujIFuptFMcf9eUDNW4/nTJCqwOl7iWyVUTZwo9hs+OXin
+	 y2gDzAAfeTSFB0im9juwXFPOpR4dsX9yshWNxTXZwcnDMtps8uQPbeU+EDjq3ElIrY
+	 N1XqwjNc02YboOdua/+DnwuYUdKah9CSZ6vhEAsofIaGvd1HDRccJAh4DUTdcHVwZ5
+	 0FPsse1MSDcaCS6sx5uUIBSOScPpXiJbtYDqM44o/fGRMiRUn8P9XMVj1QSBKga5eF
+	 hhSYZuH+NvKCA==
+Date: Thu, 11 Jan 2024 11:35:41 +0000
+From: Lee Jones <lee@kernel.org>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Yang Xiwen <forbidden405@foxmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: Re: [DO NOT MERGE v6 23/37] mfd: sm501: Convert platform_data to OF
+ property
+Message-ID: <20240111113541.GH1678981@google.com>
+References: <cover.1704788539.git.ysato@users.sourceforge.jp>
+ <569f0bfb4fa3fcec8fbd64f67fc4fd2d1cba3f77.1704788539.git.ysato@users.sourceforge.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <569f0bfb4fa3fcec8fbd64f67fc4fd2d1cba3f77.1704788539.git.ysato@users.sourceforge.jp>
 
-Fix the following errors reported by checkpatch:
+On Tue, 09 Jan 2024, Yoshinori Sato wrote:
 
-ERROR: spaces required around that '<' (ctx:VxV)
-ERROR: "foo * bar" should be "foo *bar"
+> Various parameters of SM501 can be set using platform_data,
+> so parameters cannot be passed in the DeviceTree target.
+> Expands the parameters set in platform_data so that they can be
+> specified using DeviceTree properties.
+> 
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> ---
+>  drivers/mfd/sm501.c           | 436 ++++++++++++++++++++++++++++++++++
 
-Signed-off-by: XueBing Chen <chenxb_99091@126.com>
----
- drivers/scsi/aacraid/commsup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+How has this grown from 99 lines to 436 lines?
 
-diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-index 25cee03d7f97..865316ba3c19 100644
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -129,7 +129,7 @@ void aac_fib_vector_assign(struct aac_dev *dev)
-  *	fib area, the unmapped fib data and also the free list
-  */
- 
--int aac_fib_setup(struct aac_dev * dev)
-+int aac_fib_setup(struct aac_dev *dev)
- {
- 	struct fib *fibptr;
- 	struct hw_fib *hw_fib;
-@@ -144,7 +144,7 @@ int aac_fib_setup(struct aac_dev * dev)
- 		if (dev->comm_interface != AAC_COMM_MESSAGE_TYPE3)
- 			dev->init->r7.max_io_commands = cpu_to_le32(max_cmds);
- 	}
--	if (i<0)
-+	if (i < 0)
- 		return -ENOMEM;
- 
- 	memset(dev->hw_fib_va, 0,
+Most of it almost certainly needs moving (back?) out to the leaf
+drivers.  A great deal of the properties parsed in here are only
+relevant to a single device (display for instance).  Please move all
+non-generic handling out to the relevant subsystems.
+
+>  drivers/video/fbdev/sm501fb.c | 106 +++++++++
+>  2 files changed, 542 insertions(+)
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
