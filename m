@@ -1,39 +1,39 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8575C10A14
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:33:12 +0000 (UTC)
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42E76F9D6
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pR+FxTnY"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Vr0Vujg/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=yIzZtNZgUk+hSg+LRm
-	vyXhs5mkbZ/NoO0/JblU6W9xQ=; b=pR+FxTnYzQfJ26kf7/SYkr44nWiV0torxa
-	S24RKhmDyBfnUeC9FVTisuJqbJOyFvcoYE2H/H1nSHATAZ7knm3gQUnERlCQ3Ry7
-	YiTrQe/LYBXmWAXjuExiRdNE0H7jaLl29tI5gyvAODd7Z+mRGYANZkcAPXdodJxF
-	WJHnO2hJg=
+	s=s110527; h=From:Subject:Date:Message-Id; bh=4/Jx3JBI1HjdTdG8JO
+	PlsexBLCUAbZM6wJbiVlJEdV0=; b=Vr0Vujg/9yithDZdETK1ydxLa6oOHOFsAs
+	r/X1Y6mLJw7xhhlzG9ky7b/Mi/dP++d+EodnBo/FXuxxAiYIRPNUWaXAME+SBC2w
+	7bGxcimoOBzsFBwVMr0YZxMwzeGm9LviXGV9gvWJlwguoGlUwcT7iR5puVU+HSIp
+	EfGpSWB7w=
 Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wDnjxEVpJ9lJ0sRAA--.4258S2;
-	Thu, 11 Jan 2024 16:17:25 +0800 (CST)
+	by gzga-smtp-mta-g0-0 (Coremail) with SMTP id _____wD3X7AqqJ9lWq2UAA--.19387S2;
+	Thu, 11 Jan 2024 16:34:50 +0800 (CST)
 From: GuoHua Chen <chenguohua_716@163.com>
 To: daniel@ffwll.ch,
 	Xinhui.Pan@amd.com,
+	alexander.deucher@amd.com,
 	airlied@gmail.com,
-	christian.koenig@amd.com,
-	alexander.deucher@amd.com
-Cc: linux-kernel@vger.kernel.org,
+	christian.koenig@amd.com
+Cc: dri-devel@lists.freedesktop.org,
 	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
 	GuoHua Chen <chenguohua_716@163.com>
-Subject: [PATCH] drm/radeon: Clean up errors in rv6xx_dpm.h
-Date: Thu, 11 Jan 2024 08:17:24 +0000
-Message-Id: <20240111081724.11578-1-chenguohua_716@163.com>
+Subject: [PATCH] drm/radeon: Clean up errors in si_dpm.h
+Date: Thu, 11 Jan 2024 08:34:48 +0000
+Message-Id: <20240111083448.12238-1-chenguohua_716@163.com>
 X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wDnjxEVpJ9lJ0sRAA--.4258S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKFWDZrWxuFy5Kry8JFWfuFg_yoWfWFb_Gr
-	n7Xa93CrW7uryv9F1xArsIyrWIv398uFs3G3W8KF43J347X3WxZ3srZF9rX345JF4xAFn7
-	Ka1vgFyfCrs3WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUj2YLDUUUUU==
-X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/1tbiqBZi1mVOBlBo9wAAso
+X-CM-TRANSID:_____wD3X7AqqJ9lWq2UAA--.19387S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tFWrKF1DWF1xKF1rXw4Utwb_yoW8uw4UpF
+	srC343CrWkJr43ua43JFWUCF9I93srJrWIka1DG3yFy3WUZ34kCFn0kr4fZryxGrWF9w12
+	yrn2gFy5Ww1a9rDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UFdgAUUUUU=
+X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/1tbiqAti1mVOBlDTuwAAsC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,27 +42,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 Fix the following errors reported by checkpatch:
 
-ERROR: that open brace { should be on the previous line
+ERROR: open brace '{' following struct go on the same line
+ERROR: open brace '{' following enum go on the same line
 
 Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
 ---
- drivers/gpu/drm/radeon/atombios_crtc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/radeon/si_dpm.h | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/atombios_crtc.c b/drivers/gpu/drm/radeon/atombios_crtc.c
-index ade13173921b..ecebebe2e7a6 100644
---- a/drivers/gpu/drm/radeon/atombios_crtc.c
-+++ b/drivers/gpu/drm/radeon/atombios_crtc.c
-@@ -213,8 +213,7 @@ static void atombios_enable_crtc_memreq(struct drm_crtc *crtc, int state)
- 	atom_execute_table(rdev->mode_info.atom_context, index, (uint32_t *)&args);
- }
+diff --git a/drivers/gpu/drm/radeon/si_dpm.h b/drivers/gpu/drm/radeon/si_dpm.h
+index aa857906ef93..4887edebd348 100644
+--- a/drivers/gpu/drm/radeon/si_dpm.h
++++ b/drivers/gpu/drm/radeon/si_dpm.h
+@@ -26,15 +26,13 @@
+ #include "ni_dpm.h"
+ #include "sislands_smc.h"
  
--static const u32 vga_control_regs[6] =
+-enum si_cac_config_reg_type
 -{
-+static const u32 vga_control_regs[6] = {
- 	AVIVO_D1VGA_CONTROL,
- 	AVIVO_D2VGA_CONTROL,
- 	EVERGREEN_D3VGA_CONTROL,
++enum si_cac_config_reg_type {
+ 	SISLANDS_CACCONFIG_MMR = 0,
+ 	SISLANDS_CACCONFIG_CGIND,
+ 	SISLANDS_CACCONFIG_MAX
+ };
+ 
+-struct si_cac_config_reg
+-{
++struct si_cac_config_reg {
+ 	u32 offset;
+ 	u32 mask;
+ 	u32 shift;
+@@ -42,8 +40,7 @@ struct si_cac_config_reg
+ 	enum si_cac_config_reg_type type;
+ };
+ 
+-struct si_powertune_data
+-{
++struct si_powertune_data {
+ 	u32 cac_window;
+ 	u32 l2_lta_window_size_default;
+ 	u8 lts_truncate_default;
+@@ -56,8 +53,7 @@ struct si_powertune_data
+ 	bool enable_powertune_by_default;
+ };
+ 
+-struct si_dyn_powertune_data
+-{
++struct si_dyn_powertune_data {
+ 	u32 cac_leakage;
+ 	s32 leakage_minimum_temperature;
+ 	u32 wintime;
+@@ -68,8 +64,7 @@ struct si_dyn_powertune_data
+ 	bool disable_uvd_powertune;
+ };
+ 
+-struct si_dte_data
+-{
++struct si_dte_data {
+ 	u32 tau[SMC_SISLANDS_DTE_MAX_FILTER_STAGES];
+ 	u32 r[SMC_SISLANDS_DTE_MAX_FILTER_STAGES];
+ 	u32 k;
+@@ -122,8 +117,7 @@ struct si_mc_reg_table {
+ #define SISLANDS_MCREGISTERTABLE_ULV_SLOT                   2
+ #define SISLANDS_MCREGISTERTABLE_FIRST_DRIVERSTATE_SLOT     3
+ 
+-struct si_leakage_voltage_entry
+-{
++struct si_leakage_voltage_entry {
+ 	u16 voltage;
+ 	u16 leakage_index;
+ };
+@@ -131,8 +125,7 @@ struct si_leakage_voltage_entry
+ #define SISLANDS_LEAKAGE_INDEX0     0xff01
+ #define SISLANDS_MAX_LEAKAGE_COUNT  4
+ 
+-struct si_leakage_voltage
+-{
++struct si_leakage_voltage {
+ 	u16 count;
+ 	struct si_leakage_voltage_entry entries[SISLANDS_MAX_LEAKAGE_COUNT];
+ };
 -- 
 2.17.1
 
