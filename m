@@ -1,65 +1,98 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361404CB42;
-	Thu, 11 Jan 2024 15:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from dslb-188-097-211-245.188.097.pools.vodafone-ip.de ([188.97.211.245] helo=martin-debian-2.paytec.ch)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <martin@kaiser.cx>)
-	id 1rNwc2-000I31-0K;
-	Thu, 11 Jan 2024 16:04:54 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Peng Fan <peng.fan@nxp.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH] gpio: vf610: allow disabling the vf610 driver
-Date: Thu, 11 Jan 2024 16:04:29 +0100
-Message-Id: <20240111150429.681567-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1F822074;
+	Thu, 11 Jan 2024 15:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Thu, 11 Jan
+ 2024 18:10:11 +0300
+Received: from [192.168.211.130] (10.0.253.138) by Ex16-01.fintech.ru
+ (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Thu, 11 Jan
+ 2024 18:10:10 +0300
+Message-ID: <b7ca60c4-2392-448e-90e4-5078051d7af6@fintech.ru>
+Date: Thu, 11 Jan 2024 07:10:10 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: em28xx: return error on media_device_register()
+ failure
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240110173958.4544-1-n.zhandarovich@fintech.ru>
+ <20240111074905.67d61b00@coco.lan>
+Content-Language: en-US
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+In-Reply-To: <20240111074905.67d61b00@coco.lan>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-The vf610 gpio driver is enabled by default for all i.MX machines,
-without any option to disable it in a board-specific config file.
 
-Most i.MX chipsets have no hardware for this driver. Change the default
-to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
+On 1/10/24 22:49, Mauro Carvalho Chehab wrote:
+> Em Wed, 10 Jan 2024 09:39:58 -0800
+> Nikita Zhandarovich <n.zhandarovich@fintech.ru> escreveu:
+> 
+>> In an unlikely case of failure in media_device_register(), release
+>> resources and return the erroneous value. Otherwise, possible issues
+>> with registering the device will continue to be ignored.
+>>
+>> Found by Linux Verification Center (linuxtesting.org) with static
+>> analysis tool SVACE.
+>>
+>> Fixes: 37ecc7b1278f ("[media] em28xx: add media controller support")
+>> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+>> ---
+>>  drivers/media/usb/em28xx/em28xx-cards.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
+>> index 4d037c92af7c..dae731dfc569 100644
+>> --- a/drivers/media/usb/em28xx/em28xx-cards.c
+>> +++ b/drivers/media/usb/em28xx/em28xx-cards.c
+>> @@ -4095,6 +4095,8 @@ static int em28xx_usb_probe(struct usb_interface *intf,
+>>  	 */
+>>  #ifdef CONFIG_MEDIA_CONTROLLER
+>>  	retval = media_device_register(dev->media_dev);
+>> +	if (retval)
+>> +		goto err_free;
+> 
+> Not freeing resources here is intentional. See, the media controller 
+> API is optional on this driver. It will just provide a way to identify
+> the device's topology, but the device is completely usable without
+> it.
+> 
+> Perhaps we need, instead, a patch documenting it, and preventing
+> static analysis tools to point it as an issue.
+> 
+> Thanks,
+> Mauro
 
-Add a text description after the bool type, this makes the driver
-selectable by make config etc. i.MX chips other than SOC_VF610 can now
-enable the driver from their board config.
+Thank you for your feedback, however I had a few questions...
 
-Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO_VF610")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- drivers/gpio/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+While I understand what you mean about optional nature of media
+controller registration in this case, a quick glance into other calls to
+media_device_register() across the source code shows that usually
+failure with registering is handled as a proper error regardless of
+whether the device is still usable. But if you think that we can make an
+exception here, I'll happily oblige.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1301cec94f12..353af1a4d0ac 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -711,7 +711,8 @@ config GPIO_UNIPHIER
- 	  Say yes here to support UniPhier GPIOs.
- 
- config GPIO_VF610
--	def_bool y
-+	bool "VF610 GPIO support"
-+	default y if SOC_VF610
- 	depends on ARCH_MXC
- 	select GPIOLIB_IRQCHIP
- 	help
--- 
-2.39.2
+Then if I am to continue on this path, would the following comment above
+the call to media_device_register() suffice?
 
+ #ifdef CONFIG_MEDIA_CONTROLLER
++	/*
++	 * No need to check the return value, the device will still be 	     +
+ * usable without media controller API.
++	 */
+ 	retval = media_device_register(dev->media_dev);
+
+Thanks,
+Nikita
