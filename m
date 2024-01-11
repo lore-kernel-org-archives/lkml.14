@@ -1,118 +1,111 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DB24F1E6
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 15:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BC74CDE8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JO5QJYwA"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bc09434600so2504492b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 07:56:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iAIp9ESR"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbeac1f5045so6629047276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:00:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1704988610; x=1705593410; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XzlSQgi5aMFQ6ZZbKcTjiWRQSktCc9jeFnSRbXOKzuI=;
-        b=JO5QJYwAGS+ekfRmosz2EhW4wCC5gpPSHmP3EPktykd5vfHypZI+Zv03d3d6tDUrOE
-         zOxvN0YSROPpY0s0fjRny0wMko+hlQqNvrxnh299Nq7ACJrI+fKuhH3UIzIibqbEA8bR
-         3Ufy7/0OnCw1NSk0naA0X9H4D6DWWCgw2yfCeDU0p0JR7LsadqBYw65KE+u2SpFYGHrj
-         f8MVVOQfLozHTISwdWT5nc+bPFsGeRebPOsaT+90T1FCVvTKu/RoFQK6lK4gPRyWVSSj
-         IM7RM/1pRSdEHU1IMH8SY2gWRRJCNj5Wxtey/TXNvqdJthYgo1BJHwTb68x+r1oAKkwf
-         p92g==
+        d=google.com; s=20230601; t=1704988807; x=1705593607; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxN7R377bwy0eVKj0G4Rz7CiNeL7SD47OvC/Yydz4N4=;
+        b=iAIp9ESRiT4KZxhu4joy8o8utXwsHC4VBhtQKqDS4Q97s4xLLanH4k6bisIn1bNxQj
+         gspevdfYmcxrAqNOVMaxuwyaWQGrSItt8T2ciCku6xXRglmOww08pPh/qWsu1x1G7Ii3
+         43OExbsGQDjmWtLzrthS20D26xWTbxQxdZR8vr0TvtHNmgiHZvlTPgSRY+c9jvUPwNQn
+         djnz3FyalPXBbsdPfbhKT9BTliq0PaO6XApoDlgBxXViMPGN1CG4rU2eQHaux4AwqirK
+         Dp02kew0zgjJqmUO4Bwmo78eYIRKb9RKEQ+ZZXV/lsI4K8DnCBD5KZY28LG2iLm6vQR+
+         MsLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704988610; x=1705593410;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XzlSQgi5aMFQ6ZZbKcTjiWRQSktCc9jeFnSRbXOKzuI=;
-        b=gptY8eAOx5TFUVzWOcH8frj6Rf5p/CCTu0hVlKflLmVdTocXGg9N58zV0RxO7Dvj8K
-         +p1ZfS0JlF8Ua/SDkzY6QEyOVpQKTk+/Bcitj+DDx2wsu2ewF/p4r7J+gWzi/yHvfvQa
-         aWVW2pBVfI+igqD4uPu64MfSYPSwsUyZ8Rj0P/mFqJHiwwB9Ok8Z3MisUmqKCkt8Li72
-         /N+nJKLA8UEsRzlRFj/CH4ZBX8kwGxUenOQt0ojza+Z+F9brcpu7h6dhat8hxLX2yZoW
-         cg09MeXeBODvDn6/tYks3hKBfGRfQY+GfE1JWfmdIwCrihFszVP82a16EQcENz8cis/Q
-         M1nw==
-X-Gm-Message-State: AOJu0YyPo8/ZK5EOEIEMPLOOcxkRxSITfvbliM9AFH6NtPoIuevTmk3M
-	cbQFMwzqqgmVXtHG9T7j9NBX/BdvzTCB0g==
-X-Google-Smtp-Source: AGHT+IHYynUbRhLmuQVEz/Gn2c2nYnwGP0p6jJC5WKr54BT87sr0IvlKfK2tBXuiCnWCfqjPiMAcuQ==
-X-Received: by 2002:a05:6808:2e9a:b0:3bd:4b9f:7f5a with SMTP id gt26-20020a0568082e9a00b003bd4b9f7f5amr6897oib.23.1704988609940;
-        Thu, 11 Jan 2024 07:56:49 -0800 (PST)
-Received: from ziepe.ca ([12.97.180.36])
-        by smtp.gmail.com with ESMTPSA id b14-20020aca220e000000b003bd4453e5d5sm204005oic.22.2024.01.11.07.56.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 07:56:49 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rNxQG-00326u-0o;
-	Thu, 11 Jan 2024 11:56:48 -0400
-Date: Thu, 11 Jan 2024 11:56:48 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>, Kevin Tian <kevin.tian@intel.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommufd/selftest: Use right iommu_ops for mock device
-Message-ID: <20240111155648.GX50608@ziepe.ca>
-References: <20240111073213.180020-1-baolu.lu@linux.intel.com>
- <20240111144840.GW50608@ziepe.ca>
- <016e052e-8a99-4d60-b864-87c9859953f2@arm.com>
+        d=1e100.net; s=20230601; t=1704988807; x=1705593607;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxN7R377bwy0eVKj0G4Rz7CiNeL7SD47OvC/Yydz4N4=;
+        b=qYPPWb5OeLv+E4LfLlJiwB5UInMlHkYtnG4PgNPjLzBImhCrgjXtdv2isZr1WY/55f
+         tGEhwCqlCqG1nJV/J5adLWEMLExVCx+pna/BPiu6VvdGJ8PVsY2oAjmIo6SqHBcpQumK
+         GYjgJCDDuUsjOrxhW4qUlkZBXaMVv/NcYD9UB9Y+yCfRFlbi2+QWX7QfKsybfD/5tfQq
+         IW2caExr0UATr22v3p6kDV/zErdJMX7yBpJuxHX4P+hK0plLXukvRI4kDRTUhSEi7UXK
+         8MDYav2J0FLku2wQog1RKF3MqCAQaFZxaNr70KujUTTCjq4zAIr2mjtU6XbdHsfvzYAa
+         fLVg==
+X-Gm-Message-State: AOJu0YyGQCX+ot6jr/R0rmxTMx2HIZmkZq9cgM9xhBevDouv+gbssSDg
+	G9DDsG4Pl1Msb1WYfg48z3EjZrUiaxypEKAmdQ==
+X-Google-Smtp-Source: AGHT+IE30GMehPurCyiES1cREhJREwfrrR4fxbnpplJHm846Ao21KoBD2vg4J2OgkIxidWjcBwnCdxeO62M=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:72a:b0:dbf:4556:2c58 with SMTP id
+ l10-20020a056902072a00b00dbf45562c58mr241806ybt.1.1704988806911; Thu, 11 Jan
+ 2024 08:00:06 -0800 (PST)
+Date: Thu, 11 Jan 2024 08:00:05 -0800
+In-Reply-To: <832697b9-3652-422d-a019-8c0574a188ac@proxmox.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <016e052e-8a99-4d60-b864-87c9859953f2@arm.com>
+Mime-Version: 1.0
+References: <832697b9-3652-422d-a019-8c0574a188ac@proxmox.com>
+Message-ID: <ZaAQhc13IbWk5j5D@google.com>
+Subject: Re: Temporary KVM guest hangs connected to KSM and NUMA balancer
+From: Sean Christopherson <seanjc@google.com>
+To: Friedrich Weber <f.weber@proxmox.com>
+Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Jan 11, 2024 at 03:50:51PM +0000, Robin Murphy wrote:
-> On 11/01/2024 2:48 pm, Jason Gunthorpe wrote:
-> > On Thu, Jan 11, 2024 at 03:32:13PM +0800, Lu Baolu wrote:
-> > > In the iommu probe device path, __iommu_probe_device() gets the iommu_ops
-> > > for the device from dev->iommu->fwspec if this field has been initialized
-> > > before probing. Otherwise, it will lookup the global iommu device list
-> > > and use the iommu_ops of the first iommu device which has no
-> > > dev->iommu->fwspec. This causes the wrong iommu_ops to be used for the mock
-> > > device on x86 platforms where dev->iommu->fwspec is not used.
-> > > 
-> > > Preallocate the fwspec for the mock device so that the right iommu ops can
-> > > be used.
-> > 
-> > I really don't like this.
-> > 
-> > The lifecycle model for fwspec is already a bit confusing. Introducing
-> > a new case where a driver pre-allocates the fwspec is making it worse,
-> > not better.
-> > 
-> > eg iommu_init_device() error unwind will free this allocated fwspec
-> > leaving the device broken. We don't have the concept of a fwspec that
-> > is owned by the device, it is really owned by the probing code.
+On Thu, Jan 04, 2024, Friedrich Weber wrote:
+> Hi,
 > 
-> As I've tried to explain before, this is in fact the correct use of fwspec
-> as originally designed, i.e. being set up by *bus code* before device_add()
-> (remember this is not the "IOMMU driver" part of selftest.c).
+> some of our (Proxmox VE) users have been reporting [1] that guests
+> occasionally become unresponsive with high CPU usage for some time
+> (varying between ~1 and more than 60 seconds). After that time, the
+> guests come back and continue running fine. Windows guests seem most
+> affected (not responding to pings during the hang, RDP sessions time
+> out). But we also got reports about Linux guests. This issue was not
+> present while we provided (host) kernel 5.15 and was first reported when
+> we rolled out a kernel based on 6.2. The reports seem to concern NUMA
+> hosts only. Users reported that the issue becomes easier to trigger the
+> more memory is assigned to the guests. Setting mitigations=off was
+> reported to alleviate (but not eliminate) the issue. The issue seems to
+> disappear after disabling KSM.
+> 
+> We can reproduce the issue with a Windows guest on a NUMA host, though
+> only occasionally and not very reliably. Using a bpftrace script like
+> [7] we found the hangs to correlate with long-running invocations of
+> `task_numa_work` (more than 500ms), suggesting a connection to the NUMA
+> balancer. Indeed, we can't reproduce the issue after disabling the NUMA
+> balancer with `echo 0 > /proc/sys/kernel/numa_balancing` [2] and got a
+> user confirming this fixes the issue for them [3].
+> 
+> Since the Windows reproducer is not very stable, we tried to find a
+> Linux guest reproducer and have found one (described below [0]) that
+> triggers a very similar (hopefully the same) issue. The reproducer
+> triggers the hangs also if the host is on current Linux 6.7-rc8
+> (610a9b8f). A kernel bisect points to the following as the commit
+> introducing the issue:
+> 
+> f47e5bbb ("KVM: x86/mmu: Zap only TDP MMU leafs in zap range and
+> mmu_notifier unmap")
+> 
+> which is why I cc'ed Sean and Paolo. Because of the possible KSM
+> connection I cc'ed Andrew and linux-mm.
+> 
+> Indeed, on f47e5bbb~1 = a80ced6e ("KVM: SVM: fix panic on out-of-bounds
+> guest IRQ") the reproducer does not trigger the hang, and on f47e5bbb it
+> triggers the hang.
+> 
+> Currently I don't know enough about the KVM/KSM/NUMA balancer code to
+> tell how the patch may trigger these issues. Any idea who we could ask
+> about this, or how we could further debug this would be greatly appreciated!
 
-I understand it was the intention, but it doesn't relaly match how the
-code works today..
+This is a known issue.  It's mostly a KVM bug[1][2] (fix posted[3]), but I suspect
+that a bug in the dynamic preemption model logic[4] is also contributing to the
+behavior by causing KVM to yield on preempt models where it really shouldn't.
 
-> Indeed for perfect symmetry the bus code would free the fwspec after the
-> corresponding device_del() returns, but there's no harm in that being
-> factored into iommu_release_device() since the notifier call occurs
-> sufficiently late in device_del() itself as to make no practical difference.
-
-IIRC there were issues with leaking the dev_iommu :(
-
-> I'm working to get things back to that model (wherein the dev_iommu and
-> fwspec lifecycles become trivial), just with the slight tweak that these
-> days it's going to make more sense to have the initialisation factored into
-> device_add() itself (via iommu_probe_device()), rather than beforehand.
-
-I would prefer to simply remove fwspec as I've already shown patches
-for. You should give some comment on them.
-
-My main complaint is there is no full vision to remove the 'global
-drivers', we will always have some drivers doing FW parsing in probe
-and then this different fwspec thing on the side for other drivers.
-
-Jason
+[1] https://lore.kernel.org/all/ZNnPF4W26ZbAyGto@yzhao56-desk.sh.intel.com
+[2] https://lore.kernel.org/all/bug-218259-28872@https.bugzilla.kernel.org%2F
+[3] https://lore.kernel.org/all/20240110012045.505046-1-seanjc@google.com
+[4] https://lore.kernel.org/all/20240110214723.695930-1-seanjc@google.com
