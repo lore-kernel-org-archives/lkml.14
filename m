@@ -1,94 +1,94 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2846759B5D;
-	Thu, 11 Jan 2024 23:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D6859B70;
+	Thu, 11 Jan 2024 23:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CMHcxHp5"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 655E8C0000E4;
-	Thu, 11 Jan 2024 15:15:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 655E8C0000E4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1705014944;
-	bh=0zK9IlUIaxglY1uUdlByTuJo2PKiDkOIZhKkGpO6xA4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CMHcxHp5C+YRIBeq0K7N+oUN1fUdHBCzud8Ob3nw2/g/oK0xprx/CmDTRH7gHG07T
-	 xIfupzM9+2OVqTEi9tMSUQqO859hYCH7xdyTEWtVOigHTHON+qyOe0u8TxcP3suEik
-	 VhV4XGUMG2R5mhGxvANLDBTj1V9HkYdtz/Cfkz0w=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id B684418041CAC7;
-	Thu, 11 Jan 2024 15:15:42 -0800 (PST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] bus: brcmstb_gisb: Added support for 74165 register layout
-Date: Thu, 11 Jan 2024 15:15:39 -0800
-Message-Id: <20240111231539.783785-3-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240111231539.783785-1-florian.fainelli@broadcom.com>
-References: <20240111231539.783785-1-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2oszTF8"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-28c0df4b42eso4829812a91.1;
+        Thu, 11 Jan 2024 15:24:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705015495; x=1705620295; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9zoWmFoYkKu4HBJVGwO275SshfSpYBWqc1pCmIP2iww=;
+        b=k2oszTF88DADtVlbfJV0f9YhuMWn/gELTAxMYD/grJ41U7RTY2+8gy9aVrHzl4b7wB
+         u80Dr+JjIJB0Uebum5ufn2plXaoOocy0xzJsCf5LWFeib3EFov6ALdyszbA4ELVPDyYB
+         Ara4Fdi6vJUplK4DvDtv+lEHj/SinkJ0bjyu3xF8Cmay/G1bAGHGoP5/elcQEQv1w9Wa
+         +XHTN7hWGRSR19nIaRPmxAwa+bR/Vns7hBnEaqs0SG+SB4Vz2SijWa1EEbO1/scgXXtJ
+         kbuXs4aQO2M+e4dAGoEZD9pl7p6ojq2hC9pRQpYuygan2x1seRqn8NSsC0j47CJkWWjb
+         jiHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705015495; x=1705620295;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9zoWmFoYkKu4HBJVGwO275SshfSpYBWqc1pCmIP2iww=;
+        b=vHo4LtUDcO6k++iUl11nUPCzV+yy2f4JxdTH1YMjqPQXgeT2VKLBG3sMzeA/ZaBlwr
+         prz5iDz5rr1ZLF0D8apszeXqpfpMh/qTkricVQbpSd85xsXYxRfowcH2kfxHY7+c5uGv
+         isuDDbjYcD9NW6nhSzfvbq3TRwE/EBhr6z4fcGMIJkEtsduVnm8ggL5ZpeqYFiK254KD
+         IsrqjxjptpJC3GkE8dPCUV/7U6+9tOEPHLKSiRzcBwIGcKSCeZ2q3WSOqiRoZL98g18M
+         HvgDL3qTuRoHiyUshk8RoSea9HP16Zrsz4zMllrv+xzn/hSNgblIJl+6IBYVSiDFAOvp
+         QHqQ==
+X-Gm-Message-State: AOJu0Yy+Y/61s/GslucLWe6Gp0sbOf/4SD2CkXbQvqPhI+wiO7KMX4UZ
+	tOSReKIJX2KmLJBMpDLHzYc=
+X-Google-Smtp-Source: AGHT+IGWZE4gB9+B2RUPYypL6rlRC93oxdf4Aigp9TozTAlb2bl06PhD3Oq3MZkBSEJqJc0a7CXCRw==
+X-Received: by 2002:a17:90b:4b03:b0:28c:7e73:2485 with SMTP id lx3-20020a17090b4b0300b0028c7e732485mr2181349pjb.36.1705015495237;
+        Thu, 11 Jan 2024 15:24:55 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id h28-20020a63385c000000b005ce71f1440bsm1781548pgn.72.2024.01.11.15.24.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 15:24:54 -0800 (PST)
+Message-ID: <29e54f0d-aa80-44fd-9fe8-311faf87cd09@gmail.com>
+Date: Thu, 11 Jan 2024 15:24:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.10 0/7] 5.10.207-rc1 review
+Content-Language: en-US
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, allen.lkml@gmail.com
+References: <20240111094700.222742213@linuxfoundation.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240111094700.222742213@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-BCM74165 introduces a new register layout which is different from
-previously taped out chips, match the documented compatible and use the
-appropriate table of register offsets.
+On 1/11/24 01:52, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.10.207 release.
+> There are 7 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 13 Jan 2024 09:46:53 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.207-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- drivers/bus/brcmstb_gisb.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index b6dfe4340da2..65ae758f3194 100644
---- a/drivers/bus/brcmstb_gisb.c
-+++ b/drivers/bus/brcmstb_gisb.c
-@@ -96,6 +96,20 @@ static const int gisb_offsets_bcm7400[] = {
- 	[ARB_ERR_CAP_MASTER]	= 0x0d8,
- };
- 
-+static const int gisb_offsets_bcm74165[] = {
-+	[ARB_TIMER]		= 0x008,
-+	[ARB_BP_CAP_CLR]	= 0x044,
-+	[ARB_BP_CAP_HI_ADDR]	= -1,
-+	[ARB_BP_CAP_ADDR]	= 0x048,
-+	[ARB_BP_CAP_STATUS]	= 0x058,
-+	[ARB_BP_CAP_MASTER]	= 0x05c,
-+	[ARB_ERR_CAP_CLR]	= 0x038,
-+	[ARB_ERR_CAP_HI_ADDR]	= -1,
-+	[ARB_ERR_CAP_ADDR]	= 0x020,
-+	[ARB_ERR_CAP_STATUS]	= 0x030,
-+	[ARB_ERR_CAP_MASTER]	= 0x034,
-+};
-+
- static const int gisb_offsets_bcm7435[] = {
- 	[ARB_TIMER]		= 0x00c,
- 	[ARB_BP_CAP_CLR]	= 0x014,
-@@ -393,6 +407,7 @@ static const struct of_device_id brcmstb_gisb_arb_of_match[] = {
- 	{ .compatible = "brcm,bcm7400-gisb-arb", .data = gisb_offsets_bcm7400 },
- 	{ .compatible = "brcm,bcm7278-gisb-arb", .data = gisb_offsets_bcm7278 },
- 	{ .compatible = "brcm,bcm7038-gisb-arb", .data = gisb_offsets_bcm7038 },
-+	{ .compatible = "brcm,bcm74165-gisb-arb", .data = gisb_offsets_bcm74165 },
- 	{ },
- };
- 
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.34.1
+Florian
 
