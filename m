@@ -1,41 +1,62 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4186E364A9;
-	Thu, 11 Jan 2024 13:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C4632C6C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="rh5RxXvG"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 8D5EB60886;
-	Thu, 11 Jan 2024 13:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1704980510;
-	bh=spHBxL0T5QVtiotbfLvZE1HJm4xym++up4FJ1+AM8Bs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rh5RxXvG1JNFsVFaq6yky/LXdHSY5hsqtFbMNx01g5nV3YynCrqh999LCnn8D4x9s
-	 WtWGVFG+KJZXyVBzEGUKi/YlUQf0Bua3YEqaOOg/tEoe6jQKyVEIi1ofBwqUBcdsqj
-	 sPFUZfRqdgRrOXjUzpbm9Xq714jzfJQrFglv3tiMjszEr/bBRVhenEcWT+TV7MiT3O
-	 KjTA/eS+Mq1Erjn6IARyTlNb2U7lWMUgey/ipYiOhX0Bc2hQA7QtEkrkIJ7X2zo6xs
-	 A0+7aSCXw2URyqaxa0IcZojOl/pwF/qPbWRByimeduGGeeiLN72pN3RB/f7wEEvg62
-	 uH/t4IRUicZDw==
-Date: Thu, 11 Jan 2024 15:41:23 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Nishanth Menon <nm@ti.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Apelete Seketeli <aseketeli@baylibre.com>,
-	Jerome Neanne <jneanne@baylibre.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 10/16] arm64: dts: ti: k3-j784s4: Add MIT license along
- with GPL-2.0
-Message-ID: <20240111134123.GK5185@atomide.com>
-References: <20240110140903.4090946-1-nm@ti.com>
- <20240110140903.4090946-11-nm@ti.com>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="xRyN36Us"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-429b76f129eso8423261cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 05:43:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1704980619; x=1705585419; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1KFXDERr3pDZlcRyum1ggEXEmpPYyroR1nfySc9tJl0=;
+        b=xRyN36Us2k1drP4z7QYI4RJxYcksrPfWfuDsMMmp4VhKa5wg9Na4cBfxpvoggiq8lZ
+         6Kd8zU4ydcxkcteL55+G2bNs6nDZQYxUKKoChCQf2/nWxJ/bTo1hFA2IS9hKPPtuc8CH
+         wh6ws2P8mbAtd5x7kXArEbS92ovqg4I1PVDllDItWblDI9MkgS8M1mJBsVlyTqlnnhZE
+         GGFo8UUwlLuUFU0f4zuwZGLDo6Y33mjhIy1eqKsCJQyVv9rz/2B8x62LcTxAbW2fexsW
+         EvZNDwW74/3FTHJej6dOJXplb7BxmTBI0ocevDv9ZUPo+C1bOfwWEQClJUiud9tEU6in
+         cNRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704980619; x=1705585419;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1KFXDERr3pDZlcRyum1ggEXEmpPYyroR1nfySc9tJl0=;
+        b=Kn2r91zypcdnlGiTIvYIEoNywXH/csDDIoE10mcvFX0WbRNWNjDdSNOnFCYPqIyOGN
+         6MKzpSmfZ35g1k7F0i6qO9Wes85SvvPnek5NIS61X6Xx1lx2PM0oa61+0NFioL2EnZ21
+         Xn02mapz0y4vZhW+UF+HA7bvyQC7PfiKcw/jiN+MxrcoygL7w0aJaPoRouXc2+2rSa3C
+         FMC9YKYEmvWC3eOLtKqv4qmmJjo/pA+33DternYM3ftz967M2pDYMrqxt5dM66R3KxRM
+         Ir6CfDv03ETuctQ7rOGFaOBURbDwLz7ieQw270RR8j6ybjlB59e1vgGRkqxCmgddy4xg
+         NOdQ==
+X-Gm-Message-State: AOJu0YzT2IqoQm/2ss13YzcmDuPXLQeTTWXRvuslAkLi2oHqi1am+zfp
+	mOsuRbeli1Gz0WSfQhFTHDb5+FHITPHvOg==
+X-Google-Smtp-Source: AGHT+IF1SDgwokzxyx1Lo9I3aSo2nbw9Nk3i7W+ba4rDycvJdrMVL4Kmi9FdBM0vduMgOwrl+YPC2g==
+X-Received: by 2002:ac8:5945:0:b0:429:be1b:fd8e with SMTP id 5-20020ac85945000000b00429be1bfd8emr701915qtz.33.1704980619331;
+        Thu, 11 Jan 2024 05:43:39 -0800 (PST)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id wa6-20020a05620a4d0600b00781de2da438sm341939qkn.107.2024.01.11.05.43.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 05:43:39 -0800 (PST)
+Date: Thu, 11 Jan 2024 08:43:38 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Zhiguo Jiang <justinjiang@vivo.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Dan Schatzberg <schatzberg.dan@gmail.com>,
+	Yosry Ahmed <yosryahmed@google.com>, Yue Zhao <findns94@gmail.com>,
+	Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, opensource.kernel@vivo.com
+Subject: Re: [PATCH v1 2/2] mm:vmscan: fix shrink sc parameters issue
+Message-ID: <20240111134338.GB390292@cmpxchg.org>
+References: <20240111122451.682-1-justinjiang@vivo.com>
+ <20240111122451.682-3-justinjiang@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,19 +65,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240110140903.4090946-11-nm@ti.com>
+In-Reply-To: <20240111122451.682-3-justinjiang@vivo.com>
 
-* Nishanth Menon <nm@ti.com> [700101 02:00]:
-> Modify license to include dual licensing as GPL-2.0-only OR MIT
-> license for SoC and TI evm device tree files. This allows for Linux
-> kernel device tree to be used in other Operating System ecosystems
-> such as Zephyr or FreeBSD.
-> 
-> While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
-> with latest SPDX conventions (GPL-2.0 is deprecated).
-> 
-> While at this, update the TI copyright year to sync with current year
-> to indicate license change (and add it at least for one file which was
-> missing TI copyright).
+On Thu, Jan 11, 2024 at 08:24:51PM +0800, Zhiguo Jiang wrote:
+> The values of struct scan_control's members obtained by
+> prepare_scan_control() are always from root_mem_cgroup, rather than
+> the memcg where the shrinked folio is actually located, such as
+> sc->anon_cost, sc->file_cost, sc->may_deactivate and so on. This is
+> an inaccurate sc values for the actual situation of the current
+> shrinking memcg. so we need fix the values of struct scan_control's
+> members are corresponding to the current shrinking memcg.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+You don't seem to understand how cgroup reclaim works.
+
+Nacked-by: Johannes Weiner <hannes@cmpxchg.org>
