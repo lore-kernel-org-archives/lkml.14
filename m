@@ -1,159 +1,158 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8324750264
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 17:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yngvason.is
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304B151C33
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 17:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b="fHWJ2f4M"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5f68af028afso49058277b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 09:18:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nP9wpPCF"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e55c885d7so24176595e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 09:20:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=yngvason.is; s=google; t=1704993502; x=1705598302; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=reRg+juZFTzYLAuymnc77j283thAAyu9GtKD+8yi8oo=;
-        b=fHWJ2f4MgIwGKzOsXgfG9dMQlXYuSoFtDj/Lxofu4OwUO0D0f6SdstOcnFFY4p7gdE
-         NEOn+nZiaBzgAcisvRJpnN21dRkSAeBRESFp4I7hHLe1mO0n2b57Je32yhVjIfAOYra3
-         SOr2EUgW5u6LTnwqltXclstzK7kJKOvPDfJZM=
+        d=linaro.org; s=google; t=1704993633; x=1705598433; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6s3qiPwrXyAwGU9WfN6p4EwpZ2YgT483oI4li09j9iQ=;
+        b=nP9wpPCFVPg4RS8l2EoGXg9IwbnYRnLvPQrzYZii0PtMaUYb8TnIgQfLBJwmecJ8BC
+         ReI/jijjnWmFlYzeaA7BwRmV8HCuxyyKreDH9s6x8YCeO6JxcLcdM6MlvcpiusGgcv90
+         CT3SFBwcSp4Sqqr5GCDDz9bf4ZpVvF0HI45PcM13GFjG/yCvXzir8X7xLHbRjgboMNg8
+         +T4d0v+aEOKrOSWmhKNyqnNvn9+7Exk+E5GN6CKksGe9DNRXxu5Wt/Z++sHgXfntq2k0
+         pv4o+gpi+NOWQ5Pq6D2P9fOi/n/DqPHzUQSWAGaND6Xy6TVZObn7TQIuki3zL7opXfWI
+         52tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704993502; x=1705598302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=reRg+juZFTzYLAuymnc77j283thAAyu9GtKD+8yi8oo=;
-        b=kWeUTmilsYFg5SkMCj59nUkgKohuhayrxHqM69RE4ToHMjqnzdzEaNnUw8T8M3lCJb
-         YQWgLgAaGoaKqqOxdq+3RAjRuLfTH3mkuIyaT1dOCKcM1CmnoeuvKeNXEbwFg3y/FWo5
-         anPi/eyxpSJbJu6J0Q48WJNHub4SRVz6VMU3Kte5+2f2CJQJJYJDC2mh3V8xQJ7FH6b4
-         iu8YVzojRysAxDcLfyDvP6ZSKOl8AcbX5V+zJO5P07lHDFPNWy+JZzcMT72nzrA6DF/0
-         wpMBz6H1U7wZJuUj0QnVPo05nx3SZKvVczKbgEiMKGU5X7NCGJS2jL3XM1XLquE98KNv
-         8xfw==
-X-Gm-Message-State: AOJu0YyJuQaYx5Pexwo1KrEOhO12dvERgtLkoEwOvrMcHnSK0UE1HPDj
-	hF9MZY29ki0nTX6jM45fh1UUXtMg1a/lMxSRK48mlcbzann2Kw==
-X-Google-Smtp-Source: AGHT+IE39wedx9qoJqNO6MjAU4E5XVco4roigw4JCooGGaUKrzldoRbPFpkW15iiHXNNuutcoyizp+NdmoWt5CbB2Gc=
-X-Received: by 2002:a81:84d1:0:b0:5e9:94dc:b77f with SMTP id
- u200-20020a8184d1000000b005e994dcb77fmr123269ywf.9.1704993502233; Thu, 11 Jan
- 2024 09:18:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704993633; x=1705598433;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6s3qiPwrXyAwGU9WfN6p4EwpZ2YgT483oI4li09j9iQ=;
+        b=RVNi4LItkZD6+NSJifqWARIq5g+gjQ8qn4u16mKI6lHE/bu3i9h/pcwk35ydnRLiRJ
+         ugG0NX1Y+HvCuz81HQdZgWCKmsaSafMMDhgzksqC3UYZ/bfxwevtXF5nDeXjCyEZeN9W
+         FzTOS7N5GTnoFcUyJG2FhgNH2EB8XDEiN/GF/fhVYsgfTl4HJJq4qW+j9xS8zJV3rp4z
+         qFcBnda+LRJa6kPI2OfWxXaj2Ti98ac6Ge2BPv6SuXRfnv/R5ZpdImYCOr4WFJ0Vo0H1
+         uIc7LqzRFg3NKVox4PKjAMJhfLCc4QVElsSwbs6NblNfg8O02govZ5XF99GJtQm+M0KU
+         IvvQ==
+X-Gm-Message-State: AOJu0Yy7Ej5vsHpQgMb5wigQmyeGM/n6T0GVQ58FKi7S5Nbk5DZILgdz
+	DdH81qfgAQuypDClGW0V58JVGzJ+M+t5wg==
+X-Google-Smtp-Source: AGHT+IFm3GMILTY23wXs8VUd4tWNwejKkPgaXuPR0sV8BhPYXcZmhJ0QM7fAqEXtNCihcjoZGJEOUA==
+X-Received: by 2002:a1c:7705:0:b0:40e:5f23:413 with SMTP id t5-20020a1c7705000000b0040e5f230413mr85378wmi.177.1704993633469;
+        Thu, 11 Jan 2024 09:20:33 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id d18-20020a5d6452000000b0033761b2de64sm1673897wrw.76.2024.01.11.09.20.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 09:20:32 -0800 (PST)
+Message-ID: <b6bc84f9-2ff6-40b6-8c1f-90a12f8d9149@linaro.org>
+Date: Thu, 11 Jan 2024 18:20:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109181104.1670304-1-andri@yngvason.is> <20240109181104.1670304-3-andri@yngvason.is>
- <CAPj87rNan8B5urDFkmD_Vti4to6p3NmvXYsTFQTNg-Ue2ieDug@mail.gmail.com>
- <CAFNQBQwiqqSRqzXAnC035UWCGF3=GGFR5SpDd=biPTOEA+cWbQ@mail.gmail.com>
- <ZZ509L_kmVC4IUBW@phenom.ffwll.local> <CAPj87rOiS8F=oDW3iE=bgFyfeJnYhy8kPF2v-uYOq3xgYtVPAg@mail.gmail.com>
-In-Reply-To: <CAPj87rOiS8F=oDW3iE=bgFyfeJnYhy8kPF2v-uYOq3xgYtVPAg@mail.gmail.com>
-From: Andri Yngvason <andri@yngvason.is>
-Date: Thu, 11 Jan 2024 17:17:46 +0000
-Message-ID: <CAFNQBQwjeJaX6B4oewpgASMUd5_nxZYMxUfdOG294CTVGBTd1w@mail.gmail.com>
-Subject: Re: [PATCH 2/7] drm/uAPI: Add "active color format" drm property as
- feedback for userspace
-To: Daniel Stone <daniel@fooishbar.org>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, Simon Ser <contact@emersion.fr>, 
-	Werner Sembach <wse@tuxedocomputers.com>, Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: net: dp83826: add ti,cfg-dac-minus
+ binding
+Content-Language: en-US
+To: Catalin Popescu <catalin.popescu@leica-geosystems.com>,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, afd@ti.com, andrew@lunn.ch, hkallweit1@gmail.com,
+ linux@armlinux.org.uk
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240111161927.3689084-1-catalin.popescu@leica-geosystems.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240111161927.3689084-1-catalin.popescu@leica-geosystems.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-mi=C3=B0., 10. jan. 2024 kl. 13:26 skrifa=C3=B0i Daniel Stone <daniel@foois=
-hbar.org>:
-> >
-> > This thing here works entirely differently, and I think we need somewha=
-t
-> > new semantics for this:
-> >
-> > - I agree it should be read-only for userspace, so immutable sounds rig=
-ht.
-> >
-> > - But I also agree with Daniel Stone that this should be tied more
-> >   directly to the modeset state.
-> >
-> > So I think the better approach would be to put the output type into
-> > drm_connector_state, require that drivers compute it in their
-> > ->atomic_check code (which in the future would allow us to report it ou=
-t
-> > for TEST_ONLY commits too), and so guarantee that the value is updated
-> > right after the kms ioctl returns (and not somewhen later for non-block=
-ing
-> > commits).
->
-> That's exactly the point. Whether userspace gets an explicit
-> notification or it has to 'know' when to read isn't much of an issue -
-> just as long as it's well defined. I think the suggestion of 'do it in
-> atomic_check and then it's guaranteed to be readable when the commit
-> completes' is a good one.
->
-> I do still have some reservations - for instance, why do we have the
-> fallback to auto when userspace has explicitly requested a certain
-> type? - but they may have been covered previously.
->
+On 11/01/2024 17:19, Catalin Popescu wrote:
+> Add property ti,cfg-dac-minus to allow for voltage tuning
+> of logical level -1 of the MLT-3 encoded data.
 
-We discussed this further on IRC and this is summary of that discussion:
+A nit, subject: drop second/last, redundant "binding". The "dt-bindings"
+prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+> 
+> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+> ---
+>  Documentation/devicetree/bindings/net/ti,dp83822.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-Sima proposed a new type of property that can be used to git feedback to
-userspace after atomic ioctl. The user supplies a list of output properties
-that they want to query and the kernel fills it in before returning from th=
-e
-ioctl. This would help to get some information about why things failed
-during TEST_ONLY.
+Don't add properties one by one. Especially if they are related.
 
-Emersion raised the point that you might not know how much memory is needed
-beforehand for the returned properties, to which sima replied: blob
-property. There was some discussion about how that makes it possible to lea=
-k
-kernel memory, especially if userspace does not know about a new property
-blob. Emersion pointed out that userspace should only request properties
-that it understands and pq agreed.
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> index db74474207ed..2f010333be49 100644
+> --- a/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> @@ -62,6 +62,15 @@ properties:
+>         for the PHY.  The internal delay for the PHY is fixed to 3.5ns relative
+>         to transmit data.
+>  
+> +  ti,cfg-dac-minus:
+> +    description: |
+> +       DP83826 PHY only.
+> +       Sets the voltage ratio of the logical level -1 for the MLT-3 encoded data.
 
-Emersion asked how the user should inform the kernel that it's done with th=
-e
-blob, to which sima replied: DRM_IOCTL_MODE_DESTROYPROPBLOB. Sima also
-mentioned using some sort of weak reference garbage collection scheme for
-properties and there was some further discussion, but I'm not sure there wa=
-s
-any conclusion.
+ratio between what and what?
 
-I asked if it made sense to add color format capabilities to the mode info
-struct, but the conclusion was that it wouldn't really be useful because we
-need TEST_ONLY anyway to see if the color format setting is compatible with
-other settings.
+> +       0 = 50%, 1 = 56.25%, 2 = 62.50%, 3 = 68.75%, 4 = 75%, 5 = 81.25%, 6 = 87.50%,
+> +       7 = 93.75%, 8 = 100%, 9 = 106.25%, 10 = 112.50%, 11 = 118.75%, 12 = 125%,
+> +       13 = 131.25%, 14 = 137.50%, 15 = 143.75%, 16 = 150%.
+> +    enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
-I asked again if we should drop the "active color format" property as it
-seems to be more trouble than it's worth for now. pq mentioned that there
-are 2 separate use cases (in his words):
-- People playing with setting UI would like to know what "auto" would resul=
-t
-  in, but that's just nice to have
-- The other use case is the flicker-free boot into known configuration He
-  went on to point out that the main problem with "auto" is that any modese=
-t
-  could make the driver decide differently. This means that we cannot fully
-  rely on the previously set property.
+Missing: "default:"
 
-However, leaving out "active color property" did not put us in a worse
-situation than before, so the conclusion was that we should leave it out fo=
-r
-now. For GUI selectors, the current TEST_ONLY should be good enough, and al=
-l
-the fancy stuff discussed previously isn't needed for now.
 
-To summarise the summary: this means that we will drop the "active
-color format" property and rename the "preferred color format"
-property to "force color format" or just "color format" and failing to
-satisfy that constraint will fail the modeset rather than falling back
-to the "auto" behaviour.
+>  
 
-Cheers,
-Andri
+Best regards,
+Krzysztof
+
