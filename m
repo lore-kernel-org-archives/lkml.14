@@ -1,148 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AA8DDAD;
-	Thu, 11 Jan 2024 07:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AD9CA6F
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 07:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PsxFlqiM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704957264; x=1736493264;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TwjCUuzwUOMo/dYEA4GwmnKF1gt7VZ+tjYe5DJBJoEM=;
-  b=PsxFlqiM25EHVaiQabPdmwbPVsYzFdepEUQIHN7hWX9FyX3YRFBTkXPs
-   y3j3T7impGSkxmopEmFzYP/9UwwT3ivW7USqw9Hd/23aUJeBIUTOJ70Ny
-   tHJpxPP29fJJBV5ftKyfFV2AP0wg8J71EYDTJOBXIAnI2YpHmtGpGAcew
-   VyDdHlv0AcHp9vcmPtkWN7LMIfre8ZtIdegGKjYrF752KCyshIhH8wUdD
-   V39xWHoA64c+XYvWGXKiuMu3xARI4tfWn2TNF8A2NpolNHAIgBFit8xfZ
-   h+/71UebPhobW0vAlstTdfkphgYpkz/g7yG/Swt3J5sEEj0auv5dOkb64
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="395910247"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="395910247"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 23:14:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="732116839"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="732116839"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.8.238]) ([10.93.8.238])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 23:14:15 -0800
-Message-ID: <4d50c00a-9718-4ec5-bdef-ea14c7727ff4@linux.intel.com>
-Date: Thu, 11 Jan 2024 15:14:12 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r0e41A1v"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40b5155e154so64267045e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 23:15:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704957344; x=1705562144; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UX20rbF7hlnyWLHyXsogEXaIvZyHEjXlNvsR8Qs9blw=;
+        b=r0e41A1vUzhV8KYDP89y4Z08jMC7CEQQfR4ANirMUE83erDaIRq7WCKXYEK55Knx1G
+         WI8gHtgn9qGk7ZO91zsBAQYYZEiVki+liCxRmN6NbwKmO3K+eLc7YyzG/+zOJZUMhLzL
+         Hsl1SZ81BbGW/lh1ebS8Bi+BjY5w5isG7fyPnWTMG5kcmGkYAUwJ20EdOqWTTBNrSwcR
+         R6KIQHUUt1NEwRWfPDZxIt6P1WX+Slu5pPTlAeYaNsjiRlnfGBaXS/zdm10AkDQmtTzI
+         QC90PSoas1QVIS1LnBleqc7AHJBPhs012ATidlDsxaR1JqbD0qmskbvwYIuy+uBcB0tQ
+         Jrdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704957344; x=1705562144;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UX20rbF7hlnyWLHyXsogEXaIvZyHEjXlNvsR8Qs9blw=;
+        b=Ox9s2s4LxIhus/awTEyFMe378K5Ibyc/TBAChdsGRzHndFrb1JGoO+38e3l++XDP+f
+         goCLhpXoaW0aTQopSVygIFke6+5/sMeMYIgx9PFNNb0TDcbkXHSo+Gj4XkeyKJNieKnt
+         U5BODtJACobmHN+kDNR0EeL4Cy6HWf64ypoPc+yZbJMVh521S9rdi8PbUl4BLkKGuvKL
+         YKtTkHRDCths4U5ajaai5fH9FXQtjaKj/L3w0vKkj4+U5Be73wrRJF9iFJYk5+u1yhCY
+         E/r+BVphGh4j66C/4ry8tnrTMTkh4TrC6Fd0gvnRqvMqB64sKtV4fGMEp0qkR2GThes9
+         qLGg==
+X-Gm-Message-State: AOJu0YyALKnXEPraYmC+Pia7TexIemRQ8E0gqZaLXgbOjKGWLOPlo/WM
+	Jxr05K/K2CfNkXxEQFyVKzokhsYutrj6Wg==
+X-Google-Smtp-Source: AGHT+IE3ZG9N0YdyCOamkgAPvxJPh1uuI47g4YgkEb/vAmbAgIDLHmccrGJ7hdBP693w0AFm/dM0eQ==
+X-Received: by 2002:a05:600c:428c:b0:40e:52c3:47f9 with SMTP id v12-20020a05600c428c00b0040e52c347f9mr122255wmc.67.1704957344497;
+        Wed, 10 Jan 2024 23:15:44 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id t5-20020a05600c450500b0040d6d755c90sm741939wmo.42.2024.01.10.23.15.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 23:15:44 -0800 (PST)
+Date: Thu, 11 Jan 2024 10:15:40 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	linux-hardening@vger.kernel.org, error27@gmail.com,
+	gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+	Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
+ dg_dispatch_as_host()
+Message-ID: <8e527ade-fe49-4697-8e36-589775c63354@moroto.mountain>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+ <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+ <202401081430.9DAB37B46@keescook>
+ <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
+ <202401101601.30ED61A1A3@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 07/10] iommu/vt-d: Allow qi_submit_sync() to return the
- QI faults
-To: Baolu Lu <baolu.lu@linux.intel.com>, "Tian, Kevin"
- <kevin.tian@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
- "jgg@nvidia.com" <jgg@nvidia.com>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>
-Cc: "cohuck@redhat.com" <cohuck@redhat.com>,
- "eric.auger@redhat.com" <eric.auger@redhat.com>,
- "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
- "chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>,
- "yi.y.sun@linux.intel.com" <yi.y.sun@linux.intel.com>,
- "peterx@redhat.com" <peterx@redhat.com>,
- "jasowang@redhat.com" <jasowang@redhat.com>,
- "shameerali.kolothum.thodi@huawei.com"
- <shameerali.kolothum.thodi@huawei.com>, "lulu@redhat.com" <lulu@redhat.com>,
- "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
- "Duan, Zhenzhong" <zhenzhong.duan@intel.com>,
- "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
- "Zeng, Xin" <xin.zeng@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>,
- "j.granados@samsung.com" <j.granados@samsung.com>
-References: <20231227161354.67701-1-yi.l.liu@intel.com>
- <20231227161354.67701-8-yi.l.liu@intel.com>
- <BN9PR11MB5276429906ED56258BB433068C9EA@BN9PR11MB5276.namprd11.prod.outlook.com>
- <50098edc-2bbb-4c8f-9360-6990f0f5d88a@linux.intel.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <50098edc-2bbb-4c8f-9360-6990f0f5d88a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202401101601.30ED61A1A3@keescook>
 
+On Wed, Jan 10, 2024 at 04:03:28PM -0800, Kees Cook wrote:
+> 
+> Oops, yes, thanks for fixing my confusion. Right, this is a direct write
+> across members into the flex array, not a composite destination. Yay
+> all the corner cases. :P
 
-On 1/1/2024 11:34 AM, Baolu Lu wrote:
-> On 12/28/23 2:17 PM, Tian, Kevin wrote:
->>> raw_spin_lock_irqsave(&qi->q_lock, flags);
->>>       /*
->>> @@ -1430,7 +1439,7 @@ int qi_submit_sync(struct intel_iommu *iommu,
->>> struct qi_desc *desc,
->>>            * a deadlock where the interrupt context can wait
->>> indefinitely
->>>            * for free slots in the queue.
->>>            */
->>> -        rc = qi_check_fault(iommu, index, wait_index);
->>> +        rc = qi_check_fault(iommu, index, wait_index, fault);
->>>           if (rc)
->>>               break;
->> and as replied in another thread let's change qi_check_fault to return
->> -ETIMEDOUT to break the restart loop when fault pointer is valid.
->
-> It's fine to break the retry loop when fault happens and the fault
-> pointer is valid. Please don't forget to add an explanation comment
-> around the code. Something like:
->
-> /*
->  * The caller is able to handle the fault by itself. The IOMMU driver
->  * should not attempt to retry this request.
->  */
+Is there a document somewhere which explains what will trigger a runtime
+warning?  For example, if you write across members but it's not into a
+flex array does that cause an issue?  Or if you read across members?
 
-If caller could pass desc with mixed iotlb & devtlb invalidation request,
+For example, this line reads from bulletin->vlan and
+bulletin->vlan_padding.  This causes a compiler warning in Clang and
+GCC depending on the options but does it also trigger a runtime warning?
+https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c#L2655
 
-it would be problematic/difficult for caller or qi_submit_sync() to do
+(I wrote a patch for this a few months back but didn't send it because
+of the merge window.  I forgot about it until now that we're in a merge
+window again...  :P)
 
-error handling, imagine a case like,
-
-1. call qi_submit_sync() with iotlb & devltb.
-
-2. qi_submit_sync() detects the target device is dead.
-
-3.  break the loop, or will block other invalidation submitter / hang.
-
-4. it is hard for qi_submit_sync() to extract those iotlb invalidation 
-to retry.
-
-5. it is also difficult for caller to retry the iotlb invalidation, or
-
-     leave iotlb out-of-sync. ---there is no sync at all, device is gone.
-
-and if only ITE fault hit, but target device is there && configuration
-
-space reading okay, the ITE is probably left by previous request for
-
-other device, not triggered by this batch, the question is we couldn't
-
-identify the ITE device is just the same as current target ? if the same,
-
-then breaking out is reasonable, or just leave the problem to caller,
-
-something in the request batch is bad, some requests someone request
-
-befoere is bad, but the request is not from the same caller.
-
-
-Thanks,
-
-Ethan
-
-
->
-> Best regards,
-> baolu
->
+regards,
+dan carpenter
