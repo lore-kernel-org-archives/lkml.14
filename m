@@ -1,222 +1,151 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2054553E23
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 18:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB1E537E4
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 18:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q2O/BF9q";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NUZgcu42"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40BGmw57017285;
-	Thu, 11 Jan 2024 18:11:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=EjB/6oFslutHK0mGctzSTTs5r1IgdhWzC6KCBZI0+kY=;
- b=Q2O/BF9qFwQk3RKdRA8Q/yy38aZY9Zeoxyy1X4sYfmjTYmqUX5WSmN3Z+4RlHA45xlgZ
- ilXS8a6/zmRC55jjrDZkwKReQvREt+eWIsLIJ7QL44rJwQ2pW/rWVU1nsWcYRuaPVhKk
- GTtZGH6UoAc0J8354T6UxdpjpEbMP+eZwXzyI3bG9sf69aRs+x7iwMBgLkToT+6OQdO8
- OUXkfcW0vVl4+5b0o9QR9ZFOBJLi7UAaZVQluLb+dCyKC8WvV+X3QiyygbAedY4by8aG
- TNRN/ra9vEJmYi4y8unpWcH9ZUkA0I1Cuyro0Pbb307wWLuL4yHIPnX+LpLCJBlPr3fN wQ== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vjcbkha0d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Jan 2024 18:11:19 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40BI96uK035052;
-	Thu, 11 Jan 2024 18:11:19 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vfuu823ve-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Jan 2024 18:11:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HI6BZJDU9pBOSI2K/FQLsmRm+dnw83LIXrH3sI4iG0P7lskBMh/3g6MA6oSS4ATe+uS8x6oI1MLamL8eWIL+SyUliEv7EWIecqjq5IPdCoQzxJxoyAsg99r+wl1eDqEQEpQlwUKU5Dczl49Lo6Tg/yMcCrSmP0E5W63OUgKVF2Pr5F12ioDN5W8CceYNHuhf/6Cd6JRXDesjnJAQAIl55QNK2PV29LISn8oVx/zAAdO1s0eM2jmrklPpqEO0R3MQnecAenAmZ9Dc38jUDU5rcrJ+w/EjU/5VNnf0QPIMr76tcMt/4N6jc8yinOULGeFpTFaahJtzAekT3Cr0WwE7jA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EjB/6oFslutHK0mGctzSTTs5r1IgdhWzC6KCBZI0+kY=;
- b=PJGHsank8pgFna9CZ6y0wRHfSqxKoCbt6xHJHeUUfeOKXD2ysOiKfKouSBE51pTt3CHl7M4inKWZcsLL2JvPMurLXb4D3LnBaje8DUjSB9wNqvG8Z8ZIdx6JbgcAI58xm8Sn96yX7ELMHSf2be//Aj8kMh7bdLVG2QBHjbv0Rb1dbxCkd9NNgHlSySvG4KQlZEB0aqgSa+N/LpscFc5j4qUh8VLTM6sPe5DvYBVykVyU8sNSFAS2XfC/MBOc0ziAy9hHnwQQxXZLHXCoObzXRkbYMl/JWH/JHdNpd/InpoVXV02k7cx0yP59oeHIycMb41r/ioEPNRMxNrqaRNgrrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N/cO3F36"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-28b400f08a4so4657996a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 10:13:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EjB/6oFslutHK0mGctzSTTs5r1IgdhWzC6KCBZI0+kY=;
- b=NUZgcu42y01iz1M4BBUVBGF5OdDxxB67f6729ep4q5qJcVkchs33GqXDDmwKgBwI28we0FtGVVoWAJtUDrSeGFUZ9uDj8ZUYN4yt5AOWPWGKO0iw06Pu3ccxbPEcrFCqnvA5tASJVACSz+LwR3LWZq9VSvvjkMJLZmmET7rNZjs=
-Received: from CH0PR10MB5113.namprd10.prod.outlook.com (2603:10b6:610:c9::8)
- by CY8PR10MB7313.namprd10.prod.outlook.com (2603:10b6:930:7d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Thu, 11 Jan
- 2024 18:11:16 +0000
-Received: from CH0PR10MB5113.namprd10.prod.outlook.com
- ([fe80::78b9:5082:241a:d1fb]) by CH0PR10MB5113.namprd10.prod.outlook.com
- ([fe80::78b9:5082:241a:d1fb%3]) with mapi id 15.20.7181.020; Thu, 11 Jan 2024
- 18:11:16 +0000
-Message-ID: <39b90dce-fe0f-e1d8-3094-75cabbfa38a3@oracle.com>
-Date: Thu, 11 Jan 2024 10:11:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 4/4] selftests/mm: add tests for HWPOISON hugetlbfs
- read
-Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Jiaqi Yan <jiaqiyan@google.com>,
-        Muhammad Usama Anjum <usama.anjum@collabora.com>, linmiaohe@huawei.com,
-        mike.kravetz@oracle.com, naoya.horiguchi@nec.com,
-        akpm@linux-foundation.org, songmuchun@bytedance.com,
-        shy828301@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jthoughton@google.com, "kernel@collabora.com" <kernel@collabora.com>
-References: <20230713001833.3778937-1-jiaqiyan@google.com>
- <20230713001833.3778937-5-jiaqiyan@google.com>
- <be3976b5-0a9c-41c6-8160-88e6c1e5d63e@collabora.com>
- <CACw3F51WvZDVCpVg9j4j8WmnmAFOsnK+FZDDoVqhgLqVwhPTCA@mail.gmail.com>
- <e68488e4-764e-4b25-8a47-05bf8976bd19@collabora.com>
- <079335ab-190f-41f7-b832-6ffe7528fd8b@collabora.com>
- <a20e7bdb-7344-306d-e8f5-5ee69af7d5ea@oracle.com>
- <dd96e476-e1ad-4cb5-b5d1-556f720acd17@collabora.com>
- <CACw3F53PddeCHUHb=m8OSO6yYQJoM==urn+Axp=Xi1szozJH9A@mail.gmail.com>
- <6bacbd7c-88cb-1399-8bd0-db98c93a1adf@oracle.com>
- <ZaAtjVVTETdQDR4B@casper.infradead.org>
-From: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-In-Reply-To: <ZaAtjVVTETdQDR4B@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BLAPR05CA0012.namprd05.prod.outlook.com
- (2603:10b6:208:36e::21) To CH0PR10MB5113.namprd10.prod.outlook.com
- (2603:10b6:610:c9::8)
+        d=chromium.org; s=google; t=1704996825; x=1705601625; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Q/8Soo+wEKDq7eYPc8t+IYgpbRZAsRM2amYkmZMpzg=;
+        b=N/cO3F36YmS3aq/jRKxDFCLqmZJZnUe1iqMkts0N7drA1FZPwRWbcL5u8PoUBN/oU5
+         vwJ926//PLZAewfjwZIGo81AF00RgWu4LuWd/jyv5zxkclPoce7u7djJDVu8j6jK3k5J
+         eZ79CUqcD+Rv2pwU1NnxeudYq+9apyQXuV8N0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704996825; x=1705601625;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1Q/8Soo+wEKDq7eYPc8t+IYgpbRZAsRM2amYkmZMpzg=;
+        b=D7SXISoDDGJvLJ7Lp6xXHBPaWLKrtetpXzLmAw5cikc+nIUe3bQlKTSr+EgXVUFYBp
+         7TfaNiThivgJrcO1v0SATlfiIuCEYnf6khZS5l37sJmuzcVVkkxmvtSw/8uskgyq3kZ7
+         kE5mmrAx9vYAf8gm2lUJSyC4cz7xuSAQ0POdyJyFoQAbW7AUYnUvPrz9ONJjD6RGcDiu
+         9SlQkDg5buVt/wLU3dvk1loFwcnvmNveevajofaBY1Bp0r6cJyhpK2ld/hVEgQHtqYCF
+         Xs8vVoduazPgNWmnRa9WZn5lHK9InCUHhIjHVz7EC4rt9aIrvFIwFydoA3u7CXXS3GWH
+         3m3Q==
+X-Gm-Message-State: AOJu0YwNtHLVTfYjvk3ixiGGk84unxJPJy9vkEb9ivDC7FR9W/MYmttx
+	1C+UIHwBHkmPPAsfYr1fXgoDnlIWjcxi
+X-Google-Smtp-Source: AGHT+IEqA+jBHfgllqO6iXTDhDycwgIlkmEw66FVSjukl5mRD1d1Qm4e8CVvwaS1Ndd5k321Lph+1A==
+X-Received: by 2002:a17:90a:3da5:b0:28d:df02:447b with SMTP id i34-20020a17090a3da500b0028ddf02447bmr216438pjc.0.1704996825202;
+        Thu, 11 Jan 2024 10:13:45 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jh18-20020a170903329200b001d4593a2e8fsm1465916plb.83.2024.01.11.10.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 10:13:44 -0800 (PST)
+Date: Thu, 11 Jan 2024 10:13:44 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	linux-hardening@vger.kernel.org, error27@gmail.com,
+	gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+	Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
+ dg_dispatch_as_host()
+Message-ID: <202401111001.78284D8F@keescook>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+ <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+ <202401081430.9DAB37B46@keescook>
+ <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
+ <202401101601.30ED61A1A3@keescook>
+ <8e527ade-fe49-4697-8e36-589775c63354@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5113:EE_|CY8PR10MB7313:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4ed3b5d-2cfd-4c95-23f0-08dc12d0b429
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	dGEqdhn7s7um4wywEvszdwgWWTSnYt8PF0fxV+iXwNwYSqrdzneyhQHswY7XPF0o1pKgTBw9kimnlpTHBUIEo9NbezzOcLeKDiR6m/KZr3Gh4p0mu43PFGgkTvwVgU9sr7AiVexbbGAEcb8W7OVa7JtVEcxAecggIkJHYnnobL0tPet39ZAvBwX7/OyvJyQ+LGhfBcAelQ60ftWqpF3gFMa256Gszoty48aBzOgTOHTpeukW5n1vwG+bo9CRYzSV7/+c5swd39JwtGACV/v28sm1gqDMrHs3D0obPw8oubf2qwT/b1HiLcdGMeRY0fT2fwMDEmweKOsd2Ub6BPizI4GNZbwbS7TPZPXYzucH+AJqrFyTFDrhwe2IJ5a8zuu2IBq3jRD5f7Lh8U8t+BuvWSFHpkW6+VNWsGv4KsOYDfF9uwm7pdteKjSq402uSkm+7xAn89oofXJsgPRprakEm+8a5wl90W02gnJklAZWWelOmQeAqF4gTUW2zpXvcjX+dvfLM2xCW8Y7eh4byHm58HZiIya/37waNTaO5TqeXJ1Y+tuVrgJUZRd+kxhuiUyMbRmzoaSEdZ2OCXuyoVQWmOWEAZmXqGpb61qFzGnDNOHkwlQhwf8bzJAQv5i2CJpVqX1UGdA50TdvqpZlWJuiBQ==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5113.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(396003)(39860400002)(136003)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(31686004)(86362001)(36756003)(31696002)(8676002)(4326008)(6916009)(38100700002)(53546011)(2616005)(83380400001)(6512007)(66556008)(6506007)(6666004)(66946007)(478600001)(66476007)(54906003)(6486002)(316002)(41300700001)(44832011)(8936002)(5660300002)(7416002)(2906002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?aVpOaDgrdXRjZERia3hYR0lCUkNrbDBjRExMMi9YOEY1cXBHbFVOYXQ1ZFgv?=
- =?utf-8?B?OTJaWmZidmJ0YlBjdXpucDYrUmhxTURnaEpUVzc3NzdEcE0yZGZHNC9oeHVq?=
- =?utf-8?B?VTdKWFRkOEIwOGorV0hSblZ4eVU3M1B4L1plV3pBMWNlYTlYV3hzYXQ2ZS9H?=
- =?utf-8?B?MVpnT2lUOEJJdTdJTUN1MWY4YnVuOXd1dkI0dlZkbkpEbHdqVlVYRm5XeUZI?=
- =?utf-8?B?VHRKTVBaUWFDWENsWlAzODd4RnZrSjZPTVVOb1lLMGRGMmR6K2lhQk1lTlNJ?=
- =?utf-8?B?VmROT2drSVdjMytoeTNyL1puN1lPM2tpc3pPYWpJMVMrTUZzanp3Q1VCeStp?=
- =?utf-8?B?a3N4Rmk1SW1kSXFiZEMzTzRkQ3RjWUY4Q29ibWkrYWZSTVN2MWJ1UUJzMGxE?=
- =?utf-8?B?WmF1MGhIVDlKeEFyNmlHMFhqMnpuemFvemVUNjZVRGdNZzNJNEp6RHBON3RG?=
- =?utf-8?B?aDFCcmRHKzhoWSswKzlTWXhQcHB1UDlWRldwSjNqdkwwRXR3K2ZrY3JLc0Ix?=
- =?utf-8?B?L1hXcXJMejFzV1RJMmZOT3I3dzlxbnpHQ3RKSlRvNTFndjZNYlRZTllWM0cy?=
- =?utf-8?B?UDVuVkp2SmxUaU1Edjg4RVVFOTZnNk5rQTdhazk0enZGWmdwTkkzQUJwMmJR?=
- =?utf-8?B?T0k4UDQzYkVqMTBEajlXeXpSb1YzN0xGdkhHdDI2SDZYaTV6UG5KeURVZ0E3?=
- =?utf-8?B?ZGlhT3hNN1U1VDV3SXNTU09YOUc2ZkEyOXpTN2xibUd0UXUzekZkbm9RM2xY?=
- =?utf-8?B?Q200eExDQzF2cDcxcmJiY0RRdWcvUTY1NU5MbncveDl2VnZMM0lSTVhvNm0r?=
- =?utf-8?B?RUFTTExqdXRZakRtZHJhWmw1NDBsVHJ6dXJISUR0N01EQ0hSMFlralkxaHhO?=
- =?utf-8?B?aGFnWW9LZGFDbVoyY1IrZVFyZk1XR3hpNEcwZUxPN1oyZzhTaUQ3NStsUHVQ?=
- =?utf-8?B?UVk4WVFvaDRqN0I4M0c5OGp5ZWtocHBMQ2ZyMFFqalVzM21UU01GRW9WVkFG?=
- =?utf-8?B?YWVqcjZYamxvVnpTNHZ2Z3hEUGEzdjdRYm0vekdMY3oxVXA2QWhtM0lNV0pH?=
- =?utf-8?B?aUc1MUo5MUdtbFRodmhxM2pqaDBZTlZDOWZVREhxWWV2SFZ3OUFNYXhvZ2o4?=
- =?utf-8?B?VHBYamdEMTdQRnNvTHdVN2s4TFI1MWtIZlBNU1ZxOTRVOVhtdGtzNytrMVVJ?=
- =?utf-8?B?MEVldnZlcnNLRzZOa1o2RXFXOER0NFBzTkpBQ25iWGtvQ3hJVDhwVHFtcW9v?=
- =?utf-8?B?RVl4U0lqRWlYME9RTDcvU202YUowbTBkVmxBMjgrL0Z1QU4vcGczeHBmU04x?=
- =?utf-8?B?VXNkY0ZvR1JlTXp6YTJzK0podUkzT0M3Sm9TNXZrSUxOdmlRTmswRWZBa3Jn?=
- =?utf-8?B?eHFseUUzWEhoRU1NbFdVQUtYNU1BSnRlcW5wTlArb2Q1L2V0aWZ4UWI5bmZs?=
- =?utf-8?B?OXRmSnVHZ3ZNRVovRitiWFY3aVhCMFowQkdwNytDd04yOFFkOWNGUm1peG9H?=
- =?utf-8?B?WHNwKzEzVkJQR0tGWEdZSGx3K0ZTZE1lOWJsVHVRelNYaklCYTdSZ09zdm5s?=
- =?utf-8?B?SFhzNGNxRW5WY0xvenRTeWxiZlVWSC9rdzVHWUNtWUFlZFR2SHdTVFlFN2M1?=
- =?utf-8?B?UTVQUkdiNXc4NURtMDRQYmF0RXBKV3kwNXBBNS9KRnFNUy91dlJZUXgrOGgv?=
- =?utf-8?B?WEhyeklQbVFXR3oxTEw2d0RVL3Znem5KQ3FTUi90SVpVLzFENmhEM3ppTndq?=
- =?utf-8?B?SXdBRi9GalJsWTE3TmlhS3p2eUhRYW1oSnRDWDFDRnF1ZVl2U1c4STdSaFhQ?=
- =?utf-8?B?WFduS3MySnFqSWpHK0pSa0tlV09ZcENQZnhEVmJtZVhtTE1wVlBiTWEzRGJI?=
- =?utf-8?B?d2VEZjlqcmFla3BORldOVHo3WUVBeS9OQWcrLzVSUW5ZT015ckZiVWhXQlRh?=
- =?utf-8?B?Z3ppeEFIdjgwZi9hWnk1anAyb0RCTW1rU0dnYjE0RFBzcWlTTUJwUzc2WTBD?=
- =?utf-8?B?d3g3RkJaeS9DZlhyRmlsR3ZaUnFNUzNDby9FQmY4R3pjc2Z6VDBnWG9rbWp5?=
- =?utf-8?B?dDJyVWp4WkhSSGtQSkxDSVFmSnZtcEpNOVVlU3dBeFhIc2Zjck5FVGIyMWth?=
- =?utf-8?B?SFdWa1dZQ1l0S3FYamo2YlV4anhQUEUvaURLTzJuRWFKNERiZWVTRnNiOVUy?=
- =?utf-8?Q?kNKul3zQy8yRN1ZVmmsJego=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	/HGKQG1EDPKMgLTTEltQu571BpCjTCYgbEbuTPi/gwT6zPekrLSm0T32E8N1np5YLdJT2KDjIfNOpnPyhKXUwgNGWB7kpbhoyGn24kmNqf7lmzS6sKmNYtmVaW6fE5H5jycn8j+O7VJHwUczCruCJOH1bVcp7/mRZJnV6SQVJws+TbXFglXk6OHYrw7KvXsHlt1sksYofVOK+66FxexlPqmYgwKhKUEd7fEmogByEj8kCY6XenLwoBA0ljid2vMhbkw7eElu1W7FmwE3YCegpy/QKHpnDyddD/8bRDMVPVZZ5rO92yMaNk9GS7EqYHM2kuNGCG5Tj36o3LOhlSSj5SN4JB6UJ5MVSJraUFmuev6Gtj9jaoHhfqA5ZDYaiU++GsjgHcQrVqAOSmCKtzjMTUMXaIF65Q6UOCcodLSAP7K+ZNcWxjBljUn60Kmreyijl81mPDn/yTYJrYJVZuWUw+wAEXH6K6LERGy3WWouIGW1mRwWmlpgdE3iFsXaPgCa268d4+uYVRdP1QB7WwE+xw/Efoxi8qklyRQQPnJvTA1ud6/QL4ydgxisgsXD15nzrnczuMxraW91nRjlLcwF8NClqy9qSRRl1ct0EOMTbsE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4ed3b5d-2cfd-4c95-23f0-08dc12d0b429
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5113.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 18:11:16.6376
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lA/NuFnXWn14sigpJcXTmbyRRxxgvK4Cjt4GlYm1MR6gQd4k/d12tVsJd+BJUfyeoDP38eh8AeA/+GDyYOugvxvqxD8nbwlzz2btvr56/NA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB7313
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-11_09,2024-01-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- mlxscore=0 mlxlogscore=905 adultscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401110142
-X-Proofpoint-ORIG-GUID: G-IUUz7qZub2scK_UAIpGSiCkQiDOeyb
-X-Proofpoint-GUID: G-IUUz7qZub2scK_UAIpGSiCkQiDOeyb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e527ade-fe49-4697-8e36-589775c63354@moroto.mountain>
 
-On 1/11/24 10:03 AM, Matthew Wilcox wrote:
-> On Thu, Jan 11, 2024 at 09:51:47AM -0800, Sidhartha Kumar wrote:
->> On 1/11/24 9:34 AM, Jiaqi Yan wrote:
->>>> -                       if (!folio_test_has_hwpoisoned(folio))
->>>> +                       if (!folio_test_hwpoison(folio))
->>>
->>> Sidhartha, just curious why this change is needed? Does
->>> PageHasHWPoisoned change after commit
->>> "a08c7193e4f18dc8508f2d07d0de2c5b94cb39a3"?
->>
->> No its not an issue PageHasHWPoisoned(), the original code is testing for
->> the wrong flag and I realized that has_hwpoison and hwpoison are two
->> different flags. The memory-failure code calls folio_test_set_hwpoison() to
->> set the hwpoison flag and does not set the has_hwpoison flag. When
->> debugging, I realized this if statement was never true despite the code
->> hitting folio_test_set_hwpoison(). Now we are testing the correct flag.
->>
->>  From page-flags.h
->>
->> #ifdef CONFIG_MEMORY_FAILURE
->> 	PG_hwpoison,		/* hardware poisoned page. Don't touch */
->> #endif
->>
->> folio_test_hwpoison() checks this flag ^^^
->>
->> /* At least one page in this folio has the hwpoison flag set */
->> PG_has_hwpoisoned = PG_error,
->>
->> while folio_test_has_hwpoisoned() checks this flag ^^^
+On Thu, Jan 11, 2024 at 10:15:40AM +0300, Dan Carpenter wrote:
+> On Wed, Jan 10, 2024 at 04:03:28PM -0800, Kees Cook wrote:
+> > 
+> > Oops, yes, thanks for fixing my confusion. Right, this is a direct write
+> > across members into the flex array, not a composite destination. Yay
+> > all the corner cases. :P
 > 
-> So what you're saying is that hugetlb behaves differently from THP
-> with how memory-failure sets the flags?
+> Is there a document somewhere which explains what will trigger a runtime
+> warning?  For example, if you write across members but it's not into a
+> flex array does that cause an issue?  Or if you read across members?
 
-I think so, in memory_failure() THP goes through this path:
-	
-	hpage = compound_head(p);
-	if (PageTransHuge(hpage)) {
-		/*
-		 * The flag must be set after the refcount is bumped
-		 * otherwise it may race with THP split.
-		 * And the flag can't be set in get_hwpoison_page() since
-		 * it is called by soft offline too and it is just called
-		 * for !MF_COUNT_INCREASED.  So here seems to be the best
-		 * place.
-		 *
-		 * Don't need care about the above error handling paths for
-		 * get_hwpoison_page() since they handle either free page
-		 * or unhandlable page.  The refcount is bumped iff the
-		 * page is a valid handlable page.
-		 */
-		SetPageHasHWPoisoned(hpage);
+There isn't a good place to find this. There are some code comments near
+the memcpy macros, but that's not really sufficient.
 
-which sets has_hwpoisoned flag while hugetlb goes through 
-folio_set_hugetlb_hwpoison() which calls folio_test_set_hwpoison().
+At present FORTIFY is only being pedantic about _writes_, as that's
+generally a higher priority problem. The implemented restriction is that
+the destination buffer must be a single addressable struct member. That
+destination can be a composite member (i.e. an entire substruct), but
+going beyond a single member in a single memcpy() is no longer allowed
+because the compiler cannot reason about whether such a copy is
+"intentional".
+
+> For example, this line reads from bulletin->vlan and
+> bulletin->vlan_padding.  This causes a compiler warning in Clang and
+> GCC depending on the options but does it also trigger a runtime warning?
+> https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c#L2655
+
+Right, the -Wstringop-overread and related compiler flags are doing the
+source buffer size checking.
+
+Note that for the compile-time warnings, GCC has the capacity to be much
+more strict than the FORTIFY checks because it can perform value _range_
+tracking, where as FORTIFY compile-time checks are limited to having the
+copy size being a constant expression. (i.e. GCC may produce compile
+time warnings for cases that FORTIFY will only warn about at runtime if
+the range is violated.)
+
+> (I wrote a patch for this a few months back but didn't send it because
+> of the merge window.  I forgot about it until now that we're in a merge
+> window again...  :P)
+
+			memcpy(&ivi->vlan, &bulletin->vlan, VLAN_HLEN);
+
+#define VLAN_HLEN 4
+ivi->vlan is u32
+bulletin has:
+	u16 vlan;
+	u8 vlan_padding[6];
+
+yeah, ew. Should it even be reading padding? i.e. should this be:
+
+		ivi->vlan = bulletin->vlan << 16;
+
+?
+
+Or should bulletin be:
+
+	union {
+		struct {
+			u16 vlan;
+			u8 vlan_padding[6];
+		};
+		struct {
+			u32 vlan_header;
+			u8 vlan_header_padding[4];
+		};
+	};
+
+with:
+
+		ivi->vlan = bulletin->vlan_header;
+
+?
+
+I've been finding that almost all memcpy()s and memset()s into non-array
+types are better just rewritten as a direct assignment. :P
+
+-- 
+Kees Cook
