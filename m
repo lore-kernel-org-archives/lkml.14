@@ -1,180 +1,155 @@
-Received: from m16.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CECFB14A82
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 09:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DC414A9C;
+	Thu, 11 Jan 2024 09:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kfnBLjdk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=yIRdTiFNyHb0/qm6Ef
-	AjWM6tlpKk3ddwfpRKBB+4ypg=; b=kfnBLjdku5GJ0NIswW5tYgTmDZsdXwhSPe
-	7G26bLH+jsDmSZrICt0Qpm2eq/c4bxdAuQtO0tfjnuZtGhsu4sbT7nUEsfyN9YbJ
-	Mej/uelWwbJtZawfHgtn8Y082/2dOoof0mc9YyB05X67VEpM+80I9xl8YNhHpOS2
-	IgYG6vRZc=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-5 (Coremail) with SMTP id _____wDnL10Fr59l9pSXAA--.18295S2;
-	Thu, 11 Jan 2024 17:04:06 +0800 (CST)
-From: GuoHua Chen <chenguohua_716@163.com>
-To: daniel@ffwll.ch,
-	Xinhui.Pan@amd.com,
-	alexander.deucher@amd.com,
-	airlied@gmail.com,
-	christian.koenig@amd.com
-Cc: dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	GuoHua Chen <chenguohua_716@163.com>
-Subject: [PATCH] drm/radeon/kms: Clean up errors in smu7_fusion.h
-Date: Thu, 11 Jan 2024 09:04:03 +0000
-Message-Id: <20240111090403.13324-1-chenguohua_716@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wDnL10Fr59l9pSXAA--.18295S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXFWkZF15Jr48GFWfWry3Jwb_yoWrArWfp3
-	y5Aa1agayrA34agry8Cr4rXw4ftr1UurWkCr12k3yrJ3W2kr42gF10kw40yryI9r4kuwnx
-	ZwsFqF1IgrW7ZrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UFZXrUUUUU=
-X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/1tbiqAli1mVOBlFrDAACsM
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMzdJDz4"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55818b733f7so3075876a12.3;
+        Thu, 11 Jan 2024 01:04:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704963867; x=1705568667; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nKYfbtGZSuWol92QjWEdUhJKfrs3o8tz2BQxPjW/QIM=;
+        b=dMzdJDz4WB1CeTHby1ByA00cUGc90h7htVkqNdzl9x7FwsqDbxzVn5y3tNRf/5l4E1
+         JKakH6WAi4VNiQObUGEwH++8WVN9IwIx9cgyqqFJaRP6+ZbBB4rUaYMNkGwHstrWfgFR
+         9NbmOvsrzJF2lTyExHyy70sxsEq4iwfiIz9yIsm4D6R+97i0detMqV+PZva5bKVqP5Gm
+         4mHoF32FiInHksplJoTWtyLI/ZGpG6cwGhiANxSukdyEsJp04z6ogHdn46MCPlykD5QR
+         ThBRjflLfnB2qbunON8XAlRra8qwUq5RwtN7kBRXrL65WC7zprcIGMhgQx6yE7EJpRmq
+         hQtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704963867; x=1705568667;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nKYfbtGZSuWol92QjWEdUhJKfrs3o8tz2BQxPjW/QIM=;
+        b=qKbF3RJNHvhgnYl7OH75Gie8pP4TFxFrPewBk4ucQKwuErw6CjNVAPUhO+pCiHqxxc
+         IbhAdmkceOL/+TZKJBYkT54Cr3JoRnufUA+HXoME9kLZCjW9kgq1uCCwEK/GDGXgPQHy
+         mDMytWd1XamKg2K7jnJLuf5FTN7yDbkqFIIhZsAkAKHlSyc6nl0U49vLEZ34eq9lhZWq
+         XkJ6slIJFaLBE+k2lLuSrYXRa3iEpgtAyljge4jmw4h6pjgRdvm6/OBFyrs88Sicqrk5
+         U2Vqabo9JumEsBNEg+vvYl1uQB6aEjtJid665OzOVklDbaLbw0DFyW2n3ZQuS9ohm/e7
+         w6Kw==
+X-Gm-Message-State: AOJu0YzH67KYhIV/qyJLfiBxNr45FaIh5tS+OzpWv2HS0CjhUsCOgRvq
+	aIv4YHR82sbVIwb33ETX2m8=
+X-Google-Smtp-Source: AGHT+IGNchkmZ4xR/1cEDGA6uaCwadY4fTil39N89Fv7dqdCC2nauGrYBDo4A90POu6tgiDlQ9c9uA==
+X-Received: by 2002:a17:906:4557:b0:a28:a409:aeeb with SMTP id s23-20020a170906455700b00a28a409aeebmr424289ejq.61.1704963867146;
+        Thu, 11 Jan 2024 01:04:27 -0800 (PST)
+Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
+        by smtp.gmail.com with ESMTPSA id v7-20020a1709063bc700b00a29bd8f9edbsm326112ejf.72.2024.01.11.01.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 01:04:26 -0800 (PST)
+Message-ID: <501bb280c6bd7dcb49929e7dbd242807b828e7de.camel@gmail.com>
+Subject: Re: [PATCH 04/13] spi: dt-bindings: adi,axi-spi-engine: add offload
+ bindings
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Rob Herring <robh@kernel.org>, David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>,
+ Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,  Frank Rowand
+ <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan
+ Corbet <corbet@lwn.net>,  linux-spi@vger.kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Date: Thu, 11 Jan 2024 10:07:38 +0100
+In-Reply-To: <20240110231456.GB2854345-robh@kernel.org>
+References: 
+	<20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
+	 <20240109-axi-spi-engine-series-3-v1-4-e42c6a986580@baylibre.com>
+	 <20240110231456.GB2854345-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-Fix the following errors reported by checkpatch:
+On Wed, 2024-01-10 at 17:14 -0600, Rob Herring wrote:
+> On Wed, Jan 10, 2024 at 01:49:45PM -0600, David Lechner wrote:
+> > The ADI AXI SPI Engine driver supports offloading SPI transfers to
+> > hardware. This is essentially a feature that allows recording an
+> > arbitrary sequence of SPI transfers and then playing them back with
+> > no CPU intervention via a hardware trigger.
+> >=20
+> > This adds the bindings for this feature. Each SPI Engine instance
+> > can have from 0 to 32 offload instances. Each offload instance has a
+> > trigger input and a data stream output. As an example, this could be
+> > used with an ADC SPI peripheral. In this case the trigger is connected
+> > to a PWM/clock to determine the sampling rate for the ADC and the outpu=
+t
+> > stream is connected to a DMA channel to pipe the sample data to memory.
+> >=20
+> > SPI peripherals act as consumers of the offload instances. Typically,
+> > one SPI peripheral will be connected to one offload instance. But to
+> > make the bindings future-proof, the property is an array.
+>=20
+> Is there some sort of arbitration between multiple offload engines on=20
+> the same chip select? If not, I don't see how it would work.
+>=20
+> I think this whole thing could be simplified down to just 3=20
+> SPI controller properties: pwms, dmas, and adi,offload-cs-map. Each=20
+> property is has entries equal the number of offload engines. The last=20
+> one maps an offload engine to a SPI chip-select.
+>=20
 
-ERROR: open brace '{' following struct go on the same line
-ERROR: space prohibited before open square bracket '['
+I think the whole reason why the offload is being treated as a node + platf=
+orm
+device is to have these properties (or other possible properties depending =
+on
+the trigger and data capture being used) in it and so respect the HW
+configuration.
 
-Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
----
- drivers/gpu/drm/radeon/smu7_fusion.h | 42 +++++++++++-----------------
- 1 file changed, 16 insertions(+), 26 deletions(-)
+While that is conceptually correct I feel that this is bringing a lot of ex=
+tra
+complexity. The end consumer of the offload core (which is a property/featu=
+re of
+the spi cotroller) are obviously the peripheral devices that in our usecase=
+s are
+converters and hence IIO devices. So those are the ones consuming all the d=
+ata.
+I saw Mark already giving some pointers and speaking about having a way to
+support the triggers (being it pwm, clock, gpio, etc...) directly in the sp=
+i
+framework and I think that would be nice. For the dmas, I think it would be=
+ more
+complicated. While we can setup the dma transfer directly in the spi contro=
+ller,
+we would need a mechanism to transfer each block of data (periodically) as =
+soon
+as we have it to the peripheral device. In case of IIO, that would then hav=
+e to
+connect to IIO DMA buffers so the data can be consumed in userspace and tha=
+t
+would be the tricky part I believe.
 
-diff --git a/drivers/gpu/drm/radeon/smu7_fusion.h b/drivers/gpu/drm/radeon/smu7_fusion.h
-index 78ada9ffd508..e130f52fe8d6 100644
---- a/drivers/gpu/drm/radeon/smu7_fusion.h
-+++ b/drivers/gpu/drm/radeon/smu7_fusion.h
-@@ -36,8 +36,7 @@
- #define SMU7_NUM_NON_TES 2
- 
- // All 'soft registers' should be uint32_t.
--struct SMU7_SoftRegisters
--{
-+struct SMU7_SoftRegisters {
-     uint32_t        RefClockFrequency;
-     uint32_t        PmTimerP;
-     uint32_t        FeatureEnables;
-@@ -80,8 +79,7 @@ struct SMU7_SoftRegisters
- 
- typedef struct SMU7_SoftRegisters SMU7_SoftRegisters;
- 
--struct SMU7_Fusion_GraphicsLevel
--{
-+struct SMU7_Fusion_GraphicsLevel {
-     uint32_t    MinVddNb;
- 
-     uint32_t    SclkFrequency;
-@@ -111,8 +109,7 @@ struct SMU7_Fusion_GraphicsLevel
- 
- typedef struct SMU7_Fusion_GraphicsLevel SMU7_Fusion_GraphicsLevel;
- 
--struct SMU7_Fusion_GIOLevel
--{
-+struct SMU7_Fusion_GIOLevel {
-     uint8_t     EnabledForActivity;
-     uint8_t     LclkDid;
-     uint8_t     Vid;
-@@ -137,8 +134,7 @@ struct SMU7_Fusion_GIOLevel
- typedef struct SMU7_Fusion_GIOLevel SMU7_Fusion_GIOLevel;
- 
- // UVD VCLK/DCLK state (level) definition.
--struct SMU7_Fusion_UvdLevel
--{
-+struct SMU7_Fusion_UvdLevel {
-     uint32_t VclkFrequency;
-     uint32_t DclkFrequency;
-     uint16_t MinVddNb;
-@@ -155,8 +151,7 @@ struct SMU7_Fusion_UvdLevel
- typedef struct SMU7_Fusion_UvdLevel SMU7_Fusion_UvdLevel;
- 
- // Clocks for other external blocks (VCE, ACP, SAMU).
--struct SMU7_Fusion_ExtClkLevel
--{
-+struct SMU7_Fusion_ExtClkLevel {
-     uint32_t Frequency;
-     uint16_t MinVoltage;
-     uint8_t  Divider;
-@@ -166,8 +161,7 @@ struct SMU7_Fusion_ExtClkLevel
- };
- typedef struct SMU7_Fusion_ExtClkLevel SMU7_Fusion_ExtClkLevel;
- 
--struct SMU7_Fusion_ACPILevel
--{
-+struct SMU7_Fusion_ACPILevel {
-     uint32_t    Flags;
-     uint32_t    MinVddNb;
-     uint32_t    SclkFrequency;
-@@ -181,8 +175,7 @@ struct SMU7_Fusion_ACPILevel
- 
- typedef struct SMU7_Fusion_ACPILevel SMU7_Fusion_ACPILevel;
- 
--struct SMU7_Fusion_NbDpm
--{
-+struct SMU7_Fusion_NbDpm {
-     uint8_t DpmXNbPsHi;
-     uint8_t DpmXNbPsLo;
-     uint8_t Dpm0PgNbPsHi;
-@@ -197,8 +190,7 @@ struct SMU7_Fusion_NbDpm
- 
- typedef struct SMU7_Fusion_NbDpm SMU7_Fusion_NbDpm;
- 
--struct SMU7_Fusion_StateInfo
--{
-+struct SMU7_Fusion_StateInfo {
-     uint32_t SclkFrequency;
-     uint32_t LclkFrequency;
-     uint32_t VclkFrequency;
-@@ -214,8 +206,7 @@ struct SMU7_Fusion_StateInfo
- 
- typedef struct SMU7_Fusion_StateInfo SMU7_Fusion_StateInfo;
- 
--struct SMU7_Fusion_DpmTable
--{
-+struct SMU7_Fusion_DpmTable {
-     uint32_t                            SystemFlags;
- 
-     SMU7_PIDController                  GraphicsPIDController;
-@@ -230,12 +221,12 @@ struct SMU7_Fusion_DpmTable
-     uint8_t                            SamuLevelCount;
-     uint16_t                           FpsHighT;
- 
--    SMU7_Fusion_GraphicsLevel         GraphicsLevel           [SMU__NUM_SCLK_DPM_STATE];
-+    SMU7_Fusion_GraphicsLevel         GraphicsLevel[SMU__NUM_SCLK_DPM_STATE];
-     SMU7_Fusion_ACPILevel             ACPILevel;
--    SMU7_Fusion_UvdLevel              UvdLevel                [SMU7_MAX_LEVELS_UVD];
--    SMU7_Fusion_ExtClkLevel           VceLevel                [SMU7_MAX_LEVELS_VCE];
--    SMU7_Fusion_ExtClkLevel           AcpLevel                [SMU7_MAX_LEVELS_ACP];
--    SMU7_Fusion_ExtClkLevel           SamuLevel               [SMU7_MAX_LEVELS_SAMU];
-+    SMU7_Fusion_UvdLevel              UvdLevel[SMU7_MAX_LEVELS_UVD];
-+    SMU7_Fusion_ExtClkLevel           VceLevel[SMU7_MAX_LEVELS_VCE];
-+    SMU7_Fusion_ExtClkLevel           AcpLevel[SMU7_MAX_LEVELS_ACP];
-+    SMU7_Fusion_ExtClkLevel           SamuLevel[SMU7_MAX_LEVELS_SAMU];
- 
-     uint8_t                           UvdBootLevel;
-     uint8_t                           VceBootLevel;
-@@ -266,10 +257,9 @@ struct SMU7_Fusion_DpmTable
- 
- };
- 
--struct SMU7_Fusion_GIODpmTable
--{
-+struct SMU7_Fusion_GIODpmTable {
- 
--    SMU7_Fusion_GIOLevel              GIOLevel                [SMU7_MAX_LEVELS_GIO];
-+    SMU7_Fusion_GIOLevel              GIOLevel[SMU7_MAX_LEVELS_GIO];
- 
-     SMU7_PIDController                GioPIDController;
- 
--- 
-2.17.1
+What we have been doing out of tree is to control the trigger and dmas in t=
+he
+peripheral device even if that does not really directly respect the HW setu=
+p (as
+these are properties of the offload core). Hence, we can just allocate an I=
+IO
+DMA buffer, enable the offload message with the messages we want and data c=
+an be
+directly transferred to userspace (without any intervention of the peripher=
+al
+driver) using the IIO interfaces for it.
 
+To sum it up, I think having the trigger being handled by the spi framework=
+ or
+even have it as an IIO generic trigger would be simple. To have the dma
+transfers in the spi controller would be more complex but anything is possi=
+ble,
+I guess :).
+
+- Nuno S=C3=A1
+>=20
+>=20
