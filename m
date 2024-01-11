@@ -1,65 +1,64 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C034EB28;
-	Thu, 11 Jan 2024 14:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13BC4F89F;
+	Thu, 11 Jan 2024 14:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SI3XVCMl"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iAvJ+NRN"
 Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40BDqEA7010727;
-	Thu, 11 Jan 2024 14:38:53 GMT
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40BDqGNB010812;
+	Thu, 11 Jan 2024 14:38:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=W/rDZcFYvEKxv7IsdcV7co3Hn2U+Y2v7rDJ2EcuzIiM=;
- b=SI3XVCMlQyZnIpuf0ByIgP5e2AS5IKtb1JOBAR/+kd/mCT/k6u18s4jUFMMuD81FG123
- zzN6swSXsfvvt7XoJDiICc+g7NNJ/h5iJgf4Q3JYkmZ9x/tEY0F31v/vBA85Ch+hlgwY
- hmukVwa1+uVL2TkngHIpEa6RbpJyggsOqaawnGGjs1ZvH1QCxuYRGXL9hyaciKoukpdf
- CjDLzPcuThbu/Q6JGETtQarVNaSZ+02+ETk31iDb7rbPDZ9IhyWNiWVoG+3ym5tgwxw0
- PpNuqnSVQ7HVswQo3QtN44SBuXm5frrRhCN++VUw8yfDcW+27rR5K1kaFDTrUKENEH9c Ig== 
+ bh=41kSqjRA8LZoRNq2Fpx4NoqSL80yGNnpkuhMiftcsxI=;
+ b=iAvJ+NRNMyncaN6VG62ukxeNDYQ2iCAf0fWTE1dBF6x1l6QnpCOoqBiyet6WmOUA3326
+ qdD5DBy0AI/MUH45esjhhWAbyp+hnQx7zx9tCgj+lRKssUIFrODw2vys0nyEDgIY9rIO
+ 58bQqb6ou2Y7T8Xag5iDdwptMaVNDEQ673tjg/NYb0dil1tgiGa43yERT3+UhsxCkv4N
+ KsF4razYR3dsq4tRSKdvO+Hg75lhJrusyZ9m6g9I2MbJt6rW/L1ITKzYUHOKFUpK0fZI
+ 28iqLGDAYH4hh4xUSjke7Q61hhNjxRwU9Px19Zzd6lF9GCYrkPcJ6ArvN7UC3WSrJHiZ hQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjhkese36-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjhkese3x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 14:38:55 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40BEOLb6019557;
+	Thu, 11 Jan 2024 14:38:54 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjhkese3g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 14:38:54 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40BERM4G022781;
+	Thu, 11 Jan 2024 14:38:53 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vfhjyv4b1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 11 Jan 2024 14:38:53 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40BEcVbc031093;
-	Thu, 11 Jan 2024 14:38:52 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjhkese2e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 14:38:52 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40BC3bse004395;
-	Thu, 11 Jan 2024 14:38:50 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vfjpm3tuw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 14:38:50 +0000
 Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40BEcnaw61473188
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40BEcpj447186234
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Jan 2024 14:38:50 GMT
+	Thu, 11 Jan 2024 14:38:51 GMT
 Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9DD7E5805F;
-	Thu, 11 Jan 2024 14:38:49 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id AA4E458061;
+	Thu, 11 Jan 2024 14:38:51 +0000 (GMT)
 Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AD2C958059;
-	Thu, 11 Jan 2024 14:38:48 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id C032058059;
+	Thu, 11 Jan 2024 14:38:50 +0000 (GMT)
 Received: from li-2c1e724c-2c76-11b2-a85c-ae42eaf3cb3d.ibm.com.com (unknown [9.61.174.181])
 	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 11 Jan 2024 14:38:48 +0000 (GMT)
+	Thu, 11 Jan 2024 14:38:50 +0000 (GMT)
 From: Tony Krowiak <akrowiak@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
 Cc: jjherne@linux.ibm.com, borntraeger@de.ibm.com, pasic@linux.ibm.com,
         pbonzini@redhat.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        stable@vger.kernel.org
-Subject: [PATCH v3 1/6] s390/vfio-ap: always filter entire AP matrix
-Date: Thu, 11 Jan 2024 09:38:35 -0500
-Message-ID: <20240111143846.8801-2-akrowiak@linux.ibm.com>
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+Subject: [PATCH v3 3/6] s390/vfio-ap: let 'on_scan_complete' callback filter matrix and update guest's APCB
+Date: Thu, 11 Jan 2024 09:38:37 -0500
+Message-ID: <20240111143846.8801-4-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240111143846.8801-1-akrowiak@linux.ibm.com>
 References: <20240111143846.8801-1-akrowiak@linux.ibm.com>
@@ -71,190 +70,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: BzIUzsrWYVjglZznFSUfv7NvRajihycj
-X-Proofpoint-ORIG-GUID: h9tKNpwaakFohMZcoE368ZCeZ_mJI6SN
+X-Proofpoint-GUID: 1FCJHo1pQmaRllvcViiVeZpz2Eyuh1L1
+X-Proofpoint-ORIG-GUID: 2dcJ6jI1VE2LU2Jb9BSFD7KO1zvJ5chT
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-11_07,2024-01-11_01,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
  priorityscore=1501 suspectscore=0 impostorscore=0 lowpriorityscore=0
- malwarescore=0 spamscore=0 clxscore=1011 mlxscore=0 phishscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0 phishscore=0
  adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311290000 definitions=main-2401110116
 
-The vfio_ap_mdev_filter_matrix function is called whenever a new adapter or
-domain is assigned to the mdev. The purpose of the function is to update
-the guest's AP configuration by filtering the matrix of adapters and
-domains assigned to the mdev. When an adapter or domain is assigned, only
-the APQNs associated with the APID of the new adapter or APQI of the new
-domain are inspected. If an APQN does not reference a queue device bound to
-the vfio_ap device driver, then it's APID will be filtered from the mdev's
-matrix when updating the guest's AP configuration.
+When adapters and/or domains are added to the host's AP configuration, this
+may result in multiple queue devices getting created and probed by the
+vfio_ap device driver. For each queue device probed, the matrix of adapters
+and domains assigned to a matrix mdev will be filtered to update the
+guest's APCB. If any adapters or domains get added to or removed from the
+APCB, the guest's AP configuration will be dynamically updated (i.e., hot
+plug/unplug). To dynamically update the guest's configuration, its VCPUs
+must be taken out of SIE for the period of time it takes to make the
+update. This is disruptive to the guest's operation and if there are many
+queues probed due to a change in the host's AP configuration, this could be
+troublesome. The problem is exacerbated by the fact that the
+'on_scan_complete' callback also filters the mdev's matrix and updates
+the guest's AP configuration.
 
-Inspecting only the APID of the new adapter or APQI of the new domain will
-result in passing AP queues through to a guest that are not bound to the
-vfio_ap device driver under certain circumstances. Consider the following:
-
-guest's AP configuration (all also assigned to the mdev's matrix):
-14.0004
-14.0005
-14.0006
-16.0004
-16.0005
-16.0006
-
-unassign domain 4
-unbind queue 16.0005
-assign domain 4
-
-When domain 4 is re-assigned, since only domain 4 will be inspected, the
-APQNs that will be examined will be:
-14.0004
-16.0004
-
-Since both of those APQNs reference queue devices that are bound to the
-vfio_ap device driver, nothing will get filtered from the mdev's matrix
-when updating the guest's AP configuration. Consequently, queue 16.0005
-will get passed through despite not being bound to the driver. This
-violates the linux device model requirement that a guest shall only be
-given access to devices bound to the device driver facilitating their
-pass-through.
-
-To resolve this problem, every adapter and domain assigned to the mdev will
-be inspected when filtering the mdev's matrix.
+In order to reduce the potential amount of disruption to the guest that may
+result from a change to the host's AP configuration, let's bypass the
+filtering of the matrix and updating of the guest's AP configuration in the
+probe callback - if due to a host config change - and defer it until the
+'on_scan_complete' callback is invoked after the AP bus finishes its device
+scan operation. This way the filtering and updating will be performed only
+once regardless of the number of queues added.
 
 Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-Acked-by: Halil Pasic <pasic@linux.ibm.com>
-Fixes: 48cae940c31d ("s390/vfio-ap: refresh guest's APCB by filtering AP resources assigned to mdev")
-Cc: <stable@vger.kernel.org>
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_ops.c | 57 +++++++++----------------------
- 1 file changed, 17 insertions(+), 40 deletions(-)
+ drivers/s390/crypto/vfio_ap_ops.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 4db538a55192..9382b32e5bd1 100644
+index 47232e19a50e..26bd4aca497a 100644
 --- a/drivers/s390/crypto/vfio_ap_ops.c
 +++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -670,8 +670,7 @@ static bool vfio_ap_mdev_filter_cdoms(struct ap_matrix_mdev *matrix_mdev)
-  * Return: a boolean value indicating whether the KVM guest's APCB was changed
-  *	   by the filtering or not.
-  */
--static bool vfio_ap_mdev_filter_matrix(unsigned long *apm, unsigned long *aqm,
--				       struct ap_matrix_mdev *matrix_mdev)
-+static bool vfio_ap_mdev_filter_matrix(struct ap_matrix_mdev *matrix_mdev)
- {
- 	unsigned long apid, apqi, apqn;
- 	DECLARE_BITMAP(prev_shadow_apm, AP_DEVICES);
-@@ -692,8 +691,8 @@ static bool vfio_ap_mdev_filter_matrix(unsigned long *apm, unsigned long *aqm,
- 	bitmap_and(matrix_mdev->shadow_apcb.aqm, matrix_mdev->matrix.aqm,
- 		   (unsigned long *)matrix_dev->info.aqm, AP_DOMAINS);
- 
--	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
--		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
-+	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, AP_DEVICES) {
-+		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm, AP_DOMAINS) {
- 			/*
- 			 * If the APQN is not bound to the vfio_ap device
- 			 * driver, then we can't assign it to the guest's
-@@ -958,7 +957,6 @@ static ssize_t assign_adapter_store(struct device *dev,
- {
- 	int ret;
- 	unsigned long apid;
--	DECLARE_BITMAP(apm_delta, AP_DEVICES);
- 	struct ap_matrix_mdev *matrix_mdev = dev_get_drvdata(dev);
- 
- 	mutex_lock(&ap_perms_mutex);
-@@ -987,11 +985,8 @@ static ssize_t assign_adapter_store(struct device *dev,
- 	}
- 
- 	vfio_ap_mdev_link_adapter(matrix_mdev, apid);
--	memset(apm_delta, 0, sizeof(apm_delta));
--	set_bit_inv(apid, apm_delta);
- 
--	if (vfio_ap_mdev_filter_matrix(apm_delta,
--				       matrix_mdev->matrix.aqm, matrix_mdev))
-+	if (vfio_ap_mdev_filter_matrix(matrix_mdev))
- 		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
- 
- 	ret = count;
-@@ -1167,7 +1162,6 @@ static ssize_t assign_domain_store(struct device *dev,
- {
- 	int ret;
- 	unsigned long apqi;
--	DECLARE_BITMAP(aqm_delta, AP_DOMAINS);
- 	struct ap_matrix_mdev *matrix_mdev = dev_get_drvdata(dev);
- 
- 	mutex_lock(&ap_perms_mutex);
-@@ -1196,11 +1190,8 @@ static ssize_t assign_domain_store(struct device *dev,
- 	}
- 
- 	vfio_ap_mdev_link_domain(matrix_mdev, apqi);
--	memset(aqm_delta, 0, sizeof(aqm_delta));
--	set_bit_inv(apqi, aqm_delta);
- 
--	if (vfio_ap_mdev_filter_matrix(matrix_mdev->matrix.apm, aqm_delta,
--				       matrix_mdev))
-+	if (vfio_ap_mdev_filter_matrix(matrix_mdev))
- 		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
- 
- 	ret = count;
-@@ -2091,9 +2082,7 @@ int vfio_ap_mdev_probe_queue(struct ap_device *apdev)
+@@ -2083,9 +2083,22 @@ int vfio_ap_mdev_probe_queue(struct ap_device *apdev)
  	if (matrix_mdev) {
  		vfio_ap_mdev_link_queue(matrix_mdev, q);
  
--		if (vfio_ap_mdev_filter_matrix(matrix_mdev->matrix.apm,
--					       matrix_mdev->matrix.aqm,
--					       matrix_mdev))
-+		if (vfio_ap_mdev_filter_matrix(matrix_mdev))
++		/*
++		 * If we're in the process of handling the adding of adapters or
++		 * domains to the host's AP configuration, then let the
++		 * vfio_ap device driver's on_scan_complete callback filter the
++		 * matrix and update the guest's AP configuration after all of
++		 * the new queue devices are probed.
++		 */
++		if (!bitmap_empty(matrix_mdev->apm_add, AP_DEVICES) ||
++		    !bitmap_empty(matrix_mdev->aqm_add, AP_DOMAINS))
++			goto done;
++
+ 		if (vfio_ap_mdev_filter_matrix(matrix_mdev))
  			vfio_ap_mdev_update_guest_apcb(matrix_mdev);
  	}
- 	dev_set_drvdata(&apdev->device, q);
-@@ -2443,34 +2432,22 @@ void vfio_ap_on_cfg_changed(struct ap_config_info *cur_cfg_info,
- 
- static void vfio_ap_mdev_hot_plug_cfg(struct ap_matrix_mdev *matrix_mdev)
- {
--	bool do_hotplug = false;
--	int filter_domains = 0;
--	int filter_adapters = 0;
--	DECLARE_BITMAP(apm, AP_DEVICES);
--	DECLARE_BITMAP(aqm, AP_DOMAINS);
-+	bool filter_domains, filter_adapters, filter_cdoms, do_hotplug = false;
- 
- 	mutex_lock(&matrix_mdev->kvm->lock);
- 	mutex_lock(&matrix_dev->mdevs_lock);
- 
--	filter_adapters = bitmap_and(apm, matrix_mdev->matrix.apm,
--				     matrix_mdev->apm_add, AP_DEVICES);
--	filter_domains = bitmap_and(aqm, matrix_mdev->matrix.aqm,
--				    matrix_mdev->aqm_add, AP_DOMAINS);
--
--	if (filter_adapters && filter_domains)
--		do_hotplug |= vfio_ap_mdev_filter_matrix(apm, aqm, matrix_mdev);
--	else if (filter_adapters)
--		do_hotplug |=
--			vfio_ap_mdev_filter_matrix(apm,
--						   matrix_mdev->shadow_apcb.aqm,
--						   matrix_mdev);
--	else
--		do_hotplug |=
--			vfio_ap_mdev_filter_matrix(matrix_mdev->shadow_apcb.apm,
--						   aqm, matrix_mdev);
-+	filter_adapters = bitmap_intersects(matrix_mdev->matrix.apm,
-+					    matrix_mdev->apm_add, AP_DEVICES);
-+	filter_domains = bitmap_intersects(matrix_mdev->matrix.aqm,
-+					   matrix_mdev->aqm_add, AP_DOMAINS);
-+	filter_cdoms = bitmap_intersects(matrix_mdev->matrix.adm,
-+					 matrix_mdev->adm_add, AP_DOMAINS);
 +
-+	if (filter_adapters || filter_domains)
-+		do_hotplug = vfio_ap_mdev_filter_matrix(matrix_mdev);
++done:
+ 	dev_set_drvdata(&apdev->device, q);
+ 	release_update_locks_for_mdev(matrix_mdev);
  
--	if (bitmap_intersects(matrix_mdev->matrix.adm, matrix_mdev->adm_add,
--			      AP_DOMAINS))
-+	if (filter_cdoms)
- 		do_hotplug |= vfio_ap_mdev_filter_cdoms(matrix_mdev);
- 
- 	if (do_hotplug)
 -- 
 2.43.0
 
