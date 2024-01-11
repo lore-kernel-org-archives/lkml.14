@@ -1,39 +1,39 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3B914F75;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279551549B;
 	Thu, 11 Jan 2024 10:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="qXtRQkgy"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40B68LIV021183;
-	Thu, 11 Jan 2024 11:42:31 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="XWCO4PKO"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40B95I6O009306;
+	Thu, 11 Jan 2024 11:42:32 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=f+RuX/Eia9uR2MHJdZssTap6bVCpuc5frqUe4l82QhE=; b=qX
-	tRQkgyp5Bfsf0nU3MjZrbznR15gewse6FmmHBNy5PGmROFJ0V7D88hEE70Lwbh2t
-	YvGRzZiLxR60ejhGj1XjtmKvOrFaFJH3QjvIsr6vjPaJe1nh6k4azgumaKTS3gsg
-	8XaeaZxMppcvWVJ9Div5EiYIfio6KOfEwLuc3G6T/3tu3SeDmseq5PCUJVxulSiM
-	38grbcvXOMSfQPQ9UDUNSxUnjUS5LRuZRgR9DVtxiOR/LQfzfaabqMytLtuy3nPB
-	3sz/gJasMBGli+WZWO7j0N7lsfdrvPhg/7m98PCnpjMksUILrFaFavXJFp4PYQzZ
-	3pCvAit6FTPcA0srdYpA==
+	selector1; bh=Nsa2H5miBl9akiMiWy7Ow+OggKNKlHu8xqBbyIslAYs=; b=XW
+	CO4PKOQBTgoCD3EJFTI4bCadV5m5QVMD51lDWkZFslc4Y1BTKYvTKN9q5W9VC+xH
+	2y/BuXAyh8iNWs2w27sD6FcX0kmnBu9esgPNsJaPD62Fbob7icV/MILfh6YYCbef
+	sRZHfbMWpVPCcK7GmlbKKu3tdNNa9tafGu1nfSpJfjEKHXqfHlpVQI3DS5OJVwNN
+	i8PMUeYXevEApF0ij2mH3KgX5CcHeWIWx3Inwc5t1fZmZBPHxrRcMJzRzI68cSRG
+	oy/n4CGK076w+/Djk93lISnHUsv+8gtlMDIsE4X7wHisAZO7fYKfS89qMB1QBuAt
+	vNytY+MKe2HifxWNnP9w==
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vfha4tvuj-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vexpg57yg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 11:42:31 +0100 (CET)
+	Thu, 11 Jan 2024 11:42:32 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6165A10002A;
-	Thu, 11 Jan 2024 11:42:31 +0100 (CET)
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3505710002A;
+	Thu, 11 Jan 2024 11:42:32 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 57306231504;
-	Thu, 11 Jan 2024 11:42:31 +0100 (CET)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2CA44231504;
+	Thu, 11 Jan 2024 11:42:32 +0100 (CET)
 Received: from localhost (10.252.29.122) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Jan
- 2024 11:42:31 +0100
+ 2024 11:42:29 +0100
 From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 To: Yannick Fertre <yannick.fertre@foss.st.com>,
         Raphael Gallais-Pou
@@ -57,9 +57,9 @@ To: Yannick Fertre <yannick.fertre@foss.st.com>,
 CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 6/6] arm64: dts: st: add display support on stm32mp257f-ev
-Date: Thu, 11 Jan 2024 11:40:49 +0100
-Message-ID: <20240111104049.38695-7-raphael.gallais-pou@foss.st.com>
+Subject: [PATCH v2 4/6] arm64: dts: st: add ltdc support on stm32mp251
+Date: Thu, 11 Jan 2024 11:40:47 +0100
+Message-ID: <20240111104049.38695-5-raphael.gallais-pou@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240111104049.38695-1-raphael.gallais-pou@foss.st.com>
 References: <20240111104049.38695-1-raphael.gallais-pou@foss.st.com>
@@ -77,122 +77,38 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
 
-This patch enables the following IPs on stm32mp257f-ev :
-  * LTDC
-  * LVDS
-  * WSVGA LVDS panel (1024x600)
-  * Panel backlight
-  * Ilitek touchescreen
+The LCD-TFT Display Controller (LTDC) handles display composition,
+scaling and rotation. It provides a parallel digital RGB flow to be used
+by display interfaces.
 
 Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 ---
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 79 ++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 0ea8e69bfb3d..ca2da988d91c 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -29,6 +29,43 @@ memory@80000000 {
- 		reg = <0x0 0x80000000 0x1 0x0>;
- 	};
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index 93bc8a8908ce..064077e98dfd 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -212,6 +212,18 @@ i2c8: i2c@46040000 {
+ 				status = "disabled";
+ 			};
  
-+	panel_lvds: panel-lvds {
-+		compatible = "edt,etml0700z9ndha", "panel-lvds";
-+		enable-gpios = <&gpiog 15 GPIO_ACTIVE_HIGH>;
-+		backlight = <&panel_lvds_backlight>;
-+		status = "okay";
-+
-+		width-mm = <156>;
-+		height-mm = <92>;
-+		data-mapping = "vesa-24";
-+
-+		panel-timing {
-+			clock-frequency = <54000000>;
-+			hactive = <1024>;
-+			vactive = <600>;
-+			hfront-porch = <150>;
-+			hback-porch = <150>;
-+			hsync-len = <21>;
-+			vfront-porch = <24>;
-+			vback-porch = <24>;
-+			vsync-len = <21>;
-+		};
-+
-+		port {
-+			lvds_panel_in: endpoint {
-+				remote-endpoint = <&lvds_out0>;
++			ltdc: display-controller@48010000 {
++				compatible = "st,stm32-ltdc";
++				reg = <0x48010000 0x400>;
++				st,syscon = <&syscfg>;
++				interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&rcc CK_BUS_LTDC>, <&rcc CK_KER_LTDC>;
++				clock-names = "bus", "lcd";
++				resets = <&rcc LTDC_R>;
++				status = "disabled";
 +			};
-+		};
-+	};
 +
-+	panel_lvds_backlight: panel-lvds-backlight {
-+		compatible = "gpio-backlight";
-+		gpios = <&gpioi 5 GPIO_ACTIVE_HIGH>;
-+		default-on;
-+		default-brightness-level = <0>;
-+		status = "okay";
-+	};
-+
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-@@ -63,6 +100,15 @@ &i2c2 {
- 	i2c-scl-falling-time-ns = <13>;
- 	clock-frequency = <400000>;
- 	status = "okay";
-+
-+	ili2511: ili2511@41 {
-+		compatible = "ilitek,ili251x";
-+		reg = <0x41>;
-+		interrupt-parent = <&gpioi>;
-+		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
-+		reset-gpios = <&gpiog 14 GPIO_ACTIVE_LOW>;
-+		status = "okay";
-+	};
- };
- 
- &i2c8 {
-@@ -75,6 +121,39 @@ &i2c8 {
- 	status = "disabled";
- };
- 
-+&ltdc {
-+	status = "okay";
-+
-+	port {
-+		ltdc_ep0_out: endpoint {
-+			remote-endpoint = <&lvds_in>;
-+		};
-+	};
-+};
-+
-+&lvds {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			lvds_in: endpoint {
-+				remote-endpoint = <&ltdc_ep0_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			lvds_out0: endpoint {
-+				remote-endpoint = <&lvds_panel_in>;
-+			};
-+		};
-+	};
-+};
-+
- &sdmmc1 {
- 	pinctrl-names = "default", "opendrain", "sleep";
- 	pinctrl-0 = <&sdmmc1_b4_pins_a>;
+ 			sdmmc1: mmc@48220000 {
+ 				compatible = "st,stm32mp25-sdmmc2", "arm,pl18x", "arm,primecell";
+ 				arm,primecell-periphid = <0x00353180>;
 -- 
 2.25.1
 
