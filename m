@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EB24CB5E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/3EBLIO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C818C4167E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E084BA8C;
 	Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IyfmibMm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ED2CEC4166B;
+	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704984638;
-	bh=iGnhSFR4oy8vML/vLeOSYSO2FOyqacVWkaXJJeDyNUM=;
+	bh=QWatFqK+FZtSrigvY3VYuU2+QMxyML/XXXBrhQ7Moh8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=i/3EBLIOo6blQ/RTham11oq8xEbA+ix9e1GUFP3qr5Km+lP4dFbNgj8zfhJWUc6wn
-	 Gw6IIhtXLXdCmd8hKsAR80QhMetUXYHI2tA9Dy5/1Y3GPw5zywjjHLSPOogx3QW8OY
-	 4W6TqQByS4uC2WiNITnApAg1Hi647lv+u1b7Hd8VeQ8fVwtkRaAMLmSMcEsOHz6Tsh
-	 0/oqIa6vmzPmxY4Ud8xRbNUD/nbafrwlkRkYXd7YKnrg/GRn1yXayYYatPaqksCbGj
-	 HDt+A9yiXCY6tBVw0Ee2oN6kRT9p3Tc5Rn7RUJt1kvXoQo9t4Pfqz7K7SniATUKiVZ
-	 GQRYFXvMmcYWg==
+	b=IyfmibMmfWFE9VNHB3wbJEXlRYEUBGsWAjvujFbU0flIiCwiSO4o85MURxgEF7iUC
+	 8umdxZWRYV/Tn5pdwiaPK6hlrvseibDY6nHq93ewD9LoLMQcIXah6zThpSZmJITNVa
+	 CV6GZlrUKjvLtu+9+4dJSYCChQMiApeSj1yVFYpCLj3KUSEgECJUjfLf/LgIuGPpo7
+	 NPQ0ss/LL3+9EqP2vzf4tXKiHs/Qvz8RyxivJy98NauVnrvx+Jm4W28o0Z9Pwqnm7O
+	 aFE0OdtKOlUOmo97KGDLsOb6ODc2g63/XhwK4T2U2dNxKUlHT3WpMVWu1vNsiGOdD5
+	 zqag26HoHLv7w==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ED18FD8C975;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D84CDD8C96D;
 	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,38 +28,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv; fix __user annotation in save_v_state()
+Subject: Re: [PATCH v1] dt-bindings: riscv: permit numbers in "riscv,isa"
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170498463796.20080.14961218265938269771.git-patchwork-notify@kernel.org>
+ <170498463788.20080.14469126182221973580.git-patchwork-notify@kernel.org>
 Date: Thu, 11 Jan 2024 14:50:37 +0000
-References: <20231123142708.261733-1-ben.dooks@codethink.co.uk>
-In-Reply-To: <20231123142708.261733-1-ben.dooks@codethink.co.uk>
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
+References: <20231208-uncolored-oxidant-5ab37dd3ab84@spud>
+In-Reply-To: <20231208-uncolored-oxidant-5ab37dd3ab84@spud>
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+ conor.dooley@microchip.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, paul.walmsley@sifive.com,
+ aou@eecs.berkeley.edu, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Thu, 23 Nov 2023 14:27:08 +0000 you wrote:
-> The save_v_state() is technically sending a __user pointer through
-> __put_user() and thus is generating a sparse warning so force the
-> value to be "void *" to fix:
+On Fri,  8 Dec 2023 16:06:51 +0000 you wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> arch/riscv/kernel/signal.c:94:16: warning: incorrect type in initializer (different address spaces)
-> arch/riscv/kernel/signal.c:94:16:    expected void *__val
-> arch/riscv/kernel/signal.c:94:16:    got void [noderef] __user *[assigned] datap
-> Fixes:  8ee0b41898fa26f66e32 ("riscv: signal: Add sigcontext save/restore for vector")
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> There are some extensions that contain numbers, such as Zve32f, which
+> are enabled by the "max" cpu type in QEMU.
+> 
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv; fix __user annotation in save_v_state()
-    https://git.kernel.org/riscv/c/869436dae72a
+  - [v1] dt-bindings: riscv: permit numbers in "riscv,isa"
+    https://git.kernel.org/riscv/c/baa04909d100
 
 You are awesome, thank you!
 -- 
