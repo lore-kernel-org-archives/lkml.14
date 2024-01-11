@@ -1,94 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5370515482;
-	Thu, 11 Jan 2024 11:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB6414F79
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXydpx5Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0942C433C7;
-	Thu, 11 Jan 2024 11:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704971012;
-	bh=bI1Tet5jDj/QH09wURUJK1NElS1yuV/fwxx+hGurCKQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gXydpx5YYq7Gt4XhTMlirofDbH/GMG4JFQlhuY7CLC45RscIa+dfuNP803StsPw4j
-	 n/UR34vmiBCA5F5LI5+rTkeauMcYorGlS7G839valCfkC8HrstTBx/HJsz6aG/7HPW
-	 0Dc/Zw10+M/cbeekw5rO3Q4C8RFcHWRO0oUmMto6iyj7jTZEYb/tzmOLpyuIpMrkle
-	 rT74OZ9SuM4hEjuUvmH/w+kcmqEybvzeiuRI5mLvZvnafUfn+u4YJWb7y0p2tW7toF
-	 0YZdGHN5h95Yfef+oqzDKrSKm8BoCpRNP7GIQ5gIchh5x8DU1Sg6DKuGEhiBjyddh0
-	 ws0TlA9d2M/Dg==
-Date: Thu, 11 Jan 2024 11:03:25 +0000
-From: Lee Jones <lee@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	William Zhang <william.zhang@broadcom.com>,
-	Anand Gore <anand.gore@broadcom.com>,
-	Kursad Oney <kursad.oney@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	=?iso-8859-1?Q?Fern=E1ndez?= Rojas <noltari@gmail.com>,
-	Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org
-Subject: Re: [net-next PATCH v9 1/5] dt-bindings: net: phy: Make LED
- active-low property common
-Message-ID: <20240111110325.GE1678981@google.com>
-References: <20240105142719.11042-1-ansuelsmth@gmail.com>
- <20240105142719.11042-2-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTE8GgEA"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40d6b4e2945so60430125e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 03:04:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704971098; x=1705575898; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oZPGxlrX7BusY7TLHurUJ/YbEgD2UlLPEhETZEeCeag=;
+        b=VTE8GgEAmwlqahjBoKTk6ll8/M0PDwjRmmDA8vYcnZYalElcxmAE8GjncnlaSgfCFf
+         DEoaQHpSqe5VgtLV4o+ymFtr9nfPinQwZgb3U0U6shRhmZ7SRQQn5f7sfZqPzqxWnNJe
+         oGSYWNzoAuKUi07AJFfMPfi+b91OtpgvmHNUujh0bZk7FAxAOzhAnSO/z+7HbGErnpN4
+         /1O2Lt6JMBUJk4vkwk6XpUa5+Gk9cG/0X9onno2BCu8w2qAwEMf5Uqe+CTyJ5Z6xiuNs
+         10+XzzUe4k56hkbcknQ0Zkzn6A+PZ09c29AlDkkfOZO/Lu7glmLaNOHnce+yevWDUb8O
+         r8Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704971098; x=1705575898;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oZPGxlrX7BusY7TLHurUJ/YbEgD2UlLPEhETZEeCeag=;
+        b=U0rzIQUaGiUs+39IXp2MnYVANJmJZLvh3//LvIuGNh0jaruVseDyPPRmy65nVoYvDE
+         BhrgGASpgTH8fdkpBxJdW9fOhz1BfFQHIpUn4vA4MaK2spruF+6LYoqtEZSt0NmtKVeY
+         fX3mnjx4TQYWLxfpeDf23c/nX88BCAGuKbe8aoreZkViiQNMyT7doPJg7bSiYt55Dlll
+         bTxq1xR1qt2XGbnY5t1Q8uxS5z+neW7AX16w9GSAhy+QUKwK5URLVRFXUVcmxigZO61G
+         6LGPbB2LAnzIiUeJ9ph2OsYSSdmuT1nOfA9ZE3XMigbKygcb62PD7eR6ueHLVtUeMdhK
+         YioA==
+X-Gm-Message-State: AOJu0YyNMvA516lpxvmrEnJY0Q9m5/EAAIceMHp/wZBJMHRhij8Hl1P7
+	V31VF3o57j0zEKVkvdrZsySUm92oayIM6A==
+X-Google-Smtp-Source: AGHT+IF+XcaiCo8+aQz2iSRmrWzgdeHikwQTjy/cUNypVTY3l3kaz+y01SDv2jBQK/KU5ySGz3o/MQ==
+X-Received: by 2002:a05:600c:4e8c:b0:40d:39d0:9916 with SMTP id f12-20020a05600c4e8c00b0040d39d09916mr228182wmq.246.1704971097287;
+        Thu, 11 Jan 2024 03:04:57 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id o8-20020a05600c510800b0040e624995f1sm265160wms.8.2024.01.11.03.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 03:04:57 -0800 (PST)
+Date: Thu, 11 Jan 2024 14:04:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Ming Qian <ming.qian@nxp.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mingjia Zhang <mingjia.zhang@mediatek.com>,
+	Jack Zhu <jack.zhu@starfivetech.com>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
+Subject: Re: [PATCH v2 08/13] staging: media: starfive: Add for StarFive ISP
+ 3A SC
+Message-ID: <a761d936-4f46-41c8-b6f8-c1761eddd42f@moroto.mountain>
+References: <20240111084120.16685-1-changhuang.liang@starfivetech.com>
+ <20240111084120.16685-9-changhuang.liang@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240105142719.11042-2-ansuelsmth@gmail.com>
+In-Reply-To: <20240111084120.16685-9-changhuang.liang@starfivetech.com>
 
-On Fri, 05 Jan 2024, Christian Marangi wrote:
-
-> Move LED active-low property to common.yaml. This property is currently
-> defined multiple times by bcm LEDs. This property will now be supported
-> in a generic way for PHY LEDs with the use of a generic function.
+On Thu, Jan 11, 2024 at 12:41:15AM -0800, Changhuang Liang wrote:
+> Register ISP 3A "capture_scd" video device to receive statistics
+> collection data.
 > 
-> With active-low bool property not defined, active-high is always
-> assumed.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
 > ---
-> Changes v5:
-> - Make active-low generic
-> Changes v4:
-> - Drop support for global active-low
-> - Rework to polarity option (for marvell10g series support)
-> Changes v3:
-> - Out of RFC
-> Changes v2:
-> - Add this patch
+>  .../staging/media/starfive/camss/stf-buffer.h |   1 +
+>  .../staging/media/starfive/camss/stf-camss.c  |   8 +
+>  .../media/starfive/camss/stf-capture.c        |  21 ++-
+>  .../media/starfive/camss/stf-isp-hw-ops.c     |  66 ++++++++
+>  .../staging/media/starfive/camss/stf-isp.h    |  23 +++
+>  .../staging/media/starfive/camss/stf-video.c  | 143 +++++++++++++++++-
+>  .../staging/media/starfive/camss/stf-video.h  |   1 +
+>  7 files changed, 254 insertions(+), 9 deletions(-)
 > 
->  Documentation/devicetree/bindings/leds/common.yaml          | 6 ++++++
->  Documentation/devicetree/bindings/leds/leds-bcm63138.yaml   | 4 ----
->  Documentation/devicetree/bindings/leds/leds-bcm6328.yaml    | 4 ----
->  Documentation/devicetree/bindings/leds/leds-bcm6358.txt     | 2 --
->  .../devicetree/bindings/leds/leds-pwm-multicolor.yaml       | 4 ----
->  Documentation/devicetree/bindings/leds/leds-pwm.yaml        | 5 -----
->  6 files changed, 6 insertions(+), 19 deletions(-)
+> diff --git a/drivers/staging/media/starfive/camss/stf-buffer.h b/drivers/staging/media/starfive/camss/stf-buffer.h
+> index 9d1670fb05ed..727d00617448 100644
+> --- a/drivers/staging/media/starfive/camss/stf-buffer.h
+> +++ b/drivers/staging/media/starfive/camss/stf-buffer.h
+> @@ -23,6 +23,7 @@ enum stf_v_state {
+>  struct stfcamss_buffer {
+>  	struct vb2_v4l2_buffer vb;
+>  	dma_addr_t addr[2];
+> +	void *vaddr;
+>  	struct list_head queue;
+>  };
+>  
+> diff --git a/drivers/staging/media/starfive/camss/stf-camss.c b/drivers/staging/media/starfive/camss/stf-camss.c
+> index a587f860101a..3175d0d9a05c 100644
+> --- a/drivers/staging/media/starfive/camss/stf-camss.c
+> +++ b/drivers/staging/media/starfive/camss/stf-camss.c
+> @@ -126,6 +126,7 @@ static int stfcamss_of_parse_ports(struct stfcamss *stfcamss)
+>  static int stfcamss_register_devs(struct stfcamss *stfcamss)
+>  {
+>  	struct stf_capture *cap_yuv = &stfcamss->captures[STF_CAPTURE_YUV];
+> +	struct stf_capture *cap_scd = &stfcamss->captures[STF_CAPTURE_SCD];
+>  	struct stf_isp_dev *isp_dev = &stfcamss->isp_dev;
+>  	int ret;
+>  
+> @@ -150,6 +151,13 @@ static int stfcamss_register_devs(struct stfcamss *stfcamss)
+>  
+>  	cap_yuv->video.source_subdev = &isp_dev->subdev;
+>  
+> +	ret = media_create_pad_link(&isp_dev->subdev.entity, STF_ISP_PAD_SRC_SCD,
+> +				    &cap_scd->video.vdev.entity, 0, 0);
+> +	if (ret)
+> +		goto err_cap_unregister;
+> +
 
-If the DT Maintainers are happy, so am I.
+Don't we need to do something like
 
-Acked-by: Lee Jones <lee@kernel.org>
+	media_entity_remove_links(&cap_yuv->video.vdev.entity);
 
--- 
-Lee Jones [李琼斯]
+as part of the cleanup?  Also where do we clean up this new call to
+media_create_pad_link() in the unregister process?
+
+> +	cap_scd->video.source_subdev = &isp_dev->subdev;
+> +
+>  	return ret;
+>  
+>  err_cap_unregister:
+
+regards,
+dan carpenter
