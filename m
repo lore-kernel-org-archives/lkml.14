@@ -1,368 +1,128 @@
-Received: from m16.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBAD5D512
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4756EDF68
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EIqGb5+E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=Vxs/9a7sqhQlJj4S3j
-	1ChSIbzxBuadcH2mbF7ZpIbfs=; b=EIqGb5+ESfJ3pp84gyeG2QDXQPulWO17Dc
-	fIihFjNgjbRKMs1FayD9QI2PzpljkyXZxLme5Kur1tQAlxZDwRIvj5sIwaQFPyUz
-	CV0NidyMLHD3pxvp2Z86wHnQyctK+v0SfWBJ1ZS+WXZMF02UiadFeauUERt3AAQ3
-	c4Ef2qAV4=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wDXnxODo59lsiURAA--.4147S2;
-	Thu, 11 Jan 2024 16:14:59 +0800 (CST)
-From: GuoHua Chen <chenguohua_716@163.com>
-To: daniel@ffwll.ch,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	christian.koenig@amd.com,
-	alexander.deucher@amd.com
-Cc: linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	GuoHua Chen <chenguohua_716@163.com>
-Subject: [PATCH] drm/radeon/btc_dpm: Clean up errors in btc_dpm.c
-Date: Thu, 11 Jan 2024 08:14:56 +0000
-Message-Id: <20240111081456.11404-1-chenguohua_716@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wDXnxODo59lsiURAA--.4147S2
-X-Coremail-Antispam: 1Uf129KBjvAXoW3ur15ZF15WrW7Jry7Kw1xZrb_yoW8JryxJo
-	WxAry5Xa1xWrW7XF17ZF1qqFy7Ww4Iy3ZIgan5Jw48Cr9rKFs2qryxGwn5GFZIgrn8KF15
-	Z342y34rJ3s7Jr4kn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU1vtZUUUUU
-X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/xtbBEARi1mVOBk95BAAAs-
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BNwPN68k"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e60e137aaso1806175e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 00:15:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704960923; x=1705565723; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lhNg/hT61OVz92mVen6SG0PHl8H7M3f4I/Xw2MdU3wk=;
+        b=BNwPN68kFDyle69ePV2N5X7wlMK2CyQG1CNAAQpPPvbDVIXOtFnIwjspYyL2D9Gjcn
+         uJqKTrp1WQMDnfZeGW1gtHqMerucZa9etZ73yOSp1hSvfLE9ORdj0XTplIUZcPosq4VW
+         0pw8JF18ihSXtRaqXqPRaddwk7qlhoGat/6jDABv8VzGu32eafNwKG/tL5QUps2B/g2o
+         acvZIo1iN3v5dn4wg4Yb/m29Rq9nUTj49zyJlXxcu4Prr/xq5mbYqMKBp37isZ3YvVrR
+         6hkJtUqvXpTyDonBX5BYkYBOlcMYyG5KS2ONDMWgkEt8k+VcWAocDNh+Q5pc7dkMYoks
+         YPKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704960923; x=1705565723;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lhNg/hT61OVz92mVen6SG0PHl8H7M3f4I/Xw2MdU3wk=;
+        b=M9E0rD7EY7PJRUyhFVMrIu9CZB43v59GdeaHF/1vBGh8EZwe0HTm83SmXHqGmEhnAR
+         l0CrHg/Afg4Hxe/5tlig1Lm1dm570324SXk05MyICkBp7j05WwWQqIc//xAYTOD5dZK3
+         EO/1FiU2bVBsl5RygzA/y22q0OgY668i6gcTsY9JpiJ6oIDjK4kN6LHonhXLcc9YZC9X
+         zMuWHncbJlMYMw6LfNdHaBcJRt5KCAidp2IiQ/3oFW7n8ZKGAhuGyboj+N6sF0KmAgb6
+         ksqZTlURf5Qk/Do78FQ0NstMnAIPYpP4tFwBwig+qFF/xgyG4Tfx3WjlecFXZiitYon6
+         IEnQ==
+X-Gm-Message-State: AOJu0YyL7I/x4WejlpiVwtFi9UdOVjrXIjHcM81673uaDonKWs4F27Ov
+	XrcOUB9PjQXFAS/CCHNz4/rQnd9H9zB6Ow==
+X-Google-Smtp-Source: AGHT+IF/f7owkasdyC/MXgmBm/N1vKiUhNkP2gxMz9Hc0+6VjlV1rdgRGysxvD1ZUx8/gqCrux8hLQ==
+X-Received: by 2002:a05:600c:1547:b0:40e:40b3:99e9 with SMTP id f7-20020a05600c154700b0040e40b399e9mr149158wmg.108.1704960923479;
+        Thu, 11 Jan 2024 00:15:23 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:a5aa:e466:ae57:5a26? ([2a01:e0a:982:cbb0:a5aa:e466:ae57:5a26])
+        by smtp.gmail.com with ESMTPSA id o21-20020a05600c4fd500b0040e34ca648bsm955660wmq.0.2024.01.11.00.15.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 00:15:22 -0800 (PST)
+Message-ID: <60cfb114-aa36-4588-91a5-7353791cb0ae@linaro.org>
+Date: Thu, 11 Jan 2024 09:15:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v1 16/24] dt-bindings: crypto: meson: add new compatibles
+Content-Language: en-US, fr
+To: Alexey Romanov <avromanov@salutedevices.com>, narmstrong@baylibre.com,
+ clabbe@baylibre.com, herbert@gondor.apana.org.au, davem@davemloft.net,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ khilman@baylibre.com, jbrunet@baylibre.com, artin.blumenstingl@googlemail.com
+Cc: linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kernel@salutedevices.com
+References: <20240110201216.18016-1-avromanov@salutedevices.com>
+ <20240110201216.18016-17-avromanov@salutedevices.com>
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+In-Reply-To: <20240110201216.18016-17-avromanov@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Fix the following errors reported by checkpatch:
+Hi,
 
-ERROR: that open brace { should be on the previous line
-ERROR: space required before the open parenthesis '('
-ERROR: spaces required around that '+=' (ctx:VxV)
-ERROR: spaces required around that '=' (ctx:VxW)
+On 10/01/2024 21:11, Alexey Romanov wrote:
+> Now we can use crypto driver at G12A/G12B/S4/A1/SM1/AXG.
+> 
+> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> ---
+>   .../devicetree/bindings/crypto/amlogic,gxl-crypto.yaml          | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> index 948e11ebe4ee..317003505510 100644
+> --- a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> +++ b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> @@ -13,6 +13,8 @@ properties:
+>     compatible:
+>       items:
+>         - const: amlogic,gxl-crypto
+> +      - const: amlogic,g12a-crypto
+> +      - const: amlogic,axg-crypto
 
-Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
----
- drivers/gpu/drm/radeon/btc_dpm.c | 90 +++++++++++---------------------
- 1 file changed, 31 insertions(+), 59 deletions(-)
+Please add amlogic,s4-crypto and amlogic,a1-crypto using amlogic,g12a-crypto as fallback,
+it's a requirement for dt bindings to have per-soc compatibles now.
 
-diff --git a/drivers/gpu/drm/radeon/btc_dpm.c b/drivers/gpu/drm/radeon/btc_dpm.c
-index 4e64ed38c439..70931b04bbac 100644
---- a/drivers/gpu/drm/radeon/btc_dpm.c
-+++ b/drivers/gpu/drm/radeon/btc_dpm.c
-@@ -53,8 +53,7 @@
- extern int ni_mc_load_microcode(struct radeon_device *rdev);
- 
- //********* BARTS **************//
--static const u32 barts_cgcg_cgls_default[] =
--{
-+static const u32 barts_cgcg_cgls_default[] = {
- 	/* Register,   Value,     Mask bits */
- 	0x000008f8, 0x00000010, 0xffffffff,
- 	0x000008fc, 0x00000000, 0xffffffff,
-@@ -107,8 +106,7 @@ static const u32 barts_cgcg_cgls_default[] =
- };
- #define BARTS_CGCG_CGLS_DEFAULT_LENGTH sizeof(barts_cgcg_cgls_default) / (3 * sizeof(u32))
- 
--static const u32 barts_cgcg_cgls_disable[] =
--{
-+static const u32 barts_cgcg_cgls_disable[] = {
- 	0x000008f8, 0x00000010, 0xffffffff,
- 	0x000008fc, 0xffffffff, 0xffffffff,
- 	0x000008f8, 0x00000011, 0xffffffff,
-@@ -162,8 +160,7 @@ static const u32 barts_cgcg_cgls_disable[] =
- };
- #define BARTS_CGCG_CGLS_DISABLE_LENGTH sizeof(barts_cgcg_cgls_disable) / (3 * sizeof(u32))
- 
--static const u32 barts_cgcg_cgls_enable[] =
--{
-+static const u32 barts_cgcg_cgls_enable[] = {
- 	/* 0x0000c124, 0x84180000, 0x00180000, */
- 	0x00000644, 0x000f7892, 0x001f4080,
- 	0x000008f8, 0x00000010, 0xffffffff,
-@@ -217,8 +214,7 @@ static const u32 barts_cgcg_cgls_enable[] =
- };
- #define BARTS_CGCG_CGLS_ENABLE_LENGTH sizeof(barts_cgcg_cgls_enable) / (3 * sizeof(u32))
- 
--static const u32 barts_mgcg_default[] =
--{
-+static const u32 barts_mgcg_default[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x00005448, 0x00000100, 0xffffffff,
- 	0x000055e4, 0x00600100, 0xffffffff,
-@@ -366,8 +362,7 @@ static const u32 barts_mgcg_default[] =
- };
- #define BARTS_MGCG_DEFAULT_LENGTH sizeof(barts_mgcg_default) / (3 * sizeof(u32))
- 
--static const u32 barts_mgcg_disable[] =
--{
-+static const u32 barts_mgcg_disable[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x000008f8, 0x00000000, 0xffffffff,
- 	0x000008fc, 0xffffffff, 0xffffffff,
-@@ -381,8 +376,7 @@ static const u32 barts_mgcg_disable[] =
- };
- #define BARTS_MGCG_DISABLE_LENGTH sizeof(barts_mgcg_disable) / (3 * sizeof(u32))
- 
--static const u32 barts_mgcg_enable[] =
--{
-+static const u32 barts_mgcg_enable[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x000008f8, 0x00000000, 0xffffffff,
- 	0x000008fc, 0x00000000, 0xffffffff,
-@@ -397,8 +391,7 @@ static const u32 barts_mgcg_enable[] =
- #define BARTS_MGCG_ENABLE_LENGTH sizeof(barts_mgcg_enable) / (3 * sizeof(u32))
- 
- //********* CAICOS **************//
--static const u32 caicos_cgcg_cgls_default[] =
--{
-+static const u32 caicos_cgcg_cgls_default[] = {
- 	0x000008f8, 0x00000010, 0xffffffff,
- 	0x000008fc, 0x00000000, 0xffffffff,
- 	0x000008f8, 0x00000011, 0xffffffff,
-@@ -450,8 +443,7 @@ static const u32 caicos_cgcg_cgls_default[] =
- };
- #define CAICOS_CGCG_CGLS_DEFAULT_LENGTH sizeof(caicos_cgcg_cgls_default) / (3 * sizeof(u32))
- 
--static const u32 caicos_cgcg_cgls_disable[] =
--{
-+static const u32 caicos_cgcg_cgls_disable[] = {
- 	0x000008f8, 0x00000010, 0xffffffff,
- 	0x000008fc, 0xffffffff, 0xffffffff,
- 	0x000008f8, 0x00000011, 0xffffffff,
-@@ -505,8 +497,7 @@ static const u32 caicos_cgcg_cgls_disable[] =
- };
- #define CAICOS_CGCG_CGLS_DISABLE_LENGTH sizeof(caicos_cgcg_cgls_disable) / (3 * sizeof(u32))
- 
--static const u32 caicos_cgcg_cgls_enable[] =
--{
-+static const u32 caicos_cgcg_cgls_enable[] = {
- 	/* 0x0000c124, 0x84180000, 0x00180000, */
- 	0x00000644, 0x000f7892, 0x001f4080,
- 	0x000008f8, 0x00000010, 0xffffffff,
-@@ -560,8 +551,7 @@ static const u32 caicos_cgcg_cgls_enable[] =
- };
- #define CAICOS_CGCG_CGLS_ENABLE_LENGTH sizeof(caicos_cgcg_cgls_enable) / (3 * sizeof(u32))
- 
--static const u32 caicos_mgcg_default[] =
--{
-+static const u32 caicos_mgcg_default[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x00005448, 0x00000100, 0xffffffff,
- 	0x000055e4, 0x00600100, 0xffffffff,
-@@ -640,8 +630,7 @@ static const u32 caicos_mgcg_default[] =
- };
- #define CAICOS_MGCG_DEFAULT_LENGTH sizeof(caicos_mgcg_default) / (3 * sizeof(u32))
- 
--static const u32 caicos_mgcg_disable[] =
--{
-+static const u32 caicos_mgcg_disable[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x000008f8, 0x00000000, 0xffffffff,
- 	0x000008fc, 0xffffffff, 0xffffffff,
-@@ -655,8 +644,7 @@ static const u32 caicos_mgcg_disable[] =
- };
- #define CAICOS_MGCG_DISABLE_LENGTH sizeof(caicos_mgcg_disable) / (3 * sizeof(u32))
- 
--static const u32 caicos_mgcg_enable[] =
--{
-+static const u32 caicos_mgcg_enable[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x000008f8, 0x00000000, 0xffffffff,
- 	0x000008fc, 0x00000000, 0xffffffff,
-@@ -671,8 +659,7 @@ static const u32 caicos_mgcg_enable[] =
- #define CAICOS_MGCG_ENABLE_LENGTH sizeof(caicos_mgcg_enable) / (3 * sizeof(u32))
- 
- //********* TURKS **************//
--static const u32 turks_cgcg_cgls_default[] =
--{
-+static const u32 turks_cgcg_cgls_default[] = {
- 	0x000008f8, 0x00000010, 0xffffffff,
- 	0x000008fc, 0x00000000, 0xffffffff,
- 	0x000008f8, 0x00000011, 0xffffffff,
-@@ -724,8 +711,7 @@ static const u32 turks_cgcg_cgls_default[] =
- };
- #define TURKS_CGCG_CGLS_DEFAULT_LENGTH  sizeof(turks_cgcg_cgls_default) / (3 * sizeof(u32))
- 
--static const u32 turks_cgcg_cgls_disable[] =
--{
-+static const u32 turks_cgcg_cgls_disable[] = {
- 	0x000008f8, 0x00000010, 0xffffffff,
- 	0x000008fc, 0xffffffff, 0xffffffff,
- 	0x000008f8, 0x00000011, 0xffffffff,
-@@ -779,8 +765,7 @@ static const u32 turks_cgcg_cgls_disable[] =
- };
- #define TURKS_CGCG_CGLS_DISABLE_LENGTH sizeof(turks_cgcg_cgls_disable) / (3 * sizeof(u32))
- 
--static const u32 turks_cgcg_cgls_enable[] =
--{
-+static const u32 turks_cgcg_cgls_enable[] = {
- 	/* 0x0000c124, 0x84180000, 0x00180000, */
- 	0x00000644, 0x000f7892, 0x001f4080,
- 	0x000008f8, 0x00000010, 0xffffffff,
-@@ -835,8 +820,7 @@ static const u32 turks_cgcg_cgls_enable[] =
- #define TURKS_CGCG_CGLS_ENABLE_LENGTH sizeof(turks_cgcg_cgls_enable) / (3 * sizeof(u32))
- 
- // These are the sequences for turks_mgcg_shls
--static const u32 turks_mgcg_default[] =
--{
-+static const u32 turks_mgcg_default[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x00005448, 0x00000100, 0xffffffff,
- 	0x000055e4, 0x00600100, 0xffffffff,
-@@ -935,8 +919,7 @@ static const u32 turks_mgcg_default[] =
- };
- #define TURKS_MGCG_DEFAULT_LENGTH sizeof(turks_mgcg_default) / (3 * sizeof(u32))
- 
--static const u32 turks_mgcg_disable[] =
--{
-+static const u32 turks_mgcg_disable[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x000008f8, 0x00000000, 0xffffffff,
- 	0x000008fc, 0xffffffff, 0xffffffff,
-@@ -950,8 +933,7 @@ static const u32 turks_mgcg_disable[] =
- };
- #define TURKS_MGCG_DISABLE_LENGTH sizeof(turks_mgcg_disable) / (3 * sizeof(u32))
- 
--static const u32 turks_mgcg_enable[] =
--{
-+static const u32 turks_mgcg_enable[] = {
- 	0x0000802c, 0xc0000000, 0xffffffff,
- 	0x000008f8, 0x00000000, 0xffffffff,
- 	0x000008fc, 0x00000000, 0xffffffff,
-@@ -972,8 +954,7 @@ static const u32 turks_mgcg_enable[] =
- 
- 
- //********* BARTS **************//
--static const u32 barts_sysls_default[] =
--{
-+static const u32 barts_sysls_default[] = {
- 	/* Register,   Value,     Mask bits */
- 	0x000055e8, 0x00000000, 0xffffffff,
- 	0x0000d0bc, 0x00000000, 0xffffffff,
-@@ -993,8 +974,7 @@ static const u32 barts_sysls_default[] =
- };
- #define BARTS_SYSLS_DEFAULT_LENGTH sizeof(barts_sysls_default) / (3 * sizeof(u32))
- 
--static const u32 barts_sysls_disable[] =
--{
-+static const u32 barts_sysls_disable[] = {
- 	0x000055e8, 0x00000000, 0xffffffff,
- 	0x0000d0bc, 0x00000000, 0xffffffff,
- 	0x000015c0, 0x00041401, 0xffffffff,
-@@ -1013,8 +993,7 @@ static const u32 barts_sysls_disable[] =
- };
- #define BARTS_SYSLS_DISABLE_LENGTH sizeof(barts_sysls_disable) / (3 * sizeof(u32))
- 
--static const u32 barts_sysls_enable[] =
--{
-+static const u32 barts_sysls_enable[] = {
- 	0x000055e8, 0x00000001, 0xffffffff,
- 	0x0000d0bc, 0x00000100, 0xffffffff,
- 	0x000015c0, 0x000c1401, 0xffffffff,
-@@ -1034,8 +1013,7 @@ static const u32 barts_sysls_enable[] =
- #define BARTS_SYSLS_ENABLE_LENGTH sizeof(barts_sysls_enable) / (3 * sizeof(u32))
- 
- //********* CAICOS **************//
--static const u32 caicos_sysls_default[] =
--{
-+static const u32 caicos_sysls_default[] = {
- 	0x000055e8, 0x00000000, 0xffffffff,
- 	0x0000d0bc, 0x00000000, 0xffffffff,
- 	0x000015c0, 0x000c1401, 0xffffffff,
-@@ -1053,8 +1031,7 @@ static const u32 caicos_sysls_default[] =
- };
- #define CAICOS_SYSLS_DEFAULT_LENGTH sizeof(caicos_sysls_default) / (3 * sizeof(u32))
- 
--static const u32 caicos_sysls_disable[] =
--{
-+static const u32 caicos_sysls_disable[] = {
- 	0x000055e8, 0x00000000, 0xffffffff,
- 	0x0000d0bc, 0x00000000, 0xffffffff,
- 	0x000015c0, 0x00041401, 0xffffffff,
-@@ -1072,8 +1049,7 @@ static const u32 caicos_sysls_disable[] =
- };
- #define CAICOS_SYSLS_DISABLE_LENGTH sizeof(caicos_sysls_disable) / (3 * sizeof(u32))
- 
--static const u32 caicos_sysls_enable[] =
--{
-+static const u32 caicos_sysls_enable[] = {
- 	0x000055e8, 0x00000001, 0xffffffff,
- 	0x0000d0bc, 0x00000100, 0xffffffff,
- 	0x000015c0, 0x000c1401, 0xffffffff,
-@@ -1092,8 +1068,7 @@ static const u32 caicos_sysls_enable[] =
- #define CAICOS_SYSLS_ENABLE_LENGTH sizeof(caicos_sysls_enable) / (3 * sizeof(u32))
- 
- //********* TURKS **************//
--static const u32 turks_sysls_default[] =
--{
-+static const u32 turks_sysls_default[] = {
- 	0x000055e8, 0x00000000, 0xffffffff,
- 	0x0000d0bc, 0x00000000, 0xffffffff,
- 	0x000015c0, 0x000c1401, 0xffffffff,
-@@ -1112,8 +1087,7 @@ static const u32 turks_sysls_default[] =
- };
- #define TURKS_SYSLS_DEFAULT_LENGTH sizeof(turks_sysls_default) / (3 * sizeof(u32))
- 
--static const u32 turks_sysls_disable[] =
--{
-+static const u32 turks_sysls_disable[] = {
- 	0x000055e8, 0x00000000, 0xffffffff,
- 	0x0000d0bc, 0x00000000, 0xffffffff,
- 	0x000015c0, 0x00041401, 0xffffffff,
-@@ -1132,8 +1106,7 @@ static const u32 turks_sysls_disable[] =
- };
- #define TURKS_SYSLS_DISABLE_LENGTH sizeof(turks_sysls_disable) / (3 * sizeof(u32))
- 
--static const u32 turks_sysls_enable[] =
--{
-+static const u32 turks_sysls_enable[] = {
- 	0x000055e8, 0x00000001, 0xffffffff,
- 	0x0000d0bc, 0x00000100, 0xffffffff,
- 	0x000015c0, 0x000c1401, 0xffffffff,
-@@ -1154,8 +1127,7 @@ static const u32 turks_sysls_enable[] =
- 
- #endif
- 
--u32 btc_valid_sclk[40] =
--{
-+u32 btc_valid_sclk[40] = {
- 	5000,   10000,  15000,  20000,  25000,  30000,  35000,  40000,  45000,  50000,
- 	55000,  60000,  65000,  70000,  75000,  80000,  85000,  90000,  95000,  100000,
- 	105000, 110000, 11500,  120000, 125000, 130000, 135000, 140000, 145000, 150000,
-@@ -1194,7 +1166,7 @@ void btc_apply_voltage_dependency_rules(struct radeon_clock_voltage_dependency_t
- 	if ((table == NULL) || (table->count == 0))
- 		return;
- 
--	for (i= 0; i < table->count; i++) {
-+	for (i = 0; i < table->count; i++) {
- 		if (clock <= table->entries[i].clk) {
- 			if (*voltage < table->entries[i].v)
- 				*voltage = (u16)((table->entries[i].v < max_voltage) ?
-@@ -1441,7 +1413,7 @@ void btc_program_mgcg_hw_sequence(struct radeon_device *rdev,
- 	u32 i, length = count * 3;
- 	u32 tmp;
- 
--	for (i = 0; i < length; i+=3) {
-+	for (i = 0; i < length; i += 3) {
- 		tmp = RREG32(sequence[i]);
- 		tmp &= ~sequence[i+2];
- 		tmp |= sequence[i+1] & sequence[i+2];
-@@ -2003,7 +1975,7 @@ static int btc_copy_vbios_mc_reg_table(struct atom_mc_reg_table *table,
- 	for (i = 0; i < table->num_entries; i++) {
- 		eg_table->mc_reg_table_entry[i].mclk_max =
- 			table->mc_reg_table_entry[i].mclk_max;
--		for(j = 0; j < table->last; j++)
-+		for (j = 0; j < table->last; j++)
- 			eg_table->mc_reg_table_entry[i].mc_data[j] =
- 				table->mc_reg_table_entry[i].mc_data[j];
- 	}
--- 
-2.17.1
+Thanks,
+Neil
+
+>   
+>     reg:
+>       maxItems: 1
 
