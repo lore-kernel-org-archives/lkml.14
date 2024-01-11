@@ -1,183 +1,316 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA456154BF;
-	Thu, 11 Jan 2024 08:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C422D10798
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bn0OsbXO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704963387; x=1736499387;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/z2uYKhSyYcTU8/yd1Vq7zQ21LOb4cUygjDFi2E+u98=;
-  b=Bn0OsbXOuHcmjyxhW4ej8etCRCRyt9chbCRy9agDpxsKaXyftP2GRFnW
-   lPjPn00CMKTKqWh6RN4o2ChGYm6nAKQmug8E/qHeeEWqIWT1mh9YffXgd
-   RuoYPSggzSTg1Yu7CVNlqIG8uGMCnE7sZlJttoG1nhj2XPeJwyOTzqxB0
-   Haa+3PvmXZRlvJL986Hv6OgqBa+KMSzy+emyJhjt3zKLHtfYsh3aKA8ks
-   GFEG9M/MgMTWUA1jY1uFjT/QSczUVEcomPqtP17LDbAcXQhlfsp84zGtt
-   VxP+pji+CbDsR7+GkfzNuDxTk3O7tk9TlKQa2eGDjTFUU49cn6+gFIJkF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="12141738"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="12141738"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 00:56:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="30929545"
-Received: from ericwong-mobl2.amr.corp.intel.com (HELO desk) ([10.209.43.169])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 00:56:24 -0800
-Date: Thu, 11 Jan 2024 00:56:24 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, tony.luck@intel.com,
-	ak@linux.intel.com, tim.c.chen@linux.intel.com,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Nikolay Borisov <nik.borisov@suse.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Alyssa Milburn <alyssa.milburn@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	antonio.gomez.iglesias@linux.intel.com,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Alyssa Milburn <alyssa.milburn@intel.com>
-Subject: [PATCH  v5 1/6] x86/bugs: Add asm helpers for executing VERW
-Message-ID: <20240111-delay-verw-v5-1-a3b234933ea6@linux.intel.com>
-X-Mailer: b4 0.12.3
-References: <20240111-delay-verw-v5-0-a3b234933ea6@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="djD0pAZh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704963385;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oTGzUnuImaRUCmV4376iFTUXoCEDIuJDS3P/LYSpU0A=;
+	b=djD0pAZheu7KQ9RYnxMWmnq/7iVF2AIzBjUgsUl7FhnisLgIBsLAYjIdzPw4CHy+3mVXDx
+	RWWhya2op2s9k+4PHlF+h5Ym0PJSYtEG4SKipSFh2pdnrdHmoYameukTU54bDT4zxuhowI
+	Q/5w99hKBsmv7ELaGSa7cmTjRjz70F0=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-190-pIA0ON_OM7-30_nAmLwqIg-1; Thu, 11 Jan 2024 03:56:21 -0500
+X-MC-Unique: pIA0ON_OM7-30_nAmLwqIg-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78130939196so123166785a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 00:56:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704963381; x=1705568181;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oTGzUnuImaRUCmV4376iFTUXoCEDIuJDS3P/LYSpU0A=;
+        b=t3zGierPZqjqPuvUJx9lJTZJo5ND4ay9Itq9Ho5JiAdMfTWZ/hTREYdXlBWqdDTFJU
+         6cHHUBRnnvUIZ3xNifUuxND/nVINcBrUTMWRubs3gU66PvB4m3+sf78+btcc6fvTar5W
+         wxGs+WQ1sBi7vUYOQe2sWI0vfl1yWEG0vJMeUTxQrEka/iFquPfSeBG20OeVwcwmgGIu
+         ggma8gH8SqyKfm2gOR2p60S6SykNmJdy8hM/B1F3JOq2dyBd/1mLHZk2hb2HLfrrssFK
+         RgQ2WJwk4UjbA3+hmYb8rYExYC8eYZi0J03rJeCOOlRzQgCNg3bEe4qeIN2oYdq/nSrl
+         z9lg==
+X-Gm-Message-State: AOJu0YyO/BL9BxSr4Y6GUVkRwXw0ZNpYC3wTdsn+WY72ujrtbUY3Lm9M
+	O9yBRE72nhcGknG9vxekQgIvwOvYOgcGCwoatUUmiwlURt3Ob1VZcUtFe5tfyes7BEh37LpiG3W
+	c4YkM1GeHJH0BYSKQ550RvHInqf1LLwvU
+X-Received: by 2002:a05:6214:500f:b0:681:926:891e with SMTP id jo15-20020a056214500f00b006810926891emr1565506qvb.3.1704963380830;
+        Thu, 11 Jan 2024 00:56:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHzmy/nbkxxdCXxo2Y8/nRkoD+dX+kegQu+gtkJjE6JFhiI22kPP+ZVBAnCB/hi7SC+IqKJLA==
+X-Received: by 2002:a05:6214:500f:b0:681:926:891e with SMTP id jo15-20020a056214500f00b006810926891emr1565494qvb.3.1704963380562;
+        Thu, 11 Jan 2024 00:56:20 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id e16-20020a0cd650000000b0067f7d131256sm168341qvj.17.2024.01.11.00.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 00:56:20 -0800 (PST)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	NeilBrown <neilb@suse.de>,
+	John Sanpe <sanpeqf@gmail.com>,
+	Kent Overstreet <kent.overstreet@gmail.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Uladzislau Koshchanka <koshchanka@gmail.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Kees Cook <keescook@chromium.org>,
+	Rae Moar <rmoar@google.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	dakr@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	stable@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>
+Subject: [PATCH v5 RESEND 5/5] lib, pci: unify generic pci_iounmap()
+Date: Thu, 11 Jan 2024 09:55:40 +0100
+Message-ID: <20240111085540.7740-6-pstanner@redhat.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240111085540.7740-1-pstanner@redhat.com>
+References: <20240111085540.7740-1-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240111-delay-verw-v5-0-a3b234933ea6@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-MDS mitigation requires clearing the CPU buffers before returning to
-user. This needs to be done late in the exit-to-user path. Current
-location of VERW leaves a possibility of kernel data ending up in CPU
-buffers for memory accesses done after VERW such as:
+The implementation of pci_iounmap() is currently scattered over two
+files, drivers/pci/iomap.c and lib/iomap.c. Additionally,
+architectures can define their own version.
 
-  1. Kernel data accessed by an NMI between VERW and return-to-user can
-     remain in CPU buffers since NMI returning to kernel does not
-     execute VERW to clear CPU buffers.
-  2. Alyssa reported that after VERW is executed,
-     CONFIG_GCC_PLUGIN_STACKLEAK=y scrubs the stack used by a system
-     call. Memory accesses during stack scrubbing can move kernel stack
-     contents into CPU buffers.
-  3. When caller saved registers are restored after a return from
-     function executing VERW, the kernel stack accesses can remain in
-     CPU buffers(since they occur after VERW).
+To have only one version, it's necessary to create a helper function,
+iomem_is_ioport(), that tells pci_iounmap() whether the passed address
+points to an ioport or normal memory.
 
-To fix this VERW needs to be moved very late in exit-to-user path.
+iomem_is_ioport() can be provided through two different ways:
+  1. The architecture itself provides it. As of today, the version
+     coming from lib/iomap.c de facto is the x86-specific version and
+     comes into play when CONFIG_GENERIC_IOMAP is selected. This rather
+     confusing naming is an artifact left by the removal of IA64.
+  2. As a default version in include/asm-generic/io.h for those
+     architectures that don't use CONFIG_GENERIC_IOMAP, but also don't
+     provide their own version of iomem_is_ioport().
 
-In preparation for moving VERW to entry/exit asm code, create macros
-that can be used in asm. Also make VERW patching depend on a new feature
-flag X86_FEATURE_CLEAR_CPU_BUF.
+Once all architectures that support ports provide iomem_is_ioport(), the
+arch-specific definitions for pci_iounmap() can be removed and the archs
+can use the generic implementation, instead.
 
-Reported-by: Alyssa Milburn <alyssa.milburn@intel.com>
-Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Create a unified version of pci_iounmap() in drivers/pci/iomap.c.
+Provide the function iomem_is_ioport() in include/asm-generic/io.h
+(generic) and lib/iomap.c ("pseudo-generic" for x86).
+
+Remove the CONFIG_GENERIC_IOMAP guard around
+ARCH_WANTS_GENERIC_PCI_IOUNMAP so that configs that set
+CONFIG_GENERIC_PCI_IOMAP without CONFIG_GENERIC_IOMAP still get the
+function.
+
+Add TODOs for follow-up work on the "generic is not generic but
+x86-specific"-Problem.
+
+Suggested-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/entry/entry.S               | 22 ++++++++++++++++++++++
- arch/x86/include/asm/cpufeatures.h   |  2 +-
- arch/x86/include/asm/nospec-branch.h | 15 +++++++++++++++
- 3 files changed, 38 insertions(+), 1 deletion(-)
+ drivers/pci/iomap.c         | 46 +++++++++++++------------------------
+ include/asm-generic/io.h    | 27 ++++++++++++++++++++--
+ include/asm-generic/iomap.h | 21 +++++++++++++++++
+ lib/iomap.c                 | 28 ++++++++++++++++------
+ 4 files changed, 83 insertions(+), 39 deletions(-)
 
-diff --git a/arch/x86/entry/entry.S b/arch/x86/entry/entry.S
-index 8c8d38f0cb1d..bd8e77c5a375 100644
---- a/arch/x86/entry/entry.S
-+++ b/arch/x86/entry/entry.S
-@@ -6,6 +6,9 @@
- #include <linux/export.h>
- #include <linux/linkage.h>
- #include <asm/msr-index.h>
-+#include <asm/unwind_hints.h>
-+#include <asm/segment.h>
-+#include <asm/cache.h>
+diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
+index 91285fcff1ba..b7faf22ec8f5 100644
+--- a/drivers/pci/iomap.c
++++ b/drivers/pci/iomap.c
+@@ -135,44 +135,30 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
+ EXPORT_SYMBOL_GPL(pci_iomap_wc);
  
- .pushsection .noinstr.text, "ax"
+ /*
+- * pci_iounmap() somewhat illogically comes from lib/iomap.c for the
+- * CONFIG_GENERIC_IOMAP case, because that's the code that knows about
+- * the different IOMAP ranges.
++ * This check is still necessary due to legacy reasons.
+  *
+- * But if the architecture does not use the generic iomap code, and if
+- * it has _not_ defined it's own private pci_iounmap function, we define
+- * it here.
+- *
+- * NOTE! This default implementation assumes that if the architecture
+- * support ioport mapping (HAS_IOPORT_MAP), the ioport mapping will
+- * be fixed to the range [ PCI_IOBASE, PCI_IOBASE+IO_SPACE_LIMIT [,
+- * and does not need unmapping with 'ioport_unmap()'.
+- *
+- * If you have different rules for your architecture, you need to
+- * implement your own pci_iounmap() that knows the rules for where
+- * and how IO vs MEM get mapped.
+- *
+- * This code is odd, and the ARCH_HAS/ARCH_WANTS #define logic comes
+- * from legacy <asm-generic/io.h> header file behavior. In particular,
+- * it would seem to make sense to do the iounmap(p) for the non-IO-space
+- * case here regardless, but that's not what the old header file code
+- * did. Probably incorrectly, but this is meant to be bug-for-bug
+- * compatible.
++ * TODO: Have all architectures that provide their own pci_iounmap() provide
++ * iomem_is_ioport() instead. Remove this #if afterwards.
+  */
+ #if defined(ARCH_WANTS_GENERIC_PCI_IOUNMAP)
  
-@@ -20,3 +23,22 @@ SYM_FUNC_END(entry_ibpb)
- EXPORT_SYMBOL_GPL(entry_ibpb);
- 
- .popsection
-+
-+/*
-+ * Defines the VERW operand that is disguised as entry code so that
-+ * it can be referenced with KPTI enabled. This ensures VERW can be
-+ * used late in exit-to-user path after page tables are switched.
-+ */
-+.pushsection .entry.text, "ax"
-+
-+.align L1_CACHE_BYTES, 0xcc
-+SYM_CODE_START_NOALIGN(mds_verw_sel)
-+	UNWIND_HINT_UNDEFINED
-+	ANNOTATE_NOENDBR
-+	.word __KERNEL_DS
-+.align L1_CACHE_BYTES, 0xcc
-+SYM_CODE_END(mds_verw_sel);
-+/* For KVM */
-+EXPORT_SYMBOL_GPL(mds_verw_sel);
-+
-+.popsection
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 4af140cf5719..79a7e81b9458 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -308,10 +308,10 @@
- #define X86_FEATURE_SMBA		(11*32+21) /* "" Slow Memory Bandwidth Allocation */
- #define X86_FEATURE_BMEC		(11*32+22) /* "" Bandwidth Monitoring Event Configuration */
- #define X86_FEATURE_USER_SHSTK		(11*32+23) /* Shadow stack support for user mode applications */
--
- #define X86_FEATURE_SRSO		(11*32+24) /* "" AMD BTB untrain RETs */
- #define X86_FEATURE_SRSO_ALIAS		(11*32+25) /* "" AMD BTB untrain RETs through aliasing */
- #define X86_FEATURE_IBPB_ON_VMEXIT	(11*32+26) /* "" Issue an IBPB only on VMEXIT */
-+#define X86_FEATURE_CLEAR_CPU_BUF	(11*32+27) /* "" Clear CPU buffers using VERW */
- 
- /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
- #define X86_FEATURE_AVX_VNNI		(12*32+ 4) /* AVX VNNI instructions */
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-index f93e9b96927a..4ea4c310db52 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -315,6 +315,21 @@
- #endif
- .endm
- 
-+/*
-+ * Macros to execute VERW instruction that mitigate transient data sampling
-+ * attacks such as MDS. On affected systems a microcode update overloaded VERW
-+ * instruction to also clear the CPU buffers. VERW clobbers CFLAGS.ZF.
+-void pci_iounmap(struct pci_dev *dev, void __iomem *p)
++/**
++ * pci_iounmap - Unmapp a mapping
++ * @dev: PCI device the mapping belongs to
++ * @addr: start address of the mapping
 + *
-+ * Note: Only the memory operand variant of VERW clears the CPU buffers.
++ * Unmapp a PIO or MMIO mapping.
 + */
-+.macro EXEC_VERW
-+	verw _ASM_RIP(mds_verw_sel)
-+.endm
++void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
+ {
+-#ifdef ARCH_HAS_GENERIC_IOPORT_MAP
+-	uintptr_t start = (uintptr_t) PCI_IOBASE;
+-	uintptr_t addr = (uintptr_t) p;
+-
+-	if (addr >= start && addr < start + IO_SPACE_LIMIT) {
+-		ioport_unmap(p);
++#ifdef CONFIG_HAS_IOPORT_MAP
++	if (iomem_is_ioport(addr)) {
++		ioport_unmap(addr);
+ 		return;
+ 	}
+ #endif
+-	iounmap(p);
 +
-+.macro CLEAR_CPU_BUFFERS
-+	ALTERNATIVE "", __stringify(EXEC_VERW), X86_FEATURE_CLEAR_CPU_BUF
-+.endm
-+
- #else /* __ASSEMBLY__ */
++	iounmap(addr);
+ }
+ EXPORT_SYMBOL(pci_iounmap);
  
- #define ANNOTATE_RETPOLINE_SAFE					\
-
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index bac63e874c7b..58c7bf4080da 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -1129,11 +1129,34 @@ extern void ioport_unmap(void __iomem *p);
+ #endif /* CONFIG_GENERIC_IOMAP */
+ #endif /* CONFIG_HAS_IOPORT_MAP */
+ 
+-#ifndef CONFIG_GENERIC_IOMAP
++/*
++ * TODO:
++ * remove this once all architectures replaced their pci_iounmap() with
++ * a custom implementation of iomem_is_ioport().
++ */
+ #ifndef pci_iounmap
++#define pci_iounmap pci_iounmap
+ #define ARCH_WANTS_GENERIC_PCI_IOUNMAP
++#endif /* pci_iounmap */
++
++/*
++ * This function is a helper only needed for the generic pci_iounmap().
++ * It's provided here if the architecture does not provide its own version.
++ */
++#ifndef iomem_is_ioport
++#define iomem_is_ioport iomem_is_ioport
++static inline bool iomem_is_ioport(void __iomem *addr_raw)
++{
++#ifdef CONFIG_HAS_IOPORT
++	uintptr_t start = (uintptr_t)PCI_IOBASE;
++	uintptr_t addr = (uintptr_t)addr_raw;
++
++	if (addr >= start && addr < start + IO_SPACE_LIMIT)
++		return true;
+ #endif
+-#endif
++	return false;
++}
++#endif /* iomem_is_ioport */
+ 
+ #ifndef xlate_dev_mem_ptr
+ #define xlate_dev_mem_ptr xlate_dev_mem_ptr
+diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
+index 196087a8126e..2cdc6988a102 100644
+--- a/include/asm-generic/iomap.h
++++ b/include/asm-generic/iomap.h
+@@ -110,6 +110,27 @@ static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
+ }
+ #endif
+ 
++/*
++ * If CONFIG_GENERIC_IOMAP is selected and the architecture does NOT provide its
++ * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that the generic
++ * version from asm-generic/io.h is NOT used and instead the second "generic"
++ * version from lib/iomap.c is used.
++ *
++ * There are currently two generic versions because of a difficult cleanup
++ * process. Namely, the version in lib/iomap.c once was really generic when IA64
++ * still existed. Today, it's only really used by x86.
++ *
++ * TODO: Move the version from lib/iomap.c to x86 specific code. Then, remove
++ * this ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT-mechanism.
++ */
++#ifdef CONFIG_GENERIC_IOMAP
++#ifndef iomem_is_ioport
++#define iomem_is_ioport iomem_is_ioport
++bool iomem_is_ioport(void __iomem *addr);
++#define ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT
++#endif /* iomem_is_ioport */
++#endif /* CONFIG_GENERIC_IOMAP */
++
+ #include <asm-generic/pci_iomap.h>
+ 
+ #endif
+diff --git a/lib/iomap.c b/lib/iomap.c
+index 4f8b31baa575..eb9a879ebf42 100644
+--- a/lib/iomap.c
++++ b/lib/iomap.c
+@@ -418,12 +418,26 @@ EXPORT_SYMBOL(ioport_map);
+ EXPORT_SYMBOL(ioport_unmap);
+ #endif /* CONFIG_HAS_IOPORT_MAP */
+ 
+-#ifdef CONFIG_PCI
+-/* Hide the details if this is a MMIO or PIO address space and just do what
+- * you expect in the correct way. */
+-void pci_iounmap(struct pci_dev *dev, void __iomem * addr)
++/*
++ * If CONFIG_GENERIC_IOMAP is selected and the architecture does NOT provide its
++ * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that the generic
++ * version from asm-generic/io.h is NOT used and instead the second "generic"
++ * version from this file here is used.
++ *
++ * There are currently two generic versions because of a difficult cleanup
++ * process. Namely, the version in lib/iomap.c once was really generic when IA64
++ * still existed. Today, it's only really used by x86.
++ *
++ * TODO: Move this function to x86-specific code.
++ */
++#if defined(ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT)
++bool iomem_is_ioport(void __iomem *addr)
+ {
+-	IO_COND(addr, /* nothing */, iounmap(addr));
++	unsigned long port = (unsigned long __force)addr;
++
++	if (port > PIO_OFFSET && port < PIO_RESERVED)
++		return true;
++
++	return false;
+ }
+-EXPORT_SYMBOL(pci_iounmap);
+-#endif /* CONFIG_PCI */
++#endif /* ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT */
 -- 
-2.34.1
-
+2.43.0
 
