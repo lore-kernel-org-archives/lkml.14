@@ -1,124 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD1FD28F
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 07:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A8E9DDA6
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 07:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N6FpV21f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704958705; x=1736494705;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1P8soOsSAg4WFnLHZTKMOzbTMCW8wETbL0uhEPdgccw=;
-  b=N6FpV21fHeJknRBKaPXaG/kKeWdYqsgJLMwDQ9ynSW7vShP1ZfLk/ALh
-   qG6wkO0yYKjDAWsF9bRuhR3XN6s1s7y6ZGXVyuJ4WO01Jn9h3isT/0o8m
-   fxi6OjbG3aR7OSMKIBQE9ZqR2+/5q1G5+4zZEIj5oDKmSz85nR+zOXdQE
-   jMCzIWVJvW8CoqG9OstXg82rIevgzuCHR55byhH+qakZGmPq0+78IDdxX
-   3RgwSEUOsZLRWq0iNkE37iaLbU4byEjW96Vx0K78ZQwOcDO2XLrA/hnvS
-   T0jmmRlpSl9CjMEgckV+eVnT/KwxIjHnWkAE2UOZ0K5YrzDt9t646UIe/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="463056662"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="463056662"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 23:37:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="30909609"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by orviesa001.jf.intel.com with ESMTP; 10 Jan 2024 23:37:35 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>
-Cc: iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 1/1] iommufd/selftest: Use right iommu_ops for mock device
-Date: Thu, 11 Jan 2024 15:32:13 +0800
-Message-Id: <20240111073213.180020-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Hezbn2R0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=5T0AHkxZ0BUdC30HXl
+	e6vf8EoCWrpjRutkeHm3gI4X8=; b=Hezbn2R0UcTrThAh2Y53WDMxRlrS4Z7jUm
+	PJEwiMvDRuUhi/iLp4vhNX5WnV0nBRidvhWmd+pWEiQuy8us3OOtG++6Cd1iabJa
+	fioOfn+nCQ1nwiVdIdSkmf+Y9uvWzPO3kBUkoRXSOS7Xn7S+ql6XqmQ2xpCRHxSG
+	M/Vh1FJ/8=
+Received: from localhost.localdomain (unknown [182.148.14.173])
+	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD3P5Dhmp9l+sqRAA--.14643S2;
+	Thu, 11 Jan 2024 15:38:09 +0800 (CST)
+From: GuoHua Chen <chenguohua_716@163.com>
+To: daniel@ffwll.ch,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	christian.koenig@amd.com,
+	alexander.deucher@amd.com
+Cc: linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	GuoHua Chen <chenguohua_716@163.com>
+Subject: [PATCH] drm/radeon/r100: Clean up errors in r100.c
+Date: Thu, 11 Jan 2024 07:38:07 +0000
+Message-Id: <20240111073807.10577-1-chenguohua_716@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wD3P5Dhmp9l+sqRAA--.14643S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZFy8tFWUGrWfWr48ZrW3Awb_yoW3ArcEgF
+	18XFsFqas29F9IgF1j9FWvvryIvr45urs5Cr1Iya4fKF1xZryxZ3sak39xXws5Aa9IqFWD
+	Jw4ktFy3ArsFgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUtC7UUUUUU==
+X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/xtbBEBpi1mVOBk6DhgADsb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In the iommu probe device path, __iommu_probe_device() gets the iommu_ops
-for the device from dev->iommu->fwspec if this field has been initialized
-before probing. Otherwise, it will lookup the global iommu device list
-and use the iommu_ops of the first iommu device which has no
-dev->iommu->fwspec. This causes the wrong iommu_ops to be used for the mock
-device on x86 platforms where dev->iommu->fwspec is not used.
+Fix the following errors reported by checkpatch:
 
-Preallocate the fwspec for the mock device so that the right iommu ops can
-be used.
+ERROR: spaces required around that '+=' (ctx:VxV)o
 
-Fixes: 17de3f5fdd35 ("iommu: Retire bus ops")
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
 ---
- drivers/iommu/iommufd/selftest.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/gpu/drm/radeon/r100.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iommufd/selftest.c b/drivers/iommu/iommufd/selftest.c
-index cf3e9fed039e..4eca67b8a5c6 100644
---- a/drivers/iommu/iommufd/selftest.c
-+++ b/drivers/iommu/iommufd/selftest.c
-@@ -611,6 +611,8 @@ static void mock_dev_release(struct device *dev)
- 
- static struct mock_dev *mock_dev_create(unsigned long dev_flags)
- {
-+	struct iommu_fwspec *fwspec;
-+	struct dev_iommu *param;
- 	struct mock_dev *mdev;
- 	int rc;
- 
-@@ -621,10 +623,28 @@ static struct mock_dev *mock_dev_create(unsigned long dev_flags)
- 	if (!mdev)
- 		return ERR_PTR(-ENOMEM);
- 
-+	/* fwspec and param will be freed in the iommu core */
-+	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
-+	if (!fwspec) {
-+		kfree(mdev);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	fwspec->ops = &mock_ops;
-+
-+	param = kzalloc(sizeof(*param), GFP_KERNEL);
-+	if (!param) {
-+		kfree(mdev);
-+		kfree(fwspec);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	mutex_init(&param->lock);
-+	param->fwspec = fwspec;
-+
- 	device_initialize(&mdev->dev);
- 	mdev->flags = dev_flags;
- 	mdev->dev.release = mock_dev_release;
- 	mdev->dev.bus = &iommufd_mock_bus_type.bus;
-+	mdev->dev.iommu = param;
- 
- 	rc = dev_set_name(&mdev->dev, "iommufd_mock%u",
- 			  atomic_inc_return(&mock_dev_num));
-@@ -638,6 +658,8 @@ static struct mock_dev *mock_dev_create(unsigned long dev_flags)
- 
- err_put:
- 	put_device(&mdev->dev);
-+	kfree(param);
-+	kfree(fwspec);
- 	return ERR_PTR(rc);
- }
- 
+diff --git a/drivers/gpu/drm/radeon/r100.c b/drivers/gpu/drm/radeon/r100.c
+index cfeca2694d5f..86b8b770af19 100644
+--- a/drivers/gpu/drm/radeon/r100.c
++++ b/drivers/gpu/drm/radeon/r100.c
+@@ -1327,7 +1327,7 @@ int r100_packet3_load_vbpntr(struct radeon_cs_parser *p,
+ 	    return -EINVAL;
+ 	}
+ 	track->num_arrays = c;
+-	for (i = 0; i < (c - 1); i+=2, idx+=3) {
++	for (i = 0; i < (c - 1); i += 2, idx += 3) {
+ 		r = radeon_cs_packet_next_reloc(p, &reloc, 0);
+ 		if (r) {
+ 			DRM_ERROR("No reloc for packet3 %d\n",
 -- 
-2.34.1
+2.17.1
 
