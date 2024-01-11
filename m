@@ -1,51 +1,51 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B39056754
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 19:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2566C5731C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 19:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="stPan0EA"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3367601a301so4959616f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:57:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f/wkqdio"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3376555b756so3345149f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:57:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705003024; x=1705607824; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705003028; x=1705607828; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hARQAQOLcSzjwOPYvs4BLOOY/nQZprU58P/GDXDBCPs=;
-        b=stPan0EAHPqgzz1Cpx+gYdnDp30PfCLG1c87lKQSgDhTJA8ielZlsgLgA+HfBH6IiG
-         z00NYlxPH59bSE2MxPVdgpDbEdd7y5fFccMU+B3AOtah57F+Um97sz2jSzohopy+6D7f
-         +P8bQO5B/4KeV8bMHCsTlZe55uRBRSoHiYBIxf12Ju8WGTqDBB536qxH8VWSey/OBcfY
-         CeXFJ3ciT8AIq4Pm6rGUM4uAzAbaC8KGS4/ewzPtuLz3IHucsdSn/xDWEF8Poi69nKJe
-         d5CvF/66EHau12lmF9NRFDe4pEgJg0W3E/Mpo46NWeJ0xVBmFEpKH73+S+Y7RDAYHU1p
-         brtg==
+        bh=vt4idOJ4AVt0o+9v3yIJItOs/gt0F0b2lVJhV4P/Taw=;
+        b=f/wkqdiodNpRYVeKemyBnc3CgxRiGBYfiJ2i/To9OCgKk9MfUHwmsyzt4/RPTjVNml
+         MoNOpBBRGXWEmVhw9zfzxFYi0i8k3NxJuAHZdMwv8DHexejCycwiD51I3VfokiaJU1vp
+         zVzvBNGQLXZie/invwnrHFeW6FMzZG22DCC58PS0M8R2z3GUCaXD51fnavLRlAoj11UU
+         TK9pRPTfRnoJXuh92q6z9SoAZZFp49B9NzhnHBIgrjGGBAlKG5UiFBMcT4cs/66QCCpY
+         pK2dZlnvENkIEnufEQfpt/ZqoyxIXRxDBTVU6AAoBJU7UlAHrP651no5I4x4+8uvEWy2
+         Q/Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705003024; x=1705607824;
+        d=1e100.net; s=20230601; t=1705003028; x=1705607828;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hARQAQOLcSzjwOPYvs4BLOOY/nQZprU58P/GDXDBCPs=;
-        b=Gy29BC2+Pw1uX5Cvq6UuCmYplNkOjeQXXr0rvDRT75ZovFZ64oWeE2+xNIseNR1jPg
-         3LEFvwxdDnO0Lcr1cOAXy6yx1VfmPUgKwTFi8wo9ciZqoIZLethHO8DtJ620EHC8B7Zd
-         G7ZRtfnvjIPFF3fVB8lpIV2AFEUqwhL0OwUFMsvOAZ/YOa4KdrotLrrjd1GB1/cldZkh
-         +F91t25YDj6SJxUrgjxtQ7W1ifb2gHgrNEW2RgF0ViSATbXTJz/2XanuAB5oF6et89pP
-         DJgjEHgNHz64elYThLqXEc6WGD7qtURa7W4kKkkhSq7XCDnMN2FDw2BWX6cVZC8zDzWP
-         qpPA==
-X-Gm-Message-State: AOJu0Yyi6i0N+caRXuvCPzP1mYiaCPOV32bgHpnotbZ3I1RDBHG/AYJO
-	eSi1jemSOl1u+Jdu0tyusQ7iuPkN5Tb8+zVO/YFf+5LkLLHPVw==
-X-Google-Smtp-Source: AGHT+IFL96e41K600fJJGUs5F1vtnJGv3lVq4s6iPMdPh4ieOBC2qO+nj0jDH5zlPmNgCaxRsYbrVg==
-X-Received: by 2002:a05:6000:8c:b0:337:7680:885b with SMTP id m12-20020a056000008c00b003377680885bmr107073wrx.38.1705003024452;
-        Thu, 11 Jan 2024 11:57:04 -0800 (PST)
+        bh=vt4idOJ4AVt0o+9v3yIJItOs/gt0F0b2lVJhV4P/Taw=;
+        b=H7Chh9hdEXw5aPCRDNxeelueiSY3q51w5CAKZ3mEGJKUomikcWmD68nfCrUxKUHMdH
+         tz65skGRqnEuy6lmSxMqkGj8RUPVsL1ypcWm+IlujClAH9woEoRO2dPvmaITVnJcKg4o
+         Ug1wff9KTRgOP2Jne30tTr6N0kY6M6lvZ53ZaxVTrd3WrtKGkLL0nzH3pAdbmkh2JHCB
+         vcYlKS3iTy6XT9L3pOPav+4AXoMvoKn4E0GTKJsgRmo+HnGDrVuQj/qHhXP5+fyxyFs8
+         1ao5Kp2WcNSnTrKEZ6I7qCKb36K+m3j8fZhpIopXFoGidLc1SsPDDskm8l3ryadzGf0i
+         gNxA==
+X-Gm-Message-State: AOJu0YweUV/gl6eh3tZED+SVNrRQogwQl9p4CWjvCqGo33xSetV2Kidg
+	y8Rrb8Bs91p/wnDnvVA8Yoo611ItB/Z3Iw==
+X-Google-Smtp-Source: AGHT+IE90qP2pgskdFf+tC+ZCbc+pS9HmA+agxQymv0g25TJ6DADTofWu1tMSPhKtAsxJEQylqul4w==
+X-Received: by 2002:a5d:4603:0:b0:336:7281:cc78 with SMTP id t3-20020a5d4603000000b003367281cc78mr218405wrq.50.1705003028504;
+        Thu, 11 Jan 2024 11:57:08 -0800 (PST)
 Received: from [127.0.1.1] ([37.228.218.3])
-        by smtp.gmail.com with ESMTPSA id b7-20020adfe647000000b0033763a9ea2dsm1955382wrn.63.2024.01.11.11.57.03
+        by smtp.gmail.com with ESMTPSA id b7-20020adfe647000000b0033763a9ea2dsm1955382wrn.63.2024.01.11.11.57.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 11:57:04 -0800 (PST)
+        Thu, 11 Jan 2024 11:57:08 -0800 (PST)
 From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Date: Thu, 11 Jan 2024 19:57:02 +0000
-Subject: [PATCH 1/5] media: qcom: camss: csiphy-3ph: Add Gen2 v1.1
- two-phase MIPI CSI-2 DPHY init
+Date: Thu, 11 Jan 2024 19:57:06 +0000
+Subject: [PATCH 5/5] media: qcom: camss: vfe-17x: Rename camss-vfe-170 to
+ camss-vfe-17x
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240111-linux-next-24-01-09-sc8280xp-camss-changes-v1-1-b92a650121ba@linaro.org>
+Message-Id: <20240111-linux-next-24-01-09-sc8280xp-camss-changes-v1-5-b92a650121ba@linaro.org>
 References: <20240111-linux-next-24-01-09-sc8280xp-camss-changes-v1-0-b92a650121ba@linaro.org>
 In-Reply-To: <20240111-linux-next-24-01-09-sc8280xp-camss-changes-v1-0-b92a650121ba@linaro.org>
 To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
@@ -67,114 +67,36 @@ Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 X-Mailer: b4 0.13-dev-4e032
 
-Add a PHY configuration sequence for the sc8280xp which uses a Qualcomm
-Gen 2 version 1.1 CSI-2 PHY.
+vfe-170 and vfe-175 can be supported in the same file with some minimal
+indirection to differentiate between the silicon versions.
 
-The PHY can be configured as two phase or three phase in C-PHY or D-PHY
-mode. This configuration supports two-phase D-PHY mode.
+sdm845 uses vfe-170, sc8280xp uses vfe-175-200. Lets rename the file to
+capture its wider scope than vfe-170 only.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- .../platform/qcom/camss/camss-csiphy-3ph-1-0.c     | 85 ++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+ drivers/media/platform/qcom/camss/Makefile                             | 2 +-
+ drivers/media/platform/qcom/camss/{camss-vfe-170.c => camss-vfe-17x.c} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
-index f50e2235c37f..66ff48aeab64 100644
---- a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
-+++ b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
-@@ -148,6 +148,91 @@ csiphy_reg_t lane_regs_sdm845[5][14] = {
- 	},
- };
- 
-+/* GEN2 1.1 2PH */
-+static const struct
-+csiphy_reg_t lane_regs_sc8280xp[5][14] = {
-+	{
-+		{0x0004, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x002C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0034, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x001C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0014, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0028, 0x00, 0x00, CSIPHY_DNP_PARAMS},
-+		{0x003C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0000, 0x90, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0008, 0x0E, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x000C, 0x00, 0x00, CSIPHY_DNP_PARAMS},
-+		{0x0010, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0038, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0060, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0064, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+	{
-+		{0x0704, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x072C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0734, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x071C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0714, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0728, 0x04, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x073C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0700, 0x80, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0708, 0x0E, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x070C, 0xA5, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0710, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0738, 0x1F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0760, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0764, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+	{
-+		{0x0204, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x022C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0234, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x021C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0214, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0228, 0x00, 0x00, CSIPHY_DNP_PARAMS},
-+		{0x023C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0200, 0x90, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0208, 0x0E, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x020C, 0x00, 0x00, CSIPHY_DNP_PARAMS},
-+		{0x0210, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0238, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0260, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0264, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+	{
-+		{0x0404, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x042C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0434, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x041C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0414, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0428, 0x00, 0x00, CSIPHY_DNP_PARAMS},
-+		{0x043C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0400, 0x90, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0408, 0x0E, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x040C, 0x00, 0x00, CSIPHY_DNP_PARAMS},
-+		{0x0410, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0438, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0460, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0464, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+	{
-+		{0x0604, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x062C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0634, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x061C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0614, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0628, 0x00, 0x00, CSIPHY_DNP_PARAMS},
-+		{0x063C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0600, 0x90, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0608, 0x0E, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x060C, 0x00, 0x00, CSIPHY_DNP_PARAMS},
-+		{0x0610, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0638, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0660, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0664, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+};
-+
- /* GEN2 1.2.1 2PH */
- static const struct
- csiphy_reg_t lane_regs_sm8250[5][20] = {
+diff --git a/drivers/media/platform/qcom/camss/Makefile b/drivers/media/platform/qcom/camss/Makefile
+index 4e2222358973..0d4389ab312d 100644
+--- a/drivers/media/platform/qcom/camss/Makefile
++++ b/drivers/media/platform/qcom/camss/Makefile
+@@ -14,7 +14,7 @@ qcom-camss-objs += \
+ 		camss-vfe-4-1.o \
+ 		camss-vfe-4-7.o \
+ 		camss-vfe-4-8.o \
+-		camss-vfe-170.o \
++		camss-vfe-17x.o \
+ 		camss-vfe-480.o \
+ 		camss-vfe-gen1.o \
+ 		camss-vfe.o \
+diff --git a/drivers/media/platform/qcom/camss/camss-vfe-170.c b/drivers/media/platform/qcom/camss/camss-vfe-17x.c
+similarity index 100%
+rename from drivers/media/platform/qcom/camss/camss-vfe-170.c
+rename to drivers/media/platform/qcom/camss/camss-vfe-17x.c
 
 -- 
 2.42.0
