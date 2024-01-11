@@ -1,84 +1,120 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293CF537E3;
-	Thu, 11 Jan 2024 18:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2037652F7B;
+	Thu, 11 Jan 2024 18:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="k15I3w8q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704996431;
-	bh=lv5L2wbjPc1YW+bfBQ2xAmvYm+GCTmQkkdH8Qjc9HRw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=k15I3w8q1Xt6+sO+soQbwSrQPfh0RCgowNT2FUnLnjHfgzEghTstoGgHA4O9JIbRZ
-	 4ghe80QPeXKCGlKmaV/VCtqhawWXnRUrUwCbqmYdk3IHFJ/nlFNUqox206qYmftSt1
-	 NWC3/vhnl5q3AFfcQKUV2vNUsDoRd1QBR2E7J6/iHsKiNZ4cFFn2ZKVoISuu2Kf2Sx
-	 /U3YJ4N5DwnBp5EeOgMf60+7nhZgOS/r7gFl95KJDIqXZJi5KnRvJZUOkf4xP3at5u
-	 8egkGmktDDfQtE3ySHf6ZqrmdhV1I4gZqfGTP6hi4L0dEnHF4k4PI4aLDv1P7q5Zc2
-	 Z4/kZvag02TxQ==
-Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 82F463781FCF;
-	Thu, 11 Jan 2024 18:07:09 +0000 (UTC)
-Message-ID: <59bb488f-f2ad-44b0-87fa-206ae3b1c33f@collabora.com>
-Date: Thu, 11 Jan 2024 20:07:08 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HxdKXFpd"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40BHcXWM030596;
+	Thu, 11 Jan 2024 18:09:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=EO3J9A6TroCBSWwiiGnlVOrch5ftdo4Wu2ZAYo+fcUk=;
+ b=HxdKXFpdlqUOQRMHMptzjr5RPR41La1ViQaQXWhZNmb/B/N18udSfIFMFkT6M1Ktu+KY
+ GF9B0cdwFN3ejWP+QpX3Ms90qwiQoNhi1Dd/hwR7YzQ7blEbdlWSTtlGt5cfiipvaGeD
+ D6phIWWjLUaGcWSQvY5XpezwjxNSJgWD1HdxnLmf0XUTqq23jh3oXAFh3m+UO41kZMPx
+ 8Flhx6RjNw3q+b1n5ZQlSd3TLH17g3ovEyZanDnnVwqXc9P9igLARUGIJQ7xJRzFttSF
+ PwmYIahhEk0R4aHJv13gtxK0RMJ9tyoLj5wN2ojRNSrsioz+QV3pvJSz3keCZTSDn3yN Xw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjmwh0yt2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 18:09:44 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40BHdWMt000491;
+	Thu, 11 Jan 2024 18:09:44 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjmwh0ysu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 18:09:44 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40BGBmnJ027253;
+	Thu, 11 Jan 2024 18:09:43 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vfkw2cps8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 18:09:43 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40BI9gN715532638
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jan 2024 18:09:42 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 48A0C5805A;
+	Thu, 11 Jan 2024 18:09:42 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0F06258064;
+	Thu, 11 Jan 2024 18:09:42 +0000 (GMT)
+Received: from [9.24.12.86] (unknown [9.24.12.86])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 11 Jan 2024 18:09:42 +0000 (GMT)
+Message-ID: <70838bd2-8b03-4003-86f5-50a635ae31ec@linux.ibm.com>
+Date: Thu, 11 Jan 2024 12:09:41 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] tpm: tis-i2c: Add more compatible strings
+Content-Language: en-US
+To: Conor Dooley <conor@kernel.org>
+Cc: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca,
+        Joel Stanley <joel@jms.id.au>, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ninad Palsule <ninad@linux.vnet.ibm.com>
+References: <20231214144954.3833998-1-ninad@linux.ibm.com>
+ <20231214144954.3833998-2-ninad@linux.ibm.com>
+ <20240109-saddling-nintendo-c7fbb46bb0dd@spud>
+From: Ninad Palsule <ninad@linux.ibm.com>
+In-Reply-To: <20240109-saddling-nintendo-c7fbb46bb0dd@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: uuvxTt3KtfKDFwLlGQhoor5IRYlDO1V2
+X-Proofpoint-ORIG-GUID: HfjQtr4LDqAAdNKAYr1YyqQ97IZh4rcz
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] dt-bindings: net: starfive,jh7110-dwmac: Add
- StarFive JH8100 support
-Content-Language: en-US
-To: Tan Chun Hau <chunhau.tan@starfivetech.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Simon Horman <horms@kernel.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Andrew Halaney <ahalaney@redhat.com>, Jisheng Zhang <jszhang@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
- Jee Heng Sia <jeeheng.sia@starfivetech.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
-References: <20240111025531.2875-1-chunhau.tan@starfivetech.com>
- <20240111025531.2875-2-chunhau.tan@starfivetech.com>
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20240111025531.2875-2-chunhau.tan@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-11_09,2024-01-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0 bulkscore=0
+ phishscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2401110142
 
-On 1/11/24 04:55, Tan Chun Hau wrote:
-> Add StarFive JH8100 dwmac support.
-> JH8100 dwmac has one reset signal instead of 2 resets as in JH7110.
-> 
-> Signed-off-by: Tan Chun Hau <chunhau.tan@starfivetech.com>
-> ---
->  .../devicetree/bindings/net/snps,dwmac.yaml   |  1 +
->  .../bindings/net/starfive,jh7110-dwmac.yaml   | 50 +++++++++++++------
->  2 files changed, 37 insertions(+), 14 deletions(-)
+Hello Conor,
 
-[...]
+On 1/9/24 11:11, Conor Dooley wrote:
+> On Thu, Dec 14, 2023 at 08:49:53AM -0600, Ninad Palsule wrote:
+>> From: Joel Stanley <joel@jms.id.au>
+>>
+>> The NPCT75x TPM is TIS compatible. It has an I2C and SPI interface.
+>>
+>> https://www.nuvoton.com/products/cloud-computing/security/trusted-platform-module-tpm/
+>>
+>> Add a compatible string for it, and the generic compatible.
+>>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
+>> Link: https://lore.kernel.org/r/20220928043957.2636877-4-joel@jms.id.au
+>> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+> I don't understand why you broke this series up and dropped patches.
+> NAK, these compatibles are not documented.
 
-Please note this is going to conflict with the about-to-be-merged changes
-in [1], so probably it makes sense to wait for that to be picked up before
-sending a new revision.  
+I have reconfirmed and other two patches are already dropped and merged 
+by Lukas:
 
-[1]: https://lore.kernel.org/lkml/20231222101001.2541758-2-cristian.ciocaltea@collabora.com/
+https://lore.kernel.org/all/3f56f0a2bb90697a23e83583a21684b75dc7eea2.1701093036.git.lukas@wunner.de/
+
+This is the only one pending from that series. Please let me know if I 
+need to do anything else for this patch series.
 
 Regards,
-Cristian
+
+Ninad
+
+>
+>
