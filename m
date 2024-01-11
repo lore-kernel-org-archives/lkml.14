@@ -1,104 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2F212E6B
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 09:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5292D125BE
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 10:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XYDiGKcn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704967177; x=1736503177;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=wWtjtpvLpCpNq6v6WPPTrwuiaHZ9+Yn/ZZKrzAQXEDo=;
-  b=XYDiGKcnNutdLGi4OZPb2N/dnzrmfFYD570fsPl3jzDXnlGPCWwHkt42
-   7ROI9med6L8rJL5hfYeMs/1N50k0KimkmfAXjXpagYKcXfWkLDceRmP6a
-   sBamzBB+4sLCFxb7hVbgk8GlgotWYjXHCsqPBe6CaabpjExQy5eR2/XRs
-   862/qyqpq1PzrgBNX+FXxRJ6T4pyqMxko9pvQQuQkNj0NqaQE4UIK+2rB
-   4JLFL6KHCLeKiAFJuyajq9HoOHVDxlTT6/FsFR+GoIkZA8tMWyYEC0AmL
-   Ju8FRrL2PjOBUZXaspzH07+rjSenr0hXcsFFut6PyNYcXbtKbmrc9LfeG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="5530914"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="5530914"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 01:59:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="782568762"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="782568762"
-Received: from gaertgee-mobl.ger.corp.intel.com (HELO localhost) ([10.252.54.206])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 01:59:24 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: chenxuebing <chenxb_99091@126.com>, airlied@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, daniel@ffwll.ch,
- tzimmermann@suse.de
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- chenxuebing <chenxb_99091@126.com>
-Subject: Re: [PATCH] drm: Clean up errors in drm_dp_mst_topology.h
-In-Reply-To: <20240111064245.8789-1-chenxb_99091@126.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240111064245.8789-1-chenxb_99091@126.com>
-Date: Thu, 11 Jan 2024 11:59:21 +0200
-Message-ID: <875y00ur5y.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="AsEZXAkq"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-555bd21f9fdso5818277a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:00:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1704967214; x=1705572014; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SK6l91q7AEIn5ipGCEJlFPJF27Zw8+0MoPYYgQPY0a4=;
+        b=AsEZXAkq7rgCb3FMKtxC+H3Axt8OhMzF2gp6HL3KglEpPC7pY7kHgjFG81lXzvZ/UN
+         wLwIG5YIr1ReEYlGnn+d90k0CfdMpuxobTPyawzLSiaDcBaKeP2HJ4KQWiJS1XmMyJ39
+         k/Ox2Pc/agvuZh/X6kGyNAFogbRgembnxmEN5DN1il19f96KXjO0q4yMO2ZKT8wB+uhW
+         Z3uuo40KyPsRHX0BL8uZd/DaWA7ZBygNYC0OOd8vcHNYPg/HzJKv+59yuLsDWAmdoXxO
+         9kD7Obb+S73Nur8WGtFBbObUn8GOEjpRCq5IgfVPGJJtdo1oBRyj4Jx1HvVklaXvws9N
+         G1cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704967214; x=1705572014;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SK6l91q7AEIn5ipGCEJlFPJF27Zw8+0MoPYYgQPY0a4=;
+        b=dfslvgQdy05fJi9fZriqUV+sf0QpAOjiGXZZyPb9BZduoSQsHTI89Vb7V5r56hJ+Ln
+         4VzMA8Spyme7WifXCu/P5zJqeKwux5Ji+bkmwQ4GRv+ieeXNhrSoEBuw095tNuOhhccN
+         UZ7AUgq2qZSTRel+Vnq5M1Yx+YTrtsNxUUZhLV3qvNP1ILJwCh3qh3+1a9LFaNpMnWXj
+         28hCUvEhth8l+JvcEMbvpYL37o282ICQ0t6MDYbLpUXz0mMif40xA4cTYqGqVsn2V4vy
+         rrWkWkeU0a0asD60RcVi6QJltxBx30UE85HSOCXEfeEnsjLhEu0P4z/VfRdI+IhITpKQ
+         Qw5g==
+X-Gm-Message-State: AOJu0Yw8t9pZgC4c1qxJw72ZMcFC1P/DQZ5nVLeEWMiVDEOxmgspF2D5
+	uVEIVM59WziHUkHrggbdivqYqqezrnlDpQ==
+X-Google-Smtp-Source: AGHT+IG9OykZ6CNPvrkHEc3LhlxSvCDJTd22uv+2HGjZ6t7gDVg53BD9mWU36h/4tpDnSh7smSjEVg==
+X-Received: by 2002:a17:907:9281:b0:a27:f6aa:c7b0 with SMTP id bw1-20020a170907928100b00a27f6aac7b0mr576724ejc.11.1704967214471;
+        Thu, 11 Jan 2024 02:00:14 -0800 (PST)
+Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
+        by smtp.gmail.com with ESMTPSA id o8-20020a170906358800b00a2ace215a78sm368912ejb.114.2024.01.11.02.00.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 02:00:13 -0800 (PST)
+Date: Thu, 11 Jan 2024 11:00:12 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Conor Dooley <conor@kernel.org>, Atish Kumar Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH -next 1/2] ACPI: Enable ACPI_PROCESSOR for RISC-V
+Message-ID: <20240111-bb411d2dd39eb859dd049fa0@orel>
+References: <20240111093058.121838-1-sunilvl@ventanamicro.com>
+ <20240111093058.121838-2-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111093058.121838-2-sunilvl@ventanamicro.com>
 
-On Thu, 11 Jan 2024, chenxuebing <chenxb_99091@126.com> wrote:
-> Fix the following errors reported by checkpatch:
->
-> ERROR: space prohibited before open square bracket '['
-
-Same here, checkpatch just isn't clever enough to realize it's within a
-macro.
-
-BR,
-Jani.
-
->
-> Signed-off-by: chenxuebing <chenxb_99091@126.com>
+On Thu, Jan 11, 2024 at 03:00:57PM +0530, Sunil V L wrote:
+> The ACPI processor driver is not currently enabled for RISC-V.
+> This is required to enable CPU related functionalities like
+> LPI and CPPC. Hence, enable ACPI_PROCESSOR for RISC-V.
+> 
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 > ---
->  drivers/gpu/drm/display/drm_dp_mst_topology.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/acpi/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index f819e760ff19..9a920752171c 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -282,7 +282,7 @@ config ACPI_CPPC_LIB
+>  
+>  config ACPI_PROCESSOR
+>  	tristate "Processor"
+> -	depends on X86 || ARM64 || LOONGARCH
+> +	depends on X86 || ARM64 || LOONGARCH || RISCV
+>  	select ACPI_PROCESSOR_IDLE
+>  	select ACPI_CPU_FREQ_PSS if X86 || LOONGARCH
+>  	select THERMAL
+> -- 
+> 2.34.1
 >
-> diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/drm/display/drm_dp_mst_topology.c
-> index bd6c24d4213c..a4a24ec11b80 100644
-> --- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
-> @@ -100,7 +100,7 @@ static bool drm_dp_mst_port_downstream_of_branch(struct drm_dp_mst_port *port,
->  
->  #define DBG_PREFIX "[dp_mst]"
->  
-> -#define DP_STR(x) [DP_ ## x] = #x
-> +#define DP_STR(x)[DP_ ## x] = #x
->  
->  static const char *drm_dp_mst_req_type_str(u8 req_type)
->  {
-> @@ -131,7 +131,7 @@ static const char *drm_dp_mst_req_type_str(u8 req_type)
->  }
->  
->  #undef DP_STR
-> -#define DP_STR(x) [DP_NAK_ ## x] = #x
-> +#define DP_STR(x)[DP_NAK_ ## x] = #x
->  
->  static const char *drm_dp_mst_nak_reason_str(u8 nak_reason)
->  {
-> @@ -156,7 +156,7 @@ static const char *drm_dp_mst_nak_reason_str(u8 nak_reason)
->  }
->  
->  #undef DP_STR
-> -#define DP_STR(x) [DRM_DP_SIDEBAND_TX_ ## x] = #x
-> +#define DP_STR(x)[DRM_DP_SIDEBAND_TX_ ## x] = #x
->  
->  static const char *drm_dp_mst_sideband_tx_state_str(int state)
->  {
 
--- 
-Jani Nikula, Intel
+Hi Sunil,
+
+Typically we'll want the Kconfig changes to come at the end of a series,
+or squashed into the patch that adds support for it, otherwise there's
+risk of build breakage during bisection. In this case, we're safe because
+the two new functions (I looked ahead) have __weak versions when they're
+not present.
+
+Also, interestingly, it looks like this ancient line
+
+ obj-$(CONFIG_ACPI_PROCESSOR)    += processor.o
+
+in drivers/acpi/Makefile should be removed, since there's no
+drivers/acpi/processor.c file. I guess the make process silently
+filters object files which don't have corresponding source files?
+Maybe we should write a Makefile analyzer to see what other lines
+can be removed...
+
+Anyway, for this patch, which I'd prefer to be swapped in order with
+the other patch, or just squashed into the other patch,
+
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+
+Thanks,
+drew
