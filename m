@@ -1,118 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C21DA3C;
-	Thu, 11 Jan 2024 02:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FF8D15D0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="atetTZY3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704941728; x=1736477728;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HoH9MUvgkubUOlwwOn66/K+dJfeGm9DqWpVIQurTjTE=;
-  b=atetTZY3iM3vS6P/vHQUtKxkk8KfDK5nOXQatWwnbob7kLhfYX7EyQo8
-   JIk7mnSYI0yXwcSbgxppbk5xdkRT6K9iawiCCsWdcB5PNFSiDf1C31mtN
-   QrnnesNBVMmGNEfCtkT1sMpy86r/hMqkujC3noLs4DmUASIBr+KvtpFxu
-   yPcM8iO9NI8LLCZTacbalv/GFb87AAfCeW+5OLPLf9rI/P6rNxKn3tAlV
-   UFOjA6fvmSRWAso9GMmYpB4QQEhi6r/p2ZBOCHjpJJLkrKRnqK8mEndzT
-   Ja4bt4qkhZWeMTvXG5LByu76xtNipBD338+W8rHCyT7+S1fi+SAUU7wnN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="5805754"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="5805754"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 18:55:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="775454469"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="775454469"
-Received: from linux.bj.intel.com ([10.238.157.71])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 18:55:23 -0800
-Date: Thu, 11 Jan 2024 10:52:21 +0800
-From: Tao Su <tao1.su@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Chao Gao <chao.gao@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yi Lai <yi1.lai@intel.com>, Xudong Hao <xudong.hao@intel.com>
-Subject: Re: [PATCH] x86/cpu: Add a VMX flag to enumerate 5-level EPT support
- to userspace
-Message-ID: <ZZ9X5anB/HGS8JR6@linux.bj.intel.com>
-References: <20240110002340.485595-1-seanjc@google.com>
- <ZZ42Vs3uAPwBmezn@chao-email>
- <ZZ7FMWuTHOV-_Gn7@google.com>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="iBgjqxt4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=6XnZjv2AWPiI5dqzax
+	Rd+P/BdNiXsS2TWUib8qNZYKo=; b=iBgjqxt4vjbfmHHDs60si/oISpoy7ig8nT
+	LTK3ltXA48wnW8Dfpbju1D9ZlHi6q3+y9JA7wVMbIHRZDJ9hVEfU1mH3MSmd1kOQ
+	t72tNk3nr6O7uRAIWUHmJ7tx21VrbISJjXZdpfV3GqZO85BDGMh+9t0VPDEVgoqk
+	D09sQzXRE=
+Received: from localhost.localdomain (unknown [182.148.14.173])
+	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wDnD9uXWJ9lwy+dAA--.10032S2;
+	Thu, 11 Jan 2024 10:55:19 +0800 (CST)
+From: chenxuebing <chenxb_99091@126.com>
+To: Xinhui.Pan@amd.com,
+	daniel@ffwll.ch,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	chenxuebing <chenxb_99091@126.com>
+Subject: [PATCH] drm/amd/include: Clean up errors in arct_ip_offset.h
+Date: Thu, 11 Jan 2024 02:55:17 +0000
+Message-Id: <20240111025517.6687-1-chenxb_99091@126.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wDnD9uXWJ9lwy+dAA--.10032S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtF1DCF48Kry8Zr1xWw4rKrg_yoWfJrc_Ca
+	4xJ395W3y7uFnFqF1akFn3u34j9a1ruFnYqw1fta4rtrZFkr4UW395Jr42qr4ruFs3CFsr
+	Z3WkXFW5ZrnIgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUj2NtUUUUU==
+X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiGA5ixWVLZWL-aQADsN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZ7FMWuTHOV-_Gn7@google.com>
 
-On Wed, Jan 10, 2024 at 08:26:25AM -0800, Sean Christopherson wrote:
-> On Wed, Jan 10, 2024, Chao Gao wrote:
-> > On Tue, Jan 09, 2024 at 04:23:40PM -0800, Sean Christopherson wrote:
-> > >Add a VMX flag in /proc/cpuinfo, ept_5level, so that userspace can query
-> > >whether or not the CPU supports 5-level EPT paging.  EPT capabilities are
-> > >enumerated via MSR, i.e. aren't accessible to userspace without help from
-> > >the kernel, and knowing whether or not 5-level EPT is supported is sadly
-> > >necessary for userspace to correctly configure KVM VMs.
-> > 
-> > This assumes procfs is enabled in Kconfig and userspace has permission to
-> > access /proc/cpuinfo. But it isn't always true. So, I think it is better to
-> > advertise max addressable GPA via KVM ioctls.
-> 
-> Hrm, so the help for PROC_FS says:
-> 
->   Several programs depend on this, so everyone should say Y here.
-> 
-> Given that this is working around something that is borderline an erratum, I'm
-> inclined to say that userspace shouldn't simply assume the worst if /proc isn't
-> available.  Practically speaking, I don't think a "real" VM is likely to be
-> affected; AFAIK, there's no reason for QEMU or any other VMM to _need_ to expose
-> a memslot at GPA[51:48] unless the VM really has however much memory that is
-> (hundreds of terabytes?).  And a if someone is trying to run such a massive VM on
-> such a goofy CPU...
+Fix the following errors reported by checkpatch:
 
-It is unusual to assign a huge RAM to guest, but passthrough a device also may trigger
-this issue which we have met, i.e. alloc memslot for the 64bit BAR which can set
-bits[51:48]. BIOS can control the BAR address, e.g. seabios moved 64bit pci window
-to end of address space by using advertised physical bits[1].
+ERROR: open brace '{' following struct go on the same line
 
-[1] https://gitlab.com/qemu-project/seabios/-/commit/bcfed7e270776ab5595cafc6f1794bea0cae1c6c
+Signed-off-by: chenxuebing <chenxb_99091@126.com>
+---
+ drivers/gpu/drm/amd/include/arct_ip_offset.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-> 
-> I don't think it's unreasonable for KVM selftests to require access to
-> /proc/cpuinfo.  Or actually, they can probably do the same thing and self-limit
-> to 48-bit addresses if /proc/cpuinfo isn't available.
-> 
-> I'm not totally opposed to adding a more programmatic way for userspace to query
-> 5-level EPT support, it just seems unnecessary.  E.g. unlike CPUID, userspace
-> can't directly influence whether or not KVM uses 5-level EPT.  Even in hindsight,
-> I'm not entirely sure KVM should expose such a knob, as it raises questions around
-> interactions guest.MAXPHYADDR and memslots that I would rather avoid.
-> 
-> And even if we do add such uAPI, enumerating 5-level EPT in /proc/cpuinfo is
-> definitely worthwhile, the only thing that would need to be tweaked is the
-> justification in the changelog.
-> 
-> One thing we can do irrespective of feature enumeration is have kvm_mmu_page_fault()
-> exit to userspace with an explicit error if the guest faults ona GPA that KVM
-> knows it can't map, i.e. exit with KVM_EXIT_INTERNAL_ERROR or maybe even
-> KVM_EXIT_MEMORY_FAULT instead of looping indefinitely.
+diff --git a/drivers/gpu/drm/amd/include/arct_ip_offset.h b/drivers/gpu/drm/amd/include/arct_ip_offset.h
+index af1c46991429..7dd876f7df74 100644
+--- a/drivers/gpu/drm/amd/include/arct_ip_offset.h
++++ b/drivers/gpu/drm/amd/include/arct_ip_offset.h
+@@ -25,13 +25,11 @@
+ #define MAX_SEGMENT                                         6
+ 
+ 
+-struct IP_BASE_INSTANCE
+-{
++struct IP_BASE_INSTANCE {
+     unsigned int segment[MAX_SEGMENT];
+ } __maybe_unused;
+ 
+-struct IP_BASE
+-{
++struct IP_BASE {
+     struct IP_BASE_INSTANCE instance[MAX_INSTANCE];
+ } __maybe_unused;
+ 
+-- 
+2.17.1
 
-If KVM does report guest.MAXPHYADDR=host.MAXPHYADDR, it is not reasonable to kill the
-guest directly. And just reporting that it does not support 5-level EPT in /proc/cpuinfo
-will make it difficult for users to realize that physical-bits needs to be forcibly
-limited in the command. But advertising max addressable GPA via ioctl and this patch do
-not conflict.
-
-Thanks,
-Tao
