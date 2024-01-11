@@ -1,192 +1,101 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C870524A8;
-	Thu, 11 Jan 2024 23:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81C257870
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 23:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="n374fa5J";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="8EJR+e51"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 41FDE5C0076;
-	Thu, 11 Jan 2024 18:01:56 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 11 Jan 2024 18:01:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1705014116; x=1705100516; bh=oZXd44/iUL
-	eucMaGv4BNeFUvP0p+w9PCsZxuaMhOtuw=; b=n374fa5Jz+FUk0jiydMTizDaxY
-	J0CC8/Jbq6MivHZ0qO4T3tpcvjmiB4Q1xUj/a9PRtDyjR4OivQLKvtw6fFxVMAoQ
-	g4lUD0nhNqZyHIsq8Z2RQWCjk9wVJhz73DCcSUV8r/sUjTIQdBw2n7F/RkyR5B8s
-	ENCpiCZCld8UB1VjUJxBRfor17fd5XdYCi1+SxPMbdWGv271AS6kIeqzvZcKa7X+
-	wKMKkzfGbbkZqYTQYNxjroAQlJXMnQeZtdkV10G+oBR/dE2KUMHfSxJ3KuJ9Ynit
-	kZFHX2FJN24/ZlMHiL61mV+VQycTOlmmo8AHVhMuhMwnKayNh6RmM+dICSLQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1705014116; x=1705100516; bh=oZXd44/iULeucMaGv4BNeFUvP0p+
-	w9PCsZxuaMhOtuw=; b=8EJR+e51ZxTxDdqmsp+ACMDiaKQVQZgHR7ioChuEDwqH
-	lVcAp0w0Knhv4mGwJIFjEC1SOOqJEx0nJ5yTHoqsGX3aWTrkh6/sahg9ixI5S5R8
-	an/sxt6yE89GHZtmT7Oaj78AU3L/wAY7Eu4pXDxLDDn8u9lDUsTbZMFRONPD4c96
-	X6jPJ65aBVv1yDJ1oTwxeGzxkXcxKPZmhyjTVhthYe8iLJFS+sC+cHvc6okUc25K
-	O62sI4dsIfc2qG4gByxS3d04mScLFze3n6fgCoTlGyGwteq7aTGJX2lIhfwI5Md9
-	yvJFtkGKq+EDdwiyEb0hYkAbsnRKA7W7yP9/r4GslQ==
-X-ME-Sender: <xms:Y3OgZdsrrmddnp0x2ftuxACmpMcdSCuDfG1iJb9-3DHAAmGcOv50rQ>
-    <xme:Y3OgZWeKaUDNPOmBPqQfJqnuQSJwyxu3R13mmA4deuOyVf6J-1VF4xzTqA3ujep_i
-    2w28o6farPDur3XkIE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeigedgtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:Y3OgZQzQnB9weu89BwnifSdJ_5CdXW93usF8KqV508Pk4dsOw53YWQ>
-    <xmx:Y3OgZUPJotBC7wRKYObKXjSx4zrVUq2zSIhoXotyyOgdoPpBdSNG1g>
-    <xmx:Y3OgZd-nKfYUnsHCZsejz5O2Dxr-yBTZ7B3bsCZgM8249h2GNqjD9Q>
-    <xmx:ZHOgZVOc_SV3r1f-YYNS0JO3tAbguG6PBOkuIApIoY8gAkB0mPWd7Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 75097B6008F; Thu, 11 Jan 2024 18:01:55 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1374-gc37f3abe3d-fm-20240102.001-gc37f3abe
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="D5frV7y2"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e62e6e3b0so5501865e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 15:11:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705014665; x=1705619465; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UAbAyrmMd20Q5seaAiCBRhxbgsJRjIg1DcHDB7xiO80=;
+        b=D5frV7y205ulqpKaY4TmiBxJu/g7Xs2j0VD7bJLODUJ20ynPKkCsaSey4go7P19JuO
+         wtheS31FcCBzAREnQFzKLv6v23D5x9P7RuwSDjcsMsd6FA2Pby3ku6CbrfwvU5FuLwet
+         iP7MTkewJLtBDOoGOcExpi+3bLTSqnmNiTYrUN2zBmf4ZjXxp1MLVJzGBCaxKSHiwvmD
+         q4ss04gqNQtxmQjIMxgAaGUC4NZqpsVw8JYSXY0WVy14oaAscJ8JQVjQ9/uzx8a5+E5B
+         oWW0k6houo0uZRDRxIcCFeRS//JM1Ls1L/hnadiwripUw0wxkHD4BP4Vg52Qh7MKf8si
+         0Tgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705014665; x=1705619465;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UAbAyrmMd20Q5seaAiCBRhxbgsJRjIg1DcHDB7xiO80=;
+        b=ZgAo/NvOzn/EWjZCCSIBJLjoOCwzbpXXVoSPSzNQEfIVtT6Vm/mDa1FFpfj6dd5vWD
+         0WHuVswyKaP5XksmS20rmPcrhTztDV5ecVLspsIszpMZIuwovXsf1laLzRLwn5QCkbKs
+         4PevEh4qeqgqqT4l4CVvYN2iaIubpNUxr9w2uw6CbTYazs6i9ayN7fQDajKJfc/q0jpl
+         4SSMxD5tioPwPmdzsioP+tQhA8EJY0Sf+SdaPyC2t2UkOr/i7J6BdK3g3X2KpgsvNGu2
+         6bhEJdTs0A5QPv1qUR5BfwCzy+hCpVAYNks4JGJ9dNe1jlQ9nphi40+97V6o0QWK5Suk
+         4wYw==
+X-Gm-Message-State: AOJu0Yzibr38z3s+h9yM4SiP5OGi4KnXhSNZxb+YcBHQX0t5MEM1zp3l
+	xk6OdTfaol/8EXw7aKhEEeTn5fC0/wxmvg==
+X-Google-Smtp-Source: AGHT+IERYL9YzMokzGUekmbXWha1z4FNVQ4dPniuX9EM1HIgYCzFPnZ/YT5HubK1/jugeWnwEd2OKg==
+X-Received: by 2002:a05:600c:6a0c:b0:40e:3b46:4a55 with SMTP id jj12-20020a05600c6a0c00b0040e3b464a55mr185662wmb.153.1705014665009;
+        Thu, 11 Jan 2024 15:11:05 -0800 (PST)
+Received: from ?IPV6:2a05:6e02:10a5:e010:a767:b543:4e1d:2ea8? ([2a05:6e02:10a5:e010:a767:b543:4e1d:2ea8])
+        by smtp.gmail.com with ESMTPSA id o3-20020a5d4083000000b00333359b522dsm2243797wrp.77.2024.01.11.15.11.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 15:11:04 -0800 (PST)
+Message-ID: <5d3f3db5-9010-469d-a142-53cee8c2bc58@baylibre.com>
+Date: Fri, 12 Jan 2024 00:11:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <07d8877b-d933-46f4-8ca4-c10ed602f37e@app.fastmail.com>
-In-Reply-To: 
- <CAHk-=wjh6Cypo8WC-McXgSzCaou3UXccxB+7PVeSuGR8AjCphg@mail.gmail.com>
-References: <20231025140205.3586473-1-mszeredi@redhat.com>
- <20231025140205.3586473-6-mszeredi@redhat.com>
- <75b87a85-7d2c-4078-91e3-024ea36cfb42@roeck-us.net>
- <CAHk-=wjdW-4s6Kpa4izJ2D=yPdCje6Ta=eQxxQG6e2SkP42vnw@mail.gmail.com>
- <2f595f28-7fcd-4196-a0b1-6598781530b9@roeck-us.net>
- <CAHk-=wjh6Cypo8WC-McXgSzCaou3UXccxB+7PVeSuGR8AjCphg@mail.gmail.com>
-Date: Fri, 12 Jan 2024 00:01:34 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Guenter Roeck" <linux@roeck-us.net>,
- "Yoshinori Sato" <ysato@users.sourceforge.jp>,
- "Rich Felker" <dalias@libc.org>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>
-Cc: "Miklos Szeredi" <mszeredi@redhat.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- linux-man@vger.kernel.org, linux-security-module@vger.kernel.org,
- "Karel Zak" <kzak@redhat.com>, "Ian Kent" <raven@themaw.net>,
- "David Howells" <dhowells@redhat.com>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <christian@brauner.io>,
- "Amir Goldstein" <amir73il@gmail.com>,
- "Matthew House" <mattlloydhouse@gmail.com>,
- "Florian Weimer" <fweimer@redhat.com>
-Subject: Re: [PATCH v4 5/6] add listmount(2) syscall
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/16] arm64: dts: ti: k3-am625: Add MIT license along
+ with GPL-2.0
+Content-Language: en-US
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Tero Kristo <kristo@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Julien Panis <jpanis@baylibre.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Pierre Gondois <pierre.gondois@arm.com>, Roger Quadros <rogerq@kernel.org>,
+ Ronald Wahl <ronald.wahl@raritan.com>, Sarah Walker
+ <sarah.walker@imgtec.com>, Tony Lindgren <tony@atomide.com>
+References: <20240110140903.4090946-1-nm@ti.com>
+ <20240110140903.4090946-4-nm@ti.com>
+From: Guillaume LA ROQUE <glaroque@baylibre.com>
+In-Reply-To: <20240110140903.4090946-4-nm@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 11, 2024, at 21:14, Linus Torvalds wrote:
+Le 10/01/2024 à 15:08, Nishanth Menon a écrit :
+> Modify license to include dual licensing as GPL-2.0-only OR MIT
+> license for SoC and TI evm device tree files. This allows for Linux
+> kernel device tree to be used in other Operating System ecosystems
+> such as Zephyr or FreeBSD.
+>
+> While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
+> with latest SPDX conventions (GPL-2.0 is deprecated).
+>
+> While at this, update the TI copyright year to sync with current year
+> to indicate license change (and add it at least for one file which was
+> missing TI copyright).
+>
+> Cc: Guillaume La Roque <glaroque@baylibre.com>
+> Cc: Julien Panis <jpanis@baylibre.com>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Cc: Pierre Gondois <pierre.gondois@arm.com>
+> Cc: Roger Quadros <rogerq@kernel.org>
+> Cc: Ronald Wahl <ronald.wahl@raritan.com>
+> Cc: Sarah Walker <sarah.walker@imgtec.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 
-> The SH put_user64() needs to be looked at too, but in the meantime,
-> maybe something like this fixes the problems with listmount?
+Acked-by: Guillaume La Roque <glaroque@baylibre.com>
 
-I tried changing it to use the generic memcpy() based uaccess
-that m68k-nommu and riscv-nommu use, which also avoids the
-build failure. I still run into other unrelated build issues
-on arch/sh, so I'm not sure if this is a sufficient fix.
+Guillaume
 
-     Arnd
-
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 7500521b2b98..2cc3a541e231 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -73,6 +73,7 @@ config SUPERH
-        select PERF_USE_VMALLOC
-        select RTC_LIB
-        select SPARSE_IRQ
-+       select UACCESS_MEMCPY if !MMU
-        select TRACE_IRQFLAGS_SUPPORT
-        help
-          The SuperH is a RISC processor targeted for use in embedded systems
-diff --git a/arch/sh/include/asm/uaccess.h b/arch/sh/include/asm/uaccess.h
-index a79609eb14be..b42764d55901 100644
---- a/arch/sh/include/asm/uaccess.h
-+++ b/arch/sh/include/asm/uaccess.h
-@@ -2,6 +2,7 @@
- #ifndef __ASM_SH_UACCESS_H
- #define __ASM_SH_UACCESS_H
- 
-+#ifdef CONFIG_MMU
- #include <asm/extable.h>
- #include <asm-generic/access_ok.h>
- 
-@@ -130,4 +131,8 @@ struct mem_access {
- int handle_unaligned_access(insn_size_t instruction, struct pt_regs *regs,
-                            struct mem_access *ma, int, unsigned long address);
- 
-+#else
-+#include <asm-generic/uaccess.h>
-+#endif
-+
- #endif /* __ASM_SH_UACCESS_H */
-diff --git a/arch/sh/include/asm/uaccess_32.h b/arch/sh/include/asm/uaccess_32.h
-index 5d7ddc092afd..e053f2fd245c 100644
---- a/arch/sh/include/asm/uaccess_32.h
-+++ b/arch/sh/include/asm/uaccess_32.h
-@@ -35,7 +35,6 @@ do {                                                          \
-        }                                                       \
- } while (0)
- 
--#ifdef CONFIG_MMU
- #define __get_user_asm(x, addr, err, insn) \
- ({ \
- __asm__ __volatile__( \
-@@ -56,16 +55,6 @@ __asm__ __volatile__( \
-        ".previous" \
-        :"=&r" (err), "=&r" (x) \
-        :"m" (__m(addr)), "i" (-EFAULT), "0" (err)); })
--#else
--#define __get_user_asm(x, addr, err, insn)             \
--do {                                                   \
--       __asm__ __volatile__ (                          \
--               "mov." insn "   %1, %0\n\t"             \
--               : "=&r" (x)                             \
--               : "m" (__m(addr))                       \
--       );                                              \
--} while (0)
--#endif /* CONFIG_MMU */
- 
- extern void __get_user_unknown(void);
- 
-@@ -140,7 +129,6 @@ do {                                                        \
-        }                                               \
- } while (0)
- 
--#ifdef CONFIG_MMU
- #define __put_user_asm(x, addr, err, insn)                     \
- do {                                                           \
-        __asm__ __volatile__ (                                  \
-@@ -164,17 +152,6 @@ do {                                                               \
-                : "memory"                                      \
-        );                                                      \
- } while (0)
--#else
--#define __put_user_asm(x, addr, err, insn)             \
--do {                                                   \
--       __asm__ __volatile__ (                          \
--               "mov." insn "   %0, %1\n\t"             \
--               : /* no outputs */                      \
--               : "r" (x), "m" (__m(addr))              \
--               : "memory"                              \
--       );                                              \
--} while (0)
--#endif /* CONFIG_MMU */
- 
- #if defined(CONFIG_CPU_LITTLE_ENDIAN)
- #define __put_user_u64(val,addr,retval) \
