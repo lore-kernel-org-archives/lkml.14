@@ -1,26 +1,26 @@
 Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE512837F;
-	Thu, 11 Jan 2024 13:37:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7667418023;
+	Thu, 11 Jan 2024 13:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="JhaUs9v2"
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="iDh9oAhw"
 Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 6FFA5608A0;
-	Thu, 11 Jan 2024 13:36:34 +0000 (UTC)
+	by mail5.25mail.st (Postfix) with ESMTPSA id 9E79260886;
+	Thu, 11 Jan 2024 13:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1704980223;
+	s=25mailst; t=1704980266;
 	bh=spHBxL0T5QVtiotbfLvZE1HJm4xym++up4FJ1+AM8Bs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JhaUs9v2drb0kR/0gQvjmC2+kn+XmRknGx0QH9+9MH0BwaAASlCawV3r+MGJLQg5x
-	 jwsMyz3qRcNwdy4jSpUQbq7BIEyVBTcUVUP9/GuzbylslGF9Xk0fhj3Pso2p80pDsd
-	 sgd7B2EjEBzkd+6n9GZtMwcixtJ2TRdoR15IWrrmBJ+M3IZtqjjUEVOgc3wtqzVq+s
-	 NJFCt+eflZQN+S0kfeFqAj9C/7LIw7dp66VyRdhMduOgNA5flWdjCICIXp3BnYcoBX
-	 Dca32jwZKRDlOgWYVjfVGVRXr2x9eeiwmVPBJW3csiC0W6QC5LguH2KnuNma7rwIeA
-	 Jf/H0KipOYZhQ==
-Date: Thu, 11 Jan 2024 15:36:32 +0200
+	b=iDh9oAhwaAmPm4zdzIJ+KKzrnaOKZVCGnEXR9mipAjS6cO9cM9UpS+ypvZvexmPEA
+	 VHLGbLMQNj9h1jsiBKOh0vgBqbPDePudOfvZgF2VcHzevbngLtjr32T5QaYZMVR1K1
+	 9/ne1lUn/pxa+WxK1ZH6TMwpo13bJ55ooRsM0I5rqZyniSbuPYSnxa22O5pphGz0IH
+	 jDnnAWmOT+J4+DBQgEKa79lV086GwBRTaTpG1lFjgFekz+DjrqhlQnSk9uTz1oB0xH
+	 3H2NOr6DI88e0+BWK7yy+4okOi+b9DJuNhMHq11WEVU7K7oT3p2VZAl2vnNlrrkzwt
+	 HpfMpUjDYEpAw==
+Date: Thu, 11 Jan 2024 15:37:19 +0200
 From: Tony Lindgren <tony@atomide.com>
 To: Nishanth Menon <nm@ti.com>
 Cc: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
@@ -28,16 +28,14 @@ Cc: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	"Alexander A. Klimov" <grandmaster@al2klimov.de>,
-	Jerome Neanne <jneanne@baylibre.com>,
+	Esteban Blanc <eblanc@baylibre.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>,
 	Pierre Gondois <pierre.gondois@arm.com>
-Subject: Re: [PATCH 08/16] arm64: dts: ti: k3-j721e: Add MIT license along
+Subject: Re: [PATCH 09/16] arm64: dts: ti: k3-j721s2: Add MIT license along
  with GPL-2.0
-Message-ID: <20240111133632.GG5185@atomide.com>
+Message-ID: <20240111133719.GH5185@atomide.com>
 References: <20240110140903.4090946-1-nm@ti.com>
- <20240110140903.4090946-9-nm@ti.com>
+ <20240110140903.4090946-10-nm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,7 +44,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240110140903.4090946-9-nm@ti.com>
+In-Reply-To: <20240110140903.4090946-10-nm@ti.com>
 
 * Nishanth Menon <nm@ti.com> [700101 02:00]:
 > Modify license to include dual licensing as GPL-2.0-only OR MIT
