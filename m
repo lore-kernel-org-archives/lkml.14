@@ -1,139 +1,197 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE16623C1;
-	Thu, 11 Jan 2024 06:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DQ9BnO9/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2hI3TVul";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lDbfuXmN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PVX3jxHN"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 41443221E8;
-	Thu, 11 Jan 2024 06:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704954079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=GhgTsGSYZqMlLkF6ctTWj2wKU/kDUrvtJ+VkGRpxij8=;
-	b=DQ9BnO9/AjVn8onMqZnchn5gPvt/80svfZQh1zrGNEgOqet0hXnQoBLimBX/Qe89QEmfv2
-	7CcgoAWwLo+KiB+1E8Ond9rI5kioWHnMT0ZnOT2Oekaydr/xK52GOkpANFf60k3w3SeD4d
-	u6vNLw+q5lM6pLh/16wZM+0R/jyeNko=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704954079;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=GhgTsGSYZqMlLkF6ctTWj2wKU/kDUrvtJ+VkGRpxij8=;
-	b=2hI3TVulZ73IfMXUKy26ToHCqfoOxoynWwQiQporQYsV9XMC88hRmgCuRaXnrsBfVu5KiI
-	F2KRwGl/MTuV0/DA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704954155; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=GhgTsGSYZqMlLkF6ctTWj2wKU/kDUrvtJ+VkGRpxij8=;
-	b=lDbfuXmNZvbVsaFNEJtyMz8S/yvRnBrgrGEuNysTbSb+2OIdPNivoKputDTiwVcIqWIeQR
-	gnWq7X3Ze8wTw5kuFU9GXxX7gUjUjvqZVU2gi3DHozNRO57fhmKugT6s0s6Ncb/96V5BVr
-	ScvrK5I5ZHi3q3D/3WS7Bi3Hft50ljs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704954155;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=GhgTsGSYZqMlLkF6ctTWj2wKU/kDUrvtJ+VkGRpxij8=;
-	b=PVX3jxHNS+reAC05gT3M2xsrCvl48A47PLSnmtMTpc1BBzHknVI/iHdrJuXTHoKCUJS/sX
-	V0gFomUoZ9MjoEAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2931B13635;
-	Thu, 11 Jan 2024 06:21:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7ff2MtyIn2WjTgAAD6G6ig
-	(envelope-from <ddiss@suse.de>); Thu, 11 Jan 2024 06:21:16 +0000
-From: David Disseldorp <ddiss@suse.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Disseldorp <ddiss@suse.de>
-Subject: [PATCH] initramfs: remove duplicate built-in __initramfs_start unpacking
-Date: Thu, 11 Jan 2024 17:22:40 +1100
-Message-Id: <20240111062240.9362-1-ddiss@suse.de>
-X-Mailer: git-send-email 2.35.3
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E0D5663
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-da-659f85c789e9
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: kernel_team@skhynix.com,
+	akpm@linux-foundation.org,
+	ying.huang@intel.com,
+	namit@vmware.com,
+	xhao@linux.alibaba.com,
+	mgorman@techsingularity.net,
+	hughd@google.com,
+	willy@infradead.org,
+	david@redhat.com,
+	peterz@infradead.org,
+	luto@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Subject: [v5 0/7] Reduce TLB flushes by 94% by improving folio migration
+Date: Thu, 11 Jan 2024 15:07:50 +0900
+Message-Id: <20240111060757.13563-1-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXC9ZZnoe6J1vmpBg8WslrMWb+GzeLzhn9s
+	Fi82tDNafF3/i9ni6ac+FovLu+awWdxb85/V4vyutawWO5buY7K4dGABk8X1XQ8ZLY73HmCy
+	2LxpKrPF7x9AdXOmWFmcnDWZxUHA43trH4vHgk2lHptXaHks3vOSyWPTqk42j02fJrF7vDt3
+	jt3jxIzfLB47H1p6zDsZ6PF+31U2j62/7Dw+b5LzeDf/LVsAXxSXTUpqTmZZapG+XQJXxqyr
+	FQWrDCs6zx9ka2Dcr9rFyMEhIWAicX1SchcjJ5i5enUnK4jNJqAucePGT2YQW0TATOJg6x/2
+	LkYuDmaBB0wSc9+uYARJCAt4SLzpbWMHsVkEVCVaLzwFi/MKmEp8eH6ICWKovMTqDQeYQZol
+	BG6zSXRPnccCkZCUOLjiBssERu4FjAyrGIUy88pyEzNzTPQyKvMyK/SS83M3MQKDeFntn+gd
+	jJ8uBB9iFOBgVOLhfbBoXqoQa2JZcWXuIUYJDmYlEV6Fz3NShXhTEiurUovy44tKc1KLDzFK
+	c7AoifMafStPERJITyxJzU5NLUgtgskycXBKNTCmc/9U/y/Oyjk3qun+6bSZH8Sercn7x2cv
+	KcvAySuW1b367/Ibd45x5mjYsPNIV1/zuzn9Mcu5urYbTZPzlubcUt12yq/YLX7v/LlOYuVJ
+	NqHT3qT9+V73+8fx9wsOdsVYPV98t6Oie8/T3ylb1Z+3b+ZXOmQSMt3EYWNdpOaPq1emb6lz
+	mPJEiaU4I9FQi7moOBEAcRM/6V4CAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMLMWRmVeSWpSXmKPExsXC5WfdrHu8dX6qwYKfJhZz1q9hs/i84R+b
+	xYsN7YwWX9f/YrZ4+qmPxeLw3JOsFpd3zWGzuLfmP6vF+V1rWS12LN3HZHHpwAImi+u7HjJa
+	HO89wGSxedNUZovfP4Dq5kyxsjg5azKLg6DH99Y+Fo8Fm0o9Nq/Q8li85yWTx6ZVnWwemz5N
+	Yvd4d+4cu8eJGb9ZPHY+tPSYdzLQ4/2+q2wei198YPLY+svO4/MmOY9389+yBfBHcdmkpOZk
+	lqUW6dslcGXMulpRsMqwovP8QbYGxv2qXYycHBICJhKrV3eygthsAuoSN278ZAaxRQTMJA62
+	/mHvYuTiYBZ4wCQx9+0KRpCEsICHxJveNnYQm0VAVaL1wlOwOK+AqcSH54eYIIbKS6zecIB5
+	AiPHAkaGVYwimXlluYmZOaZ6xdkZlXmZFXrJ+bmbGIFBuaz2z8QdjF8uux9iFOBgVOLhNXg5
+	L1WINbGsuDL3EKMEB7OSCK/C5zmpQrwpiZVVqUX58UWlOanFhxilOViUxHm9wlMThATSE0tS
+	s1NTC1KLYLJMHJxSDYzz1dzPaOVFFv22i5E8Kv7eVzxRl98hWSXbXWLTralz3lYeEluzikV+
+	Z4LNBpGSv5Yntz36/zTBjePJutN3V09JUZ79ri7RN+ZMt/zdRWVHV9zyj7qonxHyefEEHS+b
+	+pQVgT4eG8pjEk5ErJjZvyhUdNar/JQjqu9CEl71RO6W+dlnwX3zkpsSS3FGoqEWc1FxIgD7
+	AFVfRgIAAA==
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lDbfuXmN;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=PVX3jxHN
-X-Spamd-Result: default: False [3.19 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:106:10:150:64:167:received];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[42.52%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 3.19
-X-Rspamd-Queue-Id: 41443221E8
-X-Spam-Level: ***
-X-Spam-Flag: NO
-X-Spamd-Bar: +++
 
-If initrd_start cpio extraction fails, CONFIG_BLK_DEV_RAM triggers
-fallback to initrd.image handling via populate_initrd_image().
-The populate_initrd_image() call follows successful extraction of any
-built-in cpio archive at __initramfs_start, but currently performs
-built-in archive extraction a second time.
+Hi everyone,
 
-Prior to commit b2a74d5f9d446 ("initramfs: remove clean_rootfs"),
-the second built-in initramfs unpack call was used to repopulate entries
-removed by clean_rootfs(), but it's no longer necessary now the contents
-of the previous extraction are retained.
+While I'm working with CXL memory, I have been facing migration overhead
+esp. TLB shootdown on promotion or demotion between different tiers.
+Yeah.. most TLB shootdowns on migration through hinting fault can be
+avoided thanks to Huang Ying's work, commit 4d4b6d66db ("mm,unmap: avoid
+flushing TLB in batch if PTE is inaccessible"). See the following link:
 
-Signed-off-by: David Disseldorp <ddiss@suse.de>
+https://lore.kernel.org/lkml/20231115025755.GA29979@system.software.com/
+
+However, it's only for ones using hinting fault. I thought it'd be much
+better if we have a general mechanism to reduce the number of TLB
+flushes and TLB misses, that we can apply to any type of migration. I
+tried it only for tiering migration for now tho.
+
+I'm suggesting a mechanism to reduce TLB flushes by keeping source and
+destination of folios participated in the migrations until all TLB
+flushes required are done, only if those folios are not mapped with
+write permission PTE entries at all. I worked Based on v6.7.
+
+I saw the number of iTLB full flush was reduced by 94%, iTLB miss was
+reduced by 45.5% and the total runtime was reduced by 3.5% with the
+workload I tested with, XSBench. However, I believe that it would help
+more with other ones or any real ones. It'd be appreciated to let me
+know if I'm missing something.
+
+	Byungchul
+
 ---
- init/initramfs.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/init/initramfs.c b/init/initramfs.c
-index 8d0fd946cdd2b..2edd3007a6857 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -669,8 +669,6 @@ static void __init populate_initrd_image(char *err)
- 	struct file *file;
- 	loff_t pos = 0;
- 
--	unpack_to_rootfs(__initramfs_start, __initramfs_size);
--
- 	printk(KERN_INFO "rootfs image is not initramfs (%s); looks like an initrd\n",
- 			err);
- 	file = filp_open("/initrd.image", O_WRONLY | O_CREAT, 0700);
+Changes from v4:
+
+	1. Rebase on v6.7.
+	2. Fix build errors in arm64 that is doing nothing for TLB flush
+	   but has CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH. (reported
+	   by kernel test robot)
+	3. Don't use any page flag. So the system would give up migrc
+	   mechanism more often but it's okay. The final improvement is
+	   good enough.
+	4. Instead, optimize full TLB flush(arch_tlbbatch_flush()) by
+	   avoiding redundant CPUs from TLB flush.
+
+Changes from v3:
+
+	1. Don't use the kconfig, CONFIG_MIGRC, and remove sysctl knob,
+	   migrc_enable. (feedbacked by Nadav)
+	2. Remove the optimization skipping CPUs that have already
+	   performed TLB flushes needed by any reason when performing
+	   TLB flushes by migrc because I can't tell the performance
+	   difference between w/ the optimization and w/o that.
+	   (feedbacked by Nadav)
+	3. Minimize arch-specific code. While at it, move all the migrc
+           declarations and inline functions from include/linux/mm.h to
+           mm/internal.h (feedbacked by Dave Hansen, Nadav)
+	4. Separate a part making migrc paused when the system is in
+	   high memory pressure to another patch. (feedbacked by Nadav)
+	5. Rename:
+	      a. arch_tlbbatch_clean() to arch_tlbbatch_clear(),
+	      b. tlb_ubc_nowr to tlb_ubc_ro,
+	      c. migrc_try_flush_free_folios() to migrc_flush_free_folios(),
+	      d. migrc_stop to migrc_pause.
+	   (feedbacked by Nadav)
+	6. Use ->lru list_head instead of introducing a new llist_head.
+	   (feedbacked by Nadav)
+	7. Use non-atomic operations of page-flag when it's safe.
+	   (feedbacked by Nadav)
+	8. Use stack instead of keeping a pointer of 'struct migrc_req'
+	   in struct task, which is for manipulating it locally.
+	   (feedbacked by Nadav)
+	9. Replace a lot of simple functions to inline functions placed
+	   in a header, mm/internal.h. (feedbacked by Nadav)
+	10. Add additional sufficient comments. (feedbacked by Nadav)
+	11. Remove a lot of wrapper functions. (feedbacked by Nadav)
+
+Changes from RFC v2:
+
+	1. Remove additional occupation in struct page. To do that,
+	   unioned with lru field for migrc's list and added a page
+	   flag. I know page flag is a thing that we don't like to add
+	   but no choice because migrc should distinguish folios under
+	   migrc's control from others. Instead, I force migrc to be
+	   used only on 64 bit system to mitigate you guys from getting
+	   angry.
+	2. Remove meaningless internal object allocator that I
+	   introduced to minimize impact onto the system. However, a ton
+	   of tests showed there was no difference.
+	3. Stop migrc from working when the system is in high memory
+	   pressure like about to perform direct reclaim. At the
+	   condition where the swap mechanism is heavily used, I found
+	   the system suffered from regression without this control.
+	4. Exclude folios that pte_dirty() == true from migrc's interest
+	   so that migrc can work simpler.
+	5. Combine several patches that work tightly coupled to one.
+	6. Add sufficient comments for better review.
+	7. Manage migrc's request in per-node manner (from globally).
+	8. Add TLB miss improvement in commit message.
+	9. Test with more CPUs(4 -> 16) to see bigger improvement.
+
+Changes from RFC:
+
+	1. Fix a bug triggered when a destination folio at the previous
+	   migration becomes a source folio at the next migration,
+	   before the folio gets handled properly so that the folio can
+	   play with another migration. There was inconsistency in the
+	   folio's state. Fixed it.
+	2. Split the patch set into more pieces so that the folks can
+	   review better. (Feedbacked by Nadav Amit)
+	3. Fix a wrong usage of barrier e.g. smp_mb__after_atomic().
+	   (Feedbacked by Nadav Amit)
+	4. Tried to add sufficient comments to explain the patch set
+	   better. (Feedbacked by Nadav Amit)
+
+Byungchul Park (7):
+  x86/tlb: Add APIs manipulating tlb batch's arch data
+  arm64: tlbflush: Add APIs manipulating tlb batch's arch data
+  mm/rmap: Recognize read-only TLB entries during batched TLB flush
+  mm: Separate move/undo doing on folio list from migrate_pages_batch()
+  mm: Add APIs to free a folio directly to the buddy bypassing pcp
+  mm: Defer TLB flush by keeping both src and dst folios at migration
+  mm: Pause migrc mechanism at high memory pressure
+
+ arch/arm64/include/asm/tlbflush.h |  19 ++
+ arch/x86/include/asm/tlbflush.h   |  18 ++
+ arch/x86/mm/tlb.c                 |   7 +
+ include/linux/mm.h                |  23 ++
+ include/linux/mmzone.h            |   5 +
+ include/linux/sched.h             |   7 +
+ mm/internal.h                     |  84 +++++++
+ mm/memory.c                       |   8 +
+ mm/migrate.c                      | 381 +++++++++++++++++++++++++-----
+ mm/page_alloc.c                   |  34 ++-
+ mm/rmap.c                         |  37 ++-
+ mm/swap.c                         |   7 +
+ 12 files changed, 574 insertions(+), 56 deletions(-)
+
 -- 
-2.35.3
+2.17.1
 
