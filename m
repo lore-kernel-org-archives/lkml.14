@@ -1,78 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196025821A;
-	Thu, 11 Jan 2024 21:01:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E14656B80
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 21:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGXpUEwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8F02C43390;
-	Thu, 11 Jan 2024 21:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705006899;
-	bh=vT9ATkHQ5EKl+YtVVvA9nkiRWFb45uIc4mz/IoDatf4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=MGXpUEwcdY4/WUf4HhEBogM2Y4+pTu1TLKlV3W0hUAeeXFDqNYWs/+EYZd5oOOAub
-	 c3J35TZYNdvV5tWuhi2X0olclyw9Z8kY5HXHlGxyytHdpO7R4ENlMAa2h07C2sfJBl
-	 CC2MjX55+tqWpK+RqyGLSqjWBr25Y57r147fpiOIuZoPzJq6f4VfuozP/0fxypE5bR
-	 lE+O3axKUK8sZRCc+yfHeuDIY81vltyNRYeiPXtUyAsg0sxpFJC5XxA1BmIoDVN5bv
-	 znrVKXmLy+mv1xDRDkSA99RemcpHeVl/SvMhkCZO5PYlJxyAeLu4ul1TjAErx/hGSf
-	 uH2ZD4Z+dvw/Q==
-Date: Thu, 11 Jan 2024 15:01:38 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RCucMcQV"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5e7c1012a42so55023557b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:04:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705007058; x=1705611858; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BZBM9DHTMRa5r9o/EOHYBsOH+N+oJgezGzR9/BcPyBA=;
+        b=RCucMcQVSqfQFlmmPdKzjKcHChkEzqq1eGhDOueJV5NOYXx/dCBwjTBUDsu8rDzSpa
+         GTwmuK4xuahgPNPs4C+Hlrm5sL61/3YSMpKFBwlNkwvX9o2UgBKcoxKdKWzYgtIfddz/
+         lus4eKgPBN+Ezv3YWsQolBD0bI/nuuOIhUxk2H9V9KiUmDMIlK85a6hf0sW81/iXnJqr
+         kGLnAxnLKWDIXdoUhG9Q4CHJA1Wapzt6AkoEXQ3rbVgsCII+aY79RUde15FR46pb4+4z
+         PWMp7NP1QLIHQxTbrjl4faBZajV7CoBRVW5wPii+a2oj1VmtipnpDH5vG1exMjEQqH6X
+         /0HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705007058; x=1705611858;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BZBM9DHTMRa5r9o/EOHYBsOH+N+oJgezGzR9/BcPyBA=;
+        b=rJBFnKkjXE1avEO+HM00ntJMdgDNdIRZlBD6YpLmZSbglXKYf1vgqVYqeSRoZHkFcl
+         px60OqizkSxCUO89bRG5qpbWDGs5wcnYuUqIpg0rUfKGf1SKV5HKAhm1NM666+wesj+T
+         NVAx5NQIPT3fkf9HEr02dcDy/o5s+ACw1sL5B/d6LzkgJ7qOVVAeJ5BBMBboB5Yl8baw
+         t625h6xlz21NmwFm+aJtLdbaH4vR6oH4gYSZ5BYJcTjUe1qncRfNcBtbzmTUbdBT3tdW
+         FZaHv5kWLIHejx3NQqZyusQT5d2xUfm55u+2mqEmIg2RgvqGNopHHm8KcE6vHO1dqsxk
+         fsfw==
+X-Gm-Message-State: AOJu0YwYG1CXCh0eMwqT4J208nz/SEAaTYVxHglLv/tlVuDgyu7CNzxb
+	Q+9FocqvTVWb2x9HF+kwnTNTVTM/lStjnXuB4xaVH0mZ10eN
+X-Google-Smtp-Source: AGHT+IFU4vD3qg9bo1/N+GrmostDVqHnqU0mqNePYQwXjQmDgut8e6ATb+n1Jg+lw2BRcgjE9YjbaH/XiOpxGxGcl3s=
+X-Received: by 2002:a81:c80e:0:b0:5f1:e1f:fe7a with SMTP id
+ n14-20020a81c80e000000b005f10e1ffe7amr399574ywi.10.1705007057927; Thu, 11 Jan
+ 2024 13:04:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Catalin Popescu <catalin.popescu@leica-geosystems.com>
-Cc: kuba@kernel.org, devicetree@vger.kernel.org, pabeni@redhat.com, 
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
- linux@armlinux.org.uk, edumazet@google.com, netdev@vger.kernel.org, 
- andrew@lunn.ch, davem@davemloft.net, hkallweit1@gmail.com, 
- linux-kernel@vger.kernel.org, afd@ti.com, conor+dt@kernel.org
-In-Reply-To: <20240111161927.3689084-2-catalin.popescu@leica-geosystems.com>
-References: <20240111161927.3689084-1-catalin.popescu@leica-geosystems.com>
- <20240111161927.3689084-2-catalin.popescu@leica-geosystems.com>
-Message-Id: <170500673322.1110591.17657743226495430265.robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: net: dp83826: add ti,cfg-dac-plus
- binding
+References: <00000000000011d709060eadffd3@google.com> <CAJuCfpG-8w_KQ8bWvSr=GrXM+Jx3YKn5DqTFJU2MaMojML_a-A@mail.gmail.com>
+ <CAJuCfpFfKYn+G1+puQ0KxzWCnbfFT51tKwV8MnrP7YZcJAORwg@mail.gmail.com>
+ <CAJuCfpHTAAPEjMLrcxyG8zW7HA47EinB8CQfKGmBw7gGxqQ=vA@mail.gmail.com>
+ <5ed23cf3-eedd-44aa-a498-d2a9ab046535@redhat.com> <CAJuCfpG5T71Sc46pB2eGpV7TreMZX2VZ-kDfaNmtn+etP0q9JA@mail.gmail.com>
+ <bf9dbc58-35c4-4a35-b194-6d8d9e7e4923@redhat.com>
+In-Reply-To: <bf9dbc58-35c4-4a35-b194-6d8d9e7e4923@redhat.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 11 Jan 2024 21:04:06 +0000
+Message-ID: <CAJuCfpGRA7KJhMBneqAj+dw=rQReU7PyR1r34yqrNSoa-RUKbg@mail.gmail.com>
+Subject: Re: [syzbot] [mm?] kernel BUG in move_pages
+To: David Hildenbrand <david@redhat.com>
+Cc: syzbot <syzbot+705209281e36404998f6@syzkaller.appspotmail.com>, 
+	Peter Xu <peterx@redhat.com>, aarcange@redhat.com, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jan 11, 2024 at 9:00=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 11.01.24 21:20, Suren Baghdasaryan wrote:
+> > On Thu, Jan 11, 2024 at 6:58=E2=80=AFPM David Hildenbrand <david@redhat=
+.com> wrote:
+> >>
+> >> On 11.01.24 19:34, Suren Baghdasaryan wrote:
+> >>> On Thu, Jan 11, 2024 at 8:44=E2=80=AFAM Suren Baghdasaryan <surenb@go=
+ogle.com> wrote:
+> >>>>
+> >>>> On Thu, Jan 11, 2024 at 8:40=E2=80=AFAM Suren Baghdasaryan <surenb@g=
+oogle.com> wrote:
+> >>>>>
+> >>>>> On Thu, Jan 11, 2024 at 8:25=E2=80=AFAM syzbot
+> >>>>> <syzbot+705209281e36404998f6@syzkaller.appspotmail.com> wrote:
+> >>>>>>
+> >>>>>> Hello,
+> >>>>>>
+> >>>>>> syzbot found the following issue on:
+> >>>>>>
+> >>>>>> HEAD commit:    e2425464bc87 Add linux-next specific files for 202=
+40105
+> >>>>>> git tree:       linux-next
+> >>>>>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D14941c=
+dee80000
+> >>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D4056b9=
+349f3da8c9
+> >>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=3D70520928=
+1e36404998f6
+> >>>>>> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutil=
+s for Debian) 2.40
+> >>>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D125d=
+0a09e80000
+> >>>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15bc73=
+31e80000
+> >>>>>>
+> >>>>>> Downloadable assets:
+> >>>>>> disk image: https://storage.googleapis.com/syzbot-assets/2f738185e=
+2cf/disk-e2425464.raw.xz
+> >>>>>> vmlinux: https://storage.googleapis.com/syzbot-assets/b248fcf4ea46=
+/vmlinux-e2425464.xz
+> >>>>>> kernel image: https://storage.googleapis.com/syzbot-assets/a9945c8=
+223f4/bzImage-e2425464.xz
+> >>>>>>
+> >>>>>> The issue was bisected to:
+> >>>>>>
+> >>>>>> commit adef440691bab824e39c1b17382322d195e1fab0
+> >>>>>> Author: Andrea Arcangeli <aarcange@redhat.com>
+> >>>>>> Date:   Wed Dec 6 10:36:56 2023 +0000
+> >>>>>>
+> >>>>>>       userfaultfd: UFFDIO_MOVE uABI
+> >>>>>>
+> >>>>>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D11c=
+b6ea9e80000
+> >>>>>> final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D13c=
+b6ea9e80000
+> >>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=3D15cb6e=
+a9e80000
+> >>>>>>
+> >>>>>> IMPORTANT: if you fix the issue, please add the following tag to t=
+he commit:
+> >>>>>> Reported-by: syzbot+705209281e36404998f6@syzkaller.appspotmail.com
+> >>>>>> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> >>>>>>
+> >>>>>>    do_one_initcall+0x128/0x680 init/main.c:1237
+> >>>>>>    do_initcall_level init/main.c:1299 [inline]
+> >>>>>>    do_initcalls init/main.c:1315 [inline]
+> >>>>>>    do_basic_setup init/main.c:1334 [inline]
+> >>>>>>    kernel_init_freeable+0x692/0xc30 init/main.c:1552
+> >>>>>>    kernel_init+0x1c/0x2a0 init/main.c:1442
+> >>>>>>    ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+> >>>>>>    ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+> >>>>>> ------------[ cut here ]------------
+> >>>>>> kernel BUG at include/linux/page-flags.h:1035!
+> >>>>>> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> >>>>>> CPU: 0 PID: 5068 Comm: syz-executor191 Not tainted 6.7.0-rc8-next-=
+20240105-syzkaller #0
+> >>>>>> Hardware name: Google Google Compute Engine/Google Compute Engine,=
+ BIOS Google 11/17/2023
+> >>>>>> RIP: 0010:PageAnonExclusive include/linux/page-flags.h:1035 [inlin=
+e]
+> >>>>>
+> >>>>>   From a quick look, I think the new ioctl is being used against a
+> >>>>> file-backed page and that's why PageAnonExclusive() throws this err=
+or.
+> >>>>> I'll confirm if this is indeed the case and will add checks for tha=
+t
+> >>>>> case. Thanks!
+> >>>>
+> >>>> Hmm. Looking at the reproducer it does not look like a file-backed
+> >>>> memory... Anyways, I'm on it.
+> >>>
+> >>> Looks like the test is trying to move the huge_zero_page. Wonder how
+> >>> we should handle this. Just fail or do something else? Adding David
+> >>> and Peter for feedback.
+> >>
+> >> You'll need some special-casing to handle that. But it should be fairl=
+y
+> >> easy.
+> >
+> > Ok, so should we treat zeropage the same as PAE and map destination
+> > PTE/PMD to zeropage while clearing source PTE/PMD?
+>
+> Likely yes. So it's transparent for user space what we are moving. (this
+> sounds like an easy case to not require a prior write access just to
+> move it)
 
-On Thu, 11 Jan 2024 17:19:26 +0100, Catalin Popescu wrote:
-> Add property ti,cfg-dac-plus to allow for voltage tuning
-> of logical level +1 of the MLT-3 encoded data.
-> 
-> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
-> ---
->  Documentation/devicetree/bindings/net/ti,dp83822.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
+Ok, working on it. split_huge_pmd() already knows how to split
+huge_zero_page but I think I'll need special handling in both
+move_pages_pte() and move_pages_huge_pmd().
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/ti,dp83822.yaml: ti,cfg-dac-plus: missing type definition
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240111161927.3689084-2-catalin.popescu@leica-geosystems.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
