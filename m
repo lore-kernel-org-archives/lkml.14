@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D664495CC
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336DF495FB
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvrdmSn8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A8D49C43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XggMf5a8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C4AE1C433A6;
 	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704984637;
-	bh=+blWXOkxs+elmiiGxL/nzv66ZE7UIH/a2iH3jf6WOV0=;
+	bh=QEltCOghjDHZcleTwVJs57Hiqfo45501vMQF9TdPbNw=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MvrdmSn8UtowhN7o/iJd1KQk9lDrmGaHxmqnpBMwd+g65GDsWrjHwTwFLFw1GOjjW
-	 xUtteiGQz/iuIIo7ObwUmeJNgViVe8hZn23amuaxOhhxLCy+yljeuI+HRvEv1ZJDRb
-	 kD7rwvNmZkqzctQLIbgLORTKrX+s2TfM5KYD7F1nN/YtMscXTA3pzOk0T5Ci9IXicu
-	 fWbxOz1/ZFhf0lrJAZkcgLRVOTSIIoiDMffVVe8RoxFlnBLhQDJIKaKURLkiNMpkKq
-	 1dSSsSGZUJ7yLXk8oVlkCO7F7E2w5gQGfM5TBaY7F7ym5r3Ot4NDHjk0BJWc6GnmGy
-	 NMdspWQtG15Iw==
+	b=XggMf5a8thlS8ZWv5KV1lrlRp922G8wC7o8T6DeasRsCajZZMOepavAmdDIc7PmSA
+	 bRQWtvSmHBmqOMSPaXXuIk4+mm+GGUA01qbWkQQRjsqaFYxe9uKKfQY9G4UdeJlxOF
+	 YHRaBFv0YGDS2hiHBr5/2nIxoUrRq9ci/rGMB2YudM2s8UGY6fd55Z2ie9HYbJVy7M
+	 PpHbYUbpJ+WvuNWs2tW849GsXLO+1ckKdiU1CTyxw6e3P0KcZXE5Z8ms0voVi7VAfx
+	 4Dscqip2NmNI3XlCvlQ9YHF88GvMsdauT2lFbBgmapiropnrw8oq7kmUP7AjX283ej
+	 c3MlnTSkW9GHw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8D54EDFC698;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A8BEBD8C97A;
 	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,39 +28,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: vector: Check SR_SD before saving vstate
+Subject: Re: [PATCH 0/3] Fix XIP boot and make XIP testable in QEMU
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170498463757.20080.7960935665061816471.git-patchwork-notify@kernel.org>
+ <170498463768.20080.204922306048177003.git-patchwork-notify@kernel.org>
 Date: Thu, 11 Jan 2024 14:50:37 +0000
-References: <20231221070449.1809020-1-songshuaishuai@tinylab.org>
-In-Reply-To: <20231221070449.1809020-1-songshuaishuai@tinylab.org>
-To: Song Shuai <songshuaishuai@tinylab.org>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, andy.chiu@sifive.com,
- greentime.hu@sifive.com, conor.dooley@microchip.com, guoren@kernel.org,
- bjorn@rivosinc.com, xiao.w.wang@intel.com, heiko@sntech.de,
- ruinland.tsai@sifive.com, linux-kernel@vger.kernel.org
+References: <20231212130116.848530-1-haxel@fzi.de>
+In-Reply-To: <20231212130116.848530-1-haxel@fzi.de>
+To: Frederik Haxel <haxel@fzi.de>
+Cc: linux-riscv@lists.infradead.org, vitaly.wool@konsulko.com,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ greentime.hu@sifive.com, andy.chiu@sifive.com, heiko@sntech.de,
+ conor.dooley@microchip.com, cleger@rivosinc.com, samitolvanen@google.com,
+ masahiroy@kernel.org, guoren@kernel.org, namcaov@gmail.com,
+ alexghiti@rivosinc.com, akpm@linux-foundation.org, anup@brainfault.org,
+ bhe@redhat.com, chenjiahao16@huawei.com, bjorn@rivosinc.com,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (for-next)
+This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Thu, 21 Dec 2023 15:04:49 +0800 you wrote:
-> The SD bit summarizes the dirty states of FS, VS, or XS fields,
-> providing a "fast check" before saving fstate or vstate.
+On Tue, 12 Dec 2023 14:01:11 +0100 you wrote:
+> XIP boot seems to be broken for some time now. A likely reason why no one
+> seems to have noticed this is that XIP is more difficult to test, as it is
+> currently not easily testable with QEMU.
 > 
-> Let __switch_to_vector() check SD bit as __switch_to_fpu() does.
-> 
-> Fixes: 3a2df6323def ("riscv: Add task switch support for vector")
-> Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
+> These patches fix the XIP boot and allow an XIP build without BUILTIN_DTB,
+> which in turn makes it easier to test an image with the QEMU virt machine.
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: vector: Check SR_SD before saving vstate
-    https://git.kernel.org/riscv/c/e1b76bc00ed1
+  - [1/3] riscv: Make XIP bootable again
+    https://git.kernel.org/riscv/c/66f1e6809397
+  - [2/3] riscv: Fixed wrong register in XIP_FIXUP_FLASH_OFFSET macro
+    https://git.kernel.org/riscv/c/5daa37264102
+  - [3/3] riscv: Allow disabling of BUILTIN_DTB for XIP
+    https://git.kernel.org/riscv/c/6c4a2f6329f0
 
 You are awesome, thank you!
 -- 
