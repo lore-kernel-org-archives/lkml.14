@@ -1,132 +1,87 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA5F14F88;
-	Thu, 11 Jan 2024 11:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50D715482;
+	Thu, 11 Jan 2024 11:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="GWDvW8kf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=5sjLwUPk7GW0AYnZdr
-	pWLEmyQy7eYTGg/d7DZKCHq6w=; b=GWDvW8kfl9KDvl1mm6occPSzLG1Ba9xq+0
-	fCwM9WnqnZ7XRaRNeGYL2DLUks0Q3naNm89ugpnZqqxxJ/BhD3HWCUlYrBx+mSgG
-	3wf/QZr+BSd5g9448yOrgAick6GhE7gNQs6EOmoG/GwpmeyXRr3dPD9v1AGLDPtP
-	E2t+mJTvY=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD3H3fLzJ9lxzinAA--.14213S2;
-	Thu, 11 Jan 2024 19:11:07 +0800 (CST)
-From: XueBing Chen <chenxb_99091@126.com>
-To: jejb@linux.ibm.com,
-	njavali@marvell.com,
-	martin.petersen@oracle.com,
-	mrangankar@marvell.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	XueBing Chen <chenxb_99091@126.com>
-Subject: [PATCH] scsi: qla4xxx: Clean up errors in ql4_def.h
-Date: Thu, 11 Jan 2024 11:11:06 +0000
-Message-Id: <20240111111106.15200-1-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3H3fLzJ9lxzinAA--.14213S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWr17trykAFW3JryDur1xXwb_yoW5uF4DpF
-	WUtas8Wa1DtFnFgFWkKrs8Crn3KFn2qa4UKas2gw48tFn0y3y0yryruFyY9FyfJw1kXF1f
-	JF4kXFWrCw42grUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U0FAJUUUUU=
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiGA9ixWVLZWp60gAAs5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZEf06Me"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F119C433C7;
+	Thu, 11 Jan 2024 11:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704971507;
+	bh=jrjz1XxjlOKskncLo0svJMKugtaa7ZciuJ2FrB6L8Q8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=cZEf06MeycSA/AXMtdWc1Lq8zuNUbrjNs0dW+DevuJt8qKC6YAKD9m9iLR1Q1hKEH
+	 izjVuMF6hqpm4th1jLi2Q51b0Nu/POJM+nG3FmJ6AzLohMGxg+lnDi+iveGomOaC/j
+	 UlE94FN5PsTdGEdpAVDcD8hacnjh0oMRkB1oPqTDHAITn2TQhGOjUVKWZUPI3BpyhC
+	 ybMTh3aUf7yNiK6BLmMflw53/lbNPH0TVFJKSUleZiWPBpq7DwTbygRIqkFEx47P67
+	 nbAxebZ9rrAr9xJdrMMDX8hC+cMHJ4njt039Vs5CGJFWU+64U4+a0VNQb5VehLzFP2
+	 /kIqnkbyXM35w==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Andre Przywara <andre.przywara@arm.com>, Fuyao Kashizuku <fuyao@sjterm.com>
+Cc: Jianzhang Mai <maijianzhang@allwinnertech.com>
+In-Reply-To: <ZYuFbUUus9apiCpq@debian.cyg>
+References: <ZYuFbUUus9apiCpq@debian.cyg>
+Subject: Re: (subset) [PATCH] mfd: sun4i-gpadc: adaptation interrupt number
+Message-Id: <170497150511.1690895.486576943676385399.b4-ty@kernel.org>
+Date: Thu, 11 Jan 2024 11:11:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.3
 
-Fix the following errors reported by checkpatch:
+On Wed, 27 Dec 2023 10:01:17 +0800, Fuyao Kashizuku wrote:
+> The identifiers are used as IRQ resource numbers, where 0 is treated
+> specially.
+> 
+> This fixes sun4i-gpadc-iio probe failed when request irq.
+> 
+> The backstack:
+> 	WARNING: CPU: 3 PID: 1 at drivers/base/platform.c:451
+> 	__platform_get_irq_byname+0xb8/0xc4
+> 	0 is an invalid IRQ number
+> 	Modules linked in:
+> 	CPU: 3 PID: 1 Comm: swapper/0 Not tainted 6.7.0-rc6 #9
+> 	Hardware name: Allwinner sun8i Family
+> 	 unwind_backtrace
+> 	 show_stack
+> 	 dump_stack_lvl
+> 	 __warn
+> 	 warn_slowpath_fmt
+> 	 __platform_get_irq_byname
+> 	 platform_get_irq_byname
+> 	 sun4i_irq_init
+> 	 sun4i_gpadc_probe
+> 	 platform_probe
+> 	 really_probe
+> 	 __driver_probe_device
+> 	 driver_probe_device
+> 	 __driver_attach
+> 	 bus_for_each_dev
+> 	 bus_add_driver
+> 	 driver_register
+> 	 do_one_initcall
+> 	 do_initcall_level
+> 	 do_initcalls
+> 	 kernel_init_freeable
+> 	 kernel_init
+> 
+> [...]
 
-ERROR: "foo* bar" should be "foo *bar"
+Applied, thanks!
 
-Signed-off-by: XueBing Chen <chenxb_99091@126.com>
----
- drivers/scsi/qla4xxx/ql4_def.h | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+[1/1] mfd: sun4i-gpadc: adaptation interrupt number
+      commit: 112461517fa0cf4135bf242270c2923b61426b60
 
-diff --git a/drivers/scsi/qla4xxx/ql4_def.h b/drivers/scsi/qla4xxx/ql4_def.h
-index 5e683ba49fa5..af466834dc3b 100644
---- a/drivers/scsi/qla4xxx/ql4_def.h
-+++ b/drivers/scsi/qla4xxx/ql4_def.h
-@@ -918,54 +918,54 @@ static inline int adapter_up(struct scsi_qla_host *ha)
- 	       (!test_bit(AF_LOOPBACK, &ha->flags));
- }
- 
--static inline struct scsi_qla_host* to_qla_host(struct Scsi_Host *shost)
-+static inline struct scsi_qla_host *to_qla_host(struct Scsi_Host *shost)
- {
- 	return (struct scsi_qla_host *)iscsi_host_priv(shost);
- }
- 
--static inline void __iomem* isp_semaphore(struct scsi_qla_host *ha)
-+static inline void __iomem *isp_semaphore(struct scsi_qla_host *ha)
- {
- 	return (is_qla4010(ha) ?
- 		&ha->reg->u1.isp4010.nvram :
- 		&ha->reg->u1.isp4022.semaphore);
- }
- 
--static inline void __iomem* isp_nvram(struct scsi_qla_host *ha)
-+static inline void __iomem *isp_nvram(struct scsi_qla_host *ha)
- {
- 	return (is_qla4010(ha) ?
- 		&ha->reg->u1.isp4010.nvram :
- 		&ha->reg->u1.isp4022.nvram);
- }
- 
--static inline void __iomem* isp_ext_hw_conf(struct scsi_qla_host *ha)
-+static inline void __iomem *isp_ext_hw_conf(struct scsi_qla_host *ha)
- {
- 	return (is_qla4010(ha) ?
- 		&ha->reg->u2.isp4010.ext_hw_conf :
- 		&ha->reg->u2.isp4022.p0.ext_hw_conf);
- }
- 
--static inline void __iomem* isp_port_status(struct scsi_qla_host *ha)
-+static inline void __iomem *isp_port_status(struct scsi_qla_host *ha)
- {
- 	return (is_qla4010(ha) ?
- 		&ha->reg->u2.isp4010.port_status :
- 		&ha->reg->u2.isp4022.p0.port_status);
- }
- 
--static inline void __iomem* isp_port_ctrl(struct scsi_qla_host *ha)
-+static inline void __iomem *isp_port_ctrl(struct scsi_qla_host *ha)
- {
- 	return (is_qla4010(ha) ?
- 		&ha->reg->u2.isp4010.port_ctrl :
- 		&ha->reg->u2.isp4022.p0.port_ctrl);
- }
- 
--static inline void __iomem* isp_port_error_status(struct scsi_qla_host *ha)
-+static inline void __iomem *isp_port_error_status(struct scsi_qla_host *ha)
- {
- 	return (is_qla4010(ha) ?
- 		&ha->reg->u2.isp4010.port_err_status :
- 		&ha->reg->u2.isp4022.p0.port_err_status);
- }
- 
--static inline void __iomem * isp_gp_out(struct scsi_qla_host *ha)
-+static inline void __iomem *isp_gp_out(struct scsi_qla_host *ha)
- {
- 	return (is_qla4010(ha) ?
- 		&ha->reg->u2.isp4010.gp_out :
-@@ -979,9 +979,9 @@ static inline int eeprom_ext_hw_conf_offset(struct scsi_qla_host *ha)
- 		offsetof(struct eeprom_data, isp4022.ext_hw_conf) / 2);
- }
- 
--int ql4xxx_sem_spinlock(struct scsi_qla_host * ha, u32 sem_mask, u32 sem_bits);
--void ql4xxx_sem_unlock(struct scsi_qla_host * ha, u32 sem_mask);
--int ql4xxx_sem_lock(struct scsi_qla_host * ha, u32 sem_mask, u32 sem_bits);
-+int ql4xxx_sem_spinlock(struct scsi_qla_host *ha, u32 sem_mask, u32 sem_bits);
-+void ql4xxx_sem_unlock(struct scsi_qla_host *ha, u32 sem_mask);
-+int ql4xxx_sem_lock(struct scsi_qla_host *ha, u32 sem_mask, u32 sem_bits);
- 
- static inline int ql4xxx_lock_flash(struct scsi_qla_host *a)
- {
--- 
-2.17.1
+--
+Lee Jones [李琼斯]
 
