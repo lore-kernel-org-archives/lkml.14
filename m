@@ -1,67 +1,100 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 065A31866
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="AcDNtnxK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=zK0YN430fRG/wJDkOy
-	RLzq+lusy5pMsnDcFSbdS1ltM=; b=AcDNtnxK4AP42mE+SXzZ2l0GbvwP18wR6/
-	XVmquiHVemvyVfdD8n0uqW8iOq0kVpxy6Nrz6ZjN80zLSPsHRnoJhUoLcbn67xRa
-	YUEGL7Jy5w+6Xve7AuSO1hltSBVyfMcnPqkueti9Sb4tPs0SELsKrf/p2x3Fg1om
-	m5UJ5n5ec=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wD3P7u1UZ9lyIUtAA--.14199S2;
-	Thu, 11 Jan 2024 10:25:57 +0800 (CST)
-From: chenxuebing <chenxb_99091@126.com>
-To: christian.koenig@amd.com,
-	daniel@ffwll.ch,
-	Xinhui.Pan@amd.com,
-	alexander.deucher@amd.com,
-	airlied@gmail.com
-Cc: dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	chenxuebing <chenxb_99091@126.com>
-Subject: [PATCH] drm/amdgpu: Clean up errors in amdgpu_gmc.c
-Date: Thu, 11 Jan 2024 02:25:56 +0000
-Message-Id: <20240111022556.6327-1-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3P7u1UZ9lyIUtAA--.14199S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrurW8Zw17Wry7Kr1ruw4UJwb_yoWDurX_Cr
-	W7Xwn5Kr13AF92qF13Z3yYqw1DtFy5ur4kWr12yFn3t343Z348AryjgryfXay8u3WxGFyD
-	uw1YgrWYya9xWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRRt8nDUUUUU==
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiOhpixWVEuXoZjAAAsw
+Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412F81C16;
+	Thu, 11 Jan 2024 02:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
+Received: from mail.maildlp.com ([172.25.15.154])
+	by h3cspam02-ex.h3c.com with ESMTP id 40B2P3Oi095226;
+	Thu, 11 Jan 2024 10:25:03 +0800 (GMT-8)
+	(envelope-from hu.yadi@h3c.com)
+Received: from DAG6EX01-IMDC.srv.huawei-3com.com (unknown [10.62.14.10])
+	by mail.maildlp.com (Postfix) with ESMTP id 559F822D4780;
+	Thu, 11 Jan 2024 10:29:23 +0800 (CST)
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
+ DAG6EX01-IMDC.srv.huawei-3com.com (10.62.14.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.27; Thu, 11 Jan 2024 10:25:04 +0800
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
+ by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
+ mapi id 15.02.1258.027; Thu, 11 Jan 2024 10:25:03 +0800
+From: Huyadi <hu.yadi@h3c.com>
+To: =?utf-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+CC: "jmorris@namei.org" <jmorris@namei.org>,
+        "serge@hallyn.com"
+	<serge@hallyn.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org"
+	<linux-security-module@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>,
+        "514118380@qq.com" <514118380@qq.com>
+Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjJdIHNlbGZ0ZXN0cy9tb3ZlX21vdW50X3NldF9n?=
+ =?utf-8?Q?roup:Make_tests_build_with_old_libc?=
+Thread-Topic: [PATCH v2] selftests/move_mount_set_group:Make tests build with
+ old libc
+Thread-Index: AQHaQ5cFEyIWLbXjpU+9djDN1vXVNrDSzHOAgAEVTtA=
+Date: Thu, 11 Jan 2024 02:25:03 +0000
+Message-ID: <6c398076d4624691a97766bad168d975@h3c.com>
+References: <20240110072901.5873-1-hu.yadi@h3c.com>
+ <20240110.Yap9Aw9aeghu@digikod.net>
+In-Reply-To: <20240110.Yap9Aw9aeghu@digikod.net>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-sender-location: DAG2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:h3cspam02-ex.h3c.com 40B2P3Oi095226
 
-Fix the following errors reported by checkpatch:
-
-ERROR: need consistent spacing around '-' (ctx:WxV)
-
-Signed-off-by: chenxuebing <chenxb_99091@126.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
-index d2f273d77e59..a5d2cda33266 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
-@@ -52,7 +52,7 @@ int amdgpu_gmc_pdb0_alloc(struct amdgpu_device *adev)
- 	struct amdgpu_bo_param bp;
- 	u64 vram_size = adev->gmc.xgmi.node_segment_size * adev->gmc.xgmi.num_physical_nodes;
- 	uint32_t pde0_page_shift = adev->gmc.vmid0_page_table_block_size + 21;
--	uint32_t npdes = (vram_size + (1ULL << pde0_page_shift) -1) >> pde0_page_shift;
-+	uint32_t npdes = (vram_size + (1ULL << pde0_page_shift) - 1) >> pde0_page_shift;
- 
- 	memset(&bp, 0, sizeof(bp));
- 	bp.size = PAGE_ALIGN((npdes + 1) * 8);
--- 
-2.17.1
-
+DQo+T24gV2VkLCBKYW4gMTAsIDIwMjQgYXQgMDM6Mjk6MDFQTSArMDgwMCwgSHUgWWFkaSB3cm90
+ZToNCj4+IEZyb206ICJIdS5ZYWRpIiA8aHUueWFkaUBoM2MuY29tPg0KPj4gDQo+PiBSZXBsYWNl
+IFNZU188c3lzY2FsbD4gd2l0aCBfX05SXzxzeXNjYWxsPi4gIFVzaW5nIHRoZSBfX05SXzxzeXNj
+YWxsPiANCj4+IG5vdGF0aW9uLCBwcm92aWRlZCBieSBVQVBJLCBpcyB1c2VmdWwgdG8gYnVpbGQg
+dGVzdHMgb24gc3lzdGVtcyANCj4+IHdpdGhvdXQgdGhlIFNZU188c3lzY2FsbD4gZGVmaW5pdGlv
+bnMuDQo+DQo+VGhpcyBsb29rcyBhIGxvdCBsaWtlIHRoYXQuLi4NCj5odHRwczovL2dpdC5rZXJu
+ZWwub3JnL3N0YWJsZS9jLzg3MTI5ZWYxMzYwM2FlNDZjODJiY2QwOWVlZDk0OGFjZjA1MDZkYmIN
+Cg0KWWVzLCBJIHBpY2tlZCB1cCBjb21tZW50cyBmcm9tIGFib3ZlIGNvbW1pdCBpbiBvcmRlciBm
+b3IgY29uc2lzdGVudCwNCkkgd291bGQgc2VuZCB2MyBwYXRjaCBpZiBpdCBpcyBpbmFwcHJvcHJp
+YXRlLiANCg0KPj4gDQo+PiBSZXBsYWNlIFNZU19tb3ZlX21vdW50IHdpdGggX19OUl9tb3ZlX21v
+dW50DQo+PiANCj4+IFNpZ25lZC1vZmYtYnk6IEh1LllhZGkgPGh1LnlhZGlAaDNjLmNvbT4gU3Vn
+Z2VzdGVkLWJ5OkppYW8gDQo+PiA8amlhb3h1cG9AaDNjLmNvbT4gUmV2aWV3ZWQtYnk6QmVybGlu
+IDxiZXJsaW5AaDNjLmNvbT4NCj4+IC0tLQ0KPj4gQ2hhbmdlcyB2MSAtPiB2MjoNCj4+ICAtIEZp
+eCBtYWlsIG9mIFN1Z2dlc3RlZC1ieSBhbmQgUmV2aWV3ZWQtYnkNCj4+IA0KPj4gIC4uLi9tb3Zl
+X21vdW50X3NldF9ncm91cC9tb3ZlX21vdW50X3NldF9ncm91cF90ZXN0LmMgICAgICAgICAgfCA0
+ICsrLS0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygt
+KQ0KPj4gDQo+PiBkaWZmIC0tZ2l0IA0KPj4gYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9tb3Zl
+X21vdW50X3NldF9ncm91cC9tb3ZlX21vdW50X3NldF9ncm91cF90ZQ0KPj4gc3QuYyANCj4+IGIv
+dG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbW92ZV9tb3VudF9zZXRfZ3JvdXAvbW92ZV9tb3VudF9z
+ZXRfZ3JvdXBfdGUNCj4+IHN0LmMgaW5kZXggNTBlZDVkNDc1ZGQxLi5iY2Y1MWQ3ODVhMzcgMTAw
+NjQ0DQo+PiAtLS0gDQo+PiBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL21vdmVfbW91bnRfc2V0
+X2dyb3VwL21vdmVfbW91bnRfc2V0X2dyb3VwX3RlDQo+PiBzdC5jDQo+PiArKysgYi90b29scy90
+ZXN0aW5nL3NlbGZ0ZXN0cy9tb3ZlX21vdW50X3NldF9ncm91cC9tb3ZlX21vdW50X3NldF9ncm91
+DQo+PiArKysgcF90ZXN0LmMNCj4+IEBAIC0yMTgsNyArMjE4LDcgQEAgc3RhdGljIGJvb2wgbW92
+ZV9tb3VudF9zZXRfZ3JvdXBfc3VwcG9ydGVkKHZvaWQpDQo+PiAgCWlmIChtb3VudChOVUxMLCBT
+RVRfR1JPVVBfRlJPTSwgTlVMTCwgTVNfU0hBUkVELCAwKSkNCj4+ICAJCXJldHVybiAtMTsNCj4+
+ICANCj4+IC0JcmV0ID0gc3lzY2FsbChTWVNfbW92ZV9tb3VudCwgQVRfRkRDV0QsIFNFVF9HUk9V
+UF9GUk9NLA0KPj4gKwlyZXQgPSBzeXNjYWxsKF9fTlJfbW92ZV9tb3VudCwgQVRfRkRDV0QsIFNF
+VF9HUk9VUF9GUk9NLA0KPj4gIAkJICAgICAgQVRfRkRDV0QsIFNFVF9HUk9VUF9UTywgTU9WRV9N
+T1VOVF9TRVRfR1JPVVApOw0KPj4gIAl1bW91bnQyKCIvdG1wIiwgTU5UX0RFVEFDSCk7DQo+PiAg
+DQo+PiBAQCAtMzYzLDcgKzM2Myw3IEBAIFRFU1RfRihtb3ZlX21vdW50X3NldF9ncm91cCwgY29t
+cGxleF9zaGFyaW5nX2NvcHlpbmcpDQo+PiAgCQkgICAgICAgQ0xPTkVfVk0gfCBDTE9ORV9GSUxF
+Uyk7IEFTU0VSVF9HVChwaWQsIDApOw0KPj4gIAlBU1NFUlRfRVEod2FpdF9mb3JfcGlkKHBpZCks
+IDApOw0KPj4gIA0KPj4gLQlBU1NFUlRfRVEoc3lzY2FsbChTWVNfbW92ZV9tb3VudCwgY2FfZnJv
+bS5tbnRmZCwgIiIsDQo+PiArCUFTU0VSVF9FUShzeXNjYWxsKF9fTlJfbW92ZV9tb3VudCwgY2Ff
+ZnJvbS5tbnRmZCwgIiIsDQo+PiAgCQkJICBjYV90by5tbnRmZCwgIiIsIE1PVkVfTU9VTlRfU0VU
+X0dST1VQDQo+PiAgCQkJICB8IE1PVkVfTU9VTlRfRl9FTVBUWV9QQVRIIHwgTU9WRV9NT1VOVF9U
+X0VNUFRZX1BBVEgpLA0KPj4gIAkJICAwKTsNCj4+IC0tDQo+PiAyLjIzLjANCj4+ICANCg==
