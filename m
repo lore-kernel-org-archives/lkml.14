@@ -1,83 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0648B14F88;
-	Thu, 11 Jan 2024 11:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bUFkSZhz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704974196; x=1736510196;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rxfB6CJ33YC73UGGmfDn7hZc0Y7X2EI0dmmGO62rrxA=;
-  b=bUFkSZhz7q/+UU1fw7vtB9c5sVycqecMoBuDw8qhVn6w1c4fl3dRIQPO
-   ccFkz29+qM4VlAl0Vh4ZK7l8h/eTMeQdIBbWgJhLF9+5Nt7Qv4ub1XsC1
-   jkSJC4vxIbfiE1WwkZLaRMO/49+NyOPpBGSUzgSli8a29vQvH3qLnAVza
-   OUrmv97CSFGrQcPtnDHnpI1gGMhD2kBRbgV2APqp1rfaMV/3eauP07evC
-   cNuWvjAUlmCm+vLDkPc/FsH/Kam5i0m5wCZLh5xggkPtrIDSKtU7VDaPT
-   a76gW4t7XJA20VRlOlp+XQ70lHpM/WI53V8jU454LWAK4BYkMIm7hhhzU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="389261859"
-X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
-   d="scan'208";a="389261859"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 03:56:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="758734850"
-X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
-   d="scan'208";a="758734850"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.201])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 03:56:32 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Jan 2024 13:56:28 +0200 (EET)
-To: Dan Carpenter <dan.carpenter@linaro.org>
-cc: Hans de Goede <hdegoede@redhat.com>, Henry Shi <henryshi2018@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: silicom-platform: clean up a check
-In-Reply-To: <0402e613-446a-40d1-b676-0422f6223aa8@moroto.mountain>
-Message-ID: <90c2576b-006d-36eb-1fac-c4c4a6eccb4a@linux.intel.com>
-References: <0402e613-446a-40d1-b676-0422f6223aa8@moroto.mountain>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B41154B6;
+	Thu, 11 Jan 2024 11:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bbc5636b8eso3279063b6e.2;
+        Thu, 11 Jan 2024 03:56:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704974209; x=1705579009;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aRRot3fSPqM/q7yv55Kx8nQqL7oWPBUmdwcMoAjnDzI=;
+        b=f3d3u6E6haVdNUl1q1DGEmanBsFJVarbPa+P8lPLm8quExTXEz1sL12OXkURHULrlW
+         1j/hmVlOZc/PBUhScAaZx8eGtzXDgHfRmt9SMNniew1g8WOCv5TxYJGPU2RoTg9aW1B0
+         7vAJRHELmlSXb/pO2nM/Y86RHmqFu4I81b0bUTZdxNV7nPmukDjSpqKZ0igk1UQtj3wr
+         io0XonpKomaDJL8p4BWLP+2OliWdOR1pJXfi97GUIiArjbIJGgErxyayaPX0wIkviSU7
+         ceV8JJwNPkK3Qz1GI5PQhpRkzr2HHfym6mr/rEJ6FTV+MOLbF9DsgRB+Y7iKHA8MjV8r
+         bBWQ==
+X-Gm-Message-State: AOJu0YwoeXqoi87P9TP2xitmzNUXtLpJxmSVu5j58VuCI6pkeSE/HGj+
+	0Xnyou13VhGFZ8/r9JP3Nrw=
+X-Google-Smtp-Source: AGHT+IH6QIRblUbO7LPVLGc5KQtSUtO/9V3RZZMWBTBUf/ouMAQIu3s88JmEiW1PahzxYrrxcTHaSg==
+X-Received: by 2002:a05:6808:3987:b0:3bb:c56e:7f6b with SMTP id gq7-20020a056808398700b003bbc56e7f6bmr1267990oib.56.1704974209024;
+        Thu, 11 Jan 2024 03:56:49 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id le5-20020a056a004fc500b006db00cb78a8sm997489pfb.179.2024.01.11.03.56.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 03:56:48 -0800 (PST)
+Date: Thu, 11 Jan 2024 20:56:46 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Phil Elwell <phil@raspberrypi.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 0/2] PCI: brcmstb: Configure appropriate HW CLKREQ#
+ mode
+Message-ID: <20240111115646.GA1443933@rocinante>
+References: <20231113185607.1756-1-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231113185607.1756-1-james.quinlan@broadcom.com>
 
-On Wed, 10 Jan 2024, Dan Carpenter wrote:
+Hello,
 
-> "value" is either non-zero, or zero.  There isn't a third option.
-> Delete the unnecessary code.
+> V8 -- Un-advertise L1SS capability when in "no-l1ss" mode (Bjorn)
+>    -- Squashed last two commits of v7 (Bjorn)
+>    -- Fix DT binding description text wrapping (Bjorn)
+>    -- Fix incorrect Spec reference (Bjorn)
+>          s/PCIe Spec/PCIe Express Mini CEM 2.1 specification/
+>    -- Text substitutions (Bjorn)
+>          s/WRT/With respect to/ 
+>          s/Tclron/T_CLRon/
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/platform/x86/silicom-platform.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> v7 -- Manivannan Sadhasivam suggested (a) making the property look like a
+>       network phy-mode and (b) keeping the code simple (not counting clkreq
+>       signal appearances, un-advertising capabilites, etc).  This is
+>       what I have done.  The property is now "brcm,clkreq-mode" and
+>       the values may be one of "safe", "default", and "no-l1ss".  The
+>       default setting is to employ the most capable power savings mode.
 > 
-> diff --git a/drivers/platform/x86/silicom-platform.c b/drivers/platform/x86/silicom-platform.c
-> index 6ce43ccb3112..5cac698bf98d 100644
-> --- a/drivers/platform/x86/silicom-platform.c
-> +++ b/drivers/platform/x86/silicom-platform.c
-> @@ -258,10 +258,8 @@ static void silicom_gpio_set(struct gpio_chip *gc,
->  
->  	if (value)
->  		silicom_mec_port_set(channel, 0);
-> -	else if (value == 0)
-> -		silicom_mec_port_set(channel, 1);
->  	else
-> -		pr_err("Wrong argument value: %d\n", value);
-> +		silicom_mec_port_set(channel, 1);
+> v6 -- No code has been changed.
+>    -- Changed commit subject and comment in "#PERST" commit (Bjorn, Cyril)
+>    -- Changed sign-off and author email address for all commits.
+>       This was due to a change in Broadcom's upstreaming policy.
+> 
+> v5 -- Remove DT property "brcm,completion-timeout-us" from	 
+>       "DT bindings" commit.  Although this error may be reported	 
+>       as a completion timeout, its cause was traced to an	 
+>       internal bus timeout which may occur even when there is	 
+>       no PCIe access being processed.  We set a timeout of four	 
+>       seconds only if we are operating in "L1SS CLKREQ#" mode.
+>    -- Correct CEM 2.0 reference provided by HW engineer,
+>       s/3.2.5.2.5/3.2.5.2.2/ (Bjorn)
+>    -- Add newline to dev_info() string (Stefan)
+>    -- Change variable rval to unsigned (Stefan)
+>    -- s/implementaion/implementation/ (Bjorn)
+>    -- s/superpowersave/powersupersave/ (Bjorn)
+>    -- Slightly modify message on "PERST#" commit.
+>    -- Rebase to torvalds master
+> 
+> v4 -- New commit that asserts PERST# for 2711/RPi SOCs at PCIe RC
+>       driver probe() time.  This is done in Raspian Linux and its
+>       absence may be the cause of a failing test case.
+>    -- New commit that removes stale comment.
+> 
+> v3 -- Rewrote commit msgs and comments refering panics if L1SS
+>       is enabled/disabled; the code snippet that unadvertises L1SS
+>       eliminates the panic scenario. (Bjorn)
+>    -- Add reference for "400ns of CLKREQ# assertion" blurb (Bjorn)
+>    -- Put binding names in DT commit Subject (Bjorn)
+>    -- Add a verb to a commit's subject line (Bjorn)
+>    -- s/accomodat(\w+)/accommodat$1/g (Bjorn)
+>    -- Rewrote commit msgs and comments refering panics if L1SS
+>       is enabled/disabled; the code snippet that unadvertises L1SS
+>       eliminates the panic scenario. (Bjorn)
+> 
+> v2 -- Changed binding property 'brcm,completion-timeout-msec' to
+>       'brcm,completion-timeout-us'.  (StefanW for standard suffix).
+>    -- Warn when clamping timeout value, and include clamped
+>       region in message. Also add min and max in YAML. (StefanW)
+>    -- Qualify description of "brcm,completion-timeout-us" so that
+>       it refers to PCIe transactions. (StefanW)
+>    -- Remvove mention of Linux specifics in binding description. (StefanW)
+>    -- s/clkreq#/CLKREQ#/g (Bjorn)
+>    -- Refactor completion-timeout-us code to compare max and min to
+>       value given by the property (as opposed to the computed value).
+> 
+> v1 -- The current driver assumes the downstream devices can
+>       provide CLKREQ# for ASPM.  These commits accomodate devices
+>       w/ or w/o clkreq# and also handle L1SS-capable devices.
+> 
+>    -- The Raspian Linux folks have already been using a PCIe RC
+>       property "brcm,enable-l1ss".  These commits use the same
+>       property, in a backward-compatible manner, and the implementaion
+>       adds more detail and also automatically identifies devices w/o
+>       a clkreq# signal, i.e. most devices plugged into an RPi CM4
+>       IO board.
 
-This covers both cases without if:
+Applied to controller/broadcom, thank you!
 
-	silicom_mec_port_set(channel, !value);
+[01/02] dt-bindings: PCI: brcmstb: Add property "brcm,clkreq-mode"
+        https://git.kernel.org/pci/pci/c/14b15aeb3628
+[02/02] PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream device
+        https://git.kernel.org/pci/pci/c/e2596dcf1e9d
 
-
--- 
- i.
-
+	Krzysztof
