@@ -1,162 +1,74 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC031549A;
-	Thu, 11 Jan 2024 11:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5637414F88
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Ady4bBw4"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40BA1fUg011257;
-	Thu, 11 Jan 2024 12:22:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=m3GNVAvX3k8htTlkp4Usks8fTVv88WEHu4xrWJGJQwU=; b=Ad
-	y4bBw4Wy7pvRySTAQn+a92J5NKcopXq7oMKUuI3RDuYuu2S1D+2PHarEO5pnuRO7
-	ClWnlSti34jH4+rSXWpgUI8MbqTjO3xAKQrbFbyFTE5LAqJ8lkjdbQqipABTCJ+8
-	ZG7Wqi2DpnFzLDRHQrCNG1iq2YdTT38yNI3/VkFFlW13DqK8KwxCnfNMgwu82EZT
-	pH5SA6w+Gyf+w/R74zmuN8SLHIJIhIN3wbwHMe8cAA9n2RTe1083OSCE2s4JvbOa
-	hyjUlLD3SWqGdq+bqrm46uKQV4tOjCSABUXdXyP6+rUDvW07iBxfiWh08DspZGXc
-	4sx3iaPbHKR5b0rFyROw==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vexrccsnq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 12:22:53 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4DC0D10002A;
-	Thu, 11 Jan 2024 12:22:52 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3EA4E237D84;
-	Thu, 11 Jan 2024 12:22:52 +0100 (CET)
-Received: from [10.252.29.122] (10.252.29.122) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Jan
- 2024 12:22:49 +0100
-Message-ID: <7889dff7-2c38-43c0-b6f7-281a20ae9733@foss.st.com>
-Date: Thu, 11 Jan 2024 12:22:48 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6S3euTN"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-db3fa47c2f7so4392913276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 03:24:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704972273; x=1705577073; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aojgwYUr2QZguAnX8qCVqtq4dlhf98Fk0ICKv6JZtAA=;
+        b=I6S3euTNp/+LZ7D4a64R/spzkuCFJrbmvJm4nvY2yTPulHPUla4wTXPx7xdbp+zxi1
+         E438AzFdcfByFcNPGc2O8+clYPFFZXqUMIBevBD/KbpnmkovZpP/BBqBHmGShlO/055K
+         jWazNttenZzfW3b7eYiu5rHdPIrwZpnczddbSNZWSF9HQ8C1nuoQZLxU3XdKd/YK/+yz
+         oYdbMIu/zGuAEUHH0gQaubZY4bkj8yS2Sy6iIvFoIB13QL1rplhG3hhrE9HxilT/YmoI
+         IcGqb+Y6m9kQsOwTvLvS1JQZLfvNZQ+fRDoU8mW125qMIHewM7Ls+pYHXun8XJ5ODa4r
+         ifpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704972273; x=1705577073;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aojgwYUr2QZguAnX8qCVqtq4dlhf98Fk0ICKv6JZtAA=;
+        b=gfT0858AsxlqE8wCp4STjCAmPS3AnuycSxOVd/BRZaD9y4tu6SwBDcA3Bn3uzpPfOl
+         gqk4fax6NjgRYR9HrOB6HQmj9ghF3rKkOlFFr0hcXuDrykzaj/EratL7FBktq0NFfgrk
+         nuhvaPzRvt+OskEcD8f2OdQG7FEFUOWFSTycNulwNOq6BOQRgRp791W4A2LhEgtXk8Lm
+         l4IRYmC6gin1zdRFKogx+/Z+UGNTqRPxh0f2t9kfX0NGlZwmInGX5DyPv+OithL8aBp6
+         TrWLjhTfnCIPBUm0xTnPiRVJPbIujLqWOmCdmxD0dtgylV6Q+3vN6pbA6qlsEyz9m+XW
+         yTWQ==
+X-Gm-Message-State: AOJu0Yxx/gR/6CEiBt+lbB1sEEZpVJiZlgvwN+8Pie1f7oNyDJD7oyLH
+	n+pXhGuPmL1mJ6VKwQihMgBAe+ogAkmNDMlfRko=
+X-Google-Smtp-Source: AGHT+IFx/bMfT4kDTm4bgkWCoYa3rLRG+k7Kmh2mgpdeVBjV2rOa+hvE8gKeoOVOnexdTpKD/cM7RjMgcYULBo13E8A=
+X-Received: by 2002:a25:fc1c:0:b0:dbd:b46c:c1e2 with SMTP id
+ v28-20020a25fc1c000000b00dbdb46cc1e2mr837247ybd.110.1704972273260; Thu, 11
+ Jan 2024 03:24:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linux-stm32] [PATCH v6 5/5] ARM: dts: add
- stm32f769-disco-mb1225-revb03-mb1166-reva09
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        <linux-kernel@vger.kernel.org>
-CC: <devicetree@vger.kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-        Florian
- Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andre Przywara
-	<andre.przywara@arm.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Sean Nyekjaer <sean@geanix.com>, <linux-amarula@amarulasolutions.com>,
-        Peter Rosin <peda@axentia.se>, <linux-arm-kernel@lists.infradead.org>
-References: <20240110080729.3238251-1-dario.binacchi@amarulasolutions.com>
- <20240110080729.3238251-6-dario.binacchi@amarulasolutions.com>
-Content-Language: en-US
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-In-Reply-To: <20240110080729.3238251-6-dario.binacchi@amarulasolutions.com>
+References: <20240111070652.71717-1-pranavsubbu@gmail.com> <2024011144-silica-viral-9e79@gregkh>
+ <CAP1Lp88vEZJtd69Njf9uZ5VXypwZ-5vLdBHf2xoLSpqmeyEQiA@mail.gmail.com>
+ <CAP1Lp8-CP-uELVam=18oADOEvL_13wXkTyDLHKbjQe1ZyxiG9g@mail.gmail.com>
+ <2024011144-sinister-baking-952d@gregkh> <CAP1Lp89zshQW_s0eLJjekr5tyc3XLaPnh2VGFrNDHTA7GT51ZQ@mail.gmail.com>
+ <8988f86a-f850-49a4-b7ac-ae363a7898d4@moroto.mountain>
+In-Reply-To: <8988f86a-f850-49a4-b7ac-ae363a7898d4@moroto.mountain>
+From: Pranav Athreya <pranavsubbu@gmail.com>
+Date: Thu, 11 Jan 2024 16:54:22 +0530
+Message-ID: <CAP1Lp8_6MRu8DJOqfvOEWVzA9wPhFB16iw=i2jOQX4RWELj=kA@mail.gmail.com>
+Subject: Re: [PATCH] staging: vt6655: Remove extra blank lines between code blocks
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Forest Bond <forest@alittletooquiet.net>, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+Content-Transfer-Encoding: quoted-printable
 
-
-On 1/10/24 09:05, Dario Binacchi wrote:
-> As reported in the section 8.3 (i. e. Board revision history) of document
-> UM2033 (i. e. Discovery kit with STM32F769NI MCU) these are the changes
-> related to the board revisions addressed by the patch:
-> - Board MB1225 revision B-03:
->   - Memory MICRON MT48LC4M32B2B5-6A replaced by ISSI IS42S32400F-6BL
-> - Board MB1166 revision A-09:
->   - LCD FRIDA FRD397B25009-D-CTK replaced by FRIDA FRD400B25025-A-CTK
+On Thu, Jan 11, 2024 at 4:38=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+> I have a blog about how to send a v2 patch.  (v3 patch now I guess).
 >
-> The patch only adds the DTS support for the new display which belongs to
-> to the Novatek NT35510-based panel family.
->
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
->
-> ---
->
-> Changes in v6:
-> - Drop patches
->   - [5/8] dt-bindings: nt35510: add compatible for FRIDA FRD400B25025-A-CTK
->   - [7/8] drm/panel: nt35510: move hardwired parameters to configuration
->   - [8/8] drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK
->   because applied by the maintainer Linus Walleij
->
-> Changes in v5:
-> - Replace GPIOD_ASIS with GPIOD_OUT_HIGH in the call to devm_gpiod_get_optional().
->
-> Changes in v2:
-> - Change the status of panel_backlight node to "disabled"
-> - Delete backlight property from panel0 node.
-> - Re-write the patch [8/8] "drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK"
->   in the same style as the original driver.
->
->  arch/arm/boot/dts/st/Makefile                  |  1 +
->  ...2f769-disco-mb1225-revb03-mb1166-reva09.dts | 18 ++++++++++++++++++
->  2 files changed, 19 insertions(+)
->  create mode 100644 arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts
->
-> diff --git a/arch/arm/boot/dts/st/Makefile b/arch/arm/boot/dts/st/Makefile
-> index 7892ad69b441..390dbd300a57 100644
-> --- a/arch/arm/boot/dts/st/Makefile
-> +++ b/arch/arm/boot/dts/st/Makefile
-> @@ -23,6 +23,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
->  	stm32f469-disco.dtb \
->  	stm32f746-disco.dtb \
->  	stm32f769-disco.dtb \
+> https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
+Thanks Dan, I will take a look at this! Also, why do you say it is a
+v3 patch now?
 
-Hi Dario,
+Yours Sincerely,
 
-
-Did you meant dtb here ? ;)
-
-
-Regards,
-
-Raphaël
-
-> +	stm32f769-disco-mb1225-revb03-mb1166-reva09.dts \
->  	stm32429i-eval.dtb \
->  	stm32746g-eval.dtb \
->  	stm32h743i-eval.dtb \
-> diff --git a/arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts b/arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts
-> new file mode 100644
-> index 000000000000..014cac192375
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts
-> @@ -0,0 +1,18 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2023 Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> + */
-> +
-> +#include "stm32f769-disco.dts"
-> +
-> +&panel_backlight {
-> +	status = "disabled";
-> +};
-> +
-> +&panel0 {
-> +	compatible = "frida,frd400b25025", "novatek,nt35510";
-> +	vddi-supply = <&vcc_3v3>;
-> +	vdd-supply = <&vcc_3v3>;
-> +	/delete-property/backlight;
-> +	/delete-property/power-supply;
-> +};
+Pranav.
