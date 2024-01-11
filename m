@@ -1,28 +1,41 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99FE28E33;
-	Thu, 11 Jan 2024 16:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 8034F68CFE; Thu, 11 Jan 2024 17:15:22 +0100 (CET)
-Date: Thu, 11 Jan 2024 17:15:22 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
-	Dave Chinner <david@fromorbit.com>, axboe@kernel.dk,
-	kbusch@kernel.org, sagi@grimberg.me, jejb@linux.ibm.com,
-	martin.petersen@oracle.com, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, dchinner@redhat.com, jack@suse.cz,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	linux-scsi@vger.kernel.org, ming.lei@redhat.com, bvanassche@acm.org,
-	ojaswin@linux.ibm.com
-Subject: Re: [PATCH v2 00/16] block atomic writes
-Message-ID: <20240111161522.GB16626@lst.de>
-References: <fff50006-ccd2-4944-ba32-84cbb2dbd1f4@oracle.com> <20231221065031.GA25778@lst.de> <73d03703-6c57-424a-80ea-965e636c34d6@oracle.com> <ZZ3Q4GPrKYo91NQ0@dread.disaster.area> <20240110091929.GA31003@lst.de> <20240111014056.GL722975@frogsfrogsfrogs> <20240111050257.GA4457@lst.de> <d5db2291-36b4-4b22-89f2-1d9e7d30f0f1@oracle.com> <20240111144537.GA9295@lst.de> <71063aee-8ba9-4a02-8c09-9b3a9982f6e0@oracle.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EEE4EB5C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IHX0Zrat"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=IHX0Zrat34d5MNL7qKQ/f7tIPs
+	kS7jGf4yNJrHjn0UT1ugOA7GOreE7qnGNpfGDx7Msy7s78bTPTVUAuDEfp40GBDW6UuafwPIRUx+6
+	j+WeGj3Wn/KmuLQgRHD/sQKa8KdDUrLpDgnk1lRsonLsToSDcEKWQqTYp0VmUmxl1gSCULETAhn44
+	wHuFOtCa1UTSKh6aKP5lPhphBJrMz3m8a4d0jBYhIqHOjtgyOVEAJe852O+tLRqhSZdBZNlK165vm
+	sOxKrFjvyWATwhBosp5hNE40FyWEPPOqZUhLYyuJUd7NnaYPcIC98aVIqrMU1FXEJi/pbh+VDJL5K
+	6PqAsV5g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rNxjg-000Ywh-2T;
+	Thu, 11 Jan 2024 16:16:52 +0000
+Date: Thu, 11 Jan 2024 08:16:52 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Dave Chinner <david@fromorbit.com>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/1] mm: vmalloc: Mark vmap_init_free_space() with __init
+ tag
+Message-ID: <ZaAUdInnnZA6VjU2@infradead.org>
+References: <20240111132628.299644-1-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,12 +44,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <71063aee-8ba9-4a02-8c09-9b3a9982f6e0@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20240111132628.299644-1-urezki@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Jan 11, 2024 at 04:11:38PM +0000, John Garry wrote:
-> Could we just error the SETXATTR ioctl when FS_XFLAG_FORCEALIGN is not set 
-> (and it is required)? The problem is that ioctl reports -EINVAL for any 
-> such errors, so hard for the user to know the issue...
+Looks good:
 
-Sure.  Pick a good unique error code, though.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
