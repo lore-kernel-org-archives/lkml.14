@@ -1,68 +1,156 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16516DDA7
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E092E545
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GGR2SuQr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=6AZs02xj1/cbg0BiYo
-	+KmJRnfb8WZCPrXQoJKEmHzYI=; b=GGR2SuQrujnsc54YNSF+uxxnodPQeL2V9+
-	V7RNolEXZMjC8F4P2oQdDTfLHoOsRnlrb/ivLerLV0SXttB0lsXZv85InIUpJ595
-	TNdQEWO0tOFQkEyZ/FAMX00fgfq+s9q7Zv/AkttaErTfxFwJFv1tDJU9HCL5E4iY
-	dG2K2S8Mo=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-5 (Coremail) with SMTP id _____wD3n1bdo59lXLCUAA--.18346S2;
-	Thu, 11 Jan 2024 16:16:30 +0800 (CST)
-From: GuoHua Chen <chenguohua_716@163.com>
-To: daniel@ffwll.ch,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	christian.koenig@amd.com,
-	alexander.deucher@amd.com
-Cc: linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	GuoHua Chen <chenguohua_716@163.com>
-Subject: [PATCH] drm/radeon/kms: Clean up errors in rv6xx_dpm.h
-Date: Thu, 11 Jan 2024 08:16:28 +0000
-Message-Id: <20240111081628.11492-1-chenguohua_716@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3n1bdo59lXLCUAA--.18346S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtF1kXF13tr13Ww17CFWDCFg_yoWxuwb_Ca
-	4xX3y7WrW2kFn5XF47Zrs8JryIva15uF48uw4fta4fGry7Xr1fWa4vgrW7Xa1FgFn3JF9x
-	Cw4kXFyfJFsFgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjcTmDUUUUU==
-X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/xtbBEB5i1mVOBk+DPwAAsk
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PutPWzbt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00909C433C7;
+	Thu, 11 Jan 2024 08:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704961079;
+	bh=6/KBhRJKvbOmR2LyqIZkaOwcwJm2RpzWRnpJUkpAL8I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PutPWzbtL476sPg8chP7RJKKWMAj+mYS2f7POak1nJalGkex+UvOwOUwJ7wGjIPZ+
+	 HTTazRqMpZIg+5qs0a1ykErqMwRq2LN6nrVK2Tfp8td8le5913ErcR4VV/9PRKUkfH
+	 tVGFe2xc57o64UYKfDwR2JcJ5q7mesWmu47yfPidp0FyibB0zYcSAiV0Di/YuLjcFM
+	 YcxA7mU9a/tV3N0NmMPaAkc0a+piApu9/Dd6L+iGdjca1cYMK6CHzmyVx6ULUGoY5T
+	 csAU/hTvog+6EBY3zGlivZYPtEMr/4yvpYroyjy92t/9TcKbc3/QfmKGLcIcyoVoVc
+	 QSH2xjPnBH97w==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	Zhiguo Niu <zhiguo.niu@unisoc.com>,
+	Yunlei He <heyunlei@hihonor.com>
+Subject: [PATCH v3] f2fs: reduce expensive checkpoint trigger frequency
+Date: Thu, 11 Jan 2024 16:17:43 +0800
+Message-Id: <20240111081743.2999210-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Fix the following errors reported by checkpatch:
+We may trigger high frequent checkpoint for below case:
+1. mkdir /mnt/dir1; set dir1 encrypted
+2. touch /mnt/file1; fsync /mnt/file1
+3. mkdir /mnt/dir2; set dir2 encrypted
+4. touch /mnt/file2; fsync /mnt/file2
+...
 
-ERROR: open brace '{' following struct go on the same line
+Although, newly created dir and file are not related, due to
+commit bbf156f7afa7 ("f2fs: fix lost xattrs of directories"), we will
+trigger checkpoint whenever fsync() comes after a new encrypted dir
+created.
 
-Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
+In order to avoid such condition, let's record an entry including
+directory's ino into global cache when we initialize encryption policy
+in a checkpointed directory, and then only trigger checkpoint() when
+target file's parent has non-persisted encryption policy, for the case
+its parent is not checkpointed, need_do_checkpoint() has cover that
+by verifying it with f2fs_is_checkpointed_node().
+
+Reported-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Tested-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Reported-by: Yunlei He <heyunlei@hihonor.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
- drivers/gpu/drm/radeon/rv6xx_dpm.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+v3:
+- Recently, Zhiguo Niu reported the same issue, so I repost this
+patch for comments.
+ fs/f2fs/f2fs.h              |  2 ++
+ fs/f2fs/file.c              |  3 +++
+ fs/f2fs/xattr.c             | 16 ++++++++++++++--
+ include/trace/events/f2fs.h |  3 ++-
+ 4 files changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/rv6xx_dpm.h b/drivers/gpu/drm/radeon/rv6xx_dpm.h
-index 8035d53ebea6..020c0dc8361d 100644
---- a/drivers/gpu/drm/radeon/rv6xx_dpm.h
-+++ b/drivers/gpu/drm/radeon/rv6xx_dpm.h
-@@ -28,8 +28,7 @@
- #include "r600_dpm.h"
- 
- /* Represents a single SCLK step. */
--struct rv6xx_sclk_stepping
--{
-+struct rv6xx_sclk_stepping {
-     u32 vco_frequency;
-     u32 post_divider;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index e2e0ca45f881..0094a8c85f4a 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -279,6 +279,7 @@ enum {
+ 	APPEND_INO,		/* for append ino list */
+ 	UPDATE_INO,		/* for update ino list */
+ 	TRANS_DIR_INO,		/* for transactions dir ino list */
++	ENC_DIR_INO,		/* for encrypted dir ino list */
+ 	FLUSH_INO,		/* for multiple device flushing */
+ 	MAX_INO_ENTRY,		/* max. list */
  };
+@@ -1147,6 +1148,7 @@ enum cp_reason_type {
+ 	CP_FASTBOOT_MODE,
+ 	CP_SPEC_LOG_NUM,
+ 	CP_RECOVER_DIR,
++	CP_ENC_DIR,
+ };
+ 
+ enum iostat_type {
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 8198afb5fb9c..18b33b1f0c83 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -218,6 +218,9 @@ static inline enum cp_reason_type need_do_checkpoint(struct inode *inode)
+ 		f2fs_exist_written_data(sbi, F2FS_I(inode)->i_pino,
+ 							TRANS_DIR_INO))
+ 		cp_reason = CP_RECOVER_DIR;
++	else if (f2fs_exist_written_data(sbi, F2FS_I(inode)->i_pino,
++							ENC_DIR_INO))
++		cp_reason = CP_ENC_DIR;
+ 
+ 	return cp_reason;
+ }
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index f290fe9327c4..cbd1b88297fe 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -629,6 +629,7 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 			const char *name, const void *value, size_t size,
+ 			struct page *ipage, int flags)
+ {
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct f2fs_xattr_entry *here, *last;
+ 	void *base_addr, *last_base_addr;
+ 	int found, newsize;
+@@ -772,8 +773,19 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 	if (index == F2FS_XATTR_INDEX_ENCRYPTION &&
+ 			!strcmp(name, F2FS_XATTR_NAME_ENCRYPTION_CONTEXT))
+ 		f2fs_set_encrypted_inode(inode);
+-	if (S_ISDIR(inode->i_mode))
+-		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_CP);
++
++	if (S_ISDIR(inode->i_mode)) {
++		/*
++		 * In restrict mode, fsync() always tries triggering checkpoint
++		 * for all metadata consistency, in other mode, it only triggers
++		 * checkpoint when parent's encryption metadata updates.
++		 */
++		if (F2FS_OPTION(sbi).fsync_mode == FSYNC_MODE_STRICT)
++			set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_CP);
++		else if (IS_ENCRYPTED(inode) &&
++			f2fs_is_checkpointed_node(sbi, inode->i_ino))
++			f2fs_add_ino_entry(sbi, inode->i_ino, ENC_DIR_INO);
++	}
+ 
+ same:
+ 	if (is_inode_flag_set(inode, FI_ACL_MODE)) {
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 7ed0fc430dc6..48f2e399e184 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -139,7 +139,8 @@ TRACE_DEFINE_ENUM(EX_BLOCK_AGE);
+ 		{ CP_NODE_NEED_CP,	"node needs cp" },		\
+ 		{ CP_FASTBOOT_MODE,	"fastboot mode" },		\
+ 		{ CP_SPEC_LOG_NUM,	"log type is 2" },		\
+-		{ CP_RECOVER_DIR,	"dir needs recovery" })
++		{ CP_RECOVER_DIR,	"dir needs recovery" },		\
++		{ CP_ENC_DIR,		"persist encryption policy" })
+ 
+ #define show_shutdown_mode(type)					\
+ 	__print_symbolic(type,						\
 -- 
-2.17.1
+2.40.1
 
