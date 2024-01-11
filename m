@@ -1,117 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D46212E4C;
-	Thu, 11 Jan 2024 09:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A411511722
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 09:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0RtdqRMj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51154C433C7;
-	Thu, 11 Jan 2024 09:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704966779;
-	bh=Rg+uWdSn7M8siVwGtnph84S0VwOHlpKxDjRqhHzmUBE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=0RtdqRMjVtvj+J7ROrMeb6Sr/+F4RqCQItOXOt4+RNnO0MS+dLkH7f+78WQrgQEJW
-	 20YmvNzQFZP8ohR1Y7yg1gIB75sO+PLU7vjmMoUWutRHxfWvw2RmFw/m5LRE+kyWUf
-	 x1NR2Xo3BuTYiQu+gp+nh5sbJUdc0+uy9VCwAMAI=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: [PATCH 5.10 0/7] 5.10.207-rc1 review
-Date: Thu, 11 Jan 2024 10:52:49 +0100
-Message-ID: <20240111094700.222742213@linuxfoundation.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M4R/cmbP"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50eaf2f00d1so1572e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 01:53:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704966831; x=1705571631; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zgQBYPpCMJHmwQQ7MSzJ01g6p5sRnkxOOVnMipT4Y9o=;
+        b=M4R/cmbPPFMtheK6MY5VP8zGnWpdohfVWm+x9WKSvZF5WtWCuvkNo/2GI6PvmWFTMP
+         saQTvRVOERWO+3jQA0hGSJa5Sw/92IyryAExdD++EtMw4lHXCrfurI5XoEzVuSTcuoZW
+         bKfTBljLccXwTF+hIgor6mg3Rgg2uAJCuVbv1IUEbdkhbjtecdSPlhRSTPgZHCpHibAK
+         9QtyyuF7TonUR57BYztpFGGqm3xSkukBNWwWU/bjNJlO0YDHkvd+hyQpk7OMChIfqGBS
+         mcRQtW2d57URce4VlTarkTX8yf/LmzCKd3mSNG0y42cquGQ9DhVznWQZnlkdQs0xYZb3
+         budw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704966831; x=1705571631;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zgQBYPpCMJHmwQQ7MSzJ01g6p5sRnkxOOVnMipT4Y9o=;
+        b=K3kI52FU2o/xiCmUoIUoQhiKpJoiwSL/GsUp8khyBU9iHsNK/bZvRowbnwPfcH+mQz
+         CYM3tUEUFIOpeC3bihci4lkyw0DnaZyjd1zFY9OGfwCERSY4WJI+ze1at33izx/hKmyE
+         tNxFLJU5Py2TPUsgsRKlD1jiWBfmEKOD9OtntWR7DRd95Nu7Ke5coy1rYLOpHSjnLaAR
+         tL7O5vw6Te0Cc5iHHX0L8rhMTy1OtvBfTcCgfTN6IMB4IdJvKNZRbQIGs7ocKV03Dcf2
+         gfcRHMmP9teXcZKdcyErkyp9rr7GLFINSdRUU66OYc/dS9LobE34oBQIJfnPwfx/XyMN
+         W+xQ==
+X-Gm-Message-State: AOJu0Yz4P38BD2Afu/mV5xqoNQA4ya+3trjfMltjG0ZRTImuxZjFWgL7
+	LK90h5tYmis8YdbwiHqevFfq9jXXlzIodc5B/TtiE0XPa0Q4
+X-Google-Smtp-Source: AGHT+IFcPP/fziapp2cRbLUbIpvWNNm4ul19qV7vlrMJDwTWz429M1Mdty01i/XOSnrbItydGtslek/0jRKgNjOXwBI=
+X-Received: by 2002:a05:6512:e90:b0:50e:6b4e:1bb9 with SMTP id
+ bi16-20020a0565120e9000b0050e6b4e1bb9mr42600lfb.5.1704966831382; Thu, 11 Jan
+ 2024 01:53:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.207-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.10.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.10.207-rc1
-X-KernelTest-Deadline: 2024-01-13T09:47+00:00
-Content-Transfer-Encoding: 8bit
+References: <20240111002056.28205-1-mcpratt@pm.me>
+In-Reply-To: <20240111002056.28205-1-mcpratt@pm.me>
+From: VAMSHI GAJJELA <vamshigajjela@google.com>
+Date: Thu, 11 Jan 2024 15:23:39 +0530
+Message-ID: <CAMTSyjrh8msOWqFu+0PYRVoy74Uubur-NV7nPY6AmhR_wx_Qfw@mail.gmail.com>
+Subject: Re: [PATCH v1 RESEND] serial: 8250: Set fifo timeout with uart_fifo_timeout()
+To: Michael Pratt <mcpratt@pm.me>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Wander Lairson Costa <wander@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is the start of the stable review cycle for the 5.10.207 release.
-There are 7 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Sat, 13 Jan 2024 09:46:53 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.207-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.10.207-rc1
-
-Alexander Atanasov <alexander.atanasov@virtuozzo.com>
-    scsi: core: Always send batch on reset or error handling command
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "scsi: core: Add scsi_prot_ref_tag() helper"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "scsi: core: Introduce scsi_get_sector()"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "scsi: core: Make scsi_get_lba() return the LBA"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "scsi: core: Use scsi_cmd_to_rq() instead of scsi_cmnd.request"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "scsi: core: Use a structure member to track the SCSI command submitter"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "scsi: core: Always send batch on reset or error handling command"
-
-
--------------
-
-Diffstat:
-
- Makefile                    |  4 ++--
- drivers/scsi/scsi.c         |  2 +-
- drivers/scsi/scsi_error.c   | 34 +++++++++++++++++++---------------
- drivers/scsi/scsi_lib.c     | 38 +++++++++++++-------------------------
- drivers/scsi/scsi_logging.c | 18 ++++++++----------
- drivers/scsi/scsi_priv.h    |  1 -
- include/scsi/scsi_cmnd.h    | 29 +++--------------------------
- include/scsi/scsi_device.h  | 16 +++++++---------
- 8 files changed, 53 insertions(+), 89 deletions(-)
-
-
+On Thu, Jan 11, 2024 at 5:57=E2=80=AFAM Michael Pratt <mcpratt@pm.me> wrote=
+:
+>
+> Commit 8f3631f0f6eb ("serial/8250: Use fifo in 8250 console driver")
+> reworked functions for basic 8250 and 16550 type serial devices
+> in order to enable and use the internal FIFO device for buffering,
+> however the default timeout of 10 ms remained, which is proving
+> to be insufficient for low baud rates like 9600, causing data overrun.
+>
+> Unforunately, that commit was written and accepted just before commit
+> 31f6bd7fad3b ("serial: Store character timing information to uart_port")
+> which introduced the frame_time member of the uart_port struct
+> in order to store the amount of time it takes to send one UART frame
+> relative to the baud rate and other serial port configuration,
+> and commit f9008285bb69 ("serial: Drop timeout from uart_port")
+> which established function uart_fifo_timeout() in order to
+> calculate a reasonable timeout to wait for all frames
+> in the FIFO device to flush before writing data again
+> using the now stored frame_time value and size of the buffer.
+>
+> Fix this by using the new function to calculate the timeout
+> whenever the buffer is larger than 1 byte (unknown port default).
+>
+> Tested on a MIPS device (ar934x) at baud rates 625, 9600, 115200.
+>
+> Signed-off-by: Michael Pratt <mcpratt@pm.me>
+> ---
+> v1 thread: https://lore.kernel.org/linux-serial/20231125063552.517-1-mcpr=
+att@pm.me/
+>
+>  drivers/tty/serial/8250/8250_port.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
+0/8250_port.c
+> index 8ca061d3bbb9..777b61a79c5e 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2076,7 +2076,10 @@ static void wait_for_lsr(struct uart_8250_port *up=
+, int bits)
+>  {
+>         unsigned int status, tmout =3D 10000;
+>
+> -       /* Wait up to 10ms for the character(s) to be sent. */
+> +       /* Wait for a time relative to buffer size and baud */
+> +       if (up->port.fifosize > 1)
+> +               tmout =3D jiffies_to_usecs(uart_fifo_timeout(&up->port));
+> +
+Michael, I have copied you onto a patch addressing the similar issue, where
+it was considered to avoid the computation of timeout on call to wait_for_l=
+sr.
+>         for (;;) {
+>                 status =3D serial_lsr_in(up);
+>
+> --
+> 2.30.2
+>
+>
+>
