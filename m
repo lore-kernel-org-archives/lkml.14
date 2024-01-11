@@ -1,44 +1,31 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A88EFC08;
-	Thu, 11 Jan 2024 23:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="on00Wa/e"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 149C8C001660;
-	Thu, 11 Jan 2024 15:15:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 149C8C001660
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1705014944;
-	bh=RZEbF5rHXIeGL5qadO5zUtwdGFWIxLHURWRU1bfcIJo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=on00Wa/eYWwY9KUfqVThcAcSAGtGlQKQfpPqO26SMPA1fjWI7cM3skzrDI+r6JQAt
-	 u/adcT61FjMmNBTGEBjsf/BO2PT2lXkOP2ljfUk714Nt18SMB2ACVveoboj7ZwlVkj
-	 CFP4rTzLikAqdNUIVvdQbgwy8IMgjWeiYpjdmYes=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 985A418041CAC6;
-	Thu, 11 Jan 2024 15:15:42 -0800 (PST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] dt-bindings: bus: Document Broadcom GISB arbiter 74165 compatible
-Date: Thu, 11 Jan 2024 15:15:38 -0800
-Message-Id: <20240111231539.783785-2-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240111231539.783785-1-florian.fainelli@broadcom.com>
-References: <20240111231539.783785-1-florian.fainelli@broadcom.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F96A59B40;
+	Thu, 11 Jan 2024 23:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+Received: from meterpeter.fritz.box ([84.170.86.196]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MRCFw-1rl4nb1Rzg-00NCGL; Fri, 12 Jan 2024 00:15:43 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: Jens Axboe <axboe@kernel.dk>,
+	Dave Chinner <dchinner@redhat.com>,
+	Jan Kara <jack@suse.cz>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Christian Brauner <brauner@kernel.org>,
+	Min Li <min15.li@samsung.com>,
+	Christian Heusel <christian@heusel.eu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: dan.carpenter@linaro.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] block: print symbolic error name instead of error code
+Date: Fri, 12 Jan 2024 00:15:18 +0100
+Message-ID: <20240111231521.1596838-1-christian@heusel.eu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,28 +33,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:hRXS/pbCGGcWgW+YdsFtf7CISoZpfbLekLeh/9dCbsXEE+9Xmnt
+ 6y1MThGhnBIcgxOwTuF41kb4eXoDRY9XGjiBiz6RGFPYa/rB2ZDq4gczVKkFlweNG3FRwpZ
+ HlvHqv0w3OiCRtBc5IXiWh1OVDl6pV8olZr4v4y6TciQinC8GiKWlHuOwxOK1e1dIIuaKKZ
+ 9h1IGa9JE7asMxdQYJBhw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:YOEeGaZNxuM=;yLWzStPVr+/wfRyPQxeTyK3BP1T
+ ooVIDDk8C/vXNQviLslzRLDVLCO4fdbjW/F0pLyeqoO+5btQsRb7ZwGDAEbukrPC0sQ5cUe5/
+ +Rh2Db1kc/lAELadQlfadrICs7dt8emJ/uV0/pKNb0Pl0g9RGtJO0FK80uar4BCPnfY5dnpia
+ rlVcTvwvhhUsmS8pZZuXKPFjY0Nxpj7AkMkZSQz97F+h8rcUAwENSPGTIxk9qEbr/AkT3BieS
+ 0/jCE0ZP8QxzmurTOPdn8JEOP7wDbeg7QiAhzMg2j0NtlDWX+Qaf8Hr5mIjaC6W/E9px/2VJV
+ QKx6/tXxlrdP5YdNotHSKGB3YJbveYDxxncBdm2QJxZdeNofcjZi/q4WOrOwvC82m3egGwlwQ
+ hXkdmTFfoIXa1g20/skVHJEsr9+DE1WfcP6ui/EsXvD/7rOjiMtP809A0gb4h4VoVyo60VIRl
+ xr2PL2bkoc5vVrFpr7eIUsoOv6oayaX5pbt5S7HWpaxlDzIdfu1xNWcvpDZDNe4e9zFAFfdHB
+ YIhOHJXUoo44t45htTz318dagKOaemAHzy3a7uRV8pnFzP7UqDTpoGGp/EmrzyMv5IwUCzqba
+ jbQe/cxvd8pFNjjhcx00PspBnsQr6u47pKQXLY2VEBN1/B3/fHMmJnrV2HQrjHZhP4UM7W2Qr
+ oVfXvXrF+f+D/utrzSvKlIdm0SCYJg/EOx14NigDJkJ+spiE0qw9Vd651iyuzPGBAkwWnI8sx
+ Vzj675/uGMA+gVsN66zI0/zTB6vKA5zU8xEextRg4Y7pnncFkqr0fU3X++o5TmadVp8urE9MO
+ KyRWR1QPgOBa8tP6gLLZ5BLBBs0pCHjfxqZW9exW7IB0g7OYSMzZ/EJZoMuPIQsF5ye4SdN3c
+ T6QLJ3yLFqJmUJg==
 
-The 74165 chip introduces a new layout for the GISB arbiter which is not
-identical to previous chips, document the new compatible that we are
-going to key off.
+Utilize the %pe print specifier to get the symbolic error name as a
+string (i.e "-ENOMEM") in the log message instead of the error code to
+increase its readablility.
 
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+This change was suggested in
+https://lore.kernel.org/all/92972476-0b1f-4d0a-9951-af3fc8bc6e65@suswa.mountain/
+
+Signed-off-by: Christian Heusel <christian@heusel.eu>
 ---
- Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ block/partitions/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml
-index 3aaefdbe361e..9017c5a3f3d2 100644
---- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml
-+++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml
-@@ -18,6 +18,7 @@ properties:
-           - const: brcm,gisb-arb
-       - items:
-           - enum:
-+              - brcm,bcm74165-gisb-arb  # for V7 new style 16nm chips
-               - brcm,bcm7278-gisb-arb  # for V7 28nm chips
-               - brcm,bcm7435-gisb-arb  # for newer 40nm chips
-               - brcm,bcm7400-gisb-arb  # for older 40nm chips and all 65nm chips
+diff --git a/block/partitions/core.c b/block/partitions/core.c
+index f47ffcfdfcec..932df4db76f1 100644
+--- a/block/partitions/core.c
++++ b/block/partitions/core.c
+@@ -570,8 +570,8 @@ static bool blk_add_partition(struct gendisk *disk,
+ 	part = add_partition(disk, p, from, size, state->parts[p].flags,
+ 			     &state->parts[p].info);
+ 	if (IS_ERR(part) && PTR_ERR(part) != -ENXIO) {
+-		printk(KERN_ERR " %s: p%d could not be added: %ld\n",
+-		       disk->disk_name, p, -PTR_ERR(part));
++		printk(KERN_ERR " %s: p%d could not be added: %pe\n",
++		       disk->disk_name, p, part);
+ 		return true;
+ 	}
+ 
 -- 
-2.34.1
+2.43.0
 
