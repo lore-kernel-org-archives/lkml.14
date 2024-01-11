@@ -1,31 +1,28 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 250FC4CDFE;
-	Thu, 11 Jan 2024 15:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F9BE2F4;
-	Thu, 11 Jan 2024 07:42:03 -0800 (PST)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97C073F5A1;
-	Thu, 11 Jan 2024 07:41:15 -0800 (PST)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Barry Song <21cnbao@gmail.com>,
-	John Hubbard <jhubbard@nvidia.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [RFC PATCH v1] mm/filemap: Allow arch to request folio size for exec memory
-Date: Thu, 11 Jan 2024 15:41:06 +0000
-Message-Id: <20240111154106.3692206-1-ryan.roberts@arm.com>
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2D94D13A;
+	Thu, 11 Jan 2024 15:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Thu, 11 Jan
+ 2024 18:41:44 +0300
+Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Thu, 11 Jan
+ 2024 18:41:43 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<wireguard@lists.zx2c4.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, syzbot <syzkaller@googlegroups.com>,
+	<syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com>
+Subject: [PATCH net] wireguard: receive: annotate data-race around receiving_counter.counter
+Date: Thu, 11 Jan 2024 07:41:38 -0800
+Message-ID: <20240111154138.7605-1-n.zhandarovich@fintech.ru>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -34,213 +31,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-Change the readahead config so that if it is being requested for an
-executable mapping, do a synchronous read of an arch-specified size in a
-naturally aligned manner.
+Syzkaller with KCSAN identified a data-race issue [1] when accessing
+keypair->receiving_counter.counter.
 
-On arm64 if memory is physically contiguous and naturally aligned to the
-"contpte" size, we can use contpte mappings, which improves utilization
-of the TLB. When paired with the "multi-size THP" changes, this works
-well to reduce dTLB pressure. However iTLB pressure is still high due to
-executable mappings having a low liklihood of being in the required
-folio size and mapping alignment, even when the filesystem supports
-readahead into large folios (e.g. XFS).
+This patch uses READ_ONCE() and WRITE_ONCE() annotations to fix the
+problem.
 
-The reason for the low liklihood is that the current readahead algorithm
-starts with an order-2 folio and increases the folio order by 2 every
-time the readahead mark is hit. But most executable memory is faulted in
-fairly randomly and so the readahead mark is rarely hit and most
-executable folios remain order-2. This is observed impirically and
-confirmed from discussion with a gnu linker expert; in general, the
-linker does nothing to group temporally accessed text together
-spacially. Additionally, with the current read-around approach there are
-no alignment guarrantees between the file and folio. This is
-insufficient for arm64's contpte mapping requirement (order-4 for 4K
-base pages).
+[1]
+BUG: KCSAN: data-race in wg_packet_decrypt_worker / wg_packet_rx_poll
 
-So it seems reasonable to special-case the read(ahead) logic for
-executable mappings. The trade-off is performance improvement (due to
-more efficient storage of the translations in iTLB) vs potential read
-amplification (due to reading too much data around the fault which won't
-be used), and the latter is independent of base page size. I've chosen
-64K folio size for arm64 which benefits both the 4K and 16K base page
-size configs and shouldn't lead to any further read-amplification since
-the old read-around path was (usually) reading blocks of 128K (with the
-last 32K being async).
+write to 0xffff888107765888 of 8 bytes by interrupt on cpu 0:
+ counter_validate drivers/net/wireguard/receive.c:321 [inline]
+ wg_packet_rx_poll+0x3ac/0xf00 drivers/net/wireguard/receive.c:461
+ __napi_poll+0x60/0x3b0 net/core/dev.c:6536
+ napi_poll net/core/dev.c:6605 [inline]
+ net_rx_action+0x32b/0x750 net/core/dev.c:6738
+ __do_softirq+0xc4/0x279 kernel/softirq.c:553
+ do_softirq+0x5e/0x90 kernel/softirq.c:454
+ __local_bh_enable_ip+0x64/0x70 kernel/softirq.c:381
+ __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:167 [inline]
+ _raw_spin_unlock_bh+0x36/0x40 kernel/locking/spinlock.c:210
+ spin_unlock_bh include/linux/spinlock.h:396 [inline]
+ ptr_ring_consume_bh include/linux/ptr_ring.h:367 [inline]
+ wg_packet_decrypt_worker+0x6c5/0x700 drivers/net/wireguard/receive.c:499
+ process_one_work kernel/workqueue.c:2633 [inline]
+ ...
 
-Performance Benchmarking
-------------------------
+read to 0xffff888107765888 of 8 bytes by task 3196 on cpu 1:
+ decrypt_packet drivers/net/wireguard/receive.c:252 [inline]
+ wg_packet_decrypt_worker+0x220/0x700 drivers/net/wireguard/receive.c:501
+ process_one_work kernel/workqueue.c:2633 [inline]
+ process_scheduled_works+0x5b8/0xa30 kernel/workqueue.c:2706
+ worker_thread+0x525/0x730 kernel/workqueue.c:2787
+ ...
 
-The below shows kernel compilation and speedometer javascript benchmarks
-on Ampere Altra arm64 system. (The contpte patch series is applied in
-the baseline).
-
-First, confirmation that this patch causes more memory to be contained
-in 64K folios (this is for all file-backed memory so includes
-non-executable too):
-
-| File-backed folios      |   Speedometer   |  Kernel Compile |
-| by size as percentage   |-----------------|-----------------|
-| of all mapped file mem  | before |  after | before |  after |
-|=========================|========|========|========|========|
-|file-thp-aligned-16kB    |    45% |     9% |    46% |     7% |
-|file-thp-aligned-32kB    |     2% |     0% |     3% |     1% |
-|file-thp-aligned-64kB    |     3% |    63% |     5% |    80% |
-|file-thp-aligned-128kB   |    11% |    11% |     0% |     0% |
-|file-thp-unaligned-16kB  |     1% |     0% |     3% |     1% |
-|file-thp-unaligned-128kB |     1% |     0% |     0% |     0% |
-|file-thp-partial         |     0% |     0% |     0% |     0% |
-|-------------------------|--------|--------|--------|--------|
-|file-cont-aligned-64kB   |    16% |    75% |     5% |    80% |
-
-The above shows that for both use cases, the amount of file memory
-backed by 16K folios reduces and the amount backed by 64K folios
-increases significantly. And the amount of memory that is contpte-mapped
-significantly increases (last line).
-
-And this is reflected in performance improvement:
-
-Kernel Compilation (smaller is faster):
-| kernel   |   real-time |   kern-time |   user-time |   peak memory |
-|----------|-------------|-------------|-------------|---------------|
-| before   |        0.0% |        0.0% |        0.0% |          0.0% |
-| after    |       -1.6% |       -2.1% |       -1.7% |          0.0% |
-
-Speedometer (bigger is faster):
-| kernel   |   runs_per_min |   peak memory |
-|----------|----------------|---------------|
-| before   |           0.0% |          0.0% |
-| after    |           1.3% |          1.0% |
-
-Both benchmarks show a ~1.5% improvement once the patch is applied.
-
-Alternatives
-------------
-
-I considered (and rejected for now - but I anticipate this patch will
-stimulate discussion around what the best approach is) alternative
-approaches:
-
-  - Expose a global user-controlled knob to set the preferred folio
-    size; this would move policy to user space and allow (e.g.) setting
-    it to PMD-size for even better iTLB utilizaiton. But this would add
-    ABI, and I prefer to start with the simplest approach first. It also
-    has the downside that a change wouldn't apply to memory already in
-    the page cache that is in active use (e.g. libc) so we don't get the
-    same level of utilization as for something that is fixed from boot.
-
-  - Add a per-vma attribute to allow user space to specify preferred
-    folio size for memory faulted from the range. (we've talked about
-    such a control in the context of mTHP). The dynamic loader would
-    then be responsible for adding the annotations. Again this feels
-    like something that could be added later if value was demonstrated.
-
-  - Enhance MADV_COLLAPSE to collapse to THP sizes less than PMD-size.
-    This would still require dynamic linker involvement, but would
-    additionally neccessitate a copy and all memory in the range would
-    be synchronously faulted in, adding to application load time. It
-    would work for filesystems that don't support large folios though.
-
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Fixes: a9e90d9931f3 ("wireguard: noise: separate receive counter from send counter")
+Reported-by: syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 ---
+ drivers/net/wireguard/receive.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hi all,
-
-I originally concocted something similar to this, with Matthew's help, as a
-quick proof of concept hack. Since then I've tried a few different approaches
-but always came back to this as the simplest solution. I expect this will raise
-a few eyebrows but given it is providing a real performance win, I hope we can
-converge to something that can be upstreamed.
-
-This depends on my contpte series to actually set the contiguous bit in the page
-table.
-
-Thanks,
-Ryan
-
-
- arch/arm64/include/asm/pgtable.h | 12 ++++++++++++
- include/linux/pgtable.h          | 12 ++++++++++++
- mm/filemap.c                     | 19 +++++++++++++++++++
- 3 files changed, 43 insertions(+)
-
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index f5bf059291c3..8f8f3f7eb8d8 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1143,6 +1143,18 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
-  */
- #define arch_wants_old_prefaulted_pte	cpu_has_hw_af
-
-+/*
-+ * Request exec memory is read into pagecache in at least 64K folios. The
-+ * trade-off here is performance improvement due to storing translations more
-+ * effciently in the iTLB vs the potential for read amplification due to reading
-+ * data from disk that won't be used. The latter is independent of base page
-+ * size, so we set a page-size independent block size of 64K. This size can be
-+ * contpte-mapped when 4K base pages are in use (16 pages into 1 iTLB entry),
-+ * and HPA can coalesce it (4 pages into 1 TLB entry) when 16K base pages are in
-+ * use.
-+ */
-+#define arch_wants_exec_folio_order(void) ilog2(SZ_64K >> PAGE_SHIFT)
-+
- static inline bool pud_sect_supported(void)
- {
- 	return PAGE_SIZE == SZ_4K;
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 170925379534..57090616d09c 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -428,6 +428,18 @@ static inline bool arch_has_hw_pte_young(void)
- }
- #endif
-
-+#ifndef arch_wants_exec_folio_order
-+/*
-+ * Returns preferred minimum folio order for executable file-backed memory. Must
-+ * be in range [0, PMD_ORDER]. Negative value implies that the HW has no
-+ * preference and mm will not special-case executable memory in the pagecache.
-+ */
-+static inline int arch_wants_exec_folio_order(void)
-+{
-+	return -1;
-+}
-+#endif
-+
- #ifndef arch_check_zapped_pte
- static inline void arch_check_zapped_pte(struct vm_area_struct *vma,
- 					 pte_t pte)
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 67ba56ecdd32..80a76d755534 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -3115,6 +3115,25 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
+index a176653c8861..d91383afb6e2 100644
+--- a/drivers/net/wireguard/receive.c
++++ b/drivers/net/wireguard/receive.c
+@@ -251,7 +251,7 @@ static bool decrypt_packet(struct sk_buff *skb, struct noise_keypair *keypair)
+ 
+ 	if (unlikely(!READ_ONCE(keypair->receiving.is_valid) ||
+ 		  wg_birthdate_has_expired(keypair->receiving.birthdate, REJECT_AFTER_TIME) ||
+-		  keypair->receiving_counter.counter >= REJECT_AFTER_MESSAGES)) {
++		  READ_ONCE(keypair->receiving_counter.counter) >= REJECT_AFTER_MESSAGES)) {
+ 		WRITE_ONCE(keypair->receiving.is_valid, false);
+ 		return false;
  	}
- #endif
-
-+	/*
-+	 * Allow arch to request a preferred minimum folio order for executable
-+	 * memory. This can often be beneficial to performance if (e.g.) arm64
-+	 * can contpte-map the folio. Executable memory rarely benefits from
-+	 * read-ahead anyway, due to its random access nature.
-+	 */
-+	if (vm_flags & VM_EXEC) {
-+		int order = arch_wants_exec_folio_order();
-+
-+		if (order >= 0) {
-+			fpin = maybe_unlock_mmap_for_io(vmf, fpin);
-+			ra->size = 1UL << order;
-+			ra->async_size = 0;
-+			ractl._index &= ~((unsigned long)ra->size - 1);
-+			page_cache_ra_order(&ractl, ra, order);
-+			return fpin;
-+		}
-+	}
-+
- 	/* If we don't want any read-ahead, don't bother */
- 	if (vm_flags & VM_RAND_READ)
- 		return fpin;
---
-2.25.1
-
+@@ -318,7 +318,7 @@ static bool counter_validate(struct noise_replay_counter *counter, u64 their_cou
+ 		for (i = 1; i <= top; ++i)
+ 			counter->backtrack[(i + index_current) &
+ 				((COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1)] = 0;
+-		counter->counter = their_counter;
++		WRITE_ONCE(counter->counter, their_counter);
+ 	}
+ 
+ 	index &= (COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1;
