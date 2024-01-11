@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336DF495FB
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ED5495D5;
+	Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XggMf5a8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C4AE1C433A6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq36s6XH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C7DA3C433B2;
 	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704984637;
-	bh=QEltCOghjDHZcleTwVJs57Hiqfo45501vMQF9TdPbNw=;
+	bh=gdgtNpyL3iGYpN5fWGoWRuJ8Tt8QZwxXPQpw0xnUJ6g=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=XggMf5a8thlS8ZWv5KV1lrlRp922G8wC7o8T6DeasRsCajZZMOepavAmdDIc7PmSA
-	 bRQWtvSmHBmqOMSPaXXuIk4+mm+GGUA01qbWkQQRjsqaFYxe9uKKfQY9G4UdeJlxOF
-	 YHRaBFv0YGDS2hiHBr5/2nIxoUrRq9ci/rGMB2YudM2s8UGY6fd55Z2ie9HYbJVy7M
-	 PpHbYUbpJ+WvuNWs2tW849GsXLO+1ckKdiU1CTyxw6e3P0KcZXE5Z8ms0voVi7VAfx
-	 4Dscqip2NmNI3XlCvlQ9YHF88GvMsdauT2lFbBgmapiropnrw8oq7kmUP7AjX283ej
-	 c3MlnTSkW9GHw==
+	b=Aq36s6XHWAapk7vNTgj1jWLUkf2EPJwSCz2dwnb24J+GQlMIe0827n+P+ELynHfdU
+	 O5NtyLaHcUK8fP5GsyOU73TJNwxr8DChoQRYNi8NS1lgcnqmORtXclWor8WWvzi0kR
+	 gLasGPPMysgi02WkD4SYV6Vy0+SePqrcaszLe94uoPhoZCtcRqWtsNs+w47NeKeDAG
+	 cPAnFYoNOTSZjNK93f6YYamQ82/wwmz8GKNIsDr4Ds2RgfQvdMjvI5N1aBNmyMPVix
+	 DFUIGwwxhtsr6Z6LX0J7IQbINGUA3FPplzFUFnxuf/sfMfPPrtDQUW44oua91/eI4Q
+	 nk8CURcV3E/Wg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A8BEBD8C97A;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B20BFD8C96C;
 	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,45 +28,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/3] Fix XIP boot and make XIP testable in QEMU
+Subject: Re: [PATCH v2 0/6] riscv: hwprobe: add Zicond, Zacas and Ztso support
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170498463768.20080.204922306048177003.git-patchwork-notify@kernel.org>
+ <170498463772.20080.16524587804054627963.git-patchwork-notify@kernel.org>
 Date: Thu, 11 Jan 2024 14:50:37 +0000
-References: <20231212130116.848530-1-haxel@fzi.de>
-In-Reply-To: <20231212130116.848530-1-haxel@fzi.de>
-To: Frederik Haxel <haxel@fzi.de>
-Cc: linux-riscv@lists.infradead.org, vitaly.wool@konsulko.com,
+References: <20231220155723.684081-1-cleger@rivosinc.com>
+In-Reply-To: <20231220155723.684081-1-cleger@rivosinc.com>
+To: =?utf-8?b?Q2zDqW1lbnQgTMOpZ2VyIDxjbGVnZXJAcml2b3NpbmMuY29tPg==?=@ci.codeaurora.org
+Cc: linux-riscv@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, corbet@lwn.net,
  paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- greentime.hu@sifive.com, andy.chiu@sifive.com, heiko@sntech.de,
- conor.dooley@microchip.com, cleger@rivosinc.com, samitolvanen@google.com,
- masahiroy@kernel.org, guoren@kernel.org, namcaov@gmail.com,
- alexghiti@rivosinc.com, akpm@linux-foundation.org, anup@brainfault.org,
- bhe@redhat.com, chenjiahao16@huawei.com, bjorn@rivosinc.com,
- linux-kernel@vger.kernel.org
+ conor@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ rehn@rivosinc.com, gianluca@rivosinc.com
 
 Hello:
 
 This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Tue, 12 Dec 2023 14:01:11 +0100 you wrote:
-> XIP boot seems to be broken for some time now. A likely reason why no one
-> seems to have noticed this is that XIP is more difficult to test, as it is
-> currently not easily testable with QEMU.
-> 
-> These patches fix the XIP boot and allow an XIP build without BUILTIN_DTB,
-> which in turn makes it easier to test an image with the QEMU virt machine.
+On Wed, 20 Dec 2023 16:57:16 +0100 you wrote:
+> This series add support for a few more extensions that are present in
+> the RVA22U64/RVA23U64 (either mandatory or optional) and that are useful
+> for userspace:
+> - Zicond
+> - Zacas
+> - Ztso
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/3] riscv: Make XIP bootable again
-    https://git.kernel.org/riscv/c/66f1e6809397
-  - [2/3] riscv: Fixed wrong register in XIP_FIXUP_FLASH_OFFSET macro
-    https://git.kernel.org/riscv/c/5daa37264102
-  - [3/3] riscv: Allow disabling of BUILTIN_DTB for XIP
-    https://git.kernel.org/riscv/c/6c4a2f6329f0
+  - [v2,1/6] riscv: add ISA extension parsing for Ztso
+    https://git.kernel.org/riscv/c/1ec9f381e848
+  - [v2,2/6] riscv: hwprobe: export Ztso ISA extension
+    https://git.kernel.org/riscv/c/5b4d64a819c0
+  - [v2,3/6] dt-bindings: riscv: add Zacas ISA extension description
+    https://git.kernel.org/riscv/c/cd7be4d02f41
+  - [v2,4/6] riscv: add ISA extension parsing for Zacas
+    https://git.kernel.org/riscv/c/188a2122c827
+  - [v2,5/6] riscv: hwprobe: export Zacas ISA extension
+    https://git.kernel.org/riscv/c/154a37061229
+  - [v2,6/6] riscv: hwprobe: export Zicond extension
+    https://git.kernel.org/riscv/c/3359866b40a9
 
 You are awesome, thank you!
 -- 
