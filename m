@@ -1,80 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D17EBB
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 03:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V6sCyQaU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704943239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5ySxIr9158TeBUa4+brfKytrmL8cNYEATrtS2LGdz8E=;
-	b=V6sCyQaUqb0tVq30yQG91Tqe4V8QEP9j3WpM6d1rUFq2+fPUkov1D6Kh8v/toVmHn6D28i
-	oo9rmKGC38bMLchRHhXkR1icDwtAl3PftPwx7Mhoqxsjov+2etF9Tlgor6/obdd7C85UP9
-	A1R8+GaL/QT7UJf0hpmJ6XXVaUr1wfI=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-nho-GnQmNQWnqAXcjjEE5Q-1; Wed, 10 Jan 2024 22:20:38 -0500
-X-MC-Unique: nho-GnQmNQWnqAXcjjEE5Q-1
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6d9dfc1fc38so4133833b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jan 2024 19:20:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704943236; x=1705548036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5ySxIr9158TeBUa4+brfKytrmL8cNYEATrtS2LGdz8E=;
-        b=h7/zWGUhbjdNy7A9mcMKhQonBTmu1QrlAqWT6t2iDHtW02M3wZ400zVmRoBjOQMfR0
-         YeRKGlqgeR4SBqXw6FUGfoMd41KWoJSw5U3R+Ox7q2GVRKd1y/y58loHCF68yLyxuwD/
-         m/svWMaSSwYvdbqneqH+WCu3uNsecsw8itqkPp2AkOpup2kfBdRYWwL5IFeCGSAT+ybR
-         mY3amkTf8j+pILlIWbtCA4k2ulGY90zANNkcZctVUxiQAbcATVlfrSWXXGgp1TFOBw1V
-         FkhDVmR8mxc9zhaxthvVOMIye6LrwwBo4FbC3tSk5gOPWAWstt/TrCV/Y3YSXYvamOmJ
-         YbjQ==
-X-Gm-Message-State: AOJu0YysF2axl0BrI0Uiu2WolK6sAZ/Myoz9Kb0/YnCrC8cRt/AOq16u
-	aVkC7ylZBF2KJWlC0fpq8Ra+Z6w9mCX6phkvwJ4jAfdw+h0PrNUp7pQWEFjWBU5RFln5K16pIj2
-	eVESLcLAThqpfMfgNnoaDvEQreP4SY7wZRKxjoJ4ZEavHsRGuww6XqF5P
-X-Received: by 2002:a05:6a21:3b4a:b0:199:f3f7:1906 with SMTP id zy10-20020a056a213b4a00b00199f3f71906mr197808pzb.4.1704943236614;
-        Wed, 10 Jan 2024 19:20:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFb//iOIGwN9CPQkZdv0a02qYPN9GCk/FREn+oyN1EysZc3rGY+TX2fdifK8FhGRGGABtZPAG7pGCnTcjuBzA4=
-X-Received: by 2002:a05:6a21:3b4a:b0:199:f3f7:1906 with SMTP id
- zy10-20020a056a213b4a00b00199f3f71906mr197798pzb.4.1704943236351; Wed, 10 Jan
- 2024 19:20:36 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309A9EBB
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 03:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 7ba693d7b893478cb3666b0f55a16ff9-20240111
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:d96497ca-ea87-411e-bb5f-78c71e7f1c5d,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.35,REQID:d96497ca-ea87-411e-bb5f-78c71e7f1c5d,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:5d391d7,CLOUDID:7fb4b882-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:2401111121497VF3I11C,BulkQuantity:0,Recheck:0,SF:64|66|24|17|19|44|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 7ba693d7b893478cb3666b0f55a16ff9-20240111
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 405513473; Thu, 11 Jan 2024 11:21:48 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 09549E000EB9;
+	Thu, 11 Jan 2024 11:21:48 +0800 (CST)
+X-ns-mid: postfix-659F5ECB-954882627
+Received: from [172.20.15.234] (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 82634E000EB9;
+	Thu, 11 Jan 2024 11:21:46 +0800 (CST)
+Message-ID: <cc9b456f-31f6-46f0-a6e6-f553779a775b@kylinos.cn>
+Date: Thu, 11 Jan 2024 11:21:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2035137075.1083380.1704867762955.JavaMail.zimbra@sjtu.edu.cn>
-In-Reply-To: <2035137075.1083380.1704867762955.JavaMail.zimbra@sjtu.edu.cn>
-From: Jason Wang <jasowang@redhat.com>
-Date: Thu, 11 Jan 2024 11:20:25 +0800
-Message-ID: <CACGkMEvqg3cqbPDvYe3qAh2BQKNbKYim27or08WsxCAMHmYO6g@mail.gmail.com>
-Subject: Re: [PATCH] driver/virtio: Add Memory Balloon Support for SEV/SEV-ES
-To: Zheyun Shen <szy0127@sjtu.edu.cn>
-Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
-	mst <mst@redhat.com>, david <david@redhat.com>, xuanzhuo@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ubifs: Remove unreachable code
+Content-Language: en-US
+To: Richard Weinberger <richard.weinberger@gmail.com>
+Cc: richard@nod.at, Artem.Bityutskiy@nokia.com, kunwu.chan@hotmail.com,
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20231111143314.1518314-1-chentao@kylinos.cn>
+ <CAFLxGvzAncnBTEbHZ0pA-oF6n9P+wKFMugz8c+8UQKoPeBiYig@mail.gmail.com>
+From: Kunwu Chan <chentao@kylinos.cn>
+In-Reply-To: <CAFLxGvzAncnBTEbHZ0pA-oF6n9P+wKFMugz8c+8UQKoPeBiYig@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 2:23=E2=80=AFPM Zheyun Shen <szy0127@sjtu.edu.cn> w=
-rote:
->
-> For now, SEV pins guest's memory to avoid swapping or
-> moving ciphertext, but leading to the inhibition of
-> Memory Ballooning.
->
-> In Memory Ballooning, only guest's free pages will be relocated
-> in balloon inflation and deflation, so the difference of plaintext
-> doesn't matter to guest.
 
-This seems only true if the page is zeroed, is this true here?
 
-Thanks
+On 2024/1/5 23:55, Richard Weinberger wrote:
+> On Sat, Nov 11, 2023 at 3:33=E2=80=AFPM Kunwu Chan <chentao@kylinos.cn>=
+ wrote:
+>>
+>> Because there is no break statement in the dead loop above,it is
+>> impossible to execute the 'err=3D0' statement.Delete the code that
+>> will never execute and initialize 'err' at the start of the function.
+>>
+>> Fixes: 6fb324a4b0c3 ("UBIFS: allocate ltab checking buffer on demand")
+>> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+>> ---
+>>   fs/ubifs/lpt_commit.c | 5 ++---
+>>   1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/ubifs/lpt_commit.c b/fs/ubifs/lpt_commit.c
+>> index c4d079328b92..d4751628fe70 100644
+>> --- a/fs/ubifs/lpt_commit.c
+>> +++ b/fs/ubifs/lpt_commit.c
+>> @@ -1589,8 +1589,8 @@ static int dbg_is_node_dirty(struct ubifs_info *=
+c, int node_type, int lnum,
+>>    */
+>>   static int dbg_check_ltab_lnum(struct ubifs_info *c, int lnum)
+>>   {
+>> -       int err, len =3D c->leb_size, dirty =3D 0, node_type, node_num=
+, node_len;
+>> -       int ret;
+>> +       int len =3D c->leb_size, dirty =3D 0, node_type, node_num, nod=
+e_len;
+>> +       int ret, err =3D 0;
+>>          void *buf, *p;
+>=20
+> Now it is still dead code.
+> A few lines later err will be used for the result of ubifs_leb_read().
+> So you can remove the initialization of err completely.
 
+Thanks, I will modify in v2 patch.
+
+>=20
+>>          if (!dbg_is_chk_lprops(c))
+>> @@ -1646,7 +1646,6 @@ static int dbg_check_ltab_lnum(struct ubifs_info=
+ *c, int lnum)
+>>                  len -=3D node_len;
+>>          }
+>>
+>> -       err =3D 0;
+>>   out:
+>>          vfree(buf);
+>>          return err;
+>> --
+>> 2.34.1
+>>
+>=20
+>=20
