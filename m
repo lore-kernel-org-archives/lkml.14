@@ -1,73 +1,159 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F7D115482;
-	Thu, 11 Jan 2024 11:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE6314F88
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="KeQP14Ez"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=TedLus6DeoKh8EHTaLRaHX786jSO4OLiu12N9jYORaY=; b=K
-	eQP14EzGfAqm4n5NCaItNVdKG31Te45XVtL8aHKz5owsPqhxeunD+/gQp9aaPWza
-	DGWOLFbby87oR5pu3nQ8fB+VPHGjBy4pwa+xaBJJAk+pCwBSciWc3cRmlV4F8z/C
-	vkwjCJviCbX2ik7UJDwkbl9ocLImhg5FTFtpQyTx6s=
-Received: from 00107082$163.com ( [111.35.187.31] ) by
- ajax-webmail-wmsvr-40-116 (Coremail) ; Thu, 11 Jan 2024 19:11:28 +0800
- (CST)
-Date: Thu, 11 Jan 2024 19:11:28 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Jozsef Kadlecsik" <kadlec@blackhole.kfki.hu>
-Cc: ale.crismani@automattic.com, xiaolinkui@kylinos.cn, 
-	"Pablo Neira Ayuso" <pablo@netfilter.org>, 
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org
-Subject: Re:Re: Performance regression in ip_set_swap on 6.1.69
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <0d0b1526-6189-fd0f-747e-cb803936b20a@blackhole.kfki.hu>
-References: <C0829B10-EAA6-4809-874E-E1E9C05A8D84@automattic.com>
- <20240110102342.4978-1-00107082@163.com>
- <a4dfc3d9-f028-7ab4-c3a7-11dcbb12e377@netfilter.org>
- <661cb613.7974.18cf30c4a42.Coremail.00107082@163.com>
- <956ec7cd-16ef-7f72-dad8-dfa2ec5f4d77@netfilter.org>
- <0d0b1526-6189-fd0f-747e-cb803936b20a@blackhole.kfki.hu>
-X-NTES-SC: AL_Qu2bBvWcvkwj7iaaZ+kXn0oTju85XMCzuv8j3YJeN500pSTk+ys6fH5DDFHQ0v2JLgG3sRmYWSVK6epwVJZSQIBVjQI5bBlmm6SRu1ejlEZ0
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W61qeUVg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704971554; x=1736507554;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1YFtBXWVelzOCij9mu8FZw930rKm1mM6tLkMC1PxwA8=;
+  b=W61qeUVgV7B7ZJ/4uZmGD/ID7cFfikWkAYSIqDLkThXVDJGGIsBRHnhz
+   n1h6WJqTnxDhvQ9jCr5Snpbl8M1AqvNqTn7p+bl6VBgtCJ1Rr8mXYd6nz
+   j1VTXSjcWmOkz1zZN/foNsYQA2XxzgLQhx+L69Q97FZleQ38j5tuC2Nui
+   vluMKWTh6TZlf3FmIHTtw05G9p3e7xm+1OrUv4aM0iVueGtC9ZgYXr+8D
+   yVwWbkgHF5cqg4QqIGj9pqAEcpA9jsHl9iQULcm67Cf+cEnXgTMuhzvcD
+   LKfD3mSgTRzWfDYkv1Mojce0U0kBrRTeLCJ2SJgZGIXv2QGGZMVGv6qX7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="6175587"
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="6175587"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 03:12:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="24593644"
+Received: from gcrisanx-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.213.56])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 03:12:30 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id B879810A557; Thu, 11 Jan 2024 14:12:27 +0300 (+03)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+Subject: [PATCHv2] x86/mm: Fix memory encryption features advertisement
+Date: Thu, 11 Jan 2024 14:12:24 +0300
+Message-ID: <20240111111224.25289-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <7c8d2978.8451.18cf8384d73.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3P_HhzJ9lAuYiAA--.4743W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEBdiqmVOBlC60wAEsf
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-CgpBdCAyMDI0LTAxLTExIDE2OjI1OjQ2LCAiSm96c2VmIEthZGxlY3NpayIgPGthZGxlY0BibGFj
-a2hvbGUua2ZraS5odT4gd3JvdGU6Cj5IaSwKPgo+Cj5Db3VsZCB5b3UgY2hlY2sgdGhhdCB0aGUg
-cGF0Y2ggYmVsb3cgZml4ZXMgdGhlIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24/IAo+SW5zdGVhZCBv
-ZiB3YWl0aW5nIGZvciB0aGUgUkNVIGdyYWNlIHBlcmlvZCBhdCBzd2FwcGluZywgY2FsbF9yY3Uo
-KSBpcyAKPnVzZWQgYXQgZGVzdHJveWluZyB0aGUgc2V0LgoKR290IGEgY29tcGlsZXIgZXJyb3I6
-Cm5ldC9uZXRmaWx0ZXIvaXBzZXQvaXBfc2V0X2NvcmUuYzogSW4gZnVuY3Rpb24goa5pcF9zZXRf
-ZGVzdHJveV9zZXRfcmN1oa86Cm5ldC9uZXRmaWx0ZXIvaXBzZXQvaXBfc2V0X2NvcmUuYzoxMDE3
-Ojk6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiChrmlwX3NldF9kZXN0
-cm95X3NldKGvOyBkaWQgeW91IG1lYW4goa5pcF9zZXRfZGVzdHJveV9zZXRfcmN1oa8/IFstV2Vy
-cm9yPWltcGxpY2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQogMTAxNyB8ICAgICAgICAgaXBfc2V0
-X2Rlc3Ryb3lfc2V0KHNldCk7CiAgICAgIHwgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn4KICAg
-ICAgfCAgICAgICAgIGlwX3NldF9kZXN0cm95X3NldF9yY3UKbmV0L25ldGZpbHRlci9pcHNldC9p
-cF9zZXRfY29yZS5jOiBBdCB0b3AgbGV2ZWw6Cm5ldC9uZXRmaWx0ZXIvaXBzZXQvaXBfc2V0X2Nv
-cmUuYzoxMTgzOjE6IHdhcm5pbmc6IGNvbmZsaWN0aW5nIHR5cGVzIGZvciChrmlwX3NldF9kZXN0
-cm95X3NldKGvOyBoYXZlIKGudm9pZChzdHJ1Y3QgaXBfc2V0ICopoa8KIDExODMgfCBpcF9zZXRf
-ZGVzdHJveV9zZXQoc3RydWN0IGlwX3NldCAqc2V0KQogICAgICB8IF5+fn5+fn5+fn5+fn5+fn5+
-fgpuZXQvbmV0ZmlsdGVyL2lwc2V0L2lwX3NldF9jb3JlLmM6MTE4MzoxOiBlcnJvcjogc3RhdGlj
-IGRlY2xhcmF0aW9uIG9mIKGuaXBfc2V0X2Rlc3Ryb3lfc2V0oa8gZm9sbG93cyBub24tc3RhdGlj
-IGRlY2xhcmF0aW9uCgoKSSBtb3ZlIHRoZSBkZWNsYXJhdGlvbiBvZiBpcF9zZXRfZGVzdHJveV9z
-ZXRfcmN1LCAgbWFrZSBzdXJlIGl0IGlzIGFmdGVyIHRoZSBkZWNsYXJhdGlvbiBvZiBpcF9zZXRf
-ZGVzdHJveV9zZXQsIApXaXRoIHRoaXMgcGF0aCwgdGhlIHBlcmZvcm1hbmNlIGRlZ3JhZGF0aW9u
-IG9mIGlwc2V0X3N3YXAgaXMgZ29uZSwgIGJ1dCBteSB0ZXN0IG9ubHkgc3RyZXNzIGlwc2V0X3N3
-YXAsIG5vdCBhIHN3YXAvZGVzdHJveSBzZXF1ZW5jZS4KSSB3aWxsIGFkanVzdCBteSAgY29kZSB0
-byBzdHJlc3MgYSBmdWxsIHN3YXAvZGVzdHJveS9jcmVhdGUvYWRkIHNlcXVlbmNlLCBhbmQgdXBk
-YXRlIGxhdGVyLgoKClRoYW5rcwpEYXZpZAo=
+When memory encryption is enabled, the kernel prints the encryption
+flavor that the system supports.
+
+The check assumes that everything is AMD SME/SEV if it doesn't have
+the TDX CPU feature set.
+
+Hyper-V vTOM sets cc_vendor to CC_VENDOR_INTEL when it runs as L2 guest
+on top of TDX, but not X86_FEATURE_TDX_GUEST. Hyper-V only needs memory
+encryption enabled for I/O without the rest of CoCo enabling.
+
+To avoid confusion, check the cc_vendor directly.
+
+Possible alternative is to completely removing the print statement.
+For a regular TDX guest, the kernel already prints a message indicating
+that it is booting on TDX. Similarly, AMD and Hyper-V can also display
+a message during their enumeration process.
+
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+---
+ arch/x86/mm/mem_encrypt.c | 56 +++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 26 deletions(-)
+
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index c290c55b632b..d035bce3a2b0 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -42,38 +42,42 @@ bool force_dma_unencrypted(struct device *dev)
+ 
+ static void print_mem_encrypt_feature_info(void)
+ {
+-	pr_info("Memory Encryption Features active:");
++	pr_info("Memory Encryption Features active: ");
+ 
+-	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+-		pr_cont(" Intel TDX\n");
+-		return;
+-	}
++	switch (cc_vendor) {
++	case CC_VENDOR_INTEL:
++		pr_cont("Intel TDX\n");
++		break;
++	case CC_VENDOR_AMD:
++		pr_cont("AMD");
+ 
+-	pr_cont(" AMD");
+-
+-	/* Secure Memory Encryption */
+-	if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT)) {
++		/* Secure Memory Encryption */
++		if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT)) {
+ 		/*
+ 		 * SME is mutually exclusive with any of the SEV
+ 		 * features below.
+-		 */
+-		pr_cont(" SME\n");
+-		return;
++		*/
++			pr_cont(" SME\n");
++			return;
++		}
++
++		/* Secure Encrypted Virtualization */
++		if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
++			pr_cont(" SEV");
++
++		/* Encrypted Register State */
++		if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
++			pr_cont(" SEV-ES");
++
++		/* Secure Nested Paging */
++		if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
++			pr_cont(" SEV-SNP");
++
++		pr_cont("\n");
++		break;
++	default:
++		pr_cont("Unknown\n");
+ 	}
+-
+-	/* Secure Encrypted Virtualization */
+-	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+-		pr_cont(" SEV");
+-
+-	/* Encrypted Register State */
+-	if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+-		pr_cont(" SEV-ES");
+-
+-	/* Secure Nested Paging */
+-	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+-		pr_cont(" SEV-SNP");
+-
+-	pr_cont("\n");
+ }
+ 
+ /* Architecture __weak replacement functions */
+-- 
+2.41.0
+
