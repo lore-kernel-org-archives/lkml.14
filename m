@@ -1,76 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7514114F76
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 10:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083821548D
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 10:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8r0sJ43"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704968095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S16ICIiOihOWmFRVFMbuskDB7oAUbfdibwyo8M1GhmA=;
-	b=B8r0sJ43kt+yFALqcV4ArXzUpb9V4Rd6EI3PXvUDfYnYNedCZalo/0IYM201KFJ58SkGeu
-	EYLM42kbXTRmzLM8WzSRO5fp3MhqxqmLyU0ViUFN/zGJNRqiB1MJ9YEBnIiK6NJFmjR1KU
-	bl5Ytb3oq1hpJ2aECaTZ1lMnZa5F+sU=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-360--hYfp2eXOPqe5lVRozNpjg-1; Thu, 11 Jan 2024 05:14:53 -0500
-X-MC-Unique: -hYfp2eXOPqe5lVRozNpjg-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-42998e470e9so7109261cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:14:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="D6I8Jkiu"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e60e13581so2980855e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:15:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704968109; x=1705572909; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+V4JzjzBqaHzJLZncYnEckgIPzqOvsDKGfGUY3ZauSA=;
+        b=D6I8Jkiu7R2YYZjSXVLCAEHo7Tni8IMl8dy9/kBdkb7S7vXW2tNVB19YzW/1kX86lO
+         /w1Paf48C7NPiR6m3SVbgrrrk/+8slEbGy//PyLYlbsQtb2Upc3miDc3INa50+Sl6HxF
+         lelnOioANvptTcCJEGD53wlr7bScwQcHzEgSed6kNJtMzhXRit37tXPVrboj+47aOs5u
+         3cGrfUbYYpU4K635cOm5jCTRWr9IhUvoMw2ayDZQ6GLday3A7LtczPX3IZ8thiqLZ7Y2
+         3TNr48uobHf51v2axVFyQSjSmSkux+uYE1DBIic6MmaH/XAA8nDboghBXOGFBG+2G8VX
+         8yTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704968093; x=1705572893;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S16ICIiOihOWmFRVFMbuskDB7oAUbfdibwyo8M1GhmA=;
-        b=c21Amo2yMMw+k1j7nowKZYMixU5uI4CBPzzvQ4cDlD7Rxewp1LOhRsN9nxrrbnbnur
-         AZehBNqJscSAykkvIwbFFQiZQyb8OpzOB/qaplpZ+zRvkVoPIn/58IxyJmSgKbDxqule
-         5MNWUnO1hTiep18mVUZOGoL7ofJgg+jN3pJG4YK3rC+gGfmnJv/f9qZ/VMU+Z3fk0fLv
-         0ANvWSkUfw2u1lTPRNPGfVUGv7l40fSnSW9C1b7ZRepCmcis+8ERnA2vs4ZM2i6BDoSg
-         hLOBS24968Z8JpxwHsmFw95VWOjZnSno5VM6kdvNNLFZcmFi008l9Ul67uKZ2jhgxXfq
-         7zpQ==
-X-Gm-Message-State: AOJu0Yz1fDtXgMdHERxZhWmgxN5QC43iT5zPz7+c6uwAG31bZL/miD9c
-	WYM/r9XOOsb+tXNlj4c/oa4bQM1WyrvAxCbpZCnfWlw0/2LWAQ7l3koXh41u0tjw3St6RiVS+/b
-	4RyUC3sY++YwFBLu7ltqO9EZIm+UI6d8U
-X-Received: by 2002:a05:622a:c3:b0:429:c64e:bbf2 with SMTP id p3-20020a05622a00c300b00429c64ebbf2mr722045qtw.1.1704968092963;
-        Thu, 11 Jan 2024 02:14:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFTzZl0NIrM5dujx955ccLPeiLKGsrMmKqGnmN6hPG7JhM/ZFMOo9jRoDntIWauIMCWURrJVA==
-X-Received: by 2002:a05:622a:c3:b0:429:c64e:bbf2 with SMTP id p3-20020a05622a00c300b00429c64ebbf2mr722019qtw.1.1704968092644;
-        Thu, 11 Jan 2024 02:14:52 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id eo7-20020a05622a544700b0042993549c3asm313237qtb.32.2024.01.11.02.14.50
+        d=1e100.net; s=20230601; t=1704968109; x=1705572909;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+V4JzjzBqaHzJLZncYnEckgIPzqOvsDKGfGUY3ZauSA=;
+        b=FzI8Sb/cqTK3QCsDXdsIZaJICVXi4Q6LwBjDfg6Qc31KC3RoIVDPsEG/2Jszp9MaM1
+         OZWOQfaOHgtmzsEgKcRIl/pcGDOL1I7oyjSaFx2rIs0Tek8QwGjUFhNBz1+EVcQY166w
+         evxdJycz8KSSwHgb1EasGlwxURK3Aw0Ts29xbzjCEH3Tm10VRjflRJ3mapZUbZewHleJ
+         eucROdUZ0O/eG0lhbzciZP6LvJeHmhNVbnyXKg4N5kVKg3AqQPFcc1KdNJmnn5S7QCam
+         IytyqdwXAXtnILojXriLDiMpyJQiEirb3VS7j3ISF9ZL5Oh67MUXNGgTUYVgP067d+2b
+         2AHA==
+X-Gm-Message-State: AOJu0YxEz62SERAeCXheLvmw24T0vNTWuqtFqWnNnZnP7WYRL2140YC2
+	JJl5FoH/zQiKlXrVlz67QsBxJJum/rtACQ==
+X-Google-Smtp-Source: AGHT+IEm+n9REC3cDZLVtCMBBH7ollyf38bVEHwiAvqjBMBz1qwTcxZsn0pt65qrruZ1CkOufUMg3Q==
+X-Received: by 2002:a05:600c:3b1d:b0:40e:6206:a518 with SMTP id m29-20020a05600c3b1d00b0040e6206a518mr68778wms.184.1704968109127;
+        Thu, 11 Jan 2024 02:15:09 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:55f:21e0:9e19:4376:dea6:dbfa])
+        by smtp.gmail.com with ESMTPSA id j7-20020a05600c190700b0040e52cac976sm5157758wmq.29.2024.01.11.02.15.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 02:14:52 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>,
+        Thu, 11 Jan 2024 02:15:08 -0800 (PST)
+From: Julien Stephan <jstephan@baylibre.com>
+To: 
+Cc: Julien Stephan <jstephan@baylibre.com>,
+	Andy Hsieh <andy.hsieh@mediatek.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH v3 2/2] drm/imx/dcss: have all init functions use devres
-Date: Thu, 11 Jan 2024 11:13:47 +0100
-Message-ID: <20240111101346.15193-4-pstanner@redhat.com>
+	linux-mediatek@lists.infradead.org,
+	linux-phy@lists.infradead.org,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v5 0/2] phy: mtk-mipi-csi: add driver for CSI phy
+Date: Thu, 11 Jan 2024 11:14:49 +0100
+Message-ID: <20240111101504.468169-1-jstephan@baylibre.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240111101346.15193-2-pstanner@redhat.com>
-References: <20240111101346.15193-2-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,460 +73,113 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-dcss currently allocates and ioremaps quite a few resources in its probe
-function's call graph. Devres now provides convenient functions which
-perform the same task but do the cleanup automatically.
+Adding a new driver for the MIPI CSI CD-PHY module v 0.5 embedded in
+some Mediatek soc, such as the MT8365
 
-Port all memory allocations and ioremap() calls to the devres
-counterparts.
+This driver was adapted from https://patchwork.kernel.org/project/linux-mediatek/cover/20200708104023.3225-1-louis.kuo@mediatek.com/
 
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
- drivers/gpu/drm/imx/dcss/dcss-blkctl.c | 14 +++-----------
- drivers/gpu/drm/imx/dcss/dcss-ctxld.c  | 15 ++++-----------
- drivers/gpu/drm/imx/dcss/dcss-dev.c    | 12 ++----------
- drivers/gpu/drm/imx/dcss/dcss-dev.h    |  1 -
- drivers/gpu/drm/imx/dcss/dcss-dpr.c    | 25 ++++++-------------------
- drivers/gpu/drm/imx/dcss/dcss-drv.c    | 12 +++---------
- drivers/gpu/drm/imx/dcss/dcss-dtg.c    | 23 ++++-------------------
- drivers/gpu/drm/imx/dcss/dcss-scaler.c | 24 +++++-------------------
- drivers/gpu/drm/imx/dcss/dcss-ss.c     | 11 +++--------
- 9 files changed, 30 insertions(+), 107 deletions(-)
+v1 can be found here: https://lore.kernel.org/all/20230403071929.360911-1-jstephan@baylibre.com/
 
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-blkctl.c b/drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-index c9b54bb2692d..58e12ec65f80 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-@@ -41,15 +41,15 @@ void dcss_blkctl_cfg(struct dcss_blkctl *blkctl)
- int dcss_blkctl_init(struct dcss_dev *dcss, unsigned long blkctl_base)
- {
- 	struct dcss_blkctl *blkctl;
-+	struct device *dev = dcss->dev;
- 
--	blkctl = kzalloc(sizeof(*blkctl), GFP_KERNEL);
-+	blkctl = devm_kzalloc(dev, sizeof(*blkctl), GFP_KERNEL);
- 	if (!blkctl)
- 		return -ENOMEM;
- 
--	blkctl->base_reg = ioremap(blkctl_base, SZ_4K);
-+	blkctl->base_reg = devm_ioremap(dev, blkctl_base, SZ_4K);
- 	if (!blkctl->base_reg) {
- 		dev_err(dcss->dev, "unable to remap BLK CTRL base\n");
--		kfree(blkctl);
- 		return -ENOMEM;
- 	}
- 
-@@ -60,11 +60,3 @@ int dcss_blkctl_init(struct dcss_dev *dcss, unsigned long blkctl_base)
- 
- 	return 0;
- }
--
--void dcss_blkctl_exit(struct dcss_blkctl *blkctl)
--{
--	if (blkctl->base_reg)
--		iounmap(blkctl->base_reg);
--
--	kfree(blkctl);
--}
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-ctxld.c b/drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-index 3a84cb3209c4..444511d0f382 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-@@ -199,10 +199,11 @@ static int dcss_ctxld_alloc_ctx(struct dcss_ctxld *ctxld)
- 
- int dcss_ctxld_init(struct dcss_dev *dcss, unsigned long ctxld_base)
- {
-+	struct device *dev = dcss->dev;
- 	struct dcss_ctxld *ctxld;
- 	int ret;
- 
--	ctxld = kzalloc(sizeof(*ctxld), GFP_KERNEL);
-+	ctxld = devm_kzalloc(dev, sizeof(*ctxld), GFP_KERNEL);
- 	if (!ctxld)
- 		return -ENOMEM;
- 
-@@ -217,7 +218,7 @@ int dcss_ctxld_init(struct dcss_dev *dcss, unsigned long ctxld_base)
- 		goto err;
- 	}
- 
--	ctxld->ctxld_reg = ioremap(ctxld_base, SZ_4K);
-+	ctxld->ctxld_reg = devm_ioremap(dev, ctxld_base, SZ_4K);
- 	if (!ctxld->ctxld_reg) {
- 		dev_err(dcss->dev, "ctxld: unable to remap ctxld base\n");
- 		ret = -ENOMEM;
-@@ -226,18 +227,14 @@ int dcss_ctxld_init(struct dcss_dev *dcss, unsigned long ctxld_base)
- 
- 	ret = dcss_ctxld_irq_config(ctxld, to_platform_device(dcss->dev));
- 	if (ret)
--		goto err_irq;
-+		goto err;
- 
- 	dcss_ctxld_hw_cfg(ctxld);
- 
- 	return 0;
- 
--err_irq:
--	iounmap(ctxld->ctxld_reg);
--
- err:
- 	dcss_ctxld_free_ctx(ctxld);
--	kfree(ctxld);
- 
- 	return ret;
- }
-@@ -246,11 +243,7 @@ void dcss_ctxld_exit(struct dcss_ctxld *ctxld)
- {
- 	free_irq(ctxld->irq, ctxld);
- 
--	if (ctxld->ctxld_reg)
--		iounmap(ctxld->ctxld_reg);
--
- 	dcss_ctxld_free_ctx(ctxld);
--	kfree(ctxld);
- }
- 
- static int dcss_ctxld_enable_locked(struct dcss_ctxld *ctxld)
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-dev.c b/drivers/gpu/drm/imx/dcss/dcss-dev.c
-index d448bf1c205e..597e9b7bd4bf 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-dev.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-dev.c
-@@ -109,8 +109,6 @@ static int dcss_submodules_init(struct dcss_dev *dcss)
- 	dcss_ctxld_exit(dcss->ctxld);
- 
- ctxld_err:
--	dcss_blkctl_exit(dcss->blkctl);
--
- 	dcss_clocks_disable(dcss);
- 
- 	return ret;
-@@ -124,7 +122,6 @@ static void dcss_submodules_stop(struct dcss_dev *dcss)
- 	dcss_ss_exit(dcss->ss);
- 	dcss_dtg_exit(dcss->dtg);
- 	dcss_ctxld_exit(dcss->ctxld);
--	dcss_blkctl_exit(dcss->blkctl);
- 	dcss_clocks_disable(dcss);
- }
- 
-@@ -190,7 +187,7 @@ struct dcss_dev *dcss_dev_create(struct device *dev, bool hdmi_output)
- 		return ERR_PTR(-EBUSY);
- 	}
- 
--	dcss = kzalloc(sizeof(*dcss), GFP_KERNEL);
-+	dcss = devm_kzalloc(dev, sizeof(*dcss), GFP_KERNEL);
- 	if (!dcss)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -201,7 +198,7 @@ struct dcss_dev *dcss_dev_create(struct device *dev, bool hdmi_output)
- 	ret = dcss_clks_init(dcss);
- 	if (ret) {
- 		dev_err(dev, "clocks initialization failed\n");
--		goto err;
-+		return ERR_PTR(ret);
- 	}
- 
- 	dcss->of_port = of_graph_get_port_by_id(dev->of_node, 0);
-@@ -233,9 +230,6 @@ struct dcss_dev *dcss_dev_create(struct device *dev, bool hdmi_output)
- clks_err:
- 	dcss_clks_release(dcss);
- 
--err:
--	kfree(dcss);
--
- 	return ERR_PTR(ret);
- }
- 
-@@ -253,8 +247,6 @@ void dcss_dev_destroy(struct dcss_dev *dcss)
- 	dcss_submodules_stop(dcss);
- 
- 	dcss_clks_release(dcss);
--
--	kfree(dcss);
- }
- 
- static int dcss_dev_suspend(struct device *dev)
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-dev.h b/drivers/gpu/drm/imx/dcss/dcss-dev.h
-index f27b87c09599..b032e873d227 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-dev.h
-+++ b/drivers/gpu/drm/imx/dcss/dcss-dev.h
-@@ -104,7 +104,6 @@ extern const struct dev_pm_ops dcss_dev_pm_ops;
- /* BLKCTL */
- int dcss_blkctl_init(struct dcss_dev *dcss, unsigned long blkctl_base);
- void dcss_blkctl_cfg(struct dcss_blkctl *blkctl);
--void dcss_blkctl_exit(struct dcss_blkctl *blkctl);
- 
- /* CTXLD */
- int dcss_ctxld_init(struct dcss_dev *dcss, unsigned long ctxld_base);
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-dpr.c b/drivers/gpu/drm/imx/dcss/dcss-dpr.c
-index df9dab949bf2..d6b2ad5e6977 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-dpr.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-dpr.c
-@@ -125,7 +125,8 @@ static void dcss_dpr_write(struct dcss_dpr_ch *ch, u32 val, u32 ofs)
- 	dcss_ctxld_write(dpr->ctxld, dpr->ctx_id, val, ch->base_ofs + ofs);
- }
- 
--static int dcss_dpr_ch_init_all(struct dcss_dpr *dpr, unsigned long dpr_base)
-+static int dcss_dpr_ch_init_all(struct device *dev, struct dcss_dpr *dpr,
-+		unsigned long dpr_base)
- {
- 	struct dcss_dpr_ch *ch;
- 	int i;
-@@ -135,7 +136,7 @@ static int dcss_dpr_ch_init_all(struct dcss_dpr *dpr, unsigned long dpr_base)
- 
- 		ch->base_ofs = dpr_base + i * 0x1000;
- 
--		ch->base_reg = ioremap(ch->base_ofs, SZ_4K);
-+		ch->base_reg = devm_ioremap(dev, ch->base_ofs, SZ_4K);
- 		if (!ch->base_reg) {
- 			dev_err(dpr->dev, "dpr: unable to remap ch %d base\n",
- 				i);
-@@ -154,8 +155,9 @@ static int dcss_dpr_ch_init_all(struct dcss_dpr *dpr, unsigned long dpr_base)
- int dcss_dpr_init(struct dcss_dev *dcss, unsigned long dpr_base)
- {
- 	struct dcss_dpr *dpr;
-+	struct device *dev = dcss->dev;
- 
--	dpr = kzalloc(sizeof(*dpr), GFP_KERNEL);
-+	dpr = devm_kzalloc(dev, sizeof(*dpr), GFP_KERNEL);
- 	if (!dpr)
- 		return -ENOMEM;
- 
-@@ -164,18 +166,8 @@ int dcss_dpr_init(struct dcss_dev *dcss, unsigned long dpr_base)
- 	dpr->ctxld = dcss->ctxld;
- 	dpr->ctx_id = CTX_SB_HP;
- 
--	if (dcss_dpr_ch_init_all(dpr, dpr_base)) {
--		int i;
--
--		for (i = 0; i < 3; i++) {
--			if (dpr->ch[i].base_reg)
--				iounmap(dpr->ch[i].base_reg);
--		}
--
--		kfree(dpr);
--
-+	if (dcss_dpr_ch_init_all(dev, dpr, dpr_base))
- 		return -ENOMEM;
--	}
- 
- 	return 0;
- }
-@@ -189,12 +181,7 @@ void dcss_dpr_exit(struct dcss_dpr *dpr)
- 		struct dcss_dpr_ch *ch = &dpr->ch[ch_no];
- 
- 		dcss_writel(0, ch->base_reg + DCSS_DPR_SYSTEM_CTRL0);
--
--		if (ch->base_reg)
--			iounmap(ch->base_reg);
- 	}
--
--	kfree(dpr);
- }
- 
- static u32 dcss_dpr_x_pix_wide_adjust(struct dcss_dpr_ch *ch, u32 pix_wide,
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-drv.c b/drivers/gpu/drm/imx/dcss/dcss-drv.c
-index b61cec0cc79d..bd3f9d58042c 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-drv.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-drv.c
-@@ -51,15 +51,13 @@ static int dcss_drv_platform_probe(struct platform_device *pdev)
- 
- 	of_node_put(remote);
- 
--	mdrv = kzalloc(sizeof(*mdrv), GFP_KERNEL);
-+	mdrv = devm_kzalloc(dev, sizeof(*mdrv), GFP_KERNEL);
- 	if (!mdrv)
- 		return -ENOMEM;
- 
- 	mdrv->dcss = dcss_dev_create(dev, hdmi_output);
--	if (IS_ERR(mdrv->dcss)) {
--		err = PTR_ERR(mdrv->dcss);
--		goto err;
--	}
-+	if (IS_ERR(mdrv->dcss))
-+		return PTR_ERR(mdrv->dcss);
- 
- 	dev_set_drvdata(dev, mdrv);
- 
-@@ -75,8 +73,6 @@ static int dcss_drv_platform_probe(struct platform_device *pdev)
- dcss_shutoff:
- 	dcss_dev_destroy(mdrv->dcss);
- 
--err:
--	kfree(mdrv);
- 	return err;
- }
- 
-@@ -87,8 +83,6 @@ static int dcss_drv_platform_remove(struct platform_device *pdev)
- 	dcss_kms_detach(mdrv->kms);
- 	dcss_dev_destroy(mdrv->dcss);
- 
--	kfree(mdrv);
--
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-dtg.c b/drivers/gpu/drm/imx/dcss/dcss-dtg.c
-index 30de00540f63..5c0f697587e6 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-dtg.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-dtg.c
-@@ -151,8 +151,9 @@ int dcss_dtg_init(struct dcss_dev *dcss, unsigned long dtg_base)
- {
- 	int ret = 0;
- 	struct dcss_dtg *dtg;
-+	struct device *dev = dcss->dev;
- 
--	dtg = kzalloc(sizeof(*dtg), GFP_KERNEL);
-+	dtg = devm_kzalloc(dev, sizeof(*dtg), GFP_KERNEL);
- 	if (!dtg)
- 		return -ENOMEM;
- 
-@@ -160,11 +161,10 @@ int dcss_dtg_init(struct dcss_dev *dcss, unsigned long dtg_base)
- 	dtg->dev = dcss->dev;
- 	dtg->ctxld = dcss->ctxld;
- 
--	dtg->base_reg = ioremap(dtg_base, SZ_4K);
-+	dtg->base_reg = devm_ioremap(dev, dtg_base, SZ_4K);
- 	if (!dtg->base_reg) {
- 		dev_err(dcss->dev, "dtg: unable to remap dtg base\n");
--		ret = -ENOMEM;
--		goto err_ioremap;
-+		return -ENOMEM;
- 	}
- 
- 	dtg->base_ofs = dtg_base;
-@@ -176,16 +176,6 @@ int dcss_dtg_init(struct dcss_dev *dcss, unsigned long dtg_base)
- 		((dtg->alpha << DEFAULT_FG_ALPHA_POS) & DEFAULT_FG_ALPHA_MASK);
- 
- 	ret = dcss_dtg_irq_config(dtg, to_platform_device(dcss->dev));
--	if (ret)
--		goto err_irq;
--
--	return 0;
--
--err_irq:
--	iounmap(dtg->base_reg);
--
--err_ioremap:
--	kfree(dtg);
- 
- 	return ret;
- }
-@@ -193,11 +183,6 @@ int dcss_dtg_init(struct dcss_dev *dcss, unsigned long dtg_base)
- void dcss_dtg_exit(struct dcss_dtg *dtg)
- {
- 	free_irq(dtg->ctxld_kick_irq, dtg);
--
--	if (dtg->base_reg)
--		iounmap(dtg->base_reg);
--
--	kfree(dtg);
- }
- 
- void dcss_dtg_sync_set(struct dcss_dtg *dtg, struct videomode *vm)
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-scaler.c b/drivers/gpu/drm/imx/dcss/dcss-scaler.c
-index 47852b9dd5ea..ed4d1eb9442e 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-scaler.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-scaler.c
-@@ -291,7 +291,7 @@ static void dcss_scaler_write(struct dcss_scaler_ch *ch, u32 val, u32 ofs)
- 	dcss_ctxld_write(scl->ctxld, scl->ctx_id, val, ch->base_ofs + ofs);
- }
- 
--static int dcss_scaler_ch_init_all(struct dcss_scaler *scl,
-+static int dcss_scaler_ch_init_all(struct device *dev, struct dcss_scaler *scl,
- 				   unsigned long scaler_base)
- {
- 	struct dcss_scaler_ch *ch;
-@@ -302,7 +302,7 @@ static int dcss_scaler_ch_init_all(struct dcss_scaler *scl,
- 
- 		ch->base_ofs = scaler_base + i * 0x400;
- 
--		ch->base_reg = ioremap(ch->base_ofs, SZ_4K);
-+		ch->base_reg = devm_ioremap(dev, ch->base_ofs, SZ_4K);
- 		if (!ch->base_reg) {
- 			dev_err(scl->dev, "scaler: unable to remap ch base\n");
- 			return -ENOMEM;
-@@ -317,8 +317,9 @@ static int dcss_scaler_ch_init_all(struct dcss_scaler *scl,
- int dcss_scaler_init(struct dcss_dev *dcss, unsigned long scaler_base)
- {
- 	struct dcss_scaler *scaler;
-+	struct device *dev = dcss->dev;
- 
--	scaler = kzalloc(sizeof(*scaler), GFP_KERNEL);
-+	scaler = devm_kzalloc(dev, sizeof(*scaler), GFP_KERNEL);
- 	if (!scaler)
- 		return -ENOMEM;
- 
-@@ -327,18 +328,8 @@ int dcss_scaler_init(struct dcss_dev *dcss, unsigned long scaler_base)
- 	scaler->ctxld = dcss->ctxld;
- 	scaler->ctx_id = CTX_SB_HP;
- 
--	if (dcss_scaler_ch_init_all(scaler, scaler_base)) {
--		int i;
--
--		for (i = 0; i < 3; i++) {
--			if (scaler->ch[i].base_reg)
--				iounmap(scaler->ch[i].base_reg);
--		}
--
--		kfree(scaler);
--
-+	if (dcss_scaler_ch_init_all(dev, scaler, scaler_base))
- 		return -ENOMEM;
--	}
- 
- 	return 0;
- }
-@@ -351,12 +342,7 @@ void dcss_scaler_exit(struct dcss_scaler *scl)
- 		struct dcss_scaler_ch *ch = &scl->ch[ch_no];
- 
- 		dcss_writel(0, ch->base_reg + DCSS_SCALER_CTRL);
--
--		if (ch->base_reg)
--			iounmap(ch->base_reg);
- 	}
--
--	kfree(scl);
- }
- 
- void dcss_scaler_ch_enable(struct dcss_scaler *scl, int ch_num, bool en)
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-ss.c b/drivers/gpu/drm/imx/dcss/dcss-ss.c
-index 8ddf08da911b..0a8320adc302 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-ss.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-ss.c
-@@ -82,8 +82,9 @@ static void dcss_ss_write(struct dcss_ss *ss, u32 val, u32 ofs)
- int dcss_ss_init(struct dcss_dev *dcss, unsigned long ss_base)
- {
- 	struct dcss_ss *ss;
-+	struct device *dev = dcss->dev;
- 
--	ss = kzalloc(sizeof(*ss), GFP_KERNEL);
-+	ss = devm_kzalloc(dev, sizeof(*ss), GFP_KERNEL);
- 	if (!ss)
- 		return -ENOMEM;
- 
-@@ -91,10 +92,9 @@ int dcss_ss_init(struct dcss_dev *dcss, unsigned long ss_base)
- 	ss->dev = dcss->dev;
- 	ss->ctxld = dcss->ctxld;
- 
--	ss->base_reg = ioremap(ss_base, SZ_4K);
-+	ss->base_reg = devm_ioremap(dev, ss_base, SZ_4K);
- 	if (!ss->base_reg) {
- 		dev_err(dcss->dev, "ss: unable to remap ss base\n");
--		kfree(ss);
- 		return -ENOMEM;
- 	}
- 
-@@ -108,11 +108,6 @@ void dcss_ss_exit(struct dcss_ss *ss)
- {
- 	/* stop SS */
- 	dcss_writel(0, ss->base_reg + DCSS_SS_SYS_CTRL);
--
--	if (ss->base_reg)
--		iounmap(ss->base_reg);
--
--	kfree(ss);
- }
- 
- void dcss_ss_subsam_set(struct dcss_ss *ss)
+v2 can be found here: https://lore.kernel.org/all/20230515090551.1251389-1-jstephan@baylibre.com/
+
+v3 can be found here: https://lore.kernel.org/all/20230524083033.486490-1-jstephan@baylibre.com/
+
+v4 can be found here: https://lore.kernel.org/linux-phy/20230620121928.1231745-1-jstephan@baylibre.com/
+
+Changelog
+Changes in v5:
+- rebase on latest master scheduled for 6.8-rc1
+- sort alphabetically CONFIG_PHY_MTK_MIPI_CSI_0_5 in Kconfig and Makefile
+- put lines under 100 chars on one line
+
+Changes in v4:
+include/dt-bindings/phy/phy.h:
+	- remove commit adding PHY_TYPE_CDPHY definition
+
+Binding file:
+	- use the standard phy-type property instead of a custom one so
+	  rename mediatek,phy-type -> phy-type
+	- phy-type property is made optional: when present, describes the
+	  phy type and the operating mode
+	- phy-cell is modified to accept a phy argument representing the
+	  phy operating mode if phy-type is not specified
+	- adding new property num-lanes
+
+Driver:
+	- add a custom xlate function to handle phy cells
+	- update probe function to retrieve the new value phy-type
+	  instead of the mediatek,phy-type
+	- remove useless struct define `struct mtk_mipi_dphy;`
+	- rename some functin/variable from `xx_dphy_xx` to `xx_cdphy_xx`
+	- update probe function to read num-lanes property
+
+Changes in v3:
+Binding file:
+	- rename compatible string
+	  mediatek,phy-mipi-csi-0-5 -> mediatek,mt8365-csi-rx
+	- rename binding file to be as compatible string
+	- change property mediatek,is_cdphy -> mediatek,phy-type using an
+	  enum value instead of boolean for scalability
+	- remove status property from example nodes
+	- rename example node name 'mipi_rx_csi0: mipi_rx_csi0@11c10000' ->
+	  'csi0_rx: phy@11c10000'
+	- put reg address in lower case
+
+include/dt-bindings/phy/phy.h:
+	- add PHY_TYPE_CDPHY definition
+
+Driver:
+	- rename compatible string
+	- rename property mediatek,is_cdphy -> mediatek,phy-type
+	- rename CSIx* macro to CSIX* (x -> X)
+	- fix style issue on the driver data structure
+	- update MODULE_DESCRIPTION as suggested by Angelo
+	  and update the kconfig module description to match it
+	- add dphy /cdphy eq tuning function to factor the code
+	  and increase readability
+	- fix typo __PHY_MTK__MIPI_CSI__C_0_5_RX_REG_H_ -->
+	  __PHY_MTK_MIPI_CSI_V_0_5_RX_REG_H_
+	- reword commit message to update my contributions
+	- added missing copyright
+	- added module name in Kconfig
+
+Changes in v2:
+	- fix all comments on bindings
+	- move the binding chunk from driver to binding commit
+	- fix dt_binding_check error (reported by DT_CHECKER_FLAGS)
+	- use a more generic compatible string
+	- add a new dt properties to simplify the driver
+	  "mediatek,is_cdphy"
+	- rename the driver and the corresponding file to include
+	  version
+	- drop of_match_ptr()
+	- use devm_platform_ioremap_resource
+	- use phy-mtk-io.h api instead of regmap
+	- rework the driver to use dt nodes to declare PHY instead of an
+	  array in the driver
+	- remove useless define for unused registers
+	- remove support for CSI0A/B because it cannot be tested, and it
+	  simplifies the driver for a first review
+	- edit commit message and bindings to be more descriptive about the
+	  hardware
+
+Florian Sylvestre (1):
+  dt-bindings: phy: add mediatek MIPI CD-PHY module v0.5
+
+Phi-bang Nguyen (1):
+  phy: mtk-mipi-csi: add driver for CSI phy
+
+ .../bindings/phy/mediatek,mt8365-csi-rx.yaml  |  79 +++++
+ MAINTAINERS                                   |   7 +
+ drivers/phy/mediatek/Kconfig                  |  12 +
+ drivers/phy/mediatek/Makefile                 |   2 +
+ .../mediatek/phy-mtk-mipi-csi-0-5-rx-reg.h    |  62 ++++
+ drivers/phy/mediatek/phy-mtk-mipi-csi-0-5.c   | 294 ++++++++++++++++++
+ 6 files changed, 456 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/mediatek,mt8365-csi-rx.yaml
+ create mode 100644 drivers/phy/mediatek/phy-mtk-mipi-csi-0-5-rx-reg.h
+ create mode 100644 drivers/phy/mediatek/phy-mtk-mipi-csi-0-5.c
+
 -- 
 2.43.0
 
