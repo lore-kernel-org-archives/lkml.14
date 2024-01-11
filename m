@@ -1,91 +1,73 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAD510A2F
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 09:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087E710962;
+	Thu, 11 Jan 2024 09:31:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="nystDnn5"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d3e8a51e6bso40924875ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 01:31:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1704965466; x=1705570266; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0u2ZqaYTukKS/ErfsgIWqLBT0BekDb7tY/EUWordXcQ=;
-        b=nystDnn5QuSvip3d60xSy0rBgMQrJnJMPbGIEhWktq1Bur8GW0CDK/UMU/9o1ZyZjM
-         iFzPBHBFRPzOx3MGYetwX68u3Ohy5Y/H5BqOj677k0f0Kv+2YOvaVDffmPxGMkTIxv4U
-         Z9hOP9Cu5eI32TZ7Sd0f0UVQ5sGRrSQR10M3n5oj2qAXvQy3GxgON3vpWgdUb+P5V5Ez
-         m00Ps2TfSrOcMkSl4wRcrFBXf3YUvUOUjqYPHxIq7R8D6cH+sSSQ8xWV3qc92lJCJWUJ
-         x32//+koXUakHI39WmiQp7ZUToznzUL382cRvaoTaTFAvQUbHH9MEdDzHBRn/t8RX4BK
-         TroQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704965466; x=1705570266;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0u2ZqaYTukKS/ErfsgIWqLBT0BekDb7tY/EUWordXcQ=;
-        b=gy2CsVv5z+JWw77ba7SVDpxEgzi0HcIW9H4/04H6/0atPPjlz9IpdKrvHatpb3aK0O
-         M1VX+9q8izruAwhLq7C8hhGa0xMBSMZ/6/QWH0Q6PQho1DSBEnnm+2nIiUSCvWYGXrq3
-         UMoUzACCEtxurd3+mP80nAcfFjyD0/HGx6qR2Ja5ijCQKiBoh+I311m9zm4MnUK3Iqms
-         XFTsWc+HNmXHUZskW8axv+vgsiK6q7/+OxDQ6g3mcsuAOH4jsoFMVcsK2dN5tvwKGnYT
-         SP3aa5wsdWXp4MPzCWgWjfEerQPZEmx+2skg5wJ2GUsUidoUCkiT9daI9ubUo1LwZCpv
-         dL8Q==
-X-Gm-Message-State: AOJu0YwE93Gozb9lV65rx15d5PNZ7nxrkMFEvhEmvBMvrumGpYMFpNvS
-	eaNwwrn/d9k+T+HCKIDR8vNxBY1frdkZAA==
-X-Google-Smtp-Source: AGHT+IFdmA3NHb1ER4UFaUxR1jSr/olfCSoHwNY32G7qcH3iYgX8OKA4O85XbeUboGgxDYYmHv1L3Q==
-X-Received: by 2002:a17:902:bb16:b0:1d4:e208:9b0 with SMTP id im22-20020a170902bb1600b001d4e20809b0mr880703plb.44.1704965466610;
-        Thu, 11 Jan 2024 01:31:06 -0800 (PST)
-Received: from sunil-laptop.. ([106.51.188.200])
-        by smtp.gmail.com with ESMTPSA id jd2-20020a170903260200b001d4a7cf0673sm730566plb.117.2024.01.11.01.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 01:31:06 -0800 (PST)
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: linux-acpi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0BCgLY1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA2BC433C7;
+	Thu, 11 Jan 2024 09:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704965473;
+	bh=Rk9NRpDsadZMSSvC4keuPq0iP2/9RWYyuAwhc7yIrX8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=h0BCgLY1yflXpmcmYV6znA84kTWM7HBx55M1P4GWlSAu59zmFfn5N87JnXf0/mko7
+	 u6M9Ip8qEx0hYKGxSBtFywDTIOfy6/IfvHv1nYfxR6UlDKf4dlPO726lKhsjjc57vx
+	 qIW38OsFWev/pi8p2uKvZK/x9oL3fhpbzStuF4JEZeLnwODKnm2Of0IASs2IDKKfAl
+	 Hg5VAdPgevSZXKAvueHzlYM2Hpb+DTrE+NVFm8YfZanq7dOWMjgf5faXfUTn8fOD33
+	 MRQrNDXn1+1wJWeYwcTOHvmOsDPV4YG3IHZY94wHKyTGVVkkMA8m9gSoximOZ9KfMF
+	 MvH6jokXogrcA==
+From: Christian Brauner <brauner@kernel.org>
+To: David Disseldorp <ddiss@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [PATCH -next 0/2] RISC-V: ACPI: Add LPI support
-Date: Thu, 11 Jan 2024 15:00:56 +0530
-Message-Id: <20240111093058.121838-1-sunilvl@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] initramfs: remove duplicate built-in __initramfs_start unpacking
+Date: Thu, 11 Jan 2024 10:30:58 +0100
+Message-ID: <20240111-bratwurst-schrebergarten-1444199c8559@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240111062240.9362-1-ddiss@suse.de>
+References: <20240111062240.9362-1-ddiss@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1444; i=brauner@kernel.org; h=from:subject:message-id; bh=Rk9NRpDsadZMSSvC4keuPq0iP2/9RWYyuAwhc7yIrX8=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTO3xol2NIdmffcsmTa3VkurfpCdc80e7tdMleuSpD9v TNHfCJ/RykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwERS2BgZZs+s/LLaaYm+v2dz Q+acFVpNop0Nyw5cazz1/2KtaX+dOMM/g98PUi5bb1D6v0Duz+szOzfUdHC2rF3r8rG9WvlRlsM vRgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-This series adds support for Low Power Idle (LPI) on ACPI based
-platforms. 
+On Thu, 11 Jan 2024 17:22:40 +1100, David Disseldorp wrote:
+> If initrd_start cpio extraction fails, CONFIG_BLK_DEV_RAM triggers
+> fallback to initrd.image handling via populate_initrd_image().
+> The populate_initrd_image() call follows successful extraction of any
+> built-in cpio archive at __initramfs_start, but currently performs
+> built-in archive extraction a second time.
+> 
+> Prior to commit b2a74d5f9d446 ("initramfs: remove clean_rootfs"),
+> the second built-in initramfs unpack call was used to repopulate entries
+> removed by clean_rootfs(), but it's no longer necessary now the contents
+> of the previous extraction are retained.
+> 
+> [...]
 
-LPI is described in the ACPI spec [1]. RISC-V FFH spec required to
-enable this is available at [2].
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-[1] - https://uefi.org/specs/ACPI/6.5/08_Processor_Configuration_and_Control.html#lpi-low-power-idle-states 
-[2] - https://github.com/riscv-non-isa/riscv-acpi-ffh/releases/download/v/riscv-ffh.pdf
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Sunil V L (2):
-  ACPI: Enable ACPI_PROCESSOR for RISC-V
-  cpuidle: RISC-V: Add ACPI LPI support
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
- drivers/acpi/Kconfig                |  2 +-
- drivers/cpuidle/cpuidle-riscv-sbi.c | 78 +++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 1 deletion(-)
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
--- 
-2.34.1
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
 
+[1/1] initramfs: remove duplicate built-in __initramfs_start unpacking
+      https://git.kernel.org/vfs/vfs/c/822b1a28fc5f
