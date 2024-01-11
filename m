@@ -1,162 +1,84 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E6752F7B;
-	Thu, 11 Jan 2024 18:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293CF537E3;
+	Thu, 11 Jan 2024 18:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XlvdxguI"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40BD06LU002874;
-	Thu, 11 Jan 2024 18:05:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=hh/tRNJ5XrL+rWWHTNtLhbWKFUswhrmv1cBQS4WQcJE
-	=; b=XlvdxguIi4bwdXi+QfQXHeLdgKPMPldUr2/N1VLCV+tFh8Kn2GSEib4ORTP
-	cDKONsYqo3sXzXPMvX45falZgLiS4mJFrw81o3lZf1QNS5NzLQrw8qviDn4Tuk64
-	iMFtcNR8n6nvjkrn3DGrF06jN4HZYKFDh41Wk/7jpL4njO4qsQO5gEqEwIDXjCBt
-	Uymo2GW0imsPzFi7TYyYVeniJdVyifd/ERD9TwQyaaHAv6EkKtEp68TnoJcMvhnx
-	DOcUULVAkUd90/tbnVS8kR+u57NIpIrxw4rf2a2/w4HK0l119JjDBTfrL71v0Icv
-	lxQtP9yMgapcKw3jOsHST2YlS+w==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vjgtjgq7t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 18:05:43 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40BI5gVT018207
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 18:05:42 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 11 Jan
- 2024 10:05:42 -0800
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 11 Jan 2024 10:05:30 -0800
-Subject: [PATCH v2 1/3] wifi: ath12k: Remove unnecessary struct qmi_txn
- initializers
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="k15I3w8q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704996431;
+	bh=lv5L2wbjPc1YW+bfBQ2xAmvYm+GCTmQkkdH8Qjc9HRw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k15I3w8q1Xt6+sO+soQbwSrQPfh0RCgowNT2FUnLnjHfgzEghTstoGgHA4O9JIbRZ
+	 4ghe80QPeXKCGlKmaV/VCtqhawWXnRUrUwCbqmYdk3IHFJ/nlFNUqox206qYmftSt1
+	 NWC3/vhnl5q3AFfcQKUV2vNUsDoRd1QBR2E7J6/iHsKiNZ4cFFn2ZKVoISuu2Kf2Sx
+	 /U3YJ4N5DwnBp5EeOgMf60+7nhZgOS/r7gFl95KJDIqXZJi5KnRvJZUOkf4xP3at5u
+	 8egkGmktDDfQtE3ySHf6ZqrmdhV1I4gZqfGTP6hi4L0dEnHF4k4PI4aLDv1P7q5Zc2
+	 Z4/kZvag02TxQ==
+Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 82F463781FCF;
+	Thu, 11 Jan 2024 18:07:09 +0000 (UTC)
+Message-ID: <59bb488f-f2ad-44b0-87fa-206ae3b1c33f@collabora.com>
+Date: Thu, 11 Jan 2024 20:07:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] dt-bindings: net: starfive,jh7110-dwmac: Add
+ StarFive JH8100 support
+Content-Language: en-US
+To: Tan Chun Hau <chunhau.tan@starfivetech.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Simon Horman <horms@kernel.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Andrew Halaney <ahalaney@redhat.com>, Jisheng Zhang <jszhang@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+ Jee Heng Sia <jeeheng.sia@starfivetech.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
+References: <20240111025531.2875-1-chunhau.tan@starfivetech.com>
+ <20240111025531.2875-2-chunhau.tan@starfivetech.com>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <20240111025531.2875-2-chunhau.tan@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240111-qmi-cleanup-v2-1-53343af953d5@quicinc.com>
-References: <20240111-qmi-cleanup-v2-0-53343af953d5@quicinc.com>
-In-Reply-To: <20240111-qmi-cleanup-v2-0-53343af953d5@quicinc.com>
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-CC: <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-X-Mailer: b4 0.12.3
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: YaBNPeqwNgiwKuID-T_txlVtZPDJIBua
-X-Proofpoint-ORIG-GUID: YaBNPeqwNgiwKuID-T_txlVtZPDJIBua
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- suspectscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 spamscore=0 impostorscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2311290000 definitions=main-2401110142
 
-Currently most of the ath12k QMI messaging functions define their
-struct qmi_txn variables with a {} initializer. However, all of these
-functions subsequently call qmi_txn_init(), and the very first thing
-that function does is zero the struct. Hence, the initializers are
-unnecessary. Since these consume code space and cpu cycles, remove
-them.
+On 1/11/24 04:55, Tan Chun Hau wrote:
+> Add StarFive JH8100 dwmac support.
+> JH8100 dwmac has one reset signal instead of 2 resets as in JH7110.
+> 
+> Signed-off-by: Tan Chun Hau <chunhau.tan@starfivetech.com>
+> ---
+>  .../devicetree/bindings/net/snps,dwmac.yaml   |  1 +
+>  .../bindings/net/starfive,jh7110-dwmac.yaml   | 50 +++++++++++++------
+>  2 files changed, 37 insertions(+), 14 deletions(-)
 
-No functional changes, compile tested only.
+[...]
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/net/wireless/ath/ath12k/qmi.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Please note this is going to conflict with the about-to-be-merged changes
+in [1], so probably it makes sense to wait for that to be picked up before
+sending a new revision.  
 
-diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
-index 536856234f3b..180e86c2a10c 100644
---- a/drivers/net/wireless/ath/ath12k/qmi.c
-+++ b/drivers/net/wireless/ath/ath12k/qmi.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: BSD-3-Clause-Clear
- /*
-  * Copyright (c) 2018-2021 The Linux Foundation. All rights reserved.
-- * Copyright (c) 2021-2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #include <linux/elf.h>
-@@ -1921,7 +1921,7 @@ static int ath12k_qmi_host_cap_send(struct ath12k_base *ab)
- {
- 	struct qmi_wlanfw_host_cap_req_msg_v01 req;
- 	struct qmi_wlanfw_host_cap_resp_msg_v01 resp;
--	struct qmi_txn txn = {};
-+	struct qmi_txn txn;
- 	int ret = 0;
- 
- 	memset(&req, 0, sizeof(req));
-@@ -2069,7 +2069,7 @@ static int ath12k_qmi_respond_fw_mem_request(struct ath12k_base *ab)
- {
- 	struct qmi_wlanfw_respond_mem_req_msg_v01 *req;
- 	struct qmi_wlanfw_respond_mem_resp_msg_v01 resp;
--	struct qmi_txn txn = {};
-+	struct qmi_txn txn;
- 	int ret = 0, i;
- 	bool delayed;
- 
-@@ -2210,7 +2210,7 @@ static int ath12k_qmi_request_target_cap(struct ath12k_base *ab)
- {
- 	struct qmi_wlanfw_cap_req_msg_v01 req;
- 	struct qmi_wlanfw_cap_resp_msg_v01 resp;
--	struct qmi_txn txn = {};
-+	struct qmi_txn txn;
- 	unsigned int board_id = ATH12K_BOARD_ID_DEFAULT;
- 	int ret = 0;
- 	int r;
-@@ -2311,7 +2311,7 @@ static int ath12k_qmi_load_file_target_mem(struct ath12k_base *ab,
- {
- 	struct qmi_wlanfw_bdf_download_req_msg_v01 *req;
- 	struct qmi_wlanfw_bdf_download_resp_msg_v01 resp;
--	struct qmi_txn txn = {};
-+	struct qmi_txn txn;
- 	const u8 *temp = data;
- 	int ret;
- 	u32 remaining = len;
-@@ -2547,7 +2547,7 @@ static int ath12k_qmi_wlanfw_m3_info_send(struct ath12k_base *ab)
- 	struct m3_mem_region *m3_mem = &ab->qmi.m3_mem;
- 	struct qmi_wlanfw_m3_info_req_msg_v01 req;
- 	struct qmi_wlanfw_m3_info_resp_msg_v01 resp;
--	struct qmi_txn txn = {};
-+	struct qmi_txn txn;
- 	int ret = 0;
- 
- 	memset(&req, 0, sizeof(req));
-@@ -2598,7 +2598,7 @@ static int ath12k_qmi_wlanfw_mode_send(struct ath12k_base *ab,
- {
- 	struct qmi_wlanfw_wlan_mode_req_msg_v01 req;
- 	struct qmi_wlanfw_wlan_mode_resp_msg_v01 resp;
--	struct qmi_txn txn = {};
-+	struct qmi_txn txn;
- 	int ret = 0;
- 
- 	memset(&req, 0, sizeof(req));
-@@ -2651,7 +2651,7 @@ static int ath12k_qmi_wlanfw_wlan_cfg_send(struct ath12k_base *ab)
- 	struct qmi_wlanfw_wlan_cfg_resp_msg_v01 resp;
- 	struct ce_pipe_config *ce_cfg;
- 	struct service_to_pipe *svc_cfg;
--	struct qmi_txn txn = {};
-+	struct qmi_txn txn;
- 	int ret = 0, pipe_num;
- 
- 	ce_cfg	= (struct ce_pipe_config *)ab->qmi.ce_cfg.tgt_ce;
+[1]: https://lore.kernel.org/lkml/20231222101001.2541758-2-cristian.ciocaltea@collabora.com/
 
--- 
-2.42.0
-
+Regards,
+Cristian
