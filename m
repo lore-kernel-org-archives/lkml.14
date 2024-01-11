@@ -1,143 +1,96 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4220C50245
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B970E15AC4
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ppfd7wav"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40BEsRr0030404;
-	Thu, 11 Jan 2024 16:23:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=yvEoKVrxCx84Qso2ZKN68nnOcsKKBjWqodWTF4MPK2Y=;
- b=Ppfd7wav0FWB0+C05oE/+mZBq6q/VsxjP8wCJOGitOhvDYAAtJZSBZZEzj5sQfZMcuPJ
- zPyc0td38+BO9hcWGT7hJ7VIp7NerKEbo/i2oiaAxp3DwvRgCf7kwLVBIZq53F6BXOnB
- aRW0+JKpsgAodCSroB+tiX90OiBw6ReTwgbYbt5d1mEXBQWyO/cjN/qG8ftyicNKShwE
- PIQQ7NOuolKYJDawchgEQDuIZ1I4t9HynPGVnTi8mz8Kcw205QuMoofOgHyiilyl0RU8
- 8qS9MZFdWmF/WdOe15IGsMjBXP70/R3Jor5BqhKiN5hLWlmvx13/js2Ff60CIvs9voGi 0w== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjjghap60-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 16:23:32 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40BDjbfp026992;
-	Thu, 11 Jan 2024 16:23:31 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vfkw2c1x8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 16:23:31 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40BGNU1a17564308
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Jan 2024 16:23:31 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9FD5158068;
-	Thu, 11 Jan 2024 16:23:30 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 36C6458062;
-	Thu, 11 Jan 2024 16:23:30 +0000 (GMT)
-Received: from [9.24.12.86] (unknown [9.24.12.86])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 11 Jan 2024 16:23:30 +0000 (GMT)
-Message-ID: <c5a4cde9-cc30-48f7-8da0-7c0e71d7d2aa@linux.ibm.com>
-Date: Thu, 11 Jan 2024 10:23:29 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e7eo2TNw"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5ce10b4cea9so3804692a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:25:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704990303; x=1705595103; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q7vbyXBr3P0E9528YW5LLlUgtQst+bQffN0BGFft0l8=;
+        b=e7eo2TNwKpO/4ggF4GL2qCh2VuucIDO+uwbwyI4dsSGiGywoNdgYn5QiRgQ82f518U
+         GvKh5tCx9+tnpJ1kmaqryP84bI846lYu8j4Lc8UngfIEEKBs0BK98N2y1J2Eo0f891zN
+         x3hNS+wKL0iVCCHJA71MZQJHaFqH7KMFFfKqkin6f2UxbNURWzJOLxya6LRzgIlc7BXK
+         l6UYlG39Wf7xK8Yy8soVXqLviv6HvdXcMTJk9K0QGzuet73xz17Obt8uedq1NSgM5T6b
+         PzsE3SmUx+LQcUm6nFwR882TXvUKVvOhOzymdr5Z8luo9r56RfG2YugCn6PgE4ZQyGhS
+         QFig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704990303; x=1705595103;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q7vbyXBr3P0E9528YW5LLlUgtQst+bQffN0BGFft0l8=;
+        b=coYv6ahyINrnkQY3BVresXiuVePfPrRni9aAsh4f5ZShM0Yo/MaLWijs0m2cMyUzEX
+         0NZGz/L52yy2Ny8qAOPfkCX9WtHNHCC6bU0BdyhXJz4nPaKsI8ydZgFHOr4pY3uSeih+
+         v88gaU1Wdy+G5Ii8P8whYnjZXUN0uKUZrOXt5VWY1p3HXdDOSflPqTyWeeFXrj6mdEVQ
+         xk4N9YN3bBzm7nUlmi6VIEWnr5im82WLkdNiwwfyknvqSvHXSDr/bAdwmqo6HX3C9lvT
+         W0fQ36KrOqBKJ/elH8P40izcbd+9EJFPfoCVfU2wP6jP64Y+I9mvCZc5sHsRxIVhE5y9
+         E0ag==
+X-Gm-Message-State: AOJu0YxnAsmTePjHYQo+z2cNOj8drFYPPhirMuXmripCTHFRSS1NW1Rt
+	PhGVsN7CSJOlHm+NnNWsDQCaAsGsJyg9/KUUBQ==
+X-Google-Smtp-Source: AGHT+IHWrP9S3u1zxFmOqD1cNfHQ/2dd0lwBop3h+FWQZKNgm3pdcQrx0pMDzQTd+wPGu0bJwYj4qviImnU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:903:234f:b0:1d5:6a32:66f with SMTP id
+ c15-20020a170903234f00b001d56a32066fmr188plh.4.1704990302913; Thu, 11 Jan
+ 2024 08:25:02 -0800 (PST)
+Date: Thu, 11 Jan 2024 08:25:01 -0800
+In-Reply-To: <ZZ9X5anB/HGS8JR6@linux.bj.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] soc/aspeed: Add host side BMC device driver
-Content-Language: en-US
-To: Ninad Palsule <ninad@linux.vnet.ibm.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: joel@jms.id.au, andrew@aj.id.au, eajames@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-References: <20230821183525.3427144-1-ninad@linux.ibm.com>
- <20230821183525.3427144-2-ninad@linux.ibm.com>
- <5159abb8-1b4c-4576-b370-4dd9db142beb@lunn.ch>
- <6cea8ee7-f845-6ef3-631f-3f252ff5e949@linux.vnet.ibm.com>
- <5c918888-6933-7661-45f0-32ae4521aa2c@linux.vnet.ibm.com>
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <5c918888-6933-7661-45f0-32ae4521aa2c@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: AVbA9MnxxCVVkGqCoodM0HqcSyFelbg7
-X-Proofpoint-ORIG-GUID: AVbA9MnxxCVVkGqCoodM0HqcSyFelbg7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-11_09,2024-01-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0
- phishscore=0 clxscore=1011 mlxlogscore=999 priorityscore=1501 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401110128
+Mime-Version: 1.0
+References: <20240110002340.485595-1-seanjc@google.com> <ZZ42Vs3uAPwBmezn@chao-email>
+ <ZZ7FMWuTHOV-_Gn7@google.com> <ZZ9X5anB/HGS8JR6@linux.bj.intel.com>
+Message-ID: <ZaAWXSvMgIMkxr50@google.com>
+Subject: Re: [PATCH] x86/cpu: Add a VMX flag to enumerate 5-level EPT support
+ to userspace
+From: Sean Christopherson <seanjc@google.com>
+To: Tao Su <tao1.su@linux.intel.com>
+Cc: Chao Gao <chao.gao@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Yi Lai <yi1.lai@intel.com>, 
+	Xudong Hao <xudong.hao@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hello Andrew,
+On Thu, Jan 11, 2024, Tao Su wrote:
+> On Wed, Jan 10, 2024 at 08:26:25AM -0800, Sean Christopherson wrote:
+> > On Wed, Jan 10, 2024, Chao Gao wrote:
+> > > On Tue, Jan 09, 2024 at 04:23:40PM -0800, Sean Christopherson wrote:
+> > > >Add a VMX flag in /proc/cpuinfo, ept_5level, so that userspace can query
+> > > >whether or not the CPU supports 5-level EPT paging.  EPT capabilities are
+> > > >enumerated via MSR, i.e. aren't accessible to userspace without help from
+> > > >the kernel, and knowing whether or not 5-level EPT is supported is sadly
+> > > >necessary for userspace to correctly configure KVM VMs.
+> > > 
+> > > This assumes procfs is enabled in Kconfig and userspace has permission to
+> > > access /proc/cpuinfo. But it isn't always true. So, I think it is better to
+> > > advertise max addressable GPA via KVM ioctls.
+> > 
+> > Hrm, so the help for PROC_FS says:
+> > 
+> >   Several programs depend on this, so everyone should say Y here.
+> > 
+> > Given that this is working around something that is borderline an erratum, I'm
+> > inclined to say that userspace shouldn't simply assume the worst if /proc isn't
+> > available.  Practically speaking, I don't think a "real" VM is likely to be
+> > affected; AFAIK, there's no reason for QEMU or any other VMM to _need_ to expose
+> > a memslot at GPA[51:48] unless the VM really has however much memory that is
+> > (hundreds of terabytes?).  And a if someone is trying to run such a massive VM on
+> > such a goofy CPU...
+> 
+> It is unusual to assign a huge RAM to guest, but passthrough a device also may trigger
+> this issue which we have met, i.e. alloc memslot for the 64bit BAR which can set
+> bits[51:48]. BIOS can control the BAR address, e.g. seabios moved 64bit pci window
+> to end of address space by using advertised physical bits[1].
 
-On 8/23/23 12:32, Ninad Palsule wrote:
-> Hello Andrew,
->
-> On 8/22/23 11:14 AM, Ninad Palsule wrote:
->> Hello Andrew,
->>
->> Thanks for the review.
->>
->> On 8/21/23 2:29 PM, Andrew Lunn wrote:
->>>> Testing:
->>>>    - This is tested on IBM rainier system with BMC. It requires BMC 
->>>> side
->>>>      BMC device driver which is available in the ASPEED's 5.15 SDK
->>>>      kernel.
->>> How relevant is that? To the host side, it just appears to be an
->>> 16550A. Is the SDK emulating an 16550A? If you where to use a
->>> different kernel, is it still guaranteed to be an 16550A? I also
->>> notice there is a mainline
->>> drivers/tty/serial/8250/8250_aspeed_vuart.c. Could that be used on the
->>> BMC? That would be a better testing target than the vendor kernel.
->>
->> This is just to indicate how I tested my code.
->>
->> Yes, aspeed chip (in this case ast2600) is compatible with 16550 UART.
->>
->> I am guessing it should work with different kernel too as 16550 
->> standard is used.
->>
->> The 8250_aspeed_vuart.c is a BMC side driver for accessing VUART over 
->> LPC bus and
->>
->> this is a host side driver to access VUART over PCIe bus.
->>
->>>> +config ASPEED_HOST_BMC_DEV
->>>> +    bool "ASPEED SoC Host BMC device driver"
->>>> +    default ARCH_ASPEED
->>>> +    select SOC_BUS
->>>> +    default ARCH_ASPEED
->>> same default twice?
->> Removed.
->>
->>>> +late_initcall(aspeed_host_bmc_device_init);
->>>> +module_exit(aspeed_host_bmc_device_exit);
->>> It looks like you can use module_pci_driver() ?
->> yes, It should work unless the late initcall is important. I will 
->> test it and see.
->
-> I will not be able to use module_pci_driver() as it doesn't support 
-> late initcall which is required otherwise
->
-> 8250 registration fails. So I am not making this change.
-
-Please let me know if you are fine with this.
-
-Thanks for the review.
-
-Regards,
-
-Ninad
-
+Drat.  Do you know if these CPUs are going to be productized?  We'll still need
+something in KVM either way, but whether or not the problems are more or less
+limited to funky software setups might influence how we address this.
