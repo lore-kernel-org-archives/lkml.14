@@ -1,44 +1,44 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A31E5A0F8
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 23:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CD95A108
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 23:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aJE8g4kB"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d3ed1ca402so53824985ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 15:42:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tr8tWk+Q"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6d9bee259c5so3771945b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 15:42:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705016548; x=1705621348; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705016552; x=1705621352; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ne9yj+nvNWHbV2a56sNsprOER+qKF6viifIBPBfyHZ0=;
-        b=aJE8g4kBXGivkLqFuwIErHjaCEYS54HMkZgqB6dtyylt1CUwckdqzM5/EFGAAjCm7f
-         X03xa1lLUgi8cSzF4OUG4WcLFwtw2k/xnnT2InyQIWOODuEa1jAdVKnVd4TfOd8vu8jA
-         oQqkAEpqAIg1Il8vS2PezH40h2hmT0gYEpR14=
+        bh=dPOt9smlRtRbYxwBRyVbgWAEdHEPdj5BH7dSKIF5aYg=;
+        b=Tr8tWk+QJJePIQp2HV89Zztn8laajT5b87Dl9vqi+uWu3z2gRoCVn3PZKoSJmXLCT/
+         7R+aAFWWmZ3XrFgWy5rV35EotMH8R+PNXgOUbVFvvd+RcY+Z4eS4KtT8kyunpub6dL5U
+         8mx7BWxfRvjgV4//WSKrK5673Gf21gDKL8e/s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705016548; x=1705621348;
+        d=1e100.net; s=20230601; t=1705016552; x=1705621352;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ne9yj+nvNWHbV2a56sNsprOER+qKF6viifIBPBfyHZ0=;
-        b=qpV3EVCqXwx4GEEgqa7/PFobpVIk7kcAzMeEaXdJMVJGMnHDOX7U8dJNbGeJR+53oE
-         SE4Z9ARGTN0ocIXugb7mqswbteMbt2+bQ3H5rnPAu69UUACtDmT8wLB5rNB3HugE+oDR
-         rH+BdVP7Bwv/Ovqiypq+X9IGhcA8CQ87KGF9nzOpnh/WBWXOpvN2yU5AqBakAeeuazy/
-         kQbhxmxKVMT069L3H7kzyN8jNu71VZs+Gsk6K2kJyVPBtZMH3JBigiCXlno5S+ZHvZux
-         2NervhCPSfl5NV9URQnoX9zREgMPXC2Sem4ObTdjNxZE71szlETof+Wm6WHTMja0XEAZ
-         Flkw==
-X-Gm-Message-State: AOJu0YzZMcDTxBKwf0HdbP3sqWnj8duCy6AtUpzrA2F1ugtsP6a4uyBW
-	BxgG0S2AwrIMz3UDjlUzaiAd7arUpq9n
-X-Google-Smtp-Source: AGHT+IHmCFLCEXmeANftiJfuRVnG2r2pedRZDHgQPe/UETpzeo9Pkat4TImEIu6Cmln+sHRYfgmnKw==
-X-Received: by 2002:a17:902:e544:b0:1d5:5aa5:9a9e with SMTP id n4-20020a170902e54400b001d55aa59a9emr127566plf.56.1705016548552;
-        Thu, 11 Jan 2024 15:42:28 -0800 (PST)
+        bh=dPOt9smlRtRbYxwBRyVbgWAEdHEPdj5BH7dSKIF5aYg=;
+        b=t5Ta6hcmFnaoWxmp+LwNt51oTVY0YiUcutkK3G5TTSB9vh5MxL9Ro61tDA4e23D4nZ
+         zt7n76p5ltEVYS/y4cIIWxGWP7p87r6f5IkGSguvEYt1ElBcO3RsosgPSVb/Rv8TOCsX
+         R6sqk8LoSurRPHKMTwP8ndcD84Rj9tsCQKu60gFqRu/4XqFkzJ3QowSVBk9PsfY1ZDiY
+         g9N9I/EVKP2bJk/khi0wB65tud1V7x5laFV81y9JUGEP64BqL9IPZ4z3+ghjp+QSwhIq
+         zavGhrMTNllh61rUiv3U65WiJ7RjzZZbYe0bD9+2ltmuivPTq9pwCGN1eTVlHE3o/hrH
+         B0iA==
+X-Gm-Message-State: AOJu0YxSPXs9c+Hn1DVCHb8h1CuNR6XnL04eFfEG3v2BMVk7I4eKbc1V
+	9Kfp09oSXr0kJdNNuLI9ZndUuLlLDuom
+X-Google-Smtp-Source: AGHT+IHJDwdHYyS7Zbj3sKxeCcxONqJ1iFvG2HlgJ22bfBwKo2IZ7jo/F+uXbfaJl4SWskGm+QdBFw==
+X-Received: by 2002:a05:6a00:22d5:b0:6d9:bf59:462a with SMTP id f21-20020a056a0022d500b006d9bf59462amr98647pfj.65.1705016551711;
+        Thu, 11 Jan 2024 15:42:31 -0800 (PST)
 Received: from localhost (34.85.168.34.bc.googleusercontent.com. [34.168.85.34])
-        by smtp.gmail.com with UTF8SMTPSA id kh11-20020a170903064b00b001d58ed4c591sm1664834plb.105.2024.01.11.15.42.27
+        by smtp.gmail.com with UTF8SMTPSA id n40-20020a056a000d6800b006d5929810a6sm1785848pfv.83.2024.01.11.15.42.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jan 2024 15:42:27 -0800 (PST)
+        Thu, 11 Jan 2024 15:42:31 -0800 (PST)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -60,9 +60,9 @@ Cc: jeffxu@google.com,
 	linux-hardening@vger.kernel.org,
 	deraadt@openbsd.org,
 	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH v6 1/4] mseal: Wire up mseal syscall
-Date: Thu, 11 Jan 2024 23:41:38 +0000
-Message-ID: <20240111234142.2944934-2-jeffxu@chromium.org>
+Subject: [PATCH v6 4/4] mseal:add documentation
+Date: Thu, 11 Jan 2024 23:41:41 +0000
+Message-ID: <20240111234142.2944934-5-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
 In-Reply-To: <20240111234142.2944934-1-jeffxu@chromium.org>
 References: <20240111234142.2944934-1-jeffxu@chromium.org>
@@ -72,228 +72,206 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-Wire up mseal syscall for all architectures.
+Add documentation for mseal().
 
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 ---
- arch/alpha/kernel/syscalls/syscall.tbl      | 1 +
- arch/arm/tools/syscall.tbl                  | 1 +
- arch/arm64/include/asm/unistd.h             | 2 +-
- arch/arm64/include/asm/unistd32.h           | 2 ++
- arch/m68k/kernel/syscalls/syscall.tbl       | 1 +
- arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   | 1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   | 1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   | 1 +
- arch/parisc/kernel/syscalls/syscall.tbl     | 1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    | 1 +
- arch/s390/kernel/syscalls/syscall.tbl       | 1 +
- arch/sh/kernel/syscalls/syscall.tbl         | 1 +
- arch/sparc/kernel/syscalls/syscall.tbl      | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
- include/uapi/asm-generic/unistd.h           | 5 ++++-
- kernel/sys_ni.c                             | 1 +
- 19 files changed, 23 insertions(+), 2 deletions(-)
+ Documentation/userspace-api/mseal.rst | 181 ++++++++++++++++++++++++++
+ 1 file changed, 181 insertions(+)
+ create mode 100644 Documentation/userspace-api/mseal.rst
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 8ff110826ce2..d8f96362e9f8 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -501,3 +501,4 @@
- 569	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 570	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 571	common	lsm_list_modules		sys_lsm_list_modules
-+572	common  mseal				sys_mseal
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index b6c9e01e14f5..2ed7d229c8f9 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -475,3 +475,4 @@
- 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
-+462	common	mseal				sys_mseal
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 491b2b9bd553..1346579f802f 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -39,7 +39,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		462
-+#define __NR_compat_syscalls		463
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 7118282d1c79..266b96acc014 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -929,6 +929,8 @@ __SYSCALL(__NR_lsm_get_self_attr, sys_lsm_get_self_attr)
- __SYSCALL(__NR_lsm_set_self_attr, sys_lsm_set_self_attr)
- #define __NR_lsm_list_modules 461
- __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
-+#define __NR_mseal 462
-+__SYSCALL(__NR_mseal, sys_mseal)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index 7fd43fd4c9f2..22a3cbd4c602 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -461,3 +461,4 @@
- 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
-+462	common	mseal				sys_mseal
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index b00ab2cabab9..2b81a6bd78b2 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -467,3 +467,4 @@
- 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
-+462	common	mseal				sys_mseal
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 83cfc9eb6b88..cc869f5d5693 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -400,3 +400,4 @@
- 459	n32	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	n32	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	n32	lsm_list_modules		sys_lsm_list_modules
-+462	n32	mseal				sys_mseal
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 532b855df589..1464c6be6eb3 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -376,3 +376,4 @@
- 459	n64	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	n64	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	n64	lsm_list_modules		sys_lsm_list_modules
-+462	n64	mseal				sys_mseal
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index f45c9530ea93..008ebe60263e 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -449,3 +449,4 @@
- 459	o32	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	o32	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	o32	lsm_list_modules		sys_lsm_list_modules
-+462	o32	mseal				sys_mseal
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index b236a84c4e12..b13c21373974 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -460,3 +460,4 @@
- 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
-+462	common	mseal				sys_mseal
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 17173b82ca21..3656f1ca7a21 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -548,3 +548,4 @@
- 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
-+462	common	mseal				sys_mseal
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index 095bb86339a7..bd0fee24ad10 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -464,3 +464,4 @@
- 459  common	lsm_get_self_attr	sys_lsm_get_self_attr		sys_lsm_get_self_attr
- 460  common	lsm_set_self_attr	sys_lsm_set_self_attr		sys_lsm_set_self_attr
- 461  common	lsm_list_modules	sys_lsm_list_modules		sys_lsm_list_modules
-+462  common	mseal			sys_mseal			sys_mseal
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index 86fe269f0220..bbf83a2db986 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -464,3 +464,4 @@
- 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
-+462	common	mseal				sys_mseal
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index b23d59313589..ac6c281ccfe0 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -507,3 +507,4 @@
- 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
-+462	common	mseal 				sys_mseal
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 5f8591ce7f25..7fd1f57ad3d3 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -466,3 +466,4 @@
- 459	i386	lsm_get_self_attr	sys_lsm_get_self_attr
- 460	i386	lsm_set_self_attr	sys_lsm_set_self_attr
- 461	i386	lsm_list_modules	sys_lsm_list_modules
-+462	i386	mseal 			sys_mseal
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 7e8d46f4147f..52df0dec70da 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -383,6 +383,7 @@
- 459	common	lsm_get_self_attr	sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr	sys_lsm_set_self_attr
- 461	common	lsm_list_modules	sys_lsm_list_modules
-+462 	common  mseal			sys_mseal
- 
- #
- # Due to a historical design error, certain syscalls are numbered differently
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index dd116598fb25..67083fc1b2f5 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -432,3 +432,4 @@
- 459	common	lsm_get_self_attr		sys_lsm_get_self_attr
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
-+462	common	mseal 				sys_mseal
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 75f00965ab15..d983c48a3b6a 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -842,8 +842,11 @@ __SYSCALL(__NR_lsm_set_self_attr, sys_lsm_set_self_attr)
- #define __NR_lsm_list_modules 461
- __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
- 
-+#define __NR_mseal 462
-+__SYSCALL(__NR_mseal, sys_mseal)
+diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
+new file mode 100644
+index 000000000000..3ca0c9ce3967
+--- /dev/null
++++ b/Documentation/userspace-api/mseal.rst
+@@ -0,0 +1,181 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- #undef __NR_syscalls
--#define __NR_syscalls 462
-+#define __NR_syscalls 463
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index faad00cce269..d7eee421d4bc 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -196,6 +196,7 @@ COND_SYSCALL(migrate_pages);
- COND_SYSCALL(move_pages);
- COND_SYSCALL(set_mempolicy_home_node);
- COND_SYSCALL(cachestat);
-+COND_SYSCALL(mseal);
- 
- COND_SYSCALL(perf_event_open);
- COND_SYSCALL(accept4);
++=====================
++Introduction of mseal
++=====================
++
++:Author: Jeff Xu <jeffxu@chromium.org>
++
++Modern CPUs support memory permissions such as RW and NX bits. The memory
++permission feature improves security stance on memory corruption bugs, i.e.
++the attacker can’t just write to arbitrary memory and point the code to it,
++the memory has to be marked with X bit, or else an exception will happen.
++
++Memory sealing additionally protects the mapping itself against
++modifications. This is useful to mitigate memory corruption issues where a
++corrupted pointer is passed to a memory management system. For example,
++such an attacker primitive can break control-flow integrity guarantees
++since read-only memory that is supposed to be trusted can become writable
++or .text pages can get remapped. Memory sealing can automatically be
++applied by the runtime loader to seal .text and .rodata pages and
++applications can additionally seal security critical data at runtime.
++
++A similar feature already exists in the XNU kernel with the
++VM_FLAGS_PERMANENT flag [1] and on OpenBSD with the mimmutable syscall [2].
++
++User API
++========
++Two system calls are involved in virtual memory sealing, mseal() and mmap().
++
++mseal()
++-----------
++The mseal() syscall has the following signature:
++
++``int mseal(void addr, size_t len, unsigned long flags)``
++
++**addr/len**: virtual memory address range.
++
++The address range set by ``addr``/``len`` must meet:
++   - The start address must be in an allocated VMA.
++   - The start address must be page aligned.
++   - The end address (``addr`` + ``len``) must be in an allocated VMA.
++   - no gap (unallocated memory) between start and end address.
++
++The ``len`` will be paged aligned implicitly by the kernel.
++
++**flags**: reserved for future use.
++
++**return values**:
++
++- ``0``: Success.
++
++- ``-EINVAL``:
++    - Invalid input ``flags``.
++    - The start address (``addr``) is not page aligned.
++    - Address range (``addr`` + ``len``) overflow.
++
++- ``-ENOMEM``:
++    - The start address (``addr``) is not allocated.
++    - The end address (``addr`` + ``len``) is not allocated.
++    - A gap (unallocated memory) between start and end address.
++
++- ``-EACCES``:
++    - ``MAP_SEALABLE`` is not set during mmap().
++
++- ``-EPERM``:
++    - sealing is supported only on 64-bit CPUs, 32-bit is not supported.
++
++- For above error cases, users can expect the given memory range is
++  unmodified, i.e. no partial update.
++
++- There might be other internal errors/cases not listed here, e.g.
++  error during merging/splitting VMAs, or the process reaching the max
++  number of supported VMAs. In those cases, partial updates to the given
++  memory range could happen. However, those cases should be rare.
++
++**Blocked operations after sealing**:
++    Unmapping, moving to another location, and shrinking the size,
++    via munmap() and mremap(), can leave an empty space, therefore
++    can be replaced with a VMA with a new set of attributes.
++
++    Moving or expanding a different VMA into the current location,
++    via mremap().
++
++    Modifying a VMA via mmap(MAP_FIXED).
++
++    Size expansion, via mremap(), does not appear to pose any
++    specific risks to sealed VMAs. It is included anyway because
++    the use case is unclear. In any case, users can rely on
++    merging to expand a sealed VMA.
++
++    mprotect() and pkey_mprotect().
++
++    Some destructive madvice() behaviors (e.g. MADV_DONTNEED)
++    for anonymous memory, when users don't have write permission to the
++    memory. Those behaviors can alter region contents by discarding pages,
++    effectively a memset(0) for anonymous memory.
++
++**Note**:
++
++- mseal() only works on 64-bit CPUs, not 32-bit CPU.
++
++- users can call mseal() multiple times, mseal() on an already sealed memory
++  is a no-action (not error).
++
++- munseal() is not supported.
++
++mmap()
++----------
++``void *mmap(void* addr, size_t length, int prot, int flags, int fd,
++off_t offset);``
++
++We add two changes in ``prot`` and ``flags`` of  mmap() related to
++memory sealing.
++
++**prot**
++
++The ``PROT_SEAL`` bit in ``prot`` field of mmap().
++
++When present, it marks the memory is sealed since creation.
++
++This is useful as optimization because it avoids having to make two
++system calls: one for mmap() and one for mseal().
++
++It's worth noting that even though the sealing is set via the
++``prot`` field in mmap(), it can't be set in the ``prot``
++field in later mprotect(). This is unlike the ``PROT_READ``,
++``PROT_WRITE``, ``PROT_EXEC`` bits, e.g. if ``PROT_WRITE`` is not set in
++mprotect(), it means that the region is not writable.
++
++Setting ``PROT_SEAL`` implies setting ``MAP_SEALABLE`` below.
++
++**flags**
++
++The ``MAP_SEALABLE`` bit in the ``flags`` field of mmap().
++
++When present, it marks the map as sealable. A map created
++without ``MAP_SEALABLE`` will not support sealing. In other words,
++mseal() will fail for such a map.
++
++
++Applications that don't care about sealing will expect their
++behavior unchanged. For those that need sealing support, opt in
++by adding ``MAP_SEALABLE`` in mmap().
++
++Note: for a map created without ``MAP_SEALABLE`` or a map created
++with ``MAP_SEALABLE`` but not sealed yet, mmap(MAP_FIXED) can
++change the sealable or sealing bit.
++
++Use Case:
++=========
++- glibc:
++  The dynamic linker, during loading ELF executables, can apply sealing to
++  non-writable memory segments.
++
++- Chrome browser: protect some security sensitive data-structures.
++
++Additional notes:
++=================
++As Jann Horn pointed out in [3], there are still a few ways to write
++to RO memory, which is, in a way, by design. Those cases are not covered
++by mseal(). If applications want to block such cases, sandbox tools (such as
++seccomp, LSM, etc) might be considered.
++
++Those cases are:
++
++- Write to read-only memory through /proc/self/mem interface.
++- Write to read-only memory through ptrace (such as PTRACE_POKETEXT).
++- userfaultfd.
++
++The idea that inspired this patch comes from Stephen Röttger’s work in V8
++CFI [4]. Chrome browser in ChromeOS will be the first user of this API.
++
++Reference:
++==========
++[1] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37aff177559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
++
++[2] https://man.openbsd.org/mimmutable.2
++
++[3] https://lore.kernel.org/lkml/CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ426FkcgnfUGLvA@mail.gmail.com
++
++[4] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmwdvxQMyXgeaRHo/edit#heading=h.bvaojj9fu6hc
 -- 
 2.43.0.275.g3460e3d667-goog
 
