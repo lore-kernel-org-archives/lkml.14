@@ -1,204 +1,95 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594D952F90;
-	Thu, 11 Jan 2024 18:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04084537E3
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 18:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fooishbar.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="expIiGO9"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40B8B0AP005246;
-	Thu, 11 Jan 2024 18:09:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=d+FeWuF+MXwS6XPriMB52QuaXQMuGywYMW+thXPOIUg=; b=ex
-	pIiGO9C/W71ZqYtmNFcCSIzxKZ1ENrR14KKEUuDAIHpsuti0IV081lPG4NugJqw5
-	tkl0wyzU1zhDZrQtAHEjM+e/BztU6ku9WJxOvPOsvxkmiW9B8snheHcJ7XzamBEI
-	kn0+RWfONMJUB85tQ5S6gxaRzpExxEYSx3n/y5G1IP37S0RNU+/KYFQHzD1az9Y0
-	sOCli+8duMBFqlQA+0dchILx6JLJvkfjwQ8BXwUUuHIfYlizP91nMsuadINHb+K6
-	wgsa+ANep6EVN0XJmrd2pUb0TDpnHM7iJqC3I30OS4K+x74Ao4fKs84t+B0/49An
-	QEDbFdElmrXPTaqMtBTQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vjckh9c3u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 18:09:47 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40BI9kcQ014233
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 18:09:46 GMT
-Received: from [10.216.16.210] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 11 Jan
- 2024 10:09:39 -0800
-Message-ID: <1a1f9b11-5a6d-41f7-8bcd-533a61a27a65@quicinc.com>
-Date: Thu, 11 Jan 2024 23:39:36 +0530
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20230601.gappssmtp.com header.i=@fooishbar-org.20230601.gappssmtp.com header.b="hMNIey/C"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3bbd6e377ceso4440993b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 10:11:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20230601.gappssmtp.com; s=20230601; t=1704996697; x=1705601497; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GNwfPpOc+w6+qUvr4c6LiIOhhkOq06R1P3AdfBXYN2Y=;
+        b=hMNIey/CDK5B1EZAQ4GoR07e+qaSHxxOjE9KrmmBxnaR4QOZQ9Kd35Dn2eDO89EZqh
+         QaGA+4CCPjgBo3um5DKZJYxVoDOdlBI2GOTewycQeS4s9/vkvcpXH+QWc3k11qWFL3Im
+         8BXZoCPNM3xfc+W9YepgkdAAm+OBCeNconj2yf6qT3vZZA3ZuwnHBqR4Kpi+poKr3ymN
+         /DIWKB1XAoBP0qjKI8QRyGhZkAOoVlsbt37kwLE5Fqc0eJxd0HPPb22TGWPmfAr7U9wf
+         h0pcdoH2LJqXMkiNOV9+ynzjpxMzaerQF7Yq3IXlAxiX0GPpgxJH2UnyR/yfQp10k44+
+         fvjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704996697; x=1705601497;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GNwfPpOc+w6+qUvr4c6LiIOhhkOq06R1P3AdfBXYN2Y=;
+        b=j/kqxRqnLWugxeH/xmvgG9vxqlFFBTT2C6grgofEr6/diyy+uk74QoX6nd1MnsO0vW
+         fggCDbk7TEI0gB+GYXvIdBPhWXIt8glcdVbdBJFohZHelWwHQgSk7LODr0EHqTaLHfVY
+         USaZHvHzEFWHtj2mSSVJNfBt7cQBC7vG6fjcqdeWQAK6g9z31niea15pTBZUTVOsgoy8
+         HesuzyRd/K3qlgj/is/Ys758SK5QpsC6qFrYU9HFRedHhxon9ViErWy8vCoTOxSBVRPy
+         mZ7YZ2U82SezNfOaLHqNEKKvPkNFs+vNCzApTppyuvqD4F4wKPJQdzCvH3E8X5uATD+k
+         O29Q==
+X-Gm-Message-State: AOJu0YyNfmmkix+1lx8UGujHdY1+6f8jR8PPA9XXotR0233gzmjxXOKg
+	UVP/tydu1gyPc+L4usiMlYNb77yrrr6aUe5Uq/xMktkuf2Q/fw==
+X-Google-Smtp-Source: AGHT+IEOQA3VGINqdDq3XtCaDe7x77fu7+Iwu6ym4ijoXArXnWe9XYkfG56HHC5HEq3XFTuTf4bmEuP1OyFcAzpA/9w=
+X-Received: by 2002:a05:6808:3989:b0:3bd:5006:e313 with SMTP id
+ gq9-20020a056808398900b003bd5006e313mr78961oib.105.1704996696986; Thu, 11 Jan
+ 2024 10:11:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/5] iommu/arm-smmu: introduction of ACTLR for custom
- prefetcher settings
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Pavan Kondeti
-	<quic_pkondeti@quicinc.com>
-CC: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
-        <dmitry.baryshkov@linaro.org>, <jsnitsel@redhat.com>,
-        <quic_bjorande@quicinc.com>, <mani@kernel.org>,
-        <quic_eberman@quicinc.com>, <robdclark@chromium.org>,
-        <u.kleine-koenig@pengutronix.de>, <robh@kernel.org>,
-        <vladimir.oltean@nxp.com>, <quic_molvera@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>
-References: <20240109114220.30243-1-quic_bibekkum@quicinc.com>
- <20240109114220.30243-4-quic_bibekkum@quicinc.com>
- <2ad70157-27d1-41df-8866-c226af690cf6@quicinc.com>
- <ec31fafa-b912-454a-8b64-e0593911aaf2@quicinc.com>
- <4a595815-7fcc-47e2-b22c-dac349af6d79@quicinc.com>
- <492aeca3-a4df-47a3-9c77-02ea4235d736@linaro.org>
-From: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-In-Reply-To: <492aeca3-a4df-47a3-9c77-02ea4235d736@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zVFn-BH7dMnP9KgOwl_Wb9OjB68c8kxb
-X-Proofpoint-GUID: zVFn-BH7dMnP9KgOwl_Wb9OjB68c8kxb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401110142
+References: <20231220121110.1441160-1-vignesh.raman@collabora.com>
+ <CAPj87rOMPioOK0r74vcnVkXusm6Nah6KNUWyxYgpVLdkMNtW2g@mail.gmail.com> <ad7cbd59-5264-96e8-5e9b-aafde8028e41@collabora.com>
+In-Reply-To: <ad7cbd59-5264-96e8-5e9b-aafde8028e41@collabora.com>
+From: Daniel Stone <daniel@fooishbar.org>
+Date: Thu, 11 Jan 2024 18:11:25 +0000
+Message-ID: <CAPj87rPRRfJmxTev50YqxBizyvzCUhCiymoV_bdqsZ-zvcREfA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/8] drm/ci: Add support for GPU and display testing
+To: Helen Koike <helen.koike@collabora.com>, Dave Airlie <airlied@gmail.com>, 
+	Sima Vetter <daniel@ffwll.ch>, Daniel Stone <daniels@collabora.com>, Emma Anholt <emma@anholt.net>, 
+	linux-rockchip <linux-rockchip@lists.infradead.org>, guilherme.gallo@collabora.com, 
+	sergi.blanch.torne@collabora.com, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	David Heidelberg <david.heidelberg@collabora.com>, Rob Clark <robdclark@gmail.com>, 
+	linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Vignesh,
 
+On Wed, 10 Jan 2024 at 10:47, Vignesh Raman <vignesh.raman@collabora.com> wrote:
+> On 09/01/24 19:08, Daniel Stone wrote:
+> > A better sequencing would be something like:
+> >    1. add ANX7625 config
+> >    2. refactor _existing_ MTK display jobs to use YAML includes, change
+> > the existing job name, and rename the existing xfail set, remove
+> > IGT_FORCE_DRIVER from the script since it's now set by the job
+> >    3. add MTK Panfrost+PVR GPU jobs with new xfails, add xfail entry to
+> > MAINTAINERS
+> >    4+5: same as 2+3 but for Amlogic
+> >    6+7: same as 2+3 but for Rockchip
+> >
+> > Then the separate rename/update xfail commits just disappear, as does
+> > the removal of IGT_FORCE_DRIVER, because it's just done incrementally
+> > as part of the commits which change the related functionality. It's
+> > extremely important that every change can work standalone, instead of
+> > introducing intermediate breakage which is only fixed in later commits
+> > in the series.
+>
+> Thank you for reviewing the patches. I agree, will follow this sequence
+> and send a v2 version.
 
-On 1/10/2024 11:26 PM, Konrad Dybcio wrote:
-> 
-> 
-> On 1/10/24 13:55, Bibek Kumar Patro wrote:
->>
->>
->> On 1/10/2024 4:46 PM, Bibek Kumar Patro wrote:
->>>
->>>
->>> On 1/10/2024 9:36 AM, Pavan Kondeti wrote:
->>
->> [...]
->>
->>>>> @@ -274,6 +321,21 @@ static const struct of_device_id 
->>>>> qcom_smmu_client_of_match[] __maybe_unused = {
->>>>>   static int qcom_smmu_init_context(struct arm_smmu_domain 
->>>>> *smmu_domain,
->>>>>           struct io_pgtable_cfg *pgtbl_cfg, struct device *dev)
->>>>>   {
->>>>> +    struct arm_smmu_device *smmu = smmu_domain->smmu;
->>>>> +    struct qcom_smmu *qsmmu = to_qcom_smmu(smmu);
->>>>> +    const struct actlr_variant *actlrvar;
->>>>> +    int cbndx = smmu_domain->cfg.cbndx;
->>>>> +
->>>>> +    if (qsmmu->data->actlrvar) {
->>>>> +        actlrvar = qsmmu->data->actlrvar;
->>>>> +        for (; actlrvar->io_start; actlrvar++) {
->>>>> +            if (actlrvar->io_start == smmu->ioaddr) {
->>>>> +                qcom_smmu_set_actlr(dev, smmu, cbndx, 
->>>>> actlrvar->actlrcfg);
->>>>> +                break;
->>>>> +            }
->>>>> +        }
->>>>> +    }
->>>>> +
->>>>
->>>> This block and the one in qcom_adreno_smmu_init_context() are exactly
->>>> the same. Possible to do some refactoring?
->>>>
->>>
->>> I will check if this repeated blocks can be accomodated this into 
->>> qcom_smmu_set_actlr function if that would be fine.
->>>
->>
->> Also adding to this, this might increase the number of indentation 
->> inside qcom_smmu_set_actlr as well, to around 5. So wouldn't this
->> be an issue?
-> 
-> By the way, we can refactor this:
-> 
-> if (qsmmu->data->actlrvar) {
->      actlrvar = qsmmu->data->actlrvar;
->      for (; actlrvar->io_start; actlrvar++) {
->          if (actlrvar->io_start == smmu->ioaddr) {
->              qcom_smmu_set_actlr(dev, smmu, cbndx, actlrvar->actlrcfg);
->              break;
->          }
->      }
-> }
-> 
-> into
-> 
-> // add const u8 num_actlrcfgs to struct actrl_variant to
-> // save on sentinel space:
-> //   sizeof(u8) < sizeof(ptr) + sizeof(resource_size_t)
-> 
+Alongside Rob's patch to add msm-specific tests to the runlist, we'd
+need to add the Panfrost-specific tests. Whilst we're here, we might
+as well add the vc4/v3d/etnaviv/lima tests so they can use it in
+future.
 
-Git it, Would it be better to add this in struct qcom_smmu_match_data ?
-Posted a sample below.
+Panfrost should also skip kms_.* tests - since it's not a KMS driver,
+it can't run the KMS tests, so there's no point in trying.
 
-> 
-> [declarations]
-> const struct actlr_variant *actlrvar = qsmmu->data->actlrvar;
-> int i;
-> 
-> [rest of the functions]
-> 
-> if (!actlrvar)
->      return 0;
->  > for (i = 0; i < actrlvar->num_actrlcfgs; i++) {
->      if (actlrvar[i].io_start == smmu->ioaddr) {
->          qcom_smmu_set_actlr(dev, smmu, cbndx, actlrvar->actlrcfg);
->          break;
->      }
-> }
->  > Saving both on .TEXT size and indentation levels :)
-> 
-Thanks for this suggestion Konrad, will try to implement this, as it 
-would reduce the indent levels to good extent.
-Would something like this be okay?
-
-static int qcom_smmu_init_context(struct arm_smmu_domain *smmu_domain,
-  	struct qcom_smmu *qsmmu = to_qcom_smmu(smmu);
-  	const struct actlr_variant *actlrvar;
-  	int cbndx = smmu_domain->cfg.cbndx;
-+	int i;
-
-+	actlrvar = qsmmu->data->actlrvar;
-+
-+	if (!actlrvar)
-+		goto end;
-+
-+	for (i = 0; i < qsmmu->data->num_smmu ; i++) {
-+		if (actlrvar[i].io_start == smmu->ioaddr) {
-+			qcom_smmu_set_actlr(dev, smmu, cbndx,
-+						actlrvar[i].actlrcfg);
-+			break;
-  		}
-  	}
-
-+end:
-  	smmu_domain->cfg.flush_walk_prefer_tlbiasid = true;
-
-  	return 0;
-
-Thanks & regards,
-Bibek
-
-> Konrad
+Cheers,
+Daniel
