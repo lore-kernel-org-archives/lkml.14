@@ -1,86 +1,122 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D7E26AC7;
-	Thu, 11 Jan 2024 20:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B43A56B6C;
+	Thu, 11 Jan 2024 20:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="FpRJcWwu"
-Received: from [10.0.0.200] (unknown [10.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 0CF2D1657AF;
-	Thu, 11 Jan 2024 21:08:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1705003682;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GvjUcYLLXKLbNwRxSSCVydB/RFhpiJ6mm/XGX66hcSY=;
-	b=FpRJcWwuQTPar2Eai5aH4jQj/07Z2WhTgHa/405+UzJUOVS57CrlyTqfDSBahucZexEPTx
-	lf1+UMns5MoGVtfNDUWqNzfHcM/ZOHrcVfm2um3wncHvo8axQjY1RetJk/xUpv+nqspKJE
-	H9JcEH1QV9ug1ECXeRT0EDp5jF3l4UA=
-Message-ID: <9696e2e9-db02-4ea7-b955-785ff5d19f3f@ixit.cz>
-Date: Thu, 11 Jan 2024 21:08:01 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pz76U6jP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C575C43390;
+	Thu, 11 Jan 2024 20:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705004407;
+	bh=+QavJfo5shHsDI54vIkucOEkmDxcfkwD6QfPD3io40U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pz76U6jPieOUiWYaAgRMSZ0RaLxs3b1cj+yfIzSrgCEHRBjcAABzNWoHXXaVgbbVR
+	 JNL9z6/6pKRr8TJbyGaLt7nR6s0+DfKU4aAcu4ZDw5Do5dHTvwf4BPKmoh0ZdmM/wj
+	 jISSXv6Gt4afZr8OahwxcH5973TMwOHw2ZxyVygTiXXrAn8B+w5p4KN/47VPigb+oS
+	 lYek+N6adK2I8qsxnhvl1i233QVbL1Z/OOAND2xJb1gcc/MqtuOAhpUYiVLBzA8k05
+	 Pn5/fUyVcxSYy0zI54/QOKcb1yk1mCMG9Vo/M2TPP27bkS1dSLsIkepje263KX/Vl3
+	 DZj5TG7UMZ1Rw==
+Date: Thu, 11 Jan 2024 13:20:03 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Yonghong Song <yonghong.song@linux.dev>,
+	clang-built-linux <llvm@lists.linux.dev>, patches@lists.linux.dev,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	ppc-dev <linuxppc-dev@lists.ozlabs.org>, kvm@vger.kernel.org,
+	linux-riscv <linux-riscv@lists.infradead.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-s390 <linux-s390@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-efi <linux-efi@vger.kernel.org>,
+	amd-gfx list <amd-gfx@lists.freedesktop.org>,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linux-arch <linux-arch@vger.kernel.org>,
+	kasan-dev <kasan-dev@googlegroups.com>,
+	linux-mm <linux-mm@kvack.org>, bridge@lists.linux.dev,
+	Network Development <netdev@vger.kernel.org>,
+	LSM List <linux-security-module@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH 1/3] selftests/bpf: Update LLVM Phabricator links
+Message-ID: <20240111202003.GA3418790@dev-arch.thelio-3990X>
+References: <20240109-update-llvm-links-v1-0-eb09b59db071@kernel.org>
+ <20240109-update-llvm-links-v1-1-eb09b59db071@kernel.org>
+ <6a655e9f-9878-4292-9d16-f988c4bdfc73@linux.dev>
+ <20240111194001.GA3805856@dev-arch.thelio-3990X>
+ <CAADnVQKFv2DKE=Um=+kcEzSWYCp9USQT_VpTawzNY6eRaUdu5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 2/2] arm64: defconfig: Enable PSTORE_RAM
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Kees Cook <keescook@chromium.org>
-Cc: kernel@collabora.com,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <quic_bjorande@quicinc.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Tony Luck <tony.luck@intel.com>,
- Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240110210600.787703-1-nfraprado@collabora.com>
- <20240110210600.787703-3-nfraprado@collabora.com>
-Content-Language: en-US
-From: David <david@ixit.cz>
-In-Reply-To: <20240110210600.787703-3-nfraprado@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQKFv2DKE=Um=+kcEzSWYCp9USQT_VpTawzNY6eRaUdu5g@mail.gmail.com>
 
-Useful stuff!
+Hi Alexei,
 
-Reviewed-by: David Heidelberg <david@ixit.cz>
+On Thu, Jan 11, 2024 at 12:00:50PM -0800, Alexei Starovoitov wrote:
+> On Thu, Jan 11, 2024 at 11:40 AM Nathan Chancellor <nathan@kernel.org> wrote:
+> >
+> > Hi Yonghong,
+> >
+> > On Wed, Jan 10, 2024 at 08:05:36PM -0800, Yonghong Song wrote:
+> > >
+> > > On 1/9/24 2:16 PM, Nathan Chancellor wrote:
+> > > > reviews.llvm.org was LLVM's Phabricator instances for code review. It
+> > > > has been abandoned in favor of GitHub pull requests. While the majority
+> > > > of links in the kernel sources still work because of the work Fangrui
+> > > > has done turning the dynamic Phabricator instance into a static archive,
+> > > > there are some issues with that work, so preemptively convert all the
+> > > > links in the kernel sources to point to the commit on GitHub.
+> > > >
+> > > > Most of the commits have the corresponding differential review link in
+> > > > the commit message itself so there should not be any loss of fidelity in
+> > > > the relevant information.
+> > > >
+> > > > Additionally, fix a typo in the xdpwall.c print ("LLMV" -> "LLVM") while
+> > > > in the area.
+> > > >
+> > > > Link: https://discourse.llvm.org/t/update-on-github-pull-requests/71540/172
+> > > > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> > >
+> > > Ack with one nit below.
+> > >
+> > > Acked-by: Yonghong Song <yonghong.song@linux.dev>
+> >
+> > <snip>
+> >
+> > > > @@ -304,6 +304,6 @@ from running test_progs will look like:
+> > > >   .. code-block:: console
+> > > > -  test_xdpwall:FAIL:Does LLVM have https://reviews.llvm.org/D109073? unexpected error: -4007
+> > > > +  test_xdpwall:FAIL:Does LLVM have https://github.com/llvm/llvm-project/commit/ea72b0319d7b0f0c2fcf41d121afa5d031b319d5? unexpected error: -4007
+> > > > -__ https://reviews.llvm.org/D109073
+> > > > +__ https://github.com/llvm/llvm-project/commit/ea72b0319d7b0f0c2fcf41d121afa5d031b319d
+> > >
+> > > To be consistent with other links, could you add the missing last alnum '5' to the above link?
+> >
+> > Thanks a lot for catching this and providing an ack. Andrew, could you
+> > squash this update into selftests-bpf-update-llvm-phabricator-links.patch?
+> 
+> Please send a new patch.
+> We'd like to take all bpf patches through the bpf tree to avoid conflicts.
 
-On 10/01/2024 22:05, Nícolas F. R. A. Prado wrote:
-> Enable PSTORE_RAM, that is the ramoops driver, in the defconfig, to
-> allow logging and retrieving panics and oopses to/from RAM automatically
-> for platforms that have a ramoops reserved memory node in DT.
->
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->
-> ---
->
->   arch/arm64/configs/defconfig | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index d48659217bb4..0b0ef6877a12 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -1589,6 +1589,7 @@ CONFIG_HUGETLBFS=y
->   CONFIG_CONFIGFS_FS=y
->   CONFIG_EFIVAR_FS=y
->   CONFIG_SQUASHFS=y
-> +CONFIG_PSTORE_RAM=m
->   CONFIG_NFS_FS=y
->   CONFIG_NFS_V4=y
->   CONFIG_NFS_V4_1=y
+Very well, I've sent a standalone v2 on top of bpf-next:
+
+https://lore.kernel.org/20240111-bpf-update-llvm-phabricator-links-v2-1-9a7ae976bd64@kernel.org/
+
+Andrew, just drop selftests-bpf-update-llvm-phabricator-links.patch
+altogether in that case, the other two patches are fine to go via -mm I
+think.
+
+Cheers,
+Nathan
