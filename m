@@ -1,136 +1,183 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2040.outbound.protection.partner.outlook.cn [139.219.17.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7276B14F8F;
-	Thu, 11 Jan 2024 08:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kVKfsXypWpy5ShaBPLcA1yXUEIrpetn8UQCG7u3huAUcw/Ut0LQEDNsDU786Khi73V8zElioP7PgBTCecw6LW3pOyQiEO20xY/IrBdXf6M+ASSNLeKp482A6K4UapOocbuu6d+c/eSnaG7ujs8qILqWqqZzhk00yzzn0WSX/+NQYu5T56m4ZcQBhFF8SMo3pplNllVh4iOeee+dB/Plb+/Er6be8WYTW4pOvRckO8kpZ81N0otTaUbFSN8oyR1LeKwtd/2UPIGRxJpaZ3cDG7e7OUMam2y6+PumD+I0kz6lNiMjn/b2FcQ4GUi2AA6FApEwM5Ewk1D6/Z8whsI97pA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IpYS+v+cBn1HqDAmhXTHJL+v2aLemV00fes8PvGvKzM=;
- b=hO/Y3TDh+Xl+83aqrrnnaakq+b2XZrech0AO0HNJg8/ys9JCH5RY7MBOFMUBQc7+D5cFZ6kTKMX3WRXMGpd+kyo/sK+KrSlc9lPOi1tGBhbqNd9HnWA0BSGxYd4yaQ1hQuA6BsZ53ZJbcdLY+LRooJBIcHDG+1Y+r1xZJaddUcWJpGOcYSVHMNij02ZTD0AH/CqMQvRHRNGpJJQyPYWdLv4ypvGcAKVffZmJ0WsT5mqp5nF5l7zej7jjOwRe9dWqkF+v8lazIBLWQg5XNEkRtZAeGzcl7CN13cCdpYvaU/+SXGsDau+vfSo75VDqhjErAUfwsn6ZP05GGAWekkOWVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:20::21) by SH0PR01MB0747.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:21::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.33; Thu, 11 Jan
- 2024 08:41:36 +0000
-Received: from SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
- ([fe80::e255:98f3:ba27:8c7d]) by
- SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn ([fe80::e255:98f3:ba27:8c7d%3])
- with mapi id 15.20.7135.033; Thu, 11 Jan 2024 08:41:36 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Ming Qian <ming.qian@nxp.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mingjia Zhang <mingjia.zhang@mediatek.com>
-Cc: Jack Zhu <jack.zhu@starfivetech.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: [PATCH v2 10/13] staging: media: starfive: Add V4L2_CAP_IO_MC capability
-Date: Thu, 11 Jan 2024 00:41:17 -0800
-Message-Id: <20240111084120.16685-11-changhuang.liang@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240111084120.16685-1-changhuang.liang@starfivetech.com>
-References: <20240111084120.16685-1-changhuang.liang@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0009.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510::19) To SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:20::21)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464471772E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jt2phPfC"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a2bdc3a3c84so156712966b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 00:58:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704963516; x=1705568316; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mEyCOzWKzhN6fJuNZ8x6DfrD1KxuLW5yl178ZcMbpVM=;
+        b=Jt2phPfCjPKwX0A6qbLtRcbt0BvnJSbqP9E+w4/rJru/CDr1RP9u610lMf0UPIGvzt
+         8LIaUQqVzZT+2Gge9nJxnekH+Q6MxN0oPX9eJLU7EktHz4uqa5dpyIvt3YqQfOy62deU
+         vQFuqRl/vhaAksInZ8qqrgOdERaIXw5sTzc7DmlIZgn5mJXxboEG7S/6AMLf/vrxbzdp
+         Sxs+FVhg83sIJ5lUbduG4LKs+Y8PFOM217/tRv5922rQcLKxBbbo2NubJfAlZaZNi0Re
+         4DsB/Z8gLVHbJJUEbeibf/02h/ABeqXnx39/9+J4rRkk4FG2mZC9UYdrmchI2RleDkoZ
+         3d3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704963516; x=1705568316;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mEyCOzWKzhN6fJuNZ8x6DfrD1KxuLW5yl178ZcMbpVM=;
+        b=doUgJz0qWGxGaRl0+3R3sX2BGN9JsBHZ73t+2gGcZ8mt/uXoCElVpfu/HIU9eBTRA5
+         oGjb2uVFQlN2BHZx/cE+bqTqKYcVR7XeBYXOROCqO387m6bWKhVgeyWSdF4sI+Dgp7NT
+         yx8JfW36Ssjsx38kB8FtlklnlYWf+3BtJ+/Vkm92p6AbSsg6GPnIH8A7g0WVMKjUxqq3
+         AuTBKr12+1o06UriaJj5v6ifA74NnqIjVzbc/8hy/zNNfQzv5zkUZwXJb+iU9XE1yUYu
+         b0vhqnR4gA2ggiKe3Ma0713v5VFHwXby4CIxsYH4uJFWLvRpzvDyv8m+xCgo37YNmYXf
+         FOOA==
+X-Gm-Message-State: AOJu0Yx7Bvn6yS9eH++3rW+1Lh8OeS0TWhURtdiJXYUltXZQJy89q+qD
+	wMqBGlS9Zg3ErTfSJLm9qHEu+MGRZpIXmA==
+X-Google-Smtp-Source: AGHT+IGGJC7YroF42FIiBLUaEY8Uwq+Z4UdPUsTbm5xkNKjL/CJMPFhImK0PVAA1pnXowysgl9C1OQ==
+X-Received: by 2002:a17:906:e12:b0:a28:e5eb:3f31 with SMTP id l18-20020a1709060e1200b00a28e5eb3f31mr398132eji.80.1704963516564;
+        Thu, 11 Jan 2024 00:58:36 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id rv25-20020a17090710d900b00a26c8c70069sm319909ejb.48.2024.01.11.00.58.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 00:58:35 -0800 (PST)
+Message-ID: <3476ab0f-1589-4023-9951-3c03ab2467c3@linaro.org>
+Date: Thu, 11 Jan 2024 09:58:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SH0PR01MB0667:EE_|SH0PR01MB0747:EE_
-X-MS-Office365-Filtering-Correlation-Id: 060f83a9-a4dc-4d7b-7996-08dc12811eff
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	YcGJbMGfN5k4Zf+exk08/BZCrNKc3+FZ37P+G/TFvFS8NUQqu60o9DXX6CjDDfTkpgzVlvIzJw2GkGjnKwx+/ZkxM1e4NQBOd0ahEwTrosVjQWusF5Na94uErrDFT3xyoMgMQtI8J2Jb1UpK03HaZRkuRpUpo8CxiEjAY4pJIUy6iyuL8CUF4mjvpd+o8owjkdouljnXxy4QI8GWnAYSANKJbcVkv1wBfR1xQ/JaQVAgQX95AynOqdb/i1qR57noKdAIVyIW4v/MEpteTivWu9H9rUKIAo6ewazkYx0JAim7qrS0nOH1IedixKQZB1CIfB71i46/LT6gZaIqVHZOaMvx6l/rzkxkyl1tsgQhNkcU9tYPF7YPh0pHoRaQ9niNFZk5J1EpKl/v7h5pgvM9aPd81YeCUml/w3B7pgKM2bk0kTeNvpLRh13zRj/3i24Ew6HMc3KcwRctXQwWiyMn5ruInRyPDs781U0ZnjIC0zqW8nCxyiC/fr9s7jLxYwBuZHRJfC6kxo6ApLLINWX3nF775ygQxuti2hXMOp2NpJie3aAu2sFvRTyOUuzuGoZ4ZCGhj5JbiFhouuT/kNJIDg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(136003)(39830400003)(230922051799003)(186009)(1800799012)(451199024)(64100799003)(6666004)(52116002)(41300700001)(2616005)(508600001)(38100700002)(40160700002)(1076003)(26005)(86362001)(36756003)(921011)(38350700005)(83380400001)(110136005)(54906003)(66556008)(66946007)(66476007)(8676002)(8936002)(41320700001)(4326008)(44832011)(2906002)(40180700001)(5660300002)(4744005)(7416002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?WBF96B5Er/5ZrSz3zsGKBWbadtFzp71CA8pUD3WCHmUjOmghW3+ICeGPXzps?=
- =?us-ascii?Q?bJmt7vdmETcs19w27SidT7yIjhWU3HbraYKo+4qFWas1qPbeNji8LOgNgXPl?=
- =?us-ascii?Q?nr+J2O3HNKGmurtMFcH88P1SpKlZvBMNIYo3wxIK1rgPP0jgPkemmvavzM0Z?=
- =?us-ascii?Q?DvLJSlwp9s4CfgGg6S2gtHIgVTSiIxLQx+0c8eVzBlAthQ5IYC4yqsK8egur?=
- =?us-ascii?Q?oE3DTfvIGqkZTkFxRuldOBZJAp2pGFdJSVGTPZnJLMBuF6KpZdpR95X9O+1r?=
- =?us-ascii?Q?6wWvMqGogYDc58O4uxaS8aDYxjm8fIHok1z4OnXiDCdSkXfcYi6dEHf3AVfL?=
- =?us-ascii?Q?oB3rHaNa+keMMEj9dgNmTQ3C32gVGgyjbuScaXJQaC78jfpGD0I/CD9Wwti5?=
- =?us-ascii?Q?PytqWEFtz1WSc446AT0/n6JNxrsndkHWb0xSyUcW3ORhbV01Lyx9RL52O4Fs?=
- =?us-ascii?Q?ewxBAbEMx61vDfK/8fE40Vf7cEYlv4UVQprd27LUdfoKwlXry3BdOIJmH/dO?=
- =?us-ascii?Q?1GloWJH3YUwrnkzUAJcYdiBrbWlZWiO/+vANgPD/mjIqFtkvwxFY3RbpMXOr?=
- =?us-ascii?Q?XxPNNDXGxOuwcQZrUf9o8r7+xQLCYTQg9LEgxdRmt5s5GeJfgEugv6loumtZ?=
- =?us-ascii?Q?xYuXnKeSAV4Dp5gxxRCT/xW6bo4fhCf/TZfkT6oZndoNeta9ezHnBp2rlJdj?=
- =?us-ascii?Q?C3FzOpYjuEQQcuoEjN11ttBGvSy18RIuZ4ZCi/DbA2HuX3ePr7X7P9/X4Qd/?=
- =?us-ascii?Q?jFW6ovXIu/qb8pT3QmwTjAZ/wiq/cFh5S1VH500Rt3cULQVwwGm/vNZslvA3?=
- =?us-ascii?Q?fB68KGYb+o5JddwfO5299Rn8zBZUku0sfW5RD5oWGG9f3QWfl/uWG3KapgrJ?=
- =?us-ascii?Q?GLv9LYO6lyAxBwGT0ri/U6H2yg/Ad8xVBi5Rk7dXRctJILTztsgzKIQu26Ns?=
- =?us-ascii?Q?0aSx712Vv+zKq0glj5MkbdPo907Nlj4+R3ovH1p3t7/foCWNwJfX+a1Me5Lx?=
- =?us-ascii?Q?GfiRC4bh+ExQ8MNaSbY8tVEE3KxuC2/fRjgcMUKp58bNAZCl4yVnWellv42t?=
- =?us-ascii?Q?3VM8ccMkGWVFO8aq8j5EMe3NVE93OwnIIAFiOkrAVWTkiRYB3DeLJSG1gWvg?=
- =?us-ascii?Q?c5iNJsobBx4GcI7Ud9dGL/hT4nppkwOcNL1vdOB3oS8JDRsYEKMf/kyixwsu?=
- =?us-ascii?Q?FTR2hptHrdH+V5tFohVbwUS3mTUKY8fkKGSSk6/JyoWnCs5qOex3MVc5jdVA?=
- =?us-ascii?Q?Hhov9v/6x/8rGKof7sEQA/oMQnCkjY0nKh2XZ9XYyPriB5mEYtndbVDMdCh7?=
- =?us-ascii?Q?TeLPHj5U1Ql6Pf5cHd32udMTbXe0/AWfewhKTRQjMcfP466fbmLOKKC0F+w2?=
- =?us-ascii?Q?5BzKMvoL1nJJAkRyxaOqiqTRXl7oxoQki9UMfxb33zw5+Bopl4bRrChP4+GH?=
- =?us-ascii?Q?oVZ3ROJj730JzPR95GrkoVYXJcWPGlLU7F8ccDC1NFz07NU2GVnNs2Xx7DKn?=
- =?us-ascii?Q?f5mzgG4JHHPECCDFkqTpGuCZ71LaSOlEF3g84sHevmIDUMgNXlft9bl8P+7H?=
- =?us-ascii?Q?OPl7kJIIVv1ZNrBOWmJuQkAAVSCWymzAsXWNxXRTLWEue2VBxocx8kgpKJrQ?=
- =?us-ascii?Q?W5fEfmXkYpwZUE1GKYoJwU4=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 060f83a9-a4dc-4d7b-7996-08dc12811eff
-X-MS-Exchange-CrossTenant-AuthSource: SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 08:41:36.1161
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OuA4lj49L9ve69LVy7UdgJtnDDYfLLp+0oUz7AAV6JsnUUIAnfEJb3FvtnJ7aYixozm4ASnBts4bzp7HmBdbLpq6kPqr7kCJn0uPZ3PNLufxd5PouBXmiRz/8uwqrOSa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SH0PR01MB0747
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v3] arm64: dts: qcom: qcs6490-idp: Add definition
+ for three LEDs.
+Content-Language: en-US
+To: Luca Weiss <luca.weiss@fairphone.com>, quic_huliu@quicinc.com,
+ Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240111-lpg-v3-1-811c9e82dae4@quicinc.com>
+ <CYBQW9KRHVJS.3UOHTOMRWDWVK@fairphone.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CYBQW9KRHVJS.3UOHTOMRWDWVK@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add V4L2_CAP_IO_MC capabality for video device. User space can enumerate
-formats by mbus code.
+On 11/01/2024 09:47, Luca Weiss wrote:
+> On Thu Jan 11, 2024 at 3:52 AM CET, Hui Liu via B4 Relay wrote:
+>> From: Hui Liu <quic_huliu@quicinc.com>
+>>
+>> Add definition for three LEDs to make sure they can
+>> be enabled base on QCOM LPG LED driver.
+>>
+>> Signed-off-by: Hui Liu <quic_huliu@quicinc.com>
+>> ---
+>> Changes in v3:
+>> - Rephrased commit text and updated the nodes to qcm6490-idp board file.
+>> - Link to v2: https://lore.kernel.org/all/20231110-qcom_leds-v2-1-3cad1fbbc65a@quicinc.com/
+>>
+>> Changes in v2:
+>> - Rephrased commit text and updated the nodes to board file.
+>> - Link to v1: https://lore.kernel.org/r/20231108-qcom_leds-v1-1-c3e1c8572cb0@quicinc.com
+>> ---
+>>  arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 25 +++++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+>> index 37c91fdf3ab9..f801144a1556 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+>> @@ -5,6 +5,7 @@
+>>  
+>>  /dts-v1/;
+>>  
+>> +#include <dt-bindings/leds/common.h>
+>>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>>  #include "sc7280.dtsi"
+>>  #include "pm7325.dtsi"
+>> @@ -414,6 +415,30 @@ vreg_bob_3p296: bob {
+>>  	};
+>>  };
+>>  
+>> +&pm8350c_pwm {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	status = "okay";
+>> +
+>> +	led@1 {
+>> +		reg = <1>;
+> 
+> Hi Hui Liu,
+> 
+>> +		color = <LED_COLOR_ID_RED>;
+>> +		label = "red";
+> 
+> Please remove the deprecated "label" property. Since you already have
+> "color" set you only need to add "function". On phones for the
+> notification LED we usually use "function = LED_FUNCTION_STATUS;"
+> 
+> Also depends on what your hardware looks like, if it's 3 separate LEDs
+> then with label replaced it would be okay.
+> If the 3 LEDs are in one spot (so you can mix the colors with it), then
+> please make it a RGB multi-led like e.g. in sm8550-qrd.dts.
+> 
 
-Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
----
- drivers/staging/media/starfive/camss/stf-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I already asked for this and it was ignored:
 
-diff --git a/drivers/staging/media/starfive/camss/stf-video.c b/drivers/staging/media/starfive/camss/stf-video.c
-index d9e51d4e2004..4ca889a7b757 100644
---- a/drivers/staging/media/starfive/camss/stf-video.c
-+++ b/drivers/staging/media/starfive/camss/stf-video.c
-@@ -665,7 +665,7 @@ int stf_video_register(struct stfcamss_video *video,
- 	}
- 
- 	vdev->fops = &stf_vid_fops;
--	vdev->device_caps |= V4L2_CAP_STREAMING;
-+	vdev->device_caps |= V4L2_CAP_STREAMING | V4L2_CAP_IO_MC;
- 	vdev->entity.ops = &stf_media_ops;
- 	vdev->vfl_dir = VFL_DIR_RX;
- 	vdev->release = stf_video_release;
--- 
-2.25.1
+https://lore.kernel.org/all/6aa67adb-a4d5-40da-a261-c90050ac04b2@linaro.org/
+
+Let's engage three different community reviewers to repeat the same, one
+feedback. This is just disrespectful to our time.
+
+Best regards,
+Krzysztof
 
