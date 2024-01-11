@@ -1,76 +1,161 @@
-Received: from m16.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AD40DF51
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83560D512;
+	Thu, 11 Jan 2024 08:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LoRzmpVs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=EdwkIfTSeV+DEasRQ1
-	DrTVemJN0cc/VUOnUfemJESuA=; b=LoRzmpVsm/tfsGH7czRoYTCM1z2lLGz/WW
-	S1urIPDX1dY2reDQ1/8uhTu5YurDU0AQk12EWZBb50RnxK4oUMPolIhHJSOLvEtQ
-	nHZG+9p8ecR3aWwzwBOyzBSmF1lYX0poxPk0oYwNDcnCTirQLpx+iaLFUMoHDydO
-	PF6kx9pxs=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD3X+DKoZ9l4YOTAA--.19175S2;
-	Thu, 11 Jan 2024 16:07:39 +0800 (CST)
-From: GuoHua Chen <chenguohua_716@163.com>
-To: daniel@ffwll.ch,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	christian.koenig@amd.com,
-	alexander.deucher@amd.com
-Cc: linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	GuoHua Chen <chenguohua_716@163.com>
-Subject: [PATCH] drm/radeon/rv770: Clean up errors in rv770_dpm.c
-Date: Thu, 11 Jan 2024 08:07:35 +0000
-Message-Id: <20240111080735.11217-1-chenguohua_716@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3X+DKoZ9l4YOTAA--.19175S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tFWrKF4fKr1DurWDGrWfZrb_yoW8Jw1Upw
-	4S93s8ursxAr1Y9a129a18KryfW3WkJFy2qr4xG3WjkayUJryUAFZI9r43JF93KF929Fy7
-	tFyIgry7ua10yr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UzUDAUUUUU=
-X-CM-SenderInfo: xfkh0w5xrk3tbbxrlqqrwthudrp/xtbBEAdi1mVOBk8scQABsd
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MkyY8POS"
+Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C211AC85;
+	Thu, 11 Jan 2024 09:07:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1704960445;
+	bh=qmei24w/G2Gd38IxUj6H/ANIvTM67mnsZB7V0/RAtLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MkyY8POSVX7UaEBiHxkzQk/CvAeTddOKPInEUe2lqAC8sd8iiVp8EOWmbT4xVvwCs
+	 SUYCwgl6oQwd37DkkC+LE+zrlPX+IqygjAq3WeNY+PM+neqWudwbyBDpAf/NXP2FIW
+	 EJykbF8O+CempNUHb0/63gw0Bb3QMjQqUNhQst/s=
+Date: Thu, 11 Jan 2024 10:08:37 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Julien Stephan <jstephan@baylibre.com>
+Cc: Andy Hsieh <andy.hsieh@mediatek.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Florian Sylvestre <fsylvestre@baylibre.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+	Louis Kuo <louis.kuo@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	Phi-bang Nguyen <pnguyen@baylibre.com>,
+	Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 0/5] Add Mediatek ISP3.0
+Message-ID: <20240111080837.GA30988@pendragon.ideasonboard.com>
+References: <20240110141443.364655-1-jstephan@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240110141443.364655-1-jstephan@baylibre.com>
 
-Fix the following errors reported by checkpatch:
+Hi Julien,
 
-ERROR: space prohibited before that close parenthesis ')'
+Thank you for the patches.
 
-Signed-off-by: GuoHua Chen <chenguohua_716@163.com>
----
- drivers/gpu/drm/radeon/rv770_dpm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Wed, Jan 10, 2024 at 03:14:37PM +0100, Julien Stephan wrote:
+> This series adds the support of the Mediatek ISP3.0 found on some
+> Mediatek SoCs such as the mt8365. The driver is divided into 2 parts:
+> 
+> * SENINF: the sensor interface
+> * CAMSV: this driver provides a path to bypass the SoC ISP so that image
+>   data coming from the SENINF can go directly into memory without any
+>   image processing. This allows the use of an external ISP or camera
+>   sensor directly.
 
-diff --git a/drivers/gpu/drm/radeon/rv770_dpm.c b/drivers/gpu/drm/radeon/rv770_dpm.c
-index ef2f1a048cfe..e3e1f6833f12 100644
---- a/drivers/gpu/drm/radeon/rv770_dpm.c
-+++ b/drivers/gpu/drm/radeon/rv770_dpm.c
-@@ -1010,7 +1010,7 @@ int rv770_populate_initial_mvdd_value(struct radeon_device *rdev,
- 	struct rv7xx_power_info *pi = rv770_get_pi(rdev);
- 
- 	if ((pi->s0_vid_lower_smio_cntl & pi->mvdd_mask_low) ==
--	     (pi->mvdd_low_smio[MVDD_LOW_INDEX] & pi->mvdd_mask_low) ) {
-+	     (pi->mvdd_low_smio[MVDD_LOW_INDEX] & pi->mvdd_mask_low)) {
- 		voltage->index = MVDD_LOW_INDEX;
- 		voltage->value = cpu_to_be16(MVDD_LOW_VALUE);
- 	} else {
-@@ -1260,7 +1260,7 @@ static int rv770_construct_vddc_table(struct radeon_device *rdev)
- 		pi->vddc_mask_low = gpio_mask;
- 		if (i > 0) {
- 			if ((pi->vddc_table[i].low_smio !=
--			     pi->vddc_table[i - 1].low_smio ) ||
-+			     pi->vddc_table[i - 1].low_smio) ||
- 			     (pi->vddc_table[i].high_smio !=
- 			      pi->vddc_table[i - 1].high_smio))
- 				vddc_index++;
+I'm afraid this doesn't compile based on the latest media tree's master
+branch, scheduled for v6.8-rc1. I've pushed the following fixes to [1]:
+
+0d2e75fb8909 media: mediatek: isp_30: Update to new subdev state API
+05dc498f151a media: mediatek: isp_30: Update to new subdev state API
+
+You can squash those in v5 when you will rebase on v6.8-rc1.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/pinchartl/linux.git/log/?h=mtk/v6.8/pumpkin/camera
+
+> The SENINF driver is based on previous work done by Louis Kuo available
+> as an RFC here: https://lore.kernel.org/all/20200708104023.3225-1-louis.kuo@mediatek.com/
+> 
+> This series depends on the following series for the phy [1]
+> 
+> Changes in v4:
+> - fix suspend/resume deadlock
+> - fix various locking issues reported by Laurent Pinchart on v3
+> - run LOCKDEP
+> - add missing include reported by kernel-test-robot for non mediatek arch and COMPILE_TEST=y
+> - use atomic poll inside mtk_camsv30_setup
+> - drop second lane support as it was not used 
+> - remove useless members in structs
+> - fix media entity initialization
+> - initialize correct pad for camsv video device
+> - add isp support in mt8365.dtsi
+> - rebase on 6.7
+> 
+> Changes in v3:
+> - fix a lot of formatting issues/coding style issues found in camsv/seninf reported by Angelo on v2
+> - fix camsv/seninf binding file error reported by Rob
+> 
+> Changes in v2:
+> - renamed clock `cam_seninf` to `camsys`
+> - renamed clock `top_mux_seninf` to `top_mux`
+> - moved phy properties from port nodes to top level
+> - remove patternProperties
+> - specify power management dependency in the cover letter description to fix
+>   missing include in dt-binding example
+> - change '$ref' properties on some endpoint nodes from
+>   '$ref: video-interfaces.yaml#' to '$ref: /schemas/graph.yaml#/$defs/endpoint-base'
+>  where applicable
+> 
+> Best
+> Julien Stephan
+> 
+> [1] : https://lore.kernel.org/all/20230620121928.1231745-1-jstephan@baylibre.com/
+> 
+> 
+> 
+> Louis Kuo (2):
+>   dt-bindings: media: add mediatek ISP3.0 sensor interface
+>   media: platform: mediatek: isp_30: add mediatek ISP3.0 sensor
+>     interface
+> 
+> Phi-bang Nguyen (2):
+>   dt-bindings: media: add mediatek ISP3.0 camsv
+>   media: platform: mediatek: isp_30: add mediatek ISP3.0 camsv
+> 
+>  .../bindings/media/mediatek,mt8365-camsv.yaml |  109 ++
+>  .../media/mediatek,mt8365-seninf.yaml         |  259 +++
+>  MAINTAINERS                                   |   10 +
+>  arch/arm64/boot/dts/mediatek/mt8365.dtsi      |  128 ++
+>  drivers/media/platform/mediatek/Kconfig       |    1 +
+>  drivers/media/platform/mediatek/Makefile      |    1 +
+>  drivers/media/platform/mediatek/isp/Kconfig   |    2 +
+>  drivers/media/platform/mediatek/isp/Makefile  |    3 +
+>  .../platform/mediatek/isp/isp_30/Kconfig      |   35 +
+>  .../platform/mediatek/isp/isp_30/Makefile     |    4 +
+>  .../mediatek/isp/isp_30/camsv/Makefile        |    7 +
+>  .../mediatek/isp/isp_30/camsv/mtk_camsv.c     |  328 ++++
+>  .../mediatek/isp/isp_30/camsv/mtk_camsv.h     |  199 +++
+>  .../isp/isp_30/camsv/mtk_camsv30_hw.c         |  427 +++++
+>  .../isp/isp_30/camsv/mtk_camsv30_regs.h       |   60 +
+>  .../isp/isp_30/camsv/mtk_camsv_video.c        |  774 +++++++++
+>  .../mediatek/isp/isp_30/seninf/Makefile       |    5 +
+>  .../mediatek/isp/isp_30/seninf/mtk_seninf.c   | 1488 +++++++++++++++++
+>  .../isp/isp_30/seninf/mtk_seninf_reg.h        |  112 ++
+>  19 files changed, 3952 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8365-camsv.yaml
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8365-seninf.yaml
+>  create mode 100644 drivers/media/platform/mediatek/isp/Kconfig
+>  create mode 100644 drivers/media/platform/mediatek/isp/Makefile
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/Kconfig
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/Makefile
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/camsv/Makefile
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/camsv/mtk_camsv.c
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/camsv/mtk_camsv.h
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/camsv/mtk_camsv30_hw.c
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/camsv/mtk_camsv30_regs.h
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/camsv/mtk_camsv_video.c
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/seninf/Makefile
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/seninf/mtk_seninf.c
+>  create mode 100644 drivers/media/platform/mediatek/isp/isp_30/seninf/mtk_seninf_reg.h
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
