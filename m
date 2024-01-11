@@ -1,27 +1,39 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92A6432C89;
-	Thu, 11 Jan 2024 12:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxLOui2J9lh0EEAA--.12675S3;
-	Thu, 11 Jan 2024 20:01:38 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxO9yg2J9llQsQAA--.41850S2;
-	Thu, 11 Jan 2024 20:01:37 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org,
+Received: from out199-12.us.a.mail.aliyun.com (out199-12.us.a.mail.aliyun.com [47.90.199.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739B83D55F;
+	Thu, 11 Jan 2024 12:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W-PgOvd_1704974485;
+Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W-PgOvd_1704974485)
+          by smtp.aliyun-inc.com;
+          Thu, 11 Jan 2024 20:01:27 +0800
+From: Wen Gu <guwen@linux.alibaba.com>
+To: wintera@linux.ibm.com,
+	wenjia@linux.ibm.com,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	alibuda@linux.alibaba.com,
+	tonylu@linux.alibaba.com,
+	guwen@linux.alibaba.com,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v1] selftests/bpf: Skip callback tests if jit is disabled in test_verifier
-Date: Thu, 11 Jan 2024 20:01:36 +0800
-Message-ID: <20240111120136.16013-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+Subject: [PATCH net-next 10/15] net/smc: add operations to merge sndbuf with peer DMB
+Date: Thu, 11 Jan 2024 20:00:31 +0800
+Message-Id: <20240111120036.109903-11-guwen@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
+In-Reply-To: <20240111120036.109903-1-guwen@linux.alibaba.com>
+References: <20240111120036.109903-1-guwen@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,125 +41,117 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxO9yg2J9llQsQAA--.41850S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFW3tr1UtrW5ur1xGr1kCrX_yoW5ury3pF
-	WkCr1qkF1UJFySgr17Arn3JFWFvw4vqw18Gr98G3yUZa1DA343Jrn7KFyjvF9xGrW5ua4S
-	vFWI9FW5uw4UXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
-If CONFIG_BPF_JIT_ALWAYS_ON is not set and bpf_jit_enable is 0, there
-exist 6 failed tests.
+In some scenarios using virtual ISM device, sndbuf can share the same
+physical memory region with peer DMB to avoid data copy from one side
+to the other. In such case the sndbuf is only a descriptor that
+describes the shared memory and does not actually occupy memory, it's
+more like a ghost buffer.
 
-  [root@linux bpf]# echo 0 > /proc/sys/net/core/bpf_jit_enable
-  [root@linux bpf]# echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
-  [root@linux bpf]# ./test_verifier | grep FAIL
-  #106/p inline simple bpf_loop call FAIL
-  #107/p don't inline bpf_loop call, flags non-zero FAIL
-  #108/p don't inline bpf_loop call, callback non-constant FAIL
-  #109/p bpf_loop_inline and a dead func FAIL
-  #110/p bpf_loop_inline stack locations for loop vars FAIL
-  #111/p inline bpf_loop call in a big program FAIL
-  Summary: 768 PASSED, 15 SKIPPED, 6 FAILED
+      +----------+                     +----------+
+      | socket A |                     | socket B |
+      +----------+                     +----------+
+            |                               |
+       +--------+                       +--------+
+       | sndbuf |                       |  DMB   |
+       |  desc  |                       |  desc  |
+       +--------+                       +--------+
+            |                               |
+            |                          +----v-----+
+            +-------------------------->  memory  |
+                                       +----------+
 
-The test log shows that callbacks are not allowed in non-JITed programs,
-interpreter doesn't support them yet, thus these tests should be skipped
-if jit is disabled, copy some check functions from the other places under
-tools directory, and then handle this case in do_test_single().
+So here introduces three new SMC-D device operations to check if this
+feature is supported by device, and to {attach|detach} ghost sndbuf to
+peer DMB. For now only loopback-ism supports this.
 
-With this patch:
-
-  [root@linux bpf]# echo 0 > /proc/sys/net/core/bpf_jit_enable
-  [root@linux bpf]# echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
-  [root@linux bpf]# ./test_verifier | grep FAIL
-  Summary: 768 PASSED, 21 SKIPPED, 0 FAILED
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
 ---
+ include/net/smc.h |  3 +++
+ net/smc/smc_ism.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ net/smc/smc_ism.h |  4 ++++
+ 3 files changed, 47 insertions(+)
 
-Thanks very much for the feedbacks from Eduard, John, Jiri and Daniel.
-I do not move loop inlining tests to test_progs, just copy some check
-functions and do the minimal changes in test_verifier.
-
- tools/testing/selftests/bpf/test_verifier.c | 39 +++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index f36e41435be7..7c74e65ee25c 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -21,6 +21,7 @@
- #include <sched.h>
- #include <limits.h>
- #include <assert.h>
-+#include <fcntl.h>
- 
- #include <linux/unistd.h>
- #include <linux/filter.h>
-@@ -1397,6 +1398,34 @@ static bool is_skip_insn(struct bpf_insn *insn)
- 	return memcmp(insn, &skip_insn, sizeof(skip_insn)) == 0;
+diff --git a/include/net/smc.h b/include/net/smc.h
+index 6273c3a8b24a..01387631d8a6 100644
+--- a/include/net/smc.h
++++ b/include/net/smc.h
+@@ -62,6 +62,9 @@ struct smcd_ops {
+ 	int (*register_dmb)(struct smcd_dev *dev, struct smcd_dmb *dmb,
+ 			    void *client);
+ 	int (*unregister_dmb)(struct smcd_dev *dev, struct smcd_dmb *dmb);
++	int (*support_dmb_nocopy)(struct smcd_dev *dev);
++	int (*attach_dmb)(struct smcd_dev *dev, struct smcd_dmb *dmb);
++	int (*detach_dmb)(struct smcd_dev *dev, u64 token);
+ 	int (*add_vlan_id)(struct smcd_dev *dev, u64 vlan_id);
+ 	int (*del_vlan_id)(struct smcd_dev *dev, u64 vlan_id);
+ 	int (*set_vlan_required)(struct smcd_dev *dev);
+diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
+index 4065ebd2e43d..2d2781724932 100644
+--- a/net/smc/smc_ism.c
++++ b/net/smc/smc_ism.c
+@@ -246,6 +246,46 @@ int smc_ism_register_dmb(struct smc_link_group *lgr, int dmb_len,
+ 	return rc;
  }
  
-+static inline bool is_ldimm64_insn(struct bpf_insn *insn)
++bool smc_ism_support_dmb_nocopy(struct smcd_dev *smcd)
 +{
-+	return insn->code == (BPF_LD | BPF_IMM | BPF_DW);
++	/* for now only loopback-ism supports
++	 * merging sndbuf with peer DMB to avoid
++	 * data copies between them.
++	 */
++	return (smcd->ops->support_dmb_nocopy &&
++		smcd->ops->support_dmb_nocopy(smcd));
 +}
 +
-+static bool insn_is_pseudo_func(struct bpf_insn *insn)
++int smc_ism_attach_dmb(struct smcd_dev *dev, u64 token,
++		       struct smc_buf_desc *dmb_desc)
 +{
-+	return is_ldimm64_insn(insn) && insn->src_reg == BPF_PSEUDO_FUNC;
-+}
++	struct smcd_dmb dmb;
++	int rc = 0;
 +
-+static bool is_jit_enabled(void)
-+{
-+	const char *jit_sysctl = "/proc/sys/net/core/bpf_jit_enable";
-+	bool enabled = false;
-+	int sysctl_fd;
++	if (!dev->ops->attach_dmb)
++		return -EINVAL;
 +
-+	sysctl_fd = open(jit_sysctl, 0, O_RDONLY);
-+	if (sysctl_fd != -1) {
-+		char tmpc;
-+
-+		if (read(sysctl_fd, &tmpc, sizeof(tmpc)) == 1)
-+			enabled = (tmpc != '0');
-+		close(sysctl_fd);
++	memset(&dmb, 0, sizeof(dmb));
++	dmb.dmb_tok = token;
++	rc = dev->ops->attach_dmb(dev, &dmb);
++	if (!rc) {
++		dmb_desc->sba_idx = dmb.sba_idx;
++		dmb_desc->token = dmb.dmb_tok;
++		dmb_desc->cpu_addr = dmb.cpu_addr;
++		dmb_desc->dma_addr = dmb.dma_addr;
++		dmb_desc->len = dmb.dmb_len;
 +	}
-+
-+	return enabled;
++	return rc;
 +}
 +
- static int null_terminated_insn_len(struct bpf_insn *seq, int max_len)
- {
- 	int i;
-@@ -1662,6 +1691,16 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 		goto close_fds;
- 	}
- 
-+	if (!is_jit_enabled()) {
-+		for (i = 0; i < prog_len; i++, prog++) {
-+			if (insn_is_pseudo_func(prog)) {
-+				printf("SKIP (callbacks are not allowed in non-JITed programs)\n");
-+				skips++;
-+				goto close_fds;
-+			}
-+		}
-+	}
++int smc_ism_detach_dmb(struct smcd_dev *dev, u64 token)
++{
++	if (!dev->ops->detach_dmb)
++		return -EINVAL;
 +
- 	alignment_prevented_execution = 0;
- 
- 	if (expected_ret == ACCEPT || expected_ret == VERBOSE_ACCEPT) {
++	return dev->ops->detach_dmb(dev, token);
++}
++
+ static int smc_nl_handle_smcd_dev(struct smcd_dev *smcd,
+ 				  struct sk_buff *skb,
+ 				  struct netlink_callback *cb)
+diff --git a/net/smc/smc_ism.h b/net/smc/smc_ism.h
+index 6903cd5d4d4d..8ea5ab737c6f 100644
+--- a/net/smc/smc_ism.h
++++ b/net/smc/smc_ism.h
+@@ -48,6 +48,10 @@ int smc_ism_put_vlan(struct smcd_dev *dev, unsigned short vlan_id);
+ int smc_ism_register_dmb(struct smc_link_group *lgr, int buf_size,
+ 			 struct smc_buf_desc *dmb_desc);
+ int smc_ism_unregister_dmb(struct smcd_dev *dev, struct smc_buf_desc *dmb_desc);
++bool smc_ism_support_dmb_nocopy(struct smcd_dev *smcd);
++int smc_ism_attach_dmb(struct smcd_dev *dev, u64 token,
++		       struct smc_buf_desc *dmb_desc);
++int smc_ism_detach_dmb(struct smcd_dev *dev, u64 token);
+ int smc_ism_signal_shutdown(struct smc_link_group *lgr);
+ void smc_ism_get_system_eid(u8 **eid);
+ u16 smc_ism_get_chid(struct smcd_dev *dev);
 -- 
-2.42.0
+2.32.0.3.g01195cf9f
 
