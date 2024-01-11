@@ -1,45 +1,41 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF62B1802D;
-	Thu, 11 Jan 2024 13:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4186E364A9;
+	Thu, 11 Jan 2024 13:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Mi/7EUkk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=il+w8FtfhJHoKZMk6/3PRsXBylrA/EgWONxoBacvEFk=; b=Mi/7EUkk+96Fu+e4grIj30OKjw
-	s9UyrmWftnrF5wN6Wzm7wk3Z+2ni4VbciRb89fFHNdz7XOhm6n6z8y4JbQdPiM695s0KR7w/ilFeA
-	XRWAAsLwqU88g7nnIBgdyaaEn9mfjf3/lxxelTjQKnISiOWvECOfxFpBj0eCdTv5gTDI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rNuvm-00506I-0z; Thu, 11 Jan 2024 14:17:10 +0100
-Date: Thu, 11 Jan 2024 14:17:10 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Gan, Yi Fang" <yi.fang.gan@intel.com>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Looi, Hong Aun" <hong.aun.looi@intel.com>,
-	"Voon, Weifeng" <weifeng.voon@intel.com>,
-	"Song, Yoong Siang" <yoong.siang.song@intel.com>,
-	"Choong, Yong Liang" <yong.liang.choong@intel.com>
-Subject: Re: [PATCH net v3 1/1] net: phylink: Add module_exit()
-Message-ID: <3e87a5f7-e637-401c-8fe1-9b0c5e6d8289@lunn.ch>
-References: <20240104101255.3056090-1-yi.fang.gan@intel.com>
- <fb1cc3a4-8615-4cee-8fe7-29966c4cb7c7@lunn.ch>
- <MW6PR11MB8310698247DD950C5EBF5F2CB9682@MW6PR11MB8310.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="rh5RxXvG"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 8D5EB60886;
+	Thu, 11 Jan 2024 13:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1704980510;
+	bh=spHBxL0T5QVtiotbfLvZE1HJm4xym++up4FJ1+AM8Bs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rh5RxXvG1JNFsVFaq6yky/LXdHSY5hsqtFbMNx01g5nV3YynCrqh999LCnn8D4x9s
+	 WtWGVFG+KJZXyVBzEGUKi/YlUQf0Bua3YEqaOOg/tEoe6jQKyVEIi1ofBwqUBcdsqj
+	 sPFUZfRqdgRrOXjUzpbm9Xq714jzfJQrFglv3tiMjszEr/bBRVhenEcWT+TV7MiT3O
+	 KjTA/eS+Mq1Erjn6IARyTlNb2U7lWMUgey/ipYiOhX0Bc2hQA7QtEkrkIJ7X2zo6xs
+	 A0+7aSCXw2URyqaxa0IcZojOl/pwF/qPbWRByimeduGGeeiLN72pN3RB/f7wEEvg62
+	 uH/t4IRUicZDw==
+Date: Thu, 11 Jan 2024 15:41:23 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Nishanth Menon <nm@ti.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Apelete Seketeli <aseketeli@baylibre.com>,
+	Jerome Neanne <jneanne@baylibre.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 10/16] arm64: dts: ti: k3-j784s4: Add MIT license along
+ with GPL-2.0
+Message-ID: <20240111134123.GK5185@atomide.com>
+References: <20240110140903.4090946-1-nm@ti.com>
+ <20240110140903.4090946-11-nm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,35 +44,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MW6PR11MB8310698247DD950C5EBF5F2CB9682@MW6PR11MB8310.namprd11.prod.outlook.com>
+In-Reply-To: <20240110140903.4090946-11-nm@ti.com>
 
-> Hi Andrew,
+* Nishanth Menon <nm@ti.com> [700101 02:00]:
+> Modify license to include dual licensing as GPL-2.0-only OR MIT
+> license for SoC and TI evm device tree files. This allows for Linux
+> kernel device tree to be used in other Operating System ecosystems
+> such as Zephyr or FreeBSD.
 > 
-> Regarding the justification on why it is safe to remove phylink, 
-> we had done some memory leak check when unloading the phylink module.
->  
-> root@localhost:~# lsmod | grep "phylink"
-> phylink               73728  0
-> root@localhost:~# rmmod phylink
-> root@localhost:~# echo scan > /sys/kernel/debug/kmemleak
-> root@localhost:~# cat /sys/kernel/debug/kmemleak
-> root@localhost:~#
->  
-> So far, we didn't observe any memory leaking happened when unloading
-> phylink module. Is it sufficient or do you have any other suggestions to check 
-> on whether the module is safe to remove?
+> While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
+> with latest SPDX conventions (GPL-2.0 is deprecated).
+> 
+> While at this, update the TI copyright year to sync with current year
+> to indicate license change (and add it at least for one file which was
+> missing TI copyright).
 
-In general, leaked memory is safe. Being leaked, nothing is using
-it. If nothing is using it, how can it cause an opps, corrupt a file
-system, etc.
-
-What you need to do is review all users of phylink, and determine if
-any of them retains a pointer to anything which phylink manages and
-will not be freed or uninitialized when it is unloaded. Is all polling
-of GPIOs cleanly stopped? Are interrupt handlers disabled and
-removed. Are PCS and MAC drivers cleanly unloaded first? Are hwmon
-entries cleanly removed, taking into account that user space might
-have them open? All ethtool ioctl/netlink calls are out of the code
-before it is removed, etc.
-
-     Andrew
+Acked-by: Tony Lindgren <tony@atomide.com>
