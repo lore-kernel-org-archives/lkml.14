@@ -1,25 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A12B4B5A7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9494B5C9
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tHSuOLPK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DB054C43141;
-	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRPkfA0l"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 16038C32778;
+	Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704984637;
-	bh=mAiijGHiSfZsTFrUYq/Jmg4J9ygxl7AwTDFZGVX0vqc=;
+	s=k20201202; t=1704984638;
+	bh=sxh40JJQMoRZqXunjJmrdXyyxH+F75rmhC8LiUGqhE0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=tHSuOLPKewEXoCsknWKaTh4RYAHl4+uYdYWx5duufMLrcPbfDgXWGNjlNtXn48G0t
-	 BDseeq5T3vhQG+6Zye+zLho51hZoSm1bQi/jH1FTZyR4Jx+heS+BFMaqod8dKEHTaj
-	 IHYB2vFNZYLquw5uTFYzRf2wYQw7e9mWDCVOrYmILpQGzvpgzZ71RFxUGQeEWPTnw3
-	 M3TrDLzroKZVHTpgJSGU/bpYJ0Rp9u872xNsaXCWK0Y00b8b2kfZdjmvfLFbVwurmS
-	 Lk9VDXpucd4bkqD0VVuH7pARPR1vN2QN2ku0eI6urTMStZETyWfWpC0rBIHgmlDcmU
-	 BvpH9hq4+FPhQ==
+	b=kRPkfA0lip75TvmCFQUcSzqgumSiQtZ+YPmRhQRBD/E10A8e4L30WM/Mm70ctz+uM
+	 nJ5Aq2dEBNBVVPwuxppzz6EXd1lLlPGhwV4s32x/P+SeOfpwOY/SSK23ArBxSOh5Mr
+	 TL5sWbLVYLboYp1J1fnVCLjyDKOl2noLagjJuAX3Xvhkmn7yWvuZUWtLoaTpVVXYHm
+	 74iIsYZIVhlJ/w6rO6xe1IKghnmsbgk+fmmZZpGFZXHGe9O+REHc8/M/5s5/mih030
+	 MEP1KsEo8LHPYIZvaoMJzLSPewDrsnBlfmkqCp2bY4G+E6kl0mXNjGQIg33UqoP5/a
+	 sMI0u3IaBOkNQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C42FAD8C97B;
-	Thu, 11 Jan 2024 14:50:37 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0222AD8C96C;
+	Thu, 11 Jan 2024 14:50:38 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -28,37 +28,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH --fixes] riscv: Remove SHADOW_OVERFLOW_STACK_SIZE macro
+Subject: Re: [PATCH] riscv: fix __user annotation in traps_misaligned.c
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170498463780.20080.3843533399150814207.git-patchwork-notify@kernel.org>
-Date: Thu, 11 Jan 2024 14:50:37 +0000
-References: <20231211110331.359534-1-songshuaishuai@tinylab.org>
-In-Reply-To: <20231211110331.359534-1-songshuaishuai@tinylab.org>
-To: Song Shuai <songshuaishuai@tinylab.org>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, guoren@kernel.org,
- samitolvanen@google.com, conor.dooley@microchip.com, bjorn@rivosinc.com,
- debug@rivosinc.com, greentime.hu@sifive.com, linux-kernel@vger.kernel.org
+ <170498463800.20080.16588164711212512128.git-patchwork-notify@kernel.org>
+Date: Thu, 11 Jan 2024 14:50:38 +0000
+References: <20231123141617.259591-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20231123141617.259591-1-ben.dooks@codethink.co.uk>
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Mon, 11 Dec 2023 19:03:31 +0800 you wrote:
-> The commit be97d0db5f44 ("riscv: VMAP_STACK overflow
-> detection thread-safe") got rid of `shadow_stack`,
-> so SHADOW_OVERFLOW_STACK_SIZE should be removed too.
+On Thu, 23 Nov 2023 14:16:17 +0000 you wrote:
+> The instruction reading code can read from either user or kernel addresses
+> and thus the use of __user on pointers to instructions depends on which
+> context. Fix a few sparse warnings by using __user for user-accesses and
+> remove it when not.
 > 
-> Fixes: be97d0db5f44 ("riscv: VMAP_STACK overflow detection thread-safe")
-> Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
+> Fixes:
 > 
 > [...]
 
 Here is the summary with links:
-  - [--fixes] riscv: Remove SHADOW_OVERFLOW_STACK_SIZE macro
-    https://git.kernel.org/riscv/c/a7565f4d068b
+  - riscv: fix __user annotation in traps_misaligned.c
+    https://git.kernel.org/riscv/c/ca0e433b41a6
 
 You are awesome, thank you!
 -- 
