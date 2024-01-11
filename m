@@ -1,81 +1,64 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C4632C6C
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="xRyN36Us"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-429b76f129eso8423261cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 05:43:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1704980619; x=1705585419; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1KFXDERr3pDZlcRyum1ggEXEmpPYyroR1nfySc9tJl0=;
-        b=xRyN36Us2k1drP4z7QYI4RJxYcksrPfWfuDsMMmp4VhKa5wg9Na4cBfxpvoggiq8lZ
-         6Kd8zU4ydcxkcteL55+G2bNs6nDZQYxUKKoChCQf2/nWxJ/bTo1hFA2IS9hKPPtuc8CH
-         wh6ws2P8mbAtd5x7kXArEbS92ovqg4I1PVDllDItWblDI9MkgS8M1mJBsVlyTqlnnhZE
-         GGFo8UUwlLuUFU0f4zuwZGLDo6Y33mjhIy1eqKsCJQyVv9rz/2B8x62LcTxAbW2fexsW
-         EvZNDwW74/3FTHJej6dOJXplb7BxmTBI0ocevDv9ZUPo+C1bOfwWEQClJUiud9tEU6in
-         cNRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704980619; x=1705585419;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1KFXDERr3pDZlcRyum1ggEXEmpPYyroR1nfySc9tJl0=;
-        b=Kn2r91zypcdnlGiTIvYIEoNywXH/csDDIoE10mcvFX0WbRNWNjDdSNOnFCYPqIyOGN
-         6MKzpSmfZ35g1k7F0i6qO9Wes85SvvPnek5NIS61X6Xx1lx2PM0oa61+0NFioL2EnZ21
-         Xn02mapz0y4vZhW+UF+HA7bvyQC7PfiKcw/jiN+MxrcoygL7w0aJaPoRouXc2+2rSa3C
-         FMC9YKYEmvWC3eOLtKqv4qmmJjo/pA+33DternYM3ftz967M2pDYMrqxt5dM66R3KxRM
-         Ir6CfDv03ETuctQ7rOGFaOBURbDwLz7ieQw270RR8j6ybjlB59e1vgGRkqxCmgddy4xg
-         NOdQ==
-X-Gm-Message-State: AOJu0YzT2IqoQm/2ss13YzcmDuPXLQeTTWXRvuslAkLi2oHqi1am+zfp
-	mOsuRbeli1Gz0WSfQhFTHDb5+FHITPHvOg==
-X-Google-Smtp-Source: AGHT+IF1SDgwokzxyx1Lo9I3aSo2nbw9Nk3i7W+ba4rDycvJdrMVL4Kmi9FdBM0vduMgOwrl+YPC2g==
-X-Received: by 2002:ac8:5945:0:b0:429:be1b:fd8e with SMTP id 5-20020ac85945000000b00429be1bfd8emr701915qtz.33.1704980619331;
-        Thu, 11 Jan 2024 05:43:39 -0800 (PST)
-Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id wa6-20020a05620a4d0600b00781de2da438sm341939qkn.107.2024.01.11.05.43.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 05:43:39 -0800 (PST)
-Date: Thu, 11 Jan 2024 08:43:38 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Zhiguo Jiang <justinjiang@vivo.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Dan Schatzberg <schatzberg.dan@gmail.com>,
-	Yosry Ahmed <yosryahmed@google.com>, Yue Zhao <findns94@gmail.com>,
-	Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH v1 2/2] mm:vmscan: fix shrink sc parameters issue
-Message-ID: <20240111134338.GB390292@cmpxchg.org>
-References: <20240111122451.682-1-justinjiang@vivo.com>
- <20240111122451.682-3-justinjiang@vivo.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894D0364A9
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:8291:a340:26b8:8238])
+	by michel.telenet-ops.be with bizsmtp
+	id ZRju2B0084LvM1A06RjuCM; Thu, 11 Jan 2024 14:43:54 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rNvKw-00F7rd-Qm;
+	Thu, 11 Jan 2024 14:43:54 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rNqle-008hXN-5V;
+	Thu, 11 Jan 2024 09:50:26 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	"Christian A . Ehrhardt" <lk@c--e.de>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] of: unittest: Fix of_count_phandle_with_args() expected value message
+Date: Thu, 11 Jan 2024 09:50:25 +0100
+Message-Id: <20240111085025.2073894-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240111122451.682-3-justinjiang@vivo.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 11, 2024 at 08:24:51PM +0800, Zhiguo Jiang wrote:
-> The values of struct scan_control's members obtained by
-> prepare_scan_control() are always from root_mem_cgroup, rather than
-> the memcg where the shrinked folio is actually located, such as
-> sc->anon_cost, sc->file_cost, sc->may_deactivate and so on. This is
-> an inaccurate sc values for the actual situation of the current
-> shrinking memcg. so we need fix the values of struct scan_control's
-> members are corresponding to the current shrinking memcg.
+The expected result value for the call to of_count_phandle_with_args()
+was updated from 7 to 8, but the accompanying error message was
+forgotten.
 
-You don't seem to understand how cgroup reclaim works.
+Fixes: 4dde83569832f937 ("of: Fix double free in of_parse_phandle_with_args_map")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/of/unittest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Nacked-by: Johannes Weiner <hannes@cmpxchg.org>
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 45bd0d28c7173db9..cfd60e35a8992d7d 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -574,7 +574,7 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 	}
+ 
+ 	rc = of_count_phandle_with_args(np, "phandle-list", "#phandle-cells");
+-	unittest(rc == 8, "of_count_phandle_with_args() returned %i, expected 7\n", rc);
++	unittest(rc == 8, "of_count_phandle_with_args() returned %i, expected 8\n", rc);
+ 
+ 	for (i = 0; i < 9; i++) {
+ 		bool passed = true;
+-- 
+2.34.1
+
