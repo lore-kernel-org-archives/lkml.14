@@ -1,119 +1,85 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E8215E95;
-	Thu, 11 Jan 2024 10:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D27C14AB5;
+	Thu, 11 Jan 2024 10:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="sC1KaRxS"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40B9LK7c002030;
-	Thu, 11 Jan 2024 11:42:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=Zzq4sr5HL0Ty2CrxFtUdwdQvorVCV4080Uc+mKEc8cQ=; b=sC
-	1KaRxS/B3SJBzu+DZ9IBA1mOSrrtCsf4TaAQhDy8yRKeD9bRA4rse+XK2GDWBnfa
-	HW134c4e2AfsOdoRAPeL3zyByCW24GwC9PuMEZoEb94pyFS5R7RnxpGvHqUgRYov
-	tmBHGUabNh9Nl8vydGoR15LuTDJTkomk9riJwCm4zoZHz37jv8/t7/CDOa81Nh8+
-	HBeo4r4wMVUFCCVoTvP0OKV7VCA645H7UHJWlfFrH5JZm5NkXLNu5qOWNW39YIGG
-	K2n2w4vfVBXL2/GQ+wptfJqcmMxSOnmW3f0Vo0jl4Vtqa9WZptgsYrVycMSDiCl8
-	xtzSVSTk0xWmPIVERLkg==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vexmfmmax-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 11:42:31 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6491B100049;
-	Thu, 11 Jan 2024 11:42:31 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C483231507;
-	Thu, 11 Jan 2024 11:42:31 +0100 (CET)
-Received: from localhost (10.252.29.122) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Jan
- 2024 11:42:30 +0100
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-To: Yannick Fertre <yannick.fertre@foss.st.com>,
-        Raphael Gallais-Pou
-	<raphael.gallais-pou@foss.st.com>,
-        Philippe Cornu
-	<philippe.cornu@foss.st.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 5/6] arm64: dts: st: add lvds support on stm32mp255
-Date: Thu, 11 Jan 2024 11:40:48 +0100
-Message-ID: <20240111104049.38695-6-raphael.gallais-pou@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240111104049.38695-1-raphael.gallais-pou@foss.st.com>
-References: <20240111104049.38695-1-raphael.gallais-pou@foss.st.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oNYmXVP6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B9EC433C7;
+	Thu, 11 Jan 2024 10:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1704969843;
+	bh=wTvyF0pAfwwWQaTolfICOUFyt2Pv4Lpw/gdxqRFsfWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oNYmXVP6XsJgYWhj+lLirQKLMoSsJw0R2XQkt7T9zPMH0QkQ5uhQvXNq4XB9D1Aos
+	 pYCmvd6sknJrgT/Dav66vHkENYCFegEWjNOqKV+7mQhxz2NZWa1I4vKzNIb9XK9jKC
+	 QHkQA08uU6nLc0TEMbJ7jg2wpdM+2jZClmFDDyGU=
+Date: Thu, 11 Jan 2024 11:44:01 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Darren Kenny <darren.kenny@oracle.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Lieven Hey <lieven.hey@kdab.com>
+Subject: Re: [PATCH for-5.15] perf inject: Fix GEN_ELF_TEXT_OFFSET for jit
+Message-ID: <2024011155-fragrance-perfected-2183@gregkh>
+References: <2024010711-skeletal-material-15e8@gregkh>
+ <20240109214955.451513-1-namhyung@kernel.org>
+ <2024011043-unearned-manned-12b7@gregkh>
+ <CAM9d7cj3fdaKVehz+E3Fd_Zf91hy31z19goM84qq+cc8WZe7RQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+In-Reply-To: <CAM9d7cj3fdaKVehz+E3Fd_Zf91hy31z19goM84qq+cc8WZe7RQ@mail.gmail.com>
 
-This patch adds LVDS support on stm32mp255.  The LVDS is used on
-STM32MP2 as a display interface.  LVDS PLL clock is binded to the LTDC
-input clock.
+On Wed, Jan 10, 2024 at 09:53:17AM -0800, Namhyung Kim wrote:
+> Hello,
+> 
+> On Tue, Jan 9, 2024 at 11:59 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Jan 09, 2024 at 01:49:55PM -0800, Namhyung Kim wrote:
+> > > From: Adrian Hunter <adrian.hunter@intel.com>
+> > >
+> > > When a program header was added, it moved the text section but
+> > > GEN_ELF_TEXT_OFFSET was not updated.
+> > >
+> > > Fix by adding the program header size and aligning.
+> > >
+> > > Fixes: babd04386b1df8c3 ("perf jit: Include program header in ELF files")
+> > > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > Cc: Ian Rogers <irogers@google.com>
+> > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > Cc: Lieven Hey <lieven.hey@kdab.com>
+> > > Link: https://lore.kernel.org/r/20221014170905.64069-7-adrian.hunter@intel.com
+> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > [namhyung: use "linux/kernel.h" instead to avoid build failure]
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > ---
+> > >  tools/perf/util/genelf.h | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > What is the git commit id of this change in Linus's tree?
+> 
+> Sorry I forgot to add that.  It's 89b15d00527b7825ff19130ed83478e80e3fae99
 
-Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
----
-Changes in v2:
-	- Move patch to stm32mp255.dtsi after internal discussions
----
- arch/arm64/boot/dts/st/stm32mp255.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Thanks, now queued up.
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp255.dtsi b/arch/arm64/boot/dts/st/stm32mp255.dtsi
-index e6fa596211f5..ac46a7dbed2d 100644
---- a/arch/arm64/boot/dts/st/stm32mp255.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp255.dtsi
-@@ -7,3 +7,20 @@
- 
- / {
- };
-+
-+&ltdc {
-+	clocks = <&rcc CK_BUS_LTDC>, <&rcc CK_KER_LTDC>, <&lvds 0>;
-+	clock-names = "bus", "lcd", "lvds";
-+};
-+
-+&rifsc {
-+	lvds: lvds@48060000 {
-+		#clock-cells = <0>;
-+		compatible = "st,stm32-lvds";
-+		reg = <0x48060000 0x2000>;
-+		clocks = <&rcc CK_BUS_LVDS>, <&rcc CK_KER_LVDSPHY>;
-+		clock-names = "pclk", "ref";
-+		resets = <&rcc LVDS_R>;
-+		status = "disabled";
-+	};
-+};
--- 
-2.25.1
-
+greg k-h
