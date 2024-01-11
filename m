@@ -1,62 +1,45 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD2C1802D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF62B1802D;
+	Thu, 11 Jan 2024 13:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="Md1WfQW3"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-78333ad3a17so221936285a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 05:41:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1704980487; x=1705585287; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OrNtFKBOME8koezo+hwmifmOEhoB9oiYKEx7YwjL4r0=;
-        b=Md1WfQW3oPsFkg6vpOhZrmtHl5kDxwloz/s5glmryxJQTCqbzWBUpgzGH0Wnyrkby6
-         wFeNIK8EexuR+4vP7g9Titz22eV4L6VXvDWiAakFfJNr2PBnxvYelFWOXV+2+6QDcW8b
-         89uB6CiAtfgdH6ik8/eS4YqWAfzwNR/P1O8JI0nH5kKF3qTvQCgfIxTJ4/5YU7HdQnSD
-         uMcIklSEN8FUGu3zSMHSyiQTA+JcnL/63HExfZG6O41SGjIuDykS81moiDT6KRQnTw28
-         EA4YXB9462mweNselERLKCm8P9so2odlxUuQqAHPGpQbPd8y0CvwPCeM9+xFkYaKcpnP
-         0VVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704980487; x=1705585287;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OrNtFKBOME8koezo+hwmifmOEhoB9oiYKEx7YwjL4r0=;
-        b=vwKSg18vhtZOgg56u+lH/WQOrBAFFKwAYF1oS6G2GSB39NnhQ3jjrH5aupg3B4sKtO
-         9DGgIoPfiLf5hHW+kn8DHrQo0LjDUPsMbPxg5WPxQN2usIR2nhDWl9EWcVtjuB04V2Xb
-         11nFEnN7uuzLPzHoCmjjBAg1c/m0KqEPMDXYB/9zD92baXWaOFny8b7YP80EZ5j7dOrj
-         p+1m3vQnhVm6WnBUUhqjvWAH/z53H/gjLrEmusgdATlc04dtVF3zwmD+Tv/6jAgpC/2/
-         0KLA51aO9ZkvqtcFtlQJKkIAJCmCm1cba5DLqEIbY7Ypj6snQOu/G9UNR31+2UBfZ06A
-         xFzA==
-X-Gm-Message-State: AOJu0YxivcblaALTl8wQvwDYfInhDkCxogzyv/Dtx0MMO65ooV9cqbx4
-	sI0PpFAHJzaFN7ElPJlAWZ2co9E9HHyIlw==
-X-Google-Smtp-Source: AGHT+IHP/0R6MwUAt5y6EpV/5jC07uWw3Cph7B1QeRfXaXAn8J6x9jo5Bti06WxZXF+eIILMOH5DPg==
-X-Received: by 2002:a05:620a:8082:b0:781:62f6:6786 with SMTP id ef2-20020a05620a808200b0078162f66786mr1335682qkb.127.1704980486804;
-        Thu, 11 Jan 2024 05:41:26 -0800 (PST)
-Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id ay13-20020a05620a178d00b0078318dac889sm345703qkb.19.2024.01.11.05.41.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 05:41:26 -0800 (PST)
-Date: Thu, 11 Jan 2024 08:41:25 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Zhiguo Jiang <justinjiang@vivo.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Dan Schatzberg <schatzberg.dan@gmail.com>,
-	Yosry Ahmed <yosryahmed@google.com>, Yue Zhao <findns94@gmail.com>,
-	Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH v1 1/2] mm:vmscan: fix workingset eviction memcg issue
-Message-ID: <20240111134125.GA390292@cmpxchg.org>
-References: <20240111122451.682-1-justinjiang@vivo.com>
- <20240111122451.682-2-justinjiang@vivo.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Mi/7EUkk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=il+w8FtfhJHoKZMk6/3PRsXBylrA/EgWONxoBacvEFk=; b=Mi/7EUkk+96Fu+e4grIj30OKjw
+	s9UyrmWftnrF5wN6Wzm7wk3Z+2ni4VbciRb89fFHNdz7XOhm6n6z8y4JbQdPiM695s0KR7w/ilFeA
+	XRWAAsLwqU88g7nnIBgdyaaEn9mfjf3/lxxelTjQKnISiOWvECOfxFpBj0eCdTv5gTDI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rNuvm-00506I-0z; Thu, 11 Jan 2024 14:17:10 +0100
+Date: Thu, 11 Jan 2024 14:17:10 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Gan, Yi Fang" <yi.fang.gan@intel.com>
+Cc: Russell King <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Looi, Hong Aun" <hong.aun.looi@intel.com>,
+	"Voon, Weifeng" <weifeng.voon@intel.com>,
+	"Song, Yoong Siang" <yoong.siang.song@intel.com>,
+	"Choong, Yong Liang" <yong.liang.choong@intel.com>
+Subject: Re: [PATCH net v3 1/1] net: phylink: Add module_exit()
+Message-ID: <3e87a5f7-e637-401c-8fe1-9b0c5e6d8289@lunn.ch>
+References: <20240104101255.3056090-1-yi.fang.gan@intel.com>
+ <fb1cc3a4-8615-4cee-8fe7-29966c4cb7c7@lunn.ch>
+ <MW6PR11MB8310698247DD950C5EBF5F2CB9682@MW6PR11MB8310.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,42 +48,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240111122451.682-2-justinjiang@vivo.com>
+In-Reply-To: <MW6PR11MB8310698247DD950C5EBF5F2CB9682@MW6PR11MB8310.namprd11.prod.outlook.com>
 
-On Thu, Jan 11, 2024 at 08:24:50PM +0800, Zhiguo Jiang wrote:
-> The parameter of target_memcg is NULL in workingset_eviction(), and
-> the lruvec obtained by mem_cgroup_lruvec(target_memcg, pgdat) is always
-> root_mem_cgroup->lruvec, rather than the lruvec of mem_cgroup where
-> folio is actually located.
-
-WTF? No!
-
-	/*
-	 * The memory cgroup that hit its limit and as a result is the
-	 * primary target of this reclaim invocation.
-	 */
-	struct mem_cgroup *target_mem_cgroup;
-
-The cgroup that is stored in the eviction cookie is the one whose
-limit triggered the reclaim cycle. This is often several levels above
-the cgroups that own the pages. Subsequent refaults need to be
-evaluated at the eviction level:
-
-	/*
-	 * The activation decision for this folio is made at the level
-	 * where the eviction occurred, as that is where the LRU order
-	 * during folio reclaim is being determined.
-	 *
-	 * However, the cgroup that will own the folio is the one that
-	 * is actually experiencing the refault event.
-	 */
-
-> Fix target_memcg to the memcg obtained by folio_memcg(folio).
+> Hi Andrew,
 > 
-> Signed-off-by: Zhiguo Jiang <justinjiang@vivo.com>
+> Regarding the justification on why it is safe to remove phylink, 
+> we had done some memory leak check when unloading the phylink module.
+>  
+> root@localhost:~# lsmod | grep "phylink"
+> phylink               73728  0
+> root@localhost:~# rmmod phylink
+> root@localhost:~# echo scan > /sys/kernel/debug/kmemleak
+> root@localhost:~# cat /sys/kernel/debug/kmemleak
+> root@localhost:~#
+>  
+> So far, we didn't observe any memory leaking happened when unloading
+> phylink module. Is it sufficient or do you have any other suggestions to check 
+> on whether the module is safe to remove?
 
-Nacked-by: Johannes Weiner <hannes@cmpxchg.org>
+In general, leaked memory is safe. Being leaked, nothing is using
+it. If nothing is using it, how can it cause an opps, corrupt a file
+system, etc.
 
-Please take more time to read into the code you're proposing to
-change. You made it sound like a trivial simplification, but this
-totally screws up aging and pressure detection in containers.
+What you need to do is review all users of phylink, and determine if
+any of them retains a pointer to anything which phylink manages and
+will not be freed or uninitialized when it is unloaded. Is all polling
+of GPIOs cleanly stopped? Are interrupt handlers disabled and
+removed. Are PCS and MAC drivers cleanly unloaded first? Are hwmon
+entries cleanly removed, taking into account that user space might
+have them open? All ethtool ioctl/netlink calls are out of the code
+before it is removed, etc.
+
+     Andrew
