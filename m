@@ -1,77 +1,147 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDB5154AE;
-	Thu, 11 Jan 2024 12:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WwFaddtk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704974950;
-	bh=eZahT2rDuCpxGaxjQ0g1JBIf/O3DF9bTmSWTwmZEQco=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WwFaddtkJJu7jPZYnHCPG/N6e4prkzO+Gu9Qw9P81aKmJQxyuQCYIXjImX3YoGb1n
-	 HP8wobgYkBR95NKbpkw18krJRqRwGBpUo1uL2+j2MyUY4cuMUvQdPUEKKy/wWAksLH
-	 0K/rfQU7ifpiAcY0wyz1pYY6n2M8CgvYOMgIzaIpS0vjPR2B6REitQwwcpkAaOecsk
-	 Q9KgW3ocGcqqiufREDJq9p9ks37nX/ThwWupsLHS7x/giZnmOZiMwiSMxMRpMOBjvi
-	 V6MgfIs1T4kciPxkPgdwdDQoQjbgqvCe5w7RxrN3Bv/YTBn0KQiVCRu14tuBhbUX00
-	 AliBy58fCgVEw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C42ED3781FCD;
-	Thu, 11 Jan 2024 12:09:09 +0000 (UTC)
-Message-ID: <09de860e-224b-4ed5-a6f3-da4f336d2dd7@collabora.com>
-Date: Thu, 11 Jan 2024 13:09:09 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E524415AD1
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 12:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4T9k2S6Bzfz2LXKD;
+	Thu, 11 Jan 2024 20:08:00 +0800 (CST)
+Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8F97B1A0172;
+	Thu, 11 Jan 2024 20:09:33 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ dggpemd200001.china.huawei.com (7.185.36.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1258.28; Thu, 11 Jan 2024 20:09:33 +0800
+From: Wupeng Ma <mawupeng1@huawei.com>
+To: <akpm@linux-foundation.org>, <dave.hansen@linux.intel.com>,
+	<luto@kernel.org>, <tglx@linutronix.de>, <peterz@infradead.org>
+CC: <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <mawupeng1@huawei.com>,
+	<bp@suse.de>, <mingo@redhat.com>
+Subject: [PATCH v3 1/3] x86/mm/pat: Move follow_phys to pat-related file
+Date: Thu, 11 Jan 2024 20:09:27 +0800
+Message-ID: <20240111120929.2694440-2-mawupeng1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240111120929.2694440-1-mawupeng1@huawei.com>
+References: <20240111120929.2694440-1-mawupeng1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] phy: mtk-mipi-csi: add driver for CSI phy
-Content-Language: en-US
-To: Julien Stephan <jstephan@baylibre.com>
-Cc: Phi-bang Nguyen <pnguyen@baylibre.com>, Louis Kuo
- <louis.kuo@mediatek.com>, Andy Hsieh <andy.hsieh@mediatek.com>,
- Chunfeng Yun <chunfeng.yun@mediatek.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
- Vinod Koul <vkoul@kernel.org>
-References: <20240111101738.468916-1-jstephan@baylibre.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240111101738.468916-1-jstephan@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemd200001.china.huawei.com (7.185.36.224)
 
-Il 11/01/24 11:17, Julien Stephan ha scritto:
-> From: Phi-bang Nguyen <pnguyen@baylibre.com>
-> 
-> This is a new driver that supports the MIPI CSI CD-PHY version 0.5
-> 
-> The number of PHYs depend on the SoC.
-> Each PHY can support D-PHY only or CD-PHY configuration.
-> The driver supports only D-PHY mode, so CD-PHY
-> compatible PHY are configured in D-PHY mode.
-> 
-> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
-> Signed-off-by: Phi-bang Nguyen <pnguyen@baylibre.com>
-> [Julien Stephan: refactor code]
-> [Julien Stephan: simplify driver model: one instance per phy vs
-> one instance for all phys]
-> Co-developed-by: Julien Stephan <jstephan@baylibre.com>
-> Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+From: Ma Wupeng <mawupeng1@huawei.com>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Since only PAT in x86 use follow_phys(), move this to from memory.c to
+memtype.c and make it static.
 
+Since config HAVE_IOREMAP_PROT is selected by x86, drop this config macro.
+
+Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
+---
+ arch/x86/mm/pat/memtype.c | 28 ++++++++++++++++++++++++++++
+ include/linux/mm.h        |  2 --
+ mm/memory.c               | 28 ----------------------------
+ 3 files changed, 28 insertions(+), 30 deletions(-)
+
+diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+index de10800cd4dd..a6a88679c92e 100644
+--- a/arch/x86/mm/pat/memtype.c
++++ b/arch/x86/mm/pat/memtype.c
+@@ -950,6 +950,34 @@ static void free_pfn_range(u64 paddr, unsigned long size)
+ 		memtype_free(paddr, paddr + size);
+ }
+ 
++static int follow_phys(struct vm_area_struct *vma,
++		unsigned long address, unsigned int flags,
++		unsigned long *prot, resource_size_t *phys)
++{
++	int ret = -EINVAL;
++	pte_t *ptep, pte;
++	spinlock_t *ptl;
++
++	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP)))
++		goto out;
++
++	if (follow_pte(vma->vm_mm, address, &ptep, &ptl))
++		goto out;
++	pte = ptep_get(ptep);
++
++	if ((flags & FOLL_WRITE) && !pte_write(pte))
++		goto unlock;
++
++	*prot = pgprot_val(pte_pgprot(pte));
++	*phys = (resource_size_t)pte_pfn(pte) << PAGE_SHIFT;
++
++	ret = 0;
++unlock:
++	pte_unmap_unlock(ptep, ptl);
++out:
++	return ret;
++}
++
+ /*
+  * track_pfn_copy is called when vma that is covering the pfnmap gets
+  * copied through copy_page_range().
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index da5219b48d52..8c4fa44e0e4b 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2364,8 +2364,6 @@ int follow_pte(struct mm_struct *mm, unsigned long address,
+ 	       pte_t **ptepp, spinlock_t **ptlp);
+ int follow_pfn(struct vm_area_struct *vma, unsigned long address,
+ 	unsigned long *pfn);
+-int follow_phys(struct vm_area_struct *vma, unsigned long address,
+-		unsigned int flags, unsigned long *prot, resource_size_t *phys);
+ int generic_access_phys(struct vm_area_struct *vma, unsigned long addr,
+ 			void *buf, int len, int write);
+ 
+diff --git a/mm/memory.c b/mm/memory.c
+index 6e0712d06cd4..a555f7ebd4ef 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -5697,34 +5697,6 @@ int follow_pfn(struct vm_area_struct *vma, unsigned long address,
+ EXPORT_SYMBOL(follow_pfn);
+ 
+ #ifdef CONFIG_HAVE_IOREMAP_PROT
+-int follow_phys(struct vm_area_struct *vma,
+-		unsigned long address, unsigned int flags,
+-		unsigned long *prot, resource_size_t *phys)
+-{
+-	int ret = -EINVAL;
+-	pte_t *ptep, pte;
+-	spinlock_t *ptl;
+-
+-	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP)))
+-		goto out;
+-
+-	if (follow_pte(vma->vm_mm, address, &ptep, &ptl))
+-		goto out;
+-	pte = ptep_get(ptep);
+-
+-	if ((flags & FOLL_WRITE) && !pte_write(pte))
+-		goto unlock;
+-
+-	*prot = pgprot_val(pte_pgprot(pte));
+-	*phys = (resource_size_t)pte_pfn(pte) << PAGE_SHIFT;
+-
+-	ret = 0;
+-unlock:
+-	pte_unmap_unlock(ptep, ptl);
+-out:
+-	return ret;
+-}
+-
+ /**
+  * generic_access_phys - generic implementation for iomem mmap access
+  * @vma: the vma to access
+-- 
+2.25.1
 
