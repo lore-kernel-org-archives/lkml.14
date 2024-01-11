@@ -1,9 +1,9 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B68CC6AA6
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B687D63D8
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-de-659f85c70830
+X-AuditID: a67dfc5b-d6dff70000001748-e8-659f85c8eef1
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -22,36 +22,36 @@ Cc: kernel_team@skhynix.com,
 	mingo@redhat.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com
-Subject: [v5 1/7] x86/tlb: Add APIs manipulating tlb batch's arch data
-Date: Thu, 11 Jan 2024 15:07:51 +0900
-Message-Id: <20240111060757.13563-2-byungchul@sk.com>
+Subject: [v5 3/7] mm/rmap: Recognize read-only TLB entries during batched TLB flush
+Date: Thu, 11 Jan 2024 15:07:53 +0900
+Message-Id: <20240111060757.13563-4-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240111060757.13563-1-byungchul@sk.com>
 References: <20240111060757.13563-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXC9ZZnke6J1vmpBg+usFrMWb+GzeLzhn9s
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXC9ZZnoe6J1vmpBi8W8VnMWb+GzeLzhn9s
 	Fi82tDNafF3/i9ni6ac+FovLu+awWdxb85/V4vyutawWO5buY7K4dGABk8X1XQ8ZLY73HmCy
 	2LxpKrPF7x9AdXOmWFmcnDWZxUHA43trH4vHgk2lHptXaHks3vOSyWPTqk42j02fJrF7vDt3
-	jt3jxIzfLB47H1p6zDsZ6PF+31U2j62/7Dw+b5LzeDf/LVsAXxSXTUpqTmZZapG+XQJXxu3b
-	L5kKVvFVLPnRztbAOI2ni5GTQ0LARGLby5dMXYwcYPa8TZkgYTYBdYkbN34yg9giAmYSB1v/
-	sHcxcnEwCzxgkpj7dgUjSEJYwE2i/8M3JhCbRUBVYtHNTlYQm1fAVOLdzR5WiPnyEqs3HAAb
-	xAk06MLhWYwgu4SAah611UGUfGeTeLK0FMKWlDi44gbLBEbeBYwMqxiFMvPKchMzc0z0Mirz
-	Miv0kvNzNzECQ35Z7Z/oHYyfLgQfYhTgYFTi4X2waF6qEGtiWXFl7iFGCQ5mJRFehc9zUoV4
-	UxIrq1KL8uOLSnNSiw8xSnOwKInzGn0rTxESSE8sSc1OTS1ILYLJMnFwSjUwTrb4OvVb5d9S
-	D6ZpXYaRl+LjdnRMndy4f3VFTuefjZqHeTySHUVfrylIWJGwti3NqKsmLMJ6y7xNaUenur6z
-	3dhvm7B3TfjV5dv9v/YY9K3ZNLcv+leuuqj5dr6EY5eTGr4GzfNI59/59dLaxd9PHKzv+nT9
-	4zK+ednHN/h+M7uxNdTxtvM/fyWW4oxEQy3mouJEAAWL0dt1AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsXC5WfdrHu8dX6qwdM+C4s569ewWXze8I/N
-	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfVdDxkt
-	jvceYLLYvGkqs8XvH0B1c6ZYWZycNZnFQdDje2sfi8eCTaUem1doeSze85LJY9OqTjaPTZ8m
-	sXu8O3eO3ePEjN8sHjsfWnrMOxno8X7fVTaPxS8+MHls/WXn8XmTnMe7+W/ZAvijuGxSUnMy
-	y1KL9O0SuDJu337JVLCKr2LJj3a2BsZpPF2MHBwSAiYS8zZldjFycrAJqEvcuPGTGcQWETCT
-	ONj6h72LkYuDWeABk8TctysYQRLCAm4S/R++MYHYLAKqEotudrKC2LwCphLvbvaA2RIC8hKr
-	NxwAG8QJNOjC4VmMILuEgGoetdVNYORawMiwilEkM68sNzEzx1SvODujMi+zQi85P3cTIzCE
-	l9X+mbiD8ctl90OMAhyMSjy8Bi/npQqxJpYVV+YeYpTgYFYS4VX4PCdViDclsbIqtSg/vqg0
-	J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJg1OqgdHRV6F6dvfDWYfPVhxTevCV/ZZT
-	UfEO4XX+Pckit20DZh7cy3HyovC9rDdHZBw1/untvNm9f4rPFY2DQdrTbklzq4c6btu0Ikda
-	IKPsssTEG8edT6wzaCjM3xqdXHTvyaFCVgvzXqeWi9/CRPIrmf85ey7jNVWdkrNucvb8G2Gl
-	D668dZ3esEOJpTgj0VCLuag4EQDnu2KHXQIAAA==
+	jt3jxIzfLB47H1p6zDsZ6PF+31U2j62/7Dw+b5LzeDf/LVsAXxSXTUpqTmZZapG+XQJXxtd5
+	TgXHpSs+fNrB2MD4QKyLkZNDQsBEYsrSBkYY+27PBGYQm01AXeLGjZ9gtoiAmcTB1j/sXYxc
+	HMwCD5gk5r5dAdYgLBAscej9NlYQm0VAVWLO33dARRwcvAKmEn+mQM2Xl1i94QDYHE6gORcO
+	z2IEKRECKnnUVgcyUkLgPZvEm4sTmSHqJSUOrrjBMoGRdwEjwypGocy8stzEzBwTvYzKvMwK
+	veT83E2MwJBfVvsnegfjpwvBhxgFOBiVeHgfLJqXKsSaWFZcmXuIUYKDWUmEV+HznFQh3pTE
+	yqrUovz4otKc1OJDjNIcLErivEbfylOEBNITS1KzU1MLUotgskwcnFINjPKH1Z8pHNc4dKyz
+	tOrYkmuah7aJnXLVqlb+zbRD79/NCo32CTs5mnNDWFI6WDp4Vh+TZOt3f2/8wJ7v8fo9c96/
+	/jRrNXNBQZ7NUSEFzvf6xYsYdA6xstr/6oh0qJTs2fKB876p/jGbrFNBNls2Bfu6G15i9NCd
+	I1rMlvt95+RHG2Ru3GsyV2Ipzkg01GIuKk4EALcZgJl1AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJLMWRmVeSWpSXmKPExsXC5WfdrHuidX6qwedPTBZz1q9hs/i84R+b
+	xYsN7YwWX9f/YrZ4+qmPxeLw3JOsFpd3zWGzuLfmP6vF+V1rWS12LN3HZHHpwAImi+u7HjJa
+	HO89wGSxedNUZovfP4Dq5kyxsjg5azKLg6DH99Y+Fo8Fm0o9Nq/Q8li85yWTx6ZVnWwemz5N
+	Yvd4d+4cu8eJGb9ZPHY+tPSYdzLQ4/2+q2wei198YPLY+svO4/MmOY9389+yBfBHcdmkpOZk
+	lqUW6dslcGV8nedUcFy64sOnHYwNjA/Euhg5OSQETCTu9kxgBrHZBNQlbtz4CWaLCJhJHGz9
+	w97FyMXBLPCASWLu2xWMIAlhgWCJQ++3sYLYLAKqEnP+vgMq4uDgFTCV+DMFaqa8xOoNB8Dm
+	cALNuXB4FiNIiRBQyaO2ugmMXAsYGVYximTmleUmZuaY6hVnZ1TmZVboJefnbmIEBvCy2j8T
+	dzB+uex+iFGAg1GJh9fg5bxUIdbEsuLK3EOMEhzMSiK8Cp/npArxpiRWVqUW5ccXleakFh9i
+	lOZgURLn9QpPTRASSE8sSc1OTS1ILYLJMnFwSjUwVoZaMSzSWsZ4hOEQn9GVW1w7NggdLGs8
+	eOidjG+ES85q2YbXR716b6R8id/HrFf/Qu+5hVLa0kkWz6Ia97bpTbigEnXP9hRb8J62+3Ok
+	suo5TyhV/Vh36Pn7pJcHZr8XLes59rV16uKvpUHz7tf0335oIN51f4b7CvbzHstOspqfcDwp
+	GNyxUYmlOCPRUIu5qDgRAM7hR7pcAgAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,57 +59,115 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-This is a preparation for migrc mechanism that needs to recognize
-read-only TLB entries during batched TLB flush by separating tlb batch's
-arch data into two, one is for read-only entries and the other is for
-writable ones, and merging those two when needed.
-
-Migrc also needs to optimize CPUs to flush by clearing ones that have
-already performed TLB flush needed.
-
-To support it, added APIs manipulating arch data for x86.
+Functionally, no change. This is a preparation for migrc mechanism that
+requires to recognize read-only TLB entries and makes use of them to
+batch more aggressively. Plus, the newly introduced API, fold_ubc() will
+be used by migrc mechanism when manipulating tlb batch data.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- arch/x86/include/asm/tlbflush.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ include/linux/sched.h |  1 +
+ mm/internal.h         |  4 ++++
+ mm/rmap.c             | 31 ++++++++++++++++++++++++++++++-
+ 3 files changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 25726893c6f4..fa7e16dbeb44 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -5,6 +5,7 @@
- #include <linux/mm_types.h>
- #include <linux/mmu_notifier.h>
- #include <linux/sched.h>
-+#include <linux/cpumask.h>
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 292c31697248..0317e7a65151 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1328,6 +1328,7 @@ struct task_struct {
+ #endif
  
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
-@@ -293,6 +294,23 @@ static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+ 	struct tlbflush_unmap_batch	tlb_ubc;
++	struct tlbflush_unmap_batch	tlb_ubc_ro;
  
- extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
- 
-+static inline void arch_tlbbatch_clear(struct arch_tlbflush_unmap_batch *batch)
+ 	/* Cache last used pipe for splice(): */
+ 	struct pipe_inode_info		*splice_pipe;
+diff --git a/mm/internal.h b/mm/internal.h
+index b61034bd50f5..b880f1e78700 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -923,6 +923,7 @@ extern struct workqueue_struct *mm_percpu_wq;
+ void try_to_unmap_flush(void);
+ void try_to_unmap_flush_dirty(void);
+ void flush_tlb_batched_pending(struct mm_struct *mm);
++void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src);
+ #else
+ static inline void try_to_unmap_flush(void)
+ {
+@@ -933,6 +934,9 @@ static inline void try_to_unmap_flush_dirty(void)
+ static inline void flush_tlb_batched_pending(struct mm_struct *mm)
+ {
+ }
++static inline void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src)
 +{
-+	cpumask_clear(&batch->cpumask);
++}
+ #endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+ 
+ extern const struct trace_print_flags pageflag_names[];
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 7a27a2b41802..da36f23ff7b0 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -605,6 +605,28 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
+ }
+ 
+ #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
++
++void fold_ubc(struct tlbflush_unmap_batch *dst,
++	      struct tlbflush_unmap_batch *src)
++{
++	if (!src->flush_required)
++		return;
++
++	/*
++	 * Fold src to dst.
++	 */
++	arch_tlbbatch_fold(&dst->arch, &src->arch);
++	dst->writable = dst->writable || src->writable;
++	dst->flush_required = true;
++
++	/*
++	 * Reset src.
++	 */
++	arch_tlbbatch_clear(&src->arch);
++	src->flush_required = false;
++	src->writable = false;
 +}
 +
-+static inline void arch_tlbbatch_fold(struct arch_tlbflush_unmap_batch *bdst,
-+		struct arch_tlbflush_unmap_batch *bsrc)
-+{
-+	cpumask_or(&bdst->cpumask, &bdst->cpumask, &bsrc->cpumask);
-+}
+ /*
+  * Flush TLB entries for recently unmapped pages from remote CPUs. It is
+  * important if a PTE was dirty when it was unmapped that it's flushed
+@@ -614,7 +636,9 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
+ void try_to_unmap_flush(void)
+ {
+ 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
+ 
++	fold_ubc(tlb_ubc, tlb_ubc_ro);
+ 	if (!tlb_ubc->flush_required)
+ 		return;
+ 
+@@ -645,13 +669,18 @@ void try_to_unmap_flush_dirty(void)
+ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
+ 				      unsigned long uaddr)
+ {
+-	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct tlbflush_unmap_batch *tlb_ubc;
+ 	int batch;
+ 	bool writable = pte_dirty(pteval);
+ 
+ 	if (!pte_accessible(mm, pteval))
+ 		return;
+ 
++	if (pte_write(pteval) || writable)
++		tlb_ubc = &current->tlb_ubc;
++	else
++		tlb_ubc = &current->tlb_ubc_ro;
 +
-+static inline bool arch_tlbbatch_done(struct arch_tlbflush_unmap_batch *bdst,
-+		struct arch_tlbflush_unmap_batch *bsrc)
-+{
-+	return cpumask_andnot(&bdst->cpumask, &bdst->cpumask, &bsrc->cpumask);
-+}
-+
- static inline bool pte_flags_need_flush(unsigned long oldflags,
- 					unsigned long newflags,
- 					bool ignore_access)
+ 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, uaddr);
+ 	tlb_ubc->flush_required = true;
+ 
 -- 
 2.17.1
 
