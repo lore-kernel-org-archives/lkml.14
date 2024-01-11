@@ -1,137 +1,86 @@
-Received: from smtp2-kfki.kfki.hu (smtp2-kfki.kfki.hu [148.6.0.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB57E15492;
-	Thu, 11 Jan 2024 11:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=blackhole.kfki.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blackhole.kfki.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA03314F90
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=blackhole.kfki.hu header.i=@blackhole.kfki.hu header.b="dwSlHn7G"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp2.kfki.hu (Postfix) with ESMTP id 835CACC02BC;
-	Thu, 11 Jan 2024 12:22:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	blackhole.kfki.hu; h=mime-version:references:message-id
-	:in-reply-to:from:from:date:date:received:received:received
-	:received; s=20151130; t=1704972153; x=1706786554; bh=ItwLxOEzQ4
-	5w4lPvLTUHSM4c0y/LFPNe9lzTTBcz9zU=; b=dwSlHn7GZyeW5jcFnxUh8motT+
-	j4Z/V/JQRPqrOaZRFsPoKTbtdhOt1cApXYAgwSOAit9Xh4omg1UcqPGGkRXaByB1
-	K6yPX4tKIZh8tnSa9QaWkyh21MYRCr56w0qApAPtP9ZfZXtTCvh3B9xf0PNqw9yd
-	TJMr843TZwa6tm02g=
-X-Virus-Scanned: Debian amavisd-new at smtp2.kfki.hu
-Received: from smtp2.kfki.hu ([127.0.0.1])
-	by localhost (smtp2.kfki.hu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP; Thu, 11 Jan 2024 12:22:33 +0100 (CET)
-Received: from blackhole.kfki.hu (blackhole.szhk.kfki.hu [148.6.240.2])
-	by smtp2.kfki.hu (Postfix) with ESMTP id 04F3DCC0134;
-	Thu, 11 Jan 2024 12:22:33 +0100 (CET)
-Received: by blackhole.kfki.hu (Postfix, from userid 1000)
-	id F24CB343167; Thu, 11 Jan 2024 12:22:32 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by blackhole.kfki.hu (Postfix) with ESMTP id F09AF343166;
-	Thu, 11 Jan 2024 12:22:32 +0100 (CET)
-Date: Thu, 11 Jan 2024 12:22:32 +0100 (CET)
-From: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-To: David Wang <00107082@163.com>
-cc: ale.crismani@automattic.com, xiaolinkui@kylinos.cn, 
-    Pablo Neira Ayuso <pablo@netfilter.org>, linux-kernel@vger.kernel.org, 
-    netfilter-devel@vger.kernel.org
-Subject: Re:Re: Performance regression in ip_set_swap on 6.1.69
-In-Reply-To: <7c8d2978.8451.18cf8384d73.Coremail.00107082@163.com>
-Message-ID: <b333bc85-83ea-8869-ccf7-374c9456d93c@blackhole.kfki.hu>
-References: <C0829B10-EAA6-4809-874E-E1E9C05A8D84@automattic.com> <20240110102342.4978-1-00107082@163.com> <a4dfc3d9-f028-7ab4-c3a7-11dcbb12e377@netfilter.org> <661cb613.7974.18cf30c4a42.Coremail.00107082@163.com> <956ec7cd-16ef-7f72-dad8-dfa2ec5f4d77@netfilter.org>
- <0d0b1526-6189-fd0f-747e-cb803936b20a@blackhole.kfki.hu> <7c8d2978.8451.18cf8384d73.Coremail.00107082@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IxEkt4DL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704972197; x=1736508197;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IhLVf1IN4DSrbYF9P13rk6JGQJ+d09K7DNovQma/Gpc=;
+  b=IxEkt4DL9N66BUh+U0i+FlV5R8mPwxZi7Up/qjwNz9Y/N5sJCORrIN3N
+   FQzj6BRb7b8d61Ic8/9S0DWU43E4n9D6CBv8KyJwH6LJ1NRFL+blPKr8U
+   TZ5uePheb032va/3aa2kMNpWYTbpOsO+LgDgw7Ihus5KjR1LARVC/Z/oI
+   x7nMDU6JyHP4EQtqahbTyxnrvD1b6xhVo83YGqO7Iy08dKCdCeOPjJ/r1
+   kPN2os/mEvw3qqXwsDy27x+mP/sBVIAwZBgAqhvWQhghrpzTFJjoCWRB3
+   5p2PK+NX30Hs7zn9X5pTafp1wQx70ggN7K17NwVzlsHyacpP9NM9EnmIS
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="5546859"
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="5546859"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 03:23:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="852916313"
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="852916313"
+Received: from gcrisanx-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.213.56])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 03:23:15 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id BD76F10A557; Thu, 11 Jan 2024 14:23:12 +0300 (+03)
+Date: Thu, 11 Jan 2024 14:23:12 +0300
+From: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xiaoyao Li <xiaoyao.li@intel.com>, linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev
+Subject: Re: [PATCH v2] virt: tdx-guest: Handle GetQuote request error code
+Message-ID: <20240111112312.zdgkmfywscp2kvxw@box.shutemov.name>
+References: <20240111033245.2632484-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="110363376-155968070-1704972152=:2980"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111033245.2632484-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Jan 11, 2024 at 03:32:45AM +0000, Kuppuswamy Sathyanarayanan wrote:
+> During the TDX guest attestation process, TSM ConfigFS ABI is used by
+> the user attestation agent to get the signed VM measurement data (a.k.a
+> Quote), which can be used by a remote verifier to validate the
+> trustworthiness of the guest. When a user requests for the Quote data
+> via the ConfigFS ABI, the TDX Quote generation handler
+> (tdx_report_new()) forwards the request to VMM (or QE) via a hypercall,
+> and then shares the output with the user.
+> 
+> Currently, when handling the Quote generation request, tdx_report_new()
+> handler only checks whether the VMM successfully processed the request
+> and if it is true it returns success and shares the output to the user
+> without actually validating the output data. Since the VMM can return
+> error even after processing the Quote request, always returning success
+> for the processed requests is incorrect and will create confusion to
+> the user. Although for the failed request, output buffer length will
+> be zero and can also be used by the user to identify the failure case,
+> it will be more clear to return error for all failed cases.
+> 
+> Validate the Quote data output status and return error code for all
+> failed cases.
+> 
+> Fixes: f4738f56d1dc ("virt: tdx-guest: Add Quote generation support using TSM_REPORTS")
+> Reported-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Closes: https://lore.kernel.org/linux-coco/6bdf569c-684a-4459-af7c-4430691804eb@linux.intel.com/T/#u
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
---110363376-155968070-1704972152=:2980
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-Hi,
-
-On Thu, 11 Jan 2024, David Wang wrote:
-
-> At 2024-01-11 16:25:46, "Jozsef Kadlecsik" <kadlec@blackhole.kfki.hu> w=
-rote:
-> >
-> >
-> >Could you check that the patch below fixes the performance regression?=
-=20
-> >Instead of waiting for the RCU grace period at swapping, call_rcu() is=
-=20
-> >used at destroying the set.
->=20
-> Got a compiler error:
-> net/netfilter/ipset/ip_set_core.c: In function =E2=80=98ip_set_destroy_=
-set_rcu=E2=80=99:
-> net/netfilter/ipset/ip_set_core.c:1017:9: error: implicit declaration o=
-f function =E2=80=98ip_set_destroy_set=E2=80=99; did you mean =E2=80=98ip=
-_set_destroy_set_rcu=E2=80=99? [-Werror=3Dimplicit-function-declaration]
->  1017 |         ip_set_destroy_set(set);
->       |         ^~~~~~~~~~~~~~~~~~
->       |         ip_set_destroy_set_rcu
-> net/netfilter/ipset/ip_set_core.c: At top level:
-> net/netfilter/ipset/ip_set_core.c:1183:1: warning: conflicting types fo=
-r =E2=80=98ip_set_destroy_set=E2=80=99; have =E2=80=98void(struct ip_set =
-*)=E2=80=99
->  1183 | ip_set_destroy_set(struct ip_set *set)
->       | ^~~~~~~~~~~~~~~~~~
-> net/netfilter/ipset/ip_set_core.c:1183:1: error: static declaration of =
-=E2=80=98ip_set_destroy_set=E2=80=99 follows non-static declaration
->
->  I move the declaration of ip_set_destroy_set_rcu, make sure it is afte=
-r=20
-> the declaration of ip_set_destroy_set, With this path, the performance=20
-> degradation of ipset_swap is gone,
-
-Thanks! I wrote the patch for the ipset package code and while it applies=
-=20
-to the vanilla kernel source, function definiton ordering got broken.=20
-Sorry, I should have to double check.
-
-> but my test only stress ipset_swap, not a swap/destroy sequence. I will=
-=20
-> adjust my code to stress a full swap/destroy/create/add sequence, and=20
-> update later.
-
-The synchronize_rcu() in ip_set_swap() was added to exclude the parallel=20
-swap+destroy and kernel side add/del/test operations, which can be tested=
-=20
-with the commands
-
-    ipset create hash_ip1 hash:net family inet hashsize 1024 maxelem 1048=
-576
-    ipset add hash_ip1 172.20.0.0/16
-    ipset add hash_ip1 192.168.0.0/16
-    iptables -A INPUT -m set --match-set hash_ip1 src -j ACCEPT
-    while [ 1 ]
-    do
-            # ... Ongoing traffic...
-            ipset create hash_ip2 hash:net family inet hashsize 1024 maxe=
-lem 1048576
-            ipset add hash_ip2 172.20.0.0/16
-            ipset swap hash_ip1 hash_ip2
-            ipset destroy hash_ip2
-            sleep 0.05
-    done
-
-I have checked it but the virtual machine on my dev laptop might be too=20
-slow to trigger the case.
-
-Best regards,
-Jozsef
---=20
-E-mail  : kadlec@blackhole.kfki.hu, kadlecsik.jozsef@wigner.hu
-PGP key : https://wigner.hu/~kadlec/pgp_public_key.txt
-Address : Wigner Research Centre for Physics
-          H-1525 Budapest 114, POB. 49, Hungary
---110363376-155968070-1704972152=:2980--
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
