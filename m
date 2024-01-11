@@ -1,112 +1,80 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B360E56B63
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 19:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-252-pj7-twXmO1a0C0jMic4vcg-1; Thu, 11 Jan 2024 19:41:15 +0000
-X-MC-Unique: pj7-twXmO1a0C0jMic4vcg-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 11 Jan
- 2024 19:40:57 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 11 Jan 2024 19:40:57 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Chris Down' <chris@chrisdown.name>, "H. Peter Anvin" <hpa@zytor.com>
-CC: Peter Zijlstra <peterz@infradead.org>, David Howells
-	<dhowells@redhat.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "pinskia@gmail.com" <pinskia@gmail.com>
-Subject: RE: [PATCH 00/45] C++: Convert the kernel to C++
-Thread-Topic: [PATCH 00/45] C++: Convert the kernel to C++
-Thread-Index: AQHaRIs8ZglmPXooXEql0bLLyUbXRbDU/wpw
-Date: Thu, 11 Jan 2024 19:40:56 +0000
-Message-ID: <d1e780dcb9854bd3be3699751272e077@AcuMS.aculab.com>
-References: <152261521484.30503.16131389653845029164.stgit@warthog.procyon.org.uk>
- <3465e0c6-f5b2-4c42-95eb-29361481f805@zytor.com>
- <ZZ_hhT6N9tqKuB2c@chrisdown.name>
-In-Reply-To: <ZZ_hhT6N9tqKuB2c@chrisdown.name>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9062C52F9F
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 19:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jVrfh2eI"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so4199024276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:46:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705002379; x=1705607179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QAi2GDQ+ThdQ1lT7Cr2g77YBh1JVwDL9p52yhtkQlNo=;
+        b=jVrfh2eIfKUdq1E/b3tnplpCL7xWlTRv+kslpwK32KG7qYz3NKoKPIBJRUzq4Q9vwS
+         ItqcvepuwkUipMhL/N64VaRQtKdc3+1Xebvmw6gLmmVfM7u7QFFNZYyw7dhhiMLCAi2Q
+         TUxxDe+3R/QHRE4j0igvqWeArlkK3I5VCCy6rZ800fGpt1sSzX0IZHnnFekFqtOAKBi9
+         RwEhgvtRJqskEiiw6WWju3iZMm+/Nwp+6mL2Ttq5mrNShAjSGl+oDntsWACuvJtTXeL5
+         72GTHDInGV7Qah5qsTiYhbwhj5VfphHU8DNGcnNF72GPW322wV2AT2IS0MszH2g2iuZw
+         gD9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705002379; x=1705607179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QAi2GDQ+ThdQ1lT7Cr2g77YBh1JVwDL9p52yhtkQlNo=;
+        b=iOpG4gvZLEl176/61dKUqZ4EWvlki2uMUYoSCD8FuT/2rjQpRDQ9535fet1qi7ZoYT
+         PYVtT4lOyaTnPTfn7XL4YvOtfiD4cF5POdzrF0EUCpZVuGmhqJyEQEMBi4yKe31tgiqF
+         JcArN/CepKpkit/PP5XmZFOOtGbr3UTzoCJZ5Xf99L/aoxrswAruV9oiuU+4ZFZtKPgC
+         ga42vbIf8pSbjmPVMOGnz6H3ELRcy+QE1klst0QE4l80xdW4Fmcq8s/XhvGgdaQGWEny
+         pz6g6aJr9IMgivMtRLDjfumfGa9nEmGPX95/W8wVLM2USWKG/KmGZcud3GIBB1nMbE3E
+         fOSw==
+X-Gm-Message-State: AOJu0YwmXXXvXKeIHs8/PIyCV4pGLga/ghOVFSe1qeWU7ofZ3Q4K7ew3
+	w+257zVUCQUnsAzKDowyr/h3yFGhlobZwd2/XW29e6qIdAoLrQ==
+X-Google-Smtp-Source: AGHT+IHO/hbJI7uHyCOMQIngOSzow7KSL8+obEwrYolSGuUHUtXDHtI5B5XmyV1xIfhs7xwpVwi2TXyaGiDh+D7cEDw=
+X-Received: by 2002:a25:74c8:0:b0:dbd:b419:1ca6 with SMTP id
+ p191-20020a2574c8000000b00dbdb4191ca6mr133118ybc.82.1705002379332; Thu, 11
+ Jan 2024 11:46:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+References: <20240111150429.681567-1-martin@kaiser.cx>
+In-Reply-To: <20240111150429.681567-1-martin@kaiser.cx>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 11 Jan 2024 20:46:07 +0100
+Message-ID: <CACRpkdbxbqPKQbkDECy8-TDXpLuA1UcUhJkozioECeqm75eq8Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: vf610: allow disabling the vf610 driver
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-From: Chris Down
-> Sent: 11 January 2024 12:40
->=20
-> H. Peter Anvin writes:
-> >We already *do* use constructors and *especially* destructors for a
-> >lot of objects, we just call them out.
-> >
-> >Note that modern C++ also has the ability to construct and destruct
-> >objects in-place, so allocation and construction/destruction aren't
-> >necessarily related.
-> >
-> >There is no reason you can't do static initialization where possible;
-> >even constructors can be evaluated at compile time if they are
-> >constexpr.
+On Thu, Jan 11, 2024 at 4:05=E2=80=AFPM Martin Kaiser <martin@kaiser.cx> wr=
+ote:
 
-But the compiler often doesn't - look at the generated code and marvel
-at all the constructors for static items.
-Oh yes, and all the destructors that pretty much always get called
-in the wrong order leading to SIGSEGV on exit().
-C++ programs pretty much have close all files and use _exit().
+> The vf610 gpio driver is enabled by default for all i.MX machines,
+> without any option to disable it in a board-specific config file.
+>
+> Most i.MX chipsets have no hardware for this driver. Change the default
+> to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
+>
+> Add a text description after the bool type, this makes the driver
+> selectable by make config etc. i.MX chips other than SOC_VF610 can now
+> enable the driver from their board config.
+>
+> Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO=
+_VF610")
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 
-> Side note for the constructor and destructor discussion: should we be mor=
-e
-> widely marketing the __cleanup() infrastructure that Peter added a year o=
-r so
-> ago? It likely helps a lot with at least some of these cases. In systemd =
-we use
-> __attribute__((cleanup)) pretty widely and my experience is that it's mad=
-e the
-> code a lot easier to both create and consume.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-And harder for us 'old fogies' to quickly read for correctness.
-
-IIRC some bugs got committed during some 'simple applications'
-because of the real hoops you have to go through to correctly
-tidy up a malloc()ed buffer that might be passed on.
-
-I've seen the same issue with some C++ code that was like:
-(Pardon my C++ :-)
-=09foo =3D new();
-=09try {
-=09=09add_foo_to_list(foo);
-=09} except {
-=09=09free(foo);
-=09}
-The problem is that you have no idea whether the exception was
-thrown before or after 'foo' was saved.
-Since pretty much everything can 'throw' you really can't tell.
-OTOH if add_foo_to_list() returns an error code you can know
-(and check) that zero is returned iff the pointer has been saved.
-
-Then there is function and class member overloading.
-How may times have you renamed a structure member (etc) and used
-the compiler to find out where it is used?
-I'm pretty sure that is hard work in C++.
-
-And don't forget the default copy constructor...
-
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+Yours,
+Linus Walleij
