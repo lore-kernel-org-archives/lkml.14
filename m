@@ -1,85 +1,155 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D83DB7FC
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778A0807;
+	Thu, 11 Jan 2024 02:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="IqhOuiAf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=SALJLRmBOXzxBM8mcf
-	sgEpWIGewiMx1rbO76aYGKWys=; b=IqhOuiAf9hGx6agbB6/LPBHc2iIGlyGfD9
-	edcTWvkWsZI2jtKzWjJbu5asdpmnqV4Xw5hz/vjTwD0jCig6j0YIxl15oT0uteXT
-	q7rGeqUW9EuQ0ZtAWD4FgYE9NlqgRYEU4H3iKDbO5O71Ls9g7MNsneqOB4WBRb/f
-	0S9ArffuY=
-Received: from localhost.localdomain (unknown [182.148.14.173])
-	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wD3f1IHUp9lQUUtAA--.20942S2;
-	Thu, 11 Jan 2024 10:27:20 +0800 (CST)
-From: chenxuebing <chenxb_99091@126.com>
-To: christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	alexander.deucher@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	chenxuebing <chenxb_99091@126.com>
-Subject: [PATCH] drm/amdgpu: Clean up errors in amdgpu.h
-Date: Thu, 11 Jan 2024 02:27:18 +0000
-Message-Id: <20240111022718.6415-1-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3f1IHUp9lQUUtAA--.20942S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtF1DCF48KF1fuF4rZr15CFg_yoWkXFb_CF
-	WUAF98Wr43GFnYqr13uw4fZ3yqvr1YvF1kWw1agF9ayr9rZrW5ArWDCryxXw4fua1xWF1D
-	u39Ygr15C3ZakjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRRt8nDUUUUU==
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiHA5ixWV2zz6dAAAAsK
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DoDGYV8q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704940170; x=1736476170;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iferbRpdeUhgnRlUu9J8+KBTyosmA5KQK2annn3GVaQ=;
+  b=DoDGYV8q4mxmR52ycOM1SlFEF3XBpoel2Pr/tX+QnUjsN+Q7yXmVrsUb
+   oDF2VjGePl8D/3Tm6g9S1ujoY01upfwVz1QjXS9LE2JDzLjRlDfINepB4
+   kv6fi5Bby5OqMgLftX5vUTU8f6/Rw88aW8aavK0HVYMV2oujuLjEk8W1k
+   89YEn/h03i3X56qGvDRpCoAb83WQ8b1dLVp07wXTg+GMzxahJjdqZS0Pd
+   mauvjkT36HdffrmFHq+cDxxbAQNRpX16mxtzIIQvyNhbCIVWVzxCZf5vf
+   XCpEZTh3kO61fIDAjwFtunG6++loTXjYJK2Fj/OnjyUDtC6I3iXfolYEq
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="12204158"
+X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
+   d="scan'208";a="12204158"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 18:29:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
+   d="scan'208";a="24162309"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by orviesa002.jf.intel.com with ESMTP; 10 Jan 2024 18:29:22 -0800
+Message-ID: <1be246aa-4813-43df-af77-9a94f493374b@linux.intel.com>
+Date: Thu, 11 Jan 2024 10:24:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v10 4/5] iommu/vt-d: don't issue ATS Invalidation
+ request when device is disconnected
+Content-Language: en-US
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, kevin.tian@intel.com,
+ bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
+ robin.murphy@arm.com, lukas@wunner.de
+References: <20231228170504.720794-1-haifeng.zhao@linux.intel.com>
+ <20231228170504.720794-2-haifeng.zhao@linux.intel.com>
+ <8e16ff9b-4dcd-4bec-a78b-61d90205841f@linux.intel.com>
+ <b077a691-5790-40a0-8539-0f5294d0fc28@linux.intel.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <b077a691-5790-40a0-8539-0f5294d0fc28@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Fix the following errors reported by checkpatch:
+On 1/10/24 4:37 PM, Ethan Zhao wrote:
+> 
+> On 1/10/2024 1:24 PM, Baolu Lu wrote:
+>> On 12/29/23 1:05 AM, Ethan Zhao wrote:
+>>> Except those aggressive hotplug cases - surprise remove a hotplug device
+>>> while its safe removal is requested and handled in process by:
+>>>
+>>> 1. pull it out directly.
+>>> 2. turn off its power.
+>>> 3. bring the link down.
+>>> 4. just died there that moment.
+>>>
+>>> etc, in a word, 'gone' or 'disconnected'.
+>>>
+>>> Mostly are regular normal safe removal and surprise removal unplug.
+>>> these hot unplug handling process could be optimized for fix the ATS
+>>> Invalidation hang issue by calling pci_dev_is_disconnected() in function
+>>> devtlb_invalidation_with_pasid() to check target device state to avoid
+>>> sending meaningless ATS Invalidation request to iommu when device is 
+>>> gone.
+>>> (see IMPLEMENTATION NOTE in PCIe spec r6.1 section 10.3.1)
+>>>
+>>> For safe removal, device wouldn't be removed untill the whole software
+>>> handling process is done, it wouldn't trigger the hard lock up issue
+>>> caused by too long ATS Invalidation timeout wait. In safe removal path,
+>>> device state isn't set to pci_channel_io_perm_failure in
+>>> pciehp_unconfigure_device() by checking 'presence' parameter, calling
+>>> pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will 
+>>> return
+>>> false there, wouldn't break the function.
+>>>
+>>> For surprise removal, device state is set to 
+>>> pci_channel_io_perm_failure in
+>>> pciehp_unconfigure_device(), means device is already gone (disconnected)
+>>> call pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will
+>>> return true to break the function not to send ATS Invalidation 
+>>> request to
+>>> the disconnected device blindly, thus avoid the further long time 
+>>> waiting
+>>> triggers the hard lockup.
+>>>
+>>> safe removal & surprise removal
+>>>
+>>> pciehp_ist()
+>>>     pciehp_handle_presence_or_link_change()
+>>>       pciehp_disable_slot()
+>>>         remove_board()
+>>>           pciehp_unconfigure_device(presence)
+>>>
+>>> Tested-by: Haorong Ye <yehaorong@bytedance.com>
+>>> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>>> ---
+>>>   drivers/iommu/intel/pasid.c | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
+>>> index 715943531091..3d5ed27f39ef 100644
+>>> --- a/drivers/iommu/intel/pasid.c
+>>> +++ b/drivers/iommu/intel/pasid.c
+>>> @@ -480,6 +480,8 @@ devtlb_invalidation_with_pasid(struct intel_iommu 
+>>> *iommu,
+>>>       if (!info || !info->ats_enabled)
+>>>           return;
+>>>   +    if (pci_dev_is_disconnected(to_pci_dev(dev)))
+>>> +        return;
+>>
+>> Why do you need the above after changes in PATCH 2/5? It's unnecessary
+>> and not complete. We have other places where device TLB invalidation is
+>> issued, right?
+> 
+> This one could be regarded as optimization, no need to trapped into rabbit
+> 
+> hole if we could predict the result. because the bad thing is we don't know
+> 
+> what response to us in the rabbit hole from third party switch (bridges 
+> will
+> 
+> feedback timeout to requester as PCIe spec mentioned if the endpoint is
+> 
+> gone).
 
-ERROR: open brace '{' following struct go on the same line
+The IOMMU hardware has its own timeout mechanism. This timeout might
+happen if:
 
-Signed-off-by: chenxuebing <chenxb_99091@126.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu.h | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+1) The link to the endpoint is broken, so the invalidation completion
+    message is lost on the way.
+2) The device has a longer timeout value, so the device is still busy
+    with handling the cache invalidation when IOMMU's timeout is
+    triggered.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-index 616b6c911767..189bf62076f3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-@@ -114,14 +114,12 @@
- 
- #define MAX_GPU_INSTANCE		64
- 
--struct amdgpu_gpu_instance
--{
-+struct amdgpu_gpu_instance {
- 	struct amdgpu_device		*adev;
- 	int				mgpu_fan_enabled;
- };
- 
--struct amdgpu_mgpu_info
--{
-+struct amdgpu_mgpu_info {
- 	struct amdgpu_gpu_instance	gpu_ins[MAX_GPU_INSTANCE];
- 	struct mutex			mutex;
- 	uint32_t			num_gpu;
-@@ -140,8 +138,7 @@ enum amdgpu_ss {
- 	AMDGPU_SS_DRV_UNLOAD
- };
- 
--struct amdgpu_watchdog_timer
--{
-+struct amdgpu_watchdog_timer {
- 	bool timeout_fatal_disable;
- 	uint32_t period; /* maxCycles = (1 << period), the number of cycles before a timeout */
- };
--- 
-2.17.1
+Here, we are doing the following:
 
+For Case 1, we return -ETIMEDOUT directly. For Case 2, we attempt to
+retry.
+
+Best regards,
+baolu
