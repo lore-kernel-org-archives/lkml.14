@@ -1,69 +1,91 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80275A0E9;
-	Thu, 11 Jan 2024 23:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646CE59B7A
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 23:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="sgJhtYqj"
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-	id 56C0320B3CC5; Thu, 11 Jan 2024 15:57:36 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 56C0320B3CC5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1705017456;
-	bh=NhxGRohCG2d8qbgwEKxLa5IMv9vQBy7R7+Z0UyLVSR0=;
-	h=From:To:Cc:Subject:Date:Reply-To:From;
-	b=sgJhtYqjRJRf3a9DQJGolmw7LPKGW3dkWjd328i1Xr7rMfF/cWj2T++bWgSbTlwbK
-	 iNwDzFAIOFP8IDEcOmxOKCI6UTcvblKET8W+xDuZ20hYSJwmc8sOI9s8mnsgEaz6wi
-	 7vqLswJISeg6GOES7G4Psw/vot1jZJrwa3uZjVvE=
-From: longli@linuxonhyperv.com
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: [PATCH] MAINTAINERS: update maintainer for Microsoft MANA RDMA driver
-Date: Thu, 11 Jan 2024 15:57:18 -0800
-Message-Id: <1705017438-20417-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: longli@microsoft.com
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DYyV9AVQ"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a2821884a09so504323866b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 15:58:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1705017522; x=1705622322; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nsr6PFlZr2msZU50SITFyVGPFm+oEax+N/q9E6uP/As=;
+        b=DYyV9AVQydERZeSEYr2aUBf0HOdug7/MGPUMX0nhGBEq9vWPVkwEV8BfrQpI1hoRRB
+         vQA2tKUmrFEaUD06Wr8Pn/bgqRZmRQACgeClukpS7VRNpBVlMKWU4hWNT9lXGfyanV6z
+         FV5N+3AfJJLXoSSKkgZmoKUX7NoQU4CfyWGQg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705017522; x=1705622322;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nsr6PFlZr2msZU50SITFyVGPFm+oEax+N/q9E6uP/As=;
+        b=ge5vfZSkC40T+bE9pvuSYL5BLtow5bfLCyTEnTZuyl2R3xDYkBvRaxQbMbvstIrzBe
+         hB0oUSWrNgxMITjfvwkOLdtPZ/lOQsvDy5ft1dZFxFgt3Xt9GpM9NcaxugzJZ7GuHdvq
+         eHZSC9avYAkv9x7IeuaBdyEsInPgZ+35D4Gdx4hJPOjEb6kXEkaxmNQ77d9btk9Qo/RV
+         gBqDKZFTxFnJrSuOdo0UJ4sKXXIgCnBaE2Z9MN3rXFgBjhyTzqxQ1ABp8y24qNq9KYk8
+         Z7WZ4QS1leyzVZ5TKXaP5oUwATPzC6VCZQUSQtJQyVGwPUp9D3kwE+Y0J27Wy+819YVQ
+         04Vg==
+X-Gm-Message-State: AOJu0YzK49YMTRWsT0UnDpuXZITthwXwYn+e7Hg+HA3GdX6tpjdpbGZO
+	BfDK8OAxI+KLGAJfTvz/asaIXl3pVPfqULNrJz7SYXRdI8I7Wx7P
+X-Google-Smtp-Source: AGHT+IFl2H2S5OeKjLK6bfAvQUpvHYQJbHDgyJYHSVunV4Pl49B2v9uK6MlApp4yq2u3zL9N4dblgQ==
+X-Received: by 2002:a17:907:804:b0:a28:d6f0:510a with SMTP id wv4-20020a170907080400b00a28d6f0510amr275319ejb.49.1705017522641;
+        Thu, 11 Jan 2024 15:58:42 -0800 (PST)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id m23-20020a17090607d700b00a233efe6aa7sm1125568ejc.51.2024.01.11.15.58.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 15:58:41 -0800 (PST)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a28a997f3dfso452492866b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 15:58:41 -0800 (PST)
+X-Received: by 2002:a17:907:a609:b0:a2b:d242:8d35 with SMTP id
+ vt9-20020a170907a60900b00a2bd2428d35mr295990ejc.40.1705017520730; Thu, 11 Jan
+ 2024 15:58:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <wq27r7e3n5jz4z6pn2twwrcp2zklumcfibutcpxrw6sgaxcsl5@m5z7rwxyuh72>
+ <202401101525.112E8234@keescook> <6pbl6vnzkwdznjqimowfssedtpawsz2j722dgiufi432aldjg4@6vn573zspwy3>
+ <202401101625.3664EA5B@keescook> <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
+ <CAHk-=wigjbr7d0ZLo+6wbMk31bBMn8sEwHEJCYBRFuNRhzO+Kw@mail.gmail.com>
+ <ZaByTq3uy0NfYuQs@casper.infradead.org> <202401111534.859084884C@keescook>
+In-Reply-To: <202401111534.859084884C@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 11 Jan 2024 15:58:23 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiWHj83=NnpT5mo9M7r=s7GmCdNczRfmN87thLFxA+pqQ@mail.gmail.com>
+Message-ID: <CAHk-=wiWHj83=NnpT5mo9M7r=s7GmCdNczRfmN87thLFxA+pqQ@mail.gmail.com>
+Subject: Re: [GIT PULL] bcachefs updates for 6.8
+To: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Long Li <longli@microsoft.com>
+On Thu, 11 Jan 2024 at 15:42, Kees Cook <keescook@chromium.org> wrote:
+>
+> Another ugly idea would be to do a treewide replacement of "func" to
+> "func_deprecated", and make "func" just a wrapper for it that is marked
+> with __deprecated.
 
-Ajay is no longer working on the MANA RDMA driver.
+That's probably not a horrible idea, at least when we're talking a
+reasonable number of users (ie when we're talking "tens of users" like
+strlcpy is now).
 
-Konstantin Taranov will take the responsibility of fixing bugs, reviewing
-patches and developing new features for MANA RDMA driver.
+We should probably generally rename functions much more aggressively
+any time the "signature" changes.
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We've had situations where the semantics changed but not enough to
+necessarily trigger type warnings, and then renaming things is just a
+good thing just to avoid mistakes. Even if it's temporary and you plan
+on renaming things back.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 463c097e01af..135471cbc144 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14527,7 +14527,7 @@ F:	include/uapi/linux/cciss*.h
- 
- MICROSOFT MANA RDMA DRIVER
- M:	Long Li <longli@microsoft.com>
--M:	Ajay Sharma <sharmaajay@microsoft.com>
-+M:	Konstantin Taranov <kotaranov@microsoft.com>
- L:	linux-rdma@vger.kernel.org
- S:	Supported
- F:	drivers/infiniband/hw/mana/
--- 
-2.17.1
+And with a coccinelle script (that should be documented in the patch)
+it's not necessarily all that painful to do.
 
+                Linus
