@@ -1,35 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E31B1802D;
-	Thu, 11 Jan 2024 13:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQMpsbuN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C45EC43390;
-	Thu, 11 Jan 2024 13:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704979071;
-	bh=4RdvKST51cJemT2mdWu7LVxZC9+IbRrzBCtv9as6/tU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JQMpsbuNa0HzPgts9Tv3qoCoTicKXpZ+TVP/u4QhwXSTMd6H2jdrLciiUIuhDa1gC
-	 4uipPFXY/dwW2y6AYR0FUUybTP2cAhiW6UcBvynjZxkDXmn77+Mtif8jnjxIfOMUNl
-	 a6w7yg+tqGHC9pYc1JDGKrPLtPlRpKEg4STponK/dGuIVPpBRj/NSVzX+93B5W9MY/
-	 nIx+MW4f4TnKujmpjxAc/CNoV/mxN/ODSE56h/4PPgDZ/t8Z0sYwZJP59rWKSiBBP3
-	 q7Avzz4B2mVEY0BMRL7VcZavhTf5neUnbkVQaoIxfTCDk+w9SXxS4yjeKKfpET414V
-	 2PAC4iraM5eTg==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	Richard Hirst <rhirst@linuxcare.com>
-Subject: [PATCH 4/5] scsi: 53c700: Remove snprintf() from sysfs call-backs and replace with sysfs_emit()
-Date: Thu, 11 Jan 2024 13:17:25 +0000
-Message-ID: <20240111131732.1815560-5-lee@kernel.org>
-X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
-In-Reply-To: <20240111131732.1815560-1-lee@kernel.org>
-References: <20240111131732.1815560-1-lee@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D24F32C94;
+	Thu, 11 Jan 2024 13:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4T9lXD0cr1z6K8wp;
+	Thu, 11 Jan 2024 21:15:24 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
+	by mail.maildlp.com (Postfix) with ESMTPS id 53AB4140CB9;
+	Thu, 11 Jan 2024 21:18:01 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Jan 2024 13:18:00 +0000
+From: <shiju.jose@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dan.j.williams@intel.com>
+CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [RFC PATCH v5 00/12] cxl: Add support for CXL feature commands, CXL device patrol scrub control and DDR5 ECS control features
+Date: Thu, 11 Jan 2024 21:17:29 +0800
+Message-ID: <20240111131741.1356-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,457 +43,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
 
-Since snprintf() has the documented, but still rather strange trait of
-returning the length of the data that *would have been* written to the
-array if space were available, rather than the arguably more useful
-length of data *actually* written, it is usually considered wise to use
-something else instead in order to avoid confusion.
+From: Shiju Jose <shiju.jose@huawei.com>
 
-In the case of sysfs call-backs, new wrappers exist that do just that.
+1. Add support for CXL feature mailbox commands.
+2. Add CXL device scrub driver supporting patrol scrub control and ECS
+control features.
+3. Add scrub subsystem driver supports configuring memory scrubs in the system.
+4. Register CXL device patrol scrub and ECS with scrub subsystem.
+5. Add common library for RASF and RAS2 PCC interfaces.
+6. Add driver for ACPI RAS2 feature table (RAS2).
+7. Add memory RAS2 driver and register with scrub subsystem.
 
-Link: https://lwn.net/Articles/69419/
-Link: https://github.com/KSPP/linux/issues/105
-Cc: Richard Hirst <rhirst@linuxcare.com>
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- drivers/scsi/53c700.c | 104 +++++++++++++++++++++---------------------
- 1 file changed, 52 insertions(+), 52 deletions(-)
+The QEMU series to support the CXL specific features is available here,
+https://lore.kernel.org/qemu-devel/20231124135338.1191-1-shiju.jose@huawei.com/
 
-diff --git a/drivers/scsi/53c700.c b/drivers/scsi/53c700.c
-index 857be0f3ae5b9..1aa933485719a 100644
---- a/drivers/scsi/53c700.c
-+++ b/drivers/scsi/53c700.c
-@@ -4,7 +4,7 @@
-  *
-  * Copyright (C) 2001 by James.Bottomley@HansenPartnership.com
- **-----------------------------------------------------------------------------
--**  
-+**
- **
- **-----------------------------------------------------------------------------
-  */
-@@ -18,7 +18,7 @@
-  *
-  * The 700 is the lowliest of the line, it can only do async SCSI.
-  * The 700-66 can at least do synchronous SCSI up to 10MHz.
-- * 
-+ *
-  * The 700 chip has no host bus interface logic of its own.  However,
-  * it is usually mapped to a location with well defined register
-  * offsets.  Therefore, if you can determine the base address and the
-@@ -61,7 +61,7 @@
-  * consistent memory allocation.
-  *
-  * Version 2.5
-- * 
-+ *
-  * More Compatibility changes for 710 (now actually works).  Enhanced
-  * support for odd clock speeds which constrain SDTR negotiations.
-  * correct cacheline separation for scsi messages and status for
-@@ -70,7 +70,7 @@
-  *
-  * Version 2.4
-  *
-- * Added support for the 53c710 chip (in 53c700 emulation mode only---no 
-+ * Added support for the 53c710 chip (in 53c700 emulation mode only---no
-  * special 53c710 instructions or registers are used).
-  *
-  * Version 2.3
-@@ -190,7 +190,7 @@ static char *NCR_700_condition[] = {
- 	"DISCONNECT_MSG RECEIVED",
- 	"MSG_OUT",
- 	"DATA_IN",
--	
-+
- };
- 
- static char *NCR_700_fatal_messages[] = {
-@@ -260,7 +260,7 @@ NCR_700_offset_period_to_sxfer(struct NCR_700_Host_Parameters *hostdata,
- static inline __u8
- NCR_700_get_SXFER(struct scsi_device *SDp)
- {
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)SDp->host->hostdata[0];
- 
- 	return NCR_700_offset_period_to_sxfer(hostdata,
-@@ -416,7 +416,7 @@ NCR_700_detect(struct scsi_host_template *tpnt,
- int
- NCR_700_release(struct Scsi_Host *host)
- {
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)host->hostdata[0];
- 
- 	if (hostdata->noncoherent)
-@@ -449,7 +449,7 @@ NCR_700_identify(int can_disconnect, __u8 lun)
-  * Inputs : host - SCSI host */
- static inline int
- NCR_700_data_residual (struct Scsi_Host *host) {
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)host->hostdata[0];
- 	int count, synchronous = 0;
- 	unsigned int ddir;
-@@ -461,16 +461,16 @@ NCR_700_data_residual (struct Scsi_Host *host) {
- 		count = ((NCR_700_readb(host, DFIFO_REG) & 0x3f) -
- 			 (NCR_700_readl(host, DBC_REG) & 0x3f)) & 0x3f;
- 	}
--	
-+
- 	if(hostdata->fast)
- 		synchronous = NCR_700_readb(host, SXFER_REG) & 0x0f;
--	
-+
- 	/* get the data direction */
- 	ddir = NCR_700_readb(host, CTEST0_REG) & 0x01;
- 
- 	if (ddir) {
- 		/* Receive */
--		if (synchronous) 
-+		if (synchronous)
- 			count += (NCR_700_readb(host, SSTAT2_REG) & 0xf0) >> 4;
- 		else
- 			if (NCR_700_readb(host, SSTAT1_REG) & SIDL_REG_FULL)
-@@ -500,7 +500,7 @@ sbcl_to_string(__u8 sbcl)
- 
- 	ret[0]='\0';
- 	for(i=0; i<8; i++) {
--		if((1<<i) & sbcl) 
-+		if((1<<i) & sbcl)
- 			strcat(ret, NCR_700_SBCL_bits[i]);
- 	}
- 	strcat(ret, NCR_700_SBCL_to_phase[sbcl & 0x07]);
-@@ -533,7 +533,7 @@ find_empty_slot(struct NCR_700_Host_Parameters *hostdata)
- 	if(slot->state != NCR_700_SLOT_FREE)
- 		/* should panic! */
- 		printk(KERN_ERR "BUSY SLOT ON FREE LIST!!!\n");
--		
-+
- 
- 	hostdata->free_list = slot->ITL_forw;
- 	slot->ITL_forw = NULL;
-@@ -546,11 +546,11 @@ find_empty_slot(struct NCR_700_Host_Parameters *hostdata)
- 	slot->state = NCR_700_SLOT_BUSY;
- 	slot->flags = 0;
- 	hostdata->command_slot_count++;
--	
-+
- 	return slot;
- }
- 
--STATIC void 
-+STATIC void
- free_slot(struct NCR_700_command_slot *slot,
- 	  struct NCR_700_Host_Parameters *hostdata)
- {
-@@ -560,7 +560,7 @@ free_slot(struct NCR_700_command_slot *slot,
- 	if(slot->state == NCR_700_SLOT_FREE) {
- 		printk(KERN_ERR "53c700: SLOT %p is FREE!!!\n", slot);
- 	}
--	
-+
- 	slot->resume_offset = 0;
- 	slot->cmnd = NULL;
- 	slot->state = NCR_700_SLOT_FREE;
-@@ -654,7 +654,7 @@ NCR_700_internal_bus_reset(struct Scsi_Host *host)
- STATIC void
- NCR_700_chip_setup(struct Scsi_Host *host)
- {
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)host->hostdata[0];
- 	__u8 min_period;
- 	__u8 min_xferp = (hostdata->chip710 ? NCR_710_MIN_XFERP : NCR_700_MIN_XFERP);
-@@ -694,11 +694,11 @@ NCR_700_chip_setup(struct Scsi_Host *host)
- 	} else {
- 		NCR_700_writeb(BURST_LENGTH_8 | hostdata->dmode_extra,
- 			       host, DMODE_700_REG);
--		NCR_700_writeb(hostdata->differential ? 
-+		NCR_700_writeb(hostdata->differential ?
- 			       DIFF : 0, host, CTEST7_REG);
- 		if(hostdata->fast) {
- 			/* this is for 700-66, does nothing on 700 */
--			NCR_700_writeb(LAST_DIS_ENBL | ENABLE_ACTIVE_NEGATION 
-+			NCR_700_writeb(LAST_DIS_ENBL | ENABLE_ACTIVE_NEGATION
- 				       | GENERATE_RECEIVE_PARITY, host,
- 				       CTEST8_REG);
- 		} else {
-@@ -731,7 +731,7 @@ NCR_700_chip_setup(struct Scsi_Host *host)
- 		NCR_700_writeb(ASYNC_DIV_3_0 | hostdata->dcntl_extra, host, DCNTL_REG);
- 		hostdata->sync_clock = hostdata->clock*2;
- 		hostdata->sync_clock /= 3;
--		
-+
- 	} else if(hostdata->clock > 37 && hostdata->clock <= 50) {
- 		/* sync divider 1, async divider 2 */
- 		DEBUG(("53c700: sync 1 async 2\n"));
-@@ -764,7 +764,7 @@ NCR_700_chip_setup(struct Scsi_Host *host)
- STATIC void
- NCR_700_chip_reset(struct Scsi_Host *host)
- {
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)host->hostdata[0];
- 	if(hostdata->chip710) {
- 		NCR_700_writeb(SOFTWARE_RESET_710, host, ISTAT_REG);
-@@ -774,7 +774,7 @@ NCR_700_chip_reset(struct Scsi_Host *host)
- 	} else {
- 		NCR_700_writeb(SOFTWARE_RESET, host, DCNTL_REG);
- 		udelay(100);
--		
-+
- 		NCR_700_writeb(0, host, DCNTL_REG);
- 	}
- 
-@@ -790,7 +790,7 @@ NCR_700_chip_reset(struct Scsi_Host *host)
-  * ACK) so that the routine returns correctly to resume its activity
-  * */
- STATIC __u32
--process_extended_message(struct Scsi_Host *host, 
-+process_extended_message(struct Scsi_Host *host,
- 			 struct NCR_700_Host_Parameters *hostdata,
- 			 struct scsi_cmnd *SCp, __u32 dsp, __u32 dsps)
- {
-@@ -816,15 +816,15 @@ process_extended_message(struct Scsi_Host *host,
- 
- 			spi_offset(starget) = offset;
- 			spi_period(starget) = period;
--			
-+
- 			if(NCR_700_is_flag_set(SCp->device, NCR_700_DEV_PRINT_SYNC_NEGOTIATION)) {
- 				spi_display_xfer_agreement(starget);
- 				NCR_700_clear_flag(SCp->device, NCR_700_DEV_PRINT_SYNC_NEGOTIATION);
- 			}
--			
-+
- 			NCR_700_set_flag(SCp->device, NCR_700_DEV_NEGOTIATED_SYNC);
- 			NCR_700_clear_flag(SCp->device, NCR_700_DEV_BEGIN_SYNC_NEGOTIATION);
--			
-+
- 			NCR_700_writeb(NCR_700_get_SXFER(SCp->device),
- 				       host, SXFER_REG);
- 
-@@ -841,7 +841,7 @@ process_extended_message(struct Scsi_Host *host,
- 			resume_offset = hostdata->pScript + Ent_SendMessageWithATN;
- 		}
- 		break;
--	
-+
- 	case A_WDTR_MSG:
- 		printk(KERN_INFO "scsi%d: (%d:%d), Unsolicited WDTR after CMD, Rejecting\n",
- 		       host->host_no, pun, lun);
-@@ -1121,7 +1121,7 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
- 
- 			SCp = scsi_host_find_tag(SDp->host, hostdata->msgin[2]);
- 			if(unlikely(SCp == NULL)) {
--				printk(KERN_ERR "scsi%d: (%d:%d) no saved request for tag %d\n", 
-+				printk(KERN_ERR "scsi%d: (%d:%d) no saved request for tag %d\n",
- 				       host->host_no, reselection_id, lun, hostdata->msgin[2]);
- 				BUG();
- 			}
-@@ -1180,7 +1180,7 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
- 				       slot->cmnd->cmd_len);
- 
- 
--			
-+
- 		}
- 	} else if(dsps == A_RESELECTED_DURING_SELECTION) {
- 
-@@ -1193,10 +1193,10 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
- 
- 		__u8 reselection_id = NCR_700_readb(host, SFBR_REG);
- 		struct NCR_700_command_slot *slot;
--		
-+
- 		/* Take out our own ID */
- 		reselection_id &= ~(1<<host->this_id);
--		
-+
- 		/* I've never seen this happen, so keep this as a printk rather
- 		 * than a debug */
- 		printk(KERN_INFO "scsi%d: (%d:%d) RESELECTION DURING SELECTION, dsp=%08x[%04x] state=%d, count=%d\n",
-@@ -1222,7 +1222,7 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
- 			slot->state = NCR_700_SLOT_QUEUED;
- 		}
- 		hostdata->cmd = NULL;
--		
-+
- 		if(reselection_id == 0) {
- 			if(hostdata->reselection_id == 0xff) {
- 				printk(KERN_ERR "scsi%d: Invalid reselection during selection!!\n", host->host_no);
-@@ -1233,7 +1233,7 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
- 				reselection_id = hostdata->reselection_id;
- 			}
- 		} else {
--			
-+
- 			/* convert to real ID */
- 			reselection_id = bitmap_to_number(reselection_id);
- 		}
-@@ -1251,7 +1251,7 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
- 		 * a return here will re-run the queued command slot
- 		 * that may have been interrupted by the initial selection */
- 		DEBUG((" SELECTION COMPLETED\n"));
--	} else if((dsps & 0xfffff0f0) == A_MSG_IN) { 
-+	} else if((dsps & 0xfffff0f0) == A_MSG_IN) {
- 		resume_offset = process_message(host, hostdata, SCp,
- 						dsp, dsps);
- 	} else if((dsps &  0xfffff000) == 0) {
-@@ -1304,7 +1304,7 @@ process_selection(struct Scsi_Host *host, __u32 dsp)
- 
- 		/* Take out our own ID */
- 		id &= ~(1<<host->this_id);
--		if(id != 0) 
-+		if(id != 0)
- 			break;
- 		udelay(5);
- 	}
-@@ -1322,7 +1322,7 @@ process_selection(struct Scsi_Host *host, __u32 dsp)
- 		struct NCR_700_command_slot *slot =
- 			(struct NCR_700_command_slot *)SCp->host_scribble;
- 		DEBUG(("  ID %d WARNING: RESELECTION OF BUSY HOST, saving cmd %p, slot %p, addr %x [%04x], resume %x!\n", id, hostdata->cmd, slot, dsp, dsp - hostdata->pScript, resume_offset));
--		
-+
- 		switch(dsp - hostdata->pScript) {
- 		case Ent_Disconnect1:
- 		case Ent_Disconnect2:
-@@ -1344,7 +1344,7 @@ process_selection(struct Scsi_Host *host, __u32 dsp)
- 		case Ent_Finish2:
- 			process_script_interrupt(A_GOOD_STATUS_AFTER_STATUS, dsp, SCp, host, hostdata);
- 			break;
--			
-+
- 		default:
- 			slot->state = NCR_700_SLOT_QUEUED;
- 			break;
-@@ -1547,7 +1547,7 @@ NCR_700_intr(int irq, void *dev_id)
- 			/* clear all the negotiated parameters */
- 			__shost_for_each_device(SDp, host)
- 				NCR_700_clear_flag(SDp, ~0);
--			
-+
- 			/* clear all the slots and their pending commands */
- 			for(i = 0; i < NCR_700_COMMAND_SLOTS_PER_HOST; i++) {
- 				struct scsi_cmnd *SCp;
-@@ -1556,7 +1556,7 @@ NCR_700_intr(int irq, void *dev_id)
- 
- 				if(slot->state == NCR_700_SLOT_FREE)
- 					continue;
--				
-+
- 				SCp = slot->cmnd;
- 				printk(KERN_ERR " failing command because of reset, slot %p, cmnd %p\n",
- 				       slot, SCp);
-@@ -1620,7 +1620,7 @@ NCR_700_intr(int irq, void *dev_id)
- 				data_transfer += residual;
- 
- 				if(data_transfer != 0) {
--					int count; 
-+					int count;
- 					__u32 pAddr;
- 
- 					SGcount--;
-@@ -1680,7 +1680,7 @@ NCR_700_intr(int irq, void *dev_id)
- 			NCR_700_scsi_done(hostdata, SCp, DID_ERROR<<16);
- 		}
- 
--		
-+
- 		/* NOTE: selection interrupt processing MUST occur
- 		 * after script interrupt processing to correctly cope
- 		 * with the case where we process a disconnect and
-@@ -1718,7 +1718,7 @@ NCR_700_intr(int irq, void *dev_id)
- 		DEBUG(("Attempting to resume at %x\n", resume_offset));
- 		NCR_700_clear_fifo(host);
- 		NCR_700_writel(resume_offset, host, DSP_REG);
--	} 
-+	}
- 	/* There is probably a technical no-no about this: If we're a
- 	 * shared interrupt and we got this interrupt because the
- 	 * other device needs servicing not us, we're still going to
-@@ -1732,7 +1732,7 @@ NCR_700_intr(int irq, void *dev_id)
- 			 * position we left off */
- 			int j = (i + hostdata->saved_slot_position)
- 				% NCR_700_COMMAND_SLOTS_PER_HOST;
--			
-+
- 			if(hostdata->slots[j].state != NCR_700_SLOT_QUEUED)
- 				continue;
- 			if(NCR_700_start_command(hostdata->slots[j].cmnd)) {
-@@ -1752,7 +1752,7 @@ NCR_700_intr(int irq, void *dev_id)
- 
- static int NCR_700_queuecommand_lck(struct scsi_cmnd *SCp)
- {
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)SCp->device->host->hostdata[0];
- 	__u32 move_ins;
- 	struct NCR_700_command_slot *slot;
-@@ -1852,7 +1852,7 @@ static int NCR_700_queuecommand_lck(struct scsi_cmnd *SCp)
- 		default:
- 			printk(KERN_ERR "53c700: Unknown command for data direction ");
- 			scsi_print_command(SCp);
--			
-+
- 			move_ins = 0;
- 			break;
- 		case DMA_NONE:
-@@ -1937,7 +1937,7 @@ STATIC int
- NCR_700_host_reset(struct scsi_cmnd * SCp)
- {
- 	DECLARE_COMPLETION_ONSTACK(complete);
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)SCp->device->host->hostdata[0];
- 
- 	scmd_printk(KERN_INFO, SCp,
-@@ -1975,9 +1975,9 @@ STATIC void
- NCR_700_set_period(struct scsi_target *STp, int period)
- {
- 	struct Scsi_Host *SHp = dev_to_shost(STp->dev.parent);
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)SHp->hostdata[0];
--	
-+
- 	if(!hostdata->fast)
- 		return;
- 
-@@ -1994,11 +1994,11 @@ STATIC void
- NCR_700_set_offset(struct scsi_target *STp, int offset)
- {
- 	struct Scsi_Host *SHp = dev_to_shost(STp->dev.parent);
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)SHp->hostdata[0];
- 	int max_offset = hostdata->chip710
- 		? NCR_710_MAX_OFFSET : NCR_700_MAX_OFFSET;
--	
-+
- 	if(!hostdata->fast)
- 		return;
- 
-@@ -2031,7 +2031,7 @@ NCR_700_slave_alloc(struct scsi_device *SDp)
- STATIC int
- NCR_700_slave_configure(struct scsi_device *SDp)
- {
--	struct NCR_700_Host_Parameters *hostdata = 
-+	struct NCR_700_Host_Parameters *hostdata =
- 		(struct NCR_700_Host_Parameters *)SDp->host->hostdata[0];
- 
- 	/* to do here: allocate memory; build a queue_full list */
-@@ -2071,7 +2071,7 @@ NCR_700_show_active_tags(struct device *dev, struct device_attribute *attr, char
- {
- 	struct scsi_device *SDp = to_scsi_device(dev);
- 
--	return snprintf(buf, 20, "%d\n", NCR_700_get_depth(SDp));
-+	return sysfs_emit(buf, "%d\n", NCR_700_get_depth(SDp));
- }
- 
- static struct device_attribute NCR_700_active_tags_attr = {
+Changes
+v4 -> v5:
+1. Following are the main changes made based on the feedback from Dan Williams on v4.
+1.1. In the scrub subsystem the common scrub control attributes are statically defined
+     instead of dynamically created.
+1.2. Add scrub subsystem support externally defined attribute group.
+     Add CXL ECS driver define ECS specific attribute group and pass to
+	 the scrub subsystem.
+1.3. Move cxl_mem_ecs_init() to cxl/core/region.c so that the CXL region_id
+     is used in the registration with the scrub subsystem. 	 
+1.4. Add previously posted RASF common and RAS2 patches to this scrub series.
+	 
+2. Add support for the 'enable_background_scrub' attribute
+   for RAS2, on request from Bill Schwartz(wschwartz@amperecomputing.com).
+
+v3 -> v4:
+1. Fixes for the warnings/errors reported by kernel test robot.
+2. Add support for reading the 'enable' attribute of CXL patrol scrub.
+
+Changes
+v2 -> v3:
+1. Changes for comments from Davidlohr, Thanks.
+ - Updated cxl scrub kconfig
+ - removed usage of the flag is_support_feature from
+   the function cxl_mem_get_supported_feature_entry().
+ - corrected spelling error.
+ - removed unnecessary debug message.
+ - removed export feature commands to the userspace.
+2. Possible fix for the warnings/errors reported by kernel
+   test robot.
+3. Add documentation for the common scrub configure atrributes.
+
+v1 -> v2:
+1. Changes for comments from Dave Jiang, Thanks.
+ - Split patches.
+ - reversed xmas tree declarations.
+ - declared flags as enums.
+ - removed few unnecessary variable initializations.
+ - replaced PTR_ERR_OR_ZERO() with IS_ERR() and PTR_ERR().
+ - add auto clean declarations.
+ - replaced while loop with for loop.
+ - Removed allocation from cxl_get_supported_features() and
+   cxl_get_feature() and make change to take allocated memory
+   pointer from the caller.
+ - replaced if/else with switch case.
+ - replaced sprintf() with sysfs_emit() in 2 places.
+ - replaced goto label with return in few functions.
+2. removed unused code for supported attributes from ecs.
+3. Included following common patch for scrub configure driver
+   to this series.
+   "memory: scrub: Add scrub driver supports configuring memory scrubbers
+    in the system"
+
+A Somasundaram (1):
+  ACPI:RASF: Add common library for RASF and RAS2 PCC interfaces
+
+Shiju Jose (11):
+  cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
+  cxl/mbox: Add GET_FEATURE mailbox command
+  cxl/mbox: Add SET_FEATURE mailbox command
+  cxl/memscrub: Add CXL device patrol scrub control feature
+  cxl/memscrub: Add CXL device ECS control feature
+  memory: scrub: Add scrub subsystem driver supports configuring memory
+    scrubs in the system
+  cxl/memscrub: Register CXL device patrol scrub with scrub configure
+    driver
+  cxl/memscrub: Register CXL device ECS with scrub configure driver
+  ACPICA: ACPI 6.5: Add support for RAS2 table
+  ACPI:RAS2: Add driver for ACPI RAS2 feature table (RAS2)
+  memory: RAS2: Add memory RAS2 driver
+
+ .../ABI/testing/sysfs-class-scrub-configure   |   91 ++
+ drivers/acpi/Kconfig                          |   15 +
+ drivers/acpi/Makefile                         |    1 +
+ drivers/acpi/ras2_acpi.c                      |   97 ++
+ drivers/acpi/rasf_acpi_common.c               |  272 +++++
+ drivers/cxl/Kconfig                           |   23 +
+ drivers/cxl/core/Makefile                     |    1 +
+ drivers/cxl/core/mbox.c                       |   59 +
+ drivers/cxl/core/memscrub.c                   | 1009 +++++++++++++++++
+ drivers/cxl/core/region.c                     |    1 +
+ drivers/cxl/cxlmem.h                          |  120 ++
+ drivers/cxl/pci.c                             |    5 +
+ drivers/memory/Kconfig                        |   15 +
+ drivers/memory/Makefile                       |    3 +
+ drivers/memory/ras2.c                         |  354 ++++++
+ drivers/memory/rasf_common.c                  |  269 +++++
+ drivers/memory/scrub/Kconfig                  |   11 +
+ drivers/memory/scrub/Makefile                 |    6 +
+ drivers/memory/scrub/memory-scrub.c           |  367 ++++++
+ include/acpi/actbl2.h                         |  137 +++
+ include/acpi/rasf_acpi.h                      |   58 +
+ include/memory/memory-scrub.h                 |   78 ++
+ include/memory/rasf.h                         |   88 ++
+ 23 files changed, 3080 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-scrub-configure
+ create mode 100755 drivers/acpi/ras2_acpi.c
+ create mode 100755 drivers/acpi/rasf_acpi_common.c
+ create mode 100644 drivers/cxl/core/memscrub.c
+ create mode 100644 drivers/memory/ras2.c
+ create mode 100644 drivers/memory/rasf_common.c
+ create mode 100644 drivers/memory/scrub/Kconfig
+ create mode 100644 drivers/memory/scrub/Makefile
+ create mode 100755 drivers/memory/scrub/memory-scrub.c
+ create mode 100644 include/acpi/rasf_acpi.h
+ create mode 100755 include/memory/memory-scrub.h
+ create mode 100755 include/memory/rasf.h
+
 -- 
-2.43.0.275.g3460e3d667-goog
+2.34.1
 
