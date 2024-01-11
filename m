@@ -1,421 +1,125 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1B456B76
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 19:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E95156751
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 19:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z87XcEkX"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-336897b6bd6so5338325f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:57:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705003026; x=1705607826; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VruG++fZ5jU2hKKx0BJ6HBmek88ni0w2T34SzkuW8J8=;
-        b=z87XcEkX2mWw5raE9302J52rYVHQdzeRiz+OtPwM5B8wGVw3vy8UILrn3Kv8BvaOHg
-         HN8DSgfUICE6XS3rWLCnnUOgTtQjQRQNpbfVJnCzFwWBNAnuTyCzwYYRRuTaPDw3JhF9
-         P4b78O2X8XZtxyBHq+YCdI+FDt0yPXskwKHWq/cB7O35U+n9qaOrZPJEWQRblcUia9Kd
-         PzN9BeIctCnkl2qy4GeDvO98N4VXggBxzRPdRwAzAfQ8JzuEEv+SW/CMARVuT0WN9823
-         pDiGhwg10jcGRd2T38eb62ct1zChWgE4UQY1Q9cd7+Q0j/EdkvKHKOcDOsYmpe4y8NUf
-         mijg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705003026; x=1705607826;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VruG++fZ5jU2hKKx0BJ6HBmek88ni0w2T34SzkuW8J8=;
-        b=OgReiiQXlsvEAtY26lFWKMFZs3H1Gw3MZPa6YFKUqFwQG63EG5wmHawt8Wlyc7Htym
-         EN9r+gXg0r4Y8hzjmkitfDvzoTsURq6Frb+sAGXsd5qGcB92+C0F92u6xN8qHrWA7V7v
-         2rUCJbRaDIG1Ewr2+mdjSh8KwySPsbPYojjypBrds7Pe93Hipru3jxFJqvSQ0PjUB66h
-         YWEd3Sn4DC0t7Uvsr+IE8ITCkOzo1MkQxVJscFlbkUgdMj8rkh9rkA2+bb62KVaS7pl+
-         TNgEmYjv4LnDKyEdFnft7v0z3PNL1OnNP2G2wpS/xMfPfO4DYw33zpjluhPD6HX65rU/
-         kZ6w==
-X-Gm-Message-State: AOJu0YzXdr9OZsmQAZ4MIQj9W/UXasCr3Cm535YB0jki5avVPN06F4+o
-	ag9coYKXEZUZ9eQPWe6ITYThgYxJt/Pp0A==
-X-Google-Smtp-Source: AGHT+IHeT5URh66hPtENDGA/6G5VukazA73Mm07T/ZeTNGJuociiql/E6fVXl+q2sMPpMOcFkUuyAg==
-X-Received: by 2002:adf:e4c8:0:b0:336:ca94:3e00 with SMTP id v8-20020adfe4c8000000b00336ca943e00mr127785wrm.69.1705003026587;
-        Thu, 11 Jan 2024 11:57:06 -0800 (PST)
-Received: from [127.0.1.1] ([37.228.218.3])
-        by smtp.gmail.com with ESMTPSA id b7-20020adfe647000000b0033763a9ea2dsm1955382wrn.63.2024.01.11.11.57.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 11:57:06 -0800 (PST)
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Date: Thu, 11 Jan 2024 19:57:04 +0000
-Subject: [PATCH 3/5] media: qcom: camss: Add sc8280xp resources
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WyYHUT+t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705003147; x=1736539147;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zWgdszgF2upi1RJNQNcI5k8HBE/XFq2LbjMvesYoLCk=;
+  b=WyYHUT+tFWycSN8F74TmVVL61TNZfDE/N/Bn8+j6x8PMotxHEPl2Mi4q
+   yi4LOq3oC77D72UoCfM89WAn9SveFAzd97vwFPiyGMVpU0ghiX1ICb++0
+   5NUWQr01lOsUrolz8VbVRjjExw0tHGucJixgjt4FGMf3L0n6RdNSNF4k6
+   4AlnxfwheCVl2CRU61FHDwHDv7uSOERJ5to3uwzO305r47jM25zNC46La
+   ibuazPpyW12/MeLHblCcnv2sdr4hdDeBIy1aq4n8URaHx61PCYXtiLxiC
+   O86X9IiAz6KfEPrZOD1+Lg3areWB8wSAIqmCg5t8WbXRLoLb/VupzFURh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="397846585"
+X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
+   d="scan'208";a="397846585"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 11:59:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="786108629"
+X-IronPort-AV: E=Sophos;i="6.04,187,1695711600"; 
+   d="scan'208";a="786108629"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jan 2024 11:59:01 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rO1CS-0008gU-0D;
+	Thu, 11 Jan 2024 19:58:51 +0000
+Date: Fri, 12 Jan 2024 03:58:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: oe-kbuild-all@lists.linux.dev, kernel_team@skhynix.com,
+	akpm@linux-foundation.org, ying.huang@intel.com, namit@vmware.com,
+	xhao@linux.alibaba.com, mgorman@techsingularity.net,
+	hughd@google.com, willy@infradead.org, david@redhat.com,
+	peterz@infradead.org, luto@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com
+Subject: Re: [v5 6/7] mm: Defer TLB flush by keeping both src and dst folios
+ at migration
+Message-ID: <202401120309.9xlXPJBx-lkp@intel.com>
+References: <20240111060757.13563-7-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240111-linux-next-24-01-09-sc8280xp-camss-changes-v1-3-b92a650121ba@linaro.org>
-References: <20240111-linux-next-24-01-09-sc8280xp-camss-changes-v1-0-b92a650121ba@linaro.org>
-In-Reply-To: <20240111-linux-next-24-01-09-sc8280xp-camss-changes-v1-0-b92a650121ba@linaro.org>
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-X-Mailer: b4 0.13-dev-4e032
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111060757.13563-7-byungchul@sk.com>
 
-This commit describes the hardware layout for the sc8280xp for the
-following hardware blocks:
+Hi Byungchul,
 
-- 4 x VFE, 4 RDI per VFE
-- 4 x VFE Lite, 4 RDI per VFE
-- 4 x CSID
-- 4 x CSID Lite
-- 4 x CSI PHY
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on tip/sched/core tip/x86/core arm64/for-next/core tip/x86/mm linus/master v6.7 next-20240111]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
----
-Depends on:
-Link: https://lore.kernel.org/linux-arm-msm/20240111-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v4-2-cdd5c57ff1dc@linaro.org
----
- drivers/media/platform/qcom/camss/camss.c | 307 ++++++++++++++++++++++++++++++
- 1 file changed, 307 insertions(+)
+url:    https://github.com/intel-lab-lkp/linux/commits/Byungchul-Park/x86-tlb-Add-APIs-manipulating-tlb-batch-s-arch-data/20240111-141049
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240111060757.13563-7-byungchul%40sk.com
+patch subject: [v5 6/7] mm: Defer TLB flush by keeping both src and dst folios at migration
+config: x86_64-buildonly-randconfig-005-20240111 (https://download.01.org/0day-ci/archive/20240112/202401120309.9xlXPJBx-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240112/202401120309.9xlXPJBx-lkp@intel.com/reproduce)
 
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 58f4be660290..916fe4a83aa9 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -941,6 +941,298 @@ static const struct resources_icc icc_res_sm8250[] = {
- 	},
- };
- 
-+static const struct camss_subdev_resources csiphy_res_sc8280xp[] = {
-+	/* CSIPHY0 */
-+	{
-+		.regulators = {},
-+		.clock = { "csiphy0", "csiphy0_timer" },
-+		.clock_rate = { { 400000000 },
-+				{ 300000000 } },
-+		.reg = { "csiphy0" },
-+		.interrupt = { "csiphy0" },
-+		.ops = &csiphy_ops_3ph_1_0
-+	},
-+	/* CSIPHY1 */
-+	{
-+		.regulators = {},
-+		.clock = { "csiphy1", "csiphy1_timer" },
-+		.clock_rate = { { 400000000 },
-+				{ 300000000 } },
-+		.reg = { "csiphy1" },
-+		.interrupt = { "csiphy1" },
-+		.ops = &csiphy_ops_3ph_1_0
-+	},
-+	/* CSIPHY2 */
-+	{
-+		.regulators = {},
-+		.clock = { "csiphy2", "csiphy2_timer" },
-+		.clock_rate = { { 400000000 },
-+				{ 300000000 } },
-+		.reg = { "csiphy2" },
-+		.interrupt = { "csiphy2" },
-+		.ops = &csiphy_ops_3ph_1_0
-+	},
-+	/* CSIPHY3 */
-+	{
-+		.regulators = {},
-+		.clock = { "csiphy3", "csiphy3_timer" },
-+		.clock_rate = { { 400000000 },
-+				{ 300000000 } },
-+		.reg = { "csiphy3" },
-+		.interrupt = { "csiphy3" },
-+		.ops = &csiphy_ops_3ph_1_0
-+	},
-+};
-+
-+static const struct camss_subdev_resources csid_res_sc8280xp[] = {
-+	/* CSID0 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = { "vfe0_csid", "vfe0_cphy_rx", "vfe0", "vfe0_axi" },
-+		.clock_rate = { { 400000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid0" },
-+		.interrupt = { "csid0" },
-+		.ops = &csid_ops_gen2
-+	},
-+	/* CSID1 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = { "vfe1_csid", "vfe1_cphy_rx", "vfe1", "vfe1_axi" },
-+		.clock_rate = { { 400000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid1" },
-+		.interrupt = { "csid1" },
-+		.ops = &csid_ops_gen2
-+	},
-+	/* CSID2 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = { "vfe2_csid", "vfe2_cphy_rx", "vfe2", "vfe2_axi" },
-+		.clock_rate = { { 400000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid2" },
-+		.interrupt = { "csid2" },
-+		.ops = &csid_ops_gen2
-+	},
-+	/* CSID3 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = { "vfe3_csid", "vfe3_cphy_rx", "vfe3", "vfe3_axi" },
-+		.clock_rate = { { 400000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid3" },
-+		.interrupt = { "csid3" },
-+		.ops = &csid_ops_gen2
-+	},
-+	/* CSID_LITE0 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = { "vfe_lite0_csid", "vfe_lite0_cphy_rx", "vfe_lite0" },
-+		.clock_rate = { { 400000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 }, },
-+		.reg = { "csid0_lite" },
-+		.interrupt = { "csid0_lite" },
-+		.is_lite = true,
-+		.ops = &csid_ops_gen2
-+	},
-+	/* CSID_LITE1 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = { "vfe_lite1_csid", "vfe_lite1_cphy_rx", "vfe_lite1" },
-+		.clock_rate = { { 400000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 }, },
-+		.reg = { "csid1_lite" },
-+		.interrupt = { "csid1_lite" },
-+		.is_lite = true,
-+		.ops = &csid_ops_gen2
-+	},
-+	/* CSID_LITE2 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = { "vfe_lite2_csid", "vfe_lite2_cphy_rx", "vfe_lite2" },
-+		.clock_rate = { { 400000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 }, },
-+		.reg = { "csid2_lite" },
-+		.interrupt = { "csid2_lite" },
-+		.is_lite = true,
-+		.ops = &csid_ops_gen2
-+	},
-+	/* CSID_LITE3 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = { "vfe_lite3_csid", "vfe_lite3_cphy_rx", "vfe_lite3" },
-+		.clock_rate = { { 400000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 }, },
-+		.reg = { "csid3_lite" },
-+		.interrupt = { "csid3_lite" },
-+		.is_lite = true,
-+		.ops = &csid_ops_gen2
-+	}
-+};
-+
-+static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
-+	/* IFE0 */
-+	{
-+		.regulators = {},
-+		.clock = { "gcc_axi_hf", "gcc_axi_sf", "cpas_ahb", "camnoc_axi", "vfe0", "vfe0_axi" },
-+		.clock_rate = { { 0 },
-+				{ 0 },
-+				{ 19200000, 80000000},
-+				{ 19200000, 150000000, 266666667, 320000000, 400000000, 480000000 },
-+				{ 400000000, 558000000, 637000000, 760000000 },
-+				{ 0 }, },
-+		.reg = { "vfe0" },
-+		.interrupt = { "vfe0" },
-+		.pd_name = "ife0",
-+		.line_num = 4,
-+		.ops = &vfe_ops_170
-+	},
-+	/* IFE1 */
-+	{
-+		.regulators = {},
-+		.clock = { "gcc_axi_hf", "gcc_axi_sf", "cpas_ahb", "camnoc_axi", "vfe1", "vfe1_axi" },
-+		.clock_rate = { { 0 },
-+				{ 0 },
-+				{ 19200000, 80000000},
-+				{ 19200000, 150000000, 266666667, 320000000, 400000000, 480000000 },
-+				{ 400000000, 558000000, 637000000, 760000000 },
-+				{ 0 }, },
-+		.reg = { "vfe1" },
-+		.interrupt = { "vfe1" },
-+		.pd_name = "ife1",
-+		.line_num = 4,
-+		.ops = &vfe_ops_170
-+	},
-+	/* IFE2 */
-+	{
-+		.regulators = {},
-+		.clock = { "gcc_axi_hf", "gcc_axi_sf", "cpas_ahb", "camnoc_axi", "vfe2", "vfe2_axi" },
-+		.clock_rate = { { 0 },
-+				{ 0 },
-+				{ 19200000, 80000000},
-+				{ 19200000, 150000000, 266666667, 320000000, 400000000, 480000000 },
-+				{ 400000000, 558000000, 637000000, 760000000 },
-+				{ 0 }, },
-+		.reg = { "vfe2" },
-+		.interrupt = { "vfe2" },
-+		.pd_name = "ife2",
-+		.line_num = 4,
-+		.ops = &vfe_ops_170
-+	},
-+	/* VFE3 */
-+	{
-+		.regulators = {},
-+		.clock = { "gcc_axi_hf", "gcc_axi_sf", "cpas_ahb", "camnoc_axi", "vfe3", "vfe3_axi" },
-+		.clock_rate = { { 0 },
-+				{ 0 },
-+				{ 19200000, 80000000},
-+				{ 19200000, 150000000, 266666667, 320000000, 400000000, 480000000 },
-+				{ 400000000, 558000000, 637000000, 760000000 },
-+				{ 0 }, },
-+		.reg = { "vfe3" },
-+		.interrupt = { "vfe3" },
-+		.pd_name = "ife3",
-+		.line_num = 4,
-+		.ops = &vfe_ops_170
-+	},
-+	/* IFE_LITE_0 */
-+	{
-+		.regulators = {},
-+		.clock = { "gcc_axi_hf", "gcc_axi_sf", "cpas_ahb", "camnoc_axi", "vfe_lite0" },
-+		.clock_rate = { { 0 },
-+				{ 0 },
-+				{ 19200000, 80000000},
-+				{ 19200000, 150000000, 266666667, 320000000, 400000000, 480000000 },
-+				{ 320000000, 400000000, 480000000, 600000000 }, },
-+		.reg = { "vfe_lite0" },
-+		.interrupt = { "vfe_lite0" },
-+		.is_lite = true,
-+		.line_num = 4,
-+		.ops = &vfe_ops_170
-+	},
-+	/* IFE_LITE_1 */
-+	{
-+		.regulators = {},
-+		.clock = { "gcc_axi_hf", "gcc_axi_sf", "cpas_ahb", "camnoc_axi", "vfe_lite1" },
-+		.clock_rate = { { 0 },
-+				{ 0 },
-+				{ 19200000, 80000000},
-+				{ 19200000, 150000000, 266666667, 320000000, 400000000, 480000000 },
-+				{ 320000000, 400000000, 480000000, 600000000 }, },
-+		.reg = { "vfe_lite1" },
-+		.interrupt = { "vfe_lite1" },
-+		.is_lite = true,
-+		.line_num = 4,
-+		.ops = &vfe_ops_170
-+	},
-+	/* IFE_LITE_2 */
-+	{
-+		.regulators = {},
-+		.clock = { "gcc_axi_hf", "gcc_axi_sf", "cpas_ahb", "camnoc_axi", "vfe_lite2" },
-+		.clock_rate = { { 0 },
-+				{ 0 },
-+				{ 19200000, 80000000},
-+				{ 19200000, 150000000, 266666667, 320000000, 400000000, 480000000 },
-+				{ 320000000, 400000000, 480000000, 600000000, }, },
-+		.reg = { "vfe_lite2" },
-+		.interrupt = { "vfe_lite2" },
-+		.is_lite = true,
-+		.line_num = 4,
-+		.ops = &vfe_ops_170
-+	},
-+	/* VFE_LITE_3 */
-+	{
-+		.regulators = {},
-+		.clock = { "gcc_axi_hf", "gcc_axi_sf", "cpas_ahb", "camnoc_axi", "vfe_lite3" },
-+		.clock_rate = { { 0 },
-+				{ 0 },
-+				{ 19200000, 80000000},
-+				{ 19200000, 150000000, 266666667, 320000000, 400000000, 480000000 },
-+				{ 320000000, 400000000, 480000000, 600000000 }, },
-+		.reg = { "vfe_lite3" },
-+		.interrupt = { "vfe_lite3" },
-+		.is_lite = true,
-+		.line_num = 4,
-+		.ops = &vfe_ops_170
-+	},
-+};
-+
-+static const struct resources_icc icc_res_sc8280xp[] = {
-+	{
-+		.name = "cam_ahb",
-+		.icc_bw_tbl.avg = 150000,
-+		.icc_bw_tbl.peak = 300000,
-+	},
-+	{
-+		.name = "cam_hf_mnoc",
-+		.icc_bw_tbl.avg = 2097152,
-+		.icc_bw_tbl.peak = 2097152,
-+	},
-+	{
-+		.name = "cam_sf_mnoc",
-+		.icc_bw_tbl.avg = 2097152,
-+		.icc_bw_tbl.peak = 2097152,
-+	},
-+	{
-+		.name = "cam_sf_icp_mnoc",
-+		.icc_bw_tbl.avg = 2097152,
-+		.icc_bw_tbl.peak = 2097152,
-+	},
-+};
-+
- /*
-  * camss_add_clock_margin - Add margin to clock frequency rate
-  * @rate: Clock frequency rate
-@@ -1826,12 +2118,27 @@ static const struct camss_resources sm8250_resources = {
- 	.vfe_num = ARRAY_SIZE(vfe_res_8250),
- };
- 
-+static const struct camss_resources sc8280xp_resources = {
-+	.version = CAMSS_8280XP,
-+	.pd_name = "top",
-+	.csiphy_res = csiphy_res_sc8280xp,
-+	.csid_res = csid_res_sc8280xp,
-+	.ispif_res = NULL,
-+	.vfe_res = vfe_res_sc8280xp,
-+	.icc_res = icc_res_sc8280xp,
-+	.icc_path_num = ARRAY_SIZE(icc_res_sc8280xp),
-+	.csiphy_num = ARRAY_SIZE(csiphy_res_sc8280xp),
-+	.csid_num = ARRAY_SIZE(csid_res_sc8280xp),
-+	.vfe_num = ARRAY_SIZE(vfe_res_sc8280xp),
-+};
-+
- static const struct of_device_id camss_dt_match[] = {
- 	{ .compatible = "qcom,msm8916-camss", .data = &msm8916_resources },
- 	{ .compatible = "qcom,msm8996-camss", .data = &msm8996_resources },
- 	{ .compatible = "qcom,sdm660-camss", .data = &sdm660_resources },
- 	{ .compatible = "qcom,sdm845-camss", .data = &sdm845_resources },
- 	{ .compatible = "qcom,sm8250-camss", .data = &sm8250_resources },
-+	{ .compatible = "qcom,sc8280xp-camss", .data = &sc8280xp_resources },
- 	{ }
- };
- 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401120309.9xlXPJBx-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from mm/hwpoison-inject.c:10:
+   mm/internal.h: In function 'init_tlb_ubc':
+>> mm/internal.h:931:9: error: implicit declaration of function 'arch_tlbbatch_clear' [-Werror=implicit-function-declaration]
+     931 |         arch_tlbbatch_clear(&ubc->arch);
+         |         ^~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/arch_tlbbatch_clear +931 mm/internal.h
+
+   928	
+   929	static inline void init_tlb_ubc(struct tlbflush_unmap_batch *ubc)
+   930	{
+ > 931		arch_tlbbatch_clear(&ubc->arch);
+   932		ubc->flush_required = false;
+   933		ubc->writable = false;
+   934	}
+   935	#else
+   936	static inline void try_to_unmap_flush(void)
+   937	{
+   938	}
+   939	static inline void try_to_unmap_flush_dirty(void)
+   940	{
+   941	}
+   942	static inline void flush_tlb_batched_pending(struct mm_struct *mm)
+   943	{
+   944	}
+   945	static inline void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src)
+   946	{
+   947	}
+   948	static inline void init_tlb_ubc(struct tlbflush_unmap_batch *ubc)
+   949	{
+   950	}
+   951	#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+   952	
 
 -- 
-2.42.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
