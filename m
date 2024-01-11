@@ -1,44 +1,44 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CB414F89
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 10:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A081640A
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 10:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="L2HIqfuN"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-556c3f0d6c5so6118074a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:53:22 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="paGTC+yw"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-557ad92cabbso4699057a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:53:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1704970400; x=1705575200; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1704970402; x=1705575202; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mmQnQzOW0HVCglZmRdERbSkiK/7LfpA/GFNr/QR6hMQ=;
-        b=L2HIqfuNWDEVZ1mwsmlPx1OYxsS6jJ92OUxtq4EVt7JaviA+D7RDKuunlAj23KUHz8
-         ajmpAe080VaBLvB9QAOBy8uQM7Tml26asp3li0RrglxP+Sv9qeRXr8PDmJqeJ0VQ9DVk
-         Ua6l63rAGv8sDw8VoRQzFBraTHa724p11DOB8=
+        bh=/mPDNXnb7QOonc0RYCjpM23Kv+HuP4dW7ug+KwP2qeg=;
+        b=paGTC+ywLxbI/k1otTM+/mQbSKafbtw+ZJCGQmghQff+QHAaA4lFsoYu80o/h9nItf
+         qv7Vjl7SnT/sBFuMeTLodTbmZ9jRDMnc6Dbq1hAtxv0GW/MEtqfaNz+SXpewUJFb6YuJ
+         Vs/rQb8RcGLdZK63NBQyhw4+WTikC6rBZh/t0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704970400; x=1705575200;
+        d=1e100.net; s=20230601; t=1704970402; x=1705575202;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mmQnQzOW0HVCglZmRdERbSkiK/7LfpA/GFNr/QR6hMQ=;
-        b=RqBbetMP9gSKPE1MkG+NrMCOCRZBNEiB49zldh3CeIzbNsQtFhzbQU/EEHJJxDu4ey
-         XumrveAZ2XQyjn9KtxzjWunEDPpuM4jqzB+p22UN1blUbMvd4s2vq02xA6+oTD3KuBA/
-         /RSzT2IxjvLT7Xg/8PqMy0w9vzBFRjr5JfTP2SxRKXoU0BzO6V6YpaYCAsFcfAR+Lqqm
-         vvlU5rEgzguk2b3fRyWjNpDsWEcDTEKQGvCFNszzTicesX1YheJ5aEHkm5dUnXFb2hHS
-         IS0MOSC/p/90GniCCHgFgiw/Xm4DcpTHb3RVyf53Pb+haJmlz+jsc0CK1wINIJ4PyQ79
-         ojCw==
-X-Gm-Message-State: AOJu0YxzQck8iEfvaOOoVPqgU+f9d46ZLYirnIOllwNDAK+E5zJiniNO
-	h0an8tMs7yDWQ8WBdEt7tT0TMR5oBo4vu3C8WOL+aexNTw4=
-X-Google-Smtp-Source: AGHT+IHbxxIKk3NteWkU//Ar74s0SpE82pEJRJtg2JrYTPT5Y4V1l3Xs8p5WIrDx1N9DEZhJchqThg==
-X-Received: by 2002:aa7:c1c6:0:b0:558:afee:9fa5 with SMTP id d6-20020aa7c1c6000000b00558afee9fa5mr41821edp.84.1704970400837;
-        Thu, 11 Jan 2024 02:53:20 -0800 (PST)
+        bh=/mPDNXnb7QOonc0RYCjpM23Kv+HuP4dW7ug+KwP2qeg=;
+        b=w/k2d9a/NAmlaZmPHySB00zIlPduuR+mWkGU8M1ghIPsBWLVHvwxNWbJYiozoJ0Kgc
+         LUNs0P4xM1jjmaLeKDngwrTsyUVD2iRHuPqWsRN8Bqyx3xLtCnL3wzeHYsMD4l5/zlkC
+         N7YWaB0rJrcJp2kyLoeC7kV7w/sA8lo0BtZoCTDIsgz78EXbogmfOehMLyzfM5JTftAn
+         60nYTLb3r+2sVWcqYBX1xas8iJPqB6MuqPe2v4PsamIwmzfridJqQ0mkYLgXQbG0sr36
+         iVXkxp0juK+V0yd96Sra7bRMhhOR1hIsXrjmBK5RMGA2pjpxR9yN2hAUa1GXdjplWUjG
+         zCvg==
+X-Gm-Message-State: AOJu0YwQ2zCGHdhnlAfazGWEIKIhv6ovURp01OC/YaZz9aO7BM2cuLwj
+	pvnc+gTx8Z6vEB54YT8PUs5FI2dgKxla3CKL3mG4mrCpISQ=
+X-Google-Smtp-Source: AGHT+IGIWbCv4PnMgXnRbbJHR/lEed57VjJ6cuH+5z5J9Itaar6fGZvHeEt5Bz1kJQZaj1IdPk9KLQ==
+X-Received: by 2002:a05:6402:22e5:b0:553:34b1:1130 with SMTP id dn5-20020a05640222e500b0055334b11130mr264317edb.58.1704970402103;
+        Thu, 11 Jan 2024 02:53:22 -0800 (PST)
 Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it ([95.236.91.90])
-        by smtp.gmail.com with ESMTPSA id eo9-20020a056402530900b00557b0f8d906sm459774edb.70.2024.01.11.02.53.19
+        by smtp.gmail.com with ESMTPSA id eo9-20020a056402530900b00557b0f8d906sm459774edb.70.2024.01.11.02.53.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 02:53:20 -0800 (PST)
+        Thu, 11 Jan 2024 02:53:21 -0800 (PST)
 From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-amarula@amarulasolutions.com,
@@ -52,9 +52,9 @@ Cc: linux-amarula@amarulasolutions.com,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-stm32@st-md-mailman.stormreply.com
-Subject: [RESEND PATCH v6 2/5] ARM: dts: stm32: add DSI support on stm32f769
-Date: Thu, 11 Jan 2024 11:53:08 +0100
-Message-ID: <20240111105314.8186-3-dario.binacchi@amarulasolutions.com>
+Subject: [RESEND PATCH v6 3/5] ARM: dts: stm32: rename mmc_vcard to vcc-3v3 on stm32f769-disco
+Date: Thu, 11 Jan 2024 11:53:09 +0100
+Message-ID: <20240111105314.8186-4-dario.binacchi@amarulasolutions.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240111105314.8186-1-dario.binacchi@amarulasolutions.com>
 References: <20240111105314.8186-1-dario.binacchi@amarulasolutions.com>
@@ -66,46 +66,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for MIPI DSI Host controller. Since MIPI DSI is not
-available on stm32f746, the patch adds the "stm32f769.dtsi" file
-containing the dsi node inside.
+In the schematics of document UM2033, the power supply for the micro SD
+card is the same 3v3 voltage that is used to power other devices on the
+board. By generalizing the name of the voltage regulator, it can be
+referenced by other nodes in the device tree without creating
+misunderstandings.
+
+This patch is preparatory for future developments.
 
 Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 ---
 
 (no changes since v1)
 
- arch/arm/boot/dts/st/stm32f769.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 arch/arm/boot/dts/st/stm32f769.dtsi
+ arch/arm/boot/dts/st/stm32f769-disco.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/st/stm32f769.dtsi b/arch/arm/boot/dts/st/stm32f769.dtsi
-new file mode 100644
-index 000000000000..e09184f7079c
---- /dev/null
-+++ b/arch/arm/boot/dts/st/stm32f769.dtsi
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2023 Dario Binacchi <dario.binacchi@amarulasolutions.com>
-+ */
-+
-+#include "stm32f746.dtsi"
-+
-+/ {
-+	soc {
-+		dsi: dsi@40016c00 {
-+			compatible = "st,stm32-dsi";
-+			reg = <0x40016c00 0x800>;
-+			interrupts = <98>;
-+			clocks = <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
-+			clock-names = "pclk", "ref";
-+			resets = <&rcc STM32F7_APB2_RESET(DSI)>;
-+			reset-names = "apb";
-+			status = "disabled";
-+		};
-+	};
-+};
+diff --git a/arch/arm/boot/dts/st/stm32f769-disco.dts b/arch/arm/boot/dts/st/stm32f769-disco.dts
+index 5d12ae25b327..8632bd866272 100644
+--- a/arch/arm/boot/dts/st/stm32f769-disco.dts
++++ b/arch/arm/boot/dts/st/stm32f769-disco.dts
+@@ -92,9 +92,9 @@ usbotg_hs_phy: usb-phy {
+ 		clock-names = "main_clk";
+ 	};
+ 
+-	mmc_vcard: mmc_vcard {
++	vcc_3v3: vcc_3v3 {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "mmc_vcard";
++		regulator-name = "vcc_3v3";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+@@ -128,7 +128,7 @@ &rtc {
+ 
+ &sdio2 {
+ 	status = "okay";
+-	vmmc-supply = <&mmc_vcard>;
++	vmmc-supply = <&vcc_3v3>;
+ 	cd-gpios = <&gpioi 15 GPIO_ACTIVE_LOW>;
+ 	broken-cd;
+ 	pinctrl-names = "default", "opendrain", "sleep";
 -- 
 2.43.0
 
