@@ -1,140 +1,131 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32C014F97
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B10B14F9D
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 11:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q3jlpGM+"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2a17f3217aso585256166b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 03:28:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="axVFp5FU"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bbbdf0b859so5550114b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 03:29:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704972502; x=1705577302; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1r4p8EZizALAha2W0BpFV/ugv3SVBdRsaxVwbhdyofU=;
-        b=q3jlpGM+7f3viLraFKsP1bjc0pynslWLdE4jNaANsFv+gTTURDv60tiLh/q9YzmJS3
-         BG7+TYcANaX/Y0NC3Z76RnWCwph9UOPHR7E62l2duBj2YPytZZA7Gn9gLZQS4tVt2vIl
-         XKSMKELuF5ELtQUAKuE+UAijSzyI6wR1cWAmpYDk9+NkkEW3Q6XxVjQGHcco/k/AnNOo
-         jUMF/YUwFwe8xaTNJvaBGdkhJrcWjGVAl9rKK1nJlBI+IEQ9VPR82oJ1ougVyquunh/z
-         xMG1hfKWntqCT4YcBsNsWcFV2lOXkjeNf0FwX4mOl/lRzV399s/OD2sYwrtnnGyxVRGH
-         vShw==
+        d=ventanamicro.com; s=google; t=1704972596; x=1705577396; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L1/9OBgUnbI4qV6pkGpalRcx7MgtwXi8Ekel0WOHXQs=;
+        b=axVFp5FU03cyM3XxUlRW4A1+Af30SmYit08s6H2hKmmih4wOrjWxnvCQAZgbw3mWqE
+         YR9trjFZ40lEehQQ3oSe9esID+j8cTq6MGpb5ZmpYIrA5JByUBFhKdwAs0kigL1lyMuW
+         jy1h1DANW1eRGABdrMUg1Sj/51M2nkkrAG75ZtiSHcbFmS1/d5hypp9NDGnTkgM9rZKZ
+         yaxRHkUlAONKPckPvlCEL6Sc+m67S+cGa19UlNH4t1iaKjlq1w7emyWqZTWnVS5Lrplj
+         TNqEXj9Q5eO+KUM+2YC53wXpGDkwG05eLrt7Fx3SpAi4sFBvglhFVLJChJbrL+LIo0Kz
+         ocdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704972502; x=1705577302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1r4p8EZizALAha2W0BpFV/ugv3SVBdRsaxVwbhdyofU=;
-        b=n17XHV8RSZsGm4umB/41Bm0eU7Rba7agVkG1uBYwOWqjvxSAR5v26140nHoB12UWaJ
-         046aQ6XWGnMhhWZm2i/W6pwGzl90d0re71lvbLopcGeMC5wj4cZEcF5DqCPIpYADNyE/
-         Tlsyl8UrjOO23A8wIv9+3diUeDe4Hx9RN2FZaaEE9rPyC1z9PldcvDP3nUQCGwc3rYIS
-         viNVrMRlHX3YxReNtaCZ+hGjHAOFSxg6sQ+2yP2MkqGb0kv7PdTmlSZIhHVc8MYDmX4f
-         3hNs0nIAx02cdbv+F4XGBsjevSoSN5l4E/TSKEpiKSFnTGb0LgOjY9HvFVGiwllYqYyM
-         gTbg==
-X-Gm-Message-State: AOJu0Ywq5CYg87cQa/lt4udib8HlYTI70sW2cJ0s8Fjz/V990OWDpKZt
-	r15b3xbg60J1exSSwOJlZCxx0zg5P1XCJTN6YqKObymXrb2g
-X-Google-Smtp-Source: AGHT+IEufoHkvLSX8vgq4YGEOXKsTE0opFs0mnugITz8vjU8xo4oJO5CX6Yg+X0XoMd4DWqJkwdFdlvpvUFOV4j5AXg=
-X-Received: by 2002:a17:906:2496:b0:a2c:4a17:1d66 with SMTP id
- e22-20020a170906249600b00a2c4a171d66mr425894ejb.47.1704972501963; Thu, 11 Jan
- 2024 03:28:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704972596; x=1705577396;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L1/9OBgUnbI4qV6pkGpalRcx7MgtwXi8Ekel0WOHXQs=;
+        b=YdM95pLap1hjk/3WiyxLaja0eZbOpxiOiqJtLJS+Z3aThGOD9EgskZ+syiO31mwzIJ
+         5+hVnKSX6d6tFdtP/DkVwujRj3WXBTarribYszTnDb2EwMn8+6drjFYmrG4AjQHojFmQ
+         RcGONznva3cdJ32lufeGrJMPF6lR1haZKNUSAcZDRI2qp5TrPPmRLGgDmDU2wOMvLYQz
+         S8xvSKDpsMeG5NbFn9TdB96kK+NrAF6bz00+y9QfM0idod7GgeKwxbIKq1xTfN9K7Bo2
+         uiXqAI+GEf1mMK5n48HJtVHncBlNYA7tMl/U0X5oKPMrxUtiay1kb7wRkQmopRUGSSHN
+         KjYw==
+X-Gm-Message-State: AOJu0Yw2oLRmqao+xGzuTHoj67kzVqdXY0EZKiMGYseoFryg4zVZgwny
+	sWqtIF3skKXvbEcaR7PB8zxu4N7F2QefGQ==
+X-Google-Smtp-Source: AGHT+IFCKZdtwrnCuFg7TdR7AtliYvHu3SQxC/Xbm2j8wl2ATuGO1M0kBIaUI9ISibSbZ6dp+SrhvA==
+X-Received: by 2002:a05:6358:d39d:b0:175:9bfc:1b34 with SMTP id mp29-20020a056358d39d00b001759bfc1b34mr1332658rwb.22.1704972596331;
+        Thu, 11 Jan 2024 03:29:56 -0800 (PST)
+Received: from sunil-laptop ([106.51.188.200])
+        by smtp.gmail.com with ESMTPSA id nb1-20020a17090b35c100b0028d804ef772sm3504720pjb.25.2024.01.11.03.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 03:29:55 -0800 (PST)
+Date: Thu, 11 Jan 2024 16:59:47 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Anup Patel <anup@brainfault.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH -next 1/2] ACPI: Enable ACPI_PROCESSOR for RISC-V
+Message-ID: <ZZ/RK49zoFtSt4Ed@sunil-laptop>
+References: <20240111093058.121838-1-sunilvl@ventanamicro.com>
+ <20240111093058.121838-2-sunilvl@ventanamicro.com>
+ <20240111-bb411d2dd39eb859dd049fa0@orel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231024142706.195517-1-hezhongkun.hzk@bytedance.com>
- <CAKEwX=OiNB+pPhb-3Tf7O=F7psKE3EOpwmbPSeLSOyuHpj3i+Q@mail.gmail.com>
- <CACSyD1P6HmH9tSvONnNxYv8P+am_hH2dK3UJQd9_+o6EWkPsXA@mail.gmail.com>
- <CAKEwX=PC3C-PrWAH3XiYGyR4ujqBJQBBX6uRa2jXKCy9VMyRCQ@mail.gmail.com>
- <CACSyD1O7t0+BXUujJ81RAdEys3MUnmpu0sRADLazoyvayx5DLA@mail.gmail.com>
- <CAKEwX=P5AC+ubnunnZr5vMiC6fFU+E_E7jg_FZztWwZRYSxTWQ@mail.gmail.com>
- <CACSyD1Nnc_w3epbt6+EMt7a-4pAzgW1hbE=G5Fy5Tc5R5+uxKw@mail.gmail.com>
- <CAKEwX=NuXR9Ot1eRFsp9n-3Tq9yhjD9up+jyvXeOzQ4xK9kEPA@mail.gmail.com>
- <CAKEwX=Oj2dR6a4-DeccvcVdJ-J7b=83uCWQAf5u7U0sySudnkw@mail.gmail.com>
- <CAJD7tkb2oda=4f0s8w8xn+t_TM1b2Q_otbb86VPQ9R1m2uqDTA@mail.gmail.com>
- <CACSyD1ODCikYLDzO4LkQeDzB4sqDWCULwCdehw9inP-qyw3_Jg@mail.gmail.com>
- <CAJD7tkY=zmGiPoWNjVaVeU+NPxV2t48J5-CxEP9=nBK8nAh0XA@mail.gmail.com>
- <CAKEwX=Na3dg+KZwvtQi-Nj79Am-1tttDw50_qStkobmYGUC6NA@mail.gmail.com> <CACSyD1Pp8gkxwTXZuinm6wiZs0e5U2B5oND4rj29dzmRApFjhQ@mail.gmail.com>
-In-Reply-To: <CACSyD1Pp8gkxwTXZuinm6wiZs0e5U2B5oND4rj29dzmRApFjhQ@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 11 Jan 2024 03:27:44 -0800
-Message-ID: <CAJD7tkYmOCCR7iipEFF69woXQxOr7byj+GuafGQVBL=UCHUK5A@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] mm: zswap: fix the lack of page lru flag
- in zswap_writeback_entry
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: Nhat Pham <nphamcs@gmail.com>, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	sjenning@redhat.com, ddstreet@ieee.org, vitaly.wool@konsulko.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Chris Li <chrisl@kernel.org>, Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111-bb411d2dd39eb859dd049fa0@orel>
 
-On Wed, Jan 10, 2024 at 7:49=E2=80=AFPM Zhongkun He
-<hezhongkun.hzk@bytedance.com> wrote:
->
+On Thu, Jan 11, 2024 at 11:00:12AM +0100, Andrew Jones wrote:
+> On Thu, Jan 11, 2024 at 03:00:57PM +0530, Sunil V L wrote:
+> > The ACPI processor driver is not currently enabled for RISC-V.
+> > This is required to enable CPU related functionalities like
+> > LPI and CPPC. Hence, enable ACPI_PROCESSOR for RISC-V.
+> > 
+> > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> > ---
+> >  drivers/acpi/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> > index f819e760ff19..9a920752171c 100644
+> > --- a/drivers/acpi/Kconfig
+> > +++ b/drivers/acpi/Kconfig
+> > @@ -282,7 +282,7 @@ config ACPI_CPPC_LIB
+> >  
+> >  config ACPI_PROCESSOR
+> >  	tristate "Processor"
+> > -	depends on X86 || ARM64 || LOONGARCH
+> > +	depends on X86 || ARM64 || LOONGARCH || RISCV
+> >  	select ACPI_PROCESSOR_IDLE
+> >  	select ACPI_CPU_FREQ_PSS if X86 || LOONGARCH
+> >  	select THERMAL
+> > -- 
+> > 2.34.1
 > >
-> > This sounds dangerous. This is going to introduce a rather large
-> > unexpected side effect - we're changing the readahead behavior in a
-> > seemingly small zswap optimization. In fact, I'd argue that if we do
-> > this, the readahead behavior change will be the "main effect", and the
-> > zswap-side change would be a "happy consequence". We should run a lot
-> > of benchmarking and document the change extensively if we pursue this
-> > route.
-> >
->
-> I agree with the unexpected side effect,  and here I need
-> to clarify the original intention of this patch.Please see the memory
-> offloading steps below.
->
->
-> memory      zswap(reclaim)          memory+swap (writeback)
-> 1G                 0.5G                        1G(tmp memory) + 1G=EF=BC=
-=88swap=EF=BC=89
->
-> If the decompressed memory cannot be released in time,
-> zswap's writeback has great side effects(mostly clod pages).
-> On the one hand, the memory space has not been reduced,
-> but has increased (from 0.5G->1G).
-> At the same time, it is not put the pages to the tail of the lru.
-> When the memory is insufficient, other pages will be squeezed out
-> and released early.
-> With this patch=EF=BC=8C we can put the tmp pages to the tail and reclaim=
- it
-> in time when the memory is insufficient or actively reclaimed.
-> So I think this patch makes sense and hope it can be fixed with a
-> suitable approaches.
->
-> >
-> > Unless some page flag/readahead expert can confirm that the first
-> > option is safe, my vote is on this option. I mean, it's fairly minimal
-> > codewise, no? Just a bunch of plumbing. We can also keep the other
-> > call sites intact if we just rename the old versions - something along
-> > the line of:
-> >
-> > __read_swap_cache_async_head(..., bool add_to_lru_head)
-> > {
-> > ...
-> > if (add_to_lru_head)
-> >   folio_add_lru(folio)
-> > else
-> >   folio_add_lru_tail(folio);
-> > }
-> >
-> > __read_swap_cache_async(...)
-> > {
-> >    return __read_swap_cache_async_tail(..., true);
-> > }
-> >
-> > A bit boilerplate? Sure. But this seems safer, and I doubt it's *that*
-> > much more work.
-> >
->
-> Yes=EF=BC=8C agree. I will try it again.
+> 
+> Hi Sunil,
+> 
+> Typically we'll want the Kconfig changes to come at the end of a series,
+> or squashed into the patch that adds support for it, otherwise there's
+> risk of build breakage during bisection. In this case, we're safe because
+> the two new functions (I looked ahead) have __weak versions when they're
+> not present.
+> 
+Sure. Let me swap the order of the patches.
 
-I agree with Nhat here. Unless someone with enough readahead/page
-flags knowledge says putting PG_readahead pages at the tail of the LRU
-is okay (doubtful), I think we should opt for introducing a
-folio_add_lru_tail() as I initially suggested.
+> Also, interestingly, it looks like this ancient line
+> 
+>  obj-$(CONFIG_ACPI_PROCESSOR)    += processor.o
+> 
+> in drivers/acpi/Makefile should be removed, since there's no
+> drivers/acpi/processor.c file. I guess the make process silently
+> filters object files which don't have corresponding source files?
+> Maybe we should write a Makefile analyzer to see what other lines
+> can be removed...
+>
+Interesting. 
+
+Hi Rafael, any thoughts?
+ 
+> Anyway, for this patch, which I'd prefer to be swapped in order with
+> the other patch, or just squashed into the other patch,
+>
+I prefer to keep as 2 separate patches. I will swap the order.
+
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> 
+Thanks!
+Sunil 
