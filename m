@@ -1,129 +1,138 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FF211C8C;
-	Thu, 11 Jan 2024 08:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC0C10940
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQpE2h0o"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e61ff3e37so422645e9.1;
-        Thu, 11 Jan 2024 00:45:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704962757; x=1705567557; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XnXGwZ90m0aaWtoshE1c+60rdXXd9xE4R+DPUoXirhg=;
-        b=bQpE2h0oOho6RSJJGBJPdo04CCZe45nqNgK8oN+UczucLqK8AJ07HFKt2+IKipXx8R
-         vDX0rzjXzRQXq2bHwacUt2Y7aYCbdKeB5cgTTpYF0K8GwgByAwoCVpYwfDVtxeK0Wbsv
-         rvM92oUnh+A8g6QBUHW8HCgHO0sYGWBBO774qlkBZWY0qdhSspZC5AwndM0cSOymRYff
-         vPUh1sR8iDaeAksE5gpQYbN/3SMpUo5NG/Fs2OjHFRW73F84/9Vgw0Z9+U5WNl8+LDla
-         9wB28AFQ/IJRqgUtND2xihtP4Ozjkbt1Exp3fdsdOznpndmRYCLkgsZCV+aVHf/TLVPn
-         dmSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704962757; x=1705567557;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XnXGwZ90m0aaWtoshE1c+60rdXXd9xE4R+DPUoXirhg=;
-        b=h3qTHl2UCyp3U9edeRUPcdSKPB4jFAytMO8F1RDKU3ySqJh5bPR5hnQsjyZo1c9I4D
-         UGplPy76d5+58iCP8L691AC1INO/CwX7zP5wE7GEKhOdm+SQqkzdyVRg1W5QZdRCl6tE
-         JDxxKKu5EeGa4IAkCz+SlNFhT5koRVD7nOBSDCb9raGkKiX7GSw68C//u6P2ZH3LKMvb
-         9Qxqxo80euySgGEGobjneTFOH0OZise/CnPjca3VOaSLYCUTbaHTaVQDw9GStwO9f9cc
-         FJgn4n1qzibANb/CivgOXwW2RF1kbXVFaufzQKiao50re5Rd/OBgs9fbK68WHupoP7fu
-         NGJA==
-X-Gm-Message-State: AOJu0YxJxl3OYedl2qC/AGkyrUgmRCkk7ZbKN2+5rzsaPBh2IdYe0M7A
-	Py/jChAT+FjpmEpMSNSFhjY=
-X-Google-Smtp-Source: AGHT+IHWay0LKAaf6f5AsLsJfQGOlRBcT0TnnnSJL09Q2WvM12Zsgwn+NZHu8+7z/vzkPhYyU0+OlQ==
-X-Received: by 2002:a7b:c414:0:b0:40e:5be9:2ac3 with SMTP id k20-20020a7bc414000000b0040e5be92ac3mr207183wmi.137.1704962756651;
-        Thu, 11 Jan 2024 00:45:56 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
-        by smtp.gmail.com with ESMTPSA id l22-20020a05600c4f1600b0040d6b91efd9sm4930135wmq.44.2024.01.11.00.45.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 00:45:56 -0800 (PST)
-Message-ID: <0c0b1954825dc174cab48060e96ddadadc18aefd.camel@gmail.com>
-Subject: Re: [PATCH 01/13] spi: add core support for controllers with
- offload capabilities
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, 
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>,  Michael Hennerich <michael.hennerich@analog.com>,
- Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Frank Rowand
- <frowand.list@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan
- Corbet <corbet@lwn.net>,  linux-spi@vger.kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Thu, 11 Jan 2024 09:49:08 +0100
-In-Reply-To: <20240109-axi-spi-engine-series-3-v1-1-e42c6a986580@baylibre.com>
-References: 
-	<20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
-	 <20240109-axi-spi-engine-series-3-v1-1-e42c6a986580@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="e4m9cSu+";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="lW37eauM"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 237BB1FB8D;
+	Thu, 11 Jan 2024 08:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1704962678; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IdRbXT6KWpUzahecRbqmMLz9QYgtWWSOiBuKfzahGm4=;
+	b=e4m9cSu+JtjkKXBsa/A8ayGBh/KZsh+30cjHUIaGPv4RGg/99sP8YbSWDzHTA9ZUScXEdf
+	S4I2cmqrF9SCcF/3h4GiNkaBFvUJeArqaQMICR+GO08pQAvTSLMKbm2rUt1FxWV3AnzAWh
+	nk2iN8sT6cMWx/v18I5a5Fn7R3Zrgd8=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1704962754; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IdRbXT6KWpUzahecRbqmMLz9QYgtWWSOiBuKfzahGm4=;
+	b=lW37eauMFxGqcxJ5l1Qy3X5TVFa5XvZzxj7ajhxTiqQa3hJHQeW+2LkT/aXoJQ3skpEKJ7
+	pJCu8CDZx6QDMag1fR0KR7ZP+JZDxAuZID7dwdqJJX9ySUuOK6aYmzjNTsnFjQ3tahEETS
+	Wo7fcYNDFemMdH5BjxKSQ0k91iX5qps=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 413C513635;
+	Thu, 11 Jan 2024 08:44:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id afVYDHaqn2VFbwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Thu, 11 Jan 2024 08:44:38 +0000
+Date: Thu, 11 Jan 2024 09:46:08 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Jianfeng Wang <jianfeng.w.wang@oracle.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm, oom: Add lru_add_drain() in __oom_reap_task_mm()
+Message-ID: <ZZ-q0PZ-XCDwA4oG@tiehlicka>
+References: <20240109091511.8299-1-jianfeng.w.wang@oracle.com>
+ <ZZ5Zb3FYqY8FZgB3@tiehlicka>
+ <1d866f1b-94b3-43ec-8f4c-2de31b82d3d1@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d866f1b-94b3-43ec-8f4c-2de31b82d3d1@oracle.com>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [-2.60 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.60
 
-Hi David,
+On Wed 10-01-24 11:02:03, Jianfeng Wang wrote:
+> On 1/10/24 12:46 AM, Michal Hocko wrote:
+> > On Tue 09-01-24 01:15:11, Jianfeng Wang wrote:
+> >> The oom_reaper tries to reclaim additional memory owned by the oom
+> >> victim. In __oom_reap_task_mm(), it uses mmu_gather for batched page
+> >> free. After oom_reaper was added, mmu_gather feature introduced
+> >> CONFIG_MMU_GATHER_NO_GATHER (in 'commit 952a31c9e6fa ("asm-generic/tlb:
+> >> Introduce CONFIG_HAVE_MMU_GATHER_NO_GATHER=y")', an option to skip batched
+> >> page free. If set, tlb_batch_pages_flush(), which is responsible for
+> >> calling lru_add_drain(), is skipped during tlb_finish_mmu(). Without it,
+> >> pages could still be held by per-cpu fbatches rather than be freed.
+> >>
+> >> This fix adds lru_add_drain() prior to mmu_gather. This makes the code
+> >> consistent with other cases where mmu_gather is used for freeing pages.
+> > 
+> > Does this fix any actual problem or is this pure code consistency thing?
+> > I am asking because it doesn't make much sense to me TBH, LRU cache
+> > draining is usually important when we want to ensure that cached pages
+> > are put to LRU to be dealt with because otherwise the MM code wouldn't
+> > be able to deal with them. OOM reaper doesn't necessarily run on the
+> > same CPU as the oom victim so draining on a local CPU doesn't
+> > necessarily do anything for the victim's pages.
+> > 
+> > While this patch is not harmful I really do not see much point in adding
+> > the local draining here. Could you clarify please?
+> > 
+> It targets the case described in the patch's commit message: oom_killer
+> thinks that it 'reclaims' pages while pages are still held by per-cpu
+> fbatches with a ref count.
+> 
+> I admit that pages may sit on a different core(s). Given that
+> doing remote calls to all CPUs with lru_add_drain_all() is expensive,
+> this line of code can be helpful if it happens to give back a few pages
+> to the system right away without the overhead, especially when oom is
+> involved. Plus, it also makes the code consistent with other places
+> using mmu_gather feature to free pages in batch.
 
+I would argue that consistency the biggest problem of this patch. It
+tries to follow a pattern that is just not really correct. First it
+operates on a random CPU from the oom victim perspective and second it
+doesn't really block any unmapping operation and that is the main
+purpose of the reaper. Sure it frees a lot of unmapped memory but if
+there are couple of pages that cannot be freed imeediately because they
+are sitting on a per-cpu LRU caches then this is not a deal breaker. As
+you have noted those pages might be sitting on any per-cpu cache.
 
-On Wed, 2024-01-10 at 13:49 -0600, David Lechner wrote:
-> This adds a feature for specialized SPI controllers that can record
-> a series of SPI transfers, including tx data, cs assertions, delays,
-> etc. and then play them back using a hardware trigger without CPU
-> intervention.
->=20
-> The intended use case for this is with the AXI SPI Engine to capture
-> data from ADCs at high rates (MSPS) with a stable sample period.
->=20
-> Most of the implementation is controller-specific and will be handled by
-> drivers that implement the offload_ops callbacks. The API follows a
-> prepare/enable pattern that should be familiar to users of the clk
-> subsystem.
->=20
-> Consumers of this API will make calls similar to this:
->=20
-> =C2=A0=C2=A0=C2=A0 /* in probe() */
-> =C2=A0=C2=A0=C2=A0 offload =3D spi_offload_get(spi, 0);
-> =C2=A0=C2=A0=C2=A0 ...
->=20
-On top of what Mark already stated, and as we already discussed offline, I
-personally don't like this provider - consumer interface for the offload. T=
-he
-first thing is that this is taking into account the possibility of having
-multiple offload cores. While the FGPA core was designed with that in mind,=
- we
-don't really have any design using multiple offloads in one spi engine (alw=
-ays
-one). Hence this is all pretty much untested.
+So I do not really see that as a good justification. People will follow
+that pattern even more and spread lru_add_drain to other random places.
 
-If we want to already have this support, my feeling is that we should have =
-a
-simple integer dt property for the peripheral devices (similar to cs). When=
- a
-device is being created/added, the spi core would parse this property and g=
-et
-it's offload index. The point is that this would all be transparent for spi
-devices drivers that would only have to call the SPI API's and the core wou=
-ld
-make sure the right index is passed to the controller.
+Unless you can show any actual runtime effect of this patch then I think
+it shouldn't be merged.
 
-But honestly, IMO, I would just keep things simple for now and assume one c=
-ore
-per engine.
-
-I would probably also prefer to see all the new interfaces part of the
-spi_controller struct directly...
-
-- Nuno S=C3=A1
-
-
+-- 
+Michal Hocko
+SUSE Labs
