@@ -1,112 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6364E15E88;
-	Thu, 11 Jan 2024 13:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8144715E88
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CFEz4Mim"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704978113; x=1736514113;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oCzQBcRIeW5uBmcYUKzKBeMO8BTEAhWkUMNU32e2x1E=;
-  b=CFEz4MimHtdWl5nzujYyPB/UoIkNLBQuqld89fADvFifx6jzG0S3v1B7
-   Q4Vd/VIl4YsYW6HPWweGGucxQoGF9rnQWmpbh4fm3Cm8WQEt6AGzm3PjM
-   ujqgRotS4kSakuAkRlKCYaTg/3iUtDpfZ53c+xDNxUh+jE5qD3CMhwZHP
-   4TWsXd/KMw0K/tnZ+GDueoBHkl+hrBNbKeAXhPt1jzTR8D21qU2TENNFe
-   AP+3QQHILcI0lHsiEFDUOhw5shuBOnQHEtmYGPaUy2CM7Yq+TLtF1rlvn
-   wU4tM3HuruyJ6FirpKoMGB4G6UyBiFR01XNBJupbiZ8FqfwArEpp4Hzxh
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="395982155"
-X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
-   d="scan'208";a="395982155"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 05:01:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="758758981"
-X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
-   d="scan'208";a="758758981"
-Received: from marquiz-s-2.fi.intel.com (HELO [10.237.72.58]) ([10.237.72.58])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jan 2024 05:01:49 -0800
-Message-ID: <ed4db18f-5590-40a6-adbe-53062d0f382b@linux.intel.com>
-Date: Thu, 11 Jan 2024 15:01:48 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e6JEhf0D"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d3ef33e68dso37125185ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 05:04:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704978255; x=1705583055; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJye1HwRZXqiDXVZCClxaEgybA810vZVpEjfXbsfFJs=;
+        b=e6JEhf0DE1R6mJWacHwY1y5ZyhbIVbMeHL3r4HLo/FmxsLISWxZ+y1/u1pj6Ih/O0W
+         ati7Yjy3q8NTDd7cpXRq8Ul3nKhf0EaTxKm/p4gLUKWETOC1b0fGlIxllFBmL6eRKRnI
+         /CSA/sH9eRbl9x3ZBI5P8Mqox0jyXHJEqR3lt7ZzKbeXxxalsAWNS7Xbo1nYAcJDXjDQ
+         xyZJJ64pBsul1ppK6sOP6G+6WgC7plspBET6y3cOHRZcXu7TPyCEi1P3S9PAv/Hb7URM
+         fNdDx3wGRTbAQUSYSjTed77kzuFwXlQHQ588oMqmSTwVVmodOmxHai/LX/G6KfiKg2K7
+         x9Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704978255; x=1705583055;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mJye1HwRZXqiDXVZCClxaEgybA810vZVpEjfXbsfFJs=;
+        b=OgbCF98q4EYtm+Zd2WkE88Rl1MFgg7EPhGx2vqQ1IbjM4glMXAOLEHfOBTCrScDuzs
+         HC/EfGUMC8pD5Fpoug1niS02ZttR4YobBEQGqN+CDTg1BsLbzrKIF0m35l8EfNVj/QV0
+         MmGu7NVJ+36uqDcc2nRMC/xnEqTgapMMAAjBy7ZkEdAGk+csvn7jX3xwvZlVQSv0CMWT
+         yd3TqtQcGWUoE1bTBkdOHDeOiEKgRtgKBnTQdE7IA8Z8cQyPwEkCeC4sjwDnFm4Y39aO
+         2uaSfi72qxGDNQoUQwH8PLOFBIt5ty+nqqNMx1nQ4gdJVoBCQ7MTSkdzf70iwW5euUj+
+         uGjA==
+X-Gm-Message-State: AOJu0Yx+foPjy963ki6LMs2JKRISZcTKDY+3n28cbs2GyIec97bl/PqH
+	NnoykrIChKe9JIZLvKovHXx53he6zttbFMx0iwXP0YP1YL/6wg==
+X-Google-Smtp-Source: AGHT+IEIWU162vz5BVssaLQ0v5ixlNOrYXMwBNBuJPvkNECOBriOK+cjfvlgUUjSWppOSEVExQD4wxH6SdVKIFrJy18=
+X-Received: by 2002:a17:902:c3d1:b0:1d5:6b6c:1add with SMTP id
+ j17-20020a170902c3d100b001d56b6c1addmr1014391plj.28.1704978255603; Thu, 11
+ Jan 2024 05:04:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: i2c-designware: NULL ptr at RIP: 0010:regmap_read+0x12/0x70
-To: Kim Phillips <kim.phillips@amd.com>, "V, Narasimhan"
- <Narasimhan.V@amd.com>, Borislav Petkov <bp@alien8.de>,
- "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
- "Limonciello, Mario" <Mario.Limonciello@amd.com>
-References: <20231229120820.GCZY62tM7z4v2XmOAZ@fat_crate.local>
- <8169d773-f9ec-4092-b036-9e4fd59966c3@linux.intel.com>
- <DM4PR12MB508654DF49FE079D6C283D658961A@DM4PR12MB5086.namprd12.prod.outlook.com>
- <888da30a-c1ed-4fb0-af81-787fd868ce20@linux.intel.com>
- <DM4PR12MB5086DE2882C7C5044697B1C38967A@DM4PR12MB5086.namprd12.prod.outlook.com>
- <adf6c24a-d94b-40e5-b645-0c6b23b2d513@linux.intel.com>
- <DM4PR12MB508652E9A422CF639C2FEEC0896A2@DM4PR12MB5086.namprd12.prod.outlook.com>
- <e059928c-6fab-4ca2-9615-4401ee16fb82@linux.intel.com>
- <27cf56b5-d21b-4906-823f-a9e567fc26e2@amd.com>
-Content-Language: en-US
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-In-Reply-To: <27cf56b5-d21b-4906-823f-a9e567fc26e2@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <ZTz9RpZxfxysYCmt@gmail.com> <ZZwBi/YmnMqm7zrO@gmail.com>
+ <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
+ <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
+ <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com> <ZZ/MY0KEGXotqGHY@gmail.com>
+In-Reply-To: <ZZ/MY0KEGXotqGHY@gmail.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 11 Jan 2024 14:04:04 +0100
+Message-ID: <CAKfTPtCR5U++CF93aUq8i+j9G5nLRvUUbCESX=CwemYu9LKOqQ@mail.gmail.com>
+Subject: Re: [GIT PULL] scheduler fixes
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi
+On Thu, 11 Jan 2024 at 12:09, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+> > On Wed, 10 Jan 2024 at 14:41, Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > >
+> > > It's one of these two:
+> > >
+> > >   f12560779f9d sched/cpufreq: Rework iowait boost
+> > >   9c0b4bb7f630 sched/cpufreq: Rework schedutil governor performance estimation
+> > >
+> > > one more boot to go, then I'll try to revert whichever causes my
+> > > machine to perform horribly much worse.
+> >
+> > I guess it should come as no surprise that the result is
+> >
+> >    9c0b4bb7f6303c9c4e2e34984c46f5a86478f84d is the first bad commit
+> >
+> > but to revert cleanly I will have to revert all of
+> >
+> >       b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency")
+> >       f12560779f9d ("sched/cpufreq: Rework iowait boost")
+> >       9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor
+> > performance estimation")
+> >
+> > This is on a 32-core (64-thread) AMD Ryzen Threadripper 3970X, fwiw.
+> >
+> > I'll keep that revert in my private test-tree for now (so that I have
+> > a working machine again), but I'll move it to my main branch soon
+> > unless somebody has a quick fix for this problem.
+>
+> Thanks a lot for bisecting this, and ack on the revert in any case, these
+> are relatively fresh changes that clearly didn't get enough testing - sorry!
 
-On 1/11/24 00:56, Kim Phillips wrote:
-> Hi,
-> 
-> On 1/9/24 4:11 AM, Jarkko Nikula wrote> On 1/9/24 09:56, V, Narasimhan 
-> wrote:
->>>   * Looks like the issue is with this below commit:
->>>   * i2c: designware: Fix lock probe call order in dw_i2c_plat_probe()
->>>
->> Hmm... This makes me even more confused since your device AMDI0010 
->> should not even use the access semaphore.
->>
->> So linux-next works if you run a commit before it or revert these 
->> three patches? (commit 2f571a725434 ("i2c: designware: Fix lock probe 
->> call order in dw_i2c_plat_probe()") doesn't revert without reverting 
->> two other related commits after it)
->>
->> git show f9b51f600217b38f46ea39d6aa445e594bf3eb30 |patch -p1 -R
->> git show b8034c7d28a988be82efbf4d65faa847334811f7 |patch -p1 -R
->> git show 2f571a72543463ef07dc3ac61e7b703b9ad997f9 |patch -p1 -R
-> 
-> Narasimhan is right, if I check out, build and boot this commit:
-> 
->        2f571a725434 i2c: designware: Fix lock probe call order in 
-> dw_i2c_plat_probe()
-> 
-> I get the same stacktrace on the serial console.
-> 
-> If I try the previous commit (174a0c565cea "efi/loongarch: Directly 
-> position the loaded image file"),
-> the system boots fine.
-> 
-> The same thing happens with the three reversions above:
-> next-20240110 gets the stacktrace, but with the three
-> reversions, it doesn't.
-> 
-Thanks, I just sent a fix reverting those commits.
+b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency") is
+linked with other patches.
+I can provide a clean revert of only :
+f12560779f9d ("sched/cpufreq: Rework iowait boost")
+9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor performance estimation")
 
-> Is your parallel post probe runtime suspending time window
-> theory no longer applicable?  These AMD EPYC systems have a
-> lot more cores than their client equivalents, and AMD power
-> management code has had a lot of improvements lately.
-> 
-It still a mystery to me but I let Andy to figure out it if he wants to 
-during next development cycle :-)
+if the fix that i proposed doesn't work:
+https://lore.kernel.org/all/ZZ+ixagkxRPYyTCE@vingu-book/
+
+>
+> I also made the revert in sched/urgent & added a changelog, which you can
+> pull from:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-2024-01-11
+>
+>    # HEAD: 250ce3c1169743f3575cc5937fccd72380052795 Revert "sched/cpufreq: Rework schedutil governor performance estimation" and dependent commits
+>
+> Revert recent changes to the sched_util logic, to address a bad
+> performance regression that increased kernel build time on Linus's
+> 64-CPU desktop system substantially.
+>
+> Lightly build and boot tested.
+>
+>  Thanks,
+>
+>         Ingo
+>
+> ------------------>
+> Ingo Molnar (1):
+>       Revert "sched/cpufreq: Rework schedutil governor performance estimation" and dependent commits
+>
+>
+>  include/linux/energy_model.h     |  1 +
+>  kernel/sched/core.c              | 90 +++++++++++++++++++++++-----------------
+>  kernel/sched/cpufreq_schedutil.c | 90 ++++++++++++----------------------------
+>  kernel/sched/fair.c              | 22 ++--------
+>  kernel/sched/sched.h             | 84 +++++++++++++++++++++++++++++++++----
+>  5 files changed, 160 insertions(+), 127 deletions(-)
