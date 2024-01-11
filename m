@@ -1,124 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F1D610D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:44:12 +0000 (UTC)
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1EB779E3
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJrCKw9O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F69EC433F1;
-	Thu, 11 Jan 2024 06:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704955452;
-	bh=Yt2x1VIugdYVXsOxoBOVxcIohw/X1vEQrQchbterPrg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LJrCKw9ObJhB5WOPt9fG/KvCfAARHtMVBKRloB6IGXiC2c8QIuZaZqg3vLPBQcmif
-	 l5Oya0vqJMNBwxbp3Aw3+lJUvgKF/Ns1UWShYNEdcBoLlK9s240rn8GpX0m55Axcnj
-	 Negd12cyLVdZ587YXF2EpRJea/TU0uM+mQc263D+QYHwNwMVYO7rz4hupiCXThi7CM
-	 GneEhT6fiFoA6Ke/1hd8cP9R9Ln6by10eQADUy/rIeSacYkKC9YdQslORNGfzDAn6c
-	 ycUFU9kI/svDBz/4S7CKRo0GBOFOgry8oQRnpTUrfxS/BiQ4KnL8QoY67GJuqaAoqe
-	 aRUatm4c8/5cw==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="csxWlf9j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=1gXnhZ66Ygt/sxM3Iu
+	3BuDo8HgYk1gMQ33s6Qoaqb2c=; b=csxWlf9jmSrpm+h/fCPsCUXhUTSDqtgnzw
+	rLZ9VejvOJf8n33gMZfXLiWizcdTGCLzzavnQy8SIFIB4gjm8UN0B1ImDHiheeHY
+	JbR/1lRBtpg15HLWZ1dlgUT1fjc3PnwSk8YID8JuBh3QBhW2Hn0zu42A6WE2SkVP
+	eFWihGNrY=
+Received: from localhost.localdomain (unknown [182.148.14.173])
+	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wD3P9syjp9l+RqiAA--.12958S2;
+	Thu, 11 Jan 2024 14:44:02 +0800 (CST)
+From: chenxuebing <chenxb_99091@126.com>
+To: airlied@gmail.com,
+	tzimmermann@suse.de,
+	daniel@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH] f2fs: compress: fix to cover f2fs_disable_compressed_file() w/ i_sem
-Date: Thu, 11 Jan 2024 14:44:06 +0800
-Message-Id: <20240111064406.2970205-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	chenxuebing <chenxb_99091@126.com>
+Subject: [PATCH] drm: Clean up errors in drm_dp_helper.h
+Date: Thu, 11 Jan 2024 06:44:00 +0000
+Message-Id: <20240111064400.8878-1-chenxb_99091@126.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wD3P9syjp9l+RqiAA--.12958S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKw18JFy7Gr1rZw4rCryfJFb_yoWfAwbE9F
+	18X34DurnrCF1qqr1DAF4Sgr10kFnxZ3y8uF13Ka43AFy2vr1rt39Fvw4DX3W5Ar47XF1q
+	q3Z7tFnavws7KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUZNVJUUUUU==
+X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiGAtixWVLZWcFwAABsc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-- f2fs_disable_compressed_file
-  - check inode_has_data
-					- f2fs_file_mmap
-					- mkwrite
-					 - f2fs_get_block_locked
-					 : update metadata in compressed
-					   inode's disk layout
-  - fi->i_flags &= ~F2FS_COMPR_FL
-  - clear_inode_flag(inode, FI_COMPRESSED_FILE);
+Fix the following errors reported by checkpatch:
 
-we should use i_sem lock to prevent above race case.
+ERROR: space prohibited before open square bracket '['
 
-Meanwhile, this patch adds i_size check to restrict compress inode
-conversion condition.
-
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: chenxuebing <chenxb_99091@126.com>
 ---
- fs/f2fs/f2fs.h | 18 ++++++++++++++++--
- fs/f2fs/file.c |  5 ++---
- 2 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/display/drm_dp_helper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 74729db0b381..e2e0ca45f881 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -4406,19 +4406,33 @@ static inline int set_compress_context(struct inode *inode)
- #endif
+diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
+index b1ca3a1100da..2704bf703040 100644
+--- a/drivers/gpu/drm/display/drm_dp_helper.c
++++ b/drivers/gpu/drm/display/drm_dp_helper.c
+@@ -2133,7 +2133,7 @@ void drm_dp_aux_unregister(struct drm_dp_aux *aux)
  }
+ EXPORT_SYMBOL(drm_dp_aux_unregister);
  
-+static inline bool inode_has_data(struct inode *inode)
-+{
-+	return (S_ISREG(inode->i_mode) &&
-+		(F2FS_HAS_BLOCKS(inode) || i_size_read(inode)));
-+}
-+
- static inline bool f2fs_disable_compressed_file(struct inode *inode)
- {
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
+-#define PSR_SETUP_TIME(x) [DP_PSR_SETUP_TIME_ ## x >> DP_PSR_SETUP_TIME_SHIFT] = (x)
++#define PSR_SETUP_TIME(x)[DP_PSR_SETUP_TIME_ ## x >> DP_PSR_SETUP_TIME_SHIFT] = (x)
  
--	if (!f2fs_compressed_file(inode))
-+	f2fs_down_write(&F2FS_I(inode)->i_sem);
-+
-+	if (!f2fs_compressed_file(inode)) {
-+		f2fs_up_write(&F2FS_I(inode)->i_sem);
- 		return true;
--	if (S_ISREG(inode->i_mode) && F2FS_HAS_BLOCKS(inode))
-+	}
-+	if (f2fs_is_mmap_file(inode) || inode_has_data(inode)) {
-+		f2fs_up_write(&F2FS_I(inode)->i_sem);
- 		return false;
-+	}
- 
- 	fi->i_flags &= ~F2FS_COMPR_FL;
- 	stat_dec_compr_inode(inode);
- 	clear_inode_flag(inode, FI_COMPRESSED_FILE);
- 	f2fs_mark_inode_dirty_sync(inode, true);
-+
-+	f2fs_up_write(&F2FS_I(inode)->i_sem);
- 	return true;
- }
- 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 0e4c871d6aed..5e5df234eb92 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1926,8 +1926,7 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
- 
- 			f2fs_down_write(&F2FS_I(inode)->i_sem);
- 			if (!f2fs_may_compress(inode) ||
--					(S_ISREG(inode->i_mode) &&
--					F2FS_HAS_BLOCKS(inode))) {
-+					inode_has_data(inode)) {
- 				f2fs_up_write(&F2FS_I(inode)->i_sem);
- 				return -EINVAL;
- 			}
-@@ -4011,7 +4010,7 @@ static int f2fs_ioc_set_compress_option(struct file *filp, unsigned long arg)
- 		goto out;
- 	}
- 
--	if (F2FS_HAS_BLOCKS(inode)) {
-+	if (inode_has_data(inode)) {
- 		ret = -EFBIG;
- 		goto out;
- 	}
+ /**
+  * drm_dp_psr_setup_time() - PSR setup in time usec
 -- 
-2.40.1
+2.17.1
 
