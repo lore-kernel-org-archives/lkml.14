@@ -1,70 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16995382;
-	Thu, 11 Jan 2024 06:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NGvG5Scy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC21C433F1;
-	Thu, 11 Jan 2024 06:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704955961;
-	bh=xODAJt+RpoPJsO1LiIGKxZkDf5NGLa+gJ+Rp4TBoiSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NGvG5Scy2oHu4RjRhn1DooJi/oby9fU1wUT8C/miebL+QfF1a7sx6/bdVrPlGHAsB
-	 tBhO9Fvb91ySI920IiZ6n2VdGLlROSdvkQZlWzpWSvk9pj8odtmearkVcKkeOS3xSk
-	 z6uZy/1xiehw7QgVXhsfcTKktwA5BACgrXA6NcxE=
-Date: Thu, 11 Jan 2024 07:52:37 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michael Pratt <mcpratt@pm.me>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 RESEND] serial: 8250: Set fifo timeout with
- uart_fifo_timeout()
-Message-ID: <2024011125-stiffness-mutilated-75bb@gregkh>
-References: <20240111002056.28205-1-mcpratt@pm.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892CB63A0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 06e8d5df7d514be686305328458a4511-20240111
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:83a6b7f4-26f0-4521-9e96-b36bb32f8909,IP:15,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:1
+X-CID-INFO: VERSION:1.1.35,REQID:83a6b7f4-26f0-4521-9e96-b36bb32f8909,IP:15,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:1
+X-CID-META: VersionHash:5d391d7,CLOUDID:5fec0b2f-1ab8-4133-9780-81938111c800,B
+	ulkID:240111143903VJUGI1AE,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|45|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: 06e8d5df7d514be686305328458a4511-20240111
+X-User: chentao@kylinos.cn
+Received: from kernel.. [(116.128.244.169)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 630914744; Thu, 11 Jan 2024 14:39:00 +0800
+From: Kunwu Chan <chentao@kylinos.cn>
+To: richard@nod.at,
+	Artem.Bityutskiy@nokia.com
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>,
+	Kunwu Chan <kunwu.chan@hotmail.com>,
+	Richard Weinberger <richard.weinberger@gmail.com>
+Subject: [PATCH v2] ubifs: Remove unreachable code in dbg_check_ltab_lnum
+Date: Thu, 11 Jan 2024 14:36:56 +0800
+Message-Id: <20240111063656.68810-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240111002056.28205-1-mcpratt@pm.me>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 11, 2024 at 12:27:07AM +0000, Michael Pratt wrote:
-> Commit 8f3631f0f6eb ("serial/8250: Use fifo in 8250 console driver")
-> reworked functions for basic 8250 and 16550 type serial devices
-> in order to enable and use the internal FIFO device for buffering,
-> however the default timeout of 10 ms remained, which is proving
-> to be insufficient for low baud rates like 9600, causing data overrun.
-> 
-> Unforunately, that commit was written and accepted just before commit
-> 31f6bd7fad3b ("serial: Store character timing information to uart_port")
-> which introduced the frame_time member of the uart_port struct
-> in order to store the amount of time it takes to send one UART frame
-> relative to the baud rate and other serial port configuration,
-> and commit f9008285bb69 ("serial: Drop timeout from uart_port")
-> which established function uart_fifo_timeout() in order to
-> calculate a reasonable timeout to wait for all frames
-> in the FIFO device to flush before writing data again
-> using the now stored frame_time value and size of the buffer.
-> 
-> Fix this by using the new function to calculate the timeout
-> whenever the buffer is larger than 1 byte (unknown port default).
-> 
-> Tested on a MIPS device (ar934x) at baud rates 625, 9600, 115200.
-> 
-> Signed-off-by: Michael Pratt <mcpratt@pm.me>
-> ---
-> v1 thread: https://lore.kernel.org/linux-serial/20231125063552.517-1-mcpratt@pm.me/
+Because there is no break statement in the dead loop above,it is
+impossible to execute the 'err=0' statement.Delete the code that
+will never execute.
 
-What commit id does this fix?
+Fixes: 6fb324a4b0c3 ("UBIFS: allocate ltab checking buffer on demand")
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+Cc: Kunwu Chan <kunwu.chan@hotmail.com>
+Suggested-by: Richard Weinberger <richard.weinberger@gmail.com>
 
-thanks,
+---
+v2: Remove the initialization of err
+---
+ fs/ubifs/lpt_commit.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-greg k-h
+diff --git a/fs/ubifs/lpt_commit.c b/fs/ubifs/lpt_commit.c
+index c4d079328b92..07351fdce722 100644
+--- a/fs/ubifs/lpt_commit.c
++++ b/fs/ubifs/lpt_commit.c
+@@ -1646,7 +1646,6 @@ static int dbg_check_ltab_lnum(struct ubifs_info *c, int lnum)
+ 		len -= node_len;
+ 	}
+ 
+-	err = 0;
+ out:
+ 	vfree(buf);
+ 	return err;
+-- 
+2.39.2
+
