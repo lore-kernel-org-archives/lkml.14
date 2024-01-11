@@ -1,55 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2049A111C;
-	Thu, 11 Jan 2024 02:24:06 +0000 (UTC)
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A20C256D
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 02:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="po3ZtUl+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9D42AC43601;
-	Thu, 11 Jan 2024 02:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704939846;
-	bh=2Ehi9MvUvYj2i3upmCtopTC6fjPCoweOub1OYoxPCro=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=po3ZtUl+JIJ0hvKQp5GIS2DT4nwiClM3PFSIuzwz/odOr8qCQEPzmr+CxPnOF4MbB
-	 5eOwOdFUPfoV7ZxwwvpWfgi3drpdphHb5hMRCquz4OC5pufG1Ra0y64djBLJ8j9fjk
-	 Bd5VRJjzktlog2PeQGj9kYnKhVLref7i66pAD9HnYzpVrBqUZa8GPAR2TJdJr83Drl
-	 3pBlNQ2iw4edMBDQYbMbqF11iwrHID3mtT7bWtmDu9b7gSwMZs9v9/Nh/TYNSDWxK3
-	 uuHtOV2vLM0uZxFii2e5cCejmf7umwN/1l3+P7OyW+Umlhb1Rga1jYRa65Ry/U8sEG
-	 wgsZ/KjONO59A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8D7C9DFC686;
-	Thu, 11 Jan 2024 02:24:06 +0000 (UTC)
-Subject: Re: [GIT PULL] smb3 client fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAH2r5muCHfBddtoXwKmFZFnQ8+H+PA_gAf8htYEGhN0az6vV8g@mail.gmail.com>
-References: <CAH2r5muCHfBddtoXwKmFZFnQ8+H+PA_gAf8htYEGhN0az6vV8g@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAH2r5muCHfBddtoXwKmFZFnQ8+H+PA_gAf8htYEGhN0az6vV8g@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git tags/v6.8-rc-part1-smb-client
-X-PR-Tracked-Commit-Id: 26ba1bf310f0ed43f249a93d0cf8a93675cd8ae8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 84e9a2d5517bf62edda74f382757aa173b8e45fd
-Message-Id: <170493984657.10151.1402667335311596210.pr-tracker-bot@kernel.org>
-Date: Thu, 11 Jan 2024 02:24:06 +0000
-To: Steve French <smfrench@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="V487I366"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=nbbVvUF/7Gsgkfq6Xu
+	1euEZczf3yX7tnXLat+g/jEbg=; b=V487I3661EHGOrtHEJZmbZzrAKmx1eYtqw
+	bjlRIlNd35Bwg8dtgjQt6rb9z+QAzxA3xoPQdMRNsGglKIjWrlOf3Nxs0/+sITr+
+	9nwhILbhYRLul9cXM8NWSs8DGCTUedXsa93jyOR6aPlnhSOSlo0UtgWQgM+5Bi8Q
+	C6BGBvTzc=
+Received: from localhost.localdomain (unknown [182.148.14.173])
+	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wD331ppUZ9lMjQtAA--.21367S2;
+	Thu, 11 Jan 2024 10:24:41 +0800 (CST)
+From: chenxuebing <chenxb_99091@126.com>
+To: alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	Xinhui.Pan@amd.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	chenxuebing <chenxb_99091@126.com>
+Subject: [PATCH] drm/amdgpu: Clean up errors in jpeg_v2_5.c
+Date: Thu, 11 Jan 2024 02:24:37 +0000
+Message-Id: <20240111022437.6239-1-chenxb_99091@126.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wD331ppUZ9lMjQtAA--.21367S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7urWDWry7JF13Jry3Ary3twb_yoW8WFWUpa
+	93AFy5urs5CFnFv3ZrX3WDZFnYkw13u3W5CrWUJw1fu3W5Jr98X3s7tFy5Z340qFWxCrWI
+	vr48t3y7X3WIvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRijjPUUUUU=
+X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiHAxixWV2zz6PUgAAsI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 10 Jan 2024 16:26:33 -0600:
+Fix the following errors reported by checkpatch:
 
-> git://git.samba.org/sfrench/cifs-2.6.git tags/v6.8-rc-part1-smb-client
+ERROR: space required before the open parenthesis '('
+ERROR: that open brace { should be on the previous line
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/84e9a2d5517bf62edda74f382757aa173b8e45fd
+Signed-off-by: chenxuebing <chenxb_99091@126.com>
+---
+ drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Thank you!
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c b/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
+index e67a337457ed..99cd49ee8ef6 100644
+--- a/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
++++ b/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
+@@ -551,7 +551,7 @@ static int jpeg_v2_5_set_powergating_state(void *handle,
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 	int ret;
+ 
+-	if(state == adev->jpeg.cur_state)
++	if (state == adev->jpeg.cur_state)
+ 		return 0;
+ 
+ 	if (state == AMD_PG_STATE_GATE)
+@@ -559,7 +559,7 @@ static int jpeg_v2_5_set_powergating_state(void *handle,
+ 	else
+ 		ret = jpeg_v2_5_start(adev);
+ 
+-	if(!ret)
++	if (!ret)
+ 		adev->jpeg.cur_state = state;
+ 
+ 	return ret;
+@@ -754,8 +754,7 @@ static void jpeg_v2_5_set_irq_funcs(struct amdgpu_device *adev)
+ 	}
+ }
+ 
+-const struct amdgpu_ip_block_version jpeg_v2_5_ip_block =
+-{
++const struct amdgpu_ip_block_version jpeg_v2_5_ip_block = {
+ 		.type = AMD_IP_BLOCK_TYPE_JPEG,
+ 		.major = 2,
+ 		.minor = 5,
+@@ -763,8 +762,7 @@ const struct amdgpu_ip_block_version jpeg_v2_5_ip_block =
+ 		.funcs = &jpeg_v2_5_ip_funcs,
+ };
+ 
+-const struct amdgpu_ip_block_version jpeg_v2_6_ip_block =
+-{
++const struct amdgpu_ip_block_version jpeg_v2_6_ip_block = {
+ 		.type = AMD_IP_BLOCK_TYPE_JPEG,
+ 		.major = 2,
+ 		.minor = 6,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.17.1
+
