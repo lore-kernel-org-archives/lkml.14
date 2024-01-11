@@ -1,116 +1,80 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CD63C097;
-	Thu, 11 Jan 2024 14:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008633C485
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 14:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPrOWCXO"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2cd1aeb1bf3so50054481fa.1;
-        Thu, 11 Jan 2024 06:21:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QAn4k2aZ"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5e784ce9bb8so43137537b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 06:23:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704982873; x=1705587673; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RwaiGVnOJ4Du9HqZqbeixpFvs9VfyRazD4DEKYzZ3xs=;
-        b=GPrOWCXOOFiNNjB7fIXRrMFTsMzDyCk66/Jw3pxNetsV6FKjhrXVQQEp7JukWZh0Xc
-         synTBokOPNYYd7hnsVkCdcl85+TjIhV9hfe60vDXjT7GrKS40+C4mEhHnuRIOChTZaFR
-         bKC63FTPViXKw63fPi0C84AetInXSo/ysFh8g36Hyl7gZomg7u9eoz+VwDpbAc5n7AHt
-         GZCoNlpswEFC9952mjCdDl6S+XgQAG/gDksrY6lORpTuIVM4W5mob4S1r6GNQhgvq1BD
-         L7+pteHA7IkqkBfLNf3cXQ8UzT9j+M05G4VXneUd1mYfejXPtwXtr22ktOnfmicb2Lok
-         YlTw==
+        d=linaro.org; s=google; t=1704982991; x=1705587791; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=82LMk21rXTaOAuZPn/JpTaNt+mh1ufAOYBK06tgEzW4=;
+        b=QAn4k2aZCIff0P4+zMaNwOlw7j7E6Rc65IA+hRIvMTZ2j95mOWc9rUwI3s2oqvKicC
+         MubvgKeCBhWRkYygHSR1ep560tDm0qkhhGs2vuB4q2xk/zNKrJJ+qhnvFxqiNNymdHU4
+         lXppZKsBCtNm+j72T9nNXeJLQx97bkftmuvwXozOXo5cxC6J7BDiuwO4Qn9qlIsiZTtx
+         p7PM04k++AL3Se8K4JBD0PnXrM2qup7EfI64PAaFhi2S9yVAtd2wNoMv7DAifUjTOACk
+         /224MbRGLp5OaLYK4iYaAza6WGTMLYtF1iLWCXPJVwHd3C0v/+kb/kmN++DwVSAbJnnM
+         8a1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704982873; x=1705587673;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RwaiGVnOJ4Du9HqZqbeixpFvs9VfyRazD4DEKYzZ3xs=;
-        b=WiJdFxAZbQX8rBtKPVXdJFrEw+4ApHIruRGGgiHLLV4ZNrfO3xpGq109JepRejx5Ba
-         3BEEcxlOy+0enKARF4sFvdCuL7Bjhz+OfOFp0ljy2dFJKCp9Zeyc2WT7HYZVmatMC1AJ
-         cLBvZcHQCPMohvP2hXiPTwmQJc5F6UdYI7ORwG7lCcFcnU3xKiAUMojxC3j6ODlhs9NJ
-         yRSw0tn6qEqNnUMeniJ7/c3ziA/sT/KZqRwPTBL0/sh8KXzjjp4fMtjBl5WbO9QG1K+a
-         rGeuvEM0a+cmKVyT8O4+w5ZHYdFZuEZZipvh5tO9wzfFaUSLqVCA4Fx6QEfJRm69lOJ+
-         KzQA==
-X-Gm-Message-State: AOJu0Yy7aqRLnwEObDcVnDerbJcZi39q/l2vDT9Ag6zoxZWLq9gmYrUf
-	5OtDXUTZbubrk0ZFGEN40likGXqtT78gaB29mBs=
-X-Google-Smtp-Source: AGHT+IGASPuQqXfakyAKXe5VY1bHxQL6IYqanbxagT73RkRxA5RqV6D1bl0yQv8fT94XiGX8zMneuUjWQoT9/ZpENCM=
-X-Received: by 2002:a2e:96c7:0:b0:2cd:1aa5:db82 with SMTP id
- d7-20020a2e96c7000000b002cd1aa5db82mr537079ljj.21.1704982872565; Thu, 11 Jan
- 2024 06:21:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704982991; x=1705587791;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=82LMk21rXTaOAuZPn/JpTaNt+mh1ufAOYBK06tgEzW4=;
+        b=ZMrq3CeE8uEkkEth43RvYrfspF9yCkukBcKo0TXTbx+3JfvyFqZfOceS40BN55YPeN
+         dN46zSrkkva64rBmXq45UtHyWisELse9Ok8Ao+0lb7uaRE+gu+wUcL58b0mJfRCG4Ys+
+         wkmnRbmJYe5KQa2Dusc/jRE83EZaCx8fyClz5vXAvCmQjXPAfY20Ev+h5JG6kqPnjpJB
+         XBlU0J/m27k6nwXPHcqrQpuVcWWD8i5IsW6p/0p07iReWfASzigFojQcgnjd18D0mLQ8
+         3tfnm3qAP6lOEt8/aydVaHbj4ElpZqPmIWjUUKroGz/ACHlNytOR5PLqqr3Bd/Hx90C6
+         vjoQ==
+X-Gm-Message-State: AOJu0Yw3knasJT8+MtC4AVdYglq+XZDS2+b+Bp6YyOLicPwqee5rZAYp
+	aNLlnOa1zqqOdX1jWyRhcuXm5Fg5hV0rFeUqNA8sPvR0v0MB1g==
+X-Google-Smtp-Source: AGHT+IHGnWm8idFr5cT2v8uG+5SChhoOvI/illCDzUTIoBYIRefwZu5c17k9Hax/9G3MDNccmYF6fieCFTY6hWzus8k=
+X-Received: by 2002:a0d:df4e:0:b0:5fa:1942:f055 with SMTP id
+ i75-20020a0ddf4e000000b005fa1942f055mr349315ywe.48.1704982990940; Thu, 11 Jan
+ 2024 06:23:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Thu, 11 Jan 2024 08:20:59 -0600
-Message-ID: <CAH2r5mvajaHtTgnfMYd2BQ+w9XoBvN7tcjaG17W-Zb9r0KDG_w@mail.gmail.com>
-Subject: [GIT PULL] ksmbd server fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: CIFS <linux-cifs@vger.kernel.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
+References: <20240111131904.1491496-1-hector.palacios@digi.com> <20240111131904.1491496-2-hector.palacios@digi.com>
+In-Reply-To: <20240111131904.1491496-2-hector.palacios@digi.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 11 Jan 2024 15:22:59 +0100
+Message-ID: <CACRpkdYvXEBPWgFYEgF5kx=JLjSadU38UUUPPNOg+K46ff2kCw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: vf610: add support to DT 'ngpios' property
+To: Hector Palacios <hector.palacios@digi.com>
+Cc: bartosz.golaszewski@linaro.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, haibo.chen@nxp.com, peng.fan@nxp.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please pull the following changes since commit
-0dd3ee31125508cd67f7e7172247f05b7fd1753a:
+On Thu, Jan 11, 2024 at 2:20=E2=80=AFPM Hector Palacios
+<hector.palacios@digi.com> wrote:
 
-  Linux 6.7 (2024-01-07 12:18:38 -0800)
+> Default to hardcoded VF610_GPIO_PER_PORT (32 pins) but allow optional
+> generic 'ngpios' property to be specified from the device tree.
+>
+> Signed-off-by: Hector Palacios <hector.palacios@digi.com>
 
-are available in the Git repository at:
+Looks correct to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-  git://git.samba.org/ksmbd.git tags/6.8-rc-smb-server-fixes
+NB: this only makes sense when you use GPIOs 0...n where n < 31.
 
-for you to fetch changes up to 8fb7b723924cc9306bc161f45496497aec733904:
+We also have the .valid_mask and .init_valid_mask() callback if
+you want to mask out GPIOs in the middle or beginning or so.
 
-  ksmbd: Add missing set_freezable() for freezable kthread (2024-01-09
-20:01:16 -0600)
+Yours,
+Linus Walleij
 
-----------------------------------------------------------------
-11 ksmbd server fixes
-- memory allocation fix
-- Three lease fixes, including important rename fix
-- read only share fix
-- thread freeze fix
-- Three cleanup fixes (two kernel doc related)
-- locking fix in setting EAs
-- packet header validation fix
-
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      ksmbd: Remove usage of the deprecated ida_simple_xx() API
-
-Fedor Pchelkin (1):
-      ksmbd: free ppace array on error in parse_dacl
-
-Kevin Hao (1):
-      ksmbd: Add missing set_freezable() for freezable kthread
-
-Li Nan (1):
-      ksmbd: validate the zero field of packet header
-
-Namjae Jeon (5):
-      ksmbd: set v2 lease version on lease upgrade
-      ksmbd: fix potential circular locking issue in smb2_set_ea()
-      ksmbd: don't increment epoch if current state and request state are same
-      ksmbd: don't allow O_TRUNC open on read-only share
-      ksmbd: send lease break notification on FILE_RENAME_INFORMATION
-
-Randy Dunlap (2):
-      ksmbd: auth: fix most kernel-doc warnings
-      ksmbd: vfs: fix all kernel-doc warnings
-
- fs/smb/server/auth.c           | 14 ++++++++------
- fs/smb/server/connection.c     |  1 +
- fs/smb/server/mgmt/ksmbd_ida.c | 21 ++++++---------------
- fs/smb/server/oplock.c         | 16 +++++++++++-----
- fs/smb/server/smb2pdu.c        | 31 ++++++++++++++-----------------
- fs/smb/server/smb_common.c     |  6 +++++-
- fs/smb/server/smbacl.c         | 11 +++++++----
- fs/smb/server/vfs.c            | 28 ++++++++++++++++++----------
- 8 files changed, 70 insertions(+), 58 deletions(-)
-
--- 
-Thanks,
-
-Steve
+Yours,
+Linus Walleij
