@@ -1,35 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A373417752;
-	Thu, 11 Jan 2024 13:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C58528380;
+	Thu, 11 Jan 2024 13:17:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJKft9gx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32B0AC41606;
-	Thu, 11 Jan 2024 13:17:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NslUajr5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72A99C43601;
+	Thu, 11 Jan 2024 13:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704979069;
-	bh=3DYVdyB50Ylc2Qxe9BWxLuvcVZRrn+c0FMmqUAOKf2E=;
+	s=k20201202; t=1704979073;
+	bh=H6jAa/1qm3fcEGYYR8xZvaYjmIAWKwCFiXdEuAok+aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rJKft9gx0/soSQGbtzOl1/IXYFF3UaKx/HP2arIXg1tyW6u6oPJQoQzsXyTagTBpM
-	 tyPIx6D7sw1iCziXfxTwMCFOaK8YQGIYCJH3px7YFRNTybv25iBykMTmKQPQtfAonC
-	 gbS713Aj3GF6LJV4tlrCNDGDu5h508WFLpA1g7xFlnhpkqP/fILSjdn3btBn9q9jUR
-	 FykDmyJ2Ok/ITeU89OBImmySPjlq/u2bGZkQKEfJroKJppNTNcdlSWlxWzr6KeVL+D
-	 5A8xssE/YwVlsUfhsIV/tEhRgEXbd5252bjno2Y3pxHFbMBqJsN/kOYf4khPC5M8nR
-	 bDtkCkKBjL5nQ==
+	b=NslUajr5yYffmjX0xTHEDPUKXWSepCDuYldFgyWbcAdo6zIEXGqzd6kP91UEd+rSt
+	 sU/gFDHsL7z1EQrA8i25sU4Uznxit8SxZles95BNEwRi/0k7zB+CXrYd6e/x2npnwB
+	 x4nQfId++/chpiz52ky0VzRiP+7I+p/mNp05AeRHY8CGnNGzj1SnZ0vqd4WT1JsyZN
+	 /DJA94SQbwa9YyY+fMZz+GZ70EH3gcUM6+Fjug6lPtPyLQs6YBsHyIt26TN5KD5OXV
+	 Gv8d+PvtHKyODKD0crVLUG7REoYcoqxVp/kxQdUK3VCUICVive9EI+w7Ap4R+ns3kP
+	 apCZ8OYKBPNEA==
 From: Lee Jones <lee@kernel.org>
 To: lee@kernel.org,
 	jejb@linux.ibm.com,
 	martin.petersen@oracle.com
 Cc: linux-kernel@vger.kernel.org,
 	linux-scsi@vger.kernel.org,
-	Adam Radford <aradford@gmail.com>,
-	Joel Jacobson <linux@3ware.com>,
-	de Melo <acme@conectiva.com.br>,
-	Andre Hedrick <andre@suse.com>
-Subject: [PATCH 3/5] scsi: 3w-xxxx: Remove snprintf() from sysfs call-backs and replace with sysfs_emit()
-Date: Thu, 11 Jan 2024 13:17:24 +0000
-Message-ID: <20240111131732.1815560-4-lee@kernel.org>
+	Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+	"PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Subject: [PATCH 5/5] scsi: aacraid: aachba: Replace snprintf() with the safer scnprintf() variant
+Date: Thu, 11 Jan 2024 13:17:26 +0000
+Message-ID: <20240111131732.1815560-6-lee@kernel.org>
 X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
 In-Reply-To: <20240111131732.1815560-1-lee@kernel.org>
 References: <20240111131732.1815560-1-lee@kernel.org>
@@ -41,89 +39,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since snprintf() has the documented, but still rather strange trait of
-returning the length of the data that *would have been* written to the
-array if space were available, rather than the arguably more useful
-length of data *actually* written, it is usually considered wise to use
-something else instead in order to avoid confusion.
-
-In the case of sysfs call-backs, new wrappers exist that do just that.
+There is a general misunderstanding amongst engineers that {v}snprintf()
+returns the length of the data *actually* encoded into the destination
+array.  However, as per the C99 standard {v}snprintf() really returns
+the length of the data that *would have been* written if there were
+enough space for it.  This misunderstanding has led to buffer-overruns
+in the past.  It's generally considered safer to use the {v}scnprintf()
+variants in their place (or even sprintf() in simple cases).  So let's
+do that.
 
 Link: https://lwn.net/Articles/69419/
 Link: https://github.com/KSPP/linux/issues/105
-Cc: Adam Radford <aradford@gmail.com>
-Cc: Joel Jacobson <linux@3ware.com>
-Cc: de Melo <acme@conectiva.com.br>
-Cc: Andre Hedrick <andre@suse.com>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
 Signed-off-by: Lee Jones <lee@kernel.org>
 ---
- drivers/scsi/3w-xxxx.c | 46 +++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ drivers/scsi/aacraid/aachba.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/3w-xxxx.c b/drivers/scsi/3w-xxxx.c
-index f39c9ec2e7810..13ddc97f5a623 100644
---- a/drivers/scsi/3w-xxxx.c
-+++ b/drivers/scsi/3w-xxxx.c
-@@ -496,28 +496,28 @@ static ssize_t tw_show_stats(struct device *dev, struct device_attribute *attr,
- 	ssize_t len;
+diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+index 70e1cac1975eb..b22857c6f3f4f 100644
+--- a/drivers/scsi/aacraid/aachba.c
++++ b/drivers/scsi/aacraid/aachba.c
+@@ -1099,7 +1099,7 @@ static void get_container_serial_callback(void *context, struct fib * fibptr)
+ 			sp[0] = INQD_PDT_DA;
+ 			sp[1] = scsicmd->cmnd[2];
+ 			sp[2] = 0;
+-			sp[3] = snprintf(sp+4, sizeof(sp)-4, "%08X",
++			sp[3] = scnprintf(sp+4, sizeof(sp)-4, "%08X",
+ 				le32_to_cpu(get_serial_reply->uid));
+ 			scsi_sg_copy_from_buffer(scsicmd, sp,
+ 						 sizeof(sp));
+@@ -1169,8 +1169,8 @@ static int setinqserial(struct aac_dev *dev, void *data, int cid)
+ 	/*
+ 	 *	This breaks array migration.
+ 	 */
+-	return snprintf((char *)(data), sizeof(struct scsi_inq) - 4, "%08X%02X",
+-			le32_to_cpu(dev->adapter_info.serial[0]), cid);
++	return scnprintf((char *)(data), sizeof(struct scsi_inq) - 4, "%08X%02X",
++			 le32_to_cpu(dev->adapter_info.serial[0]), cid);
+ }
  
- 	spin_lock_irqsave(tw_dev->host->host_lock, flags);
--	len = snprintf(buf, PAGE_SIZE, "3w-xxxx Driver version: %s\n"
--		       "Current commands posted:   %4d\n"
--		       "Max commands posted:       %4d\n"
--		       "Current pending commands:  %4d\n"
--		       "Max pending commands:      %4d\n"
--		       "Last sgl length:           %4d\n"
--		       "Max sgl length:            %4d\n"
--		       "Last sector count:         %4d\n"
--		       "Max sector count:          %4d\n"
--		       "SCSI Host Resets:          %4d\n"
--		       "AEN's:                     %4d\n", 
--		       TW_DRIVER_VERSION,
--		       tw_dev->posted_request_count,
--		       tw_dev->max_posted_request_count,
--		       tw_dev->pending_request_count,
--		       tw_dev->max_pending_request_count,
--		       tw_dev->sgl_entries,
--		       tw_dev->max_sgl_entries,
--		       tw_dev->sector_count,
--		       tw_dev->max_sector_count,
--		       tw_dev->num_resets,
--		       tw_dev->aen_count);
-+	len = sysfs_emit(buf, "3w-xxxx Driver version: %s\n"
-+			 "Current commands posted:   %4d\n"
-+			 "Max commands posted:       %4d\n"
-+			 "Current pending commands:  %4d\n"
-+			 "Max pending commands:      %4d\n"
-+			 "Last sgl length:           %4d\n"
-+			 "Max sgl length:            %4d\n"
-+			 "Last sector count:         %4d\n"
-+			 "Max sector count:          %4d\n"
-+			 "SCSI Host Resets:          %4d\n"
-+			 "AEN's:                     %4d\n",
-+			 TW_DRIVER_VERSION,
-+			 tw_dev->posted_request_count,
-+			 tw_dev->max_posted_request_count,
-+			 tw_dev->pending_request_count,
-+			 tw_dev->max_pending_request_count,
-+			 tw_dev->sgl_entries,
-+			 tw_dev->max_sgl_entries,
-+			 tw_dev->sector_count,
-+			 tw_dev->max_sector_count,
-+			 tw_dev->num_resets,
-+			 tw_dev->aen_count);
- 	spin_unlock_irqrestore(tw_dev->host->host_lock, flags);
- 	return len;
- } /* End tw_show_stats() */
-@@ -1099,7 +1099,7 @@ static int tw_initconnection(TW_Device_Extension *tw_dev, int message_credits)
- 	command_packet->request_id = request_id;
- 	command_packet->status = 0x0;
- 	command_packet->flags = 0x0;
--	command_packet->byte6.message_credits = message_credits; 
-+	command_packet->byte6.message_credits = message_credits;
- 	command_packet->byte8.init_connection.response_queue_pointer = 0x0;
- 	command_que_value = tw_dev->command_packet_physical_address[request_id];
- 
+ static inline void set_sense(struct sense_data *sense_data, u8 sense_key,
 -- 
 2.43.0.275.g3460e3d667-goog
 
