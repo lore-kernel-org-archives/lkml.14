@@ -1,137 +1,315 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8144715E88
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA2A15E90
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 13:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e6JEhf0D"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d3ef33e68dso37125185ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 05:04:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="0D8Du/mR"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e6275e9beso911645e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 05:04:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704978255; x=1705583055; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mJye1HwRZXqiDXVZCClxaEgybA810vZVpEjfXbsfFJs=;
-        b=e6JEhf0DE1R6mJWacHwY1y5ZyhbIVbMeHL3r4HLo/FmxsLISWxZ+y1/u1pj6Ih/O0W
-         ati7Yjy3q8NTDd7cpXRq8Ul3nKhf0EaTxKm/p4gLUKWETOC1b0fGlIxllFBmL6eRKRnI
-         /CSA/sH9eRbl9x3ZBI5P8Mqox0jyXHJEqR3lt7ZzKbeXxxalsAWNS7Xbo1nYAcJDXjDQ
-         xyZJJ64pBsul1ppK6sOP6G+6WgC7plspBET6y3cOHRZcXu7TPyCEi1P3S9PAv/Hb7URM
-         fNdDx3wGRTbAQUSYSjTed77kzuFwXlQHQ588oMqmSTwVVmodOmxHai/LX/G6KfiKg2K7
-         x9Eg==
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1704978256; x=1705583056; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TUK2zT0BPfdydNsT5EJn5ISOoo/X1IO0KyG0yLRREqg=;
+        b=0D8Du/mRMMnX8woI/jhgIOIO6kXrqNctCoMTiAhd+qWiD03E1FeQAu12HMjWPimMAR
+         WLgj4uikobeKBzy1FQYt99v5wFQEXn4QcTsIpUJOS6Nr7vTIkJDbQa0tbdlvO/ZS7Jtr
+         5lcQ6ivTQCQkToBmO0pReBo6luQnKoLmRZkKzoIDLfQ4kYwPqKCc4nHyLeJqnCNvtLsg
+         aZUXttQa3HS9YT/xxYX9970dTODZXdQqpiQQIVyx2wqHQf3r5V42JP3vDf6qjPFp/22v
+         JA5Y0PiAl5gpuVTkL1AuJMZmQcvH1EaL9kUVPAYndV7sVNSbgBfu4xFvmmP4Li6lKR2P
+         4Xaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704978255; x=1705583055;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mJye1HwRZXqiDXVZCClxaEgybA810vZVpEjfXbsfFJs=;
-        b=OgbCF98q4EYtm+Zd2WkE88Rl1MFgg7EPhGx2vqQ1IbjM4glMXAOLEHfOBTCrScDuzs
-         HC/EfGUMC8pD5Fpoug1niS02ZttR4YobBEQGqN+CDTg1BsLbzrKIF0m35l8EfNVj/QV0
-         MmGu7NVJ+36uqDcc2nRMC/xnEqTgapMMAAjBy7ZkEdAGk+csvn7jX3xwvZlVQSv0CMWT
-         yd3TqtQcGWUoE1bTBkdOHDeOiEKgRtgKBnTQdE7IA8Z8cQyPwEkCeC4sjwDnFm4Y39aO
-         2uaSfi72qxGDNQoUQwH8PLOFBIt5ty+nqqNMx1nQ4gdJVoBCQ7MTSkdzf70iwW5euUj+
-         uGjA==
-X-Gm-Message-State: AOJu0Yx+foPjy963ki6LMs2JKRISZcTKDY+3n28cbs2GyIec97bl/PqH
-	NnoykrIChKe9JIZLvKovHXx53he6zttbFMx0iwXP0YP1YL/6wg==
-X-Google-Smtp-Source: AGHT+IEIWU162vz5BVssaLQ0v5ixlNOrYXMwBNBuJPvkNECOBriOK+cjfvlgUUjSWppOSEVExQD4wxH6SdVKIFrJy18=
-X-Received: by 2002:a17:902:c3d1:b0:1d5:6b6c:1add with SMTP id
- j17-20020a170902c3d100b001d56b6c1addmr1014391plj.28.1704978255603; Thu, 11
- Jan 2024 05:04:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704978256; x=1705583056;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TUK2zT0BPfdydNsT5EJn5ISOoo/X1IO0KyG0yLRREqg=;
+        b=WbR0U96fO8M+vIpu8b6nRjJjShbIKGMtJ8O+2AovdjJMb99JuCT6PkPbNNlYWRHYn5
+         E8fTwaCPC9C5A9idEmdG4KXyGqiJLwneFxnC+8acsyMFTyFvQq98YR0s8cEQhK29Eozl
+         dpBHHBSb2Jd6wkCARFuFC0e85ThdPsr4ojKZD7g3LzG8NUdK0J11jBSPjn8rlT2dIaXS
+         zeuVS4xpptAF+4vpKKK4by4J7INeK9CpyctNdrHRn6wQtyqxgJdSsTCHAF7iuMbRVgd7
+         RDtAgjJbEqCcXBDf0aGC2gWB1Fhud2ObGIhFfw414Cnoa7xqnOg2/qMZw9Kf3EFJY+Nf
+         bOpQ==
+X-Gm-Message-State: AOJu0Yx6pLVZrYChGzJfVXMFvbzsXpvmTtDw2YaRURI/Ym6aX8Wo3Y51
+	XYAQzZZcAhMYbLirlEHF1VNxHcrT4h2f9w==
+X-Google-Smtp-Source: AGHT+IFF9WMMBpGrWeM0BHAltriDJcHnFIQQ9fcUKOSAiJEE8dv3V03p30sSgqAaj2i4HbEA8OuF+A==
+X-Received: by 2002:a05:600c:1e84:b0:40e:6259:82e3 with SMTP id be4-20020a05600c1e8400b0040e625982e3mr165637wmb.56.1704978256036;
+        Thu, 11 Jan 2024 05:04:16 -0800 (PST)
+Received: from localhost ([165.225.194.217])
+        by smtp.gmail.com with ESMTPSA id o8-20020a05600c4fc800b0040e549c77a1sm5762576wmq.32.2024.01.11.05.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 05:04:15 -0800 (PST)
+References: <20230503090708.2524310-1-nmi@metaspace.dk>
+ <20230503090708.2524310-5-nmi@metaspace.dk>
+ <-SiJ5paRDIUkH1WEWhGhEjhIgFbSo5PJAvac53bTnBZ5o41DR-kNWZEQBsnKeW1FRJh35siVFRrx54L0M6ebSzl0rzecgcDjqZFGRa9uypE=@proton.me>
+User-agent: mu4e 1.10.8; emacs 28.2.50
+From: "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith
+ Busch <kbusch@kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, Hannes
+ Reinecke <hare@suse.de>, lsf-pc@lists.linux-foundation.org,
+ rust-for-linux@vger.kernel.org, linux-block@vger.kernel.org, Matthew
+ Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>, linux-kernel@vger.kernel.org,
+ gost.dev@samsung.com
+Subject: Re: [RFC PATCH 04/11] rust: block: introduce `kernel::block::bio`
+ module
+Date: Thu, 11 Jan 2024 13:49:53 +0100
+In-reply-to: <-SiJ5paRDIUkH1WEWhGhEjhIgFbSo5PJAvac53bTnBZ5o41DR-kNWZEQBsnKeW1FRJh35siVFRrx54L0M6ebSzl0rzecgcDjqZFGRa9uypE=@proton.me>
+Message-ID: <87a5pcyqf8.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZTz9RpZxfxysYCmt@gmail.com> <ZZwBi/YmnMqm7zrO@gmail.com>
- <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
- <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
- <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com> <ZZ/MY0KEGXotqGHY@gmail.com>
-In-Reply-To: <ZZ/MY0KEGXotqGHY@gmail.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 11 Jan 2024 14:04:04 +0100
-Message-ID: <CAKfTPtCR5U++CF93aUq8i+j9G5nLRvUUbCESX=CwemYu9LKOqQ@mail.gmail.com>
-Subject: Re: [GIT PULL] scheduler fixes
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 11 Jan 2024 at 12:09, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
-> > On Wed, 10 Jan 2024 at 14:41, Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > > It's one of these two:
-> > >
-> > >   f12560779f9d sched/cpufreq: Rework iowait boost
-> > >   9c0b4bb7f630 sched/cpufreq: Rework schedutil governor performance estimation
-> > >
-> > > one more boot to go, then I'll try to revert whichever causes my
-> > > machine to perform horribly much worse.
-> >
-> > I guess it should come as no surprise that the result is
-> >
-> >    9c0b4bb7f6303c9c4e2e34984c46f5a86478f84d is the first bad commit
-> >
-> > but to revert cleanly I will have to revert all of
-> >
-> >       b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency")
-> >       f12560779f9d ("sched/cpufreq: Rework iowait boost")
-> >       9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor
-> > performance estimation")
-> >
-> > This is on a 32-core (64-thread) AMD Ryzen Threadripper 3970X, fwiw.
-> >
-> > I'll keep that revert in my private test-tree for now (so that I have
-> > a working machine again), but I'll move it to my main branch soon
-> > unless somebody has a quick fix for this problem.
->
-> Thanks a lot for bisecting this, and ack on the revert in any case, these
-> are relatively fresh changes that clearly didn't get enough testing - sorry!
 
-b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency") is
-linked with other patches.
-I can provide a clean revert of only :
-f12560779f9d ("sched/cpufreq: Rework iowait boost")
-9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor performance estimation")
+Benno Lossin <benno.lossin@proton.me> writes:
 
-if the fix that i proposed doesn't work:
-https://lore.kernel.org/all/ZZ+ixagkxRPYyTCE@vingu-book/
+>> +/// A wrapper around a `struct bio` pointer
+>> +///
+>> +/// # Invariants
+>> +///
+>> +/// First field must alwyas be a valid pointer to a valid `struct bio`.
+>> +pub struct Bio<'a>(
+>> +    NonNull<crate::bindings::bio>,
+>> +    core::marker::PhantomData<&'a ()>,
+>
+> Please make this a struct with named fields. Also this is rather a
+> `BioRef`, right? Why can't `&Bio` be used and `Bio` embeds
+> `bindings::bio`?
+
+Yes, it feels better with a &Bio reference, thanks.
+
+>> +);
+>> +
+>> +impl<'a> Bio<'a> {
+>> +    /// Returns an iterator over segments in this `Bio`. Does not consi=
+der
+>> +    /// segments of other bios in this bio chain.
+>> +    #[inline(always)]
+>
+> Why are these `inline(always)`? The compiler should inline them
+> automatically?
+
+No, the compiler would not inline into modules without them. I'll check
+again if that is still the case.
 
 >
-> I also made the revert in sched/urgent & added a changelog, which you can
-> pull from:
+>> +    pub fn segment_iter(&'a self) -> BioSegmentIterator<'a> {
+>> +        BioSegmentIterator::new(self)
+>> +    }
+>> +
+>> +    /// Get a pointer to the `bio_vec` off this bio
+>> +    #[inline(always)]
+>> +    fn io_vec(&self) -> *const bindings::bio_vec {
+>> +        // SAFETY: By type invariant, get_raw() returns a valid pointer=
+ to a
+>> +        // valid `struct bio`
+>> +        unsafe { (*self.get_raw()).bi_io_vec }
+>> +    }
+>> +
+>> +    /// Return a copy of the `bvec_iter` for this `Bio`
+>> +    #[inline(always)]
+>> +    fn iter(&self) -> bindings::bvec_iter {
 >
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-2024-01-11
+> Why does this return the bindings iter? Maybe rename to `raw_iter`?
+
+Makes sense to rename it, thanks.
+
+>> +        // SAFETY: self.0 is always a valid pointer
+>> +        unsafe { (*self.get_raw()).bi_iter }
+>> +    }
+>> +
+>> +    /// Get the next `Bio` in the chain
+>> +    #[inline(always)]
+>> +    fn next(&self) -> Option<Bio<'a>> {
+>> +        // SAFETY: self.0 is always a valid pointer
+>> +        let next =3D unsafe { (*self.get_raw()).bi_next };
+>> +        Some(Self(NonNull::new(next)?, core::marker::PhantomData))
 >
->    # HEAD: 250ce3c1169743f3575cc5937fccd72380052795 Revert "sched/cpufreq: Rework schedutil governor performance estimation" and dependent commits
+> Missing `INVARIANT` explaining why `next` is valid or null. Also why not
+> use `Self::from_raw` here?
+
+Thanks, will change that.
+
 >
-> Revert recent changes to the sched_util logic, to address a bad
-> performance regression that increased kernel build time on Linus's
-> 64-CPU desktop system substantially.
+>> +    }
+>> +
+>> +    /// Return the raw pointer of the wrapped `struct bio`
+>> +    #[inline(always)]
+>> +    fn get_raw(&self) -> *const bindings::bio {
+>> +        self.0.as_ptr()
+>> +    }
+>> +
+>> +    /// Create an instance of `Bio` from a raw pointer. Does check that=
+ the
+>> +    /// pointer is not null.
+>> +    #[inline(always)]
+>> +    pub(crate) unsafe fn from_raw(ptr: *mut bindings::bio) -> Option<Bi=
+o<'a>> {
+>> +        Some(Self(NonNull::new(ptr)?, core::marker::PhantomData))
+>> +    }
+>> +}
+>> +
+>> +impl core::fmt::Display for Bio<'_> {
+>> +    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+>> +        write!(f, "Bio {:?}", self.0.as_ptr())
 >
-> Lightly build and boot tested.
+> this will display as `Bio 0x7ff0654..` I think there should be some
+> symbol wrapping the pointer like `Bio(0x7ff0654)` or `Bio { ptr: 0x7ff065=
+4 }`.
 >
->  Thanks,
+
+Sure =F0=9F=91=8D
+
+>> +    }
+>> +}
+>> +
+>> +/// An iterator over `Bio`
+>> +pub struct BioIterator<'a> {
+>> +    pub(crate) bio: Option<Bio<'a>>,
+>> +}
+>> +
+>> +impl<'a> core::iter::Iterator for BioIterator<'a> {
+>> +    type Item =3D Bio<'a>;
+>> +
+>> +    #[inline(always)]
+>> +    fn next(&mut self) -> Option<Bio<'a>> {
+>> +        if let Some(current) =3D self.bio.take() {
+>> +            self.bio =3D current.next();
+>> +            Some(current)
+>> +        } else {
+>> +            None
+>> +        }
 >
->         Ingo
+> Can be rewritten as:
+>     let current =3D self.bio.take()?;
+>     self.bio =3D current.next();
+>     Some(cur)
 >
-> ------------------>
-> Ingo Molnar (1):
->       Revert "sched/cpufreq: Rework schedutil governor performance estimation" and dependent commits
+
+Thanks =F0=9F=91=8D
+
+>> +    }
+>> +}
+>> diff --git a/rust/kernel/block/bio/vec.rs b/rust/kernel/block/bio/vec.rs
+>> new file mode 100644
+>> index 000000000000..acd328a6fe54
+>> --- /dev/null
+>> +++ b/rust/kernel/block/bio/vec.rs
+>> @@ -0,0 +1,181 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! Types for working with `struct bio_vec` IO vectors
+>> +//!
+>> +//! C header: [`include/linux/bvec.h`](../../include/linux/bvec.h)
+>> +
+>> +use super::Bio;
+>> +use crate::error::Result;
+>> +use crate::pages::Pages;
+>> +use core::fmt;
+>> +use core::mem::ManuallyDrop;
+>> +
+>> +#[inline(always)]
+>> +fn mp_bvec_iter_offset(bvec: *const bindings::bio_vec, iter: &bindings:=
+:bvec_iter) -> u32 {
+>> +    (unsafe { (*bvec_iter_bvec(bvec, iter)).bv_offset }) + iter.bi_bvec=
+_done
+>> +}
+>> +
+>> +#[inline(always)]
+>> +fn mp_bvec_iter_page(
+>> +    bvec: *const bindings::bio_vec,
+>> +    iter: &bindings::bvec_iter,
+>> +) -> *mut bindings::page {
+>> +    unsafe { (*bvec_iter_bvec(bvec, iter)).bv_page }
+>> +}
+>> +
+>> +#[inline(always)]
+>> +fn mp_bvec_iter_page_idx(bvec: *const bindings::bio_vec, iter: &binding=
+s::bvec_iter) -> usize {
+>> +    (mp_bvec_iter_offset(bvec, iter) / crate::PAGE_SIZE) as usize
+>> +}
+>> +
+>> +#[inline(always)]
+>> +fn mp_bvec_iter_len(bvec: *const bindings::bio_vec, iter: &bindings::bv=
+ec_iter) -> u32 {
+>> +    iter.bi_size
+>> +        .min(unsafe { (*bvec_iter_bvec(bvec, iter)).bv_len } - iter.bi_=
+bvec_done)
+>> +}
+>> +
+>> +#[inline(always)]
+>> +fn bvec_iter_bvec(
+>> +    bvec: *const bindings::bio_vec,
+>> +    iter: &bindings::bvec_iter,
+>> +) -> *const bindings::bio_vec {
+>> +    unsafe { bvec.add(iter.bi_idx as usize) }
+>> +}
+>> +
+>> +#[inline(always)]
+>> +fn bvec_iter_page(
+>> +    bvec: *const bindings::bio_vec,
+>> +    iter: &bindings::bvec_iter,
+>> +) -> *mut bindings::page {
+>> +    unsafe { mp_bvec_iter_page(bvec, iter).add(mp_bvec_iter_page_idx(bv=
+ec, iter)) }
+>> +}
+>> +
+>> +#[inline(always)]
+>> +fn bvec_iter_len(bvec: *const bindings::bio_vec, iter: &bindings::bvec_=
+iter) -> u32 {
+>> +    mp_bvec_iter_len(bvec, iter).min(crate::PAGE_SIZE - bvec_iter_offse=
+t(bvec, iter))
+>> +}
+>> +
+>> +#[inline(always)]
+>> +fn bvec_iter_offset(bvec: *const bindings::bio_vec, iter: &bindings::bv=
+ec_iter) -> u32 {
+>> +    mp_bvec_iter_offset(bvec, iter) % crate::PAGE_SIZE
+>> +}
 >
+> Why are these functions:
+> - not marked as `unsafe`?
+> - undocumented,
+> - free functions.
 >
->  include/linux/energy_model.h     |  1 +
->  kernel/sched/core.c              | 90 +++++++++++++++++++++++-----------------
->  kernel/sched/cpufreq_schedutil.c | 90 ++++++++++++----------------------------
->  kernel/sched/fair.c              | 22 ++--------
->  kernel/sched/sched.h             | 84 +++++++++++++++++++++++++++++++++----
->  5 files changed, 160 insertions(+), 127 deletions(-)
+> Can't these be directly implemented on `Segment<'_>`? If not,
+> I think we should find some better way or make them `unsafe`.
+
+Yes, you are right. I will move them to `Segment` and document them
+better. They definitely need to be unsafe because they rely on C API
+contract that the iterator is not indexing out of bounds.
+
+[...]
+
+>> +impl<'a> core::iter::Iterator for BioSegmentIterator<'a> {
+>> +    type Item =3D Segment<'a>;
+>> +
+>> +    #[inline(always)]
+>> +    fn next(&mut self) -> Option<Self::Item> {
+>> +        if self.iter.bi_size =3D=3D 0 {
+>> +            return None;
+>> +        }
+>> +
+>> +        // Macro
+>> +        // bio_vec =3D bio_iter_iovec(bio, self.iter)
+>> +        // bio_vec =3D bvec_iter_bvec(bio.bi_io_vec, self.iter);
+>
+> Weird comment?
+
+Yes, will fix, thanks.
+
+Thanks for the comments!
+
+BR Andreas
