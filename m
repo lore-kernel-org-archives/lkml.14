@@ -1,203 +1,131 @@
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2100.outbound.protection.outlook.com [40.107.247.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265805025A
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394735025A;
+	Thu, 11 Jan 2024 16:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ZMmkUfov";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ENiLZzhg"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 036A33200AFF;
-	Thu, 11 Jan 2024 11:20:11 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 11 Jan 2024 11:20:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1704990011;
-	 x=1705076411; bh=gNBm75P/BzEJKB3blSTo2jlzNOpKk99lOVmMsOox8Jk=; b=
-	ZMmkUfov0oGo2MFjyTwe15A6QQ/dc+1hqJb8hkPx3hnyDsh7Jx7ZhHejcOwMzm8O
-	O9w4yGBujWIy7TMvPIFoRNu83HytFQ8RnYWb6jukZIJUePEF8kkOw+vBlfT0ADJu
-	fVyKdx7UOEcORuCSNRZs9QxUZXGmHbVWJXiyZpFT+NgDuAN9+Oy+RDQjnqX8lbsT
-	Hk9K8aXralQlI9AD4qkRRN55yD6tO0KReXbn734GC8D2AdrVCYpDpOUv3zmyTUGF
-	V5pJTKd6FevdOCCdhhyNnuQrTRhqNrb5ofYs0TymJLBQo7CzhG6od3GxudOqvZD2
-	6UTZh2om0BHhljne+5oZZw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704990011; x=
-	1705076411; bh=gNBm75P/BzEJKB3blSTo2jlzNOpKk99lOVmMsOox8Jk=; b=E
-	NiLZzhg6m8FJzY2EgXWNsSDqcyvBqppRrdbjIqmaKvUaVgvU4dW9c3eGIZP+y/sw
-	5J6dv+XdkIk75HBd++eap641aK9e5Zk7K4VBCbuoC+xsy21h0UffbCq0AdNJK+l5
-	t4p6Yy8BKAPzoyxWembytqlmMXZVGkFJb7/WTH0M//LlRD8hyN3i5aDGBiGfJpLJ
-	RYO7FOyLMKwYeUHbVs9r8pB2jsZF+TTzwQL1TQ+wcYCSlDGnCBHbygq4IdTai0FU
-	8azDpOgEGMupywBko5Ex82vKCfNllaeMmkGvIOdHtEFSc7j7L4Rauvc2R1I3qOUS
-	uNH5a+FTMTpCb5InJywog==
-X-ME-Sender: <xms:OxWgZWzNd76rW8cMgQs5i6emFAj2dMUCukzzFG-y1NOQNXUqJtbiGA>
-    <xme:OxWgZSSbFwu6wYu2ZYeZyM-W3b6LkqP4s2vdQJDzVRMHn0VRRHM9lWtgJLFRvQDUQ
-    Y4wvyglvjF0L6vZqcs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeifedgkeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpefgkeeuleegieeghfduudeltdekfeffjeeuleehleefudettddtgfevueef
-    feeigeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:OxWgZYW-_yIIZy7HNFv3jj8bsY3UUZ0-MmO08j1MRTeo7mJzGG0n1g>
-    <xmx:OxWgZcgIj-k_351DNLDCsdXayeqqKCfEl6yORigTxsssd6IJHaFo4Q>
-    <xmx:OxWgZYAxbrjURJaJpuaQ_1Oh702sZyFvqOlrOnEpJHAXHLbgAwf97A>
-    <xmx:OxWgZR5lI4p1ecNRdqlaCItCjfjXJDxF3D8DpYFQE7D-Psq_tcQIsQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 31988B6008D; Thu, 11 Jan 2024 11:20:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1374-gc37f3abe3d-fm-20240102.001-gc37f3abe
+	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="tybnatGY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HWc/uJYrOhlCJ30ixQ+q3HDyvHImT8ftNjUXMxAAf/HNDE8Rcc0+AZKg+nK3ngx+ALCizTq7ChVLcA3S6VSRLcdDwJl4PvHecVw4+ZqZm4+S8n4wKQAOIWAeLFk7RefpMlyOPg/h2HV3APioGd1e75jAppl1rTQ5hYkhwzt7ZiYKLriWHwZRM6QxhMce4qFmQIdzB4KODuuhsSN885Pu+zPYmJgtEC0w57jZbPYu+SQiX247RIqN1f5iWqGT2Z9YE/yJHlz9Ay5Z7Caa5PozY8dR/xxyqTuVq/0f/r2kDkOEBtncfli+QFQkPzmKlJMCVbh+ALJZpBKHymLpfsFWtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0aQqe5Pbmg9/g7Hqzu5M8uFwCumDkHgty4VSR4lSNjk=;
+ b=ZPlZE0Qo4Ws+4fEHeyeOI8vsKHG/54YCgyLnjW7MLLFz5yJ46lJtkdPZSKJewJAIMFkTcnWj2eb2ulJ5/3VIqHdn47SziJGOt9Ao6xuixn1zKP90dAl2q5ameou/GY/V19ellYfOlfiv6oH+GWYifwKhg8u8a4rg/1ZVhqmCJjJyd04Rss3nGy5Gx71lTT8Knle1VgKhuVN8TP5adps2eF53yJU29P6WzmoVTRmyZW9elusk56R+BYOEqe9BT8xEwCoAsh2yfzpdwNPnGomAqpSqT4yDtA54pV7XmfA4UqdzlmB0/WLE+xWTqSIMVVcCB813bXh4XoXHX1g1oaU+1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=leica-geosystems.com; dmarc=temperror action=none
+ header.from=leica-geosystems.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0aQqe5Pbmg9/g7Hqzu5M8uFwCumDkHgty4VSR4lSNjk=;
+ b=tybnatGYYYeeQTPjki7liG8Cpdw+tv1vVDkF6rXGw5L3vSKl50++9tORhDqtA4RV//P/g61VLIeqtB/yV6CgNM9bLGx84nm2ljm3DlplQu3CDtPada/yj74CPZ8pCCUPg22Peb3x13PypFE/nqsh13mfEz9OwIxNO11u6cUbIow=
+Received: from DU2P251CA0022.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:230::20)
+ by AM8PR06MB6867.eurprd06.prod.outlook.com (2603:10a6:20b:1dc::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Thu, 11 Jan
+ 2024 16:20:20 +0000
+Received: from DB5PEPF00014B9B.eurprd02.prod.outlook.com
+ (2603:10a6:10:230:cafe::9b) by DU2P251CA0022.outlook.office365.com
+ (2603:10a6:10:230::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.19 via Frontend
+ Transport; Thu, 11 Jan 2024 16:20:20 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is 193.8.40.94)
+ smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=leica-geosystems.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of leica-geosystems.com: DNS Timeout)
+Received: from hexagon.com (193.8.40.94) by
+ DB5PEPF00014B9B.mail.protection.outlook.com (10.167.8.168) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.14 via Frontend Transport; Thu, 11 Jan 2024 16:20:19 +0000
+Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
+	 Thu, 11 Jan 2024 17:20:19 +0100
+From: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	afd@ti.com,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk
+Cc: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>
+Subject: [PATCH 1/3] dt-bindings: net: dp83826: add ti,cfg-dac-minus binding
+Date: Thu, 11 Jan 2024 17:19:25 +0100
+Message-Id: <20240111161927.3689084-1-catalin.popescu@leica-geosystems.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ab382a86-641b-477d-b6da-7398c600395b@app.fastmail.com>
-In-Reply-To: <1c120ba6-3c94-4d94-8497-afb6c5063d3c@app.fastmail.com>
-References: <1c120ba6-3c94-4d94-8497-afb6c5063d3c@app.fastmail.com>
-Date: Thu, 11 Jan 2024 17:19:50 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: soc@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject:  [GIT PULL 3/4] ARM: SoC code changes for 6.8
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 11 Jan 2024 16:20:19.0199 (UTC) FILETIME=[11A4C0F0:01DA44AA]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B9B:EE_|AM8PR06MB6867:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 21d94795-6ee9-4970-5c92-08dc12c13481
+X-SET-LOWER-SCL-SCANNER: YES
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	NqlWwgovF6YMwSXVrG7JlijejGgjyCIknlQVU/HkMjug1QPSVkMMQZTyppkApvSbQzPcLM+7N08lTXsHhdutd03iukkyhHy3WfnZxNh6/cDWxllq1XTSQE524/IGNIlrchubwpOTGlado1b86R43xYCo3kXhOK6axE33ux6zT1ADlASMU6rH39d1EZ7lQlqhT3X9CWHAh3SVoN7fnV1GkAQr8TuEtc6WzZZDASTikkcaAP7JqlkSVAuoGISiXLsmwlKwpkWx4e87bC2vOl8Zn0TyPomASX1oPtqDxrn1YWLegSQzz59TzMkJR7I0EASWe8qun2QH3tybHYm5tKgdevCfzG3KjdZS+cH+rWBQ5eKTWKqd1IySx32nPDi07dr2siQVMrJZqc3H9IW/aexgsHbE5DG7eIjy2CKRMLGFBBlZELooPPJFkXC2dmr/Goh18jqcq8llP7YU6XNbf3KH6w6me9Dv8F/wuZRi1+jguWpBY+hyc7grQ9d8AvVbUbpKrJgxgT4yO2EQMiIfb6uhwEkNivfbDnEe1C6qkgm05VP3IV6xvKdacWCKLyoBIbRCCsyYO+TPmPpZe5RZteJP99vVSuvm4FQomg2huS/F5dtqUrvzc8h9tMDVIcvnMo1guf4GMXIpJiCYW3JQU9HRiSM2gFb2Su+6W95vrAh2mwzjOcQ6SuSGt+shJjbbT0Q6LeDyCdKspnR+1iFhxeieVftTxms4qDIzBdzDM1rTBDsjwilYVRAppmf69NT9wE6X2Kc5HEKl+5+tf+zwU8OF6A==
+X-Forefront-Antispam-Report:
+	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(396003)(346002)(39860400002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(82310400011)(36840700001)(40470700004)(46966006)(40460700003)(40480700001)(921011)(70586007)(336012)(36756003)(81166007)(86362001)(356005)(41300700001)(36860700001)(63350400001)(63370400001)(2616005)(82740400003)(1076003)(107886003)(26005)(47076005)(2906002)(6666004)(70206006)(8936002)(316002)(450100002)(478600001)(5660300002)(4326008)(44832011)(8676002);DIR:OUT;SFP:1102;
+X-OriginatorOrg: leica-geosystems.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 16:20:19.6617
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21d94795-6ee9-4970-5c92-08dc12c13481
+X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB5PEPF00014B9B.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR06MB6867
 
-The following changes since commit 2cc14f52aeb78ce3f29677c2de1f06c0e9147=
-1ab:
+Add property ti,cfg-dac-minus to allow for voltage tuning
+of logical level -1 of the MLT-3 encoded data.
 
-  Linux 6.7-rc3 (2023-11-26 19:59:33 -0800)
+Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+---
+ Documentation/devicetree/bindings/net/ti,dp83822.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-are available in the Git repository at:
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+index db74474207ed..2f010333be49 100644
+--- a/Documentation/devicetree/bindings/net/ti,dp83822.yaml
++++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+@@ -62,6 +62,15 @@ properties:
+        for the PHY.  The internal delay for the PHY is fixed to 3.5ns relative
+        to transmit data.
+ 
++  ti,cfg-dac-minus:
++    description: |
++       DP83826 PHY only.
++       Sets the voltage ratio of the logical level -1 for the MLT-3 encoded data.
++       0 = 50%, 1 = 56.25%, 2 = 62.50%, 3 = 68.75%, 4 = 75%, 5 = 81.25%, 6 = 87.50%,
++       7 = 93.75%, 8 = 100%, 9 = 106.25%, 10 = 112.50%, 11 = 118.75%, 12 = 125%,
++       13 = 131.25%, 14 = 137.50%, 15 = 143.75%, 16 = 150%.
++    enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
++
+ required:
+   - reg
+ 
+-- 
+2.34.1
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-a=
-rm-6.8
-
-for you to fetch changes up to 40974ee421b4d1fc74ac733d86899ce1b83d8f65:
-
-  ARM: davinci: always select CONFIG_CPU_ARM926T (2024-01-09 08:25:47 +0=
-100)
-
-----------------------------------------------------------------
-ARM: SoC code changes for 6.8
-
-There are two notable changes this time:
-
-- Andrew Davis adds a arch/arm/Kconfig.platforms file to simplify
-  the platforms that have no code except their Kconfig file
-
-- Linux Walleij removes support for the ARM11MPCore CPU in
-  the versatile/realview platform. Since this is the last
-  remaining one after removing ox820, some core code can go
-  as well.
-
-The other changes are minor cleanups and bugfixes.
-
-----------------------------------------------------------------
-Andrew Davis (8):
-      ARM: Kconfig: move platform selection into its own Kconfig file
-      ARM: mach-asm9260: Move ASM9260 support into Kconfig.platforms
-      ARM: mach-rda: Move RDA Micro support into Kconfig.platforms
-      ARM: mach-uniphier: Move Socionext UniPhier support into Kconfig.p=
-latforms
-      ARM: mach-moxart: Move MOXA ART support into Kconfig.platforms
-      ARM: mach-airoha: Rework support and directory structure
-      ARM: mach-sunplus: Rework support and directory structure
-      ARM: mach-nspire: Rework support and directory structure
-
-Arnd Bergmann (5):
-      Merge tag 'omap-for-v6.8/maintainers-signed' of git://git.kernel.o=
-rg/pub/scm/linux/kernel/git/tmlind/linux-omap into soc/arm
-      Merge tag 'at91-soc-6.8' of https://git.kernel.org/pub/scm/linux/k=
-ernel/git/at91/linux into soc/arm
-      Merge tag 'imx-soc-6.8' of git://git.kernel.org/pub/scm/linux/kern=
-el/git/shawnguo/linux into soc/arm
-      Merge tag 'mvebu-arm-6.8-1' of git://git.kernel.org/pub/scm/linux/=
-kernel/git/gclement/mvebu into soc/arm
-      ARM: davinci: always select CONFIG_CPU_ARM926T
-
-Duje Mihanovi=C4=87 (1):
-      soc: pxa: ssp: fix casts
-
-Fabio Estevam (1):
-      ARM: mxs: Do not search for "fsl,clkctrl"
-
-Krzysztof Kozlowski (1):
-      ARM: MAINTAINERS: drop empty entries for removed boards
-
-Linus Walleij (2):
-      ARM: Delete ARM11MPCore (ARM11 ARMv6K SMP) support
-      ARM: Delete ARM11MPCore perf leftovers
-
-Lukas Bulwahn (2):
-      MAINTAINERS: add omap bus drivers to OMAP2+ SUPPORT
-      MAINTAINERS: add Marvell MBus driver to Marvell EBU SoCs support
-
-Martin Kaiser (1):
-      ARM: debug: fix DEBUG_UNCOMPRESS help for !MULTIPLATFORM
-
-Rob Herring (1):
-      ARM: imx: Use device_get_match_data()
-
-Thomas Perrot (1):
-      ARM: at91: pm: set soc_pm.data.mode in at91_pm_secure_init()
-
- MAINTAINERS                                |  24 +---
- arch/arm/Kconfig                           |  90 +-------------
- arch/arm/Kconfig.debug                     |  11 +-
- arch/arm/Kconfig.platforms                 | 183 ++++++++++++++++++++++=
-+++++++
- arch/arm/Makefile                          |   4 -
- arch/arm/kernel/perf_event_v6.c            | 128 --------------------
- arch/arm/mach-airoha/Makefile              |   2 -
- arch/arm/mach-airoha/airoha.c              |  16 ---
- arch/arm/mach-asm9260/Kconfig              |   9 --
- arch/arm/mach-at91/pm.c                    |   3 +
- arch/arm/mach-davinci/Kconfig              |   1 +
- arch/arm/mach-imx/mmdc.c                   |   9 +-
- arch/arm/mach-moxart/Kconfig               |  28 -----
- arch/arm/mach-moxart/Makefile              |   4 -
- arch/arm/mach-moxart/moxart.c              |   6 -
- arch/arm/mach-mxs/mach-mxs.c               |   4 +-
- arch/arm/mach-nspire/Kconfig               |  15 ---
- arch/arm/mach-nspire/Makefile              |   2 -
- arch/arm/mach-nspire/nspire.c              |  18 ---
- arch/arm/mach-rda/Kconfig                  |   8 --
- arch/arm/mach-sunplus/Kconfig              |  27 -----
- arch/arm/mach-sunplus/Makefile             |   8 --
- arch/arm/mach-sunplus/sp7021.c             |  16 ---
- arch/arm/mach-uniphier/Kconfig             |  15 ---
- arch/arm/mach-versatile/Kconfig            |  17 ---
- arch/arm/mach-versatile/platsmp-realview.c |   6 +-
- arch/arm/mach-versatile/realview.c         |   1 -
- arch/arm/mm/Kconfig                        |  18 ---
- arch/arm/mm/cache-v6.S                     |  31 -----
- drivers/soc/pxa/ssp.c                      |   4 +-
- 30 files changed, 206 insertions(+), 502 deletions(-)
- create mode 100644 arch/arm/Kconfig.platforms
- delete mode 100644 arch/arm/mach-airoha/Makefile
- delete mode 100644 arch/arm/mach-airoha/airoha.c
- delete mode 100644 arch/arm/mach-asm9260/Kconfig
- delete mode 100644 arch/arm/mach-moxart/Kconfig
- delete mode 100644 arch/arm/mach-moxart/Makefile
- delete mode 100644 arch/arm/mach-moxart/moxart.c
- delete mode 100644 arch/arm/mach-nspire/Kconfig
- delete mode 100644 arch/arm/mach-nspire/Makefile
- delete mode 100644 arch/arm/mach-nspire/nspire.c
- delete mode 100644 arch/arm/mach-rda/Kconfig
- delete mode 100644 arch/arm/mach-sunplus/Kconfig
- delete mode 100644 arch/arm/mach-sunplus/Makefile
- delete mode 100644 arch/arm/mach-sunplus/sp7021.c
- delete mode 100644 arch/arm/mach-uniphier/Kconfig
