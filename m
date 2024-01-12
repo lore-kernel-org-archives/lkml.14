@@ -1,111 +1,94 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B997319F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 16:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rOKEA-0000I6-2s; Fri, 12 Jan 2024 17:17:50 +0100
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rOKE7-002Bnr-Ow; Fri, 12 Jan 2024 17:17:47 +0100
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 7CBE82751CD;
-	Fri, 12 Jan 2024 15:43:16 +0000 (UTC)
-Date: Fri, 12 Jan 2024 16:43:16 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: "Kumar, Udit" <u-kumar1@ti.com>
-Cc: Bhavya Kapoor <b-kapoor@ti.com>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-can@vger.kernel.org, mailhol.vincent@wanadoo.fr, 
-	rcsekar@samsung.com, pabeni@redhat.com, kuba@kernel.org, edumazet@google.com, 
-	davem@davemloft.net, wg@grandegger.com, vigneshr@ti.com
-Subject: Re: [PATCH] net: can: Add support for aliases in CAN
-Message-ID: <20240112-overreact-dwindling-2949267e8a02-mkl@pengutronix.de>
-References: <20240102102949.138607-1-b-kapoor@ti.com>
- <20240102-chop-extending-b7dc1acaf5db-mkl@pengutronix.de>
- <8dee1738-0bde-48fb-bd0e-b8d06b609677@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EEC73198
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 16:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="TikfNHgX"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7bb06f56fe9so79946439f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 08:18:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705076326; x=1705681126; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kGo5Qib9p/CMqmc2qVWW+nsxV9z3k+DvCQknh7gy4Ww=;
+        b=TikfNHgXxUFCbvfBPpEhlkO8PQD/CPuLpqY+r9fugo9iaLEktnSFF4jGJRk3Ws2DXc
+         HsCOYiLGDFBIRTG96xHJZPzdyUz/oQPUZyXLhjuM7zBTeg+4FUbM2WFsZJ9FHR3bGJMa
+         teqdxwU1ovOC2+DZb/QILZfqDqcAUKWZn0jy+LlBj7pnUD3s/Exa4/9St0h64Ll/g0KQ
+         dAf0T4qajiIljjJICcNlTzwoketYubIsrqoOOmkiAw43Ucelom4DVHrM9ZCIf25ezn/y
+         3o8h851xjLMvMHPHeI8juQA/7jyuKSaopN7Z+92PmquuikGyDkdDeyklPZAp7zGoQrjH
+         5zSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705076326; x=1705681126;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kGo5Qib9p/CMqmc2qVWW+nsxV9z3k+DvCQknh7gy4Ww=;
+        b=HZ/Attzu+JWt21jawloP+Rnf3dllWBwuaDdU8b66C/7owGAeg9ehNAFR1+ESv6bBbp
+         cb/pAZOPBINo47GB4P0UOU+1dyufWyuJ9Qpi6LF2In7AEn2/gjGUvMzgz3XljoHSn6u8
+         XjFTDjGr7TVNZOjEWDpHmfLDAD8VFHF4hAHj9ajfx1ZgSZ5Pkn9Jj5JPN3QA+6U67ZHh
+         Cep6YMgcEWGc1qV7ZbHopDsbudIOHzT3hplLHsybAIIBCtmMFBX1b0YhImJ+QBrxeELs
+         a6DMTqQmf/+qNpkjNDEXHSEsP+gAxCRXbnvnh8VSfxXF367VaTN8FcORpThFsE8Nh7nN
+         hRxQ==
+X-Gm-Message-State: AOJu0YwuBfd5IjtvLhdhVQ4gMGv1yaYjEIj3nWixGYJ8g7dlgmclUiwR
+	JjIV6Xdicm4WcTKM+Mluj32sbTWXlMHJ+w==
+X-Google-Smtp-Source: AGHT+IHOgGtZvSj8dp3Ed1gkngzNUSPm5tUfa1e4J5SEfUWYdU8tbSUFQ/gTEZJG343OrT8yf+lERw==
+X-Received: by 2002:a05:6602:14c7:b0:7be:edbc:629f with SMTP id b7-20020a05660214c700b007beedbc629fmr2513957iow.0.1705076326471;
+        Fri, 12 Jan 2024 08:18:46 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id s23-20020a02c517000000b0046d98c3cd7bsm964739jam.14.2024.01.12.08.18.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 08:18:45 -0800 (PST)
+Message-ID: <c17648db-469c-4d3c-8c2e-774b88e79f07@kernel.dk>
+Date: Fri, 12 Jan 2024 09:18:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="uxczuahqgymwfz6l"
-Content-Disposition: inline
-In-Reply-To: <8dee1738-0bde-48fb-bd0e-b8d06b609677@ti.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] io_uring: Delete a redundant kfree() call in
+ io_ring_ctx_alloc()
+Content-Language: en-US
+To: Gabriel Krisman Bertazi <krisman@suse.de>,
+ Markus Elfring <Markus.Elfring@web.de>
+Cc: io-uring@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Pavel Begunkov <asml.silence@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+References: <6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de>
+ <aa867594-e79d-6d08-a08e-8c9e952b4724@web.de>
+ <878r4xnn52.fsf@mailhost.krisman.be>
+ <b9c9ba9f-459e-40b5-ae4b-703dcc03871d@web.de>
+ <edeafe29-2ab1-4e87-853c-912b4da06ad5@web.de>
+ <87jzoek4r7.fsf@mailhost.krisman.be>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <87jzoek4r7.fsf@mailhost.krisman.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 1/12/24 7:25 AM, Gabriel Krisman Bertazi wrote:
+> Markus Elfring <Markus.Elfring@web.de> writes:
+> 
+>> From: Markus Elfring <elfring@users.sourceforge.net>
+>> Date: Wed, 10 Jan 2024 20:54:43 +0100
+>>
+>> Another useful pointer was not reassigned to the data structure member
+>> ?io_bl? by this function implementation.
+>> Thus omit a redundant call of the function ?kfree? at the end.
 
---uxczuahqgymwfz6l
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is just nonsense...
 
-On 12.01.2024 20:53:32, Kumar, Udit wrote:
-> Hi Marc
->=20
-> On 1/2/2024 4:43 PM, Marc Kleine-Budde wrote:
-> > On 02.01.2024 15:59:49, Bhavya Kapoor wrote:
-> > > When multiple CAN's are present, then names that are getting assigned
-> > > changes after every boot even after providing alias in the device tre=
-e.
-> > > Thus, Add support for implementing CAN aliasing so that names or
-> > > alias for CAN will now be provided from device tree.
-> > NACK, please use udev or systemd-networkd to provide stable names for
-> > CAN interfaces.
->=20
-> Would you like to re-consider this NACK.
+On top of that, this patch is pointless, and the 2nd patch is even worse
+in that it just makes a mess of cleanup. And for what reasoning?
+Absolutely none.
 
-This is not a CAN device specific problem. If you want to change this,
-talk/convince the networking people.
+There's a reason why I filter emails from this particular author
+straight to the trash, there's a long history of this kind of thing and
+not understanding feedback.
 
-> From kernel side,
->=20
-> IMO if aliasing is set in device tree then kernel should provide consiste=
-nt
-> baseline names.
->=20
-> However, distributions may choose different or other stable naming,
->=20
-> Also, if some distribution want to rely on kernel naming they still can d=
-o.
+-- 
+Jens Axboe
 
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---uxczuahqgymwfz6l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEDs2BvajyNKlf9TJQvlAcSiqKBOgFAmWhXhAACgkQvlAcSiqK
-BOjD0wgAriZqvA12Vu5nzdKCKAjSH8J55u83wid8H1TFwOTI44OzbAg0a6AakQua
-JRGAbYx0pivUuwNf8emVJ1FVJMxyPH1lMPwQep6ZYtTVqoWfhOFDWk2m14xBYTVj
-DguY9dlaK/uBU39GBDnk3b8dMd+l6QwSDJhymFTO5P5c87YLzVlpa4FkbSVE2Atz
-wQVQZdMzIUJK4FwFaymKkT2SjLsLb5kZPM8t80L7oknZruvsJKGEAm2KF9TJYnV0
-fjdBgfzdbdxFrJqJEd7YSOK5aN0mv2/gyb16rpGDYRsrWmBN2sffk4kIC1TmsSwS
-Do9pEjkihZ2wEpAShuxai2OdqVMBMQ==
-=709B
------END PGP SIGNATURE-----
-
---uxczuahqgymwfz6l--
