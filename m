@@ -1,78 +1,215 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD017175B7
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 18:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597902560A;
+	Fri, 12 Jan 2024 18:23:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="flajn/Hp"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2d04888d3dso33173866b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 10:19:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1705083556; x=1705688356; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4YgfB75CHcjxceeOnVR/ppUWGj8eZS3KKNzpvFvVkgw=;
-        b=flajn/HpYNvQD5M3bnlvKUM10JgJNeDLoJVLIvHyoj8RrmFe5pGeVQRmUNE3TWCDF7
-         q+32dYu6toUJ2f1HX45/LGc7l61LI6xVVpJTS610iavHmAQ8EfhN4USxLbLCvkg75Iox
-         j/N0gk9vqrS2i9e4SIIAKI2bV0956bvKREi9E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705083556; x=1705688356;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4YgfB75CHcjxceeOnVR/ppUWGj8eZS3KKNzpvFvVkgw=;
-        b=FkSwXxe4YRFNVkq9XlK+M8NBa+OpaJzrlcF3c8t664E+9tetgH2K38NUrM8AHObfT1
-         9RqCNHzfmfG67oLKPRqznJFA6QXlj8IVtVTGpKSRYziBuW6l3P3RPubCMTZLbPcMpOOk
-         3T1PYmWl7VO5egXHBx96HUHWxUAfD8uWBWyxPgrWftrDNHNjbSSG/5i1kjPjfavUa50Q
-         LXHCT4BHVoD/O4hhZhqc+fs/lL06IpfK0HoMtgNpufD9ECh5KTzjOYa4i4X4OlYOY4jp
-         CwlhuW5AmW14pwZp5/pqoVIAWbNC0n71XUE3984T/mwXdGk2T2BslzMbPLK3vDnt7l2B
-         5XEQ==
-X-Gm-Message-State: AOJu0Yz6RWPHFC85O+RYq+3YVW2ds28nMRV/yO1t7oJN50kAi2u0a9mk
-	TBzD8IFM9mcYJWGJjAiJiCKzN3HWFR1/XZXT3SjsbkWLYOuPBNf4
-X-Google-Smtp-Source: AGHT+IGU+WIpugRRYz3pubQWlEZQ3btlN1RMn4U4FmkNcNuSxrivezn8JWUUTSLp5MVbGk7vzfeMGA==
-X-Received: by 2002:a17:907:8b93:b0:a23:4e3f:a2fd with SMTP id tb19-20020a1709078b9300b00a234e3fa2fdmr1095111ejc.5.1705083555946;
-        Fri, 12 Jan 2024 10:19:15 -0800 (PST)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id jp9-20020a170906f74900b00a29512c5ee9sm2031227ejb.154.2024.01.12.10.19.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jan 2024 10:19:15 -0800 (PST)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-558ac3407eeso2220654a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 10:19:14 -0800 (PST)
-X-Received: by 2002:a17:906:3813:b0:a27:f2c8:acd3 with SMTP id
- v19-20020a170906381300b00a27f2c8acd3mr803201ejc.94.1705083554611; Fri, 12 Jan
- 2024 10:19:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdlcrtmq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B58C433C7;
+	Fri, 12 Jan 2024 18:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705083780;
+	bh=lU3HCrdKgQWP+2uYW9g0VOt5OLiZn7shgDnF710EWXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cdlcrtmqtc4RIj/ehk3I9GgSPENo8oFhjP05Q1gjkiiVIzH5RcFlOnoRBKmnvhC8S
+	 MGXlhqBNmJ8uXmDzFEhy6HHY8uFIDjaqWE2klebrDfPJj9VW4D3a3jbQ//VIGi2hRH
+	 gspA72SUP4AyCNu0l3Fo/7lOcYKiFnkg1v+4YSbAxd1vmnAe5OaBzZa/eft3LOcfcD
+	 CtS4KbLBHMQ8/pqAfF+aOJPlXRzoPR70YFSHl8dXneVjl0OVTxUUejeYYb5heSdOar
+	 0G9Y46AfkxdhMHfrAKnFBj2aJHokLxuY/VK1E9WXEjbNU9zGnRt47+Ts4v95VnzCEX
+	 bKU0KuUs0/AmQ==
+Date: Fri, 12 Jan 2024 18:22:55 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Neal Gompa <neal@gompa.dev>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Nikolai Kondrashov <spbnick@gmail.com>
+Subject: Re: [GIT PULL] bcachefs updates for 6.8
+Message-ID: <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
+References: <wq27r7e3n5jz4z6pn2twwrcp2zklumcfibutcpxrw6sgaxcsl5@m5z7rwxyuh72>
+ <202401101525.112E8234@keescook>
+ <6pbl6vnzkwdznjqimowfssedtpawsz2j722dgiufi432aldjg4@6vn573zspwy3>
+ <202401101625.3664EA5B@keescook>
+ <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
+ <be2fa62f-f4d3-4b1c-984d-698088908ff3@sirena.org.uk>
+ <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
+ <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
+ <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
+ <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZaAzOgd3iWL0feTU@google.com> <CAHk-=wgTbey3-RCz8ZpmTsMhUGf02YVV068k3OzrmOvJPowXfw@mail.gmail.com>
- <20240112071242.GA1674809@ZenIV>
-In-Reply-To: <20240112071242.GA1674809@ZenIV>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 12 Jan 2024 10:18:57 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjwL6bdmvdLu2CB=OmD3Dkr=ENATVsk6mE3rpZ-tavktg@mail.gmail.com>
-Message-ID: <CAHk-=wjwL6bdmvdLu2CB=OmD3Dkr=ENATVsk6mE3rpZ-tavktg@mail.gmail.com>
-Subject: Re: [GIT PULL] f2fs update for 6.8-rc1
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux F2FS Dev Mailing List <linux-f2fs-devel@lists.sourceforge.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UV+e11fnWR99TzU9"
+Content-Disposition: inline
+In-Reply-To: <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
+X-Cookie: I want a WESSON OIL lease!!
 
-On Thu, 11 Jan 2024 at 23:12, Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> Where would you end up with old_dir_page != NULL and old_dir_entry == NULL?
 
-D'oh.
+--UV+e11fnWR99TzU9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You are of course right, and I missed that connection. Happily my
-merge still works, just isn't as minimal as yours.
+On Fri, Jan 12, 2024 at 06:11:04AM -0500, Neal Gompa wrote:
+> On Thu, Jan 11, 2024 at 8:11=E2=80=AFPM Kent Overstreet
+> > On Thu, Jan 11, 2024 at 09:47:26PM +0000, Mark Brown wrote:
 
-I see that Jaegeuk already posted the patch for the cleanup.
+> > > It's certainly an issue and it's much better if people do manage to f=
+it
+> > > their tests into some existing thing but I'm not convinced that's the
+> > > big reason why you have a bunch of different systems running separate=
+ly
+> > > and doing different things.  For example the enterprise vendors will
+> > > naturally tend to have a bunch of server systems in their labs and fo=
+cus
+> > > on their testing needs while I know the Intel audio CI setup has a bu=
+nch
 
-              Linus
+> > No, you're overthinking.
+
+> > The vast majority of kernel testing requires no special hardware, just a
+> > virtual machine.
+
+This depends a lot on the area of the kernel you're looking at - some
+things are very amenable to testing in a VM but there's plenty of code
+where you really do want to ensure that at some point you're running
+with some actual hardware, ideally as wide a range of it with diverse
+implementation decisions as you can manage.  OTOH some things can only
+be tested virtually because the hardware doesn't exist yet!
+
+> > There is _no fucking reason_ we shouldn't be able to run tests on our
+> > own local machines - _local_ machines, not waiting for the Intel CI
+> > setup and asking for a git branch to be tested, not waiting for who
+> > knows how long for the CI farm to get to it - just run the damn tests
+> > immediately and get immediate feedback.
+
+> > You guys are overthinking and overengineering and ignoring the basics,
+> > the way enterprise people always do.
+
+> As one of those former enterprise people that actually did do this
+> stuff, I can say that even when I was "in the enterprise", I tried to
+> avoid overthinking and overengineering stuff like this. :)
+
+> Nobody can maintain anything that's so complicated nobody can run the
+> tests on their machine. That is the root of all sadness.
+
+Yeah, similar with a lot of the more hardware focused or embedded stuff
+- running something on the machine that's in front of you is seldom the
+bit that causes substantial issues.  Most of the exceptions I've
+personally dealt with involved testing hardware (from simple stuff like
+wiring the audio inputs and outputs together to verify that they're
+working to attaching fancy test equipment to simulate things or validate
+that desired physical parameters are being achieved).
+
+> > > of the existing systems fit well.  Anecdotally it seems much more com=
+mon
+> > > to see people looking for things to reuse in order to save time than =
+it
+> > > is to see people going off and reinventing the world.
+
+> > It's a basic lack of leadership. Yes, the younger engineers are always
+> > going to be doing the new and shiny, and always going to want to build
+> > something new instead of finishing off the tests or integrating with
+> > something existing. Which is why we're supposed to have managers saying
+> > "ok, what do I need to prioritize for my team be able to develop
+> > effectively".
+
+That sounds more like a "(reproducible) tests don't exist" complaint
+which is a different thing again to people going off and NIHing fancy
+frameworks.
+
+> > > That does assume that you're building and running everything directly=
+ on
+> > > the system under test and are happy to have the test in a VM which is=
+n't
+> > > an assumption that holds universally, and also that whoever's doing t=
+he
+> > > testing doesn't want to do something like use their own distro or
+> > > something - like I say none of it looks too unreasonable for
+> > > filesystems.
+
+> > No, I'm doing it that way because technically that's the simplest way to
+> > do it.
+
+> > All you guys building crazy contraptions for running tests on Google
+> > Cloud or Amazon or whatever - you're building technical workarounds for
+> > broken procurement.
+
+I think you're addressing some specific stuff that I'm not super
+familiar with here?  My own stuff (and most of the stuff I end up
+looking at) involves driving actual hardware.
+
+> > Just requisition the damn machines.
+
+There's some assumptions there which are true for a lot of people
+working on the kernel but not all of them...
+
+> Running in the cloud does not mean it has to be complicated. It can be
+> a simple Buildbot or whatever that knows how to spawn spot instances
+> for tests and destroy them when they're done *if the test passed*. If
+> a test failed on an instance, it could hold onto them for a day or two
+> for someone to debug if needed.
+
+> (I mention Buildbot because in a previous life, I used that to run
+> tests for the dattobd out-of-tree kernel module before. That was the
+> strategy I used for it.)
+
+Yeah, or if your thing runs in a Docker container rather than a VM then
+throwing it at a Kubernetes cluster using a batch job isn't a big jump.
+
+> > I'd also really like to get automated performance testing going too,
+> > which would have similar requirements in that jobs would need to be
+> > scheduled on specific dedicated machines. I think what you're doing
+> > could still build off of some common infrastructure.
+
+It does actually - like quite a few test labs mine is based around LAVA,
+labgrid is the other popular option (people were actually thinking about
+integrating the two recently since labgrid is a bit lower level than
+LAVA and they could conceptually play nicely with each other).  Since
+the control API is internet accessible this means that it's really
+simple for me to to donate spare time on the boards to KernelCI as it
+understands how to drive LAVA, testing that I in turn use myself.  Both
+my stuff and KernelCI use a repository of glue which knows how to drive
+various testsuites inside a LAVA job, that's also used by other systems
+using LAVA like LKFT.
+
+The custom stuff I have is all fairly thin (and quite janky), mostly
+just either things specific to my physical lab or managing which tests I
+want to run and what results I expect.  What I've got is *much* more
+limited than I'd like, and frankly if I wasn't able to pick up huge
+amounts of preexisting work most of this stuff would not be happening.
+
+> > > I'd also note that the 9 hour turnaround time for that test set you're
+> > > pointing at isn't exactly what I'd associate with immediate feedback.
+
+> > My CI shards at the subtest level, and like I mentioned I run 10 VMs per
+> > physical machine, so with just 2 of the 80 core Ampere boxes I get full
+> > test runs done in ~20 minutes.
+
+> This design, ironically, is way more cloud-friendly than a lot of
+> testing system designs I've seen in the past. :)
+
+Sounds like a small private cloud to me!  :P
+
+--UV+e11fnWR99TzU9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWhg38ACgkQJNaLcl1U
+h9DHZwf+PUi1dDbFvsjAfmvcY+0m2KkcjKJUtDiUwTEHmzVMfX8ecVVG8n3KvIoK
+yJPiP3akTv4vWMqCVYjXdWrIWgxd9JD3tLscfll2OH1dFJPKVKynWNhqdAKLfBIv
+dZALV/v+MthofRA4/SQclK5mUqp8TfQ9Y+oHdKoc9IZ/ouD2XKpmdx2Pd7czeDXF
+3g5bgNNV0B6qTNySSsk9kFIMqGrFd9x8lD5JGDI+Yn0Pszd1apv0G2Jd0GizYuUa
+0zWhQFJC1o7YVIdocJlIUQMMw4DarW45ZWzhHOqw/l4qyJ5ozT5LPB+PzEmfNLQj
+Sk+tVn8kcBGo7OmCWlw8wcd5eUNqvQ==
+=b3J3
+-----END PGP SIGNATURE-----
+
+--UV+e11fnWR99TzU9--
