@@ -1,67 +1,67 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BE45EE67;
-	Fri, 12 Jan 2024 09:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D565EE82;
+	Fri, 12 Jan 2024 09:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CnkglU/M";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LtbMjz1V";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CnkglU/M";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LtbMjz1V"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WVfb89vf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GNKTw6kD";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WVfb89vf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GNKTw6kD"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4EE4F1FC31;
-	Fri, 12 Jan 2024 09:50:04 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8193F21E5A;
+	Fri, 12 Jan 2024 09:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705053004; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1705053005; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0VtVMugAx0bf7F0Ks4LYKgivz5jC/UzmrIRwmqlOnbQ=;
-	b=CnkglU/M/lLXvK59kvRO83tUZ3QyD7a+8Tcu7QI+Iep9bGC804RQyIUIXu7l0EH3zp1P/b
-	QcIGQbXStRHVWK5yfn/jGt1gLCs1miyxQogPGquQdJj+UY/EDfJP+Ng10pwKE8xrIPQkYB
-	lBd26xdI0AEdyzxYFOjM2yC5XddLWOk=
+	bh=4ZY5CvUKPTyR/DoYhG/6WLW1e06/fH9Nafua63trqkc=;
+	b=WVfb89vfFOsfEQtmvvxMABtAAqd4mvPtclri/fLLV0HtETZ+f00vBbuf84LcqDqTUtmYd9
+	p/p8uNqVD/25+fIw+MfJ1sfpaJrtNp+CCiew/2fWJXXvrpXIBIAu+xNM2wDiJgWbKLtUN9
+	AGN/surNnYHZzBkP7vm2uaTwYYrP+os=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705053004;
+	s=susede2_ed25519; t=1705053005;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0VtVMugAx0bf7F0Ks4LYKgivz5jC/UzmrIRwmqlOnbQ=;
-	b=LtbMjz1VKlZsgCNxKV1UJ2Adw7yR5POGNE2Y2VyKa5osHoLym3PHl4/TPodujojwdRwdFx
-	i/Oo2wcUfVMN9DDA==
+	bh=4ZY5CvUKPTyR/DoYhG/6WLW1e06/fH9Nafua63trqkc=;
+	b=GNKTw6kDfumSrhXL8aBNPuFDSXgOyUwW5MG5LU3CTmblkDYzL7mYhh6rl38fA3ZfOkQmcz
+	7bHg3H6dazhdIbAg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705053004; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1705053005; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0VtVMugAx0bf7F0Ks4LYKgivz5jC/UzmrIRwmqlOnbQ=;
-	b=CnkglU/M/lLXvK59kvRO83tUZ3QyD7a+8Tcu7QI+Iep9bGC804RQyIUIXu7l0EH3zp1P/b
-	QcIGQbXStRHVWK5yfn/jGt1gLCs1miyxQogPGquQdJj+UY/EDfJP+Ng10pwKE8xrIPQkYB
-	lBd26xdI0AEdyzxYFOjM2yC5XddLWOk=
+	bh=4ZY5CvUKPTyR/DoYhG/6WLW1e06/fH9Nafua63trqkc=;
+	b=WVfb89vfFOsfEQtmvvxMABtAAqd4mvPtclri/fLLV0HtETZ+f00vBbuf84LcqDqTUtmYd9
+	p/p8uNqVD/25+fIw+MfJ1sfpaJrtNp+CCiew/2fWJXXvrpXIBIAu+xNM2wDiJgWbKLtUN9
+	AGN/surNnYHZzBkP7vm2uaTwYYrP+os=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705053004;
+	s=susede2_ed25519; t=1705053005;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0VtVMugAx0bf7F0Ks4LYKgivz5jC/UzmrIRwmqlOnbQ=;
-	b=LtbMjz1VKlZsgCNxKV1UJ2Adw7yR5POGNE2Y2VyKa5osHoLym3PHl4/TPodujojwdRwdFx
-	i/Oo2wcUfVMN9DDA==
+	bh=4ZY5CvUKPTyR/DoYhG/6WLW1e06/fH9Nafua63trqkc=;
+	b=GNKTw6kDfumSrhXL8aBNPuFDSXgOyUwW5MG5LU3CTmblkDYzL7mYhh6rl38fA3ZfOkQmcz
+	7bHg3H6dazhdIbAg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B812313782;
-	Fri, 12 Jan 2024 09:50:03 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EBCF613782;
+	Fri, 12 Jan 2024 09:50:04 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cAi2K0sLoWVmOgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 12 Jan 2024 09:50:03 +0000
+	id MPxPOEwLoWVmOgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 12 Jan 2024 09:50:04 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: ardb@kernel.org,
 	nathan@kernel.org,
@@ -86,9 +86,9 @@ Cc: linux-arch@vger.kernel.org,
 	linux-integrity@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v5 2/4] arch/x86: Move internal setup_data structures into setup_data.h
-Date: Fri, 12 Jan 2024 10:44:37 +0100
-Message-ID: <20240112095000.8952-3-tzimmermann@suse.de>
+Subject: [PATCH v5 4/4] arch/x86: Do not include <asm/bootparam.h> in several files
+Date: Fri, 12 Jan 2024 10:44:39 +0100
+Message-ID: <20240112095000.8952-5-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240112095000.8952-1-tzimmermann@suse.de>
 References: <20240112095000.8952-1-tzimmermann@suse.de>
@@ -99,185 +99,261 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: **
-X-Spam-Score: 2.20
-X-Spamd-Result: default: False [2.20 / 50.00];
-	 ARC_NA(0.00)[];
+X-Spam-Level: *
+X-Spamd-Bar: +
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=WVfb89vf;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GNKTw6kD
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [1.99 / 50.00];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
 	 R_MISSING_CHARSET(2.50)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
 	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 R_RATELIMIT(0.00)[to_ip_from(RLf6fmkuiuubj71hj5sz5bt3qt)];
+	 R_RATELIMIT(0.00)[to_ip_from(RLfgmttzabnpkr34rizty4fwu5)];
 	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
 	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[23];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
 	 FREEMAIL_TO(0.00)[kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,arndb.de,linux.ibm.com,gmail.com,paul-moore.com,namei.org,hallyn.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[23];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 RCVD_TLS_ALL(0.00)[];
 	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Score: 1.99
+X-Rspamd-Queue-Id: 8193F21E5A
 X-Spam-Flag: NO
 
-The type definition of struct pci_setup_rom in <asm/pci.h> requires
-struct setup_data from <asm/bootparam.h>. Many drivers include
-<linux/pci.h>, but do not use boot parameters. Changes to bootparam.h
-or its included header files could easily trigger a large, unnecessary
-rebuild of the kernel.
-
-Moving struct pci_setup_rom into its own header file avoids including
-<asm/bootparam.h> in <asm/pci.h>. Moving struct_efi_setup_data allows
-to unify duplicated definition of the data structure in a single place.
-Also silence clang's warnings about GNU extensions in real-mode code,
-which might occur from the changed includes.
+Remove the include statement for <asm/bootparam.h> from several files
+that don't require it. Limits the exposure of the boot parameters
+within the Linux kernel code.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
 ---
+
 v5:
-	* silence clang's GNU warnings for real-mode code (Nathan)
+	* revert of boot/compressed/misc.h (kernel test robot)
+v3:
+	* revert of e820/types.h required
+v2:
+	* clean up misc.h and e820/types.h
+	* include bootparam.h in several source files
 ---
- arch/x86/Makefile                 |  3 +++
- arch/x86/boot/compressed/efi.h    |  9 ---------
- arch/x86/include/asm/efi.h        |  9 ---------
- arch/x86/include/asm/pci.h        | 13 -------------
- arch/x86/include/asm/setup_data.h | 32 +++++++++++++++++++++++++++++++
- 5 files changed, 35 insertions(+), 31 deletions(-)
- create mode 100644 arch/x86/include/asm/setup_data.h
+ arch/x86/boot/compressed/acpi.c       | 2 ++
+ arch/x86/boot/compressed/cmdline.c    | 2 ++
+ arch/x86/boot/compressed/efi.c        | 2 ++
+ arch/x86/boot/compressed/pgtable_64.c | 1 +
+ arch/x86/boot/compressed/sev.c        | 1 +
+ arch/x86/include/asm/kexec.h          | 1 -
+ arch/x86/include/asm/mem_encrypt.h    | 2 +-
+ arch/x86/include/asm/sev.h            | 3 ++-
+ arch/x86/include/asm/x86_init.h       | 2 --
+ arch/x86/kernel/crash.c               | 1 +
+ arch/x86/kernel/sev-shared.c          | 2 ++
+ arch/x86/platform/pvh/enlighten.c     | 1 +
+ arch/x86/xen/enlighten_pvh.c          | 1 +
+ arch/x86/xen/vga.c                    | 1 -
+ 14 files changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 1a068de12a56..24076db59783 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -53,6 +53,9 @@ REALMODE_CFLAGS += -fno-stack-protector
- REALMODE_CFLAGS += -Wno-address-of-packed-member
- REALMODE_CFLAGS += $(cc_stack_align4)
- REALMODE_CFLAGS += $(CLANG_FLAGS)
-+ifdef CONFIG_CC_IS_CLANG
-+REALMODE_CFLAGS += -Wno-gnu
-+endif
- export REALMODE_CFLAGS
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 18d15d1ce87d..f196b1d1ddf8 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -5,6 +5,8 @@
+ #include "../string.h"
+ #include "efi.h"
  
- # BITS is used as extension for files which are available in a 32 bit
-diff --git a/arch/x86/boot/compressed/efi.h b/arch/x86/boot/compressed/efi.h
-index 866c0af8b5b9..b22300970f97 100644
---- a/arch/x86/boot/compressed/efi.h
-+++ b/arch/x86/boot/compressed/efi.h
-@@ -97,15 +97,6 @@ typedef struct {
- 	u32 tables;
- } efi_system_table_32_t;
- 
--/* kexec external ABI */
--struct efi_setup_data {
--	u64 fw_vendor;
--	u64 __unused;
--	u64 tables;
--	u64 smbios;
--	u64 reserved[8];
--};
--
- struct efi_unaccepted_memory {
- 	u32 version;
- 	u32 unit_size;
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index c4555b269a1b..a5d7a83e4c2a 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -143,15 +143,6 @@ extern void efi_free_boot_services(void);
- void arch_efi_call_virt_setup(void);
- void arch_efi_call_virt_teardown(void);
- 
--/* kexec external ABI */
--struct efi_setup_data {
--	u64 fw_vendor;
--	u64 __unused;
--	u64 tables;
--	u64 smbios;
--	u64 reserved[8];
--};
--
- extern u64 efi_setup;
- 
- #ifdef CONFIG_EFI
-diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
-index f6100df3652e..b3ab80a03365 100644
---- a/arch/x86/include/asm/pci.h
-+++ b/arch/x86/include/asm/pci.h
-@@ -10,7 +10,6 @@
++#include <asm/bootparam.h>
++
  #include <linux/numa.h>
- #include <asm/io.h>
- #include <asm/memtype.h>
--#include <asm/setup_data.h>
  
- struct pci_sysdata {
- 	int		domain;		/* PCI domain */
-@@ -124,16 +123,4 @@ cpumask_of_pcibus(const struct pci_bus *bus)
- }
- #endif
+ /*
+diff --git a/arch/x86/boot/compressed/cmdline.c b/arch/x86/boot/compressed/cmdline.c
+index c1bb180973ea..e162d7f59cc5 100644
+--- a/arch/x86/boot/compressed/cmdline.c
++++ b/arch/x86/boot/compressed/cmdline.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "misc.h"
  
--struct pci_setup_rom {
--	struct setup_data data;
--	uint16_t vendor;
--	uint16_t devid;
--	uint64_t pcilen;
--	unsigned long segment;
--	unsigned long bus;
--	unsigned long device;
--	unsigned long function;
--	uint8_t romdata[];
--};
++#include <asm/bootparam.h>
++
+ static unsigned long fs;
+ static inline void set_fs(unsigned long seg)
+ {
+diff --git a/arch/x86/boot/compressed/efi.c b/arch/x86/boot/compressed/efi.c
+index 6edd034b0b30..f2e50f9758e6 100644
+--- a/arch/x86/boot/compressed/efi.c
++++ b/arch/x86/boot/compressed/efi.c
+@@ -7,6 +7,8 @@
+ 
+ #include "misc.h"
+ 
++#include <asm/bootparam.h>
++
+ /**
+  * efi_get_type - Given a pointer to boot_params, determine the type of EFI environment.
+  *
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index 51f957b24ba7..c882e1f67af0 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "misc.h"
++#include <asm/bootparam.h>
+ #include <asm/e820/types.h>
+ #include <asm/processor.h>
+ #include "pgtable.h"
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 454acd7a2daf..13beae767e48 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -12,6 +12,7 @@
+  */
+ #include "misc.h"
+ 
++#include <asm/bootparam.h>
+ #include <asm/pgtable_types.h>
+ #include <asm/sev.h>
+ #include <asm/trapnr.h>
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index c9f6a6c5de3c..91ca9a9ee3a2 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -25,7 +25,6 @@
+ 
+ #include <asm/page.h>
+ #include <asm/ptrace.h>
+-#include <asm/bootparam.h>
+ 
+ struct kimage;
+ 
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 359ada486fa9..c1a8a3408c18 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -15,7 +15,7 @@
+ #include <linux/init.h>
+ #include <linux/cc_platform.h>
+ 
+-#include <asm/bootparam.h>
++struct boot_params;
+ 
+ #ifdef CONFIG_X86_MEM_ENCRYPT
+ void __init mem_encrypt_init(void);
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 5b4a1ce3d368..8dad8b1613bf 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -13,7 +13,6 @@
+ 
+ #include <asm/insn.h>
+ #include <asm/sev-common.h>
+-#include <asm/bootparam.h>
+ #include <asm/coco.h>
+ 
+ #define GHCB_PROTOCOL_MIN	1ULL
+@@ -22,6 +21,8 @@
+ 
+ #define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
+ 
++struct boot_params;
++
+ enum es_result {
+ 	ES_OK,			/* All good */
+ 	ES_UNSUPPORTED,		/* Requested operation not supported */
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index c878616a18b8..f062715578a0 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -2,8 +2,6 @@
+ #ifndef _ASM_X86_PLATFORM_H
+ #define _ASM_X86_PLATFORM_H
+ 
+-#include <asm/bootparam.h>
 -
- #endif /* _ASM_X86_PCI_H */
-diff --git a/arch/x86/include/asm/setup_data.h b/arch/x86/include/asm/setup_data.h
-new file mode 100644
-index 000000000000..77c51111a893
---- /dev/null
-+++ b/arch/x86/include/asm/setup_data.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_SETUP_DATA_H
-+#define _ASM_X86_SETUP_DATA_H
+ struct ghcb;
+ struct mpc_bus;
+ struct mpc_cpu;
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index c92d88680dbf..564cff7ed33a 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -26,6 +26,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/memblock.h>
+ 
++#include <asm/bootparam.h>
+ #include <asm/processor.h>
+ #include <asm/hardirq.h>
+ #include <asm/nmi.h>
+diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+index ccb0915e84e1..4962ec42dc68 100644
+--- a/arch/x86/kernel/sev-shared.c
++++ b/arch/x86/kernel/sev-shared.c
+@@ -9,6 +9,8 @@
+  * and is included directly into both code-bases.
+  */
+ 
++#include <asm/setup_data.h>
 +
-+#include <uapi/asm/setup_data.h>
-+
-+#ifndef __ASSEMBLY__
-+
-+struct pci_setup_rom {
-+	struct setup_data data;
-+	uint16_t vendor;
-+	uint16_t devid;
-+	uint64_t pcilen;
-+	unsigned long segment;
-+	unsigned long bus;
-+	unsigned long device;
-+	unsigned long function;
-+	uint8_t romdata[];
-+};
-+
-+/* kexec external ABI */
-+struct efi_setup_data {
-+	u64 fw_vendor;
-+	u64 __unused;
-+	u64 tables;
-+	u64 smbios;
-+	u64 reserved[8];
-+};
-+
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* _ASM_X86_SETUP_DATA_H */
+ #ifndef __BOOT_COMPRESSED
+ #define error(v)	pr_err(v)
+ #define has_cpuflag(f)	boot_cpu_has(f)
+diff --git a/arch/x86/platform/pvh/enlighten.c b/arch/x86/platform/pvh/enlighten.c
+index 00a92cb2c814..944e0290f2c0 100644
+--- a/arch/x86/platform/pvh/enlighten.c
++++ b/arch/x86/platform/pvh/enlighten.c
+@@ -3,6 +3,7 @@
+ 
+ #include <xen/hvc-console.h>
+ 
++#include <asm/bootparam.h>
+ #include <asm/io_apic.h>
+ #include <asm/hypervisor.h>
+ #include <asm/e820/api.h>
+diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
+index ada3868c02c2..9e9db601bd52 100644
+--- a/arch/x86/xen/enlighten_pvh.c
++++ b/arch/x86/xen/enlighten_pvh.c
+@@ -4,6 +4,7 @@
+ 
+ #include <xen/hvc-console.h>
+ 
++#include <asm/bootparam.h>
+ #include <asm/io_apic.h>
+ #include <asm/hypervisor.h>
+ #include <asm/e820/api.h>
+diff --git a/arch/x86/xen/vga.c b/arch/x86/xen/vga.c
+index d97adab8420f..f7547807b0bd 100644
+--- a/arch/x86/xen/vga.c
++++ b/arch/x86/xen/vga.c
+@@ -2,7 +2,6 @@
+ #include <linux/screen_info.h>
+ #include <linux/init.h>
+ 
+-#include <asm/bootparam.h>
+ #include <asm/setup.h>
+ 
+ #include <xen/interface/xen.h>
 -- 
 2.43.0
 
