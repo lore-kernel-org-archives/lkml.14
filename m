@@ -1,156 +1,246 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E15D18B0C
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 22:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4370C18E07
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 22:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aarsen.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aarsen.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c5qcLjF5"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-553e36acfbaso4068a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:52:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705099969; x=1705704769; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5zEBqjbWZbZ/3Uylirb4GeOi3RLFiwNvDX78phkZWD8=;
-        b=c5qcLjF5G6rsdOJSEN+5jNUHtaJnz6bg7DZd4TSYSqQlU69Btav9OyEpNvGvhq3rab
-         FNQJK0of7qznSdVcvCFVRGru+BYD31/qz7NC6AHp44IrONbUvE6bDEa1Q0YGVlyXtvUU
-         KQPO89/QEm3MTb8C7uGUMGqB51qIP6pO5LVG2SuKQf3RCLFrbBAUGbT90GN6uzcJO+tD
-         xVaMuzulaP5Qxw4Pe7+wtK3mi58rzoEhlnynwPY40AnT9adIRqN/7Bn0BE5sVpgzYr7N
-         cxA2l4/xBs0dSf0qvDZkj4mLoE9R2j3uXyx8vYjWlDJCZIgBtkPxl3LwNDHwOdJyaece
-         683A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705099969; x=1705704769;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5zEBqjbWZbZ/3Uylirb4GeOi3RLFiwNvDX78phkZWD8=;
-        b=QIg2JgNm3zsJjCpxk4+TpDUH5R7CyHVcc5mCm1XY0bG2Ry6fH16rloVrZnEgaWNLP2
-         dwSRAfzK65cNHorb0BOubsUd+zsaH8rzYiZyUgs+iz8XVQNWxL4T8LxBnGJgFnP77jtL
-         +n9HdZORTM/nR+oVlDrvBcJdguQzJR4Ei9+dGU9vpCt3/t6DrE4rBtTYaXbvhJzsmR0Y
-         kuiFv3qGegbloHL8qoD6t7Z8BZmiOWkWAmXRuDeA2nJm7lVo40p9tDlna1t2ecD8qnxX
-         s74kVQoWqY819lZwzvPekE9iWE+zIYn9l8d+6wtDO75LK63WzsU02AjvLBvLut0Ddxe4
-         M5QA==
-X-Gm-Message-State: AOJu0YyyNQ4wEaNXdYMXsbOqgFZ1TFx+Um8fpMgM6WNNYROibH/qo0PO
-	0tNKrvDBahVL/koaDQMFFtEpXC/2I4jLgL6MmqVd0Io0pr0=
-X-Google-Smtp-Source: AGHT+IHkgMN1yQJBbcRo0BFB3B8pFJiDvEWeO3tE0O3jDrHXiN3BUhVwpu15ZRDxRy6MkjLufhC9Rmys7MiCAQ75PZg=
-X-Received: by 2002:aa7:c98b:0:b0:554:2501:cc8e with SMTP id
- c11-20020aa7c98b000000b005542501cc8emr18281edt.6.1705099969244; Fri, 12 Jan
- 2024 14:52:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=aarsen.me header.i=@aarsen.me header.b="dOIx4QCu"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4TBcJS4RwMz9sb5;
+	Fri, 12 Jan 2024 23:53:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aarsen.me; s=MBO0001;
+	t=1705099992;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZFzu3NgjfMFZmq8jvH7R3F6/VXMH/hfZeTvzde0WbXo=;
+	b=dOIx4QCu2tEhzhYdIfvD1PHclO7wOxYjGbVf5aDxFaJ/ey2kPIUzz09Ipg7fA0980KTJsl
+	3cMcj2hJQvS8+zfp76vwxlOYij1hYZo367v34fDPwi9ZP999UudwYzziz35QVQW4VViZVc
+	7or7Gv/89BDeqxdjn1MLMPqldtzAOPlyD4lxxDfOSrjMdpz5wEruFXra+aKxkLD2tZaq0o
+	aXcbVGyOlwnzwicWPlyAHC7fDpEKzXf8KBiCq8owLvBnpTqE+onX6xzLFnH9A/XnhiwkOX
+	Iwf4v3E8ewch8orDJIj0Q5SxT/PytGAqhoC9ud0ZEKUQFrJIL1notgfbn5xarw==
+References: <86r0inmpbm.fsf@aarsen.me>
+ <152261521484.30503.16131389653845029164.stgit@warthog.procyon.org.uk>
+ <2154236.1705051203@warthog.procyon.org.uk>
+From: Arsen =?utf-8?Q?Arsenovi=C4=87?= <arsen@aarsen.me>
+To: David Howells <dhowells@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/45] C++: Convert the kernel to C++
+Date: Fri, 12 Jan 2024 22:35:34 +0100
+In-reply-to: <2154236.1705051203@warthog.procyon.org.uk>
+Message-ID: <8634v2jh9s.fsf@aarsen.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112092014.23999-1-yong.wu@mediatek.com> <20240112092014.23999-4-yong.wu@mediatek.com>
-In-Reply-To: <20240112092014.23999-4-yong.wu@mediatek.com>
-From: John Stultz <jstultz@google.com>
-Date: Fri, 12 Jan 2024 14:52:37 -0800
-Message-ID: <CANDhNCrxpeqEhJD0xJzu3vm8a4jMXD2v+_dbDNvaKhLsLB5-4g@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] dma-buf: heaps: restricted_heap: Add private heap ops
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, christian.koenig@amd.com, 
-	Sumit Semwal <sumit.semwal@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	tjmercier@google.com, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	Robin Murphy <robin.murphy@arm.com>, Vijayanand Jitta <quic_vjitta@quicinc.com>, 
-	Joakim Bech <joakim.bech@linaro.org>, Jeffrey Kardatzke <jkardatzke@google.com>, 
-	Pavel Machek <pavel@ucw.cz>, Simon Ser <contact@emersion.fr>, Pekka Paalanen <ppaalanen@gmail.com>, 
-	jianjiao.zeng@mediatek.com, kuohong.wang@mediatek.com, 
-	youlin.pei@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+X-Rspamd-Queue-Id: 4TBcJS4RwMz9sb5
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 12, 2024 at 1:21=E2=80=AFAM Yong Wu <yong.wu@mediatek.com> wrot=
-e:
+
+David Howells <dhowells@redhat.com> writes:
+
+> Arsen Arsenovi=C4=87 <arsen@aarsen.me> wrote:
 >
-> Add "struct restricted_heap_ops". For the restricted memory, totally ther=
-e
-> are two steps:
-> a) memory_alloc: Allocate the buffer in kernel;
-> b) memory_restrict: Restrict/Protect/Secure that buffer.
-> The memory_alloc is mandatory while memory_restrict is optinal since it m=
-ay
-> be part of memory_alloc.
+>> >  (2) Constructors and destructors.  Nests of implicit code makes the c=
+ode less
+>> >      obvious, and the replacement of static initialisation with constr=
+uctor
+>> >      calls would make the code size larger.
+>>
+>> This also disallows the primary benefit of C++ (RAII), though.  A lot of
+>> static initialization can be achieved using constexpr and consteval,
+>> too.
 >
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->  drivers/dma-buf/heaps/restricted_heap.c | 41 ++++++++++++++++++++++++-
->  drivers/dma-buf/heaps/restricted_heap.h | 12 ++++++++
->  2 files changed, 52 insertions(+), 1 deletion(-)
+> Okay, let me downgrade that to "I wouldn't allow it at first".  The prima=
+ry
+> need for destructors, I think, is exception handling.
+
+I'm not sure I agree, the amount of 'goto err' constructs in the kernel
+seems to indicate otherwise to me.  This feels like the exact same code,
+except more error prone.
+
+> And don't get me wrong, I like the idea of exception handling - so
+> many bugs come because we mischeck or forget to check the error.
+
+C++ also provides possible alternative avenues for solving such
+problems, such as, for instance, an expected type with monadic
+operations: https://en.cppreference.com/w/cpp/utility/expected
+
+IIRC, using std::expected in managarm (where we previously used the IMO
+far less nice Frigg expected type) is what initially prompted me to
+start enabling the use of a lot of libstdc++ in kernel contexts, and
+indeed, it is enabled there:
+https://gcc.gnu.org/cgit/gcc/tree/libstdc++-v3/include/Makefile.am#n25
+
+>> It is incredibly useful to be able to express resource ownership in
+>> terms of automatic storage duration.
 >
-
-Thanks for sending this out! A thought below.
-
-> diff --git a/drivers/dma-buf/heaps/restricted_heap.h b/drivers/dma-buf/he=
-aps/restricted_heap.h
-> index 443028f6ba3b..ddeaf9805708 100644
-> --- a/drivers/dma-buf/heaps/restricted_heap.h
-> +++ b/drivers/dma-buf/heaps/restricted_heap.h
-> @@ -15,6 +15,18 @@ struct restricted_buffer {
+> Oh, indeed, yes - but you also have to be careful:
 >
->  struct restricted_heap {
->         const char              *name;
-> +
-> +       const struct restricted_heap_ops *ops;
-> +};
-> +
-> +struct restricted_heap_ops {
-> +       int     (*heap_init)(struct restricted_heap *heap);
-> +
-> +       int     (*memory_alloc)(struct restricted_heap *heap, struct rest=
-ricted_buffer *buf);
-> +       void    (*memory_free)(struct restricted_heap *heap, struct restr=
-icted_buffer *buf);
-> +
-> +       int     (*memory_restrict)(struct restricted_heap *heap, struct r=
-estricted_buffer *buf);
-> +       void    (*memory_unrestrict)(struct restricted_heap *heap, struct=
- restricted_buffer *buf);
->  };
+>  (1) You don't always want to wait till the end of the scope before relea=
+sing
+>      resources.
+
+One could move a resource out, or call a function akin to the 'reset()'
+method of std::unique_ptr.
+
+>  (2) Expressing ownership of something like a lock so that it is automati=
+cally
+>      undone may require extra memory is currently unnecessary:
 >
->  int restricted_heap_add(struct restricted_heap *rstrd_heap);
+> 	struct foo {
+> 		struct rwsem sem;
+> 	};
+>
+>
+> 	myfunc(struct foo *foo)
+> 	{
+> 		...
+> 		struct foo_shared_lock mylock(foo->sem);
+> 		...
+> 	}
+>
+>      This looks like a nice way to automatically take and hold a lock, bu=
+t I
+>      don't think it can be done without storing the address of the semaph=
+ore
+>      in mylock - something that isn't strictly necessary since we can fin=
+d sem
+>      from foo.
 
-So, I'm a little worried here, because you're basically turning the
-restricted_heap dma-buf heap driver into a framework itself.
-Where this patch is creating a subdriver framework.
+The compiler can often get rid of it.  Here's an example:
+https://godbolt.org/z/1W7bnYY7a
 
-Part of my hesitancy, is you're introducing this under the dma-buf
-heaps. For things like CMA, that's more of a core subsystem that has
-multiple users, and exporting cma buffers via dmabuf heaps is just an
-additional interface.  What I like about that is the core kernel has
-to define the semantics for the memory type and then the dmabuf heap
-is just exporting that well understood type of buffer.
+Simple enough wrapper classes like these combined with a modern
+compilers IPA and inlining can really do magic :-)
 
-But with these restricted buffers, I'm not sure there's yet a well
-understood set of semantics nor a central abstraction for that which
-other drivers use directly.
+>  (3) We could implement a magic pointer class that automatically does
+>      reference wangling (kref done right) - but we would have to be very
+>      careful using it because we want to do the minimum number of atomic =
+ops
+>      on its refcount that we can manage, firstly because atomic ops are s=
+low
+>      and secondly because the atomic counter must not overflow.
 
-I know part of this effort here is to start to centralize all these
-vendor specific restricted buffer implementations, which I think is
-great, but I just worry that in doing it in the dmabuf heap interface,
-it is a bit too user-facing. The likelihood of encoding a particular
-semantic to the singular "restricted_heap" name seems high.
+With move semantics, this could be quite effective and general.  The
+shared_ptr from the standard library, for instance, won't bump
+reference counts if moved.  And temporaries are automatically moved.
 
-Similarly we might run into systems with multiple types of restricted
-buffers (imagine a discrete gpu having one type along with TEE
-protected buffers also being used on the same system).
+You could make the class move-only so that *all* reference incrementing
+requires a method call (and hence, is clear and obvious), while still
+permitting auto-decrementing and preventing reference leakage.
 
-So the one question I have: Why not just have a mediatek specific
-restricted_heap dmabuf heap driver?  Since there's already been some
-talk of slight semantic differences in various restricted buffer
-implementations, should we just start with separately named dmabuf
-heaps for each? Maybe consolidating to a common name as more drivers
-arrive and we gain a better understanding of the variations of
-semantics folks are using?
+>> >  (5) Function overloading (except in special inline cases).
+>>
+>> Generic code, another significant benefit of C++, requires function
+>> overloading, though.
+>
+> I know.  But I was thinking that we might want to disable name mangling i=
+f we
+> can so as not to bloat the size of the kernel image.  That said, I do lik=
+e the
+> idea of being able to have related functions of the same name with differ=
+ent
+> arguments rather than having to name each one differently.
 
-thanks
--john
+Hmm, I can understand the symbol table size being an issue.
+
+>> >  (7) 'class', 'private', 'namespace'.
+>>
+>> 'class' does nothing that struct doesn't do, private and namespace serve
+>> simply for encapsulation, so I don't see why banning these is useful.
+>
+> Namespaces would lead to image bloat as they make the symbols bigger.
+> Remember, the symbol list uses up unswappable memory.
+
+Ah, I was not aware of this restriction of the kernel (my understanding
+was that the symbol table is outside of the kernel image).  That poses a
+problem, yes.  I wonder if a big part of the symbol table (or even the
+entirety of it) could be dropped from the kernel.  I must say, I do not
+know why the kernel has it, so I cannot speak on this issue.
+
+> We use class and private a lot as symbols already, so to get my stuff to
+> compile I had to #define them.  Granted there's nothing intrinsically
+> different about classes and we could rename every instance of the symbol =
+in
+> the kernel first.
+
+I see.  That is quite understandable then, especially if temporary.
+
+> When it comes to 'private', actually, I might withdraw my objection to it=
+: it
+> would help delineate internal fields - but we would then have to change
+> out-of-line functions that use it to be members of the class - again
+> potentially increasing the size of the symbol table.
+
+This is what I like about it too.
+
+>> >  (8) 'virtual'.  Don't want virtual base classes, though virtual funct=
+ion
+>> >      tables might make operations tables more efficient.
+>>
+>> Virtual base classes are seldom useful, but I see no reason to
+>> blanket-ban them (and I suspect you'll never notice that they're not
+>> banned).
+>
+> You can end up increasing the size of your structure as you may need mult=
+iple
+> virtual method pointer tables - and we have to be very careful about that=
+ as
+> some structures (dentry, inode and page for example) we have a *lot* of
+> instances of in a running kernel.
+
+I retract what I said about virtual classes - I had, indeed, forgotten
+about that issue (but, again, I doubt anyone will miss them ;-) ).
+
+>> >  (2) Direct assignment of pointers to/from void* isn't allowed by C++,=
+ though
+>> >      g++ grudgingly permits it with -fpermissive.  I would imagine tha=
+t a
+>> >      compiler option could easily be added to hide the error entirely.
+>>
+>> This should never be useful.
+>
+> It's not a matter of whether it should be useful - we do this an awful lo=
+t and
+> every case of assigning to/from a void pointer would require some sort of
+> cast.
+
+I see.  That could pose significant trouble.
+
+Ideally, nearly all uses of void* could be lost sooner or later, as C++
+has a more flexible (despite being stricter) type system.
+
+Have a lovely day!
+
+> David
+
+
+=2D-
+Arsen Arsenovi=C4=87
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iOYEARYKAI4WIQT+4rPRE/wAoxYtYGFSwpQwHqLEkwUCZaHCz18UgAAAAAAuAChp
+c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0RkVF
+MkIzRDExM0ZDMDBBMzE2MkQ2MDYxNTJDMjk0MzAxRUEyQzQ5MxAcYXJzZW5AYWFy
+c2VuLm1lAAoJEFLClDAeosSTfN4A/2x4kuET1fRRSAiEKkAFptXwLOvtJS+Kfla+
+b5JZNMqXAQC3y8t48Cfop96k2NC0NXiJyOLnf6eUpbX3eMpTSb3OBQ==
+=hUdU
+-----END PGP SIGNATURE-----
+--=-=-=--
