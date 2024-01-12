@@ -1,160 +1,136 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2058.outbound.protection.outlook.com [40.107.22.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97350EA6;
-	Fri, 12 Jan 2024 00:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B2D808
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 00:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WPTU9Uwo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oDH+yUTvgUX/bYR1auPqZp/+fpkEasDSLPejw1419jgPQ97Rv9tOB4KyJy1Q1Xe32Q04dOj8Xgs9KNHwckISV2mGwkQzQcABR9tWNPpa0lYvKwvPve16MJZr7Wi8mF5Id7jJ5ZWTcL/8hbDH+QW2Uh2CU6trR+jqjFX64WKdYKYxVP7P44J95xd5MyVfSFeabZLqFAc5DLjCtdcLn9+XqPVoU5I7gBcoZi6aDdpff1SwClRlHhkFld3OtOUZ4c2EidtxT8sWJtl/vjNghhyTBdLD9IuK/kM6rfa/RSp5mLUcgcasuZUCakrTwSH4/qczsuFCk0jYV11JWwyJSIt92Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qH1eYroDTV52Z7eusowWnJwSCTJjwrwIMWHC/rocFjs=;
- b=hBCJxr27z8r2Bgv3XrURtPxl0F5ACeZG3uxUxfzMIelbxRcjSqNv7GgVNx2DYbi0r8tBCrZz/FaYeNc27qkVLUu3iGeNkrKdMYXMDeIlBA5V8kEhkJiwdYl3omtYhdxaKa9xrBH60UVnNW8whWwDm/KVTFAEcsu5jc+nZa/7BvmYCDjczIE37ln//sqds0aqxpkAXcDQYyUzQ0Ypq5TrA4flG35xRTKOIo3xSvXyJLQfmWpAbPklDKVGSNW2urrNQPTOK9KTlgcaig5kee95J8Hp4GyKuiJ6HDJqbnegcydUa790K+dhxSgM7h0LcwNZxLkHmZKX3DZIWr0q3jqy7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qH1eYroDTV52Z7eusowWnJwSCTJjwrwIMWHC/rocFjs=;
- b=WPTU9Uwo/ghlZ2iFDJt1kC9jlcq+RPUV/I8RN1Cm4+kwMDaWzpdJQHPgxAxCZgrON1LCEpX4S+x3cVNtGMEvztfDUaTljVCxqsifa5GHhnYUcBIOxYgaNjD87R5QkvhCjRqKRLVXhQjmJJmNk4ZWCguIu1/T5JoiyHEXN6zsvXQ=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by VI1PR04MB6877.eurprd04.prod.outlook.com (2603:10a6:803:131::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Fri, 12 Jan
- 2024 00:44:10 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6%3]) with mapi id 15.20.7181.019; Fri, 12 Jan 2024
- 00:44:10 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Martin Kaiser <martin@kaiser.cx>, Linus Walleij
-	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] gpio: vf610: allow disabling the vf610 driver
-Thread-Topic: [PATCH] gpio: vf610: allow disabling the vf610 driver
-Thread-Index: AQHaRJ+WqP9gCRQCxEO4s+d81h4DHbDVVuJg
-Date: Fri, 12 Jan 2024 00:44:10 +0000
-Message-ID:
- <DU0PR04MB9417956F985780AD85FD733E886F2@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240111150429.681567-1-martin@kaiser.cx>
-In-Reply-To: <20240111150429.681567-1-martin@kaiser.cx>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|VI1PR04MB6877:EE_
-x-ms-office365-filtering-correlation-id: 62f3b804-2fa8-43bd-a785-08dc1307977d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- zwzm3Sv7w6uKiKzx/+ZdL89TfCglDgZoj4Ybv2A7smK0LGiWb8lPvmkldIfg8alZmcXIv2dJ75ZLHNFNjYG2BIYlaOpae9Ae0OBzwhO6HC3e8kghuP1qKsHp1LmR+oaH+82eT6gg3ohFUdZxF67FEt/pNwttISA7UQrE2v31LRvsbg/NXH2tdoHvP0eIWkSA/QsjaeV8MtNcQ0YyBkLF2tQfUwYVSy8jG93N4x5ohDp4EOg9DWJ+TAwhxeDNlRHIgyW2ud4FcxmYGWSYlr+jBWGTTyZExkygQ1EVRyj+BBH09ptevSDM6fx5jiLaPrY2pEXNKXIjS3JWJz8pgUxrwNgf2sYUNsKOeLIwaF9xuEjtM3e4Xr4hJPU3xBYE1Y+IFXcS1HV9ts0r2vot9ABBfN2YJrxEcUncBNKfnJGcWOD+fu6bTvHOCx+8fwmsna6NOc04LpN7B1fal9COCg2wvarFemZEdfLsv16iXuTFZFGHNR1YKrNBOho5i5BCi+89QwXN7uv/hK9Y1/TucTu//Xaw8gJtcUyWfSdt4KSdf7kSilxhU5w+nDQQQN7iKbanXggVZZSu75+RvDwUTGHxBmDQZsUU3Nz9G2DYRbsjS3mSrShmjM1DnaPKREs/tecd
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(366004)(376002)(39860400002)(396003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(55016003)(83380400001)(26005)(2906002)(38100700002)(66446008)(33656002)(86362001)(38070700009)(5660300002)(66476007)(66556008)(110136005)(54906003)(76116006)(71200400001)(41300700001)(52536014)(9686003)(122000001)(8936002)(8676002)(66946007)(316002)(44832011)(7696005)(64756008)(478600001)(6506007)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?45lyMATeZi4ZR1qTe9S0Jg7mxSaQ1grtsPwmSIv7DmUuLs7fs8N6qCYEOK2d?=
- =?us-ascii?Q?qu4WvwuG+V5m4OBuORv7080uqhwUfS/8SUUkwVatUKhUunGmzcZPU13K5yY8?=
- =?us-ascii?Q?LAa7vIcedfjKhm7oby96rhN5Tic8fNoXjVZjDNuKz+C3kgM/GCFH86vrIgNj?=
- =?us-ascii?Q?SsilN6sRu0QRV18H9cyF7ABQiQBCOkj3EG39l4W8reDT98f+zRFc4L1zmlnw?=
- =?us-ascii?Q?j7ncQ9vKxVwTTnsS/xA2lKZKQQSOq42qRxTQLcZx3Nthh92MQLhkNeaPYpas?=
- =?us-ascii?Q?eexyN/dU5xFb/4M8Rplt0efPg3hGiNccDmX90LkV0Pdy2ID5vlHGUN5AhaL4?=
- =?us-ascii?Q?xfhqL+9KI3rZYYoEF0wiFVC+9plzPxNIu0CZV+AQ1NJ3B1PrWX89EzM/jG/c?=
- =?us-ascii?Q?aj+KHqDOMdoBr9ogwhePHgN8LXNmRV6jELWC8DURvB9bkDBpdMG891R6hDaj?=
- =?us-ascii?Q?OxXgkzomtwdJJDhluA7qhQfhp2RsJ0VVDOGbIKlHB4nCUyRkHv6+kC0+gOXT?=
- =?us-ascii?Q?dIbcKZnt+6jKhJN08VBL5vgheHIARxz7jGzn0vtt+SbBF8Hw1BIAJ2lMSAr7?=
- =?us-ascii?Q?Mt4r19/RQSDF5tDKksHv46U8dsvfxbwLIPDgzOngwjMixdl1TRRMkhWBiert?=
- =?us-ascii?Q?YYWnDTLrCnUwanG/xhC9590BbL4Ik/itD6UJQx6gfiGgryhJjiYAqOsnJoNl?=
- =?us-ascii?Q?IQuudhxXjOTG88MnzbLf8ejsvnUEetnB+QsCa3AyU2p4pCiwMccgrzaqL8Mx?=
- =?us-ascii?Q?+V0lyPXFwNtAeULuroi+B31sro+0TKfIn+3gbFm4qfe6uzEXUmoaXXnOfsDB?=
- =?us-ascii?Q?x+ccuLs500v1/+GL3essedJDn3SRE8nVI+esR1HX5BkKsRAgWm6a2odvN/JZ?=
- =?us-ascii?Q?hAp+K1N37Iwr7aLoxvO0OU8XvfTqr/OjkL7e0XAABS2Yx4MlMoWTPeSI6ozh?=
- =?us-ascii?Q?7zTVarHvHIqbvnxSfrklVr5ipch9S4NDi3Hp37+UWwkRg4dejZJi0dw5GjTw?=
- =?us-ascii?Q?wnZMhYOVLDGckceou3S/SxaVWbc866+9HqrT3WgcDJ5PlIExqhZUXU24fcF0?=
- =?us-ascii?Q?YXASePejLFD8E0p2cYhnI1fSn6VW3fgTmz78og9ALUks8P87K9EGOG3nTGw+?=
- =?us-ascii?Q?IV0lFJecxaHqK/roXFVGecitc4E/Zv5PjG4AGZ75YgJ5p/zHTvUZv822VCgn?=
- =?us-ascii?Q?0KlyQB8+v5TydS8O1Ra/dyjzgln5NF17+i5P+ehkFuBHRPvXkyLl7C9qWE41?=
- =?us-ascii?Q?X2xT7LWGJ5Xxa1LjQA3xltCU4KqjJJq/IRw2HIjOV3LVDHv3PkknheASma6u?=
- =?us-ascii?Q?vrK4jaqsh7Ic7+ZNSHa6uc7y9kQA46Qyjpi9BFmmbSgAne9XSf2QZvNdk+sE?=
- =?us-ascii?Q?AvCpp0/iVLSpLCorfP2gXgZLtlkaM9UqH8wJf7kp9svVY07tNYM/0k4ysx+2?=
- =?us-ascii?Q?ZorjWSmi4x1SclDEHcc9hrO3GPkdRK0LA29ylk2XuLN2Kw8ai7QdXomII7Qk?=
- =?us-ascii?Q?nmp1tT+yYLkrqLSw6kwCzasbK955EWH3zdXT516cxzJaQGd9+kcp7NNlJ1Jl?=
- =?us-ascii?Q?4JFEOi1OcKtXS3IGSp0=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ITV8y+JE"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-28bbe965867so4095269a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:44:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705020285; x=1705625085; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sN2es8KlQfgJlHIGj5HF3V4E8vkTP0blruT0KN91HgE=;
+        b=ITV8y+JEIUqkHd2L5nkGpuraOPsGYiKofNUDKqTrVUKpCJWdD6+yepTBNKJ8EwDa7I
+         w32qqS8VeB0X1CMgNY2GOnkEygG4c9qiv56cFdBldoJLUg66WMHO76/qlyCkF1H9u6Kf
+         pKO3uuhGz/lgGouJ4OTwwJSbRUcPZMzwv6uiQOguBy++g+40Ww0jAWN+a32ocB3V6Ikf
+         6Y1rUo9Lw1sUc8gadVB/Ua1Z+6FjerNRdAanFhqnCI3nyXV7WiD9AaZ2EYM/2+KMm8Xn
+         bQFteOE+kRvMWY+0gvIs6qOCn0nZWHQYpFSddMY6egO2aHhoB9IyZuDGK2+rICcIcuB1
+         s3MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705020285; x=1705625085;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sN2es8KlQfgJlHIGj5HF3V4E8vkTP0blruT0KN91HgE=;
+        b=w+KaOwrEjz21lBhw9FC+Ensiih49SD58pr3t9F5YNWQsx66FnOhNhOflfhTW21l/53
+         HX6GBBUVNXiRnTvoOF2VQHzje21h84bSjSRpCl8ugNZC0bvctGTaiF6WaLCQhHOwg1w1
+         dQu3wJ/gioSTLN1TJIaG4Y3bs8xwyLry6FxuFASbtrCPAgm7fBFgtokssiKL11qRrrkG
+         ETZXiE5NJb+ghaz3tu9l9P4ik/0XBl4mUxgw1AY19QywGbZTTsmEUkK3xKDy0qfIIp92
+         TRen8qanUvO8aPzmM6sykFYLez5H36IqDJ0nK02C6+4TPFuTBoShQq/4fi3mPM5RmdeQ
+         oSNg==
+X-Gm-Message-State: AOJu0YxoUMHraA14q7LU6+q21fgfgDBNzLIJyYd63GdWeiptU+s4h1AP
+	A/DT0Q+ap1fzU3sl/DoiGc0N1DB9lxorFpcXWA==
+X-Google-Smtp-Source: AGHT+IG5ommWT719Fl7J9iZ+Wiaz9wxUw0BgdIsI4EBsqWk43AnLBHzc1JTU7N4YI/8UprhBryXp0Cn89eA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:5209:b0:28e:272:4e18 with SMTP id
+ sg9-20020a17090b520900b0028e02724e18mr2054pjb.2.1705020284924; Thu, 11 Jan
+ 2024 16:44:44 -0800 (PST)
+Date: Thu, 11 Jan 2024 16:44:43 -0800
+In-Reply-To: <ZZdlt2Dm36VF4WL6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62f3b804-2fa8-43bd-a785-08dc1307977d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jan 2024 00:44:10.6705
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MqmsHFnBA1fgXvUDMdKYWIobZj2IjFyWubYnk9tWvVJ6F15C8ZB35EW5g493NOW7D8cH1966cpeCaQwjs/MSMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6877
+Mime-Version: 1.0
+References: <20231110235528.1561679-1-seanjc@google.com> <20231110235528.1561679-4-seanjc@google.com>
+ <3ad69657ba8e1b19d150db574193619cf0cb34df.camel@redhat.com>
+ <ZWk8IMZamuemfwXG@google.com> <daaf098a6219310b6b1c1e3dc147fbb7e48b6f54.camel@redhat.com>
+ <ZZdlt2Dm36VF4WL6@google.com>
+Message-ID: <ZaCLe4UdDgLuT21S@google.com>
+Subject: Re: [PATCH 3/9] KVM: x86: Initialize guest cpu_caps based on guest CPUID
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Thanks Linus for Ccing me.
+On Thu, Jan 04, 2024, Sean Christopherson wrote:
+> On Thu, Dec 21, 2023, Maxim Levitsky wrote:
+> > On Thu, 2023-11-30 at 17:51 -0800, Sean Christopherson wrote:
+> > > On Sun, Nov 19, 2023, Maxim Levitsky wrote:
+> > > > On Fri, 2023-11-10 at 15:55 -0800, Sean Christopherson wrote:
+ 
+> > > > Also why not to initialize guest_caps = host_caps & userspace_cpuid?
+> > > > 
+> > > > If this was the default we won't need any guest_cpu_cap_restrict and such,
+> > > > instead it will just work.
+> > > 
+> > > Hrm, I definitely like the idea.  Unfortunately, unless we do an audit of all
+> > > ~120 uses of guest_cpuid_has(), restricting those based on kvm_cpu_caps might
+> > > break userspace.
+> > 
+> > 120 uses is not that bad, IMHO it is worth it - we won't need to deal with that
+> > in the future.
+> > 
+> > How about a compromise - you change the patches such as it will be possible
+> > to remove these cases one by one, and also all new cases will be fully
+> > automatic?
+> 
+> Hrm, I'm not necessarily opposed to that, but I don't think we should go partway
+> unless we are 100% confident that changing the default to "use guest CPUID ANDed
+> with KVM capabilities" is the best end state, *and* that someone will actually
+> have the bandwidth to do the work soon-ish so that KVM isn't in a half-baked
+> state for months on end.  Even then, my preference would definitely be to switch
+> everything in one go.
+> 
+> And automatically handling new features would only be feasible for entirely new
+> leafs.  E.g. X86_FEATURE_RDPID is buried in CPUID.0x7.0x0.ECX, so to automatically
+> handle new features KVM would need to set the default guest_caps for all bits
+> *except* RDPID, at which point we're again building a set of features that need
+> to opt-out.
+> 
+> > > To be fair, the manual lists predate the governed features.
+> > 
+> > 100% agree, however the point of governed features was to simplify this list,
+> > the point of this patch set is to simplify these lists and yet they still remain,
+> > more or less untouched, and we will still need to maintain them.
+> > 
+> > Again I do think that governed features and/or this patchset are better than
+> > the mess that was there before, but a part of me wants to fully get rid of
+> > this mess instead of just making it a bit more beautiful. 
+> 
+> Oh, I would love to get rid of the mess too, I _completely_ getting rid of the
+> mess isn't realistic.  There are guaranteed to be exceptions to the rule, whether
+> the rule is "use guest CPUID by default" or "use guest CPUID constrained by KVM
+> capabilities by default".
+> 
+> I.e. there will always be some amount of manual messiness, the question is which
+> default behavior would yield the smallest mess.  My gut agrees with you, that
+> defaulting to "guest & KVM" would yield the fewest exceptions.  But as above,
+> I think we're better off doing the switch as an all-or-nothing things (where "all"
+> means within a single series, not within a single patch).
 
-> Subject: [PATCH] gpio: vf610: allow disabling the vf610 driver
->=20
-> The vf610 gpio driver is enabled by default for all i.MX machines, withou=
-t any
-> option to disable it in a board-specific config file.
->=20
-> Most i.MX chipsets have no hardware for this driver. Change the default t=
-o
-> enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
->=20
-> Add a text description after the bool type, this makes the driver selecta=
-ble by
-> make config etc. i.MX chips other than SOC_VF610 can now enable the drive=
-r
-> from their board config.
+Ok, the idea of having vcpu->arch.cpu_caps default to a KVM & GUEST is growing
+on me.  There's a lurking bug in KVM that in some ways is due to lack of a per-vCPU,
+KVM-enforced set of a features.  The bug is relatively benign (VMX passes through
+CR4.FSGSBASE when it's not supported in the host), and easy to fix (incorporate
+KVM-reserved CR4 bits into vcpu->arch.cr4_guest_rsvd_bits), but it really is
+something that just shouldn't happen.  E.g. KVM's handling of EFER has a similar
+lurking problem where __kvm_valid_efer() is unsafe to use without also consulting
+efer_reserved_bits.
 
-This will break i.MX8QM,DXL,ULP/i.MX93 boot. You could add text description
-to make it selectable, but please not drop def y. Or you need update defcon=
-fig.
+And after digging a bit more, I think I'm just being overly paranoid.  I'm fairly
+certain the only exceptions are literally the few that I've called out (RDPID,
+MOVBE, and MWAIT (which is only a problem because of a stupid quirk)).  I don't
+yet have a firm plan on how to deal with the exceptions in a clean way, e.g. I'd
+like to somehow have the "opt-out" code share the set of emulated features with
+__do_cpuid_func_emulated().  One thought would be to add kvm_emulated_cpu_caps,
+which would be *comically* wasteful, but might be worth the 90 bytes.
 
-Thanks,
-Peng.
-
->=20
-> Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for
-> GPIO_VF610")
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
->  drivers/gpio/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig index
-> 1301cec94f12..353af1a4d0ac 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -711,7 +711,8 @@ config GPIO_UNIPHIER
->  	  Say yes here to support UniPhier GPIOs.
->=20
->  config GPIO_VF610
-> -	def_bool y
-> +	bool "VF610 GPIO support"
-> +	default y if SOC_VF610
->  	depends on ARCH_MXC
->  	select GPIOLIB_IRQCHIP
->  	help
-> --
-> 2.39.2
-
+For v2, what if I post this more or less as-is, with a "convert to KVM & GUEST"
+patch thrown in at the end as an RFC?  I want to do a lot more testing (and staring)
+before committing to the conversion, and sadly I don't have anywhere near enough
+cycles to do that right now.
