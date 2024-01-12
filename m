@@ -1,211 +1,357 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5232857310;
-	Fri, 12 Jan 2024 10:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A690E57877;
+	Fri, 12 Jan 2024 10:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TS0iao3U"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-50e80d40a41so8037524e87.1;
-        Fri, 12 Jan 2024 02:04:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705053842; x=1705658642; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=49mGNK36uTAc2PcGxvuMH6FjMrZ7N2e/dp51dNcG2WI=;
-        b=TS0iao3U15Q4mYmhJW2KtRm0i/xDGi7Tbkl9WyTW71DxaEpm5qQFe9qGmFEAgQ95Me
-         tUi0usc5SFDOo2VIGCCW6gsbxfkTwsjKk54RFOuUA551usnSTeo5XH/w5yJKgJiuUw4r
-         sSZzx+OzTKHu8tpjh4Zub38fFWWfTQDggVZTRUT4n3P/UZDFbk4dDgzk5ALHtb2qqsio
-         5vWCG1nJbnM6Bw1nFqDnaNDf5mFeiYjyAFGR6QSgmrTqWtuWclCcDaHuVFFh1+H8jWRY
-         HNsV+U/wVXI6LHSERyFmraMDXgWkfvCy8L6P+OYQMU2IBSO1wggWiE5qlIBn5BYphsSQ
-         wl3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705053842; x=1705658642;
-        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=49mGNK36uTAc2PcGxvuMH6FjMrZ7N2e/dp51dNcG2WI=;
-        b=VRtMt8eaamKvwXo3zsBgStBXMbmqM869AGGSX8QQdJPHVxfVbVV389+qMCcpNfkUTF
-         TDvEhhPic2HC2qBNW8NA7uXCso0c3DbJELU0dvegH4fo3jfirpKeil2MjQxh4EoX0dSb
-         t6Qzmf6VN/D2xgjbZpfRq4hJe4FWPaeyRJkIwnd9CUCfRgqYJCDwGx9fXtbd2+eo7iDF
-         9n/bOL3PHnXHQk27DFoVOcAcRz8DlEOED+pmQImltQLYRLix6+a3iF1P6h97N/F4PgrT
-         urU3z0v6zgtp6/i8bq61N8sN5GM+eYA2SQVa/N5cHqAEocwbrKlMdjuIUOyrglZxFuFz
-         xW5A==
-X-Gm-Message-State: AOJu0YxHuvvoKIRqLh6j1zFoHLe3DgaJ2q8fkuEbcmAa4lWxHaFfpguD
-	09gY2RNarFkH2XEw/YluLVI=
-X-Google-Smtp-Source: AGHT+IEJgqgQRPe4+wGucPThB/wEKQwuXAHrrbJUK/XGlr7TnjYBQAAXKDwmwnzWG8Ho0OJhEyyxYw==
-X-Received: by 2002:a05:6512:3188:b0:50e:6b48:5407 with SMTP id i8-20020a056512318800b0050e6b485407mr667018lfe.82.1705053841920;
-        Fri, 12 Jan 2024 02:04:01 -0800 (PST)
-Received: from eldfell ([194.136.85.206])
-        by smtp.gmail.com with ESMTPSA id y22-20020a056512335600b0050eea9541casm26727lfd.44.2024.01.12.02.04.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 02:04:01 -0800 (PST)
-Date: Fri, 12 Jan 2024 12:03:57 +0200
-From: Pekka Paalanen <ppaalanen@gmail.com>
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, <christian.koenig@amd.com>, Sumit Semwal
- <sumit.semwal@linaro.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey
- <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- <tjmercier@google.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
- <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-mediatek@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>,
- Vijayanand Jitta <quic_vjitta@quicinc.com>, Joakim Bech
- <joakim.bech@linaro.org>, Jeffrey Kardatzke <jkardatzke@google.com>, Pavel
- Machek <pavel@ucw.cz>, Simon Ser <contact@emersion.fr>,
- <jianjiao.zeng@mediatek.com>, <kuohong.wang@mediatek.com>,
- <youlin.pei@mediatek.com>
-Subject: Re: [PATCH v4 0/7] dma-buf: heaps: Add restricted heap
-Message-ID: <20240112120357.724e9326@eldfell>
-In-Reply-To: <20240112092014.23999-1-yong.wu@mediatek.com>
-References: <20240112092014.23999-1-yong.wu@mediatek.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i/AS8hZB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705053987; x=1736589987;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=22XIiAOoXuioZQ/vLkULlEp+icB2/uQtV3+EwoPaODo=;
+  b=i/AS8hZBlz0EYIzZJt+uUd6GvutRKv1JXAxeOe/wrJgPqxi4J3TBQHxw
+   7DXcy+RRigaCYidlV7kSo4h3tUtaCmp4Wb8aYGrKAEaRJqhh9eDzeVmg3
+   fp8Nd6VzChtZYW2QMq3yM82gOOs3KwDeiq/eO8QQmwFtRS0FKgBWJzSjK
+   FT8twV5pqkLau3Dgln495Z9YTu4egn/oA7gDsDAKRGvEy5VJdmryJ6LBu
+   39AwV+PJoOud37Ju1zxieMYiaZYf184tRtPoR6ORnhy+tfT+SOrkobgyw
+   VhSWe3CtoRLGkfiOEgE7Z2lHXGglr0JuiEk/VQsu4GhTDPVg0MBxrjUbH
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="463418046"
+X-IronPort-AV: E=Sophos;i="6.04,189,1695711600"; 
+   d="scan'208";a="463418046"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 02:06:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="817025042"
+X-IronPort-AV: E=Sophos;i="6.04,189,1695711600"; 
+   d="scan'208";a="817025042"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by orsmga001.jf.intel.com with ESMTP; 12 Jan 2024 02:06:26 -0800
+From: Xin Li <xin3.li@intel.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: seanjc@google.com,
+	pbonzini@redhat.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	weijiang.yang@intel.com,
+	kai.huang@intel.com
+Subject: [PATCH v4 1/2] KVM: VMX: Cleanup VMX basic information defines and usages
+Date: Fri, 12 Jan 2024 01:34:48 -0800
+Message-ID: <20240112093449.88583-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lS=3R00MGWXjD0UrR5LXr4S";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/lS=3R00MGWXjD0UrR5LXr4S
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Define VMX basic information fields with BIT_ULL()/GENMASK_ULL(), and
+replace hardcoded VMX basic numbers with these field macros.
 
-On Fri, 12 Jan 2024 17:20:07 +0800
-Yong Wu <yong.wu@mediatek.com> wrote:
+Per Sean's ask, save the full/raw value of MSR_IA32_VMX_BASIC in the
+global vmcs_config as type u64 to get rid of the hi/lo crud, and then
+use VMX_BASIC helpers to extract info as needed.
 
-> The purpose of this patchset is for MediaTek secure video playback, and
-> also to enable other potential uses of this in the future. The 'restricted
-> dma-heap' will be used to allocate dma_buf objects that reference memory
-> in the secure world that is inaccessible/unmappable by the non-secure
-> (i.e. kernel/userspace) world.  That memory will be used by the secure/
-> trusted world to store secure information (i.e. decrypted media content).
-> The dma_bufs allocated from the kernel will be passed to V4L2 for video
-> decoding (as input and output). They will also be used by the drm
-> system for rendering of the content.
->=20
-> This patchset adds two MediaTek restricted heaps and they will be used in
-> v4l2[1] and drm[2].
-> 1) restricted_mtk_cm: secure chunk memory for MediaTek SVP (Secure Video
->    Path). The buffer is reserved for the secure world after bootup and it
->    is used for vcodec's ES/working buffer;
-> 2) restricted_mtk_cma: secure CMA memory for MediaTek SVP. This buffer is
->    dynamically reserved for the secure world and will be got when we start
->    playing secure videos. Once the security video playing is complete, the
->    CMA will be released. This heap is used for the vcodec's frame buffer.=
-=20
->=20
-> [1] https://lore.kernel.org/linux-mediatek/20231206081538.17056-1-yunfei.=
-dong@mediatek.com/
-> [2] https://lore.kernel.org/all/20231223182932.27683-1-jason-jh.lin@media=
-tek.com/
->=20
-> Change note:
-> v4: 1) Rename the heap name from "secure" to "restricted". suggested from
->      Simon/Pekka. There are still several "secure" string in MTK file
->      since we use ARM platform in which we call this "secure world"/
->      "secure command".
+Tested-by: Shan Kang <shan.kang@intel.com>
+Signed-off-by: Xin Li <xin3.li@intel.com>
+---
 
-Hi,
+Changes since v3:
+* Remove vmx_basic_vmcs_basic_cap() (Kai Huang).
+* Add 2 macros VMX_BASIC_VMCS12_SIZE and VMX_BASIC_MEM_TYPE_WB to
+  avoid keeping 2 their bit shift macros (Kai Huang).
 
-I am really happy about this name change, thank you.
+Changes since v2:
+* Simply save the full/raw value of MSR_IA32_VMX_BASIC in the global
+  vmcs_config, and then use the helpers to extract info from it as
+  needed (Sean Christopherson).
+* Move all VMX_MISC related changes to the second patch (Kai Huang).
+* Commonize memory type definitions used in the VMX files, as memory
+  types are architectural.
 
-It is unfortunate that ARM specifications use the word "secure", but so
-be it. When referring to specs, it's good to use the spec wording.
+Changes since v1:
+* Don't add field shift macros unless it's really needed, extra layer
+  of indirect makes it harder to read (Sean Christopherson).
+* Add a static_assert() to ensure that VMX_BASIC_FEATURES_MASK doesn't
+  overlap with VMX_BASIC_RESERVED_BITS (Sean Christopherson).
+* read MSR_IA32_VMX_BASIC into an u64 rather than 2 u32 (Sean
+  Christopherson).
+* Add 2 new functions for extracting fields from VMX basic (Sean
+  Christopherson).
+* Drop the tools header update (Sean Christopherson).
+* Move VMX basic field macros to arch/x86/include/asm/vmx.h.
+---
+ arch/x86/include/asm/msr-index.h |  9 ---------
+ arch/x86/include/asm/vmx.h       | 15 ++++++++++++--
+ arch/x86/kvm/vmx/capabilities.h  |  6 ++----
+ arch/x86/kvm/vmx/nested.c        | 34 +++++++++++++++++++++-----------
+ arch/x86/kvm/vmx/vmx.c           | 24 ++++++++++------------
+ 5 files changed, 48 insertions(+), 40 deletions(-)
 
-In everything that is not a direct reference to some spec though it
-would be nice to use the "restricted" terminology if possible. I
-presume there are other vendors who use words other than what ARM uses
-for similar concepts. A common vocabulary would be nice.
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 1d51e1850ed0..9068cdd6f063 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -1094,15 +1094,6 @@
+ #define MSR_IA32_VMX_VMFUNC             0x00000491
+ #define MSR_IA32_VMX_PROCBASED_CTLS3	0x00000492
+ 
+-/* VMX_BASIC bits and bitmasks */
+-#define VMX_BASIC_VMCS_SIZE_SHIFT	32
+-#define VMX_BASIC_TRUE_CTLS		(1ULL << 55)
+-#define VMX_BASIC_64		0x0001000000000000LLU
+-#define VMX_BASIC_MEM_TYPE_SHIFT	50
+-#define VMX_BASIC_MEM_TYPE_MASK	0x003c000000000000LLU
+-#define VMX_BASIC_MEM_TYPE_WB	6LLU
+-#define VMX_BASIC_INOUT		0x0040000000000000LLU
+-
+ /* Resctrl MSRs: */
+ /* - Intel: */
+ #define MSR_IA32_L3_QOS_CFG		0xc81
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index 0e73616b82f3..b8a745ff8c06 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -120,6 +120,14 @@
+ 
+ #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
+ 
++/* x86 memory types, explicitly used in VMX only */
++#define MEM_TYPE_WB				0x6ULL
++#define MEM_TYPE_UC				0x0ULL
++
++/* VMX_BASIC bits and bitmasks */
++#define VMX_BASIC_32BIT_PHYS_ADDR_ONLY		BIT_ULL(48)
++#define VMX_BASIC_INOUT				BIT_ULL(54)
++
+ #define VMX_MISC_PREEMPTION_TIMER_RATE_MASK	0x0000001f
+ #define VMX_MISC_SAVE_EFER_LMA			0x00000020
+ #define VMX_MISC_ACTIVITY_HLT			0x00000040
+@@ -143,6 +151,11 @@ static inline u32 vmx_basic_vmcs_size(u64 vmx_basic)
+ 	return (vmx_basic & GENMASK_ULL(44, 32)) >> 32;
+ }
+ 
++static inline u32 vmx_basic_vmcs_mem_type(u64 vmx_basic)
++{
++	return (vmx_basic & GENMASK_ULL(53, 50)) >> 50;
++}
++
+ static inline int vmx_misc_preemption_timer_rate(u64 vmx_misc)
+ {
+ 	return vmx_misc & VMX_MISC_PREEMPTION_TIMER_RATE_MASK;
+@@ -505,8 +518,6 @@ enum vmcs_field {
+ #define VMX_EPTP_PWL_5				0x20ull
+ #define VMX_EPTP_AD_ENABLE_BIT			(1ull << 6)
+ #define VMX_EPTP_MT_MASK			0x7ull
+-#define VMX_EPTP_MT_WB				0x6ull
+-#define VMX_EPTP_MT_UC				0x0ull
+ #define VMX_EPT_READABLE_MASK			0x1ull
+ #define VMX_EPT_WRITABLE_MASK			0x2ull
+ #define VMX_EPT_EXECUTABLE_MASK			0x4ull
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index 41a4533f9989..86ce8bb96bed 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -54,9 +54,7 @@ struct nested_vmx_msrs {
+ };
+ 
+ struct vmcs_config {
+-	int size;
+-	u32 basic_cap;
+-	u32 revision_id;
++	u64 basic;
+ 	u32 pin_based_exec_ctrl;
+ 	u32 cpu_based_exec_ctrl;
+ 	u32 cpu_based_2nd_exec_ctrl;
+@@ -76,7 +74,7 @@ extern struct vmx_capability vmx_capability __ro_after_init;
+ 
+ static inline bool cpu_has_vmx_basic_inout(void)
+ {
+-	return	(((u64)vmcs_config.basic_cap << 32) & VMX_BASIC_INOUT);
++	return	vmcs_config.basic & VMX_BASIC_INOUT;
+ }
+ 
+ static inline bool cpu_has_virtual_nmis(void)
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index db0ad1e6ec4b..735f729a22f4 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -1226,23 +1226,32 @@ static bool is_bitwise_subset(u64 superset, u64 subset, u64 mask)
+ 	return (superset | subset) == superset;
+ }
+ 
++#define VMX_BASIC_DUAL_MONITOR_TREATMENT	BIT_ULL(49)
++#define VMX_BASIC_TRUE_CTLS			BIT_ULL(55)
++
++#define VMX_BASIC_FEATURES_MASK			\
++	(VMX_BASIC_DUAL_MONITOR_TREATMENT |	\
++	 VMX_BASIC_INOUT |			\
++	 VMX_BASIC_TRUE_CTLS)
++
++#define VMX_BASIC_RESERVED_BITS			\
++	(GENMASK_ULL(63, 56) | GENMASK_ULL(47, 45) | BIT_ULL(31))
++
+ static int vmx_restore_vmx_basic(struct vcpu_vmx *vmx, u64 data)
+ {
+-	const u64 feature_and_reserved =
+-		/* feature (except bit 48; see below) */
+-		BIT_ULL(49) | BIT_ULL(54) | BIT_ULL(55) |
+-		/* reserved */
+-		BIT_ULL(31) | GENMASK_ULL(47, 45) | GENMASK_ULL(63, 56);
+ 	u64 vmx_basic = vmcs_config.nested.basic;
+ 
+-	if (!is_bitwise_subset(vmx_basic, data, feature_and_reserved))
++	static_assert(!(VMX_BASIC_FEATURES_MASK & VMX_BASIC_RESERVED_BITS));
++
++	if (!is_bitwise_subset(vmx_basic, data,
++			       VMX_BASIC_FEATURES_MASK | VMX_BASIC_RESERVED_BITS))
+ 		return -EINVAL;
+ 
+ 	/*
+ 	 * KVM does not emulate a version of VMX that constrains physical
+ 	 * addresses of VMX structures (e.g. VMCS) to 32-bits.
+ 	 */
+-	if (data & BIT_ULL(48))
++	if (data & VMX_BASIC_32BIT_PHYS_ADDR_ONLY)
+ 		return -EINVAL;
+ 
+ 	if (vmx_basic_vmcs_revision_id(vmx_basic) !=
+@@ -2726,11 +2735,11 @@ static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
+ 
+ 	/* Check for memory type validity */
+ 	switch (new_eptp & VMX_EPTP_MT_MASK) {
+-	case VMX_EPTP_MT_UC:
++	case MEM_TYPE_UC:
+ 		if (CC(!(vmx->nested.msrs.ept_caps & VMX_EPTP_UC_BIT)))
+ 			return false;
+ 		break;
+-	case VMX_EPTP_MT_WB:
++	case MEM_TYPE_WB:
+ 		if (CC(!(vmx->nested.msrs.ept_caps & VMX_EPTP_WB_BIT)))
+ 			return false;
+ 		break;
+@@ -6994,6 +7003,9 @@ static void nested_vmx_setup_misc_data(struct vmcs_config *vmcs_conf,
+ 	msrs->misc_high = 0;
+ }
+ 
++#define VMX_BSAIC_VMCS12_SIZE	((u64)VMCS12_SIZE << 32)
++#define VMX_BASIC_MEM_TYPE_WB	(MEM_TYPE_WB << 50);
++
+ static void nested_vmx_setup_basic(struct nested_vmx_msrs *msrs)
+ {
+ 	/*
+@@ -7005,8 +7017,8 @@ static void nested_vmx_setup_basic(struct nested_vmx_msrs *msrs)
+ 	msrs->basic =
+ 		VMCS12_REVISION |
+ 		VMX_BASIC_TRUE_CTLS |
+-		((u64)VMCS12_SIZE << VMX_BASIC_VMCS_SIZE_SHIFT) |
+-		(VMX_BASIC_MEM_TYPE_WB << VMX_BASIC_MEM_TYPE_SHIFT);
++		VMX_BSAIC_VMCS12_SIZE |
++		VMX_BASIC_MEM_TYPE_WB;
+ 
+ 	if (cpu_has_vmx_basic_inout())
+ 		msrs->basic |= VMX_BASIC_INOUT;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d21f55f323ea..25d261b7ed74 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2563,13 +2563,13 @@ static u64 adjust_vmx_controls64(u64 ctl_opt, u32 msr)
+ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+ 			     struct vmx_capability *vmx_cap)
+ {
+-	u32 vmx_msr_low, vmx_msr_high;
+ 	u32 _pin_based_exec_control = 0;
+ 	u32 _cpu_based_exec_control = 0;
+ 	u32 _cpu_based_2nd_exec_control = 0;
+ 	u64 _cpu_based_3rd_exec_control = 0;
+ 	u32 _vmexit_control = 0;
+ 	u32 _vmentry_control = 0;
++	u64 basic_msr;
+ 	u64 misc_msr;
+ 	int i;
+ 
+@@ -2688,29 +2688,25 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+ 		_vmexit_control &= ~x_ctrl;
+ 	}
+ 
+-	rdmsr(MSR_IA32_VMX_BASIC, vmx_msr_low, vmx_msr_high);
++	rdmsrl(MSR_IA32_VMX_BASIC, basic_msr);
+ 
+ 	/* IA-32 SDM Vol 3B: VMCS size is never greater than 4kB. */
+-	if ((vmx_msr_high & 0x1fff) > PAGE_SIZE)
++	if ((vmx_basic_vmcs_size(basic_msr) > PAGE_SIZE))
+ 		return -EIO;
+ 
+ #ifdef CONFIG_X86_64
+ 	/* IA-32 SDM Vol 3B: 64-bit CPUs always have VMX_BASIC_MSR[48]==0. */
+-	if (vmx_msr_high & (1u<<16))
++	if (basic_msr & VMX_BASIC_32BIT_PHYS_ADDR_ONLY)
+ 		return -EIO;
+ #endif
+ 
+ 	/* Require Write-Back (WB) memory type for VMCS accesses. */
+-	if (((vmx_msr_high >> 18) & 15) != 6)
++	if (vmx_basic_vmcs_mem_type(basic_msr) != MEM_TYPE_WB)
+ 		return -EIO;
+ 
+ 	rdmsrl(MSR_IA32_VMX_MISC, misc_msr);
+ 
+-	vmcs_conf->size = vmx_msr_high & 0x1fff;
+-	vmcs_conf->basic_cap = vmx_msr_high & ~0x1fff;
+-
+-	vmcs_conf->revision_id = vmx_msr_low;
+-
++	vmcs_conf->basic = basic_msr;
+ 	vmcs_conf->pin_based_exec_ctrl = _pin_based_exec_control;
+ 	vmcs_conf->cpu_based_exec_ctrl = _cpu_based_exec_control;
+ 	vmcs_conf->cpu_based_2nd_exec_ctrl = _cpu_based_2nd_exec_control;
+@@ -2860,13 +2856,13 @@ struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags)
+ 	if (!pages)
+ 		return NULL;
+ 	vmcs = page_address(pages);
+-	memset(vmcs, 0, vmcs_config.size);
++	memset(vmcs, 0, vmx_basic_vmcs_size(vmcs_config.basic));
+ 
+ 	/* KVM supports Enlightened VMCS v1 only */
+ 	if (kvm_is_using_evmcs())
+ 		vmcs->hdr.revision_id = KVM_EVMCS_VERSION;
+ 	else
+-		vmcs->hdr.revision_id = vmcs_config.revision_id;
++		vmcs->hdr.revision_id = vmx_basic_vmcs_revision_id(vmcs_config.basic);
+ 
+ 	if (shadow)
+ 		vmcs->hdr.shadow_vmcs = 1;
+@@ -2959,7 +2955,7 @@ static __init int alloc_kvm_area(void)
+ 		 * physical CPU.
+ 		 */
+ 		if (kvm_is_using_evmcs())
+-			vmcs->hdr.revision_id = vmcs_config.revision_id;
++			vmcs->hdr.revision_id = vmx_basic_vmcs_revision_id(vmcs_config.basic);
+ 
+ 		per_cpu(vmxarea, cpu) = vmcs;
+ 	}
+@@ -3361,7 +3357,7 @@ static int vmx_get_max_ept_level(void)
+ 
+ u64 construct_eptp(struct kvm_vcpu *vcpu, hpa_t root_hpa, int root_level)
+ {
+-	u64 eptp = VMX_EPTP_MT_WB;
++	u64 eptp = MEM_TYPE_WB;
+ 
+ 	eptp |= (root_level == 5) ? VMX_EPTP_PWL_5 : VMX_EPTP_PWL_4;
+ 
 
+base-commit: 1c6d984f523f67ecfad1083bb04c55d91977bb15
+-- 
+2.43.0
 
-Thanks,
-pq
-
-> v3: https://lore.kernel.org/linux-mediatek/20231212024607.3681-1-yong.wu@=
-mediatek.com/
->     1) Separate the secure heap to a common file(secure_heap.c) and mtk
->      special file (secure_heap_mtk.c),  and put all the tee related code
->      into our special file.
->     2) About dt-binding, Add "mediatek," prefix since this is Mediatek TEE
->      firmware definition.
->     3) Remove the normal CMA heap which is a draft for qcom.
->     Rebase on v6.7-rc1.
->=20
-> v2: https://lore.kernel.org/linux-mediatek/20231111111559.8218-1-yong.wu@=
-mediatek.com/
->     1) Move John's patches into the vcodec patchset since they use the new
->        dma heap interface directly.
->        https://lore.kernel.org/linux-mediatek/20231106120423.23364-1-yunf=
-ei.dong@mediatek.com/
->     2) Reword the dt-binding description.
->     3) Rename the heap name from mtk_svp to secure_mtk_cm.
->        This means the current vcodec/DRM upstream code doesn't match this.
->     4) Add a normal CMA heap. currently it should be a draft version.
->     5) Regarding the UUID, I still use hard code, but put it in a private
->     data which allow the others could set their own UUID. What's more, UU=
-ID
->     is necessary for the session with TEE. If we don't have it, we can't
->     communicate with the TEE, including the get_uuid interface, which tri=
-es
->     to make uuid more generic, not working. If there is other way to make
->     UUID more general, please free to tell me.
->    =20
-> v1: https://lore.kernel.org/linux-mediatek/20230911023038.30649-1-yong.wu=
-@mediatek.com/
->     Base on v6.6-rc1.
->=20
-> Yong Wu (7):
->   dt-bindings: reserved-memory: Add mediatek,dynamic-restricted-region
->   dma-buf: heaps: Initialize a restricted heap
->   dma-buf: heaps: restricted_heap: Add private heap ops
->   dma-buf: heaps: restricted_heap: Add dma_ops
->   dma-buf: heaps: restricted_heap: Add MediaTek restricted heap and
->     heap_init
->   dma-buf: heaps: restricted_heap_mtk: Add TEE memory service call
->   dma_buf: heaps: restricted_heap_mtk: Add a new CMA heap
->=20
->  .../mediatek,dynamic-restricted-region.yaml   |  43 +++
->  drivers/dma-buf/heaps/Kconfig                 |  16 +
->  drivers/dma-buf/heaps/Makefile                |   4 +-
->  drivers/dma-buf/heaps/restricted_heap.c       | 237 +++++++++++++
->  drivers/dma-buf/heaps/restricted_heap.h       |  43 +++
->  drivers/dma-buf/heaps/restricted_heap_mtk.c   | 322 ++++++++++++++++++
->  6 files changed, 664 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/reserved-memory/med=
-iatek,dynamic-restricted-region.yaml
->  create mode 100644 drivers/dma-buf/heaps/restricted_heap.c
->  create mode 100644 drivers/dma-buf/heaps/restricted_heap.h
->  create mode 100644 drivers/dma-buf/heaps/restricted_heap_mtk.c
->=20
-
-
---Sig_/lS=3R00MGWXjD0UrR5LXr4S
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmWhDo0ACgkQI1/ltBGq
-qqdgnhAAiXIHptPG8WhqVlmOGF8J+Dj7PxjrLasFg2BG/gbUDAM2FICO1VBkblIw
-bW1+LqpcdVG+FBs/hGrQOvEblaiIKjMXf5jyNnqPun4xGzi4VggC3sU7erHyIaAb
-bLqfGVzrG782jns8Ibj9AeX1fck6aooUm8yD6w5JvGJRKRNIXKIeGPZrRkiotfnn
-0NcTZ4BVoTufB5dzYgJABuiTmk1OyT4QkCVmVVE0mVn4tTc8Yd+s4m3rXqr/r3YE
-A0geZB/426wfXy6oxNmf0ftQzsyEIcVP/WZJZKtbh6rnXQ2RcMkK38wTTG0Bmyuf
-F1FW2L0GEyile6Vm6DyRJf97UQSzWCMraDUJKEd9+AbyjbreEnSUSL5WnPpWTbND
-lmsCrC1rVM+/hTOD7or/0mF6kp2WgfSaaH+BhrkvDb8MGjj/84yEs4v0jAwBM5y4
-knMaP00XF33xsX4OWEWbjniT+ZCdl9lhrGju9A+0+ZDTH+2LKAuzF5Rq9GgzWUzD
-NqoAZ3aLTUS6KdLfjG6Dzz+eLtjrmOcOcP0gdxKbObO5DXo3yL/r3WZyGDoBDDNr
-Ko38kjrDz+kuAsfKRzu1tDbPLnJLnVyt9rBl4NiD5Gl3BrJv0WvFRtuyzYrlNKHU
-M5t91RcbiaPApyXCZT0eXqefR5B27nW2e20Kqcf3kEPh+dsLVzc=
-=Y8bP
------END PGP SIGNATURE-----
-
---Sig_/lS=3R00MGWXjD0UrR5LXr4S--
