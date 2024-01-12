@@ -1,91 +1,92 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176B225619
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 18:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F03417C8D;
+	Fri, 12 Jan 2024 18:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8ElmKwQ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a28fb463a28so725552266b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 10:26:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705084016; x=1705688816; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BX2OIRKYqtC0J//p7kMK9Nn7FSvWIPNl2OJ4Auc3QVg=;
-        b=Z8ElmKwQLqD7ksbSoVyp8nqXSYdCtuST22Ca+GPwj7MQ4aQFIGvcAopS9A6NC59/LZ
-         MahKtOc1HESgf1s9wCPLB80kcGUl2sInhE27NPnSVikGE5yvyv6d71QYKUnVkGqIPpQI
-         DB42+Av3LPKk5DwHHTZIx46L3m2gUoEncugV2Vy06AV8rvf8K6ipCmAdzyTpxg3FQnJW
-         3GQFfl8QmMPNq8FYKWoOqIAGHJLWH3Bm8ZU1bL3y8Ae4k5eUVDE5nzFXUWeuHtiIBM4W
-         JF0bONvOkgobcEdKCkt313N7ycyHfAstN8zPUjm3sBgNeXV192mNmOVmYa9h07ONS7E/
-         PzUA==
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5e82f502a4cso58009917b3.0;
+        Fri, 12 Jan 2024 10:27:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705084016; x=1705688816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705084073; x=1705688873;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BX2OIRKYqtC0J//p7kMK9Nn7FSvWIPNl2OJ4Auc3QVg=;
-        b=WcfpNyN7SiKR8Zn0jUPbsdEGK8DA1nvjImd8mSomYf06Kkmxn1+L/sOf3GhQPw+MA8
-         eTE1fFYlT8YTwGuOV0+xOgGbX4OaBnqsLvlasSifC1weF7iJiBCzyblPTqVHS7RjxPvb
-         uT4eWGO4y4rvlBiGLkVhLe4lNzhMdd4VaWOgE1Mb6Ze9KGnHe8zfA2lSg4qPLsgjRPiy
-         /NFnEmtxmxB7a8Ws5vqOzwk0Z+ML+InnpkuAKG1O2uSN/L1gXvvoVO8ZLOAwZoE5qt2z
-         hPzECvMNDKVkSWZ5+WcA1GnzmRg+F7blPMDuFvWpxmWFJL6aC1CLsEeqAxY+spGjEaUe
-         Ihtw==
-X-Gm-Message-State: AOJu0YzahRnJmZcPjoxG4PAWzeUdG4VJdH8pimHo/zq5Lho/LM848KX5
-	7TmeHRiLYfGztrE6JCvoV+E=
-X-Google-Smtp-Source: AGHT+IHDCHmwvZIDF1k+St+jTaCt9HJQUMS2UP+ZZIPy7es1LE4HuBzP68Hd790Z/5UA9ZXntOkJ9Q==
-X-Received: by 2002:a17:906:88a:b0:a28:b71d:6801 with SMTP id n10-20020a170906088a00b00a28b71d6801mr840254eje.149.1705084016358;
-        Fri, 12 Jan 2024 10:26:56 -0800 (PST)
-Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
-        by smtp.gmail.com with ESMTPSA id ll5-20020a170907190500b00a2cc5199dd0sm876407ejc.135.2024.01.12.10.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 10:26:55 -0800 (PST)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Fri, 12 Jan 2024 19:26:53 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [GIT PULL] Scheduler changes for v6.8
-Message-ID: <ZaGEbaa3bWVYiqhY@gmail.com>
-References: <ZTz9RpZxfxysYCmt@gmail.com>
- <ZZwBi/YmnMqm7zrO@gmail.com>
- <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
- <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
- <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com>
+        bh=0BJ2WZX4mtYqpwBUHJyyeiT7eNbqAuxy96Kww4r+LXQ=;
+        b=GUt+ndJf52R/+30jG/w/aJJQWnspE13Xmif7JivZcKju1OgdPNPR6z67cTCq25QSdt
+         ModJZ0DkkrgdwYdoFp1TgNr/UA5eNE0UO+7xobGkLJ9GdgrIgOwtF/jId4BCKcSK5tnN
+         6lpaooo0PVDHtBq+zL2AiMmSKM4Jwwls89kzZ8R2ifIDTq2jiABEZ3pcMvL5h9eTI1/j
+         8H9ico0Gz9lVtTALdPznGO6OpxFYGvX9P+CY/CBLYZqNSc6ReqmC+EPv2MIaNsHa0cyS
+         7RkcBiMpfVbDMTC3BRzfjV0zOTd783qPdKJyvP1dPuvbI0cZke0iDSxBL3CDKPFYeNTB
+         wmLA==
+X-Gm-Message-State: AOJu0YwxK1ryP39vJz+f5pAVQuqAprdcwZxz+pPrqk4g4bwPS/kSgmrG
+	JPm1FJktf49W38ucAMK0mtwB5Qv4ywRi5Q==
+X-Google-Smtp-Source: AGHT+IE9RoWp3i10xpf6g1epyIgWlK9Sn/awn4vi1jxOqmRmn2q4EuJbdULMc4brijGsWdtY0usgjQ==
+X-Received: by 2002:a0d:d5d1:0:b0:5fb:60db:86b0 with SMTP id x200-20020a0dd5d1000000b005fb60db86b0mr1390345ywd.19.1705084072947;
+        Fri, 12 Jan 2024 10:27:52 -0800 (PST)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
+        by smtp.gmail.com with ESMTPSA id v141-20020a814893000000b005fb420b14dcsm1422530ywa.108.2024.01.12.10.27.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 10:27:52 -0800 (PST)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5e7467eb93aso58735757b3.1;
+        Fri, 12 Jan 2024 10:27:52 -0800 (PST)
+X-Received: by 2002:a25:d84f:0:b0:dbc:d3a5:d039 with SMTP id
+ p76-20020a25d84f000000b00dbcd3a5d039mr779893ybg.32.1705084072167; Fri, 12 Jan
+ 2024 10:27:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com>
+References: <20231214222107.2016042-1-song@kernel.org> <20231214222107.2016042-2-song@kernel.org>
+ <CAMuHMdUtzhwHLa_DTtH00YsZ6t_CefZjZj6oS_mpckHDNXpYWw@mail.gmail.com>
+ <CAPhsuW6KVN1c=dB1RXVQjygBevVcb_1qQJoLz3zA-qTVVmbCAw@mail.gmail.com> <20240112171010.GA18360@lst.de>
+In-Reply-To: <20240112171010.GA18360@lst.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 12 Jan 2024 19:27:40 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWvo5ggC31Ukd8+sLC1jyqcXw=T-tVDtwdLqRg87HwvCQ@mail.gmail.com>
+Message-ID: <CAMuHMdWvo5ggC31Ukd8+sLC1jyqcXw=T-tVDtwdLqRg87HwvCQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] md: Remove deprecated CONFIG_MD_LINEAR
+To: Christoph Hellwig <hch@lst.de>
+Cc: Song Liu <song@kernel.org>, linux-raid@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	Jens Axboe <axboe@kernel.dk>, Neil Brown <neilb@suse.de>, Guoqing Jiang <guoqing.jiang@linux.dev>, 
+	Mateusz Grzonka <mateusz.grzonka@intel.com>, Jes Sorensen <jes@trained-monkey.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Christoph,
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Fri, Jan 12, 2024 at 6:10=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
+e:
+> On Fri, Jan 12, 2024 at 09:08:04AM -0800, Song Liu wrote:
+> > Thanks for the heads-up. I honestly don't know about this use case.
+> > Where can I find/get more information about it?
+>
+> What NAS uses md linear?
 
-> This is on a 32-core (64-thread) AMD Ryzen Threadripper 3970X, fwiw.
+No idea, I was just wondering....
+Lots of NASes sold support JBOD (yes, I know I should not use anything
+that lacks mirroring for data I care about ;-)
 
-Same here:
+> Either way you can always set up a dm-linear table to get at the
+> data.
 
-   model name	: AMD Ryzen Threadripper 3970X 32-Core Processor
+If dm-linear offers the same functionality, I have no objection.
 
-Could you please send me your desktop system's .config privately?
+Note to self: learn about the difference between dm and md, finally...
 
-If it's triggered by something in the .config, I might be able to 
-reproduce.
+Gr{oetje,eeting}s,
 
-Thanks,
+                        Geert
 
-	Ingo
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
