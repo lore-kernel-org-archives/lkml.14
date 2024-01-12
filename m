@@ -1,29 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79506EB4E;
-	Fri, 12 Jan 2024 15:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2946EB66
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 15:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwfzX2mE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F028DC433F1;
-	Fri, 12 Jan 2024 15:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705074526;
-	bh=LjNh32+q3C0+BqK8BlI5tSSM8lb3tGzw35+W/e7lDGA=;
-	h=Date:From:To:Subject:From;
-	b=UwfzX2mEQlMs7lKRKyPel2evCsbDKSF3FUJWhz2ja/dq05Zf8E2LeyAKqtghulLpq
-	 ZdITG9xio8wsxb3aEbE66gvbl7xwWfvDC8zdLdBfbo6nDoRr5K/2FYDwTMSP+1aTXO
-	 yUapVQDcRnDBzXNxRRXJVIhKYuatcVQScCr1aNn99StcNxluNspXVxAkY7wkvGptIm
-	 oD7706f5h6O5euzgYr+ywxiZRoCebK5twcPV36/yj6KaSt08ogPP1B41RPoh9XIAT/
-	 zB0rf6PqQbiPbnenPeiqIGWpAWP/2mdtPBD3Fp/wfdd8IEze9+H8kGf9NSFQSPu3qL
-	 GoUDR079kJFZw==
-Date: Fri, 12 Jan 2024 16:48:41 +0100
-From: Helge Deller <deller@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Dave Airlie <airlied@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [GIT PULL] fbdev fixes and updates for v6.8-rc1
-Message-ID: <ZaFfWY-bB_b9dGrO@carbonx1>
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="AOQT5Yom"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e60e137aaso18262035e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 07:50:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1705074604; x=1705679404; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=555qONK1oJClh2Kw16Xrs8R6xHCU3yQwx0yHihoKnxA=;
+        b=AOQT5YomkMQEHvtvveqiKhDgA1xiJx/7yM20DneHsquIBnYECUjA4n/f3VB5C2QtJ2
+         snIC/mv5VLZzya6Ec1gkweA69fe4BoWY7UU8XXj1NvMXv5cdvoShM9btNsRaAf84JGap
+         0I+hmrGAiMxgI4fTsenIuMyJjQQzTBTZhr2iXGdZlHCWTKHxL9KZA2IwPs/o3slWJIi1
+         26YZxdHFXlMoavefEDR6H5CkTcWuXJSOlvdNkCbT22WAhlU/jnhxeVoZrHBZZADg7bAZ
+         2F7Aq3d0eseLXJ5v4P3+UR3CyU3M33r/qz4fv5gAyqR7v0bhIW1fYpDFm9LF6OGd6c/L
+         8hJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705074604; x=1705679404;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=555qONK1oJClh2Kw16Xrs8R6xHCU3yQwx0yHihoKnxA=;
+        b=OiBGWJQCq3OZTBfHvrldhSFNrYVsC9Eahm7TN9G+ybRdeL1VWq3PkKA/a5gT5Qgafo
+         4aAfBht0X59XydOsMm7obhflE51r8N3l7NAxwG1TrEx36WD1NGsbb7yS4iw7gKXveJcD
+         dnOkUC3d3Da5iuH3nuwHZb8q7rlM1V4Fho37oarE9sNlovOciTlVdgFlzbu4LOG9m5/D
+         VWiIJ4nqs1q7Dv9+DagHWV+14P1I351q1bc4zJHTxtgXo01R1gIvgWd/dU9DAGTZwj5G
+         IqSAIpLH87/QFtd3Fw2nfJSRmbPNL2QVsNdeX5fABb1eb+qUql3CwI3/2qYoo5FlF65d
+         21dQ==
+X-Gm-Message-State: AOJu0Yw05NN3SdtCgtPAgiBt/FZmlPqis52OYwMoR8ltclZfyjK5Ys4g
+	JIPN5EuSnSuL7dczUdkmKzagZETFsaVl5A==
+X-Google-Smtp-Source: AGHT+IFn5atQOJvpxgKuwBd+23o6cl1YOWg6Di66TElCHWTI1fZP60/idEH9mh0fndMnAKrwYxgfuw==
+X-Received: by 2002:a05:600c:524c:b0:40d:7f19:40b1 with SMTP id fc12-20020a05600c524c00b0040d7f1940b1mr818755wmb.169.1705074603823;
+        Fri, 12 Jan 2024 07:50:03 -0800 (PST)
+Received: from localhost (host-213-179-129-39.customer.m-online.net. [213.179.129.39])
+        by smtp.gmail.com with ESMTPSA id jg1-20020a05600ca00100b0040d4e1393dcsm10000611wmb.20.2024.01.12.07.50.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jan 2024 07:50:03 -0800 (PST)
+Date: Fri, 12 Jan 2024 16:50:01 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Wen Gu <guwen@linux.alibaba.com>
+Cc: wintera@linux.ibm.com, wenjia@linux.ibm.com, hca@linux.ibm.com,
+	gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	jaka@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
+	alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 00/15] net/smc: implement loopback-ism used by
+ SMC-D
+Message-ID: <ZaFfqZbgpVtVt4XM@nanopsycho>
+References: <20240111120036.109903-1-guwen@linux.alibaba.com>
+ <ZaAAJDiQ3bPGGRFK@nanopsycho>
+ <2d8e7aeb-06da-434c-b7fe-6c1bd2e0674a@linux.alibaba.com>
+ <ZaEB-b-W9Jt77T98@nanopsycho>
+ <d7f9684e-4115-4b04-9e92-dbb841a52935@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,147 +67,290 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <d7f9684e-4115-4b04-9e92-dbb841a52935@linux.alibaba.com>
 
-Hi Linus,
+Fri, Jan 12, 2024 at 01:32:14PM CET, guwen@linux.alibaba.com wrote:
+>
+>
+>On 2024/1/12 17:10, Jiri Pirko wrote:
+>> Fri, Jan 12, 2024 at 09:29:35AM CET, guwen@linux.alibaba.com wrote:
+>> > 
+>> > 
+>
+><...>
+>
+>> > > > inter-containers communication within the same OS instance.
+>> > > > 
+>> > > > # Design
+>> > > > 
+>> > > > This patch set includes 3 parts:
+>> > > > 
+>> > > > - Patch #1-#2: some prepare work for loopback-ism.
+>> > > > - Patch #3-#9: implement loopback-ism device.
+>> > > > - Patch #10-#15: memory copy optimization for loopback scenario.
+>> > > > 
+>> > > > The loopback-ism device is designed as a ISMv2 device and not be limited to
+>> > > > a specific net namespace, ends of both inter-process connection (1/1' in diagram
+>> > > > below) or inter-container connection (2/2' in diagram below) can find the same
+>> > > > available loopback-ism and choose it during the CLC handshake.
+>> > > > 
+>> > > > Container 1 (ns1)                              Container 2 (ns2)
+>> > > > +-----------------------------------------+    +-------------------------+
+>> > > > | +-------+      +-------+      +-------+ |    |        +-------+        |
+>> > > > | | App A |      | App B |      | App C | |    |        | App D |<-+     |
+>> > > > | +-------+      +---^---+      +-------+ |    |        +-------+  |(2') |
+>> > > > |     |127.0.0.1 (1')|             |192.168.0.11       192.168.0.12|     |
+>> > > > |  (1)|   +--------+ | +--------+  |(2)   |    | +--------+   +--------+ |
+>> > > > |     `-->|   lo   |-` |  eth0  |<-`      |    | |   lo   |   |  eth0  | |
+>> > > > +---------+--|---^-+---+-----|--+---------+    +-+--------+---+-^------+-+
+>> > > >                |   |           |                                  |
+>> > > > Kernel       |   |           |                                  |
+>> > > > +----+-------v---+-----------v----------------------------------+---+----+
+>> > > > |    |                            TCP                               |    |
+>> > > > |    |                                                              |    |
+>> > > > |    +--------------------------------------------------------------+    |
+>> > > > |                                                                        |
+>> > > > |                           +--------------+                             |
+>> > > > |                           | smc loopback |                             |
+>> > > > +---------------------------+--------------+-----------------------------+
+>> > > > 
+>> > > > loopback-ism device creates DMBs (shared memory) for each connection peer.
+>> > > > Since data transfer occurs within the same kernel, the sndbuf of each peer
+>> > > > is only a descriptor and point to the same memory region as peer DMB, so that
+>> > > > the data copy from sndbuf to peer DMB can be avoided in loopback-ism case.
+>> > > > 
+>> > > > Container 1 (ns1)                              Container 2 (ns2)
+>> > > > +-----------------------------------------+    +-------------------------+
+>> > > > | +-------+                               |    |        +-------+        |
+>> > > > | | App C |-----+                         |    |        | App D |        |
+>> > > > | +-------+     |                         |    |        +-^-----+        |
+>> > > > |               |                         |    |          |              |
+>> > > > |           (2) |                         |    |     (2') |              |
+>> > > > |               |                         |    |          |              |
+>> > > > +---------------|-------------------------+    +----------|--------------+
+>> > > >                   |                                         |
+>> > > > Kernel          |                                         |
+>> > > > +---------------|-----------------------------------------|--------------+
+>> > > > | +--------+ +--v-----+                           +--------+ +--------+  |
+>> > > > | |dmb_desc| |snd_desc|                           |dmb_desc| |snd_desc|  |
+>> > > > | +-----|--+ +--|-----+                           +-----|--+ +--------+  |
+>> > > > | +-----|--+    |                                 +-----|--+             |
+>> > > > | | DMB C  |    +---------------------------------| DMB D  |             |
+>> > > > | +--------+                                      +--------+             |
+>> > > > |                                                                        |
+>> > > > |                           +--------------+                             |
+>> > > > |                           | smc loopback |                             |
+>> > > > +---------------------------+--------------+-----------------------------+
+>> > > > 
+>> > > > # Benchmark Test
+>> > > > 
+>> > > > * Test environments:
+>> > > >        - VM with Intel Xeon Platinum 8 core 2.50GHz, 16 GiB mem.
+>> > > >        - SMC sndbuf/DMB size 1MB.
+>> > > >        - /sys/devices/virtual/smc/loopback-ism/dmb_copy is set to default 0,
+>> > > >          which means sndbuf and DMB are merged and no data copied between them.
+>> > > >        - /sys/devices/virtual/smc/loopback-ism/dmb_type is set to default 0,
+>> > > 
+>> > > Exposing any configuration knobs and statistics over sysfs for
+>> > > softdevices does not look correct at all :/ Could you please avoid
+>> > > sysfs?
+>> > > 
+>> > 
+>> > In previous reviews and calls, we think loopback-ism needs to be more
+>> > like a device and be visible under /sys/devices.
+>> > 
+>> > Would you mind explaining why using sysfs for loopback-ism is not correct?
+>> > since I saw some other configurations or statistics exists under /sys/devices,
+>> > e.g. /sys/devices/virtual/net/lo. Thank you!
+>> 
+>> You have smc_netlink.c exposing clear netlink api for the subsystem.
+>> Can't you extend it to contain the configuration knobs and expose stats
+>> instead of sysfs?
+>> 
+>
+>Thank you for the suggestion. I've also considered this approach.
+>
+>But I didn't choose to extend the smc netlink because for now smc netlink
+>are used for SMC protocol related attributes, for example:
+>
+>SMC_NETLINK_GET_SYS_INFO:     SMC version, release, v2-capable..
+>SMC_NETLINK_GET_LGR_SMC{R|D}: SMC-{R|D} link group inform (lgr id, lgr conn num, lgr role..)
+>SMC_NETLINK_GET_LINK_SMCR:    SMC-R link inform (link id, link state, conn cnt..)
+>SMC_NETLINK_GET_DEV_SMCD:     SMC-D device generic inform (user cnt, pci_fid, pci_chid, pci_vendor..)
+>SMC_NETLINK_GET_DEV_SMCR:     SMC-R device generic inform (dev name, port pnet_id, port valid, port state..)
+>SMC_NETLINK_GET_STATS:        SMC generic stats (RMB cnt, Tx size, Rx size, RMB size...)
+>
+>And the knobs and stats in this patchset are loopback-ism device specific
+>attributes, for example:
+>
+>active:        loopback-ism runtime switch
+>dmb_type:      type of DMB provided by loopback-ism
+>dmb_copy:      support for DMB merge of loopback-ism
+>xfer_bytes:    data transferred by loopback-ism
+>dmbs_cnt:      DMB num provided by loopback-ism
+>
+>The layer will be:
+>
+>               +--------------------------------------+
+>               |                                      |
+>               |             SMC protocol             |
+>               |  (attrs by netlink in smc_netlink.c) |
+>               |                                      |
+>               +--------------------------------------+
+>             ------------------smcd_ops------------------
+>     +---------------+  +---------------------+  +--------------+
+>     | loopback-ism  |  |  s390 firmware ISM  |  | Possible     |
+>     +---------------+  |                     |  | other        |
+>     (attrs by sysfs    |                     |  | virtual ISM  |
+>    in smc_loopback.c)  |                     |  |              |
+>                        |                     |  |              |
+>                        +---------------------+  +--------------+
 
-please pull the fbdev changes for kernel 6.8-rc1.
+So nest it:
+SMC_NETLINK_BACKEND_GET_INFO
+SMC_NETLINK_BACKEND_GET_STATS
+?
+I mean, isn't it better to have the backend knobs and stats in one place
+under same netlink commands and attributes than random sysfs path ?
 
-Three fbdev drivers (~8500 lines of code) will be dropped:
-The Carillo Ranch fbdev driver is for an Intel product which was never shipped,
-and for the intelfb and the amba-clcd drivers the drm drivers can be used
-instead. 
 
-The other code changes are minor:
-Some fb_deferred_io flushing fixes, imxfb margin fixes and stifb cleanups.
 
-Please note that there is a merge conflict with the drm tree for those files:
-- drivers/video/fbdev/amba-clcd.c
-- drivers/video/fbdev/vermilion/vermilion.c
-They were modified in the drm tree, but deleted in the fbdev tree.
-In case you don't want to deal with this upcoming merge conflict I offer
-to resend a rebased pull request after you pulled drm.
-
-Thanks!
-Helge
-
-----------------------------------------------------------------
-The following changes since commit de927f6c0b07d9e698416c5b287c521b07694cac:
-
-  Merge tag 's390-6.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux (2024-01-10 18:18:20 -0800)
-
-are available in the Git repository at:
-
-  http://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev.git tags/fbdev-for-6.8-rc1
-
-for you to fetch changes up to 689237ab37c59b9909bc9371d7fece3081683fba:
-
-  fbdev/intelfb: Remove driver (2024-01-12 12:38:37 +0100)
-
-----------------------------------------------------------------
-fbdev fixes and cleanups for 6.8-rc1:
-
-- Remove intelfb fbdev driver (Thomas Zimmermann)
-- Remove amba-clcd fbdev driver (Linus Walleij)
-- Remove vmlfb Carillo Ranch fbdev driver (Matthew Wilcox)
-- fb_deferred_io flushing fixes (Nam Cao)
-- imxfb code fixes and cleanups (Dario Binacchi)
-- stifb primary screen detection cleanups (Thomas Zimmermann)
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      video/logo: use %u format specifier for unsigned int values
-
-Dario Binacchi (11):
-      fbdev: imxfb: fix left margin setting
-      fbdev: imxfb: move PCR bitfields near their offset
-      fbdev: imxfb: use BIT, FIELD_{GET,PREP} and GENMASK macros
-      fbdev: imxfb: replace some magic numbers with constants
-      fbdev: imxfb: add missing SPDX tag
-      fbdev: imxfb: drop ftrace-like logging
-      fbdev: imxfb: add missing spaces after ','
-      fbdev: imxfb: Fix style warnings relating to printk()
-      fbdev: imxfb: use __func__ for function name
-      fbdev: imxfb: add '*/' on a separate line in block comment
-      fbdev: mmp: Fix typo and wording in code comment
-
-Linus Walleij (1):
-      fbdev: amba-clcd: Delete the old CLCD driver
-
-Matthew Wilcox (Oracle) (1):
-      fbdev: Remove support for Carillo Ranch driver
-
-Nam Cao (2):
-      fbdev: flush deferred work in fb_deferred_io_fsync()
-      fbdev: flush deferred IO before closing
-
-Randy Dunlap (1):
-      fbdev: hgafb: fix kernel-doc comments
-
-Stanislav Kinsburskii (1):
-      fbdev: fsl-diu-fb: Fix sparse warning due to virt_to_phys() prototype change
-
-Thomas Zimmermann (10):
-      video/sticore: Store ROM device in STI struct
-      fbdev/stifb: Allocate fb_info instance with framebuffer_alloc()
-      arch/parisc: Detect primary video device from device instance
-      video/sticore: Remove info field from STI struct
-      fbdev/sis: Remove dependency on screen_info
-      drm/hyperv: Remove firmware framebuffers with aperture helper
-      fbdev/hyperv_fb: Remove firmware framebuffers with aperture helpers
-      firmware/sysfb: Clear screen_info state after consuming it
-      fbdev/hyperv_fb: Do not clear global screen_info
-      fbdev/intelfb: Remove driver
-
- Documentation/fb/index.rst                         |    1 -
- Documentation/fb/intelfb.rst                       |  155 --
- Documentation/userspace-api/ioctl/ioctl-number.rst |    1 -
- MAINTAINERS                                        |   12 -
- arch/parisc/video/fbdev.c                          |    2 +-
- drivers/Makefile                                   |    3 +-
- drivers/firmware/sysfb.c                           |   14 +-
- drivers/gpu/drm/hyperv/hyperv_drm_drv.c            |    8 +-
- drivers/video/backlight/Kconfig                    |    7 -
- drivers/video/backlight/Makefile                   |    1 -
- drivers/video/backlight/cr_bllcd.c                 |  264 ---
- drivers/video/fbdev/Kconfig                        |   72 -
- drivers/video/fbdev/Makefile                       |    2 -
- drivers/video/fbdev/amba-clcd.c                    |  984 ---------
- drivers/video/fbdev/core/fb_defio.c                |    8 +-
- drivers/video/fbdev/fsl-diu-fb.c                   |    2 +-
- drivers/video/fbdev/hgafb.c                        |   13 +-
- drivers/video/fbdev/hyperv_fb.c                    |   20 +-
- drivers/video/fbdev/imxfb.c                        |  179 +-
- drivers/video/fbdev/intelfb/Makefile               |    8 -
- drivers/video/fbdev/intelfb/intelfb.h              |  382 ----
- drivers/video/fbdev/intelfb/intelfb_i2c.c          |  209 --
- drivers/video/fbdev/intelfb/intelfbdrv.c           | 1680 ----------------
- drivers/video/fbdev/intelfb/intelfbhw.c            | 2115 --------------------
- drivers/video/fbdev/intelfb/intelfbhw.h            |  609 ------
- drivers/video/fbdev/mmp/hw/mmp_spi.c               |    2 +-
- drivers/video/fbdev/sis/sis_main.c                 |   37 -
- drivers/video/fbdev/stifb.c                        |  109 +-
- drivers/video/fbdev/vermilion/Makefile             |    6 -
- drivers/video/fbdev/vermilion/cr_pll.c             |  195 --
- drivers/video/fbdev/vermilion/vermilion.c          | 1173 -----------
- drivers/video/fbdev/vermilion/vermilion.h          |  245 ---
- drivers/video/logo/pnmtologo.c                     |    6 +-
- drivers/video/sticore.c                            |    5 +
- include/linux/amba/clcd-regs.h                     |   87 -
- include/linux/amba/clcd.h                          |  290 ---
- include/video/sticore.h                            |    6 +-
- 37 files changed, 208 insertions(+), 8704 deletions(-)
- delete mode 100644 Documentation/fb/intelfb.rst
- delete mode 100644 drivers/video/backlight/cr_bllcd.c
- delete mode 100644 drivers/video/fbdev/amba-clcd.c
- delete mode 100644 drivers/video/fbdev/intelfb/Makefile
- delete mode 100644 drivers/video/fbdev/intelfb/intelfb.h
- delete mode 100644 drivers/video/fbdev/intelfb/intelfb_i2c.c
- delete mode 100644 drivers/video/fbdev/intelfb/intelfbdrv.c
- delete mode 100644 drivers/video/fbdev/intelfb/intelfbhw.c
- delete mode 100644 drivers/video/fbdev/intelfb/intelfbhw.h
- delete mode 100644 drivers/video/fbdev/vermilion/Makefile
- delete mode 100644 drivers/video/fbdev/vermilion/cr_pll.c
- delete mode 100644 drivers/video/fbdev/vermilion/vermilion.c
- delete mode 100644 drivers/video/fbdev/vermilion/vermilion.h
- delete mode 100644 include/linux/amba/clcd-regs.h
- delete mode 100644 include/linux/amba/clcd.h
+>
+>So I choose to use current way to provide this lower layer loopback-ism
+>device's attributes, restrict loopback-ism specific code to smc_loopback.c
+>and try to make a clear layer architecture.
+>
+>Thanks,
+>Wen Gu
+>> 
+>> > 
+>> > 
+>> > 
+>> > Thanks again,
+>> > Wen Gu
+>> > 
+>> > > 
+>> > > >          which means DMB is physically contiguous buffer.
+>> > > > 
+>> > > > * Test object:
+>> > > >        - TCP: run on TCP loopback.
+>> > > >        - SMC lo: run on SMC loopback device.
+>> > > > 
+>> > > > 1. ipc-benchmark (see [3])
+>> > > > 
+>> > > > - ./<foo> -c 1000000 -s 100
+>> > > > 
+>> > > >                              TCP                  SMC-lo
+>> > > > Message
+>> > > > rate (msg/s)              80636                  149515(+85.42%)
+>> > > > 
+>> > > > 2. sockperf
+>> > > > 
+>> > > > - serv: <smc_run> taskset -c <cpu> sockperf sr --tcp
+>> > > > - clnt: <smc_run> taskset -c <cpu> sockperf { tp | pp } --tcp --msg-size={ 64000 for tp | 14 for pp } -i 127.0.0.1 -t 30
+>> > > > 
+>> > > >                              TCP                  SMC-lo
+>> > > > Bandwidth(MBps)         4909.36                 8197.57(+66.98%)
+>> > > > Latency(us)               6.098                   3.383(-44.52%)
+>> > > > 
+>> > > > 3. nginx/wrk
+>> > > > 
+>> > > > - serv: <smc_run> nginx
+>> > > > - clnt: <smc_run> wrk -t 8 -c 1000 -d 30 http://127.0.0.1:80
+>> > > > 
+>> > > >                             TCP                   SMC-lo
+>> > > > Requests/s           181685.74                246447.77(+35.65%)
+>> > > > 
+>> > > > 4. redis-benchmark
+>> > > > 
+>> > > > - serv: <smc_run> redis-server
+>> > > > - clnt: <smc_run> redis-benchmark -h 127.0.0.1 -q -t set,get -n 400000 -c 200 -d 1024
+>> > > > 
+>> > > >                             TCP                   SMC-lo
+>> > > > GET(Requests/s)       85855.34                118553.64(+38.09%)
+>> > > > SET(Requests/s)       86824.40                125944.58(+45.06%)
+>> > > > 
+>> > > > 
+>> > > > Change log:
+>> > > > 
+>> > > > v1->RFC:
+>> > > > - Patch #9: merge rx_bytes and tx_bytes as xfer_bytes statistics:
+>> > > >    /sys/devices/virtual/smc/loopback-ism/xfer_bytes
+>> > > > - Patch #10: add support_dmb_nocopy operation to check if SMC-D device supports
+>> > > >    merging sndbuf with peer DMB.
+>> > > > - Patch #13 & #14: introduce loopback-ism device control of DMB memory type and
+>> > > >    control of whether to merge sndbuf and DMB. They can be respectively set by:
+>> > > >    /sys/devices/virtual/smc/loopback-ism/dmb_type
+>> > > >    /sys/devices/virtual/smc/loopback-ism/dmb_copy
+>> > > >    The motivation for these two control is that a performance bottleneck was
+>> > > >    found when using vzalloced DMB and sndbuf is merged with DMB, and there are
+>> > > >    many CPUs and CONFIG_HARDENED_USERCOPY is set [4]. The bottleneck is caused
+>> > > >    by the lock contention in vmap_area_lock [5] which is involved in memcpy_from_msg()
+>> > > >    or memcpy_to_msg(). Currently, Uladzislau Rezki is working on mitigating the
+>> > > >    vmap lock contention [6]. It has significant effects, but using virtual memory
+>> > > >    still has additional overhead compared to using physical memory.
+>> > > >    So this new version provides controls of dmb_type and dmb_copy to suit
+>> > > >    different scenarios.
+>> > > > - Some minor changes and comments improvements.
+>> > > > 
+>> > > > RFC->old version([1]):
+>> > > > Link: https://lore.kernel.org/netdev/1702214654-32069-1-git-send-email-guwen@linux.alibaba.com/
+>> > > > - Patch #1: improve the loopback-ism dump, it shows as follows now:
+>> > > >    # smcd d
+>> > > >    FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
+>> > > >    0000 0     loopback-ism  ffff   No        0
+>> > > > - Patch #3: introduce the smc_ism_set_v2_capable() helper and set
+>> > > >    smc_ism_v2_capable when ISMv2 or virtual ISM is registered,
+>> > > >    regardless of whether there is already a device in smcd device list.
+>> > > > - Patch #3: loopback-ism will be added into /sys/devices/virtual/smc/loopback-ism/.
+>> > > > - Patch #8: introduce the runtime switch /sys/devices/virtual/smc/loopback-ism/active
+>> > > >    to activate or deactivate the loopback-ism.
+>> > > > - Patch #9: introduce the statistics of loopback-ism by
+>> > > >    /sys/devices/virtual/smc/loopback-ism/{{tx|rx}_tytes|dmbs_cnt}.
+>> > > > - Some minor changes and comments improvements.
+>> > > > 
+>> > > > [1] https://lore.kernel.org/netdev/1695568613-125057-1-git-send-email-guwen@linux.alibaba.com/
+>> > > > [2] https://lore.kernel.org/netdev/20231219142616.80697-1-guwen@linux.alibaba.com/
+>> > > > [3] https://github.com/goldsborough/ipc-bench
+>> > > > [4] https://lore.kernel.org/all/3189e342-c38f-6076-b730-19a6efd732a5@linux.alibaba.com/
+>> > > > [5] https://lore.kernel.org/all/238e63cd-e0e8-4fbf-852f-bc4d5bc35d5a@linux.alibaba.com/
+>> > > > [6] https://lore.kernel.org/all/20240102184633.748113-1-urezki@gmail.com/
+>> > > > 
+>> > > > Wen Gu (15):
+>> > > >    net/smc: improve SMC-D device dump for virtual ISM
+>> > > >    net/smc: decouple specialized struct from SMC-D DMB registration
+>> > > >    net/smc: introduce virtual ISM device loopback-ism
+>> > > >    net/smc: implement ID-related operations of loopback-ism
+>> > > >    net/smc: implement some unsupported operations of loopback-ism
+>> > > >    net/smc: implement DMB-related operations of loopback-ism
+>> > > >    net/smc: register loopback-ism into SMC-D device list
+>> > > >    net/smc: introduce loopback-ism runtime switch
+>> > > >    net/smc: introduce loopback-ism statistics attributes
+>> > > >    net/smc: add operations to merge sndbuf with peer DMB
+>> > > >    net/smc: attach or detach ghost sndbuf to peer DMB
+>> > > >    net/smc: adapt cursor update when sndbuf and peer DMB are merged
+>> > > >    net/smc: introduce loopback-ism DMB type control
+>> > > >    net/smc: introduce loopback-ism DMB data copy control
+>> > > >    net/smc: implement DMB-merged operations of loopback-ism
+>> > > > 
+>> > > > drivers/s390/net/ism_drv.c |   2 +-
+>> > > > include/net/smc.h          |   7 +-
+>> > > > net/smc/Kconfig            |  13 +
+>> > > > net/smc/Makefile           |   2 +-
+>> > > > net/smc/af_smc.c           |  28 +-
+>> > > > net/smc/smc_cdc.c          |  58 ++-
+>> > > > net/smc/smc_cdc.h          |   1 +
+>> > > > net/smc/smc_core.c         |  61 +++-
+>> > > > net/smc/smc_core.h         |   1 +
+>> > > > net/smc/smc_ism.c          |  71 +++-
+>> > > > net/smc/smc_ism.h          |   5 +
+>> > > > net/smc/smc_loopback.c     | 718 +++++++++++++++++++++++++++++++++++++
+>> > > > net/smc/smc_loopback.h     |  88 +++++
+>> > > > 13 files changed, 1026 insertions(+), 29 deletions(-)
+>> > > > create mode 100644 net/smc/smc_loopback.c
+>> > > > create mode 100644 net/smc/smc_loopback.h
+>> > > > 
+>> > > > -- 
+>> > > > 2.32.0.3.g01195cf9f
+>> > > > 
+>> > > > 
