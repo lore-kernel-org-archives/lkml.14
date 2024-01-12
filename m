@@ -1,33 +1,33 @@
 Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F155F17734
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 23:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774441A706
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 23:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6dde173384aso2709309a34.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 15:37:11 -0800 (PST)
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6ddec7e5747so2514181a34.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 15:37:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705102631; x=1705707431;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SVfOI8w12aI3+T3TMUSSNd7UpcAZD7/xtS98IbT/+6k=;
-        b=AeqAI/OkLSjCu61nLjU5ekoC62A2ndu1dNFq95J/lhVv6eCt5xXtbCoNuJk6TEVq/r
-         YVhD5Y0SN8kVxZ4a/OPtAglbII9WIbSqzN3URimSgkF540PF6MF+iz/s+PJCXWQRvSyD
-         a4vkHjHM7JisVwgkKM8czF7RytOfPkFonWO5T1HLzts7SHh17C9NsiWqon+jCEcokY7x
-         JXM67YUQWU2lCQwQTGU7dKy9CaWl1hEQqwZ+YWiRzJSlCp4C4jyaZl2qwspvzHfajz1t
-         hvmqLWH6MmC3YIIaKaCDLyLmIFS/zGlljiGKu7Sb0MUKP4C/MYNQmEt+dD+nu7s0KJZr
-         Z7Ow==
-X-Gm-Message-State: AOJu0Yzk7aAk5sDomv78MwcdaItsDOeQ7rd3oULn7i0AsgJKH8cQdn3r
-	9s9heE+znNnJTMamw57JiDkot8fjjyq8rA==
-X-Google-Smtp-Source: AGHT+IHKvz7Suy9cX9d3UWM+8TuvQVA9u/4+U4ILo0hzoZjxC1LPbmbbcPFQ4oaVb1T4JlVF3Q6Peg==
-X-Received: by 2002:a9d:5c11:0:b0:6dd:e286:309 with SMTP id o17-20020a9d5c11000000b006dde2860309mr2194781otk.76.1705102630992;
-        Fri, 12 Jan 2024 15:37:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705102634; x=1705707434;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DXiBs0Dsv9lw08RA+psp/orErqrti+c5fonsf5dUFRo=;
+        b=gvdgTDIalNpO6pkPGpQ4SY+7xoAXKQzKFHZ6QrOlUnKBUyljTeR8SaRl/34cCgfbi1
+         5RfSIgDlQgYbespOqwkMWkNgHakph2dXJgG89c5VaCzroSIut9vGKT0K9uWR/z1BP2au
+         bhUzzou6yd5iyEGJO31whfHmmzrsDaQuMENiXx7RFoLeQ0LnTJquC4bX4JwXOcL2Fe70
+         ++oVGo5vDrPSUhE1NpmsrVQrfcjDvb/nv6R7ns2YCePDITxPtIdb9UZTsXgC6VsVggMp
+         4Q4DshVl7pGPmGBSZVDAUNbjxQt0xD6+839lHgkKvIvR3eThnJ5MdfoLrr0cwKQKMp5v
+         4Gqg==
+X-Gm-Message-State: AOJu0YxkwVW6trqtEDUSt2qyHzZdNRgKZirCKsyoofZasF/ffwnya21/
+	yRcjvvsdLCHedYDvEN9bddI=
+X-Google-Smtp-Source: AGHT+IEdNIM2lremxB3JZhNXf4OuMUXyIV4MCDVGmUw8k5Ivx9Us2Hv3XZbGLovn7MBYk8JmFX6PxA==
+X-Received: by 2002:a05:6830:12d6:b0:6dd:eebd:cd5f with SMTP id a22-20020a05683012d600b006ddeebdcd5fmr2415192otq.48.1705102634455;
+        Fri, 12 Jan 2024 15:37:14 -0800 (PST)
 Received: from snowbird.lan ([136.25.84.107])
-        by smtp.gmail.com with ESMTPSA id x5-20020aa793a5000000b006d9b4171b20sm3676811pff.112.2024.01.12.15.37.09
+        by smtp.gmail.com with ESMTPSA id x5-20020aa793a5000000b006d9b4171b20sm3676811pff.112.2024.01.12.15.37.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 15:37:10 -0800 (PST)
+        Fri, 12 Jan 2024 15:37:14 -0800 (PST)
 From: Dennis Zhou <dennis@kernel.org>
 To: Tejun Heo <tj@kernel.org>,
 	Christoph Lameter <cl@linux.com>,
@@ -42,10 +42,12 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Dennis Zhou <dennis@kernel.org>
-Subject: [PATCH 0/3 v2] lib/percpu_counter, cpu/hotplug: Cure the cpu_dying_mask woes
-Date: Fri, 12 Jan 2024 15:36:45 -0800
-Message-Id: <cover.1705101789.git.dennis@kernel.org>
+Subject: [PATCH 2/3] cpu/hotplug: Remove export of cpu_active_mask and cpu_dying_mask
+Date: Fri, 12 Jan 2024 15:36:47 -0800
+Message-Id: <1d719106061cc0177eb16d6d5ac914c0485772b2.1705101789.git.dennis@kernel.org>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <cover.1705101789.git.dennis@kernel.org>
+References: <cover.1705101789.git.dennis@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,35 +56,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi everyone,
+From: Thomas Gleixner <tglx@linutronix.de>
 
-This is a respin of Thomas' series [1] against v6.7-rc4. Largely it's
-the same minus a slight change in percpu_counter.c for batch
-percpu_counters and updating __percpu_counter_limited_add().
+No module users and no module should ever care.
 
-I don't think we reached an alternative resolution here so I can queue
-this up and give it some soak time in for-next.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+[Dennis: applied cleanly]
+Signed-off-by: Dennis Zhou <dennis@kernel.org>
+---
+ kernel/cpu.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-[1] https://lore.kernel.org/lkml/20230414162755.281993820@linutronix.de/
-
-Thanks,
-Dennis
-
-Dennis Zhou (2):
-  lib/percpu_counter: Fix CPU hotplug handling
-  cpu/hotplug: Get rid of cpu_dying_mask
-
-Thomas Gleixner (1):
-  cpu/hotplug: Remove export of cpu_active_mask and cpu_dying_mask
-
- include/linux/cpuhotplug.h |  2 +-
- include/linux/cpumask.h    | 21 ------------
- kernel/cpu.c               | 45 +++++++++++++++++++++-----
- kernel/sched/core.c        |  4 +--
- kernel/smpboot.h           |  2 ++
- lib/percpu_counter.c       | 65 ++++++++++++++++----------------------
- 6 files changed, 70 insertions(+), 69 deletions(-)
-
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index a86972a91991..c4929e9cd9be 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -3126,10 +3126,8 @@ struct cpumask __cpu_present_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_present_mask);
+ 
+ struct cpumask __cpu_active_mask __read_mostly;
+-EXPORT_SYMBOL(__cpu_active_mask);
+ 
+ struct cpumask __cpu_dying_mask __read_mostly;
+-EXPORT_SYMBOL(__cpu_dying_mask);
+ 
+ atomic_t __num_online_cpus __read_mostly;
+ EXPORT_SYMBOL(__num_online_cpus);
 -- 
 2.39.1
 
