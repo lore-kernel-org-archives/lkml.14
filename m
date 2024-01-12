@@ -1,82 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B72117C78;
-	Fri, 12 Jan 2024 17:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94E217540;
+	Fri, 12 Jan 2024 17:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y/zzcq8E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58747C433F1;
-	Fri, 12 Jan 2024 17:06:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3lS3yPQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 634CBC433F1;
+	Fri, 12 Jan 2024 17:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705079184;
-	bh=ChOHcFdSRNFjvK3N8OYYhuCgtYXFpkTyeUTD5QgblIA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Y/zzcq8EM1YES3DPDYMNeuSgyTK4ElDmYRAE6AbLqPcpzI0xKRqZtpTbd5s5JwYeS
-	 93waMWxV8pcyAlzlU9+/kgh2wPTk6U9cNDuLFEFRFU/01mLjboHttb9ID1F9AFWGUm
-	 T8849i4Ep4lio4qhfYZ+VYpyqS4YtcL8nzMNYxhqoznesU0ZW2n6j7ySLCzdqYIpBp
-	 XSLixugrSd89EfkOFvKAWYgeZrkjQbdTCvCs8K9ZhNEKA9nDoqniS038QxkmkoIcxk
-	 IlK+jG9xfNzJGKl2MZMEjlHZgsg4zOOzoAyZNyGymByfgjPI4LaSdd5yvMKX7MiMue
-	 zGFJfuW2kb1tA==
-Date: Fri, 12 Jan 2024 11:06:22 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V1] PCI: Clear errors logged in Secondary Status Register
-Message-ID: <20240112170622.GA2272469@bhelgaas>
+	s=k20201202; t=1705079190;
+	bh=wZDnbh7n64HZXBziqJnarpVCrDn44XHiaryQeXzT4Jk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O3lS3yPQkwbyA3T/nJ4LwyRW+9PissQShMQh5QL5f7Bmho0kWq2fc8EVIb/s7a0Ex
+	 f8rQ7wGaVWQVZ429XPgXv2+6eH92Krk3nyrexdA2hE5qUmi3yJBj0vkSX2kAJu3zN5
+	 eiRWTF7dz3mfOUIBAfUDNa1FzCy5xD40Y2tBFmKr91My270qB6kIFxv7gcjwsf++bS
+	 l83+elWFcsEgiDwapOb4z15ZJDiEzlv4pgq2C4Az4DJ6DMV8EwKTzhjMgKL5M2Q1/m
+	 2aon5a9GvA/fcN0f4uPmkNq2Io/7xwbtDpmKFCyIcO4XwZTBMnDBh06KGKyN9tcNt9
+	 1pxMwcGs/NSSw==
+Date: Fri, 12 Jan 2024 17:06:25 +0000
+From: Conor Dooley <conor@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	matthias.bgg@gmail.com, wenst@chromium.org, hsinyi@chromium.org,
+	nfraprado@collabora.com, macpaul.lin@mediatek.com,
+	sean.wang@mediatek.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kernel@collabora.com
+Subject: Re: [PATCH 01/15] dt-bindings: arm64: mediatek: Add MT8395 Radxa NIO
+ 12L board compatible
+Message-ID: <20240112-scanning-contour-019b286021e6@spud>
+References: <20240112094632.66310-1-angelogioacchino.delregno@collabora.com>
+ <20240112094632.66310-2-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="govvU38t0WtaM7t9"
+Content-Disposition: inline
+In-Reply-To: <20240112094632.66310-2-angelogioacchino.delregno@collabora.com>
+
+
+--govvU38t0WtaM7t9
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240104013229.693041-1-vidyas@nvidia.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 04, 2024 at 07:02:29AM +0530, Vidya Sagar wrote:
-> If a downstream port has a PCIe switch connected to it, the enumeration
-> process leaves the 'Received Master Abort' bit set in the Secondary
-> Status Register of the downstream port because of the Unsupported
-> Requests (URs) take place in the downstream hierarchy. Since the
-> ownership of Secondary Status Register always lies with the OS including
-> systems with Firmware-First approach for error handling[1], clear the
-> error status bits in the Secondary Status Register post enumeration.
+On Fri, Jan 12, 2024 at 10:46:18AM +0100, AngeloGioacchino Del Regno wrote:
+> Add a board compatible for the Radxa NIO 12L, based on the MediaTek
+> MT8395 SoC.
+>=20
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
 
-I would expect these URs to happen when enumerating below *all* PCIe
-Root Ports (not just when switches are present), and Master Aborts
-should happen in conventional PCI.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Similarly, I don't think Firmware-First is relevant here.  Only the
-fact that the OS owns PCI_SEC_STATUS because there's no mechanism to
-negotiate for platform ownership of it.
+Cheers,
+Conor.
 
-We're in the merge window right now, so we'll start merging v6.9
-material after v6.8-rc1 is tagged.
-
-> [1] https://lore.kernel.org/all/1fb9d746-0695-4d19-af98-f442f31cd464@nvidia.com/T/
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  drivers/pci/probe.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 43159965e09e..edf8202465d8 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1470,6 +1470,9 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  	}
->  
->  out:
-> +	/* Clear errors in the Secondary Status Register */
-> +	pci_write_config_word(dev, PCI_SEC_STATUS, 0xffff);
-> +
->  	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
->  
->  	pm_runtime_put(&dev->dev);
-> -- 
-> 2.25.1
-> 
+>  Documentation/devicetree/bindings/arm/mediatek.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Docume=
+ntation/devicetree/bindings/arm/mediatek.yaml
+> index 5d49c7af50e5..cc37c88d8d4a 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> @@ -345,6 +345,7 @@ properties:
+>        - items:
+>            - enum:
+>                - mediatek,mt8395-evk
+> +              - radxa,nio-12l
+>            - const: mediatek,mt8395
+>            - const: mediatek,mt8195
+>        - items:
+> --=20
+> 2.43.0
+>=20
+
+--govvU38t0WtaM7t9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaFxkQAKCRB4tDGHoIJi
+0u2ZAQCrxxq3yuqhnnom8wr4ZvEFVZTjfwbrnntQ/oN+LUXvxQD9EornS9s9da5q
+6K6qX/043jYEYDy4qbt94rd6ApvhXgA=
+=yQm+
+-----END PGP SIGNATURE-----
+
+--govvU38t0WtaM7t9--
