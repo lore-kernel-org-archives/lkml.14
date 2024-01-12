@@ -1,125 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526026A032
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 12:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hyM//Fnf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705061188; x=1736597188;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=qZO5o8gloP88hNEdbyf9gooCX6/C7fxpb8IKA6kIC/U=;
-  b=hyM//FnfKYE1n2o5ZnHZAR1919Dre9R4uNLe9OsDqzuTw24JQkF6BvV/
-   HWWEa41oWu77lU6VN8uRXOTAyRt4YHpv+5M4z2APrTTCLarTXbFCWJ9cq
-   pfXhQdhR39DV/O87Y+QoDutx3lpd2/JohfRccufoN/pElEsZalVzbogT5
-   QQWdEq4j8LB6KUulyArRWdl7WedkRZiTAFYnW2Tg5VVO4DSTeRb9eN9et
-   +tHsSXMF/IftuW809i26bRGWQzo0Eh+jXZkZp5hPbXJC7rkMruMiXLfe8
-   zVqxWybOzmq+sBCXhFEkhebFMdbybdwwuZQN8TAJVw/0s/asSUabYDwWE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="463441909"
-X-IronPort-AV: E=Sophos;i="6.04,189,1695711600"; 
-   d="scan'208";a="463441909"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 04:06:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,189,1695711600"; 
-   d="scan'208";a="24689196"
-Received: from kschuele-mobl1.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.213.195])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 04:06:19 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id B843210A557; Fri, 12 Jan 2024 15:06:16 +0300 (+03)
-Date: Fri, 12 Jan 2024 15:06:16 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: NOMURA =?utf-8?B?SlVOSUNISSjph47mnZHjgIDmt7PkuIAp?= <junichi.nomura@nec.com>
-Cc: "mingo@redhat.com" <mingo@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	"nikunj@amd.com" <nikunj@amd.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"debarbos@redhat.com" <debarbos@redhat.com>,
-	"jlelli@redhat.com" <jlelli@redhat.com>,
-	"lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-	"dzickus@redhat.com" <dzickus@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH repost] x86/boot: Add a message about ignored early NMIs
-Message-ID: <20240112120616.5zjojjmjeqg5egb7@box>
-References: <ZaEe8FC767f+sxRQ@jeru.linux.bs1.fc.nec.co.jp>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C0C36A011;
+	Fri, 12 Jan 2024 12:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6313D1FB;
+	Fri, 12 Jan 2024 04:08:37 -0800 (PST)
+Received: from e127643.arm.com (unknown [10.57.91.137])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CD8843F73F;
+	Fri, 12 Jan 2024 04:07:47 -0800 (PST)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	ilkka@os.amperecomputing.com
+Cc: James Clark <james.clark@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Anup Sharma <anupnewsmail@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf test: Fixed masked error condition in perf data convert test
+Date: Fri, 12 Jan 2024 12:07:35 +0000
+Message-Id: <20240112120737.1995575-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZaEe8FC767f+sxRQ@jeru.linux.bs1.fc.nec.co.jp>
 
-On Fri, Jan 12, 2024 at 11:13:53AM +0000, NOMURA JUNICHI(野村 淳一) wrote:
-> Commit 78a509fba9c9 ("x86/boot: Ignore NMIs during very early boot") added
-> empty handler in early boot stage to avoid boot failure by spurious NMIs.
-> 
-> Add a diagnostic message in case we need to know whether early NMIs have
-> occurred and/or what happened to them.
-> 
-> Signed-off-by: Jun'ichi Nomura <junichi.nomura@nec.com>
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Suggested-by: H. Peter Anvin <hpa@zytor.com>
-> Link: https://lore.kernel.org/lkml/20231130103339.GCZWhlA196uRklTMNF@fat_crate.local/
-> 
-> diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-> --- a/arch/x86/boot/compressed/ident_map_64.c
-> +++ b/arch/x86/boot/compressed/ident_map_64.c
-> @@ -387,7 +387,10 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
->  	kernel_add_identity_map(address, end);
->  }
->  
-> +extern int spurious_nmi_count;
-> +
+The test does set -e, so any errors go straight to the exit handler,
+where it returns err=0 (success). Fix it by leaving err=1 from the
+beginning and only set the success code if it ran all the way to the end
+without errors.
 
-It has to be in a header file.
+Also remove the exit code argument from the last exit because it doesn't
+do anything, it's always replaced by err in the exit handler.
 
->  void do_boot_nmi_trap(struct pt_regs *regs, unsigned long error_code)
->  {
->  	/* Empty handler to ignore NMI during early boot */
-> +	spurious_nmi_count++;
->  }
-> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-> --- a/arch/x86/boot/compressed/misc.c
-> +++ b/arch/x86/boot/compressed/misc.c
-> @@ -357,6 +357,8 @@ unsigned long decompress_kernel(unsigned char *outbuf, unsigned long virt_addr,
->  	return entry;
->  }
->  
-> +int spurious_nmi_count;
-> +
+Fixes: 68d124182610 ("perf test: Add test validating JSON generated by 'perf data convert --to-json'")
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/tests/shell/test_perf_data_converter_json.sh | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-It is not a right place to define a variable. Do it next to rest of
-variables at the beginning of the file.
->  /*
->   * The compressed kernel image (ZO), has been moved so that its position
->   * is against the end of the buffer used to hold the uncompressed kernel
-> @@ -493,6 +495,12 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
->  	/* Disable exception handling before booting the kernel */
->  	cleanup_exception_handling();
->  
-> +	if (spurious_nmi_count) {
-> +		error_putstr("Spurious early NMI ignored. Number of NMIs: 0x");
-> +		error_puthex(spurious_nmi_count);
-> +		error_putstr("\n");
-> +	}
-> +
->  	return output + entry_offset;
->  }
->  
-
+diff --git a/tools/perf/tests/shell/test_perf_data_converter_json.sh b/tools/perf/tests/shell/test_perf_data_converter_json.sh
+index c4f1b59d116f..1781b7215c11 100755
+--- a/tools/perf/tests/shell/test_perf_data_converter_json.sh
++++ b/tools/perf/tests/shell/test_perf_data_converter_json.sh
+@@ -4,7 +4,7 @@
+ 
+ set -e
+ 
+-err=0
++err=1
+ 
+ shelldir=$(dirname "$0")
+ # shellcheck source=lib/setup_python.sh
+@@ -36,7 +36,6 @@ test_json_converter_command()
+ 		echo "Perf Data Converter Command to JSON [SUCCESS]"
+ 	else
+ 		echo "Perf Data Converter Command to JSON [FAILED]"
+-		err=1
+ 		exit
+ 	fi
+ }
+@@ -49,7 +48,6 @@ validate_json_format()
+ 			echo "The file contains valid JSON format [SUCCESS]"
+ 		else
+ 			echo "The file does not contain valid JSON format [FAILED]"
+-			err=1
+ 			exit
+ 		fi
+ 	else
+@@ -62,4 +60,7 @@ validate_json_format()
+ test_json_converter_command
+ validate_json_format
+ 
+-exit ${err}
++# Set -e is on, so it was only successful if it ran up to this point.
++# Therefore only set err=0 here.
++err=0
++exit
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.34.1
+
