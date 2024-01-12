@@ -1,91 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859AC6A038;
-	Fri, 12 Jan 2024 13:50:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3AC6D1B1;
+	Fri, 12 Jan 2024 13:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b3QPwCi8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D5AC433F1;
-	Fri, 12 Jan 2024 13:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705067418;
-	bh=2GBsmlDMuRrcjc2Hma/6Rsppr8bfpOi1zXgsvajbU7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b3QPwCi8lSUlKn9lVR7v8i0+OSGblLUhqlsqZKv6AReHbWezDzAbl5Ek0HuC1CMbH
-	 hn/K732i14ODy4j2Gz5t8iq1wiVIrk3MHXTxnaaTe4Io23MZhxn1BkFS0xUqAwdZHg
-	 Vz6QIeDaCfTzD9YbJgKaCHyNxhIMTmMuWDE+DJ3FgKiZPEPzEeUOKGALfd1OgO60AN
-	 cFFoMfQYsZFxQAZCdn/15HZoag1q5sVA2/btsTQxSYdhbfTLInbvYY8Xc7ABrVUw9/
-	 zwYQM6+8NRSDNSlwnhPXE+pdEGVIQVKm32r90zeT7MyJ/h93VrME76gBc61jsp553F
-	 LDNABLAzw/HEg==
-Date: Fri, 12 Jan 2024 13:50:09 +0000
-From: Will Deacon <will@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Raag Jadav <raag.jadav@intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>,
-	Kevin Hilman <khilman@baylibre.com>, Andy Gross <agross@kernel.org>,
-	NXP Linux Team <linux-imx@nxp.com>, linux-arm-msm@vger.kernel.org,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Frank Li <Frank.li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Besar Wicaksono <bwicaksono@nvidia.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 00/18] perf: Convert to platform remove callback
- returning void
-Message-ID: <20240112135009.GA16771@willie-the-truck>
-References: <cover.1702648124.git.u.kleine-koenig@pengutronix.de>
- <vlnl6og3bts5hcdjw5h7c4km7zolzuf6h7cwyfymjzan3uqjwy@rsra3lqdhou7>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P1QGGUCc"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40CDo1jA077687;
+	Fri, 12 Jan 2024 07:50:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1705067401;
+	bh=lbPtsYeeY36RDpZ1dpZig59RqjnFtrAMDUMxS5lJiOg=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=P1QGGUCcDQTxgCawaAy38Us4GC2dmjSNZuufDxydkw5c5hystE1J9OKTXiEBaUHao
+	 noAlvBW5guI4vd84Fg9glwttkG5/9dkOnRgU5SBcAevkz/ei6d3Fug1FDYvH87xybK
+	 E6vlgGlDPiRKAFGWDaeuOKsL3tSSeg1Ah/JSyY5E=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40CDo161065703
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 12 Jan 2024 07:50:01 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 12
+ Jan 2024 07:50:00 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 12 Jan 2024 07:50:00 -0600
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40CDo0JX110565;
+	Fri, 12 Jan 2024 07:50:00 -0600
+Date: Fri, 12 Jan 2024 07:50:00 -0600
+From: Nishanth Menon <nm@ti.com>
+To: Sjoerd Simons <sjoerd@collabora.com>
+CC: <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@kernel.org>,
+        <kernel@collabora.com>, Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>, Tero Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am625-beagleplay: Use the builtin
+ mdio bus
+Message-ID: <20240112135000.b54xz3boeua7y2jf@music>
+References: <20240112124505.2054212-1-sjoerd@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <vlnl6og3bts5hcdjw5h7c4km7zolzuf6h7cwyfymjzan3uqjwy@rsra3lqdhou7>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240112124505.2054212-1-sjoerd@collabora.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Uwe,
-
-On Wed, Jan 10, 2024 at 09:56:26AM +0100, Uwe Kleine-König wrote:
-> On Fri, Dec 15, 2023 at 02:59:00PM +0100, Uwe Kleine-König wrote:
-> > this series converts all drivers below drivers/perf to use
-> > .remove_new(). See commit 5c5a7680e67b ("platform: Provide a remove
-> > callback that returns no value") for an extended explanation and the
-> > eventual goal. The TL;DR; is to make it harder for driver authors to
-> > leak resources without noticing.
-> > 
-> > I based the patches on today's next, I had to revert commits 
-> > 3115ee021bfb ("arm64: perf: Include threshold control fields in
-> > PMEVTYPER mask") and 816c26754447 ("arm64: perf: Add support for event
-> > counting threshold") to compile test on ARCH=arm (this is a problem in
-> > next, not in my patch series).
-> > 
-> > This is merge window material. All patches are pairwise independent of
-> > each other so they can be applied individually. Still it would be great
-> > to let them go in all together.
+On 13:44-20240112, Sjoerd Simons wrote:
+> The beagleplay dts was using a bit-bang gpio mdio bus as a work-around
+> for errata i2329. However since commit d04807b80691 ("net: ethernet: ti:
+> davinci_mdio: Add workaround for errata i2329") the mdio driver itself
+> already takes care of this errata for effected silicon, which landed
+> well before the beagleplay dts. So i suspect the reason for the
+> workaround in upstream was simply due to copying the vendor dts.
 > 
-> I wonder if this series is still on someone's radar. It didn't appear in
-> next up to now, so I guess it's too late for 6.8-rc1?!
+> Switch the dts to the ti,cpsw-mdio instead so it described the actual
+> hardware and is consistent with other AM625 based boards
+> 
+> Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+> 
+> ---
 
-This came in during the holiday period so, by the time I saw it, it was
-too late to land for this merge window. I can pick it up for 6.9 in a few
-weeks, though. I usually start queueing stuff at -rc3.
+We have had issues with the ethernet integration previously (also why
+ethernet in u-boot is not yet functional on beagleplay[1]).
 
-Will
+https://openbeagle.org/beagleplay/beagleplay/-/issues/101
+
+we should probably do a 1000 boot nfs test or something to ensure this
+doesn't introduce regressions (I recollect mdio wasn't stable on
+beagleplay) and switching to bitbang driver stopped all complains.
+
+[1] https://lore.kernel.org/u-boot/20230822121350.51324-1-rogerq@kernel.org/
+> 
+>  .../arm64/boot/dts/ti/k3-am625-beagleplay.dts | 42 +++++++------------
+>  1 file changed, 16 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> index eadbdd9ffe37..49fb21ba62b0 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> @@ -29,7 +29,6 @@ aliases {
+>  		i2c3 = &main_i2c3;
+>  		i2c4 = &wkup_i2c0;
+>  		i2c5 = &mcu_i2c0;
+> -		mdio-gpio0 = &mdio0;
+>  		mmc0 = &sdhci0;
+>  		mmc1 = &sdhci1;
+>  		mmc2 = &sdhci2;
+> @@ -231,27 +230,6 @@ simple-audio-card,codec {
+>  		};
+>  	};
+>  
+> -	/* Workaround for errata i2329 - just use mdio bitbang */
+> -	mdio0: mdio {
+> -		compatible = "virtual,mdio-gpio";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&mdio0_pins_default>;
+> -		gpios = <&main_gpio0 86 GPIO_ACTIVE_HIGH>, /* MDC */
+> -			<&main_gpio0 85 GPIO_ACTIVE_HIGH>; /* MDIO */
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		cpsw3g_phy0: ethernet-phy@0 {
+> -			reg = <0>;
+> -		};
+> -
+> -		cpsw3g_phy1: ethernet-phy@1 {
+> -			reg = <1>;
+> -			reset-gpios = <&main_gpio1 5 GPIO_ACTIVE_LOW>;
+> -			reset-assert-us = <25>;
+> -			reset-deassert-us = <60000>; /* T2 */
+> -		};
+> -	};
+>  };
+>  
+>  &main_pmx0 {
+> @@ -312,8 +290,8 @@ AM62X_IOPAD(0x00b4, PIN_INPUT_PULLUP, 1) /* (K24) GPMC0_CSn3.I2C2_SDA */
+>  
+>  	mdio0_pins_default: mdio0-default-pins {
+>  		pinctrl-single,pins = <
+> -			AM62X_IOPAD(0x0160, PIN_OUTPUT, 7) /* (AD24) MDIO0_MDC.GPIO0_86 */
+> -			AM62X_IOPAD(0x015c, PIN_INPUT, 7) /* (AB22) MDIO0_MDIO.GPIO0_85 */
+> +			AM62X_IOPAD(0x0160, PIN_OUTPUT, 0) /* (AD24) MDIO0_MDC */
+> +			AM62X_IOPAD(0x015c, PIN_INPUT, 0) /* (AB22) MDIO0_MDIO */
+>  		>;
+>  	};
+>  
+> @@ -611,8 +589,20 @@ &cpsw_port2 {
+>  };
+>  
+>  &cpsw3g_mdio {
+> -	/* Workaround for errata i2329 - Use mdio bitbang */
+> -	status = "disabled";
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mdio0_pins_default>;
+> +
+> +	cpsw3g_phy0: ethernet-phy@0 {
+> +		reg = <0>;
+> +	};
+> +
+> +	cpsw3g_phy1: ethernet-phy@1 {
+> +		reg = <1>;
+> +		reset-gpios = <&main_gpio1 5 GPIO_ACTIVE_LOW>;
+> +		reset-assert-us = <25>;
+> +		reset-deassert-us = <60000>; /* T2 */
+> +	};
+>  };
+>  
+>  &main_gpio0 {
+> -- 
+> 2.43.0
+> 
+
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
