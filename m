@@ -1,103 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747AB6D1A8;
-	Fri, 12 Jan 2024 13:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LPFbBNAq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 516F5C433C7;
-	Fri, 12 Jan 2024 13:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705067301;
-	bh=EFpXmdi+94w1NoCiiu1BKtTy8v+SRmS3ykZ0eRaUW30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LPFbBNAqGLfRO+EmAnPz+SzHL4dFyN4vF9ZdZIZp/bYmcGQ4PkvfKjov3ndqXJ1PU
-	 4lqr8S6BF6ld4MjJqZ6ehTp7/RwVGwxuAONtXSwq8Co/n/gDiZ02sDP9rvqciLBfE/
-	 TFgt+yDnQnjyv8VXbZlAnmDtT4/fL1yozlGYckf4=
-Date: Fri, 12 Jan 2024 14:48:18 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Gui-Dong Han <2045gemini@gmail.com>
-Cc: jirislaby@kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, baijiaju1990@outlook.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] tty: fix atomicity violation in n_tty_read
-Message-ID: <2024011212-disbelief-respect-5230@gregkh>
-References: <20240112125801.2650-1-2045gemini@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3AA6D1AB;
+	Fri, 12 Jan 2024 13:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.6] (ip5f5af452.dynamic.kabel-deutschland.de [95.90.244.82])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 375FE61E5FE03;
+	Fri, 12 Jan 2024 14:46:43 +0100 (CET)
+Message-ID: <2a58fed3-1fa9-47eb-b475-3f7c3b291376@molgen.mpg.de>
+Date: Fri, 12 Jan 2024 14:46:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240112125801.2650-1-2045gemini@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH v2] igb: Fix string truncation warnings
+ in igb_set_fw_version
+To: Kunwu Chan <chentao@kylinos.cn>
+Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, Kunwu Chan <kunwu.chan@hotmail.com>,
+ przemyslaw.kitszel@intel.com, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ jacob.e.keller@intel.com
+References: <20240112025853.123048-1-chentao@kylinos.cn>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20240112025853.123048-1-chentao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 12, 2024 at 08:58:01PM +0800, Gui-Dong Han wrote:
-> In n_tty_read():
->     if (packet && tty->link->ctrl.pktstatus) {
->     ...
->     spin_lock_irq(&tty->link->ctrl.lock);
->     cs = tty->link->ctrl.pktstatus;
->     tty->link->ctrl.pktstatus = 0;
->     spin_unlock_irq(&tty->link->ctrl.lock);
->     *kb++ = cs;
->     ...
+Dear Kunwu,
+
+
+Thank you for your patch. I have some minor nits.
+
+Am 12.01.24 um 03:58 schrieb Kunwu Chan:
+> 'commit 1978d3ead82c ("intel: fix string truncation warnings")'
+
+Please don’t enclose it in '': Commit 1978d3ead82c ("intel: fix string 
+truncation warnings")
+
+> fix '-Wformat-truncation=' warnings in igb_main.c by using kasprintf.
+
+fix*es*
+
+> kasprintf() returns a pointer to dynamically allocated memory
+> which can be NULL upon failure.
+
+Maybe paste one warning message.
+
+> Fix this warning by using a larger space for adapter->fw_version,
+> and then fall back and continue to use snprintf.
 > 
-> In n_tty_read() function, there is a potential atomicity violation issue.
-> The tty->link->ctrl.pktstatus might be set to 0 after being checked, which
-> could lead to incorrect values in the kernel space buffer
-> pointer (kb/kbuf). The check if (packet && tty->link->ctrl.pktstatus)
-> occurs outside the spin_lock_irq(&tty->link->ctrl.lock) block. This may
-> lead to tty->link->ctrl.pktstatus being altered between the check and the
-> lock, causing *kb++ = cs; to be assigned with a zero pktstatus value.
-> 
-> This possible bug is found by an experimental static analysis tool
-> developed by our team, BassCheck[1]. This tool analyzes the locking APIs
-> to extract function pairs that can be concurrently executed, and then
-> analyzes the instructions in the paired functions to identify possible
-> concurrency bugs including data races and atomicity violations. The above
-> possible bug is reported when our tool analyzes the source code of
-> Linux 5.17.
+> Fixes: 1978d3ead82c ("intel: fix string truncation warnings")
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> Cc: Kunwu Chan <kunwu.chan@hotmail.com>
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
 
-Again, we can't do anything with 5.17 patches :(
 
-> To resolve this atomicity issue, it is suggested to move the condition
-> check if (packet && tty->link->ctrl.pktstatus) inside the spin_lock block.
-> With this patch applied, our tool no longer reports the bug, with the
-> kernel configuration allyesconfig for x86_64. Due to the absence of the
-> requisite hardware, we are unable to conduct runtime testing of the patch.
-> Therefore, our verification is solely based on code logic analysis.
-> 
-> [1] https://sites.google.com/view/basscheck/
-> 
-> Fixes: 64d608db38ff ("tty: cumulate and document tty_struct::ctrl* members")
+Kind regards,
 
-That is not where this code came from :(
+Paul Menzel
 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gui-Dong Han <2045gemini@gmail.com>
+
 > ---
->  drivers/tty/n_tty.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+> v2: Fall back to use snprintf and a larger space,as suggested by
+> https://lore.kernel.org/all/20231212132637.1b0fb8aa@kernel.org/
+> ---
+>   drivers/net/ethernet/intel/igb/igb.h      |  2 +-
+>   drivers/net/ethernet/intel/igb/igb_main.c | 35 ++++++++++++-----------
+>   2 files changed, 19 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
-> index f252d0b5a434..df54ab0c4d8c 100644
-> --- a/drivers/tty/n_tty.c
-> +++ b/drivers/tty/n_tty.c
-> @@ -2222,19 +2222,23 @@ static ssize_t n_tty_read(struct tty_struct *tty, struct file *file, u8 *kbuf,
->  	add_wait_queue(&tty->read_wait, &wait);
->  	while (nr) {
->  		/* First test for status change. */
-> +		spin_lock_irq(&tty->link->ctrl.lock);
-
-What is this lock going to do for the performance?  The n_tty_read path
-is VERY tricky, and heavily used and tested, without a real reproducer
-or proof of a bug here, we are going to be very loath to change anything
-for obvious reasons.
-
-Also, how was this tested?
-
-thanks,
-
-greg k-h
+> diff --git a/drivers/net/ethernet/intel/igb/igb.h b/drivers/net/ethernet/intel/igb/igb.h
+> index a2b759531cb7..3c2dc7bdebb5 100644
+> --- a/drivers/net/ethernet/intel/igb/igb.h
+> +++ b/drivers/net/ethernet/intel/igb/igb.h
+> @@ -637,7 +637,7 @@ struct igb_adapter {
+>   		struct timespec64 period;
+>   	} perout[IGB_N_PEROUT];
+>   
+> -	char fw_version[32];
+> +	char fw_version[48];
+>   #ifdef CONFIG_IGB_HWMON
+>   	struct hwmon_buff *igb_hwmon_buff;
+>   	bool ets;
+> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+> index b2295caa2f0a..ce762d77d2c1 100644
+> --- a/drivers/net/ethernet/intel/igb/igb_main.c
+> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
+> @@ -3069,7 +3069,6 @@ void igb_set_fw_version(struct igb_adapter *adapter)
+>   {
+>   	struct e1000_hw *hw = &adapter->hw;
+>   	struct e1000_fw_version fw;
+> -	char *lbuf;
+>   
+>   	igb_get_fw_version(hw, &fw);
+>   
+> @@ -3077,34 +3076,36 @@ void igb_set_fw_version(struct igb_adapter *adapter)
+>   	case e1000_i210:
+>   	case e1000_i211:
+>   		if (!(igb_get_flash_presence_i210(hw))) {
+> -			lbuf = kasprintf(GFP_KERNEL, "%2d.%2d-%d",
+> -					 fw.invm_major, fw.invm_minor,
+> -					 fw.invm_img_type);
+> +			snprintf(adapter->fw_version,
+> +				 sizeof(adapter->fw_version),
+> +				 "%2d.%2d-%d",
+> +				 fw.invm_major, fw.invm_minor,
+> +				 fw.invm_img_type);
+>   			break;
+>   		}
+>   		fallthrough;
+>   	default:
+>   		/* if option rom is valid, display its version too */
+>   		if (fw.or_valid) {
+> -			lbuf = kasprintf(GFP_KERNEL, "%d.%d, 0x%08x, %d.%d.%d",
+> -					 fw.eep_major, fw.eep_minor,
+> -					 fw.etrack_id, fw.or_major, fw.or_build,
+> -					 fw.or_patch);
+> +			snprintf(adapter->fw_version,
+> +				 sizeof(adapter->fw_version),
+> +				 "%d.%d, 0x%08x, %d.%d.%d",
+> +				 fw.eep_major, fw.eep_minor, fw.etrack_id,
+> +				 fw.or_major, fw.or_build, fw.or_patch);
+>   		/* no option rom */
+>   		} else if (fw.etrack_id != 0X0000) {
+> -			lbuf = kasprintf(GFP_KERNEL, "%d.%d, 0x%08x",
+> -					 fw.eep_major, fw.eep_minor,
+> -					 fw.etrack_id);
+> +			snprintf(adapter->fw_version,
+> +				 sizeof(adapter->fw_version),
+> +				 "%d.%d, 0x%08x",
+> +				 fw.eep_major, fw.eep_minor, fw.etrack_id);
+>   		} else {
+> -			lbuf = kasprintf(GFP_KERNEL, "%d.%d.%d", fw.eep_major,
+> -					 fw.eep_minor, fw.eep_build);
+> +			snprintf(adapter->fw_version,
+> +				 sizeof(adapter->fw_version),
+> +				 "%d.%d.%d",
+> +				 fw.eep_major, fw.eep_minor, fw.eep_build);
+>   		}
+>   		break;
+>   	}
+> -
+> -	/* the truncate happens here if it doesn't fit */
+> -	strscpy(adapter->fw_version, lbuf, sizeof(adapter->fw_version));
+> -	kfree(lbuf);
+>   }
+>   
+>   /**
