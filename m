@@ -1,62 +1,74 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC1C74E2A;
-	Fri, 12 Jan 2024 16:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605877762C
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 16:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKxUNkex"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-337874b8164so1585763f8f.2;
-        Fri, 12 Jan 2024 08:35:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DhHJs56x"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e60e135a7so16362935e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 08:36:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705077316; x=1705682116; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705077380; x=1705682180; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LlIMTu749xK+G2nXubgKLsCYahSVNlgmIkXmTS0PwKs=;
-        b=eKxUNkexotkQSlpuTCUQ/IJJiW9VMbMxHXDF+/t+X+viomZBY1wu25N8YOqYUG6ZlB
-         v8rJeyx3kTgcnKQSCYjxtllh5xApe+eCzBiuf3R3W/XbSaHYf3yn5lyG7IvdEMy5O95C
-         7zb8nh3/LV/W2ITCdCoBYF9GRr9E81BiMItbZ22GmMxguRcCfu9RExjCBg7nytBLCe8u
-         XNjZYFT81aDNctFRjglRxnDmmOTo8IDqHBZ7TNK8ryvWrW/TmTrMmiUIbCFsz39LZoIw
-         TQVGAin2edmRPwLOlsqqJUqjVa/fDWl7bO6atIOYjUE75WMuUim87ALt9vLENXxneQoL
-         goLg==
+        bh=Hn+LSFeIE6cgmvG+tEU3s1iTtjUkavz0Czg37/bP5gM=;
+        b=DhHJs56xoMdthQqCaQz5JO0J50qLvVDNZTmB3U+ObnqvxumKs4M4fE+rgeZ52iQviY
+         wR3q6U5ib6jxSJGix+DeSLcoKTj6g5ad1/NsRWhxpyzLN/p7UX570v/Ml9zyDArBO+ie
+         LJ7Rm2tEeejyFfPNmyaddGvU03kpNLVXqESY2kcnn83XYRRHyOQp1ZbaGOkBxQ0LGY6J
+         a1h6ISFaPjywPvJ3uDrO0ZG2JNeHBS4vCvDIdqivOZm1XeCLmXdoawvNY19aXcK5Ppu8
+         rEfv28e0jc9rRqr8ue2HYevzKi4Ci7JlSY6rIrrJxqUsvF14NGbvV6uUFPSdiYSbUmVu
+         4inQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705077316; x=1705682116;
+        d=1e100.net; s=20230601; t=1705077380; x=1705682180;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LlIMTu749xK+G2nXubgKLsCYahSVNlgmIkXmTS0PwKs=;
-        b=IV4FZDtpY/VR1x+9p43THj6tjx5mRsUv4EDOkJvNH77ZO7437TlAcZtdWSZ8xSlkjK
-         O7k39VqoG32rfhvo5/1NgxhHZRwShI+cvwyehAjs3ChLZA6VDBKwDS11Xu2565pjuxfs
-         Qwfa3fwl7n+2aPELwAbhBCGmB2f5mL0FX5iSFc2zpnuQ9JW7BvjkBvWO6Ip2dap02bKI
-         fUt546v7pSgJd6jUgcgj8Jku+jZLreujlZjYzaBfAS0eXLkjoioe8x6+NXfStajf3f7f
-         Tkd3uxxXtbZJ3MfMfP65W+oEgmY1s/c049jJ5ANa3lpf86fXToKHHmCldEmLW4sEuCLR
-         x/aA==
-X-Gm-Message-State: AOJu0YypruvUSYWfcpJ9zrSTtWwANyae5ZbLzpRunhUl44aMBL3QmSx9
-	woUr+scr1WczP2+REYVqY2Y=
-X-Google-Smtp-Source: AGHT+IHIaYT4sw8rtu3Wb5cOS37Igtd1/bCisVWU7eVb4vG7lRY3sMPZwc5lgYivI8nUeoVlHEFP9g==
-X-Received: by 2002:a05:6000:11d1:b0:333:2fd2:5d1a with SMTP id i17-20020a05600011d100b003332fd25d1amr1025646wrx.76.1705077315961;
-        Fri, 12 Jan 2024 08:35:15 -0800 (PST)
-Received: from kenzo-linux-laptop.bicolor-pike.ts.net (154.red-88-26-51.staticip.rima-tde.net. [88.26.51.154])
-        by smtp.gmail.com with ESMTPSA id h18-20020adf9cd2000000b00336a1f6ce7csm4298766wre.19.2024.01.12.08.35.15
+        bh=Hn+LSFeIE6cgmvG+tEU3s1iTtjUkavz0Czg37/bP5gM=;
+        b=X9Wt6ZKM/OQcGxnJ2ZZzAmmEKRtyTdytxqGuMx87F3mnmj+PtjLpiGbp6tbGVv6wUO
+         gll5XRJDaDjfdorKmDk7M1yDJSrKVVzdcXlxjHNcHJ10FxG2vv4Ss0yc5XKyLvYy7zAT
+         nPP4XXD1ISQ7Iyz7tZIF0NM0PTfJiMmM1V+A/Dua9MCzLbyRkq3/Nt4ZnwNmldXTyLFB
+         CjNyXpR3xh3VL0HeuM785fAqPGAD5N+6swynXMLqjeGVTdZeb78+WW6ZEVQbPrjJjvVw
+         aNttFI0P0fS6Nz6PO5OcaRoSTL/qDAX0TKE22UYiCkq/+iJxh7DSoxoE4HrkUUjwFXcR
+         WaDg==
+X-Gm-Message-State: AOJu0YzzhG7IlYt5ur17sLoU75V+quiFgqh/m5okLozUKrmBlCzB/UX+
+	sIDWDm0DR3hO/2az3oNIZHbCdhYHSCiNPg==
+X-Google-Smtp-Source: AGHT+IH+yRgfFBXEytnUKCD59ok3rbCy/JtVfxvi0S39fF9MOsVDbm+3HUJ7eJuXjsGI344nf1LKPg==
+X-Received: by 2002:a05:600c:1c92:b0:40e:532c:7cb1 with SMTP id k18-20020a05600c1c9200b0040e532c7cb1mr1056935wms.125.1705077380618;
+        Fri, 12 Jan 2024 08:36:20 -0800 (PST)
+Received: from krzk-bin.. ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id bd16-20020a05600c1f1000b0040e5a93ae53sm6573195wmb.22.2024.01.12.08.36.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 08:35:15 -0800 (PST)
-From: Kenzo Gomez <kenzo.sgomez@gmail.com>
-To: sbinding@opensource.cirrus.com
-Cc: Kenzo Gomez <kenzo.sgomez@gmail.com>,
-	James Schulman <james.schulman@cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Fri, 12 Jan 2024 08:36:20 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Peter Rosin <peda@axentia.se>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
 	Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
+	linux-arm-msm@vger.kernel.org,
 	alsa-devel@alsa-project.org,
-	patches@opensource.cirrus.com,
 	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: hda: cs35l41: Support additional ASUS Zenbook UX3402VA
-Date: Fri, 12 Jan 2024 17:32:15 +0100
-Message-ID: <20240112163239.59743-1-kenzo.sgomez@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Sean Anderson <sean.anderson@seco.com>
+Subject: [PATCH v3 0/5] reset: gpio: ASoC: shared GPIO resets
+Date: Fri, 12 Jan 2024 17:36:03 +0100
+Message-Id: <20240112163608.528453-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,33 +77,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add new model entry into configuration table.
+Hi,
 
-Signed-off-by: Kenzo Gomez <kenzo.sgomez@gmail.com>
----
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v3
+=============
+1. reset-gpio.c:
+  - Add reset_gpio_of_xlate (Philipp).
+  - reset_gpio_of_args_put->reset_gpio_of_node_put (Philipp).
+  - Expect via platdata of_phandle_args.
+  - Do not call device_set_node() to attach itself to reset consumer
+    (the final device).  This was questionable idea in the first place.
+    Bartosz suggested to use GPIO_LOOKUP to solve this.
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index c1afb721b4c6..adfb31a6bf1e 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -67,6 +67,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
- 	{ "10431D1F", I2C, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
- 	{ "10431DA2", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
- 	{ "10431E02", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
-+	{ "104316A3", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
- 	{ "10431EE2", I2C, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
- 	{ "10431F12", I2C, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
- 	{ "10431F1F", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
-@@ -371,6 +372,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
- 	{ "CSC3551", "10431D1F", generic_dsd_config },
- 	{ "CSC3551", "10431DA2", generic_dsd_config },
- 	{ "CSC3551", "10431E02", generic_dsd_config },
-+	{ "CSC3551", "104316A3", generic_dsd_config },
- 	{ "CSC3551", "10431EE2", generic_dsd_config },
- 	{ "CSC3551", "10431F12", generic_dsd_config },
- 	{ "CSC3551", "10431F1F", generic_dsd_config },
+2. reset/core.c, implement Philipp's feedback. That was a lot:
+  - Commit msg fixes.
+  - Add new platform_device earlier, when reset core found "reset-gpios" but
+    not "resets".
+  - Do not overwrite of_phandle_args.
+  - Expect matching .of_reset_n_cells.
+  - Pass of_phandle_args as platdata to reset-gpio.
+  - Rename reset_gpio_device->reset_gpio_lookup and others. Fix few comments
+    and code cleanup pointed on review.
+  - From Bartosz:
+    Use GPIO_LOOKUP and a lot of cleanup.h in __reset_add_reset_gpio_lookup().
+
+3. Include here Chris' patch: "i2c: muxes: pca954x: Allow sharing reset GPIO".
+
+Changes in v2
+=============
+1. wsa884x.c: add missing return in wsa884x_get_reset(), correct comment.
+2. qcom,wsa8840.yaml: fix oneOf syntax.
+3. reset-gpio.c:
+   - Fix smatch warning on platdata evaluation.
+   - Parse GPIO args and store them in rc.of_args.
+4. reset/core.c:
+   - Revise approach based on Bartosz comments: parse the reset-gpios phandle
+     with arguments, do not use deprecated API and do not rely on gpio_desc
+     pointer.
+   - Create a list of instantiated platform devices to avoid any duplicates.
+   - After creating reset-gpio platform device, try to get new reset controller
+     or return EPROBE_DEFER.
+   - Drop the "cookie" member and add new "of_args" to "struct
+     reset_controller_dev".
+
+Description
+===========
+
+We have at least few cases where hardware engineers decided to use one
+powerdown/shutdown/reset GPIO line for multiple devices:
+
+1. WSA884x (this and previous patch):
+https://lore.kernel.org/all/b7aeda24-d638-45b7-8e30-80d287f498f8@sirena.org.uk/
+2. https://lore.kernel.org/all/20231027033104.1348921-1-chris.packham@alliedtelesis.co.nz/
+3. https://lore.kernel.org/lkml/20191030120440.3699-1-peter.ujfalusi@ti.com/
+4. https://lore.kernel.org/all/20211018234923.1769028-1-sean.anderson@seco.com/
+5. https://social.treehouse.systems/@marcan/111268780311634160
+
+I try to solve my case, hopefuly Chris' (2), partially Sean's (4) and maybe
+Hectors (5), using Rob's suggestion:
+
+https://lore.kernel.org/all/YXi5CUCEi7YmNxXM@robh.at.kernel.org/
+
+Best regards,
+Krzysztof
+
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sean Anderson <sean.anderson@seco.com>
+
+Chris Packham (1):
+  i2c: muxes: pca954x: Allow sharing reset GPIO
+
+Krzysztof Kozlowski (4):
+  reset: gpio: Add GPIO-based reset controller
+  reset: Instantiate reset GPIO controller for shared reset-gpios
+  ASoC: dt-bindings: qcom,wsa8840: Add reset-gpios for shared line
+  ASoC: codecs: wsa884x: Allow sharing reset GPIO
+
+ .../bindings/sound/qcom,wsa8840.yaml          |  11 +-
+ MAINTAINERS                                   |   5 +
+ drivers/i2c/muxes/i2c-mux-pca954x.c           |  46 +++-
+ drivers/reset/Kconfig                         |   9 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/core.c                          | 227 ++++++++++++++++--
+ drivers/reset/reset-gpio.c                    | 121 ++++++++++
+ include/linux/reset-controller.h              |   4 +
+ sound/soc/codecs/wsa884x.c                    |  53 +++-
+ 9 files changed, 444 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/reset/reset-gpio.c
+
 -- 
-2.43.0
+2.34.1
 
