@@ -1,78 +1,109 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D71217988;
-	Fri, 12 Jan 2024 00:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D3D10F1
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 00:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xenobhv8"
-Date: Thu, 11 Jan 2024 19:05:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705017914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ja/rCrslI1ygahysbrKqDdK7cEumA4q0GUIhaAsj41s=;
-	b=xenobhv8UAJbqxw9LEhIHklm8eVbdXfTgNl4eYnpAViLGg4XD2eqzldprWOoacL63BDc66
-	BhihY9pLUMlJLCbhlThvPSFIJemt2OOM/BllXPeft/BR9O6jxPLpGmLTJ2+mEjU3riEAbF
-	GTS2N0EYRkJF6RTp4E1sJZ+mst/yXos=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <zocgn7zzr4wo3egjnq2vpmh7kpuxcj7gvo3a5tlbidt6wdh4rs@2udxphdcgeug>
-References: <wq27r7e3n5jz4z6pn2twwrcp2zklumcfibutcpxrw6sgaxcsl5@m5z7rwxyuh72>
- <202401101525.112E8234@keescook>
- <6pbl6vnzkwdznjqimowfssedtpawsz2j722dgiufi432aldjg4@6vn573zspwy3>
- <202401101625.3664EA5B@keescook>
- <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
- <CAHk-=wigjbr7d0ZLo+6wbMk31bBMn8sEwHEJCYBRFuNRhzO+Kw@mail.gmail.com>
- <ZaByTq3uy0NfYuQs@casper.infradead.org>
- <202401111534.859084884C@keescook>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mwiqXLJf"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-28cc07d8876so3657037a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:06:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705017963; x=1705622763; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NCsMdLHga1GxnMyWDbdKtpfMINMaUDqjALsfcY3IzvA=;
+        b=mwiqXLJf3t7Gr0uSHaZSBsMT3fpxqOTnLUwURJH17VPsMnKAprHgmx+6KJyoRsaqbU
+         syZ9MkeDCM1m4gswRk6k3j5GisQnU2gOjRhhof+4wRGj4IFzTSa+F34VaK59oIei5AvT
+         ytWS65RYLFGeOfYBPZpaKv10gOIzuHboq3oXU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705017963; x=1705622763;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NCsMdLHga1GxnMyWDbdKtpfMINMaUDqjALsfcY3IzvA=;
+        b=KmiFdWtNsF8L/n7AFaD3rhA4NjcyUaHy1vMAcyBF9+InBomiUJ7h1a5uj/Ti7CXQ/F
+         kFs5J6OGli618c0LIg518a4G2cqTYcuSvNJtUt6rUBqHLkOixrOT67V7SUsIikEC7KHW
+         8lJgeyHA1+mEAhlm/c7nkzc13r+7vbMXZQD8LfAxA3u84N4zqBcP9dytomw4dhJBka2A
+         2QOFLxV63nGfOneOHSdBV05ihtPob0ZzBmxP7MBdiBpTaTkIMU5cdSwLudMpmLiPZGA/
+         TxBcTK0G3XmYiyQ+ibTpFHnRMZ5IIkwNejXfgUtH74I6hMAVhj8L/IqL/r8BEQ2JSnUt
+         7acw==
+X-Gm-Message-State: AOJu0YyP0Z2jmi+1f6zS8giEZEltR9+9Vzwq21eLWsWrmIfP8tP735w6
+	AM08LvV9epqnQXuL7dBNw002VcxzZ45H+cOrUfGwX79Nxwvx
+X-Google-Smtp-Source: AGHT+IErAvw1GUiSMvbfubpQ0WiskyDsn9mMns8r5WQUQgZgSWKq5N7P6VNxiNo/j2j+6JbPl4sTQkxfe6kkAVb2Gfc=
+X-Received: by 2002:a17:90a:e544:b0:28d:bd78:7806 with SMTP id
+ ei4-20020a17090ae54400b0028dbd787806mr544103pjb.59.1705017963052; Thu, 11 Jan
+ 2024 16:06:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202401111534.859084884C@keescook>
-X-Migadu-Flow: FLOW_OUT
+References: <1704867134-5522-1-git-send-email-quic_dikshita@quicinc.com>
+In-Reply-To: <1704867134-5522-1-git-send-email-quic_dikshita@quicinc.com>
+From: Nathan Hebert <nhebert@chromium.org>
+Date: Thu, 11 Jan 2024 16:05:52 -0800
+Message-ID: <CANHAJhGpHps26T5ErXVpz3Artf-Zwfidps2tF5GoEBNm2XdevQ@mail.gmail.com>
+Subject: Re: [PATCH v2] media: venus: flush all buffers in output plane streamoff
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Cc: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+	Vikash Garodia <quic_vgarodia@quicinc.com>, Andy Gross <agross@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
+	Stanimir Varbanov <stanimir.varbanov@linaro.org>, linux-media@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 11, 2024 at 03:42:19PM -0800, Kees Cook wrote:
-> On Thu, Jan 11, 2024 at 10:57:18PM +0000, Matthew Wilcox wrote:
-> > On Wed, Jan 10, 2024 at 05:47:20PM -0800, Linus Torvalds wrote:
-> > > No, because the whole idea of "let me mark something deprecated and
-> > > then not just remove it" is GARBAGE.
-> > > 
-> > > If somebody wants to deprecate something, it is up to *them* to finish
-> > > the job. Not annoy thousands of other developers with idiotic
-> > > warnings.
-> > 
-> > What would be nice is something that warned about _new_ uses being
-> > added.  ie checkpatch.  Let's at least not make the problem worse.
-> 
-> For now, we've just kind of "dealt with it". For things that show up
-> with new -W options we've enlisted sfr to do the -next builds with it
-> explicitly added (but not to the tree) so he could generate nag emails
-> when new warnings appeared. That could happen if we added it to W=1
-> builds, or some other flag like REPORT_DEPRECATED=1.
-> 
-> Another ugly idea would be to do a treewide replacement of "func" to
-> "func_deprecated", and make "func" just a wrapper for it that is marked
-> with __deprecated. Then only new instances would show up (assuming people
-> weren't trying to actively bypass the deprecation work by adding calls to
-> "func_deprecated"). :P Then the refactoring to replace "func_deprecated"
-> could happen a bit more easily.
-> 
-> Most past deprecations have pretty narrow usage. This is not true with
-> the string functions, which is why it's more noticeable here. :P
+On Tue, Jan 9, 2024 at 10:13=E2=80=AFPM Dikshita Agarwal
+<quic_dikshita@quicinc.com> wrote:
+>
+> For scenarios, when source change is followed by VIDIOC_STREAMOFF
+> on output plane, driver should discard any queued OUTPUT
+> buffers, which are not decoded or dequeued.
+> Flush with HFI_FLUSH_INPUT does not have any actual impact.
+> So, fix it, by invoking HFI_FLUSH_ALL, which will flush all
+> queued buffers.
+>
+> Fixes: 85872f861d4c ("media: venus: Mark last capture buffer")
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Tested on a SC7280 Chromebook with a custom client [0] to perform the
+queueing and VIDIOC_STREAMOFF sequence as described in the commit
+message. Before this patch, a buffer from before the VIDIOC_STREAMOFF
+command would be dequeued and seen by the client. With this patch, it
+is not seen by the client.
 
-Before doing the renaming - why not just leave a kdoc comment that marks
-it as deprecated? Seems odd that checkpatch was patched, but I can't
-find anything marking it as deprecated when I cscope to it.
+[0]: https://crrev.com/c/5191249
+
+Tested-by: Nathan Hebert <nhebert@chromium.org>
+>
+> ---
+> Changes since v1:
+> - Added fixes tag (Bryan)
+>
+>  drivers/media/platform/qcom/venus/vdec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/pla=
+tform/qcom/venus/vdec.c
+> index 29130a9..0d2ab95 100644
+> --- a/drivers/media/platform/qcom/venus/vdec.c
+> +++ b/drivers/media/platform/qcom/venus/vdec.c
+> @@ -1255,7 +1255,7 @@ static int vdec_stop_output(struct venus_inst *inst=
+)
+>                 break;
+>         case VENUS_DEC_STATE_INIT:
+>         case VENUS_DEC_STATE_CAPTURE_SETUP:
+> -               ret =3D hfi_session_flush(inst, HFI_FLUSH_INPUT, true);
+> +               ret =3D hfi_session_flush(inst, HFI_FLUSH_ALL, true);
+>                 break;
+>         default:
+>                 break;
+> --
+> 2.7.4
+>
+>
