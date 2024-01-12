@@ -1,178 +1,133 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-oi1-f194.google.com (mail-oi1-f194.google.com [209.85.167.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FCA5D739
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 10:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9556057869;
+	Fri, 12 Jan 2024 10:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OpOcctWq"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-28ca63fd071so3380045a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 02:00:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0LGiOv5"
+Received: by mail-oi1-f194.google.com with SMTP id 5614622812f47-3bbd6e37a9bso5248786b6e.0;
+        Fri, 12 Jan 2024 02:00:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705053624; x=1705658424; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dRYoalgnwKVYfdSiaBfDRevKcT4wc2GOJqsALypTOmU=;
-        b=OpOcctWqWBe3ajchwYGTl3RxOwVKYQiBfBqLvQPnN9D8/8aHpnJz3q8CFxEqBfsUz5
-         JCacvo4unw0zaCQBdj4M6F5i5WoCuGpCHuOYKV7nE+rvVqchOgHOsECliAMxK3y51HLF
-         rzi2gvAQUP7nPGrQ9WApRk9fws2Q2gJarzBju1s7MBOYwc9VHLYA7fkVglDsvqCeeFiE
-         HMZv7RO/ch4OuvWpErEJumEsS1cnaCnNgBIOKwgGGRrYTpMJX1G+kmIsRzVirT88jPKj
-         A+6UBi8td/SRVZ17mRI3eMvlyjP5TqYKFmvFKPuFutppLVyrVbJiu7TXitHS5rFPrKyL
-         6Y8g==
+        d=gmail.com; s=20230601; t=1705053628; x=1705658428; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gZSg4xRXWuoNbqdqrgRfE1U45ctI7Mu0MbXHLSoUnsA=;
+        b=L0LGiOv5wsGksE0dbpmQUJ3sMhYaABqx8w8PBcV0SpIz2pIDI6LaxED7fs9xZNrrXS
+         qPGQTDgRlnHmFCN5UiXhLcEzKDIWIKoRABUjSiLf0atURM9jgTpwfytaAuuWncJYKUet
+         eSEqfjdaAMOnQsx2IzmKxPcz3Tx2pYivlmUrhHuA5VwhZDJOH3+7pd7sR0z/vX5JtHuH
+         P2is0NG4UT43VuCZQmBAYLv6O/yF3hrSQMzzMYG9pDq62jvWHCuZ9ijLcYWaDuLEqCtZ
+         99NgGWaRJsx6weQNkcY0rEqEnYs6DkMHx17RDhiIL3CpeRvaoddGUhpr/5FhR7s3n9/r
+         n6Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705053624; x=1705658424;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dRYoalgnwKVYfdSiaBfDRevKcT4wc2GOJqsALypTOmU=;
-        b=qzZ5S1fABEaZzqjRB1fpRu5KnUW1hOSoj92qfbFmyTqt0oEnv6i1cT63r4YmjY+O7E
-         DyX+QwW0NNjzmQ5f2ukifB+Jm/r/OupcSqEbGrPHw4+H33lcBIMp1PhKXfaPhcfHouy0
-         2THc4fe6Udd1ujLgbDqQzH/udo4JB8EHX1BshpuMt7U7S5SCcoi28nvioDdzRVB0dWV3
-         QhEzvW7/7PDg32AxB74K6o+7BvWZsGwFrpmN+1oO6lhzYz5Dr9v6jbFkP6JLxfGUpBy0
-         XVykVL/yoyA5aPo2gcgqsnyi49csxtbdMiKlcf2b3iNG3DP3FgfMHJiAwcC4LzCUsM/s
-         zmaw==
-X-Gm-Message-State: AOJu0YyUqj7mRxIlxHc+tQZQI7cbEZwZGVtYxtlJqGzGE55YnMqLGI6O
-	VcIwHBOXw/TQIzz32Jdr5AUJYQCnQkfz
-X-Google-Smtp-Source: AGHT+IGVBuc/bzfWDGIQZBxbBGBGgbQ8hy2U6+QesiLzQrB5AGxj9ilSJ5pZ8u646RBth+dnJjW/eA==
-X-Received: by 2002:a17:90a:898b:b0:28d:2b9d:e273 with SMTP id v11-20020a17090a898b00b0028d2b9de273mr917862pjn.74.1705053624143;
-        Fri, 12 Jan 2024 02:00:24 -0800 (PST)
-Received: from google.com (108.93.126.34.bc.googleusercontent.com. [34.126.93.108])
-        by smtp.gmail.com with ESMTPSA id px12-20020a17090b270c00b0028e17b2f27esm58229pjb.13.2024.01.12.02.00.21
+        d=1e100.net; s=20230601; t=1705053628; x=1705658428;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gZSg4xRXWuoNbqdqrgRfE1U45ctI7Mu0MbXHLSoUnsA=;
+        b=pu7UCiWHLOMBEcOivFcS8lgn+vcQS1fYVq46HbNJA8hJ6T+gtqLkMwyVu+ATluQBTG
+         xzMCzNU7Adm/rsCOg6768p3tfKctXEKzQzhhuaifns8UNtOxCMv+fFu2ZkRl2t9iVKi4
+         cDbk5tuzuXdy4KMc9Lm6Da60rFnBCH1IlWtScdfTJtoUtS46Bngdq0rVx3dlK9pLTrrV
+         JCHtwfp01h0MbRK/Y8f/qd9RAcqS+OpaB7sveIHkaEHqP1Q5sJ3ilPjsaqmYzNkqBLmv
+         v+drdiMIJsKYSgatsFeRseqf77wu5Io+EQsKnQVqjtEJ+lbL9y8dSgYn5h97t0lWWOd9
+         vcMw==
+X-Gm-Message-State: AOJu0Yzqjiiw+l8Z6+/+PrivOBONVz6LqqRj04XEY20PbDpJPCEPXA1m
+	UwVtBss3Hk8uq/tH5gI+n7s=
+X-Google-Smtp-Source: AGHT+IGfUvt1DlpPEjdKl8TX7I5/J1+w+tswdIzAK9AIhkH2QlACj1OPQxrLv06jnyb4/pucE9F19A==
+X-Received: by 2002:a05:6808:2387:b0:3bd:6342:e2a0 with SMTP id bp7-20020a056808238700b003bd6342e2a0mr421499oib.6.1705053628002;
+        Fri, 12 Jan 2024 02:00:28 -0800 (PST)
+Received: from localhost.localdomain ([43.129.244.20])
+        by smtp.gmail.com with ESMTPSA id n26-20020aa7985a000000b006d96bb5db5esm2910962pfq.96.2024.01.12.02.00.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 02:00:23 -0800 (PST)
-Date: Fri, 12 Jan 2024 15:30:15 +0530
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Johan Hovold <johan@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Sajid Dalvi <sdalvi@google.com>
-Subject: Re: [PATCH] Revert "PCI: dwc: Wait for link up only if link is
- started"
-Message-ID: <ZaENr7jQ35winQAe@google.com>
-References: <20230706082610.26584-1-johan+linaro@kernel.org>
- <20230706125811.GD4808@thinkpad>
- <ZKgJfG5Mi-e77LQT@hovoldconsulting.com>
- <ZKwwAin4FcCETGq/@google.com>
- <20230711073719.GA36617@thinkpad>
+        Fri, 12 Jan 2024 02:00:27 -0800 (PST)
+From: Menglong Dong <menglong8.dong@gmail.com>
+To: edumazet@google.com
+Cc: davem@davemloft.net,
+	dsahern@kernel.org,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Menglong Dong <menglong8.dong@gmail.com>
+Subject: [RFC PATCH net-next v2] net: tcp: accept old ack during closing
+Date: Fri, 12 Jan 2024 17:46:03 +0800
+Message-Id: <20240112094603.23706-1-menglong8.dong@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230711073719.GA36617@thinkpad>
 
-On Tue, Jul 11, 2023 at 01:07:19PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Jul 10, 2023 at 09:51:22PM +0530, Ajay Agarwal wrote:
-> > On Fri, Jul 07, 2023 at 02:47:56PM +0200, Johan Hovold wrote:
-> > > On Thu, Jul 06, 2023 at 06:28:11PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Thu, Jul 06, 2023 at 10:26:10AM +0200, Johan Hovold wrote:
-> > > 
-> > > > > Finally, note that the intel-gw driver is the only driver currently not
-> > > > > providing a start_link callback and instead starts the link in its
-> > > > > host_init callback, and which may avoid an additional one-second timeout
-> > > > > during probe by making the link-up wait conditional. If anyone cares,
-> > > > > that can be done in a follow-up patch with a proper motivation.
-> > > 
-> > > > The offending commit is bogus since it makes the intel-gw _special_ w.r.t
-> > > > waiting for the link up. Most of the drivers call dw_pcie_host_init() during the
-> > > > probe time and they all have to wait for 1 sec if the slot is empty.
-> > Mani, can you please explain how my commit made the intel-gw driver
-> > special? The intel driver actually fails the dw_pcie_host_init if the
-> > link does not come up. That was my motivation behind adding the fail
-> > logic in the core driver as well.
-> 
-> Your commit ended up failing the probe, if dw_pcie_wait_for_link() fails for
-> SoCs defining start_link() callback, which is the case for all the drivers
-> except intel-gw. I take back my _special_ argument since it was special before
-> your commit and now you just made its behavior applicable to all SoCs.
->
-You are right. I should not have returned an error from the
-dw_pcie_wait_for_link check. Raised v5 with the error return removed:
-https://lore.kernel.org/all/20240112093006.2832105-1-ajayagarwal@google.com/
+For now, the packet with an old ack is not accepted if we are in
+FIN_WAIT1 state, which can cause retransmission. Taking the following
+case as an example:
 
-> > > 
-> > > Just to clarify, the intel-gw driver starts the link and waits for link
-> > > up in its host_init() callback, which is called during probe. That wait
-> > > could possibly just be dropped in favour of the one in
-> > > dw_pcie_host_init() and/or the driver could be reworked to implement
-> > > start_link().
-> > > 
-> > > Either way, the call in dw_pcie_host_init() will only add an additional
-> > > 1 second delay in cases where the link did *not* come up.
-> > > 
-> > > > As Johan noted, intel-gw should make use of the async probe to avoid the boot
-> > > > delay instead of adding a special case.
-> > > 
-> > > Indeed.
-> > > 
-> > > Johan
-> > Johan, Mani
-> > My apologies for adding this regression in some of the SOCs.
-> > May I suggest to keep my patch and make the following change instead?
-> > This shall keep the existing behavior as is, and save the boot time
-> > for drivers that do not define the start_link()?
-> > 
-> 
-> No, IMO the offending commit was wrong in serving its purpose so a revert makes
-> sense. Because, if the intention was to reduce the boot delay then it did not
-> fix that because dw_pcie_wait_for_link() is still called from intel-gw's
-> host_init() callback. You just skipped another instance which is there in
-> dw_pcie_host_init().
-> 
-> So to fix this issue properly intel-gw needs to do 2 things:
-> 
-> 1. Move the ltssm_enable to start_link() callback and get rid of
-> dw_pcie_wait_for_link() from its host_init() callback. If there is any special
-> reason to not do this way, please explain.
-> 
-> 2. Enable async probe so that other drivers can continue probing while this
-> driver waits for the link to be up. This will almost make the delay negligible.
-> 
-> The above 2 should be done in separate patches.
-> 
-> - Mani
->
-Mani, the intention is not to fix the intel-gw driver in any manner. It
-calls dw_pcie_wait_for_link explicitly in the probe path and checks for
-the error as well. So it has to live with the delay and the probe
-failure if the link does not come up.
+    Client                               Server
+      |                                    |
+  FIN_WAIT1(Send FIN, seq=10)          FIN_WAIT1(Send FIN, seq=20, ack=10)
+      |                                    |
+      |                                Send ACK(seq=21, ack=11)
+   Recv ACK(seq=21, ack=11)
+      |
+   Recv FIN(seq=20, ack=10)
 
-My intention is just to get rid of the 1 sec delay for the drivers that
-do not define the start_link callback, and hence do not expect that the
-link will come up during probe anyway.
+In the case above, simultaneous close is happening, and the FIN and ACK
+packet that send from the server is out of order. Then, the FIN will be
+dropped by the client, as it has an old ack. Then, the server has to
+retransmit the FIN, which can cause delay if the server has set the
+SO_LINGER on the socket.
 
-> > ```
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index cf61733bf78d..af6a7cd060b1 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -492,11 +492,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> >                 if (ret)
-> >                         goto err_remove_edma;
-> > 
-> > -               if (pci->ops && pci->ops->start_link) {
-> > -                       ret = dw_pcie_wait_for_link(pci);
-> > -                       if (ret)
-> > -                               goto err_stop_link;
-> > -               }
-> > +               if (pci->ops && pci->ops->start_link)
-> > +                       dw_pcie_wait_for_link(pci);
-> >         }
-> > 
-> >         bridge->sysdata = pp;
-> > ```
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+Old ack is accepted in the ESTABLISHED and TIME_WAIT state, and I think
+it should be better to keep the same logic.
+
+In this commit, we accept old ack in FIN_WAIT1/FIN_WAIT2/CLOSING/LAST_ACK
+states. Maybe we should limit it to FIN_WAIT1 for now?
+
+Signed-off-by: Menglong Dong <menglong8.dong@gmail.com>
+---
+v2:
+- fix the compiling error
+---
+ net/ipv4/tcp_input.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index df7b13f0e5e0..70642bb08f3a 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6699,17 +6699,21 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
+ 		return 0;
+ 
+ 	/* step 5: check the ACK field */
+-	acceptable = tcp_ack(sk, skb, FLAG_SLOWPATH |
+-				      FLAG_UPDATE_TS_RECENT |
+-				      FLAG_NO_CHALLENGE_ACK) > 0;
++	reason = tcp_ack(sk, skb, FLAG_SLOWPATH |
++				  FLAG_UPDATE_TS_RECENT |
++				  FLAG_NO_CHALLENGE_ACK);
+ 
+-	if (!acceptable) {
++	if (reason <= 0) {
+ 		if (sk->sk_state == TCP_SYN_RECV)
+ 			return 1;	/* send one RST */
+-		tcp_send_challenge_ack(sk);
+-		SKB_DR_SET(reason, TCP_OLD_ACK);
+-		goto discard;
++		/* accept old ack during closing */
++		if (reason < 0) {
++			tcp_send_challenge_ack(sk);
++			reason = -reason;
++			goto discard;
++		}
+ 	}
++	SKB_DR_SET(reason, NOT_SPECIFIED);
+ 	switch (sk->sk_state) {
+ 	case TCP_SYN_RECV:
+ 		tp->delivered++; /* SYN-ACK delivery isn't tracked in tcp_ack */
+-- 
+2.39.2
+
