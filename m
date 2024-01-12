@@ -1,143 +1,63 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9781E16410;
-	Fri, 12 Jan 2024 20:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (178.176.79.58) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 12 Jan
- 2024 23:15:34 +0300
-Subject: Re: [PATCH] net: ethernet: ravb: fix dma mapping failure handling
-To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>, "David S. Miller"
-	<davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>
-CC: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Yoshihiro Shimoda
-	<yoshihiro.shimoda.uh@renesas.com>, Wolfram Sang
-	<wsa+renesas@sang-engineering.com>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?=
-	<u.kleine-koenig@pengutronix.de>, <netdev@vger.kernel.org>,
-	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240112050639.405784-1-nikita.yoush@cogentembedded.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <6e5150c8-452a-f794-dbf4-18b64bcae206@omp.ru>
-Date: Fri, 12 Jan 2024 23:15:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AF416408;
+	Fri, 12 Jan 2024 20:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="POGwJLzL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A3EDC433F1;
+	Fri, 12 Jan 2024 20:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705090609;
+	bh=VIhoLIqCtvk1tD1fY7sWAKm66VsDrr9HCMvWDwJLm8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=POGwJLzLmy2j6xtcouSj7Ubg11TZtpwmfQ1cYGTz25UotXcxvSvXi/Cv2Uru6Gn7P
+	 yEPJVFHT2hEDlBm1rJBkEY/M7JySUPeyZOntHyVEKU2n3/cesU2kS0Drl9T3qnf5DK
+	 vGntsKuDzhJcBbeRbLEoccQjzffvoJlD9x7l0cbA=
+Date: Fri, 12 Jan 2024 21:16:47 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: A quick "Regression tracking: state of the union early 2024"
+ from my side
+Message-ID: <2024011243-aorta-defraud-7950@gregkh>
+References: <7613e402-894a-4d38-8cef-7263630c1c57@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240112050639.405784-1-nikita.yoush@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/12/2024 20:00:31
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 182617 [Jan 12 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.79.58 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info:
-	127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.79.58
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 01/12/2024 20:04:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 1/12/2024 7:08:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7613e402-894a-4d38-8cef-7263630c1c57@leemhuis.info>
 
-On 1/12/24 8:06 AM, Nikita Yushchenko wrote:
-
-> dma_mapping_error() depends on getting full 64-bit dma_addr_t and does
-> not work correctly if 32-bit value is passed instead.
+On Wed, Jan 10, 2024 at 08:22:39AM +0100, Thorsten Leemhuis wrote:
+> ## The long story short
 > 
-> Fix handling of dma_map_single() failures on Rx ring entries:
-> - do not store return value of dma_map_signle() in 32-bit variable,
+> I'm not really happy with my performance wrt to my regression tracking
+> efforts during the last year. To counter that, I've already shifted my
+> focus somewhat ~in October. With the new year I will shift it some more.
+> Top-priority will be "make regzbot more useful for kernel subsystem
+> maintainers" from now on. My tracking efforts of course will continue,
+> but everything except regressions in the current and the previous
+> mainline cycle might not see much attention from my side. This
+> refocusing also means that I won't work much on resolving some
+> ambiguities around "how regressions are supposed to be handled" which
+> lead to tension quite a few times. But all that should be for the best
+> in the long term.
 
-   This one is on the TX path, in ravb_start_xmit()... :-/
+While you might be "too close" to the details to feel like this past
+year was not good with regards to "performance", I'd like to counter
+that and say I have been immensely happy with the work you did last
+year.  The tracking and pushing on people to get regressions addressed
+and merged is thankless (as you well know), but vital to our project in
+order to keep our users happy.
 
-> - do not use dma_mapping_error() against 32-bit descriptor field when
->   checking if unmap is needed, check for zero size instead.
+So don't beat yourself up at all, you're doing a great job.
 
-   This one is on the RX path indeed...
-   I suggest that you split this patch to the RX/TX path patches, as it fixes different issues.
+thanks,
 
-> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-
-   You forgot to specify the Fixes tag (we'd need two of those,
-one per patch)...
-
-> ---
->  drivers/net/ethernet/renesas/ravb_main.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-> index 8649b3e90edb..4d4b5d44c4e7 100644
-> --- a/drivers/net/ethernet/renesas/ravb_main.c
-> +++ b/drivers/net/ethernet/renesas/ravb_main.c
-> @@ -256,8 +256,7 @@ static void ravb_rx_ring_free_gbeth(struct net_device *ndev, int q)
->  	for (i = 0; i < priv->num_rx_ring[q]; i++) {
->  		struct ravb_rx_desc *desc = &priv->gbeth_rx_ring[i];
->  
-> -		if (!dma_mapping_error(ndev->dev.parent,
-> -				       le32_to_cpu(desc->dptr)))
-> +		if (le16_to_cpu(desc->ds_cc) != 0)
->  			dma_unmap_single(ndev->dev.parent,
->  					 le32_to_cpu(desc->dptr),
->  					 GBETH_RX_BUFF_MAX,
-> @@ -281,8 +280,7 @@ static void ravb_rx_ring_free_rcar(struct net_device *ndev, int q)
->  	for (i = 0; i < priv->num_rx_ring[q]; i++) {
->  		struct ravb_ex_rx_desc *desc = &priv->rx_ring[q][i];
->  
-> -		if (!dma_mapping_error(ndev->dev.parent,
-> -				       le32_to_cpu(desc->dptr)))
-> +		if (le16_to_cpu(desc->ds_cc) != 0)
->  			dma_unmap_single(ndev->dev.parent,
->  					 le32_to_cpu(desc->dptr),
->  					 RX_BUF_SZ,
-
-   For these hunks it will be:
-
-Fixes: a47b70ea86bd ("ravb: unmap descriptors when freeing rings")
-
-> @@ -1949,7 +1947,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->  	struct ravb_tstamp_skb *ts_skb;
->  	struct ravb_tx_desc *desc;
->  	unsigned long flags;
-> -	u32 dma_addr;
-> +	dma_addr_t dma_addr;
->  	void *buffer;
->  	u32 entry;
->  	u32 len;
-
-   And for this hunk it will be:
-
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-
-MBR, Sergey
+greg k-h
