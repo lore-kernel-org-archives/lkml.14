@@ -1,115 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CECA6EB45
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 15:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A730C6A019
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 15:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dFmxTTQg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="no5JwyVt"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705073985;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=67Uy+xhGrqYkO1Av45A28fcnjxtc8LhN+2a/aHhmapI=;
-	b=dFmxTTQg/dIndngXy7D1328VAC8fb38C9VJ4X1o3ewLia4TGVa9wAtDOjN0+/tn/tRpujV
-	hbh5LXDTTCqQHhYT3mTEyAAZqmEGBWZLrJE6qluvISNJTVIKgoWZEk1b57KsImdMsBPVgt
-	/JX8eA9gR3Lt1CTncgjo6J8hfe4RhOoz4CudQ3ouZ/UVZHkp5gJ9lVltG8OtSV8ZgHzHd5
-	MCW1fPS5uM9WGEeXwkTr1AHELcycksqU7RjxqetguO/YZIxREZXXOUMGJKRf5+rY1zhUyi
-	sH8/RDv6Y3UGc9kjiWJ89iRul4oE/iTtxytlKdG9a3s4tb3ydLtYssF2L8TQmA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705073985;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=67Uy+xhGrqYkO1Av45A28fcnjxtc8LhN+2a/aHhmapI=;
-	b=no5JwyVtQJcvBedZG3HEST21xAghCRMvMEWZEAok147fvhdFDCeIZXVEwDQIxvEw7eNqLO
-	p1U7FWpW9+LwcHCg==
-To: "Zhang, Rui" <rui.zhang@intel.com>, "Brown, Len" <len.brown@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "jgross@suse.com" <jgross@suse.com>, "x86@kernel.org" <x86@kernel.org>,
- "arjan@linux.intel.com" <arjan@linux.intel.com>, "kprateek.nayak@amd.com"
- <kprateek.nayak@amd.com>, "Tang, Feng" <feng.tang@intel.com>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "ray.huang@amd.com"
- <ray.huang@amd.com>, "andrew.cooper3@citrix.com"
- <andrew.cooper3@citrix.com>, "Sivanich, Dimitri"
- <dimitri.sivanich@hpe.com>, "paulmck@kernel.org" <paulmck@kernel.org>,
- "Mehta, Sohil" <sohil.mehta@intel.com>, "andy@infradead.org"
- <andy@infradead.org>
-Subject: Re: [patch 37/53] x86/cpu: Detect real BSP on crash kernels
-In-Reply-To: <dbad0f6f9dee5851aa21ffae9e8877cf23645af5.camel@intel.com>
-References: <20230807130108.853357011@linutronix.de>
- <20230807135028.381851690@linutronix.de>
- <7443f3200ef0be756566059e8c9b0657f3cefcff.camel@intel.com>
- <871qarlvub.ffs@tglx> <87y1czkdlg.ffs@tglx>
- <ff58623cdf63dc75fc245fd18ee776465f4bb3b8.camel@intel.com>
- <87frz5jmnl.ffs@tglx> <87a5pdjk54.ffs@tglx>
- <dbad0f6f9dee5851aa21ffae9e8877cf23645af5.camel@intel.com>
-Date: Fri, 12 Jan 2024 16:39:44 +0100
-Message-ID: <87edemimrj.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="k8nu2ViQ"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2cca8eb0509so81590911fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 07:42:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705074143; x=1705678943; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AaVw5UCNPa/eBnU3IdbP9nG5gQESTbpoML4+9XQsGiA=;
+        b=k8nu2ViQ6nqFK2cdO51lezAvvzZ+Zd/L6DFLtOMoUlmCC0ra9VpapmyQ6qh6Bml0g2
+         yZcP+eipX54D9kGoFKPlzEy7ISe4KkItdBlPruLa5CTfdtm+EhG8HJRhoTQmm0mVKN19
+         nGe+2gnCtOsM/SJDctKuRADj6SweyiJREgq/Jrwum6rdRdRmcGGxXJ40MRt7VtfLadxM
+         WYi3WlQevwSSGmvG0FDssxm5kCD7i0BucBd79BHI3+gh45qiiuuvKCqoiuQGNstqw9gA
+         EJTiRFrqwu8B4Y5og8XVSa2iaIh/no/2+mTh/tYXJrzYjb/vkKWElSQmjkaIR3IG0kXe
+         cfpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705074143; x=1705678943;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AaVw5UCNPa/eBnU3IdbP9nG5gQESTbpoML4+9XQsGiA=;
+        b=D9eQj8tjWP1NO+XrNNfNuSznvtF6ATHnBTOKSn9kjeX/kd73NYqL9fPnpWxSg4iDVY
+         RIfJ6OdLedly/N7I+yRiCdZ5KkcMb5/4jyn3XipmqRDfSswxN0xRjOYqT9lyMUo98ofU
+         /YZZFHCXzcFYfHZB2YC8GIlzAYRe0jzAjpF5nNtxdGU9DvAWJtIzMC2DBHLXBleiGpVa
+         AvW7uHZQGudSCefqVBpNYv518BoNNTRSPpiwBjHNb4hqac1fVxpy5gxpaT3vIct+x0Rf
+         irJoUyPfQ/3yy4X1fqIOIKJoIGCyPKuipXHxkX0a50wTk+QPRdjkDliC8RerfFyknbDt
+         W4Hg==
+X-Gm-Message-State: AOJu0YzuC0oVEyTv72fnDGiIe+tF0Hcgr14bY5wQ+qnydpwPdc3XKGVC
+	6N6HwYAGIGMm6a7mf4R6m4mBdNO8cDV2NoLJsS9UWcEhqFCAOw==
+X-Google-Smtp-Source: AGHT+IGSdD++VbAlk6yLdx4OmCl7oUCBBWxOavT4Y+To7Z+DI6Nf4HIB4JFkD20KhlhibNd0x8p5Dty5gytrBI/xgy8=
+X-Received: by 2002:a2e:9bd2:0:b0:2cc:db7e:aac2 with SMTP id
+ w18-20020a2e9bd2000000b002ccdb7eaac2mr753538ljj.58.1705074142783; Fri, 12 Jan
+ 2024 07:42:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
+ <20240109-axi-spi-engine-series-3-v1-6-e42c6a986580@baylibre.com> <20240112123711.0000422a@Huawei.com>
+In-Reply-To: <20240112123711.0000422a@Huawei.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Fri, 12 Jan 2024 09:42:12 -0600
+Message-ID: <CAMknhBHs32nHH8o-m3ByFfiKGAY=U7is18LMM2tGhH-v4v+8EQ@mail.gmail.com>
+Subject: Re: [PATCH 06/13] iio: buffer: add hardware triggered buffer support
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Hennerich <michael.hennerich@analog.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Frank Rowand <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-spi@vger.kernel.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 12 2024 at 09:14, Zhang, Rui wrote:
-> On Wed, 2024-01-10 at 16:14 +0100, Thomas Gleixner wrote:
->> On Wed, Jan 10 2024 at 15:19, Thomas Gleixner wrote:
->> > > This is the order in MADT,
->> > > $ cat apic.dsl=C2=A0 | grep x2Apic
->> > > [030h 0048=C2=A0=C2=A0 4]=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 Processor x2Apic ID : 00000010
->> > > [040h 0064=C2=A0=C2=A0 4]=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 Processor x2Apic ID : 00000011
->> ...
->> > > and this is the order in Linux (from CPU0 to CPUN)
->> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 x2APIC ID of logical processor =3D 0x=
-20 (32)
->> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 x2APIC ID of logical processor =3D 0x=
-10 (16)
->> >=20
->> > What a mess...
->>=20
->> And clearly not according to the spec
->>=20
->> =C2=A0 "The second is that platform firmware should list the boot
->> processor
->> =C2=A0=C2=A0 as the first processor entry in the MADT."
->>=20
->> Oh well. There are reasons why this is written the way it is.
+On Fri, Jan 12, 2024 at 6:37=E2=80=AFAM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
 >
-> This is indeed a violation of the ACPI spec and we should modify the
-> order in MADT. But this doesn't bring any actual effect as Linux
-> already handles this, right?
+> On Wed, 10 Jan 2024 13:49:47 -0600
+> David Lechner <dlechner@baylibre.com> wrote:
+>
+> > This adds a new mode INDIO_HW_BUFFER_TRIGGERED to the IIO subsystem.
+> >
+> > This mode is essentially the hardware version of INDIO_BUFFER_TRIGGERED
+> > where the trigger has the semantics of INDIO_HARDWARE_TRIGGERED and the
+> > buffer has the semantics of INDIO_BUFFER_HARDWARE.
+> >
+> > So basically INDIO_HW_BUFFER_TRIGGERED is the same as
+> > INDIO_BUFFER_HARDWARE except that it also enables the trigger when the
+> > buffer is enabled.
+>
+> If the trigger isn't routeable to multiple devices we normally don't
+> make it visible at all.
+>
+> I'm not yet understanding what a trigger actually means in this case.
+> Why do you need it to be userspace configurable?
+>
+> J
+>
 
-It brings the effect that we can detect when we are not booting (kexec
-case) on the actual boot CPU because then the first enumerated APIC ID
-is not the same as the boot CPU APIC ID. No?
-
-> For the BSP APIC ID 0x20, I didn't find out a specific reason why we
-> have to do it in that way, but it is still legal.
-
-Linux does not really care in which order the APICs are enumerated.
-
-> We may need to figure out another way to distinguish the kdump kernel.
-
-Having the first enumerated APIC in the MADT as the actual boot CPU is a
-sensible and functional way. Everything else including the silly kexec
-boot parameter is error prone.
-
-I agree that MADT is error prone too given the fact that not even Intel
-can get it right....
-
-Thanks,
-
-        tglx
+It looks like this question was answered in another thread (we need to
+configure the sampling frequency from userspace). But there you
+mentioned that adding a trigger for that seemed overkill. So you would
+you suggest to add the sampling_frequency sysfs attribute to the
+iio:deviceX instead and just forget about the trigger part? It seems a
+bit odd to me to have an attribute that may or may not be there
+depending other hardware external to the ADC chip. But if that is a
+normal acceptable thing to do, then it does seem like the simpler
+thing to do.
