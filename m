@@ -1,100 +1,168 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C912560A;
-	Fri, 12 Jan 2024 18:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E62A1AAA6
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 18:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ME5K2Wvg"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40d6b4e2945so78026195e9.0;
-        Fri, 12 Jan 2024 10:24:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNMBC8z2"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-556c3f0d6c5so8051157a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 10:24:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705083855; x=1705688655; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pTWj3rihL8bSDfLhEga4c9xLiiLPW6jDT6R2juZX/CY=;
-        b=ME5K2Wvg+Ly1P0QIIXH02w1AXrfIzkpRFB1IDNNA4gQSGo5Kwy6bRImhx0gQL2Phwa
-         LK1niqzLSlVd9PbkUDmilltdB6PcP96dCqt/CdXL/Z0BsPeXlpLl2H2H0JdAtkEfpsSW
-         ccTa+8dADkTm01e+QqTBW+nnhGbejWN9FgbcYiumOFoYOckKBIQGjSfB5+T8CQZyVUFJ
-         cwsEqKp8LXsTKL7lix1mlOyvYMNNnMnp+B/AaND4oEvvSU58koH0z6quGP7vQT8YZ3fA
-         Xul82t6rPuLSSVFXTUFYTbbUKCh9InClf3raIUYQO83/wSGw3/I/lY6zjcF6BHRTeDAw
-         cYiA==
+        d=gmail.com; s=20230601; t=1705083858; x=1705688658; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Tnu8ykiaLhvhfeKozjNh1muEVcXSR2hqekqJyEyZRj8=;
+        b=ZNMBC8z2q8l1bz1V5MGF1cJ52PXvhWn7NOyjaJY38Rn9ZW5qgXgDl3sDJZ5+RlXgPn
+         Roz+39KQ5pK1ep8QCghItxi1Hcy7bHmHPAjuX0KmjiosN2Adq72qI6Nv3bSXdXfxLom9
+         jzWwEzR1K3eloJgcfiv5f/yyIAg2MuTIBHOfXI6rwPaDHMMd6KgEt3VzV6rTEKDw1IzP
+         UHV04/ebWbS/6AKhLjAPhiO4PEWduYenNRpy0l9L50lGP85Av6M025kKfFWgjrvNOctF
+         y2N/RmdCpzjDB3eGVTnWjpl+0NaOSzN7vGU1z13hN9IGORUR1lASJZw+kA0hTwvY1FTo
+         fEIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705083855; x=1705688655;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705083858; x=1705688658;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pTWj3rihL8bSDfLhEga4c9xLiiLPW6jDT6R2juZX/CY=;
-        b=hlAaDBeBrR3kBDCn+9N/67L6NhmIe5lOpNkiiX4QDpHyJUEiUv6VeQ+qNQ8sNMSlCb
-         pbim+vg6DOt8wgLX8JV6qIIQfrfzlNorivJK8cQvYfZSm1gzs5ibiHVfDEdg3khJrJin
-         v2EenQBbms/Sdq11klszsF2fSbLACx+sRTGUL5vP4sIi2+Z85HwwPu6VR++SpHjp/T0/
-         PrZO1d/tVL/ML+mnvNDQcfyofYslajlJXLhaUwSiOAIzgZ2JH6wyyb8YcwhdpEg6eFgm
-         K7lFUjIn3jkeW8gqnW7jJTCbutBQXEXhgCaIYutCqWPrwnxIGJr244NeR1Zv+iNQAzCv
-         BsSw==
-X-Gm-Message-State: AOJu0YwIl4QCdiy9GqjDjrPkXtkyRFdDS87yaT5RPuR8ylOp2lFs56U/
-	8FEJv10bPuslUWZuinQx9M469rhXBWyULA==
-X-Google-Smtp-Source: AGHT+IG7YWD6hzcwCjnkvQXzbiGmgtZPEtPzRB21len23MAiK4rXbujptBECL5ruziLhYjMSAtv0ig==
-X-Received: by 2002:a05:600c:4286:b0:40e:68da:dd2d with SMTP id v6-20020a05600c428600b0040e68dadd2dmr285867wmc.17.1705083854527;
-        Fri, 12 Jan 2024 10:24:14 -0800 (PST)
-Received: from kenzo-linux-laptop.bicolor-pike.ts.net (154.red-88-26-51.staticip.rima-tde.net. [88.26.51.154])
-        by smtp.gmail.com with ESMTPSA id g16-20020a05600c4ed000b0040d91912f2csm6694521wmq.1.2024.01.12.10.24.13
+        bh=Tnu8ykiaLhvhfeKozjNh1muEVcXSR2hqekqJyEyZRj8=;
+        b=bUsYMR4IhOQrmgPnvtMy+xY/czJUnWsfjH+HZSPm0xpRbfYtS8d2c+oL7rhrs3/AAB
+         g264QEvnMRYafKRprj2TMeSFRG7IYewYlqZ+WMo9PbUzKCHFjEqP4An/SgWCjMjnMgea
+         SvytHFC0Dt33K6K8Yb93eeodR3MCRyL2kc08Z9kCjXRLrV70vdVCnUeqHrh/u4b8KLQn
+         p4yvj7k/wEUn0FXU4CbtbGuXhQugEU9tjLeNC7RDUH1bNUZa2/IX+o1ULwq3U7FJfuL0
+         UKqVNrPnSsYM1w6vqoiwE1DpI6NVD+LrjYyTyUcROT7QCIVBui789WDz/JQPRfIVgZrt
+         pP/g==
+X-Gm-Message-State: AOJu0YzP1mN/3v/arUMHhFjQMxkgIgZdamvmSfAXqv+EWEtGUOK35deU
+	ZfS50Av+VOzS3yylGm3shn4=
+X-Google-Smtp-Source: AGHT+IEKDaQ2qCIotP2BJERSrZBjWe+z/Mch3BGJTxeTpS6IVe0Xn9pm7TXN4WqlJ9/U7ffR14Vtxg==
+X-Received: by 2002:a05:6402:3d2:b0:557:2aae:a362 with SMTP id t18-20020a05640203d200b005572aaea362mr550826edw.109.1705083858309;
+        Fri, 12 Jan 2024 10:24:18 -0800 (PST)
+Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
+        by smtp.gmail.com with ESMTPSA id i16-20020aa7c9d0000000b005582b9d551csm2070960edt.30.2024.01.12.10.24.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 10:24:14 -0800 (PST)
-From: Kenzo Gomez <kenzo.sgomez@gmail.com>
-To: sbinding@opensource.cirrus.com
-Cc: Kenzo Gomez <kenzo.sgomez@gmail.com>,
-	James Schulman <james.schulman@cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	alsa-devel@alsa-project.org,
-	patches@opensource.cirrus.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ALSA: hda: cs35l41: Support additional ASUS Zenbook UX3402VA
-Date: Fri, 12 Jan 2024 19:20:34 +0100
-Message-ID: <20240112182113.70650-1-kenzo.sgomez@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240112163239.59743-1-kenzo.sgomez@gmail.com>
-References: <20240112163239.59743-1-kenzo.sgomez@gmail.com>
+        Fri, 12 Jan 2024 10:24:17 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 12 Jan 2024 19:24:14 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH] Revert "sched/cpufreq: Rework schedutil governor
+ performance estimation" and dependent commit
+Message-ID: <ZaGDziEnKJ988zHh@gmail.com>
+References: <ZTz9RpZxfxysYCmt@gmail.com>
+ <ZZwBi/YmnMqm7zrO@gmail.com>
+ <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
+ <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
+ <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com>
+ <ZZ/MY0KEGXotqGHY@gmail.com>
+ <CAKfTPtCR5U++CF93aUq8i+j9G5nLRvUUbCESX=CwemYu9LKOqQ@mail.gmail.com>
+ <ZaBUFETV53cRF7RB@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZaBUFETV53cRF7RB@gmail.com>
 
-Add new model entry into configuration table.
 
-Signed-off-by: Kenzo Gomez <kenzo.sgomez@gmail.com>
----
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- 1 file changed, 2 insertions(+)
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index c1afb721b4c6..9ec5773e580e 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -54,6 +54,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
- 	{ "10431533", I2C, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
- 	{ "10431573", SPI, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
- 	{ "10431663", SPI, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 1000, 4500, 24 },
-+	{ "104316A3", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
- 	{ "104316D3", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
- 	{ "104316F3", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
- 	{ "104317F3", I2C, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
-@@ -358,6 +359,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
- 	{ "CSC3551", "10431533", generic_dsd_config },
- 	{ "CSC3551", "10431573", generic_dsd_config },
- 	{ "CSC3551", "10431663", generic_dsd_config },
-+	{ "CSC3551", "104316A3", generic_dsd_config },
- 	{ "CSC3551", "104316D3", generic_dsd_config },
- 	{ "CSC3551", "104316F3", generic_dsd_config },
- 	{ "CSC3551", "104317F3", generic_dsd_config },
--- 
-2.43.0
+> > I can provide a clean revert of only :
+> > f12560779f9d ("sched/cpufreq: Rework iowait boost")
+> > 9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor performance estimation")
+> 
+> I've done this too, see this new commit in sched/urgent:
+> 
+>   60ee1706bd11 ("Revert "sched/cpufreq: Rework schedutil governor performance estimation" and dependent commit")
+> 
+> Also attached below.
+> 
+> > if the fix that i proposed doesn't work:
+> > https://lore.kernel.org/all/ZZ+ixagkxRPYyTCE@vingu-book/
+> 
+> Yeah - although of course Linus is free to just pull the revert as well. 
+> I'll try to reproduce the regression locally as well.
 
+Update & heads up: unfortunately I'm unable to reproduce the regression on 
+a fairly similar system with a Threadripper 3970X CPU.
+
+Kernel build times are very close, with or without the revert, on vanilla 
+v6.7 or v6.7+sched/core.
+
+Here's a few results where I tried to quantify kernel build times without 
+having to wait a long time.
+
+Re-building the kernel/**.o object files in a loop:
+
+   $ perf stat --pre 'rm -f kernel/*.o kernel/*/*.o kernel/*/*/*.o' --null --sync --repeat 3 make -j64 kernel/ >/dev/null
+
+
+    # v6.7.0:
+    # bootup default schedutil governor:
+              24.521 +- 0.077 seconds time elapsed  ( +-  0.31% )
+              24.644 +- 0.071 seconds time elapsed  ( +-  0.29% )
+
+    # cpufreq-max:
+              24.452 +- 0.110 seconds time elapsed  ( +-  0.45% )
+              24.482 +- 0.048 seconds time elapsed  ( +-  0.20% )
+
+    # v6.7.0+sched/core:
+    # bootup default schedutil governor:
+              24.666 +- 0.063 seconds time elapsed  ( +-  0.26% )
+              24.809 +- 0.118 seconds time elapsed  ( +-  0.48% )
+
+The fully-cached build numbers are very close to each other, and during the 
+hot phase of the kernel build all CPUs are saturated.
+
+The 2x performance regression that Linus is seeing is either some 
+pathological wakeup behavior, or perhaps the cores don't transition 
+frequencies? The difference between the lowest and highest frequency is 
+pretty substantial (at least on my box):
+
+  cpu MHz		: 2200.000
+  ...
+  cpu MHz		: 4000.000
+
+
+There was *one* test when the tree was cache-cold, when I saw really bad 
+performance (which I didn't really expect with my nvram system), with -j32 
+builds:
+
+   Performance counter stats for 'make -j32 kernel/' (3 runs):
+
+              64.34 +- 39.22 seconds time elapsed  ( +- 60.95% )
+              25.08 +- 0.142 seconds time elapsed  ( +-  0.56% )
+              24.97 +- 0.072 seconds time elapsed  ( +-  0.29% )
+
+Unfortunately that outlier was on a vanilla v6.7 bootup.
+
+As a next step I could try Linus's specific config, maybe there's some 
+detail in it that makes the difference.
+
+The commit itself that Linus bisected to (9c0b4bb7f6303c) doesn't *seem* 
+wrong in itself, especially without uclamp [I presume Linus doesn't use 
+CONFIG_UCLAMP_TASK=y and the cpu.uclamp.min/uclamp.max cgroup interface 
+that goes with it?], but the commit changes how we use sched_util metrics, 
+which could change scheduling patterns - which is why I was spending many 
+hours yesterday and today trying to find a pathological workload to 
+reproduce this. No luck so far.
+
+Linus: I can send a pull request for the 2-commit revert, or maybe you 
+could try Vincent's guess-patch that tries to restore to previous behavior 
+as closely as possible.
+
+Thanks,
+
+	Ingo
