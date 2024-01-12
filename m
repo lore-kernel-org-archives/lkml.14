@@ -1,161 +1,756 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2042.outbound.protection.outlook.com [40.107.20.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC6C5F565;
-	Tue, 23 Jan 2024 13:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706018392; cv=fail; b=ndSyKfS5gUfsUmtp5o4NKRr+46veU8rFVO4ZkXLWvAF6XxsoVfrN7kYqS7TbLfKoBhcalXFnUd1sHB6VFFrY7jODlaQhq3hLvNdRPASb7p/AQCTR4PkqC5bNi5iZ5DkcXkvhq58k9Zlqr0hOOzSk1Zvc2i9Z9Rfog+pAA/h3bU4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706018392; c=relaxed/simple;
-	bh=buWegNqA7sC+ZWR5eiqU1b4NbCmUPQpDgbr4prN3QOw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nyncTxpgEcbHG/tCTtREQREHp+yi04VwjrMfUWMW+WX8ZKZT1gYzukHkyCdPr5QRlyJNis6DcNy7Ps/rU5tVVe9yEMd11ZpB6tuC1s46qKTr/eEyMfxxbzUu2FkNofdmlDKNuSRNVww4vVb+h7778F+bAnVGNUNyepxgCjmPJSI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=WQmoMJbA; arc=fail smtp.client-ip=40.107.20.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4438A5F578
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 14:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706018434; cv=none; b=o3t7WFLSVAYy5wOs9rcuW6cdvqJCFWlgf86Ktns5mKC3p4KQ4jvCD9k8MBSwU3PEMna/uvjDSY2y3rJpqfiA/+J3frLTZEnDSCIr/sxgEmBfP4Ldhpid625zzbpNmwxKhk9DY0udADUZvuFwJJeHLKGlo5A4TmHY3T4EaQxO3YU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706018434; c=relaxed/simple;
+	bh=tsHdP4SaBp55LhE3gGTBwtFXJ1hu9Zclof97rfj+TzE=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=diwqK2zb5aZkhE4Lx1zdg2XJgofqoYAq/VkwIFTk3J79PNNaRYiF96M1okwLOCwfYkfqnVHq48wiLqI9dmuzMtXkpSVEZAIP1Xf6sYws9Qwsn7+L45+hmmVvzGw/9xpzvZPysKYom7t+PyFud5N+XW4i6eXNOkiMoD3mHrmx6+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=id9yOuBb; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WQmoMJbA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IvZLV5e0YbjrEEsh3R3soqNkMgY0d+sS6afAaVGmO08bohgdEdupgKBXM8tUwZ8Ymm5HxMjeDyCom/VPfOitOEn3PyDsV2ex5Q8sVC9IJ3Q52lIW7lob8qA6Twa2iyj2gJ4zTQQvqfX+Ung2rd14EaAKFU9UAmuXN6d/PmGI1xP0AHSTnwGA3sFEi32cKBwAIfsm+qADrU5M+aEcMjPSsEqdc4oNUvCSf94jm011aTHLwv/r+/YVX8J5NOCXN+JntQEwKHSixh5lryXB8cmITp3tBpqxVrdmw3Ll/g6ZGuePBkRu5G535O8MKubX/EB7eYAcaP9h7rSctmnucKvgOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=buWegNqA7sC+ZWR5eiqU1b4NbCmUPQpDgbr4prN3QOw=;
- b=CwZF41CSNB6Xv8+4d/UvoP5ueEZUQR+U4XGJgD8DQ2ZzvXNXoT+why+tdPm7XZD/Sam76AsflW/IlqqjoXM4ICel2z3InqeKALuLARAKrHoqYdpOEHNPtXjE0D5L6TYWIdTzPAvkHKBAJAlZLlceJTS8UfhBQ3rWGoXteA/BFPSkcHYGpFXkksCxR+cXhr3o2Rf7Yr03J5S6xkRCf4imBnsuJFSrwxlAoP83Ok/Js3I/dqijwVMeAx2eecifN3LoGlJV3Sxm+QIfPlljVdPnp6EisDNJLrGAE7GzT18HGxYHM3mZRkVX1n4AHvT8epF+7A7YhPhJ5bXZmEjzaN06+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=buWegNqA7sC+ZWR5eiqU1b4NbCmUPQpDgbr4prN3QOw=;
- b=WQmoMJbA+jy7tphSgrkrFWZesF8xYDj0R7LIJNVPV19NGzMJF/QsPtkjxMx3Yx9nSvEmWAlpj51FTp6aR+JC1NnQdklQPifKcX4X6iEbnp0X6mnL1h3OmlZkWDogSRNMgIsqpeGH04e7+6mJ0ewGQO/j8kgl3IxTXDi2fcpncAQ=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by AS1PR04MB9360.eurprd04.prod.outlook.com (2603:10a6:20b:4da::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.33; Tue, 23 Jan
- 2024 13:59:46 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6%3]) with mapi id 15.20.7202.031; Tue, 23 Jan 2024
- 13:59:46 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "abelvesa@kernel.org"
-	<abelvesa@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>,
-	"sboyd@kernel.org" <sboyd@kernel.org>, "shawnguo@kernel.org"
-	<shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com"
-	<festevam@gmail.com>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx
-	<linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] dt-bindings: clock: support NXP i.MX95
-Thread-Topic: [PATCH] dt-bindings: clock: support NXP i.MX95
-Thread-Index: AQHaTF7dbf3fZzQpTkKKhWtWHavxlrDlm5UAgAHFORCAAA4YAIAAANsw
-Date: Tue, 23 Jan 2024 13:59:46 +0000
-Message-ID:
- <DU0PR04MB94173B34D426181D285B995088742@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240121114623.1418597-1-peng.fan@oss.nxp.com>
- <273a80a7-2a60-4490-9c3c-c33dc14be9e7@linaro.org>
- <DU0PR04MB9417A8F4230D2C7C76D1550988742@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <78e296fb-a3dc-4e00-94bc-91dab7294887@linaro.org>
-In-Reply-To: <78e296fb-a3dc-4e00-94bc-91dab7294887@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|AS1PR04MB9360:EE_
-x-ms-office365-filtering-correlation-id: 815630d9-d159-4b4c-710b-08dc1c1b8ef2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- q+mQz9UxQvLtVikjdzOB/bRbRDxVH12kQ0guXa5MESVEGcJ5VCM4FurQMge3f5bps7ZZEyutPylsOAJIoVvyzhebVrd4wp+ebGwEVcyKJVw04sbmpgpnJmd6z/NwrDIgLCZq98uoMxlRjQ4aLj/J6oL8KR8J+Rk2esvHqiGvisyAe86ONegaLt9FZwSiFwhMP+zb4uLwmnWtM3da1JKLqKL33m9nftYDQDTgDVUO+qNlFkbJWur1yHwu3ohLYRkyQyeM1SMWX0nIlKzj+L5G7YDL72NY/+m3ThJJxcpg2+EFDWfGESOcOMmpepE8e9X5Zw6/m0ebkPE25c0YgnqEUChSh82Iv7sOnn1XTOFf6UkoV+oSuXr87IqMRK6DALNTmgeZ9uTMDBlfXzmPa1tPE9X72Dv3tOn3fkiIcpKnAKMZY3IoRfmrShB/I/X8vnFllgfeCVxDnruvZgysaLIFs65qcV48IOX2TlyvP5Z8vEKMJitxT6x1ai1G6gn4yFxjUOVJUCWJ0EQkwA7v8Y+ftoci/2tv4z0GrSCmjbf4+9OzMNp+qMRPVB+rCD1cCoy9jJ2oFSubChBvMqgNoJBPQCe01ccNKIMMc4Hlp4GzRRVcRbln+GUL7gVyBI8GoSbiGfrNq7C/DbN2nXmvg15u4A==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(396003)(346002)(366004)(136003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(55016003)(71200400001)(6506007)(53546011)(9686003)(7696005)(26005)(86362001)(38100700002)(33656002)(921011)(122000001)(41300700001)(38070700009)(478600001)(44832011)(5660300002)(83380400001)(7416002)(2906002)(54906003)(52536014)(8936002)(110136005)(66476007)(8676002)(64756008)(66446008)(76116006)(66556008)(4326008)(66946007)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?bkI5MmxOWGovZGN1VENOeHJYdDlFSlBIaUpUWVE2MG4zeiszS2VCcXlva1lM?=
- =?utf-8?B?VHBvZ0NsN2V4SDNTbFZRa2RNbGhZRmpKTzRzVEpGS0NhRHl2OHdkV1VFNWMz?=
- =?utf-8?B?QXRPUTZrSzNtTzFtNUZJWVZISmJLdXhRL211YjJoejd0a2FzbmpXK01HRWlD?=
- =?utf-8?B?QWhLRzJUTjllYVNoL2c1UzZORklwQ2pRVGJzOTA5VzhEbDlxTHdhWmdSeExZ?=
- =?utf-8?B?dmI4cFV4Mk9FbFgxZm9RakkrMEtZdnR6b0NpK0cydFcyMnRHd3NOdk8vTU1H?=
- =?utf-8?B?V2ZrOHNTM1RqUFJvSGxMU25MUmh1aWpHbGxUeDNGdzFXNFU2S0QyQ3dNMWpR?=
- =?utf-8?B?U2gxRXRrMFF1UmxLOEpwV0JZMTEwNTUzakFJU2RJYkU5QVVJOEQ5UUh4Sm1P?=
- =?utf-8?B?T1I2VE1aUnRlZlpGYnJodWpsNmphRkZVNFowWHhiSVdBQXNFQWhoaGl2MUpT?=
- =?utf-8?B?NVdkZXRucnJmd1AxNEY3RWFvWnFVVGRPQWZINmJYQzg5eG5uNFJEeHVYQlpN?=
- =?utf-8?B?L2QvS1hibXMrMFZmSW1WcXcwaWw1QjFkaEJDRVVuRG12TVVET3c3V205a2lW?=
- =?utf-8?B?eEVhWlFBMUt5c3dCRXpKSGgxb1IxMWxveThuTVlGM3VzbnllTFVlbTd5ZWo3?=
- =?utf-8?B?UWlteEF0Q2kreTFzZWJ0NS9XcTFmYmxvelZ6WnF3QWVpSWNGZ2tBZk8wQkRa?=
- =?utf-8?B?RnUrRGdmRFNiaTlnMkRWMDMzTm95RURXcmt0aVo3UG9rVnJJVmt6TGJNZnBM?=
- =?utf-8?B?RGNNUXRkR3RxTkJaczQ1cmJrdVZmMWZlSU5jZkFmTmkrS2JqQ3FnKzJLallN?=
- =?utf-8?B?aXdVN0hmSHR5dklnODRMNUtvS1JteENDbHFqK0R5eWxCeWl3RVgza2ZYT2JR?=
- =?utf-8?B?aU1KOENDSW91ZWxGdTkxcERjZHZUUEZiTVk1Yzd2YU9hMmtnOGNNMGxoTVNK?=
- =?utf-8?B?UnBSemlJVFB3cUdqVHhHcEo3VEtSb1ZLb0l3VVJuWGRQWUdkVVpWZVZFTTRM?=
- =?utf-8?B?d0RIdUJYZU41d2ExZTFQU0JmZVlWVFQvL2NJeG1YQllrK1AxZEpmb25qTTV1?=
- =?utf-8?B?UW84U3hkdFFuZEsrK2ZJZG9tSmFzbnF1djA2cUc4RTh1VVdRTHhvWk1pRloz?=
- =?utf-8?B?dkdwOEFpRVdaM0NxRG1ZdTI2ZDNhS0t1SjA5NU9SeXptaGIwUVdmUy9hRjhi?=
- =?utf-8?B?Z2JIZjdTTkQrQ201eXJNUHJDSkoyM0c5TjNuRGZnTTQ5NXFTanNXb05PdE0v?=
- =?utf-8?B?MUVCcUc1anpMa2hvTVBtZmc0OXRRREs2dUhtTXFXS1RpTklnTE9EVzlLUnVq?=
- =?utf-8?B?cEhOeTBwblQyaHJLUTRzOGVzZW1iU0VNOUljcXlZUVhhbnVjeCsybVNvOXQ3?=
- =?utf-8?B?aU9KNUpiZ2RYakl2TVMzbEZtbzBpK2dNU0lsWTEvREZGOVZCWktIdTdua2RE?=
- =?utf-8?B?NHhtTmxjUy9qQ3FQamJaRVdML2FUMXFGK0RLSGRMN2xyYVNIbzRQYmZGZkxt?=
- =?utf-8?B?ZEk4elFjV2x2cmdGbVlCV1RYNVE4U0JFbU9uOVdFb3p6cXpqVENLcTlhVU1U?=
- =?utf-8?B?UnVWUUNpVkFlMXd0TzdJWGhsampzL21wVkkvNm9VVFZDOVNadE5BL3RXOWVC?=
- =?utf-8?B?U2JhN2lMTjE2L1luZm5JY3VFTnFFbUo1Unk2SURPa3FES2h5cGR0WTdDdmlh?=
- =?utf-8?B?cXFLTlpkRlE4S25NVkdwSVl2NCtDMnVPRnlCTGFKMGNHSy9ETnU4OE9rc2dS?=
- =?utf-8?B?RHNtWk5HS2lwQnNNcUI0YmRIcHhYVE1FcXFaQnZSR1BNTUhJZnBFdFFyTEJE?=
- =?utf-8?B?N0FoRmFPZXBBWUN1YTM1bUJhaHg2emkvVWVqQ3FpUXdvcG9uMy9IL1VldkFF?=
- =?utf-8?B?MjFyQm0yclVmZ1JBWHYvYlVybmxUQklvMEtQTk9xbnJCWnp0SENsK3JVYjZl?=
- =?utf-8?B?Zkd0NHNha0k3eHhzNkxBek9CdDVBTXM0UHBBQmUvRmFRSGc5VEY4Ynd0dSto?=
- =?utf-8?B?em13SVZNbTN5UUpqeTA4MFVSTkJsVllYVXdSVTRlTi9VNzJJRWEvT293Zklm?=
- =?utf-8?B?ZitzanBrckVlYXoyR2F6OWxWT2JxTzVqSnR0YmQwU3RaV1d6TjczWnRIQU84?=
- =?utf-8?Q?Msm8=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="id9yOuBb"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40eb0836f8dso16692595e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:00:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1706018429; x=1706623229; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MztHQ/jR+d2tN0W3qQFoilN32wrXuXzc1YcFAuUZ0aI=;
+        b=id9yOuBb/qW5DwUO7ETOthp8TfXNqdakz1ME+pmJQ7SCCqorwxhQ8O91tYjPGIfWNK
+         C3zRVhCeBZ3OrS+aOVek1fArl6IkG5JFxCnbbrTopBd6OXNab1HVWM4EL19Trl3+SA/w
+         87bC8pcStCTX7GFVt7HqgDeGWYEf75jVJr/O2XwCeWIVg7n6OIoHTkgJzLLCcd1RNnJu
+         rafqaZzxLpdHrsFBO1hT6XV9+HQ/wGzUy4KR/jCa33msEGePHAXYKBWQWzJqTeFpwtvO
+         /9MyxNzmPd0nlNe7msJBU6eWGVxeLE1Zfwtu30sY3Ab3ArcqPNc2NKeM3aeLtm6hjGFb
+         r7nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706018429; x=1706623229;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MztHQ/jR+d2tN0W3qQFoilN32wrXuXzc1YcFAuUZ0aI=;
+        b=pWoTMRCfNHuTGJ346I5OFpgDAqIEmf81eeRYCI9q5weqjOLc9wIXL10UK67DqN9Mgs
+         GlsfWiDfYgnomlUEvLqj9u5B//XBfpqpouzHjEnA34prfay2PT4MIx80rJNNRmYQVrnr
+         beWvTuSj5zI+bry9JbewbNFOGV6wTPn06iJM0lLLSN46qmxG6lXUpQPXc99zzRm1TVil
+         nvcm1KGoS3G4qLibVBLiCOARa9ie2lmTnTDYFJm2XFb5HGR1VVZiWVE5M0r1k2uVPGxf
+         +WZAxC9sbbbN1ZnBJnBGI4+P6dq6Z0LD4YmO5vKn73xNtlOVLMoCLQtHD20f9eB70lHq
+         Qc8Q==
+X-Gm-Message-State: AOJu0YzEo722hHIQAJnLiWaoXV1t0I8MhisUAMqZH24k/MCY6tB1HjQi
+	UrMV1BeBGopEuv5n92x1C9LKJNjt9mMO7ALXwi9M2cDaNToChvBpm6RCLgPlcug=
+X-Google-Smtp-Source: AGHT+IE5AB4guwQBC7A4aJQ+gcIFXJ/hOOzwRn4rWxQtrn0oC5ntvZjrClrP9TO/ZKVOkDKrPUiZbw==
+X-Received: by 2002:a05:600c:1e23:b0:40e:758a:96d5 with SMTP id ay35-20020a05600c1e2300b0040e758a96d5mr161123wmb.167.1706018428717;
+        Tue, 23 Jan 2024 06:00:28 -0800 (PST)
+Received: from localhost ([79.142.230.34])
+        by smtp.gmail.com with ESMTPSA id o9-20020a056402444900b00559dd0a5146sm7932904edb.44.2024.01.23.06.00.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 06:00:26 -0800 (PST)
+References: <20230503090708.2524310-1-nmi@metaspace.dk>
+ <20230503090708.2524310-4-nmi@metaspace.dk>
+ <iL2M45BoRlK6yS9y8uo0A5yUXcZWMkdk3vtH3LRFSWXfvPVagVZ-0YC7taIKOBFUcjJYA_2xNNFPoC4WL-_ulCHOLkbqvsZlIshE_LEeYtU=@proton.me>
+User-agent: mu4e 1.10.8; emacs 28.2.50
+From: "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith
+ Busch <kbusch@kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, Hannes
+ Reinecke <hare@suse.de>, lsf-pc@lists.linux-foundation.org,
+ rust-for-linux@vger.kernel.org, linux-block@vger.kernel.org, Matthew
+ Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>, linux-kernel@vger.kernel.org,
+ gost.dev@samsung.com
+Subject: Re: [RFC PATCH 03/11] rust: block: introduce `kernel::block::mq`
+ module
+Date: Fri, 12 Jan 2024 10:18:15 +0100
+In-reply-to: <iL2M45BoRlK6yS9y8uo0A5yUXcZWMkdk3vtH3LRFSWXfvPVagVZ-0YC7taIKOBFUcjJYA_2xNNFPoC4WL-_ulCHOLkbqvsZlIshE_LEeYtU=@proton.me>
+Message-ID: <87il3kjgk0.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 815630d9-d159-4b4c-710b-08dc1c1b8ef2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2024 13:59:46.7178
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: flYFuJGfJHh2C2v7isXtRJKeIyuETFxg0z8IszBEtsgft+01/K21OXBSgJ/MX5FiHxOIv5IbA9bWzA8IgrTRLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9360
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1iaW5kaW5nczogY2xvY2s6IHN1cHBvcnQgTlhQIGku
-TVg5NQ0KPiANCj4gT24gMjMvMDEvMjAyNCAxNDowOCwgUGVuZyBGYW4gd3JvdGU6DQo+ID4gSGkg
-Q29ub3IsIEtyenlzenRvZg0KPiA+DQo+ID4gSSByZXBsaWVkIHlvdSBib3RoIGhlcmUuDQo+ID4N
-Cj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSF0gZHQtYmluZGluZ3M6IGNsb2NrOiBzdXBwb3J0IE5Y
-UCBpLk1YOTUNCj4gPj4NCj4gPj4gT24gMjEvMDEvMjAyNCAxMjo0NiwgUGVuZyBGYW4gKE9TUykg
-d3JvdGU6DQo+ID4+PiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gPj4+DQo+
-ID4+PiBBZGQgaS5NWDk1IGNsb2NrIGR0LWJpbmRpbmcgaGVhZGVyIGZpbGUNCj4gPj4+DQo+ID4+
-PiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gPj4NCj4gPj4g
-VGhpcyBzaG91bGQgYmUgc3F1YXNoZWQgd2l0aCByZXNwZWN0aXZlIGJpbmRpbmcgcGF0Y2guDQo+
-ID4NCj4gPiBpLk1YOTUgdXNlIFNDTUkgZmlybXdhcmUsIHRoZSBTQ1AgcHJvY2Vzc29yIGhhbmRs
-ZXMNCj4gPiBjbG9jay9wb3dlci9waW5tdXgvcmVzZXQvcGVyZm9ybWFuY2UgYW5kIGV0Yy4NCj4g
-Pg0KPiA+IEkganVzdCBhZGQgdGhlIGluZGV4IHRoYXQgU0NNSSBleHBvcnRzLCBhbmQgTGludXgv
-VUJvb3Qgd2lsbCB1c2UgdGhlDQo+ID4gaW5kZXggYW5kIGdvIHRocm91Z2ggU0NNSSB0byBkbyBy
-ZWFsIEhXIGNvbmZpZ3VyYXRpb24uDQo+ID4NCj4gPiBJbiBzdWNoIGNhc2UsIHNob3VsZCBJIHN0
-aWxsIGFkZCBIVyBpbmZvcm1hdGlvbiBpbiBhIHlhbWwgYmluZGluZyBkb2M/DQo+ID4gSSBhbSBu
-b3Qgc3VyZSB3aGF0IHNob3VsZCBiZSBhZGRlZCBpZiB5ZXMuDQo+IA0KPiBUaGVuIHdoeSBkbyB5
-b3UgbmVlZCBpdCBpbiB0aGUgYmluZGluZz8gSSBkb24ndCBzZWUgYW55IHVzZSBvZiB0aGlzLg0K
-DQpvaywgc2hvdWxkIEkganVzdCBhZGQgdGhlIGNsayBpbmRleCBoZWFkZXIgaW4gc2FtZSBmb2xk
-ZXIgYXMgc29jIGR0c2k/DQoNClRoYW5rcywNClBlbmcuDQoNCg0KPiANCj4gQmVzdCByZWdhcmRz
-LA0KPiBLcnp5c3p0b2YNCg0K
+
+Hi Benno,
+
+Benno Lossin <benno.lossin@proton.me> writes:
+
+<...>
+
+>> diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/gen=
+_disk.rs
+>> new file mode 100644
+>> index 000000000000..50496af15bbf
+>> --- /dev/null
+>> +++ b/rust/kernel/block/mq/gen_disk.rs
+>> @@ -0,0 +1,133 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! GenDisk abstraction
+>> +//!
+>> +//! C header: [`include/linux/blkdev.h`](../../include/linux/blkdev.h)
+>> +//! C header: [`include/linux/blk_mq.h`](../../include/linux/blk_mq.h)
+>> +
+>> +use crate::block::mq::{raw_writer::RawWriter, Operations, TagSet};
+>> +use crate::{
+>> +    bindings, error::from_err_ptr, error::Result, sync::Arc, types::For=
+eignOwnable,
+>> +    types::ScopeGuard,
+>> +};
+>> +use core::fmt::{self, Write};
+>> +
+>> +/// A generic block device
+>> +///
+>> +/// # Invariants
+>> +///
+>> +///  - `gendisk` must always point to an initialized and valid `struct =
+gendisk`.
+>> +pub struct GenDisk<T: Operations> {
+>> +    _tagset: Arc<TagSet<T>>,
+>> +    gendisk: *mut bindings::gendisk,
+>
+> Why are these two fields not embedded? Shouldn't the user decide where
+> to allocate?
+
+The `TagSet` can be shared between multiple `GenDisk`. Using an `Arc`
+seems resonable?
+
+For the `gendisk` field, the allocation is done by C and the address
+must be stable. We are owning the pointee and must drop it when it goes out
+of scope. I could do this:
+
+#[repr(transparent)]
+struct GenDisk(Opaque<bindings::gendisk>);
+
+struct UniqueGenDiskRef {
+    _tagset: Arc<TagSet<T>>,
+    gendisk: Pin<&'static mut GenDisk>,
+
+}
+
+but it seems pointless. `struct GenDisk` would not be pub in that case. Wha=
+t do you think?
+
+>
+>> +}
+>> +
+>> +// SAFETY: `GenDisk` is an owned pointer to a `struct gendisk` and an `=
+Arc` to a
+>> +// `TagSet` It is safe to send this to other threads as long as T is Se=
+nd.
+>> +unsafe impl<T: Operations + Send> Send for GenDisk<T> {}
+>> +
+>> +impl<T: Operations> GenDisk<T> {
+>> +    /// Try to create a new `GenDisk`
+>> +    pub fn try_new(tagset: Arc<TagSet<T>>, queue_data: T::QueueData) ->=
+ Result<Self> {
+>> +        let data =3D queue_data.into_foreign();
+>> +        let recover_data =3D ScopeGuard::new(|| {
+>> +            // SAFETY: T::QueueData was created by the call to `into_fo=
+reign()` above
+>> +            unsafe { T::QueueData::from_foreign(data) };
+>> +        });
+>> +
+>> +        let lock_class_key =3D crate::sync::LockClassKey::new();
+>> +
+>> +        // SAFETY: `tagset.raw_tag_set()` points to a valid and initial=
+ized tag set
+>> +        let gendisk =3D from_err_ptr(unsafe {
+>> +            bindings::__blk_mq_alloc_disk(tagset.raw_tag_set(), data as=
+ _, lock_class_key.as_ptr())
+>
+> Avoid `as _` casts.
+
+=F0=9F=91=8D
+
+>
+>> +        })?;
+>> +
+>> +        const TABLE: bindings::block_device_operations =3D bindings::bl=
+ock_device_operations {
+>> +            submit_bio: None,
+>> +            open: None,
+>> +            release: None,
+>> +            ioctl: None,
+>> +            compat_ioctl: None,
+>> +            check_events: None,
+>> +            unlock_native_capacity: None,
+>> +            getgeo: None,
+>> +            set_read_only: None,
+>> +            swap_slot_free_notify: None,
+>> +            report_zones: None,
+>> +            devnode: None,
+>> +            alternative_gpt_sector: None,
+>> +            get_unique_id: None,
+>> +            owner: core::ptr::null_mut(),
+>> +            pr_ops: core::ptr::null_mut(),
+>> +            free_disk: None,
+>> +            poll_bio: None,
+>> +        };
+>> +
+>> +        // SAFETY: gendisk is a valid pointer as we initialized it above
+>> +        unsafe { (*gendisk).fops =3D &TABLE };
+>> +
+>> +        recover_data.dismiss();
+>> +        Ok(Self {
+>> +            _tagset: tagset,
+>> +            gendisk,
+>> +        })
+>> +    }
+>> +
+>> +    /// Set the name of the device
+>> +    pub fn set_name(&self, args: fmt::Arguments<'_>) -> Result {
+>> +        let mut raw_writer =3D RawWriter::from_array(unsafe { &mut (*se=
+lf.gendisk).disk_name });
+>
+> Missing `SAFETY` also see below.
+
+Yes, I have a few of those. Will add for next version.
+
+>
+>> +        raw_writer.write_fmt(args)?;
+>> +        raw_writer.write_char('\0')?;
+>> +        Ok(())
+>> +    }
+>> +
+>> +    /// Register the device with the kernel. When this function return,=
+ the
+>> +    /// device is accessible from VFS. The kernel may issue reads to th=
+e device
+>> +    /// during registration to discover partition infomation.
+>> +    pub fn add(&self) -> Result {
+>> +        crate::error::to_result(unsafe {
+>> +            bindings::device_add_disk(core::ptr::null_mut(), self.gendi=
+sk, core::ptr::null_mut())
+>> +        })
+>> +    }
+>> +
+>> +    /// Call to tell the block layer the capcacity of the device
+>> +    pub fn set_capacity(&self, sectors: u64) {
+>> +        unsafe { bindings::set_capacity(self.gendisk, sectors) };
+>> +    }
+>> +
+>> +    /// Set the logical block size of the device
+>> +    pub fn set_queue_logical_block_size(&self, size: u32) {
+>> +        unsafe { bindings::blk_queue_logical_block_size((*self.gendisk)=
+.queue, size) };
+>> +    }
+>> +
+>> +    /// Set the physical block size of the device
+>
+> What does this *do*? I do not think the doc string gives any meaningful
+> information not present in the function name (this might just be,
+> because I have no idea of what this is and anyone with just a little
+> more knowledge would know, but I still wanted to mention it).
+
+I'll add some more context.
+
+>
+>> +    pub fn set_queue_physical_block_size(&self, size: u32) {
+>> +        unsafe { bindings::blk_queue_physical_block_size((*self.gendisk=
+).queue, size) };
+>> +    }
+>> +
+>> +    /// Set the rotational media attribute for the device
+>> +    pub fn set_rotational(&self, rotational: bool) {
+>> +        if !rotational {
+>> +            unsafe {
+>> +                bindings::blk_queue_flag_set(bindings::QUEUE_FLAG_NONRO=
+T, (*self.gendisk).queue)
+>> +            };
+>> +        } else {
+>> +            unsafe {
+>> +                bindings::blk_queue_flag_clear(bindings::QUEUE_FLAG_NON=
+ROT, (*self.gendisk).queue)
+>> +            };
+>> +        }
+>> +    }
+>> +}
+>> +
+>> +impl<T: Operations> Drop for GenDisk<T> {
+>> +    fn drop(&mut self) {
+>> +        let queue_data =3D unsafe { (*(*self.gendisk).queue).queuedata =
+};
+>> +
+>> +        unsafe { bindings::del_gendisk(self.gendisk) };
+>> +
+>> +        // SAFETY: `queue.queuedata` was created by `GenDisk::try_new()=
+` with a
+>> +        // call to `ForeignOwnable::into_pointer()` to create `queuedat=
+a`.
+>> +        // `ForeignOwnable::from_foreign()` is only called here.
+>> +        let _queue_data =3D unsafe { T::QueueData::from_foreign(queue_d=
+ata) };
+>> +    }
+>> +}
+>> diff --git a/rust/kernel/block/mq/operations.rs b/rust/kernel/block/mq/o=
+perations.rs
+>> new file mode 100644
+>> index 000000000000..fb1ab707d1f0
+>> --- /dev/null
+>> +++ b/rust/kernel/block/mq/operations.rs
+>> @@ -0,0 +1,260 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! This module provides an interface for blk-mq drivers to implement.
+>> +//!
+>> +//! C header: [`include/linux/blk-mq.h`](../../include/linux/blk-mq.h)
+>> +
+>> +use crate::{
+>> +    bindings,
+>> +    block::mq::{tag_set::TagSetRef, Request},
+>> +    error::{from_result, Result},
+>> +    types::ForeignOwnable,
+>> +};
+>> +use core::{marker::PhantomData, pin::Pin};
+>> +
+>> +/// Implement this trait to interface blk-mq as block devices
+>> +#[macros::vtable]
+>> +pub trait Operations: Sized {
+>
+> Is this trait really safe? Are there **no** requirements for e.g.
+> `QueueData`? So could I use `Box<()>`?
+
+Yes, it is intended to be safe. `ForeignOwnable` covers safety
+requirements for these associated data types.
+
+>
+>> +    /// Data associated with a request. This data is located next to th=
+e request
+>> +    /// structure.
+>> +    type RequestData;
+>> +
+>> +    /// Data associated with the `struct request_queue` that is allocat=
+ed for
+>> +    /// the `GenDisk` associated with this `Operations` implementation.
+>> +    type QueueData: ForeignOwnable;
+>> +
+>> +    /// Data associated with a dispatch queue. This is stored as a poin=
+ter in
+>> +    /// `struct blk_mq_hw_ctx`.
+>> +    type HwData: ForeignOwnable;
+>> +
+>> +    /// Data associated with a tag set. This is stored as a pointer in =
+`struct
+>> +    /// blk_mq_tag_set`.
+>> +    type TagSetData: ForeignOwnable;
+>> +
+>> +    /// Called by the kernel to allocate a new `RequestData`. The struc=
+ture will
+>> +    /// eventually be pinned, so defer initialization to `init_request_=
+data()`
+>> +    fn new_request_data(
+>> +        _tagset_data: <Self::TagSetData as ForeignOwnable>::Borrowed<'_=
+>,
+>> +    ) -> Result<Self::RequestData>;
+>> +
+>> +    /// Called by the kernel to initialize a previously allocated `Requ=
+estData`
+>> +    fn init_request_data(
+>> +        _tagset_data: <Self::TagSetData as ForeignOwnable>::Borrowed<'_=
+>,
+>> +        _data: Pin<&mut Self::RequestData>,
+>> +    ) -> Result {
+>> +        Ok(())
+>> +    }
+>> +
+>> +    /// Called by the kernel to queue a request with the driver. If `is=
+_last` is
+>> +    /// `false`, the driver is allowed to defer commiting the request.
+>> +    fn queue_rq(
+>> +        hw_data: <Self::HwData as ForeignOwnable>::Borrowed<'_>,
+>> +        queue_data: <Self::QueueData as ForeignOwnable>::Borrowed<'_>,
+>> +        rq: &Request<Self>,
+>> +        is_last: bool,
+>> +    ) -> Result;
+>> +
+>> +    /// Called by the kernel to indicate that queued requests should be=
+ submitted
+>> +    fn commit_rqs(
+>> +        hw_data: <Self::HwData as ForeignOwnable>::Borrowed<'_>,
+>> +        queue_data: <Self::QueueData as ForeignOwnable>::Borrowed<'_>,
+>> +    );
+>> +
+>> +    /// Called by the kernel when the request is completed
+>> +    fn complete(_rq: &Request<Self>);
+>> +
+>> +    /// Called by the kernel to allocate and initialize a driver specif=
+ic hardware context data
+>> +    fn init_hctx(
+>> +        tagset_data: <Self::TagSetData as ForeignOwnable>::Borrowed<'_>,
+>> +        hctx_idx: u32,
+>> +    ) -> Result<Self::HwData>;
+>> +
+>> +    /// Called by the kernel to poll the device for completed requests.=
+ Only used for poll queues.
+>> +    fn poll(_hw_data: <Self::HwData as ForeignOwnable>::Borrowed<'_>) -=
+> i32 {
+>> +        unreachable!()
+>
+> Why are these implemented this way? Should this really panic? Maybe
+> return an error? Why `i32` as the return type? If it can error it should
+> be `Result<u32>`.
+
+I will update in accordance with the new documentation for `#[vtable]`.
+
+Return type should be `bool`, I will change it. It inherited the int
+from `core::ffi::c_int`.
+
+>
+>> +    }
+>> +
+>> +    /// Called by the kernel to map submission queues to CPU cores.
+>> +    fn map_queues(_tag_set: &TagSetRef) {
+>> +        unreachable!()
+>> +    }
+>> +
+>> +    // There is no need for exit_request() because `drop` will be calle=
+d.
+>> +}
+>> +
+>> +pub(crate) struct OperationsVtable<T: Operations>(PhantomData<T>);
+>> +
+>> +impl<T: Operations> OperationsVtable<T> {
+>> +    // # Safety
+>> +    //
+>> +    // The caller of this function must ensure that `hctx` and `bd` are=
+ valid
+>> +    // and initialized. The pointees must outlive this function. Further
+>> +    // `hctx->driver_data` must be a pointer created by a call to
+>> +    // `Self::init_hctx_callback()` and the pointee must outlive this f=
+unction.
+>> +    // This function must not be called with a `hctx` for which
+>> +    // `Self::exit_hctx_callback()` has been called.
+>> +    unsafe extern "C" fn queue_rq_callback(
+>> +        hctx: *mut bindings::blk_mq_hw_ctx,
+>> +        bd: *const bindings::blk_mq_queue_data,
+>> +    ) -> bindings::blk_status_t {
+>> +        // SAFETY: `bd` is valid as required by the safety requirement =
+for this function.
+>> +        let rq =3D unsafe { (*bd).rq };
+>> +
+>> +        // SAFETY: The safety requirement for this function ensure that
+>> +        // `(*hctx).driver_data` was returned by a call to
+>> +        // `Self::init_hctx_callback()`. That function uses
+>> +        // `PointerWrapper::into_pointer()` to create `driver_data`. Fu=
+rther,
+>> +        // the returned value does not outlive this function and
+>> +        // `from_foreign()` is not called until `Self::exit_hctx_callba=
+ck()` is
+>> +        // called. By the safety requirement of this function and contr=
+act with
+>> +        // the `blk-mq` API, `queue_rq_callback()` will not be called a=
+fter that
+>> +        // point.
+>
+> This safety section and the others here are rather long and mostly
+> repeat themselves. Is it possible to put this in its own module and
+> explain the safety invariants in that module and then in these safety
+> sections just refer to some labels from that section?
+>
+> I think we should discuss this in our next meeting.
+
+Not sure about the best way to do this. Lets talk.
+
+<...>
+
+>> +
+>> +    pub(crate) const unsafe fn build() -> &'static bindings::blk_mq_ops=
+ {
+>> +        &Self::VTABLE
+>> +    }
+>
+> Why is this function `unsafe`?
+
+I don't think it needs to be unsafe, thanks.
+
+>
+>> +}
+>
+> Some `# Safety` and `SAFETY` missing in this hunk.
+>
+>> diff --git a/rust/kernel/block/mq/raw_writer.rs b/rust/kernel/block/mq/r=
+aw_writer.rs
+>> new file mode 100644
+>> index 000000000000..25c16ee0b1f7
+>> --- /dev/null
+>> +++ b/rust/kernel/block/mq/raw_writer.rs
+>> @@ -0,0 +1,30 @@
+>> +use core::fmt::{self, Write};
+>> +
+>> +pub(crate) struct RawWriter {
+>> +    ptr: *mut u8,
+>> +    len: usize,
+>> +}
+>> +
+>> +impl RawWriter {
+>> +    unsafe fn new(ptr: *mut u8, len: usize) -> Self {
+>> +        Self { ptr, len }
+>> +    }
+>> +
+>> +    pub(crate) fn from_array<const N: usize>(a: &mut [core::ffi::c_char=
+; N]) -> Self {
+>> +        unsafe { Self::new(&mut a[0] as *mut _ as _, N) }
+>> +    }
+>
+> This function needs to be `unsafe`, because it never captures the
+> lifetime of `a`. I can write:
+>     let mut a =3D Box::new([0; 10]);
+>     let mut writer =3D RawWriter::from_array(&mut *a);
+>     drop(a);
+>     writer.write_str("Abc"); // UAF
+> Alternatively add a lifetime to `RawWriter`.
+
+Yes, a lifetime is missing in RawWriter, thanks.
+
+>
+>> +}
+>> +
+>> +impl Write for RawWriter {
+>> +    fn write_str(&mut self, s: &str) -> fmt::Result {
+>> +        let bytes =3D s.as_bytes();
+>> +        let len =3D bytes.len();
+>> +        if len > self.len {
+>> +            return Err(fmt::Error);
+>> +        }
+>> +        unsafe { core::ptr::copy_nonoverlapping(&bytes[0], self.ptr, le=
+n) };
+>> +        self.ptr =3D unsafe { self.ptr.add(len) };
+>> +        self.len -=3D len;
+>> +        Ok(())
+>> +    }
+>> +}
+>> diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/requ=
+est.rs
+>> new file mode 100644
+>> index 000000000000..e95ae3fd71ad
+>> --- /dev/null
+>> +++ b/rust/kernel/block/mq/request.rs
+>> @@ -0,0 +1,71 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! This module provides a wrapper for the C `struct request` type.
+>> +//!
+>> +//! C header: [`include/linux/blk-mq.h`](../../include/linux/blk-mq.h)
+>> +
+>> +use crate::{
+>> +    bindings,
+>> +    block::mq::Operations,
+>> +    error::{Error, Result},
+>> +};
+>> +use core::marker::PhantomData;
+>> +
+>> +/// A wrapper around a blk-mq `struct request`. This represents an IO r=
+equest.
+>> +pub struct Request<T: Operations> {
+>> +    ptr: *mut bindings::request,
+>
+> Why is this not embedded?
+
+I have changed it to `struct Request(Opaque<bindings::request>)` for
+next version =F0=9F=91=8D
+
+>
+>> +    _p: PhantomData<T>,
+>> +}
+>> +
+>> +impl<T: Operations> Request<T> {
+>> +    pub(crate) unsafe fn from_ptr(ptr: *mut bindings::request) -> Self {
+>> +        Self {
+>> +            ptr,
+>> +            _p: PhantomData,
+>> +        }
+>> +    }
+>> +
+>> +    /// Get the command identifier for the request
+>> +    pub fn command(&self) -> u32 {
+>> +        unsafe { (*self.ptr).cmd_flags & ((1 << bindings::REQ_OP_BITS) =
+- 1) }
+>> +    }
+>> +
+>> +    /// Call this to indicate to the kernel that the request has been i=
+ssued by the driver
+>> +    pub fn start(&self) {
+>> +        unsafe { bindings::blk_mq_start_request(self.ptr) };
+>> +    }
+>> +
+>> +    /// Call this to indicate to the kernel that the request has been c=
+ompleted without errors
+>> +    // TODO: Consume rq so that we can't use it after ending it?
+>> +    pub fn end_ok(&self) {
+>> +        unsafe { bindings::blk_mq_end_request(self.ptr, bindings::BLK_S=
+TS_OK as _) };
+>> +    }
+>> +
+>> +    /// Call this to indicate to the kernel that the request completed =
+with an error
+>> +    pub fn end_err(&self, err: Error) {
+>> +        unsafe { bindings::blk_mq_end_request(self.ptr, err.to_blk_stat=
+us()) };
+>> +    }
+>> +
+>> +    /// Call this to indicate that the request completed with the statu=
+s indicated by `status`
+>> +    pub fn end(&self, status: Result) {
+>> +        if let Err(e) =3D status {
+>> +            self.end_err(e);
+>> +        } else {
+>> +            self.end_ok();
+>> +        }
+>> +    }
+>> +
+>> +    /// Call this to schedule defered completion of the request
+>> +    // TODO: Consume rq so that we can't use it after completing it?
+>> +    pub fn complete(&self) {
+>> +        if !unsafe { bindings::blk_mq_complete_request_remote(self.ptr)=
+ } {
+>> +            T::complete(&unsafe { Self::from_ptr(self.ptr) });
+>> +        }
+>> +    }
+>> +
+>> +    /// Get the target sector for the request
+>> +    #[inline(always)]
+>
+> Why is this `inline(always)`?
+
+Compiler would not inline from kernel crate to modules without this. I
+will check if this is still the case.
+
+>
+>> +    pub fn sector(&self) -> usize {
+>> +        unsafe { (*self.ptr).__sector as usize }
+>> +    }
+>> +}
+>> diff --git a/rust/kernel/block/mq/tag_set.rs b/rust/kernel/block/mq/tag_=
+set.rs
+>> new file mode 100644
+>> index 000000000000..d122db7f6d0e
+>> --- /dev/null
+>> +++ b/rust/kernel/block/mq/tag_set.rs
+>> @@ -0,0 +1,92 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! This module provides the `TagSet` struct to wrap the C `struct blk_=
+mq_tag_set`.
+>> +//!
+>> +//! C header: [`include/linux/blk-mq.h`](../../include/linux/blk-mq.h)
+>> +
+>> +use crate::{
+>> +    bindings,
+>> +    block::mq::{operations::OperationsVtable, Operations},
+>> +    error::{Error, Result},
+>> +    sync::Arc,
+>> +    types::ForeignOwnable,
+>> +};
+>> +use core::{cell::UnsafeCell, convert::TryInto, marker::PhantomData};
+>> +
+>> +/// A wrapper for the C `struct blk_mq_tag_set`
+>> +pub struct TagSet<T: Operations> {
+>> +    inner: UnsafeCell<bindings::blk_mq_tag_set>,
+>> +    _p: PhantomData<T>,
+>> +}
+>> +
+>> +impl<T: Operations> TagSet<T> {
+>> +    /// Try to create a new tag set
+>> +    pub fn try_new(
+>> +        nr_hw_queues: u32,
+>> +        tagset_data: T::TagSetData,
+>> +        num_tags: u32,
+>> +        num_maps: u32,
+>> +    ) -> Result<Arc<Self>> {
+>
+> Why force the users to use `Arc`?
+
+Changed to return a `PinInit<TagSet>` for next version.
+
+>
+>> +        let tagset =3D Arc::try_new(Self {
+>> +            inner: UnsafeCell::new(bindings::blk_mq_tag_set::default()),
+>> +            _p: PhantomData,
+>> +        })?;
+>> +
+>> +        // SAFETY: We just allocated `tagset`, we know this is the only=
+ reference to it.
+>> +        let inner =3D unsafe { &mut *tagset.inner.get() };
+>> +
+>> +        inner.ops =3D unsafe { OperationsVtable::<T>::build() };
+>> +        inner.nr_hw_queues =3D nr_hw_queues;
+>> +        inner.timeout =3D 0; // 0 means default which is 30 * HZ in C
+>> +        inner.numa_node =3D bindings::NUMA_NO_NODE;
+>> +        inner.queue_depth =3D num_tags;
+>> +        inner.cmd_size =3D core::mem::size_of::<T::RequestData>().try_i=
+nto()?;
+>> +        inner.flags =3D bindings::BLK_MQ_F_SHOULD_MERGE;
+>> +        inner.driver_data =3D tagset_data.into_foreign() as _;
+>> +        inner.nr_maps =3D num_maps;
+>> +
+>> +        // SAFETY: `inner` points to valid and initialised memory.
+>> +        let ret =3D unsafe { bindings::blk_mq_alloc_tag_set(inner) };
+>> +        if ret < 0 {
+>> +            // SAFETY: We created `driver_data` above with `into_foreig=
+n`
+>> +            unsafe { T::TagSetData::from_foreign(inner.driver_data) };
+>> +            return Err(Error::from_errno(ret));
+>> +        }
+>> +
+>> +        Ok(tagset)
+>> +    }
+>> +
+>> +    /// Return the pointer to the wrapped `struct blk_mq_tag_set`
+>> +    pub(crate) fn raw_tag_set(&self) -> *mut bindings::blk_mq_tag_set {
+>> +        self.inner.get()
+>> +    }
+>> +}
+>> +
+>> +impl<T: Operations> Drop for TagSet<T> {
+>> +    fn drop(&mut self) {
+>> +        let tagset_data =3D unsafe { (*self.inner.get()).driver_data };
+>> +
+>> +        // SAFETY: `inner` is valid and has been properly initialised d=
+uring construction.
+>> +        unsafe { bindings::blk_mq_free_tag_set(self.inner.get()) };
+>> +
+>> +        // SAFETY: `tagset_data` was created by a call to
+>> +        // `ForeignOwnable::into_foreign` in `TagSet::try_new()`
+>> +        unsafe { T::TagSetData::from_foreign(tagset_data) };
+>> +    }
+>> +}
+>> +
+>> +/// A tag set reference. Used to control lifetime and prevent drop of T=
+agSet references passed to
+>> +/// `Operations::map_queues()`
+>> +pub struct TagSetRef {
+>> +    ptr: *mut bindings::blk_mq_tag_set,
+>> +}
+>> +
+>> +impl TagSetRef {
+>> +    pub(crate) unsafe fn from_ptr(tagset: *mut bindings::blk_mq_tag_set=
+) -> Self {
+>> +        Self { ptr: tagset }
+>> +    }
+>> +
+>> +    pub fn ptr(&self) -> *mut bindings::blk_mq_tag_set {
+>> +        self.ptr
+>> +    }
+>> +}
+>
+> This is a **very** thin abstraction, why is it needed?
+
+It is not. I changed it to `&TagSet`, thanks.
+
+
+Thanks for the comments!
+
+Best regards,
+Andreas
