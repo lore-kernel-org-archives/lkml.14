@@ -1,144 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CE9537E4
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 08:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NxgG80tT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705049363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZCR5bRfxgHPmBloCia4lyHhepnFKs/EyakChbsYrBIQ=;
-	b=NxgG80tT0yvE4kev9NnA+Nqnzu1kmpMKft4HoOe62B7ec94U8e2K/d1ap3ftYWfsLQwEAZ
-	1yu4HadVY6/IKHmDZjrZXyX2oelJPyZcDSr14CECdXHUoxFYkJSxnp2/y+lVwTVOzgAPSG
-	m2KLCFvjQPONScI3467ujkJ2w6I49GM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-325-z2p4KbrpOV6s74omyNAXAQ-1; Fri, 12 Jan 2024 03:49:21 -0500
-X-MC-Unique: z2p4KbrpOV6s74omyNAXAQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a2bfaa1e6bcso150708166b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 00:49:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705049360; x=1705654160;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZCR5bRfxgHPmBloCia4lyHhepnFKs/EyakChbsYrBIQ=;
-        b=Aweki4aFo3qVAuwXIRkvNgEEuIx/P7KRvN7hZ9i+Yby7PYJ4TbNN+xWJw6C8nUfx8R
-         dXsyBKQuGcMZTD9H4vaB7BYGR0+sYSHLaJTLcGnx4wHKc7hagZxkgDKqNtcLCi+8QaLR
-         0wrCyGAP0OXqdF1rqrr4TGOxomQZZ/+3NU0y+3e85MrMeV9Ql+KcK7gd0CrtmSE7veEP
-         kB591DxOJ5QtiUkirDAn2++nY0/XEf6pygY6CPTSjvdQMGnNBvbD5Dklt018VXoPG/dg
-         TjfAy98GgiWI2Se5M/kK5wdMJCqx4EUro2X0D9YWJpmsSo/sJEpfBM0/tpPk+VFkNWQH
-         4xMg==
-X-Gm-Message-State: AOJu0Yw/Cx+gpSUS3Wo8DkoK96iJOxnyZBloolOA/+s9dzjt3NYrI8kT
-	9GmoHFdAoCwNprp3Az7MBy/9HKOH//noWQfiYqVgQkZe1QUTxkkSk2uciGEOllipxiIL6fu1bFd
-	k6TAXLHYqaAibwO2/B9uoW21tZ+EMr8a1
-X-Received: by 2002:a17:906:b155:b0:a27:45a2:e5f4 with SMTP id bt21-20020a170906b15500b00a2745a2e5f4mr380570ejb.14.1705049359991;
-        Fri, 12 Jan 2024 00:49:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFJn4FR+hzfQY89lHJ8M2tFUtayLT65NlizQ9Ox1LTrqzTHrjpKkjHw0yowZCCByL3QkK8Xyw==
-X-Received: by 2002:a17:906:b155:b0:a27:45a2:e5f4 with SMTP id bt21-20020a170906b15500b00a2745a2e5f4mr380561ejb.14.1705049359709;
-        Fri, 12 Jan 2024 00:49:19 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id k25-20020a170906a39900b00a27a25afaf2sm1553804ejz.98.2024.01.12.00.49.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jan 2024 00:49:19 -0800 (PST)
-Message-ID: <5dd12651-232d-41f2-afa4-2a3e5c127969@redhat.com>
-Date: Fri, 12 Jan 2024 09:49:18 +0100
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9878B50268
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 08:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
+	by mail-app4 (Coremail) with SMTP id cS_KCgCneJ0E_aBlevm4AA--.27969S2;
+	Fri, 12 Jan 2024 16:49:08 +0800 (CST)
+From: Zhipeng Lu <alexious@zju.edu.cn>
+To: alexious@zju.edu.cn
+Cc: Qiang Yu <yuq825@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Vasily Khoruzhick <anarsoul@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	lima@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/lima: fix a memleak in lima_heap_alloc
+Date: Fri, 12 Jan 2024 16:47:50 +0800
+Message-Id: <20240112084750.3729837-1-alexious@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: atomisp: ssh_css: Fix a null-pointer dereference
- in load_video_binaries
-To: Zhipeng Lu <alexious@zju.edu.cn>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kate Hsuan
- <hpa@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>,
- Dan Carpenter <error27@gmail.com>, Brent Pappas <bpappas@pappasbrent.com>,
- linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240112083421.3728017-1-alexious@zju.edu.cn>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240112083421.3728017-1-alexious@zju.edu.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cS_KCgCneJ0E_aBlevm4AA--.27969S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruF1xZrW7XF4xJFWkJrW5Wrg_yoWfWwbEk3
+	yxXFn7ury5GF4q93W2vw47uFyIka15ZrZ3Zr10gasxt3srJa10q3429rWrX3s8Wa17KFyq
+	ya1jyw4fA3ZF9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbV8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
+	6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+	DU0xZFpf9x0JUqD73UUUUU=
+X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
 
-Hi Zhipeng Lu,
+When lima_vm_map_bo fails, the resources need to be deallocated, or
+there will be memleaks.
 
-On 1/12/24 09:34, Zhipeng Lu wrote:
-> The allocation failure of mycs->yuv_scaler_binary in load_video_binaries
-> is followed with a dereference of mycs->yuv_scaler_binary after the
-> following call chain:
-> 
-> sh_css_pipe_load_binaries
->   |-> load_video_binaries (mycs->yuv_scaler_binary == NULL)
->   |
->   |-> sh_css_pipe_unload_binaries
->         |-> unload_video_binaries
-> 
-> In unload_video_binaries, it calls to ia_css_binary_unload with argument
-> &pipe->pipe_settings.video.yuv_scaler_binary[i], which refers to the
-> same memory slot as mycs->yuv_scaler_binary. Thus, a null-pointer
-> dereference is triggered.
-> 
-> Fixes: ad85094b293e ("Revert "media: staging: atomisp: Remove driver"")
-> Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Fixes: 6aebc51d7aef ("drm/lima: support heap buffer creation")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+---
+ drivers/gpu/drm/lima/lima_gem.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Thank you for your patch. I believe it would be better to fix this
-like this:
-
-diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-index 1d1fbda75da1..d566c5417448 100644
---- a/drivers/staging/media/atomisp/pci/sh_css.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css.c
-@@ -4690,6 +4690,7 @@ static int load_video_binaries(struct ia_css_pipe *pipe)
- 						  sizeof(struct ia_css_binary),
- 						  GFP_KERNEL);
- 		if (!mycs->yuv_scaler_binary) {
-+			mycs->num_yuv_scaler = 0;
- 			err = -ENOMEM;
- 			return err;
- 		}
-
-Can you please submit a new version using this approach ?
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/staging/media/atomisp/pci/sh_css.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-> index f35c90809414..eb43f4e99d02 100644
-> --- a/drivers/staging/media/atomisp/pci/sh_css.c
-> +++ b/drivers/staging/media/atomisp/pci/sh_css.c
-> @@ -4936,9 +4936,10 @@ unload_video_binaries(struct ia_css_pipe *pipe)
->  	ia_css_binary_unload(&pipe->pipe_settings.video.video_binary);
->  	ia_css_binary_unload(&pipe->pipe_settings.video.vf_pp_binary);
->  
-> -	for (i = 0; i < pipe->pipe_settings.video.num_yuv_scaler; i++)
-> -		ia_css_binary_unload(&pipe->pipe_settings.video.yuv_scaler_binary[i]);
-> -
-> +	if (pipe->pipe_settings.video.yuv_scaler_binary)
-> +		for (i = 0; i < pipe->pipe_settings.video.num_yuv_scaler; i++)
-> +			ia_css_binary_unload(&pipe->pipe_settings.video.yuv_scaler_binary[i]);
-> +		
->  	kfree(pipe->pipe_settings.video.is_output_stage);
->  	pipe->pipe_settings.video.is_output_stage = NULL;
->  	kfree(pipe->pipe_settings.video.yuv_scaler_binary);
+diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
+index 4f9736e5f929..824ed22141c7 100644
+--- a/drivers/gpu/drm/lima/lima_gem.c
++++ b/drivers/gpu/drm/lima/lima_gem.c
+@@ -92,8 +92,13 @@ int lima_heap_alloc(struct lima_bo *bo, struct lima_vm *vm)
+ 
+ 	if (vm) {
+ 		ret = lima_vm_map_bo(vm, bo, old_size >> PAGE_SHIFT);
+-		if (ret)
++		if (ret) {
++			dma_unmap_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
++			sg_free_table(&sgt);
++			kfree(bo->base.sgt);
++			bo->base.sgt = NULL;
+ 			return ret;
++		}
+ 	}
+ 
+ 	bo->heap_size = new_size;
+-- 
+2.34.1
 
