@@ -1,242 +1,118 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575CC1772F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 22:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC5617726
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 22:16:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j6bRLQsI"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-428405a0205so19981cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:15:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dc8Z7/ao"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d3fde109f2so10975ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:16:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705097756; x=1705702556; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oP5fGZzgpZ9SrgGeq8dIeW2tXFSQwQhUhlpKAu1DbqQ=;
-        b=j6bRLQsIMTu7MjvtVYm+17W91DlDKOc09sNbaC9blJe5qhzFrdfpTT1m9UpqhmOLLR
-         upRgU+xo+hlvbJLqxazgh/wuHcsPB4QLrlLy4WH416z4rpDQtqSC+ye+Tksw58vq/s03
-         Tw1tDb7sGYaXOF9sL6z9KrHe0Zg8xhTJy91486DJrx8SBdT7GwUw1VumiG+SRRX+EsiL
-         sByZ5aWvIGXvSw8uaf1gKd5M/AE4LNIh2jlvzQFhglOZYYVM7KP/orZuU2BFqT9K2Kt3
-         4ws/pnGNKQ8NKsUNqaxXdEr1BLepE5Jm+D1nmM3xJVBNZE/Nqw8NgUX1vh2BVG6xsqgJ
-         ONAg==
+        d=google.com; s=20230601; t=1705097814; x=1705702614; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lry9qLsx6UZvlRxob1780MirJjVFaR6R1yAoW5+x8Hk=;
+        b=dc8Z7/aomT9QRgG04selIE/s6ThMYsbvvNBGU5Rd4gt8HPEsYDKoldeJKLgGgrCPkU
+         0FCgKDB5Pp5//RhUH7qRDraAXdr66WyaAXr11Ow2eqwWk5Q0YJECKkz8GDj7LYtOcECy
+         DasoPAgX5yyklpg0F/Tpqtv5t9TVNz7SZIQ1PeZPaf10VBlJus0Y+klAya8uH1CrLk3Q
+         Y2/5YRQnRUWFX6uN93ljhRLdqIbL2pZSQWLyKX1TpIR6EBMH9ZcTz33fiJ8b4a/QPOyd
+         GBr9FAXISl3EoNmRcJWOrgh386pRz3hP3yUdAppjQuChiwgk9oei4NzMY+pGUJgc+DLb
+         gvqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705097756; x=1705702556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oP5fGZzgpZ9SrgGeq8dIeW2tXFSQwQhUhlpKAu1DbqQ=;
-        b=T8BwEHXAXxiRq4NkBTvUHZhPxqaG4m/sZnRmexjADcoyP1Uc2CLyy8TXKIKd7fBDoM
-         g+g0m18pdvNIvXTIVOLVwGXNQ1UEHhJm4nW74qkJgHQzcnLk+RKyny63NgsQpnCNiyPZ
-         ium6GL9a181f2FkBeJhElyn/kgTepLPzFob52T9qQ4Yzs0EhHhhFJCHaiEOygl9LeYsh
-         SaNdulfWdePkpQoLv33cUiHGG9g0CVWNUFAnD4VPfocMosnkukzn2VNn/M5cnYKuHj85
-         cq6riJQwkMTHR9q9CUnqbxv8SkEweAndyIbxBm8h6aoYFWAVgp2yZiiURq/uTFnFmsgH
-         9nRg==
-X-Gm-Message-State: AOJu0Yx7g9HHNZ8TBfFzFkxJp4g0+TwpurJcvTTvmfM7UOKHSKxq9ziq
-	ab3vPLougjcl20v3UcaCdGyiZq8ATLF2AynOAr9hTxeCHhE7
-X-Google-Smtp-Source: AGHT+IFFoU3MTUjYQMJj8EicBpziSzS7VeX+N1XmF+YFP6bUz5fPV3J53vSVX9kFH6naS1msjeDVFB3ysZ6ZaVwLbG8=
-X-Received: by 2002:a05:622a:174d:b0:429:cba2:8628 with SMTP id
- l13-20020a05622a174d00b00429cba28628mr312680qtk.24.1705097755996; Fri, 12 Jan
- 2024 14:15:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705097814; x=1705702614;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lry9qLsx6UZvlRxob1780MirJjVFaR6R1yAoW5+x8Hk=;
+        b=HeX+kC2736/Cn2h1bqMeWX5QX77TLLnbESPpEwF1ZD6bXGf9e9GNTkE49bA08VzHcd
+         e8W8mUlkTQB9m27mRNhnJGgMQ2M1MwbVyXVbqKNr2/mC05OrVPCGsF9tzhqaZslEaqkP
+         ShxBK5t6l9M+JUemCL88ycoE5OCdOlmBt8mqrKAoM/hDpqVT5iTTHlpSqggEq8R3Znve
+         KbkApbmXEsgcVruoBTC13rV/ytVSXZLygAPPDSyviI2TXRKk7J2cGvXiuhhCWQLvP7DK
+         oKiW7Jwcu+KAH0qb7kP9NKXEVcvKU/Kcw6wx2STBCUZTGgorDkQIWh5z7V85WC/fKvY0
+         3c1Q==
+X-Gm-Message-State: AOJu0Yx+w9WmIT2Rlny3FxrgEDuDM3n2sYalDl+qo6DCm9NfMwF9E28Z
+	9GQM6XofatUcdHWGffjIj6x9KWeIxrqc
+X-Google-Smtp-Source: AGHT+IHZxFmKAb81aZbOG13seu8/SecJ0oTiSTHCDMzD2aW6mfK8h3njEoIKTzRV2XruCxfBbfLtyQ==
+X-Received: by 2002:a17:902:f544:b0:1d5:4c40:bf01 with SMTP id h4-20020a170902f54400b001d54c40bf01mr22623plf.17.1705097813656;
+        Fri, 12 Jan 2024 14:16:53 -0800 (PST)
+Received: from google.com (78.250.82.34.bc.googleusercontent.com. [34.82.250.78])
+        by smtp.gmail.com with ESMTPSA id b13-20020a65668d000000b005cdf0b46fecsm3218397pgw.81.2024.01.12.14.16.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jan 2024 14:16:52 -0800 (PST)
+Date: Fri, 12 Jan 2024 14:16:49 -0800
+From: William McVicker <willmcvicker@google.com>
+To: Joe Perches <joe@perches.com>
+Cc: Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-kbuild@vger.kernel.org, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] checkpatch: allow build files to reference other
+ build files
+Message-ID: <ZaG6UcGSrxduqtFH@google.com>
+References: <20240112183420.1777576-1-willmcvicker@google.com>
+ <3513adb04d17156242c92121a7aec4515c39bcf5.camel@perches.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231111014933.1934562-1-davidai@google.com> <20231111014933.1934562-2-davidai@google.com>
- <20231208124503.unhka7c6ihzrrwhu@bogus>
-In-Reply-To: <20231208124503.unhka7c6ihzrrwhu@bogus>
-From: Saravana Kannan <saravanak@google.com>
-Date: Fri, 12 Jan 2024 14:15:20 -0800
-Message-ID: <CAGETcx9p8y7uN08_KyO45KygDU9i4KnU4HLd1XGhK+k0e9sahA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: cpufreq: add virtual cpufreq device
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: David Dai <davidai@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Quentin Perret <qperret@google.com>, Masami Hiramatsu <mhiramat@google.com>, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Pavan Kondeti <quic_pkondeti@quicinc.com>, 
-	Gupta Pankaj <pankaj.gupta@amd.com>, Mel Gorman <mgorman@suse.de>, kernel-team@android.com, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3513adb04d17156242c92121a7aec4515c39bcf5.camel@perches.com>
 
-On Fri, Dec 8, 2023 at 4:47=E2=80=AFAM Sudeep Holla <sudeep.holla@arm.com> =
-wrote:
->
-> On Fri, Nov 10, 2023 at 05:49:29PM -0800, David Dai wrote:
-> > Adding bindings to represent a virtual cpufreq device.
-> >
-> > Virtual machines may expose MMIO regions for a virtual cpufreq device
-> > for guests to read frequency information or to request frequency
-> > selection. The virtual cpufreq device has an individual controller for
-> > each frequency domain.
-> >
-> > Co-developed-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: David Dai <davidai@google.com>
-> > ---
-> >  .../cpufreq/qemu,cpufreq-virtual.yaml         | 99 +++++++++++++++++++
-> >  1 file changed, 99 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/cpufreq/qemu,cpuf=
-req-virtual.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/cpufreq/qemu,cpufreq-vir=
-tual.yaml b/Documentation/devicetree/bindings/cpufreq/qemu,cpufreq-virtual.=
-yaml
-> > new file mode 100644
-> > index 000000000000..16606cf1fd1a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/cpufreq/qemu,cpufreq-virtual.ya=
-ml
-> > @@ -0,0 +1,99 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/cpufreq/qemu,cpufreq-virtual.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Virtual CPUFreq
-> > +
-> > +maintainers:
-> > +  - David Dai <davidai@google.com>
-> > +  - Saravana Kannan <saravanak@google.com>
-> > +
-> > +description:
-> > +  Virtual CPUFreq is a virtualized driver in guest kernels that sends =
-frequency
-> > +  selection of its vCPUs as a hint to the host through MMIO regions. E=
-ach vCPU
-> > +  is associated with a frequency domain which can be shared with other=
- vCPUs.
-> > +  Each frequency domain has its own set of registers for frequency con=
-trols.
-> > +
->
-> Are these register controls described somewhere ? The reason I ask is we
-> should be able to have single implementation of this virtual cpufreq
-> irrespective of the firmware used(DT vs ACPI) IMO.
+On 01/12/2024, Joe Perches wrote:
+> On Fri, 2024-01-12 at 10:34 -0800, Will McVicker wrote:
+> > Add an exception to the EMBEDDED_FILENAME warning for build files. This
+> > fixes the below warnings where the Kconfig and Makefile files reference
+> > other similarly named build files.
+> > 
+> >   WARNING:EMBEDDED_FILENAME: It's generally not useful to have the
+> >   filename in the file
+> >   #24: FILE: Kconfig:34:
+> >   +source "drivers/willmcvicker/Kconfig"
+> > 
+> >   WARNING:EMBEDDED_FILENAME: It's generally not useful to have the
+> >   filename in the file
+> >   #36: FILE: Makefile:667:
+> >   +	} > Makefile
+> 
+> No need to wrap here I think.
 
-Agree that we want the same driver to work for DT and ACPI. This doc
-was written to be similar to other DT binding docs that don't describe
-the registers in the DT binding. The registers are pretty straight
-forward (can tell from the code too). One register to "set" the
-frequency and another to "get" the current frequency. We don't have
-any ACPI expertise/hardware to test this on or care about it right
-now. But David looked at some ACPI drivers and we think it should be
-trivial to add ACPI support to this. Just a different set of probe
-functions to register and populate the CPUfreq table.
+You're right. I'll update in v2.
 
->
-> > +properties:
-> > +  compatible:
-> > +    const: qemu,virtual-cpufreq
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description:
-> > +      Address and size of region containing frequency controls for eac=
-h of the
-> > +      frequency domains. Regions for each frequency domain is placed
-> > +      contiugously and contain registers for controlling DVFS(Dynamic =
-Frequency
-> > +      and Voltage) characteristics. The size of the region is proporti=
-onal to
-> > +      total number of frequency domains.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    // This example shows a two CPU configuration with a frequency dom=
-ain
-> > +    // for each CPU.
-> > +    cpus {
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <0>;
-> > +
-> > +      cpu@0 {
-> > +        compatible =3D "arm,armv8";
-> > +        device_type =3D "cpu";
-> > +        reg =3D <0x0>;
-> > +        operating-points-v2 =3D <&opp_table0>;
-> > +      };
-> > +
-> > +      cpu@1 {
-> > +        compatible =3D "arm,armv8";
-> > +        device_type =3D "cpu";
-> > +        reg =3D <0x0>;
-> > +        operating-points-v2 =3D <&opp_table1>;
-> > +      };
-> > +    };
-> > +
-> > +    opp_table0: opp-table-0 {
-> > +      compatible =3D "operating-points-v2";
-> > +      opp-shared;
-> > +
-> > +      opp1098000000 {
-> > +        opp-hz =3D /bits/ 64 <1098000000>;
-> > +        opp-level =3D <1>;
-> > +      };
-> > +
-> > +      opp1197000000 {
-> > +        opp-hz =3D /bits/ 64 <1197000000>;
-> > +        opp-level =3D <2>;
-> > +      };
-> > +    };
-> > +
-> > +    opp_table1: opp-table-1 {
-> > +      compatible =3D "operating-points-v2";
-> > +      opp-shared;
-> > +
-> > +      opp1106000000 {
-> > +        opp-hz =3D /bits/ 64 <1106000000>;
-> > +        opp-level =3D <1>;
-> > +      };
-> > +
-> > +      opp1277000000 {
-> > +        opp-hz =3D /bits/ 64 <1277000000>;
-> > +        opp-level =3D <2>;
-> > +      };
-> > +    };
-> >
->
-> I think using OPP with absolute frequencies seems not appropriate here.
-> Why can't these fetched from the registers and have some abstract values
-> instead ?
+> 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+> > @@ -3785,7 +3785,9 @@ sub process {
+> >  		}
+> >  
+> >  # check for embedded filenames
+> > -		if ($rawline =~ /^\+.*\b\Q$realfile\E\b/) {
+> > +		if ($rawline =~ /^\+.*\b\Q$realfile\E\b/ &&
+> > +			$realfile !~ /Kconfig.*/ &&
+> > +			$realfile !~ /Makefile.*/) {
+> 
+> Align to open parenthesis please.
+> It's not useful to have .* before the /
 
-Whether the frequencies are real or you want to cap it to 1024 and
-normalize it, you still need to populate the CPUfreq table. And we
-didn't want to reinvent the wheel and want to use existing means of
-representing the table in as cross-architecture as possible -- so, DT
-and ACPI should cover them all. For example, if we want to say CPU0
-and 1 for a single CPUfreq policy, that's all already doable in DT. We
-don't want to reinvent new schemes/register interfaces for that.
-
->
-> > +    soc {
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <1>;
-> > +
-> > +      cpufreq@1040000 {
-> > +        compatible =3D "qemu,virtual-cpufreq";
-> > +        reg =3D <0x1040000 0x10>;
->
-> So just 16bytes for 2 CPU system ? How does the register layout look like=
- ?
-> I assume just 4 x 32bit registers: 2 for reading and 2 for setting the
-> frequencies ?
-
-Yup. 2 registers per CPU frequency domain or policy.
+I was following other references in this file, but looks like you're right that
+it's not needed. Your recommendation passed the tests I have. So I'll update
+the regex in v2.
 
 Thanks,
-Saravana
+Will
+
+> 
+> So perhaps better to be
+> 
+> 		if ($rawline =~ /^\+.*\b\Q$realfile\E\b/ &&
+> 		    $realfile !~ /(?:Kconfig|Makefile)/) {
+> 	
+> >  			WARN("EMBEDDED_FILENAME",
+> >  			     "It's generally not useful to have the filename in the file\n" . $herecurr);
+> >  		}
+> 
