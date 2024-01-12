@@ -1,170 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669CE6EB49
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 15:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B23A6DD1D;
+	Fri, 12 Jan 2024 15:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oBvr6vkO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705072661; x=1736608661;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=D9C510WNU5d4w7UxKVNoZXKZjwNy6NLOkMCSWBm+IHk=;
-  b=oBvr6vkODJI1sfQGjOJHBezT5VqvXRy3c3P1HnEOjjO4QHt7NSQKSXeZ
-   AN2U6ajWYwag62MWtEYY/TDkJZMpJyIscPVAxLzZZo4UjjziFAnBWOtqN
-   X9oU2NbiasVlp7Yypvzdnb0/SU37GvEK3wKTu7TSQAZikkKU8JYpRvTNw
-   pqE0HOO10UKahic269AtvvthGjaT+x03gL2a4zRZ3FqYJSOdPPmQsC0uB
-   rfffevVWV3QGoF0k6FOjbv8y4JvQWJpxQ330+i/tLZJ1RIiamGCDywGYy
-   criCjc7hVcePHVEIrw52174uq4J8+Rr4vgHVbxzmATf02yeGpZ2YmH7Wv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="6557020"
-X-IronPort-AV: E=Sophos;i="6.04,189,1695711600"; 
-   d="scan'208";a="6557020"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 07:17:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="786372788"
-X-IronPort-AV: E=Sophos;i="6.04,189,1695711600"; 
-   d="scan'208";a="786372788"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Jan 2024 07:17:39 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rOJHt-0009ba-0M;
-	Fri, 12 Jan 2024 15:17:37 +0000
-Date: Fri, 12 Jan 2024 23:16:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: drivers/scsi/mpt3sas/mpt3sas_base.c:3135:49: warning: '-mq-poll'
- directive output may be truncated writing 8 bytes into a region of size
- between 6 and 31
-Message-ID: <202401122336.ZuzNmzYi-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpIAopN0"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40e69b314e0so696495e9.1;
+        Fri, 12 Jan 2024 07:20:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705072832; x=1705677632; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uoyz0fX05VFZUA0YqL9VDmTIjZubn+1o1Tubn/qOGIQ=;
+        b=WpIAopN0Hb9CXQDrliZnqkD+jzNE8pBnM8lIMH5kkMt5PgP5gFQkMpQ91rajY3mO+Q
+         unVQ6ZHjmwETUTltJ2T2KfAkvvD/1L1TXDNlKAUC8kImIYRqRq2xoWB7a/pMTGRq6vhT
+         4VIz9FnhkgeFSG0+Pm/g9OWMUrlJoq5ZmRA7U2Odtble+D6x915C40q0H7HXpFgxJaII
+         HON5yGYhzvSomcjHpMtaMyvjX2vAAfItwo7VcZw/kaT57C7I9WU+TMJpBfoclZfgqibu
+         yH0SZmvS7knHy9bQN98ndMxGTeQnWH6otfT2DTmhhriB4s5pVbP5Ujmo6WEcxBozsLP/
+         sewQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705072832; x=1705677632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Uoyz0fX05VFZUA0YqL9VDmTIjZubn+1o1Tubn/qOGIQ=;
+        b=m3/NVusqORLqnIq/Lwwj+GjwXDZNuyj+3RcoO/dXxIn7RUUHvIFORoxcSpLN75nPPu
+         FYM8r9QtWHtKWUN3LSZtsAcaHPIobiMXueyX7P6n6dPAYRUnNsBA6hhBNq5ODGYmUrMT
+         hhHCguzXYigbZBCdK1L8cjgqeo7wDvgf3IRCOcrSZVSq1E6ETu9UZ1crAR2NerFXb6T0
+         qVxZAf/2BiDJwQKROYejnbVqQpjZAhtIKkw+pA8ZegFUT0MTmw085uUfznyvqqnAcrkQ
+         FMePiWXPAHrzzgdmDgfolXA2i98pXHoPR83DToHD1LLdY2ueQq4PI4+FK5c6zZoIxwhK
+         pXgw==
+X-Gm-Message-State: AOJu0Yw+f2va5eMw+kPUq9Lo3bcWygTzqhszOru9R/bORPZaomngC9LX
+	C5JKINdFB7LpJt13+IFijxj3vIKkkw==
+X-Google-Smtp-Source: AGHT+IHHZeFyMpKhH/9NZUPYGoPS59noDveXdZGapwC4YE9+IpLbuXeeZXS1ZGK3B7Qz/X6uuuEBfw==
+X-Received: by 2002:a05:600c:3381:b0:40e:427d:4b02 with SMTP id o1-20020a05600c338100b0040e427d4b02mr960326wmp.67.1705072832187;
+        Fri, 12 Jan 2024 07:20:32 -0800 (PST)
+Received: from staff-net-cx-3510.intern.ethz.ch (2001-67c-10ec-5784-8000--16b.net6.ethz.ch. [2001:67c:10ec:5784:8000::16b])
+        by smtp.gmail.com with ESMTPSA id o23-20020a05600c511700b0040e4c1b0c14sm10157728wms.34.2024.01.12.07.20.31
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 12 Jan 2024 07:20:31 -0800 (PST)
+From: Hao Sun <sunhao.th@gmail.com>
+To: bpf@vger.kernel.org
+Cc: willemb@google.com,
+	ast@kernel.org,
+	andrii@kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	linux-kernel@vger.kernel.org,
+	Hao Sun <sunhao.th@gmail.com>
+Subject: [PATCH v3 1/2] bpf: Reject variable offset alu on PTR_TO_FLOW_KEYS
+Date: Fri, 12 Jan 2024 16:20:10 +0100
+Message-ID: <20240112152011.6264-1-sunhao.th@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   70d201a40823acba23899342d62bc2644051ad2e
-commit: 432bc7caef4eaacc1101ee2569bb870bdfeed7ce scsi: mpt3sas: Add io_uring iopoll support
-date:   2 years, 5 months ago
-config: x86_64-randconfig-002-20240105 (https://download.01.org/0day-ci/archive/20240112/202401122336.ZuzNmzYi-lkp@intel.com/config)
-compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240112/202401122336.ZuzNmzYi-lkp@intel.com/reproduce)
+For PTR_TO_FLOW_KEYS, check_flow_keys_access() only uses fixed off
+for validation. However, variable offset ptr alu is not prohibited
+for this ptr kind. So the variable offset is not checked.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401122336.ZuzNmzYi-lkp@intel.com/
+The following prog is accepted:
+func#0 @0
+0: R1=ctx() R10=fp0
+0: (bf) r6 = r1                       ; R1=ctx() R6_w=ctx()
+1: (79) r7 = *(u64 *)(r6 +144)        ; R6_w=ctx() R7_w=flow_keys()
+2: (b7) r8 = 1024                     ; R8_w=1024
+3: (37) r8 /= 1                       ; R8_w=scalar()
+4: (57) r8 &= 1024                    ; R8_w=scalar(smin=smin32=0,
+smax=umax=smax32=umax32=1024,var_off=(0x0; 0x400))
+5: (0f) r7 += r8
+mark_precise: frame0: last_idx 5 first_idx 0 subseq_idx -1
+mark_precise: frame0: regs=r8 stack= before 4: (57) r8 &= 1024
+mark_precise: frame0: regs=r8 stack= before 3: (37) r8 /= 1
+mark_precise: frame0: regs=r8 stack= before 2: (b7) r8 = 1024
+6: R7_w=flow_keys(smin=smin32=0,smax=umax=smax32=umax32=1024,var_off
+=(0x0; 0x400)) R8_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=1024,
+var_off=(0x0; 0x400))
+6: (79) r0 = *(u64 *)(r7 +0)          ; R0_w=scalar()
+7: (95) exit
 
-All warnings (new ones prefixed by >>):
+This prog loads flow_keys to r7, and adds the variable offset r8
+to r7, and finally causes out-of-bounds access:
 
-   drivers/scsi/mpt3sas/mpt3sas_base.c: In function '_base_request_irq':
-   drivers/scsi/mpt3sas/mpt3sas_base.c:3144:54: warning: '%d' directive output may be truncated writing between 1 and 3 bytes into a region of size between 1 and 26 [-Wformat-truncation=]
-    3144 |   snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d-msix%d",
-         |                                                      ^~
-   drivers/scsi/mpt3sas/mpt3sas_base.c:3144:44: note: directive argument in the range [0, 255]
-    3144 |   snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d-msix%d",
-         |                                            ^~~~~~~~~~~~~
-   drivers/scsi/mpt3sas/mpt3sas_base.c:3144:3: note: 'snprintf' output between 8 and 35 bytes into a destination of size 32
-    3144 |   snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d-msix%d",
-         |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    3145 |       ioc->driver_name, ioc->id, index);
-         |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/scsi/mpt3sas/mpt3sas_base.c:3135:49: warning: '-mq-poll' directive output may be truncated writing 8 bytes into a region of size between 6 and 31 [-Wformat-truncation=]
-    3135 |   snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d-mq-poll%d",
-         |                                                 ^~~~~~~~
-   drivers/scsi/mpt3sas/mpt3sas_base.c:3135:44: note: directive argument in the range [-255, 255]
-    3135 |   snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d-mq-poll%d",
-         |                                            ^~~~~~~~~~~~~~~~
-   drivers/scsi/mpt3sas/mpt3sas_base.c:3135:3: note: 'snprintf' output between 11 and 39 bytes into a destination of size 32
-    3135 |   snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d-mq-poll%d",
-         |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    3136 |       ioc->driver_name, ioc->id, qid);
-         |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/scsi/mpt3sas/mpt3sas_base.c: In function 'mpt3sas_base_start_watchdog':
-   drivers/scsi/mpt3sas/mpt3sas_base.c:831:50: warning: '%s' directive output may be truncated writing up to 23 bytes into a region of size 15 [-Wformat-truncation=]
-     831 |      sizeof(ioc->fault_reset_work_q_name), "poll_%s%d_status",
-         |                                                  ^~
-   drivers/scsi/mpt3sas/mpt3sas_base.c:831:44: note: directive argument in the range [0, 255]
-     831 |      sizeof(ioc->fault_reset_work_q_name), "poll_%s%d_status",
-         |                                            ^~~~~~~~~~~~~~~~~~
-   drivers/scsi/mpt3sas/mpt3sas_base.c:830:2: note: 'snprintf' output between 14 and 39 bytes into a destination of size 20
-     830 |  snprintf(ioc->fault_reset_work_q_name,
-         |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     831 |      sizeof(ioc->fault_reset_work_q_name), "poll_%s%d_status",
-         |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     832 |      ioc->driver_name, ioc->id);
-         |      ~~~~~~~~~~~~~~~~~~~~~~~~~~
+BUG: unable to handle page fault for address: ffffc90014c80038
+...
+Call Trace:
+ <TASK>
+ bpf_dispatcher_nop_func include/linux/bpf.h:1231 [inline]
+ __bpf_prog_run include/linux/filter.h:651 [inline]
+ bpf_prog_run include/linux/filter.h:658 [inline]
+ bpf_prog_run_pin_on_cpu include/linux/filter.h:675 [inline]
+ bpf_flow_dissect+0x15f/0x350 net/core/flow_dissector.c:991
+ bpf_prog_test_run_flow_dissector+0x39d/0x620 net/bpf/test_run.c:1359
+ bpf_prog_test_run kernel/bpf/syscall.c:4107 [inline]
+ __sys_bpf+0xf8f/0x4560 kernel/bpf/syscall.c:5475
+ __do_sys_bpf kernel/bpf/syscall.c:5561 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5559 [inline]
+ __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:5559
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x3f/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
+Fix this by rejecting ptr alu with variable offset on flow_keys.
+Applying the patch makes the program rejected with "R7 pointer
+arithmetic on flow_keys prohibited"
 
-vim +3135 drivers/scsi/mpt3sas/mpt3sas_base.c
+Fixes: d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
+Signed-off-by: Hao Sun <sunhao.th@gmail.com>
+---
+ kernel/bpf/verifier.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-  3107	
-  3108	/**
-  3109	 * _base_request_irq - request irq
-  3110	 * @ioc: per adapter object
-  3111	 * @index: msix index into vector table
-  3112	 *
-  3113	 * Inserting respective reply_queue into the list.
-  3114	 */
-  3115	static int
-  3116	_base_request_irq(struct MPT3SAS_ADAPTER *ioc, u8 index)
-  3117	{
-  3118		struct pci_dev *pdev = ioc->pdev;
-  3119		struct adapter_reply_queue *reply_q;
-  3120		int r, qid;
-  3121	
-  3122		reply_q =  kzalloc(sizeof(struct adapter_reply_queue), GFP_KERNEL);
-  3123		if (!reply_q) {
-  3124			ioc_err(ioc, "unable to allocate memory %zu!\n",
-  3125				sizeof(struct adapter_reply_queue));
-  3126			return -ENOMEM;
-  3127		}
-  3128		reply_q->ioc = ioc;
-  3129		reply_q->msix_index = index;
-  3130	
-  3131		atomic_set(&reply_q->busy, 0);
-  3132	
-  3133		if (index >= ioc->iopoll_q_start_index) {
-  3134			qid = index - ioc->iopoll_q_start_index;
-> 3135			snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d-mq-poll%d",
-  3136			    ioc->driver_name, ioc->id, qid);
-  3137			reply_q->is_iouring_poll_q = 1;
-  3138			ioc->io_uring_poll_queues[qid].reply_q = reply_q;
-  3139			goto out;
-  3140		}
-  3141	
-  3142	
-  3143		if (ioc->msix_enable)
-  3144			snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d-msix%d",
-  3145			    ioc->driver_name, ioc->id, index);
-  3146		else
-  3147			snprintf(reply_q->name, MPT_NAME_LENGTH, "%s%d",
-  3148			    ioc->driver_name, ioc->id);
-  3149		r = request_irq(pci_irq_vector(pdev, index), _base_interrupt,
-  3150				IRQF_SHARED, reply_q->name, reply_q);
-  3151		if (r) {
-  3152			pr_err("%s: unable to allocate interrupt %d!\n",
-  3153			       reply_q->name, pci_irq_vector(pdev, index));
-  3154			kfree(reply_q);
-  3155			return -EBUSY;
-  3156		}
-  3157	out:
-  3158		INIT_LIST_HEAD(&reply_q->list);
-  3159		list_add_tail(&reply_q->list, &ioc->reply_queue_list);
-  3160		return 0;
-  3161	}
-  3162	
-
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index adbf330d364b..65f598694d55 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -12826,6 +12826,10 @@ static int adjust_ptr_min_max_vals(struct bpf_verifier_env *env,
+ 	}
+ 
+ 	switch (base_type(ptr_reg->type)) {
++	case PTR_TO_FLOW_KEYS:
++		if (known)
++			break;
++		fallthrough;
+ 	case CONST_PTR_TO_MAP:
+ 		/* smin_val represents the known value */
+ 		if (known && smin_val == 0 && opcode == BPF_ADD)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
