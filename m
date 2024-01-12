@@ -1,176 +1,151 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB6822637;
-	Fri, 12 Jan 2024 17:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goldelico.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A90E175A3;
+	Fri, 12 Jan 2024 17:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="jL32j5Fw";
-	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="pHXvjyM6"
-ARC-Seal: i=1; a=rsa-sha256; t=1705080852; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=W3GWy0FmIaj8bnyQOLBzXX83ySwtjGcplbG/RlF6oXx9qygnBd9EMgXtiadN4VCuYL
-    Vzb9K/1Q4zEh0B7XcKv8F2Sx4FijwnMPXysHfKJDCuQG0VCoTY5bqyISD5X10Sklu//B
-    6VkzB1eAyWBDr/bYsxdCjCk7edGU3pgaP2hEzvpyZbAxOha7gyG3pLDtiV5WNhRfEYbL
-    TDD/pLVM6nJvYv+XcCrZwcaohlv+M2+F2XzRIFeiekgqkBmiLXVXMh3jQ6/CCRVmglED
-    VgmepBQlqLq+ZF6ebJlWo7K1uGUcBpy8sQQyJjroV+U5685/yWLccmDVI8r77ioDgMW0
-    JoMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1705080852;
-    s=strato-dkim-0002; d=strato.com;
-    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=x1r68xA9wRZ4ANIBi9hA9+/f2i2/5reMcctFU/rKIWM=;
-    b=VDcJUmHB6n+dNWMqrBgIeSm07uZuiZ3Lo4YHM+4lHTEf/fShWCuTsnhOvGLLQPDnuX
-    DVAPLYAUhm05iR1fke6fvyGt2yjAOY9M0JpWsM0G7ZDb7NOVtKdS5okSvg27EKDAjxe4
-    EZA65KUjsuxqrlxq3A4GvhvmCzWHoRqtwrIEFgzCZ+5/k2+oHOIrVt8PoLSJaD5ZuoIt
-    SkIGnPo+f/Kh0VfwAACyGqpv0UWlsRVd0cuYtQVx3MTV8cVZA1NPKmpaCAhndTK188ip
-    jcc0l/OXnhCOTjIjugpKHKxL3l3jO3UA4Ps7c/ux8panbv6FBehkIg3hmwU9B0kTY7rX
-    EJQQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1705080852;
-    s=strato-dkim-0002; d=goldelico.com;
-    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=x1r68xA9wRZ4ANIBi9hA9+/f2i2/5reMcctFU/rKIWM=;
-    b=jL32j5FwaeApRttmOhW1Gu7gSfqOtYGFDHV/dfmiVwk6lv/rGq6WkiuBz82beG8UnO
-    swrsv0PhvQYaN21JZmxO2+xU2OKEIDHGCNxj9juFGzg+Ldkd0mhSBo97APtDJ6U+LRqu
-    7blY6TeqlvdGLoENvx22BbsH/dahwDdBTiZ9BLCKDH+ergN8Y0RIkiA25I65IuRw4QpB
-    qzlOiNthWw+WTgSS1LzxBVQAwVwPewl9NQf1D7CfvSzknu8aEGQJDyWjtSAjV3d/ogkE
-    eT3drVtVQwHCoz/BHuQVEe8SLaX+rax4SpDu49ZC3/DEwQeCoUx/w0zBh8zzKKg1e7bO
-    eWKg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1705080852;
-    s=strato-dkim-0003; d=goldelico.com;
-    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=x1r68xA9wRZ4ANIBi9hA9+/f2i2/5reMcctFU/rKIWM=;
-    b=pHXvjyM6SXoq2JN88aS5Df7FeZdKXhVFedn7SwZ4nyqUqIMi1EYmq65gduamPGp39D
-    E3e2r+2FnzciMSGM/LCQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Apz9PSN6LgsXcGZjDY="
-Received: from smtpclient.apple
-    by smtp.strato.de (RZmta 49.10.2 DYNA|AUTH)
-    with ESMTPSA id dbe64400CHY9PpN
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-	(Client did not present a certificate);
-    Fri, 12 Jan 2024 18:34:09 +0100 (CET)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hNvUKiVt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yhRGzsDZ"
+Date: Fri, 12 Jan 2024 18:41:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705081299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MSerJ1jiXzUOejSZwcpJCzNYxLNjbdJRxkU6ajmn+qM=;
+	b=hNvUKiVtIx2Q8yYcInszUSrifOyzrx1yC7DMnctpPd1RCvkGGCe87JwyVd6Df1OCHJG3Jo
+	WKJcVpew98o7k6XsyhsU6Up9WopBVpBHCRsEueszlWbuxy6paLWKV07AjjU7PecUHogMU5
+	xsNi+qFd5KGXbU0uAaFzbVL94GYssifSnzLpBMCzARK2EMzzan98bxQjZy2a1Wu9D6jSGP
+	wc7RsQTbrIIiuZ+KDUrf7924KkROskmvQ57YP7Wu2jI8E8VFs2OUdWAwZZu3VMtw1/HFuU
+	PA0NUqhwLDlghjjJuTwc4vqpQ+b7f3NZFPk+k0mIi5Ijnt2Vc6LIl6DbLyhhGQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705081299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MSerJ1jiXzUOejSZwcpJCzNYxLNjbdJRxkU6ajmn+qM=;
+	b=yhRGzsDZ2lGrIgwoEKmPL7pgDjALimrtmgPXUY7K98e5nSXwOUzgXaLDYZAtD2grtVHq++
+	Q+A6E5QAfIWlXwCw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Network Development <netdev@vger.kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Cong Wang <xiyou.wangcong@gmail.com>, Hao Luo <haoluo@google.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Ronak Doshi <doshir@vmware.com>, Song Liu <song@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next 15/24] net: Use nested-BH locking for XDP
+ redirect.
+Message-ID: <20240112174138.tMmUs11o@linutronix.de>
+References: <20231215171020.687342-1-bigeasy@linutronix.de>
+ <20231215171020.687342-16-bigeasy@linutronix.de>
+ <CAADnVQKJBpvfyvmgM29FLv+KpLwBBRggXWzwKzaCT9U-4bgxjA@mail.gmail.com>
+ <87r0iw524h.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
-Subject: Re: [PATCH RFC v2 04/11] ARM: dts: omap4: Add device tree entry for
- SGX GPU
-From: H. Nikolaus Schaller <hns@goldelico.com>
-In-Reply-To: <20240108183302.255055-5-afd@ti.com>
-Date: Fri, 12 Jan 2024 18:33:58 +0100
-Cc: Frank Binns <frank.binns@imgtec.com>,
- Donald Robson <donald.robson@imgtec.com>,
- Matt Coster <matt.coster@imgtec.com>,
- Adam Ford <aford173@gmail.com>,
- Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
- Tony Lindgren <tony@atomide.com>,
- Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>,
- Tero Kristo <kristo@kernel.org>,
- Paul Cercueil <paul@crapouillou.net>,
- dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev,
- linux-omap@vger.kernel.org,
- linux-mips@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <122DC5ED-2AA7-46A0-845F-083922458385@goldelico.com>
-References: <20240108183302.255055-1-afd@ti.com>
- <20240108183302.255055-5-afd@ti.com>
-To: Andrew Davis <afd@ti.com>
-X-Mailer: Apple Mail (2.3774.300.61.1.2)
+In-Reply-To: <87r0iw524h.fsf@toke.dk>
 
-Hi,
-I just comment on this example, but it applies almost the same for all =
-other .dtsi changes.
-
-> Am 08.01.2024 um 19:32 schrieb Andrew Davis <afd@ti.com>:
+On 2024-01-04 20:29:02 [+0100], Toke H=C3=B8iland-J=C3=B8rgensen wrote:
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 >=20
-> Add SGX GPU device entry to base OMAP4 dtsi file.
+> >> @@ -3925,6 +3926,7 @@ struct sk_buff *tcf_qevent_handle(struct tcf_qev=
+ent *qe, struct Qdisc *sch, stru
+> >>
+> >>         fl =3D rcu_dereference_bh(qe->filter_chain);
+> >>
+> >> +       guard(local_lock_nested_bh)(&bpf_run_lock.redirect_lock);
+> >>         switch (tcf_classify(skb, NULL, fl, &cl_res, false)) {
+> >>         case TC_ACT_SHOT:
+> >>                 qdisc_qstats_drop(sch);
+> >
+> > Here and in all other places this patch adds locks that
+> > will kill performance of XDP, tcx and everything else in networking.
+> >
+> > I'm surprised Jesper and other folks are not jumping in with nacks.
+> > We measure performance in nanoseconds here.
+> > Extra lock is no go.
+> > Please find a different way without ruining performance.
 >=20
-> Signed-off-by: Andrew Davis <afd@ti.com>
-> ---
-> arch/arm/boot/dts/ti/omap/omap4.dtsi | 9 +++++----
-> 1 file changed, 5 insertions(+), 4 deletions(-)
+> I'll add that while all this compiles out as no-ops on !PREEMPT_RT, I do
+> believe there are people who are using XDP on PREEMPT_RT kernels and
+> still expect decent performance. And to achieve that it is absolutely
+> imperative that we can amortise expensive operations (such as locking)
+> over multiple packets.
 >=20
-> diff --git a/arch/arm/boot/dts/ti/omap/omap4.dtsi =
-b/arch/arm/boot/dts/ti/omap/omap4.dtsi
-> index 2bbff9032be3e..559b2bfe4ca7c 100644
-> --- a/arch/arm/boot/dts/ti/omap/omap4.dtsi
-> +++ b/arch/arm/boot/dts/ti/omap/omap4.dtsi
-> @@ -501,10 +501,11 @@ sgx_module: target-module@56000000 {
-> #size-cells =3D <1>;
-> ranges =3D <0 0x56000000 0x2000000>;
->=20
-> - /*
-> - * Closed source PowerVR driver, no child device
-> - * binding or driver in mainline
-> - */
-> + gpu@0 {
+> I realise there's a fundamental trade-off between the amount of
+> amortisation and the latency hit that we take from holding locks for
+> longer, but tuning the batch size (while still keeping some amount of
+> batching) may be a way forward? I suppose Jakub's suggestion in the
+> other part of the thread, of putting the locks around napi->poll(), is a
+> step towards something like this.
 
-I wonder why we don't add a "gpu:" label here.
+The RT requirements are usually different. Networking as in CAN might be
+important but Ethernet could only used for remote communication and so
+"not" important. People complained that they need to wait for Ethernet
+to be done until the CAN packet can be injected into the stack.
+With that expectation you would like to pause Ethernet immediately and
+switch over the CAN interrupt thread.
 
-Almost all other subsystem nodes have one (e.g. emif:, aes:, dss:, dsi:, =
-hdmi:, etc.),
-obviously for convenience when using a .dtsi file.
+But if someone managed to setup XDP then it is likely to be important.
+With RT traffic it is usually not the throughput that matters but the
+latency. You are likely in the position to receive a packet, say every
+1ms, and need to respond immediately. XDP would be used to inspect the
+packet and either hand it over to the stack or process it.
 
-It would allow a board-specific DTS to easily add status =3D "disabled" =
-to avoid driver
-probing or disabling the GPU (e.g. if there is no display).
+I expected the lock operation (under RT) to always succeeds and not
+cause any delay because it should not be contended. It should only
+block if something with higher priority preempted the current interrupt
+thread _and_ also happen to use XDP on the same CPU. In that case (XDP
+is needed) it would flush the current user out of the locked section
+before the higher-prio thread could take over. Doing bulk and allowing
+the low-priority thread to complete would delay the high-priority
+thread. Maybe I am too pessimistic here and having two XDP programs on
+one CPU is unlikely to happen.
 
-> + compatible =3D "ti,omap4430-gpu", "img,powervr-sgx540";
+Adding the lock on per-NAPI basis would allow to batch packets.
+Acquiring the lock only if XDP is supported would not block the CAN
+drivers since they dont't support XDP. But sounds like a hack.
 
-It still appears to me that the "img,powervr-sgx540" (or similar) entry =
-is redundant
-information.
+Daniel said netkit doesn't need this locking because it is not
+supporting this redirect and it made me think. Would it work to make
+the redirect structures part of the bpf_prog-structure instead of
+per-CPU? My understanding is that eBPF's programs data structures are
+part of it and contain locking allowing one eBPF program preempt
+another one.
+Having the redirect structures part of the program would obsolete
+locking. Do I miss anything?
 
-I have experimentally updated our openpvrsgx driver and we do not have =
-any use for
-this information (at least in the kernel driver):
+> -Toke
 
-=
-https://github.com/goldelico/letux-kernel/commit/f2f7cb3b858ef255f52f2b82a=
-8bb34c047337afe
-
-It shows how easy it is to derive the sgx version and revision number if =
-we ever
-need it inside the driver.
-
-So if you want to keep a reference to powervr, it would suffice to have
-
-> + compatible =3D "ti,omap4430-gpu", "img,powervr-sgx";
-
-Otherwise your device tree entries compile fine and seem to work (at =
-least in
-a cursory test on PandaBoard ES).
-
-> + reg =3D <0x0 0x2000000>; /* 32MB */
-> + interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> + };
-> };
-
-BR and thanks,
-Nikolaus=
+Sebastian
