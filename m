@@ -1,53 +1,47 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B18042A87
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 06:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2C51A72F
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 06:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IrjQh1wM"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3374eb61cbcso5376880f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 22:56:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705042588; x=1705647388; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9prXoTbAmkoR0CZO9d0SNqMhaDHqa31k4/WzflBN+f4=;
-        b=IrjQh1wMctaMiqlMKDXXjr2CzSqAu3HFdYdyugt2MgNsDOmB0LNVorGBlYIFtLHqP5
-         UD+lib05Tcym45i+C6gOKXF7WYMiZGQJVOAp0zzh+hnEb1O5Oo5O/KZW6CF8y4LYDmH5
-         5M8xjEPAtIysW4FxEk/jQ2QKRXCcj26NxNX44hsuxzt6lgnc5SIbsnBvi1aUGWCDaTAx
-         IEvGwEHyYCoF4uGpln/xlvy4BmkF6UbOrr+mky2xjaa0KDY9fOL6wTN6uWsNybXXPlI/
-         A6aT8o9hihZzds2B3MfbMiIvn8P0/iQisYnaU+7Gsnmjcgr84GRiWR6lap0P4GDn+i+3
-         4Hdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705042588; x=1705647388;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9prXoTbAmkoR0CZO9d0SNqMhaDHqa31k4/WzflBN+f4=;
-        b=wcdhpdwxAfrgbbC5GzRALup7p47QttWQnKQ4mQ6OF8UscZy8oezPsfigM7fp96Jkoe
-         uu7qZNOZy9eR20YTu8PE+ggTddEUjMRAc/2aNklVDv5Y2UMWongfIeVh3Cur9WrmBPi+
-         yw7fMjU5GeLRaYsUzT2S1V9nrZNPfp52w5H+m1CajDfFRd54DKJ3DA6kAuEjaGHrk0yH
-         ezUeXlwdOI51CqD3qNFR4EXjBB1dUqBQ1ScQYJ2Qe2e4dD+1No/Mx1qPJGL1UTJyI7hL
-         oowAh2kL3n3745Gj3df7J0ueA9eNxe1SzhdpCamc3rwaXBHULZQKDGeMHX+0ZI/RmxGJ
-         K+xg==
-X-Gm-Message-State: AOJu0YyZqjsA9adfYRMhIgc6TYZx7oQInTkWr8ygP7FNz0PKhv3rQ6P/
-	LDfQf+aSKCdomsVrx4u1T1iZGm6q58b32Q==
-X-Google-Smtp-Source: AGHT+IH6gsHGVIynSC4gedvLtDCTO7G8G5VIZut2PGL0yCvFoPazVS5ii5HisQkORg+7Nmq9Qnuw5Q==
-X-Received: by 2002:a05:6000:141:b0:337:404b:1d67 with SMTP id r1-20020a056000014100b00337404b1d67mr447985wrx.69.1705042588682;
-        Thu, 11 Jan 2024 22:56:28 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id a7-20020adff7c7000000b0033660f75d08sm2983461wrq.116.2024.01.11.22.56.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 22:56:28 -0800 (PST)
-Date: Fri, 12 Jan 2024 09:56:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Hans de Goede <hdegoede@redhat.com>, Henry Shi <henryshi2018@gmail.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] platform/x86: silicom-platform: clean up a check
-Message-ID: <a58bffb7-0a8b-4195-b273-f65a188ace7b@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jXu6qLXF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705042702; x=1736578702;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=A4Uy7Ajsj6SUOi6nMD1J8RWRv90SkpcVxs+drA+sxhY=;
+  b=jXu6qLXFxYzLupPKjD57nE36XaYzHS46zU1yPqwFwpFJ22o7OI1C8XVR
+   AHcYxKSbtBe+1K3kN1U9lcRftqVX0tL9fAp4BbJ6nmLdyAADvA7FPPjNr
+   WNbEOe8hZeTIF0uHFRfWdnq608u4j60haHATH8tkZgcDxiRk7Sk20Ra19
+   +nMjjFcFjsAtyr7VTNOTbd7rvepxZ6YIzVSwrreEazZAw8bhAp1Phew7m
+   rXZN3nCf5YCdy34WLxTz5mPvKc0HhrKFSccZB66QgWWNnXib0A6ieNi2G
+   uI0L4cT+5fKlbavsSzeP4kVrysyvJzwpvioaMiHv2bJvaiH4kfFuslLMh
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="5822853"
+X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
+   d="scan'208";a="5822853"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 22:58:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
+   d="scan'208";a="24910675"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 11 Jan 2024 22:58:18 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rOBUe-0009BA-2S;
+	Fri, 12 Jan 2024 06:58:16 +0000
+Date: Fri, 12 Jan 2024 14:57:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+	Sami Tolvanen <samitolvanen@google.com>
+Subject: WARNING: modpost: vmlinux: section mismatch in reference:
+ __apply_fineibt+0x542 (section: .text) -> poison_endbr (section: .init.text)
+Message-ID: <202401121450.TRN6qxCa-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,35 +50,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
 
-The error message in this code can't be reached because value is either
-zero or non-zero.  There isn't a third option.  Really, it's nicer to
-write this as a one liner.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   70d201a40823acba23899342d62bc2644051ad2e
+commit: 04505bbbbb15da950ea0239e328a76a3ad2376e0 x86/fineibt: Poison ENDBR at +0
+date:   6 months ago
+config: x86_64-buildonly-randconfig-003-20240112 (https://download.01.org/0day-ci/archive/20240112/202401121450.TRN6qxCa-lkp@intel.com/config)
+compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240112/202401121450.TRN6qxCa-lkp@intel.com/reproduce)
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/platform/x86/silicom-platform.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401121450.TRN6qxCa-lkp@intel.com/
 
-diff --git a/drivers/platform/x86/silicom-platform.c b/drivers/platform/x86/silicom-platform.c
-index 6ce43ccb3112..c0910af16a3a 100644
---- a/drivers/platform/x86/silicom-platform.c
-+++ b/drivers/platform/x86/silicom-platform.c
-@@ -256,12 +256,7 @@ static void silicom_gpio_set(struct gpio_chip *gc,
- 	if (direction == GPIO_LINE_DIRECTION_IN)
- 		return;
- 
--	if (value)
--		silicom_mec_port_set(channel, 0);
--	else if (value == 0)
--		silicom_mec_port_set(channel, 1);
--	else
--		pr_err("Wrong argument value: %d\n", value);
-+	silicom_mec_port_set(channel, !value);
- }
- 
- static int silicom_gpio_direction_output(struct gpio_chip *gc,
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in vmlinux.o
+WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x12f (section: .text) -> text_poke_early (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x1d5 (section: .text) -> text_poke_early (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x2ec (section: .text) -> text_poke_early (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x3aa (section: .text) -> text_poke_early (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x40b (section: .text) -> text_poke_early (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x42b (section: .text) -> text_poke_early (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x4e5 (section: .text) -> text_poke_early (section: .init.text)
+WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x50c (section: .text) -> text_poke_early (section: .init.text)
+>> WARNING: modpost: vmlinux: section mismatch in reference: __apply_fineibt+0x542 (section: .text) -> poison_endbr (section: .init.text)
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
