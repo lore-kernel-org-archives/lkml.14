@@ -1,103 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CE517C78;
-	Fri, 12 Jan 2024 16:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A081757F;
+	Fri, 12 Jan 2024 16:58:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sryWrizc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7067AC43390;
-	Fri, 12 Jan 2024 16:58:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/it6ZRJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5983C433F1;
+	Fri, 12 Jan 2024 16:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705078689;
-	bh=R017C35XZgULOTl/xha7MyuS1RZo/GZh2uHIhJvPTbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sryWrizcLFiIRtjL2T2O6J7y4Xf1KNRTjVhxcm6onbBPZtNH00DpE2nWImgF/qG90
-	 Ez4H++i94x6WyBeSN83a+c5wPpBwvKUtxeeb/jd+RGn5zmF2Tf0D/iquqSX4iJns7M
-	 /wMfqFRKTi9z77H8BuEOmD18h4fE5G0KOBhZqRt86tmOg1gcouFERrO3ihwf51HSnx
-	 QVjcn8ILDd40b+hv9NeRCMs9P6MmY/rDOpj6JJUz6ESYxRHnLJlK49B/5bafsjOia3
-	 JUNWm5H6MniZio06IaTuyedkZ8zoObTyH4H1orTW07gFL7FyWD0iBZE02oA2/8x/f1
-	 6marEdWt9+q6A==
-Date: Fri, 12 Jan 2024 16:58:04 +0000
-From: Conor Dooley <conor@kernel.org>
-To: KyuHyuk Lee <lee@kyuhyuk.kr>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Jagan Teki <jagan@edgeble.ai>, Tianling Shen <cnsztl@gmail.com>,
-	Andy Yan <andyshrk@163.com>, Ondrej Jirman <megi@xff.cz>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: rockchip: Add Hardkernel ODROID-M1S
- board
-Message-ID: <20240112-granola-underline-36a525dc789c@spud>
-References: <20240112134230.28055-1-lee@kyuhyuk.kr>
+	s=k20201202; t=1705078712;
+	bh=6BMDfJ5c63lfLV+AgM5FqKmFO/iabKogwK/rRP83CI8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=S/it6ZRJzqE59hXdX3tLslvvnHCf7nPCJEBt1pv9HEHDmtmqvX9FY4MBiOp9ROPpH
+	 URStaObMvnyhJRqYcWfOmofllck+lV5RyS4z3LkMwp8p8493KKkm3b/JRd7qS7pn1u
+	 IaFS0oOfW+xfjdAA6FTM/hVgVnFD/GvOSCMm8E27PvbMMFMQgIQip+mD9QlexYgjaP
+	 QK2itt5Uh4x5G5bv7CDmLq0i+bc0wIZJaLmV4UM4K1CQOlKwcWg1H9VgozmKuy9iWz
+	 HjsvD306JQDVchYbwxWa/l81qIgMgu4+nhGyrcTgt1hO03mM6SP7tBfgmB+dLG7JKH
+	 +edfStHMgp5fw==
+Date: Fri, 12 Jan 2024 10:58:30 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, will@kernel.org, frowand.list@gmail.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
+	mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH V2 2/2] PCI: Add support for "preserve-boot-config"
+ property
+Message-ID: <20240112165830.GA2271982@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8SF8l+0YFEFPpEIl"
-Content-Disposition: inline
-In-Reply-To: <20240112134230.28055-1-lee@kyuhyuk.kr>
-
-
---8SF8l+0YFEFPpEIl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240110030725.710547-3-vidyas@nvidia.com>
 
-On Fri, Jan 12, 2024 at 10:42:30PM +0900, KyuHyuk Lee wrote:
-> Add device tree binding for Hardkernel ODROID-M1S board based on
-> RK3566 SoC.
->=20
-> Signed-off-by: KyuHyuk Lee <lee@kyuhyuk.kr>
+On Wed, Jan 10, 2024 at 08:37:25AM +0530, Vidya Sagar wrote:
+> Add support for "preserve-boot-config" property that can be used to
+> selectively (i.e. per host bridge) instruct the kernel to preserve the
+> boot time configuration done by the platform firmware.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Docume=
-ntation/devicetree/bindings/arm/rockchip.yaml
-> index 5cf5cbef2cf5..cc37d2118131 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -566,6 +566,11 @@ properties:
->            - const: rockchip,rk3568-odroid-m1
->            - const: rockchip,rk3568
-> =20
-> +      - description: Hardkernel Odroid M1S
+> V2:
+> * Addressed issues reported by kernel test robot <lkp@intel.com>
+> 
+>  drivers/pci/controller/pci-host-common.c |  5 ++++-
+>  drivers/pci/of.c                         | 18 ++++++++++++++++++
+>  drivers/pci/probe.c                      |  2 +-
+>  include/linux/of_pci.h                   |  6 ++++++
+>  4 files changed, 29 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> index 6be3266cd7b5..d3475dc9ec44 100644
+> --- a/drivers/pci/controller/pci-host-common.c
+> +++ b/drivers/pci/controller/pci-host-common.c
+> @@ -68,13 +68,16 @@ int pci_host_common_probe(struct platform_device *pdev)
+>  
+>  	of_pci_check_probe_only();
+>  
+> +	bridge->preserve_config =
+> +		of_pci_check_preserve_boot_config(dev->of_node);
 
-if the vendor for this board is hardkernel...
+Thanks for leveraging the existing "preserve_config" support for the
+ACPI _DSM.  Is pci_host_common_probe() the best place for this?  I
+think there are many DT platform drivers that do not use
+pci_host_common_probe(), so I wonder if there's a more generic place
+to put this.
 
-> +        items:
-> +          - const: rockchip,rk3566-odroid-m1s
+I see Rob's concern about adding "preserve-boot-config" vs extending
+"linux,pci-probe-only" and I don't really have an opinion on that,
+although I do think the "pci-probe-only" name is not as descriptive as
+it could be.  I guess somebody will argue that "preserve_config" could
+be more descriptive, too :)
 
-=2E..why is the vendor prefix here rockchip?
-
-Thanks,
-Conor.
-
-> +          - const: rockchip,rk3566
-> +
->        - description: Hugsun X99 TV Box
->          items:
->            - const: hugsun,x99
-> --=20
-> 2.34.1
->=20
-
---8SF8l+0YFEFPpEIl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaFvnAAKCRB4tDGHoIJi
-0n/AAQDkHzkEpbkEcPgsWiysuI7BEp4nrEoSAcQvm/4eChZuegD6Aztb5FfajYfD
-gJvPbsipxJ9PyVMsiM5/pyUwU68MZwk=
-=bjqJ
------END PGP SIGNATURE-----
-
---8SF8l+0YFEFPpEIl--
+Bjorn
