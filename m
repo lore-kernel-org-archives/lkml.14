@@ -1,133 +1,186 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5425FA3F;
-	Fri, 12 Jan 2024 01:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E463D81C
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 01:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ru6YBIHM"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d4a2526a7eso36039675ad.3;
-        Thu, 11 Jan 2024 17:03:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705021394; x=1705626194; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=j3XdDa+qFVErTyo59RgwEE3EAEc/YkpJSsj4wu519lQ=;
-        b=Ru6YBIHMoDsVVICzEcoGXLAbRh7sg8/c+cP0l4Cv+9MJOWe5d/gBv+FVkcYWWCAzz+
-         xyMDfKVE8hIaXGx8tjsC6Jw1zxZrd82ryzj4VaFp8pDvjozR8SSry3y8xhZspVG+GAaz
-         5cPJzjbLS+KH3vBNRqn66c9cj11jXnNINxbsOav1Ov6sST5A+xE+4uOgIBY+F/PN9kUW
-         r1xvsDusyCJmgfngnHhhFXidkvMjp32Z3jNiE+EVYcIC6dWNjrL2ITPICRtr4j3EoShC
-         jtl3G0U4DEyZrLGcB4ElJyRym+swDkurBNzxY1UGHGk64CQW84UgMQzQosiI5SSNJHGk
-         ZERQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705021394; x=1705626194;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j3XdDa+qFVErTyo59RgwEE3EAEc/YkpJSsj4wu519lQ=;
-        b=HlsjwD7p9J9aXNX5+voR4F2eJQgJmrVoUDKrcpomUuG8yMvDEs70yXR1k3P6ES+C2T
-         AiDO2fk2JhPYPWvLJvPdcrCYwGYAs2l8qwm26RQTIaxD8LOSlja78mOcjyQbKb0JYizg
-         M3EvVuoWeR6qqX9MJbxhb87GsD3ZAxkkeu3NCJGw6W7tugSVjB+rPcj4SM1Q9XG7X6wR
-         sh9faE1KjkUfiYmR4Ahm+PLZuGHTCXRofnmMyfNodqXllQTJM+WWz9czZnoeV8i/B3uJ
-         t94CmgFQMnVn8yAn4V/lzvOeIbNM6T8f7CHKUTMWUhmgoHKBkh4VOCuMqZ6nkGXF6MnI
-         Qypg==
-X-Gm-Message-State: AOJu0YxmSHQSTvJYhVCcuuFeY9/8NGIlGIVkwbYBk9A5ZSNOCAMdKe+i
-	HiqRoIcqddCBKYupfgLM56w=
-X-Google-Smtp-Source: AGHT+IEVufCYK4XkGA+x0XxKaYdgBgJ1EHmTgS+OCBtj5Sb48/s3juO/VS4mnC9bLigBvtWJ5O3uEw==
-X-Received: by 2002:a17:902:f814:b0:1d4:35ad:41cd with SMTP id ix20-20020a170902f81400b001d435ad41cdmr137992plb.108.1705021393591;
-        Thu, 11 Jan 2024 17:03:13 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id kz15-20020a170902f9cf00b001d4bcf6cc43sm1825060plb.81.2024.01.11.17.03.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 17:03:13 -0800 (PST)
-Date: Fri, 12 Jan 2024 09:03:07 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Vegard Nossum <vegard.nossum@oracle.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-	brgl@bgdev.pl, linus.walleij@linaro.org, andy@kernel.org,
-	corbet@lwn.net
-Subject: Re: [PATCH 0/7] Documentation: gpio: add character device userspace
- API documentation
-Message-ID: <20240112010307.GA9794@rigel>
-References: <20240109135952.77458-1-warthog618@gmail.com>
- <CAHp75Ve05bAK-ehZZ7XSci5VqR18cCb=hgnbFKXwy2QPkxo=pw@mail.gmail.com>
- <20240109234518.GA7839@rigel>
- <9e33f7dc-deee-4165-bc10-ad77f38b270a@oracle.com>
- <CAHp75Vc8UN2kyxGtV0tCF+xcRLAxg0qijTvHWXXtdTA9nY-h3w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVc5HDk+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88EB7C433F1;
+	Fri, 12 Jan 2024 01:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705021601;
+	bh=hVgQfaTNbu8e8u2PuXBunuk/KB2v9c8tBDHRJ1yrMBY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gVc5HDk+8JyrndEwP6so6gn1fSvC35oo6TbS2MvWsd5x0QaWgcx4HXwwHfOoCGdHu
+	 P3qOgI+3LgX9KOVKu6IfLSmuoz+YM56OtZeZG7I4/PblmsrATdO4j9JnXit0UL2Uxz
+	 hzGzUY5C4jXi0q0B1+bKUT9ZMjbdjrXANT73AJ5I6rmQCY3xHvfgnOdPQ+d3ckJbds
+	 C0TXuUUHto2MYqguGC+vdmFNriUJXJ8F2DhmmGybVWfmG93bYTIKrqlPVD7BxQqmAf
+	 e/ET8wCG01xC8ZNRhOZF6HVB33XzVARyMQI4oajxKjg+l6N0JtmAJfAjQf53y50Jtl
+	 gUiU1BLBDLM2A==
+Message-ID: <d2f2e4ba-8668-4e37-a56f-dbe7c730b01f@kernel.org>
+Date: Fri, 12 Jan 2024 09:06:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [f2fs-dev] [PATCH v3 3/6] f2fs: compress: fix to check unreleased
+ compressed cluster
+To: Daeho Jeong <daeho43@gmail.com>
+Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
+References: <20231228143152.1543509-1-chao@kernel.org>
+ <20231228143152.1543509-3-chao@kernel.org>
+ <CACOAw_xCfOtJaC3FbOhvbrEzyUwecdSujFo4-f--dz+33BC+Sg@mail.gmail.com>
+ <e7f4a835-6a4c-4f94-a79f-a425b04516e2@kernel.org>
+ <CACOAw_wzBTV=+cqZeiCZvhud1Ek06aW_5nJbg=9FF327MNgxEg@mail.gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+Autocrypt: addr=chao@kernel.org; keydata=
+ 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
+In-Reply-To: <CACOAw_wzBTV=+cqZeiCZvhud1Ek06aW_5nJbg=9FF327MNgxEg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vc8UN2kyxGtV0tCF+xcRLAxg0qijTvHWXXtdTA9nY-h3w@mail.gmail.com>
 
-On Wed, Jan 10, 2024 at 01:10:51PM +0200, Andy Shevchenko wrote:
-> On Wed, Jan 10, 2024 at 10:16 AM Vegard Nossum <vegard.nossum@oracle.com> wrote:
-> > On 10/01/2024 00:45, Kent Gibson wrote:
-> > > On Tue, Jan 09, 2024 at 10:00:26PM +0200, Andy Shevchenko wrote:
-> > >> On Tue, Jan 9, 2024 at 4:00 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > >>
-> > >> May we actually state in the documentation that sysfs is subject to
-> > >> remove at some point?
-> > >
-> > > So formally define what "deprecated" means?
-> > > Is that covered in the higher level documentation somewhere?
-> > > If so I'm more than happy to provide a reference.
-> >
-> > We have a few files that may be relevant here, that I'm aware of:
-> >
-> > 1) https://docs.kernel.org/admin-guide/sysfs-rules.html
-> >
-> > documents some general assumptions that userspace can make about the
-> > stability of sysfs and its files
-> >
-> > 2) https://docs.kernel.org/admin-guide/abi.html
-> >
-> > This is the public-facing, somewhat machine-readable repository of what
-> > is supposed to be the kernel's ABI/API, including "obsolete" and
-> > "removed" interfaces.
-> >
-> > 3) Documentation/ABI/README
-> >
-> > describes the process of deprecating an interface
->
-> Yes and GPIO currently is under obsolete section with also this:
->
-> "This ABI is deprecated and will be removed after 2020. It is replaced
-> with the GPIO character device."
->
-> https://docs.kernel.org/admin-guide/abi-obsolete.html#symbols-under-sys-class
->
-> So, proposed cleanup series should probably rely on this documentation
-> among other existing descriptions of sysfs GPIO.
->
+On 2024/1/12 1:15, Daeho Jeong wrote:
+> On Wed, Jan 10, 2024 at 5:33 PM Chao Yu <chao@kernel.org> wrote:
+>>
+>> On 2024/1/11 9:18, Daeho Jeong wrote:
+>>> On Thu, Dec 28, 2023 at 6:33 AM Chao Yu <chao@kernel.org> wrote:
+>>>>
+>>>> From: Sheng Yong <shengyong@oppo.com>
+>>>>
+>>>> Compressed cluster may not be released due to we can fail in
+>>>> release_compress_blocks(), fix to handle reserved compressed
+>>>> cluster correctly in reserve_compress_blocks().
+>>>>
+>>>> Fixes: 4c8ff7095bef ("f2fs: support data compression")
+>>>> Signed-off-by: Sheng Yong <shengyong@oppo.com>
+>>>> Signed-off-by: Chao Yu <chao@kernel.org>
+>>>> ---
+>>>>    fs/f2fs/file.c | 12 ++++++++++++
+>>>>    1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>> index 026d05a7edd8..782ae3be48f6 100644
+>>>> --- a/fs/f2fs/file.c
+>>>> +++ b/fs/f2fs/file.c
+>>>> @@ -3624,6 +3624,15 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+>>>>                                   goto next;
+>>>>                           }
+>>>>
+>>>> +                       /*
+>>>> +                        * compressed cluster was not released due to
+>>>> +                        * it fails in release_compress_blocks().
+>>>> +                        */
+>>>> +                       if (blkaddr == NEW_ADDR) {
+>>>> +                               compr_blocks++;
+>>>> +                               continue;
+>>>> +                       }
+>>>> +
+>>>>                           if (__is_valid_data_blkaddr(blkaddr)) {
+>>>>                                   compr_blocks++;
+>>>>                                   continue;
+>>>
+>>> How about merging two conditions like "blkaddr == NEW_ADDR ||
+>>> __is_valid_data_blkaddr(blkaddr)"?
+>>
+>> Oh, sure.
+>>
+>>>
+>>>> @@ -3633,6 +3642,9 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+>>>>                   }
+>>>>
+>>>>                   reserved = cluster_size - compr_blocks;
+>>>> +               if (!reserved)
+>>>> +                       goto next;
+>>>> +
+>>>
+>>> How can the reserved variable be zero?
+>>
+>> I guess it can happen if a cluster was not released during
+>> release_compress_blocks(), then all blocks in the cluster should
+>> has been reserved, so, in this round of reserving, it needs to skip
+>> reserve blocks, right?
+> 
+> Let's assume cluster_size is 4. How can compr_blocks be 4?
+> 
+>                          if (i == 0) {
+>                                  if (blkaddr == COMPRESS_ADDR)
+>                                          continue;
+>                                  dn->ofs_in_node += cluster_size;
+>                                  goto next;
+>                          }
+> 
+> We skip the block having COMPRESS_ADDR when counting compr_blocks.
+> So, the maximum value of compr_blocks should be 3, right?
 
-The sysfs doc already references the doc (sysfs-gpio) that generates the
-HTML that link points to, so not sure what to change.
-I can't include a direct reference to the HTML, AFAICT, as that HTML is
-generated using kernel-abi makefile magic so the usual doc path
-cross-references don't work - you just get the path as plain text.
+Ah, got it, and I think you're right.
 
-If there is some way to provide a cross-reference that generates to that
-link then I'll change it, but I don't know how.
+Should fix the condition as below?
 
->>> +    -  -  ``EFAULT``
+		/* for the case all blocks in cluster were reserved */
+		if (reserved == 1)
+			goto next;
 
-> Wondering if these constants can be referenced via % and if it makes sense.
+Thanks,
 
-That would be great and I do want to do that, particularly for the
-uAPI v1 docs that use a lot of consts rather than enums, but, AFAICT, you
-can't create cross-references for consts, you can only add formatting[1].
-And the % formatting only works in kernel-doc, in rst you have to add it
-explicitly yourself, hence the ``EFAULT`` .
-
-Cheers,
-Kent.
-[1] https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#highlights-and-cross-references
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>>>                   ret = inc_valid_block_count(sbi, dn->inode, &reserved);
+>>>>                   if (ret)
+>>>>                           return ret;
+>>>> --
+>>>> 2.40.1
+>>>>
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> Linux-f2fs-devel mailing list
+>>>> Linux-f2fs-devel@lists.sourceforge.net
+>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
