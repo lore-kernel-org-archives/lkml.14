@@ -1,83 +1,96 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FD161672;
-	Fri, 12 Jan 2024 09:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="B5lKJPcB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705052813;
-	bh=tsohDLdjrCpy/Zam0gWBw3px6fB53qKguAcxzszbx7Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B5lKJPcBBWHx15S4tRJBrMmNXjZCtc1OdrRodFbI1YI5TvfErCAm/YYm2hWV5uULg
-	 Xe47kU69iOPLQBD5Nz5K5PfRixeskqlFRYaoZ7PsQM92m0X873zUH57HaPIo53L99g
-	 TGSUktlQUsFPrSLkebQhxI294bF67QIj5tEQs39R01gT5a3AHJSPl8DVNY3ZVcexli
-	 BW5LK7/HWYbmK40Qa5ujbUs4Vunhi+GQuujaAEvZezJFd6XJBLgBN9K2S34DGskcNJ
-	 Dt9kb/s/SrFN1AaYp5J5HZ8tEGDOV8JZWZA6XnZRZvX5/nt7wnL3K+Y8r4DJ9Zbfdo
-	 cIbnwrq3J4mYw==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E39B6281C;
+	Fri, 12 Jan 2024 09:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 16570378203A;
-	Fri, 12 Jan 2024 09:46:53 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-mediatek@lists.infradead.org
-Cc: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	wenst@chromium.org,
-	hsinyi@chromium.org,
-	nfraprado@collabora.com,
-	macpaul.lin@mediatek.com,
-	sean.wang@mediatek.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com
-Subject: [PATCH 15/15] arm64: dts: mediatek: radxa-nio-12l: Enable Panfrost for Mali GPU
-Date: Fri, 12 Jan 2024 10:46:32 +0100
-Message-ID: <20240112094632.66310-16-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240112094632.66310-1-angelogioacchino.delregno@collabora.com>
-References: <20240112094632.66310-1-angelogioacchino.delregno@collabora.com>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id D04802800BB60;
+	Fri, 12 Jan 2024 10:47:11 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id C31E22C3E0D; Fri, 12 Jan 2024 10:47:11 +0100 (CET)
+Date: Fri, 12 Jan 2024 10:47:11 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peng Fan <peng.fan@nxp.com>, Robert Richter <rrichter@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFC 3/9] PCI/portdrv: create platform devices for child OF nodes
+Message-ID: <20240112094711.GA17714@wunner.de>
+References: <20240110132853.GA6860@wunner.de>
+ <CAMRc=MdBSAb_kEO2r7r-vwLuRAEv7pMODOMtZoCCRAd=zsQb_w@mail.gmail.com>
+ <20240110164105.GA13451@wunner.de>
+ <CAMRc=MdQKPN8UbagmswjFx7_JvmJuBeuq8+9=z-+GBNUmdpWEA@mail.gmail.com>
+ <20240111104211.GA32504@wunner.de>
+ <CAMRc=MfT_VLo7++K4M89iYrciqWSrX_JyS1LX5kaGTNDNVQiOg@mail.gmail.com>
+ <20240111150201.GA28409@wunner.de>
+ <CAMRc=Mcngw1vw9q0DXRWLKk4o9FOY+Mzz-niueT-v2THvbS1Dw@mail.gmail.com>
+ <CAMuHMdUnB_eGhzyOYRczXLMgb65dfHgwHgnv7eXSWDvOvTEdjQ@mail.gmail.com>
+ <CAMRc=MeGsWV_71MzJ-Srm5MnwMfmwac_DLyC9O-8242eekuhNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeGsWV_71MzJ-Srm5MnwMfmwac_DLyC9O-8242eekuhNg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Enable the GPU node and add the required power supply to get GPU
-support through Panfrost.
+On Fri, Jan 12, 2024 at 10:43:04AM +0100, Bartosz Golaszewski wrote:
+> Lukas, Terry: am I getting this right - is the port driver supposed to
+> go away at some point?
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+Yes, that's the plan.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-index b0d66fa139b5..1e97d2bf7b8b 100644
---- a/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-@@ -153,6 +153,11 @@ rgmii_phy: ethernet-phy@1 {
- 	};
- };
- 
-+&gpu {
-+	mali-supply = <&mt6315_7_vbuck1>;
-+	status = "okay";
-+};
-+
- &i2c2 {
- 	clock-frequency = <400000>;
- 	pinctrl-0 = <&i2c2_pins>;
--- 
-2.43.0
+> Because I'm not sure I understand what the
+> problem is here. To me it seems that when we create a real device for
+> the PCIe port, then it's only normal to populate its child devices
+> from the port driver.
 
+portdrv is not creating a real device for the PCIe port.
+It *binds* to that device.  The device is created much earlier.
+
+NAK for adding this to portdrv.
+
+Thanks,
+
+Lukas
