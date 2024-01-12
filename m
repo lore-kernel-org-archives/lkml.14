@@ -1,107 +1,144 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C220255776;
-	Fri, 12 Jan 2024 08:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
-	by mail-app4 (Coremail) with SMTP id cS_KCgD3Wd1M_KBlIPG4AA--.22411S2;
-	Fri, 12 Jan 2024 16:46:05 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simo Sorce <simo@redhat.com>,
-	Steve Dickson <steved@redhat.com>,
-	Kevin Coffman <kwc@citi.umich.edu>,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF7F4F60B
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 08:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="a2slaEPw";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="a2slaEPw"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B6DDB1FC0D;
+	Fri, 12 Jan 2024 08:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1705049349; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6sXPhHbdfaX/RtWLihGxAHTWJmXovJjXqKxXGD3VnTs=;
+	b=a2slaEPwGq+FKw7AfG2vIle1EKtT8s404qlxEQBjQfvL3gHZEcaeghnerLKg5x8AkU3rJz
+	Vm1PyHkL9g2HHo+8iiw2cvx6h5qazEm6plHwqCq8vzu1qW1kXtMGA6iUbjAkAKVuy7Fx1h
+	RuHH8PSvsino0JhCIaRPD5G7En4OJgY=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1705049349; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6sXPhHbdfaX/RtWLihGxAHTWJmXovJjXqKxXGD3VnTs=;
+	b=a2slaEPwGq+FKw7AfG2vIle1EKtT8s404qlxEQBjQfvL3gHZEcaeghnerLKg5x8AkU3rJz
+	Vm1PyHkL9g2HHo+8iiw2cvx6h5qazEm6plHwqCq8vzu1qW1kXtMGA6iUbjAkAKVuy7Fx1h
+	RuHH8PSvsino0JhCIaRPD5G7En4OJgY=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 92EFB13782;
+	Fri, 12 Jan 2024 08:49:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +bTaIAX9oGXLKQAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Fri, 12 Jan 2024 08:49:09 +0000
+Date: Fri, 12 Jan 2024 09:49:08 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Jianfeng Wang <jianfeng.w.wang@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] SUNRPC: fix a memleak in gss_import_v2_context
-Date: Fri, 12 Jan 2024 16:45:38 +0800
-Message-Id: <20240112084540.3729001-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [External] : Re: [PATCH] mm, oom: Add lru_add_drain() in
+ __oom_reap_task_mm()
+Message-ID: <ZaD9BNtXZfY2UtVI@tiehlicka>
+References: <20240109091511.8299-1-jianfeng.w.wang@oracle.com>
+ <ZZ5Zb3FYqY8FZgB3@tiehlicka>
+ <1d866f1b-94b3-43ec-8f4c-2de31b82d3d1@oracle.com>
+ <ZZ-q0PZ-XCDwA4oG@tiehlicka>
+ <b2096bcb-bda6-4831-85a2-67759e783e4d@oracle.com>
+ <20240111135404.609af4a26d0118c0d290f11c@linux-foundation.org>
+ <897538a0-5ce6-484e-a9bc-4e61b3be2265@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cS_KCgD3Wd1M_KBlIPG4AA--.22411S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFWkGFWxKrW7tr17uFW3KFg_yoW8XryUpF
-	Z8Z347trZ8WFWIyF9akFyUZ3W3Aw4kJryUWanFqw43ZrnaqFyUKF1qkryj9FWrZr4rXF1U
-	CF1UGF98Z3WDuwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfUYv38UUUUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <897538a0-5ce6-484e-a9bc-4e61b3be2265@oracle.com>
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=a2slaEPw
+X-Spamd-Result: default: False [-4.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: B6DDB1FC0D
+X-Spam-Level: 
+X-Spam-Score: -4.81
+X-Spam-Flag: NO
 
-The ctx->mech_used.data allocated by kmemdup is not freed in neither
-gss_import_v2_context nor it only caller radeon_driver_open_kms.
-Thus, this patch reform the last call of gss_import_v2_context to the
-gss_krb5_import_ctx_v2, preventing the memleak while keepping the return
-formation.
+On Thu 11-01-24 16:08:57, Jianfeng Wang wrote:
+> 
+> 
+> On 1/11/24 1:54 PM, Andrew Morton wrote:
+> > On Thu, 11 Jan 2024 10:54:45 -0800 Jianfeng Wang <jianfeng.w.wang@oracle.com> wrote:
+> > 
+> >>
+> >>> Unless you can show any actual runtime effect of this patch then I think
+> >>> it shouldn't be merged.
+> >>>
+> >>
+> >> Thanks for raising your concern.
+> >> I'd call it a trade-off rather than "not really correct". Look at
+> >> unmap_region() / free_pages_and_swap_cache() written by Linus. These are in
+> >> favor of this pattern, which indicates that the trade-off (i.e. draining
+> >> local CPU or draining all CPUs or no draining at all) had been made in the
+> >> same way in the past. I don't have a specific runtime effect to provide,
+> >> except that it will free 10s kB pages immediately during OOM.
 
-Fixes: 47d848077629 ("gss_krb5: handle new context format from gssd")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
-Changelog:
-
-v2: add non-error case
----
- net/sunrpc/auth_gss/gss_krb5_mech.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index e31cfdf7eadc..5e6f90d73858 100644
---- a/net/sunrpc/auth_gss/gss_krb5_mech.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -398,6 +398,7 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
- 	u64 seq_send64;
- 	int keylen;
- 	u32 time32;
-+	int ret;
+You are missing an important point. Those two calls are quite different.
+oom_reaper unmaps memory after all the reclaim attempts have failed.
+That includes draining all sorts of caches on the way. Including
+draining LRU pcp cache (look for lru_add_drain_all in the reclaim path). 
  
- 	p = simple_get_bytes(p, end, &ctx->flags, sizeof(ctx->flags));
- 	if (IS_ERR(p))
-@@ -450,8 +451,16 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
- 	}
- 	ctx->mech_used.len = gss_kerberos_mech.gm_oid.len;
- 
--	return gss_krb5_import_ctx_v2(ctx, gfp_mask);
-+	ret = gss_krb5_import_ctx_v2(ctx, gfp_mask);
-+	if (ret) {
-+		p = ERR_PTR(ret);
-+		goto out_free;
-+	};
- 
-+	return 0;
-+
-+out_free:
-+	kfree(ctx->mech_used.data);
- out_err:
- 	return PTR_ERR(p);
- }
+> > I don't think it's necessary to run lru_add_drain() for each vma.  Once
+> > we've done it it once, it can be skipped for additional vmas.
+> > 
+> Agreed.
+> 
+> > That's pretty minor because the second and successive calls will be
+> > cheap.  But it becomes much more significant if we switch to
+> > lru_add_drain_all(), which sounds like what we should be doing here. 
+> > Is it possible?
+> >
+> What do you both think of adding lru_add_drain_all() prior to the for loop?
+
+lru_add_drain_all relies on WQs. And we absolutely do not want to get
+oom_reaper stuck just because all the WQ is jammed. So no, this is
+actually actively harmful!
+
+All that being said I stand by my previous statement that this patch is
+not doing anything measurably useful. Prove me wrong otherwise I am
+against merging "just for consistency patch". Really, we should go and
+re-evaluate existing local lru draining callers. I wouldn't be surprised
+if we removed some of them.
+
 -- 
-2.34.1
-
+Michal Hocko
+SUSE Labs
