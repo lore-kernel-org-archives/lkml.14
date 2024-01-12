@@ -1,88 +1,74 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C4B5D910
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 10:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9195EE8A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 10:25:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="spC2baQ/"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5f2d4aaa2fdso66047047b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 02:23:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rXXBYWI0"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5f70c085d64so55434697b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 02:25:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705054991; x=1705659791; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705055157; x=1705659957; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uoixCIvUaJI+Ikw8bVxT8gSbu0EfclZZOnaz2syKKYw=;
-        b=spC2baQ/D8jPu7CEJOU1UPOIN16iZNlCsr3QXetR7rqP/O6ARnnDL1eTkw/s90ZqKc
-         etq4/kbAXij7fdiNlkjfxpMp/ePmC7Jo3Ukdt+rp/aVLZiXQRJezlSxGNczMGfjq3pzf
-         C/9qyekg1pRk7UDFY2CVvMyNCYxhA8Kxgw2w/vGKF+vSebD3LYsUyApejvOfKXWjYf+i
-         8yXXBoHbnWy2L4c7PnlGeOU0pWmnVC8sQvYQV4pKV8YPs9Ze3EDOVX16ueew3M9rBbEK
-         0aj2F9dx5PYbmTmHxT8qMKJZXejVHszUCn+MFlZQVZ7vmnKGeEBOVRTRJJHKzVbTY1lw
-         VB0w==
+        bh=TrpYiiUZvW6/AnFbosBlfeKS3Uh1NSZM2E5hPQsUkps=;
+        b=rXXBYWI0vGvvTKV6ygv88oM6VN6fXHHyZjLlGKMs/s3CbH5ci8S/ZMTvCYqPcVxfOb
+         b/+PWxhNxncyKnZ2ZkHpqQOqBTe4gKaDV25oFWex16yfaOE64JSa4tp+TLnaaZsHp+gL
+         oFC2MfirbpqhGs6e4AsAZfDwo1A3MsFZA/KR/pfITivpSG7AG/wdl6SxqjWLVznZgfJV
+         ni4KSOTYAA0g7P63wJnFem26JwLAtTtDjDNoJ0WASue6Y4AJOdltlY1FMXp86bmziBQi
+         gEWZ07W7emdb6aNONrB8+e+cxwvhZfV33DKXp1PQVpdNsnb6H1EV+T85vLkz/uCKh+T9
+         A/Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705054991; x=1705659791;
+        d=1e100.net; s=20230601; t=1705055157; x=1705659957;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uoixCIvUaJI+Ikw8bVxT8gSbu0EfclZZOnaz2syKKYw=;
-        b=FKhXedSTNzOSX1DnT2bDhidjwWQEMBy02GOobb3CAcJHTsWmJfKvuDMiLYFItQ2tN5
-         JipDxg8Z7xORG3QXNbABNZGQ5j0Y59/rigAewT4c9PxfhvnuyuJ6ujPTXYbBnyj9eOzH
-         LC7sQNwBdTNIcJ1JhX2KZ5fVdfDN5PvqpahfJfxnhhC4PjuKFVZpxTbxwJy5VQaKCe45
-         QEZqshy9+N/afdZnKduvTY25q2XPKL7pBYITQdPrCfnNLmPfj2etSOCeBR7LzjgPLRWl
-         mZIPaWOWHCftXUuC7a3amJATYKa0lZwvjqMCs1Hnfbh776XRPrGUS0/Gkgw4uCXG6c80
-         ZZrw==
-X-Gm-Message-State: AOJu0YyRFG0ZDE5WrCXKdVkx4l4Kob17PFjONU6RMccKZtWJzunB1bT1
-	NBjSNRyboropNj6DzN/NeVj2ouI7JNbwsJ5Jpf2bEafeF8PHtw==
-X-Google-Smtp-Source: AGHT+IHmVOQtBdyVCbejqekjIZT/Rhkl+4ZWZHIRmIXNgIVih5i3KRfprEy8VQeiPbDlnOubwhyA1NG9t/mgb8i6gp4=
-X-Received: by 2002:a81:ed0b:0:b0:5ee:6491:c2e5 with SMTP id
- k11-20020a81ed0b000000b005ee6491c2e5mr1005535ywm.10.1705054991639; Fri, 12
- Jan 2024 02:23:11 -0800 (PST)
+        bh=TrpYiiUZvW6/AnFbosBlfeKS3Uh1NSZM2E5hPQsUkps=;
+        b=KgwjleB0Afzp7y1zbkbF5ykeJ884VaKwe5wnVDWVdYD8QIj1Ejn35IDodQsg+QRVAB
+         j7iGh0goQvZCSL8sABBPFd3vChdSWOqViQh1nq25Q2QxTrUf9QNjm54IpRYGtydx12y1
+         MrYhWVFfGqgJTH+Io23DqIrLpnMgY+EaXgdfsuC7F9QjUcaCIM0hoMAyExo//p7UaF9w
+         ZeAH24lSM7d6PV6gEa0OEP/pmQ+rg8m6jxe/Xe0iphXfalWVLIJ9aZ9VgRUDNVgNCpvC
+         WjdzJ9K3gp29TKnMwsPFTidNYGGHRneIlg9Usr9FFMKr6EKOAsuLaryIN7zAGUmA2xut
+         vBuA==
+X-Gm-Message-State: AOJu0YwymFPAgPtTsl2VnHStph42xfY5e7479ECARXpmDqp6xUyOOBPK
+	nHYlo9+E8SUlefgUn2SrEfmuehJSJRv37OJhESoItC1b+1LnKQ==
+X-Google-Smtp-Source: AGHT+IFlOE1GVKUUNrtrFdTNGJR3/eHT7lHMq9rhtkAS83Jo4rY6adUw6B7dW71bpZFr994d28Nl/vfiD5zAKqQ4GOw=
+X-Received: by 2002:a25:ea44:0:b0:dbd:e651:a32f with SMTP id
+ o4-20020a25ea44000000b00dbde651a32fmr439006ybe.114.1705055157730; Fri, 12 Jan
+ 2024 02:25:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110-fp4-panel-v2-0-8ad11174f65b@fairphone.com>
- <20240110-fp4-panel-v2-2-8ad11174f65b@fairphone.com> <CACRpkdaWTfPDCin_L6pefHsokjNyO8Mo6hWPdzPLLi1EUkKUuA@mail.gmail.com>
- <CYBZEZ4IM6IL.VR04W7933VI@fairphone.com> <CACRpkdZQbVXfBa70nhDOqfWPbsh-6DgX-uvZOxr19pzMmF2giQ@mail.gmail.com>
- <CYCLSCKPPBOC.1B1MP3VOOC0Q8@fairphone.com> <cdc18e2a-b7eb-4b54-a513-481148fb3b0d@linaro.org>
- <CYCMVXHYVDCI.HVH1TR8MWEUK@fairphone.com>
-In-Reply-To: <CYCMVXHYVDCI.HVH1TR8MWEUK@fairphone.com>
+References: <46566e85-4afa-4c55-93b2-0d0b71d76b12@moroto.mountain>
+In-Reply-To: <46566e85-4afa-4c55-93b2-0d0b71d76b12@moroto.mountain>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 12 Jan 2024 11:23:00 +0100
-Message-ID: <CACRpkdacS9ojXUuogygkz6xxCf3mMq6GG_75sze8ukUu=rxVyw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] drm/panel: Add driver for DJN HX83112A LCD panel
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: neil.armstrong@linaro.org, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, ~postmarketos/upstreaming@lists.sr.ht, 
-	phone-devel@vger.kernel.org
+Date: Fri, 12 Jan 2024 11:25:46 +0100
+Message-ID: <CACRpkdafwsQugKzGFsAPsMNGGObSJEzJRah9qGTitah12Zf3Bg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: rtd: Fix signedness bug in probe
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Tzuyi Chang <tychang@realtek.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 12, 2024 at 10:52=E2=80=AFAM Luca Weiss <luca.weiss@fairphone.c=
-om> wrote:
+On Fri, Jan 12, 2024 at 7:55=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
 
-> Since there's zero indication Truly is involved in this panel in my
-> documentation - much less the number 5P65 - I'm not going to add that.
+> The "data->irqs[]" array holds unsigned int so this error handling will
+> not work correctly.
+>
+> Fixes: eee636bff0dc ("gpio: rtd: Add support for Realtek DHC(Digital Home=
+ Center) RTD SoCs")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-OK then, I fold, thanks for looking into it.
-Keep the Himax hx83112a file name and symbols.
-
-> So in short this panel is the model 9A-3R063-1102B from DJN, which uses
-> a Himax HX83112A driver IC.
-
-So compatible =3D "djn,9a-3r063-1102b" since the setup sequences for
-hx83112a are clearly for this one display?
+Looks right to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
