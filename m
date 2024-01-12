@@ -1,159 +1,91 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3AA6D1AB;
-	Fri, 12 Jan 2024 13:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.6] (ip5f5af452.dynamic.kabel-deutschland.de [95.90.244.82])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 375FE61E5FE03;
-	Fri, 12 Jan 2024 14:46:43 +0100 (CET)
-Message-ID: <2a58fed3-1fa9-47eb-b475-3f7c3b291376@molgen.mpg.de>
-Date: Fri, 12 Jan 2024 14:46:42 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859AC6A038;
+	Fri, 12 Jan 2024 13:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b3QPwCi8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D5AC433F1;
+	Fri, 12 Jan 2024 13:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705067418;
+	bh=2GBsmlDMuRrcjc2Hma/6Rsppr8bfpOi1zXgsvajbU7A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b3QPwCi8lSUlKn9lVR7v8i0+OSGblLUhqlsqZKv6AReHbWezDzAbl5Ek0HuC1CMbH
+	 hn/K732i14ODy4j2Gz5t8iq1wiVIrk3MHXTxnaaTe4Io23MZhxn1BkFS0xUqAwdZHg
+	 Vz6QIeDaCfTzD9YbJgKaCHyNxhIMTmMuWDE+DJ3FgKiZPEPzEeUOKGALfd1OgO60AN
+	 cFFoMfQYsZFxQAZCdn/15HZoag1q5sVA2/btsTQxSYdhbfTLInbvYY8Xc7ABrVUw9/
+	 zwYQM6+8NRSDNSlwnhPXE+pdEGVIQVKm32r90zeT7MyJ/h93VrME76gBc61jsp553F
+	 LDNABLAzw/HEg==
+Date: Fri, 12 Jan 2024 13:50:09 +0000
+From: Will Deacon <will@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Raag Jadav <raag.jadav@intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Kevin Hilman <khilman@baylibre.com>, Andy Gross <agross@kernel.org>,
+	NXP Linux Team <linux-imx@nxp.com>, linux-arm-msm@vger.kernel.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Frank Li <Frank.li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Besar Wicaksono <bwicaksono@nvidia.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 00/18] perf: Convert to platform remove callback
+ returning void
+Message-ID: <20240112135009.GA16771@willie-the-truck>
+References: <cover.1702648124.git.u.kleine-koenig@pengutronix.de>
+ <vlnl6og3bts5hcdjw5h7c4km7zolzuf6h7cwyfymjzan3uqjwy@rsra3lqdhou7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH v2] igb: Fix string truncation warnings
- in igb_set_fw_version
-To: Kunwu Chan <chentao@kylinos.cn>
-Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, Kunwu Chan <kunwu.chan@hotmail.com>,
- przemyslaw.kitszel@intel.com, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- jacob.e.keller@intel.com
-References: <20240112025853.123048-1-chentao@kylinos.cn>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240112025853.123048-1-chentao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <vlnl6og3bts5hcdjw5h7c4km7zolzuf6h7cwyfymjzan3uqjwy@rsra3lqdhou7>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Dear Kunwu,
+Hi Uwe,
 
-
-Thank you for your patch. I have some minor nits.
-
-Am 12.01.24 um 03:58 schrieb Kunwu Chan:
-> 'commit 1978d3ead82c ("intel: fix string truncation warnings")'
-
-Please donâ€™t enclose it in '': Commit 1978d3ead82c ("intel: fix string 
-truncation warnings")
-
-> fix '-Wformat-truncation=' warnings in igb_main.c by using kasprintf.
-
-fix*es*
-
-> kasprintf() returns a pointer to dynamically allocated memory
-> which can be NULL upon failure.
-
-Maybe paste one warning message.
-
-> Fix this warning by using a larger space for adapter->fw_version,
-> and then fall back and continue to use snprintf.
+On Wed, Jan 10, 2024 at 09:56:26AM +0100, Uwe Kleine-König wrote:
+> On Fri, Dec 15, 2023 at 02:59:00PM +0100, Uwe Kleine-König wrote:
+> > this series converts all drivers below drivers/perf to use
+> > .remove_new(). See commit 5c5a7680e67b ("platform: Provide a remove
+> > callback that returns no value") for an extended explanation and the
+> > eventual goal. The TL;DR; is to make it harder for driver authors to
+> > leak resources without noticing.
+> > 
+> > I based the patches on today's next, I had to revert commits 
+> > 3115ee021bfb ("arm64: perf: Include threshold control fields in
+> > PMEVTYPER mask") and 816c26754447 ("arm64: perf: Add support for event
+> > counting threshold") to compile test on ARCH=arm (this is a problem in
+> > next, not in my patch series).
+> > 
+> > This is merge window material. All patches are pairwise independent of
+> > each other so they can be applied individually. Still it would be great
+> > to let them go in all together.
 > 
-> Fixes: 1978d3ead82c ("intel: fix string truncation warnings")
-> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-> Cc: Kunwu Chan <kunwu.chan@hotmail.com>
-> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> I wonder if this series is still on someone's radar. It didn't appear in
+> next up to now, so I guess it's too late for 6.8-rc1?!
 
+This came in during the holiday period so, by the time I saw it, it was
+too late to land for this merge window. I can pick it up for 6.9 in a few
+weeks, though. I usually start queueing stuff at -rc3.
 
-Kind regards,
-
-Paul Menzel
-
-
-> ---
-> v2: Fall back to use snprintf and a larger space,as suggested by
-> https://lore.kernel.org/all/20231212132637.1b0fb8aa@kernel.org/
-> ---
->   drivers/net/ethernet/intel/igb/igb.h      |  2 +-
->   drivers/net/ethernet/intel/igb/igb_main.c | 35 ++++++++++++-----------
->   2 files changed, 19 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igb/igb.h b/drivers/net/ethernet/intel/igb/igb.h
-> index a2b759531cb7..3c2dc7bdebb5 100644
-> --- a/drivers/net/ethernet/intel/igb/igb.h
-> +++ b/drivers/net/ethernet/intel/igb/igb.h
-> @@ -637,7 +637,7 @@ struct igb_adapter {
->   		struct timespec64 period;
->   	} perout[IGB_N_PEROUT];
->   
-> -	char fw_version[32];
-> +	char fw_version[48];
->   #ifdef CONFIG_IGB_HWMON
->   	struct hwmon_buff *igb_hwmon_buff;
->   	bool ets;
-> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-> index b2295caa2f0a..ce762d77d2c1 100644
-> --- a/drivers/net/ethernet/intel/igb/igb_main.c
-> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
-> @@ -3069,7 +3069,6 @@ void igb_set_fw_version(struct igb_adapter *adapter)
->   {
->   	struct e1000_hw *hw = &adapter->hw;
->   	struct e1000_fw_version fw;
-> -	char *lbuf;
->   
->   	igb_get_fw_version(hw, &fw);
->   
-> @@ -3077,34 +3076,36 @@ void igb_set_fw_version(struct igb_adapter *adapter)
->   	case e1000_i210:
->   	case e1000_i211:
->   		if (!(igb_get_flash_presence_i210(hw))) {
-> -			lbuf = kasprintf(GFP_KERNEL, "%2d.%2d-%d",
-> -					 fw.invm_major, fw.invm_minor,
-> -					 fw.invm_img_type);
-> +			snprintf(adapter->fw_version,
-> +				 sizeof(adapter->fw_version),
-> +				 "%2d.%2d-%d",
-> +				 fw.invm_major, fw.invm_minor,
-> +				 fw.invm_img_type);
->   			break;
->   		}
->   		fallthrough;
->   	default:
->   		/* if option rom is valid, display its version too */
->   		if (fw.or_valid) {
-> -			lbuf = kasprintf(GFP_KERNEL, "%d.%d, 0x%08x, %d.%d.%d",
-> -					 fw.eep_major, fw.eep_minor,
-> -					 fw.etrack_id, fw.or_major, fw.or_build,
-> -					 fw.or_patch);
-> +			snprintf(adapter->fw_version,
-> +				 sizeof(adapter->fw_version),
-> +				 "%d.%d, 0x%08x, %d.%d.%d",
-> +				 fw.eep_major, fw.eep_minor, fw.etrack_id,
-> +				 fw.or_major, fw.or_build, fw.or_patch);
->   		/* no option rom */
->   		} else if (fw.etrack_id != 0X0000) {
-> -			lbuf = kasprintf(GFP_KERNEL, "%d.%d, 0x%08x",
-> -					 fw.eep_major, fw.eep_minor,
-> -					 fw.etrack_id);
-> +			snprintf(adapter->fw_version,
-> +				 sizeof(adapter->fw_version),
-> +				 "%d.%d, 0x%08x",
-> +				 fw.eep_major, fw.eep_minor, fw.etrack_id);
->   		} else {
-> -			lbuf = kasprintf(GFP_KERNEL, "%d.%d.%d", fw.eep_major,
-> -					 fw.eep_minor, fw.eep_build);
-> +			snprintf(adapter->fw_version,
-> +				 sizeof(adapter->fw_version),
-> +				 "%d.%d.%d",
-> +				 fw.eep_major, fw.eep_minor, fw.eep_build);
->   		}
->   		break;
->   	}
-> -
-> -	/* the truncate happens here if it doesn't fit */
-> -	strscpy(adapter->fw_version, lbuf, sizeof(adapter->fw_version));
-> -	kfree(lbuf);
->   }
->   
->   /**
+Will
