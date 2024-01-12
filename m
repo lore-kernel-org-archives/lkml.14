@@ -1,305 +1,119 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C765C8FF;
-	Fri, 12 Jan 2024 07:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56C6381B7;
+	Fri, 12 Jan 2024 07:26:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYH3gTl+"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-598a2cb5a7cso836905eaf.2;
-        Thu, 11 Jan 2024 23:24:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwxYMJe2"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-50ea98440a7so6375929e87.1;
+        Thu, 11 Jan 2024 23:26:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705044276; x=1705649076; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sDgypo+3HDDGZL1zxwUNMT/iERIfh59UdQRh8jntZkQ=;
-        b=XYH3gTl+j1kiYsaH1o0UH6VautskV8dhprzHw+J0xUhxKn1gGBj3KdUdPohOWAmjwD
-         jZ/0HgCkT/jZm3WeZLo8sXl1oZa/znHGijMbNZSJ+nzvY+oareeecRPeWZFYYIIljUgP
-         BELqMS39G/L6kvBAyPBRdgXXbO8g0PGnhlvytKqYQROwjgUe/A0+ZjSkiqXI+YDQiJTB
-         ykMVzM2c3MA7w9Ygjl1z84dWkpDeauxvdBDHMdqhZsp2pXV5/vBpPa5HRI87ZaEFMSx7
-         z9JmpPBCYvpA8jYJyX9plBoDiayvIL3vFl6Oi8MthA0QqhlaQdQTdubUPsylXZUYNQXL
-         hakQ==
+        d=gmail.com; s=20230601; t=1705044402; x=1705649202; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gneEqmMOyK7inkwh49BJcAK3SqDSE1D3WmwtdjW5DGM=;
+        b=FwxYMJe2jvIjT5v2l40f5TAFUG8U+Ri2TSy/cryOS24jFtb5fWEBh7HIw4KbWbO75M
+         a1rxMaDG5MIAlinMxO5JInRjSch4HZiOn15IsuwWEZUGem45zLiq2krRRY9F9nCT7m+A
+         HIS3hg/qckJRH/lLm4iNgxi6jyM7vNDIEL9nVSesRzSVBQw9+NpCS4NLY5oBDSVRD6cj
+         cmpF/ZQpVDpWEN2rO04GuFPlgpRMGWj6+CZpw/odL7TFgjSoYnGZM2kWE5BHu/bYcK/T
+         kBZJ8Qgdcp7Zn6cXecYqx7ebybCwqLQX2sNQe4W0RZC0hASMkMqlH5vHEDvJ6Lbflo8a
+         2DOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705044276; x=1705649076;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sDgypo+3HDDGZL1zxwUNMT/iERIfh59UdQRh8jntZkQ=;
-        b=v/2Uh48h65oEP3DSteCSHYH8ovJdhsNavtXMqNFz/yNpdMZA8fdSwm47hDsNZRNWnQ
-         AAld/GN6/RlMckU/rVJvzfNprpWcbsY4JZ+59VVxyb2Y6vVvhD5FV9mv+4O/l3ZNsQPg
-         jtdOxfWVdWPDNE3jQPQP+fYQdAxywExKdH+e1HBXxa9ctpnyXBj0Xu4T+OpKD2NppN5/
-         szfYRHgiwWd1AnKutcq1K42KT/RMRJmKZzVEzJmWDMJdIvqIem30SOq1HsjJ3YMZwo/3
-         ssIeCOKJ2/0pHWDcdUAaaXim6xwH0/7tXmRdiOF+rEU6v7hLGpp7IyTIf8QlJVIAZAmG
-         vQEg==
-X-Gm-Message-State: AOJu0YzpdJwATENH9IiDnpT/BVwPpunDGsvX3MV9GK5QGYdDFTH8P8SG
-	p7rIwJId5jINOLMLwkrx/Kuo+abvA/tGD4dulTI=
-X-Google-Smtp-Source: AGHT+IGE3xGViKlK2yc+ZaJNXRVWyRFPOFIivkbfR3AmMupXtJWgQtiqGlkYa9/vl6mLOqkAulKZo4nfI/O3IVit2Tw=
-X-Received: by 2002:a05:6359:3516:b0:172:ea55:1ae2 with SMTP id
- un22-20020a056359351600b00172ea551ae2mr1060625rwb.37.1705044276352; Thu, 11
- Jan 2024 23:24:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705044402; x=1705649202;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gneEqmMOyK7inkwh49BJcAK3SqDSE1D3WmwtdjW5DGM=;
+        b=YHEluoI3kM9QAe8NqKPWcMXYhqivhY4BYhLu5bG5H05h3sXIKQZpDdMK3+socHtaOy
+         n2Ja72aJZs5Obc1JpWVF+D49rXi7pza+i726oxUXPWyoMb2BhCL4bmzm71WmhIuTbOFE
+         Fs84ftdw34Vt2Efhpk4Ead1aYugrdoI0XmRAJDH1xZGqrIm8LFaHbIPiwIgyoEbszEFO
+         ynbuOA4toJaQnF2fS1k/MRw9wyxWIuNdGmqvrTRXDpYXnYzKysB/tjJVHdYmU98nVNe2
+         qBlL3fdtH1YZ4ldLlMoL6xeom3d3DI9WdNihbptNd4IV2Bz+uzvQwPTNnGpQJYXdVSkx
+         yM5g==
+X-Gm-Message-State: AOJu0YwxxeN19Goxtubylf/cGL8k0h/rEpwDFxCOxsoaOVmRCn3Aql3p
+	DuT0wdunKGACiFXtb+MjpSU=
+X-Google-Smtp-Source: AGHT+IGy+3PkDT9BlN+tYjnahAUimYtM7/rxEeJyqJ+bvuIygrRVut+yaLiioJGco4zZFrsehQqsLw==
+X-Received: by 2002:ac2:5921:0:b0:50e:a9f0:4a88 with SMTP id v1-20020ac25921000000b0050ea9f04a88mr204155lfi.91.1705044401301;
+        Thu, 11 Jan 2024 23:26:41 -0800 (PST)
+Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
+        by smtp.gmail.com with ESMTPSA id cd6-20020a170906b34600b00a2c8e9918casm924387ejb.198.2024.01.11.23.26.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 23:26:40 -0800 (PST)
+Message-ID: <fbe07c5f1d37febe0b89bf73816bc2e5d219547f.camel@gmail.com>
+Subject: Re: [PATCH 01/13] spi: add core support for controllers with
+ offload capabilities
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>,  Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Michael Hennerich <michael.hennerich@analog.com>,  Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Frank Rowand
+ <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan
+ Corbet <corbet@lwn.net>,  linux-spi@vger.kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Date: Fri, 12 Jan 2024 08:26:40 +0100
+In-Reply-To: <ee19aa9e-cb51-41fb-a980-e3df579b5d35@sirena.org.uk>
+References: 
+	<20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
+	 <20240109-axi-spi-engine-series-3-v1-1-e42c6a986580@baylibre.com>
+	 <0c0b1954825dc174cab48060e96ddadadc18aefd.camel@gmail.com>
+	 <aae36622-4e05-4f16-9460-d7614fd599aa@sirena.org.uk>
+	 <5b62d742fa789e9860781b6f5f1fda4f583b0e5b.camel@gmail.com>
+	 <ee19aa9e-cb51-41fb-a980-e3df579b5d35@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110081128.18683-1-qiang.zhang1211@gmail.com>
- <CALm+0cXQF0nS6HD5iZ1RhbWo0rg8adwvcHrsS8W04K1MxY51bA@mail.gmail.com>
- <06bb8028-a1be-431c-9bff-265777d64e27@paulmck-laptop> <4a3031ff-49e5-4e95-914c-aa034ebfd8a7@joelfernandes.org>
-In-Reply-To: <4a3031ff-49e5-4e95-914c-aa034ebfd8a7@joelfernandes.org>
-From: Z qiang <qiang.zhang1211@gmail.com>
-Date: Fri, 12 Jan 2024 15:24:25 +0800
-Message-ID: <CALm+0cU2j9S7sL-zmXmYD3KBtGxtYgmbxA9rnF2Cud4d8BWH=A@mail.gmail.com>
-Subject: Re: [PATCH] rcu/nocb: Fix WARN_ON_ONCE() in the rcu_nocb_bypass_lock()
-To: Joel Fernandes <joel@joelfernandes.org>
-Cc: paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com, 
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
->
->
->
-> On 1/11/2024 6:54 AM, Paul E. McKenney wrote:
-> > On Wed, Jan 10, 2024 at 04:36:46PM +0800, Z qiang wrote:
-> >>>
-> >>> For the kernels built with CONFIG_RCU_NOCB_CPU_DEFAULT_ALL=y and
-> >>> CONFIG_RCU_LAZY=y, here are the following scenarios that will trigger
-> >>> WARN_ON_ONCE() in the rcu_nocb_bypass_lock() and rcu_nocb_wait_contended().
-> >>>
-> >>>         CPU2                                               CPU11
-> >>> kthread
-> >>> rcu_nocb_cb_kthread                                       ksys_write
-> >>> rcu_do_batch                                              vfs_write
-> >>> rcu_torture_timer_cb                                      proc_sys_write
-> >>> __kmem_cache_free                                         proc_sys_call_handler
-> >>> kmemleak_free                                             drop_caches_sysctl_handler
-> >>> delete_object_full                                        drop_slab
-> >>> __delete_object                                           shrink_slab
-> >>> put_object                                                lazy_rcu_shrink_scan
-> >>> call_rcu                                                  rcu_nocb_flush_bypass
-> >>> __call_rcu_commn                                            rcu_nocb_bypass_lock
-> >>>                                                             raw_spin_trylock(&rdp->nocb_bypass_lock) fail
-> >>>                                                             atomic_inc(&rdp->nocb_lock_contended);
-> >>> rcu_nocb_wait_contended                                     WARN_ON_ONCE(smp_processor_id() != rdp->cpu);
-> >>>  WARN_ON_ONCE(atomic_read(&rdp->nocb_lock_contended))                                          |
-> >>>                             |_ _ _ _ _ _ _ _ _ _same rdp and rdp->cpu != 11_ _ _ _ _ _ _ _ _ __|
-> >>>
-> >>> This commit therefore use the rcu_nocb_try_flush_bypass() instead of
-> >>> rcu_nocb_flush_bypass() in lazy_rcu_shrink_scan(), if the nocb_bypass
-> >>> queue is being flushed, the rcu_nocb_try_flush_bypass will return directly.
-> >>>
-> >>> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> >
-> > Just to make sure I understand, the "echo" command called out below
-> > will trigger the two-CPU scenario called out above in kernels built with
-> > CONFIG_RCU_NOCB_CPU_DEFAULT_ALL=y and CONFIG_RCU_LAZY=y, correct?
-> >
-> > If so, good catch!
-> >
-> > Any objections to this patch?  Or to put it another way, is there a
-> > better fix via adjusting lazy RCU?
->
-> I think it is a good find and no objections to this patch. One thing we could
-> also do is have rcu_nocb_try_flush_bypass() return false if the
->  trylock fails, and then retry till lock is available. That would give us
-> roughly the same behavior as rcu_nocb_flush_bypass() but I am not sure if it is
-> worth it, because the shrinker will just try again if memory pressure is not
-> relieved anyway.
->
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Thu, 2024-01-11 at 15:41 +0000, Mark Brown wrote:
+> On Thu, Jan 11, 2024 at 03:11:32PM +0100, Nuno S=C3=A1 wrote:
+> > On Thu, 2024-01-11 at 13:33 +0000, Mark Brown wrote:
+>=20
+> > > I tend to agree that we shouldn't be exposing this to SPI device driv=
+ers
+> > > however we will want to keep track of if the unit is busy, and design=
+ing
+> > > it to cope with multiple offloads does seem like sensible future
+> > > proofing.=C2=A0 There's also the possibility that one engine might be=
+ able to
+>=20
+> > Fair enough. But wouldn't a simple DT integer property (handled by the =
+spi core)
+> > to identify the offload index be easier for SPI device drivers? We coul=
+d still
+> > have dedicated interfaces for checking if the unit is busy or not... Th=
+e point
+> > is that we would not need an explicit get() from SPI drivers.
+>=20
+> It feels like we'd need a get/release operation of some kind for mutual
+> exclusion, it's not just the discovery it's also figuring out if the
+> hardware is in use at a given moment.
+>=20
 
-Thanks Joel for the review :) .
+Hmm did not thought about the busy case. Still, I could see this being easi=
+ly done on
+the controller driver (at least until we have a clear idea if this is usefu=
+l or if it
+will attract more users) or even at the spi core on the prepare + unprepare
+interfaces. A flag could be enough to return EBUSY if someone is already in=
+ the
+process of preparing + enabling the engine.=C2=A0
 
->
-> thanks,
->
->  - Joel
->
->
-> >
-> >                                                       Thanx, Paul
-> >
-> >>> ---
-> >>
-> >> During rcutorture testing, use echo 3 > /proc/sys/vm/drop_caches will trigger:
-> >>
-> >> [ 52.674359] WARNING: CPU: 11 PID: 505 at kernel/rcu/tree_nocb.h:104
-> >> rcu_nocb_bypass_lock+0xc7/0xd0
-> >> [ 52.674388] Modules linked in:
-> >> [ 52.674406] CPU: 11 PID: 505 Comm: sh Not tainted 6.6.0-rt14zqiang-dirty #103
-> >> [ 52.674422] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
-> >> rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
-> >> [ 52.674436] RIP: 0010:rcu_nocb_bypass_lock+0xc7/0xd0
-> >> [ 52.674454] Code: 4c 89 e7 e8 4b 3d 6a 01 be 04 00 00 00 4c 89 ef e8
-> >> ce 92 31 00 f0 ff 8b 68 02 00 00 5b 41 5c 41 5d 41 5e 5d c3 cc cc cc
-> >> cc 90 <0f> 0b 90 eb d1 0f 1f 40 00 90 90 0
-> >> [ 52.674467] RSP: 0018:ffff88800af6fa68 EFLAGS: 00010093
-> >> [ 52.674487] RAX: 0000000000000000 RBX: ffff888069e0f540 RCX: ffffffffb5c12d44
-> >> [ 52.674497] RDX: 0000000000000003 RSI: dffffc0000000000 RDI: ffff888069e0fb10
-> >> [ 52.674508] RBP: ffff88800af6fa88 R08: ffffed100d3c1ef6 R09: ffffed100d3c1ef6
-> >> [ 52.674518] R10: ffffed100d3c1ef5 R11: ffff888069e0f7ab R12: ffff888069e0f8c0
-> >> [ 52.674529] R13: ffff888069e0f7a8 R14: 000000000000000b R15: ffff88800af6fb90
-> >> [ 52.674540] FS: 00007ff543132740(0000) GS:ffff88806c000000(0000)
-> >> knlGS:0000000000000000
-> >> [ 52.674555] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >> [ 52.674565] CR2: 000055df13465004 CR3: 00000000027f2000 CR4: 00000000001506e0
-> >> [ 52.674576] Call Trace:
-> >> [ 52.674583] <TASK>
-> >> [ 52.674598] ? show_regs+0x66/0x70
-> >> [ 52.674627] ? __warn+0xae/0x220
-> >> [ 52.674657] ? rcu_nocb_bypass_lock+0xc7/0xd0
-> >> [ 52.674693] ? report_bug+0x14a/0x240
-> >> [ 52.674756] ------------[ cut here ]------------
-> >> [ 52.674766] WARNING: CPU: 2 PID: 118 at kernel/rcu/tree_nocb.h:124
-> >> __call_rcu_common+0xd3f/0xd80
-> >> [ 52.674785] Modules linked in:
-> >> [ 52.674785] ? handle_bug+0x44/0x80
-> >> [ 52.674795] CPU: 2 PID: 118 Comm: rcuop/10 Not tainted
-> >> 6.6.0-rt14zqiang-dirty #103
-> >> [ 52.674806] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
-> >> rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
-> >> [ 52.674812] RIP: 0010:__call_rcu_common+0xd3f/0xd80
-> >> [ 52.674816] ? exc_invalid_op+0x1c/0x50
-> >> [ 52.674822] Code: 9e 02 4c 89 e2 e8 a1 46 ff ff e9 d0 fa ff ff 48 8d
-> >> 7b 18 e8 43 5f 30 00 48 8b 7b 18 48 89 de e8 67 9a ff ff e9 69 f6 ff
-> >> ff 90 <0f> 0b 90 f3 90 e9 17 fa ff ff 90 b
-> >> [ 52.674832] RSP: 0018:ffff888002277af8 EFLAGS: 00010002
-> >> [ 52.674847] RAX: 0000000000000001 RBX: ffff888069e0f540 RCX: ffffffffb5c24655
-> >> [ 52.674848] ? asm_exc_invalid_op+0x1f/0x30
-> >> [ 52.674857] RDX: 0000000000000003 RSI: dffffc0000000000 RDI: ffff888069e0f7a8
-> >> [ 52.674867] RBP: ffff888002277bf0 R08: ffffed100d3c1ef6 R09: ffffed100d3c1ef6
-> >> [ 52.674877] R10: ffffed100d3c1ef5 R11: ffff888069e0f7ab R12: ffff88800bab62f8
-> >> [ 52.674887] R13: ffff888069e0f7a8 R14: 0000000000000000 R15: ffff888069e0f918
-> >> [ 52.674897] FS: 0000000000000000(0000) GS:ffff888069c00000(0000)
-> >> knlGS:0000000000000000
-> >> [ 52.674910] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >> [ 52.674920] CR2: 000055df13419911 CR3: 00000000027f2000 CR4: 00000000001506e0
-> >> [ 52.674930] Call Trace:
-> >> [ 52.674936] <TASK>
-> >> [ 52.674934] ? rcu_nocb_bypass_lock+0x94/0xd0
-> >> [ 52.674950] ? show_regs+0x66/0x70
-> >> [ 52.674972] ? rcu_nocb_bypass_lock+0xc7/0xd0
-> >> [ 52.674974] ? __warn+0xae/0x220
-> >> [ 52.675002] ? __call_rcu_common+0xd3f/0xd80
-> >> [ 52.675010] ? rcu_nocb_bypass_lock+0x94/0xd0
-> >> [ 52.675037] ? report_bug+0x14a/0x240
-> >> [ 52.675054] rcu_nocb_flush_bypass+0x3a/0x60
-> >> [ 52.675094] ? handle_bug+0x44/0x80
-> >> [ 52.675095] lazy_rcu_shrink_scan+0x12e/0x220
-> >> [ 52.675114] ? exc_invalid_op+0x1c/0x50
-> >> [ 52.675139] ? asm_exc_invalid_op+0x1f/0x30
-> >> [ 52.675156] shrink_slab.constprop.116+0x2cd/0x6e0
-> >> [ 52.675206] ? __call_rcu_common+0x775/0xd80
-> >> [ 52.675239] ? __call_rcu_common+0xd3f/0xd80
-> >> [ 52.675259] ? __pfx_shrink_slab.constprop.116+0x10/0x10
-> >> [ 52.675272] ? __call_rcu_common+0x775/0xd80
-> >> [ 52.675335] ? __pfx_drop_pagecache_sb+0x10/0x10
-> >> [ 52.675365] ? __pfx___call_rcu_common+0x10/0x10
-> >> [ 52.675386] ? preempt_schedule+0x7f/0xa0
-> >> [ 52.675396] drop_slab+0x64/0x90
-> >> [ 52.675413] ? preempt_schedule_thunk+0x1a/0x30
-> >> [ 52.675426] drop_caches_sysctl_handler+0x82/0xe0
-> >> [ 52.675472] call_rcu+0x17/0x20
-> >> [ 52.675489] put_object+0x53/0x70
-> >> [ 52.675513] __delete_object+0x73/0x90
-> >> [ 52.675545] delete_object_full+0x1f/0x30
-> >> [ 52.675563] kmemleak_free+0x41/0x70
-> >> [ 52.675586] __kmem_cache_free+0x1bd/0x230
-> >> [ 52.675598] ? rcu_torture_timer_cb+0x12/0x20
-> >> [ 52.675623] ? rcu_do_batch+0x466/0xf50
-> >> [ 52.675649] kfree+0x90/0x110
-> >> [ 52.675661] ? __pfx_rcu_torture_timer_cb+0x10/0x10
-> >> [ 52.675678] rcu_torture_timer_cb+0x12/0x20
-> >> [ 52.675697] rcu_do_batch+0x46b/0xf50
-> >> [ 52.675464] proc_sys_call_handler+0x247/0x310
-> >> [ 52.675772] ? __pfx_rcu_do_batch+0x10/0x10
-> >> [ 52.675785] ? migrate_disable+0x2a/0xf0
-> >> [ 52.675815] ? lockdep_softirqs_off+0x13d/0x200
-> >> [ 52.675854] ? rcu_nocb_cb_kthread+0x29c/0x880
-> >> [ 52.675889] rcu_nocb_cb_kthread+0x2b1/0x880
-> >> [ 52.675910] ? __pfx_proc_sys_call_handler+0x10/0x10
-> >> [ 52.675945] ? vfs_write+0x3ea/0x7c0
-> >> [ 52.675958] ? vfs_write+0x3ea/0x7c0
-> >> [ 52.675959] ? __pfx_rcu_nocb_cb_kthread+0x10/0x10
-> >> [ 52.675974] ? trace_preempt_on+0x54/0xe0
-> >> [ 52.675990] ? __kthread_parkme+0x80/0x110
-> >> [ 52.676015] ? preempt_count_sub+0x50/0x80
-> >> [ 52.676031] proc_sys_write+0x17/0x20
-> >> [ 52.676050] vfs_write+0x58b/0x7c0
-> >> [ 52.676063] ? __kthread_parkme+0xf2/0x110
-> >> [ 52.676111] ? __pfx_rcu_nocb_cb_kthread+0x10/0x10
-> >> [ 52.676112] ? __pfx_vfs_write+0x10/0x10
-> >> [ 52.676139] kthread+0x1a8/0x1f0
-> >> [ 52.676161] ? kthread+0x107/0x1f0
-> >> [ 52.676163] ? __might_fault+0x84/0xd0
-> >> [ 52.676183] ? __pfx_kthread+0x10/0x10
-> >> [ 52.676197] ? __might_fault+0xbe/0xd0
-> >> [ 52.676213] ? __might_fault+0x84/0xd0
-> >> [ 52.676223] ret_from_fork+0x40/0x60
-> >> [ 52.676238] ? __pfx_kthread+0x10/0x10
-> >> [ 52.676272] ? __fget_light+0xb8/0x120
-> >> [ 52.676273] ret_from_fork_asm+0x1b/0x30
-> >> [ 52.676355] ksys_write+0xd0/0x170
-> >> [ 52.676386] ? __pfx_ksys_write+0x10/0x10
-> >> [ 52.676418] </TASK>
-> >> [ 52.676425] irq event stamp: 591689
-> >> [ 52.676433] hardirqs last enabled at (591688): [<ffffffffb72b7193>]
-> >> _raw_spin_unlock_irqrestore+0x63/0x80
-> >> [ 52.676452] hardirqs last disabled at (591689): [<ffffffffb5c242f3>]
-> >> __call_rcu_common+0x413/0xd80
-> >> [ 52.676467] softirqs last enabled at (591668): [<ffffffffb5af3489>]
-> >> __local_bh_enable_ip+0x109/0x160
-> >> [ 52.676486] softirqs last disabled at (591672): [<ffffffffb5c1ed2d>]
-> >> rcu_do_batch+0x5ad/0xf50
-> >> [ 52.676488] __x64_sys_write+0x47/0x60
-> >> [ 52.676500] ---[ end trace 0000000000000000 ]---
-> >> root@qemux86-64:~# [ 52.676526] do_syscall_64+0x47/0x90
-> >> [ 52.676552] entry_SYSCALL_64_after_hwframe+0x6f/0xd9
-> >> [ 52.676566] RIP: 0033:0x7ff5432260c4
-> >> [ 52.676583] Code: 15 59 7d 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff
-> >> eb b7 0f 1f 00 f3 0f 1e fa 80 3d 1d 0d 0e 00 00 74 13 b8 01 00 00 00
-> >> 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 8
-> >> [ 52.676596] RSP: 002b:00007ffcc9614998 EFLAGS: 00000202 ORIG_RAX:
-> >> 0000000000000001
-> >> [ 52.676613] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007ff5432260c4
-> >> [ 52.676624] RDX: 0000000000000002 RSI: 000055df1345df40 RDI: 0000000000000001
-> >> [ 52.676634] RBP: 000055df1345df40 R08: 000055df1345b700 R09: 0000000000000000
-> >> [ 52.676644] R10: 00000000000001b6 R11: 0000000000000202 R12: 0000000000000001
-> >> [ 52.676653] R13: 00007ff5431326c8 R14: 00007ffcc9614a00 R15: 000055df1345b6f8
-> >> [ 52.676789] </TASK>
-> >> [ 52.676796] irq event stamp: 502888
-> >> [ 52.676804] hardirqs last enabled at (502887): [<ffffffffb72b7193>]
-> >> _raw_spin_unlock_irqrestore+0x63/0x80
-> >> [ 52.676823] hardirqs last disabled at (502888): [<ffffffffb5c19753>]
-> >> lazy_rcu_shrink_scan+0x1d3/0x220
-> >> [ 52.676838] softirqs last enabled at (54708): [<ffffffffb5af3489>]
-> >> __local_bh_enable_ip+0x109/0x160
-> >> [ 52.676854] softirqs last disabled at (54698): [<ffffffffb6fd861a>]
-> >> unix_release_sock+0x26a/0x7c0
-> >> [ 52.676888] ---[ end trace 0000000000000000 ]---
-> >>
-> >> Thanks
-> >> Zqiang
-> >>
-> >>
-> >>>  kernel/rcu/tree_nocb.h | 2 +-
-> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-> >>> index d82f96a66600..9b618842c324 100644
-> >>> --- a/kernel/rcu/tree_nocb.h
-> >>> +++ b/kernel/rcu/tree_nocb.h
-> >>> @@ -1381,7 +1381,7 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
-> >>>                         rcu_nocb_unlock_irqrestore(rdp, flags);
-> >>>                         continue;
-> >>>                 }
-> >>> -               WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, jiffies, false));
-> >>> +               rcu_nocb_try_flush_bypass(rdp, jiffies);
-> >>>                 rcu_nocb_unlock_irqrestore(rdp, flags);
-> >>>                 wake_nocb_gp(rdp, false);
-> >>>                 sc->nr_to_scan -= _count;
-> >>> --
-> >>> 2.17.1
-> >>>
-> >
+Bah, anyways, it's just I'm really not thrilled about that kind of interfac=
+e in here
+but yeah, as long as you think it's worth it...
+>=20
+
+- Nuno S=C3=A1
