@@ -1,112 +1,111 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2310E7319F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 16:17:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B997319F
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 16:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <mkl@pengutronix.de>)
-	id 1rOKE8-0000I0-0A
-	for linux-kernel@vger.kernel.org; Fri, 12 Jan 2024 17:17:48 +0100
+	id 1rOKEA-0000I6-2s; Fri, 12 Jan 2024 17:17:50 +0100
 Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <mkl@pengutronix.de>)
-	id 1rOKE7-002Bnl-Im
-	for linux-kernel@vger.kernel.org; Fri, 12 Jan 2024 17:17:47 +0100
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id 16FF5275222
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 16:13:20 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
+	id 1rOKE7-002Bnr-Ow; Fri, 12 Jan 2024 17:17:47 +0100
+Received: from pengutronix.de (unknown [172.20.34.65])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id 28927275213;
-	Fri, 12 Jan 2024 16:13:18 +0000 (UTC)
-Received: from [172.20.34.65] (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id d9b81a73;
-	Fri, 12 Jan 2024 16:13:17 +0000 (UTC)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 7CBE82751CD;
+	Fri, 12 Jan 2024 15:43:16 +0000 (UTC)
+Date: Fri, 12 Jan 2024 16:43:16 +0100
 From: Marc Kleine-Budde <mkl@pengutronix.de>
-Date: Fri, 12 Jan 2024 17:13:14 +0100
-Subject: [PATCH] net: netdev_queue: netdev_txq_completed_mb(): fix wake
- condition
+To: "Kumar, Udit" <u-kumar1@ti.com>
+Cc: Bhavya Kapoor <b-kapoor@ti.com>, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-can@vger.kernel.org, mailhol.vincent@wanadoo.fr, 
+	rcsekar@samsung.com, pabeni@redhat.com, kuba@kernel.org, edumazet@google.com, 
+	davem@davemloft.net, wg@grandegger.com, vigneshr@ti.com
+Subject: Re: [PATCH] net: can: Add support for aliases in CAN
+Message-ID: <20240112-overreact-dwindling-2949267e8a02-mkl@pengutronix.de>
+References: <20240102102949.138607-1-b-kapoor@ti.com>
+ <20240102-chop-extending-b7dc1acaf5db-mkl@pengutronix.de>
+ <8dee1738-0bde-48fb-bd0e-b8d06b609677@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240112-netdev_queue-v1-1-102c2d57e20a@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIABlloWUC/x3MQQqAIBRF0a3EHyeoVFRbiYjIZ/2JlWYE0t6Th
- mdwb6IAzwjUF4k8bg68uwxVFrRss1sh2GSTlrqSSmnhcBnc0xkRIdCppm1sbbGAcnJ4WH7+3TC
- +7wchRTDoXgAAAA==
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>
-Cc: kernel@pengutronix.de, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>
-X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1364; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=CkEKs9/ASN2pww0g0ug4I7HYAiq8bIX4Yqwzznlyw/4=;
- b=owEBbQGS/pANAwAKAb5QHEoqigToAcsmYgBloWUa98YtsGRxO4OY7nG90d2rMUTs9xKV9hUp4
- YoKoQPLipmJATMEAAEKAB0WIQQOzYG9qPI0qV/1MlC+UBxKKooE6AUCZaFlGgAKCRC+UBxKKooE
- 6KeICACY3D2klvan6Q4R965DSPSOZiScSg3DoNHPLut+48r26NGzmPwepHnGUvxExCKWShF8O9I
- 55Q5qMSQO8dFKIoNoyrn8sitRwUWP/tJQFpg8kTwJBfcLySxyL58BVHccxbsovVPont8s9oc1Ev
- WWtYQ+gu/1RFbkuetQJF9QegiSmiqpVZD9wZkHW9nPJPWGuKTFGwHqwuPFSP/y6yOtsjzBwXmXi
- 2VogySlyZSSdaTiyZ3jeKuCWEOfS/KQsAIo5Bx5+Y/LYpEolrZks8G5obTYJJOWEC+1PX/ZvVwz
- Nr6PDmdONeeBuiTwRnOGFhM9BsWzyKP+auS1SeSDhjVpH7u0
-X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
- fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uxczuahqgymwfz6l"
+Content-Disposition: inline
+In-Reply-To: <8dee1738-0bde-48fb-bd0e-b8d06b609677@ti.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: mkl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-netif_txq_try_stop() uses "get_desc >= start_thrs" as the check for
-the call to netif_tx_start_queue().
 
-Use ">=" i netdev_txq_completed_mb(), too.
+--uxczuahqgymwfz6l
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: c91c46de6bbc ("net: provide macros for commonly copied lockless queue stop/wake code")
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
----
-Hello,
+On 12.01.2024 20:53:32, Kumar, Udit wrote:
+> Hi Marc
+>=20
+> On 1/2/2024 4:43 PM, Marc Kleine-Budde wrote:
+> > On 02.01.2024 15:59:49, Bhavya Kapoor wrote:
+> > > When multiple CAN's are present, then names that are getting assigned
+> > > changes after every boot even after providing alias in the device tre=
+e.
+> > > Thus, Add support for implementing CAN aliasing so that names or
+> > > alias for CAN will now be provided from device tree.
+> > NACK, please use udev or systemd-networkd to provide stable names for
+> > CAN interfaces.
+>=20
+> Would you like to re-consider this NACK.
 
-I'm currently converting a networking driver with a TX-FIFO depth of
-1 (CAN device with lots of errata :/) to the netdev_queue.h helpers
-and stumbled over an off-by-one error on __netif_txq_completed_wake().
+This is not a CAN device specific problem. If you want to change this,
+talk/convince the networking people.
+
+> From kernel side,
+>=20
+> IMO if aliasing is set in device tree then kernel should provide consiste=
+nt
+> baseline names.
+>=20
+> However, distributions may choose different or other stable naming,
+>=20
+> Also, if some distribution want to rely on kernel naming they still can d=
+o.
 
 regards,
 Marc
----
- include/net/netdev_queues.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/netdev_queues.h b/include/net/netdev_queues.h
-index d68b0a483431..8b8ed4e13d74 100644
---- a/include/net/netdev_queues.h
-+++ b/include/net/netdev_queues.h
-@@ -128,7 +128,7 @@ netdev_txq_completed_mb(struct netdev_queue *dev_queue,
- 		netdev_txq_completed_mb(txq, pkts, bytes);		\
- 									\
- 		_res = -1;						\
--		if (pkts && likely(get_desc > start_thrs)) {		\
-+		if (pkts && likely(get_desc >= start_thrs)) {		\
- 			_res = 1;					\
- 			if (unlikely(netif_tx_queue_stopped(txq)) &&	\
- 			    !(down_cond)) {				\
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
----
-base-commit: 907ee6681788556b9ade3ad0a1f6f4aea192399c
-change-id: 20240112-netdev_queue-e91686f5fece
+--uxczuahqgymwfz6l
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards,
--- 
-Marc Kleine-Budde <mkl@pengutronix.de>
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEDs2BvajyNKlf9TJQvlAcSiqKBOgFAmWhXhAACgkQvlAcSiqK
+BOjD0wgAriZqvA12Vu5nzdKCKAjSH8J55u83wid8H1TFwOTI44OzbAg0a6AakQua
+JRGAbYx0pivUuwNf8emVJ1FVJMxyPH1lMPwQep6ZYtTVqoWfhOFDWk2m14xBYTVj
+DguY9dlaK/uBU39GBDnk3b8dMd+l6QwSDJhymFTO5P5c87YLzVlpa4FkbSVE2Atz
+wQVQZdMzIUJK4FwFaymKkT2SjLsLb5kZPM8t80L7oknZruvsJKGEAm2KF9TJYnV0
+fjdBgfzdbdxFrJqJEd7YSOK5aN0mv2/gyb16rpGDYRsrWmBN2sffk4kIC1TmsSwS
+Do9pEjkihZ2wEpAShuxai2OdqVMBMQ==
+=709B
+-----END PGP SIGNATURE-----
 
+--uxczuahqgymwfz6l--
