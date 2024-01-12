@@ -1,122 +1,101 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB8D1B27B;
-	Fri, 12 Jan 2024 03:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TB6pf01FpzNkyp;
-	Fri, 12 Jan 2024 11:44:09 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id 93C29140555;
-	Fri, 12 Jan 2024 11:44:34 +0800 (CST)
-Received: from ubuntu2204.huawei.com (10.67.174.22) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Jan 2024 11:44:33 +0800
-From: Yang Jihong <yangjihong1@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <yangjihong1@huawei.com>
-Subject: [PATCH] perf build: Check whether pkg-config is installed when libtraceevent is linked
-Date: Fri, 12 Jan 2024 03:40:19 +0000
-Message-ID: <20240112034019.3558584-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC151A73C;
+	Fri, 12 Jan 2024 03:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="l/og3Mku"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1705031328;
+	bh=vOyFXKkwchtgJ0ImOnmWdboCyhvPRseqpjfIMKUiPtM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=l/og3MkuZ7cHzp5MjaSifoHebyZWPBMx4w5b+cMppz9W4lTmL/jQvdfnVEEH9khfb
+	 dM9iI+fl48GWvHKGHYdkJQ8YPV3tQO77ur2ao9m7XI6UZTNLGMCyFL8MhXGyg8HFDB
+	 Y5MbPP0xY3ci0Ml4Vo37OugCX+TybWY9GrBhoyF7LKEJoc+4HwJvx8O2gkUGXkyKj5
+	 JXTEFXN9R9vOLrK0gPLXZ1NptcD/4SsR+2SPRD67oxY8P9kC0EZyPxUSgPggnMlnYT
+	 eK7FtWqAaf4mkMUtBUCb3RabxzF7cX0q/mPk/yYxi6kPlITYQBZ4YhFt14wWfDfxOV
+	 eLPlvKSAsawfQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TB6w057fPz4wnv;
+	Fri, 12 Jan 2024 14:48:48 +1100 (AEDT)
+Date: Fri, 12 Jan 2024 14:48:46 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: Fixes tags needs some work in the mm-unstable branch of
+ the mm tree
+Message-ID: <20240112144846.7d619a45@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+Content-Type: multipart/signed; boundary="Sig_/MpnNr3EeXGFl/OcyGbL45S9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-If pkg-config is not installed when libtraceevent is linked, the build fails.
+--Sig_/MpnNr3EeXGFl/OcyGbL45S9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The error information is as follows:
+Hi all,
 
-  $ make
-  <SNIP>
-  In file included from /home/yjh/projects_linux/perf-tool-next/linux/tools/perf/util/evsel.c:43:
-  /home/yjh/projects_linux/perf-tool-next/linux/tools/perf/util/trace-event.h:149:62: error: operator '&&' has no right operand
-    149 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
-        |                                                              ^~
-  error: command '/usr/bin/gcc' failed with exit code 1
-  cp: cannot stat 'python_ext_build/lib/perf*.so': No such file or directory
-  make[2]: *** [Makefile.perf:668: python/perf.cpython-310-x86_64-linux-gnu.so] Error 1
-  make[2]: *** Waiting for unfinished jobs....
+In commit
 
-Because pkg-config is not installed, fail to get libtraceevent version in
-Makefile.config file. As a result, LIBTRACEEVENT_VERSION is empty.
-However, the preceding error information is not user-friendly.
+  e8ff43feb436 ("mm: vmalloc: Fix a warning in the crash_save_vmcoreinfo_in=
+it()")
 
-Identify errors in advance by checking that pkg-config is installed at
-compile time.
+Fixes tag
 
-The build results of various scenarios are as follows:
+  Fixes: 9bdb180b2d ("mm/vmalloc: remove vmap_area_list")
 
-1. build successful when libtraceevent is not linked and pkg-config is not installed
+has these problem(s):
 
-  $ pkg-config --version
-  -bash: /usr/bin/pkg-config: No such file or directory
-  $ make clean >/dev/null
-  $ make NO_LIBTRACEEVENT=1 >/dev/null
-  Makefile.config:1133: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
-    PERF_VERSION = 6.7.rc6.gd988c9f511af
-  $ echo $?
-  0
+  - SHA1 should be at least 12 digits long
+    This can be fixed for the future by setting core.abbrev to 12 (or
+    more) or (for git v2.11 or later) just making sure it is not set
+    (or set to "auto").
 
-2. dummy pkg-config is missing when libtraceevent is linked
+In commit
 
-  $ pkg-config --version
-  -bash: /usr/bin/pkg-config: No such file or directory
-  $ make clean >/dev/null
-  $ make >/dev/null
-  Makefile.config:221: *** Error: pkg-config needed by libtraceevent is missing on this system, please install it.  Stop.
-  make[1]: *** [Makefile.perf:251: sub-make] Error 2
-  make: *** [Makefile:70: all] Error 2
-  $ echo $?
-  2
+  49d7473a6c07 ("mm: vmalloc: mark vmap_init_free_space() with __init tag")
 
-3. build successful when libtraceevent is linked and pkg-config is installed
+Fixes tag
 
-  $ pkg-config --version
-  0.29.2
-  $ make clean >/dev/null
-  $ make >/dev/null
-  Makefile.config:1133: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
-    PERF_VERSION = 6.7.rc6.gd988c9f511af
-  $ echo $?
-  0
+  Fixes: 86817057732 ("mm: vmalloc: remove global vmap_area_root rb-tree")
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/Makefile.config | 6 ++++++
- 1 file changed, 6 insertions(+)
+has these problem(s):
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index aa55850fbc21..70c33c935a98 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -216,6 +216,12 @@ ifeq ($(call get-executable,$(BISON)),)
-   dummy := $(error Error: $(BISON) is missing on this system, please install it)
- endif
- 
-+ifneq ($(NO_LIBTRACEEVENT),1)
-+  ifeq ($(call get-executable,$(PKG_CONFIG)),)
-+  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
-+  endif
-+endif
-+
- ifneq ($(OUTPUT),)
-   ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\= 371), 1)
-     BISON_FILE_PREFIX_MAP := --file-prefix-map=$(OUTPUT)=
--- 
-2.34.1
+  - SHA1 should be at least 12 digits long
+    This can be fixed for the future by setting core.abbrev to 12 (or
+    more) or (for git v2.11 or later) just making sure it is not set
+    (or set to "auto").
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/MpnNr3EeXGFl/OcyGbL45S9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWgtp4ACgkQAVBC80lX
+0GyKmAf/bRZAsaglOYAzRSt63DjfXHopB00T8GJA179Eoe6fsSA03oD1yEJ3Nynv
+pkkyeGIZClsmL83woJill1fkKDcm7dAL4KprcpMteRPIZQ1d/e1RqJL6euqbLBvS
+wKGOdEw6XKTe3FxucOOwko+RBcvdiKoDZgNmfO8n2B1xTnTnUvRfmXUm18XSVRPO
+rHA1x/o3BEVzEPedSLzI9iKXYqfLK3LCFepT3c8UL4swpeXug8833o1CeYb7qmum
+qkp+ksBMVy0SwMyPj9BXBLthBoP4zsm3GXfOH/SQ43khqRYure13BEXdltfSf6j4
+lFwkqWLIYEF0L6sbq/vmrpWwjo6xOA==
+=T1xf
+-----END PGP SIGNATURE-----
+
+--Sig_/MpnNr3EeXGFl/OcyGbL45S9--
