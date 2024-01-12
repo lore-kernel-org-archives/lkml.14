@@ -1,148 +1,135 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAEB55C1A;
-	Fri, 12 Jan 2024 09:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5e89ba9810aso53716167b3.2;
-        Fri, 12 Jan 2024 01:22:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705051377; x=1705656177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oZ+2Dp9TWzBAJs7a7HXex6+HAK1whEFISVpRMsIzFtY=;
-        b=kz4Rh6tATK+ePkChxTffCB9o+LAq6zBjbkDfXI6KrDfscKzvxXI01Me3Ig/oKKwgnh
-         F/fm3ooHu0iDL858CU7KoFwM+rmNwYZAIpLj2WMuesIFJt0uTqLjVwGJr95JprWaPeTA
-         ZMS/mMy1duXu1z02b9X458aq+ZGgrwp4OM1/mjoaDK25qH7HeXWQ5iMy04XrARfHdZjU
-         KsY9yOW/k1uHcDQ2j006IrLzVi/pvnqMTSfU1klrt5+iExv8BlfvSCjI9SwPZVDz9mCM
-         /olV2pj97GcsWyYLiWLBt9MChS2Oyfj9MHoP/+uEWAZkRPbNaSwiEZ64FulvrHL22xP0
-         C8LA==
-X-Gm-Message-State: AOJu0YxxA6j94SUnMr2pYu/8XC/gHImIJPaTp40blv99ARFOyhdj7Se7
-	64K6HjkIxW5N9drUM+xmpIr5HyR0ayfa7w==
-X-Google-Smtp-Source: AGHT+IFg5IMMzLpSbtw/b/cT8GfZQlvcBjGu28hUCRjpVSb+ZtQCVo1usFysauBc/fg372QgmQpzpA==
-X-Received: by 2002:a81:6c54:0:b0:5fb:7671:477d with SMTP id h81-20020a816c54000000b005fb7671477dmr994872ywc.46.1705051377320;
-        Fri, 12 Jan 2024 01:22:57 -0800 (PST)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id ft18-20020a05690c361200b005fa813ac693sm1160169ywb.48.2024.01.12.01.22.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jan 2024 01:22:56 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5e89ba9810aso53715957b3.2;
-        Fri, 12 Jan 2024 01:22:56 -0800 (PST)
-X-Received: by 2002:a81:4522:0:b0:5fa:7e0a:b133 with SMTP id
- s34-20020a814522000000b005fa7e0ab133mr895241ywa.79.1705051375948; Fri, 12 Jan
- 2024 01:22:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565C029D19;
+	Fri, 12 Jan 2024 09:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TBGL62L2Wz6J69M;
+	Fri, 12 Jan 2024 17:23:26 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9A8B6140A36;
+	Fri, 12 Jan 2024 17:25:21 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 12 Jan
+ 2024 09:25:20 +0000
+Date: Fri, 12 Jan 2024 09:25:20 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>,
+	<acpica-devel@lists.linuxfoundation.org>, <linux-csky@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, <jianyong.wu@arm.com>,
+	<justin.he@arm.com>, James Morse <james.morse@arm.com>
+Subject: Re: [PATCH RFC v3 02/21] ACPI: processor: Add support for
+ processors described as container packages
+Message-ID: <20240112092520.00001278@Huawei.com>
+In-Reply-To: <ZaA3l4yjgCXxSiVg@shell.armlinux.org.uk>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
+	<E1rDOfx-00Dvje-MS@rmk-PC.armlinux.org.uk>
+	<CAJZ5v0iB0bS6nmjQ++pV1zp5YSGuigbffK5VD3wsX+8bY9MA5w@mail.gmail.com>
+	<20240111175908.00002f46@Huawei.com>
+	<ZaA3l4yjgCXxSiVg@shell.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240111162419.12406-1-pmladek@suse.com>
-In-Reply-To: <20240111162419.12406-1-pmladek@suse.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 12 Jan 2024 10:22:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdW1XyimybybSwAfwgzeUyFj6riRZZZzQK7zjTVUJziX-Q@mail.gmail.com>
-Message-ID: <CAMuHMdW1XyimybybSwAfwgzeUyFj6riRZZZzQK7zjTVUJziX-Q@mail.gmail.com>
-Subject: Re: [PATCH] scsi: core: Safe warning about bad dev info string
-To: Petr Mladek <pmladek@suse.com>
-Cc: "James E . J . Bottomley" <jejb@linux.ibm.com>, "Martin K . Petersen" <martin.petersen@oracle.com>, 
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Chris Down <chris@chrisdown.name>, oe-kbuild-all@lists.linux.dev, 
-	kernel test robot <lkp@intel.com>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Petr,
+On Thu, 11 Jan 2024 18:46:47 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-On Thu, Jan 11, 2024 at 5:26=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrot=
-e:
-> Both "model" and "strflags" are passed to "%s" even when one or both
-> are NULL.
->
-> It is safe because vsprintf() would detect the NULL pointer and print
-> "(null)". But it is a kernel-specific feature and compiler warns
-> about it:
->
-> <warning>
->    In file included from include/linux/kernel.h:19,
->                     from arch/x86/include/asm/percpu.h:27,
->                     from arch/x86/include/asm/current.h:6,
->                     from include/linux/sched.h:12,
->                     from include/linux/blkdev.h:5,
->                     from drivers/scsi/scsi_devinfo.c:3:
->    drivers/scsi/scsi_devinfo.c: In function 'scsi_dev_info_list_add_str':
-> >> include/linux/printk.h:434:44: warning: '%s' directive argument is nul=
-l [-Wformat-overflow=3D]
->      434 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__V=
-A_ARGS__)
->          |                                            ^
->    include/linux/printk.h:430:3: note: in definition of macro 'printk_ind=
-ex_wrap'
->      430 |   _p_func(_fmt, ##__VA_ARGS__);    \
->          |   ^~~~~~~
->    drivers/scsi/scsi_devinfo.c:551:4: note: in expansion of macro 'printk=
-'
->      551 |    printk(KERN_ERR "%s: bad dev info string '%s' '%s'"
->          |    ^~~~~~
->    drivers/scsi/scsi_devinfo.c:552:14: note: format string is defined her=
-e
->      552 |           " '%s'\n", __func__, vendor, model,
->          |              ^~
-> </warning>
->
-> Do not rely on the kernel specific behavior and print the message a safe =
-way.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202401112002.AOjwMNM0-lkp@i=
-ntel.com/
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
-> Note: The patch is only compile tested.
->
->  drivers/scsi/scsi_devinfo.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
-> index 3fcaf10a9dfe..ba7237e83863 100644
-> --- a/drivers/scsi/scsi_devinfo.c
-> +++ b/drivers/scsi/scsi_devinfo.c
-> @@ -551,9 +551,9 @@ static int scsi_dev_info_list_add_str(char *dev_list)
->                 if (model)
->                         strflags =3D strsep(&next, next_check);
->                 if (!model || !strflags) {
-> -                       printk(KERN_ERR "%s: bad dev info string '%s' '%s=
-'"
-> -                              " '%s'\n", __func__, vendor, model,
-> -                              strflags);
-> +                       pr_err("%s: bad dev info string '%s' '%s' '%s'\n"=
-,
-> +                              __func__, vendor, model ? model : "",
-> +                              strflags ? strflags : "");
+> On Thu, Jan 11, 2024 at 05:59:08PM +0000, Jonathan Cameron wrote:
+> > On Mon, 18 Dec 2023 21:17:34 +0100
+> > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> >  =20
+> > > On Wed, Dec 13, 2023 at 1:49=E2=80=AFPM Russell King <rmk+kernel@arml=
+inux.org.uk> wrote: =20
+> > > >
+> > > > From: James Morse <james.morse@arm.com> =20
+> >=20
+> > Done some digging + machine faking.  This is mid stage results at best.
+> >=20
+> > Summary: I don't think this patch is necessary.  If anyone happens to b=
+e in
+> > the mood for testing on various platforms, can you drop this patch and
+> > see if everything still works.
+> >=20
+> > With this patch in place, and a processor container containing
+> > Processor() objects acpi_process_add is called twice - once via
+> > the path added here and once via acpi_bus_attach etc.
+> >=20
+> > Maybe it's a left over from earlier approaches to some of this? =20
+>=20
+> From what you're saying, it seems that way. It would be really good to
+> get a reply from James to see whether he agrees - or at least get the
+> reason why this patch is in the series... but I suspect that will never
+> come.
+>=20
+> > Both cases are covered by the existing handling without this.
+> >=20
+> > I'm far from clear on why we need this patch.  Presumably
+> > it's the reference in the description on it breaking for
+> > Processor Package containing Processor() objects that matters
+> > after a move... I'm struggling to find that move though! =20
+>=20
+> I do know that James did a lot of testing, so maybe he found some
+> corner case somewhere which made this necessary - but without input
+> from James, we can't know that.
+>=20
+> So, maybe the right way forward on this is to re-test the series
+> with this patch dropped, and see whether there's any ill effects.
+> It should be possible to resurect the patch if it does turn out to
+> be necessary.
+>=20
+> Does that sound like a good way forward?
+>=20
+> Thanks.
+>=20
 
-Do we really want to make this change?
-The kernel's vsprintf() implementation has supported NULL pointers
-since forever, and lots of code relies on that behavior.
+Yes that sounds like the best plan. Note this patch can only make a
+difference on non arm64 arches because it's a firmware bug to combine
+Processor() with a GICC entry in APIC/MADT.  To even test on ARM64
+you have to skip the bug check.
 
-Perhaps this warning can be disabled instead?
+https://elixir.bootlin.com/linux/latest/source/drivers/acpi/processor_core.=
+c#L101
 
->                         res =3D -EINVAL;
->                 } else
->                         res =3D scsi_dev_info_list_add(0 /* compatible */=
-, vendor,
+	/* device_declaration means Device object in DSDT, in the
+	 * GIC interrupt model, logical processors are required to
+	 * have a Processor Device object in the DSDT, so we should
+	 * check device_declaration here
+	 */
+//	if (device_declaration && (gicc->uid =3D=3D acpi_id)) {
+	if (gicc->uid =3D=3D acpi_id) {
+		*mpidr =3D gicc->arm_mpidr;
+		return 0;
+	}
 
-Gr{oetje,eeting}s,
+Only alternative is probably to go history diving and try and
+find another change that would have required this and is now gone.
 
-                        Geert
+The ACPI scanning code has had a lot of changes whilst this work has
+been underway.  More than possible that this was papering over some
+issue that has long since been fixed. I can't find any deliberate
+functional changes, but there is some code generalization that 'might'
+have side effects in this area. Rafael, any expectation that anything
+changed in how scanning processor containers works?
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Jonathan
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+
