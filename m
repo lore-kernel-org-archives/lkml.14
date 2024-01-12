@@ -1,201 +1,144 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1497917C83;
-	Fri, 12 Jan 2024 17:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TBSkn3kDJz6K5sk;
-	Sat, 13 Jan 2024 01:12:01 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id CB7D9140B2A;
-	Sat, 13 Jan 2024 01:13:57 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 12 Jan
- 2024 17:13:57 +0000
-Date: Fri, 12 Jan 2024 17:13:56 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Petre Rodan <petre.rodan@subdimension.ro>
-CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Jonathan
- Cameron" <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 6/6] iio: pressure: hsc030pa add sleep mode
-Message-ID: <20240112171356.00003e88@Huawei.com>
-In-Reply-To: <20240110172306.31273-7-petre.rodan@subdimension.ro>
-References: <20240110172306.31273-1-petre.rodan@subdimension.ro>
-	<20240110172306.31273-7-petre.rodan@subdimension.ro>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF0D17570
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 17:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ULRJgNeZ"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3376555b756so3857961f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 09:14:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705079668; x=1705684468; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2OAq8z2KjhBT/qUSIvv15flis3B/+38rhm3pjzp0NPo=;
+        b=ULRJgNeZN4wxtJBtrcQua765lYOJhQfevYXCRCvzgVqOF+upJFwy55Gz75sdiC0m1/
+         Rk9JAP1QoIjN0E/vDHyWVmtgAheu05D1XmYoMXf1AxT/y8SmF8pYyBm0TWOHc7cUpisB
+         MwiJ5IVgawuS8y59+pN+YpDhdBRAWGhaDkC/lhfYhDCoQSXB9mN5kZq3TQ9SmqpEkYZi
+         FVnEK2q5Rdax6HQJllLU7d58ilwE0tojqj7lPkAFe9kitxOVpoOeAOHPFCrAPItsRlRH
+         ED3wbH/zyHZrbdB7nmnfHTwV0HgP/RP8FHU70YV63tM0rIiTVblePk38oFyMxsxlJMVn
+         S8ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705079668; x=1705684468;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2OAq8z2KjhBT/qUSIvv15flis3B/+38rhm3pjzp0NPo=;
+        b=N08xpHhxTwnkjexJNbg6S+9moLwBf4EGGSSqXdbPD/7iPcQXQLABZ3GrktqOSClcnn
+         juuuxN4l158D0L4gITDa/5UJdCfULCwtqTQCSu6S3n2C5RY2vSjT+13ZkoEVTOMD3JT4
+         IQvaetlsD8o/lfXXsceMZcLwGvl23kf2p6RNUqCGxk2L6aVJvNhBmcNH1FpN4TGbUaDH
+         SOpgt653RtFeNFCTkAigfcYinpecHqRbwQv+UdmttaysNvL7mlnFliLfEk10hYdrwapR
+         9mehu4ohoqlu9+QQMGpcz0RgXXDGkWo/t9t6eDZEILriGEQAnrAkcyCg2N4Noxl2ZhGg
+         OGng==
+X-Gm-Message-State: AOJu0YwL1LU+v8KEN0dxRkRZqZnNvCeQtMfzlyY3oGktcH43YzuocY4/
+	w3IpKuA2Wfo138g9hQjoOfTGWdIhD2TuFg==
+X-Google-Smtp-Source: AGHT+IGVjShUloLwSvGWnOrvPP72JkT8vmD8hWJYbYxG3b6bbD/spuRrEhQoW0vhtcUlHRhZxrtbTw==
+X-Received: by 2002:adf:fc8c:0:b0:336:c79d:7504 with SMTP id g12-20020adffc8c000000b00336c79d7504mr975218wrr.2.1705079668434;
+        Fri, 12 Jan 2024 09:14:28 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id f18-20020adffcd2000000b0033642a9a1eesm4380751wrs.21.2024.01.12.09.14.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 09:14:28 -0800 (PST)
+Message-ID: <c0a83358-09a3-4c51-b8b6-6d6ea8b4f196@linaro.org>
+Date: Fri, 12 Jan 2024 18:14:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: arm: nuvoton: add Facebook Yosemite 4
+ board
+Content-Language: en-US
+To: Patrick Williams <patrick@stwcx.xyz>
+Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
+ Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>,
+ Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>,
+ Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+ openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240112013654.1424451-1-Delphine_CC_Chiu@wiwynn.com>
+ <20240112013654.1424451-2-Delphine_CC_Chiu@wiwynn.com>
+ <8efef092-e70f-46c0-a60a-e62e676d6eb2@linaro.org>
+ <ZaFydbPxbeczo97t@heinlein.vulture-banana.ts.net>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ZaFydbPxbeczo97t@heinlein.vulture-banana.ts.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Jan 2024 19:22:41 +0200
-Petre Rodan <petre.rodan@subdimension.ro> wrote:
+On 12/01/2024 18:10, Patrick Williams wrote:
+> On Fri, Jan 12, 2024 at 08:10:25AM +0100, Krzysztof Kozlowski wrote:
+>> On 12/01/2024 02:36, Delphine CC Chiu wrote:
+>>> Document the new compatibles used on Facebook Yosemite 4.
+>>
+>> There is Yosemite4 board already supported. What is this for?
+>> https://lore.kernel.org/all/20240109072053.3980855-5-Delphine_CC_Chiu@wiwynn.com/
+> 
+> Yosemite4 is a server chassis which is managed by a BMC.  The BMC is on
+> a pluggable module card.  Typically we've used Aspeed chips for this,
+> but we are building an alternative BMC module using Nuvoton BMC chips.
 
-> Some custom chips from this series require a wakeup sequence before the
-> measurement cycle is started.
->=20
-> Quote from the product datasheet:
-> "Optional sleep mode available upon special request."
->=20
-> Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
-> ---
->  drivers/iio/pressure/hsc030pa.c     |  4 ++++
->  drivers/iio/pressure/hsc030pa.h     |  4 ++++
->  drivers/iio/pressure/hsc030pa_i2c.c | 19 +++++++++++++++++
->  drivers/iio/pressure/hsc030pa_spi.c | 32 +++++++++++++++++++++++++++--
->  4 files changed, 57 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/iio/pressure/hsc030pa.c b/drivers/iio/pressure/hsc03=
-0pa.c
-> index 3faa0fd42201..9e66fd561801 100644
-> --- a/drivers/iio/pressure/hsc030pa.c
-> +++ b/drivers/iio/pressure/hsc030pa.c
-> @@ -501,6 +501,10 @@ int hsc_common_probe(struct device *dev, hsc_recv_fn=
- recv)
->  		return dev_err_probe(dev, -EINVAL,
->  				     "pressure limits are invalid\n");
->=20
-> +	ret =3D device_property_read_bool(dev, "honeywell,sleep-mode");
-> +	if (ret)
-> +		hsc->capabilities |=3D HSC_CAP_SLEEP;
-	if (device_property_read_bool())
-		hsc->cap...
+There are few ways to solve this, like having different compatibles or
+having some shared compatibles to note common part of hardware. However
+usually the final compatible represents the final device, which here you
+use for two entirely different products. This works only for the cases
+of carrier boards, where that compatible indeed represents the same
+hardware.
 
-The return value is not an int so it's inappropriate to stash it in ret.
+Not your case. This needs fixing.
 
-> +
->  	ret =3D devm_regulator_get_enable(dev, "vdd");
->  	if (ret)
->  		return dev_err_probe(dev, ret, "can't get vdd supply\n");
-> diff --git a/drivers/iio/pressure/hsc030pa.h b/drivers/iio/pressure/hsc03=
-0pa.h
-> index 6c635c42d85d..4e356944d67d 100644
-> --- a/drivers/iio/pressure/hsc030pa.h
-> +++ b/drivers/iio/pressure/hsc030pa.h
-> @@ -15,6 +15,8 @@
->  #define HSC_REG_MEASUREMENT_RD_SIZE 4
->  #define HSC_RESP_TIME_MS            2
->=20
-> +#define HSC_CAP_SLEEP               0x1
-> +
->  struct device;
->=20
->  struct iio_chan_spec;
-> @@ -29,6 +31,7 @@ typedef int (*hsc_recv_fn)(struct hsc_data *);
->   * struct hsc_data
->   * @dev: current device structure
->   * @chip: structure containing chip's channel properties
-> + * @capabilities: chip specific attributes
->   * @recv_cb: function that implements the chip reads
->   * @is_valid: true if last transfer has been validated
->   * @pmin: minimum measurable pressure limit
-> @@ -45,6 +48,7 @@ typedef int (*hsc_recv_fn)(struct hsc_data *);
->  struct hsc_data {
->  	struct device *dev;
->  	const struct hsc_chip_data *chip;
-> +	u32 capabilities;
->  	hsc_recv_fn recv_cb;
->  	bool is_valid;
->  	s32 pmin;
-> diff --git a/drivers/iio/pressure/hsc030pa_i2c.c b/drivers/iio/pressure/h=
-sc030pa_i2c.c
-> index b3fd230e71da..62bdae272012 100644
-> --- a/drivers/iio/pressure/hsc030pa_i2c.c
-> +++ b/drivers/iio/pressure/hsc030pa_i2c.c
-> @@ -24,8 +24,27 @@ static int hsc_i2c_recv(struct hsc_data *data)
->  {
->  	struct i2c_client *client =3D to_i2c_client(data->dev);
->  	struct i2c_msg msg;
-> +	u8 buf;
->  	int ret;
->=20
-> +	if (data->capabilities & HSC_CAP_SLEEP) {
-> +		/*
-> +		 * Send the Full Measurement Request (FMR) command on the CS
-> +		 * line in order to wake up the sensor as per
-> +		 * "Sleep Mode for Use with Honeywell Digital Pressure Sensors"
-> +		 * technical note (consult the datasheet link in the header).
-> +		 *
-> +		 * These specifications require a dummy packet comprised only by
-> +		 * a single byte that contains the 7bit slave address and the
-> +		 * READ bit followed by a STOP.
-> +		 * Because the i2c API does not allow packets without a payload,
-> +		 * the driver sends two bytes in this implementation.
-> +		 */
-> +		ret =3D i2c_master_recv(client, &buf, 1);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
->  	msleep_interruptible(HSC_RESP_TIME_MS);
->=20
->  	msg.addr =3D client->addr;
-> diff --git a/drivers/iio/pressure/hsc030pa_spi.c b/drivers/iio/pressure/h=
-sc030pa_spi.c
-> index 737197eddff0..1c139cdfe856 100644
-> --- a/drivers/iio/pressure/hsc030pa_spi.c
-> +++ b/drivers/iio/pressure/hsc030pa_spi.c
-> @@ -25,12 +25,40 @@ static int hsc_spi_recv(struct hsc_data *data)
->  	struct spi_device *spi =3D to_spi_device(data->dev);
->  	struct spi_transfer xfer =3D {
->  		.tx_buf =3D NULL,
-> -		.rx_buf =3D data->buffer,
-> -		.len =3D HSC_REG_MEASUREMENT_RD_SIZE,
-> +		.rx_buf =3D NULL,
-> +		.len =3D 0,
->  	};
-> +	u16 orig_cs_setup_value;
-> +	u8 orig_cs_setup_unit;
-> +
-> +	if (data->capabilities & HSC_CAP_SLEEP) {
-> +		/*
-> +		 * Send the Full Measurement Request (FMR) command on the CS
-> +		 * line in order to wake up the sensor as per
-> +		 * "Sleep Mode for Use with Honeywell Digital Pressure Sensors"
-> +		 * technical note (consult the datasheet link in the header).
-> +		 *
-> +		 * These specifications require the CS line to be held asserted
-> +		 * for at least 8=B5s without any payload being generated.
-> +		 */
-> +		orig_cs_setup_value =3D spi->cs_setup.value;
-> +		orig_cs_setup_unit =3D spi->cs_setup.unit;
-> +		spi->cs_setup.value =3D 8;
-> +		spi->cs_setup.unit =3D SPI_DELAY_UNIT_USECS;
-> +		/*
-> +		 * Send a dummy 0-size packet so that CS gets toggled.
-> +		 * Trying to manually call spi->controller->set_cs() instead
-> +		 * does not work as expected during the second call.
-> +		 */
-
-Do you have a reference that says the CS must be toggled on 0 length transf=
-er?
-If that's not specified in the SPI core somewhere then you will need to send
-something...
-
-> +		spi_sync_transfer(spi, &xfer, 1);
-> +		spi->cs_setup.value =3D orig_cs_setup_value;
-> +		spi->cs_setup.unit =3D orig_cs_setup_unit;
-> +	}
->=20
->  	msleep_interruptible(HSC_RESP_TIME_MS);
->=20
-> +	xfer.rx_buf =3D data->buffer;
-> +	xfer.len =3D HSC_REG_MEASUREMENT_RD_SIZE;
->  	return spi_sync_transfer(spi, &xfer, 1);
->  }
->=20
-> --
-> 2.41.0
->=20
->=20
+Best regards,
+Krzysztof
 
