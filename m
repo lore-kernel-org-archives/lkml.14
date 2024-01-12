@@ -1,79 +1,118 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9321B585;
-	Fri, 12 Jan 2024 16:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68EC17570
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 17:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RurXtaro"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cf1f4f6c3dso1908760a12.2;
-        Fri, 12 Jan 2024 08:59:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705078787; x=1705683587; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T9F9H5m2UqD7K0wRa8JjG4+hM5ev/YDQv3Vx3krTev0=;
-        b=RurXtaroF99+XFk+vJw6LodtmJr7KTiUF3nJ3pVpN4UmxOabKkc6+E9yVNKyfCbZ1L
-         8FAldpAJ8UCXI19zMHOTBzXd3cVcRDxF+4L6QuJbmbCZgiT1/kQbOhzvuuqx9O547KR8
-         LoXm+x+bZfMceTpRDaxDzVAEcVtQ+ayhFiwARRi5N94tONFnQj7L/bnMJu97eo+D680K
-         fzmxh8S/o1NFoGFhtX8wWCHvQca7nZURThcoZqDaEp5SgGwAGdk5IavOhlWYkvC8TBPh
-         rNu/PKEmvcvjt24zpa7yUsEBLruFNvbsvjr+Cg7ZTZ49eD1QpridSEebYyCg1oE7y4W7
-         wlJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705078787; x=1705683587;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T9F9H5m2UqD7K0wRa8JjG4+hM5ev/YDQv3Vx3krTev0=;
-        b=DLCATjQ0Zrf5zbgXdmazt1RkG7sXOkmX5IfAJoWJSQdWA6UTB+t/qADWSR6bphkc+m
-         FpT3Qc+JPmPorltw0fnhVDPE8cagj2TxqxpP+ELQyc3nbvliUY5McflAKqy0D+0BGiRv
-         RMZZuHJIaDNHX2NMVHn61PHyAS0VUdsM7pSv3RuVa9VxEUkz2tuX2aEdosz6RkLI1LmE
-         Yabb/b/U/ptAQR1RFREBx3TcIlenlqZluUSt1UBjIRqQ7LQ7DsF8csEgNq3uMGv8oU21
-         HGSjTc0pX+znDto1JlP+ecixcqdlMN9pTQRAIpSIKB5Kfgv00oCsIHfl5YgzgIJNd+Fh
-         aDng==
-X-Gm-Message-State: AOJu0YzzybioWslz032zkLdKUqu50JxfRE3ilItn117veSNCXKrFXt3a
-	Y3/yCOASip0dYv9HQ4aSI0IarYTnj6HpZiyzAmI=
-X-Google-Smtp-Source: AGHT+IEG389YSvfn+IpZIBlscLZMHZhDFTYgbsonRLB5XKzjTeRqxMacx/YKJRvroOesq8X85g/4wKm4saq89cu7De0=
-X-Received: by 2002:a05:6a20:1051:b0:199:f2bb:f166 with SMTP id
- gt17-20020a056a20105100b00199f2bbf166mr937692pzc.30.1705078786876; Fri, 12
- Jan 2024 08:59:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IdeTu56k"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40CFQI7q008287;
+	Fri, 12 Jan 2024 17:00:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=b9NZbxKGkMu7WSq1DRJZvs6ktHpD4yfQIktgeIKEyJw=; b=Id
+	eTu56kFSblsfgVGDycwx3ezfsyQZ8TwW+/eXm9jeJ6Bg0HWCqKBVWBMm3hekJQtU
+	kWBdGXHGPkyoUCI7CVXz+1A7aPcaYPxIBTdVMXP/gCwLThRAjOcnTKCCk9kkyWld
+	fyjB7STNPmmQO2F/D1coP2yNyzr69lvgYbZ+E8Sn4UP0Uuy5gzsTTfZosRZoGTzd
+	lqcI7QS0vvDkDKLpl63xb+Kzwo+wy26SfRJA1qcKn0uNR8UYoHkbdJzFkUxny2wE
+	ujhrm5HLAEUX9iBdjy+XDP7VopEVdtFVeLuVl1n+8saw2LWYu0dEvZBtSu+TsQ+D
+	3yso7ktmQSBIv0l3P6MA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vjqx1jevd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jan 2024 17:00:45 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40CH0iQN021505
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jan 2024 17:00:44 GMT
+Received: from [10.71.111.207] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 12 Jan
+ 2024 09:00:43 -0800
+Message-ID: <3915b289-2741-4b18-ab11-3c7c8e7fbac4@quicinc.com>
+Date: Fri, 12 Jan 2024 09:00:43 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112125801.2650-1-2045gemini@gmail.com> <2024011212-disbelief-respect-5230@gregkh>
-In-Reply-To: <2024011212-disbelief-respect-5230@gregkh>
-From: Gui-Dong Han <2045gemini@gmail.com>
-Date: Sat, 13 Jan 2024 00:59:11 +0800
-Message-ID: <CAOPYjvZYdPSiZ+jX4vhwPQ3AKRvW15XT1znAa8vd9a6DVoor5w@mail.gmail.com>
-Subject: Re: [PATCH] tty: fix atomicity violation in n_tty_read
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: jirislaby@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, baijiaju1990@outlook.com, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/panel: nt36523: Set 120Hz fps for xiaomi,elish panels
+Content-Language: en-US
+To: Jianhua Lu <lujianhua000@gmail.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20240112140047.18123-1-lujianhua000@gmail.com>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20240112140047.18123-1-lujianhua000@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 5duJvOEVbRnFTa77GTuHcGGCO9uB0RxV
+X-Proofpoint-GUID: 5duJvOEVbRnFTa77GTuHcGGCO9uB0RxV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 clxscore=1011 impostorscore=0 mlxlogscore=999
+ malwarescore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401120134
 
-Hi
 
-I apologize for any confusion caused by my reference to Linux 5.17 in
-the patch description. I'm currently working on a project involving
-kernel static analysis to identify atomicity violations, and part of
-this work involves comparison with a previous study that supports up
-to Linux 5.17. Therefore, I initially ran my tool on 5.17 to filter
-potential bugs that are still unaddressed in the upstream. I want to
-clarify that the patch was developed and tested on linux-next. I
-realize now that this may have led to misunderstandings, and I will
-ensure clearer communication in future submissions.
-My experience with Linux kernel contributions is still growing, and I
-acknowledge that my recent submission might have been hasty and lacked
-thorough consideration, especially regarding the critical nature of
-n_tty_read and the potential impacts of the patch, like performance
-concerns. I will take more care in future assessments before
-submitting patches and continue to familiarize myself with the rules
-and practices of the Linux kernel community.
 
-Thanks,
-Han
+On 1/12/2024 6:00 AM, Jianhua Lu wrote:
+> After commit e6c0de5f4450 ("drm/msm/dpu: try multirect based on mdp clock limits")
+> merged, 120Hz is working on xiaomi,elish panels, so feature it.
+> 
+> Signed-off-by: Jianhua Lu <lujianhua000@gmail.com>
+
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+
+> ---
+>   drivers/gpu/drm/panel/panel-novatek-nt36523.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36523.c b/drivers/gpu/drm/panel/panel-novatek-nt36523.c
+> index a189ce236328..d6fa76dbf948 100644
+> --- a/drivers/gpu/drm/panel/panel-novatek-nt36523.c
+> +++ b/drivers/gpu/drm/panel/panel-novatek-nt36523.c
+> @@ -933,8 +933,7 @@ static int j606f_boe_init_sequence(struct panel_info *pinfo)
+>   
+>   static const struct drm_display_mode elish_boe_modes[] = {
+>   	{
+> -		/* There is only one 120 Hz timing, but it doesn't work perfectly, 104 Hz preferred */
+> -		.clock = (1600 + 60 + 8 + 60) * (2560 + 26 + 4 + 168) * 104 / 1000,
+> +		.clock = (1600 + 60 + 8 + 60) * (2560 + 26 + 4 + 168) * 120 / 1000,
+>   		.hdisplay = 1600,
+>   		.hsync_start = 1600 + 60,
+>   		.hsync_end = 1600 + 60 + 8,
+> @@ -948,8 +947,7 @@ static const struct drm_display_mode elish_boe_modes[] = {
+>   
+>   static const struct drm_display_mode elish_csot_modes[] = {
+>   	{
+> -		/* There is only one 120 Hz timing, but it doesn't work perfectly, 104 Hz preferred */
+> -		.clock = (1600 + 200 + 40 + 52) * (2560 + 26 + 4 + 168) * 104 / 1000,
+> +		.clock = (1600 + 200 + 40 + 52) * (2560 + 26 + 4 + 168) * 120 / 1000,
+>   		.hdisplay = 1600,
+>   		.hsync_start = 1600 + 200,
+>   		.hsync_end = 1600 + 200 + 40,
+> -- 
+> 2.41.0
+> 
