@@ -1,63 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AF416408;
-	Fri, 12 Jan 2024 20:16:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E304216408;
+	Fri, 12 Jan 2024 20:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="POGwJLzL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A3EDC433F1;
-	Fri, 12 Jan 2024 20:16:49 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BNBwPdl+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47D4C433C7;
+	Fri, 12 Jan 2024 20:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705090609;
-	bh=VIhoLIqCtvk1tD1fY7sWAKm66VsDrr9HCMvWDwJLm8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=POGwJLzLmy2j6xtcouSj7Ubg11TZtpwmfQ1cYGTz25UotXcxvSvXi/Cv2Uru6Gn7P
-	 yEPJVFHT2hEDlBm1rJBkEY/M7JySUPeyZOntHyVEKU2n3/cesU2kS0Drl9T3qnf5DK
-	 vGntsKuDzhJcBbeRbLEoccQjzffvoJlD9x7l0cbA=
-Date: Fri, 12 Jan 2024 21:16:47 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: A quick "Regression tracking: state of the union early 2024"
- from my side
-Message-ID: <2024011243-aorta-defraud-7950@gregkh>
-References: <7613e402-894a-4d38-8cef-7263630c1c57@leemhuis.info>
+	s=korg; t=1705090653;
+	bh=75JiH8kzfFtsmvxd4fH2+U/Tptv/Qz1Z1CgVG1oNzXw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BNBwPdl+miROVR6GXT5ds/0g9Dkvd6qGFpoLItV3l8tK+rawe6TRx7gSqGC/UtJOC
+	 q2mTFO35a/Ewc0Aq6YorDYPzTTBReOOnFRRkzwOkd2Ycf24eNMIZznlEV9AQRj3ney
+	 dEDlxYHdDpEYRCMQ4YrZB4EbCZyHj/1m41YQTJoo=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	torvalds@linux-foundation.org,
+	stable@vger.kernel.org
+Cc: lwn@lwn.net,
+	jslaby@suse.cz,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 5.10.207
+Date: Fri, 12 Jan 2024 21:17:28 +0100
+Message-ID: <2024011229-oyster-basically-df9f@gregkh>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7613e402-894a-4d38-8cef-7263630c1c57@leemhuis.info>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 10, 2024 at 08:22:39AM +0100, Thorsten Leemhuis wrote:
-> ## The long story short
-> 
-> I'm not really happy with my performance wrt to my regression tracking
-> efforts during the last year. To counter that, I've already shifted my
-> focus somewhat ~in October. With the new year I will shift it some more.
-> Top-priority will be "make regzbot more useful for kernel subsystem
-> maintainers" from now on. My tracking efforts of course will continue,
-> but everything except regressions in the current and the previous
-> mainline cycle might not see much attention from my side. This
-> refocusing also means that I won't work much on resolving some
-> ambiguities around "how regressions are supposed to be handled" which
-> lead to tension quite a few times. But all that should be for the best
-> in the long term.
+I'm announcing the release of the 5.10.207 kernel.
 
-While you might be "too close" to the details to feel like this past
-year was not good with regards to "performance", I'd like to counter
-that and say I have been immensely happy with the work you did last
-year.  The tracking and pushing on people to get regressions addressed
-and merged is thankless (as you well know), but vital to our project in
-order to keep our users happy.
+All users of the 5.10 kernel series must upgrade.
 
-So don't beat yourself up at all, you're doing a great job.
+The updated 5.10.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.10.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
 thanks,
 
 greg k-h
+
+------------
+
+ Makefile                    |    2 +-
+ drivers/scsi/scsi.c         |    2 +-
+ drivers/scsi/scsi_error.c   |   34 +++++++++++++++++++---------------
+ drivers/scsi/scsi_lib.c     |   38 +++++++++++++-------------------------
+ drivers/scsi/scsi_logging.c |   18 ++++++++----------
+ drivers/scsi/scsi_priv.h    |    1 -
+ include/scsi/scsi_cmnd.h    |   29 +++--------------------------
+ include/scsi/scsi_device.h  |   16 +++++++---------
+ 8 files changed, 52 insertions(+), 88 deletions(-)
+
+Alexander Atanasov (1):
+      scsi: core: Always send batch on reset or error handling command
+
+Greg Kroah-Hartman (7):
+      Revert "scsi: core: Always send batch on reset or error handling command"
+      Revert "scsi: core: Use a structure member to track the SCSI command submitter"
+      Revert "scsi: core: Use scsi_cmd_to_rq() instead of scsi_cmnd.request"
+      Revert "scsi: core: Make scsi_get_lba() return the LBA"
+      Revert "scsi: core: Introduce scsi_get_sector()"
+      Revert "scsi: core: Add scsi_prot_ref_tag() helper"
+      Linux 5.10.207
+
