@@ -1,75 +1,105 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5537AB646
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 00:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bf0305ded5so69862239f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:04:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705017867; x=1705622667;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D11414F6D
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 00:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V94TzYNx"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33765009941so4655587f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:05:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705017911; x=1705622711; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8xpDiqNEwArw50N7Lg2HZuMoMi1N+LpphpiDT2blddI=;
-        b=OHwG6GAE6aSWIHqhpaZj34JWzvkz192kYlSRt3wrL6A/gEAYUKaQY4qMKMYPMf06vT
-         coAzFU+XwB9ADeIUxozqDTIJ7oeiD4Mjypr8DK6+7LZuofUynA+fispEHf42IfGDIudY
-         4yQYlUjltvyE9F8+Jb4QWJ231ZQxjsTk41B0q9GGY5nZpxav6/kqHvUccWN9bTPUtVCF
-         VpcH4a7aSz0VdyI5UuBc8SAGTakODh4AsgD4/Wdtu5Vt4foO3TQZh4wOqr3TIiEHtw0b
-         jWmW0/vFxRZaWqFqgPn7UIeuLX9oyWPB8tIOjqpL4900oxhQIa1ZoLomnUlSs903fK0Z
-         GkJw==
-X-Gm-Message-State: AOJu0YxmUXYtFBfAjlFZfXHTlmfIgTsUYiplYAnpw+sI8bz1ObBb54Oa
-	qrYG7KImhnBGp+CT1mb2RE1EynDC32klFjPRiLLRxLoQEQDA
-X-Google-Smtp-Source: AGHT+IGChu8fGl9D+SA4BIa887LqB3kDIlxbCu5Ph+kisWPnmpq6voLkoaimmlGJZtFxYd1krdrvUSiHQ2qbOk1drakhziO+jjCy
+        bh=yUeW4cbpZ4DyBVhP3Gp3OihLg4kH7ejzOns3IWU+5Ug=;
+        b=V94TzYNxrIGl4Ql1KDfj2dIQRwVR9b1dQrxA1cZQEojq6YhzPCVfSVjfN/IiscAxOM
+         8bUuW5xHjn7OlmX3CPNDqDlhhYBnv9R1joYXwOQWJNiCcd5+sRFpPAODZfN9imaGzyWL
+         LaMDDlaBorSvEZglhXzI+54J6UQ4VS0IarLYknJiOulo5LskRn/VkNKd512E2KD2iPED
+         aY1NtlIz9hBilBL2tqM8pyDjIjvyaFpkAit99k7l6MjT2FjBohbk+T6xNRQ3VDdtFVYN
+         P50s3DC7BkCr4P9ZNN0f44CYmQPvp+KuMmDUMELhNFjFFVHfJscIVEVOIYqHzYoyLZdZ
+         ys1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705017911; x=1705622711;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yUeW4cbpZ4DyBVhP3Gp3OihLg4kH7ejzOns3IWU+5Ug=;
+        b=IUy931ckH2pxA67Wm6wJRnauTp6irNZNe16/51lxEQJtD2ETh/7Q+owcUuBViP9ujv
+         0DL3BiNwRc6wFuoqHx01Uv0jcJhnTeVaXjSXseF5pS7jCoy89D8MtQayIbGF5CAdoIwl
+         duFo7TtwFsleEpTjPlbhjgMJ0rnXwOuhZ9GeqQ0TtFFWOtO4BtorKh3+2YfvzWqIVtbF
+         WS4E3KlX3IUlvzYaYNRKKIDd1hzhHdFLKM4kyFO1raPVl8BQj9ixCWt+bZc2dnDJqPmm
+         lqrGgznSV/6QUV3WsVAQTEP5rHaqYD3pOp2IVcxx65zw4dSc+PbqcKDCfuBEIHb6p7IK
+         JI0Q==
+X-Gm-Message-State: AOJu0YzNqVQqncrNjnIzhVVO7KLN/zn0zBkBupVKglLOJdxB/D3is+bE
+	KcbwQWWcBmj6U+b72dSlME59CHpnEOkidw==
+X-Google-Smtp-Source: AGHT+IHCdDVdU5Stel0+XBc70+8iYoGyZHbMKQqAFOmwuvJLM/lTb1tAB1c6+WSy2s9dD19FKm9UCw==
+X-Received: by 2002:a05:6000:10c8:b0:337:7bde:f03e with SMTP id b8-20020a05600010c800b003377bdef03emr294510wrx.16.1705017911388;
+        Thu, 11 Jan 2024 16:05:11 -0800 (PST)
+Received: from [192.168.100.86] ([37.228.218.3])
+        by smtp.gmail.com with ESMTPSA id l5-20020adfe9c5000000b0033673ddd81csm2314450wrn.112.2024.01.11.16.05.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jan 2024 16:05:10 -0800 (PST)
+Message-ID: <39b4a009-1883-4e66-b743-6b69f0846418@linaro.org>
+Date: Fri, 12 Jan 2024 00:05:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1918:b0:46e:5dfe:42bc with SMTP id
- p24-20020a056638191800b0046e5dfe42bcmr17819jal.0.1705017867308; Thu, 11 Jan
- 2024 16:04:27 -0800 (PST)
-Date: Thu, 11 Jan 2024 16:04:27 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000511463060eb468d7@google.com>
-Subject: [syzbot] Monthly nfc report (Jan 2024)
-From: syzbot <syzbot+list2e368c73436f97eb5665@syzkaller.appspotmail.com>
-To: krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] media: qcom: camss: Add sc8280xp support
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240111-linux-next-24-01-09-sc8280xp-camss-changes-v1-0-b92a650121ba@linaro.org>
+ <cd3d3034-ce98-4b96-8cdc-fbd5b66ca7a8@linaro.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <cd3d3034-ce98-4b96-8cdc-fbd5b66ca7a8@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello nfc maintainers/developers,
+On 11/01/2024 20:13, Konrad Dybcio wrote:
+> 
+> 
+> On 1/11/24 20:57, Bryan O'Donoghue wrote:
+>> A minimal set of patches to switch on sc8280xp support in CAMSS
+>> upstream. Most of the SoC dependencies are either merged - CAMCC or very
+>> close to being merged - CAMSS/CCI dtsi.
+>>
+>> Alot of prior work means we have far less interventions to make in this
+>> driver to support this new SoC.
+>>
+>> Most of this series is already reviewed however it is gated on merge of
+>> the CAMSS compat string here =>
+>>
+>> Link: 
+>> https://lore.kernel.org/linux-arm-msm/20240111-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v4-2-cdd5c57ff1dc@linaro.org/
+>> Link: 
+>> https://git.codelinaro.org/bryan.odonoghue/kernel/-/tree/linux-next-24-01-09-sc8280xp-camss-changes
+>>
+>> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>> ---
+> What happened to the "vN" in the subject and the changelog?
+> 
+> Konrad
 
-This is a 31-day syzbot report for the nfc subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/nfc
+Hmm it "felt" like a new series
 
-During the period, 2 new issues were detected and 1 were fixed.
-In total, 11 issues are still open and 20 have been fixed so far.
+Checking though - yep this should be v5
 
-Some of the still happening issues:
+https://lwn.net/Articles/950887/
 
-Ref Crashes Repro Title
-<1> 715     Yes   INFO: task hung in rfkill_global_led_trigger_worker (2)
-                  https://syzkaller.appspot.com/bug?extid=2e39bc6569d281acbcfb
-<2> 110     Yes   INFO: task hung in nfc_rfkill_set_block
-                  https://syzkaller.appspot.com/bug?extid=3e3c2f8ca188e30b1427
-<3> 88      Yes   KMSAN: uninit-value in nci_rx_work
-                  https://syzkaller.appspot.com/bug?extid=d7b4dc6cd50410152534
-<4> 10      Yes   KMSAN: uninit-value in nci_ntf_packet
-                  https://syzkaller.appspot.com/bug?extid=29b5ca705d2e0f4a44d2
+I'll resend
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+bod
