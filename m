@@ -1,320 +1,480 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pv50p00im-tydg10021701.me.com (pv50p00im-tydg10021701.me.com [17.58.6.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B46C6BB58
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 13:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFB56D1B3
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 13:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kyuhyuk.kr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kyuhyuk.kr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="h1YIr9y7"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6dc20b4595bso4243691a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 05:51:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1705067461; x=1705672261; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FCZ8j9fAWWRYV1vYgkF5hXOFc9k0Z1v9gjk2xHmazQc=;
-        b=h1YIr9y7KjbW4Y5DVe+tsCL2Xm+JOzWzxa2uTt2nUWE+deR+jVyDSiiC/FGbFxf4Hm
-         UuY3F2yhs53pM5K4yeFIGW37X/Qt4rxGhdkRPvEs5AifRTcLt22wgzWqhissYWHqTdVd
-         fX13fewegOLt8MsVKtUWWVSRDZAy1GRNWPxQg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705067461; x=1705672261;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FCZ8j9fAWWRYV1vYgkF5hXOFc9k0Z1v9gjk2xHmazQc=;
-        b=OTaznQlVgx0JeVdgwMkNPwrKAalWjX/rFcWR6nTC5Iq16XwADB3HQucT1KimCRxlxI
-         jyEHj2GNo4vercv//W3wXSG36l5SbZDWzYm1Rq4S0CjG67+hOOXKj5t0d7A/i9Aj1fjY
-         r6Opi4QiV0ltOV5cXS9zvIBLB5ovxsoCHoi/eQXlOsAKjuLn1W3SF4vi09BhDiiH92+o
-         Ivrzm8wtopVbEYa005eH38lJ4iikoPTzGHzlNZiHHvV2Cc13n+e6125mlBPVp8p9zXTu
-         XEXJCNwrXqC1nvcicGSfp2TXWQs223qNp2/dYGcVFZXro5sk8gxeOC2Lc+i1dcuCcrW5
-         2LVA==
-X-Gm-Message-State: AOJu0YxSwprDnswX0jr+ZwjoWvo+p0KqWGBhs5KJQ/cme2Fv+HaWEmb7
-	NIZoCfHAlaG12dEusH+H/fFoekE/2tVyvg==
-X-Google-Smtp-Source: AGHT+IH0v4LCgLQ6sLNFl0t4I7XWy3JDM7T0b9IHt4AhkGMTew7AXOuTU64SMTRUAm8aOp2Ur0Rv9A==
-X-Received: by 2002:a05:6870:b152:b0:205:c773:c6da with SMTP id a18-20020a056870b15200b00205c773c6damr1651211oal.60.1705067461069;
-        Fri, 12 Jan 2024 05:51:01 -0800 (PST)
-Received: from [10.5.0.2] ([185.172.52.113])
-        by smtp.gmail.com with ESMTPSA id j12-20020a056870530c00b00203d8ce415bsm790533oan.50.2024.01.12.05.50.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jan 2024 05:51:00 -0800 (PST)
-Message-ID: <adea48e5-6c9f-41f1-9e7e-1f33aa520a85@joelfernandes.org>
-Date: Fri, 12 Jan 2024 08:50:47 -0500
+	dkim=pass (2048-bit key) header.d=kyuhyuk.kr header.i=@kyuhyuk.kr header.b="Vs0wf9yp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kyuhyuk.kr; s=sig1;
+	t=1705067472; bh=k4L8owKwtitHX6QZgEndWA531suQhjqueyk0UlNyQ1w=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=Vs0wf9ypC3x+SLrLwNhv/+V7K2zI9ik2skIUpJWWd9wiwHgbcPZUIoU78l9PO0LM/
+	 3HxsGQWI51HA6h+r711lLSBq62QsYnijfUobxP8JGK9MawS03VgCOal2BdBgiE2Ru4
+	 g1t5Epugonx43wtsHDpENKmfyKYO3hz2r6tgl5ahHS/7k2UprCAWWCnGgdBIYcAnQ3
+	 K9f0CK5Q2SgJKNjQNOYxwFUSxa/MDGCiUoTtjtJ272h6ki1PCUAtKinHErTIb/kypr
+	 TUrUnIx+5Gcvfqdoaon1SgzYpjIF0Ht33PsUJOjgFuZmGY6hBuWwP+LDDN/Nby0Kld
+	 CzH0W1LZ+wigw==
+Received: from KyuDevelop.. (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-tydg10021701.me.com (Postfix) with ESMTPSA id 0FA173A0C19;
+	Fri, 12 Jan 2024 13:51:07 +0000 (UTC)
+From: KyuHyuk Lee <lee@kyuhyuk.kr>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Tianling Shen <cnsztl@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Ondrej Jirman <megi@xff.cz>,
+	Andy Yan <andyshrk@163.com>,
+	Jagan Teki <jagan@edgeble.ai>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	KyuHyuk Lee <lee@kyuhyuk.kr>,
+	David Heidelberg <david@ixit.cz>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] arm64: dts: rockchip: Add Hardkernel ODROID-M1S board
+Date: Fri, 12 Jan 2024 22:50:04 +0900
+Message-Id: <20240112135004.28907-1-lee@kyuhyuk.kr>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rcu/nocb: Fix WARN_ON_ONCE() in the
- rcu_nocb_bypass_lock()
-To: Z qiang <qiang.zhang1211@gmail.com>
-Cc: paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
- rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240110081128.18683-1-qiang.zhang1211@gmail.com>
- <CALm+0cXQF0nS6HD5iZ1RhbWo0rg8adwvcHrsS8W04K1MxY51bA@mail.gmail.com>
- <06bb8028-a1be-431c-9bff-265777d64e27@paulmck-laptop>
- <4a3031ff-49e5-4e95-914c-aa034ebfd8a7@joelfernandes.org>
- <CALm+0cU2j9S7sL-zmXmYD3KBtGxtYgmbxA9rnF2Cud4d8BWH=A@mail.gmail.com>
-Content-Language: en-US
-From: Joel Fernandes <joel@joelfernandes.org>
-In-Reply-To: <CALm+0cU2j9S7sL-zmXmYD3KBtGxtYgmbxA9rnF2Cud4d8BWH=A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: YytT8xDLqY8BuXB8k4PQCRe2B4o_xQD2
+X-Proofpoint-GUID: YytT8xDLqY8BuXB8k4PQCRe2B4o_xQD2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-12_06,2024-01-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 clxscore=1030 phishscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 mlxlogscore=979 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2401120108
 
+This patch is to add a device tree for new board Hardkernel ODROID-M1S
+based on Rockchip RK3566, includes basic peripherals uart/eMMC/uSD/i2c
 
+Signed-off-by: KyuHyuk Lee <lee@kyuhyuk.kr>
+---
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3566-odroid-m1s.dts   | 388 ++++++++++++++++++
+ 2 files changed, 389 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-odroid-m1s.dts
 
-On 1/12/2024 2:24 AM, Z qiang wrote:
->>
->>
->>
->> On 1/11/2024 6:54 AM, Paul E. McKenney wrote:
->>> On Wed, Jan 10, 2024 at 04:36:46PM +0800, Z qiang wrote:
->>>>>
->>>>> For the kernels built with CONFIG_RCU_NOCB_CPU_DEFAULT_ALL=y and
->>>>> CONFIG_RCU_LAZY=y, here are the following scenarios that will trigger
->>>>> WARN_ON_ONCE() in the rcu_nocb_bypass_lock() and rcu_nocb_wait_contended().
->>>>>
->>>>>         CPU2                                               CPU11
->>>>> kthread
->>>>> rcu_nocb_cb_kthread                                       ksys_write
->>>>> rcu_do_batch                                              vfs_write
->>>>> rcu_torture_timer_cb                                      proc_sys_write
->>>>> __kmem_cache_free                                         proc_sys_call_handler
->>>>> kmemleak_free                                             drop_caches_sysctl_handler
->>>>> delete_object_full                                        drop_slab
->>>>> __delete_object                                           shrink_slab
->>>>> put_object                                                lazy_rcu_shrink_scan
->>>>> call_rcu                                                  rcu_nocb_flush_bypass
->>>>> __call_rcu_commn                                            rcu_nocb_bypass_lock
->>>>>                                                             raw_spin_trylock(&rdp->nocb_bypass_lock) fail
->>>>>                                                             atomic_inc(&rdp->nocb_lock_contended);
->>>>> rcu_nocb_wait_contended                                     WARN_ON_ONCE(smp_processor_id() != rdp->cpu);
->>>>>  WARN_ON_ONCE(atomic_read(&rdp->nocb_lock_contended))                                          |
->>>>>                             |_ _ _ _ _ _ _ _ _ _same rdp and rdp->cpu != 11_ _ _ _ _ _ _ _ _ __|
->>>>>
->>>>> This commit therefore use the rcu_nocb_try_flush_bypass() instead of
->>>>> rcu_nocb_flush_bypass() in lazy_rcu_shrink_scan(), if the nocb_bypass
->>>>> queue is being flushed, the rcu_nocb_try_flush_bypass will return directly.
->>>>>
->>>>> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
->>>
->>> Just to make sure I understand, the "echo" command called out below
->>> will trigger the two-CPU scenario called out above in kernels built with
->>> CONFIG_RCU_NOCB_CPU_DEFAULT_ALL=y and CONFIG_RCU_LAZY=y, correct?
->>>
->>> If so, good catch!
->>>
->>> Any objections to this patch?  Or to put it another way, is there a
->>> better fix via adjusting lazy RCU?
->>
->> I think it is a good find and no objections to this patch. One thing we could
->> also do is have rcu_nocb_try_flush_bypass() return false if the
->>  trylock fails, and then retry till lock is available. That would give us
->> roughly the same behavior as rcu_nocb_flush_bypass() but I am not sure if it is
->> worth it, because the shrinker will just try again if memory pressure is not
->> relieved anyway.
->>
->> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> Thanks Joel for the review :) .
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index a7b30e11beaf..0cc7360a6120 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -76,6 +76,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg353ps.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg353v.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg353vs.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg503.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-odroid-m1s.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-pinenote-v1.1.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-pinenote-v1.2.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-powkiddy-rgb30.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3566-odroid-m1s.dts b/arch/arm64/boot/dts/rockchip/rk3566-odroid-m1s.dts
+new file mode 100644
+index 000000000000..c6c4f573535f
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3566-odroid-m1s.dts
+@@ -0,0 +1,388 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2024 KyuHyuk Lee <lee@kyuhyuk.kr>
++ *
++ */
++
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++#include "rk3566.dtsi"
++
++/ {
++	model = "Hardkernel ODROID-M1S";
++	compatible = "rockchip,rk3566-odroid-m1s", "rockchip,rk3566";
++
++	aliases {
++		i2c0 = &i2c3;
++		i2c3 = &i2c0;
++		spi0 = &spi1;
++		spi1 = &spi0;
++		mmc0 = &sdmmc0;
++		mmc1 = &sdhci;
++		serial0 = &uart6;
++		serial1 = &uart0;
++		serial6 = &uart1;
++	};
++
++	chosen {
++		stdout-path = "serial2:1500000n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power: led-0 {
++			gpios = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
++			function = LED_FUNCTION_POWER;
++			color = <LED_COLOR_ID_RED>;
++			linux,default-trigger = "default-on";
++			pinctrl-names = "default";
++			pinctrl-0 = <&led_power_pin>;
++		};
++		led_work: led-1 {
++			gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
++			function = LED_FUNCTION_HEARTBEAT;
++			color = <LED_COLOR_ID_BLUE>;
++			linux,default-trigger = "heartbeat";
++			pinctrl-names = "default";
++			pinctrl-0 = <&led_work_pin>;
++		};
++	};
++
++	vcc_sys: vcc-sys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
++	vcc3v3_sys: vcc3v3-sys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc5v0_sys>;
++	};
++
++	vcc5v0_sys: vcc5v0-sys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc_sys>;
++	};
++};
++
++&cpu0 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&i2c0 {
++	status = "okay";
++
++	vdd_cpu: regulator@1c {
++		compatible = "tcs,tcs452x";
++		reg = <0x1c>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-name = "vdd_cpu";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <712500>;
++		regulator-max-microvolt = <1390000>;
++		regulator-init-microvolt = <900000>;
++		regulator-ramp-delay = <2300>;
++		vin-supply = <&vcc5v0_sys>;
++
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++
++	rk809: pmic@20 {
++		compatible = "rockchip,rk809";
++		reg = <0x20>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++		#clock-cells = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_int_l>;
++		rockchip,system-power-controller;
++		vcc1-supply = <&vcc3v3_sys>;
++		vcc2-supply = <&vcc3v3_sys>;
++		vcc3-supply = <&vcc3v3_sys>;
++		vcc4-supply = <&vcc3v3_sys>;
++		vcc5-supply = <&vcc3v3_sys>;
++		vcc6-supply = <&vcc3v3_sys>;
++		vcc7-supply = <&vcc3v3_sys>;
++		vcc8-supply = <&vcc3v3_sys>;
++		vcc9-supply = <&vcc3v3_sys>;
++		wakeup-source;
++
++		regulators {
++			vdd_logic: DCDC_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-init-microvolt = <900000>;
++				regulator-ramp-delay = <6001>;
++				regulator-initial-mode = <0x2>;
++				regulator-name = "vdd_logic";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_gpu: DCDC_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-init-microvolt = <900000>;
++				regulator-ramp-delay = <6001>;
++				regulator-initial-mode = <0x2>;
++				regulator-name = "vdd_gpu";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-initial-mode = <0x2>;
++				regulator-name = "vcc_ddr";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vdd_npu: DCDC_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-init-microvolt = <900000>;
++				regulator-ramp-delay = <6001>;
++				regulator-initial-mode = <0x2>;
++				regulator-name = "vdd_npu";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdda0v9_image: LDO_REG1 {
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-name = "vdda0v9_image";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdda_0v9: LDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-name = "vdda_0v9";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdda0v9_pmu: LDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-name = "vdda0v9_pmu";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <900000>;
++				};
++			};
++
++			vccio_acodec: LDO_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-name = "vccio_acodec";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vccio_sd: LDO_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vccio_sd";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc3v3_pmu: LDO_REG6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc3v3_pmu";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcca_1v8: LDO_REG7 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcca_1v8";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcca1v8_ddr: LDO_REG8 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcca1v8_pmu";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vcca1v8_image: LDO_REG9 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcca1v8_image";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_1v8: DCDC_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_1v8";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_3v3: SWITCH_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc_3v3";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc3v3_sd: SWITCH_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc3v3_sd";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++		};
++	};
++};
++
++&pinctrl {
++	leds {
++		led_power_pin: led-power-pin {
++			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++		led_work_pin: led-work-pin {
++			rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	pmic {
++		pmic_int_l: pmic-int-l {
++			rockchip,pins =
++				<0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++};
++
++&pmu_io_domains {
++	pmuio2-supply = <&vcc3v3_pmu>;
++	vccio1-supply = <&vccio_acodec>;
++	vccio3-supply = <&vccio_sd>;
++	vccio4-supply = <&vcc_3v3>;
++	vccio5-supply = <&vcc_3v3>;
++	vccio6-supply = <&vcc_3v3>;
++	vccio7-supply = <&vcc_3v3>;
++	status = "okay";
++};
++
++&saradc {
++	vref-supply = <&vcca_1v8>;
++	status = "okay";
++};
++
++&sdhci {
++	bus-width = <8>;
++	max-frequency = <200000000>;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_bus8 &emmc_clk &emmc_cmd &emmc_datastrobe &emmc_rstnout>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vcc_1v8>;
++	status = "okay";
++};
++
++&sdmmc0 {
++	bus-width = <4>;
++	cap-sd-highspeed;
++	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
++	disable-wp;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc0_bus4 &sdmmc0_clk &sdmmc0_cmd &sdmmc0_det>;
++	sd-uhs-sdr104;
++	vmmc-supply = <&vcc3v3_sd>;
++	vqmmc-supply = <&vccio_sd>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
+\ No newline at end of file
+-- 
+2.34.1
 
-You're welcome! And thanks for the patch. :)
-
- - Joel
-
-> 
->>
->> thanks,
->>
->>  - Joel
->>
->>
->>>
->>>                                                       Thanx, Paul
->>>
->>>>> ---
->>>>
->>>> During rcutorture testing, use echo 3 > /proc/sys/vm/drop_caches will trigger:
->>>>
->>>> [ 52.674359] WARNING: CPU: 11 PID: 505 at kernel/rcu/tree_nocb.h:104
->>>> rcu_nocb_bypass_lock+0xc7/0xd0
->>>> [ 52.674388] Modules linked in:
->>>> [ 52.674406] CPU: 11 PID: 505 Comm: sh Not tainted 6.6.0-rt14zqiang-dirty #103
->>>> [ 52.674422] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
->>>> rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
->>>> [ 52.674436] RIP: 0010:rcu_nocb_bypass_lock+0xc7/0xd0
->>>> [ 52.674454] Code: 4c 89 e7 e8 4b 3d 6a 01 be 04 00 00 00 4c 89 ef e8
->>>> ce 92 31 00 f0 ff 8b 68 02 00 00 5b 41 5c 41 5d 41 5e 5d c3 cc cc cc
->>>> cc 90 <0f> 0b 90 eb d1 0f 1f 40 00 90 90 0
->>>> [ 52.674467] RSP: 0018:ffff88800af6fa68 EFLAGS: 00010093
->>>> [ 52.674487] RAX: 0000000000000000 RBX: ffff888069e0f540 RCX: ffffffffb5c12d44
->>>> [ 52.674497] RDX: 0000000000000003 RSI: dffffc0000000000 RDI: ffff888069e0fb10
->>>> [ 52.674508] RBP: ffff88800af6fa88 R08: ffffed100d3c1ef6 R09: ffffed100d3c1ef6
->>>> [ 52.674518] R10: ffffed100d3c1ef5 R11: ffff888069e0f7ab R12: ffff888069e0f8c0
->>>> [ 52.674529] R13: ffff888069e0f7a8 R14: 000000000000000b R15: ffff88800af6fb90
->>>> [ 52.674540] FS: 00007ff543132740(0000) GS:ffff88806c000000(0000)
->>>> knlGS:0000000000000000
->>>> [ 52.674555] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> [ 52.674565] CR2: 000055df13465004 CR3: 00000000027f2000 CR4: 00000000001506e0
->>>> [ 52.674576] Call Trace:
->>>> [ 52.674583] <TASK>
->>>> [ 52.674598] ? show_regs+0x66/0x70
->>>> [ 52.674627] ? __warn+0xae/0x220
->>>> [ 52.674657] ? rcu_nocb_bypass_lock+0xc7/0xd0
->>>> [ 52.674693] ? report_bug+0x14a/0x240
->>>> [ 52.674756] ------------[ cut here ]------------
->>>> [ 52.674766] WARNING: CPU: 2 PID: 118 at kernel/rcu/tree_nocb.h:124
->>>> __call_rcu_common+0xd3f/0xd80
->>>> [ 52.674785] Modules linked in:
->>>> [ 52.674785] ? handle_bug+0x44/0x80
->>>> [ 52.674795] CPU: 2 PID: 118 Comm: rcuop/10 Not tainted
->>>> 6.6.0-rt14zqiang-dirty #103
->>>> [ 52.674806] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
->>>> rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
->>>> [ 52.674812] RIP: 0010:__call_rcu_common+0xd3f/0xd80
->>>> [ 52.674816] ? exc_invalid_op+0x1c/0x50
->>>> [ 52.674822] Code: 9e 02 4c 89 e2 e8 a1 46 ff ff e9 d0 fa ff ff 48 8d
->>>> 7b 18 e8 43 5f 30 00 48 8b 7b 18 48 89 de e8 67 9a ff ff e9 69 f6 ff
->>>> ff 90 <0f> 0b 90 f3 90 e9 17 fa ff ff 90 b
->>>> [ 52.674832] RSP: 0018:ffff888002277af8 EFLAGS: 00010002
->>>> [ 52.674847] RAX: 0000000000000001 RBX: ffff888069e0f540 RCX: ffffffffb5c24655
->>>> [ 52.674848] ? asm_exc_invalid_op+0x1f/0x30
->>>> [ 52.674857] RDX: 0000000000000003 RSI: dffffc0000000000 RDI: ffff888069e0f7a8
->>>> [ 52.674867] RBP: ffff888002277bf0 R08: ffffed100d3c1ef6 R09: ffffed100d3c1ef6
->>>> [ 52.674877] R10: ffffed100d3c1ef5 R11: ffff888069e0f7ab R12: ffff88800bab62f8
->>>> [ 52.674887] R13: ffff888069e0f7a8 R14: 0000000000000000 R15: ffff888069e0f918
->>>> [ 52.674897] FS: 0000000000000000(0000) GS:ffff888069c00000(0000)
->>>> knlGS:0000000000000000
->>>> [ 52.674910] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> [ 52.674920] CR2: 000055df13419911 CR3: 00000000027f2000 CR4: 00000000001506e0
->>>> [ 52.674930] Call Trace:
->>>> [ 52.674936] <TASK>
->>>> [ 52.674934] ? rcu_nocb_bypass_lock+0x94/0xd0
->>>> [ 52.674950] ? show_regs+0x66/0x70
->>>> [ 52.674972] ? rcu_nocb_bypass_lock+0xc7/0xd0
->>>> [ 52.674974] ? __warn+0xae/0x220
->>>> [ 52.675002] ? __call_rcu_common+0xd3f/0xd80
->>>> [ 52.675010] ? rcu_nocb_bypass_lock+0x94/0xd0
->>>> [ 52.675037] ? report_bug+0x14a/0x240
->>>> [ 52.675054] rcu_nocb_flush_bypass+0x3a/0x60
->>>> [ 52.675094] ? handle_bug+0x44/0x80
->>>> [ 52.675095] lazy_rcu_shrink_scan+0x12e/0x220
->>>> [ 52.675114] ? exc_invalid_op+0x1c/0x50
->>>> [ 52.675139] ? asm_exc_invalid_op+0x1f/0x30
->>>> [ 52.675156] shrink_slab.constprop.116+0x2cd/0x6e0
->>>> [ 52.675206] ? __call_rcu_common+0x775/0xd80
->>>> [ 52.675239] ? __call_rcu_common+0xd3f/0xd80
->>>> [ 52.675259] ? __pfx_shrink_slab.constprop.116+0x10/0x10
->>>> [ 52.675272] ? __call_rcu_common+0x775/0xd80
->>>> [ 52.675335] ? __pfx_drop_pagecache_sb+0x10/0x10
->>>> [ 52.675365] ? __pfx___call_rcu_common+0x10/0x10
->>>> [ 52.675386] ? preempt_schedule+0x7f/0xa0
->>>> [ 52.675396] drop_slab+0x64/0x90
->>>> [ 52.675413] ? preempt_schedule_thunk+0x1a/0x30
->>>> [ 52.675426] drop_caches_sysctl_handler+0x82/0xe0
->>>> [ 52.675472] call_rcu+0x17/0x20
->>>> [ 52.675489] put_object+0x53/0x70
->>>> [ 52.675513] __delete_object+0x73/0x90
->>>> [ 52.675545] delete_object_full+0x1f/0x30
->>>> [ 52.675563] kmemleak_free+0x41/0x70
->>>> [ 52.675586] __kmem_cache_free+0x1bd/0x230
->>>> [ 52.675598] ? rcu_torture_timer_cb+0x12/0x20
->>>> [ 52.675623] ? rcu_do_batch+0x466/0xf50
->>>> [ 52.675649] kfree+0x90/0x110
->>>> [ 52.675661] ? __pfx_rcu_torture_timer_cb+0x10/0x10
->>>> [ 52.675678] rcu_torture_timer_cb+0x12/0x20
->>>> [ 52.675697] rcu_do_batch+0x46b/0xf50
->>>> [ 52.675464] proc_sys_call_handler+0x247/0x310
->>>> [ 52.675772] ? __pfx_rcu_do_batch+0x10/0x10
->>>> [ 52.675785] ? migrate_disable+0x2a/0xf0
->>>> [ 52.675815] ? lockdep_softirqs_off+0x13d/0x200
->>>> [ 52.675854] ? rcu_nocb_cb_kthread+0x29c/0x880
->>>> [ 52.675889] rcu_nocb_cb_kthread+0x2b1/0x880
->>>> [ 52.675910] ? __pfx_proc_sys_call_handler+0x10/0x10
->>>> [ 52.675945] ? vfs_write+0x3ea/0x7c0
->>>> [ 52.675958] ? vfs_write+0x3ea/0x7c0
->>>> [ 52.675959] ? __pfx_rcu_nocb_cb_kthread+0x10/0x10
->>>> [ 52.675974] ? trace_preempt_on+0x54/0xe0
->>>> [ 52.675990] ? __kthread_parkme+0x80/0x110
->>>> [ 52.676015] ? preempt_count_sub+0x50/0x80
->>>> [ 52.676031] proc_sys_write+0x17/0x20
->>>> [ 52.676050] vfs_write+0x58b/0x7c0
->>>> [ 52.676063] ? __kthread_parkme+0xf2/0x110
->>>> [ 52.676111] ? __pfx_rcu_nocb_cb_kthread+0x10/0x10
->>>> [ 52.676112] ? __pfx_vfs_write+0x10/0x10
->>>> [ 52.676139] kthread+0x1a8/0x1f0
->>>> [ 52.676161] ? kthread+0x107/0x1f0
->>>> [ 52.676163] ? __might_fault+0x84/0xd0
->>>> [ 52.676183] ? __pfx_kthread+0x10/0x10
->>>> [ 52.676197] ? __might_fault+0xbe/0xd0
->>>> [ 52.676213] ? __might_fault+0x84/0xd0
->>>> [ 52.676223] ret_from_fork+0x40/0x60
->>>> [ 52.676238] ? __pfx_kthread+0x10/0x10
->>>> [ 52.676272] ? __fget_light+0xb8/0x120
->>>> [ 52.676273] ret_from_fork_asm+0x1b/0x30
->>>> [ 52.676355] ksys_write+0xd0/0x170
->>>> [ 52.676386] ? __pfx_ksys_write+0x10/0x10
->>>> [ 52.676418] </TASK>
->>>> [ 52.676425] irq event stamp: 591689
->>>> [ 52.676433] hardirqs last enabled at (591688): [<ffffffffb72b7193>]
->>>> _raw_spin_unlock_irqrestore+0x63/0x80
->>>> [ 52.676452] hardirqs last disabled at (591689): [<ffffffffb5c242f3>]
->>>> __call_rcu_common+0x413/0xd80
->>>> [ 52.676467] softirqs last enabled at (591668): [<ffffffffb5af3489>]
->>>> __local_bh_enable_ip+0x109/0x160
->>>> [ 52.676486] softirqs last disabled at (591672): [<ffffffffb5c1ed2d>]
->>>> rcu_do_batch+0x5ad/0xf50
->>>> [ 52.676488] __x64_sys_write+0x47/0x60
->>>> [ 52.676500] ---[ end trace 0000000000000000 ]---
->>>> root@qemux86-64:~# [ 52.676526] do_syscall_64+0x47/0x90
->>>> [ 52.676552] entry_SYSCALL_64_after_hwframe+0x6f/0xd9
->>>> [ 52.676566] RIP: 0033:0x7ff5432260c4
->>>> [ 52.676583] Code: 15 59 7d 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff
->>>> eb b7 0f 1f 00 f3 0f 1e fa 80 3d 1d 0d 0e 00 00 74 13 b8 01 00 00 00
->>>> 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 8
->>>> [ 52.676596] RSP: 002b:00007ffcc9614998 EFLAGS: 00000202 ORIG_RAX:
->>>> 0000000000000001
->>>> [ 52.676613] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007ff5432260c4
->>>> [ 52.676624] RDX: 0000000000000002 RSI: 000055df1345df40 RDI: 0000000000000001
->>>> [ 52.676634] RBP: 000055df1345df40 R08: 000055df1345b700 R09: 0000000000000000
->>>> [ 52.676644] R10: 00000000000001b6 R11: 0000000000000202 R12: 0000000000000001
->>>> [ 52.676653] R13: 00007ff5431326c8 R14: 00007ffcc9614a00 R15: 000055df1345b6f8
->>>> [ 52.676789] </TASK>
->>>> [ 52.676796] irq event stamp: 502888
->>>> [ 52.676804] hardirqs last enabled at (502887): [<ffffffffb72b7193>]
->>>> _raw_spin_unlock_irqrestore+0x63/0x80
->>>> [ 52.676823] hardirqs last disabled at (502888): [<ffffffffb5c19753>]
->>>> lazy_rcu_shrink_scan+0x1d3/0x220
->>>> [ 52.676838] softirqs last enabled at (54708): [<ffffffffb5af3489>]
->>>> __local_bh_enable_ip+0x109/0x160
->>>> [ 52.676854] softirqs last disabled at (54698): [<ffffffffb6fd861a>]
->>>> unix_release_sock+0x26a/0x7c0
->>>> [ 52.676888] ---[ end trace 0000000000000000 ]---
->>>>
->>>> Thanks
->>>> Zqiang
->>>>
->>>>
->>>>>  kernel/rcu/tree_nocb.h | 2 +-
->>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
->>>>> index d82f96a66600..9b618842c324 100644
->>>>> --- a/kernel/rcu/tree_nocb.h
->>>>> +++ b/kernel/rcu/tree_nocb.h
->>>>> @@ -1381,7 +1381,7 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
->>>>>                         rcu_nocb_unlock_irqrestore(rdp, flags);
->>>>>                         continue;
->>>>>                 }
->>>>> -               WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, jiffies, false));
->>>>> +               rcu_nocb_try_flush_bypass(rdp, jiffies);
->>>>>                 rcu_nocb_unlock_irqrestore(rdp, flags);
->>>>>                 wake_nocb_gp(rdp, false);
->>>>>                 sc->nr_to_scan -= _count;
->>>>> --
->>>>> 2.17.1
->>>>>
->>>
