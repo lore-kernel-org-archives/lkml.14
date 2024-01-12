@@ -1,181 +1,134 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA2222606;
-	Fri, 12 Jan 2024 17:14:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CF717569;
+	Fri, 12 Jan 2024 17:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nmh6/Z7s"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-557bfc7f7b4so9527655a12.0;
-        Fri, 12 Jan 2024 09:14:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BU0gdRsk"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7ce415b5492so1872301241.0;
+        Fri, 12 Jan 2024 09:15:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705079676; x=1705684476; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1705079713; x=1705684513; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gkRip5P/CSH4Zjga6g7Ad+NhClHoMzovsmKSyhbUtXI=;
-        b=Nmh6/Z7sMOOWiVD7SBEno5YLeBNngSkGArrgJ8cWt6xMQdNuEtHQPuHmJiuYP7HjV0
-         PhKXVEpA3jAT2aBjv9DlM5n9rzNLjQCkqKYqEI8oE/1FkV8znN0MwmTFuBSA0bQLbgN+
-         zKSu6+lPzfTUMRU8woUpwBsEPTXeOzV0O7kR6JEKacSUHgOnbW0QLcJVk8h+sffCRpHT
-         ev7cNoMzkB5B0bZOBOk2evGFA7egZbo4HdEnd+Km+Pi9OIjQYcEIbDLcJjLXdiPPovpe
-         Uu4E69NeefoXKVqgCnN7TbLBBlUUds+2sTSqlpbUFqhnqK+8op0z7k9j6HahNHL04tPu
-         u0dA==
+        bh=rkseUqPo8OXQ3YOG2VTgeQHbmBTlfvlda5FttZ/w2HE=;
+        b=BU0gdRske5sEcPRZiDZAZ9wfpmC01sS+A7WZGh+y7jBvkc7rk2YJPOt3Ofh8zrd0u+
+         huw+KJrOZmJ41xaJQpjUf7jDQ8Jr2CGSrGagnbOSrnEO08CozNZmmkxN7NMGmfgE1lnu
+         8T96B8byIzkTadvH9I3HrXJ3XN0+V0KqaATNZ/dcpH1EgB/71h0JTaFV1AmqqwQ8L0iU
+         39LDIwE++44yjITXFag8YDlYJoa/GRJMvTFo8I2qFO9tZyaHZDizt/bXjBU1r1EfpURp
+         g3WEuAt/R6QtQkblmzD1alNYe3La0JJ1fd5YfxQ3ZzL9x2WQU3BdVLgAxfu14rCRqo6P
+         QRrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705079676; x=1705684476;
+        d=1e100.net; s=20230601; t=1705079713; x=1705684513;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gkRip5P/CSH4Zjga6g7Ad+NhClHoMzovsmKSyhbUtXI=;
-        b=a4Qyrf8DpymFOnj7BwI47tu5AE+k9mcJ7bH8h90VeEyIEQoKo0LrX7X0Kvt/8JdZvw
-         XcQOtxHQREXhybyxtCJaJRfkiwbgtXSMvzCyHgf0t0qF9lQO8lLa6maTDLUH20x1Ds1J
-         r2Hwbs2UOY4EYLu98X3NuT+jCIOsLP9p/9sSnooU94ljSoMJD3MSjOAXU1g2QkYH4v1k
-         +iI1yyLthBNiynJBAxlVbMwO/4M5iCjkHYxUcNd/t1JRi/30FSTJ/Y3PTcz2WAKVb33P
-         y6INEIb3j7V1I+v0KoIJYd33IeU4ayqfT/hzMpKaSPGea7rm0x+OmKR13h9NPFJSjG8Z
-         UOKA==
-X-Gm-Message-State: AOJu0YwhODHmN6RD+GcByoi7yRsLz4LdS+RkwXILREaw1p+gYXbry6B2
-	tX9N56O8WkW3w9tR3gCKNKsbfJ0aE5l5GXk7/iM=
-X-Google-Smtp-Source: AGHT+IF9IMPBk8V3jyU215rKqdmijeXsvs7Ngpeca5FQb7pvIGZgTeR2+krrbELKgsorLRv1yVbITGICkSbSxw/uz2Q=
-X-Received: by 2002:a50:9fab:0:b0:558:b5d0:e77a with SMTP id
- c40-20020a509fab000000b00558b5d0e77amr1925498edf.36.1705079676202; Fri, 12
- Jan 2024 09:14:36 -0800 (PST)
+        bh=rkseUqPo8OXQ3YOG2VTgeQHbmBTlfvlda5FttZ/w2HE=;
+        b=kVvLxz9EIz0Z6Iu5cFLtPLGcBI7V236gy0mLls4qX+hNvG7nHlEkdKuyWznd3FuQDn
+         ueBGZbA9+0t9MmuRTibt+mzElo7YHHGvoHueTHR5voCo23gva6jr1XSR2dP60kHpaHdI
+         R0N4XcGhyTBHyNwSklJWxS4VG9QIzhGwE/ChMCG6J+DVpxVzVnShtbLbgSWkBDTa4E1R
+         TrXL/DjBEkEjAxtYngvhr50SIreVxr+MKE8fEZyAUSV7PKA/L4D14Puj2dqLqOBJXv6U
+         bHz4bNlmliN+SIMCEOJf2qzCKBqERLD3rA/2sDRNA5mSiqp5WQJHCVQWEji5wonDCmr5
+         r0vA==
+X-Gm-Message-State: AOJu0YxJJJ3zmhLDY9s82ylTmd1vd9JKIzcll9CrzGWu0o9Q9gdOQQyN
+	Qr+FKBkyAH14Ep5lVYPIRqHNicwtl3sljRc3jus=
+X-Google-Smtp-Source: AGHT+IEtyS+zRiryoiEol1GpjC1w298O0gfObrmREKMAHHDiKjWPg5utyGaAszkNnTgUD0jUCqxwBLwFcY9rn2/AIc0=
+X-Received: by 2002:a05:6122:400f:b0:4b6:e339:31b3 with SMTP id
+ ca15-20020a056122400f00b004b6e33931b3mr1348367vkb.27.1705079712913; Fri, 12
+ Jan 2024 09:15:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108195016.156583-1-robdclark@gmail.com> <27e64458-7cb1-99a4-f67e-60d911f28f44@collabora.com>
- <CAF6AEGvBFdXe9rHjbwWv9eLUMv2YEP7cfMoXcWgZ30Wn4LzOjw@mail.gmail.com>
-In-Reply-To: <CAF6AEGvBFdXe9rHjbwWv9eLUMv2YEP7cfMoXcWgZ30Wn4LzOjw@mail.gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Fri, 12 Jan 2024 09:14:24 -0800
-Message-ID: <CAF6AEGuXi1wTbE0j6FmSnqw_EVUYSdnk5WeFL6abD=zeNutPpg@mail.gmail.com>
-Subject: Re: [PATCH] drm/ci: Add msm tests
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>, 
-	Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	open list <linux-kernel@vger.kernel.org>, Maxime Ripard <mripard@kernel.org>, 
-	Helen Koike <helen.koike@collabora.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, freedreno@lists.freedesktop.org, 
-	Daniel Stone <daniel@fooishbar.org>
+References: <20240112142621.13525-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240112142621.13525-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TYCPR01MB112699FAB53E6E4647893516B866F2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+ <CA+V-a8smkiub9ACDsqxv0z8yF_iLVEXG2OHwS7iJ+tmsdmTQ6g@mail.gmail.com> <TYCPR01MB11269F75A63DB020297DF21DA866F2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYCPR01MB11269F75A63DB020297DF21DA866F2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 12 Jan 2024 17:14:46 +0000
+Message-ID: <CA+V-a8tsxoaLfxCHmViyewYVbtZMkDAkYjUUYAoH_2MDi2ugBw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] pinctrl: renesas: pinctrl-rzg2l: Add the missing
+ port pins P19 to P28
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 12, 2024 at 7:57=E2=80=AFAM Rob Clark <robdclark@gmail.com> wro=
-te:
+On Fri, Jan 12, 2024 at 5:10=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
 >
-> On Fri, Jan 12, 2024 at 3:42=E2=80=AFAM Vignesh Raman
-> <vignesh.raman@collabora.com> wrote:
+>
+>
+> > -----Original Message-----
+> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: Friday, January 12, 2024 5:06 PM
+> > Subject: Re: [PATCH v4 3/4] pinctrl: renesas: pinctrl-rzg2l: Add the
+> > missing port pins P19 to P28
 > >
-> > Hi Rob,
+> > Hi Biju,
 > >
+> > Thank you for the review.
 > >
-> > On 09/01/24 01:20, Rob Clark wrote:
-> > > From: Rob Clark <robdclark@chromium.org>
+> > On Fri, Jan 12, 2024 at 2:31=E2=80=AFPM Biju Das <biju.das.jz@bp.renesa=
+s.com>
+> > wrote:
 > > >
-> > > The msm tests should skip on non-msm hw, so I think it should be safe=
- to
-> > > enable everywhere.
 > > >
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > ---
-> > >   drivers/gpu/drm/ci/testlist.txt | 49 ++++++++++++++++++++++++++++++=
-+++
-> > >   1 file changed, 49 insertions(+)
+> > > Hi Prabhakar,
 > > >
-> > > diff --git a/drivers/gpu/drm/ci/testlist.txt b/drivers/gpu/drm/ci/tes=
-tlist.txt
-> > > index f82cd90372f4..eaeb751bb0ad 100644
-> > > --- a/drivers/gpu/drm/ci/testlist.txt
-> > > +++ b/drivers/gpu/drm/ci/testlist.txt
-> > > @@ -2910,3 +2910,52 @@ kms_writeback@writeback-invalid-parameters
-> > >   kms_writeback@writeback-fb-id
-> > >   kms_writeback@writeback-check-output
-> > >   prime_mmap_kms@buffer-sharing
-> > > +msm_shrink@copy-gpu-sanitycheck-8
-> > > +msm_shrink@copy-gpu-sanitycheck-32
-> > > +msm_shrink@copy-gpu-8
-> > > +msm_shrink@copy-gpu-32
-> > > +msm_shrink@copy-gpu-madvise-8
-> > > +msm_shrink@copy-gpu-madvise-32
-> > > +msm_shrink@copy-gpu-oom-8
-> > > +msm_shrink@copy-gpu-oom-32
-> > > +msm_shrink@copy-mmap-sanitycheck-8
-> > > +msm_shrink@copy-mmap-sanitycheck-32
-> > > +msm_shrink@copy-mmap-8
-> > > +msm_shrink@copy-mmap-32
-> > > +msm_shrink@copy-mmap-madvise-8
-> > > +msm_shrink@copy-mmap-madvise-32
-> > > +msm_shrink@copy-mmap-oom-8
-> > > +msm_shrink@copy-mmap-oom-32
-> > > +msm_shrink@copy-mmap-dmabuf-sanitycheck-8
-> > > +msm_shrink@copy-mmap-dmabuf-sanitycheck-32
-> > > +msm_shrink@copy-mmap-dmabuf-8
-> > > +msm_shrink@copy-mmap-dmabuf-32
-> > > +msm_shrink@copy-mmap-dmabuf-madvise-8
-> > > +msm_shrink@copy-mmap-dmabuf-madvise-32
-> > > +msm_shrink@copy-mmap-dmabuf-oom-8
-> > > +msm_shrink@copy-mmap-dmabuf-oom-32
-> > > +msm_mapping@ring
-> > > +msm_mapping@sqefw
-> > > +msm_mapping@shadow
-> > > +msm_submitoverhead@submitbench-10-bos
-> > > +msm_submitoverhead@submitbench-10-bos-no-implicit-sync
-> > > +msm_submitoverhead@submitbench-100-bos
-> > > +msm_submitoverhead@submitbench-100-bos-no-implicit-sync
-> > > +msm_submitoverhead@submitbench-250-bos
-> > > +msm_submitoverhead@submitbench-250-bos-no-implicit-sync
-> > > +msm_submitoverhead@submitbench-500-bos
-> > > +msm_submitoverhead@submitbench-500-bos-no-implicit-sync
-> > > +msm_submitoverhead@submitbench-1000-bos
-> > > +msm_submitoverhead@submitbench-1000-bos-no-implicit-sync
-> > > +msm_recovery@hangcheck
-> > > +msm_recovery@gpu-fault
-> > > +msm_recovery@gpu-fault-parallel
-> > > +msm_recovery@iova-fault
-> > > +msm_submit@empty-submit
-> > > +msm_submit@invalid-queue-submit
-> > > +msm_submit@invalid-flags-submit
-> > > +msm_submit@invalid-in-fence-submit
-> > > +msm_submit@invalid-duplicate-bo-submit
-> > > +msm_submit@invalid-cmd-idx-submit
-> > > +msm_submit@invalid-cmd-type-submit
-> > > +msm_submit@valid-submit
+> > > > -----Original Message-----
+> > > > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > > > Sent: Friday, January 12, 2024 2:26 PM
+> > > > Subject: [PATCH v4 3/4] pinctrl: renesas: pinctrl-rzg2l: Add the
+> > > > missing port pins P19 to P28
+> > > >
+> > <snip>
+> > > >
+> > > > +/**
+> > > > + * struct rzg2l_variable_pin_cfg - pin data cfg
+> > > > + * @cfg: port pin configuration
+> > > > + * @port: port number
+> > > > + * @pin: port pin
+> > > > + */
+> > > > +struct rzg2l_variable_pin_cfg {
+> > > > +     u32 cfg:20;
+> > > > +     u8 port:5;
+> > >
+> > >  u32 ??
+> > This is done based on the feedback provided previously by Geert [0].
 > >
-> > I tested this patch with latest drm-misc/drm-misc-next and there was
-> > some failures seen for the newly added msm tests. I have updated the
-> > xfails with below commit,
+> > > > +     u8 pin:5;
+> > >
+> > >  u32 ??
+> > >
+> > ditto.
 > >
-> > https://gitlab.freedesktop.org/vigneshraman/linux/-/commit/d012893597a6=
-61d6ebbb755bf2607dfb055524a1
-> >
-> > I will notify the maintainers about the flaky tests, update the url in
-> > the flakes.txt, and submit a separate patch for this change.
-
-Oh, you should probably move msm_mapping@* to skips on sdm845.  I had
-a closer look at those, and they are failing due to a bootloader/fw
-issue.  We work around this in mesa CI with these two patches:
-
-https://gitlab.freedesktop.org/gfx-ci/linux/-/commit/4b49f902ec6f2bb382cbbf=
-489870573f4b43371e
-https://gitlab.freedesktop.org/gfx-ci/linux/-/commit/38cdf4c5559771e2474ae0=
-fecef8469f65147bc1
-
-But given that sdm845 is similar to sc7180 as far as kernel gpu
-driver, it is probably just better to skip these on sdm845 (with a
-comment referring to the hack patches we use in mesa CI)
-
-BR,
--R
-
 >
-> Thanks, it looks like you also have a relatively recent igt (there
-> were some msm_submit fails until I fixed the test)..
+> As per[0] suggestion is,
 >
-> BR,
-> -R
+> As cfg only contains the lower bits (PIN_CFG_*), I think you can fit
+> everything in a u32:
 >
-> > Regards,
-> > Vignesh
+>     u32 cfg: 20;
+>     u32 port: 5;
+>     u32 pin: 3;
+>
+Ouch my bad, i'll send a v5 with this change.
+
+Cheers,
+Prabhakar
