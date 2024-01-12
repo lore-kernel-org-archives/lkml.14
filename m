@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704D823C1;
-	Fri, 12 Jan 2024 06:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7054A42049
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 06:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGAcbI0V"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DD15BC43394;
-	Fri, 12 Jan 2024 06:30:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoKOZ9Iu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0F3B4C433B2;
+	Fri, 12 Jan 2024 06:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705041030;
-	bh=nTCKlP8E3w3r918DPScqNt0w2ZJX7f1RmOrFs37dgR4=;
+	s=k20201202; t=1705041031;
+	bh=jekUb0FSVZPvWCqMLLEnDhCHnUsUC5IyzrcXtmJkoMQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=OGAcbI0VhUEpVkGS4VG3jEOGk3GqOPOr+EdWGx53BE+NE4KQR/yFHpjBuYEL9tKCw
-	 RXn26BLLp8IiJIb7iuDuj6N5E4GJhTUJh0yPN8uuE9tw/3OgjDaH59M5YmL8zzC/T8
-	 decxw1LmqoBxpIOEmmjyfVxkrIX6+gZI8AWGjtVcBO3I/cTN21lZSwJNMkgiWcMiim
-	 2HS/etH3Txt6vLZBk+c8n6O4DuKtgeL16zHL6AEw1oKaaDGzko6j62Ry/IE0rIBT+d
-	 CJO9GG4QqwYUIw+Bv/VBVzOTSID0bLM5iQwnPW9AF2umzhuD/AyFbLUCvR63YiquM8
-	 lYe+SGt6KVtKw==
+	b=ZoKOZ9IuihzHcwrt/9jW7znjgqOmpCDPTWVGhMBu0568Xac3cCsUNuuX8bVv2JwUd
+	 xzb1otYyIhe3EtzEe4kPVfjeqXy51k6sJSGXTnuIJogGmya4bW2JUn3MLIc7OO9TvF
+	 BrS8tcj1RJfZrvpcriWUGrdxKBWH9b/oWYJVyPIHNyWrtz+42/nfCW9VBtz9UVIf8a
+	 oxLTDHk4EVyakeEZ/C025+5Q1HGsOUJYQkl+OMjJgJd1UpNBtRA3qBezowVSQjoy9Y
+	 shZv2Kw1qPkckk9gyNznM+MzacDcN16R+IPb6SpkQAAhzl7aLsMR8fPwGoBGG9HqzN
+	 clSGzXxLo2zBA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C34F1D8C96D;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E8B73DFC697;
 	Fri, 12 Jan 2024 06:30:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,47 +28,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/5] tools: selftests: riscv: Fix compiler warnings
+Subject: Re: [PATCH V3 0/4] riscv: mm: Fixup & Optimize COMPAT code
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170504103079.17535.4478051835218795004.git-patchwork-notify@kernel.org>
+ <170504103094.17535.18254228443220727646.git-patchwork-notify@kernel.org>
 Date: Fri, 12 Jan 2024 06:30:30 +0000
-References: <20231123185821.2272504-1-christoph.muellner@vrull.eu>
-In-Reply-To: <20231123185821.2272504-1-christoph.muellner@vrull.eu>
-To: =?utf-8?q?Christoph_M=C3=BCllner_=3Cchristoph=2Emuellner=40vrull=2Eeu=3E?=@ci.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
- aou@eecs.berkeley.edu, shuah@kernel.org, philipp.tomsich@vrull.eu,
- ajones@ventanamicro.com, evan@rivosinc.com, xiao.w.wang@intel.com,
- alexghiti@rivosinc.com, andy.chiu@sifive.com, bjorn@rivosinc.com,
- charlie@rivosinc.com
+References: <20231222115703.2404036-1-guoren@kernel.org>
+In-Reply-To: <20231222115703.2404036-1-guoren@kernel.org>
+To: Guo Ren <guoren@kernel.org>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, alexghiti@rivosinc.com,
+ charlie@rivosinc.com, xiao.w.wang@intel.com, david@redhat.com,
+ panqinglin2020@iscas.ac.cn, rick.p.edgecombe@intel.com, willy@infradead.org,
+ bjorn@rivosinc.com, conor.dooley@microchip.com, cleger@rivosinc.com,
+ leobras@redhat.com, guoren@linux.alibaba.com
 
 Hello:
 
 This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Thu, 23 Nov 2023 19:58:16 +0100 you wrote:
-> From: Christoph Müllner <christoph.muellner@vrull.eu>
+On Fri, 22 Dec 2023 06:56:59 -0500 you wrote:
+> From: Guo Ren <guoren@linux.alibaba.com>
 > 
-> When building the RISC-V selftests with a riscv32 compiler I ran into
-> a couple of compiler warnings. While riscv32 support for these tests is
-> questionable, the fixes are so trivial that it is probably best to simply
-> apply them.
+> When the task is in COMPAT mode, the TASK_SIZE should be 2GB, so
+> STACK_TOP_MAX and arch_get_mmap_end must be limited to 2 GB. This series
+> fixes the problem made by commit: add2cc6b6515 ("RISC-V: mm: Restrict
+> address space for sv39,sv48,sv57") and optimizes the related coding
+> convention of TASK_SIZE.
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/5] tools: selftests: riscv: Fix compile warnings in hwprobe
-    https://git.kernel.org/riscv/c/b91c26fdb0e8
-  - [2/5] tools: selftests: riscv: Fix compile warnings in cbo
-    https://git.kernel.org/riscv/c/ac7b2a02d62f
-  - [3/5] tools: selftests: riscv: Add missing include for vector test
-    https://git.kernel.org/riscv/c/b250c9089841
-  - [4/5] tools: selftests: riscv: Fix compile warnings in vector tests
-    https://git.kernel.org/riscv/c/e1baf5e68ed1
-  - [5/5] tools: selftests: riscv: Fix compile warnings in mm tests
-    https://git.kernel.org/riscv/c/12c16919652b
+  - [V3,1/4] riscv: mm: Fixup compat mode boot failure
+    https://git.kernel.org/riscv/c/5f449e245e5b
+  - [V3,2/4] riscv: mm: Fixup compat arch_get_mmap_end
+    https://git.kernel.org/riscv/c/97b7ac69be2e
+  - [V3,3/4] riscv: mm: Remove unused TASK_SIZE_MIN
+    (no matching commit)
+  - [V3,4/4] riscv: mm: Optimize TASK_SIZE definition
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
