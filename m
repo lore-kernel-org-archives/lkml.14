@@ -1,69 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C893A51;
-	Fri, 12 Jan 2024 00:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F17B812;
+	Fri, 12 Jan 2024 00:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s37k4LPo"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E2E97C43390;
-	Fri, 12 Jan 2024 00:40:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsXk11xq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EE17C433F1;
+	Fri, 12 Jan 2024 00:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705020025;
-	bh=Pe69cV68ZbKdlXaX6tPFs9FZpMkP5r1bd8cAtLk6wMk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=s37k4LPoYdLB59SirtXCv2+Z4D0gXhSOIZXopJafjyH+zKVGPyfHHgDYZwgsNqjfI
-	 ObcqVhCTg6ZZgV9/08kqL7DOO4gssuh80z4cime8QVmOaeLW3Vi1w7VdJYGnSvUvB7
-	 54fjJoi7aOs4YO8yrEwzwJj3vl69/MY/DfZth5bNXOhxUFqxpqq609JA6o6ZIAy82q
-	 +YSbtRCOi/382G6P190Y1kBWhJvHN/tBbEpbcTfH+OVj6n//2F2hfxmqqruqgpnCOV
-	 rpLhi6WSF6mRxf1e6biaMobJYqh7J3jVeB0I8KMdcWw8BoWch5Rt13TPjExbCxvtmh
-	 XrstD7s+G0w2w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CAC63D8C974;
-	Fri, 12 Jan 2024 00:40:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1705020256;
+	bh=+ieIg1Vyrm7V4Kx0AWUkiM3IfDgk/8hVTKmTn+rXIUY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hsXk11xqgvlvqBCv3MXy+6XQzo99gGTJPlboJrXI4F5CZcLU+MqenfuD6HXXX4JCS
+	 KrLch1AcWdOvv3HkjZ+gkGtjUjFSgC9vKxVVClVoCTxCCXYPY7HZr6v9JTjDKH9IMC
+	 hzaUd49PCUL3lIqCdlMSRRB0XgqzaKsbKEgKoWWSf3Xx9G9a8R5nR3joQqfrp0aUTU
+	 OzubsdpCx5XxFl9HYLG0q7ElB4kIFsQMT4LAexZE3yk67qj/CpHv3bTdl1R8t881xX
+	 scSeFGg6HBc3U1lj2/Ujz+p3TUvWxIM4xBdKGHVdivN5acqSsmXgNV0brz4A0MIDFF
+	 k5M+5WEHIK5/w==
+Date: Thu, 11 Jan 2024 16:44:14 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Aahil Awatramani <aahila@google.com>
+Cc: David Dillow <dave@thedillows.org>, Mahesh Bandewar
+ <maheshb@google.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek
+ <andy@greyhouse.net>, "David S . Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Martin
+ KaFai Lau <martin.lau@kernel.org>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Daniel Borkmann <daniel@iogearbox.net>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 1/2] bonding: Add independent control state
+ machine
+Message-ID: <20240111164414.58c7af7d@kernel.org>
+In-Reply-To: <20240111203244.1712804-1-aahila@google.com>
+References: <20240111203244.1712804-1-aahila@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] selftests/net/tcp-ao: Use LDLIBS instead of LDFLAGS
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170502002582.17549.11892138227072738598.git-patchwork-notify@kernel.org>
-Date: Fri, 12 Jan 2024 00:40:25 +0000
-References: <20240110-tcp_ao-selftests-makefile-v1-1-aa07d043f052@arista.com>
-In-Reply-To: <20240110-tcp_ao-selftests-makefile-v1-1-aa07d043f052@arista.com>
-To: Dmitry Safonov <dima@arista.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, shuah@kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
- 0x7f454c46@gmail.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Thu, 11 Jan 2024 20:32:43 +0000 Aahil Awatramani wrote:
+> Add support for the independent control state machine per IEEE
+> 802.1AX-2008 5.4.15 in addition to the existing implementation of the
+> coupled control state machine.
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+## Form letter - net-next-closed
 
-On Wed, 10 Jan 2024 21:34:10 +0000 you wrote:
-> The rules to link selftests are:
-> 
-> > $(OUTPUT)/%_ipv4: %.c
-> > 	$(LINK.c) $^ $(LDLIBS) -o $@
-> >
-> > $(OUTPUT)/%_ipv6: %.c
-> > 	$(LINK.c) -DIPV6_TEST $^ $(LDLIBS) -o $@
-> 
-> [...]
+The merge window for v6.8 has begun and we have already posted our pull
+request. Therefore net-next is closed for new drivers, features, code
+refactoring and optimizations. We are currently accepting bug fixes only.
 
-Here is the summary with links:
-  - selftests/net/tcp-ao: Use LDLIBS instead of LDFLAGS
-    https://git.kernel.org/netdev/net/c/e689a8769698
+Please repost when net-next reopens after January 22nd.
 
-You are awesome, thank you!
+RFC patches sent for review only are obviously welcome at any time.
+
+See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+pw-bot: defer
 
