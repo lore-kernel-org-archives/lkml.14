@@ -1,394 +1,208 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A0D18C01
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 22:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500161773D
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 22:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="je85hg6c"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6ddf388ca74so1706926a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:20:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K+jkxS/H"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2c29418ad5so341257066b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:28:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705098028; x=1705702828; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gsyhCTVxxckx0n+ATAL7x0fno4ad8i+6BqknWTE/NcQ=;
-        b=je85hg6cMRlyuGdUkc07GFztuF38ktx86hidNth3WGOqtOouF5v7xiJmEQ+poqBhXo
-         pDcFtryKrlmkUChJydFOmhYoZNNq9yyKBQmdOt+oApeQu83Qg1hIw9eNpR0bOced/jg2
-         2l3OmhgBarD4U3/+ACLWZ0cRWFOTONOzj6HvLsharndNeQti05liX80Fl4BBdmhnLmkS
-         pQSSt5zH13G/Numv1Ahf+L87sUvk0RmW3U7d5hHmGquCQKzJzqpAO/d8azly5HRozeNj
-         PlJ47GPhIt+F2TJTAKGjyCtKCMby8LC8brUG0jp/aDEtSCEXpIFmqmFP+ey62v/hJ5JZ
-         W7pg==
+        d=linaro.org; s=google; t=1705098529; x=1705703329; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=k+g8KAN/GocAbP+Hjj0VU3R5oOrMC5lRs+LQJKDyZbc=;
+        b=K+jkxS/HFNwjqGT47Hes14wV4POIlXFMqJjU2r06BY6/ANnvSE/NxIER3GEbt2Rci1
+         G+ySvp3yP92iSYndcPdgTP6X5prn6o3ewq88l+pzFuU03dwGecfVMjOmfuEpRysp9Yj1
+         8qWmc0Tk1lZOZowmMKuoQFig+tFKJ1SqxL/E2g/E2jlzOmhwnrtaFsPKrgKw9WCtQYeG
+         YMpeul7CqohG4wU/WwjK4J44hX9fdGvKBTkEd7AfkKlNtGJhIJN8jo6zJT2Yp1OCBJ/7
+         HIWvt7IxJcpOpQyV6MVmy/6XytdULTSKDcX2uO08U9GsBAgOJREQ8gmSKZUmQWhUMnhl
+         SKgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705098028; x=1705702828;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gsyhCTVxxckx0n+ATAL7x0fno4ad8i+6BqknWTE/NcQ=;
-        b=oTRK89mKFTsL1yTgPeFbRPyL4SczMz1d5ShV2OJAypv8qsBpgdfYHt4/GNkdcj2wRF
-         ADIgOhIUoCoYiARRCt58H62EkuiAKb4f2Y/dEFq+4Zr7F4eizQfVaZzYooaUoRDEm2Cy
-         Rl9m/wM9dVy2wuiGoJ2b/MWfVpBiVLKBtgkccBcfxB63OaGlvO5TiIhAcLsCSIRvUlY3
-         WICFpnvFlqbFJxw6LXY+rBg2Ka2R/ZRk//3+5YVPI1ZW6bPBB1D4WrolQrsqBRCrWhAP
-         kOkJAEx2/9X1BCcWuKhqsnCfjPvriLS28PfcMGn7j5uKNBsbiV9YuFsVt8qxdkqtL2Vr
-         Yzgg==
-X-Gm-Message-State: AOJu0Yw2TSAJPkVkUncltjmkML3ywK5ExZBTjPoq4/ehdTWC8qb96Sj2
-	rBnVuCsqXTCQxygj74jixKkzsZ02ZA1SclNGsdlGanyJnne1nA==
-X-Google-Smtp-Source: AGHT+IHUgf8bIMRZW6OWV5FbOMUg/ttXmJhymJVHC0BedU4/xNBh+ld0HEoVYtiRlO0ElxhVo0JIZCUJV6UXwGl4Sa8=
-X-Received: by 2002:a9d:7d06:0:b0:6dc:41c:9bc6 with SMTP id
- v6-20020a9d7d06000000b006dc041c9bc6mr2113012otn.36.1705098028448; Fri, 12 Jan
- 2024 14:20:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705098529; x=1705703329;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k+g8KAN/GocAbP+Hjj0VU3R5oOrMC5lRs+LQJKDyZbc=;
+        b=sWphJDGZkt1Np22n/02zs8ZwZTvFFk22mGs2b6to1Dqh9vQm1iz4m3Zn5Ry6Ayq+mN
+         Mk7WUl9kzUVtCiuXKLpGDCJoeXVScw7ut7/tJPyVIxTg69wizUW5zDNO8x5n6PpnSrYI
+         lRAlnB41ePeAQ2d6CIghVW7hn2U4akUSn5iRgsgaAwiIlMfuOLQZgQyKohyP/ZkpkkHc
+         6NW4mT2u/Wa9GmWzUU5Yp5JYdOSogDRwgYlW4xMucpqU4WamNO5M9gulk+STvhnfbBV1
+         TE4e8AUSXVfxKfa211N8+LE9ECiCdpBPj3Ysd4LFrIg5hZGkbIyYWJMQ0KsQcbsRLeEs
+         IuTQ==
+X-Gm-Message-State: AOJu0YxF+UeVPJ9NJBMNBqvtzSEzb3mQogq70AQ7/mP/ExCgn24ffg9k
+	Yhhk6TAUfHUfZo3h9f6dcPAa97hNSV4EwA==
+X-Google-Smtp-Source: AGHT+IE6Y1CQAvSWgVhfPTkwN2W/RAJPjIutDlo+/cj2s9k6qNsUhtuGUhJR5tGNazvTNT3GoTlf0A==
+X-Received: by 2002:a17:906:a202:b0:a2c:4b7d:69db with SMTP id r2-20020a170906a20200b00a2c4b7d69dbmr1054995ejy.18.1705098529417;
+        Fri, 12 Jan 2024 14:28:49 -0800 (PST)
+Received: from [192.168.174.25] (178235179017.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.17])
+        by smtp.gmail.com with ESMTPSA id hx25-20020a170906847900b00a26ac57b951sm2215051ejc.23.2024.01.12.14.28.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 14:28:48 -0800 (PST)
+Message-ID: <2a8ad790-6f3b-43d8-af31-0e6dcca72c54@linaro.org>
+Date: Fri, 12 Jan 2024 23:28:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240111064208.2969599-1-chao@kernel.org> <20240111064208.2969599-6-chao@kernel.org>
-In-Reply-To: <20240111064208.2969599-6-chao@kernel.org>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Fri, 12 Jan 2024 14:20:17 -0800
-Message-ID: <CACOAw_xANX_O2hhN9M7SrA0HEzQyWS8yFqfVwS5T+_2gbyZ1LQ@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH v4 6/6] f2fs: introduce FAULT_BLKADDR_CONSISTENCE
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1 1/2] scsi: ufs: qcom : Refactor phy_power_on/off calls
+To: Nitin Rawat <quic_nitirawa@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+ Can Guo <quic_cang@quicinc.com>,
+ Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
+References: <20240112153348.2778-1-quic_nitirawa@quicinc.com>
+ <20240112153348.2778-2-quic_nitirawa@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240112153348.2778-2-quic_nitirawa@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
-
-On Wed, Jan 10, 2024 at 10:43=E2=80=AFPM Chao Yu <chao@kernel.org> wrote:
->
-> We will encounter below inconsistent status when FAULT_BLKADDR type
-> fault injection is on.
->
-> Info: checkpoint state =3D d6 :  nat_bits crc fsck compacted_summary orph=
-an_inodes sudden-power-off
-> [ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1c100 has i_blocks: 000000=
-c0, but has 191 blocks
-> [FIX] (fsck_chk_inode_blk:1260)  --> [0x1c100] i_blocks=3D0x000000c0 -> 0=
-xbf
-> [FIX] (fsck_chk_inode_blk:1269)  --> [0x1c100] i_compr_blocks=3D0x0000002=
-6 -> 0x27
-> [ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1cadb has i_blocks: 000000=
-2f, but has 46 blocks
-> [FIX] (fsck_chk_inode_blk:1260)  --> [0x1cadb] i_blocks=3D0x0000002f -> 0=
-x2e
-> [FIX] (fsck_chk_inode_blk:1269)  --> [0x1cadb] i_compr_blocks=3D0x0000001=
-1 -> 0x12
-> [ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1c62c has i_blocks: 000000=
-02, but has 1 blocks
-> [FIX] (fsck_chk_inode_blk:1260)  --> [0x1c62c] i_blocks=3D0x00000002 -> 0=
-x1
->
-> After we inject fault into f2fs_is_valid_blkaddr() during truncation,
-> a) it missed to increase @nr_free or @valid_blocks
-> b) it can cause in blkaddr leak in truncated dnode
-> Which may cause inconsistent status.
->
-> This patch separates FAULT_BLKADDR_CONSISTENCE from FAULT_BLKADDR,
-> and rename FAULT_BLKADDR to FAULT_BLKADDR_VALIDITY
-> so that we can:
-> a) use FAULT_BLKADDR_CONSISTENCE in f2fs_truncate_data_blocks_range()
-> to simulate inconsistent issue independently, then it can verify fsck
-> repair flow.
-> b) FAULT_BLKADDR_VALIDITY fault will not cause any inconsistent status,
-> we can just use it to check error path handling in kernel side.
->
-> Signed-off-by: Chao Yu <chao@kernel.org>
+On 12.01.2024 16:33, Nitin Rawat wrote:
+> Commit 3f6d1767b1a0 ("phy: ufs-qcom: Refactor all init steps into
+> phy_poweron") removes the phy_power_on/off from ufs_qcom_setup_clocks
+> to suspend/resume func.
+> 
+> To have a better power saving, remove the phy_power_on/off calls from
+> resume/suspend path and put them back to ufs_qcom_setup_clocks, so that
+> PHY's regulators & clks can be turned on/off along with UFS's clocks.
+> 
+> Since phy phy_power_on is separated out from phy calibrate, make
+> separate calls to phy_power_on and phy_calibrate calls from ufs qcom
+> driver.
+> 
+> Also add a mutex lock to protect the usage of is_phy_pwr_on against
+> possible racing.
+> 
+> Co-developed-by: Can Guo <quic_cang@quicinc.com>
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Co-developed-by: Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
+> Signed-off-by: Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
 > ---
-> v4:
-> - rename macro to FAULT_BLKADDR_CONSISTENCE and FAULT_BLKADDR_VALIDITY
-> suggested by Jaegeuk.
->  Documentation/ABI/testing/sysfs-fs-f2fs | 47 +++++++++++++------------
->  Documentation/filesystems/f2fs.rst      | 47 +++++++++++++------------
->  fs/f2fs/checkpoint.c                    | 19 +++++++---
->  fs/f2fs/f2fs.h                          |  5 ++-
->  fs/f2fs/file.c                          |  8 +++--
->  fs/f2fs/super.c                         | 37 +++++++++----------
->  6 files changed, 92 insertions(+), 71 deletions(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/=
-testing/sysfs-fs-f2fs
-> index 99fa87a43926..48c135e24eb5 100644
-> --- a/Documentation/ABI/testing/sysfs-fs-f2fs
-> +++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-> @@ -701,29 +701,30 @@ Description:      Support configuring fault injecti=
-on type, should be
->                 enabled with fault_injection option, fault type value
->                 is shown below, it supports single or combined type.
->
-> -               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -               Type_Name                Type_Value
-> -               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -               FAULT_KMALLOC            0x000000001
-> -               FAULT_KVMALLOC           0x000000002
-> -               FAULT_PAGE_ALLOC         0x000000004
-> -               FAULT_PAGE_GET           0x000000008
-> -               FAULT_ALLOC_BIO          0x000000010 (obsolete)
-> -               FAULT_ALLOC_NID          0x000000020
-> -               FAULT_ORPHAN             0x000000040
-> -               FAULT_BLOCK              0x000000080
-> -               FAULT_DIR_DEPTH          0x000000100
-> -               FAULT_EVICT_INODE        0x000000200
-> -               FAULT_TRUNCATE           0x000000400
-> -               FAULT_READ_IO            0x000000800
-> -               FAULT_CHECKPOINT         0x000001000
-> -               FAULT_DISCARD            0x000002000
-> -               FAULT_WRITE_IO           0x000004000
-> -               FAULT_SLAB_ALLOC         0x000008000
-> -               FAULT_DQUOT_INIT         0x000010000
-> -               FAULT_LOCK_OP            0x000020000
-> -               FAULT_BLKADDR            0x000040000
-> -               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +               Type_Name                        Type_Value
-> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +               FAULT_KMALLOC                    0x000000001
-> +               FAULT_KVMALLOC                   0x000000002
-> +               FAULT_PAGE_ALLOC                 0x000000004
-> +               FAULT_PAGE_GET                   0x000000008
-> +               FAULT_ALLOC_BIO                  0x000000010 (obsolete)
-> +               FAULT_ALLOC_NID                  0x000000020
-> +               FAULT_ORPHAN                     0x000000040
-> +               FAULT_BLOCK                      0x000000080
-> +               FAULT_DIR_DEPTH                  0x000000100
-> +               FAULT_EVICT_INODE                0x000000200
-> +               FAULT_TRUNCATE                   0x000000400
-> +               FAULT_READ_IO                    0x000000800
-> +               FAULT_CHECKPOINT                 0x000001000
-> +               FAULT_DISCARD                    0x000002000
-> +               FAULT_WRITE_IO                   0x000004000
-> +               FAULT_SLAB_ALLOC                 0x000008000
-> +               FAULT_DQUOT_INIT                 0x000010000
-> +               FAULT_LOCK_OP                    0x000020000
-> +               FAULT_BLKADDR_VALIDITY           0x000040000
-> +               FAULT_BLKADDR_CONSISTENCE        0x000080000
-> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->  What:          /sys/fs/f2fs/<disk>/discard_io_aware_gran
->  Date:          January 2023
-> diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesyste=
-ms/f2fs.rst
-> index d32c6209685d..32cbfa864f38 100644
-> --- a/Documentation/filesystems/f2fs.rst
-> +++ b/Documentation/filesystems/f2fs.rst
-> @@ -184,29 +184,30 @@ fault_type=3D%d              Support configuring fa=
-ult injection type, should be
->                          enabled with fault_injection option, fault type =
-value
->                          is shown below, it supports single or combined t=
-ype.
->
-> -                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -                        Type_Name                Type_Value
-> -                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -                        FAULT_KMALLOC            0x000000001
-> -                        FAULT_KVMALLOC           0x000000002
-> -                        FAULT_PAGE_ALLOC         0x000000004
-> -                        FAULT_PAGE_GET           0x000000008
-> -                        FAULT_ALLOC_BIO          0x000000010 (obsolete)
-> -                        FAULT_ALLOC_NID          0x000000020
-> -                        FAULT_ORPHAN             0x000000040
-> -                        FAULT_BLOCK              0x000000080
-> -                        FAULT_DIR_DEPTH          0x000000100
-> -                        FAULT_EVICT_INODE        0x000000200
-> -                        FAULT_TRUNCATE           0x000000400
-> -                        FAULT_READ_IO            0x000000800
-> -                        FAULT_CHECKPOINT         0x000001000
-> -                        FAULT_DISCARD            0x000002000
-> -                        FAULT_WRITE_IO           0x000004000
-> -                        FAULT_SLAB_ALLOC         0x000008000
-> -                        FAULT_DQUOT_INIT         0x000010000
-> -                        FAULT_LOCK_OP            0x000020000
-> -                        FAULT_BLKADDR            0x000040000
-> -                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +                        Type_Name                        Type_Value
-> +                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +                        FAULT_KMALLOC                    0x000000001
-> +                        FAULT_KVMALLOC                   0x000000002
-> +                        FAULT_PAGE_ALLOC                 0x000000004
-> +                        FAULT_PAGE_GET                   0x000000008
-> +                        FAULT_ALLOC_BIO                  0x000000010 (ob=
-solete)
-> +                        FAULT_ALLOC_NID                  0x000000020
-> +                        FAULT_ORPHAN                     0x000000040
-> +                        FAULT_BLOCK                      0x000000080
-> +                        FAULT_DIR_DEPTH                  0x000000100
-> +                        FAULT_EVICT_INODE                0x000000200
-> +                        FAULT_TRUNCATE                   0x000000400
-> +                        FAULT_READ_IO                    0x000000800
-> +                        FAULT_CHECKPOINT                 0x000001000
-> +                        FAULT_DISCARD                    0x000002000
-> +                        FAULT_WRITE_IO                   0x000004000
-> +                        FAULT_SLAB_ALLOC                 0x000008000
-> +                        FAULT_DQUOT_INIT                 0x000010000
-> +                        FAULT_LOCK_OP                    0x000020000
-> +                        FAULT_BLKADDR_VALIDITY           0x000040000
-> +                        FAULT_BLKADDR_CONSISTENCE        0x000080000
-> +                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->  mode=3D%s                         Control block allocation mode which su=
-pports "adaptive"
->                          and "lfs". In "lfs" mode, there should be no ran=
-dom
->                          writes towards main area.
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index b0597a539fc5..b85820e70f5e 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -170,12 +170,9 @@ static bool __is_bitmap_valid(struct f2fs_sb_info *s=
-bi, block_t blkaddr,
->         return exist;
+>  drivers/ufs/host/ufs-qcom.c | 104 +++++++++++++++++++++++-------------
+>  drivers/ufs/host/ufs-qcom.h |   4 ++
+>  2 files changed, 72 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> index 39eef470f8fa..2721a30f0db8 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -338,6 +338,46 @@ static u32 ufs_qcom_get_hs_gear(struct ufs_hba *hba)
+>  	return UFS_HS_G3;
 >  }
->
-> -bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
-> +static bool __f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
->                                         block_t blkaddr, int type)
+> 
+> +static int ufs_qcom_phy_power_on(struct ufs_hba *hba)
+> +{
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +	struct phy *phy = host->generic_phy;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&host->phy_mutex);
+
+guard(mutex)(&host->phy_mutex);
+
+and you can drop the _unlock calls
+
+> +	if (!host->is_phy_pwr_on) {
+> +		ret = phy_power_on(phy);
+> +		if (ret) {
+> +			mutex_unlock(&host->phy_mutex);
+> +			return ret;
+
+And with the _unlock now being unnecessary, you can rewrite this
+as:
+
+if (!host->is_phy_pwr_on) {
+	ret = phy_power_on(phy);
+	if (!ret)
+		host->is_phy_pwr_on = true;
+}
+
+return ret
+> +		}
+> +		host->is_phy_pwr_on = true;
+> +	}
+> +	mutex_unlock(&host->phy_mutex);
+> +
+> +	return ret;
+> +}
+
+[...]
+
+>  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
 >  {
-> -       if (time_to_inject(sbi, FAULT_BLKADDR))
-> -               return false;
-> -
->         switch (type) {
->         case META_NAT:
->                 break;
-> @@ -230,6 +227,20 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
->         return true;
->  }
->
-> +bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
-> +                                       block_t blkaddr, int type)
-> +{
-> +       if (time_to_inject(sbi, FAULT_BLKADDR_VALIDITY))
-> +               return false;
-> +       return __f2fs_is_valid_blkaddr(sbi, blkaddr, type);
-> +}
-> +
-> +bool f2fs_is_valid_blkaddr_raw(struct f2fs_sb_info *sbi,
-> +                                       block_t blkaddr, int type)
-> +{
-> +       return __f2fs_is_valid_blkaddr(sbi, blkaddr, type);
-> +}
-> +
->  /*
->   * Readahead CP/NAT/SIT/SSA/POR pages
->   */
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index ab710bb6d8b3..4481f68d6418 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -60,7 +60,8 @@ enum {
->         FAULT_SLAB_ALLOC,
->         FAULT_DQUOT_INIT,
->         FAULT_LOCK_OP,
-> -       FAULT_BLKADDR,
-> +       FAULT_BLKADDR_VALIDITY,
-> +       FAULT_BLKADDR_CONSISTENCE,
->         FAULT_MAX,
->  };
->
-> @@ -3768,6 +3769,8 @@ struct page *f2fs_get_meta_page_retry(struct f2fs_s=
-b_info *sbi, pgoff_t index);
->  struct page *f2fs_get_tmp_page(struct f2fs_sb_info *sbi, pgoff_t index);
->  bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
->                                         block_t blkaddr, int type);
-> +bool f2fs_is_valid_blkaddr_raw(struct f2fs_sb_info *sbi,
-> +                                       block_t blkaddr, int type);
->  int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpa=
-ges,
->                         int type, bool sync);
->  void f2fs_ra_meta_pages_cond(struct f2fs_sb_info *sbi, pgoff_t index,
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 53c495651789..0e4c871d6aed 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -590,9 +590,13 @@ void f2fs_truncate_data_blocks_range(struct dnode_of=
-_data *dn, int count)
->                 f2fs_set_data_blkaddr(dn, NULL_ADDR);
->
->                 if (__is_valid_data_blkaddr(blkaddr)) {
-> -                       if (!f2fs_is_valid_blkaddr(sbi, blkaddr,
-> -                                       DATA_GENERIC_ENHANCE))
-> +                       if (time_to_inject(sbi, FAULT_BLKADDR_CONSISTENCE=
-))
-> +                               continue;
-> +                       if (!f2fs_is_valid_blkaddr_raw(sbi, blkaddr,
-> +                                               DATA_GENERIC_ENHANCE)) {
-> +                               f2fs_handle_error(sbi, ERROR_INVALID_BLKA=
-DDR);
->                                 continue;
-> +                       }
->                         if (compressed_cluster)
->                                 valid_blocks++;
->                 }
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 206d03c82d96..4de5478972b2 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -44,24 +44,25 @@ static struct kmem_cache *f2fs_inode_cachep;
->  #ifdef CONFIG_F2FS_FAULT_INJECTION
->
->  const char *f2fs_fault_name[FAULT_MAX] =3D {
-> -       [FAULT_KMALLOC]         =3D "kmalloc",
-> -       [FAULT_KVMALLOC]        =3D "kvmalloc",
-> -       [FAULT_PAGE_ALLOC]      =3D "page alloc",
-> -       [FAULT_PAGE_GET]        =3D "page get",
-> -       [FAULT_ALLOC_NID]       =3D "alloc nid",
-> -       [FAULT_ORPHAN]          =3D "orphan",
-> -       [FAULT_BLOCK]           =3D "no more block",
-> -       [FAULT_DIR_DEPTH]       =3D "too big dir depth",
-> -       [FAULT_EVICT_INODE]     =3D "evict_inode fail",
-> -       [FAULT_TRUNCATE]        =3D "truncate fail",
-> -       [FAULT_READ_IO]         =3D "read IO error",
-> -       [FAULT_CHECKPOINT]      =3D "checkpoint error",
-> -       [FAULT_DISCARD]         =3D "discard error",
-> -       [FAULT_WRITE_IO]        =3D "write IO error",
-> -       [FAULT_SLAB_ALLOC]      =3D "slab alloc",
-> -       [FAULT_DQUOT_INIT]      =3D "dquot initialize",
-> -       [FAULT_LOCK_OP]         =3D "lock_op",
-> -       [FAULT_BLKADDR]         =3D "invalid blkaddr",
-> +       [FAULT_KMALLOC]                 =3D "kmalloc",
-> +       [FAULT_KVMALLOC]                =3D "kvmalloc",
-> +       [FAULT_PAGE_ALLOC]              =3D "page alloc",
-> +       [FAULT_PAGE_GET]                =3D "page get",
-> +       [FAULT_ALLOC_NID]               =3D "alloc nid",
-> +       [FAULT_ORPHAN]                  =3D "orphan",
-> +       [FAULT_BLOCK]                   =3D "no more block",
-> +       [FAULT_DIR_DEPTH]               =3D "too big dir depth",
-> +       [FAULT_EVICT_INODE]             =3D "evict_inode fail",
-> +       [FAULT_TRUNCATE]                =3D "truncate fail",
-> +       [FAULT_READ_IO]                 =3D "read IO error",
-> +       [FAULT_CHECKPOINT]              =3D "checkpoint error",
-> +       [FAULT_DISCARD]                 =3D "discard error",
-> +       [FAULT_WRITE_IO]                =3D "write IO error",
-> +       [FAULT_SLAB_ALLOC]              =3D "slab alloc",
-> +       [FAULT_DQUOT_INIT]              =3D "dquot initialize",
-> +       [FAULT_LOCK_OP]                 =3D "lock_op",
-> +       [FAULT_BLKADDR_VALIDITY]        =3D "invalid blkaddr",
-> +       [FAULT_BLKADDR_CONSISTENCE]     =3D "inconsistent blkaddr",
->  };
->
->  void f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned int rate,
-> --
-> 2.40.1
->
->
->
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> @@ -378,13 +418,18 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>  		goto out_disable_phy;
+> 
+>  	/* power on phy - start serdes and phy's power and clocks */
+> -	ret = phy_power_on(phy);
+> +	ret = ufs_qcom_phy_power_on(hba);
+>  	if (ret) {
+>  		dev_err(hba->dev, "%s: phy power on failed, ret = %d\n",
+>  			__func__, ret);
+>  		goto out_disable_phy;
+>  	}
+> 
+> +	ret = phy_calibrate(phy);
+> +	if (ret) {
+> +		dev_err(hba->dev, "%s: Failed to calibrate PHY %d\n",
+> +				  __func__, ret);
+> +	}
+
+You can drop the overly verbose __func__, unwrap the line and remove the
+curly braces, similar for dev_err-s below
+
+Actually, shouldn't this error out if calibrate fails??
+
+Konrad
