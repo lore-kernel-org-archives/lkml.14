@@ -1,88 +1,76 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E410A5B5B1
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 04:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF96E5B5B3;
+	Fri, 12 Jan 2024 05:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqYuSoHZ"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-58e256505f7so3047801eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 20:52:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705035167; x=1705639967; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SMzzmG1PU01z52zMYQ4mz/0VyGI2Cib5puWp6/ySFDQ=;
-        b=cqYuSoHZ7WeTBp/qJWmgN7JLSB9Tc72zccUIwUz7WBGExHFgV5qMRQgPDdbSmnjUnb
-         sbuBlSoJstPMBHGOKgnKK6fWAVYx+5jdtZhET4QCZf5N82wyWjXXTKs02jT2XdzAWogi
-         aJwjOysOivmYx0gqp6J7ezbf1cvQN/ALXfWayvxasqbB3DL3/np94ReyGHDzxQYgURl/
-         xgRkZatZJ871rKjtmTBwDC9y0qI0txjY6YJkeAy36DldmkurMvPeZK3tpCHu2QYo2cfz
-         CUCHa88e229sGJHQ88dc7n0GvKZjSJIwxhKHi3/PLi0NCuOrql0kTOCdOZES7UVND22M
-         O/lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705035167; x=1705639967;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SMzzmG1PU01z52zMYQ4mz/0VyGI2Cib5puWp6/ySFDQ=;
-        b=a91ioObLbVYASMLpjS75eD0N1oHYAXDOWTd0JULJahFw1Z724OdBJXU3NbBXH+A7HJ
-         V7v/0jKKRAFKBXimGYbkTYlnu9GrMueii1R+gne9xNOy/FXKMpHA7/I58HOCCe0tER2O
-         oKhhG69VfL434g5F372djqXE8ai+xfNu214jaRw+fC1YoMOM4672VkgL/kWMFPrfwuyC
-         eQPbKAISjTzB+Ss8u4LUvmVUS4T+8thqryN5iu/+p9e9UR7H8XOO2gj3Bqbx2/M/yvI7
-         cNuZYvlH5ZVvFWgt54GsNbKYPwEUXBfBc7jvo+Uoi7RAZluoqZezM0ku8Dsvzew8fxZ4
-         Eu1g==
-X-Gm-Message-State: AOJu0YwlllZ4JhspkkM+sgD35RxMB5Bw9xdfj3vAKakWm0KhNa5Okx7l
-	H0MyS8jNoxVE5TQAPCJnJv0=
-X-Google-Smtp-Source: AGHT+IFJgzyRwboVdy9LT1n7++9wIf2SdbFJSaOXKeS6HdcURnC4aOSek9WjGWLY9zlN65VH6PnX9g==
-X-Received: by 2002:a05:6358:6a44:b0:16e:271d:1db7 with SMTP id c4-20020a0563586a4400b0016e271d1db7mr965001rwh.2.1705035166719;
-        Thu, 11 Jan 2024 20:52:46 -0800 (PST)
-Received: from pop-os ([27.4.4.207])
-        by smtp.gmail.com with ESMTPSA id l22-20020a62be16000000b006d9b38f2e75sm2183645pff.32.2024.01.11.20.52.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 20:52:46 -0800 (PST)
-Date: Fri, 12 Jan 2024 10:22:43 +0530
-From: Pranav Athreya <pranavsubbu@gmail.com>
-To: Forest Bond <forest@alittletooquiet.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Pranav Athreya <pranavsubbu@gmail.com>
-Subject: [PATCH v2] staging: vt6655: Remove extra blank lines between code
- blocks
-Message-ID: <ZaDFm6XX7HiGWn58@pop-os>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UxrURFed"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=vgJoxByM6oiQwE5/ygczGmqmO8QxfCFpN0WkRcWZdaI=; b=UxrURFedLIFFev9h7SzxjxxSkP
+	ZdSRg+Bf00xFEa/Ui5X3S9ZM6KCAK4it19SE97RrMyyzB4B3OVkA55kmH7AGoBheJOlsAqsMRru1M
+	Xoq74z38STTsPniQ4RTMMMXv1njlBPwizQNCqCEtXCbtZyL1DSehvOBas1PZ6rdlwjTV3to3UN+Hq
+	DGgXeKt/UnPnbhierGwrRpsqvvGbFviUDYtKOq9Ojzlhx/Ty8l65n04//4Xp0YP0hCeUQqsv/ZEEu
+	32Bp1S4AyyM3kIWGcXst+7G3YQgzooHuLk+AGnS0a2fZSomE5p+BKoLyxeH51p0ga30j8gpnQ9Zwa
+	B0Cb4ylg==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rO9eM-001tOt-2V;
+	Fri, 12 Jan 2024 05:00:10 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Jon Maloy <jmaloy@redhat.com>,
+	Ying Xue <ying.xue@windriver.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] tipc: node: remove Excess struct member kernel-doc warnings
+Date: Thu, 11 Jan 2024 21:00:10 -0800
+Message-ID: <20240112050010.25626-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Adhere to Linux kernel coding style.
+Remove 2 kernel-doc descriptions to squelch warnings:
 
-Reported by checkpatch:
+node.c:150: warning: Excess struct member 'inputq' description in 'tipc_node'
+node.c:150: warning: Excess struct member 'namedq' description in 'tipc_node'
 
-drivers/staging/vt6655/rxtx.h:22: CHECK: Please don't use multiple blank lines
-
-Signed-off-by: Pranav Athreya <pranavsubbu@gmail.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jon Maloy <jmaloy@redhat.com>
+Cc: Ying Xue <ying.xue@windriver.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>
 ---
-v2: Fixed commit message to only mention files that are being changed.
+ net/tipc/node.c |    2 --
+ 1 file changed, 2 deletions(-)
 
- drivers/staging/vt6655/rxtx.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/staging/vt6655/rxtx.h b/drivers/staging/vt6655/rxtx.h
-index a67757c9bb5c..be1e5180d57b 100644
---- a/drivers/staging/vt6655/rxtx.h
-+++ b/drivers/staging/vt6655/rxtx.h
-@@ -19,7 +19,6 @@
- #define DEFAULT_MSDU_LIFETIME_RES_64us	8000 /* 64us */
- #define DEFAULT_MGN_LIFETIME_RES_64us	125  /* 64us */
- 
--
- /*---------------------  Export Definitions -------------------------*/
- 
- /*---------------------  Export Variables  --------------------------*/
--- 
-2.34.1
-
+diff -- a/net/tipc/node.c b/net/tipc/node.c
+--- a/net/tipc/node.c
++++ b/net/tipc/node.c
+@@ -86,8 +86,6 @@ struct tipc_bclink_entry {
+  * @lock: rwlock governing access to structure
+  * @net: the applicable net namespace
+  * @hash: links to adjacent nodes in unsorted hash chain
+- * @inputq: pointer to input queue containing messages for msg event
+- * @namedq: pointer to name table input queue with name table messages
+  * @active_links: bearer ids of active links, used as index into links[] array
+  * @links: array containing references to all links to node
+  * @bc_entry: broadcast link entry
