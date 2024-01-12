@@ -1,176 +1,132 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2093.outbound.protection.outlook.com [40.107.215.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE685171B4
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 01:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BDB136B
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 01:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ah4DutBe"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240112012257epoutp0432d82b414ba6f7123f4477780ae603ec~pdQBHQdTv2393423934epoutp04v
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 01:22:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240112012257epoutp0432d82b414ba6f7123f4477780ae603ec~pdQBHQdTv2393423934epoutp04v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1705022578;
-	bh=SFU7BaLlItzshQF51gNiPtOFAobwD70oxh7hUcOIdQg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ah4DutBeudNLZhDDJP8SKSeLwgwAx6vr6ie06s6lhSG/8lN85bBXajadAY9zLQvxS
-	 JaG91Wg5FbvHxVMSriIAEka3Um8RyfLGxPC2oMUpEnXP1gQcytrecFJC0/aV11Dwy6
-	 AWY8QGb4QusJYvnvRRo3rl8m0zNVkw/YuIG67F/c=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240112012256epcas5p17a75106713f4d72ae60e9727e033ddf7~pdP-_ENFF2394323943epcas5p1c;
-	Fri, 12 Jan 2024 01:22:56 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4TB3gg3jxbz4x9Pw; Fri, 12 Jan
-	2024 01:22:55 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9B.FA.10009.F6490A56; Fri, 12 Jan 2024 10:22:55 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240112012013epcas5p38c70493069fb14da02befcf25e604bc1~pdNnrMaMm2285922859epcas5p3K;
-	Fri, 12 Jan 2024 01:20:13 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240112012013epsmtrp205ed4fe17598397c86e63ba7a850d2ff~pdNnqQ6002752627526epsmtrp2n;
-	Fri, 12 Jan 2024 01:20:13 +0000 (GMT)
-X-AuditID: b6c32a4a-ff1ff70000002719-65-65a0946f0aac
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	30.E7.08817.DC390A56; Fri, 12 Jan 2024 10:20:13 +0900 (KST)
-Received: from localhost.localdomain (unknown [109.105.118.124]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240112012011epsmtip1c7980d0818c780cc9d6e19307ba4b481~pdNmO1XZG0923009230epsmtip1g;
-	Fri, 12 Jan 2024 01:20:11 +0000 (GMT)
-From: Xiaobing Li <xiaobing.li@samsung.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
-	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
-	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
-	ruyi.zhang@samsung.com, xiaobing.li@samsung.com
-Subject: Re: Re: [PATCH v6] io_uring: Statistics of the true utilization of
- sq threads.
-Date: Fri, 12 Jan 2024 09:12:02 +0800
-Message-ID: <20240112011202.1705067-1-xiaobing.li@samsung.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <b0c67327-5131-4cde-a8bd-df69b1f300e5@kernel.dk>
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="XNPHDmfb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DU1Q4XlL39SSi/SzmWPU4Wz8w1jdYdX2zCBhcPJ6FXLv6JexXKYLoImBiAGO5JOzelzlK+JUZRppy/4FcGF/NRthvej7LgIduWQ/Fa3Rm9KUzrIRd0fkaVG3w68uvJ1JSvt+YOBoqA8waEaF2FUOtdhNqh4lp38bhDxkwluVywfsQCA59BIRNFnCxChjwFzgLax8sWLmxdEpvLX1b2Vzeh78BqqPahyQkysjQURCs9bGwHansnd/EFN6OSHVr9aMyuPSa+aoO1X688RZs75FQMkziZYQXQU9HBPRFzkZnnSTYq//rRfu0j4lA9pVlWshToJjBnq8Q+LLCSDOP4Sx0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Fj5AV5yhLvp46POzyszmbG3Zw2mh0SoZGg7ohwwMVPI=;
+ b=QoAxaUM+hl6aKmxx7taTRpkHKI2Ij4FJEbwj0Ih8e3Gy+PPmzp2NNzdWXTo0YMzqdHL96VpY6GBnV8PU55D4MLKRKedsdlb0+pdTU1SNVIbyLkb9h5NNeLXVlJXfL1A/ORYK03h10Cw2Qpp0evycbtGolOc5VpUFBeSBGnUByiYzDMcLIOnkbwjIGtNVx9hl6toIQ8b5J/LCQi8felJ0wz+ZhJFEwueOcjTKDNwRASz0w8iZWw/g/UnXcmwsT1BFm6Hxks/jrF6qQ6GWYz6tC6hM4jTH5EOpCWQQlYJbt3A51IGM7cuCXu13u1p/iSrTZBzSvwV3HDrsah2ughhycw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fj5AV5yhLvp46POzyszmbG3Zw2mh0SoZGg7ohwwMVPI=;
+ b=XNPHDmfbMdSY0xZq1KhqTDH/WBkjut5E6rO4ZN2Fb1uDILXYVLmXNKRX+sgpaX8OBJAycMitfUQYNHHnyOg4yNXZGxKRfNR/SkuUclZ4gRyMb/w+eKe6iNjT8V99st2leiCVq7fZCrNvytuTit18NluPfltfd/EvFIRppJIjEYRRkOBez9RhEPfokcPkPHJeSb2nCtutMNeUyxMxaVP2QxpLTTiHXmI7H0hqMv/yhVtyYLcNqAi9hZ37UiGqT2l0gxxEgOxPtDsaK/BrA0VmBcyEw68Th2uGV62Lj+tu4CSjj/vW7RlfY4rn0vaCshIsNcPLD7ckipcPLXBq9XmuGA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from JH0PR06MB6849.apcprd06.prod.outlook.com (2603:1096:990:47::12)
+ by SEZPR06MB6598.apcprd06.prod.outlook.com (2603:1096:101:187::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21; Fri, 12 Jan
+ 2024 01:24:01 +0000
+Received: from JH0PR06MB6849.apcprd06.prod.outlook.com
+ ([fe80::1be0:ebf0:eb04:6bd3]) by JH0PR06MB6849.apcprd06.prod.outlook.com
+ ([fe80::1be0:ebf0:eb04:6bd3%4]) with mapi id 15.20.7181.020; Fri, 12 Jan 2024
+ 01:24:01 +0000
+From: Zhiguo Jiang <justinjiang@vivo.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: opensource.kernel@vivo.com,
+	Zhiguo Jiang <justinjiang@vivo.com>
+Subject: [PATCH] mm: fix shrink nr.unqueued_dirty counter issue
+Date: Fri, 12 Jan 2024 09:23:52 +0800
+Message-ID: <20240112012353.1387-1-justinjiang@vivo.com>
+X-Mailer: git-send-email 2.41.0.windows.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2P153CA0046.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::15)
+ To JH0PR06MB6849.apcprd06.prod.outlook.com (2603:1096:990:47::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIJsWRmVeSWpSXmKPExsWy7bCmum7+lAWpBrfWS1nMWbWN0WL13X42
-	i3et51gsjv5/y2bxq/suo8XWL19ZLS7vmsNm8Wwvp8WXw9/ZLc5O+MBqMXXLDiaLjpbLjA48
-	Hjtn3WX3uHy21KNvyypGj8+b5AJYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0t
-	zJUU8hJzU22VXHwCdN0yc4AOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBTo
-	FSfmFpfmpevlpZZYGRoYGJkCFSZkZ9z/EV/QKlHxeO0S1gbGDcJdjJwcEgImEju/v2DvYuTi
-	EBLYzSix4OZPdpCEkMAnRomLOyQgEt8YJc6sucIK07H6yGpmiMReRonvb+awQjhfGSV2zFrL
-	CFLFJqAtcX1dF1iHiICwxP6OVhaQImaBv4wSE17+ZgZJCAtESnR+O88EYrMIqEpM3rMWzOYV
-	sJNYNbEFap28xOIdy8HqOQVsJfrfXGeGqBGUODnzCQuIzQxU07x1NjNEfSuHxKb11hC2i8SJ
-	F2cZIWxhiVfHt7BD2FISn9/tZYOwiyWO9HwH+0BCoIFRYvrtq1BF1hL/ruwBWsABtEBTYv0u
-	fYiwrMTUU+uYIPbySfT+fsIEEeeV2DEPxlaVWH3pIQuELS3xuuE3E8gYCQEPicf7xCCBNYFR
-	Yv/+1+wTGBVmIXlnFpJ3ZiFsXsDIvIpRMrWgODc9tdi0wCgvtRweycn5uZsYwWlVy2sH48MH
-	H/QOMTJxMB5ilOBgVhLhVfg8J1WINyWxsiq1KD++qDQntfgQoykwvCcyS4km5wMTe15JvKGJ
-	pYGJmZmZiaWxmaGSOO/r1rkpQgLpiSWp2ampBalFMH1MHJxSDUwVe0sD9LclPq6WKmMKt5v4
-	Q0hZfKotn9Teap+5hZ+YpG5+eXkuQOSRnKfaR84XQubvY44U1ua/P2I7c7fE0qO/HrRnPmDq
-	Vdxxl6n0zt6M5LoZd/9zH/8tNS//8zmHLb4JOYfLpnItM56d8f3qxODPVuVvVwqvWjKVLeNO
-	hJHp6alFR1wjyn+fyvhtkPykcO+eP8dtwkWXlc148TrqlVHA9xxVjv0trE83fllw7BOrYFJp
-	ZnXp7eYK1hkTq/y//kp90eu8oibMSchQo+E01/X3C5TKyjvC++tiX06aGyDm35tWt8Jl5cdm
-	7mvVdffLxQ9asr/bqOj2yiyTM+dm2rWnj66aCfA+Wfynt3AH53MlluKMREMt5qLiRAAqCHtU
-	NAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsWy7bCSnO7ZyQtSDZb8YrOYs2obo8Xqu/1s
-	Fu9az7FYHP3/ls3iV/ddRoutX76yWlzeNYfN4tleTosvh7+zW5yd8IHVYuqWHUwWHS2XGR14
-	PHbOusvucflsqUffllWMHp83yQWwRHHZpKTmZJalFunbJXBl3P8RX9AqUfF47RLWBsYNwl2M
-	nBwSAiYSq4+sZu5i5OIQEtjNKHHr7Fv2LkYOoIS0xJ8/5RA1whIr/z1nh6j5zChx/WQ3G0iC
-	TUBb4vq6LlYQWwSoaH9HKwuIzSzQySTx+rMeiC0sEC5xsPkWI4jNIqAqMXnPWiYQm1fATmLV
-	xBZWiAXyEot3LGcGsTkFbCX631wHs4UEbCS+nWhggagXlDg58wnUfHmJ5q2zmScwCsxCkpqF
-	JLWAkWkVo2RqQXFuem6xYYFRXmq5XnFibnFpXrpecn7uJkZw2Gtp7WDcs+qD3iFGJg7GQ4wS
-	HMxKIrwKn+ekCvGmJFZWpRblxxeV5qQWH2KU5mBREuf99ro3RUggPbEkNTs1tSC1CCbLxMEp
-	1cBkvsy62FAv0Lxt79bkjLLeNbWBR+wTr0S+Tll+OHJp8YdZAbezWjVPbl83iTdq1cIjYmtE
-	GCd9NQuP/BDNcvMGg7HAxCnzrbMD1mcfDckNq1joWnZtT4uybHnEuX8GicUzLnBsn99sEBN9
-	XkPu2/26bXOnvO9Z1Hpy3T9FxYP9c5Mk5+zmjlBb0Xbx6JXatq7GRB9uuZtymZOe7Kwp1/f/
-	6HrQmT3wUqSo5YKTU9c9C1wt+Ub5YMX2C39E/bxOmTE6nH59cc4FTjfRJrU3+w2+aCd9XMv4
-	39Fci8kn7pj7IW/zw/Pi1ztoXecRMNfakH/m85x2vR8fhY5Pebq46OTGo2WlfpV8bF7WCTsL
-	XqkrsRRnJBpqMRcVJwIAqUTybeoCAAA=
-X-CMS-MailID: 20240112012013epcas5p38c70493069fb14da02befcf25e604bc1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240112012013epcas5p38c70493069fb14da02befcf25e604bc1
-References: <b0c67327-5131-4cde-a8bd-df69b1f300e5@kernel.dk>
-	<CGME20240112012013epcas5p38c70493069fb14da02befcf25e604bc1@epcas5p3.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: JH0PR06MB6849:EE_|SEZPR06MB6598:EE_
+X-MS-Office365-Filtering-Correlation-Id: 95e6ab72-a756-4aca-68a1-08dc130d2872
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	zCD65CI4UscfqfeOY9mXgWl/n8ORKX+WapqeAuEiPKFSPV92JeG0kag5K5B4TnpleBq+dugZHGXWH7+BQpewRiC4DFgaxLxjDo8WeyoIP9pWBIiwK5lvUO2cGoSL0cmdhBMKdHuyiAl8auBy7mp8RGMRpa0NQliFLmw64WyhUKU9/vcyWUMzwAOYmMZGgTwwQQ8IMO+hoVXmpRWXIn1iT1e1MrkhbRwTwnHtdhfXNHnphQHngXLu3sQaBbur5Q5vpsBJuQedgfW2cmheMYAyeUDEdJmSv8NdFOkanH2em9JX/QyvYXKsyMEt/b5GtZ71ZWMwsIG0k56sKyCY10jpsa5WpX5+Ge0HlL1JoFEAzGBgZVSvFkUMiyoMPp26gOMTjF361fV8UYS+Y9iUf+uwtBwIS+oMPWaSnb6H00uDzVj/Kfdig/DQZYMnld5VitASPAzERGTsLUkkFyQxrFLsfNqoBwX5nQatO4xX3C3pBOITE3Y34Kn5N0wg/kHUfIa7kX3yw1EugJiX1jxc8KCPLyDxNJTDwmEeQkPObEf+PBxXS12SzUmLAcdY9/euuD/qMW0yAYekO5+1YoYvYYAKRu/2+85rD9wsZdLf+wTxs4p0DTv4PL9bYpa/VzYJZFLSPRJ//Yij4AnX/oJaa32bDQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR06MB6849.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(376002)(396003)(346002)(366004)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(6666004)(6512007)(6506007)(107886003)(38350700005)(52116002)(1076003)(2616005)(26005)(38100700002)(86362001)(36756003)(2906002)(8676002)(41300700001)(4326008)(8936002)(4744005)(5660300002)(83380400001)(66556008)(478600001)(66476007)(316002)(6486002)(66946007)(14143004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zHBhe6hIee+uPIpL2L12/dKGsgElbsdAfLeKMtiJQg0TyCJ0f1tesydN/DSx?=
+ =?us-ascii?Q?WyhderPugKJtVkkUuVrZ0YP9nmjm+d2mGdGqR4XixHmkP6n/jiaHVMJ6TTGA?=
+ =?us-ascii?Q?PsrrXuxIaelemWQNuJQJVi1Rjzg6z67nOCLGA+7uhd8drX4/eS2440G/JNr/?=
+ =?us-ascii?Q?gjwcuaPesbcB7QHww2KdDMGMAk4l6LXLkcApGporYKXWCuGI5U6WjuNEfoMp?=
+ =?us-ascii?Q?tzm7Ho45X3hZfVpqTp4L3ZPMmNxn12kLPssSz6dn/61R8+qdOTQpN5wS+35W?=
+ =?us-ascii?Q?qrCi6ySdbsMhy+lWfx99PZCw1YmMpBaVMaUrwRs43hDLf3oxTtULo+vWJKq5?=
+ =?us-ascii?Q?xURIN+Sw9N1txQO1YzOMMO2e51+miSiNLtxWdjg2QG/XGO3FBH9LubqhFfmh?=
+ =?us-ascii?Q?YiU5KzXCqt4P3ZcZPJjWnhcBd7khL4CW94fTIEkVEXcPRrc1innzxipVEd6i?=
+ =?us-ascii?Q?OCPvDqnZtmnik3igf/ngA0YmQYDuHuT39pewx4SJl+hs6gRslvKUSOg6n8Uj?=
+ =?us-ascii?Q?JKVVWZRKAmlVdvtmQYftoFuHNN8xAUpXpY3UkFJ/eG8/aaxdTEI9/r6ZS/C3?=
+ =?us-ascii?Q?LzEKTZDE0tBY5T4cH+ADkoXBbgRVmKP1lvMW5bD/iGn3dfASSXoKcHRz/zB1?=
+ =?us-ascii?Q?1mmFTxYJeHl8lV/h9CkCmWEdJiQThJBNsB8ZKVPDbBlFw9RA3wPOdhnSvO6a?=
+ =?us-ascii?Q?p8iuHY278l2TiAEyD7vL+koaIKx0ZGbhEbXGeoPyXW4gRV3MpQmept5HywPO?=
+ =?us-ascii?Q?xHap3Yh4I5rTN7xn5FsjL6mBWr3yc2ezUhkM1Bsf07Yy8G1XsJrZ9SdjZa49?=
+ =?us-ascii?Q?XylYogbyPz2bxqJTxhprEMJc1BHLeoqYCstboETJ/WQdiKFcUFT6fkgIJILz?=
+ =?us-ascii?Q?cuVsGda0kUNuqs7yhvqhyC1HMFxh7Op8v0JEbS00US49WeQZtJ1sP6u4zRNm?=
+ =?us-ascii?Q?0YVhGstYQiGgfs7XEh/bFIcOitiLZH0KJfQsFX0illC5stpK7sZWKPqkYnr6?=
+ =?us-ascii?Q?Zws2Y5gUT1M1r9gHZnG3wAprYrs0uQXirT4ihDZTUMU0iCLU3yVtE21urHud?=
+ =?us-ascii?Q?+nrHqysaolAmaqslENo+9RVNDJy5iFvw8RTu7Y6dxMsgDmbMqglVGL/MpiBb?=
+ =?us-ascii?Q?YhIMm2FLYdPT2PeLFS/OCxwMdb6wGfRGpJwX5mVeDkctCs73t2RlkZ/vq83k?=
+ =?us-ascii?Q?6P6ZPRSzKoMmuvFFi8lN8tmj4djxCey4DFSWQwOiHd/z1TuD/pErViMjKzYG?=
+ =?us-ascii?Q?UWzDvOvfb0CFMOI+lF90e0GsnrWdP7cY6i8f2zzIza3fvJuJJNb0j3xowpPT?=
+ =?us-ascii?Q?vD64AEaSR+Yh3tjn+w6wcq3b+/S4FtV8PnJhfUUp2OA4VKSarB0Wgk4TX06X?=
+ =?us-ascii?Q?mPjFqt07kSl4j41ylvwcFYSC6j6LOOtJNA4FLwTc+4zVZ4Xk8ODelmQHWcTp?=
+ =?us-ascii?Q?EW1gMtB0hEbqVAAMVDBl8MuecYQlelCL15kEWtEWgDy0HNDsKW4yMVFm4ao8?=
+ =?us-ascii?Q?TxheixfTbRWXTjDkIN/r32Id+AVID/V13+Fue8DeGHGNkfGEOD0+0T+mdREF?=
+ =?us-ascii?Q?BAZLYv/vt2OR9L7fWWiYx6hl0M3FP6Xa+knGDevH?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95e6ab72-a756-4aca-68a1-08dc130d2872
+X-MS-Exchange-CrossTenant-AuthSource: JH0PR06MB6849.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2024 01:24:01.5253
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XfL0iQRmE4B71HE22yj9SBpBXV6MlH2Dv8HuThwbog+1cPgkS2mPaJK4/J2fzorJlhHjTWXLI4b4Bdv60hD4Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6598
 
-On 1/10/24 16:15 AM, Jens Axboe wrote:
->On 1/10/24 2:05 AM, Xiaobing Li wrote:
->> On 1/5/24 04:02 AM, Pavel Begunkov wrote:
->>> On 1/3/24 05:49, Xiaobing Li wrote:
->>>> On 12/30/23 9:27 AM, Pavel Begunkov wrote:
->>>>> Why it uses jiffies instead of some task run time?
->>>>> Consequently, why it's fine to account irq time and other
->>>>> preemption? (hint, it's not)
->>>>>
->>>>> Why it can't be done with userspace and/or bpf? Why
->>>>> can't it be estimated by checking and tracking
->>>>> IORING_SQ_NEED_WAKEUP in userspace?
->>>>>
->>>>> What's the use case in particular? Considering that
->>>>> one of the previous revisions was uapi-less, something
->>>>> is really fishy here. Again, it's a procfs file nobody
->>>>> but a few would want to parse to use the feature.
->>>>>
->>>>> Why it just keeps aggregating stats for the whole
->>>>> life time of the ring? If the workload changes,
->>>>> that would either totally screw the stats or would make
->>>>> it too inert to be useful. That's especially relevant
->>>>> for long running (days) processes. There should be a
->>>>> way to reset it so it starts counting anew.
->>>>
->>>> Hi, Jens and Pavel,
->>>> I carefully read the questions you raised.
->>>> First of all, as to why I use jiffies to statistics time, it
->>>> is because I have done some performance tests and found that
->>>> using jiffies has a relatively smaller loss of performance
->>>> than using task run time. Of course, using task run time is
->>>
->>> How does taking a measure for task runtime looks like? I expect it to
->>> be a simple read of a variable inside task_struct, maybe with READ_ONCE,
->>> in which case the overhead shouldn't be realistically measurable. Does
->>> it need locking?
->> 
->> The task runtime I am talking about is similar to this:
->> start = get_system_time(current);
->> do_io_part();
->> sq->total_time += get_system_time(current) - start;
->
->Not sure what get_system_time() is, don't see that anywhere.
->
->> Currently, it is not possible to obtain the execution time of a piece of 
->> code by a simple read of a variable inside task_struct. 
->> Or do you have any good ideas?
->
->I must be missing something, because it seems like all you need is to
->read task->stime? You could possible even make do with just logging busy
->loop time, as getrusage(RUSAGE_THREAD, &stat) from userspace would then
->give you the total time.
->
->stat.ru_stime would then be the total time, the thread ran, and
->1 - (above_busy_stime / stat.ru_stime) would give you the time the
->percentage of time the thread ran and did useful work (eg not busy
->looping.
+It is needed to ensure sc->nr.unqueued_dirty > 0, which can avoid to
+set PGDAT_DIRTY flag when sc->nr.unqueued_dirty and sc->nr.file_taken
+are both zero at the same time.
 
-getrusage can indeed get the total time of the thread, but this introduces an 
-extra function call, which is relatively more complicated than defining a variable.
-In fact, recording the total time of the loop and the time of processing the 
-IO part can achieve our observation purpose. Recording only two variables will 
-have less impact on the existing performance, so why not  choose a simpler 
-and effective method.
+Signed-off-by: Zhiguo Jiang <justinjiang@vivo.com>
+---
+ mm/vmscan.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+ mode change 100644 => 100755 mm/vmscan.c
 
---
-Xiaobing Li
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 91e7d334a7ca..7c0cd7ecdfab
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -5957,7 +5957,8 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 			set_bit(PGDAT_WRITEBACK, &pgdat->flags);
+ 
+ 		/* Allow kswapd to start writing pages during reclaim.*/
+-		if (sc->nr.unqueued_dirty == sc->nr.file_taken)
++		if (sc->nr.unqueued_dirty &&
++			sc->nr.unqueued_dirty == sc->nr.file_taken)
+ 			set_bit(PGDAT_DIRTY, &pgdat->flags);
+ 
+ 		/*
+-- 
+2.39.0
+
