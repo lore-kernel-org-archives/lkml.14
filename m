@@ -1,136 +1,124 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB18E6E2C8
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD556E2C4
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="neAeT8Xs"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2cca5d81826so87599261fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 06:55:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705071325; x=1705676125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+L9xJDVEsE7V3csU6sYKZtbMRfUFtdtCzJGzvU7993M=;
-        b=neAeT8XsY2KdELItdqx8vka/T7u8iZ1br+YyzJ66sp++PsaSwbcpzQBbafe7kn4Yup
-         ob/fgH1cbZ54UfcRoXIcwbwIUuEK8cbNxm/y/BAFdWYhGVJ3BPdFwNmGmelgLiylWH6x
-         5euzjlgFG8peaiL1Yju9cW5Jtnkq9SMTtrUAkkQXjSa1p0A4rUEpOxw3+sZZCgZsYhKG
-         D7U64C3EKTZ1n1p+WGVNduEy2gZHvIlj2/495fUKi/T2zkcJGxDjIvBqS7DclZRZoF3c
-         Vn87/dvtQd6g/ZQZj7yJGLnuF+DFXSqPVvA+lYX847xapKRI0JcVyZsW108ekSQEA+zJ
-         Ya2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705071325; x=1705676125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+L9xJDVEsE7V3csU6sYKZtbMRfUFtdtCzJGzvU7993M=;
-        b=XPzYun9IRNFQt6XkNY35qXsgOnsSdoW6rvxPxaQXEfD9fuSMulV4AYWP6pT+mdyzWt
-         RKRmsXHHNqBsE4kJiUy/i8br0eabrAPHETIMrylP2DwVQmzYiiKejW1UpgY5C5xZNM4b
-         pRHQjZuZoMHv8Nkdn7BHmvvzbL8qPmbcFUQBQi7sQLV2R4wn9rUobaopzIjRtHo5/k0+
-         mZNhQOPMhWmuwriXxBdEzg7GMAb1wZewOsdVfBxPkNhrQURd2UzzNLinL32aYER2nPE2
-         HUk1Y0YgRdDWvbLUXygff6Z+VLLgIZCWE/CjQqZpcmuphugHqXV6YVliTm4UTZlL9UgN
-         u4Rg==
-X-Gm-Message-State: AOJu0Yy846r9ORuxsrZjrB5UQ+lk3G6qfYq1s9VPtstz6GO4qdamyQf1
-	rJlbi3PZv37SJivohVcqmYjccHUbrZztcfmYoh+Cp12qfHkOLw==
-X-Google-Smtp-Source: AGHT+IHOBCkkSmKcJgoDfFQ2qfKU3lRx2F8RaRRCwSuhk/vh9byUp+s06T/ssB1/fybT50ECpPe/HwOtDD/JTDQsV8Q=
-X-Received: by 2002:a2e:b0d9:0:b0:2cc:f31b:56ea with SMTP id
- g25-20020a2eb0d9000000b002ccf31b56eamr844666ljl.92.1705071324606; Fri, 12 Jan
- 2024 06:55:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M2hRE4zP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705071339; x=1736607339;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aNMq1YQujOmY6sdfUWeZ6GdETZpGlMxbFb+mqNEEpwI=;
+  b=M2hRE4zPHkCD83+j0fWm9oKQZg/FqRNvXkGA8aFbaDGyWRJKEpAUwH7W
+   GE7xYyKD8Cggnuqcu+30wrR0S/DWGG4CEIRHRKXcsw8BSRHcaA01CSjQb
+   fM6qBsLs1n0t58bMpngK1S1d77jp4xIs3HbZTwR2LGQY1OfshXSVtQQj0
+   baq0qSTzvT4k0TAuEK5YQ0viqnDZx7HkoxC6mqguTtKKIqdjSvgTsgcwW
+   T1QZKLKjg/4jhuhU82aPTzBYRmay8fW8+qO25YzMzCvFzLUDUgte+LSIC
+   X6WnoWdnZ4vvRX7Sv8WR2XIjcWaFcSQjf1LmxLXhWn4dUgnkFyGTcEdtO
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="485365827"
+X-IronPort-AV: E=Sophos;i="6.04,189,1695711600"; 
+   d="scan'208";a="485365827"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 06:55:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="1029947731"
+X-IronPort-AV: E=Sophos;i="6.04,189,1695711600"; 
+   d="scan'208";a="1029947731"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Jan 2024 06:55:36 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rOIwW-0009a8-0D;
+	Fri, 12 Jan 2024 14:55:32 +0000
+Date: Fri, 12 Jan 2024 22:55:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wupeng Ma <mawupeng1@huawei.com>, akpm@linux-foundation.org,
+	dave.hansen@linux.intel.com, luto@kernel.org, tglx@linutronix.de,
+	peterz@infradead.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, mawupeng1@huawei.com, bp@suse.de, mingo@redhat.com
+Subject: Re: [PATCH v3 1/3] x86/mm/pat: Move follow_phys to pat-related file
+Message-ID: <202401122234.MfmlPf9b-lkp@intel.com>
+References: <20240111120929.2694440-2-mawupeng1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
- <20240109-axi-spi-engine-series-3-v1-10-e42c6a986580@baylibre.com> <20240112123759.00007440@Huawei.com>
-In-Reply-To: <20240112123759.00007440@Huawei.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 12 Jan 2024 08:55:13 -0600
-Message-ID: <CAMknhBHOEQ7vs9S=SFPxDPsKFWdoWe4EtxU_8+M=h7gDH83Afw@mail.gmail.com>
-Subject: Re: [PATCH 10/13] iio: buffer: dmaengine: export devm_iio_dmaengine_buffer_alloc()
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Hennerich <michael.hennerich@analog.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Frank Rowand <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-spi@vger.kernel.org, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111120929.2694440-2-mawupeng1@huawei.com>
 
-On Fri, Jan 12, 2024 at 6:38=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Wed, 10 Jan 2024 13:49:51 -0600
-> David Lechner <dlechner@baylibre.com> wrote:
->
-> > This changes devm_iio_dmaengine_buffer_alloc() to an exported symbol.
-> > This will be used by drivers that need to allocate a DMA buffer without
-> > attaching it to an IIO device.
-> >
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > ---
-> >  Documentation/driver-api/driver-model/devres.rst   |  1 +
-> >  drivers/iio/buffer/Kconfig                         | 14 +++++++-------
-> >  drivers/iio/buffer/industrialio-buffer-dmaengine.c |  3 ++-
-> >  include/linux/iio/buffer-dmaengine.h               |  2 ++
-> >  4 files changed, 12 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documen=
-tation/driver-api/driver-model/devres.rst
-> > index b23d4a2b68a6..60e4b7ba38e5 100644
-> > --- a/Documentation/driver-api/driver-model/devres.rst
-> > +++ b/Documentation/driver-api/driver-model/devres.rst
-> > @@ -285,6 +285,7 @@ I2C
-> >  IIO
-> >    devm_iio_device_alloc()
-> >    devm_iio_device_register()
-> > +  devm_iio_dmaengine_buffer_alloc()
-> >    devm_iio_dmaengine_buffer_setup()
-> >    devm_iio_kfifo_buffer_setup()
-> >    devm_iio_kfifo_buffer_setup_ext()
-> > diff --git a/drivers/iio/buffer/Kconfig b/drivers/iio/buffer/Kconfig
-> > index 925c5bf074bc..27d82fb4bc4d 100644
-> > --- a/drivers/iio/buffer/Kconfig
-> > +++ b/drivers/iio/buffer/Kconfig
-> > @@ -40,6 +40,13 @@ config IIO_BUFFER_HW_CONSUMER
-> >         Should be selected by drivers that want to use the generic Hw c=
-onsumer
-> >         interface.
-> >
-> > +config IIO_HW_TRIGGERED_BUFFER
-> > +     tristate "Industrial I/O hardware triggered buffer support"
-> > +     select AUXILIARY_BUS
-> > +     select IIO_TRIGGER
-> > +     help
-> > +       Provides helper functions for setting up hardware triggered buf=
-fers.
-> > +
-> >  config IIO_KFIFO_BUF
-> >       tristate "Industrial I/O buffering based on kfifo"
-> >       help
-> > @@ -53,10 +60,3 @@ config IIO_TRIGGERED_BUFFER
-> >       select IIO_KFIFO_BUF
-> >       help
-> >         Provides helper functions for setting up triggered buffers.
-> > -
-> > -config IIO_HW_TRIGGERED_BUFFER
-> > -     tristate "Industrial I/O hardware triggered buffer support"
-> > -     select AUXILIARY_BUS
-> > -     select IIO_TRIGGER
-> > -     help
-> > -       Provides helper functions for setting up hardware triggered buf=
-fers.
->
-> Why move this?
->
+Hi Wupeng,
 
-Oops, this shouldn't be here. Looks like an artifact from a botched
-rebase. The intention was to put it in alphabetical order.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on tip/x86/mm tip/master linus/master v6.7 next-20240112]
+[cannot apply to tip/auto-latest]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Wupeng-Ma/x86-mm-pat-Move-follow_phys-to-pat-related-file/20240111-201305
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240111120929.2694440-2-mawupeng1%40huawei.com
+patch subject: [PATCH v3 1/3] x86/mm/pat: Move follow_phys to pat-related file
+config: i386-randconfig-012-20240112 (https://download.01.org/0day-ci/archive/20240112/202401122234.MfmlPf9b-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240112/202401122234.MfmlPf9b-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401122234.MfmlPf9b-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/mm.h:29,
+                    from include/linux/memblock.h:12,
+                    from arch/x86/mm/pat/memtype.c:35:
+   arch/x86/mm/pat/memtype.c: In function 'follow_phys':
+>> include/linux/pgtable.h:103:9: error: implicit declaration of function 'kunmap_local' [-Werror=implicit-function-declaration]
+     103 |         kunmap_local((pte));    \
+         |         ^~~~~~~~~~~~
+   include/linux/mm.h:2965:9: note: in expansion of macro 'pte_unmap'
+    2965 |         pte_unmap(pte);                                 \
+         |         ^~~~~~~~~
+   arch/x86/mm/pat/memtype.c:976:9: note: in expansion of macro 'pte_unmap_unlock'
+     976 |         pte_unmap_unlock(ptep, ptl);
+         |         ^~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/kunmap_local +103 include/linux/pgtable.h
+
+974b9b2c68f3d3 Mike Rapoport 2020-06-08   98  
+0d940a9b270b92 Hugh Dickins  2023-06-08   99  #ifdef CONFIG_HIGHPTE
+0d940a9b270b92 Hugh Dickins  2023-06-08  100  #define __pte_map(pmd, address) \
+0d940a9b270b92 Hugh Dickins  2023-06-08  101  	((pte_t *)kmap_local_page(pmd_page(*(pmd))) + pte_index((address)))
+0d940a9b270b92 Hugh Dickins  2023-06-08  102  #define pte_unmap(pte)	do {	\
+0d940a9b270b92 Hugh Dickins  2023-06-08 @103  	kunmap_local((pte));	\
+a349d72fd9efc8 Hugh Dickins  2023-07-11  104  	rcu_read_unlock();	\
+0d940a9b270b92 Hugh Dickins  2023-06-08  105  } while (0)
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  106  #else
+0d940a9b270b92 Hugh Dickins  2023-06-08  107  static inline pte_t *__pte_map(pmd_t *pmd, unsigned long address)
+0d940a9b270b92 Hugh Dickins  2023-06-08  108  {
+0d940a9b270b92 Hugh Dickins  2023-06-08  109  	return pte_offset_kernel(pmd, address);
+0d940a9b270b92 Hugh Dickins  2023-06-08  110  }
+0d940a9b270b92 Hugh Dickins  2023-06-08  111  static inline void pte_unmap(pte_t *pte)
+0d940a9b270b92 Hugh Dickins  2023-06-08  112  {
+a349d72fd9efc8 Hugh Dickins  2023-07-11  113  	rcu_read_unlock();
+0d940a9b270b92 Hugh Dickins  2023-06-08  114  }
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  115  #endif
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  116  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
