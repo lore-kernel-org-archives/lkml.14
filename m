@@ -1,93 +1,143 @@
-Received: from zg8tmtu5ljg5lje1ms4xmtka.icoremail.net (zg8tmtu5ljg5lje1ms4xmtka.icoremail.net [159.89.151.119])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F2139AC8;
-	Fri, 12 Jan 2024 08:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
-	by mail-app4 (Coremail) with SMTP id cS_KCgAXHy98+6BlXum4AA--.47709S2;
-	Fri, 12 Jan 2024 16:42:38 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kate Hsuan <hpa@redhat.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Dan Carpenter <error27@gmail.com>,
-	Brent Pappas <bpappas@pappasbrent.com>,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55C042057;
+	Fri, 12 Jan 2024 08:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zElDNEeG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Jkh4AA8I";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zElDNEeG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Jkh4AA8I"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0B3DE1FC24;
+	Fri, 12 Jan 2024 08:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1705049178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FKd2vrnCJc+ZSoIlM3guxZ67+jWlztH2KbgryFDlQoo=;
+	b=zElDNEeGfpShF+8jwZ26dyAYpEBX+ZHyw7CES1ySvN0Vd1wdf7oOtIkMd/4oFXEiE42s/8
+	hpHVbCD0M+pyiD2ETyXP4etpUVqIY2MzVBsUjQZkmfAZ4uFN37nwFQe2/Rodl/v2PFh/kF
+	D97r89l6RRt73wCOXS1SecRooT6dhSs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1705049178;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FKd2vrnCJc+ZSoIlM3guxZ67+jWlztH2KbgryFDlQoo=;
+	b=Jkh4AA8InzLyeIyFaJBbDLTt+1lgd5eFwy8FyRPww+XUHZnDyNBvuM/RshYV3lnyiYK9s3
+	hswbjdDzgxcLVpBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1705049178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FKd2vrnCJc+ZSoIlM3guxZ67+jWlztH2KbgryFDlQoo=;
+	b=zElDNEeGfpShF+8jwZ26dyAYpEBX+ZHyw7CES1ySvN0Vd1wdf7oOtIkMd/4oFXEiE42s/8
+	hpHVbCD0M+pyiD2ETyXP4etpUVqIY2MzVBsUjQZkmfAZ4uFN37nwFQe2/Rodl/v2PFh/kF
+	D97r89l6RRt73wCOXS1SecRooT6dhSs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1705049178;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FKd2vrnCJc+ZSoIlM3guxZ67+jWlztH2KbgryFDlQoo=;
+	b=Jkh4AA8InzLyeIyFaJBbDLTt+1lgd5eFwy8FyRPww+XUHZnDyNBvuM/RshYV3lnyiYK9s3
+	hswbjdDzgxcLVpBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C8C3B13782;
+	Fri, 12 Jan 2024 08:46:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id b0STL1n8oGUSKQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 12 Jan 2024 08:46:17 +0000
+Date: Fri, 12 Jan 2024 09:46:17 +0100
+Message-ID: <87bk9rndly.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Chancel Liu <chancel.liu@nxp.com>
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	ivan.orlov0322@gmail.com,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: atomisp: ssh_css: Fix a null-pointer dereference in load_video_binaries
-Date: Fri, 12 Jan 2024 16:34:19 +0800
-Message-Id: <20240112083421.3728017-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] ALSA: aloop: Introduce a function to get if access is interleaved mode
+In-Reply-To: <20240111025219.2678764-1-chancel.liu@nxp.com>
+References: <20240111025219.2678764-1-chancel.liu@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cS_KCgAXHy98+6BlXum4AA--.47709S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw15uw1xGrW5KF18tF17Awb_yoW8CFyxpF
-	48Gw1Uur1UZrs7Ca17G347uF90g3sY9ay5Ww4DJa4fZ3Z7Aas2qF15KFWYgry8ur4fJ3yD
-	tryjgFyYvr1FvFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
-	DUUUUU=
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zElDNEeG;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Jkh4AA8I
+X-Spamd-Result: default: False [-2.74 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 BAYES_HAM(-2.93)[99.70%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[perex.cz,suse.com,gmail.com,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 0B3DE1FC24
+X-Spam-Level: 
+X-Spam-Score: -2.74
+X-Spam-Flag: NO
 
-The allocation failure of mycs->yuv_scaler_binary in load_video_binaries
-is followed with a dereference of mycs->yuv_scaler_binary after the
-following call chain:
+On Thu, 11 Jan 2024 03:52:19 +0100,
+Chancel Liu wrote:
+> 
+> There's a use case that playback stream of a loopback cable works on
+> RW_INTERLEAVED mode while capture stream works on MMAP_INTERLEAVED mode:
+> 
+> aplay -Dhw:Loopback,0,0 S32_48K_2ch.wav;
+> arecord -Dplughw:Loopback,1,0 -fS32_LE -r16000 -c2 cap.wav;
+> 
+> The plug plugin handles only slave PCM support MMAP mode. Not only plug
+> plugin but also other plugins like direct plugins(dmix/dsnoop/dshare)
+> work on MMAP access mode. In this case capture stream is the slave
+> PCM works on MMAP_INTERLEAVED mode. However loopback_check_format()
+> rejects this access setting and return:
+> 
+> arecord: pcm_read:2240: read error: Input/output error
+> 
+> To fix it a function called is_access_interleaved() is introduced to
+> get if access is interleaved mode. If both access of capture stream and
+> playback stream is interleaved mode loopback_check_format() will allow
+> this kind of access setting.
+> 
+> Fixes: 462494565c27 ("ALSA: aloop: Add support for the non-interleaved access mode")
+> Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
 
-sh_css_pipe_load_binaries
-  |-> load_video_binaries (mycs->yuv_scaler_binary == NULL)
-  |
-  |-> sh_css_pipe_unload_binaries
-        |-> unload_video_binaries
+Applied now.  Thanks.
 
-In unload_video_binaries, it calls to ia_css_binary_unload with argument
-&pipe->pipe_settings.video.yuv_scaler_binary[i], which refers to the
-same memory slot as mycs->yuv_scaler_binary. Thus, a null-pointer
-dereference is triggered.
 
-Fixes: ad85094b293e ("Revert "media: staging: atomisp: Remove driver"")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
- drivers/staging/media/atomisp/pci/sh_css.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-index f35c90809414..eb43f4e99d02 100644
---- a/drivers/staging/media/atomisp/pci/sh_css.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css.c
-@@ -4936,9 +4936,10 @@ unload_video_binaries(struct ia_css_pipe *pipe)
- 	ia_css_binary_unload(&pipe->pipe_settings.video.video_binary);
- 	ia_css_binary_unload(&pipe->pipe_settings.video.vf_pp_binary);
- 
--	for (i = 0; i < pipe->pipe_settings.video.num_yuv_scaler; i++)
--		ia_css_binary_unload(&pipe->pipe_settings.video.yuv_scaler_binary[i]);
--
-+	if (pipe->pipe_settings.video.yuv_scaler_binary)
-+		for (i = 0; i < pipe->pipe_settings.video.num_yuv_scaler; i++)
-+			ia_css_binary_unload(&pipe->pipe_settings.video.yuv_scaler_binary[i]);
-+		
- 	kfree(pipe->pipe_settings.video.is_output_stage);
- 	pipe->pipe_settings.video.is_output_stage = NULL;
- 	kfree(pipe->pipe_settings.video.yuv_scaler_binary);
--- 
-2.34.1
-
+Takashi
