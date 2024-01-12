@@ -1,81 +1,64 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9878B50268
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 08:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
-	by mail-app4 (Coremail) with SMTP id cS_KCgCneJ0E_aBlevm4AA--.27969S2;
-	Fri, 12 Jan 2024 16:49:08 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Qiang Yu <yuq825@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Vasily Khoruzhick <anarsoul@gmail.com>,
-	dri-devel@lists.freedesktop.org,
-	lima@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/lima: fix a memleak in lima_heap_alloc
-Date: Fri, 12 Jan 2024 16:47:50 +0800
-Message-Id: <20240112084750.3729837-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B25562A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 08:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HN9GaIYR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705049529;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EDdfOvV+4784FLJ0qEaQ5pTw49maq5I10+FoEROdaJg=;
+	b=HN9GaIYRntprs+FldAh/N+Ptb3PcXZL+trzopTRy6usijDymBL60LKoNG4gfVN4iqay1bo
+	m1SV7BBv94zVcts8HmjQpC0Jr6iGGsYW/dCcg15KW4AEkODBy8aAi/+We/bYgcwV/o42CR
+	McEEeUuvtzPIN23SD4lKtEWvQQlUkMw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-642-R9aKxxDgOKaEa7VvkeRM3g-1; Fri, 12 Jan 2024 03:52:05 -0500
+X-MC-Unique: R9aKxxDgOKaEa7VvkeRM3g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C620385A58B;
+	Fri, 12 Jan 2024 08:52:04 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2C878C19060;
+	Fri, 12 Jan 2024 08:52:04 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <49231a98-d39f-4920-8d9f-e60aa014f518@zytor.com>
+References: <49231a98-d39f-4920-8d9f-e60aa014f518@zytor.com> <152261521484.30503.16131389653845029164.stgit@warthog.procyon.org.uk> <3465e0c6-f5b2-4c42-95eb-29361481f805@zytor.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: dhowells@redhat.com, linux-kernel@vger.kernel.org, pinskia@gmail.com
+Subject: Re: [PATCH 00/45] C++: Convert the kernel to C++
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cS_KCgCneJ0E_aBlevm4AA--.27969S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruF1xZrW7XF4xJFWkJrW5Wrg_yoWfWwbEk3
-	yxXFn7ury5GF4q93W2vw47uFyIka15ZrZ3Zr10gasxt3srJa10q3429rWrX3s8Wa17KFyq
-	ya1jyw4fA3ZF9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbV8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-	6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUqD73UUUUU=
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2153665.1705049523.1@warthog.procyon.org.uk>
+Date: Fri, 12 Jan 2024 08:52:03 +0000
+Message-ID: <2153666.1705049523@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-When lima_vm_map_bo fails, the resources need to be deallocated, or
-there will be memleaks.
+H. Peter Anvin <hpa@zytor.com> wrote:
 
-Fixes: 6aebc51d7aef ("drm/lima: support heap buffer creation")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
- drivers/gpu/drm/lima/lima_gem.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> One thing I forgot to mention that would be quite useful is careful use of
+> namespaces.
 
-diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
-index 4f9736e5f929..824ed22141c7 100644
---- a/drivers/gpu/drm/lima/lima_gem.c
-+++ b/drivers/gpu/drm/lima/lima_gem.c
-@@ -92,8 +92,13 @@ int lima_heap_alloc(struct lima_bo *bo, struct lima_vm *vm)
- 
- 	if (vm) {
- 		ret = lima_vm_map_bo(vm, bo, old_size >> PAGE_SHIFT);
--		if (ret)
-+		if (ret) {
-+			dma_unmap_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
-+			sg_free_table(&sgt);
-+			kfree(bo->base.sgt);
-+			bo->base.sgt = NULL;
- 			return ret;
-+		}
- 	}
- 
- 	bo->heap_size = new_size;
--- 
-2.34.1
+Just be aware that the use of namespaces would make the kernel image bigger if
+symbols are included.
+
+David
 
