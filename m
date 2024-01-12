@@ -1,194 +1,101 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F836DCE7;
-	Fri, 12 Jan 2024 14:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDDA6D1DC
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kTKxJY5X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705069220;
-	bh=Y00IcYmAGqjkXxmqCRg4Ou9eblS4gIaU95j+2+yuqxc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=kTKxJY5XYGvh8G9hAuYRUCaqNGR+p+4yQSbTjGZeLbh6al1oAeHQCBDs+cTXiKweV
-	 nFPDmwy6W0paicJoJsyIkRMveAKrwg846hNcl4t5x0h5/pfma7TJ0K0Vd6IQN6CQNE
-	 Y3/lV8fe4oxhRZE7e5u2GiVTKizuaRYy6OhItqLplVRY2g0OSjkcTA29PF9+bEv+zz
-	 gsIoEVeRwBG5bsHlRindxu4m70hsQk0X5+mDZramgRH2ICJ5yeFdHMCXqcfV2jGZv8
-	 GjEO6oAosZpZHUXsDu6SrX1sVaY67O/h1vNY3+fawpTtf15OygrZ5QG5PSNKpcOKoq
-	 3cJBHTQPyAtAQ==
-Received: from beast.luon.net (cola.collaboradmins.com [IPv6:2a01:4f8:1c1c:5717::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: sjoerd)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E692E3780624;
-	Fri, 12 Jan 2024 14:20:19 +0000 (UTC)
-Received: by beast.luon.net (Postfix, from userid 1000)
-	id 866F29F0AEA0; Fri, 12 Jan 2024 15:20:19 +0100 (CET)
-Message-ID: <2ce27ed917b9bd569ee4a7f87b3d9b78d07cecbd.camel@collabora.com>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am625-beagleplay: Use the builtin
- mdio bus
-From: Sjoerd Simons <sjoerd@collabora.com>
-To: Nishanth Menon <nm@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@kernel.org>,
-  kernel@collabora.com, Conor Dooley <conor+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring
- <robh+dt@kernel.org>, Tero Kristo <kristo@kernel.org>, Vignesh Raghavendra
- <vigneshr@ti.com>, devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Fri, 12 Jan 2024 15:20:19 +0100
-In-Reply-To: <20240112135000.b54xz3boeua7y2jf@music>
-References: <20240112124505.2054212-1-sjoerd@collabora.com>
-	 <20240112135000.b54xz3boeua7y2jf@music>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2-1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZM7i33VK"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d9344f30caso4473858b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 06:20:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705069249; x=1705674049; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2sON2zsEgmOr2oRLYLHAKX2KUxW1/7chOQU/DqL3AV4=;
+        b=ZM7i33VKYCX1edB2L20HggEYeq92vLAv03XZkFWET0Me19h+/e42BJDieztjJEvEtx
+         +Dr8P3Cw5XA+ku9VijxxP+3PIIQ7132NSim5mamdOqCkja5zsEqOiW6eCGP1BP1NkKgv
+         sHEVpwCSHOoec0F0ZnIHtzm4XF4T4cJlqFDgz2qTjEkMa8ZIWYRm9ttFedeLyso6myrd
+         8LZqO2n7tmILBmYwEjYzcOMquXYcQro414C2B5IFxOpYP0p9cy/hGcc9IoUmmRhuOg51
+         jfg6L0Fsdy9of/Vn9h9bCwr6cjXmLSLkQ8aiPdF6QQQ/wlhRl5uvTZECfNB8cLfhbUWp
+         v6EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705069249; x=1705674049;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2sON2zsEgmOr2oRLYLHAKX2KUxW1/7chOQU/DqL3AV4=;
+        b=YiWVCkqgNhyWzgco8lm84uUYomx5lS6a0xWc6JDYiIYiW1o6kUXZI6Q9ub+JOfa2JB
+         xpAD/VlTzLTbGv8J9x3zxtss6EviZqccAS6eA3cmmcs2K4ByirrcI5epu9GEUj+XV1Mq
+         nA3yQBbbEFhf3iOVMJZXTyzdkQi1Thjmh5bG+pEcVkHwnpQqM7WzsV++7CQP9uwvqCa4
+         aHx0MdF7pRovYD0lv3WDYqOM4HAbVLARosEMaItRdtEo3GJQSeCR58lxerCmuJE7JAyQ
+         1rTifoHjmoRuh3LBc3bRV1PXRlw3WkRhVjUg/tlf63N8Irgum/AUtI1gEUgzw3HGPG6a
+         5muQ==
+X-Gm-Message-State: AOJu0YyhxFAX/0WAdGhdzZsED5Pn0LNSQgCyhLK+mya+M89ivqyCDvN8
+	hQ02DhE6r7kKGnDqHaH3l2c=
+X-Google-Smtp-Source: AGHT+IGEI+FxtB7YCv0q78LKq6Lhf6thYTjYnOOjc2RxTqiVGhRFJeuJkzcDbU6KfHBrh+/NGHAYWQ==
+X-Received: by 2002:a05:6a00:3a1c:b0:6d9:baf0:b8a2 with SMTP id fj28-20020a056a003a1c00b006d9baf0b8a2mr1589144pfb.4.1705069249175;
+        Fri, 12 Jan 2024 06:20:49 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id g26-20020aa79f1a000000b006dab0d72cd0sm3221775pfr.214.2024.01.12.06.20.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jan 2024 06:20:48 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 6C65B18503882; Fri, 12 Jan 2024 21:20:45 +0700 (WIB)
+Date: Fri, 12 Jan 2024 21:20:45 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Deliberately sending partial patch sets?
+Message-ID: <ZaFKvZg-MtZgbCKA@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-On Fri, 2024-01-12 at 07:50 -0600, Nishanth Menon wrote:
-> On 13:44-20240112, Sjoerd Simons wrote:
-> > The beagleplay dts was using a bit-bang gpio mdio bus as a work-
-> > around
-> > for errata i2329. However since commit d04807b80691 ("net:
-> > ethernet: ti:
-> > davinci_mdio: Add workaround for errata i2329") the mdio driver
-> > itself
-> > already takes care of this errata for effected silicon, which
-> > landed
-> > well before the beagleplay dts. So i suspect the reason for the
-> > workaround in upstream was simply due to copying the vendor dts.
-> >=20
-> > Switch the dts to the ti,cpsw-mdio instead so it described the
-> > actual
-> > hardware and is consistent with other AM625 based boards
-> >=20
-> > Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
-> >=20
-> > ---
->=20
-> We have had issues with the ethernet integration previously (also why
-> ethernet in u-boot is not yet functional on beagleplay[1]).
->=20
-> https://openbeagle.org/beagleplay/beagleplay/-/issues/101
->=20
-> we should probably do a 1000 boot nfs test or something to ensure
-> this
-> doesn't introduce regressions (I recollect mdio wasn't stable on
-> beagleplay) and switching to bitbang driver stopped all complains.
-
-I can do a longer test with that over the weekend sure; For reference
-I'm seeing issues in u-boot as well on initial probe with these
-changes, but i've not seen the same on the linux side.
-
-Do you remember with what kernel versions users saw the mdio
-instabilities? I wonder if that was a version with the commit mentioned
-that includes the errata fix for the mdio driver.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="YnDQqZwqJe9COSOd"
+Content-Disposition: inline
 
 
+--YnDQqZwqJe9COSOd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->=20
-> [1]
-> https://lore.kernel.org/u-boot/20230822121350.51324-1-rogerq@kernel.org/
-> >=20
-> > =C2=A0.../arm64/boot/dts/ti/k3-am625-beagleplay.dts | 42 +++++++-------=
--
-> > ----
-> > =C2=A01 file changed, 16 insertions(+), 26 deletions(-)
-> >=20
-> > diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-> > b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-> > index eadbdd9ffe37..49fb21ba62b0 100644
-> > --- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-> > +++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-> > @@ -29,7 +29,6 @@ aliases {
-> > =C2=A0		i2c3 =3D &main_i2c3;
-> > =C2=A0		i2c4 =3D &wkup_i2c0;
-> > =C2=A0		i2c5 =3D &mcu_i2c0;
-> > -		mdio-gpio0 =3D &mdio0;
-> > =C2=A0		mmc0 =3D &sdhci0;
-> > =C2=A0		mmc1 =3D &sdhci1;
-> > =C2=A0		mmc2 =3D &sdhci2;
-> > @@ -231,27 +230,6 @@ simple-audio-card,codec {
-> > =C2=A0		};
-> > =C2=A0	};
-> > =C2=A0
-> > -	/* Workaround for errata i2329 - just use mdio bitbang */
-> > -	mdio0: mdio {
-> > -		compatible =3D "virtual,mdio-gpio";
-> > -		pinctrl-names =3D "default";
-> > -		pinctrl-0 =3D <&mdio0_pins_default>;
-> > -		gpios =3D <&main_gpio0 86 GPIO_ACTIVE_HIGH>, /* MDC
-> > */
-> > -			<&main_gpio0 85 GPIO_ACTIVE_HIGH>; /* MDIO
-> > */
-> > -		#address-cells =3D <1>;
-> > -		#size-cells =3D <0>;
-> > -
-> > -		cpsw3g_phy0: ethernet-phy@0 {
-> > -			reg =3D <0>;
-> > -		};
-> > -
-> > -		cpsw3g_phy1: ethernet-phy@1 {
-> > -			reg =3D <1>;
-> > -			reset-gpios =3D <&main_gpio1 5
-> > GPIO_ACTIVE_LOW>;
-> > -			reset-assert-us =3D <25>;
-> > -			reset-deassert-us =3D <60000>; /* T2 */
-> > -		};
-> > -	};
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0&main_pmx0 {
-> > @@ -312,8 +290,8 @@ AM62X_IOPAD(0x00b4, PIN_INPUT_PULLUP, 1) /*
-> > (K24) GPMC0_CSn3.I2C2_SDA */
-> > =C2=A0
-> > =C2=A0	mdio0_pins_default: mdio0-default-pins {
-> > =C2=A0		pinctrl-single,pins =3D <
-> > -			AM62X_IOPAD(0x0160, PIN_OUTPUT, 7) /*
-> > (AD24) MDIO0_MDC.GPIO0_86 */
-> > -			AM62X_IOPAD(0x015c, PIN_INPUT, 7) /*
-> > (AB22) MDIO0_MDIO.GPIO0_85 */
-> > +			AM62X_IOPAD(0x0160, PIN_OUTPUT, 0) /*
-> > (AD24) MDIO0_MDC */
-> > +			AM62X_IOPAD(0x015c, PIN_INPUT, 0) /*
-> > (AB22) MDIO0_MDIO */
-> > =C2=A0		>;
-> > =C2=A0	};
-> > =C2=A0
-> > @@ -611,8 +589,20 @@ &cpsw_port2 {
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0&cpsw3g_mdio {
-> > -	/* Workaround for errata i2329 - Use mdio bitbang */
-> > -	status =3D "disabled";
-> > +	status =3D "okay";
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&mdio0_pins_default>;
-> > +
-> > +	cpsw3g_phy0: ethernet-phy@0 {
-> > +		reg =3D <0>;
-> > +	};
-> > +
-> > +	cpsw3g_phy1: ethernet-phy@1 {
-> > +		reg =3D <1>;
-> > +		reset-gpios =3D <&main_gpio1 5 GPIO_ACTIVE_LOW>;
-> > +		reset-assert-us =3D <25>;
-> > +		reset-deassert-us =3D <60000>; /* T2 */
-> > +	};
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0&main_gpio0 {
-> > --=20
-> > 2.43.0
-> >=20
->=20
+Hi,
+
+Let's say that there is a contributor who wish to send a patch set (e.g.
+20-30 patches in the series) to LKML. But instead of sending the full
+series, he either do one of the following:
+
+* Send only the cover letter (analogous to movie trailers)
+* Send only a few arbitrary patches in a series that are most important
+  (e.g. patch [01,04,11,18,23/30]) (analogous to match highlights)
+* Send only the first few patches in a series (i.e. subject of one of
+  patches says [09/30]) (analogous to sample book chapters)
+
+The rest of patches are behind closed doors (i.e. not sent), possibly
+behind charm-priced (pay)walls.
+
+Is the submission like above acceptable (when in review)?
+
+Thanks.
 
 --=20
-Sjoerd Simons
-Collabora Ltd.
+An old man doll... just what I always wanted! - Clara
+
+--YnDQqZwqJe9COSOd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZaFKuQAKCRD2uYlJVVFO
+oyK3AP9E9wtVBSlPGAo0UtbWhvTCnSDB86LMRwdKtVCcAfIGJAD/dV+/2leBp+jD
+89GKopwZUgbpZg+Rv4SkXMeeLXtxbQE=
+=UalB
+-----END PGP SIGNATURE-----
+
+--YnDQqZwqJe9COSOd--
