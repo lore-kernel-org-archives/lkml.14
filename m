@@ -1,191 +1,78 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B4D1AAA3;
-	Fri, 12 Jan 2024 17:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75E11AAAA;
+	Fri, 12 Jan 2024 18:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n3wiSLAW"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40CHwjdV078929;
-	Fri, 12 Jan 2024 11:58:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705082325;
-	bh=PhIGoUQlM+uURwcXlMwuAoVz4y5y+HTbgDHxL0fF+zU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=n3wiSLAWcZx+ECcnA37ns0laYc8I3NhqmaIFXaFj8UfIrsEbaG1dx854YVrdWb+7X
-	 rxxAMCagIT7KZT6osPswwJux/rNarqRVS7a37p9aDqemyEkJ+58+5l+71/wQ+zV7zQ
-	 2Ls0IJHrLkuYQdUa7UuUrJocGcWoOx/K4d4pwUks=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40CHwjnM030811
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 12 Jan 2024 11:58:45 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 12
- Jan 2024 11:58:45 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 12 Jan 2024 11:58:45 -0600
-Received: from [10.249.40.136] ([10.249.40.136])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40CHwimu048633;
-	Fri, 12 Jan 2024 11:58:44 -0600
-Message-ID: <c1ea65a6-4aad-4ca1-88cf-ac3fa130b0e4@ti.com>
-Date: Fri, 12 Jan 2024 11:58:44 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBxhJ3sR"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dbed85ec5b5so5501576276.3;
+        Fri, 12 Jan 2024 10:02:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705082541; x=1705687341; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a8dTLTTQWQauPVmA7N7Cgw9w08I3I6pmEcifcj/7RQ0=;
+        b=FBxhJ3sR5h2CfOu7FhqI6P/tigDGMcFX8RSTI+dGMMJjj7NhrMJ/QJFko/b2udD6ht
+         jOH2TcSV6P3QeOsChlVyMsBTWD+V/GgeDYV+tcBM2MNEI1PIqNY9xQYPrCbV65cWNQcB
+         VsJMgt7nL1tw1kG3KFs0QDibqMBrpRSqoQlVjCUP2PnE3J6MiTj4FDQ7ySdh9pKrbuXq
+         p0dTwdhp8FhTbTJQEqMl96nxLdAeCrjFt4bzXRN9V4+43kdGrUjYj6164bKlKmMZye0D
+         A7DVSAX5+jLdgF4zZhTBrCHFo8bqigUji3he8VJG9SXvo9KUhrCnLMLWU8hWm5O3qSgl
+         kBAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705082541; x=1705687341;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a8dTLTTQWQauPVmA7N7Cgw9w08I3I6pmEcifcj/7RQ0=;
+        b=JhLzVgZ7gBo7oMkRFMwz2VFsOpVM2WKRDv5SBmesB/Nu//jY3GTJZt5WwMUq5VPv1h
+         F25f59lF75PujLWVLglIzM5Nd8l3mt9cqgpIfUMLthfgYvwDpn5Ou99MIXfBemgOQAi7
+         TmheybEWoQurJAn6qkh2qDelljf04hwIILCMSkoH06WRrCR8nTPMcSha82ngOrzafYnF
+         jQVaYgqXBsN2mXCa5oE3NPVsJy9N9Z5kWrL+GuY99r331YAOlxzza69A91idIkNP98Am
+         XrFPc+p8RJzLdJXj/XIPAr3sSUSjsagPxJhoumffyz5cANjwuBd7HVSiACkZdLG9gpzn
+         vKTw==
+X-Gm-Message-State: AOJu0YzgqQSfxXG6HBXpUCp4uu3oPY9ld35ohdzO+cEwwVullDzCkk2H
+	8TacYhJBlzbPWgKZPVL4l7bVMbTnYNrH8Gl0VQ==
+X-Google-Smtp-Source: AGHT+IE8VVnO9ZHkTOH6uJMBFKQmimo6ZZatvIvy4HtMQLKns5zvqi6y2sps2th9o5CjM2M469UEfiaWfKmR9rsK9po=
+X-Received: by 2002:a25:ce43:0:b0:dbd:c1ef:8fb5 with SMTP id
+ x64-20020a25ce43000000b00dbdc1ef8fb5mr835203ybe.51.1705082540645; Fri, 12 Jan
+ 2024 10:02:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] arm64: dts: ti: hummingboard-t: add descriptions
- for m.2 pci-e and usb-3
-Content-Language: en-US
-To: Josua Mayer <josua@solid-run.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>
-CC: Yazan Shhady <yazan.shhady@solid-run.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>
-References: <20240112-add-am64-som-v2-0-1385246c428c@solid-run.com>
- <20240112-add-am64-som-v2-5-1385246c428c@solid-run.com>
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20240112-add-am64-som-v2-5-1385246c428c@solid-run.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240112152011.6264-1-sunhao.th@gmail.com> <CAADnVQK4S2roFHP6W+PwT6+CjcCaUVzTHGHs39bwZPU00PEh8w@mail.gmail.com>
+In-Reply-To: <CAADnVQK4S2roFHP6W+PwT6+CjcCaUVzTHGHs39bwZPU00PEh8w@mail.gmail.com>
+From: Hao Sun <sunhao.th@gmail.com>
+Date: Fri, 12 Jan 2024 19:02:09 +0100
+Message-ID: <CACkBjsaO126d1tb-6GpPe62dkqfT7ZynhkWW_WzCaz1AHiY1Tg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] bpf: Reject variable offset alu on PTR_TO_FLOW_KEYS
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, Willem de Bruijn <willemb@google.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Eddy Z <eddyz87@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/12/24 11:12 AM, Josua Mayer wrote:
-> HummingBoard-T features two M.2 connectors labeled "M1" and "M2".
-> The single SerDes lane of the SoC can be routed to either M1 pci-e
-> signals, or M2 usb-3 signals by a gpio-controlled mux.
-> 
-> Add dedicated dts for each configuration.
-> - k3-am642-hummingboard-t.dts enables neither configuration
-> - k3-am642-hummingboard-t-pcie.dts (new)
->    configures serdes mux and pci-e controller for M1
-> - k3-am642-hummingboard-t-usb3.dts (new)
->    configures serdes mux and usb-3 controller for M2
-> 
-> Signed-off-by: Josua Mayer <josua@solid-run.com>
-> ---
->   arch/arm64/boot/dts/ti/Makefile                    |  2 ++
->   .../boot/dts/ti/k3-am642-hummingboard-t-pcie.dts   | 31 ++++++++++++++++++
->   .../boot/dts/ti/k3-am642-hummingboard-t-usb3.dts   | 37 ++++++++++++++++++++++
->   3 files changed, 70 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> index 041c3b71155e..0e408555edf1 100644
-> --- a/arch/arm64/boot/dts/ti/Makefile
-> +++ b/arch/arm64/boot/dts/ti/Makefile
-> @@ -33,6 +33,8 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
->   # Boards with AM64x SoC
->   dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
->   dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t.dtb
-> +dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t-pcie.dtb
-> +dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t-usb3.dtb
->   dtb-$(CONFIG_ARCH_K3) += k3-am642-phyboard-electra-rdk.dtb
->   dtb-$(CONFIG_ARCH_K3) += k3-am642-sk.dtb
->   dtb-$(CONFIG_ARCH_K3) += k3-am642-tqma64xxl-mbax4xxl.dtb
-> diff --git a/arch/arm64/boot/dts/ti/k3-am642-hummingboard-t-pcie.dts b/arch/arm64/boot/dts/ti/k3-am642-hummingboard-t-pcie.dts
-> new file mode 100644
-> index 000000000000..5ba0029fcfb9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-am642-hummingboard-t-pcie.dts
-> @@ -0,0 +1,31 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2023 Josua Mayer <josua@solid-run.com>
-> + *
-> + * DTS for SolidRun AM642 HummingBoard-T,
-> + * running on Cortex A53, with PCI-E.
-> + *
-> + */
-> +
-> +#include "k3-am642-hummingboard-t.dts"
+On Fri, Jan 12, 2024 at 6:57=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Fri, Jan 12, 2024 at 7:20=E2=80=AFAM Hao Sun <sunhao.th@gmail.com> wro=
+te:
+> >
+> > For PTR_TO_FLOW_KEYS, check_flow_keys_access() only uses fixed off
+> > for validation. However, variable offset ptr alu is not prohibited
+> > for this ptr kind. So the variable offset is not checked.
+>
+> Why resend v3?
+> What changed from v2?
 
-Avoid including .dts files, if this file is for an option that
-can be chosen (PCIe vs USB3), then it should be a DT overlay.
-
-> +#include "k3-serdes.h"
-> +
-> +/ {
-> +	model = "SolidRun AM642 HummingBoard-T with PCI-E";
-> +};
-> +
-> +&pcie0_rc {
-> +	status = "okay";
-
-If PCIe is only available here when using this add-on then
-all of the node data should be in this add-on file.
-
-Andrew
-
-> +};
-> +
-> +&serdes0_link {
-> +	cdns,phy-type = <PHY_TYPE_PCIE>;
-> +};
-> +
-> +&serdes_ln_ctrl {
-> +	idle-states = <AM64_SERDES0_LANE0_PCIE0>;
-> +};
-> +
-> +&serdes_mux {
-> +	idle-state = <1>;
-> +};
-> diff --git a/arch/arm64/boot/dts/ti/k3-am642-hummingboard-t-usb3.dts b/arch/arm64/boot/dts/ti/k3-am642-hummingboard-t-usb3.dts
-> new file mode 100644
-> index 000000000000..12b0fedcd2bc
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-am642-hummingboard-t-usb3.dts
-> @@ -0,0 +1,37 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2023 Josua Mayer <josua@solid-run.com>
-> + *
-> + * DTS for SolidRun AM642 HummingBoard-T,
-> + * running on Cortex A53, with USB-3.1 Gen 1.
-> + *
-> + */
-> +
-> +#include "k3-am642-hummingboard-t.dts"
-> +#include "k3-serdes.h"
-> +
-> +/ {
-> +	model = "SolidRun AM642 HummingBoard-T with USB-3.1 Gen 1";
-> +};
-> +
-> +&serdes0_link {
-> +	cdns,phy-type = <PHY_TYPE_USB3>;
-> +};
-> +
-> +&serdes_ln_ctrl {
-> +	idle-states = <AM64_SERDES0_LANE0_USB>;
-> +};
-> +
-> +&serdes_mux {
-> +	idle-state = <0>;
-> +};
-> +
-> +&usbss0 {
-> +	/delete-property/ ti,usb2-only;
-> +};
-> +
-> +&usb0 {
-> +	maximum-speed = "super-speed";
-> +	phys = <&serdes0_link>;
-> +	phy-names = "cdns3,usb3-phy";
-> +};
-> 
+Nothing changes in the first patch, the tests in the second patch are
+reformatted
+with a proper number of tabs after each instruction. Forgot to add changelo=
+gs.
