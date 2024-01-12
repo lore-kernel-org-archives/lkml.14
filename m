@@ -1,118 +1,105 @@
-Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91A66D1AA;
-	Fri, 12 Jan 2024 15:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 619B5490C3;
-	Fri, 12 Jan 2024 16:13:23 +0100 (CET)
-Message-ID: <db8b9e19-ad75-44d3-bfb2-46590d426ff5@proxmox.com>
-Date: Fri, 12 Jan 2024 16:13:22 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABBB6EB41
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 15:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GCUb9eu4"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3376f71fcbbso4363594f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 07:17:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705072650; x=1705677450; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vQNAWDXmxYQgA4LCYNmP7mT3vlvbfkNqLGD29l63sUA=;
+        b=GCUb9eu4TaulOmoyhglouaCBEVoE057d9JYUGF8PwD4yNuxpkLpwo+NPfKMCZc80zZ
+         4YzhDJl1Fx4EK47H7TRgqbGXrFmJdiCYYjruaKe7bH0bTwm0oIHBpdIvPBhhSEELueug
+         J+ieGU65i5BytmVPgTc2GiE+HwZdDWv+3iDlz79w9ENsRY1RzUUHUwyLqqSSt08sjJZF
+         GZ5+g/J3aoRlcvzeMnE6hRbjzna6fo9ZBEWNrbdKHdU7faVmXJxCL6KxRROg16rSwtJR
+         uu4bFUNPHBzadKdgKBzylk1FrpGVPA4yBbCBC9rYiw44lbHTRf6NEWzEf/xzfZPh/eyR
+         ZwVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705072650; x=1705677450;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vQNAWDXmxYQgA4LCYNmP7mT3vlvbfkNqLGD29l63sUA=;
+        b=EZO0Qof84Br4njz1cCQp52KhqL4BsFA2IWXdiml6zGhcjiMUm6XmcihYA7L94P3sl2
+         vUdERUp8vqHXoqqtWtCgbSyXWBS/QV8KPOeRu9zgm6MsIx/Ed8VwrNHIk4o0f7Pr8FYx
+         8sVjXdKOcr9LRAACEi2Ws7j/RjTYqLmLC8sX9kxNfy5lE/FQjJXYru3HPO1C/C9gNPmF
+         6YnAfXest7nDwVLWISfgYai8Z4DpAGIp7v4VCdqEtwzCoV1Y9QIj5CROGzC4JYbF3f2j
+         63CEEbz3+wpBwVODNyNvevtGcByKGxwHb+0ph3tbikQuA3mcgftdyL8ts97YvV1IW+BU
+         +esg==
+X-Gm-Message-State: AOJu0YxspsO1xsnMTuA+dD0z46upGi1t8O398raRA/nD4vcCPiWHKMK2
+	xpjGcKanu7o/5V2CUCAnJfAz1bPbwPGnwQ==
+X-Google-Smtp-Source: AGHT+IFSQRMTt3MRHiq8+omkYfNKh6C4s/p8ZGj089lXD4FOE2t74cG6vQoayvJt3ce81EKNlrpH0w==
+X-Received: by 2002:adf:e64f:0:b0:336:ea02:ae93 with SMTP id b15-20020adfe64f000000b00336ea02ae93mr486332wrn.180.1705072650364;
+        Fri, 12 Jan 2024 07:17:30 -0800 (PST)
+Received: from [192.168.100.86] ([37.228.218.3])
+        by smtp.gmail.com with ESMTPSA id r1-20020adfce81000000b0033667867a66sm4147699wrn.101.2024.01.12.07.17.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 07:17:29 -0800 (PST)
+Message-ID: <fecfd2d9-7302-4eb6-92d0-c2efbe824bf4@linaro.org>
+Date: Fri, 12 Jan 2024 15:17:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Content-Language: en-GB, de-AT
-To: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-From: Thomas Lamprecht <t.lamprecht@proxmox.com>
-Subject: vxlan: how to expose opt-in RFC conformity with unprocessed header
- flags
-Autocrypt: addr=t.lamprecht@proxmox.com; keydata=
- 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 DrEx
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/6] PCI: qcom: Add missing icc bandwidth vote for cpu
+ to PCIe path
+Content-Language: en-US
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>,
+ Brian Masney <bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, vireshk@kernel.org,
+ quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
+ quic_nitegupt@quicinc.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
+ <20240112-opp_support-v6-3-77bbf7d0cc37@quicinc.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240112-opp_support-v6-3-77bbf7d0cc37@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi!
+On 12/01/2024 14:22, Krishna chaitanya chundru wrote:
+> CPU-PCIe path consits for registers PCIe BAR space, config space.
+> As there is less access on this path compared to pcie to mem path
+> add minimum vote i.e GEN1x1 bandwidth always.
+> 
+> In suspend remove the cpu vote after register space access is done.
+> 
+> Fixes: c4860af88d0c ("PCI: qcom: Add basic interconnect support")
 
-We got a customer that reported an issue where the Linux VXLAN
-implementation diverges from the RFC, namely when any of the (reserved)
-flags other than the VNI one is set, the kernel just drops the package.
+If this patch is a Fixes then don't you need the accompanying dts change 
+as a parallel Fixes too ?
 
-According to the vxlan_rcv function in vxlan_core this is done by choice:
+i.e. without the dts update - you won't have the nodes in the dts to 
+consume => applying this code to the stable kernel absent the dts will 
+result in no functional change and therefore no bugfix.
 
-if (unparsed.vx_flags || unparsed.vx_vni) {
-        /* If there are any unprocessed flags remaining treat
-         * this as a malformed packet. This behavior diverges from
-         * VXLAN RFC (RFC7348) which stipulates that bits in reserved
-         * in reserved fields are to be ignored. The approach here
-         * maintains compatibility with previous stack code, and also
-         * is more robust and provides a little more security in
-         * adding extensions to VXLAN.
-         */
-        goto drop;
-}
+I'm not sure if you are asked to put a Fixes here but it seems to be it 
+should either be dropped or require a parallel Fixes: tag for the dts 
+and yaml changes.
 
-Normally this is not an issue, as the same RFC also dictates that the sender
-must have those reserved bits set to zero. But naturally, some devices are
-not following that side of the contract either, like some Juniper switches
-of said customers, which set the B-bit (like it would be a VXLAN-GPE) in the
-VXLAN packet, even though they have VXLAN-GPE explicitly disabled.
+What is the bug this change fixes in the backport ?
 
-So, while I asked the customer to open a support ticket with their switch
-vendor, as that one is breaking the RFC too, the kernel is just the simpler
-thing to "fix", especially for our side the only thing we can change at all.
+> cc: stable@vger.kernel.org
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-As just changing the code so that it would be always RFC conform (at least
-in this regard) seems to be a no-go, as some setups would then suddenly see
-extra (malicious) traffic go through, so to my actual question:
-
-What would be the accepted way to add a switch of making this RFC conform in
-an opt-in way? A module parameter? A sysfs entry? Through netlink?
-
-As depending on the answer of that I'd like to prepare a patch implementing
-the opt-in RFC-conformance w.r.t. ignoring the reserved bits values of the
-VXLAN flags, this way setups with complementary broken HW in their network
-path can opt in to that behavior as a workaround.
-
-thanks!
- Thomas
-
+---
+bod
