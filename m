@@ -1,150 +1,183 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C3D56B67;
-	Fri, 12 Jan 2024 09:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A84C56B60;
+	Fri, 12 Jan 2024 09:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="shbLLU6a"
-X-UUID: d0ce2c1cb12b11ee9e680517dc993faa-20240112
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=/5MRUAf8nzbyEgJGFVzsz6MlL8E4uCaojf+OWju13B8=;
-	b=shbLLU6aCW/Bh7DbF7m6TRxdbYiU72+hTRZUot8pOtGUmXJ1/XJ9tXsJTwz30ef0KDj/PZIsy6uYrIqFTnH10BDmVRvjCFK+hApulAUDVM/MevKEY1QgaETIzsjMno5B8J8HDjWbxy6MoofeGfXROS60lguvPmiLLdOYfak3rZ8=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:779d9b66-563a-4bbf-af01-dff1a673b736,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:5d391d7,CLOUDID:5c522e8e-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
-	DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
-X-UUID: d0ce2c1cb12b11ee9e680517dc993faa-20240112
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
-	(envelope-from <yong.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1331444285; Fri, 12 Jan 2024 17:20:23 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 12 Jan 2024 17:20:22 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 12 Jan 2024 17:20:21 +0800
-From: Yong Wu <yong.wu@mediatek.com>
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, <christian.koenig@amd.com>, Sumit Semwal
-	<sumit.semwal@linaro.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
-	<tjmercier@google.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linaro-mm-sig@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>,
-	Vijayanand Jitta <quic_vjitta@quicinc.com>, Joakim Bech
-	<joakim.bech@linaro.org>, Jeffrey Kardatzke <jkardatzke@google.com>, Pavel
- Machek <pavel@ucw.cz>, Simon Ser <contact@emersion.fr>, Pekka Paalanen
-	<ppaalanen@gmail.com>, <jianjiao.zeng@mediatek.com>,
-	<kuohong.wang@mediatek.com>, <youlin.pei@mediatek.com>
-Subject: [PATCH v4 0/7] dma-buf: heaps: Add restricted heap
-Date: Fri, 12 Jan 2024 17:20:07 +0800
-Message-ID: <20240112092014.23999-1-yong.wu@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WPUhCUm6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cV/tWTRdGBCwlgpcwwYKLleSxM7+XbEe4HSVTIsS14zue8HL7kSjoyNj2Z3mCVroWdKKDlB8/GSj5vHurZ3G8jskOspzwbtBNBQUtcJpFsKD0qjv828ptKcOBMTCCBOQnJ8z9xciONMvRjnLusxMUKUus5dzcGt1cHjCEaSgzbAeE9pEVToIc20pnvaWIKg/2RhAVk1dZPiJ329rxTW4Q1Vc8Fo6uDlp9cUtJ8ajBcbggiJW4fWZJRC7kbpWk6jq+IO1kmPBIde972p/SGtG0tA704nFYdEdK6Kc//bHfHAOFHQ5vYOWM8JlN9nf+gQJ2LDGm87UHbzgTk2xyeoZoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CD2UN6p5RKi5TeEksZU13jpPnevWU9lRPfZxbUA3xaI=;
+ b=f1cxKq6bHF3Rixd7h6Q2aEfwmO1JjP8SCErVGtb64Zlh0tBD1QuOoW9OQLVvNeZpe9+GuUGEMl0pqddhCacgm4E+AsgwQru8NFls11bbnauW465CpzujItIrT2zZjeNG8fi4ny7wV9gew8kwAUafg/Y1WUR3fAf8ftEAxUFHZQ3KvS5+0ds/QpSfhxeUL7l3hU86LbKNo/lUT2t56CubnBSgfhTPAug7K3pNGbTAOFo4ckCaaSVWINbGEZhJyVGPeBdnPxO6Ib/U8McdQTTqryrTJhpSslKhNnHfgGXRF/Jr0TotSS0KgMMTBocQaR4Uqw1z393SHRWuoOqqZhoHZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CD2UN6p5RKi5TeEksZU13jpPnevWU9lRPfZxbUA3xaI=;
+ b=WPUhCUm6ZU+GENkjKVKCOFlG/JKsf8vkzyc4+PA5WdKZfZUcL3o/x5JhJMg1TH07AIxiATUtHS+moRpe5dCyohHd8kuzpIluax9AlbgM/AZt0kZRreVMza5PEjr6aZhMHZW0DqvW6ItDGZSkswO5flp3JbQxz78feFx0cOZ1uWc=
+Received: from MW4PR04CA0238.namprd04.prod.outlook.com (2603:10b6:303:87::33)
+ by DM6PR12MB4076.namprd12.prod.outlook.com (2603:10b6:5:213::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21; Fri, 12 Jan
+ 2024 09:20:35 +0000
+Received: from MWH0EPF000989E9.namprd02.prod.outlook.com
+ (2603:10b6:303:87:cafe::9f) by MW4PR04CA0238.outlook.office365.com
+ (2603:10b6:303:87::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21 via Frontend
+ Transport; Fri, 12 Jan 2024 09:20:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000989E9.mail.protection.outlook.com (10.167.241.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.14 via Frontend Transport; Fri, 12 Jan 2024 09:20:34 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 12 Jan
+ 2024 03:20:33 -0600
+From: Michal Simek <michal.simek@amd.com>
+To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+	<michal.simek@xilinx.com>, <git@xilinx.com>
+CC: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
+	<linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2] dt-bindings: soc: xilinx: Add support for K26 rev2 SOMs
+Date: Fri, 12 Jan 2024 10:20:29 +0100
+Message-ID: <3e86244a840a45c970289ba6d2fa700a74f5b259.1705051222.git.michal.simek@amd.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2940; i=michal.simek@amd.com; h=from:subject:message-id; bh=aQWS2q0gS9teFGJW1a5oMVC06SqN/ebq0z4PxRXh4Ic=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtSFLOGry6qNN65mPcXhsKz2SAnzIXe/iC9LX/uo9Sann zL4stq/I5aFQZCJQVZMkUXa5sqZvZUzpghfPCwHM4eVCWQIAxenAExEfDLDPI2Qf6n6pveXRltk fPjddH91rfPOdoa5Egz9XldqFj33LmXa8jmruDPnWZIwAA==
+X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-MTK: N
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E9:EE_|DM6PR12MB4076:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15ba630b-c4d6-42e0-bbb9-08dc134fbba4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	mOy2DYUyFEJQ/87ipCKTrWIUW3IQqApMaNM14PRPV1M62cAm0DSztkzSgTO+i0QksXUW8jbfFRqklEzmei/FFAZ9H4aX4AMyZ0r+oy1llfMntEizQ7RtR6bf7yAHevbHxNwu7GBZK5eBpDetVMQrkBA2LX74Xt8DqXs6z+zjdWJya1f6UFVYrU17Sd3iLZsSEdIxn39mLz7zxWhb8BYXLB2qj7T20B0Bcg5K/xI4zP9MbnrSJVoJeT5Dmhv8MYQxy0lwnnh91WxxWnv+HQ0kQe3plwBl9OspuU/PbDXd6R4lDZ9ZJmpiIXvu+kKqPQgkl2TF3We8TrFqH690M1KCGaX9TfIpZt1JQjKoI+OERdvOPmEOexmf8fQc/bREm9GzNT8pYBvL+ay5GEJ/Hggyn5jxitQIB4gcxcOSwNrqCWcjawb5tDLdD3LWuCGMGavNsqVDIpeYYcQdd82TlHhh2e7QWbrG+RwYu2KPLo49ca9OAl3R068hW/toOwucX8Ostn1KwBUrE2VSxkx3uRupuhEJEuUL+tNuM7puq10tPan0t0TzWhCxkhbKFeMnbpTDVHEURVUtxtQbXKzsNzEjELq0XaOPCgXv+WLWY8vbgT9Fvw5gDhWoU8k71Fej6y7TlYOXhzAvgJczQ5jsiLiPWqDdsrbhVUPUgl0Og/6zE4REWYOVsRnnElE7aUgmcv07OKaX5XjKUrhjD3s3fAD1cnjP8eYk9//fI6aj3qSuPxmzvpl8i6znOfrKSUPT0j3ZwXSgC5lHJhXioEIptq/uJElhcYJ7sOuBgd2aaGcBQao=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(376002)(136003)(346002)(230922051799003)(451199024)(82310400011)(64100799003)(186009)(1800799012)(36840700001)(40470700004)(46966006)(6666004)(36756003)(47076005)(478600001)(36860700001)(26005)(16526019)(2616005)(426003)(41300700001)(336012)(83380400001)(40480700001)(40460700003)(82740400003)(5660300002)(110136005)(70586007)(70206006)(44832011)(2906002)(8936002)(356005)(54906003)(81166007)(316002)(4326008)(8676002)(86362001)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2024 09:20:34.9684
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15ba630b-c4d6-42e0-bbb9-08dc134fbba4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E9.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4076
 
-The purpose of this patchset is for MediaTek secure video playback, and
-also to enable other potential uses of this in the future. The 'restricted
-dma-heap' will be used to allocate dma_buf objects that reference memory
-in the secure world that is inaccessible/unmappable by the non-secure
-(i.e. kernel/userspace) world.  That memory will be used by the secure/
-trusted world to store secure information (i.e. decrypted media content).
-The dma_bufs allocated from the kernel will be passed to V4L2 for video
-decoding (as input and output). They will also be used by the drm
-system for rendering of the content.
+Revision 2 is SW compatible with revision 1 but it is necessary to reflect
+it in model and compatible properties which are parsed by user space.
+Rev 2 has improved a power on boot reset and MIO34 shutdown glich
+improvement done via an additional filter in the GreenPak chip.
 
-This patchset adds two MediaTek restricted heaps and they will be used in
-v4l2[1] and drm[2].
-1) restricted_mtk_cm: secure chunk memory for MediaTek SVP (Secure Video
-   Path). The buffer is reserved for the secure world after bootup and it
-   is used for vcodec's ES/working buffer;
-2) restricted_mtk_cma: secure CMA memory for MediaTek SVP. This buffer is
-   dynamically reserved for the secure world and will be got when we start
-   playing secure videos. Once the security video playing is complete, the
-   CMA will be released. This heap is used for the vcodec's frame buffer. 
+Signed-off-by: Michal Simek <michal.simek@amd.com>
+---
 
-[1] https://lore.kernel.org/linux-mediatek/20231206081538.17056-1-yunfei.dong@mediatek.com/
-[2] https://lore.kernel.org/all/20231223182932.27683-1-jason-jh.lin@mediatek.com/
+Changes in v2:
+- Support older combinations
 
-Change note:
-v4: 1) Rename the heap name from "secure" to "restricted". suggested from
-     Simon/Pekka. There are still several "secure" string in MTK file
-     since we use ARM platform in which we call this "secure world"/
-     "secure command".
+I want to support all versions we created:
+All of them:
+-rev2, -rev1, -revB, -revA, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
 
-v3: https://lore.kernel.org/linux-mediatek/20231212024607.3681-1-yong.wu@mediatek.com/
-    1) Separate the secure heap to a common file(secure_heap.c) and mtk
-     special file (secure_heap_mtk.c),  and put all the tee related code
-     into our special file.
-    2) About dt-binding, Add "mediatek," prefix since this is Mediatek TEE
-     firmware definition.
-    3) Remove the normal CMA heap which is a draft for qcom.
-    Rebase on v6.7-rc1.
+rev1:
+-rev1, -revB, -revA, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
 
-v2: https://lore.kernel.org/linux-mediatek/20231111111559.8218-1-yong.wu@mediatek.com/
-    1) Move John's patches into the vcodec patchset since they use the new
-       dma heap interface directly.
-       https://lore.kernel.org/linux-mediatek/20231106120423.23364-1-yunfei.dong@mediatek.com/
-    2) Reword the dt-binding description.
-    3) Rename the heap name from mtk_svp to secure_mtk_cm.
-       This means the current vcodec/DRM upstream code doesn't match this.
-    4) Add a normal CMA heap. currently it should be a draft version.
-    5) Regarding the UUID, I still use hard code, but put it in a private
-    data which allow the others could set their own UUID. What's more, UUID
-    is necessary for the session with TEE. If we don't have it, we can't
-    communicate with the TEE, including the get_uuid interface, which tries
-    to make uuid more generic, not working. If there is other way to make
-    UUID more general, please free to tell me.
-    
-v1: https://lore.kernel.org/linux-mediatek/20230911023038.30649-1-yong.wu@mediatek.com/
-    Base on v6.6-rc1.
+revB:
+-revB, -revA, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
 
-Yong Wu (7):
-  dt-bindings: reserved-memory: Add mediatek,dynamic-restricted-region
-  dma-buf: heaps: Initialize a restricted heap
-  dma-buf: heaps: restricted_heap: Add private heap ops
-  dma-buf: heaps: restricted_heap: Add dma_ops
-  dma-buf: heaps: restricted_heap: Add MediaTek restricted heap and
-    heap_init
-  dma-buf: heaps: restricted_heap_mtk: Add TEE memory service call
-  dma_buf: heaps: restricted_heap_mtk: Add a new CMA heap
+revA:
+-revA, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
 
- .../mediatek,dynamic-restricted-region.yaml   |  43 +++
- drivers/dma-buf/heaps/Kconfig                 |  16 +
- drivers/dma-buf/heaps/Makefile                |   4 +-
- drivers/dma-buf/heaps/restricted_heap.c       | 237 +++++++++++++
- drivers/dma-buf/heaps/restricted_heap.h       |  43 +++
- drivers/dma-buf/heaps/restricted_heap_mtk.c   | 322 ++++++++++++++++++
- 6 files changed, 664 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,dynamic-restricted-region.yaml
- create mode 100644 drivers/dma-buf/heaps/restricted_heap.c
- create mode 100644 drivers/dma-buf/heaps/restricted_heap.h
- create mode 100644 drivers/dma-buf/heaps/restricted_heap_mtk.c
+And also single one are permitted:
+-revB, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
+-rev1, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
+-rev2, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
 
+I didn't find a way to pretty much all the time force that there must be
+both "xlnx,zynqmp-smk-k26", "xlnx,zynqmp" that's why there is only
+requested to have xlnx,zynqmp. If you find a way how to encode it please
+let me know.
+
+---
+ .../bindings/soc/xilinx/xilinx.yaml           | 32 +++++++++++++------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/soc/xilinx/xilinx.yaml b/Documentation/devicetree/bindings/soc/xilinx/xilinx.yaml
+index d4c0fe1fe435..39242efeec47 100644
+--- a/Documentation/devicetree/bindings/soc/xilinx/xilinx.yaml
++++ b/Documentation/devicetree/bindings/soc/xilinx/xilinx.yaml
+@@ -117,20 +117,32 @@ properties:
+           - const: xlnx,zynqmp
+ 
+       - description: Xilinx Kria SOMs
++        additionalItems: true
++        maxItems: 6
++        minItems: 3
+         items:
+-          - const: xlnx,zynqmp-sm-k26-rev1
+-          - const: xlnx,zynqmp-sm-k26-revB
+-          - const: xlnx,zynqmp-sm-k26-revA
+-          - const: xlnx,zynqmp-sm-k26
+-          - const: xlnx,zynqmp
++          - enum:
++              - xlnx,zynqmp-sm-k26-rev2
++              - xlnx,zynqmp-sm-k26-rev1
++              - xlnx,zynqmp-sm-k26-revB
++              - xlnx,zynqmp-sm-k26-revA
++              - xlnx,zynqmp-sm-k26
++        contains:
++          const: xlnx,zynqmp
+ 
+       - description: Xilinx Kria SOMs (starter)
++        additionalItems: true
++        maxItems: 6
++        minItems: 3
+         items:
+-          - const: xlnx,zynqmp-smk-k26-rev1
+-          - const: xlnx,zynqmp-smk-k26-revB
+-          - const: xlnx,zynqmp-smk-k26-revA
+-          - const: xlnx,zynqmp-smk-k26
+-          - const: xlnx,zynqmp
++          - enum:
++              - xlnx,zynqmp-smk-k26-rev2
++              - xlnx,zynqmp-smk-k26-rev1
++              - xlnx,zynqmp-smk-k26-revB
++              - xlnx,zynqmp-smk-k26-revA
++              - xlnx,zynqmp-smk-k26
++        contains:
++          const: xlnx,zynqmp
+ 
+       - description: AMD MicroBlaze V (QEMU)
+         items:
 -- 
-2.18.0
-
+2.36.1
 
