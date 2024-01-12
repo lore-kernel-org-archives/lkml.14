@@ -1,68 +1,88 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDCC1AABB
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 17:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51541AAAD
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 17:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Azs5GhsS"
-Date: Fri, 12 Jan 2024 09:10:33 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705079451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=McdqJF13JJY95fe2wVB3NPXE39DtpV52lmmGUDjCt/8=;
-	b=Azs5GhsSQc0JX1eVWdKhQOMnykKCEd0TUAy5wBRqscrGBpynqnH9NrztgOh9i4qcO4ySG5
-	JCfXydZMdgx15mjGt63BsD9HBndIph9DkxlorF1HV18ImX9uxbRs2qO3pyfDiSz8yEtYsx
-	2tt8hW1AI1BDy8SQGP2BvUcqYYj+by0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shakeel Butt <shakeelb@google.com>,
-	Muchun Song <muchun.song@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Dan Schatzberg <schatzberg.dan@gmail.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: memcontrol: don't throttle dying tasks on memory.high
-Message-ID: <ZaFyiTFC-ped0IdA@P9FQF9L96D.corp.robot.car>
-References: <20240111132902.389862-1-hannes@cmpxchg.org>
- <ZaAsbwFP-ttYNwIe@P9FQF9L96D>
- <20240111192807.GA424308@cmpxchg.org>
- <ZaFxn7JC8FeR-Si0@tiehlicka>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="B1zE97HP"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-360576be804so3927475ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 09:11:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705079493; x=1705684293; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S0Vttk9vgl2pIMZk4UzP9itUkUCCJPY3X5z+XJAuPbg=;
+        b=B1zE97HPQzLGblOmsHguugiebBfCO/69AbpkCODREWsibnawlve1iD+cUEL0GG3D2I
+         QV+RCa6LPy9EaAukV80yZ8dZBxC1GSHTGxCKYmAbqT2sf4G30GeGa3TMWUXRLaF6Robc
+         4beIHej1J/psD3xwU9JJJ/n9ciURg3xFTWX9VPTrFG0KvRYl7RZg//g+eYDd6EOGsqaL
+         d08JlCJDP3hWg7yEzMqXPeavr835esleZwSPRpZ64giYKlL18yCDskFAOv0WHpDdCO4w
+         eSPuBVZ1+lSObUExP1SjZ6v5eVvFFXtFsjyNh4IrRc1X0hDn8VC3HUkG2nm2PIbSO2Ex
+         MpWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705079493; x=1705684293;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S0Vttk9vgl2pIMZk4UzP9itUkUCCJPY3X5z+XJAuPbg=;
+        b=cnfXl2ewbiR7T68MLTSEji27x+s26HSO9/FAweyQNpsVswbWLxDb3Jogh9zr7rEOld
+         ZR0L5fHfybalpEaRFoe907WjChZMXcPXsN6JHchxO6iRmCFqNxLgcerw3dj4u6H6q34q
+         KxGmACJSXsqoJWIz7ACJDmjUApkI0Q0J233G1oQSZw6r72NBmu+JDNl1sWK0z/RwoDTE
+         /BnTK/3zROhCCVQL4kuswKate2ep24EwNVZOxOqncSWRuxajs4TsMzHQLYbTPL3pb8Nq
+         BLhBqN6s70VOFywH1UYEiTTtb4Gnm3gQRl1zq7bd1bgbKgVbkYI7upIaa4wT3MEu5ahO
+         dP8w==
+X-Gm-Message-State: AOJu0YzzRKTUiocIRtBiIZ9e1ruCZr3j/QBe5SMhaU5FiD7QVnSR7Usg
+	PkunLXfdCZFU+fXJv8SEezr/YFaQEvjxvg==
+X-Google-Smtp-Source: AGHT+IExhFWsKAwiuWBQQgdWYJDuVJ2ab3qaEJpjWi6IK6vFjpLjekkwD3havgCps5qaeYm21SWGTg==
+X-Received: by 2002:a6b:c845:0:b0:7bc:2603:575f with SMTP id y66-20020a6bc845000000b007bc2603575fmr3634052iof.0.1705079493696;
+        Fri, 12 Jan 2024 09:11:33 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id cq9-20020a056638478900b00469328386c8sm995517jab.162.2024.01.12.09.11.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 09:11:33 -0800 (PST)
+Message-ID: <79f0bbe3-ade9-43a2-8372-dbe8598c2fd8@kernel.dk>
+Date: Fri, 12 Jan 2024 10:11:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZaFxn7JC8FeR-Si0@tiehlicka>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] md: Remove deprecated CONFIG_MD_LINEAR
+Content-Language: en-US
+To: Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-raid@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ Neil Brown <neilb@suse.de>, Guoqing Jiang <guoqing.jiang@linux.dev>,
+ Mateusz Grzonka <mateusz.grzonka@intel.com>,
+ Jes Sorensen <jes@trained-monkey.org>
+References: <20231214222107.2016042-1-song@kernel.org>
+ <20231214222107.2016042-2-song@kernel.org>
+ <CAMuHMdUtzhwHLa_DTtH00YsZ6t_CefZjZj6oS_mpckHDNXpYWw@mail.gmail.com>
+ <CAPhsuW6KVN1c=dB1RXVQjygBevVcb_1qQJoLz3zA-qTVVmbCAw@mail.gmail.com>
+ <20240112171010.GA18360@lst.de>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240112171010.GA18360@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 12, 2024 at 06:06:39PM +0100, Michal Hocko wrote:
-> On Thu 11-01-24 14:28:07, Johannes Weiner wrote:
-> [...]
-> > @@ -2867,11 +2882,17 @@ static int try_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> >  		}
-> >  	} while ((memcg = parent_mem_cgroup(memcg)));
-> >  
-> > +	/*
-> > +	 * Reclaim is set up above to be called from the userland
-> > +	 * return path. But also attempt synchronous reclaim to avoid
-> > +	 * excessive overrun while the task is still inside the
-> > +	 * kernel. If this is successful, the return path will see it
-> > +	 * when it rechecks the overage and simply bail out.
-> > +	 */
-> >  	if (current->memcg_nr_pages_over_high > MEMCG_CHARGE_BATCH &&
-> >  	    !(current->flags & PF_MEMALLOC) &&
-> > -	    gfpflags_allow_blocking(gfp_mask)) {
-> > +	    gfpflags_allow_blocking(gfp_mask))
-> >  		mem_cgroup_handle_over_high(gfp_mask);
+On 1/12/24 10:10 AM, Christoph Hellwig wrote:
+> On Fri, Jan 12, 2024 at 09:08:04AM -0800, Song Liu wrote:
+>> Thanks for the heads-up. I honestly don't know about this use case.
+>> Where can I find/get more information about it?
 > 
-> Have you lost the check for the dying task here?
+> What NAS uses md linear?
+> 
+> Either way you can always set up a dm-linear table to get at the
+> data.
 
-It was moved into mem_cgroup_handle_over_high()'s body.
+Or just boot an older kernel... Seems like a bit of a contrived use
+case to cater to.
+
+-- 
+Jens Axboe
+
+
