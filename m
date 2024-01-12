@@ -1,101 +1,83 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDDA6D1DC
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZM7i33VK"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d9344f30caso4473858b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 06:20:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705069249; x=1705674049; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2sON2zsEgmOr2oRLYLHAKX2KUxW1/7chOQU/DqL3AV4=;
-        b=ZM7i33VKYCX1edB2L20HggEYeq92vLAv03XZkFWET0Me19h+/e42BJDieztjJEvEtx
-         +Dr8P3Cw5XA+ku9VijxxP+3PIIQ7132NSim5mamdOqCkja5zsEqOiW6eCGP1BP1NkKgv
-         sHEVpwCSHOoec0F0ZnIHtzm4XF4T4cJlqFDgz2qTjEkMa8ZIWYRm9ttFedeLyso6myrd
-         8LZqO2n7tmILBmYwEjYzcOMquXYcQro414C2B5IFxOpYP0p9cy/hGcc9IoUmmRhuOg51
-         jfg6L0Fsdy9of/Vn9h9bCwr6cjXmLSLkQ8aiPdF6QQQ/wlhRl5uvTZECfNB8cLfhbUWp
-         v6EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705069249; x=1705674049;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2sON2zsEgmOr2oRLYLHAKX2KUxW1/7chOQU/DqL3AV4=;
-        b=YiWVCkqgNhyWzgco8lm84uUYomx5lS6a0xWc6JDYiIYiW1o6kUXZI6Q9ub+JOfa2JB
-         xpAD/VlTzLTbGv8J9x3zxtss6EviZqccAS6eA3cmmcs2K4ByirrcI5epu9GEUj+XV1Mq
-         nA3yQBbbEFhf3iOVMJZXTyzdkQi1Thjmh5bG+pEcVkHwnpQqM7WzsV++7CQP9uwvqCa4
-         aHx0MdF7pRovYD0lv3WDYqOM4HAbVLARosEMaItRdtEo3GJQSeCR58lxerCmuJE7JAyQ
-         1rTifoHjmoRuh3LBc3bRV1PXRlw3WkRhVjUg/tlf63N8Irgum/AUtI1gEUgzw3HGPG6a
-         5muQ==
-X-Gm-Message-State: AOJu0YyhxFAX/0WAdGhdzZsED5Pn0LNSQgCyhLK+mya+M89ivqyCDvN8
-	hQ02DhE6r7kKGnDqHaH3l2c=
-X-Google-Smtp-Source: AGHT+IGEI+FxtB7YCv0q78LKq6Lhf6thYTjYnOOjc2RxTqiVGhRFJeuJkzcDbU6KfHBrh+/NGHAYWQ==
-X-Received: by 2002:a05:6a00:3a1c:b0:6d9:baf0:b8a2 with SMTP id fj28-20020a056a003a1c00b006d9baf0b8a2mr1589144pfb.4.1705069249175;
-        Fri, 12 Jan 2024 06:20:49 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id g26-20020aa79f1a000000b006dab0d72cd0sm3221775pfr.214.2024.01.12.06.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 06:20:48 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 6C65B18503882; Fri, 12 Jan 2024 21:20:45 +0700 (WIB)
-Date: Fri, 12 Jan 2024 21:20:45 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: Deliberately sending partial patch sets?
-Message-ID: <ZaFKvZg-MtZgbCKA@archie.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A96E6DD01;
+	Fri, 12 Jan 2024 14:22:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D5A3C433C7;
+	Fri, 12 Jan 2024 14:22:33 +0000 (UTC)
+Date: Fri, 12 Jan 2024 09:22:30 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
+ <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
+ default ownership
+Message-ID: <20240112092230.6107bc94@rorschach.local.home>
+In-Reply-To: <20240112085344.30540d10@rorschach.local.home>
+References: <20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
+	<20240105095954.67de63c2@gandalf.local.home>
+	<20240107-getrickst-angeeignet-049cea8cad13@brauner>
+	<20240107132912.71b109d8@rorschach.local.home>
+	<20240108-ortsrand-ziehen-4e9a9a58e708@brauner>
+	<20240108102331.7de98cab@gandalf.local.home>
+	<20240110-murren-extra-cd1241aae470@brauner>
+	<20240110080746.50f7767d@gandalf.local.home>
+	<20240111-unzahl-gefegt-433acb8a841d@brauner>
+	<20240111165319.4bb2af76@gandalf.local.home>
+	<20240112-normierung-knipsen-dccb7cac7efc@brauner>
+	<20240112085344.30540d10@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YnDQqZwqJe9COSOd"
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 12 Jan 2024 08:53:44 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
---YnDQqZwqJe9COSOd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > // We managed to open the directory so we have permission to list
+> > // directory entries in "xfs".
+> > fd = open("/sys/kernel/tracing/events/xfs");
+> > 
+> > // Remove ownership so we can't open the directory anymore
+> > chown("/sys/kernel/tracing/events/xfs", 0, 0);
+> > 
+> > // Or just remove exec bit for the group and restrict to owner
+> > chmod("/sys/kernel/tracing/events/xfs", 700);
+> > 
+> > // Drop caches to force an eventfs_root_lookup() on everything
+> > write("/proc/sys/vm/drop_caches", "3", 1);  
+> 
+> This requires opening the directory, then having it's permissions
+> change, and then immediately dropping the caches.
+> 
+> > 
+> > // Returns 0 even though directory has a lot of entries and we should be
+> > // able to list them
+> > getdents64(fd, ...);  
+> 
+> And do we care?
 
-Hi,
+Hmm, maybe the issue you have is with the inconsistency of the action?
 
-Let's say that there is a contributor who wish to send a patch set (e.g.
-20-30 patches in the series) to LKML. But instead of sending the full
-series, he either do one of the following:
+For this to fail, it would require the admin to do both change the
+permission and to flush caches. If you don't flush the caches then the
+task with the dir open can still read it regardless. If the dentries
+were already created.
 
-* Send only the cover letter (analogous to movie trailers)
-* Send only a few arbitrary patches in a series that are most important
-  (e.g. patch [01,04,11,18,23/30]) (analogous to match highlights)
-* Send only the first few patches in a series (i.e. subject of one of
-  patches says [09/30]) (analogous to sample book chapters)
+In that case I'm fine if we change the creation of the dentries to not
+check the permission.
 
-The rest of patches are behind closed doors (i.e. not sent), possibly
-behind charm-priced (pay)walls.
+But for now, it's just a weird side effect that I don't really see how
+it would affect any user's workflow.
 
-Is the submission like above acceptable (when in review)?
+-- Steve
 
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---YnDQqZwqJe9COSOd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZaFKuQAKCRD2uYlJVVFO
-oyK3AP9E9wtVBSlPGAo0UtbWhvTCnSDB86LMRwdKtVCcAfIGJAD/dV+/2leBp+jD
-89GKopwZUgbpZg+Rv4SkXMeeLXtxbQE=
-=UalB
------END PGP SIGNATURE-----
-
---YnDQqZwqJe9COSOd--
