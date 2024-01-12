@@ -1,144 +1,107 @@
-Received: from zg8tmty3ljk5ljewns4xndka.icoremail.net (zg8tmty3ljk5ljewns4xndka.icoremail.net [167.99.105.149])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E906F5C8FD;
-	Fri, 12 Jan 2024 07:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
-	by mail-app2 (Coremail) with SMTP id by_KCgBn+fCG6qBlmFQzAA--.25619S2;
-	Fri, 12 Jan 2024 15:30:16 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maor Gottlieb <maorg@mellanox.com>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v3] net/mlx5e: fix a double-free in arfs_create_groups
-Date: Fri, 12 Jan 2024 15:29:16 +0800
-Message-Id: <20240112072916.3726945-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240F03D7C;
+	Fri, 12 Jan 2024 07:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY3Lh7uO"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-680f48ce344so12108636d6.0;
+        Thu, 11 Jan 2024 23:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705044679; x=1705649479; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UzmJYQifp0tT8HMYxNeNkEtPO1O5pS2d3JZ6MMXiyEw=;
+        b=IY3Lh7uOc/dMZEhAufI1uVfI7QxieDfcnJ3P9P5ksWIDqVvU7NBx33+VTolRoebLH3
+         AhXUlm42txQtnznibN+00oQlsyqMHo/tw1+yvPtRRbZy72GQJ1wlQuYx1VmhDzv5ZWo6
+         tTTRvRTqxt4c8av/aXEYWJkMR6xfei0v+ZoDLEvOyo3BwwAx+v8notIxKdxGPjjqTTKb
+         IDLk876L8d7xjDfx0zixISJQoeN027SuiYeXUB+eaJ9pEM78a7jcdpxu5xbDCYFQqGtr
+         iXqlf/BH9RGKKmp2aGVYdqS6hR3cyDD4Mid55Aj9Fz+Gx5zwWNLf0lPiW8N5KCXAJRiw
+         8bow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705044679; x=1705649479;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UzmJYQifp0tT8HMYxNeNkEtPO1O5pS2d3JZ6MMXiyEw=;
+        b=gToEMxDNFW00bHt1uiQmCfIeFNjAi/BAVXQw6BAe4+IbgntZm+P7D+0/USU6ImZPa4
+         qhGz5I2MHSpLwNaPopg8rr0icplzLRzCqDFp3YiEs38dXmNNiG2VFrmGqDhfOuab/cST
+         RXbt7oUKz1Aa7wg4ZW0J889c6/D6Ln6Yui8yrrALox5gbPkKhGIgG60IAjfKT3JN7M19
+         etlDlw/iyTeTvCwFA08zjqMFXfn4m83zBHvgZBgN1kdIi5JQlEhm/WS2JYiI2Hcw6zBp
+         0vS7XTvrjuS3uyEMdgRqcWleAHbxOxgNIVHBANXqCbsmsic+gXkVXmCas7S4n9lxq/gE
+         hCnw==
+X-Gm-Message-State: AOJu0Yyy63Z37EAPBy7KdCrD1jmFqXGP5EmhInPW9PmImCn0Tx5e53x3
+	fNsfEmPg5QCE6j6oaIyvR53fwRqdzuaheqvqBmY=
+X-Google-Smtp-Source: AGHT+IEZYRtJV23LfZzikBGgRvQiIaymJwe9noiRvbJ1Sx4KzU7o8kxXfZX9iTngfrbE6cTAG+IAm1U3b2+OEdeyVak=
+X-Received: by 2002:a05:6214:246d:b0:681:16ec:25e2 with SMTP id
+ im13-20020a056214246d00b0068116ec25e2mr822887qvb.6.1705044678915; Thu, 11 Jan
+ 2024 23:31:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:by_KCgBn+fCG6qBlmFQzAA--.25619S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrWUGFWrJw1UGFWUWr1kGrg_yoW5Xr4DpF
-	47JryDtFs5A3WxX39Iy3y0qrn5Cw48Ka1UuFyI934Sqrsrtr4kGFy0g345ArWxCFy3AwnF
-	y34rZw1UCFnrCwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-	6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbU
-	UUUUU==
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+References: <CABXGCsOdvVwdLmSsC8TZ1jF0UOg_F_W3wqLECWX620PUkvNk=A@mail.gmail.com>
+ <efcb591e162ff0b04a9878f7250ab6ee6907f4a4.camel@mediatek.com>
+In-Reply-To: <efcb591e162ff0b04a9878f7250ab6ee6907f4a4.camel@mediatek.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Fri, 12 Jan 2024 12:31:07 +0500
+Message-ID: <CABXGCsPF6MbSOpfUBbT77Hnfc450kutsc8Fzr1O_O9bgtQ5PAw@mail.gmail.com>
+Subject: Re: [BUG] Unloading mt7921e module cause use-after-free
+To: =?UTF-8?B?RGVyZW4gV3UgKOatpuW+t+S7gSk=?= <Deren.Wu@mediatek.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "nbd@nbd.name" <nbd@nbd.name>, 
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When `in` allocated by kvzalloc fails, arfs_create_groups will free
-ft->g and return an error. However, arfs_create_table, the only caller of
-arfs_create_groups, will hold this error and call to
-mlx5e_destroy_flow_table, in which the ft->g will be freed again.
+On Fri, Jan 12, 2024 at 10:34=E2=80=AFAM Deren Wu (=E6=AD=A6=E5=BE=B7=E4=BB=
+=81) <Deren.Wu@mediatek.com> wrote:
+>
+> Hi Mikhail,
+>
+> I can reproduce a similar problem when CONFI_DEBUG_SHIRQ is enabled.
+>
+> Pleaese try this patch in mainline kernel (6.7+)
+> ---
+> --- a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+> @@ -387,6 +387,7 @@ static void mt7921_pci_remove(struct pci_dev *pdev)
+>         struct mt792x_dev *dev =3D container_of(mdev, struct mt792x_dev,
+> mt76);
+>
+>         mt7921e_unregister_device(dev);
+> +       set_bit(MT76_REMOVED, &mdev->phy.state);
+>         devm_free_irq(&pdev->dev, pdev->irq, dev);
+>         mt76_free_device(&dev->mt76);
+>         pci_free_irq_vectors(pdev);
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
+> b/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
+> index 488326ce5ed4..3893dbe866fe 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
+> @@ -12,6 +12,8 @@ irqreturn_t mt792x_irq_handler(int irq, void
+> *dev_instance)
+>  {
+>         struct mt792x_dev *dev =3D dev_instance;
+>
+> +       if (test_bit(MT76_REMOVED, &dev->mt76.phy.state))
+> +               return IRQ_NONE;
+>         mt76_wr(dev, dev->irq_map->host_irq_enable, 0);
+>
+>         if (!test_bit(MT76_STATE_INITIALIZED, &dev->mphy.state))
+>
+>
 
-Fixes: 1cabe6b0965e ("net/mlx5e: Create aRFS flow tables")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
-Changelog:
+Thanks, this patch looks good to me.
+Demonstration: https://youtu.be/nKnA2ftVoXw
 
-v2: free ft->g just in arfs_create_groups with a unwind ladder.
-v3: split the allocation of ft->g and in. Rename the error label.
-    remove some refector change in v2.
----
- .../net/ethernet/mellanox/mlx5/core/en_arfs.c | 26 +++++++++++--------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-index bb7f86c993e5..0424ae068a60 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-@@ -254,11 +254,13 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- 
- 	ft->g = kcalloc(MLX5E_ARFS_NUM_GROUPS,
- 			sizeof(*ft->g), GFP_KERNEL);
--	in = kvzalloc(inlen, GFP_KERNEL);
--	if  (!in || !ft->g) {
--		kfree(ft->g);
--		kvfree(in);
-+	if(!ft->g)
- 		return -ENOMEM;
-+
-+	in = kvzalloc(inlen, GFP_KERNEL);
-+	if  (!in) {
-+		err = -ENOMEM;
-+		goto err_free_g;
- 	}
- 
- 	mc = MLX5_ADDR_OF(create_flow_group_in, in, match_criteria);
-@@ -278,7 +280,7 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- 		break;
- 	default:
- 		err = -EINVAL;
--		goto out;
-+		goto err_free_in;
- 	}
- 
- 	switch (type) {
-@@ -300,7 +302,7 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- 		break;
- 	default:
- 		err = -EINVAL;
--		goto out;
-+		goto err_free_in;
- 	}
- 
- 	MLX5_SET_CFG(in, match_criteria_enable, MLX5_MATCH_OUTER_HEADERS);
-@@ -309,7 +311,7 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- 	MLX5_SET_CFG(in, end_flow_index, ix - 1);
- 	ft->g[ft->num_groups] = mlx5_create_flow_group(ft->t, in);
- 	if (IS_ERR(ft->g[ft->num_groups]))
--		goto err;
-+		goto err_clean_group;
- 	ft->num_groups++;
- 
- 	memset(in, 0, inlen);
-@@ -318,18 +320,20 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- 	MLX5_SET_CFG(in, end_flow_index, ix - 1);
- 	ft->g[ft->num_groups] = mlx5_create_flow_group(ft->t, in);
- 	if (IS_ERR(ft->g[ft->num_groups]))
--		goto err;
-+		goto err_clean_group;
- 	ft->num_groups++;
- 
- 	kvfree(in);
- 	return 0;
- 
--err:
-+err_clean_group:
- 	err = PTR_ERR(ft->g[ft->num_groups]);
- 	ft->g[ft->num_groups] = NULL;
--out:
-+err_free_in:
- 	kvfree(in);
--
-+err_free_g:
-+	kfree(ft->g);
-+	ft->g = NULL;
- 	return err;
- }
- 
--- 
-2.34.1
-
+--=20
+Best Regards,
+Mike Gavrilov.
