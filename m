@@ -1,57 +1,57 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D3C17731
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 22:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBE2179A6
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 22:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOUMKqeh"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7cd4d77e2ebso1856557241.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:19:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMZNmq5f"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6dde5d308c6so2357438a34.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 14:20:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705097998; x=1705702798; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1705098006; x=1705702806; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6lFqZjkPZLgpWdQzQexGYvvvqn/GuOyoQcQUtJrcBd0=;
-        b=WOUMKqehPo2s78qFvwS1XNuuDhslIEXIv0MfjkSrK4aMIxf0alBGzJvGxbw6j24Noh
-         iQzFmOotgA2rHg+gK5l/qQRMHQaL75zxyhAQDBuVwrxgeIU+Mw5FHwX1VhdsEjsU6SD1
-         HItEvKdcnCcPl/hWdHFq95Cg8GYKs6qhhmBtGRYp8bDMk9qKJETeAgW2QWQNI4t/LuDa
-         b+AJa97twYHGFerN73SQh9CJmduN18/JJnvC5Ogp//pjlT61AddD/UFXk5NUwaXz8Utw
-         J7gLqRfSF1R0e+PvgTBOttbjEi27VD9CXCV9Cwv5qxR6PVFxmcrYb34AkRi0hbohSYxo
-         vaxA==
+        bh=pZ1fE0zMIdBTRXTZzC0pYGjjHoVS0GZdkj3k4G9P/8k=;
+        b=HMZNmq5fBG+6yintXaoXeHT/tPcZ1zDgVfeuy9UPQhW+vpTTISix/NGLeYnQwV1bzS
+         Oglb9RHietWQSRx/Bdo2qVNdkO1LXyEdeIEMWy6Wg395rxNVWCAZ4clV8SL3PmWDk5Cn
+         MYfJc/82rd/cR/jye+eu8J9atEvY/oD1KQNIAIGszsViuAlSr/QO5p0oU+HJcmYXOvdl
+         YOU/szZx65RNaGeiNTCzv9DIUVx3vbD2U4GdrIJTo7vdWvly2N2Z6Fq9wKnkjDmnZfoU
+         5KQhvSEIi1WMkkZP7MF/i0MZcXh8K6UwVhIlxCq1fyaLEue/E5/jsL3Qd9XPiGmVPkgF
+         qY8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705097998; x=1705702798;
+        d=1e100.net; s=20230601; t=1705098006; x=1705702806;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6lFqZjkPZLgpWdQzQexGYvvvqn/GuOyoQcQUtJrcBd0=;
-        b=OCRcqypQeDNLc2Ew/OXvL8iUDkltt7pjVXgXfHEuMAPOESRikfUYQxHemDIiZ29oaM
-         2FfM2GqEnppN8jS/OwpHHDgcveppRsyPD39oCue/fACrsYugHkTAgB74kJeoSq3c4+ub
-         XBG8izLMB8MKCGpKFo0Bs/XYf4TKKqEZwl4gPgucPzSsmf6TXGZ6r3h0Phm6iWBI01Sh
-         D1Y8gq71q1gLSKecldrOzN86Xdki53pSzLOXHgvsf6gWjt/KiPeQMDxaUbenSe0ztvgb
-         1KQzDwLqqNYwkOYAgIIsLpmj1ie78jNaywbQuK2wLJ5xIRKNTkMpsKWZv4/H9YNnCtPz
-         RtOQ==
-X-Gm-Message-State: AOJu0YxfCbuGaNaa2AoTLBPrcfZoJxUG0qLtxG3dWfDT1DOmxZlMjHv2
-	T/5ZPNw3zVjoWDpjcDeoHcl6JptqFca05nuJ4P8=
-X-Google-Smtp-Source: AGHT+IF92SkdZZTxt+ctl9b5km9Ne4xAZqZW7Ez9/O6g/iyL2onhoDLSjphK+u8uX4e99lZZXh2Tk/UtqExTS7i7Vm0=
-X-Received: by 2002:a05:6102:3a6f:b0:468:7d:6e3c with SMTP id
- bf15-20020a0561023a6f00b00468007d6e3cmr2340436vsb.33.1705097997740; Fri, 12
- Jan 2024 14:19:57 -0800 (PST)
+        bh=pZ1fE0zMIdBTRXTZzC0pYGjjHoVS0GZdkj3k4G9P/8k=;
+        b=jwcixcbUK0cbU0TUsL82scIkYfGEIyg4zS6P2wlrtkAPxuL4McElmrWVcBlFROXQbM
+         bGUTJKW5hzEQez5Lxf76dBr2S3VCnqK/djdterxus96gz/tGa6v1zi5M6arsGDG/kNqW
+         Q42OMSeddRpOGCITWsYkUJrZISgRJuV7YDWDCpEfm7AyyjUvzyfU+lrJiEmMUMznTAtx
+         JkCjylcWqta019rPRaxNN3IOUCgbde/hPYGXiCxiUTYZeqUxDs006xnSzV486hi+LbMv
+         gj+AjxSYs5l9Qor4vJFpEL+S+8qBStz0EyrLP5dAmVKYFOgbFfh1+L6uIOlfL+yA5TMD
+         zObQ==
+X-Gm-Message-State: AOJu0YyabnKeil+RONsQaniDRcCA05LrUMDIS5Nmn6MjdVZF+LH9hITJ
+	oF3ro+dcSI7Zd7YxNOypYNbIgRgQnB+VmOHyqJ0=
+X-Google-Smtp-Source: AGHT+IF3nLiZdIVfIpj/tS0ArCYtqeD9qYJvdJym55Bt1+GH6gLfy6yhR92PURPrqVl8XlX8IimHnbmfH6hWYE2Nqy4=
+X-Received: by 2002:a05:6830:718c:b0:6db:ffa6:6c4d with SMTP id
+ el12-20020a056830718c00b006dbffa66c4dmr2586243otb.24.1705098006595; Fri, 12
+ Jan 2024 14:20:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240111064208.2969599-1-chao@kernel.org> <20240111064208.2969599-4-chao@kernel.org>
-In-Reply-To: <20240111064208.2969599-4-chao@kernel.org>
+References: <20240111064208.2969599-1-chao@kernel.org> <20240111064208.2969599-5-chao@kernel.org>
+In-Reply-To: <20240111064208.2969599-5-chao@kernel.org>
 From: Daeho Jeong <daeho43@gmail.com>
-Date: Fri, 12 Jan 2024 14:19:44 -0800
-Message-ID: <CACOAw_yzAWpHzHerTtm5vCkejt4Xiex5m_xKMTC_WHspOXFmRg@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH v4 4/6] f2fs: compress: fix to avoid
- inconsistence bewteen i_blocks and dnode
+Date: Fri, 12 Jan 2024 14:19:55 -0800
+Message-ID: <CACOAw_wrktRjueox2FQC129jjVVNVEMpCDM06iQXv1p0gpYvXw@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH v4 5/6] f2fs: fix to remove unnecessary
+ f2fs_bug_on() to avoid panic
 To: Chao Yu <chao@kernel.org>
 Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org, 
 	linux-f2fs-devel@lists.sourceforge.net
@@ -62,153 +62,35 @@ Reviewed-by: Daeho Jeong <daehojeong@google.com>
 
 On Wed, Jan 10, 2024 at 10:43=E2=80=AFPM Chao Yu <chao@kernel.org> wrote:
 >
-> In reserve_compress_blocks(), we update blkaddrs of dnode in prior to
-> inc_valid_block_count(), it may cause inconsistent status bewteen
-> i_blocks and blkaddrs once inc_valid_block_count() fails.
+> verify_blkaddr() will trigger panic once we inject fault into
+> f2fs_is_valid_blkaddr(), fix to remove this unnecessary f2fs_bug_on().
 >
-> To fix this issue, it needs to reverse their invoking order.
->
-> Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
+> Fixes: 18792e64c86d ("f2fs: support fault injection for f2fs_is_valid_blk=
+addr()")
 > Signed-off-by: Chao Yu <chao@kernel.org>
 > ---
->  fs/f2fs/data.c    |  5 +++--
->  fs/f2fs/f2fs.h    |  7 ++++++-
->  fs/f2fs/file.c    | 26 ++++++++++++++------------
->  fs/f2fs/segment.c |  2 +-
->  4 files changed, 24 insertions(+), 16 deletions(-)
+>  fs/f2fs/f2fs.h | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index b171a9980f6a..8d2ace723310 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -1219,7 +1219,8 @@ int f2fs_reserve_new_blocks(struct dnode_of_data *d=
-n, blkcnt_t count)
->
->         if (unlikely(is_inode_flag_set(dn->inode, FI_NO_ALLOC)))
->                 return -EPERM;
-> -       if (unlikely((err =3D inc_valid_block_count(sbi, dn->inode, &coun=
-t))))
-> +       err =3D inc_valid_block_count(sbi, dn->inode, &count, true);
-> +       if (unlikely(err))
->                 return err;
->
->         trace_f2fs_reserve_new_blocks(dn->inode, dn->nid,
-> @@ -1476,7 +1477,7 @@ static int __allocate_data_block(struct dnode_of_da=
-ta *dn, int seg_type)
->
->         dn->data_blkaddr =3D f2fs_data_blkaddr(dn);
->         if (dn->data_blkaddr =3D=3D NULL_ADDR) {
-> -               err =3D inc_valid_block_count(sbi, dn->inode, &count);
-> +               err =3D inc_valid_block_count(sbi, dn->inode, &count, tru=
-e);
->                 if (unlikely(err))
->                         return err;
->         }
 > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 50f3d546ded8..69e71460a950 100644
+> index 69e71460a950..ab710bb6d8b3 100644
 > --- a/fs/f2fs/f2fs.h
 > +++ b/fs/f2fs/f2fs.h
-> @@ -2252,7 +2252,7 @@ static inline bool __allow_reserved_blocks(struct f=
-2fs_sb_info *sbi,
->
->  static inline void f2fs_i_blocks_write(struct inode *, block_t, bool, bo=
-ol);
->  static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
-> -                                struct inode *inode, blkcnt_t *count)
-> +                                struct inode *inode, blkcnt_t *count, bo=
-ol partial)
+> @@ -3470,11 +3470,9 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sb=
+i,
+>  static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
+>                                         block_t blkaddr, int type)
 >  {
->         blkcnt_t diff =3D 0, release =3D 0;
->         block_t avail_user_block_count;
-> @@ -2292,6 +2292,11 @@ static inline int inc_valid_block_count(struct f2f=
-s_sb_info *sbi,
->                         avail_user_block_count =3D 0;
->         }
->         if (unlikely(sbi->total_valid_block_count > avail_user_block_coun=
-t)) {
-> +               if (!partial) {
-> +                       spin_unlock(&sbi->stat_lock);
-> +                       goto enospc;
-> +               }
-> +
->                 diff =3D sbi->total_valid_block_count - avail_user_block_=
-count;
->                 if (diff > *count)
->                         diff =3D *count;
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 80d9c4c096f0..53c495651789 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -3614,14 +3614,16 @@ static int reserve_compress_blocks(struct dnode_o=
-f_data *dn, pgoff_t count)
->                 blkcnt_t reserved;
->                 int ret;
+> -       if (!f2fs_is_valid_blkaddr(sbi, blkaddr, type)) {
+> +       if (!f2fs_is_valid_blkaddr(sbi, blkaddr, type))
+>                 f2fs_err(sbi, "invalid blkaddr: %u, type: %d, run fsck to=
+ fix.",
+>                          blkaddr, type);
+> -               f2fs_bug_on(sbi, 1);
+> -       }
+>  }
 >
-> -               for (i =3D 0; i < cluster_size; i++, dn->ofs_in_node++) {
-> -                       blkaddr =3D f2fs_data_blkaddr(dn);
-> +               for (i =3D 0; i < cluster_size; i++) {
-> +                       blkaddr =3D data_blkaddr(dn->inode, dn->node_page=
-,
-> +                                               dn->ofs_in_node + i);
->
->                         if (i =3D=3D 0) {
-> -                               if (blkaddr =3D=3D COMPRESS_ADDR)
-> -                                       continue;
-> -                               dn->ofs_in_node +=3D cluster_size;
-> -                               goto next;
-> +                               if (blkaddr !=3D COMPRESS_ADDR) {
-> +                                       dn->ofs_in_node +=3D cluster_size=
-;
-> +                                       goto next;
-> +                               }
-> +                               continue;
->                         }
->
->                         /*
-> @@ -3634,20 +3636,20 @@ static int reserve_compress_blocks(struct dnode_o=
-f_data *dn, pgoff_t count)
->                                 compr_blocks++;
->                                 continue;
->                         }
-> -
-> -                       f2fs_set_data_blkaddr(dn, NEW_ADDR);
->                 }
->
->                 reserved =3D cluster_size - compr_blocks;
->                 if (!reserved)
->                         goto next;
->
-> -               ret =3D inc_valid_block_count(sbi, dn->inode, &reserved);
-> -               if (ret)
-> +               ret =3D inc_valid_block_count(sbi, dn->inode, &reserved, =
-false);
-> +               if (unlikely(ret))
->                         return ret;
->
-> -               if (reserved !=3D cluster_size - compr_blocks)
-> -                       return -ENOSPC;
-> +               for (i =3D 0; i < cluster_size; i++, dn->ofs_in_node++) {
-> +                       if (f2fs_data_blkaddr(dn) =3D=3D NULL_ADDR)
-> +                               f2fs_set_data_blkaddr(dn, NEW_ADDR);
-> +               }
->
->                 f2fs_i_compr_blocks_update(dn->inode, compr_blocks, true)=
-;
->
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 4c8836ded90f..ef5b3848426b 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -248,7 +248,7 @@ static int __replace_atomic_write_block(struct inode =
-*inode, pgoff_t index,
->         } else {
->                 blkcnt_t count =3D 1;
->
-> -               err =3D inc_valid_block_count(sbi, inode, &count);
-> +               err =3D inc_valid_block_count(sbi, inode, &count, true);
->                 if (err) {
->                         f2fs_put_dnode(&dn);
->                         return err;
+>  static inline bool __is_valid_data_blkaddr(block_t blkaddr)
 > --
 > 2.40.1
 >
