@@ -1,134 +1,137 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AD917C87;
-	Fri, 12 Jan 2024 17:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E45F22618;
+	Fri, 12 Jan 2024 17:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="OR0GINHd"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40C6eAW6010272;
-	Fri, 12 Jan 2024 11:21:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:references:in-reply-to:subject:date:message-id
-	:mime-version:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=J3TCSGRnd9DnWnfS+rOSPwl8wXTlbWxJiNR59khbceE=; b=
-	OR0GINHd39SEt59Nux2WoWKhWSASQ9jvB27t7sO+ysdwQJu7DsyFMP0HPdaNmyDF
-	X1WEaldKQSjgjTR1VB2oklM1bG2GrxD7zhSZxuSRQP+8u/4ie4HIIxuvWq/+BhF8
-	C+kARahk1gR0x0ygxaChAhfeY5pLnf22bcMNVqmHsiBqidUbYKzQYPe8YXuGsNz3
-	CJwjhcghGzE/xR2hc1zR0aBf15J+9ba1IZsof94jtOPTvZ0MgnkAw6PuV3jm8Ddu
-	n4pF/t2lii8P2HdHIvdDzkjgX1plFVGpAkSvHZJE079Nnt3TWh35NqWZRhcpYMG0
-	kgGN6tlxlQaJurPTRgOx7g==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vf45prnsr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jan 2024 11:21:58 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 12 Jan
- 2024 17:21:57 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Fri, 12 Jan 2024 17:21:57 +0000
-Received: from LONN2DGDQ73 (LONN2DGDQ73.ad.cirrus.com [198.61.65.232])
-	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D3E2515A0;
-	Fri, 12 Jan 2024 17:21:56 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: 'Kenzo Gomez' <kenzo.sgomez@gmail.com>
-CC: 'James Schulman' <james.schulman@cirrus.com>,
-        'David Rhodes'
-	<david.rhodes@cirrus.com>,
-        'Richard Fitzgerald' <rf@opensource.cirrus.com>,
-        'Jaroslav Kysela' <perex@perex.cz>, 'Takashi Iwai' <tiwai@suse.com>,
-        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240112163239.59743-1-kenzo.sgomez@gmail.com>
-In-Reply-To: <20240112163239.59743-1-kenzo.sgomez@gmail.com>
-Subject: RE: [PATCH] ALSA: hda: cs35l41: Support additional ASUS Zenbook UX3402VA
-Date: Fri, 12 Jan 2024 17:21:56 +0000
-Message-ID: <000f01da457b$d8268cf0$8873a6d0$@opensource.cirrus.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="coh+Fnu1";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="coh+Fnu1"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 145DF1F396;
+	Fri, 12 Jan 2024 17:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1705080226; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xHxzNkl3+lg5RxMKF+f20439C0qvkhGvp+j1/UrE0ss=;
+	b=coh+Fnu1UJz13gGiunWRvCcSzWJD2fwZrkHJ5sUDzW6vhjdNim8KWDD2ba23fDxBMIh1lB
+	Jp5SehF/gfoh3YoHmxoQ9FtbDGLOeqgz3mVfxnA2nOI4th84z5IY4S80dEy8XvzzBee4jM
+	BbATxr1ambWoEyMxadVor+ufkHahK20=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1705080226; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xHxzNkl3+lg5RxMKF+f20439C0qvkhGvp+j1/UrE0ss=;
+	b=coh+Fnu1UJz13gGiunWRvCcSzWJD2fwZrkHJ5sUDzW6vhjdNim8KWDD2ba23fDxBMIh1lB
+	Jp5SehF/gfoh3YoHmxoQ9FtbDGLOeqgz3mVfxnA2nOI4th84z5IY4S80dEy8XvzzBee4jM
+	BbATxr1ambWoEyMxadVor+ufkHahK20=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EAE3E136A4;
+	Fri, 12 Jan 2024 17:23:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id uTxdNqF1oWW+OAAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Fri, 12 Jan 2024 17:23:45 +0000
+Date: Fri, 12 Jan 2024 18:23:45 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>, Tejun Heo <tj@kernel.org>,
+	Dan Schatzberg <schatzberg.dan@gmail.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: memcontrol: don't throttle dying tasks on memory.high
+Message-ID: <ZaF1oQyovAOMA3be@tiehlicka>
+References: <20240111132902.389862-1-hannes@cmpxchg.org>
+ <ZaAsbwFP-ttYNwIe@P9FQF9L96D>
+ <20240111192807.GA424308@cmpxchg.org>
+ <ZaFxn7JC8FeR-Si0@tiehlicka>
+ <ZaFyiTFC-ped0IdA@P9FQF9L96D.corp.robot.car>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQNavMYHpNy3oxQTxP/3AG71Wvly+63VfWQQ
-Content-Language: en-gb
-X-Proofpoint-GUID: dVLmaUESpk4yggWR00XD8W0QL271qo47
-X-Proofpoint-ORIG-GUID: dVLmaUESpk4yggWR00XD8W0QL271qo47
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZaFyiTFC-ped0IdA@P9FQF9L96D.corp.robot.car>
+X-Spam-Level: 
+X-Spamd-Bar: /
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=coh+Fnu1
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [0.36 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.13)[67.72%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[cmpxchg.org,linux-foundation.org,google.com,linux.dev,kernel.org,gmail.com,vger.kernel.org,kvack.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Score: 0.36
+X-Rspamd-Queue-Id: 145DF1F396
+X-Spam-Flag: NO
 
-Hi,
-
-> -----Original Message-----
-> From: Kenzo Gomez <kenzo.sgomez@gmail.com>
-> Sent: Friday, January 12, 2024 4:32 PM
-> To: sbinding@opensource.cirrus.com
-> Cc: Kenzo Gomez <kenzo.sgomez@gmail.com>; James Schulman
-> <james.schulman@cirrus.com>; David Rhodes
-> <david.rhodes@cirrus.com>; Richard Fitzgerald
-> <rf@opensource.cirrus.com>; Jaroslav Kysela <perex@perex.cz>;
-Takashi
-> Iwai <tiwai@suse.com>; alsa-devel@alsa-project.org;
-> patches@opensource.cirrus.com; linux-sound@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [PATCH] ALSA: hda: cs35l41: Support additional ASUS Zenbook
-> UX3402VA
+On Fri 12-01-24 09:10:33, Roman Gushchin wrote:
+> On Fri, Jan 12, 2024 at 06:06:39PM +0100, Michal Hocko wrote:
+> > On Thu 11-01-24 14:28:07, Johannes Weiner wrote:
+> > [...]
+> > > @@ -2867,11 +2882,17 @@ static int try_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp_mask,
+> > >  		}
+> > >  	} while ((memcg = parent_mem_cgroup(memcg)));
+> > >  
+> > > +	/*
+> > > +	 * Reclaim is set up above to be called from the userland
+> > > +	 * return path. But also attempt synchronous reclaim to avoid
+> > > +	 * excessive overrun while the task is still inside the
+> > > +	 * kernel. If this is successful, the return path will see it
+> > > +	 * when it rechecks the overage and simply bail out.
+> > > +	 */
+> > >  	if (current->memcg_nr_pages_over_high > MEMCG_CHARGE_BATCH &&
+> > >  	    !(current->flags & PF_MEMALLOC) &&
+> > > -	    gfpflags_allow_blocking(gfp_mask)) {
+> > > +	    gfpflags_allow_blocking(gfp_mask))
+> > >  		mem_cgroup_handle_over_high(gfp_mask);
+> > 
+> > Have you lost the check for the dying task here?
 > 
-> Add new model entry into configuration table.
-> 
-> Signed-off-by: Kenzo Gomez <kenzo.sgomez@gmail.com>
-> ---
->  sound/pci/hda/cs35l41_hda_property.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/sound/pci/hda/cs35l41_hda_property.c
-> b/sound/pci/hda/cs35l41_hda_property.c
-> index c1afb721b4c6..adfb31a6bf1e 100644
-> --- a/sound/pci/hda/cs35l41_hda_property.c
-> +++ b/sound/pci/hda/cs35l41_hda_property.c
-> @@ -67,6 +67,7 @@ static const struct cs35l41_config
-> cs35l41_config_table[] = {
->  	{ "10431D1F", I2C, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT,
-> 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
->  	{ "10431DA2", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT,
-> 0, 0 }, 1, 2, 0, 0, 0, 0 },
->  	{ "10431E02", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT,
-> 0, 0 }, 1, 2, 0, 0, 0, 0 },
-> +	{ "104316A3", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT,
-> 0, 0 }, 1, 2, 0, 0, 0, 0 },
+> It was moved into mem_cgroup_handle_over_high()'s body.
 
-This entry looks correct, but this table is supposed to be sorted by
-SSID,
-can you move the entry to its correct location?
+Ohh, right. Somehow overlooked that even when I was staring at that
+path.
 
->  	{ "10431EE2", I2C, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT,
-> 0, 0 }, 0, -1, -1, 0, 0, 0 },
->  	{ "10431F12", I2C, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT,
-> 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
->  	{ "10431F1F", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT,
-> 0, 0 }, 1, -1, 0, 0, 0, 0 },
-> @@ -371,6 +372,7 @@ static const struct cs35l41_prop_model
-> cs35l41_prop_model_table[] = {
->  	{ "CSC3551", "10431D1F", generic_dsd_config },
->  	{ "CSC3551", "10431DA2", generic_dsd_config },
->  	{ "CSC3551", "10431E02", generic_dsd_config },
-> +	{ "CSC3551", "104316A3", generic_dsd_config },
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Same with this table, it should be sorted by SSID.
+Thanks!
 
->  	{ "CSC3551", "10431EE2", generic_dsd_config },
->  	{ "CSC3551", "10431F12", generic_dsd_config },
->  	{ "CSC3551", "10431F1F", generic_dsd_config },
-> --
-> 2.43.0
-> 
-
-Thanks,
-Stefan
-
+-- 
+Michal Hocko
+SUSE Labs
