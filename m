@@ -1,216 +1,163 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDC16BB40;
-	Fri, 12 Jan 2024 13:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="MoMDc32t"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40C8bMSh014558;
-	Fri, 12 Jan 2024 14:52:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=bQDWIGEUgxPtuigdQYbYpc8qQmx6+NnBxK0RzcsvHAk=; b=Mo
-	MDc32tNZ2bdXNePfuK2gQh17PuuNs5HDWkF7eC0e2Bp0QqQ4Fi9D3QoweqBAgHb7
-	5BwkGP5Ay1SVvg7oacZ4M6P09cD48CmFExeA8AM1n+G7rqU8chGQhz8+o3D4aZyU
-	32AoO6RFggFYb6q8fC0WqLeDYm2gy6deaScB8KdCaauewtSqx2mFApN0wvsEn35t
-	gG8UYxfdCR1nqK1Wh5XGv5QbWSqp5mp2/cCjBagOHFAzW68qsamp9/59kZoXPT8C
-	B/4nzc3m2m73SomaMBXTlfdSMibFVJeIkar3P0GIfhad8G3LaZh1izZZs/i+g1ru
-	HbFdBGkEFOLhjveIPeFQ==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vk22w9ab1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jan 2024 14:52:28 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BCC1410002A;
-	Fri, 12 Jan 2024 14:52:27 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AA420215159;
-	Fri, 12 Jan 2024 14:52:27 +0100 (CET)
-Received: from [10.129.178.37] (10.129.178.37) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 12 Jan
- 2024 14:52:24 +0100
-Message-ID: <3552f3e5-01cc-4e95-a055-f7aea0f8dc4b@foss.st.com>
-Date: Fri, 12 Jan 2024 14:52:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52906BB40;
+	Fri, 12 Jan 2024 13:53:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31075C433F1;
+	Fri, 12 Jan 2024 13:53:46 +0000 (UTC)
+Date: Fri, 12 Jan 2024 08:53:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
+ <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
+ default ownership
+Message-ID: <20240112085344.30540d10@rorschach.local.home>
+In-Reply-To: <20240112-normierung-knipsen-dccb7cac7efc@brauner>
+References: <20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
+	<20240105095954.67de63c2@gandalf.local.home>
+	<20240107-getrickst-angeeignet-049cea8cad13@brauner>
+	<20240107132912.71b109d8@rorschach.local.home>
+	<20240108-ortsrand-ziehen-4e9a9a58e708@brauner>
+	<20240108102331.7de98cab@gandalf.local.home>
+	<20240110-murren-extra-cd1241aae470@brauner>
+	<20240110080746.50f7767d@gandalf.local.home>
+	<20240111-unzahl-gefegt-433acb8a841d@brauner>
+	<20240111165319.4bb2af76@gandalf.local.home>
+	<20240112-normierung-knipsen-dccb7cac7efc@brauner>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/5] ARM: dts: stm32: add display support on
- stm32f769-disco
-Content-Language: en-US
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        <linux-kernel@vger.kernel.org>
-CC: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        <linux-amarula@amarulasolutions.com>, Lee Jones <lee@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20240111113146.16011-1-dario.binacchi@amarulasolutions.com>
- <20240111113146.16011-5-dario.binacchi@amarulasolutions.com>
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-In-Reply-To: <20240111113146.16011-5-dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 12 Jan 2024 09:27:24 +0100
+Christian Brauner <brauner@kernel.org> wrote:
 
-On 1/11/24 12:31, Dario Binacchi wrote:
-> The patch adds display support on the stm32f769-disco board.
->
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> ---
->
-> (no changes since v1)
->
->  arch/arm/boot/dts/st/stm32f769-disco.dts | 72 +++++++++++++++++++++++-
->  1 file changed, 71 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/st/stm32f769-disco.dts b/arch/arm/boot/dts/st/stm32f769-disco.dts
-> index 8632bd866272..d1eb5f9c78bf 100644
-> --- a/arch/arm/boot/dts/st/stm32f769-disco.dts
-> +++ b/arch/arm/boot/dts/st/stm32f769-disco.dts
-> @@ -41,7 +41,7 @@
->   */
->  
->  /dts-v1/;
-> -#include "stm32f746.dtsi"
-> +#include "stm32f769.dtsi"
->  #include "stm32f769-pinctrl.dtsi"
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/gpio/gpio.h>
-> @@ -60,6 +60,19 @@ memory@c0000000 {
->  		reg = <0xC0000000 0x1000000>;
->  	};
->  
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		linux,dma {
-> +			compatible = "shared-dma-pool";
-> +			linux,dma-default;
-> +			no-map;
-> +			size = <0x100000>;
-> +		};
-> +	};
-> +
->  	aliases {
->  		serial0 = &usart1;
->  	};
-> @@ -85,6 +98,13 @@ button-0 {
->  		};
->  	};
->  
-> +	panel_backlight: panel-backlight {
-> +		compatible = "gpio-backlight";
-> +		gpios = <&gpioi 14 GPIO_ACTIVE_HIGH>;
-> +		default-on;
-> +		status = "okay";
-> +	};
-> +
->  	usbotg_hs_phy: usb-phy {
->  		#phy-cells = <0>;
->  		compatible = "usb-nop-xceiv";
-> @@ -114,6 +134,46 @@ &clk_hse {
->  	clock-frequency = <25000000>;
->  };
->  
-> +&dsi {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			dsi_in: endpoint {
-> +				remote-endpoint = <&ltdc_out_dsi>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			dsi_out: endpoint {
-> +				remote-endpoint = <&dsi_panel_in>;
-> +			};
-> +		};
-> +	};
-> +
-> +	panel0: panel-dsi@0 {
-> +		compatible = "orisetech,otm8009a";
-> +		reg = <0>; /* dsi virtual channel (0..3) */
-> +		reset-gpios = <&gpioj 15 GPIO_ACTIVE_LOW>;
-> +		power-supply = <&vcc_3v3>;
-> +		backlight = <&panel_backlight>;
-> +		status = "okay";
-> +
-> +		port {
-> +			dsi_panel_in: endpoint {
-> +				remote-endpoint = <&dsi_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
->  &i2c1 {
->  	pinctrl-0 = <&i2c1_pins_b>;
->  	pinctrl-names = "default";
-> @@ -122,6 +182,16 @@ &i2c1 {
->  	status = "okay";
->  };
->  
-> +&ltdc {
-> +	status = "okay";
-> +
-> +	port {
-> +		ltdc_out_dsi: endpoint@0 {
+> On Thu, Jan 11, 2024 at 04:53:19PM -0500, Steven Rostedt wrote:
+> > On Thu, 11 Jan 2024 22:01:32 +0100
+> > Christian Brauner <brauner@kernel.org> wrote:
+> >   
+> > > What I'm pointing out in the current logic is that the caller is
+> > > taxed twice:
+> > > 
+> > > (1) Once when the VFS has done inode_permission(MAY_EXEC, "xfs")
+> > > (2) And again when you call lookup_one_len() in eventfs_start_creating()
+> > >     _because_ the permission check in lookup_one_len() is the exact
+> > >     same permission check again that the vfs has done
+> > >     inode_permission(MAY_EXEC, "xfs").  
+> > 
+> > As I described in: https://lore.kernel.org/all/20240110133154.6e18feb9@gandalf.local.home/
+> > 
+> > The eventfs files below "events" doesn't need the .permissions callback at
+> > all. It's only there because the "events" inode uses it.
+> > 
+> > The .permissions call for eventfs has:  
+> 
+> It doesn't matter whether there's a ->permission handler. If you don't
+> add one explicitly the VFS will simply call generic_permission():
+> 
+> inode_permission()
+> -> do_inode_permission()  
+>    {
+>         if (unlikely(!(inode->i_opflags & IOP_FASTPERM))) {
+>                 if (likely(inode->i_op->permission))
+>                         return inode->i_op->permission(idmap, inode, mask);
+>                
+>                 /* This gets set once for the inode lifetime */
+>                 spin_lock(&inode->i_lock);
+>                 inode->i_opflags |= IOP_FASTPERM;
+>                 spin_unlock(&inode->i_lock);
+>         }
+>         return generic_permission(idmap, inode, mask);
+>    }
 
-Hi Dario,
+Yes I know that, because that's where I knew what to call in the non
+"events" dir case.
 
-There is no need for unit name on this endpoint since it is alone.
+> 
+> > Anyway, the issue is with "events" directory and remounting, because like
+> > the tracefs system, the inode and dentry for "evnets" is created at boot
+> > up, before the mount happens. The VFS layer is going to check the
+> > permissions of its inode and dentry, which will be incorrect if the mount
+> > was mounted with a "gid" option.  
+> 
+> The gid option has nothing to do with this and it is just handled fine
+> if you remove the second permission checking in (2).
 
-Otherwise it triggers this warning at build time :
+I guess I'm confused to what you are having an issue with. Is it just
+that the permission check gets called twice?
 
-.../arch/arm/boot/dts/st/stm32f769-disco.dts:189.28-191.5: Warning
-(unit_address_vs_reg): /soc/display-controller@40016800/port/endpoint@0: node
-has a unit name, but no reg or ranges property
+> 
+> You need to remove the inode_permission() code from
+> eventfs_start_creating(). It is just an internal lookup and the fact
+> that you have it in there allows userspace to break readdir on the
+> eventfs portions of tracefs as I've shown in the parts of the mail that
+> you cut off.
 
-.../arch/arm/boot/dts/st/stm32f769-disco.dts:189.28-191.5: Warning
-(unit_address_vs_reg): /soc/display-controller@40016800/port/endpoint@0: node
-has a unit name, but no reg or ranges property
+That's because I didn't see how it was related to the way I fixed the
+mount=gid issue. Are you only concerned because of the check in
+eventfs_start_creating()?
 
+Yes, you posted code that would make things act funny for some code
+that I see no real world use case for. Yeah, it may not act "properly"
+but I'm not sure that's bad.
 
-Regards,
+Here, I'll paste it back:
 
-Raphaël
+> // We managed to open the directory so we have permission to list
+> // directory entries in "xfs".
+> fd = open("/sys/kernel/tracing/events/xfs");
+> 
+> // Remove ownership so we can't open the directory anymore
+> chown("/sys/kernel/tracing/events/xfs", 0, 0);
+> 
+> // Or just remove exec bit for the group and restrict to owner
+> chmod("/sys/kernel/tracing/events/xfs", 700);
+> 
+> // Drop caches to force an eventfs_root_lookup() on everything
+> write("/proc/sys/vm/drop_caches", "3", 1);
 
-> +			remote-endpoint = <&dsi_in>;
-> +		};
-> +	};
-> +};
-> +
->  &rtc {
->  	status = "okay";
->  };
+This requires opening the directory, then having it's permissions
+change, and then immediately dropping the caches.
+
+> 
+> // Returns 0 even though directory has a lot of entries and we should be
+> // able to list them
+> getdents64(fd, ...);
+
+And do we care?
+
+Since tracing exposes internal kernel information, perhaps this is a
+feature and not a bug. If someone who had access to the tracing system
+and you wanted to stop them, if they had a directory open that they no
+longer have access to, you don't want them to see what's left in the
+directory.
+
+In other words, I like the idea that the getends64(fd, ...) will fail!
+
+If there's a file underneath that wasn't change, and the admin thought
+that just keeping the top directory permissions off is good enough,
+then that attacker having that directory open before the directory had
+it's file permissions change is a way to still have access to the files
+below it.
+
+> 
+> And the failure is in the inode_permission(MAY_EXEC, "xfs") call in
+> lookup_one_len() in eventfs_start_creating() which now fails.
+
+And I think is a good thing!
+
+Again, tracefs is special. It gives you access and possibly control to
+the kernel behavior. I like the fact that as soon as someone loses
+permission to a directory, they immediately lose it.
+
+-- Steve
