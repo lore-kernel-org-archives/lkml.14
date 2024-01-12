@@ -1,82 +1,154 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ACE60B89;
-	Fri, 12 Jan 2024 10:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C7565197;
+	Fri, 12 Jan 2024 10:17:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OTc6kLuE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8CE61C000F;
-	Fri, 12 Jan 2024 10:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705054607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0K0NkJXHATQCdt6Zs6v3+PLVIU0Q+wxMutthUOuyUe0=;
-	b=OTc6kLuE8/j50AyxXkOpTdbycuBdRRsukDgen1EqqVONnMp0PamyOrRuoWRUIED/OYtTEw
-	7lkETMD0ixKhcBqNAjH/q0aO8LEJ7usz/0T6/CqFl/jKKnibtxI88c0XjSB0knZL1yMsy4
-	0pQ6aNrdW9EBzF87wkoZ7lNQK5KQWfh9qwzn26VoEfVeiE7OykI+AtQuPKiaEYpZgpl7Lp
-	yg4MyEJLoXbjJyzj4G3h37iTqwWY7Y1qqfyxUn+Uy1OYxw8EgIGKuqGsoredvq/F2Z+seW
-	r0v8UJV84XImt35JzOb6qjErjAXnp2jFnbJBQ7hiBgOWs1fa6EVlq6+Ya4qVCg==
-Date: Fri, 12 Jan 2024 11:16:37 +0100
-From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>, Gustavo Pimentel
- <gustavo.pimentel@synopsys.com>, Vinod Koul <vkoul@kernel.org>, Cai Huoqing
- <cai.huoqing@linux.dev>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, Herve Codina
- <herve.codina@bootlin.com>
-Subject: Re: [PATCH v6 0/6] Fix support of dw-edma HDMA NATIVE IP in remote
- setup
-Message-ID: <20240112111637.01a5ea21@kmaincent-XPS-13-7390>
-In-Reply-To: <20231122171242.GA266396@thinkpad>
-References: <20231117-b4-feature_hdma_mainline-v6-0-ebf7aa0e40d7@bootlin.com>
-	<20231121062629.GA3315@thinkpad>
-	<js3qo4i67tdhbbcopvfaav4c7fzhz4tc2nai45rzfmbpq7l3xa@7ac2colelvnz>
-	<20231121120828.GC3315@thinkpad>
-	<bqtgnsxqmvndog4jtmyy6lnj2cp4kh7c2lcwmjjqbet53vrhhn@i6fc6vxsvbam>
-	<20231122171242.GA266396@thinkpad>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pO5KVae6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3ACC433F1;
+	Fri, 12 Jan 2024 10:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705054620;
+	bh=uaiQ0NlnGDpVimzHf7hc4bouD6LM9m4Fjq8sHDW6itc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pO5KVae6AmOuqr6kVlJNH4be4B4TxbaMaLYsDVdubgNkwu7Yt5xOUbIg1Ei6Py3/F
+	 DE7LEQSb+gJYMhB6aLgrhmfCbqhrh2WizYlJEsjbkb4UCw8pLZNIhRWxRQ4vlLndn5
+	 H1PPtiznmiVcRK/ldP8naIsSVMXvNk7FcKIo5CdGx6tnFPb22Xntqri4NCZar7pqEN
+	 VIG42/WGYGdZqNBwuDHocupYL5vZzXIkkr+K/sPudQC7jsJYR0ncr2EBdcqZb9y2qw
+	 EHf05ahEti5GRx6GZ0snNTq9v7GpVBQ8EA8MVznLLn6Kod2EPfR+LMWC0bcTTIQ6vK
+	 0dP2h5Ucn802A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v6 31/36] bpf: Enable kprobe_multi feature if CONFIG_FPROBE is enabled
+Date: Fri, 12 Jan 2024 19:16:54 +0900
+Message-Id: <170505461435.459169.1646224653234049177.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <170505424954.459169.10630626365737237288.stgit@devnote2>
+References: <170505424954.459169.10630626365737237288.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 22 Nov 2023 22:42:42 +0530
-Manivannan Sadhasivam <mani@kernel.org> wrote:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> > For all of that you'll need to fix the
-> > dw_pcie_edma_find_chip()/dw_pcie_edma_detect() method somehow.
-> >=20
-> > Alternatively, to keep things simple you can convert the
-> > dw_pcie_edma_find_chip()/dw_pcie_edma_detect() methods to just relying
-> > on the HDMA settings being fully specified by the low-level drivers.
-> >  =20
->=20
-> This looks like the best possible solution at the moment. Thanks for the
-> insight!
->=20
-> I will post the patches together with the HDMA enablement ones.
+Enable kprobe_multi feature if CONFIG_FPROBE is enabled. The pt_regs is
+converted from ftrace_regs by ftrace_partial_regs(), thus some registers
+may always returns 0. But it should be enough for function entry (access
+arguments) and exit (access return value).
 
-Hello Manivannan,
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Florent Revest <revest@chromium.org>
+---
+ Changes from previous series: NOTHING, Update against the new series.
+---
+ kernel/trace/bpf_trace.c |   22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-What is the status of this series?
-Do you want to wait for designware-ep.c to be HDMA compatible before merging
-the fixes? Do you expect us to do something? We can't work on the
-designware-ep.c driver as we do not have such hardware.
-Shouldn't fixes be merged as soon as possible?
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index efb792f8f2ea..24ee4e960f1d 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2503,7 +2503,7 @@ static int __init bpf_event_init(void)
+ fs_initcall(bpf_event_init);
+ #endif /* CONFIG_MODULES */
+ 
+-#if defined(CONFIG_FPROBE) && defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
++#ifdef CONFIG_FPROBE
+ struct bpf_kprobe_multi_link {
+ 	struct bpf_link link;
+ 	struct fprobe fp;
+@@ -2526,6 +2526,8 @@ struct user_syms {
+ 	char *buf;
+ };
+ 
++static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
++
+ static int copy_user_syms(struct user_syms *us, unsigned long __user *usyms, u32 cnt)
+ {
+ 	unsigned long __user usymbol;
+@@ -2703,13 +2705,14 @@ static u64 bpf_kprobe_multi_entry_ip(struct bpf_run_ctx *ctx)
+ 
+ static int
+ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+-			   unsigned long entry_ip, struct pt_regs *regs)
++			   unsigned long entry_ip, struct ftrace_regs *fregs)
+ {
+ 	struct bpf_kprobe_multi_run_ctx run_ctx = {
+ 		.link = link,
+ 		.entry_ip = entry_ip,
+ 	};
+ 	struct bpf_run_ctx *old_run_ctx;
++	struct pt_regs *regs;
+ 	int err;
+ 
+ 	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+@@ -2720,6 +2723,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 
+ 	migrate_disable();
+ 	rcu_read_lock();
++	regs = ftrace_partial_regs(fregs, this_cpu_ptr(&bpf_kprobe_multi_pt_regs));
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.run_ctx);
+ 	err = bpf_prog_run(link->link.prog, regs);
+ 	bpf_reset_run_ctx(old_run_ctx);
+@@ -2737,13 +2741,9 @@ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
+ 			  void *data)
+ {
+ 	struct bpf_kprobe_multi_link *link;
+-	struct pt_regs *regs = ftrace_get_regs(fregs);
+-
+-	if (!regs)
+-		return 0;
+ 
+ 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
+-	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
++	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
+ 	return 0;
+ }
+ 
+@@ -2753,13 +2753,9 @@ kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
+ 			       void *data)
+ {
+ 	struct bpf_kprobe_multi_link *link;
+-	struct pt_regs *regs = ftrace_get_regs(fregs);
+-
+-	if (!regs)
+-		return;
+ 
+ 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
+-	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
++	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
+ }
+ 
+ static int symbols_cmp_r(const void *a, const void *b, const void *priv)
+@@ -3016,7 +3012,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	kvfree(cookies);
+ 	return err;
+ }
+-#else /* !CONFIG_FPROBE || !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
++#else /* !CONFIG_FPROBE */
+ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+ {
+ 	return -EOPNOTSUPP;
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
