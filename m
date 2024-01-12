@@ -1,53 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CB4168CC
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 19:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3159D15AFE
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 19:40:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wEzlG3U5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 128E9C43390;
-	Fri, 12 Jan 2024 19:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705088233;
-	bh=ew3UB/+/Wu+260THz1eNJAhDnDXdfU5nnyjQIahxjUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wEzlG3U5nDzx9L1f8WqsXoRY7WdpEizjN1GQTtN0gd+d9jJjH17BtEYMazNQMDJXI
-	 W6nL74b1GpvuxK9SzFSntPUclhagGAJnW5YlMykBwGgGGcon20Uc4dq+8nyKYMkS7J
-	 BJt2ThgOLj8KFsNBpD034zC4x1DmBq7NgJJTFEp4=
-Date: Fri, 12 Jan 2024 20:37:10 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: Re: Deliberately sending partial patch sets?
-Message-ID: <2024011247-caregiver-compacted-2e6b@gregkh>
-References: <ZaFKvZg-MtZgbCKA@archie.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bI90ViK9"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0897AC433F1;
+	Fri, 12 Jan 2024 19:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705088418;
+	bh=n2qpSfzBdeIj4whO8TofAHanTFZG3WGJUxhBb7hd9eI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=bI90ViK9XO50sRYA7pMqEYsCW9fJ56BuRp4KFtj/Ton0Tc3AEsHtAdiwPlDUR7g0N
+	 IexpAjdHpoIlOXpxGiSERiHAVfj+gVnhMDIx6FbFr0fZuaycZ9T/pDttNwZFKBF1E5
+	 d76EWobV1z9kMuRjW7GsgQHd/mvunKr0LpM5pqMOkl9qRXZymOl1FppSIcPO4MfstL
+	 lYlYfTr4JpMBwxIvp/OqAfEZBnS1xJVYZ+4FSe9KHo/2u/GchQCr8RdMoWWnAeD+Iq
+	 yOjd1lhJqLWJtqJFYdi4BnUlipcr6ZKnbkBpGSzdFWmRwOIID8bBtouCnOLqaRqKVF
+	 al6H5bnpZmeHw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E0A8DD8C984;
+	Fri, 12 Jan 2024 19:40:17 +0000 (UTC)
+Subject: Re: [git pull] drm for 6.8
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
+References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm tags/drm-next-2024-01-10
+X-PR-Tracked-Commit-Id: b76c01f1d950425924ee1c1377760de3c024ef78
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: cf65598d5909acf5e7b7dc9e21786e386356bc81
+Message-Id: <170508841787.32272.8044456543001426203.pr-tracker-bot@kernel.org>
+Date: Fri, 12 Jan 2024 19:40:17 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZaFKvZg-MtZgbCKA@archie.me>
 
-On Fri, Jan 12, 2024 at 09:20:45PM +0700, Bagas Sanjaya wrote:
-> Hi,
-> 
-> Let's say that there is a contributor who wish to send a patch set (e.g.
-> 20-30 patches in the series) to LKML. But instead of sending the full
-> series, he either do one of the following:
-> 
-> * Send only the cover letter (analogous to movie trailers)
-> * Send only a few arbitrary patches in a series that are most important
->   (e.g. patch [01,04,11,18,23/30]) (analogous to match highlights)
-> * Send only the first few patches in a series (i.e. subject of one of
->   patches says [09/30]) (analogous to sample book chapters)
-> 
-> The rest of patches are behind closed doors (i.e. not sent), possibly
-> behind charm-priced (pay)walls.
-> 
-> Is the submission like above acceptable (when in review)?
+The pull request you sent on Thu, 11 Jan 2024 05:49:21 +1000:
 
-No, kernel development is done in public.
+> git://anongit.freedesktop.org/drm/drm tags/drm-next-2024-01-10
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/cf65598d5909acf5e7b7dc9e21786e386356bc81
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
