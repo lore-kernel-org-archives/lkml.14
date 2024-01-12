@@ -1,74 +1,56 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9195EE8A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 10:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rXXBYWI0"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5f70c085d64so55434697b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 02:25:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705055157; x=1705659957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TrpYiiUZvW6/AnFbosBlfeKS3Uh1NSZM2E5hPQsUkps=;
-        b=rXXBYWI0vGvvTKV6ygv88oM6VN6fXHHyZjLlGKMs/s3CbH5ci8S/ZMTvCYqPcVxfOb
-         b/+PWxhNxncyKnZ2ZkHpqQOqBTe4gKaDV25oFWex16yfaOE64JSa4tp+TLnaaZsHp+gL
-         oFC2MfirbpqhGs6e4AsAZfDwo1A3MsFZA/KR/pfITivpSG7AG/wdl6SxqjWLVznZgfJV
-         ni4KSOTYAA0g7P63wJnFem26JwLAtTtDjDNoJ0WASue6Y4AJOdltlY1FMXp86bmziBQi
-         gEWZ07W7emdb6aNONrB8+e+cxwvhZfV33DKXp1PQVpdNsnb6H1EV+T85vLkz/uCKh+T9
-         A/Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705055157; x=1705659957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TrpYiiUZvW6/AnFbosBlfeKS3Uh1NSZM2E5hPQsUkps=;
-        b=KgwjleB0Afzp7y1zbkbF5ykeJ884VaKwe5wnVDWVdYD8QIj1Ejn35IDodQsg+QRVAB
-         j7iGh0goQvZCSL8sABBPFd3vChdSWOqViQh1nq25Q2QxTrUf9QNjm54IpRYGtydx12y1
-         MrYhWVFfGqgJTH+Io23DqIrLpnMgY+EaXgdfsuC7F9QjUcaCIM0hoMAyExo//p7UaF9w
-         ZeAH24lSM7d6PV6gEa0OEP/pmQ+rg8m6jxe/Xe0iphXfalWVLIJ9aZ9VgRUDNVgNCpvC
-         WjdzJ9K3gp29TKnMwsPFTidNYGGHRneIlg9Usr9FFMKr6EKOAsuLaryIN7zAGUmA2xut
-         vBuA==
-X-Gm-Message-State: AOJu0YwymFPAgPtTsl2VnHStph42xfY5e7479ECARXpmDqp6xUyOOBPK
-	nHYlo9+E8SUlefgUn2SrEfmuehJSJRv37OJhESoItC1b+1LnKQ==
-X-Google-Smtp-Source: AGHT+IFlOE1GVKUUNrtrFdTNGJR3/eHT7lHMq9rhtkAS83Jo4rY6adUw6B7dW71bpZFr994d28Nl/vfiD5zAKqQ4GOw=
-X-Received: by 2002:a25:ea44:0:b0:dbd:e651:a32f with SMTP id
- o4-20020a25ea44000000b00dbde651a32fmr439006ybe.114.1705055157730; Fri, 12 Jan
- 2024 02:25:57 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51225EE89;
+	Fri, 12 Jan 2024 10:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TBHf22fFpz1FJBC;
+	Fri, 12 Jan 2024 18:22:18 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
+	by mail.maildlp.com (Postfix) with ESMTPS id E86F31400DA;
+	Fri, 12 Jan 2024 18:26:26 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 12 Jan 2024 18:26:26 +0800
+From: Weili Qian <qianweili@huawei.com>
+To: <herbert@gondor.apana.org.au>
+CC: <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<liulongfang@huawei.com>, Weili Qian <qianweili@huawei.com>
+Subject: [PATCH 0/2] crypto: hisilicon/qm - add debugfs qm_state for hisilicon driver
+Date: Fri, 12 Jan 2024 18:25:44 +0800
+Message-ID: <20240112102546.2213-1-qianweili@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <46566e85-4afa-4c55-93b2-0d0b71d76b12@moroto.mountain>
-In-Reply-To: <46566e85-4afa-4c55-93b2-0d0b71d76b12@moroto.mountain>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 12 Jan 2024 11:25:46 +0100
-Message-ID: <CACRpkdafwsQugKzGFsAPsMNGGObSJEzJRah9qGTitah12Zf3Bg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rtd: Fix signedness bug in probe
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Tzuyi Chang <tychang@realtek.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
 
-On Fri, Jan 12, 2024 at 7:55=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
+Read some device register values for error analysis.
+Patch #1, the debug file 'qm_state' is added to obtain
+the current device state.
+Patch #2, read device register value before resetting
+to help analyze the cause of the device exception.
 
-> The "data->irqs[]" array holds unsigned int so this error handling will
-> not work correctly.
->
-> Fixes: eee636bff0dc ("gpio: rtd: Add support for Realtek DHC(Digital Home=
- Center) RTD SoCs")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Weili Qian (2):
+  crypto: hisilicon/qm - support get device state
+  crypto: hisilicon/qm - dump important registers values before
+    resetting
 
-Looks right to me!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+ Documentation/ABI/testing/debugfs-hisi-hpre |  7 +++
+ Documentation/ABI/testing/debugfs-hisi-sec  |  7 +++
+ Documentation/ABI/testing/debugfs-hisi-zip  |  7 +++
+ drivers/crypto/hisilicon/debugfs.c          | 53 +++++++++++++++++++++
+ 4 files changed, 74 insertions(+)
 
-Yours,
-Linus Walleij
+-- 
+2.33.0
+
