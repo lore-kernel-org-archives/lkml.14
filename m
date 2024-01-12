@@ -1,110 +1,118 @@
-Received: from out187-20.us.a.mail.aliyun.com (out187-20.us.a.mail.aliyun.com [47.90.187.20])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D4F5B5BF
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 07:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047207;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.W4PYTwM_1705044926;
-Received: from localhost(mailfrom:libang.li@antgroup.com fp:SMTPD_---.W4PYTwM_1705044926)
-          by smtp.aliyun-inc.com;
-          Fri, 12 Jan 2024 15:35:27 +0800
-From: "Bang Li" <libang.li@antgroup.com>
-To: akpm@linux-foundation.org
-Cc:  <linux-mm@kvack.org>,
-   <linux-kernel@vger.kernel.org>,
-  "=?UTF-8?B?5pyx6L6JKOiMtuawtCk=?=" <teawater@antgroup.com>,
-  "=?UTF-8?B?WWFuIFlhbihjYWlsaW5nKQ==?=" <yanyan.yan@antgroup.com>,
-  "Bang Li" <libang.li@antgroup.com>
-Subject: [PATCH] mm/compaction: Reduce unnecessary loops
-Date: Fri, 12 Jan 2024 15:35:24 +0800
-Message-Id: <20240112073524.80724-1-libang.li@antgroup.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA125C8E1;
+	Fri, 12 Jan 2024 07:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FKRjjSpE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1705045401; x=1736581401;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1T3tgkH4iijZDYGTTzAf0IpYzhHY6enp+pqFzjuGwdw=;
+  b=FKRjjSpEBTRyEYz9JO+JgDbEv99IjV8mJAfYCoW2wXuFLU8v2kOmLXaX
+   XywKJZFaR8/fAxyKCfBzl8iXK8vb9BUEPEG42NJfiaBiuhE+634qVZsJD
+   CJk/g/oEZsik4SfhJNgJjFL0m3AMnfFQS9vQ5mgvx73NIhBGTmFaRLBR/
+   hqat4wU0NJNq4KdRAmihW27JUfXC40QgdYVEHA5Q09Cfwv+o78YYCDhma
+   /JigGYNaXRQyD853lAQB8ti5DBeOq6AF3pryIVX4ckQUgBjR0ZaVpZt1H
+   gdgthgZdlwXDaxRsgExtmRuifdNRCvyt6hWK0MRrruYAOK/6ca7HhCCv3
+   w==;
+X-CSE-ConnectionGUID: tOc90VrxTfqk6wus7ohuMw==
+X-CSE-MsgGUID: sHvIQsA7RM2ZtlC6VGTG9w==
+X-ThreatScanner-Verdict: Negative
+X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
+   d="asc'?scan'208";a="15111438"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Jan 2024 00:43:14 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 12 Jan 2024 00:42:53 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 12 Jan 2024 00:42:49 -0700
+Date: Fri, 12 Jan 2024 07:42:14 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Chen Wang <unicorn_wang@outlook.com>
+CC: Conor Dooley <conor@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>, Chen Wang <unicornxw@gmail.com>,
+	<aou@eecs.berkeley.edu>, <chao.wei@sophgo.com>,
+	<krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+	<palmer@dabbelt.com>, <paul.walmsley@sifive.com>, <richardcochran@gmail.com>,
+	<robh+dt@kernel.org>, <sboyd@kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <haijiao.liu@sophgo.com>,
+	<xiaoguang.xing@sophgo.com>, <guoren@kernel.org>, <jszhang@kernel.org>,
+	<inochiama@outlook.com>, <samuel.holland@sifive.com>
+Subject: Re: [PATCH v7 2/4] dt-bindings: clock: sophgo: support SG2042
+Message-ID: <20240112-overhead-disallow-8c2a4b97c36c@wendy>
+References: <cover.1704694903.git.unicorn_wang@outlook.com>
+ <925d99d5b4ece01337cb3389aaea4b631894dd1d.1704694903.git.unicorn_wang@outlook.com>
+ <f88b79c3-e44b-4136-ae56-10e1f2502e2d@linaro.org>
+ <MA0P287MB2822C7A3C1DC7786708E860BFE692@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
+ <20240110-untoasted-underfed-fe81479506f6@spud>
+ <MA0P287MB282224A6097B4FCCF721C89AFE682@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
+ <20240111-jolly-prize-930931cc648a@spud>
+ <MA0P287MB28229BCC9EA83507B99A9F3BFE6F2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="IJiafrCvNW1u7xS0"
+Content-Disposition: inline
+In-Reply-To: <MA0P287MB28229BCC9EA83507B99A9F3BFE6F2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
 
-Compaction will be triggered when we write 1 to '/proc/sys/vm/
-compact_memory'. During the execution of the process, when we send
-SIGKILL to terminate the compaction, the process does not exit
-immediately. Instead, it will continue to loop through the remaining
-zones and nodes before exiting.
+--IJiafrCvNW1u7xS0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-in my environment:
+On Fri, Jan 12, 2024 at 08:08:15AM +0800, Chen Wang wrote:
+> On 2024/1/12 0:58, Conor Dooley wrote:
+> > On Thu, Jan 11, 2024 at 04:00:04PM +0800, Chen Wang wrote:
 
-[root]# cat /proc/buddyinfo
-Node 0, zone      DMA      1      1      1      0      2      1      1      0      1      1      3
-Node 0, zone    DMA32   1666   1123    804    625    488    356    321    278    209    178    250
-Node 0, zone   Normal  58852  83160  49983   9812   2287   1229  19604  24471  10346   5219  12205
-[root]# echo 1 > /sys/kernel/debug/tracing/events/compaction/mm_compaction_end/enable
+> > > There are four types of clocks for SG2042 and following are where the=
+ir
+> > > control registers are defined in:
+> > >=20
+> > > PLL=EF=BC=9Aall in SYS_CTRL
+> > > DIV: all in CLOCK
+> > > GATE: some are in SYS_CTRL, some others are in CLOCK
+> > When you say "some", do you meant some entire clocks are in SYS_CTRL and
+> > some entire clocks are in the CLOCKS? Or do you meant that for a given
+> > clock, some registers are in SYS_CTRL and some are in CLOCK? It's the
+> > first option, right?
+>=20
+> It's the first option.
 
-before the patch:
+Then the gate clocks that are fully contained within SYS_CTRL are
+outputs of SYS_CTRL and gate clocks fully contained within CLOCK are
+outputs of CLOCK. You should not use a phandle to SYS_CTRL from the
+CLOCKS node so that you can pretend they are part of CLOCKS just because
+that makes writing your driver easier. That said, obviously you can
+share the routines for turning the gates on and off etc.
 
-[root]# timeout --signal=SIGKILL 0.002 bash -c 'echo 1 > /proc/sys/vm/compact_memory'
-[root]# cat /sys/kernel/debug/tracing/trace_pipe
-           <...>-26494   [014] .....   226.468993: mm_compaction_end: zone_start=0x1 migrate_pfn=0xe00 free_pfn=0xe00 zone_end=0x1000, mode=sync status=complete
-           <...>-26494   [014] .....   226.469718: mm_compaction_end: zone_start=0x1000 migrate_pfn=0x20a80 free_pfn=0xffe00 zone_end=0x100000, mode=sync status=contended
-           <...>-26494   [014] .....   226.469720: mm_compaction_end: zone_start=0x100000 migrate_pfn=0x100000 free_pfn=0x307fe00 zone_end=0x3080000, mode=sync status=contended
+Cheers,
+Conor.
 
-after the patch:
+--IJiafrCvNW1u7xS0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[root]# timeout --signal=SIGKILL 0.002 bash -c 'echo 1 > /proc/sys/vm/compact_memory'
-[root]# cat /sys/kernel/debug/tracing/trace_pipe
-           <...>-17491   [053] .....   109.005387: mm_compaction_end: zone_start=0x1 migrate_pfn=0xe00 free_pfn=0xe00 zone_end=0x1000, mode=sync status=complete
-           <...>-17491   [053] .....   109.006139: mm_compaction_end: zone_start=0x1000 migrate_pfn=0x22220 free_pfn=0xffe00 zone_end=0x100000, mode=sync status=contended
+-----BEGIN PGP SIGNATURE-----
 
-Although it exits quickly after receiving the SIGKILL signal, a better
-solution is to terminate the loop early after receiving the SIGKILL
-signal.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaDtUAAKCRB4tDGHoIJi
+0nxTAP9CrpCZwpKaT/G47Q3VE/Iop0YxDp0B26eM0tRrfqHaLwD/cs6kxe63wPej
+jDHoKl/useqwla8QveRde8FpitXfYwE=
+=y7/T
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Bang Li <libang.li@antgroup.com>
----
- mm/compaction.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 27ada42924d5..16f2bde5205d 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2807,7 +2807,7 @@ static void proactive_compact_node(pg_data_t *pgdat)
- }
- 
- /* Compact all zones within a node */
--static void compact_node(int nid)
-+static int compact_node(int nid)
- {
- 	pg_data_t *pgdat = NODE_DATA(nid);
- 	int zoneid;
-@@ -2830,7 +2830,12 @@ static void compact_node(int nid)
- 		cc.zone = zone;
- 
- 		compact_zone(&cc, NULL);
-+
-+		if (fatal_signal_pending(current))
-+			return -EINTR;
- 	}
-+
-+	return 0;
- }
- 
- /* Compact all nodes in the system */
-@@ -2841,8 +2846,10 @@ static void compact_nodes(void)
- 	/* Flush pending updates to the LRU lists */
- 	lru_add_drain_all();
- 
--	for_each_online_node(nid)
--		compact_node(nid);
-+	for_each_online_node(nid) {
-+		if (compact_node(nid))
-+			break;
-+	}
- }
- 
- static int compaction_proactiveness_sysctl_handler(struct ctl_table *table, int write,
--- 
-2.19.1.6.gb485710b
-
+--IJiafrCvNW1u7xS0--
