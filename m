@@ -1,147 +1,229 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2052.outbound.protection.partner.outlook.cn [139.219.17.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF10EA6;
-	Fri, 12 Jan 2024 01:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y/oSZ+g7+fQjO38nCMXus09Dqv2kb9vb5esANm+XumcPmSvKK5zOk+bUmWfbLonbjFGXqAtwqZjXUh2MQnuH6aXQ8Ex6UWY32m2BJUpbPS9EowQep5njqPUbfDzAb2P1TDEvla7gxxz/HjKs/Lkil8yh7JjTUqe3gKHIVq60zhJ5SeYlsZGNAxCo0fho0NsV0NooCuzvQDXJhS/Ff5yLzWEiz2pkPeuB0TY32wzZbVy/bKnlkQbmDlSfagVmaD9bJkdahyfQQPOWst5HmbQ2F2xfpFY2DsVG8nDv1nDvJjXRuTPvVQ4CB++oY/6MbgRkOkRqJQeY4kWuOwIJpgWZEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+nh5bWaQxD5DY1lH3foTGDG1DiLXWPHYZSjcbAWAU+E=;
- b=nD84AY5ujw6KvOH+bThhu0Nf+6xGtCFZbiF1UQqsXNXjmlzqzqtNEjEZDsp0GD7DApCfI5l+KlMka+IGC4vmJR/AuLUTsVhVYaqoGdSzzhMyzB6PfvrPRov27qye/SOm8z1ImtzQ672wIjT+7P+oJJKQgWUmclsq3SEsOzkUvLoa6BQacCb3gq8S/83TB5LCqQZYc8sNvvNHBt8ITjAic1nZeQRiNVauSGeY4Ep+EhyosJcaXDpi4JE1ooPm8r3ZGhYYWfpGmjLpBsYPVVpsqFkqPy8n1XzVIuW28B6ZD5Ryr85pjtODxFlWiS0MxkQUCVgfaAVPUYR07mVSDcgU/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:20::21) by SH0PR01MB0634.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:8::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.33; Fri, 12 Jan
- 2024 01:30:34 +0000
-Received: from SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
- ([fe80::e255:98f3:ba27:8c7d]) by
- SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn ([fe80::e255:98f3:ba27:8c7d%3])
- with mapi id 15.20.7135.033; Fri, 12 Jan 2024 01:30:33 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Hans
- Verkuil <hverkuil-cisco@xs4all.nl>, Ming Qian <ming.qian@nxp.com>, Laurent
- Pinchart <laurent.pinchart@ideasonboard.com>, Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Tomi Valkeinen
-	<tomi.valkeinen+renesas@ideasonboard.com>, Mingjia Zhang
-	<mingjia.zhang@mediatek.com>, Jack Zhu <jack.zhu@starfivetech.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>
-Subject:
- =?gb2312?B?u9i4tDogW1BBVENIIHYyIDA4LzEzXSBzdGFnaW5nOiBtZWRpYTogc3RhcmZp?=
- =?gb2312?Q?ve:_Add_for_StarFive_ISP_3A_SC?=
-Thread-Topic: [PATCH v2 08/13] staging: media: starfive: Add for StarFive ISP
- 3A SC
-Thread-Index: AQHaRGn71f6F/u/Orkyp84TvJxn/QLDUcy2AgADvhsA=
-Date: Fri, 12 Jan 2024 01:30:33 +0000
-Message-ID:
- <SH0PR01MB06677BD8FAB7F5977D29EABDF26FA@SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn>
-References: <20240111084120.16685-1-changhuang.liang@starfivetech.com>
- <20240111084120.16685-9-changhuang.liang@starfivetech.com>
- <a761d936-4f46-41c8-b6f8-c1761eddd42f@moroto.mountain>
-In-Reply-To: <a761d936-4f46-41c8-b6f8-c1761eddd42f@moroto.mountain>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SH0PR01MB0667:EE_|SH0PR01MB0634:EE_
-x-ms-office365-filtering-correlation-id: 4bc7e664-0945-47e5-7ba7-08dc130e124c
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- V7R1TZxL/g650XtiuRu7Rp0pSuDs3opWckYLIIR49JCUbaDvBBxEaTBf4blKdpJ+fQSHMVrB9IiNUmig5g/U89sCAwVPO1yHib5D2/bOTMIvqNerwwGSzMuR5s7/rhcdaPLXxh/wE8l8Dkr5Tz9p5StaBUOvANewA4aqrguKRRVLY3XRYYwotvDcOU6kmQWrpZW4NGUDX7ZN1OoR4CJeMUdPpwpH7UwD1JPHHZmTyqL79iSI8l3i59m2PPQWtxbDuOQ6PUS8r/NMm983qPQrbks+DS39SzV/cYCejEHppjxeLN4+JgKQeI52Ydnn1i2fQVZkaIO2wodjJU9/7cPm95PFh1pJLc2QuKZMS3HCdaMTkajpgLp1/3h3s5C2sgZSR+09/ukZnsN5TzTyQJPL6HZ3cslhLih03liMEL73apYG5lVucoK/ZrQNADoUCQdR2QuC/CREMrRh8AwRhGDgw0VeNEcciS1SA/1zFA3KiMI5TujqTbrDyn14bsbB3M7a8VLKVbthmkyCfh+coNoc+WPXeOrDrWhJ/6fGSErsCCpAzaiTvgscQKEEGtCdyJph
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(39830400003)(346002)(136003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(40160700002)(41300700001)(41320700001)(224303003)(38070700009)(86362001)(9686003)(54906003)(508600001)(7696005)(66476007)(66446008)(64756008)(66556008)(66946007)(76116006)(122000001)(33656002)(55016003)(40180700001)(26005)(71200400001)(5660300002)(7416002)(2906002)(44832011)(38100700002)(6916009)(4326008)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?gb2312?B?aWUzK2dlVnVyL3lFSzB0aHdkbFc3L203akZIVlpZeXN2TjY3ZE5xMkNKSExx?=
- =?gb2312?B?cjh0VkFPeDNIMnZacHBGR3N4S3BGNGh5RDJVSWF0d3NHUTB6bGorMy9ibHVo?=
- =?gb2312?B?TmtVUHlCYmRBdVN4STZuTWR0U0NmM2xLekN5UDdORlNxb1M2RDl2bkhxV01B?=
- =?gb2312?B?Yy9VWE5KNGM0QmphTHNDMlJsQXA0SVRyRmtrQmRnQjNjZHJUZ3ZmekhZNkYr?=
- =?gb2312?B?MkxsT2VRMHZaQ3lZOU5HRFNycG9ZM2FZYVlRWlhWckZnY3ZaRXpqYzNzSlVE?=
- =?gb2312?B?MTNTYkg3MnQvdkZGeThhZ2VFeWNVOVl1bldjTkZwaDB6Q1l0R1M5ZU9oRzA0?=
- =?gb2312?B?bDU5clA0NWpNRGMxRU1YSXV2S2lINzVSRHMybE0rblZNbG9Ccy9GN05lK3RF?=
- =?gb2312?B?ZlNlZXEzZEwzK3hyaGc1OWFFWWsxbXYrcWVLRE1ZWUpxWCt1M0MyOTEyQ3F1?=
- =?gb2312?B?R2s2R1NVQU5KOXhNd1A5aWRHNlNQYmJqbHZiOHkwOUI1N2lxQjU4c29NYUY3?=
- =?gb2312?B?cjhsZ2E5ODVBVGJvSm51OVBXYUdKMjUwZCtMRHFSZEFOZVZzNXVNT3FrWjNp?=
- =?gb2312?B?YzVHek8raVN1ekM0YjlZVGZqYmJQbHpaSTUvZ2dXLzY2dDhJbkhiM2UraDUr?=
- =?gb2312?B?QW13QVNhV0F1ODNIZDVKMy9KNlhrUzcxdUsxdThIdWYwclQzWnVDejR2RHpk?=
- =?gb2312?B?MWV3TWxqUStseEZManYzSVkrNC9Za3gwa1VUL205eWFOOWtUeUl0NUNXMzdW?=
- =?gb2312?B?VHVHNm1VZldkMy9ZSy9WL0QxMnZIc3A5U3NlZVlDZHhHV0ZBNW5WNGROTEFx?=
- =?gb2312?B?RXVOT1lnaVRCeGZ1Wk1hYVozaHE0cEk3SU5Kb2xFb0xaeWd2K2N5RkhZeEJG?=
- =?gb2312?B?bnZPekJyWWxzc0xGQ3JQL2w4akxxMDIzWFFiblB4R1pmTXhxUW1OTU5jZ1pO?=
- =?gb2312?B?OXRDMHhOeS81VEJqbmpnZ05ZSWwvMmdWMzZhTnZQcDVhSXBwMmQraFdtZGd4?=
- =?gb2312?B?amJQMFB1N0tmbHRCWTB4akJLQkdZZ1loS1pnblB0NEFlcG1WNUtPN2lxbUVy?=
- =?gb2312?B?NVZKTzE1TGMvZXZrd2R5NWhDaEl1Sjg0bVZEbjBDS1Vibm80Q3pVNVEwZk53?=
- =?gb2312?B?SU0zVnVLQUF5Uyt0QWlmNFZyd2FCdS9YMXgzL3NuUEhVRkRHcVRXWG9yMHlo?=
- =?gb2312?B?V3FFUG5TNGZBSTVITFhJNkdVZ0NoaGl0TldjOFpwVFBMQjNBUnBFRm1zVXdn?=
- =?gb2312?B?Slc1RWhsakxYd3FrWXZvUzBkV3F1eWJNQkhTcC9YQzFtZXNKRFhFWkJOMFpJ?=
- =?gb2312?B?Z2p2dDZFYlVYdHEvZkhIY0RtOEFleVVVRjQ4M0tlMU9tcDZaZ1lDWXduQ1BN?=
- =?gb2312?B?RllIMlN2aFJGVjZienZUTVM0OWdWUkNpaU1TTVNIcWhTNWJ2dkRObnFwRGgx?=
- =?gb2312?B?MElGWWJiTk8va2FHU1E2cmVzdEVhTGZDUGZhZjBIc0FsWVhIbGIvNmhjVnJD?=
- =?gb2312?B?bjVNVmRvUllrYklWSzNVekpCTmQ2QnpZMko0eTVjQTJFQ05KelRCNmUyNUpX?=
- =?gb2312?B?VnhlRzdqRUlYakF4YkJYOHpKbHh0NHhFcjlxSElSMHp1MUFQelNCV0hUNDZh?=
- =?gb2312?B?UnpUUW94VlR6TVQvK09EUWc2RzExZDY0MGRiY1RYVXVXMEw4eXEyY2lMU1U4?=
- =?gb2312?B?MFhFMURhL213QXlLZko0QXUxYnBxenlpWTJvK0dmR3FMK0RoNldkeGVEWWYx?=
- =?gb2312?B?VFBrb0wxOVp3L2N1WUhIcEpFWFhpSm1oQzJBOXZIM2hvK1YyQTFKM2tXWUVt?=
- =?gb2312?B?V2RjSWY4LzZPL1ZYVFZuMkUyK3RRZWdEY3JiZUlHTm9oNGx2OVpzR2RLUnNn?=
- =?gb2312?B?cDFOKzd0aG10TmNHdFBVcmxzTmIzNXdDeDFGWHVVUjBSK1VpVURDL2RkaTNL?=
- =?gb2312?B?MzJmLy81MzRJaENRTTQwQW9mbldtMVBHQ25scEVyMmExREF2a015ckdqenJo?=
- =?gb2312?B?YTJwYUwxN0kwVmRRVnBlWmYraVAzUCtoS3B2NEJzUi9ER1JDNlEzNUwzQy9Z?=
- =?gb2312?B?NUNsWnJnSlFsdXNzZ2dpeE9Kbk1lOXY2VnpKN2grbTFUVnp6OWJ4cVB1NHhH?=
- =?gb2312?B?ak1xM2R4MlRFQjdiZ1YxTk9zLzFEWitpZ1pjVW8xRXAvRGRiM0ZqbmIwQ1NO?=
- =?gb2312?B?T1E9PQ==?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD768469F
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 01:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qDAUU0wm"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5e89ba9810aso51438427b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jan 2024 17:45:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705023910; x=1705628710; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LwfKNFvm8QyzmQofKZ8aVlq1/QWvi0cu1esaAtwrFUo=;
+        b=qDAUU0wmVpfQeiqu0CTx50QKOouyS0slQC/cB7QQOg2T+onnwBtO8AHXnx2E+WAXeC
+         o/5UpmgLXsvJ2mMFXoopQ3jg3NhzeXK8bcLZm7vnY7DrUgYKQxoROrRyy0QaWqM9u7x8
+         iipHcwUfZEX2gUpAK+esa7ZOgn/Pdp/qYyv/jr4dO0Q4BrH+sIsbcaT31DqJEEz5yaA2
+         4n4vspdl/t61CvolTWkLRbR5+4m/6bJMNrXWVjh08v5nXCMM9zV8EU+7v4K9vN2/UxBL
+         PUQjy3xFvDNnhwDtASobIVIEVwGxzq/AU7VASqRBh1JmL3oW5zwKN5tuHdU2dufdXht8
+         Vh2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705023910; x=1705628710;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LwfKNFvm8QyzmQofKZ8aVlq1/QWvi0cu1esaAtwrFUo=;
+        b=CTOj8NLGhzrZeGTxB5Jfs4llfwWaZCpiAP8M3w0dn6L2BxfieITg/OlKCqZRBOwa0F
+         qa2Y09Kfd1J/xNkEjK/tJqGW6vwxa0IuC2kJ2A7LiHFJM80Sjw37CKGQ/ecdsdV/OoxE
+         HYYQt/xDhVgQkh/9+t2Rcqmg/cKNNJm8vZ/7mdTbhaJDRx9tp22KcHfCaCZTvWtoUBwy
+         uSzMNtoMOZrkPrnM+cd5VFIou0Nr9XwPBh0Bh3pw7CjOibKJdr8QtfmYmu4C2HFpFkr5
+         ANkUr+tMoV4jdC3EecnmpyGg3I0b4LLFKNeZuWonNVxvf6yBgkeDvnejsS+b62gueL4a
+         vJbw==
+X-Gm-Message-State: AOJu0Ywa5llQI7m604k+SSTnuA1UZsOtD7F46yXmhPgP7zeDJkuHswC0
+	F4/M/fE80naxR/c+R2A+SKUIirvaqlrAnxLuDS7eAXMLXIa2
+X-Google-Smtp-Source: AGHT+IFAsCOpo+2v4dWFZPCTajTA6UTDPtSXWSL2urXkzvdbQCrm4msG36fdjr9pKizgskUhBp49zrNYMYRbfm2MWC4=
+X-Received: by 2002:a81:8396:0:b0:5f8:9702:4040 with SMTP id
+ t144-20020a818396000000b005f897024040mr636949ywf.52.1705023910394; Thu, 11
+ Jan 2024 17:45:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bc7e664-0945-47e5-7ba7-08dc130e124c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jan 2024 01:30:33.7184
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IK2nzXyqyVdyIGrW07rcueYRytGhPtPXnGMJp5qA3ewi8gbbEE73QGdzaxiCHzqTysWSAzikLOvNrw4nXY8T8lJe6n3MuCbHbN+CQlpw1xgZBR2xTOwfmiMKdfjc5O+i
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SH0PR01MB0634
+References: <00000000000011d709060eadffd3@google.com> <CAJuCfpG-8w_KQ8bWvSr=GrXM+Jx3YKn5DqTFJU2MaMojML_a-A@mail.gmail.com>
+ <CAJuCfpFfKYn+G1+puQ0KxzWCnbfFT51tKwV8MnrP7YZcJAORwg@mail.gmail.com>
+ <CAJuCfpHTAAPEjMLrcxyG8zW7HA47EinB8CQfKGmBw7gGxqQ=vA@mail.gmail.com>
+ <5ed23cf3-eedd-44aa-a498-d2a9ab046535@redhat.com> <CAJuCfpG5T71Sc46pB2eGpV7TreMZX2VZ-kDfaNmtn+etP0q9JA@mail.gmail.com>
+ <bf9dbc58-35c4-4a35-b194-6d8d9e7e4923@redhat.com> <CAJuCfpGRA7KJhMBneqAj+dw=rQReU7PyR1r34yqrNSoa-RUKbg@mail.gmail.com>
+ <15ce90cd-ff0b-4bc3-bee4-880bee3200ae@redhat.com> <CAJuCfpFcjxX4RkcYyzLWMBqPw4amzbiJCZx8UdmM1H2_QkoOqA@mail.gmail.com>
+ <CAJuCfpFQaKMh9c8e4YMvqh5ZDoX91C3RWYaB-vsX5YgwC=wvcg@mail.gmail.com>
+In-Reply-To: <CAJuCfpFQaKMh9c8e4YMvqh5ZDoX91C3RWYaB-vsX5YgwC=wvcg@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 11 Jan 2024 17:44:57 -0800
+Message-ID: <CAJuCfpFxoDzQ_MBQe127pdWBRxugN2c7QsoemvHp+qCnfir+JQ@mail.gmail.com>
+Subject: Re: [syzbot] [mm?] kernel BUG in move_pages
+To: Stephen Rothwell <sfr@canb.auug.org.au>, akpm@linux-foundation.org
+Cc: syzbot <syzbot+705209281e36404998f6@syzkaller.appspotmail.com>, 
+	Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>, aarcange@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGksIERhbg0KDQpUaGFua3MgZm9yIHlvdXIgY29tbWVudC4NCiANCj4gT24gVGh1LCBKYW4gMTEs
-IDIwMjQgYXQgMTI6NDE6MTVBTSAtMDgwMCwgQ2hhbmdodWFuZyBMaWFuZyB3cm90ZToNCj4gPiBS
-ZWdpc3RlciBJU1AgM0EgImNhcHR1cmVfc2NkIiB2aWRlbyBkZXZpY2UgdG8gcmVjZWl2ZSBzdGF0
-aXN0aWNzDQo+ID4gY29sbGVjdGlvbiBkYXRhLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hh
-bmdodWFuZyBMaWFuZyA8Y2hhbmdodWFuZy5saWFuZ0BzdGFyZml2ZXRlY2guY29tPg0KPiA+IC0t
-LQ0KWy4uLl0NCj4gPiBAQCAtMTUwLDYgKzE1MSwxMyBAQCBzdGF0aWMgaW50IHN0ZmNhbXNzX3Jl
-Z2lzdGVyX2RldnMoc3RydWN0IHN0ZmNhbXNzDQo+ID4gKnN0ZmNhbXNzKQ0KPiA+DQo+ID4gIAlj
-YXBfeXV2LT52aWRlby5zb3VyY2Vfc3ViZGV2ID0gJmlzcF9kZXYtPnN1YmRldjsNCj4gPg0KPiA+
-ICsJcmV0ID0gbWVkaWFfY3JlYXRlX3BhZF9saW5rKCZpc3BfZGV2LT5zdWJkZXYuZW50aXR5LA0K
-PiBTVEZfSVNQX1BBRF9TUkNfU0NELA0KPiA+ICsJCQkJICAgICZjYXBfc2NkLT52aWRlby52ZGV2
-LmVudGl0eSwgMCwgMCk7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCWdvdG8gZXJyX2NhcF91bnJl
-Z2lzdGVyOw0KPiA+ICsNCj4gDQo+IERvbid0IHdlIG5lZWQgdG8gZG8gc29tZXRoaW5nIGxpa2UN
-Cj4gDQo+IAltZWRpYV9lbnRpdHlfcmVtb3ZlX2xpbmtzKCZjYXBfeXV2LT52aWRlby52ZGV2LmVu
-dGl0eSk7DQo+IA0KPiBhcyBwYXJ0IG9mIHRoZSBjbGVhbnVwPyAgQWxzbyB3aGVyZSBkbyB3ZSBj
-bGVhbiB1cCB0aGlzIG5ldyBjYWxsIHRvDQo+IG1lZGlhX2NyZWF0ZV9wYWRfbGluaygpIGluIHRo
-ZSB1bnJlZ2lzdGVyIHByb2Nlc3M/DQo+IA0KDQpZZXMsIEkgd2lsbCBjYWxsIGl0IGluIG5leHQg
-dmVyc2lvbi4gT3JpZ2luYWwgY29kZSBpcyBtaXNzaW5nIHRoZSBjbGVhbnVwDQpwcm9jZXNzLCBh
-ZGQgSSB3aWxsIGFkZCBpdCB0b28uDQoNCj4gPiArCWNhcF9zY2QtPnZpZGVvLnNvdXJjZV9zdWJk
-ZXYgPSAmaXNwX2Rldi0+c3ViZGV2Ow0KPiA+ICsNCj4gPiAgCXJldHVybiByZXQ7DQo+ID4NCj4g
-PiAgZXJyX2NhcF91bnJlZ2lzdGVyOg0KPiANCj4gcmVnYXJkcywNCj4gZGFuIGNhcnBlbnRlcg0K
-DQpyZWdhcmRzLA0KQ2hhbmdodWFuZw0K
+On Thu, Jan 11, 2024 at 3:23=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Thu, Jan 11, 2024 at 9:13=E2=80=AFPM Suren Baghdasaryan <surenb@google=
+.com> wrote:
+> >
+> > On Thu, Jan 11, 2024 at 1:06=E2=80=AFPM David Hildenbrand <david@redhat=
+.com> wrote:
+> > >
+> > > On 11.01.24 22:04, Suren Baghdasaryan wrote:
+> > > > On Thu, Jan 11, 2024 at 9:00=E2=80=AFPM David Hildenbrand <david@re=
+dhat.com> wrote:
+> > > >>
+> > > >> On 11.01.24 21:20, Suren Baghdasaryan wrote:
+> > > >>> On Thu, Jan 11, 2024 at 6:58=E2=80=AFPM David Hildenbrand <david@=
+redhat.com> wrote:
+> > > >>>>
+> > > >>>> On 11.01.24 19:34, Suren Baghdasaryan wrote:
+> > > >>>>> On Thu, Jan 11, 2024 at 8:44=E2=80=AFAM Suren Baghdasaryan <sur=
+enb@google.com> wrote:
+> > > >>>>>>
+> > > >>>>>> On Thu, Jan 11, 2024 at 8:40=E2=80=AFAM Suren Baghdasaryan <su=
+renb@google.com> wrote:
+> > > >>>>>>>
+> > > >>>>>>> On Thu, Jan 11, 2024 at 8:25=E2=80=AFAM syzbot
+> > > >>>>>>> <syzbot+705209281e36404998f6@syzkaller.appspotmail.com> wrote=
+:
+> > > >>>>>>>>
+> > > >>>>>>>> Hello,
+> > > >>>>>>>>
+> > > >>>>>>>> syzbot found the following issue on:
+> > > >>>>>>>>
+> > > >>>>>>>> HEAD commit:    e2425464bc87 Add linux-next specific files f=
+or 20240105
+> > > >>>>>>>> git tree:       linux-next
+> > > >>>>>>>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D=
+14941cdee80000
+> > > >>>>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D=
+4056b9349f3da8c9
+> > > >>>>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=3D70=
+5209281e36404998f6
+> > > >>>>>>>> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU B=
+inutils for Debian) 2.40
+> > > >>>>>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=
+=3D125d0a09e80000
+> > > >>>>>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D=
+15bc7331e80000
+> > > >>>>>>>>
+> > > >>>>>>>> Downloadable assets:
+> > > >>>>>>>> disk image: https://storage.googleapis.com/syzbot-assets/2f7=
+38185e2cf/disk-e2425464.raw.xz
+> > > >>>>>>>> vmlinux: https://storage.googleapis.com/syzbot-assets/b248fc=
+f4ea46/vmlinux-e2425464.xz
+> > > >>>>>>>> kernel image: https://storage.googleapis.com/syzbot-assets/a=
+9945c8223f4/bzImage-e2425464.xz
+> > > >>>>>>>>
+> > > >>>>>>>> The issue was bisected to:
+> > > >>>>>>>>
+> > > >>>>>>>> commit adef440691bab824e39c1b17382322d195e1fab0
+> > > >>>>>>>> Author: Andrea Arcangeli <aarcange@redhat.com>
+> > > >>>>>>>> Date:   Wed Dec 6 10:36:56 2023 +0000
+> > > >>>>>>>>
+> > > >>>>>>>>        userfaultfd: UFFDIO_MOVE uABI
+> > > >>>>>>>>
+> > > >>>>>>>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=
+=3D11cb6ea9e80000
+> > > >>>>>>>> final oops:     https://syzkaller.appspot.com/x/report.txt?x=
+=3D13cb6ea9e80000
+> > > >>>>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=3D=
+15cb6ea9e80000
+> > > >>>>>>>>
+> > > >>>>>>>> IMPORTANT: if you fix the issue, please add the following ta=
+g to the commit:
+> > > >>>>>>>> Reported-by: syzbot+705209281e36404998f6@syzkaller.appspotma=
+il.com
+> > > >>>>>>>> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> > > >>>>>>>>
+> > > >>>>>>>>     do_one_initcall+0x128/0x680 init/main.c:1237
+> > > >>>>>>>>     do_initcall_level init/main.c:1299 [inline]
+> > > >>>>>>>>     do_initcalls init/main.c:1315 [inline]
+> > > >>>>>>>>     do_basic_setup init/main.c:1334 [inline]
+> > > >>>>>>>>     kernel_init_freeable+0x692/0xc30 init/main.c:1552
+> > > >>>>>>>>     kernel_init+0x1c/0x2a0 init/main.c:1442
+> > > >>>>>>>>     ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+> > > >>>>>>>>     ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:24=
+2
+> > > >>>>>>>> ------------[ cut here ]------------
+> > > >>>>>>>> kernel BUG at include/linux/page-flags.h:1035!
+> > > >>>>>>>> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> > > >>>>>>>> CPU: 0 PID: 5068 Comm: syz-executor191 Not tainted 6.7.0-rc8=
+-next-20240105-syzkaller #0
+> > > >>>>>>>> Hardware name: Google Google Compute Engine/Google Compute E=
+ngine, BIOS Google 11/17/2023
+> > > >>>>>>>> RIP: 0010:PageAnonExclusive include/linux/page-flags.h:1035 =
+[inline]
+> > > >>>>>>>
+> > > >>>>>>>    From a quick look, I think the new ioctl is being used aga=
+inst a
+> > > >>>>>>> file-backed page and that's why PageAnonExclusive() throws th=
+is error.
+> > > >>>>>>> I'll confirm if this is indeed the case and will add checks f=
+or that
+> > > >>>>>>> case. Thanks!
+> > > >>>>>>
+> > > >>>>>> Hmm. Looking at the reproducer it does not look like a file-ba=
+cked
+> > > >>>>>> memory... Anyways, I'm on it.
+> > > >>>>>
+> > > >>>>> Looks like the test is trying to move the huge_zero_page. Wonde=
+r how
+> > > >>>>> we should handle this. Just fail or do something else? Adding D=
+avid
+> > > >>>>> and Peter for feedback.
+> > > >>>>
+> > > >>>> You'll need some special-casing to handle that. But it should be=
+ fairly
+> > > >>>> easy.
+> > > >>>
+> > > >>> Ok, so should we treat zeropage the same as PAE and map destinati=
+on
+> > > >>> PTE/PMD to zeropage while clearing source PTE/PMD?
+> > > >>
+> > > >> Likely yes. So it's transparent for user space what we are moving.=
+ (this
+> > > >> sounds like an easy case to not require a prior write access just =
+to
+> > > >> move it)
+> > > >
+> > > > Ok, working on it. split_huge_pmd() already knows how to split
+> > > > huge_zero_page but I think I'll need special handling in both
+> > > > move_pages_pte() and move_pages_huge_pmd().
+> > >
+> > > A PTE-mapped huge zeropage is just a page table populated with the
+> > > ordinary shared zeropage. Are you moving the ordinary shared zeropage=
+ as
+> > > well? If not, you should do so for consistency (or not do either :) )=
+.
+> >
+> > Yes, I think I should move ordinary zeropages as well.
+>
+> I have a version that seems to work but I want to test it more and
+> it's too heavy to be considered a quick fix for linux-next. I'll post
+> a simple one-line fix which takes care of this crash and keeps the
+> behavior for zeropages the same (ioctl returns -EBUSY). Later will
+> post a separate patch to move huge and ordinary zeropages.
+
+I posted a quick fix for this issue here:
+https://lore.kernel.org/all/20240112013935.1474648-1-surenb@google.com/
+It cleanly applies over linux-next, mm-stable and mm-unstable. Andrew,
+Stephen, could you please pull the fix into your branches?
+Thanks,
+Suren.
+
+
+>
+> >
+> > >
+> > > --
+> > > Cheers,
+> > >
+> > > David / dhildenb
+> > >
