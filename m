@@ -1,183 +1,149 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A84C56B60;
-	Fri, 12 Jan 2024 09:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027CB57303;
+	Fri, 12 Jan 2024 09:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WPUhCUm6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cV/tWTRdGBCwlgpcwwYKLleSxM7+XbEe4HSVTIsS14zue8HL7kSjoyNj2Z3mCVroWdKKDlB8/GSj5vHurZ3G8jskOspzwbtBNBQUtcJpFsKD0qjv828ptKcOBMTCCBOQnJ8z9xciONMvRjnLusxMUKUus5dzcGt1cHjCEaSgzbAeE9pEVToIc20pnvaWIKg/2RhAVk1dZPiJ329rxTW4Q1Vc8Fo6uDlp9cUtJ8ajBcbggiJW4fWZJRC7kbpWk6jq+IO1kmPBIde972p/SGtG0tA704nFYdEdK6Kc//bHfHAOFHQ5vYOWM8JlN9nf+gQJ2LDGm87UHbzgTk2xyeoZoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CD2UN6p5RKi5TeEksZU13jpPnevWU9lRPfZxbUA3xaI=;
- b=f1cxKq6bHF3Rixd7h6Q2aEfwmO1JjP8SCErVGtb64Zlh0tBD1QuOoW9OQLVvNeZpe9+GuUGEMl0pqddhCacgm4E+AsgwQru8NFls11bbnauW465CpzujItIrT2zZjeNG8fi4ny7wV9gew8kwAUafg/Y1WUR3fAf8ftEAxUFHZQ3KvS5+0ds/QpSfhxeUL7l3hU86LbKNo/lUT2t56CubnBSgfhTPAug7K3pNGbTAOFo4ckCaaSVWINbGEZhJyVGPeBdnPxO6Ib/U8McdQTTqryrTJhpSslKhNnHfgGXRF/Jr0TotSS0KgMMTBocQaR4Uqw1z393SHRWuoOqqZhoHZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CD2UN6p5RKi5TeEksZU13jpPnevWU9lRPfZxbUA3xaI=;
- b=WPUhCUm6ZU+GENkjKVKCOFlG/JKsf8vkzyc4+PA5WdKZfZUcL3o/x5JhJMg1TH07AIxiATUtHS+moRpe5dCyohHd8kuzpIluax9AlbgM/AZt0kZRreVMza5PEjr6aZhMHZW0DqvW6ItDGZSkswO5flp3JbQxz78feFx0cOZ1uWc=
-Received: from MW4PR04CA0238.namprd04.prod.outlook.com (2603:10b6:303:87::33)
- by DM6PR12MB4076.namprd12.prod.outlook.com (2603:10b6:5:213::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21; Fri, 12 Jan
- 2024 09:20:35 +0000
-Received: from MWH0EPF000989E9.namprd02.prod.outlook.com
- (2603:10b6:303:87:cafe::9f) by MW4PR04CA0238.outlook.office365.com
- (2603:10b6:303:87::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21 via Frontend
- Transport; Fri, 12 Jan 2024 09:20:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000989E9.mail.protection.outlook.com (10.167.241.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.14 via Frontend Transport; Fri, 12 Jan 2024 09:20:34 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 12 Jan
- 2024 03:20:33 -0600
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2] dt-bindings: soc: xilinx: Add support for K26 rev2 SOMs
-Date: Fri, 12 Jan 2024 10:20:29 +0100
-Message-ID: <3e86244a840a45c970289ba6d2fa700a74f5b259.1705051222.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.36.1
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NYil9XfQ"
+X-UUID: da5ee334b12b11ee9e680517dc993faa-20240112
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=CsDipHrMcSMQZ5T1xzar/uAvtmPl0zEeVcCMjR5KaC0=;
+	b=NYil9XfQ59lQJZnRBfKxJX4IprCQ+NqbmOVP0ER+PCCi6z58brkkuvS6WzvMLOzUV/aumuzlWaQvV3VsFtP+vHWAgm1Nmp9ief31omekrHLuATa4xbGWh5N3flygjEsku9JtliN1xAuypamveEmKz8kYUubTPryIIsP7j5cE1Bk=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:7a65e872-013e-4ddf-9cdc-1c36a075d3e1,IP:0,U
+	RL:25,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:5d391d7,CLOUDID:dd59c782-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
+	NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: da5ee334b12b11ee9e680517dc993faa-20240112
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <yong.wu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1197665150; Fri, 12 Jan 2024 17:20:40 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 12 Jan 2024 17:20:37 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 12 Jan 2024 17:20:35 +0800
+From: Yong Wu <yong.wu@mediatek.com>
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, <christian.koenig@amd.com>, Sumit Semwal
+	<sumit.semwal@linaro.org>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+	<tjmercier@google.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linaro-mm-sig@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>,
+	Vijayanand Jitta <quic_vjitta@quicinc.com>, Joakim Bech
+	<joakim.bech@linaro.org>, Jeffrey Kardatzke <jkardatzke@google.com>, "Pavel
+ Machek" <pavel@ucw.cz>, Simon Ser <contact@emersion.fr>, Pekka Paalanen
+	<ppaalanen@gmail.com>, <jianjiao.zeng@mediatek.com>,
+	<kuohong.wang@mediatek.com>, <youlin.pei@mediatek.com>
+Subject: [PATCH v4 1/7] dt-bindings: reserved-memory: Add mediatek,dynamic-restricted-region
+Date: Fri, 12 Jan 2024 17:20:08 +0800
+Message-ID: <20240112092014.23999-2-yong.wu@mediatek.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240112092014.23999-1-yong.wu@mediatek.com>
+References: <20240112092014.23999-1-yong.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2940; i=michal.simek@amd.com; h=from:subject:message-id; bh=aQWS2q0gS9teFGJW1a5oMVC06SqN/ebq0z4PxRXh4Ic=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtSFLOGry6qNN65mPcXhsKz2SAnzIXe/iC9LX/uo9Sann zL4stq/I5aFQZCJQVZMkUXa5sqZvZUzpghfPCwHM4eVCWQIAxenAExEfDLDPI2Qf6n6pveXRltk fPjddH91rfPOdoa5Egz9XldqFj33LmXa8jmruDPnWZIwAA==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E9:EE_|DM6PR12MB4076:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15ba630b-c4d6-42e0-bbb9-08dc134fbba4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	mOy2DYUyFEJQ/87ipCKTrWIUW3IQqApMaNM14PRPV1M62cAm0DSztkzSgTO+i0QksXUW8jbfFRqklEzmei/FFAZ9H4aX4AMyZ0r+oy1llfMntEizQ7RtR6bf7yAHevbHxNwu7GBZK5eBpDetVMQrkBA2LX74Xt8DqXs6z+zjdWJya1f6UFVYrU17Sd3iLZsSEdIxn39mLz7zxWhb8BYXLB2qj7T20B0Bcg5K/xI4zP9MbnrSJVoJeT5Dmhv8MYQxy0lwnnh91WxxWnv+HQ0kQe3plwBl9OspuU/PbDXd6R4lDZ9ZJmpiIXvu+kKqPQgkl2TF3We8TrFqH690M1KCGaX9TfIpZt1JQjKoI+OERdvOPmEOexmf8fQc/bREm9GzNT8pYBvL+ay5GEJ/Hggyn5jxitQIB4gcxcOSwNrqCWcjawb5tDLdD3LWuCGMGavNsqVDIpeYYcQdd82TlHhh2e7QWbrG+RwYu2KPLo49ca9OAl3R068hW/toOwucX8Ostn1KwBUrE2VSxkx3uRupuhEJEuUL+tNuM7puq10tPan0t0TzWhCxkhbKFeMnbpTDVHEURVUtxtQbXKzsNzEjELq0XaOPCgXv+WLWY8vbgT9Fvw5gDhWoU8k71Fej6y7TlYOXhzAvgJczQ5jsiLiPWqDdsrbhVUPUgl0Og/6zE4REWYOVsRnnElE7aUgmcv07OKaX5XjKUrhjD3s3fAD1cnjP8eYk9//fI6aj3qSuPxmzvpl8i6znOfrKSUPT0j3ZwXSgC5lHJhXioEIptq/uJElhcYJ7sOuBgd2aaGcBQao=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(376002)(136003)(346002)(230922051799003)(451199024)(82310400011)(64100799003)(186009)(1800799012)(36840700001)(40470700004)(46966006)(6666004)(36756003)(47076005)(478600001)(36860700001)(26005)(16526019)(2616005)(426003)(41300700001)(336012)(83380400001)(40480700001)(40460700003)(82740400003)(5660300002)(110136005)(70586007)(70206006)(44832011)(2906002)(8936002)(356005)(54906003)(81166007)(316002)(4326008)(8676002)(86362001)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2024 09:20:34.9684
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15ba630b-c4d6-42e0-bbb9-08dc134fbba4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000989E9.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4076
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--3.946300-8.000000
+X-TMASE-MatchedRID: YXgS1C6OPWwxaBEU4bKrV8LPXKYZysJRecvjbu/xDjpMOjKUxCZwr6oy
+	tXMP4p4T7Oz5SO8AjrT8deRGOD4hQJ/vdeQQfVo4zfqlpbtmcWhMkOX0Uoduubuqk4cq52pzNDP
+	jsaoNaOmcPcDHCp4L+uSWVqW5qzmOGHMruoCVNItsG7r4Qh7N3J15MaKbV6Qv92wasZo4p00VN8
+	HXIE+U8k5/nzWZD6z607K+59sjwLdAXbiRmn1bD54CIKY/Hg3AaZGo0EeYG978V77yhJRgo99pj
+	zubZ2rH33fj+sMArfMJpevTilEwkFjGlbPXfDBGCFErBhF4CgwJ/T+F/HKSEHCVsvSCvlbfzLv5
+	+XaqEeZwkCae1ANnop9RAYWhalwdisxAtDy5oyiZqjnDjmy9xW1Rjoup2VCcWve+eVz4Pp5Vk5u
+	tmQ1VlGVF3+d9rnoxXsgQSqx49gY=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--3.946300-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	D68D2818C77DD63E4E15ABE939F9C3F9AD0BFE5F39B89A44924D760DB8D2C71A2000:8
+X-MTK: N
 
-Revision 2 is SW compatible with revision 1 but it is necessary to reflect
-it in model and compatible properties which are parsed by user space.
-Rev 2 has improved a power on boot reset and MIO34 shutdown glich
-improvement done via an additional filter in the GreenPak chip.
+Add a binding for describing the dynamic restricted reserved memory range.
+The memory range also will be defined in the TEE firmware. It means the TEE
+will be configured with the same address/size that is being set in this
+DT node. Regarding to the detail TEE command, Please search
+MTK_TZCMD_SECMEM_ZALLOC and MTK_TZCMD_SECMEM_FREE.
 
-Signed-off-by: Michal Simek <michal.simek@amd.com>
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
 ---
+ .../mediatek,dynamic-restricted-region.yaml   | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,dynamic-restricted-region.yaml
 
-Changes in v2:
-- Support older combinations
-
-I want to support all versions we created:
-All of them:
--rev2, -rev1, -revB, -revA, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
-
-rev1:
--rev1, -revB, -revA, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
-
-revB:
--revB, -revA, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
-
-revA:
--revA, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
-
-And also single one are permitted:
--revB, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
--rev1, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
--rev2, "xlnx,zynqmp-smk-k26", "xlnx,zynqmp"
-
-I didn't find a way to pretty much all the time force that there must be
-both "xlnx,zynqmp-smk-k26", "xlnx,zynqmp" that's why there is only
-requested to have xlnx,zynqmp. If you find a way how to encode it please
-let me know.
-
----
- .../bindings/soc/xilinx/xilinx.yaml           | 32 +++++++++++++------
- 1 file changed, 22 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/xilinx/xilinx.yaml b/Documentation/devicetree/bindings/soc/xilinx/xilinx.yaml
-index d4c0fe1fe435..39242efeec47 100644
---- a/Documentation/devicetree/bindings/soc/xilinx/xilinx.yaml
-+++ b/Documentation/devicetree/bindings/soc/xilinx/xilinx.yaml
-@@ -117,20 +117,32 @@ properties:
-           - const: xlnx,zynqmp
- 
-       - description: Xilinx Kria SOMs
-+        additionalItems: true
-+        maxItems: 6
-+        minItems: 3
-         items:
--          - const: xlnx,zynqmp-sm-k26-rev1
--          - const: xlnx,zynqmp-sm-k26-revB
--          - const: xlnx,zynqmp-sm-k26-revA
--          - const: xlnx,zynqmp-sm-k26
--          - const: xlnx,zynqmp
-+          - enum:
-+              - xlnx,zynqmp-sm-k26-rev2
-+              - xlnx,zynqmp-sm-k26-rev1
-+              - xlnx,zynqmp-sm-k26-revB
-+              - xlnx,zynqmp-sm-k26-revA
-+              - xlnx,zynqmp-sm-k26
-+        contains:
-+          const: xlnx,zynqmp
- 
-       - description: Xilinx Kria SOMs (starter)
-+        additionalItems: true
-+        maxItems: 6
-+        minItems: 3
-         items:
--          - const: xlnx,zynqmp-smk-k26-rev1
--          - const: xlnx,zynqmp-smk-k26-revB
--          - const: xlnx,zynqmp-smk-k26-revA
--          - const: xlnx,zynqmp-smk-k26
--          - const: xlnx,zynqmp
-+          - enum:
-+              - xlnx,zynqmp-smk-k26-rev2
-+              - xlnx,zynqmp-smk-k26-rev1
-+              - xlnx,zynqmp-smk-k26-revB
-+              - xlnx,zynqmp-smk-k26-revA
-+              - xlnx,zynqmp-smk-k26
-+        contains:
-+          const: xlnx,zynqmp
- 
-       - description: AMD MicroBlaze V (QEMU)
-         items:
+diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,dynamic-restricted-region.yaml b/Documentation/devicetree/bindings/reserved-memory/mediatek,dynamic-restricted-region.yaml
+new file mode 100644
+index 000000000000..5cbe3a5637fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,dynamic-restricted-region.yaml
+@@ -0,0 +1,43 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reserved-memory/mediatek,dynamic-restricted-region.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek Dynamic Reserved Region
++
++description:
++  A memory region that can dynamically transition as a whole between
++  secure and non-secure states. This memory will be protected by OP-TEE
++  when allocations are active and unprotected otherwise.
++
++maintainers:
++  - Yong Wu <yong.wu@mediatek.com>
++
++allOf:
++  - $ref: reserved-memory.yaml
++
++properties:
++  compatible:
++    const: mediatek,dynamic-restricted-region
++
++required:
++  - compatible
++  - reg
++  - reusable
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    reserved-memory {
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges;
++
++        reserved-memory@80000000 {
++            compatible = "mediatek,dynamic-restricted-region";
++            reg = <0x80000000 0x18000000>;
++            reusable;
++        };
++    };
 -- 
-2.36.1
+2.25.1
 
