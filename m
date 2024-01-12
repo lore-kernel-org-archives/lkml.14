@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7054A42049
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705BC45015
 	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 06:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoKOZ9Iu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0F3B4C433B2;
-	Fri, 12 Jan 2024 06:30:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MikZ87mn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F0A7CC43399;
+	Fri, 12 Jan 2024 06:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1705041031;
-	bh=jekUb0FSVZPvWCqMLLEnDhCHnUsUC5IyzrcXtmJkoMQ=;
+	bh=aZ9M2uKV6onpNRKsHx+QyMJOm0urWPWtFbPW2xqWs08=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZoKOZ9IuihzHcwrt/9jW7znjgqOmpCDPTWVGhMBu0568Xac3cCsUNuuX8bVv2JwUd
-	 xzb1otYyIhe3EtzEe4kPVfjeqXy51k6sJSGXTnuIJogGmya4bW2JUn3MLIc7OO9TvF
-	 BrS8tcj1RJfZrvpcriWUGrdxKBWH9b/oWYJVyPIHNyWrtz+42/nfCW9VBtz9UVIf8a
-	 oxLTDHk4EVyakeEZ/C025+5Q1HGsOUJYQkl+OMjJgJd1UpNBtRA3qBezowVSQjoy9Y
-	 shZv2Kw1qPkckk9gyNznM+MzacDcN16R+IPb6SpkQAAhzl7aLsMR8fPwGoBGG9HqzN
-	 clSGzXxLo2zBA==
+	b=MikZ87mnhB9HH1R7gMvXdNW9prX/1oyBMOBB/8n5d5VPk95YQZqp5DIGcEgOWzzdG
+	 yUclOZ8J0/Pi8L6xpIH9l+I2pF+kK99NORstrRmjGNm1Xtxv+HjXvP883xKL5ipKeB
+	 u9+XA41SJbg4z4/kRa4Bj7Zawf9WeyIt2A/zl3OhCUUPIzU1PBVtRt4QEtdNE9OdHO
+	 crFRG+4EqPcQGoLbQljsQSuSIfOUVUvJSwcT++jm0F1QtYEnFV6vdijlkEJJRqE8sK
+	 MMXvAHzjNgHTHRiLo5hQUEhPUIsKaiv5beCMWnyTcTqwPmxTgC6i3mCCUPp0ejYnbZ
+	 MBDQSBYzxceBw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E8B73DFC697;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D7034D8C987;
 	Fri, 12 Jan 2024 06:30:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,46 +28,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH V3 0/4] riscv: mm: Fixup & Optimize COMPAT code
+Subject: Re: [PATCH v2] riscv: Add support for BATCHED_UNMAP_TLB_FLUSH
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170504103094.17535.18254228443220727646.git-patchwork-notify@kernel.org>
+ <170504103087.17535.15863318828506386951.git-patchwork-notify@kernel.org>
 Date: Fri, 12 Jan 2024 06:30:30 +0000
-References: <20231222115703.2404036-1-guoren@kernel.org>
-In-Reply-To: <20231222115703.2404036-1-guoren@kernel.org>
-To: Guo Ren <guoren@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, alexghiti@rivosinc.com,
- charlie@rivosinc.com, xiao.w.wang@intel.com, david@redhat.com,
- panqinglin2020@iscas.ac.cn, rick.p.edgecombe@intel.com, willy@infradead.org,
- bjorn@rivosinc.com, conor.dooley@microchip.com, cleger@rivosinc.com,
- leobras@redhat.com, guoren@linux.alibaba.com
+References: <20240108193640.344929-1-alexghiti@rivosinc.com>
+In-Reply-To: <20240108193640.344929-1-alexghiti@rivosinc.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+ jszhang@kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Fri, 22 Dec 2023 06:56:59 -0500 you wrote:
-> From: Guo Ren <guoren@linux.alibaba.com>
+On Mon,  8 Jan 2024 20:36:40 +0100 you wrote:
+> Allow to defer the flushing of the TLB when unmapping pages, which allows
+> to reduce the numbers of IPI and the number of sfence.vma.
 > 
-> When the task is in COMPAT mode, the TASK_SIZE should be 2GB, so
-> STACK_TOP_MAX and arch_get_mmap_end must be limited to 2 GB. This series
-> fixes the problem made by commit: add2cc6b6515 ("RISC-V: mm: Restrict
-> address space for sv39,sv48,sv57") and optimizes the related coding
-> convention of TASK_SIZE.
+> The ubenchmarch used in commit 43b3dfdd0455 ("arm64: support
+> batched/deferred tlb shootdown during page reclamation/migration") that
+> was multithreaded to force the usage of IPI shows good performance
+> improvement on all platforms:
 > 
 > [...]
 
 Here is the summary with links:
-  - [V3,1/4] riscv: mm: Fixup compat mode boot failure
-    https://git.kernel.org/riscv/c/5f449e245e5b
-  - [V3,2/4] riscv: mm: Fixup compat arch_get_mmap_end
-    https://git.kernel.org/riscv/c/97b7ac69be2e
-  - [V3,3/4] riscv: mm: Remove unused TASK_SIZE_MIN
-    (no matching commit)
-  - [V3,4/4] riscv: mm: Optimize TASK_SIZE definition
-    (no matching commit)
+  - [v2] riscv: Add support for BATCHED_UNMAP_TLB_FLUSH
+    https://git.kernel.org/riscv/c/54d7431af73e
 
 You are awesome, thank you!
 -- 
