@@ -1,480 +1,216 @@
-Received: from pv50p00im-tydg10021701.me.com (pv50p00im-tydg10021701.me.com [17.58.6.54])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFB56D1B3
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 13:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kyuhyuk.kr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kyuhyuk.kr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDC16BB40;
+	Fri, 12 Jan 2024 13:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kyuhyuk.kr header.i=@kyuhyuk.kr header.b="Vs0wf9yp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kyuhyuk.kr; s=sig1;
-	t=1705067472; bh=k4L8owKwtitHX6QZgEndWA531suQhjqueyk0UlNyQ1w=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=Vs0wf9ypC3x+SLrLwNhv/+V7K2zI9ik2skIUpJWWd9wiwHgbcPZUIoU78l9PO0LM/
-	 3HxsGQWI51HA6h+r711lLSBq62QsYnijfUobxP8JGK9MawS03VgCOal2BdBgiE2Ru4
-	 g1t5Epugonx43wtsHDpENKmfyKYO3hz2r6tgl5ahHS/7k2UprCAWWCnGgdBIYcAnQ3
-	 K9f0CK5Q2SgJKNjQNOYxwFUSxa/MDGCiUoTtjtJ272h6ki1PCUAtKinHErTIb/kypr
-	 TUrUnIx+5Gcvfqdoaon1SgzYpjIF0Ht33PsUJOjgFuZmGY6hBuWwP+LDDN/Nby0Kld
-	 CzH0W1LZ+wigw==
-Received: from KyuDevelop.. (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-tydg10021701.me.com (Postfix) with ESMTPSA id 0FA173A0C19;
-	Fri, 12 Jan 2024 13:51:07 +0000 (UTC)
-From: KyuHyuk Lee <lee@kyuhyuk.kr>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Tianling Shen <cnsztl@gmail.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Ondrej Jirman <megi@xff.cz>,
-	Andy Yan <andyshrk@163.com>,
-	Jagan Teki <jagan@edgeble.ai>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	KyuHyuk Lee <lee@kyuhyuk.kr>,
-	David Heidelberg <david@ixit.cz>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: rockchip: Add Hardkernel ODROID-M1S board
-Date: Fri, 12 Jan 2024 22:50:04 +0900
-Message-Id: <20240112135004.28907-1-lee@kyuhyuk.kr>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="MoMDc32t"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40C8bMSh014558;
+	Fri, 12 Jan 2024 14:52:28 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=bQDWIGEUgxPtuigdQYbYpc8qQmx6+NnBxK0RzcsvHAk=; b=Mo
+	MDc32tNZ2bdXNePfuK2gQh17PuuNs5HDWkF7eC0e2Bp0QqQ4Fi9D3QoweqBAgHb7
+	5BwkGP5Ay1SVvg7oacZ4M6P09cD48CmFExeA8AM1n+G7rqU8chGQhz8+o3D4aZyU
+	32AoO6RFggFYb6q8fC0WqLeDYm2gy6deaScB8KdCaauewtSqx2mFApN0wvsEn35t
+	gG8UYxfdCR1nqK1Wh5XGv5QbWSqp5mp2/cCjBagOHFAzW68qsamp9/59kZoXPT8C
+	B/4nzc3m2m73SomaMBXTlfdSMibFVJeIkar3P0GIfhad8G3LaZh1izZZs/i+g1ru
+	HbFdBGkEFOLhjveIPeFQ==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vk22w9ab1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jan 2024 14:52:28 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BCC1410002A;
+	Fri, 12 Jan 2024 14:52:27 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AA420215159;
+	Fri, 12 Jan 2024 14:52:27 +0100 (CET)
+Received: from [10.129.178.37] (10.129.178.37) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 12 Jan
+ 2024 14:52:24 +0100
+Message-ID: <3552f3e5-01cc-4e95-a055-f7aea0f8dc4b@foss.st.com>
+Date: Fri, 12 Jan 2024 14:52:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 4/5] ARM: dts: stm32: add display support on
+ stm32f769-disco
+Content-Language: en-US
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        <linux-kernel@vger.kernel.org>
+CC: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <linux-amarula@amarulasolutions.com>, Lee Jones <lee@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20240111113146.16011-1-dario.binacchi@amarulasolutions.com>
+ <20240111113146.16011-5-dario.binacchi@amarulasolutions.com>
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+In-Reply-To: <20240111113146.16011-5-dario.binacchi@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: YytT8xDLqY8BuXB8k4PQCRe2B4o_xQD2
-X-Proofpoint-GUID: YytT8xDLqY8BuXB8k4PQCRe2B4o_xQD2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-12_06,2024-01-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 clxscore=1030 phishscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 mlxlogscore=979 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2401120108
+ definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
 
-This patch is to add a device tree for new board Hardkernel ODROID-M1S
-based on Rockchip RK3566, includes basic peripherals uart/eMMC/uSD/i2c
 
-Signed-off-by: KyuHyuk Lee <lee@kyuhyuk.kr>
----
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3566-odroid-m1s.dts   | 388 ++++++++++++++++++
- 2 files changed, 389 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-odroid-m1s.dts
+On 1/11/24 12:31, Dario Binacchi wrote:
+> The patch adds display support on the stm32f769-disco board.
+>
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> ---
+>
+> (no changes since v1)
+>
+>  arch/arm/boot/dts/st/stm32f769-disco.dts | 72 +++++++++++++++++++++++-
+>  1 file changed, 71 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/st/stm32f769-disco.dts b/arch/arm/boot/dts/st/stm32f769-disco.dts
+> index 8632bd866272..d1eb5f9c78bf 100644
+> --- a/arch/arm/boot/dts/st/stm32f769-disco.dts
+> +++ b/arch/arm/boot/dts/st/stm32f769-disco.dts
+> @@ -41,7 +41,7 @@
+>   */
+>  
+>  /dts-v1/;
+> -#include "stm32f746.dtsi"
+> +#include "stm32f769.dtsi"
+>  #include "stm32f769-pinctrl.dtsi"
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> @@ -60,6 +60,19 @@ memory@c0000000 {
+>  		reg = <0xC0000000 0x1000000>;
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		linux,dma {
+> +			compatible = "shared-dma-pool";
+> +			linux,dma-default;
+> +			no-map;
+> +			size = <0x100000>;
+> +		};
+> +	};
+> +
+>  	aliases {
+>  		serial0 = &usart1;
+>  	};
+> @@ -85,6 +98,13 @@ button-0 {
+>  		};
+>  	};
+>  
+> +	panel_backlight: panel-backlight {
+> +		compatible = "gpio-backlight";
+> +		gpios = <&gpioi 14 GPIO_ACTIVE_HIGH>;
+> +		default-on;
+> +		status = "okay";
+> +	};
+> +
+>  	usbotg_hs_phy: usb-phy {
+>  		#phy-cells = <0>;
+>  		compatible = "usb-nop-xceiv";
+> @@ -114,6 +134,46 @@ &clk_hse {
+>  	clock-frequency = <25000000>;
+>  };
+>  
+> +&dsi {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +			dsi_in: endpoint {
+> +				remote-endpoint = <&ltdc_out_dsi>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +			dsi_out: endpoint {
+> +				remote-endpoint = <&dsi_panel_in>;
+> +			};
+> +		};
+> +	};
+> +
+> +	panel0: panel-dsi@0 {
+> +		compatible = "orisetech,otm8009a";
+> +		reg = <0>; /* dsi virtual channel (0..3) */
+> +		reset-gpios = <&gpioj 15 GPIO_ACTIVE_LOW>;
+> +		power-supply = <&vcc_3v3>;
+> +		backlight = <&panel_backlight>;
+> +		status = "okay";
+> +
+> +		port {
+> +			dsi_panel_in: endpoint {
+> +				remote-endpoint = <&dsi_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  &i2c1 {
+>  	pinctrl-0 = <&i2c1_pins_b>;
+>  	pinctrl-names = "default";
+> @@ -122,6 +182,16 @@ &i2c1 {
+>  	status = "okay";
+>  };
+>  
+> +&ltdc {
+> +	status = "okay";
+> +
+> +	port {
+> +		ltdc_out_dsi: endpoint@0 {
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index a7b30e11beaf..0cc7360a6120 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -76,6 +76,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg353ps.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg353v.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg353vs.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg503.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-odroid-m1s.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-pinenote-v1.1.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-pinenote-v1.2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-powkiddy-rgb30.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3566-odroid-m1s.dts b/arch/arm64/boot/dts/rockchip/rk3566-odroid-m1s.dts
-new file mode 100644
-index 000000000000..c6c4f573535f
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3566-odroid-m1s.dts
-@@ -0,0 +1,388 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2024 KyuHyuk Lee <lee@kyuhyuk.kr>
-+ *
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
-+#include "rk3566.dtsi"
-+
-+/ {
-+	model = "Hardkernel ODROID-M1S";
-+	compatible = "rockchip,rk3566-odroid-m1s", "rockchip,rk3566";
-+
-+	aliases {
-+		i2c0 = &i2c3;
-+		i2c3 = &i2c0;
-+		spi0 = &spi1;
-+		spi1 = &spi0;
-+		mmc0 = &sdmmc0;
-+		mmc1 = &sdhci;
-+		serial0 = &uart6;
-+		serial1 = &uart0;
-+		serial6 = &uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led_power: led-0 {
-+			gpios = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
-+			function = LED_FUNCTION_POWER;
-+			color = <LED_COLOR_ID_RED>;
-+			linux,default-trigger = "default-on";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&led_power_pin>;
-+		};
-+		led_work: led-1 {
-+			gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
-+			function = LED_FUNCTION_HEARTBEAT;
-+			color = <LED_COLOR_ID_BLUE>;
-+			linux,default-trigger = "heartbeat";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&led_work_pin>;
-+		};
-+	};
-+
-+	vcc_sys: vcc-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
-+	vcc3v3_sys: vcc3v3-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc5v0_sys: vcc5v0-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_sys>;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	vdd_cpu: regulator@1c {
-+		compatible = "tcs,tcs452x";
-+		reg = <0x1c>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_cpu";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <712500>;
-+		regulator-max-microvolt = <1390000>;
-+		regulator-init-microvolt = <900000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
-+	rk809: pmic@20 {
-+		compatible = "rockchip,rk809";
-+		reg = <0x20>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+		#clock-cells = <1>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_int_l>;
-+		rockchip,system-power-controller;
-+		vcc1-supply = <&vcc3v3_sys>;
-+		vcc2-supply = <&vcc3v3_sys>;
-+		vcc3-supply = <&vcc3v3_sys>;
-+		vcc4-supply = <&vcc3v3_sys>;
-+		vcc5-supply = <&vcc3v3_sys>;
-+		vcc6-supply = <&vcc3v3_sys>;
-+		vcc7-supply = <&vcc3v3_sys>;
-+		vcc8-supply = <&vcc3v3_sys>;
-+		vcc9-supply = <&vcc3v3_sys>;
-+		wakeup-source;
-+
-+		regulators {
-+			vdd_logic: DCDC_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-init-microvolt = <900000>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-initial-mode = <0x2>;
-+				regulator-name = "vdd_logic";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_gpu: DCDC_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-init-microvolt = <900000>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-initial-mode = <0x2>;
-+				regulator-name = "vdd_gpu";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_ddr: DCDC_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-initial-mode = <0x2>;
-+				regulator-name = "vcc_ddr";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vdd_npu: DCDC_REG4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-init-microvolt = <900000>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-initial-mode = <0x2>;
-+				regulator-name = "vdd_npu";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdda0v9_image: LDO_REG1 {
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-name = "vdda0v9_image";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdda_0v9: LDO_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-name = "vdda_0v9";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdda0v9_pmu: LDO_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-name = "vdda0v9_pmu";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <900000>;
-+				};
-+			};
-+
-+			vccio_acodec: LDO_REG4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-name = "vccio_acodec";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vccio_sd: LDO_REG5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vccio_sd";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc3v3_pmu: LDO_REG6 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc3v3_pmu";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			vcca_1v8: LDO_REG7 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcca_1v8";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcca1v8_ddr: LDO_REG8 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcca1v8_pmu";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vcca1v8_image: LDO_REG9 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcca1v8_image";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_1v8: DCDC_REG5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc_1v8";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_3v3: SWITCH_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc_3v3";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc3v3_sd: SWITCH_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc3v3_sd";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	leds {
-+		led_power_pin: led-power-pin {
-+			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		led_work_pin: led-work-pin {
-+			rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmic {
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins =
-+				<0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-+
-+&pmu_io_domains {
-+	pmuio2-supply = <&vcc3v3_pmu>;
-+	vccio1-supply = <&vccio_acodec>;
-+	vccio3-supply = <&vccio_sd>;
-+	vccio4-supply = <&vcc_3v3>;
-+	vccio5-supply = <&vcc_3v3>;
-+	vccio6-supply = <&vcc_3v3>;
-+	vccio7-supply = <&vcc_3v3>;
-+	status = "okay";
-+};
-+
-+&saradc {
-+	vref-supply = <&vcca_1v8>;
-+	status = "okay";
-+};
-+
-+&sdhci {
-+	bus-width = <8>;
-+	max-frequency = <200000000>;
-+	non-removable;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_bus8 &emmc_clk &emmc_cmd &emmc_datastrobe &emmc_rstnout>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vcc_1v8>;
-+	status = "okay";
-+};
-+
-+&sdmmc0 {
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc0_bus4 &sdmmc0_clk &sdmmc0_cmd &sdmmc0_det>;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc3v3_sd>;
-+	vqmmc-supply = <&vccio_sd>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-\ No newline at end of file
--- 
-2.34.1
+Hi Dario,
 
+There is no need for unit name on this endpoint since it is alone.
+
+Otherwise it triggers this warning at build time :
+
+.../arch/arm/boot/dts/st/stm32f769-disco.dts:189.28-191.5: Warning
+(unit_address_vs_reg): /soc/display-controller@40016800/port/endpoint@0: node
+has a unit name, but no reg or ranges property
+
+.../arch/arm/boot/dts/st/stm32f769-disco.dts:189.28-191.5: Warning
+(unit_address_vs_reg): /soc/display-controller@40016800/port/endpoint@0: node
+has a unit name, but no reg or ranges property
+
+
+Regards,
+
+Raphaël
+
+> +			remote-endpoint = <&dsi_in>;
+> +		};
+> +	};
+> +};
+> +
+>  &rtc {
+>  	status = "okay";
+>  };
