@@ -1,113 +1,149 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72B86D1B4;
-	Fri, 12 Jan 2024 13:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AievCUHb"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40CDIW99009300;
-	Fri, 12 Jan 2024 13:53:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=DhVXr6gyIbMg
-	zR2b0surHFdqtEQz2xq2bAyxCY1BWNg=; b=AievCUHbdq/ugHWm/OsV+lLygUYw
-	K4NGsL8+BJKPUcnaL5SLCddxxnLGtTrMlu/YrkUMYAEX3mKJ6rMsXWz8ZVlcvz1+
-	RBDQwQjJHe8is7YTZnhNKGI+S7wOmHMyknU/EpYpZl2mcKI10rrNyU4Hf7WBbhch
-	1wmMuY95zzYuRv9R9lzZzgcpCo3LlP9Cj/oIwKLQQr780eBCGW5MvAsCX4JRWrEA
-	J7LObRPepcjDFQVOLNC57IDNKcy+qdEboAgBom+AEedwPK8shDK9XUCrT+FAobpM
-	obsUYXxRqVwwkVmwKo53WKfamBm698dM9jDzQXwJXgJM4wUIjpdJfpA1MA==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vjrqj1ysn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jan 2024 13:53:46 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 40CDrhs3005326;
-	Fri, 12 Jan 2024 13:53:43 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3veyxm4mxw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 12 Jan 2024 13:53:43 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40CDrgeK005319;
-	Fri, 12 Jan 2024 13:53:42 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-vdadhani-hyd.qualcomm.com [10.213.106.28])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 40CDrg91005316;
-	Fri, 12 Jan 2024 13:53:42 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 4047106)
-	id 29C915013A9; Fri, 12 Jan 2024 19:23:41 +0530 (+0530)
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-To: andersson@kernel.org, konrad.dybcio@linaro.org, andi.shyti@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org
-Cc: quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>
-Subject: [PATCH 1/1] i2c: i2c-qcom-geni: Correct I2C TRE sequence
-Date: Fri, 12 Jan 2024 19:23:32 +0530
-Message-Id: <20240112135332.24957-1-quic_vdadhani@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: OoHBo6GdfJgBuPdX_brWoMYa6rkH5ixG
-X-Proofpoint-GUID: OoHBo6GdfJgBuPdX_brWoMYa6rkH5ixG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- malwarescore=0 mlxlogscore=720 mlxscore=0 clxscore=1011 adultscore=0
- phishscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401120109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBE854747;
+	Fri, 12 Jan 2024 13:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5e734251f48so51365657b3.1;
+        Fri, 12 Jan 2024 05:55:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705067749; x=1705672549;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EGC/g2xK3NLCm39yP+e6r0PYYA1RCJNgKN4yfeuv1jg=;
+        b=j464jAxDojn+mpXZ8DF+0zxFhFgq2Fz7Btb3Td37lyyBNc4b8xkWpjihox/ClQ5N05
+         MfYx4nHRB2eikvVsagt7HSA6k4Wvcp8pmD8CcSuhmb21Xjd4GuQ5kZsDefg+T9PCQCzW
+         v3B6sHZMY99BU+28//x9yrmErQB27bf48npNneOWCCz1qjbhmp/RFARByyIDgFhBuIxE
+         e8yBfTxc/p0/LbCaSf8d3ugCKBHC3W8BVyq+cdHkmibeiSijgjZWRbFUE7AQJwhNyCQy
+         iTYZyARJXGfQ9+qj+yIzeVPh9JK/E04oxMu14AqfuNkXPz5Vi6GO5GoW/M0nlzqjpKlz
+         T7EQ==
+X-Gm-Message-State: AOJu0YzHAp6avRtMlUBZxlj46PBV0ERIDzbxLizyqH3ZCPNN5boqaENE
+	Ttjiqh0j67raZyudHCnNoPW2IbcXZu0AKw==
+X-Google-Smtp-Source: AGHT+IGi1dBhWOyIkyhYxPs19Jgh4+Mqa0q+fC5Sry7mDnl0KRNeAhVDlVuKH1WYpyeFATALIuFDeA==
+X-Received: by 2002:a81:a188:0:b0:5e7:6f9c:38fe with SMTP id y130-20020a81a188000000b005e76f9c38femr1363891ywg.46.1705067749663;
+        Fri, 12 Jan 2024 05:55:49 -0800 (PST)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id x203-20020a81a0d4000000b00583b144fe51sm1345771ywg.118.2024.01.12.05.55.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 05:55:49 -0800 (PST)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dbed179f0faso5183234276.1;
+        Fri, 12 Jan 2024 05:55:49 -0800 (PST)
+X-Received: by 2002:a25:2e0c:0:b0:dbd:c783:c456 with SMTP id
+ u12-20020a252e0c000000b00dbdc783c456mr515265ybu.0.1705067749329; Fri, 12 Jan
+ 2024 05:55:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20231227130810.2744550-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20231227130810.2744550-1-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 12 Jan 2024 14:55:37 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVnsJfOtZPpr+_MRNkx-bSXrCm8Hy_j6Gy58WnGn_kaMA@mail.gmail.com>
+Message-ID: <CAMuHMdVnsJfOtZPpr+_MRNkx-bSXrCm8Hy_j6Gy58WnGn_kaMA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: rzg3s-smarc: Add gpio keys
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: geert+renesas@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For i2c read operation, we are getting gsi mode timeout due
-to malformed TRE(Transfer Ring Element). currently for read opreration,
-we are configuring incorrect TRE sequence(config->dma->go).
+Hi Claudiu,
 
-So correct TRE sequence(config->go->dma) to resolve timeout
-issue for read operation.
+On Wed, Dec 27, 2023 at 2:08=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> RZ SMARC Carrier II board has 3 user buttons called USER_SW1, USER_SW2,
+> USER_SW3. Add a DT node in device tree to propertly instantiate the
+> gpio-keys driver for these buttons.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
----
- drivers/i2c/busses/i2c-qcom-geni.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Thanks for your patch!
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index 0d2e7171e3a6..5904fc8bba71 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -613,6 +613,11 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 
- 		peripheral.addr = msgs[i].addr;
- 
-+		ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
-+				    &tx_addr, &tx_buf, I2C_WRITE, gi2c->tx_c);
-+		if (ret)
-+			goto err;
-+
- 		if (msgs[i].flags & I2C_M_RD) {
- 			ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
- 					    &rx_addr, &rx_buf, I2C_READ, gi2c->rx_c);
-@@ -620,11 +625,6 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 				goto err;
- 		}
- 
--		ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
--				    &tx_addr, &tx_buf, I2C_WRITE, gi2c->tx_c);
--		if (ret)
--			goto err;
--
- 		if (msgs[i].flags & I2C_M_RD)
- 			dma_async_issue_pending(gi2c->rx_c);
- 		dma_async_issue_pending(gi2c->tx_c);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+> @@ -6,6 +6,7 @@
+>   */
+>
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+>  #include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
+>
+>  / {
+> @@ -14,6 +15,37 @@ aliases {
+>                 mmc1 =3D &sdhi1;
+>         };
+>
+> +       keys {
 
+Do you mind if I s/keys/keypad/ while applying? ...
+
+> +               compatible =3D "gpio-keys";
+> +
+> +               key-1 {
+> +                       interrupts =3D <RZG2L_GPIO(18, 0) IRQ_TYPE_EDGE_F=
+ALLING>;
+
+Oh, the horror of interrupt controllers that don't support generating
+interrupts on both edges...
+
+> +                       interrupt-parent =3D <&pinctrl>;
+
+... and move these one level up, to avoid duplication?
+
+> +                       linux,code =3D <KEY_1>;
+> +                       label =3D "USER_SW1";
+> +                       wakeup-source;
+> +                       debounce-interval =3D <20>;
+> +               };
+> +
+> +               key-2 {
+> +                       interrupts =3D <RZG2L_GPIO(0, 1) IRQ_TYPE_EDGE_FA=
+LLING>;
+> +                       interrupt-parent =3D <&pinctrl>;
+> +                       linux,code =3D <KEY_2>;
+> +                       label =3D "USER_SW2";
+> +                       wakeup-source;
+> +                       debounce-interval =3D <20>;
+> +               };
+> +
+> +               key-3 {
+> +                       interrupts =3D <RZG2L_GPIO(0, 3) IRQ_TYPE_EDGE_FA=
+LLING>;
+> +                       interrupt-parent =3D <&pinctrl>;
+> +                       linux,code =3D <KEY_3>;
+> +                       label =3D "USER_SW3";
+> +                       wakeup-source;
+> +                       debounce-interval =3D <20>;
+> +               };
+> +       };
+> +
+>         vcc_sdhi1: regulator-vcc-sdhi1 {
+>                 compatible =3D "regulator-fixed";
+>                 regulator-name =3D "SDHI1 Vcc";
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.9, with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
