@@ -1,81 +1,84 @@
-Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF06210E1;
-	Sat, 13 Jan 2024 11:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B73011723;
+	Sat, 13 Jan 2024 12:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="C3cVHZwz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1705146666; bh=9hZq7TcGcl2DGxECsv0Ebzbyr1A9X1v0BNjSFl+A1aU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=C3cVHZwzmYsW+jqADlOsss0kZPQgBa9jKPwDAyqOTrFbzCgRpmMFRbWp4XUr0yCP+
-	 01Hb3PHGK+XoeaHaLPqGnfNmH4tbvCZdrkrrE75BXW2vT+rAFsAnw9eduSrLiuAacI
-	 Q+trbCcNcxOttxRBEGoV4vF1qunKUEA5lyKI1cUY=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id 7238E448; Sat, 13 Jan 2024 19:28:35 +0800
-X-QQ-mid: xmsmtpt1705145315tbfs81lrf
-Message-ID: <tencent_BEF36CE365896CC3B36456B765576766C105@qq.com>
-X-QQ-XMAILINFO: NyTsQ4JOu2J2w0/HgP7bscZFbrNQ6Z0syXFbsb9Ax6uOONSKscJtVTVn8sxCYS
-	 0VjKj33QxKGXISBSHshLRWBhU86KQ8KgM/LL6hMEn/zkEL6UlDZK09ijsxUOTQUZA3e/iQ/wJFo3
-	 d9Osf4cg7OsOIEQD1vfV0uBhorlv5s/XlpCfM4ivUgqFYUr4q2r8N9ubtb5URDldo6qtu9o+D3QU
-	 X5zcYN7ip2o/LPFE46ycXAWjE/y8+/nWH0ejHR+HWb9Kkmlc0R7GWMgOFEJ+PhLFmi8EtZHgg5Tu
-	 5f9sQ2rR36mym0GgBtc4AFxqoTuVFB573eTtCkgOHIqyw4AbhFuCYZRwd5yuZYkms4GU7AHlFwxe
-	 Fmi6foZN5ZWO5WYAU2dQKuSZ0A5INDHF249n4up705CZ/0+BkUKIaE0427MCLt3ReUUEnl+SN5Bl
-	 CLq+dkxElreY4WW2ArLKW00B7i43/sReYjVNZ1NJt9SSJuEadUAyeHFic8seENnt40uKwMzfnyRM
-	 9V54vt/GCN1gfO0SE0uXED4sNBoYVNRrFbjzlHaXN7tEmUtYApevUit5s7jelfZJ6Iy9MQMiSSzw
-	 F6hL6iKNtKdJBqEfAHO7JlMyVhlLCNuuwMxC7dFYqdD4RjY7jBTWKo2eEQrbnPgmZJxz8MOAzjgf
-	 Gcrf+h6r/R3LhRA+03nb8bn2qiGKg2rYI4WGsTB8jorEIw5o50gtNnNSfpO6MNc40cAfVffTKFJY
-	 13DmxDk+L6595jxI9o1dMz3slt+Esp3m6BigGNsvkENUTjJti7dYlCKCJIuXdaqrT1xxM6mTqH6J
-	 uV55l5cvWACvvFFsB2BHYb3fQ2k/JwKGfhLf0UB8Dfl2sjkwp0c1KDxyAfLcR6F28Pc+SqMB1Cr8
-	 E4OIzw9oh6qW9Nk6puiU1HjDZgK7xnyNahj60gZy51smUz9MqKocFHz55li9keR+J/R2wQRLcr
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+a5e651ca75fa0260acd5@syzkaller.appspotmail.com
-Cc: chao@kernel.org,
-	jaegeuk@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="fVAgUE6A"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id C96E22811E;
+	Sat, 13 Jan 2024 13:07:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1705147653;
+	bh=AWkbGvrri97ygiLDXcFsTUsvIJvm0ZdoZBcRZ/Dn6h8=;
+	h=Received:From:To:Subject;
+	b=fVAgUE6AnDUjj9sAQOzwLvObe7GCPEDKOBwFcv5mWJ4eZvC8rF5XgCJRTIEGuw1Qm
+	 CmLmJBjTB3ewdkLUQmRJv+UiEMnXf7FbteJ262FdB+K0BmaFQdYDQWSJXA9XY/hMqi
+	 TmoDGm0RpuypzdnUHpuc4XtoSWKyvmCpOrLzr9pUJscfX1l37bbwFFGvb02wk/QfSh
+	 eMkBtVadtyL0hGHdQqkeWAC6Qy9jm2M/eBPeHm7P/7LIwYlPcWU3Z5DshzyVGimcn+
+	 3K5vlt5p4fRTUEeuea0/CTj0ntsxk17RBYD7yN2xEYLYxnpT/JJ+QL4+YCHm0DmJm+
+	 NALwXB7ZKZ8Wg==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id 6D2F97F824; Sat, 13 Jan 2024 13:07:33 +0100 (CET)
+Date: Sat, 13 Jan 2024 13:07:33 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Nishanth Menon <nm@ti.com>, Francesco Dolcini <francesco@dolcini.it>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joao Paulo Goncalves <joao.goncalves@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] f2fs: fix uaf in destroy_device_list
-Date: Sat, 13 Jan 2024 19:28:31 +0800
-X-OQ-MSGID: <20240113112830.1732178-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000aac725060ed0b15c@google.com>
-References: <000000000000aac725060ed0b15c@google.com>
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: ti: add verdin am62 mallow board
+Message-ID: <ZaJ9BWD3K_iWWDkl@gaggiata.pivistrello.it>
+References: <20231201145551.23337-1-francesco@dolcini.it>
+ <20231201145551.23337-4-francesco@dolcini.it>
+ <20231204181336.scm2fgfyyzpr2u7t@dimmer>
+ <20240113092025.GA8517@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240113092025.GA8517@wunner.de>
 
-When the call to f2fs_fill_super() fails, only the memory occupied by sbi is 
-released, but s_fs_info is not set to NULL, this will cause the current issue
-to occur. 
+On Sat, Jan 13, 2024 at 10:20:25AM +0100, Lukas Wunner wrote:
+> On Mon, Dec 04, 2023 at 12:13:36PM -0600, Nishanth Menon wrote:
+> > On 15:55-20231201, Francesco Dolcini wrote:
+> > > From: Joao Paulo Goncalves <joao.goncalves@toradex.com>
+> > > +
+> > > +	tpm@1 {
+> > > +		compatible = "infineon,slb9670", "tcg,tpm_tis-spi";
+> > 
+> > arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: /bus@f0000/spi@20110000/tpm@1: failed to match any schema with compatible: ['infineon,slb9670', 'tcg,tpm_tis-spi']
+> > arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: /bus@f0000/spi@20110000/tpm@1: failed to match any schema with compatible: ['infineon,slb9670', 'tcg,tpm_tis-spi']
+> > 
+> > We should either drop this node OR introduce bindings and later
+> > introduce this series.
+> > 
+> > Yes, I know there are other places where the compatible is already used
+> > arch/arm64/boot/dts/freescale/imx8mm-phyboard-polis-rdk.dts
+> > arch/arm64/boot/dts/xilinx/zynqmp-sm-k26-revA.dts
+> > etc.. But, unfortunately, I'd rather see the binding
+> > Documentation/devicetree/bindings/security/tpm/tpm_tis_spi.txt
+> > transition over to yaml prior to picking things up.
+> 
+> Thy will be done:
+> 
+> https://git.kernel.org/linus/26c9d152ebf3
+> 
+> The TPM bindings are now converted to YAML, so the change rejected above
+> can be resubmitted.
 
-Reported-and-tested-by: syzbot+a5e651ca75fa0260acd5@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/f2fs/super.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks Lukas, it's ready to be sent, just waiting for rc1 to be out.
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index d00d21a8b53a..9939e2445b1e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -4879,6 +4879,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- free_sbi:
- 	if (sbi->s_chksum_driver)
- 		crypto_free_shash(sbi->s_chksum_driver);
-+	sb->s_fs_info = NULL;
- 	kfree(sbi);
- 
- 	/* give only one another chance */
--- 
-2.43.0
+Francesco
 
