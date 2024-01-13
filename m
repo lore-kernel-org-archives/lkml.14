@@ -1,51 +1,50 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7642A17733
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 18:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAE263A6
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 18:37:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="WAW4ZWTB"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40e68ca8b45so15928995e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 10:33:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="p8n4+Yhs"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33694bf8835so5724956f8f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 10:37:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1705170803; x=1705775603; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nZHQqNMYwA3ydf8Sgrb1Wl3va8SACG5r69XJGJ42K5U=;
-        b=WAW4ZWTBrJ6Y49OEyHprigdemL8BwhL9adofr9w9oCkveo99zCBPTXsWgdyPTNlciR
-         2DrvW6yW+S1PwZwt8YV12ASyemzhjBpSXF0wpM38Qp457rG+fTkxCHPyaPC7IZtQkfME
-         8PgjrQDVYt8T6mnVjPz3OrSYn/01DlwxCyR65znvP7TSECAyHmZZVdcHZ4vWMTYmz1nB
-         3yGaU+bjxfakwZnsNMEd8rsIbEejkyJXsWLoL23mgXjL3MgYIiYyuQQfb3/7/2uFxLEB
-         H6BMm6R+83v1MEoGRFYYkutPeXR8TjOxz+odTLPSYuZBec7CnzpYeQJXboRIL/dm/duv
-         vyNg==
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1705171077; x=1705775877; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLHitRwn8P5MWByWsP9MWy9vMCnP3S50sHRU56/35w8=;
+        b=p8n4+YhskKkLSgcKfSp21kg9qGeGyPiOGtU74MFo6Rg01D4eoSqG+VOnOFEtbwzPGw
+         WTZV24eh5Shv4IcQjX/vcycLq8U08GChHPexcEAkqPV3DDibzZC5DNcsSlAmyDFnyBCX
+         uo8JqpK88KP+zVSTqT+AJrQ+jCjt3WBxvdaTV3TOk7KKcM+EhFcVcUV5wf2ZmIhr4Uax
+         1n1wGiNAQYfCeI6sXlkmkbXfIRb2ALp6SiScZDeIavBHmkM1YmRGfzdOsaBJyNIeGCmp
+         MNvEMFbsfGG9tUQYxWJiFHNjd+JXPEa/D5tfMEmVg3Adj6NasdnClZ4BPa7/Yr8mdfU6
+         nYuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705170803; x=1705775603;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nZHQqNMYwA3ydf8Sgrb1Wl3va8SACG5r69XJGJ42K5U=;
-        b=uEvOIVgAPQwUMD2+/n33V9v3skaZBArUcqxFOaQMWqMWUMelgmjBLb/ZVUQb5n0J2M
-         jhpLpEgSz6uKYndwzK3Q2W1nd86+5SXyFjA9lGYkNwup/60lvBHfndMwX7tQ5Nd/Vh/a
-         LWpLoBoT7heEj4vvupvOpgUHXTQd1FRXd0odEZiLa7MGGeMaE4hsekpxpqfaT1IPJdhc
-         mqwg5fbZH5ZPDf6BUZZAHO70QnlHpj+GDv+KoB12mP8usHK8B7Z3v0pJfHOUeDU+4dxP
-         jO35ZQLz5s3wUC2gqvbC6NbLo/oSQ2yYLyPWztKwXwCOOIB8KZJGbC96IbjYvkGAOb2N
-         6umQ==
-X-Gm-Message-State: AOJu0YzHxna5a3AarpDR2/2C/LrgB9tplG/WJHJlGNJX2dGES8EyZehx
-	fazu9ijnswu1h179Oc5bLmeYfzYGnWzPzw==
-X-Google-Smtp-Source: AGHT+IFP8hHqW+eSSJPeh9HZxAdky9lgc1gA170lAdeXEhO4WQAxa/nlidi0834tkme5GSgWMv7a8Q==
-X-Received: by 2002:a7b:c5ce:0:b0:40e:47de:d7e1 with SMTP id n14-20020a7bc5ce000000b0040e47ded7e1mr1868394wmk.73.1705170803165;
-        Sat, 13 Jan 2024 10:33:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705171077; x=1705775877;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zLHitRwn8P5MWByWsP9MWy9vMCnP3S50sHRU56/35w8=;
+        b=puSMlhYkUc0vuNfr1D92AS+SyS6HSkYZ38dDDxPdFah3NtULChO1shadYwIaPNsHfo
+         tULMF3cDbRBf8u4haWMMWB/lkrBwSIhm2p5MbBKTsznkKaIfahut39nVWuiKfI9JMgQx
+         MAPy8drtGXBLTxNq6B6zsVUXagqsLFcEQ6EYkPWjPyl1Qj75o/OMyTxi+unjvgPRuak/
+         zdHkliHB83co/2D1ZJXJkW6iPkMwC/mHxEWYuof4RJt82QIPwhWS6IfrlFjqBCdlCYam
+         BlKi8ueHql1PPevVGg0xlZzDDs+flj/2UkStFJhjxqV3DwTcOCXFhNxYU3c+2t0A2ykE
+         Vf5Q==
+X-Gm-Message-State: AOJu0Yy/iMxl58bfwOZAyMVtZ/fz9Vl0JOmdbYFmJ8NTbhV/IBw+nKuj
+	q9pNhEyPyRueanzw1FWUd22Z6L8KkykpPg==
+X-Google-Smtp-Source: AGHT+IGx+typfGV6pw88t0MhNDVovMTO/6LAQT5VVf/hJ8arArE+DoukPULemtHJk7obzpVYRYbGeg==
+X-Received: by 2002:a5d:4087:0:b0:336:ca46:2ce1 with SMTP id o7-20020a5d4087000000b00336ca462ce1mr1687719wrp.122.1705171077431;
+        Sat, 13 Jan 2024 10:37:57 -0800 (PST)
 Received: from airbuntu (host109-154-205-127.range109-154.btcentralplus.com. [109.154.205.127])
-        by smtp.gmail.com with ESMTPSA id v21-20020a05600c445500b0040d62f89381sm10206400wmn.35.2024.01.13.10.33.21
+        by smtp.gmail.com with ESMTPSA id c17-20020a5d63d1000000b003365fcc1846sm7297613wrw.52.2024.01.13.10.37.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jan 2024 10:33:22 -0800 (PST)
-Date: Sat, 13 Jan 2024 18:33:20 +0000
+        Sat, 13 Jan 2024 10:37:57 -0800 (PST)
+Date: Sat, 13 Jan 2024 18:37:55 +0000
 From: Qais Yousef <qyousef@layalina.io>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
 	Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -56,8 +55,10 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Daniel Bristot de Oliveira <bristot@redhat.com>,
 	Valentin Schneider <vschneid@redhat.com>
 Subject: Re: [GIT PULL] Scheduler changes for v6.8
-Message-ID: <20240113183320.sfm5v35tid55d6sf@airbuntu>
-References: <4405adb5-0b16-4716-9542-47d8bb1737ee@arm.com>
+Message-ID: <20240113183755.3gppkooy2g72f3qn@airbuntu>
+References: <CAHk-=whK-cuBUQ2hECtkGu3LR-ipai+tmB85M=C7n3b1M8B4gQ@mail.gmail.com>
+ <CAKfTPtCnT9VLqiQGL5kyhzqv=WAUNRA3tVDVoKjB7jX-00Un+g@mail.gmail.com>
+ <4405adb5-0b16-4716-9542-47d8bb1737ee@arm.com>
  <20240112181805.bjvrkvvkszdfa7co@airbuntu>
  <CAKfTPtBQZcDpiPMF2sjJopNueMe+Lv0cziPzAMAaxH1XbfHiUQ@mail.gmail.com>
  <CAHk-=wiwRb50-q6EFU9RgjxOXHC2=x_ddQ6yzWTs5ah0nVeXPw@mail.gmail.com>
@@ -65,8 +66,6 @@ References: <4405adb5-0b16-4716-9542-47d8bb1737ee@arm.com>
  <CAHk-=whCt-Eem=BbDo+f0VoDerYQNbvnPCdh6fcBNDnLyZyvfA@mail.gmail.com>
  <20240113010432.xe25lxqogxuvl72t@airbuntu>
  <CAHk-=wgfS+F+QNbFPurhnZTVLkw4xDOmmaSD3qdQLUoE2VsGTw@mail.gmail.com>
- <CAHk-=wjMGP2STWAqEO=T3TQUu44ygz2_JpOh65RahEO5Cjc+Yw@mail.gmail.com>
- <ZaJqRfjsI820jfXE@vingu-book>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,99 +74,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZaJqRfjsI820jfXE@vingu-book>
+In-Reply-To: <CAHk-=wgfS+F+QNbFPurhnZTVLkw4xDOmmaSD3qdQLUoE2VsGTw@mail.gmail.com>
 
-On 01/13/24 11:47, Vincent Guittot wrote:
-> Le vendredi 12 janv. 2024 à 17:31:13 (-0800), Linus Torvalds a écrit :
-> > On Fri, 12 Jan 2024 at 17:24, Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > > With a *working* kernel, I get events, setting the frequency to either
-> > > 2.2GHz (idle) or 3.8GHz (work).
-> > 
-> > Just to fix that - not 3.8Ghz, but in addition to 2.2 I see 2.8 or 3.7:
+On 01/12/24 17:24, Linus Torvalds wrote:
+> On Fri, 12 Jan 2024 at 17:04, Qais Yousef <qyousef@layalina.io> wrote:
+> >
+> > That is odd. I can't see how the patch can cause this yet, could you try with
+> > a different compiler if possible?
 > 
-> IIUC, with the commit you stay at lowest frequency all time which is clearly
-> weird. One change that could create such behavior is in
-> sugov_effective_cpu_perf() where we take the min between the actual
-> utilization and the max allowed. If max is set to min capacity for whatever
-> the reason, then you stay stuck to lowest capacity/frequency
-
-I tried on Linus' ToT (052d534373b7) with and without CONFIG_UCLAMP_TASK=y and
-I still can't reproduce.
-
+> I use two different compilers - I do my allmodconfig builds with gcc,
+> and the kernels I boot with clang, so my problems have been with a
+> kernel built with
 > 
-> What is the output of 
-> /sys/devices/system/cpu/cpu0/cpu_capacity
-
-Since it's SMP, I don't see these generated.
-
-There's a acpi_cppc node though. For CPU0
-
-	$ grep . /sys/devices/system/cpu/cpu0/acpi_cppc/*
-	/sys/devices/system/cpu/cpu0/acpi_cppc/feedback_ctrs:ref:500461208742 del:522909165272
-	/sys/devices/system/cpu/cpu0/acpi_cppc/highest_perf:216
-	/sys/devices/system/cpu/cpu0/acpi_cppc/lowest_freq:550
-	/sys/devices/system/cpu/cpu0/acpi_cppc/lowest_nonlinear_perf:62
-	/sys/devices/system/cpu/cpu0/acpi_cppc/lowest_perf:20
-	/sys/devices/system/cpu/cpu0/acpi_cppc/nominal_freq:3801
-	/sys/devices/system/cpu/cpu0/acpi_cppc/nominal_perf:135
-	/sys/devices/system/cpu/cpu0/acpi_cppc/reference_perf:135
-	/sys/devices/system/cpu/cpu0/acpi_cppc/wraparound_time:18446744073709551615
-
-highest_perf for all CPUs
-
-	$ grep . /sys/devices/system/cpu/cpu*/acpi_cppc/highest_perf
-	/sys/devices/system/cpu/cpu0/acpi_cppc/highest_perf:216
-	/sys/devices/system/cpu/cpu10/acpi_cppc/highest_perf:166
-	/sys/devices/system/cpu/cpu11/acpi_cppc/highest_perf:176
-	/sys/devices/system/cpu/cpu12/acpi_cppc/highest_perf:216
-	/sys/devices/system/cpu/cpu13/acpi_cppc/highest_perf:216
-	/sys/devices/system/cpu/cpu14/acpi_cppc/highest_perf:211
-	/sys/devices/system/cpu/cpu15/acpi_cppc/highest_perf:206
-	/sys/devices/system/cpu/cpu16/acpi_cppc/highest_perf:201
-	/sys/devices/system/cpu/cpu17/acpi_cppc/highest_perf:196
-	/sys/devices/system/cpu/cpu18/acpi_cppc/highest_perf:191
-	/sys/devices/system/cpu/cpu19/acpi_cppc/highest_perf:186
-	/sys/devices/system/cpu/cpu1/acpi_cppc/highest_perf:216
-	/sys/devices/system/cpu/cpu20/acpi_cppc/highest_perf:181
-	/sys/devices/system/cpu/cpu21/acpi_cppc/highest_perf:171
-	/sys/devices/system/cpu/cpu22/acpi_cppc/highest_perf:166
-	/sys/devices/system/cpu/cpu23/acpi_cppc/highest_perf:176
-	/sys/devices/system/cpu/cpu2/acpi_cppc/highest_perf:211
-	/sys/devices/system/cpu/cpu3/acpi_cppc/highest_perf:206
-	/sys/devices/system/cpu/cpu4/acpi_cppc/highest_perf:201
-	/sys/devices/system/cpu/cpu5/acpi_cppc/highest_perf:196
-	/sys/devices/system/cpu/cpu6/acpi_cppc/highest_perf:191
-	/sys/devices/system/cpu/cpu7/acpi_cppc/highest_perf:186
-	/sys/devices/system/cpu/cpu8/acpi_cppc/highest_perf:181
-	/sys/devices/system/cpu/cpu9/acpi_cppc/highest_perf:171
-
-Can we overshoot somehow now and hitting a bug in frequency translation in
-cpufreq by any chance?
-
+>    clang version 17.0.6
 > 
-> It should be 1024 or close
+> but to check that it's not a compiler issue I just did another try
+> with my current public tip of tree (ie *without* any reverts for this
+> issue) and gcc:
 > 
-> Could you try the below ? it skips this step and ensures to use the actual
-> utilization to select the frequency
+>     gcc version 13.2.1
 > 
-> ---
->  kernel/sched/cpufreq_schedutil.c | 1 -
->  1 file changed, 1 deletion(-)
+> and the behavior is exactly the same: all cores are stuck at 2.2GHz.
 > 
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 95c3c097083e..e420e2ee1a10 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -181,7 +181,6 @@ unsigned long sugov_effective_cpu_perf(int cpu, unsigned long actual,
->  	/* Add dvfs headroom to actual utilization */
->  	actual = map_util_perf(actual);
->  	/* Actually we don't need to target the max performance */
-> -	if (actual < max)
->  		max = actual;
->  
->  	/*
-> -- 
-> 2.34.1
+> So no, it's not compiler-dependent.
+> 
+> > I usually use perfetto but it should be easy to see frequency updates from
+> > power/cpu_frequency trace event.
+> >
+> >         echo 1 | sudo tee /sys/kernel/tracing/tracing_on
+> >         echo 1 | sudo tee /sys/kernel/tracing/events/power/cpu_frequency/enable
+> >         sudo cat /sys/kernel/tracing/trace
+> 
+> Shows absolutely nothing. Or rather, it shows the header with
+> 
+>   # entries-in-buffer/entries-written: 0/0   #P:64
+> 
+> and that's it.
+> 
+> With a *working* kernel, I get events, setting the frequency to either
+> 2.2GHz (idle) or 3.8GHz (work).
+> 
+> IOW, the tracing output is 100% consistent with "that commit breaks everything".
+
+Thanks for all the info. It seems for some reason we no longer think we need to
+update the frequency. Not sure why yet. It's strange I can't reproduce too even
+running from top of your tree. I ran with these patches on M1, Pixel, Intel and
+now AMD and haven't noticed anything since they got merged.
