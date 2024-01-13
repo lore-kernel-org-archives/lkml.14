@@ -1,84 +1,82 @@
-Received: from pv50p00im-ztdg10021901.me.com (pv50p00im-ztdg10021901.me.com [17.58.6.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B525231
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 17:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kyuhyuk.kr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kyuhyuk.kr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kyuhyuk.kr header.i=@kyuhyuk.kr header.b="AETQMjxv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kyuhyuk.kr; s=sig1;
-	t=1705166936; bh=Ncm/r4hpmcrpUhX1fSR5itLc4xrV7NoGJc5rt7JL7Tk=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=AETQMjxvQQErbY/lyVVbUU9dD1xPLM3nvimfEzzmbmeH6FLrS1lOzpI6foZeUMm76
-	 0zpgHM0NKLBKwi5k3kY790IdIBAne+Ot/mHhAHFOCTr5KkVqu+pdz1+muGiP9x3tLN
-	 dnxwNFbF0halDD5Hkex4vr2AOvzA8O/k7J9m+AJZ7qS1TznxA6tBeV5tfBWbrQ2L2F
-	 ucmMAgC7NQANWVL7ab3pDjCxjmGDyE3ZiFZhSyWAxojmZCf5+PEiOgHF02tOE90NJ0
-	 8t8Gua0FNFhBgkiYchSpcjH4ZzxGOXuRpW2Vkfo1KNCN8+WhoNzOIZLy/Q9jnu4uFn
-	 ecItlGyztNdPg==
-Received: from KyuDevelop.. (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021901.me.com (Postfix) with ESMTPSA id C3CC9813EB;
-	Sat, 13 Jan 2024 17:28:52 +0000 (UTC)
-From: KyuHyuk Lee <lee@kyuhyuk.kr>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Jagan Teki <jagan@edgeble.ai>,
-	Tianling Shen <cnsztl@gmail.com>,
-	Andy Yan <andyshrk@163.com>,
-	Ondrej Jirman <megi@xff.cz>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	KyuHyuk Lee <lee@kyuhyuk.kr>
-Subject: [PATCH v2] dt-bindings: rockchip: Add Hardkernel ODROID-M1S board
-Date: Sun, 14 Jan 2024 02:21:03 +0900
-Message-Id: <20240113172102.6890-1-lee@kyuhyuk.kr>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9979611E
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 17:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-35ff23275b8so68346485ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 09:29:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705166944; x=1705771744;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ICsUNI7Afo1PaF9JpZaaVdJbx+JyaYF4RtdCTjtQr2E=;
+        b=eBmqAnbITKU8G92UzVtDrey6GtmafXU6m7Y+QJWfp2Llo8jSZF5cLxj9+lgL/sRbgg
+         vuZIhaXPz3r9cniWKqQtl68L+fltnHcnyNpTWoX2SfoUImrGLiZX0a+lZgwkChoVLmym
+         Cjs0AilSUiu/tZYAHsgZH1/lbbE9Y6E3I/oN8xkjJJ5+xmzM3nPD3wWH3VOYM/h85W4W
+         ymBtENOeaMBcNhOwYl5z9GNAkUp39EhfxXzXdaMojQpOtEiodMkF2qhP5bpCQiWRKz0T
+         YlTSojM561lgsJ6ZV5ZgT1GwHF3FwF3BICHyFI89LMthHggv2LBnni05z6voamY7xrSQ
+         vY+g==
+X-Gm-Message-State: AOJu0YwSQv6FXhe/sXK7KFB58WGRmdIIs4NLjTS8o0x2pvcdvXDEcPHq
+	kUOU1SFPC5A2CW8cM0Th7vZxKtjAyXSGy8WrhmnnufEXVDOR
+X-Google-Smtp-Source: AGHT+IHcLfzVAyzvzQwfkVETCBuZ267lqDZoU9EjATlm1vKKLELh2mnr630YV9hDNu5o4qUMvxVVbcfwfndUYj9z7niA2zqVDvIP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: s5LNHj3FkFfaIArGgtvgU_W7ExD_8Rdg
-X-Proofpoint-GUID: s5LNHj3FkFfaIArGgtvgU_W7ExD_8Rdg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-13_07,2024-01-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
- mlxlogscore=735 mlxscore=0 adultscore=0 suspectscore=0 clxscore=1030
- bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2401130147
+X-Received: by 2002:a05:6e02:1e0c:b0:360:5cc5:8ded with SMTP id
+ g12-20020a056e021e0c00b003605cc58dedmr387058ila.3.1705166944013; Sat, 13 Jan
+ 2024 09:29:04 -0800 (PST)
+Date: Sat, 13 Jan 2024 09:29:03 -0800
+In-Reply-To: <00000000000026100c060e143e5a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fb160f060ed71da5@google.com>
+Subject: Re: [syzbot] [net?] [nfc?] INFO: task hung in nfc_targets_found
+From: syzbot <syzbot+2b131f51bb4af224ab40@syzkaller.appspotmail.com>
+To: airlied@gmail.com, daniel@ffwll.ch, davem@davemloft.net, 
+	dianders@chromium.org, dri-devel@lists.freedesktop.org, edumazet@google.com, 
+	gregkh@linuxfoundation.org, hdanton@sina.com, jernej.skrabec@gmail.com, 
+	krzysztof.kozlowski@linaro.org, kuba@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, mripard@kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, penguin-kernel@i-love.sakura.ne.jp, samuel@sholland.org, 
+	stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com, 
+	torvalds@linux-foundation.org, u.kleine-koenig@pengutronix.de, wens@csie.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add device tree binding for Hardkernel ODROID-M1S board based on
-RK3566 SoC.
+syzbot has bisected this issue to:
 
-Signed-off-by: KyuHyuk Lee <lee@kyuhyuk.kr>
----
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+commit d665e3c9d37ad31aec2d0d9d086e7c903ddd7250
+Author: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+Date:   Sun May 7 16:26:06 2023 +0000
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 5cf5cbef2cf5..9a65f7269a27 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -566,6 +566,11 @@ properties:
-           - const: rockchip,rk3568-odroid-m1
-           - const: rockchip,rk3568
- 
-+      - description: Hardkernel Odroid M1S
-+        items:
-+          - const: hardkernel,rk3566-odroid-m1s
-+          - const: rockchip,rk3566
-+
-       - description: Hugsun X99 TV Box
-         items:
-           - const: hugsun,x99
--- 
-2.34.1
+    drm/sun4i: Convert to platform remove callback returning void
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D146b91f5e800=
+00
+start commit:   acc657692aed keys, dns: Fix size check of V1 server-list h.=
+.
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D166b91f5e800=
+00
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D126b91f5e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D5c882ebde8a5f3b=
+4
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D2b131f51bb4af224a=
+b40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D103698bde8000=
+0
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1617e0fbe80000
+
+Reported-by: syzbot+2b131f51bb4af224ab40@syzkaller.appspotmail.com
+Fixes: d665e3c9d37a ("drm/sun4i: Convert to platform remove callback return=
+ing void")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisectio=
+n
