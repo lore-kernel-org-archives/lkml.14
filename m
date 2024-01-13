@@ -1,143 +1,105 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE3220DF7;
-	Sat, 13 Jan 2024 12:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BF1DDB5;
+	Sat, 13 Jan 2024 12:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="rBdODkxM"
-Received: from localhost.ispras.ru (unknown [10.10.165.8])
-	by mail.ispras.ru (Postfix) with ESMTPSA id E84F740762E4;
-	Sat, 13 Jan 2024 12:16:14 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru E84F740762E4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1705148175;
-	bh=UXsO+FATYJuTPtjVESRdxfPqcMfgJ+Z5TRk9Ig/cU7s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rBdODkxMg1L5H2zTmGYLSPw2S0CURDXH1HU32selNRUiQC7bDtQiED74SYYfHrq+G
-	 6qL+D97qMSSKzxcWDtVNeZCWKugYZ+eB4jMUvCaDc3TjBixl3RikLhIYO4YlSvIZt6
-	 weSxaEwRWSQ3XwZdgAJK0FCQ2VOZhkjGb8zdm3yA=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: John Johansen <john.johansen@canonical.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	lvc-project@linuxtesting.org
-Subject: [PATCH 2/2] apparmor: fix namespace check in serialized stream headers from the same policy load
-Date: Sat, 13 Jan 2024 15:15:52 +0300
-Message-ID: <20240113121556.12948-3-pchelkin@ispras.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/TsCCds"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27AF1C433F1;
+	Sat, 13 Jan 2024 12:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705149140;
+	bh=t2Rxld++6LxnRpwfNKlxPU3qyMSRsXCrdRX2fXTMQdY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=g/TsCCdsCF+lflwqOWfY7INUWUY5fC/ElZLV7OPSkr36g3WcP9fKzDVn6GokaV9PF
+	 7MaalnZ1UF8Jq1uhfsrM3XYpOStwyW3hhsxVnav1vWBeZtIAGgkcSGJ6aO0l+5lf8X
+	 vO+Z4M1dtBzgfL1l/WRW5azB7GpTsraIupfkiyAdghRQcBz7UDpLpOyTZtVnPA325A
+	 NA9/Rz77/Kr3t/qCru/iZYM6VQKgiT/QKZdU9xqt1zWa5MXdJg5+2CbpFKh0hhi2K6
+	 omgw1nVSk3Yi9xpGTzBVsXHMwfwFhbYakzVxPYdmzNTlxkZR6vnTD7ntDAU1Y7ZdHD
+	 iX9wdr6P4xBeA==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs fixes
+Date: Sat, 13 Jan 2024 13:31:03 +0100
+Message-ID: <20240113-vfs-fixes-23fdefd76783@brauner>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240113121556.12948-1-pchelkin@ispras.ru>
-References: <20240113121556.12948-1-pchelkin@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2763; i=brauner@kernel.org; h=from:subject:message-id; bh=t2Rxld++6LxnRpwfNKlxPU3qyMSRsXCrdRX2fXTMQdY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQuaupl28ihu1z4y++IddNjH131E9xoeoRDqz7lT6ID4 8IPj8V/dZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzE9SUjwwwL64WTVbrcDGxP RysL/zu78ZSAp8K1deo5bbsWXpJj8mRkaHz9LnLtkspvry/IRAgHrQxSCTywlrG061acfYarwuH l/AA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-Per commit 04dc715e24d0 ("apparmor: audit policy ns specified in policy
-load"), profiles in a single load must specify the same namespace. It is
-supposed to be detected inside aa_replace_profiles() and verify_header(),
-but seems not to be implemented correctly in the second function.
+Hey Linus,
 
-Consider we have the following profile load
+/* Summary */
+This contains two fixes for the current merge window. The listmount changes
+that you requested and a fix for a fsnotify performance regression:
 
-  profile :ns1:profile1 ... {}
-  profile :ns2:profile2 ... {}
+* The proposed listmount changes are currently under my authorship. I wasn't
+  sure whether you'd wanted to be author as the patch wasn't signed off. If you
+  do I'm happy if you just apply your own patch.
 
-The profiles specify different policy namespaces but if they are loaded as
-a single binary where the serialized stream headers contain different
-namespace values, it eventually leads to the profiles specified with
-different namespaces be included into the same one without any specific
-indication to user.
+  I've tested the patch with my sh4 cross-build setup. And confirmed that a)
+  the build failure with sh on current upstream is reproducible and that b) the
+  proposed patch fixes the build failure. That should only leave the task of
+  fixing put_user on sh.
 
-*ns is assigned NULL in verify_header(), and the branch indicating an
-"invalid ns change" message is a dead code.
+* The fsnotify regression was caused by moving one of the hooks out of the
+  security hook in preparation for other fsnotify work. This meant that
+  CONFIG_SECURITY would have compiled out the fsnotify hook before but didn't
+  do so now. That lead to up to 6% performance regression in some io_uring
+  workloads that compile all fsnotify and security checks out. Fix this by
+  making sure that the relevant hooks are covered by the already existing
+  CONFIG_FANOTIFY_ACCESS_PERMISSIONS where the relevant hook belongs.
 
-Moreover, some of *ns strings is leaked as they are allocated every time
-verify_header() reads a namespace string.
+/* Testing */
+clang: Debian clang version 16.0.6 (19)
+gcc: (Debian 13.2.0-7) 13.2.0
 
-Actually, *ns is already assigned NULL in aa_unpack(), before the multiple
-profiles unpacking loop. So make verify_header() check if every new
-unpacked namespace declaration differs from the previous one in the same
-load.
+All patches are based on mainline as of yesterday. No build failures or
+warnings were observed. I've successfully tested the changes to listmount with
+the selftests we added.
 
-Note that similar to the namespace check in aa_replace_profiles(), if
-one profile in the load specifies some namespace declaration in the header
-and the other one doesn't specify any namespace in the header - it is also
-considered invalid, e.g. the following multiple profiles load will fail
-after this patch
+/* Conflicts */
+At the time of creating this PR no merge conflicts were reported from
+linux-next and no merge conflicts showed up doing a test-merge with
+current mainline.
 
-  profile profile1 ... {}
-  profile :ns:profile2 ... {}
+The following changes since commit 70d201a40823acba23899342d62bc2644051ad2e:
 
-Found by Linux Verification Center (linuxtesting.org).
+  Merge tag 'f2fs-for-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs (2024-01-11 20:39:15 -0800)
 
-Fixes: dd51c8485763 ("apparmor: provide base for multiple profiles to be replaced at once")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- security/apparmor/policy_unpack.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+are available in the Git repository at:
 
-diff --git a/security/apparmor/policy_unpack.c b/security/apparmor/policy_unpack.c
-index 54f7b4346506..5bd8ab7f1c88 100644
---- a/security/apparmor/policy_unpack.c
-+++ b/security/apparmor/policy_unpack.c
-@@ -1120,7 +1120,6 @@ static int verify_header(struct aa_ext *e, int start, const char **ns)
- {
- 	int error = -EPROTONOSUPPORT;
- 	const char *name = NULL;
--	*ns = NULL;
- 
- 	/* get the interface version */
- 	if (!aa_unpack_u32(e, &e->version, "version")) {
-@@ -1142,20 +1141,35 @@ static int verify_header(struct aa_ext *e, int start, const char **ns)
- 		return error;
- 	}
- 
--	/* read the namespace if present */
-+	/* read the namespace if present and check it against policy load
-+	 * namespace specified in the data start header
-+	 */
- 	if (aa_unpack_str(e, &name, "namespace")) {
- 		if (*name == '\0') {
- 			audit_iface(NULL, NULL, NULL, "invalid namespace name",
- 				    e, error);
- 			return error;
- 		}
-+
-+		/* don't allow different namespaces be specified in the same
-+		 * policy load set
-+		 */
-+		error = -EACCES;
- 		if (*ns && strcmp(*ns, name)) {
--			audit_iface(NULL, NULL, NULL, "invalid ns change", e,
-+			audit_iface(NULL, NULL, NULL,
-+				    "policy load has mixed namespaces", e,
- 				    error);
--		} else if (!*ns) {
-+			return error;
-+		} else if (!*ns && start) {
-+			/* fill current policy load namespace at data start */
- 			*ns = kstrdup(name, GFP_KERNEL);
- 			if (!*ns)
- 				return -ENOMEM;
-+		} else if (!*ns) {
-+			audit_iface(NULL, NULL, NULL,
-+				    "policy load has mixed namespaces", e,
-+				    error);
-+			return error;
- 		}
- 	}
- 
--- 
-2.43.0
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.8-rc1.fixes
 
+for you to fetch changes up to ba5afb9a84df2e6b26a1b6389b98849cd16ea757:
+
+  fs: rework listmount() implementation (2024-01-13 13:06:25 +0100)
+
+Please consider pulling these changes from the signed vfs-6.8-rc1.fixes tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.8-rc1.fixes
+
+----------------------------------------------------------------
+Amir Goldstein (1):
+      fsnotify: compile out fsnotify permission hooks if !FANOTIFY_ACCESS_PERMISSIONS
+
+Christian Brauner (1):
+      fs: rework listmount() implementation
+
+ fs/namespace.c           | 50 +++++++++++++++++++++++++++---------------------
+ include/linux/fsnotify.h | 19 ++++++++++++++++++
+ include/linux/syscalls.h |  2 +-
+ 3 files changed, 48 insertions(+), 23 deletions(-)
