@@ -1,105 +1,75 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB1917BDB
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 13:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b="JD2jHngr"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-28be8ebcdc1so5105546a91.0
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 05:05:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl-com.20230601.gappssmtp.com; s=20230601; t=1705151111; x=1705755911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zVWV8K+dnjde8ezML8ji89qBWwS6fczbNmk79i42bNY=;
-        b=JD2jHngrZEP+9WCPxwxHXNz/5U49z3QfxM1k5FA1NDK4fGAMhcamfAQLyRyk4p9Cg4
-         EJzjjjVMaGH/6Re7DTTqN5JVrgjLAISVAmAMQGV3pPfNbpmbIqe+wGD5DVy/rhQCFHus
-         sHnNLQdt39o3uGc1zqKwavodrGBUAhsol9wwILpyH8mLAs7SzGQ9MXM8G5psiZUo2jiW
-         q4Ja+yFrjouxcMNjsFnZx+tWBVldd66JaRdG/aBEtq0bRCCXadR8erRxzAR/QlvoNgno
-         c9s7ZKgMIY5I70U5Mv045wyTNaOl20Dg9wFSG99IjmfBSmPNwEYsxhy4q4Nn7TJxAeeJ
-         9tnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705151111; x=1705755911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zVWV8K+dnjde8ezML8ji89qBWwS6fczbNmk79i42bNY=;
-        b=cPgcYtDN7o1C4Jstj6RqC+8pBct3OTqGjIyeUYgGNx1fYwP5hN46VHmu2Kf6e9+wTU
-         /0fsJKoOR27YVVQJyZwYO5VIbHYo+DoaHQ+F5pMtaLcNKOC+cfI7+Q/hz1+WBeah6XH2
-         hh+JrYFackOUhU5zInv2ffJTuAfOL3j6zs93pOIvZOI7pxkWKddV689tU54gc/YQEh6M
-         eqoldKkBu1+ror+gDshEk/SZABEO8L0vXNtAXjes8cTyH1IDM11pSdtMtXwrTEH929gJ
-         exao05uXDHmgY+xLzWPnRgNRkjTivGZ/fdrRwAn34G8zswZkBGNDbZUQr9rxzEvcGdkc
-         wlKg==
-X-Gm-Message-State: AOJu0YxxURSE5Gq0kfBtZYlvtqQFBaefnmgLF1AkAapSeCQ/wwpm7FRG
-	SxoOr6VNPrlcM+ikq/xSnyPeNdE8k/6VP0J//OXVxNYKyAzluQ==
-X-Google-Smtp-Source: AGHT+IFfzaMt3kAshqB5gY9Yv2YAX/gQFYbf/6z/CSB06VZEWh9ZAzNRcb/hS+uXfH+mr0UYhZL0C7MdZiNjDrP2NrA=
-X-Received: by 2002:a17:90a:3946:b0:28c:ae1:9965 with SMTP id
- n6-20020a17090a394600b0028c0ae19965mr1783552pjf.44.1705151111284; Sat, 13 Jan
- 2024 05:05:11 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7359D210E3
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 13:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TBzCm6myXz1xmCm;
+	Sat, 13 Jan 2024 21:05:24 +0800 (CST)
+Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
+	by mail.maildlp.com (Postfix) with ESMTPS id A074C1404F7;
+	Sat, 13 Jan 2024 21:06:05 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by dggpemd200001.china.huawei.com
+ (7.185.36.224) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Sat, 13 Jan
+ 2024 21:06:05 +0800
+From: ZhaoLong Wang <wangzhaolong1@huawei.com>
+To: <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>
+CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH v3 2/2] ubi: Correct the number of PEBs after a volume resize failure
+Date: Sat, 13 Jan 2024 21:06:01 +0800
+Message-ID: <20240113130601.2502095-2-wangzhaolong1@huawei.com>
+X-Mailer: git-send-email 2.34.3
+In-Reply-To: <20240113130601.2502095-1-wangzhaolong1@huawei.com>
+References: <20240113130601.2502095-1-wangzhaolong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240113094204.275569789@linuxfoundation.org>
-In-Reply-To: <20240113094204.275569789@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Sat, 13 Jan 2024 22:05:00 +0900
-Message-ID: <CAKL4bV5T_a-GXi1KE0gj=2JQB_JmxnA1b2FuPMjxDy8jGND4hQ@mail.gmail.com>
-Subject: Re: [PATCH 6.6 0/1] 6.6.12-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemd200001.china.huawei.com (7.185.36.224)
 
-Hi Greg
+In the error handling path `out_acc` of `ubi_resize_volume()`,
+when `pebs < 0`, it indicates that the volume table record failed to
+update when the volume was shrunk. In this case, the number of `ubi->avail_pebs`
+and `ubi->rsvd_pebs` should be restored to their previous values to prevent
+the UBI layer from reporting an incorrect number of available PEBs.
 
-On Sat, Jan 13, 2024 at 7:02=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.12 release.
-> There are 1 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Mon, 15 Jan 2024 09:41:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.12-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Signed-off-by: ZhaoLong Wang <wangzhaolong1@huawei.com>
+Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ drivers/mtd/ubi/vmt.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-6.6.12-rc1 tested.
+diff --git a/drivers/mtd/ubi/vmt.c b/drivers/mtd/ubi/vmt.c
+index 97294def01eb..990571287e84 100644
+--- a/drivers/mtd/ubi/vmt.c
++++ b/drivers/mtd/ubi/vmt.c
+@@ -515,13 +515,12 @@ int ubi_resize_volume(struct ubi_volume_desc *desc, int reserved_pebs)
+ out_acc:
+ 	spin_lock(&ubi->volumes_lock);
+ 	vol->reserved_pebs = reserved_pebs - pebs;
+-	if (pebs > 0) {
+-		ubi->rsvd_pebs -= pebs;
+-		ubi->avail_pebs += pebs;
++	ubi->rsvd_pebs -= pebs;
++	ubi->avail_pebs += pebs;
++	if (pebs > 0)
+ 		ubi_eba_copy_table(vol, old_eba_tbl, vol->reserved_pebs);
+-	} else {
++	else
+ 		ubi_eba_copy_table(vol, old_eba_tbl, reserved_pebs);
+-	}
+ 	vol->eba_tbl = old_eba_tbl;
+ 	spin_unlock(&ubi->volumes_lock);
+ out_free:
+-- 
+2.34.3
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
-
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
-
-[    0.000000] Linux version 6.6.12-rc1rv
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 13.2.1 20230801, GNU ld (GNU
-Binutils) 2.41.0) #1 SMP PREEMPT_DYNAMIC Sat Jan 13 21:45:47 JST 2024
-
-Thanks
-
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
