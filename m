@@ -1,149 +1,95 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583377E9;
-	Sat, 13 Jan 2024 09:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BB57E8
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 09:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="TkrNwGzc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 43827C0004;
-	Sat, 13 Jan 2024 09:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1705137762;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mB9WRD6UXawX/aZviJr/LqXnsIPoDNYg4d4Tt1YlqkY=;
-	b=TkrNwGzcmbBNqS3JFQynOg1MmHpaGT+zxUEG3+8ZUGv8+W33RLnTPlHp36SVlk95uDD+nk
-	XWc14sgNS8osRTteaSAPcGEXH8G3jjVCBhnO9mS2dyHhi1VJ0qovlwJ22f27ifdtlS3OON
-	RhpvdcCY+tIhT121P4MuV0oluLVEEu2tCX0nNOb2YfY0gcKC/3xKDEqO73tn9ZOKicohad
-	AVMUeqrACQ8wqPDZjIQaBAHDwNjAUojqXeD9dueDEYRLt5hU+JR4Yk266fgD3gtwBFJU4r
-	8oB2SmfQ6UeUWzjR0YYZi2O8uy7+mAQc5cyDzXz+UkNw84cn8jb5D6z6w20Uhg==
-From: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-	mithat.guner@xeront.com,
-	erkin.bozoglu@xeront.com,
-	=?UTF-8?q?Alvin=20=C5=A0ipraga?= <ALSI@bang-olufsen.dk>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH net-next] net: dsa: remove OF-based MDIO bus registration from DSA core
-Date: Sat, 13 Jan 2024 12:22:11 +0300
-Message-Id: <20240113092211.36218-1-arinc.unal@arinc9.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vn5YEivO"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7ce9defc4c2so917275241.0
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 01:24:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705137849; x=1705742649; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mG8ngPgKidpc6DG7VcOonL9w+Hnp78zOGjk/tfdl9Tw=;
+        b=vn5YEivOcF8tWeywC6GM7xeJ9UkzFwXVY3EBfbU6t+Jntvf83lg3G19hn1y+vDMgoZ
+         c2EM8RshJsdMvlvFOFt9z28m5zeKGwxQR+uTUWNEU72bRdUpLLEpxb+7g95TkKo7rtfg
+         C+OY1qvnhha8jhBz1HkZ7WCob4pkBCvfYaciC2OEsYhjvjXAYQxnR4u9MOi4lton4fYC
+         o/V5dAbxb1WgrqW/9fSvdzeNDcf8bmHfPpqp0i/O29/VgoaZeYrzt8Tk1yimZz4p+v7Z
+         BlbfgUZNZBRjkaMSgalfi3+yvvAMmDgGDqK3z2dO0Hy5BSl9uS154jilYuIY8GYlBv3F
+         wo0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705137849; x=1705742649;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mG8ngPgKidpc6DG7VcOonL9w+Hnp78zOGjk/tfdl9Tw=;
+        b=arzTqOzR/gsMXnr0lYsAeiaO+4z+TVzgMNDoy2YAu6dAx052QSgCJBYTYLmUIg0LgZ
+         GEBRBu7SKsyvDzVTxYAXrVsR9bzrRSoGNFo/6ms6ycQLOdUHR19Y/O9j4/hzbc9hfoia
+         YGqdncf3oN3MNGYpttLNaZ1asF4Kt3/JaIvohZbxptQMcO3Cso4EmH9QKhoLNNb6ljeO
+         P/3CuENUNJnSL32cm9Hjtrdsxw+hyR6Q68RPsTBI5DNW0BJy+vTwQxTxEQ4RnatoaoZz
+         d8zAmyrK9sE4sCJud1rxTKrorWCuFUFfRd5T9Y4ubXFKetKIjg32MIKm8NAF6e9qiXou
+         htrw==
+X-Gm-Message-State: AOJu0YwDuhzoCt5mjfzD6ldqmQOhQ4TVTQ1RXagXAR2GaZlJp3hMiKE4
+	HOyr9U7uZDz/RtElWk1omMRFz8bGWSGAmb+vrMVyFrafjXMf
+X-Google-Smtp-Source: AGHT+IHQmzh1pZteKXgvH8dJwsS4sgNEfW4HehyT02ehbFX36vyKPNHczzlDSgTkhiJtalxLJyxvkky7vwxMGQoFV4s=
+X-Received: by 2002:a05:6122:4308:b0:4b6:f1e0:956 with SMTP id
+ cp8-20020a056122430800b004b6f1e00956mr1346224vkb.17.1705137849491; Sat, 13
+ Jan 2024 01:24:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+References: <ZZUlgs69iTTlG8Lh@localhost.localdomain> <87sf34lrn3.fsf@linux.intel.com>
+ <CANpmjNNdWwGsD3JRcEqpq_ywwDFoxsBjz6n=6vL5YksNsPyqHw@mail.gmail.com>
+ <ZZ_gssjTCyoWjjhP@tassilo> <ZaA8oQG-stLAVTbM@elver.google.com>
+ <CA+fCnZeS=OrqSK4QVUVdS6PwzGrpg8CBj8i2Uq=VMgMcNg1FYw@mail.gmail.com>
+ <CANpmjNOoidtyeQ76274SWtTYR4zZPdr1DnxhLaagHGXcKwPOhA@mail.gmail.com>
+ <ZaG56XTDwPfkqkJb@elver.google.com> <ZaHmQU5DouedI9kS@tassilo>
+ <CANpmjNO-q4pjS4z=W8xVLHTs72FNq+TR+-=QBmkP=HOQy6UHmg@mail.gmail.com> <ZaJVqF-_fJ_O3pJK@tassilo>
+In-Reply-To: <ZaJVqF-_fJ_O3pJK@tassilo>
+From: Marco Elver <elver@google.com>
+Date: Sat, 13 Jan 2024 10:23:31 +0100
+Message-ID: <CANpmjNOz7tBMK-HoyZNVR2KcgxEBY1Qym=DRa9gHLFkaNHLmVw@mail.gmail.com>
+Subject: Re: [PATCH v4 12/22] lib/stackdepot: use read/write lock
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>, Oscar Salvador <osalvador@suse.de>, andrey.konovalov@linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, Alexander Potapenko <glider@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Vlastimil Babka <vbabka@suse.cz>, kasan-dev@googlegroups.com, 
+	Evgenii Stepanov <eugenis@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The code block under the "!ds->user_mii_bus && ds->ops->phy_read" check
-under dsa_switch_setup() populates ds->user_mii_bus. The use of
-ds->user_mii_bus is inappropriate when the MDIO bus of the switch is
-described on the device tree [1].
+On Sat, 13 Jan 2024 at 10:19, Andi Kleen <ak@linux.intel.com> wrote:
+>
+> On Sat, Jan 13, 2024 at 10:12:21AM +0100, Marco Elver wrote:
+> > On Sat, 13 Jan 2024 at 02:24, Andi Kleen <ak@linux.intel.com> wrote:
+> > >
+> > > On Fri, Jan 12, 2024 at 11:15:05PM +0100, Marco Elver wrote:
+> > > > +             /*
+> > > > +              * Stack traces of size 0 are never saved, and we can simply use
+> > > > +              * the size field as an indicator if this is a new unused stack
+> > > > +              * record in the freelist.
+> > > > +              */
+> > > > +             stack->size = 0;
+> > >
+> > > I would use WRITE_ONCE here too, at least for TSan.
+> >
+> > This is written with the pool_lock held.
+>
+> ...which doesn't help because the readers don't take it?
 
-For this reason, use this code block only for switches [with MDIO bus]
-probed on platform_data, and OF which the switch MDIO bus isn't described
-on the device tree. Therefore, remove OF-based MDIO bus registration as
-it's useless for these cases.
+This function is only refilling the freelist. Readers don't see it yet
+because it's in none of the hash table buckets. The freelist is only
+ever accessed under the lock.
 
-These subdrivers which control switches [with MDIO bus] probed on OF, will
-lose the ability to register the MDIO bus OF-based:
+Once an entry is allocated from the freelist, its size is overwritten
+with something non-zero (since it then contains a stack trace). Those
+updates are released into the right hash table bucket with
+list_add_rcu() (which implies a release).
 
-drivers/net/dsa/b53/b53_common.c
-drivers/net/dsa/lan9303-core.c
-drivers/net/dsa/realtek/realtek-mdio.c
-drivers/net/dsa/vitesse-vsc73xx-core.c
-
-These subdrivers let the DSA core driver register the bus:
-- ds->ops->phy_read() and ds->ops->phy_write() are present.
-- ds->user_mii_bus is not populated.
-
-The commit fe7324b93222 ("net: dsa: OF-ware slave_mii_bus") which brought
-OF-based MDIO bus registration on the DSA core driver is reasonably recent
-and, in this time frame, there have been no device trees in the Linux
-repository that started describing the MDIO bus, or dt-bindings defining
-the MDIO bus for the switches these subdrivers control. So I don't expect
-any devices to be affected.
-
-The logic we encourage is that all subdrivers should register the switch
-MDIO bus on their own [2]. And, for subdrivers which control switches [with
-MDIO bus] probed on OF, this logic must be followed to support all cases
-properly:
-
-No switch MDIO bus defined: Populate ds->user_mii_bus, register the MDIO
-bus, set the interrupts for PHYs if "interrupt-controller" is defined at
-the switch node. This case should only be covered for the switches which
-their dt-bindings documentation didn't document the MDIO bus from the
-start. This is to keep supporting the device trees that do not describe the
-MDIO bus on the device tree but the MDIO bus is being used nonetheless.
-
-Switch MDIO bus defined: Don't populate ds->user_mii_bus, register the MDIO
-bus, set the interrupts for PHYs if ["interrupt-controller" is defined at
-the switch node and "interrupts" is defined at the PHY nodes under the
-switch MDIO bus node].
-
-Switch MDIO bus defined but explicitly disabled: If the device tree says
-status = "disabled" for the MDIO bus, we shouldn't need an MDIO bus at all.
-Instead, just exit as early as possible and do not call any MDIO API.
-
-After all subdrivers that control switches with MDIO buses are made to
-register the MDIO buses on their own, we will be able to get rid of
-dsa_switch_ops :: phy_read() and :: phy_write(), and the code block for
-registering the MDIO bus on the DSA core driver.
-
-Link: https://lore.kernel.org/netdev/20231213120656.x46fyad6ls7sqyzv@skbuf/ [1]
-Link: https://lore.kernel.org/netdev/20240103184459.dcbh57wdnlox6w7d@skbuf/ [2]
-Suggested-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- net/dsa/dsa.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
-index ac7be864e80d..09d2f5d4b3dd 100644
---- a/net/dsa/dsa.c
-+++ b/net/dsa/dsa.c
-@@ -15,7 +15,6 @@
- #include <linux/slab.h>
- #include <linux/rtnetlink.h>
- #include <linux/of.h>
--#include <linux/of_mdio.h>
- #include <linux/of_net.h>
- #include <net/dsa_stubs.h>
- #include <net/sch_generic.h>
-@@ -626,7 +625,6 @@ static void dsa_switch_teardown_tag_protocol(struct dsa_switch *ds)
- 
- static int dsa_switch_setup(struct dsa_switch *ds)
- {
--	struct device_node *dn;
- 	int err;
- 
- 	if (ds->setup)
-@@ -666,10 +664,7 @@ static int dsa_switch_setup(struct dsa_switch *ds)
- 
- 		dsa_user_mii_bus_init(ds);
- 
--		dn = of_get_child_by_name(ds->dev->of_node, "mdio");
--
--		err = of_mdiobus_register(ds->user_mii_bus, dn);
--		of_node_put(dn);
-+		err = mdiobus_register(ds->user_mii_bus);
- 		if (err < 0)
- 			goto free_user_mii_bus;
- 	}
--- 
-2.40.1
-
+Am I missing something else?
