@@ -1,289 +1,236 @@
-Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E441EF01;
-	Sat, 13 Jan 2024 11:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alu.unizg.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alu.unizg.hr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC3020DE3;
+	Sat, 13 Jan 2024 11:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="f365jIRH";
-	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="AlB2ouPt"
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 4607A6017E;
-	Sat, 13 Jan 2024 12:28:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1705145281; bh=VAj5AAwNUdpfXiWXey1DITL/aNNspA9xoYd9dFjINYY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f365jIRHkSwFpvv+rLnGy8Wtoqz8spdphy6C301DTtmY9NCAjib94hlhVpQXo3KP9
-	 MzKjfTDiJCwEsLsHAaFWcwtnUBckbWYMndBmom8Y5UW3T6o3E6dCS6mF6cPKMfvPUU
-	 7lfJdL/FDLHNI/WBRDlSVGbxHjRijljmM00vVfkRLUenCKYhyugOIlG4LO9mDyT148
-	 Do7VQkxRAVGXqQG7E2WzXer/yMvDCZ+TlH/BVBpJQKdvgF95jJH/t7S/p1SWTz70XJ
-	 CrTHncPIiqfO4iM9CKa8dHIQJtKAvUgwmeM2BN51ngrhP0TVRl3P7Yawp7EbBOpAQn
-	 A+NmIUNZ88tsg==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id KW7atziFEnLU; Sat, 13 Jan 2024 12:27:58 +0100 (CET)
-Received: from [192.168.178.20] (dh207-40-235.xnet.hr [88.207.40.235])
-	by domac.alu.hr (Postfix) with ESMTPSA id 687EE6017C;
-	Sat, 13 Jan 2024 12:27:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1705145278; bh=VAj5AAwNUdpfXiWXey1DITL/aNNspA9xoYd9dFjINYY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AlB2ouPtXFaDqYtrbvRdwFYaPD/4aVCF6w2b04gMCYBQIWxx/xRYyipA+V4gXF0qF
-	 VDSJXq7VhbdQCIKgFtLAE7wVtWv+az3BqI/5/odkStKlhQJzI3+gBClph9cM35yB+E
-	 eQWLqDLBb8DodzYWCI0/IZDV6cg/IJYVx17XrOmIV27AvSxLB+6aSO3UAk1H201auY
-	 FdZrPzgC8Bqacr8+zKLL4p5I4Syij4gO61JUVDN3UDUCxNZdZq3vcmLmeUlk07alNv
-	 dzPn5ulwJw75g2Kd4fbp9oBQ8MIi3Lfpw39IS6DovIpbYbg2huZxG7uefUIDvpGal9
-	 y/RU3noqy59nQ==
-Message-ID: <b83bf78d-5fb0-4069-a1bb-c6a946b7b23c@alu.unizg.hr>
-Date: Sat, 13 Jan 2024 12:27:54 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="InKI3efF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705145570; x=1736681570;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Du3qdD4Uv77R7v4lmk2V7UBcI5SCGfYhkI4KA6VQIw0=;
+  b=InKI3efFvvcbWfP6i+Agft7QegQWYtaHsUaCeCMpZWpadQXFJDqIV2S8
+   nHrDT4czatxtRvQg8ALB+Kb7K52wisdMVthKTNYgCs/ATt+qorvF/PXiv
+   YlHiIBRy9tFOKaSYNVJSHYIWjU43Ot7mKrs0PfUiWmac/tua+sjy/Imfk
+   +nlaA7YMHwn8MFe/swZb5Pl7ymY38x3c1uc/fm3O7bq/nZXxsS9sznGyr
+   NS9DRoTbop3BcKLNQ0O/JEOce1jCBMzPwXR8fz+Kzm0/n57T8H5KKXi+f
+   UL3o+Eo2QTYBhp5GOarK0hpJLNsD6GpEJ5V1ndT3CiuKj2ae6eeXeuFhZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="12850526"
+X-IronPort-AV: E=Sophos;i="6.04,192,1695711600"; 
+   d="scan'208";a="12850526"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2024 03:32:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="783310511"
+X-IronPort-AV: E=Sophos;i="6.04,192,1695711600"; 
+   d="scan'208";a="783310511"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 13 Jan 2024 03:32:46 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rOcFn-000AQA-2j;
+	Sat, 13 Jan 2024 11:32:43 +0000
+Date: Sat, 13 Jan 2024 19:31:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Julien Massot <julien.massot@collabora.com>,
+	linux-media@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, kernel@collabora.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mchehab@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	Julien Massot <julien.massot@collabora.com>
+Subject: Re: [PATCH v3 4/4] media: i2c: add MAX96714 driver
+Message-ID: <202401131916.MpdR8A2O-lkp@intel.com>
+References: <20240111130349.2776699-5-julien.massot@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PROBLEM] Very long .deb package build times for bindeb-pkg build
- target
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>,
- Mirsad Todorovac <mirsad.todorovac@alu.hr>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <c2adb439-0dea-4de1-996e-5a0caa5c729d@alu.unizg.hr>
- <ZaALOOhEdBP70lDH@bergen.fjasle.eu>
- <827b5e97-a436-47a7-a097-13657bcda948@alu.unizg.hr>
- <CAK7LNAToNP0hFvhzr_gYw6TXMxkJuCN4idWZvqmq3mSTNOHtSQ@mail.gmail.com>
-Content-Language: en-US
-From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <CAK7LNAToNP0hFvhzr_gYw6TXMxkJuCN4idWZvqmq3mSTNOHtSQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111130349.2776699-5-julien.massot@collabora.com>
 
-On 1/13/24 06:40, Masahiro Yamada wrote:
-> On Fri, Jan 12, 2024 at 7:48 AM Mirsad Todorovac
-> <mirsad.todorovac@alu.unizg.hr> wrote:
->>
->> On 11. 01. 2024. 16:37, Nicolas Schier wrote:
->>> Hi Mirsad,
->>>
->>> On Thu 11 Jan 2024 13:22:39 GMT, Mirsad Todorovac wrote:
->>>> Hi,
->>>>
->>>> With this new release, it seems that Debian kernel build uses "xz" in single-
->>>> threaded mode:
+Hi Julien,
 
-Hi, Masahiro,
+kernel test robot noticed the following build errors:
 
-Thank you for your reply.
+[auto build test ERROR on media-tree/master]
+[also build test ERROR on linuxtv-media-stage/master linus/master next-20240112]
+[cannot apply to sailus-media-tree/streams]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> New release of what?
+url:    https://github.com/intel-lab-lkp/linux/commits/Julien-Massot/dt-bindings-media-add-Maxim-MAX96717F-GMSL2-Serializer/20240111-210740
+base:   git://linuxtv.org/media_tree.git master
+patch link:    https://lore.kernel.org/r/20240111130349.2776699-5-julien.massot%40collabora.com
+patch subject: [PATCH v3 4/4] media: i2c: add MAX96714 driver
+config: i386-randconfig-r071-20240112 (https://download.01.org/0day-ci/archive/20240113/202401131916.MpdR8A2O-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240113/202401131916.MpdR8A2O-lkp@intel.com/reproduce)
 
-Forgive me for not being precise. It was the new release of torvalds tree mainline
-kernel 6.7+ (with merge commits up-to-date). I sort of mistakenly assumed that
-I wrote it, but it was declared in some mail on LKML.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401131916.MpdR8A2O-lkp@intel.com/
 
-One environment was Ubuntu 23.10 Mantic Minotaur on the desktop at work.
+All errors (new ones prefixed by >>):
 
-The laptop also has Mantic Minotaur, but for some reason it spawns multithreaded
-dpkg-deb when building packages, unlike desktop which spawned single-threaded "xz".
+   ld: drivers/media/i2c/max96714.o: in function `max96714_parse_dt_txport':
+>> drivers/media/i2c/max96714.c:827: undefined reference to `__moddi3'
+   ld: drivers/media/i2c/max96714.o: in function `max96714_init_tx_port':
+>> drivers/media/i2c/max96714.c:725: undefined reference to `__udivdi3'
 
-This is at least what the "top" displayed when turning on "H" (show threads).
 
-On one system (upgraded 23.10 from 22.04 LTS) the same dpkg-deb shows as multi-threaded
-dpkg-deb, while on the other it calls xz which didn't respect XT_OPT=-T0 (visible
-from the copy+paste from top output).
+vim +827 drivers/media/i2c/max96714.c
 
-I am perplexed myself.
+   714	
+   715	static int max96714_init_tx_port(struct max96714_priv *priv)
+   716	{
+   717		struct v4l2_mbus_config_mipi_csi2 *mipi;
+   718		unsigned long lanes_used = 0;
+   719		u8 val, lane;
+   720		int ret;
+   721	
+   722		ret = max96714_disable_tx_port(priv);
+   723	
+   724		mipi = &priv->vep.bus.mipi_csi2;
+ > 725		val = *priv->vep.link_frequencies * 2 / MHZ(100);
+   726	
+   727		cci_update_bits(priv->regmap, MAX96714_BACKTOP25,
+   728				CSI_DPLL_FREQ_MASK, val, &ret);
+   729	
+   730		val = FIELD_PREP(MAX96714_CSI2_LANE_CNT_MASK, mipi->num_data_lanes - 1);
+   731		cci_update_bits(priv->regmap, MAX96714_MIPI_LANE_CNT,
+   732				MAX96714_CSI2_LANE_CNT_MASK, val, &ret);
+   733	
+   734		/* lanes polarity */
+   735		val = 0;
+   736		for (lane = 0; lane < mipi->num_data_lanes + 1; lane++) {
+   737			if (!mipi->lane_polarities[lane])
+   738				continue;
+   739			if (lane == 0)
+   740				/* clock lane */
+   741				val |= BIT(5);
+   742			else if (lane < 3)
+   743				/* Lane D0 and D1 */
+   744				val |= BIT(lane - 1);
+   745			else
+   746				/* D2 and D3 */
+   747				val |= BIT(lane);
+   748		}
+   749	
+   750		cci_update_bits(priv->regmap, MAX96714_MIPI_POLARITY,
+   751				MAX96714_MIPI_POLARITY_MASK, val, &ret);
+   752	
+   753		/* lanes mapping */
+   754		val = 0;
+   755		for (lane = 0; lane < mipi->num_data_lanes; lane++) {
+   756			val |= (mipi->data_lanes[lane] - 1) << (lane * 2);
+   757			lanes_used |= BIT(mipi->data_lanes[lane] - 1);
+   758		}
+   759	
+   760		/* Unused lanes need to be mapped as well to not have
+   761		 * the same lanes mapped twice.
+   762		 */
+   763		for (; lane < 4; lane++) {
+   764			unsigned int idx = find_first_zero_bit(&lanes_used, 4);
+   765	
+   766			val |= idx << (lane * 2);
+   767			lanes_used |= BIT(idx);
+   768		}
+   769	
+   770		return cci_write(priv->regmap, MAX96714_MIPI_LANE_MAP, val, &ret);
+   771	}
+   772	
+   773	static int max96714_rxport_enable_poc(struct max96714_priv *priv)
+   774	{
+   775		struct max96714_rxport *rxport = &priv->rxport;
+   776	
+   777		if (!rxport->poc)
+   778			return 0;
+   779	
+   780		return regulator_enable(rxport->poc);
+   781	}
+   782	
+   783	static int max96714_rxport_disable_poc(struct max96714_priv *priv)
+   784	{
+   785		struct max96714_rxport *rxport = &priv->rxport;
+   786	
+   787		if (!rxport->poc)
+   788			return 0;
+   789	
+   790		return regulator_disable(rxport->poc);
+   791	}
+   792	
+   793	static int max96714_parse_dt_txport(struct max96714_priv *priv)
+   794	{
+   795		struct device *dev = &priv->client->dev;
+   796		struct fwnode_handle *ep_fwnode;
+   797		u32 num_data_lanes;
+   798		s64 dpll_freq;
+   799		int ret;
+   800	
+   801		ep_fwnode = fwnode_graph_get_endpoint_by_id(dev_fwnode(dev),
+   802							    MAX96714_PAD_SOURCE, 0, 0);
+   803		if (!ep_fwnode)
+   804			return -EINVAL;
+   805	
+   806		priv->vep.bus_type = V4L2_MBUS_UNKNOWN;
+   807	
+   808		ret = v4l2_fwnode_endpoint_alloc_parse(ep_fwnode, &priv->vep);
+   809		fwnode_handle_put(ep_fwnode);
+   810		if (ret) {
+   811			dev_err(dev, "tx: failed to parse endpoint data\n");
+   812			return -EINVAL;
+   813		}
+   814	
+   815		if (priv->vep.bus_type != V4L2_MBUS_CSI2_DPHY) {
+   816			dev_err(&priv->client->dev, "Unsupported bus-type %u\n",
+   817				priv->vep.bus_type);
+   818			return -EINVAL;
+   819		}
+   820	
+   821		if (priv->vep.nr_of_link_frequencies != 1) {
+   822			ret = -EINVAL;
+   823			goto err_free_vep;
+   824		}
+   825	
+   826		/* DPLL freq is twice the link frequency */
+ > 827		dpll_freq = priv->vep.link_frequencies[0] * 2;
+   828	
+   829		/* 100Mbps step, Min 100Mbps, Max 2500Mbps */
+   830		if (dpll_freq % MHZ(100) || dpll_freq < MHZ(100) ||
+   831		    dpll_freq > MHZ(2500)) {
+   832			dev_err(dev, "tx: invalid link frequency\n");
+   833			ret = -EINVAL;
+   834			goto err_free_vep;
+   835		}
+   836	
+   837		num_data_lanes = priv->vep.bus.mipi_csi2.num_data_lanes;
+   838		if (num_data_lanes < 1 || num_data_lanes > 4) {
+   839			dev_err(dev,
+   840				"tx: invalid number of data lanes should be 1 to 4\n");
+   841			ret = -EINVAL;
+   842			goto err_free_vep;
+   843		}
+   844	
+   845		return 0;
+   846	
+   847	err_free_vep:
+   848		v4l2_fwnode_endpoint_free(&priv->vep);
+   849	
+   850		return ret;
+   851	};
+   852	
 
->>>> Tasks: 484 total,   2 running, 481 sleeping,   0 stopped,   1 zombie
->>>> %Cpu(s):  2.5 us,  2.2 sy,  6.3 ni, 85.1 id,  2.3 wa,  0.0 hi,  1.7 si,  0.0 st
->>>> MiB Mem :  64128.3 total,    524.3 free,   5832.0 used,  58540.9 buff/cache
->>>> MiB Swap:  32760.0 total,  32758.7 free,      1.2 used.  58296.3 avail Mem
->>>>
->>>>      PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+
->>>> COMMAND
->>>>
->>>>   978084 marvin    30  10  112440  97792   2432 R 100.0   0.1  29:30.23 xz
->>>>
->>>>
->>>> Before dpkg-deb was using up to 3200% of CPU time on a 16 core SMT CPU.
->>>>
->>>> Can it be something with dpkg-deb --thread-max=%n option?
->>>
->>> I cannot find any --thread-max option in Linux tree.  Do you call
->>> dpkg-deb manually or somehow induce a thread maximum?
->>>
->>>> Waiting for half an hour just for the build of linux-image-...-dbg package
->>>> seems like an overkill ...
->>>
->>> With current v6.7 release tree I do not see the reported slow-downs
->>> when building bindeb-pkg; I tested by cross-compiling for arm64 on
->>> amd64 with CONFIG_MODULE_COMPRESS_XZ=y and =n).
->>>
->>> Both take roughly 5mins on my 24-core i9 system.
->>>
->>> Kind regards,
->>> Nicolas
->>
->> I am perplexed too, but you can see from the top output the
->> single-threaded xz with 29:30m processor time.
->>
->> On my laptop with the sam Ubuntu 23.10 mantic minotaur, I have
->> dpkg-deb version 1.20.12 and it shows things like 400% and 3200%
->> CPU time, so it is working multithreaded.
->>
->> On desktop machine with the same Ubuntu 23.10 and the same git
->> torvalds tree, it starts single-threaded xz from dpkg-deb instead.
-> 
-> You built the same mainline git tree on your laptop and desktop.
-> The former runs xz multi-threaded, the latter single-threaded.
-> 
-> So, this is not about the kernel code, but about your environment,
-> isn't it?
-
-It should be. Somehow it doesn't behave rationally. To be true to the facts,
-one is 23.10 Mantic Minotaur upgraded from 22.04 LTS, and the other is
-fresh Mantic from install.
-
-> You mentioned you were using Ubuntu 23.10, where
-> dpkg-deb version is 1.22.0
-
-This is correct.
-
-> Your dpkg-deb version, 1.20.12, is too old for Ubuntu 23.10.
-> Is it a self-built one?
-
-Yes, it is the build from Debian 11 source package.
-
-This had the similar rationale because Ubuntu version ran single-threaded.
-
-dpkg-deb from Debian 11 source package worked well for months.
-
-> dpkg-deb usually compresses binary packages, but the default
-> compression type depends on the distro.
-> (It is determined at "./configure" time)
-
-I see. But the home-built dpkg-deb also resorted to running "xz", and
-xz did not recognise XZ_OPT environment variable. Very odd. :-/
-
-> On Ubuntu, the default compression type for dpkg-deb is "zstd"
-> (while it is "xz" on Debian)
-> 
-> Check "man dpkg-deb" on your Ubuntu machine.
-> 
->    -Zcompress‐type
->        Specify which compression type to use when building a package.
->        Allowed values are gzip, xz (since dpkg 1.15.6),
->        zstd (since dpkg 1.21.18) and none (default is zstd).
-
-Verified. "man dpkg-deb" confirms that.
-
-> You are still allowed to use xz with "make KDEB_COMPRESS=xz deb-pkg".
-> Is this your case?
-
-Somehow, my Mantic's "xz" did not react to the environment variables. Maybe it is
-enchanted? :-/
-
-> Overall, your report is not sensible.
-
-> You should check what you are seeing.
-
-I was seeing exactly what I copy+pasted (top output). Give me the benefit of doubt
-that I did not falsify copy+paste. Ideally, I should have submitted JPG terminal
-screenshot.
-
-Home-built dpkg-deb worked well on Ubuntu 22.04 LTS and 23.10 (upgraded from 22.04).
-So it was a surprise that it started showing quirks on this new box with fresh 23.10
-from .iso.
-
-But I am only 16 months in the Linux kernel development, so it is probably my fault.
-
-I saw from the output of "ps xewww" that "xz" had "XZ_OPT=-T0", but it refused to obey
-the environment variable.
-
-This is probably worth digging and delving into to find the culprit, but eventually the
-workaround was the script manually prepending "--threads=0" to the parameter list and
-calling system xz:
-
-	/usr/bin/xz --threads=0 "$@"
-
-Certainly, I need to establish "normality" before building complex kernels and applying
-patches or the results will be non-reproducible and useless.
-
-I did the background search on your valuable contributions to the LK, but as we have this
-problem with the vanilla installation of Ubuntu, maybe we can think of something to
-optimise the LK build time?
-
-To recall better from Thursday, I actually tried to prepend "XZ_OPT=--threads=0" to
-system xz, and it worked. But when called from dpkg-deb, it suddenly got amnesia, despite
-XZ_OPT=-T0 being seen in "ps xewww" output :-/
-
-I believe there should be a rational explanation rather than black or red magic.
-
-Thank you again for considering this problem report and have a nice weekend!
-
-Best regards,
-Mirsad Todorovac
-
->> I tried things like this:
->>
->> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
->> index d7dd0d04c70c..b2319c23db34 100755
->> --- a/scripts/package/builddeb
->> +++ b/scripts/package/builddeb
->> @@ -38,7 +38,7 @@ create_package() {
->>
->>          # Fix ownership and permissions
->>          if [ "$DEB_RULES_REQUIRES_ROOT" = "no" ]; then
->> -               dpkg_deb_opts="--root-owner-group"
->> +               dpkg_deb_opts="--threads-max=0 --root-owner-group"
->>          else
->>                  chown -R root:root "$pdir"
->>          fi
->>
->> and it didn't work either - dpkg-deb --threads-max=0 still spawned a
->> single-threaded xz that ran 30 minutes.
->>
->> Then the workaround was a very simple xz shell script that adds option --threads=0
->> and calls system xz:
->>
->> ~/bin/xz:
->> ----------------------------------------------------------------
->> #!/bin/bash -f
->>
->> /usr/bin/xz --threads=0 "$@"
->> ----------------------------------------------------------------
->>
->> This finally worked, but sometimes I get:
->>
->> marvin@defiant:~/linux/kernel$ xz -9 --memlimit-compress=8000MiB linux-image-6.7.0-rc8-dbg_6.7.0-rc8-6_amd64.deb
->> /usr/bin/xz: Reduced the number of threads from 8 to 6 to not exceed the memory usage limit of 8000 MiB
->>
->> (This is of course just an example of compressing a large file, as .deb is already compressed.)
->>
->> I used the default Ubuntu 23.10 config, with .pems excluded, and I think module compression
->> did not work either. I had to turn it off ...
->>
->> Hope this helps.
->>
->> Regards,
->> Mirsad
->>
->> --
->> Mirsad Goran Todorovac
->> Sistem inženjer
->> Grafički fakultet | Akademija likovnih umjetnosti
->> Sveučilište u Zagrebu
->>
->> System engineer
->> Faculty of Graphic Arts | Academy of Fine Arts
->> University of Zagreb, Republic of Croatia
->> The European Union
->>
->> "I see something approaching fast ... Will it be friends with me?"
->>
->>
-> 
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
