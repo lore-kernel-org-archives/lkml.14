@@ -1,317 +1,287 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD7F107A8
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 00:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8368E17739;
+	Sat, 13 Jan 2024 00:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nv+QOBof"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d4a980fdedso63037825ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 16:29:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705105768; x=1705710568; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7MAUWYR37XI3Wftfiw189yoBRG5IjIAuaL92kbTlRss=;
-        b=Nv+QOBofIWa4y88S3lfss4tc2pcVNWVDbACKWSZr9TyIUQn2VUsnJDU0+OhNxF4k4N
-         okyrYFKyBfnDP/aQssDtcrsLUNybbg1PfkNjWOI5WmhIllMZkhPfp+0+3YJX6FxpZEaO
-         wv/TCwt15XSqLY+LcpirdJWINdoFvKEje/NXCXqhL3e4woNVjt90SymggsQkszOaPjhi
-         8AvA9MB/y9B2MSnUivqqIt4fm0Q1J9TaGmwZU9KJWHN9njl9JQ1G2bynQHGkCr3/V+9F
-         ThikfSOwBoEovUdzNp4iPdGJH2icAclw/D9hU5W8WJIME7LM7NQ+ZwIuw/bOgOLHJnjU
-         ARaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705105768; x=1705710568;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7MAUWYR37XI3Wftfiw189yoBRG5IjIAuaL92kbTlRss=;
-        b=i+MWq389JBCLv6iV3D9qn7/QiLvYggfAm4AyTsnCk1zJzo8h/NuD2/W/L86Av8Ujsj
-         iavkelKDwOBvqjap6zA01cwpLMMHljxCw5BtmLwJJrC6UKstyxKhBxoI4pkltOws4BG9
-         so9TP1eRzXhyPZ1RAof+W5O1ecdVDwWh96QJu1GhlqyXa3p20N4Kty/1n9p0tWbnB52E
-         8fKJ2Ktfp4Rlchv/Wp8e3zW0JqC2zpcFz0wV1ZhijeF9FDC0v0PKaYTZ4kfBNFimJcV2
-         ShzQ+olYj5RZLww7vOH61DByIvznzmTCujn8XgluLJbDmUaWkN2l1/cq1y0X1uGtJJpZ
-         EH6Q==
-X-Gm-Message-State: AOJu0Yz7qQmeEA1+8HNbhMySbDMsS3lR/TNI1WlWr1FKhIwoS/1wgHZU
-	m6kVTgwy9NadMQo9ujUSLDs=
-X-Google-Smtp-Source: AGHT+IEqBUiaa5u/cgs9r3EkdedxLyYB8zbqHvLPYzbOukTUF1vyB14PDkj9LpG6aubORP3Z9CaO4g==
-X-Received: by 2002:a17:902:6849:b0:1d4:9c06:17ef with SMTP id f9-20020a170902684900b001d49c0617efmr1727575pln.67.1705105768370;
-        Fri, 12 Jan 2024 16:29:28 -0800 (PST)
-Received: from localhost (dhcp-72-253-202-210.hawaiiantel.net. [72.253.202.210])
-        by smtp.gmail.com with ESMTPSA id d4-20020a170902cec400b001d3c0074f33sm3757355plg.170.2024.01.12.16.29.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 16:29:28 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-From: Tejun Heo <tj@kernel.org>
-To: jiangshanlai@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	Naohiro.Aota@wdc.com,
-	kernel-team@meta.com,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 8/9] workqueue: Introduce struct wq_node_nr_active
-Date: Fri, 12 Jan 2024 14:28:52 -1000
-Message-ID: <20240113002911.406791-9-tj@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240113002911.406791-1-tj@kernel.org>
-References: <20240113002911.406791-1-tj@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XDS7Oz0F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0944C433F1;
+	Sat, 13 Jan 2024 00:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705105770;
+	bh=JAvwWUtmXl0VoUe1t4B4U2Vs7n3vjhfaIM/dqJeCdDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XDS7Oz0Fyk20HkbbwDerLmzg8UgsATURp3iWM43OMggELC2/csRYvv4KnaYtLX519
+	 gPXFQwhN+vqof1Vi2PlLqNpLuDg5MbQMh6qFrjC2Z07SsZplsxiWMi1Dwpp5Fbscko
+	 x2oo5XK45aZLphzrD0w5i9J+VrsOVovN4UhWNDZHIYzDty1CbmJaZ6g3GsIygAfBU9
+	 yDvL4aoFLXWL1hsUIL0nhnnJDlH03eSVDYT8C5oMYiH6ZvizoWPdLU1WN+Y5qGuXu2
+	 9d72/K+vv3DJV/m2de8e00PFXbub6IzPMKd8F4RyDKXnQ187984ueSxszvDMSFwW9J
+	 FgkP/Dsk3CtlQ==
+Date: Fri, 12 Jan 2024 16:29:30 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Chandan Babu R <chandan.babu@oracle.com>, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, Mateusz Guzik <mjguzik@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 3/3] xfs: Remove mrlock wrapper
+Message-ID: <20240113002930.GZ722975@frogsfrogsfrogs>
+References: <20240111212424.3572189-1-willy@infradead.org>
+ <20240111212424.3572189-4-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111212424.3572189-4-willy@infradead.org>
 
-Currently, for both percpu and unbound workqueues, max_active applies
-per-cpu, which is a recent change for unbound workqueues. The change for
-unbound workqueues was a significant departure from the previous behavior of
-per-node application. It made some use cases create undesirable number of
-concurrent work items and left no good way of fixing them. To address the
-problem, workqueue is implementing a NUMA node segmented global nr_active
-mechanism, which will be explained further in the next patch.
+On Thu, Jan 11, 2024 at 09:24:24PM +0000, Matthew Wilcox (Oracle) wrote:
+> mrlock was an rwsem wrapper that also recorded whether the lock was
+> held for read or write.  Now that we can ask the generic code whether
+> the lock is held for read or write, we can remove this wrapper and use
+> an rwsem directly.
+> 
+> As the comment says, we can't use lockdep to assert that the ILOCK is
+> held for write, because we might be in a workqueue, and we aren't able
+> to tell lockdep that we do in fact own the lock.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  fs/xfs/mrlock.h    | 78 ----------------------------------------------
+>  fs/xfs/xfs_inode.c | 22 +++++++------
+>  fs/xfs/xfs_inode.h |  2 +-
+>  fs/xfs/xfs_iops.c  |  4 +--
+>  fs/xfs/xfs_linux.h |  2 +-
+>  fs/xfs/xfs_super.c |  4 +--
+>  6 files changed, 18 insertions(+), 94 deletions(-)
+>  delete mode 100644 fs/xfs/mrlock.h
+> 
+> diff --git a/fs/xfs/mrlock.h b/fs/xfs/mrlock.h
+> deleted file mode 100644
+> index 79155eec341b..000000000000
+> --- a/fs/xfs/mrlock.h
+> +++ /dev/null
+> @@ -1,78 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -/*
+> - * Copyright (c) 2000-2006 Silicon Graphics, Inc.
+> - * All Rights Reserved.
+> - */
+> -#ifndef __XFS_SUPPORT_MRLOCK_H__
+> -#define __XFS_SUPPORT_MRLOCK_H__
+> -
+> -#include <linux/rwsem.h>
+> -
+> -typedef struct {
+> -	struct rw_semaphore	mr_lock;
+> -#if defined(DEBUG) || defined(XFS_WARN)
+> -	int			mr_writer;
+> -#endif
+> -} mrlock_t;
+> -
+> -#if defined(DEBUG) || defined(XFS_WARN)
+> -#define mrinit(mrp, name)	\
+> -	do { (mrp)->mr_writer = 0; init_rwsem(&(mrp)->mr_lock); } while (0)
+> -#else
+> -#define mrinit(mrp, name)	\
+> -	do { init_rwsem(&(mrp)->mr_lock); } while (0)
+> -#endif
+> -
+> -#define mrlock_init(mrp, t,n,s)	mrinit(mrp, n)
+> -#define mrfree(mrp)		do { } while (0)
+> -
+> -static inline void mraccess_nested(mrlock_t *mrp, int subclass)
+> -{
+> -	down_read_nested(&mrp->mr_lock, subclass);
+> -}
+> -
+> -static inline void mrupdate_nested(mrlock_t *mrp, int subclass)
+> -{
+> -	down_write_nested(&mrp->mr_lock, subclass);
+> -#if defined(DEBUG) || defined(XFS_WARN)
+> -	mrp->mr_writer = 1;
+> -#endif
+> -}
+> -
+> -static inline int mrtryaccess(mrlock_t *mrp)
+> -{
+> -	return down_read_trylock(&mrp->mr_lock);
+> -}
+> -
+> -static inline int mrtryupdate(mrlock_t *mrp)
+> -{
+> -	if (!down_write_trylock(&mrp->mr_lock))
+> -		return 0;
+> -#if defined(DEBUG) || defined(XFS_WARN)
+> -	mrp->mr_writer = 1;
+> -#endif
+> -	return 1;
+> -}
+> -
+> -static inline void mrunlock_excl(mrlock_t *mrp)
+> -{
+> -#if defined(DEBUG) || defined(XFS_WARN)
+> -	mrp->mr_writer = 0;
+> -#endif
+> -	up_write(&mrp->mr_lock);
+> -}
+> -
+> -static inline void mrunlock_shared(mrlock_t *mrp)
+> -{
+> -	up_read(&mrp->mr_lock);
+> -}
+> -
+> -static inline void mrdemote(mrlock_t *mrp)
+> -{
+> -#if defined(DEBUG) || defined(XFS_WARN)
+> -	mrp->mr_writer = 0;
+> -#endif
+> -	downgrade_write(&mrp->mr_lock);
+> -}
+> -
+> -#endif /* __XFS_SUPPORT_MRLOCK_H__ */
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index 728b3bc1c3db..b9b2af913e89 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -203,9 +203,9 @@ xfs_ilock(
+>  	}
+>  
+>  	if (lock_flags & XFS_ILOCK_EXCL)
+> -		mrupdate_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
+> +		down_write_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
+>  	else if (lock_flags & XFS_ILOCK_SHARED)
+> -		mraccess_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
+> +		down_read_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
+>  }
+>  
+>  /*
+> @@ -246,10 +246,10 @@ xfs_ilock_nowait(
+>  	}
+>  
+>  	if (lock_flags & XFS_ILOCK_EXCL) {
+> -		if (!mrtryupdate(&ip->i_lock))
+> +		if (!down_write_trylock(&ip->i_lock))
+>  			goto out_undo_mmaplock;
+>  	} else if (lock_flags & XFS_ILOCK_SHARED) {
+> -		if (!mrtryaccess(&ip->i_lock))
+> +		if (!down_read_trylock(&ip->i_lock))
+>  			goto out_undo_mmaplock;
+>  	}
+>  	return 1;
+> @@ -298,9 +298,9 @@ xfs_iunlock(
+>  		up_read(&VFS_I(ip)->i_mapping->invalidate_lock);
+>  
+>  	if (lock_flags & XFS_ILOCK_EXCL)
+> -		mrunlock_excl(&ip->i_lock);
+> +		up_write(&ip->i_lock);
+>  	else if (lock_flags & XFS_ILOCK_SHARED)
+> -		mrunlock_shared(&ip->i_lock);
+> +		up_read(&ip->i_lock);
+>  
+>  	trace_xfs_iunlock(ip, lock_flags, _RET_IP_);
+>  }
+> @@ -319,7 +319,7 @@ xfs_ilock_demote(
+>  		~(XFS_IOLOCK_EXCL|XFS_MMAPLOCK_EXCL|XFS_ILOCK_EXCL)) == 0);
+>  
+>  	if (lock_flags & XFS_ILOCK_EXCL)
+> -		mrdemote(&ip->i_lock);
+> +		downgrade_write(&ip->i_lock);
+>  	if (lock_flags & XFS_MMAPLOCK_EXCL)
+>  		downgrade_write(&VFS_I(ip)->i_mapping->invalidate_lock);
+>  	if (lock_flags & XFS_IOLOCK_EXCL)
+> @@ -333,10 +333,14 @@ xfs_assert_ilocked(
+>  	struct xfs_inode	*ip,
+>  	uint			lock_flags)
+>  {
+> +	/*
+> +	 * Sometimes we assert the ILOCK is held exclusively, but we're in
+> +	 * a workqueue, so lockdep doesn't know we're the owner.
+> +	 */
+>  	if (lock_flags & XFS_ILOCK_SHARED)
+> -		rwsem_assert_held(&ip->i_lock.mr_lock);
+> +		rwsem_assert_held(&ip->i_lock);
+>  	else if (lock_flags & XFS_ILOCK_EXCL)
+> -		ASSERT(ip->i_lock.mr_writer);
+> +		rwsem_assert_held_write_nolockdep(&ip->i_lock);
 
-As a preparation, this patch introduces struct wq_node_nr_active. It's a
-data structured allocated for each workqueue and NUMA node pair and
-currently only tracks the workqueue's number of active work items on the
-node. This is split out from the next patch to make it easier to understand
-and review.
+Hooray, someone finally broke the gordian knot!
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-Note that there is an extra wq_node_nr_active allocated for the invalid node
-nr_node_ids which is used to track nr_active for pools which don't have NUMA
-node associated such as the default fallback system-wide pool.
+--D
 
-This doesn't cause any behavior changes visible to userland yet. The next
-patch will expand to implement the control mechanism on top.
-
-v2: - wq->max_active now uses WRITE/READ_ONCE() as suggested by Lai.
-
-    - Lai pointed out that pwq_tryinc_nr_active() incorrectly dropped
-      pwq->max_active check. Restored. As the next patch replaces the
-      max_active enforcement mechanism, this doesn't change the end result.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
----
- kernel/workqueue.c | 125 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 123 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 522ef63088de..71ac3a3633ac 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -281,6 +281,16 @@ struct wq_flusher {
- 
- struct wq_device;
- 
-+/*
-+ * Unlike in a per-cpu workqueue where max_active limits its concurrency level
-+ * on each CPU, in an unbound workqueue, max_active applies to the whole system.
-+ * As sharing a single nr_active across multiple sockets can be very expensive,
-+ * the counting and enforcement is per NUMA node.
-+ */
-+struct wq_node_nr_active {
-+	atomic_t		count;		/* per-node nr_active count */
-+};
-+
- /*
-  * The externally visible workqueue.  It relays the issued work items to
-  * the appropriate worker_pool through its pool_workqueues.
-@@ -327,6 +337,7 @@ struct workqueue_struct {
- 	/* hot fields used during command issue, aligned to cacheline */
- 	unsigned int		flags ____cacheline_aligned; /* WQ: WQ_* flags */
- 	struct pool_workqueue __percpu __rcu **cpu_pwq; /* I: per-cpu pwqs */
-+	struct wq_node_nr_active **node_nr_active; /* I: per-node nr_active */
- };
- 
- static struct kmem_cache *pwq_cache;
-@@ -1407,6 +1418,31 @@ work_func_t wq_worker_last_func(struct task_struct *task)
- 	return worker->last_func;
- }
- 
-+/**
-+ * wq_node_nr_active - Determine wq_node_nr_active to use
-+ * @wq: workqueue of interest
-+ * @node: NUMA node, can be %NUMA_NO_NODE
-+ *
-+ * Determine wq_node_nr_active to use for @wq on @node. Returns:
-+ *
-+ * - %NULL for per-cpu workqueues as they don't need to use shared nr_active.
-+ *
-+ * - node_nr_active[nr_node_ids] if @node is %NUMA_NO_NODE.
-+ *
-+ * - Otherwise, node_nr_active[@node].
-+ */
-+static struct wq_node_nr_active *wq_node_nr_active(struct workqueue_struct *wq,
-+						   int node)
-+{
-+	if (!(wq->flags & WQ_UNBOUND))
-+		return NULL;
-+
-+	if (node == NUMA_NO_NODE)
-+		node = nr_node_ids;
-+
-+	return wq->node_nr_active[node];
-+}
-+
- /**
-  * get_pwq - get an extra reference on the specified pool_workqueue
-  * @pwq: pool_workqueue to get
-@@ -1485,12 +1521,17 @@ static bool pwq_activate_work(struct pool_workqueue *pwq,
- 			      struct work_struct *work)
- {
- 	struct worker_pool *pool = pwq->pool;
-+	struct wq_node_nr_active *nna;
- 
- 	lockdep_assert_held(&pool->lock);
- 
- 	if (!(*work_data_bits(work) & WORK_STRUCT_INACTIVE))
- 		return false;
- 
-+	nna = wq_node_nr_active(pwq->wq, pool->node);
-+	if (nna)
-+		atomic_inc(&nna->count);
-+
- 	pwq->nr_active++;
- 	__pwq_activate_work(pwq, work);
- 	return true;
-@@ -1507,14 +1548,18 @@ static bool pwq_tryinc_nr_active(struct pool_workqueue *pwq)
- {
- 	struct workqueue_struct *wq = pwq->wq;
- 	struct worker_pool *pool = pwq->pool;
-+	struct wq_node_nr_active *nna = wq_node_nr_active(wq, pool->node);
- 	bool obtained;
- 
- 	lockdep_assert_held(&pool->lock);
- 
- 	obtained = pwq->nr_active < READ_ONCE(wq->max_active);
- 
--	if (obtained)
-+	if (obtained) {
- 		pwq->nr_active++;
-+		if (nna)
-+			atomic_inc(&nna->count);
-+	}
- 	return obtained;
- }
- 
-@@ -1551,10 +1596,26 @@ static bool pwq_activate_first_inactive(struct pool_workqueue *pwq)
- static void pwq_dec_nr_active(struct pool_workqueue *pwq)
- {
- 	struct worker_pool *pool = pwq->pool;
-+	struct wq_node_nr_active *nna = wq_node_nr_active(pwq->wq, pool->node);
- 
- 	lockdep_assert_held(&pool->lock);
- 
-+	/*
-+	 * @pwq->nr_active should be decremented for both percpu and unbound
-+	 * workqueues.
-+	 */
- 	pwq->nr_active--;
-+
-+	/*
-+	 * For a percpu workqueue, it's simple. Just need to kick the first
-+	 * inactive work item on @pwq itself.
-+	 */
-+	if (!nna) {
-+		pwq_activate_first_inactive(pwq);
-+		return;
-+	}
-+
-+	atomic_dec(&nna->count);
- 	pwq_activate_first_inactive(pwq);
- }
- 
-@@ -4018,12 +4079,64 @@ static void wq_free_lockdep(struct workqueue_struct *wq)
- }
- #endif
- 
-+static void free_node_nr_active(struct wq_node_nr_active **ptr_ar)
-+{
-+	int i;
-+
-+	if (!ptr_ar)
-+		return;
-+	for (i = 0; i < nr_node_ids + 1; i++)
-+		kfree(ptr_ar[i]);
-+	kfree(ptr_ar);
-+}
-+
-+static void init_node_nr_active(struct wq_node_nr_active *nna)
-+{
-+	atomic_set(&nna->count, 0);
-+}
-+
-+/*
-+ * Each node's nr_active counter will be accessed mostly from its own node and
-+ * should be allocated in the node.
-+ */
-+static struct wq_node_nr_active **alloc_node_nr_active(void)
-+{
-+	struct wq_node_nr_active **nna_ar, *nna;
-+	int node;
-+
-+	nna_ar = kcalloc(nr_node_ids + 1, sizeof(*nna_ar), GFP_KERNEL);
-+	if (!nna_ar)
-+		return NULL;
-+
-+	for_each_node(node) {
-+		nna = kzalloc_node(sizeof(*nna), GFP_KERNEL, node);
-+		if (!nna)
-+			goto err_free;
-+		init_node_nr_active(nna);
-+		nna_ar[node] = nna;
-+	}
-+
-+	/* [nr_node_ids] is used as the fallback */
-+	nna = kzalloc_node(sizeof(*nna), GFP_KERNEL, NUMA_NO_NODE);
-+	if (!nna)
-+		goto err_free;
-+	init_node_nr_active(nna);
-+	nna_ar[nr_node_ids] = nna;
-+
-+	return nna_ar;
-+
-+err_free:
-+	free_node_nr_active(nna_ar);
-+	return NULL;
-+}
-+
- static void rcu_free_wq(struct rcu_head *rcu)
- {
- 	struct workqueue_struct *wq =
- 		container_of(rcu, struct workqueue_struct, rcu);
- 
- 	wq_free_lockdep(wq);
-+	free_node_nr_active(wq->node_nr_active);
- 	free_percpu(wq->cpu_pwq);
- 	free_workqueue_attrs(wq->unbound_attrs);
- 	kfree(wq);
-@@ -4807,8 +4920,14 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	wq_init_lockdep(wq);
- 	INIT_LIST_HEAD(&wq->list);
- 
-+	if (flags & WQ_UNBOUND) {
-+		wq->node_nr_active = alloc_node_nr_active();
-+		if (!wq->node_nr_active)
-+			goto err_unreg_lockdep;
-+	}
-+
- 	if (alloc_and_link_pwqs(wq) < 0)
--		goto err_unreg_lockdep;
-+		goto err_free_node_nr_active;
- 
- 	if (wq_online && init_rescuer(wq) < 0)
- 		goto err_destroy;
-@@ -4833,6 +4952,8 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 
- 	return wq;
- 
-+err_free_node_nr_active:
-+	free_node_nr_active(wq->node_nr_active);
- err_unreg_lockdep:
- 	wq_unregister_lockdep(wq);
- 	wq_free_lockdep(wq);
--- 
-2.43.0
-
+>  
+>  	if (lock_flags & XFS_MMAPLOCK_SHARED)
+>  		rwsem_assert_held(&VFS_I(ip)->i_mapping->invalidate_lock);
+> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+> index dcc818901a79..796d11065fe2 100644
+> --- a/fs/xfs/xfs_inode.h
+> +++ b/fs/xfs/xfs_inode.h
+> @@ -39,7 +39,7 @@ typedef struct xfs_inode {
+>  
+>  	/* Transaction and locking information. */
+>  	struct xfs_inode_log_item *i_itemp;	/* logging information */
+> -	mrlock_t		i_lock;		/* inode lock */
+> +	struct rw_semaphore	i_lock;		/* inode lock */
+>  	atomic_t		i_pincount;	/* inode pin count */
+>  	struct llist_node	i_gclist;	/* deferred inactivation list */
+>  
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index e7fca1913175..73f46486c252 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -1284,9 +1284,9 @@ xfs_setup_inode(
+>  		 */
+>  		lockdep_set_class(&inode->i_rwsem,
+>  				  &inode->i_sb->s_type->i_mutex_dir_key);
+> -		lockdep_set_class(&ip->i_lock.mr_lock, &xfs_dir_ilock_class);
+> +		lockdep_set_class(&ip->i_lock, &xfs_dir_ilock_class);
+>  	} else {
+> -		lockdep_set_class(&ip->i_lock.mr_lock, &xfs_nondir_ilock_class);
+> +		lockdep_set_class(&ip->i_lock, &xfs_nondir_ilock_class);
+>  	}
+>  
+>  	/*
+> diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+> index d7873e0360f0..ec3c6c138a63 100644
+> --- a/fs/xfs/xfs_linux.h
+> +++ b/fs/xfs/xfs_linux.h
+> @@ -22,7 +22,6 @@ typedef __u32			xfs_nlink_t;
+>  #include "xfs_types.h"
+>  
+>  #include "kmem.h"
+> -#include "mrlock.h"
+>  
+>  #include <linux/semaphore.h>
+>  #include <linux/mm.h>
+> @@ -51,6 +50,7 @@ typedef __u32			xfs_nlink_t;
+>  #include <linux/notifier.h>
+>  #include <linux/delay.h>
+>  #include <linux/log2.h>
+> +#include <linux/rwsem.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/random.h>
+>  #include <linux/ctype.h>
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index aff20ddd4a9f..15831c53a83b 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -716,9 +716,7 @@ xfs_fs_inode_init_once(
+>  	/* xfs inode */
+>  	atomic_set(&ip->i_pincount, 0);
+>  	spin_lock_init(&ip->i_flags_lock);
+> -
+> -	mrlock_init(&ip->i_lock, MRLOCK_ALLOW_EQUAL_PRI|MRLOCK_BARRIER,
+> -		     "xfsino", ip->i_ino);
+> +	init_rwsem(&ip->i_lock);
+>  }
+>  
+>  /*
+> -- 
+> 2.43.0
+> 
+> 
