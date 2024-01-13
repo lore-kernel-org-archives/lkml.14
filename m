@@ -1,281 +1,513 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23B81A5AC
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 23:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C063236
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 00:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atishpatra.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SFOqFyIp"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3606e69ec67so45007155ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 15:56:24 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="BaapVokA"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2cd0d05838fso79362361fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jan 2024 16:05:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1705103784; x=1705708584; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8ZPrT6/9y7GTRJXEMx1tnKXDzgpl8nPp7oBDsTEm8Wc=;
-        b=SFOqFyIpJc08sirFK1gwy7/Qe5fHvOHapnEwh26GPZoHY9pTBUkdZGElXgw7Qo8CLv
-         99fB+FdfT9F1Fq03XTM63Go/l6oLCEsAxh/nTdkui92FNfpLM/DEzLrQoMs4TiUnvKpS
-         ikPIGqIjzgVaBo4tWuaMWvBGNDKn8EbWCfqmogUygAQ/5U9zSZRREwuVsZn5m4SpMMsa
-         QCFMKaicgENFKDXENDiZgJLxUxH+ukDFDQx4u+7WIHWFhbEk+SWRf09P9ItAK5wGqU8+
-         Lonk63IH0tPRBWqarLUWGmw6JPLMhgjUuyNpxC3BYo8vUtKjvW4PfRQsJLPFM9XoGQo+
-         Fy1Q==
+        d=atishpatra.org; s=google; t=1705104298; x=1705709098; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kbH0ObE2Pi8n+TtACEyBv03NTKSbcKArm6Tse3UArX8=;
+        b=BaapVokAkYg1YHjhaPgWOqvzQKWan45BsNfRj5JmIVbZT9mFZ3XlAys/S9vBHtRyRe
+         kcVIg+VE6T2ILL2e/ZHwEmi/qEa1U2L7I8C1MDKZg0bRapDUwo9rLjg3LzP6NypMo0dY
+         6uh9L8HlBrAFfvSSdtdT/Cz4bT+pMJXnqQvQo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705103784; x=1705708584;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705104298; x=1705709098;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8ZPrT6/9y7GTRJXEMx1tnKXDzgpl8nPp7oBDsTEm8Wc=;
-        b=YMWfgHS6GZ9D1LYMiCAsUQ5vihbCuAA8IjZfkuJBdPG3c5ifa/GsG60/aeA8mE7dS7
-         Z+iOZH2AU/N6fxG2Z9FVrCCv8z8yB1RllPpZ+ON8mM4s2SGny/vMP6N3OlbGB5VwxabS
-         kDyDWARcbj3bP+Auxs8lwnA8+ufvM/dt6boPIMoSBCZtTvYz3iRtBkpUpIKgo+jR2NOi
-         DLWOyI2uWv0COt8rMU4R8QN44ckBUsDHGfOs5J1sBYy7zd86fPRU2mm2FajBv5QbLEPv
-         RvD2PgOwr4pcFxclw2TbVQElNC0n53CfPJ+iZ+90VhsIh38pVTfcTq++lw30H3UDrV+/
-         R3vw==
-X-Gm-Message-State: AOJu0YyDP1ppcr0dKsD3DZam+37P+baSWqSPPCLqgozFc7BKu/LBYzrw
-	ZRhEo8R18jbPVFRwEoZl4VHiU9Y7bqXG/g==
-X-Google-Smtp-Source: AGHT+IHdFa0Z2vYPcCoDiJ3LsRWm/16BT/G+otM7tI1aKuDPn6A2GBUo8z6t3tR2U6vN86wYJYEnFQ==
-X-Received: by 2002:a92:d642:0:b0:35f:aba9:1031 with SMTP id x2-20020a92d642000000b0035faba91031mr2026091ilp.126.1705103783744;
-        Fri, 12 Jan 2024 15:56:23 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id jc14-20020a17090325ce00b001d3b3ac2d7bsm3725537plb.245.2024.01.12.15.56.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 15:56:23 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Fri, 12 Jan 2024 15:56:20 -0800
-Subject: [PATCH v7 1/2] riscv: Include riscv_set_icache_flush_ctx prctl
+        bh=kbH0ObE2Pi8n+TtACEyBv03NTKSbcKArm6Tse3UArX8=;
+        b=CWS/wjGDBQWdc8ksgYJX7sWlRATBTnTMjOWA7bVGBoj7GFYPf6FXA+cwMhf2IP7vJn
+         qcighnBbfq0+/+PtSj3cWlI6KfkgCxVBLmCXVrTPLRVDA51krxxchvBCVtnEanR/IPfX
+         U0hLWVKB3HSG23PzJSttBYp7AeT0CBTD9AFwS4WnIlaKi7osvIwdV+HQqMOTi2dfC7/m
+         Fp8hiQ07GqyrpToM8/IPSAbJR6RqLyzgB58yP7DRMLYg4mJ9YO9YjpUrImjKYiJQCFA9
+         EazqbGvmih2WlMuY/etULJtZwl0o3whZVQwPIEUkEXNyOP4INtkA0Jmn3r4AlMC9bd8R
+         3qfw==
+X-Gm-Message-State: AOJu0Yzh6r1sotMTNhyr6WPPkMSrOC1S0lR6TJN2flrrYayhnTUHkqJb
+	9C+pjVDxLFuuuFpTRpZFEnIU9AENuPayyVZARiVbeU0g3iUi
+X-Google-Smtp-Source: AGHT+IGEyaMVgWle34ONQUxwRlfD098l+SMvTSxZbNefZB6inFNdpNZrGpV+48levahU6E1Cfug3chgqUIyC39BHV5o=
+X-Received: by 2002:a2e:93c3:0:b0:2cd:1211:ba9 with SMTP id
+ p3-20020a2e93c3000000b002cd12110ba9mr1040563ljh.41.1705104297793; Fri, 12 Jan
+ 2024 16:04:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240112-fencei-v7-1-78f0614e1db0@rivosinc.com>
-References: <20240112-fencei-v7-0-78f0614e1db0@rivosinc.com>
-In-Reply-To: <20240112-fencei-v7-0-78f0614e1db0@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor.dooley@microchip.com>, 
- =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
- Atish Patra <atishp@atishpatra.org>, Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>, 
- Atish Patra <atishp@rivosinc.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705103781; l=7834;
- i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=IdbTkc3Q5t6sA8vLkrqSjebg3h+Stp0xkerv0GwEwco=;
- b=DFljA3ELwjm7M3ykiqZxlt6bGcQv8rzhZHSg/zi0qtVve1L7ETJZfuIxnYwlcJfFB4Uq9IHgt
- PFfuzrwL+8sDzjWUUZPkqIiowj+kAlIg28wSiK9URyZ6p/IrZR2H/en
-X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
- pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
+References: <20240110073917.2398826-1-peterlin@andestech.com> <20240110073917.2398826-17-peterlin@andestech.com>
+In-Reply-To: <20240110073917.2398826-17-peterlin@andestech.com>
+From: Atish Patra <atishp@atishpatra.org>
+Date: Fri, 12 Jan 2024 16:04:46 -0800
+Message-ID: <CAOnJCULcJJAp1baxtKM3eOzW_LwMZ+PM9m25Sn1VJ428RiUTGw@mail.gmail.com>
+Subject: Re: [PATCH v7 16/16] riscv: andes: Support specifying symbolic
+ firmware and hardware raw events
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, conor+dt@kernel.org, 
+	conor.dooley@microchip.com, conor@kernel.org, devicetree@vger.kernel.org, 
+	dminus@andestech.com, evan@rivosinc.com, geert+renesas@glider.be, 
+	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
+	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
+	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
+	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
+	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
+	uwu@icenowy.me, wens@csie.org, will@kernel.org, ycliang@andestech.com, 
+	inochiama@outlook.com, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
+	wefu@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Support new prctl with key PR_RISCV_SET_ICACHE_FLUSH_CTX to enable
-optimization of cross modifying code. This prctl enables userspace code
-to use icache flushing instructions such as fence.i with the guarantee
-that the icache will continue to be clean after thread migration.
+On Tue, Jan 9, 2024 at 11:41=E2=80=AFPM Yu Chien Peter Lin
+<peterlin@andestech.com> wrote:
+>
+> From: Locus Wei-Han Chen <locus84@andestech.com>
+>
+> Add the Andes AX45 JSON files that allows specifying symbolic event
+> names for the raw PMU events.
+>
+> Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
+> Reviewed-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+> Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> Changes v1 -> v2:
+>   - No change
+> Changes v2 -> v3:
+>   - No change
+> Changes v3 -> v4:
+>   - No change
+> Changes v4 -> v5:
+>   - Include Prabhakar's Tested-by
+> Changes v5 -> v6:
+>   - No change
+> Changes v6 -> v7:
+>   - No change
+> ---
+>  .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
+>  .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
+>  .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
+>  .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
+>  tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
+>  5 files changed, 330 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.=
+json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructi=
+ons.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.js=
+on
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch=
+.json
+>
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/=
+tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+> new file mode 100644
+> index 000000000000..9b4a032186a7
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+> @@ -0,0 +1,68 @@
+> +[
+> +  {
+> +    "ArchStdEvent": "FW_MISALIGNED_LOAD"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_MISALIGNED_STORE"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ACCESS_LOAD"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ACCESS_STORE"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ILLEGAL_INSN"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SET_TIMER"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_IPI_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_IPI_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_FENCE_I_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.jso=
+n b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+> new file mode 100644
+> index 000000000000..713a08c1a40f
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+> @@ -0,0 +1,127 @@
+> +[
+> +       {
+> +               "EventCode": "0x10",
+> +               "EventName": "cycle_count",
+> +               "BriefDescription": "Cycle count"
+> +       },
+> +       {
+> +               "EventCode": "0x20",
+> +               "EventName": "inst_count",
+> +               "BriefDescription": "Retired instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x30",
+> +               "EventName": "int_load_inst",
+> +               "BriefDescription": "Integer load instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x40",
+> +               "EventName": "int_store_inst",
+> +               "BriefDescription": "Integer store instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x50",
+> +               "EventName": "atomic_inst",
+> +               "BriefDescription": "Atomic instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x60",
+> +               "EventName": "sys_inst",
+> +               "BriefDescription": "System instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x70",
+> +               "EventName": "int_compute_inst",
+> +               "BriefDescription": "Integer computational instruction co=
+unt"
+> +       },
+> +       {
+> +               "EventCode": "0x80",
+> +               "EventName": "condition_br",
+> +               "BriefDescription": "Conditional branch instruction count=
+"
+> +       },
+> +       {
+> +               "EventCode": "0x90",
+> +               "EventName": "taken_condition_br",
+> +               "BriefDescription": "Taken conditional branch instruction=
+ count"
+> +       },
+> +       {
+> +               "EventCode": "0xA0",
+> +               "EventName": "jal_inst",
+> +               "BriefDescription": "JAL instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xB0",
+> +               "EventName": "jalr_inst",
+> +               "BriefDescription": "JALR instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xC0",
+> +               "EventName": "ret_inst",
+> +               "BriefDescription": "Return instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xD0",
+> +               "EventName": "control_trans_inst",
+> +               "BriefDescription": "Control transfer instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xE0",
+> +               "EventName": "ex9_inst",
+> +               "BriefDescription": "EXEC.IT instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xF0",
+> +               "EventName": "int_mul_inst",
+> +               "BriefDescription": "Integer multiplication instruction c=
+ount"
+> +       },
+> +       {
+> +               "EventCode": "0x100",
+> +               "EventName": "int_div_rem_inst",
+> +               "BriefDescription": "Integer division/remainder instructi=
+on count"
+> +       },
+> +       {
+> +               "EventCode": "0x110",
+> +               "EventName": "float_load_inst",
+> +               "BriefDescription": "Floating-point load instruction coun=
+t"
+> +       },
+> +       {
+> +               "EventCode": "0x120",
+> +               "EventName": "float_store_inst",
+> +               "BriefDescription": "Floating-point store instruction cou=
+nt"
+> +       },
+> +       {
+> +               "EventCode": "0x130",
+> +               "EventName": "float_add_sub_inst",
+> +               "BriefDescription": "Floating-point addition/subtraction =
+instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x140",
+> +               "EventName": "float_mul_inst",
+> +               "BriefDescription": "Floating-point multiplication instru=
+ction count"
+> +       },
+> +       {
+> +               "EventCode": "0x150",
+> +               "EventName": "float_fused_muladd_inst",
+> +               "BriefDescription": "Floating-point fused multiply-add in=
+struction count"
+> +       },
+> +       {
+> +               "EventCode": "0x160",
+> +               "EventName": "float_div_sqrt_inst",
+> +               "BriefDescription": "Floating-point division or square-ro=
+ot instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x170",
+> +               "EventName": "other_float_inst",
+> +               "BriefDescription": "Other floating-point instruction cou=
+nt"
+> +       },
+> +       {
+> +               "EventCode": "0x180",
+> +               "EventName": "int_mul_add_sub_inst",
+> +               "BriefDescription": "Integer multiplication and add/sub i=
+nstruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x190",
+> +               "EventName": "retired_ops",
+> +               "BriefDescription": "Retired operation count"
+> +       }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json b/to=
+ols/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+> new file mode 100644
+> index 000000000000..c7401b526c77
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+> @@ -0,0 +1,57 @@
+> +[
+> +       {
+> +               "EventCode": "0x01",
+> +               "EventName": "ilm_access",
+> +               "BriefDescription": "ILM access"
+> +       },
+> +       {
+> +               "EventCode": "0x11",
+> +               "EventName": "dlm_access",
+> +               "BriefDescription": "DLM access"
+> +       },
+> +       {
+> +               "EventCode": "0x21",
+> +               "EventName": "icache_access",
+> +               "BriefDescription": "ICACHE access"
+> +       },
+> +       {
+> +               "EventCode": "0x31",
+> +               "EventName": "icache_miss",
+> +               "BriefDescription": "ICACHE miss"
+> +       },
+> +       {
+> +               "EventCode": "0x41",
+> +               "EventName": "dcache_access",
+> +               "BriefDescription": "DCACHE access"
+> +       },
+> +       {
+> +               "EventCode": "0x51",
+> +               "EventName": "dcache_miss",
+> +               "BriefDescription": "DCACHE miss"
+> +       },
+> +       {
+> +               "EventCode": "0x61",
+> +               "EventName": "dcache_load_access",
+> +               "BriefDescription": "DCACHE load access"
+> +       },
+> +       {
+> +               "EventCode": "0x71",
+> +               "EventName": "dcache_load_miss",
+> +               "BriefDescription": "DCACHE load miss"
+> +       },
+> +       {
+> +               "EventCode": "0x81",
+> +               "EventName": "dcache_store_access",
+> +               "BriefDescription": "DCACHE store access"
+> +       },
+> +       {
+> +               "EventCode": "0x91",
+> +               "EventName": "dcache_store_miss",
+> +               "BriefDescription": "DCACHE store miss"
+> +       },
+> +       {
+> +               "EventCode": "0xA1",
+> +               "EventName": "dcache_wb",
+> +               "BriefDescription": "DCACHE writeback"
+> +       }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json b=
+/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+> new file mode 100644
+> index 000000000000..a6d378cbaa74
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+> @@ -0,0 +1,77 @@
+> +[
+> +       {
+> +               "EventCode": "0xB1",
+> +               "EventName": "cycle_wait_icache_fill",
+> +               "BriefDescription": "Cycles waiting for ICACHE fill data"
+> +       },
+> +       {
+> +               "EventCode": "0xC1",
+> +               "EventName": "cycle_wait_dcache_fill",
+> +               "BriefDescription": "Cycles waiting for DCACHE fill data"
+> +       },
+> +       {
+> +               "EventCode": "0xD1",
+> +               "EventName": "uncached_ifetch_from_bus",
+> +               "BriefDescription": "Uncached ifetch data access from bus=
+"
+> +       },
+> +       {
+> +               "EventCode": "0xE1",
+> +               "EventName": "uncached_load_from_bus",
+> +               "BriefDescription": "Uncached load data access from bus"
+> +       },
+> +       {
+> +               "EventCode": "0xF1",
+> +               "EventName": "cycle_wait_uncached_ifetch",
+> +               "BriefDescription": "Cycles waiting for uncached ifetch d=
+ata from bus"
+> +       },
+> +       {
+> +               "EventCode": "0x101",
+> +               "EventName": "cycle_wait_uncached_load",
+> +               "BriefDescription": "Cycles waiting for uncached load dat=
+a from bus"
+> +       },
+> +       {
+> +               "EventCode": "0x111",
+> +               "EventName": "main_itlb_access",
+> +               "BriefDescription": "Main ITLB access"
+> +       },
+> +       {
+> +               "EventCode": "0x121",
+> +               "EventName": "main_itlb_miss",
+> +               "BriefDescription": "Main ITLB miss"
+> +       },
+> +       {
+> +               "EventCode": "0x131",
+> +               "EventName": "main_dtlb_access",
+> +               "BriefDescription": "Main DTLB access"
+> +       },
+> +       {
+> +               "EventCode": "0x141",
+> +               "EventName": "main_dtlb_miss",
+> +               "BriefDescription": "Main DTLB miss"
+> +       },
+> +       {
+> +               "EventCode": "0x151",
+> +               "EventName": "cycle_wait_itlb_fill",
+> +               "BriefDescription": "Cycles waiting for Main ITLB fill da=
+ta"
+> +       },
+> +       {
+> +               "EventCode": "0x161",
+> +               "EventName": "pipe_stall_cycle_dtlb_miss",
+> +               "BriefDescription": "Pipeline stall cycles caused by Main=
+ DTLB miss"
+> +       },
+> +       {
+> +               "EventCode": "0x02",
+> +               "EventName": "mispredict_condition_br",
+> +               "BriefDescription": "Misprediction of conditional branche=
+s"
+> +       },
+> +       {
+> +               "EventCode": "0x12",
+> +               "EventName": "mispredict_take_condition_br",
+> +               "BriefDescription": "Misprediction of taken conditional b=
+ranches"
+> +       },
+> +       {
+> +               "EventCode": "0x22",
+> +               "EventName": "mispredict_target_ret_inst",
+> +               "BriefDescription": "Misprediction of targets of Return i=
+nstructions"
+> +       }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
+u-events/arch/riscv/mapfile.csv
+> index c61b3d6ef616..5bf09af14c1b 100644
+> --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> @@ -15,3 +15,4 @@
+>  #
+>  #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
+>  0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
+> +0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
+> --
+> 2.34.1
+>
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
----
- arch/riscv/include/asm/mmu.h       |  2 ++
- arch/riscv/include/asm/processor.h |  6 ++++
- arch/riscv/mm/cacheflush.c         | 67 ++++++++++++++++++++++++++++++++++++++
- arch/riscv/mm/context.c            |  8 +++--
- include/uapi/linux/prctl.h         |  6 ++++
- kernel/sys.c                       |  6 ++++
- 6 files changed, 92 insertions(+), 3 deletions(-)
+Acked-by: Atish Patra <atishp@rivosinc.com>
 
-diff --git a/arch/riscv/include/asm/mmu.h b/arch/riscv/include/asm/mmu.h
-index 355504b37f8e..60be458e94da 100644
---- a/arch/riscv/include/asm/mmu.h
-+++ b/arch/riscv/include/asm/mmu.h
-@@ -19,6 +19,8 @@ typedef struct {
- #ifdef CONFIG_SMP
- 	/* A local icache flush is needed before user execution can resume. */
- 	cpumask_t icache_stale_mask;
-+	/* Force local icache flush on all migrations. */
-+	bool force_icache_flush;
- #endif
- #ifdef CONFIG_BINFMT_ELF_FDPIC
- 	unsigned long exec_fdpic_loadmap;
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index f19f861cda54..7eda6c75e0f2 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -84,6 +84,9 @@ struct thread_struct {
- 	unsigned long vstate_ctrl;
- 	struct __riscv_v_ext_state vstate;
- 	unsigned long align_ctl;
-+#ifdef CONFIG_SMP
-+	bool force_icache_flush;
-+#endif
- };
- 
- /* Whitelist the fstate from the task_struct for hardened usercopy */
-@@ -145,6 +148,9 @@ extern int set_unalign_ctl(struct task_struct *tsk, unsigned int val);
- #define GET_UNALIGN_CTL(tsk, addr)	get_unalign_ctl((tsk), (addr))
- #define SET_UNALIGN_CTL(tsk, val)	set_unalign_ctl((tsk), (val))
- 
-+#define RISCV_SET_ICACHE_FLUSH_CTX(arg1, arg2)	riscv_set_icache_flush_ctx(arg1, arg2)
-+extern int riscv_set_icache_flush_ctx(unsigned long ctx, unsigned long per_thread);
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _ASM_RISCV_PROCESSOR_H */
-diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-index 55a34f2020a8..ff545f19f07a 100644
---- a/arch/riscv/mm/cacheflush.c
-+++ b/arch/riscv/mm/cacheflush.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/of.h>
-+#include <linux/prctl.h>
- #include <asm/acpi.h>
- #include <asm/cacheflush.h>
- 
-@@ -152,3 +153,69 @@ void __init riscv_init_cbo_blocksizes(void)
- 	if (cboz_block_size)
- 		riscv_cboz_block_size = cboz_block_size;
- }
-+
-+/**
-+ * riscv_set_icache_flush_ctx() - Enable/disable icache flushing instructions in
-+ * userspace.
-+ * @ctx: Set the type of icache flushing instructions permitted/prohibited in
-+ *	 userspace. Supported values described below.
-+ *
-+ * Supported values for ctx:
-+ *
-+ * * %PR_RISCV_CTX_SW_FENCEI_ON: Allow fence.i in userspace.
-+ *
-+ * * %PR_RISCV_CTX_SW_FENCEI_OFF: Disallow fence.i in userspace. When ``scope ==
-+ *   PR_RISCV_SCOPE_PER_PROCESS``, this will effect all threads in a process.
-+ *   Therefore, caution must be taken -- only use this flag when you can
-+ *   guarantee that no thread in the process will emit fence.i from this point
-+ *   onward.
-+ *
-+ * @scope: Set scope of where icache flushing instructions are allowed to be
-+ *	   emitted. Supported values described below.
-+ *
-+ * Supported values for scope:
-+ *
-+ * * PR_RISCV_SCOPE_PER_PROCESS: Ensure the icache of any thread in this process
-+ *                               is coherent with instruction storage upon
-+ *                               migration.
-+ *
-+ * * PR_RISCV_SCOPE_PER_THREAD: Ensure the icache of the current thread is
-+ *                              coherent with instruction storage upon
-+ *                              migration.
-+ *
-+ * When ``scope == PR_RISCV_SCOPE_PER_PROCESS``, all threads in the process are
-+ * permitted to emit icache flushing instructions. Whenever any thread in the
-+ * process is migrated, the corresponding hart's icache will be guaranteed to be
-+ * consistent with instruction storage. Note this does not enforce any
-+ * guarantees outside of migration. If a thread modifies an instruction that
-+ * another thread may attempt to execute, the other thread must still emit an
-+ * icache flushing instruction before attempting to execute the potentially
-+ * modified instruction. This must be performed by the userspace program.
-+ *
-+ * In per-thread context (eg. ``scope == PR_RISCV_SCOPE_PER_THREAD``), only the
-+ * thread calling this function is permitted to emit icache flushing
-+ * instructions. When the thread is migrated, the corresponding hart's icache
-+ * will be guaranteed to be consistent with instruction storage.
-+ *
-+ * On kernels configured without SMP, this function is a nop as migrations
-+ * across harts will not occur.
-+ */
-+int riscv_set_icache_flush_ctx(unsigned long ctx, unsigned long scope)
-+{
-+#ifdef CONFIG_SMP
-+	switch (ctx) {
-+	case PR_RISCV_CTX_SW_FENCEI_ON:
-+		switch (scope) {
-+		case PR_RISCV_SCOPE_PER_PROCESS:
-+			current->mm->context.force_icache_flush = true;
-+			break;
-+		case PR_RISCV_SCOPE_PER_THREAD:
-+			current->thread.force_icache_flush = true;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+#endif
-+	return 0;
-+}
-diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
-index 217fd4de6134..0146c61be0ab 100644
---- a/arch/riscv/mm/context.c
-+++ b/arch/riscv/mm/context.c
-@@ -297,12 +297,14 @@ static inline void set_mm(struct mm_struct *prev,
-  *
-  * The "cpu" argument must be the current local CPU number.
-  */
--static inline void flush_icache_deferred(struct mm_struct *mm, unsigned int cpu)
-+static inline void flush_icache_deferred(struct mm_struct *mm, unsigned int cpu,
-+					 struct task_struct *task)
- {
- #ifdef CONFIG_SMP
- 	cpumask_t *mask = &mm->context.icache_stale_mask;
- 
--	if (cpumask_test_cpu(cpu, mask)) {
-+	if (cpumask_test_cpu(cpu, mask) || mm->context.force_icache_flush ||
-+	    (task && task->thread.force_icache_flush)) {
- 		cpumask_clear_cpu(cpu, mask);
- 		/*
- 		 * Ensure the remote hart's writes are visible to this hart.
-@@ -332,5 +334,5 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
- 
- 	set_mm(prev, next, cpu);
- 
--	flush_icache_deferred(next, cpu);
-+	flush_icache_deferred(next, cpu, task);
- }
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 370ed14b1ae0..524d546d697b 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -306,4 +306,10 @@ struct prctl_mm_map {
- # define PR_RISCV_V_VSTATE_CTRL_NEXT_MASK	0xc
- # define PR_RISCV_V_VSTATE_CTRL_MASK		0x1f
- 
-+#define PR_RISCV_SET_ICACHE_FLUSH_CTX	71
-+# define PR_RISCV_CTX_SW_FENCEI_ON	0
-+# define PR_RISCV_CTX_SW_FENCEI_OFF	1
-+# define PR_RISCV_SCOPE_PER_PROCESS	0
-+# define PR_RISCV_SCOPE_PER_THREAD	1
-+
- #endif /* _LINUX_PRCTL_H */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index 420d9cb9cc8e..e806a8a67c36 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -146,6 +146,9 @@
- #ifndef RISCV_V_GET_CONTROL
- # define RISCV_V_GET_CONTROL()		(-EINVAL)
- #endif
-+#ifndef RISCV_SET_ICACHE_FLUSH_CTX
-+# define RISCV_SET_ICACHE_FLUSH_CTX(a, b)	(-EINVAL)
-+#endif
- 
- /*
-  * this is where the system-wide overflow UID and GID are defined, for
-@@ -2739,6 +2742,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 	case PR_RISCV_V_GET_CONTROL:
- 		error = RISCV_V_GET_CONTROL();
- 		break;
-+	case PR_RISCV_SET_ICACHE_FLUSH_CTX:
-+		error = RISCV_SET_ICACHE_FLUSH_CTX(arg2, arg3);
-+		break;
- 	default:
- 		error = -EINVAL;
- 		break;
-
--- 
-2.43.0
-
+--=20
+Regards,
+Atish
