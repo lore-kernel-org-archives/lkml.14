@@ -1,69 +1,99 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD4A20DC6
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 11:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F2B20DEA;
+	Sat, 13 Jan 2024 11:23:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GGFKv4Vs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1705143804; bh=IalPj4dWcc3Tst3zLyeeQAncbEoxVIiQCJ3k5GdQ4SQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=GGFKv4VsdFkcgFKVDaBOcD5d1hOjIkiSModDMs+KiqSu6wBj7XqFBo7Ij7OtpTM23
-	 uh1WHCY+BrKJoIOeliDLpncecfQiFPT6wo6RDU2zApx9Zt75aVxqES7TzimTJT9Fo3
-	 VIrHDPXzvcRynRlybdyEv6Yam86pixfe2BbOvbsI=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id DC9028D0; Sat, 13 Jan 2024 18:55:09 +0800
-X-QQ-mid: xmsmtpt1705143309ts2d34r7z
-Message-ID: <tencent_53EC36AE4A8A751776E7672A3C8737D69709@qq.com>
-X-QQ-XMAILINFO: MWdgP8+gtiFRSS+ndu4x9KH00rQSYVWyvkIjAwUeb0KnyEmKKERwLzYYk7ZUt8
-	 k4rZckQ60KqU4aZLo069ncLX5vw4qIS0RXPCtfRMO3Kh4CKVVG32zIhPoloBHT3uzIqNxh49wuNE
-	 BJE/KjSIdzq94pL4o16ev9m/jjV8+m2o4mh3MQo/pRAEB0nwNK7D34M3kpQHeRAv+tHTTomGcyKg
-	 WyMTazc6WDmeEfKC5C5QAT47N6QCVElOjIIqn1aDVzy2fwjnkWhDaCjhUblt3bvn646yN0En/bvg
-	 bXkLS2JNGLuN0D7sUymvomVy3gPgstgZkJZIETHbfa1ZUzvP+D9QanfClqGduxygcCpabpib02CW
-	 L7j2aS+Y46nsTdISx/eThCEcML3BC+QjNQs2xvSO6u6ZxpBOFqMuUmkyRUxIuOXrls+90YEkl/iu
-	 1UTIfR8k019bcnil/8u2eyJNQCdv7fhC3KW3d74ye4ZO5EQFsCAPd+RwCUd0TrALhj6LO9zS/719
-	 A+KCis5ncEN2R0JDkC2hsHc8g4uFdOK05MKRK9YlskI0HEKy67b2AP9A49kOfKEpM4I2zDUx/foK
-	 XP5ntC46Mvz1VkV3CxDQaGGXsnpsRz86BCx0iH2zg3n5717J+cR3rMZlDmpmBVJluZvEBkCYG9gB
-	 NKEGpRRTeZgUK6DPdgwz8ZkmxlXqYIpejRtVi4Qr3QpmWrevIRRyE3rYUGz8fHb4xLEhkAcFH7Jx
-	 YBOkm+cDDZCYyV30UHEFdVd3jX1p76zM5sIBco+Qft9vxi6c8LXWbZi/DDDlh29goxHS5rXgLlou
-	 QDCXQkwWwVauMrEepJhr1i5LQJt//5L/BRuiONhKjuB2t/nnzNyO3esNj4fpeY6ehHRx38douHqW
-	 xgs/gxvjqOhg+Ql8xKTBhneieOUjiA5olj2lEWG9Z8TRz767iVCXZQOs1m9e8Pfg==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+a5e651ca75fa0260acd5@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [f2fs?] KASAN: slab-use-after-free Read in destroy_device_list
-Date: Sat, 13 Jan 2024 18:55:09 +0800
-X-OQ-MSGID: <20240113105509.1700896-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000aac725060ed0b15c@google.com>
-References: <000000000000aac725060ed0b15c@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkhuXsbj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD20C433F1;
+	Sat, 13 Jan 2024 11:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705144982;
+	bh=aWbp+sEf+jIAbTFLPFuB/3Cx5+Za97c58mRFpcxYGJc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gkhuXsbjaKE7PSoY2E4Q9y+qX+HHGHULpuCwR2/TinkMp5adGUMEnR0Xy+zogBmUR
+	 2636q+k0hAjEhu8/jEr/AcODCOfEbmIKZO6oukRq/zT8ez9yUR9E19+rIk579l8B4o
+	 gfu2et5OVbkTQqLFxcimEVwzOk3FSVh9Aa7GkzhrWvWmzP4P+cYbk2LL4DZQMOcMTB
+	 /u7F/30f6cbWrTw5tSR67bZw96BfggfEhcCfVBkwIXdEIEn9veCK/Somddk4qEh2iG
+	 cRb0jYb2ZuW8RitV8mrGt92DYGwO3c9uTMFyCfC2oUuKX+vLgwBszN9uBoV4udO/CC
+	 Q/BmTPOui02Bg==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5989e17b01fso1914738eaf.1;
+        Sat, 13 Jan 2024 03:23:02 -0800 (PST)
+X-Gm-Message-State: AOJu0YwqXqC1ammfHP0bZanm9xUyku15HWXFz8YaPP4WspHu2c6+kl3e
+	rj68V4pYAP21M7f0mjaAFS9IZ7im3TSJWx4eQ6s=
+X-Google-Smtp-Source: AGHT+IExm2onaWEcRV1yyPLaI3C+6VllCEvk/CLeQioCLoz2xERGv+yJLzCKN2FmzVHpOOZKxjhJmHY2XiO7re0emlk=
+X-Received: by 2002:a05:6870:3920:b0:204:1a34:9f12 with SMTP id
+ b32-20020a056870392000b002041a349f12mr3276040oap.89.1705144982182; Sat, 13
+ Jan 2024 03:23:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231228054630.3595093-1-tfiga@chromium.org> <CAK7LNATBipJtprjvvRVYg8JcYOFXQdpLEyEc+4+8j1PtBQ+PUg@mail.gmail.com>
+ <CAAFQd5C3vAUJhKiQ1LPkZv3dJxNvK4QinRezV9Q8rz_Ov6FSUQ@mail.gmail.com>
+In-Reply-To: <CAAFQd5C3vAUJhKiQ1LPkZv3dJxNvK4QinRezV9Q8rz_Ov6FSUQ@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 13 Jan 2024 20:22:25 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQcaDneE4rnjvV+GTSBBMozm5deu_q9+STTn60ervZJbA@mail.gmail.com>
+Message-ID: <CAK7LNAQcaDneE4rnjvV+GTSBBMozm5deu_q9+STTn60ervZJbA@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: menuconfig: Make hidden options show as dim
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jesse Taube <Mr.Bossman075@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-please test slab-use-after-free Read in destroy_device_list
+On Wed, Jan 10, 2024 at 10:05=E2=80=AFPM Tomasz Figa <tfiga@chromium.org> w=
+rote:
+>
+> On Fri, Dec 29, 2023 at 1:10=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
+.org> wrote:
+> >
+> > On Thu, Dec 28, 2023 at 2:46=E2=80=AFPM Tomasz Figa <tfiga@chromium.org=
+> wrote:
+> > >
+> > > When hidden options are toggled on (using 'z'), the number of options
+> > > on the screen can be overwhelming and may make it hard to distinguish
+> > > between available and hidden ones. Make them easier to distinguish by
+> > > displaying the hidden one as dim (using the A_DIM curses attribute).
+> > >
+> > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> >
+> >
+> >
+> > Do you think this is useful?
+> >
+> > This changes the color only when you select a hidden item.
+> >
+> >
+> > For unselected items, you cannot distinguish hidden ones,
+> > as A_DIM has no effect to black text.
+> >
+> >
+>
+> Hmm, are you sure about that? For me it seems to dim the text. it
+> seems to be also used in the existing code for dlg.button_inactive.atr
+> of the mono theme:
+>
+> https://elixir.bootlin.com/linux/latest/source/scripts/kconfig/lxdialog/u=
+til.c#L26
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 23a80d462c67
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index d00d21a8b53a..9939e2445b1e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -4879,6 +4879,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- free_sbi:
- 	if (sbi->s_chksum_driver)
- 		crypto_free_shash(sbi->s_chksum_driver);
-+	sb->s_fs_info = NULL;
- 	kfree(sbi);
- 
- 	/* give only one another chance */
 
+Then, your code works only on the mono theme.
+(when your terminal does not support color, or
+"MENUCONFIG_COLOR=3Dmono make menuconfig")
+
+
+
+In the normal color mode, the foreground text is black.
+(Just like a picture in https://en.wikipedia.org/wiki/Menuconfig)
+A_DIM does nothing for black.
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
