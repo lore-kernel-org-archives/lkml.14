@@ -1,326 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741C41A710
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 03:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3457DF4F
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 04:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxzTR0xu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8571C433C7;
-	Sat, 13 Jan 2024 03:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705118250;
-	bh=NYSX/TkgarANmk6VfmtUNzyVgno2TCYsNByCnI6rLpw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TxzTR0xuizFjDC4VJrVppa1DLIeQ2lZ3cUCOOePX4TvSfZtn0ojC+UdG7a0adG1IA
-	 B4DbupvqzdKjoWu5/dc+wo8HdpQtTI1ljMJCVsMQUezroiK+HYEClsRGC904ncKkQg
-	 bhMotHgnHvt4870MRIfK7wYM/gjBLsvoDDTtP5f2qo2kRRKYUFuOnaoS40hsfIen+g
-	 GFpHwwerwakKc/39deDxN0IyjyNi3Tkh/hjao9zm2+mRH+xhBSkeNZIsEERSJtyYwT
-	 STh9+U0pML3T40DEUtRr51QBWqeEmQpH9bXYY9LGSB5MC9q9WvtwqFNKSY4ktT4fMm
-	 NwbKUsP5X7ZGQ==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH v5 6/6] f2fs: introduce FAULT_BLKADDR_CONSISTENCE
-Date: Sat, 13 Jan 2024 03:41:32 +0800
-Message-Id: <20240112194132.25637-6-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240112194132.25637-1-chao@kernel.org>
-References: <20240112194132.25637-1-chao@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jjn9bnnF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705119025; x=1736655025;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=YKX6ELWIIbxvgyZPCwfBcAyQ41ZMYr9iqHmtEXYo1M4=;
+  b=Jjn9bnnFuxLx3EfCY3kgTuCtpO49vr6o3r7pU4n+ECBRaDi22zU+D6Eg
+   mHRd+51KCBTZC9u7ZnIOSLDLr8ITZ+33dzw+7EZeLI8NlPzDUkKNnvCes
+   4hFVopBjycjYoxvf3X0xA36yMacGBqSXBFp25aBVAdXLIWPzltIoZYnlQ
+   baztcbT7p3kYKFQqyP+EdPQwdNH9l+Z/4n3YUetgH/yPnDqlLupcZEMvZ
+   Q52HKeLd5qJ5xDI6tYQbM5Bf12kN82oQeaEG3262EW3fkG3Dy7aSuMovI
+   hVSsAAZmVWB/io3pMSeEiDDHitZEyJ0/mjzQx8abnq/hFFnLdqrPz5uaE
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="389792704"
+X-IronPort-AV: E=Sophos;i="6.04,191,1695711600"; 
+   d="scan'208";a="389792704"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 20:10:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="1114415882"
+X-IronPort-AV: E=Sophos;i="6.04,191,1695711600"; 
+   d="scan'208";a="1114415882"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Jan 2024 20:10:23 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rOVLh-000A4e-15;
+	Sat, 13 Jan 2024 04:10:21 +0000
+Date: Sat, 13 Jan 2024 12:09:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ignat Korchagin <ignat@cloudflare.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Baoquan He <bhe@redhat.com>
+Subject: /tmp/ccGfww2D.s:234: Error: selected processor does not support
+ requested special purpose register -- `mrs r1,cpsr'
+Message-ID: <202401131221.Hxl4DN46-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-We will encounter below inconsistent status when FAULT_BLKADDR type
-fault injection is on.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   052d534373b7ed33712a63d5e17b2b6cdbce84fd
+commit: c41bd2514184d75db087fe4c1221237fb7922875 kexec: drop dependency on ARCH_SUPPORTS_KEXEC from CRASH_DUMP
+date:   4 weeks ago
+config: arm-randconfig-003-20240113 (https://download.01.org/0day-ci/archive/20240113/202401131221.Hxl4DN46-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240113/202401131221.Hxl4DN46-lkp@intel.com/reproduce)
 
-Info: checkpoint state = d6 :  nat_bits crc fsck compacted_summary orphan_inodes sudden-power-off
-[ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1c100 has i_blocks: 000000c0, but has 191 blocks
-[FIX] (fsck_chk_inode_blk:1260)  --> [0x1c100] i_blocks=0x000000c0 -> 0xbf
-[FIX] (fsck_chk_inode_blk:1269)  --> [0x1c100] i_compr_blocks=0x00000026 -> 0x27
-[ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1cadb has i_blocks: 0000002f, but has 46 blocks
-[FIX] (fsck_chk_inode_blk:1260)  --> [0x1cadb] i_blocks=0x0000002f -> 0x2e
-[FIX] (fsck_chk_inode_blk:1269)  --> [0x1cadb] i_compr_blocks=0x00000011 -> 0x12
-[ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1c62c has i_blocks: 00000002, but has 1 blocks
-[FIX] (fsck_chk_inode_blk:1260)  --> [0x1c62c] i_blocks=0x00000002 -> 0x1
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401131221.Hxl4DN46-lkp@intel.com/
 
-After we inject fault into f2fs_is_valid_blkaddr() during truncation,
-a) it missed to increase @nr_free or @valid_blocks
-b) it can cause in blkaddr leak in truncated dnode
-Which may cause inconsistent status.
+All errors (new ones prefixed by >>):
 
-This patch separates FAULT_BLKADDR_CONSISTENCE from FAULT_BLKADDR,
-and rename FAULT_BLKADDR to FAULT_BLKADDR_VALIDITY
-so that we can:
-a) use FAULT_BLKADDR_CONSISTENCE in f2fs_truncate_data_blocks_range()
-to simulate inconsistent issue independently, then it can verify fsck
-repair flow.
-b) FAULT_BLKADDR_VALIDITY fault will not cause any inconsistent status,
-we can just use it to check error path handling in kernel side.
+   /tmp/ccGfww2D.s: Assembler messages:
+>> /tmp/ccGfww2D.s:234: Error: selected processor does not support requested special purpose register -- `mrs r1,cpsr'
 
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- Documentation/ABI/testing/sysfs-fs-f2fs | 47 +++++++++++++------------
- Documentation/filesystems/f2fs.rst      | 47 +++++++++++++------------
- fs/f2fs/checkpoint.c                    | 19 +++++++---
- fs/f2fs/f2fs.h                          |  5 ++-
- fs/f2fs/file.c                          |  8 +++--
- fs/f2fs/super.c                         | 37 +++++++++----------
- 6 files changed, 92 insertions(+), 71 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index 99fa87a43926..48c135e24eb5 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -701,29 +701,30 @@ Description:	Support configuring fault injection type, should be
- 		enabled with fault_injection option, fault type value
- 		is shown below, it supports single or combined type.
- 
--		===================      ===========
--		Type_Name                Type_Value
--		===================      ===========
--		FAULT_KMALLOC            0x000000001
--		FAULT_KVMALLOC           0x000000002
--		FAULT_PAGE_ALLOC         0x000000004
--		FAULT_PAGE_GET           0x000000008
--		FAULT_ALLOC_BIO          0x000000010 (obsolete)
--		FAULT_ALLOC_NID          0x000000020
--		FAULT_ORPHAN             0x000000040
--		FAULT_BLOCK              0x000000080
--		FAULT_DIR_DEPTH          0x000000100
--		FAULT_EVICT_INODE        0x000000200
--		FAULT_TRUNCATE           0x000000400
--		FAULT_READ_IO            0x000000800
--		FAULT_CHECKPOINT         0x000001000
--		FAULT_DISCARD            0x000002000
--		FAULT_WRITE_IO           0x000004000
--		FAULT_SLAB_ALLOC         0x000008000
--		FAULT_DQUOT_INIT         0x000010000
--		FAULT_LOCK_OP            0x000020000
--		FAULT_BLKADDR            0x000040000
--		===================      ===========
-+		===========================      ===========
-+		Type_Name                        Type_Value
-+		===========================      ===========
-+		FAULT_KMALLOC                    0x000000001
-+		FAULT_KVMALLOC                   0x000000002
-+		FAULT_PAGE_ALLOC                 0x000000004
-+		FAULT_PAGE_GET                   0x000000008
-+		FAULT_ALLOC_BIO                  0x000000010 (obsolete)
-+		FAULT_ALLOC_NID                  0x000000020
-+		FAULT_ORPHAN                     0x000000040
-+		FAULT_BLOCK                      0x000000080
-+		FAULT_DIR_DEPTH                  0x000000100
-+		FAULT_EVICT_INODE                0x000000200
-+		FAULT_TRUNCATE                   0x000000400
-+		FAULT_READ_IO                    0x000000800
-+		FAULT_CHECKPOINT                 0x000001000
-+		FAULT_DISCARD                    0x000002000
-+		FAULT_WRITE_IO                   0x000004000
-+		FAULT_SLAB_ALLOC                 0x000008000
-+		FAULT_DQUOT_INIT                 0x000010000
-+		FAULT_LOCK_OP                    0x000020000
-+		FAULT_BLKADDR_VALIDITY           0x000040000
-+		FAULT_BLKADDR_CONSISTENCE        0x000080000
-+		===========================      ===========
- 
- What:		/sys/fs/f2fs/<disk>/discard_io_aware_gran
- Date:		January 2023
-diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-index d32c6209685d..32cbfa864f38 100644
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@ -184,29 +184,30 @@ fault_type=%d		 Support configuring fault injection type, should be
- 			 enabled with fault_injection option, fault type value
- 			 is shown below, it supports single or combined type.
- 
--			 ===================	  ===========
--			 Type_Name		  Type_Value
--			 ===================	  ===========
--			 FAULT_KMALLOC		  0x000000001
--			 FAULT_KVMALLOC		  0x000000002
--			 FAULT_PAGE_ALLOC	  0x000000004
--			 FAULT_PAGE_GET		  0x000000008
--			 FAULT_ALLOC_BIO	  0x000000010 (obsolete)
--			 FAULT_ALLOC_NID	  0x000000020
--			 FAULT_ORPHAN		  0x000000040
--			 FAULT_BLOCK		  0x000000080
--			 FAULT_DIR_DEPTH	  0x000000100
--			 FAULT_EVICT_INODE	  0x000000200
--			 FAULT_TRUNCATE		  0x000000400
--			 FAULT_READ_IO		  0x000000800
--			 FAULT_CHECKPOINT	  0x000001000
--			 FAULT_DISCARD		  0x000002000
--			 FAULT_WRITE_IO		  0x000004000
--			 FAULT_SLAB_ALLOC	  0x000008000
--			 FAULT_DQUOT_INIT	  0x000010000
--			 FAULT_LOCK_OP		  0x000020000
--			 FAULT_BLKADDR		  0x000040000
--			 ===================	  ===========
-+			 ===========================      ===========
-+			 Type_Name                        Type_Value
-+			 ===========================      ===========
-+			 FAULT_KMALLOC                    0x000000001
-+			 FAULT_KVMALLOC                   0x000000002
-+			 FAULT_PAGE_ALLOC                 0x000000004
-+			 FAULT_PAGE_GET                   0x000000008
-+			 FAULT_ALLOC_BIO                  0x000000010 (obsolete)
-+			 FAULT_ALLOC_NID                  0x000000020
-+			 FAULT_ORPHAN                     0x000000040
-+			 FAULT_BLOCK                      0x000000080
-+			 FAULT_DIR_DEPTH                  0x000000100
-+			 FAULT_EVICT_INODE                0x000000200
-+			 FAULT_TRUNCATE                   0x000000400
-+			 FAULT_READ_IO                    0x000000800
-+			 FAULT_CHECKPOINT                 0x000001000
-+			 FAULT_DISCARD                    0x000002000
-+			 FAULT_WRITE_IO                   0x000004000
-+			 FAULT_SLAB_ALLOC                 0x000008000
-+			 FAULT_DQUOT_INIT                 0x000010000
-+			 FAULT_LOCK_OP                    0x000020000
-+			 FAULT_BLKADDR_VALIDITY           0x000040000
-+			 FAULT_BLKADDR_CONSISTENCE        0x000080000
-+			 ===========================      ===========
- mode=%s			 Control block allocation mode which supports "adaptive"
- 			 and "lfs". In "lfs" mode, there should be no random
- 			 writes towards main area.
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index b0597a539fc5..b85820e70f5e 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -170,12 +170,9 @@ static bool __is_bitmap_valid(struct f2fs_sb_info *sbi, block_t blkaddr,
- 	return exist;
- }
- 
--bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
-+static bool __f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type)
- {
--	if (time_to_inject(sbi, FAULT_BLKADDR))
--		return false;
--
- 	switch (type) {
- 	case META_NAT:
- 		break;
-@@ -230,6 +227,20 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 	return true;
- }
- 
-+bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
-+					block_t blkaddr, int type)
-+{
-+	if (time_to_inject(sbi, FAULT_BLKADDR_VALIDITY))
-+		return false;
-+	return __f2fs_is_valid_blkaddr(sbi, blkaddr, type);
-+}
-+
-+bool f2fs_is_valid_blkaddr_raw(struct f2fs_sb_info *sbi,
-+					block_t blkaddr, int type)
-+{
-+	return __f2fs_is_valid_blkaddr(sbi, blkaddr, type);
-+}
-+
- /*
-  * Readahead CP/NAT/SIT/SSA/POR pages
-  */
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index ab710bb6d8b3..4481f68d6418 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -60,7 +60,8 @@ enum {
- 	FAULT_SLAB_ALLOC,
- 	FAULT_DQUOT_INIT,
- 	FAULT_LOCK_OP,
--	FAULT_BLKADDR,
-+	FAULT_BLKADDR_VALIDITY,
-+	FAULT_BLKADDR_CONSISTENCE,
- 	FAULT_MAX,
- };
- 
-@@ -3768,6 +3769,8 @@ struct page *f2fs_get_meta_page_retry(struct f2fs_sb_info *sbi, pgoff_t index);
- struct page *f2fs_get_tmp_page(struct f2fs_sb_info *sbi, pgoff_t index);
- bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type);
-+bool f2fs_is_valid_blkaddr_raw(struct f2fs_sb_info *sbi,
-+					block_t blkaddr, int type);
- int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
- 			int type, bool sync);
- void f2fs_ra_meta_pages_cond(struct f2fs_sb_info *sbi, pgoff_t index,
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index a02c530c7e4b..0e274474d020 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -590,9 +590,13 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
- 		f2fs_set_data_blkaddr(dn, NULL_ADDR);
- 
- 		if (__is_valid_data_blkaddr(blkaddr)) {
--			if (!f2fs_is_valid_blkaddr(sbi, blkaddr,
--					DATA_GENERIC_ENHANCE))
-+			if (time_to_inject(sbi, FAULT_BLKADDR_CONSISTENCE))
-+				continue;
-+			if (!f2fs_is_valid_blkaddr_raw(sbi, blkaddr,
-+						DATA_GENERIC_ENHANCE)) {
-+				f2fs_handle_error(sbi, ERROR_INVALID_BLKADDR);
- 				continue;
-+			}
- 			if (compressed_cluster)
- 				valid_blocks++;
- 		}
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 206d03c82d96..4de5478972b2 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -44,24 +44,25 @@ static struct kmem_cache *f2fs_inode_cachep;
- #ifdef CONFIG_F2FS_FAULT_INJECTION
- 
- const char *f2fs_fault_name[FAULT_MAX] = {
--	[FAULT_KMALLOC]		= "kmalloc",
--	[FAULT_KVMALLOC]	= "kvmalloc",
--	[FAULT_PAGE_ALLOC]	= "page alloc",
--	[FAULT_PAGE_GET]	= "page get",
--	[FAULT_ALLOC_NID]	= "alloc nid",
--	[FAULT_ORPHAN]		= "orphan",
--	[FAULT_BLOCK]		= "no more block",
--	[FAULT_DIR_DEPTH]	= "too big dir depth",
--	[FAULT_EVICT_INODE]	= "evict_inode fail",
--	[FAULT_TRUNCATE]	= "truncate fail",
--	[FAULT_READ_IO]		= "read IO error",
--	[FAULT_CHECKPOINT]	= "checkpoint error",
--	[FAULT_DISCARD]		= "discard error",
--	[FAULT_WRITE_IO]	= "write IO error",
--	[FAULT_SLAB_ALLOC]	= "slab alloc",
--	[FAULT_DQUOT_INIT]	= "dquot initialize",
--	[FAULT_LOCK_OP]		= "lock_op",
--	[FAULT_BLKADDR]		= "invalid blkaddr",
-+	[FAULT_KMALLOC]			= "kmalloc",
-+	[FAULT_KVMALLOC]		= "kvmalloc",
-+	[FAULT_PAGE_ALLOC]		= "page alloc",
-+	[FAULT_PAGE_GET]		= "page get",
-+	[FAULT_ALLOC_NID]		= "alloc nid",
-+	[FAULT_ORPHAN]			= "orphan",
-+	[FAULT_BLOCK]			= "no more block",
-+	[FAULT_DIR_DEPTH]		= "too big dir depth",
-+	[FAULT_EVICT_INODE]		= "evict_inode fail",
-+	[FAULT_TRUNCATE]		= "truncate fail",
-+	[FAULT_READ_IO]			= "read IO error",
-+	[FAULT_CHECKPOINT]		= "checkpoint error",
-+	[FAULT_DISCARD]			= "discard error",
-+	[FAULT_WRITE_IO]		= "write IO error",
-+	[FAULT_SLAB_ALLOC]		= "slab alloc",
-+	[FAULT_DQUOT_INIT]		= "dquot initialize",
-+	[FAULT_LOCK_OP]			= "lock_op",
-+	[FAULT_BLKADDR_VALIDITY]	= "invalid blkaddr",
-+	[FAULT_BLKADDR_CONSISTENCE]	= "inconsistent blkaddr",
- };
- 
- void f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned int rate,
 -- 
-2.40.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
