@@ -1,108 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E6220B2E;
-	Sat, 13 Jan 2024 10:50:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1856020DC6
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 10:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3gxB+Ai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A08FAC433F1;
-	Sat, 13 Jan 2024 10:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705143055;
-	bh=P0vT5yJqXjKBVosYYPfXKfXcBExTHb01xJ00Hlt0GL0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=T3gxB+AiBsxoJBBqF3GC3J6VrIfyHdAaBcQlXZASEmfJzwxhuXQpcpF8dWQoWW06W
-	 ul78aXAmXcuLcobXwDvFu+rXC74b6sOQHhAk9B1nUfDnMyzn5sdmVqmXyaAIEi+WW0
-	 d169wZ0mCSIHH459SjCAjKdseC9vuxCbTFkXZf3RbMiMiUKcw3j52R8Ytz11ao9hBz
-	 tls4lYr25lGD/Fq+O+UJWccP2IIXs56S7fseG+JGe6uYk6qb76+ZRpiL4kaiwjAuTZ
-	 6Yi6iXVibLkbMw1NDToXjKVLPFrhrwfFTlWPmI7qFYZSuOtdSqZVSCiwMrGwx91ILn
-	 dAiASsAQT05Kg==
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-203fb334415so4821884fac.2;
-        Sat, 13 Jan 2024 02:50:55 -0800 (PST)
-X-Gm-Message-State: AOJu0YwkPiedjEDo0vBB81GBaTRbZ022E2geF1IHq96+eere5RBaTwyx
-	ocsAAmVbZGDEyQ8dotKcD5iU54Wz9m8956F5J9I=
-X-Google-Smtp-Source: AGHT+IHdijpaZRtIjvlakGXAeOpi5qtUfyMHJiwKMpajRzbtFgzrFpjdSh7po0vkHN5D+jbrt5/oh/WaBUdksBDetUw=
-X-Received: by 2002:a05:6870:37cf:b0:206:91a9:f1c5 with SMTP id
- p15-20020a05687037cf00b0020691a9f1c5mr3690978oai.18.1705143055012; Sat, 13
- Jan 2024 02:50:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3TiBYmn"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2041c292da8so4116366fac.3
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 02:59:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705143571; x=1705748371; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u13T7RhOAhH6dog8l7JDUAnbOerR+MJDTwUVG6LqbC0=;
+        b=b3TiBYmnBuqT+rkSHkGbE3HsS29qpbC+LHkra1QAppSwGskwdsetJIc+C0xTyqwj1U
+         xv8J08fklB8YUjwcOlWJEjWSLXrOhg0y+CGe9kGRnwjIjY6Q046YY6Crx70p+UXGYOxg
+         1+g1bXKPI+pJ3/7DoYywE3/nPYgrYLzzRTRZLandCb1cJpM+GzsHFZR/ULnfZ5nCZehs
+         RjDhqdzOaNAQLkbq5O80KoMQnUGizCXoFptMTyCKPfxHIGa62joj86WiPgGUk9k+ap75
+         t3A9x9Vg/7x3YChnK8qwr2fYnB8i8l3BogTKDOXnxG/JDoy0Y2l3u81UAIqQ+KsLU5RX
+         lMWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705143571; x=1705748371;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u13T7RhOAhH6dog8l7JDUAnbOerR+MJDTwUVG6LqbC0=;
+        b=b6MZKLHPNWRiB4dYmTm8pjJhVeYUd3IBrBBwlhDGVHkRs/Urm8ifNHF7JDEM162bX0
+         uFIsMkp8HUVJTJQ4lFLfEXkVAtpWxIPRYsV+paS+RIHbXzcwBb3vcehdRo4sDHwAGrSz
+         jHzZBYNiaPdd9EGzwy/3ypOj39PJgI0jpCV6xUCMRAObhuHiqduYrpzuFNnWv21JUt4g
+         OU84vMl30vbeX61h+B7pA6iAPiQCWQDeGcRHKE8J+jkM/qGBImcOnoUFdN7hwX24W936
+         HZPBIPhvm2ZfXO42j/qg/AX8jDkzkzs3izOdWbhYE6y7O4n/4QgbRzX94gxCxQ3SoWSQ
+         nPkA==
+X-Gm-Message-State: AOJu0Yw6mQyDatU05f2aWO8PcPSX1nEE93yX6qV+dPxkK/nYfGqHwrRF
+	J/YBiQZlqhDTQRB8QNpj30K7VQWMZtyWSA==
+X-Google-Smtp-Source: AGHT+IFGiUMJSqzWngkokLw5wmr4wlU32u45XMqTnru0is3haBEI76tr82lzZOTg+ShE6AfPukE06g==
+X-Received: by 2002:a05:6870:8315:b0:204:4877:974b with SMTP id p21-20020a056870831500b002044877974bmr3237112oae.97.1705143570850;
+        Sat, 13 Jan 2024 02:59:30 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id y2-20020a656c02000000b005ca0ae17983sm4155376pgu.8.2024.01.13.02.59.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jan 2024 02:59:30 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 014941850DF82; Sat, 13 Jan 2024 17:59:26 +0700 (WIB)
+Date: Sat, 13 Jan 2024 17:59:26 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Re: Deliberately sending partial patch sets?
+Message-ID: <ZaJtDozZOgARzVRh@archie.me>
+References: <ZaFKvZg-MtZgbCKA@archie.me>
+ <2024011247-caregiver-compacted-2e6b@gregkh>
+ <ZaI04-HDHbBxKYbS@archie.me>
+ <2024011338-flammable-zoology-4686@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231228070941.3611649-1-tfiga@chromium.org> <CAK7LNASbgXSZNiwhMf8jm7511eyDm8oCqY=MzWhgWwNuVLk5Vw@mail.gmail.com>
- <CAAFQd5CRtgMUN8xZ_4BOv04KzCvXtrKHhWGQhhqgENyMCVWbKw@mail.gmail.com>
-In-Reply-To: <CAAFQd5CRtgMUN8xZ_4BOv04KzCvXtrKHhWGQhhqgENyMCVWbKw@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 13 Jan 2024 19:50:18 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS29-KZvuHE=WE7ravvqh4e-M5Da=MZ2vh_EM7_Jo_jbw@mail.gmail.com>
-Message-ID: <CAK7LNAS29-KZvuHE=WE7ravvqh4e-M5Da=MZ2vh_EM7_Jo_jbw@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: Add a build target for checking current config
- for issues
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PY6NfrOfUq4uRhtf"
+Content-Disposition: inline
+In-Reply-To: <2024011338-flammable-zoology-4686@gregkh>
+
+
+--PY6NfrOfUq4uRhtf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 10:15=E2=80=AFPM Tomasz Figa <tfiga@chromium.org> w=
-rote:
->
-> On Fri, Dec 29, 2023 at 1:11=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
-.org> wrote:
-> >
-> > On Thu, Dec 28, 2023 at 4:09=E2=80=AFPM Tomasz Figa <tfiga@chromium.org=
-> wrote:
-> > >
-> > > The new target is called 'checkconfig' and currently is basically an
-> > > alias for `listnewconfig` with KCONFIG_WARN_UNKNOWN_SYMBOLS set to tr=
-ue.
-> > > It can be used to validate if the current config is directly compatib=
-le
-> > > with the current kernel version or needs some manual adjustment.
-> > >
-> > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> >
-> >
-> > I rejected a new target in the past.
-> >
-> > https://lore.kernel.org/all/20230817012007.131868-1-senozhatsky@chromiu=
-m.org/T/#m55c37e3091158f8cb008d9e0b5c6bf3f5ead225a
-> >
->
-> That was specifically for the unrecognized symbols warning. What I'm
-> proposing is a universal target that would include any possible
-> diagnostics.
->
-> >
-> >
-> > Instead, you can run
-> >
-> >   KCONFIG_WARN_UNKNOWN_SYMBOLS=3D1 make listnewconfig
-> >
-> > or
-> >
-> >   make W=3Dc listnewconfig
-> >
-> >
->
-> I can do so, because my team member implemented it and told me and
-> other team members about it. But how would someone who hasn't heard
-> about it be aware of the existence of this useful feature?
+On Sat, Jan 13, 2024 at 09:44:00AM +0100, Greg Kroah-Hartman wrote:
+> On Sat, Jan 13, 2024 at 01:59:47PM +0700, Bagas Sanjaya wrote:
+> > That is, the submitter must send the full series, right? Why not partial
+> > like above?
+>=20
+> What can anyone do with a partial patch series?  Why would anyone who
+> sent that think it would be material that anyone else should do work for
+> them and review it when they aren't even sending the whole series?
 
+IMO people will question why there is partial series submitted (and where t=
+he
+missing patches are) and then ignore it if it becomes a pattern on submitter
+side.
 
-People are not aware of your 'checkconfig' until
-they run 'make help'.
+>=20
+> I'm confused as to why you would think that would be acceptable?  What
+> are you really asking here?  Hypotheticals only go so far, please point
+> at a real instance and we can talk about it there.
 
-The same for W=3Dc.
+Honestly just to scratch my itch.
 
-'make help' explains it.
-
-
-       c: extra checks in the configuration stage (Kconfig)
-
+Thanks for the reply.
 
 --=20
-Best Regards
-Masahiro Yamada
+An old man doll... just what I always wanted! - Clara
+
+--PY6NfrOfUq4uRhtf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZaJtCgAKCRD2uYlJVVFO
+o7UjAP9uVVxJwKrgCIjLtXAlYWGiD8C0whbfhDTx/Gska+HjIwD/fSpy7R6H50y4
+EDDzRXQxL+P3tH53Ez8/x78UbBdloQM=
+=rv77
+-----END PGP SIGNATURE-----
+
+--PY6NfrOfUq4uRhtf--
