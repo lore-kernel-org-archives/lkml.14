@@ -1,84 +1,90 @@
-Received: from out0-221.mail.aliyun.com (out0-221.mail.aliyun.com [140.205.0.221])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2AD18C21
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jan 2024 05:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047205;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---.W59eyl6_1705125139;
-Received: from 30.39.211.193(mailfrom:libang.li@antgroup.com fp:SMTPD_---.W59eyl6_1705125139)
-          by smtp.aliyun-inc.com;
-          Sat, 13 Jan 2024 13:52:20 +0800
-Message-ID: <a15af04e-ed31-45a7-958c-8c727ee046db@antgroup.com>
-Date: Sat, 13 Jan 2024 13:52:17 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3FCFBE1;
+	Sat, 13 Jan 2024 06:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WKF91vYX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705126240; x=1736662240;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Eld4MoQpbkUQ2AJhP3wOklAVBHkSsTYQWgcDlJwGMEo=;
+  b=WKF91vYXXfBwK7dbFj69h2eyzfTvOslUEiN6TPU1o5wYsr+iiyNSV2C5
+   L2H8FIkpyOCWJDw2PHP7ZljqJYxctinILX3rVo4TELvpYc/7htNYXGuls
+   s04sz0ro6RnbODD/xSCgE+HzZTSuckwlDk3z7rK9FwvZiBptv/pr5bwqT
+   wrPc6BuXkgTcl1yC5hivmjRVPG49foMBW3Ocgs58kgx0Oq+Q7Vck2eXBr
+   ppKlu0uQWcvOEla8NZP3FEafyOxxIyFf5QxF8oaHoD5WDb5xa9SLv4GZp
+   zxjhAVBfW/uA/dZGUTHc2IZaj9oRmtYzdI3ZGQB1KuIB29IPcyS3m6Ks4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="6074976"
+X-IronPort-AV: E=Sophos;i="6.04,191,1695711600"; 
+   d="scan'208";a="6074976"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 22:10:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="783260272"
+X-IronPort-AV: E=Sophos;i="6.04,191,1695711600"; 
+   d="scan'208";a="783260272"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 12 Jan 2024 22:10:35 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rOXE0-000A9q-1g;
+	Sat, 13 Jan 2024 06:10:32 +0000
+Date: Sat, 13 Jan 2024 14:10:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Catalin Popescu <catalin.popescu@leica-geosystems.com>,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, afd@ti.com,
+	andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>
+Subject: Re: [PATCH 1/3] dt-bindings: net: dp83826: add ti,cfg-dac-minus
+ binding
+Message-ID: <202401131320.WhWHSzeD-lkp@intel.com>
+References: <20240111161927.3689084-1-catalin.popescu@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/compaction: Reduce unnecessary loops
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc:  <linux-mm@kvack.org>,
-   <linux-kernel@vger.kernel.org>,
-  "=?UTF-8?B?5pyx6L6JKOiMtuawtCk=?=" <teawater@antgroup.com>,
-  "=?UTF-8?B?WWFuIFlhbihjYWlsaW5nKQ==?=" <yanyan.yan@antgroup.com>
-References: <20240112073524.80724-1-libang.li@antgroup.com>
- <20240112112551.bbc9d5114fd2c6fb421fed2d@linux-foundation.org>
-From: "Bang Li" <libang.li@antgroup.com>
-In-Reply-To: <20240112112551.bbc9d5114fd2c6fb421fed2d@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111161927.3689084-1-catalin.popescu@leica-geosystems.com>
 
+Hi Catalin,
 
-On 2024/1/13 3:25, Andrew Morton wrote:
-> On Fri, 12 Jan 2024 15:35:24 +0800 "Bang Li" <libang.li@antgroup.com> wrote:
-> 
->> Compaction will be triggered when we write 1 to '/proc/sys/vm/
->> compact_memory'. During the execution of the process, when we send
->> SIGKILL to terminate the compaction, the process does not exit
->> immediately. Instead, it will continue to loop through the remaining
->> zones and nodes before exiting.
->>
->> in my environment:
->>
->> [root]# cat /proc/buddyinfo
->> Node 0, zone      DMA      1      1      1      0      2      1      1      0      1      1      3
->> Node 0, zone    DMA32   1666   1123    804    625    488    356    321    278    209    178    250
->> Node 0, zone   Normal  58852  83160  49983   9812   2287   1229  19604  24471  10346   5219  12205
->> [root]# echo 1 > /sys/kernel/debug/tracing/events/compaction/mm_compaction_end/enable
->>
->> before the patch:
->>
->> [root]# timeout --signal=SIGKILL 0.002 bash -c 'echo 1 > /proc/sys/vm/compact_memory'
->> [root]# cat /sys/kernel/debug/tracing/trace_pipe
->>             <...>-26494   [014] .....   226.468993: mm_compaction_end: zone_start=0x1 migrate_pfn=0xe00 free_pfn=0xe00 zone_end=0x1000, mode=sync status=complete
->>             <...>-26494   [014] .....   226.469718: mm_compaction_end: zone_start=0x1000 migrate_pfn=0x20a80 free_pfn=0xffe00 zone_end=0x100000, mode=sync status=contended
->>             <...>-26494   [014] .....   226.469720: mm_compaction_end: zone_start=0x100000 migrate_pfn=0x100000 free_pfn=0x307fe00 zone_end=0x3080000, mode=sync status=contended
->>
->> after the patch:
->>
->> [root]# timeout --signal=SIGKILL 0.002 bash -c 'echo 1 > /proc/sys/vm/compact_memory'
->> [root]# cat /sys/kernel/debug/tracing/trace_pipe
->>             <...>-17491   [053] .....   109.005387: mm_compaction_end: zone_start=0x1 migrate_pfn=0xe00 free_pfn=0xe00 zone_end=0x1000, mode=sync status=complete
->>             <...>-17491   [053] .....   109.006139: mm_compaction_end: zone_start=0x1000 migrate_pfn=0x22220 free_pfn=0xffe00 zone_end=0x100000, mode=sync status=contended
->>
->> Although it exits quickly after receiving the SIGKILL signal, a better
->> solution is to terminate the loop early after receiving the SIGKILL
->> signal.
->>
-> 
-> What is the use case here?  The requirement?  Why is this change
-> valuable to anyone?
+kernel test robot noticed the following build warnings:
 
-Thanks for the quick reply! I'm very sorry that my inappropriate use
-case confused you. What I want to explain is that when receiving the
-SIGKILL signal, we can break in advance to reduce unnecessary loops.
-This is a clean up patch, the purpose is to reduce the execution of
-unnecessary code. If possible, I will remove the confusing use case
-in V2.
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on net-next/main net/main linus/master v6.7 next-20240112]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks,
-Bang
+url:    https://github.com/intel-lab-lkp/linux/commits/Catalin-Popescu/dt-bindings-net-dp83826-add-ti-cfg-dac-plus-binding/20240112-002701
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20240111161927.3689084-1-catalin.popescu%40leica-geosystems.com
+patch subject: [PATCH 1/3] dt-bindings: net: dp83826: add ti,cfg-dac-minus binding
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20240113/202401131320.WhWHSzeD-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401131320.WhWHSzeD-lkp@intel.com/
+
+dtcheck warnings: (new ones prefixed by >>)
+>> Documentation/devicetree/bindings/net/ti,dp83822.yaml: ti,cfg-dac-minus: missing type definition
+   Documentation/devicetree/bindings/net/snps,dwmac.yaml: mac-mode: missing type definition
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
