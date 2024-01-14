@@ -1,37 +1,38 @@
-Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 308D9186B
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 09:00:28 +0000 (UTC)
+Received: from smtp.smtpout.orange.fr (smtp-29.smtpout.orange.fr [80.12.242.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEE523A6
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 09:01:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ssbkoVS1"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="h4vzcQ2q"
 Received: from fedora.home ([92.140.202.140])
 	by smtp.orange.fr with ESMTPA
-	id OwEZrP7Of2jhsOwEZrsM9R; Sun, 14 Jan 2024 09:52:50 +0100
+	id OwMXrDZZKBraWOwMYrneAT; Sun, 14 Jan 2024 10:01:02 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1705222370;
-	bh=yi38xR3jxyaNMmKPbq/ZSFZvYl79v0C2NPnhX4g7YBk=;
+	s=t20230301; t=1705222862;
+	bh=y3+/aQ4vgOniKlgATVWb92D72XQcu/VbbHayVguyuRk=;
 	h=From:To:Cc:Subject:Date;
-	b=ssbkoVS1ZRNE8a3dVGCLxULy25MBTpxwBy07CDmMkeKUxMU4lGqdjnsGZr95CpCOQ
-	 Zp6BVWDeOOuVPT4gbzC0Aod4Kt99bTRE8SOIobJrnxvbRMtdKEgKtOCLGHLjhbQE4m
-	 XEOmGfFj/PK45n0AIdJA7QK9JWt8lmdxsVfbJmqLIeOny3zk8aryQgS6ACNU6iz+TG
-	 K7jvZPXs5QqUEBuyZ5jNF0PD0rN2eTgDLwcegwa4WcB7atXIn578kqYaU+2kxw5EtV
-	 4D38/TyQv5dZ+lLlKgQHMmAwNmfKzjQ+V/k8dMnA6j+mExZcJWVv5DSe7Bo+kISc1N
-	 akRsy7qslzeng==
+	b=h4vzcQ2qZd99EaMkQ1rmDICJKBOtuszqY2QT5GC4vUGpzqg6qv+Cy+/nlwcYrpdBL
+	 +CcRL7hQ4ZXXHwNY1Kw1lXnd+dF2W7i5LgS98cZePgCUoCREDPZzz4VF/RBnksAf7N
+	 /ZPtTqd9OBtUe+/soZJQd9Q71wQkAwkFemaH0AtolzWo3rlCl90E4eRJa9CKvjxqXc
+	 w6n1TlL/xuP3xeKN0HdXPtQIjXNPkbw4JJK3CKAUW1O1cnhyg8VN3UonBCHyPTKgNU
+	 0G6KFqNpyxNelc9xWVGRLjyg0q716Th6zehyR8XIzDrFyLOHpoWq9bUSIFSZHZNzJG
+	 YiGWsU7Ar5kqg==
 X-ME-Helo: fedora.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Jan 2024 09:52:50 +0100
+X-ME-Date: Sun, 14 Jan 2024 10:01:02 +0100
 X-ME-IP: 92.140.202.140
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Marc Zyngier <maz@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
+To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] irqchip/gic-v3-its: Remove usage of the deprecated ida_simple_xx() API
-Date: Sun, 14 Jan 2024 09:52:39 +0100
-Message-ID: <3b472b0e7edf6e483b8b255cf8d1cb0163532adf.1705222332.git.christophe.jaillet@wanadoo.fr>
+	linux-block@vger.kernel.org
+Subject: [PATCH] null_blk: Remove usage of the deprecated ida_simple_xx() API
+Date: Sun, 14 Jan 2024 10:00:59 +0100
+Message-ID: <bf257b1078475a415cdc3344c6a750842946e367.1705222845.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,33 +45,35 @@ Content-Transfer-Encoding: 8bit
 ida_alloc() and ida_free() should be preferred to the deprecated
 ida_simple_get() and ida_simple_remove().
 
-Note that the upper limit of ida_simple_get() is exclusive, but the one of
-ida_alloc_max() is inclusive. So a -1 has been added when needed.
+This is less verbose.
 
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 4 ++--
+ drivers/block/null_blk/main.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index d097001c1e3e..cd950f435cf0 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -4419,12 +4419,12 @@ static const struct irq_domain_ops its_sgi_domain_ops = {
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index b1271de64d36..293f24cc4122 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -1825,7 +1825,7 @@ static void null_del_dev(struct nullb *nullb)
  
- static int its_vpe_id_alloc(void)
- {
--	return ida_simple_get(&its_vpeid_ida, 0, ITS_MAX_VPEID, GFP_KERNEL);
-+	return ida_alloc_max(&its_vpeid_ida, ITS_MAX_VPEID - 1, GFP_KERNEL);
- }
+ 	dev = nullb->dev;
  
- static void its_vpe_id_free(u16 id)
- {
--	ida_simple_remove(&its_vpeid_ida, id);
-+	ida_free(&its_vpeid_ida, id);
- }
+-	ida_simple_remove(&nullb_indexes, nullb->index);
++	ida_free(&nullb_indexes, nullb->index);
  
- static int its_vpe_init(struct its_vpe *vpe)
+ 	list_del_init(&nullb->list);
+ 
+@@ -2159,7 +2159,7 @@ static int null_add_dev(struct nullb_device *dev)
+ 	blk_queue_flag_set(QUEUE_FLAG_NONROT, nullb->q);
+ 
+ 	mutex_lock(&lock);
+-	rv = ida_simple_get(&nullb_indexes, 0, 0, GFP_KERNEL);
++	rv = ida_alloc(&nullb_indexes, GFP_KERNEL);
+ 	if (rv < 0) {
+ 		mutex_unlock(&lock);
+ 		goto out_cleanup_zone;
 -- 
 2.43.0
 
