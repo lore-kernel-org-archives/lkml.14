@@ -1,101 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E94524B;
-	Sun, 14 Jan 2024 15:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7879A23D6;
+	Sun, 14 Jan 2024 15:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P6vUiQ/z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705246088; x=1736782088;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HHwu/+ttKG6+gQ16tPnQoTnLOBcKuPt3xGBj8B08rW8=;
-  b=P6vUiQ/z8+ClUM7MsCyEGN1OUnmuQNa+KxhMopg0SkJM7RyQ1FN1GqF3
-   Ex1g8eIOQ9PaRBJcqw1TcR+o+ZsZwyxbwVsqoPSIasDp/waa+jcW+hplO
-   d7sYUA+ThVp8OJjgm4p13DLOqskf2zNKPLb2O8Cv1g9tIcuM0TZWru2xe
-   HeV1jOnkYfdogEmVIIAyUR8GU6wjumRzPs/ioJT2RytNlhyxEg+jC/gLY
-   S37Sa0beihIys/vdVatI5QWqxFp6C/sYqRX2yvA7M+QVYp46WW0QvGVV5
-   4NVvBnJwR4x7ppM9i1W0JACCBHYzZk/8p6F4NPfkHw74IlfKSlpmiQnYW
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="6829681"
-X-IronPort-AV: E=Sophos;i="6.04,194,1695711600"; 
-   d="scan'208";a="6829681"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2024 07:28:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="956601547"
-X-IronPort-AV: E=Sophos;i="6.04,194,1695711600"; 
-   d="scan'208";a="956601547"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 14 Jan 2024 07:28:03 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 4D3D039B; Sun, 14 Jan 2024 17:28:02 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>
-Subject: [PATCH v1 4/4] backlight: hx8357: Utilise temporary variable for struct device
-Date: Sun, 14 Jan 2024 17:25:11 +0200
-Message-ID: <20240114152759.1040563-5-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240114152759.1040563-1-andriy.shevchenko@linux.intel.com>
-References: <20240114152759.1040563-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0hdRpNE"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e0a89b98e4so1161548a34.1;
+        Sun, 14 Jan 2024 07:43:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705247037; x=1705851837; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z6fsnynes0vO+z8SDnt6jjjUyKp+VvnkB7fpxe78CwY=;
+        b=a0hdRpNEOgp6tfMDBhnZbvIHUpAapuJbdJcEkcxvJWaIJUmF9yAsMxO2HcPi+gB0D2
+         /GciiVt/hPb8IackUUHKoRFAVSym90SKt/Lf0Fx9TVv4ZULWgHGmVtWc4LO5YXq88tI0
+         bEdO/GCkpzAdmhcjq/lqUiXpg3lZ4FgTUUET6p+5b1XzNvU9IBUG70t6q9Gy1OJyMmS+
+         wL582Hl3fLwjv7H60PCxZJKLocZOP6FAR/AtoHdkUeUuNX2TPDNjJnhHnn8QzKCpf+ZB
+         3YyRC2eOB6y12VyF+0xTrc+laXSrJt+XW7Vvh3jMY1gt/DC0b/pGAofWnq9gPWLHhbFm
+         2qoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705247037; x=1705851837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z6fsnynes0vO+z8SDnt6jjjUyKp+VvnkB7fpxe78CwY=;
+        b=TpsI0zUSaWMjw/JhO6E52QrEB6q3DXUoLHJ9G0+oEMfvfa34/gYVZliDvA+QRoo/Ob
+         Q8eu5QMTDK66KdhgskGwbo28dEZ8PvLpvoLccdXLpdnsVS7TlIC/PPVCRuZzap8r0p64
+         E+zPaUafzHf9d2KiczaFHjSL9M8fdYLzvtPcg/nYENSS4VSfeq6pNLODpXeDXCTV2gcW
+         ZQhm70SIjLOCpI7uDV1UCkO1d+6eWPbuS7VKO1WA+9wNNu34pzkXhS0+14LGwyBQqkwd
+         07iKP9DI5LfrjGcfBz4d6O+Ye4F2k2lS1Lck9qU+2/1sNwaZn2/UYX5IBhi1b4B2EdFG
+         trHw==
+X-Gm-Message-State: AOJu0YylZxXOGhbL4ZbmSCesCiRKCuZY/eePSysBYAzuKnfOJ6w8C/J6
+	CBfSXWsjTL9YNsGf1hNdkVV8hOZEuDI5PnyxxXU=
+X-Google-Smtp-Source: AGHT+IEBUS1Lk9KquvNh+AEEgwGYDkKmF9ia0vinlcAsqnTVB/V+nqiprHElf2rORE5ktsStx+qC6yV6xTNuDc/rWoc=
+X-Received: by 2002:a05:6359:2ea2:b0:175:ca98:881b with SMTP id
+ rp34-20020a0563592ea200b00175ca98881bmr2063172rwb.34.1705247037364; Sun, 14
+ Jan 2024 07:43:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240108032117.215171-1-wangrui@loongson.cn> <ZZ2fn0scbDKBXWe5@boqun-archlinux>
+ <CAHirt9iox8FGV2wrMyxwFRjab2avfOcyLKvBc9K=AqiHxqHXKg@mail.gmail.com>
+ <ZZ38XMQw18mw2sTA@Boquns-Mac-mini.home> <CAHirt9jQSVvBF=1wc=sT9FxngeSP30P4FDpu8m0JH_0fOPSO-w@mail.gmail.com>
+ <CANiq72=X3cggAn0HLMi7jVFAfypBhog=ZkPB57yfaX4ZUzT-HA@mail.gmail.com> <CAHirt9hdtGSsEofxDb0FCtcFeAw9n9LKJALz23Qdqh4n2=Ua5A@mail.gmail.com>
+In-Reply-To: <CAHirt9hdtGSsEofxDb0FCtcFeAw9n9LKJALz23Qdqh4n2=Ua5A@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 14 Jan 2024 16:43:46 +0100
+Message-ID: <CANiq72n7K8LcKrs+beF2sbt1XLdr4zEhEw4xcy3yh4wgTrvYeg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] Rust enablement for LoongArch
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We have a temporary variable to keep pointer to struct device.
-Utilise it inside the ->probe() implementation.
+On Thu, Jan 11, 2024 at 4:16=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wrot=
+e:
+>
+> 6.8
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/video/backlight/hx8357.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Thanks, that is quite expedited...
 
-diff --git a/drivers/video/backlight/hx8357.c b/drivers/video/backlight/hx8357.c
-index fbe02fd73272..e4dc76f25f8e 100644
---- a/drivers/video/backlight/hx8357.c
-+++ b/drivers/video/backlight/hx8357.c
-@@ -574,7 +574,7 @@ static int hx8357_probe(struct spi_device *spi)
- 	hx8357_init init;
- 	int i, ret;
- 
--	lcd = devm_kzalloc(&spi->dev, sizeof(*lcd), GFP_KERNEL);
-+	lcd = devm_kzalloc(dev, sizeof(*lcd), GFP_KERNEL);
- 	if (!lcd)
- 		return -ENOMEM;
- 
-@@ -604,8 +604,7 @@ static int hx8357_probe(struct spi_device *spi)
- 			gpiod_set_consumer_name(lcd->im_pins->desc[i], "im_pins");
- 	}
- 
--	lcdev = devm_lcd_device_register(&spi->dev, "mxsfb", &spi->dev, lcd,
--					&hx8357_ops);
-+	lcdev = devm_lcd_device_register(dev, "mxsfb", dev, lcd, &hx8357_ops);
- 	if (IS_ERR(lcdev)) {
- 		ret = PTR_ERR(lcdev);
- 		return ret;
-@@ -618,7 +617,7 @@ static int hx8357_probe(struct spi_device *spi)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Couldn't initialize panel\n");
- 
--	dev_info(&spi->dev, "Panel probed\n");
-+	dev_info(dev, "Panel probed\n");
- 
- 	return 0;
- }
--- 
-2.43.0.rc1.1.gbec44491f096
+Please `rustfmt` the code to avoid failing the `rustfmtcheck` target.
+I see you already created the 6.8 tag but I have not seen it in
+linux-next yet and you did not send the PR, so it would be ideal if
+you could fix this before it goes to Linus.
 
+diff --git a/scripts/generate_rust_target.rs b/scripts/generate_rust_target=
+.rs
+index 3edda6a10..0da52b548 100644
+--- a/scripts/generate_rust_target.rs
++++ b/scripts/generate_rust_target.rs
+@@ -163,10 +163,7 @@ fn main() {
+         ts.push("target-pointer-width", "64");
+     } else if cfg.has("LOONGARCH") {
+         ts.push("arch", "loongarch64");
+-        ts.push(
+-            "data-layout",
+-            "e-m:e-p:64:64-i64:64-i128:128-n64-S128",
+-        );
++        ts.push("data-layout", "e-m:e-p:64:64-i64:64-i128:128-n64-S128");
+         ts.push("features", "-f,-d");
+         ts.push("llvm-target", "loongarch64-linux-gnusf");
+         ts.push("llvm-abiname", "lp64s");
+
+Thanks!
+
+Cheers,
+Miguel
