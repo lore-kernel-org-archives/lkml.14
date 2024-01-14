@@ -1,141 +1,154 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2040.outbound.protection.outlook.com [40.107.20.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E307E
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 15:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD0E7E;
+	Sun, 14 Jan 2024 15:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FZHBD6uG"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-28d2c1389e8so6677940a91.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 07:21:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="UCILTuOU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U9ERb5Tkn3pgKjRHKhqlxOvb0L+4KqAcJvSffxnV2+SXD8JTd8ooYPu+LeKWOHFvZDXguzckW/g/oh39aAHFidAAYJsypa3sHlXsg5WrGLw1uZYuLTdDQSedw1du9ga8YRH//IGmA+tc/167lk37X/9+xS8/TOj+ZX/iyKul6z/8shBSp6VYnE5mfvHBoR8JOfmUBuLpb2mRutV0De+UeTckycFztgEU/h8HZ8aTE6sswuPMh7JeK2UDv99atNRd1cny3k5RuJ6jhTZaaQ8zZFXvONLL8C62rSpm7u4be+k4mZ5CnNv6qMV5gUR9zUM5vU7cg9Rt6scZ82xHWw8/8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Vzy5D7HrAjykWw9Oml7PuUd6sm2oMjiaBCRit2uMaeE=;
+ b=gYyNarPJmXcd7TbbQVOsBA2JSsQ9EXRszp1WDJXRJw9bIaHrxOxSRSw59VAybYWrCLgpW+xg9nik8B2GSud+awCEfmCQl6Lvo1m+wwMEf0y9qQCutnT2g4ddCoRxZHqOmy4Pv1HwqoN8ecYA+UKQorpOI8JylkgrNGquviYOaWzdUiwzbJNX0LnLHZbj4Wltpu1WpDQcheO9fo0j12CZIP5y6vPf7Ba9dPQkf/mdTBb/evap5wY+bnoLkaKSs9Tx+OWuwSeyKNt0/TS6tPPx44QF2Cf2LP84chRXJ+HpfkzJoFliTSVFgQQ8/PmTZ9un/HodIwL4+LsxDc/8RhcvDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705245670; x=1705850470; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SzyvJUGvedVohMElLvYed6eWhwfFl/8HQ2/9qBk1dT0=;
-        b=FZHBD6uGEAdxbzXSnwCZm/Kh8rQuJgBoQwz3Elt6nzKM7MzZXhR90mr1QyEt0P44r9
-         2Plna3qQVr5yAUXlL0myjB+Ks8tTN7N2hmUXMYpisS4k6ZQpmXHGoUBG9F0BPVRjYOax
-         ZKS5h1K2mK9YGLu3Tm4PW0qfJjUS6XMnw8cmEA9yFTWqQ+2VRaBQXLIzu6qT3sqiqjjc
-         Nghvk/qtt5ivIYfBIXvDhVAuxZlNyXj+fVXUklBB5gz3put6AFw9Gtr69OOO22eaciXK
-         VMixdU2jmR3M1chseirzXgqtpF8tTE7Yah0aL7bSJVXw4MRNBwN2DvnDKa26Bh/kBHuB
-         awZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705245670; x=1705850470;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SzyvJUGvedVohMElLvYed6eWhwfFl/8HQ2/9qBk1dT0=;
-        b=VjwxplCcf7nOjyHA6pCw8autrzUtLIbRwpxDeEcAnZbLbVyO5gSV2aXwFjbgkh5FEm
-         PjFgE5secWpO88dPcTmMbfVxU1bxI1gJtN5hSGA3dfp+50DSWJQf9gvtkX2wOZ+PZPm8
-         UD6MtLqBPFFAeKr2qeL6QbWn2ObwF8OQCLv7MSluCakAW0cyN1DLXR52EsGhA6je9K8T
-         8X2uzK3McFo/A7h6qzfH+2vllp6fnwgITb/IAKFfmiLLrkuH/5sIgL9XGJPUBMi9VUXF
-         3Gnz5RRVEpj+h38DEjPcRDRolhfNzTZJ7Ogeb9YGvWHBC+d+UEGznp5SwdqgZZmexiSU
-         P6vw==
-X-Gm-Message-State: AOJu0YxxTsUt0mgrpv3RxQSoyR3laYhkofByPJXbg8+f8Guz99m6ntuF
-	9vEGiEKiGV7XGO+d27yDGthQ89GyarIjhhAKvQ8f4M0geNz4dQ==
-X-Google-Smtp-Source: AGHT+IEs8pCVB+XUMVxsPdp5JHbf1WqhNJ5rBBeenY2em8Rd6YEg/h2q+hTglh4h5xc+kWgPVFlB61coC67sf/Jc1p4=
-X-Received: by 2002:a17:90b:345:b0:28d:2737:a894 with SMTP id
- fh5-20020a17090b034500b0028d2737a894mr2918877pjb.26.1705245670150; Sun, 14
- Jan 2024 07:21:10 -0800 (PST)
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vzy5D7HrAjykWw9Oml7PuUd6sm2oMjiaBCRit2uMaeE=;
+ b=UCILTuOUoTPwZ+XSn2uKuOwfzRCkknzNIpmjqDO0jtm+V4XkWtYBug8TORn+xzPKMfw0EcfeRsWuVHM6Dkk64Dvu9ouv4X0ypAaCV50mV+CzSQlYRG6E+opD9Px3ny6OJznw5iRORcUY7DLkJValLof2OBZjDWDsDmvZEiJVnlU=
+Received: from AS8PR04MB8963.eurprd04.prod.outlook.com (2603:10a6:20b:42e::18)
+ by AM9PR04MB8275.eurprd04.prod.outlook.com (2603:10a6:20b:3ec::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.24; Sun, 14 Jan
+ 2024 15:25:14 +0000
+Received: from AS8PR04MB8963.eurprd04.prod.outlook.com
+ ([fe80::daf2:8c54:d469:793d]) by AS8PR04MB8963.eurprd04.prod.outlook.com
+ ([fe80::daf2:8c54:d469:793d%7]) with mapi id 15.20.7181.020; Sun, 14 Jan 2024
+ 15:25:13 +0000
+From: Josua Mayer <josua@solid-run.com>
+To: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>
+CC: Yazan Shhady <yazan.shhady@solid-run.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-rtc@vger.kernel.org"
+	<linux-rtc@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] arm64: dts: ti: hummingboard-t: add descriptions
+ for m.2 pci-e and usb-3
+Thread-Topic: [PATCH v2 5/5] arm64: dts: ti: hummingboard-t: add descriptions
+ for m.2 pci-e and usb-3
+Thread-Index: AQHaRXqNuxiGMT8hwU+/Nqu/DoZlNbDWdwIAgAL5xYA=
+Date: Sun, 14 Jan 2024 15:25:13 +0000
+Message-ID: <3f86b313-f8b7-45fb-a318-e1a633bdba1b@solid-run.com>
+References: <20240112-add-am64-som-v2-0-1385246c428c@solid-run.com>
+ <20240112-add-am64-som-v2-5-1385246c428c@solid-run.com>
+ <c1ea65a6-4aad-4ca1-88cf-ac3fa130b0e4@ti.com>
+In-Reply-To: <c1ea65a6-4aad-4ca1-88cf-ac3fa130b0e4@ti.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=solid-run.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR04MB8963:EE_|AM9PR04MB8275:EE_
+x-ms-office365-filtering-correlation-id: 8dfd2006-3b02-4207-7611-08dc1515013e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ rsl9BNrQKjVgrTkQsQfK3bfIFU8lkAQITJlYaomTSGxwoCIsz6UAmpjOr7st8XqDOvc8i9HxVRo+dXe5Rs1Maioq0wXWZUg80WAKNiu1agLR02aDoLWcXuucJFv8mhgZWIbVu0q+T/PIU6irXTsQoSzrR507Pc3IrFi49QIQxlggxkS+9Mn9X/bdgebgfKlxI3OxIIZsxqYhuwc6HS/mEU/B9KbqOULnmCIj6Lz7vcSYWil6GKAvTptdFsw9n4MvsC6LIUgH5yj/+4dk5hDy2YRZz6P3whgrAp774mQVL5Id82c4U0kNHcD9wfIaOxSJ7LVg5r2DQN79hS+cFc9n8+nfsC/SCBPL+CZxGjBRpZZxGyuPxNHKH+M0/5UqdrW247Sk7nwmN6287EBZPOz4WNRrYRSu9lkV+a42JVZQC7l0rCATULlZSrQr/eGQl8BbIQTcgZFEkO/OuuPKMJo2BjfRq7SbzYHRASvl1kXvaz6VKZim0fpg1sDF1MDQcurB9O0SkwZvLmXyii2JdO3yP8Cq3iTZ4LMXXKHMzi2Pm1VuNRiMCoGs2NnMYIIAEtsNYG1cmv39C1heXVC2ci4SPZi7SZFXIswLJNve+PTEdw9Y3SRV4ClzzKPEmb+xnc4tcsKyk3I2xxyN5SigPhbrgg==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8963.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39840400004)(136003)(396003)(366004)(376002)(346002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(71200400001)(2616005)(26005)(478600001)(53546011)(6512007)(6506007)(2906002)(7416002)(4326008)(5660300002)(41300700001)(91956017)(110136005)(54906003)(64756008)(66446008)(66476007)(66556008)(66946007)(76116006)(6486002)(8676002)(8936002)(316002)(38070700009)(38100700002)(122000001)(36756003)(31696002)(86362001)(31686004)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WVltY3RtM0JEVkdEaWxaL3lISDdTdHFWOWFLclo4KzR6NFUzUXR4aUJaaVVZ?=
+ =?utf-8?B?LzFnNStwaTE3T2hhRkIwd25HdWpLRlBkS3FIRyszd1JUdXVEblZYZ3duYlhF?=
+ =?utf-8?B?NTMxTkl3czYzcjFCK3ZTWmk1TnBhQ1VLSWJrK1lnb2dCSTZDMm92SmE4Rm1F?=
+ =?utf-8?B?bXZaMEpEdnAxMDFmaFdlSWRyMGkwK1h0RVFXZVBrb2ZQaTZOOElXSEg5OE43?=
+ =?utf-8?B?YXRMVElBanVmQkx6MEQvQk5LY2RhdmlLSDlaN0tWOFVnL25RdU1Hc2ZpTjhG?=
+ =?utf-8?B?WmdpWldtR1ZTWXNsRmQ2UWE4NFZDa1pnM29KWVZBOXIxeTlaUGJUWE5BODF3?=
+ =?utf-8?B?NmY3SG1PZTB2YlYrbTdIM01XZjllMGhYeW1SSk1NRmVhcS9QaFBzYTRnbnNM?=
+ =?utf-8?B?SjJGc1hzUFhmaGg2clpWZHYxL0QwdTZUb2hMd2c0blE3VWVyekV0R1VqV1Zn?=
+ =?utf-8?B?RnNMWGJNaU1SLzVKUzBJbFZMU05aTWtHbmV1dmpJTGdTYlJNWGJPNUFtYWp0?=
+ =?utf-8?B?TmVHQllzN3drWTNaREFSOUN0NTR4L24yTFlrSnkwRTU4NnVVNTFtTHdHTS9h?=
+ =?utf-8?B?VExkaDdMTE5JdEcySXUxeG1KNEMwNS82S3NYQVJLbkZKNTBkZTJOQ05OdEhJ?=
+ =?utf-8?B?ZGN2bm1SbTlIV3c5M1pwUlNqaUIzbHVsU1BYM2pJN3Z1NUlVT3pPQ1BOZEYy?=
+ =?utf-8?B?RWVUd1M2dXgwSnZGTVVaczFNTjgzTzVMaTV0eTBTUks5T1VORzVkTHBLWnBV?=
+ =?utf-8?B?OC90WTAxZ2dHQWRQWTVTa3hGNlFiOUpQczkwNDRjK3VDZXB3WjErdmhxNWxP?=
+ =?utf-8?B?emxJeEdWalVkREVRd0pCZk9ETExlWGYveStvckk4VEZ6aHp3TGRtdCtxVWNQ?=
+ =?utf-8?B?eXd5SDVROEY0b0M5dVdjK2pmeXRzNjlWbGtpZTFYWG5pU2hQN0JIZnFpZlR3?=
+ =?utf-8?B?M0NVMmRzcWllbURqLzNNUzRlNjJ1STZ1ZUlLb0tQWHZJYTlDTjRoMmowNHdY?=
+ =?utf-8?B?ZkI5dmNnSVdSaWQ1Rml1R3hyck5LWUhvcm13ZjhURmtlaGs4UjRsL0dSZ2Iz?=
+ =?utf-8?B?WVRvWnE5Tkt0NTEyYmVGbW04R2R0WHFNRHpKajZ0cjZxL1JQR0oySzR2Q01m?=
+ =?utf-8?B?K1owL1BmRlBiVFg1Y0xGY1loMDJJeFFSR3Nqb1ZuNFdxbCtWL3ZNSjUxaVpa?=
+ =?utf-8?B?WGRRc2RlOWl3SmJiUkdtalpoQzNVK3Y0R0IyWG5FRkZsTVZFcVN4ZklpY3Bv?=
+ =?utf-8?B?Rkwrdks1RFNFUzliK2NnRXhsbnU3cS85dmc2ZGxZQ1FZYXM2M2xOd1J4ODJH?=
+ =?utf-8?B?NXdvYnhBNFNUeWJsWHliNUk1VDB3UU11dnlSNjErWEdva1UweVVoVmtzMW5J?=
+ =?utf-8?B?MUwyOE5EcGJrY3ZuVW5ER0Ftc3F6ZlNqeTgyQmNCUFNKRTNJYmc2NmZpa0tO?=
+ =?utf-8?B?elRubVdXeTVMMDZBaVJGVzdCRHRZKzdQTTZVSnBRSEF1czYzMjRLbUNKWm50?=
+ =?utf-8?B?aDhOQlMyVzI1VVlvbHpaUE9nMUZGcUhtaXByUk9Sa3IxaFdIS3ZmSWhXTCs0?=
+ =?utf-8?B?VzNkMERqdmc4bElXWVRzQklvZFBDNnkraFZoSjc5NVBZaXQvOFRHUFE2aXBC?=
+ =?utf-8?B?d2tEZGp5S1FPekJ6R3p2c3l2Z3QvZW5hL1RKNUIrU3k2emVud2NEN0dZMC95?=
+ =?utf-8?B?cmNhZ0hZbU1wV2xFMjZlbG9mck91aHNmUm9RTDl2aVJXb2ZEOHRZRnNKQjFK?=
+ =?utf-8?B?OEVOcityMS9CYXFYaVQ1VmhNL25zQ2NWSjh0b090aitwQmlkVVFpbDRDRnh2?=
+ =?utf-8?B?WkoxRHhxWkd2K25adUd1dDhuVENsKytSUEZYa2hDZ1h5NVhVQmMvNnpHL2pl?=
+ =?utf-8?B?QVY3Snp5Rk5GL2Z4VjlubjBIc2NRWFk5KzdrdDZjNEtncTkvRWlTNW1BTWxU?=
+ =?utf-8?B?NktQTkZTSTdUUjF3VjNkc2pGc3VOQjc2WGZYeUE2anVya0tiQngySWw5UGxS?=
+ =?utf-8?B?Sk1hQ0tMMWZoS0I3NkF2dEQrNnFzS0VpNEtaVnZPQTl0VmczdmpzVFd3ZVZY?=
+ =?utf-8?B?ek8rRmVVM1crRDZ2N2dydjVrRWVDb1Mwek5pQUVpSGV1aUVjUDhpNHdjQVJJ?=
+ =?utf-8?Q?2RDN+GD2hQ2C+AVGpPXEADEmM?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <03A51C77654ACA4EBDFCD1112CA1A040@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZTz9RpZxfxysYCmt@gmail.com> <ZZwBi/YmnMqm7zrO@gmail.com>
- <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
- <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
- <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com>
- <20240114091240.xzdvqk75ifgfj5yx@wyes-pc> <ZaPC7o44lEswxOXp@vingu-book>
- <20240114123759.pjs7ctexcpc6pshl@wyes-pc> <CAKfTPtCz+95dR38c_u6_7JbkVt=czj5N2dKYVV-zk9dgbk16hw@mail.gmail.com>
- <20240114151250.5wfexq44o3mdm3nh@airbuntu>
-In-Reply-To: <20240114151250.5wfexq44o3mdm3nh@airbuntu>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Sun, 14 Jan 2024 16:20:58 +0100
-Message-ID: <CAKfTPtAMxiTbvAYav1JQw+MhjzDPCZDrMLL2JOfsc0GWp+FnOA@mail.gmail.com>
-Subject: Re: [GIT PULL] Scheduler changes for v6.8
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Wyes Karny <wkarny@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8963.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dfd2006-3b02-4207-7611-08dc1515013e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2024 15:25:13.8634
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8TBGE4NP0zkcYBWcLTHyzVncuTYdoZpdISSMpdkt7s1m9jtizFc826L3pk1GYUHz5WoS9erOmCZkl0Lrsesklw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8275
 
-On Sun, 14 Jan 2024 at 16:12, Qais Yousef <qyousef@layalina.io> wrote:
->
-> On 01/14/24 14:03, Vincent Guittot wrote:
->
-> > Thanks for the trace. It was really helpful and I think that I got the
-> > root cause.
-> >
-> > The problem comes from get_capacity_ref_freq() which returns current
-> > freq when arch_scale_freq_invariant() is not enable, and the fact that
-> > we apply map_util_perf() earlier in the path now which is then capped
-> > by max capacity.
-> >
-> > Could you try the below ?
-> >
-> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > index e420e2ee1a10..611c621543f4 100644
-> > --- a/kernel/sched/cpufreq_schedutil.c
-> > +++ b/kernel/sched/cpufreq_schedutil.c
-> > @@ -133,7 +133,7 @@ unsigned long get_capacity_ref_freq(struct
-> > cpufreq_policy *policy)
-> >         if (arch_scale_freq_invariant())
-> >                 return policy->cpuinfo.max_freq;
-> >
-> > -       return policy->cur;
-> > +       return policy->cur + policy->cur >> 2;
-> >  }
-> >
-> >  /**
->
-> Is this a test patch or a proper fix? I can't see it being the latter. It seems
-
-It's a proper fix. It's the same mechanism that is used already :
- - Either you add margin on the utilization to go above current freq
-before it is fully used. This si what was done previously
- - or you add margin on the freq range to select a higher freq than
-current one before it become fully used
-
-> the current logic fails when util is already 1024, and I think we're trying to
-> fix the invariance issue too late.
->
-> Is the problem that we can't read policy->cur in the scheduler to fix the util
-> while it's being updated that's why it's done here in this case?
->
-> If this is the problem, shouldn't the logic be if util is max then always go to
-> max frequency? I don't think we have enough info to correct the invariance here
-> IIUC. All we can see the system is saturated at this frequency and whether
-> a small jump or a big jump is required is hard to tell.
->
-> Something like this
->
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 95c3c097083e..473d0352030b 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -164,8 +164,12 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
->         struct cpufreq_policy *policy = sg_policy->policy;
->         unsigned int freq;
->
-> -       freq = get_capacity_ref_freq(policy);
-> -       freq = map_util_freq(util, freq, max);
-> +       if (util != max) {
-> +               freq = get_capacity_ref_freq(policy);
-> +               freq = map_util_freq(util, freq, max);
-> +       } else {
-> +               freq = policy->cpuinfo.max_freq;
-> +       }
-
-This is not correct because you will have to wait to reach full
-utilization at the current OPP possibly the lowest OPP before moving
-directly to max OPP
-
->
->         if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
->                 return sg_policy->next_freq;
+QW0gMTIuMDEuMjQgdW0gMTg6NTggc2NocmllYiBBbmRyZXcgRGF2aXM6DQo+IE9uIDEvMTIvMjQg
+MTE6MTIgQU0sIEpvc3VhIE1heWVyIHdyb3RlOg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvdGkvazMtYW02NDItaHVtbWluZ2JvYXJkLXQtcGNpZS5kdHMgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL3RpL2szLWFtNjQyLWh1bW1pbmdib2FyZC10LXBjaWUuZHRzDQo+PiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMDAwMDAwLi41YmEwMDI5ZmNmYjkNCj4+IC0t
+LSAvZGV2L251bGwNCj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NDItaHVt
+bWluZ2JvYXJkLXQtcGNpZS5kdHMNCj4+IEBAIC0wLDAgKzEsMzEgQEANCj4+ICsvLyBTUERYLUxp
+Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCsNCj4+ICsvKg0KPj4gKyAqIENvcHlyaWdodCAoQykg
+MjAyMyBKb3N1YSBNYXllciA8am9zdWFAc29saWQtcnVuLmNvbT4NCj4+ICsgKg0KPj4gKyAqIERU
+UyBmb3IgU29saWRSdW4gQU02NDIgSHVtbWluZ0JvYXJkLVQsDQo+PiArICogcnVubmluZyBvbiBD
+b3J0ZXggQTUzLCB3aXRoIFBDSS1FLg0KPj4gKyAqDQo+PiArICovDQo+PiArDQo+PiArI2luY2x1
+ZGUgImszLWFtNjQyLWh1bW1pbmdib2FyZC10LmR0cyINCj4NCj4gQXZvaWQgaW5jbHVkaW5nIC5k
+dHMgZmlsZXMsIGlmIHRoaXMgZmlsZSBpcyBmb3IgYW4gb3B0aW9uIHRoYXQNCj4gY2FuIGJlIGNo
+b3NlbiAoUENJZSB2cyBVU0IzKSwgdGhlbiBpdCBzaG91bGQgYmUgYSBEVCBvdmVybGF5Lg0KPg0K
+Pj4gKyNpbmNsdWRlICJrMy1zZXJkZXMuaCINCj4+ICsNCj4+ICsvIHsNCj4+ICvCoMKgwqAgbW9k
+ZWwgPSAiU29saWRSdW4gQU02NDIgSHVtbWluZ0JvYXJkLVQgd2l0aCBQQ0ktRSI7DQo+PiArfTsN
+Cj4+ICsNCj4+ICsmcGNpZTBfcmMgew0KPj4gK8KgwqDCoCBzdGF0dXMgPSAib2theSI7DQo+DQo+
+IElmIFBDSWUgaXMgb25seSBhdmFpbGFibGUgaGVyZSB3aGVuIHVzaW5nIHRoaXMgYWRkLW9uIHRo
+ZW4NCj4gYWxsIG9mIHRoZSBub2RlIGRhdGEgc2hvdWxkIGJlIGluIHRoaXMgYWRkLW9uIGZpbGUu
+DQpUaGF0IGlzIGNvcnJlY3QsIGFkZC1vbiBmaWxlIHNlZW1zIGFwcHJvcHJpYXRlLg0KDQpJdCBp
+cyB0aGUgc2FtZSBoYXJkd2FyZSwgbWVyZWx5IGEgZGlmZmVyZW50IGNob2ljZSBmb3Igc2lnbmFs
+IHJvdXRpbmcuDQoNClRoYW5rcyEgLSBzaW5jZXJlbHkNCkpvc3VhIE1heWVyDQo=
