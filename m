@@ -1,38 +1,46 @@
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A462B522F
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 15:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE5D7E
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 15:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="aO2iMp46"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="nzH4J84c"
 Received: from fedora.home ([92.140.202.140])
 	by smtp.orange.fr with ESMTPA
-	id P1zvriYlCZnJmP1zvru354; Sun, 14 Jan 2024 16:02:04 +0100
+	id P26xrDSR7T1UwP26xrm4KQ; Sun, 14 Jan 2024 16:09:22 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1705244524;
-	bh=ZtLkLsgrDIH5e5A0X7MYjDkRyJPsjPUPwNrNBrcfvVU=;
+	s=t20230301; t=1705244962;
+	bh=D4u6ZY8/Ur6FTZ//imiCQyP7Y8yAqe7AAZ58naxjz8A=;
 	h=From:To:Cc:Subject:Date;
-	b=aO2iMp46nKuSxICxqVGoBBCSiQMdIrYeE6veHg/9yM8ks4qPFXdmogC94oSmF8pM/
-	 WrGWcjvUO9nx6M+yx9rPu1ovDdzRYYYDQAQTc/avmJliv2vlzIDMfScOcFVj/e4TsM
-	 ma3cHRUTp/ixyK55biyC7SmPi2WVRz1na9SWRyQMWSL41XzhWOYiLf7kKQxbHiu5H7
-	 RRewYsdXJuSC5y9VOFLiIw4id2Jb2tJiA8wL5o6YA+0P2OIiRKEv0amHPDFQULTJ+v
-	 MzjJLD2Ch/8kNafO5OMVdAESCPPF2y1mFOAImv8+OomqeUqKv1QXMsln+UoY0yEHUs
-	 A3pBZCMWbL0DQ==
+	b=nzH4J84cZVHQOVW0KPp/cLSC3pL50CpKxdOjirhPLQfNhV/Yrqo75zKzkKfxCwCHu
+	 mDt1PvfU1iULiOHF2aQ/bypcGVlUATudKhYMLC0YxipoqpSxTeLzzk5NnyuLp0LOJT
+	 G8AgPHmauRqaW/2TMO2NCi8Dy2gKsyghfFsMhrz9EU/3e8a9W2KNfIybrzYWngOZL/
+	 7+eMRxQYSld9TOdoxLiQXpe4W1LEHQw/Bekr9DzHbrFRtY4YRwfJ8jMexWLZnU2v6O
+	 qLd3Qbuo0lerFxtd+xh52kSTkkxixzl5oepVZ63hCe3WYCGjzGLqZpFQ2Vy87kvlrQ
+	 B+4a6dzhzd8EQ==
 X-ME-Helo: fedora.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Jan 2024 16:02:04 +0100
+X-ME-Date: Sun, 14 Jan 2024 16:09:22 +0100
 X-ME-IP: 92.140.202.140
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Ulf Hansson <ulf.hansson@linaro.org>
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>
 Cc: linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-mmc@vger.kernel.org
-Subject: [PATCH] mmc: core: Remove usage of the deprecated ida_simple_xx() API
-Date: Sun, 14 Jan 2024 16:01:57 +0100
-Message-ID: <583c57d0ae09f9d3a1e1a7b80c1e39ada17954b7.1705244502.git.christophe.jaillet@wanadoo.fr>
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/xe/guc: Remove usage of the deprecated ida_simple_xx() API
+Date: Sun, 14 Jan 2024 16:09:16 +0100
+Message-ID: <d6a9ec9dc426fca372eaa1423a83632bd743c5d9.1705244938.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,94 +54,37 @@ ida_alloc() and ida_free() should be preferred to the deprecated
 ida_simple_get() and ida_simple_remove().
 
 Note that the upper limit of ida_simple_get() is exclusive, but the one of
-ida_alloc_range()/ida_alloc_max() is inclusive. So a -1 has been added when
-needed.
+ida_alloc_max() is inclusive. So a -1 has been added when needed.
 
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/mmc/core/block.c | 12 ++++++------
- drivers/mmc/core/host.c  |  5 +++--
- 2 files changed, 9 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/xe/xe_guc_submit.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index 32d49100dff5..a9b60b91e32f 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -206,7 +206,7 @@ static void mmc_blk_kref_release(struct kref *ref)
- 	int devidx;
- 
- 	devidx = mmc_get_devidx(md->disk);
--	ida_simple_remove(&mmc_blk_ida, devidx);
-+	ida_free(&mmc_blk_ida, devidx);
- 
- 	mutex_lock(&open_lock);
- 	md->disk->private_data = NULL;
-@@ -2467,7 +2467,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
- 	bool cache_enabled = false;
- 	bool fua_enabled = false;
- 
--	devidx = ida_simple_get(&mmc_blk_ida, 0, max_devices, GFP_KERNEL);
-+	devidx = ida_alloc_max(&mmc_blk_ida, max_devices - 1, GFP_KERNEL);
- 	if (devidx < 0) {
- 		/*
- 		 * We get -ENOSPC because there are no more any available
-@@ -2577,7 +2577,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
-  err_kfree:
- 	kfree(md);
-  out:
--	ida_simple_remove(&mmc_blk_ida, devidx);
-+	ida_free(&mmc_blk_ida, devidx);
- 	return ERR_PTR(ret);
+diff --git a/drivers/gpu/drm/xe/xe_guc_submit.c b/drivers/gpu/drm/xe/xe_guc_submit.c
+index 21ac68e3246f..11ffacd1dd58 100644
+--- a/drivers/gpu/drm/xe/xe_guc_submit.c
++++ b/drivers/gpu/drm/xe/xe_guc_submit.c
+@@ -311,7 +311,7 @@ static void __release_guc_id(struct xe_guc *guc, struct xe_exec_queue *q, u32 xa
+ 				      q->guc->id - GUC_ID_START_MLRC,
+ 				      order_base_2(q->width));
+ 	else
+-		ida_simple_remove(&guc->submission_state.guc_ids, q->guc->id);
++		ida_free(&guc->submission_state.guc_ids, q->guc->id);
  }
  
-@@ -2703,7 +2703,7 @@ static void mmc_blk_rpmb_device_release(struct device *dev)
- {
- 	struct mmc_rpmb_data *rpmb = dev_get_drvdata(dev);
- 
--	ida_simple_remove(&mmc_rpmb_ida, rpmb->id);
-+	ida_free(&mmc_rpmb_ida, rpmb->id);
- 	kfree(rpmb);
- }
- 
-@@ -2719,13 +2719,13 @@ static int mmc_blk_alloc_rpmb_part(struct mmc_card *card,
- 	struct mmc_rpmb_data *rpmb;
- 
- 	/* This creates the minor number for the RPMB char device */
--	devidx = ida_simple_get(&mmc_rpmb_ida, 0, max_devices, GFP_KERNEL);
-+	devidx = ida_alloc_max(&mmc_rpmb_ida, max_devices - 1, GFP_KERNEL);
- 	if (devidx < 0)
- 		return devidx;
- 
- 	rpmb = kzalloc(sizeof(*rpmb), GFP_KERNEL);
- 	if (!rpmb) {
--		ida_simple_remove(&mmc_rpmb_ida, devidx);
-+		ida_free(&mmc_rpmb_ida, devidx);
- 		return -ENOMEM;
+ static int alloc_guc_id(struct xe_guc *guc, struct xe_exec_queue *q)
+@@ -335,8 +335,8 @@ static int alloc_guc_id(struct xe_guc *guc, struct xe_exec_queue *q)
+ 		ret = bitmap_find_free_region(bitmap, GUC_ID_NUMBER_MLRC,
+ 					      order_base_2(q->width));
+ 	} else {
+-		ret = ida_simple_get(&guc->submission_state.guc_ids, 0,
+-				     GUC_ID_NUMBER_SLRC, GFP_NOWAIT);
++		ret = ida_alloc_max(&guc->submission_state.guc_ids,
++				    GUC_ID_NUMBER_SLRC - 1, GFP_NOWAIT);
  	}
- 
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index cf396e8f34e9..7cc9a33d28ca 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -76,7 +76,7 @@ static void mmc_host_classdev_release(struct device *dev)
- 	struct mmc_host *host = cls_dev_to_mmc_host(dev);
- 	wakeup_source_unregister(host->ws);
- 	if (of_alias_get_id(host->parent->of_node, "mmc") < 0)
--		ida_simple_remove(&mmc_host_ida, host->index);
-+		ida_free(&mmc_host_ida, host->index);
- 	kfree(host);
- }
- 
-@@ -538,7 +538,8 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
- 		min_idx = mmc_first_nonreserved_index();
- 		max_idx = 0;
- 
--		index = ida_simple_get(&mmc_host_ida, min_idx, max_idx, GFP_KERNEL);
-+		index = ida_alloc_range(&mmc_host_ida, min_idx, max_idx - 1,
-+					GFP_KERNEL);
- 		if (index < 0) {
- 			kfree(host);
- 			return NULL;
+ 	if (ret < 0)
+ 		return ret;
 -- 
 2.43.0
 
