@@ -1,169 +1,147 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77872538D
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 10:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35fc6976630so66325215ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 02:15:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705227320; x=1705832120;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ef8RlfvNizusNJEpFPPJswpir101aPuFjW55VZ/jFAE=;
-        b=YMty9zrygiXPLT2Jy2oqgl0Afs0rb2wsMT/OnRC10Ku0RjRTQecZBNkAWWdO+YZ81D
-         5CjLehZvv6sTpe4fAWRNoR7gffOuBEHF4M17OZphgp1raeJ9PwfjIXCtpEAOZ6Py1sSE
-         4K5RgFyBo0F2po8fCzJntdrSIujosIctGhZltbjAqWmr4Ku0uviPZTYnD4vWx+fPfPAA
-         LL2uYOI5oe4ok8ml870KdnNTcpDb62cCqiwqlgZK56Do5DZmUbCpG9KKNCjDC9sz7kcF
-         zOFh+6Ib1eJ2fNNP6DmTVNE2wEgUk4mXx1ckOD/XAaDk69ip5ShomjghbhOQM29RVLEL
-         kURQ==
-X-Gm-Message-State: AOJu0YxjDyoKHQlxo6qUwJTLNzZL8q34qtfPGNkl6+4GuxGZeLrnIVYE
-	Cdiq6L0S9hQF+YWiOCWNFXhcWC0shxjBMiDKpbRkfSJN80wn
-X-Google-Smtp-Source: AGHT+IH4paAtnH1GJFNpGmWxNyqSDgEl+vpHoOr+kybnQ1rSsj6CcqUHkvD2v8RpwUFwLc1rO0kDVuvGqOYmC9+eM+6+83UNe4yt
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BD31FB2;
+	Sun, 14 Jan 2024 10:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="E/PuUshD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705227865; x=1705832665; i=erick.archer@gmx.com;
+	bh=v7nvUPA9OesHnOY8TOQ/tEDzJPZ9C3L0VTmMHqqdqCg=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=E/PuUshD8TGQY82SBpOAPIL8fFQkIpFxpnOWu6hlgAimBDTC7j6dVeGpz7SwGooA
+	 eoCcFM19BVd+hLZ7R7/5tjB1xXYK11S8qd0G2pgP+GYQxs2tZVe/Vw1Wlvj6mcEQh
+	 Y/YbDLHAI9iQjvvdv2MPVT/04odvB6IuZAH58zbmvfFnaj9Uoq6LZErebRsNBcpGO
+	 c51o5BAYcMItEVZlMaPa4Ck2daSzv+bdtk80tI/hN/hV4NEitkcBcDeEFJFKGrxMp
+	 3vZQhDAroEebw8Rj9bt91MM+4AZnH78Px+jTGFP+kZEdTyzZxhT6Uk8f5jlv5wRVk
+	 y9a8fKE0fDUBY21N5g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1N33Ed-1r1UTF4BzR-013RDI; Sun, 14 Jan 2024 11:24:25 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: "James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	Kees Cook <keescook@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] scsi: csiostor: Use kcalloc() instead of kzalloc()
+Date: Sun, 14 Jan 2024 11:24:00 +0100
+Message-Id: <20240114102400.3816-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b85:b0:35f:f01e:bb1d with SMTP id
- h5-20020a056e021b8500b0035ff01ebb1dmr548548ili.5.1705227320751; Sun, 14 Jan
- 2024 02:15:20 -0800 (PST)
-Date: Sun, 14 Jan 2024 02:15:20 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b6ffa9060ee52c74@google.com>
-Subject: [syzbot] [btrfs?] KMSAN: uninit-value in bcmp (2)
-From: syzbot <syzbot+3ce5dea5b1539ff36769@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xJ85ZowQaVa1OldU6FzPfNXRLaX+yPPgWuef38/WNGua4RxRri6
+ OlQil9I2dzIT/+wjstr6h9LR3cm8DSnkJuNn/9kr5MqgriqGEE52TDlLGrjHpdN2wRClrFk
+ gx/J6xAu8I1bm8gH+Be0N+RmCb5Fuh/iu3awBpP03OCLZGy/wsn1xtjPbsgOcP36KrPi3/h
+ fuhJOfkttmNy14ZTcJJUg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:vNv9MwBiC54=;OJwtbY227lidkukH55eW6u+Blo4
+ 3qCTOKjT9ZwDmW76FXlvj7NkWiyCt0q3tp+1rCjBaRsykO/HHmC1GcAgVwXcXY9zbJB9syQli
+ lGqX5kDS1wsWobJBai0E96tBrWCS/fiYrgsjg6RuPXX+siG2cgYC+CQa8wDmjePYSO7D7Ufkp
+ RengseWl51czMZs+z5KtAZtEUs5TertUVLLAPFE/y/rzHou1+7jhbvlTJ8h7QggdSQvte6O6E
+ jsmmZJ6Y+t6AIN/HlV+Nt/h5020vlP36+vOwv9N0r/06ad83ITUGpe96BfTa8qTPm4MlDm6m5
+ 0TVfZIgjMLols9tz3KrA9Ag3RgM5Cg39nYdCMcqU7N11XR6IoWNZlN6mqKE5F1/pP+parnNjV
+ /sYfFzxxYYwGSLOb4FWwM83lhK7q3Kb4cyjE7xLYUnHL/oVn+kgoqRbttK6uay9tO64OJFvv3
+ a0fQcEBD4o7cNes3KdjXubWJSquwAJoY4v7Qq2IzDqnWUbK/PWIHE6EJZ3rtP7Bs69ykxXHr8
+ tO6yIiL0gAlN4NpZfDvcZpi1hJeYgNGgyFk2syQIt/aaea+PiIgSPdB21WiFjEw34dMnmHnsA
+ vJPBHsarcaPw3t982FyGKy2qAcFPqcB04GN1fRdW7wzmlYXjO/fymRYyI0Clt6obA3dTZFApY
+ DMGpsvm1RynymxFKLl23Gc3jCW6/9/pYVWB8WS5rp30D/hEpxs4a0VIgulHOcpyZ19mN37HrF
+ Y930d4QNMcBsfxc2tvvYOweHRJSwAHeZXtM3Cnd5IPmpZpejbgiFJjkgDkuKAX3ygW+X8RI7n
+ 0hytW7qJ8X4/HXJzULYFhuZAu95J5ZRTIZsglDFuN21gcbV6z1r13avJPNXTGynS8Tc0SVE74
+ uoXUmdki8cPq9+8w3AJmwP9fexqHEyUrpughz+RJu9Chka80+ArCVuOfa+MW7zMUD2hi5cPbm
+ AJ2/5Rkc5aqWF3FB0nPRhRUd/gA=
 
-Hello,
+Use 2-factor multiplication argument form kcalloc() instead
+of kzalloc().
 
-syzbot found the following issue on:
+Also, it is preferred to use sizeof(*pointer) instead of
+sizeof(type) due to the type of the variable can change and
+one needs not change the former (unlike the latter).
 
-HEAD commit:    610a9b8f49fb Linux 6.7-rc8
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=110b4555e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e51fe20c3e51ba7f
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ce5dea5b1539ff36769
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Changes in v2:
+- Update the changelog text describing the sizeof()
+  changes (Gustavo A. R. Silva)
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Version 1:
+Link: https://lore.kernel.org/linux-hardening/20240112182603.11048-1-erick=
+.archer@gmx.com/
+=2D--
+ drivers/scsi/csiostor/csio_init.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/daced691c987/disk-610a9b8f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5e37367a7d1e/vmlinux-610a9b8f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/013b65c960ab/bzImage-610a9b8f.xz
+diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csi=
+o_init.c
+index d649b7a2a879..d72892e44fd1 100644
+=2D-- a/drivers/scsi/csiostor/csio_init.c
++++ b/drivers/scsi/csiostor/csio_init.c
+@@ -698,8 +698,7 @@ csio_lnodes_block_request(struct csio_hw *hw)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ce5dea5b1539ff36769@syzkaller.appspotmail.com
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "Failed to allocate lnodes_list");
+ 		return;
+@@ -737,8 +736,7 @@ csio_lnodes_unblock_request(struct csio_hw *hw)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
 
-=====================================================
-BUG: KMSAN: uninit-value in memcmp lib/string.c:681 [inline]
-BUG: KMSAN: uninit-value in bcmp+0xc3/0x1c0 lib/string.c:713
- memcmp lib/string.c:681 [inline]
- bcmp+0xc3/0x1c0 lib/string.c:713
- sample_repeated_patterns fs/btrfs/compression.c:1298 [inline]
- btrfs_compress_heuristic+0x926/0x31f0 fs/btrfs/compression.c:1380
- inode_need_compress fs/btrfs/inode.c:804 [inline]
- btrfs_run_delalloc_range+0x156c/0x16c0 fs/btrfs/inode.c:2272
- writepage_delalloc+0x244/0x6b0 fs/btrfs/extent_io.c:1189
- __extent_writepage fs/btrfs/extent_io.c:1440 [inline]
- extent_write_cache_pages fs/btrfs/extent_io.c:2108 [inline]
- extent_writepages+0x1d22/0x3f20 fs/btrfs/extent_io.c:2230
- btrfs_writepages+0x35/0x40 fs/btrfs/inode.c:7836
- do_writepages+0x426/0x870 mm/page-writeback.c:2553
- filemap_fdatawrite_wbc+0x1d8/0x270 mm/filemap.c:387
- start_delalloc_inodes+0x91d/0x1560 fs/btrfs/inode.c:9284
- btrfs_start_delalloc_roots+0x874/0xe80 fs/btrfs/inode.c:9361
- shrink_delalloc fs/btrfs/space-info.c:649 [inline]
- flush_space+0xbd4/0x16c0 fs/btrfs/space-info.c:759
- btrfs_async_reclaim_metadata_space+0x76d/0x9c0 fs/btrfs/space-info.c:1089
- process_one_work kernel/workqueue.c:2627 [inline]
- process_scheduled_works+0x104e/0x1e70 kernel/workqueue.c:2700
- worker_thread+0xf45/0x1490 kernel/workqueue.c:2781
- kthread+0x3ed/0x540 kernel/kthread.c:388
- ret_from_fork+0x66/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "Failed to allocate lnodes_list");
+ 		return;
+@@ -775,8 +773,7 @@ csio_lnodes_block_by_port(struct csio_hw *hw, uint8_t =
+portid)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
 
-Uninit was stored to memory at:
- heuristic_collect_sample fs/btrfs/compression.c:1338 [inline]
- btrfs_compress_heuristic+0x303/0x31f0 fs/btrfs/compression.c:1378
- inode_need_compress fs/btrfs/inode.c:804 [inline]
- btrfs_run_delalloc_range+0x156c/0x16c0 fs/btrfs/inode.c:2272
- writepage_delalloc+0x244/0x6b0 fs/btrfs/extent_io.c:1189
- __extent_writepage fs/btrfs/extent_io.c:1440 [inline]
- extent_write_cache_pages fs/btrfs/extent_io.c:2108 [inline]
- extent_writepages+0x1d22/0x3f20 fs/btrfs/extent_io.c:2230
- btrfs_writepages+0x35/0x40 fs/btrfs/inode.c:7836
- do_writepages+0x426/0x870 mm/page-writeback.c:2553
- filemap_fdatawrite_wbc+0x1d8/0x270 mm/filemap.c:387
- start_delalloc_inodes+0x91d/0x1560 fs/btrfs/inode.c:9284
- btrfs_start_delalloc_roots+0x874/0xe80 fs/btrfs/inode.c:9361
- shrink_delalloc fs/btrfs/space-info.c:649 [inline]
- flush_space+0xbd4/0x16c0 fs/btrfs/space-info.c:759
- btrfs_async_reclaim_metadata_space+0x76d/0x9c0 fs/btrfs/space-info.c:1089
- process_one_work kernel/workqueue.c:2627 [inline]
- process_scheduled_works+0x104e/0x1e70 kernel/workqueue.c:2700
- worker_thread+0xf45/0x1490 kernel/workqueue.c:2781
- kthread+0x3ed/0x540 kernel/kthread.c:388
- ret_from_fork+0x66/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "Failed to allocate lnodes_list");
+ 		return;
+@@ -816,8 +813,7 @@ csio_lnodes_unblock_by_port(struct csio_hw *hw, uint8_=
+t portid)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
 
-Uninit was created at:
- __alloc_pages+0x9a4/0xe00 mm/page_alloc.c:4591
- alloc_pages_mpol+0x62b/0x9d0 mm/mempolicy.c:2133
- alloc_pages mm/mempolicy.c:2204 [inline]
- folio_alloc+0x1da/0x380 mm/mempolicy.c:2211
- filemap_alloc_folio+0xa5/0x430 mm/filemap.c:974
- __filemap_get_folio+0xa5a/0x1760 mm/filemap.c:1918
- pagecache_get_page+0x4a/0x1a0 mm/folio-compat.c:99
- prepare_pages+0x1f2/0x1050 fs/btrfs/file.c:922
- btrfs_buffered_write+0xe48/0x2be0 fs/btrfs/file.c:1316
- btrfs_do_write_iter+0x370/0x2300 fs/btrfs/file.c:1687
- btrfs_file_write_iter+0x38/0x40 fs/btrfs/file.c:1704
- __kernel_write_iter+0x329/0x930 fs/read_write.c:517
- dump_emit_page fs/coredump.c:888 [inline]
- dump_user_range+0x593/0xcd0 fs/coredump.c:915
- elf_core_dump+0x59e8/0x5c60 fs/binfmt_elf.c:2077
- do_coredump+0x32c9/0x4920 fs/coredump.c:764
- get_signal+0x2185/0x2d10 kernel/signal.c:2890
- arch_do_signal_or_restart+0x53/0xca0 arch/x86/kernel/signal.c:309
- exit_to_user_mode_loop+0xe8/0x320 kernel/entry/common.c:168
- exit_to_user_mode_prepare+0x163/0x220 kernel/entry/common.c:204
- irqentry_exit_to_user_mode+0xd/0x30 kernel/entry/common.c:309
- irqentry_exit+0x16/0x40 kernel/entry/common.c:412
- exc_page_fault+0x246/0x6f0 arch/x86/mm/fault.c:1564
- asm_exc_page_fault+0x2b/0x30 arch/x86/include/asm/idtentry.h:570
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "Failed to allocate lnodes_list");
+ 		return;
+@@ -855,8 +851,7 @@ csio_lnodes_exit(struct csio_hw *hw, bool npiv)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
 
-CPU: 1 PID: 56 Comm: kworker/u4:4 Not tainted 6.7.0-rc8-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-Workqueue: events_unbound btrfs_async_reclaim_metadata_space
-=====================================================
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "lnodes_exit: Failed to allocate lnodes_list.\n");
+ 		return;
+=2D-
+2.25.1
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
