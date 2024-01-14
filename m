@@ -1,206 +1,128 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8163CEAED
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 17:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6182BF9D0;
+	Sun, 14 Jan 2024 17:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcStc1g3"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cd8bd6ce1bso35094221fa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 09:42:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705254150; x=1705858950; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FopLFC80dOf1fsN3Wz4ZFt4KjR5ko9Ne4EZUQ437vhE=;
-        b=JcStc1g3/IksF3nJchore6a7jw7/r80wr3FSt9jc91hw0mQ46t+R1aG1+4nECZ/Bgv
-         LSfmtVyu9+Q8rEadZFxzpe0TftXwUlwgWPr7E254GWDUFUbDlJWQA7Eq5NosHwbYivbt
-         1phubtrNH8NPMZzrYS8ipSYdBytU3mRbJ7/PyjaoWngUg7Goe2ai3Q6uRT25I3dCATfb
-         HCi3Xq5eZsqLosfFxJO+h0TnxrUTtn/XUyinfOtvrt6gcIaOP6aiT5BVUCIm5LQ3pdc3
-         Hd73MCiQQ++NIidbSvKv1NA09ppzzt6uhvFFzTemCJUKadnCk3BISw9Zoqr8s7B4euAw
-         rFOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705254150; x=1705858950;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FopLFC80dOf1fsN3Wz4ZFt4KjR5ko9Ne4EZUQ437vhE=;
-        b=G6g+L6HEeBRW5Zye/02RLC1pc/1IRPThab2AYMHufE0yUV2F6swiEf/1xpkgxKQXu4
-         qVpvDBwhFhkdZb0INslEa+HX038CjhR9ZoYUbsPH0pKIKYNgFRmqbQtfT+nsOx41clKV
-         M+cwTdoYPn6xRPx6sPdo23rbeIwslvg9kP8zWx3cGiKQVGL+oLb6AuzzSHHfwVB6dXhT
-         ncLYUSzfy7uHL5s3wAF9q7mz/q4qBwvbdCXfUdRe/N8ihmwkWqetp6P53bNIsPOOuPb/
-         3R7EQQPB/3+9PimytelvhFSEa9bV6hcXNm79QYkJmud+B6weIME+XfZPujjxtfeinijb
-         B20A==
-X-Gm-Message-State: AOJu0YyRvZBCPcfiteobfZZ3VWa+JJ4c/XY3GWipspDKhFBZ4Oak717a
-	wGx0B3qosSOHZAVp2pwH4aPee3+dnbwHaga7WHg=
-X-Google-Smtp-Source: AGHT+IHzaIBlNFz6Pu5GIxN523Wrwgv14ieBgneCLoBprg3Rp5Zg+w6u++LKXVswLVwFcxbGoNHkDJMBFV+EHHqaGOs=
-X-Received: by 2002:a2e:8447:0:b0:2cd:7f14:9b33 with SMTP id
- u7-20020a2e8447000000b002cd7f149b33mr1079998ljh.51.1705254150168; Sun, 14 Jan
- 2024 09:42:30 -0800 (PST)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="G8/lsiwd"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40EFrbhI014352;
+	Sun, 14 Jan 2024 09:22:06 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	pfpt0220; bh=QQNf0lKyajsE6Luo4IJ5sBtXhUXF5LYFHu/e6XK5dmg=; b=G8/
+	lsiwd0GmCFpnkzD6MHMPsw8tQnZDR3glMsGv/bJayu9Nhbp2CW/YfhWJgHcZvfs4
+	MRzyzCOjvJwyVFlnyRA/5J4/nLX0h/AYADP0JkWO9umCiI7N/MuWld6BAWx2DOLv
+	TE0b1EQbXv+GLpATW9hAQA+Kj5k0gjlYqJXNiCr4JnQ6pvf7ogF3LuSYncg79mhp
+	q2idmfAqL+AW3+EANnsEyCJ36RW7aR+V08r0Zwr8Z3vuEx2CzS78H61FtyBbiTPy
+	xXcM1Rw9bLKWHXeaks3KDLdq4GdFTlrHeXbi7weyjJkbAnp5iYit2WVdHUdy4ZSZ
+	GBVX9Zp/XzkAT+x9sbw==
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vktwkafqx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Sun, 14 Jan 2024 09:22:05 -0800 (PST)
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 14 Jan
+ 2024 09:22:03 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
+ Transport; Sun, 14 Jan 2024 09:22:03 -0800
+Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
+	by maili.marvell.com (Postfix) with ESMTP id 7D0025E6873;
+	Sun, 14 Jan 2024 09:22:01 -0800 (PST)
+From: Elad Nachman <enachman@marvell.com>
+To: <gregkh@linuxfoundation.org>,
+        rowland.harvard.edu@mx0b-0016f401.pphosted.com, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <enachman@marvell.com>
+Subject: [PATCH v4 2/2] usb: host: Add ac5 to EHCI Orion
+Date: Sun, 14 Jan 2024 19:21:54 +0200
+Message-ID: <20240114172154.2622275-3-enachman@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240114172154.2622275-1-enachman@marvell.com>
+References: <20240114172154.2622275-1-enachman@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240111183321.19984-1-ryncsn@gmail.com> <20240111183321.19984-2-ryncsn@gmail.com>
- <CAAPL-u8dMX11CiaUxQdx0bK-RDMuNV40JFDYyXBPJ+ex+Kx4rw@mail.gmail.com>
-In-Reply-To: <CAAPL-u8dMX11CiaUxQdx0bK-RDMuNV40JFDYyXBPJ+ex+Kx4rw@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Mon, 15 Jan 2024 01:42:12 +0800
-Message-ID: <CAMgjq7Bv7L_J4pfbHnopsbOzrqZfgfqTYuJUMXo94Z6vp+74-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] mm, lru_gen: batch update counters on againg
-To: Wei Xu <weixugc@google.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Yu Zhao <yuzhao@google.com>, Chris Li <chrisl@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, 
-	Greg Thelen <gthelen@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 6g2FV-TDOt1RYnH2hzDVuTU4ot22dik8
+X-Proofpoint-GUID: 6g2FV-TDOt1RYnH2hzDVuTU4ot22dik8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
 
-Wei Xu <weixugc@google.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=8813=E6=97=A5=E5=
-=91=A8=E5=85=AD 05:01=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Thu, Jan 11, 2024 at 10:33=E2=80=AFAM Kairui Song <ryncsn@gmail.com> w=
-rote:
-> >
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > When lru_gen is aging, it will update mm counters page by page,
-> > which causes a higher overhead if age happens frequently or there
-> > are a lot of pages in one generation getting moved.
-> > Optimize this by doing the counter update in batch.
-> >
-> > Although most __mod_*_state has its own caches the overhead
-> > is still observable.
-> >
-> > Tested in a 4G memcg on a EPYC 7K62 with:
-> >
-> >   memcached -u nobody -m 16384 -s /tmp/memcached.socket \
-> >     -a 0766 -t 16 -B binary &
-> >
-> >   memtier_benchmark -S /tmp/memcached.socket \
-> >     -P memcache_binary -n allkeys \
-> >     --key-minimum=3D1 --key-maximum=3D16000000 -d 1024 \
-> >     --ratio=3D1:0 --key-pattern=3DP:P -c 2 -t 16 --pipeline 8 -x 6
-> >
-> > Average result of 18 test runs:
-> >
-> > Before: 44017.78 Ops/sec
-> > After:  44687.08 Ops/sec (+1.5%)
->
-> I see the same performance numbers get quoted in all the 3 patches.
-> How much performance improvements does this particular patch provide
-> (the same for the other 2 patches)? If as the cover letter says, the
-> most performance benefits come from patch 3 (prefetching), can we just
-> have that patch alone to avoid the extra complexities.
+From: Elad Nachman <enachman@marvell.com>
 
-Hi Wei,
+Add support for ac5 to the EHCI Orion platform driver.
+The ac5 SOC has DDR starting at offset 0x2_0000_0000,
+Hence it requires a larger than 32-bit DMA mask to operate.
+Move the dma mask to be pointed by the OF match data, and
+use that match data when initializng the DMA mask.
 
-Indeed these are two different optimization technique, I can reorder
-the series, prefetch is the first one and should be more acceptable,
-other optimizations can come later. And add standalone info about
-improvement of batch operations.
+Signed-off-by: Elad Nachman <enachman@marvell.com>
+---
+ drivers/usb/host/ehci-orion.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
->
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > ---
-> >  mm/vmscan.c | 64 +++++++++++++++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 55 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index 4f9c854ce6cc..185d53607c7e 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -3113,9 +3113,47 @@ static int folio_update_gen(struct folio *folio,=
- int gen)
-> >         return ((old_flags & LRU_GEN_MASK) >> LRU_GEN_PGOFF) - 1;
-> >  }
-> >
-> > +/*
-> > + * Update LRU gen in batch for each lru_gen LRU list. The batch is lim=
-ited to
-> > + * each gen / type / zone level LRU. Batch is applied after finished o=
-r aborted
-> > + * scanning one LRU list.
-> > + */
-> > +struct gen_update_batch {
-> > +       int delta[MAX_NR_GENS];
-> > +};
-> > +
-> > +static void lru_gen_update_batch(struct lruvec *lruvec, int type, int =
-zone,
-> > +                                struct gen_update_batch *batch)
-> > +{
-> > +       int gen;
-> > +       int promoted =3D 0;
-> > +       struct lru_gen_folio *lrugen =3D &lruvec->lrugen;
-> > +       enum lru_list lru =3D type ? LRU_INACTIVE_FILE : LRU_INACTIVE_A=
-NON;
-> > +
-> > +       for (gen =3D 0; gen < MAX_NR_GENS; gen++) {
-> > +               int delta =3D batch->delta[gen];
-> > +
-> > +               if (!delta)
-> > +                       continue;
-> > +
-> > +               WRITE_ONCE(lrugen->nr_pages[gen][type][zone],
-> > +                          lrugen->nr_pages[gen][type][zone] + delta);
-> > +
-> > +               if (lru_gen_is_active(lruvec, gen))
-> > +                       promoted +=3D delta;
-> > +       }
-> > +
-> > +       if (promoted) {
-> > +               __update_lru_size(lruvec, lru, zone, -promoted);
-> > +               __update_lru_size(lruvec, lru + LRU_ACTIVE, zone, promo=
-ted);
-> > +       }
-> > +}
-> > +
-> >  /* protect pages accessed multiple times through file descriptors */
-> > -static int folio_inc_gen(struct lruvec *lruvec, struct folio *folio, b=
-ool reclaiming)
-> > +static int folio_inc_gen(struct lruvec *lruvec, struct folio *folio,
-> > +                        bool reclaiming, struct gen_update_batch *batc=
-h)
-> >  {
-> > +       int delta =3D folio_nr_pages(folio);
-> >         int type =3D folio_is_file_lru(folio);
-> >         struct lru_gen_folio *lrugen =3D &lruvec->lrugen;
-> >         int new_gen, old_gen =3D lru_gen_from_seq(lrugen->min_seq[type]=
-);
-> > @@ -3138,7 +3176,8 @@ static int folio_inc_gen(struct lruvec *lruvec, s=
-truct folio *folio, bool reclai
-> >                         new_flags |=3D BIT(PG_reclaim);
-> >         } while (!try_cmpxchg(&folio->flags, &old_flags, new_flags));
-> >
-> > -       lru_gen_update_size(lruvec, folio, old_gen, new_gen);
-> > +       batch->delta[old_gen] -=3D delta;
-> > +       batch->delta[new_gen] +=3D delta;
-> >
-> >         return new_gen;
-> >  }
-> > @@ -3672,6 +3711,7 @@ static bool inc_min_seq(struct lruvec *lruvec, in=
-t type, bool can_swap)
-> >  {
-> >         int zone;
-> >         int remaining =3D MAX_LRU_BATCH;
-> > +       struct gen_update_batch batch =3D { };
->
-> Can this batch variable be moved away from the stack?  We (Google) use
-> a much larger value for MAX_NR_GENS internally. This large stack
-> allocation from "struct gen_update_batch batch" can significantly
-> increase the risk of stack overflow for our use cases.
->
+diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+index 6c47ab0a491d..ad145a54ca74 100644
+--- a/drivers/usb/host/ehci-orion.c
++++ b/drivers/usb/host/ehci-orion.c
+@@ -65,6 +65,15 @@ struct orion_ehci_hcd {
+ 
+ static struct hc_driver __read_mostly ehci_orion_hc_driver;
+ 
++/*
++ * Legacy DMA mask is 32 bit.
++ * AC5 has the DDR starting at 8GB, hence it requires
++ * a larger (34-bit) DMA mask, in order for DMA allocations
++ * to succeed:
++ */
++static const u64 dma_mask_orion =	DMA_BIT_MASK(32);
++static const u64 dma_mask_ac5 =		DMA_BIT_MASK(34);
++
+ /*
+  * Implement Orion USB controller specification guidelines
+  */
+@@ -211,6 +220,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 	int irq, err;
+ 	enum orion_ehci_phy_ver phy_version;
+ 	struct orion_ehci_hcd *priv;
++	u64 *dma_mask_ptr;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+@@ -228,7 +238,8 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 	 * set. Since shared usb code relies on it, set it here for
+ 	 * now. Once we have dma capability bindings this can go away.
+ 	 */
+-	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++	dma_mask_ptr = (u64 *)of_device_get_match_data(&pdev->dev);
++	err = dma_coerce_mask_and_coherent(&pdev->dev, *dma_mask_ptr);
+ 	if (err)
+ 		goto err;
+ 
+@@ -332,8 +343,9 @@ static void ehci_orion_drv_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id ehci_orion_dt_ids[] = {
+-	{ .compatible = "marvell,orion-ehci", },
+-	{ .compatible = "marvell,armada-3700-ehci", },
++	{ .compatible = "marvell,orion-ehci", .data = &dma_mask_orion},
++	{ .compatible = "marvell,armada-3700-ehci", .data = &dma_mask_orion},
++	{ .compatible = "marvell,ac5-ehci", .data = &dma_mask_ac5},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ehci_orion_dt_ids);
+-- 
+2.25.1
 
-Thanks for the info.
-Do you have any suggestion about where we should put the batch info? I
-though about merging it with lru_gen_mm_walk but that depend on
-kzalloc and not useable for slow allocation path, the overhead could
-be larger than benefit in many cases.
-
-Not sure if we can use some thing like a preallocated per-cpu cache
-here to avoid all the issues.
