@@ -1,103 +1,106 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234FD1C3E
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 10:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476D71FB2
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 10:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-35fffb6fe5bso76130425ab.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 02:14:16 -0800 (PST)
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-35fffb6fe5bso76130455ab.2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 02:14:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1705227256; x=1705832056;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=++zUQFlQO1jJCn2oGGjsjqpi/zbkWdKQOFSazaQqWLM=;
-        b=k6Ll1L63Kpsp8lKcdW24RudzdK7fS4A5Q6JuWN/sSw7Y5zMFyTb9Mr6YeOVj3Y2SA7
-         N84+YnJRHIskgyPDuFAAOTKt8FuwjSKNBfaZGq1PbLo3ZIZ6W2ashg1pT0Zoe/RqDHQV
-         spWgkcjeSD2v+NpUqJ3OzQzvVVB6l4+I+KzfsuTCNDf/TBxiaRZ9mq8y8GCVhNw7L8ym
-         eabPl47eIysUXQ5A9GhiS5l80/CcvfYHbsiALamL9qsqj3ygj7IAVFdoRFgjGfjsZqO6
-         ikcC6h2SlN5e2Z2/3pqmzE60XPh/o/sBeRftO//G1eVnjC87d4wP2FFOfVsc7bLUYja5
-         X/MA==
-X-Gm-Message-State: AOJu0Yxx61bPBdpGbIUg1ANGy5viEBMbiIccdf5gc83OKOYSD+g6m/oA
-	6h4XYO9ko3UUl/WRY3rlTFcLr7Baprf6SQJg9qstVMaa3KtH
-X-Google-Smtp-Source: AGHT+IFuF0rQEiObRoW/C9j4Ipq9ayuERPEJrHyCIA/CXrKUYY1vLljh+rJ4yQchsGkbwShXhr0pzMhLVfpAgsv2MJXPA0j3WWHn
+        bh=QrvREBUnMEJS2CzujDbDhJ4E9qQTed9wyaoazMHtiC0=;
+        b=eIWFjXe17A/+WX0U28s0CA7AfogerruQJsIR9LPQL2vOTnt917ecGKC3n9uN7T45MA
+         YSc+runHYyw5LsoLUh/oSSPtCuVJeWvsU3/TAgi7IV4i7/mRZbvYqRwVps0PNQnOM5RA
+         bRwUsPBi7SuJe9utGV0OWZEVxj3Bfp3LWFzNOiqkEznJ8FecuNvSgmdxPgwlRa0gB5P8
+         iBE5147SwalizqSPNVCT9HULusEeMs5YuNWlhcTghpdW7svd65hG2EroJiPD+dhX1bTH
+         1V25EY/7UGmjyhDSo8ORiyRMpDI/tGDedd5fBDv331rVXXdlUP/RUUIn0X8V+xYTnoIJ
+         qqXA==
+X-Gm-Message-State: AOJu0YxWXC0XTp8NTXOOSYHeLHTuelVjvpOnVzffSkkHWPPDDAfFCIy9
+	qtfbyxZrG8uuIRpP7GMbqpTj4xX8XQLu+Sx8aeZ4JmTaohVK
+X-Google-Smtp-Source: AGHT+IEgqMBYvqGrYA24w+LW96Eta29eUzTxngRiauLZkHYbupaUjAMNNmp2DbmjfBY+orf8/b96du/cdCjl19nOaL2LA2roXyq5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:194a:b0:360:620a:24eb with SMTP id
- x10-20020a056e02194a00b00360620a24ebmr560177ilu.4.1705227256357; Sun, 14 Jan
+X-Received: by 2002:a05:6e02:180d:b0:35f:9ada:73a8 with SMTP id
+ a13-20020a056e02180d00b0035f9ada73a8mr551115ilv.2.1705227256582; Sun, 14 Jan
  2024 02:14:16 -0800 (PST)
 Date: Sun, 14 Jan 2024 02:14:16 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e06949060ee528f1@google.com>
-Subject: [syzbot] [io-uring?] KMSAN: uninit-value in io_rw_fail
-From: syzbot <syzbot+8d9c06e026c513a69f2f@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000e3d83a060ee5285a@google.com>
+Subject: [syzbot] [nfs?] KMSAN: kernel-infoleak in sys_name_to_handle_at (4)
+From: syzbot <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, brauner@kernel.org, chuck.lever@oracle.com, 
+	jlayton@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    99d99825fc07 Merge tag 'nfs-for-6.6-1' of git://git.linux-..
+HEAD commit:    861deac3b092 Linux 6.7-rc7
 git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=10c292a8680000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e9fadcd263e8d242
-dashboard link: https://syzkaller.appspot.com/bug?extid=8d9c06e026c513a69f2f
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=155d9131e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c7078a6b901aa3
+dashboard link: https://syzkaller.appspot.com/bug?extid=09b349b3066c2e0b1e96
 compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1358d7dfa80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c99d9fa80000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16cefdc9e80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164fe7e9e80000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/7e9fa7fad7d0/disk-99d99825.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/424ca21fc443/vmlinux-99d99825.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d4de08b26e5b/bzImage-99d99825.xz
+disk image: https://storage.googleapis.com/syzbot-assets/0ea60ee8ed32/disk-861deac3.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6d69fdc33021/vmlinux-861deac3.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/f0158750d452/bzImage-861deac3.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/bb450f076a10/mount_0.gz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8d9c06e026c513a69f2f@syzkaller.appspotmail.com
+Reported-by: syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com
 
+         option from the mount to silence this warning.
+=======================================================
 =====================================================
-BUG: KMSAN: uninit-value in io_fixup_rw_res io_uring/rw.c:273 [inline]
-BUG: KMSAN: uninit-value in io_rw_fail+0x1a7/0x1b0 io_uring/rw.c:996
- io_fixup_rw_res io_uring/rw.c:273 [inline]
- io_rw_fail+0x1a7/0x1b0 io_uring/rw.c:996
- io_req_defer_failed+0x217/0x3e0 io_uring/io_uring.c:1030
- io_queue_sqe_fallback+0x1f4/0x260 io_uring/io_uring.c:2063
- io_submit_state_end io_uring/io_uring.c:2308 [inline]
- io_submit_sqes+0x2b83/0x2ff0 io_uring/io_uring.c:2426
- __do_sys_io_uring_enter io_uring/io_uring.c:3620 [inline]
- __se_sys_io_uring_enter+0x491/0x43f0 io_uring/io_uring.c:3554
- __x64_sys_io_uring_enter+0x11b/0x1a0 io_uring/io_uring.c:3554
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x41/0xc0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
+BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ copy_to_user include/linux/uaccess.h:191 [inline]
+ do_sys_name_to_handle fs/fhandle.c:73 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
 Uninit was created at:
- slab_post_alloc_hook+0x12f/0xb70 mm/slab.h:767
+ slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
  slab_alloc_node mm/slub.c:3478 [inline]
- __kmem_cache_alloc_node+0x536/0x8d0 mm/slub.c:3517
- __do_kmalloc_node mm/slab_common.c:1022 [inline]
- __kmalloc+0x121/0x3c0 mm/slab_common.c:1036
- kmalloc include/linux/slab.h:603 [inline]
- io_alloc_async_data io_uring/io_uring.c:1745 [inline]
- io_req_prep_async+0x384/0x5a0 io_uring/io_uring.c:1766
- io_queue_sqe_fallback+0x95/0x260 io_uring/io_uring.c:2060
- io_submit_state_end io_uring/io_uring.c:2308 [inline]
- io_submit_sqes+0x2b83/0x2ff0 io_uring/io_uring.c:2426
- __do_sys_io_uring_enter io_uring/io_uring.c:3620 [inline]
- __se_sys_io_uring_enter+0x491/0x43f0 io_uring/io_uring.c:3554
- __x64_sys_io_uring_enter+0x11b/0x1a0 io_uring/io_uring.c:3554
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x41/0xc0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
+ __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
+ __do_kmalloc_node mm/slab_common.c:1006 [inline]
+ __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
+ kmalloc include/linux/slab.h:604 [inline]
+ do_sys_name_to_handle fs/fhandle.c:39 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-CPU: 0 PID: 4988 Comm: syz-executor352 Not tainted 6.5.0-syzkaller-09276-g99d99825fc07 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/26/2023
+Bytes 18-19 of 20 are uninitialized
+Memory access of size 20 starts at ffff888128a46380
+Data copied to user address 0000000020000240
+
+CPU: 0 PID: 5006 Comm: syz-executor975 Not tainted 6.7.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
 =====================================================
 
 
