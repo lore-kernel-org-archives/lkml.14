@@ -1,174 +1,163 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C229915AF6
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 13:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202AB171A0;
+	Mon, 15 Jan 2024 13:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bCwzKauS"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e8004629bso2593005e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 05:19:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1705324785; x=1705929585; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0v/N0kXAbnUMy0XtXE3gHSioK80yxhIhWRK0FxbIKw=;
-        b=bCwzKauSqoUAHcrWeskUkjjC1uVaGrYEfkD+QwbJa7by8Ws7H7SzY+RlmkgqfPpvpn
-         xjwe6U69enKFSbdBLzk014iiza9a2tGlMO7bi+VFz//bs4B43YDB3ZL//G+aGoJ/ofjh
-         ZDRZvPYM8muX3M1zd2+nVq0UY20vKm181YpXxUv90QBz0RRsAuBj/pBYiNxlSg3pphpK
-         7sUkA8L9A89QtaZhkheGyIdPOZxXiFP7+EeT6SQ77SY9/aBQDsCoMrD1PY08p8tHtUyM
-         GSzRKFd7BsK5gwVtBLzNdMBoDkZAlk2YT/q2XxENb59UFcYTrLL51KjjmqH5o1EbGWSx
-         bE6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705324785; x=1705929585;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0v/N0kXAbnUMy0XtXE3gHSioK80yxhIhWRK0FxbIKw=;
-        b=f7qmoZ2RELAh0nZBhopYjvCiPM825V/ns8VQvWpf++hpL3jUbIymlPqN9OHg1Vww0E
-         9l+Co2JpEepIN8JusWVdSM+7aCpZoi68k7FOSSICBQyct02UnBZhXC3o59mL7TwjvlgO
-         Uxv7UUH1CbplbH0ek6q0Z9cgoKG6+s01aVL2Jc11Q6VoV6nuKDTz7/jSigi5u0VoXG51
-         4eAbr4EdtNZPiIo/kLVymfoRZZ+Z0BAbVQ6GVG+2LBMnodIqejI2kvyfUXM8bXbZc0I3
-         l6P/VA4LIBE3D4W4VIqFBtZnQlm6ywzYvI0iPDn8d8szXkeIzPc4lmMXmnaKZu/2Bs8x
-         NSIw==
-X-Gm-Message-State: AOJu0YwxFv93RQ3cefW2Dxd/6+KvwVk6SN0pNAnhCpeoBjgptUboVPwT
-	RD4vbwa/i/kUk/mNom/iBKzh1jCTpUtoEg==
-X-Google-Smtp-Source: AGHT+IEmfou+SJJzbucaZzJYGOu0aKAR3E1mpvl8rhNlPReIy38XcB//GKFyZHBfkSGj9VIw/SMfNQ==
-X-Received: by 2002:a05:600c:295:b0:40e:5f22:3d1b with SMTP id 21-20020a05600c029500b0040e5f223d1bmr1871631wmk.72.1705324785015;
-        Mon, 15 Jan 2024 05:19:45 -0800 (PST)
-Received: from ?IPV6:2a10:bac0:b000:7588:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7588:7285:c2ff:fedd:7e3a])
-        by smtp.gmail.com with ESMTPSA id v4-20020a05600c470400b0040e5945307esm16032865wmo.40.2024.01.15.05.19.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jan 2024 05:19:44 -0800 (PST)
-Message-ID: <fa1e3873-6218-461b-85fa-1ff353380532@suse.com>
-Date: Mon, 15 Jan 2024 15:19:43 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="n0iFw1aP"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40F8xlB6024780;
+	Mon, 15 Jan 2024 14:20:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=7xKLdUQk8OK9A6paxlcl3qVq6RQlLn1l6EzzLpxbCZc=; b=n0
+	iFw1aPk2545mroHDhygi4YHxf3oHwOKXZNyPmop3PWQBexhXKS8gbyaaIw+t8r3p
+	d39BPn+4zYcK4FuSZNHvABwDSPw0wp4McBL7Ag0tYwlE3JJEhD7qjxmVXvSGNR7f
+	Fz/GTbVdWvt3ICMkPIcLanfAGwjyq9WpkuVSgDLqEafZ4QeWOPZXg8Utb5XLv0os
+	aq781EAeRPy3goVILiVdYtTpJKL8fP1bszIsmsDEU0t3BicZP7TKG/e3UtR1Kq4o
+	wWYzqEE9R7HraBNki7DM5LNP4ARf8hrJtrqpqZCtAKb+sW64/qCa9bMMFNmaqy9A
+	MgpoVEwN95iO7ZDverWw==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vm6bnx42p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jan 2024 14:20:25 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 87481100058;
+	Mon, 15 Jan 2024 14:20:23 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7CEB72831A5;
+	Mon, 15 Jan 2024 14:20:23 +0100 (CET)
+Received: from localhost (10.129.178.37) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 15 Jan
+ 2024 14:20:22 +0100
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+To: Yannick Fertre <yannick.fertre@foss.st.com>,
+        Raphael Gallais-Pou
+	<raphael.gallais-pou@foss.st.com>,
+        Philippe Cornu
+	<philippe.cornu@foss.st.com>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter
+	<daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 3/6] drm/stm: ltdc: add lvds pixel clock
+Date: Mon, 15 Jan 2024 14:20:06 +0100
+Message-ID: <20240115132009.101718-4-raphael.gallais-pou@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240115132009.101718-1-raphael.gallais-pou@foss.st.com>
+References: <20240115132009.101718-1-raphael.gallais-pou@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv5 16/16] x86/acpi: Add support for CPU offlining for ACPI
- MADT wakeup method
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
- <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
- "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
- <20231222235209.32143-17-kirill.shutemov@linux.intel.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <20231222235209.32143-17-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
 
+The STM32MP25x display subsystem presents a mux which feeds the loopback
+pixel clock of the current bridge in use into the LTDC. This mux is only
+accessible through sysconfig registers which is not yet available in the
+STM32MP25x common clock framework.
 
+While waiting for a complete update of the clock framework, this would
+allow to use the LVDS.
 
-On 23.12.23 г. 1:52 ч., Kirill A. Shutemov wrote:
-> MADT Multiprocessor Wakeup structure version 1 brings support of CPU
-> offlining: BIOS provides a reset vector where the CPU has to jump to
-> for offlining itself. The new TEST mailbox command can be used to test
-> whether the CPU offlined itself which means the BIOS has control over
-> the CPU and can online it again via the ACPI MADT wakeup method.
-> 
-> Add CPU offling support for the ACPI MADT wakeup method by implementing
-> custom cpu_die(), play_dead() and stop_this_cpu() SMP operations.
-> 
-> CPU offlining makes is possible to hand over secondary CPUs over kexec,
-> not limiting the second kernel to a single CPU.
-> 
-> The change conforms to the approved ACPI spec change proposal. See the
-> Link.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Link: https://lore.kernel.org/all/13356251.uLZWGnKmhe@kreacher
-> ---
->   arch/x86/include/asm/acpi.h          |   2 +
->   arch/x86/kernel/acpi/Makefile        |   2 +-
->   arch/x86/kernel/acpi/madt_playdead.S |  29 +++++
->   arch/x86/kernel/acpi/madt_wakeup.c   | 184 ++++++++++++++++++++++++++-
->   include/acpi/actbl2.h                |  15 ++-
->   5 files changed, 228 insertions(+), 4 deletions(-)
->   create mode 100644 arch/x86/kernel/acpi/madt_playdead.S
-> 
-> diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-> index 2625b915ae7f..021cafa214c2 100644
-> --- a/arch/x86/include/asm/acpi.h
-> +++ b/arch/x86/include/asm/acpi.h
-> @@ -81,6 +81,8 @@ union acpi_subtable_headers;
->   int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
->   			      const unsigned long end);
->   
-> +void asm_acpi_mp_play_dead(u64 reset_vector, u64 pgd_pa);
-> +
->   /*
->    * Check if the CPU can handle C2 and deeper
->    */
-> diff --git a/arch/x86/kernel/acpi/Makefile b/arch/x86/kernel/acpi/Makefile
-> index 8c7329c88a75..37b1f28846de 100644
-> --- a/arch/x86/kernel/acpi/Makefile
-> +++ b/arch/x86/kernel/acpi/Makefile
-> @@ -4,7 +4,7 @@ obj-$(CONFIG_ACPI)			+= boot.o
->   obj-$(CONFIG_ACPI_SLEEP)		+= sleep.o wakeup_$(BITS).o
->   obj-$(CONFIG_ACPI_APEI)			+= apei.o
->   obj-$(CONFIG_ACPI_CPPC_LIB)		+= cppc.o
-> -obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+= madt_wakeup.o
-> +obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+= madt_wakeup.o madt_playdead.o
->   
->   ifneq ($(CONFIG_ACPI_PROCESSOR),)
->   obj-y					+= cstate.o
-> diff --git a/arch/x86/kernel/acpi/madt_playdead.S b/arch/x86/kernel/acpi/madt_playdead.S
-> new file mode 100644
-> index 000000000000..e48049959513
-> --- /dev/null
-> +++ b/arch/x86/kernel/acpi/madt_playdead.S
-> @@ -0,0 +1,29 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#include <linux/linkage.h>
-> +#include <asm/nospec-branch.h>
-> +#include <asm/page_types.h>
-> +#include <asm/processor-flags.h>
-> +
-> +	.text
-> +	.align PAGE_SIZE
-> +
-> +/*
-> + * asm_acpi_mp_play_dead() - Hand over control of the CPU to the BIOS
-> + *
-> + * rdi: Address of the ACPI MADT MPWK ResetVector
-> + * rsi: PGD of the identity mapping
-> + */
-> +SYM_FUNC_START(asm_acpi_mp_play_dead)
-> +	/* Turn off global entries. Following CR3 write will flush them. */
-> +	movq	%cr4, %rdx
-> +	andq	$~(X86_CR4_PGE), %rdx
-> +	movq	%rdx, %cr4
-> +
-> +	/* Switch to identity mapping */
-> +	movq	%rsi, %rax
-> +	movq	%rax, %cr3
+Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+Signed-off-by: Yannick Fertre <yannick.fertre@foss.st.com>
+---
+Changes in v2:
+	- Fixed my address
+	- Fixed smatch warning
+---
+ drivers/gpu/drm/stm/ltdc.c | 19 +++++++++++++++++++
+ drivers/gpu/drm/stm/ltdc.h |  1 +
+ 2 files changed, 20 insertions(+)
 
-nit: Can't you move directly to cr3
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 5576fdae4962..23011a8913bd 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -838,6 +838,12 @@ ltdc_crtc_mode_valid(struct drm_crtc *crtc,
+ 	int target_max = target + CLK_TOLERANCE_HZ;
+ 	int result;
+ 
++	if (ldev->lvds_clk) {
++		result = clk_round_rate(ldev->lvds_clk, target);
++		DRM_DEBUG_DRIVER("lvds pixclk rate target %d, available %d\n",
++				 target, result);
++	}
++
+ 	result = clk_round_rate(ldev->pixel_clk, target);
+ 
+ 	DRM_DEBUG_DRIVER("clk rate target %d, available %d\n", target, result);
+@@ -1896,6 +1902,8 @@ void ltdc_suspend(struct drm_device *ddev)
+ 
+ 	DRM_DEBUG_DRIVER("\n");
+ 	clk_disable_unprepare(ldev->pixel_clk);
++	if (ldev->lvds_clk)
++		clk_disable_unprepare(ldev->lvds_clk);
+ }
+ 
+ int ltdc_resume(struct drm_device *ddev)
+@@ -1910,6 +1918,13 @@ int ltdc_resume(struct drm_device *ddev)
+ 		DRM_ERROR("failed to enable pixel clock (%d)\n", ret);
+ 		return ret;
+ 	}
++	if (ldev->lvds_clk) {
++		if (clk_prepare_enable(ldev->lvds_clk)) {
++			clk_disable_unprepare(ldev->pixel_clk);
++			DRM_ERROR("Unable to prepare lvds clock\n");
++			return -ENODEV;
++		}
++	}
+ 
+ 	return 0;
+ }
+@@ -1981,6 +1996,10 @@ int ltdc_load(struct drm_device *ddev)
+ 		}
+ 	}
+ 
++	ldev->lvds_clk = devm_clk_get(dev, "lvds");
++	if (IS_ERR(ldev->lvds_clk))
++		ldev->lvds_clk = NULL;
++
+ 	rstc = devm_reset_control_get_exclusive(dev, NULL);
+ 
+ 	mutex_init(&ldev->err_lock);
+diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
+index 9d488043ffdb..4a60ce5b610c 100644
+--- a/drivers/gpu/drm/stm/ltdc.h
++++ b/drivers/gpu/drm/stm/ltdc.h
+@@ -44,6 +44,7 @@ struct ltdc_device {
+ 	void __iomem *regs;
+ 	struct regmap *regmap;
+ 	struct clk *pixel_clk;	/* lcd pixel clock */
++	struct clk *lvds_clk;	/* lvds pixel clock */
+ 	struct mutex err_lock;	/* protecting error_status */
+ 	struct ltdc_caps caps;
+ 	u32 irq_status;
+-- 
+2.25.1
 
-> +
-> +	/* Jump to reset vector */
-> +	ANNOTATE_RETPOLINE_SAFE
-> +	jmp	*%rdi
-> +SYM_FUNC_END(asm_acpi_mp_play_dead)
-
-<snip>
