@@ -1,102 +1,106 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7626018629;
-	Mon, 15 Jan 2024 15:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50C7175B7;
+	Mon, 15 Jan 2024 15:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eQp3fu30"
-Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 95A43C6473;
-	Mon, 15 Jan 2024 14:59:22 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 954FAFF812;
-	Mon, 15 Jan 2024 14:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705330755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KljMchxpu6sUXwdpmR1vxK0+FWcbaI+DBRqAnIQUPW8=;
-	b=eQp3fu301Pdbrj+5NEEwhB3xtfqdd9CrRZuNr4j+TnGsXarH/kVpLtdeYvHaixB6ExxMTG
-	mN5jxpP6VHWMrGHwGj7dWEo8XkBAL36stLNgR+OTGWliEQh5zWQCnAUwF7ocfgo9DmCO+Y
-	FVlIeszJvowU32RiBfsGCs+7M/eZvHgg+ZyyG9NxLS+iK76xCrhsaga0CSWs4g6FO5MEn0
-	cTtk9zBZkHmZFpLXEX+BI60Z8jUzQe+5DdIKsHkjXBqpoPjPDDE/1P6liFl1dU1ogyfolq
-	wlBhNylR8C6qQrHEh1Es/3qrMzz73MpaZaQAW5moO2Knxum4b7Gv0yG/f5G04Q==
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Date: Mon, 15 Jan 2024 15:56:34 +0100
-Subject: [PATCH 5/5] wifi: wilc1000: fix multi-vif management when deleting
- a vif
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aNuSjlCh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=h1zJVN/StgdtGJ+KvowsDPSUZpuVAQLtb4Gk0WK6sxU=; b=aNuSjlChQOa5cvpTN5zXyWQTQs
+	P71JqXtroWZ63bfc4xkj1dF/AqNZArT6Ohf9opFouJrwod6mEL/QCECd9A9YiOByYWqgANJ51MIxB
+	NgXvJ/qbRyEMsKUE9ANEEQ7t2ColgxlZ4X0DEfa49MW/SxKD7E+r070K/jdaiWDyfeuKfrwawA2kP
+	iZjdPET9Nz5F9Qy5Z7jiU2Zh2n46cyC8T8UlIRO0F1ZU5nsjzRaXDfz6j4hEKg3CYr31HCVmHlAyE
+	0Ws04qhwYB6ZOVBBRVziJCG/yrQWDb+ULrqYDN3TbwGGi0G3UdAfNyBxsA1i3pPGVZMlR7Co49WoH
+	7LK+S/Tw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rPOZO-00A0HG-59; Mon, 15 Jan 2024 15:08:10 +0000
+Date: Mon, 15 Jan 2024 15:08:10 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Muchun Song <muchun.song@linux.dev>
+Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	akpm@linux-foundation.org, usama.anjum@collabora.com,
+	jiaqiyan@google.com, linmiaohe@huawei.com, naoya.horiguchi@nec.com,
+	shy828301@gmail.com, jthoughton@google.com, jane.chu@oracle.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] fs/hugetlbfs/inode.c: mm/memory-failure.c: fix
+ hugetlbfs hwpoison handling
+Message-ID: <ZaVKWox1/yTLThma@casper.infradead.org>
+References: <20240112180840.367006-1-sidhartha.kumar@oracle.com>
+ <03168121-080f-41e4-a242-02638f5787f7@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240115-wilc_1000_fixes-v1-5-54d29463a738@bootlin.com>
-References: <20240115-wilc_1000_fixes-v1-0-54d29463a738@bootlin.com>
-In-Reply-To: <20240115-wilc_1000_fixes-v1-0-54d29463a738@bootlin.com>
-To: linux-wireless@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>, 
- David Mosberger-Tang <davidm@egauge.net>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-X-Mailer: b4 0.12.4
-X-GND-Sasl: alexis.lothore@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03168121-080f-41e4-a242-02638f5787f7@linux.dev>
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+On Mon, Jan 15, 2024 at 08:02:51PM +0800, Muchun Song wrote:
+> On 2024/1/13 02:08, Sidhartha Kumar wrote:
+> > has_extra_refcount() makes the assumption that the page cache adds a ref
+> > count of 1 and subtracts this in the extra_pins case. Commit a08c7193e4f1
+> > (mm/filemap: remove hugetlb special casing in filemap.c) modifies
+> > __filemap_add_folio() by calling folio_ref_add(folio, nr); for all cases
+> > (including hugtetlb) where nr is the number of pages in the folio. We
+> > should adjust the number of references coming from the page cache by
+> > subtracing the number of pages rather than 1.
+> > 
+> > In hugetlbfs_read_iter(), folio_test_has_hwpoisoned() is testing the wrong
+> > flag as, in the hugetlb case, memory-failure code calls
+> > folio_test_set_hwpoison() to indicate poison. folio_test_hwpoison() is the
+> > correct function to test for that flag.
+> > 
+> > After these fixes, the hugetlb hwpoison read selftest passes all cases.
+> > 
+> > Fixes: a08c7193e4f1 ("mm/filemap: remove hugetlb special casing in filemap.c")
+> > Closes: https://lore.kernel.org/linux-mm/20230713001833.3778937-1-jiaqiyan@google.com/T/#m8e1469119e5b831bbd05d495f96b842e4a1c5519
+> > Cc: <stable@vger.kernel.org> # 6.7+
+> > Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+> > Reported-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> > ---
+> > 
+> > v1 -> v2:
+> >      move ref_count adjustment to if(extra_pins) block as that represents
+> >      ref counts from the page cache per Miaohe Lin.
+> > 
+> >   fs/hugetlbfs/inode.c | 2 +-
+> >   mm/memory-failure.c  | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+> > index 36132c9125f9..3a248e4f7e93 100644
+> > --- a/fs/hugetlbfs/inode.c
+> > +++ b/fs/hugetlbfs/inode.c
+> > @@ -340,7 +340,7 @@ static ssize_t hugetlbfs_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> >   		} else {
+> >   			folio_unlock(folio);
+> > -			if (!folio_test_has_hwpoisoned(folio))
+> > +			if (!folio_test_hwpoison(folio))
+> >   				want = nr;
+> >   			else {
+> >   				/*
+> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> > index d8c853b35dbb..ef7ae73b65bd 100644
+> > --- a/mm/memory-failure.c
+> > +++ b/mm/memory-failure.c
+> > @@ -976,7 +976,7 @@ static bool has_extra_refcount(struct page_state *ps, struct page *p,
+> >   	int count = page_count(p) - 1;
+> >   	if (extra_pins)
+> > -		count -= 1;
+> > +		count -= folio_nr_pages(page_folio(p));
+> 
+> IIUC, It seems than this also fix shmem of THP, because has_extra_refcount()
+> is called
+> from me_pagecache_clean(), right?
 
-Adding then removing a second vif currently makes the first vif not working
-anymore. This is visible for example when we have a first interface
-connected to some access point:
-- create a wpa_supplicant.conf with some AP credentials
-- wpa_supplicant -Dnl80211 -c /etc/wpa_supplicant.conf -i wlan0
-- dhclient wlan0
-- iw phy phy0 interface add wlan1 type managed
-- iw dev wlan1 del
-wlan0 does not manage properly traffic anymore (eg: ping not working)
-
-This is due to vif mode being incorrectly reconfigured with some default
-values in del_virtual_intf, affecting by default first vif.
-
-Prevent first vif from being affected on second vif removal by removing vif
-mode change command in del_virtual_intf
-
-Fixes: 9bc061e88054 ("staging: wilc1000: added support to dynamically add/remove interfaces")
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
----
-This patch has been initiated by Ajay, and I reworked it a bit/split it.
-I could have just fixed the parameters passed to wilc_set_operation_mode,
-but I observed that even calling wilc_set_operation_mode seems faulty in
-del_virtual_intf: for example the thread in charge of sending commands to
-the chip is possibly not running (because interface is not up). Also, the
-vif mode is only configured in change_virtual_intf and not in
-add_virtual_intf, which tends to validate the removal from
-del_virtual_intf.
----
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-index 2d0474e6404e..f03fd15c0c97 100644
---- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-+++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-@@ -1609,7 +1609,6 @@ static int del_virtual_intf(struct wiphy *wiphy, struct wireless_dev *wdev)
- 	cfg80211_unregister_netdevice(vif->ndev);
- 	vif->monitor_flag = 0;
- 
--	wilc_set_operation_mode(vif, 0, 0, 0);
- 	mutex_lock(&wl->vif_mutex);
- 	list_del_rcu(&vif->list);
- 	wl->vif_num--;
-
--- 
-2.42.1
-
+Usually we split THPs before we get to this point, but we always poison
+an entire hugetlb page.  This should probably change, but it's not high
+on my list of things to do.
