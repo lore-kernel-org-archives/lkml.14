@@ -1,43 +1,23 @@
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A281717CF;
-	Mon, 15 Jan 2024 05:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="XvTh11TF"
-Received: from localhost.localdomain (unknown [10.101.196.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 090B03F722;
-	Mon, 15 Jan 2024 04:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1705294302;
-	bh=/h0ueumzQRHlEhJDa988fwbrKEXZ/2rrzQgvraRlQ6s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=XvTh11TFw0EDTwDxRedeNeFkn2S20dhKqZYkET3YbEsT0Im3PVCgGfK1t4sIYpbCW
-	 UFcIPZwX9gWN250kSEvp1DtvkOz9D2aRJ9q0q2WLZnrgdNMYlej0bVjm3JSRGoeNCY
-	 QctqYkRWuV41PjSo07wbOt6AgW4iHQkKudSe7yQc4qaav44S3i18RLN8tmpcO5hzTl
-	 MzLYWkJK0IHaJBo4RTjdb5as1v3idXBFC5Y+tcW7IJakerky6EP3XaaDqrVuSoUcEF
-	 zRhC5H+Y7BOQY1wek1WE7Qa1kDMW5aiuTf1wbG7BaR+NWmhCd5+26/BtcRRsdEzdtA
-	 x/h+Hy9hS+2qA==
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-To: jikos@kernel.org,
-	benjamin.tissoires@redhat.com
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] HID: i2c-hid: Skip SET_POWER SLEEP for Cirque touchpad on system suspend
-Date: Mon, 15 Jan 2024 12:50:51 +0800
-Message-Id: <20240115045054.1170294-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462AD17CF
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 05:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=liusong@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W-ZivNm_1705293980;
+Received: from localhost(mailfrom:liusong@linux.alibaba.com fp:SMTPD_---0W-ZivNm_1705293980)
+          by smtp.aliyun-inc.com;
+          Mon, 15 Jan 2024 12:46:50 +0800
+From: Liu Song <liusong@linux.alibaba.com>
+To: mingo@redhat.com,
+	peterz@infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	liusong@linux.alibaba.com
+Subject: [PATCH] sched/eevdf: using leftmost improves the readability of the code
+Date: Mon, 15 Jan 2024 12:46:19 +0800
+Message-Id: <20240115044619.34718-1-liusong@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,76 +26,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There's a Cirque touchpad that wakes system up without anything touched
-the touchpad. The input report is empty when this happens.
-The reason is stated in HID over I2C spec, 7.2.8.2:
-"If the DEVICE wishes to wake the HOST from its low power state, it can
-issue a wake by asserting the interrupt."
+Using 'leftmost' enhances code readability, without involving any logical
+changes.
 
-This is fine if OS can put system back to suspend by identifying input
-wakeup count stays the same on resume, like Chrome OS Dark Resume [0].
-But for regular distro such policy is lacking.
-
-Though the change doesn't bring any impact on power consumption for
-touchpad is minimal, other i2c-hid device may depends on SLEEP control
-power. So use a quirk to limit the change scope.
-
-[0] https://chromium.googlesource.com/chromiumos/platform2/+/HEAD/power_manager/docs/dark_resume.md
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Liu Song <liusong@linux.alibaba.com>
 ---
-v2:
- - Use quirk instead of applying the change universally.
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- drivers/hid/hid-ids.h              | 3 +++
- drivers/hid/i2c-hid/i2c-hid-core.c | 6 +++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index fb30e228d35f..828a5c022c64 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -298,6 +298,9 @@
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index f2bb83675e4a..4247584258ae 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -848,12 +848,12 @@ struct sched_entity *__pick_root_entity(struct cfs_rq *cfs_rq)
  
- #define USB_VENDOR_ID_CIDC		0x1677
+ struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
+ {
+-	struct rb_node *left = rb_first_cached(&cfs_rq->tasks_timeline);
++	struct rb_node *leftmost = rb_first_cached(&cfs_rq->tasks_timeline);
  
-+#define I2C_VENDOR_ID_CIRQUE           0x0488
-+#define I2C_PRODUCT_ID_CIRQUE_1063     0x1063
-+
- #define USB_VENDOR_ID_CJTOUCH		0x24b8
- #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0020	0x0020
- #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0040	0x0040
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 90f316ae9819..2df1ab3c31cc 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -49,6 +49,7 @@
- #define I2C_HID_QUIRK_RESET_ON_RESUME		BIT(2)
- #define I2C_HID_QUIRK_BAD_INPUT_SIZE		BIT(3)
- #define I2C_HID_QUIRK_NO_WAKEUP_AFTER_RESET	BIT(4)
-+#define I2C_HID_QUIRK_NO_SLEEP_ON_SUSPEND	BIT(5)
+-	if (!left)
++	if (!leftmost)
+ 		return NULL;
  
- /* Command opcodes */
- #define I2C_HID_OPCODE_RESET			0x01
-@@ -131,6 +132,8 @@ static const struct i2c_hid_quirks {
- 		 I2C_HID_QUIRK_RESET_ON_RESUME },
- 	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
- 		I2C_HID_QUIRK_BAD_INPUT_SIZE },
-+	{ I2C_VENDOR_ID_CIRQUE, I2C_PRODUCT_ID_CIRQUE_1063,
-+		I2C_HID_QUIRK_NO_SLEEP_ON_SUSPEND },
- 	/*
- 	 * Sending the wakeup after reset actually break ELAN touchscreen controller
- 	 */
-@@ -956,7 +959,8 @@ static int i2c_hid_core_suspend(struct i2c_hid *ihid, bool force_poweroff)
- 		return ret;
+-	return __node_2_se(left);
++	return __node_2_se(leftmost);
+ }
  
- 	/* Save some power */
--	i2c_hid_set_power(ihid, I2C_HID_PWR_SLEEP);
-+	if (!(ihid->quirks & I2C_HID_QUIRK_NO_SLEEP_ON_SUSPEND))
-+		i2c_hid_set_power(ihid, I2C_HID_PWR_SLEEP);
- 
- 	disable_irq(client->irq);
- 
+ /*
 -- 
-2.34.1
+2.19.1.6.gb485710b
 
