@@ -1,195 +1,162 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B25271DDC1;
-	Mon, 15 Jan 2024 11:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4951E2F4;
-	Mon, 15 Jan 2024 03:01:48 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.91.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 524093F5A1;
-	Mon, 15 Jan 2024 03:01:00 -0800 (PST)
-Date: Mon, 15 Jan 2024 11:00:57 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: perf test hybrid failing on 14700K
-Message-ID: <ZaUQaaT_Hi_c0JhO@FVFF77S0Q05N>
-References: <ZYbm5L7tw7bdpDpE@kernel.org>
- <4d86f3b6-eaee-4673-bdf5-3b97c1c1ad17@linux.intel.com>
- <CAP-5=fUfJ-VBGS1D2+WM_eBu4uPGvxJ2KyD4WXzgKRCfGKHTQQ@mail.gmail.com>
- <ZZfwjG-HL5yOEh6z@FVFF77S0Q05N>
- <CAP-5=fUK+t1p0g3dKtgyP0g3oixM1G7Xm4BFneY5EMzRW_urdw@mail.gmail.com>
- <ZZ12PhUfA_wPAaRR@FVFF77S0Q05N.cambridge.arm.com>
- <CAP-5=fWCn88KchSdQg87FRY0cpH4tVqO0UEYMhE=ioANeRBdwg@mail.gmail.com>
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7361FCA
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 11:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QQ5H9Wpk"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40FArmvJ031597;
+	Mon, 15 Jan 2024 11:05:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=n+SxP4a1Echsd2W48WiaYeGB/mW2FQoZ7a5VMYNkOkY=;
+ b=QQ5H9WpkCERwUjDkb27SNrfNP4wc5fPQOHq3tusma95TUII00wYsBq85qgpV/dS+VwsH
+ NZwuutrRA7MpKyIdyfoPW/Vrh6A0jYkyr/Wx7ijmDHAdP8CwkVy01uWMMQR0mXp8Obs9
+ geYBj9x7zx7bwwS+VKJRClKaju2wB+IUhRRpJ68M4p3JxaWIwfOMDsEKGeKsE3PPbLU0
+ KoUQ7yJrNmLNQbVyrmoQ2umZ2lpGbSpQScdI2LgDa9taYHrcJe8CqBBKu7ikLzFe9tkT
+ RKJbh+NmlWDdzTg8Qvgboc9hoUFM0KzEHM46mtAiIOSMjOP9eL4zkQdk39iNpQnwP0IB zQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vmqju6a1n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jan 2024 11:05:27 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40FA6Jxh003268;
+	Mon, 15 Jan 2024 11:05:26 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vmqju6a1e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jan 2024 11:05:26 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40FApW8k008775;
+	Mon, 15 Jan 2024 11:05:25 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm57y7yax-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jan 2024 11:05:25 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40FB5NRo20906610
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Jan 2024 11:05:23 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F26520049;
+	Mon, 15 Jan 2024 11:05:23 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 19BE320040;
+	Mon, 15 Jan 2024 11:05:23 +0000 (GMT)
+Received: from [9.171.7.113] (unknown [9.171.7.113])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 15 Jan 2024 11:05:23 +0000 (GMT)
+Message-ID: <80f1ba0d-afae-4af7-8de7-9813cb22e741@linux.ibm.com>
+Date: Mon, 15 Jan 2024 12:05:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWCn88KchSdQg87FRY0cpH4tVqO0UEYMhE=ioANeRBdwg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cxl: Fix null pointer dereference in cxl_get_fd
+To: Kunwu Chan <chentao@kylinos.cn>, ajd@linux.ibm.com, arnd@arndb.de,
+        mpe@ellerman.id.au, mrochs@linux.vnet.ibm.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Kunwu Chan <kunwu.chan@hotmail.com>
+References: <20240112054903.133145-1-chentao@kylinos.cn>
+Content-Language: en-US
+From: Frederic Barrat <fbarrat@linux.ibm.com>
+In-Reply-To: <20240112054903.133145-1-chentao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: JchAga7cNIfcyPNxpbIUp0MpQ_cdTOvI
+X-Proofpoint-GUID: S8h4f2npXqJkgmLx0HW_uQuR3DTVBV7Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-15_06,2024-01-15_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 clxscore=1011
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 mlxscore=0
+ mlxlogscore=833 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401150080
 
-On Wed, Jan 10, 2024 at 08:29:18AM -0800, Ian Rogers wrote:
-> On Tue, Jan 9, 2024 at 8:37 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Fri, Jan 05, 2024 at 09:21:21AM -0800, Ian Rogers wrote:
-> > > While much has been done in the perf tool to work around latent issues
-> > > with ARM's PMU drivers and the behavior changes they have instigated,
-> > > except for 5c816728651a ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE
-> > > capability") where I wrote the original version, there doesn't seem to
-> > > have been progress made on the ARM PMU driver nor on ARM testing -
-> > > which was why such an issue could exist for so long, across numerous
-> > > Linux releases and ultimately break Hector and Martin.
-> >
-> > Ian, which latent issues in the PMU drivers are you referring to?
+
+
+On 12/01/2024 06:49, Kunwu Chan wrote:
+> kasprintf() returns a pointer to dynamically allocated memory
+> which can be NULL upon failure.
 > 
-> Core PMUs generally have a lookup from legacy to non-legacy event,
-> from the past discussion this was missing on the problematic PMUs
-> hence the sysfs versions.
-
-I don't know what you mean there, so I think you may have the wrong end of the
-stick.
-
-All the ARM PMU drivers handle revelant PERF_EVENT_TYPE_HARDWARE events
-directly; they check perf_event_attr::type, and interpret
-perf_event_attr::config dependent upon this. 
-
-For example, the Apple M1 PMU driver has a table mapping
-PERF_COUNT_HW_CPU_CYCLES and PERF_COUNT_HW_INSTRUCTIONS to its native events:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/apple_m1_cpu_pmu.c?h=v6.7#n134
-
-... which is used by the m1_pmu_map_event() and m2_pmu_map_event() callbacks:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/apple_m1_cpu_pmu.c?h=v6.7#n485
-
-... which is used by __hw_perf_event_init() when called by armpmu_event_init,
-which is used as the pmu::event_init() callback:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/arm_pmu.c?h=v6.7#n443
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/arm_pmu.c?h=v6.7#n500
-
-The sysfs events were added so that PMU-specific events (in the namespace of
-the PMU's dynamic type id) could be advertised to userspace. Those weren't
-added in lieu of the PERF_EVENT_TYPE_HARDWARE events.
-
-When support for big.LITTLE was added (years prior to the introduction of the
-extended HW type support), it was necessary to use those sysfs events to target
-events to specific PMUs (since those used the PMU's dynamic type id, and would
-only be handled by that specific PMU). Hence why Marc and Hector were using
-those events on their systems.
-
-AFAICT there's nothing missing from the drivers w.r.t. event mapping.
-
-The problem Hector and Marc encountered was the result of a number of
-interacting parts:
-
-1) The logic in the perf tool to detect support for extended type support was
-   not robust to PMUs requiring event filters and failed to detect support for
-   the extended type for the Apple PMUs which require the exclude_guest filter.
-
-2) The interpretation of 'pmu/event/' was changed to try to interpret 'event'
-   as a PERF_EVENT_TYPE_HARDWARE event. For the Apple PMU, this changed the
-   interpretation of 'apple_pmu_name/cycles/' and
-   'apple_pmu_name/instructions/'.
-
-3) Even in the absence of (detected) support for extended type support, the
-   perf tool interpreted 'apple_pmu_name/cycles/' and
-   'apple_pmu_name/instructions/' as PERF_EVENT_TYPE_HARDWARE events, but since
-   it thought that the kernel didn't support the extended HW type, it didn't
-   set the extended bits to target specific PMUs. Hence the kernel didn't know
-   which PMUs to route the events to specifically, and those were handled by an
-   arbitrary PMU which could handle PERF_EVENT_TYPE_HARDWARE events.
-
-... hence the issue that Hector and Marc reported with events going to a
-different PMU from what they explicitly requested.
-
-As I've said before, I think that (2) is a problem in its own right, since even
-with (1) fixed, clashing event names could have different semantics, and it
-would be better to have a distinct syntax for "PERF_EVENT_TYPE_HARDWARE event
-on this specific PMU" vs "native event on this PMU".
-
-> > I already pointed out that one of the problems you have claimed to be a driver
-> > bug is actually due to userspace incorrectly detecting support for the extended
-> > HW type, and I suggested some options which you have so far ignored:
-> >
-> >   https://lore.kernel.org/lkml/ZV-CUlQhlkdOzfFZ@FVFF77S0Q05N.cambridge.arm.com/
-> >   https://lore.kernel.org/lkml/ZV-ItX1eMeIdo_00@FVFF77S0Q05N.cambridge.arm.com/
+> Uniformly handle resource release in error paths. And when an
+> error occurs, an error pointer should be returned.
 > 
-> Those suggestions look fine but you seemed to be suggesting testing.
+> Fixes: bdecf76e319a ("cxl: Fix coredump generation when cxl_get_fd() is used")
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> Cc: Kunwu Chan <kunwu.chan@hotmail.com>
+> Suggested-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> ---
 
-I was only asking for an opinion on the analysis/suggestion, no testing
-necessary.
+Thanks!
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
 
-> Lacking hardware with the broken PMU(s) I'm not able to do this. Could
-> you turn the suggestion into a patch and test on BIG.little? I can
-> test on Intel Alderlake.
+   Fred
 
-I've spun up the diff below, which works in local testing. I'll go write up a
-commit message and send it out as a proper patch shortly.
 
-Mark.
-
----->8----
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index b0fc48be623f..4f67e8f00a4d 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -232,7 +232,6 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
- bool is_event_supported(u8 type, u64 config)
- {
- 	bool ret = true;
--	int open_return;
- 	struct evsel *evsel;
- 	struct perf_event_attr attr = {
- 		.type = type,
-@@ -246,20 +245,32 @@ bool is_event_supported(u8 type, u64 config)
- 
- 	evsel = evsel__new(&attr);
- 	if (evsel) {
--		open_return = evsel__open(evsel, NULL, tmap);
--		ret = open_return >= 0;
-+		ret = evsel__open(evsel, NULL, tmap) >= 0;
- 
--		if (open_return == -EACCES) {
-+		if (!ret) {
- 			/*
--			 * This happens if the paranoid value
-+			 * The event may fail to open if the paranoid value
- 			 * /proc/sys/kernel/perf_event_paranoid is set to 2
--			 * Re-run with exclude_kernel set; we don't do that
--			 * by default as some ARM machines do not support it.
--			 *
-+			 * Re-run with exclude_kernel set; we don't do that by
-+			 * default as some ARM machines do not support it.
- 			 */
- 			evsel->core.attr.exclude_kernel = 1;
- 			ret = evsel__open(evsel, NULL, tmap) >= 0;
- 		}
-+
-+		if (!ret) {
-+			/*
-+			 * The event may fail to open if the PMU requires
-+			 * exclude_guest to be set (e.g. as the Apple M1 PMU
-+			 * requires).
-+			 * Re-run with exclude_guest set; we don't do that by
-+			 * default as it's equally legitimate for another PMU
-+			 * driver to require that exclude_guest is clear.
-+			 */
-+			evsel->core.attr.exclude_guest = 1;
-+			ret = evsel__open(evsel, NULL, tmap) >= 0;
-+		}
-+
- 		evsel__delete(evsel);
- 	}
- 
+> v2: Deal with error path
+> ---
+>   drivers/misc/cxl/api.c | 18 ++++++++++++++----
+>   1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/misc/cxl/api.c b/drivers/misc/cxl/api.c
+> index d85c56530863..b49bc3d29fc0 100644
+> --- a/drivers/misc/cxl/api.c
+> +++ b/drivers/misc/cxl/api.c
+> @@ -389,19 +389,22 @@ struct file *cxl_get_fd(struct cxl_context *ctx, struct file_operations *fops,
+>   			int *fd)
+>   {
+>   	struct file *file;
+> -	int rc, flags, fdtmp;
+> +	int rc = 0, flags, fdtmp;
+>   	char *name = NULL;
+>   
+>   	/* only allow one per context */
+> -	if (ctx->mapping)
+> -		return ERR_PTR(-EEXIST);
+> +	if (ctx->mapping) {
+> +		rc = -EEXIST;
+> +		goto err;
+> +	}
+>   
+>   	flags = O_RDWR | O_CLOEXEC;
+>   
+>   	/* This code is similar to anon_inode_getfd() */
+>   	rc = get_unused_fd_flags(flags);
+>   	if (rc < 0)
+> -		return ERR_PTR(rc);
+> +		goto err;
+> +
+>   	fdtmp = rc;
+>   
+>   	/*
+> @@ -419,6 +422,10 @@ struct file *cxl_get_fd(struct cxl_context *ctx, struct file_operations *fops,
+>   		fops = (struct file_operations *)&afu_fops;
+>   
+>   	name = kasprintf(GFP_KERNEL, "cxl:%d", ctx->pe);
+> +	if (!name) {
+> +		rc = -ENOMEM;
+> +		goto err_fd;
+> +	}
+>   	file = cxl_getfile(name, fops, ctx, flags);
+>   	kfree(name);
+>   	if (IS_ERR(file))
+> @@ -430,6 +437,9 @@ struct file *cxl_get_fd(struct cxl_context *ctx, struct file_operations *fops,
+>   
+>   err_fd:
+>   	put_unused_fd(fdtmp);
+> +err:
+> +	if (rc < 0)
+> +		return ERR_PTR(rc);
+>   	return NULL;
+>   }
+>   EXPORT_SYMBOL_GPL(cxl_get_fd);
