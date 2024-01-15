@@ -1,483 +1,215 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FE418040
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 16:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C222B17BB1
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 16:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yngvason.is
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hxU0zzYP"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2045542eec3so2971177fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:06:42 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b="f1XqMvAM"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e775695c6so9636175e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:06:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705334801; x=1705939601; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=yngvason.is; s=google; t=1705334804; x=1705939604; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kn+1e/OzTz/hbLFYJ8GtJcSKI9NgZJACZLMKDxTIsf0=;
-        b=hxU0zzYPy+B8vxZLq4GLWqBEVn1tlWrZ4G8Z1VwF1+CAQqEXQSAw5QT3tT8di6d5a8
-         +X+fyUOPu8w0TsHEGB4Mer5IpypKAvmj+JRkdqlU4chjcagJLW+/gjEmeaWdbZXrzv/J
-         lknNVknvcR1mdyfZvAWyHKg/8OZE89r5nK2qj+jud524OBqTcSv48MNFudFkVidXSWCs
-         ttLJQ7Mxd8KsCD+SLT0kjlwMEItspKxi4LA7s4w/RKKIEu+NlmwlbWlOfSmpi9KS2JUD
-         1i6Fvd+qH6BL6VfGCJACL2/ZPpSGCQ+hsC9m/yxOvfXQowkCAs5oR8q9+Ve0wu7Hrw3R
-         2jvA==
+        bh=y7h5TOlHeh29R5MO3vqvyCpfRR+2j5wkj4KSWlgVsY0=;
+        b=f1XqMvAM/gkiRVln52kgZRjSUI4gyps3RPmoYbpMXTFmluU4ZidTR9NkP8eTukJL8q
+         TRSve6cFqM2/v1z9oNAM7jKdABO0kgtpVyivb0dL+MbC9U62OtYnre7GDDeUJfOMdSIi
+         nqQOrawB3i3S9IokaJSW3W/p9GOehJZj79/tE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705334801; x=1705939601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705334804; x=1705939604;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kn+1e/OzTz/hbLFYJ8GtJcSKI9NgZJACZLMKDxTIsf0=;
-        b=LpG8t4iYgRemYp3RoS33V6vAmDYZgse0gocU7sd1zMN0JyWOSWNXc671gLqwlm9DdK
-         Iu8tfYKrQWRywIg8+HpGiaLFggn5ZU5WO2bk75iuzWf+ecwTQQtA1Ll49OiXzYHvLIAW
-         9YUtAFFCkO5asbP7Ws5fbAeicyz/W4+0OASV+0j3IhEWy8OjxJcvlSGuWqIqTRMUZXzT
-         rTcVFQsKJZ7hvmD7zONb3gNEwpq89ih8yuQvcV61BJ/x48+kbOhfcm8MApkCyjeIQuag
-         ZmQ6o3bPDl5DO4rkxqJ+ptT2/HqYCgznodmXRDCmxlWnqseJFLrlwwzi2HL/+Nt94g+R
-         8Kww==
-X-Gm-Message-State: AOJu0Yzyt1HLA04VrWvRv9A/6ae+rjtuVDrO78pOcKCE93hqlS8AwoXW
-	INxOqIEGJ9TnWLe/sDBNSFPlNnRygvGngaznFfB2SMHyB3vz8Q==
-X-Google-Smtp-Source: AGHT+IHEcfJFAmuje7OgZUgxOXcY1Caf4X30rrKq/sFIMdn0BQ0zgmZIDD+ZRKPIMSDfKFVI2f+w1X4CKdh7lo3T8LA=
-X-Received: by 2002:a05:6870:9707:b0:206:de00:b86a with SMTP id
- n7-20020a056870970700b00206de00b86amr1350537oaq.38.1705334801632; Mon, 15 Jan
- 2024 08:06:41 -0800 (PST)
+        bh=y7h5TOlHeh29R5MO3vqvyCpfRR+2j5wkj4KSWlgVsY0=;
+        b=vn6u2dh2+XrWEbW25rDQBZJkbxWNCWTSlZc7QI6Wurx2/w2Gq701s1FUMU4ZX6q30v
+         /sLi8fLghGCvJU2hd8GSeNpSmL6ATFyCSpwDIlGaPnnTiIOkohk+N7o6ZTGLRg69ode4
+         enFK7ET6KE6PTGsVsNdV3Xibt0L6gYnrnQjKnhaweJWVJfnJTsDB1q4gXmkhMHfv2bnc
+         2e3VQHL4yAqo9GKdoDjW4LKTegCgoygaApZrGw0l+F4mbHDvFKUNC9jbfextllFIyZEW
+         SqLYLk9HqH3xNK+vsDbUHzxPvhWlLpHxj1RhmzNEzXJGiaQgH5YPbpSZwEI0kkWc/hJR
+         GVHg==
+X-Gm-Message-State: AOJu0Yz+DmkOxIvhSpmNvucK/I5QMYS+n15e3RX6g6O6jho7VV+cFK7g
+	OKtOPWWBac7iFF6EgZ90fqAvhBwY1XggRA==
+X-Google-Smtp-Source: AGHT+IHMlicTU5ZpLWspXuG4eSFL0osighJE+s/ckHvaTE3eH7QH7NJLEqO4581S2L63mZc6rAr+vw==
+X-Received: by 2002:a05:600c:524c:b0:40e:397e:16e7 with SMTP id fc12-20020a05600c524c00b0040e397e16e7mr3140605wmb.3.1705334804112;
+        Mon, 15 Jan 2024 08:06:44 -0800 (PST)
+Received: from andri-workstation.turninn.appdynamic.com ([2a01:8280:aa07:ad:7285:c2ff:fef0:4baf])
+        by smtp.gmail.com with ESMTPSA id l22-20020a05600c4f1600b0040d6b91efd9sm20174140wmq.44.2024.01.15.08.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 08:06:43 -0800 (PST)
+From: Andri Yngvason <andri@yngvason.is>
+To: Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org,
+	Simon Ser <contact@emersion.fr>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	Andri Yngvason <andri@yngvason.is>
+Subject: [PATCH v2 3/4] drm/amd/display: Add handling for new "force color format" property
+Date: Mon, 15 Jan 2024 16:05:53 +0000
+Message-ID: <20240115160554.720247-4-andri@yngvason.is>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240115160554.720247-1-andri@yngvason.is>
+References: <20240115160554.720247-1-andri@yngvason.is>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112163608.528453-1-krzysztof.kozlowski@linaro.org> <20240112163608.528453-3-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240112163608.528453-3-krzysztof.kozlowski@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 15 Jan 2024 17:06:30 +0100
-Message-ID: <CAMRc=MdcCZP5kgv7JBdy2m_naNbTSeq4MDE_3mk+1-5UD4ntwQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] reset: Instantiate reset GPIO controller for
- shared reset-gpios
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami <bgoswami@quicinc.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Peter Rosin <peda@axentia.se>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org, 
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, 
-	Sean Anderson <sean.anderson@seco.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 12, 2024 at 5:36=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> Devices sharing a reset GPIO could use the reset framework for
-> coordinated handling of that shared GPIO line.  We have several cases of
-> such needs, at least for Devicetree-based platforms.
->
-> If Devicetree-based device requests a reset line, while "resets"
-> Devicetree property is missing but there is a "reset-gpios" one,
-> instantiate a new "reset-gpio" platform device which will handle such
-> reset line.  This allows seamless handling of such shared reset-gpios
-> without need of changing Devicetree binding [1].
->
-> To avoid creating multiple "reset-gpio" platform devices, store the
-> Devicetree "reset-gpios" GPIO specifiers used for new devices on a
-> linked list.  Later such Devicetree GPIO specifier (phandle to GPIO
-> controller, GPIO number and GPIO flags) is used to check if reset
-> controller for given GPIO was already registered.
->
-> If two devices have conflicting "reset-gpios" property, e.g. with
-> different ACTIVE_xxx flags, this would allow to spawn two separate
-> "reset-gpio" devices, where the second would fail probing on busy GPIO
-> request.
->
-> Link: https://lore.kernel.org/all/YXi5CUCEi7YmNxXM@robh.at.kernel.org/ [1=
-]
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Cc: Sean Anderson <sean.anderson@seco.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/reset/core.c             | 227 +++++++++++++++++++++++++++++--
->  include/linux/reset-controller.h |   4 +
->  2 files changed, 217 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index 4d5a78d3c085..86e33a703ad2 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -10,9 +10,13 @@
->  #include <linux/export.h>
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio/machine.h>
-> +#include <linux/idr.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/acpi.h>
-> +#include <linux/platform_device.h>
->  #include <linux/reset.h>
->  #include <linux/reset-controller.h>
->  #include <linux/slab.h>
-> @@ -23,6 +27,11 @@ static LIST_HEAD(reset_controller_list);
->  static DEFINE_MUTEX(reset_lookup_mutex);
->  static LIST_HEAD(reset_lookup_list);
->
-> +/* Protects reset_gpio_lookup_list */
-> +static DEFINE_MUTEX(reset_gpio_lookup_mutex);
-> +static LIST_HEAD(reset_gpio_lookup_list);
-> +static DEFINE_IDA(reset_gpio_ida);
-> +
->  /**
->   * struct reset_control - a reset control
->   * @rcdev: a pointer to the reset controller device
-> @@ -63,6 +72,16 @@ struct reset_control_array {
->         struct reset_control *rstc[] __counted_by(num_rstcs);
->  };
->
-> +/**
-> + * struct reset_gpio_lookup - lookup key for ad-hoc created reset-gpio d=
-evices
-> + * @of_args: phandle to the reset controller with all the args like GPIO=
- number
-> + * @list: list entry for the reset_gpio_lookup_list
-> + */
-> +struct reset_gpio_lookup {
-> +       struct of_phandle_args of_args;
-> +       struct list_head list;
-> +};
-> +
->  static const char *rcdev_name(struct reset_controller_dev *rcdev)
->  {
->         if (rcdev->dev)
-> @@ -813,13 +832,183 @@ static void __reset_control_put_internal(struct re=
-set_control *rstc)
->         kref_put(&rstc->refcnt, __reset_control_release);
->  }
->
-> +static bool __reset_gpios_args_match(const struct of_phandle_args *a1,
-> +                                    const struct of_phandle_args *a2)
-> +{
-> +       unsigned int i;
-> +
-> +       if (!a2)
-> +               return false;
-> +
-> +       if (a1->args_count !=3D a2->args_count)
-> +               return false;
-> +
-> +       for (i =3D 0; i < a1->args_count; i++)
-> +               if (a1->args[i] !=3D a2->args[i])
-> +                       return false;
-> +
-> +       return true;
-> +}
-> +
-> +static int __reset_add_reset_gpio_lookup(int id, struct device_node *np,
-> +                                        unsigned int gpio,
-> +                                        unsigned int of_flags)
-> +{
-> +       struct gpiod_lookup_table *lookup __free(kfree) =3D NULL;
-> +       struct gpio_device *gdev __free(gpio_device_put) =3D NULL;
-> +       char *label __free(kfree) =3D NULL;
+From: Werner Sembach <wse@tuxedocomputers.com>
 
-I got yelled at by Linus Torvalds personally for doing it like this. I
-know this is a common pattern in code using GLib but Linus wants auto
-variables to be initialized where they're declared...
+This commit implements the "force color format" drm property for the
+AMD GPU driver.
 
-> +       unsigned int lookup_flags;
-> +
-> +       /*
-> +        * Later we map GPIO flags between OF and Linux, however not all
-> +        * constants from include/dt-bindings/gpio/gpio.h and
-> +        * include/linux/gpio/machine.h match each other.
-> +        */
-> +       if (of_flags > GPIO_ACTIVE_LOW) {
-> +               pr_err("reset-gpio code does not support GPIO flags %u fo=
-r GPIO %u\n",
-> +                       of_flags, gpio);
-> +               return -EINVAL;
-> +       }
-> +
-> +       gdev =3D gpio_device_find_by_fwnode(of_fwnode_handle(np));
+Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+Co-Developed-by: Andri Yngvason <andri@yngvason.is>
+Signed-off-by: Andri Yngvason <andri@yngvason.is>
+Tested-by: Andri Yngvason <andri@yngvason.is>
+---
 
-... so this should become:
+Changes in v2:
+ - Renamed to "force color format" from "preferred color format"
+ - Modeset will fail if color format cannot be satisfied
 
-  struct gpio_device *gdev __free(gpio_device_put) =3D gpio_device_find(...=
-)
+---
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 63 ++++++++++++++++---
+ .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  4 ++
+ 2 files changed, 60 insertions(+), 7 deletions(-)
 
-and same for the rest.
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index cc4d1f7f97b98..26c4260c78d7b 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -5573,15 +5573,32 @@ static void fill_stream_properties_from_drm_display_mode(
+ 	timing_out->h_border_right = 0;
+ 	timing_out->v_border_top = 0;
+ 	timing_out->v_border_bottom = 0;
+-	/* TODO: un-hardcode */
+-	if (drm_mode_is_420_only(info, mode_in)
+-			|| (drm_mode_is_420_also(info, mode_in) && aconnector->force_yuv420_output))
++
++	if (connector_state
++			&& (connector_state->force_color_format == DRM_COLOR_FORMAT_YCBCR420
++			|| aconnector->force_yuv420_output) && drm_mode_is_420(info, mode_in))
+ 		timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
+-	else if ((connector->display_info.color_formats & DRM_COLOR_FORMAT_YCBCR444)
+-			&& stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
++	else if (connector_state
++			&& connector_state->force_color_format == DRM_COLOR_FORMAT_YCBCR444
++			&& connector->display_info.color_formats & DRM_COLOR_FORMAT_YCBCR444)
+ 		timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR444;
+-	else
++	else if (connector_state
++			&& connector_state->force_color_format == DRM_COLOR_FORMAT_RGB444
++			&& !drm_mode_is_420_only(info, mode_in))
+ 		timing_out->pixel_encoding = PIXEL_ENCODING_RGB;
++	else
++		/*
++		 * connector_state->force_color_format not possible
++		 * || connector_state->force_color_format == 0 (auto)
++		 * || connector_state->force_color_format == DRM_COLOR_FORMAT_YCBCR422
++		 */
++		if (drm_mode_is_420_only(info, mode_in))
++			timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
++		else if ((connector->display_info.color_formats & DRM_COLOR_FORMAT_YCBCR444)
++				&& stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
++			timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR444;
++		else
++			timing_out->pixel_encoding = PIXEL_ENCODING_RGB;
+ 
+ 	timing_out->timing_3d_format = TIMING_3D_FORMAT_NONE;
+ 	timing_out->display_color_depth = convert_color_depth_from_display_info(
+@@ -6685,6 +6702,33 @@ static enum dc_status dm_validate_stream_and_context(struct dc *dc,
+ 	return dc_result;
+ }
+ 
++static enum dc_status
++dm_validate_stream_color_format(const struct drm_connector_state *drm_state,
++				const struct dc_stream_state *stream)
++{
++	if (!drm_state->force_color_format)
++		return DC_OK;
++
++	enum dc_pixel_encoding encoding = PIXEL_ENCODING_UNDEFINED;
++	switch (drm_state->force_color_format) {
++	case DRM_COLOR_FORMAT_RGB444:
++		encoding = PIXEL_ENCODING_RGB;
++		break;
++	case DRM_COLOR_FORMAT_YCBCR444:
++		encoding = PIXEL_ENCODING_YCBCR444;
++		break;
++	case DRM_COLOR_FORMAT_YCBCR422:
++		encoding = PIXEL_ENCODING_YCBCR422;
++		break;
++	case DRM_COLOR_FORMAT_YCBCR420:
++		encoding = PIXEL_ENCODING_YCBCR420;
++		break;
++	}
++
++	return encoding == stream->timing.pixel_encoding ?
++	       DC_OK : DC_UNSUPPORTED_VALUE;
++}
++
+ struct dc_stream_state *
+ create_validate_stream_for_sink(struct amdgpu_dm_connector *aconnector,
+ 				const struct drm_display_mode *drm_mode,
+@@ -6717,6 +6761,9 @@ create_validate_stream_for_sink(struct amdgpu_dm_connector *aconnector,
+ 		if (dc_result == DC_OK)
+ 			dc_result = dm_validate_stream_and_context(adev->dm.dc, stream);
+ 
++		if (dc_result == DC_OK)
++			dc_result = dm_validate_stream_color_format(drm_state, stream);
++
+ 		if (dc_result != DC_OK) {
+ 			DRM_DEBUG_KMS("Mode %dx%d (clk %d) failed DC validation with error %d (%s)\n",
+ 				      drm_mode->hdisplay,
+@@ -7512,8 +7559,10 @@ void amdgpu_dm_connector_init_helper(struct amdgpu_display_manager *dm,
+ 				adev->mode_info.underscan_vborder_property,
+ 				0);
+ 
+-	if (!aconnector->mst_root)
++	if (!aconnector->mst_root) {
+ 		drm_connector_attach_max_bpc_property(&aconnector->base, 8, 16);
++		drm_connector_attach_force_color_format_property(&aconnector->base);
++	}
+ 
+ 	aconnector->base.state->max_bpc = 16;
+ 	aconnector->base.state->max_requested_bpc = aconnector->base.state->max_bpc;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index 941e96f100f4e..437d50f53eb97 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -601,6 +601,10 @@ dm_dp_add_mst_connector(struct drm_dp_mst_topology_mgr *mgr,
+ 	if (connector->max_bpc_property)
+ 		drm_connector_attach_max_bpc_property(connector, 8, 16);
+ 
++	connector->force_color_format_property = master->base.force_color_format_property;
++	if (connector->force_color_format_property)
++		drm_connector_attach_force_color_format_property(&aconnector->base);
++
+ 	connector->vrr_capable_property = master->base.vrr_capable_property;
+ 	if (connector->vrr_capable_property)
+ 		drm_connector_attach_vrr_capable_property(connector);
+-- 
+2.43.0
 
-Don't get me wrong, I love cleanup.h but there's a (unofficial for
-now) coding style.
-
-> +       if (!gdev)
-> +               return -EPROBE_DEFER;
-> +
-> +       label =3D kstrdup(gpio_device_get_label(gdev), GFP_KERNEL);
-> +       if (!label)
-> +               return -EINVAL;
-> +
-> +       /* Size: one lookup entry plus sentinel */
-> +       lookup =3D kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
-> +       if (!lookup)
-> +               return -ENOMEM;
-> +
-> +       lookup->dev_id =3D kasprintf(GFP_KERNEL, "reset-gpio.%d", id);
-> +       if (!lookup->dev_id)
-> +               return -ENOMEM;
-> +
-> +       lookup_flags =3D GPIO_PERSISTENT;
-> +       lookup_flags |=3D of_flags & GPIO_ACTIVE_LOW;
-> +       lookup->table[0] =3D GPIO_LOOKUP(no_free_ptr(label), gpio, "reset=
-",
-> +                                      lookup_flags);
-> +
-> +       gpiod_add_lookup_table(no_free_ptr(lookup));
-
-You told me that this doesn't need to be removed or ever freed but a
-comment on that would be in order.
-
-> +
-> +       return 0;
-> +}
-> +
-> +/*
-> + * @reset_args:        phandle to the GPIO provider with all the args li=
-ke GPIO number
-> + */
-> +static int __reset_add_reset_gpio_device(const struct of_phandle_args *a=
-rgs)
-> +{
-> +       struct reset_gpio_lookup *rgpio_dev;
-> +       struct platform_device *pdev;
-> +       int id, ret;
-> +
-> +       /*
-> +        * Registering reset-gpio device might cause immediate
-> +        * bind, resulting in its probe() registering new reset controlle=
-r thus
-> +        * taking reset_list_mutex lock via reset_controller_register().
-> +        */
-> +       lockdep_assert_not_held(&reset_list_mutex);
-
-So how does dumping the stack help here exactly?
-
-> +
-> +       mutex_lock(&reset_gpio_lookup_mutex);
-> +
-> +       list_for_each_entry(rgpio_dev, &reset_gpio_lookup_list, list) {
-> +               if (args->np =3D=3D rgpio_dev->of_args.np) {
-> +                       if (__reset_gpios_args_match(args, &rgpio_dev->of=
-_args))
-> +                               goto out; /* Already on the list, done */
-> +               }
-> +       }
-> +
-> +       id =3D ida_alloc(&reset_gpio_ida, GFP_KERNEL);
-> +       if (id < 0) {
-> +               ret =3D id;
-> +               goto err_unlock;
-> +       }
-> +
-> +       /*
-> +        * Not freed in normal path, persisent subsystem data (which is a=
-ssumed
-> +        * also in the reset-gpio driver).
-> +        */
-> +       rgpio_dev =3D kzalloc(sizeof(*rgpio_dev), GFP_KERNEL);
-> +       if (!rgpio_dev) {
-> +               ret =3D -ENOMEM;
-> +               goto err_ida_free;
-> +       }
-> +
-> +       ret =3D __reset_add_reset_gpio_lookup(id, args->np, args->args[0]=
-,
-> +                                           args->args[1]);
-> +       if (ret < 0)
-> +               goto err_kfree;
-> +
-> +       rgpio_dev->of_args =3D *args;
-> +       /*
-> +        * We keep the device_node reference, but of_args.np is put at th=
-e end
-> +        * of __of_reset_control_get(), so get it one more time.
-> +        * Hold reference as long as rgpio_dev memory is valid.
-> +        */
-> +       of_node_get(rgpio_dev->of_args.np);
-> +       pdev =3D platform_device_register_data(NULL, "reset-gpio", id,
-> +                                            &rgpio_dev->of_args,
-> +                                            sizeof(rgpio_dev->of_args));
-> +       ret =3D PTR_ERR_OR_ZERO(pdev);
-> +       if (ret)
-> +               goto err_put;
-> +
-> +       list_add(&rgpio_dev->list, &reset_gpio_lookup_list);
-> +
-> +out:
-> +       mutex_unlock(&reset_gpio_lookup_mutex);
-> +
-> +       return 0;
-> +
-> +err_put:
-> +       of_node_put(rgpio_dev->of_args.np);
-> +err_kfree:
-> +       kfree(rgpio_dev);
-> +err_ida_free:
-> +       ida_free(&reset_gpio_ida, id);
-> +err_unlock:
-> +       mutex_unlock(&reset_gpio_lookup_mutex);
-> +
-
-You're already using cleanup helpers above, why not here too? Would
-make this function much more readable and allow you to drop all but
-the ida_free() here. Possibly you'd need to define the __free()
-callback for of_node_put() though.
-
-> +       return ret;
-> +}
-> +
-> +static struct reset_controller_dev *__reset_find_rcdev(const struct of_p=
-handle_args *args,
-> +                                                      bool gpio_fallback=
-)
-> +{
-> +       struct reset_controller_dev *r, *rcdev;
-> +
-> +       lockdep_assert_held(&reset_list_mutex);
-> +
-> +       rcdev =3D NULL;
-> +       list_for_each_entry(r, &reset_controller_list, list) {
-> +               if (args->np =3D=3D r->of_node) {
-> +                       if (gpio_fallback) {
-> +                               if (__reset_gpios_args_match(args, r->of_=
-args)) {
-> +                                       rcdev =3D r;
-> +                                       break;
-> +                               }
-> +                       } else {
-> +                               rcdev =3D r;
-> +                               break;
-> +                       }
-> +               }
-> +       }
-> +
-> +       return rcdev;
-> +}
-> +
->  struct reset_control *
->  __of_reset_control_get(struct device_node *node, const char *id, int ind=
-ex,
->                        bool shared, bool optional, bool acquired)
->  {
-> +       struct of_phandle_args args =3D {0};
-> +       bool gpio_fallback =3D false;
->         struct reset_control *rstc;
-> -       struct reset_controller_dev *r, *rcdev;
-> -       struct of_phandle_args args;
-> +       struct reset_controller_dev *rcdev;
->         int rstc_id;
->         int ret;
->
-> @@ -839,39 +1028,49 @@ __of_reset_control_get(struct device_node *node, c=
-onst char *id, int index,
->                                          index, &args);
->         if (ret =3D=3D -EINVAL)
->                 return ERR_PTR(ret);
-> -       if (ret)
-> -               return optional ? NULL : ERR_PTR(ret);
-> +       if (ret) {
-> +               /*
-> +                * There can be only one reset-gpio for regular devices, =
-so
-> +                * don't bother with GPIO index.
-> +                */
-> +               ret =3D of_parse_phandle_with_args(node, "reset-gpios", "=
-#gpio-cells",
-> +                                                0, &args);
-> +               if (ret)
-> +                       return optional ? NULL : ERR_PTR(ret);
->
-> -       mutex_lock(&reset_list_mutex);
-> -       rcdev =3D NULL;
-> -       list_for_each_entry(r, &reset_controller_list, list) {
-> -               if (args.np =3D=3D r->of_node) {
-> -                       rcdev =3D r;
-> -                       break;
-> +               gpio_fallback =3D true;
-> +
-> +               ret =3D __reset_add_reset_gpio_device(&args);
-> +               if (ret) {
-> +                       rstc =3D ERR_PTR(ret);
-> +                       goto out_put;
->                 }
->         }
->
-> +       mutex_lock(&reset_list_mutex);
-> +       rcdev =3D __reset_find_rcdev(&args, gpio_fallback);
->         if (!rcdev) {
->                 rstc =3D ERR_PTR(-EPROBE_DEFER);
-> -               goto out;
-> +               goto out_unlock;
->         }
->
->         if (WARN_ON(args.args_count !=3D rcdev->of_reset_n_cells)) {
->                 rstc =3D ERR_PTR(-EINVAL);
-> -               goto out;
-> +               goto out_unlock;
->         }
->
->         rstc_id =3D rcdev->of_xlate(rcdev, &args);
->         if (rstc_id < 0) {
->                 rstc =3D ERR_PTR(rstc_id);
-> -               goto out;
-> +               goto out_unlock;
->         }
->
->         /* reset_list_mutex also protects the rcdev's reset_control list =
-*/
->         rstc =3D __reset_control_get_internal(rcdev, rstc_id, shared, acq=
-uired);
->
-> -out:
-> +out_unlock:
->         mutex_unlock(&reset_list_mutex);
-> +out_put:
->         of_node_put(args.np);
-
-I suggest reworking this to use cleanup.h as well.
-
-Bartosz
-
->
->         return rstc;
-> diff --git a/include/linux/reset-controller.h b/include/linux/reset-contr=
-oller.h
-> index 0fa4f60e1186..e064473215de 100644
-> --- a/include/linux/reset-controller.h
-> +++ b/include/linux/reset-controller.h
-> @@ -61,6 +61,9 @@ struct reset_control_lookup {
->   * @dev: corresponding driver model device struct
->   * @of_node: corresponding device tree node as phandle target
->   * @of_reset_n_cells: number of cells in reset line specifiers
-> + * TODO: of_args have of_node, so we have here duplication
-> + * @of_args: for reset-gpios controllers: corresponding phandle args wit=
-h GPIO
-> + *           number complementing of_node
->   * @of_xlate: translation function to translate from specifier as found =
-in the
->   *            device tree to id as given to the reset control ops, defau=
-lts
->   *            to :c:func:`of_reset_simple_xlate`.
-> @@ -74,6 +77,7 @@ struct reset_controller_dev {
->         struct device *dev;
->         struct device_node *of_node;
->         int of_reset_n_cells;
-> +       const struct of_phandle_args *of_args;
->         int (*of_xlate)(struct reset_controller_dev *rcdev,
->                         const struct of_phandle_args *reset_spec);
->         unsigned int nr_resets;
-> --
-> 2.34.1
->
