@@ -1,230 +1,193 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC3BBE5A
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S+zEg/YC"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4b87d79a7d8so1395113e0c.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 00:50:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705308615; x=1705913415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jnB0KQ9n30qRjDbWGaCy0bZrFlz+zGMbjPXvFhazWYk=;
-        b=S+zEg/YCg0kQRHrdN1WsXg26TdPCG22tM66mOsViXlj3oJnd6+hQU7m9foE5tvKbGr
-         8EXRWNCcDLJAK6SMWBrey94QLJumiUQLR0wLsQf03bkGZuGCtD7BOeiFa4GLf+PpTxGl
-         TYfHG618xgbTlnT50BK53ZQguH1vOfmIocLD57ob5Ku4ueHubpHSJtSV9OT1r/Ofhi4i
-         +nWnzODT1K/3SVvjTdhom4hf1ZnjQNFh1YIg8iWwdzPGwpu02sNdA5FPGVuDlih+XIbY
-         2n68rdgtrptK7a12+dX5F9lCC/5FpJJWEQkjlyg9+3gGrfWDKUOCq21/aUcOSFqzVYtQ
-         +Mvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705308615; x=1705913415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jnB0KQ9n30qRjDbWGaCy0bZrFlz+zGMbjPXvFhazWYk=;
-        b=ZIqIi1Dyoms0FChYD/t87cU4SxZD+v4RMo7LAspC8F9OYG0kIpcJaOskzJvGnYN5Wi
-         5RlhG5Z8+CvMFwshHyNZJ5hzih+HJvkdY34lyuqGnzb/zofzAffDu8/WLdIumaulM5FQ
-         P063Jyr+5HpxuWV/ItW51pwujB2FL2V9QyAdwXMMve6zujslJSf7V6Bj4+Ia+a8lKSlZ
-         zHB09iYDjcVeFACdFbSdbxaQHW1GdSw77vaKWQUVsecAw10kTkHWnHI87imB91ToBo0z
-         H1BfSuqpBmznmNqumxEHXgitbtA4SMh79W8VZnGP9Bu7c9yUXzRK0hpK+IfuFc8XnFkc
-         6c8Q==
-X-Gm-Message-State: AOJu0YxROUeDOHSKY6aVSVEVUaW2ma8rOAC+qpsgKfT0n1Iu+G/NkywE
-	8MgmmiUpchnrbz0GbqNh2gqk5u2fSbPoLVA3hqd/IO2/xp6aAw==
-X-Google-Smtp-Source: AGHT+IER2LHdcYASLqpy/PfdO8Gpg40SfDQcuW1fxoPYHs8Q2bhDpNHi14VF6ecCs7jo2egVbIqPe1MtNxnKV+D9l+8=
-X-Received: by 2002:a05:6122:448e:b0:4b6:ca2c:b420 with SMTP id
- cz14-20020a056122448e00b004b6ca2cb420mr1640394vkb.2.1705308615173; Mon, 15
- Jan 2024 00:50:15 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81FB9C8D2
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36B472F4;
+	Mon, 15 Jan 2024 00:51:10 -0800 (PST)
+Received: from [10.57.76.47] (unknown [10.57.76.47])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B77D3F6C4;
+	Mon, 15 Jan 2024 00:50:20 -0800 (PST)
+Message-ID: <1188e67e-5c04-4bb5-b242-78d92c3fc85c@arm.com>
+Date: Mon, 15 Jan 2024 08:50:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240113094204.017594027@linuxfoundation.org>
-In-Reply-To: <20240113094204.017594027@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 15 Jan 2024 14:20:04 +0530
-Message-ID: <CA+G9fYsg1tT9-HHRbPmiQAV+BZ3o7BJepQzskYmRU=JHLxucEw@mail.gmail.com>
-Subject: Re: [PATCH 6.1 0/4] 6.1.73-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 02/10] mm: Non-pmd-mappable, large folios for
+ folio_add_new_anon_rmap()
+Content-Language: en-GB
+To: Jiri Olsa <olsajiri@gmail.com>, David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Yin Fengwei <fengwei.yin@intel.com>,
+ Yu Zhao <yuzhao@google.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Yang Shi
+ <shy828301@gmail.com>, "Huang, Ying" <ying.huang@intel.com>,
+ Zi Yan <ziy@nvidia.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Itaru Kitayama <itaru.kitayama@gmail.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ John Hubbard <jhubbard@nvidia.com>, David Rientjes <rientjes@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Hugh Dickins <hughd@google.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Barry Song <v-songbaohua@oppo.com>
+References: <20231207161211.2374093-1-ryan.roberts@arm.com>
+ <20231207161211.2374093-3-ryan.roberts@arm.com> <ZaMR2EWN-HvlCfUl@krava>
+ <41dc7dff-1ea8-4894-a487-88d46ec2b2d8@redhat.com> <ZaRKMwKJIBmh8-lD@krava>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <ZaRKMwKJIBmh8-lD@krava>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, 13 Jan 2024 at 15:32, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.1.73 release.
-> There are 4 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Mon, 15 Jan 2024 09:41:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.1.73-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.1.y
-> and the diffstat can be found below.
->
+On 14/01/2024 20:55, Jiri Olsa wrote:
+> On Sun, Jan 14, 2024 at 06:33:56PM +0100, David Hildenbrand wrote:
+>> On 13.01.24 23:42, Jiri Olsa wrote:
+>>> On Thu, Dec 07, 2023 at 04:12:03PM +0000, Ryan Roberts wrote:
+>>>> In preparation for supporting anonymous multi-size THP, improve
+>>>> folio_add_new_anon_rmap() to allow a non-pmd-mappable, large folio to be
+>>>> passed to it. In this case, all contained pages are accounted using the
+>>>> order-0 folio (or base page) scheme.
+>>>>
+>>>> Reviewed-by: Yu Zhao <yuzhao@google.com>
+>>>> Reviewed-by: Yin Fengwei <fengwei.yin@intel.com>
+>>>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>>>> Reviewed-by: Barry Song <v-songbaohua@oppo.com>
+>>>> Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>>>> Tested-by: John Hubbard <jhubbard@nvidia.com>
+>>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>> ---
+>>>>   mm/rmap.c | 28 ++++++++++++++++++++--------
+>>>>   1 file changed, 20 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/mm/rmap.c b/mm/rmap.c
+>>>> index 2a1e45e6419f..846fc79f3ca9 100644
+>>>> --- a/mm/rmap.c
+>>>> +++ b/mm/rmap.c
+>>>> @@ -1335,32 +1335,44 @@ void page_add_anon_rmap(struct page *page, struct vm_area_struct *vma,
+>>>>    * This means the inc-and-test can be bypassed.
+>>>>    * The folio does not have to be locked.
+>>>>    *
+>>>> - * If the folio is large, it is accounted as a THP.  As the folio
+>>>> + * If the folio is pmd-mappable, it is accounted as a THP.  As the folio
+>>>>    * is new, it's assumed to be mapped exclusively by a single process.
+>>>>    */
+>>>>   void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
+>>>>   		unsigned long address)
+>>>>   {
+>>>> -	int nr;
+>>>> +	int nr = folio_nr_pages(folio);
+>>>> -	VM_BUG_ON_VMA(address < vma->vm_start || address >= vma->vm_end, vma);
+>>>> +	VM_BUG_ON_VMA(address < vma->vm_start ||
+>>>> +			address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
+>>>
+>>> hi,
+>>> I'm hitting this bug (console output below) with adding uprobe
+>>> on simple program like:
+>>>
+>>>    $ cat up.c
+>>>    int main(void)
+>>>    {
+>>>       return 0;
+>>>    }
+>>>
+>>>    # bpftrace -e 'uprobe:/home/jolsa/up:_start {}'
+>>>
+>>>    $ ./up
+>>>
+>>> it's on top of current linus tree master:
+>>>    052d534373b7 Merge tag 'exfat-for-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat
+>>>
+>>> before this patch it seems to work, I can send my .config if needed
+
+Thanks for the bug report!
+
+>>
+>> bpf only inserts a small folio, so no magic there.
+>>
+>> It was:
+>> 	VM_BUG_ON_VMA(address < vma->vm_start || address >= vma->vm_end, vma);
+>> And now it is
+>> 	VM_BUG_ON_VMA(address < vma->vm_start || address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
+>>
+>> I think this change is sane. As long as the address is aligned to full pages
+>> (which it better should be)
+>>
+>> Staring at uprobe_write_opcode, likely vaddr isn't aligned ...
+>>
+>> Likely (hopefully) that is not an issue for __folio_set_anon(), because linear_page_index()
+>> will mask these bits off.
+>>
+>>
+>> Would the following change fix it for you?
+
+And thanks for fixing my mess so quickly, David.
+
+FWIW, I agree with your diagnosis. One small suggestion below.
+
+> 
+> great, that fixes it for me, you can add my
+> 
+> Tested-by: Jiri Olsa <jolsa@kernel.org>
+> 
 > thanks,
->
-> greg k-h
+> jirka
+> 
+>>
+>> From c640a8363e47bc96965a35115a040b5f876c4320 Mon Sep 17 00:00:00 2001
+>> From: David Hildenbrand <david@redhat.com>
+>> Date: Sun, 14 Jan 2024 18:32:57 +0100
+>> Subject: [PATCH] tmp
+>>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  kernel/events/uprobes.c | 2 +-
+>>  mm/rmap.c               | 1 +
+>>  2 files changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+>> index 485bb0389b488..929e98c629652 100644
+>> --- a/kernel/events/uprobes.c
+>> +++ b/kernel/events/uprobes.c
+>> @@ -537,7 +537,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+>>  		}
+>>  	}
+>> -	ret = __replace_page(vma, vaddr, old_page, new_page);
+>> +	ret = __replace_page(vma, vaddr & PAGE_MASK, old_page, new_page);
+>>  	if (new_page)
+>>  		put_page(new_page);
+>>  put_old:
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index f5d43edad529a..a903db4df6b97 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -1408,6 +1408,7 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
+>>  {
+>>  	int nr = folio_nr_pages(folio);
+>> +	VM_WARN_ON_FOLIO(!IS_ALIGNED(address, PAGE_SIZE), folio);
 
+nit: Is it worth also adding this to __folio_add_anon_rmap() so that
+folio_add_anon_rmap_ptes() and folio_add_anon_rmap_pmd() also benefit?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Regardless:
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
-## Build
-* kernel: 6.1.73-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-6.1.y
-* git commit: ccaabe94627897d3e2d2234aa6b2196c32a63325
-* git describe: v6.1.72-5-gccaabe946278
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.7=
-2-5-gccaabe946278/
+>>  	VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
+>>  	VM_BUG_ON_VMA(address < vma->vm_start ||
+>>  			address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
+>> -- 
+>> 2.43.0
+>>
+>>
+>>
+>> -- 
+>> Cheers,
+>>
+>> David / dhildenb
+>>
 
-## Test Regressions (compared to v6.1.71)
-
-## Metric Regressions (compared to v6.1.71)
-
-## Test Fixes (compared to v6.1.71)
-
-## Metric Fixes (compared to v6.1.71)
-
-## Test result summary
-total: 253149, pass: 214510, fail: 4787, skip: 33543, xfail: 309
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 151 total, 150 passed, 1 failed
-* arm64: 52 total, 52 passed, 0 failed
-* i386: 39 total, 39 passed, 0 failed
-* mips: 26 total, 26 passed, 0 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 36 total, 36 passed, 0 failed
-* riscv: 15 total, 14 passed, 1 failed
-* s390: 16 total, 16 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 8 total, 8 passed, 0 failed
-* x86_64: 46 total, 46 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-kvm
-* kselftest-lib
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-vm
-* kselftest-x86
-* kselftest-zram
-* kunit
-* libgpiod
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-fsx
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* network-basic-tests
-* perf
-* rcutorture
-* v4l2-compliance
-
---
-Linaro LKFT
-https://lkft.linaro.org
