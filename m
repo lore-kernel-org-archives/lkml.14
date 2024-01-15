@@ -1,55 +1,58 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from mail.enpas.org (zhong.enpas.org [46.38.239.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B8518E11
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jADQY+aV"
-Date: Mon, 15 Jan 2024 14:47:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705330079;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=70gQbu/giMgMkf4XDme2+PvJ3v9UrOA9656rWrCyjgc=;
-	b=jADQY+aVG6V1M1+JSosgf/4FbPMNq0qEkomdtCuRkhoJjLA6ByHC5wE/Ks7JMP4XtYKpWH
-	iL8ltxfsg/AbK4Ldf4Tb1l0GdsuYrG5zteM2dFMJB1q8DY8k0Y7DkZ4/UlScefpV5mQdW8
-	6mNT7mUFP8OzaSoLXXdMfpcEJuWxMw4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Ruidong Tian <tianruidong@linux.alibaba.com>, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
-	catalin.marinas@arm.com, will@kernel.org
-Subject: Re: [PATCH] KVM: arm64: Add missing ERX*_EL1 registers
-Message-ID: <ZaVFmtKbtCJtaAAu@linux.dev>
-References: <20240110075739.8291-1-tianruidong@linux.alibaba.com>
- <867ckh9y7l.wl-maz@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FDF175B6;
+	Mon, 15 Jan 2024 14:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enpas.org
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.enpas.org (Postfix) with ESMTPSA id D55ED101649;
+	Mon, 15 Jan 2024 14:48:49 +0000 (UTC)
+From: Max Staudt <max@enpas.org>
+To: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	max@enpas.org
+Subject: [PATCH v1 3/7] HID: playstation: DS4: Don't fail on FW/HW version request
+Date: Mon, 15 Jan 2024 23:45:34 +0900
+Message-Id: <20240115144538.12018-4-max@enpas.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240115144538.12018-1-max@enpas.org>
+References: <20240115144538.12018-1-max@enpas.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <867ckh9y7l.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 10, 2024 at 12:20:30PM +0000, Marc Zyngier wrote:
-> If my reading of the ARM ARM is correct, these registers only exist if
-> FEAT_RASv1p1 is implemented. Which means that we shouldn't handle
-> those as RAZ/WI unconditionally, but instead check for what we
-> advertise to the guest and handle it accordingly.
+Some third-party controllers can't report firmware/hardware version.
 
-Can we go a step further and just stop advertising RAS to guests? I don't
-expect VMs to gain much from our RAZ/WI implementation. Conditional
-RAZ/WI would still be helpful in this case for migrated VMs that have
-'seen' the feature.
+Unlike for the DualSense, the driver does not use these values for
+anything in the DualShock 4 case, but merely exposes them via sysfs.
+They will simply be 0x0.
 
+Signed-off-by: Max Staudt <max@enpas.org>
+---
+ drivers/hid/hid-playstation.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-playstation.c b/drivers/hid/hid-playstation.c
+index 0a3c442af305..12321cae4416 100644
+--- a/drivers/hid/hid-playstation.c
++++ b/drivers/hid/hid-playstation.c
+@@ -2561,7 +2561,7 @@ static struct ps_device *dualshock4_create(struct hid_device *hdev)
+ 	ret = dualshock4_get_firmware_info(ds4);
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to get firmware info from DualShock4\n");
+-		return ERR_PTR(ret);
++		hid_err(hdev, "HW/FW version data in sysfs will be invalid.\n");
+ 	}
+ 
+ 	ret = ps_devices_list_add(ps_dev);
 -- 
-Thanks,
-Oliver
+2.39.2
+
