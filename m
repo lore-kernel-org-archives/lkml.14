@@ -1,198 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2044.outbound.protection.outlook.com [40.107.21.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05844E55E;
-	Mon, 15 Jan 2024 09:16:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4901AC433C7;
-	Mon, 15 Jan 2024 09:16:45 +0000 (UTC)
-Message-ID: <f8e34951-5152-4158-8e68-c55aa156999a@xs4all.nl>
-Date: Mon, 15 Jan 2024 10:16:43 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E6EC155;
+	Mon, 15 Jan 2024 09:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="GIKRieCO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X1wzehwIns/ivSsrpvzR6Fp0h7iTx7GMWk08KuemDoto5C34mdSgzUH/mb1o6hT/PQuVY9dpHFoXWPtFbYddPB3KsEwRhmlkVaodLksbcvGgWJpOKJQPXhWHEuuU8eRPGNgpIvPkW2tiVIM9The0ievNVsPCaOwYYO6+zy56ZfTtp/UlIvrOQmvBYCEHFiUlfG+uHQ8W9ibhxgmIY7/abi4oH8gNezY3MfsSbjWFVFOiPULIE83B2VHAt7xm6uN6tPUQ+S6kmw4svnnuu+V/A6urVflQwcA0sanb84mx6pMn3k8tw3yOTld9LTfzhZ9nriAEDSEE5YSOiogjg9D3Ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EvUrqoy3wsg+8tUY3FLgYGgdf7zD4OHWKf0G02QwwpU=;
+ b=AnPymIezsShTuyQh+sp+5n6CnU2vvKcD3aWrC65o4uGMGwIaN85M4KW/SG5HkAOrvC+RbTJ1K+clVB0zCQZQXNSzkV4pKX7jwJDNG2Y4XTxfURgN5ehQPNGlX5Y0yKyZbSP0IgOe+6KWruuB50MtXGT+55swLF/rhj8WcVj1qKrL6q1ikIrJ9nwmvNpiWbT6YK6I2rpuMYuW3SojNGaxK8uv+25TtwB+HBwRbgFMdc+CVA3O3YU/pN1Hm6PC4sQAE9ybrxtXy042FZ9ux+u+jiGEkTML6cxiq3XwuLZvmNnuR6ojVmPiWg0lhXg2s6msOl83Rz+Dy/S3rFi8DxrCNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wolfvision.net; dmarc=pass action=none
+ header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EvUrqoy3wsg+8tUY3FLgYGgdf7zD4OHWKf0G02QwwpU=;
+ b=GIKRieCO5GiA5EXTokfJMjRmlyRCkAnPiJDmIksvuHq8hxQg613QKkghOU7OSVfEzs0cONVMWDKUOKBRd7bN+cdAx06X0OPidM7JLjo0wus705Dljt7P4pnNL4SXrG0tUhdf62GNG89KDppXlIbHUVRbI2lDy6A2XtfugHC4ebM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wolfvision.net;
+Received: from VE1PR08MB4974.eurprd08.prod.outlook.com (2603:10a6:803:111::15)
+ by AM9PR08MB6035.eurprd08.prod.outlook.com (2603:10a6:20b:2d9::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.23; Mon, 15 Jan
+ 2024 09:16:37 +0000
+Received: from VE1PR08MB4974.eurprd08.prod.outlook.com
+ ([fe80::6b40:1e6f:7c94:71dc]) by VE1PR08MB4974.eurprd08.prod.outlook.com
+ ([fe80::6b40:1e6f:7c94:71dc%4]) with mapi id 15.20.7181.026; Mon, 15 Jan 2024
+ 09:16:37 +0000
+From: Javier Carrasco <javier.carrasco@wolfvision.net>
+Subject: [PATCH 0/3] ALSA: usb: add support for XMOS XVF3500
+Date: Mon, 15 Jan 2024 10:16:30 +0100
+Message-Id: <20240115-feature-xvf3500_driver-v1-0-ed9cfb48bb85@wolfvision.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO73pGUC/x3MQQqDMBBG4avIrA1koqXqVaQUjX90NiqTNgji3
+ Q0uv8V7J0WoIFJXnKRIEmVbM7gsyC/DOsPIlE3OutoyswkYfn+FOVKoXtZ+J5UENb55u6ZqPfM
+ IyvGuCHI84/5zXTe6McKlaAAAAA==
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco@wolfvision.net>
+X-Mailer: b4 0.13-dev-4e032
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705310196; l=1753;
+ i=javier.carrasco@wolfvision.net; s=20230509; h=from:subject:message-id;
+ bh=JBsPjBCzo6FTPu3MSdjGFr7gnmUmal2Kzm1FTTD0/3I=;
+ b=v2fITQom5/SBKklk6XddFlLyhzgF4K26WyKLNJF26q532RWi4c0wfsQUZcbeDQQdZ6/1WuACq
+ /6fP6YvjiubB0LCuKwox4LIu0lZXqq/eVhRemFCRQ+JxdVpksr23vDA
+X-Developer-Key: i=javier.carrasco@wolfvision.net; a=ed25519;
+ pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
+X-ClientProxiedBy: VI1P190CA0005.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:2b::18) To VE1PR08MB4974.eurprd08.prod.outlook.com
+ (2603:10a6:803:111::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 1/8] videobuf2: Add min_reqbufs_allocation field to
- vb2_queue structure
-Content-Language: en-US, nl
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, mchehab@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- kernel@collabora.com
-References: <20231215090813.15610-1-benjamin.gaignard@collabora.com>
- <20231215090813.15610-2-benjamin.gaignard@collabora.com>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20231215090813.15610-2-benjamin.gaignard@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4974:EE_|AM9PR08MB6035:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf03a166-aa90-43d8-1e3b-08dc15aaad43
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	/v3m03x1VpdJ6jtcoSKMM7T3TdnU5/YmVRIR2+nyZiCtphswt3CJu7t90nkpaUxxOMTa0tpcdKU00ZZ3fNaJlIBaD8VV7sKJQq24wgtySOPMxaqUnO5/pojwhlXcrNDQgEp0cVKn2d3UAVwHMrU87AUzOPJFOrBxlW04wlAY1m68RlQcHf0zPrGO0KlJ+OU+kmWQPETULXr52vhwNV09Okpqm9wWl4TsLFgNnKZZJE3fjeytm+YisQmpRmhO+qmfHEdnLxexZ+EMzZWuvY3w3QbjdUhkolZ7qjjiOu+QR0XYUU+9jnheONojZmgT6g2UwFEUBBd1qxxQItiW2PXndVxEf5YyWxGx4+ISHHU79/4WLVvFf06atK/60CLS/0EjaSqKX2ih2+E4q9DW+6DPnPhJ6FSaPsd3gZeekSoVpOZuCTMSQ00We++dJxU+wv/5ludLIhGgE1LNz2ND8nmZIM6mk5aWKJW8Bv76otJzt6yLBVBP4/JEBriJpn6t+5nP+Q7yVNA1jNc0X/dacrBkLWaRnNNe6HHVmg6uvYEU2h1+6veBgvMr4jQIJerhtQOrLXMwlxfxeqMfM5wek7iAzEADns2c4DTFSEpG6diyIN8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39840400004)(346002)(376002)(396003)(136003)(366004)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(38100700002)(38350700005)(36756003)(86362001)(66556008)(26005)(107886003)(2616005)(83380400001)(54906003)(66946007)(66476007)(316002)(110136005)(6512007)(6506007)(966005)(478600001)(8936002)(8676002)(6666004)(52116002)(6486002)(41300700001)(44832011)(2906002)(4326008)(5660300002)(7416002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N0x1SjZVN1hnNFBWVUhYQTR6cG85ZEtySTk4V2xmaktFRm9jdVVJSVpwWU9n?=
+ =?utf-8?B?Z055YkhiTjZ6QzV6cVZ5bENQZ2ZvMGtPMWN2UzYxMVp4VEJYalEwYWFxVklU?=
+ =?utf-8?B?R2Z6ZHBYSmR4a1loSlZJTnVXUVk1YVo4a3oxbjdJNDBodFhuUHFtc3UrTTFa?=
+ =?utf-8?B?c2hFM2M0UFZhV2wrN3YyRVF6cUlpSXozQTdJTE1GTC9XOXFLMnhublM3d09K?=
+ =?utf-8?B?M0JENGUrcWpVVmlzNGZlUGdZMjlPSXdXTEVvMDU0Sm54MWpOZGx2cThXNHJQ?=
+ =?utf-8?B?Znl4TFhaUUJFWXhUSmU0QmpVSFdTOHVpZkpJMzlEWTRmK2l2WkpPbzJLNW9x?=
+ =?utf-8?B?TEY0bUtLa0Fla0ZYVlZwV2lJUC8xMWw4VlNLc3RlVEhpZy95ME5TUWJWZzY1?=
+ =?utf-8?B?R012TWQyMEFNQ3hYR3BQV0w3RzNRclppSlZRZDFwcUhSRkhzU2JPQU95aU4x?=
+ =?utf-8?B?ZXBadGkxUlZhRlgrbmUxU3BlOHRremJMQnluQUJZMG5PM1dPWmZ4MU9XMlpo?=
+ =?utf-8?B?TXMrMVpzTElUWHUzM1NnQVY3amRzQXVGYnY4TStFcTBnSTlNcHIyK3RxaW5N?=
+ =?utf-8?B?NUhvUy9hUTBUZXBYK2Nvd3UwdEtpbXNGVk11aHlUYlIxMzRyaDMxbDhHY3dE?=
+ =?utf-8?B?TytOZU1STXVpZGN0UXM4RGFBaWpEQ2xyUDBKYXRXZDEzN2V0Rmd0Wk5CV2FL?=
+ =?utf-8?B?ZCtpampRNnNoK3lOZ2NqUGNVL2lpeHl1SGZhcmQxWVJWQ3FIQUtpNEFnaHA5?=
+ =?utf-8?B?ZllLTTV6ZWxOWDRZbyt0MHB3d0F5TExsVmM4WkJUdEhVNjZKbUdrQ0JLNkNW?=
+ =?utf-8?B?MldPaFlCaDFNUjk5R05zTGE2WWdTQzNHMmlFR29KeG9iNzM5dmt5T2xTUUpF?=
+ =?utf-8?B?MGRMMUZqaVlMOUMxMVE1WnZRTjIxOHlJb0JxZTdhcFlJT3FzVTJZZXFTQXN4?=
+ =?utf-8?B?eFlXKy9SUE9PZ0RuRHFiaE9sU1F2TTNrVXEvRTY2L3djclIvemZqWlAzWk9D?=
+ =?utf-8?B?TDZBSUhJVGdzUENVelBIc0ZuSGsxVkVFYTF2ckFZVXduTzNQeFhhaXc2UEUw?=
+ =?utf-8?B?dWsrME14SjdKc3p4VTFXUmZybFZpRFZEZ2R0U2xYS1dGdjA4NWlvN3pXa3NQ?=
+ =?utf-8?B?SFJ2eVF6dkFHNnBhNGpYZkNNK0ZqZnh5SDVlNzRML1dZeVhkS3hGK2U5S0Jl?=
+ =?utf-8?B?eFN2RDhVVitsMUJuU1JncHNYeHNiNnR6MGdyelY5QlFTU3RSOHQrWmw1VlVk?=
+ =?utf-8?B?RXIxeE54a1VGL2c5cGFsV0xJNTFiWlY3MCtFM200aTlRODl1VWpkeUwwR3hm?=
+ =?utf-8?B?blp1TjF5Mkp3ZWZQckRDdHN4UFlqRkRBSFJIejUxSGhuU1ZtTGJ5M1VNd0FG?=
+ =?utf-8?B?V1ZuUWt4Y2VRZUU5VnlxYkJELzI0Yy80Uytwd3RCU2pITWJFMHdaOGwwNnZv?=
+ =?utf-8?B?enFwSE00cE9NdDJZVVFqdVNLQkNWNU90eGRRVEc0NXViUktJZmRCUWI4MEdN?=
+ =?utf-8?B?NHdUTU5xZDFHRXhsQlQ5RVByR0VscENkbW8yR1VXQ3MvUGhSVmNQbnJoRnE4?=
+ =?utf-8?B?UlUrR2FmMkttZ2lMZXRrc0wrV1VkRTM4WHdteFVpN1IzeHJSaE45MzZXblZk?=
+ =?utf-8?B?cnFFeElnZVd4Q0FIcEdqcGU4enluZnh0aWpwRS82by8rTjlaSkZqK3d1RURC?=
+ =?utf-8?B?S3B5UU5qdmtiVkJESVhzbXc1MGFBYXptUHNweDJLT0p1R2lnYzdlVmwrV21K?=
+ =?utf-8?B?OHFGMHMyMkN5R00rendYNDErT25ra01SbUh6Z3o4RlgvUmZJMGV5MlBySDJh?=
+ =?utf-8?B?bHVmQVQ5aHU3ZElQYWc4Q0JldHNaZk9ud0dtU0xOWVBiKzFMQ0FFeDI4LzNl?=
+ =?utf-8?B?bUI0MFhoV2l4OXdMMGNkWitVOCtEaFVubGFOTis1S1E4R1ZxbkNqcHo4QlRU?=
+ =?utf-8?B?aG5JWXF2cHFGYlFKazJDNzlzeXJ1WkhqbFYxV1NhL05rOVc0WHY5NUNKb2Jv?=
+ =?utf-8?B?OERwZHdIWTdkeGIveHc5VXVkZytPYW56aFovTXRZTE1uNWtuV1hTUzRVVStD?=
+ =?utf-8?B?NlhRMmNUb01mSzd1K3Nmb2FKbWJnRTZlUW5VS012TDdHWmt5MDZiVjFxNm5w?=
+ =?utf-8?B?S0hsVVM1dXVveHV6UEZlTHRCRlZtUUEwall2NzlOeHppU3kwcmFzdVF6ZjlQ?=
+ =?utf-8?Q?8sAGYSzUFaFIynrZ4FhTf1c=3D?=
+X-OriginatorOrg: wolfvision.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf03a166-aa90-43d8-1e3b-08dc15aaad43
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR08MB4974.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2024 09:16:37.6429
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +SggZ/uNC1I77FEpztm68hTfc7Ze1jk+DlamY5XGe9c2YA3uYi2Pn0Z2erP18nMlBZ/vdVyC3HYy2TZlEmod/oMaudQ7Ik7Wo5ipbzJRil4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB6035
 
-Hi Benjamin,
+The XMOS XVF3500 VocalFusion Voice Processor[1] is a low-latency, 32-bit
+multicore controller for voice processing.
 
-Some comments below:
+This device requires two power supplies and a specific power sequence to
+reach normal operation, where it registers itself as a USB device. These
+constraints cannot be cleanly solved without the use of a driver that
+guarantees proper initialization during system power-up sequences and
+sleep-mode transitions.
 
-On 15/12/2023 10:08, Benjamin Gaignard wrote:
-> Add 'min_reqbufs_allocation' field in vb2_queue structure so drivers
-> can specificy the minimum number of buffers to allocate when calling
-> VIDIOC_REQBUFS.
-> If used this minimum should be higher than the minimum number of
-> queued buffers needed to start streaming.
+Once in normal operation, the device works like a regular USB device
+with the obvious limitation that it cannot be unplugged because of its
+onboard nature.
 
-You should also mention that it defaults to min_queued_buffers + 1
-instead of min_queued_buffers since otherwise you would not have a
-buffer available for userspace (or something along those lines).
+This series adds support for the XMOS XVF3500 and includes the device
+bindings, which also required a new entry in vendor-prefixes for the
+XMOS manufacturer.
 
-This is a change that needs to be documented in the commit message.
+[1] https://www.xmos.com/xvf3500/
 
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> ---
->  drivers/media/common/videobuf2/videobuf2-core.c | 10 ++++++++--
->  include/media/videobuf2-core.h                  | 13 +++++++++++++
->  2 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-> index 41a832dd1426..a183edf11586 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-core.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-> @@ -865,7 +865,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->  	/*
->  	 * Make sure the requested values and current defaults are sane.
->  	 */
-> -	num_buffers = max_t(unsigned int, *count, q->min_queued_buffers);
-> +	num_buffers = max_t(unsigned int, *count, q->min_reqbufs_allocation);
->  	num_buffers = min_t(unsigned int, num_buffers, q->max_num_buffers);
->  	memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
->  	/*
-> @@ -917,7 +917,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->  	 * There is no point in continuing if we can't allocate the minimum
->  	 * number of buffers needed by this vb2_queue.
->  	 */
-> -	if (allocated_buffers < q->min_queued_buffers)
-> +	if (allocated_buffers < q->min_reqbufs_allocation)
->  		ret = -ENOMEM;
->  
->  	/*
-> @@ -2521,6 +2521,12 @@ int vb2_core_queue_init(struct vb2_queue *q)
->  	if (WARN_ON(q->supports_requests && q->min_queued_buffers))
->  		return -EINVAL;
->  
-> +	q->min_reqbufs_allocation = max_t(unsigned int,
-> +					  q->min_reqbufs_allocation,
-> +					  q->min_queued_buffers + 1);
-> +	if (WARN_ON(q->min_reqbufs_allocation > q->max_num_buffers))
-> +		return -EINVAL;
-> +
->  	INIT_LIST_HEAD(&q->queued_list);
->  	INIT_LIST_HEAD(&q->done_list);
->  	spin_lock_init(&q->done_lock);
-> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> index 56719a26a46c..7b84b4e2e273 100644
-> --- a/include/media/videobuf2-core.h
-> +++ b/include/media/videobuf2-core.h
-> @@ -553,6 +553,18 @@ struct vb2_buf_ops {
->   *		VIDIOC_REQBUFS will ensure at least @min_queued_buffers
->   *		buffers will be allocated. Note that VIDIOC_CREATE_BUFS will not
+Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
+---
+Javier Carrasco (3):
+      dt-bindings: vendor-prefixes: add XMOS
+      ASoC: dt-bindings: xmos,xvf3500: add bindings for XMOS XVF3500
+      ALSA: usb: add support for XMOS XVF3500
 
-In this comment it still mentions @min_queued_buffers instead of
-@min_queued_buffers + 1.
+ .../devicetree/bindings/sound/xmos,xvf3500.yaml    |  51 ++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ MAINTAINERS                                        |   7 ++
+ sound/usb/Kconfig                                  |   9 ++
+ sound/usb/Makefile                                 |   3 +-
+ sound/usb/xvf3500/Makefile                         |   4 +
+ sound/usb/xvf3500/xvf3500.c                        | 140 +++++++++++++++++++++
+ 7 files changed, 215 insertions(+), 1 deletion(-)
+---
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+change-id: 20240111-feature-xvf3500_driver-c872839c11be
 
->   *		modify the requested buffer count.
-> + * @min_reqbufs_allocation: the minimum number of buffers to be allocated when
-> + *		calling VIDIOC_REQBUFS. Drivers can set this if there has to
-> + *		be a certain number of buffers available for the hardware to
-> + *		work effectively. If set, then @min_reqbufs_allocation must be
-> + *		larger than @min_queued_buffers + 1.
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco@wolfvision.net>
 
-There is not actually any check for that. But I think such a check should
-be added: it makes it much easier to do a 'git grep min_reqbufs_allocation'
-and only get those drivers that really set it to a non-standard value.
-
-> + *		This field is only used by VIDIOC_REQBUFS. This allows calling
-> + *		that ioctl with a buffer count of 1 and it will be automatically
-> + *		adjusted to a workable buffer count. VIDIOC_CREATE_BUFS will not
-
-"workable buffer count": nice phrase, I like it!
-
-> + *		modify the requested buffer count.
-> + *		If this field is > 3, then it is highly recommended that the
-> + *		driver implements the V4L2_CID_MIN_BUFFERS_FOR_CAPTURE/OUTPUT
-> + *		control.
-
-Also a nice final sentence. This is also something that is a nice check to add
-to v4l2-compliance! A patch would be welcome...
-
-I think the sentences need to be reordered. How about this (alignment needs to
-be fixed):
-
- * @min_reqbufs_allocation: the minimum number of buffers to be allocated when
- *		calling VIDIOC_REQBUFS. Note that VIDIOC_CREATE_BUFS will *not*
- *		modify the requested buffer count and does not use this field.
- *		Drivers can set this if there has to
- *		be a certain number of buffers available for the hardware to
- *		work effectively. This allows calling VIDIOC_REQBUFS with a buffer
- *		count of 1 and it will be automatically adjusted to a workable
- *		buffer count. If set, then @min_reqbufs_allocation must be
- *		larger than @min_queued_buffers + 1.
- *		If this field is > 3, then it is highly recommended that the
- *		driver implements the V4L2_CID_MIN_BUFFERS_FOR_CAPTURE/OUTPUT
- *		control.
-
->   */
->  /*
->   * Private elements (won't appear at the uAPI book):
-> @@ -618,6 +630,7 @@ struct vb2_queue {
->  	u32				timestamp_flags;
->  	gfp_t				gfp_flags;
->  	u32				min_queued_buffers;
-> +	u32				min_reqbufs_allocation;
->  
->  	struct device			*alloc_devs[VB2_MAX_PLANES];
->  
-
-Regards,
-
-	Hans
