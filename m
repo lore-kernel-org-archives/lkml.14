@@ -1,94 +1,54 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866472C69D;
-	Mon, 15 Jan 2024 12:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OGbdXgrS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1705321261; x=1736857261;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6uiGgKOYeoijZXNs4JR31BgEsE6com5xM6jwtC4X6eU=;
-  b=OGbdXgrSG6+53Jmct6kH06gmovz+iORRXEvkudAnWHRwGM9hBJ66zYAM
-   BPJbo1+J+A8J+q+3CofFapUcFV0nse032FPsNdLrpZivWaIe4RrbNppIh
-   CRNgBRaZ/rNtLctsTj4ocu7cCQQe3OBYiGS1EGKZI/tfNZ3lrg/WzJKKV
-   ixL4cpMqlsCgs0VD7BGoTXGd4LE92VIbT7q+w0eUR11fs0AQ9Wa/fgCjk
-   K9BU3nhkxkzBtqbfN24CbFzA/aFmOmZyhekHMAy51x8g3SY3HshRgj7eo
-   WZbb8JcACnCKA/6jlP6wpPfwves71FF4fqYRTuaz6U7SdIzUb7l3z1cng
-   A==;
-X-CSE-ConnectionGUID: HseR1VJsSLqKdYBiAuMLMA==
-X-CSE-MsgGUID: IijWf9yfQIC9NYX6qqchgQ==
-X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
-   d="asc'?scan'208";a="181979590"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Jan 2024 05:20:54 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CAC1E49D
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 12:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TD9fr17kxz1V4Dq;
+	Mon, 15 Jan 2024 19:59:32 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id DEB771400D4;
+	Mon, 15 Jan 2024 20:01:08 +0800 (CST)
+Received: from [10.174.185.179] (10.174.185.179) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 15 Jan 2024 05:20:49 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Mon, 15 Jan 2024 05:20:45 -0700
-Date: Mon, 15 Jan 2024 12:20:09 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: <stable@vger.kernel.org>, <patches@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-	<akpm@linux-foundation.org>, <linux@roeck-us.net>, <shuah@kernel.org>,
-	<patches@kernelci.org>, <lkft-triage@lists.linaro.org>, <pavel@denx.de>,
-	<jonathanh@nvidia.com>, <f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>,
-	<srw@sladewatkins.net>, <rwarsow@gmx.de>, <conor@kernel.org>,
-	<allen.lkml@gmail.com>
-Subject: Re: [PATCH 6.1 0/4] 6.1.73-rc1 review
-Message-ID: <20240115-unclamped-doze-108d5c282743@wendy>
-References: <20240113094204.017594027@linuxfoundation.org>
+ 15.1.2507.35; Mon, 15 Jan 2024 20:01:07 +0800
+Subject: Re: [PATCH 5/8] KVM: arm64: Fix typos
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Randy Dunlap <rdunlap@infradead.org>, <linux-kernel@vger.kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, James Morse <james.morse@arm.com>, Suzuki K
+ Poulose <suzuki.poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>
+References: <20240103231605.1801364-1-helgaas@kernel.org>
+ <20240103231605.1801364-6-helgaas@kernel.org>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <6dfccc7e-38bb-0aee-ff86-c4cfa047fb01@huawei.com>
+Date: Mon, 15 Jan 2024 20:01:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0ezr28PRs4Tsf82y"
-Content-Disposition: inline
-In-Reply-To: <20240113094204.017594027@linuxfoundation.org>
+In-Reply-To: <20240103231605.1801364-6-helgaas@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
---0ezr28PRs4Tsf82y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2024/1/4 7:16, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Fix typos, most reported by "codespell arch/arm64".  Only touches comments,
+> no code changes.
 
-On Sat, Jan 13, 2024 at 10:50:38AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.73 release.
-> There are 4 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Mon, 15 Jan 2024 09:41:55 +0000.
-> Anything received after that time might be too late.
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 
-It may be too late, but
-Tested-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
---0ezr28PRs4Tsf82y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaUi+QAKCRB4tDGHoIJi
-0pL+AQDxDTyPAlv0llGnMtomfluUfHekZeRStBZ9r3iNZig6kAD+IT5T9ekWA24F
-pJUIm3XHu8Y366kPx2s05pHOLfbxnAA=
-=SISq
------END PGP SIGNATURE-----
-
---0ezr28PRs4Tsf82y--
+Thanks!
