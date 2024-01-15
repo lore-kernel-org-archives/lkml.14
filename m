@@ -1,219 +1,149 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3E0C8C2
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
-	by SHSQR01.spreadtrum.com with ESMTP id 40F8t014047556
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 16:55:00 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 40F8rkXH042583;
-	Mon, 15 Jan 2024 16:53:46 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TD5NJ1vNzz2RCYp0;
-	Mon, 15 Jan 2024 16:46:40 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Mon, 15 Jan 2024 16:53:44 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
-        <longman@redhat.com>, <boqun.feng@gmail.com>
-CC: <linux-kernel@vger.kernel.org>, <niuzhiguo84@gmail.com>,
-        <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>, <xuewen.yan@unisoc.com>
-Subject: [PATCH] lockdep: fix deadlock issue between lockdep and rcu
-Date: Mon, 15 Jan 2024 16:53:16 +0800
-Message-ID: <1705308796-13547-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3926BE5A;
+	Mon, 15 Jan 2024 08:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XbY0i/QJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705308946; x=1736844946;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EPKCrpoOynDLhuk+Tpuc/kPMJl3QbsrGwbcZC0NpoT0=;
+  b=XbY0i/QJjVh4PIi23giwouSUQS/yXyY1D838ODt+C0qy2O+wotaQb18h
+   kOVpxJcBEjMXgNcSzQ/fnmUnn/JdMJW9i3S3gdEyS8YCci+EHBwHVsD85
+   mLdpeEneI1nyIKgWVTTAvHnFwIOJrfrDJMwkOMv5tXWM1hvcyMgoQVN0R
+   HoUsh5/IIquEu4d9QIdF7g9b48l02iC0nOx3W9Vhe7tMbbC1VU08RyQ4X
+   BJiTN1dyrkgwJtZXnekU82GeKqWmI3d9tWCAvgwdMKUFLggMyBsed6XK5
+   3bRgJv9sawmi9Tz/f93gULGRuP9jaNe0sFQqiDLA12Gv1MwOFohTwEoS6
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="485728127"
+X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
+   d="scan'208";a="485728127"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 00:55:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="853935166"
+X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
+   d="scan'208";a="853935166"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Jan 2024 00:55:43 -0800
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: netdev@vger.kernel.org
+Cc: vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	davem@davemloft.net,
+	milena.olech@intel.com,
+	linux-kernel@vger.kernel.org,
+	pabeni@redhat.com,
+	kuba@kernel.org,
+	mschmidt@redhat.com,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Subject: [PATCH net v3 0/3] dpll: fix unordered unbind/bind registerer issues
+Date: Mon, 15 Jan 2024 09:52:38 +0100
+Message-Id: <20240115085241.312144-1-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 40F8rkXH042583
+Content-Transfer-Encoding: 8bit
 
-There is a deadlock scenario between lockdep and rcu when
-rcu nocb feature is enabled, just as following call stack:
+Fix issues when performing unordered unbind/bind of a kernel modules
+which are using a dpll device with DPLL_PIN_TYPE_MUX pins.
+Currently only serialized bind/unbind of such use case works, fix
+the issues and allow for unserialized kernel module bind order.
 
-     rcuop/x
--000|queued_spin_lock_slowpath(lock = 0xFFFFFF817F2A8A80, val = ?)
--001|queued_spin_lock(inline) // try to hold nocb_gp_lock
--001|do_raw_spin_lock(lock = 0xFFFFFF817F2A8A80)
--002|__raw_spin_lock_irqsave(inline)
--002|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F2A8A80)
--003|wake_nocb_gp_defer(inline)
--003|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F30B680)
--004|__call_rcu_common(inline)
--004|call_rcu(head = 0xFFFFFFC082EECC28, func = ?)
--005|call_rcu_zapped(inline)
--005|free_zapped_rcu(ch = ?)// hold graph lock
--006|rcu_do_batch(rdp = 0xFFFFFF817F245680)
--007|nocb_cb_wait(inline)
--007|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F245680)
--008|kthread(_create = 0xFFFFFF80803122C0)
--009|ret_from_fork(asm)
+The issues are observed on the ice driver, i.e.,
 
-     rcuop/y
--000|queued_spin_lock_slowpath(lock = 0xFFFFFFC08291BBC8, val = 0)
--001|queued_spin_lock()
--001|lockdep_lock()
--001|graph_lock() // try to hold graph lock
--002|lookup_chain_cache_add()
--002|validate_chain()
--003|lock_acquire
--004|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F211D80)
--005|lock_timer_base(inline)
--006|mod_timer(inline)
--006|wake_nocb_gp_defer(inline)// hold nocb_gp_lock
--006|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F2A8680)
--007|__call_rcu_common(inline)
--007|call_rcu(head = 0xFFFFFFC0822E0B58, func = ?)
--008|call_rcu_hurry(inline)
--008|rcu_sync_call(inline)
--008|rcu_sync_func(rhp = 0xFFFFFFC0822E0B58)
--009|rcu_do_batch(rdp = 0xFFFFFF817F266680)
--010|nocb_cb_wait(inline)
--010|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F266680)
--011|kthread(_create = 0xFFFFFF8080363740)
--012|ret_from_fork(asm)
+$ echo 0000:af:00.0 > /sys/bus/pci/drivers/ice/unbind
+$ echo 0000:af:00.1 > /sys/bus/pci/drivers/ice/unbind
 
-rcuop/x and rcuop/y are rcu nocb threads with the same nocb gp thread.
+results in:
 
-This patch release the graph lock before lockdep call_rcu.
+ice 0000:af:00.0: Removed PTP clock
+BUG: kernel NULL pointer dereference, address: 0000000000000010
+PF: supervisor read access in kernel mode
+PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0 
+Oops: 0000 [#1] PREEMPT SMP PTI
+CPU: 7 PID: 71848 Comm: bash Kdump: loaded Not tainted 6.6.0-rc5_next-queue_19th-Oct-2023-01625-g039e5d15e451 #1
+Hardware name: Intel Corporation S2600STB/S2600STB, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+RIP: 0010:ice_dpll_rclk_state_on_pin_get+0x2f/0x90 [ice]
+Code: 41 57 4d 89 cf 41 56 41 55 4d 89 c5 41 54 55 48 89 f5 53 4c 8b 66 08 48 89 cb 4d 8d b4 24 f0 49 00 00 4c 89 f7 e8 71 ec 1f c5 <0f> b6 5b 10 41 0f b6 84 24 30 4b 00 00 29 c3 41 0f b6 84 24 28 4b
+RSP: 0018:ffffc902b179fb60 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffff8882c1398000 RSI: ffff888c7435cc60 RDI: ffff888c7435cb90
+RBP: ffff888c7435cc60 R08: ffffc902b179fbb0 R09: 0000000000000000
+R10: ffff888ef1fc8050 R11: fffffffffff82700 R12: ffff888c743581a0
+R13: ffffc902b179fbb0 R14: ffff888c7435cb90 R15: 0000000000000000
+FS:  00007fdc7dae0740(0000) GS:ffff888c105c0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000010 CR3: 0000000132c24002 CR4: 00000000007706e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ? __die+0x20/0x70
+ ? page_fault_oops+0x76/0x170
+ ? exc_page_fault+0x65/0x150
+ ? asm_exc_page_fault+0x22/0x30
+ ? ice_dpll_rclk_state_on_pin_get+0x2f/0x90 [ice]
+ ? __pfx_ice_dpll_rclk_state_on_pin_get+0x10/0x10 [ice]
+ dpll_msg_add_pin_parents+0x142/0x1d0
+ dpll_pin_event_send+0x7d/0x150
+ dpll_pin_on_pin_unregister+0x3f/0x100
+ ice_dpll_deinit_pins+0xa1/0x230 [ice]
+ ice_dpll_deinit+0x29/0xe0 [ice]
+ ice_remove+0xcd/0x200 [ice]
+ pci_device_remove+0x33/0xa0
+ device_release_driver_internal+0x193/0x200
+ unbind_store+0x9d/0xb0
+ kernfs_fop_write_iter+0x128/0x1c0
+ vfs_write+0x2bb/0x3e0
+ ksys_write+0x5f/0xe0
+ do_syscall_64+0x59/0x90
+ ? filp_close+0x1b/0x30
+ ? do_dup2+0x7d/0xd0
+ ? syscall_exit_work+0x103/0x130
+ ? syscall_exit_to_user_mode+0x22/0x40
+ ? do_syscall_64+0x69/0x90
+ ? syscall_exit_work+0x103/0x130
+ ? syscall_exit_to_user_mode+0x22/0x40
+ ? do_syscall_64+0x69/0x90
+ entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+RIP: 0033:0x7fdc7d93eb97
+Code: 0b 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+RSP: 002b:00007fff2aa91028 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 000000000000000d RCX: 00007fdc7d93eb97
+RDX: 000000000000000d RSI: 00005644814ec9b0 RDI: 0000000000000001
+RBP: 00005644814ec9b0 R08: 0000000000000000 R09: 00007fdc7d9b14e0
+R10: 00007fdc7d9b13e0 R11: 0000000000000246 R12: 000000000000000d
+R13: 00007fdc7d9fb780 R14: 000000000000000d R15: 00007fdc7d9f69e0
+ </TASK>
+Modules linked in: uinput vfio_pci vfio_pci_core vfio_iommu_type1 vfio irqbypass ixgbevf snd_seq_dummy snd_hrtimer snd_seq snd_timer snd_seq_device snd soundcore overlay qrtr rfkill vfat fat xfs libcrc32c rpcrdma sunrpc rdma_ucm ib_srpt ib_isert iscsi_target_mod target_core_mod ib_iser libiscsi scsi_transport_iscsi rdma_cm iw_cm ib_cm intel_rapl_msr intel_rapl_common intel_uncore_frequency intel_uncore_frequency_common isst_if_common skx_edac nfit libnvdimm ipmi_ssif x86_pkg_temp_thermal intel_powerclamp coretemp irdma rapl intel_cstate ib_uverbs iTCO_wdt iTCO_vendor_support acpi_ipmi intel_uncore mei_me ipmi_si pcspkr i2c_i801 ib_core mei ipmi_devintf intel_pch_thermal ioatdma i2c_smbus ipmi_msghandler lpc_ich joydev acpi_power_meter acpi_pad ext4 mbcache jbd2 sd_mod t10_pi sg ast i2c_algo_bit drm_shmem_helper drm_kms_helper ice crct10dif_pclmul ixgbe crc32_pclmul drm crc32c_intel ahci i40e libahci ghash_clmulni_intel libata mdio dca gnss wmi fuse [last unloaded: iavf]
+CR2: 0000000000000010
 
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
- kernel/locking/lockdep.c | 38 +++++++++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 13 deletions(-)
+v3:
+- Removed patch "[1/1] dpll: fix pin dump crash after module unbind",
+  behavior fixed in [v3 3/3] patch.
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3d..c1d432a 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -6186,23 +6186,29 @@ static struct pending_free *get_pending_free(void)
- /*
-  * Schedule an RCU callback if no RCU callback is pending. Must be called with
-  * the graph lock held.
-+ *
-+ * Return true if graph lock need be released by the caller, otherwise false
-+ * means graph lock is released by itself.
-  */
--static void call_rcu_zapped(struct pending_free *pf)
-+static bool call_rcu_zapped(struct pending_free *pf)
- {
- 	WARN_ON_ONCE(inside_selftest());
- 
- 	if (list_empty(&pf->zapped))
--		return;
-+		return true;
- 
- 	if (delayed_free.scheduled)
--		return;
-+		return true;
- 
- 	delayed_free.scheduled = true;
- 
- 	WARN_ON_ONCE(delayed_free.pf + delayed_free.index != pf);
- 	delayed_free.index ^= 1;
- 
-+	lockdep_unlock();
- 	call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
-+
-+	return false;
- }
- 
- /* The caller must hold the graph lock. May be called from RCU context. */
-@@ -6228,6 +6234,7 @@ static void free_zapped_rcu(struct rcu_head *ch)
- {
- 	struct pending_free *pf;
- 	unsigned long flags;
-+	bool need_unlock;
- 
- 	if (WARN_ON_ONCE(ch != &delayed_free.rcu_head))
- 		return;
-@@ -6243,9 +6250,9 @@ static void free_zapped_rcu(struct rcu_head *ch)
- 	/*
- 	 * If there's anything on the open list, close and start a new callback.
- 	 */
--	call_rcu_zapped(delayed_free.pf + delayed_free.index);
--
--	lockdep_unlock();
-+	need_unlock = call_rcu_zapped(delayed_free.pf + delayed_free.index);
-+	if (need_unlock)
-+		lockdep_unlock();
- 	raw_local_irq_restore(flags);
- }
- 
-@@ -6286,6 +6293,7 @@ static void lockdep_free_key_range_reg(void *start, unsigned long size)
- {
- 	struct pending_free *pf;
- 	unsigned long flags;
-+	bool need_unlock;
- 
- 	init_data_structures_once();
- 
-@@ -6293,8 +6301,9 @@ static void lockdep_free_key_range_reg(void *start, unsigned long size)
- 	lockdep_lock();
- 	pf = get_pending_free();
- 	__lockdep_free_key_range(pf, start, size);
--	call_rcu_zapped(pf);
--	lockdep_unlock();
-+	need_unlock = call_rcu_zapped(pf);
-+	if (need_unlock)
-+		lockdep_unlock();
- 	raw_local_irq_restore(flags);
- 
- 	/*
-@@ -6390,6 +6399,7 @@ static void lockdep_reset_lock_reg(struct lockdep_map *lock)
- 	struct pending_free *pf;
- 	unsigned long flags;
- 	int locked;
-+	bool need_unlock;
- 
- 	raw_local_irq_save(flags);
- 	locked = graph_lock();
-@@ -6398,9 +6408,9 @@ static void lockdep_reset_lock_reg(struct lockdep_map *lock)
- 
- 	pf = get_pending_free();
- 	__lockdep_reset_lock(pf, lock);
--	call_rcu_zapped(pf);
--
--	graph_unlock();
-+	need_unlock = call_rcu_zapped(pf);
-+	if (need_unlock)
-+		graph_unlock();
- out_irq:
- 	raw_local_irq_restore(flags);
- }
-@@ -6446,6 +6456,7 @@ void lockdep_unregister_key(struct lock_class_key *key)
- 	struct pending_free *pf;
- 	unsigned long flags;
- 	bool found = false;
-+	bool need_unlock = true;
- 
- 	might_sleep();
- 
-@@ -6466,9 +6477,10 @@ void lockdep_unregister_key(struct lock_class_key *key)
- 	if (found) {
- 		pf = get_pending_free();
- 		__lockdep_free_key_range(pf, key, 1);
--		call_rcu_zapped(pf);
-+		need_unlock = call_rcu_zapped(pf);
- 	}
--	lockdep_unlock();
-+	if (need_unlock)
-+		lockdep_unlock();
- 	raw_local_irq_restore(flags);
- 
- 	/* Wait until is_dynamic_key() has finished accessing k->hash_entry. */
+Arkadiusz Kubalewski (3):
+  dpll: fix pin dump crash for rebound module
+  dpll: fix register pin with unregistered parent pin
+  dpll: fix userspace availability of pins
+
+ drivers/dpll/dpll_core.c    | 63 +++++++++++++++++++++++++++++++------
+ drivers/dpll/dpll_core.h    |  4 +--
+ drivers/dpll/dpll_netlink.c | 57 +++++++++++++++++++++++----------
+ 3 files changed, 97 insertions(+), 27 deletions(-)
+
 -- 
-1.9.1
+2.38.1
 
