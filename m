@@ -1,98 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E90186A;
-	Mon, 15 Jan 2024 03:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DMSAOjlS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705290461; x=1736826461;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cpCFBsSH/4SlXTqGSHw0GnglPpDmXBuS/gJX+HbsERc=;
-  b=DMSAOjlSb0sI+XfQbFXvPU/HrLAXXadm2Cqc8+ajdhe+y8UYLQ/rShcS
-   oiOjy3poAkkkwd91rDwu0Yu9//TJ6fUGWj1k2wRj74GOjW1LZgb38sR7j
-   iVm48M04iGO35A/LIUXggMGET3ImZ1ra/KSCA5cRG93IVykzPsG2Idnz+
-   MlWiWSk5o99+S9cP5OhMCqRW2qQGvczAknM+Tfw1dKfG3Gtvq4FnwR13R
-   UqPkqaARrveXh4Zb7RIERUGXSslwnzi2OYkJfvoilz34mwVfK8/DOlS5o
-   DFWPa0ilcm42F0bX47F1kb/bwMLim8AiMyDyNqVvG1CXURe00WMBBG//s
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="6284464"
-X-IronPort-AV: E=Sophos;i="6.04,195,1695711600"; 
-   d="scan'208";a="6284464"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2024 19:47:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="776608748"
-X-IronPort-AV: E=Sophos;i="6.04,195,1695711600"; 
-   d="scan'208";a="776608748"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 14 Jan 2024 19:47:36 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rPDwZ-000C5o-0T;
-	Mon, 15 Jan 2024 03:47:26 +0000
-Date: Mon, 15 Jan 2024 11:46:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hu Yadi <hu.yadi@h3c.com>, jmorris@namei.org, serge@hallyn.com,
-	shuah@kernel.org, mathieu.desnoyers@efficios.com, mic@digikod.net
-Cc: oe-kbuild-all@lists.linux.dev, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, 514118380@qq.com,
-	"Hu.Yadi" <hu.yadi@h3c.com>
-Subject: Re: [PATCH v3] selftests/landlock:Fix two build issues
-Message-ID: <202401151147.T1s11iHJ-lkp@intel.com>
-References: <20240112071245.669-1-hu.yadi@h3c.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F44186A;
+	Mon, 15 Jan 2024 03:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: ad3584cdeded4aa7aa35c29c9456ddfa-20240115
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:30ae8a57-8a58-4796-9abd-fb1752245180,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.35,REQID:30ae8a57-8a58-4796-9abd-fb1752245180,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:5d391d7,CLOUDID:c1d0292f-1ab8-4133-9780-81938111c800,B
+	ulkID:240112233230SFMXI8SS,BulkQuantity:6,Recheck:0,SF:64|66|24|17|19|44|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:40,QS:nil,BEC:nil,
+	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULN
+X-UUID: ad3584cdeded4aa7aa35c29c9456ddfa-20240115
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 530555269; Mon, 15 Jan 2024 11:02:14 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id E7E4BE000EB9;
+	Mon, 15 Jan 2024 11:02:13 +0800 (CST)
+X-ns-mid: postfix-65A4A035-870995346
+Received: from [172.20.15.234] (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id BCF8BE000EB9;
+	Mon, 15 Jan 2024 11:02:10 +0800 (CST)
+Message-ID: <b71c5e28-2dbe-48c8-ab92-e1dad9d6f2e4@kylinos.cn>
+Date: Mon, 15 Jan 2024 11:02:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240112071245.669-1-hu.yadi@h3c.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net: phy: Fix possible NULL pointer dereference
+ issues caused by phy_attached_info_irq
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240112095724.154197-1-chentao@kylinos.cn>
+ <627c9558-04df-43a6-b6e4-a13f24a8bc1d@lunn.ch>
+Content-Language: en-US
+From: Kunwu Chan <chentao@kylinos.cn>
+In-Reply-To: <627c9558-04df-43a6-b6e4-a13f24a8bc1d@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Hu,
+Thanks for your reply.
 
-kernel test robot noticed the following build errors:
+On 2024/1/12 23:32, Andrew Lunn wrote:
+> On Fri, Jan 12, 2024 at 05:57:24PM +0800, Kunwu Chan wrote:
+>> kasprintf() returns a pointer to dynamically allocated memory
+>> which can be NULL upon failure. Ensure the allocation was successful
+>> by checking the pointer validity.
+>>
+>> Fixes: e27f178793de ("net: phy: Added IRQ print to phylink_bringup_phy()")
+>> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+>> ---
+>>   drivers/net/phy/phy_device.c | 3 +++
+>>   drivers/net/phy/phylink.c    | 2 ++
+>>   2 files changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>> index 3611ea64875e..10fa99d957c0 100644
+>> --- a/drivers/net/phy/phy_device.c
+>> +++ b/drivers/net/phy/phy_device.c
+>> @@ -1299,6 +1299,9 @@ void phy_attached_print(struct phy_device *phydev, const char *fmt, ...)
+>>   	const char *unbound = phydev->drv ? "" : "[unbound] ";
+>>   	char *irq_str = phy_attached_info_irq(phydev);
+>>   
+>> +	if (!irq_str)
+>> +		return;
+>> +
+>>   	if (!fmt) {
+>>   		phydev_info(phydev, ATTACHED_FMT "\n", unbound,
+>>   			    phydev_name(phydev), irq_str);
+> 
+> This part looks O.K.
+> 
+>> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+>> index ed0b4ccaa6a6..db0a545c9468 100644
+>> --- a/drivers/net/phy/phylink.c
+>> +++ b/drivers/net/phy/phylink.c
+>> @@ -1884,6 +1884,8 @@ static int phylink_bringup_phy(struct phylink *pl, struct phy_device *phy,
+>>   	phy->phy_link_change = phylink_phy_change;
+>>   
+>>   	irq_str = phy_attached_info_irq(phy);
+>> +	if (!irq_str)
+>> +		return -ENOMEM;
+> 
+> Here, i would just skip the print and continue with the reset of the
+> function. The print is just useful information, its not a big problem
+> if its not printed. However, if this function does not complete, the
+> network interface is likely to be dead.
+Thanks for the reminder.
+The second part doesn't look so perfect, can we just print an empty 
+string when the irq_str is empty?
 
-[auto build test ERROR on shuah-kselftest/next]
-[also build test ERROR on shuah-kselftest/fixes linus/master v6.7 next-20240112]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -1886,7 +1886,7 @@ static int phylink_bringup_phy(struct phylink *pl, 
+struct phy_device *phy,
+         irq_str = phy_attached_info_irq(phy);
+         phylink_info(pl,
+                      "PHY [%s] driver [%s] (irq=%s)\n",
+-                    dev_name(&phy->mdio.dev), phy->drv->name, irq_str);
++                    dev_name(&phy->mdio.dev), phy->drv->name, irq_str ? 
+irq_str : "");
+         kfree(irq_str);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hu-Yadi/selftests-landlock-Fix-two-build-issues/20240112-151805
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git next
-patch link:    https://lore.kernel.org/r/20240112071245.669-1-hu.yadi%40h3c.com
-patch subject: [PATCH v3] selftests/landlock:Fix two build issues
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240115/202401151147.T1s11iHJ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401151147.T1s11iHJ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> net_test.c:25:14: error: static declaration of 'gettid' follows non-static declaration
-      25 | static pid_t gettid(void)
-         |              ^~~~~~
-   In file included from /usr/include/unistd.h:1218,
-                    from /usr/include/x86_64-linux-gnu/bits/sigstksz.h:24,
-                    from /usr/include/signal.h:328,
-                    from /usr/include/x86_64-linux-gnu/sys/wait.h:36,
-                    from common.h:16,
-                    from net_test.c:22:
-   /usr/include/x86_64-linux-gnu/bits/unistd_ext.h:34:16: note: previous declaration of 'gettid' with type '__pid_t(void)' {aka 'int(void)'}
-      34 | extern __pid_t gettid (void) __THROW;
-         |                ^~~~~~
-
+> 
+> 	Andrew
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+   Kunwu
+
