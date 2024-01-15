@@ -1,24 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049E413AD4;
-	Mon, 15 Jan 2024 12:35:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0CB2919
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 12:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e66828PM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39426C433F1;
-	Mon, 15 Jan 2024 12:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705322147;
-	bh=ka2hi/uM2nE/0NKw+Ue3UWnzr5acORYb/NeWIN/2f+U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e66828PMRqC5XrkvIVrAGDYDGKxgNZx3pXLiUaFI9j1huy3xJx8e5QFnkEaWSaQay
-	 gaiO3lsWdmcombfowkdDy6EIOb0ZZEkqO3XmRygRhb8wlFJg5ALtf6BjKtc0nHNbiy
-	 h280O2Zgtyw2IfyGoaAsFh3JcZ1e+Mt4RqC5aIdvvRj6Ur2FNwKkWgUUkskgbrq7lp
-	 K32x/Ax1rs0eTENdQKFQhd7lEFlDekezv29MQ+Sp6p4p+NJCoiCdDPMOuyNG3eZjKg
-	 i/KGkyIaieHkHeKyOSJbLMID9cJwtWkTPdb5VXghRrVSrpX/8XrrbPenD8uEu8WZL1
-	 u3ScKn33GpW5A==
-Message-ID: <f236fe3c-c2ea-49c9-8594-aca74891c7f2@kernel.org>
-Date: Mon, 15 Jan 2024 14:35:43 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dF/BQG2m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705322300;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dr/8JgFmTBfE32B6mIfn3zI7m2veG/h6YX6miLSEnA4=;
+	b=dF/BQG2meYsokrpIK1TteyFCzmHPR+phIROSnhnaYpdfVyk5jLjXC09e9i5dQFtGyPK7l7
+	PdpXfMXMnUCQ9kiJ/r84xuc2iW4GyFGBn6pvK2nIlSIAqXojp95YYsOrXGXcGSmdpFpDZE
+	kZGnlmlB7aS8ZJ2Vyj2MTnljc3fS1rk=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-582-xGF4pUuGNnWdoI-_ZfdZVQ-1; Mon, 15 Jan 2024 07:38:19 -0500
+X-MC-Unique: xGF4pUuGNnWdoI-_ZfdZVQ-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-50e73a3a280so6139793e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 04:38:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705322298; x=1705927098;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dr/8JgFmTBfE32B6mIfn3zI7m2veG/h6YX6miLSEnA4=;
+        b=u+KhBghbhcMqw2LIn9mKCosCuBOLQ+B0nlRyMcBvSrPKzbXWF4Vz/aNdWWTHG7EUPg
+         VSe3axDVovvstuyAMmlfvB0w3QNWRY4E5DY46isBp5j7DFtQWWAAcNUainVy8kJCEBk2
+         jFv9jas/yipM7BGcipifysvaVXP9Ho+MNnRjdWp26LCRrF19V+PT8b1OmLyvwIjWVTtf
+         Kc70Jpj4k4ptYDJkebsb2TX69aaYRAtG8II+j1r0rAzW75tsACt+kImRSYADaWqrNzIa
+         /jqHlvZGYt6TyCiTxB6uZUAcLzpICMQDtx74NP5j3BcfHDaKftRBLZx+e1KKoD6V9mtJ
+         ATrg==
+X-Gm-Message-State: AOJu0YxocUsm9PDn13iU9JRfZR97ay0QIkM4wnO1Vv+tyuCX5c/8dfCG
+	6ZHLTTv2yeFx6sjMfpK1PWeYRYfpdk1e+xtuDbg2ax7feanUirJrumv/zJr71e+kuTdaVyde0JI
+	g7nidrNpELDd6H/oveg7oc6289W0s6mzF
+X-Received: by 2002:a05:6512:48c3:b0:50e:5049:a179 with SMTP id er3-20020a05651248c300b0050e5049a179mr1947810lfb.105.1705322297943;
+        Mon, 15 Jan 2024 04:38:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEid8F0+Z+azt9DHERkU4iXM1IC9qS+5wiphoZcVWWiGGNKVpcy+TqeHGegNN/+7EtN/nPH0g==
+X-Received: by 2002:a05:6512:48c3:b0:50e:5049:a179 with SMTP id er3-20020a05651248c300b0050e5049a179mr1947804lfb.105.1705322297567;
+        Mon, 15 Jan 2024 04:38:17 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id z6-20020a170906668600b00a2327e826ccsm5216185ejo.201.2024.01.15.04.38.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jan 2024 04:38:17 -0800 (PST)
+Message-ID: <e776db0e-2376-415b-8688-f166118d4007@redhat.com>
+Date: Mon, 15 Jan 2024 13:38:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,38 +57,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mfd: omap-usb-host: Increase size of buffer to
- include all possible values
+Subject: Re: [PATCH] platform/x86: asus-wmi: Re-enable custom fan curves after
+ setting throttle_thermal_policy
 Content-Language: en-US
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
- Keshava Munegowda <keshava_mgowda@ti.com>, linux-omap@vger.kernel.org
-References: <20240111163949.1976778-1-lee@kernel.org>
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <20240111163949.1976778-1-lee@kernel.org>
+To: Andrei Sabalenka <mechakotik@gmail.com>, corentin.chary@gmail.com,
+ ilpo.jarvinen@linux.intel.com, acpi4asus-user@lists.sourceforge.net,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Luke D. Jones" <luke@ljones.dev>
+References: <20240115122315.10250-1-mechakotik@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240115122315.10250-1-mechakotik@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
-
-On 11/01/2024 18:39, Lee Jones wrote:
-> Avoid these nasty W=1 errors:
+On 1/15/24 13:22, Andrei Sabalenka wrote:
+> When changing throttle_thermal_policy, all the custom fan curves are getting disabled. This patch re-enables all the custom fan curves that were enabled before changing throttle_thermal_policy.
 > 
->   drivers/mfd/omap-usb-host.c: In function ‘usbhs_omap_probe’:
->   drivers/mfd/omap-usb-host.c:706:54: error: ‘_clk’ directive output may be truncated writing 4 bytes into a region of size between 1 and 11 [-Werror=format-truncation=]
->   drivers/mfd/omap-usb-host.c:705:17: note: ‘snprintf’ output between 24 and 34 bytes into a destination of size 30
->   drivers/mfd/omap-usb-host.c:721:56: error: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 8 [-Werror=format-truncation=]
->   drivers/mfd/omap-usb-host.c:721:33: note: directive argument in the range [-2147483640, 2147483647]
->   drivers/mfd/omap-usb-host.c:720:17: note: ‘snprintf’ output between 28 and 38 bytes into a destination of size 30
->   drivers/mfd/omap-usb-host.c:731:55: error: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 9 [-Werror=format-truncation=]
->   drivers/mfd/omap-usb-host.c:731:33: note: directive argument in the range [-2147483640, 2147483647]
->   drivers/mfd/omap-usb-host.c:730:17: note: ‘snprintf’ output between 27 and 37 bytes into a destination of size 30
-> 
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Keshava Munegowda <keshava_mgowda@ti.com>
-> Cc: Roger Quadros <rogerq@ti.com>
-> Cc: linux-omap@vger.kernel.org
-> Signed-off-by: Lee Jones <lee@kernel.org>
+> I believe it makes asus-wmi sysfs interface more convenient, as it allows userspace to manage fan curves independently from platform_profile and throttle_thermal_policy. At the kernel level, custom fan curves should not be tied to "power profiles" scheme in any way, as it gives the user less freedom of controlling them.
 
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
+Setting a high performance power-profile typically also involves ramping up
+the fans harder. So I don't think this patch is a good idea.
+
+If you really want this behavior then you can always re-enable the custom
+curve after changing the profile.
+
+Luke, do you have any opinion on this?
+
+Regards,
+
+Hans
+
+
+
+
+> 
+> Signed-off-by: Andrei Sabalenka <mechakotik@gmail.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 29 ++++++++++++++++++++++-------
+>  1 file changed, 22 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 18be35fdb..c2e38f6d8 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -3441,13 +3441,28 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
+>  		return -EIO;
+>  	}
+>  
+> -	/* Must set to disabled if mode is toggled */
+> -	if (asus->cpu_fan_curve_available)
+> -		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
+> -	if (asus->gpu_fan_curve_available)
+> -		asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
+> -	if (asus->mid_fan_curve_available)
+> -		asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled = false;
+> +	/* Re-enable fan curves after profile change */
+> +	if (asus->cpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled) {
+> +		err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_CPU]);
+> +		if (err) {
+> +			pr_warn("Failed to re-enable CPU fan curve: %d\n", err);
+> +			return err;
+> +		}
+> +	}
+> +	if (asus->gpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled) {
+> +		err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_GPU]);
+> +		if (err) {
+> +			pr_warn("Failed to re-enable GPU fan curve: %d\n", err);
+> +			return err;
+> +		}
+> +	}
+> +	if (asus->mid_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled) {
+> +		err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_MID]);
+> +		if (err) {
+> +			pr_warn("Failed to re-enable MID fan curve: %d\n", err);
+> +			return err;
+> +		}
+> +	}
+>  
+>  	return 0;
+>  }
 
