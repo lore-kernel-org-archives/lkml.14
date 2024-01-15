@@ -1,53 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86E81799F
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181CE17BC7
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SV7SESBy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BD+zOudQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705330044;
+	s=mimecast20190719; t=1705330048;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GuPy6o0xdtswTFzGt//PWEkxlEqwBN5Ui7YfUNE5A+E=;
-	b=SV7SESByT91/P8alxXhjdOmMPktimB418QKhoVC3H4zRIo7RIZ5Ubv4Z0WNMRN1IRC3V+z
-	xG4NveWgKebKrN/KpmLjR59PsBh2gaIFgH2K3DgDOoyP4NhOP3Ib4+GBzfAjDXsXWrBJr+
-	W8t/GQ87c5te2kglQNGoC4XyLXM7HCg=
-Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com
- [209.85.222.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=k3vu21hkZlZsapFSJtp8nhKKQ/3OZTkpZfYIme9+49k=;
+	b=BD+zOudQkPf/CYbLETcnHrpIm1cUoXYFUOO0K4nZiU8n/wHtXXFmiYUQ8e0eJ7CZAwvYhj
+	FJt/pq46Q3Ioil40c0MRFS0A6MkGDOxHEHRMeAClUf0d41M/CUbUnmsoc+sacGgLsx2NS1
+	059A8ROOW+4lKQJK1eNdwcr2vCbwsHQ=
+Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com
+ [209.85.221.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-MwaY5k1tNu-PaaaSI2QuRA-1; Mon, 15 Jan 2024 09:47:21 -0500
-X-MC-Unique: MwaY5k1tNu-PaaaSI2QuRA-1
-Received: by mail-ua1-f70.google.com with SMTP id a1e0cc1a2514c-7cdaffe6b9aso377456241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 06:47:21 -0800 (PST)
+ us-mta-303-DiF4Cu-INhiTmwYDeM7lVw-1; Mon, 15 Jan 2024 09:47:26 -0500
+X-MC-Unique: DiF4Cu-INhiTmwYDeM7lVw-1
+Received: by mail-vk1-f197.google.com with SMTP id 71dfb90a1353d-4b7bdc844fcso135153e0c.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 06:47:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705330041; x=1705934841;
+        d=1e100.net; s=20230601; t=1705330046; x=1705934846;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GuPy6o0xdtswTFzGt//PWEkxlEqwBN5Ui7YfUNE5A+E=;
-        b=FqSPvc6KqJgTrURorjBfXpeA98dp92vvhnznjuFUl6eDwxpJm5IJf2SnYoL4qDBF3M
-         6HITTMpbnyOgTV5BfMXQuiSr51RkCFcZ67lIxGxm7SOmggbyCDmjjMdZJ3SrX4LnpYcm
-         FpX53ZCwoiqQMSOM2plcIJ/m97ZF7+LkI5dJK+hi/wN2/a183y+Mlks6vrG9M5GkWvqd
-         rRa4/oIwZ2HqFqqsVYXEoN3UstCWgMsw4JKMxSzgWmM5D3nAX4cbQdcIQQ3+6csINy2b
-         hDGPjIFnvNPUDiG7vXSONiM7B1ij0L5ZZ4QM+vjMhnO+CB5NJ60SqQ1l91DElJPt/xOA
-         dZtg==
-X-Gm-Message-State: AOJu0YyuIQo5CSPrV1ngvtaisFJKxOJbqWZM4RftHpV/HJ0cHMO5YqHl
-	kxgvZk5/Hdq0fl1NuvBA7cgvF5dxvYR6Z0dLRh2TtC5GOgt9Avc/7oTq8RViO5dw4Ki1MnjRbAF
-	JDwEHbBlCKPJxg7yNJ+X5sIS/SrR+N5Tr
-X-Received: by 2002:a05:6122:200a:b0:4b6:e3fa:7599 with SMTP id l10-20020a056122200a00b004b6e3fa7599mr4678900vkd.0.1705330041139;
-        Mon, 15 Jan 2024 06:47:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHCsY0ZuDYFJr87bladWt7s6eCEJzNh1RKNCl6gfgHXUBWkBCjqEMu+F8KwMd/Grf0wk26qBg==
-X-Received: by 2002:a05:6122:200a:b0:4b6:e3fa:7599 with SMTP id l10-20020a056122200a00b004b6e3fa7599mr4678878vkd.0.1705330040810;
-        Mon, 15 Jan 2024 06:47:20 -0800 (PST)
+        bh=k3vu21hkZlZsapFSJtp8nhKKQ/3OZTkpZfYIme9+49k=;
+        b=WQ11PYcA1fq4S8fu5h10ekqn0bgPbYDl97kPbXHH+ysKq5GnZWAqOSTj2P0a/ZFA4t
+         qEro/2jw1sBwqKCWH4wZCVyCAv5wOtapMXYQcdlC4Wlf4FfLMAeXOMoCo5CapvidvX8W
+         eIrwJFaBMkvDpgHz22gnnwnm1Li+RvYdOpfmvqX6xgz3gtomthzgRFE8N15Rk2BuinAg
+         45ihnR7AS9MXF2Q9Fln6ilwTHi6EPWxmRSwkbxbNW+DvTh+AZgTsUCxmYZMvV6Hkcugc
+         Qzdx/yTlrg8UfnNGj1v9q/yPI+U6s6bJRttMfpBueF1Wy7710z1PqBctKQssNzJDUytx
+         S/DQ==
+X-Gm-Message-State: AOJu0YwOEKEPOv9ocCkP96Hh1C83HPL0t5RAwhtlaWs2qD61Rcfn/U5q
+	qA4eMYKQN9IrCAAzO+M7KdF2OjmYwWaNMnzDSiHSa16EafVNgVpxyOhNeywKwu6kjpjUFHc+7Py
+	UI5zoYq35BXkms7vXxRwI1n0kfzVIEaG/
+X-Received: by 2002:a05:6122:2886:b0:4b7:32ac:f4e5 with SMTP id fl6-20020a056122288600b004b732acf4e5mr4682343vkb.1.1705330046110;
+        Mon, 15 Jan 2024 06:47:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEl3g0muu7xD/Tj+Zr9TyY8gOWhOJboojbdmamx1smFfYvzduqw18AZ9+hpq2S3HXA+drCMKA==
+X-Received: by 2002:a05:6122:2886:b0:4b7:32ac:f4e5 with SMTP id fl6-20020a056122288600b004b732acf4e5mr4682321vkb.1.1705330045850;
+        Mon, 15 Jan 2024 06:47:25 -0800 (PST)
 Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id ne13-20020a056214424d00b006815cf9a644sm1020720qvb.55.2024.01.15.06.47.18
+        by smtp.gmail.com with ESMTPSA id ne13-20020a056214424d00b006815cf9a644sm1020720qvb.55.2024.01.15.06.47.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 06:47:20 -0800 (PST)
+        Mon, 15 Jan 2024 06:47:25 -0800 (PST)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Hans de Goede <hdegoede@redhat.com>,
@@ -64,9 +64,9 @@ Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 04/10] pci: devres: make devres region requests consistent
-Date: Mon, 15 Jan 2024 15:46:15 +0100
-Message-ID: <20240115144655.32046-6-pstanner@redhat.com>
+Subject: [PATCH 06/10] pci: move pinned status bit to pci_dev struct
+Date: Mon, 15 Jan 2024 15:46:17 +0100
+Message-ID: <20240115144655.32046-8-pstanner@redhat.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240115144655.32046-2-pstanner@redhat.com>
 References: <20240115144655.32046-2-pstanner@redhat.com>
@@ -78,215 +78,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that pure managed region request functions are available, the
-implementation of the hybrid-functions which are only sometimes managed
-can be made more consistent and readable by wrapping those
-always-managed functions.
+The bit describing whether the PCI device is currently pinned is stored
+in the PCI devres struct. To clean up and simplify the pci-devres API,
+it's better if this information is stored in the pci_dev struct, because
+it allows for checking that device's pinned-status directly through the
+device struct.
+This will later permit simplifying  pcim_enable_device().
 
-Implement a new pcim_ function for exclusively requested regions.
-Have the pci_request / release functions call their pcim_ counterparts.
-Remove the now surplus region_mask from the devres struct.
+Move the 'pinned' boolean bit to struct pci_dev.
 
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 ---
- drivers/pci/devres.c | 49 ++++++++++++++++++++++---------------------
- drivers/pci/pci.c    | 50 +++++++++++++++-----------------------------
- drivers/pci/pci.h    |  6 ------
+ drivers/pci/devres.c | 14 ++++----------
+ drivers/pci/pci.h    |  1 -
  include/linux/pci.h  |  1 +
- 4 files changed, 43 insertions(+), 63 deletions(-)
+ 3 files changed, 5 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index e221919ebbe2..1e5cf950775d 100644
+index bf957f0bc5ac..de8cf6f87dd7 100644
 --- a/drivers/pci/devres.c
 +++ b/drivers/pci/devres.c
-@@ -22,18 +22,15 @@
-  *    _sometimes_ managed (e.g. pci_request_region()).
-  *    Consequently, in the new API, region requests performed by the pcim_
-  *    functions are automatically cleaned up through the devres callback
-- *    pcim_addr_resource_release(), while requests performed by
-- *    pcim_enable_device() + pci_*region*() are automatically cleaned up
-- *    through the for-loop in pcim_release().
-+ *    pcim_addr_resource_release().
-+ *    Users utilizing pcim_enable_device() + pci_*region*() are redirected in
-+ *    pci.c to the managed functions here in this file. This isn't exactly
-+ *    perfect, but the only alternative way would be to port ALL drivers using
-+ *    said combination to pcim_ functions.
+@@ -411,7 +411,7 @@ static void pcim_release(struct device *gendev, void *res)
+ 	if (this->restore_intx)
+ 		pci_intx(dev, this->orig_intx);
+ 
+-	if (!this->pinned)
++	if (!dev->pinned)
+ 		pci_disable_device(dev);
+ }
+ 
+@@ -469,18 +469,12 @@ EXPORT_SYMBOL(pcim_enable_device);
+  * pcim_pin_device - Pin managed PCI device
+  * @pdev: PCI device to pin
   *
-- * TODO 1:
-+ * TODO:
-  * Remove the legacy table entirely once all calls to pcim_iomap_table() in
-  * the kernel have been removed.
-- *
-- * TODO 2:
-- * Port everyone calling pcim_enable_device() + pci_*region*() to using the
-- * pcim_ functions. Then, remove all devres functionality from pci_*region*()
-- * functions and remove the associated cleanups described above in point #2.
+- * Pin managed PCI device @pdev.  Pinned device won't be disabled on
+- * driver detach.  @pdev must have been enabled with
+- * pcim_enable_device().
++ * Pin managed PCI device @pdev. Pinned device won't be disabled on driver
++ * detach.  @pdev must have been enabled with pcim_enable_device().
   */
- 
- /*
-@@ -407,21 +404,6 @@ static void pcim_release(struct device *gendev, void *res)
- {
- 	struct pci_dev *dev = to_pci_dev(gendev);
- 	struct pci_devres *this = res;
--	int i;
--
--	/*
--	 * This is legacy code.
--	 * All regions requested by a pcim_ function do get released through
--	 * pcim_addr_resource_release(). Thanks to the hybrid nature of the pci_
--	 * region-request functions, this for-loop has to release the regions
--	 * if they have been requested by such a function.
--	 *
--	 * TODO: Remove this once all users of pcim_enable_device() PLUS
--	 * pci-region-request-functions have been ported to pcim_ functions.
--	 */
--	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
--		if (this->region_mask & (1 << i))
--			pci_release_region(dev, i);
- 
- 	if (this->mwi)
- 		pci_clear_mwi(dev);
-@@ -971,6 +953,25 @@ int pcim_request_region(struct pci_dev *pdev, int bar, const char *name)
- }
- EXPORT_SYMBOL(pcim_request_region);
- 
-+/**
-+ * pcim_request_region_exclusive - Request a PCI BAR exclusively
-+ * @pdev: PCI device to requestion region for
-+ * @bar: Index of BAR to request
-+ * @name: Name associated with the request
-+ *
-+ * Returns: 0 on success, a negative error code on failure.
-+ *
-+ * Request region specified by @bar exclusively.
-+ *
-+ * The region will automatically be released on driver detach. If desired,
-+ * release manually only with pcim_release_region().
-+ */
-+int pcim_request_region_exclusive(struct pci_dev *pdev, int bar, const char *name)
-+{
-+	return _pcim_request_region(pdev, bar, name, IORESOURCE_EXCLUSIVE);
-+}
-+EXPORT_SYMBOL(pcim_request_region_exclusive);
-+
- /**
-  * pcim_release_region - Release a PCI BAR
-  * @pdev: PCI device to operate on
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 7ca860acf351..66639dd754c7 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3873,7 +3873,15 @@ EXPORT_SYMBOL_GPL(pci_common_swizzle);
-  */
- void pci_release_region(struct pci_dev *pdev, int bar)
+ void pcim_pin_device(struct pci_dev *pdev)
  {
 -	struct pci_devres *dr;
-+	/*
-+	 * This is done for backwards compatibility, because the old pci-devres
-+	 * API had a mode in which the function became managed if it had been
-+	 * enabled with pcim_enable_device() instead of pci_enable_device().
-+	 */
-+	if (pci_is_managed(pdev)) {
-+		pcim_release_region(pdev, bar);
-+		return;
-+	}
- 
- 	if (pci_resource_len(pdev, bar) == 0)
- 		return;
-@@ -3883,20 +3891,6 @@ void pci_release_region(struct pci_dev *pdev, int bar)
- 	else if (pci_resource_flags(pdev, bar) & IORESOURCE_MEM)
- 		release_mem_region(pci_resource_start(pdev, bar),
- 				pci_resource_len(pdev, bar));
 -
--	/*
--	 * This devres utility makes this function sometimes managed
--	 * (when pcim_enable_device() has been called before).
--	 * This is bad because it conflicts with the pcim_ functions being
--	 * exclusively responsible for managed pci. Its "sometimes yes, sometimes
--	 * no" nature can cause bugs.
--	 *
--	 * TODO: Remove this once all users that use pcim_enable_device() PLUS
--	 * a region request function have been ported to using pcim_ functions.
--	 */
 -	dr = find_pci_dr(pdev);
+-	WARN_ON(!dr || !pdev->enabled);
 -	if (dr)
--		dr->region_mask &= ~(1 << bar);
+-		dr->pinned = 1;
++	pdev->pinned = true;
  }
- EXPORT_SYMBOL(pci_release_region);
+ EXPORT_SYMBOL(pcim_pin_device);
  
-@@ -3924,14 +3918,18 @@ EXPORT_SYMBOL(pci_release_region);
-  * NOTE:
-  * This is a "hybrid" function: Its normally unmanaged, but becomes managed
-  * when pcim_enable_device() has been called in advance.
-- * This hybrid feature is DEPRECATED! If you need to implement a new pci
-- * function that does automatic cleanup, write a new pcim_* function that uses
-- * devres directly.
-+ * This hybrid feature is DEPRECATED! If you want managed cleanup, use the
-+ * pcim_* functions instead.
-  */
- static int __pci_request_region(struct pci_dev *pdev, int bar,
- 				const char *res_name, int exclusive)
- {
--	struct pci_devres *dr;
-+	if (pci_is_managed(pdev)) {
-+		if (exclusive == IORESOURCE_EXCLUSIVE)
-+			return pcim_request_region_exclusive(pdev, bar, res_name);
-+		else
-+			return pcim_request_region(pdev, bar, res_name);
-+	}
- 
- 	if (pci_resource_len(pdev, bar) == 0)
- 		return 0;
-@@ -3947,20 +3945,6 @@ static int __pci_request_region(struct pci_dev *pdev, int bar,
- 			goto err_out;
- 	}
- 
--	/*
--	 * This devres utility makes this function sometimes managed
--	 * (when pcim_enable_device() has been called before).
--	 * This is bad because it conflicts with the pcim_ functions being
--	 * exclusively responsible for managed pci. Its "sometimes yes, sometimes
--	 * no" nature can cause bugs.
--	 *
--	 * TODO: Remove this once all users that use pcim_enable_device() PLUS
--	 * a region request function have been ported to using pcim_ functions.
--	 */
--	dr = find_pci_dr(pdev);
--	if (dr)
--		dr->region_mask |= 1 << bar;
--
- 	return 0;
- 
- err_out:
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 4d4bcc2d850f..7c2181677760 100644
+index dbb76a3fb0e4..3d9908a69ebf 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -814,12 +814,6 @@ struct pci_devres {
+@@ -809,7 +809,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
+  * when a device is enabled using managed PCI device enable interface.
+  */
+ struct pci_devres {
+-	unsigned int pinned:1;
  	unsigned int orig_intx:1;
  	unsigned int restore_intx:1;
  	unsigned int mwi:1;
--
--	/*
--	 * TODO: remove the region_mask once everyone calling
--	 * pcim_enable_device() + pci_*region*() is ported to pcim_ functions.
--	 */
--	u32 region_mask;
- };
- 
- struct pci_devres *find_pci_dr(struct pci_dev *pdev);
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3dcd8a5e10b5..641ee30f7d2d 100644
+index a356bdcc14cc..2f6f44991003 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -2321,6 +2321,7 @@ int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
- 				   const char *name);
- void pcim_iounmap_regions(struct pci_dev *pdev, int mask);
- int pcim_request_region(struct pci_dev *pdev, int bar, const char *res_name);
-+int pcim_request_region_exclusive(struct pci_dev *pdev, int bar, const char *name);
- void pcim_release_region(struct pci_dev *pdev, int bar);
- void pcim_release_all_regions(struct pci_dev *pdev);
- int pcim_request_all_regions(struct pci_dev *pdev, const char *name);
+@@ -368,6 +368,7 @@ struct pci_dev {
+ 					   functional, and D3 being off. */
+ 	u8		pm_cap;		/* PM capability offset */
+ 	unsigned int	enabled:1;	/* Whether this dev is enabled */
++	unsigned int	pinned:1;	/* Whether this dev is pinned */
+ 	unsigned int	imm_ready:1;	/* Supports Immediate Readiness */
+ 	unsigned int	pme_support:5;	/* Bitmask of states from which PME#
+ 					   can be generated */
 -- 
 2.43.0
 
