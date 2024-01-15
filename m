@@ -1,155 +1,109 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D212C1757A;
-	Mon, 15 Jan 2024 14:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TDDL969ZXz4f3jq2;
-	Mon, 15 Jan 2024 22:00:17 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id EEC511A0BAE;
-	Mon, 15 Jan 2024 22:00:19 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-	by APP2 (Coremail) with SMTP id Syh0CgBXeg1xOqVlBRm1Aw--.63466S2;
-	Mon, 15 Jan 2024 22:00:19 +0800 (CST)
-Subject: Re: [PATCH bpf-next v3 2/2] selftests/bpf: Skip callback tests if jit
- is disabled in test_verifier
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>,
- John Fastabend <john.fastabend@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240115070010.12338-1-yangtiezhu@loongson.cn>
- <20240115070010.12338-3-yangtiezhu@loongson.cn>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <84e15d1c-c2a6-9af4-c123-beea01893a8f@huaweicloud.com>
-Date: Mon, 15 Jan 2024 22:00:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1CE17571;
+	Mon, 15 Jan 2024 14:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5f588ce1b6dso66987817b3.1;
+        Mon, 15 Jan 2024 06:02:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705327341; x=1705932141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SmpeOIqaC6PrGt9qvY+jgYWHyktprhcCdGj8iUM5P0I=;
+        b=Yt4xlFkzSpjqRxhces7okltFQMXhwfO05Hlv8AD7dk+eVKltsf7BJ6pX9njOy1+sk6
+         H9UMBZRI2rmvXW90PQhI0tDLkb90K7NVnGH1gl6XX+U9ZSEYfBE1/fdQzCXzuwdJHT2N
+         9E8NBgLx0ffjS6qvGAgHBvNeq7zEO2W7u96RxaVfDf5uSMJ9Gs2rbbCvf2WER1SKPHvh
+         eAgieqtnFDlO/79/bQ0J+NLXZNGp9nPPmET1RKEN7arHQyFxoxbqc9+0Pm2aQjARItIN
+         ouYXgcPhX6O7nFcYK5k0soyeEbUAdp3uqgoceIEmG77WotkczCoKRwWeHWCWLYL1uWWt
+         a7Lw==
+X-Gm-Message-State: AOJu0YygMe1NckHxlY2dFQiFZvk93OlAdHkPVvrHqgpradDCGZYTZGKj
+	l+J4CdXi+il8oq+aCevUXasdXrCSragDKg==
+X-Google-Smtp-Source: AGHT+IE/elFYKN9BF86sLVhHM6ET7LPCmUG2/Qxw0T/S8lXbarHLYNVLV8XKSGAiXDjukIXZPgKM1A==
+X-Received: by 2002:a81:c14c:0:b0:5e2:af70:4f11 with SMTP id e12-20020a81c14c000000b005e2af704f11mr3882804ywl.38.1705327339616;
+        Mon, 15 Jan 2024 06:02:19 -0800 (PST)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id a16-20020a0dd810000000b005e847caa1f0sm3972757ywe.29.2024.01.15.06.02.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jan 2024 06:02:18 -0800 (PST)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5f2aab1c0c5so76364847b3.0;
+        Mon, 15 Jan 2024 06:02:18 -0800 (PST)
+X-Received: by 2002:a05:690c:fc3:b0:5ed:b2a2:1279 with SMTP id
+ dg3-20020a05690c0fc300b005edb2a21279mr3185157ywb.16.1705327338023; Mon, 15
+ Jan 2024 06:02:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240115070010.12338-3-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:Syh0CgBXeg1xOqVlBRm1Aw--.63466S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr4rAw48WF1kAr17Zr4DXFb_yoW5tw4rpF
-	4kJ3WqkF10va429r17Zwn7GFWYvw4kXw4UGryfW3y8AF4DJr13Jrn3KrWYvF93GrWrWa4S
-	va109r45Ww1UJFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UQzVbUUUUU=
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+References: <cover.1704788539.git.ysato@users.sourceforge.jp> <17c6381a733d34e8460fd2979f8b53804e808e04.1704788539.git.ysato@users.sourceforge.jp>
+In-Reply-To: <17c6381a733d34e8460fd2979f8b53804e808e04.1704788539.git.ysato@users.sourceforge.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 15 Jan 2024 15:02:06 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVSa0j_npPwcPqH0W2XG8je_A5osy4WjAe0nM_DpC7Ffw@mail.gmail.com>
+Message-ID: <CAMuHMdVSa0j_npPwcPqH0W2XG8je_A5osy4WjAe0nM_DpC7Ffw@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v6 25/37] dt-bindings: vendor-prefixes: Add iodata
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> Add IO DATA DEVICE INC.
+> https://www.iodata.com/
+>
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-On 1/15/2024 3:00 PM, Tiezhu Yang wrote:
-> If CONFIG_BPF_JIT_ALWAYS_ON is not set and bpf_jit_enable is 0, there
-> exist 6 failed tests.
->
->   [root@linux bpf]# echo 0 > /proc/sys/net/core/bpf_jit_enable
->   [root@linux bpf]# echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
->   [root@linux bpf]# ./test_verifier | grep FAIL
->   #106/p inline simple bpf_loop call FAIL
->   #107/p don't inline bpf_loop call, flags non-zero FAIL
->   #108/p don't inline bpf_loop call, callback non-constant FAIL
->   #109/p bpf_loop_inline and a dead func FAIL
->   #110/p bpf_loop_inline stack locations for loop vars FAIL
->   #111/p inline bpf_loop call in a big program FAIL
->   Summary: 768 PASSED, 15 SKIPPED, 6 FAILED
->
-> The test log shows that callbacks are not allowed in non-JITed programs,
-> interpreter doesn't support them yet, thus these tests should be skipped
-> if jit is disabled, copy some check functions from the other places under
-> tools directory, and then handle this case in do_test_single().
->
-> With this patch:
->
->   [root@linux bpf]# echo 0 > /proc/sys/net/core/bpf_jit_enable
->   [root@linux bpf]# echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
->   [root@linux bpf]# ./test_verifier | grep FAIL
->   Summary: 768 PASSED, 21 SKIPPED, 0 FAILED
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  tools/testing/selftests/bpf/test_verifier.c | 23 +++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-> index 1a09fc34d093..70f903e869b7 100644
-> --- a/tools/testing/selftests/bpf/test_verifier.c
-> +++ b/tools/testing/selftests/bpf/test_verifier.c
-> @@ -74,6 +74,7 @@
->  		    1ULL << CAP_BPF)
->  #define UNPRIV_SYSCTL "kernel/unprivileged_bpf_disabled"
->  static bool unpriv_disabled = false;
-> +static bool jit_disabled;
->  static int skips;
->  static bool verbose = false;
->  static int verif_log_level = 0;
-> @@ -1355,6 +1356,16 @@ static bool is_skip_insn(struct bpf_insn *insn)
->  	return memcmp(insn, &skip_insn, sizeof(skip_insn)) == 0;
->  }
->  
-> +static bool is_ldimm64_insn(struct bpf_insn *insn)
-> +{
-> +	return insn->code == (BPF_LD | BPF_IMM | BPF_DW);
-> +}
-> +
-> +static bool insn_is_pseudo_func(struct bpf_insn *insn)
-> +{
-> +	return is_ldimm64_insn(insn) && insn->src_reg == BPF_PSEUDO_FUNC;
-> +}
-> +
->  static int null_terminated_insn_len(struct bpf_insn *seq, int max_len)
->  {
->  	int i;
-> @@ -1619,6 +1630,16 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
->  		goto close_fds;
->  	}
->  
-> +	if (fd_prog < 0 && saved_errno == EINVAL && jit_disabled) {
-> +		for (i = 0; i < prog_len; i++, prog++) {
-> +			if (insn_is_pseudo_func(prog)) {
-> +				printf("SKIP (callbacks are not allowed in non-JITed programs)\n");
-> +				skips++;
-> +				goto close_fds;
-> +			}
-> +		}
-> +	}
+My
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+on v3 is still valid.
 
-I ran test_verifier before applying the patch set, it seems all
-expected_ret for these failed programs are ACCEPT, so I think it would
-be better to move the not-allowed-checking into "if (expected_ret ==
-ACCEPT || expected_ret == VERBOSE_ACCEPT)" block. I should suggest such
-modification in v2, sorry about that.
-> +
->  	alignment_prevented_execution = 0;
->  
->  	if (expected_ret == ACCEPT || expected_ret == VERBOSE_ACCEPT) {
-> @@ -1844,6 +1865,8 @@ int main(int argc, char **argv)
->  		return EXIT_FAILURE;
->  	}
->  
-> +	jit_disabled = !is_jit_enabled();
-> +
->  	/* Use libbpf 1.0 API mode */
->  	libbpf_set_strict_mode(LIBBPF_STRICT_ALL);
->  
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
