@@ -1,83 +1,108 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0EC1E861
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 09:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: e4e15a98d98647e5a3b516dd4e08d058-20240115
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:06f7089b-bbb1-4f97-aadc-650fd0a90c24,IP:20,
-	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:25
-X-CID-INFO: VERSION:1.1.35,REQID:06f7089b-bbb1-4f97-aadc-650fd0a90c24,IP:20,UR
-	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:25
-X-CID-META: VersionHash:5d391d7,CLOUDID:a7eb5c7f-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:240115174336TP554N1E,BulkQuantity:0,Recheck:0,SF:19|44|66|38|24|17|1
-	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
-	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
-X-UUID: e4e15a98d98647e5a3b516dd4e08d058-20240115
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1917306438; Mon, 15 Jan 2024 17:43:36 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id C29D3E000EB9;
-	Mon, 15 Jan 2024 17:43:35 +0800 (CST)
-X-ns-mid: postfix-65A4FE47-62623527
-Received: from kernel.. (unknown [172.20.15.234])
-	by mail.kylinos.cn (NSMail) with ESMTPA id D7B87E000EB9;
-	Mon, 15 Jan 2024 17:43:31 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: christophe.leroy@csgroup.eu,
-	mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	aneesh.kumar@kernel.org,
-	naveen.n.rao@linux.ibm.com
-Cc: linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>,
-	Kunwu Chan <kunwu.chan@hotmail.com>
-Subject: [PATCH] powerpc/83xx: Add a null pointer check to mcu_gpiochip_add
-Date: Mon, 15 Jan 2024 17:43:30 +0800
-Message-Id: <20240115094330.33014-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4322BAE0
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 09:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ip6EgncI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD4DC433C7;
+	Mon, 15 Jan 2024 09:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705311911;
+	bh=9TfclVxenwhLNqqbdWKDJ6r7w6xibtjyrmpBf389HBo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ip6EgncIonnMjh4DWPhEZNCM9CBa6b26cayPDOiKD1GdFdIxUVfTWSYtYD30rv8E6
+	 1T6lBUoykAvfmpXP6wRDCEcSxYlMKPWjAzLnlkh2qjfJf2wFLYBO/wizlJVnI2XUNy
+	 zBScSjHfZytimxRZBeNA6QxHqx0fW2dggJYZVzCD5mIVXU1zBhE/JCryjI/o02vhMt
+	 h0m3JQGLg0L0xQCGQPhE6MA4jCN/duW0N7FCBSmkX/FJa6k929yQnX7P4EgAH0dSWu
+	 JRkP4pSZmJwoegcc6yGFoh7QVDMAd4tGjzzlZo01tBo97mZSGA2Lh90cNrDKP3BJZm
+	 N1L+pnBnRU2+A==
+Date: Mon, 15 Jan 2024 17:32:20 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: [PATCH v2] riscv: select ARCH_HAS_FAST_MULTIPLIER
+Message-ID: <ZaT7pNjWS3faGjv9@xhacker>
+References: <20231202135202.4071-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231202135202.4071-1-jszhang@kernel.org>
 
-kasprintf() returns a pointer to dynamically allocated memory
-which can be NULL upon failure. Ensure the allocation was successful
-by checking the pointer validity.
+On Sat, Dec 02, 2023 at 09:52:02PM +0800, Jisheng Zhang wrote:
+> Currently, riscv linux requires at least IMA, so all platforms have a
+> multiplier. And I assume the 'mul' efficiency is comparable or better
+> than a sequence of five or so register-dependent arithmetic
+> instructions. Select ARCH_HAS_FAST_MULTIPLIER to get slightly nicer
+> codegen. Refer to commit f9b4192923fa ("[PATCH] bitops: hweight()
+> speedup") for more details.
+> 
+> In a simple benchmark test calling hweight64() in a loop, it got:
+> about 14% performance improvement on JH7110, tested on Milkv Mars.
+> 
+> about 23% performance improvement on TH1520 and SG2042, tested on
+> Sipeed LPI4A and SG2042 platform.
+> 
+> a slight performance drop on CV1800B, tested on milkv duo. Among all
+> riscv platforms in my hands, this is the only one which sees a slight
+> performance drop. It means the 'mul' isn't quick enough. However, the
+> situation exists on x86 too, for example, P4 doesn't have fast
+> integer multiplies as said in the above commit, x86 also selects
+> ARCH_HAS_FAST_MULTIPLIER. So let's select ARCH_HAS_FAST_MULTIPLIER
+> which can benefit almost riscv platforms.
+> 
+> Samuel also provided some performance numbers:
+> On Unmatched: 20% speedup for __sw_hweight32 and 30% speedup for
+> __sw_hweight64.
+> On D1: 8% speedup for __sw_hweight32 and 8% slowdown for
+> __sw_hweight64.
+> 
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+> Tested-by: Samuel Holland <samuel.holland@sifive.com>
 
-Cc: Kunwu Chan <kunwu.chan@hotmail.com>
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi @Palmer,
 
-diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerp=
-c/platforms/83xx/mcu_mpc8349emitx.c
-index 4d8fa9ed1a67..d1ae66eaa687 100644
---- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-+++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-@@ -120,6 +120,8 @@ static int mcu_gpiochip_add(struct mcu *mcu)
-=20
- 	gc->owner =3D THIS_MODULE;
- 	gc->label =3D kasprintf(GFP_KERNEL, "%pfw", dev_fwnode(dev));
-+	if (!gc->label)
-+		return -ENOMEM;
- 	gc->can_sleep =3D 1;
- 	gc->ngpio =3D MCU_NUM_GPIO;
- 	gc->base =3D -1;
---=20
-2.39.2
+I saw this simple patch is missed in your for-next tree, could you
+please pick it up?
 
+Thanks in advance
+
+> ---
+> 
+> since v1:
+>  - fix typo in commit msg
+>  - add some performance numbers provided by Samuel
+>  - collect Reviewed-by and Tested-by tag
+> 
+>  arch/riscv/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 95a2a06acc6a..e4834fa76417 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -23,6 +23,7 @@ config RISCV
+>  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>  	select ARCH_HAS_DEBUG_VM_PGTABLE
+>  	select ARCH_HAS_DEBUG_WX
+> +	select ARCH_HAS_FAST_MULTIPLIER
+>  	select ARCH_HAS_FORTIFY_SOURCE
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+>  	select ARCH_HAS_GIGANTIC_PAGE
+> -- 
+> 2.42.0
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
