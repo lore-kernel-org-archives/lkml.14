@@ -1,42 +1,48 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA795C97
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 06:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b13c22455a7543f58122e02b9107bdfc-20240115
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:de2d3315-cd84-4853-a1bb-18f2e590ddb8,IP:20,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:15
-X-CID-INFO: VERSION:1.1.35,REQID:de2d3315-cd84-4853-a1bb-18f2e590ddb8,IP:20,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:15
-X-CID-META: VersionHash:5d391d7,CLOUDID:c1deda82-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:2401151448309NCJ8U9I,BulkQuantity:1,Recheck:0,SF:66|24|17|42|101|74|
-	38|100|19|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:40,QS:nil,
-	BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: b13c22455a7543f58122e02b9107bdfc-20240115
-X-User: mengfanhui@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.13)] by mailgw
-	(envelope-from <mengfanhui@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
-	with ESMTP id 2087022929; Mon, 15 Jan 2024 14:53:03 +0800
-From: mengfanhui <mengfanhui@kylinos.cn>
-To: kbusch@kernel.org,
-	axboe@kernel.dk
-Cc: mengfanhui@kylinos.cn,
-	linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	sagi@grimberg.me
-Subject: [PATCH] nvme/auth: optimize code redundancy and provide code quality
-Date: Mon, 15 Jan 2024 14:52:31 +0800
-Message-Id: <20240115065231.12733-1-mengfanhui@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7096FA1;
+	Mon, 15 Jan 2024 06:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V8Xpxit+"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40F5qfME121268;
+	Sun, 14 Jan 2024 23:52:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1705297961;
+	bh=kHXNzqbBb5FPPwGvP0vugldGfFsecWuQTVR1E17V5YQ=;
+	h=From:To:CC:Subject:Date;
+	b=V8Xpxit+Nl1Idr2XbZF5kvWzK+mDoHOe4e3/WYprvQckWQejoanEM2vQIvte67ImM
+	 vcP90DIrGQc/GlV+R291FQyTDSp3Y8cgBMU4GnxhosQJ9fYi3tzb5quEQH1svs2p+f
+	 5gFSwSJCj60hZ564Z+aWzxFzJprPZMDZzQtDQRyE=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40F5qfYU026086
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 14 Jan 2024 23:52:41 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 14
+ Jan 2024 23:52:40 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 14 Jan 2024 23:52:40 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40F5qbWo065972;
+	Sun, 14 Jan 2024 23:52:37 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v2] dt-bindings: PCI: ti,j721e-pci-host: Add device-id for TI's J784S4 SoC
+Date: Mon, 15 Jan 2024 11:22:36 +0530
+Message-ID: <20240115055236.1840255-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,31 +50,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Improve code quality. Reduce code redundancy.
+Add the device-id of 0xb012 for the PCIe controller on the J784S4 SoC as
+described in the CTRL_MMR_PCI_DEVICE_ID register's PCI_DEVICE_ID_DEVICE_ID
+field. The Register descriptions and the Technical Reference Manual for
+J784S4 SoC can be found at: https://www.ti.com/lit/zip/spruj52
 
-Signed-off-by: mengfanhui <mengfanhui@kylinos.cn>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/nvme/common/auth.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/common/auth.c b/drivers/nvme/common/auth.c
-index a23ab5c968b9..4f9d06afdc38 100644
---- a/drivers/nvme/common/auth.c
-+++ b/drivers/nvme/common/auth.c
-@@ -250,9 +250,7 @@ struct nvme_dhchap_key *nvme_auth_transform_key(
- 	if (key->hash == 0) {
- 		key_len = nvme_auth_key_struct_size(key->len);
- 		transformed_key = kmemdup(key, key_len, GFP_KERNEL);
--		if (!transformed_key)
--			return ERR_PTR(-ENOMEM);
--		return transformed_key;
-+		return transformed_key ? transformed_key : ERR_PTR(-ENOMEM);
- 	}
- 	hmac_name = nvme_auth_hmac_name(key->hash);
- 	if (!hmac_name) {
+This patch is based on linux-next tagged next-20240112.
 
-base-commit: c29901006179c4c87f9335771e50814ec5707239
+v1:
+https://lore.kernel.org/r/20240108050735.512445-1-s-vadapalli@ti.com/
+Changes since v1:
+- Rebased patch on linux-next tagged next-20240112.
+- Collected Acked-by tag from Rob Herring <robh@kernel.org>
+  https://lore.kernel.org/r/170511031475.3817032.5482957589582376350.robh@kernel.org/
+
+Regards,
+Siddharth.
+
+ Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+index b7a534cef24d..0b1f21570ed0 100644
+--- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+@@ -68,6 +68,7 @@ properties:
+       - 0xb00d
+       - 0xb00f
+       - 0xb010
++      - 0xb012
+       - 0xb013
+ 
+   msi-map: true
 -- 
-2.25.1
+2.34.1
 
