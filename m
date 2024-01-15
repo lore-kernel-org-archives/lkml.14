@@ -1,35 +1,35 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF23D182C3
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE9E18C01
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b8GGphrl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j+t04NEL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ie8gWsdU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="atGElf/B"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705329490;
+	s=2020; t=1705329491;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ia4sddnbK0Qx+BWCOb+xOAdGjZ34vg4G3iXN8bRXi4s=;
-	b=b8GGphrlLbDvJc/pDdyXU2kGAPnBE+bfQAiN++hh9wO8KyqhoTl94U9CrJSuGmSpPDyFZl
-	cLIe0e0k4amIcy5S/NJU1uzMOZvDYVocGPAJ0Mejw3owPepGbbfbh1p0KI7My6IJG2A6a6
-	oHwdiNYrIW6rAmolipJKKpjx/cBeYpKIOFLnBZ8ojnpA89TnqzcOnv14q89e1Y41EAaG9E
-	DU8pnAwafNmnZIqkH2lJ8HS5k3yqCimeJGbB54bllC7IIEDGpfk+jSOL7DyqK/ZUlzMLVr
-	vNCzqb5rmrN2pLujw2Tik888Lvz7W6SXTgr9qm6hOEl51qitzauy9SiGlvVC9A==
+	bh=Opkow5gPOaaBUb3NbiN3AOkG3DcAm/G1qJk4x5I78GI=;
+	b=ie8gWsdUYa+mDSLuzV7dk7msmvEw1vRr4MX7/KUDaezICOJHY5kGXthCkRRrq2V/Cm3QwT
+	M/Ia4z+ICY3uEuKwzf+KJlwoCRioqjhG5E13ONLvcsGwXLtI6hdf3qlCZlTmqAHITBQnV/
+	oCmnmfKS4Ec15QGfvdk/K10X3oZ5J+4UrWvzf6cl/l+KT72NR1/6rUxenmm0HuPSDIFOEd
+	Ig9fkQEMR2/Exz+mAs2mKoK63fKL4Y7v3bWXdFksZb7DIJ1wO7gDBLfTGXB6yWhCu8Isgb
+	hoGlq1Q7rouQh+yiYK2hDV43qJ91UebEjVLWxcgDnugQhnfUmp/oz2iJ8qyzCg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705329490;
+	s=2020e; t=1705329491;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ia4sddnbK0Qx+BWCOb+xOAdGjZ34vg4G3iXN8bRXi4s=;
-	b=j+t04NELCR9FOn+3Ltaz1pEStFnL5V8hESrqaOUd7BCwDRzN1BJgcvFY9O/2TamDwtwKWQ
-	5IJD6N6eDzQki4Bw==
+	bh=Opkow5gPOaaBUb3NbiN3AOkG3DcAm/G1qJk4x5I78GI=;
+	b=atGElf/B15NatGtc5QWfPX7yXEKL5ON23WrledoHFHNeTOnwOonj+qkfzRdjJFyPyW6n21
+	PvNi9dInYpmACHDg==
 To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	John Stultz <jstultz@google.com>,
@@ -48,9 +48,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
 	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH v10 13/20] timers: Add get next timer interrupt functionality for remote CPUs
-Date: Mon, 15 Jan 2024 15:37:36 +0100
-Message-Id: <20240115143743.27827-14-anna-maria@linutronix.de>
+Subject: [PATCH v10 15/20] timers: Check if timers base is handled already
+Date: Mon, 15 Jan 2024 15:37:38 +0100
+Message-Id: <20240115143743.27827-16-anna-maria@linutronix.de>
 In-Reply-To: <20240115143743.27827-1-anna-maria@linutronix.de>
 References: <20240115143743.27827-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -61,163 +61,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
- remote CPUs
+Due to the conversion of the NOHZ timer placement to a pull at expiry
+time model, the per CPU timer bases with non pinned timers are no
+longer handled only by the local CPU. In case a remote CPU already
+expires the non pinned timers base of the local CPU, nothing more
+needs to be done by the local CPU. A check at the begin of the expire
+timers routine is required, because timer base lock is dropped before
+executing the timer callback function.
 
-To prepare for the conversion of the NOHZ timer placement to a pull at
-expiry time model it's required to have functionality available getting the
-next timer interrupt on a remote CPU.
-
-Locking of the timer bases and getting the information for the next timer
-interrupt functionality is split into separate functions. This is required
-to be compliant with lock ordering when the new model is in place.
+This is a preparatory work, but has no functional impact right now.
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
-v10:
- - sparse annotations for locks
+v10: s/cpu/CPU/ in commit message
 
-v8:
- - Update comment
-
-v7:
- - Move functions into CONFIG_SMP && CONFIG_NO_HZ_COMMON section
- - change lock, fetch functions to be unconditional
- - split out unlock function into a separate function
-
-v6:
- - introduce timer_lock_remote_bases() to fix race
+v6: Drop double negation
 ---
- kernel/time/tick-internal.h | 10 +++++
- kernel/time/timer.c         | 80 ++++++++++++++++++++++++++++++++++---
- 2 files changed, 85 insertions(+), 5 deletions(-)
+ kernel/time/timer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
-index 47df30b871e4..8b0c28edbd09 100644
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -8,6 +8,11 @@
- #include "timekeeping.h"
- #include "tick-sched.h"
- 
-+struct timer_events {
-+	u64	local;
-+	u64	global;
-+};
-+
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- 
- # define TICK_DO_TIMER_NONE	-1
-@@ -154,6 +159,11 @@ extern unsigned long tick_nohz_active;
- extern void timers_update_nohz(void);
- # ifdef CONFIG_SMP
- extern struct static_key_false timers_migration_enabled;
-+extern void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
-+					      struct timer_events *tevt,
-+					      unsigned int cpu);
-+extern void timer_lock_remote_bases(unsigned int cpu);
-+extern void timer_unlock_remote_bases(unsigned int cpu);
- # endif
- #else /* CONFIG_NO_HZ_COMMON */
- static inline void timers_update_nohz(void) { }
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 9fa759dd80f5..3e2adfc15f3a 100644
+index ccb2a5c03b87..eb99297a96fe 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -221,11 +221,6 @@ struct timer_base {
+@@ -2225,6 +2225,9 @@ static inline void __run_timers(struct timer_base *base)
  
- static DEFINE_PER_CPU(struct timer_base, timer_bases[NR_BASES]);
+ 	lockdep_assert_held(&base->lock);
  
--struct timer_events {
--	u64	local;
--	u64	global;
--};
--
- #ifdef CONFIG_NO_HZ_COMMON
- 
- static DEFINE_STATIC_KEY_FALSE(timers_nohz_active);
-@@ -2031,6 +2026,81 @@ static unsigned long fetch_next_timer_interrupt(unsigned long basej, u64 basem,
- 	return nextevt;
- }
- 
-+# ifdef CONFIG_SMP
-+/**
-+ * fetch_next_timer_interrupt_remote() - Store next timers into @tevt
-+ * @basej:	base time jiffies
-+ * @basem:	base time clock monotonic
-+ * @tevt:	Pointer to the storage for the expiry values
-+ * @cpu:	Remote CPU
-+ *
-+ * Stores the next pending local and global timer expiry values in the
-+ * struct pointed to by @tevt. If a queue is empty the corresponding
-+ * field is set to KTIME_MAX. If local event expires before global
-+ * event, global event is set to KTIME_MAX as well.
-+ *
-+ * Caller needs to make sure timer base locks are held (use
-+ * timer_lock_remote_bases() for this purpose).
-+ */
-+void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
-+				       struct timer_events *tevt,
-+				       unsigned int cpu)
-+{
-+	struct timer_base *base_local, *base_global;
++	if (base->running_timer)
++		return;
 +
-+	/* Preset local / global events */
-+	tevt->local = tevt->global = KTIME_MAX;
-+
-+	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
-+	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
-+
-+	lockdep_assert_held(&base_local->lock);
-+	lockdep_assert_held(&base_global->lock);
-+
-+	fetch_next_timer_interrupt(basej, basem, base_local, base_global, tevt);
-+}
-+
-+/**
-+ * timer_unlock_remote_bases - unlock timer bases of cpu
-+ * @cpu:	Remote CPU
-+ *
-+ * Unlocks the remote timer bases.
-+ */
-+void timer_unlock_remote_bases(unsigned int cpu)
-+	__releases(timer_bases[BASE_LOCAL]->lock)
-+	__releases(timer_bases[BASE_GLOBAL]->lock)
-+{
-+	struct timer_base *base_local, *base_global;
-+
-+	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
-+	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
-+
-+	raw_spin_unlock(&base_global->lock);
-+	raw_spin_unlock(&base_local->lock);
-+}
-+
-+/**
-+ * timer_lock_remote_bases - lock timer bases of cpu
-+ * @cpu:	Remote CPU
-+ *
-+ * Locks the remote timer bases.
-+ */
-+void timer_lock_remote_bases(unsigned int cpu)
-+	__acquires(timer_bases[BASE_LOCAL]->lock)
-+	__acquires(timer_bases[BASE_GLOBAL]->lock)
-+{
-+	struct timer_base *base_local, *base_global;
-+
-+	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
-+	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	raw_spin_lock(&base_local->lock);
-+	raw_spin_lock_nested(&base_global->lock, SINGLE_DEPTH_NESTING);
-+}
-+# endif /* CONFIG_SMP */
-+
- static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 					     bool *idle)
- {
+ 	while (time_after_eq(jiffies, base->clk) &&
+ 	       time_after_eq(jiffies, base->next_expiry)) {
+ 		levels = collect_expired_timers(base, heads);
 -- 
 2.39.2
 
