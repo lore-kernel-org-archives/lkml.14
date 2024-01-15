@@ -1,116 +1,86 @@
-Received: from mail-m92248.xmail.ntesmail.com (mail-m92248.xmail.ntesmail.com [103.126.92.248])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C29F17BA4;
-	Mon, 15 Jan 2024 16:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sangfor.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sangfor.com.cn
-Received: from [172.23.69.7] (unknown [121.32.254.147])
-	by mail-m11879.qiye.163.com (Hmail) with ESMTPA id 8B7656802F0;
-	Mon, 15 Jan 2024 11:27:08 +0800 (CST)
-Message-ID: <520ac28c-80c6-4c5e-ae88-4c5a8387f3c0@sangfor.com.cn>
-Date: Mon, 15 Jan 2024 11:27:07 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D69717BA4;
+	Mon, 15 Jan 2024 16:24:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E5FC433C7;
+	Mon, 15 Jan 2024 16:24:00 +0000 (UTC)
+Date: Mon, 15 Jan 2024 11:23:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com
+Subject: Re: [PATCH v11 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <20240115112359.65dcecbf@rorschach.local.home>
+In-Reply-To: <20240115110938.613380ca@rorschach.local.home>
+References: <20240111161712.1480333-1-vdonnefort@google.com>
+	<20240111161712.1480333-3-vdonnefort@google.com>
+	<20240115134303.1a673e37b8e7d35a33d8df52@kernel.org>
+	<ZaVRO76JxaHjPwCi@google.com>
+	<20240115110938.613380ca@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] RDMA/device: Fix a race between mad_client and cm_client
- init
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: leon@kernel.org, wenglianfa@huawei.com, gustavoars@kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shifeng Li <lishifeng1992@126.com>, "Ding, Hui" <dinghui@sangfor.com.cn>
-References: <20240102034335.34842-1-lishifeng@sangfor.com.cn>
- <20240103184804.GB50608@ziepe.ca>
- <80cac9fd-7fed-403e-8889-78e2fc7a49b0@sangfor.com.cn>
- <20240104123728.GC50608@ziepe.ca>
- <62db1a02-41b8-44b0-960b-6d6f5bec5d19@sangfor.com.cn>
- <20240105141944.GF50608@ziepe.ca>
-From: Shifeng Li <lishifeng@sangfor.com.cn>
-In-Reply-To: <20240105141944.GF50608@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaQxlDVh0YQktLTR8ZSU4YSFUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
-	++
-X-HM-Tid: 0a8d0b28a2752eb5kusn8b7656802f0
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6P1E6Hjo4DzwoCBpDKT8cSCEz
-	NhgaChFVSlVKTEtOSUNCSUlCTk9PVTMWGhIXVRcSCBMSHR4VHDsIGhUcHRQJVRgUFlUYFUVZV1kS
-	C1lBWUpJSlVISVVJTk9VSk9MWVdZCAFZQU9JQkw3Bg++
 
-On 2024/1/5 22:19, Jason Gunthorpe wrote:
-> On Fri, Jan 05, 2024 at 04:15:18PM +0800, Shifeng Li wrote:
->> On 2024/1/4 20:37, Jason Gunthorpe wrote:
->>> On Thu, Jan 04, 2024 at 02:48:14PM +0800, Shifeng Li wrote:
->>>
->>>> The root cause is that mad_client and cm_client may init concurrently
->>>> when devices_rwsem write semaphore is downgraded in enable_device_and_get() like:
->>>
->>> That can't be true, the module loader infrastructue ensures those two
->>> things are sequential.
->>>
->>
->> I'm a bit confused how the module loader infrastructue ensures that mad_client.add() and
->> cm_client.add() are sequential. Could you explain in more detail
->> please?
-> 
-> ib_cm has a symbol dependency on ib_mad, so the module loader will not
-> allow ib_cm to start running until all its symbol dependencies have
-> completed loading.
+On Mon, 15 Jan 2024 11:09:38 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-I have found a method to reproduce the issue as follow:
+> No. The ring buffer logic should not care if the user of it is swapping
+> the entire ring buffer or not. It only cares if parts of the ring
+> buffer is being swapped or not. That's not the level of scope it should
+> care about. If we do not want a swap to happen in update_max_tr()
+> that's not ring_buffer.c's problem. The code to prevent that from
+> happening should be 100% in trace.c.
 
-1. modprobe -r ib_cm; modprobe -r ib_core; modprobe -r mlx5_ib;
-2. Compile and replace ib_core with following patch;
-3. modprobe ib_cm;
-4. modprobe mlx5_ib;
+What needs to be done, and feel free to add this as a separate patch,
+is to have checks where snapshot is used.
 
-diff -Narup ./drivers/infiniband/core/device.c ./drivers/infiniband/core/device.c.reproduce
---- ./drivers/infiniband/core/device.c  2024-01-15 11:14:08.063094430 +0800
-+++ ./drivers/infiniband/core/device.c.reproduce        2024-01-15 11:16:22.577096953 +0800
-@@ -64,6 +64,8 @@ struct workqueue_struct *ib_wq;
-  EXPORT_SYMBOL_GPL(ib_wq);
-  static struct workqueue_struct *ib_unreg_wq;
-  
-+int ib_cm_run_flag = 0;
+  (All errors return -EBUSY)
+
+Before allowing mapping, check to see if:
+
+ 1) the current tracer has "use_max_tr" set.
+ 2) any event has a "snapshot" trigger set
+ 3) Any function has a "snapshot" command set
+
+Fail if any of the above is true.
+
+Also in reverse, if the buffer is mapped, then fail:
+
+ 1) a tracer being set that has "use_max_tr" set.
+ 2) a "snapshot" command being set on a function
+ 3) a "snapshot" trigger being set on an event.
+
+For the last two, we may be able to get away with just a below as well.
+Adding the tr->flags bit. We could also add a tr->snapshot count to
+keep track of everything that is using a snapshot, and if that count is
+non-zero, mapping fails.
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2a7c6fd934e9..f534f74ae80f 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1175,6 +1175,12 @@ static void tracing_snapshot_instance_cond(struct trace_array *tr,
+ 		return;
+ 	}
+ 
++	if (tr->flags & TRACE_ARRAY_FL_MAPPED) {
++		trace_array_puts(tr, "*** BUFFER IS MEMORY MAPPED ***\n");
++		trace_array_puts(tr, "*** Can not use snapshot (sorry) ***\n");
++		return;
++	}
 +
-  /*
-   * Each of the three rwsem locks (devices, clients, client_data) protects the
-   * xarray of the same name. Specifically it allows the caller to assert that
-@@ -1371,6 +1373,9 @@ static int enable_device_and_get(struct
-          */
-         downgrade_write(&devices_rwsem);
-  
-+       ib_cm_run_flag = 1;
-+       msleep(30000);
-+
-         if (device->ops.enable_driver) {
-                 ret = device->ops.enable_driver(device);
-                 if (ret)
-@@ -1843,6 +1848,12 @@ int ib_register_client(struct ib_client
-         if (ret)
-                 return ret;
-  
-+       if (strncmp(client->name, "cm", strlen("cm")) == 0) {
-+               while (!ib_cm_run_flag) {
-+                       cond_resched();
-+               }
-+       }
-+
-         down_read(&devices_rwsem);
-         xa_for_each_marked (&devices, index, device, DEVICE_REGISTERED) {
-                 ret = add_client_context(device, client);
+ 	local_irq_save(flags);
+ 	update_max_tr(tr, current, smp_processor_id(), cond_data);
+ 	local_irq_restore(flags);
 
-> 
->> We know that the ib_cm driver and mlx5_ib driver can load concurrently.
-> 
-> Yes, this is possible
-> 
-> Jason
-> 
 
+-- Steve
