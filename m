@@ -1,9 +1,9 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E3463CA
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A002379F9
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:20:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-7f-65a4eab48a36
+X-AuditID: a67dfc5b-d85ff70000001748-89-65a4eab45724
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -23,36 +23,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [PATCH v6 3/7] mm/rmap: Recognize read-only TLB entries during batched TLB flush
-Date: Mon, 15 Jan 2024 17:19:49 +0900
-Message-Id: <20240115081953.2521-4-byungchul@sk.com>
+Subject: [PATCH v6 5/7] mm: Add APIs to free a folio directly to the buddy bypassing pcp
+Date: Mon, 15 Jan 2024 17:19:51 +0900
+Message-Id: <20240115081953.2521-6-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240115081953.2521-1-byungchul@sk.com>
 References: <20240115081953.2521-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsXC9ZZnoe6WV0tSDboXi1nMWb+GzeLzhn9s
-	Fi82tDNafF3/i9ni6ac+FovLu+awWdxb85/V4vyutawWO5buY7K4dGABk8X1XQ8ZLY73HmCy
-	mH/vM5vF5k1TmS2OT5nKaPH7B1DHyVmTWRwEPb639rF47Jx1l91jwaZSj80rtDwW73nJ5LFp
-	VSebx6ZPk9g93p07x+5xYsZvFo95JwM93u+7yuax9ZedR+PUa2wenzfJebyb/5YtgD+KyyYl
-	NSezLLVI3y6BK+PrPKeC49IVHz7tYGxgfCDWxcjJISFgIvHl7ERWGPvasXWMIDabgLrEjRs/
-	mUFsEQEziYOtf9i7GLk4mAU+Mkms/t7BApIQFoiUaFixF6yBRUBV4tjmN2ANvECDtm2dATVU
-	XmL1hgNgcU4BU4l3H4+zg9hCQDUtd9exggyVEGhml7j+aAlUg6TEwRU3WCYw8i5gZFjFKJSZ
-	V5abmJljopdRmZdZoZecn7uJERgPy2r/RO9g/HQh+BCjAAejEg/vj7+LU4VYE8uKK3MPMUpw
-	MCuJ8FbfWZIqxJuSWFmVWpQfX1Sak1p8iFGag0VJnNfoW3mKkEB6YklqdmpqQWoRTJaJg1Oq
-	gVHzRf2p6w7TWh/tPSadJTRDa14q24VzVforrpY+Vrrp+DqTIX6WrdMFDcMVM+reZp698f+z
-	y5rapKVWeyYutX2xjbEm9UWMjt/ZK7LyMflerzS61bnmO0371bj32FfNCNeLNgoLD6feu3tC
-	0uKxs+aE5E17k1QXJ0p8XcqwVSawVOj5Zp53nPJKLMUZiYZazEXFiQBlepJngwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsXC5WfdrLvl1ZJUg+5VnBZz1q9hs/i84R+b
-	xYsN7YwWX9f/YrZ4+qmPxeLw3JOsFpd3zWGzuLfmP6vF+V1rWS12LN3HZHHpwAImi+u7HjJa
-	HO89wGQx/95nNovNm6YyWxyfMpXR4vcPoI6TsyazOAh5fG/tY/HYOesuu8eCTaUem1doeSze
-	85LJY9OqTjaPTZ8msXu8O3eO3ePEjN8sHvNOBnq833eVzWPxiw9MHlt/2Xk0Tr3G5vF5k5zH
-	u/lv2QIEorhsUlJzMstSi/TtErgyvs5zKjguXfHh0w7GBsYHYl2MnBwSAiYS146tYwSx2QTU
-	JW7c+MkMYosImEkcbP3D3sXIxcEs8JFJYvX3DhaQhLBApETDir1gDSwCqhLHNr8Ba+AFGrRt
-	6wxWiKHyEqs3HACLcwqYSrz7eJwdxBYCqmm5u451AiPXAkaGVYwimXlluYmZOaZ6xdkZlXmZ
-	FXrJ+bmbGIHBvaz2z8QdjF8uux9iFOBgVOLh/fF3caoQa2JZcWXuIUYJDmYlEd7qO0tShXhT
-	EiurUovy44tKc1KLDzFKc7AoifN6hacmCAmkJ5akZqemFqQWwWSZODilGhgbr0o4HFm85Kfq
-	gQu/F6bd3ZnyYU7heQ/jhRv+XX/i9v7Dyplc1+Z/TvJpuKbSkDZ5h9VL/718xgfjHHtifQ5k
-	/o0IP6rZ99dde3+x3I05j08dDlsUkhimK2t0VpypRvMU37q+NBd37ZSGyGMPb7tXfjdXm3BL
-	WPDfoRmnyy+5T75r/Gu++ywtJZbijERDLeai4kQAJQwUJmoCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsXC9ZZnke6WV0tSDebPkrWYs34Nm8XnDf/Y
+	LF5saGe0+Lr+F7PF0099LBaXd81hs7i35j+rxflda1ktdizdx2Rx6cACJovrux4yWhzvPcBk
+	Mf/eZzaLzZumMlscnzKV0eL3D6COk7MmszgIenxv7WPx2DnrLrvHgk2lHptXaHks3vOSyWPT
+	qk42j02fJrF7vDt3jt3jxIzfLB7zTgZ6vN93lc1j6y87j8ap19g8Pm+S83g3/y1bAH8Ul01K
+	ak5mWWqRvl0CV0bHdbaCP1IVh4/vZm5g/CHaxcjJISFgIrHo02N2GHvDsR1MIDabgLrEjRs/
+	mUFsEQEziYOtf4BquDiYBT4ySaz+3sECkhAWiJD4c/ksWBGLgKpE5789bF2MHBy8QIOWnayH
+	mCkvsXrDAbASTgFTiXcfj4PtEgIqabm7jhVkpoRAM7vE8v9rWSEaJCUOrrjBMoGRdwEjwypG
+	ocy8stzEzBwTvYzKvMwKveT83E2MwGhYVvsnegfjpwvBhxgFOBiVeHh//F2cKsSaWFZcmXuI
+	UYKDWUmEt/rOklQh3pTEyqrUovz4otKc1OJDjNIcLErivEbfylOEBNITS1KzU1MLUotgskwc
+	nFINjE4zODo3GK5az23z2HHVzVXObm9F1jPF3+1zr/slsXj3tvwk8SVl06eFxX00F1BsyWry
+	WlclvijK22yjxDZPb6YvPh0JfW6zBSNPhXDE3jhgWPJUnFE7r/L2YftoHnPV1XfX7LxpJfTm
+	75PUDy9ldvD+ruW79sRh6+IdmcJmZ4+crwlfyljzUImlOCPRUIu5qDgRAEaPGL6CAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsXC5WfdrLvl1ZJUg9ZmQYs569ewWXze8I/N
+	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfVdDxkt
+	jvceYLKYf+8zm8XmTVOZLY5Pmcpo8fsHUMfJWZNZHIQ8vrf2sXjsnHWX3WPBplKPzSu0PBbv
+	ecnksWlVJ5vHpk+T2D3enTvH7nFixm8Wj3knAz3e77vK5rH4xQcmj62/7Dwap15j8/i8Sc7j
+	3fy3bAECUVw2Kak5mWWpRfp2CVwZHdfZCv5IVRw+vpu5gfGHaBcjJ4eEgInEhmM7mEBsNgF1
+	iRs3fjKD2CICZhIHW/+wdzFycTALfGSSWP29gwUkISwQIfHn8lmwIhYBVYnOf3vYuhg5OHiB
+	Bi07WQ8xU15i9YYDYCWcAqYS7z4eZwexhYBKWu6uY53AyLWAkWEVo0hmXlluYmaOqV5xdkZl
+	XmaFXnJ+7iZGYGgvq/0zcQfjl8vuhxgFOBiVeHh//F2cKsSaWFZcmXuIUYKDWUmEt/rOklQh
+	3pTEyqrUovz4otKc1OJDjNIcLErivF7hqQlCAumJJanZqakFqUUwWSYOTqkGRvX/9/84uPN9
+	eJAfK+R/+bb8Bbfsb9eaXhVMvvw3UlknWe7jkliWlntncvxVLkmfl1NY09grNDWU/WmJ7uUU
+	J6WJPhpfz/S6HYsPaGeT2154+35Lt2PSgpyJa9dkeMn/9w1Otk7fMrtuM0/Ij3mRS3fMKnst
+	YPzwS6dvt66K8+QTU5ZOXHi2TImlOCPRUIu5qDgRALgW8+dpAgAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,115 +60,110 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Functionally, no change. This is a preparation for migrc mechanism that
-requires to recognize read-only TLB entries and makes use of them to
-batch more aggressively. Plus, the newly introduced API, fold_ubc() will
-be used by migrc mechanism when manipulating tlb batch data.
+This is a preparation for migrc mechanism that frees folios at a better
+time later, rather than the moment migrating folios. The folios freed by
+migrc are too old to keep in pcp.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/sched.h |  1 +
- mm/internal.h         |  4 ++++
- mm/rmap.c             | 31 ++++++++++++++++++++++++++++++-
- 3 files changed, 35 insertions(+), 1 deletion(-)
+ include/linux/mm.h | 23 +++++++++++++++++++++++
+ mm/internal.h      |  1 +
+ mm/page_alloc.c    | 10 ++++++++++
+ mm/swap.c          |  7 +++++++
+ 4 files changed, 41 insertions(+)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 292c31697248..0317e7a65151 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1328,6 +1328,7 @@ struct task_struct {
- #endif
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index da5219b48d52..fc0581cce3a7 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1284,6 +1284,7 @@ static inline struct folio *virt_to_folio(const void *x)
+ }
  
- 	struct tlbflush_unmap_batch	tlb_ubc;
-+	struct tlbflush_unmap_batch	tlb_ubc_ro;
+ void __folio_put(struct folio *folio);
++void __folio_put_small_nopcp(struct folio *folio);
  
- 	/* Cache last used pipe for splice(): */
- 	struct pipe_inode_info		*splice_pipe;
+ void put_pages_list(struct list_head *pages);
+ 
+@@ -1483,6 +1484,28 @@ static inline void folio_put(struct folio *folio)
+ 		__folio_put(folio);
+ }
+ 
++/**
++ * folio_put_small_nopcp - Decrement the reference count on a folio.
++ * @folio: The folio.
++ *
++ * This is only for a single page folio to release directly to the buddy
++ * allocator bypassing pcp.
++ *
++ * If the folio's reference count reaches zero, the memory will be
++ * released back to the page allocator and may be used by another
++ * allocation immediately.  Do not access the memory or the struct folio
++ * after calling folio_put_small_nopcp() unless you can be sure that it
++ * wasn't the last reference.
++ *
++ * Context: May be called in process or interrupt context, but not in NMI
++ * context.  May be called while holding a spinlock.
++ */
++static inline void folio_put_small_nopcp(struct folio *folio)
++{
++	if (folio_put_testzero(folio))
++		__folio_put_small_nopcp(folio);
++}
++
+ /**
+  * folio_put_refs - Reduce the reference count on a folio.
+  * @folio: The folio.
 diff --git a/mm/internal.h b/mm/internal.h
-index b61034bd50f5..b880f1e78700 100644
+index b880f1e78700..3be8fd5604e8 100644
 --- a/mm/internal.h
 +++ b/mm/internal.h
-@@ -923,6 +923,7 @@ extern struct workqueue_struct *mm_percpu_wq;
- void try_to_unmap_flush(void);
- void try_to_unmap_flush_dirty(void);
- void flush_tlb_batched_pending(struct mm_struct *mm);
-+void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src);
- #else
- static inline void try_to_unmap_flush(void)
- {
-@@ -933,6 +934,9 @@ static inline void try_to_unmap_flush_dirty(void)
- static inline void flush_tlb_batched_pending(struct mm_struct *mm)
- {
- }
-+static inline void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src)
-+{
-+}
- #endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+@@ -451,6 +451,7 @@ extern int user_min_free_kbytes;
  
- extern const struct trace_print_flags pageflag_names[];
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 7a27a2b41802..da36f23ff7b0 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -605,6 +605,28 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
+ extern void free_unref_page(struct page *page, unsigned int order);
+ extern void free_unref_page_list(struct list_head *list);
++extern void free_pages_nopcp(struct page *page, unsigned int order);
+ 
+ extern void zone_pcp_reset(struct zone *zone);
+ extern void zone_pcp_disable(struct zone *zone);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 733732e7e0ba..21b8c8cd1673 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -565,6 +565,16 @@ static inline void free_the_page(struct page *page, unsigned int order)
+ 		__free_pages_ok(page, order, FPI_NONE);
  }
  
- #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
-+
-+void fold_ubc(struct tlbflush_unmap_batch *dst,
-+	      struct tlbflush_unmap_batch *src)
++void free_pages_nopcp(struct page *page, unsigned int order)
 +{
-+	if (!src->flush_required)
-+		return;
-+
 +	/*
-+	 * Fold src to dst.
++	 * This function will be used in case that the pages are too
++	 * cold to keep in pcp e.g. migrc mechanism. So it'd better
++	 * release the pages to the tail.
 +	 */
-+	arch_tlbbatch_fold(&dst->arch, &src->arch);
-+	dst->writable = dst->writable || src->writable;
-+	dst->flush_required = true;
-+
-+	/*
-+	 * Reset src.
-+	 */
-+	arch_tlbbatch_clear(&src->arch);
-+	src->flush_required = false;
-+	src->writable = false;
++	__free_pages_ok(page, order, FPI_TO_TAIL);
 +}
 +
  /*
-  * Flush TLB entries for recently unmapped pages from remote CPUs. It is
-  * important if a PTE was dirty when it was unmapped that it's flushed
-@@ -614,7 +636,9 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
- void try_to_unmap_flush(void)
- {
- 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
-+	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
+  * Higher-order pages are called "compound pages".  They are structured thusly:
+  *
+diff --git a/mm/swap.c b/mm/swap.c
+index cd8f0150ba3a..3f37496a1184 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -106,6 +106,13 @@ static void __folio_put_small(struct folio *folio)
+ 	free_unref_page(&folio->page, 0);
+ }
  
-+	fold_ubc(tlb_ubc, tlb_ubc_ro);
- 	if (!tlb_ubc->flush_required)
- 		return;
- 
-@@ -645,13 +669,18 @@ void try_to_unmap_flush_dirty(void)
- static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
- 				      unsigned long uaddr)
- {
--	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
-+	struct tlbflush_unmap_batch *tlb_ubc;
- 	int batch;
- 	bool writable = pte_dirty(pteval);
- 
- 	if (!pte_accessible(mm, pteval))
- 		return;
- 
-+	if (pte_write(pteval) || writable)
-+		tlb_ubc = &current->tlb_ubc;
-+	else
-+		tlb_ubc = &current->tlb_ubc_ro;
++void __folio_put_small_nopcp(struct folio *folio)
++{
++	__page_cache_release(folio);
++	mem_cgroup_uncharge(folio);
++	free_pages_nopcp(&folio->page, 0);
++}
 +
- 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, uaddr);
- 	tlb_ubc->flush_required = true;
- 
+ static void __folio_put_large(struct folio *folio)
+ {
+ 	/*
 -- 
 2.17.1
 
