@@ -1,43 +1,26 @@
-Received: from pv50p00im-ztdg10021901.me.com (pv50p00im-ztdg10021901.me.com [17.58.6.55])
+Received: from mail.enpas.org (zhong.enpas.org [46.38.239.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D93175A6
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kyuhyuk.kr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kyuhyuk.kr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kyuhyuk.kr header.i=@kyuhyuk.kr header.b="o0uB9/0f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kyuhyuk.kr; s=sig1;
-	t=1705330433; bh=2+fJNK0tDVBz4TCLJ97mC6ABjRsY+gTG6ZoZy4vbqaw=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=o0uB9/0fHpuxFGWEyCG906GLotIw53+8nd+k1lnBr8tFnBaPLjIB1W7kPQqA5TKY8
-	 k8N2kqGiRAqQnzWw525lDfkeiDeeGTpP80NADBGV7c3+FCYbh7/+uOW9pZ5qO0yp6T
-	 cBtDFXOmxK5aK+5CETeFGqVZ96htgaVU9OxyxRXNjxo0+5V8g9CgNi7DxJQ9e0kqGr
-	 ZhFQLw00e2p3JOTrSIO2vuGvdi0Tj1H7ZMMGwKSv0KU2rKFcGPakQsUpplAPztWoAU
-	 O3IIsDshanl8pHdQoDjALPtl+Wf6aSksesCzQECX5ybQHF3WeNgUPF1BMUmePZdgAG
-	 6GZTEg77tIu0w==
-Received: from KyuDevelop.. (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021901.me.com (Postfix) with ESMTPSA id 0E7428148E;
-	Mon, 15 Jan 2024 14:53:47 +0000 (UTC)
-From: KyuHyuk Lee <lee@kyuhyuk.kr>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Tianling Shen <cnsztl@gmail.com>,
-	Jagan Teki <jagan@edgeble.ai>,
-	Ondrej Jirman <megi@xff.cz>,
-	Andy Yan <andyshrk@163.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB4617586;
+	Mon, 15 Jan 2024 14:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enpas.org
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.enpas.org (Postfix) with ESMTPSA id 41FB5101643;
+	Mon, 15 Jan 2024 14:48:47 +0000 (UTC)
+From: Max Staudt <max@enpas.org>
+To: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	KyuHyuk Lee <lee@kyuhyuk.kr>
-Subject: [PATCH] dt-bindings: rockchip: Fix Hardkernel ODROID-M1 board bindings
-Date: Mon, 15 Jan 2024 23:51:42 +0900
-Message-Id: <20240115145142.6292-1-lee@kyuhyuk.kr>
-X-Mailer: git-send-email 2.34.1
+	max@enpas.org
+Subject: [PATCH v1 2/7] HID: playstation: DS4: Don't fail on MAC address request
+Date: Mon, 15 Jan 2024 23:45:33 +0900
+Message-Id: <20240115144538.12018-3-max@enpas.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240115144538.12018-1-max@enpas.org>
+References: <20240115144538.12018-1-max@enpas.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,37 +28,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: niry3WWL1W0m_DapRYWwFycyjk25WHMD
-X-Proofpoint-ORIG-GUID: niry3WWL1W0m_DapRYWwFycyjk25WHMD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-15_09,2024-01-15_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1030 mlxlogscore=690
- phishscore=0 malwarescore=0 adultscore=0 mlxscore=0 suspectscore=0
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2401150109
 
-The vendor in ODROID-M1 is hardkernel, but it was incorrectly written
-as rockchip. Fixed the vendor prefix correctly.
+Some third-party controllers can't report their MAC address.
 
-Signed-off-by: KyuHyuk Lee <lee@kyuhyuk.kr>
+Since a unique ID is needed for ps_devices_list_add() and
+ps_device_register_battery(), let's use hdev->id for this when we don't
+have a MAC address.
+
+Signed-off-by: Max Staudt <max@enpas.org>
 ---
- Documentation/devicetree/bindings/arm/rockchip.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-playstation.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 5cf5cbef2cf5..869abf6bcfe6 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -563,7 +563,7 @@ properties:
+diff --git a/drivers/hid/hid-playstation.c b/drivers/hid/hid-playstation.c
+index 7f50e13601f0..0a3c442af305 100644
+--- a/drivers/hid/hid-playstation.c
++++ b/drivers/hid/hid-playstation.c
+@@ -1966,7 +1966,10 @@ static int dualshock4_get_mac_address(struct dualshock4 *ds4)
+ 				DS4_FEATURE_REPORT_PAIRING_INFO_SIZE, false);
+ 		if (ret) {
+ 			hid_err(hdev, "Failed to retrieve DualShock4 pairing info: %d\n", ret);
+-			goto err_free;
++			hid_err(hdev, "Generating fake MAC address for this device.\n");
++			buf[1] = (hdev->id >>  0) & 0xff;
++			buf[2] = (hdev->id >>  8) & 0xff;
++			buf[3] = (hdev->id >> 16) & 0xff;
+ 		}
  
-       - description: Hardkernel Odroid M1
-         items:
--          - const: rockchip,rk3568-odroid-m1
-+          - const: hardkernel,rk3568-odroid-m1
-           - const: rockchip,rk3568
+ 		memcpy(ds4->base.mac_address, &buf[1], sizeof(ds4->base.mac_address));
+@@ -1986,7 +1989,6 @@ static int dualshock4_get_mac_address(struct dualshock4 *ds4)
+ 		return 0;
+ 	}
  
-       - description: Hugsun X99 TV Box
+-err_free:
+ 	kfree(buf);
+ 	return ret;
+ }
+@@ -2552,7 +2554,7 @@ static struct ps_device *dualshock4_create(struct hid_device *hdev)
+ 	ret = dualshock4_get_mac_address(ds4);
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to get MAC address from DualShock4\n");
+-		return ERR_PTR(ret);
++		hid_err(hdev, "Can't detect simultaneous USB/BT connections from this device.\n");
+ 	}
+ 	snprintf(hdev->uniq, sizeof(hdev->uniq), "%pMR", ds4->base.mac_address);
+ 
 -- 
-2.34.1
+2.39.2
 
