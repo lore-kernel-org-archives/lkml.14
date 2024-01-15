@@ -1,171 +1,123 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBFD1802F
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 18:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C800182A1
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 18:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z3xN0lJg"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6db0c49e93eso6192279b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 10:14:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PoYl0srb"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55965fd00aeso879669a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 10:17:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705342463; x=1705947263; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YBn2qZQx8P3zg2r39V5+2Dh28lfRonfO6AcXOPJi0eo=;
-        b=Z3xN0lJgoMpkO7ZmWQWssNERIlWY/LH1cbKdVjbqumPdwcFgGfR6CrSozF90Ub0YrZ
-         noGdHjoPd4sUouvD9veEsjJWKeXlLJWIdTP2R8DuZWWGDKHBnTOP/67SmPCZN4xeSa+E
-         h1gQTnzJh6o6XrHW493lsywTl3FHNd+youIwd5px/QZMH0o4ohGtD2YBUvG7wzcflSFM
-         9jzvGcnmpL8eplLFjgTsP8VlIGhycspNS/vH+F1RUi4MuE6/MDJqlyjbjHiZJ+DCQ9jr
-         JdDQb81joMFiIdqhNpzAETy1lTwCamZd/G1sX8eiWLm6GpYaP40gZOGOZnH7HSRl1M8W
-         CyHQ==
+        d=linaro.org; s=google; t=1705342636; x=1705947436; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ONrJRmAYGOIocV1TaXZm7gL7rutvMwXPfE4iqEwyFPc=;
+        b=PoYl0srbD9EFyvr4gPlCs3zNyvhlcNPxSKQhHFDrOEBP9P1OKm/qtamajDO9M4E55G
+         XkdWcoW2y3J/qKN0TJjc0Ce4IU0N1e09qA+EOlTQfMGVqlT8+PjiEUFuAgGvdetIKRCi
+         tcmG3Bwcdr/1sSh1Fvu+Ny0a2ujKuDlikbqAN5Pj5oqdZr5dmQmLThCdPfTlGAMBrxSA
+         wM2emdhDQujxF9lgDQWFigntUGCFtTT1e4WAA/m9XmeS+HShoBtwBAO1EZSMAQjk4oRf
+         l2LzJpQuJskXy3OIiW4+rd+PgRL2n6swaazIHEn2BSyEIGq5LxX1Wn08BSkbUrIVIRMB
+         EOhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705342463; x=1705947263;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YBn2qZQx8P3zg2r39V5+2Dh28lfRonfO6AcXOPJi0eo=;
-        b=UT18S2YxzkVQD2EA50LGygtz5i5aHaMXW3+S8zz2HXzReK6rH2wscAbQNhDEVklEUI
-         S7gpcgLfLmtY76nzL63xkwLU2Ze2GpH4IdFE4e2jMJVMBoUFHfRjL16PDLN2itqF2AM5
-         fKGGuQX7Ff0iqexFE2xXoDa7Yt7Udx7u4+ADLhE0h/vgZ/pvQs+CGMwlRtLquOCj9knZ
-         1HCoFyAbZBDLfDpN2hhxn7gWpGWL9950PFbDp7FxCjqWcjZECyRoxrEmH7+fXQseCGM7
-         c7Fa2SGju6KuCFjxl8sg/Zg7aJuyeAPeN/JLuCTXcbmLCufP8tu8A8lbYNbY/pjkteYF
-         Q8UA==
-X-Gm-Message-State: AOJu0Yw3icKgF/TyD9gj2DjCTb301c9aV8y03gm5rZrfuHokC/3tFFZA
-	OETXNuS3cM54RuPatPsYc+HGhKMcCDnh+lVHtEyN2kcqDTs=
-X-Google-Smtp-Source: AGHT+IE+Bl8C8gShAKZw9kvDRcOSbLDBFpmGYYhTQ367w8nhdPd/vWjoDLLYXnHf7zdXAZEBXtu+7w==
-X-Received: by 2002:a05:6a20:9c89:b0:19b:2303:88a4 with SMTP id mj9-20020a056a209c8900b0019b230388a4mr731854pzb.105.1705342463524;
-        Mon, 15 Jan 2024 10:14:23 -0800 (PST)
-Received: from p14s ([2604:3d09:148c:c800::5ced])
-        by smtp.gmail.com with ESMTPSA id lc18-20020a056a004f5200b006d9cf4b56edsm8116673pfb.175.2024.01.15.10.14.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 10:14:23 -0800 (PST)
-Date: Mon, 15 Jan 2024 11:14:20 -0700
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Tanmay Shah <tanmay.shah@amd.com>
-Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ben Levinsky <ben.levinsky@xilinx.com>
-Subject: Re: [PATCH v4 1/2] remoteproc: Make rproc_get_by_phandle() work for
- clusters
-Message-ID: <ZaV1/GEiV2VS6c2p@p14s>
-References: <20240103221124.3063683-1-tanmay.shah@amd.com>
- <20240103221124.3063683-2-tanmay.shah@amd.com>
+        d=1e100.net; s=20230601; t=1705342636; x=1705947436;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ONrJRmAYGOIocV1TaXZm7gL7rutvMwXPfE4iqEwyFPc=;
+        b=DdvImCcqnUSdxgjrFtbVRRm5PWU7TfMAjoGigAexL/JhfdqGoBDVlbCUhZeuTNr8Z0
+         cQOI/YUsDBFoR2PZQvQpVIVx/wPoFjzJ89P7AnmNSSah5DaWeVZvaGpJCrjFAq7FMLLa
+         yaOZRMwhb5mzzwJAOWg2AaW5BFw8FcgiBN4dvJLLzJdo51IVQ/CLsI59fiuKGC6icjws
+         uiOvGm/oQbxlHjBl+ZlvTE2wBFFQglVz8mZFOH9eSoO+xRZIxDET3MZhv77wJhUeNXtD
+         +fBU25+kW3SsS+snw0CnF2qTqD7s+xlwDrNsFJXlAxhZpxdH9OtdXpftSzfP3GcCtZCM
+         0Jlw==
+X-Gm-Message-State: AOJu0Yy8pVQVFNqewi5z+NyRkXRxpeZo1p3PMjWcOr15EVTzsQpiZGcw
+	iaCTDO4AcJ10adXq4WXyA/SOyNEfSkSsVca/1Dh8wIvPLrw=
+X-Google-Smtp-Source: AGHT+IHkcc7u1FWPuYceUCKz3DBIl/vUsuKPMumLJC1NjafJoIlnGoXR9vhME8swkxJukn0sQnu3PA==
+X-Received: by 2002:aa7:c513:0:b0:557:fe5:a682 with SMTP id o19-20020aa7c513000000b005570fe5a682mr2767954edq.80.1705342636527;
+        Mon, 15 Jan 2024 10:17:16 -0800 (PST)
+Received: from [192.168.174.25] (178235179017.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.17])
+        by smtp.gmail.com with ESMTPSA id es18-20020a056402381200b00554b1d1a934sm5708181edb.27.2024.01.15.10.17.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jan 2024 10:17:16 -0800 (PST)
+Message-ID: <93bc06a3-8af9-4d50-bfee-d54e04bade51@linaro.org>
+Date: Mon, 15 Jan 2024 19:17:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240103221124.3063683-2-tanmay.shah@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] interconnect: qcom: sm8450: Revert "interconnect: qcom:
+ sm8450: Enable sync_state"
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Georgi Djakov <djakov@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20240115153420.1525037-1-krzysztof.kozlowski@linaro.org>
+ <201733c1-dc24-4d77-9967-f52c8e81d35b@kernel.org>
+ <96928df4-75ca-4a55-829b-b8ab0583e3b5@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <96928df4-75ca-4a55-829b-b8ab0583e3b5@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Tanmay,
+On 15.01.2024 18:59, Krzysztof Kozlowski wrote:
+> On 15/01/2024 17:44, Georgi Djakov wrote:
+>> On 15.01.24 17:34, Krzysztof Kozlowski wrote:
+>>> Revert commit 16862f1b2110 ("interconnect: qcom: sm8450: Enable
+>>> sync_state"), because it causes serial console to corrupt, later freeze
+>>> and become either entirely corrupted or only print without accepting any
+>>> input.
+>>
+>> Sounds like some driver is not requesting bandwidth and is relying on
+>> bandwidth requests made by other drivers. Maybe we are missing some
+>> "interconnects" property in DT?
+> 
+> Yes, the debug UART (console) misses the interconnects. They could be
+> added but it does not change the fact that console is broken since v6.6
+> and this was probably never tested on actual hardware :/
 
-Thanks for the refactoring, this is in line with what Bjorn and I have talked
-about at Plumbers.  Please see my comments below.
+This patch? I definitely tested it out on a headless remote board..
 
-On Wed, Jan 03, 2024 at 02:11:24PM -0800, Tanmay Shah wrote:
-> From: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
-> Multi-cluster remoteproc designs typically have the following DT
-> declaration:
-> 
-> 	remoteproc_cluster {
-> 		compatible = "soc,remoteproc-cluster";
-> 
->                 core0: core0 {
-> 			compatible = "soc,remoteproc-core"
->                         memory-region;
->                         sram;
->                 };
-> 
->                 core1: core1 {
-> 			compatible = "soc,remoteproc-core"
->                         memory-region;
->                         sram;
->                 }
->         };
-> 
-> A driver exists for the cluster rather than the individual cores
-> themselves so that operation mode and HW specific configurations
-> applicable to the cluster can be made.
-> 
-> Because the driver exists at the cluster level and not the individual
-> core level, function rproc_get_by_phandle() fails to return the
-> remoteproc associated with the phandled it is called for.
-> 
-> This patch enhances rproc_get_by_phandle() by looking for the cluster's
-> driver when the driver for the immediate remoteproc's parent is not
-> found.
-> 
-> Reported-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-Humm... You wrote the code in this patch so you also deserve some credit.  If I
-end up applying this set I will add myself as a co-developer, i.e
-Co-developed-by:, and add your SoB.  If you end up re-spinning this set then
-simply do so for the next revision.
-
-As far as I am concerned this patchset is ready.  I will wait to see if other
-people would like to see something adjusted.
-
-Mathieu
-
-> ---
->  drivers/remoteproc/remoteproc_core.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 695cce218e8c..0b3b34085e2f 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -33,6 +33,7 @@
->  #include <linux/idr.h>
->  #include <linux/elf.h>
->  #include <linux/crc32.h>
-> +#include <linux/of_platform.h>
->  #include <linux/of_reserved_mem.h>
->  #include <linux/virtio_ids.h>
->  #include <linux/virtio_ring.h>
-> @@ -2112,6 +2113,7 @@ EXPORT_SYMBOL(rproc_detach);
->  struct rproc *rproc_get_by_phandle(phandle phandle)
->  {
->  	struct rproc *rproc = NULL, *r;
-> +	struct device_driver *driver;
->  	struct device_node *np;
->  
->  	np = of_find_node_by_phandle(phandle);
-> @@ -2122,7 +2124,26 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
->  	list_for_each_entry_rcu(r, &rproc_list, node) {
->  		if (r->dev.parent && device_match_of_node(r->dev.parent, np)) {
->  			/* prevent underlying implementation from being removed */
-> -			if (!try_module_get(r->dev.parent->driver->owner)) {
-> +
-> +			/*
-> +			 * If the remoteproc's parent has a driver, the
-> +			 * remoteproc is not part of a cluster and we can use
-> +			 * that driver.
-> +			 */
-> +			driver = r->dev.parent->driver;
-> +
-> +			/*
-> +			 * If the remoteproc's parent does not have a driver,
-> +			 * look for the driver associated with the cluster.
-> +			 */
-> +			if (!driver) {
-> +				if (r->dev.parent->parent)
-> +					driver = r->dev.parent->parent->driver;
-> +				if (!driver)
-> +					break;
-> +			}
-> +
-> +			if (!try_module_get(driver->owner)) {
->  				dev_err(&r->dev, "can't get owner\n");
->  				break;
->  			}
-> -- 
-> 2.25.1
-> 
+Konrad
