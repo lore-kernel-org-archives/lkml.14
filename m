@@ -1,82 +1,67 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C34D2563;
-	Mon, 15 Jan 2024 08:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsTq2872"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5596fa1e2ebso10907a12.2;
-        Mon, 15 Jan 2024 00:44:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705308297; x=1705913097; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0C76vN2UDn6EUDP01K9KG9fUM6gU4ZfDAK5/kbr9SnI=;
-        b=SsTq2872saE3bVYCJAa/ewPZP6DZcdhFgxMJojkIgWT7InUKotCt++3yciP4nwk1HL
-         v0NsMp8ZdzSNFhYaAgbZM2GsMXtnCD/ZHL+cEBfT0RYPPeQ/4wBqheI31IC6r/Kp4iXh
-         vVtYxlQfO6Wt3w1jXEqy91kEuP9xtCjiZoSuoKMtP59vdwEpOJuJAGGOhAAA5BborEAA
-         EjR/3W4vDHIJnqgBEnW7UekRObmIO9VjgaWnYddt9W2tXYBJk18gKbLjtLHTXjdhHOAr
-         4vVuMLOUlj+ccP+V3vGIUU22mBYYEzx8NUEYN0K67uA5f6hh3yrqtwo+DO0wnfs4OL8S
-         bj3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705308297; x=1705913097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0C76vN2UDn6EUDP01K9KG9fUM6gU4ZfDAK5/kbr9SnI=;
-        b=toSf00nQJgTI6078Eq5iSoFCQ242tukRKqrVfscd3JxXNHx6wGR6Q0Nqw46bDVh9lo
-         UqCIvBytP4TIfDWbusclm9T8JuhP8FM8FyfDor7uySwFgwIcpWRCU1cPTVgjC40srTMj
-         Yu2jjv95dv9KXqp7j4NTdI51k4IvryXyP+5gLUueJcQj9YZwlqRF/sz7yPV30uR9GGlS
-         4PAZXi+7K5nbt58EfHcjIBsB21jMR0JPuHf4hpDVtVibfTtbBgnupzO/LBIZXbiXlSsX
-         JKBZwU6+j9hukucvN4tNOUULhvRS+zUOUEU5SUCmDwkwCKlUFTWwYmKIzM931vaihWKp
-         l0CQ==
-X-Gm-Message-State: AOJu0YxVb4HCVWjK5r227L2J9hnmZyNxLZJhRdDAwDAeyrNz0HCBPlVG
-	lbi5N4TFVDGi64c3NJ2nkN0F9/ZPTefRT3zKtDdQyymb1jQ=
-X-Google-Smtp-Source: AGHT+IH7nvS/JdO/EzfUQDdzm0WV8ZdWqB1u3wrr0534j/vihMpugOZn083H8/xbA9kXJqWmr0IeLilNh0zeciM1Nsg=
-X-Received: by 2002:a17:907:a80a:b0:a2c:aff6:f6a9 with SMTP id
- vo10-20020a170907a80a00b00a2caff6f6a9mr2469795ejc.150.1705308296578; Mon, 15
- Jan 2024 00:44:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABD56FAD
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-152-rTHkT31JO3-khzbeXCOiRA-1; Mon, 15 Jan 2024 08:43:12 +0000
+X-MC-Unique: rTHkT31JO3-khzbeXCOiRA-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 15 Jan
+ 2024 08:42:47 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 15 Jan 2024 08:42:47 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Qais Yousef' <qyousef@layalina.io>, Vincent Guittot
+	<vincent.guittot@linaro.org>
+CC: Wyes Karny <wkarny@gmail.com>, Linus Torvalds
+	<torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Juri Lelli
+	<juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, "Steven
+ Rostedt" <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, "Valentin
+ Schneider" <vschneid@redhat.com>
+Subject: RE: [GIT PULL] Scheduler changes for v6.8
+Thread-Topic: [GIT PULL] Scheduler changes for v6.8
+Thread-Index: AQHaRyQFsiSfur0Aj02h5LiRnI/DCbDajsCw
+Date: Mon, 15 Jan 2024 08:42:47 +0000
+Message-ID: <09d13ccbfcfd4fc78ac142405298ea79@AcuMS.aculab.com>
+References: <ZZwBi/YmnMqm7zrO@gmail.com>
+ <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
+ <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
+ <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com>
+ <20240114091240.xzdvqk75ifgfj5yx@wyes-pc> <ZaPC7o44lEswxOXp@vingu-book>
+ <20240114123759.pjs7ctexcpc6pshl@wyes-pc>
+ <CAKfTPtCz+95dR38c_u6_7JbkVt=czj5N2dKYVV-zk9dgbk16hw@mail.gmail.com>
+ <20240114151250.5wfexq44o3mdm3nh@airbuntu>
+ <CAKfTPtAMxiTbvAYav1JQw+MhjzDPCZDrMLL2JOfsc0GWp+FnOA@mail.gmail.com>
+ <20240114195815.nes4bn53tc25djbh@airbuntu>
+In-Reply-To: <20240114195815.nes4bn53tc25djbh@airbuntu>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112054331.3244104-1-chancel.liu@nxp.com>
-In-Reply-To: <20240112054331.3244104-1-chancel.liu@nxp.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Mon, 15 Jan 2024 10:44:44 +0200
-Message-ID: <CAEnQRZCT31ti278aLqh1QtTQ33fJU6xnb_qoVMRooBi7WsJ6Yg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] ASoC: Support SAI and MICFIL on i.MX95 platform
-To: Chancel Liu <chancel.liu@nxp.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
-	nicoleotsuka@gmail.com, perex@perex.cz, tiwai@suse.com, 
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, 
-	linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Fri, Jan 12, 2024 at 7:44=E2=80=AFAM Chancel Liu <chancel.liu@nxp.com> w=
-rote:
->
-> Support SAI and MICFIL on i.MX95 platform
->
-> changes in v2
-> - Remove unnecessary "item" in fsl,micfil.yaml
-> - Don't change alphabetical order in fsl,sai.yaml
->
-> Chancel Liu (3):
->   ASoC: dt-bindings: fsl,sai: Add compatible string for i.MX95 platform
->   ASoC: fsl_sai: Add support for i.MX95 platform
->   ASoC: dt-bindings: fsl,micfil: Add compatible string for i.MX95
->     platform
+PiBNeSB0ZXN0IGlzIHNpbXBsZSBidXN5bG9vcCB2aWENCj4gDQo+IAljYXQgL2Rldi96ZXJvID4g
+L2Rldi9udWxsDQoNCkkgdXN1YWxseSB1c2UgdGhlIHVzZXJzcGFjZSBsb29wOg0KCXdoaWxlIDo7
+IGRvIDo7IGRvbmUNCg0KUXVpdGUgZ29vZCBmb3IgdGVzdGluZyB3aGV0aGVyIHRoZSBmYW5zIHNw
+ZWVkIHVwIQ0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFt
+bGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3Ry
+YXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-For all patches in the series:
-
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
