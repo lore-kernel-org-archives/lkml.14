@@ -1,146 +1,124 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from relay.virtuozzo.com (relay.virtuozzo.com [130.117.225.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C43628DD1;
-	Mon, 15 Jan 2024 11:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30A2219E1
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 11:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=virtuozzo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=virtuozzo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="If4u5sBw"
+	dkim=pass (2048-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="nHMPZr4H"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=B8snCTk6m/S/IySGz0MUr7RGvF9ztHAy1wNv3isU/8A=; b=If4u5sBwSs6B37nBXDgiTbTUGN
-	lDo8qxPOFMMLR9tdUyLFo9NhxhiAei6ak3C/e+2MynMriUcITyfJLZRCR7Ly9EwLVRyTpXgvcUB3V
-	dwGg8WGAGKz7K/mPA9CiHN8UfYztvfbPPXOI0b0S+WLTsoNs8EV0O1R9IOUUphih0SDSGEtoXqkyc
-	uB4sWSh8b+qMXC/2xsfM+PilLtcS9vlGpghLJvk9GXVZXiWY3hrSNwUQ65+M5e30MzDBuRHWV1QU/
-	jXo3DcbVxcVsJSrnfHOPq2fWintWikuBFLjvQHJE8GaX60F8EKAbY9S+jDwY+ZggmQThypOLb+Xcb
-	DtnjfwcQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60190)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rPKnW-0002Kh-1U;
-	Mon, 15 Jan 2024 11:06:30 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rPKnV-0002tb-9h; Mon, 15 Jan 2024 11:06:29 +0000
-Date: Mon, 15 Jan 2024 11:06:29 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 03/21] ACPI: processor: Register CPUs that are
- online, but not described in the DSDT
-Message-ID: <ZaURtUvWQyjYfiiO@shell.armlinux.org.uk>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
- <E1rDOg2-00Dvjk-RI@rmk-PC.armlinux.org.uk>
- <CAJZ5v0ju1JHgpjuFLHZVs4NZiARG6iBZN_wza6c2e0kDhZjK0w@mail.gmail.com>
+	d=virtuozzo.com; s=relay; h=MIME-Version:Message-Id:Date:Subject:From:
+	Content-Type; bh=iLvRjgtii0U9FsiG7za0k50TI4MDsT+FsH6CIxXQRL4=; b=nHMPZr4Hh5H7
+	GbeQfTA5PEqm/hIjYuYcLWQZTBvuzBzefQ8BjRRSAsB3hGH1y0Zpb35humEe9Dxo5KBGDhw+48b9h
+	sXozH/wJftQ2c1+yUMILYR8vUcof+oEkipmewKGqtKuLeA44yhsEjlXHBkoNacQePOv+GNYPINH/c
+	pTcUEPTEfjWW4NLhdEnxt1FzSfM3j/qBeMxWZtG+tjn5LKuT43cxDzDsNGBNQ1ixj9pVXeWF1dHzb
+	4bBaVw7eK1CnQiqPcczu1DpofHXJcD0eGO3fHxSCBGUOuzc28DWxd2FIQ0aZplMX+ipHWpejFIX0g
+	wriD9OrRagE8D0yjkGAohg==;
+Received: from [130.117.225.1] (helo=finist-alma9.sw.ru)
+	by relay.virtuozzo.com with esmtp (Exim 4.96)
+	(envelope-from <khorenko@virtuozzo.com>)
+	id 1rPKVW-008UGf-0M;
+	Mon, 15 Jan 2024 11:50:45 +0100
+From: Konstantin Khorenko <khorenko@virtuozzo.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Alexander Atanasov <alexander.atanasov@virtuozzo.com>,
+	linux-kernel@vger.kernel.org,
+	Konstantin Khorenko <khorenko@virtuozzo.com>
+Subject: [PATCH v2 RESEND] sched/fair: Do not scan non-movable tasks several times
+Date: Mon, 15 Jan 2024 13:50:52 +0300
+Message-Id: <20240115105052.398761-1-khorenko@virtuozzo.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0ju1JHgpjuFLHZVs4NZiARG6iBZN_wza6c2e0kDhZjK0w@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, Dec 18, 2023 at 09:22:03PM +0100, Rafael J. Wysocki wrote:
-> On Wed, Dec 13, 2023 at 1:49 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> >
-> > From: James Morse <james.morse@arm.com>
-> >
-> > ACPI has two descriptions of CPUs, one in the MADT/APIC table, the other
-> > in the DSDT. Both are required. (ACPI 6.5's 8.4 "Declaring Processors"
-> > says "Each processor in the system must be declared in the ACPI
-> > namespace"). Having two descriptions allows firmware authors to get
-> > this wrong.
-> >
-> > If CPUs are described in the MADT/APIC, they will be brought online
-> > early during boot. Once the register_cpu() calls are moved to ACPI,
-> > they will be based on the DSDT description of the CPUs. When CPUs are
-> > missing from the DSDT description, they will end up online, but not
-> > registered.
-> >
-> > Add a helper that runs after acpi_init() has completed to register
-> > CPUs that are online, but weren't found in the DSDT. Any CPU that
-> > is registered by this code triggers a firmware-bug warning and kernel
-> > taint.
-> >
-> > Qemu TCG only describes the first CPU in the DSDT, unless cpu-hotplug
-> > is configured.
-> 
-> So why is this a kernel problem?
+If busiest rq is small, nr_running < SCHED_NR_MIGRATE_BREAK and all
+tasks are not movable, detach_tasks() should not iterate more than tasks
+available in the busiest rq.
 
-So what are you proposing should be the behaviour here? What this
-statement seems to be saying is that QEMU as it exists today only
-describes the first CPU in DSDT.
+Before commit: b0defa7ae03e ("sched/fair: Make sure to try to detach at
+least one movable task"), the (env->loop > env->loop_max) condition
+prevented us from scanning non-movable tasks more than rq size times,
+but after we start checking the LBF_ALL_PINNED flag, the "all tasks are
+not movable" case is under threat.
 
-As this patch series changes when arch_register_cpu() gets called (as
-described in the paragraph above) we obviously need to preserve the
-_existing_ behaviour to avoid causing regressions. So, if changing the
-kernel causes user visible regressions (e.g. sysfs entries to
-disappear) then it obviously _is_ a kernel problem that needs to be
-solved.
+Note: in case all tasks in the rq could not be moved in detach_tasks()
+we always increase loop_break by SCHED_NR_MIGRATE_BREAK, so we can step
+over loop_max, but i think it's a rare case and does not worth adding
+here extra check for rq->nr_running overlimit.
 
-We can't say "well fix QEMU then" without invoking the wrath of Linus.
+Fixes: b0defa7ae03e ("sched/fair: Make sure to try to detach at least
+one movable task")
 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Reviewed-by: Gavin Shan <gshan@redhat.com>
-> > Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > ---
-> >  drivers/acpi/acpi_processor.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> > index 6a542e0ce396..0511f2bc10bc 100644
-> > --- a/drivers/acpi/acpi_processor.c
-> > +++ b/drivers/acpi/acpi_processor.c
-> > @@ -791,6 +791,25 @@ void __init acpi_processor_init(void)
-> >         acpi_pcc_cpufreq_init();
-> >  }
-> >
-> > +static int __init acpi_processor_register_missing_cpus(void)
-> > +{
-> > +       int cpu;
-> > +
-> > +       if (acpi_disabled)
-> > +               return 0;
-> > +
-> > +       for_each_online_cpu(cpu) {
-> > +               if (!get_cpu_device(cpu)) {
-> > +                       pr_err_once(FW_BUG "CPU %u has no ACPI namespace description!\n", cpu);
-> > +                       add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-> > +                       arch_register_cpu(cpu);
-> 
-> Which part of this code is related to ACPI?
+Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+---
+ kernel/sched/fair.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-That's a good question, and I suspect it would be more suited to being
-placed in drivers/base/cpu.c except for the problem that the error
-message refers to ACPI.
-
-As long as we keep the acpi_disabled test, I guess that's fine.
-cpu_dev_register_generic() there already tests acpi_disabled.
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 533547e3c90a..920fb16e6e2f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -11277,7 +11277,6 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 		.dst_rq		= this_rq,
+ 		.dst_grpmask    = group_balance_mask(sd->groups),
+ 		.idle		= idle,
+-		.loop_break	= SCHED_NR_MIGRATE_BREAK,
+ 		.cpus		= cpus,
+ 		.fbq_type	= all,
+ 		.tasks		= LIST_HEAD_INIT(env.tasks),
+@@ -11324,6 +11323,14 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 		 */
+ 		env.loop_max  = min(sysctl_sched_nr_migrate, busiest->nr_running);
+ 
++more_balance_reset_break:
++		/*
++		 * If busiest rq is small, nr_running < SCHED_NR_MIGRATE_BREAK
++		 * and all tasks are not movable, detach_tasks() should not
++		 * iterate more than tasks available in rq.
++		 */
++		env.loop_break = min(SCHED_NR_MIGRATE_BREAK, busiest->nr_running);
++
+ more_balance:
+ 		rq_lock_irqsave(busiest, &rf);
+ 		update_rq_clock(busiest);
+@@ -11386,13 +11393,12 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 			env.dst_cpu	 = env.new_dst_cpu;
+ 			env.flags	&= ~LBF_DST_PINNED;
+ 			env.loop	 = 0;
+-			env.loop_break	 = SCHED_NR_MIGRATE_BREAK;
+ 
+ 			/*
+ 			 * Go back to "more_balance" rather than "redo" since we
+ 			 * need to continue with same src_cpu.
+ 			 */
+-			goto more_balance;
++			goto more_balance_reset_break;
+ 		}
+ 
+ 		/*
+@@ -11418,7 +11424,6 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 			 */
+ 			if (!cpumask_subset(cpus, env.dst_grpmask)) {
+ 				env.loop = 0;
+-				env.loop_break = SCHED_NR_MIGRATE_BREAK;
+ 				goto redo;
+ 			}
+ 			goto out_all_pinned;
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.3
+
