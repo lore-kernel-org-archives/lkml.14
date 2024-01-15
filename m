@@ -1,119 +1,222 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C666F4E3
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 09:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D67F9C6
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 09:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXGm8akh"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e80046263so650925e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 01:23:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GPj0uVZI"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7cd42bc0f1dso2303036241.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 01:24:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705310597; x=1705915397; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705310660; x=1705915460; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rcYPhRGd43b7CefS4mS1BKKH4ql6RBhdXWhyItNiInQ=;
-        b=QXGm8akhWEgQgOgEnFYLpSCfAm69nd9/XgSfUGBwQ/26p9GN6IYNOFQiAensuENPdi
-         Eqr4YvNFNVZCI2T0X37Y1a9UeIOQisi5oB5v0UcVdKPkdxA6z+iZmVii+pLps7XBN4FK
-         FsLABLWEeDjTeSZMdrxRmTc7OcMJfn+5gGMW9FDSpJbDq2pK9SKMy1tB6YXQcljNKiOq
-         +tZk4lLrB7TEMRPufugWKIBZYguFFsQJJBt8pc0iUFkr7rFzSl6DIco3TnhmN/fKYJXr
-         4nBKRF2rg9Bth+HiwNb19iKn6DtqueegvPS7QV/49yDxo9pmzcROgaFSx5Uq3FLX8I9B
-         KrsA==
+        bh=fh+LNMWozo0J3aAZgCisR4oMBODsHlxEIqXU2tzebT8=;
+        b=GPj0uVZI7UqNvkPenSbX6stVa/Ah9Cbc1Bz64PC1s69I9SncVxAsVj1UQdpMpD2cE2
+         LN5kLGBaJIBSrkjW1XnMPpfp+UpBCpSyiFAP2zFR33nEdgxL57wqH1A2VU8EIaA5q9ab
+         WYotdIrpw0Thrf92Iiso5VqmjBvSf/n0Rz6FQiGpMSP0PZxmMFvsrBhLhIWWiEJphBzX
+         e3mJoRdGXm0rzX7avMnvSDZOQM2afFmMyG/05dI9eX1k+Pop27fpAjUBVFBO/DQIDiGP
+         mqkvk8rqme6H7DHK5df4I66P26/RDVLoeF5EE/n1fG7Q3nYtC1O9oM2E8ZD7aF4vnbky
+         aloA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705310597; x=1705915397;
+        d=1e100.net; s=20230601; t=1705310660; x=1705915460;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rcYPhRGd43b7CefS4mS1BKKH4ql6RBhdXWhyItNiInQ=;
-        b=S3lm/hd/tzaq9EgkSjorTHJIwdZB+rjJIAGQVZdCWzPxJn4thX2jIBkIbAjAE3sAT7
-         HDvKMvLRpE1M/QUF7lBC9zTeojFN4PY2wkviSJVywSepKBo6e3NkbyzgVhOFrby4W5YY
-         rin4YDtJEE8AMl+K6QUHKRQEoU2LZPs8MCMIEMemVLKNSDtzTJ6uTwmZkDvz7kAMg/Aw
-         yJXl69yjfG5xedPRIS3cr52Kq/263uzMHcXJx4LyEqDwca38lVXSmsu9+WEgK27bud7N
-         BfGWn5iPi9abPMymMARp0wvUxvaINqWp0+CDWx2nKU36zXw3tGnTTtd+0M/+k/c0oOdU
-         gQyw==
-X-Gm-Message-State: AOJu0YwaUC5jZmVVzpWoKPpDzMbj+CDoJKpgNfkCR5YvSvl84Akc4Qdk
-	dSyvyLjmFI666+xzwRlwS20/DIEDUS/b42fhJoPDDtRKqr0=
-X-Google-Smtp-Source: AGHT+IGeKmfI2DLg+B0avpu37AUIgzqNEQKAVus7WMtYV0i8ndcdKHSvZ/hVTfs72GwCpQmQhTFMYNdejIqpvBLI/Cw=
-X-Received: by 2002:a05:600c:3151:b0:40e:67a9:5d1d with SMTP id
- h17-20020a05600c315100b0040e67a95d1dmr2277573wmo.149.1705310597141; Mon, 15
- Jan 2024 01:23:17 -0800 (PST)
+        bh=fh+LNMWozo0J3aAZgCisR4oMBODsHlxEIqXU2tzebT8=;
+        b=ODcKXTgxZbmOplMzrCx1yf7QAOeYZUZf3fK4+VDUosPx2TEiLMIljLDRUb7ykHJ4eM
+         AIfPlSmJJM/KGYrCGiFCS70O8nTKL0QmTqgL5gY4nfY5zjMvVgVH7KG9c/3oJL+3xPgG
+         tnktVv7Y3TV6lQsp+J1lawQR7v95YzgUH7xaYfPCUE7BhJY0zyGyk64MldCqJyDUCSOC
+         kGaJZ3ZBPrM3ydA8Mt0CGfH4V7ejEnnh41dvy66BGOMIoCDBuIZbPJBABu01C8Et6Uq2
+         AJPffg6cpic84/hjfS3vaSxF5C4DoEDRz/ouk+GGfw6rdTIeC36+3jH9XtTLZgqHZimh
+         ud+A==
+X-Gm-Message-State: AOJu0Ywj+/CJC6k4aM7wzg262Bxg6KpMOjw89wX/xEWEFlS4YmFRSW+k
+	sxpnOcCHJpFLD+ZQOJ96drK9R2YpfQeah/uJzt4nNJKyf5CyPg==
+X-Google-Smtp-Source: AGHT+IGTfBZ82YCdI7oc8T+p1JxA3rHRkpH5nuA8FLd5dC/vBpmXIkg7gkwgSvsrDaptlz8KQTrUhgjeNSVqriVRcsM=
+X-Received: by 2002:a05:6102:21ba:b0:467:dd9a:b1f5 with SMTP id
+ i26-20020a05610221ba00b00467dd9ab1f5mr3593591vsb.18.1705310659736; Mon, 15
+ Jan 2024 01:24:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZZvS8rigFJR8L56c@FVFF77S0Q05N> <fb6c8253fd90e66c036a85954c3299bc2c047473.camel@xry111.site>
- <CAJNi4rPj0Wc7ByqrS-GVLUUEnOFPZi8A5nLLCEEJErqAe16EZw@mail.gmail.com>
- <9aef98eed96ed32962ce90499291cb30ad5e3e14.camel@xry111.site>
- <20240109074843.GI19790@gate.crashing.org> <4ee8067e72028b070d92e10fa33ddde3a498cb48.camel@xry111.site>
- <20240109082647.GJ19790@gate.crashing.org> <CAJNi4rM_w5JKjug1PtV+tHyk11DUhRJ-K1pSDE6P1x8KSU2wrg@mail.gmail.com>
- <20240110141005.GL19790@gate.crashing.org> <CAJNi4rMw1rN64hGZbraoDwtOJOMOumVWL_8iLaCb=TYXAhD2Jg@mail.gmail.com>
- <ZZ_QaIrlKlFNdDbG@FVFF77S0Q05N>
-In-Reply-To: <ZZ_QaIrlKlFNdDbG@FVFF77S0Q05N>
-From: richard clark <richard.xnu.clark@gmail.com>
-Date: Mon, 15 Jan 2024 17:23:05 +0800
-Message-ID: <CAJNi4rOKQ9DZHEJw=bMFEGUqqGDb_58Y6mxDMRbCPk2Kzwtx1Q@mail.gmail.com>
-Subject: Re: undefined reference to `__aarch64_cas4_sync' error on arm64
- native build
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Segher Boessenkool <segher@kernel.crashing.org>, Xi Ruoyao <xry111@xry111.site>, gcc-help@gcc.gnu.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240113094206.455533180@linuxfoundation.org>
+In-Reply-To: <20240113094206.455533180@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 15 Jan 2024 14:54:08 +0530
+Message-ID: <CA+G9fYtjSMDFywbNMZMoc2ZaXQ0kg0aCeOHEW-xe627PLFkpNw@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/38] 5.4.267-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
-
-On Thu, Jan 11, 2024 at 7:26=E2=80=AFPM Mark Rutland <mark.rutland@arm.com>=
- wrote:
+On Sat, 13 Jan 2024 at 15:25, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Thu, Jan 11, 2024 at 09:42:40AM +0800, richard clark wrote:
-> > On Wed, Jan 10, 2024 at 10:12=E2=80=AFPM Segher Boessenkool
-> > <segher@kernel.crashing.org> wrote:
-> > >
-> > > On Wed, Jan 10, 2024 at 01:59:53PM +0800, richard clark wrote:
-> > > > A ported driver in linux kernel calls '__sync_val_compare_and_swap'=
-,
-> > >
-> > > That is a builtin function.  It does not necessarily expand to an act=
-ual
-> > > function call.  aarch64 will typically expand it to inline code.
-> > >
-> > native gcc version:
-> > gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
-> > cross-compiler gcc version:
-> > aarch64-linux-gnu-gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
-> >
-> > Interesting, the same '__sync_val_compare_and_swap' in the .c file
-> > will be 'U __aarch64_cas4_sync' in the .o file compiled by native,
-> > will be 't __cmpxchg_case_mb_32' in the .o file compiled by
-> > aarch64-linux-gnu-gcc... don't know what the reason is
+> This is the start of the stable review cycle for the 5.4.267 release.
+> There are 38 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> The __cmpxchg_case_mb_32() function is kernel code from
-> arch/arm64/include/asm/cmpxchg.h, so I do not believe that's being genera=
-ted by
-> the compiler from __sync_val_compare_and_swap().
+> Responses should be made by Mon, 15 Jan 2024 09:41:55 +0000.
+> Anything received after that time might be too late.
 >
-> Are you certain that's being built from the exact same C file?
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.267-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
 >
-> Are you able to share the code in question? Where has it come from in the=
- first
-> place?
+> thanks,
 >
-
-Ah, double check and the misleading info about the native and cross
-compiler, the native gcc(Ubuntu 11.4.0-1ubuntu1~22.04) and the
-cross-compiler - aarch64-linux-gnu-gcc(Ubuntu 11.4.0-1ubuntu1~22.04)
-will generate the same link error, but the cross-compiler -
-aarch64-buildroot-linux-gnu-gcc.
-(aarch64-buildroot-linux-gnu-gcc.br_real (Buildroot 2020.08) 9.3.0)
-will not generate the link error, I believe it should be as you said,
-the aarch64-buildroot-linux-gnu-gcc doesn't enable '-moutline-atomics'
-by default.
+> greg k-h
 
 
->
-> Thanks,
-> Mark.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build
+* kernel: 5.4.267-rc1
+* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
+* git branch: linux-5.4.y
+* git commit: 86b133f1f903a253af84a135ff1afeec162143e7
+* git describe: v5.4.266-39-g86b133f1f903
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.2=
+66-39-g86b133f1f903
+
+## Test Regressions (compared to v5.4.266)
+
+## Metric Regressions (compared to v5.4.266)
+
+## Test Fixes (compared to v5.4.266)
+
+## Metric Fixes (compared to v5.4.266)
+
+## Test result summary
+total: 176285, pass: 139633, fail: 3376, skip: 33179, xfail: 97
+
+## Build Summary
+* arc: 10 total, 10 passed, 0 failed
+* arm: 285 total, 285 passed, 0 failed
+* arm64: 81 total, 77 passed, 4 failed
+* i386: 51 total, 39 passed, 12 failed
+* mips: 52 total, 52 passed, 0 failed
+* parisc: 6 total, 0 passed, 6 failed
+* powerpc: 62 total, 62 passed, 0 failed
+* riscv: 27 total, 27 passed, 0 failed
+* s390: 14 total, 14 passed, 0 failed
+* sh: 20 total, 20 passed, 0 failed
+* sparc: 14 total, 14 passed, 0 failed
+* x86_64: 70 total, 70 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-android
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-drivers-dma-buf
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-filesystems
+* kselftest-filesystems-binderfs
+* kselftest-filesystems-epoll
+* kselftest-firmware
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-ir
+* kselftest-kcmp
+* kselftest-kexec
+* kselftest-kvm
+* kselftest-lib
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-memory-hotplug
+* kselftest-mincore
+* kselftest-mount
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-forwarding
+* kselftest-net-mptcp
+* kselftest-netfilter
+* kselftest-nsfs
+* kselftest-openat2
+* kselftest-pid_namespace
+* kselftest-pidfd
+* kselftest-proc
+* kselftest-pstore
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timens
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-vm
+* kselftest-x86
+* kselftest-zram
+* kunit
+* log-parser-boot
+* log-parser-test
+* ltp-cap_bounds
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-fsx
+* ltp-hugetlb
+* ltp-io
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-securebits
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
