@@ -1,86 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A099F4E7
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 09:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1A2D2F5
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 09:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRE/BSnY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5820FC433C7;
-	Mon, 15 Jan 2024 09:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705311651;
-	bh=+F7K07Y5fx0dIdwadJy3MnmnbVE+eGFHi4fQFk5p/hs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uRE/BSnY7551SxKY3LorlQ3CfD5bzcEiVuBHEQkOhH1W0kKzpggvZZHxYdTWOHz5N
-	 2Egz++9BrZVhXk2fgU+TD8v194sEvcx/z1WKinPt8ERZ16jAFXV4SFTSmNV8XVLYgT
-	 COpOPNP7O83+ofyZ4WOzcR/GsyfiTSGmeHXnFo4vLl5c/S+O4VCaq15ennUve1Y7WO
-	 8/B25fs4qFB1KfMCd9kbm4eMCJ3L5gKT9RpWNuX9SuWevSRm/+o2BcwV/LQzHD3wY6
-	 B8f+HYpfMOvWp+/qfazl8ywHuYtC1cua3EqhAr+M6WRtsrSTpVKOM07krn70BPIYug
-	 Qqvmrl23RT55Q==
-Date: Mon, 15 Jan 2024 17:27:59 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Yangyu Chen <cyy@cyyself.name>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Waterman <andrew@sifive.com>
-Subject: Re: [PATCH] RISC-V: only flush icache when it has VM_EXEC set
-Message-ID: <ZaT6n+2lqTg0UFk5@xhacker>
-References: <tencent_6D851035F6F2FD0B5A69FB391AE39AC6300A@qq.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UKmgqObc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tvMa7edt"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705311710;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jW6EgVzQUaQoLb1vz2iTmsqFo+thhXthmccLpVlE5zo=;
+	b=UKmgqObc2reVuU1aNJMeq5PbR/Q2+mVvQf5zbtNYEJlXVynUBzUtnRNTgu+u0ejC2LUh2G
+	G00nUugBK6fuVikytVStJQMpkhWs+0rXVUElI8pxBnLgsIpAjXAGpEgLMnibzJvT57w5ZZ
+	OJLVgkE0Kzfy/rDfFMneTVI1kBJIpmAcI0of0iZthB/OuAQlSfm1ifbicWEUvrfuPEVFNn
+	DbGbHkAQ6Ur2PQU2w674Nm4tveLLxPF0kI2lTzaAzPvZOCQjqDJgT1okLl6d0lHWy172xj
+	nWsPnlCNu0LqQZ0Y3QOyk6XFJp7WJVCW0c8uF+pRcELkJ14KP/paW/rH7x447A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705311710;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jW6EgVzQUaQoLb1vz2iTmsqFo+thhXthmccLpVlE5zo=;
+	b=tvMa7edtUMlBU2C77nC8PnxnizfC6UpwzAW3+5VEweD5czsZcl0lHLuBEUG164X7+ILAXf
+	Fhjg/TXUGt67uyAQ==
+To: "Zhang, Rui" <rui.zhang@intel.com>, "Brown, Len" <len.brown@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "jgross@suse.com" <jgross@suse.com>, "x86@kernel.org" <x86@kernel.org>,
+ "arjan@linux.intel.com" <arjan@linux.intel.com>, "kprateek.nayak@amd.com"
+ <kprateek.nayak@amd.com>, "Tang, Feng" <feng.tang@intel.com>,
+ "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+ "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "ray.huang@amd.com"
+ <ray.huang@amd.com>, "andrew.cooper3@citrix.com"
+ <andrew.cooper3@citrix.com>, "Sivanich, Dimitri"
+ <dimitri.sivanich@hpe.com>, "paulmck@kernel.org" <paulmck@kernel.org>,
+ "Mehta, Sohil" <sohil.mehta@intel.com>, "andy@infradead.org"
+ <andy@infradead.org>
+Subject: Re: [patch 37/53] x86/cpu: Detect real BSP on crash kernels
+In-Reply-To: <365568d9441d74516d0bfb802018ee0943b1b94b.camel@intel.com>
+References: <20230807130108.853357011@linutronix.de>
+ <20230807135028.381851690@linutronix.de>
+ <7443f3200ef0be756566059e8c9b0657f3cefcff.camel@intel.com>
+ <871qarlvub.ffs@tglx> <87y1czkdlg.ffs@tglx>
+ <ff58623cdf63dc75fc245fd18ee776465f4bb3b8.camel@intel.com>
+ <87frz5jmnl.ffs@tglx> <87a5pdjk54.ffs@tglx>
+ <dbad0f6f9dee5851aa21ffae9e8877cf23645af5.camel@intel.com>
+ <87edemimrj.ffs@tglx>
+ <365568d9441d74516d0bfb802018ee0943b1b94b.camel@intel.com>
+Date: Mon, 15 Jan 2024 10:41:49 +0100
+Message-ID: <87a5p7gcgy.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <tencent_6D851035F6F2FD0B5A69FB391AE39AC6300A@qq.com>
+Content-Type: text/plain
 
-On Wed, Jan 10, 2024 at 02:48:59AM +0800, Yangyu Chen wrote:
-> As I-Cache flush on current RISC-V needs to send IPIs to every CPU cores
-> in the system is very costly, limiting flush_icache_mm to be called only
-> when vma->vm_flags has VM_EXEC can help minimize the frequency of these
-> operations. It improves performance and reduces disturbances when
-> copy_from_user_page is needed such as profiling with perf.
+On Sat, Jan 13 2024 at 07:35, Zhang, Rui wrote:
+> On Fri, 2024-01-12 at 16:39 +0100, Thomas Gleixner wrote:
+>> It brings the effect that we can detect when we are not booting
+>> (kexec
+>> case) on the actual boot CPU because then the first enumerated APIC
+>> ID
+>> is not the same as the boot CPU APIC ID. No?
+>
+> Right.
+> I was thinking in the way this patch series does, which just compares
+> the boot CPU APIC ID and the lowest numbered APIC ID.
 
-Hi Yangyu,
+Yes, that's obviously not working when the lowest APIC ID is not the
+actual boot CPU.
 
-Since this is for "performance", can you please add the benchmark, test
-platform and performance numbers in your commit msg?
+>> I agree that MADT is error prone too given the fact that not even
+>> Intel
+>> can get it right....
+>
+> For this MTL, I can raise an internal ticket to get it right.
+>
+> Are there quite some platforms with BSP not listed as the first entry
+> in MADT?
+> if so, we still have to live with the kexec boot parameter? :)
 
-thanks
-
-> 
-> For I-D coherence concerns, it will not fail if such a page adds VM_EXEC
-> flags in the future since we have checked it in the __set_pte_at function.
-> 
-> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-> ---
->  arch/riscv/include/asm/cacheflush.h | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-> index 3cb53c4df27c..915f532dc336 100644
-> --- a/arch/riscv/include/asm/cacheflush.h
-> +++ b/arch/riscv/include/asm/cacheflush.h
-> @@ -33,8 +33,11 @@ static inline void flush_dcache_page(struct page *page)
->   * so instead we just flush the whole thing.
->   */
->  #define flush_icache_range(start, end) flush_icache_all()
-> -#define flush_icache_user_page(vma, pg, addr, len) \
-> -	flush_icache_mm(vma->vm_mm, 0)
-> +#define flush_icache_user_page(vma, pg, addr, len)	\
-> +do {							\
-> +	if (vma->vm_flags & VM_EXEC)			\
-> +		flush_icache_mm(vma->vm_mm, 0);		\
-> +} while (0)
->  
->  #ifdef CONFIG_64BIT
->  #define flush_cache_vmap(start, end)	flush_tlb_kernel_range(start, end)
-> -- 
-> 2.43.0
-> 
+I haven't found one yet, but you might look through the P/E systems to
+get a picture.
