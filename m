@@ -1,35 +1,35 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A87C1773A
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A933F17743
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iqQYd40g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jpYB6+8/"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NlXab2cz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WukEzm0D"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705329483;
+	s=2020; t=1705329484;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TrRJNa/4dVg7BTloDs+oOr0KGfNkWbg12FR3FDPf3kI=;
-	b=iqQYd40g6jjZ8kvPdnidNQc8zqE5Zq5Oyd0ENex12OAECMGf7KJPZOxPlpgecMDOfNqmjp
-	iSy92IYa4iyCzHf9wnuCjjdxhwFefVqTiZhARgqzAOiIsvFWKHCR6BK/KNe2vdP5Ua7sB1
-	vAXuf2/mj9R/MgJpjnqHHWbls4jIzdmidCZzDt3zJQFSV0knI5FtJFmMI3/Hii6OM9QZIy
-	jvNw99w1eN8BfV4GjgNbYAjA/7fvkozUcKJa1qjp+T8O9TDalR84pVax7b9P/1FamlfGCe
-	ma7GDWmdCIter2i5Q6ndvM5UikKP/QzDrf8+OcsFKhDYPIOPWSymcysUKyLXGg==
+	bh=8tyreN3+pRRCj9fddFni7Yjd9oa5LLsmYxigcZC8rcg=;
+	b=NlXab2czETZp0xP+IzFHm6awdOka425Kzdzign5GPkoImvVgJWFPet0O1EW09TvG7M0L3m
+	Y+dn4iDZS+MzOESzvSjVs7M4BV37zoPhtQ299jVWZRsGqLkETRvccoIw2UdMEDJfaZFOgH
+	uaGiiYdetxgsHsjKab2KMYxJka1GNu0bxN/NhKYHll6hFm7OldcGToYy9qqCV4dySwibWU
+	5i/fqIwQZrKElFuVBQCNTxGL83OT1hcWi1xGQlI5YvU4lDXzREJ5e2qRnx5S3OdFbC6SWG
+	075hrzrLNhmiTPkEsV2Fok+cgT+UxrqcOozjePeIX5Xtghz9xkzAMgUO9HFhGQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705329483;
+	s=2020e; t=1705329484;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TrRJNa/4dVg7BTloDs+oOr0KGfNkWbg12FR3FDPf3kI=;
-	b=jpYB6+8/2KkjAvRHid8a5at40ByDrZXjwLFmJvXJPlY2UnGF/8Tkauw4/zFeqbbofToFQd
-	OONQDpUIoneCDnBw==
+	bh=8tyreN3+pRRCj9fddFni7Yjd9oa5LLsmYxigcZC8rcg=;
+	b=WukEzm0DqpDbF2CDUItBPNFQBpgiXis0UKMUH26OhxA6gVei/m2F7wqKm8NtJaTG3Li47F
+	oGqLobTfz0ErcmCg==
 To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	John Stultz <jstultz@google.com>,
@@ -48,9 +48,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
 	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH v10 02/20] timers: Split out get next timer interrupt
-Date: Mon, 15 Jan 2024 15:37:25 +0100
-Message-Id: <20240115143743.27827-3-anna-maria@linutronix.de>
+Subject: [PATCH v10 04/20] timers: Optimization for timer_base_try_to_set_idle()
+Date: Mon, 15 Jan 2024 15:37:27 +0100
+Message-Id: <20240115143743.27827-5-anna-maria@linutronix.de>
 In-Reply-To: <20240115143743.27827-1-anna-maria@linutronix.de>
 References: <20240115143743.27827-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -61,57 +61,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Split out get_next_timer_interrupt() to be able to extend it and make it
-reusable for other call sites.
-
-No functional change.
+When tick is stopped also the timer base is_idle flag is set. When
+reentering the timer_base_try_to_set_idle() with the tick stopped, there is
+no need to check whether the timer base needs to be set idle again. When a
+timer was enqueued in the meantime, this is already handled by the
+tick_nohz_next_event() call which was executed before
+tick_nohz_stop_tick().
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 ---
- kernel/time/timer.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ kernel/time/tick-sched.c |  2 +-
+ kernel/time/timer.c      | 11 ++++++++---
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index c6223afc801f..27f1a2ae7f39 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -886,7 +886,7 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
+ 	struct clock_event_device *dev = __this_cpu_read(tick_cpu_device.evtdev);
+ 	unsigned long basejiff = ts->last_jiffies;
+ 	u64 basemono = ts->timer_expires_base;
+-	bool timer_idle;
++	bool timer_idle = ts->tick_stopped;
+ 	u64 expires;
+ 
+ 	/* Make sure we won't be trying to stop it twice in a row. */
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 5f21db4fa3ca..2aea55d53416 100644
+index 3a668060692e..2f69a485a070 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -1911,15 +1911,7 @@ static u64 cmp_next_hrtimer_event(u64 basem, u64 expires)
- 	return DIV_ROUND_UP_ULL(nextevt, TICK_NSEC) * TICK_NSEC;
- }
- 
--/**
-- * get_next_timer_interrupt - return the time (clock mono) of the next timer
-- * @basej:	base time jiffies
-- * @basem:	base time clock monotonic
-- *
+@@ -1999,13 +1999,18 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
+  * timer_base_try_to_set_idle() - Try to set the idle state of the timer bases
+  * @basej:	base time jiffies
+  * @basem:	base time clock monotonic
+- * @idle:	pointer to store the value of timer_base->is_idle
++ * @idle:	pointer to store the value of timer_base->is_idle on return;
++ *		*idle contains the information whether tick was already stopped
+  *
 - * Returns the tick aligned clock monotonic time of the next pending
 - * timer or KTIME_MAX if no timer is pending.
-- */
--u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
-+static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem)
++ * Returns the tick aligned clock monotonic time of the next pending timer or
++ * KTIME_MAX if no timer is pending. When tick was already stopped KTIME_MAX is
++ * returned as well.
+  */
+ u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle)
  {
- 	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
- 	unsigned long nextevt = basej + NEXT_TIMER_MAX_DELTA;
-@@ -1978,6 +1970,19 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
- 	return cmp_next_hrtimer_event(basem, expires);
++	if (*idle)
++		return KTIME_MAX;
++
+ 	return __get_next_timer_interrupt(basej, basem, idle);
  }
  
-+/**
-+ * get_next_timer_interrupt() - return the time (clock mono) of the next timer
-+ * @basej:	base time jiffies
-+ * @basem:	base time clock monotonic
-+ *
-+ * Returns the tick aligned clock monotonic time of the next pending
-+ * timer or KTIME_MAX if no timer is pending.
-+ */
-+u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
-+{
-+	return __get_next_timer_interrupt(basej, basem);
-+}
-+
- /**
-  * timer_clear_idle - Clear the idle state of the timer base
-  *
 -- 
 2.39.2
 
