@@ -1,149 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3E01E865;
-	Mon, 15 Jan 2024 10:35:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1787AC433F1;
-	Mon, 15 Jan 2024 10:35:25 +0000 (UTC)
-Message-ID: <564b7460-6996-4366-8046-e32466f55964@xs4all.nl>
-Date: Mon, 15 Jan 2024 11:35:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AADB1E503
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 10:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D+ToKPME"
+Received: from relay5-d.mail.gandi.net (unknown [217.70.183.197])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 2842AC2F46
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 10:17:59 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 06C7C1C0011;
+	Mon, 15 Jan 2024 10:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1705313871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZEf3znytnn/5u2nQ5HISUI8I48juAUPjkUbskiAR5Kw=;
+	b=D+ToKPMERGdPs/q2d4zNP/9bvGUhVQK5CVJRXIH159Dbdok5XKx+SDxxvtWyXcnZl+cTOy
+	dL3W86EvwKpiOkK0aAxkybSxSMq9qtu97OctBkFrmHvFe0gftp3svl8uew5BfLFwZukvH8
+	jxD+NiNPB7+zisUpEPmBCMUPydiDjAPBJvIjo7lJ97qdOWGzdWXDlQXukLQIJFar083KFq
+	edoOYr0ljwhZ+dCALcpn8nmIei6LeU8A/pdQnm9MZCdkJkRvwHFzrXFgrW3zFTcHIvAKzP
+	n6NOzeTAt9wM9agfLe3th8vcIHBRBWJdza2d/Wuwr88nIU+WLv4IZO2in8cm0Q==
+Message-ID: <d3ffc899948961cd3327db1ad0e59970dcf87bca.camel@bootlin.com>
+Subject: Re: Failed to create a rescuer kthread for the amdgpu-reset-dev
+ workqueue
+From: Thomas Perrot <thomas.perrot@bootlin.com>
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
+	alexander.deucher@amd.com, Xinhui.Pan@amd.com, lijo.lazar@amd.com, 
+	kenneth.feng@amd.com, guchun.chen@amd.com, evan.quan@amd.com, 
+	srinivasan.shanmugam@amd.com
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 15 Jan 2024 11:17:49 +0100
+In-Reply-To: <95e791b0-4672-4a1a-940b-684d8c96e995@amd.com>
+References: <cf1a3a2b7599b7b6900ff45aa8b204169411687f.camel@bootlin.com>
+	 <95e791b0-4672-4a1a-940b-684d8c96e995@amd.com>
+Autocrypt: addr=thomas.perrot@bootlin.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-cMV9dIg4T3JiQTgXtcRJ"
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 2/8] media: test-drivers: Set REQBUFS minimum number
- of buffers
-Content-Language: en-US, nl
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, mchehab@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- kernel@collabora.com
-References: <20231215090813.15610-1-benjamin.gaignard@collabora.com>
- <20231215090813.15610-3-benjamin.gaignard@collabora.com>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- xsFNBFQ84W0BEAC7EF1iL4s3tY8cRTVkJT/297h0Hz0ypA+ByVM4CdU9sN6ua/YoFlr9k0K4
- BFUlg7JzJoUuRbKxkYb8mmqOe722j7N3HO8+ofnio5cAP5W0WwDpM0kM84BeHU0aPSTsWiGR
- yw55SOK2JBSq7hueotWLfJLobMWhQii0Zd83hGT9SIt9uHaHjgwmtTH7MSTIiaY6N14nw2Ud
- C6Uykc1va0Wqqc2ov5ihgk/2k2SKa02ookQI3e79laOrbZl5BOXNKR9LguuOZdX4XYR3Zi6/
- BsJ7pVCK9xkiVf8svlEl94IHb+sa1KrlgGv3fn5xgzDw8Z222TfFceDL/2EzUyTdWc4GaPMC
- E/c1B4UOle6ZHg02+I8tZicjzj5+yffv1lB5A1btG+AmoZrgf0X2O1B96fqgHx8w9PIpVERN
- YsmkfxvhfP3MO3oHh8UY1OLKdlKamMneCLk2up1Zlli347KMjHAVjBAiy8qOguKF9k7HOjif
- JCLYTkggrRiEiE1xg4tblBNj8WGyKH+u/hwwwBqCd/Px2HvhAsJQ7DwuuB3vBAp845BJYUU3
- 06kRihFqbO0vEt4QmcQDcbWINeZ2zX5TK7QQ91ldHdqJn6MhXulPKcM8tCkdD8YNXXKyKqNl
- UVqXnarz8m2JCbHgjEkUlAJCNd6m3pfESLZwSWsLYL49R5yxIwARAQABzSFIYW5zIFZlcmt1
- aWwgPGh2ZXJrdWlsQHhzNGFsbC5ubD7CwZUEEwECACgFAlQ84W0CGwMFCRLMAwAGCwkIBwMC
- BhUIAgkKCwQWAgMBAh4BAheAACEJEL0tYUhmFDtMFiEEBSzee8IVBTtonxvKvS1hSGYUO0wT
- 7w//frEmPBAwu3OdvAk9VDkH7X+7RcFpiuUcJxs3Xl6jpaA+SdwtZra6W1uMrs2RW8eXXiq/
- 80HXJtYnal1Y8MKUBoUVhT/+5+KcMyfVQK3VFRHnNxCmC9HZV+qdyxAGwIscUd4hSlweuU6L
- 6tI7Dls6NzKRSTFbbGNZCRgl8OrF01TBH+CZrcFIoDgpcJA5Pw84mxo+wd2BZjPA4TNyq1od
- +slSRbDqFug1EqQaMVtUOdgaUgdlmjV0+GfBHoyCGedDE0knv+tRb8v5gNgv7M3hJO3Nrl+O
- OJVoiW0G6OWVyq92NNCKJeDy8XCB1yHCKpBd4evO2bkJNV9xcgHtLrVqozqxZAiCRKN1elWF
- 1fyG8KNquqItYedUr+wZZacqW+uzpVr9pZmUqpVCk9s92fzTzDZcGAxnyqkaO2QTgdhPJT2m
- wpG2UwIKzzi13tmwakY7OAbXm76bGWVZCO3QTHVnNV8ku9wgeMc/ZGSLUT8hMDZlwEsW7u/D
- qt+NlTKiOIQsSW7u7h3SFm7sMQo03X/taK9PJhS2BhhgnXg8mOa6U+yNaJy+eU0Lf5hEUiDC
- vDOI5x++LD3pdrJVr/6ZB0Qg3/YzZ0dk+phQ+KlP6HyeO4LG662toMbFbeLcBjcC/ceEclII
- 90QNEFSZKM6NVloM+NaZRYVO3ApxWkFu+1mrVTXOwU0EVDzhbQEQANzLiI6gHkIhBQKeQaYs
- p2SSqF9c++9LOy5x6nbQ4s0X3oTKaMGfBZuiKkkU6NnHCSa0Az5ScRWLaRGu1PzjgcVwzl5O
- sDawR1BtOG/XoPRNB2351PRp++W8TWo2viYYY0uJHKFHML+ku9q0P+NkdTzFGJLP+hn7x0RT
- DMbhKTHO3H2xJz5TXNE9zTJuIfGAz3ShDpijvzYieY330BzZYfpgvCllDVM5E4XgfF4F/N90
- wWKu50fMA01ufwu+99GEwTFVG2az5T9SXd7vfSgRSkzXy7hcnxj4IhOfM6Ts85/BjMeIpeqy
- TDdsuetBgX9DMMWxMWl7BLeiMzMGrfkJ4tvlof0sVjurXibTibZyfyGR2ricg8iTbHyFaAzX
- 2uFVoZaPxrp7udDfQ96sfz0hesF9Zi8d7NnNnMYbUmUtaS083L/l2EDKvCIkhSjd48XF+aO8
- VhrCfbXWpGRaLcY/gxi2TXRYG9xCa7PINgz9SyO34sL6TeFPSZn4bPQV5O1j85Dj4jBecB1k
- z2arzwlWWKMZUbR04HTeAuuvYvCKEMnfW3ABzdonh70QdqJbpQGfAF2p4/iCETKWuqefiOYn
- pR8PqoQA1DYv3t7y9DIN5Jw/8Oj5wOeEybw6vTMB0rrnx+JaXvxeHSlFzHiD6il/ChDDkJ9J
- /ejCHUQIl40wLSDRABEBAAHCwXwEGAECAA8FAlQ84W0CGwwFCRLMAwAAIQkQvS1hSGYUO0wW
- IQQFLN57whUFO2ifG8q9LWFIZhQ7TA1WD/9yxJvQrpf6LcNrr8uMlQWCg2iz2q1LGt1Itkuu
- KaavEF9nqHmoqhSfZeAIKAPn6xuYbGxXDrpN7dXCOH92fscLodZqZtK5FtbLvO572EPfxneY
- UT7JzDc/5LT9cFFugTMOhq1BG62vUm/F6V91+unyp4dRlyryAeqEuISykhvjZCVHk/woaMZv
- c1Dm4Uvkv0Ilelt3Pb9J7zhcx6sm5T7v16VceF96jG61bnJ2GFS+QZerZp3PY27XgtPxRxYj
- AmFUeF486PHx/2Yi4u1rQpIpC5inPxIgR1+ZFvQrAV36SvLFfuMhyCAxV6WBlQc85ArOiQZB
- Wm7L0repwr7zEJFEkdy8C81WRhMdPvHkAIh3RoY1SGcdB7rB3wCzfYkAuCBqaF7Zgfw8xkad
- KEiQTexRbM1sc/I8ACpla3N26SfQwrfg6V7TIoweP0RwDrcf5PVvwSWsRQp2LxFCkwnCXOra
- gYmkrmv0duG1FStpY+IIQn1TOkuXrciTVfZY1cZD0aVxwlxXBnUNZZNslldvXFtndxR0SFat
- sflovhDxKyhFwXOP0Rv8H378/+14TaykknRBIKEc0+lcr+EMOSUR5eg4aURb8Gc3Uc7fgQ6q
- UssTXzHPyj1hAyDpfu8DzAwlh4kKFTodxSsKAjI45SLjadSc94/5Gy8645Y1KgBzBPTH7Q==
-In-Reply-To: <20231215090813.15610-3-benjamin.gaignard@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.perrot@bootlin.com
 
-On 15/12/2023 10:08, Benjamin Gaignard wrote:
-> Test drivers require at least 2 buffers to be allocated when
-> calling REQBUFS so set queue min_reqbufs_allocation field instead
-> of min_queued_buffers.
 
-This is not really correct.
+--=-cMV9dIg4T3JiQTgXtcRJ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-These test drivers set min_queued_buffers (previously min_buffers_needed)
-to emulate what happens to actual HW drivers that need this. However, the
-test driver code just effectively used that as what is now the
-min_reqbufs_allocation value. I.e., it never had 2 buffers queued all the
-time, although it still waited until 2 buffers were queued before calling
-start_streaming.
+Hello Christian,
 
-Basically it was just an incomplete emulation of min_queued_buffers.
+On Fri, 2024-01-12 at 09:17 +0100, Christian K=C3=B6nig wrote:
+> Well the driver load is interrupted for some reason.
+>=20
+> Have you set any timeout for modprobe?
+>=20
 
-I think it makes sense to convert this over to min_reqbufs_allocation,
-and, since that will already default to a minimum of 2 buffers, most
-calls to vivid_create_queue() can just pass 0 instead of 2.
+We don't set a modprobe timeout.
 
-In the future we might want to add a real min_queued_buffers emulation,
-but that has to ensure that there are always that many buffers in the
-driver's queue.
+Kind regards,
+Thomas
 
-In any case, the commit log has to reflect that we are making a subtle
-change in behavior.
+> Regards,
+> Christian.
+>=20
+> Am 12.01.24 um 09:11 schrieb Thomas Perrot:
+> > Hello,
+> >=20
+> > We are updating the kernel from the 6.1 to the 6.6 and we observe
+> > an
+> > amdgpu=E2=80=99s regression with Radeon RX580 8GB and SiFive Unmatched:
+> > =E2=80=9Cworkqueue: Failed to create a rescuer kthread for wq 'amdgpu-
+> > reset-
+> > dev': -EINTR
+> > [drm:amdgpu_reset_create_reset_domain [amdgpu]] *ERROR* Failed to
+> > allocate wq for amdgpu_reset_domain!
+> > amdgpu 0000:07:00.0: amdgpu: Fatal error during GPU init
+> > amdgpu 0000:07:00.0: amdgpu: amdgpu: finishing device.
+> > amdgpu: probe of 0000:07:00.0 failed with error -12=E2=80=9D
+> >=20
+> > We tried to figure it out without success for the moment, do you
+> > have
+> > some advice to identify the root cause and to fix it?
+> >=20
+> > Kind regards,
+> > Thomas Perrot
+> >=20
+>=20
 
-> While at it remane vivid_create_queue() parameter.
+--=20
+Thomas Perrot, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-remane -> rename
 
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> ---
->  drivers/media/test-drivers/vimc/vimc-capture.c | 2 +-
->  drivers/media/test-drivers/vivid/vivid-core.c  | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
-> index 2a2d19d23bab..97693561f1e4 100644
-> --- a/drivers/media/test-drivers/vimc/vimc-capture.c
-> +++ b/drivers/media/test-drivers/vimc/vimc-capture.c
-> @@ -432,7 +432,7 @@ static struct vimc_ent_device *vimc_capture_add(struct vimc_device *vimc,
->  	q->mem_ops = vimc_allocator == VIMC_ALLOCATOR_DMA_CONTIG
->  		   ? &vb2_dma_contig_memops : &vb2_vmalloc_memops;
->  	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-> -	q->min_queued_buffers = 2;
-> +	q->min_reqbufs_allocation = 2;
->  	q->lock = &vcapture->lock;
->  	q->dev = v4l2_dev->dev;
->  
-> diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
-> index 159c72cbb5bf..11b8520d9f57 100644
-> --- a/drivers/media/test-drivers/vivid/vivid-core.c
-> +++ b/drivers/media/test-drivers/vivid/vivid-core.c
-> @@ -861,7 +861,7 @@ static const struct media_device_ops vivid_media_ops = {
->  static int vivid_create_queue(struct vivid_dev *dev,
->  			      struct vb2_queue *q,
->  			      u32 buf_type,
-> -			      unsigned int min_queued_buffers,
-> +			      unsigned int min_reqbufs_allocation,
->  			      const struct vb2_ops *ops)
->  {
->  	if (buf_type == V4L2_BUF_TYPE_VIDEO_CAPTURE && dev->multiplanar)
-> @@ -898,7 +898,7 @@ static int vivid_create_queue(struct vivid_dev *dev,
->  	q->mem_ops = allocators[dev->inst] == 1 ? &vb2_dma_contig_memops :
->  						  &vb2_vmalloc_memops;
->  	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-> -	q->min_queued_buffers = supports_requests[dev->inst] ? 0 : min_queued_buffers;
-> +	q->min_reqbufs_allocation = min_reqbufs_allocation;
->  	q->lock = &dev->mutex;
->  	q->dev = dev->v4l2_dev.dev;
->  	q->supports_requests = supports_requests[dev->inst];
+--=-cMV9dIg4T3JiQTgXtcRJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Regards,
+-----BEGIN PGP SIGNATURE-----
 
-	Hans
+iQGzBAABCAAdFiEEh0B3xqajCiMDqBIhn8ALBXH+Cu0FAmWlBk0ACgkQn8ALBXH+
+Cu2j/Qv6A5oWfrKUk0H6c+EJltETug8YjAC0uUNMXeqZc3IunJYIEvifQbnwOU6P
+M8zc1K4C75r+6C8+x/fvc5Bb7mgFjr4nR2aDmNMMmsddH4o79Mm0djnce/m60L5+
+CsgEM/vxLaYv3w3/pAefbFSpkRA7JauCJYWPSnueSMxvuSeyVZB8agqqcrMbgh1i
+6NbuLsm3TGZToHCBN0HgSvh4fhYYeLDTO0kx510Dy3Ha6C2A/4LgPtlKg0Na4+2p
+gWVDlwN7iO3qGSA8SGy2rekwfZQ3qfZYeUmzu5ZxJeecH0f7Lu7H77zCJl6j0io4
+wGI6SkbhvR3BBDDRB/kV44MjYNiVsm08lZmzZQmFrD0k3SM20VJXkfaZb76q0Si4
+oEt3RZXqLPUSafMGPhtBQmmzgeAy2w+2jk/7iHw6uLcjM9qRxw8kXwwraRLqEke+
+8GZbG8kg9hoS40RRXuYk6YgCjD+8dDVj3Mh0wZkneyz3+/mPpw4YZg9KXNAEAxk9
+pC11KECt
+=z8NM
+-----END PGP SIGNATURE-----
+
+--=-cMV9dIg4T3JiQTgXtcRJ--
