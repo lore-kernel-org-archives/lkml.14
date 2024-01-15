@@ -1,9 +1,9 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A435C98
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:20:04 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 182A063BA
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-70-65a4eab4c743
+X-AuditID: a67dfc5b-d85ff70000001748-7a-65a4eab45555
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -23,34 +23,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [PATCH v6 0/7] Reduce TLB flushes by 94% by improving folio migration
-Date: Mon, 15 Jan 2024 17:19:46 +0900
-Message-Id: <20240115081953.2521-1-byungchul@sk.com>
+Subject: [PATCH v6 2/7] arm64: tlbflush: Add APIs manipulating tlb batch's arch data
+Date: Mon, 15 Jan 2024 17:19:48 +0900
+Message-Id: <20240115081953.2521-3-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsXC9ZZnoe6WV0tSDWb857SYs34Nm8XnDf/Y
+In-Reply-To: <20240115081953.2521-1-byungchul@sk.com>
+References: <20240115081953.2521-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsXC9ZZnke6WV0tSDR4tELWYs34Nm8XnDf/Y
 	LF5saGe0+Lr+F7PF0099LBaXd81hs7i35j+rxflda1ktdizdx2Rx6cACJovrux4yWhzvPcBk
 	Mf/eZzaLzZumMlscnzKV0eL3D6COk7MmszgIenxv7WPx2DnrLrvHgk2lHptXaHks3vOSyWPT
 	qk42j02fJrF7vDt3jt3jxIzfLB7zTgZ6vN93lc1j6y87j8ap19g8Pm+S83g3/y1bAH8Ul01K
-	ak5mWWqRvl0CV8bL8zuZCy6YVvx+cpS1gbFVs4uRk0NCwESiu2sLM4z96vEqMJtNQF3ixo2f
-	YLaIgJnEwdY/7F2MXBzMAh+ZJFZ/72DpYuTgEBbwk1i+OACkhkVAVeLbj1OsIDYv0JxZHT+Y
-	IGbKS6zecIAZpFdC4D2bxOxTm6CWSUocXHGDZQIj9wJGhlWMQpl5ZbmJmTkmehmVeZkVesn5
-	uZsYgeG9rPZP9A7GTxeCDzEKcDAq8fD++Ls4VYg1say4MvcQowQHs5IIb/WdJalCvCmJlVWp
-	RfnxRaU5qcWHGKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGBdn3Wzq/3lO3/u8LE/w
-	weaXZ31qRANkTU4fduRusfjAc+zRkpV7Sxmn1jy58O/LtN4TR68u7ony970kz/DsvsWthNsa
-	B6JOcHP1p95afWrOZN6CPOs1C3L1fnyLKs/c6LlQhXvDryMGvr+vfO53l0ir6C65+rHpXX2N
-	1qf1GZblvanFIU/D3JVYijMSDbWYi4oTAduM0C5rAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAAwFSAq39CAMSvwMaCGludGVybmFsIgYKBApOO4Mts+qkZTCJzTo4nK+sBjjz
-	sP4GOOiwhwE49a/6Azjl8o4EOMOdyQU407qcBjjerP8FOM+6rQU4uKW+AjjSwKACONe64QE4
-	x43AAjif3vMGOLOylQM4x5SVATj7+JwGOMmakwRAEkj3hY4ESLma3QdIoLJ1SLOoKkijvOkC
-	SLKqiQZIsvKSB0juzs4HSMiY+wRInslRSO++1QZIo+jwAki1+j5IgZXWBkjzsh5I7p/tBlAQ
-	Wgo8ZGVsaXZlci8+YApo6c+5A3DQNXj75MUFgAGFKYoBCQgYEDQY6uOqA4oBCQgGECcY2Nj5
-	A4oBCQgUEDYYwYX8B4oBCggDEPECGKv3iASKAQgIExBOGKejUIoBCQgEECUY9vjKBYoBCQgN
-	EDQYmoj4AooBCQgYEB8Yq7DAA5ABCKABAKoBFGludm1haWw1LnNraHluaXguY29tsgEGCgSm
-	ffyRuAH000fCARAIASIMDfj9o2USBWF2c3ltwgEYCAMiFA173KRlEg1kYXl6ZXJvX3J1bGVz
-	wgEbCAQiFw1KV2VgEhBnYXRla2VlcGVyX3J1bGVzwgECCAkagAFiNwb4xjxd+MxzjdvSwkot
-	7+UbekBkQPEOn2wwTJSVHR5J2E/cUfDXUIn3yI2bQzD+pKNSnd/5v+1ObvNjBakGkyqvzcsw
-	XzbkQEsEeY0YffYH4O1FTtdLH0mP/4HqS8EAO9MV4O6R1uvmG4lfc29FufaOphfnuvOyMCW/
-	cgsQvCIEc2hhMSoDcnNhw3hrcVICAAA=
+	ak5mWWqRvl0CV8aevofsBbO5Kja9b2drYNzL0cXIySEhYCLx5+sEFhj75OkWZhCbTUBd4saN
+	n2C2iICZxMHWP+xdjFwczAIfmSRWf+8AauDgEBYIkTi2WQakhkVAVeLX5nZGEJsXaM62nu/M
+	EDPlJVZvOABmcwqYSrz7eJwdxBYCqmm5u44VZKaEQDu7xIfZh1khGiQlDq64wTKBkXcBI8Mq
+	RqHMvLLcxMwcE72MyrzMCr3k/NxNjMB4WFb7J3oH46cLwYcYBTgYlXh4f/xdnCrEmlhWXJl7
+	iFGCg1lJhLf6zpJUId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJM
+	HJxSDYyeJU89j3v1/La5sGbRvAUqB1wEc2aphZgc+bJ6vneVnq7Fjf08s4oiunM4vTco6UnP
+	4Pa2en18wqR679BEvR9ZTay9fMn6KtP8ff/w8hWUqdxQs95W6xPRyW+3JOPdN2G5qzMrBB1D
+	rzltr15xZc5NLRM3pZfrThcYTz37tnvirp+ftPdwrFFiKc5INNRiLipOBACmt96qgwIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsXC5WfdrLvl1ZJUgyXv2SzmrF/DZvF5wz82
+	ixcb2hktvq7/xWzx9FMfi8XhuSdZLS7vmsNmcW/Nf1aL87vWslrsWLqPyeLSgQVMFtd3PWS0
+	ON57gMli/r3PbBabN01ltjg+ZSqjxe8fQB0nZ01mcRDy+N7ax+Kxc9Zddo8Fm0o9Nq/Q8li8
+	5yWTx6ZVnWwemz5NYvd4d+4cu8eJGb9ZPOadDPR4v+8qm8fiFx+YPLb+svNonHqNzePzJjmP
+	d/PfsgUIRHHZpKTmZJalFunbJXBl7Ol7yF4wm6ti0/t2tgbGvRxdjJwcEgImEidPtzCD2GwC
+	6hI3bvwEs0UEzCQOtv5h72Lk4mAW+Mgksfp7B0sXIweHsECIxLHNMiA1LAKqEr82tzOC2LxA
+	c7b1fGeGmCkvsXrDATCbU8BU4t3H4+wgthBQTcvddawTGLkWMDKsYhTJzCvLTczMMdUrzs6o
+	zMus0EvOz93ECAzuZbV/Ju5g/HLZ/RCjAAejEg/vj7+LU4VYE8uKK3MPMUpwMCuJ8FbfWZIq
+	xJuSWFmVWpQfX1Sak1p8iFGag0VJnNcrPDVBSCA9sSQ1OzW1ILUIJsvEwSnVwFj5aoFW5esc
+	p8jDSq8/e2hqtpsb33t5OrMqRbH7jOyq7KrUvI3dHUXCDGbrxK493BEyV+31+r9PnnrFbtqm
+	8vy9wEtFk49lh7YY3D/cwmyzpcJqW7DV6YL3DqrOnJsThROWbFuyaX5VlIHa9dzNPy7VKmk3
+	qRTUzK1xP554/fWf+iVHym57bFZiKc5INNRiLipOBACps5EaagIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,156 +60,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-I'm sorry for the spam-like consecutive posting. I introduced build
-errors in v5, in case of CONFIG_MIGRATION disabled or
-CONFIG_HWPOISON_INJECT moduled. I'm reposting the fixed version.
+This is a preparation for migrc mechanism that requires to manipulate
+tlb batch's arch data. Even though arm64 does nothing with it, arch
+with CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH should provide the APIs.
 
---->8---
-
-Hi everyone,
-
-While I'm working with CXL memory, I have been facing migration overhead
-esp. TLB shootdown on promotion or demotion between different tiers.
-Yeah.. most TLB shootdowns on migration through hinting fault can be
-avoided thanks to Huang Ying's work, commit 4d4b6d66db ("mm,unmap: avoid
-flushing TLB in batch if PTE is inaccessible"). See the following link:
-
-https://lore.kernel.org/lkml/20231115025755.GA29979@system.software.com/
-
-However, it's only for ones using hinting fault. I thought it'd be much
-better if we have a general mechanism to reduce the number of TLB
-flushes and TLB misses, that we can apply to any type of migration. I
-tried it only for tiering migration for now tho.
-
-I'm suggesting a mechanism to reduce TLB flushes by keeping source and
-destination of folios participated in the migrations until all TLB
-flushes required are done, only if those folios are not mapped with
-write permission PTE entries at all. I worked Based on v6.7.
-
-I saw the number of iTLB full flush was reduced by 94%, iTLB miss was
-reduced by 45.5% and the total runtime was reduced by 3.5% with the
-workload I tested with, XSBench. However, I believe that it would help
-more with other ones or any real ones. It'd be appreciated to let me
-know if I'm missing something.
-
-	Byungchul
-
+Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
+ arch/arm64/include/asm/tlbflush.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Changes from v5:
-	1. Fix build errors in case of CONFIG_MIGRATION disabled or
-	   CONFIG_HWPOISON_INJECT moduled. (feedbacked by kernel test
-	   bot and Raymond Jay Golo)
-	2. Organize migrc code with two kconfigs, CONFIG_MIGRATION and
-	   CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH.
-
-Changes from v4:
-
-	1. Rebase on v6.7.
-	2. Fix build errors in arm64 that is doing nothing for TLB flush
-	   but has CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH. (reported
-	   by kernel test robot)
-	3. Don't use any page flag. So the system would give up migrc
-	   mechanism more often but it's okay. The final improvement is
-	   good enough.
-	4. Instead, optimize full TLB flush(arch_tlbbatch_flush()) by
-	   avoiding redundant CPUs from TLB flush.
-
-Changes from v3:
-
-	1. Don't use the kconfig, CONFIG_MIGRC, and remove sysctl knob,
-	   migrc_enable. (feedbacked by Nadav)
-	2. Remove the optimization skipping CPUs that have already
-	   performed TLB flushes needed by any reason when performing
-	   TLB flushes by migrc because I can't tell the performance
-	   difference between w/ the optimization and w/o that.
-	   (feedbacked by Nadav)
-	3. Minimize arch-specific code. While at it, move all the migrc
-           declarations and inline functions from include/linux/mm.h to
-           mm/internal.h (feedbacked by Dave Hansen, Nadav)
-	4. Separate a part making migrc paused when the system is in
-	   high memory pressure to another patch. (feedbacked by Nadav)
-	5. Rename:
-	      a. arch_tlbbatch_clean() to arch_tlbbatch_clear(),
-	      b. tlb_ubc_nowr to tlb_ubc_ro,
-	      c. migrc_try_flush_free_folios() to migrc_flush_free_folios(),
-	      d. migrc_stop to migrc_pause.
-	   (feedbacked by Nadav)
-	6. Use ->lru list_head instead of introducing a new llist_head.
-	   (feedbacked by Nadav)
-	7. Use non-atomic operations of page-flag when it's safe.
-	   (feedbacked by Nadav)
-	8. Use stack instead of keeping a pointer of 'struct migrc_req'
-	   in struct task, which is for manipulating it locally.
-	   (feedbacked by Nadav)
-	9. Replace a lot of simple functions to inline functions placed
-	   in a header, mm/internal.h. (feedbacked by Nadav)
-	10. Add additional sufficient comments. (feedbacked by Nadav)
-	11. Remove a lot of wrapper functions. (feedbacked by Nadav)
-
-Changes from RFC v2:
-
-	1. Remove additional occupation in struct page. To do that,
-	   unioned with lru field for migrc's list and added a page
-	   flag. I know page flag is a thing that we don't like to add
-	   but no choice because migrc should distinguish folios under
-	   migrc's control from others. Instead, I force migrc to be
-	   used only on 64 bit system to mitigate you guys from getting
-	   angry.
-	2. Remove meaningless internal object allocator that I
-	   introduced to minimize impact onto the system. However, a ton
-	   of tests showed there was no difference.
-	3. Stop migrc from working when the system is in high memory
-	   pressure like about to perform direct reclaim. At the
-	   condition where the swap mechanism is heavily used, I found
-	   the system suffered from regression without this control.
-	4. Exclude folios that pte_dirty() == true from migrc's interest
-	   so that migrc can work simpler.
-	5. Combine several patches that work tightly coupled to one.
-	6. Add sufficient comments for better review.
-	7. Manage migrc's request in per-node manner (from globally).
-	8. Add TLB miss improvement in commit message.
-	9. Test with more CPUs(4 -> 16) to see bigger improvement.
-
-Changes from RFC:
-
-	1. Fix a bug triggered when a destination folio at the previous
-	   migration becomes a source folio at the next migration,
-	   before the folio gets handled properly so that the folio can
-	   play with another migration. There was inconsistency in the
-	   folio's state. Fixed it.
-	2. Split the patch set into more pieces so that the folks can
-	   review better. (Feedbacked by Nadav Amit)
-	3. Fix a wrong usage of barrier e.g. smp_mb__after_atomic().
-	   (Feedbacked by Nadav Amit)
-	4. Tried to add sufficient comments to explain the patch set
-	   better. (Feedbacked by Nadav Amit)
-
-Byungchul Park (7):
-  x86/tlb: Add APIs manipulating tlb batch's arch data
-  arm64: tlbflush: Add APIs manipulating tlb batch's arch data
-  mm/rmap: Recognize read-only TLB entries during batched TLB flush
-  mm: Separate move/undo doing on folio list from migrate_pages_batch()
-  mm: Add APIs to free a folio directly to the buddy bypassing pcp
-  mm: Defer TLB flush by keeping both src and dst folios at migration
-  mm: Pause migrc mechanism at high memory pressure
-
- arch/arm64/include/asm/tlbflush.h |  19 ++
- arch/x86/include/asm/tlbflush.h   |  18 ++
- arch/x86/mm/tlb.c                 |   4 +
- include/linux/mm.h                |  31 +++
- include/linux/mmzone.h            |   7 +
- include/linux/sched.h             |   9 +
- mm/internal.h                     |  74 ++++++
- mm/memory.c                       |   8 +
- mm/migrate.c                      | 411 ++++++++++++++++++++++++++----
- mm/page_alloc.c                   |  34 ++-
- mm/rmap.c                         |  37 ++-
- mm/swap.c                         |   7 +
- 12 files changed, 602 insertions(+), 57 deletions(-)
-
-
-base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index bb2c2833a987..4f2094843e7a 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -328,6 +328,25 @@ static inline void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+ 	dsb(ish);
+ }
+ 
++static inline void arch_tlbbatch_clear(struct arch_tlbflush_unmap_batch *batch)
++{
++	/* nothing to do */
++}
++
++static inline void arch_tlbbatch_fold(struct arch_tlbflush_unmap_batch *bdst,
++			       struct arch_tlbflush_unmap_batch *bsrc)
++{
++	/* nothing to do */
++}
++
++static inline bool arch_tlbbatch_done(struct arch_tlbflush_unmap_batch *bdst,
++			       struct arch_tlbflush_unmap_batch *bsrc)
++{
++	/* nothing to do */
++
++	return false;
++}
++
+ /*
+  * This is meant to avoid soft lock-ups on large TLB flushing ranges and not
+  * necessarily a performance improvement.
 -- 
 2.17.1
 
