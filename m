@@ -1,120 +1,159 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136EB17BAB;
-	Mon, 15 Jan 2024 20:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8F219470
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 20:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ha/0V3VV"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50eaaf2c7deso10292602e87.2;
-        Mon, 15 Jan 2024 12:11:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qkxkutBw"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-598e01ce434so1173462eaf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 12:12:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705349505; x=1705954305; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mIzPwYM/Ny8e0mdBUhsIkDn1Q1CyUA5R1cmNmiZYEMc=;
-        b=Ha/0V3VVV6X7Mmic22cHDuJW4lhgiaUSLA5ACDtRwDfp3GIcSlDVq6qg/6mzLxD2T8
-         0HYUqbW29EzTWZCPjvb8zxPHmPR6lJOj1T1lfFjWP85fNoE9LomnQy/tzJa09L3b9KOz
-         SZNRTULn55PM35RC0SblyIHzKDt+JN26DJ5hvKaG1vPMlDAhWi6LrINF78L1xUeBgBfk
-         +NiBOQJANyWiONQ3ttmwkRdOAQ8mLgoeTk3NB4IDxIgiArAxAtA+ZDfVSn2cg8mAw5g9
-         1CfsjNgjR2pBkpvPA1/CrntIvAqKehxHrXHhXEGE1JkpFRrohAeeHbYGbmFZvPUFYFcK
-         496Q==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705349545; x=1705954345; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OoGYdHuOEch5eGoOUgb3CbwIdtVZ1B+1VuVUe8FdGw8=;
+        b=qkxkutBwONnkNLDxt2Rt7GfUg+ZG8foCxf/FhUNUN4cDCJdsbhrDbCV2tQf6U6Hi82
+         hlC3R03m5a/Cnqo32GQDSAIr3SmLcRSG9CQ7szwJumS6/aX/mRWjF6h8Ijug7gnTXkRI
+         gyUTqOmZYIzD7lK2vLgRvpLKwrQXNEUcZldaxcWxs8K2TViwEj9K7REjJPdfYt9BwlRD
+         ynzovUHmAw+Phs+hkAeQU5NYW06Y0SlW5F1LprGIZADaZfVY+7etv6NJzBDKRmXXPu87
+         Cc1HBckSML0F9ZNs1TtPRwAcuJptqLqLFcfObgGsqkPEdQrHtNCAqZMENmP0jqBj1IYE
+         jxqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705349505; x=1705954305;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mIzPwYM/Ny8e0mdBUhsIkDn1Q1CyUA5R1cmNmiZYEMc=;
-        b=IcTVpLb33yimSD2j2db92/n6+3buDpbywS0XYt0Su2RXYY2cHwm69BfLC7Y4q45duB
-         wEdCmDcRHQOHpbeKnJnYdmgckEW+cnFLoFyUUa7d+8ea9s2/Gy2a7Nctnyu3Sw5xmHUL
-         pEpOCCEqRSUQgNdLNzjLDUmHhbEZ1vAbwxs2ZbwQuS2m5YVD0kGCMHvSDbSP9k0/l6gr
-         qh8rhT97SCT4mbXDQWNihu/tCttrp8E12sCk+BSJdlD660UEyHDnuFGZ0ZUPQWwTx6ZH
-         2e0+R9Lx/88OyEBuo3gdnO8bbrObbKjS4VKERnOWeUCNLsL3qTlFcSKlLcW0Tuz4hfEx
-         Ap5Q==
-X-Gm-Message-State: AOJu0Ywy3x9hMJlcLzukEkp+WfowvBf6L2JWZF121ZnjcDGcFDOJCHTY
-	l92Ja5+o9GgRD6z3S5miGEg=
-X-Google-Smtp-Source: AGHT+IGOdhTcDmH/j5CzVjjXx9n1gHAiS/+bh0UAaYWK4Uyrbcp985c8qH3vB39trmISFgq0UB07eA==
-X-Received: by 2002:a05:6512:3a91:b0:50e:fa02:2f8d with SMTP id q17-20020a0565123a9100b0050efa022f8dmr1143726lfu.62.1705349504796;
-        Mon, 15 Jan 2024 12:11:44 -0800 (PST)
-Received: from ?IPV6:2a02:a466:68ed:1:176c:f513:1187:6521? (2a02-a466-68ed-1-176c-f513-1187-6521.fixed6.kpn.net. [2a02:a466:68ed:1:176c:f513:1187:6521])
-        by smtp.gmail.com with ESMTPSA id y3-20020ac24e63000000b0050e7e92d211sm1545416lfs.45.2024.01.15.12.11.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jan 2024 12:11:44 -0800 (PST)
-Message-ID: <8d8ee3be-3068-4a52-82d3-51678cd620c2@gmail.com>
-Date: Mon, 15 Jan 2024 21:11:43 +0100
+        d=1e100.net; s=20230601; t=1705349545; x=1705954345;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OoGYdHuOEch5eGoOUgb3CbwIdtVZ1B+1VuVUe8FdGw8=;
+        b=BYwpA3DZHe5bf6XoBwCHHe+ws78aajvzGwxT7xFTZq99FqmNV+z7Gk4mYwQOBDXpj4
+         /hQ5uq7PDrU4oRKj3NIA0lzs/3W9CXlXwtlywCJ5Y3D5AN1LPjadBsh/7jidx6Jom6tp
+         O63GPAS2kRwCx6acNKkoxBANBuTkwBpRq+n6yc2zNxK9jmhsIy1lDPyQlurdzO7c9Ss4
+         FdU87lJrsKZuMgMtWhY1xiGJj+J2soV3HcVwotc6/mq/z31b13fMj3jGo/2VssbBTNyB
+         jJPxjLUM4vOwENL2jXAk0iit+C44aC829cOioblctUvV3oYVz3EtG8Ko8QHs6TNjehgD
+         53fQ==
+X-Gm-Message-State: AOJu0Yzvd4LEBZITZcf2QjoFzP6Lp4zHsFAlNVQ268si8E8a7alxfFTo
+	S0yCUYiWhGmX7r1gR36TztrgvXccmva6CQ==
+X-Google-Smtp-Source: AGHT+IHnusVFj+YA3xivR599tPImC6bULBVIHPYSM+PjDD1HCrUKJZuqs61Cdx3c+wH2pjzpb2J/hQ==
+X-Received: by 2002:a05:6359:6b81:b0:170:64cd:8aac with SMTP id ta1-20020a0563596b8100b0017064cd8aacmr4081881rwb.62.1705349545406;
+        Mon, 15 Jan 2024 12:12:25 -0800 (PST)
+Received: from workbox.taildc8f3.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id y26-20020ac8525a000000b004298b33cdcasm4219170qtn.50.2024.01.15.12.12.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 12:12:25 -0800 (PST)
+From: Trevor Gamblin <tgamblin@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	michael.hennerich@analog.com,
+	nuno.sa@analog.com,
+	devicetree@vger.kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Subject: [PATCH 1/2] dt-bindings: pwm: Add bindings for AXI PWM generator
+Date: Mon, 15 Jan 2024 15:12:20 -0500
+Message-ID: <20240115201222.1423626-2-tgamblin@baylibre.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240115201222.1423626-1-tgamblin@baylibre.com>
+References: <20240115201222.1423626-1-tgamblin@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: gadget: u_ether: Re-attach netif device to mirror
- detachment
-Content-Language: en-US
-To: Richard Acayan <mailingradian@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Hardik Gajjar <hgajjar@de.adit-jv.com>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231218164532.411125-2-mailingradian@gmail.com>
-From: Ferry Toth <fntoth@gmail.com>
-In-Reply-To: <20231218164532.411125-2-mailingradian@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Drew Fustini <dfustini@baylibre.com>
 
-Op 18-12-2023 om 17:45 schreef Richard Acayan:
-> In 6.7-rc1, there was a netif_device_detach call added to the
-> gether_disconnect function. This clears the __LINK_STATE_PRESENT bit of
-> the netif device and suppresses pings (ICMP messages) and TCP connection
-> requests from the connected host. If userspace temporarily disconnects
-> the gadget, such as by temporarily removing configuration in the gadget
-> configfs interface, network activity should continue to be processed
-> when the gadget is re-connected. Mirror the netif_device_detach call
-> with a netif_device_attach call in gether_connect to fix re-connecting
-> gadgets.
-> 
-> Link: https://gitlab.com/postmarketOS/pmaports/-/tree/6002e51b7090aeeb42947e0ca7ec22278d7227d0/main/postmarketos-base-ui/rootfs-usr-lib-NetworkManager-dispatcher.d-50-tethering.sh
-> Fixes: f49449fbc21e ("usb: gadget: u_ether: Replace netif_stop_queue with netif_device_detach")
-> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
-> ---
->   drivers/usb/gadget/function/u_ether.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/usb/gadget/function/u_ether.c b/drivers/usb/gadget/function/u_ether.c
-> index 9d1c40c152d8..3c5a6f6ac341 100644
-> --- a/drivers/usb/gadget/function/u_ether.c
-> +++ b/drivers/usb/gadget/function/u_ether.c
-> @@ -1163,6 +1163,8 @@ struct net_device *gether_connect(struct gether *link)
->   		if (netif_running(dev->net))
->   			eth_start(dev, GFP_ATOMIC);
->   
-> +		netif_device_attach(dev->net);
-> +
->   	/* on error, disable any endpoints  */
->   	} else {
->   		(void) usb_ep_disable(link->out_ep);
-This works mrfld (Intel Edison Arduino) using configfs with v6.7.0. 
-Tested using `iperf3 -s` on mrfld,
-iperf3 --bidir -c edison-usb
-[ ID][Role] Interval           Transfer     Bitrate         Retr
-[  5][TX-C]   0.00-10.00  sec   130 MBytes   109 Mbits/sec    0 
-    sender
-[  5][TX-C]   0.00-9.99   sec   129 MBytes   108 Mbits/sec 
-    receiver
-[  7][RX-C]   0.00-10.00  sec   167 MBytes   140 Mbits/sec    0 
-    sender
-[  7][RX-C]   0.00-9.99   sec   166 MBytes   139 Mbits/sec 
-    receiver
+Add bindings for Analog Devices AXI PWM generator.
 
-and
-iperf3 -c edison-usb
-[  5]   0.00-10.00  sec   247 MBytes   207 Mbits/sec    0             sender
-[  5]   0.00-9.99   sec   246 MBytes   206 Mbits/sec 
-receiver
+Link: https://wiki.analog.com/resources/fpga/docs/axi_pwm_gen
+Signed-off-by: Drew Fustini <dfustini@baylibre.com>
+Co-developed-by: Trevor Gamblin <tgamblin@baylibre.com>
+Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+---
+ .../bindings/pwm/adi,axi-pwmgen.yaml          | 48 +++++++++++++++++++
+ MAINTAINERS                                   |  8 ++++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
 
+diff --git a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+new file mode 100644
+index 000000000000..8f16b2e14154
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/adi,axi-pwmgen.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AXI PWM generator
++
++maintainers:
++  - Michael Hennerich <Michael.Hennerich@analog.com>
++  - Nuno Sá <nuno.sa@analog.com>
++
++description:
++  The Analog Devices AXI PWM generator can generate PWM signals
++  with variable pulse width and period.
++
++  https://wiki.analog.com/resources/fpga/docs/axi_pwm_gen
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    const: adi,axi-pwmgen-1.00.a
++
++  reg:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++unevaluatedProperties: false
++
++required:
++  - reg
++  - clocks
++
++examples:
++  - |
++    pwm@44b00000 {
++       compatible = "adi,axi-pwmgen-1.00.a";
++       reg = <0x44b00000 0x1000>;
++       clocks = <&spi_clk>;
++       #pwm-cells = <2>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c6c7b50e6ef6..7b0f3aec5381 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3415,6 +3415,14 @@ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/hwmon/adi,axi-fan-control.yaml
+ F:	drivers/hwmon/axi-fan-control.c
+ 
++AXI PWM GENERATOR
++M:	Michael Hennerich <michael.hennerich@analog.com>
++M:	Nuno Sá <nuno.sa@analog.com>
++L:	linux-pwm@vger.kernel.org
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
++
+ AXXIA I2C CONTROLLER
+ M:	Krzysztof Adamski <krzysztof.adamski@nokia.com>
+ L:	linux-i2c@vger.kernel.org
+-- 
+2.43.0
 
-Tested-by: Ferry Toth <fntoth@gmail.com> [mrfld]
