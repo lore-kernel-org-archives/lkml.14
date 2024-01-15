@@ -1,51 +1,36 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD03154B1
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 12:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qaO9svZ1"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40e60e137aaso40376715e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 04:52:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705323150; x=1705927950; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CIcQfpzLxtniFRrdqWB9c4Ne8h1A+td17JByQxotsiY=;
-        b=qaO9svZ1EyKpPFemsUcIQ4Dl80oDTXQ3yiTve1VwjzSZv7u/UKqEGVuVxZWtj7s2hY
-         7s7d8SDM7D/esfgAuokVWpD1lAxpYUJ5ElJSfgi5aR2Nsj+knIGKqAM9ilB6G3X+B7dd
-         df0VjrCmTIpeAywV2DpFf305OAe2axt/26gHbCwF7++1W99cc3ym6a+USzNp8W1jRf1u
-         6qZnC6nuVR6OiBppIp7VIFLl4WjrC5VzNnA51xpQMx9FcqznfBz3cM9cJ9JTaVHuC2tw
-         Gc3rJgWrjMDdMxqwiFBcPilJ3GqUhUvXhsN+ZEJhjkY1XiA4nIFs0d/Zq0zDNbYK/m9U
-         6CxQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE3D1642F
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 12:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3368b1e056eso7227606f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 04:54:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705323150; x=1705927950;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CIcQfpzLxtniFRrdqWB9c4Ne8h1A+td17JByQxotsiY=;
-        b=mMg+Vj7IvYgpggwKzvTs79oJVB/qHNUCzn6f+lBJkhO0+Hq6/eIzLK6F63ATryaV9G
-         GIwLXHqriJWWmzgKHKAxF+A8o1fND2FO2p8yb6e5XO8+OgUURlynCmn0Xxw12VkZ3GLc
-         pzWJPnCFH7JxABlxiEoRuDJ8cSW3BG/Pz+03Q8OOP650CbcZVIPJS9kv3EaURWK2jWl2
-         kUzyEmJpgzTY4WHs0SGif65PaIEyrKVbE99EIzsbeZ0paVzn7TmXNGHyFqsa3qek3OyK
-         52bXYtWWxVeoUqhElX7ulmG9kQO0S4sbKZM74q4QbNtXEmJo1j9YyfD6luBzXdyfScXS
-         EwhA==
-X-Gm-Message-State: AOJu0YwWxFKOYKMJEdRaGVNJ/fr6A2eWeiwiNo8RdxSC9FumPFoGP9nr
-	14idolJWTm9yn9obNgTpKgaJBUgJlu49+g==
-X-Google-Smtp-Source: AGHT+IFkde+i/p346tJ1Gllcj11n1VuQ9JNiLDXuEWxSEkgLGelLcwxWVqkv5z7rJaOrwnmXsl/1Vw==
-X-Received: by 2002:a05:600c:3c89:b0:40e:61a6:c639 with SMTP id bg9-20020a05600c3c8900b0040e61a6c639mr3110685wmb.94.1705323149947;
-        Mon, 15 Jan 2024 04:52:29 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:af6f:bcbb:3c88:33c2? ([2a01:e0a:982:cbb0:af6f:bcbb:3c88:33c2])
-        by smtp.gmail.com with ESMTPSA id t21-20020a05600c451500b0040e3ac9f4c8sm19539332wmo.28.2024.01.15.04.52.28
+        d=1e100.net; s=20230601; t=1705323275; x=1705928075;
+        h=in-reply-to:autocrypt:references:cc:to:from:content-language
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xLghDWpkVU0YBuzbAu4AAdJFnxwFpeeuzgUW29PuSMY=;
+        b=T8RpIyWEb3P3/JTkXd+ydPlozGY6Jj9q5xcBcfEe+KzXPWFyoUOEZHXa7yWb/8kBzA
+         wAOtj2LFt+U0EbJps+L382YFoa0QY09xFfp3kjtnqKRB8v3/ltQL03f6ye9T3hv5O3vA
+         lJZzsfAqiNmoON8TymRPq7afOHRXaS6MuDJjL5w9MIWAQWIytcmIVtR6BJF5A+V6VHr7
+         k3nYKJSDo0iQ1TfTVzwiWdwfIfSpmLYUnx8xzReQBY8ns4RmwbD+fhD8SEzvmWwCof2U
+         rUcxq2wbH/bSC2xzkk0gMVzoNdyHraRXpVsorHhWU6ojhwJdt3VfctRhUGLnn+YpZF0o
+         MK/g==
+X-Gm-Message-State: AOJu0YxS0hTT38DrAWWuE0XJnWgb4YK88favGIW60pqcQl8PVeUbDQk6
+	60ZjRtm8ZcnGVD5mmJzwJC0=
+X-Google-Smtp-Source: AGHT+IFRPhXev11ORnPnGCEOT2C2rDG6s0AfVxRCuG72RaCVKZpRUBUFZH8FhqL+PGUDJpREjrGt6w==
+X-Received: by 2002:adf:f150:0:b0:333:5665:fa86 with SMTP id y16-20020adff150000000b003335665fa86mr2807773wro.18.1705323274450;
+        Mon, 15 Jan 2024 04:54:34 -0800 (PST)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
+        by smtp.gmail.com with ESMTPSA id d13-20020a056000114d00b003379d5d2f1csm6629574wrx.28.2024.01.15.04.54.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jan 2024 04:52:29 -0800 (PST)
-Message-ID: <562a7ab4-2bd0-44e1-92b3-a16bb642ab11@linaro.org>
-Date: Mon, 15 Jan 2024 13:52:27 +0100
+        Mon, 15 Jan 2024 04:54:33 -0800 (PST)
+Content-Type: multipart/mixed; boundary="------------MIjzjvXzDzk5uLbgROFJFtxw"
+Message-ID: <c737a604-d441-49c6-a5cd-ef01e9f2a454@kernel.org>
+Date: Mon, 15 Jan 2024 13:54:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,378 +38,161 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] drm/bridge: synopsys: dw-mipi-dsi: fix deferred dsi host
- probe breaks dsi device probe
-Content-Language: en-US, fr
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- Farouk Bouabid <farouk.bouabid@theobroma-systems.com>, victor.liu@nxp.com,
- andrzej.hajda@intel.com, rfoss@kernel.org, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, linux-imx@nxp.com, khilman@baylibre.com,
- jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
- hjc@rock-chips.com, yannick.fertre@foss.st.com,
- raphael.gallais-pou@foss.st.com, philippe.cornu@foss.st.com,
- mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
-Cc: quentin.schulz@theobroma-systems.com, bouabid.farouk97@gmail.com
-References: <20240112180737.551318-1-farouk.bouabid@theobroma-systems.com>
- <9dd100de-6d33-4872-8619-1df6ee520c5a@linaro.org> <8542394.JRmrKFJ9eK@diego>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <8542394.JRmrKFJ9eK@diego>
+Subject: Re: [PATCH v3 7/7] locking/rtmutex: Acquire the hb lock via trylock
+ after wait-proxylock.
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ linux-kernel@vger.kernel.org, boqun.feng@gmail.com, bristot@redhat.com,
+ bsegall@google.com, dietmar.eggemann@arm.com, jstultz@google.com,
+ juri.lelli@redhat.com, longman@redhat.com, mgorman@suse.de,
+ mingo@redhat.com, rostedt@goodmis.org, swood@redhat.com,
+ vincent.guittot@linaro.org, vschneid@redhat.com, will@kernel.org
+References: <20230908162254.999499-1-bigeasy@linutronix.de>
+ <20230908162254.999499-8-bigeasy@linutronix.de>
+ <20230911141135.GB9098@noisy.programming.kicks-ass.net> <87fs3f1tl0.ffs@tglx>
+ <20230915151943.GD6743@noisy.programming.kicks-ass.net>
+ <4611bcf2-44d0-4c34-9b84-17406f881003@kernel.org>
+ <9f75eb59-9b7a-4b49-9081-e6a3cbb00187@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <9f75eb59-9b7a-4b49-9081-e6a3cbb00187@kernel.org>
+
+This is a multi-part message in MIME format.
+--------------MIjzjvXzDzk5uLbgROFJFtxw
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 15/01/2024 11:07, Heiko Stübner wrote:
-> Am Montag, 15. Januar 2024, 09:45:10 CET schrieb neil.armstrong@linaro.org:
->> Hi,
->>
->> On 12/01/2024 19:07, Farouk Bouabid wrote:
->>> dw-mipi-dsi based drivers such as dw-mipi-dsi-rockchip or dw_mipi_dsi-stm
->>> depend on dw_mipi_dsi_probe() to initialize the dw_mipi_dsi driver
->>> structure (dmd pointer). This structure is only initialized once
->>> dw_mipi_dsi_probe() returns, creating the link between the locally created
->>> structure and the actual dmd pointer.
+On 15. 01. 24, 12:52, Jiri Slaby wrote:
+> On 15. 01. 24, 12:40, Jiri Slaby wrote:
+>> On 15. 09. 23, 17:19, Peter Zijlstra wrote:
+>>> On Fri, Sep 15, 2023 at 02:58:35PM +0200, Thomas Gleixner wrote:
 >>>
->>> Probing the dsi host can be deferred in case of dependency to a dsi
->>> phy-supply (eg. "rockchip,px30-dsi-dphy"). Meanwhile dsi-device drivers
->>> like panels (eg. "ltk050h3146w") can already be registered on the bus.
->>> In that case, when attempting, to register the dsi host from
->>> dw_mipi_dsi_probe() using mipi_dsi_host_register(), the panel probe is
->>> called with a dsi-host pointer that is still locally allocated in
->>> dw_mipi_dsi_probe().
+>>>> I spent quite some time to convince myself that this is correct. I was
+>>>> not able to poke a hole into it. So that really should be safe to
+>>>> do. Famous last words ...
 >>>
->>> While probing, the panel driver tries to attach to a dsi host
->>> (mipi_dsi_attach()) which calls in return for the specific dsi host
->>> attach hook. (e.g. dw_mipi_dsi_rockchip_host_attach()).
->>> dw_mipi_dsi_rockchip uses the component framework.
->>> In the attach hook, the host component is registered which calls in return
->>> for drm_bridge_attach() while trying to bind the component
->>> (dw_mipi_dsi_bind())
->>
->> In meson_dw_mipi_dsi I simply fixed this by getting rid of components...
-> 
-> If I remember correctly, the component element is there on Rockchip to
-> facilitate running dual-dsi displays (1 panel driven by 2 dsi controllers),
-> because it allows to wait for both controllers to have probed individually
-> before trying to drive the display.
-> 
-> Not sure if there is a better way to do that now.
-
-Device links should limit probe deferal to a minimum, at least it works fine
-on the systems I work on
-
-Neil
-
-> 
-> 
-> Heiko
-> 
-> 
->>> drm_bridge_attach() requires a valid drm bridge parameter. However, the
->>> drm bridge (&dmd->bridge) that will be passed, is not yet initialized since
->>> the dw_mipi_dsi_probe() has not yet returned. This call will fail with a
->>> fatal error (invalid bridge) causing the panel to not be probed again.
+>>> IKR :-/
 >>>
->>> To simplify the issue: drm_bridge_attach() depends on the result pointer
->>> of dw_mipi_dsi_probe().
->>> While, if the dsi probe is deferred, drm_bridge_attach() is called before
->>> dw_mipi_dsi_probe() returns.
+>>> Something like so then...
 >>>
->>> drm_bridge_attach+0x14/0x1ac
->>> dw_mipi_dsi_bind+0x24/0x30
->>> dw_mipi_dsi_rockchip_bind+0x258/0x378
->>> component_bind_all+0x118/0x248
->>> rockchip_drm_bind+0xb0/0x1f8
->>> try_to_bring_up_aggregate_device+0x168/0x1d4
->>> __component_add+0xa4/0x170
->>> component_add+0x14/0x20
->>> dw_mipi_dsi_rockchip_host_attach+0x54/0x144
->>> dw_mipi_dsi_host_attach+0x9c/0xcc
->>> mipi_dsi_attach+0x28/0x3c
->>> ltk050h3146w_probe+0x10c/0x1a4
->>> mipi_dsi_drv_probe+0x20/0x2c
->>> really_probe+0x148/0x2ac
->>> __driver_probe_device+0x78/0x12c
->>> driver_probe_device+0xdc/0x160
->>> __device_attach_driver+0xb8/0x134
->>> bus_for_each_drv+0x80/0xdc
->>> __device_attach+0xa8/0x1b0
->>> device_initial_probe+0x14/0x20
->>> bus_probe_device+0xa8/0xac
->>> device_add+0x5cc/0x778
->>> mipi_dsi_device_register_full+0xd8/0x198
->>> mipi_dsi_host_register+0x98/0x18c
->>> __dw_mipi_dsi_probe+0x290/0x35c
->>> dw_mipi_dsi_probe+0x10/0x6c
->>> dw_mipi_dsi_rockchip_probe+0x208/0x3e4
->>> platform_probe+0x68/0xdc
->>> really_probe+0x148/0x2ac
->>> __driver_probe_device+0x78/0x12c
->>> driver_probe_device+0xdc/0x160
->>> __device_attach_driver+0xb8/0x134
->>> bus_for_each_drv+0x80/0xdc
->>> __device_attach+0xa8/0x1b0
->>> device_initial_probe+0x14/0x20
->>> bus_probe_device+0xa8/0xac
->>> deferred_probe_work_func+0x88/0xc0
->>> process_one_work+0x138/0x260
->>> worker_thread+0x32c/0x438
->>> kthread+0x118/0x11c
->>> ret_from_fork+0x10/0x20
->>> ---[ end trace 0000000000000000 ]---
->>>
->>> Fix this by initializing directly the dmd pointer in dw_mipi_dsi_probe(),
->>> which requires also initializting the dmd->bridge attributes that are
->>> required in drm_bridge_attach() before calling mipi_dsi_host_register().
->>>
->>> Signed-off-by: Farouk Bouabid <farouk.bouabid@theobroma-systems.com>
 >>> ---
->>>    drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c   |  4 +-
->>>    drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 42 ++++++++++---------
->>>    drivers/gpu/drm/meson/meson_dw_mipi_dsi.c     |  8 ++--
->>>    .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |  5 +--
->>>    drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  5 +--
->>>    include/drm/bridge/dw_mipi_dsi.h              |  5 ++-
->>>    6 files changed, 35 insertions(+), 34 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c b/drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c
->>> index 3ff30ce80c5b..469976ad3b19 100644
->>> --- a/drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c
->>> +++ b/drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c
->>> @@ -881,8 +881,8 @@ static int imx93_dsi_probe(struct platform_device *pdev)
->>>    	dsi->pdata.priv_data = dsi;
->>>    	platform_set_drvdata(pdev, dsi);
->>>    
->>> -	dsi->dmd = dw_mipi_dsi_probe(pdev, &dsi->pdata);
->>> -	if (IS_ERR(dsi->dmd))
->>> +	ret = dw_mipi_dsi_probe(pdev, &dsi->pdata, &dsi->dmd);
->>> +	if (ret < 0)
->>>    		return dev_err_probe(dev, PTR_ERR(dsi->dmd),
->>>    				     "failed to probe dw_mipi_dsi\n");
->>>    
->>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
->>> index 824fb3c65742..306cba366ba8 100644
->>> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
->>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
->>> @@ -1184,18 +1184,19 @@ static void dw_mipi_dsi_debugfs_remove(struct dw_mipi_dsi *dsi) { }
->>>    
->>>    #endif /* CONFIG_DEBUG_FS */
->>>    
->>> -static struct dw_mipi_dsi *
->>> -__dw_mipi_dsi_probe(struct platform_device *pdev,
->>> -		    const struct dw_mipi_dsi_plat_data *plat_data)
->>> +int __dw_mipi_dsi_probe(struct platform_device *pdev,
->>> +		    const struct dw_mipi_dsi_plat_data *plat_data, struct dw_mipi_dsi **dsi_p)
->>>    {
->>>    	struct device *dev = &pdev->dev;
->>>    	struct reset_control *apb_rst;
->>>    	struct dw_mipi_dsi *dsi;
->>>    	int ret;
->>>    
->>> -	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
->>> -	if (!dsi)
->>> -		return ERR_PTR(-ENOMEM);
->>> +	*dsi_p = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
->>> +	if (!*dsi_p)
->>> +		return -ENOMEM;
->>> +
->>> +	dsi = *dsi_p;
->>>    
->>>    	dsi->dev = dev;
->>>    	dsi->plat_data = plat_data;
->>> @@ -1203,13 +1204,13 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
->>>    	if (!plat_data->phy_ops->init || !plat_data->phy_ops->get_lane_mbps ||
->>>    	    !plat_data->phy_ops->get_timing) {
->>>    		DRM_ERROR("Phy not properly configured\n");
->>> -		return ERR_PTR(-ENODEV);
->>> +		return -ENODEV;
->>>    	}
->>>    
->>>    	if (!plat_data->base) {
->>>    		dsi->base = devm_platform_ioremap_resource(pdev, 0);
->>>    		if (IS_ERR(dsi->base))
->>> -			return ERR_PTR(-ENODEV);
->>> +			return -ENODEV;
->>>    
->>>    	} else {
->>>    		dsi->base = plat_data->base;
->>> @@ -1219,7 +1220,7 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
->>>    	if (IS_ERR(dsi->pclk)) {
->>>    		ret = PTR_ERR(dsi->pclk);
->>>    		dev_err(dev, "Unable to get pclk: %d\n", ret);
->>> -		return ERR_PTR(ret);
->>> +		return ret;
->>>    	}
->>>    
->>>    	/*
->>> @@ -1233,14 +1234,14 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
->>>    		if (ret != -EPROBE_DEFER)
->>>    			dev_err(dev, "Unable to get reset control: %d\n", ret);
->>>    
->>> -		return ERR_PTR(ret);
->>> +		return ret;
->>>    	}
->>>    
->>>    	if (apb_rst) {
->>>    		ret = clk_prepare_enable(dsi->pclk);
->>>    		if (ret) {
->>>    			dev_err(dev, "%s: Failed to enable pclk\n", __func__);
->>> -			return ERR_PTR(ret);
->>> +			return ret;
->>>    		}
->>>    
->>>    		reset_control_assert(apb_rst);
->>> @@ -1255,19 +1256,20 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
->>>    
->>>    	dsi->dsi_host.ops = &dw_mipi_dsi_host_ops;
->>>    	dsi->dsi_host.dev = dev;
->>> +	dsi->bridge.driver_private = dsi;
->>> +	dsi->bridge.funcs = &dw_mipi_dsi_bridge_funcs;
->>> +	dsi->bridge.of_node = pdev->dev.of_node;
->>> +
->>>    	ret = mipi_dsi_host_register(&dsi->dsi_host);
->>>    	if (ret) {
->>>    		dev_err(dev, "Failed to register MIPI host: %d\n", ret);
->>>    		pm_runtime_disable(dev);
->>>    		dw_mipi_dsi_debugfs_remove(dsi);
->>> -		return ERR_PTR(ret);
->>> +		return ret;
->>>    	}
->>>    
->>> -	dsi->bridge.driver_private = dsi;
->>> -	dsi->bridge.funcs = &dw_mipi_dsi_bridge_funcs;
->>> -	dsi->bridge.of_node = pdev->dev.of_node;
->>>    
->>> -	return dsi;
->>> +	return 0;
->>>    }
->>>    
->>>    static void __dw_mipi_dsi_remove(struct dw_mipi_dsi *dsi)
->>> @@ -1301,11 +1303,11 @@ EXPORT_SYMBOL_GPL(dw_mipi_dsi_get_bridge);
->>>    /*
->>>     * Probe/remove API, used from platforms based on the DRM bridge API.
->>>     */
->>> -struct dw_mipi_dsi *
->>> -dw_mipi_dsi_probe(struct platform_device *pdev,
->>> -		  const struct dw_mipi_dsi_plat_data *plat_data)
->>> +int dw_mipi_dsi_probe(struct platform_device *pdev,
->>> +		  const struct dw_mipi_dsi_plat_data *plat_data,
->>> +		  struct dw_mipi_dsi **dsi_p)
->>>    {
->>> -	return __dw_mipi_dsi_probe(pdev, plat_data);
->>> +	return __dw_mipi_dsi_probe(pdev, plat_data, dsi_p);
->>>    }
->>>    EXPORT_SYMBOL_GPL(dw_mipi_dsi_probe);
->>>    
->>> diff --git a/drivers/gpu/drm/meson/meson_dw_mipi_dsi.c b/drivers/gpu/drm/meson/meson_dw_mipi_dsi.c
->>> index e5fe4e994f43..b103f3e31f2a 100644
->>> --- a/drivers/gpu/drm/meson/meson_dw_mipi_dsi.c
->>> +++ b/drivers/gpu/drm/meson/meson_dw_mipi_dsi.c
->>> @@ -262,6 +262,7 @@ static int meson_dw_mipi_dsi_probe(struct platform_device *pdev)
->>>    {
->>>    	struct meson_dw_mipi_dsi *mipi_dsi;
->>>    	struct device *dev = &pdev->dev;
->>> +	int ret;
->>>    
->>>    	mipi_dsi = devm_kzalloc(dev, sizeof(*mipi_dsi), GFP_KERNEL);
->>>    	if (!mipi_dsi)
->>> @@ -315,10 +316,9 @@ static int meson_dw_mipi_dsi_probe(struct platform_device *pdev)
->>>    	mipi_dsi->pdata.priv_data = mipi_dsi;
->>>    	platform_set_drvdata(pdev, mipi_dsi);
->>>    
->>> -	mipi_dsi->dmd = dw_mipi_dsi_probe(pdev, &mipi_dsi->pdata);
->>> -	if (IS_ERR(mipi_dsi->dmd))
->>> -		return dev_err_probe(dev, PTR_ERR(mipi_dsi->dmd),
->>> -				     "Failed to probe dw_mipi_dsi\n");
->>> +	ret = dw_mipi_dsi_probe(pdev, &mipi_dsi->pdata, &mipi_dsi->dmd);
->>> +	if (ret < 0)
->>> +		return dev_err_probe(dev, ret, "Failed to probe dw_mipi_dsi\n");
->>>    
->>>    	return 0;
->>>    }
->>> diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
->>> index 6396f9324dab..4df32747476c 100644
->>> --- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
->>> +++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
->>> @@ -1457,9 +1457,8 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
->>>    	if (IS_ERR(phy_provider))
->>>    		return PTR_ERR(phy_provider);
->>>    
->>> -	dsi->dmd = dw_mipi_dsi_probe(pdev, &dsi->pdata);
->>> -	if (IS_ERR(dsi->dmd)) {
->>> -		ret = PTR_ERR(dsi->dmd);
->>> +	ret = dw_mipi_dsi_probe(pdev, &dsi->pdata, &dsi->dmd);
->>> +	if (ret < 0) {
->>>    		if (ret != -EPROBE_DEFER)
->>>    			DRM_DEV_ERROR(dev,
->>>    				      "Failed to probe dw_mipi_dsi: %d\n", ret);
->>> diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->>> index d5f8c923d7bc..44dbbfc277d8 100644
->>> --- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->>> +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->>> @@ -518,9 +518,8 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
->>>    
->>>    	platform_set_drvdata(pdev, dsi);
->>>    
->>> -	dsi->dsi = dw_mipi_dsi_probe(pdev, &dw_mipi_dsi_stm_plat_data);
->>> -	if (IS_ERR(dsi->dsi)) {
->>> -		ret = PTR_ERR(dsi->dsi);
->>> +	ret = dw_mipi_dsi_probe(pdev, &dw_mipi_dsi_stm_plat_data, &dsi->dsi);
->>> +	if (ret < 0) {
->>>    		dev_err_probe(dev, ret, "Failed to initialize mipi dsi host\n");
->>>    		goto err_dsi_probe;
->>>    	}
->>> diff --git a/include/drm/bridge/dw_mipi_dsi.h b/include/drm/bridge/dw_mipi_dsi.h
->>> index 65d5e68065e3..f073e819251e 100644
->>> --- a/include/drm/bridge/dw_mipi_dsi.h
->>> +++ b/include/drm/bridge/dw_mipi_dsi.h
->>> @@ -76,9 +76,10 @@ struct dw_mipi_dsi_plat_data {
->>>    	void *priv_data;
->>>    };
->>>    
->>> -struct dw_mipi_dsi *dw_mipi_dsi_probe(struct platform_device *pdev,
->>> +int dw_mipi_dsi_probe(struct platform_device *pdev,
->>>    				      const struct dw_mipi_dsi_plat_data
->>> -				      *plat_data);
->>> +				      *plat_data,
->>> +					  struct dw_mipi_dsi **dsi_p);
->>>    void dw_mipi_dsi_remove(struct dw_mipi_dsi *dsi);
->>>    int dw_mipi_dsi_bind(struct dw_mipi_dsi *dsi, struct drm_encoder *encoder);
->>>    void dw_mipi_dsi_unbind(struct dw_mipi_dsi *dsi);
+>>> Subject: futex/pi: Fix recursive rt_mutex waiter state
 >>
+>> So this breaks some random test in APR:
 >>
+>>  From 
+>> https://build.opensuse.org/package/live_build_log/openSUSE:Factory:Staging:G/apr/standard/x86_64:
+>> testprocmutex       :  Line 122: child did not terminate with success
+>>
+>> The child in fact terminates on 
+>> https://github.com/apache/apr/blob/trunk/test/testprocmutex.c#L93:
+>>                  while ((rv = apr_proc_mutex_timedlock(proc_lock, 1))) {
+>>                      if (!APR_STATUS_IS_TIMEUP(rv))
+>>                          exit(1); <----- here
+>>
+>> The test creates 6 children and does some 
+>> pthread_mutex_timedlock/unlock() repeatedly (200 times) in parallel 
+>> while sleeping 1 us inside the lock. The timeout is 1 us above. And 
+>> the test expects all them to fail (to time out). But the time out does 
+>> not always happen in 6.7 (it's racy, so the failure is semi-random: 
+>> like 1 of 1000 attempts is bad).
 > 
+> This is not precise as I misinterpreted. The test is: either it succeeds 
+> or times out.
 > 
-> 
-> 
+> But since the commit, futex() yields 22/EINVAL, i.e. fails.
 
+A simplified reproducer attached (in particular, no APR anymore). Build 
+with -pthread, obviously. If you see
+BADx rv=22
+
+that's bad.
+
+regards,
+-- 
+js
+suse labs
+
+--------------MIjzjvXzDzk5uLbgROFJFtxw
+Content-Type: text/x-csrc; charset=UTF-8; name="pokus2.c"
+Content-Disposition: attachment; filename="pokus2.c"
+Content-Transfer-Encoding: base64
+
+I2luY2x1ZGUgPGVycm5vLmg+CiNpbmNsdWRlIDxwdGhyZWFkLmg+CiNpbmNsdWRlIDxzdGRp
+by5oPgojaW5jbHVkZSA8c3RkbGliLmg+CiNpbmNsdWRlIDx1bmlzdGQuaD4KCiNpbmNsdWRl
+IDxzeXMvbW1hbi5oPgojaW5jbHVkZSA8c3lzL3RpbWUuaD4KI2luY2x1ZGUgPHN5cy93YWl0
+Lmg+CgojZGVmaW5lIE1BWF9XQUlUX1VTRUMgKDEwMDAqMTAwMCkKI2RlZmluZSBDSElMRFJF
+TiAxNgojZGVmaW5lIE1BWF9JVEVSIDIwMAoKI2RlZmluZSBOU19QRVJfUyAxMDAwMDAwMDAw
+CgpzdGF0aWMgcHRocmVhZF9tdXRleF90ICpwcm9jX2xvY2s7CgpzdGF0aWMgdm9pZCBjaGls
+ZCgpCnsKICAgICAgICBpbnQgcnYsIGkgPSAwOwoKICAgICAgICBkbyB7CiAgICAgICAgICAg
+ICAgICBpbnQgd2FpdF91c2VjID0gMDsKCQlzdHJ1Y3QgdGltZXNwZWMgYWJzdGltZTsKCgkJ
+Y2xvY2tfZ2V0dGltZShDTE9DS19SRUFMVElNRSwgJmFic3RpbWUpOwoKCQlhYnN0aW1lLnR2
+X25zZWMgKz0gMTAwMDsKCQlpZiAoYWJzdGltZS50dl9uc2VjID49IE5TX1BFUl9TKSB7CgkJ
+CWFic3RpbWUudHZfc2VjKys7CgkJCWFic3RpbWUudHZfbnNlYyAtPSBOU19QRVJfUzsKCQl9
+CgogICAgICAgICAgICAgICAgd2hpbGUgKChydiA9IHB0aHJlYWRfbXV0ZXhfdGltZWRsb2Nr
+KHByb2NfbG9jaywgJmFic3RpbWUpKSkgewogICAgICAgICAgICAgICAgICAgIGlmIChydiAh
+PSBFVElNRURPVVQpIHsKCQkJICAgIGZwcmludGYoc3RkZXJyLCAiQkFEeCBydj0lZFxuIiwg
+cnYpOwoJCQkgICAgYWJvcnQoKTsKCQkgICAgfQogICAgICAgICAgICAgICAgICAgIGlmICgr
+K3dhaXRfdXNlYyA+PSBNQVhfV0FJVF9VU0VDKQogICAgICAgICAgICAgICAgICAgICAgICBh
+Ym9ydCgpOwogICAgICAgICAgICAgICAgfQoJCS8vZnByaW50ZihzdGRlcnIsICJbJWRdIHJ2
+PSVkXG4iLCBnZXRwaWQoKSwgcnYpOwoKICAgICAgICAgICAgaSsrOwoJICAgIHVzbGVlcCgx
+KTsKICAgICAgICAgICAgaWYgKHB0aHJlYWRfbXV0ZXhfdW5sb2NrKHByb2NfbG9jaykpCiAg
+ICAgICAgICAgICAgICBhYm9ydCgpOwogICAgICAgIH0gd2hpbGUgKGkgPCBNQVhfSVRFUik7
+CgoJZXhpdCgwKTsKfQoKaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKiphcmd2KQp7Cglwcm9j
+X2xvY2sgPSBtbWFwKE5VTEwsIHNpemVvZigqcHJvY19sb2NrKSwKCQkJIFBST1RfUkVBRCB8
+IFBST1RfV1JJVEUsIE1BUF9BTk9OWU1PVVMgfCBNQVBfU0hBUkVELAoJCQkgLTEsIDApOwoK
+CXB0aHJlYWRfbXV0ZXhhdHRyX3QgbWF0dHI7CgoJcHRocmVhZF9tdXRleGF0dHJfaW5pdCgm
+bWF0dHIpOwoJcHRocmVhZF9tdXRleGF0dHJfc2V0cHNoYXJlZCgmbWF0dHIsIFBUSFJFQURf
+UFJPQ0VTU19TSEFSRUQpOwoJcHRocmVhZF9tdXRleGF0dHJfc2V0cm9idXN0KCZtYXR0ciwg
+UFRIUkVBRF9NVVRFWF9ST0JVU1QpOwoJcHRocmVhZF9tdXRleGF0dHJfc2V0cHJvdG9jb2wo
+Jm1hdHRyLCBQVEhSRUFEX1BSSU9fSU5IRVJJVCk7CgoJcHRocmVhZF9tdXRleF9pbml0KHBy
+b2NfbG9jaywgJm1hdHRyKTsKCglwdGhyZWFkX211dGV4YXR0cl9kZXN0cm95KCZtYXR0cik7
+CgoJZm9yICh1bnNpZ25lZCBhID0gMDsgYSA8IENISUxEUkVOOyBhKyspCgkJaWYgKCFmb3Jr
+KCkpCgkJCWNoaWxkKCk7CgoJZm9yICh1bnNpZ25lZCBhID0gMDsgYSA8IENISUxEUkVOOyBh
+KyspCgkJd2FpdChOVUxMKTsKCglwdGhyZWFkX211dGV4X2Rlc3Ryb3kocHJvY19sb2NrKTsK
+CgoJcmV0dXJuIDA7Cn0KCg==
+
+--------------MIjzjvXzDzk5uLbgROFJFtxw--
