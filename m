@@ -1,125 +1,102 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AADB1E503
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 10:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D+ToKPME"
-Received: from relay5-d.mail.gandi.net (unknown [217.70.183.197])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 2842AC2F46
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 10:17:59 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 06C7C1C0011;
-	Mon, 15 Jan 2024 10:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705313871;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZEf3znytnn/5u2nQ5HISUI8I48juAUPjkUbskiAR5Kw=;
-	b=D+ToKPMERGdPs/q2d4zNP/9bvGUhVQK5CVJRXIH159Dbdok5XKx+SDxxvtWyXcnZl+cTOy
-	dL3W86EvwKpiOkK0aAxkybSxSMq9qtu97OctBkFrmHvFe0gftp3svl8uew5BfLFwZukvH8
-	jxD+NiNPB7+zisUpEPmBCMUPydiDjAPBJvIjo7lJ97qdOWGzdWXDlQXukLQIJFar083KFq
-	edoOYr0ljwhZ+dCALcpn8nmIei6LeU8A/pdQnm9MZCdkJkRvwHFzrXFgrW3zFTcHIvAKzP
-	n6NOzeTAt9wM9agfLe3th8vcIHBRBWJdza2d/Wuwr88nIU+WLv4IZO2in8cm0Q==
-Message-ID: <d3ffc899948961cd3327db1ad0e59970dcf87bca.camel@bootlin.com>
-Subject: Re: Failed to create a rescuer kthread for the amdgpu-reset-dev
- workqueue
-From: Thomas Perrot <thomas.perrot@bootlin.com>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
-	alexander.deucher@amd.com, Xinhui.Pan@amd.com, lijo.lazar@amd.com, 
-	kenneth.feng@amd.com, guchun.chen@amd.com, evan.quan@amd.com, 
-	srinivasan.shanmugam@amd.com
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 15 Jan 2024 11:17:49 +0100
-In-Reply-To: <95e791b0-4672-4a1a-940b-684d8c96e995@amd.com>
-References: <cf1a3a2b7599b7b6900ff45aa8b204169411687f.camel@bootlin.com>
-	 <95e791b0-4672-4a1a-940b-684d8c96e995@amd.com>
-Autocrypt: addr=thomas.perrot@bootlin.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-cMV9dIg4T3JiQTgXtcRJ"
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC2463AD;
+	Mon, 15 Jan 2024 10:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
+Received: from mail.maildlp.com ([172.25.15.154])
+	by h3cspam02-ex.h3c.com with ESMTP id 40FAfUqO038155;
+	Mon, 15 Jan 2024 18:41:30 +0800 (GMT-8)
+	(envelope-from hu.yadi@h3c.com)
+Received: from DAG6EX13-BJD.srv.huawei-3com.com (unknown [10.153.34.15])
+	by mail.maildlp.com (Postfix) with ESMTP id 88C4C2004DB6;
+	Mon, 15 Jan 2024 18:45:58 +0800 (CST)
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
+ DAG6EX13-BJD.srv.huawei-3com.com (10.153.34.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.27; Mon, 15 Jan 2024 18:41:32 +0800
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
+ by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
+ mapi id 15.02.1258.027; Mon, 15 Jan 2024 18:41:32 +0800
+From: Huyadi <hu.yadi@h3c.com>
+To: "'kernel test robot'" <lkp@intel.com>,
+        "jmorris@namei.org"
+	<jmorris@namei.org>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "mathieu.desnoyers@efficios.com"
+	<mathieu.desnoyers@efficios.com>,
+        "mic@digikod.net" <mic@digikod.net>
+CC: "oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org"
+	<linux-security-module@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>,
+        "514118380@qq.com" <514118380@qq.com>
+Subject: =?gb2312?B?u9i4tDogW1BBVENIIHYzXSBzZWxmdGVzdHMvbGFuZGxvY2s6Rml4IHR3byBi?=
+ =?gb2312?Q?uild_issues?=
+Thread-Topic: [PATCH v3] selftests/landlock:Fix two build issues
+Thread-Index: AQHaRScQ690ykYEnskymgvTI87URSbDZuk8AgAD5tWA=
+Date: Mon, 15 Jan 2024 10:41:32 +0000
+Message-ID: <44bf55ff3e3649c88c5b1daf843a86b5@h3c.com>
+References: <20240112071245.669-1-hu.yadi@h3c.com>
+ <202401151147.T1s11iHJ-lkp@intel.com>
+In-Reply-To: <202401151147.T1s11iHJ-lkp@intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-sender-location: DAG2
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-GND-Sasl: thomas.perrot@bootlin.com
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:h3cspam02-ex.h3c.com 40FAfUqO038155
 
-
---=-cMV9dIg4T3JiQTgXtcRJ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hello Christian,
-
-On Fri, 2024-01-12 at 09:17 +0100, Christian K=C3=B6nig wrote:
-> Well the driver load is interrupted for some reason.
->=20
-> Have you set any timeout for modprobe?
->=20
-
-We don't set a modprobe timeout.
-
-Kind regards,
-Thomas
-
-> Regards,
-> Christian.
->=20
-> Am 12.01.24 um 09:11 schrieb Thomas Perrot:
-> > Hello,
-> >=20
-> > We are updating the kernel from the 6.1 to the 6.6 and we observe
-> > an
-> > amdgpu=E2=80=99s regression with Radeon RX580 8GB and SiFive Unmatched:
-> > =E2=80=9Cworkqueue: Failed to create a rescuer kthread for wq 'amdgpu-
-> > reset-
-> > dev': -EINTR
-> > [drm:amdgpu_reset_create_reset_domain [amdgpu]] *ERROR* Failed to
-> > allocate wq for amdgpu_reset_domain!
-> > amdgpu 0000:07:00.0: amdgpu: Fatal error during GPU init
-> > amdgpu 0000:07:00.0: amdgpu: amdgpu: finishing device.
-> > amdgpu: probe of 0000:07:00.0 failed with error -12=E2=80=9D
-> >=20
-> > We tried to figure it out without success for the moment, do you
-> > have
-> > some advice to identify the root cause and to fix it?
-> >=20
-> > Kind regards,
-> > Thomas Perrot
-> >=20
->=20
-
---=20
-Thomas Perrot, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
-
---=-cMV9dIg4T3JiQTgXtcRJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCAAdFiEEh0B3xqajCiMDqBIhn8ALBXH+Cu0FAmWlBk0ACgkQn8ALBXH+
-Cu2j/Qv6A5oWfrKUk0H6c+EJltETug8YjAC0uUNMXeqZc3IunJYIEvifQbnwOU6P
-M8zc1K4C75r+6C8+x/fvc5Bb7mgFjr4nR2aDmNMMmsddH4o79Mm0djnce/m60L5+
-CsgEM/vxLaYv3w3/pAefbFSpkRA7JauCJYWPSnueSMxvuSeyVZB8agqqcrMbgh1i
-6NbuLsm3TGZToHCBN0HgSvh4fhYYeLDTO0kx510Dy3Ha6C2A/4LgPtlKg0Na4+2p
-gWVDlwN7iO3qGSA8SGy2rekwfZQ3qfZYeUmzu5ZxJeecH0f7Lu7H77zCJl6j0io4
-wGI6SkbhvR3BBDDRB/kV44MjYNiVsm08lZmzZQmFrD0k3SM20VJXkfaZb76q0Si4
-oEt3RZXqLPUSafMGPhtBQmmzgeAy2w+2jk/7iHw6uLcjM9qRxw8kXwwraRLqEke+
-8GZbG8kg9hoS40RRXuYk6YgCjD+8dDVj3Mh0wZkneyz3+/mPpw4YZg9KXNAEAxk9
-pC11KECt
-=z8NM
------END PGP SIGNATURE-----
-
---=-cMV9dIg4T3JiQTgXtcRJ--
+DQo+SGkgSHUsDQo+DQo+a2VybmVsIHRlc3Qgcm9ib3Qgbm90aWNlZCB0aGUgZm9sbG93aW5nIGJ1
+aWxkIGVycm9yczoNCj4NCj4gW2F1dG8gYnVpbGQgdGVzdCBFUlJPUiBvbiBzaHVhaC1rc2VsZnRl
+c3QvbmV4dF0gW2Fsc28gYnVpbGQgdGVzdCBFUlJPUiBvbiBzaHVhaC1rc2VsZnRlc3QvZml4ZXMg
+bGludXMvbWFzdGVyIHY2LjcgbmV4dC0yMDI0MDExMl0gW0lmIHlvdXIgcGF0Y2ggaXMgYXBwbGll
+ZCB0byB0aGUgd3JvbmcgZ2l0IHRyZWUsIGtpbmRseSBkcm9wIHVzIGEgbm90ZS4NCj5BbmQgd2hl
+biBzdWJtaXR0aW5nIHBhdGNoLCB3ZSBzdWdnZXN0IHRvIHVzZSAnLS1iYXNlJyBhcyBkb2N1bWVu
+dGVkIGluIGh0dHBzOi8vZ2l0LXNjbS5jb20vZG9jcy9naXQtZm9ybWF0LXBhdGNoI19iYXNlX3Ry
+ZWVfaW5mb3JtYXRpb25dDQoNCj51cmw6ICAgIGh0dHBzOi8vZ2l0aHViLmNvbS9pbnRlbC1sYWIt
+bGtwL2xpbnV4L2NvbW1pdHMvSHUtWWFkaS9zZWxmdGVzdHMtbGFuZGxvY2stRml4LXR3by1idWls
+ZC1pc3N1ZXMvMjAyNDAxMTItMTUxODA1DQo+YmFzZTogICBodHRwczovL2dpdC5rZXJuZWwub3Jn
+L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9zaHVhaC9saW51eC1rc2VsZnRlc3QuZ2l0IG5leHQN
+Cj5wYXRjaCBsaW5rOiAgICBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjQwMTEyMDcxMjQ1
+LjY2OS0xLWh1LnlhZGklNDBoM2MuY29tDQo+cGF0Y2ggc3ViamVjdDogW1BBVENIIHYzXSBzZWxm
+dGVzdHMvbGFuZGxvY2s6Rml4IHR3byBidWlsZCBpc3N1ZXMNCj5jb21waWxlcjogZ2NjLTEyIChE
+ZWJpYW4gMTIuMi4wLTE0KSAxMi4yLjAgcmVwcm9kdWNlICh0aGlzIGlzIGEgVz0xIGJ1aWxkKTog
+KGh0dHBzOi8vZG93bmxvYWQuMDEub3JnLzBkYXktY2kvYXJjaGl2ZS8yMDI0MDExNS8yMDI0MDEx
+NTExNDcuVDFzMTFpSEotbGtwQGludGVsLmNvbS9yZXByb2R1Y2UpDQo+DQo+SWYgeW91IGZpeCB0
+aGUgaXNzdWUgaW4gYSBzZXBhcmF0ZSBwYXRjaC9jb21taXQgKGkuZS4gbm90IGp1c3QgYSBuZXcg
+dmVyc2lvbiBvZiB0aGUgc2FtZSBwYXRjaC9jb21taXQpLCBraW5kbHkgYWRkIGZvbGxvd2luZyB0
+YWdzDQo+fCBSZXBvcnRlZC1ieToga2VybmVsIHRlc3Qgcm9ib3QgPGxrcEBpbnRlbC5jb20+DQo+
+fCBDbG9zZXM6IA0KPnwgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvb2Uta2J1aWxkLWFsbC8yMDI0
+MDExNTExNDcuVDFzMTFpSEotbGtwQGludGVsLg0KPnwgY29tLw0KPg0KPkFsbCBlcnJvcnMgKG5l
+dyBvbmVzIHByZWZpeGVkIGJ5ID4+KToNCj4NCg0KRml4IGl0LCBhbmQgc2VuZCBwYXRjaCBWNCBz
+b29uLg0KDQo+Pj4gbmV0X3Rlc3QuYzoyNToxNDogZXJyb3I6IHN0YXRpYyBkZWNsYXJhdGlvbiBv
+ZiAnZ2V0dGlkJyBmb2xsb3dzIA0KPj4+IG5vbi1zdGF0aWMgZGVjbGFyYXRpb24NCj4gICAgICAy
+NSB8IHN0YXRpYyBwaWRfdCBnZXR0aWQodm9pZCkNCj4gICAgICAgICB8ICAgICAgICAgICAgICBe
+fn5+fn4NCj4gICBJbiBmaWxlIGluY2x1ZGVkIGZyb20gL3Vzci9pbmNsdWRlL3VuaXN0ZC5oOjEy
+MTgsDQo+ICAgICAgICAgICAgICAgICAgICBmcm9tIC91c3IvaW5jbHVkZS94ODZfNjQtbGludXgt
+Z251L2JpdHMvc2lnc3Rrc3ouaDoyNCwNCj4gICAgICAgICAgICAgICAgICAgIGZyb20gL3Vzci9p
+bmNsdWRlL3NpZ25hbC5oOjMyOCwNCj4gICAgICAgICAgICAgICAgICAgIGZyb20gL3Vzci9pbmNs
+dWRlL3g4Nl82NC1saW51eC1nbnUvc3lzL3dhaXQuaDozNiwNCj4gICAgICAgICAgICAgICAgICAg
+IGZyb20gY29tbW9uLmg6MTYsDQo+ICAgICAgICAgICAgICAgICAgICBmcm9tIG5ldF90ZXN0LmM6
+MjI6DQo+ICAgL3Vzci9pbmNsdWRlL3g4Nl82NC1saW51eC1nbnUvYml0cy91bmlzdGRfZXh0Lmg6
+MzQ6MTY6IG5vdGU6IHByZXZpb3VzIGRlY2xhcmF0aW9uIG9mICdnZXR0aWQnIHdpdGggdHlwZSAn
+X19waWRfdCh2b2lkKScge2FrYSAnaW50KHZvaWQpJ30NCj4gICAgICAzNCB8IGV4dGVybiBfX3Bp
+ZF90IGdldHRpZCAodm9pZCkgX19USFJPVzsNCj4gICAgICAgICB8ICAgICAgICAgICAgICAgIF5+
+fn5+fg0KPg0KPi0tDQo+MC1EQVkgQ0kgS2VybmVsIFRlc3QgU2VydmljZQ0KaHR0cHM6Ly9naXRo
+dWIuY29tL2ludGVsL2xrcC10ZXN0cy93aWtpDQo=
