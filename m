@@ -1,167 +1,100 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E92DC132
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E584428;
+	Mon, 15 Jan 2024 09:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ad4tuJWU"
-Message-ID: <ea4a5417-1fce-4b36-be4d-215086fd7e96@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705309068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bXiuxGjT6S8rglErry6pNbf96Enl3N9c2dT+qili78s=;
-	b=Ad4tuJWUuxQE3Th3u+z9dP6aAcsQ36Pp8YaJVA7kJaKoRl1ebzoRCL+Wo9fK6nZNOLMf0K
-	oNds8mr/QjNtjzWoQS1HxD/ez1Yn78+V1RiiqSlk+bloenFBPcJN12I8pwBK8GUhxpcb+H
-	ypYAnJayr4U6+K7RUlm2o2cge/+woBw=
-Date: Mon, 15 Jan 2024 16:57:40 +0800
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SAOPBhxw"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AD92740E01B0;
+	Mon, 15 Jan 2024 09:02:12 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id SUKdvpsWbZhK; Mon, 15 Jan 2024 09:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1705309330; bh=StldW18DJW9RHvhpFLIMw8/y8Xdlf7u+BI435bxm9gE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SAOPBhxwbXpACDVHP9Vgo+tBOgk6enmMbPub2YjCJOSM2Toof/rV7Tf6Q7KI0mS1g
+	 ZEBocmEh81odQ2fQbDeCt9YY3bAHX7XPTnpw7Un7NF9qjc3oa1yXKaibzSuoQDj/x3
+	 evyCIOERFXEiSoe5cyAhmDl1c1pRyM8HLcaLyzQMdOF72dHMjbbRjLv0doHYVPOaCh
+	 hlygnPuXr/lh3jKPd04u9kqpmeR2RvvB11xD0OZbMX98qSlIrtzWdjd/EJwIPPXF/e
+	 3B4uJK5neFbWsFBfVhuCn823FkTrBaGCd/C4SUl+MIBS8hD67NvSqMRUxA5BhQzE5Z
+	 olACYu2A9zCwGqxAR/dxdJtbefC0pED2yvzcvoMizdVumW2bIrH2gaqeVecKt5LeEE
+	 kvQxK5TJeeXq+Xc+DaFxh0DsavN4p3n6NNrZ2GYRoMMaOelAuNsYdoTKSLlPViMhxn
+	 so7gePgLsENHGpjy+x/C1Wi41H+Rl5T+SVHS7jKFXTVmIhciNEDlSkcfMY61sFbJI/
+	 o7VSoCVXWZv8qrKkhvxKf8e3Yh2FnNPraaEj7B872YIPUs96dShqtLXjHEgZWG9QqR
+	 6jgVxJglFNO/ETzSN4Oz4a+qpYt6yB52z6q81wpRVsI+ElPGIVMbmNf/lhjYS9V2T+
+	 oygAXEbBHHh/kshvJixLCzlI=
+Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 008B940E01A9;
+	Mon, 15 Jan 2024 09:01:31 +0000 (UTC)
+Date: Mon, 15 Jan 2024 10:01:26 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Michael Roth <michael.roth@amd.com>
+Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
+	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
+	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
+	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
+	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
+	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
+	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
+	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
+	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
+	pankaj.gupta@amd.com, liam.merwick@oracle.com, zhi.a.wang@intel.com,
+	Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH v1 11/26] x86/sev: Invalidate pages from the direct map
+ when adding them to the RMP table
+Message-ID: <20240115090126.GEZaT0ZnSPIPsnUiyt@fat_crate.local>
+References: <20231230161954.569267-1-michael.roth@amd.com>
+ <20231230161954.569267-12-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 3/7] padata: dispatch works on different nodes
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Mike Kravetz <mike.kravetz@oracle.com>, David Rientjes
- <rientjes@google.com>, linux-kernel@vger.kernel.org,
- ligang.bdlg@bytedance.com, David Hildenbrand <david@redhat.com>,
- Muchun Song <muchun.song@linux.dev>, Gang Li <gang.li@linux.dev>
-References: <20240102131249.76622-1-gang.li@linux.dev>
- <20240102131249.76622-4-gang.li@linux.dev>
- <1d9074955618ea0b4b155701f7c1b8b18a43fa8d.camel@linux.intel.com>
- <feaf7851-f924-48f4-b16a-2fa5efdb28cf@linux.dev>
- <1bd6ee64a600daad58866ce684b591d39879c470.camel@linux.intel.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Gang Li <gang.li@linux.dev>
-In-Reply-To: <1bd6ee64a600daad58866ce684b591d39879c470.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231230161954.569267-12-michael.roth@amd.com>
 
+On Sat, Dec 30, 2023 at 10:19:39AM -0600, Michael Roth wrote:
+> +	/*
+> +	 * If the kernel uses a 2MB directmap mapping to write to an address,
+> +	 * and that 2MB range happens to contain a 4KB page that set to private
+> +	 * in the RMP table, an RMP #PF will trigger and cause a host crash.
 
+Also:
 
-On 2024/1/13 02:27, Tim Chen wrote:
-> On Fri, 2024-01-12 at 15:09 +0800, Gang Li wrote:
->> On 2024/1/12 01:50, Tim Chen wrote:
->>> On Tue, 2024-01-02 at 21:12 +0800, Gang Li wrote:
->>>> When a group of tasks that access different nodes are scheduled on the
->>>> same node, they may encounter bandwidth bottlenecks and access latency.
->>>>
->>>> Thus, numa_aware flag is introduced here, allowing tasks to be
->>>> distributed across different nodes to fully utilize the advantage of
->>>> multi-node systems.
->>>>
->>>> Signed-off-by: Gang Li <gang.li@linux.dev>
->>>> ---
->>>>    include/linux/padata.h | 3 +++
->>>>    kernel/padata.c        | 8 ++++++--
->>>>    mm/mm_init.c           | 1 +
->>>>    3 files changed, 10 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/include/linux/padata.h b/include/linux/padata.h
->>>> index 495b16b6b4d72..f79ccd50e7f40 100644
->>>> --- a/include/linux/padata.h
->>>> +++ b/include/linux/padata.h
->>>> @@ -137,6 +137,8 @@ struct padata_shell {
->>>>     *             appropriate for one worker thread to do at once.
->>>>     * @max_threads: Max threads to use for the job, actual number may be less
->>>>     *               depending on task size and minimum chunk size.
->>>> + * @numa_aware: Dispatch jobs to different nodes. If a node only has memory but
->>>> + *              no CPU, dispatch its jobs to a random CPU.
->>>>     */
->>>>    struct padata_mt_job {
->>>>    	void (*thread_fn)(unsigned long start, unsigned long end, void *arg);
->>>> @@ -146,6 +148,7 @@ struct padata_mt_job {
->>>>    	unsigned long		align;
->>>>    	unsigned long		min_chunk;
->>>>    	int			max_threads;
->>>> +	bool			numa_aware;
->>>>    };
->>>>    
->>>>    /**
->>>> diff --git a/kernel/padata.c b/kernel/padata.c
->>>> index 179fb1518070c..1c2b3a337479e 100644
->>>> --- a/kernel/padata.c
->>>> +++ b/kernel/padata.c
->>>> @@ -485,7 +485,7 @@ void __init padata_do_multithreaded(struct padata_mt_job *job)
->>>>    	struct padata_work my_work, *pw;
->>>>    	struct padata_mt_job_state ps;
->>>>    	LIST_HEAD(works);
->>>> -	int nworks;
->>>> +	int nworks, nid = 0;
->>>
->>> If we always start from 0, we may be biased towards the low numbered node,
->>> and not use high numbered nodes at all.  Suggest you do
->>> static nid = 0;
->>>
->>
->> When we use `static`, if there are multiple parallel calls to
->> `padata_do_multithreaded`, it may result in an uneven distribution of
->> tasks for each padata_do_multithreaded.
->>
->> We can make the following modifications to address this issue.
->>
->> ```
->> diff --git a/kernel/padata.c b/kernel/padata.c
->> index 1c2b3a337479e..925e48df6dd8d 100644
->> --- a/kernel/padata.c
->> +++ b/kernel/padata.c
->> @@ -485,7 +485,8 @@ void __init padata_do_multithreaded(struct
->> padata_mt_job *job)
->>           struct padata_work my_work, *pw;
->>           struct padata_mt_job_state ps;
->>           LIST_HEAD(works);
->> -       int nworks, nid = 0;
->> +       int nworks, nid;
->> +       static volatile int global_nid = 0;
->>
->>           if (job->size == 0)
->>                   return;
->> @@ -516,12 +517,15 @@ void __init padata_do_multithreaded(struct
->> padata_mt_job *job)
->>           ps.chunk_size = max(ps.chunk_size, job->min_chunk);
->>           ps.chunk_size = roundup(ps.chunk_size, job->align);
->>
->> +       nid = global_nid;
->>           list_for_each_entry(pw, &works, pw_list)
->> -               if (job->numa_aware)
->> -                       queue_work_node((++nid % num_node_state(N_MEMORY)),
->> -                                       system_unbound_wq, &pw->pw_work);
->> -               else
->> +               if (job->numa_aware) {
->> +                       queue_work_node(nid, system_unbound_wq,
->> &pw->pw_work);
->> +                       nid = next_node(nid, node_states[N_CPU]);
->> +               } else
->>                           queue_work(system_unbound_wq, &pw->pw_work);
->> +       if (job->numa_aware)
->> +               global_nid = nid;
-> 
-> Thinking more about it, there could still be multiple threads working
-> at the same time with stale global_nid.  We should probably do a compare
-> exchange of global_nid with new nid only if the global nid was unchanged.
-> Otherwise we should go to the next node with the changed global nid before
-> we queue the job.
-> 
-> Tim
-> 
-How about:
-```
-nid = global_nid;
-list_for_each_entry(pw, &works, pw_list)
-	if (job->numa_aware) {
-		int old_node = nid;
-		queue_work_node(nid, system_unbound_wq, &pw->pw_work);
-		nid = next_node(nid, node_states[N_CPU]);
-		cmpxchg(&global_nid, old_node, nid);
-	} else
-		queue_work(system_unbound_wq, &pw->pw_work);
+diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
+index 7d294d1a620b..2ad83e7fb2da 100644
+--- a/arch/x86/virt/svm/sev.c
++++ b/arch/x86/virt/svm/sev.c
+@@ -415,8 +415,9 @@ static int rmpupdate(u64 pfn, struct rmp_state *state)
+ 
+ 	/*
+ 	 * If the kernel uses a 2MB directmap mapping to write to an address,
+-	 * and that 2MB range happens to contain a 4KB page that set to private
+-	 * in the RMP table, an RMP #PF will trigger and cause a host crash.
++	 * and that 2MB range happens to contain a 4KB page that has been set
++	 * to private in the RMP table, an RMP #PF will trigger and cause a
++	 * host crash.
+ 	 *
+ 	 * Prevent this by removing pages from the directmap prior to setting
+ 	 * them as private in the RMP table.
 
-```
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
