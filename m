@@ -1,159 +1,226 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DDD1E537
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7FD847A
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ahkiEaD3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705306850;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LRrQ9hj3v8JeCLKcpLTeqR/vnXCdHRzqkMMDMAxwZhE=;
-	b=ahkiEaD3VNLcL7mLHZn+rMh9rvoZjqiANMY1XhJkY42DI8JX0tbsPYiEi8PDAeoul60Z69
-	nyQQMuub9yckCt0Fn+zwmDfEnNZI1myyYMwhrZ5JVQw3m9LeDQI4hybpnwSD3dpOrFqLOG
-	Y/jSdbhuD8clr86gQCIVLMWA2K1pBFA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-yzYmH0KHOW-sbBaq0ikc-w-1; Mon, 15 Jan 2024 03:20:48 -0500
-X-MC-Unique: yzYmH0KHOW-sbBaq0ikc-w-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40e61491b81so16094265e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 00:20:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LWpcI1tV"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5ce6b5e3c4eso3566997a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 00:21:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705306918; x=1705911718; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0EKYsp2xFmSVYaS86Gpj+vRKi5Fv8R8FrWQsCr7yev0=;
+        b=LWpcI1tV1mmBtAmwbjI9YdOrjXmJ8g6laBXITfNRQGq88ufhu4GSU8n0EOflNagj/2
+         uS1HMqo9YPmTjQJ6BjqFteRO1R9JIG6IV7S/ddXULHYDvIKzJpovT+g5VY/vsbX1mKEY
+         H89MnTbJFbH5ChtBaK+lSWJxuPxa7AGYg8amTa0atLF63shYNjj2DqA7Dpgoyh01I8id
+         L8RSfOU/piaWUh9UOSbQbFDO1WrAztWLmMMUDYlFTzkh2yy7jH+V42BoJX6Pw1wEBAD0
+         Fx9zfw26uNcRqWYr24XJFhCnFdmSz44FrwX5utbIdYvee0QOk6wRNrpR6t5J69yHtZaS
+         2VGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705306848; x=1705911648;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LRrQ9hj3v8JeCLKcpLTeqR/vnXCdHRzqkMMDMAxwZhE=;
-        b=Ds7y90qv80/HII7+3bvL9bPsie7wSrTVb6cLjh5FrWrqNXAHNG5QeAf6Blt30Nchzj
-         znqC7P7q7QqHsAjVlBivYjh45TzFQa1GvjUG6phWcW9hsjD98WlTITaCkLZgUlE5hqSA
-         tW/jgkEmOP+/uCngbutYWAxsw1DwyJO7qJ9Js1pW6iB/mZQjj6ObPw6UE1WfDAXnalUW
-         eU59wmWacVP7Wit2bfTsNMB4UA55SSH2xOnnG6y0IO9XApsyh8cjMK7UOh4Z+rth5kZ6
-         haXmxAdFVAQNrlc2fIjcuwS/VuNEaDkHWKl4ZUp7zynl2Q8CC+m554eNjOsYKPBdK+IT
-         54qQ==
-X-Gm-Message-State: AOJu0Yyby4E/FToAUatH7Pe9iy+5svwqRPwUF55f58y7hbrRt8e2fWdI
-	FNde5gfkfS7+hlqsCTLN1bQ6mp5LTLpBTvD1ZeQWRkENWMvmdFW9w5llxILbGgezqIgwVSeGGLg
-	98/ue3Uegode9Rd5AN7hkVhJI/KNKprho
-X-Received: by 2002:a05:600c:8515:b0:40e:66cd:1868 with SMTP id gw21-20020a05600c851500b0040e66cd1868mr2066356wmb.88.1705306847868;
-        Mon, 15 Jan 2024 00:20:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEPwI3UICWY2yo54y5yNxKfPuc3OoaC2AsJ2BmiXtKiDTgSkaxoQcQyHiv07sCt2HzzIkDD2A==
-X-Received: by 2002:a05:600c:8515:b0:40e:66cd:1868 with SMTP id gw21-20020a05600c851500b0040e66cd1868mr2066345wmb.88.1705306847586;
-        Mon, 15 Jan 2024 00:20:47 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id d13-20020a056000114d00b003379d5d2f1csm5969671wrx.28.2024.01.15.00.20.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 00:20:47 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, dri-devel@lists.freedesktop.org,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jingoo Han <jingoohan1@gmail.com>, Daniel Thompson
- <daniel.thompson@linaro.org>, Lee Jones <lee@kernel.org>, Helge Deller
- <deller@gmx.de>
-Subject: Re: [PATCH v1 1/4] backlight: hx8357: Make use of device properties
-In-Reply-To: <20240114152759.1040563-2-andriy.shevchenko@linux.intel.com>
-References: <20240114152759.1040563-1-andriy.shevchenko@linux.intel.com>
- <20240114152759.1040563-2-andriy.shevchenko@linux.intel.com>
-Date: Mon, 15 Jan 2024 09:20:46 +0100
-Message-ID: <87bk9novmp.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20230601; t=1705306918; x=1705911718;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0EKYsp2xFmSVYaS86Gpj+vRKi5Fv8R8FrWQsCr7yev0=;
+        b=hC/h07TID6w9Q6YAm105u1wNLZtjNabOynts7SPNByRRfzINDQyaEdt1zynpm0IL4I
+         Vkph/cqJ30YIrxwil1APobsNuSDiHTPIyQEOYFBz2wogQXK8wZ6OC4HlEJ8NXdJkgokC
+         29jJ+p1EpjuyOZuB9z1g6y1AgUl60ymBlmbjuZkHmo04rhBOzWg9fVSbrRmFN0DFou2U
+         5Q1vy/mizGbkB96ZKINSOtTm9ACxBWm8+P34zVltkB3MuPt/z07PRghF0DKZtL61M6xJ
+         PdmBfLIRZOfY60jKbqBrRVP9Sg2A/u8kHQNfCVKfJXoioOg+qCBWkzPdUc80flbu7LAo
+         95Zg==
+X-Gm-Message-State: AOJu0Yw39nJ6DLRcNEWu/646j4+X1l51wIfEj9px7B/BYKwE7uDEbOjt
+	9N2O7270kz5saO+WCnkDfL07RT+SFx62zpWl5GWT9uhKvSOU9w==
+X-Google-Smtp-Source: AGHT+IGzhvjPeJt4tfpT6RVK0EJtUW67/1pIzsXo+md9QHr82rTOaCyk0S+fy8OyafMN+DoMvwXUS/yP327eyTMsSVw=
+X-Received: by 2002:a05:6a20:3d01:b0:19a:7ca5:77f4 with SMTP id
+ y1-20020a056a203d0100b0019a7ca577f4mr2345525pzi.53.1705306918429; Mon, 15 Jan
+ 2024 00:21:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <ZZwBi/YmnMqm7zrO@gmail.com> <CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com>
+ <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
+ <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com>
+ <20240114091240.xzdvqk75ifgfj5yx@wyes-pc> <ZaPC7o44lEswxOXp@vingu-book>
+ <20240114123759.pjs7ctexcpc6pshl@wyes-pc> <CAKfTPtCz+95dR38c_u6_7JbkVt=czj5N2dKYVV-zk9dgbk16hw@mail.gmail.com>
+ <20240114151250.5wfexq44o3mdm3nh@airbuntu> <CAKfTPtAMxiTbvAYav1JQw+MhjzDPCZDrMLL2JOfsc0GWp+FnOA@mail.gmail.com>
+ <20240114195815.nes4bn53tc25djbh@airbuntu>
+In-Reply-To: <20240114195815.nes4bn53tc25djbh@airbuntu>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Mon, 15 Jan 2024 09:21:46 +0100
+Message-ID: <CAKfTPtCGgJiFDrZYpynCiHBnQx48A9RsAY9-6Hshduo4ymGJLQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Scheduler changes for v6.8
+To: Qais Yousef <qyousef@layalina.io>
+Cc: Wyes Karny <wkarny@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-
-Hello Andy,
-
-> Convert the module to be property provider agnostic and allow
-> it to be used on non-OF platforms.
+On Sun, 14 Jan 2024 at 20:58, Qais Yousef <qyousef@layalina.io> wrote:
 >
-> Include mod_devicetable.h explicitly to replace the dropped of.h
-> which included mod_devicetable.h indirectly.
+> On 01/14/24 16:20, Vincent Guittot wrote:
+> > On Sun, 14 Jan 2024 at 16:12, Qais Yousef <qyousef@layalina.io> wrote:
+> > >
+> > > On 01/14/24 14:03, Vincent Guittot wrote:
+> > >
+> > > > Thanks for the trace. It was really helpful and I think that I got the
+> > > > root cause.
+> > > >
+> > > > The problem comes from get_capacity_ref_freq() which returns current
+> > > > freq when arch_scale_freq_invariant() is not enable, and the fact that
+> > > > we apply map_util_perf() earlier in the path now which is then capped
+> > > > by max capacity.
+> > > >
+> > > > Could you try the below ?
+> > > >
+> > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > > > index e420e2ee1a10..611c621543f4 100644
+> > > > --- a/kernel/sched/cpufreq_schedutil.c
+> > > > +++ b/kernel/sched/cpufreq_schedutil.c
+> > > > @@ -133,7 +133,7 @@ unsigned long get_capacity_ref_freq(struct
+> > > > cpufreq_policy *policy)
+> > > >         if (arch_scale_freq_invariant())
+> > > >                 return policy->cpuinfo.max_freq;
+> > > >
+> > > > -       return policy->cur;
+> > > > +       return policy->cur + policy->cur >> 2;
+> > > >  }
+> > > >
+> > > >  /**
+> > >
+> > > Is this a test patch or a proper fix? I can't see it being the latter. It seems
+> >
+> > It's a proper fix. It's the same mechanism that is used already :
+> >  - Either you add margin on the utilization to go above current freq
+> > before it is fully used. This si what was done previously
+> >  - or you add margin on the freq range to select a higher freq than
+> > current one before it become fully used
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/video/backlight/hx8357.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
+> Aren't we applying the 25% headroom twice then?
+
+In some cases, yes. But whereas the 1st one is generic and can be
+filtered with uclamp, the 2nd one is there to enable platform without
+frequency invariance to jump to the next OPP
+
 >
-> diff --git a/drivers/video/backlight/hx8357.c b/drivers/video/backlight/hx8357.c
-> index bf18337ff0c2..c7fd10d55c5d 100644
-> --- a/drivers/video/backlight/hx8357.c
-> +++ b/drivers/video/backlight/hx8357.c
-> @@ -8,9 +8,9 @@
->  #include <linux/delay.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/lcd.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/module.h>
-> -#include <linux/of.h>
-> -#include <linux/of_device.h>
-> +#include <linux/property.h>
->  #include <linux/spi/spi.h>
->  
->  #define HX8357_NUM_IM_PINS	3
-> @@ -564,6 +564,8 @@ static struct lcd_ops hx8357_ops = {
->  	.get_power	= hx8357_get_power,
->  };
->  
-> +typedef int (*hx8357_init)(struct lcd_device *);
-> +
+> >
+> > > the current logic fails when util is already 1024, and I think we're trying to
+> > > fix the invariance issue too late.
+> > >
+> > > Is the problem that we can't read policy->cur in the scheduler to fix the util
+> > > while it's being updated that's why it's done here in this case?
+> > >
+> > > If this is the problem, shouldn't the logic be if util is max then always go to
+> > > max frequency? I don't think we have enough info to correct the invariance here
+> > > IIUC. All we can see the system is saturated at this frequency and whether
+> > > a small jump or a big jump is required is hard to tell.
+> > >
+> > > Something like this
+> > >
+> > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > > index 95c3c097083e..473d0352030b 100644
+> > > --- a/kernel/sched/cpufreq_schedutil.c
+> > > +++ b/kernel/sched/cpufreq_schedutil.c
+> > > @@ -164,8 +164,12 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
+> > >         struct cpufreq_policy *policy = sg_policy->policy;
+> > >         unsigned int freq;
+> > >
+> > > -       freq = get_capacity_ref_freq(policy);
+> > > -       freq = map_util_freq(util, freq, max);
+> > > +       if (util != max) {
+> > > +               freq = get_capacity_ref_freq(policy);
+> > > +               freq = map_util_freq(util, freq, max);
+> > > +       } else {
+> > > +               freq = policy->cpuinfo.max_freq;
+> > > +       }
+> >
+> > This is not correct because you will have to wait to reach full
+> > utilization at the current OPP possibly the lowest OPP before moving
+> > directly to max OPP
+>
+> Isn't this already the case? The ratio (util+headroom/max) will be less than
+> 1 until util is 80% (with 25% headroom). And for all values <= 80% * max, we
+> will request a frequency smaller than/equal policy->cur, no?
 
-This kind of typedef usage is frowned upon in the Linux coding style [0]
-(per my understanding at least) and indeed in my opinion it makes harder
-to grep.
+In your proposal, we stay at current OPP until util == 1024 because
+util can't be higher than max. And then we switch directly to max_freq
 
-[0] https://www.kernel.org/doc/Documentation/process/coding-style.rst
+In the previous behavior and with the fix, we can go to the next OPP
+because either util can be higher than max (previous behavior) or the
+selected freq can be higher than current (fix behavior) and we don't
+have to want for util == max
 
->  static const struct of_device_id hx8357_dt_ids[] = {
->  	{
->  		.compatible = "himax,hx8357",
-> @@ -582,7 +584,7 @@ static int hx8357_probe(struct spi_device *spi)
->  	struct device *dev = &spi->dev;
->  	struct lcd_device *lcdev;
->  	struct hx8357_data *lcd;
-> -	const struct of_device_id *match;
-> +	hx8357_init init;
->  	int i, ret;
->  
->  	lcd = devm_kzalloc(&spi->dev, sizeof(*lcd), GFP_KERNEL);
-> @@ -597,8 +599,8 @@ static int hx8357_probe(struct spi_device *spi)
->  
->  	lcd->spi = spi;
->  
-> -	match = of_match_device(hx8357_dt_ids, &spi->dev);
-> -	if (!match || !match->data)
-> +	init = device_get_match_data(dev);
-> +	if (!init)
->  		return -EINVAL;
->  
->  	lcd->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> @@ -627,7 +629,7 @@ static int hx8357_probe(struct spi_device *spi)
->  
->  	hx8357_lcd_reset(lcdev);
->  
-> -	ret = ((int (*)(struct lcd_device *))match->data)(lcdev);
+>
+> ie:
+>
+>         util = 600
+>         max = 1024
+>
+>         freq = 1.25 * 600 * policy->cur / 1024 = 0.73 * policy->cur
+>
+> (util+headroom/max) must be greater than 1 for us to start going above
+> policy->cur - which seems to have been working by accident IIUC.
 
-This is what I mean, before it was clear what was stored in match->data.
-But after you changes, what is returned by the device_get_match_data()
-function is opaque and you need to look at the typedef hx8357_init to
-figure that out.
+No this is not by accident
 
-No strong opinion though and I see other drivers doing the same (but no
-other driver in drivers/video/backlight).
+>
+> So yes my proposal is incorrect, but it seems the conversion is not right to me
+> now.
+>
+> I could reproduce the problem now (thanks Wyes!). I have 3 freqs on my system
+>
+> 2.2GHz, 2.8GHz and 3.8GHz
+>
+> which (I believe) translates into capacities
+>
+> ~592, ~754, 1024
+>
+> which means we should pick 2.8GHz as soon as util * 1.25 > 592; which
+> translates into util = ~473.
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Keep in mind that util is the utilization at current OPP not at full
+scale because we don't have frequency invariance.
 
--- 
-Best regards,
+>
+> But what I see is that we go to 2.8GHz when we jump from 650 to 680 (see
+> attached picture), which is what you'd expect since we apply two headrooms now,
+> which means the ratio (util+headroom/max) will be greater than 1 after go above
+> this value
+>
+>         1024 * 0.8 * 0.8 = ~655
+>
+> So I think the math makes sense logically, but we're missing some other
+> correction factor.
+>
+> When I re-enable CPPC I see for the same test that we go into 3.8GHz straight
+> away. My test is simple busyloop via
+>
+>         cat /dev/zero > /dev/null
+>
+> I see the CPU util_avg is at 523 at fork. I expected us to run to 2.8GHz here
+> to be honest, but I am not sure if util_cfs_boost() and util_est() are maybe
+> causing us to be slightly above 523 and that's why we start with max freq.
+>
+> Or I've done the math wrong :-) But the two don't behave the same for the same
+> kernel with and without CPPC.
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+They will never behave the same because they can't
+- with invariance, the utilization is the utilization at max capacity
+so we can easily jump several OPP to go directly to the right one
+- without invariance, the utilization is the utilization at current
+OPP so we can only jump to a limited number of OPP
 
+>
+> >
+> > >
+> > >         if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
+> > >                 return sg_policy->next_freq;
