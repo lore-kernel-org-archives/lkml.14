@@ -1,161 +1,59 @@
-Received: from wp716.webpack.hosteurope.de (wp716.webpack.hosteurope.de [80.237.130.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F7F1757D;
-	Mon, 15 Jan 2024 13:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=alumni.tu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=alumni.tu-berlin.de
-Received: from dynamic-2a01-0c23-606a-b500-b981-1935-c9f7-1531.c23.pool.telefonica.de ([2a01:c23:606a:b500:b981:1935:c9f7:1531] helo=jt.fritz.box); authenticated
-	by wp716.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rPNEg-0006AL-4K; Mon, 15 Jan 2024 14:42:42 +0100
-From: =?UTF-8?q?J=C3=B6rn-Thorben=20Hinz?= <j-t.hinz@alumni.tu-berlin.de>
-To: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: =?UTF-8?q?J=C3=B6rn-Thorben=20Hinz?= <j-t.hinz@alumni.tu-berlin.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Deepa Dinamani <deepa.kernel@gmail.com>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Subject: [PATCH bpf-next] bpf: Allow setting SO_TIMESTAMPING* with bpf_setsockopt()
-Date: Mon, 15 Jan 2024 14:41:10 +0100
-Message-Id: <20240115134110.11624-1-j-t.hinz@alumni.tu-berlin.de>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E157171BB;
+	Mon, 15 Jan 2024 13:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4EpZHYE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849DBC43390;
+	Mon, 15 Jan 2024 13:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705326324;
+	bh=3CYq5m9c0Z2YmumV52JE15z62NoUEsxe7VfwOd+rpf0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=o4EpZHYE4CsLFI3cR+A1UgmZAYtPlvqTHIIyHAeZAUabjWiH3V8xJsWPLRxHWMdSJ
+	 EXLMqJ9hafmfr6zBox8Jq47WwvGfGw/f7JomKbvknyiyo1UwhARhGO2I2H4P6kgfD5
+	 yLvcLZtfgOsQns7AeGG8Dn5e3WleZ46JmMe/KE8Ky4oR1BSqDbcClbjVHMLuUBosPA
+	 SRNcnABEIpx7j4/G1dxFLJ2/6bb2a07y1ABgv3lxJBtd1h4MKq5MN1riE3dE3jv0IG
+	 1aTqcjau+tUrFAhGup4rIQutQnPL8nGdROkZSYTRRaO0/pMArFgyqZnY2fMFMv9iiK
+	 mxBX6Q1ZbswKw==
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <305898fb-6bd4-4749-806c-05ec51bbeb80@moroto.mountain>
+References: <305898fb-6bd4-4749-806c-05ec51bbeb80@moroto.mountain>
+Subject: Re: [PATCH 1/2] HID: hid-steam: remove pointless error message
+Message-Id: <170532632324.1146873.6182162741847699008.b4-ty@kernel.org>
+Date: Mon, 15 Jan 2024 14:45:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;j-t.hinz@alumni.tu-berlin.de;1705326171;87aeb70d;
-X-HE-SMSGID: 1rPNEg-0006AL-4K
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-A BPF application, e.g., a TCP congestion control, might benefit from or
-even require precise (=hardware) packet timestamps. These timestamps are
-already available through __sk_buff.hwtstamp and
-bpf_sock_ops.skb_hwtstamp, but could not be requested: BPF programs were
-not allowed to set SO_TIMESTAMPING* on sockets.
+On Fri, 12 Jan 2024 17:34:14 +0300, Dan Carpenter wrote:
+> This error message doesn't really add any information.  If modprobe
+> fails then the user will already know what the error code is.  In the
+> case of kmalloc() it's a style violation to print an error message for
+> that because kmalloc has it's own better error messages built in.
+> 
+> 
 
-Enable BPF programs to actively request the generation of timestamps
-from a stream socket. The also required ioctl(SIOCSHWTSTAMP) on the
-network device must still be done separately, in user space.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git (for-6.8/upstream-fixes), thanks!
 
-This patch had previously been submitted in a two-part series (first
-link below). The second patch has been independently applied in commit
-7f6ca95d16b9 ("net: Implement missing getsockopt(SO_TIMESTAMPING_NEW)")
-(second link below).
+[1/2] HID: hid-steam: remove pointless error message
+      https://git.kernel.org/hid/hid/c/a96681699611
+[2/2] HID: hid-steam: Fix cleanup in probe()
+      https://git.kernel.org/hid/hid/c/a9f1da09c69f
 
-On the earlier submission, there was the open question whether to only
-allow, thus enforce, SO_TIMESTAMPING_NEW in this patch:
-
-For a BPF program, this won't make a difference: A timestamp, when
-accessed through the fields mentioned above, is directly read from
-skb_shared_info.hwtstamps, independent of the places where NEW/OLD is
-relevant. See bpf_convert_ctx_access() besides others.
-
-I am unsure, though, when it comes to the interconnection of user space
-and BPF "space", when both are interested in the timestamps. I think it
-would cause an unsolvable conflict when user space is bound to use
-SO_TIMESTAMPING_OLD with a BPF program only allowed to set
-SO_TIMESTAMPING_NEW *on the same socket*? Please correct me if I'm
-mistaken.
-
-Link: https://lore.kernel.org/lkml/20230703175048.151683-1-jthinz@mailbox.tu-berlin.de/
-Link: https://lore.kernel.org/all/20231221231901.67003-1-jthinz@mailbox.tu-berlin.de/
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Signed-off-by: Jörn-Thorben Hinz <j-t.hinz@alumni.tu-berlin.de>
----
- include/uapi/linux/bpf.h                            | 3 ++-
- net/core/filter.c                                   | 2 ++
- tools/include/uapi/linux/bpf.h                      | 3 ++-
- tools/testing/selftests/bpf/progs/bpf_tracing_net.h | 2 ++
- tools/testing/selftests/bpf/progs/setget_sockopt.c  | 4 ++++
- 5 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 754e68ca8744..8825d0648efe 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -2734,7 +2734,8 @@ union bpf_attr {
-  * 		  **SO_RCVBUF**, **SO_SNDBUF**, **SO_MAX_PACING_RATE**,
-  * 		  **SO_PRIORITY**, **SO_RCVLOWAT**, **SO_MARK**,
-  * 		  **SO_BINDTODEVICE**, **SO_KEEPALIVE**, **SO_REUSEADDR**,
-- * 		  **SO_REUSEPORT**, **SO_BINDTOIFINDEX**, **SO_TXREHASH**.
-+ * 		  **SO_REUSEPORT**, **SO_BINDTOIFINDEX**, **SO_TXREHASH**,
-+ * 		  **SO_TIMESTAMPING_NEW**, **SO_TIMESTAMPING_OLD**.
-  * 		* **IPPROTO_TCP**, which supports the following *optname*\ s:
-  * 		  **TCP_CONGESTION**, **TCP_BPF_IW**,
-  * 		  **TCP_BPF_SNDCWND_CLAMP**, **TCP_SAVE_SYN**,
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 8c9f67c81e22..4f5280874fd8 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -5144,6 +5144,8 @@ static int sol_socket_sockopt(struct sock *sk, int optname,
- 	case SO_MAX_PACING_RATE:
- 	case SO_BINDTOIFINDEX:
- 	case SO_TXREHASH:
-+	case SO_TIMESTAMPING_NEW:
-+	case SO_TIMESTAMPING_OLD:
- 		if (*optlen != sizeof(int))
- 			return -EINVAL;
- 		break;
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 7f24d898efbb..09eaafa6ab43 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -2734,7 +2734,8 @@ union bpf_attr {
-  * 		  **SO_RCVBUF**, **SO_SNDBUF**, **SO_MAX_PACING_RATE**,
-  * 		  **SO_PRIORITY**, **SO_RCVLOWAT**, **SO_MARK**,
-  * 		  **SO_BINDTODEVICE**, **SO_KEEPALIVE**, **SO_REUSEADDR**,
-- * 		  **SO_REUSEPORT**, **SO_BINDTOIFINDEX**, **SO_TXREHASH**.
-+ * 		  **SO_REUSEPORT**, **SO_BINDTOIFINDEX**, **SO_TXREHASH**,
-+ * 		  **SO_TIMESTAMPING_NEW**, **SO_TIMESTAMPING_OLD**.
-  * 		* **IPPROTO_TCP**, which supports the following *optname*\ s:
-  * 		  **TCP_CONGESTION**, **TCP_BPF_IW**,
-  * 		  **TCP_BPF_SNDCWND_CLAMP**, **TCP_SAVE_SYN**,
-diff --git a/tools/testing/selftests/bpf/progs/bpf_tracing_net.h b/tools/testing/selftests/bpf/progs/bpf_tracing_net.h
-index 1bdc680b0e0e..95f5f169819e 100644
---- a/tools/testing/selftests/bpf/progs/bpf_tracing_net.h
-+++ b/tools/testing/selftests/bpf/progs/bpf_tracing_net.h
-@@ -15,8 +15,10 @@
- #define SO_RCVLOWAT		18
- #define SO_BINDTODEVICE		25
- #define SO_MARK			36
-+#define SO_TIMESTAMPING_OLD     37
- #define SO_MAX_PACING_RATE	47
- #define SO_BINDTOIFINDEX	62
-+#define SO_TIMESTAMPING_NEW     65
- #define SO_TXREHASH		74
- #define __SO_ACCEPTCON		(1 << 16)
- 
-diff --git a/tools/testing/selftests/bpf/progs/setget_sockopt.c b/tools/testing/selftests/bpf/progs/setget_sockopt.c
-index 7a438600ae98..54205d10793c 100644
---- a/tools/testing/selftests/bpf/progs/setget_sockopt.c
-+++ b/tools/testing/selftests/bpf/progs/setget_sockopt.c
-@@ -48,6 +48,10 @@ static const struct sockopt_test sol_socket_tests[] = {
- 	{ .opt = SO_MARK, .new = 0xeb9f, .expected = 0xeb9f, },
- 	{ .opt = SO_MAX_PACING_RATE, .new = 0xeb9f, .expected = 0xeb9f, },
- 	{ .opt = SO_TXREHASH, .flip = 1, },
-+	{ .opt = SO_TIMESTAMPING_NEW, .new = SOF_TIMESTAMPING_RX_HARDWARE,
-+		.expected = SOF_TIMESTAMPING_RX_HARDWARE, },
-+	{ .opt = SO_TIMESTAMPING_OLD, .new = SOF_TIMESTAMPING_RX_HARDWARE,
-+		.expected = SOF_TIMESTAMPING_RX_HARDWARE, },
- 	{ .opt = 0, },
- };
- 
+Cheers,
 -- 
-2.39.2
+Benjamin Tissoires <bentiss@kernel.org>
 
