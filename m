@@ -1,49 +1,49 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139C9440A
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 07:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921B73C0E
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 07:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vca+Pw0i"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-555bd21f9fdso9333570a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 23:25:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RwXWlNmR"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a28a6cef709so930397166b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jan 2024 23:29:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705303510; x=1705908310; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1705303749; x=1705908549; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=noL0QiRbU6pjETzvZ3yB3hE8vGvLIzlB9DK5dI0Bii8=;
-        b=vca+Pw0iOoZKYOtjgBpgCZwjITVne5X9yhKyKS65ecR1j1u1KqsD+uGB7SJR4P4Lll
-         auK4AquVLz50bQJTOOiAYpI6Iv1BWBMIPWljoQiEaRO8F06dMoLX3YlKp4SuS4qhDfdg
-         uG6EomcZDl/G88tNAasaxItmewmEvDCai89OjwI7ACKZgDkLb1VaZ9b0XS8G74ZKXy6+
-         NZPaWt+5/NQ9+b4CTDWUBAY9zHnyQ5WIjbmptAPXxZKnU1EjUa+1/zJrIp/D/N/rEwyb
-         WpBZqw9GqS6S19f9EoUXDvsd9kVzfbDR/F/kRdlKQcasGvOcTk+6cYZeH8BzWZJ5wIvl
-         TC/A==
+        bh=xC/RFDsUvgpNYXEbYIF5IQX/d8l9YbICStp/7THUWHE=;
+        b=RwXWlNmRKu9rCFX3f2BcCylLCll02ItCgp7pWwrL56uHfrX96tU0zoXvZJi0UunTNi
+         q5XgHTQNFRdblECijpReLqXzWeHv9YvTyz2q7OcAHvIBZuNgOd9kAUUTQWk7DfqV9+NH
+         6Gl9PGnpPbRLP1yafIvehQE2ZHVFF9E5q186KIrQg91BNWoIj4h8pXCHXJ6RxznLgZZB
+         YMlrU5udDXotLLKewC1P2iNqUyOwsxUkibs/34qPrpv1Z0rMHz/hoRJb1lXMAbJ16zPI
+         eJARk+BrexXvKvH7KBD8ovvtZXlumqtp2ImD/LPyGMBhCtRjRRWhEq27KY8YYReOmwCA
+         X9aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705303510; x=1705908310;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1705303749; x=1705908549;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=noL0QiRbU6pjETzvZ3yB3hE8vGvLIzlB9DK5dI0Bii8=;
-        b=V9WKbZsV4ho5SxYHKLP7kg0Z0+dneozABbgDMesrn5AJM085sMeE5+ROBXG8z63Zi3
-         WWpMQy2EDQFslfOl2dwl7PXU+CMD0z1+hMvdVGyXfARbtC6YzByaxi9OXWB9tD1bcll7
-         uRyUQja6oHBtEtZWgfXIrf8fsfZKI0KE/4Sw0lVCSsrRJL0FXI7lv/TCQAiUAwfH7GsT
-         3n69L+iysnXcRvQSV76lqmUvXTFSGNTO0UOZP+GDI8ABox0TUufR/D57VRCiC1R+d0/D
-         Iejf5FjTHhqvLqz8gtOGbolHvpcprdwrJFDLQesnak4ynM055dAuMBqZdnQLiFiPUcAF
-         p+fw==
-X-Gm-Message-State: AOJu0YzsOtQQ5+D7lGLNi/K7Wm5jYZk8+NmAv9hDXSWPOtVHv5P1q88S
-	2iotk7zPJuAkZHYjcDRJX9yTt25u/L1qVma6cpKA6hfk3ZI=
-X-Google-Smtp-Source: AGHT+IH4e+MPW+sdyaMnErEm0ixIlKNYbAUERjG/Auy4SXdxT9Mzju13B4Np7YR0468fGzOsYoO0pg==
-X-Received: by 2002:a17:907:a0d1:b0:a2c:f8e3:1fce with SMTP id hw17-20020a170907a0d100b00a2cf8e31fcemr2269491ejc.153.1705303510370;
-        Sun, 14 Jan 2024 23:25:10 -0800 (PST)
+        bh=xC/RFDsUvgpNYXEbYIF5IQX/d8l9YbICStp/7THUWHE=;
+        b=osNmYyRJ1GslM+GN+4id7WPaInTcNwJK0V5YehG5kO+cn5S2ddfbHNsz8EIGALiUCB
+         vR0Z1iqzZheVc04uedxUkuNhnE0wyBiAXUBkAX/pX9SoX1jlnNxsvVwI6Rm706lOQm6T
+         poI7MqATmwJCANyCAOcJ5vP8Jn5NOs1NnollCpGLfFoVAPbYpf8KmY0KhbINBPdK2qYN
+         SDU4qae7BqAXdXZQz2wZSugKD6KP2Q0f+Eoqx7io3bo9WXoot/iZjfoH2Or61qHJzHLV
+         VseRlccnXZi34JhKoZLXI7GG3MOYTCGZtCJhaBFSmaAivIDCQsJ1dIBCos0OAN3AJ2j5
+         n6hw==
+X-Gm-Message-State: AOJu0YzMfERVSQPzYzqNS3w3+JN8ZolQ8JQ2nZmfc4+GA9T0aihDkRgX
+	/a5TKH5VzE5hnel3QdfQ7VGRPYj2ZI0haQ==
+X-Google-Smtp-Source: AGHT+IHiZgreULCpHLf+h+i+C6Xiu2SvcyS89nvLx5LhKwlckntO3LCDt2oo9MnzZzeI852Js046wQ==
+X-Received: by 2002:a17:906:27c8:b0:a2d:4d43:bef7 with SMTP id k8-20020a17090627c800b00a2d4d43bef7mr1212341ejc.71.1705303748734;
+        Sun, 14 Jan 2024 23:29:08 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id t19-20020a1709067c1300b00a2ca9d38654sm4030783ejo.85.2024.01.14.23.25.09
+        by smtp.gmail.com with ESMTPSA id w17-20020a17090652d100b00a28116285e0sm598698ejn.165.2024.01.14.23.29.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jan 2024 23:25:09 -0800 (PST)
-Message-ID: <de079fa2-bba2-4e50-b738-465ed959633a@linaro.org>
-Date: Mon, 15 Jan 2024 08:25:08 +0100
+        Sun, 14 Jan 2024 23:29:08 -0800 (PST)
+Message-ID: <0b03af70-7dc4-4a4f-b9dc-218ef365c237@linaro.org>
+Date: Mon, 15 Jan 2024 08:29:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,15 +51,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: usb: Add Marvell ac5
+Subject: Re: [PATCH v2 4/5] arm64: dts: add description for solidrun am642 som
+ and evaluation board
 Content-Language: en-US
-To: Elad Nachman <enachman@marvell.com>, gregkh@linuxfoundation.org,
- rowland.harvard.edu@mx0a-0016f401.pphosted.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240114172154.2622275-1-enachman@marvell.com>
- <20240114172154.2622275-2-enachman@marvell.com>
+To: Josua Mayer <josua@solid-run.com>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Yazan Shhady <yazan.shhady@solid-run.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+References: <20240112-add-am64-som-v2-0-1385246c428c@solid-run.com>
+ <20240112-add-am64-som-v2-4-1385246c428c@solid-run.com>
+ <60d78882-0ec5-4cd1-b68d-f75b73cb6cdb@linaro.org>
+ <1656bf68-c3b4-476d-984e-f231541058f6@solid-run.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -105,34 +115,93 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240114172154.2622275-2-enachman@marvell.com>
+In-Reply-To: <1656bf68-c3b4-476d-984e-f231541058f6@solid-run.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 14/01/2024 18:21, Elad Nachman wrote:
-> From: Elad Nachman <enachman@marvell.com>
+On 14/01/2024 15:16, Josua Mayer wrote:
+> Am 12.01.24 um 18:22 schrieb Krzysztof Kozlowski:
 > 
-> Add Marvell ac5 device tree bindings to generic EHCI.
-> This compatible enables the Marvell Orion platform code
-> to properly configure the DMA mask for the Marvell AC5 SOC.
+>>> +	/* PRU Ethernet Controller */
+>>> +	icssg1_eth: icssg1-eth {
+>> Node names should be generic.
+> This name intentionally includes the name of the ip block within am64 soc providing software-defined ethernet controller through coprocessors TI call "pru".
+
+Why? This intentionally should not include specific name.
+
+Also, wrap your emails at proper length so they will be manageable...
+
+>> See also an explanation and list of
+>> examples (not exhaustive) in DT specification:
+>> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+>>
+>>
+>>> +		compatible = "ti,am642-icssg-prueth";
+>>> +		pinctrl-names = "default";
+>>> +		pinctrl-0 = <&pru_rgmii1_pins_default>, <&pru_rgmii2_pins_default>;
+>>> +
+>>> +		sram = <&oc_sram>;
+>>> +		ti,prus = <&pru1_0>, <&rtu1_0>, <&tx_pru1_0>, <&pru1_1>, <&rtu1_1>, <&tx_pru1_1>;
+>>> +		firmware-name = "ti-pruss/am65x-sr2-pru0-prueth-fw.elf",
+>>> +				"ti-pruss/am65x-sr2-rtu0-prueth-fw.elf",
+>>> +				"ti-pruss/am65x-sr2-txpru0-prueth-fw.elf",
+>>> +				"ti-pruss/am65x-sr2-pru1-prueth-fw.elf",
+>>> +				"ti-pruss/am65x-sr2-rtu1-prueth-fw.elf",
+>>> +				"ti-pruss/am65x-sr2-txpru1-prueth-fw.elf";
+>>> +
+>>> +		ti,pruss-gp-mux-sel = <2>,	/* MII mode */
+>>> +				      <2>,
+>>> +				      <2>,
+>>> +				      <2>,	/* MII mode */
+>>> +				      <2>,
+>>> +				      <2>;
+>>> +
+>>> +		ti,mii-g-rt = <&icssg1_mii_g_rt>;
+>>> +		ti,mii-rt = <&icssg1_mii_rt>;
+>>> +		ti,iep = <&icssg1_iep0>, <&icssg1_iep1>;
+>>> +
+>>> +		interrupt-parent = <&icssg1_intc>;
+>>> +		interrupts = <24 0 2>, <25 1 3>;
+>> None of these are typical interrupt constants/flags?
+>>
+>>> +		interrupt-names = "tx_ts0", "tx_ts1";
+>>> +
+>>> +		dmas = <&main_pktdma 0xc200 15>, /* egress slice 0 */
+>>> +		       <&main_pktdma 0xc201 15>, /* egress slice 0 */
+>>> +		       <&main_pktdma 0xc202 15>, /* egress slice 0 */
+>>> +		       <&main_pktdma 0xc203 15>, /* egress slice 0 */
+>>> +		       <&main_pktdma 0xc204 15>, /* egress slice 1 */
+>>> +		       <&main_pktdma 0xc205 15>, /* egress slice 1 */
+>>> +		       <&main_pktdma 0xc206 15>, /* egress slice 1 */
+>>> +		       <&main_pktdma 0xc207 15>, /* egress slice 1 */
+>>> +		       <&main_pktdma 0x4200 15>, /* ingress slice 0 */
+>>> +		       <&main_pktdma 0x4201 15>, /* ingress slice 1 */
+>>> +		       <&main_pktdma 0x4202 0>, /* mgmnt rsp slice 0 */
+>>> +		       <&main_pktdma 0x4203 0>; /* mgmnt rsp slice 1 */
+>>> +		dma-names = "tx0-0", "tx0-1", "tx0-2", "tx0-3",
+>>> +			    "tx1-0", "tx1-1", "tx1-2", "tx1-3",
+>>> +			    "rx0", "rx1";
+>>> +
+>>> +		status = "okay";
+>> Drop. Didn't you get such comments before?
 > 
-> Signed-off-by: Elad Nachman <enachman@marvell.com>
+> Yes, but again I can point to an in-tree example of the same structure.
+> I see no reason for describing the same thing differently in different places.
 
-This is a friendly reminder during the review process.
+So if there is a bug, you are going to duplicate it.
 
-It looks like you received a tag and forgot to add it.
+Please provide real argument why this is needed, not "I saw it
+somewhere", or drop it. Otherwise it's a NAK from me.
 
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions, under or above your Signed-off-by tag. Tag is "received", when
-provided in a message replied to you on the mailing list. Tools like b4
-can help here. However, there's no need to repost patches *only* to add
-the tags. The upstream maintainer will do that for tags received on the
-version they apply.
+> 
+> Please see arch/arm64/boot/dts/ti/k3-am654-idk.dtso
+> There are only small differences for this feature between am65 and am64.
+> It's inclusion in the tree was very recent, clearly it was good enough right?
+> See also my cover letter dtbs_check remark on dmas property.
 
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+How does dmas matter? What are you talking about?
 
-If a tag was not added on purpose, please state why and what changed.
+
 
 Best regards,
 Krzysztof
