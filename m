@@ -1,157 +1,77 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FB817C70;
-	Mon, 15 Jan 2024 15:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
-Received: from meterpeter.INF524.stwhd ([141.70.80.5]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1N5VLY-1r6Fsk23Kc-016uBC; Mon, 15 Jan 2024 16:55:48 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Anton Altaparmakov <anton@tuxera.com>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	linux-ntfs-dev@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	Christian Heusel <christian@heusel.eu>
-Subject: [PATCH] ntfs: print symbolic error name instead of error code
-Date: Mon, 15 Jan 2024 16:55:38 +0100
-Message-ID: <20240115155540.94127-1-christian@heusel.eu>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BF1182AA
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 15:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="SVSAnTSN"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2bdc3a3c84so541686766b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 07:56:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1705334177; x=1705938977; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GzIcEuaHWXnCzr/2sL8Vcv3dHdribnGFmFr1eaLd75A=;
+        b=SVSAnTSNnvJB9AoX1CjyLEh1GcaGT2n3gYJVYuHN7mEaaXZ/HWhGfbiqhsplMWTKKO
+         5HrOhJ9rLYeYmXnG7WwRZ4//E239jGifgkXELNgcBZ5jSg27wQoM6jhZmpG0yfrdat39
+         oF4GvrT1aJiw7Jceh0auAasOlP9nmdWCZEqHUeBMcwKJdBojDVRvfGFUcziLVGUTBtg5
+         2QJr4Dey/kcNF+S5n0FcjpOcmP4b+5UZMdgXDH2tFVtZ/gtpyO1ve6qx0pPCGW/UnNQh
+         /tb40GggNQ5bgpPhLeKq12WAlR7XvICO7a4SZQl6fmvURAJwDn9qdRaSLdsUN+FZw8/a
+         3tpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705334177; x=1705938977;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GzIcEuaHWXnCzr/2sL8Vcv3dHdribnGFmFr1eaLd75A=;
+        b=N6kRYVul5e9sG47jLea278+UvOf2hLpkEm0UK/m5rRuY/bEtEvvok3y/ibQEZrt5HC
+         wDoIQMOD3QiaNukkQeJ6pugmdSDNDGA4kkQTQotVTRChxJfA+owZEagiRG1JFtchSDmj
+         Ehm7QvTXDqljSu92CL77B84WzS1cb1Nb+xavlvglZSdeOnd1QgiRSGX1KG53i5wldynj
+         MGKCDZlvlUqNv+x3HDYUUShuHRzM7/UvpYcFPijMblRDB9GFNawRCFnKyz7aazRfUwOx
+         hlYVnGF2nS7zRIA2YnnjsMVpMQ3tSUOHwo8fRdVyFgEX/te6sg3owxxH0KvorZ3BG3cO
+         SYQw==
+X-Gm-Message-State: AOJu0YykNU8x/38Pm7A819kIfKQ3Yt7CjKSxrQbFVMQY1bY8gJpNqIBe
+	YDIRnn8uHL4SnzXQwIk7N0c0dlguh8MmrA==
+X-Google-Smtp-Source: AGHT+IHy/Uamyk2YtYJ79+3ZC9ozJlXkNxEjS2ryGtVNOpdPIVCRT4L3/ylgzhP5km9hLu/sXJEJzg==
+X-Received: by 2002:a17:906:c10c:b0:a26:cee8:3713 with SMTP id do12-20020a170906c10c00b00a26cee83713mr3113155ejc.55.1705334177541;
+        Mon, 15 Jan 2024 07:56:17 -0800 (PST)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id d14-20020a170906c20e00b00a298e2f6b3csm5384397ejz.213.2024.01.15.07.56.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 07:56:17 -0800 (PST)
+Date: Mon, 15 Jan 2024 16:56:16 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, 
+	Atish Patra <atishp@atishpatra.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Shuah Khan <shuah@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	devicetree@vger.kernel.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 11/15] KVM: riscv: selftests: Add Zihintntl extension to
+ get-reg-list test
+Message-ID: <20240115-6c4b2f1b0c692b6b8e609ab4@orel>
+References: <20231128145357.413321-1-apatel@ventanamicro.com>
+ <20231128145357.413321-12-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8Cj9rg6OYmZJSHmw+KpGRyrT/3xXnK/X35tHaWFT4Z017Ota8AT
- +UpSs8EPfJNryBWCRdJ7rI9VvFTg5c6Vc5VpE3p4Hp4ckDB1SDYl+R2QmnAQs2sS1UR11L7
- hyQSXn72ht4wi6xeYDPjrlSgcqmCHltgg0OQ5L7f/BjZIKoYKMMQSif/AlihCZsZRY2gLH2
- vlSHgaRvde2FmeVPkE51w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HwgHyQdHjo0=;jxlGXhDLZbiOF1B/xDBM50aA2KY
- zWyHHrEqyatDBGIGDUEcFoGI21HDR9Q/nGqA4vb+ivICx/7fT5DRt+zDCouoOkITgv8XVUYlr
- iRFflzvbJdkky+YkhamV43XnrC80z9R/4/TtUqOXmnBVbA6cmcPpWndPF23Z7uBQSI3aBIrFP
- C/wiB/Gx4xerESBXA3xKVgU4vs71yIS60BkRINWc3kDI2g0V3o1gzkiD4cRKifNhm293sAtOB
- EphknbmvEtoctkIUfjYwr1SSpw6GTayFCrzcwfSgn/p+AV/L8PA3P86zFTfNgXeLvllAPF4Ai
- aBjFLKFKMylTvlUw1M+7dxZp41zxs38Bvk6oiV4WKv7M4W9EGYs8HYAq+eDbhhO0KB9YwFZZq
- AZGHe5ME4hQpWnWjNI5ulSXPKPFzEcbDYGqWLhzI43S15WP6lKmSgbOneJn0IabHhGO7W135W
- FKdZSViAEnR3yQLlkzgCJ9gG7TnREQXrl8G2U1CCld5ArdDVbKaXpZnaJhUHArvSqUiAXr+bR
- aUIPSjZ3xy5cvYb8k3R8bt0SYZTRFuAwnQlJjn2+j93xcJu/AEPhEpajh1oJg9Ghp1vP6MQnF
- s3L+KWUYtmAImr3EMsDD2wGu/QRKYEjJtlYZY2K2tgc0ySn6PPSXQVsvVjqIt83HRaWZwjgCX
- tmqESg26ir8zM6T4TXRLMeL7kFazP6v4IUytGBoOXBX/G2JjlAtsIpRkETr8nID66ZCi4c4Zq
- IqNYndy2WK5CldCQmd7TirQMG3fBaTU+q764y6ZF+uB8MGKxDPqoIYYkR+AZq6Z5K/DaMisOU
- OhvZEiOHwzJ324eryJrxL5fgqiz5CJx3p9B8IE+CFrXwcL+EfarX1QrQ3jlevJKAffcHToKwX
- kSk8CnZV3UnvRhA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231128145357.413321-12-apatel@ventanamicro.com>
 
-Utilize the %pe print specifier in multiple log messages to get the
-symbolic error name as a string (i.e "-ENOMEM") instead of the error
-code to increase the log messages readablility.
+On Tue, Nov 28, 2023 at 08:23:53PM +0530, Anup Patel wrote:
+> The KVM RISC-V allows Zihintntl extension for Guest/VM so let us
+> add this extension to get-reg-list test.
+> 
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>  tools/testing/selftests/kvm/riscv/get-reg-list.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
 
-This change was suggested in
-https://lore.kernel.org/all/92972476-0b1f-4d0a-9951-af3fc8bc6e65@suswa.mountain/
-
-Signed-off-by: Christian Heusel <christian@heusel.eu>
----
- fs/ntfs/dir.c   | 12 ++++--------
- fs/ntfs/index.c |  6 ++----
- fs/ntfs/mft.c   |  6 +++---
- 3 files changed, 9 insertions(+), 15 deletions(-)
-
-diff --git a/fs/ntfs/dir.c b/fs/ntfs/dir.c
-index 629723a8d712..8df4f233969d 100644
---- a/fs/ntfs/dir.c
-+++ b/fs/ntfs/dir.c
-@@ -88,8 +88,7 @@ MFT_REF ntfs_lookup_inode_by_name(ntfs_inode *dir_ni, const ntfschar *uname,
- 	/* Get hold of the mft record for the directory. */
- 	m = map_mft_record(dir_ni);
- 	if (IS_ERR(m)) {
--		ntfs_error(sb, "map_mft_record() failed with error code %ld.",
--				-PTR_ERR(m));
-+		ntfs_error(sb, "map_mft_record() failed with error %pe.", m);
- 		return ERR_MREF(PTR_ERR(m));
- 	}
- 	ctx = ntfs_attr_get_search_ctx(dir_ni, m);
-@@ -308,8 +307,7 @@ MFT_REF ntfs_lookup_inode_by_name(ntfs_inode *dir_ni, const ntfschar *uname,
- 	page = ntfs_map_page(ia_mapping, vcn <<
- 			dir_ni->itype.index.vcn_size_bits >> PAGE_SHIFT);
- 	if (IS_ERR(page)) {
--		ntfs_error(sb, "Failed to map directory index page, error %ld.",
--				-PTR_ERR(page));
-+		ntfs_error(sb, "Failed to map directory index page, error %pe.", page);
- 		err = PTR_ERR(page);
- 		goto err_out;
- 	}
-@@ -639,8 +637,7 @@ u64 ntfs_lookup_inode_by_name(ntfs_inode *dir_ni, const ntfschar *uname,
- 	/* Get hold of the mft record for the directory. */
- 	m = map_mft_record(dir_ni);
- 	if (IS_ERR(m)) {
--		ntfs_error(sb, "map_mft_record() failed with error code %ld.",
--				-PTR_ERR(m));
-+		ntfs_error(sb, "map_mft_record() failed with error %pe.", m);
- 		return ERR_MREF(PTR_ERR(m));
- 	}
- 	ctx = ntfs_attr_get_search_ctx(dir_ni, m);
-@@ -786,8 +783,7 @@ u64 ntfs_lookup_inode_by_name(ntfs_inode *dir_ni, const ntfschar *uname,
- 	page = ntfs_map_page(ia_mapping, vcn <<
- 			dir_ni->itype.index.vcn_size_bits >> PAGE_SHIFT);
- 	if (IS_ERR(page)) {
--		ntfs_error(sb, "Failed to map directory index page, error %ld.",
--				-PTR_ERR(page));
-+		ntfs_error(sb, "Failed to map directory index page, error %pe.", page);
- 		err = PTR_ERR(page);
- 		goto err_out;
- 	}
-diff --git a/fs/ntfs/index.c b/fs/ntfs/index.c
-index d46c2c03a032..777bbd4548ad 100644
---- a/fs/ntfs/index.c
-+++ b/fs/ntfs/index.c
-@@ -137,8 +137,7 @@ int ntfs_index_lookup(const void *key, const int key_len,
- 	/* Get hold of the mft record for the index inode. */
- 	m = map_mft_record(base_ni);
- 	if (IS_ERR(m)) {
--		ntfs_error(sb, "map_mft_record() failed with error code %ld.",
--				-PTR_ERR(m));
-+		ntfs_error(sb, "map_mft_record() failed with code %pe.", m);
- 		return PTR_ERR(m);
- 	}
- 	actx = ntfs_attr_get_search_ctx(base_ni, m);
-@@ -264,8 +263,7 @@ int ntfs_index_lookup(const void *key, const int key_len,
- 	page = ntfs_map_page(ia_mapping, vcn <<
- 			idx_ni->itype.index.vcn_size_bits >> PAGE_SHIFT);
- 	if (IS_ERR(page)) {
--		ntfs_error(sb, "Failed to map index page, error %ld.",
--				-PTR_ERR(page));
-+		ntfs_error(sb, "Failed to map index page, error %pe.", page);
- 		err = PTR_ERR(page);
- 		goto err_out;
- 	}
-diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
-index 6fd1dc4b08c8..fed9abc3ff1f 100644
---- a/fs/ntfs/mft.c
-+++ b/fs/ntfs/mft.c
-@@ -159,7 +159,7 @@ MFT_RECORD *map_mft_record(ntfs_inode *ni)
- 
- 	mutex_unlock(&ni->mrec_lock);
- 	atomic_dec(&ni->count);
--	ntfs_error(ni->vol->sb, "Failed with error code %lu.", -PTR_ERR(m));
-+	ntfs_error(ni->vol->sb, "Failed with error %pe.", m);
- 	return m;
- }
- 
-@@ -285,8 +285,8 @@ MFT_RECORD *map_extent_mft_record(ntfs_inode *base_ni, MFT_REF mref,
- 			return ERR_PTR(-EIO);
- 		}
- map_err_out:
--		ntfs_error(base_ni->vol->sb, "Failed to map extent "
--				"mft record, error code %ld.", -PTR_ERR(m));
-+		ntfs_error(base_ni->vol->sb,
-+			   "Failed to map extent mft record, error %pe.", m);
- 		return m;
- 	}
- 	/* Record wasn't there. Get a new ntfs inode and initialize it. */
--- 
-2.43.0
-
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
