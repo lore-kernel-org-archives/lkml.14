@@ -1,60 +1,74 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DCC1754F;
-	Mon, 15 Jan 2024 13:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0D917748;
+	Mon, 15 Jan 2024 13:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="D9FrRzYm"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40FD9OnB009290;
-	Mon, 15 Jan 2024 14:54:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=JgTqkog598RbC204zCHUiytINQsebXi6rfWzdONWWfk=; b=D9
-	FrRzYm0JDUdFDfvftiNJO8KroHy7qrDoBca/+lhkZQYV/aCzOkZUk6iDM5KiTPrY
-	KHBUgNTw7zE02ms0shdVytXy8mHfz37hpqI5OMsXkvBn0WXGuJdqPfYfgjP+fEuZ
-	7apOftYeq7pCRBhkoMU1d+V8Bdlp/1eX9gCk3IRGFbk0e5o5RMOGkX5ut0x1sPPh
-	i7+BbPUwwsyT3vKWer5FPXoOPGXi9vDul0xrnY+gVIPxzsKmOeqSgknsTE0scpjW
-	8OvBEJFN4AJmGnJ3WC+AQ8KfTWrxjFKknpnZTgVqVH2feTU5hGZHmnkbyC0C+f8M
-	RymqkLaH2HbSoI0qxqFA==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vkmfy8xer-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jan 2024 14:54:02 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E7680100057;
-	Mon, 15 Jan 2024 14:54:01 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DC90228EF7F;
-	Mon, 15 Jan 2024 14:54:01 +0100 (CET)
-Received: from localhost (10.201.20.75) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 15 Jan
- 2024 14:53:58 +0100
-From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Rob
- Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Subject: [PATCH 3/4] remoteproc: stm32: create sub-functions to request shutdown and release
-Date: Mon, 15 Jan 2024 14:52:48 +0100
-Message-ID: <20240115135249.296822-4-arnaud.pouliquen@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240115135249.296822-1-arnaud.pouliquen@foss.st.com>
-References: <20240115135249.296822-1-arnaud.pouliquen@foss.st.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jv/XJUbq"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e76109cdeso12298365e9.0;
+        Mon, 15 Jan 2024 05:54:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705326862; x=1705931662; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yiHT1cqvrc0trw3bxSP5/rwExxYg33Rrd3Fl5ENDp88=;
+        b=jv/XJUbqGWgMk7xVbxtlA9Q2BzWZs+9svvl7/ML0bi4wHGT/KAR0DyOcsVdyspbiA1
+         OrdhqzrUC30D9qKWLqxpigSjTeb8yJda759A5EvhTIcltA8Jxgz7ann5FEQP/UWsr79/
+         IZT7/W2gaxXfcl0+5CGCfqDe5crd6eOYzcfkvYmZpjbhzfY50it/g+xMx9FpNm/HHHtD
+         P+Iyqxi2Hg/OBSnGm91D/ZbMN81iRK7db7KluEqsjP8QbziKYsrvinEzcA8TVehYqhK6
+         P2aKZpnoZOCAl7NZHCOa+gpYXPnS5twgSpWzf/ykagM9pAj5HCQ2j435BuFwXOnKit9R
+         MV0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705326862; x=1705931662;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yiHT1cqvrc0trw3bxSP5/rwExxYg33Rrd3Fl5ENDp88=;
+        b=g67UoXjcoOgrbypInRz57QkIHRdFKRKrOuGd6/YM6T6coCgj+QNkR5N1s4ObtpWQb2
+         TT2+MiQe0Uh64ZcR3+i5ZtycrOXQeGE27lFOUXoG5MWg3QDkNTy3CVX7atkVO9cj753J
+         ScEsDMEjhW1DZEsCZfUWZ9Vbn4JOA/RF5EDGM4ZeEx5RcMjjNWyJyETmJHI3nLq/KvOd
+         Y4CoRBvoNsrbsYMFkGKPWca29gs3P6YxiDPpkaiREkOzBkqIw7qMpT06FCd23V/nAD7e
+         SJTc5YKzWIxygZp1EvL7MuVPWHvoYRc9u6HWuOuRN84hdrD43igqnHbDi6IFowanMCsW
+         7DAQ==
+X-Gm-Message-State: AOJu0YypbyjKmLPaRyv+mZObXOPGqIQ3g48YX97vorExbfB2+ycMoTdA
+	STuAvnEzzaAedOu66IK5fFE=
+X-Google-Smtp-Source: AGHT+IFdCzleycxmTWk9VzFQCjTv4P4gSvEEiHtuXuJg62O291JhiccUWky/aKK9jJXabhiE/lFytA==
+X-Received: by 2002:a05:600c:4fcd:b0:40e:3bbe:265d with SMTP id o13-20020a05600c4fcd00b0040e3bbe265dmr3169515wmq.118.1705326861566;
+        Mon, 15 Jan 2024 05:54:21 -0800 (PST)
+Received: from HYB-hhAwRlzzMZb.ad.analog.com ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id r10-20020a05600c458a00b0040e6efeac9esm7979651wmo.48.2024.01.15.05.54.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 05:54:21 -0800 (PST)
+From: Dumitru Ceclan <mitrutzceclan@gmail.com>
+To: 
+Cc: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andy@kernel.org,
+	linux-gpio@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	ChiaEn Wu <chiaen_wu@richtek.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>
+Subject: [PATCH 0/2] Add support for additional AD717X models
+Date: Mon, 15 Jan 2024 15:53:03 +0200
+Message-ID: <20240115135416.10595-1-mitrutzceclan@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,131 +76,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
 
-To prepare for the support of TEE remoteproc, create sub-functions
-that can be used in both cases, with and without TEE support.
+This patch series adds support for the Analog Devices AD7172-2, AD7175-8,
+ AD7177-2 ADCs within the AD7173 driver.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
----
- drivers/remoteproc/stm32_rproc.c | 84 +++++++++++++++++++-------------
- 1 file changed, 51 insertions(+), 33 deletions(-)
+ Datasheets:
+ https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-4.pdf
+ https://www.analog.com/media/en/technical-documentation/data-sheets/AD7175-8.pdf
+ https://www.analog.com/media/en/technical-documentation/data-sheets/AD7177-2.pdf
 
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index 4f469f0bcf8b..fcc0001e2657 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -209,6 +209,54 @@ static int stm32_rproc_mbox_idx(struct rproc *rproc, const unsigned char *name)
- 	return -EINVAL;
- }
- 
-+static void stm32_rproc_request_shutdown(struct rproc *rproc)
-+{
-+	struct stm32_rproc *ddata = rproc->priv;
-+	int err, dummy_data, idx;
-+
-+	/* Request shutdown of the remote processor */
-+	if (rproc->state != RPROC_OFFLINE && rproc->state != RPROC_CRASHED) {
-+		idx = stm32_rproc_mbox_idx(rproc, STM32_MBX_SHUTDOWN);
-+		if (idx >= 0 && ddata->mb[idx].chan) {
-+			/* A dummy data is sent to allow to block on transmit. */
-+			err = mbox_send_message(ddata->mb[idx].chan,
-+						&dummy_data);
-+			if (err < 0)
-+				dev_warn(&rproc->dev, "warning: remote FW shutdown without ack\n");
-+		}
-+	}
-+}
-+
-+static int stm32_rproc_release(struct rproc *rproc)
-+{
-+	struct stm32_rproc *ddata = rproc->priv;
-+	unsigned int err = 0;
-+
-+	/* To allow platform Standby power mode, set remote proc Deep Sleep. */
-+	if (ddata->pdds.map) {
-+		err = regmap_update_bits(ddata->pdds.map, ddata->pdds.reg,
-+					 ddata->pdds.mask, 1);
-+		if (err) {
-+			dev_err(&rproc->dev, "failed to set pdds\n");
-+			return err;
-+		}
-+	}
-+
-+	/* Update coprocessor state to OFF if available. */
-+	if (ddata->m4_state.map) {
-+		err = regmap_update_bits(ddata->m4_state.map,
-+					 ddata->m4_state.reg,
-+					 ddata->m4_state.mask,
-+					 M4_STATE_OFF);
-+		if (err) {
-+			dev_err(&rproc->dev, "failed to set copro state\n");
-+			return err;
-+		}
-+	}
-+
-+	return err;
-+}
-+
- static int stm32_rproc_prepare(struct rproc *rproc)
- {
- 	struct device *dev = rproc->dev.parent;
-@@ -519,17 +567,9 @@ static int stm32_rproc_detach(struct rproc *rproc)
- static int stm32_rproc_stop(struct rproc *rproc)
- {
- 	struct stm32_rproc *ddata = rproc->priv;
--	int err, idx;
-+	int err;
- 
--	/* request shutdown of the remote processor */
--	if (rproc->state != RPROC_OFFLINE && rproc->state != RPROC_CRASHED) {
--		idx = stm32_rproc_mbox_idx(rproc, STM32_MBX_SHUTDOWN);
--		if (idx >= 0 && ddata->mb[idx].chan) {
--			err = mbox_send_message(ddata->mb[idx].chan, "detach");
--			if (err < 0)
--				dev_warn(&rproc->dev, "warning: remote FW shutdown without ack\n");
--		}
--	}
-+	stm32_rproc_request_shutdown(rproc);
- 
- 	err = stm32_rproc_set_hold_boot(rproc, true);
- 	if (err)
-@@ -541,29 +581,7 @@ static int stm32_rproc_stop(struct rproc *rproc)
- 		return err;
- 	}
- 
--	/* to allow platform Standby power mode, set remote proc Deep Sleep */
--	if (ddata->pdds.map) {
--		err = regmap_update_bits(ddata->pdds.map, ddata->pdds.reg,
--					 ddata->pdds.mask, 1);
--		if (err) {
--			dev_err(&rproc->dev, "failed to set pdds\n");
--			return err;
--		}
--	}
--
--	/* update coprocessor state to OFF if available */
--	if (ddata->m4_state.map) {
--		err = regmap_update_bits(ddata->m4_state.map,
--					 ddata->m4_state.reg,
--					 ddata->m4_state.mask,
--					 M4_STATE_OFF);
--		if (err) {
--			dev_err(&rproc->dev, "failed to set copro state\n");
--			return err;
--		}
--	}
--
--	return 0;
-+	return stm32_rproc_release(rproc);
- }
- 
- static void stm32_rproc_kick(struct rproc *rproc, int vqid)
+Dumitru Ceclan (2):
+  dt-bindings: adc: ad7173: add support for additional models
+  iio: adc: ad7173: add support for additional models
+
+ .../bindings/iio/adc/adi,ad7173.yaml          | 50 +++++++++++-
+ drivers/iio/adc/ad7173.c                      | 76 +++++++++++++++++--
+ 2 files changed, 115 insertions(+), 11 deletions(-)
+
 -- 
-2.25.1
+2.42.0
 
