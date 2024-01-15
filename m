@@ -1,60 +1,33 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E522C683;
-	Mon, 15 Jan 2024 11:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="b9q0o4tQ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D5A1440E01A9;
-	Mon, 15 Jan 2024 11:00:25 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id sfiRGpzfaODp; Mon, 15 Jan 2024 11:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1705316423; bh=oP77XyZj9HhicA6zK+E2uirUhsgRReQ/mwWlYJegOQA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b9q0o4tQ50g+7Sr5DKT5AfeuDncxgpLRIIudonC6h0msPRkM2sMP9vfEa+BuCZbl1
-	 Uqte3mOzZ+IpLU3RpLCzC92861U8l/LPzTnMMy+hXGuck4FLADjlPxWUXGi9TX58Sa
-	 ysB5lW8rptHc7ilcZGNrQt29I8S59GnvuP2RDdAgJyOl4KXT8oAlwcXNxsvFdSuuZW
-	 c0hLIp6HwzsEe6sFYqF/yeglM0EPf+m2FmVvCmEkarZH1Oti1fjhPfEap9JSNdQryq
-	 7Btd8LUDHVJ/vxXOTnidM6NyotTX50FuXaHub7bKxt7VwPqfjS6irr6TxnouG1KufG
-	 4BVKfTLTqr73UuSvSrZbaO/gMA5hlhZWIqHPvV2GtBuHzoovogDt0JcOwlDkbmWjFJ
-	 oLKRKGMSUy5l/1A5ReOZId7WfIjRnEuQykO4K/9d57TvWCON/BAlGvRX1O/IF+ak/x
-	 ijvYQidLBTIAmKJK7aKKLCiIOR9Zau8RftkXynt+Uk1yQrHEkzjH3HSR06A3xHKPaf
-	 67x4l5jVNR9iJzhPeorcAEWYwPfx8VWHkauCWe2Zd04ccFdd5M5pY1D8NtkY+ssykL
-	 ko4wsKO98DMsDEu/qo8GAu9HDua195gnEZgQd2RAlbTltZIxzksvnR2fT0ljic0SEu
-	 Fk8eYp/HJEpH1SwTYxISl7RI=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C6BE40E016C;
-	Mon, 15 Jan 2024 11:00:01 +0000 (UTC)
-Date: Mon, 15 Jan 2024 12:00:00 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, nathan@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, bhelgaas@google.com, arnd@arndb.de,
-	zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, paul@paul-moore.com,
-	jmorris@namei.org, serge@hallyn.com, javierm@redhat.com,
-	linux-arch@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] arch/x86: Remove unnecessary dependencies on
- bootparam.h
-Message-ID: <20240115110000.GEZaUQMBwGAibwR_Yp@fat_crate.local>
-References: <20240112095000.8952-1-tzimmermann@suse.de>
- <CAMj1kXGxNTvCca+9TfUfvp06ppyD9XiyO59khYXg88VkyFm1rw@mail.gmail.com>
- <3e2f70ab-c4de-4fae-9365-4f6f77c847c5@suse.de>
- <CAMj1kXGECo1E1U8jjrzvA=ZJe80DVOi3v5CvxkhXbnBQKVMT8Q@mail.gmail.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B25271DDC1;
+	Mon, 15 Jan 2024 11:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4951E2F4;
+	Mon, 15 Jan 2024 03:01:48 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.91.116])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 524093F5A1;
+	Mon, 15 Jan 2024 03:01:00 -0800 (PST)
+Date: Mon, 15 Jan 2024 11:00:57 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf test hybrid failing on 14700K
+Message-ID: <ZaUQaaT_Hi_c0JhO@FVFF77S0Q05N>
+References: <ZYbm5L7tw7bdpDpE@kernel.org>
+ <4d86f3b6-eaee-4673-bdf5-3b97c1c1ad17@linux.intel.com>
+ <CAP-5=fUfJ-VBGS1D2+WM_eBu4uPGvxJ2KyD4WXzgKRCfGKHTQQ@mail.gmail.com>
+ <ZZfwjG-HL5yOEh6z@FVFF77S0Q05N>
+ <CAP-5=fUK+t1p0g3dKtgyP0g3oixM1G7Xm4BFneY5EMzRW_urdw@mail.gmail.com>
+ <ZZ12PhUfA_wPAaRR@FVFF77S0Q05N.cambridge.arm.com>
+ <CAP-5=fWCn88KchSdQg87FRY0cpH4tVqO0UEYMhE=ioANeRBdwg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,44 +36,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGECo1E1U8jjrzvA=ZJe80DVOi3v5CvxkhXbnBQKVMT8Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWCn88KchSdQg87FRY0cpH4tVqO0UEYMhE=ioANeRBdwg@mail.gmail.com>
 
-On Mon, Jan 15, 2024 at 11:55:36AM +0100, Ard Biesheuvel wrote:
-> But please be aware that we are in the middle of the merge window
+On Wed, Jan 10, 2024 at 08:29:18AM -0800, Ian Rogers wrote:
+> On Tue, Jan 9, 2024 at 8:37 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > On Fri, Jan 05, 2024 at 09:21:21AM -0800, Ian Rogers wrote:
+> > > While much has been done in the perf tool to work around latent issues
+> > > with ARM's PMU drivers and the behavior changes they have instigated,
+> > > except for 5c816728651a ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE
+> > > capability") where I wrote the original version, there doesn't seem to
+> > > have been progress made on the ARM PMU driver nor on ARM testing -
+> > > which was why such an issue could exist for so long, across numerous
+> > > Linux releases and ultimately break Hector and Martin.
+> >
+> > Ian, which latent issues in the PMU drivers are you referring to?
+> 
+> Core PMUs generally have a lookup from legacy to non-legacy event,
+> from the past discussion this was missing on the problematic PMUs
+> hence the sysfs versions.
 
-Yes, and the merge window has been suspended too:
+I don't know what you mean there, so I think you may have the wrong end of the
+stick.
 
-https://lore.kernel.org/r/CAHk-=wjMWpmXtKeiN__vnNO4TcttZR-8dVvd_oBq%2BhjeSsWUwg@mail.gmail.com
+All the ARM PMU drivers handle revelant PERF_EVENT_TYPE_HARDWARE events
+directly; they check perf_event_attr::type, and interpret
+perf_event_attr::config dependent upon this. 
 
-> right now, and I suspect that the -tip maintainers may have some
-> feedback of their own. So give it at least a week or so, and ping this
-> thread again to ask how to proceed.
+For example, the Apple M1 PMU driver has a table mapping
+PERF_COUNT_HW_CPU_CYCLES and PERF_COUNT_HW_INSTRUCTIONS to its native events:
 
-From: Documentation/process/maintainer-tip.rst
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/apple_m1_cpu_pmu.c?h=v6.7#n134
 
-"Merge window
-^^^^^^^^^^^^
+... which is used by the m1_pmu_map_event() and m2_pmu_map_event() callbacks:
 
-Please do not expect large patch series to be handled during the merge
-window or even during the week before.  Such patches should be submitted in
-mergeable state *at* *least* a week before the merge window opens.
-Exceptions are made for bug fixes and *sometimes* for small standalone
-drivers for new hardware or minimally invasive patches for hardware
-enablement.
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/apple_m1_cpu_pmu.c?h=v6.7#n485
 
-During the merge window, the maintainers instead focus on following the
-upstream changes, fixing merge window fallout, collecting bug fixes, and
-allowing themselves a breath. Please respect that.
+... which is used by __hw_perf_event_init() when called by armpmu_event_init,
+which is used as the pmu::event_init() callback:
 
-The release candidate -rc1 is the starting point for new patches to be
-applied which are targeted for the next merge window."
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/arm_pmu.c?h=v6.7#n443
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/arm_pmu.c?h=v6.7#n500
 
-So pls be patient.
+The sysfs events were added so that PMU-specific events (in the namespace of
+the PMU's dynamic type id) could be advertised to userspace. Those weren't
+added in lieu of the PERF_EVENT_TYPE_HARDWARE events.
 
-Thx.
+When support for big.LITTLE was added (years prior to the introduction of the
+extended HW type support), it was necessary to use those sysfs events to target
+events to specific PMUs (since those used the PMU's dynamic type id, and would
+only be handled by that specific PMU). Hence why Marc and Hector were using
+those events on their systems.
 
--- 
-Regards/Gruss,
-    Boris.
+AFAICT there's nothing missing from the drivers w.r.t. event mapping.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+The problem Hector and Marc encountered was the result of a number of
+interacting parts:
+
+1) The logic in the perf tool to detect support for extended type support was
+   not robust to PMUs requiring event filters and failed to detect support for
+   the extended type for the Apple PMUs which require the exclude_guest filter.
+
+2) The interpretation of 'pmu/event/' was changed to try to interpret 'event'
+   as a PERF_EVENT_TYPE_HARDWARE event. For the Apple PMU, this changed the
+   interpretation of 'apple_pmu_name/cycles/' and
+   'apple_pmu_name/instructions/'.
+
+3) Even in the absence of (detected) support for extended type support, the
+   perf tool interpreted 'apple_pmu_name/cycles/' and
+   'apple_pmu_name/instructions/' as PERF_EVENT_TYPE_HARDWARE events, but since
+   it thought that the kernel didn't support the extended HW type, it didn't
+   set the extended bits to target specific PMUs. Hence the kernel didn't know
+   which PMUs to route the events to specifically, and those were handled by an
+   arbitrary PMU which could handle PERF_EVENT_TYPE_HARDWARE events.
+
+... hence the issue that Hector and Marc reported with events going to a
+different PMU from what they explicitly requested.
+
+As I've said before, I think that (2) is a problem in its own right, since even
+with (1) fixed, clashing event names could have different semantics, and it
+would be better to have a distinct syntax for "PERF_EVENT_TYPE_HARDWARE event
+on this specific PMU" vs "native event on this PMU".
+
+> > I already pointed out that one of the problems you have claimed to be a driver
+> > bug is actually due to userspace incorrectly detecting support for the extended
+> > HW type, and I suggested some options which you have so far ignored:
+> >
+> >   https://lore.kernel.org/lkml/ZV-CUlQhlkdOzfFZ@FVFF77S0Q05N.cambridge.arm.com/
+> >   https://lore.kernel.org/lkml/ZV-ItX1eMeIdo_00@FVFF77S0Q05N.cambridge.arm.com/
+> 
+> Those suggestions look fine but you seemed to be suggesting testing.
+
+I was only asking for an opinion on the analysis/suggestion, no testing
+necessary.
+
+> Lacking hardware with the broken PMU(s) I'm not able to do this. Could
+> you turn the suggestion into a patch and test on BIG.little? I can
+> test on Intel Alderlake.
+
+I've spun up the diff below, which works in local testing. I'll go write up a
+commit message and send it out as a proper patch shortly.
+
+Mark.
+
+---->8----
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index b0fc48be623f..4f67e8f00a4d 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -232,7 +232,6 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
+ bool is_event_supported(u8 type, u64 config)
+ {
+ 	bool ret = true;
+-	int open_return;
+ 	struct evsel *evsel;
+ 	struct perf_event_attr attr = {
+ 		.type = type,
+@@ -246,20 +245,32 @@ bool is_event_supported(u8 type, u64 config)
+ 
+ 	evsel = evsel__new(&attr);
+ 	if (evsel) {
+-		open_return = evsel__open(evsel, NULL, tmap);
+-		ret = open_return >= 0;
++		ret = evsel__open(evsel, NULL, tmap) >= 0;
+ 
+-		if (open_return == -EACCES) {
++		if (!ret) {
+ 			/*
+-			 * This happens if the paranoid value
++			 * The event may fail to open if the paranoid value
+ 			 * /proc/sys/kernel/perf_event_paranoid is set to 2
+-			 * Re-run with exclude_kernel set; we don't do that
+-			 * by default as some ARM machines do not support it.
+-			 *
++			 * Re-run with exclude_kernel set; we don't do that by
++			 * default as some ARM machines do not support it.
+ 			 */
+ 			evsel->core.attr.exclude_kernel = 1;
+ 			ret = evsel__open(evsel, NULL, tmap) >= 0;
+ 		}
++
++		if (!ret) {
++			/*
++			 * The event may fail to open if the PMU requires
++			 * exclude_guest to be set (e.g. as the Apple M1 PMU
++			 * requires).
++			 * Re-run with exclude_guest set; we don't do that by
++			 * default as it's equally legitimate for another PMU
++			 * driver to require that exclude_guest is clear.
++			 */
++			evsel->core.attr.exclude_guest = 1;
++			ret = evsel__open(evsel, NULL, tmap) >= 0;
++		}
++
+ 		evsel__delete(evsel);
+ 	}
+ 
