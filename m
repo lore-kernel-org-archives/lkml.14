@@ -1,98 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B44168C4
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 13:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000E81798C;
+	Mon, 15 Jan 2024 13:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v3usj8aN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fo0RYHwo"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705324251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hWEMqJ3ZY8IoMhDyU06y+UtP311AunIjwISjvPisJoY=;
-	b=v3usj8aNlB+kVv2boYs/C1kzdjc8i+y3spoTxS427OnOvfaNG0q//S0MVWT9KIdbCOryBU
-	lG4SNUTCs02L1l6rI8C2ic1qmn+A2wXgwgxlxLhctGXGVyZ0fvVH6dZqM5fnfwGwk0vBfs
-	52qCiitpIMVu+LzNQoztLDq/M7NV+ATIaAnb8z/IAqORDVAZ16kmXCvZ8dcGVeOahZibiE
-	a1m/8NOFqERZB7FHGHlS39Ai1c7ei7aWEPq7nQHf61czUqOk7XFUFy+S7NHMpz7uSLLg4b
-	VIVXuBVCQfHjXo3CFYLWbO4+IwyHITV8vrdFDdW+9ofTz8/CL1xDdP9ckW1kZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705324251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hWEMqJ3ZY8IoMhDyU06y+UtP311AunIjwISjvPisJoY=;
-	b=fo0RYHwomUHBXvSpZCiQ7cTaaIOTdLIz4OYN3ByVC9R65et59Xh8Z7uxNeXkMDXstmkJdE
-	4X7v0DliNivg0nCA==
-To: Pierre Gondois <pierre.gondois@arm.com>, Thomas Gleixner
- <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
- Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH] sched/idle: Prevent stopping the tick when there is no
- cpuidle driver
-In-Reply-To: <fe5038e1-e06b-41dd-9584-cbd992bef1fe@arm.com>
-References: <20231215130501.24542-1-anna-maria@linutronix.de>
- <c09fb78b-5bf9-4c0b-b93f-10fd19a4ab36@arm.com> <87ttnmiif9.fsf@somnus>
- <06a2561f-557b-4eaa-8f11-75883bbbaef9@arm.com> <87a5pag6q7.fsf@somnus>
- <d0f1617e-0088-4bd9-bea6-e89c63b0e2ae@arm.com> <87mstaioy6.ffs@tglx>
- <fe5038e1-e06b-41dd-9584-cbd992bef1fe@arm.com>
-Date: Mon, 15 Jan 2024 14:10:50 +0100
-Message-ID: <877ckad9np.fsf@somnus>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="qd5dpkiS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=z3BzOmqIUzMO6UAJIUQ8GAcKK4W9P4/Fhk70+J3UgU0=;
+	t=1705324423; x=1706534023; b=qd5dpkiSzAphXJFZXmns78MO5/1IaI6mRTWuzzw/sjPLt/t
+	G2HGM0iw9v3bfHHZ3DUVNVVLCKuEbOK/JpUUA05fGBw3LyKMhOXiLolTg/tiDhBYIEqhVW6tpeI4Y
+	CDE3l/toHQFh7KEIQO5+/vFjzRrON0QrmT8K3P5qZ8pgduMzvCVMq81e4OT7Kx6G+2UFVfPLBnAUz
+	waF/1zLQhtY8ZpdyHNS9ts8pd7JCQywXVfl6ABsLJau5PUBFjfwH2CTE7WReuVBJgZzpa2d5iDVgw
+	V1S9BRaDlGjOFEnDe/YxQXj5nT0XtDjqjlEvqQR1OIY+RBwos6wCGsrBUhUqAJPg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1rPMmT-00000003V7V-1PaZ;
+	Mon, 15 Jan 2024 14:13:33 +0100
+Message-ID: <26d364547d3bbb04800877e899cfebe0e1ec4dc0.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: mac80211: tx: Add __must_hold() annotation
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Kalle Valo <kvalo@kernel.org>, Brent Pappas <bpappas@pappasbrent.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>,  linux-wireless@vger.kernel.org,
+ netdev@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Mon, 15 Jan 2024 14:13:31 +0100
+In-Reply-To: <87sf31hhfp.fsf@kernel.org>
+References: <20240113011145.10888-2-bpappas@pappasbrent.com>
+	 <87sf31hhfp.fsf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-malware-bazaar: not-scanned
 
-Pierre Gondois <pierre.gondois@arm.com> writes:
+On Sat, 2024-01-13 at 08:32 +0200, Kalle Valo wrote:
+>=20
+> >  static void ieee80211_set_beacon_cntdwn(struct ieee80211_sub_if_data *=
+sdata,
+> >  					struct beacon_data *beacon,
+> >  					struct ieee80211_link_data *link)
+> > +	__must_hold(link)
+>=20
+> Oh, never seen __must_hold() before and looks very useful. So does this
+> work with RCU, mutexes and spinlocks?
+>=20
+> In case others are interested, here's the documentation I was able to fin=
+d:
+>=20
+> https://docs.kernel.org/dev-tools/sparse.html#using-sparse-for-lock-check=
+ing
+>=20
 
-> Hello Thomas,
->
-> On 1/12/24 15:52, Thomas Gleixner wrote:
->> On Fri, Jan 12 2024 at 14:39, Pierre Gondois wrote:
->>> On 1/12/24 11:56, Anna-Maria Behnsen wrote:
->>>> Pierre Gondois <pierre.gondois@arm.com> writes:
->>>>> I agree that the absence of cpuidle driver prevents from reaching deep
->>>>> idle states. FWIU, there is however still benefits in stopping the tick
->>>>> on such platform.
->>>>
->>>> What's the benefit?
->>>
->>> I did the following test:
->>> - on an arm64 Juno-r2 platform (2 big A-72 and 4 little A-53 CPUs)
->>> - booting with 'cpuidle.off=1'
->>> - using the energy counters of the platforms
->>>     (the counters measure energy for the whole cluster of big/little CPUs)
->>> - letting the platform idling during 10s
->>>
->>> So the energy consumption would be up:
->>> - ~6% for the big CPUs
->>> - ~10% for the litte CPUs
->> 
->> Fair enough, but what's the actual usecase?
->> 
->> NOHZ w/o cpuidle driver seems a rather academic exercise to me.
->
-> I thought Anna-Maria had a use-case for this.
-> I just wanted to point out that this patch could potentially
-> increase the energy consumption for her use-case, nothing more,
->
+Except it's not actually useful, and looks more useful than it is. IMHO
+it's actually more harmful than anything else.
 
-I saw tons of calls trying to stop the tick on a loaded system - which
-decreased performance. Deep sleep states were disabled (by accident) in
-the BIOS but NOHZ was enabled. So my proposal is to remove this
-unconditional call trying to stop the tick.
+One might even consider this patch a good example! The function
+ieee80211_set_beacon_cntdwn() is called from a number of places in this
+file, some of which acquire RCU critical section, and some of which
+acquire no locks nor RCU critical section at all. Most of them nest and
+are called in RCU.
 
-Thanks,
+However, there's basically no way to get sparse to warn on this. Even
+inserting a function
 
-        Anna-Maria
+void test(void);
+void test(void)
+{
+        ieee80211_set_beacon_cntdwn(NULL, NULL, NULL);
+}
+
+will not cause sparse to complain, where this *clearly* doesn't hold an
+locks.
+
+
+Also, as we (should) all know, the argument to __acquires(),
+__releases() and __must_check() is pretty much ignored. I tried to fix
+this in sparse many years ago, some code even got merged (and then
+reverted), and if the experience tells me anything then that it's pretty
+much not fixable.
+
+__acquires() and __releases() at least are useful for tracking that you
+don't have a mismatch, e.g. a function that __acquires() but then takes
+a lock in most paths but forgot one, for example. With __must_hold(),
+this really isn't the case.
+
+And then we could argue that at least it has a documentation effect, but
+... what does it even mean to "hold 'link'"? There isn't even a lock,
+mutex or otherwise, in the link. You can't "own" a reference to it, or
+anything like that. The closest thing in current kernels would be to
+maybe see if you have the wiphy mutex, but that's likely not the case in
+these paths and RCU was used to get to the link struct ...
+
+
+IOW, I find this lacking from an implementation/validation point of
+view, and lacking if not outright confusing from a documentation point
+of view. Much better to put something lockdep_assert_held() or similar
+into the right places.
+
+As for your comment about RCU in ath11k (which points back to this
+thread): I don't find
+
+	RCU_LOCKDEP_WARN(!rcu_read_lock_held());
+or
+	WARN_ON_ONCE(!rcu_read_lock_held());
+
+very persuasive, it's much better to have it checked with
+rcu_dereference_protected(), rcu_dereference_check(), the condition
+argument to list_for_each_rcu(), or (in the case of wiphy) our wrappers
+around these like wiphy_dereference(). I cannot think of any case where
+you'd want to ensure that some code is in an RCU critical section
+without it actually using RCU - and if it does you have
+rcu_dereference() and all those things that (a) check anyway, and also
+(b) serve as their own documentation.
+
+
+Anyway, long story short: I don't see value in this patch and won't be
+applying it unless somebody here can convince me otherwise, ideally
+addressing the concerns stated above.
+
+johannes
