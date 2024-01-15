@@ -1,86 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664455C97
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD005689;
+	Mon, 15 Jan 2024 08:25:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UUMqzTNz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705307052;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WdHL5Nw4L0E7LviK69bDEOS/TGajAce1+kECtONWdOQ=;
-	b=UUMqzTNzA8YwpfeQNOTcFeDejrxF1OHzZTHWnzmfjEDWEqQrdsCpa/3xsHB3dWzD4mcle3
-	SwQTtgqerLJsAPRy2iDsifopLt7UW6eV/9MpOl4LH2oC5CpvgDLIexoRG74kjNHYt7h1c0
-	/eKecx7THtQHjGUqAtmSaHnxCwdlFEA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-197-XVr_iVrEM9ipj_dSsMeN3A-1; Mon, 15 Jan 2024 03:24:10 -0500
-X-MC-Unique: XVr_iVrEM9ipj_dSsMeN3A-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40e4caa37f5so49445795e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 00:24:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705307049; x=1705911849;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WdHL5Nw4L0E7LviK69bDEOS/TGajAce1+kECtONWdOQ=;
-        b=lP48utkjT9WjFpoDBoMuGBIOlcxFusPRI4CmkZUSe5fql6biB6ENoxRsay55s2feOR
-         r++rH2l03bUb8aKih2uphjbL7Af4wC/RkI/btaf1WMa0Ouog0DTF3fon3PC5av4i+VIg
-         J367pOHLjA1dLaHN57LnKCkkvjrjZNtKBmPiqEpPh5owqJiVLWTFMNQdhclj/4xb9rTa
-         EEw/wRMoW+4SeoIWyf+q23OvmbTyM5lppJBZeAiSZuVIPjxRjq084rZPsVPIb/O9/0w+
-         Ar6dFNyLuL7Gu2mPDIqeUzGCcBWBfmDEF78JLYKzofuNvlfIuTG2SU4Fem5+Aa3sHw0+
-         b8AQ==
-X-Gm-Message-State: AOJu0YzHiC51WFXnIP4907tIEQp9/YQKumY90s6WTrmr4Gvnj8i6h9zg
-	dHIJD/veRkRsGjqr9kotwgl4Ya4v0HHRf7h0QPsGkMzQKLyB7RlhmKQNYyyYR4ok2lCLhceZDl9
-	z/UsBs8JssONPcUcKKdx6f31q3gH8Sbdn
-X-Received: by 2002:a7b:ce89:0:b0:40e:616b:50f with SMTP id q9-20020a7bce89000000b0040e616b050fmr2463777wmj.141.1705307049669;
-        Mon, 15 Jan 2024 00:24:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGBEbtq4O+FopQ6pQyQO1trt0NUo5+q0+USaIZPNgscLYIqA4FgDvQ2PPDGSn+Q3oE/+3Jcxg==
-X-Received: by 2002:a7b:ce89:0:b0:40e:616b:50f with SMTP id q9-20020a7bce89000000b0040e616b050fmr2463771wmj.141.1705307049365;
-        Mon, 15 Jan 2024 00:24:09 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id g21-20020a05600c311500b0040d30af488asm18874042wmo.40.2024.01.15.00.24.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 00:24:09 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, dri-devel@lists.freedesktop.org,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jingoo Han <jingoohan1@gmail.com>, Daniel Thompson
- <daniel.thompson@linaro.org>, Lee Jones <lee@kernel.org>, Helge Deller
- <deller@gmx.de>
-Subject: Re: [PATCH v1 3/4] backlight: hx8357: Make use of dev_err_probe()
-In-Reply-To: <20240114152759.1040563-4-andriy.shevchenko@linux.intel.com>
-References: <20240114152759.1040563-1-andriy.shevchenko@linux.intel.com>
- <20240114152759.1040563-4-andriy.shevchenko@linux.intel.com>
-Date: Mon, 15 Jan 2024 09:24:08 +0100
-Message-ID: <875xzvovh3.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CoV0R374"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BC49C433C7;
+	Mon, 15 Jan 2024 08:25:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705307133;
+	bh=bkFxuxf0iCghKC8GrzWqXKXAFsRRBXSZ7feexi45UVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CoV0R374tK5kCtzfve7eyQAekaInOpN0kUMbDADJ0KXk63eiqZTQu9MWzErWMYAfj
+	 BDp82RgAyoC0OgaHWM5EFeBKTwr8e+VuBEiW9BLrJAQoXyQcvdypB5Jg9rqF3Eto5u
+	 u+EbR/pWzZwUzdc53sIOnvkoHlbqKwwykR0GFpAgmNhCKrLV97kkbrFH0THj6m9hNd
+	 rlhyTBEwVAXw3ZeYbwAxM/EyfKlfjSXTiTQg5oBwZxiTqrTSdiuaD5tS8mwlRYdcK1
+	 J5IYOw8SdFTdWr6BorUsL3PvlYJxuPS7BKs7hxmNaGe84+JruinkUhmnF8916wcMt5
+	 vzHB0zIfM8/Ew==
+Date: Mon, 15 Jan 2024 09:25:30 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Andrew Davis <afd@ti.com>, Frank Binns <frank.binns@imgtec.com>, 
+	Donald Robson <donald.robson@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+	Adam Ford <aford173@gmail.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	=?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
+	Paul Cercueil <paul@crapouillou.net>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-omap@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: Re: [PATCH RFC v2 04/11] ARM: dts: omap4: Add device tree entry
+ for SGX GPU
+Message-ID: <vpcgccul53oibwoqb3barj3rjxoyskoldjyfvjdzmytic3tonm@wq4aqsenk7rp>
+References: <20240108183302.255055-1-afd@ti.com>
+ <20240108183302.255055-5-afd@ti.com>
+ <122DC5ED-2AA7-46A0-845F-083922458385@goldelico.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5bv4mdxrrdvnbudo"
+Content-Disposition: inline
+In-Reply-To: <122DC5ED-2AA7-46A0-845F-083922458385@goldelico.com>
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-> Simplify the error handling in probe function by switching from
-> dev_err() to dev_err_probe().
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+--5bv4mdxrrdvnbudo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Hi,
 
--- 
-Best regards,
+On Fri, Jan 12, 2024 at 06:33:58PM +0100, H. Nikolaus Schaller wrote:
+> > Am 08.01.2024 um 19:32 schrieb Andrew Davis <afd@ti.com>:
+> >=20
+> > Add SGX GPU device entry to base OMAP4 dtsi file.
+> >=20
+> > Signed-off-by: Andrew Davis <afd@ti.com>
+> > ---
+> > arch/arm/boot/dts/ti/omap/omap4.dtsi | 9 +++++----
+> > 1 file changed, 5 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/ti/omap/omap4.dtsi b/arch/arm/boot/dts/t=
+i/omap/omap4.dtsi
+> > index 2bbff9032be3e..559b2bfe4ca7c 100644
+> > --- a/arch/arm/boot/dts/ti/omap/omap4.dtsi
+> > +++ b/arch/arm/boot/dts/ti/omap/omap4.dtsi
+> > @@ -501,10 +501,11 @@ sgx_module: target-module@56000000 {
+> > #size-cells =3D <1>;
+> > ranges =3D <0 0x56000000 0x2000000>;
+> >=20
+> > - /*
+> > - * Closed source PowerVR driver, no child device
+> > - * binding or driver in mainline
+> > - */
+> > + gpu@0 {
+>=20
+> I wonder why we don't add a "gpu:" label here.
+>=20
+> Almost all other subsystem nodes have one (e.g. emif:, aes:, dss:, dsi:, =
+hdmi:, etc.),
+> obviously for convenience when using a .dtsi file.
+>=20
+> It would allow a board-specific DTS to easily add status =3D "disabled" t=
+o avoid driver
+> probing or disabling the GPU (e.g. if there is no display).
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+There's no reason to disable it in the DT: the hardware block would
+still be there and it's rendering to memory so it still could be useful.
 
+If there's no display on the board and you really don't want the GPU
+driver, then you can disable the driver or block the module loading, but
+it should be a distro / package / user decision, not a DT / kernel one
+still.
+
+Maxime
+
+--5bv4mdxrrdvnbudo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZaTr7AAKCRDj7w1vZxhR
+xSybAP96mNxOy9DrBryPZmmu4a4Y6AfuRKXr9+Uh2C3OhAPO3QEA1j3KoeAhpYrF
+0pDWtJkRFUHwyOTCz3HpiAeRG3RSqwM=
+=GRcK
+-----END PGP SIGNATURE-----
+
+--5bv4mdxrrdvnbudo--
