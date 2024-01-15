@@ -1,16 +1,16 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3357C18E2A
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 20:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC34418E2A;
+	Mon, 15 Jan 2024 20:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF7A82F4;
-	Mon, 15 Jan 2024 12:06:12 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6BC02F4;
+	Mon, 15 Jan 2024 12:06:52 -0800 (PST)
 Received: from [192.168.178.6] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 190513F73F;
-	Mon, 15 Jan 2024 12:05:23 -0800 (PST)
-Message-ID: <0880d81b-9c80-423c-95e6-2fe973e7d739@arm.com>
-Date: Mon, 15 Jan 2024 21:05:22 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AA713F73F;
+	Mon, 15 Jan 2024 12:06:03 -0800 (PST)
+Message-ID: <781c567a-5af1-414e-844f-7312dd8b70ff@arm.com>
+Date: Mon, 15 Jan 2024 21:06:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -18,55 +18,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] Scheduler changes for v6.8
+Subject: Re: [PATCH] sched/fair: Fix frequency selection for non invariant
+ case
 Content-Language: en-US
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Qais Yousef <qyousef@layalina.io>, Wyes Karny <wkarny@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>
-References: <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
- <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com>
- <20240114091240.xzdvqk75ifgfj5yx@wyes-pc> <ZaPC7o44lEswxOXp@vingu-book>
- <20240114123759.pjs7ctexcpc6pshl@wyes-pc>
- <CAKfTPtCz+95dR38c_u6_7JbkVt=czj5N2dKYVV-zk9dgbk16hw@mail.gmail.com>
- <20240114151250.5wfexq44o3mdm3nh@airbuntu>
- <CAKfTPtAMxiTbvAYav1JQw+MhjzDPCZDrMLL2JOfsc0GWp+FnOA@mail.gmail.com>
- <20240114195815.nes4bn53tc25djbh@airbuntu>
- <CAKfTPtCGgJiFDrZYpynCiHBnQx48A9RsAY9-6Hshduo4ymGJLQ@mail.gmail.com>
- <20240115120915.fukpcdumntdsllwi@airbuntu>
- <CAKfTPtAMacH4hKLyttLuQJjzc=D4m864MFaEEwZLG4K8RKTDYA@mail.gmail.com>
- <dfde5b4f-0d5e-49b6-a787-0766eff23f91@arm.com>
- <CAKfTPtB72Oa8XvH_xRFiKy+bfyEKUMdndKphFAD3dixePBUohQ@mail.gmail.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, wkarny@gmail.com, torvalds@linux-foundation.org,
+ qyousef@layalina.io, tglx@linutronix.de, rafael@kernel.org,
+ viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+References: <20240114183600.135316-1-vincent.guittot@linaro.org>
 From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-In-Reply-To: <CAKfTPtB72Oa8XvH_xRFiKy+bfyEKUMdndKphFAD3dixePBUohQ@mail.gmail.com>
+In-Reply-To: <20240114183600.135316-1-vincent.guittot@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 15/01/2024 16:26, Vincent Guittot wrote:
-> On Mon, 15 Jan 2024 at 15:03, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>
->> On 15/01/2024 14:26, Vincent Guittot wrote:
->>> On Mon, 15 Jan 2024 at 13:09, Qais Yousef <qyousef@layalina.io> wrote:
->>>>
->>>> On 01/15/24 09:21, Vincent Guittot wrote:
+On 14/01/2024 19:36, Vincent Guittot wrote:
+> When frequency invariance is not enabled, get_capacity_ref_freq(policy)
+> returns the current frequency and the performance margin applied by
+> map_util_perf(), enabled the utilization to go above the maximum compute
+> capacity and to select a higher frequency than the current one.
+> 
+> The performance margin is now applied earlier in the path to take into
+> account some utilization clampings and we can't get an utilization higher
+> than the maximum compute capacity.
+> 
+> We must use a frequency above the current frequency to get a chance to
+> select a higher OPP when the current one becomes fully used. Apply
+> the same margin and returns a frequency 25% higher than the current one in
+> order to switch to the next OPP before we fully use the cpu at the current
+> one.
+> 
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Closes: https://lore.kernel.org/lkml/CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com/
+> Reported-by: Wyes Karny <wkarny@gmail.com>
+> Closes: https://lore.kernel.org/lkml/20240114091240.xzdvqk75ifgfj5yx@wyes-pc/
+> Fixes: 9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor performance estimation")
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Tested-by: Wyes Karny <wkarny@gmail.com>
+> ---
+>  kernel/sched/cpufreq_schedutil.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> index 95c3c097083e..d12e95d30e2e 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -133,7 +133,11 @@ unsigned long get_capacity_ref_freq(struct cpufreq_policy *policy)
+>  	if (arch_scale_freq_invariant())
+>  		return policy->cpuinfo.max_freq;
+>  
+> -	return policy->cur;
+> +	/*
+> +	 * Apply a 25% margin so that we select a higher frequency than
+> +	 * the current one before the CPU is full busy
+> +	 */
+> +	return policy->cur + (policy->cur >> 2);
+>  }
+>  
+>  /**
 
-[...]
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 
-> Now, util can't be higher than max to handle clamping use cases
-> whereas it could be the case before. The jump to next OPP was
-> previously done with util being higher than max and it's now done with
-> freq being higher than policy->cur
-
-Ah, OK:
-
-  util = map_util_perf(util)     <- (1) util *= 1.25
-
-in the old code was doing this. And you do this now via frequency for
-the !freq_inv case. I just saw that you already mention this in the
-patch header of:
-https://lkml.kernel.org/r/20240114183600.135316-1-vincent.guittot@linaro.org
+(on Intel Xeon CPU E5-2690 v2 with frequency invariance disabled)
