@@ -1,152 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C0DF51E;
-	Mon, 15 Jan 2024 08:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC50C8EA;
+	Mon, 15 Jan 2024 08:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goldelico.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MvDD6KWa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705308954; x=1736844954;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zPtD/bN19IJuSWVPo1+D4i+VRget/n6bfsyISYsUZb4=;
-  b=MvDD6KWaw4uQPK8CNQK29H1W8IzuskOhUUmXvsyMY3xw8mi9K2k4zlpS
-   wIDJF850EqiWfrmgCsPStLaGIHEFCCS5G3hGdi5Zm/+WEjIQZ699CbzgJ
-   IL+KiShoydLIeTGg1VBLvGFDHizd5tliWDxKMexAhAmmnkbP2z1ttjRlL
-   GJ0/T0L+22KIN9ayTDfsULY+N82v9nVZeXIstXU7RGL7h3SgDtlXjsybq
-   emimSDVPdeuQbGhslC7OGkpcpNBPogfPqfhVYTjne9eFrW+0ZZIWTajjn
-   JZSFJWmTvlbCSXee/ct/ypggpwgR82rVMZcu9rCEImshtziXHPXE/AFDx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="485728197"
-X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
-   d="scan'208";a="485728197"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 00:55:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="853935196"
-X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
-   d="scan'208";a="853935196"
-Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Jan 2024 00:55:51 -0800
-From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-To: netdev@vger.kernel.org
-Cc: vadim.fedorenko@linux.dev,
-	jiri@resnulli.us,
-	davem@davemloft.net,
-	milena.olech@intel.com,
-	linux-kernel@vger.kernel.org,
-	pabeni@redhat.com,
-	kuba@kernel.org,
-	mschmidt@redhat.com,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jan Glaza <jan.glaza@intel.com>
-Subject: [PATCH net v3 3/3] dpll: fix userspace availability of pins
-Date: Mon, 15 Jan 2024 09:52:41 +0100
-Message-Id: <20240115085241.312144-4-arkadiusz.kubalewski@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20240115085241.312144-1-arkadiusz.kubalewski@intel.com>
-References: <20240115085241.312144-1-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="eSo9RdXW";
+	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="pFlSZHjw"
+ARC-Seal: i=1; a=rsa-sha256; t=1705308912; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=qjzfTZXIn8ULyATbJ8kYws4bzV++on2FpfW1SqbtHT2ZnlgpuuvjMFc9zWdYkSUb1P
+    pflMhVIuUbCfLuoxbfOdW/zf8sM4TwYDjmW3ythMRZUO8lnVMlOM+QZSMHstRbG8VtiX
+    5pwr2BiVJ8tdtG3poAmvrV+xsIuYkRT1GgmC8BDbXpdWsN0ctXi7pD4TNEpj/lq2pZtL
+    k5pdszBql0UT/kPieggXIZvTKJN+RftG6PAfZYMvuyDyo1qhrOsV6EbbV3/PajMnlMUp
+    1YUs2dJHnFqWnbil9Jo1DCF5ZxyOlev+0ttwdR9LtJTWIkOeqAavF9AGa1aW9v9FJ8+r
+    UYYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1705308912;
+    s=strato-dkim-0002; d=strato.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=yHFJRaGiqBFJv2kzsrvLiyk/a/j3+Epn1Hl4IwAPpOQ=;
+    b=FczWUnwFJvS7KFS7oNsI/m5tBh2F7SkhYobWhH96170UEzMMHAY7/a2uyfmRbvRKow
+    XxzFEyTyBSOpP3cF9pfgWkeza1nyq9zf9oi94YsTKyXshRdfn0d2e1F+xcLv8awnUM+t
+    23KGqjcyo8asdDAHzV7uXyl/kvjTh+b7fZuuWlVKtZu1rjuGlDcrRzDinWOIgoWMA5Wj
+    BjA/4lR6aUUN4OyCAwPXkzDxTN3a2Q2m2k5Q1wNMeAa9JuH9RN0wdEAwdz/qZhjKuvPI
+    3BU/3b5PpiRq+EPUwQ3qjVOGVG+kh3rXnC5BHkVFSwaAoihtAP+/XoV4p90kDDcSAdoh
+    GEiA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1705308912;
+    s=strato-dkim-0002; d=goldelico.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=yHFJRaGiqBFJv2kzsrvLiyk/a/j3+Epn1Hl4IwAPpOQ=;
+    b=eSo9RdXWhAdoaMENfvhNPTzvKpEwOCUl0YycnoU2xzRMAOQMB9qGX0yeiCQFmhzBUq
+    wtqDF7H9q9nFpN3AhXoAtzXmn353mljOaUrGVy5EQHo30O7NtvmPjMuX37RJgZbC6sND
+    fRtz6wn5n3MdFHaakYwZD88U4bjAkBC5emYMKMDFoqqzbgcrbDVGevUornxZP935h3Cu
+    tv41U+52zsH5KQm3PgvBNVFAjwQ7rqiUTmOaI152R9JDBW8y9aOthnrXVhPSOrkEfVnn
+    LjPFWcJGYSWQ9UEoWZWcV1FktKs5lSlXM1XvdZO0b1hLY5YrsGsr5UvkO108hZlxyai4
+    634A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1705308912;
+    s=strato-dkim-0003; d=goldelico.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=yHFJRaGiqBFJv2kzsrvLiyk/a/j3+Epn1Hl4IwAPpOQ=;
+    b=pFlSZHjwt8Te0l07++VZwoZT0mvrVr31djwxtUJKVo9l8cKGGgl9Ds9Oo6Q5eOqrsf
+    5kYGQb7B3DxK7iUUj3Bw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Apz9PSN6LgsXcGZhzY="
+Received: from smtpclient.apple
+    by smtp.strato.de (RZmta 49.10.2 DYNA|AUTH)
+    with ESMTPSA id dbe64400F8tBUDl
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+	(Client did not present a certificate);
+    Mon, 15 Jan 2024 09:55:11 +0100 (CET)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
+Subject: Re: [PATCH RFC v2 04/11] ARM: dts: omap4: Add device tree entry for
+ SGX GPU
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <vpcgccul53oibwoqb3barj3rjxoyskoldjyfvjdzmytic3tonm@wq4aqsenk7rp>
+Date: Mon, 15 Jan 2024 09:55:00 +0100
+Cc: Andrew Davis <afd@ti.com>,
+ Frank Binns <frank.binns@imgtec.com>,
+ Donald Robson <donald.robson@imgtec.com>,
+ Matt Coster <matt.coster@imgtec.com>,
+ Adam Ford <aford173@gmail.com>,
+ Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+ Tony Lindgren <tony@atomide.com>,
+ Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ Tero Kristo <kristo@kernel.org>,
+ Paul Cercueil <paul@crapouillou.net>,
+ dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev,
+ linux-omap@vger.kernel.org,
+ linux-mips@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7BC64F03-A4DF-411F-9B6F-6BCA436D9B50@goldelico.com>
+References: <20240108183302.255055-1-afd@ti.com>
+ <20240108183302.255055-5-afd@ti.com>
+ <122DC5ED-2AA7-46A0-845F-083922458385@goldelico.com>
+ <vpcgccul53oibwoqb3barj3rjxoyskoldjyfvjdzmytic3tonm@wq4aqsenk7rp>
+To: Maxime Ripard <mripard@kernel.org>
+X-Mailer: Apple Mail (2.3774.300.61.1.2)
 
-If parent pin was unregistered but child pin was not, the userspace
-would see the "zombie" pins - the ones that were registered with
-a parent pin (dpll_pin_on_pin_register(..)).
-Technically those are not available - as there is no dpll device in the
-system. Do not dump those pins and prevent userspace from any
-interaction with them. Provide a unified function to determine if the
-pin is available and use it before acting/responding for user requests.
+Hi,
 
-Fixes: 9431063ad323 ("dpll: core: Add DPLL framework base functions")
-Fixes: 9d71b54b65b1 ("dpll: netlink: Add DPLL framework base functions")
-Reviewed-by: Jan Glaza <jan.glaza@intel.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
----
-v3:
-- introduce separated function to determine pin availability
-- move check for pin availablity to dpll_pin_pre_doit(..)
-- check if pin available within pin-id-get flow
-- rename patch title
+> Am 15.01.2024 um 09:25 schrieb Maxime Ripard <mripard@kernel.org>:
+>=20
+> Hi,
+>=20
+> On Fri, Jan 12, 2024 at 06:33:58PM +0100, H. Nikolaus Schaller wrote:
+>>> Am 08.01.2024 um 19:32 schrieb Andrew Davis <afd@ti.com>:
+>>>=20
+>>> Add SGX GPU device entry to base OMAP4 dtsi file.
+>>>=20
+>>> Signed-off-by: Andrew Davis <afd@ti.com>
+>>> ---
+>>> arch/arm/boot/dts/ti/omap/omap4.dtsi | 9 +++++----
+>>> 1 file changed, 5 insertions(+), 4 deletions(-)
+>>>=20
+>>> diff --git a/arch/arm/boot/dts/ti/omap/omap4.dtsi =
+b/arch/arm/boot/dts/ti/omap/omap4.dtsi
+>>> index 2bbff9032be3e..559b2bfe4ca7c 100644
+>>> --- a/arch/arm/boot/dts/ti/omap/omap4.dtsi
+>>> +++ b/arch/arm/boot/dts/ti/omap/omap4.dtsi
+>>> @@ -501,10 +501,11 @@ sgx_module: target-module@56000000 {
+>>> #size-cells =3D <1>;
+>>> ranges =3D <0 0x56000000 0x2000000>;
+>>>=20
+>>> - /*
+>>> - * Closed source PowerVR driver, no child device
+>>> - * binding or driver in mainline
+>>> - */
+>>> + gpu@0 {
+>>=20
+>> I wonder why we don't add a "gpu:" label here.
+>>=20
+>> Almost all other subsystem nodes have one (e.g. emif:, aes:, dss:, =
+dsi:, hdmi:, etc.),
+>> obviously for convenience when using a .dtsi file.
+>>=20
+>> It would allow a board-specific DTS to easily add status =3D =
+"disabled" to avoid driver
+>> probing or disabling the GPU (e.g. if there is no display).
+>=20
+> There's no reason to disable it in the DT: the hardware block would
+> still be there and it's rendering to memory so it still could be =
+useful.
 
- drivers/dpll/dpll_netlink.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+Well, if you know that the board does not have a dm3730 but a dm3725 =
+without
+GPU it is better to disable the GPU completely instead of loading the =
+driver
+and make it detect by some internal bits that it has no GPU on the SoC.
 
-diff --git a/drivers/dpll/dpll_netlink.c b/drivers/dpll/dpll_netlink.c
-index 108c002537e6..7cc99d627942 100644
---- a/drivers/dpll/dpll_netlink.c
-+++ b/drivers/dpll/dpll_netlink.c
-@@ -525,6 +525,24 @@ __dpll_device_change_ntf(struct dpll_device *dpll)
- 	return dpll_device_event_send(DPLL_CMD_DEVICE_CHANGE_NTF, dpll);
- }
- 
-+static bool dpll_pin_available(struct dpll_pin *pin)
-+{
-+	struct dpll_pin_ref *par_ref;
-+	unsigned long i;
-+
-+	if (!xa_get_mark(&dpll_pin_xa, pin->id, DPLL_REGISTERED))
-+		return false;
-+	xa_for_each(&pin->parent_refs, i, par_ref)
-+		if (xa_get_mark(&dpll_pin_xa, par_ref->pin->id,
-+				DPLL_REGISTERED))
-+			return true;
-+	xa_for_each(&pin->dpll_refs, i, par_ref)
-+		if (xa_get_mark(&dpll_device_xa, par_ref->dpll->id,
-+				DPLL_REGISTERED))
-+			return true;
-+	return false;
-+}
-+
- /**
-  * dpll_device_change_ntf - notify that the dpll device has been changed
-  * @dpll: registered dpll pointer
-@@ -551,7 +569,7 @@ dpll_pin_event_send(enum dpll_cmd event, struct dpll_pin *pin)
- 	int ret = -ENOMEM;
- 	void *hdr;
- 
--	if (!xa_get_mark(&dpll_pin_xa, pin->id, DPLL_REGISTERED))
-+	if (!dpll_pin_available(pin))
- 		return -ENODEV;
- 
- 	msg = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
-@@ -1102,6 +1120,10 @@ int dpll_nl_pin_id_get_doit(struct sk_buff *skb, struct genl_info *info)
- 	}
- 	pin = dpll_pin_find_from_nlattr(info);
- 	if (!IS_ERR(pin)) {
-+		if (!dpll_pin_available(pin)) {
-+			nlmsg_free(msg);
-+			return -ENODEV;
-+		}
- 		ret = dpll_msg_add_pin_handle(msg, pin);
- 		if (ret) {
- 			nlmsg_free(msg);
-@@ -1151,6 +1173,8 @@ int dpll_nl_pin_get_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
- 
- 	xa_for_each_marked_start(&dpll_pin_xa, i, pin, DPLL_REGISTERED,
- 				 ctx->idx) {
-+		if (!dpll_pin_available(pin))
-+			continue;
- 		hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
- 				  cb->nlh->nlmsg_seq,
- 				  &dpll_nl_family, NLM_F_MULTI,
-@@ -1413,7 +1437,8 @@ int dpll_pin_pre_doit(const struct genl_split_ops *ops, struct sk_buff *skb,
- 	}
- 	info->user_ptr[0] = xa_load(&dpll_pin_xa,
- 				    nla_get_u32(info->attrs[DPLL_A_PIN_ID]));
--	if (!info->user_ptr[0]) {
-+	if (!info->user_ptr[0] ||
-+	    !dpll_pin_available(info->user_ptr[0])) {
- 		NL_SET_ERR_MSG(info->extack, "pin not found");
- 		ret = -ENODEV;
- 		goto unlock_dev;
--- 
-2.38.1
+> If there's no display on the board and you really don't want the GPU
+> driver, then you can disable the driver or block the module loading, =
+but
+> it should be a distro / package / user decision, not a DT / kernel one
+> still.
+
+The same holds for aes: dss: dsi: hdmi: etc. If they are not used by =
+some
+board file, they don't change a single bit of the DTB [1] which IMHO =
+would
+be of reasonable concern to question additional labels.
+
+BR and thanks,
+Nikolaus
+
+[1] =
+https://devicetree-specification.readthedocs.io/en/stable/source-language.=
+html
+"Labels are only used in the devicetree source format and are not =
+encoded into the
+DTB binary."
 
