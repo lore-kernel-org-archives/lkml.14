@@ -1,127 +1,83 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EF9F9D3;
-	Mon, 15 Jan 2024 09:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="kZq7oIgp"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 367D240E016C;
-	Mon, 15 Jan 2024 09:41:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id gbcYK8KndIZR; Mon, 15 Jan 2024 09:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1705311716; bh=XBIKxlNsZUJPRPkrxlOi1GzgwTad37xoV2mYozz4U4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kZq7oIgpoPYNJEFRmQ9JE48d2cPjKOwShniYdb8svdbjNuXaCXgkI4vm7t9jN3tk3
-	 0SyquZx6f4o+581UG8SQEF/a5JXBrhlewfKVgs0DWSPD7Xhu3x7KPorhxYHOrW/ZkW
-	 /WkS4JM23S0qQa6J6k/PMJ9/UFQC3c3EAtxAAudXnxy2OfmMr6GryU5ieNcRB0VUqF
-	 Kk56gR6BWxDGFlGlKPXEkv3AS1x2RjKgRjF4rN71FCEKHAR7JQV8a9ePmr0epXg4nr
-	 +K8OUef+fdVPdl9dDUwxnKAIEtAaEqwy5hTxtLcpu+fZI3TyrfY91wAV77MqGaQJX+
-	 I9TV8Vr7MDR6A+XR2gzKocxtwZwUaUPYPtI71n52jydUwNRUFbuLfcJmGPHLs6vmCc
-	 GT15I5hrWJ5oS44BqXuvuQz7Gn+RxvthADl5Xqp7KraalD4OGnhM3sIkHtrlPoA+SP
-	 ElIlzTj3x2wO4UdsT9YEgQcRKXep+r2BCZohCYiRrppaZJ8uagtla5VglupvrYmOSB
-	 Uz8ExwhjAP5m15h1O0Q7sQH1RYxDEBqFCXtAiJLE2g5DCXhPEhpyNgmdJIGvMFTeRG
-	 6p+xjuV3jBjkoXBYS7fHf89rG4lL2UmaOvBIU5i6yOHaa7F3eHhKV/VzYkAGlTfiYe
-	 I7Bqk/56DF97nG5LMUix8SaU=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AC6A940E01A9;
-	Mon, 15 Jan 2024 09:41:19 +0000 (UTC)
-Date: Mon, 15 Jan 2024 10:41:12 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Michael Roth <michael.roth@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
-	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
-	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com,
-	"liam.merwick@oracle.com Brijesh Singh" <brijesh.singh@amd.com>
-Subject: Re: [PATCH v1 12/26] crypto: ccp: Define the SEV-SNP commands
-Message-ID: <20240115094103.GFZaT9r4zX8V_ax8lv@fat_crate.local>
-References: <20231230161954.569267-1-michael.roth@amd.com>
- <20231230161954.569267-13-michael.roth@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0EC1E861
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 09:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: e4e15a98d98647e5a3b516dd4e08d058-20240115
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:06f7089b-bbb1-4f97-aadc-650fd0a90c24,IP:20,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:25
+X-CID-INFO: VERSION:1.1.35,REQID:06f7089b-bbb1-4f97-aadc-650fd0a90c24,IP:20,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:25
+X-CID-META: VersionHash:5d391d7,CLOUDID:a7eb5c7f-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:240115174336TP554N1E,BulkQuantity:0,Recheck:0,SF:19|44|66|38|24|17|1
+	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
+X-UUID: e4e15a98d98647e5a3b516dd4e08d058-20240115
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1917306438; Mon, 15 Jan 2024 17:43:36 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id C29D3E000EB9;
+	Mon, 15 Jan 2024 17:43:35 +0800 (CST)
+X-ns-mid: postfix-65A4FE47-62623527
+Received: from kernel.. (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id D7B87E000EB9;
+	Mon, 15 Jan 2024 17:43:31 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: christophe.leroy@csgroup.eu,
+	mpe@ellerman.id.au,
+	npiggin@gmail.com,
+	aneesh.kumar@kernel.org,
+	naveen.n.rao@linux.ibm.com
+Cc: linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>,
+	Kunwu Chan <kunwu.chan@hotmail.com>
+Subject: [PATCH] powerpc/83xx: Add a null pointer check to mcu_gpiochip_add
+Date: Mon, 15 Jan 2024 17:43:30 +0800
+Message-Id: <20240115094330.33014-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231230161954.569267-13-michael.roth@amd.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 30, 2023 at 10:19:40AM -0600, Michael Roth wrote:
-> From: Brijesh Singh <brijesh.singh@amd.com>
-> 
-> AMD introduced the next generation of SEV called SEV-SNP (Secure Nested
-> Paging). SEV-SNP builds upon existing SEV and SEV-ES functionality
-> while adding new hardware security protection.
-> 
-> Define the commands and structures used to communicate with the AMD-SP
-> when creating and managing the SEV-SNP guests. The SEV-SNP firmware spec
-> is available at developer.amd.com/sev.
-> 
-> Co-developed-by: Ashish Kalra <ashish.kalra@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> [mdr: update SNP command list and SNP status struct based on current
->       spec, use C99 flexible arrays, fix kernel-doc issues]
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> ---
->  drivers/crypto/ccp/sev-dev.c |  16 +++
->  include/linux/psp-sev.h      | 264 +++++++++++++++++++++++++++++++++++
->  include/uapi/linux/psp-sev.h |  56 ++++++++
->  3 files changed, 336 insertions(+)
+kasprintf() returns a pointer to dynamically allocated memory
+which can be NULL upon failure. Ensure the allocation was successful
+by checking the pointer validity.
 
-More ignored feedback:
+Cc: Kunwu Chan <kunwu.chan@hotmail.com>
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-https://lore.kernel.org/r/20231124143630.GKZWC07hjqxkf60ni4@fat_crate.local
+diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerp=
+c/platforms/83xx/mcu_mpc8349emitx.c
+index 4d8fa9ed1a67..d1ae66eaa687 100644
+--- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
++++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+@@ -120,6 +120,8 @@ static int mcu_gpiochip_add(struct mcu *mcu)
+=20
+ 	gc->owner =3D THIS_MODULE;
+ 	gc->label =3D kasprintf(GFP_KERNEL, "%pfw", dev_fwnode(dev));
++	if (!gc->label)
++		return -ENOMEM;
+ 	gc->can_sleep =3D 1;
+ 	gc->ngpio =3D MCU_NUM_GPIO;
+ 	gc->base =3D -1;
+--=20
+2.39.2
 
-Lemme send it to you as a diff then - it'll work then perhaps.
-
-diff --git a/include/linux/psp-sev.h b/include/linux/psp-sev.h
-index 983d314b5ff5..1a76b5297f03 100644
---- a/include/linux/psp-sev.h
-+++ b/include/linux/psp-sev.h
-@@ -104,7 +104,7 @@ enum sev_cmd {
- 	SEV_CMD_SNP_PAGE_RECLAIM	= 0x0C7,
- 	SEV_CMD_SNP_PAGE_UNSMASH	= 0x0C8,
- 	SEV_CMD_SNP_CONFIG		= 0x0C9,
--	SEV_CMD_SNP_DOWNLOAD_FIRMWARE_EX	= 0x0CA,
-+	SEV_CMD_SNP_DOWNLOAD_FIRMWARE_EX = 0x0CA,
- 	SEV_CMD_SNP_COMMIT		= 0x0CB,
- 	SEV_CMD_SNP_VLEK_LOAD		= 0x0CD,
- 
-@@ -624,7 +624,8 @@ enum {
-  * @gctx_paddr: system physical address of guest context page
-  * @page_size: page size 0 indicates 4K and 1 indicates 2MB page
-  * @page_type: encoded page type
-- * @imi_page: indicates that this page is part of the IMI of the guest
-+ * @imi_page: indicates that this page is part of the IMI (Incoming
-+ * Migration Image) of the guest
-  * @rsvd: reserved
-  * @rsvd2: reserved
-  * @address: system physical address of destination page to encrypt
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
