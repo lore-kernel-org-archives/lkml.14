@@ -1,172 +1,126 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4864B19BD0;
-	Mon, 15 Jan 2024 20:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009EF1A712;
+	Mon, 15 Jan 2024 20:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l59JS8lA"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40e7fb927a3so7179905e9.3;
-        Mon, 15 Jan 2024 12:02:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHu8vTJP"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a28cc85e6b5so1085481166b.1;
+        Mon, 15 Jan 2024 12:02:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705348950; x=1705953750; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CLDQhSu6kRqZGxiyHOr+RblF6k83oiX6rLk/meipQMA=;
-        b=l59JS8lApJCODbBoqEOcoRV5jGa+PDeEsfrIb16WrVFYr+jiukgWb7rOZOut6mEhrz
-         PKGvrcGwwOR9rGI5rVwZuqM72Tkkh+ubNZmphZc63ZqlxoT3RNgzHTTihzHppcZtmz/8
-         WyTggJTHrbIGX5H2dzTVeomUd/tz1rowMpvw43xQBEdhg+QdtxFU/zafZNaWE9jIHX6B
-         rofYtE4IRQmxZL5jsf3UHFTvq9M7ZGZ+20WE2o/TGkOcfvzqNvxaYu7RhXRn1i/Mhwed
-         hvf7kfA3eoApvUEBqOMLwLuuUnL7w1KuBsSMCezlpdtPVpo7asNC7yBxrZfqC+n49tY2
-         IA7A==
+        d=gmail.com; s=20230601; t=1705348959; x=1705953759; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fv9XBLOpYPAupVH4VJlqIAgoTeB9qFyrwGApny5s9n4=;
+        b=PHu8vTJPRE26Zt5pCNgDk+i5OJ1KW/fJ2GIvRZ5MTnZj3EQRhmOVYmcGhcLXD4lZ6K
+         bRq/X4YELInOL3Th7K+zQXsMrVBjuxuWjofZOVQTB22J0dAAhQpxXj2pJSXDb5b092fn
+         eUjp4sOqbzbN/Vx85hSZbAOtP6YF48oTg5gaTulmZyoLKra6zoLFE21qOuNo2B0TQzJx
+         l12pRoWPmfLDURSf71+RSgU8K4ndWBMIHDNWUE4HuTb+FFh2eOJE94FSjWd6vXhWc/NQ
+         5nctcAi/tznlnUJQXFyhj7sha0tdPNS2jDuZ1geaHO/P6TUVxieuWwGJSOLIxhKxvADk
+         GKDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705348950; x=1705953750;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705348959; x=1705953759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CLDQhSu6kRqZGxiyHOr+RblF6k83oiX6rLk/meipQMA=;
-        b=vM9HNpJOvvxZdK8qAe9prMuV/mvo/7okeTN6Zl7M+JPC2s1XGmGKG/yr1g4QLwST4+
-         8DaHi3Zfxb4wf+WRDUg4x35NYM4/n5Fabc14K3vwqJQUem/VdC5lSBnMOUznW21jgsxp
-         tOSrekhEC3BAoIOkaVylb8VHSnMQlkjbkxeZ/+THHlhs7WK/yEryMbVarDErn1swEpXN
-         8XNlTIfMtW3YD2GZXBrFDExBdJ689Oe4HwER9BY0IoFNqtuxO43jIJ4ScBpgXccrPwRj
-         1I3iy7zDABtQGNqNSEHTcs+1uMe5cfhHoeTFjdSUhzWCxrR4fFpHzvrKc6GMq6oRIL86
-         UjWA==
-X-Gm-Message-State: AOJu0YwQuygBcztcumN9EsVIBffTchV2Vrj5V6R9V6UDXbFkPfOIYpqh
-	ULNXIC2BUyNND65o+AYn3DE=
-X-Google-Smtp-Source: AGHT+IEg9dB8L9AYCo/z7kn5emLXT7SlnL7CIsoc5wE/5qgGhti8R5kfVc/XaW7XvHhkX+fmtDK/Yw==
-X-Received: by 2002:a05:600c:4d04:b0:40e:62aa:88dc with SMTP id u4-20020a05600c4d0400b0040e62aa88dcmr3774577wmp.127.1705348950476;
-        Mon, 15 Jan 2024 12:02:30 -0800 (PST)
-Received: from [127.0.1.1] (2a02-8389-41cf-e200-bf32-c470-1874-c1ad.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:bf32:c470:1874:c1ad])
-        by smtp.gmail.com with ESMTPSA id m26-20020a7bca5a000000b0040e54381a85sm16377924wml.26.2024.01.15.12.02.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 12:02:30 -0800 (PST)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Mon, 15 Jan 2024 21:02:24 +0100
-Subject: [PATCH v5 4/5] dt-bindings: hwmon: Add Amphenol ChipCap 2
+        bh=fv9XBLOpYPAupVH4VJlqIAgoTeB9qFyrwGApny5s9n4=;
+        b=UgguxIvuIzHcLGqM29HpTPMSjJw+D5b2i6z92ljHY57svtsDwOYMgBalFBYehURJkS
+         UX8q0+C2SomysYELY38PXxTqg0jwep4G4wmjBLWRk4/lOkmQJZTTVgwYmOISb2NWS3Ij
+         e1PvHzeRRPgQumHaFHekMtdOrnhMT0n5U97+BLVNBIrauCb4LxLK414lhCkuDg9vsYb9
+         PRGgUNn6IHabaEj9A+xlzwHJD2HDiApEegTMZoSlyrd9FTNcx1BmXc+JnzD+0Q+kHcj6
+         t3vIU7bZkouM7WW72lYyZcJjIboCWfSvwB4+ljF/2QHEidgG6Bga1lvZ3pSHSWpRgPLA
+         CwSA==
+X-Gm-Message-State: AOJu0YwmNMapzYQDDzrao56vlmcVHzTi8rCaA7C9oaqk+qdrTN63XWoY
+	WfIAjskIJ3VmsxtAdIHM5/8fV6X4jQm09j2YYeA=
+X-Google-Smtp-Source: AGHT+IFGtkui4lng3GSiRYoHvFlRcvlu7L0C2EI9PWrxqxFGpBJHPQ/cYp9p96ExxQEDsVPdlsgZU/bzCs9OSzxXglE=
+X-Received: by 2002:a17:906:b053:b0:a2a:7404:cf5d with SMTP id
+ bj19-20020a170906b05300b00a2a7404cf5dmr2017687ejb.114.1705348959235; Mon, 15
+ Jan 2024 12:02:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240115-topic-chipcap2-v5-4-0cc7a15aeece@gmail.com>
-References: <20240115-topic-chipcap2-v5-0-0cc7a15aeece@gmail.com>
-In-Reply-To: <20240115-topic-chipcap2-v5-0-0cc7a15aeece@gmail.com>
-To: Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, 
- Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
- linux-doc@vger.kernel.org, Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
- Conor Dooley <conor.dooley@microchip.com>
-X-Mailer: b4 0.13-dev-4e032
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705348943; l=2700;
- i=javier.carrasco.cruz@gmail.com; s=20230509; h=from:subject:message-id;
- bh=fNJt6Q/D/Alnf1fohB1Z7SdgiB8iUvgMdRCGPeqchec=;
- b=XdDpcmpsJ50SV7kmMdYGdHgD6IJrKn8r9j8aVtHF5NGWl6Y702Xak+EULeeggkgY9BxcBIMzd
- WwmzBjiFAa7Ddmqgj9RkoiaHsC1A3AH27izvMvAw8oqdszvg2CX8n0S
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com> <20240102-j7200-pcie-s2r-v1-2-84e55da52400@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v1-2-84e55da52400@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 15 Jan 2024 22:02:01 +0200
+Message-ID: <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
+Subject: Re: [PATCH 02/14] pinctrl: pinctrl-single: move suspend/resume to suspend_noirq/resume_noirq
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add device tree bindings and an example for the ChipCap 2 humidity
-and temperature sensor.
+On Mon, Jan 15, 2024 at 6:16=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+>
+> The goal is to extend the active period of pinctrl.
+> Some devices may need active pinctrl after suspend and/or before resume.
+> So move suspend/resume to suspend_noirq/resume_noirq to have active
+> pinctrl until suspend_noirq (included), and from resume_noirq
+> (included).
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
- .../bindings/hwmon/amphenol,chipcap2.yaml          | 77 ++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+->...callback...()
+(Same comment I have given for the first patch)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/amphenol,chipcap2.yaml b/Documentation/devicetree/bindings/hwmon/amphenol,chipcap2.yaml
-new file mode 100644
-index 000000000000..17351fdbefce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/amphenol,chipcap2.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/amphenol,chipcap2.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChipCap 2 humidity and temperature iio sensor
-+
-+maintainers:
-+  - Javier Carrasco <javier.carrasco.cruz@gmail.com>
-+
-+description: |
-+  Relative humidity and temperature sensor on I2C bus.
-+
-+  Datasheets:
-+    https://www.amphenol-sensors.com/en/telaire/humidity/527-humidity-sensors/3095-chipcap-2
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: amphenol,cc2d23
-+      - items:
-+          - enum:
-+              - amphenol,cc2d23s
-+              - amphenol,cc2d25
-+              - amphenol,cc2d25s
-+              - amphenol,cc2d33
-+              - amphenol,cc2d33s
-+              - amphenol,cc2d35
-+              - amphenol,cc2d35s
-+          - const: amphenol,cc2d23
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: measurement ready indicator
-+      - description: low humidity alarm
-+      - description: high humidity alarm
-+
-+  interrupt-names:
-+    items:
-+      - const: ready
-+      - const: low
-+      - const: high
-+
-+  vdd-supply:
-+    description:
-+      Dedicated, controllable supply-regulator to reset the device and
-+      enter in command mode.
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        humidity@28 {
-+            compatible = "amphenol,cc2d23s", "amphenol,cc2d23";
-+            reg = <0x28>;
-+            interrupt-parent = <&gpio>;
-+            interrupts = <4 IRQ_TYPE_EDGE_RISING>,
-+                         <5 IRQ_TYPE_EDGE_RISING>,
-+                         <6 IRQ_TYPE_EDGE_RISING>;
-+            interrupt-names = "ready", "low", "high";
-+            vdd-supply = <&reg_vdd>;
-+        };
-+    };
+...
 
--- 
-2.39.2
+>         struct pcs_device *pcs;
+>
+> -       pcs =3D platform_get_drvdata(pdev);
+> +       pcs =3D dev_get_drvdata(dev);
+>         if (!pcs)
+>                 return -EINVAL;
 
+Drop dead code.
+This should be simple one line after your change.
+
+       struct pcs_device *pcs =3D dev_get_drvdata(dev);
+
+...
+
+>         struct pcs_device *pcs;
+>
+> -       pcs =3D platform_get_drvdata(pdev);
+> +       pcs =3D dev_get_drvdata(dev);
+>         if (!pcs)
+>                 return -EINVAL;
+
+Ditto.
+
+...
+
+> +static const struct dev_pm_ops pinctrl_single_pm_ops =3D {
+> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pinctrl_single_suspend_noirq,
+> +                                     pinctrl_single_resume_noirq)
+> +};
+
+Use proper / modern macro.
+
+...
+
+>  #endif
+
+Why ifdeferry is needed (esp. taking into account pm_ptr() use below)?
+
+--=20
+With Best Regards,
+Andy Shevchenko
