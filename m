@@ -1,47 +1,47 @@
 Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2044.outbound.protection.outlook.com [40.107.21.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E6EC155;
-	Mon, 15 Jan 2024 09:16:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D36BCA7A;
+	Mon, 15 Jan 2024 09:16:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="GIKRieCO"
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="uSCfaWUs"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X1wzehwIns/ivSsrpvzR6Fp0h7iTx7GMWk08KuemDoto5C34mdSgzUH/mb1o6hT/PQuVY9dpHFoXWPtFbYddPB3KsEwRhmlkVaodLksbcvGgWJpOKJQPXhWHEuuU8eRPGNgpIvPkW2tiVIM9The0ievNVsPCaOwYYO6+zy56ZfTtp/UlIvrOQmvBYCEHFiUlfG+uHQ8W9ibhxgmIY7/abi4oH8gNezY3MfsSbjWFVFOiPULIE83B2VHAt7xm6uN6tPUQ+S6kmw4svnnuu+V/A6urVflQwcA0sanb84mx6pMn3k8tw3yOTld9LTfzhZ9nriAEDSEE5YSOiogjg9D3Ag==
+ b=fnPgPiRc5HMEOzrMu/JoIfulzqY3McRMyiiKyLZlZTiog3EN8EZcPqHxKwCXZVJfJeam7RK56AsiqXfvGk9e+DV/YPE5HsMz+YeExJEaVP+9dEsegIQPgjo1aomGaRy8eOUBqeZ0a60wLAiEL8MddNcWEM7KkSJFj1AyqX2EmFzonsy93OrFObyMczind2YK9+MqKM6oLYZoqE9FoGcxEE3E7bj4GJk28qiKGSIWZOj4klnNTzoTFtotbwSv7q8Xt5YDSU6XGijt6OZtIe/CdyEPL20SJ1xMsBxe4rLnQcYGYVD+EYDLO3hZzkMpwqe60NIx17nNhC9W1hDmodLKPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EvUrqoy3wsg+8tUY3FLgYGgdf7zD4OHWKf0G02QwwpU=;
- b=AnPymIezsShTuyQh+sp+5n6CnU2vvKcD3aWrC65o4uGMGwIaN85M4KW/SG5HkAOrvC+RbTJ1K+clVB0zCQZQXNSzkV4pKX7jwJDNG2Y4XTxfURgN5ehQPNGlX5Y0yKyZbSP0IgOe+6KWruuB50MtXGT+55swLF/rhj8WcVj1qKrL6q1ikIrJ9nwmvNpiWbT6YK6I2rpuMYuW3SojNGaxK8uv+25TtwB+HBwRbgFMdc+CVA3O3YU/pN1Hm6PC4sQAE9ybrxtXy042FZ9ux+u+jiGEkTML6cxiq3XwuLZvmNnuR6ojVmPiWg0lhXg2s6msOl83Rz+Dy/S3rFi8DxrCNQ==
+ bh=yXGpWS8USjWi9RTxYzhG5mHhW6v+pt53C1Nrcadd87g=;
+ b=GNC2JmnEA81pD2PZu47IOt2lDDUL6LB1/QsjBtWZElDQouQiBup7PS6QMqtos4htMSl37cKkM6h7iyDNtUsIRT7Rwu+Y+xrT4Zz5SlwV45qTN1z70v57E6aWplUt+JtOAteoaQCHctu8qMxACdDBnjEmoC8lmIJX6/hqtQppmYExi8/mi7J4zGAuUfUJKTtnIBWCxWBBV8LSLtE5opbKz//Jo+6skgWkifO98G1PBEuKuK6oTnIACcd4blRXzQHprjbRuYgA8XVNcnMQVx04hM1V55VbSO8nt5B8Ga6LVgUml0UVOq6hGcqnHw2J7d0uNKqPdZqN/ZsSfy2b2/VbeQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wolfvision.net; dmarc=pass action=none
  header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EvUrqoy3wsg+8tUY3FLgYGgdf7zD4OHWKf0G02QwwpU=;
- b=GIKRieCO5GiA5EXTokfJMjRmlyRCkAnPiJDmIksvuHq8hxQg613QKkghOU7OSVfEzs0cONVMWDKUOKBRd7bN+cdAx06X0OPidM7JLjo0wus705Dljt7P4pnNL4SXrG0tUhdf62GNG89KDppXlIbHUVRbI2lDy6A2XtfugHC4ebM=
+ bh=yXGpWS8USjWi9RTxYzhG5mHhW6v+pt53C1Nrcadd87g=;
+ b=uSCfaWUsRi5d3d7AvH6sPgCWbrgQPJGyeSEIcHj3xBtKONlmRiqH7l17y2wrHQwM7f/uuX7OidG6+QI/p3u2XhtgWEymHOSgW18OJHs8SFyCtUJasETK5gVjOigWsOYwT2LfJbM8+ewLIMBoMJT0hbo9Ct97+saS3BJi3VO6vEs=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=wolfvision.net;
 Received: from VE1PR08MB4974.eurprd08.prod.outlook.com (2603:10a6:803:111::15)
  by AM9PR08MB6035.eurprd08.prod.outlook.com (2603:10a6:20b:2d9::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.23; Mon, 15 Jan
- 2024 09:16:37 +0000
+ 2024 09:16:39 +0000
 Received: from VE1PR08MB4974.eurprd08.prod.outlook.com
  ([fe80::6b40:1e6f:7c94:71dc]) by VE1PR08MB4974.eurprd08.prod.outlook.com
  ([fe80::6b40:1e6f:7c94:71dc%4]) with mapi id 15.20.7181.026; Mon, 15 Jan 2024
- 09:16:37 +0000
+ 09:16:39 +0000
 From: Javier Carrasco <javier.carrasco@wolfvision.net>
-Subject: [PATCH 0/3] ALSA: usb: add support for XMOS XVF3500
-Date: Mon, 15 Jan 2024 10:16:30 +0100
-Message-Id: <20240115-feature-xvf3500_driver-v1-0-ed9cfb48bb85@wolfvision.net>
+Date: Mon, 15 Jan 2024 10:16:32 +0100
+Subject: [PATCH 2/3] ASoC: dt-bindings: xmos,xvf3500: add bindings for XMOS
+ XVF3500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAO73pGUC/x3MQQqDMBBG4avIrA1koqXqVaQUjX90NiqTNgji3
- Q0uv8V7J0WoIFJXnKRIEmVbM7gsyC/DOsPIlE3OutoyswkYfn+FOVKoXtZ+J5UENb55u6ZqPfM
- IyvGuCHI84/5zXTe6McKlaAAAAA==
+Message-Id: <20240115-feature-xvf3500_driver-v1-2-ed9cfb48bb85@wolfvision.net>
+References: <20240115-feature-xvf3500_driver-v1-0-ed9cfb48bb85@wolfvision.net>
+In-Reply-To: <20240115-feature-xvf3500_driver-v1-0-ed9cfb48bb85@wolfvision.net>
 To: Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
@@ -51,11 +51,11 @@ Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
  Javier Carrasco <javier.carrasco@wolfvision.net>
 X-Mailer: b4 0.13-dev-4e032
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705310196; l=1753;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705310196; l=1849;
  i=javier.carrasco@wolfvision.net; s=20230509; h=from:subject:message-id;
- bh=JBsPjBCzo6FTPu3MSdjGFr7gnmUmal2Kzm1FTTD0/3I=;
- b=v2fITQom5/SBKklk6XddFlLyhzgF4K26WyKLNJF26q532RWi4c0wfsQUZcbeDQQdZ6/1WuACq
- /6fP6YvjiubB0LCuKwox4LIu0lZXqq/eVhRemFCRQ+JxdVpksr23vDA
+ bh=ni2dtHWBhPqUUIR7Lgbm7KZN1KzjAuAJdGMwDarzwWM=;
+ b=w06Jag3yG5AYipCk53/pKgLVteSvbFm7yk2EG5flLCpnj740TDte3gx1yr6BLHOWAvJjPncSK
+ 86p7QnIIAciCBAh6/OzMMALd3CL0TZU+kyBkdFvdTzXpVc79mZRtU+7
 X-Developer-Key: i=javier.carrasco@wolfvision.net; a=ed25519;
  pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
 X-ClientProxiedBy: VI1P190CA0005.EURP190.PROD.OUTLOOK.COM
@@ -69,104 +69,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: VE1PR08MB4974:EE_|AM9PR08MB6035:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf03a166-aa90-43d8-1e3b-08dc15aaad43
+X-MS-Office365-Filtering-Correlation-Id: f344b796-9bb6-47ba-eb53-08dc15aaae33
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	/v3m03x1VpdJ6jtcoSKMM7T3TdnU5/YmVRIR2+nyZiCtphswt3CJu7t90nkpaUxxOMTa0tpcdKU00ZZ3fNaJlIBaD8VV7sKJQq24wgtySOPMxaqUnO5/pojwhlXcrNDQgEp0cVKn2d3UAVwHMrU87AUzOPJFOrBxlW04wlAY1m68RlQcHf0zPrGO0KlJ+OU+kmWQPETULXr52vhwNV09Okpqm9wWl4TsLFgNnKZZJE3fjeytm+YisQmpRmhO+qmfHEdnLxexZ+EMzZWuvY3w3QbjdUhkolZ7qjjiOu+QR0XYUU+9jnheONojZmgT6g2UwFEUBBd1qxxQItiW2PXndVxEf5YyWxGx4+ISHHU79/4WLVvFf06atK/60CLS/0EjaSqKX2ih2+E4q9DW+6DPnPhJ6FSaPsd3gZeekSoVpOZuCTMSQ00We++dJxU+wv/5ludLIhGgE1LNz2ND8nmZIM6mk5aWKJW8Bv76otJzt6yLBVBP4/JEBriJpn6t+5nP+Q7yVNA1jNc0X/dacrBkLWaRnNNe6HHVmg6uvYEU2h1+6veBgvMr4jQIJerhtQOrLXMwlxfxeqMfM5wek7iAzEADns2c4DTFSEpG6diyIN8=
+	1Du1GDxS1YBk7nUrYbOtxjZLLeVloS5flwfLsP4stkA8oS8Zj7dMRkcz+vPVMJ2ALDPXrwsDpTRJ6U5AMjNNwH/BeynKFazLLWvwHcrJ8yF1vrD2I0DRxP8i5xfYwpm6Lgy1NXNUZENZoPefl6e4zuxKeZ5qQQf8zDmsctD95dzKAvaptzh2S4R8uyNnhTIDWACdq1nLZcSnERKxeVEyckJA4sv7URubPKduiZ278dlHDplWG2EpBQBxdPRODi99B++DcCsTkM82gF1jF1EB+Mzd5G/RinQ7Q3WW3FB8YxP8BGzqLDLqo/WJmIysHBDEYPYKwKl6LYKqrS2faES2YvaCObAa9gW4WBF8yc4XPKI1+T/Rs8pjOfJ5qvITg7KGrs7fP/ewikjQoXw1f48SD0/CZKeZrFy9f7a+8XB9wI9cYKNnx8YoX9CWh5W6QA/JuRvlexy9dPk1bAewuFpF0hi9JIH4f49m/kIAWa+rIIBrwhhzqcHiAQC2myAnldiF/+OYlDeWoeDmHdaY/RbVF16bHVFS1+8c3gy0k6X+Eym9ZI5dNsoL/PSYW5IAdNg33DPgVFDNsnVSLMP103SokABhl9NcWenVVldgodacWZw=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39840400004)(346002)(376002)(396003)(136003)(366004)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(38100700002)(38350700005)(36756003)(86362001)(66556008)(26005)(107886003)(2616005)(83380400001)(54906003)(66946007)(66476007)(316002)(110136005)(6512007)(6506007)(966005)(478600001)(8936002)(8676002)(6666004)(52116002)(6486002)(41300700001)(44832011)(2906002)(4326008)(5660300002)(7416002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39840400004)(346002)(376002)(396003)(136003)(366004)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(38100700002)(38350700005)(36756003)(86362001)(66556008)(26005)(107886003)(2616005)(54906003)(66946007)(66476007)(316002)(110136005)(6512007)(6506007)(966005)(478600001)(8936002)(8676002)(6666004)(52116002)(6486002)(41300700001)(44832011)(2906002)(4326008)(5660300002)(7416002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N0x1SjZVN1hnNFBWVUhYQTR6cG85ZEtySTk4V2xmaktFRm9jdVVJSVpwWU9n?=
- =?utf-8?B?Z055YkhiTjZ6QzV6cVZ5bENQZ2ZvMGtPMWN2UzYxMVp4VEJYalEwYWFxVklU?=
- =?utf-8?B?R2Z6ZHBYSmR4a1loSlZJTnVXUVk1YVo4a3oxbjdJNDBodFhuUHFtc3UrTTFa?=
- =?utf-8?B?c2hFM2M0UFZhV2wrN3YyRVF6cUlpSXozQTdJTE1GTC9XOXFLMnhublM3d09K?=
- =?utf-8?B?M0JENGUrcWpVVmlzNGZlUGdZMjlPSXdXTEVvMDU0Sm54MWpOZGx2cThXNHJQ?=
- =?utf-8?B?Znl4TFhaUUJFWXhUSmU0QmpVSFdTOHVpZkpJMzlEWTRmK2l2WkpPbzJLNW9x?=
- =?utf-8?B?TEY0bUtLa0Fla0ZYVlZwV2lJUC8xMWw4VlNLc3RlVEhpZy95ME5TUWJWZzY1?=
- =?utf-8?B?R012TWQyMEFNQ3hYR3BQV0w3RzNRclppSlZRZDFwcUhSRkhzU2JPQU95aU4x?=
- =?utf-8?B?ZXBadGkxUlZhRlgrbmUxU3BlOHRremJMQnluQUJZMG5PM1dPWmZ4MU9XMlpo?=
- =?utf-8?B?TXMrMVpzTElUWHUzM1NnQVY3amRzQXVGYnY4TStFcTBnSTlNcHIyK3RxaW5N?=
- =?utf-8?B?NUhvUy9hUTBUZXBYK2Nvd3UwdEtpbXNGVk11aHlUYlIxMzRyaDMxbDhHY3dE?=
- =?utf-8?B?TytOZU1STXVpZGN0UXM4RGFBaWpEQ2xyUDBKYXRXZDEzN2V0Rmd0Wk5CV2FL?=
- =?utf-8?B?ZCtpampRNnNoK3lOZ2NqUGNVL2lpeHl1SGZhcmQxWVJWQ3FIQUtpNEFnaHA5?=
- =?utf-8?B?ZllLTTV6ZWxOWDRZbyt0MHB3d0F5TExsVmM4WkJUdEhVNjZKbUdrQ0JLNkNW?=
- =?utf-8?B?MldPaFlCaDFNUjk5R05zTGE2WWdTQzNHMmlFR29KeG9iNzM5dmt5T2xTUUpF?=
- =?utf-8?B?MGRMMUZqaVlMOUMxMVE1WnZRTjIxOHlJb0JxZTdhcFlJT3FzVTJZZXFTQXN4?=
- =?utf-8?B?eFlXKy9SUE9PZ0RuRHFiaE9sU1F2TTNrVXEvRTY2L3djclIvemZqWlAzWk9D?=
- =?utf-8?B?TDZBSUhJVGdzUENVelBIc0ZuSGsxVkVFYTF2ckFZVXduTzNQeFhhaXc2UEUw?=
- =?utf-8?B?dWsrME14SjdKc3p4VTFXUmZybFZpRFZEZ2R0U2xYS1dGdjA4NWlvN3pXa3NQ?=
- =?utf-8?B?SFJ2eVF6dkFHNnBhNGpYZkNNK0ZqZnh5SDVlNzRML1dZeVhkS3hGK2U5S0Jl?=
- =?utf-8?B?eFN2RDhVVitsMUJuU1JncHNYeHNiNnR6MGdyelY5QlFTU3RSOHQrWmw1VlVk?=
- =?utf-8?B?RXIxeE54a1VGL2c5cGFsV0xJNTFiWlY3MCtFM200aTlRODl1VWpkeUwwR3hm?=
- =?utf-8?B?blp1TjF5Mkp3ZWZQckRDdHN4UFlqRkRBSFJIejUxSGhuU1ZtTGJ5M1VNd0FG?=
- =?utf-8?B?V1ZuUWt4Y2VRZUU5VnlxYkJELzI0Yy80Uytwd3RCU2pITWJFMHdaOGwwNnZv?=
- =?utf-8?B?enFwSE00cE9NdDJZVVFqdVNLQkNWNU90eGRRVEc0NXViUktJZmRCUWI4MEdN?=
- =?utf-8?B?NHdUTU5xZDFHRXhsQlQ5RVByR0VscENkbW8yR1VXQ3MvUGhSVmNQbnJoRnE4?=
- =?utf-8?B?UlUrR2FmMkttZ2lMZXRrc0wrV1VkRTM4WHdteFVpN1IzeHJSaE45MzZXblZk?=
- =?utf-8?B?cnFFeElnZVd4Q0FIcEdqcGU4enluZnh0aWpwRS82by8rTjlaSkZqK3d1RURC?=
- =?utf-8?B?S3B5UU5qdmtiVkJESVhzbXc1MGFBYXptUHNweDJLT0p1R2lnYzdlVmwrV21K?=
- =?utf-8?B?OHFGMHMyMkN5R00rendYNDErT25ra01SbUh6Z3o4RlgvUmZJMGV5MlBySDJh?=
- =?utf-8?B?bHVmQVQ5aHU3ZElQYWc4Q0JldHNaZk9ud0dtU0xOWVBiKzFMQ0FFeDI4LzNl?=
- =?utf-8?B?bUI0MFhoV2l4OXdMMGNkWitVOCtEaFVubGFOTis1S1E4R1ZxbkNqcHo4QlRU?=
- =?utf-8?B?aG5JWXF2cHFGYlFKazJDNzlzeXJ1WkhqbFYxV1NhL05rOVc0WHY5NUNKb2Jv?=
- =?utf-8?B?OERwZHdIWTdkeGIveHc5VXVkZytPYW56aFovTXRZTE1uNWtuV1hTUzRVVStD?=
- =?utf-8?B?NlhRMmNUb01mSzd1K3Nmb2FKbWJnRTZlUW5VS012TDdHWmt5MDZiVjFxNm5w?=
- =?utf-8?B?S0hsVVM1dXVveHV6UEZlTHRCRlZtUUEwall2NzlOeHppU3kwcmFzdVF6ZjlQ?=
- =?utf-8?Q?8sAGYSzUFaFIynrZ4FhTf1c=3D?=
+	=?utf-8?B?cEJ4bWZ2YXdmMEpYaUJNcTZtKzdqaGl4R0VjSllhRkp5eWVodDVnNHRjUGNT?=
+ =?utf-8?B?RkNTdzM1d3owdEhYdEkzY1h6WlpDbWNlVGs3V1pUK0F5UGcrT3o5MzRaN1kr?=
+ =?utf-8?B?MTdyajhMZlVEYVU2WHltQnE1Zi9uOVZ6NzlPYTFEUWxrT20yZFppN04xaFB6?=
+ =?utf-8?B?SWpqaVQyVWYzcjUrMlVsanVxSHhKNFZWWUdMcGJNM05ic1UyY0h2VGljZE1q?=
+ =?utf-8?B?Mjg1NkgzcWIzcmtsMHhUdDB5MXoyRGVpR3NpQnJSU1RxdW5wU2ZIUnNSeWpx?=
+ =?utf-8?B?MG85WS9wTUZ3TlRFNGpUcElWWEwrWnowRDhWZWU4dUhSWUlEenFiM0p5VUR0?=
+ =?utf-8?B?Q2hFQ3Y3OVJNczRKS2ZwUUM5WnYwek1IT2h2T20ybUxobmZySU4wVjRWcFho?=
+ =?utf-8?B?MEswMkprVzltQlVkNzZwWUZsNzhEMmlKa2lUcHQ0ZzdFTDJ2RU1zVjduVmE0?=
+ =?utf-8?B?bEpoelRPcmJiQjh6Z0d5dHhDbmVoSFZ1dTY3ZTh5NFBuaVIybUxBaDZUbVIr?=
+ =?utf-8?B?NnAvRWFEK25GOTFVM0VpejBxVlk3OEVJc2ZheGQzcnczZmFoZlRlWnFGbElS?=
+ =?utf-8?B?cnJpV2EyWkhIY2ZaQk5xL3hlS1RTT3lpNFZlUVNadTRTY0xpc0dSeTJKaUVI?=
+ =?utf-8?B?MXJuNzZOazFBRTlRdUVoUlh0NCtEeDdKdVhBTk96cmZudHFLNWJOaFpUcVJn?=
+ =?utf-8?B?YVRjQk5OMTJrY2w3MitlTmVhSkxLUXo3RjVCSHZjZHU1WWJZM3AxdWNQeEtu?=
+ =?utf-8?B?YXhEak1rMU8yeXBkZ3JvUnIxTXFZN3JkMGUzVHZRRUQ3QnJLZU5EcUhOdTFC?=
+ =?utf-8?B?UEVVWUpHenpXcTZXT0VaTjhLak9qcUNwa051YURLTGlqK0kxL04yWEhpaWpD?=
+ =?utf-8?B?SHNnbmFPQVQ5MFgza25Cb0hQU3NHNGFKT1E0ZThlZEVJQTBUa1UvZ2Z6VS8z?=
+ =?utf-8?B?S0FZblNPMDBQWkdwRHdmbjJ2RWpwTFpRUUFJRlQ4VjlJaExDTDJONnVTSDB6?=
+ =?utf-8?B?dlRidUs5U0tIM2FBcVgwd2YrdGN0RGJPRFVuQ2YwaC9LUUd4dE5jL3Y3M05D?=
+ =?utf-8?B?T05SSFZ5TTFMcHNCOEo4OStjRml2QU9UMjZJWVdUcC9kbmhTSFo4K2RkQ2NO?=
+ =?utf-8?B?TnNtY1dyaThOTFJ2L3IxMEJCeHRtTG1SOFB2VkJKNXlyaXZ0c2g3YXdGeUEr?=
+ =?utf-8?B?ejlOcDZSM21xc0JsWTkvQmxMSEVvYml4VTZHOW83czlKUUZOdFFpb1o2Sjkz?=
+ =?utf-8?B?ZmpTeWx6b2wrNEFvODZscTRsdmJ6TlFHOFZ5UHlBYUsxWkx2RkFaUG9iMk0z?=
+ =?utf-8?B?NWV1Z1JBR0dnWWR6VTFENDFMVG1oR3hVa3FIQ2haMWE2THowTXBDVkNyUEJo?=
+ =?utf-8?B?b3FrVHBoU3VTVVBzNFFTNGt1OWNTUDZVTGxTNUZOQmZvU1RhN1JIU096bEI4?=
+ =?utf-8?B?OUZIUWpud0NVRktMNlUwUUNvLzBzQ3ZuUzhaa2JTc3hXbjlyOVhqMC9vMkZk?=
+ =?utf-8?B?amlNeUtGenBZUjV6QUxwTGpQVGlucU8zblhyc2J4Tkd3T0pzNlJYODRkT3Q5?=
+ =?utf-8?B?STdMWkpsMjZpNjE1T25SZXliazZTcnB5MGdtM1dXMklSdlZCMDlwR0VyRjFm?=
+ =?utf-8?B?TzE4cFh6UkZGODg5bkxBWGhpRldtZmR4dElNc3c3b2g1dHZrdWRYNXYyYXZ3?=
+ =?utf-8?B?Zkl4Z2lhTlkvc2lGTE9xaDBMKzFhbmY5aHhKYjhEN2pjRXpLbWVHT0ZmMlRz?=
+ =?utf-8?B?UW5zczZpOXdTQkkvM3RDaElRQzM3TEtLVGtzRDBYeVJMOFpwbzB0SThwZStJ?=
+ =?utf-8?B?ZkhPT3pzcTZuK0gwcnFTbGF3V2NiRjhrci83dUl6RUZURnRrMDk0MUphVisw?=
+ =?utf-8?B?azBDa1pJWmdKMUxCdExzV2ZLNGRNY2ZWcVF3ekwwR1I2endzbzhwRllZalVV?=
+ =?utf-8?B?SS9mN3Y5RnMvdDRZeFZPMy90N1poSjVnd0pzYWZINU1sdzFWNjJoQVNUa3Yr?=
+ =?utf-8?B?TzdrbWdhOUk2YysvaTBYditYU01wL2haNFVMQis3OTVxRElhQ24xVTNiSVpx?=
+ =?utf-8?B?dk1JUjJDdXVWTzcrSmxlWkFUUkZnb25uOHNUbjFRL1BJTnV6aVlLM0lMditF?=
+ =?utf-8?B?bEpIUVdSb0hIa0xsQnlBQzc4OWlDaEw1UXNOdDBjS2IveElITWZxVFc5K2t4?=
+ =?utf-8?Q?zresCvoWwHh8W2o7KusInGY=3D?=
 X-OriginatorOrg: wolfvision.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf03a166-aa90-43d8-1e3b-08dc15aaad43
+X-MS-Exchange-CrossTenant-Network-Message-Id: f344b796-9bb6-47ba-eb53-08dc15aaae33
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR08MB4974.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2024 09:16:37.6429
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2024 09:16:39.2277
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +SggZ/uNC1I77FEpztm68hTfc7Ze1jk+DlamY5XGe9c2YA3uYi2Pn0Z2erP18nMlBZ/vdVyC3HYy2TZlEmod/oMaudQ7Ik7Wo5ipbzJRil4=
+X-MS-Exchange-CrossTenant-UserPrincipalName: SxibH4yDhyDZBKM8F0kcmsMduG2SGoDst4SrZBZE0GHO8lrBLvsDLgekrK9Et5BywvXuLIHMCc8CkigLdTJxuppjkzMjke1dNxWZwjzHQ0M=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB6035
 
 The XMOS XVF3500 VocalFusion Voice Processor[1] is a low-latency, 32-bit
 multicore controller for voice processing.
 
-This device requires two power supplies and a specific power sequence to
-reach normal operation, where it registers itself as a USB device. These
-constraints cannot be cleanly solved without the use of a driver that
-guarantees proper initialization during system power-up sequences and
-sleep-mode transitions.
-
-Once in normal operation, the device works like a regular USB device
-with the obvious limitation that it cannot be unplugged because of its
-onboard nature.
-
-This series adds support for the XMOS XVF3500 and includes the device
-bindings, which also required a new entry in vendor-prefixes for the
-XMOS manufacturer.
+Add new bindings to define the device properties.
 
 [1] https://www.xmos.com/xvf3500/
 
 Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
 ---
-Javier Carrasco (3):
-      dt-bindings: vendor-prefixes: add XMOS
-      ASoC: dt-bindings: xmos,xvf3500: add bindings for XMOS XVF3500
-      ALSA: usb: add support for XMOS XVF3500
+ .../devicetree/bindings/sound/xmos,xvf3500.yaml    | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
- .../devicetree/bindings/sound/xmos,xvf3500.yaml    |  51 ++++++++
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- MAINTAINERS                                        |   7 ++
- sound/usb/Kconfig                                  |   9 ++
- sound/usb/Makefile                                 |   3 +-
- sound/usb/xvf3500/Makefile                         |   4 +
- sound/usb/xvf3500/xvf3500.c                        | 140 +++++++++++++++++++++
- 7 files changed, 215 insertions(+), 1 deletion(-)
----
-base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
-change-id: 20240111-feature-xvf3500_driver-c872839c11be
+diff --git a/Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml b/Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml
+new file mode 100644
+index 000000000000..e93a735a0f1a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/xmos,xvf3500.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: XMOS XVF3500 VocalFusion Voice Processor
++
++maintainers:
++  - Javier Carrasco <javier.carrasco@wolfvision.net>
++
++description: |-
++  The XMOS XVF3500 VocalFusion Voice Processor is a low-latency, 32-bit
++  multicore controller for voice processing.
++  https://www.xmos.com/xvf3500/
++
++properties:
++  compatible:
++    const: xmos,xvf3500
++
++  reset-gpios:
++    maxItems: 1
++
++  vcc1v0-supply:
++    description: |
++      Regulator for the 1V0 supply.
++
++  vcc3v3-supply:
++    description: |
++      Regulator for the 3V3 supply.
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reset-gpios
++  - vcc1v0-supply
++  - vcc3v3-supply
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    xvf3500: voice-processor {
++      compatible = "xmos,xvf3500";
++      reset-gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
++      vcc1v0-supply = <&vcc1v0>;
++      vcc3v3-supply = <&vcc3v3>;
++    };
++
++...
 
-Best regards,
 -- 
-Javier Carrasco <javier.carrasco@wolfvision.net>
+2.39.2
 
