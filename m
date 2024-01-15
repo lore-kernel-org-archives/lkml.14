@@ -1,35 +1,35 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B36C1805E
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EEC18632
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:38:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XoTSyhcG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g08rqGsE"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RpM+MlQ9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ktZOmXHD"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705329489;
+	s=2020; t=1705329490;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=L0MYhdyqdCnNF2sikCCC+B6J3YzfhlbKGb8NzRYHY1Q=;
-	b=XoTSyhcGXL3jewDT8HeyR35QvUNIwwU5TQmxnt8IqAsASAAa7s6QlLsGaP9rjri5CVBtkh
-	bt2NmkVvbHCYMfA/RffmV+1YNGNRkBrsVc8Pm1XOJ4FM119w8CHQ3bwbGy6alkxKGxwEw8
-	9MlVF1ZGDuTkS2bItWoFLKsJR+dy+cww2ThJvEhGlXJO1u0C1qubSvBFZrXxEONbwbtvBR
-	8ywQDFqZhlpTf/T0yPXCkLgffWz0kGEOVoQMQtSgNiYlbbRJULMChJ1BZDTWgEGiVSx3U9
-	NnCB2ToDM1XZaJR/KjNCRSuto1povy5FzB1hQlCt9pMumKbyKmYBkjYvH+AJ0Q==
+	bh=Nb48Ec9P9wN/ba+vLQTCWoxnTPCDbsQyo2JqCHOzxss=;
+	b=RpM+MlQ98engTxxgTZb3m1VEMYSW7zPbVdt9EtlYVA92ZO5VCBuGDLe2A6/9XL672oLhz8
+	hXSYjXGyXyvVjkbJn77lqdYHPrwJpatsb0XPTubsfT3bbsF+gBeLyYExxM9kiBcT09cRPe
+	VfykTG5s77jURoIqGMsIiZpqAOkXGlARCipzI2ye5tp7GtgtkVj65uQ2RjEzym4Ewf64wB
+	zywAwo3/qBIHBCyruCWmsDcEJC20gf1zfxK6h2ay031x717BwY+VWkhuy5d5FP8cMGnoIv
+	jebL2aKqB99ATJBOMsN49nuHlggiEt9QxCdISlAHCOg1E8i/hTWq+FwR1Zyn2g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705329489;
+	s=2020e; t=1705329490;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=L0MYhdyqdCnNF2sikCCC+B6J3YzfhlbKGb8NzRYHY1Q=;
-	b=g08rqGsEbLNBGwipTVvkMSon7N5/imR58bml+pm9R18WMYCyhxI3JHagKL/BjtMNScic1Z
-	jMV806HMjOLAOZDA==
+	bh=Nb48Ec9P9wN/ba+vLQTCWoxnTPCDbsQyo2JqCHOzxss=;
+	b=ktZOmXHD5e+0jPN1zjCs1yytQQtNHNYadVzQ83G1DCIneFUyqWPZpmcomr3cjqK/SuTg0n
+	iPzH1Z1ilW5vU1AQ==
 To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	John Stultz <jstultz@google.com>,
@@ -47,10 +47,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
 	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"Richard Cochran (linutronix GmbH)" <richardcochran@gmail.com>,
 	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH v10 12/20] timers: Split out "get next timer interrupt" functionality
-Date: Mon, 15 Jan 2024 15:37:35 +0100
-Message-Id: <20240115143743.27827-13-anna-maria@linutronix.de>
+Subject: [PATCH v10 14/20] timers: Restructure internal locking
+Date: Mon, 15 Jan 2024 15:37:37 +0100
+Message-Id: <20240115143743.27827-15-anna-maria@linutronix.de>
 In-Reply-To: <20240115143743.27827-1-anna-maria@linutronix.de>
 References: <20240115143743.27827-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -61,122 +62,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
- functionality
+From: "Richard Cochran (linutronix GmbH)" <richardcochran@gmail.com>
 
-The functionality for getting the next timer interrupt in
-get_next_timer_interrupt() is split into a separate function
-fetch_next_timer_interrupt() to be usable by other call sites.
+Move the locking out from __run_timers() to the call sites, so the
+protected section can be extended at the call site. Preparatory patch for
+changing the NOHZ timer placement to a pull at expiry time model.
 
-This is preparatory work for the conversion of the NOHZ timer
-placement to a pull at expiry time model. No functional change.
+No functional change.
 
+Signed-off-by: Richard Cochran (linutronix GmbH) <richardcochran@gmail.com>
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
-v10: Update was required (change of preceding patches)
-v9: Update was required (change of preceding patches)
-v6: s/splitted/split
-v5: Update commit message
-v4: Fix typo in comment
----
- kernel/time/timer.c | 64 +++++++++++++++++++++++++++------------------
- 1 file changed, 38 insertions(+), 26 deletions(-)
+ kernel/time/timer.c | 31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index f119b44e44e0..9fa759dd80f5 100644
+index 3e2adfc15f3a..ccb2a5c03b87 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -1988,30 +1988,13 @@ static unsigned long next_timer_interrupt(struct timer_base *base,
- 	return base->next_expiry;
- }
+@@ -2223,11 +2223,7 @@ static inline void __run_timers(struct timer_base *base)
+ 	struct hlist_head heads[LVL_DEPTH];
+ 	int levels;
  
--static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
--					     bool *idle)
-+static unsigned long fetch_next_timer_interrupt(unsigned long basej, u64 basem,
-+						struct timer_base *base_local,
-+						struct timer_base *base_global,
-+						struct timer_events *tevt)
- {
--	struct timer_events tevt = { .local = KTIME_MAX, .global = KTIME_MAX };
- 	unsigned long nextevt, nextevt_local, nextevt_global;
--	struct timer_base *base_local, *base_global;
- 	bool local_first;
--	u64 expires;
+-	if (time_before(jiffies, base->next_expiry))
+-		return;
 -
--	/*
--	 * Pretend that there is no timer pending if the cpu is offline.
--	 * Possible pending timers will be migrated later to an active cpu.
--	 */
--	if (cpu_is_offline(smp_processor_id())) {
--		if (idle)
--			*idle = true;
--		return tevt.local;
--	}
--
--	base_local = this_cpu_ptr(&timer_bases[BASE_LOCAL]);
--	base_global = this_cpu_ptr(&timer_bases[BASE_GLOBAL]);
--
--	raw_spin_lock(&base_local->lock);
--	raw_spin_lock_nested(&base_global->lock, SINGLE_DEPTH_NESTING);
+-	timer_base_lock_expiry(base);
+-	raw_spin_lock_irq(&base->lock);
++	lockdep_assert_held(&base->lock);
  
- 	nextevt_local = next_timer_interrupt(base_local, basej);
- 	nextevt_global = next_timer_interrupt(base_global, basej);
-@@ -2029,8 +2012,8 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 		/* If we missed a tick already, force 0 delta */
- 		if (time_before(nextevt, basej))
- 			nextevt = basej;
--		tevt.local = basem + (u64)(nextevt - basej) * TICK_NSEC;
--		goto forward;
-+		tevt->local = basem + (u64)(nextevt - basej) * TICK_NSEC;
-+		return nextevt;
+ 	while (time_after_eq(jiffies, base->clk) &&
+ 	       time_after_eq(jiffies, base->next_expiry)) {
+@@ -2251,21 +2247,36 @@ static inline void __run_timers(struct timer_base *base)
+ 		while (levels--)
+ 			expire_timers(base, heads + levels);
  	}
- 
- 	/*
-@@ -2040,12 +2023,41 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 	 * ignored. If the global queue is empty, nothing to do either.
- 	 */
- 	if (!local_first && base_global->timers_pending)
--		tevt.global = basem + (u64)(nextevt_global - basej) * TICK_NSEC;
-+		tevt->global = basem + (u64)(nextevt_global - basej) * TICK_NSEC;
- 
- 	if (base_local->timers_pending)
--		tevt.local = basem + (u64)(nextevt_local - basej) * TICK_NSEC;
-+		tevt->local = basem + (u64)(nextevt_local - basej) * TICK_NSEC;
-+
-+	return nextevt;
 +}
 +
-+static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
-+					     bool *idle)
++static void __run_timer_base(struct timer_base *base)
 +{
-+	struct timer_events tevt = { .local = KTIME_MAX, .global = KTIME_MAX };
-+	struct timer_base *base_local, *base_global;
-+	unsigned long nextevt;
-+	u64 expires;
++	if (time_before(jiffies, base->next_expiry))
++		return;
 +
-+	/*
-+	 * Pretend that there is no timer pending if the cpu is offline.
-+	 * Possible pending timers will be migrated later to an active cpu.
-+	 */
-+	if (cpu_is_offline(smp_processor_id())) {
-+		if (idle)
-+			*idle = true;
-+		return tevt.local;
-+	}
-+
-+	base_local = this_cpu_ptr(&timer_bases[BASE_LOCAL]);
-+	base_global = this_cpu_ptr(&timer_bases[BASE_GLOBAL]);
-+
-+	raw_spin_lock(&base_local->lock);
-+	raw_spin_lock_nested(&base_global->lock, SINGLE_DEPTH_NESTING);
-+
-+	nextevt = fetch_next_timer_interrupt(basej, basem, base_local,
-+					     base_global, &tevt);
++	timer_base_lock_expiry(base);
++	raw_spin_lock_irq(&base->lock);
++	__run_timers(base);
+ 	raw_spin_unlock_irq(&base->lock);
+ 	timer_base_unlock_expiry(base);
+ }
  
--forward:
- 	/*
- 	 * We have a fresh next event. Check whether we can forward the
- 	 * base.
++static void run_timer_base(int index)
++{
++	struct timer_base *base = this_cpu_ptr(&timer_bases[index]);
++
++	__run_timer_base(base);
++}
++
+ /*
+  * This function runs timers and the timer-tq in bottom half context.
+  */
+ static __latent_entropy void run_timer_softirq(struct softirq_action *h)
+ {
+-	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_LOCAL]);
+-
+-	__run_timers(base);
++	run_timer_base(BASE_LOCAL);
+ 	if (IS_ENABLED(CONFIG_NO_HZ_COMMON)) {
+-		__run_timers(this_cpu_ptr(&timer_bases[BASE_GLOBAL]));
+-		__run_timers(this_cpu_ptr(&timer_bases[BASE_DEF]));
++		run_timer_base(BASE_GLOBAL);
++		run_timer_base(BASE_DEF);
+ 	}
+ }
+ 
 -- 
 2.39.2
 
