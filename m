@@ -1,47 +1,47 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AD11643A;
-	Mon, 15 Jan 2024 13:08:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3C3171D4;
+	Mon, 15 Jan 2024 13:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atBw5dMW"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e490c2115so43233395e9.0;
-        Mon, 15 Jan 2024 05:08:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7BEy2in"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3376d424a79so6728088f8f.1;
+        Mon, 15 Jan 2024 05:08:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705324102; x=1705928902; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1705324106; x=1705928906; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BJ/m+l7GPcHseZYPduukv0ojncUx7hSN3NYiZJ23ScQ=;
-        b=atBw5dMW4BlkL8FM/HckPHpZcBuIUoqJ4UKJizhtwzRM17lHQe+vdfesKh3tcM01Te
-         lcz6MnSll+g8cWKrWDsBGqXlCz5bBW2KLmgWl5WedGzg3/zgMUzRJZRkNJNywc8VljEN
-         BpVqZi2UiNCV3zGnwOPY2an7Tx7VBDSlRVLYs9OEOfY8kpqPNQrfaUrpTGK+C3J2iMzG
-         b/PSMxq9fB64ylq+/hwV7nZjwuYRNDlS641T2ZU+YAIRgh+kcE5xh/ag0q1QyggReK9K
-         WADhFhU4FMjgS1T5tXoKG2QaHNLqpg6IhQvx6w+5PxCgmUB7dQ6yWLuS/VHg9H0jG8wP
-         NEJA==
+        bh=WclvSvESBcB1ccyxeqjrdGj+frspJc0esD0QtgwrkCo=;
+        b=c7BEy2inHAh8liKaRYt9aZWfCtmK6FMbo0y3yKsVHqD4ROhT/7vCeQY7Hr76g01C8w
+         n0zlAZ6wgthxFUUAaDkcwYNQnF04UCT3zKmNkV7U63AHlCwNcbMozmr3wSzxdw/dqHZj
+         yLJPjA3wAxnid6i3w7uk4lK2aPzh/DcVUCrPY971k423nKTWoMCXzqz4PZcf9Db+nHah
+         SWIftww4gAT7Uxs/KjcuSqpXZRY02HXmeaX/A45PAujdQhFeCEyd6teo+zicffA8XqUY
+         qbt2zAUxp1tSoXEgQRMiyDJznjG98S7569PL6/bCe1jLL/07ODUnDOGZtzqa6FxRlwkH
+         JM2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705324102; x=1705928902;
+        d=1e100.net; s=20230601; t=1705324106; x=1705928906;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BJ/m+l7GPcHseZYPduukv0ojncUx7hSN3NYiZJ23ScQ=;
-        b=TSfJxEegbjBrWxOkWS/7Q262yxakjVbxKcRGe2dYD3VO74aHXReodlfzyGiGOejLaG
-         63mh0df0vjZN2XKhiXuMQ9mQCoVTy4Db0L67TkR4Yuq/OXunvEkbThfbDes5yxy1itsz
-         GWZPkFcZkoyHKXhUrncV9mSgXB1FroS2kp1JcklxkmtHtPrGQPnD0XVfhXSzYn1IaB/x
-         wXRJ+1s4cWxaAFbNzpHv6hq7Ximiy4P+cmVMIIXVFIX09fx/KYPTqxAe8GrKHFt3HDmq
-         wWuyUsZktYtxwwYgIcorlpqtBGLiBH/9s9utucTuA+ugE9lBoKItIhoInzS4tHaL7MZf
-         xX/g==
-X-Gm-Message-State: AOJu0YyX4lJ6CTqndzAaYpKLK/Q20pui8Lzn7puOkjDL5+YRcskCQ7zc
-	mcdeb6LmerIX8A9DHXbYnAGNwKFrCV8KOg==
-X-Google-Smtp-Source: AGHT+IG9jFeAFg5etXmfFixnKdv6k/fqBnxgKWbCsB4lzFkB5Q4po4o1DkhXynWZQQbdCzBkENmYsg==
-X-Received: by 2002:a05:600c:2184:b0:40e:6064:b70c with SMTP id e4-20020a05600c218400b0040e6064b70cmr3203598wme.82.1705324102143;
-        Mon, 15 Jan 2024 05:08:22 -0800 (PST)
+        bh=WclvSvESBcB1ccyxeqjrdGj+frspJc0esD0QtgwrkCo=;
+        b=qFO8nKeqpP3Hq4a3r9MLPdSyXxX39QJ4TGcGs7HjTmdMwLBlGfYVk7NQofkEVQWUFH
+         tuwAj51cz5/HyWxRTj269ZEFF0oq7ClTvizQze+H2O3F/NiRJi+IkhOuZlvzbutGXW5a
+         EsqAQ5LxJAPBEm1jDd3SotmHTrHkh5xl+mm7T1bsIfg2aP3gfOUaId7eA7/vNJtASLHj
+         K+4WyTs/7aDIo7RydLoSTBDDn6FR452ZXsQWqUoUaeswd4kZE8X5f5+PTFGgzpG8NgBd
+         Wn3AwQ6VT4e9ZRY+cPemK4EYcNNz+oDG0jU3Ys02AFazaMouInhSvieSFM2FSFeGj5DI
+         LZ2g==
+X-Gm-Message-State: AOJu0YyojPg4fPZeOOM0Bs9kvwJyHxt2F4/FIQwS0jx5MOICNLb7YAWU
+	bhjCU75v7tbJGJDCnvQ8H4M=
+X-Google-Smtp-Source: AGHT+IGsOzQ7L6ielq7mxIFwHy6qHtdKpqdw04n+je7tcix4atLkzck0Yy0VuXqfteUT7WaM2h9fFA==
+X-Received: by 2002:adf:dd8f:0:b0:336:5f04:bff3 with SMTP id x15-20020adfdd8f000000b003365f04bff3mr2990776wrl.81.1705324105815;
+        Mon, 15 Jan 2024 05:08:25 -0800 (PST)
 Received: from prasmi.home ([2a00:23c8:2500:a01:3d67:232:2eec:2430])
-        by smtp.gmail.com with ESMTPSA id d13-20020adfef8d000000b0033739c1da1dsm11843620wro.67.2024.01.15.05.08.20
+        by smtp.gmail.com with ESMTPSA id d13-20020adfef8d000000b0033739c1da1dsm11843620wro.67.2024.01.15.05.08.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 05:08:21 -0800 (PST)
+        Mon, 15 Jan 2024 05:08:24 -0800 (PST)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -59,9 +59,9 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v5 1/4] pinctrl: renesas: rzg2l: Improve code for readability
-Date: Mon, 15 Jan 2024 13:08:14 +0000
-Message-Id: <20240115130817.88456-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v5 4/4] riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
+Date: Mon, 15 Jan 2024 13:08:17 +0000
+Message-Id: <20240115130817.88456-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240115130817.88456-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20240115130817.88456-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -75,137 +75,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-As the RZ/G2L pinctrl driver is extensively utilized by numerous SoCs and
-has experienced substantial growth, enhance code readability by
-incorporating FIELD_PREP_CONST/FIELD_GET macros wherever necessary.
+On RZ/Five we have additional pins compared to the RZ/G2UL SoC so update
+the gpio-ranges property in RZ/Five SoC DTSI.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 41 +++++++++++++++----------
- 1 file changed, 24 insertions(+), 17 deletions(-)
+ arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index e90d47136889..fee348b80892 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2021 Renesas Electronics Corporation.
-  */
+diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+index d2272a0bfb61..aa3b1d2b999d 100644
+--- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
++++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+@@ -46,6 +46,10 @@ cpu0_intc: interrupt-controller {
+ 	};
+ };
  
-+#include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/clk.h>
- #include <linux/gpio/driver.h>
-@@ -38,8 +39,6 @@
-  */
- #define MUX_PIN_ID_MASK		GENMASK(15, 0)
- #define MUX_FUNC_MASK		GENMASK(31, 16)
--#define MUX_FUNC_OFFS		16
--#define MUX_FUNC(pinconf)	(((pinconf) & MUX_FUNC_MASK) >> MUX_FUNC_OFFS)
- 
- /* PIN capabilities */
- #define PIN_CFG_IOLH_A			BIT(0)
-@@ -81,8 +80,12 @@
-  * n indicates number of pins in the port, a is the register index
-  * and f is pin configuration capabilities supported.
-  */
--#define RZG2L_GPIO_PORT_PACK(n, a, f)	(((n) << 28) | ((a) << 20) | (f))
--#define RZG2L_GPIO_PORT_GET_PINCNT(x)	(((x) & GENMASK(30, 28)) >> 28)
-+#define PIN_CFG_PIN_CNT_MASK		GENMASK(30, 28)
-+#define PIN_CFG_PIN_REG_MASK		GENMASK(27, 20)
-+#define PIN_CFG_MASK			GENMASK(19, 0)
-+#define RZG2L_GPIO_PORT_PACK(n, a, f)	(FIELD_PREP_CONST(PIN_CFG_PIN_CNT_MASK, (n)) | \
-+					 FIELD_PREP_CONST(PIN_CFG_PIN_REG_MASK, (a)) | \
-+					 FIELD_PREP_CONST(PIN_CFG_MASK, (f)))
- 
- /*
-  * BIT(31) indicates dedicated pin, p is the register index while
-@@ -90,14 +93,18 @@
-  * (b * 8) and f is the pin configuration capabilities supported.
-  */
- #define RZG2L_SINGLE_PIN		BIT(31)
-+#define RZG2L_SINGLE_PIN_INDEX_MASK	GENMASK(30, 24)
-+#define RZG2L_SINGLE_PIN_BITS_MASK	GENMASK(22, 20)
++&pinctrl {
++	gpio-ranges = <&pinctrl 0 0 232>;
++};
 +
- #define RZG2L_SINGLE_PIN_PACK(p, b, f)	(RZG2L_SINGLE_PIN | \
--					 ((p) << 24) | ((b) << 20) | (f))
--#define RZG2L_SINGLE_PIN_GET_BIT(x)	(((x) & GENMASK(22, 20)) >> 20)
-+					 FIELD_PREP_CONST(RZG2L_SINGLE_PIN_INDEX_MASK, (p)) | \
-+					 FIELD_PREP_CONST(RZG2L_SINGLE_PIN_BITS_MASK, (b)) | \
-+					 FIELD_PREP_CONST(PIN_CFG_MASK, (f)))
- 
--#define RZG2L_PIN_CFG_TO_CAPS(cfg)		((cfg) & GENMASK(19, 0))
-+#define RZG2L_PIN_CFG_TO_CAPS(cfg)		((cfg) & PIN_CFG_MASK)
- #define RZG2L_PIN_CFG_TO_PORT_OFFSET(cfg)	((cfg) & RZG2L_SINGLE_PIN ? \
--						(((cfg) & GENMASK(30, 24)) >> 24) : \
--						(((cfg) & GENMASK(26, 20)) >> 20))
-+						 FIELD_GET(RZG2L_SINGLE_PIN_INDEX_MASK, (cfg)) : \
-+						 FIELD_GET(PIN_CFG_PIN_REG_MASK, (cfg)))
- 
- #define P(off)			(0x0000 + (off))
- #define PM(off)			(0x0100 + (off) * 2)
-@@ -432,8 +439,8 @@ static int rzg2l_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 		ret = of_property_read_u32_index(np, "pinmux", i, &value);
- 		if (ret)
- 			goto done;
--		pins[i] = value & MUX_PIN_ID_MASK;
--		psel_val[i] = MUX_FUNC(value);
-+		pins[i] = FIELD_GET(MUX_PIN_ID_MASK, value);
-+		psel_val[i] = FIELD_GET(MUX_FUNC_MASK, value);
- 	}
- 
- 	if (parent) {
-@@ -560,7 +567,7 @@ static int rzg2l_dt_node_to_map(struct pinctrl_dev *pctldev,
- static int rzg2l_validate_gpio_pin(struct rzg2l_pinctrl *pctrl,
- 				   u32 cfg, u32 port, u8 bit)
- {
--	u8 pincount = RZG2L_GPIO_PORT_GET_PINCNT(cfg);
-+	u8 pincount = FIELD_GET(PIN_CFG_PIN_CNT_MASK, cfg);
- 	u32 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(cfg);
- 	u32 data;
- 
-@@ -868,7 +875,7 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 	off = RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
- 	cfg = RZG2L_PIN_CFG_TO_CAPS(*pin_data);
- 	if (*pin_data & RZG2L_SINGLE_PIN) {
--		bit = RZG2L_SINGLE_PIN_GET_BIT(*pin_data);
-+		bit = FIELD_GET(RZG2L_SINGLE_PIN_BITS_MASK, *pin_data);
- 	} else {
- 		bit = RZG2L_PIN_ID_TO_PIN(_pin);
- 
-@@ -972,7 +979,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 	off = RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
- 	cfg = RZG2L_PIN_CFG_TO_CAPS(*pin_data);
- 	if (*pin_data & RZG2L_SINGLE_PIN) {
--		bit = RZG2L_SINGLE_PIN_GET_BIT(*pin_data);
-+		bit = FIELD_GET(RZG2L_SINGLE_PIN_BITS_MASK, *pin_data);
- 	} else {
- 		bit = RZG2L_PIN_ID_TO_PIN(_pin);
- 
-@@ -1608,12 +1615,12 @@ static int rzg2l_gpio_get_gpioint(unsigned int virq, const struct rzg2l_pinctrl_
- 	bit = virq % 8;
- 
- 	if (port >= data->n_ports ||
--	    bit >= RZG2L_GPIO_PORT_GET_PINCNT(data->port_pin_configs[port]))
-+	    bit >= FIELD_GET(PIN_CFG_PIN_CNT_MASK, data->port_pin_configs[port]))
- 		return -EINVAL;
- 
- 	gpioint = bit;
- 	for (i = 0; i < port; i++)
--		gpioint += RZG2L_GPIO_PORT_GET_PINCNT(data->port_pin_configs[i]);
-+		gpioint += FIELD_GET(PIN_CFG_PIN_CNT_MASK, data->port_pin_configs[i]);
- 
- 	return gpioint;
- }
-@@ -1788,7 +1795,7 @@ static void rzg2l_init_irq_valid_mask(struct gpio_chip *gc,
- 		bit = offset % 8;
- 
- 		if (port >= pctrl->data->n_ports ||
--		    bit >= RZG2L_GPIO_PORT_GET_PINCNT(pctrl->data->port_pin_configs[port]))
-+		    bit >= FIELD_GET(PIN_CFG_PIN_CNT_MASK, pctrl->data->port_pin_configs[port]))
- 			clear_bit(offset, valid_mask);
- 	}
- }
+ &soc {
+ 	dma-noncoherent;
+ 	interrupt-parent = <&plic>;
 -- 
 2.34.1
 
