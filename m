@@ -1,109 +1,159 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB8D2208A;
-	Mon, 15 Jan 2024 11:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1C9DF4C
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 11:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="c9ibmYOW"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C7BEE40E016C;
-	Mon, 15 Jan 2024 11:20:23 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 1FAqnwMpb_Zd; Mon, 15 Jan 2024 11:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1705317621; bh=nCwtoIhn1fv1DIHX6b7LJt+v8CCENhFJbxBqG4Uf3iw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="McgEaJNp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF4A9C433C7;
+	Mon, 15 Jan 2024 11:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705318105;
+	bh=h5IJpMjZyx3Hv96LPVu1lr+n0HvSatz0eWIAf4u7zWU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c9ibmYOWC60KK4KJuKNxRjp9cTDl/t4NGMCh/hIKwI8C8n85ZPub0L2koL6V6bEcL
-	 DnLO99QtKwXchL36UkyaqZXBS5DH7fP3jHL9Q/Ctm4+fh8YQ/Zi44hPI/hQd/pdAI4
-	 hF/dZoekSuQo4hLubKrITPpOBld2No3hKm8/53/0LY+40mMrigZM8I3pfNjZm2DoIk
-	 UROnl9HdofZnPLJ6LMgGqBqaDafsnEMfGqPyc1AfVYJRxj4jSf2YNhaeWiCk9E/3A2
-	 a3kH6iByD969PW9vbwfK+YiMd0D9SY1TtpWky0g3RTJAF0hq+BELR+pCArKET/9zsi
-	 qWGNTjOJNmElWJ+LYDgjQXdiTHPiLtkxN0MZLSX8sXLtARN3Gs1imoyDUCgjd7VCZC
-	 J9vT3kwHNvW4Kf8TVcvfdGoJS6jNtP7zMsdEveUfXAGsMoXMdd0HGdiWKiEuoKaYNA
-	 EPtLG2zJlKmm50rZEOmCQzZpToDW7Nw49E+B7wCUUoN+R/Zp/A/UYJ71G3L+X51uGD
-	 46T9n5gOcZdmqK0u48Y8hXTy3YOBjU897Pw0gioBU1PMLttNUhCbrT7GUSTA/Bnr02
-	 Mj7zI4H0tzj0gA4NTS5FNbwPFc3ylTElAZVRO6fzZXitlK8u8u1qXnQK/5HSONYAJJ
-	 l7i/ggtKLhd5cb4XvcaoXjgQ=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1B87140E00C5;
-	Mon, 15 Jan 2024 11:19:44 +0000 (UTC)
-Date: Mon, 15 Jan 2024 12:19:37 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Michael Roth <michael.roth@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
-	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
-	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com,
-	"liam.merwick@oracle.com Brijesh Singh" <brijesh.singh@amd.com>,
-	Jarkko Sakkinen <jarkko@profian.com>
-Subject: Re: [PATCH v1 13/26] crypto: ccp: Add support to initialize the
- AMD-SP for SEV-SNP
-Message-ID: <20240115111930.GGZaUUwpmmZqxVcBEu@fat_crate.local>
-References: <20231230161954.569267-1-michael.roth@amd.com>
- <20231230161954.569267-14-michael.roth@amd.com>
+	b=McgEaJNpYAqBZQ1UROvwQP8n6TV7E2wwkv+CKdS05NHvexCD52F/dXO9sdey/SJqh
+	 3+rh35Cz0ev4gCNLJHfgf2pbwtjvcQlEKa7IFJUfd9afCzTJUjaLgvbdt3H1t8+slf
+	 g8tEe82d28bHd4vdY9w260XPaMMSHjLjpEYRMGlN5vb9fXNDW0S2AIKDyiPQATuwsI
+	 8nYLM9+kLXUtKW+OKH2aZRQ+Eckq8hwzGmYwtAwH3O4oz+1M/8+r7KkC8Lgn4vBv8i
+	 jYBulu7M0RDFvEYugY1UQ+RlPywpWeHoYNvpyloGkekYuife1N5n+uoae4kQ7aP3IH
+	 fCaul4Tq7mWsA==
+Date: Mon, 15 Jan 2024 12:28:20 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Handle non-coherent GICv4
+ redistributors
+Message-ID: <ZaUW1Oo9RRKamhMb@lpieralisi>
+References: <20240114124429.2433890-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231230161954.569267-14-michael.roth@amd.com>
+In-Reply-To: <20240114124429.2433890-1-maz@kernel.org>
 
-On Sat, Dec 30, 2023 at 10:19:41AM -0600, Michael Roth wrote:
-> +	/*
-> +	 * The following sequence must be issued before launching the
-> +	 * first SNP guest to ensure all dirty cache lines are flushed,
-> +	 * including from updates to the RMP table itself via RMPUPDATE
-> +	 * instructions:
-> +	 *
-> +	 * - WBINDV on all running CPUs
-> +	 * - SEV_CMD_SNP_INIT[_EX] firmware command
-> +	 * - WBINDV on all running CPUs
-> +	 * - SEV_CMD_SNP_DF_FLUSH firmware command
-> +	 */
+On Sun, Jan 14, 2024 at 12:44:29PM +0000, Marc Zyngier wrote:
+> Although the GICv3 code base has gained some handling of systems
+> failing to handle the shareability attributes, the GICv4 side of
+> things has been firmly ignored.
+> 
+> This is unfortunate, as the new recent addition of the
+> "dma-noncoherent" is supposed to apply to all of the GICR tables,
+> and not just the ones that are common to v3 and v4.
+> 
+> Add some checks to handle the VPROPBASE/VPENDBASE shareability
+> and cacheability attributes in the same way we deal with the
+> other GICR_BASE registers, wrapping the flag check in a helper
+> for improved readability.
+> 
+> Note that this has been found by inspection only, as I don't
+> have access to HW that suffers from this particular issue.
+> 
+> Fixes: 3a0fff0fb6a3 ("irqchip/gic-v3: Enable non-coherent redistributors/ITSes DT probing")
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 37 +++++++++++++++++++++-----------
+>  1 file changed, 25 insertions(+), 12 deletions(-)
 
-Typos:
+I missed this, sorry - the bug reports we got were for HW platforms
+where the v4 side of things would not apply but the Fixes commit above
+is generic and it must have included this hunk, so apologies.
 
----
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index 85634d4f8cfe..ce0c56006900 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -604,9 +604,9 @@ static int __sev_snp_init_locked(int *error)
- 	 * including from updates to the RMP table itself via RMPUPDATE
- 	 * instructions:
- 	 *
--	 * - WBINDV on all running CPUs
-+	 * - WBINVD on all running CPUs
- 	 * - SEV_CMD_SNP_INIT[_EX] firmware command
--	 * - WBINDV on all running CPUs
-+	 * - WBINVD on all running CPUs
- 	 * - SEV_CMD_SNP_DF_FLUSH firmware command
- 	 */
- 	wbinvd_on_all_cpus();
+FWIW:
 
--- 
-Regards/Gruss,
-    Boris.
+Reviewed-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 9a7a74239eab..bdc2c8330479 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -207,6 +207,11 @@ static bool require_its_list_vmovp(struct its_vm *vm, struct its_node *its)
+>  	return (gic_rdists->has_rvpeid || vm->vlpi_count[its->list_nr]);
+>  }
+>  
+> +static bool rdists_support_shareable(void)
+> +{
+> +	return !(gic_rdists->flags & RDIST_FLAGS_FORCE_NON_SHAREABLE);
+> +}
+> +
+>  static u16 get_its_list(struct its_vm *vm)
+>  {
+>  	struct its_node *its;
+> @@ -2710,10 +2715,12 @@ static u64 inherit_vpe_l1_table_from_its(void)
+>  			break;
+>  		}
+>  		val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR, addr >> 12);
+> -		val |= FIELD_PREP(GICR_VPROPBASER_SHAREABILITY_MASK,
+> -				  FIELD_GET(GITS_BASER_SHAREABILITY_MASK, baser));
+> -		val |= FIELD_PREP(GICR_VPROPBASER_INNER_CACHEABILITY_MASK,
+> -				  FIELD_GET(GITS_BASER_INNER_CACHEABILITY_MASK, baser));
+> +		if (rdists_support_shareable()) {
+> +			val |= FIELD_PREP(GICR_VPROPBASER_SHAREABILITY_MASK,
+> +					  FIELD_GET(GITS_BASER_SHAREABILITY_MASK, baser));
+> +			val |= FIELD_PREP(GICR_VPROPBASER_INNER_CACHEABILITY_MASK,
+> +					  FIELD_GET(GITS_BASER_INNER_CACHEABILITY_MASK, baser));
+> +		}
+>  		val |= FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, GITS_BASER_NR_PAGES(baser) - 1);
+>  
+>  		return val;
+> @@ -2936,8 +2943,10 @@ static int allocate_vpe_l1_table(void)
+>  	WARN_ON(!IS_ALIGNED(pa, psz));
+>  
+>  	val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR, pa >> 12);
+> -	val |= GICR_VPROPBASER_RaWb;
+> -	val |= GICR_VPROPBASER_InnerShareable;
+> +	if (rdists_support_shareable()) {
+> +		val |= GICR_VPROPBASER_RaWb;
+> +		val |= GICR_VPROPBASER_InnerShareable;
+> +	}
+>  	val |= GICR_VPROPBASER_4_1_Z;
+>  	val |= GICR_VPROPBASER_4_1_VALID;
+>  
+> @@ -3126,7 +3135,7 @@ static void its_cpu_init_lpis(void)
+>  	gicr_write_propbaser(val, rbase + GICR_PROPBASER);
+>  	tmp = gicr_read_propbaser(rbase + GICR_PROPBASER);
+>  
+> -	if (gic_rdists->flags & RDIST_FLAGS_FORCE_NON_SHAREABLE)
+> +	if (!rdists_support_shareable())
+>  		tmp &= ~GICR_PROPBASER_SHAREABILITY_MASK;
+>  
+>  	if ((tmp ^ val) & GICR_PROPBASER_SHAREABILITY_MASK) {
+> @@ -3153,7 +3162,7 @@ static void its_cpu_init_lpis(void)
+>  	gicr_write_pendbaser(val, rbase + GICR_PENDBASER);
+>  	tmp = gicr_read_pendbaser(rbase + GICR_PENDBASER);
+>  
+> -	if (gic_rdists->flags & RDIST_FLAGS_FORCE_NON_SHAREABLE)
+> +	if (!rdists_support_shareable())
+>  		tmp &= ~GICR_PENDBASER_SHAREABILITY_MASK;
+>  
+>  	if (!(tmp & GICR_PENDBASER_SHAREABILITY_MASK)) {
+> @@ -3880,14 +3889,18 @@ static void its_vpe_schedule(struct its_vpe *vpe)
+>  	val  = virt_to_phys(page_address(vpe->its_vm->vprop_page)) &
+>  		GENMASK_ULL(51, 12);
+>  	val |= (LPI_NRBITS - 1) & GICR_VPROPBASER_IDBITS_MASK;
+> -	val |= GICR_VPROPBASER_RaWb;
+> -	val |= GICR_VPROPBASER_InnerShareable;
+> +	if (rdists_support_shareable()) {
+> +		val |= GICR_VPROPBASER_RaWb;
+> +		val |= GICR_VPROPBASER_InnerShareable;
+> +	}
+>  	gicr_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
+>  
+>  	val  = virt_to_phys(page_address(vpe->vpt_page)) &
+>  		GENMASK_ULL(51, 16);
+> -	val |= GICR_VPENDBASER_RaWaWb;
+> -	val |= GICR_VPENDBASER_InnerShareable;
+> +	if (rdists_support_shareable()) {
+> +		val |= GICR_VPENDBASER_RaWaWb;
+> +		val |= GICR_VPENDBASER_InnerShareable;
+> +	}
+>  	/*
+>  	 * There is no good way of finding out if the pending table is
+>  	 * empty as we can race against the doorbell interrupt very
+> -- 
+> 2.39.2
+> 
