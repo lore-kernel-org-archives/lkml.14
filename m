@@ -1,114 +1,109 @@
-Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87142C68E;
-	Mon, 15 Jan 2024 12:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixcdBepZ"
-Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-a2d348d213dso188305366b.0;
-        Mon, 15 Jan 2024 04:23:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705321400; x=1705926200; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LarulzgxcbwxwMwttJUnIYJyEcTaGKlC8Ey3INSXxHQ=;
-        b=ixcdBepZq3a4yNBnHq3yPGlJeBMLugEEEbmgiavFBErslr85ET4OyfbHEDHYw1G/1x
-         rc75+GJZyUJcItXIEa3gvpIedow/yFDd/8xpUq4WPkWdNBWhEgyM8JcOo8r2QsZF14pZ
-         NMoKxyrLqRX3Rz5BNjoOqqC09ehN4leTFmTezopgvnLkbAkTBe231+r+BrFNdU9JA/aa
-         kTILGwOXjX9CdxJcdj/PMUFX0HvJlQjDAxnlLp1GCrBscTwTHTAzju6uq7bxTfLLKIXE
-         ydZRFYohPy13etIn6cX8Fg+QkJApswwEG5ln+EhpPOwQAaTMEpL99IV/WKV7Bjv1a88U
-         jBTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705321400; x=1705926200;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LarulzgxcbwxwMwttJUnIYJyEcTaGKlC8Ey3INSXxHQ=;
-        b=jXwCb4W+sf8JVVmPqoQqYKNyqzctL4v91OMikZt0LwGm7dOgglfL8LrxbLZi+D09rM
-         ayqgpQsfFHOTBd/qpZ6W8zTD7YbB63UkCBwJStX7Apt6zr5a16RFDLdrm/ZFf22PBDyg
-         XTT+xLK2bIbbhn7RUA4eiE2jSM6SVxF5jJ7hpovvYqSOFnBbcPWk+I7TWRjRYxf8Aftn
-         7zp/p4NTd1+f/i/BEtfI1Y8IvGZf6g96ItYFyoJLv+NnUnYEaEc5UBz/0HLMkGPNjZbd
-         2LUt3mFhQEae/j62BM/ExJlYm8UpTf98gWLrK7FmscStF8S/OyhkQ3oVlHy928MZokBk
-         ACww==
-X-Gm-Message-State: AOJu0YyQUu5xdnIvdxJFpz7DI74qkzYZC3vYwvUqEcF6X2iAPbuaPDPv
-	mOBUOI8UP8NhTzsS3ez5u1w=
-X-Google-Smtp-Source: AGHT+IHnFmjVSGdQH/6aGKNzNrldzt45MI0PLo4psjK+odaj0QL3QAgqsovGDwOvcpUew+6PTPcN2g==
-X-Received: by 2002:a17:907:c00f:b0:a29:4267:acc with SMTP id ss15-20020a170907c00f00b00a2942670accmr3185133ejc.104.1705321399757;
-        Mon, 15 Jan 2024 04:23:19 -0800 (PST)
-Received: from localhost.localdomain (nat3-minsk-pool-46-53-181-207.telecom.by. [46.53.181.207])
-        by smtp.gmail.com with ESMTPSA id st6-20020a170907c08600b00a2ce3230351sm3766988ejc.37.2024.01.15.04.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 04:23:19 -0800 (PST)
-From: Andrei Sabalenka <mechakotik@gmail.com>
-To: corentin.chary@gmail.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	acpi4asus-user@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mechakotik@gmail.com
-Subject: [PATCH] platform/x86: asus-wmi: Re-enable custom fan curves after setting throttle_thermal_policy
-Date: Mon, 15 Jan 2024 15:22:17 +0300
-Message-ID: <20240115122315.10250-1-mechakotik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1889813AD4;
+	Mon, 15 Jan 2024 12:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A098D2F4;
+	Mon, 15 Jan 2024 04:35:53 -0800 (PST)
+Received: from [10.57.90.3] (unknown [10.57.90.3])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E53033F5A1;
+	Mon, 15 Jan 2024 04:35:04 -0800 (PST)
+Message-ID: <661068a2-7c46-4703-ba4d-5ce1cdf44b3d@arm.com>
+Date: Mon, 15 Jan 2024 12:36:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 15/23] PM: EM: Optimize em_cpu_energy() and remove
+ division
+Content-Language: en-US
+To: Qais Yousef <qyousef@layalina.io>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ rafael@kernel.org, dietmar.eggemann@arm.com, rui.zhang@intel.com,
+ amit.kucheria@verdurent.com, amit.kachhap@gmail.com,
+ daniel.lezcano@linaro.org, viresh.kumar@linaro.org, len.brown@intel.com,
+ pavel@ucw.cz, mhiramat@kernel.org, wvw@google.com
+References: <20231129110853.94344-1-lukasz.luba@arm.com>
+ <20231129110853.94344-16-lukasz.luba@arm.com>
+ <20231228180647.rwz4u7ebk5p2hjcr@airbuntu>
+ <d9bea2d0-3869-4f08-8eb8-0ca33ce525ea@arm.com>
+ <20240104192355.mrtqnek2cyw7rlkd@airbuntu>
+ <2a8aa860-17dc-442a-a4ed-8f7c387b15ba@arm.com>
+ <20240115122156.5743y4trhm4tkgs3@airbuntu>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20240115122156.5743y4trhm4tkgs3@airbuntu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When changing throttle_thermal_policy, all the custom fan curves are getting disabled. This patch re-enables all the custom fan curves that were enabled before changing throttle_thermal_policy.
 
-I believe it makes asus-wmi sysfs interface more convenient, as it allows userspace to manage fan curves independently from platform_profile and throttle_thermal_policy. At the kernel level, custom fan curves should not be tied to "power profiles" scheme in any way, as it gives the user less freedom of controlling them.
 
-Signed-off-by: Andrei Sabalenka <mechakotik@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+On 1/15/24 12:21, Qais Yousef wrote:
+> On 01/10/24 13:53, Lukasz Luba wrote:
+>>
+>>
+>> On 1/4/24 19:23, Qais Yousef wrote:
+>>> On 01/02/24 11:47, Lukasz Luba wrote:
+>>>>> Did you see a problem or just being extra cautious here?
+>>>>
+>>>> There is no problem, 'cost' is a private coefficient for EAS only.
+>>>
+>>> Let me  ask differently, what goes wrong if you don't increase the resolution
+>>> here? Why is it necessary?
+>>>
+>>
+>>
+>> When you have 800mW at CPU capacity 1024, then the value is small (below
+>> 1 thousand).
+>> Example:
+>> power = 800000 uW
+>> cost = 800000 / 1024 = 781
+>>
+>> While I know from past that sometimes OPPs might have close voltage
+>> values and a rounding could occur and make some OPPs inefficient
+>> while they aren't.
+>>
+>> This is what would happen when we have the 1x resolution:
+>> /sys/kernel/debug/energy_model/cpu4/ps:1008000/cost:551
+>> /sys/kernel/debug/energy_model/cpu4/ps:1200000/cost:644
+>> /sys/kernel/debug/energy_model/cpu4/ps:1416000/cost:744
+>> /sys/kernel/debug/energy_model/cpu4/ps:1512000/cost:851
+>> /sys/kernel/debug/energy_model/cpu4/ps:408000/cost:493
+>> /sys/kernel/debug/energy_model/cpu4/ps:600000/cost:493
+>> /sys/kernel/debug/energy_model/cpu4/ps:816000/cost:493
+>> The bottom 3 OPPs have the same 'cost' thus 2 OPPs are in-efficient,
+>> which is not true (see below).
+>>
+>> This is what would happen when we have the 10x resolution:
+>> /sys/kernel/debug/energy_model/cpu4/ps:1008000/cost:5513
+>> /sys/kernel/debug/energy_model/cpu4/ps:1200000/cost:6443
+>> /sys/kernel/debug/energy_model/cpu4/ps:1416000/cost:7447
+>> /sys/kernel/debug/energy_model/cpu4/ps:1512000/cost:8514
+>> /sys/kernel/debug/energy_model/cpu4/ps:408000/cost:4934
+>> /sys/kernel/debug/energy_model/cpu4/ps:600000/cost:4933
+>> /sys/kernel/debug/energy_model/cpu4/ps:816000/cost:4934
+>> Here the OPP with 600MHz is more efficient than 408MHz,
+>> which is true. So only 408MHz will be marked as in-efficient OPP.
+>>
+>>
+>> This is what would happen when we have the 100x resolution:
+>> /sys/kernel/debug/energy_model/cpu4/ps:1008000/cost:55137
+>> /sys/kernel/debug/energy_model/cpu4/ps:1200000/cost:64433
+>> /sys/kernel/debug/energy_model/cpu4/ps:1416000/cost:74473
+>> /sys/kernel/debug/energy_model/cpu4/ps:1512000/cost:85140
+>> /sys/kernel/debug/energy_model/cpu4/ps:408000/cost:49346
+>> /sys/kernel/debug/energy_model/cpu4/ps:600000/cost:49331
+>> /sys/kernel/debug/energy_model/cpu4/ps:816000/cost:49346
+>> The higher (100x) resolution does not bring that much in
+>> practice.
+> 
+> So it seems a uW is not sufficient enough. We moved from mW because of
+> resolution already. Shall we make it nW then and multiply by 1000 always? The
+> choice of 10 looks arbitrary IMHO
+> 
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 18be35fdb..c2e38f6d8 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -3441,13 +3441,28 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
- 		return -EIO;
- 	}
- 
--	/* Must set to disabled if mode is toggled */
--	if (asus->cpu_fan_curve_available)
--		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
--	if (asus->gpu_fan_curve_available)
--		asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
--	if (asus->mid_fan_curve_available)
--		asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled = false;
-+	/* Re-enable fan curves after profile change */
-+	if (asus->cpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled) {
-+		err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_CPU]);
-+		if (err) {
-+			pr_warn("Failed to re-enable CPU fan curve: %d\n", err);
-+			return err;
-+		}
-+	}
-+	if (asus->gpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled) {
-+		err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_GPU]);
-+		if (err) {
-+			pr_warn("Failed to re-enable GPU fan curve: %d\n", err);
-+			return err;
-+		}
-+	}
-+	if (asus->mid_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled) {
-+		err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_MID]);
-+		if (err) {
-+			pr_warn("Failed to re-enable MID fan curve: %d\n", err);
-+			return err;
-+		}
-+	}
- 
- 	return 0;
- }
--- 
-2.43.0
-
+No, there is no need of nW in the 'power' field for this.
+You've missed the point.
