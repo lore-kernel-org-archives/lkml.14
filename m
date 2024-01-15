@@ -1,125 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6908917583
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC3A62F4;
-	Mon, 15 Jan 2024 06:04:14 -0800 (PST)
-Received: from [192.168.178.6] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B13383F6C4;
-	Mon, 15 Jan 2024 06:03:25 -0800 (PST)
-Message-ID: <dfde5b4f-0d5e-49b6-a787-0766eff23f91@arm.com>
-Date: Mon, 15 Jan 2024 15:03:18 +0100
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97FA17584;
+	Mon, 15 Jan 2024 14:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vATJg++B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=k+DYOQ+yWRd2pgMIRz/5wGINWA2P7yC/o6J+Q7W5b70=; b=vATJg++BpawwIU6E3l3nCyM/fl
+	CR1jGpmQB/8Vq7OxY1+wQ2R/Hf3ne8n0WN2AvXfif1DigL2m2rVPRPfBIGHsnUly6m2P18LQsHeeE
+	pv+B6kcZ03YpFkpKUaN87vnGX7uiFbMHtRfudt/fZlAfUY3gjxMPFrspblYKei4oeLsyxJS6XNYy4
+	LqB76AJULX5LYDl+H6w6rAl7am/wUSRx0JzXHryKNdYAP90XSPckLxOj9SUfy7eZIE7Kyi9Iei+Yr
+	r2XvhpG935/rETqKfQZjY4lEZGAuxuj/0flXZIbbrxN+farXylvZfJ9RJiRByx9wkGofpA3ZAue1Z
+	aDzeDz7g==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rPNbh-009rfH-Cs; Mon, 15 Jan 2024 14:06:29 +0000
+Date: Mon, 15 Jan 2024 14:06:29 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, David Howells <dhowells@redhat.com>,
+	Christian Brauner <christian@brauner.io>,
+	Jeff Layton <jlayton@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <huyue2@coolpad.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v2 3/4] erofs: Don't use certain internal folio_*()
+ functions
+Message-ID: <ZaU75cT0jx9Ya+6G@casper.infradead.org>
+References: <20240115083337.1355191-1-hsiangkao@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] Scheduler changes for v6.8
-Content-Language: en-US
-To: Vincent Guittot <vincent.guittot@linaro.org>,
- Qais Yousef <qyousef@layalina.io>
-Cc: Wyes Karny <wkarny@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>
-References: <CAHk-=wiXpsxMcQb7MhL-AxOityTajK0G8eWeBOzX-qBJ9X2DSw@mail.gmail.com>
- <CAHk-=wjK28MUqBZzBSMEM8vdJhDOuXGSWPmmp04GEt9CXtW6Pw@mail.gmail.com>
- <20240114091240.xzdvqk75ifgfj5yx@wyes-pc> <ZaPC7o44lEswxOXp@vingu-book>
- <20240114123759.pjs7ctexcpc6pshl@wyes-pc>
- <CAKfTPtCz+95dR38c_u6_7JbkVt=czj5N2dKYVV-zk9dgbk16hw@mail.gmail.com>
- <20240114151250.5wfexq44o3mdm3nh@airbuntu>
- <CAKfTPtAMxiTbvAYav1JQw+MhjzDPCZDrMLL2JOfsc0GWp+FnOA@mail.gmail.com>
- <20240114195815.nes4bn53tc25djbh@airbuntu>
- <CAKfTPtCGgJiFDrZYpynCiHBnQx48A9RsAY9-6Hshduo4ymGJLQ@mail.gmail.com>
- <20240115120915.fukpcdumntdsllwi@airbuntu>
- <CAKfTPtAMacH4hKLyttLuQJjzc=D4m864MFaEEwZLG4K8RKTDYA@mail.gmail.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-In-Reply-To: <CAKfTPtAMacH4hKLyttLuQJjzc=D4m864MFaEEwZLG4K8RKTDYA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240115083337.1355191-1-hsiangkao@linux.alibaba.com>
 
-On 15/01/2024 14:26, Vincent Guittot wrote:
-> On Mon, 15 Jan 2024 at 13:09, Qais Yousef <qyousef@layalina.io> wrote:
->>
->> On 01/15/24 09:21, Vincent Guittot wrote:
->>
->>>> Or I've done the math wrong :-) But the two don't behave the same for the same
->>>> kernel with and without CPPC.
->>>
->>> They will never behave the same because they can't
->>> - with invariance, the utilization is the utilization at max capacity
->>> so we can easily jump several OPP to go directly to the right one
->>> - without invariance, the utilization is the utilization at current
->>> OPP so we can only jump to a limited number of OPP
->>
->> I am probably missing some subtlty, but the  behavior looks more sensible to
->> me when we divide by current capacity instead of max one.
->>
->> It seems what you're saying is that the capacity range for each OPP is 0-1024.
+On Mon, Jan 15, 2024 at 04:33:37PM +0800, Gao Xiang wrote:
+> From: David Howells <dhowells@redhat.com>
 > 
-> Yes that's the case when you don't have frequency invariance
+> Filesystems should use folio->index and folio->mapping, instead of
+> folio_index(folio), folio_mapping() and folio_file_mapping() since
+> they know that it's in the pagecache.
 > 
->> And that's when we know that we saturated the current capacity level we decide
->> to move on.
+> Change this automagically with:
 > 
-> yes
+> perl -p -i -e 's/folio_mapping[(]([^)]*)[)]/\1->mapping/g' fs/erofs/*.c
+> perl -p -i -e 's/folio_file_mapping[(]([^)]*)[)]/\1->mapping/g' fs/erofs/*.c
+> perl -p -i -e 's/folio_index[(]([^)]*)[)]/\1->index/g' fs/erofs/*.c
 > 
->>
->> As I am trying to remove the hardcoded headroom values I am wary of another
->> one. But it seems this is bandaid scenario anyway; so maybe I shouldn't worry
->> too much about it.
+> Reported-by: Matthew Wilcox <willy@infradead.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Cc: Chao Yu <chao@kernel.org>
+> Cc: Yue Hu <huyue2@coolpad.com>
+> Cc: Jeffle Xu <jefflexu@linux.alibaba.com>
+> Cc: linux-erofs@lists.ozlabs.org
+> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+> Hi folks,
+> 
+> I tend to apply this patch upstream since compressed data fscache
+> adaption touches this part too.  If there is no objection, I'm
+> going to take this patch separately for -next shortly..
 
-I still don't fully understand this fix.
+Could you change the subject?  It's not that the functions are
+"internal", it's that filesystems don't need to use them because they're
+guaranteed to not see swap pages.  Maybe just s/internal/unnecessary/
 
-We had:
-
-sugov_update_single_freq()
-
-  sugov_update_single_common()
-
-  next_f = get_next_freq()
-
-   freq = arch_scale_freq_invariant() ?
-          policy->cpuinfo.max_freq : policy->cur (**) <- (2) !freq_inv
-
-
-  util = map_util_perf(util);                     <- (1) util *= 1.25
-
-  freq = map_util_freq(util, freq, max);          <- (3)
-}
-
-
-
-And now there is:
-
-sugov_update_single_freq()
-
-  sugov_update_single_common()
-
-    sugov_get_util()
-
-      sg_cpu->util = sugov_effective_cpu_perf()
-
-        /* Add dvfs headroom to actual utilization */
-        actual = map_util_perf(actual)            <- (1) util *= 1.25
-
-  next_f = get_next_freq()
-
-    freq = get_capacity_ref_freq()
-
-      return policy->cur (*)                      <- (2) !freq_inv
-
-    freq = map_util_freq(util, freq, max)         <- (3)
-
-Still not clear to me why we need this extra 'policy->cur *= 1.25' here
-(*) and not here (**)
-
-
+> Thanks,
+> Gao Xiang
+> 
+> Change since v1:
+>  - a better commit message pointed out by Jeff Layton.
+> 
+>  fs/erofs/fscache.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+> index 87ff35bff8d5..bc12030393b2 100644
+> --- a/fs/erofs/fscache.c
+> +++ b/fs/erofs/fscache.c
+> @@ -165,10 +165,10 @@ static int erofs_fscache_read_folios_async(struct fscache_cookie *cookie,
+>  static int erofs_fscache_meta_read_folio(struct file *data, struct folio *folio)
+>  {
+>  	int ret;
+> -	struct erofs_fscache *ctx = folio_mapping(folio)->host->i_private;
+> +	struct erofs_fscache *ctx = folio->mapping->host->i_private;
+>  	struct erofs_fscache_request *req;
+>  
+> -	req = erofs_fscache_req_alloc(folio_mapping(folio),
+> +	req = erofs_fscache_req_alloc(folio->mapping,
+>  				folio_pos(folio), folio_size(folio));
+>  	if (IS_ERR(req)) {
+>  		folio_unlock(folio);
+> @@ -276,7 +276,7 @@ static int erofs_fscache_read_folio(struct file *file, struct folio *folio)
+>  	struct erofs_fscache_request *req;
+>  	int ret;
+>  
+> -	req = erofs_fscache_req_alloc(folio_mapping(folio),
+> +	req = erofs_fscache_req_alloc(folio->mapping,
+>  			folio_pos(folio), folio_size(folio));
+>  	if (IS_ERR(req)) {
+>  		folio_unlock(folio);
+> -- 
+> 2.39.3
+> 
