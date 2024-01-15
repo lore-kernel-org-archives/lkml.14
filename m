@@ -1,94 +1,65 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7096FA1;
-	Mon, 15 Jan 2024 06:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD54D63AE
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 06:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V8Xpxit+"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40F5qfME121268;
-	Sun, 14 Jan 2024 23:52:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705297961;
-	bh=kHXNzqbBb5FPPwGvP0vugldGfFsecWuQTVR1E17V5YQ=;
-	h=From:To:CC:Subject:Date;
-	b=V8Xpxit+Nl1Idr2XbZF5kvWzK+mDoHOe4e3/WYprvQckWQejoanEM2vQIvte67ImM
-	 vcP90DIrGQc/GlV+R291FQyTDSp3Y8cgBMU4GnxhosQJ9fYi3tzb5quEQH1svs2p+f
-	 5gFSwSJCj60hZ564Z+aWzxFzJprPZMDZzQtDQRyE=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40F5qfYU026086
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 14 Jan 2024 23:52:41 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 14
- Jan 2024 23:52:40 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 14 Jan 2024 23:52:40 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40F5qbWo065972;
-	Sun, 14 Jan 2024 23:52:37 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2] dt-bindings: PCI: ti,j721e-pci-host: Add device-id for TI's J784S4 SoC
-Date: Mon, 15 Jan 2024 11:22:36 +0530
-Message-ID: <20240115055236.1840255-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="duDvVlZi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hJrN8gZT/HYpbOMm+1QDv4p0H4Brjpdl0colo6KhxYM=; b=duDvVlZiKsVGlGusgzwGo3i5/+
+	6De1nttWvMKpJbVZom4lqFwcwDbyC5+iGfM105rwq++rkD56TWmKxcPshaVHxdtlcnkcHl8si3eee
+	RNXzRjFKsCKP+B9URGDky1Kaw5+W86dPKGjiXuhzoJ7hyCBTNSvbxoMaUy6vXfDrI6iX87jhTlW8y
+	1hu2LmlYMnXaSCHCv5UgBNuYX51zf0hhzDKWeUVWRaEu5xVCFwM2Z/e0MtIbz3I7U18B3z2k+UBem
+	0TLskF+m9jidYpZVGFgxtTXpnUBiZBv3xRz1BkG8mLIkXjZxCdcPfUC2wqFd9KwzFWZqX6yK+92Ho
+	nbMad+JA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rPGro-002cLQ-1N;
+	Mon, 15 Jan 2024 06:54:40 +0000
+Date: Mon, 15 Jan 2024 06:54:40 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Li kunyu <kunyu@nfschina.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] utsname: Optimize clone_uts_ns()
+Message-ID: <20240115065440.GF1674809@ZenIV>
+References: <20240115061127.30836-1-kunyu@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240115061127.30836-1-kunyu@nfschina.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Add the device-id of 0xb012 for the PCIe controller on the J784S4 SoC as
-described in the CTRL_MMR_PCI_DEVICE_ID register's PCI_DEVICE_ID_DEVICE_ID
-field. The Register descriptions and the Technical Reference Manual for
-J784S4 SoC can be found at: https://www.ti.com/lit/zip/spruj52
+On Mon, Jan 15, 2024 at 02:11:27PM +0800, Li kunyu wrote:
+> Optimize the err variable assignment location so that the err variable
+> is manually modified when an error occurs.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+First of all, this is *not* an optimization in any meaningful sense -
+compiler is perfectly capable to shift those assignments (from either
+form) and choose whatever it prefers.
 
-This patch is based on linux-next tagged next-20240112.
+Incidentally, it might end up lifting the store out of if - it's
+entirely possible that
+	r1 = v
+	flag = (r2 == 0)
+	if flag goto fail
+is better than
+	flag = (r2 == 0)
+	if flag goto l
+	...
+l:
+	r1 = v
+	goto fail
+provided that assignment to r1 and checking r2 can be done in parallel
+and that's assuming that it will figure out that branch is unlikely.
 
-v1:
-https://lore.kernel.org/r/20240108050735.512445-1-s-vadapalli@ti.com/
-Changes since v1:
-- Rebased patch on linux-next tagged next-20240112.
-- Collected Acked-by tag from Rob Herring <robh@kernel.org>
-  https://lore.kernel.org/r/170511031475.3817032.5482957589582376350.robh@kernel.org/
-
-Regards,
-Siddharth.
-
- Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-index b7a534cef24d..0b1f21570ed0 100644
---- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-@@ -68,6 +68,7 @@ properties:
-       - 0xb00d
-       - 0xb00f
-       - 0xb010
-+      - 0xb012
-       - 0xb013
- 
-   msi-map: true
--- 
-2.34.1
-
+Readability might be a good reason; optimization... no.  Leave that to
+compiler; it will override your choice here anyway.
