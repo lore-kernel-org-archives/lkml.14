@@ -1,65 +1,79 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD54D63AE
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 06:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="duDvVlZi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hJrN8gZT/HYpbOMm+1QDv4p0H4Brjpdl0colo6KhxYM=; b=duDvVlZiKsVGlGusgzwGo3i5/+
-	6De1nttWvMKpJbVZom4lqFwcwDbyC5+iGfM105rwq++rkD56TWmKxcPshaVHxdtlcnkcHl8si3eee
-	RNXzRjFKsCKP+B9URGDky1Kaw5+W86dPKGjiXuhzoJ7hyCBTNSvbxoMaUy6vXfDrI6iX87jhTlW8y
-	1hu2LmlYMnXaSCHCv5UgBNuYX51zf0hhzDKWeUVWRaEu5xVCFwM2Z/e0MtIbz3I7U18B3z2k+UBem
-	0TLskF+m9jidYpZVGFgxtTXpnUBiZBv3xRz1BkG8mLIkXjZxCdcPfUC2wqFd9KwzFWZqX6yK+92Ho
-	nbMad+JA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPGro-002cLQ-1N;
-	Mon, 15 Jan 2024 06:54:40 +0000
-Date: Mon, 15 Jan 2024 06:54:40 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Li kunyu <kunyu@nfschina.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] utsname: Optimize clone_uts_ns()
-Message-ID: <20240115065440.GF1674809@ZenIV>
-References: <20240115061127.30836-1-kunyu@nfschina.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FC43C0B;
+	Mon, 15 Jan 2024 06:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TD2zV1ytXz4f3jM7;
+	Mon, 15 Jan 2024 14:58:30 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 514DC1A016E;
+	Mon, 15 Jan 2024 14:58:36 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+	by APP2 (Coremail) with SMTP id Syh0CgAHLA+a16RlEZuWAw--.48011S2;
+	Mon, 15 Jan 2024 14:58:36 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: axboe@kernel.dk,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: djeffery@redhat.com,
+	ming.lei@redhat.com
+Subject: [PATCH] sbitmap: remove stale comment in sbq_calc_wake_batch
+Date: Mon, 15 Jan 2024 22:56:26 +0800
+Message-Id: <20240115145626.665562-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240115061127.30836-1-kunyu@nfschina.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgAHLA+a16RlEZuWAw--.48011S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF18JF4xXF4kCw17JFW8Zwb_yoWDXrcEkF
+	WvkF18Wa9xWFn7KF1rAr4avryjk3yUZa48AFWYqFy8JFyjv393JrWkurWYyFWruay2vry7
+	CrWxWF4xtr13ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+	AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq
+	3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gc
+	CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
+	r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87
+	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IY
+	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
+	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU0miiDUUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Mon, Jan 15, 2024 at 02:11:27PM +0800, Li kunyu wrote:
-> Optimize the err variable assignment location so that the err variable
-> is manually modified when an error occurs.
+After commit 106397376c036 ("sbitmap: fix batching wakeup"), we may wake
+up more than one queue for each batch. Just remove stale comment that
+we wake up only one queue for each batch.
 
-First of all, this is *not* an optimization in any meaningful sense -
-compiler is perfectly capable to shift those assignments (from either
-form) and choose whatever it prefers.
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+---
+ lib/sbitmap.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Incidentally, it might end up lifting the store out of if - it's
-entirely possible that
-	r1 = v
-	flag = (r2 == 0)
-	if flag goto fail
-is better than
-	flag = (r2 == 0)
-	if flag goto l
-	...
-l:
-	r1 = v
-	goto fail
-provided that assignment to r1 and checking r2 can be done in parallel
-and that's assuming that it will figure out that branch is unlikely.
+diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+index d0a5081dfd12..92c6b1fd8989 100644
+--- a/lib/sbitmap.c
++++ b/lib/sbitmap.c
+@@ -388,11 +388,6 @@ static unsigned int sbq_calc_wake_batch(struct sbitmap_queue *sbq,
+ 	unsigned int shallow_depth;
+ 
+ 	/*
+-	 * For each batch, we wake up one queue. We need to make sure that our
+-	 * batch size is small enough that the full depth of the bitmap,
+-	 * potentially limited by a shallow depth, is enough to wake up all of
+-	 * the queues.
+-	 *
+ 	 * Each full word of the bitmap has bits_per_word bits, and there might
+ 	 * be a partial word. There are depth / bits_per_word full words and
+ 	 * depth % bits_per_word bits left over. In bitwise arithmetic:
+-- 
+2.30.0
 
-Readability might be a good reason; optimization... no.  Leave that to
-compiler; it will override your choice here anyway.
