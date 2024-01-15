@@ -1,153 +1,269 @@
-Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [207.211.30.44])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBB7179A5
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 15:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-577-w6Of273vPOui2F9i1TlWMA-1; Mon, 15 Jan 2024 10:47:13 -0500
-X-MC-Unique: w6Of273vPOui2F9i1TlWMA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B82B482DFE7;
-	Mon, 15 Jan 2024 15:47:12 +0000 (UTC)
-Received: from localhost.redhat.com (unknown [10.45.226.182])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6C7723C25;
-	Mon, 15 Jan 2024 15:47:11 +0000 (UTC)
-From: Alexey Gladkov <legion@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linux Containers <containers@lists.linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	Joel Granados <joel.granados@gmail.com>,
-	Kees Cook <keescook@chromium.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Manfred Spraul <manfred@colorfullife.com>
-Subject: [RESEND PATCH v3 1/3] sysctl: Allow change system v ipc sysctls inside ipc namespace
-Date: Mon, 15 Jan 2024 15:46:41 +0000
-Message-ID: <d2f4603305cbfed58a24755aa61d027314b73a45.1705333426.git.legion@kernel.org>
-In-Reply-To: <cover.1705333426.git.legion@kernel.org>
-References: <cover.1663756794.git.legion@kernel.org> <cover.1705333426.git.legion@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB8A17BAF
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 15:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ACr6gIzx"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240115154913euoutp0152dfeb70d3dc37f52d9c7cf156681bbd~qkANipyGR0612206122euoutp01W;
+	Mon, 15 Jan 2024 15:49:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240115154913euoutp0152dfeb70d3dc37f52d9c7cf156681bbd~qkANipyGR0612206122euoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1705333753;
+	bh=DDK2iFTetcCqvO6VugL53gp2zlYJEjnscZ6upVA4Aj8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=ACr6gIzxbXH3+A8pQF4Fmwhg01e8pC1YYZ3fcKf3xXlImI3Wq4mZf+hDDB5E3DuT7
+	 cqHcWOnfKrExpPHF1vAYgprTAsZE8talg7v95eAaQBDSsGNXT0s/F09y78TW457D4c
+	 KyYI7TvDPjhWSR4Peh9jVgmdK54HB8pT+SnhvGYY=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240115154912eucas1p177cc773f5a9f751eb8c6452c24b60f8a~qkANZi9ph1742917429eucas1p1d;
+	Mon, 15 Jan 2024 15:49:12 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id 3E.47.09552.8F355A56; Mon, 15
+	Jan 2024 15:49:12 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240115154912eucas1p2e5ebae8bbeed7bdbaec30f80dbf52df1~qkANAzrCE1315413154eucas1p2W;
+	Mon, 15 Jan 2024 15:49:12 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240115154912eusmtrp2e1ba161be4b1e79231fae633f0e755da~qkANARVSS1355813558eusmtrp2k;
+	Mon, 15 Jan 2024 15:49:12 +0000 (GMT)
+X-AuditID: cbfec7f5-83dff70000002550-b0-65a553f8fdaa
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 1D.6D.09146.8F355A56; Mon, 15
+	Jan 2024 15:49:12 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240115154912eusmtip2dc8d3fbf9d5bdc3f1915671dbf9a58ae~qkAM2RsRB0679506795eusmtip25;
+	Mon, 15 Jan 2024 15:49:12 +0000 (GMT)
+Received: from localhost (106.210.248.50) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Mon, 15 Jan 2024 15:49:11 +0000
+Date: Mon, 15 Jan 2024 16:49:07 +0100
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+CC: Luis Chamberlain <mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] scripts: check-sysctl-docs: adapt to new API
+Message-ID: <20240115154907.ubr4admknmousjbz@localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="j7wblihvlqrnvzk4"
+Content-Disposition: inline
+In-Reply-To: <20231226-sysctl-check-v2-1-2d4f50b30d34@weissschuh.net>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djP87o/gpemGky7YWZxedccNovfP54x
+	WdyY8JTRgdlj06pONo/Pm+Q8+ruPsQcwR3HZpKTmZJalFunbJXBl3J69ia2gXadiy+55bA2M
+	y5W7GDk5JARMJBbeWsvcxcjFISSwglFi6qsLjBDOF0aJm+ufQDmfGSX+PrjDBNPSefM0C0Ri
+	OaPEohPn2eCqug+0MEE4WxglNnbuYwFpYRFQlZjdMIMNxGYT0JE4/+YOM4gtImAjsfLbZ/Yu
+	Rg4OZgEPib0TQkHCwgIuEqvvT2AEsXkFzCXO/jvEBGELSpyc+QRsJLNAhcSMvhOsEK3SEsv/
+	cYCEOQVcJa50XAELSwgoSXxf7QVxc63EqS23wC6TEHjDIbF/9lw2iISLxL0vd6EeE5Z4dXwL
+	O4QtI/F/53yohsmMEvv/fWCHcFYzSixr/ArVYS3RcuUJVIejxKe7PVCb+SRuvBWEuJNPYtK2
+	6cwQYV6JjjYhiGo1idX33rBMYFSeheSzWUg+m4XwGURYT+LG1ClsGMLaEssWvmaGsG0l1q17
+	z7KAkX0Vo3hqaXFuemqxcV5quV5xYm5xaV66XnJ+7iZGYDo6/e/41x2MK1591DvEyMTBeIhR
+	Baj50YbVFxilWPLy81KVRHir7yxJFeJNSaysSi3Kjy8qzUktPsQozcGiJM6rmiKfKiSQnliS
+	mp2aWpBaBJNl4uCUamCqrVVbnBO21Nxe3mcC53TftUssNB7GamQUxKawLEjQnhBd07djU29Q
+	gj9nzewH5y6mOLOa7eJOyYo3M/1sfr1s4h6bBtcYh22MzIvPTQid1J2wo7DmJZOL9pXgOSyT
+	uibM8Z7469D+qxb+sZpWh+8ul1U9rPWdrWRtSunbnQ/O/C84NMv6wf4l5vz9887pbXMV2fpT
+	S0c/aOpNzUds56JLUt90fIqd/HLBZqNp+2cfMhMXK75u/9y4MkpYbtP89ImWC5P3tMwq3B4X
+	IyuzK0m1uthCeJn7xepZSxLll8ZV/2DsdTuaxGQmHSuxYsKxkyeD9u43YHg7PbDe2/l1k9Sd
+	u34uCurscR0cf3pFpymxFGckGmoxFxUnAgCvelRrwgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsVy+t/xe7o/gpemGjy5KWNxedccNovfP54x
+	WdyY8JTRgdlj06pONo/Pm+Q8+ruPsQcwR+nZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hka
+	m8daGZkq6dvZpKTmZJalFunbJehlvP//mqmgVafi2ow/rA2MS5W7GDk5JARMJDpvnmbpYuTi
+	EBJYyijR9LiNHSIhI7Hxy1VWCFtY4s+1LjaIoo+MEr83bWGFcLYwSjzduI8RpIpFQFVidsMM
+	NhCbTUBH4vybO8wgtoiAjcTKb5+BpnJwMAt4SOydEAoSFhZwkVh9fwJYK6+AucTZf4eYIGbO
+	YJRY/LSDCSIhKHFy5hMWEJtZoExi7aEuFog50hLL/3GAhDkFXCWudFxhBQlLCChJfF/tBXFz
+	rcTnv88YJzAKz0IyaBaSQbMQBkGEdSR2br3DhiGsLbFs4WtmCNtWYt269ywLGNlXMYqklhbn
+	pucWG+oVJ+YWl+al6yXn525iBMbktmM/N+9gnPfqo94hRiYOxkOMKkCdjzasvsAoxZKXn5eq
+	JMJbfWdJqhBvSmJlVWpRfnxRaU5q8SFGU2AYTmSWEk3OByaLvJJ4QzMDU0MTM0sDU0szYyVx
+	Xs+CjkQhgfTEktTs1NSC1CKYPiYOTqkGJt8u0fDuWUtFteYWGE41PPF6qZLgQguVhSLbFIQa
+	Trrkbdj/+W5bxPvzel4TG3mznbZcll4wTTIpQszw8o5ppVns3+O+WJfKlQTsPjjjqsNWBd0H
+	M7bbnznrfGLR/4pTqnyegn/UFk+ZMdHmo5vs+S3WGxc+N16tWcJ4kkk2YZvu+UaDA+4W2T6h
+	V26/SO5YPHtGS3brsjhfY13eH6mVF019l6y4F3G1M7pK8Ennlwu5W1Z77XvRrHejP9qwc9qE
+	1faT279eeXQkPs7JcH2kKHtZuO6fVbtnOea7eVQunu115UPCm21+4Vum8540imz/9umpbHdM
+	/4usnXpBMbeEV/ofXzpNn+dDfVjEiaqs60osxRmJhlrMRcWJAL9MmapeAwAA
+X-CMS-MailID: 20240115154912eucas1p2e5ebae8bbeed7bdbaec30f80dbf52df1
+X-Msg-Generator: CA
+X-RootMTR: 20231226113448eucas1p2790755bc45518304822dc9b24c93c2a3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20231226113448eucas1p2790755bc45518304822dc9b24c93c2a3
+References: <CGME20231226113448eucas1p2790755bc45518304822dc9b24c93c2a3@eucas1p2.samsung.com>
+	<20231226-sysctl-check-v2-1-2d4f50b30d34@weissschuh.net>
 
-Rootless containers are not allowed to modify kernel IPC parameters.
+--j7wblihvlqrnvzk4
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-All default limits are set to such high values that in fact there are no
-limits at all. All limits are not inherited and are initialized to
-default values when a new ipc_namespace is created.
+Hey Thomas
 
-For new ipc_namespace:
+I lost track of the thread here. Did you get my latest answer to your V1?
+https://lore.kernel.org/all/20231231143455.tvwb464awfzv5uti@localhost/
 
-size_t       ipc_ns.shm_ctlmax = SHMMAX; // (ULONG_MAX - (1UL << 24))
-size_t       ipc_ns.shm_ctlall = SHMALL; // (ULONG_MAX - (1UL << 24))
-int          ipc_ns.shm_ctlmni = IPCMNI; // (1 << 15)
-int          ipc_ns.shm_rmid_forced = 0;
-unsigned int ipc_ns.msg_ctlmax = MSGMAX; // 8192
-unsigned int ipc_ns.msg_ctlmni = MSGMNI; // 32000
-unsigned int ipc_ns.msg_ctlmnb = MSGMNB; // 16384
+Best
+On Tue, Dec 26, 2023 at 12:34:38PM +0100, Thomas Wei=DFschuh wrote:
+> The script expects the old sysctl_register_paths() API which was removed
+> some time ago. Adapt it to work with the new
+> sysctl_register()/sysctl_register_sz()/sysctl_register_init() APIs.
+>=20
+> In its reference invocation the script won't be able to parse the tables
+> from ipc/ipc_sysctl.c as they are using dynamically built tables which
+> are to complex to parse.
+>=20
+> Note that the script is already prepared for a potential constification
+> of the ctl_table structs.
+>=20
+> Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
+> ---
+> Changes in v2:
+> - Remove unused global variable "paths"
+> - Remove docs for deleted variables "children" and "paths"
+> - Link to v1: https://lore.kernel.org/r/20231220-sysctl-check-v1-1-420ced=
+4a69d7@weissschuh.net
+> ---
+>  scripts/check-sysctl-docs | 45 ++++++++++++-----------------------------=
+----
+>  1 file changed, 12 insertions(+), 33 deletions(-)
+>=20
+> diff --git a/scripts/check-sysctl-docs b/scripts/check-sysctl-docs
+> index 4f163e0bf6a4..739afd766708 100755
+> --- a/scripts/check-sysctl-docs
+> +++ b/scripts/check-sysctl-docs
+> @@ -8,7 +8,7 @@
+>  # Example invocation:
+>  #	scripts/check-sysctl-docs -vtable=3D"kernel" \
+>  #		Documentation/admin-guide/sysctl/kernel.rst \
+> -#		$(git grep -l register_sysctl_)
+> +#		$(git grep -l register_sysctl)
+>  #
+>  # Specify -vdebug=3D1 to see debugging information
+> =20
+> @@ -20,14 +20,10 @@ BEGIN {
+>  }
+> =20
+>  # The following globals are used:
+> -# children: maps ctl_table names and procnames to child ctl_table names
+>  # documented: maps documented entries (each key is an entry)
+>  # entries: maps ctl_table names and procnames to counts (so
+>  #          enumerating the subkeys for a given ctl_table lists its
+>  #          procnames)
+> -# files: maps procnames to source file names
+> -# paths: maps ctl_path names to paths
+> -# curpath: the name of the current ctl_path struct
+>  # curtable: the name of the current ctl_table struct
+>  # curentry: the name of the current proc entry (procname when parsing
+>  #           a ctl_table, constructed path when parsing a ctl_path)
+> @@ -94,44 +90,23 @@ FNR =3D=3D NR {
+> =20
+>  # Stage 2: process each file and find all sysctl tables
+>  BEGINFILE {
+> -    delete children
+>      delete entries
+> -    delete paths
+> -    curpath =3D ""
+>      curtable =3D ""
+>      curentry =3D ""
+>      if (debug) print "Processing file " FILENAME
+>  }
+> =20
+> -/^static struct ctl_path/ {
+> -    match($0, /static struct ctl_path ([^][]+)/, tables)
+> -    curpath =3D tables[1]
+> -    if (debug) print "Processing path " curpath
+> -}
+> -
+> -/^static struct ctl_table/ {
+> -    match($0, /static struct ctl_table ([^][]+)/, tables)
+> -    curtable =3D tables[1]
+> +/^static( const)? struct ctl_table/ {
+> +    match($0, /static( const)? struct ctl_table ([^][]+)/, tables)
+> +    curtable =3D tables[2]
+>      if (debug) print "Processing table " curtable
+>  }
+> =20
+>  /^};$/ {
+> -    curpath =3D ""
+>      curtable =3D ""
+>      curentry =3D ""
+>  }
+> =20
+> -curpath && /\.procname[\t ]*=3D[\t ]*".+"/ {
+> -    match($0, /.procname[\t ]*=3D[\t ]*"([^"]+)"/, names)
+> -    if (curentry) {
+> -	curentry =3D curentry "/" names[1]
+> -    } else {
+> -	curentry =3D names[1]
+> -    }
+> -    if (debug) print "Setting path " curpath " to " curentry
+> -    paths[curpath] =3D curentry
+> -}
+> -
+>  curtable && /\.procname[\t ]*=3D[\t ]*".+"/ {
+>      match($0, /.procname[\t ]*=3D[\t ]*"([^"]+)"/, names)
+>      curentry =3D names[1]
+> @@ -140,10 +115,14 @@ curtable && /\.procname[\t ]*=3D[\t ]*".+"/ {
+>      file[curentry] =3D FILENAME
+>  }
+> =20
+> -/\.child[\t ]*=3D/ {
+> -    child =3D trimpunct($NF)
+> -    if (debug) print "Linking child " child " to table " curtable " entr=
+y " curentry
+> -    children[curtable][curentry] =3D child
+> +/register_sysctl.*/ {
+> +    match($0, /register_sysctl(|_init|_sz)\("([^"]+)" *, *([^,)]+)/, tab=
+les)
+> +    if (debug) print "Registering table " tables[3] " at " tables[2]
+> +    if (tables[2] =3D=3D table) {
+> +        for (entry in entries[tables[3]]) {
+> +            printentry(entry)
+> +        }
+> +    }
+>  }
+> =20
+>  END {
+>=20
+> ---
+> base-commit: de2ee5e9405e12600c81e39837362800cee433a2
+> change-id: 20231220-sysctl-check-8802651d945d
+>=20
+> Best regards,
+> --=20
+> Thomas Wei=DFschuh <linux@weissschuh.net>
+>=20
 
-The shm_tot (total amount of shared pages) has also ceased to be
-global, it is located in ipc_namespace and is not inherited from
-anywhere.
+--=20
 
-In such conditions, it cannot be said that these limits limit anything.
-The real limiter for them is cgroups.
+Joel Granados
 
-If we allow rootless containers to change these parameters, then it can
-only be reduced.
+--j7wblihvlqrnvzk4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Alexey Gladkov <legion@kernel.org>
-Link: https://lkml.kernel.org/r/e2d84d3ec0172cfff759e6065da84ce0cc2736f8.1663756794.git.legion@kernel.org
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
----
- ipc/ipc_sysctl.c | 37 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
-index 8c62e443f78b..01c4a50d22b2 100644
---- a/ipc/ipc_sysctl.c
-+++ b/ipc/ipc_sysctl.c
-@@ -14,6 +14,7 @@
- #include <linux/ipc_namespace.h>
- #include <linux/msg.h>
- #include <linux/slab.h>
-+#include <linux/cred.h>
- #include "util.h"
- 
- static int proc_ipc_dointvec_minmax_orphans(struct ctl_table *table, int write,
-@@ -190,25 +191,57 @@ static int set_is_seen(struct ctl_table_set *set)
- 	return &current->nsproxy->ipc_ns->ipc_set == set;
- }
- 
-+static void ipc_set_ownership(struct ctl_table_header *head,
-+			      struct ctl_table *table,
-+			      kuid_t *uid, kgid_t *gid)
-+{
-+	struct ipc_namespace *ns =
-+		container_of(head->set, struct ipc_namespace, ipc_set);
-+
-+	kuid_t ns_root_uid = make_kuid(ns->user_ns, 0);
-+	kgid_t ns_root_gid = make_kgid(ns->user_ns, 0);
-+
-+	*uid = uid_valid(ns_root_uid) ? ns_root_uid : GLOBAL_ROOT_UID;
-+	*gid = gid_valid(ns_root_gid) ? ns_root_gid : GLOBAL_ROOT_GID;
-+}
-+
- static int ipc_permissions(struct ctl_table_header *head, struct ctl_table *table)
- {
- 	int mode = table->mode;
- 
- #ifdef CONFIG_CHECKPOINT_RESTORE
--	struct ipc_namespace *ns = current->nsproxy->ipc_ns;
-+	struct ipc_namespace *ns =
-+		container_of(head->set, struct ipc_namespace, ipc_set);
- 
- 	if (((table->data == &ns->ids[IPC_SEM_IDS].next_id) ||
- 	     (table->data == &ns->ids[IPC_MSG_IDS].next_id) ||
- 	     (table->data == &ns->ids[IPC_SHM_IDS].next_id)) &&
- 	    checkpoint_restore_ns_capable(ns->user_ns))
- 		mode = 0666;
-+	else
- #endif
--	return mode;
-+	{
-+		kuid_t ns_root_uid;
-+		kgid_t ns_root_gid;
-+
-+		ipc_set_ownership(head, table, &ns_root_uid, &ns_root_gid);
-+
-+		if (uid_eq(current_euid(), ns_root_uid))
-+			mode >>= 6;
-+
-+		else if (in_egroup_p(ns_root_gid))
-+			mode >>= 3;
-+	}
-+
-+	mode &= 7;
-+
-+	return (mode << 6) | (mode << 3) | mode;
- }
- 
- static struct ctl_table_root set_root = {
- 	.lookup = set_lookup,
- 	.permissions = ipc_permissions,
-+	.set_ownership = ipc_set_ownership,
- };
- 
- bool setup_ipc_sysctls(struct ipc_namespace *ns)
--- 
-2.43.0
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmWlU/IACgkQupfNUreW
+QU+z9wv/SfmB+xmpyKa9R2Gwimo/vOJ/aUGmeafjnaCVGIugl6ZoW70A4pv0OO1z
+1SueAfBzIiXG+8MSduB9aHF2xa83fxLHVw3fuEeMivJMowW26vC9Jsd07eLEYIPJ
+Fr3ZD1oXcdDdaI0V3eShij4+/CwkAl1zf9VlrKBlsJNYmqn+egdV054r3XZqoh3s
+cux5o/NZB6rDCmATTLoqv45WYZaydtytqJErTmPWHo1RDhp+dd4D0I6NNskt2uEw
+TlIZpRdRj7IZ+/8EjmiM7P6PMs2faI/86Zeb2vYYdQ5GDomVRh+Ff3ZF9wxCavCq
+g59c8qpcfAX59NZK6iUE4LI1B/eweDoPDXMKhvniMfm1Jv+KwyPL8i/BuWHysgl+
+NaNbAlKKQE6zbxFci9YrAG2qSoivIwAgGM94Xq9cZmS7zcz/Y+yZuk7zz096XoTD
+200WIoL0/JzVlNpTpgZUoFCWxR7gGEJ1fsh7y8PKrv4GMKsXoizaetHCeIrXi2s8
+rGesrIWO
+=ikP5
+-----END PGP SIGNATURE-----
 
+--j7wblihvlqrnvzk4--
