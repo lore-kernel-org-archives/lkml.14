@@ -1,170 +1,179 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A7017736;
-	Mon, 15 Jan 2024 15:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E210D179B2
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 15:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="zxmKpYKN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705332310;
-	bh=q8OgSPYSt4fWjce5h2uPtqcNF1oPF5OCVXh+xjDAU8I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=zxmKpYKNZVsryLBAgntQEjObGXnCS6iaHbB8FLdMBJZwkzbt9hc3knwt4/6YK/EOi
-	 9eXjmEvZOIZJ4ckDW7orT/BZE9jP+RHX/2ylANWkQaItLe4FxRFej9XaFEFGUzL06s
-	 5g6MN7XMTSdzffAzbkmUGTob9OzOzouqKW3sabB+XbOP4oygSxW38EwhiavR+tnDqr
-	 b1bBcKj0CZhmu11NDUrt65KBmCj24sYmmuqOmgvZAKWRwALQhhTm7Gp+Hbbt+se8fI
-	 DvARBlhD+vi85veigDVA/fldv2FjSx2Hx8D02478MU5ImjmhqTwNug/MXGQDofNDAd
-	 NlU6oL98YtYqw==
-Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: koike)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4BA9C37813DA;
-	Mon, 15 Jan 2024 15:25:06 +0000 (UTC)
-Message-ID: <c96e5824-21ac-4307-be96-469944d6852f@collabora.com>
-Date: Mon, 15 Jan 2024 12:25:05 -0300
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="S04UjvDx"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-557bfc7f7b4so13188307a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 07:25:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1705332317; x=1705937117; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V3Au/gRaaczdqwoxq154l1Vb0TSRdBUZsRRgmxL/3EA=;
+        b=S04UjvDxCv+YJv+ugX5uV3+beXSeeLRov+lehLqMSpkd8QTum/jqGWqjflt2haN3CS
+         CgpZQfYEWBqrmyGJK7Q17nS+eP++ks0juctFVvZ7xw3MMVPVA6hIwGuydFHDg37hglOq
+         2WyzuOIOvdzPfebTb/bYQxVkH+Pzach3nstMq9E2ysVmddap+CgvI585VE40ujQnrXjS
+         IwRjXSZWZsOwRkPWaSSswZZ1xU2KjJD4waZniGCHroTmFWRpushu8Z6PoFCig8DkrYZ0
+         x3oM+J8dBoyTpBi1faJR5FX2yD8Smgqm4DQIkhmh9vUG+pFcYtgg5IwB92VKv7niRhgN
+         ejjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705332317; x=1705937117;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V3Au/gRaaczdqwoxq154l1Vb0TSRdBUZsRRgmxL/3EA=;
+        b=kgNSSQY2qFgvDJjmo1cSaNdopZugpysaN8cJG36T3mDw+wQF78II2hKfeBEZ0pYo5t
+         +XDOfh+ieZf0IrDtS+JY9IRblD3nuDmiJFPBcHTk2oDn/OCOgnUdYzrJ/2npqNOobMVv
+         s2pIabv0hgnZNVxejluuIFp1YHdWcTxJ8xLs6EHf/oQ3Nh1V1Yeds5VeWm7xuYcolfO2
+         H+R43dePIKxbpjKF5J+esZnf5o0iSicrh41jgLEL/6WcoTd5efWNhKiKj8iVRULasl55
+         jE4h1z9rr+M6CrPY9VakTopLWYYmCHIPfM6HFFpY9VZDfnFXibtfrxXwDZHF4U+bx3Fi
+         1D2w==
+X-Gm-Message-State: AOJu0YwvRZqOc4YLl/94CbeEbTWM5Ht9iymKq3zFJQRl+eb4X1o+mJR3
+	46Q6jrRfb1W7P+o4CRlycHPfPdhyXYgW1A==
+X-Google-Smtp-Source: AGHT+IFVcJIOzgkm0o7Kllwec4Tc/GzqZS761LXVytipb32050OjQDT49hpCnD8tQxYIJBuIt52jzA==
+X-Received: by 2002:a05:6402:1ca8:b0:558:b48a:b5f1 with SMTP id cz8-20020a0564021ca800b00558b48ab5f1mr6094220edb.7.1705332317286;
+        Mon, 15 Jan 2024 07:25:17 -0800 (PST)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id b23-20020a056402139700b0055920196ddesm2446466edv.54.2024.01.15.07.25.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 07:25:16 -0800 (PST)
+Date: Mon, 15 Jan 2024 16:25:16 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Conor Dooley <conor@kernel.org>, Atish Kumar Patra <atishp@rivosinc.com>, 
+	Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 -next 2/3] ACPI: RISC-V: Add LPI driver
+Message-ID: <20240115-94bdb396ea417ca1d834548d@orel>
+References: <20240115101056.429471-1-sunilvl@ventanamicro.com>
+ <20240115101056.429471-3-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] drm/ci: Update xfails for newly added msm tests
-Content-Language: en-US
-To: Vignesh Raman <vignesh.raman@collabora.com>,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org
-Cc: daniels@collabora.com, sean@poorly.run, guilherme.gallo@collabora.com,
- sergi.blanch.torne@collabora.com, quic_abhinavk@quicinc.com,
- david.heidelberg@collabora.com, dmitry.baryshkov@linaro.org,
- marijn.suijten@somainline.org, airlied@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20240115101750.27077-1-vignesh.raman@collabora.com>
-From: Helen Koike <helen.koike@collabora.com>
-In-Reply-To: <20240115101750.27077-1-vignesh.raman@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240115101056.429471-3-sunilvl@ventanamicro.com>
 
-
-
-On 15/01/2024 07:17, Vignesh Raman wrote:
-> msm tests are added to testlist.txt, so update the xfails
-> for jobs in msm stage.
+On Mon, Jan 15, 2024 at 03:40:55PM +0530, Sunil V L wrote:
+> Enable Low Power Idle (LPI) based cpuidle driver for RISC-V platforms.
+> It depends on SBI HSM calls for idle state transitions.
 > 
-> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 > ---
+>  drivers/acpi/riscv/Makefile  |  3 +-
+>  drivers/acpi/riscv/cpuidle.c | 81 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 83 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/acpi/riscv/cpuidle.c
 > 
-> Depends on https://patchwork.kernel.org/project/linux-arm-msm/patch/20240108195016.156583-1-robdclark@gmail.com/
-> 
-> ---
->   .../gpu/drm/ci/xfails/msm-apq8016-fails.txt   |  3 +-
->   .../gpu/drm/ci/xfails/msm-sdm845-fails.txt    |  5 +---
->   .../gpu/drm/ci/xfails/msm-sdm845-flakes.txt   | 28 +++++++++++++------
->   .../gpu/drm/ci/xfails/msm-sdm845-skips.txt    |  7 ++++-
->   4 files changed, 27 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt b/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
-> index d39d254c935e..44a5c62dedad 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
-> @@ -6,8 +6,6 @@ kms_cursor_legacy@all-pipes-single-bo,Fail
->   kms_cursor_legacy@all-pipes-single-move,Fail
->   kms_cursor_legacy@all-pipes-torture-bo,Fail
->   kms_cursor_legacy@all-pipes-torture-move,Fail
-> -kms_cursor_legacy@forked-bo,Fail
-> -kms_cursor_legacy@forked-move,Fail
->   kms_cursor_legacy@pipe-A-forked-bo,Fail
->   kms_cursor_legacy@pipe-A-forked-move,Fail
->   kms_cursor_legacy@pipe-A-single-bo,Fail
-> @@ -18,3 +16,4 @@ kms_force_connector_basic@force-edid,Fail
->   kms_hdmi_inject@inject-4k,Fail
->   kms_selftest@drm_format,Timeout
->   kms_selftest@drm_format_helper,Timeout
-> +msm_mapping@ring,Fail
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt b/drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt
-> index c55baa2d18c1..e9043a00383e 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt
-> @@ -15,7 +15,7 @@ kms_color@pipe-A-ctm-max,Fail
->   kms_color@pipe-A-ctm-negative,Fail
->   kms_color@pipe-A-ctm-red-to-blue,Fail
->   kms_color@pipe-A-legacy-gamma,Fail
-> -kms_cursor_legacy@basic-flip-after-cursor-legacy,Fail
-> +kms_cursor_legacy@basic-flip-after-cursor-atomic,Fail
->   kms_cursor_legacy@basic-flip-after-cursor-varying-size,Fail
->   kms_cursor_legacy@basic-flip-before-cursor-atomic,Fail
->   kms_cursor_legacy@basic-flip-before-cursor-legacy,Fail
-> @@ -29,9 +29,6 @@ kms_cursor_legacy@flip-vs-cursor-atomic,Fail
->   kms_cursor_legacy@flip-vs-cursor-crc-atomic,Fail
->   kms_cursor_legacy@flip-vs-cursor-crc-legacy,Fail
->   kms_cursor_legacy@flip-vs-cursor-legacy,Fail
-> -kms_cursor_legacy@short-flip-after-cursor-atomic-transitions,Fail
-> -kms_cursor_legacy@short-flip-after-cursor-atomic-transitions-varying-size,Fail
-> -kms_cursor_legacy@short-flip-after-cursor-toggle,Fail
->   kms_flip@flip-vs-modeset-vs-hang,Fail
->   kms_flip@flip-vs-panning-vs-hang,Fail
->   kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Fail
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt b/drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt
-> index 16d205c04cbb..8a492f01eaa4 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt
-> @@ -1,12 +1,22 @@
-> -kms_cursor_legacy@basic-flip-after-cursor-atomic
-> -kms_cursor_legacy@basic-flip-before-cursor-varying-size
-> -kms_cursor_legacy@cursorA-vs-flipA-toggle
-> -kms_cursor_legacy@flip-vs-cursor-atomic-transitions
-> +# Board Name: msm:sdm845
-> +# Bug Report: https://lore.kernel.org/dri-devel/46287831-edfa-78e8-6055-d7a08831c445@collabora.com/T/#u
-> +# Failure Rate: 50
-> +# IGT Version: 1.28-gd2af13d9f
-> +# Linux Version: 6.7.0-rc3
+> diff --git a/drivers/acpi/riscv/Makefile b/drivers/acpi/riscv/Makefile
+> index 8b3b126e0b94..7309d92dd477 100644
+> --- a/drivers/acpi/riscv/Makefile
+> +++ b/drivers/acpi/riscv/Makefile
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -obj-y 	+= rhct.o
+> +obj-y					+= rhct.o
+> +obj-$(CONFIG_ACPI_PROCESSOR_IDLE)	+= cpuidle.o
+> diff --git a/drivers/acpi/riscv/cpuidle.c b/drivers/acpi/riscv/cpuidle.c
+> new file mode 100644
+> index 000000000000..052ec3942902
+> --- /dev/null
+> +++ b/drivers/acpi/riscv/cpuidle.c
+> @@ -0,0 +1,81 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2024, Ventana Micro Systems Inc
+> + *	Author: Sunil V L <sunilvl@ventanamicro.com>
+> + *
+> + */
 > +
-> +# Reported by deqp-runner
-> +kms_cursor_legacy@basic-flip-after-cursor-legacy
->   kms_cursor_legacy@flip-vs-cursor-toggle
->   kms_cursor_legacy@flip-vs-cursor-varying-size
-> +kms_cursor_legacy@short-flip-after-cursor-toggle
->   kms_cursor_legacy@short-flip-before-cursor-atomic-transitions
-> -kms_cursor_legacy@short-flip-before-cursor-toggle
-> -kms_flip@flip-vs-modeset-vs-hang
-> -kms_flip@flip-vs-panning-vs-hang
-> -kms_plane@pixel-format
-> -kms_plane@pixel-format-source-clamping
-> +kms_cursor_legacy@short-flip-before-cursor-atomic-transitions-varying-size
-> +msm_shrink@copy-gpu-32
-> +msm_shrink@copy-gpu-oom-32
+> +#include <linux/acpi.h>
+> +#include <acpi/processor.h>
+> +#include <linux/cpu_pm.h>
+> +#include <linux/cpuidle.h>
+> +#include <linux/suspend.h>
+> +#include <asm/cpuidle.h>
+> +#include <asm/sbi.h>
+> +#include <asm/suspend.h>
 > +
-> +# The below test shows inconsistency across multiple runs, giving
-> +# results of Pass and Fail alternately.
-> +kms_cursor_legacy@basic-flip-before-cursor-varying-size
-> +kms_cursor_legacy@flip-vs-cursor-atomic-transitions
-> +kms_cursor_legacy@short-flip-after-cursor-atomic-transitions
-> +kms_cursor_legacy@short-flip-after-cursor-atomic-transitions-varying-size
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt b/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
-> index 42675f1c6d76..618e3a3a7277 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
-> @@ -1,2 +1,7 @@
->   # Hangs machine
-> -kms_bw.*
-> \ No newline at end of file
-> +kms_bw.*
+> +#define RISCV_FFH_LPI_TYPE_MASK	GENMASK_ULL(63, 60)
+> +#define RISCV_FFH_LPI_RSVD_MASK	GENMASK_ULL(59, 32)
 > +
-> +# Failing due to a bootloader/fw issue. The workaround in mesa CI involves these two patches
-> +# https://gitlab.freedesktop.org/gfx-ci/linux/-/commit/4b49f902ec6f2bb382cbbf489870573f4b43371e
-> +# https://gitlab.freedesktop.org/gfx-ci/linux/-/commit/38cdf4c5559771e2474ae0fecef8469f65147bc1
+> +#define RISCV_FFH_LPI_TYPE_SBI	BIT_ULL(60)
+> +
+> +static int acpi_cpu_init_idle(unsigned int cpu)
+> +{
+> +	int i;
+> +	struct acpi_lpi_state *lpi;
+> +	struct acpi_processor *pr = per_cpu(processors, cpu);
+> +
+> +	if (unlikely(!pr || !pr->flags.has_lpi))
+> +		return -EINVAL;
+> +
+> +	if (!is_sbi_hsm_supported())
+> +		return -ENODEV;
+> +
+> +	if (pr->power.count <= 1)
+> +		return -ENODEV;
+> +
+> +	for (i = 1; i < pr->power.count; i++) {
+> +		u32 state;
+> +
+> +		lpi = &pr->power.lpi_states[i];
+> +
+> +		/*
+> +		 * Validate Entry Method as per FFH spec.
+> +		 * bits[63:60] should be 0x1
+> +		 * bits[59:32] should be 0x0
+> +		 * bits[31:0] represent a SBI power_state
+> +		 */
+> +		if (((lpi->address & RISCV_FFH_LPI_TYPE_MASK) != RISCV_FFH_LPI_TYPE_SBI) ||
+> +		    (lpi->address & RISCV_FFH_LPI_RSVD_MASK)) {
+> +			pr_warn("Invalid LPI entry method %#llx\n", lpi->address);
+> +			return -EINVAL;
+> +		}
+> +
+> +		state = lpi->address;
+> +		if (!sbi_suspend_state_is_valid(state)) {
+> +			pr_warn("Invalid SBI power state %#x\n", state);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int acpi_processor_ffh_lpi_probe(unsigned int cpu)
+> +{
+> +	return acpi_cpu_init_idle(cpu);
+> +}
+> +
+> +int acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
+> +{
+> +	u32 state = lpi->address;
+> +
+> +	if (state & SBI_HSM_SUSP_NON_RET_BIT)
+> +		return CPU_PM_CPU_IDLE_ENTER_PARAM(sbi_suspend,
+> +						   lpi->index,
+> +						   state);
+> +	else
+> +		return CPU_PM_CPU_IDLE_ENTER_RETENTION_PARAM(sbi_suspend,
+> +							     lpi->index,
+> +							     state);
+> +}
+> -- 
+> 2.34.1
+>
 
-Any chance we could make an upstream patch to solve this?
-
-> +msm_mapping@*
-
-In any case:
-
-Acked-by: Helen Koike <helen.koike@collabora.com>
-
-Thanks
-Helen
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
