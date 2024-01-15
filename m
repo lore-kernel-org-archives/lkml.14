@@ -1,113 +1,89 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CABB199DC;
-	Mon, 15 Jan 2024 20:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775221B263
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 20:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Ug9FFR/K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1705351332;
-	bh=0GZMuy83Qkf0CT/wQsE+OjcK1LFAZ6r3ajEM94ed9LM=;
-	h=From:To:Cc:Subject:Date;
-	b=Ug9FFR/KsLbVoL5B811EdsJ/O1Zm6j1L9J0D1ecV4MZKvKLvqbMMJn5OuuThujw6k
-	 mObChAZmRLKX7Az1jtOIH5gBZWPvT9lU4cf2vLqVasOpbFeKJNS2zzAGmdlaHXbfq9
-	 V3NkTFqjeIBPie+58H1P4DckWWMDe9XtucoW3FxM=
-Received: from localhost.localdomain ([2409:8a60:2a63:2f30:a63a:c84e:620:9928])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id 6CEB9CA0; Mon, 15 Jan 2024 23:27:14 +0800
-X-QQ-mid: xmsmtpt1705332434ty7d94vs3
-Message-ID: <tencent_B0B3D2BD9861FD009E03AB18A81783322709@qq.com>
-X-QQ-XMAILINFO: OZsapEVPoiO6cs2bsyymhyvFqUuhCAPk9ul8rNUG4VgNtxtY0dH5g0uBkpcTsB
-	 Xht6BF+QP6s/SL7G30S5jJjmR9o9pGVmdbyo0afFDoykRUnsEIRuL/slsLeyxIsSMcSpSRJK9nsa
-	 BGOIcuOBVl0f8IjUpdQidRA2UVg7Jcc/fMhtNUYkq4v8IkhJGn2++cmIX1kANYAgqumj6aiArSQi
-	 spHPN5Bsa+kzRM2OsW65efjjbaoSE7yIvQ67OfC3jhn/loPgArhha3ZanBxWUbijIl/7t40PO+xI
-	 cyWe/Esj80/zuIQ4cAgOjMvZgMIb+FfHLjHCoeDFXk8ou5mGPwa2jjN+5WGE/UoKtSZ/ZYFjD/GI
-	 /hq9Pzp0YU7IkC1HZLLI9wZN6KpSJqotegBefXd6GBgQbF7eMGTD/BrTqGfACRAPoH+IkbXMXTMG
-	 JmOVE6WmtbmFKfDSXUdTzvVWWQmJa5YUhTQop0dn5jmRQQ1/BWDR4LlttoaBIhJdUKyO2L1eLOW1
-	 ZtnDQrySnyr3Opx4GNpUE76ruKiXMGVHbGGNyl9gvKNIhgSCyx9c+jJfVCP8p+csJjTmnDYeeXmu
-	 TufLAOGpht3SEYSeWGi9i73wh2rKk93v/ipkSuO3syhB0hy7fkgeMWUDAHWMOGOCr20QLV9+/g+K
-	 2sONJK53otXGWAG39h+cq+Q36Hxnjz1tE4Xw8jF363dsUql1p3KY8Z/FJqlRJsCPfZ6nmjYn+gka
-	 G4TndEWzv3wMPbhgwC/NpNiDU6vNC9t8nBkcIhBmjSE6S/+HZcvaumWTCwLklRPZl/ukMsNmNA77
-	 gleYm58lShb6aW6HckH1eZmQspSiu+Y404pzf0R+A1SKTaF1p7Z1yZs27XmvTRTkByd1RAspEmO7
-	 dNEXFz4NInc0Uxxt7vCPwLIzjd6O20lXL+22MrbZfGD1wBhRX/QydfetnLSTsHhJnmQBK+L+l3Eh
-	 xJox79qv8uVd9ClDyzaRkpQtw8Lq6GCvKEINwtUeoOp7goGQbQZ57E3QSaHz1HJQUXO2+EPckXm0
-	 PIx4CMkr9TNZVs54qr
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: wenyang.linux@foxmail.com
-To: Christian Brauner <brauner@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Dylan Yudaken <dylany@fb.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Matthew Wilcox <willy@infradead.org>,
-	Eric Biggers <ebiggers@google.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] eventfd: move 'eventfd-count' printing out of spinlock
-Date: Mon, 15 Jan 2024 23:27:00 +0800
-X-OQ-MSGID: <20240115152700.9478-1-wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nf66qED8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1858C433F1;
+	Mon, 15 Jan 2024 20:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705351385;
+	bh=+eQ0kF1MwZjHgJQa48LmF5DC4WqnFHtOw230BvYc0aU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=nf66qED8hosljTU5luuloxRXLdZeaklVCMisE3vgP1pUSYC5zbVc4CAUOLv+nbZCx
+	 s6ep1k9eppm7mSF1hbLPbcsXwoaYB1+txLDmsuoDlfFlVzZoSW6aAc4GYCo2olDePX
+	 0wrijGkhfwrN/StgvIleSVldSMxhK6OYmeIs4djOvIPznYH/IEOAaz+APyIhwD4hKm
+	 0SOCan+LvQwUSBPWWW6eDnV6fs6OzLUllwPnwiuQ8xvbJp+Js2oUyxy2SNoU44dSV1
+	 Nn5EWeJNMlBRj3aOb0vVJ2oViVziCV8AbN5C562nXm9n+nqLAHCDn1aqdo7q45DTF7
+	 UGx8lCMdShFFA==
+Received: by mercury (Postfix, from userid 1000)
+	id 3C23F10644D4; Mon, 15 Jan 2024 21:43:00 +0100 (CET)
+Date: Mon, 15 Jan 2024 21:43:00 +0100
+From: Sebastian Reichel <sre@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hsi changes for hsi-6.8
+Message-ID: <xnu4qtvu45nm2eu5kq5lkyvfizbiaibtjag7mela6gmisxfu73@zlhfjzqbcmyl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r4pubg7ukyhd3onc"
+Content-Disposition: inline
 
-From: Wen Yang <wenyang.linux@foxmail.com>
 
-When printing eventfd->count, interrupts will be disabled and a spinlock
-will be obtained, competing with eventfd_write(). By moving the
-"eventfd-count" print out of the spinlock and merging multiple
-seq_printf() into one, it could improve a bit, just like timerfd_show().
+--r4pubg7ukyhd3onc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Dylan Yudaken <dylany@fb.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- fs/eventfd.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+Hi Linus,
 
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index ad8186d47ba7..a6fa6ee748df 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -283,13 +283,18 @@ static ssize_t eventfd_write(struct file *file, const char __user *buf, size_t c
- static void eventfd_show_fdinfo(struct seq_file *m, struct file *f)
- {
- 	struct eventfd_ctx *ctx = f->private_data;
-+	unsigned long long cnt;
- 
- 	spin_lock_irq(&ctx->wqh.lock);
--	seq_printf(m, "eventfd-count: %16llx\n",
--		   (unsigned long long)ctx->count);
-+	cnt = ctx->count;
- 	spin_unlock_irq(&ctx->wqh.lock);
--	seq_printf(m, "eventfd-id: %d\n", ctx->id);
--	seq_printf(m, "eventfd-semaphore: %d\n",
-+
-+	seq_printf(m,
-+		   "eventfd-count: %16llx\n"
-+		   "eventfd-id: %d\n"
-+		   "eventfd-semaphore: %d\n",
-+		   cnt,
-+		   ctx->id,
- 		   !!(ctx->flags & EFD_SEMAPHORE));
- }
- #endif
--- 
-2.25.1
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
 
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi.git tags/hsi-for-6.8
+
+for you to fetch changes up to fa72d143471d04ce3055d8dad9743b08c19e4060:
+
+  HSI: omap_ssi: Remove usage of the deprecated ida_simple_xx() API (2023-11-13 21:48:46 +0100)
+
+----------------------------------------------------------------
+HSI changes for the 6.8 series
+
+ * modernize IDA API
+
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      HSI: omap_ssi: Remove usage of the deprecated ida_simple_xx() API
+
+ drivers/hsi/controllers/omap_ssi_core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--r4pubg7ukyhd3onc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmWlmM8ACgkQ2O7X88g7
++pra5BAAg617YEgAhDXAFA5BHwoCd9qPMc5ySfI1MF08HPlBxr8YJiZslcgKdkVi
+rNZomQQQEDOXQ2ZeNNiuoJr2w/fTB4SsKofK8DTnlqZlC8l2cFj0RpvJa3BjbEo5
+JWqzR4PGEEoLqVD0E61S112WRkjNAoYVlbnzYnSW1Azn9YoKFV+KpsvObAIowk5a
+JXACi/FAQzxXfynLK9OcKzV/RIm+LFHl2rx9YvWhvOch4wEAewsQunvoT4Jrk+zC
+mpmSYppmZbsuiCnqUinRGB9Brpa00AzSdlk8fk33JYF3MhVTmfidnbf+yQ3tjleb
+irqa0snJAmPYz5G09+RmfS7n5bvs/OHEiDzdGVcUHdpl+8EI7ZGgDEubzt1Nmcj8
+lAU6bYgHqZKFZHZ2MVq0uU17iiYNLnNy0CShR7kdmfbGO/cm82LASKsKDxIpRFFS
+iv37ZfnLuo+cIrbve1ZQeZhf5wlent3LmmxgmN55Bf5GYjC/jatUAgT9CYx6IGp0
+WLy9d6cUYnb2yNUYkGrwXm3i98oIFv5Qsh8JvPcJ8eQigC5vEQQcJCJ5cnfcIWNE
+pyjJu7Z6T4nEVwfOu4olgxbSmPg0Xg5Zlg4fLgjma12xIZqmhQ3BLizbmMu9HLI+
+2r7VkM+msh2xRih/Wn846txK9Gq6Z5PSgIVslYn5MrpH5Ui16cE=
+=Tz35
+-----END PGP SIGNATURE-----
+
+--r4pubg7ukyhd3onc--
