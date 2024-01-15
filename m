@@ -1,29 +1,29 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFFB63CD;
-	Mon, 15 Jan 2024 07:33:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4193B4401;
+	Mon, 15 Jan 2024 07:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bEEgo7HG"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UJUhNeQk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705303989;
-	bh=COa40clGVU4MtL/28A+nBi1NMczqiOUny8LpI5UZWfU=;
+	s=mail; t=1705303994;
+	bh=msYTdYSBLgcNB9Pwi9Sv9tDsr6IJ72WoG34TW93BI1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bEEgo7HGnMtriol9Cd1RJNxtLlrNO61myA2FuEQXp1QrZaHHwOlJwKdRf0woPTJrQ
-	 EzOMqOV0/DiLwbYUjcch0Sn33IF1C9PXgFuZTBSklaWYzJ3SVAskbc6RPU1//jBIHl
-	 D7ZkMqsFNknuVt8UwGpgEIrfnXX0c9nfqfwWqa8lpSNLToehXX1ctahdM1BXuukhhQ
-	 llmc3tjHgK4Xh45GAltOdyOOZ4a3JRdkk1+dPNeTOcmAJg1ocKp4K/MpL6ZJpXpOu5
-	 Y8/19GDVFw4g7eMS43kbqMTqLk9wf8Z1bfGFm/OekYLSAtGRBkJsy4QT/zQ1GFwu03
-	 mLliwihyi1rVw==
+	b=UJUhNeQkyC7Ebkc3pFt7p01Xk/7PFHg5FBEns8H05Dd0K80Kb/n+KbvzLg99xQ/fr
+	 QF60mReOOE2DW+zEesgI+RLd4oELswj9b997YK0WauQOmKio0/r4Er2QaRAUAGjhQy
+	 XRwFzDM17zAVXftavQQuYbJMB85p5CbO/CGvsCrLzFy/5yHG9rnNu1itvdNueknnaw
+	 dL/TlVljeeXacf/UN6+XtNTKS61dzfYS5oFE+iGzB3iC8paz/IrLY+Bn3JReI9z/gB
+	 N05C21HN8PkqTGZi19xYVfWbN2IpCX5PkFgHila8eDRGMB5lC6uP87uV7iInAN/2IN
+	 ke/zANdj9UbOQ==
 Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BD6BE3781FFD;
-	Mon, 15 Jan 2024 07:33:07 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EC8753781F80;
+	Mon, 15 Jan 2024 07:33:12 +0000 (UTC)
 From: Muhammad Usama Anjum <usama.anjum@collabora.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Shuah Khan <shuah@kernel.org>
@@ -32,9 +32,9 @@ Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/7] selftests/mm: hugetlb-madvise: conform test to TAP format output
-Date: Mon, 15 Jan 2024 12:32:39 +0500
-Message-ID: <20240115073247.1280266-3-usama.anjum@collabora.com>
+Subject: [PATCH v3 5/7] selftests/mm: hugetlb-read-hwpoison: conform test to TAP format output
+Date: Mon, 15 Jan 2024 12:32:41 +0500
+Message-ID: <20240115073247.1280266-5-usama.anjum@collabora.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240115073247.1280266-1-usama.anjum@collabora.com>
 References: <20240115073247.1280266-1-usama.anjum@collabora.com>
@@ -51,386 +51,276 @@ functional change is intended other than the layout of output messages.
 
 Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
- tools/testing/selftests/mm/hugetlb-madvise.c | 209 +++++++------------
- 1 file changed, 81 insertions(+), 128 deletions(-)
+Changes in v3:
+- Use ksft_perror as short hand instead of missing strerror(errno) at
+  one place
 
-diff --git a/tools/testing/selftests/mm/hugetlb-madvise.c b/tools/testing/selftests/mm/hugetlb-madvise.c
-index f32d99565c5e..4848200f801f 100644
---- a/tools/testing/selftests/mm/hugetlb-madvise.c
-+++ b/tools/testing/selftests/mm/hugetlb-madvise.c
-@@ -19,19 +19,14 @@
- #include <sys/mman.h>
- #include <fcntl.h>
- #include "vm_util.h"
-+#include "../kselftest.h"
+Tested this by reverting the patch a08c7193e4f18dc8508f2d07d0de2c5b94cb39a3
+("mm/filemap: remove hugetlb special casing in filemap.c") as it has
+broken the test. The bug report can be found at [1].
+
+Tested with proposed fix as well [2].
+
+[1] https://lore.kernel.org/all/079335ab-190f-41f7-b832-6ffe7528fd8b@collabora.com
+[2] https://lore.kernel.org/all/a20e7bdb-7344-306d-e8f5-5ee69af7d5ea@oracle.com
+---
+ .../selftests/mm/hugetlb-read-hwpoison.c      | 116 ++++++++----------
+ 1 file changed, 54 insertions(+), 62 deletions(-)
+
+diff --git a/tools/testing/selftests/mm/hugetlb-read-hwpoison.c b/tools/testing/selftests/mm/hugetlb-read-hwpoison.c
+index ba6cc6f9cabc..23b41b88c6af 100644
+--- a/tools/testing/selftests/mm/hugetlb-read-hwpoison.c
++++ b/tools/testing/selftests/mm/hugetlb-read-hwpoison.c
+@@ -58,8 +58,8 @@ static bool verify_chunk(char *buf, size_t len, char val)
  
- #define MIN_FREE_PAGES	20
- #define NR_HUGE_PAGES	10	/* common number of pages to map/allocate */
+ 	for (i = 0; i < len; ++i) {
+ 		if (buf[i] != val) {
+-			printf(PREFIX ERROR_PREFIX "check fail: buf[%lu] = %u != %u\n",
+-				i, buf[i], val);
++			ksft_print_msg(PREFIX ERROR_PREFIX "check fail: buf[%lu] = %u != %u\n",
++				       i, buf[i], val);
+ 			return false;
+ 		}
+ 	}
+@@ -75,21 +75,21 @@ static bool seek_read_hugepage_filemap(int fd, size_t len, size_t wr_chunk_size,
+ 	ssize_t total_ret_count = 0;
+ 	char val = offset / wr_chunk_size + offset % wr_chunk_size;
  
--#define validate_free_pages(exp_free)					\
--	do {								\
--		int fhp = get_free_hugepages();				\
--		if (fhp != (exp_free)) {				\
--			printf("Unexpected number of free huge "	\
--				"pages line %d\n", __LINE__);		\
--			exit(1);					\
--		}							\
--	} while (0)
-+#define validate_free_pages(exp_free)						\
-+		ksft_test_result(get_free_hugepages() == (exp_free),		\
-+				 "Validation of free pages (%d)\n", __LINE__)
- 
- unsigned long huge_page_size;
- unsigned long base_page_size;
-@@ -64,28 +59,27 @@ int main(int argc, char **argv)
- 	int fd;
- 	int ret;
- 
-+	ksft_print_header();
-+
- 	huge_page_size = default_huge_page_size();
--	if (!huge_page_size) {
--		printf("Unable to determine huge page size, exiting!\n");
--		exit(1);
--	}
-+	if (!huge_page_size)
-+		ksft_exit_fail_msg("Unable to determine huge page size, exiting!\n");
-+
- 	base_page_size = sysconf(_SC_PAGE_SIZE);
--	if (!huge_page_size) {
--		printf("Unable to determine base page size, exiting!\n");
--		exit(1);
--	}
-+	if (!huge_page_size)
-+		ksft_exit_fail_msg("Unable to determine base page size, exiting!\n");
- 
- 	free_hugepages = get_free_hugepages();
- 	if (free_hugepages < MIN_FREE_PAGES) {
--		printf("Not enough free huge pages to test, exiting!\n");
--		exit(1);
-+		ksft_print_msg("Not enough free huge pages to test, exiting!\n");
-+		ksft_finished();
+-	printf(PREFIX PREFIX "init val=%u with offset=0x%lx\n", val, offset);
+-	printf(PREFIX PREFIX "expect to read 0x%lx bytes of data in total\n",
+-	       expected);
++	ksft_print_msg(PREFIX PREFIX "init val=%u with offset=0x%lx\n", val, offset);
++	ksft_print_msg(PREFIX PREFIX "expect to read 0x%lx bytes of data in total\n",
++		       expected);
+ 	if (lseek(fd, offset, SEEK_SET) < 0) {
+-		perror(PREFIX ERROR_PREFIX "seek failed");
++		ksft_perror(PREFIX ERROR_PREFIX "seek failed");
+ 		return false;
  	}
  
- 	fd = memfd_create(argv[0], MFD_HUGETLB);
+ 	while (offset + total_ret_count < len) {
+ 		ret_count = read(fd, buf, wr_chunk_size);
+ 		if (ret_count == 0) {
+-			printf(PREFIX PREFIX "read reach end of the file\n");
++			ksft_print_msg(PREFIX PREFIX "read reach end of the file\n");
+ 			break;
+ 		} else if (ret_count < 0) {
+-			perror(PREFIX ERROR_PREFIX "read failed");
++			ksft_perror(PREFIX ERROR_PREFIX "read failed");
+ 			break;
+ 		}
+ 		++val;
+@@ -98,8 +98,8 @@ static bool seek_read_hugepage_filemap(int fd, size_t len, size_t wr_chunk_size,
+ 
+ 		total_ret_count += ret_count;
+ 	}
+-	printf(PREFIX PREFIX "actually read 0x%lx bytes of data in total\n",
+-	       total_ret_count);
++	ksft_print_msg(PREFIX PREFIX "actually read 0x%lx bytes of data in total\n",
++		       total_ret_count);
+ 
+ 	return total_ret_count == expected;
+ }
+@@ -112,15 +112,15 @@ static bool read_hugepage_filemap(int fd, size_t len,
+ 	ssize_t total_ret_count = 0;
+ 	char val = 0;
+ 
+-	printf(PREFIX PREFIX "expect to read 0x%lx bytes of data in total\n",
+-	       expected);
++	ksft_print_msg(PREFIX PREFIX "expect to read 0x%lx bytes of data in total\n",
++		       expected);
+ 	while (total_ret_count < len) {
+ 		ret_count = read(fd, buf, wr_chunk_size);
+ 		if (ret_count == 0) {
+-			printf(PREFIX PREFIX "read reach end of the file\n");
++			ksft_print_msg(PREFIX PREFIX "read reach end of the file\n");
+ 			break;
+ 		} else if (ret_count < 0) {
+-			perror(PREFIX ERROR_PREFIX "read failed");
++			ksft_perror(PREFIX ERROR_PREFIX "read failed");
+ 			break;
+ 		}
+ 		++val;
+@@ -129,8 +129,8 @@ static bool read_hugepage_filemap(int fd, size_t len,
+ 
+ 		total_ret_count += ret_count;
+ 	}
+-	printf(PREFIX PREFIX "actually read 0x%lx bytes of data in total\n",
+-	       total_ret_count);
++	ksft_print_msg(PREFIX PREFIX "actually read 0x%lx bytes of data in total\n",
++		       total_ret_count);
+ 
+ 	return total_ret_count == expected;
+ }
+@@ -142,14 +142,14 @@ test_hugetlb_read(int fd, size_t len, size_t wr_chunk_size)
+ 	char *filemap = NULL;
+ 
+ 	if (ftruncate(fd, len) < 0) {
+-		perror(PREFIX ERROR_PREFIX "ftruncate failed");
++		ksft_perror(PREFIX ERROR_PREFIX "ftruncate failed");
+ 		return status;
+ 	}
+ 
+ 	filemap = mmap(NULL, len, PROT_READ | PROT_WRITE,
+ 		       MAP_SHARED | MAP_POPULATE, fd, 0);
+ 	if (filemap == MAP_FAILED) {
+-		perror(PREFIX ERROR_PREFIX "mmap for primary mapping failed");
++		ksft_perror(PREFIX ERROR_PREFIX "mmap for primary mapping failed");
+ 		goto done;
+ 	}
+ 
+@@ -162,7 +162,7 @@ test_hugetlb_read(int fd, size_t len, size_t wr_chunk_size)
+ 	munmap(filemap, len);
+ done:
+ 	if (ftruncate(fd, 0) < 0) {
+-		perror(PREFIX ERROR_PREFIX "ftruncate back to 0 failed");
++		ksft_perror(PREFIX ERROR_PREFIX "ftruncate back to 0 failed");
+ 		status = TEST_FAILED;
+ 	}
+ 
+@@ -179,14 +179,14 @@ test_hugetlb_read_hwpoison(int fd, size_t len, size_t wr_chunk_size,
+ 	const unsigned long pagesize = getpagesize();
+ 
+ 	if (ftruncate(fd, len) < 0) {
+-		perror(PREFIX ERROR_PREFIX "ftruncate failed");
++		ksft_perror(PREFIX ERROR_PREFIX "ftruncate failed");
+ 		return status;
+ 	}
+ 
+ 	filemap = mmap(NULL, len, PROT_READ | PROT_WRITE,
+ 		       MAP_SHARED | MAP_POPULATE, fd, 0);
+ 	if (filemap == MAP_FAILED) {
+-		perror(PREFIX ERROR_PREFIX "mmap for primary mapping failed");
++		ksft_perror(PREFIX ERROR_PREFIX "mmap for primary mapping failed");
+ 		goto done;
+ 	}
+ 
+@@ -201,7 +201,7 @@ test_hugetlb_read_hwpoison(int fd, size_t len, size_t wr_chunk_size,
+ 	 */
+ 	hwp_addr = filemap + len / 2 + pagesize;
+ 	if (madvise(hwp_addr, pagesize, MADV_HWPOISON) < 0) {
+-		perror(PREFIX ERROR_PREFIX "MADV_HWPOISON failed");
++		ksft_perror(PREFIX ERROR_PREFIX "MADV_HWPOISON failed");
+ 		goto unmap;
+ 	}
+ 
+@@ -228,7 +228,7 @@ test_hugetlb_read_hwpoison(int fd, size_t len, size_t wr_chunk_size,
+ 	munmap(filemap, len);
+ done:
+ 	if (ftruncate(fd, 0) < 0) {
+-		perror(PREFIX ERROR_PREFIX "ftruncate back to 0 failed");
++		ksft_perror(PREFIX ERROR_PREFIX "ftruncate back to 0 failed");
+ 		status = TEST_FAILED;
+ 	}
+ 
+@@ -240,27 +240,32 @@ static int create_hugetlbfs_file(struct statfs *file_stat)
+ 	int fd;
+ 
+ 	fd = memfd_create("hugetlb_tmp", MFD_HUGETLB);
 -	if (fd < 0) {
--		perror("memfd_create() failed");
--		exit(1);
+-		perror(PREFIX ERROR_PREFIX "could not open hugetlbfs file");
+-		return -1;
 -	}
 +	if (fd < 0)
-+		ksft_exit_fail_msg("memfd_create() failed\n");
++		ksft_exit_fail_msg(PREFIX ERROR_PREFIX "could not open hugetlbfs file: %s\n",
++				   strerror(errno));
+ 
+ 	memset(file_stat, 0, sizeof(*file_stat));
 +
-+	ksft_set_plan(37);
+ 	if (fstatfs(fd, file_stat)) {
+-		perror(PREFIX ERROR_PREFIX "fstatfs failed");
+-		goto close;
++		close(fd);
++		ksft_exit_fail_msg(PREFIX ERROR_PREFIX "fstatfs failed: %s\n", strerror(errno));
+ 	}
+ 	if (file_stat->f_type != HUGETLBFS_MAGIC) {
+-		printf(PREFIX ERROR_PREFIX "not hugetlbfs file\n");
+-		goto close;
++		close(fd);
++		ksft_exit_fail_msg(PREFIX ERROR_PREFIX "not hugetlbfs file\n");
+ 	}
  
- 	/*
- 	 * Test validity of MADV_DONTNEED addr and length arguments.  mmap
-@@ -97,16 +91,13 @@ int main(int argc, char **argv)
- 			PROT_READ | PROT_WRITE,
- 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB,
- 			-1, 0);
--	if (addr == MAP_FAILED) {
--		perror("mmap");
--		exit(1);
--	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
+ 	return fd;
+-close:
+-	close(fd);
+-	return -1;
+ }
+ 
++#define KSFT_PRINT_MSG(status, fmt, ...)					\
++	do {									\
++		if (status == TEST_SKIPPED)					\
++			ksft_test_result_skip(fmt, __VA_ARGS__);		\
++		else								\
++			ksft_test_result(status == TEST_PASSED, fmt, __VA_ARGS__); \
++	} while (0)
 +
- 	if (munmap(addr, huge_page_size) ||
--			munmap(addr + (NR_HUGE_PAGES + 1) * huge_page_size,
--				huge_page_size)) {
--		perror("munmap");
--		exit(1);
--	}
-+	    munmap(addr + (NR_HUGE_PAGES + 1) * huge_page_size, huge_page_size))
-+		ksft_exit_fail_msg("munmap: %s\n", strerror(errno));
+ int main(void)
+ {
+ 	int fd;
+@@ -273,50 +278,37 @@ int main(void)
+ 	};
+ 	size_t i;
+ 
++	ksft_print_header();
++	ksft_set_plan(12);
 +
- 	addr = addr + huge_page_size;
+ 	for (i = 0; i < ARRAY_SIZE(wr_chunk_sizes); ++i) {
+-		printf("Write/read chunk size=0x%lx\n",
+-		       wr_chunk_sizes[i]);
++		ksft_print_msg("Write/read chunk size=0x%lx\n",
++			       wr_chunk_sizes[i]);
  
- 	write_fault_pages(addr, NR_HUGE_PAGES);
-@@ -114,21 +105,13 @@ int main(int argc, char **argv)
+ 		fd = create_hugetlbfs_file(&file_stat);
+-		if (fd < 0)
+-			goto create_failure;
+-		printf(PREFIX "HugeTLB read regression test...\n");
++		ksft_print_msg(PREFIX "HugeTLB read regression test...\n");
+ 		status = test_hugetlb_read(fd, file_stat.f_bsize,
+ 					   wr_chunk_sizes[i]);
+-		printf(PREFIX "HugeTLB read regression test...%s\n",
+-		       status_to_str(status));
++		KSFT_PRINT_MSG(status, PREFIX "HugeTLB read regression test...%s\n",
++			       status_to_str(status));
+ 		close(fd);
+-		if (status == TEST_FAILED)
+-			return -1;
  
- 	/* addr before mapping should fail */
- 	ret = madvise(addr - base_page_size, NR_HUGE_PAGES * huge_page_size,
--		MADV_DONTNEED);
--	if (!ret) {
--		printf("Unexpected success of madvise call with invalid addr line %d\n",
--				__LINE__);
--			exit(1);
--	}
-+		      MADV_DONTNEED);
-+	ksft_test_result(ret, "The madvise call with invalid address\n");
+ 		fd = create_hugetlbfs_file(&file_stat);
+-		if (fd < 0)
+-			goto create_failure;
+-		printf(PREFIX "HugeTLB read HWPOISON test...\n");
++		ksft_print_msg(PREFIX "HugeTLB read HWPOISON test...\n");
+ 		status = test_hugetlb_read_hwpoison(fd, file_stat.f_bsize,
+ 						    wr_chunk_sizes[i], false);
+-		printf(PREFIX "HugeTLB read HWPOISON test...%s\n",
+-		       status_to_str(status));
++		KSFT_PRINT_MSG(status, PREFIX "HugeTLB read HWPOISON test...%s\n",
++			       status_to_str(status));
+ 		close(fd);
+-		if (status == TEST_FAILED)
+-			return -1;
  
- 	/* addr + length after mapping should fail */
- 	ret = madvise(addr, (NR_HUGE_PAGES * huge_page_size) + base_page_size,
--		MADV_DONTNEED);
--	if (!ret) {
--		printf("Unexpected success of madvise call with invalid length line %d\n",
--				__LINE__);
--			exit(1);
--	}
-+		      MADV_DONTNEED);
-+	ksft_test_result(ret, "The madvise call with invalid address\n");
+ 		fd = create_hugetlbfs_file(&file_stat);
+-		if (fd < 0)
+-			goto create_failure;
+-		printf(PREFIX "HugeTLB seek then read HWPOISON test...\n");
++		ksft_print_msg(PREFIX "HugeTLB seek then read HWPOISON test...\n");
+ 		status = test_hugetlb_read_hwpoison(fd, file_stat.f_bsize,
+ 						    wr_chunk_sizes[i], true);
+-		printf(PREFIX "HugeTLB seek then read HWPOISON test...%s\n",
+-		       status_to_str(status));
++		KSFT_PRINT_MSG(status, PREFIX "HugeTLB seek then read HWPOISON test...%s\n",
++			       status_to_str(status));
+ 		close(fd);
+-		if (status == TEST_FAILED)
+-			return -1;
+ 	}
  
- 	(void)munmap(addr, NR_HUGE_PAGES * huge_page_size);
- 
-@@ -139,10 +122,9 @@ int main(int argc, char **argv)
- 			PROT_READ | PROT_WRITE,
- 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB,
- 			-1, 0);
--	if (addr == MAP_FAILED) {
--		perror("mmap");
--		exit(1);
--	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
-+
- 	write_fault_pages(addr, NR_HUGE_PAGES);
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
-@@ -150,19 +132,12 @@ int main(int argc, char **argv)
- 	ret = madvise(addr + base_page_size,
- 			NR_HUGE_PAGES * huge_page_size - base_page_size,
- 			MADV_DONTNEED);
--	if (!ret) {
--		printf("Unexpected success of madvise call with unaligned start address %d\n",
--				__LINE__);
--			exit(1);
--	}
-+	ksft_test_result(ret, "The madvise call with unaligned start address\n");
- 
- 	/* addr + length should be aligned down to huge page size */
--	if (madvise(addr,
--			((NR_HUGE_PAGES - 1) * huge_page_size) + base_page_size,
--			MADV_DONTNEED)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr, ((NR_HUGE_PAGES - 1) * huge_page_size) + base_page_size,
-+		      MADV_DONTNEED);
-+	ksft_test_result(!ret, "The madvise call with aligned start address\n");
- 
- 	/* should free all but last page in mapping */
- 	validate_free_pages(free_hugepages - 1);
-@@ -177,17 +152,14 @@ int main(int argc, char **argv)
- 			PROT_READ | PROT_WRITE,
- 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB,
- 			-1, 0);
--	if (addr == MAP_FAILED) {
--		perror("mmap");
--		exit(1);
--	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
-+
- 	write_fault_pages(addr, NR_HUGE_PAGES);
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
--	if (madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED);
-+	ksft_test_result(!ret, "The madvise MADV_DONTNEED on anonymous private mapping\n");
- 
- 	/* should free all pages in mapping */
- 	validate_free_pages(free_hugepages);
-@@ -197,29 +169,25 @@ int main(int argc, char **argv)
- 	/*
- 	 * Test MADV_DONTNEED on private mapping of hugetlb file
- 	 */
--	if (fallocate(fd, 0, 0, NR_HUGE_PAGES * huge_page_size)) {
--		perror("fallocate");
--		exit(1);
--	}
-+	if (fallocate(fd, 0, 0, NR_HUGE_PAGES * huge_page_size))
-+		ksft_exit_fail_msg("fallocate: %s\n", strerror(errno));
-+
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	addr = mmap(NULL, NR_HUGE_PAGES * huge_page_size,
- 			PROT_READ | PROT_WRITE,
- 			MAP_PRIVATE, fd, 0);
--	if (addr == MAP_FAILED) {
--		perror("mmap");
--		exit(1);
--	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
- 
- 	/* read should not consume any pages */
- 	read_fault_pages(addr, NR_HUGE_PAGES);
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	/* madvise should not free any pages */
--	if (madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED);
-+	ksft_test_result(!ret, "The madvise MADV_DONTNEED on private mapping of file\n");
-+
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	/* writes should allocate private pages */
-@@ -227,10 +195,9 @@ int main(int argc, char **argv)
- 	validate_free_pages(free_hugepages - (2 * NR_HUGE_PAGES));
- 
- 	/* madvise should free private pages */
--	if (madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED);
-+	ksft_test_result(!ret, "The madvise MADV_DONTNEED on private mapping of file\n");
-+
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	/* writes should allocate private pages */
-@@ -245,10 +212,9 @@ int main(int argc, char **argv)
- 	 * implementation.
- 	 */
- 	if (fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
--					0, NR_HUGE_PAGES * huge_page_size)) {
--		perror("fallocate");
--		exit(1);
--	}
-+					0, NR_HUGE_PAGES * huge_page_size))
-+		ksft_exit_fail_msg("fallocate: %s\n", strerror(errno));
-+
- 	validate_free_pages(free_hugepages);
- 
- 	(void)munmap(addr, NR_HUGE_PAGES * huge_page_size);
-@@ -256,29 +222,25 @@ int main(int argc, char **argv)
- 	/*
- 	 * Test MADV_DONTNEED on shared mapping of hugetlb file
- 	 */
--	if (fallocate(fd, 0, 0, NR_HUGE_PAGES * huge_page_size)) {
--		perror("fallocate");
--		exit(1);
--	}
-+	if (fallocate(fd, 0, 0, NR_HUGE_PAGES * huge_page_size))
-+		ksft_exit_fail_msg("fallocate: %s\n", strerror(errno));
-+
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	addr = mmap(NULL, NR_HUGE_PAGES * huge_page_size,
- 			PROT_READ | PROT_WRITE,
- 			MAP_SHARED, fd, 0);
--	if (addr == MAP_FAILED) {
--		perror("mmap");
--		exit(1);
--	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
- 
- 	/* write should not consume any pages */
- 	write_fault_pages(addr, NR_HUGE_PAGES);
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	/* madvise should not free any pages */
--	if (madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED);
-+	ksft_test_result(!ret, "The madvise MADV_DONTNEED on shared mapping of file\n");
-+
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	/*
-@@ -286,29 +248,25 @@ int main(int argc, char **argv)
- 	 *
- 	 * madvise is same as hole punch and should free all pages.
- 	 */
--	if (madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_REMOVE)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_REMOVE);
-+	ksft_test_result(!ret, "The madvise MADV_REMOVE on shared mapping of file\n");
-+
- 	validate_free_pages(free_hugepages);
- 	(void)munmap(addr, NR_HUGE_PAGES * huge_page_size);
- 
- 	/*
- 	 * Test MADV_REMOVE on shared and private mapping of hugetlb file
- 	 */
--	if (fallocate(fd, 0, 0, NR_HUGE_PAGES * huge_page_size)) {
--		perror("fallocate");
--		exit(1);
--	}
-+	if (fallocate(fd, 0, 0, NR_HUGE_PAGES * huge_page_size))
-+		ksft_exit_fail_msg("fallocate: %s\n", strerror(errno));
-+
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	addr = mmap(NULL, NR_HUGE_PAGES * huge_page_size,
- 			PROT_READ | PROT_WRITE,
- 			MAP_SHARED, fd, 0);
--	if (addr == MAP_FAILED) {
--		perror("mmap");
--		exit(1);
--	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
- 
- 	/* shared write should not consume any additional pages */
- 	write_fault_pages(addr, NR_HUGE_PAGES);
-@@ -317,10 +275,8 @@ int main(int argc, char **argv)
- 	addr2 = mmap(NULL, NR_HUGE_PAGES * huge_page_size,
- 			PROT_READ | PROT_WRITE,
- 			MAP_PRIVATE, fd, 0);
--	if (addr2 == MAP_FAILED) {
--		perror("mmap");
--		exit(1);
--	}
-+	if (addr2 == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
- 
- 	/* private read should not consume any pages */
- 	read_fault_pages(addr2, NR_HUGE_PAGES);
-@@ -331,17 +287,15 @@ int main(int argc, char **argv)
- 	validate_free_pages(free_hugepages - (2 * NR_HUGE_PAGES));
- 
- 	/* madvise of shared mapping should not free any pages */
--	if (madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED);
-+	ksft_test_result(!ret, "The madvise MADV_REMOVE on shared mapping of file\n");
-+
- 	validate_free_pages(free_hugepages - (2 * NR_HUGE_PAGES));
- 
- 	/* madvise of private mapping should free private pages */
--	if (madvise(addr2, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr2, NR_HUGE_PAGES * huge_page_size, MADV_DONTNEED);
-+	ksft_test_result(!ret, "The madvise MADV_REMOVE on shared mapping of file\n");
-+
- 	validate_free_pages(free_hugepages - NR_HUGE_PAGES);
- 
- 	/* private write should consume additional pages again */
-@@ -353,15 +307,14 @@ int main(int argc, char **argv)
- 	 * not correct.  private pages should not be freed, but this is
- 	 * expected.  See comment associated with FALLOC_FL_PUNCH_HOLE call.
- 	 */
--	if (madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_REMOVE)) {
--		perror("madvise");
--		exit(1);
--	}
-+	ret = madvise(addr, NR_HUGE_PAGES * huge_page_size, MADV_REMOVE);
-+	ksft_test_result(!ret, "The madvise MADV_REMOVE on shared mapping of file\n");
-+
- 	validate_free_pages(free_hugepages);
- 
- 	(void)munmap(addr, NR_HUGE_PAGES * huge_page_size);
- 	(void)munmap(addr2, NR_HUGE_PAGES * huge_page_size);
- 
- 	close(fd);
 -	return 0;
+-
+-create_failure:
+-	printf(ERROR_PREFIX "Abort test: failed to create hugetlbfs file\n");
+-	return -1;
 +	ksft_finished();
  }
 -- 
