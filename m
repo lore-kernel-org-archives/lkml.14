@@ -1,87 +1,49 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2857E1B580;
-	Mon, 15 Jan 2024 21:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D24E1AADF
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 21:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5hhWBHC"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40e760e5b49so15809095e9.1;
-        Mon, 15 Jan 2024 13:24:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705353860; x=1705958660; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g4BibwaX8MWABZKTTuvrQf1jMOqo1GohyvM0tbsIEuY=;
-        b=O5hhWBHCBTdIL8Ly6Y6tJWMKqQSoaa1EM5kv55ZPFwBvvpKfus/ve+aNZHCz8z5+VK
-         jkLxqmqfqEOim4GKZ4m1KcuqYP/MPDhDZ4cKNhDmGoqEXU5XavHFbgLxsqG9BNNM6C8h
-         Fv81gpFVdvFt52ThAu2CZxUASYwmaaM7bna0mP3X6XJlJm+KWA51lgwYY6M5XQWGd25H
-         /9slXW+BGBZLp2aZNZFBwZ8dseBT+ZegjDCwIwZfUJyILtcChERG62UDQg181FzbaZK0
-         oLX4V3MWmTd3eVX0kuLHAVsDuWue/wfL18xB+S0jxcNKQrBTVb5wQCzMJBOaVmAJdPO7
-         1HdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705353860; x=1705958660;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g4BibwaX8MWABZKTTuvrQf1jMOqo1GohyvM0tbsIEuY=;
-        b=iQgYipZlvPF0CrK+d1WyR4aHcO7Z1YIP7aM3vtbEMwEzawXVWfex9fHD4JKwNT0P3w
-         Ehkt/LejKAXSn7l8mry+YyUca2P0aF+adWLC1aqqJL2jiyP5HtYZYw+eGIIgWzrj20ts
-         7V6/yqZF6wSxbpvC41opIy3Tw53vhtLxN1RwfyZvDFmZ83UTB+enVrGjHV9Lz1Gf1u2y
-         0liKFGAY6wfqY1OOolO3id3IP0Hgspr8dtzRFO4YHMBmTSgnUQosNn1tW5NcyPet6oPf
-         Ftzqz8x9sWvN5Vlem/k+e1CBDJyKOO9pfj7dFD6QM3qG31IRMRKQgUT5zomVs25xIu7L
-         C4DQ==
-X-Gm-Message-State: AOJu0Yxm7gnXbjAMSsWSOzEDxwY2B6gPFdrbn3+6g7M6fPJmyXCjDpe/
-	IGcq1PPCM2P/aaPhMf//wis=
-X-Google-Smtp-Source: AGHT+IGS2DleYsPDxFubSZWuGUfOFBEeJSJbvbS8UfWv276dj6fVdSeHn96g53WwPCorL+XvGdQWyw==
-X-Received: by 2002:a05:600c:3c8f:b0:40e:6ddb:2970 with SMTP id bg15-20020a05600c3c8f00b0040e6ddb2970mr1548393wmb.274.1705353860266;
-        Mon, 15 Jan 2024 13:24:20 -0800 (PST)
-Received: from skbuf ([188.25.255.36])
-        by smtp.gmail.com with ESMTPSA id v21-20020a50a455000000b005527c02c1d6sm6108008edb.50.2024.01.15.13.24.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 13:24:20 -0800 (PST)
-Date: Mon, 15 Jan 2024 23:24:17 +0200
-From: Vladimir Oltean <olteanv@gmail.com>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
-	Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [RFC PATCH net-next 5/8] net: dsa: mt7530: move enabling port 6
- to mt7530_setup_port6()
-Message-ID: <20240115212417.egqyslsbrqw6jp3q@skbuf>
-References: <20240113102529.80371-1-arinc.unal@arinc9.com>
- <20240113102529.80371-6-arinc.unal@arinc9.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="XEci/Gxz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1705353638;
+	bh=8Q8IQ6nfy2xImHyVMHWYDExGtASfHOX7tOIjTf2bzGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XEci/GxzsM1/vKyCQstZP1T7sI/zvs/sf1jbK1v+5XejeTyfBYd0OlutNwHJN/+Bn
+	 KGvV07n4osjMc8fyMHWKZTB8Uq/wx6s69X4IybYFllUUKALgQgjZW0rBlR608IeMA1
+	 ymBOSY/X1lnAge1rSKQl1AC9xZjMKK8VM8D0syI4=
+Date: Mon, 15 Jan 2024 22:20:37 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH v2] scripts: check-sysctl-docs: adapt to new API
+Message-ID: <3fd9a074-88cf-45eb-9f04-f8de7314b0a7@t-8ch.de>
+References: <CGME20231226113448eucas1p2790755bc45518304822dc9b24c93c2a3@eucas1p2.samsung.com>
+ <20231226-sysctl-check-v2-1-2d4f50b30d34@weissschuh.net>
+ <20240115154907.ubr4admknmousjbz@localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240113102529.80371-6-arinc.unal@arinc9.com>
+In-Reply-To: <20240115154907.ubr4admknmousjbz@localhost>
 
-On Sat, Jan 13, 2024 at 01:25:26PM +0300, Arınç ÜNAL wrote:
-> Enable port 6 only when port 6 is being used. Update the comment on
-> mt7530_setup() with a better explanation. Do not set MHWTRAP_MANUAL on
-> mt7530_setup_port5() as it's already done on mt7530_setup() beforehand.
+Hey Joel,
+
+On 2024-01-15 16:49:07+0100, Joel Granados wrote:
+> Hey Thomas
 > 
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> ---
+> I lost track of the thread here. Did you get my latest answer to your V1?
+> https://lore.kernel.org/all/20231231143455.tvwb464awfzv5uti@localhost/
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+I got your last anwer.
+
+Unfortunately I didn't find much time to work on my sysctl patches
+recently. It should improve in the near future, though.
+
+Thomas
