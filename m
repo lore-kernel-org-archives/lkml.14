@@ -1,35 +1,35 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C791F17732
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E211799A
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 14:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W85lh00Z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rwASbY7z"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RyWK6cnq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nI9H8aRP"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705329484;
+	s=2020; t=1705329486;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cawu2qRxujfpAJkXtS4G5pM5Zis15l5+RosRC2CHij0=;
-	b=W85lh00Z8Bd2TwnSXwhuTY7NxPs3Pbd0tRT8/E7ERMFhpeJOMKCEFl+agh81alVUlY95ZR
-	Rf5eohvgqFiyP4Mu3j5y41QEJIxSNET9l/4PU4HMy7mgnL2Xh4fPKmgpsb3sIdHu/3l9wT
-	2kfMA3WS3y7yji4FbFMuuUx1+aOyXmy2lPGFO81HWDa/sR0JL2JcY3DDp5vhFrj64ImSZg
-	AazX2KiBDfv3KZl6v4TFxVjj1UnIRgSYEokDS2/1bk71nsfM0Y4BVZ6G3jNZJCWFnBsfNj
-	W0M+YGjEiQ55WBxl33gPg9rT+2eaQpDmIP84MWG/34sjTAtZaYKcNvSkBLhkaA==
+	bh=3N/e3ayce4s+S+psHat1NbmR2VoGUdUGd0vnbZups1E=;
+	b=RyWK6cnqw0ZSnAWy/fuDH3dP0nS91x8d3ZEE8sFVaN+Vwyu+FNf6Eo8e15EGEiU0TVhbBP
+	CEiUEWxOavweTRQ5m0Az1upcpffWC2rkjj1sjatSDdEBJ3v2H/uwX97TZ+kDziSmES9dPj
+	oQ0z9ycusV9RXflK9FcIJEv3PAO1wO405l7j3tR3MOq6Q1A8GZfSywxZJ54WOnXBdaxU5U
+	jifuboiqZw+UW2BdbBgpEV2Wa2WrBuq57KGcfP53oo5YC9B0bViLiLuuhE3rFoDv/Ln+gW
+	t7odEXusxS4BmTv+2pDa7dzXH8jx7ahZCyNgV5jvZgJmFqO1ROABdBOk49NG+Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705329484;
+	s=2020e; t=1705329486;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cawu2qRxujfpAJkXtS4G5pM5Zis15l5+RosRC2CHij0=;
-	b=rwASbY7zJUfUnjudKyyiqJI4YgwJVGLnhdA9+Rn+0LHFic2vInNiDAfCkIVWw0hOj70W9b
-	iGrWq4H2zN3z0VDg==
+	bh=3N/e3ayce4s+S+psHat1NbmR2VoGUdUGd0vnbZups1E=;
+	b=nI9H8aRP8bIz2zRhY61S/vNnS4ySyBwwN2VLZ3UTM6sC9x7IvA1EKT80kGdS6DDSY3JvvZ
+	JIxNDTZi3oKmaoAQ==
 To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	John Stultz <jstultz@google.com>,
@@ -47,10 +47,12 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
 	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH v10 03/20] timers: Move marking timer bases idle into tick_nohz_stop_tick()
-Date: Mon, 15 Jan 2024 15:37:26 +0100
-Message-Id: <20240115143743.27827-4-anna-maria@linutronix.de>
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH v10 06/20] workqueue: Use global variant for add_timer()
+Date: Mon, 15 Jan 2024 15:37:29 +0100
+Message-Id: <20240115143743.27827-7-anna-maria@linutronix.de>
 In-Reply-To: <20240115143743.27827-1-anna-maria@linutronix.de>
 References: <20240115143743.27827-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -61,243 +63,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
- tick_nohz_stop_tick()
+The implementation of the NOHZ pull at expiry model will change the timer
+bases per CPU. Timers, that have to expire on a specific CPU, require the
+TIMER_PINNED flag. If the CPU doesn't matter, the TIMER_PINNED flag must be
+dropped. This is required for call sites which use the timer alternately as
+pinned and not pinned timer like workqueues do.
 
-The timer base is marked idle when get_next_timer_interrupt() is
-executed. But the decision whether the tick will be stopped and whether the
-system is able to go idle is done later. When the timer bases is marked
-idle and a new first timer is enqueued remote an IPI is raised. Even if it
-is not required because the tick is not stopped and the timer base is
-evaluated again at the next tick.
-
-To prevent this, the timer base is marked idle in tick_nohz_stop_tick() and
-get_next_timer_interrupt() is streamlined by only looking for the next
-timer interrupt. All other work is postponed to
-timer_base_try_to_set_idle() which is called by tick_nohz_stop_tick().
-
-With this, tick_sched::tick_stopped and timer_base::is_idle is always in
-sync. So there is no longer the need to execute timer_clear_idle() in
-tick_nohz_idle_retain_tick(). This was required before, as
-tick_nohz_next_event() set timer_base::is_idle even if the tick would not
-be stopped. So timer_clear_idle() is only executed, when timer base is
-idle. So the check whether timer base is idle, is now no longer required as
-well.
-
-While at it fix some nearby whitespace damage as well.
+Therefore use add_timer_global() to make sure TIMER_PINNED flag is dropped.
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
 ---
- kernel/time/tick-internal.h |  1 +
- kernel/time/tick-sched.c    | 47 +++++++++++++++++++++--------
- kernel/time/timer.c         | 60 ++++++++++++++++++++++++++-----------
- 3 files changed, 78 insertions(+), 30 deletions(-)
+v6:
+  - New patch: As v6 provides unconditially setting TIMER_PINNED flag in
+    add_timer_on() workqueue requires new add_timer_global() variant.
+---
+ kernel/workqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
-index 481b7ab65e2c..47df30b871e4 100644
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -163,6 +163,7 @@ static inline void timers_update_nohz(void) { }
- DECLARE_PER_CPU(struct hrtimer_cpu_base, hrtimer_bases);
- 
- extern u64 get_next_timer_interrupt(unsigned long basej, u64 basem);
-+u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle);
- void timer_clear_idle(void);
- 
- #define CLOCK_SET_WALL							\
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index a17d26002831..c6223afc801f 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -849,11 +849,6 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
- 	 */
- 	delta = next_tick - basemono;
- 	if (delta <= (u64)TICK_NSEC) {
--		/*
--		 * Tell the timer code that the base is not idle, i.e. undo
--		 * the effect of get_next_timer_interrupt():
--		 */
--		timer_clear_idle();
- 		/*
- 		 * We've not stopped the tick yet, and there's a timer in the
- 		 * next period, so no point in stopping it either, bail.
-@@ -889,12 +884,41 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
- static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- {
- 	struct clock_event_device *dev = __this_cpu_read(tick_cpu_device.evtdev);
-+	unsigned long basejiff = ts->last_jiffies;
- 	u64 basemono = ts->timer_expires_base;
--	u64 expires = ts->timer_expires;
-+	bool timer_idle;
-+	u64 expires;
- 
- 	/* Make sure we won't be trying to stop it twice in a row. */
- 	ts->timer_expires_base = 0;
- 
-+	/*
-+	 * Now the tick should be stopped definitely - so the timer base needs
-+	 * to be marked idle as well to not miss a newly queued timer.
-+	 */
-+	expires = timer_base_try_to_set_idle(basejiff, basemono, &timer_idle);
-+	if (!timer_idle) {
-+		/*
-+		 * Do not clear tick_stopped here when it was already set - it
-+		 * will be retained on the next idle iteration when the tick
-+		 * expired earlier than expected.
-+		 */
-+		expires = basemono + TICK_NSEC;
-+	} else if (expires > ts->timer_expires) {
-+		/*
-+		 * This path could only happen when the first timer was removed
-+		 * between calculating the possible sleep length and now (when
-+		 * high resolution mode is not active, timer could also be a
-+		 * hrtimer).
-+		 *
-+		 * We have to stick to the original calculated expiry value to
-+		 * not stop the tick for too long with a shallow C-state (which
-+		 * was programmed by cpuidle because of an early next expiration
-+		 * value).
-+		 */
-+		expires = ts->timer_expires;
-+	}
-+
- 	/*
- 	 * If this CPU is the one which updates jiffies, then give up
- 	 * the assignment and let it be taken by the CPU which runs
-@@ -930,6 +954,10 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- 	 * scheduler tick in tick_nohz_restart_sched_tick().
- 	 */
- 	if (!ts->tick_stopped) {
-+		/* If the timer base is not idle, retain the tick. */
-+		if (!timer_idle)
-+			return;
-+
- 		calc_load_nohz_start();
- 		quiet_vmstat();
- 
-@@ -991,7 +1019,7 @@ static void tick_nohz_restart_sched_tick(struct tick_sched *ts, ktime_t now)
- 	touch_softlockup_watchdog_sched();
- 
- 	/* Cancel the scheduled timer and restore the tick: */
--	ts->tick_stopped  = 0;
-+	ts->tick_stopped = 0;
- 	tick_nohz_restart(ts, now);
- }
- 
-@@ -1147,11 +1175,6 @@ void tick_nohz_idle_stop_tick(void)
- void tick_nohz_idle_retain_tick(void)
- {
- 	tick_nohz_retain_tick(this_cpu_ptr(&tick_cpu_sched));
--	/*
--	 * Undo the effect of get_next_timer_interrupt() called from
--	 * tick_nohz_next_event().
--	 */
--	timer_clear_idle();
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 2989b57e154a..31a6b0831318 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1955,7 +1955,7 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
+ 	if (unlikely(cpu != WORK_CPU_UNBOUND))
+ 		add_timer_on(timer, cpu);
+ 	else
+-		add_timer(timer);
++		add_timer_global(timer);
  }
  
  /**
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 2aea55d53416..3a668060692e 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1911,19 +1911,22 @@ static u64 cmp_next_hrtimer_event(u64 basem, u64 expires)
- 	return DIV_ROUND_UP_ULL(nextevt, TICK_NSEC) * TICK_NSEC;
- }
- 
--static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem)
-+static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
-+					     bool *idle)
- {
- 	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
- 	unsigned long nextevt = basej + NEXT_TIMER_MAX_DELTA;
- 	u64 expires = KTIME_MAX;
--	bool was_idle;
- 
- 	/*
- 	 * Pretend that there is no timer pending if the cpu is offline.
- 	 * Possible pending timers will be migrated later to an active cpu.
- 	 */
--	if (cpu_is_offline(smp_processor_id()))
-+	if (cpu_is_offline(smp_processor_id())) {
-+		if (idle)
-+			*idle = true;
- 		return expires;
-+	}
- 
- 	raw_spin_lock(&base->lock);
- 	if (base->next_expiry_recalc)
-@@ -1953,17 +1956,26 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem)
- 	__forward_timer_base(base, basej);
- 
- 	/*
--	 * Base is idle if the next event is more than a tick away.
--	 *
--	 * If the base is marked idle then any timer add operation must forward
--	 * the base clk itself to keep granularity small. This idle logic is
--	 * only maintained for the BASE_STD base, deferrable timers may still
--	 * see large granularity skew (by design).
-+	 * Set base->is_idle only when caller is timer_base_try_to_set_idle()
- 	 */
--	was_idle = base->is_idle;
--	base->is_idle = time_after(nextevt, basej + 1);
--	if (was_idle != base->is_idle)
--		trace_timer_base_idle(base->is_idle, base->cpu);
-+	if (idle) {
-+		/*
-+		 * Base is idle if the next event is more than a tick away.
-+		 *
-+		 * If the base is marked idle then any timer add operation must
-+		 * forward the base clk itself to keep granularity small. This
-+		 * idle logic is only maintained for the BASE_STD base,
-+		 * deferrable timers may still see large granularity skew (by
-+		 * design).
-+		 */
-+		if (!base->is_idle) {
-+			if (time_after(nextevt, basej + 1)) {
-+				base->is_idle = true;
-+				trace_timer_base_idle(true, base->cpu);
-+			}
-+		}
-+		*idle = base->is_idle;
-+	}
- 
- 	raw_spin_unlock(&base->lock);
- 
-@@ -1980,7 +1992,21 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem)
-  */
- u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
- {
--	return __get_next_timer_interrupt(basej, basem);
-+	return __get_next_timer_interrupt(basej, basem, NULL);
-+}
-+
-+/**
-+ * timer_base_try_to_set_idle() - Try to set the idle state of the timer bases
-+ * @basej:	base time jiffies
-+ * @basem:	base time clock monotonic
-+ * @idle:	pointer to store the value of timer_base->is_idle
-+ *
-+ * Returns the tick aligned clock monotonic time of the next pending
-+ * timer or KTIME_MAX if no timer is pending.
-+ */
-+u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle)
-+{
-+	return __get_next_timer_interrupt(basej, basem, idle);
- }
- 
- /**
-@@ -1998,10 +2024,8 @@ void timer_clear_idle(void)
- 	 * sending the IPI a few instructions smaller for the cost of taking
- 	 * the lock in the exit from idle path.
- 	 */
--	if (base->is_idle) {
--		base->is_idle = false;
--		trace_timer_base_idle(false, smp_processor_id());
--	}
-+	base->is_idle = false;
-+	trace_timer_base_idle(false, smp_processor_id());
- }
- #endif
- 
 -- 
 2.39.2
 
