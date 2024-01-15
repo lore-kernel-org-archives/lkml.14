@@ -1,28 +1,32 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D24E1AADF
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 21:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AB81B270;
+	Mon, 15 Jan 2024 21:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="XEci/Gxz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1705353638;
-	bh=8Q8IQ6nfy2xImHyVMHWYDExGtASfHOX7tOIjTf2bzGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XEci/GxzsM1/vKyCQstZP1T7sI/zvs/sf1jbK1v+5XejeTyfBYd0OlutNwHJN/+Bn
-	 KGvV07n4osjMc8fyMHWKZTB8Uq/wx6s69X4IybYFllUUKALgQgjZW0rBlR608IeMA1
-	 ymBOSY/X1lnAge1rSKQl1AC9xZjMKK8VM8D0syI4=
-Date: Mon, 15 Jan 2024 22:20:37 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH v2] scripts: check-sysctl-docs: adapt to new API
-Message-ID: <3fd9a074-88cf-45eb-9f04-f8de7314b0a7@t-8ch.de>
-References: <CGME20231226113448eucas1p2790755bc45518304822dc9b24c93c2a3@eucas1p2.samsung.com>
- <20231226-sysctl-check-v2-1-2d4f50b30d34@weissschuh.net>
- <20240115154907.ubr4admknmousjbz@localhost>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SB2hnLh1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DA110FF803;
+	Mon, 15 Jan 2024 21:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1705354110;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rct8yHdNHfP9b4Gqe7NZACWXejjU4EyImlY46YUEMpU=;
+	b=SB2hnLh12i4NYdiFIA3ZGcnsb/J1SVCuJdt9pjg4ptxuqRpXy3DLO0E7ymIkcUOMvFmNZy
+	PgTly8u/Z5bcXz90ox9UL7MbAaUWlD0q+fWre9Vh9tqNMe0v2b/hfKLodIcZ84gA6mtNZH
+	qpfUO8Hu5a2prCJxW6ZSJg/ZfF3NxCq4m19Fl3UFeRgnaePgAEERFmXb+5hpLsdNnE+e7m
+	pQUfws2jdI1Khb0IhrQuoD8Veerpm1COsuRXjWbZdWazotv+0BeQtjnr9xv0r4G9c/CzAc
+	OFmnCoZm8b4gT5JGgg/sE8SqAZbZr1oGyL2/AFG8PErQPHXbtVmXwEUY9b0ISQ==
+Date: Mon, 15 Jan 2024 22:28:28 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH] rtc: ac100: remove misuses of kernel-doc
+Message-ID: <170535409306.253773.7862479513182768104.b4-ty@bootlin.com>
+References: <20240114231320.31437-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,19 +35,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240115154907.ubr4admknmousjbz@localhost>
+In-Reply-To: <20240114231320.31437-1-rdunlap@infradead.org>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-Hey Joel,
 
-On 2024-01-15 16:49:07+0100, Joel Granados wrote:
-> Hey Thomas
+On Sun, 14 Jan 2024 15:13:20 -0800, Randy Dunlap wrote:
+> Prevent kernel-doc warnings by changing "/**" to common comment
+> format "/*" in non-kernel-doc comments:
 > 
-> I lost track of the thread here. Did you get my latest answer to your V1?
-> https://lore.kernel.org/all/20231231143455.tvwb464awfzv5uti@localhost/
+> drivers/rtc/rtc-ac100.c:103: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>  * Clock controls for 3 clock output pins
+> drivers/rtc/rtc-ac100.c:382: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>  * RTC related bits
+> 
+> [...]
 
-I got your last anwer.
+Applied, thanks!
 
-Unfortunately I didn't find much time to work on my sysctl patches
-recently. It should improve in the near future, though.
+[1/1] rtc: ac100: remove misuses of kernel-doc
+      commit: eea7615b684fc98cd0403beaaa2194e6f029c812
 
-Thomas
+Best regards,
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
