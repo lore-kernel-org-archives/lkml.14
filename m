@@ -1,104 +1,176 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.xenproject.org (mail.xenproject.org [104.130.215.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F60171CE;
-	Mon, 15 Jan 2024 13:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A90617562;
+	Mon, 15 Jan 2024 13:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7BXAm1Z"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-337abfd6151so354466f8f.1;
-        Mon, 15 Jan 2024 05:09:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705324169; x=1705928969; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xqciNHiwX5Xpe9HUhoDTBRkSyWdUM5unYCkQrW8mDZo=;
-        b=T7BXAm1ZKQM4MlPZ5I41/fslMSZjcmVPyKJrnpA4IZV4ieG3GWzR++3wQNm3/KxC++
-         XriUX68TqPhis+B/03djNGPtGeRA14O2AvAvsTumAbEskwjkhlMAzUJViKMaafTOpmq7
-         ua5v99bFtt7ZYqeAH4s5Yq+mNv4auTqL1BIcg0xsTfVTrEvb/tbn8J6Vdt+mS71bkUci
-         ocEEwhW5CcANXn3UW5zMxzcGaok4VTfo+4TzkKP64MEOLVoiEakOOUugAo2F0++zIw/X
-         t2xZucBmgAjCKUc9OOKCerArHlg8HqYDGWLtJfTKhQsCGJo8rlQkVLDnmhEF4qBr23Ij
-         Q45w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705324169; x=1705928969;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xqciNHiwX5Xpe9HUhoDTBRkSyWdUM5unYCkQrW8mDZo=;
-        b=e+pg1Q6U96CFpcEkn58HZPqCkYm6ScRrpoyzaaXfoRdU/1k86pgK//CogaSTpueFCd
-         r6ySxwBklM+gSzERMUvL/z4Uc8QoUqKSx2ge7Y2ZT2Qig+nG6bNS6x9kBsgx/2zd7W8E
-         ZA7xs9hzxU9G1Q3lg3DIKliN33Gn42NOv4Xe6GuvSel25uvewGsF/kFyYYnDkZvDlw5R
-         uJvm5GuREx6dZz1AuMFKaZkpmDCNaKMKpGRPKPz3pFpkOJvMmaEzmE10bEqm6Es1za90
-         ZjRjsjK442Jinps6b043FskR9z33rsgKlxuta1UW7xihkZ155b48zqNIUMB28yHjhG07
-         +UgQ==
-X-Gm-Message-State: AOJu0Yw0Oj8KdalRRQ0GuQ8Ykzd42SC/nfaufegSOJCdejsXOTspQ6PR
-	pZRzbrbXgotZoot28C1qDiw=
-X-Google-Smtp-Source: AGHT+IE3Hcks9ZuOLGbttyuv2aHArfvLfRvJchXNZtRx7ewfjtOLGEBT8LxfluFLjDM8Gk5c+eFnvQ==
-X-Received: by 2002:a5d:420a:0:b0:337:9015:ab4b with SMTP id n10-20020a5d420a000000b003379015ab4bmr3610104wrq.108.1705324169004;
-        Mon, 15 Jan 2024 05:09:29 -0800 (PST)
-Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id d16-20020adf9c90000000b003366c058509sm11850615wre.23.2024.01.15.05.09.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jan 2024 05:09:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=xen.org header.i=@xen.org header.b="FujtxAXh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=xen.org;
+	s=20200302mail; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-Id:Date:Subject:To:From;
+	bh=mSla2tR/OsoYTywuvPZsuGAtdsxoY6eqpf9PcamhVWo=; b=FujtxAXhRMPQq4BtXuIMtsI35H
+	YuP+2oFb3X2M19z9r436nU0CobixIi4Re+91+oPrxGi3tMOM2ZzznuQfq2HTC/aCYpoZClZ1h3lPY
+	Y+1XdlY1yMLUVb2UEAOFBCQ4vaSC2EA+7b8P9pqW81ULiitb53U3MfLUTPR5/X7klU7Q=;
+Received: from xenbits.xenproject.org ([104.239.192.120])
+	by mail.xenproject.org with esmtp (Exim 4.92)
+	(envelope-from <paul@xen.org>)
+	id 1rPMiY-00035Y-G5; Mon, 15 Jan 2024 13:09:30 +0000
+Received: from 54-240-197-231.amazon.com ([54.240.197.231] helo=REM-PW02S00X.ant.amazon.com)
+	by xenbits.xenproject.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <paul@xen.org>)
+	id 1rPMXU-0002kM-56; Mon, 15 Jan 2024 12:58:04 +0000
+From: Paul Durrant <paul@xen.org>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Paul Durrant <paul@xen.org>,
+	Shuah Khan <shuah@kernel.org>,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v12 13/20] KVM: selftests / xen: map shared_info using HVA rather than GFN
+Date: Mon, 15 Jan 2024 12:57:00 +0000
+Message-Id: <20240115125707.1183-14-paul@xen.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240115125707.1183-1-paul@xen.org>
+References: <20240115125707.1183-1-paul@xen.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 15 Jan 2024 14:09:28 +0100
-Message-Id: <CYFAYRP5MWTZ.Q272WWLLE7MW@gmail.com>
-Cc: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <ath11k@lists.infradead.org>
-Subject: Re: [PATCH] wifi: ath11k: fix layout of scan_flags in struct
- scan_req_params
-From: "Nicolas Escande" <nico.escande@gmail.com>
-To: "Jeff Johnson" <quic_jjohnson@quicinc.com>, "Kalle Valo"
- <kvalo@kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20231127180559.1696041-1-nico.escande@gmail.com>
- <bdcdbd06-e9bd-4a92-b27b-d94b2d8fb52d@quicinc.com>
- <CX9YPUDTAT1N.23DMRB5O9FEAO@gmail.com>
- <20c7a367-2243-4e13-b023-9999dc6c6790@quicinc.com>
- <CXC03GYAN4VN.2PQ88Q1S7IL6H@gmail.com>
-In-Reply-To: <CXC03GYAN4VN.2PQ88Q1S7IL6H@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu Nov 30, 2023 at 9:24 AM CET, Nicolas Escande wrote:
-> On Tue Nov 28, 2023 at 1:57 AM CET, Jeff Johnson wrote:
-> > On 11/27/2023 2:54 PM, Nicolas Escande wrote:
-> [...]
-> > > So either we should not use WMI_SCAN_XXX with scan_req_params.scan_fl=
-ags ever
-> > > and only use the bitfield to set scan parameters or if we use WMI_SCA=
-N_XXX with
-> > > scan_req_params.scan_flags they need to match the corresponding bitfi=
-eld.
-> >
-> > IMO the correct thing to do is to remove the unions from that struct an=
-d
-> > only leave behind the bitfields and not use the WMI_SCAN_XXX masks
-> > except when filling the firmware structure.
-> >
-> > But don't spin an update to your patches until Kalle has a chance to
-> > give his opinion. I'm new to maintaining these drivers and Kalle may
-> > have a different opinion on this.
-> >
-> > /jeff
->
-> No problem, I'll wait for Kalle's input on this before doing anything.
-> As soon as we decide which way is the right way, I'll work on this. I onl=
-y care
-> that this gets resolved.
+From: Paul Durrant <pdurrant@amazon.com>
 
-Hi Kalle/Jeff,
+Using the HVA of the shared_info page is more efficient, so if the
+capability (KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA) is present use that method
+to do the mapping.
 
-Any new input on this so I can move forward on fixing this ?
-Otherwise I think I'll end up going on with Jeff's proposal of only using t=
-he
-bitfield for intra driver representation & then converting the bitfields to
-their corresponding WMI_SCAN_XXX when transmiting the req to the hw with wm=
-i.
+NOTE: Have the juggle_shinfo_state() thread map and unmap using both
+      GFN and HVA, to make sure the older mechanism is not broken.
+
+Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+
+v3:
+ - Re-work the juggle_shinfo_state() thread.
+
+v2:
+ - New in this version.
+---
+ .../selftests/kvm/x86_64/xen_shinfo_test.c    | 44 +++++++++++++++----
+ 1 file changed, 35 insertions(+), 9 deletions(-)
+
+diff --git a/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c b/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
+index 9ec9ab60b63e..a61500ff0822 100644
+--- a/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
++++ b/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
+@@ -389,6 +389,7 @@ static int cmp_timespec(struct timespec *a, struct timespec *b)
+ 		return 0;
+ }
+ 
++static struct shared_info *shinfo;
+ static struct vcpu_info *vinfo;
+ static struct kvm_vcpu *vcpu;
+ 
+@@ -404,20 +405,38 @@ static void *juggle_shinfo_state(void *arg)
+ {
+ 	struct kvm_vm *vm = (struct kvm_vm *)arg;
+ 
+-	struct kvm_xen_hvm_attr cache_activate = {
++	struct kvm_xen_hvm_attr cache_activate_gfn = {
+ 		.type = KVM_XEN_ATTR_TYPE_SHARED_INFO,
+ 		.u.shared_info.gfn = SHINFO_REGION_GPA / PAGE_SIZE
+ 	};
+ 
+-	struct kvm_xen_hvm_attr cache_deactivate = {
++	struct kvm_xen_hvm_attr cache_deactivate_gfn = {
+ 		.type = KVM_XEN_ATTR_TYPE_SHARED_INFO,
+ 		.u.shared_info.gfn = KVM_XEN_INVALID_GFN
+ 	};
+ 
++	struct kvm_xen_hvm_attr cache_activate_hva = {
++		.type = KVM_XEN_ATTR_TYPE_SHARED_INFO_HVA,
++		.u.shared_info.hva = (unsigned long)shinfo
++	};
++
++	struct kvm_xen_hvm_attr cache_deactivate_hva = {
++		.type = KVM_XEN_ATTR_TYPE_SHARED_INFO,
++		.u.shared_info.hva = 0
++	};
++
++	int xen_caps = kvm_check_cap(KVM_CAP_XEN_HVM);
++
+ 	for (;;) {
+-		__vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &cache_activate);
+-		__vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &cache_deactivate);
++		__vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &cache_activate_gfn);
+ 		pthread_testcancel();
++		__vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &cache_deactivate_gfn);
++
++		if (xen_caps & KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA) {
++			__vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &cache_activate_hva);
++			pthread_testcancel();
++			__vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &cache_deactivate_hva);
++		}
+ 	}
+ 
+ 	return NULL;
+@@ -442,6 +461,7 @@ int main(int argc, char *argv[])
+ 	bool do_runstate_flag = !!(xen_caps & KVM_XEN_HVM_CONFIG_RUNSTATE_UPDATE_FLAG);
+ 	bool do_eventfd_tests = !!(xen_caps & KVM_XEN_HVM_CONFIG_EVTCHN_2LEVEL);
+ 	bool do_evtchn_tests = do_eventfd_tests && !!(xen_caps & KVM_XEN_HVM_CONFIG_EVTCHN_SEND);
++	bool has_shinfo_hva = !!(xen_caps & KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA);
+ 
+ 	clock_gettime(CLOCK_REALTIME, &min_ts);
+ 
+@@ -452,7 +472,7 @@ int main(int argc, char *argv[])
+ 				    SHINFO_REGION_GPA, SHINFO_REGION_SLOT, 3, 0);
+ 	virt_map(vm, SHINFO_REGION_GVA, SHINFO_REGION_GPA, 3);
+ 
+-	struct shared_info *shinfo = addr_gpa2hva(vm, SHINFO_VADDR);
++	shinfo = addr_gpa2hva(vm, SHINFO_VADDR);
+ 
+ 	int zero_fd = open("/dev/zero", O_RDONLY);
+ 	TEST_ASSERT(zero_fd != -1, "Failed to open /dev/zero");
+@@ -488,10 +508,16 @@ int main(int argc, char *argv[])
+ 			    "Failed to read back RUNSTATE_UPDATE_FLAG attr");
+ 	}
+ 
+-	struct kvm_xen_hvm_attr ha = {
+-		.type = KVM_XEN_ATTR_TYPE_SHARED_INFO,
+-		.u.shared_info.gfn = SHINFO_REGION_GPA / PAGE_SIZE,
+-	};
++	struct kvm_xen_hvm_attr ha = {};
++
++	if (has_shinfo_hva) {
++		ha.type = KVM_XEN_ATTR_TYPE_SHARED_INFO_HVA;
++		ha.u.shared_info.hva = (unsigned long)shinfo;
++	} else {
++		ha.type = KVM_XEN_ATTR_TYPE_SHARED_INFO;
++		ha.u.shared_info.gfn = SHINFO_ADDR / PAGE_SIZE;
++	}
++
+ 	vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &ha);
+ 
+ 	/*
+-- 
+2.39.2
+
