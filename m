@@ -1,130 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84F02C68F
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 11:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC5C1E865;
+	Mon, 15 Jan 2024 11:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a/DbHv15";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bwc9LEaC"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705319737;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2mpn6+obTxRcm8xRz0uPp9tprpfZMtPzWtI1I5gZgAk=;
-	b=a/DbHv15S2XyTFzVGLr/VP8O2N6cUEqJAgdMc+8Z8rylFMAR4O2i3lRQKwFWkyBV768GTL
-	BLowYbY++tExz2miIDaBkGdant3Prph45FO0dEUped6OA+keg67G1/uvPehtCOft+iwWon
-	z2bbTcrOY3P5Bir6lA9yJwxIz6qur9LbbRhCbiRUSlHvA2V2HCB7ejQAO+FUuDGI6TNaS1
-	+0ccaTqxrfimpgAAqYwrJpzEtpMQctXH3JcZ0Pt0My6JpuYvqevtNGxuYIaDO0oSmV4MT/
-	4pdU7RsWVGaMs/DflYyB/jkiwSm7IZ91ZZe1rHu/tncE6R9cQD9j9sOu0o25xA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705319737;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2mpn6+obTxRcm8xRz0uPp9tprpfZMtPzWtI1I5gZgAk=;
-	b=bwc9LEaC0EvxGWqfphA1hjxd0sqw12rysbM/BxgS84y5uVBUpX6VN8yQK5B/KMRJGdD07M
-	a0KRTYn8JnrdXEBA==
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt
- <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
- linux-kernel@vger.kernel.org, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: Re: [PATCH printk v3 04/14] printk: ringbuffer: Do not skip
- non-finalized records with prb_next_seq()
-In-Reply-To: <ZaF_eJ_BCddZl5z1@alley>
-References: <20231214214201.499426-1-john.ogness@linutronix.de>
- <20231214214201.499426-5-john.ogness@linutronix.de>
- <ZaF_eJ_BCddZl5z1@alley>
-Date: Mon, 15 Jan 2024 13:01:36 +0106
-Message-ID: <874jfeg69z.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgbiphD0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83F2EC433C7;
+	Mon, 15 Jan 2024 11:58:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705319925;
+	bh=rAzO/EbAjp/RyapW0byiwCjRX0nFnY82gnHGAzPPPos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mgbiphD0IcbgJG+qVE73R65/MPGiT5oH4pY9nHEdFNrJ/B1YENiz50WUwj82bcC8Q
+	 m+d3vkxXpDemGgesnLkobL4u7XZlmBHFsHFsc0WQRKm1PWZ/GdZ6S6n2rAOYkN8txk
+	 ADYyqM+Ujw9kY8bWk/w0ha/GTdG/BAg5eNnbKFMZNf9e9pk1c/UWMelLT3h0HKr9Pi
+	 YGItqc6m+w3BhuPv67siyXW+25KV6LTNw/ycldehMxW3FF5IQWm14WCcNtAzkTkmPA
+	 rPAd2h/bO2zIVxeIvXLTjoNtaYq1/dzr7qJT9Xg1eaJ9rkVsrHA5QZuXKKopnGS1i6
+	 CbSzqREnrhokA==
+Date: Mon, 15 Jan 2024 11:58:41 +0000
+From: Simon Horman <horms@kernel.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: edumazet@google.com, davem@davemloft.net, dsahern@kernel.org,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH net-next v2] net: tcp: accept old ack during closing
+Message-ID: <20240115115841.GS392144@kernel.org>
+References: <20240112094603.23706-1-menglong8.dong@gmail.com>
+ <20240113154632.GI392144@kernel.org>
+ <CADxym3a6qNcb47R_DfXMsac9Ou_zkz5hR3bGY9tr7Jhsdw3y-Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADxym3a6qNcb47R_DfXMsac9Ou_zkz5hR3bGY9tr7Jhsdw3y-Q@mail.gmail.com>
 
-On 2024-01-12, Petr Mladek <pmladek@suse.com> wrote:
->>  u64 prb_next_seq(struct printk_ringbuffer *rb)
->>  {
->> -	struct prb_desc_ring *desc_ring = &rb->desc_ring;
->> -	enum desc_state d_state;
->> -	unsigned long id;
->>  	u64 seq;
->>  
->> -	/* Check if the cached @id still points to a valid @seq. */
->> -	id = atomic_long_read(&desc_ring->last_finalized_id);
->> -	d_state = desc_read(desc_ring, id, NULL, &seq, NULL);
->> +	seq = desc_last_finalized_seq(rb);
->
-> desc_last_finalized_seq() does internally:
->
-> 	ulseq = atomic_long_read_acquire(&desc_ring->last_finalized_seq
-> 					); /* LMM(desc_last_finalized_seq:A) */
->
->
-> It guarantees that this CPU would see the data which were seen by the
-> CPU which updated desc_ring->last_finalized_seq.
->
-> So far so good.
->
-> The problem is that I somehow miss the counter part. Maybe,
-> it is not needed. It just looks strange.
+On Mon, Jan 15, 2024 at 10:40:56AM +0800, Menglong Dong wrote:
+> On Sat, Jan 13, 2024 at 11:46 PM Simon Horman <horms@kernel.org> wrote:
+> >
+> > On Fri, Jan 12, 2024 at 05:46:03PM +0800, Menglong Dong wrote:
+> > > For now, the packet with an old ack is not accepted if we are in
+> > > FIN_WAIT1 state, which can cause retransmission. Taking the following
+> > > case as an example:
+> > >
+> > >     Client                               Server
+> > >       |                                    |
+> > >   FIN_WAIT1(Send FIN, seq=10)          FIN_WAIT1(Send FIN, seq=20, ack=10)
+> > >       |                                    |
+> > >       |                                Send ACK(seq=21, ack=11)
+> > >    Recv ACK(seq=21, ack=11)
+> > >       |
+> > >    Recv FIN(seq=20, ack=10)
+> > >
+> > > In the case above, simultaneous close is happening, and the FIN and ACK
+> > > packet that send from the server is out of order. Then, the FIN will be
+> > > dropped by the client, as it has an old ack. Then, the server has to
+> > > retransmit the FIN, which can cause delay if the server has set the
+> > > SO_LINGER on the socket.
+> > >
+> > > Old ack is accepted in the ESTABLISHED and TIME_WAIT state, and I think
+> > > it should be better to keep the same logic.
+> > >
+> > > In this commit, we accept old ack in FIN_WAIT1/FIN_WAIT2/CLOSING/LAST_ACK
+> > > states. Maybe we should limit it to FIN_WAIT1 for now?
+> > >
+> > > Signed-off-by: Menglong Dong <menglong8.dong@gmail.com>
+> > > ---
+> > > v2:
+> > > - fix the compiling error
+> > > ---
+> > >  net/ipv4/tcp_input.c | 18 +++++++++++-------
+> > >  1 file changed, 11 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > > index df7b13f0e5e0..70642bb08f3a 100644
+> > > --- a/net/ipv4/tcp_input.c
+> > > +++ b/net/ipv4/tcp_input.c
+> > > @@ -6699,17 +6699,21 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
+> > >               return 0;
+> > >
+> > >       /* step 5: check the ACK field */
+> > > -     acceptable = tcp_ack(sk, skb, FLAG_SLOWPATH |
+> > > -                                   FLAG_UPDATE_TS_RECENT |
+> > > -                                   FLAG_NO_CHALLENGE_ACK) > 0;
+> > > +     reason = tcp_ack(sk, skb, FLAG_SLOWPATH |
+> > > +                               FLAG_UPDATE_TS_RECENT |
+> > > +                               FLAG_NO_CHALLENGE_ACK);
+> >
+> > Hi Menglong Dong,
+> >
+> > Probably I am missing something terribly obvious,
+> > but I am confused about the types used here.
+> >
+> > The type of reason is enum skb_drop_reason.
+> > For which, which on my system, the compiler uses an unsigned entity.
+> > i.e. it is an unsigned integer.
+> >
+> > But tcp_ack returns a (signed) int. And below reason is checked
+> > for values less than zero, and negated. This doesn't seem right.
+> >
+> 
+> Hello! You are right, and it seems that I make the same
+> mistake with Eric in this commit:
+> 
+> 843f77407eeb ("tcp: fix signed/unsigned comparison")
+> 
+> I should convert it to signed int before comparing it
+> like this:
+> 
+>   if ((int)reason <= 0) {
+>       ......
+>       if ((int)reason < 0) {
+>           ....
+>       }
+>   }
 
-As the comments in desc_last_finalized_seq() state: "This pairs with
-desc_update_last_finalized:A."
+Thanks. FWIIW, I would probably assign the unsigned value to an unsigned
+local variable.
 
-desc_update_last_finalized() successfully reads a record and then uses a
-cmpxchg_release() to set the new @last_finalized_seq value (of the
-record it just read). That is the counter part.
-
->> -	if (d_state == desc_finalized || d_state == desc_reusable) {
->> -		/*
->> -		 * Begin searching after the last finalized record.
->> -		 *
->> -		 * On 0, the search must begin at 0 because of hack#2
->> -		 * of the bootstrapping phase it is not known if a
->> -		 * record at index 0 exists.
->> -		 */
->> -		if (seq != 0)
->> -			seq++;
->> -	} else {
->> -		/*
->> -		 * The information about the last finalized sequence number
->> -		 * has gone. It should happen only when there is a flood of
->> -		 * new messages and the ringbuffer is rapidly recycled.
->> -		 * Give up and start from the beginning.
->> -		 */
->> -		seq = 0;
->> -	}
->> +	/*
->> +	 * Begin searching after the last finalized record.
->> +	 *
->> +	 * On 0, the search must begin at 0 because of hack#2
->> +	 * of the bootstrapping phase it is not known if a
->> +	 * record at index 0 exists.
->> +	 */
->> +	if (seq != 0)
->> +		seq++;
->>  
->>  	/*
->>  	 * The information about the last finalized @seq might be inaccurate.
->
-> Below is the code:
->
-> 	while (_prb_read_valid(rb, &seq, NULL, NULL))
-> 		seq++;
->
-> Maybe, the release() should be here to make sure that the CPU which
-> would see this "seq" would also the data.
-
-The acquire is with @last_finalized_seq. So the release must also be
-with @last_finalized_seq. The important thing is that the CPU that
-updates @last_finalized_seq has actually read the corresponding record
-beforehand. That is exactly what desc_update_last_finalized() does.
-
-John
+...
