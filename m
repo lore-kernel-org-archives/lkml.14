@@ -1,69 +1,70 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7050617BA3;
-	Mon, 15 Jan 2024 16:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2CC18027
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 16:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yngvason.is
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGV4R376"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6d9b13fe9e9so6946378b3a.2;
-        Mon, 15 Jan 2024 08:06:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b="MB/UucWH"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e7fce1abcso4555685e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 08:06:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705334783; x=1705939583; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AFjfBuQ8gREaq4FYxrLGf+324YZ/SzYtv7HMcJo8OiM=;
-        b=dGV4R376ICDmCQn+pbRycYk6b3wIyBzY7jijNawbQgXXxkTE/FSd6xOoAdaMwfIcpH
-         7akwx1kza2NI6111uriHjvoQZG/UZe0XN6hkpiyADJHOuXx++C35agxJTlWLQhmxgF/W
-         HcxTYce60B0wkJ50sUuc5npiY0UTEsq+vLnDmS/WkS7FVUSzc63XoHeuXIuuSxaajtEk
-         4gBzWxUOdKfeSZ+kMAYXBGrFAkebV+mEtEUCcvLofMykLTeulasTB1wgaX7n99q21ju3
-         9Sn3hgs5Iih2cZ9Jb5+St7j0lCvHLXL3oP2QJgB/CtI9H4jWIQ6oWUPeWd5LJdKHI1LV
-         NLcA==
+        d=yngvason.is; s=google; t=1705334797; x=1705939597; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2nfzXYtohis0OwCD+AmIl/qoZqPN5SyFIj+AeVDGrUY=;
+        b=MB/UucWHIgdmBPWYysmxSDp7a694aYDXbyKd/OIIfjY64MRdzyah4eKp706ARhzRSa
+         zG9uoiOjn1oTfUs58ZQDjshgTl/Oej2cVIrBYxvCepBNY/y+KnfcOCpCqyUEp14QJzwL
+         XjGVt1whaZTVPl85Se2yWyuCiDz9lDtixo96M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705334783; x=1705939583;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AFjfBuQ8gREaq4FYxrLGf+324YZ/SzYtv7HMcJo8OiM=;
-        b=vNoyTtbC9AdYJ0b/JzGCP44n/SSH3laSSmx0vW28gaiz9/MdbftjVe3Cju1gbsv/EO
-         pO7vd8/vULU9vJ0PTLzcHUy4D0pCXHLM9jW35BO7FDvAAePSFEMDfQ0YlR4F5QBs6xuU
-         43gwv6+er7SaPToC7CscA1D9GT4XjOYt2py7CEuUewtk2n7m6GMkMQaJALskIsEB7DeW
-         g/na088G4fgx9TFDHWgWKfTJXfcYyXR98bN3uSqMChsUVpEahEwEOv/ft1zAY62NdLVX
-         H4K4m4vr3POPJFVddtY52MswBE0xF8KQJU4+TGqecoNq0sjIFfS/mVP6O2hTEBDW/xHX
-         wtQA==
-X-Gm-Message-State: AOJu0YzPRA20AW1SInee60vqjPEKgC6EcmxUWrP1oZJYYHBJukIW8wzY
-	4bUoBY4xid7iU2vQs/yg1fw=
-X-Google-Smtp-Source: AGHT+IFKj9mSl4b8I0aFzy6SsolLQ9h6pIbeCtf+spzb47O3C8OybzpfLNS5qaDEzORGMAY8PuH/4w==
-X-Received: by 2002:a05:6a20:d392:b0:19a:9e3c:e98a with SMTP id iq18-20020a056a20d39200b0019a9e3ce98amr6370013pzb.21.1705334782493;
-        Mon, 15 Jan 2024 08:06:22 -0800 (PST)
-Received: from localhost ([124.131.233.112])
-        by smtp.gmail.com with ESMTPSA id n27-20020a056a000d5b00b006d9fd64fdcasm7757783pfv.37.2024.01.15.08.06.20
+        d=1e100.net; s=20230601; t=1705334797; x=1705939597;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2nfzXYtohis0OwCD+AmIl/qoZqPN5SyFIj+AeVDGrUY=;
+        b=XGLG9ME1RYHnK/Oev/hy6vbT9j79JRVN9ns/nRJ6B3fpJweLAF5S1yOidrBHQqSlbH
+         DLO02U5zNW7vtWNqUA2iwfgyS7r/gb8/J2ZgORs2AhjWzhaRpix/K3DQlZmn21Qn34K0
+         GoIoCIPpaUrIZEMd1IfGZKoX0gxHEO/QsUlVfRN/hbrjekqt3oPKn3m2IDZ5ryrsXh1R
+         Ekrd3hEu2wM5WzHFkb/rXnnSLSkSd+Dk3KEaU4NtbzdmiQ1pVcPU8jABAzfhxj6MU6Od
+         mK7sljHGCdtyr5LXMoSGU3qMxzjqjz51ekiky4Rphfm+PwU0IMmxUjh1trpHjXtH2Pi+
+         yruQ==
+X-Gm-Message-State: AOJu0YyTz9pPtBJqg1RiH5VwRL/fBKwqk1LmWOLUVDDJ/GAfBc2RM/EB
+	zGjCaDw3m8HBwnF4g+ujK1aDFGiPW7gq0A==
+X-Google-Smtp-Source: AGHT+IEUUc5iRjuXbMJ2dngkv+RJCZlkEQjqC7ossePXJRfMhg+lS/5kV7bU5iCCs/lMM5nEnzQUkw==
+X-Received: by 2002:a7b:cbc7:0:b0:40e:6707:b758 with SMTP id n7-20020a7bcbc7000000b0040e6707b758mr2317948wmi.178.1705334796754;
+        Mon, 15 Jan 2024 08:06:36 -0800 (PST)
+Received: from andri-workstation.turninn.appdynamic.com ([2a01:8280:aa07:ad:7285:c2ff:fef0:4baf])
+        by smtp.gmail.com with ESMTPSA id l22-20020a05600c4f1600b0040d6b91efd9sm20174140wmq.44.2024.01.15.08.06.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 08:06:22 -0800 (PST)
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-To: alexandre.belloni@bootlin.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	chao.wei@sophgo.com,
-	unicorn_wang@outlook.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu
-Cc: linux-rtc@vger.kernel.org,
-	devicetree@vger.kernel.org,
+        Mon, 15 Jan 2024 08:06:36 -0800 (PST)
+From: Andri Yngvason <andri@yngvason.is>
+To: Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	dlan@gentoo.org,
-	inochiama@outlook.com
-Subject: [PATCH v6 3/3] riscv: dts: sophgo: add rtc dt node for CV1800
-Date: Tue, 16 Jan 2024 00:06:00 +0800
-Message-ID: <20240115160600.5444-4-qiujingbao.dlmu@gmail.com>
+	intel-gfx@lists.freedesktop.org,
+	Simon Ser <contact@emersion.fr>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	Andri Yngvason <andri@yngvason.is>
+Subject: [PATCH v2 0/4] New DRM properties for output color format
+Date: Mon, 15 Jan 2024 16:05:50 +0000
+Message-ID: <20240115160554.720247-1-andri@yngvason.is>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240115160600.5444-1-qiujingbao.dlmu@gmail.com>
-References: <20240115160600.5444-1-qiujingbao.dlmu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,35 +73,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the rtc device tree node to cv1800 SoC.
+After some discussion, we decided to drop the "active color format"
+property and rename the "preferred color format" property to "force
+color format". 
 
-Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
----
- arch/riscv/boot/dts/sophgo/cv1800b.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+The user can probe available color formats in combination with other
+properties using TEST_ONLY commits.
 
-diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-index df40e87ee063..66bb4a752b91 100644
---- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-+++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-@@ -119,5 +119,17 @@ clint: timer@74000000 {
- 			reg = <0x74000000 0x10000>;
- 			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>;
- 		};
-+
-+		rtc: rtc@5025000 {
-+			compatible = "sophgo,cv1800-rtc", "syscon";
-+			reg = <0x5025000 0x2000>;
-+			interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc>;
-+		};
-+
-+		por {
-+			compatible = "sophgo,cv1800-por";
-+			sophgo,rtc-sysreg = <&rtc>;
-+		};
- 	};
- };
+v1: https://lore.kernel.org/dri-devel/20240109181104.1670304-1-andri@yngvason.is/
+
+v2
+ - Dropped "active color format"
+ - Replaced "preferred color format" with "force color format"
+
+
+Werner Sembach (4):
+  drm/amd/display: Remove unnecessary SIGNAL_TYPE_HDMI_TYPE_A check
+  drm/uAPI: Add "force color format" drm property as setting for
+    userspace
+  drm/amd/display: Add handling for new "force color format" property
+  drm/i915/display: Add handling for new "force color format" property
+
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 67 ++++++++++++++++---
+ .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  4 ++
+ drivers/gpu/drm/drm_atomic_helper.c           |  4 ++
+ drivers/gpu/drm/drm_atomic_uapi.c             |  4 ++
+ drivers/gpu/drm/drm_connector.c               | 48 +++++++++++++
+ drivers/gpu/drm/i915/display/intel_dp.c       | 35 ++++++++--
+ drivers/gpu/drm/i915/display/intel_dp_mst.c   |  5 ++
+ drivers/gpu/drm/i915/display/intel_hdmi.c     | 29 ++++++--
+ include/drm/drm_connector.h                   | 16 +++++
+ 9 files changed, 190 insertions(+), 22 deletions(-)
+
+
+base-commit: 052d534373b7ed33712a63d5e17b2b6cdbce84fd
 -- 
 2.43.0
 
