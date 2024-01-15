@@ -1,124 +1,76 @@
-Received: from relay.virtuozzo.com (relay.virtuozzo.com [130.117.225.111])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30A2219E1
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 11:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=virtuozzo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=virtuozzo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="nHMPZr4H"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=virtuozzo.com; s=relay; h=MIME-Version:Message-Id:Date:Subject:From:
-	Content-Type; bh=iLvRjgtii0U9FsiG7za0k50TI4MDsT+FsH6CIxXQRL4=; b=nHMPZr4Hh5H7
-	GbeQfTA5PEqm/hIjYuYcLWQZTBvuzBzefQ8BjRRSAsB3hGH1y0Zpb35humEe9Dxo5KBGDhw+48b9h
-	sXozH/wJftQ2c1+yUMILYR8vUcof+oEkipmewKGqtKuLeA44yhsEjlXHBkoNacQePOv+GNYPINH/c
-	pTcUEPTEfjWW4NLhdEnxt1FzSfM3j/qBeMxWZtG+tjn5LKuT43cxDzDsNGBNQ1ixj9pVXeWF1dHzb
-	4bBaVw7eK1CnQiqPcczu1DpofHXJcD0eGO3fHxSCBGUOuzc28DWxd2FIQ0aZplMX+ipHWpejFIX0g
-	wriD9OrRagE8D0yjkGAohg==;
-Received: from [130.117.225.1] (helo=finist-alma9.sw.ru)
-	by relay.virtuozzo.com with esmtp (Exim 4.96)
-	(envelope-from <khorenko@virtuozzo.com>)
-	id 1rPKVW-008UGf-0M;
-	Mon, 15 Jan 2024 11:50:45 +0100
-From: Konstantin Khorenko <khorenko@virtuozzo.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Alexander Atanasov <alexander.atanasov@virtuozzo.com>,
-	linux-kernel@vger.kernel.org,
-	Konstantin Khorenko <khorenko@virtuozzo.com>
-Subject: [PATCH v2 RESEND] sched/fair: Do not scan non-movable tasks several times
-Date: Mon, 15 Jan 2024 13:50:52 +0300
-Message-Id: <20240115105052.398761-1-khorenko@virtuozzo.com>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9851E867
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 11:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav111.sakura.ne.jp (fsav111.sakura.ne.jp [27.133.134.238])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 40FB91nb026996;
+	Mon, 15 Jan 2024 20:09:01 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav111.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav111.sakura.ne.jp);
+ Mon, 15 Jan 2024 20:09:01 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav111.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 40FB90l7026993
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 15 Jan 2024 20:09:00 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <199a52ed-59d0-4651-b361-3b3d0692a2bf@I-love.SAKURA.ne.jp>
+Date: Mon, 15 Jan 2024 20:08:58 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfc/nci: fix task hung in nfc_targets_found
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Edward Adam Davis <eadavis@qq.com>,
+        syzbot+2b131f51bb4af224ab40@syzkaller.appspotmail.com
+Cc: davem@davemloft.net, edumazet@google.com, gregkh@linuxfoundation.org,
+        hdanton@sina.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, pabeni@redhat.com, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
+References: <000000000000a041b0060eb045ec@google.com>
+ <tencent_E44436084AA874977705670A3CDD37BE9609@qq.com>
+ <10fa514a-7fa0-449f-a7fd-cd3bfb0180d7@linaro.org>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <10fa514a-7fa0-449f-a7fd-cd3bfb0180d7@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-If busiest rq is small, nr_running < SCHED_NR_MIGRATE_BREAK and all
-tasks are not movable, detach_tasks() should not iterate more than tasks
-available in the busiest rq.
+On 2024/01/15 18:36, Krzysztof Kozlowski wrote:
+>> diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+>> index 6c9592d05120..9a277228a875 100644
+>> --- a/net/nfc/nci/core.c
+>> +++ b/net/nfc/nci/core.c
+>> @@ -145,6 +145,8 @@ inline int nci_request(struct nci_dev *ndev,
+>>  {
+>>  	int rc;
+>>  
+>> +	if (test_bit(NCI_UNREG, &ndev->flags))
+>> +		return -ENODEV;
+> 
+> nci_close_device() clears the NCI_UP, which is tested here, just after
+> acquiring mutex. And there is explicit comment about it just below your
+> code. Why it is not relevant?
 
-Before commit: b0defa7ae03e ("sched/fair: Make sure to try to detach at
-least one movable task"), the (env->loop > env->loop_max) condition
-prevented us from scanning non-movable tasks more than rq size times,
-but after we start checking the LBF_ALL_PINNED flag, the "all tasks are
-not movable" case is under threat.
+Because the deadlock happens at mutex_lock(&ndev->req_lock), which is
+before test_bit(NCI_UP, &ndev->flags) is called. Please see
+https://lkml.kernel.org/r/d314e471-0251-461e-988d-70add0c6ebf6@I-love.SAKURA.ne.jp .
 
-Note: in case all tasks in the rq could not be moved in detach_tasks()
-we always increase loop_break by SCHED_NR_MIGRATE_BREAK, so we can step
-over loop_max, but i think it's a rare case and does not worth adding
-here extra check for rq->nr_running overlimit.
-
-Fixes: b0defa7ae03e ("sched/fair: Make sure to try to detach at least
-one movable task")
-
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
----
- kernel/sched/fair.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 533547e3c90a..920fb16e6e2f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -11277,7 +11277,6 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 		.dst_rq		= this_rq,
- 		.dst_grpmask    = group_balance_mask(sd->groups),
- 		.idle		= idle,
--		.loop_break	= SCHED_NR_MIGRATE_BREAK,
- 		.cpus		= cpus,
- 		.fbq_type	= all,
- 		.tasks		= LIST_HEAD_INIT(env.tasks),
-@@ -11324,6 +11323,14 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 		 */
- 		env.loop_max  = min(sysctl_sched_nr_migrate, busiest->nr_running);
- 
-+more_balance_reset_break:
-+		/*
-+		 * If busiest rq is small, nr_running < SCHED_NR_MIGRATE_BREAK
-+		 * and all tasks are not movable, detach_tasks() should not
-+		 * iterate more than tasks available in rq.
-+		 */
-+		env.loop_break = min(SCHED_NR_MIGRATE_BREAK, busiest->nr_running);
-+
- more_balance:
- 		rq_lock_irqsave(busiest, &rf);
- 		update_rq_clock(busiest);
-@@ -11386,13 +11393,12 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 			env.dst_cpu	 = env.new_dst_cpu;
- 			env.flags	&= ~LBF_DST_PINNED;
- 			env.loop	 = 0;
--			env.loop_break	 = SCHED_NR_MIGRATE_BREAK;
- 
- 			/*
- 			 * Go back to "more_balance" rather than "redo" since we
- 			 * need to continue with same src_cpu.
- 			 */
--			goto more_balance;
-+			goto more_balance_reset_break;
- 		}
- 
- 		/*
-@@ -11418,7 +11424,6 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 			 */
- 			if (!cpumask_subset(cpus, env.dst_grpmask)) {
- 				env.loop = 0;
--				env.loop_break = SCHED_NR_MIGRATE_BREAK;
- 				goto redo;
- 			}
- 			goto out_all_pinned;
--- 
-2.39.3
+> 
+> Your code looks really unnecessary, at least with that code flow from
+> commit msg. Especially considering you do it outside of mutex, so how
+> does it solve anything?
+> 
+> Best regards,
+> Krzysztof
+> 
 
