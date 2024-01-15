@@ -1,266 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE072C683;
-	Mon, 15 Jan 2024 11:40:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 579C7C433C7;
-	Mon, 15 Jan 2024 11:40:19 +0000 (UTC)
-Message-ID: <8d143985-d9f3-48de-a9a4-150c776b75ca@xs4all.nl>
-Date: Mon, 15 Jan 2024 12:40:17 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09E52C689;
+	Mon, 15 Jan 2024 11:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oUH71L6Z";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="V8O65D+L";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="J+tfy3gE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vmyZlXtx"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D0DCF1FD32;
+	Mon, 15 Jan 2024 11:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1705318970; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fa77VaAZn9UVOV4vrMGq9naLXzpjHArd8P1qmSRNbmw=;
+	b=oUH71L6Z4J/EgGXkRls1dCSZL+jk2X5LofEIlbjWPsEq7jt+xWs3PcYL0q6drkLBIOlm/z
+	aN2/Jnpqsy5BF5ycWotWquThD80lNRd4aPtX6ftF7r29IsIddxdpIOsgKTAw2luVUP+Ra9
+	eGcxwJOSyqB4hJAUawKW4moK5sVw00Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1705318970;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fa77VaAZn9UVOV4vrMGq9naLXzpjHArd8P1qmSRNbmw=;
+	b=V8O65D+L/4bnpO+sE9xANk5xOWLpXOvUghl5aiKAA+a2pNniU5/zJUIVRQS2GoPvIBY3X2
+	mmBWWUujhGLwXIAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1705318969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fa77VaAZn9UVOV4vrMGq9naLXzpjHArd8P1qmSRNbmw=;
+	b=J+tfy3gElBbqY62Ix/9oq7H32RSHu53SXfkk4533yv8AKQywY7IMBfmlMNpnHk2HnJOwnS
+	CaSwYbIVTrskI0g7xkcyQrpnCwhKut8UKAgynPPVAw5FoDFXDW07VTqt4pGuL4030bjeYA
+	FOY7FWOfnXBsIt3SsSTzqVjzwFy+iaU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1705318969;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fa77VaAZn9UVOV4vrMGq9naLXzpjHArd8P1qmSRNbmw=;
+	b=vmyZlXtx8TSl0fKGZ7fOHnU5qAXyb2gZ4q2iIwgRPUQDHp77CVYLVb/FsbhrxgPl113+Ad
+	FlG9aorv+pglFCDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 94F0813712;
+	Mon, 15 Jan 2024 11:42:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vEidIDkapWW+QAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 15 Jan 2024 11:42:49 +0000
+Date: Mon, 15 Jan 2024 12:42:49 +0100
+Message-ID: <878r4qyg92.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: =?ISO-8859-3?Q?=C7a=BBhan?= Demir <caghandemir@marun.edu.tr>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda/relatek: Enable Mute LED on HP Laptop 15s-fq2xxx
+In-Reply-To: <20240113023734.10817-2-caghandemir@marun.edu.tr>
+References: <20240113023734.10817-2-caghandemir@marun.edu.tr>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 3/8] media: core: Rework how create_buf index returned
- value is computed
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, mchehab@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- kernel@collabora.com
-References: <20231215090813.15610-1-benjamin.gaignard@collabora.com>
- <20231215090813.15610-4-benjamin.gaignard@collabora.com>
- <b371b3f3-44af-4224-a07e-841e318696bb@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <b371b3f3-44af-4224-a07e-841e318696bb@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-3
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=J+tfy3gE;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=vmyZlXtx
+X-Spamd-Result: default: False [0.35 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.34)[76.10%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 0.35
+X-Rspamd-Queue-Id: D0DCF1FD32
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Bar: /
 
-On 15/01/2024 12:00, Hans Verkuil wrote:
-> On 15/12/2023 10:08, Benjamin Gaignard wrote:
->> When DELETE_BUFS will be introduced holes could created in bufs array.
->> To be able to reuse these unused indices reworking how create->index
->> is set is mandatory.
->> Let __vb2_queue_alloc() decide which first index is correct and
->> forward this to the caller.
->>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
->> ---
->>  .../media/common/videobuf2/videobuf2-core.c   | 22 ++++++++++++-------
->>  .../media/common/videobuf2/videobuf2-v4l2.c   | 20 +++++++++++------
->>  include/media/videobuf2-core.h                |  5 ++++-
->>  3 files changed, 31 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
->> index a183edf11586..cd2b9e51b9b0 100644
->> --- a/drivers/media/common/videobuf2/videobuf2-core.c
->> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
->> @@ -447,11 +447,12 @@ static void vb2_queue_remove_buffer(struct vb2_buffer *vb)
->>   */
+On Sat, 13 Jan 2024 03:37:33 +0100,
+Ça»han Demir wrote:
 > 
-> You should update the comment before this function to explain what is
-> returned in first_index.
+> This HP Laptop uses ALC236 codec with COEF 0x07 idx 1 controlling
+> the mute LED. This patch enables the already existing quirk for
+> this device.
 > 
->>  static int __vb2_queue_alloc(struct vb2_queue *q, enum vb2_memory memory,
->>  			     unsigned int num_buffers, unsigned int num_planes,
->> -			     const unsigned plane_sizes[VB2_MAX_PLANES])
->> +			     const unsigned int plane_sizes[VB2_MAX_PLANES],
->> +			     unsigned int *first_index)
->>  {
->> -	unsigned int q_num_buffers = vb2_get_num_buffers(q);
->>  	unsigned int buffer, plane;
->>  	struct vb2_buffer *vb;
->> +	unsigned long index;
->>  	int ret;
->>  
->>  	/*
->> @@ -459,7 +460,11 @@ static int __vb2_queue_alloc(struct vb2_queue *q, enum vb2_memory memory,
->>  	 * in the queue is below q->max_num_buffers
->>  	 */
->>  	num_buffers = min_t(unsigned int, num_buffers,
->> -			    q->max_num_buffers - q_num_buffers);
->> +			    q->max_num_buffers - vb2_get_num_buffers(q));
->> +
->> +	index = vb2_get_num_buffers(q);
+> Signed-off-by: Ça»han Demir <caghandemir@marun.edu.tr>
+> ---
+>  sound/pci/hda/patch_realtek.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Perhaps move this line up, then you can use 'index' instead of
-> vb2_get_num_buffers() in the min_t line. Starting with the next
-> patch vb2_get_num_buffers becomes a more expensive operation.
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index b68c94757..124bee526 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -9876,6 +9876,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x103c, 0x8870, "HP ZBook Fury 15.6 Inch G8 Mobile Workstation PC", ALC285_FIXUP_HP_GPIO_AMP_INIT),
+>  	SND_PCI_QUIRK(0x103c, 0x8873, "HP ZBook Studio 15.6 Inch G8 Mobile Workstation PC", ALC285_FIXUP_HP_GPIO_AMP_INIT),
+>  	SND_PCI_QUIRK(0x103c, 0x887a, "HP Laptop 15s-eq2xxx", ALC236_FIXUP_HP_MUTE_LED_COEFBIT2),
+> +	SND_PCI_QUIRK(0x103c, 0x87FE, "HP Laptop 15s-fq2xxx", ALC236_FIXUP_HP_MUTE_LED_COEFBIT2),
 
-Never mind, this changes in the next patch.
+The entry is sorted in PCI SSID order.
+Could you put it at the right position?
+Also, the lower alphabets are used for hex numbers in general.
 
-That said, I would prefer to keep the q_num_buffers variable here and
-use it in the min_t and index, and replace it in the next patch.
 
-It is a bit confusing in this patch, it makes more sense in the next.
+thanks,
 
-Regards,
-
-	Hans
-
-> 
-> General note: it is perhaps a good idea to check all the users of
-> vb2_get_num_buffers to make sure it is not called unnecessarily.>
->> +
->> +	*first_index = index;
->>  
->>  	for (buffer = 0; buffer < num_buffers; ++buffer) {
->>  		/* Allocate vb2 buffer structures */
->> @@ -479,7 +484,7 @@ static int __vb2_queue_alloc(struct vb2_queue *q, enum vb2_memory memory,
->>  			vb->planes[plane].min_length = plane_sizes[plane];
->>  		}
->>  
->> -		vb2_queue_add_buffer(q, vb, q_num_buffers + buffer);
->> +		vb2_queue_add_buffer(q, vb, index++);
->>  		call_void_bufop(q, init_buffer, vb);
->>  
->>  		/* Allocate video buffer memory for the MMAP type */
->> @@ -820,7 +825,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->>  	unsigned int q_num_bufs = vb2_get_num_buffers(q);
->>  	unsigned plane_sizes[VB2_MAX_PLANES] = { };
->>  	bool non_coherent_mem = flags & V4L2_MEMORY_FLAG_NON_COHERENT;
->> -	unsigned int i;
->> +	unsigned int i, first_index;
->>  	int ret = 0;
->>  
->>  	if (q->streaming) {
->> @@ -906,7 +911,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->>  
->>  	/* Finally, allocate buffers and video memory */
->>  	allocated_buffers =
->> -		__vb2_queue_alloc(q, memory, num_buffers, num_planes, plane_sizes);
->> +		__vb2_queue_alloc(q, memory, num_buffers, num_planes, plane_sizes, &first_index);
->>  	if (allocated_buffers == 0) {
->>  		dprintk(q, 1, "memory allocation failed\n");
->>  		ret = -ENOMEM;
->> @@ -980,7 +985,8 @@ EXPORT_SYMBOL_GPL(vb2_core_reqbufs);
->>  int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
->>  			 unsigned int flags, unsigned int *count,
->>  			 unsigned int requested_planes,
->> -			 const unsigned int requested_sizes[])
->> +			 const unsigned int requested_sizes[],
->> +			 unsigned int *first_index)
->>  {
->>  	unsigned int num_planes = 0, num_buffers, allocated_buffers;
->>  	unsigned plane_sizes[VB2_MAX_PLANES] = { };
->> @@ -1042,7 +1048,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
->>  
->>  	/* Finally, allocate buffers and video memory */
->>  	allocated_buffers = __vb2_queue_alloc(q, memory, num_buffers,
->> -				num_planes, plane_sizes);
->> +				num_planes, plane_sizes, first_index);
->>  	if (allocated_buffers == 0) {
->>  		dprintk(q, 1, "memory allocation failed\n");
->>  		ret = -ENOMEM;
->> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
->> index 54d572c3b515..3c0c423c5674 100644
->> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
->> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
->> @@ -797,11 +797,16 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
->>  	for (i = 0; i < requested_planes; i++)
->>  		if (requested_sizes[i] == 0)
->>  			return -EINVAL;
->> -	return ret ? ret : vb2_core_create_bufs(q, create->memory,
->> -						create->flags,
->> -						&create->count,
->> -						requested_planes,
->> -						requested_sizes);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = vb2_core_create_bufs(q, create->memory,
-> 
-> This can just be a direct 'return vb2_core_create_bufs(...'
-> 
->> +				   create->flags,
->> +				   &create->count,
->> +				   requested_planes,
->> +				   requested_sizes,
->> +				   &create->index);
->> +	return ret;
->>  }
->>  EXPORT_SYMBOL_GPL(vb2_create_bufs);
->>  
->> @@ -1029,15 +1034,16 @@ int vb2_ioctl_create_bufs(struct file *file, void *priv,
->>  	int res = vb2_verify_memory_type(vdev->queue, p->memory,
->>  			p->format.type);
->>  
->> -	p->index = vdev->queue->num_buffers;
->>  	fill_buf_caps(vdev->queue, &p->capabilities);
->>  	validate_memory_flags(vdev->queue, p->memory, &p->flags);
->>  	/*
->>  	 * If count == 0, then just check if memory and type are valid.
->>  	 * Any -EBUSY result from vb2_verify_memory_type can be mapped to 0.
->>  	 */
->> -	if (p->count == 0)
->> +	if (p->count == 0) {
->> +		p->index = vb2_get_num_buffers(vdev->queue);
->>  		return res != -EBUSY ? res : 0;
->> +	}
->>  	if (res)
->>  		return res;
->>  	if (vb2_queue_is_busy(vdev->queue, file))
->> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
->> index 7b84b4e2e273..607f2ba7a905 100644
->> --- a/include/media/videobuf2-core.h
->> +++ b/include/media/videobuf2-core.h
->> @@ -821,6 +821,8 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->>   * @count: requested buffer count.
->>   * @requested_planes: number of planes requested.
->>   * @requested_sizes: array with the size of the planes.
->> + * @first_index: index of the first created buffer, all allocated buffers have
->> + *		 indices in the range [first..first+count]
->>   *
->>   * Videobuf2 core helper to implement VIDIOC_CREATE_BUFS() operation. It is
->>   * called internally by VB2 by an API-specific handler, like
->> @@ -837,7 +839,8 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->>  int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
->>  			 unsigned int flags, unsigned int *count,
->>  			 unsigned int requested_planes,
->> -			 const unsigned int requested_sizes[]);
->> +			 const unsigned int requested_sizes[],
->> +			 unsigned int *first_index);
->>  
->>  /**
->>   * vb2_core_prepare_buf() - Pass ownership of a buffer from userspace
-> 
-> Regards,
-> 
-> 	Hans
-> 
-
+Takashi
