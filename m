@@ -1,104 +1,188 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24ACB18AE8
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 17:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0BD18E0C;
+	Mon, 15 Jan 2024 17:09:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IENH+kDH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705338521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6oEHJxs+4pEZsHsz+fGMFU6jnZAwW1mhS11P5P0qOaA=;
-	b=IENH+kDH3J1xWDxJtO5+52MFTqUbMex9w73tnAqSJmC6w2nfIlFZx2k5lGh1TxBJlfcjlc
-	fXueHfJMzQthqkYqSw6dl4IYz0qoS9T2kf5BBgCdEctlHRRdF2hrs2t+Ler6UQ/d5lQk/E
-	A45Ks+8edIM5NunSUlzX0xHRN1VQ1qM=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-82-Hc3NWg6-ONit_PzGXk21fw-1; Mon,
- 15 Jan 2024 12:08:37 -0500
-X-MC-Unique: Hc3NWg6-ONit_PzGXk21fw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 649203830082;
-	Mon, 15 Jan 2024 17:08:37 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.8.191])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EB3502026D6F;
-	Mon, 15 Jan 2024 17:08:36 +0000 (UTC)
-From: Audra Mitchell <audra@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: tj@kernel.org,
-	jiangshanlai@gmail.com,
-	hirokazu.yamauchi.hk@hitachi.com,
-	ddouwsma@redhat.com,
-	loberman@redhat.com,
-	raquini@redhat.com,
-	rasmus.villemoes@prevas.dk
-Subject: [PATCH v3] workqueue.c: Increase workqueue name length
-Date: Mon, 15 Jan 2024 12:08:22 -0500
-Message-ID: <20240115170822.451231-1-audra@redhat.com>
-In-Reply-To: <20231215193954.1785069-1-audra@redhat.com>
-References: <20231215193954.1785069-1-audra@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjvCtXil"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DCA7C433F1;
+	Mon, 15 Jan 2024 17:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705338545;
+	bh=EqOMEzkyzNYto3UmIip9XB66HC1aMCqtxgSe2FiBi4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mjvCtXilB+F7tlBXPufpFIoL+uZ5s6bm559DwsOVDAOKL0F+CaraYCpFlmLbfF6/Q
+	 EjC5Fy6G41QsIgoRkD35EDwWOrihkeebauqiWVXBfQrZa1+0Y/RASisVtVmiLTuRk6
+	 eGhdOYUpbvtNChB0w/5pkNrmpzNgRHEB7wcdyCpqqI1qtqrYlQLBHHIRt9MqY0ofYh
+	 msitEc9VYqPft14r9x/yRjnosv7EZAa3ZkgZZaOK1FsLWl6iC8RmSJqovIlL/18jk/
+	 F+22h92t37oDYAe8zT+YeBvv+/CNODIP/dYDYB9N1ce1xsApQ1v7J/gnxDe6pxWzoO
+	 fhYcgGy3ZzBnA==
+Date: Mon, 15 Jan 2024 11:09:03 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Walle <michael@walle.cc>, linux-mtd@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, u-boot@lists.denx.de,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH V3 1/6] dt-bindings: nvmem: layouts: add U-Boot
+ environment variables layout
+Message-ID: <20240115170903.GA911971-robh@kernel.org>
+References: <20231221173421.13737-1-zajec5@gmail.com>
+ <20240104001129.GA2045237-robh@kernel.org>
+ <20240104085839.5624c354@xps-13>
+ <8c8d2d38-faf2-47f2-bfbf-2e4842dded47@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+In-Reply-To: <8c8d2d38-faf2-47f2-bfbf-2e4842dded47@gmail.com>
 
-Currently we limit the size of the workqueue name to 24 characters due to
-commit ecf6881ff349 ("workqueue: make workqueue->name[] fixed len")
-Increase the size to 32 characters and print a warning in the event
-the requested name is larger than the limit of 32 characters.
+On Thu, Jan 04, 2024 at 10:10:13AM +0100, Rafał Miłecki wrote:
+> On 4.01.2024 08:58, Miquel Raynal wrote:
+> > robh@kernel.org wrote on Wed, 3 Jan 2024 17:11:29 -0700:
+> > > On Thu, Dec 21, 2023 at 06:34:16PM +0100, Rafał Miłecki wrote:
+> > > > From: Rafał Miłecki <rafal@milecki.pl>
+> > > > 
+> > > > U-Boot env data is a way of storing firmware variables. It's a format
+> > > > that can be used of top of various storage devices. Its binding should
+> > > > be an NVMEM layout instead of a standalone device.
+> > > > 
+> > > > This patch adds layout binding which allows using it on top of MTD NVMEM
+> > > > device as well as any other. At the same time it deprecates the old
+> > > > combined binding.
+> > > 
+> > > I don't understand the issue. From a DT perspective, there isn't. A
+> > > partition is not a device, but is describing the layout of storage
+> > > already.
+> > 
+> > Actually I think what Rafał wants to do goes in the right direction but
+> > I also understand from a binding perspective it may be a little
+> > confusing, even more if we consider "NVMEM" a Linux specific concept.
+> > 
+> > There is today a "u-boot env" NVMEM *device* description which
+> > almost sits at the same level as eg. an eeprom device. We cannot
+> > compare "an eeprom device" and "a u-boot environment" of course. But
+> > that's truly what is currently described.
+> > 
+> > * Current situation
+> > 
+> > 	Flash device -> U-Boot env layout -> NVMEM cells
 
-Signed-off-by: Audra Mitchell <audra@redhat.com>
----
- kernel/workqueue.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Isn't it?:
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 76e60faed892..8d9dec14b9bb 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -108,7 +108,7 @@ enum {
- 	RESCUER_NICE_LEVEL	= MIN_NICE,
- 	HIGHPRI_NICE_LEVEL	= MIN_NICE,
- 
--	WQ_NAME_LEN		= 24,
-+	WQ_NAME_LEN		= 32,
- };
- 
- /*
-@@ -4666,6 +4666,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	va_list args;
- 	struct workqueue_struct *wq;
- 	struct pool_workqueue *pwq;
-+	int len;
- 
- 	/*
- 	 * Unbound && max_active == 1 used to imply ordered, which is no longer
-@@ -4692,9 +4693,12 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	}
- 
- 	va_start(args, max_active);
--	vsnprintf(wq->name, sizeof(wq->name), fmt, args);
-+	len = vsnprintf(wq->name, sizeof(wq->name), fmt, args);
- 	va_end(args);
- 
-+	if (len >= WQ_NAME_LEN)
-+		pr_warn_once("workqueue: name exceeds WQ_NAME_LEN. Truncating to: %s\n", wq->name);
-+
- 	max_active = max_active ?: WQ_DFL_ACTIVE;
- 	max_active = wq_clamp_max_active(max_active, flags, wq->name);
- 
--- 
-2.43.0
+Flash device -> fixed-partitions -> U-Boot env layout -> NVMEM cells
 
+> > 
+> > * Improved situation
+> > 
+> > 	Any storage device -> NVMEM -> U-Boot env layout -> NVMEM cells
+
+Why is this better? We don't need a container to say 'this is NVMEM 
+stuff' or 'this is MTD stuff'. 'U-Boot env layout' can tell us 'this is 
+NVMEM stuff' or whatever the kernel decides in the future.
+
+> > 
+> > The latter is of course the most relevant description as we expect
+> > storage devices to expose a storage-agnostic interface (NVMEM in
+> > this case) which can then be parsed (by NVMEM layouts) in a storage
+> > agnostic way.
+> > 
+> > In the current case, the current U-Boot env binding tells people to
+> > declare the env layout on top of a flash device (only). The current
+> > description also expects a partition node which is typical to flash
+> > devices. Whereas what we should have described in the first place is a
+> > layout that applies on any kind of NVMEM device.
+> > 
+> > Bonus point: We've been working the last couple years on clarifying
+> > bindings, especially with mtd partitions (with the partitions{}
+> > container) and NVMEM layouts (with the nvmem-layout{} container).
+> > The switch proposed in this patch makes use of the latter, of course.
+> 
+> Thanks Miquèl for filling bits I missed in commit description. Despite
+> years in Linux/DT I still struggle with more complex designs
+> documentation.
+> 
+> 
+> As per Rob's comment I think I see his point and a possible design
+> confusion. If you look from a pure DT perspective then "partitions" and
+> "nvmem-layout" serve a very similar purpose. They describe device's data
+> content structure. For fixed structures we have very similar
+> "fixed-partitions" and "fixed-cells".
+> 
+> If we were to design those bindings today I'm wondering if we couldn't
+> have s/partitions/layout/ and s/nvmem-layout/layout/.
+
+Why!? It is just a name, and we can't get rid of the old names. We don't 
+need 2 names.
+
+> Rob: other than having different bindings for MTD vs. NVMEM layouts I
+> think they overall design makes sense. A single device may have content
+> structurized on more than 1 level:
+> 1. You may have fixed layout at top level (multiple partitions)
+> 2. Single partitions may have their own layouts (like U-Boot env data)
+
+Sure. Partitions is for 1 and Layouts is for 2.
+
+> Maybe ideally above should look more like:
+> 
+> flash@0 {
+> 	compatible = "<flash-compatible>";
+> 
+> 	layout {
+> 		compatible = "fixed-layout";
+
+Why does 'partitions' and 'fixed-partitions' not work here?
+
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 
+> 		partition@0 {
+> 			reg = <0x0 0x40000>;
+> 			label = "u-boot";
+> 		};
+> 
+> 		partition@40000 {
+> 			reg = <0x40000 0x10000>;
+> 			label = "u-boot-env";
+> 
+> 			layout {
+> 				compatible = "u-boot,env-layout";
+> 			};
+> 		};
+> 
+> 		partition@50000 {
+> 			reg = <0x50000 0x100000>;
+> 			label = "u-boot";
+> 		};
+> 	};
+> };
+> 
+> but I can clearly see a use for nested "layout"s. As I said maybe we
+> just shouldn't be so open in calling those MTD or NVMEM devices as that
+> is kind of Linux specific.
+
+The overall structure should be agnostic to the subsystem. Specific 
+compatibles like 'u-boot,env' can be tied to a subsystem.
+
+Maybe some things need to be both MTD and NVMEM. MTD to operate on the 
+opague region and NVMEM to access the contents.
+
+
+> I'm not sure if we should try renaming "nvmem-layout" to "layout" or
+> "partitions" in similar way at this point.
+
+You can't rename. It's an ABI though maybe the whole "nvmem-layout" is 
+new enough we can. It's looking like it was a mistake to accept any of 
+this.
+
+Rob
