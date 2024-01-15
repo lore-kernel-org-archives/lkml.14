@@ -1,125 +1,112 @@
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C644F17BA1;
-	Mon, 15 Jan 2024 16:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2139179B0;
+	Mon, 15 Jan 2024 16:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="iY3DUK4+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eybOU38d"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 317F13200A24;
-	Mon, 15 Jan 2024 11:15:07 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 15 Jan 2024 11:15:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1705335306; x=1705421706; bh=OwwV079+Ib
-	4EhCbveDYoIfXqeXgw7sWlHiHGG0LHoH0=; b=iY3DUK4+l4x1zKVZt/k7PFIF2T
-	9GDD31aL2Nj9MbIq/iW7zEJNz9xwhZSOc8HNPXnB4499+tAIHkyhQOxRcdkA8UI0
-	6bZrxDFvUpAuE5HvEcMDHuRRQKMgpwH5AHEiMEYz2eHblWWvEnRxz/RI+nal6KfK
-	qiLKDTtWqA/mJxfiuoW0YMRibjnO67CI0PTGamje4QsXWuD8pjxM7cuJapiZwzYr
-	8VL49wvb+zmV7024PyQn/cl/SjVr1H5v49CHj5RY739qeryfkqHOmQf9F6DJcoM9
-	UndCI49i5EKETL7YRzJ0AP1oejWlcO2XEt/dkkVgMoto8/eQ2qrBYjJizW3g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1705335306; x=1705421706; bh=OwwV079+Ib4EhCbveDYoIfXqeXgw
-	7sWlHiHGG0LHoH0=; b=eybOU38d2C55AfxnNCB5YYoTKubKkcYLl1HuKNMxsaAE
-	CYwHMEPVdF+HoQWWmEp7ZfUhPy55abq7fsr82qLxEE35BLgUxAn0LylyfO0Y5xlT
-	VxhrN1ddFTZa5mDYp5WDc8qS/z8MW5I5nbxWi0XMcp2fEVpAo+bBm0cZGEteVLBH
-	/YLr6Cuwubvtb+4b1aO2JSI9PqTtkMZfFg9LpKiB77EaXO+4VND95uwRZep+Vr5J
-	pAj5l/2q245PGZPp0bgzDAY8f2dnfaqp+5dDT3AWjLkby0x2mKpFgH80tRLSTyxj
-	v+HL0W/cPsVxVZ+ZRFR3nJuL/29wIUoq0gfi8qXBtQ==
-X-ME-Sender: <xms:ClqlZb1bvHx7W99HefEkf9N086keHr4jvu_Lj4nJhtw23wQnRVdodw>
-    <xme:ClqlZaH50Bb-xmchKsdP4PZRqDkyI1MohXKydXLAd1sJjc69yfUB6elhMCEha_khI
-    0yzScobDup4WIA-XOE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdejuddgkeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepkeehtefguddvleejvdeileeifffhueevgedvheeiudfhueevgfehkeeitedu
-    keeknecuffhomhgrihhnpehsohhurhgtvgifrghrvgdrohhrghenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:ClqlZb5HDS1LRxqzJYVDnneQGoXfUI4iXL1UE667Uq4EAlfyErYR-A>
-    <xmx:ClqlZQ2sJ0mYSBIQueyA14P8y33zfIvxjBHlTG9Yl1fNcrvKw-pTpQ>
-    <xmx:ClqlZeGzt-jgAjwSwZCzrFkES_TEU0o48wygK48rMRWIJj8M-JbYkw>
-    <xmx:ClqlZbPv0bAFj_XAFQDrV-UIFIReuNBf2XAj8ch4tTyPK6TnOvagCg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 58AA2B6008D; Mon, 15 Jan 2024 11:15:06 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1374-gc37f3abe3d-fm-20240102.001-gc37f3abe
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RJ1p+lSe"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C8333C000A;
+	Mon, 15 Jan 2024 16:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1705335375;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FTQqCzxmqCmlYgHh3ktXPX0P1HCGFzF7LoD+ZqCYJUk=;
+	b=RJ1p+lSeuPctrMJTsfUuaITNbe+buWSru/jnSfFXQoT8He0ouAn9HpqNISomUAfaiuYaDb
+	sj6wgjZCcgcWoIQT/jPEDnQKPrJ/YEEMSRheHxrOvbq/NVyhWfRW2rJ8HZ5XwCY4m+6hx7
+	gWbH9Os6b24MmF47qQhtyHcjU8F7uaGeeIcwbmb5LPRRuzAxUcwAJ6qNct71edKD8qCI8y
+	FYnDk1JlLnJxaRym4sQEIcixdOi2mDDqSEs4t7GDk5AwYGZeSz8OvQoqIddG4V3frE/e1G
+	TKEUv/CbSR+Xmmu8swfG7A3CjqR/lRNY+WvPkgL4C8PMHHYyG114pVWaPADOvQ==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH 00/14] Add suspend to ram support for PCIe on J7200
+Date: Mon, 15 Jan 2024 17:14:41 +0100
+Message-Id: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <faf84e13-a927-4679-b837-2509f0209f82@app.fastmail.com>
-In-Reply-To: <20be7b9d5b8c0bef2a35da3d207c15eae75bfd4d.camel@mwa.re>
-References: <c812ea74dd02d1baf85dc6fb32701e103984d25d.camel@mwa.re>
- <ZYEFCHBC75rjCE0n@google.com>
- <9e97eb50-f9a6-4655-9422-fa1106fff97a@app.fastmail.com>
- <491250ba57be2ab983048ffcf5ffd2aec2bedb9e.camel@mwa.re>
- <1a528414-f193-4ac0-a911-af426bb48d64@app.fastmail.com>
- <caa041d27b0fa45aad09a9a262038e3ae4099ca2.camel@mwa.re>
- <20be7b9d5b8c0bef2a35da3d207c15eae75bfd4d.camel@mwa.re>
-Date: Mon, 15 Jan 2024 17:11:50 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Antonios Salios" <antonios@mwa.re>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Deepa Dinamani" <deepa.kernel@gmail.com>
-Cc: rydberg@bitmath.org, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Jan Henrik Weinstock" <jan@mwa.re>,
- =?UTF-8?Q?Lukas_J=C3=BCnger?= <lukas@mwa.re>
-Subject: Re: element sizes in input_event struct on riscv32
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAPJZpWUC/x2NQQrCQAwAv1JyNpCNylK/Ih6ya7QRXEsiIpT+3
+ a3HYRhmgVA3DTgNC7h+LOzVOqTdAHWSdle0a2dg4gMlYnxkJsK5mmKwo9aSZMyj7o8ZelQkFIt
+ Lq9OWPSXe6puYXW/2/Z/Ol3X9AbewuWd5AAAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Mon, Jan 15, 2024, at 16:46, Antonios Salios wrote:
-> On Thu, 2023-12-21 at 14:38 +0100, Antonios Salios wrote:
->> On Thu, 2023-12-21 at 12:28 +0000, Arnd Bergmann wrote:
->> > On Thu, Dec 21, 2023, at 08:56, Antonios Salios wrote:
->> > > On Tue, 2023-12-19 at 13:53 +0000, Arnd Bergmann wrote:
->> > > > On Tue, Dec 19, 2023, at 02:50, Dmitry Torokhov wrote:
->> > 
->> > I don't know what __TIMESIZE is, this is not part of the kernel ABI
->> > as far as I can tell. __USE_TIME_BITS64 should be set by any 32-bit
->> > architecture if the C library defines a 64-bit time_t, otherwise
->> > the
->> > kernel headers have no way of picking the correct definitions based
->> > on preprocessor logic.
->> 
->> Okay, I agree that this might be a libc problem then. I'll ask the
->> glibc maintainers.
->> 
->
-> According to a glibc maintainer, __USE_TIME_BITS64 is not set on
-> architectures that use 64-bit time_t as default such as riscv32.
-> This can also be seen here [1].
->
-> Perhaps the kernel header needs to check the size of time_t in some
-> other way?
->
-> [1]
-> https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/unix/sysv/linux/features-time64.h;hb=glibc-2.37
+This add suspend to ram support for the PCIe (RC mode) on J7200
+platform.
 
-I don't see any better way, the kernel headers started using this
-in 2018 based on the glibc design documents and discussions
-with glibc maintainers, see the section on ioctls in
-https://sourceware.org/glibc/wiki/Y2038ProofnessDesign
+In RC mode, the reset pin for endpoints is managed by a gpio expander
+on a i2c bus. This pin shall be managed in suspend_noirq and
+resume_noirq.
+The suspend/resume has been moved to suspend_noirq/resume_noirq for
+pca953x (expander) and pinctrl-single.
 
-The kernel only relies on this macro for the sound and
-input subsystem, but there are numerous applications and
-libraries that copied the kernel definition because that
-was defined as the only reliable method.
+To do i2c accesses during suspend_noirq/resume_noirq, we need to force
+the wakeup of the i2c controller (which is autosuspended) during
+suspend callback. 
+It's the only way to wakeup the controller if it's autosuspended, as
+runtime pm is disabled in suspend_noirq and resume_noirq.
 
-Maybe you can work around by patching the glibc sources
-yourself?
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Thomas Richard (10):
+      gpio: pca953x: move suspend/resume to suspend_noirq/resume_noirq
+      pinctrl: pinctrl-single: move suspend/resume to suspend_noirq/resume_noirq
+      i2c: omap: wakeup the controller during suspend callback
+      phy: ti: phy-j721e-wiz: make wiz_clock_init callable multiple times
+      phy: ti: phy-j721e-wiz: add resume support
+      phy: cadence-torrent: extract calls to clk_get from cdns_torrent_clk
+      phy: cadence-torrent: register resets even if the phy is already configured
+      phy: cadence-torrent: move already_configured to struct cdns_torrent_phy
+      phy: cadence-torrent: remove noop_ops phy operations
+      phy: cadence-torrent: add suspend and resume support
 
-     Arnd
+Théo Lebrun (4):
+      mux: mmio: Add resume support
+      PCI: cadence: add resume support to cdns_pcie_host_setup()
+      PCI: j721e: move reset GPIO to device struct
+      PCI: j721e: add suspend and resume support
+
+ drivers/gpio/gpio-pca953x.c                        |   8 +-
+ drivers/i2c/busses/i2c-omap.c                      |  15 +++
+ drivers/mux/mmio.c                                 |  34 ++++++
+ drivers/pci/controller/cadence/pci-j721e.c         |  86 ++++++++++++--
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  49 ++++----
+ drivers/pci/controller/cadence/pcie-cadence-plat.c |   2 +-
+ drivers/pci/controller/cadence/pcie-cadence.h      |   7 +-
+ drivers/phy/cadence/phy-cadence-torrent.c          | 125 +++++++++++++++------
+ drivers/phy/ti/phy-j721e-wiz.c                     |  99 ++++++++++++----
+ drivers/pinctrl/pinctrl-single.c                   |  19 ++--
+ 10 files changed, 342 insertions(+), 102 deletions(-)
+---
+base-commit: 00ff0f9ce40db8e64fe16c424a965fd7ab769c42
+change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
+
