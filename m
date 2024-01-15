@@ -1,53 +1,47 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4461117555;
-	Mon, 15 Jan 2024 12:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7752217561
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 12:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wtUjWDCL"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40FCvJZb110754;
-	Mon, 15 Jan 2024 06:57:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705323439;
-	bh=nVIik13VEQb/k+Y/rs8n0/H7l0pIsFj55OzrRKWZwcU=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=wtUjWDCLxK+FclaPXHB4PPXzzGbZD0gR0OqEYRi2Xrocsl+M7TNvfa7K3kstFKuBb
-	 QVH9YEK2FcGlWOSe8V4bCZBnxHRRucnDdz5k1jy3KhwVOfy+HeMZ6/l0w5eqpfzjWr
-	 kml8Q+i2hvxSZE7tSRdO/mr0G2qM7knaR6KEspPY=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40FCvJB0019839
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 15 Jan 2024 06:57:19 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 15
- Jan 2024 06:57:18 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 15 Jan 2024 06:57:18 -0600
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40FCvIIQ128467;
-	Mon, 15 Jan 2024 06:57:18 -0600
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <praneeth@ti.com>, <nm@ti.com>, <vigneshr@ti.com>, <a-bhatia1@ti.com>,
-        <j-luthra@ti.com>, <kristo@kernel.org>, <devarsht@ti.com>
-Subject: [PATCH 1/2] dt-bindings: display: ti,am65x-dss: Add support for common1 region
-Date: Mon, 15 Jan 2024 18:27:15 +0530
-Message-ID: <20240115125716.560363-2-devarsht@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240115125716.560363-1-devarsht@ti.com>
-References: <20240115125716.560363-1-devarsht@ti.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="yApihBdV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1705323455; bh=VGtEqPsJkEqhuNF3+7JU66Qt0P3kizIOWb//UPjajn8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=yApihBdVPS9tLWatFGj6/wwCbU4QtZRk9DEia4XiNHxs26nY3WpupD4/WzbmvXSIs
+	 NhqXCS4VL+0g3uMt9lS7tDnNRp7OYl1+jK9UDjJ/tg28fmvzMnJCn13M6ZNlvN6tSL
+	 hGqLuPpvHZpth16KtRu1BWsn5k32brOcgnzm1ICQ=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id E6092A64; Mon, 15 Jan 2024 20:57:32 +0800
+X-QQ-mid: xmsmtpt1705323452tq77d6hya
+Message-ID: <tencent_E8B0751D76BD66F43CDD363296D836844A09@qq.com>
+X-QQ-XMAILINFO: NkHKfw09D6j8ZOrKAnPRVt/1qn8q8HtmBMsceto3Si6E1j+gmIPdYPdPo4UiKb
+	 oEkmAsXriIRE3caPkeeMvM8RrojQArE5kfBBXzn60eRHNmgaNgt2ArSs9RU6bnUhXXd4KTiSV2Sn
+	 dlhjpWiuZDJ+KzOEs9t/FGS1LRUx0pwJs9qIfBUofyDAD8GV0JrolGipVaZ2LAyZq8EQsU9lJyqp
+	 8NSqsAKVs4nO7xQ6bhlxcxTd95tcbZzDBUx6VrYAjzr5ZLIHGvj0ryr93obTCSKAOwfGz5z/w3s1
+	 28OUBxRTM+kh4RJRb02g0ns56H8C1fARPP/ssGb9dGrJPuk4MJtb7QnGIGuh4LjsBfJ3O8mcAedY
+	 4kNdK1c6AhSuHjQXGhYx/Obj1fnrLO9ehFwUuShIgzXEkz3Ua2WtHg8lXBTL/phqht5NDdTMnFFA
+	 h5CXtKPVFTNxZlJMXMP57NT6wCbjnPOp42lH3Q0Mig/Z6owr2dKjgZ7IR8etWXS3AOp+5NVNv38U
+	 sj4kyDGpkBr2zQqKGKi8C+GAkji2wKPBNxkI8Y1tikVB6xke7OnsTouVHmovNTEj38NSLGJMxkfI
+	 2bJ6gK/ekhjvs6Do6nxiPfUhNuT2NZAz1IThT57rqeRGQ/NW+NOOFl79hWeuYGSXveBnhKop0frq
+	 fadKxSWNgWf2HWZUzW5+0RVoKcVKuuwFJJNCu9BGHO7lUDbThfZF5gyNXBe3zqCLe43OMSFuUFmi
+	 6EDKsUMT6g90VmEA38YB7pV6oj9WobxeWFHSqbJPff38z5APCOObJ/pLEopUEFkew4HzZSJKTJGV
+	 dirUhfJGNEFJzHCSpTazAt5JgcVPEuop0XrGFYF4x/Wrj3PLWGS5wdr5W4K8kSGVcvn9rryS7kZF
+	 OAGN16r4bASsjPb9r3vlXR4ZPD+aX222jAOyIZSr0Iwf6yELcs2u0qxX56uVgm8KzO7EPY8oJp
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] KMSAN: uninit-value in hsr_get_node (2)
+Date: Mon, 15 Jan 2024 20:57:33 +0800
+X-OQ-MSGID: <20240115125732.3807536-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000001663ea060ee476ea@google.com>
+References: <0000000000001663ea060ee476ea@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,66 +49,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-TI keystone display subsystem present in AM65 and other SoCs such as AM62
-support two separate register spaces namely "common" and "common1" which
-can be used by two separate hosts to program the display controller as
-described in respective Technical Reference Manuals [1].
+please test uninit-value in hsr_get_node
 
-The common1 register space has similar set of configuration registers as
-supported in common register space except the global configuration
-registers which are exclusive to common region.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f8413c4a66f
 
-This adds binding for "common1" register region too as supported by the
-hardware.
-
-[1]:
-AM62x TRM:
-https://www.ti.com/lit/pdf/spruiv7 (Section 14.8.9.1 DSS Registers)
-
-AM65x TRM:
-https://www.ti.com/lit/pdf/spruid7 (Section 12.6.5 DSS Registers)
-
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
----
- .../devicetree/bindings/display/ti/ti,am65x-dss.yaml       | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index b6767ef0d24d..55e3e490d0e6 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -37,6 +37,7 @@ properties:
-       - description: OVR2 overlay manager for vp2
-       - description: VP1 video port 1
-       - description: VP2 video port 2
-+      - description: common1 DSS register area
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 6d14d935ee82..280dca33ec4f 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -209,6 +209,8 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct list_head *node_db,
+ 		return NULL;
  
-   reg-names:
-     items:
-@@ -47,6 +48,7 @@ properties:
-       - const: ovr2
-       - const: vp1
-       - const: vp2
-+      - const: common1
+ 	ethhdr = (struct ethhdr *)skb_mac_header(skb);
++	if (!is_valid_ether_addr(ethhdr->h_source))
++		eth_zero_addr(ethhdr->h_source);
  
-   clocks:
-     items:
-@@ -147,9 +149,10 @@ examples:
-                     <0x04a07000 0x1000>, /* ovr1 */
-                     <0x04a08000 0x1000>, /* ovr2 */
-                     <0x04a0a000 0x1000>, /* vp1 */
--                    <0x04a0b000 0x1000>; /* vp2 */
-+                    <0x04a0b000 0x1000>, /* vp2 */
-+                    <0x04a01000 0x1000>; /* common1 */
-             reg-names = "common", "vidl1", "vid",
--                    "ovr1", "ovr2", "vp1", "vp2";
-+                    "ovr1", "ovr2", "vp1", "vp2", "common1";
-             ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
-             power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
-             clocks =        <&k3_clks 67 1>,
--- 
-2.34.1
+ 	list_for_each_entry_rcu(node, node_db, mac_list) {
+ 		if (ether_addr_equal(node->macaddress_A, ethhdr->h_source)) {
 
