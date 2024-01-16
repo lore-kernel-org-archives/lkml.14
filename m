@@ -1,104 +1,124 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918ED1CD21;
-	Tue, 16 Jan 2024 18:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A211CD30
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705428880; cv=none; b=Jxe+xQOghFsP4qmByNls5v7LWdrsutRmgCFoJ62/QyOtmIOYN7OHm3AXkCgJsfyraLJGO3dqtgY8dAo0IR/PyKmVrTuwKu7gM6ofhOcOo9AqhjJGA1qhSKrTOo3hO5acdTBxoVYYiLw+VXhr03fNuouXppvCwjCwWOxfiehLIkA=
+	t=1705428882; cv=none; b=bs6bndoz8CL+A6akgEYPhTGjhtPhZzkVY+QL6Q0w6Es71IOUG5nCzPs4VuruE16+iEu83rKpl//nSo2t+ks+Wn67cTS4YQJzafsHRhb/6/lxUF1Sc+Ck9IqUcVzylGsr8bClikn2XvkrGEbBemyYplh8QezoXmFTiBYsFVpOF2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705428880; c=relaxed/simple;
-	bh=/8t8aGI0dsmuyvHxpwC8tN1rzHOQ9w1Gua7WMUtjW2w=;
+	s=arc-20240116; t=1705428882; c=relaxed/simple;
+	bh=cv59bDCTOqRhiDC3HpONyDpPUeopXrDeTyWmM+8EkOI=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Sender:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nQ9r4hKBlkF2rHmTTgOVLxNRyNHUBBP29bpgghkiGXDwIu6p7T8iqhLm3J17Q4AqdrPI+ngFKP9nujT+YFA/bLvkl2ejmtZI8bKrbtnJaRIfStwaPGMaGGwzmgiFMraZunY8cSsh9JsCYa7sduFiTFUHuf+GsghpDhGGJrx2isQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2ZZqprn; arc=none smtp.client-ip=209.85.214.179
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=Hgp2bKkdi+woeo/MGG0lj4ZqLjtUZwVLdS502ASidJX6pzmThh/HflM72eQJN3lVqGg2WNRi7X8KOWARzyuuYDV1thEHK6zZOYk+WKS3DJAAU2Gvuh4t9CR51aSWjDbg3ngvG+4CD9FkAz2He+4FCYNheEHbtz4Pz7L0+yF+P0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ntfNTKq8; arc=none smtp.client-ip=209.85.166.53
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2ZZqprn"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d426ad4433so62064965ad.0;
-        Tue, 16 Jan 2024 10:14:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ntfNTKq8"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7ba903342c2so539628039f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:14:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705428879; x=1706033679; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wLYtcvGvL/mi4llSElQtiPFZH5wjeerjqPS6bhhaNQk=;
-        b=W2ZZqprn25xsX8LeP5sd+769+mQ7eGJvspyHSXg7hcGfHdFuKrP+XZn7oPSnhfAqDf
-         Whgju5bl28xEfUAuurXqma/gaQJS4+hdPki1GpZrBodPc1tsW6fonNW7oex1XhGkS25d
-         wBDvYFDbYipFJNLX8+jliG/5a0olZ7MxpzqhEw3me06eOBMSMLWWBhBHPTyY8V32rfXM
-         Sq9x2jO4QtfkdgjSPGbpfkmVmYmgq1vYdVfaQ4mPsej9kHP45lTg1PdSKe1fXDzTm5br
-         0V926PE4Vqf7N9v14fnWcpJkf4UChb/dQhB4AsAgpteeLAxtRjexzXcmAYtcyi+DTcoh
-         nLRw==
+        d=linaro.org; s=google; t=1705428879; x=1706033679; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xRhLuuiIVVo+A52y6bxPnSkQ+JrLAw3wqr2sWjodaZc=;
+        b=ntfNTKq8C4HxrhN7HqHgbmqQXfktwh8hmtgTA5ncDWjXGizdF3GP0fGzClzVcPySY5
+         Fr/LPYZkV9MKuT7X9Ho1WvaMWPpxFEqRhWT90Sy7hmG1jl9bMpHMyWnWjyEYvOSSdOWL
+         7RsivC3zzWi4FqeKBp1Fbus4EvmmfmE3Ira6cAvx5n03Mi7ocy62RMTCJHCjxRribQ2T
+         RcvSJ0PxWvBqmO8FcwuvIr3ttU+VFagMYmrqyEP++o14SO2/yzy3wEuWj1wWkEpVm1EU
+         paXan10Buan5kMdpRnQbVihNjLYYRVwsx6+Ihh3oMBg7fP1FX6pVxm41RiGQqlToSr72
+         7SNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1705428879; x=1706033679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wLYtcvGvL/mi4llSElQtiPFZH5wjeerjqPS6bhhaNQk=;
-        b=up/bDNTuJBlIuc4XtGuiMLDFj3Spf1Kz69vDpL+EAGykOiCbNKxplKdPy+xZt4qb8i
-         FdpokKo9a6RKhm7qsuj5/Td7gtFXFfBT9YOtVbarcMzjdY7aCKGxlqpT2qe44rOZe4yn
-         5UA+TUUmH3/xvRJKneJK0P1/49sCYg0P3UiVHB96leP/GvN55C5A6G0v7xiY4SzlYdBT
-         JuD1Z/s54IFP9+ckOxc11pbrSbtj5WjywtvDONjIJ9rYNuHSxMEP2UvLiZ/IaoG27fwC
-         1edyTajPCtJh4X3xg7VuaBbBYV9n9zQP8/sl9uxeV+grJkL8T7IFUMjg6Ete6Iq45Mav
-         08GA==
-X-Gm-Message-State: AOJu0Yxyxv+gzWk/mlK/2GKnrEGqli5vrJgsjfPPUMNANGi/iw8XuV8z
-	RiDkCX2bc1dsXd67MUWh4EQ=
-X-Google-Smtp-Source: AGHT+IH6JhzGVYdHplZcg5wg7Tyj4SwHva3TepBR8qWjhKWXw2ITVqqKOk8t2393Tp/quAQoAg669w==
-X-Received: by 2002:a17:902:8505:b0:1d5:e387:2ef8 with SMTP id bj5-20020a170902850500b001d5e3872ef8mr1157058plb.113.1705428878775;
-        Tue, 16 Jan 2024 10:14:38 -0800 (PST)
-Received: from localhost (dhcp-72-235-13-140.hawaiiantel.net. [72.235.13.140])
-        by smtp.gmail.com with ESMTPSA id e18-20020a170902cf5200b001d58ed4c58asm9556708plg.63.2024.01.16.10.14.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 10:14:38 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 16 Jan 2024 08:14:37 -1000
-From: Tejun Heo <tj@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Onkarnarth <onkarnath.1@samsung.com>, frederic@kernel.org,
-	quic_neeraju@quicinc.com, joel@joelfernandes.org,
-	josh@joshtriplett.org, boqun.feng@gmail.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang1211@gmail.com, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, r.thapliyal@samsung.com,
-	maninder1.s@samsung.com, oleg@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH 1/1] rcu/sync: remove un-used rcu_sync_enter_start
- function
-Message-ID: <ZabHjU45N4H4L9jq@slm.duckdns.org>
-References: <CGME20240111092805epcas5p2ebb993010ae31d039e8f9de1e7818f7c@epcas5p2.samsung.com>
- <20240111092722.322454-1-onkarnath.1@samsung.com>
- <de792eee-1f44-48e2-a122-c3ded1645155@paulmck-laptop>
+        bh=xRhLuuiIVVo+A52y6bxPnSkQ+JrLAw3wqr2sWjodaZc=;
+        b=JFJzHuYF55D/jJTma+WWdrcjdwp+8+uhvIMRoFQHoHrdzxg4giTUXgAYpjC1K62dCh
+         gahPfMbdduMZyrD5+89ifuqRGRNT4wiVElWGihfgkx2hmjiGUKaO53NmOLsFzXhRmslv
+         j4WkJvaXydTYicy5EmTka7GTJgIFYj7b9rsvfXQfiARVmwrThStkI/f7+CuLd3mErJt0
+         Mo4W+vuMsYeAxhYxtLrfwzybb1558ZgNFuK7nS52aoUXhLzBufjeSoIGcAN4IJSUGZa4
+         VEXlcmVqynfWR/Ctu+fIq6sNk5bWo+5kW+Z2d3n7waRDTujJ3FctxNTyEbdxqm8mvR6M
+         +SxA==
+X-Gm-Message-State: AOJu0Yy5FLqGtwMZqjjslFEL+NJ0R6YqhG8NO6fOezLAQ9GpRAiUXTF3
+	7hphDqLd1+6nQsw2XJ07lULre5W63G0AKHsoNAs9RAPCDBaDXQ==
+X-Google-Smtp-Source: AGHT+IEfZdEKTVV73IlpY3EGlS1kPKh3DImT91Va7UPo6ctMhZS1jwa3ClSyV/+ZVIEwxJrtZw8TuE8UvHu/GnDXkQ4=
+X-Received: by 2002:a05:6602:3054:b0:7be:d30c:d170 with SMTP id
+ p20-20020a056602305400b007bed30cd170mr8728680ioy.34.1705428879752; Tue, 16
+ Jan 2024 10:14:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de792eee-1f44-48e2-a122-c3ded1645155@paulmck-laptop>
+References: <20240110102102.61587-1-tudor.ambarus@linaro.org> <20240110102102.61587-4-tudor.ambarus@linaro.org>
+In-Reply-To: <20240110102102.61587-4-tudor.ambarus@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Tue, 16 Jan 2024 12:14:28 -0600
+Message-ID: <CAPLW+4mY4VUm+cryBDFLp9TFkxG2oqJrmbZVuRuT5bFOzYXrnQ@mail.gmail.com>
+Subject: Re: [PATCH 03/18] tty: serial: samsung: add gs101 earlycon support
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	andre.draszik@linaro.org, peter.griffin@linaro.org, kernel-team@android.com, 
+	willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 16, 2024 at 08:50:35AM -0800, Paul E. McKenney wrote:
-> On Thu, Jan 11, 2024 at 02:57:22PM +0530, Onkarnarth wrote:
-> > From: Onkarnath <onkarnath.1@samsung.com>
-> > 
-> > With commit '6a010a49b63a ("cgroup: Make !percpu threadgroup_rwsem
-> > operations optional")' usage of rcu_sync_enter_start is removed.
-> > 
-> > So this function can also be removed.
-> > 
-> > Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
-> > Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> 
-> Adding Oleg, Peter, and Tejun for their thoughts.  Any objections?
+On Wed, Jan 10, 2024 at 4:21=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
+.org> wrote:
+>
+> The entire bus (PERIC) on which the GS101 serial resides only allows
+> 32-bit register accesses. The reg-io-width dt property is disallowed
+> for the "google,gs101-uart" compatible and instead the iotype is
+> inferred from the compatible. Always set UPIO_MEM32 iotype for the
+> gs101 earlycon.
+>
+> Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
 
-Looks good to me. FWIW,
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
-Acked-by: Tejun Heo <tj@kernel.org>
-
-Thanks.
-
--- 
-tejun
+>  drivers/tty/serial/samsung_tty.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsun=
+g_tty.c
+> index 20ec6ef1a52f..74bc5151dad4 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -2810,6 +2810,17 @@ OF_EARLYCON_DECLARE(exynos4210, "samsung,exynos421=
+0-uart",
+>  OF_EARLYCON_DECLARE(artpec8, "axis,artpec8-uart",
+>                         s5pv210_early_console_setup);
+>
+> +static int __init gs101_early_console_setup(struct earlycon_device *devi=
+ce,
+> +                                           const char *opt)
+> +{
+> +       /* gs101 always expects MMIO32 register accesses. */
+> +       device->port.iotype =3D UPIO_MEM32;
+> +
+> +       return s5pv210_early_console_setup(device, opt);
+> +}
+> +
+> +OF_EARLYCON_DECLARE(gs101, "google,gs101-uart", gs101_early_console_setu=
+p);
+> +
+>  /* Apple S5L */
+>  static int __init apple_s5l_early_console_setup(struct earlycon_device *=
+device,
+>                                                 const char *opt)
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
+>
