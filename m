@@ -1,141 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA0312B97
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 09:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B16125B7
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 09:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hklNV1fF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F66C433F1;
-	Tue, 16 Jan 2024 09:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705395628;
-	bh=di/4fMjfr6Qyln0B/UJqaBwpqtAPoZXkJ8p/k1oNafw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hklNV1fFN5eLri4NfL+3V9gE5akiVw5GC5qfmWJrOJgIe/0OgrBA88PLZdwcQ2TnL
-	 NMxykHRst2G33UAwtW2S+gB54g0d7ynHHt0jO3nkgPdZqDLpIHXN2oOFQYyY/dcq8O
-	 7Bc/gn/BYJOZeNdfL3Da9m851xUT4LGjp53eu1Molfld2Rvde8QVQH1ACz1svNE1dd
-	 83h8DAu8JipA583K64Q6n9I1e7YSEOpqLd88wt4yJk98ckAH05EKRkrifAvdlCT2D1
-	 dnK4iCvRmz9AI7KT6yXVPmhhrrEK+L+mpgm/Kr0J9zdfUXqa7xUuOp00p3CQrptDmy
-	 2MF0CJGGMq+3A==
-Date: Tue, 16 Jan 2024 16:47:36 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] riscv: mm: still create swiotlb buffer for kmalloc()
- bouncing if required
-Message-ID: <ZaZCqAir6BdiN80K@xhacker>
-References: <20231202134224.4029-1-jszhang@kernel.org>
- <aea8222e-ec0a-4844-abd0-7fe102bc2bec@ghiti.fr>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O1UVpbz8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705395712;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Hhq45GfBEAeBjP1DoLeSrtOHZnT8tDVs7N1ek6xgzks=;
+	b=O1UVpbz80Y+ioG9UwNRjiNxUTN+nMFKJRZa8ZeeMt7ThOrhTrbrwVtq7mAcN9z/2AEH2GN
+	IaylZcdzsYavGij/N9v3qNYLum9x6PKOTcIToEgIzo2MoqY5xA7dDmjJXL35DLDhiPqzhI
+	bkWch/Gf4V3LD2o2CT1XWkHoU+vLp8c=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-35-gAAqeml4P8GDhKv3ch4aOA-1; Tue, 16 Jan 2024 04:01:45 -0500
+X-MC-Unique: gAAqeml4P8GDhKv3ch4aOA-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40e476c518eso12411135e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 01:01:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705395704; x=1706000504;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hhq45GfBEAeBjP1DoLeSrtOHZnT8tDVs7N1ek6xgzks=;
+        b=RfS2PWTC6JgTbkZvH6Nlq5IBFsTUjtwCZS0RRGTnDwoA5IOlcEOAxjhN9R27W2p1iD
+         KrVvoG82U8OuOLEYbirttIxSx0gyzw5eCuAC9Q84pfH1KO6zkS8QiLMvy6rZ/j1px36K
+         +RlRtgUA/RyCNa5PCjrlHtLkHhz584RcFlspgasEae58I1w4OnO+6CB2uhVm02mzlmS9
+         /X1hp/gRqEwfut9liT3VnDxO/35/L02fdJvxzIhrcP/U8VKcot8dRAMBHNktCy97hyoa
+         vq1BO2LGIp82pc+Km876TPJv7GMszRHjA4D7yGNWqZl12ZF9BEspJTtsBM1WxSmHJWkY
+         Ug3w==
+X-Gm-Message-State: AOJu0YxnREBB1csqSe6KdgJ7n6piz2XyrHAnetRrB4L8NregtL7HrN3f
+	D9n9m8JvdkEhawx0wopaGXWshyESbTfIL+tJOMmjA2hh6V11vI9Y+rNmQHbBsso9tlRW32krr5r
+	7FpBV3LajB0xY0m4ySD3aa/f9YjCq3JV7
+X-Received: by 2002:adf:ec8b:0:b0:336:fad1:ffd3 with SMTP id z11-20020adfec8b000000b00336fad1ffd3mr7543627wrn.4.1705395704061;
+        Tue, 16 Jan 2024 01:01:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEXvVHr/Iw5xFEXYME3eWQljrrj48ZI+91KGNppOtNUaUXXtnT/OrnmhWXBPXAIWHW+vBmm2g==
+X-Received: by 2002:adf:ec8b:0:b0:336:fad1:ffd3 with SMTP id z11-20020adfec8b000000b00336fad1ffd3mr7543605wrn.4.1705395703708;
+        Tue, 16 Jan 2024 01:01:43 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-241-126.dyn.eolo.it. [146.241.241.126])
+        by smtp.gmail.com with ESMTPSA id a18-20020adffad2000000b003373ece28efsm14045866wrs.29.2024.01.16.01.01.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 01:01:43 -0800 (PST)
+Message-ID: <8f52b85b05cb13369e8dbd836ef3aa5d29504137.camel@redhat.com>
+Subject: Re: [PATCH] tipc: node: remove Excess struct member kernel-doc
+ warnings
+From: Paolo Abeni <pabeni@redhat.com>
+To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Jon Maloy <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,  netdev@vger.kernel.org, Jonathan Corbet
+ <corbet@lwn.net>
+Date: Tue, 16 Jan 2024 10:01:42 +0100
+In-Reply-To: <20240112050010.25626-1-rdunlap@infradead.org>
+References: <20240112050010.25626-1-rdunlap@infradead.org>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aea8222e-ec0a-4844-abd0-7fe102bc2bec@ghiti.fr>
 
-On Tue, Jan 16, 2024 at 09:23:47AM +0100, Alexandre Ghiti wrote:
-> Hi Jisheng,
-> 
-> On 02/12/2023 14:42, Jisheng Zhang wrote:
-> > After commit f51f7a0fc2f4 ("riscv: enable DMA_BOUNCE_UNALIGNED_KMALLOC
-> > for !dma_coherent"), for non-coherent platforms with less than 4GB
-> > memory, we rely on users to pass "swiotlb=mmnn,force" kernel parameters
-> > to enable DMA bouncing for unaligned kmalloc() buffers. Now let's go
-> > further: If no bouncing needed for ZONE_DMA, let kernel automatically
-> > allocate 1MB swiotlb buffer per 1GB of RAM for kmalloc() bouncing on
-> > non-coherent platforms, so that no need to pass "swiotlb=mmnn,force"
-> > any more.
-> 
-> IIUC, DMA_BOUNCE_UNALIGNED_KMALLOC is enabled for all non-coherent
-> platforms, even those with less than 4GB of memory. But the DMA bouncing
-> (which is necessary to enable kmalloc-8/16/32/96...) was not enabled unless
-> the user specified "swiotlb=mmnn,force" on the kernel command line. But does
-> that mean that if the user did not specify "swiotlb=mmnn,force", the
-> kmalloc-8/16/32/96 were enabled anyway and the behaviour was wrong (by lack
-> of DMA bouncing)?
+On Thu, 2024-01-11 at 21:00 -0800, Randy Dunlap wrote:
+> Remove 2 kernel-doc descriptions to squelch warnings:
+>=20
+> node.c:150: warning: Excess struct member 'inputq' description in 'tipc_n=
+ode'
+> node.c:150: warning: Excess struct member 'namedq' description in 'tipc_n=
+ode'
+>=20
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jon Maloy <jmaloy@redhat.com>
+> Cc: Ying Xue <ying.xue@windriver.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Cc: Jonathan Corbet <corbet@lwn.net>
 
-Hi Alex,
+## Form letter - net-next-closed
 
-For coherent platforms, kmalloc-8/16/32/96 was enabled.
+The merge window for v6.8 has begun and we have already posted our pull
+request. Therefore net-next is closed for new drivers, features, code
+refactoring and optimizations. We are currently accepting bug fixes
+only.
 
-For non-coherent platforms, if memory is more than 4GB, kmalloc-8/16/32/96 was enabled.
+Please repost when net-next reopens after January 22nd.
 
-For non-coherent platforms, if memory is less than 4GB, kmalloc-8/16/32/96 was not
-enabled. If users want kmalloc-8/16/32/96, we rely on users to pass "swiotlb=mmnn,force"
+RFC patches sent for review only are obviously welcome at any time.
 
-This patch tries to remove the "swiotlb=mmnn,force" requirement for the
-last case. After this patch, kernel automatically uses "1MB swiotlb buffer per
-1GB of RAM for kmalloc() bouncing" by default.
+See:
+https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#develop=
+ment-cycle
+--
+pw-bot: defer
 
-So this is an enhancement.
-
-Thanks
-> 
-> I'm trying to understand if that's a fix or an enhancement.
-> 
-> Thanks,
-> 
-> Alex
-> 
-> 
-> > 
-> > The math of "1MB swiotlb buffer per 1GB of RAM for kmalloc() bouncing"
-> > is taken from arm64. Users can still force smaller swiotlb buffer by
-> > passing "swiotlb=mmnn".
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > ---
-> > 
-> > since v2:
-> >   - fix build error if CONFIG_RISCV_DMA_NONCOHERENT=n
-> > 
-> >   arch/riscv/include/asm/cache.h |  2 +-
-> >   arch/riscv/mm/init.c           | 16 +++++++++++++++-
-> >   2 files changed, 16 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/riscv/include/asm/cache.h b/arch/riscv/include/asm/cache.h
-> > index 2174fe7bac9a..570e9d8acad1 100644
-> > --- a/arch/riscv/include/asm/cache.h
-> > +++ b/arch/riscv/include/asm/cache.h
-> > @@ -26,8 +26,8 @@
-> >   #ifndef __ASSEMBLY__
-> > -#ifdef CONFIG_RISCV_DMA_NONCOHERENT
-> >   extern int dma_cache_alignment;
-> > +#ifdef CONFIG_RISCV_DMA_NONCOHERENT
-> >   #define dma_get_cache_alignment dma_get_cache_alignment
-> >   static inline int dma_get_cache_alignment(void)
-> >   {
-> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> > index 2e011cbddf3a..cbcb9918f721 100644
-> > --- a/arch/riscv/mm/init.c
-> > +++ b/arch/riscv/mm/init.c
-> > @@ -162,11 +162,25 @@ static void print_vm_layout(void) { }
-> >   void __init mem_init(void)
-> >   {
-> > +	bool swiotlb = max_pfn > PFN_DOWN(dma32_phys_limit);
-> >   #ifdef CONFIG_FLATMEM
-> >   	BUG_ON(!mem_map);
-> >   #endif /* CONFIG_FLATMEM */
-> > -	swiotlb_init(max_pfn > PFN_DOWN(dma32_phys_limit), SWIOTLB_VERBOSE);
-> > +	if (IS_ENABLED(CONFIG_DMA_BOUNCE_UNALIGNED_KMALLOC) && !swiotlb &&
-> > +	    dma_cache_alignment != 1) {
-> > +		/*
-> > +		 * If no bouncing needed for ZONE_DMA, allocate 1MB swiotlb
-> > +		 * buffer per 1GB of RAM for kmalloc() bouncing on
-> > +		 * non-coherent platforms.
-> > +		 */
-> > +		unsigned long size =
-> > +			DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
-> > +		swiotlb_adjust_size(min(swiotlb_size_or_default(), size));
-> > +		swiotlb = true;
-> > +	}
-> > +
-> > +	swiotlb_init(swiotlb, SWIOTLB_VERBOSE);
-> >   	memblock_free_all();
-> >   	print_vm_layout();
