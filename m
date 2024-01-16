@@ -1,126 +1,218 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23D61BC49
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 13:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952C61BC3D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 13:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gxB4Ca+S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705410194;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dgQic6M3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ns4pw93v"
+Date: Tue, 16 Jan 2024 14:08:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705410492;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X0N5v3FGg9HV1O03dFWgRRmN/kV4JKXO0joKxDaXAWM=;
-	b=gxB4Ca+SOQQ//LOnCzNh5hrHnmDnp0JaPykBERbmGycv354thzVrSr2XjmF9XLhVP890Zs
-	nBkNNLm97/ktxzSfMrxG8C/0pltyGSqQ6nPSndi039BlFa1Paov0AXIXjqbad9sNoD8NkT
-	NGLjT0zcIb9YU7Tcpm9n6FOtcyPJ3ug=
-Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
- [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-687-cTk9bMbAMJq7IqANp2eD-Q-1; Tue, 16 Jan 2024 08:03:13 -0500
-X-MC-Unique: cTk9bMbAMJq7IqANp2eD-Q-1
-Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-4b78e56d741so2200740e0c.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 05:03:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705410192; x=1706014992;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X0N5v3FGg9HV1O03dFWgRRmN/kV4JKXO0joKxDaXAWM=;
-        b=ujxOKGtA95y/IOwM+8t0sXNBP9nciYcqEG+gDak6vgOfIqlmQnOaaTMkH2fF2apsP/
-         6NTyivpaicDohSoOA0/AcOovFc6OTamaXxPnEStxTbuok/TBiiJ28BrfvoAHaghnxVAv
-         Av/6glcr5iwCqOhrKzlK3/pmJTCjMDq3CQYKS+HorQPx2PYqAyypGQydWxftcK2ntCNm
-         4zLshz+Qu9ekc1moigNipcurtfdyzof/nF/zr6vOo3PUELRGLtkYC7yIIouVJ79oIa51
-         3rrShhjlPawNXTldUibMCA7Ho5l5+N0548N84I9HreBWuIrxywp1DoK6Za2TfVon62Zq
-         TULQ==
-X-Gm-Message-State: AOJu0YyxJPYhWb6LGFIFXC6Et6o8+z4oySsTWEM7lqVYg36qfPVOtqVS
-	mwu6rpOjwnvaIMkgMKVpi1UjZwi2wM+Xp5oOQo3uJZOj0yu9elLzAnY7ZtMvyunP0cUdLyZWTI1
-	M1WHWnN1bbAv0sMVW1bKp8J2GGDmlqBfvHumIuasXMB0s76z2yN4SDQICeC6qLfwh
-X-Received: by 2002:a05:6122:3890:b0:4b7:185a:d8d with SMTP id eo16-20020a056122389000b004b7185a0d8dmr3176442vkb.1.1705410192513;
-        Tue, 16 Jan 2024 05:03:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH5OGDPaJ/pElYMM1FUKvzKRX3+RA4kcKome6XGeBKftjNA7FxErL90EMCaNp60VNPyBZs0+o+nBDaJcA7pBr0=
-X-Received: by 2002:a05:6122:3890:b0:4b7:185a:d8d with SMTP id
- eo16-20020a056122389000b004b7185a0d8dmr3176426vkb.1.1705410192165; Tue, 16
- Jan 2024 05:03:12 -0800 (PST)
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=Hds+0E3T4arkZ9lBM0loh4N8FIyDQ2ciNFdxXV0wwtc=;
+	b=dgQic6M3LvAMmzybD231KuQjHHvtjawxl63BNJ3bNnBIQLSOFSNoklk01mFHvoskZjDDRF
+	xNqHKobeE2byZRXpyzNiiqwdaxDs8fcsm1kUsX2U1J158HGWrVJL89vyIUy5NZzVkRJboc
+	CPzjU9zk1CdurSSQdtb951f2UUd1uMHHCbwZvCjh6tUM3eYlGTAb5d6mCIHsfJeRwiWjxs
+	jH/nXe7P6LTWGaMNcY8l2lb+TDgT3Ij2UJo3u/AWFNVzoioh7MIZrWpHoHIZipapLoZ81h
+	Z2WAJ35kw4H/LSXUiMFi+QPGYxnM5tfj0stm3DNbvfQpxTdWalkM2i+jN25Vpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705410492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=Hds+0E3T4arkZ9lBM0loh4N8FIyDQ2ciNFdxXV0wwtc=;
+	b=ns4pw93vAKswCCXW+4jBrTYb63wwtJt3NxiXOJajejUqaq58mbrjVAtt6ozM99tq7prssF
+	8otUcv5Ug0mzynBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Jiri Slaby <jirislaby@kernel.org>, Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, boqun.feng@gmail.com, bristot@redhat.com,
+	bsegall@google.com, dietmar.eggemann@arm.com, jstultz@google.com,
+	juri.lelli@redhat.com, longman@redhat.com, mgorman@suse.de,
+	mingo@redhat.com, rostedt@goodmis.org, swood@redhat.com,
+	vincent.guittot@linaro.org, vschneid@redhat.com, will@kernel.org
+Subject: [PATCH] futex: Avoid reusing outdated pi_state.
+Message-ID: <20240116130810.ji1YCxpg@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAOYeF9VsmqKMcQjo1k6YkGNujwN-nzfxY17N3F-CMikE1tYp+w@mail.gmail.com>
- <ZaZesiKpbMEiiTrf@infradead.org>
-In-Reply-To: <ZaZesiKpbMEiiTrf@infradead.org>
-From: Allison Karlitskaya <allison.karlitskaya@redhat.com>
-Date: Tue, 16 Jan 2024 14:03:01 +0100
-Message-ID: <CAOYeF9VoN3LpA+CV=fkBR62vqZ8VEvoWD_Hb5Ay5tK9M-Xw1Xw@mail.gmail.com>
-Subject: Re: PROBLEM: BLKPG_DEL_PARTITION with GENHD_FL_NO_PART used to return
- ENXIO, now returns EINVAL
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, Li Lingfeng <lilingfeng3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-hi Christoph,
+Jiri Slaby reported a futex state inconsistency resulting in -EINVAL
+during a lock operation for a PI futex. A requirement is that the lock
+process is interrupted by a timeout or signal:
 
-I'm not really setup for compiling and testing new kernel images which
-is why I didn't offer to develop a patch for myself (which would have
-looked a lot like this one which you just sent).  I also generally
-have a lot of other things I'm working on at the moment.
+T1		T2
+*owns* futex
+		futex_lock_pi()
+            	*create PI state, attach to it, queue RT waiter*
+		rt_mutex_wait_proxy_lock() /* -ETIMEDOUT */
+		rt_mutex_cleanup_proxy_lock()
+		  remove_waiter()
 
-The thing that worries me about this approach is that it was already
-proposed some months ago, and shot down at the time with the (somewhat
-reasonable) justification that if you do any partition table
-operations on a device that doesn't contain a partition table, then
-"EINVAL" is perhaps somewhat more reasonable as an error.  See the
-email thread I linked from my earlier message, and particular this
-message from Li Lingfeng (who wrote the patch that introduced this
-regression in the first place):
+futex_unlock_pi()
+spin_lock(&hb->lock);
+top_waiter = futex_top_waiter(hb, &key);
+/* top_waiter is NULL, do_uncontended */
+spin_unlock(&hb->lock);
 
-> I don't think so.
->
-> GENHD_FL_NO_PART means "partition support is disabled". If users try
-> to add or resize partition on the disk with this flag, kernel should
-> remind them that the parameter of device is wrong.
-> So I think it's appropriate to return -EINVAL.
+To spice things up, player T3 and T4 enter the game:
 
-https://marc.info/?l=linux-kernel&m=169753292503830&w=2
+	T3 			T4
+	*acquires futex in userland*
+				futex_lock_pi()
+				futex_q_lock(&q);
+				futex_lock_pi_atomic()
+				top_waiter = futex_top_waiter(hb, key);
+				/* top_waiter is from T1, still */
+				attach_to_pi_state()
+				/* Here -EINVAL is returned because uval
+				 *  points to T3 but pi_state says T1.
+				 */
 
-So: I suspect the offered patch would solve the issue, but I'm not
-sure if it's correct.  Another approach might involve returning ENXIO
-for "delete" and keeping EINVAL for create (and also picking one of
-those for modify), which could also look like moving the check down to
-below the point in the function where bdev_del_partition() is called.
-I've cc:'d Li Lingfeng on this email, who can maybe provide some
-additional context.
+We must not unlock the futex for userland as long as there is still a
+state pending in kernel. It can be used by further futex_lock_pi()
+caller (as it has been observed by futex_unlock_pi()). The caller will
+observe an outdated state of the futex because it was not removed during
+unlock operation in kernel.
 
-Thanks (and sorry...)
+The lock can not be handed over to T1 because it already gave up and
+stared to clean up.
+All futex_q entries point to the same pi_state and the pi_mutex has no
+waiters. A waiter can not be enqueued because hb->lock +
+pi_mutex.wait_lock is acquired (by the unlock operation) and the same
+ordering is used by futex_lock_pi() during locking.
 
-Allison
+Remove all futex_q entries from the hb list which point to the futex if
+no waiter has been observed. This closes the race window by removing all
+pointer to the previous in-kernel state.
+The leaving futex_lock_pi() caller can clean up the pi-state once it
+acquires hb->lock. The following futex_lock_pi() caller will create a
+new in-kernel state.
+The optional removal from hb->chain is only needed if the futex was not
+acquired because it might have been done by the unlock path with
+hb->lock acquired.
 
-On Tue, 16 Jan 2024 at 12:16, Christoph Hellwig <hch@infradead.org> wrote:
->
-> Hi Allison,
->
-> please try this minimal fix.  I need to double check if we historically
-> returned ENXIO or EINVAL for adding / resizing partitions, which would
-> make things more complicated.  Or maybe you already have data for that
-> at hand?
->
-> diff --git a/block/ioctl.c b/block/ioctl.c
-> index 9c73a763ef8838..f2028e39767821 100644
-> --- a/block/ioctl.c
-> +++ b/block/ioctl.c
-> @@ -21,7 +21,7 @@ static int blkpg_do_ioctl(struct block_device *bdev,
->         sector_t start, length;
->
->         if (disk->flags & GENHD_FL_NO_PART)
-> -               return -EINVAL;
-> +               return -ENXIO;
->         if (!capable(CAP_SYS_ADMIN))
->                 return -EACCES;
->         if (copy_from_user(&p, upart, sizeof(struct blkpg_partition)))
->
+Fixes: fbeb558b0dd0d ("futex/pi: Fix recursive rt_mutex waiter state")
+Reported-by: Jiri Slaby <jirislaby@kernel.org>
+Closes: c737a604-d441-49c6-a5cd-ef01e9f2a454@kernel.org
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/futex/core.c    |  9 +++++++--
+ kernel/futex/futex.h   |  2 +-
+ kernel/futex/pi.c      | 11 +++++++----
+ kernel/futex/requeue.c |  2 +-
+ 4 files changed, 16 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/futex/core.c b/kernel/futex/core.c
+index dad981a865b84..31505b0a405ae 100644
+--- a/kernel/futex/core.c
++++ b/kernel/futex/core.c
+@@ -628,10 +628,15 @@ int futex_unqueue(struct futex_q *q)
+ /*
+  * PI futexes can not be requeued and must remove themselves from the
+  * hash bucket. The hash bucket lock (i.e. lock_ptr) is held.
++ * If the PI futex was not acquired (due to timeout or signal) then it removes
++ * its rt_waiter before it removes itself from the futex queue. The unlocker
++ * will remove the futex_q from the queue if it observes an empty waitqueue.
++ * Therefore the unqueue is optional in this case.
+  */
+-void futex_unqueue_pi(struct futex_q *q)
++void futex_unqueue_pi(struct futex_q *q, bool have_lock)
+ {
+-	__futex_unqueue(q);
++	if (have_lock || !plist_node_empty(&q->list))
++		__futex_unqueue(q);
+ 
+ 	BUG_ON(!q->pi_state);
+ 	put_pi_state(q->pi_state);
+diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
+index 8b195d06f4e8e..c7133ffb381fd 100644
+--- a/kernel/futex/futex.h
++++ b/kernel/futex/futex.h
+@@ -252,7 +252,7 @@ static inline void futex_queue(struct futex_q *q, struct futex_hash_bucket *hb)
+ 	spin_unlock(&hb->lock);
+ }
+ 
+-extern void futex_unqueue_pi(struct futex_q *q);
++extern void futex_unqueue_pi(struct futex_q *q, bool have_lock);
+ 
+ extern void wait_for_owner_exiting(int ret, struct task_struct *exiting);
+ 
+diff --git a/kernel/futex/pi.c b/kernel/futex/pi.c
+index 90e5197f4e569..4023841358eea 100644
+--- a/kernel/futex/pi.c
++++ b/kernel/futex/pi.c
+@@ -1070,6 +1070,7 @@ int futex_lock_pi(u32 __user *uaddr, unsigned int flags, ktime_t *time, int tryl
+ 	 * haven't already.
+ 	 */
+ 	res = fixup_pi_owner(uaddr, &q, !ret);
++	futex_unqueue_pi(&q, !ret);
+ 	/*
+ 	 * If fixup_pi_owner() returned an error, propagate that.  If it acquired
+ 	 * the lock, clear our -ETIMEDOUT or -EINTR.
+@@ -1077,7 +1078,6 @@ int futex_lock_pi(u32 __user *uaddr, unsigned int flags, ktime_t *time, int tryl
+ 	if (res)
+ 		ret = (res < 0) ? res : 0;
+ 
+-	futex_unqueue_pi(&q);
+ 	spin_unlock(q.lock_ptr);
+ 	goto out;
+ 
+@@ -1135,6 +1135,7 @@ int futex_unlock_pi(u32 __user *uaddr, unsigned int flags)
+ 
+ 	hb = futex_hash(&key);
+ 	spin_lock(&hb->lock);
++retry_hb:
+ 
+ 	/*
+ 	 * Check waiters first. We do not trust user space values at
+@@ -1177,12 +1178,15 @@ int futex_unlock_pi(u32 __user *uaddr, unsigned int flags)
+ 		/*
+ 		 * Futex vs rt_mutex waiter state -- if there are no rt_mutex
+ 		 * waiters even though futex thinks there are, then the waiter
+-		 * is leaving and the uncontended path is safe to take.
++		 * is leaving. We need to remove it from the list so that the
++		 * current PI-state is not observed by future pi_futex_lock()
++		 * caller before the leaving waiter had a chance to clean up.
+ 		 */
+ 		rt_waiter = rt_mutex_top_waiter(&pi_state->pi_mutex);
+ 		if (!rt_waiter) {
++			__futex_unqueue(top_waiter);
+ 			raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock);
+-			goto do_uncontended;
++			goto retry_hb;
+ 		}
+ 
+ 		get_pi_state(pi_state);
+@@ -1217,7 +1221,6 @@ int futex_unlock_pi(u32 __user *uaddr, unsigned int flags)
+ 		return ret;
+ 	}
+ 
+-do_uncontended:
+ 	/*
+ 	 * We have no kernel internal state, i.e. no waiters in the
+ 	 * kernel. Waiters which are about to queue themselves are stuck
+diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
+index eb21f065816ba..57869ef20bda3 100644
+--- a/kernel/futex/requeue.c
++++ b/kernel/futex/requeue.c
+@@ -873,7 +873,7 @@ int futex_wait_requeue_pi(u32 __user *uaddr, unsigned int flags,
+ 		if (res)
+ 			ret = (res < 0) ? res : 0;
+ 
+-		futex_unqueue_pi(&q);
++		futex_unqueue_pi(&q, true);
+ 		spin_unlock(q.lock_ptr);
+ 
+ 		if (ret == -EINTR) {
+-- 
+2.43.0
 
