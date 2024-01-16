@@ -1,165 +1,141 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E017E1CD03;
-	Tue, 16 Jan 2024 17:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FE91CAAE
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 17:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705427072; cv=none; b=OCJx3MGRFJkOolwyEsuGw6TlJW0SNiLz9CeOfDBAwi0KF9sn6Tq/lK9YM2N0dlo8JW0qolAlt5kwl68R0wWuviSN9NjwJteuGUwKXyiKN3oBn7eBHsOriNfUpLV3v0sqFgty1wS9EvkIHb6gtOT4wi2vGl2uSjCXTsbUsWfkZ/Q=
+	t=1705427183; cv=none; b=ey/taDOUM3wTFghAc8SOtfo0YCXILzJN8WfeX2BkyN6LnhnxvB4eucKKrVh5ncZ88eb7E4r/DiZYnKWpuU9bhGrwXIuuiUU0cOUbtqhWt6yyypkMnIijfGixe2cdLdFxDn9pGr+I7qGrgxC5KgVn9fUE1HW7s3zBumv7yX/JD3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705427072; c=relaxed/simple;
-	bh=8ZQSUM5HHyNNwWiT3KNnANcyU223j6kAUF5U/zEq3eE=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:
-	 Received:Received:Received:Received:Received:Message-ID:Date:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:
-	 In-Reply-To:Content-Type:X-TM-AS-GCONF:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:Content-Transfer-Encoding:
-	 X-Proofpoint-UnRewURL:MIME-Version:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details; b=gx+0f9WJZz8baZlYkAtgQvBa24shWdUioaRxoVUnHhHGQx0woH5PAdrIdZW8CO6Gd7xXAGrEVazQAQ7xLQPBUnwHwENyDf5XHCbLOkY4n9yUZeV2g0hoFr0VbfoyweIcYEWuj01mCqs7A+7hcmpP83sG1AA4CoMajAUe/xOxveo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Pwtea/BH; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1705427183; c=relaxed/simple;
+	bh=LodwqaOsEDUEHn0GKKC1oEvO5NRvdIMf0U6PDs0WXF0=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:From:To:Cc:
+	 Subject:References:X-PGP-KeyID:X-PGP-CertKey:Date:Message-ID:
+	 User-Agent:MIME-Version:Content-Type:X-Scanned-By; b=Xg+Sr4CmXOgvgCEtql44LN0mIYFJn5aMXUC/YQQDBMdSlqQOwOYPvc4whi9FjrbMkCbnDMqytfp9IZZXTUSWr//gyTaeyeDEY7LkGoWwu9knsptA23ux73dgrzDJcAbv2tj29s6pHXDDuPXKz0PXMwX5ckfhJIyGw3W1gE3Y/7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BB1H3Vce; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Pwtea/BH"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GHauhh021964;
-	Tue, 16 Jan 2024 17:44:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=zvksaMNtL6Ps/tgLmmbcPa9+3ibbYYEzNDam56TV9u8=;
- b=Pwtea/BHdFspXSIpzVV4rPzuU8QeAUxNTMxrjNzg7p6hOIojeKqh4k28DoAFCTcCuhDe
- OzwmPR5Kchzs4QsbJW/sPorLJJXv1Vcw4jWbepnVzcM5P07C3jQJrdAHAjd/uCcy2CI+
- i1dBSMwsmVMGAmr/swPdstTuPkIjOOnyflUAAGtvfOk+VrytwphJjR06Mc4TkwyFd7Qn
- 9OhPw/sX8MftndEpl6a7hDm09CIG34ePeBHMyr4nv32hn4w4EAzJMJJgyFW4dap9HaPB
- g7QzoK7ilKS66xkTxletj7RL7lVXs3EhHGGl1bZjROXBQqdDZ5p3jLvvl6dxVhZydU79 pg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnwm61p3g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 17:44:22 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GHC5rZ004365;
-	Tue, 16 Jan 2024 17:44:22 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnwm61p31-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 17:44:22 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GGSUCR011053;
-	Tue, 16 Jan 2024 17:44:21 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm57yg81m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 17:44:21 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GHiKKk25297546
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 17:44:20 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AF11B58060;
-	Tue, 16 Jan 2024 17:44:20 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 685F058051;
-	Tue, 16 Jan 2024 17:44:20 +0000 (GMT)
-Received: from [9.24.12.86] (unknown [9.24.12.86])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Jan 2024 17:44:20 +0000 (GMT)
-Message-ID: <9a3d26a5-acfc-443a-911c-80f2ef6ba946@linux.ibm.com>
-Date: Tue, 16 Jan 2024 11:44:20 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] tpm: tis-i2c: Add more compatible strings
-To: Conor Dooley <conor@kernel.org>
-Cc: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca,
-        Joel Stanley <joel@jms.id.au>, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
-References: <20231214144954.3833998-1-ninad@linux.ibm.com>
- <20231214144954.3833998-2-ninad@linux.ibm.com>
- <20240109-saddling-nintendo-c7fbb46bb0dd@spud>
- <77fe0ccd-53ff-4773-9787-0d038434297f@linux.ibm.com>
- <20240112-unrevised-wafer-649c0ebffda5@spud>
-Content-Language: en-US
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <20240112-unrevised-wafer-649c0ebffda5@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: IARhOqyUtolwKtH3lyayBaHxU5ltsstz
-X-Proofpoint-ORIG-GUID: gxD_H4TXGT-l9LAEmD7DpCZS8UHWw7kS
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BB1H3Vce"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705427181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=Ial15Kpu3oyTf3h0mGFWe+pDzqBiZ9qg/SywZ2peWIk=;
+	b=BB1H3Vce7zQbHWW5OrgFa30la9Y3s240BmhUm9rIPwD/zTNgmzxVcvywSmP+ZadP3i/Cwq
+	jUspOYqnES+SQ2053WPwqFOzU/T8qKj8Iwb5cYTbCTykMuZ8OGF08ZxJhSzjjETfbc0Ciz
+	4X2Xrq4IYRKVaZTFMyeEKvQ4puwftHg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-455-ueyID-MnNlmR_njneFCvvA-1; Tue, 16 Jan 2024 12:46:15 -0500
+X-MC-Unique: ueyID-MnNlmR_njneFCvvA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C952383B8E8;
+	Tue, 16 Jan 2024 17:46:14 +0000 (UTC)
+Received: from segfault.usersys.redhat.com (unknown [10.22.17.253])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E3EFA2026D6F;
+	Tue, 16 Jan 2024 17:46:13 +0000 (UTC)
+From: Jeff Moyer <jmoyer@redhat.com>
+To: Subramanya Swamy <subramanya.swamy.linux@gmail.com>
+Cc: corbet@lwn.net,  axboe@kernel.dk,  asml.silence@gmail.com,
+  ribalda@chromium.org,  rostedt@goodmis.org,  bhe@redhat.com,
+  akpm@linux-foundation.org,  matteorizzo@google.com,  ardb@kernel.org,
+  alexghiti@rivosinc.com,  linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  io-uring@vger.kernel.org
+Subject: Re: [PATCH] iouring:added boundary value check for io_uring_group
+ systl
+References: <20240115124925.1735-1-subramanya.swamy.linux@gmail.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date: Tue, 16 Jan 2024 12:46:13 -0500
+Message-ID: <x49edeh5fyy.fsf@segfault.usersys.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_10,2024-01-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 suspectscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 phishscore=0 malwarescore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401160139
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Hello Conor,
+Subramanya Swamy <subramanya.swamy.linux@gmail.com> writes:
 
-On 1/12/24 11:24, Conor Dooley wrote:
-> On Thu, Jan 11, 2024 at 10:43:08AM -0600, Ninad Palsule wrote:
->> Hello Conor,
->>
->> On 1/9/24 11:11, Conor Dooley wrote:
->>> On Thu, Dec 14, 2023 at 08:49:53AM -0600, Ninad Palsule wrote:
->>>> From: Joel Stanley <joel@jms.id.au>
->>>>
->>>> The NPCT75x TPM is TIS compatible. It has an I2C and SPI interface.
->>>>
->>>> https://www.nuvoton.com/products/cloud-computing/security/trusted-platform-module-tpm/
->>>>
->>>> Add a compatible string for it, and the generic compatible.
->>>>
->>>> Signed-off-by: Joel Stanley <joel@jms.id.au>
->>>> Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
->>>> Link: https://lore.kernel.org/r/20220928043957.2636877-4-joel@jms.id.au
->>>> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
->>> I don't understand why you broke this series up and dropped patches.
->>> NAK, these compatibles are not documented.
->>>
->> The original series has three patches:
->>
->> 1) Adding compatibility string which I am adding in this series.
->>
->> 2) Adding schema for the TIS I2c devices which is already covered by Lukas's
->> patch (already merged in linux-next) https://lore.kernel.org/all/3f56f0a2bb90697a23e83583a21684b75dc7eea2.1701093036.git.lukas@wunner.de/
->>
->> 3) Removing "Infineon,slb9673" from trivial-devices.yaml which is not done
->> as it is already added in the TPM specific file. I will add it in my patch.
->> Good catch!
-> Dropping this should be a standalone patch (with a Fixes tag I suppose).
+> /proc/sys/kernel/io_uring_group takes gid as input
+> added boundary value check to accept gid in range of
+> 0<=gid<=4294967294 & Documentation is updated for same
+
+Thanks for the patch.  You're right, the current code artificially
+limits the maximum group id.
+
+> Signed-off-by: Subramanya Swamy <subramanya.swamy.linux@gmail.com>
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst | 9 ++++-----
+>  io_uring/io_uring.c                         | 8 ++++++--
+>  2 files changed, 10 insertions(+), 7 deletions(-)
 >
-> Looking at what got merged:
->        - description: Generic TPM 2.0 chips conforming to TCG PTP interface
->          items:
->            - enum:
->                - infineon,slb9673
->                - nuvoton,npct75x
->            - const: tcg,tpm-tis-i2c
->
-> There's no need to add "nuvoton,npct75x" to this driver, since a
-> fallback to tcg,tpm-tis-i2c is required by the binding. Adding the
-> generic compatible however makes sense.
->
-> If there's a good reason to add it (like existing QEMU releases that do
-> not have the generic compatible, but claim to have the npct75x) then
-> please note why we should make an exception in your commit message.
->
-> You need not carry the NAK, the motivation behind patch is fine.
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 6584a1f9bfe3..3f96007aa971 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -469,11 +469,10 @@ shrinks the kernel's attack surface.
+>  io_uring_group
+>  ==============
+>  
+> -When io_uring_disabled is set to 1, a process must either be
+> -privileged (CAP_SYS_ADMIN) or be in the io_uring_group group in order
+> -to create an io_uring instance.  If io_uring_group is set to -1 (the
+> -default), only processes with the CAP_SYS_ADMIN capability may create
+> -io_uring instances.
+> +When io_uring_disabled is set to 1, only processes with the
+> +CAP_SYS_ADMIN may create io_uring instances or process must be in the
+> +io_uring_group group in order to create an io_uring_instance.
+> +io_uring_group is set to 0.This is the default setting.
 
-Make sense. As there is no specific code for npct75x in the driver, I 
-will remove it.
+You are changing the default from an invalid group to the root group.  I
+guess that's ok, but I'd rather keep it the way it is.  The text is a
+bit repetitive.  Why not just this?
 
-Thanks for the review.
+"When io_uring_disabled is set to 1, a process must either be
+ privileged (CAP_SYS_ADMIN) or be in the io_uring_group group in order
+ to create an io_uring instance."
 
-Regards,
+> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+> index 09b6d860deba..0ed91b69643d 100644
+> --- a/io_uring/io_uring.c
+> +++ b/io_uring/io_uring.c
+> @@ -146,7 +146,9 @@ static void io_queue_sqe(struct io_kiocb *req);
+>  struct kmem_cache *req_cachep;
+>  
+>  static int __read_mostly sysctl_io_uring_disabled;
+> -static int __read_mostly sysctl_io_uring_group = -1;
+> +static unsigned int __read_mostly sysctl_io_uring_group;
+> +static unsigned int min_gid;
+> +static unsigned int max_gid  = 4294967294;  /*4294967294 is the max guid*/
 
-Ninad
+Right, INVALID_GID is -1.
+
+>  #ifdef CONFIG_SYSCTL
+>  static struct ctl_table kernel_io_uring_disabled_table[] = {
+> @@ -164,7 +166,9 @@ static struct ctl_table kernel_io_uring_disabled_table[] = {
+>  		.data		= &sysctl_io_uring_group,
+>  		.maxlen		= sizeof(gid_t),
+>  		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> +		.proc_handler	= proc_douintvec_minmax,
+> +		.extra1         = &min_gid,
+
+This should be SYSCTL_ZERO.
+
+> +		.extra2         = &max_gid,
+>  	},
+>  	{},
+>  };
+
+Thanks!
+Jeff
 
