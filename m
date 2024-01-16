@@ -1,107 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2551720B20
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 20:08:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC9157865;
+	Tue, 16 Jan 2024 20:09:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705435717; cv=none; b=reXDM/d4YP3yWACdhJGKxX50UaxD8CCBBYEcRyRrKCZ0XX6PnjhLH9hVAr5yy6f0RiH7OVrQjEIV3YzN465AZVnrjtue9bRWlcALa+GVEMZxvAtHr6qRTr4wdkY1ilvEb+fYOM0qVKGJ7R+tBM3/31n8JI33FOUOu+6pyY8+FeE=
+	t=1705435771; cv=none; b=tJlLFmCateCLINVWbUIGiD4bAaO2gmgtFJjJ2tAlfkfHFEMnN8VICbPsAXURGp2ZsyhFNBSL3DgrN875ySMjnujuJ/eKvU80vdb+MWzd3OJIf6nUHg2uNk9TQ4e8ZCRRtptFI3Ww2IYFbO6zgPwAiUy0mV/cpTPQq+ZvmIbPX4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705435717; c=relaxed/simple;
-	bh=+f92y93G1zWOtlpq6n0Sr2dabG7AgxMgV9bKCPRbafk=;
-	h=Received:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding; b=mLSFLdWIGa/XIjgcnw//OQpp2ONXWcT3lUt66A+62dGIVic/s2kprES9RBksFhaFmj6U9xxyntCYmb3FAeqN0g9Gfjznucw/PKpAgVlttlBKyOHnQ3jioJ9wOwXvg60fcBWbkJBJ+gM8IHg1VKNn1RuKsBg1rOn15yrPFc6zCIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE48C433F1;
-	Tue, 16 Jan 2024 20:08:35 +0000 (UTC)
-Date: Tue, 16 Jan 2024 15:09:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: nathanl@linux.ibm.com, Kees Cook <keescook@chromium.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seq_buf: make DECLARE_SEQ_BUF() usable
-Message-ID: <20240116150950.5f444a04@gandalf.local.home>
-In-Reply-To: <407c467e-1f0b-4549-951a-83c295b27733@wanadoo.fr>
-References: <20240116-declare-seq-buf-fix-v1-1-915db4692f32@linux.ibm.com>
-	<407c467e-1f0b-4549-951a-83c295b27733@wanadoo.fr>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705435771; c=relaxed/simple;
+	bh=/J1wD6JlqLab/M4j5vio3L4cnTN/46KpjHXXEocQ4g0=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-Id:
+	 In-Reply-To:References:X-Mailer:Mime-Version:Content-Type:
+	 Content-Transfer-Encoding; b=ruzYEXqHL6fyrA/OwNz+5ArliAgm4ewhrjr5DLAjqD5BqetyYtyfbOGFHRZD//BnIH4MCKv1TywUlnvQfdYidhiFtjwsPoDjnsdJr9oYJ0dYEmqcbTqKjB1/zeBa2sOcENE5b2KsVZk6vsaOBbRnLiO18/0lVoG3eifR1loiRqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GqnClk3S; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GqnClk3S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C20C433F1;
+	Tue, 16 Jan 2024 20:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1705435770;
+	bh=/J1wD6JlqLab/M4j5vio3L4cnTN/46KpjHXXEocQ4g0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GqnClk3Sj/JtMpW5BMJL3Zwe9zJCWTweck+WljmNgOp4d94a05NBJu7py0xG1O+f6
+	 YOyVN3c5DVhVzMVcDAR3CR7N+IkoaCNUpBQfE8NZ7Faes4sms5DlhFZ5GI4Al7mrdW
+	 jYv6kJh0Z8XYHvnuRPupo9RHKwAv5J/N4P6BXysU=
+Date: Tue, 16 Jan 2024 12:09:26 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Su Hui <suhui@nfschina.com>
+Cc: mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+ nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
+ justinstitt@google.com, ocfs2-devel@lists.linux.dev,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] ocfs2: remove useless code in ocfs2_try_to_merge_extent
+Message-Id: <20240116120926.3bfa87253bf5af5090bd78bd@linux-foundation.org>
+In-Reply-To: <20240112042639.3948236-1-suhui@nfschina.com>
+References: <20240112042639.3948236-1-suhui@nfschina.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 16 Jan 2024 20:40:29 +0100
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+On Fri, 12 Jan 2024 12:26:40 +0800 Su Hui <suhui@nfschina.com> wrote:
 
-> Le 16/01/2024 =C3=A0 15:09, Nathan Lynch via B4 Relay a =C3=A9crit=C2=A0:
-> > From: Nathan Lynch <nathanl@linux.ibm.com>
-> >=20
-> > Using the address operator on the array doesn't work:
-> >=20
-> > /include/linux/seq_buf.h:27:27: error: initialization of =E2=80=98char =
-*=E2=80=99
-> >    from incompatible pointer type =E2=80=98char (*)[128]=E2=80=99
-> >    [-Werror=3Dincompatible-pointer-types]
-> >     27 |                 .buffer =3D &__ ## NAME ## _buffer,       \
-> >        |                           ^
-> >=20
-> > Apart from fixing that, we can improve DECLARE_SEQ_BUF() by using a
-> > compound literal to define the buffer array without attaching a name
-> > to it. This makes the macro a single statement, allowing constructs
-> > such as:
-> >=20
-> >    static DECLARE_SEQ_BUF(my_seq_buf, MYSB_SIZE);
-> >=20
-> > to work as intended.
-> >=20
-> > Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-> > Fixes: dcc4e5728eea ("seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_st=
-r()")
-> > ---
-> >   include/linux/seq_buf.h | 3 +--
-> >   1 file changed, 1 insertion(+), 2 deletions(-)
-> >=20
-> > diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-> > index 5fb1f12c33f9..c44f4b47b945 100644
-> > --- a/include/linux/seq_buf.h
-> > +++ b/include/linux/seq_buf.h
-> > @@ -22,9 +22,8 @@ struct seq_buf {
-> >   };
-> >  =20
-> >   #define DECLARE_SEQ_BUF(NAME, SIZE)			\
-> > -	char __ ## NAME ## _buffer[SIZE] =3D "";		\
-> >   	struct seq_buf NAME =3D {				\
-> > -		.buffer =3D &__ ## NAME ## _buffer,	\
-> > +		.buffer =3D (char[SIZE]) { 0 },		\
-> >   		.size =3D SIZE,				\
-> >   	} =20
->=20
-> Hi,
->=20
-> just removing the & in ".buffer =3D __ ## NAME ## _buffer, \" also works =
-IIRC.
->=20
-> See [1], which unfortunately has been unnoticed.
->=20
-> CJ
->=20
->=20
-> [1]:=20
-> https://lore.kernel.org/all/2a534333-b5f6-4b1d-b4b8-a1a71f91c3ff@wanadoo.=
-fr/
+> Clang static checker warning: Value stored to 'rec' is never read.
+> Remove this useless code to silent this warning.
+> 
+> --- a/fs/ocfs2/alloc.c
+> +++ b/fs/ocfs2/alloc.c
+> @@ -3743,8 +3743,6 @@ static int ocfs2_try_to_merge_extent(handle_t *handle,
+>  			goto out;
+>  		}
+>  
+> -		rec = &el->l_recs[split_index];
+> -
+>  		/*
+>  		 * Note that we don't pass split_rec here on purpose -
+>  		 * we've merged it into the rec already.
 
-I guess I missed that.
+Then:
 
-But it still doesn't fix this case:
+		ret = ocfs2_merge_rec_left(path, handle, et, rec,
+					   dealloc, split_index);
 
- static DECLARE_SEQ_BUF(my_seq_buf, MYSB_SIZE);
+and ocfs2_merge_rec_left() almost immediately dereferences `rec'.
 
-Which this patch does.
-
-
--- Steve
+So this looks quite wrong to me.
