@@ -1,94 +1,89 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B230B2E653;
-	Tue, 16 Jan 2024 21:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ED734CEC;
+	Tue, 16 Jan 2024 21:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705440605; cv=none; b=Rs5U68eAR9Su9oiIJlgRjrqrz5Yu6Fmi4esyEIFQLSjQqlviPQSuZfD+E/2Smh6HHuwg0+9pEZ4h/yOSmpeVIY6vzC4ANqo7Ec3HYksn9Jrh6eXqClg0XaZ6b3Qh6g+Dpn+PuYl6vS77z7JNBI/2DCAlJRJ15Q080Ggd/HtiSmw=
+	t=1705440621; cv=none; b=rYiqdVrd4SevuUU3g7JrXb0Ywc6a7KBNFGRC2rlRltiMdTZX1EhHDOA2TpQdlhA6cyGniry0UVzcWueoT4eC/b5svCqonve7bnDSp96ikTVb4vFE4YY9AQyUOdCcwJm31MFuM5udNTmkUob79LOMDS4dqBIZDt2LEVDUts39lZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705440605; c=relaxed/simple;
-	bh=IAWk1YprB3PG7VN0yzjiLV8oZKHAOS9ZB6C24VAJCCQ=;
-	h=DKIM-Signature:Received:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=jQ/qJZTL0/ubzkNgugGhwxpe7oxG8zDwD1xlq7dmr4I3XVL9LL6LnYzGyCbVtNRatHfC7vsqOQv2WoHt8SZixOxaOHqydYKztegxTcyDmazO8C9DtWMeBrMlSjNOM2G/hJ+Qln/gqD3qSeP1ugqa4iPmgAMgrJATSG120Y45dlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jSf9328k; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1705440621; c=relaxed/simple;
+	bh=gK8TqQrUUOxfnpjirxEvhZSb+YCDUxqynDa3eMkM00I=;
+	h=DKIM-Signature:Received:From:To:Cc:Date:Message-Id:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:X-Spam-Checker-Version:
+	 X-Spam-Level:X-Spam-Report:X-Spam-Status:Subject:X-SA-Exim-Version:
+	 X-SA-Exim-Scanned; b=XkB5Fytg/qVHoxJsO0SEqxNgzjG4Ms2UVF5qWg19YtOtlwp3p38faZtXAABdiuJ+weZeWvIh78HUWuZO3chduXM3rWCV0WQSHl8DDRAtrFygE4Z46Egh+zIyIDNo48/I+UQ8kg+GQ1i+JnfrdzsYUrquBX7/lLeEAZe1TWTt1AI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=jCCK2qF/; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jSf9328k"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=HM/2mnrR5ku0dJRu3DvkRCaTPaWRj5EtYUk/YkITPe0=; b=jSf9328kIeMp0WquyPLyQD2UbG
-	vdOiLmM3fVjvGvEIAGVSGmjkXI4q/ZzuI0kqep5Czy0xnrWg8fFBlWRV9bIzSn2IY/2ptCTijl0Ot
-	8fj9Prv++oNv4PoY1BL6q853A/5/e6Ohua7ySUW+rEIlKGOvNsKMz+wPz9JLSFFNnrkCIHYwxxSBg
-	cbGME98WXP1OA3X/qfenOm1/VYdcD1xvi6zSl/0fq9MR7GkqBKRrloOGG8lJQKo8+yIKwDvFONzYc
-	vRcYh6evnSqdD2J+aKAD4gACbN8iXbT0foOZsnHhVcDKt7YHNQYkvwvFLPZLzYUJm39YMdivO8T3E
-	sqHQQ0jQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rPr0S-00EJsm-W2; Tue, 16 Jan 2024 21:30:01 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+8b23309d5788a79d3eea@syzkaller.appspotmail.com,
-	syzbot+004c1e0fced2b4bc3dcc@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH] block: Fix iterating over an empty bio with bio_for_each_folio_all
-Date: Tue, 16 Jan 2024 21:29:59 +0000
-Message-Id: <20240116212959.3413014-1-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="jCCK2qF/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
+	:From:subject:date:message-id:reply-to;
+	bh=hj07P7OtASHgv5BoQvnnERYryDretN+kpG4Xqn1gXT4=; b=jCCK2qF/EVfuA+66bqZM0/2BI7
+	QBquAr3a0uA2a2zJ9DkQkJUH4wqFVk1R4WRcoWV5GHSP0a/hDEJ7y3lHGaEQh1Wx/vTPtnuGkP0gS
+	izTZqzHJFz44j0lKcTeTH7DJJnCRl5mqwWUjD/Uvquj5pdhWB0Vl68CD9+eyJjFMgLsQ=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:47418 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1rPr0W-0002ia-FZ; Tue, 16 Jan 2024 16:30:05 -0500
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	jan.kundrat@cesnet.cz,
+	shc_work@mail.ru
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	hugo@hugovil.com,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Date: Tue, 16 Jan 2024 16:29:57 -0500
+Message-Id: <20240116213001.3691629-1-hugo@hugovil.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+Subject: [PATCH 0/4] serial: max310x: probe fixes
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-If the bio contains no data, bio_first_folio() calls page_folio() on a
-NULL pointer and oopses.  Move the test that we've reached the end of
-the bio from bio_next_folio() to bio_first_folio().
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-Reported-by: syzbot+8b23309d5788a79d3eea@syzkaller.appspotmail.com
-Reported-by: syzbot+004c1e0fced2b4bc3dcc@syzkaller.appspotmail.com
-Fixes: 640d1930bef4 ("block: Add bio_for_each_folio_all()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- include/linux/bio.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Hello,
+this patch series brings a few fixes in the probing of the max310x driver.
 
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index ec4db73e5f4e..1518f1201ddd 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -286,6 +286,11 @@ static inline void bio_first_folio(struct folio_iter *fi, struct bio *bio,
- {
- 	struct bio_vec *bvec = bio_first_bvec_all(bio) + i;
- 
-+	if (i >= bio->bi_vcnt) {
-+		fi->folio = NULL;
-+		return;
-+	}
-+
- 	fi->folio = page_folio(bvec->bv_page);
- 	fi->offset = bvec->bv_offset +
- 			PAGE_SIZE * (bvec->bv_page - &fi->folio->page);
-@@ -303,10 +308,8 @@ static inline void bio_next_folio(struct folio_iter *fi, struct bio *bio)
- 		fi->offset = 0;
- 		fi->length = min(folio_size(fi->folio), fi->_seg_count);
- 		fi->_next = folio_next(fi->folio);
--	} else if (fi->_i + 1 < bio->bi_vcnt) {
--		bio_first_folio(fi, bio, fi->_i + 1);
- 	} else {
--		fi->folio = NULL;
-+		bio_first_folio(fi, bio, fi->_i + 1);
- 	}
- }
- 
+Patches 1 to 3 could be merged if deemed necessary and to facilitate stable
+kernel backporting.
+
+Note that I do not have access to a board with an actual max310x IC on it,
+but I have tested it by using i2c-stub to simulate the four ports on a
+virtual max14830 device.
+
+Thank you.
+
+Hugo Villeneuve (4):
+  serial: max310x: set default value when reading clock ready bit
+  serial: max310x: improve crystal stable clock detection
+  serial: max310x: fail probe if clock crystal is unstable
+  serial: max310x: prevent infinite while() loop in port startup
+
+ drivers/tty/serial/max310x.c | 53 +++++++++++++++++++++++++++++-------
+ 1 file changed, 43 insertions(+), 10 deletions(-)
+
+
+base-commit: 0c84bea0cabc4e2b98a3de88eeb4ff798931f056
 -- 
-2.43.0
+2.39.2
 
