@@ -1,158 +1,75 @@
-Received: from mail-lj1-f201.google.com (mail-lj1-f201.google.com [209.85.208.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766FE1BDF1
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 14:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--khtsai.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20791BDFC
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 14:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ST+tFi/j"
-Received: by mail-lj1-f201.google.com with SMTP id 38308e7fff4ca-2ccaf8667f9so80295591fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 06:18:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705414720; x=1706019520; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cakF87CadgCIOgMCOG5EwBp6+8GtSy9HpPwc++zV4Aw=;
-        b=ST+tFi/j4TY+OOWbSSHf3Mm7LvUHvrs8FSG1j+qlmzn7q0VLhdc9BYHrhApvA+acHb
-         dZjXNDDS2ARz2XAnauAN1cslh6Xy8zfFH4QrPfXC8MbwMVuXIsKJWJOVRrU9eqV38C52
-         C8apA1q+bc8lXq0qdC2ipZx5qoJ8so1qW5BtdlobgxgMRV52eyayEonCQRWeIvjNnydx
-         KnJkjNlYhpDGIiBzW9sky3uvl8zwMrbZKHbhicch6sEu5u4c9mYX1HLS+XHdu9Vr3pkV
-         RzrPdPPKfipNwnCXRxftZmuUE/JQSAz+hNRZxZ+FwISftV9hAPBUzUdoBsq36UEfWRbm
-         tu6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705414720; x=1706019520;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cakF87CadgCIOgMCOG5EwBp6+8GtSy9HpPwc++zV4Aw=;
-        b=s3jzKsCrbH4a2HFMGJxLiTsEbQ+SAlxhkkMXJBlsff/8yie0WTWzWZM1KWJdr/VobR
-         L72KtFvWtiTP4cxv68aSAhQDBxAsQ5b3rwWcZXS58MFQp49apufTrc0SY+xEK7Srud9v
-         sgaFywtp7/L5m5Ugcn+jofHFnwOO8cANaXaNRxlqe+ezzdzFpwBnA4mbt0lCqMe1aPnJ
-         3L7XsPIJlnrHY7EPFEYxDeCgm3A9KYZ1o4nzD//y/VLsfveyuayiazkenznv2bZ7VAdk
-         5+mr8FbBvWdnsTqm/9bPAGtadikMhdu+cXD8aYO/QUpC5WrM7yJBRWALRNknlwWDDCZ1
-         k9rw==
-X-Gm-Message-State: AOJu0Yytll7xiqyDRodeFtxZl4Pg1IFcOTaOQCzE1rJxaumP3mLuv6Ym
-	3Zju6afZMh2Iji8/8b6PEF6Oz8uDWR/zgRJLAQ==
-X-Google-Smtp-Source: AGHT+IHCvq//e0n+7yiArRVI/iVOEbDs4vwkpKIx4neEAk9pynG5pMexDdUPZmZ3F37zts1U7xT8AZQIzEo=
-X-Received: from khtsai-large-gcloudtop.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:289])
- (user=khtsai job=sendgmr) by 2002:a2e:bb86:0:b0:2cd:b310:f5a6 with SMTP id
- y6-20020a2ebb86000000b002cdb310f5a6mr8054lje.5.1705414720418; Tue, 16 Jan
- 2024 06:18:40 -0800 (PST)
-Date: Tue, 16 Jan 2024 22:16:17 +0800
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="J+OWdh6A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1705414759; bh=hVZ/HiO5uU1gBjNNiO+94yCP41EBlFJE2bjhqvDtdTM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=J+OWdh6ALpv4xKOgMt6i4rHoufsXoJVMHKAIvEcpPoinvgCfCTmD2n+KnpS8yC0X6
+	 tCzjCFJSuaYD+GLiGsyOUGV4tjQIg+Mb9tf9hjSPGFT7qQ8G6hj4OggBGxuDh7q8Ar
+	 DEyfMPC0cCoxVtzdsdmSrf4crEOPxoFcAYjoz+lA=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id 350128D8; Tue, 16 Jan 2024 22:13:16 +0800
+X-QQ-mid: xmsmtpt1705414396tj04rh3xf
+Message-ID: <tencent_CBECC6CDB07A5A6C182C156DAC9490EB160A@qq.com>
+X-QQ-XMAILINFO: NQR8mRxMnur9RG4S4i57iS1wgbWQUvqmhnnm/R3d6e/JeU7u3F4LCVpTlsFzJ0
+	 +Zjj1ZXCsoQ4YHeloGST7SZAggtPT7SE6oaZ+6LaHrH5ikZmvGhddf6fxqVgEn8SN8unjXf2OYBo
+	 /KnUOnt0COGwJD/WGcnAUzWBh61TN078P+E5rb+GhbuqwEy5t1DTX8VoC6JnaBEDRgjjmc7pIAJR
+	 CCLsvCAvg+Ms+3jpc8wSjBqbjKeKjfmyBYgt4alobetp5pSL6dp1nOKAVNE5IfXgDUqn4Tz1XD3t
+	 CmJbk9ZhpitX3tHpox5MoR1BKR5tpDNZOMnL6bF9mjfkrVOdUCl5bwAnoG25u1NGco77uHkBqs53
+	 0nBgWefLDUs5yGyXxZqojFz4wx81Xc4DPjkS5pp2a4DKw3ygsb31f1Zko+Kl7xW6vpsSL0/UBKhE
+	 VLUd5hGibwXrtmnPv+9YOjPyWLR4YGUPbBM8xhEP7UpAdtQhdZRS9xGUi+dRsB/TxXu5YWn27/Ex
+	 Vm9cypB6r8g8GtwGfE2XjQkfj+yfaAPOVss7xv0+Wy25FO96P7CO648ooGa8Oan6P6LlatYQHwfR
+	 W1cGaskGeM6dUZIcdH3TuE9Oj5rpg/4R7RY4imkbgARpIToOwVrEChfEhlApCfMXYiGFB3zh0qVw
+	 wUmn8VfpGBjLSK0EiqLe6QW4v1KoD5ozgs/mFR8LATYYBTLPfTt/cWWVj0AD+yM4NncQFTU1C5B1
+	 wkdlYXrVvIZ1Fh2o/cUASlMROsTOpPCj8hfqQq6VVrLaPkVgn+lTX+ndp5DnKgjfk70q3B+gRtUy
+	 rUiRvIaTdjKd7Jlz0k1hTTxzMbt3PREggJMFdvy7hVt/8yTMDLv0/FasShioDXk3LgUWNqtrpkfL
+	 VTXyMsM3Cn4AdqMeagmiIeSJSRwYQojZJVpd0+mG4YBsjgp28Kz2nwqGawHTaVsXq6NDWpsBfTvE
+	 R3ef0nVsHYSgGj/gkXhA==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+7ec955e36bb239bd720f@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] KASAN: slab-out-of-bounds Read in dsa_user_prechangeupper
+Date: Tue, 16 Jan 2024 22:13:16 +0800
+X-OQ-MSGID: <20240116141315.955157-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000002faa2060f02e766@google.com>
+References: <00000000000002faa2060f02e766@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
-Message-ID: <20240116141801.396398-1-khtsai@google.com>
-Subject: [PATCH] usb: gadget: u_serial: Add null pointer checks after RX/TX submission
-From: Kuen-Han Tsai <khtsai@google.com>
-To: gregkh@linuxfoundation.org, quic_prashk@quicinc.com, jirislaby@kernel.org, 
-	stern@rowland.harvard.edu, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Kuen-Han Tsai <khtsai@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Commit ffd603f21423 ("usb: gadget: u_serial: Add null pointer check in
-gs_start_io") adds null pointer checks to gs_start_io(), but it doesn't
-fully fix the potential null pointer dereference issue. While
-gserial_connect() calls gs_start_io() with port_lock held, gs_start_rx()
-and gs_start_tx() release the lock during endpoint request submission.
-This creates a window where gs_close() could set port->port_tty to NULL,
-leading to a dereference when the lock is reacquired.
+please test slab-out-of-bounds Read in dsa_user_prechangeupper
 
-This patch adds a null pointer check for port->port_tty after RX/TX
-submission, and removes the initial null pointer check in gs_start_io()
-since the caller must hold port_lock and guarantee non-null values for
-port_usb and port_tty.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 3e7aeb78ab01
 
-Fixes: ffd603f21423 ("usb: gadget: u_serial: Add null pointer check in gs_start_io")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
----
-Explanation:
-    CPU1:                            CPU2:
-    gserial_connect() // lock
-                                     gs_close() // await lock
-    gs_start_rx()     // unlock
-    usb_ep_queue()
-                                     gs_close() // lock, reset port_tty and unlock
-    gs_start_rx()     // lock
-    tty_wakeup()      // dereference
-
-Stack traces:
-[   51.494375][  T278] ttyGS1: shutdown
-[   51.494817][  T269] android_work: sent uevent USB_STATE=DISCONNECTED
-[   52.115792][ T1508] usb: [dm_bind] generic ttyGS1: super speed IN/ep1in OUT/ep1out
-[   52.516288][ T1026] android_work: sent uevent USB_STATE=CONNECTED
-[   52.551667][ T1533] gserial_connect: start ttyGS1
-[   52.565634][ T1533] [khtsai] enter gs_start_io, ttyGS1, port->port.tty=0000000046bd4060
-[   52.565671][ T1533] [khtsai] gs_start_rx, unlock port ttyGS1
-[   52.591552][ T1533] [khtsai] gs_start_rx, lock port ttyGS1
-[   52.619901][ T1533] [khtsai] gs_start_rx, unlock port ttyGS1
-[   52.638659][ T1325] [khtsai] gs_close, lock port ttyGS1
-[   52.656842][ T1325] gs_close: ttyGS1 (0000000046bd4060,00000000be9750a5) ...
-[   52.683005][ T1325] [khtsai] gs_close, clear ttyGS1
-[   52.683007][ T1325] gs_close: ttyGS1 (0000000046bd4060,00000000be9750a5) done!
-[   52.708643][ T1325] [khtsai] gs_close, unlock port ttyGS1
-[   52.747592][ T1533] [khtsai] gs_start_rx, lock port ttyGS1
-[   52.747616][ T1533] [khtsai] gs_start_io, ttyGS1, going to call tty_wakeup(), port->port.tty=0000000000000000
-[   52.747629][ T1533] Unable to handle kernel NULL pointer dereference at virtual address 00000000000001f8
----
- drivers/usb/gadget/function/u_serial.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index a92eb6d90976..2f1890c8f473 100644
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -539,20 +539,16 @@ static int gs_alloc_requests(struct usb_ep *ep, struct list_head *head,
- static int gs_start_io(struct gs_port *port)
+diff --git a/net/dsa/user.h b/net/dsa/user.h
+index 996069130bea..9a40918ee7fc 100644
+--- a/net/dsa/user.h
++++ b/net/dsa/user.h
+@@ -53,7 +53,11 @@ int dsa_user_manage_vlan_filtering(struct net_device *dev,
+ 
+ static inline struct dsa_port *dsa_user_to_port(const struct net_device *dev)
  {
- 	struct list_head	*head = &port->read_pool;
--	struct usb_ep		*ep;
-+	struct usb_ep		*ep = port->port_usb->out;
- 	int			status;
- 	unsigned		started;
-
--	if (!port->port_usb || !port->port.tty)
--		return -EIO;
--
- 	/* Allocate RX and TX I/O buffers.  We can't easily do this much
- 	 * earlier (with GFP_KERNEL) because the requests are coupled to
- 	 * endpoints, as are the packet sizes we'll be using.  Different
- 	 * configurations may use different endpoints with a given port;
- 	 * and high speed vs full speed changes packet sizes too.
- 	 */
--	ep = port->port_usb->out;
- 	status = gs_alloc_requests(ep, head, gs_read_complete,
- 		&port->read_allocated);
- 	if (status)
-@@ -569,12 +565,22 @@ static int gs_start_io(struct gs_port *port)
- 	port->n_read = 0;
- 	started = gs_start_rx(port);
-
-+	/*
-+	 * The TTY may be set to NULL by gs_close() after gs_start_rx() or
-+	 * gs_start_tx() release locks for endpoint request submission.
-+	 */
-+	if (!port->port.tty)
-+		goto out;
-+
- 	if (started) {
- 		gs_start_tx(port);
- 		/* Unblock any pending writes into our circular buffer, in case
- 		 * we didn't in gs_start_tx() */
-+		if (!port->port.tty)
-+			goto out;
- 		tty_wakeup(port->port.tty);
- 	} else {
-+out:
- 		gs_free_requests(ep, head, &port->read_allocated);
- 		gs_free_requests(port->port_usb->in, &port->write_pool,
- 			&port->write_allocated);
---
-2.43.0.275.g3460e3d667-goog
+-	struct dsa_user_priv *p = netdev_priv(dev);
++	const struct rtnl_link_ops *ops = dev->rtnl_link_ops;
++	struct dsa_user_priv *p = ops->priv_size >= sizeof(*p) ? 
++		netdev_priv(dev) : NULL;
++	if (!p)
++		return NULL;
+ 
+ 	return p->dp;
+ }
 
