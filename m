@@ -1,97 +1,97 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D3C1C6BA;
-	Tue, 16 Jan 2024 15:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D621C6A1;
+	Tue, 16 Jan 2024 15:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ihMJO76X"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GFb9bl000351;
-	Tue, 16 Jan 2024 15:54:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=97MHNMQvroPsQ7l3OcwOf2G2VgJ3sRCWBpF6Bp8pnCo=;
- b=ihMJO76X9sC7gXQ75gCE7ALl+v0NiMS7MG1VFOooSMQ0b1xynvW4PSoD2gjr+jLpUjW/
- RYOH41b55L6ngLbPb9sFTIVIEUqD+k2xSDs4QETqxgK3h3C60kEZgvIZ2Aj7w4qlYw47
- 3Wc4V1PcL/dZi0ed5DSaFiRHxv137/Vpc3RBniwz7FjDQ7FtRpHjV4XbcXCQrA0HAJGs
- ZHkFUvD+bJwFwcLSoU/8mWrKizSBzAFqX7/RTmbkzkLTooUUJ/C3zkbxZRSLoLhIxJkA
- jkYLtCSqalTBj++VVWW0+sSFVjQ23c+fAFumCTPnDu2TVuT1VybZ1J1fxtI4+7EKJK1R bQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnvkn8j7v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 15:54:04 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GFblO9004401;
-	Tue, 16 Jan 2024 15:54:04 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnvkn8j79-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 15:54:04 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDTMK6023421;
-	Tue, 16 Jan 2024 15:54:03 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm6bkfbu0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 15:54:03 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GFrw7I42467798
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 15:53:58 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0DE2F2004B;
-	Tue, 16 Jan 2024 15:53:58 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E80F20040;
-	Tue, 16 Jan 2024 15:53:57 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.49.101])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 16 Jan 2024 15:53:56 +0000 (GMT)
-Date: Tue, 16 Jan 2024 16:53:55 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Tony Krowiak <akrowiak@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, jjherne@linux.ibm.com, borntraeger@de.ibm.com,
-        pasic@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
-        imbrenda@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, gor@linux.ibm.com
-Subject: Re: [PATCH v4 3/6] s390/vfio-ap: let 'on_scan_complete' callback
- filter matrix and update guest's APCB
-Message-ID: <ZaamkyuOET+1rOSm@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240115185441.31526-1-akrowiak@linux.ibm.com>
- <20240115185441.31526-4-akrowiak@linux.ibm.com>
- <ZaY/fGxUMx2z4OQH@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <4eb35fab-eb85-487d-90cd-c4b10b8410ec@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jtmo38Y+"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e7065b7bdso29156145e9.3;
+        Tue, 16 Jan 2024 07:54:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705420493; x=1706025293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=097AIZDFnth5ZFT/ZvzM3lDqkfx5bsjxaBNjsvF0f24=;
+        b=Jtmo38Y+yEH3xxoBYEpykcA+deLoyQkBoQh+85NKJTCfR9lOZMDo6Jel0nKAxAIi99
+         uknJzpXgmnGLB8aNfqEL/xFrzZ+amvwAZaKK/LUzvXWJDCxSS3Ol1tFGiBzfX6yCfGJw
+         EEtKxgEvtl2QdtqOWN3OfKK0k3kLEwcTLMQ7JqqwXcA+PdDKGZAENLYChZo7De5/v6TZ
+         rNj6QLLCJ1Zx/LvY+mmciXwr3xlscbl2fsh/3lpn2CIvul1/56zrfRjfyrQcOjgeKs1n
+         otqHIFtunq0KQ0OVoHowEYMOWUS2rKhZVY0ZcDi6BXvPoldTHGped4zKtTJtMZyvELOP
+         YC4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705420493; x=1706025293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=097AIZDFnth5ZFT/ZvzM3lDqkfx5bsjxaBNjsvF0f24=;
+        b=m2pU75i/Ro1daatB4/LXkm4Hk6b9/wmLVCATI+fWQJJXxME9JP3Nl5qmVjqr5pnvS8
+         8LlD4cNw+bH7chduapLKx2L/MNZA078xPJ0dvF/oTeN88VxGPuXq4fNmDaenZ6cH7I5U
+         gEbhFRAAvaCb8gk0O1pVBDhwegVxkBS01PTIQhTnGQh60okyQhDlIPCL1chDsM2LrbHp
+         pbUQ6GIIMugMbF3CNK4q6zl8IkXxz/9AVpoyrWEHEpv5OfClqO2sGy4pWluZH9lI9nCg
+         X0rfUxUgXSVu3XJGFkY/vhEF0KSSRLn+j6g/LxlVq0J30TP9G347JiI3MlpjElL5uOvG
+         NsJw==
+X-Gm-Message-State: AOJu0YwAAEtIG1qiAvNKHLW782cZxGO9HyWc7kc0V5ZLm6SKQiyF5U36
+	0msv08mZsx8k5ucm8+jC4qc=
+X-Google-Smtp-Source: AGHT+IHfHURJWF9KvXkLVT6B9aCIpy4k+92SQCv/WP+ixPjOX/LueXlRtXJdGBdNb5AgNn93MHzAkQ==
+X-Received: by 2002:a05:600c:1885:b0:40e:50d7:6902 with SMTP id x5-20020a05600c188500b0040e50d76902mr2588898wmp.64.1705420493390;
+        Tue, 16 Jan 2024 07:54:53 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id je6-20020a05600c1f8600b0040d8d11bf63sm19811106wmb.41.2024.01.16.07.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 07:54:52 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+	Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] wifi: ath9k:  remove redundant assignment to variable ret
+Date: Tue, 16 Jan 2024 15:54:52 +0000
+Message-Id: <20240116155452.2315351-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4eb35fab-eb85-487d-90cd-c4b10b8410ec@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Qe49cQtLJH46-BX-ssslh2WAuKu3_Qae
-X-Proofpoint-ORIG-GUID: L92aSjxdJRR6io0SwljeFoGIcqZgHe8d
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_08,2024-01-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0 priorityscore=1501
- suspectscore=0 clxscore=1015 mlxlogscore=542 phishscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401160125
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 16, 2024 at 09:57:25AM -0500, Tony Krowiak wrote:
-> This patch is more of an enhancement as opposed to a bug, so no Fixes.
+The variable ret is being assigned a value but it isn't being
+read afterwards. The assignment is redundant and so ret can be
+removed.
 
-The preceding and rest of this series CCs stable@vger.kernel.org and
-would not apply without this patch. So I guess backporting the whole
-series would be difficult.
+Cleans up clang scan build warning:
+warning: Although the value stored to 'ret' is used in the
+enclosing expression, the value is never actually read from
+'ret' [deadcode.DeadStores]
 
-Whether propagating the prevous patches' Fixes/stable makes any sense?
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/net/wireless/ath/ath9k/xmit.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks!
+diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
+index f15684379b03..d519b676a109 100644
+--- a/drivers/net/wireless/ath/ath9k/xmit.c
++++ b/drivers/net/wireless/ath/ath9k/xmit.c
+@@ -369,12 +369,11 @@ static void ath_tid_drain(struct ath_softc *sc, struct ath_txq *txq,
+ 	struct list_head bf_head;
+ 	struct ath_tx_status ts;
+ 	struct ath_frame_info *fi;
+-	int ret;
+ 
+ 	memset(&ts, 0, sizeof(ts));
+ 	INIT_LIST_HEAD(&bf_head);
+ 
+-	while ((ret = ath_tid_dequeue(tid, &skb)) == 0) {
++	while (ath_tid_dequeue(tid, &skb) == 0) {
+ 		fi = get_frame_info(skb);
+ 		bf = fi->bf;
+ 
+-- 
+2.39.2
+
