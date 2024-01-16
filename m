@@ -1,202 +1,444 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83801BC31;
-	Tue, 16 Jan 2024 15:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F371BC5D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 15:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q93afQY/"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d542701796so52807055ad.1;
-        Tue, 16 Jan 2024 07:02:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="TkZYGHlA"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2cd880ceaf2so59076511fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 07:04:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705417370; x=1706022170; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=kc8D52p6VWEioVoqD1qBkWwkmzVf2ZP4HXJmc9aOVzg=;
-        b=Q93afQY/Na8i4gFmGjRWMyTBhs1cwpmtV9bLgVfGHjEjJC/uPEU4z/1NrQKLhP6mLt
-         vOJgetZ4x5TaOIkAc3Xpp/Fhpvbcdu571/DDeeCumfGW4jMWo+9jkkLLEnEm1zRjeQq+
-         W7BzTQPeAR9+4Fl0lJEbCuwDP7hhg9M8Cy0m/icgQi/H9iFT9g68iGazx+Sq2ZSjxCwW
-         M1mejZ8wo+VU1HWTdGMhrmDqGArGBp3YleVlX2NkWfzPGZcpGfFPSqH4wPAkftzCtn+J
-         nMGobmZj1rRcb0UL99sKnF05Y7JPlC3DaSTtpYtA72Ju3oebEb5T/OynnCtaff2zj0NJ
-         FMGA==
+        d=ventanamicro.com; s=google; t=1705417450; x=1706022250; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KZObLbH50jWGDNCNNEMPuR9WvYua1JEOsUGWqN7w/1c=;
+        b=TkZYGHlAI9FR/bKw3/asNRcsXrhMxk0RWmjUIxCTIOy1HigH0lW1QDITatR+jtiv1Y
+         ITpDoqsGDmeRgyf6Z166hUqIH3Nz/zcs8pGLhK33pXeeLVHUQ05MydNsFnwBeZ/jjVy7
+         x81LK/Ppnies/9tcJBF8YJ8XHt0V7KrpVTspfybL5R/lhAPeMZY9ZVQ0P/B8pS0KHrYf
+         gPVy8G8MC+pfg8VdDkqH63MS8MX1NC21LZDgReVeH/nSIAqYWtXu/Ca/7tGFFW+gbPDj
+         Eudn47y6ehg8p9Scw7tiyC4pqsLhfIuMV1ETQ2Yx2dcZEF5Lb2ov1SdpmJW/ApPhhPF7
+         iFxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705417370; x=1706022170;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kc8D52p6VWEioVoqD1qBkWwkmzVf2ZP4HXJmc9aOVzg=;
-        b=t8tN4qhx32Bw3G7fg+nDJtLAxqnbj/LVYKOzCfRp1xrO8MQcZNbWQ8UUS+9i7R/GWL
-         slTwvZadByw1xAz8QeMSeDREH+jfeoshGY3TJrAuvPB/2fFtBz4esx6zjraRKEbC0x/b
-         WlMQfnlbh3ecicG63L5ljfv9E8gQlX/c7xB0GOaaIfZ4Z1HKuMIAHiyLxVlfyrz3XCaH
-         drDL2tEEpVTHrbRsumzBaPjQOflOWOQLmWzuu6vaASSVEsDGUEu6svk/p/Pl2xWxShzk
-         QHo+/t9fKwpLwtviQ/rKkMSUo3gDvsLBh14mrMd6NBPNdXdaCQmBqQLr/COfFw8vaHm3
-         owMg==
-X-Gm-Message-State: AOJu0Ywa4Rp7xoXxFtUyxulheMphxgd+1h2FUNN3H6SUAbCxCctJpqC+
-	2t6heQUUEVkFtDRebCvJ2l8=
-X-Google-Smtp-Source: AGHT+IGhSWY6lzeqy6rIXZJdscPDUDTBk3QAvuoEoEgn5yB0vJSb/q6qe2jAlDe1bjplKVjVMi1Msg==
-X-Received: by 2002:a17:902:d504:b0:1d4:caea:5fb5 with SMTP id b4-20020a170902d50400b001d4caea5fb5mr4807096plg.32.1705417369696;
-        Tue, 16 Jan 2024 07:02:49 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q8-20020a170902788800b001d5a17ee237sm8013094pll.155.2024.01.16.07.02.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 07:02:48 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <2c4f9829-138d-41a5-8810-d13cf749fded@roeck-us.net>
-Date: Tue, 16 Jan 2024 07:02:47 -0800
+        d=1e100.net; s=20230601; t=1705417450; x=1706022250;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KZObLbH50jWGDNCNNEMPuR9WvYua1JEOsUGWqN7w/1c=;
+        b=bwDRPWhVF8koChPMsdVuXP1ZyGr+YYtBOKibvUHg7oMMXyVo3TLlDMpBUVJaiXjHOt
+         u/xJ3FMbfAiiyyWZw4MRs1qO4UdeW7mbUPqj1tZO5KuZmUUpJb3B2uOz7hx5JBHFs1Yc
+         bZeoXuGjUClEDrNPmRyuMWWQ4ZVA/twOJ9AFhdqZIdHdwvzNCOdDzmO/AGA39xw6E5qf
+         IWevMHs3UDCoBPuL4AOD+PkDDBWDnxL48B1e4d8QhSLq/aR1Is3SgJ7Fab3vNCUayGkP
+         b/JJOuJihhEc+lNA8uPJyWpaaErBVty/Km9OuaUzTt2sKU4o3wo8ubRwwtccdqm2QpLm
+         yi+g==
+X-Gm-Message-State: AOJu0YyY8EwtD3HxWTgkO6N0WXIOMkaKiKKuNT+zYWmcMBZ3v6v7SoPB
+	yQTDIy6QSZ7C9Ly8+EzlRhKN91mkDfGT6w==
+X-Google-Smtp-Source: AGHT+IFze1yvXUIStG9IAEYe4ZfyGuJQ3Hn+kkqjQ4DOfInluQBD4+vrj7DhqXAwXsSlpR4SCc6kyw==
+X-Received: by 2002:a2e:b454:0:b0:2cd:52a5:88ec with SMTP id o20-20020a2eb454000000b002cd52a588ecmr3463178ljm.9.1705417450385;
+        Tue, 16 Jan 2024 07:04:10 -0800 (PST)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id ew3-20020a056402538300b00558a1937dddsm6688768edb.63.2024.01.16.07.04.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 07:04:09 -0800 (PST)
+Date: Tue, 16 Jan 2024 16:04:09 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Xiao Wang <xiao.w.wang@intel.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	conor.dooley@microchip.com, heiko@sntech.de, haicheng.li@intel.com, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Optimize crc32 with Zbc extension
+Message-ID: <20240116-9f09b002afc2337ab5e41e3f@orel>
+References: <20240105080830.3738117-1-xiao.w.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] watchdog: qcom: fine tune the max timeout value
- calculation
-Content-Language: en-US
-To: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240116-wdt-v2-1-501c7694c3f0@quicinc.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240116-wdt-v2-1-501c7694c3f0@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240105080830.3738117-1-xiao.w.wang@intel.com>
 
-On 1/16/24 00:22, Kathiravan Thirumoorthy wrote:
-> To determine the max_timeout value, the below calculation is used.
+On Fri, Jan 05, 2024 at 04:08:30PM +0800, Xiao Wang wrote:
+> As suggested by the B-ext spec, the Zbc (carry-less multiplication)
+> instructions can be used to accelerate CRC calculations. Currently, the
+> crc32 is the most widely used crc function inside kernel, so this patch
+> focuses on the optimization of just the crc32 APIs.
 > 
-> 	max_timeout = 0x10000000 / clk_rate
+> Compared with the current table-lookup based optimization, Zbc based
+> optimization can also achieve large stride during CRC calculation loop,
+> meantime, it avoids the memory access latency of the table-lookup based
+> implementation and it reduces memory footprint.
 > 
-> cat /sys/devices/platform/soc@0/b017000.watchdog/watchdog/watchdog0/max_timeout
-> 8388
+> If Zbc feature is not supported in a runtime environment, then the
+> table-lookup based implementation would serve as fallback via alternative
+> mechanism. To avoid the performance concern of unalignment access, we also
+> use the fallback implementation to handle the head and tail bytes if any,
+> the main body is accelerated by Zbc extension.
 > 
-> However, this is not valid for all the platforms. IPQ SoCs starting from
-> IPQ40xx and recent Snapdragron SoCs also has the bark and bite time field
-> length of 20bits, which can hold max up to 32 seconds if the clk_rate is
-> 32KHz.
-> 
-> If the user tries to configure the timeout more than 32s, then the value
-> will be truncated and the actual value will not be reflected in the HW.
-> 
-> To avoid this, lets add a variable called max_tick_count in the device data,
-> which defines max counter value of the WDT controller. Using this, max-timeout
-> will be calculated in runtime for various WDT contorllers.
-> 
-> With this change, we get the proper max_timeout as below and restricts
-> the user from configuring the timeout higher than this.
-> 
-> cat /sys/devices/platform/soc@0/b017000.watchdog/watchdog/watchdog0/max_timeout
-> 32
-> 
-> Signed-off-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+> This patch is tested on QEMU VM with the kernel CRC32 selftest.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Ideally we'd also have the results of some benchmarks, or at least a
+dynamic instruction count or something, but I don't suspect that the
+table-lookup would "win" over Zbc. The bigger question is whether we
+want three implementations, because I assume we want Zvbc, particularly
+since [1] says
 
+"""
+Zvbc is listed as a development option for use in other algorithms,
+and will become mandatory. Scalar Zbc is now listed as an expansion
+option, i.e., it will probably not become mandatory.
+"""
+
+[1] https://github.com/riscv/riscv-profiles/blob/main/rva23-profile.adoc
+
+
+A few nits below.
+
+> 
+> Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
 > ---
-> Changes in v2:
-> - drop the minimum timeout change from 30s to 32s
-> - Link to v1: https://lore.kernel.org/r/20240111-wdt-v1-1-28c648b3b1f3@quicinc.com
-> ---
->   drivers/watchdog/qcom-wdt.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+>  arch/riscv/Kconfig      |  23 +++++
+>  arch/riscv/lib/Makefile |   1 +
+>  arch/riscv/lib/crc32.c  | 216 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/crc32.h   |   3 +
+>  4 files changed, 243 insertions(+)
+>  create mode 100644 arch/riscv/lib/crc32.c
 > 
-> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> index 9e790f0c2096..006f9c61aa64 100644
-> --- a/drivers/watchdog/qcom-wdt.c
-> +++ b/drivers/watchdog/qcom-wdt.c
-> @@ -41,6 +41,7 @@ static const u32 reg_offset_data_kpss[] = {
->   struct qcom_wdt_match_data {
->   	const u32 *offset;
->   	bool pretimeout;
-> +	u32 max_tick_count;
->   };
->   
->   struct qcom_wdt {
-> @@ -177,11 +178,13 @@ static const struct watchdog_info qcom_wdt_pt_info = {
->   static const struct qcom_wdt_match_data match_data_apcs_tmr = {
->   	.offset = reg_offset_data_apcs_tmr,
->   	.pretimeout = false,
-> +	.max_tick_count = 0x10000000U,
->   };
->   
->   static const struct qcom_wdt_match_data match_data_kpss = {
->   	.offset = reg_offset_data_kpss,
->   	.pretimeout = true,
-> +	.max_tick_count = 0xFFFFFU,
->   };
->   
->   static int qcom_wdt_probe(struct platform_device *pdev)
-> @@ -236,7 +239,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->   	 */
->   	wdt->rate = clk_get_rate(clk);
->   	if (wdt->rate == 0 ||
-> -	    wdt->rate > 0x10000000U) {
-> +	    wdt->rate > data->max_tick_count) {
->   		dev_err(dev, "invalid clock rate\n");
->   		return -EINVAL;
->   	}
-> @@ -260,7 +263,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->   
->   	wdt->wdd.ops = &qcom_wdt_ops;
->   	wdt->wdd.min_timeout = 1;
-> -	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
-> +	wdt->wdd.max_timeout = data->max_tick_count / wdt->rate;
->   	wdt->wdd.parent = dev;
->   	wdt->layout = data->offset;
->   
-> 
-> ---
-> base-commit: 9e21984d62c56a0f6d1fc6f76b646212cfd7fe88
-> change-id: 20240111-wdt-5bd079ecf14d
-> 
-> Best regards,
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 95a2a06acc6a..d8b4fb697df2 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -549,6 +549,29 @@ config RISCV_ISA_ZBB
+>  
+>  	   If you don't know what to do here, say Y.
+>  
+> +config TOOLCHAIN_HAS_ZBC
+> +	bool
+> +	default y
+> +	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zbc)
+> +	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zbc)
+> +	depends on LLD_VERSION >= 150000 || LD_VERSION >= 23900
+> +	depends on AS_HAS_OPTION_ARCH
+> +
+> +config RISCV_ISA_ZBC
+> +	bool "Zbc extension support for carry-less multiplication instructions"
+> +	depends on TOOLCHAIN_HAS_ZBC
+> +	depends on MMU
+> +	depends on RISCV_ALTERNATIVE
+> +	default y
+> +	help
+> +	   Adds support to dynamically detect the presence of the Zbc
+> +	   extension (carry-less multiplication) and enable its usage.
+> +
+> +	   The Zbc extension could accelerate CRC (cyclic redundancy check)
+> +	   calculations.
+> +
+> +	   If you don't know what to do here, say Y.
+> +
+>  config RISCV_ISA_ZICBOM
+>  	bool "Zicbom extension support for non-coherent DMA operation"
+>  	depends on MMU
+> diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
+> index 26cb2502ecf8..183bf2097d57 100644
+> --- a/arch/riscv/lib/Makefile
+> +++ b/arch/riscv/lib/Makefile
+> @@ -9,5 +9,6 @@ lib-y			+= strncmp.o
+>  lib-$(CONFIG_MMU)	+= uaccess.o
+>  lib-$(CONFIG_64BIT)	+= tishift.o
+>  lib-$(CONFIG_RISCV_ISA_ZICBOZ)	+= clear_page.o
+> +lib-$(CONFIG_RISCV_ISA_ZBC)	+= crc32.o
+>  
+>  obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+> diff --git a/arch/riscv/lib/crc32.c b/arch/riscv/lib/crc32.c
+> new file mode 100644
+> index 000000000000..1a24994df826
+> --- /dev/null
+> +++ b/arch/riscv/lib/crc32.c
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Accelerated CRC32 implementation with Zbc extension.
+> + *
+> + * Copyright (C) 2024 Intel Corporation
+> + *
+> + * Authors:
+> + *     Xiao Wang <xiao.w.wang@intel.com>
+> + */
+> +
+> +#include <asm/hwcap.h>
+> +#include <asm/alternative-macros.h>
+> +#include <asm/byteorder.h>
+> +
+> +#include <linux/types.h>
+> +#include <linux/crc32poly.h>
+> +#include <linux/crc32.h>
+> +#include <linux/byteorder/generic.h>
+> +
+> +#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
+min() from linux/minmax.h?
+
+> +
+> +#if (BITS_PER_LONG == 64)
+
+I think riscv prefers
+
+ #if __riscv_xlen == 64
+
+In any case, the () are unnecessary.
+
+> +/* Slide by XLEN bits per iteration */
+> +# define STEP_ORDER 3
+> +
+> +/* Each below polynomial quotient has an implicit bit for 2^XLEN */
+> +
+> +/* Polynomial quotient of (2^(XLEN+32))/CRC32_POLY, in LE format */
+> +# define CRC32_POLY_QT_LE	0x5a72d812fb808b20
+> +
+> +/* Polynomial quotient of (2^(XLEN+32))/CRC32C_POLY, in LE format */
+> +# define CRC32C_POLY_QT_LE	0xa434f61c6f5389f8
+> +
+> +/* Polynomial quotient of (2^(XLEN+32))/CRC32_POLY, in BE format, it should be
+> + * the same as the bit-reversed version of CRC32_POLY_QT_LE
+> + */
+> +# define CRC32_POLY_QT_BE	0x04d101df481b4e5a
+> +#elif (BITS_PER_LONG == 32)
+> +# define STEP_ORDER 2
+> +/* Each quotient should match the upper half of its analog in RV64 */
+> +# define CRC32_POLY_QT_LE	0xfb808b20
+> +# define CRC32C_POLY_QT_LE	0x6f5389f8
+> +# define CRC32_POLY_QT_BE	0x04d101df
+> +#else
+> +# error "Unexpected BITS_PER_LONG"
+> +#endif
+> +
+> +#define STEP (1 << STEP_ORDER)
+> +#define OFFSET_MASK (STEP - 1)
+
+Should tab out the values of these defines so they line up.
+
+> +
+> +/*
+> + * Refer to https://www.corsix.org/content/barrett-reduction-polynomials for
+> + * better understanding of how this math works.
+
+Thanks for this pointer. I read it, but I didn't digest it enough to
+understand it, which means my review isn't confirming the math is
+correct.
+
+> + *
+> + * let "+" denotes polynomial add (XOR)
+> + * let "-" denotes polynomial sub (XOR)
+> + * let "*" denotes polynomial multiplication
+> + * let "/" denotes polynomial floor division
+> + * let "S" denotes source data, XLEN bit wide
+> + * let "P" denotes CRC32 polynomial
+> + * let "T" denotes 2^(XLEN+32)
+> + * let "QT" denotes quotient of T/P, with the bit for 2^XLEN being implicit
+> + *
+> + * crc32(S, P)
+> + * => S * (2^32) - S * (2^32) / P * P
+> + * => lowest 32 bits of: S * (2^32) / P * P
+> + * => lowest 32 bits of: S * (2^32) * (T / P) / T * P
+> + * => lowest 32 bits of: S * (2^32) * quotient / T * P
+> + * => lowest 32 bits of: S * quotient / 2^XLEN * P
+> + * => lowest 32 bits of: (clmul_high_part(S, QT) + S) * P
+> + * => clmul_low_part(clmul_high_part(S, QT) + S, P)
+> + *
+> + * In terms of below implementations, the BE case is more intuitive, since the
+> + * higher order bit sits at more significant position.
+> + */
+> +
+> +typedef u32 (*fallback)(u32 crc, unsigned char const *p, size_t len);
+> +
+> +static inline u32 __pure crc32_le_generic(u32 crc, unsigned char const *p,
+> +#if (BITS_PER_LONG == 64)
+> +					  size_t len, u32 poly, u64 poly_qt,
+> +#else
+> +					  size_t len, u32 poly, u32 poly_qt,
+> +#endif
+
+How about creating a new type for poly_qt, defined as u64 for xlen=64
+and u32 for xlen=32 to avoid the #ifdef?
+
+> +					  fallback crc_fb)
+> +{
+> +	size_t offset, head_len, tail_len;
+> +	const unsigned long *p_ul;
+> +	unsigned long s;
+> +
+> +	asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+> +				      RISCV_ISA_EXT_ZBC, 1)
+> +			  : : : : legacy);
+> +
+> +	/* Handle the unalignment head. */
+> +	offset = (unsigned long)p & OFFSET_MASK;
+> +	if (offset) {
+> +		head_len = MIN(STEP - offset, len);
+> +		crc = crc_fb(crc, p, head_len);
+> +		len -= head_len;
+> +		p += head_len;
+> +	}
+> +
+> +	tail_len = len & OFFSET_MASK;
+> +	len = len >> STEP_ORDER;
+> +	p_ul = (unsigned long *)p;
+> +
+> +	for (int i = 0; i < len; i++) {
+> +#if (BITS_PER_LONG == 64)
+> +		s = (unsigned long)crc ^ __cpu_to_le64(*p_ul++);
+> +		/* We don't have a "clmulrh" insn, so use clmul + slli instead.
+> +		 */
+
+need opening /* comment wing
+
+> +		asm volatile (".option push\n"
+> +			      ".option arch,+zbc\n"
+> +			      "clmul	%0, %1, %2\n"
+> +			      "slli	%0, %0, 1\n"
+> +			      "xor	%0, %0, %1\n"
+> +			      "clmulr	%0, %0, %3\n"
+> +			      "srli	%0, %0, 32\n"
+> +			      ".option pop\n"
+> +			      : "=&r" (crc)
+> +			      : "r" (s),
+> +				"r" (poly_qt),
+> +				"r" ((u64)poly << 32)
+> +			      :);
+> +#else
+> +		s = crc ^ __cpu_to_le32(*p_ul++);
+> +		/* We don't have a "clmulrh" insn, so use clmul + slli instead.
+
+also here
+
+> +		 */
+> +		asm volatile (".option push\n"
+> +			      ".option arch,+zbc\n"
+> +			      "clmul	%0, %1, %2\n"
+> +			      "slli	%0, %0, 1\n"
+> +			      "xor	%0, %0, %1\n"
+> +			      "clmulr	%0, %0, %3\n"
+> +			      ".option pop\n"
+> +			      : "=&r" (crc)
+> +			      : "r" (s),
+> +				"r" (poly_qt),
+> +				"r" (poly)
+> +			      :);
+> +#endif
+
+Instead of the #ifdef here, we could provide function wrappers for the asm
+which would be defined above in the first #ifdef ladder.
+
+> +	}
+> +
+> +	/* Handle the tail bytes. */
+> +	if (tail_len)
+> +		crc = crc_fb(crc, (unsigned char const *)p_ul, tail_len);
+> +	return crc;
+> +
+> +legacy:
+> +	return crc_fb(crc, p, len);
+> +}
+> +
+> +u32 __pure crc32_le(u32 crc, unsigned char const *p, size_t len)
+> +{
+> +	return crc32_le_generic(crc, p, len, CRC32_POLY_LE, CRC32_POLY_QT_LE,
+> +				crc32_le_base);
+> +}
+> +
+> +u32 __pure __crc32c_le(u32 crc, unsigned char const *p, size_t len)
+> +{
+> +	return crc32_le_generic(crc, p, len, CRC32C_POLY_LE,
+> +				CRC32C_POLY_QT_LE, __crc32c_le_base);
+> +}
+> +
+> +u32 __pure crc32_be(u32 crc, unsigned char const *p, size_t len)
+> +{
+> +	size_t offset, head_len, tail_len;
+> +	const unsigned long *p_ul;
+> +	unsigned long s;
+> +
+> +	asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+> +				      RISCV_ISA_EXT_ZBC, 1)
+> +			  : : : : legacy);
+> +
+> +	/* Handle the unalignment head. */
+> +	offset = (unsigned long)p & OFFSET_MASK;
+> +	if (offset) {
+> +		head_len = MIN(STEP - offset, len);
+> +		crc = crc32_be_base(crc, p, head_len);
+> +		len -= head_len;
+> +		p += head_len;
+> +	}
+> +
+> +	tail_len = len & OFFSET_MASK;
+> +	len = len >> STEP_ORDER;
+> +	p_ul = (unsigned long *)p;
+> +
+> +	for (int i = 0; i < len; i++) {
+> +#if (BITS_PER_LONG == 64)
+> +		s = (unsigned long)crc << 32;
+> +		s ^= __cpu_to_be64(*p_ul++);
+> +#else
+> +		s = crc ^ __cpu_to_be32(*p_ul++);
+> +#endif
+
+Could write the above without #ifdef with
+
+ if (IS_ENABLED(CONFIG_64BIT)) {
+    ...
+ } else {
+    ...
+ }
+
+> +		asm volatile (".option push\n"
+> +			      ".option arch,+zbc\n"
+> +			      "clmulh	%0, %1, %2\n"
+> +			      "xor	%0, %0, %1\n"
+> +			      "clmul	%0, %0, %3\n"
+> +			      ".option pop\n"
+> +			      : "=&r" (crc)
+> +			      : "r" (s),
+> +				"r" (CRC32_POLY_QT_BE),
+> +				"r" (CRC32_POLY_BE)
+> +			      :);
+> +	}
+> +
+> +	/* Handle the tail bytes. */
+> +	if (tail_len)
+> +		crc = crc32_be_base(crc, (unsigned char const *)p_ul, tail_len);
+> +	return crc;
+> +
+> +legacy:
+> +	return crc32_be_base(crc, p, len);
+> +}
+> diff --git a/include/linux/crc32.h b/include/linux/crc32.h
+> index 9e8a032c1788..87f788c0d607 100644
+> --- a/include/linux/crc32.h
+> +++ b/include/linux/crc32.h
+> @@ -9,7 +9,9 @@
+>  #include <linux/bitrev.h>
+>  
+>  u32 __pure crc32_le(u32 crc, unsigned char const *p, size_t len);
+> +u32 __pure crc32_le_base(u32 crc, unsigned char const *p, size_t len);
+>  u32 __pure crc32_be(u32 crc, unsigned char const *p, size_t len);
+> +u32 __pure crc32_be_base(u32 crc, unsigned char const *p, size_t len);
+>  
+>  /**
+>   * crc32_le_combine - Combine two crc32 check values into one. For two
+> @@ -37,6 +39,7 @@ static inline u32 crc32_le_combine(u32 crc1, u32 crc2, size_t len2)
+>  }
+>  
+>  u32 __pure __crc32c_le(u32 crc, unsigned char const *p, size_t len);
+> +u32 __pure __crc32c_le_base(u32 crc, unsigned char const *p, size_t len);
+>  
+>  /**
+>   * __crc32c_le_combine - Combine two crc32c check values into one. For two
+> -- 
+> 2.25.1
+>
+
+Thanks,
+drew
