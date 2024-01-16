@@ -1,55 +1,54 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984CF10A30;
-	Tue, 16 Jan 2024 07:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64A811181
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 07:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LViGTcfc"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6d99980b2e0so7865739b3a.2;
-        Mon, 15 Jan 2024 23:25:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705389910; x=1705994710; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IFU8V44giJ9TqpBstuJqgsawkBd+gwhzF3e12FlfS0Q=;
-        b=LViGTcfc+2hEbvVLqgu7Ab/c5GFEbJ0/EUnCWV8lyOw3B3ADs4nF0PiQZLFJ4QUIbX
-         LEYWIC1n0zN1821+g0ruLZZVispET4bAdN4+YeDk/Az0VD/GQcdeehj5PjAWdR/LT+Ht
-         tM5+huWXgNpzCMnp6RhYnEQERtanmoA1nGMcKsfYQw+pwcsfvb5F7DTkCxGNLb6guRgh
-         EirO36KzzV/6aL+XjG65uWUP0r7cfO+ayaRmIUCebMT09e2Ji39CN9tlsLaU+PYdwvtr
-         kr8/dixocCYYraGeDgyzAHk0pAhn7HmZy46gPhmJZTI47M7/urdd2aMl38etDGzqLq3r
-         qdLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705389910; x=1705994710;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IFU8V44giJ9TqpBstuJqgsawkBd+gwhzF3e12FlfS0Q=;
-        b=gI/ZxjuK+9HISimxIVUeBvUvIQqs8bLKj0DioJBHj/HE3vsuZcIa0YFIMso1Xe9JsK
-         l+NMffYCwATkuFGs1Fb3Kzp6yM6emerjipkd6nDXrC3/xAKSlK9ffoSV8mydpnS9hoqo
-         ZmdpqCbF740/veswIOWihUsrKWED3G9K1/FZ45oR+vKvdrm8yn3LZs7cd6YJGdwtNNEk
-         KmEZUo13xnJx7WIRHSEKfEoUnCoPyS7PSRjOjE1ch200ohYI7oCuGODPmlPMXsDOEX3X
-         an1XFMqUjn8aZ92sAH+VJwfX/ceCUNTxanAgz5CyNP/0ZKt2M18S61rOt3JlEnjmxVBD
-         tbyw==
-X-Gm-Message-State: AOJu0Yz7nRa9IUfr2RL8YbBbmtPSbmNR9T4XCe14LU4w/D9BIJRzeOhI
-	C62H4yx9nNpuZZeIjjeP6xI=
-X-Google-Smtp-Source: AGHT+IGAbSbVrbiKZ/CglJ3QzFOrQSx/78jF/361yQ4BQFSCLIL9XJjqe4MDGnOamYNJcFJWg6vmtQ==
-X-Received: by 2002:a05:6a00:b4c:b0:6d9:b075:a7d6 with SMTP id p12-20020a056a000b4c00b006d9b075a7d6mr9267851pfo.19.1705389909792;
-        Mon, 15 Jan 2024 23:25:09 -0800 (PST)
-Received: from amiden.localdomain ([2402:e280:2243:161:4f40:49bc:8675:1a83])
-        by smtp.gmail.com with ESMTPSA id t12-20020a056a00138c00b006d9ecb8e956sm8853148pfg.173.2024.01.15.23.25.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 23:25:09 -0800 (PST)
-From: Amitesh Singh <singh.amitesh@gmail.com>
-To: pavel@ucw.cz
-Cc: lee@kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Amitesh Singh <singh.amitesh@gmail.com>
-Subject: [PATCH] leds/pca963x: implement power management
-Date: Tue, 16 Jan 2024 12:54:57 +0530
-Message-ID: <20240116072457.383438-1-singh.amitesh@gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="G38fTUco"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1705389924; bh=ZTnSJxE23Nw64lBhpFMiDwgBba+3N2Q91LfEvH/xgy8=;
+	h=From:To:Cc:Subject:Date;
+	b=G38fTUcoKNLSZd/QUBsWbCN/RnPFaiNfIYw18aeBSLdQUIRkuDB/RPJofM8J+aaI4
+	 f85uc3qsOEtWcRmqRRFREBHHPH8w17O4/+SzyYhRHMo3Nka16AdWCpaFDdjR0OlMRE
+	 Z0mYZl5oxZbkU9So7i1fRlgeuWG0YR+70RmLvqbs=
+Received: from cyy-pc.lan ([2001:da8:c800:d084:c65a:644a:13d7:e72c])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id 651A00DE; Tue, 16 Jan 2024 15:25:17 +0800
+X-QQ-mid: xmsmtpt1705389917t93fy8ema
+Message-ID: <tencent_0B319B215E8D487CC082C0DA5E8E46B86B08@qq.com>
+X-QQ-XMAILINFO: Mk33QmgWauDsVhZvDrj7M3dssC3UeSG28JJBftbgZZxw/z6e0XiKTnW6dUZ7ub
+	 q4us9jOKT7MYrIpaxAp7A0JRfI0iTENFWvZCGJp7KoV736goBQFeEBtW6xmkl3opdSb9131K+bwo
+	 skscGb5PaYHkklbTch8emcjsdSZ/CEna1Pc04OlqWBJ7tKAaROnot02p2pUly3jCvr3mZFPujXtD
+	 MFK0TbmKyMFY7A2CaWEQVq1zx7l/E7gw4suN8RUFCIzJMJ3f905PGXWosBx57wbSGwXjZh4v9r+Z
+	 0LkV/9avVPphtGQLt12EZz5W3+KoJ/0T+PqOPtkT20PuxKpKZRnjClVjzKzAd6uz3Xw2UfLgQw2B
+	 ZTVHqKKNjdLA7a/IEHfyfO2hS7bl+ZS4h+T4JgGoDS4WB81HMRqOG6MrURCRbM4NFV7XEWgpE7bp
+	 P1CIsQPY9YDCgRaqRWUAtrEck1Oi8m61cLmMUAflo1cfWN/peusc0YbjTX/NIuz1BgU0VXh/B7Mo
+	 SOqG4hK4+PqPCMr9tNxCXvMPNMGjc3WVXZAR+BB5Rxyks+D+ZjvIwu8VNQP8LVPqNTXSfArz3fUY
+	 d+AuLzIkQ6d/v6E6y14DGQvHRKx7z5tP7UVRI7M3cB/LJew4jHOnJCUC6aQwK33kpW5t2IDKWD2e
+	 1ChYPRufeFC8NsiBXCXXW/8upYqOAKptW6mLfdKtJ4BdDYG1n69j9Ous5d7PqdDEZ8l3u5NeuycS
+	 UWPmJKH0TmPfxTTuYtTLly2tKN7URRCHpJTllYxSdAFVwgcZgj+RR19qr2FQFw802669848wQan2
+	 /WavfQo3m+cd8g7q3aI0JHafClIwOoHx/iHpx6bddDst3HPrd+5fWdvwj3D6ehZG+nqDAHNHbhEm
+	 Z8QsRaxfcGI+i+/Yh4c4B9y5DVnA+mGrmtfCB5mdywA8FYD5v82QTJPi7T2ZnQEfNBk/EMye7dZ4
+	 2v2E/t+guRkynBfXlF21eXMiOMfdjgd7mLxS0TqnTXOkq1OQvNcr1akSig9Pll
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Yangyu Chen <cyy@cyyself.name>
+To: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Jiuyang Liu <liu@jiuyang.me>,
+	Yichuan Gao <i@gycis.me>,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: [PATCH] drm/ttm: only use DMA32 if needed for dummy_read_page
+Date: Tue, 16 Jan 2024 15:24:06 +0800
+X-OQ-MSGID: <20240116072406.107206-1-cyy@cyyself.name>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,78 +58,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This implements power management in upstream driver
-for pca9633 which enables device sleep and resume
-on system-wide sleep/hibernation
+Some platforms may not have any memory in ZONE_DMA32 and use IOMMU to allow
+32-bit-DMA-only device to work. Forcing GFP_DMA32 on dummy_read_page will
+fail in such platforms. Only use DMA32 when it must to get the bug
+resolved.
 
-Signed-off-by: Amitesh Singh <singh.amitesh@gmail.com>
+Signed-off-by: Yangyu Chen <cyy@cyyself.name>
 ---
- drivers/leds/leds-pca963x.c | 38 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/gpu/drm/ttm/ttm_device.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
-index 47223c850e4b..2474e40d8479 100644
---- a/drivers/leds/leds-pca963x.c
-+++ b/drivers/leds/leds-pca963x.c
-@@ -39,6 +39,7 @@
- #define PCA963X_LED_PWM		0x2	/* Controlled through PWM */
- #define PCA963X_LED_GRP_PWM	0x3	/* Controlled through PWM/GRPPWM */
- 
-+#define PCA963X_MODE1_SLEEP     0x04    /* Normal mode or Low Power mode, oscillator off */
- #define PCA963X_MODE2_OUTDRV	0x04	/* Open-drain or totem pole */
- #define PCA963X_MODE2_INVRT	0x10	/* Normal or inverted direction */
- #define PCA963X_MODE2_DMBLNK	0x20	/* Enable blinking */
-@@ -380,6 +381,42 @@ static int pca963x_register_leds(struct i2c_client *client,
- 	return ret;
+diff --git a/drivers/gpu/drm/ttm/ttm_device.c b/drivers/gpu/drm/ttm/ttm_device.c
+index d48b39132b32..62f16fb72428 100644
+--- a/drivers/gpu/drm/ttm/ttm_device.c
++++ b/drivers/gpu/drm/ttm/ttm_device.c
+@@ -63,7 +63,7 @@ static void ttm_global_release(void)
+ 	mutex_unlock(&ttm_global_mutex);
  }
  
-+#ifdef CONFIG_PM_SLEEP
-+static int pca963x_suspend(struct device *dev)
-+{
-+	struct pca963x *chip;
-+	u8 reg;
-+
-+	chip = dev_get_drvdata(dev);
-+
-+	reg = i2c_smbus_read_byte_data(chip->client, PCA963X_MODE1);
-+	reg = reg | (1 << PCA963X_MODE1_SLEEP);
-+	i2c_smbus_write_byte_data(chip->client, PCA963X_MODE1, reg);
-+
-+	return 0;
-+}
-+
-+static int pca963x_resume(struct device *dev)
-+{
-+	struct pca963x *chip;
-+	u8 reg;
-+
-+	chip = dev_get_drvdata(dev);
-+
-+	reg = i2c_smbus_read_byte_data(chip->client, PCA963X_MODE1);
-+	reg = reg & ~(1 << PCA963X_MODE1_SLEEP);
-+	i2c_smbus_write_byte_data(chip->client, PCA963X_MODE1, reg);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops pca963x_pmops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(pca963x_suspend, pca963x_resume)
-+};
-+
-+static SIMPLE_DEV_PM_OPS(pca963x_pm, pca963x_suspend, pca963x_resume);
-+
- static const struct of_device_id of_pca963x_match[] = {
- 	{ .compatible = "nxp,pca9632", },
- 	{ .compatible = "nxp,pca9633", },
-@@ -430,6 +467,7 @@ static struct i2c_driver pca963x_driver = {
- 	.driver = {
- 		.name	= "leds-pca963x",
- 		.of_match_table = of_pca963x_match,
-+		.pm = &pca963x_pmops
- 	},
- 	.probe = pca963x_probe,
- 	.id_table = pca963x_id,
+-static int ttm_global_init(void)
++static int ttm_global_init(bool use_dma32)
+ {
+ 	struct ttm_global *glob = &ttm_glob;
+ 	unsigned long num_pages, num_dma32;
+@@ -95,7 +95,8 @@ static int ttm_global_init(void)
+ 	ttm_pool_mgr_init(num_pages);
+ 	ttm_tt_mgr_init(num_pages, num_dma32);
+ 
+-	glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32);
++	glob->dummy_read_page = use_dma32 ? alloc_page(__GFP_ZERO | GFP_DMA32) :
++					    alloc_page(__GFP_ZERO);
+ 
+ 	if (unlikely(glob->dummy_read_page == NULL)) {
+ 		ret = -ENOMEM;
+@@ -200,7 +201,7 @@ int ttm_device_init(struct ttm_device *bdev, const struct ttm_device_funcs *func
+ 	if (WARN_ON(vma_manager == NULL))
+ 		return -EINVAL;
+ 
+-	ret = ttm_global_init();
++	ret = ttm_global_init(use_dma32);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.43.0
 
