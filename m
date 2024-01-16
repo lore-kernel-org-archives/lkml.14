@@ -1,103 +1,114 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.119])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E445718EB4;
-	Tue, 16 Jan 2024 12:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-59584f41f1eso841986eaf.1;
-        Tue, 16 Jan 2024 04:08:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705406910; x=1706011710;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QruqD5hduNzd94C2ksyeMaDZDm2JrVFVFdIyp5RJ9mA=;
-        b=aadhuc08Phl1P5W463JVPcrmN5d7q6l86Fs2Ieb1+3zHjysfEZY5jB/blALE5ONQe5
-         Ux+LshrUFRhlh19ePDjfLPZhgWGbsvxr/FoNd2EaGkEgt4pOKijdrGLQIkKYrK4w2We+
-         fQFEn8vO0WxBcVMEjn0RrfQMsEKg+K8+I51sYpG/NLWHUSKaBlmSb7gy5ldpzdWK3pO/
-         ew8c3lDO5u1ZF4Hnm/+HR0EmPU+jVgQgcBH0d6gmvY8jNVbO7NG5f8bmMMq6K0j66MET
-         d9sKPLA3sBfdowLuLsEBaKAHRjPG1sw8hdt/VGjsst3FXEcGjdUyjbepB4PUbKFGBtvY
-         QoBA==
-X-Gm-Message-State: AOJu0Yz5ffXF7vPG9aovcHhxsudvacUuwVk5HSKz4uE/n2CcniNxP/1g
-	ZVLn5BHpegExuqkVYuDlLb2o/vWgx1X6u+P1V0X7aJp6ZE8=
-X-Google-Smtp-Source: AGHT+IG7B6OBei7Cxtss92swB49Fb3UqDmPcZzPvNLER8i15WI81CmWn6VjN3hUbvwo0bSprnAYyvOEXDeFCZbufId4=
-X-Received: by 2002:a4a:d68a:0:b0:598:e013:676d with SMTP id
- i10-20020a4ad68a000000b00598e013676dmr6073596oot.0.1705406909850; Tue, 16 Jan
- 2024 04:08:29 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547331BC37;
+	Tue, 16 Jan 2024 12:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="b/0aKTBh"
+Received: from mail-auth.avm.de (unknown [IPv6:2001:bf0:244:244::71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Tue, 16 Jan 2024 13:01:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
+	t=1705406464; bh=LTvkD50jnbDyC8Lwck8C4IOhXUM+7Ro962nBVa5evZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b/0aKTBheQflYtrNmb+bkO8c6Unq4RO+G+asjb4jdzprQvi3LMBjwCJFZFt6N73GD
+	 GgZ0kGZI6ED/G+Bt7XQfrSEIlTAT/tGZid0ZPcVilfK80xlTdf6geykExZp+v9cI9O
+	 LzyH/A/AOeI6X6of0RHOix6IpTmcuQ1Ys2sw4MTs=
+Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
+	by mail-auth.avm.de (Postfix) with ESMTPA id 6F19380397;
+	Tue, 16 Jan 2024 13:01:04 +0100 (CET)
+Received: from reykjavik.ads.avm.de (unknown [172.17.89.91])
+	by buildd.core.avm.de (Postfix) with ESMTPS id 54D51180C48;
+	Tue, 16 Jan 2024 13:01:04 +0100 (CET)
+Date: Tue, 16 Jan 2024 13:01:01 +0100
+From: Nicolas Schier <n.schier@avm.de>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Tomasz Figa <tfiga@chromium.org>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jesse Taube <Mr.Bossman075@gmail.com>
+Subject: Re: [PATCH] kconfig: menuconfig: Make hidden options show as dim
+Message-ID: <ZaZv_TNR5_1zOCji@reykjavik.ads.avm.de>
+References: <20231228054630.3595093-1-tfiga@chromium.org>
+ <CAK7LNATBipJtprjvvRVYg8JcYOFXQdpLEyEc+4+8j1PtBQ+PUg@mail.gmail.com>
+ <CAAFQd5C3vAUJhKiQ1LPkZv3dJxNvK4QinRezV9Q8rz_Ov6FSUQ@mail.gmail.com>
+ <CAK7LNAQcaDneE4rnjvV+GTSBBMozm5deu_q9+STTn60ervZJbA@mail.gmail.com>
+ <CAAFQd5DcxL80cb8w9OZs0mpD=Y3K=LmM7exG7U_DaSsMkfni7Q@mail.gmail.com>
+ <CAK7LNASyiYasGa2_Ppp54nEq2m08q_Z_keViZDCavmNN0rBAzQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 16 Jan 2024 13:08:18 +0100
-Message-ID: <CAJZ5v0hSZRrS7+aeqCJek5APiObgo3BW04cS0Circreb0JpJTA@mail.gmail.com>
-Subject: [GIT PULL] More power management updates for v6.8-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNASyiYasGa2_Ppp54nEq2m08q_Z_keViZDCavmNN0rBAzQ@mail.gmail.com>
+X-purgate-ID: 149429::1705406464-FCD755FF-BEEFE864/0/0
+X-purgate-type: clean
+X-purgate-size: 2232
+X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate: clean
+X-purgate: error
 
-Hi Linus,
+On Tue, Jan 16, 2024 at 07:58:05PM +0900, Masahiro Yamada wrote:
+> On Mon, Jan 15, 2024 at 2:04 PM Tomasz Figa <tfiga@chromium.org> wrote:
+> >
+> > On Sat, Jan 13, 2024 at 8:23 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > On Wed, Jan 10, 2024 at 10:05 PM Tomasz Figa <tfiga@chromium.org> wrote:
+> > > >
+> > > > On Fri, Dec 29, 2023 at 1:10 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, Dec 28, 2023 at 2:46 PM Tomasz Figa <tfiga@chromium.org> wrote:
+> > > > > >
+> > > > > > When hidden options are toggled on (using 'z'), the number of options
+> > > > > > on the screen can be overwhelming and may make it hard to distinguish
+> > > > > > between available and hidden ones. Make them easier to distinguish by
+> > > > > > displaying the hidden one as dim (using the A_DIM curses attribute).
+> > > > > >
+> > > > > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> > > > >
+> > > > >
+> > > > >
+> > > > > Do you think this is useful?
+> > > > >
+> > > > > This changes the color only when you select a hidden item.
+> > > > >
+> > > > >
+> > > > > For unselected items, you cannot distinguish hidden ones,
+> > > > > as A_DIM has no effect to black text.
+> > > > >
+> > > > >
+> > > >
+> > > > Hmm, are you sure about that? For me it seems to dim the text. it
+> > > > seems to be also used in the existing code for dlg.button_inactive.atr
+> > > > of the mono theme:
+> > > >
+> > > > https://elixir.bootlin.com/linux/latest/source/scripts/kconfig/lxdialog/util.c#L26
+> > >
+> > >
+> > >
+> > > Then, your code works only on the mono theme.
+> > > (when your terminal does not support color, or
+> > > "MENUCONFIG_COLOR=mono make menuconfig")
+> > >
+> >
+> > No, that's not what I meant. It works for me for all themes, see the
+> > screenshot at https://postimg.cc/sBsM0twT . The terminal is tmux
+> > inside hterm (which in turn is supposed to be compatible with xterm).
+> > I guess I can test a couple of different terminals.
+> >
+> > In which terminal is it not working for you?
+> 
+> 
+> I use gnome-terminal.
+> The disto is Ubuntu 23.10
 
-Please pull from the tag
+I see the same behaviour as Masahiro described with foot 1.13.1 on
+Debian 12.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-6.8-rc1-2
-
-with top-most commit 9223614ea760a77873c7061875cb91963e6f79b7
-
- Merge branches 'pm-sleep', 'pm-cpufreq' and 'pm-qos' into pm
-
-on top of commit 7da71072e1d6967c0482abcbb5991ffb5953fdf2
-
- Merge tag 'pm-6.8-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-
-to receive more power management updates for 6.8-rc1.
-
-These restore the asynchronous device resume optimization removed by the
-previous PM merge, make the intel_pstate driver work better on Meteor
-Lake systems, optimize the PM QoS core code slightly and fix up typos
-in admin-guide.
-
-Specifics:
-
- - Restore the system-wide asynchronous device resume optimization
-   removed by a recent concurrency fix (Rafael J. Wysocki).
-
- - Make the intel_pstate cpufreq driver allow Meteor Lake systems to run
-   at somewhat higher frequencies (Srinivas Pandruvada).
-
- - Make the PM QoS core code use kcalloc() for array allocation (Erick
-   Archer).
-
- - Fix two PM-related typos in admin-guide (Erwan Velu).
-
-Thanks!
-
-
----------------
-
-Erick Archer (1):
-      PM: QoS: Use kcalloc() instead of kzalloc()
-
-Erwan Velu (1):
-      Documentation: admin-guide: PM: Fix two typos
-
-Rafael J. Wysocki (1):
-      PM: sleep: Restore asynchronous device resume optimization
-
-Srinivas Pandruvada (1):
-      cpufreq: intel_pstate: Update hybrid scaling factor for Meteor Lake
-
----------------
-
- Documentation/admin-guide/acpi/cppc_sysfs.rst |   2 +-
- Documentation/admin-guide/pm/amd-pstate.rst   |   2 +-
- drivers/base/power/main.c                     | 117 ++++++++++++++------------
- drivers/base/power/qos.c                      |   2 +-
- drivers/cpufreq/intel_pstate.c                |  21 ++++-
- include/linux/pm.h                            |   1 +
- 6 files changed, 86 insertions(+), 59 deletions(-)
+Kind regards,
+Nicolas
