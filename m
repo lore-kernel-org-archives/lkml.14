@@ -1,127 +1,147 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F8E1CF80;
-	Tue, 16 Jan 2024 18:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DBC1D520;
+	Tue, 16 Jan 2024 18:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705429384; cv=none; b=LDkZelu93ZkOr3yvzeuy7LkbqaEMPY3YkAo97Mbhk/DQ4KCK/+2Vqp5vYVukqP4oPfE0bd/+J6NIPW/NlHZald5YQ1SJVXVBiaYBrV9JpaSOtgoyaxWoVkRjAco9I+Gvo00ws9HDSFnmoMvCW2FnGG1d7e7xByfoYcWQ1wXf5nQ=
+	t=1705429395; cv=none; b=pUNgiuf2QUZxIT1RT4CPBZ3g/nRLqMh2VFaGtaShrlqOd8XXo93JNv2VEPlf7CxygtlZr7eyoF5psx9lYHnfbtyi8k0Sqi8TNlZdBZpn0ST5m2r6QOJ6Q2dEYBLQS/tr+S6Bd+3xU4+5LypP+K02B08rFDkVNZM4jgHSssHjIYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705429384; c=relaxed/simple;
-	bh=vOgqF5Zcc8Ylq6RHqZfJs1o320FusJ0JBsfhr/+0YmU=;
-	h=Received:X-Virus-Scanned:Received:DKIM-Signature:Received:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HmPA4ohNw6qHuvujiuWZB4FSGo+W9ae8HDb0VSEfx4n9bRn9GVq59c03u6z1sBoa0IXZn0M8e4zrotK8Kf85EkqQIrWnD1+xW0514YPcXvI+pw3d5B2vAmUo08rtwNrpThfG7ylBNm6itLmX7XtU24ewoML9xEz5kRfig6EbPtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iT/Igi1V; arc=none smtp.client-ip=65.109.113.108
+	s=arc-20240116; t=1705429395; c=relaxed/simple;
+	bh=BZZrwB54NzVpdIKnJH5IBEBJlnxfuCsPO9zMgTYYx0Q=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=N0hxUpELg5L2X2//+ejvosvbr9dBvyyjQ4uOtsj81niFzVHV5JSd4aL3CIBv9U1tvvWMsXhE3Yi/CMP/94O5h5BOEotijm+9GHzJtb555/HE0uHK/x1ro6G3l6vSmZ0+L+I5Jyd/WZOaBA+k3bO0GYcXVDuXvg11B+ZatFwDtFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udPD62db; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iT/Igi1V"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0579F40E01B2;
-	Tue, 16 Jan 2024 18:22:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 3FYGSk50diAZ; Tue, 16 Jan 2024 18:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1705429375; bh=UZ6G+J6ye64gzMjmC6lSx1WhjVghiKPeCR0bIv9HV54=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udPD62db"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9565AC433F1;
+	Tue, 16 Jan 2024 18:23:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705429394;
+	bh=BZZrwB54NzVpdIKnJH5IBEBJlnxfuCsPO9zMgTYYx0Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iT/Igi1VvZ6a4grjasUBsQ3NdbxVO1LZMf2kXl82VNfinMdUS0Ec9PcrPGaD1XYXR
-	 YdA48WrCcriSh2e1xb52ISkIy8H1Rrm524EZxg9aoINEgy9OXUaWhXGJa1lV94hImP
-	 YaODpfGf/w+A/eInOmc3DpCH5vcKshzQ9Mg3VBfLUNHhIWpa8jsF9ZzU5wtjD6WPhn
-	 DAIloOlghiaeyvEcwwen2OpIDhV0kjqSYj1GWUQm+vN63O24M4KXlaRkaruNlOwWGo
-	 h6tUDG57RTqsPMq+wIcj6Z+Z9NZ0DRB624YhMEin4N8pz2z7AbqUUiuXPHv878xWwL
-	 xULI9qMNlhWlYjI0zUTMS4dOnss7cKROp32wMTohATsxLHoXcYZR7FvUImvS6ECkrh
-	 CHT7ArPtEgM1vD2isJU2OhQk9QnEo9ikZJUhZDBpg2E9bK66pHThR7OpdEhIrDCpy6
-	 GthkzXZNIYojH/h4s6yJMI6OwM4NHagRA0EuKgVwLbu2rXVZIybUYjMnw3NLd+1bXM
-	 Ujlxrws7Vk6QaiuBPnZ8+jgrI1UrwQm2aN9MZWjwjp8Zd9ZnOKPKTi/CovQK0x5Wu/
-	 AuGWt9P+gEXnoQ0GUpRPlDUDUkghNjB1kzTfdx1ZoDopAUpzAca3zMaweDB0gIZUZr
-	 sFqXK/o7GqQGyHT5mb3FRkRU=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EA5AD40E01A9;
-	Tue, 16 Jan 2024 18:22:15 +0000 (UTC)
-Date: Tue, 16 Jan 2024 19:22:10 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Michael Roth <michael.roth@amd.com>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
-	kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de,
-	hpa@zytor.com, ardb@kernel.org, pbonzini@redhat.com,
-	seanjc@google.com, vkuznets@redhat.com, jmattson@google.com,
-	luto@kernel.org, dave.hansen@linux.intel.com, slp@redhat.com,
-	pgonda@google.com, peterz@infradead.org,
-	srinivas.pandruvada@linux.intel.com, rientjes@google.com,
-	tobin@ibm.com, vbabka@suse.cz, kirill@shutemov.name,
-	ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com, liam.merwick@oracle.com,
-	Brijesh Singh <brijesh.singh@amd.com>, rppt@kernel.org
-Subject: Re: [PATCH v1 11/26] x86/sev: Invalidate pages from the direct map
- when adding them to the RMP table
-Message-ID: <20240116182158.GHZabJRqUMAEidcee1@fat_crate.local>
-References: <20231230161954.569267-1-michael.roth@amd.com>
- <20231230161954.569267-12-michael.roth@amd.com>
- <cb604c37-aeb5-45bd-b6db-246ae724e4ca@intel.com>
- <20240112200751.GHZaGcF0-OZVJiIB7y@fat_crate.local>
- <63297d29-bb24-ac5e-0b47-35e22bb1a2f8@amd.com>
- <336b55f9-c7e6-4ec9-806b-cb3659dbfdc3@intel.com>
- <20240116161909.msbdwiyux7wsxw2i@amd.com>
+	b=udPD62dbadhMBLT6wXnbk/PYsrCAhEDzjxtawZJ9t1xIzxa7qfbeCQZOMjoea3fNW
+	 ny+vVTuIADQ7GD+7sSRh8UkwpzCq8tRLvoVD1YVU3y8RlPNrvhJaPpGtGNVQ7KuO22
+	 UY8nTAwYCb42cZNy+jP21tJ/QioS8vTLwiEwsExq/qag4FgJ8znilhvRbhZm7y66b1
+	 tRzF0R/qHyskJBWBYZfiOHQgcKgDt0IAHFQ8cv33ftqROoOt7W8C7TJgl137N72wn6
+	 VFHO8HARbFh3IEiUgbMNiIv+izNcblv8i63ErRkDoKK+o68aALBny2lm8lYFeq9y9Y
+	 QWDaX98aExH2A==
+Date: Tue, 16 Jan 2024 18:23:09 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	robh@kernel.org, alexandre.belloni@bootlin.com,
+	conor.culhane@silvaco.com, gregkh@linuxfoundation.org,
+	imx@lists.linux.dev, jirislaby@kernel.org, joe@perches.com,
+	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, miquel.raynal@bootlin.com,
+	zbigniew.lukwinski@linux.intel.com, devicetree@vger.kernel.org,
+	krzysztof.kozlowski+dt@linaro.org
+Subject: Re: [PATCH v2 2/7] dt-bindings: i3c: svc: add compatible string i3c:
+ silvaco,i3c-target-v1
+Message-ID: <20240116-retract-conclude-c47a7fc8cb21@spud>
+References: <e3b9aa63-25a5-41cc-9eb7-6e7d1eacb136@linaro.org>
+ <ZaFjaWCA6k+tiCSJ@lizhi-Precision-Tower-5810>
+ <ZaWLCrWJEMtFx8cR@lizhi-Precision-Tower-5810>
+ <1b628901-7f71-4c97-9a16-723912988417@linaro.org>
+ <ZaXqCoCHPWER94Hh@lizhi-Precision-Tower-5810>
+ <d45e31c4-914e-4cea-a145-9775b6f516ab@linaro.org>
+ <20240116-bleach-herbicide-48d636967134@wendy>
+ <3199c245-3d2d-49e8-951e-2b059de4d683@linaro.org>
+ <20240116-achiness-thievish-10a12b3c08cd@wendy>
+ <Zaa+cLGVVDSB5MYr@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qdmJxKjtdyHy6e/u"
 Content-Disposition: inline
-In-Reply-To: <20240116161909.msbdwiyux7wsxw2i@amd.com>
+In-Reply-To: <Zaa+cLGVVDSB5MYr@lizhi-Precision-Tower-5810>
 
-On Tue, Jan 16, 2024 at 10:19:09AM -0600, Michael Roth wrote:
-> So at the very least, if we went down this path, we would be worth
-> investigating the following areas in addition to general perf testing:
-> 
->   1) Only splitting directmap regions corresponding to kernel-allocatable
->      *data* (hopefully that's even feasible...)
->   2) Potentially deferring the split until an SNP guest is actually
->      run, so there isn't any impact just from having SNP enabled (though
->      you still take a hit from RMP checks in that case so maybe it's not
->      worthwhile, but that itself has been noted as a concern for users
->      so it would be nice to not make things even worse).
 
-So the gist of this whole explanation why we end up doing what we end up
-doing eventually should be in the commit message so that it is clear
-*why* we did it. 
+--qdmJxKjtdyHy6e/u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> After further discussion I think we'd concluded it wasn't necessary. Maybe
-> that's worth revisiting though. If it is necessary, then that would be
-> another reason to just pre-split the directmap because the above-mentioned
-> lazy acceptance workload/bottleneck would likely get substantially worse.
+On Tue, Jan 16, 2024 at 12:35:44PM -0500, Frank Li wrote:
+> On Tue, Jan 16, 2024 at 09:48:08AM +0000, Conor Dooley wrote:
+> > On Tue, Jan 16, 2024 at 10:33:48AM +0100, Krzysztof Kozlowski wrote:
+> > > On 16/01/2024 10:30, Conor Dooley wrote:
+> > > > On Tue, Jan 16, 2024 at 08:24:20AM +0100, Krzysztof Kozlowski wrote:
+> > > >> On 16/01/2024 03:29, Frank Li wrote:
+> > > >>>>> 	Patches were accepted after discussion, what you ponit to. So I
+> > > >>>>> think everyone agree on the name 'silvaco,i3c-master-v1'.
+> > > >>>>> 	I plan send next version to fix auto build error. Any addition=
+al
+> > > >>>>> comments about this?
+> > > >>>>
+> > > >>>> I still do not see how did you address Rob's comment and his poi=
+nt is
+> > > >>>> valid. You just did not reply to it.
+> > > >>>
+> > > >>> See https://lore.kernel.org/imx/ZXCiaKfMYYShoiXK@lizhi-Precision-=
+Tower-5810/
+> > > >>
+> > > >> First of all, that's not the answer to Rob's email, but some other
+> > > >> thread which is 99% ignored by Rob (unless he has filters for
+> > > >> "@Rob"...). Therefore no, it does not count as valid answer.
+> > > >>
+> > > >> Second, explanation does not make sense. There is no argument gran=
+ting
+> > > >> you exception from SoC specific compatibles.
+> > > >=20
+> > > > The patch could have been applied two months ago had Frank done as
+> > > > was requested (multiple times). I don't understand the resistance
+> > > > towards doing so given the process has taken way way longer as a re=
+sult.
+> > >=20
+> > > I think that Rob's comment was just skipped and original master bindi=
+ng
+> > > was merged without addressing it. I don't want to repeat the same
+> > > process for the "target". Indeed I could point this earlier... if I o=
+nly
+> > > knew that Rob pointed out that issue.
+> >=20
+> > Oh I think I got confused here. The context for this mail led me to
+> > think that this was still trying to push the i3c-master-v1 stuff through
+> > and I was commenting on my frustration with the resistance to applying
+> > the feedback received. I didn't realise that this was for another
+> > patch adding a target.
+> >=20
+> > I think you already said it, but NAK to adding any more compatibles here
+> > until the soc-specific compatible that was asked for for the imx93 is
+> > added.
+>=20
+> Is it okay for 'silvaco,i3c-target-imx93'?
 
-The reason for that should also be in the commit message.
+I don't know. Is the device in question capable of also operating in
+master mode? I have no idea from the commit message since it contains
+zero information on the hardware.
+If the exact same controller can operate in master and target mode,
+having two compatibles for the same device does not seem okay to me.
 
-And to answer:
+Also, "silvaco" does not make the imx93 so that is not a suitable vendor
+prefix. If the imx93 only supports i3c IPs in target mode, I would call
+it "<vendorofimx>,imx93-i3c" with "silvaco,i3c-target-v1" as a fallback.
 
-https://lore.kernel.org/linux-mm/20221219150026.bltiyk72pmdc2ic3@amd.com/
+Thanks,
+Conor.
 
-yes, you should add a @npages variant.
+--qdmJxKjtdyHy6e/u
+Content-Type: application/pgp-signature; name="signature.asc"
 
-See if you could use/extend this, for example:
+-----BEGIN PGP SIGNATURE-----
 
-https://lore.kernel.org/r/20240116022008.1023398-3-mhklinux@outlook.com
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZabJjQAKCRB4tDGHoIJi
+0oBVAQDDSQszcWBHPjv+zzPJ4Jwf5F3zvlWOZOaPQSVALMBS1AEAjehMKKMgybnn
+hKiuBGxe+C7CLnu7Tf0NAw78Xj6lcQY=
+=fPBb
+-----END PGP SIGNATURE-----
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--qdmJxKjtdyHy6e/u--
