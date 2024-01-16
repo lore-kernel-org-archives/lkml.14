@@ -1,119 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.fris.de (unknown [116.203.77.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C6A1CD0B;
-	Tue, 16 Jan 2024 18:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75431CF80;
+	Tue, 16 Jan 2024 18:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fris.de
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705428675; cv=none; b=c6nseegCZ9VSREN7Qic0+PQyKZzcWq/4Qlslov94vBWtJzeqzD5CLzlmTDBYAadoiUjGoVHSm/fr1l9eP7FR9gHzmKYvpRgjDO6+V3BuBMm+3RyErNePdG6yMBixFTfQ2xKOR4ZBxjV9La+8IiagH2MkIfpVYMctpFAGtjyfe4Y=
+	t=1705428694; cv=none; b=SKbCJHJuMn/5s+xjiMqCPfX3Smo9oa8ZDgc1sch6VkkolbQAIfL5dV3RXvW1uldAk6ftn6YPlCNBGsX9bbcdpPIGVTIZOiITwWs5F+cwZilJbBuHST6AnvIixHP5cq1MpmscZSIEPIfcsUymuUUP0WSq6S6d5VN8xf9iVxNzON4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705428675; c=relaxed/simple;
-	bh=HF08xReEYJVEYlyq4VqGFGWbxcsg4P7vW27ttWr2NEg=;
-	h=Received:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding; b=Yqv5zaMQ2+XkJZGANimrYL1L84VNuXIg35fqK7SWvzE14Zf4kK/9oiDy7ctNT835UaLrbeyl95vtTXC+aFYxMnURnboeXpLexFyU0NU+ECmxDn+XCMnwjOI/kGsEHXtNskJX05WWlzNy2O9/V43yypikr5FtPXJJhr/+JOW0yVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE5D4C433F1;
-	Tue, 16 Jan 2024 18:11:13 +0000 (UTC)
-Date: Tue, 16 Jan 2024 13:12:28 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
- kernel test robot <oliver.sang@intel.com>, Ajay Kaher <akaher@vmware.com>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] eventfs: Create dentries and inodes at dir open
-Message-ID: <20240116131228.3ed23d37@gandalf.local.home>
-In-Reply-To: <CAHk-=wjna5QYoWE+v3BWDwvs8N=QWjNN=EgxTN4dBbmySc-jcg@mail.gmail.com>
-References: <20240116114711.7e8637be@gandalf.local.home>
-	<CAHk-=wjna5QYoWE+v3BWDwvs8N=QWjNN=EgxTN4dBbmySc-jcg@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705428694; c=relaxed/simple;
+	bh=GXTCt2puEC8n4+KVjswTePXCWATNvAVVWhSqZSB21Qo=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Transfer-Encoding:X-Last-TLS-Session-Version;
+	b=hANarosFW1zRrR3KGWRmfiyZk0r5mzk+NwyRLA65J+pEUuso8Wiglz5LA3U2xc5DhacoYw3itboSWa0oPI1SFktNIqbrMf1m4QYOYQHu2tBB3T+xhymW488ZuMvTUozqTLMKzz/KeinPfZFZJjxD5FmSBLwSRQRK+YMfLhfuf5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=ZwV73gzm; arc=none smtp.client-ip=116.203.77.234
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="ZwV73gzm"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 55B54C0354;
+	Tue, 16 Jan 2024 19:11:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
+	t=1705428688; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=8F+jBEwJoQNU4CLdgGATObLnvkE7jK0zgOw0cTlpNEM=;
+	b=ZwV73gzmZ1RhRnjO0kp4qkFsvxRqrX9mOe0piUCiPEDu/AF5mMv+ScRHfSmgnGI3Uyp0mH
+	hSLtiCKHrjohrIx3PGgNg5nPG+P3s2Rfv2jf1dxrRv5inE6CrTH/oAuMjbIldTxaw6hgZU
+	aJ1NG/+GjcuoRN76bmxeRrJ6T6YOAURkUU0yhNHhFXmxK/eaSwbCd0TSE0+1j+ewUvBIEv
+	MMHJfdplajEs4gxiny8fU89Pw6a5onltdH1INn00Ntusd8Ol7BYhRKoI6LPQ9Nr127Vvbi
+	TheONUNZ9e9UrURkQ/Gw0rmAFXYHo7TImGUckDVaEql99VLkVlh2dspXszOU+w==
+From: Frieder Schrempf <frieder@fris.de>
+To: Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Li Yang <leoyang.li@nxp.com>,
+	netdev@vger.kernel.org,
+	Richard Cochran <richardcochran@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Christoph Niedermaier <cniedermaier@dh-electronics.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	James Hilliard <james.hilliard1@gmail.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+	=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Stefan Wahren <stefan.wahren@chargebyte.com>,
+	Tim Harvey <tharvey@gateworks.com>,
+	Yang Xiwen <forbidden405@foxmail.com>,
+	Yannic Moog <y.moog@phytec.de>
+Subject: [PATCH v2 0/3] ARM: dts: imx6dl: Add support for Sielaff i.MX6 Solo board
+Date: Tue, 16 Jan 2024 19:10:25 +0100
+Message-ID: <20240116181100.382388-1-frieder@fris.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, 16 Jan 2024 09:55:15 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-> [ html crud because I still don't have power or real Internet, just trying
-> to keep an eye on things on my phone. Mailing lists removed to avoid
-> bounces, please put them back in replies that don't have my horrible
-> formatting ]
-> 
-> No.
-> 
-> Christ, you're making things worse again
-> 
-> The reason for the bug is that you're still messing with the dentries at
-> readdir() time.
+This series adds upstream support for the Sielaff i.MX6 Solo board.
+It is used as controller and user interface in vending machines. It
+is based on the i.MX6 Solo SoC and features the following
+peripherals and interfaces:
 
-I may have deleted the comment, but the only reason I created the
-inodes/destries is to keep the consistent inode number as it's created at
-the time the inodes and dentries are.
+* 512 MB DDR3 RAM
+* 512 MB NAND Flash
+* 1 MB NOR Flash
+* SD card
+* Debug LED
+* Debug UART
+* Key Inputs
+* RTC
+* RS232
+* 100 MBit Ethernet
+* USB Hub
+* USB OTG
+* HDMI
+* 7" LVDS IPS panel
+* PWM Backlight
+* Optional Extension Board with USB Ethernet NIC
 
-Ah I did delete the comment, but it is still applicable :-/
+Patch 1 adds the vendor prefix, patch 2 adds the DT bindings and
+patch 3 adds the DT.
 
-       /*
--        * Need to create the dentries and inodes to have a consistent
--        * inode number.
-+        * Need to make a struct eventfs_dent array, start by
-+        * allocating enough for just the files, which is a fixed
-+        * array. Then use realloc via add_entry() for the directories
-+        * which is stored in a linked list.
-         */
+Changes in v2:
+* Add Acked-by from Conor (Thanks!)
+* Fix touchscreen node names (Thanks Fabio!)
 
-So if for some reason, user space did a getdents() and used the inode
-numbers to match what it found, they would likely be the same.
+Frieder Schrempf (3):
+  dt-bindings: vendor-prefixes: Add Sielaff
+  dt-bindings: arm: fsl: Add Sielaff i.MX6 Solo board
+  ARM: dts: imx6dl: Add support for Sielaff i.MX6 Solo board
 
-> 
-> Just stop it. Readdir should not be creating dentries. Readdir should not
-> be even *looking* at dentries. You're not a virtual filesystem, the
-> dentries are just caches for filename lookup, and have *nothing* to do with
-> readdir.
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm/boot/dts/nxp/imx/Makefile            |   1 +
+ arch/arm/boot/dts/nxp/imx/imx6dl-sielaff.dts  | 533 ++++++++++++++++++
+ 4 files changed, 537 insertions(+)
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-sielaff.dts
 
-Actually, it's not looking at them. I did it as a way to just have the
-inode numbers be consistent.
-
-	dents[cnt].ino = d->d_inode->i_ino;
-
-Yes, that's the only reason I create them. The dentry/inode is not used for
-anything outside of that.
-
-> 
-> So just iterate over your own internal data structures in readdir. DO NOT
-> CREATE DENTRIES OR INODES FOR READDIR.
-> 
-> I've told you before, and I'll tell you again: either you are a real and
-> proper virtual filesystem and you let the vfs layer manage *everything*,
-> and the dentries and inodes are all you have. Or you are a *real*
-> filesystem and you maintain your own data structures and the dentries and
-> inodes are just the in-memory caches.
-> 
-> This "do both" is UNACCEPTABLE.
-> 
-
-The dentries were created for the inode numbers so that I did not need to
-add them to meta data. They are generated at creation time.
-
-I don't know how important inode numbers are. If they can all just have
-random inode numbers and it doesn't break user space, where an inode number
-will be one value at one read and another shortly after, is that going to
-cause a problem?
-
-Maybe I can just use a hash to generate he inode numbers from the name?
-Hopefully there will be no collisions. Then I don't need the dentry
-creation at all.
-
-I do realize that if the dentries get freed due to reclaim and recreated,
-their inode numbers will be different. But for a virtual file system, I
-don't know how important having consistent inode numbers is.
-
--- Steve
+-- 
+2.43.0
 
