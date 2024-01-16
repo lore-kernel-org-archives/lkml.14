@@ -1,99 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA54916D897;
-	Tue, 16 Jan 2024 20:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2551720B20
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 20:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705435516; cv=none; b=MA7rR8O0fek3JZWOYNycnwxC9PuzGeMNtq3893LJv+MjbZuDtaksba1XoAKj1aH/17ZKaMxdI/Eq7P3jh4AxLFOxj6sblC1JIbsusGUVTraC1pWzz94c9Ale6+rsqGEHVhwk7niS/peCzgxVFFAm0r2BEF/fE9Lz/dlpOJjZPDo=
+	t=1705435717; cv=none; b=reXDM/d4YP3yWACdhJGKxX50UaxD8CCBBYEcRyRrKCZ0XX6PnjhLH9hVAr5yy6f0RiH7OVrQjEIV3YzN465AZVnrjtue9bRWlcALa+GVEMZxvAtHr6qRTr4wdkY1ilvEb+fYOM0qVKGJ7R+tBM3/31n8JI33FOUOu+6pyY8+FeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705435516; c=relaxed/simple;
-	bh=JNUs/LQJo+qUNmb0T0rSBK5V7IO4R3L3oqT2O4dn6pE=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
-	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=C3ZYe7z8J8cXLzbBfM8RTGkBSr2MiSY7w/6bn+joSxizq2CWWCvNdFUsuM29i9usXXkFB9+e0AWxw3DBTp2HT/yOIzrgfRXLc29kSR4YDnNOKI7dTerD8/YfPnwNvAm8ZgCiyNSsfXFBzbhlnzxKzLhjDMvnxq2PBWqHupE1AB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ubcZxb/V; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubcZxb/V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DEDEC43394;
-	Tue, 16 Jan 2024 20:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705435516;
-	bh=JNUs/LQJo+qUNmb0T0rSBK5V7IO4R3L3oqT2O4dn6pE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ubcZxb/V3QrqR6eqheT+2G7PJfZ3rguO42pUMj4w0mpsbRm9PdAmnnc02REFLQHBC
-	 AFr/5QoCUVkAba2wnktOnXsekRaxzEl1Lq/c/6eDqIVaB1A+KJegjSGkS4gK7RjPJ9
-	 HwFk6hix4OjDVBw0yPhGY7bN4sMSZz67Wg8JKQBvUHxeBSoaPXx4bVMMln3wLl9Cq7
-	 4mAXCtcXikR9Uzgk12QZDNM4D4W6R4GGL2bu5IOpEK/BZhuAWGnDD30Vn3SFIpUhEs
-	 1y03gJbKmx3/tlEHQryyYRAEPDWqUunyA6S8Fw14R/h8CFgBXcQTdTrcWPeNq2qqRA
-	 uM2Zlgx3in4AA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Benjamin Berg <benjamin.berg@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	johannes@sipsolutions.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/22] wifi: cfg80211: free beacon_ies when overridden from hidden BSS
-Date: Tue, 16 Jan 2024 15:04:16 -0500
-Message-ID: <20240116200432.260016-22-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116200432.260016-1-sashal@kernel.org>
-References: <20240116200432.260016-1-sashal@kernel.org>
+	s=arc-20240116; t=1705435717; c=relaxed/simple;
+	bh=+f92y93G1zWOtlpq6n0Sr2dabG7AgxMgV9bKCPRbafk=;
+	h=Received:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding; b=mLSFLdWIGa/XIjgcnw//OQpp2ONXWcT3lUt66A+62dGIVic/s2kprES9RBksFhaFmj6U9xxyntCYmb3FAeqN0g9Gfjznucw/PKpAgVlttlBKyOHnQ3jioJ9wOwXvg60fcBWbkJBJ+gM8IHg1VKNn1RuKsBg1rOn15yrPFc6zCIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE48C433F1;
+	Tue, 16 Jan 2024 20:08:35 +0000 (UTC)
+Date: Tue, 16 Jan 2024 15:09:50 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: nathanl@linux.ibm.com, Kees Cook <keescook@chromium.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seq_buf: make DECLARE_SEQ_BUF() usable
+Message-ID: <20240116150950.5f444a04@gandalf.local.home>
+In-Reply-To: <407c467e-1f0b-4549-951a-83c295b27733@wanadoo.fr>
+References: <20240116-declare-seq-buf-fix-v1-1-915db4692f32@linux.ibm.com>
+	<407c467e-1f0b-4549-951a-83c295b27733@wanadoo.fr>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.305
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Benjamin Berg <benjamin.berg@intel.com>
+On Tue, 16 Jan 2024 20:40:29 +0100
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-[ Upstream commit 32af9a9e1069e55bc02741fb00ac9d0ca1a2eaef ]
+> Le 16/01/2024 =C3=A0 15:09, Nathan Lynch via B4 Relay a =C3=A9crit=C2=A0:
+> > From: Nathan Lynch <nathanl@linux.ibm.com>
+> >=20
+> > Using the address operator on the array doesn't work:
+> >=20
+> > /include/linux/seq_buf.h:27:27: error: initialization of =E2=80=98char =
+*=E2=80=99
+> >    from incompatible pointer type =E2=80=98char (*)[128]=E2=80=99
+> >    [-Werror=3Dincompatible-pointer-types]
+> >     27 |                 .buffer =3D &__ ## NAME ## _buffer,       \
+> >        |                           ^
+> >=20
+> > Apart from fixing that, we can improve DECLARE_SEQ_BUF() by using a
+> > compound literal to define the buffer array without attaching a name
+> > to it. This makes the macro a single statement, allowing constructs
+> > such as:
+> >=20
+> >    static DECLARE_SEQ_BUF(my_seq_buf, MYSB_SIZE);
+> >=20
+> > to work as intended.
+> >=20
+> > Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+> > Fixes: dcc4e5728eea ("seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_st=
+r()")
+> > ---
+> >   include/linux/seq_buf.h | 3 +--
+> >   1 file changed, 1 insertion(+), 2 deletions(-)
+> >=20
+> > diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+> > index 5fb1f12c33f9..c44f4b47b945 100644
+> > --- a/include/linux/seq_buf.h
+> > +++ b/include/linux/seq_buf.h
+> > @@ -22,9 +22,8 @@ struct seq_buf {
+> >   };
+> >  =20
+> >   #define DECLARE_SEQ_BUF(NAME, SIZE)			\
+> > -	char __ ## NAME ## _buffer[SIZE] =3D "";		\
+> >   	struct seq_buf NAME =3D {				\
+> > -		.buffer =3D &__ ## NAME ## _buffer,	\
+> > +		.buffer =3D (char[SIZE]) { 0 },		\
+> >   		.size =3D SIZE,				\
+> >   	} =20
+>=20
+> Hi,
+>=20
+> just removing the & in ".buffer =3D __ ## NAME ## _buffer, \" also works =
+IIRC.
+>=20
+> See [1], which unfortunately has been unnoticed.
+>=20
+> CJ
+>=20
+>=20
+> [1]:=20
+> https://lore.kernel.org/all/2a534333-b5f6-4b1d-b4b8-a1a71f91c3ff@wanadoo.=
+fr/
 
-This is a more of a cosmetic fix. The branch will only be taken if
-proberesp_ies is set, which implies that beacon_ies is not set unless we
-are connected to an AP that just did a channel switch. And, in that case
-we should have found the BSS in the internal storage to begin with.
+I guess I missed that.
 
-Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
-Reviewed-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://msgid.link/20231220133549.b898e22dadff.Id8c4c10aedd176ef2e18a4cad747b299f150f9df@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/wireless/scan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+But it still doesn't fix this case:
 
-diff --git a/net/wireless/scan.c b/net/wireless/scan.c
-index d871349036a5..7f1a4ba975dd 100644
---- a/net/wireless/scan.c
-+++ b/net/wireless/scan.c
-@@ -1018,8 +1018,12 @@ cfg80211_bss_update(struct cfg80211_registered_device *rdev,
- 				list_add(&new->hidden_list,
- 					 &hidden->hidden_list);
- 				hidden->refcount++;
-+
-+				ies = (void *)rcu_dereference(new->pub.beacon_ies);
- 				rcu_assign_pointer(new->pub.beacon_ies,
- 						   hidden->pub.beacon_ies);
-+				if (ies)
-+					kfree_rcu(ies, rcu_head);
- 			}
- 		} else {
- 			/*
--- 
-2.43.0
+ static DECLARE_SEQ_BUF(my_seq_buf, MYSB_SIZE);
 
+Which this patch does.
+
+
+-- Steve
