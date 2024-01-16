@@ -1,145 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBBD8BFE
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 01:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD2510A1D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 01:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jxz4VonQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705368308; x=1736904308;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=UF3bollbDru88APZqfgYdHHI6MxP3KGUb+uE+8+oI1A=;
-  b=jxz4VonQaWht9Vuucf3pWNwWXGju74oeERqKUPRYFKuFQrZPaXmTItYU
-   OiBoXWlReifsSTsNuB0x1RMJy1AoayZyVkJBSIIN8xgKJFG71V8juEC5S
-   +CFE66I14eo0PXT/UtpH9QMUlRXjeC6SOYDwHVzH/MKODk0D1+cfpKeZV
-   8yS9Pub1ORthdObX8A9Ih5TiZrxGrNq51DwpBNoVsxgXtV7+dcgr9uiSI
-   gL13+Vg5MPtREWh0eKh1VIyhQP1qhtKTQblh2hh71ZJmrqIZCut3GTNhI
-   +TxlvqryBMLUKosDdgFTA5yXImpJqDd9NSOvDAMnW8NcMViRGZ8z7a2+f
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="464006963"
-X-IronPort-AV: E=Sophos;i="6.04,197,1695711600"; 
-   d="scan'208";a="464006963"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 17:25:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="733429707"
-X-IronPort-AV: E=Sophos;i="6.04,197,1695711600"; 
-   d="scan'208";a="733429707"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 17:25:04 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Pierre Gondois <pierre.gondois@arm.com>
-Cc: <linux-kernel@vger.kernel.org>,  Shrikanth Hegde
- <sshegde@linux.vnet.ibm.com>,  Ingo Molnar <mingo@redhat.com>,  Peter
- Zijlstra <peterz@infradead.org>,  Juri Lelli <juri.lelli@redhat.com>,
-  Vincent Guittot <vincent.guittot@linaro.org>,  Dietmar Eggemann
- <dietmar.eggemann@arm.com>,  Steven Rostedt <rostedt@goodmis.org>,  Ben
- Segall <bsegall@google.com>,  "Mel Gorman" <mgorman@suse.de>,  Daniel
- Bristot de Oliveira <bristot@redhat.com>,  Valentin Schneider
- <vschneid@redhat.com>
-Subject: Re: [PATCH v2 1/3] sched/topology: Annotate RCU pointers properly
-In-Reply-To: <20240115143427.1820628-2-pierre.gondois@arm.com> (Pierre
-	Gondois's message of "Mon, 15 Jan 2024 15:34:24 +0100")
-References: <20240115143427.1820628-1-pierre.gondois@arm.com>
-	<20240115143427.1820628-2-pierre.gondois@arm.com>
-Date: Tue, 16 Jan 2024 09:23:07 +0800
-Message-ID: <8734uy137o.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Tq6wSFYI"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3DE332C025A;
+	Tue, 16 Jan 2024 14:38:08 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1705369088;
+	bh=7GHoTeKYfcgBq8P3j8Vvbrp1wPpvsnpu+kMyaTJguIc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Tq6wSFYIopua0N3Gp1vu596Uv3TSL4yIC5Z0P39tEoiYmhZaCBn/3vk4wJZTjm0nC
+	 1TwHNIaRSWBI/o2hn12zIr4r9vm9rxZumhgrLm2A0/vfvsM1ZVxcUzj55fPFEbXeba
+	 ylLta7TYaPrN56MRUyg+0U4A8xvavP4eb9Gof7b7m7fPd6oPwrEvU7JygKy6jJYtcd
+	 JNMeC5QyOsk7DJ9P2L9UYoNcn2PKF1qH3W+Ztw9kt+eBuveWohvYNVr2vpcNhnyEhh
+	 OzqSraYxkfrAjL0uT9TVd2WRjfzBXWhfJh4gkFAoEHv9bxC+Aike/4DjXUgjJ2AL1n
+	 TLdo247mBsemg==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B65a5de000000>; Tue, 16 Jan 2024 14:38:08 +1300
+Received: from aryans-dl.ws.atlnz.lc (aryans-dl.ws.atlnz.lc [10.33.22.26])
+	by pat.atlnz.lc (Postfix) with ESMTP id 19EDE13ED7B;
+	Tue, 16 Jan 2024 14:38:08 +1300 (NZDT)
+Received: by aryans-dl.ws.atlnz.lc (Postfix, from userid 1844)
+	id 13FBF200482; Tue, 16 Jan 2024 14:38:08 +1300 (NZDT)
+From: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
+To: aryan.srivastava@alliedtelesis.co.nz
+Cc: andi.shyti@kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: octeon: Add block-mode r/w
+Date: Tue, 16 Jan 2024 14:38:08 +1300
+Message-ID: <20240116013808.440485-1-aryan.srivastava@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230912011633.2401616-1-aryan.srivastava@alliedtelesis.co.nz>
+References: <20230912011633.2401616-1-aryan.srivastava@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=LZFCFQXi c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=dEuoMetlWLkA:10 a=XRUlxUASmzIDtQXyq5EA:9
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-Pierre Gondois <pierre.gondois@arm.com> writes:
+Hi Andi,
 
-> Cleanup RCU-related spare errors by annotating RCU pointers.
->
-> sched_domains_numa_distance:
->   error: incompatible types in comparison expression
->   (different address spaces):
->       int [noderef] __rcu *
->       int *
->
-> sched_domains_numa_masks:
->   error: incompatible types in comparison expression
->   (different address spaces):
->       struct cpumask **[noderef] __rcu *
->       struct cpumask ***
->
-> The cast to (void *) adds the following sparse warning:
->   warning: cast removes address space '__rcu' of expression
-> but this should be normal.
->
-> Fixes: 0fb3978b0aac ("sched/numa: Fix NUMA topology for systems with CPU-less nodes")
-> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
-> ---
->  kernel/sched/topology.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 10d1391e7416..2a2da9b33e31 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -1542,8 +1542,8 @@ static int			sched_domains_numa_levels;
->  static int			sched_domains_curr_level;
->  
->  int				sched_max_numa_distance;
-> -static int			*sched_domains_numa_distance;
-> -static struct cpumask		***sched_domains_numa_masks;
-> +static int			__rcu *sched_domains_numa_distance;
-> +static struct cpumask		** __rcu *sched_domains_numa_masks;
->  #endif
->  
->  /*
-> @@ -1988,8 +1988,8 @@ void sched_init_numa(int offline_node)
->  
->  static void sched_reset_numa(void)
->  {
-> -	int nr_levels, *distances;
-> -	struct cpumask ***masks;
-> +	int nr_levels, __rcu *distances;
-> +	struct cpumask ** __rcu *masks;
+Did you have any more comments on my patch?
 
-No.  distances and masks are not accessed via RCU in the function.
-Instead, they should be assigned like below,
-
-         distances = rcu_dereference_raw(sched_domains_numa_distance);
-
-Because sched_domains_numa_distance is protected by cpu_hotplug_lock,
-but the lock is static.  Some comments are deserved.
-
-Anyway, please read RCU document before making the change.
-
-https://docs.kernel.org/RCU/index.html
-
->  	nr_levels = sched_domains_numa_levels;
->  	sched_domains_numa_levels = 0;
-> @@ -2003,7 +2003,7 @@ static void sched_reset_numa(void)
->  		int i, j;
->  
->  		synchronize_rcu();
-> -		kfree(distances);
-> +		kfree((void *)distances);
->  		for (i = 0; i < nr_levels && masks; i++) {
->  			if (!masks[i])
->  				continue;
-> @@ -2011,7 +2011,7 @@ static void sched_reset_numa(void)
->  				kfree(masks[i][j]);
->  			kfree(masks[i]);
->  		}
-> -		kfree(masks);
-> +		kfree((void *)masks);
->  	}
->  	if (sched_domain_topology_saved) {
->  		kfree(sched_domain_topology);
-
---
-Best Regards,
-Huang, Ying
+Thank you,
+Aryan.
