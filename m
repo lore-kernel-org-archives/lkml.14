@@ -1,148 +1,130 @@
-Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA1A12B66;
-	Tue, 16 Jan 2024 08:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0476411C83;
+	Tue, 16 Jan 2024 08:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="Tmh2CNU0";
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="Hsp2M8Hd"
-Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id E94B126;
-	Tue, 16 Jan 2024 08:19:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1705393200;
-	bh=xtKnc81qgkt1hp+yrgP4nxQ9fcDthRgPBw7xJL7BYSI=;
-	h=Date:To:CC:From:Subject;
-	b=Tmh2CNU0YPPx7m00AJ8Ts3TC0cvRijx7y5OQAghP2q4LAOj1teg55gQ9M/Pqg2XUo
-	 XzC4lBOqxRSQckTX3O8jGHYLwKH6p6cHkFJfn8ECtw93HPN+HsvIK8Z9pBHmjkpNTU
-	 ZE3+MNpGIGy1G9MM/jUiOXTG/WiSq9UeDFWYclGw=
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id E95371DF9;
-	Tue, 16 Jan 2024 08:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1705393603;
-	bh=xtKnc81qgkt1hp+yrgP4nxQ9fcDthRgPBw7xJL7BYSI=;
-	h=Date:To:CC:From:Subject;
-	b=Hsp2M8HdMaGF1tAVu4ui6wCeB6rYF4iWde/iHCQy0hsmyhUH1Ad4GxCxJWwYqqASC
-	 xfmP5DiWsUHmdK1ITnGmLikpv7/3aWh3kTgEsa8C1Ocib3mwjGlsCATy5mXD2Hlehw
-	 NxVIbqgEW+E0IOhhqFilnFxI1YIWsiSs/LopraQ8=
-Received: from [192.168.211.197] (192.168.211.197) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Tue, 16 Jan 2024 11:26:43 +0300
-Message-ID: <667a5bc4-8cb5-47ce-a7f1-749479b25bec@paragon-software.com>
-Date: Tue, 16 Jan 2024 11:26:41 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbDqMFLn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFF18C43394;
+	Tue, 16 Jan 2024 08:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705394218;
+	bh=+lJ5i0y7ZMZZ0xychi+D6Q1kWJaf02pcZFvyU9rjOuw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TbDqMFLnW6iJ8tdSJLfPklsFJGmtZ++wejycHlp7kEjfeSJhNc3Qt86nfQ22M8Nc1
+	 coJHKsE3aWYiPc1k5vbqH0vO1qTQbcUJ5dM3f5yLcWTNc1S5eSFBumbFgzIvk4O4tO
+	 xf2rzTL+ZiYoAZOilX5VKwmQbW9dYRrfhG25oheGNE4js2utyaw0jUxDmhNHlEb0T2
+	 IHdCLRWbwO11Gg8SnznND9t2Qo6X7f3kJx2DKbKqa4nzcJTD47KbDRDqRXohrhJQlG
+	 0wdS3cCvsJGXV69DIt+4vpmruv71mOT1yqVNulwgGgILQBIB92O3+yPe11IQDlLaAt
+	 erToQmQmgQ4Gw==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50eab4bf47aso8014952e87.0;
+        Tue, 16 Jan 2024 00:36:58 -0800 (PST)
+X-Gm-Message-State: AOJu0Yxd8sPXKiVwSNry21e++m4AUJymGR65OJto28Ptrp38KqGqjFy9
+	pkkdcLsZlvb7Gbd0/mp7mPuTVl51XqR50JA/rzk=
+X-Google-Smtp-Source: AGHT+IFy8ijwBpYdckQpTRtf3hlyKF2neSs6h/mnRTFij5+mK7hdtYwYpj3q3skd/Nwf9ejRJPknZxy7Bi1r4FgJUeg=
+X-Received: by 2002:ac2:5f81:0:b0:50e:d5e0:716b with SMTP id
+ r1-20020ac25f81000000b0050ed5e0716bmr4404662lfe.14.1705394216921; Tue, 16 Jan
+ 2024 00:36:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: <ntfs3@lists.linux.dev>
-CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Subject: [PATCH] fs/ntfs3: Use kvfree to free memory allocated by kvmalloc
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: vobn-exch-01.paragon-software.com (172.30.72.13) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+References: <mhng-8a4a5f85-faf9-405c-95a0-78cd04ec6509@palmer-ri-x1c9>
+ <56b52d4e-9dc0-400c-a141-7e70f5c72afa@siemens.com> <CAMj1kXGR1aQdvej+0drfim-ZP27ZhO9UR_i_PT6F+hsV0UvbJw@mail.gmail.com>
+ <578aae7c-4069-4071-ba4b-cc86d3b516c1@siemens.com>
+In-Reply-To: <578aae7c-4069-4071-ba4b-cc86d3b516c1@siemens.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 16 Jan 2024 09:36:45 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEC4=j5zcSyo91jnUkYMoqBG5M2raMXm4DNdD5ZbS3U7g@mail.gmail.com>
+Message-ID: <CAMj1kXEC4=j5zcSyo91jnUkYMoqBG5M2raMXm4DNdD5ZbS3U7g@mail.gmail.com>
+Subject: Re: [PATCH] riscv/efistub: Ensure GP-relative addressing is not used
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 16 Jan 2024 at 06:21, Jan Kiszka <jan.kiszka@siemens.com> wrote:
+>
+> On 15.01.24 18:34, Ard Biesheuvel wrote:
+> > On Sat, 13 Jan 2024 at 11:35, Jan Kiszka <jan.kiszka@siemens.com> wrote:
+> >>
+> >> On 12.01.24 19:56, Palmer Dabbelt wrote:
+> >>> On Fri, 12 Jan 2024 10:51:16 PST (-0800), Ard Biesheuvel wrote:
+> >>>> Hi Jan,
+> >>>>
+> >>>> On Fri, 12 Jan 2024 at 19:37, Jan Kiszka <jan.kiszka@siemens.com> wrote:
+> >>>>>
+> >>>>> From: Jan Kiszka <jan.kiszka@siemens.com>
+> >>>>>
+> >>>>> The cflags for the RISC-V efistub were missing -mno-relax, thus were
+> >>>>> under the risk that the compiler could use GP-relative addressing. That
+> >>>>> happened for _edata with binutils-2.41 and kernel 6.1, causing the
+> >>>>> relocation to fail due to an invalid kernel_size in handle_kernel_image.
+> >>>>> It was not yet observed with newer versions, but that may just be luck.
+> >>>>>
+> >>>>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> >>>>> ---
+> >>>>>
+> >>>>> Something like this should go to stable as well, but we will need
+> >>>>> rebased patches.
+> >>>>>
+> >>>>>  drivers/firmware/efi/libstub/Makefile | 2 +-
+> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/drivers/firmware/efi/libstub/Makefile
+> >>>>> b/drivers/firmware/efi/libstub/Makefile
+> >>>>> index 06964a3c130f..d561d7de46a9 100644
+> >>>>> --- a/drivers/firmware/efi/libstub/Makefile
+> >>>>> +++ b/drivers/firmware/efi/libstub/Makefile
+> >>>>> @@ -28,7 +28,7 @@ cflags-$(CONFIG_ARM)          += -DEFI_HAVE_STRLEN
+> >>>>> -DEFI_HAVE_STRNLEN \
+> >>>>>                                    -DEFI_HAVE_MEMCHR
+> >>>>> -DEFI_HAVE_STRRCHR \
+> >>>>>                                    -DEFI_HAVE_STRCMP -fno-builtin
+> >>>>> -fpic \
+> >>>>>                                    $(call
+> >>>>> cc-option,-mno-single-pic-base)
+> >>>>> -cflags-$(CONFIG_RISCV)         += -fpic -DNO_ALTERNATIVE
+> >>>>> +cflags-$(CONFIG_RISCV)         += -fpic -DNO_ALTERNATIVE -mno-relax
+> >>>>
+> >>>> Can we detect the presence of these references (via the relocation
+> >>>> type)? We already do something similar for ordinary absolute
+> >>>> references too.
+> >>>
+> >>> If there's no `__global_pointer$` symbol then the linker won't make
+> >>> GP-relative relaxations (because it doesn't know where GP is).  We
+> >>> usually define that symbol in the linker script, but I'm not entierly
+> >>> sure how libstub gets its linker script...
+> >>>
+> >>
+> >> The stub seems to be linked together with the rest of the kernel, thus
+> >> the regular arch/riscv/kernel/vmlinux.lds.S is used.
+> >>
+> >
+> > Indeed - the EFI stub is part of the same executable as vmlinux, we
+> > just mangle the symbol names to ensure that only code that can be
+> > safely called from the EFI stub can be linked to it.
+> >
+> > If the effect of -mno-relax is to stop emitting R_RISCV_RELAX
+> > relocations, we should perhaps add those to the STUBCOPY_RELOC-y
+> > Makefile variable? (in the same file). BTW R_RISCV_HI20 doesn't seem
+> > like the right value there to begin with: the idea of that is to
+> > disallow ELF relocations that evaluate to expressions that can only be
+> > known at runtime (like absolute addresses for global pointer
+> > variables)
+>
+> How to do that best? Simply replace R_RISCV_HI20 with R_RISCV_RELAX?
+>
 
-Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
----
-  fs/ntfs3/attrlist.c | 4 ++--
-  fs/ntfs3/bitmap.c   | 4 ++--
-  fs/ntfs3/frecord.c  | 4 ++--
-  fs/ntfs3/super.c    | 2 +-
-  4 files changed, 7 insertions(+), 7 deletions(-)
+We'll need to keep the HI20, in fact - I got confused between HI20 and
+PCREL_HI20, and the former is actually used for 32-bit absolute
+addresses in 32-bit code.
 
-diff --git a/fs/ntfs3/attrlist.c b/fs/ntfs3/attrlist.c
-index 48e7da47c6b7..9f4bd8d26090 100644
---- a/fs/ntfs3/attrlist.c
-+++ b/fs/ntfs3/attrlist.c
-@@ -29,7 +29,7 @@ static inline bool al_is_valid_le(const struct 
-ntfs_inode *ni,
-  void al_destroy(struct ntfs_inode *ni)
-  {
-      run_close(&ni->attr_list.run);
--    kfree(ni->attr_list.le);
-+    kvfree(ni->attr_list.le);
-      ni->attr_list.le = NULL;
-      ni->attr_list.size = 0;
-      ni->attr_list.dirty = false;
-@@ -318,7 +318,7 @@ int al_add_le(struct ntfs_inode *ni, enum ATTR_TYPE 
-type, const __le16 *name,
-          memcpy(ptr, al->le, off);
-          memcpy(Add2Ptr(ptr, off + sz), le, old_size - off);
-          le = Add2Ptr(ptr, off);
--        kfree(al->le);
-+        kvfree(al->le);
-          al->le = ptr;
-      } else {
-          memmove(Add2Ptr(le, sz), le, old_size - off);
-diff --git a/fs/ntfs3/bitmap.c b/fs/ntfs3/bitmap.c
-index 63f14a0232f6..845f9b22deef 100644
---- a/fs/ntfs3/bitmap.c
-+++ b/fs/ntfs3/bitmap.c
-@@ -124,7 +124,7 @@ void wnd_close(struct wnd_bitmap *wnd)
-  {
-      struct rb_node *node, *next;
+This seems to do the trick: it disallows relaxation relocations and
+native word sizes absolute references. AFAICT, those are the only ones
+we should care about.
 
--    kfree(wnd->free_bits);
-+    kvfree(wnd->free_bits);
-      wnd->free_bits = NULL;
-      run_close(&wnd->run);
-
-@@ -1360,7 +1360,7 @@ int wnd_extend(struct wnd_bitmap *wnd, size_t 
-new_bits)
-          memcpy(new_free, wnd->free_bits, wnd->nwnd * sizeof(short));
-          memset(new_free + wnd->nwnd, 0,
-                 (new_wnd - wnd->nwnd) * sizeof(short));
--        kfree(wnd->free_bits);
-+        kvfree(wnd->free_bits);
-          wnd->free_bits = new_free;
-      }
-
-diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-index 6ff4f70ba077..2636ab7640ac 100644
---- a/fs/ntfs3/frecord.c
-+++ b/fs/ntfs3/frecord.c
-@@ -778,7 +778,7 @@ static int ni_try_remove_attr_list(struct ntfs_inode 
-*ni)
-      run_deallocate(sbi, &ni->attr_list.run, true);
-      run_close(&ni->attr_list.run);
-      ni->attr_list.size = 0;
--    kfree(ni->attr_list.le);
-+    kvfree(ni->attr_list.le);
-      ni->attr_list.le = NULL;
-      ni->attr_list.dirty = false;
-
-@@ -927,7 +927,7 @@ int ni_create_attr_list(struct ntfs_inode *ni)
-      return 0;
-
-  out:
--    kfree(ni->attr_list.le);
-+    kvfree(ni->attr_list.le);
-      ni->attr_list.le = NULL;
-      ni->attr_list.size = 0;
-      return err;
-diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-index 65ef4b57411f..c55a29793a8d 100644
---- a/fs/ntfs3/super.c
-+++ b/fs/ntfs3/super.c
-@@ -625,7 +625,7 @@ static void ntfs3_free_sbi(struct ntfs_sb_info *sbi)
-  {
-      kfree(sbi->new_rec);
-      kvfree(ntfs_put_shared(sbi->upcase));
--    kfree(sbi->def_table);
-+    kvfree(sbi->def_table);
-      kfree(sbi->compress.lznt);
-  #ifdef CONFIG_NTFS3_LZX_XPRESS
-      xpress_free_decompressor(sbi->compress.xpress);
--- 
-2.34.1
-
+STUBCOPY_RELOC-$(CONFIG_RISCV) := -E
+R_RISCV_HI20\|R_RISCV_$(BITS)\|R_RISCV_RELAX
