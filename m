@@ -1,174 +1,137 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30B22031D;
-	Tue, 16 Jan 2024 21:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D52031D;
+	Tue, 16 Jan 2024 21:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705441115; cv=none; b=G39sbTwcO3vTggJGIaN39H1i8Ijp5KMWNYnYjA1Vgw8SODF/B7R6t0uJgcMxvVCKMBgnQ2iHvL8yIZwxKHO51QbfjWKxmUlB6+praVsV9+BPNF9lFKjQb7PM59Ani8bnbErOhOum8fIeCgGHFRonmN5lQz0MdhwrUx+1s6ITZDY=
+	t=1705441152; cv=none; b=aRN58YqO0b4adomtP9e2akTLNEw8NlKSY9gQGZIM0jOKpNuu86nAAvlEImJ3UEv0aW9b7jn4/Jt+oHmo/qv+dftMSoHA6vobpe/8PwvEtepXjGKz36cjB85jBHXi2k8GKGLbrQRym5aFhwlzfPdvSyavmCB34OMIzSY9/h7HYrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705441115; c=relaxed/simple;
-	bh=0+B9f+SDQ7MNjWm/4XDd8U3BNj5wf0lOZ4O77VNib/o=;
-	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
-	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:
-	 Content-Transfer-Encoding; b=MsEsuFL9tbj2px4leklO0Mlh1l+4eoX4H6Aq6M/QGP5lzKxciHQ+aS+w69SkduC3Kqb0mQ2uAz2U/BK/JWW/TmtNFAePkb9vHGLOjgEHwOMq5yolbVtZU09alohuMPFDmaTi5VRA0MS8DU75AYmcWanvNWPnI2Oaa4XNTWnQ12M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dad22e13dcso6507272b3a.3;
-        Tue, 16 Jan 2024 13:38:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705441113; x=1706045913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CS3/2X2nggEz5xQcw+haR7fO99OiHUdyAq+EW5k/HVg=;
-        b=pGUJvWwZCbDg1uwEOyEA4pTljZxFumLn8B7djXfDm1bbY9MnLsStRntZNC1+7ofZu5
-         ls9HhTtZxpNCqa5PElYVXPs5ECjNbNcZWUUqITsoOUFQK0EsrEvcQxq1n33TLcroLMbl
-         kh5Htaverf57HJol8Ey9me6cihDwrnRgjJua4MPAIaGTBNEyB6tnPnYLcWJxxc3YTFk1
-         EyYH+JkXBj1X2/rikXwgdSYS3xN3sIKzFvBSrmmUNzN3Fhv20fcF6TzvM41HTv4UNJva
-         5bZm58Z4ZtLC5iAK2U89MIXONx0/Im9lVR3IpHm7uka4k8ERudFX8QYG6CiWUryRSD21
-         gj1g==
-X-Gm-Message-State: AOJu0YxA7NZXZE29jNY+cOSpO5lbrPXlSluEDgUIIEsW87h3eQPLlr0/
-	a+Oc+Q//uv8PavMEOEyiynqHCnbsJSmJl5/gZnM=
-X-Google-Smtp-Source: AGHT+IFkQXg9vLFpGaAiphz/VKhWfCFU2OCPkVqdGN0YFWVKlYYU+8nDURTFF2PrpGk/SdJZYSfVdLSYD4s9dnUNQqQ=
-X-Received: by 2002:a05:6a20:ce4d:b0:19a:8556:8caa with SMTP id
- id13-20020a056a20ce4d00b0019a85568caamr4805936pzb.13.1705441113058; Tue, 16
- Jan 2024 13:38:33 -0800 (PST)
+	s=arc-20240116; t=1705441152; c=relaxed/simple;
+	bh=9cVaDEGyE++XlGIZR4zuk6VP7XM32B9Tm1rS1HSDeWQ=;
+	h=Received:DKIM-Signature:Received:Received:Received:Received:
+	 Received:Received:Received:Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:Content-Language:To:Cc:References:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-TM-AS-GCONF:X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=qQr1HpIU9iSel7QLx3XO0MSfxy3K1/kAhI/W6I6CjKypWJHHUfuM3C998TymkCJLdePTZfa4c9zKUWuId8G3+UkhHyALTBgRhLf27QUHB5GyQ2jT/oxF7R7qfvdddByqIMhP8QlurC5qK6bBcgtHxd8YPnGhJ+Z1Tl9AD0ichcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pBCDyTAq; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pBCDyTAq"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GLbCeX011034;
+	Tue, 16 Jan 2024 21:38:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=C34bD3H/UW2o8lGJiE4Kl6JTQHvAgZThBzA+i3EkQj4=;
+ b=pBCDyTAqmIHQUh+WookDoNH+IaXDelj8E17v4vrqhzDtkWmm7/W79f09VlO9RLAGsyDQ
+ 5XpT7BzXBzTjat8kOoLEtQhpr9KxbD+064D4h/Kv3zpIGju3wjpHoQsaR04CV45RsRLy
+ mwDHnngbbdsjZJ4GoMXL9UeYcBYBpvvlqNYzpes9ouanXZZFKZJLU+y4Zn4mjexMEeC+
+ J+JXb79X5lSv/4+BxOa9PQ1axgPBcfkRayp9wEdkfHZwtntkgxQ7MPF8hm3dI4B22KDu
+ v1d0B+0w3llpJDEop1ib9yzyU1dw11yK3m8mXS4fZ3V3FytdkvKZTAW6yspngS4k46S2 ug== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vp1vcg1jp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 21:38:51 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GLcDTF016360;
+	Tue, 16 Jan 2024 21:38:51 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vp1vcg1hs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 21:38:51 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GJ6ONT023421;
+	Tue, 16 Jan 2024 21:38:49 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm6bkh59q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 21:38:49 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GLcmas66912726
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Jan 2024 21:38:49 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A30145804B;
+	Tue, 16 Jan 2024 21:38:48 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8250858055;
+	Tue, 16 Jan 2024 21:38:47 +0000 (GMT)
+Received: from [9.61.126.152] (unknown [9.61.126.152])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 16 Jan 2024 21:38:47 +0000 (GMT)
+Message-ID: <92007644-72e3-4312-b9e9-e93e5142e090@linux.ibm.com>
+Date: Tue, 16 Jan 2024 13:38:46 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112034019.3558584-1-yangjihong1@huawei.com>
-In-Reply-To: <20240112034019.3558584-1-yangjihong1@huawei.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 16 Jan 2024 13:38:21 -0800
-Message-ID: <CAM9d7cgecXt=QsTpv-L2nF1w72_fwV4rZZGG0tZi-LwZS8P-jg@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Check whether pkg-config is installed when
- libtraceevent is linked
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 25/42] drivers/scsi/ibmvscsi: Convert snprintf to
+ sysfs_emit
+Content-Language: en-US
+To: Li Zhijian <lizhijian@fujitsu.com>, linux-kernel@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin
+ <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
+ <20240116045151.3940401-1-lizhijian@fujitsu.com>
+ <20240116045151.3940401-23-lizhijian@fujitsu.com>
+From: Tyrel Datwyler <tyreld@linux.ibm.com>
+In-Reply-To: <20240116045151.3940401-23-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: T9F9F6QalnDwMMGJCSEfB4HU9ZM759gq
+X-Proofpoint-ORIG-GUID: s4AnZKTFZA-kPfDCUxWgqMxp7_K2Rqb-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-16_12,2024-01-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxlogscore=888 clxscore=1011 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 impostorscore=0 spamscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401160170
 
-Hello,
-
-On Thu, Jan 11, 2024 at 7:44=E2=80=AFPM Yang Jihong <yangjihong1@huawei.com=
-> wrote:
->
-> If pkg-config is not installed when libtraceevent is linked, the build fa=
-ils.
->
-> The error information is as follows:
->
->   $ make
->   <SNIP>
->   In file included from /home/yjh/projects_linux/perf-tool-next/linux/too=
-ls/perf/util/evsel.c:43:
->   /home/yjh/projects_linux/perf-tool-next/linux/tools/perf/util/trace-eve=
-nt.h:149:62: error: operator '&&' has no right operand
->     149 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=
-=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->         |                                                              ^~
->   error: command '/usr/bin/gcc' failed with exit code 1
->   cp: cannot stat 'python_ext_build/lib/perf*.so': No such file or direct=
-ory
->   make[2]: *** [Makefile.perf:668: python/perf.cpython-310-x86_64-linux-g=
-nu.so] Error 1
->   make[2]: *** Waiting for unfinished jobs....
->
-> Because pkg-config is not installed, fail to get libtraceevent version in
-> Makefile.config file. As a result, LIBTRACEEVENT_VERSION is empty.
-> However, the preceding error information is not user-friendly.
->
-> Identify errors in advance by checking that pkg-config is installed at
-> compile time.
-
-Thanks for working on this.  I also think we can disable it when
-pkg-config is not installed and continue to build.  But I guess it's
-usual to have pkg-config on a build environment so it'd be better
-to stop the build and warn the user.
-
->
-> The build results of various scenarios are as follows:
->
-> 1. build successful when libtraceevent is not linked and pkg-config is no=
-t installed
->
->   $ pkg-config --version
->   -bash: /usr/bin/pkg-config: No such file or directory
->   $ make clean >/dev/null
->   $ make NO_LIBTRACEEVENT=3D1 >/dev/null
->   Makefile.config:1133: No alternatives command found, you need to set JD=
-IR=3D to point to the root of your Java directory
->     PERF_VERSION =3D 6.7.rc6.gd988c9f511af
->   $ echo $?
->   0
->
-> 2. dummy pkg-config is missing when libtraceevent is linked
->
->   $ pkg-config --version
->   -bash: /usr/bin/pkg-config: No such file or directory
->   $ make clean >/dev/null
->   $ make >/dev/null
->   Makefile.config:221: *** Error: pkg-config needed by libtraceevent is m=
-issing on this system, please install it.  Stop.
->   make[1]: *** [Makefile.perf:251: sub-make] Error 2
->   make: *** [Makefile:70: all] Error 2
->   $ echo $?
->   2
->
-> 3. build successful when libtraceevent is linked and pkg-config is instal=
-led
->
->   $ pkg-config --version
->   0.29.2
->   $ make clean >/dev/null
->   $ make >/dev/null
->   Makefile.config:1133: No alternatives command found, you need to set JD=
-IR=3D to point to the root of your Java directory
->     PERF_VERSION =3D 6.7.rc6.gd988c9f511af
->   $ echo $?
->   0
->
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
-
+On 1/15/24 20:51, Li Zhijian wrote:
+> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+> or sysfs_emit_at() when formatting the value to be returned to user space.
+> 
+> coccinelle complains that there are still a couple of functions that use
+> snprintf(). Convert them to sysfs_emit().
+> 
+>> ./drivers/scsi/ibmvscsi/ibmvfc.c:3483:8-16: WARNING: please use sysfs_emit
+>> ./drivers/scsi/ibmvscsi/ibmvfc.c:3493:8-16: WARNING: please use sysfs_emit
+>> ./drivers/scsi/ibmvscsi/ibmvfc.c:3503:8-16: WARNING: please use sysfs_emit
+>> ./drivers/scsi/ibmvscsi/ibmvfc.c:3513:8-16: WARNING: please use sysfs_emit
+>> ./drivers/scsi/ibmvscsi/ibmvfc.c:3522:8-16: WARNING: please use sysfs_emit
+>> ./drivers/scsi/ibmvscsi/ibmvfc.c:3530:8-16: WARNING: please use sysfs_emit
+> 
+> No functional change intended
+> 
+> CC: Tyrel Datwyler <tyreld@linux.ibm.com>
+> CC: Michael Ellerman <mpe@ellerman.id.au>
+> CC: Nicholas Piggin <npiggin@gmail.com>
+> CC: Christophe Leroy <christophe.leroy@csgroup.eu>
+> CC: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+> CC: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+> CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> CC: "Martin K. Petersen" <martin.petersen@oracle.com>
+> CC: linux-scsi@vger.kernel.org
+> CC: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 > ---
->  tools/perf/Makefile.config | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index aa55850fbc21..70c33c935a98 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -216,6 +216,12 @@ ifeq ($(call get-executable,$(BISON)),)
->    dummy :=3D $(error Error: $(BISON) is missing on this system, please i=
-nstall it)
->  endif
->
-> +ifneq ($(NO_LIBTRACEEVENT),1)
-> +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
-> +  dummy :=3D $(error Error: $(PKG_CONFIG) needed by libtraceevent is mis=
-sing on this system, please install it)
-> +  endif
-> +endif
-> +
->  ifneq ($(OUTPUT),)
->    ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's=
-/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\=3D 371), 1)
->      BISON_FILE_PREFIX_MAP :=3D --file-prefix-map=3D$(OUTPUT)=3D
-> --
-> 2.34.1
->
+
+Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+
