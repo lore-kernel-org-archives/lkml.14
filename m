@@ -1,26 +1,32 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC131C686;
-	Tue, 16 Jan 2024 16:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJTgUX3e"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C670C433B1;
-	Tue, 16 Jan 2024 16:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705420829;
-	bh=VR0zelLUhCaJCX6Q+iJZSRg5efDI4Ll3fVjKY9C1snQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=aJTgUX3e6/A0yIlhhnIzOStguN5+R3jHPTRwWftJgervl+iM1z2yHGabqqGT1j2Mv
-	 2P6SmQjA051ZSnNdrioIU3vevkkKIgEqy/iCojZ9L5Rkp/Yhbt5PvPK1Do2f1IbNNS
-	 flX5Iu78NYp86thTPRzU55uTeEq6IG6mwgxGGV7WrSSavmlyXsrJGJsJgwbRBQdRBz
-	 PcZ9A36paB2fGPTblj4Dz0KZdVL+jID2szHxSPqqweV1ipt6CURIHcTbn4KKDFUX+O
-	 76XDwNwpk6qIW0b1aKfvKWiD8Tyj5MoEG6v923rtEb3My7HNZmYGPk66BSYhoBI7w0
-	 Q2ZaYsB0+3COg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 53407D8C987;
-	Tue, 16 Jan 2024 16:00:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7EC1C2AF;
+	Tue, 16 Jan 2024 16:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
+Received: from localhost.localdomain ([217.245.156.100]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MCbVD-1rGfMM1ilP-009kbA; Tue, 16 Jan 2024 17:02:37 +0100
+From: Valentin Obst <kernel@valentinobst.de>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Valentin Obst <kernel@valentinobst.de>
+Subject: [PATCH 03/13] rust: ioctl: end top level module docs with full stop
+Date: Tue, 16 Jan 2024 17:01:28 +0100
+Message-ID: <20240116160141.165951-4-kernel@valentinobst.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116160141.165951-1-kernel@valentinobst.de>
+References: <20240116160141.165951-1-kernel@valentinobst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,42 +34,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] Bluetooth: btusb: Add new VID/PID 13d3/3602 for MT7925
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <170542082933.25552.3927828232982053152.git-patchwork-notify@kernel.org>
-Date: Tue, 16 Jan 2024 16:00:29 +0000
-References: <800469f157c862bcdef7213793004d2de977791f.1705129502.git.deren.wu@mediatek.com>
-In-Reply-To: <800469f157c862bcdef7213793004d2de977791f.1705129502.git.deren.wu@mediatek.com>
-To: =?utf-8?b?RGVyZW4gV3UgKOatpuW+t+S7gSkgPERlcmVuLld1QG1lZGlhdGVrLmNvbT4=?=@ci.codeaurora.org
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- sean.wang@mediatek.com, chris.lu@mediatek.com, aaron.hou@mediatek.com,
- steve.lee@mediatek.com, linux-bluetooth@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- ulrik@strid.tech, deren.wu@mediatek.com
+X-Provags-ID: V03:K1:Vl604ifirTqxSRb0VeZq6n9STXQC2equyytItghMfY5eTvyOnz2
+ uM88EOQgOFfBZV2pVFZWqVdFt2heBqC3+1onll4HVVvSWl0hq/Sgvj1co03zc4404udJ0XO
+ V0lzfaOqs4OQtaSkc+RqPiTOq/er+938r++R2R/p3ctFexrPFTJyqXphq6FQdvSgGKW5J85
+ nUvnBocn8ivhaATyEjn9w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:M8ewJpf3SNc=;6DkxcoBATZk9fCkhsgRqI9hD4de
+ 97eMdKprz8PDEy7+1kgGahldajB3zz0kBfU477TFKBiWASXN3YHIczg4ufCS90nUVkTjLDFKD
+ oBaqBowC8P8vESRyK6+q3XF3xdhiqO7eb3X+tBFPsusH/cUzZbAdFYgeu5zUCpcK+bWcduSCQ
+ Gq7FCJ5oLOa6/YNeXKLqKi9n+X49JDuQ2v00ISAqr76zEhJuhNmFqwGbiRI9eYYe0upLuUq4g
+ 1PnlbtQFDQgj98grVp4pGExl+txnDyXCOtayxSmJqUQQas9HyASK0udF0rhKb7DYyEfG+u68j
+ HZCkRXZMZBEL/610uLcZNDzqzRngKWRs1zRakzCaMEWGr9d73UKrWyW4x3qQk8/roAdyUDe6v
+ 1eAv1y5ifzpxO6DjIDjbMWjzSMxT3FeNagV/rIlq7U+xTkEgerrDscSuGkYnnXILzv/8le9Rs
+ tHoee+FN5oCr52YX726iYwTDtb/FUe6Lvarfbv+c+g62CozwGlQbsXWD3vnHjGNqgnJr7Vsvr
+ TTBYhZJwOrex3TyrKrImIAgw8PJS/GTtEUgftDiYXV+/V8ejUj7/bEU4OppS0NKTGpjmrz1ow
+ asiEX25v56sRgxvhcHxiydFfIZDtL3fRo5MQCkOw0I3K/FisbQoTb9GfNvLiEUhApz4viL0V/
+ xiQuqITQXfFExAhimf53hjod/OAqqk/uS0q/8yyPd6I6n/hXGczCxhk7tDd21faL9OfCHXys5
+ UneRJXfZs9Qam1u4exGbAWNutykFCEU75MOJviyc85JazhAG9s3hkX6BP9qhBhjzHY8+VSl3b
+ QrgU5B4XQ4cicDDTyF09avY9zhTS9bxMei0LUKY4P/+o5zYQF90tZGVeqNZOb4tvR7IS0AcPo
+ OelptaDa0dTRYsQ==
 
-Hello:
+Every other module ends its first line of documentation with a full
+stop. Adapt the only outlier.
 
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+Signed-off-by: Valentin Obst <kernel@valentinobst.de>
+---
+ rust/kernel/ioctl.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sat, 13 Jan 2024 15:27:38 +0800 you wrote:
-> From: Ulrik Strid <ulrik@strid.tech>
-> 
-> Add VID 13d3 & PID 3602 for MediaTek MT7925 USB Bluetooth chip.
-> 
-> The information in /sys/kernel/debug/usb/devices about the Bluetooth
-> device is listed as the below.
-> 
-> [...]
-
-Here is the summary with links:
-  - Bluetooth: btusb: Add new VID/PID 13d3/3602 for MT7925
-    https://git.kernel.org/bluetooth/bluetooth-next/c/eaab5c300eab
-
-You are awesome, thank you!
+diff --git a/rust/kernel/ioctl.rs b/rust/kernel/ioctl.rs
+index 59050e5f5a5a..5987ad6d38a7 100644
+--- a/rust/kernel/ioctl.rs
++++ b/rust/kernel/ioctl.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-//! ioctl() number definitions
++//! ioctl() number definitions.
+ //!
+ //! C header: [`include/asm-generic/ioctl.h`](srctree/include/asm-generic/ioctl.h)
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
