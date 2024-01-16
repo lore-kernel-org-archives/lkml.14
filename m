@@ -1,78 +1,63 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2AE1B7F3;
-	Tue, 16 Jan 2024 11:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="JyKeXbNH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1705404751; x=1706009551; i=markus.elfring@web.de;
-	bh=iAhuJ/qQVCBNcDA7a+DCqneotDxV2KRsYE5G4LmVFbU=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=JyKeXbNHh1YPE38KNNl4pFzENqsj94iAtCjxFl4cpg3AVhjVweCJdJorozew0HUk
-	 PLmzumEy8feCAr8TbT+MBZ1mhVmeoj83jVdPwWDPACQlDR4uzRAW5gL6bzLHgBmuU
-	 x5/uE4q7oGW3a97U56to2eqE9Rw/PM5uxjz8FbxMOdY7OBW0auQ/qqYofYNkRsy8H
-	 2UUH2QOl1IPcazulENk6DKTVDNO88RnTMezLXmiQNQlce0tkmcPlIKh+wh0UVUpFj
-	 UjoPCZFqwx/oaimbV+71yIdSWLYw4DiorsaP7SH5htwq0WUIeQ+5KgScr8jhDVIWe
-	 G+umHwAdFkWxr8yYgw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MWQud-1rejZM22Z9-00Xum7; Tue, 16
- Jan 2024 12:32:31 +0100
-Message-ID: <ab6bcd8b-f53c-47d1-8c55-c374a36d6ee4@web.de>
-Date: Tue, 16 Jan 2024 12:32:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5801B7F3
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 11:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.65.196])
+	by sina.com (10.75.12.45) with ESMTP
+	id 65A669CA00007314; Tue, 16 Jan 2024 19:34:37 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 35475331457846
+X-SMAIL-UIID: 70886D29B86C41BA9E7105BCE90A56F4-20240116-193437-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+7ec955e36bb239bd720f@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] KASAN: slab-out-of-bounds Read in dsa_user_prechangeupper
+Date: Tue, 16 Jan 2024 19:34:26 +0800
+Message-Id: <20240116113426.909-1-hdanton@sina.com>
+In-Reply-To: <00000000000002faa2060f02e766@google.com>
+References: <00000000000002faa2060f02e766@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: vfio/platform: Use common error handling code in
- vfio_set_trigger()
-To: Alex Williamson <alex.williamson@redhat.com>,
- Eric Auger <eric.auger@redhat.com>, kvm@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <f1977c1c-1c55-4194-9f72-f77120b2e4e5@web.de>
- <20240115133756.674ae019.alex.williamson@redhat.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240115133756.674ae019.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ePm0QBO8e1avTdTL7DQnx+zr63juMwHQUHf/MqZ58wen1wf5U7Q
- nC3rH0Y822QXoWWjh+pQEpbDg3/sfZlNbp5rzTmaueSlfOeDQMvjChS5PA1EA+f5QeXrAYB
- e+xUQZKDGO2NVaZScLr+gzBv1iRwO/Jvy96wltiWVBW9SPMZVrlzjcneICYitwJKhjV7c45
- nX3vUK8bTg9BmiqmeREfA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:l+D0pf4ENc4=;xhq2bwmffmLpT/ZH3Np3y9ADRoj
- N1+L5kyZkxluuNKM0B3HLryXKaZM4Bmw9IF71gmD/NvN1UXcaSimmSYleskDk34BmvCxiS9TR
- 66TpSQspB5GxBzlTRs08LqIlhr3ZtazmIFo+aDOj/4vsyvwoEU3LZDFtS09e2cp8FH/5/dCaD
- 2ofTW7FjWNm454s1g0YOwAOxtrh3VrvOhrCjAu4QAKd7q1XqNxnnRBJ3kPDKxpK0Ptj4DRpBH
- NuWUa4yasDkv+xadIkSmOpPv4Bffz7Xcr0naGYcd8lYVk13G/gTZbo36lmcsvsTybRAfYxBbY
- JXmiFDSXY7/VQFiVSS0EBgAWupLRkaZED1PgWePy6XbWCRmzYQAPNcQ6AZwpXk0BLXDhtzfMy
- tf/ELA4ixuI1t8LMyFCguwNiZm4vCEtLK2FVqXsGU5t0e+ZYSI+zHawXuT3Yb1qUDgrVw6SCL
- PLcMrk+MPln7inGNSpdqudNOuWGhX9xaFldslB4PJcmSfRlwUCBIJGb/m3hmz7HkcqFSo9apM
- rUK0eMourke44zu1lJWNTOPny8F1R5ewmQUzMuljl8vouB2W4fbYLSWyfS/UT8OEIFfq9kNA0
- qPcavZL6ErQm40yTY1xiNtzM1907n0Qwek8mnNT69k5EPJAm0zqd5IODeTFGviFfkwmNUL9fs
- MYbWxxYBxQiFT6UaSnfuwnjI6LgwsSYIm7eLB9DvNZdKTeTufFl6Jhu0vOwdKZgw6sOwCjgu3
- dShjq/T6s53g9+2ViAJY3i1bPI9L1aQkWO7izKuJ1acESISH3Xq4HvXvC67yAOdizA8Cwnzle
- TfM+g6Nf8G1KeCmXEUBlaIBN6su1NBFrqBdhbX28EyfGIuMKrfsFb7AEg17N/uNoIheUYfUs8
- dt/nEzFPSKmjlX7OOX9qrj4E3ttIaVZ0/fq+0cO30pBho+W+psAoBmc9174Lup6LaW7+dsY7g
- 2IS9ig==
+Content-Transfer-Encoding: 8bit
 
-> TBH, this doesn't seem like a worthwhile exit point consolidation.  A
-> change like this might be justified if there were some common unlock
-> code that could be shared, but for a simple free and return errno by
-> jumping to a different exception block, rather than even a common exit
-> block, I don't see the value.
+On Mon, 15 Jan 2024 13:43:20 -0800
+> syzbot found the following issue on:
+> 
+> HEAD commit:    3e7aeb78ab01 Merge tag 'net-next-6.8' of git://git.kernel...
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12995b33e80000
 
-Can it be helpful to store the shown kfree() call only once
-in this function implementation?
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
-Regards,
-Markus
+--- x/net/dsa/user.c
++++ y/net/dsa/user.c
+@@ -2865,11 +2865,13 @@ static int dsa_user_changeupper(struct n
+ static int dsa_user_prechangeupper(struct net_device *dev,
+ 				   struct netdev_notifier_changeupper_info *info)
+ {
+-	struct dsa_port *dp = dsa_user_to_port(dev);
++	struct dsa_port *dp;
+ 
+ 	if (!dsa_user_dev_check(dev))
+ 		return NOTIFY_DONE;
+ 
++	dp = dsa_user_to_port(dev);
++
+ 	if (netif_is_bridge_master(info->upper_dev) && !info->linking)
+ 		dsa_port_pre_bridge_leave(dp, info->upper_dev);
+ 	else if (netif_is_lag_master(info->upper_dev) && !info->linking)
+--
