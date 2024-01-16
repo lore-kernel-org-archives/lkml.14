@@ -1,49 +1,49 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E759E11713
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 07:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EE011187
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 07:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gfhYxRiK"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-557a3ce9942so10478901a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 23:42:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yE4FewSJ"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a2bdc3a3c84so596248966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 23:44:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705390971; x=1705995771; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705391054; x=1705995854; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Co7zsJqeAeRE1qDOKNmW3TdEzTZPmfPOPRRWPGZTc5Q=;
-        b=gfhYxRiKOua2RkeJIhggBtCAGPw9sYwrOyVP4BlSn7PwGBSJfr1dE0DqzZJt8dm41w
-         zQ6nN+Wb/87t+tk1aUPR1DVJcTv8RiX0PsEYDUgDlCc1Kd/3ErmUzQcuKTd4zPQRQPTy
-         BJPbw9FQYKbVPdHzZiBJTGUBQz+c2FQzZpQZUhmJa7CsKvEVix4e8UjRAc7KFdmH/MtT
-         Xn7hfysJmuNFyzN6DotR3lwA98/LDwTrzetLTiRbhXU/mNiH+PE2if0rMfLUQ4/oHKQA
-         R9wN3FkjssoTcg+rsrHyFcdynjcjk77y1w+8aZJ97OAVYygwqnky409uvob8oD1OLpxK
-         FUAQ==
+        bh=jKzzfD7Q+iw9ywLSyQUPmN6HRknPizPzZEN0JpohIlg=;
+        b=yE4FewSJqLLtjyjvp9WzxtH8x0Ol6o2pv6APn7yBgqtjJWxWBndaXiNSmwitSiwPU7
+         d3Tj+wdqwZB8kx6PaKTBL9udbrCOaG9yGbH9AgJWGM8HXgSnQAYxys4PFhFwazP5wg+D
+         ARB4/KbQ/dQZ9om44+2LOH+YkOlvS9woBtBzIh8Y3dCY27jOHBer1IC8FOZdI7jsOXif
+         ArrFXe2deCelgbVmMs2G8UXNGQ8n/y6zrJt5uYArWZTyJ9HIBvySkvj96r+VCB5PzKBA
+         92E9EjppVI/fdWv8Ie1m3boSsKEhRAXY9g3pbOVqZDEIJasmdVf+CJlW4kUX4+dR0sna
+         imyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705390971; x=1705995771;
+        d=1e100.net; s=20230601; t=1705391054; x=1705995854;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Co7zsJqeAeRE1qDOKNmW3TdEzTZPmfPOPRRWPGZTc5Q=;
-        b=vi9tEZwexFOYY7djUWR7zRpzXswNzxFbQ+c6xAb7K7BWGLHfYUHxs4meRgpJf3jQP2
-         kiwvqOdWIoJPp/6ixEp6i73Mgr5RRBvcEHojU+HVo6sJeJ/hAJRgCS24chAmiFxuZ1MG
-         dO7PUjMb1Ej79OEZYppFkwdV+5ne3iRsYNzdYevTmB6/2vT36WVU9QZk4hqjsJpX4RlN
-         T5gjeSnit8foJ/SZktR1ocABOS2y0vls4td3Wol84FsBzz/ImBL1ClSz8oeMdpHHDOof
-         kT/42v++WTCvHsATUv6mvAy+Zai1vl6IWXXCbIQS8rr7yNqzjRLMOoEgOjGWgUpACguj
-         3Pyg==
-X-Gm-Message-State: AOJu0YwvBpNx3XUwjqDb+8F6QeZJlnhs8v5qdSW7Y+ZsiQ4YOyV/jNUx
-	ayKtoI3IX3oq4eFQj0UbK6ESM4UAMS8hbg==
-X-Google-Smtp-Source: AGHT+IGKjsCq49FIAeeEatxbVWACKvbZ6Z6jG0Fgd5QvI9e+HE0M9qFmJBdbgLAkQSwvZbQYmepmcA==
-X-Received: by 2002:a17:907:5c9:b0:a28:810b:580 with SMTP id wg9-20020a17090705c900b00a28810b0580mr2513089ejb.66.1705390971089;
-        Mon, 15 Jan 2024 23:42:51 -0800 (PST)
+        bh=jKzzfD7Q+iw9ywLSyQUPmN6HRknPizPzZEN0JpohIlg=;
+        b=gUJ3puwnR6ROm6+NnlBlJqc2AqPtaBocM7A3mD4yyXM3PSi3RvuRKHiQc0YbXP8qmD
+         VVi2+hrIPIX/vl8CdCYXqSgLpQd2YsHGo8LKaBP6m2XDuxeKuGPjLjoWKNNP6D05PxVl
+         38btNEGN9wkQBOFwGU/IoXjPkBHjXK8qt3/q+wqmmgd9jHMvuUeZ7LJYEMOfDZmqT2FI
+         gXi0M5fm76WMTlBgGDSd4pZGr6gGa4VWpmt0BpxZ5WV6GX/Xz9PmbpTpgOikxe93SLEB
+         KP1buV4uVaQPhMpYXVCinRjXbSP27BCXq4pMqz81T2+UHuC/5vMTLOAmjGuyHk54sgAR
+         /6qA==
+X-Gm-Message-State: AOJu0YyHEHyVln8LDjtbinzz4KMSntYIny0ONkhdapqI7kZ7juih42iD
+	Hv/yDgSmEAC1nRjTQVa8cGsjEZ7xbjGHRg==
+X-Google-Smtp-Source: AGHT+IGvf+bI9vg7WKoNfxfnn/VW8C+z3uM1veDKGuSQAPwDPsRWjwh7iS3QWnAxCuyTVkWR5Chu3w==
+X-Received: by 2002:a17:906:5811:b0:a2e:92dd:80a3 with SMTP id m17-20020a170906581100b00a2e92dd80a3mr20827ejq.123.1705391054245;
+        Mon, 15 Jan 2024 23:44:14 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id x25-20020a1709064bd900b00a28f54aacf1sm6185810ejv.185.2024.01.15.23.42.48
+        by smtp.gmail.com with ESMTPSA id x25-20020a1709064bd900b00a28f54aacf1sm6185810ejv.185.2024.01.15.23.44.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jan 2024 23:42:50 -0800 (PST)
-Message-ID: <e42818b2-8826-48f8-b9bd-35cbf464a08f@linaro.org>
-Date: Tue, 16 Jan 2024 08:42:48 +0100
+        Mon, 15 Jan 2024 23:44:13 -0800 (PST)
+Message-ID: <f2b3dff2-ce0d-4ddb-ad61-74abf2c3022d@linaro.org>
+Date: Tue, 16 Jan 2024 08:44:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,27 +51,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] dt-bindings: display: add dt-bindings for STM32
- LVDS device
+Subject: Re: [PATCH v6 3/3] riscv: dts: sophgo: add rtc dt node for CV1800
 Content-Language: en-US
-To: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
- Rob Herring <robh@kernel.org>
-Cc: Yannick Fertre <yannick.fertre@foss.st.com>,
- Philippe Cornu <philippe.cornu@foss.st.com>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240115132009.101718-1-raphael.gallais-pou@foss.st.com>
- <20240115132009.101718-2-raphael.gallais-pou@foss.st.com>
- <20240115154659.GA815331-robh@kernel.org>
- <3479c5d7-a9c3-40cf-a415-b8324f160ec7@foss.st.com>
+To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, alexandre.belloni@bootlin.com,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ chao.wei@sophgo.com, unicorn_wang@outlook.com, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ dlan@gentoo.org, inochiama@outlook.com
+References: <20240115160600.5444-1-qiujingbao.dlmu@gmail.com>
+ <20240115160600.5444-4-qiujingbao.dlmu@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -117,68 +107,42 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <3479c5d7-a9c3-40cf-a415-b8324f160ec7@foss.st.com>
+In-Reply-To: <20240115160600.5444-4-qiujingbao.dlmu@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 15/01/2024 17:51, Raphael Gallais-Pou wrote:
+On 15/01/2024 17:06, Jingbao Qiu wrote:
+> Add the rtc device tree node to cv1800 SoC.
 > 
-> On 1/15/24 16:46, Rob Herring wrote:
->> On Mon, Jan 15, 2024 at 02:20:04PM +0100, Raphael Gallais-Pou wrote:
->>> Add "st,stm32mp25-lvds" compatible.
->>>
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> ---
+>  arch/riscv/boot/dts/sophgo/cv1800b.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> index df40e87ee063..66bb4a752b91 100644
+> --- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> +++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> @@ -119,5 +119,17 @@ clint: timer@74000000 {
+>  			reg = <0x74000000 0x10000>;
+>  			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>;
+>  		};
+> +
+> +		rtc: rtc@5025000 {
+> +			compatible = "sophgo,cv1800-rtc", "syscon";
+> +			reg = <0x5025000 0x2000>;
+> +			interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&osc>;
+> +		};
+> +
+> +		por {
+> +			compatible = "sophgo,cv1800-por";
 
-A nit, subject: drop second/last, redundant "dt-bindings for". The
-"dt-bindings" prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+What is this? Why is it here, how did it even appear? It misses unit
+address and reg or is clearly placed in wrong place. It seems you
+entirely ignored out previous discussion.
 
->>> Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
->>> ---
->>> Depends on: "dt-bindings: stm32: add clocks and reset binding for
->>> 	    stm32mp25 platform" by Gabriel Fernandez
->>>
->>> Changes in v3:
->>> 	- Clarify commit dependency
->>> 	- Fix includes in the example
->>> 	- Fix YAML
->>> 	- Add "clock-cells" description
->>> 	- s/regroups/is composed of/
->>> 	- Changed compatible to show SoC specificity
->>>
->>> Changes in v2:
->>> 	- Switch compatible and clock-cells related areas
->>> 	- Remove faulty #include in the example.
->>> 	- Add entry in MAINTAINERS
->>> ---
->>>  .../bindings/display/st,stm32-lvds.yaml       | 119 ++++++++++++++++++
->> Filename matching compatible.
-> 
-> Hi Rob,
-> 
-> 
-> I was unsure about this.
-> 
-> The driver will eventually support several SoCs with different compatibles,
-> wouldn't this be more confusing ?
-
-No. "Eventually" might never happen.
-
-> I also wanted to keep the similarity with the "st,stm32-<ip>.yaml" name for the
-> DRM STM drivers. Would that be possible ?
-
-But why? The consistency we want is the filename matching compatible,
-not matching other filenames. If you have here multiple devices,
-document them *now*.
-
-> 
-> 
-> Regards,
-> 
-> Raphaël
-
-I hope you did not ignore rest of the comments... We expect some sort of
-"ack/ok/I'll fix/whatever" message and you wrote nothing further.
+NAK
 
 Best regards,
 Krzysztof
