@@ -1,90 +1,102 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96250257A
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549B81CD07
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705429909; cv=none; b=QC+zwCONM2jiPSGM+F4pGn4kuXbH1XIDl6gMZdJYsmaN9ok2Wl0UIwFO31BdmDYM8lo+CnERDCj24oXWKKPbtRMYuA7vwjlXBh/nxXpCRuH/+x4TXhBZ3bpkiK0eujw+B7CbdJKp87yT9xy2ev5QWVyFVX8SB/t5P+zB4Ztvj5o=
+	t=1705429994; cv=none; b=RSckkhINGxnIiUiMrXKZUd/SNmNrSvwNZOKZn/RFkoCnraxqYTaEI4XOEzsJmPClNzZzGi1lfk0GWbvzkVgmEe5wGGU1Of1r7DNgLshUpy2ryOXEWVSv/rSUKHrl0P6/shYgKouTYr142hZM7TX6ziqb3g/Uou0G3GyB3NsghEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705429909; c=relaxed/simple;
-	bh=u25NWr5gJK3oIJ5CH/ykuA1WxEzkBaijY+CVYsOK7Pg=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Sender:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=egp7bxJkI5jYgC/CHqWF/JbvMJ9RUxDlFFKz4RgVRhZtGReh/wfVUWnNWhtbnNNBlWYx2NRcizPsfq1Hq+IoxKdEflH7PT6pJXf2qz4kWs3kHsoTMNvjYZKsiLjDmcBqqSGO/nujxDcZdXAnqyrWDo6NNcQjP6DU3OGr8jk4UzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E7YtMfeJ; arc=none smtp.client-ip=209.85.167.176
+	s=arc-20240116; t=1705429994; c=relaxed/simple;
+	bh=JwNvuHi5CpdeD9Q7CbYVbQzkcZ5+AVv/Usz1r2vNrkw=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:
+	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
+	 X-Google-Smtp-Source:X-Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:In-Reply-To:References:X-Mailer:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding; b=kBlljvsxw8zqGtB2Q38kWl0LudjSSz7vZAwZkabUggDRaeU6lNlAax4MZH0b+0Mhee5P4YwH/ifHKEQoDD89cjmtnkKSKqV15laRiNPkrOB4l8CF62pnFcfTYFXwoaE5/X5o6Gdz6pj3YoSbYWN++9JqGaSo3iO9H1a2B+9PZ7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RkiPhIMT; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7YtMfeJ"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bd8cd40a04so407288b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:31:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705429907; x=1706034707; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4oMDoznzC9eNGCxtxnpKJXGMgVd6tz1LN6Nd14UBe90=;
-        b=E7YtMfeJgZ7orqENmMuUpF6BaI0ajkN+S/fzuGxltKK/5II7FM4vL5/OhllVsdmqd0
-         P1zThpJlJj9DHEqqZvGoejohcTa2c2V9jaZnM1vSMTYfnWv9/cwCPDkEKCPzsRsvmVXM
-         8q0laGSvLuvcMZ3VxrijSrTjX6Fh3IDm97hxIeusyhDamJ2TYmOAdTDkYXYR28HeAbKD
-         oUUp9YTRwwbROHNPFkiOIHm8v2a1XYz2fIPXA8E7YZ33eXWxWTAUCsw2R0Dq+GeJoko1
-         i1wVbaD3ASXn96fiCTzj6g3uvv782ryI4mStdouPjqU5LOKtF7SbEJhtCTjbmnx0N7jz
-         dL6w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RkiPhIMT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705429992;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FISaMlvGT4jM9D2WMtxVsmws03Og0Eq0GceC6awRLlY=;
+	b=RkiPhIMTk1WM7rn6arWhT1CDiVjvFgwoQgKByn3NAAslIJwMw3VcEgCq+8y+1bG4ZZo/E2
+	8RGAv4J5wCf/qVhyGEPHrL8vnOLjyLvFAupmFkrMXTKeFoWlkMJ6iHPaA7ghI1EiCVCINs
+	m8TKWbdMEOOINCkaYUVEu5WuxRGkQvk=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-436-od7ggAK3NeCfwkGRrBosiA-1; Tue, 16 Jan 2024 13:33:10 -0500
+X-MC-Unique: od7ggAK3NeCfwkGRrBosiA-1
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7bb454e1d63so1103390639f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:33:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705429907; x=1706034707;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705429990; x=1706034790;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4oMDoznzC9eNGCxtxnpKJXGMgVd6tz1LN6Nd14UBe90=;
-        b=hj8wQ2F6BTmSg8c738jKScDUG/5+E8KuHhhUHNZzm9scfEAykZh9T9M7OFwEO5DLNe
-         2H1quFn6vSCW4Fex2Tly2ZOPcPEw/8gGMFy+Hu+vp4Ynl+gNq7pPCtGWFu8rVDjFabtw
-         CNPsNUEwtolU+icCqXg6gc7+uQim+OiuEGtkYVi7rmIbtVbKBvTxcdofLePUc9NDctUv
-         rYa6Vxs+rF6rhTi8J/GarXTssGgUXN4Z2ir/gcTQXRUoeDMITDhK5BwQsalBTt07c0xd
-         UkX7vZGwpLN2DkCTkof77Pb3v53SzRxXb3tGdoAzEov1Pi05oo7aAV/1qN/su1s6Of9N
-         6ejw==
-X-Gm-Message-State: AOJu0YzTIs4UP+/57inn97ejXkQ7/6ssBhGmo7njidJ2k+sIZg+wW5qo
-	6bowdLIBelRNyXpddNvcwtk=
-X-Google-Smtp-Source: AGHT+IErXEEhbwE3HxlN8RAVe8YC5ifMpQd4+q2c2+yhlykdG1Hpsbbm1ZREiZG9zTTiSfjTtByvAQ==
-X-Received: by 2002:a05:6358:592a:b0:175:f04c:3ca4 with SMTP id g42-20020a056358592a00b00175f04c3ca4mr2790860rwf.63.1705429907440;
-        Tue, 16 Jan 2024 10:31:47 -0800 (PST)
-Received: from localhost (dhcp-72-235-13-140.hawaiiantel.net. [72.235.13.140])
-        by smtp.gmail.com with ESMTPSA id p3-20020a625b03000000b006cbe1bb5e3asm10051664pfb.138.2024.01.16.10.31.46
+        bh=FISaMlvGT4jM9D2WMtxVsmws03Og0Eq0GceC6awRLlY=;
+        b=dJMun9QVKVaHELXUySqA2n/omodqWQ9ypgckexwNYxoc5hwy4FjZnEHWIj922K13kV
+         Kwjh4NdvEsaYhwiV3InXjMbkzxFyNvs6F/clLk0FYaeVEXLdPV6OASTTU6Hh5B3ZU48J
+         3HWpT3zjSnxrLWECIhIT17Nwjfmw+L46y4Qrz1DNXLzO0kBYIAhqdkWXJv6bfVNjZSxm
+         OLfn4trokGHOg42TaMEcY1KEnDHyyJnHhUnB2Z0fO7FUwa1UNAIxMdq3+oan+FJ3JL5v
+         W0sD4Z5GkF8EjnSYMarN3eYeURhNEp3tufqPuWiRD/6YnqKkkNNtWW2bMAD7H7k9wnCE
+         mpSQ==
+X-Gm-Message-State: AOJu0YwCEyeBRPUmHXofcwGeBbBF8epfCbXnbCGUnW5ImabEfhFQBNmV
+	3/jahBa08BJQtkb3RNNn7kQaIkYf/tusJYiGmVApRGLvzCYa9I0MF3Z8yIdQJ4dTY4abPatRb+3
+	wl1SQQyQQx75vrsQY6zbgluJ2eU8FPk1u
+X-Received: by 2002:a5d:8c9a:0:b0:7bf:4694:6c36 with SMTP id g26-20020a5d8c9a000000b007bf46946c36mr4546968ion.9.1705429990000;
+        Tue, 16 Jan 2024 10:33:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IErDazX7NWGFXtbf/P4jQZuCg4zJCLsr6AAXK6x7UHmTrzfxIKGZgBT8q7U2HRZ1DI6P7MRHA==
+X-Received: by 2002:a5d:8c9a:0:b0:7bf:4694:6c36 with SMTP id g26-20020a5d8c9a000000b007bf46946c36mr4546960ion.9.1705429989777;
+        Tue, 16 Jan 2024 10:33:09 -0800 (PST)
+Received: from redhat.com ([38.15.60.12])
+        by smtp.gmail.com with ESMTPSA id bm7-20020a05663842c700b0046e41dace9csm3020396jab.30.2024.01.16.10.33.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 10:31:47 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 16 Jan 2024 08:31:45 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Audra Mitchell <audra@redhat.com>
-Cc: linux-kernel@vger.kernel.org, jiangshanlai@gmail.com,
-	hirokazu.yamauchi.hk@hitachi.com, ddouwsma@redhat.com,
-	loberman@redhat.com, raquini@redhat.com, rasmus.villemoes@prevas.dk
-Subject: Re: [PATCH v3] workqueue.c: Increase workqueue name length
-Message-ID: <ZabLkep0gOFEyjxH@slm.duckdns.org>
-References: <20231215193954.1785069-1-audra@redhat.com>
- <20240115170822.451231-1-audra@redhat.com>
+        Tue, 16 Jan 2024 10:33:09 -0800 (PST)
+Date: Tue, 16 Jan 2024 11:33:08 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Eric Auger <eric.auger@redhat.com>, kvm@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: vfio/platform: Use common error handling code in
+ vfio_set_trigger()
+Message-ID: <20240116113308.78935e11.alex.williamson@redhat.com>
+In-Reply-To: <ab6bcd8b-f53c-47d1-8c55-c374a36d6ee4@web.de>
+References: <f1977c1c-1c55-4194-9f72-f77120b2e4e5@web.de>
+	<20240115133756.674ae019.alex.williamson@redhat.com>
+	<ab6bcd8b-f53c-47d1-8c55-c374a36d6ee4@web.de>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240115170822.451231-1-audra@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 15, 2024 at 12:08:22PM -0500, Audra Mitchell wrote:
-> Currently we limit the size of the workqueue name to 24 characters due to
-> commit ecf6881ff349 ("workqueue: make workqueue->name[] fixed len")
-> Increase the size to 32 characters and print a warning in the event
-> the requested name is larger than the limit of 32 characters.
+On Tue, 16 Jan 2024 12:32:23 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
+
+> > TBH, this doesn't seem like a worthwhile exit point consolidation.  A
+> > change like this might be justified if there were some common unlock
+> > code that could be shared, but for a simple free and return errno by
+> > jumping to a different exception block, rather than even a common exit
+> > block, I don't see the value.  
 > 
-> Signed-off-by: Audra Mitchell <audra@redhat.com>
+> Can it be helpful to store the shown kfree() call only once
+> in this function implementation?
 
-Applied to wq/for-6.9.
+I don't believe it's worthwhile, it's a simple function with simple
+exit paths and consolidating those exit paths for a trivial kfree() is
+unnecessarily complex.  Thanks,
 
-Thanks.
+Alex
 
--- 
-tejun
