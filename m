@@ -1,118 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968BA24B49;
-	Tue, 16 Jan 2024 19:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B296130E4F;
+	Tue, 16 Jan 2024 19:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434682; cv=none; b=rRV6CSvyNrePymypIKElxd9oud8QObmjQZKfCCjnB0TKsp3njuErqNCGWdvriRqEJmjpC7VNwG/Ti9gTjzLYMkiYI+jnGMAJ/uOd8h0jZtHLL1hON3b2Uhtzx/1mDDD1ZceK1u7ptygY7cbQnLmTmc6kPJf9b9k9kOadhgSNvy4=
+	t=1705434688; cv=none; b=euMd0lYYpvbBiBnJLzEe1P697HhyuvkLw1AMbN5jE5X5Qu8jeIoCuBaLgCaifCzuoNM8tmuMY/HkM5yCWr6XlPXkIWPLxzCBaNOdt/1qGauNRZrJO8bkaqRuW7uuBMRJW3q7+glD2hLeDh9hOTfs0TGex4jhTA8J0R8EBaVqkYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434682; c=relaxed/simple;
-	bh=xbDbzMEtgVcUrOQCXkaSw4wRsKzePZtQjF/09aWkAeA=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
-	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=NSdeU4qIzlXP35xgkvgvlwEKWb5TmjYLzCXK2aFYIxuXpr17QnhsPw/Lti7WCS1fQGdwArUwS8ZuvsLrFXIQPl1xrqB27LDIbp8rG72ONh5Efcla1nf9WRIDvgb25FxzvHhGQKhjYXYgoHeAjs61LsJgTs8wuUoLlZni90MyV4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QA/xK0xp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705434688; c=relaxed/simple;
+	bh=8LNFAiNLxDK9BNpZe1yap94I2WcbyLVKDUX+vZ5KaBQ=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type; b=D5TeW1AC5SW66Rh/M+2k5NJYzJTSvn9jSFvMIkEdgNGs0iCQVKkrX/+gG2Lv7qzAyL1d0imBtQexujygqaL9hYCxRUAHilGBIRdWTLooUkTOw4d9X2NUQltvfFpynO4wzDkZrUPVoQkioJoaNaVrQYJE9KckgzDRpWJoo9ajSMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhndZ5PJ; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QA/xK0xp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73EACC43394;
-	Tue, 16 Jan 2024 19:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705434682;
-	bh=xbDbzMEtgVcUrOQCXkaSw4wRsKzePZtQjF/09aWkAeA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QA/xK0xprNc7T+oAOolTv7PWZrDfzVu2QrEs3RpNtlHG9amuoH0E8UvtuzXabHz+U
-	 hIYq6ZTJ3Bq1T7+JrMcXHuIt6/Befay6Md5blAlsf0IAeHBHqmRpPUx9Mo/XbvqmSG
-	 BM0R96kUk8KCID6L+hkPECY22bQg6Xo7DwjQiLDWMS02bJ5rJs6eL6EFab5pkGjAXE
-	 32jwlLoqU3i6m/RQfQtVxHPUu1sSqp65QC56iC9JBBeAnmnfC1U9ORQKMBap5lpW7E
-	 KHg+Wr5gKvSMWHiYaaEaU7uG4+ybhcRZ1mSKIjpHrLNgcMxHbIVGxGqFWLCAftA3eB
-	 8KZz60iUvCAOA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Felix Fietkau <nbd@nbd.name>,
-	Sasha Levin <sashal@kernel.org>,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	kvalo@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	sujuan.chen@mediatek.com,
-	chui-hao.chiu@mediatek.com,
-	linux-wireless@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 048/104] wifi: mt76: mt7996: add PCI IDs for mt7992
-Date: Tue, 16 Jan 2024 14:46:14 -0500
-Message-ID: <20240116194908.253437-48-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116194908.253437-1-sashal@kernel.org>
-References: <20240116194908.253437-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhndZ5PJ"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbed4b84667so9604472276.0;
+        Tue, 16 Jan 2024 11:51:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705434685; x=1706039485; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K8w04xiJGT72J3l5pZYydZFnp7VG18KNZBIm6eg0WXU=;
+        b=ZhndZ5PJmmeC7K11+j75TJ+jargGUCHC4OeVaOK/SjRtsuBWvD/V9Wpzg/AyPqXkku
+         1Wc3jXyhonOnE7xkkpmcgTPhT1DkbwbVsdFELECY6KXrSZBcVQNgEoaMc1MEJ8WYimK5
+         k0+vYaRAz+ACl1MKOaAObtLxN+sPvuy1uJJBKo6vHL7p6gaAO1wDQCQZHuheVttnUHvP
+         d+pYcFcenLOP+bu9tAThFs51K97bRTp2w7a0AubNz7btfw8bBiDbEMaoDrLRR8PDLSK6
+         Vxmf6E/bggwxD/F4PutNEnTp9UHMLWuH0HQamzXWaGof5x71hxCDID/lRGfACMu8enaq
+         ql1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705434685; x=1706039485;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K8w04xiJGT72J3l5pZYydZFnp7VG18KNZBIm6eg0WXU=;
+        b=QvzTYrBnAnY6Ncifi0VW7nBOWLhK8rT6qrli2WHqUEtPaL5l1rLvx4WDpxQExLZAKK
+         B/MbDXRe5/In5ZVdzwwfO6QcaCzSOnQ7agdW+uQVWPvLDRkDbO9ze7TRVxk5/q/6hvpc
+         L1HTHzdFNaWxynb4wWoqa1mgLFziTzIk7xmBhrV9xvPxr/0ISbb95k9Urj+G5af8fABd
+         KsDQgrk/2c69pKOt13VHqpT6HU+lCVqMZCg7G5pKYdRPy/kbmucv2wFvEwDF2LpbuN0/
+         AM3yP7FREM/ZJ6YzfroK/NFx5sir9tZNcud4U9nkfuqjfU/P7zE5fAp9Pep60XLmfCSK
+         IPww==
+X-Gm-Message-State: AOJu0YzENZgs6D/MVl0bGIsR7fT4SflMd6wKAPj/7X+7qdQMO23Xdufg
+	5GTVSVo+4XkmN/dmOWbseoUbHD2KGooTMyq128I=
+X-Google-Smtp-Source: AGHT+IEcHHyG+hJdFrG3M4zsgP7m+03vGfwWM2Y7XjxHTSXuNkOfPFJRl4DAeDiaEXh4RoBm4dUCzVDv8eYRlr6MSWI=
+X-Received: by 2002:a25:910:0:b0:dc2:266a:7814 with SMTP id
+ 16-20020a250910000000b00dc2266a7814mr1142886ybj.120.1705434685611; Tue, 16
+ Jan 2024 11:51:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.12
-Content-Transfer-Encoding: 8bit
+References: <20240108135421.684263-1-tmaimon77@gmail.com> <20240108135421.684263-4-tmaimon77@gmail.com>
+ <99eca166-7d78-4ada-ac0a-ad67f3d8eb33@linaro.org>
+In-Reply-To: <99eca166-7d78-4ada-ac0a-ad67f3d8eb33@linaro.org>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Tue, 16 Jan 2024 21:51:14 +0200
+Message-ID: <CAP6Zq1g7NoLVbAUyeQ8jm3qZvjLV6HSVZB+r-X7dxvVNtvddPg@mail.gmail.com>
+Subject: Re: [PATCH v22 3/8] arm: dts: nuvoton: npcm7xx: modify rst syscon node
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com, joel@jms.id.au, 
+	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
+	openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: StanleyYP Wang <StanleyYP.Wang@mediatek.com>
+Hi Krzysztof,
 
-[ Upstream commit 3d3f117a259a65353bf2714a18e25731b3ca5770 ]
+Thanks for your comment.
 
-Add PCI device IDs to enable mt7992 chipsets support.
+On Wed, 10 Jan 2024 at 23:01, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 08/01/2024 14:54, Tomer Maimon wrote:
+> > rst node name and compatible property modified since clock and reset are
+> > handled in the same memory region.
+> >
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
+> > index 868454ae6bde..f72c5a03d04c 100644
+> > --- a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
+> > +++ b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
+> > @@ -93,8 +93,8 @@ gcr: gcr@800000 {
+> >                       reg = <0x800000 0x1000>;
+> >               };
+> >
+> > -             rst: rst@801000 {
+> > -                     compatible = "nuvoton,npcm750-rst", "syscon", "simple-mfd";
+> > +             clk_rst: syscon@801000 {
+> > +                     compatible = "nuvoton,npcm750-clk-rst", "syscon", "simple-mfd";
+>
+> NAK. This breakes the users, is not justified, is not explained.
+Sorry, I didn't understand, which user it is breaking? there isn't a
+device tree node that uses the rst node.
+Should I explain it better in the commit message?
+>
+> Best regards,
+> Krzysztof
+>
 
-Signed-off-by: StanleyYP Wang <StanleyYP.Wang@mediatek.com>
-Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/mediatek/mt76/mt7996/pci.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Best regards,
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/pci.c b/drivers/net/wireless/mediatek/mt76/mt7996/pci.c
-index c5301050ff8b..67c015896243 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/pci.c
-@@ -17,11 +17,13 @@ static u32 hif_idx;
- 
- static const struct pci_device_id mt7996_pci_device_table[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7990) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7992) },
- 	{ },
- };
- 
- static const struct pci_device_id mt7996_hif_device_table[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7991) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x799a) },
- 	{ },
- };
- 
-@@ -60,7 +62,9 @@ static void mt7996_put_hif2(struct mt7996_hif *hif)
- static struct mt7996_hif *mt7996_pci_init_hif2(struct pci_dev *pdev)
- {
- 	hif_idx++;
--	if (!pci_get_device(PCI_VENDOR_ID_MEDIATEK, 0x7991, NULL))
-+
-+	if (!pci_get_device(PCI_VENDOR_ID_MEDIATEK, 0x7991, NULL) &&
-+	    !pci_get_device(PCI_VENDOR_ID_MEDIATEK, 0x799a, NULL))
- 		return NULL;
- 
- 	writel(hif_idx | MT_PCIE_RECOG_ID_SEM,
-@@ -113,7 +117,7 @@ static int mt7996_pci_probe(struct pci_dev *pdev,
- 
- 	mt76_pci_disable_aspm(pdev);
- 
--	if (id->device == 0x7991)
-+	if (id->device == 0x7991 || id->device == 0x799a)
- 		return mt7996_pci_hif2_probe(pdev);
- 
- 	dev = mt7996_mmio_probe(&pdev->dev, pcim_iomap_table(pdev)[0],
--- 
-2.43.0
-
+Tomer
