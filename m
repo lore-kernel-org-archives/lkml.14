@@ -1,105 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1749131745;
-	Tue, 16 Jan 2024 19:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CA0131E40;
+	Tue, 16 Jan 2024 19:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434694; cv=none; b=atnRxaW+SCJ/sVVoMdPwYv/PhIeJqeVh5lpNmup7oj4WkYqtA/ynUYyciXi0aMLcGkRYDyU3rY7p6eCzCXM9bqeGvDTaqWZqWuwldrYFugVkRx60PKypCtFZpKg2f9nAx4CvfjfWmJ6Nd6Aqamp6Qp8hNHpNWw/Zsv/DwC7413A=
+	t=1705434694; cv=none; b=bTH+NpZw2mpkXWZynJQepfJKf8ZxqgdPOshZuRoTSbxS8ZpSBmwGwJqkEkTo5jkg43Zfpy0YvJ2H9NnpmjMm15QvBFpj7x3UIr8jZ+YvCpeBkoeiGJzwihv87/5LrzT/ISMyFmz4XEPg5twseIr8MG5gYs904bmKWLiJU4cWe6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705434694; c=relaxed/simple;
-	bh=LYFKZ7TRuYk1pl41vPfkzt1g9GP165KZ2d+LPbo5cvk=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rzp7GM1z/1QoZm8wN9K8ZU7Ku4muncPBl4JJYW3pC3EkWtHm7DvvqBSXh/9Zxnxhsvcz+IC4AJdx4AYdvHTYGCj9ax24NC0LoNMMgIyQiiDpTxtOgL2ydYGwz5RuYxZ5QQe8pjzkDFAvJvvOOQSDQGz75Rzg7W/RsbtRHdSULa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RbmnggF/; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=fPkw5eb3zMl6IQEhSEcVnJa8xAm0OOdWnSuOkNjPXqY=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:X-stable:
+	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=ZH03kAE/+nr2LC1cw4VXrhI2NAbS3biWwN9R6PY9f8UnE6kQo7/qotwLc0JCyD2EBwe3Mybsk6u+ya+fXeJh9sNDEEY8SmeIgxQx8unOgIFPGivxbqwSpeYwBsDFJYyFpNNAcFoouqQTqmBiAt+k6KUmAVfE9LffYMlxlh0avFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyWxOIXQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RbmnggF/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705434693; x=1736970693;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LYFKZ7TRuYk1pl41vPfkzt1g9GP165KZ2d+LPbo5cvk=;
-  b=RbmnggF/qb4euGFspfd8dksFx7iB6jZlhwTgWHYoaw5z7Ytk2jiXrHLL
-   ADYyOL7qK7GibbMkeQzhGdD0rFQgfMITiVdlOaS9ENdLEMzZ3LIN26HbU
-   TIthaAzpacSclhdAPbn9fqoq43X4ZhXTs32yQgofEIgWWqTW0ZiZppAkP
-   YK+uH3WQkbzpLk/dkTRXzLKzrt2vxAqSZU8SFLU4mQG1KxjD03mIyjst8
-   MHv54LrUwCorB261Zcv8AM/HZsnNheVzkONyieMrYCniyhlDQD9R5vTII
-   2Q+PbBZ4hFOnfR/pmLANz9dVQ/RhdEJH+bvLoizUzKofpJ69WWLnH/ga4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="18562463"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="18562463"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 11:51:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="907479092"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="907479092"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 16 Jan 2024 11:51:28 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rPpT4-0001AK-0z;
-	Tue, 16 Jan 2024 19:51:26 +0000
-Date: Wed, 17 Jan 2024 03:51:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, v9fs@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, kernel@pengutronix.de,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>
-Subject: Re: [PATCH 1/3] usb: gadget: function: 9pfs
-Message-ID: <202401170342.VrKVlN1a-lkp@intel.com>
-References: <20240116-ml-topic-u9p-v1-1-ad8c306f9a4e@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyWxOIXQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F60C43399;
+	Tue, 16 Jan 2024 19:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705434694;
+	bh=fPkw5eb3zMl6IQEhSEcVnJa8xAm0OOdWnSuOkNjPXqY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RyWxOIXQaYBRsHfzgEk3uj2luDUBOUjCxjyxgsN+69onBW0doIPGMBgmUUhVCDog9
+	 6aPR3l3wB2fucyN8FPCIh8HDBdocdrBOlW5mk0skP/4AgdPt3bclBppcJ4hQwMPZBo
+	 Jvhx9joJk1DNvFJYVtatbtKlNAz8g8pIxKVnOxYN05kU4l5gZoTQpfgdfP4GPbqiCp
+	 DUOUX7L3+BkvT6wQKf2m7WYWU1JPIuVB1pwUsUhVsOqYYc9pATVbbTph+UrErdPUZa
+	 sM3jLQn6BPSh1sb4/h3x4865abSQBHl3LqqYskHVR6C4+4+GlKNGnitoTRi3tb7hYN
+	 HqQHuGnEkC+Uw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Dmitry Antipov <dmantipov@yandex.ru>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= <jerome.pouiller@silabs.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 052/104] wifi: wfx: fix possible NULL pointer dereference in wfx_set_mfp_ap()
+Date: Tue, 16 Jan 2024 14:46:18 -0500
+Message-ID: <20240116194908.253437-52-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116194908.253437-1-sashal@kernel.org>
+References: <20240116194908.253437-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240116-ml-topic-u9p-v1-1-ad8c306f9a4e@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.12
+Content-Transfer-Encoding: 8bit
 
-Hi Michael,
+From: Dmitry Antipov <dmantipov@yandex.ru>
 
-kernel test robot noticed the following build warnings:
+[ Upstream commit fe0a7776d4d19e613bb8dd80fe2d78ae49e8b49d ]
 
-[auto build test WARNING on 052d534373b7ed33712a63d5e17b2b6cdbce84fd]
+Since 'ieee80211_beacon_get()' can return NULL, 'wfx_set_mfp_ap()'
+should check the return value before examining skb data. So convert
+the latter to return an appropriate error code and propagate it to
+return from 'wfx_start_ap()' as well. Compile tested only.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Michael-Grzeschik/usb-gadget-function-9pfs/20240116-095914
-base:   052d534373b7ed33712a63d5e17b2b6cdbce84fd
-patch link:    https://lore.kernel.org/r/20240116-ml-topic-u9p-v1-1-ad8c306f9a4e%40pengutronix.de
-patch subject: [PATCH 1/3] usb: gadget: function: 9pfs
-config: alpha-kismet-CONFIG_NET_9P-CONFIG_USB_F_9PFS-0-0 (https://download.01.org/0day-ci/archive/20240117/202401170342.VrKVlN1a-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240117/202401170342.VrKVlN1a-lkp@intel.com/reproduce)
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+Tested-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Acked-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://lore.kernel.org/r/20231204171130.141394-1-dmantipov@yandex.ru
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/silabs/wfx/sta.c | 42 ++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 17 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401170342.VrKVlN1a-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for NET_9P when selected by USB_F_9PFS
-   
-   WARNING: unmet direct dependencies detected for NET_9P
-     Depends on [n]: NET [=n]
-     Selected by [y]:
-     - USB_F_9PFS [=y] && USB_SUPPORT [=y] && USB_GADGET [=y]
-
+diff --git a/drivers/net/wireless/silabs/wfx/sta.c b/drivers/net/wireless/silabs/wfx/sta.c
+index 626dfb4b7a55..073e870b2641 100644
+--- a/drivers/net/wireless/silabs/wfx/sta.c
++++ b/drivers/net/wireless/silabs/wfx/sta.c
+@@ -354,29 +354,38 @@ static int wfx_upload_ap_templates(struct wfx_vif *wvif)
+ 	return 0;
+ }
+ 
+-static void wfx_set_mfp_ap(struct wfx_vif *wvif)
++static int wfx_set_mfp_ap(struct wfx_vif *wvif)
+ {
+ 	struct ieee80211_vif *vif = wvif_to_vif(wvif);
+ 	struct sk_buff *skb = ieee80211_beacon_get(wvif->wdev->hw, vif, 0);
+ 	const int ieoffset = offsetof(struct ieee80211_mgmt, u.beacon.variable);
+-	const u16 *ptr = (u16 *)cfg80211_find_ie(WLAN_EID_RSN, skb->data + ieoffset,
+-						 skb->len - ieoffset);
+ 	const int pairwise_cipher_suite_count_offset = 8 / sizeof(u16);
+ 	const int pairwise_cipher_suite_size = 4 / sizeof(u16);
+ 	const int akm_suite_size = 4 / sizeof(u16);
++	const u16 *ptr;
+ 
+-	if (ptr) {
+-		ptr += pairwise_cipher_suite_count_offset;
+-		if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-			return;
+-		ptr += 1 + pairwise_cipher_suite_size * *ptr;
+-		if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-			return;
+-		ptr += 1 + akm_suite_size * *ptr;
+-		if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-			return;
+-		wfx_hif_set_mfp(wvif, *ptr & BIT(7), *ptr & BIT(6));
+-	}
++	if (unlikely(!skb))
++		return -ENOMEM;
++
++	ptr = (u16 *)cfg80211_find_ie(WLAN_EID_RSN, skb->data + ieoffset,
++				      skb->len - ieoffset);
++	if (unlikely(!ptr))
++		return -EINVAL;
++
++	ptr += pairwise_cipher_suite_count_offset;
++	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
++		return -EINVAL;
++
++	ptr += 1 + pairwise_cipher_suite_size * *ptr;
++	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
++		return -EINVAL;
++
++	ptr += 1 + akm_suite_size * *ptr;
++	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
++		return -EINVAL;
++
++	wfx_hif_set_mfp(wvif, *ptr & BIT(7), *ptr & BIT(6));
++	return 0;
+ }
+ 
+ int wfx_start_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+@@ -394,8 +403,7 @@ int wfx_start_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 	ret = wfx_hif_start(wvif, &vif->bss_conf, wvif->channel);
+ 	if (ret > 0)
+ 		return -EIO;
+-	wfx_set_mfp_ap(wvif);
+-	return ret;
++	return wfx_set_mfp_ap(wvif);
+ }
+ 
+ void wfx_stop_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
