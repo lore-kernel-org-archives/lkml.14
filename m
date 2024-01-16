@@ -1,53 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FF71CA80
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 16:20:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1A51CA84
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 16:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eKfwZdun"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AOYT6YOv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705422004;
+	s=mimecast20190719; t=1705422005;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=O3OclCH75wBgs4Z0eklBI2HCm5hzhoXh5DbDkEBHEUI=;
-	b=eKfwZdunjp2UEWBqVtYha196XToso2VFxyVuB1K9aj/4bOGUpZWWLDR/NQxrwzxQez368X
-	2AiSRKHcXcCU399qEao2OTYa0RH5O4hVe0y7T8tOzbbF8gVOgKjrhxDQQAvigYWtQd22Ij
-	EsbMyIqYFJj9r6cSdB0CEaaSV8GNXHU=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=MbtUeDj38iJv40DVhrJMpGto1LA7FQWBcqkGB+BZKUs=;
+	b=AOYT6YOviBP7jy2mIIfB8ea/NYN4hKFi3nm14vrSBPgEROGbnJ0diDl17TLo7XsKbWxtaC
+	3pt1wNq83asZsNgjEOIsM0pYysgWeUrCXWe+tG097ECmKlVVHMw3HlJTDrJi/1qdo6e09Z
+	51OKKtkZmmat0VWgrr6bBPWLqR9+7Ys=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-313-TsjjLbXOPBy1GrlyOYlZMQ-1; Tue, 16 Jan 2024 11:19:58 -0500
-X-MC-Unique: TsjjLbXOPBy1GrlyOYlZMQ-1
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3bd3b54e5c6so12445923b6e.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 08:19:55 -0800 (PST)
+ us-mta-662-5PMRCyo6M4SSjR1tL74EVg-1; Tue, 16 Jan 2024 11:20:03 -0500
+X-MC-Unique: 5PMRCyo6M4SSjR1tL74EVg-1
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-429a7149210so81107851cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 08:20:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705421994; x=1706026794;
+        d=1e100.net; s=20230601; t=1705422002; x=1706026802;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=O3OclCH75wBgs4Z0eklBI2HCm5hzhoXh5DbDkEBHEUI=;
-        b=OunUfUUc596HfqEz9VZ148bjXWhq7QP4sFOZQ7xE/ydxFs8BGc8R7zFlKJVAi+3lDz
-         bkgcdJ2u+Bozpjn/724Qb/Gs5RjDiiQuefBxxhsxl+UfbsbFN8mGVD8DmsYTcpXmw3C3
-         jmy4uxQgoZRBf5wywqTSQvhWzPOWOKHIGqZBFG4O4v2EFsdPm3m8ytolClMMG2lLSXPo
-         12FVkQhPZQuoIQBO4pUOCDtAMlYKXiRPeicdhEPc2Zklk9QzkiZvRCMMA6cQgoVYPhqF
-         +BQtvks+9IwwwYgyC5ipYbozzFCnoihf6opRJI6pUsmX+YnTbyhuvzBOUger5EWOUB1O
-         furQ==
-X-Gm-Message-State: AOJu0YzbeJ+WZweYUaaiVYwV3WgMsl1mX1ZD5W6lEY92SgrVPuLXvPMc
-	/UQhblGFmucwhWPb9rIbYVy0E51+vJHONiP7ErTJjsGo27gv5ULZzRWwoEJ2yiu8SNK36Wl7egu
-	JuyXhHB8BoW3eLBTWPONwvkWIkRizVMxS
-X-Received: by 2002:a05:6808:1a27:b0:3bc:3c49:19fd with SMTP id bk39-20020a0568081a2700b003bc3c4919fdmr9036112oib.66.1705421994698;
-        Tue, 16 Jan 2024 08:19:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEb3HukQl0gtK8Ztj7AXZUouxmpte7RsJYePK7/jXxYFAit9YmTaDaI5eMMzQ1huWoKywCFqA==
-X-Received: by 2002:a05:6808:1a27:b0:3bc:3c49:19fd with SMTP id bk39-20020a0568081a2700b003bc3c4919fdmr9036103oib.66.1705421994466;
-        Tue, 16 Jan 2024 08:19:54 -0800 (PST)
+        bh=MbtUeDj38iJv40DVhrJMpGto1LA7FQWBcqkGB+BZKUs=;
+        b=FinF9XLiZDykhiViPj6zHY9xdJdUmYZd8TNOM6O04I1JiaYmyg+IVQjWXC1ptryDS5
+         2+ipEnHTxPQutfx7/IF3R7iHXa+S73nXIyubKSLvDPJc0ugctVN7TtXI2rde2E+iv+Ix
+         OXB8g/mF82SZxuPczpjhFoZ2I6VLIA+ihpMnWU3bsWxI6nOHdnVQQba2/s0C47LWZ4gL
+         uH3i0A9s4qJSwnPpDtvua3EgtVrsaTd77naywYkEJtkuZKYP0bzfs8Sk2WuOWqPiNQt2
+         djbm0TLRcf2iOba8pEY49lBaP+XZzcvGxXzwUJGarM/urRxK1RednGQA03DdFOKjXh6K
+         6T9g==
+X-Gm-Message-State: AOJu0YzWFj3JoFdXEbu8S1hCzsq+q60Rkcg1H8pi+USOAnpNJbMew3ta
+	BO5fMnFOIjyjxyDvTuvXl1WNw3IO2NPSRAl0C3onG5PL8lC0eYnvN66AB76T8Ld2L8cL18wivWN
+	LnJ0JaKK0zHnNMUzur094ysoSitCGWit8
+X-Received: by 2002:a05:622a:120e:b0:429:ca1c:7fd3 with SMTP id y14-20020a05622a120e00b00429ca1c7fd3mr9264966qtx.68.1705422001906;
+        Tue, 16 Jan 2024 08:20:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH9R1aebixv/ciTPAg3ClvPL1gJzS0rEYYqB1UFPQV8ctoXJFXmhPVpDFtnkiOQTk9BxOtLqQ==
+X-Received: by 2002:a05:622a:120e:b0:429:ca1c:7fd3 with SMTP id y14-20020a05622a120e00b00429ca1c7fd3mr9264959qtx.68.1705422001616;
+        Tue, 16 Jan 2024 08:20:01 -0800 (PST)
 Received: from localhost.localdomain ([151.29.130.8])
-        by smtp.gmail.com with ESMTPSA id fd10-20020a05622a4d0a00b00429d3257dd6sm3809166qtb.45.2024.01.16.08.19.53
+        by smtp.gmail.com with ESMTPSA id fd10-20020a05622a4d0a00b00429d3257dd6sm3809166qtb.45.2024.01.16.08.19.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 08:19:54 -0800 (PST)
+        Tue, 16 Jan 2024 08:19:59 -0800 (PST)
 From: Juri Lelli <juri.lelli@redhat.com>
 To: Tejun Heo <tj@kernel.org>
 Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
@@ -56,9 +56,9 @@ Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
 	Waiman Long <longman@redhat.com>,
 	Juri Lelli <juri.lelli@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/4] tools/workqueue: Add rescuers printing to wq_dump.py
-Date: Tue, 16 Jan 2024 17:19:26 +0100
-Message-ID: <20240116161929.232885-2-juri.lelli@redhat.com>
+Subject: [RFC PATCH 4/4] kernel/workqueue: Let rescuers follow unbound wq cpumask changes
+Date: Tue, 16 Jan 2024 17:19:29 +0100
+Message-ID: <20240116161929.232885-5-juri.lelli@redhat.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240116161929.232885-1-juri.lelli@redhat.com>
 References: <20240116161929.232885-1-juri.lelli@redhat.com>
@@ -70,53 +70,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Retrieving rescuers information (e.g., affinity and name) is quite
-useful when debugging workqueues configurations.
+When workqueue cpumask changes are committed the associated rescuer (if
+one exists) affinity is not touched and this might be a problem down the
+line for isolated setups.
 
-Add printing of such information to the existing wq_dump.py script.
+Make sure rescuers affinity is updated every time a workqueue cpumask
+changes, so that rescuers can't break isolation.
 
 Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
 ---
- tools/workqueue/wq_dump.py | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ kernel/workqueue.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/workqueue/wq_dump.py b/tools/workqueue/wq_dump.py
-index d0df5833f2c18..6da621989e210 100644
---- a/tools/workqueue/wq_dump.py
-+++ b/tools/workqueue/wq_dump.py
-@@ -175,3 +175,32 @@ for wq in list_for_each_entry('struct workqueue_struct', workqueues.address_of_(
-     if wq.flags & WQ_UNBOUND:
-         print(f' {wq.dfl_pwq.pool.id.value_():{max_pool_id_len}}', end='')
-     print('')
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 2ef6573909070..df7f2f2bfd0c8 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -4416,6 +4416,12 @@ static void apply_wqattrs_commit(struct apply_wqattrs_ctx *ctx)
+ 	link_pwq(ctx->dfl_pwq);
+ 	swap(ctx->wq->dfl_pwq, ctx->dfl_pwq);
+ 
++	/* rescuer needs to respect wq cpumask changes */
++	if (ctx->wq->rescuer) {
++		set_cpus_allowed_ptr(ctx->wq->rescuer->task, ctx->attrs->cpumask);
++		wake_up_process(ctx->wq->rescuer->task);
++	}
 +
-+print('')
-+print('Workqueue -> rescuer')
-+print('=====================')
-+print(f'wq_unbound_cpumask={cpumask_str(wq_unbound_cpumask)}')
-+print('')
-+print('[    workqueue     \     type            unbound_cpumask     rescuer                  pid   cpumask]')
-+
-+for wq in list_for_each_entry('struct workqueue_struct', workqueues.address_of_(), 'list'):
-+    print(f'{wq.name.string_().decode()[-24:]:24}', end='')
-+    if wq.flags & WQ_UNBOUND:
-+        if wq.flags & WQ_ORDERED:
-+            print(' ordered   ', end='')
-+        else:
-+            print(' unbound', end='')
-+            if wq.unbound_attrs.affn_strict:
-+                print(',S ', end='')
-+            else:
-+                print('   ', end='')
-+        print(f' {cpumask_str(wq.unbound_attrs.cpumask):24}', end='')
-+    else:
-+        print(' percpu    ', end='')
-+        print('                         ', end='')
-+
-+    if wq.flags & WQ_MEM_RECLAIM:
-+        print(f' {wq.rescuer.task.comm.string_().decode()[-24:]:24}', end='')
-+        print(f' {wq.rescuer.task.pid.value_():5}', end='')
-+        print(f' {cpumask_str(wq.rescuer.task.cpus_ptr)}', end='')
-+    print('')
+ 	mutex_unlock(&ctx->wq->mutex);
+ }
+ 
 -- 
 2.43.0
 
