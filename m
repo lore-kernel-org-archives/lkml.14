@@ -1,219 +1,103 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A1013FEC;
-	Tue, 16 Jan 2024 10:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E14154BA
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="m1CJZ8GS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1705401907; x=1736937907;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jHGGpGh4/MgHAVgMxsA0r7UyDWvPUjd2U3iqvzqI5I4=;
-  b=m1CJZ8GSAXQo7fG2xzwArFMUXbL5StM7m4ry7iEW9gL/uJAMt5e1n+5F
-   HFxNqhCfFUg/9WgpxTlflPjSqxHaTqW9m8GBFla/lxh3ax0l/VW+/4lSo
-   teueSZAPKgpswuoZrtackdjzeosdZfvGE91/65gkYAn1jhJBJK/K+o78l
-   yl4SiSC+5SPTvvtOoOc+inIyyxD4SXEnLWr9+6IM6hDev7KRvaiKVg80U
-   UwSoS/l/nfupEk/bYgqm3AOKhZM4pgUFYLbSpvADdGJ1Lx/8mnvdoRMpf
-   M3efYNRYC/3loEMkeuEJp8SRjCOOw5SyEnVR9M0UPMuohLTqJgP9qw1tZ
-   Q==;
-X-CSE-ConnectionGUID: OYl/i3GiRI22Pg4Ra+XJtQ==
-X-CSE-MsgGUID: zKuPVUJwS3+E6LjSAt2uZA==
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="asc'?scan'208";a="14823470"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jan 2024 03:45:03 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Jan 2024 03:44:49 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 16 Jan 2024 03:44:46 -0700
-Date: Tue, 16 Jan 2024 10:44:10 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-CC: Nylon Chen <nylon.chen@sifive.com>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <conor+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <robh+dt@kernel.org>,
-	<u.kleine-koenig@pengutronix.de>, <thierry.reding@gmail.com>,
-	<aou@eecs.berkeley.edu>, <zong.li@sifve.com>, <vincent.chen@sifive.com>,
-	<linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<nylon7717@gmail.com>
-Subject: Re: [v6 1/3] riscv: dts: sifive: unleashed/unmatched: Remove PWM
- controlled LED's active-low properties
-Message-ID: <20240116-custard-drew-9a02e83d538a@wendy>
-References: <20240116041054.11641-1-nylon.chen@sifive.com>
- <20240116041054.11641-2-nylon.chen@sifive.com>
- <CAJM55Z9ZbmbPKaJ8LJ5KyoCW9fAEJaT3Q4PbcadwLNCq1NXbxA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WRnd5mkz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705401950;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bjqxTDHvgQy8aJf03PgKJjSLuMp8HhWY4sERlhF8row=;
+	b=WRnd5mkzUgOq9u2HC3T0QcsfVN/Ia88+c6/LIUDElmQA95RvxbEZXawoUzOtzjG+XJxf4s
+	2VnHJfqaCIZAd72bWGTJbpGeASIwalXGyFrzj/A5+O1Cp3KLXWnqxj0hjHEKTTwOfpzjO/
+	oBy23Powqofg4DHsf18CHLumk57hODw=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-503-5soBPydpMZy4HsQV-PNJAw-1; Tue, 16 Jan 2024 05:45:48 -0500
+X-MC-Unique: 5soBPydpMZy4HsQV-PNJAw-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a2cb0d70d6cso192888166b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 02:45:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705401948; x=1706006748;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bjqxTDHvgQy8aJf03PgKJjSLuMp8HhWY4sERlhF8row=;
+        b=VZizRpAqmyl3NPzgJzYGlQCYMGHgDJfAkK0HAQlR/k5tErciW/GHMrq6pYofCrc4QO
+         7cr49k2qnOcrYna7yp066rh3f+nx6rK+8r6RMb8YaYRyHJwoJpVWtIhm1EuvRnkVb8EM
+         Y4oz/tTrKqGBy7j0Bt6FGtJD6thn2NCmqmVO0xsZW63mra182ZTjHD1Ju6oKyansKLy4
+         3ypihbAoDGKIOoDnfVx2eKUjTw0GNkOxmadnHrggAXMU7TLKDGiO4U+I2uNqgLhnjIJR
+         azYrd0fLnrcBjQkInv9N/kTSkdC7zuVgsy4DCoo57AobneJw0wuAM9m78p5/k+/LxVQs
+         saqQ==
+X-Gm-Message-State: AOJu0YweUUwfigeHSR3kgnmAYOHM/hp/mrhfPYlI6ZurYxs+4cZM7iBA
+	2+3Z4/+GHHYodzQNYYbf75ZV0Kbtv1Nb5XAu/BgRCVbQDWDUbOUpwEB6UqN1LTX5VD1dxvQIoHa
+	+SCp/SO554bGtRM0kL2Pb1JN9UnE9VTAk
+X-Received: by 2002:a17:906:1c56:b0:a2b:299:2e3 with SMTP id l22-20020a1709061c5600b00a2b029902e3mr2882756ejg.146.1705401947885;
+        Tue, 16 Jan 2024 02:45:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH6FVV4MuXv1lla/czKKt1oAO2fwOEap+YW0g8LZflc9afhjEtSmkDaFYruOii/YXsyNY5spw==
+X-Received: by 2002:a17:906:1c56:b0:a2b:299:2e3 with SMTP id l22-20020a1709061c5600b00a2b029902e3mr2882745ejg.146.1705401947612;
+        Tue, 16 Jan 2024 02:45:47 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l10-20020a1709061c4a00b00a2b9bbd6d73sm6320836ejg.214.2024.01.16.02.45.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jan 2024 02:45:47 -0800 (PST)
+Message-ID: <da062d7e-c06c-40f8-b2ad-9dd5e82ff596@redhat.com>
+Date: Tue, 16 Jan 2024 11:45:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="IllJYSRTwnK6qQf5"
-Content-Disposition: inline
-In-Reply-To: <CAJM55Z9ZbmbPKaJ8LJ5KyoCW9fAEJaT3Q4PbcadwLNCq1NXbxA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: add Luke Jones as maintainer for asus
+ notebooks
+Content-Language: en-US, nl
+To: "Luke D. Jones" <luke@ljones.dev>, linux-kernel@vger.kernel.org
+References: <20240115211829.48251-1-luke@ljones.dev>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240115211829.48251-1-luke@ljones.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---IllJYSRTwnK6qQf5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Tue, Jan 16, 2024 at 02:20:57AM -0800, Emil Renner Berthing wrote:
-> Nylon Chen wrote:
-> > This removes the active-low properties of the PWM-controlled LEDs in
-> > the HiFive Unmatched device tree.
-> >
-> > The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schem=
-atics-v3.pdf[1].
-> >
-> > Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8=
-453f8698_hifive-unleashed-a00-schematics-1.pdf [0]
-> > Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68c=
-e76f4192_hifive-unmatched-schematics-v3.pdf [1]
-> >
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > Co-developed-by: Zong Li <zong.li@sifve.com>
-> > Signed-off-by: Zong Li <zong.li@sifve.com>
-> > Co-developed-by: Vincent Chen <vincent.chen@sifive.com>
-> > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-> > ---
-> >  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++----
-> >  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++--------
-> >  2 files changed, 8 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch=
-/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > index 900a50526d77..11e7ac1c54bb 100644
-> > --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > @@ -49,7 +49,7 @@ led-controller {
-> >  		compatible =3D "pwm-leds";
-> >
-> >  		led-d1 {
-> > -			pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> > +			pwms =3D <&pwm0 0 7812500 0>;
-> >  			active-low;
-> >  			color =3D <LED_COLOR_ID_GREEN>;
-> >  			max-brightness =3D <255>;
-> > @@ -57,7 +57,7 @@ led-d1 {
-> >  		};
-> >
-> >  		led-d2 {
-> > -			pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> > +			pwms =3D <&pwm0 1 7812500 0>;
-> >  			active-low;
-> >  			color =3D <LED_COLOR_ID_GREEN>;
-> >  			max-brightness =3D <255>;
-> > @@ -65,7 +65,7 @@ led-d2 {
-> >  		};
-> >
-> >  		led-d3 {
-> > -			pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> > +			pwms =3D <&pwm0 2 7812500 0>;
-> >  			active-low;
-> >  			color =3D <LED_COLOR_ID_GREEN>;
-> >  			max-brightness =3D <255>;
-> > @@ -73,7 +73,7 @@ led-d3 {
-> >  		};
-> >
-> >  		led-d4 {
-> > -			pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> > +			pwms =3D <&pwm0 3 7812500 0>;
-> >  			active-low;
-> >  			color =3D <LED_COLOR_ID_GREEN>;
-> >  			max-brightness =3D <255>;
-> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch=
-/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > index 07387f9c135c..b328ee80693f 100644
-> > --- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > +++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > @@ -51,8 +51,7 @@ led-controller-1 {
-> >  		compatible =3D "pwm-leds";
-> >
-> >  		led-d12 {
-> > -			pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> > -			active-low;
-> > +			pwms =3D <&pwm0 0 7812500 0>;
->=20
-> Here you remove the active-low property, but you don't above. I'm not sure
-> what's the right thing to do, but I would have expected the same change i=
-n both
-> places.
+On 1/15/24 22:18, Luke D. Jones wrote:
+> Add myself as maintainer for "ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS
+> DRIVERS" as suggested by Hans de Goede based on my history of
+> contributions.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f5c2450fa4ec..e7843beaa589 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3147,6 +3147,7 @@ F:	drivers/hwmon/asus-ec-sensors.c
+>  
+>  ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+>  M:	Corentin Chary <corentin.chary@gmail.com>
+> +M:	Luke D. Jones <luke@lones.dev>
 
-Just to note, the original version of this that I acked/reviewed removed
-the property from all led nodes. I then apparently didn't look closely
-enough at v5 and left acked/reviewed tags on it too. It did not remove
-the active-low properties but this change was not mentioned in the
-changelog for the series.
+heh there is a typo there that should be @ljones.dev ,
+I have fixed this up now in my review-hans branch.
 
-D4 on the unleashed and D12 on the unmatched have the same circuitry
-(modulo the placement of the series resistor) so I don't get why the
-property is being removed from only D12.
+Regards,
 
-I rescind my ack/review until that is clarified and/or fixed.
-
-Thanks,
-Conor.
+Hans
 
 
-> >  			color =3D <LED_COLOR_ID_GREEN>;
-> >  			max-brightness =3D <255>;
-> >  			label =3D "d12";
-> > @@ -68,20 +67,17 @@ multi-led {
-> >  			label =3D "d2";
-> >
-> >  			led-red {
-> > -				pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> > -				active-low;
-> > +				pwms =3D <&pwm0 2 7812500 0>;
-> >  				color =3D <LED_COLOR_ID_RED>;
-> >  			};
-> >
-> >  			led-green {
-> > -				pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> > -				active-low;
-> > +				pwms =3D <&pwm0 1 7812500 0>;
-> >  				color =3D <LED_COLOR_ID_GREEN>;
-> >  			};
-> >
-> >  			led-blue {
-> > -				pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> > -				active-low;
-> > +				pwms =3D <&pwm0 3 7812500 0>;
-> >  				color =3D <LED_COLOR_ID_BLUE>;
-> >  			};
-> >  		};
-> > --
-> > 2.42.0
-> >
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+>  L:	acpi4asus-user@lists.sourceforge.net
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
 
---IllJYSRTwnK6qQf5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaZd+QAKCRB4tDGHoIJi
-0ojCAP9YNgYC4jBsQgF0fIM37HjeKwwrAxp5ishwLKUKa9BKYAD9HCzhM/N+Tc7h
-NaSisFJ74M5IGYP0aZCDYgCf1EHv5gE=
-=Qjx9
------END PGP SIGNATURE-----
-
---IllJYSRTwnK6qQf5--
