@@ -1,97 +1,149 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7683B1C69F;
-	Tue, 16 Jan 2024 16:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vvf0fhuu"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-337b8da1f49so595483f8f.0;
-        Tue, 16 Jan 2024 08:18:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705421929; x=1706026729; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NMLlqCh2RRB/p799yyEGysccg2bTaRZ9dL/XaurTxmk=;
-        b=Vvf0fhuueBDBk582fkaIq6DpY8AWbl5jHLgyf4rmdaf+2voTdW7pvQGWsm4HFScWSx
-         RFYLpbenr0lwpTFWuIdtCRP+OWWZu2NE4d3aw1tnrcx9EfLtHte84LcrpRV6JqgZaY22
-         UbSxZyRz3Yy5FU/pI+erQQulfdsB4CSXYidz/7HN1lopfgstPNfIBfwsShTM4I1P1FmN
-         K0Zh+x34fc1c8DhZQe/jDWOQ+1bx7dUGmF9HzHCI76oYOzn53o5zdp/XCxBeMofeVPMa
-         PuAMN7TQmpPLGZNztDTs6rj28rFfwYK0a2199tHn4g2P39KnCDXB9/tWMOz+Rm+5x159
-         rcHQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419631C6A1
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 16:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3606d19097dso91108855ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 08:19:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705421929; x=1706026729;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NMLlqCh2RRB/p799yyEGysccg2bTaRZ9dL/XaurTxmk=;
-        b=g2MFXKVP9wGZ10Q/Bd5eGCeuzeOxRlAvuDKTx1Rp+WKyLzkFjPhnSzkR5mNGl6T45N
-         7mR/t+Fi89ruJFCRWu/CcoOwGTplsEZ1I9bg7PRFehB7GXb+ahGwASCX4wQSdpc1t3ms
-         7FSIFqVupUIgmN7URyZQbh/ELmEdtdts3X6TZUBwsbutfEs8X7OicnPOWPZ4ZiDi7IxS
-         ZppNAEQ5OYMBE0k/2BT202+H/giJw8eVdcv19IfJTMQAy5Z74IfimK/speF49HCe0++H
-         bsZ765fzIvkRLvubNBwP4Mu8mVk0LNoH/IkAWlkcxDOLBEvV1OCrNv91zfovKUjM4vaW
-         qfPQ==
-X-Gm-Message-State: AOJu0Yw9V3xV5OmQELBpQ2HKlGqgZ9b1rnRG3m9B6Nv7MIwr66vKjlqS
-	2DnvLULoyeOsce0BuoRtXSc=
-X-Google-Smtp-Source: AGHT+IGg9HcrXY9tosc+ZAXKh6ex/tlbdaBnq5t7i6gTzwXtjgngrhgqq3KD6H+lk5AFWZXSNp++jg==
-X-Received: by 2002:a5d:6283:0:b0:337:4fa6:2306 with SMTP id k3-20020a5d6283000000b003374fa62306mr2602699wru.158.1705421928640;
-        Tue, 16 Jan 2024 08:18:48 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id r1-20020adfce81000000b0033667867a66sm14956225wrn.101.2024.01.16.08.18.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 08:18:47 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net: microchip: sparx5: remove redundant store to variable clk_hz
-Date: Tue, 16 Jan 2024 16:18:47 +0000
-Message-Id: <20240116161847.2317011-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1705421958; x=1706026758;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xx2NiXfEC2f9ShTuPE2ICSF2WxhDPgmMA0aZZzN7CeY=;
+        b=ipp6J8ShTYqXmoch8pg8Zib/sMepdpqTvQLnuQKX5I8oM0JAez+uD0IN7m08AmajUg
+         pQbbfKKqxXEVg8F+HB0ZInCvV4zOTziaFpZSHd+c6j8rbzSem7E6k9QtNHeC8Lfsl1HQ
+         vC9nXunGcISn5oC+1clu9CWYIucLHceOInPFb/W2FhZ8KGiqUd/fE9+oGYF/E6dKag8n
+         +mDtl1MOSmacG5mVoP9ah4GedvP5OPtHaseR6W/SE63v4KK/d7qxe9vofZLVCFMeG38w
+         BMYZyWLcTNjzjHEspKjj8aOYaj9r83UwKRPeQxPShqd5XYSIxWLFQng8csPG4sC0bn09
+         OKfw==
+X-Gm-Message-State: AOJu0YxZI3cWWD/JHFl5c2ixAPYLqkGRwKP0eMKhKfR+IMCgsEt4TdR8
+	kp04TmukwG/SdGj+wnCybfkK8ocYn2sdcRuRVT1Ks3UcGpco
+X-Google-Smtp-Source: AGHT+IGPXIwfcx+ZEzWEl/c87WEvLS1rOC2xBs8/tlG/IpXlFdlUU8PqTyvIuo3HXMRs9HjU3v5toRNTOexomQETgrSp6qHTErtk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:12ea:b0:361:9322:6ae0 with SMTP id
+ l10-20020a056e0212ea00b0036193226ae0mr27848iln.6.1705421958506; Tue, 16 Jan
+ 2024 08:19:18 -0800 (PST)
+Date: Tue, 16 Jan 2024 08:19:18 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000007728e060f127eaf@google.com>
+Subject: [syzbot] [exfat?] kernel BUG in iov_iter_revert
+From: syzbot <syzbot+fd404f6b03a58e8bc403@syzkaller.appspotmail.com>
+To: linkinjeon@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sj1557.seo@samsung.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The store to clk_hz is redundant since clk_hz goes out of scope on the
-return. Fix this by replacing the *= operator with just * to remove
-the store back to clk_hz.
+Hello,
 
-Cleans up clang scan build warning:
-warning: Although the value stored to 'clk_hz' is used in the enclosing
-expression, the value is never actually read from 'clk_hz'
-[deadcode.DeadStores]
+syzbot found the following issue on:
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+HEAD commit:    052d534373b7 Merge tag 'exfat-for-6.8-rc1' of git://git.ke..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=108ca8b3e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7c8840a4a09eab8
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd404f6b03a58e8bc403
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1558210be80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d39debe80000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b1b0ffd73481/disk-052d5343.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c25614b900ba/vmlinux-052d5343.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7dd1842e2ad4/bzImage-052d5343.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/291ad1624ec1/mount_3.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fd404f6b03a58e8bc403@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at lib/iov_iter.c:582!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 5043 Comm: syz-executor166 Not tainted 6.7.0-syzkaller-09928-g052d534373b7 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+RIP: 0010:iov_iter_revert lib/iov_iter.c:582 [inline]
+RIP: 0010:iov_iter_revert+0x328/0x360 lib/iov_iter.c:567
+Code: 8e 94 78 fd e9 8f fd ff ff e8 e4 94 78 fd e9 de fe ff ff e8 ba 94 78 fd eb a2 e8 d3 94 78 fd e9 12 fe ff ff e8 b9 8c 21 fd 90 <0f> 0b e8 c1 94 78 fd e9 23 fe ff ff e8 b7 94 78 fd e9 64 fe ff ff
+RSP: 0018:ffffc9000337f9e0 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 00000000001bca00 RCX: ffffffff84656a77
+RDX: ffff888019313b80 RSI: ffffffff84656c97 RDI: 0000000000000001
+RBP: ffffc9000337fb30 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: fffffffffffffdef R14: 0000000000000000 R15: ffff888047da8740
+FS:  0000555555c9a380(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000056518e8170a8 CR3: 0000000048309000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ exfat_direct_IO+0x320/0x510 fs/exfat/inode.c:538
+ generic_file_read_iter+0x1dd/0x450 mm/filemap.c:2759
+ call_read_iter include/linux/fs.h:2079 [inline]
+ aio_read+0x318/0x4d0 fs/aio.c:1597
+ __io_submit_one fs/aio.c:1998 [inline]
+ io_submit_one+0x1480/0x1de0 fs/aio.c:2047
+ __do_sys_io_submit fs/aio.c:2106 [inline]
+ __se_sys_io_submit fs/aio.c:2076 [inline]
+ __x64_sys_io_submit+0x1c3/0x350 fs/aio.c:2076
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd3/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+RIP: 0033:0x7f6eb9491c79
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffdb9c8bf78 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+RAX: ffffffffffffffda RBX: 00007ffdb9c8bf80 RCX: 00007f6eb9491c79
+RDX: 0000000020000540 RSI: 0000000000003f0a RDI: 00007f6eb944a000
+RBP: 00007f6eb9506610 R08: 65732f636f72702f R09: 65732f636f72702f
+R10: 65732f636f72702f R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffdb9c8c1b8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:iov_iter_revert lib/iov_iter.c:582 [inline]
+RIP: 0010:iov_iter_revert+0x328/0x360 lib/iov_iter.c:567
+Code: 8e 94 78 fd e9 8f fd ff ff e8 e4 94 78 fd e9 de fe ff ff e8 ba 94 78 fd eb a2 e8 d3 94 78 fd e9 12 fe ff ff e8 b9 8c 21 fd 90 <0f> 0b e8 c1 94 78 fd e9 23 fe ff ff e8 b7 94 78 fd e9 64 fe ff ff
+RSP: 0018:ffffc9000337f9e0 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 00000000001bca00 RCX: ffffffff84656a77
+RDX: ffff888019313b80 RSI: ffffffff84656c97 RDI: 0000000000000001
+RBP: ffffc9000337fb30 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: fffffffffffffdef R14: 0000000000000000 R15: ffff888047da8740
+FS:  0000555555c9a380(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6eb944a000 CR3: 0000000048309000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/net/ethernet/microchip/sparx5/sparx5_sdlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_sdlb.c b/drivers/net/ethernet/microchip/sparx5/sparx5_sdlb.c
-index f5267218caeb..d8f49082dbe4 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_sdlb.c
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_sdlb.c
-@@ -31,7 +31,7 @@ int sparx5_sdlb_clk_hz_get(struct sparx5 *sparx5)
- 		clk_per_100ps = SPX5_CLK_PER_100PS_DEFAULT;
- 
- 	clk_hz = (10 * 1000 * 1000) / clk_per_100ps;
--	return clk_hz *= 1000;
-+	return clk_hz * 1000;
- }
- 
- static int sparx5_sdlb_pup_interval_get(struct sparx5 *sparx5, u32 max_token,
--- 
-2.39.2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
