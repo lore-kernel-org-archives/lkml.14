@@ -1,179 +1,232 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB182209E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 22:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9466C23744;
+	Tue, 16 Jan 2024 22:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705443760; cv=none; b=bZhGNOTT7BxXQuE5GLeMKA9fSMFcCsJa53aguX40pIgY2vwPNdeF4mszj1vq1B+Of9GMZeKrJchLEJMbj6MLrGD4Hn++E0SMgET5t3GOLu4jU9GqktOAXHV4VWXWUwv7Q2yRGbszKYxe7a3CCxBrkMnhDoPrhUqZP2npVGggMKY=
+	t=1705443807; cv=none; b=qz/cTAAI4r/nUFJDyTVOSkfR14ztOuwd8QNL1nUFJs96BVGSrPE5d536ygmsIc3TNrltvjFSpxdCY2dE0JHBXPojYzUzZkWHEfACSWf/BM9pGFdFygCUHZQCIgfsXB7mgzq2LbJ3Nt0Lq9seML2RsHcfXtLuavVyk/JQQ2MUCbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705443760; c=relaxed/simple;
-	bh=G6H7BdeN/Ihqcy5woTkqJ3iH1GBNpVprDUyaGOsUtM0=;
-	h=Received:DKIM-Signature:Received:Received:Received:From:Date:
-	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-ID:References:In-Reply-To:To:CC:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Originating-IP:
-	 X-ClientProxiedBy:X-QCInternal:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=qPONokGh2FUKA36oO+H9CkYQUBXh5BQ5MvF4sET9w4UgfNgneXcc1epNQt53XHCq534QU5LzfIasanikFGbZuKL94i3gJGoaNhQg/MTtAVLMWfrw4o4EMJNGfroa5j559dRAr0LWXe/afDUfoom71Mn2g9y84mdgLaTwjxywTVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k4yF9wXf; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k4yF9wXf"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40GMHVC8018853;
-	Tue, 16 Jan 2024 22:22:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=hUoQUsfqmmEa3pzrtXgZQhTbgJ2D9+Maj4v0QuaJ2d0
-	=; b=k4yF9wXfntbrrHMEe/FPk7x4aR7R7gG2wnPeCSZx7gnljxDeXpTXhDPSRsH
-	fnlS7uKvesFZnyHWzWVyyKxBPvaJ6evUQrgkULtyUvEmFt/7beRJ5RBkEJxBS5x8
-	zZvPrQK1aybKL4Igc64BkqADvIhvCTYJsFibgfVQwvtGCEAoQk55zAGWkpr4myy8
-	0rIszAF11PA2JtZMPboZv/3j00Li2a+ZHxUMqQgwPjoE0WehRVcnnSIZ2vyyKWVk
-	MhkM1E/9ws29Q43OXHSHDr5FV5y3QRUBAVdE8HGvmebxa2V4nv/BQCWAHhBI1f3c
-	IWY4uVyCXfQ0g7VB4kfeTMqW3Tg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vnmq0j53a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 22:22:26 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40GMMP3d013083
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 22:22:25 GMT
-Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 16 Jan 2024 14:22:24 -0800
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Tue, 16 Jan 2024 14:22:07 -0800
-Subject: [PATCH RFC 4/4] drm/msm/dsi: Add simulated panel support
+	s=arc-20240116; t=1705443807; c=relaxed/simple;
+	bh=+9So/8C/UHwU34J+AJWGCIa/pW2jaEdlYaVwPROAc40=;
+	h=Received:Received:Received:Content-Type:Content-Transfer-Encoding:
+	 MIME-Version:From:To:Cc:Subject:In-reply-to:References:Date:
+	 Message-id:X-Spamd-Result:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Spam-Level:X-Spam-Score:X-Spam-Flag; b=dlnlsl2pvH+zXrNgsBcGn3Gbl4Ddn2OEdJgB0WuEoCpUM+UAhGstUmpxmDJaSapYqbF6NXGh4tlcJTHhcSZHpqwFEDEurfgOSesQSNR4rwwbicBFZ2qMYn7sVnx+g916viP0qdSWlinhd0TFOwS/O9qScx/lpZ8onq16roTO6Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CAC4A221E8;
+	Tue, 16 Jan 2024 22:23:23 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2693A13751;
+	Tue, 16 Jan 2024 22:23:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id SEsoM80Bp2UZfAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 16 Jan 2024 22:23:09 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240116-jz-test-sim-panel-v1-4-f9511f46c9c7@quicinc.com>
-References: <20240116-jz-test-sim-panel-v1-0-f9511f46c9c7@quicinc.com>
-In-Reply-To: <20240116-jz-test-sim-panel-v1-0-f9511f46c9c7@quicinc.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Sam Ravnborg
-	<sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-CC: <quic_abhinavk@quicinc.com>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>
-X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705443743; l=2811;
- i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=G6H7BdeN/Ihqcy5woTkqJ3iH1GBNpVprDUyaGOsUtM0=;
- b=qbG5XZZuJGvZKisIkwxFZNK1JX2l6Z9/mdYeFL9rVdsxD6AcIXXSXJlQHvVixFtRXUsEjLFKV
- pfCtSXBekMmCEsimCGU8yS2qJKh6Gj+ITSCIaaAcgeqV+8nuE7JrnFP
-X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
- pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 47l8lmtJLXXM-rGSFh8Gl5bZAQh4G-T-
-X-Proofpoint-ORIG-GUID: 47l8lmtJLXXM-rGSFh8Gl5bZAQh4G-T-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
- malwarescore=0 clxscore=1015 mlxlogscore=999 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
- definitions=main-2401160173
+From: "NeilBrown" <neilb@suse.de>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Eric Van Hensbergen" <ericvh@kernel.org>,
+ "Latchesar Ionkov" <lucho@ionkov.net>,
+ "Dominique Martinet" <asmadeus@codewreck.org>,
+ "Christian Schoenebeck" <linux_oss@crudebyte.com>,
+ "David Howells" <dhowells@redhat.com>,
+ "Marc Dionne" <marc.dionne@auristor.com>, "Xiubo Li" <xiubli@redhat.com>,
+ "Ilya Dryomov" <idryomov@gmail.com>, "Alexander Aring" <aahringo@redhat.com>,
+ "David Teigland" <teigland@redhat.com>, "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+ "Anna Schumaker" <anna@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Jan Kara" <jack@suse.cz>,
+ "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
+ "Joseph Qi" <joseph.qi@linux.alibaba.com>, "Steve French" <sfrench@samba.org>,
+ "Paulo Alcantara" <pc@manguebit.com>, "Ronnie Sahlberg" <lsahlber@redhat.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>,
+ "Namjae Jeon" <linkinjeon@kernel.org>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+ gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-trace-kernel@vger.kernel.org, "Jeff Layton" <jlayton@kernel.org>
+Subject: Re: [PATCH 12/20] filelock: make __locks_delete_block and
+ __locks_wake_up_blocks take file_lock_core
+In-reply-to: <20240116-flsplit-v1-12-c9d0f4370a5d@kernel.org>
+References: <20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org>,
+ <20240116-flsplit-v1-12-c9d0f4370a5d@kernel.org>
+Date: Wed, 17 Jan 2024 09:23:07 +1100
+Message-id: <170544378717.23031.5597414508293858294@noble.neil.brown.name>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 REPLY(-4.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: CAC4A221E8
+X-Spam-Level: 
+X-Spam-Score: -4.00
+X-Spam-Flag: NO
 
-Introduce the sim_panel_enabled module parameter.
+On Wed, 17 Jan 2024, Jeff Layton wrote:
+> Convert __locks_delete_block and __locks_wake_up_blocks to take a struct
+> file_lock_core pointer. Note that to accomodate this, we need to add a
+> new file_lock() wrapper to go from file_lock_core to file_lock.
 
-When set, this parameter will force DSI to select the simulated panel
-instead of the physical panel.
+Actually we don't need it.... see below.
 
-Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
----
- drivers/gpu/drm/msm/dsi/dsi.c         | 4 ++++
- drivers/gpu/drm/msm/dsi/dsi_host.c    | 9 ++++++++-
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 8 +++++++-
- 3 files changed, 19 insertions(+), 2 deletions(-)
+>=20
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/locks.c | 43 ++++++++++++++++++++++++++-----------------
+>  1 file changed, 26 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/fs/locks.c b/fs/locks.c
+> index eddf4d767d5d..6b8e8820dec9 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -92,6 +92,11 @@ static inline bool IS_LEASE(struct file_lock_core *flc)
+> =20
+>  #define IS_REMOTELCK(fl)	(fl->fl_core.fl_pid <=3D 0)
+> =20
+> +struct file_lock *file_lock(struct file_lock_core *flc)
+> +{
+> +	return container_of(flc, struct file_lock, fl_core);
+> +}
+> +
+>  static bool lease_breaking(struct file_lock *fl)
+>  {
+>  	return fl->fl_core.fl_flags & (FL_UNLOCK_PENDING | FL_DOWNGRADE_PENDING);
+> @@ -677,31 +682,35 @@ static void locks_delete_global_blocked(struct file_l=
+ock_core *waiter)
+>   *
+>   * Must be called with blocked_lock_lock held.
+>   */
+> -static void __locks_delete_block(struct file_lock *waiter)
+> +static void __locks_delete_block(struct file_lock_core *waiter)
+>  {
+> -	locks_delete_global_blocked(&waiter->fl_core);
+> -	list_del_init(&waiter->fl_core.fl_blocked_member);
+> +	locks_delete_global_blocked(waiter);
+> +	list_del_init(&waiter->fl_blocked_member);
+>  }
+> =20
+> -static void __locks_wake_up_blocks(struct file_lock *blocker)
+> +static void __locks_wake_up_blocks(struct file_lock_core *blocker)
+>  {
+> -	while (!list_empty(&blocker->fl_core.fl_blocked_requests)) {
+> -		struct file_lock *waiter;
+> +	while (!list_empty(&blocker->fl_blocked_requests)) {
+> +		struct file_lock_core *waiter;
+> +		struct file_lock *fl;
+> +
+> +		waiter =3D list_first_entry(&blocker->fl_blocked_requests,
+> +					  struct file_lock_core, fl_blocked_member);
+> =20
+> -		waiter =3D list_first_entry(&blocker->fl_core.fl_blocked_requests,
+> -					  struct file_lock, fl_core.fl_blocked_member);
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-index c6bd7bf15605c..daea84f5e3c0c 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi.c
-@@ -5,6 +5,10 @@
- 
- #include "dsi.h"
- 
-+bool sim_panel_enabled;
-+MODULE_PARM_DESC(sim_panel_enabled, "Use simulated panel");
-+module_param(sim_panel_enabled, bool, 0444);
-+
- bool msm_dsi_is_cmd_mode(struct msm_dsi *msm_dsi)
- {
- 	unsigned long host_flags = msm_dsi_host_get_mode_flags(msm_dsi->host);
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index deeecdfd6c4e4..fa0cab09fff71 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -35,6 +35,8 @@
- 
- #define DSI_RESET_TOGGLE_DELAY_MS 20
- 
-+extern bool sim_panel_enabled;
-+
- static int dsi_populate_dsc_params(struct msm_dsi_host *msm_host, struct drm_dsc_config *dsc);
- 
- static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
-@@ -2009,7 +2011,12 @@ int msm_dsi_host_register(struct mipi_dsi_host *host)
- 	if (!msm_host->registered) {
- 		host->dev = &msm_host->pdev->dev;
- 		host->ops = &dsi_host_ops;
--		ret = mipi_dsi_host_register(host);
-+
-+		if (sim_panel_enabled)
-+			ret = mipi_dsi_host_register_sim_panel(host);
-+		else
-+			ret = mipi_dsi_host_register(host);
-+
- 		if (ret)
- 			return ret;
- 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index 896f369fdd535..e33e6be7309f2 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -30,6 +30,8 @@ struct msm_dsi_manager {
- 
- static struct msm_dsi_manager msm_dsim_glb;
- 
-+extern bool sim_panel_enabled;
-+
- #define IS_BONDED_DSI()		(msm_dsim_glb.is_bonded_dsi)
- #define IS_SYNC_NEEDED()	(msm_dsim_glb.is_sync_needed)
- #define IS_MASTER_DSI_LINK(id)	(msm_dsim_glb.master_dsi_link_id == id)
-@@ -507,7 +509,11 @@ int msm_dsi_manager_ext_bridge_init(u8 id)
- 	int ret;
- 
- 	int_bridge = msm_dsi->bridge;
--	ext_bridge = devm_drm_of_get_bridge(&msm_dsi->pdev->dev,
-+
-+	if (sim_panel_enabled)
-+		ext_bridge = drm_get_sim_panel_bridge(&msm_dsi->pdev->dev);
-+	else
-+		ext_bridge = devm_drm_of_get_bridge(&msm_dsi->pdev->dev,
- 					    msm_dsi->pdev->dev.of_node, 1, 0);
- 	if (IS_ERR(ext_bridge))
- 		return PTR_ERR(ext_bridge);
+> +		fl =3D file_lock(waiter);
 
--- 
-2.43.0
+		fl =3D list_first_entry(&blocker->fl_core.fl_blocked_requests,
+				      struct file_lock, fl_core.fl_blocked_member);
+
+                waiter =3D &fl->fl_core;
+
+achieves the same result without needing file_lock().
+
+If you really want to add file_lock() then do so, but you need a better
+justification :-)
+
+NeilBrown
+
+
+
+>  		__locks_delete_block(waiter);
+> -		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
+> -			waiter->fl_lmops->lm_notify(waiter);
+> +		if ((IS_POSIX(waiter) || IS_FLOCK(waiter)) &&
+> +		    fl->fl_lmops && fl->fl_lmops->lm_notify)
+> +			fl->fl_lmops->lm_notify(fl);
+>  		else
+> -			wake_up(&waiter->fl_core.fl_wait);
+> +			wake_up(&waiter->fl_wait);
+> =20
+>  		/*
+>  		 * The setting of fl_blocker to NULL marks the "done"
+>  		 * point in deleting a block. Paired with acquire at the top
+>  		 * of locks_delete_block().
+>  		 */
+> -		smp_store_release(&waiter->fl_core.fl_blocker, NULL);
+> +		smp_store_release(&waiter->fl_blocker, NULL);
+>  	}
+>  }
+> =20
+> @@ -743,8 +752,8 @@ int locks_delete_block(struct file_lock *waiter)
+>  	spin_lock(&blocked_lock_lock);
+>  	if (waiter->fl_core.fl_blocker)
+>  		status =3D 0;
+> -	__locks_wake_up_blocks(waiter);
+> -	__locks_delete_block(waiter);
+> +	__locks_wake_up_blocks(&waiter->fl_core);
+> +	__locks_delete_block(&waiter->fl_core);
+> =20
+>  	/*
+>  	 * The setting of fl_blocker to NULL marks the "done" point in deleting
+> @@ -799,7 +808,7 @@ static void __locks_insert_block(struct file_lock *bloc=
+ker,
+>  	 * waiter, but might not conflict with blocker, or the requests
+>  	 * and lock which block it.  So they all need to be woken.
+>  	 */
+> -	__locks_wake_up_blocks(waiter);
+> +	__locks_wake_up_blocks(&waiter->fl_core);
+>  }
+> =20
+>  /* Must be called with flc_lock held. */
+> @@ -831,7 +840,7 @@ static void locks_wake_up_blocks(struct file_lock *bloc=
+ker)
+>  		return;
+> =20
+>  	spin_lock(&blocked_lock_lock);
+> -	__locks_wake_up_blocks(blocker);
+> +	__locks_wake_up_blocks(&blocker->fl_core);
+>  	spin_unlock(&blocked_lock_lock);
+>  }
+> =20
+> @@ -1186,7 +1195,7 @@ static int posix_lock_inode(struct inode *inode, stru=
+ct file_lock *request,
+>  			 * Ensure that we don't find any locks blocked on this
+>  			 * request during deadlock detection.
+>  			 */
+> -			__locks_wake_up_blocks(request);
+> +			__locks_wake_up_blocks(&request->fl_core);
+>  			if (likely(!posix_locks_deadlock(request, fl))) {
+>  				error =3D FILE_LOCK_DEFERRED;
+>  				__locks_insert_block(fl, request,
+>=20
+> --=20
+> 2.43.0
+>=20
+>=20
 
