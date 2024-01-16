@@ -1,115 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220E1111BA
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 07:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8C812B7B;
+	Tue, 16 Jan 2024 07:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OB49gEbT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705390635;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ev/EHro7bSIb21ohSGiRASekMY9/Fc0MaRbZNwxLwJc=;
-	b=OB49gEbTkLQEFPrYhHvND7pp2kEZR9JwlKaDSudTMKRW2pFkNrTfrrbLSACGNrWM4UFt1P
-	PQvW0WATT0Q9a3NwVKIBH7NSJK+amfXP+qkiJZbl3Gik04NsDY3TM9mKlXyr6USHoaMUiJ
-	pbZAY5KwsXHT1aG9Y3qTGbU/+IaWZPQ=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-ldK5bRqMOJOfZEXcqyINLA-1; Tue, 16 Jan 2024 02:37:13 -0500
-X-MC-Unique: ldK5bRqMOJOfZEXcqyINLA-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-681684ca881so10823276d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 23:37:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705390632; x=1705995432;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ev/EHro7bSIb21ohSGiRASekMY9/Fc0MaRbZNwxLwJc=;
-        b=MqnEW4YeOk2AZ+a/zKfrPrLO+6rA29GGg4Ae72ksm2Gltn4q6kUOhz5O9WeTncawKr
-         jdi8rmYDrmlz5GMNiqJo0cpgpSZegIfAbOPo4vG3lLXah4kO6JAjUmEG/wFSwEvSTOVu
-         EW64ClFNBZFT3c0nCHUG2lStsTL4idcqlNZAr92DvSCAnHI2ltbh7MHHW+kBMFi17Sy3
-         ct05kWCZ1pKa4eCmVAyyNrZAx2Vdx5LQ9OV2Xxn0Xdux4WtcHJ3Yncjp4EYCMOQgzgtA
-         4vA9+TNIG7NSyFr4jKj0LFUcH4a+xlbkxRNrSlEXMU3OMb4vH+Zar10R0AYdNOb7pzO5
-         yO4g==
-X-Gm-Message-State: AOJu0YzQPufBQYigIYaZJ7Lk4/lU12r78NDhqbIy8BwjxPUyFi9kueSr
-	07oOL39PlWf1cz0JokFhRN7neZ/J7PZJOrwFXATfF1OF74fi2KiNK4xJH1db6A+YssXOwn2IX49
-	wOmHZx/dv7MuezVPXCp92zauUSlt4vHeH
-X-Received: by 2002:ad4:5b8f:0:b0:681:5c24:723 with SMTP id 15-20020ad45b8f000000b006815c240723mr4640540qvp.46.1705390632761;
-        Mon, 15 Jan 2024 23:37:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGrNcqol/OiEQ5ZrUIjTn7g2kuQvDjo2VGcjjAoLMRJtf3rUoTzhAFjIwMmgvbUMKAlwvpo2Q==
-X-Received: by 2002:ad4:5b8f:0:b0:681:5c24:723 with SMTP id 15-20020ad45b8f000000b006815c240723mr4640532qvp.46.1705390632538;
-        Mon, 15 Jan 2024 23:37:12 -0800 (PST)
-Received: from LeoBras.redhat.com ([2804:1b3:a803:64aa:6db9:6544:60c:9e16])
-        by smtp.gmail.com with ESMTPSA id jc4-20020a05622a714400b00429acfe5bb4sm4650206qtb.40.2024.01.15.23.37.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 23:37:12 -0800 (PST)
-From: Leonardo Bras <leobras@redhat.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Tony Lindgren <tony@atomide.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Leonardo Bras <leobras@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [RESEND RFC PATCH v1 2/2] serial/8250: Avoid getting lock in RT atomic context
-Date: Tue, 16 Jan 2024 04:37:00 -0300
-Message-ID: <20240116073701.2356171-3-leobras@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116073701.2356171-1-leobras@redhat.com>
-References: <20240116073701.2356171-1-leobras@redhat.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gH7MHFK3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1705390662; x=1736926662;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W2Z5WovOkoDhRrX3oZ/2SAj8+B2nb1yllR5MhnzNHik=;
+  b=gH7MHFK3Qvhg+39qCyI0l9EQynOo2OfkTZWU4XIvZSeuOsh1ZR3us1R3
+   /YGIJ3UOwnxRFGpCJrFQd6TU8LhA7NMQ/OQ8RiObTOn97ZuRmGvAF+/w/
+   P6slbE3Pfmz740oGOuzF5SnhL+46qVaUhnK8aQ9Ur6rA+OgUJI9TMvrjZ
+   kNxVWdJBkk0B/ldkoaivyY6a0Ta5Lrn67Hd5yaK3YJNlPS1daarc4phS9
+   gTTLXhfrcxE5N2LpOqqEZARt3YN5cBDA1FdnplCs4piNRtEnocDukQPOr
+   2u1xTJIfk7z+u9jPHkwA6AJeSiJ7AZ8J+L3N5fqNIFrbsyXd/6IyEemIl
+   A==;
+X-CSE-ConnectionGUID: IsWRT3HCQVmB2vjRJZ30Vg==
+X-CSE-MsgGUID: fn1riB1hQsScBhpbjzpgYw==
+X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
+   d="asc'?scan'208";a="14788093"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jan 2024 00:37:40 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Jan 2024 00:37:38 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Tue, 16 Jan 2024 00:37:34 -0700
+Date: Tue, 16 Jan 2024 07:36:58 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Inochi Amaoto <inochiama@outlook.com>
+CC: Conor Dooley <conor@kernel.org>, Michael Turquette
+	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Chao
+ Wei <chao.wei@sophgo.com>, Chen Wang <unicorn_wang@outlook.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang <jszhang@kernel.org>, Liu
+ Gui <kenneth.liu@sophgo.com>, Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	<dlan@gentoo.org>, <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH v6 1/4] dt-bindings: clock: sophgo: Add clock controller
+ of SG2000 series SoC
+Message-ID: <20240116-doubling-fanning-2a46405942ae@wendy>
+References: <20240115-spendable-achiness-cff7918fe810@spud>
+ <IA1PR20MB4953C0E6DCC3C4CC0A398529BB732@IA1PR20MB4953.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eB8X+Pg8BaNk7w+A"
+Content-Disposition: inline
+In-Reply-To: <IA1PR20MB4953C0E6DCC3C4CC0A398529BB732@IA1PR20MB4953.namprd20.prod.outlook.com>
 
-With PREEMPT_RT enabled, a spin_lock_irqsave() becomes a possibly sleeping
-spin_lock(), without preempt_disable() or irq_disable().
+--eB8X+Pg8BaNk7w+A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This allows a task T1 to get preempted or interrupted while holding the
-port->lock. If the preempting task T2 need the lock, spin_lock() code
-will schedule T1 back until it finishes using the lock, and then go back to
-T2.
+On Tue, Jan 16, 2024 at 08:27:59AM +0800, Inochi Amaoto wrote:
+> >On Sun, Jan 14, 2024 at 12:16:58PM +0800, Inochi Amaoto wrote:
+> >> SG2000 series SoC has the same clock as CV1810 series, but the clock
+> >> related to A53 is functional in SG2000 series. So a new compatible
+> >> string is needed for the new SoC.
+> >>
+> >> Add definition for the clock controller of the SG2000 series SoC.
+> >>
+> >> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> >> Link: https://github.com/sophgo/sophgo-doc/releases/tag/sg2000-datashe=
+et-v1.0-alpha
+> >> ---
+> >>  Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk=
+=2Eyaml b/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
+> >> index c1dc24673c0d..59ef41adb539 100644
+> >> --- a/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
+> >> +++ b/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
+> >> @@ -4,7 +4,7 @@
+> >>  $id: http://devicetree.org/schemas/clock/sophgo,cv1800-clk.yaml#
+> >>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>
+> >> -title: Sophgo CV1800 Series Clock Controller
+> >> +title: Sophgo CV1800/SG2000 Series Clock Controller
+> >>
+> >>  maintainers:
+> >>    - Inochi Amaoto <inochiama@outlook.com>
+> >> @@ -14,6 +14,7 @@ properties:
+> >>      enum:
+> >>        - sophgo,cv1800-clk
+> >>        - sophgo,cv1810-clk
+> >> +      - sophgo,sg2000-clk
+> >
+> >I recall before you mentioned that the Sophgo folks were considering
+> >renaming one of their devices. Is the sg2000 the renamed one, or a
+> >different chip?
 
-There is an issue if a T1 holding port->lock is interrupted by an
-IRQ, and this IRQ handler needs to get port->lock for writting (printk):
-spin_lock() code will try to reschedule the interrupt handler, which is in
-atomic context, causing a BUG() for trying to reschedule/sleep in atomic
-context.
+> The sg2000/sg2002 SoCs have one A53 core which cv1812/cv1813 SoCs
+> don't have. I prefer sg2000/sg2002 are different chips, or at least
+> an enhanced version of existed cv1812/cv1813. It is not a simple
+> rename.
+>=20
+> For this patch, the sg2000 doesn't need to disable A53 related clocks
+> like cv18xx series. So this compatible is needed to bind to this new
+> logic.
 
-So for the case (PREEMPT_RT && in_atomic()) try to get the lock, and if it
-fails proceed anyway, just like it's done in oops_in_progress case.
+I'm not disputing the unique compatible - you previously mentioned that
+Sophgo were considering rebranding the cvXXXX series of chips going
+forward and that one particular chip might undergo a name change.
+I was wondering if this was that chip or just another device in the
+series.
 
-Signed-off-by: Leonardo Bras <leobras@redhat.com>
----
- drivers/tty/serial/8250/8250_port.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Conor.
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 8ca061d3bbb92..8480832846319 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -3397,7 +3397,7 @@ void serial8250_console_write(struct uart_8250_port *up, const char *s,
- 
- 	touch_nmi_watchdog();
- 
--	if (oops_in_progress)
-+	if (oops_in_progress || (IS_ENABLED(CONFIG_PREEMPT_RT) && in_atomic())
- 		locked = uart_port_trylock_irqsave(port, &flags);
- 	else
- 		uart_port_lock_irqsave(port, &flags);
--- 
-2.43.0
+--eB8X+Pg8BaNk7w+A
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaYyFgAKCRB4tDGHoIJi
+0ny6AQD8jsSGjB9PRHJIURaIii46XV0kYNTdn/N7cJvxFm0LXQEApESH0dzNDVT/
+TL70OnJGXzymk7n0pSlvQzK/NlNa2gY=
+=HiGa
+-----END PGP SIGNATURE-----
+
+--eB8X+Pg8BaNk7w+A--
