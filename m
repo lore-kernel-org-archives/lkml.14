@@ -1,172 +1,119 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3781BF26
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 14:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7E51BDEC;
+	Tue, 16 Jan 2024 14:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dla/Q3AF"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5cec32dedf3so4471343a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 06:34:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705415679; x=1706020479; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wVLeCLs+UC4LCws3JCkyo7iN6KY4LoEJi4nfZy2Uvf0=;
-        b=dla/Q3AFbrjHtLCE6mravsOD8rJxf9R975TBaD4tzH8ducKywK0BMeWgWf8Zp2PdyK
-         fcS2TwHBUKjN8GsVeJqd7VWtpHzYx2eVDesDw5XArgm+4U7AGzOvdx6m9n/sbG/kmgXa
-         h3ZR/70OiHORJ65cSh4yWymHM7fHfN0UVGaNeE90NCz28fY/acg/ZBH5pLubbNuWz3BI
-         +CrMsFiLKy13S1F8gDybymCVEZEfM7gBGKW+Heye+kYINTUojreztLYzc1xRVrJcd4Sx
-         ehis4WsfnmYUJLnMP7awxZad7kcZ3LlogLhKDmowsJTBNDi4WmBtyI9N6lex4+6Xf4VX
-         6wtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705415679; x=1706020479;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wVLeCLs+UC4LCws3JCkyo7iN6KY4LoEJi4nfZy2Uvf0=;
-        b=OzTO4FG1dTm3fT2omFkLjoQ/1dXKtrL+TV0hnzmGaxQkS9DSiQ8mWNPZDvVziVnfKF
-         DlGKsL+eawL8/QSEZXa/Xaped18f5BlOss7wUd3b0L34dsxEQKuNgUUFKVKZXKX4beWG
-         dg7dGGgtX8zcw9Ye5Jq/7EKswU+1DW9dBtTd7ddLfM7bNPW7qNkxBwNY7K+9myz5YPn9
-         UmWEktHBxJRgG6bfv4yaGqvDGP1uHdtxdca47KhzGZpqE9V1DPJB98Tm3ok/2V1uA+Wv
-         FpPJv0OamXv6QQMW1oJ0MPXooaP53GvSmck77yu4uccA5MuiEN66swNuzKa+VciU4u3U
-         SpBg==
-X-Gm-Message-State: AOJu0Yw8+Z+VKG+3CoQMwDeKDj/3K32bHkuk2nmRpvGZN53A7ji9p85S
-	ZzqJNDYH+ZO7hH4vIjb9PWU=
-X-Google-Smtp-Source: AGHT+IGHaN9YxTeIzJrPa8gr5TI0NPSj8v/Q4JIkg6Iko/WVK14HfcXfvs1OU5hQ9bSc8XXrKZKWHg==
-X-Received: by 2002:a17:902:c409:b0:1d4:f77c:a8e4 with SMTP id k9-20020a170902c40900b001d4f77ca8e4mr4207509plk.79.1705415679435;
-        Tue, 16 Jan 2024 06:34:39 -0800 (PST)
-Received: from localhost.localdomain ([2001:250:4000:8246:8dd2:f82d:e185:367f])
-        by smtp.gmail.com with ESMTPSA id g13-20020a170902f74d00b001d3c23a6862sm9402603plw.25.2024.01.16.06.34.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 06:34:39 -0800 (PST)
-From: Wenjie Qi <qwjhust@gmail.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: hustqwj@hust.edu.cn,
-	Wenjie Qi <qwjhust@gmail.com>
-Subject: [PATCH v1] f2fs: fix max open zone constraints
-Date: Tue, 16 Jan 2024 22:34:22 +0800
-Message-ID: <20240116143422.1268-1-qwjhust@gmail.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4jEQCA1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A51C43390;
+	Tue, 16 Jan 2024 14:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705415711;
+	bh=YxRAEs1+500SQYSJEteA7haAvPYo8UdPYN9Xe9/mIio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D4jEQCA1oX2gdAuwVRAq1lU9gfTshP5xoyXgnUw5fC28RHQN1BTC/y12Wp2JP8d2Q
+	 ZifSys3WVBpWG10QhMIvdm8TRX/BQ0MIIOVa0vPaMbzKxrkQyAxIwkhptUb+9RQa+f
+	 2M7l3yDoJJsO9wq/DESwzXCATOm/bGMCzQRPnnghsL+qwphJBAtxUsSX4L8w4CMAZ9
+	 wZ8WgqQkQf65IsRckBsyg91ZU4ILHZUBhRLHY1FDOzfJ0oXwNtXeB8vhNgvgtlIiQp
+	 Ccgf4p10qpBOo8A0I4sbezUfWKcyK3F41Xj7hRikxXHJbQsxywodU7C0SZWNeW/S5k
+	 MsPjEWUqjaYfg==
+Date: Tue, 16 Jan 2024 08:35:09 -0600
+From: Rob Herring <robh@kernel.org>
+To: Pintu Agarwal <pintu.ping@gmail.com>
+Cc: vichy.kuo@gmail.com, Pintu Kumar <quic_pintu@quicinc.com>,
+	linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+	linux-mm@kvack.org, frowand.list@gmail.com,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] of: reserved_mem: fix error log for reserved mem init
+ failure
+Message-ID: <20240116143509.GA3845101-robh@kernel.org>
+References: <20231206151600.26833-1-quic_pintu@quicinc.com>
+ <20231208203128.GA2646347-robh@kernel.org>
+ <CAOuPNLg90T69USVQ8Ti6c8fXb_XrnaR035in_CbJHmNMUYLqOg@mail.gmail.com>
+ <CAOuPNLj4_pQiAHoER2VJpW_2NEaq8+zF8p1br+tf0Toe1t1UDg@mail.gmail.com>
+ <CAOuPNLh+V1-Uu_rnnbdu7p6DGjHOJf0yJnaxnchwpzh_YyP=_Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOuPNLh+V1-Uu_rnnbdu7p6DGjHOJf0yJnaxnchwpzh_YyP=_Q@mail.gmail.com>
 
-We can get the number of remaining available zone
-resources by subtracting the number of active logs from
-the number of max active zones of zoned devices. We can
-use these available zone resources to reduce the number
-of pending bio when switching zones.
-If max active zones is 0, there is no limit.
+On Sat, Jan 06, 2024 at 11:31:12PM +0530, Pintu Agarwal wrote:
+> Hi,
+> 
+> On Thu, 14 Dec 2023 at 22:47, Pintu Agarwal <pintu.ping@gmail.com> wrote:
+> >
+> > On Mon, 11 Dec 2023 at 20:13, Pintu Agarwal <pintu.ping@gmail.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Sat, 9 Dec 2023 at 02:01, Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Wed, Dec 06, 2023 at 08:46:00PM +0530, Pintu Kumar wrote:
+> > > > > During fdt_init_reserved_mem() when __reserved_mem_init_node()
+> > > > > fail we are using pr_info to print error.
+> > > > >
+> > > > > So, if we change the loglevel to 4 (or below), this error
+> > > > > message will be missed.
+> > > > >
+> > > > > Thus, change the pr_info to pr_err for fail case.
+> > > > >
+> > > > > Signed-off-by: Pintu Kumar <quic_pintu@quicinc.com>
+> > > > > ---
+> > > > >  drivers/of/of_reserved_mem.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> > > > > index 7ec94cfcbddb..473665e76b6f 100644
+> > > > > --- a/drivers/of/of_reserved_mem.c
+> > > > > +++ b/drivers/of/of_reserved_mem.c
+> > > > > @@ -334,7 +334,7 @@ void __init fdt_init_reserved_mem(void)
+> > > > >               if (err == 0) {
+> > > > >                       err = __reserved_mem_init_node(rmem);
+> > > > >                       if (err != 0 && err != -ENOENT) {
+> > > > > -                             pr_info("node %s compatible matching fail\n",
+> > > > > +                             pr_err("node %s compatible matching fail\n",
+> > > >
+> > > > Isn't the message just wrong. If compatible match fails, we return
+> > > > ENOENT. The failure here would be from the init function.
+> > > >
+> > > Okay.
+> > > You mean to say, if __reserved_mem_init_node fails with default err
+> > > (ENOENT) then it may not hit this condition.
+> > > Instead it will hit the 'else' case which is wrong ?
+> > > Also, the "initfn" inside "__reserved_mem_init_node" may fail in which
+> > > case also it may return default err.
+> > >
+> > > Maybe, the initial author's intention was to free the memory only if
+> > > the failure type is not the default ENOENT type.
+> > >
+> > > This seems to be a different issue.
+> > > Can we address this separately in a different patch ?
+> > >
+> > > And how do we fix this ?
+> > > One option is to add another "if" condition with just ENOENT error check ?
+> > > if (err == -ENOENT) {
+> > >     pr_err("node %s compatible matching fail\n", rmem->name);
+> > >     return;
+> > > }
+> > > Then, correct the existing log with a different message:
+> > > pr_err("node %s matching reserved mem not found.\n", rmem->name);
+> > > Or, add one more "if else" condition ?
+> > > Or, fix the calling function itself : __reserved_mem_init_node ?
+> > >
+> >
+> > Any further comments on this ?
+> 
+> Any further comments or suggestions on the above ?
+> Shall we just fix the log message, or correct the if/else case as well ?
 
-Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
----
- fs/f2fs/data.c  | 32 +++++++++++++++++++++++++-------
- fs/f2fs/f2fs.h  |  2 ++
- fs/f2fs/super.c | 11 +++++++++++
- 3 files changed, 38 insertions(+), 7 deletions(-)
+It looked to me like the original author's intent was this is not an 
+error. Either convince me otherwise or wait for me to study this 
+further. This code gets a lot of drive-by patches and what is "correct" 
+isn't always clear.
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index dce8defdf4c7..0b62ca296074 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -392,6 +392,19 @@ static void f2fs_zone_write_end_io(struct bio *bio)
- 	complete(&io->zone_wait);
- 	f2fs_write_end_io(bio);
- }
-+
-+static void f2fs_zone_write_end_io_nowait(struct bio *bio)
-+{
-+#ifdef CONFIG_F2FS_IOSTAT
-+	struct bio_iostat_ctx *iostat_ctx = bio->bi_private;
-+	struct f2fs_sb_info *sbi = iostat_ctx->sbi;
-+#else
-+	struct f2fs_sb_info *sbi = (struct f2fs_sb_info *)bio->bi_private;
-+#endif
-+
-+	atomic_inc(&sbi->available_active_zones);
-+	f2fs_write_end_io(bio);
-+}
- #endif
- 
- struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
-@@ -1085,14 +1098,19 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
- 		goto next;
- out:
- #ifdef CONFIG_BLK_DEV_ZONED
--	if (f2fs_sb_has_blkzoned(sbi) && btype < META &&
-+	if (f2fs_sb_has_blkzoned(sbi) && sbi->max_active_zones && btype < META &&
- 			is_end_zone_blkaddr(sbi, fio->new_blkaddr)) {
--		bio_get(io->bio);
--		reinit_completion(&io->zone_wait);
--		io->bi_private = io->bio->bi_private;
--		io->bio->bi_private = io;
--		io->bio->bi_end_io = f2fs_zone_write_end_io;
--		io->zone_pending_bio = io->bio;
-+		if (!atomic_add_negative(-1, &sbi->available_active_zones)) {
-+			io->bio->bi_end_io = f2fs_zone_write_end_io_nowait;
-+		} else {
-+			atomic_inc(&sbi->available_active_zones);
-+			bio_get(io->bio);
-+			reinit_completion(&io->zone_wait);
-+			io->bi_private = io->bio->bi_private;
-+			io->bio->bi_private = io;
-+			io->bio->bi_end_io = f2fs_zone_write_end_io;
-+			io->zone_pending_bio = io->bio;
-+		}
- 		__submit_merged_bio(io);
- 	}
- #endif
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 65294e3b0bef..2aade367ac66 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1551,6 +1551,8 @@ struct f2fs_sb_info {
- 
- #ifdef CONFIG_BLK_DEV_ZONED
- 	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
-+	unsigned int max_active_zones;		/* max zone resources of the zoned device */
-+	atomic_t available_active_zones;	/* remaining zone resources for zone switch */
- #endif
- 
- 	/* for node-related operations */
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 206d03c82d96..6711283ff187 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2385,6 +2385,12 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 	if (err)
- 		goto restore_opts;
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	if (sbi->max_active_zones)
-+		atomic_set(&sbi->available_active_zones,
-+				sbi->max_active_zones - F2FS_OPTION(sbi).active_logs);
-+#endif
-+
- 	/* flush outstanding errors before changing fs state */
- 	flush_work(&sbi->s_error_work);
- 
-@@ -3932,6 +3938,11 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
- 	if (!f2fs_sb_has_blkzoned(sbi))
- 		return 0;
- 
-+	sbi->max_active_zones = bdev_max_active_zones(bdev);
-+	if (sbi->max_active_zones)
-+		atomic_set(&sbi->available_active_zones,
-+				sbi->max_active_zones - F2FS_OPTION(sbi).active_logs);
-+
- 	zone_sectors = bdev_zone_sectors(bdev);
- 	if (!is_power_of_2(zone_sectors)) {
- 		f2fs_err(sbi, "F2FS does not support non power of 2 zone sizes\n");
--- 
-2.34.1
-
+Rob
