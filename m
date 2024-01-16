@@ -1,84 +1,105 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABAD154BF4;
-	Tue, 16 Jan 2024 19:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1A8154C15;
+	Tue, 16 Jan 2024 19:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705435181; cv=none; b=p5uH+655HJ7xc5jl9fLGDoXGvsDwu9uvBwmL2XhKO7ltXK6HwzNVxRxdd3dqy6p6Whvwn5PV9NoKXrr6vFaKvML/i03vWdoxDw0yRrenUlZu/rdie5JV/Wg84o/UXsluZGXHESHucHS/t0jHHCbaoGYxrFRJJN4jSOcFq+sAJrw=
+	t=1705435182; cv=none; b=RensZ+yb7cfwnkbV/t8fP3nFg98vLksJRGmmP0R+lP3ZoNsYnnDo9fRYivGR2m5tZ7xpCSD8yyvc7DnNs+MWEKRPL/f/99KDmkwXSb9V0jUAaVzWtcQkt7Bsv/NMcZk9nsOMbaRGzNJ8lV+bHPmfry/yANsvSJ1nAtVVhH3DC3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705435181; c=relaxed/simple;
-	bh=JPlHMBUhUwT7tKuxqJxvPrreTY+vcwsiULPGR0PWxf8=;
-	h=DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=iNLKS0d2i/oKnS5/v0UV1RXjOqjMtvZRJtST3pnHzrKAl+jlv/y23OjbQn7wX8LI+DWI42ZlS3TLmgDgQwH+oWSlgwDj4M1Pda8bfD746S8WaMKkopYK8JAmUEdpRg8W96Yk+/YOEsKBbw3icjl3L4vK/EFTeKG+XR2PDr61oHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BJOmr6bI; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1705435182; c=relaxed/simple;
+	bh=LHe3WbtSeAw+zMag6pGrOXRlFdOH5pbbZVwiduwmtrA=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
+	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=olR4jEeRVwBFj3UVH3J5RdFE664OiNaXdG6YLmorzspahaz3UNotmKRp8lO6dCqcdCxfH0tU+idSIr5IbPxeUgv32pOXpmr6kak2qziKAXOebmY+HipmQR5wOl3LHIXRqHYaH4uhrSAbN1cA0i7YkiIU0cRdM3iI3X1p7uJaL6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQRY046v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BJOmr6bI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=QOrbjSeg+FOA9pqS7cPB6dtob5KTxlC45EjTRB0DpCc=; b=BJOmr6bIkh2IDeTbIhp0UzgwLu
-	gx5JPFpdn526aCakeC23REpDuV+5AqtqTGju1OCirbriR/EPL6G6SLLWbhlH2ZAtm3KB+1jnq47Tw
-	OkgsJUwK6iaguqtEgg788dbAFbdbfIA869/6OW+WFtaMh1jm510ZadsetMNQ+6+s+7+8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rPpaq-005Lc7-Rj; Tue, 16 Jan 2024 20:59:28 +0100
-Date: Tue, 16 Jan 2024 20:59:28 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Tim Menninger <tmenninger@purestorage.com>
-Cc: f.fainelli@gmail.com, olteanv@gmail.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: Make *_c45 callbacks agree with
- phy_*_c45 callbacks
-Message-ID: <04d22048-737a-4281-a43f-b125ebe0c896@lunn.ch>
-References: <20240116193542.711482-1-tmenninger@purestorage.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQRY046v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C51EC433F1;
+	Tue, 16 Jan 2024 19:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705435182;
+	bh=LHe3WbtSeAw+zMag6pGrOXRlFdOH5pbbZVwiduwmtrA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SQRY046vRAJrA6kzA3DYnWweIt32cEwjnehQQgyWVPEP113TmSVCdzKS7q8bZfwyi
+	 0kPrjHT/tvUygUtaMzfqMasBs8dloSaSfO40f9d+m3JMGuJzSLU1TGLHMQWzLMW7/j
+	 328QCQEisEVNoHwCEb0CjhISgAAhwOLKUqHMmjuLmPlf02cJpsiCdBJOC4Pgmm7IDS
+	 81P8MOIbyn56h6E6ARrLEAbqyYJMQZwBjZMOjtHnL6qj91HnzGdLCoQvRyx7gsei5V
+	 UtBk8cz/2UdwAsgiqAdcPBdyLya7LnNyHjwtBcLZMnKXbzPqyTh21Q+2xypTuQqYuv
+	 blw9saNRylCqA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Fabio Estevam <festevam@denx.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.15 32/47] ARM: dts: imx23/28: Fix the DMA controller node name
+Date: Tue, 16 Jan 2024 14:57:35 -0500
+Message-ID: <20240116195834.257313-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116195834.257313-1-sashal@kernel.org>
+References: <20240116195834.257313-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240116193542.711482-1-tmenninger@purestorage.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.147
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 16, 2024 at 07:35:42PM +0000, Tim Menninger wrote:
-> Set the read_c45 callback in the mii_bus struct in mv88e6xxx only if there
-> is a non-NULL phy_read_c45 callback on the chip mv88e6xxx_ops. Similarly
-> for write_c45 and phy_write_c45.
-> 
-> In commit 743a19e38d02 ("net: dsa: mv88e6xxx: Separate C22 and C45 transactions")
-> the MDIO bus driver split its API to separate C22 and C45 transfers.
-> 
-> In commit 1a136ca2e089 ("net: mdio: scan bus based on bus capabilities for C22 and C45")
-> we do a C45 mdio bus scan based on existence of the read_c45 callback
-> rather than checking MDIO bus capabilities then in
-> commit da099a7fb13d ("net: phy: Remove probe_capabilities") we remove the
-> probe_capabilities from the mii_bus struct.
-> 
-> The combination of the above results in a scenario (e.g. mv88e6185)
-> where we take a non-NULL read_c45 callback on the mii_bus struct to mean
-> we can perform a C45 read and proceed with a C45 MDIO bus scan. The scan
-> encounters a NULL phy_read_c45 callback in the mv88e6xxx_ops which implies
-> we can NOT perform a C45 read and fails with EOPNOTSUPP. The read_c45
-> callback should be NULL if phy_read_c45 is NULL, and similarly for
-> write_c45 and phy_write_c45.
+From: Fabio Estevam <festevam@denx.de>
 
-Hi Tim
+[ Upstream commit 858d83ca4b50bbc8693d95cc94310e6d791fb2e6 ]
 
-What does phylib do with the return of -EOPNOTSUPP? I've not tested
-it, but i would expect it just keeps going with the scan? It treats it
-as if there is no device there? And since it never accesses the
-hardware, this should be fast?
+Per fsl,mxs-dma.yaml, the node name should be 'dma-controller'.
 
-Or is my assumption wrong? Do you see the EPOPNOTSUPP getting reported
-back to user space, and the probe failing?
+Change it to fix the following dt-schema warning.
 
-     Andrew
+imx28-apf28.dtb: dma-apbx@80024000: $nodename:0: 'dma-apbx@80024000' does not match '^dma-controller(@.*)?$'
+	from schema $id: http://devicetree.org/schemas/dma/fsl,mxs-dma.yaml#
+
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx23.dtsi | 2 +-
+ arch/arm/boot/dts/imx28.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+index ce3d6360a7ef..b236d23f8071 100644
+--- a/arch/arm/boot/dts/imx23.dtsi
++++ b/arch/arm/boot/dts/imx23.dtsi
+@@ -414,7 +414,7 @@ emi@80020000 {
+ 				status = "disabled";
+ 			};
+ 
+-			dma_apbx: dma-apbx@80024000 {
++			dma_apbx: dma-controller@80024000 {
+ 				compatible = "fsl,imx23-dma-apbx";
+ 				reg = <0x80024000 0x2000>;
+ 				interrupts = <7 5 9 26
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index 10eab221bc05..7fcc0d35d31c 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -992,7 +992,7 @@ etm: etm@80022000 {
+ 				status = "disabled";
+ 			};
+ 
+-			dma_apbx: dma-apbx@80024000 {
++			dma_apbx: dma-controller@80024000 {
+ 				compatible = "fsl,imx28-dma-apbx";
+ 				reg = <0x80024000 0x2000>;
+ 				interrupts = <78 79 66 0
+-- 
+2.43.0
 
