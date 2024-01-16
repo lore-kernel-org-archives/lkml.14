@@ -1,92 +1,80 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 226FE11713;
-	Tue, 16 Jan 2024 08:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8Dxfeu9PaZlw6AAAA--.2862S3;
-	Tue, 16 Jan 2024 16:26:37 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxHs+6PaZlNKQDAA--.19022S3;
-	Tue, 16 Jan 2024 16:26:36 +0800 (CST)
-Subject: Re: [PATCH v2] irqchip/loongson-eiointc: Refine irq affinity setting
- during resume
-To: Sergey Shtylyov <s.shtylyov@omp.ru>, Huacai Chen <chenhuacai@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- lvjianmin@loongson.cn
-References: <20240116080555.409215-1-maobibo@loongson.cn>
- <58b05897-8d06-52fa-8cde-ca7caa591200@omp.ru>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <236c62f1-29b9-bbd2-1391-bb713d9cd3c8@loongson.cn>
-Date: Tue, 16 Jan 2024 16:26:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDC1125A3;
+	Tue, 16 Jan 2024 08:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="KAVU3mtA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1705393686; bh=atc+5+ojRvm8ThjhjD7yUzq2b3yJt/kmV+ymWWi8EQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KAVU3mtAAmNdfm2lPlBc3yrxcepLBsM0BAxgkupmPr3o0C/hI4SsBcW6N3deojhSZ
+	 SwLgxJMXS7055SAA9oYxM9fSTUvPnOc+IQj+mRgVanuOTLMOgOPqs1Hs5HIV2DrqvC
+	 aoP1cHxPpN+msTzz9K9jk4LnMp3vGX2Iz736rrM4qTdFhXq6UN5ShVEF2R8nYTuz2d
+	 2TFH6KM4XhNENO1/crKT1TzF5bB3yy2XWjxbas56EArRXrHtXyiXj1RkoiYigdEj7H
+	 nOxyKKG8aqDbAkRJwG3GmPhrKovXYzIBYZyd84ajXRY/7oJXl/E5a+x0Yhzib5ML5U
+	 Ag/yfhu6xOnxA==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+	id D212A1000C2; Tue, 16 Jan 2024 08:28:06 +0000 (GMT)
+Date: Tue, 16 Jan 2024 08:28:06 +0000
+From: Sean Young <sean@mess.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Trevor Gamblin <tgamblin@baylibre.com>, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michael.hennerich@analog.com,
+	nuno.sa@analog.com, devicetree@vger.kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Subject: Re: [PATCH 2/2] pwm: Add driver for AXI PWM generator
+Message-ID: <ZaY-FjeRV2qPL0wz@gofer.mess.org>
+References: <20240115201222.1423626-1-tgamblin@baylibre.com>
+ <20240115201222.1423626-3-tgamblin@baylibre.com>
+ <gbessnmierg5gvdguhwauoe2mxr3krwcfk2afhazrqvz45md64@itbchezepncg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <58b05897-8d06-52fa-8cde-ca7caa591200@omp.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxHs+6PaZlNKQDAA--.19022S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Gw1UKw47Ar48Zw1xGF47WrX_yoWkGrb_WF
-	Z2k34xuw1UXF13tFWktw4UtFZIg3yru348W34UXF1jq345Z34kWrZYkrnrK3Wxta47CFn8
-	ury3Ar4Sk347uosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
+In-Reply-To: <gbessnmierg5gvdguhwauoe2mxr3krwcfk2afhazrqvz45md64@itbchezepncg>
 
-Sergey,
+On Mon, Jan 15, 2024 at 10:18:04PM +0100, Uwe Kleine-K�nig wrote:
+> On Mon, Jan 15, 2024 at 03:12:21PM -0500, Trevor Gamblin wrote:
+> > +static int axi_pwmgen_probe(struct platform_device *pdev)
+> > +{
+> > +	struct axi_pwmgen *pwm;
+> > +	void __iomem *io_base;
+> > +	int ret;
+> > +
+> > +	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+> > +	if (!pwm)
+> > +		return -ENOMEM;
+> > +
+> > +	io_base = devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(io_base))
+> > +		return PTR_ERR(io_base);
+> > +
+> > +	pwm->regmap = devm_regmap_init_mmio(&pdev->dev, io_base, &axi_pwm_regmap_config);
+> > +	if (IS_ERR(pwm->regmap))
+> > +		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->regmap),
+> > +				     "failed to init register map\n");
+> > +
+> > +	pwm->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+> > +	if (IS_ERR(pwm->clk))
+> > +		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->clk), "failed to get clock\n");
+> 
+> Please call clk_rate_exclusive_get() on pwm->clk and cache the rate in
+> struct axi_pwmgen.
+> 
+> > +	pwm->chip.dev = &pdev->dev;
+> > +	pwm->chip.ops = &axi_pwmgen_pwm_ops;
 
-Thanks for reviewing my patch.
-I reply inline.
+In that case pwm->chip.atomic = true; can be set too (although this should
+be tested with CONFIG_DEBUG_ATOMIC_SLEEP and CONFIG_PWM_DEBUG).
 
-On 2024/1/16 下午4:17, Sergey Shtylyov wrote:
-> On 1/16/24 11:05 AM, Bibo Mao wrote:
-> 
->> During suspend and resume, other CPUs are hot-unpluged and IRQs are
->> migrated to CPU0. So it is not necessary to restore irq affinity for
->> eiointc irq controller.
->>
->> Also there is some optimization for the interrupt dispatch function
->> eiointc_irq_dispatch. There are 256 IRQs supported for eiointc, eiointc
->> irq handler reads the bitmap and find pending irqs when irq happens.
->> So there are four times of consecutive iocsr_read64 operations for the
->> total 256 bits to find all pending irqs. If the pending bitmap is zero,
->> it means that there is no pending irq for the this irq bitmap range,
->> we can skip handling to avoid some useless operations sush as clearing
-> 
->      s/sush/such/?
-will fix.
+Thanks,
 
-> 
->> hw ISR.
-> 
->     This sounds like you need 2 patches to deal with 2 separate issues...
-Sure, I will separate it into 2 patches in next version.
-
-Regards
-Bibo Mao
-> 
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> [...]
-> 
-> MBR, Sergey
-> 
-
+Sean
