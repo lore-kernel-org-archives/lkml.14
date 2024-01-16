@@ -1,145 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C33D64CE9;
-	Tue, 16 Jan 2024 19:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AF46A343;
+	Tue, 16 Jan 2024 19:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434410; cv=none; b=YgUR0EqHApf3aBqBIxLMkOYHWLhzlZDN7xiDPB0mkC2cU1J247cMfE2HTzpN74w7FX0wlpKEPOuwGbQRWY7by0dVrz0ecwM5v9WQkgAthQyhSlwL+nESxlg+W28mPoKmirbFTYCVc3q4zn5ecPQzFs0+s+ER1lalymo99q1ss00=
+	t=1705434411; cv=none; b=EPDh47pLb8mUmPE3ew2h0XJGAtHcMh9ekvmQvJ8+loyN567dZVqk3Gp/vjYOaox2QAF3EMUoLLa/33HmKMG7XozgpS7lcRBIBIy9KUnw/rX6VmTgM1uG+/8snWUfMExm2yM7p6NAQ+u6hrsPn42ITIYO/iW3zZoOJthpqP8/DJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434410; c=relaxed/simple;
-	bh=mcZomUmBofZwrv5P/gxQDWjBxvcbEOUulhgq96eGZ9o=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
-	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=g40EinJP8zJ9PDONatv6PV++OFbwZP1rDEiuvUMxnARArTtDxC1b+ZAx0qtrLWsTuR46D9v6FcLbClqdy98SzMIDqwhP17KD7AyPcTh2O3Gn308VDFup5oDOsr9sxV3damYibQOUbvad6/6vvgMhG20oqtKkk6ZNituOiHhthVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/wnZgZR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705434411; c=relaxed/simple;
+	bh=YjY34dM1H484nLiPhaWW57Fe2QttFCAJUqyuIWnNlwk=;
+	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
+	 In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	b=NSYCohscd1I1IXFgwfzPGmpozHsjN+cO0IENNUOONGMs5KpfHT9/ZbQFr92vAn1UAXLoxcSQj7GNMk0pgnOFZ668gw5rRLtv1WPqdNgrepVeEROTrLmx2XqgB1pphRZYOAIyrti9eMpjSKHBLb8oJZJ7cwngsbyCW7ifplXqx9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdIgnA3S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/wnZgZR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65CEFC433B1;
-	Tue, 16 Jan 2024 19:46:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdIgnA3S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C20FC43394;
+	Tue, 16 Jan 2024 19:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705434409;
-	bh=mcZomUmBofZwrv5P/gxQDWjBxvcbEOUulhgq96eGZ9o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=V/wnZgZRrdGTto6tjy2MfQBZDEgM/68W/eiVHplWoMyvV8knP42I4joLHnGJMXBY9
-	 rJ7d418oCUDTf0djlkKMnaOTlDIz9/5qD/mnT4mslrsPdE5iz10pTKdzea83Ywts7S
-	 NlA4VNDL4pSYPWWBBWiw5atxK1sJheCOK5965aBdztSwDacNjRCX5hIGLvGiUCkk+K
-	 yjlt2ShLLnHTmD3hg363J+dBU9+0i3gRQzs7fFNdQ1MrXLBOwP61I1rndz0uXIEwee
-	 M0Rot3o0D/goHtrXZT7K1fijy3n6aIWjudSDD3YZ93LvQYxkR8DEFmpwyAYSnX/kkG
-	 WwbgKp1n7SjQw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Wen Gu <guwen@linux.alibaba.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Sasha Levin <sashal@kernel.org>,
-	jaka@linux.ibm.com,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.7 100/108] net/smc: disable SEID on non-s390 archs where virtual ISM may be used
-Date: Tue, 16 Jan 2024 14:40:06 -0500
-Message-ID: <20240116194225.250921-100-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116194225.250921-1-sashal@kernel.org>
-References: <20240116194225.250921-1-sashal@kernel.org>
+	s=k20201202; t=1705434410;
+	bh=YjY34dM1H484nLiPhaWW57Fe2QttFCAJUqyuIWnNlwk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=cdIgnA3S5spCJgft8bPEQ2cSRTib2CYHHHVTd9QZbp7rSSRir0PSNW/5pJArEoBOp
+	 CCG7ZV4Vty+k0+LnwzyzCXPuNbf/8D+kc0cn1XIGDhoEK0V9QjYdH3xj2RkTgSl2lb
+	 nKJxdH5EQfZYvkItb+H9yEGXstuSVAYobGuep5JUV2yLZ8cuGe8ISrjja2efG0L1CX
+	 eUBZRsaNMBemw6nMOEd0JDq6UsttMvH0N8yJg9jh2A5zGwnRNRN9QzvwuzO9M43y8K
+	 Epuiddlc0Ogss/9Cuf5AY5kKRT6sacFBhZXaU3FSGvGhrWvuz+Z1m0l7ChNftHZ5/j
+	 4nucu9vZGs3EA==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Tue, 16 Jan 2024 14:45:57 -0500
+Subject: [PATCH 01/20] filelock: split common fields into struct
+ file_lock_core
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240116-flsplit-v1-1-c9d0f4370a5d@kernel.org>
+References: <20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org>
+In-Reply-To: <20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org>
+To: Christian Brauner <brauner@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, 
+ Dominique Martinet <asmadeus@codewreck.org>, 
+ Christian Schoenebeck <linux_oss@crudebyte.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
+ Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
+ Miklos Szeredi <miklos@szeredi.hu>, 
+ Andreas Gruenbacher <agruenba@redhat.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+ Jan Kara <jack@suse.cz>, Mark Fasheh <mark@fasheh.com>, 
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+ Ronnie Sahlberg <lsahlber@redhat.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev, 
+ linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, 
+ gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+ linux-trace-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1316; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=YjY34dM1H484nLiPhaWW57Fe2QttFCAJUqyuIWnNlwk=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlpt0grorncqc9kLnslpuIZeyPyWu2iH2b3i5B2
+ QhRt5u8LPSJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZabdIAAKCRAADmhBGVaC
+ FbMvEACDnTZd0WkyKZFXw33wk0c2b7uo3MRrbTaAJ3SXB53MT5tXPsMrx/2rbi364MuRnoPP6bi
+ Ys3m9vycKLXirGtEGtajbM2rYOPbebP7S9O+g1VFohLR1yLsN5joqExpg9aENC5dPj/lNHnSdr9
+ 75WIVLpf7G0qyG78AxC9PJuPduxUntrA1wqjADiLA90eF1lozTSG9oLqgqpQ6VMOBwd0Kbs0a5i
+ NDCVod8SRF0fiNddU9JOiAdT1FDgumShOCW9PUCd6uU5PV0N0dLx6JHt+7PTVPYoLT3lssNET7u
+ VAWTej8G43paeJujEHZDrxniexM9BSVGH8c9xjv/H6lwcsOHrK2oYuNDvd7yDMty+3zHYgY62TT
+ /hJ/tchNR3PxSGmvY+aeE4i7yty4fiJh0enq1fG/6/BPMvrpK0LqzHM/sLb4p8L0/7er89TolW/
+ 8m7NYvGWmzilgVDsLPfyaMzjOeP+YiFRh5XSrCh3Cq1tNsfW+6sr4MAucKQLcLXaxE2PQ/wXVP2
+ RVo6Q0PshEsg48lhuMGKOuyTjoKvVODmGMHNO92/xDemnCiZia4nc7lTSD8Px72ehl7408vGs6g
+ amJflorwhY/bA5eWVETGdMDw7nt/06zb8dMl8qmXvG9sz/S54+3MvlnfNH842ZBqeaS3lrLhWLC
+ n4OPtwY7WrvAqgw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-From: Wen Gu <guwen@linux.alibaba.com>
+In a future patch, we're going to split file leases into their own
+structure. Since a lot of the underlying machinery uses the same fields
+move those into a new file_lock_core, and embed that inside struct
+file_lock.
 
-[ Upstream commit c6b8b8eb49904018e22e4e4b1fa502e57dc747d9 ]
-
-The system EID (SEID) is an internal EID used by SMC-D to represent the
-s390 physical machine that OS is executing on. On s390 architecture, it
-predefined by fixed string and part of cpuid and is enabled regardless
-of whether underlay device is virtual ISM or platform firmware ISM.
-
-However on non-s390 architectures where SMC-D can be used with virtual
-ISM devices, there is no similar information to identify physical
-machines, especially in virtualization scenarios. So in such cases, SEID
-is forcibly disabled and the user-defined UEID will be used to represent
-the communicable space.
-
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
-Reviewed-and-tested-by: Wenjia Zhang <wenjia@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/smc/smc_clc.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ include/linux/filelock.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
-index 72f4d81a3f41..1489a8421d78 100644
---- a/net/smc/smc_clc.c
-+++ b/net/smc/smc_clc.c
-@@ -155,10 +155,12 @@ static int smc_clc_ueid_remove(char *ueid)
- 			rc = 0;
- 		}
- 	}
-+#if IS_ENABLED(CONFIG_S390)
- 	if (!rc && !smc_clc_eid_table.ueid_cnt) {
- 		smc_clc_eid_table.seid_enabled = 1;
- 		rc = -EAGAIN;	/* indicate success and enabling of seid */
- 	}
-+#endif
- 	write_unlock(&smc_clc_eid_table.lock);
- 	return rc;
- }
-@@ -273,22 +275,30 @@ int smc_nl_dump_seid(struct sk_buff *skb, struct netlink_callback *cb)
+diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+index 95e868e09e29..7825511c1c11 100644
+--- a/include/linux/filelock.h
++++ b/include/linux/filelock.h
+@@ -85,8 +85,9 @@ bool opens_in_grace(struct net *);
+  *
+  * Obviously, the last two criteria only matter for POSIX locks.
+  */
+-struct file_lock {
+-	struct file_lock *fl_blocker;	/* The lock, that is blocking us */
++
++struct file_lock_core {
++	struct file_lock *fl_blocker;	/* The lock that is blocking us */
+ 	struct list_head fl_list;	/* link into file_lock_context */
+ 	struct hlist_node fl_link;	/* node in global lists */
+ 	struct list_head fl_blocked_requests;	/* list of requests with
+@@ -102,6 +103,10 @@ struct file_lock {
+ 	int fl_link_cpu;		/* what cpu's list is this on? */
+ 	wait_queue_head_t fl_wait;
+ 	struct file *fl_file;
++};
++
++struct file_lock {
++	struct file_lock_core fl_core;
+ 	loff_t fl_start;
+ 	loff_t fl_end;
  
- int smc_nl_enable_seid(struct sk_buff *skb, struct genl_info *info)
- {
-+#if IS_ENABLED(CONFIG_S390)
- 	write_lock(&smc_clc_eid_table.lock);
- 	smc_clc_eid_table.seid_enabled = 1;
- 	write_unlock(&smc_clc_eid_table.lock);
- 	return 0;
-+#else
-+	return -EOPNOTSUPP;
-+#endif
- }
- 
- int smc_nl_disable_seid(struct sk_buff *skb, struct genl_info *info)
- {
- 	int rc = 0;
- 
-+#if IS_ENABLED(CONFIG_S390)
- 	write_lock(&smc_clc_eid_table.lock);
- 	if (!smc_clc_eid_table.ueid_cnt)
- 		rc = -ENOENT;
- 	else
- 		smc_clc_eid_table.seid_enabled = 0;
- 	write_unlock(&smc_clc_eid_table.lock);
-+#else
-+	rc = -EOPNOTSUPP;
-+#endif
- 	return rc;
- }
- 
-@@ -1269,7 +1279,11 @@ void __init smc_clc_init(void)
- 	INIT_LIST_HEAD(&smc_clc_eid_table.list);
- 	rwlock_init(&smc_clc_eid_table.lock);
- 	smc_clc_eid_table.ueid_cnt = 0;
-+#if IS_ENABLED(CONFIG_S390)
- 	smc_clc_eid_table.seid_enabled = 1;
-+#else
-+	smc_clc_eid_table.seid_enabled = 0;
-+#endif
- }
- 
- void smc_clc_exit(void)
+
 -- 
 2.43.0
 
