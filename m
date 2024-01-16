@@ -1,336 +1,180 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2063.outbound.protection.partner.outlook.cn [139.219.146.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E751BC28
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 09:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="DfavQs06"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705398969;
-	bh=ihrYlqcfJH2iTt+S6IZaRZeXbpV9xKed8vW0TK/5lH8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DfavQs062G4Ep8YU6BJqBZXeJI3NrkgXDT5iAduCZFZmiX0D/0o8jar1EZfLpSQn2
-	 8vHSobAQNGXvocFQOGl5F5VMnSbxBTCa+o01o0fo4pByHXzw1XBr29j45VLWGajSGd
-	 NmGYXJLTQ5uQw7Wro/1+ll8OA6dxwTijwvtaRw35tf/eGFgezB7Xq8d0RRpT+8ovLg
-	 hHQNhbx4pDh1I7vI7ixSbJzFWInjWMm/DMqC2pwmn7REK0MaDs/UvOFEuGh8QNkm5r
-	 foDQwqEPgUK2aq980tWCarCeQGf8aPcuL/lcle9MuOjOw7KiMgV36zkDEu+TIO1Dk7
-	 lGKgZk5qqrftg==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AE2B83782067;
-	Tue, 16 Jan 2024 09:56:04 +0000 (UTC)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniel@fooishbar.org,
-	helen.koike@collabora.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	david.heidelberg@collabora.com,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	linux-mediatek@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/7] drm/ci: rockchip: Add job to test panfrost GPU driver
-Date: Tue, 16 Jan 2024 15:24:39 +0530
-Message-Id: <20240116095439.107324-8-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240116095439.107324-1-vignesh.raman@collabora.com>
-References: <20240116095439.107324-1-vignesh.raman@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1465D1BC58;
+	Tue, 16 Jan 2024 09:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fOLZ+YfX98LM5jElygPH1RcEHtn8dzmtTSLJ9nVFRVT6+C9G1dQhRXy6E0kWGxXdgo3dUnAEac23jGE05k2ok4C+AvWS6AUJHfADlu8FPHSUDGivSCMZrxxSw7+FdWuNBQlU6uZS7usg1PLXQ9bKZoVWiw4BAmFlRAxF3W03YJ+W7DJOJtA9n2lvYOQ6VLj0P1MZ2s/9gdhpoYOBlSufOaxtXUBux4exhQynGTBtewel4+AaFiibeDKZjcVOtX4ta5zfhm7wyy9DwtAu5FF5rd4rjQi7RHSjJOKMaaSHk/70wsqSWGDfYy7EGhJYpd/P7ndOm+SiLfp/I6kYrJBeJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LYfAFSkz+OsV9C1XCNWDCMU9cHcz8BFt+KXbjkWj9vk=;
+ b=PrkWH+O23pwej9W5XuKN3t4B8SmfZ0v+HRHs2JTwcnoZq5yP9oFrcYRBOEkSubQEBArcPvjVIj3f4dDG+hU4vOLW8R2bB6Tbu6hcjvbLh5jcCdhLBxsDYAqIGR3zn/6csoZyts1xx+QC0lH1RlI5VsqD0+2qkssUBb/zIj2Wt4F5VLdiUMJyZZVNlOdIi9hj9rapv+vHZvIrkL5Q2BmcY02vl8jqCSayhPGNi2iCSIEQ64Pl2z8AkCFC6zW2KXR/lbCFjSon0M166q+iHygjoZyFuOcuz7SfbAxKbd7b/4bv1rkanbE2YgcINOXYuDcp277zG9jVZYkbrkW3tZ0YiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ0PR01MB1062.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:d::7) by ZQ0PR01MB1174.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.26; Tue, 16 Jan
+ 2024 09:41:04 +0000
+Received: from ZQ0PR01MB1062.CHNPR01.prod.partner.outlook.cn
+ ([fe80::ac0a:d124:81b3:33fb]) by
+ ZQ0PR01MB1062.CHNPR01.prod.partner.outlook.cn ([fe80::ac0a:d124:81b3:33fb%6])
+ with mapi id 15.20.7181.026; Tue, 16 Jan 2024 09:41:04 +0000
+From: Shengyang Chen <shengyang.chen@starfivetech.com>
+To: "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>, Conor Dooley
+	<conor@kernel.org>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"quic_jesszhan@quicinc.com" <quic_jesszhan@quicinc.com>, "sam@ravnborg.org"
+	<sam@ravnborg.org>, "airlied@gmail.com" <airlied@gmail.com>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>, "maarten.lankhorst@linux.intel.com"
+	<maarten.lankhorst@linux.intel.com>, "mripard@kernel.org"
+	<mripard@kernel.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "wahrenst@gmx.net"
+	<wahrenst@gmx.net>, "dave.stevenson@raspberrypi.com"
+	<dave.stevenson@raspberrypi.com>, "thierry.reding@gmail.com"
+	<thierry.reding@gmail.com>, Changhuang Liang
+	<changhuang.liang@starfivetech.com>, Keith Zhao
+	<keith.zhao@starfivetech.com>, Jack Zhu <jack.zhu@starfivetech.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/2] dt-bindings: display: panel: panel-simple: Add
+ compatible property for waveshare 7inch touchscreen panel
+Thread-Topic: [PATCH v2 1/2] dt-bindings: display: panel: panel-simple: Add
+ compatible property for waveshare 7inch touchscreen panel
+Thread-Index: AQHaQsrah1i3yuxB3U6jMn0bFe2vKLDRrScAgAEVtYCACXbK8A==
+Date: Tue, 16 Jan 2024 09:41:03 +0000
+Message-ID:
+ <ZQ0PR01MB106218474E32786793E2FBB6EF73A@ZQ0PR01MB1062.CHNPR01.prod.partner.outlook.cn>
+References: <20240109070949.23957-1-shengyang.chen@starfivetech.com>
+ <20240109070949.23957-2-shengyang.chen@starfivetech.com>
+ <20240109-worsening-material-fae02ff4e611@spud>
+ <80b898a0-1f44-4623-9df2-edccb9307098@linaro.org>
+In-Reply-To: <80b898a0-1f44-4623-9df2-edccb9307098@linaro.org>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ0PR01MB1062:EE_|ZQ0PR01MB1174:EE_
+x-ms-office365-filtering-correlation-id: 273e89bb-9576-4141-3e10-08dc167741c8
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ ktmtsJe3IWI5RHKfqb4qniI3T70S4dVQM5d2qa1m5PauKHg3If6bfWuyWOdKXUvN0JW7sKUK9vIMAFLrpKAYFreKTBZTb8AKWRMUmEwC5P04g0gKqqtH+CcctVB5mg4DHsdRyHO6nCEWbyFSRV5JanasnPeH1sbmjOyUaRkju4WHCAi9Y/uYTqQsiHHMzf0dWyQRh3JLlNgCzQDzYuaAgl/XJkDKWtwaEkSVQvMtkXj6a4yAWb7nJoyv2Pt6r2tKRSWCdJF9OS38t4P8Me/edOCqoZl+s6Jo1g4TW/4C1CdQBsvJmPaJNEPHI/loth/iwdI7+xk5ZH53CUccZlpMMlp99Y5w45DeqjSQF302sOlEtIZig4gPi2OM6Ch/yA4FxD7zOnmOOK8WRCMga9pdsSXpxhBA0BQQPdfaZkvlufdiW72vQXo5Acbb7P8aXjs7hWHO5csM8ivx00bjpl0F6XEwPzcNj20zHm3NaNI2GR8NRhAoAXzm0SwyFELD7fIAuA0f5N/rQsqP0oNDaN6x4ClNK/eKyoX4yiaNr/so61gNnYIj1gjIGF10uoC29F9o
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1062.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(39830400003)(346002)(396003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(40180700001)(4326008)(8676002)(8936002)(2906002)(5660300002)(44832011)(33656002)(41320700001)(7416002)(41300700001)(38100700002)(38070700009)(53546011)(55016003)(7696005)(40160700002)(71200400001)(26005)(508600001)(83380400001)(86362001)(9686003)(54906003)(64756008)(110136005)(122000001)(66446008)(66556008)(66476007)(66946007)(76116006);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?SEN6QTFLcUZiNCszZW5BeFVGemhJY1NwL3Q3eHdsNkF4OTZ3cDNrSTltdWRV?=
+ =?utf-8?B?S2NzWHN4cDArRWxXeHVZWFZmaTJ6UTNvVlZvdndsdzBMT3NJRnZwZ245WkVj?=
+ =?utf-8?B?Vm02SVFrUENrZWtHUCtYMUk3bmlJUEg3UjFFcTlpSnFENGZ2S3FGa2hvZ2kz?=
+ =?utf-8?B?YTdxWUNxLy9JbUlSbVIvZ0puc1hnZkIzVEhDNFI0dDVLZ3hsekVnQndqWGFT?=
+ =?utf-8?B?OFFmclhyZE9LU29ZejVOcUxTM05qRklaZyt3V2JLZ3puK2dPdTh1MXM5N29j?=
+ =?utf-8?B?aWw4Wit1anZiN1dyYW1LL0JQVW8vdzNVZkd2SU9UbU0vdUNuZlRzcHdmQS9w?=
+ =?utf-8?B?U3ROVGp4c25jYXhnVDIvNmRLSmltUU1pdU03Y1dCZzdxbzJvWnA1Mk1xNmVi?=
+ =?utf-8?B?REUxUHVVN0pKSG4vVjBaMzFXc2Jab1dKUzVBL3NrL0NSV29ySXBaUkJtMzl4?=
+ =?utf-8?B?KzAyVnh6bjlabVl1TW4vNXhFWXU4TmRyRmVxRDcvVXVWWTVVbjkrbUdaV2Nu?=
+ =?utf-8?B?S2xodEYxSkNaMTFpR0tTLzU3d2gxa0pBT3Z2ZExvcFloN25jUGdORjgyUWpT?=
+ =?utf-8?B?L1JVK1Zjb01aY2tQK0RHaHA2WWN2aXRtUjJyWGd3aXMwYVJhYW1rV3hOL1JC?=
+ =?utf-8?B?MzJEUmdnQXlqNWNwZHRYQlVyK1ZXekorVlJWR1VUK1F2ejVibGRkamtHSGN4?=
+ =?utf-8?B?QmpPSU1KUEZPNTNLcVlqMHkvNzc2akJqS1JVUnk2VTd5SUoybTJDbXhKK3M3?=
+ =?utf-8?B?Ulg1QmVIa0ZZYVNydHhpK3A1NTh5VHNpRVU0M2ZzQncxS3VVd0NKUkZaZ1ky?=
+ =?utf-8?B?M3N5K3hwdmtVQkNZdFlmM3dCK3hSbkFNekMxNEM4bHExM1FwSERWeCthc2Z4?=
+ =?utf-8?B?MGNRUlBkSGtXckdJb01BWnIwb3NPb1JObTFmU2JoRC9YaGpuMkxhdlJINzJ2?=
+ =?utf-8?B?SmVlejBXck1UdkUrVlRLQ0tiUDFQdGE0M2sycUxzVG1LNmhWVHAzMFNQak9H?=
+ =?utf-8?B?VWIvSm5lQWxESGtubTFZUmg1RWVkODZST1hETDhVdk5MeHlJYnNERHl6bUYv?=
+ =?utf-8?B?dWtyVUtMTndRWHRWTmduYmFHWGhjNnhOZDRYQSsyb2xieTZUU0R0aXkycEt4?=
+ =?utf-8?B?OXArVTVhOXFNWjZqWEhteW9aM1NpNGhJMzZtbHphbG8vUHMxNDhUeHh6ckRB?=
+ =?utf-8?B?NDJxbWVwZ1dybHJkSXQ5MXdaUC9RaEM0SDdkeUZWVEd1SGQ1MW1jTjJUdmN0?=
+ =?utf-8?B?bFEvU0ZkaW5UNGFrYm13Q3liTTZTd2lFVUFxT1YvOTNZblkzRHRidzdEMmp2?=
+ =?utf-8?B?YVR6TG8vRzh0U3hqbHp0dEt1Nk14NGZmaE5lQkphcXA1QWlyUHBwK2MwQ2xP?=
+ =?utf-8?B?dytiN0tIbmlQL09SM1c4U2pVdFo1Z1kwejUyZklyZzkzU0hTYkpUUC9tWkQ4?=
+ =?utf-8?B?TUlRbHRmT2dSNVBqN1hYUThjQmt4dzI2aHJ0bzE1b0RmODQxUDVoTmZyVWl0?=
+ =?utf-8?B?bTFBZXFZZ0M1WTlSdVhNek1uWFFyRDliVEFlVkkwbi9GV0tFaGx1azNFcmZT?=
+ =?utf-8?B?Mk9yZENHY3ZlWEdISDBSaU1hQmZ2MlZGbkF4ZFZHbXg2TlE5bmxIdVNGaStZ?=
+ =?utf-8?B?bzJPeklubHk3SVlCQUV3YzRoYXJHOFNLVGxONGV4RFIxV1A4YnZnM00zajhV?=
+ =?utf-8?B?L3Zvai9oejNFcXdDcGR1dTFjMWxobnNLSUg3TXJ0alFoL2ZZNkJPdUJJYTVL?=
+ =?utf-8?B?UzZOa3F2aW1zQ3J2anZIRzRmV2FPZU8vVjRkQ3gvY1gxdlYyOXhuOFlraXov?=
+ =?utf-8?B?MlgzNldiT0w1bU5QREthSlE4Wi85dzRNM3VMUnhBNFJlWGFmRHFERDlaMHJW?=
+ =?utf-8?B?VzUzbnlvY3M1d25JZCs2N2N6UnYyUlFtNzBtVk1uZDEzZzNPQ0RYci9XZlZu?=
+ =?utf-8?B?T0xxNmVVWmllOVordG05dkZzTDUrK20xbEx5bkNIWmhwRlVKWUkzUDdFWkNK?=
+ =?utf-8?B?LzdNMTRCVnAzSHlIMGEwbHNqQm9hWkhLN0RKSVVqQWVSYUcxM0xRUE5FOXA1?=
+ =?utf-8?B?MzdjdmI5dTZ2YkpLNStPMS9zN2JpcjZSUUZOYnZjWDByUUtBWG9weWt0ZzVj?=
+ =?utf-8?B?MFNpdzhOT0NDV3ZOcWxpUmg5ZTZNeDI5eXFCSmpSelY5eWtvWnFuL2ppc0xE?=
+ =?utf-8?B?U3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1062.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 273e89bb-9576-4141-3e10-08dc167741c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2024 09:41:03.9897
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +kDOfMFxrb5bkuUGwPm9BUJ+ieI27cAS9zsvJbLIeGwVsRmZwPXmLGTIAtdAH1neLGbcFPMAM+EkqzuXHd6zvhxl6GEfMmz78S4ZNaQ39Yg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1174
 
-For rockchip rk3288 and rk3399, the GPU driver is panfrost.
-So add support in drm-ci to test panfrost driver for rockchip
-SOC and update xfails.
-
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
----
-
-v2:
-  - Add panfrost GPU jobs for rockchip SOC with new xfails.
-
----
- drivers/gpu/drm/ci/test.yml                   | 14 ++++
- .../ci/xfails/panfrost-rk3288-gpu-fails.txt   | 54 +++++++++++++
- .../ci/xfails/panfrost-rk3288-gpu-skips.txt   | 52 +++++++++++++
- .../ci/xfails/panfrost-rk3399-gpu-fails.txt   | 75 +++++++++++++++++++
- .../ci/xfails/panfrost-rk3399-gpu-flakes.txt  |  7 ++
- .../ci/xfails/panfrost-rk3399-gpu-skips.txt   |  5 ++
- 6 files changed, 207 insertions(+)
- create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3288-gpu-fails.txt
- create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3288-gpu-skips.txt
- create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-fails.txt
- create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-flakes.txt
- create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-skips.txt
-
-diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-index c9ba58571882..4d44421ec510 100644
---- a/drivers/gpu/drm/ci/test.yml
-+++ b/drivers/gpu/drm/ci/test.yml
-@@ -175,6 +175,13 @@ msm:sdm845:
-     KERNEL_IMAGE_TYPE: ""
-     RUNNER_TAG: mesa-ci-x86-64-lava-rk3399-gru-kevin
- 
-+rockchip:rk3288-gpu:
-+  extends:
-+    - .rk3288
-+  variables:
-+    GPU_VERSION: rk3288-gpu
-+    DRIVER_NAME: panfrost
-+
- rockchip:rk3288-display:
-   extends:
-     - .rk3288
-@@ -182,6 +189,13 @@ rockchip:rk3288-display:
-     GPU_VERSION: rk3288-display
-     DRIVER_NAME: rockchip
- 
-+rockchip:rk3399-gpu:
-+  extends:
-+    - .rk3399
-+  variables:
-+    GPU_VERSION: rk3399-gpu
-+    DRIVER_NAME: panfrost
-+
- rockchip:rk3399-display:
-   extends:
-     - .rk3399
-diff --git a/drivers/gpu/drm/ci/xfails/panfrost-rk3288-gpu-fails.txt b/drivers/gpu/drm/ci/xfails/panfrost-rk3288-gpu-fails.txt
-new file mode 100644
-index 000000000000..90c63f519e9e
---- /dev/null
-+++ b/drivers/gpu/drm/ci/xfails/panfrost-rk3288-gpu-fails.txt
-@@ -0,0 +1,54 @@
-+kms_3d,Crash
-+kms_bw@linear-tiling-2-displays-1920x1080p,Fail
-+kms_bw@linear-tiling-2-displays-2560x1440p,Fail
-+kms_bw@linear-tiling-2-displays-3840x2160p,Fail
-+kms_bw@linear-tiling-3-displays-1920x1080p,Fail
-+kms_bw@linear-tiling-3-displays-2560x1440p,Fail
-+kms_bw@linear-tiling-3-displays-3840x2160p,Fail
-+kms_flip@flip-vs-modeset-vs-hang,Crash
-+kms_flip@flip-vs-panning-vs-hang,Crash
-+kms_force_connector_basic@force-load-detect,Fail
-+kms_invalid_mode@int-max-clock,Crash
-+kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Crash
-+kms_pipe_crc_basic@nonblocking-crc-frame-sequence,Crash
-+kms_pipe_crc_basic@read-crc-frame-sequence,Crash
-+kms_plane@pixel-format,Crash
-+kms_plane@pixel-format-source-clamping,Crash
-+kms_plane@plane-position-hole,Crash
-+kms_plane@plane-position-hole-dpms,Crash
-+kms_plane_cursor@overlay,Crash
-+kms_plane_cursor@pipe-A-overlay-size-128,Fail
-+kms_plane_cursor@pipe-A-overlay-size-256,Fail
-+kms_plane_cursor@pipe-A-overlay-size-64,Fail
-+kms_plane_cursor@pipe-A-primary-size-128,Fail
-+kms_plane_cursor@pipe-A-primary-size-256,Fail
-+kms_plane_cursor@pipe-A-primary-size-64,Fail
-+kms_plane_cursor@pipe-A-viewport-size-128,Fail
-+kms_plane_cursor@pipe-A-viewport-size-256,Fail
-+kms_plane_cursor@pipe-A-viewport-size-64,Fail
-+kms_plane_cursor@pipe-B-overlay-size-128,Fail
-+kms_plane_cursor@pipe-B-overlay-size-256,Fail
-+kms_plane_cursor@pipe-B-overlay-size-64,Fail
-+kms_plane_cursor@pipe-B-primary-size-128,Fail
-+kms_plane_cursor@pipe-B-primary-size-256,Fail
-+kms_plane_cursor@pipe-B-primary-size-64,Fail
-+kms_plane_cursor@pipe-B-viewport-size-128,Fail
-+kms_plane_cursor@pipe-B-viewport-size-256,Fail
-+kms_plane_cursor@pipe-B-viewport-size-64,Fail
-+kms_plane_cursor@primary,Crash
-+kms_plane_cursor@viewport,Crash
-+kms_plane_lowres@tiling-none,Fail
-+kms_plane_scaling@downscale-with-modifier-factor-0-25,Fail
-+kms_plane_scaling@downscale-with-rotation-factor-0-25,Fail
-+kms_plane_scaling@upscale-with-modifier-20x20,Fail
-+kms_plane_scaling@upscale-with-modifier-factor-0-25,Fail
-+kms_plane_scaling@upscale-with-pixel-format-20x20,Fail
-+kms_plane_scaling@upscale-with-pixel-format-factor-0-25,Fail
-+kms_plane_scaling@upscale-with-rotation-20x20,Fail
-+kms_prime@basic-crc,Fail
-+kms_properties@connector-properties-atomic,Crash
-+kms_properties@connector-properties-legacy,Crash
-+kms_properties@get_properties-sanity-atomic,Crash
-+kms_properties@get_properties-sanity-non-atomic,Crash
-+kms_rmfb@close-fd,Crash
-+kms_setmode@invalid-clone-single-crtc,Crash
-diff --git a/drivers/gpu/drm/ci/xfails/panfrost-rk3288-gpu-skips.txt b/drivers/gpu/drm/ci/xfails/panfrost-rk3288-gpu-skips.txt
-new file mode 100644
-index 000000000000..f20c3574b75a
---- /dev/null
-+++ b/drivers/gpu/drm/ci/xfails/panfrost-rk3288-gpu-skips.txt
-@@ -0,0 +1,52 @@
-+# Suspend to RAM seems to be broken on this machine
-+.*suspend.*
-+
-+# Too unstable, machine ends up hanging after lots of Oopses
-+kms_cursor_legacy.*
-+
-+# Started hanging the machine on Linux 5.19-rc2:
-+#
-+# [IGT] kms_plane_lowres: executing
-+# [IGT] kms_plane_lowres: starting subtest pipe-F-tiling-y
-+# [IGT] kms_plane_lowres: exiting, ret=77
-+# Console: switching to colour frame buffer device 170x48
-+# rockchip-drm display-subsystem: [drm] *ERROR* flip_done timed out
-+# rockchip-drm display-subsystem: [drm] *ERROR* [CRTC:35:crtc-0] commit wait timed out
-+# BUG: spinlock bad magic on CPU#3, kms_plane_lowre/482
-+# 8<--- cut here ---
-+# Unable to handle kernel paging request at virtual address 7812078e
-+# [7812078e] *pgd=00000000
-+# Internal error: Oops: 5 [#1] SMP ARM
-+# Modules linked in:
-+# CPU: 3 PID: 482 Comm: kms_plane_lowre Tainted: G        W         5.19.0-rc2-323596-g00535de92171 #1
-+# Hardware name: Rockchip (Device Tree)
-+# Process kms_plane_lowre (pid: 482, stack limit = 0x1193ac2b)
-+#  spin_dump from do_raw_spin_lock+0xa4/0xe8
-+#  do_raw_spin_lock from wait_for_completion_timeout+0x2c/0x120
-+#  wait_for_completion_timeout from drm_crtc_commit_wait+0x18/0x7c
-+#  drm_crtc_commit_wait from drm_atomic_helper_wait_for_dependencies+0x44/0x168
-+#  drm_atomic_helper_wait_for_dependencies from commit_tail+0x34/0x180
-+#  commit_tail from drm_atomic_helper_commit+0x164/0x18c
-+#  drm_atomic_helper_commit from drm_atomic_commit+0xac/0xe4
-+#  drm_atomic_commit from drm_client_modeset_commit_atomic+0x23c/0x284
-+#  drm_client_modeset_commit_atomic from drm_client_modeset_commit_locked+0x60/0x1c8
-+#  drm_client_modeset_commit_locked from drm_client_modeset_commit+0x24/0x40
-+#  drm_client_modeset_commit from drm_fbdev_client_restore+0x58/0x94
-+#  drm_fbdev_client_restore from drm_client_dev_restore+0x70/0xbc
-+#  drm_client_dev_restore from drm_release+0xf4/0x114
-+#  drm_release from __fput+0x74/0x240
-+#  __fput from task_work_run+0x84/0xb4
-+#  task_work_run from do_exit+0x34c/0xa20
-+#  do_exit from do_group_exit+0x34/0x98
-+#  do_group_exit from __wake_up_parent+0x0/0x18
-+# Code: e595c008 12843d19 03e00000 03093168 (15940508)
-+# ---[ end trace 0000000000000000 ]---
-+# note: kms_plane_lowre[482] exited with preempt_count 1
-+# Fixing recursive fault but reboot is needed!
-+kms_plane_lowres@pipe-F-tiling-y
-+
-+# Take too long, we have only two machines, and these are very flaky
-+kms_cursor_crc.*
-+
-+# Machine is hanging in this test, so skip it
-+kms_pipe_crc_basic@disable-crc-after-crtc
-\ No newline at end of file
-diff --git a/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-fails.txt b/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-fails.txt
-new file mode 100644
-index 000000000000..d516d9c1d546
---- /dev/null
-+++ b/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-fails.txt
-@@ -0,0 +1,75 @@
-+kms_color@gamma,Fail
-+kms_color@legacy-gamma,Fail
-+kms_color@pipe-A-legacy-gamma,Fail
-+kms_color@pipe-B-legacy-gamma,Fail
-+kms_cursor_crc@cursor-alpha-opaque,Fail
-+kms_cursor_crc@cursor-alpha-transparent,Fail
-+kms_cursor_crc@cursor-dpms,Fail
-+kms_cursor_crc@cursor-offscreen-32x10,Fail
-+kms_cursor_crc@cursor-offscreen-32x32,Fail
-+kms_cursor_crc@cursor-offscreen-64x64,Fail
-+kms_cursor_crc@cursor-onscreen-32x10,Fail
-+kms_cursor_crc@cursor-onscreen-32x32,Fail
-+kms_cursor_crc@cursor-onscreen-64x21,Fail
-+kms_cursor_crc@cursor-onscreen-64x64,Fail
-+kms_cursor_crc@cursor-random-32x10,Fail
-+kms_cursor_crc@cursor-random-32x32,Fail
-+kms_cursor_crc@cursor-random-64x21,Fail
-+kms_cursor_crc@cursor-random-64x64,Fail
-+kms_cursor_crc@cursor-rapid-movement-32x32,Fail
-+kms_cursor_crc@cursor-rapid-movement-64x21,Fail
-+kms_cursor_crc@cursor-rapid-movement-64x64,Fail
-+kms_cursor_crc@cursor-size-change,Fail
-+kms_cursor_crc@cursor-sliding-32x10,Fail
-+kms_cursor_crc@cursor-sliding-32x32,Fail
-+kms_cursor_crc@cursor-sliding-64x21,Fail
-+kms_cursor_crc@cursor-sliding-64x64,Fail
-+kms_flip@basic-flip-vs-wf_vblank,Fail
-+kms_flip@blocking-wf_vblank,Fail
-+kms_flip@dpms-vs-vblank-race,Fail
-+kms_flip@flip-vs-absolute-wf_vblank,Fail
-+kms_flip@flip-vs-absolute-wf_vblank-interruptible,Fail
-+kms_flip@flip-vs-blocking-wf-vblank,Fail
-+kms_flip@flip-vs-modeset-vs-hang,Fail
-+kms_flip@flip-vs-panning,Fail
-+kms_flip@flip-vs-panning-interruptible,Fail
-+kms_flip@flip-vs-panning-vs-hang,Fail
-+kms_flip@modeset-vs-vblank-race,Fail
-+kms_flip@plain-flip-fb-recreate,Fail
-+kms_flip@plain-flip-fb-recreate-interruptible,Fail
-+kms_flip@plain-flip-ts-check,Fail
-+kms_flip@plain-flip-ts-check-interruptible,Fail
-+kms_flip@wf_vblank-ts-check,Fail
-+kms_flip@wf_vblank-ts-check-interruptible,Fail
-+kms_invalid_mode@int-max-clock,Fail
-+kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Fail
-+kms_pipe_crc_basic@compare-crc-sanitycheck-xr24,Fail
-+kms_pipe_crc_basic@disable-crc-after-crtc,Fail
-+kms_pipe_crc_basic@nonblocking-crc,Fail
-+kms_pipe_crc_basic@nonblocking-crc-frame-sequence,Fail
-+kms_pipe_crc_basic@read-crc,Fail
-+kms_pipe_crc_basic@read-crc-frame-sequence,Fail
-+kms_plane@pixel-format,Fail
-+kms_plane@pixel-format-source-clamping,Fail
-+kms_plane@plane-panning-bottom-right,Fail
-+kms_plane@plane-panning-top-left,Fail
-+kms_plane@plane-position-covered,Fail
-+kms_plane@plane-position-hole,Fail
-+kms_plane@plane-position-hole-dpms,Fail
-+kms_plane_cursor@overlay,Fail
-+kms_plane_cursor@pipe-B-overlay-size-128,Fail
-+kms_plane_cursor@pipe-B-overlay-size-256,Fail
-+kms_plane_cursor@pipe-B-overlay-size-64,Fail
-+kms_plane_cursor@pipe-B-primary-size-128,Fail
-+kms_plane_cursor@pipe-B-primary-size-256,Fail
-+kms_plane_cursor@pipe-B-primary-size-64,Fail
-+kms_plane_cursor@pipe-B-viewport-size-128,Fail
-+kms_plane_cursor@pipe-B-viewport-size-256,Fail
-+kms_plane_cursor@pipe-B-viewport-size-64,Fail
-+kms_plane_cursor@primary,Fail
-+kms_plane_cursor@viewport,Fail
-+kms_plane_multiple@atomic-pipe-B-tiling-none,Fail
-+kms_plane_multiple@tiling-none,Fail
-+kms_prime@basic-crc,Fail
-+kms_rmfb@close-fd,Fail
-+kms_universal_plane@universal-plane-pipe-B-functional,Fail
-diff --git a/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-flakes.txt b/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-flakes.txt
-new file mode 100644
-index 000000000000..c9fdc623ab91
---- /dev/null
-+++ b/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-flakes.txt
-@@ -0,0 +1,7 @@
-+kms_bw@linear-tiling-2-displays-1920x1080p
-+kms_cursor_crc@cursor-offscreen-64x21
-+kms_flip@dpms-vs-vblank-race-interruptible
-+kms_flip@flip-vs-wf_vblank-interruptible
-+kms_plane_cursor@overlay
-+kms_plane_cursor@primary
-+kms_plane_cursor@viewport
-diff --git a/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-skips.txt b/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-skips.txt
-new file mode 100644
-index 000000000000..10c3d81a919a
---- /dev/null
-+++ b/drivers/gpu/drm/ci/xfails/panfrost-rk3399-gpu-skips.txt
-@@ -0,0 +1,5 @@
-+# Suspend to RAM seems to be broken on this machine
-+.*suspend.*
-+
-+# Too unstable, machine ends up hanging after lots of Oopses
-+kms_cursor_legacy.*
--- 
-2.40.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbmVpbC5hcm1zdHJvbmdA
+bGluYXJvLm9yZyA8bmVpbC5hcm1zdHJvbmdAbGluYXJvLm9yZz4NCj4gU2VudDogMjAyNOW5tDHm
+nIgxMOaXpSAxNzowNg0KPiBUbzogQ29ub3IgRG9vbGV5IDxjb25vckBrZXJuZWwub3JnPjsgU2hl
+bmd5YW5nIENoZW4NCj4gPHNoZW5neWFuZy5jaGVuQHN0YXJmaXZldGVjaC5jb20+DQo+IENjOiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZzsNCj4gcXVpY19qZXNzemhhbkBxdWljaW5jLmNvbTsgc2FtQHJhdm5ib3JnLm9yZzsgYWlybGll
+ZEBnbWFpbC5jb207DQo+IGRhbmllbEBmZndsbC5jaDsgbWFhcnRlbi5sYW5raG9yc3RAbGludXgu
+aW50ZWwuY29tOyBtcmlwYXJkQGtlcm5lbC5vcmc7DQo+IHR6aW1tZXJtYW5uQHN1c2UuZGU7IHJv
+YmgrZHRAa2VybmVsLm9yZzsNCj4ga3J6eXN6dG9mLmtvemxvd3NraStkdEBsaW5hcm8ub3JnOyBj
+b25vcitkdEBrZXJuZWwub3JnOyB3YWhyZW5zdEBnbXgubmV0Ow0KPiBkYXZlLnN0ZXZlbnNvbkBy
+YXNwYmVycnlwaS5jb207IHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbTsgQ2hhbmdodWFuZw0KPiBM
+aWFuZyA8Y2hhbmdodWFuZy5saWFuZ0BzdGFyZml2ZXRlY2guY29tPjsgS2VpdGggWmhhbw0KPiA8
+a2VpdGguemhhb0BzdGFyZml2ZXRlY2guY29tPjsgSmFjayBaaHUgPGphY2suemh1QHN0YXJmaXZl
+dGVjaC5jb20+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggdjIgMS8yXSBkdC1iaW5kaW5nczogZGlzcGxheTogcGFuZWw6IHBhbmVsLXNpbXBs
+ZTogQWRkDQo+IGNvbXBhdGlibGUgcHJvcGVydHkgZm9yIHdhdmVzaGFyZSA3aW5jaCB0b3VjaHNj
+cmVlbiBwYW5lbA0KPiANCj4gT24gMDkvMDEvMjAyNCAxNzozMiwgQ29ub3IgRG9vbGV5IHdyb3Rl
+Og0KPiA+IE9uIFR1ZSwgSmFuIDA5LCAyMDI0IGF0IDAzOjA5OjQ4UE0gKzA4MDAsIFNoZW5neWFu
+ZyBDaGVuIHdyb3RlOg0KPiA+PiBUaGUgd2F2ZXNoYXJlIDciIDgwMHg0ODAgcGFuZWwgaXMgYSBj
+bG9uZSBvZiBSYXNwYmVycnkgUGkgNyIgODAweDQ4MA0KPiA+PiBwYW5lbCBJdCBjYW4gYmUgZHJp
+dmVkIGJ5IFJhc3BiZXJyeSBQaSBwYW5lbCdzIHByb2Nlc3MgYnV0IGl0IG5lZWRzDQo+ID4+IGRp
+ZmZlcmVudCB0aW1pbmcgZnJvbSBSYXNwYmVycnkgUGkgcGFuZWwuIEFkZCBjb21wYXRpYmxlIHBy
+b3BlcnR5IGZvciBpdC4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogS2VpdGggWmhhbyA8a2Vp
+dGguemhhb0BzdGFyZml2ZXRlY2guY29tPg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBTaGVuZ3lhbmcg
+Q2hlbiA8c2hlbmd5YW5nLmNoZW5Ac3RhcmZpdmV0ZWNoLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1zaW1wbGUueWFtbCAg
+ICAgICAgIHwgMiArKw0KPiA+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4g
+Pj4NCj4gPj4gZGlmZiAtLWdpdA0KPiA+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLXNpbXBsZS55YW1sDQo+ID4+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtc2ltcGxlLnlhbWwNCj4g
+Pj4gaW5kZXggMTE0MjJhZjM0NzdlLi4wMmY2YjFiMmRkYzkgMTAwNjQ0DQo+ID4+IC0tLQ0KPiA+
+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVs
+LXNpbXBsZS55YW1sDQo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL3BhbmVsLXNpbXBsZS55YQ0KPiA+PiArKysgbWwNCj4gPj4gQEAgLTMz
+NSw2ICszMzUsOCBAQCBwcm9wZXJ0aWVzOg0KPiA+PiAgICAgICAgIC0gdml2YXgsdHBjOTE1MC1w
+YW5lbA0KPiA+PiAgICAgICAgICAgIyBWWFQgODAweDQ4MCBjb2xvciBURlQgTENEIHBhbmVsDQo+
+ID4+ICAgICAgICAgLSB2eHQsdmwwNTAtODA0OG50LWMwMQ0KPiA+PiArICAgICAgICAjIFdhdmVz
+aGFyZSA3IiAoODAweDQ4MCkgdG91Y2hzY3JlZW4gTENEIHBhbmVsDQo+ID4+ICsgICAgICAtIHdh
+dmVzaGFyZSw3aW5jaC10b3VjaHNjcmVlbg0KPiA+DQo+ID4gSXMgIjdpbmNoLXRvdWNoc2NyZWVu
+IiByZWFsbHkgYSBzcGVjaWZpYyBlbm91Z2ggaWRlbnRpZmllciBmb3IgdGhpcw0KPiA+IGRldmlj
+ZT8NCj4gDQo+IFdhdmVzaGFyZSBoYXMgdmVyeSBwcmVjaXNlIFNLVXMsIHRoaXMgc2hvdWxkIGJl
+IHNvbWV0aGluZyBsaWtlDQo+IHdhdmVzaGFyZSw3aW5jaC1kc2ktc2t1MTk4ODUgcGVyaGFwcw0K
+PiANCj4gTmVpbA0KDQp0aGFua3MgZm9yIG1lbnRpb24sIEl0IHdpbGwgYmUgY2hlY2tlZCBpZiBu
+ZXh0IHZlcnNpb24gaXMgbmVlZGVkLg0KDQo+IA0KPiA+DQo+ID4+ICAgICAgICAgICAjIFdpbnN0
+YXIgRGlzcGxheSBDb3Jwb3JhdGlvbiAzLjUiIFFWR0EgKDMyMHgyNDApIFRGVCBMQ0QNCj4gcGFu
+ZWwNCj4gPj4gICAgICAgICAtIHdpbnN0YXIsd2YzNWx0aWFjZA0KPiA+PiAgICAgICAgICAgIyBZ
+ZXMgT3B0b2VsZWN0cm9uaWNzIFlUQzcwMFRMQUctMDUtMjAxQyA3IiBURlQgTENEIHBhbmVsDQo+
+ID4+IC0tDQo+ID4+IDIuMTcuMQ0KPiA+Pg0KDQo=
