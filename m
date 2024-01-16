@@ -1,204 +1,151 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B5D25565;
-	Tue, 16 Jan 2024 20:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5486B1F613
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 20:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705438121; cv=none; b=p7TND41/JM6z8hFKBKxlmMPk7lvwB4+9r/6JymHvc6AnwS2VFYvMwh9CaY07LsaYQ4XI8jJeeshrWqLM1Lldk7Jjkt2BT1UWirQZeDT+QYuB540s7N8FuVuAGVNB+Cz2LlVmPFQJZibKT2Fj05VWH8RW9Be1LWQtK4JxpZnlxB8=
+	t=1705438523; cv=none; b=lvx3EeiR1wLQy33w6x8xjQCG6mmcACvOVq7CDqBB/dAMyNxOWVTu3pc/A8U/YCCIXHTG5nyRqNwCrruIi9cUndp1bd8LT+nzMcHQFjL9AiueqvVPkvvvqnHuruBa9cm09OV7ow2SSVb4SAkkrLJp0gWb6xt4Q/ppN8C9qo8Uz5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705438121; c=relaxed/simple;
-	bh=Y3w3f3kce+eXjMPg/fWB2OkjLHS6gd02jYqc7dXVnQU=;
-	h=Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=uYueRi56aQ6S+4xJONO6y4hKNoaMp+nWIHxutf17aCKk/XVd+RbbNiniy9Lbg2ck7Hpl3efxLIyem2nS8u6V7j+MgOv3CE/9d4W6H5AY6Mj0QfDljz2cObER4t9qjdZh+vxenTjpvjekA15MUqOsCGpganAC7V0m3SwXxphFZDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 55D1F1C0071; Tue, 16 Jan 2024 21:48:38 +0100 (CET)
-Date: Tue, 16 Jan 2024 21:48:37 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Pierre Mariani <pierre.mariani@gmail.com>,
-	Steve French <stfrench@microsoft.com>, sfrench@samba.org,
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Subject: Re: [PATCH AUTOSEL 6.1 09/14] smb: client: Fix minor whitespace
- errors and warnings
-Message-ID: <ZabrpUrKf1yolVi3@duo.ucw.cz>
-References: <20240116010642.218876-1-sashal@kernel.org>
- <20240116010642.218876-9-sashal@kernel.org>
+	s=arc-20240116; t=1705438523; c=relaxed/simple;
+	bh=KJMSJ5YMtIUrpd2z3vBV4pMorEzbpfcRJrZOFXeistI=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=joMAGpyZwKS/4E3KX3S5/CK0ttJvc5t/tQiAJ2/sSX+yoaUK8KMz+mg4hd7asKcth+S73lpmlhnwVVW50RNYYF+H0ubM23GgYGXcrq1C4zAwvbcU+99U3pnIMhKC4sbL738xk/wuJa3vkjeIUmlYSr8JCw+m717cqHBCgeAryZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dg6w+hKt; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dg6w+hKt"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cf765355ecso1405527a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 12:55:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705438520; x=1706043320; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qQdIf9/3seTYdpMLp0Hh9SVTTL4lH3XX6yFOdn4DVz8=;
+        b=Dg6w+hKt+exjAt9luUTy/wCvDy1Lg92DcCh1rfibsl9DRMMoMmA1Fldh++tqLOUwbi
+         CAYtUTa8WvD2DJ6lRAimpWK9e4jwb3x/sVwDeQ5gUqEq3NNGJml4g6hahWYlxRnnEGS+
+         NoK2OMafOaBCJNQYhLPPzsiTWksVMvvroubJrTvCUuuS8zRVU4kLr1QgpvDUAgQB0N/L
+         b9sLuGS6+gt466wsRHN9VSG1bWcLgvO8YQzYJlO0DQuB2DTBBC+xn6/Rdali7uqFp0KP
+         7KbC+Go24w60wLZUpNMgkgDE23aiufV3nJuqMPb9JbQGSxymprmpL4TN8vmxlLuvllmK
+         v2BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705438520; x=1706043320;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qQdIf9/3seTYdpMLp0Hh9SVTTL4lH3XX6yFOdn4DVz8=;
+        b=T/HsKXLD43BBilLFq7IbVc8o7xjaJ0HngeCISB77F2A/im3ATOrqMADRO2nCkuab1c
+         Vgum4BThSKrozwSFDqBoV/62xXI5H27BN330IblB1I3s6V/QmodJs+rjGjUvDFRHqWWb
+         EbEFRPaXEqJIpGOsdbx+6DP0o0hBOYupXkKCRGeymR68ah+dzCZafuObdylTsu5Qvx8Q
+         RkRqm+JVTKQAqnc2esMCeA9UoL73oMJo9EE2i89/YIkrx1Ibxb9Ogfpolc9pAU65OUxp
+         1CJH3T1v9arbWguKW6/GeMmYAhIiLa6QTxAMByPWh3UEjUj98bVzuWUyYv2qLIBhNpEb
+         7F9w==
+X-Gm-Message-State: AOJu0YwkxTBev7VoYCxYlyOI8Ga2zFuE38sO5VWzlwwxwap5gZJYezkN
+	TOPmqld8gjv2cQwUC8R3vsZ1nlf9DLrAScAa29A=
+X-Google-Smtp-Source: AGHT+IFc2KL82NxqHyH1mi7Z+u4ztbfA0IHVeHJTHrf9apvxaY907fzHEBuQHG2Ze8BR6Ny0sq3JUTyqmn75o0o6+1A=
+X-Received: by 2002:a05:6a20:958e:b0:19b:dd2:aade with SMTP id
+ iu14-20020a056a20958e00b0019b0dd2aademr2926763pzb.114.1705438520639; Tue, 16
+ Jan 2024 12:55:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/Fi84FJxVfiuW0PY"
-Content-Disposition: inline
-In-Reply-To: <20240116010642.218876-9-sashal@kernel.org>
-
-
---/Fi84FJxVfiuW0PY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20220809142457.4751229f@imladris.surriel.com> <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
+ <3193bf5b-4e22-412f-8c5b-68574942d9bc@kernel.org>
+In-Reply-To: <3193bf5b-4e22-412f-8c5b-68574942d9bc@kernel.org>
+From: Yang Shi <shy828301@gmail.com>
+Date: Tue, 16 Jan 2024 12:55:08 -0800
+Message-ID: <CAHbLzkp-s1rr3496rpgx_td75waE=P=sv=5OCK9HWvWjmz-0GA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: align larger anonymous mappings on THP boundaries
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Rik van Riel <riel@surriel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kernel-team@fb.com, 
+	Matthew Wilcox <willy@infradead.org>, Christoph Lameter <cl@linux.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Tue, Jan 16, 2024 at 4:09=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org> w=
+rote:
+>
+> On 16. 01. 24, 12:53, Jiri Slaby wrote:
+> > Hi,
+> >
+> > On 09. 08. 22, 20:24, Rik van Riel wrote:
+> >> Align larger anonymous memory mappings on THP boundaries by
+> >> going through thp_get_unmapped_area if THPs are enabled for
+> >> the current process.
+> >>
+> >> With this patch, larger anonymous mappings are now THP aligned.
+> >> When a malloc library allocates a 2MB or larger arena, that
+> >> arena can now be mapped with THPs right from the start, which
+> >> can result in better TLB hit rates and execution time.
+> >
+> > This appears to break 32bit processes on x86_64 (at least). In
+> > particular, 32bit kernel or firefox builds in our build system.
+> >
+> > Reverting this on top of 6.7 makes it work again.
+> >
+> > Downstream report:
+> >   https://bugzilla.suse.com/show_bug.cgi?id=3D1218841
+> >
+> > So running:
+> > pahole -J --btf_gen_floats -j --lang_exclude=3Drust
+> > --skip_encoding_btf_inconsistent_proto --btf_gen_optimized .tmp_vmlinux=
+.btf
+> >
+> > crashes or errors out with some random errors:
+> > [182671] STRUCT idr's field 'idr_next' offset=3D128 bit_size=3D0 type=
+=3D181346
+> > Error emitting field
+> >
+> > strace shows mmap() fails with ENOMEM right before the errors:
+> > 1223  mmap2(NULL, 5783552, PROT_READ|PROT_WRITE,
+> > MAP_PRIVATE|MAP_ANONYMOUS, -1, 0 <unfinished ...>
+> > ...
+> > 1223  <... mmap2 resumed>)              =3D -1 ENOMEM (Cannot allocate
+> > memory)
 
-> [ Upstream commit 0108ce08aed195d200ffbad74c1948bbaefe6625 ]
->=20
-> Fixes no-op checkpatch errors and warnings.
+It should be due to the virtual address space size on 32-bit machine.
 
-Why did AUTOSEL pick this? It should not be picking whitespace changes.
+> >
+> > Note the .tmp_vmlinux.btf above can be arbitrary, but likely large
+> > enough. For reference, one is available at:
+> > https://decibel.fi.muni.cz/~xslaby/n/btf
+> >
+> > Any ideas?
+>
+> This works around the problem, of course (but is a band-aid, not a fix):
+>
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1829,7 +1829,7 @@ get_unmapped_area(struct file *file, unsigned long
+> addr, unsigned long len,
+>                   */
+>                  pgoff =3D 0;
+>                  get_area =3D shmem_get_unmapped_area;
+> -       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+> +       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
+> !in_32bit_syscall()) {
+>                  /* Ensures that larger anonymous mappings are THP
+> aligned. */
+>                  get_area =3D thp_get_unmapped_area;
+>          }
+>
+>
+> thp_get_unmapped_area() does not take care of the legacy stuff...
 
-BR,
-							Pavel
+Thanks for the report. I think we can just make
+thp_get_unmapped_area() no-op on 32 bit.
 
-
-> index f725a119ce31..a957efaa5e74 100644
-> --- a/fs/smb/client/connect.c
-> +++ b/fs/smb/client/connect.c
-> @@ -505,6 +505,7 @@ static int reconnect_dfs_server(struct TCP_Server_Inf=
-o *server)
->  {
->  	int rc =3D 0;
->  	const char *refpath =3D server->current_fullpath + 1;
-> +
->  	struct dfs_cache_tgt_list tl =3D DFS_CACHE_TGT_LIST_INIT(tl);
->  	struct dfs_cache_tgt_iterator *target_hint =3D NULL;
->  	int num_targets =3D 0;
-> @@ -773,6 +774,7 @@ cifs_read_from_socket(struct TCP_Server_Info *server,=
- char *buf,
->  {
->  	struct msghdr smb_msg =3D {};
->  	struct kvec iov =3D {.iov_base =3D buf, .iov_len =3D to_read};
-> +
->  	iov_iter_kvec(&smb_msg.msg_iter, ITER_DEST, &iov, 1, to_read);
-> =20
->  	return cifs_readv_from_socket(server, &smb_msg);
-> @@ -1412,11 +1414,13 @@ cifs_match_ipaddr(struct sockaddr *srcaddr, struc=
-t sockaddr *rhs)
->  	case AF_INET: {
->  		struct sockaddr_in *saddr4 =3D (struct sockaddr_in *)srcaddr;
->  		struct sockaddr_in *vaddr4 =3D (struct sockaddr_in *)rhs;
-> +
->  		return (saddr4->sin_addr.s_addr =3D=3D vaddr4->sin_addr.s_addr);
->  	}
->  	case AF_INET6: {
->  		struct sockaddr_in6 *saddr6 =3D (struct sockaddr_in6 *)srcaddr;
->  		struct sockaddr_in6 *vaddr6 =3D (struct sockaddr_in6 *)rhs;
-> +
->  		return ipv6_addr_equal(&saddr6->sin6_addr, &vaddr6->sin6_addr);
->  	}
->  	default:
-> @@ -2588,8 +2592,8 @@ cifs_get_tcon(struct cifs_ses *ses, struct smb3_fs_=
-context *ctx)
->  			rc =3D -EOPNOTSUPP;
->  			goto out_fail;
->  		} else {
-> -			cifs_dbg(VFS, "Check vers=3D mount option. SMB3.11 "
-> -				"disabled but required for POSIX extensions\n");
-> +			cifs_dbg(VFS,
-> +				"Check vers=3D mount option. SMB3.11 disabled but required for POSIX=
- extensions\n");
->  			rc =3D -EOPNOTSUPP;
->  			goto out_fail;
->  		}
-> @@ -2733,7 +2737,6 @@ cifs_put_tlink(struct tcon_link *tlink)
->  	if (!IS_ERR(tlink_tcon(tlink)))
->  		cifs_put_tcon(tlink_tcon(tlink));
->  	kfree(tlink);
-> -	return;
->  }
-> =20
->  static int
-> @@ -2867,6 +2870,7 @@ static inline void
->  cifs_reclassify_socket4(struct socket *sock)
->  {
->  	struct sock *sk =3D sock->sk;
-> +
->  	BUG_ON(!sock_allow_reclassification(sk));
->  	sock_lock_init_class_and_name(sk, "slock-AF_INET-CIFS",
->  		&cifs_slock_key[0], "sk_lock-AF_INET-CIFS", &cifs_key[0]);
-> @@ -2876,6 +2880,7 @@ static inline void
->  cifs_reclassify_socket6(struct socket *sock)
->  {
->  	struct sock *sk =3D sock->sk;
-> +
->  	BUG_ON(!sock_allow_reclassification(sk));
->  	sock_lock_init_class_and_name(sk, "slock-AF_INET6-CIFS",
->  		&cifs_slock_key[1], "sk_lock-AF_INET6-CIFS", &cifs_key[1]);
-> @@ -2910,15 +2915,18 @@ static int
->  bind_socket(struct TCP_Server_Info *server)
->  {
->  	int rc =3D 0;
-> +
->  	if (server->srcaddr.ss_family !=3D AF_UNSPEC) {
->  		/* Bind to the specified local IP address */
->  		struct socket *socket =3D server->ssocket;
-> +
->  		rc =3D kernel_bind(socket,
->  				 (struct sockaddr *) &server->srcaddr,
->  				 sizeof(server->srcaddr));
->  		if (rc < 0) {
->  			struct sockaddr_in *saddr4;
->  			struct sockaddr_in6 *saddr6;
-> +
->  			saddr4 =3D (struct sockaddr_in *)&server->srcaddr;
->  			saddr6 =3D (struct sockaddr_in6 *)&server->srcaddr;
->  			if (saddr6->sin6_family =3D=3D AF_INET6)
-> @@ -3146,6 +3154,7 @@ void reset_cifs_unix_caps(unsigned int xid, struct =
-cifs_tcon *tcon,
-> =20
->  	if (!CIFSSMBQFSUnixInfo(xid, tcon)) {
->  		__u64 cap =3D le64_to_cpu(tcon->fsUnixInfo.Capability);
-> +
->  		cifs_dbg(FYI, "unix caps which server supports %lld\n", cap);
->  		/*
->  		 * check for reconnect case in which we do not
-> @@ -3997,7 +4006,7 @@ CIFSTCon(const unsigned int xid, struct cifs_ses *s=
-es,
->  	smb_buffer_response =3D smb_buffer;
-> =20
->  	header_assemble(smb_buffer, SMB_COM_TREE_CONNECT_ANDX,
-> -			NULL /*no tid */ , 4 /*wct */ );
-> +			NULL /*no tid */, 4 /*wct */);
-> =20
->  	smb_buffer->Mid =3D get_next_mid(ses->server);
->  	smb_buffer->Uid =3D ses->Suid;
-> @@ -4016,12 +4025,12 @@ CIFSTCon(const unsigned int xid, struct cifs_ses =
-*ses,
->  	if (ses->server->sign)
->  		smb_buffer->Flags2 |=3D SMBFLG2_SECURITY_SIGNATURE;
-> =20
-> -	if (ses->capabilities & CAP_STATUS32) {
-> +	if (ses->capabilities & CAP_STATUS32)
->  		smb_buffer->Flags2 |=3D SMBFLG2_ERR_STATUS;
-> -	}
-> -	if (ses->capabilities & CAP_DFS) {
-> +
-> +	if (ses->capabilities & CAP_DFS)
->  		smb_buffer->Flags2 |=3D SMBFLG2_DFS;
-> -	}
-> +
->  	if (ses->capabilities & CAP_UNICODE) {
->  		smb_buffer->Flags2 |=3D SMBFLG2_UNICODE;
->  		length =3D
-
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---/Fi84FJxVfiuW0PY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZabrpQAKCRAw5/Bqldv6
-8vCiAKCSTvWI5Trv0C+z0NvMhyUpJCX8OQCfcsXC/pHkdCrseZx3gXdW55c3d1Y=
-=WufH
------END PGP SIGNATURE-----
-
---/Fi84FJxVfiuW0PY--
+>
+> regards,
+> --
+> js
+> suse labs
+>
