@@ -1,183 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC012032C;
-	Tue, 16 Jan 2024 01:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/2hP/qx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6972C433C7;
-	Tue, 16 Jan 2024 01:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705367164;
-	bh=86xLXhYSMvu32FARZ5Pxl3JK/oUTBtbgMS0hXaOtL4Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U/2hP/qxFtHW5xZi14SMd8q3DQDY2hWCG3JxI0/zM6DA7bi3wIKmI9HeKHXARTX+v
-	 Kl/NxkOmY3z6hmdCdv5x/6OC20X0F5mEO79MXxiAnJlfKyOJdzfeIG9ovOsHaklBIR
-	 ZEUNlHUiQsHljhzMnnySmImqnBNKejv5Z0Ec4eLa3bSYgk6Mtkwy28hza5wByBjvJM
-	 TekRYN+W0i9ajh+jwyTa3g4zKrgu39iKTNVlCmBzVxusvf0oKVlYE+9228jxFROssE
-	 yFUTS+7wGp+DXUIylkT5WaFUYqf9bXnGzS9YOlVbLJNdaqmJZShujaQAzTj7XGdI89
-	 ydJSJRRLm1Q7Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Pierre Mariani <pierre.mariani@gmail.com>,
-	Steve French <stfrench@microsoft.com>,
-	Sasha Levin <sashal@kernel.org>,
-	sfrench@samba.org,
-	linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 6.6 12/19] smb: client: Fix minor whitespace errors and warnings
-Date: Mon, 15 Jan 2024 20:05:07 -0500
-Message-ID: <20240116010532.218428-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116010532.218428-1-sashal@kernel.org>
-References: <20240116010532.218428-1-sashal@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0382A208B0
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 01:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-360a416bb22so55046835ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 17:06:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705367165; x=1705971965;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wYK71raMqp7ZcP5x298B8v4PykW3KFYvzrDO5E0K+rM=;
+        b=nlGznlWbHLp7HcY44wh30ai5TXk3xRHNADVJx7Uf3TTt6BciW2n1wk6N0Omc/n95Xg
+         nPmKkECA7IDmu2uEY0leBM88kGwRxhmPmmPPYA40LMzr2XOAOTuEUv0tfo0khO1ybAMG
+         J62aLBRiGSxmQXFJ2b9jyNJjEvT5ApAbY8ofdpezm9KdNHUKgk/lx+xkTTxcystoMKxR
+         rZZrHbS432vKP60uEQrzvGJhHXOuA+M54bpgm0Qg9kY1ZnvyFkF/Am+XswuD+CHRYWk1
+         keFOW4Yofo+gxxj6PQaAtctdT7CAWDnZiyf4CFfnjbt7IsSENg5xgWkM4+fQ/ihYS1bR
+         XnpQ==
+X-Gm-Message-State: AOJu0YyEwiNfDaLOpxBrU1p0k2j8CgPKTdxe1IxFN7RPnBS3dbRYnKWk
+	WTh++tSUjQZP3/Sfgmv5B4Sz1lM91YuY1t8tNg2GZAFSVVoc
+X-Google-Smtp-Source: AGHT+IF9+XDIJQk2HrBcrNSil2jO+KrHAL7qJTEp5045mZGwwARcy8dFfPQU1yDYxnW3r2iiuPrjpzdz5oWTXXmNS7r0DLD9fzvx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.12
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:cd82:0:b0:360:795e:a6b3 with SMTP id
+ r2-20020a92cd82000000b00360795ea6b3mr765458ilb.4.1705367165249; Mon, 15 Jan
+ 2024 17:06:05 -0800 (PST)
+Date: Mon, 15 Jan 2024 17:06:05 -0800
+In-Reply-To: <tencent_6543A4C44A9773F777A6CCB372437DE97905@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000018af0e060f05bce1@google.com>
+Subject: Re: [syzbot] [btrfs?] KASAN: slab-out-of-bounds Read in
+ getname_kernel (2)
+From: syzbot <syzbot+33f23b49ac24f986c9e8@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Pierre Mariani <pierre.mariani@gmail.com>
+Hello,
 
-[ Upstream commit 0108ce08aed195d200ffbad74c1948bbaefe6625 ]
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Fixes no-op checkpatch errors and warnings.
+Reported-and-tested-by: syzbot+33f23b49ac24f986c9e8@syzkaller.appspotmail.com
 
-Signed-off-by: Pierre Mariani <pierre.mariani@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/smb/client/connect.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+Tested on:
 
-diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
-index 76ccbdba5855..a763097f0af3 100644
---- a/fs/smb/client/connect.c
-+++ b/fs/smb/client/connect.c
-@@ -455,6 +455,7 @@ static int reconnect_target_unlocked(struct TCP_Server_Info *server, struct dfs_
- static int reconnect_dfs_server(struct TCP_Server_Info *server)
- {
- 	struct dfs_cache_tgt_iterator *target_hint = NULL;
-+
- 	DFS_CACHE_TGT_LIST(tl);
- 	int num_targets = 0;
- 	int rc = 0;
-@@ -717,6 +718,7 @@ cifs_read_from_socket(struct TCP_Server_Info *server, char *buf,
- {
- 	struct msghdr smb_msg = {};
- 	struct kvec iov = {.iov_base = buf, .iov_len = to_read};
-+
- 	iov_iter_kvec(&smb_msg.msg_iter, ITER_DEST, &iov, 1, to_read);
- 
- 	return cifs_readv_from_socket(server, &smb_msg);
-@@ -1372,11 +1374,13 @@ cifs_match_ipaddr(struct sockaddr *srcaddr, struct sockaddr *rhs)
- 	case AF_INET: {
- 		struct sockaddr_in *saddr4 = (struct sockaddr_in *)srcaddr;
- 		struct sockaddr_in *vaddr4 = (struct sockaddr_in *)rhs;
-+
- 		return (saddr4->sin_addr.s_addr == vaddr4->sin_addr.s_addr);
- 	}
- 	case AF_INET6: {
- 		struct sockaddr_in6 *saddr6 = (struct sockaddr_in6 *)srcaddr;
- 		struct sockaddr_in6 *vaddr6 = (struct sockaddr_in6 *)rhs;
-+
- 		return (ipv6_addr_equal(&saddr6->sin6_addr, &vaddr6->sin6_addr)
- 			&& saddr6->sin6_scope_id == vaddr6->sin6_scope_id);
- 	}
-@@ -2576,8 +2580,8 @@ cifs_get_tcon(struct cifs_ses *ses, struct smb3_fs_context *ctx)
- 			rc = -EOPNOTSUPP;
- 			goto out_fail;
- 		} else {
--			cifs_dbg(VFS, "Check vers= mount option. SMB3.11 "
--				"disabled but required for POSIX extensions\n");
-+			cifs_dbg(VFS,
-+				"Check vers= mount option. SMB3.11 disabled but required for POSIX extensions\n");
- 			rc = -EOPNOTSUPP;
- 			goto out_fail;
- 		}
-@@ -2720,7 +2724,6 @@ cifs_put_tlink(struct tcon_link *tlink)
- 	if (!IS_ERR(tlink_tcon(tlink)))
- 		cifs_put_tcon(tlink_tcon(tlink));
- 	kfree(tlink);
--	return;
- }
- 
- static int
-@@ -2861,6 +2864,7 @@ static inline void
- cifs_reclassify_socket4(struct socket *sock)
- {
- 	struct sock *sk = sock->sk;
-+
- 	BUG_ON(!sock_allow_reclassification(sk));
- 	sock_lock_init_class_and_name(sk, "slock-AF_INET-CIFS",
- 		&cifs_slock_key[0], "sk_lock-AF_INET-CIFS", &cifs_key[0]);
-@@ -2870,6 +2874,7 @@ static inline void
- cifs_reclassify_socket6(struct socket *sock)
- {
- 	struct sock *sk = sock->sk;
-+
- 	BUG_ON(!sock_allow_reclassification(sk));
- 	sock_lock_init_class_and_name(sk, "slock-AF_INET6-CIFS",
- 		&cifs_slock_key[1], "sk_lock-AF_INET6-CIFS", &cifs_key[1]);
-@@ -2904,15 +2909,18 @@ static int
- bind_socket(struct TCP_Server_Info *server)
- {
- 	int rc = 0;
-+
- 	if (server->srcaddr.ss_family != AF_UNSPEC) {
- 		/* Bind to the specified local IP address */
- 		struct socket *socket = server->ssocket;
-+
- 		rc = kernel_bind(socket,
- 				 (struct sockaddr *) &server->srcaddr,
- 				 sizeof(server->srcaddr));
- 		if (rc < 0) {
- 			struct sockaddr_in *saddr4;
- 			struct sockaddr_in6 *saddr6;
-+
- 			saddr4 = (struct sockaddr_in *)&server->srcaddr;
- 			saddr6 = (struct sockaddr_in6 *)&server->srcaddr;
- 			if (saddr6->sin6_family == AF_INET6)
-@@ -3142,6 +3150,7 @@ void reset_cifs_unix_caps(unsigned int xid, struct cifs_tcon *tcon,
- 
- 	if (!CIFSSMBQFSUnixInfo(xid, tcon)) {
- 		__u64 cap = le64_to_cpu(tcon->fsUnixInfo.Capability);
-+
- 		cifs_dbg(FYI, "unix caps which server supports %lld\n", cap);
- 		/*
- 		 * check for reconnect case in which we do not
-@@ -3645,7 +3654,7 @@ CIFSTCon(const unsigned int xid, struct cifs_ses *ses,
- 	smb_buffer_response = smb_buffer;
- 
- 	header_assemble(smb_buffer, SMB_COM_TREE_CONNECT_ANDX,
--			NULL /*no tid */ , 4 /*wct */ );
-+			NULL /*no tid */, 4 /*wct */);
- 
- 	smb_buffer->Mid = get_next_mid(ses->server);
- 	smb_buffer->Uid = ses->Suid;
-@@ -3664,12 +3673,12 @@ CIFSTCon(const unsigned int xid, struct cifs_ses *ses,
- 	if (ses->server->sign)
- 		smb_buffer->Flags2 |= SMBFLG2_SECURITY_SIGNATURE;
- 
--	if (ses->capabilities & CAP_STATUS32) {
-+	if (ses->capabilities & CAP_STATUS32)
- 		smb_buffer->Flags2 |= SMBFLG2_ERR_STATUS;
--	}
--	if (ses->capabilities & CAP_DFS) {
-+
-+	if (ses->capabilities & CAP_DFS)
- 		smb_buffer->Flags2 |= SMBFLG2_DFS;
--	}
-+
- 	if (ses->capabilities & CAP_UNICODE) {
- 		smb_buffer->Flags2 |= SMBFLG2_UNICODE;
- 		length =
--- 
-2.43.0
+commit:         3bd7d748 Merge tag 'io_uring-6.7-2023-12-15' of git://..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=13bc50dde80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=53ec3da1d259132f
+dashboard link: https://syzkaller.appspot.com/bug?extid=33f23b49ac24f986c9e8
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14343dcde80000
 
+Note: testing is done by a robot and is best-effort only.
