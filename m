@@ -1,126 +1,133 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2048.outbound.protection.partner.outlook.cn [139.219.17.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AE5125C4;
-	Tue, 16 Jan 2024 09:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1RMrtCQy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TukuqNgk";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VLyvgA1P";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vWs3yONw"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1D114220EE;
-	Tue, 16 Jan 2024 09:16:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705396566; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ArBPrKm5RcSvKqAvi/Mho8YH7n96j32xhTlGZo9rzwg=;
-	b=1RMrtCQyHfB8sADu4/vlCFSJtdnUcuinAPB1IeQgO6zKsTc4EmHUzunIR7JCF0DDQXyByD
-	0ZifjNGr/j80aEQGqlZSe0GLvLmRt0b5Ok0iYY3qlxEnqWq44Uh32t1w7caC4yr/uqlBy7
-	iumqNQ96z+XamdO3Ir9BRzgVoYRg2Co=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705396566;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ArBPrKm5RcSvKqAvi/Mho8YH7n96j32xhTlGZo9rzwg=;
-	b=TukuqNgktlkFrEgCQe1Wsb7Y2hK0OKsZRilVErdcC/E6L8YptvIQVD396FpyZX6a1jr04D
-	VvhfhQR54/RNLfAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705396565; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ArBPrKm5RcSvKqAvi/Mho8YH7n96j32xhTlGZo9rzwg=;
-	b=VLyvgA1Pp24mv7CFm7gEAQzSDfGct2BhfgNM7JffdZu6eFQ0vnhgmZZFcrkzj8vqqaRccg
-	zA2mNMkDN9m/RuIULu1R/vWqL7ofU5A768cJO+NEaMVql3VMdhZWrUpMaUvEw4DTjCpynT
-	kE0bqcuElbzHapC/Gav2U2TXfLGRClg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705396565;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ArBPrKm5RcSvKqAvi/Mho8YH7n96j32xhTlGZo9rzwg=;
-	b=vWs3yONwGjyVOu4q4wBmnONccSVmiAp5CvGKUk5MCHp10gONqJhlPS1Dh8CuXWneXKwP49
-	AcEb0SYKsx0i7PBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A2E08132FA;
-	Tue, 16 Jan 2024 09:16:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qcdMJlRJpmUsDwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 16 Jan 2024 09:16:04 +0000
-Date: Tue, 16 Jan 2024 10:16:04 +0100
-Message-ID: <8734uxwsdn.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Yo-Jung Lin <leo.lin@canonical.com>
-Cc: andy.chi@canonical.com,
-	0xff07@gmail.com,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Stefan Binding <sbinding@opensource.cirrus.com>,
-	Kailang Yang <kailang@realtek.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Shenghao Ding <shenghao-ding@ti.com>,
-	Matthew Anderson <ruinairas1992@gmail.com>,
-	Vitaly Rodionov <vitalyr@opensource.cirrus.com>,
-	linux-sound@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01B312B6E;
+	Tue, 16 Jan 2024 09:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HTEFIME37rOhmS9vOuHzyUEy+aqsO2kPies8C0WZBndgB6I8CKq/LQ+OoRdMkP5o/PDwBcF8gnxF/3oBOH/8VXk9jimgjXGqn5HbFVibchLlhjxu/7ZfKPBsuzYYXsoH4lUlOWG4zC0/TT5dncyVq1DdzHIB2VyTB+oxNPezr7jMkxYXiXOTR/vztYE2dcs8+izElk/E0+roBY4+A0g0NbV/knW1qF9z+38e1yr6mQqZYub/ra4coKu8j3KNiiLKEcFoWsE2Fu55iRc7HBAkyWCdQgkEQs1B1KI+W4i4HoqPViHTKH7VlHxdzN3I13QxTbv9bXeekZBWungpJ56OEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WnJhRO5PMt7EqU6VplgYfUhbqmDpVZItpn7+/T7tDXc=;
+ b=eKAgrlTOU7mvP9/A8YHbb09VR73tcGtkgMEP5z630ASb4auzvC945m3kpEDY1/ewl1sBg7ag3agMuem4P9Dm7mDnrNbcjjvZl8y0PBmAp+FdMH/IyViiK98MhX3ihIpWWmKdivDtnGzAWIxO+WI6KQTdYD2ZSzL1kfW3ZgwZ38DTYSr8x9zmveGwzK2wm2ckyfoKt/S8PjDx32URpBDHHFrHGkYBThUlJQ98u+k/KmWgKdMKFGyvDNd5ywQ5qaKkkwWDanwF5NvQ5YBrgK9SA9fGXssl4Rl6YlonNEjZXH5qJGGnHHJWKc4vS4+abTD18kgos1n4sTNv/2fzO/Iaiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:26::16) by SHXPR01MB0640.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1e::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.26; Tue, 16 Jan
+ 2024 09:01:48 +0000
+Received: from SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+ ([fe80::cf5e:3b9:7295:1ff6]) by SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+ ([fe80::cf5e:3b9:7295:1ff6%7]) with mapi id 15.20.7135.032; Tue, 16 Jan 2024
+ 09:01:48 +0000
+From: Jia Jie Ho <jiajie.ho@starfivetech.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/realtek: Enable mute/micmute LEDs and limit mic boost on HP ZBook
-In-Reply-To: <20240116020722.27236-1-leo.lin@canonical.com>
-References: <20240116020722.27236-1-leo.lin@canonical.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+Subject: [PATCH v2 1/5] dt-bindings: crypto: starfive: Add jh8100 compatible string
+Date: Tue, 16 Jan 2024 17:01:31 +0800
+Message-Id: <20240116090135.75737-2-jiajie.ho@starfivetech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240116090135.75737-1-jiajie.ho@starfivetech.com>
+References: <20240116090135.75737-1-jiajie.ho@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BJXPR01CA0054.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:12::21) To SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:26::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -2.48
-X-Spamd-Result: default: False [-2.48 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[canonical.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[canonical.com,gmail.com,perex.cz,suse.com,opensource.cirrus.com,realtek.com,ljones.dev,ti.com,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-2.18)[96.07%]
-X-Spam-Flag: NO
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0670:EE_|SHXPR01MB0640:EE_
+X-MS-Office365-Filtering-Correlation-Id: 651068f4-f0c2-4bc1-5570-08dc1671c577
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	0Trv0UX75ShpBDez+AeQDTN1ROkHUVGkKePZ02CpM4herEWmz32TKrlDuvjb5+JVRvgkGuAFFQyY01BWnkpM5zbJlVi12GdwAOsTOzkJXpz72sf0RjMI6OwpCxYDK7htaV0QMlcWvb8Rob8b3bQELPJXiVFbQUBHp3gNtB0mD8LUJtUZdj6juOluP/iednqo9eaUp/aQtYnKwc2cf/dHfjMK0hX/OJxZfNvqK6ROZGy9iHPL1KT6gWMBzkAeXgL7rOUyrDLHSl+CVIUIJJHu7AODannRl2VfkfNWbwTQZi85Wf5bmy1rfxAqHzRMxpYRPc1JOqDIStw4es9o2bB2OaVvqfN6V/ENgVGUMyflYJ6GGZH0pn1X27tY2EGqJ8Ql8xEYqwOKUaekBUMwdrApqtlv7On7rNG0xrEbprt7WAZGKFLEbc6JVUC6Xf12MfC7splSGDgnZY3R//8HihBOZ3gf2nLAmnsqMX11CJIjNOCW/rmG8y/Igx6kWhLgaq7SxxfHOGHiU96yRhOqP04gB2cHo4kWfYSdeRHhllMJ2oX25nVFMzzol68dz2H1QuHB
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(366004)(39830400003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(38100700002)(41320700001)(4744005)(2906002)(5660300002)(36756003)(40180700001)(8936002)(8676002)(86362001)(41300700001)(38350700005)(83380400001)(26005)(40160700002)(508600001)(66476007)(110136005)(66946007)(66556008)(1076003)(2616005)(6666004)(52116002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NGyobNErMw1hGh5HLV+c8gQDaR3sUPRGqa76Fa8zEkFvvXmtKDgeZdS4jVZM?=
+ =?us-ascii?Q?FLr5Y3KpcUxamxWrOZcq+8jMmaufN3IEhxGxiYzqpp/Qb4rED9F6VS+lqKlk?=
+ =?us-ascii?Q?RUm+gdT5BYw66tgsi3GohloBCoM2gGGEr3LmOWXQIEBYI3rJnloFItvPYCf/?=
+ =?us-ascii?Q?gGVXuDxqxdgFzVr3rWXYT/DWX084adqsdd2fu57+UlXdD/IXqK4MUQtUabez?=
+ =?us-ascii?Q?NskSc+HCLltiVELs5G/E7JWgiMZ8cqeE5nAbNNsdXOaEexpum0RUxBfiN9Ox?=
+ =?us-ascii?Q?/r7oqjmoDktM4NT+ViYesJkTpaUmc1tUljGlMIaHjJMl/WpAicqUe1nRzF3y?=
+ =?us-ascii?Q?0bTxLLnDUivztao1KfjFayywtk2qHkWimdQXSJJPOdmgRGyelmKOM7dUaV0M?=
+ =?us-ascii?Q?4BLjE9ITNUPRItHDac4DbBj1QO2KVXHAjuFqJ1D7SN6peVwFU+4YgR2NZxF/?=
+ =?us-ascii?Q?f1MLD9S2IXwdrXJzSqKlI/wOn507vFfHbeSh3i+YTJpCGBz9odULiZ4fROo4?=
+ =?us-ascii?Q?HKweGGefnzTtqOd6ZqGeJiSYYxOC4yHm10WPITF+/X3PQV945mEGoSJum68Y?=
+ =?us-ascii?Q?4JrvuFCPCGOGVTK8gr8DxZwET/Q3lmbL7oJArTa9BUQ6079haPGDxUFL1kJJ?=
+ =?us-ascii?Q?PCu1FHe5MI9ToQEnY8YEE6W22nVzp5mOtodCN+Ivk4pGf2TfBDkJnkhgEvkF?=
+ =?us-ascii?Q?v+/yy3doP7F4c5rSs4hwmUAO6bDk5k2ecddSiMHwhima/J2McIt4C4C2R6F0?=
+ =?us-ascii?Q?OKS+2B+wCgcdZ4Dm5uuo3iNndNrmdyBHUTTBKsKg6e6LyeQrmR+JAa4PKV4y?=
+ =?us-ascii?Q?su5iiHyckVdZNN6uScWknjV7iCtWr0bDWB14vcP75xhpHwO0IsAlPX84EkGU?=
+ =?us-ascii?Q?DemLvW5wGLOn60gUjSFZYk5QFffHqLvQkDJf4mn3Ds6Ep0zE20QmsQspp4ln?=
+ =?us-ascii?Q?Uaazo15CWQdSTFQmWNR17UdJmMud4PvqB2RfNyZTTVRSLKHZr+kc/DbYQ/Cl?=
+ =?us-ascii?Q?ncdUTiBY6GYOqIYE3KteN42+DulFv3bBXylX0b82zd3iTqcyM3J0eNRZ/ign?=
+ =?us-ascii?Q?S9cIJZuW13LyAXuKnEeEYB5ejpGZvmaGrq2M7ZWQ1dVIDdAJZZmYbbs1qYcd?=
+ =?us-ascii?Q?JoTZJbSi6NrKXxmukVyY0ktQ+MUxxY6fS9WF2ZpLSnw1IYW2cPA7Yqmo5oj3?=
+ =?us-ascii?Q?aXrw1WtduGGfxiFZX5r1N9vqruZoqnqTBglMAow6hPeuoeQLmch5n4bOGaak?=
+ =?us-ascii?Q?JOBxJOISHJ3zcUDq3g+cScQykH9hU4fz46JXVGbPyHshUL8QYevWCbaN+S73?=
+ =?us-ascii?Q?8ihqeltw8ApAls4Nhc9R98wMUvhHFKHw9XZzAhUcK9pipsRqrN+vlKvDetgj?=
+ =?us-ascii?Q?ST8dhG0B72XHktWum/SzsRb+5IPm6S7VbnEscqCrjxTfgiThsD9eFZFHW6nK?=
+ =?us-ascii?Q?vmAgSUOwJy3PmL9xRKZiDA3W5bCy4+ssEIiEofcuu7cCXD5CkAysN5BW/iRi?=
+ =?us-ascii?Q?LJZbGEFCnQZPJZ6Zh2tXgQnUfzJAl3NUbP0Emjahm/aVvHsGYnPwcMkW6fTd?=
+ =?us-ascii?Q?xgnNIP91CyYv3JSWkYUZVLAQMGtYEBJ2aOYy5+WFcR2OWtvSZomisHmdrpM8?=
+ =?us-ascii?Q?lA=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 651068f4-f0c2-4bc1-5570-08dc1671c577
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 09:01:48.1921
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nM3LJlByn6GislHsdtgStrSiM4VpAIJz65ujXhdIWo9d+mnTSquGYOIWpuEJh66m0r4nKif7aZj9SjsYkd6X6OasJYpAp2+kCOgPz80NYoo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0640
 
-On Tue, 16 Jan 2024 03:07:19 +0100,
-Yo-Jung Lin wrote:
-> 
-> On some HP ZBooks, the audio LEDs can be enabled by
-> ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF. So use it accordingly.
-> 
-> Signed-off-by: Yo-Jung Lin <leo.lin@canonical.com>
+Add compatible string for StarFive JH8100 crypto hardware.
 
-Thanks, applied now.
+Signed-off-by: Jia Jie Ho <jiajie.ho@starfivetech.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../devicetree/bindings/crypto/starfive,jh7110-crypto.yaml  | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml b/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml
+index 71a2876bd6e4..3b14320a107f 100644
+--- a/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml
++++ b/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml
+@@ -12,7 +12,11 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    const: starfive,jh7110-crypto
++    oneOf:
++      - items:
++          - const: starfive,jh8100-crypto
++          - const: starfive,jh7110-crypto
++      - const: starfive,jh7110-crypto
+ 
+   reg:
+     maxItems: 1
+-- 
+2.34.1
 
-Takashi
