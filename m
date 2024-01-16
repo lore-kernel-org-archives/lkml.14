@@ -1,133 +1,162 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696661D520;
-	Tue, 16 Jan 2024 19:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3B01CF9A
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 19:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705432463; cv=none; b=JSLjBAURffo5xc3MV+oh2K2wKiLPeG8tuzl3gj0oN9mg48Wxl9kBvgYYcGY4vZKK8HFcVIfh47MQWPzbnCq7CPECY6VDlxpW//eV+4Q1PxgAezXO6+7cLFwLPnKdmqobnelbT6mLt5zElWEqSvGl9HL0Qkgq6t/+802tOZYyIik=
+	t=1705432589; cv=none; b=ppJKbojY4MFALM6dD5z0ZyQq+5qAnO41V4bITVBIub8cTQHKURFK7rBhU1A6iGfwueRPGOLz7iYgB4woFC0hR/j/aq9fi6MORQEs2PAF1JxzlTViuz7/wBZOLVChL9F1ar3/QWfsI7rrpCgDpxarqjcYRYtofM3E/WimTmeITdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705432463; c=relaxed/simple;
-	bh=Gk5fOr4dIPtf5iRYPCjl8L1MH8Ozxm5N9FBGAXYdF6s=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:
-	 Received:Received:Received:Received:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:Content-Language:To:Cc:References:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-TM-AS-GCONF:X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=gvhxkYz62Fh14dR+YTyruurcRvdl6qS8vWa+YnvuIIKOT8TJOSZ8kxCHOogXV1MQBREOju/c/Fan0vWE25DbetXpJowz3pG9fDips1FcvdkBC0hF+OmxcwfQDGX8EFz4TXZbHRMKLTPCjSOhpl5Oh7GrQ6tHgd4lyflw4nX7ML0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NDiQZGVC; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1705432589; c=relaxed/simple;
+	bh=14HJ9UKoJ5tDBLOPu3W4EXdsFr0EJssH8lM6QFwd/Yo=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=nJ7tE1E+qgQpgz911f8CD3ksJKp7BOHdBwN89v1lhbJF2rMzZxfNkRTztSTIjL2gtvjqToRqn8xUIhHqr0hI/FBfvsSa616MG1QrgLbhW0CxQNttJNvSz+ZbWAMa0QsOAJ1mw5f0///Gwsa4Jz7bLaIn1YSDGP6Ajfk7rXEBBec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d67qHmh+; arc=none smtp.client-ip=209.85.128.176
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NDiQZGVC"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GJE8YM003004;
-	Tue, 16 Jan 2024 19:14:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=IdifBVBt/VVz8Kl9dCjHxdLKBd4kg9p5JkNDFDBHN7U=;
- b=NDiQZGVCxy/FdSFclfq2tXWYLnan55UL5HYMf4zd2ucF5WVvELUU/1S/qkk1En2yASTx
- r6Vxlev4GZmK2f5IKEHPrnYME1CIbArmIWJUBGxYRZdjpn54+hhvnlG0CpnB2CVuN7eM
- xUEChDwt9Ks+9tq5xiVLaiZ8bURGQdEHLJFNnkJH3BHZdQk/gYPeN0P57xJ5JgVQYE76
- VCHdTcdxnHVMGHzoiVDlzpUxWNE9BSbvNU3imLSQKDLcds1ytYx7BqonE56I8WWUBHP1
- ezUvBkn8G1auiujLvMJCu62BXmlEzzW8u/IftIX9k+0vggDb4/HlPxfsqv0kbcf9/gi1 ow== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnwm645ya-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 19:14:18 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GJ7esF003788;
-	Tue, 16 Jan 2024 19:14:17 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnwm645h3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 19:14:16 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GJ1fuC003699;
-	Tue, 16 Jan 2024 19:12:18 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vm4usrt8v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 19:12:18 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GJCG9N30016166
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 19:12:16 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7B2DB58052;
-	Tue, 16 Jan 2024 19:12:16 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 78BC358056;
-	Tue, 16 Jan 2024 19:12:09 +0000 (GMT)
-Received: from [9.61.48.5] (unknown [9.61.48.5])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Jan 2024 19:12:08 +0000 (GMT)
-Message-ID: <a5ccb86a-cc56-4e25-9b7c-e55a54101daf@linux.ibm.com>
-Date: Tue, 16 Jan 2024 14:12:06 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d67qHmh+"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5ff45c65e60so13901117b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 11:16:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705432587; x=1706037387; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZgBHmnfd7ftHo1oCGQ72PVUXCJag4GsreqtntUHFIw4=;
+        b=d67qHmh+XTAzBg/2a1I4AxWYyJ4oBilrvHiTbURCWOfixTkVhm2LIPHjDxEHBoiajt
+         AcUJg5PtvLTlyMNjnm4i+KZ6YjIs5xa1Pv7dA4E/Q8qnpkk2ztEuuDyWlxUQcfq+SV+O
+         5HaWtZNzIlOVWEDJ0Fr+YaN6Qhfq5wJoABl2nH61ePiyx8i2MfXjgrrFLFX8LUL8NJLq
+         uS5jCMGvpqRb7GAJGVis1fx+Z0lmadapDZ642rFNM24hxEjMD3xtTl+p0bqhL+reMoe0
+         xw46HIfhGgH0m7OHsB+4xbxB8FzNw0oHMgh/AQfETue+XhmTTtj/R4796Bx2t/fvSyTZ
+         cRhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705432587; x=1706037387;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZgBHmnfd7ftHo1oCGQ72PVUXCJag4GsreqtntUHFIw4=;
+        b=VEVbWX1Fq6zGvnoZuRPpSedDKN44h9P5G6Z8RHViBfoNIF4xa6ESZ2f12K7lwLLZeJ
+         wGC6cGml1HiZxCtjl2pVYuAtSSwrlceMg/htKyMpqHj5zKXFf3R4t2P05o5J0J/xw96x
+         zdBi8v30EICKNNmlHw81b9yI+UL+KoFW0jhLn9I7wocquJJM1z+Ue+dKmT8liamYhoGI
+         dvQ4JlBFMpCT8dc3YNiEHpXnFllRsLlfb/pctXQzLn8R2I/PeMJ5x4JuN7H4qTROiXmY
+         Ir8CyqjLUDq66A1enkztOcyJMYa8S4tVy+Dn5wgGqErD7VmaY0+H6tnxv7DsMxcF0fli
+         6HjA==
+X-Gm-Message-State: AOJu0YzHTtfjJOJ7iNJvxYXhSyz/gQqQBiNKXDiMI4FvALfd9FLFkchH
+	4KTZ9/lH+RTUlioRHVmLodDNRyqwV/xgYrCqWWdlGup72pn+
+X-Google-Smtp-Source: AGHT+IGE+FOK6HQRzkgJqrsc3p8e3hGFho/tTwQoWKzbujvJDU+6W6pENfSWZeoQafy82GNtxLC8nq3gG6yA15oD0jk=
+X-Received: by 2002:a0d:d88d:0:b0:5ff:4572:a30b with SMTP id
+ a135-20020a0dd88d000000b005ff4572a30bmr1642636ywe.59.1705432586654; Tue, 16
+ Jan 2024 11:16:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6] s390/vfio-ap: reset queues filtered from the
- guest's AP config
-Content-Language: en-US
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, jjherne@linux.ibm.com, borntraeger@de.ibm.com,
-        pasic@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
-        imbrenda@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, gor@linux.ibm.com, stable@vger.kernel.org
-References: <20240115185441.31526-1-akrowiak@linux.ibm.com>
- <20240115185441.31526-5-akrowiak@linux.ibm.com>
- <ZabGAx5BpIiYW+b3@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-From: Anthony Krowiak <akrowiak@linux.ibm.com>
-In-Reply-To: <ZabGAx5BpIiYW+b3@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yy8cEHpJ0eLe2CpHFepbk5_Y6KFN-aFH
-X-Proofpoint-ORIG-GUID: Kxz-GnwL5U2IS-Dv3b9ZmLIrWM6zpQZP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_11,2024-01-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 suspectscore=0 adultscore=0 mlxlogscore=957
- impostorscore=0 bulkscore=0 phishscore=0 malwarescore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401160152
+References: <20220809142457.4751229f@imladris.surriel.com> <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
+ <3193bf5b-4e22-412f-8c5b-68574942d9bc@kernel.org>
+In-Reply-To: <3193bf5b-4e22-412f-8c5b-68574942d9bc@kernel.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 16 Jan 2024 11:16:15 -0800
+Message-ID: <CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZTRpU0eHHKD-sQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: align larger anonymous mappings on THP boundaries
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Rik van Riel <riel@surriel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kernel-team@fb.com, 
+	Matthew Wilcox <willy@infradead.org>, Yang Shi <shy828301@gmail.com>, 
+	Christoph Lameter <cl@linux.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 16, 2024 at 4:09=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org> w=
+rote:
+>
+> On 16. 01. 24, 12:53, Jiri Slaby wrote:
+> > Hi,
+> >
+> > On 09. 08. 22, 20:24, Rik van Riel wrote:
+> >> Align larger anonymous memory mappings on THP boundaries by
+> >> going through thp_get_unmapped_area if THPs are enabled for
+> >> the current process.
+> >>
+> >> With this patch, larger anonymous mappings are now THP aligned.
+> >> When a malloc library allocates a 2MB or larger arena, that
+> >> arena can now be mapped with THPs right from the start, which
+> >> can result in better TLB hit rates and execution time.
+> >
+> > This appears to break 32bit processes on x86_64 (at least). In
+> > particular, 32bit kernel or firefox builds in our build system.
+> >
+> > Reverting this on top of 6.7 makes it work again.
+> >
+> > Downstream report:
+> >   https://bugzilla.suse.com/show_bug.cgi?id=3D1218841
+> >
+> > So running:
+> > pahole -J --btf_gen_floats -j --lang_exclude=3Drust
+> > --skip_encoding_btf_inconsistent_proto --btf_gen_optimized .tmp_vmlinux=
+.btf
+> >
+> > crashes or errors out with some random errors:
+> > [182671] STRUCT idr's field 'idr_next' offset=3D128 bit_size=3D0 type=
+=3D181346
+> > Error emitting field
+> >
+> > strace shows mmap() fails with ENOMEM right before the errors:
+> > 1223  mmap2(NULL, 5783552, PROT_READ|PROT_WRITE,
+> > MAP_PRIVATE|MAP_ANONYMOUS, -1, 0 <unfinished ...>
+> > ...
+> > 1223  <... mmap2 resumed>)              =3D -1 ENOMEM (Cannot allocate
+> > memory)
+> >
+> > Note the .tmp_vmlinux.btf above can be arbitrary, but likely large
+> > enough. For reference, one is available at:
+> > https://decibel.fi.muni.cz/~xslaby/n/btf
+> >
+> > Any ideas?
+>
+> This works around the problem, of course (but is a band-aid, not a fix):
+>
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1829,7 +1829,7 @@ get_unmapped_area(struct file *file, unsigned long
+> addr, unsigned long len,
+>                   */
+>                  pgoff =3D 0;
+>                  get_area =3D shmem_get_unmapped_area;
+> -       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+> +       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
+> !in_32bit_syscall()) {
+>                  /* Ensures that larger anonymous mappings are THP
+> aligned. */
+>                  get_area =3D thp_get_unmapped_area;
+>          }
+>
+>
+> thp_get_unmapped_area() does not take care of the legacy stuff...
 
-On 1/16/24 1:08 PM, Alexander Gordeev wrote:
-> On Mon, Jan 15, 2024 at 01:54:34PM -0500, Tony Krowiak wrote:
->> From: Tony Krowiak <akrowiak@linux.ibm.com>
-> ...
->> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
->> index 88aff8b81f2f..20eac8b0f0b9 100644
->> --- a/drivers/s390/crypto/vfio_ap_private.h
->> +++ b/drivers/s390/crypto/vfio_ap_private.h
->> @@ -83,10 +83,10 @@ struct ap_matrix {
->>   };
->>   
->>   /**
->> - * struct ap_queue_table - a table of queue objects.
->> - *
->> - * @queues: a hashtable of queues (struct vfio_ap_queue).
->> - */
->> +  * struct ap_queue_table - a table of queue objects.
->> +  *
->> +  * @queues: a hashtable of queues (struct vfio_ap_queue).
->> +  */
->>   struct ap_queue_table {
->>   	DECLARE_HASHTABLE(queues, 8);
->>   };
-> If this change is intended?
+This change also affects the entropy of allocations. With this patch
+Android test [1] started failing and it requires only 8 bits of
+entropy. The feedback from our security team:
 
+8 bits of entropy is already embarrassingly low, but was necessary for
+32 bit ARM targets with low RAM at the time. It's definitely not
+acceptable for 64 bit targets.
 
-It makes not sense, not sure why/how it happened. Probably an artifact 
-of the many rebases done to get to this version.
+Could this change be either reverted or made optional (opt-in/opt-out)?
+Thanks,
+Suren.
 
+[1] https://cs.android.com/android/platform/superproject/main/+/main:cts/te=
+sts/aslr/src/AslrMallocTest.cpp;l=3D130
 
+>
+> regards,
+> --
+> js
+> suse labs
+>
+>
