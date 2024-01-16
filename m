@@ -1,143 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE9513FE5;
-	Tue, 16 Jan 2024 18:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5121CD27
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705430118; cv=none; b=lfMypQDfvaxK/CXiPd0Tscc1oBtIAZXTWFNieoyckyT8tplwI9J3Qva6m8chSK1hEtsVj/voiQvkRSDi1ybdfERZe+cTVq2Lt59phoCxhvRvP+XA6wLRbUElY4OKTJnAZAqYp5E7drL3ViuuOKKzCNlCfcrqLdXwMII05RfYBU4=
+	t=1705430295; cv=none; b=VX4b9h/5D+a7nq2om7qY5y7EXngIK8o/iJeBKVYy4oXhHahjyu5MGKs7RfKV1JrOegSOJwqVreMvdGIWP0rnSdudBUn7HY1U5ff1NJrNREige34+U4LkFjk9qYtoyIA9q7YsDfNWEIBK+V7FMnLaaHgMggKjMFVPbP5qNli+cuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705430118; c=relaxed/simple;
-	bh=MnY2gVubEGri9ggkfjnpG/sTnNx4BdvXPjR2PSZ83GE=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=ZEFieGH8UrS6A4ocYAORHs6VGGa78yKFqQCJ66q/03mfreZKRw23ai/G2bOJA6aX0TljSK2ggB2Q7u/86B4n3FcYLXL8KBRREbCwUsF4vDPEqgVvC10cC4rL/nDvVSHg6kYLDUYv6R+zsusS9j0JyrqBLoe+LR5woi266lQA2DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKtlOPFq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705430295; c=relaxed/simple;
+	bh=TB6bL0w3hLWUcnDcaIay8oWyOu6RzNDf0O17kPM6VXw=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=OwbOto3W0MGaWYuvMFm9yNEAWcfKWONvuYCl5hADYB/gJw+s4MS09JjDyfXu6FnEDALIgyodeo6ZYFQgUDtF55BRHaJisfTKTMzZZGvXXR3Y3SxJE6Q1jrj30+FWzUGkZk2YhBIS6NAlKvF0aQTPQGu0hGD/wT4O+HCWOf78buA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oGxH89Dd; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKtlOPFq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A09C433C7;
-	Tue, 16 Jan 2024 18:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705430118;
-	bh=MnY2gVubEGri9ggkfjnpG/sTnNx4BdvXPjR2PSZ83GE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=iKtlOPFqFaAmH1K/7wOYsOyKeMSUCGDMwgk42s0cLKwHQqKxXxyXfCYNB29supvRu
-	 lxMM/8gNABx8D8EG1w2Kw6Cn64lBlbWD4PBfKqihB3SXSNxOOazlhcv58mZDz1SrPc
-	 whI157N2nOgTtOzEIgp332p44e+vjwsXduG5IANcIivFsg79jF77pVzcvclKrhhbNN
-	 jUQDLi1u+uwWAFjw4ddjRpN2/7hIzFpFmrzbU0Yl5PNucgdthNjRiBUp1xQ5aa/daj
-	 jUU13N7bJwOO8S4VBFEHMTKci0a4DM4GNNmvw0tRFb6cU/AZyMPuW4JnSy/As8ofsP
-	 LV9qr1N44b3ZQ==
-Date: Tue, 16 Jan 2024 12:35:16 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 07/10] pci: devres: give mwi its own callback
-Message-ID: <20240116183516.GA101535@bhelgaas>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oGxH89Dd"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso4524498a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:38:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705430293; x=1706035093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0jDglbZBWktYfWTPUcusyZr2j2GiYOxnIQXGiD8Doo4=;
+        b=oGxH89DdczRxZnF4aohIqsU78Z+Srdlzge3Ji/jgAa6Fb6Spd1BEJNiI8rE4hG1goZ
+         rlKPoeg/ln2gFfGQPZB38Qs5lb9u8CxAn4Pi/gwVDwaucUSYrgOYh58f3dE7YbUIvlXm
+         MdGi78pL3TYyVpYjiogoopMxxTZBPDgBp6V4OnE6AI0vIx67m6zyPegIvLot2gsbej3p
+         NBH3Ne1vIxD5CVXV4SoJd3wRu59Lnu5euQWMLxYtQVKNhR2fnBneTI7/nlysuybv2OtG
+         qgGTDdu1PGCb6za71j3MyI9uvJIEO2OLdqN7txZgHNVo4W86zdiMEqWse5auX4MTpjeP
+         pJ8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705430293; x=1706035093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0jDglbZBWktYfWTPUcusyZr2j2GiYOxnIQXGiD8Doo4=;
+        b=Z1A/hs9nq4EJsQxtkt8GkSnAF4iyxUxCraKsceyt2WBqSCS0LQwL5KCRmg5jAUJalb
+         4VhUq4WBEhOMGhFh2TorlT9XfGkaYWLFUK3BN5O8+wj9BC33aeyVkZuMTT7x3phkPsIS
+         ZyDS4sMNWWuVK7UsSMw4j/fQHIQxQ4AF3by+39piGLmvGIFYFlqgub0OFI/G5zUhZRqt
+         NrXJmFr2+JaF4rkJ9WKek6mtahxjmxEXVvj49paXS7+VW2ZboImr9ZRJvGf4SdrfwupW
+         SoEUDh1zllSwlBiefpdk8lA/Ck1i/yU4zVquhs/yXcuOwX5On35ByIzpx1LB9juzQ++J
+         aR0g==
+X-Gm-Message-State: AOJu0YwpB2bmNAmdmH9fwBHGrLMa0xYuh0Y2jYb9aeakOG0/IAfvd68o
+	DZRBj3cHfZmF2IpEiC5YLPtaN3u+vl8sfQpVT96zqgsj7lBz2g==
+X-Google-Smtp-Source: AGHT+IF1E60nyMxp0rq+piEAJAls/q3iuzPDrclS7edvISLFAbWxO/l+vo81dtOlaSnpPsalLHC1RtyIGgPAaFAsaDo=
+X-Received: by 2002:a17:90a:d913:b0:28e:1d1e:f2eb with SMTP id
+ c19-20020a17090ad91300b0028e1d1ef2ebmr2701244pjv.90.1705430293457; Tue, 16
+ Jan 2024 10:38:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240115144655.32046-9-pstanner@redhat.com>
+References: <20240110102102.61587-1-tudor.ambarus@linaro.org> <20240110102102.61587-12-tudor.ambarus@linaro.org>
+In-Reply-To: <20240110102102.61587-12-tudor.ambarus@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Tue, 16 Jan 2024 12:38:02 -0600
+Message-ID: <CAPLW+4mKBwsc9VLrGTd2k6d0n-K9TZAjH6M8trcK3Av8TQ2Ngg@mail.gmail.com>
+Subject: Re: [PATCH 11/18] tty: serial: samsung: don't compare with zero an if
+ (bitwise expression)
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	andre.draszik@linaro.org, peter.griffin@linaro.org, kernel-team@android.com, 
+	willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 15, 2024 at 03:46:18PM +0100, Philipp Stanner wrote:
-> managing mwi with devres can easily be done with its own callback,
-> without the necessity to store any state about it in a device-related
-> struct.
+On Wed, Jan 10, 2024 at 4:24=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
+.org> wrote:
+>
+> Since an if tests the numeric value of an expression, certain coding
+> shortcuts can be used. The most obvious one is writing
+>     if (expression)
+> instead of
+>     if (expression !=3D 0)
+>
+> Since our case is a bitwise expression, it's more natural and clear to
+> use the ``if (expression)`` shortcut.
 
-s/managing/Managing/
+Maybe the author of this code:
 
-s/mwi/MWI/ since this is an initialism.  Also in subject (but would be
-even better if it could mention an actual function name).
+    (ufstat & info->tx_fifomask) !=3D 0
 
-> Remove the mwi state from the devres-struct.
-> Make the devres-mwi functions set a separate devres-callback.
+just wanted to outline (logically) that the result of this bitwise
+operation produces FIFO length, which he checks to have non-zero
+length? Mechanically of course it doesn't matter much, and I guess
+everyone can understand what's going on there even without '!=3D 0'
+part. But it looks quite intentional to me, because in the same 'if'
+block the author uses this as well:
 
-Wrap to fill 75 columns (or add blank lines if you intend multiple
-paragraphs).
+    (ufstat & info->tx_fifofull)
 
-s/devres-struct/struct pci_devres/ to make this greppable.
+without any comparison operators.
 
-s/the devres-mwi functions/pcim_set_mwi()/ similarly.
-
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 > ---
->  drivers/pci/devres.c | 23 +++++++++++------------
->  drivers/pci/pci.h    |  1 -
->  2 files changed, 11 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> index de8cf6f87dd7..911c2037d9fd 100644
-> --- a/drivers/pci/devres.c
-> +++ b/drivers/pci/devres.c
-> @@ -378,24 +378,26 @@ void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
->  }
->  EXPORT_SYMBOL(devm_pci_remap_cfg_resource);
->  
-> +static void __pcim_clear_mwi(void *pdev_raw)
-> +{
-> +	struct pci_dev *pdev = pdev_raw;
-> +
-> +	pci_clear_mwi(pdev);
-> +}
-> +
->  /**
->   * pcim_set_mwi - a device-managed pci_set_mwi()
-> - * @dev: the PCI device for which MWI is enabled
-> + * @pdev: the PCI device for which MWI is enabled
->   *
->   * Managed pci_set_mwi().
->   *
->   * RETURNS: An appropriate -ERRNO error value on error, or zero for success.
->   */
-> -int pcim_set_mwi(struct pci_dev *dev)
-> +int pcim_set_mwi(struct pci_dev *pdev)
->  {
-> -	struct pci_devres *dr;
-> -
-> -	dr = find_pci_dr(dev);
-> -	if (!dr)
-> -		return -ENOMEM;
-> +	devm_add_action(&pdev->dev, __pcim_clear_mwi, pdev);
->  
-> -	dr->mwi = 1;
-> -	return pci_set_mwi(dev);
-> +	return pci_set_mwi(pdev);
->  }
->  EXPORT_SYMBOL(pcim_set_mwi);
->  
-> @@ -405,9 +407,6 @@ static void pcim_release(struct device *gendev, void *res)
->  	struct pci_dev *dev = to_pci_dev(gendev);
->  	struct pci_devres *this = res;
->  
-> -	if (this->mwi)
-> -		pci_clear_mwi(dev);
-> -
->  	if (this->restore_intx)
->  		pci_intx(dev, this->orig_intx);
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 3d9908a69ebf..667bfdd61d5e 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -811,7 +811,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
->  struct pci_devres {
->  	unsigned int orig_intx:1;
->  	unsigned int restore_intx:1;
-> -	unsigned int mwi:1;
->  };
->  
->  struct pci_devres *find_pci_dr(struct pci_dev *pdev);
-> -- 
-> 2.43.0
-> 
+>  drivers/tty/serial/samsung_tty.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsun=
+g_tty.c
+> index dbbe6b8e3ceb..f2413da14b1d 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -988,8 +988,7 @@ static unsigned int s3c24xx_serial_tx_empty(struct ua=
+rt_port *port)
+>         u32 ufcon =3D rd_regl(port, S3C2410_UFCON);
+>
+>         if (ufcon & S3C2410_UFCON_FIFOMODE) {
+> -               if ((ufstat & info->tx_fifomask) !=3D 0 ||
+> -                   (ufstat & info->tx_fifofull))
+> +               if ((ufstat & info->tx_fifomask) || (ufstat & info->tx_fi=
+fofull))
+
+Does this line fit into 80 characters? If no, please rework it so it
+does. I guess it's also possible to get rid of superfluous braces
+there, but then the code might look confusing, and I'm not sure if
+checkpatch would be ok with that.
+
+>                         return 0;
+>
+>                 return 1;
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
+>
