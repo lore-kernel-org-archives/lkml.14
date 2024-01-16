@@ -1,84 +1,138 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE75134B6
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01B913AD7
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ca5Ctil1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1705399728; bh=RbrFNBhAbWaNXKDU9bLaHQrIHTGxxv64748eV9Y5qT4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ca5Ctil1RnJp+xoQzYbswI7hDWipcqh5s05tUFVIc4V20oYEhxcam3YKb95PK1goE
-	 8idJ1nMqqfHTdgYMcS873z5znrEbsSfgdmOO2xdG1DQYY05abZ/BcoTMJmZBbs95Up
-	 6CLm1r7YJNNt5CuG+OI9xO2VjX5ICtgywKKWzLfA=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id ACBD886; Tue, 16 Jan 2024 18:02:44 +0800
-X-QQ-mid: xmsmtpt1705399364tlk4xvu33
-Message-ID: <tencent_60371697EC37444A2C756B77D567103CA109@qq.com>
-X-QQ-XMAILINFO: NafziRg7Bx69+OV4WSENK3vQvStHKhjPC1Myk+QT/ObxMhcmvcUvAVC8j8Frdq
-	 mW+OAtgjzBHhITe+bXbDeaHzdbXeaaw86B3IgwPb1qGfTMTpADitnxB5GRycS0Nm2YSTKlih05yP
-	 PAAbpoYzM41wZbUYEelVtD350V3wf/m77kYNc+I7YMVkT+8pKsdx1s4m0s4eBzEJxX3N5Kx+/IXI
-	 a2564BpRsuQt+Y53k5Q0JMX91E120V648bBZNbWWe4YPJLRsAweBUuL/thdzuDhDWcF0JofW1czS
-	 9IpML9GqUmF+f5QkYOjAQAkQiK1ozEWI38u6Jv7WS86oZAnAgJAZAhr1DGbhP3NYmFcsTFXHJfTl
-	 3WG+ILViQTojjrN7dUQmzT+GjSYgRfk25HaJlTWqxjDZKCViD6N/0eczzWsTzRfEcATwwB1M17vj
-	 ItzjEgMriHWE9S1gET7p++U0Md5SuZs9CdIweVI9fEfJbeOZWUVkAhm0hg285GyuUbp8ipKXpaSh
-	 S1ISL48pqCOdG6WBtMDbCEXD8TPRJr8mvxsyR1I9cr1Hq/4eRvjdGw2mypuz8AdqlcHjQvvwJjKH
-	 CknL+By81Qv5fCLH8MNsm0HtJTzX5V9Kp939/lTzxTa+5JV7fEhzqIa6tmiheD5MxVWmiqOWlxLz
-	 cI0cGDOobO3o2Xgu1vP+6L2MlZsyWj8a/17WI9vm32sNQRu08ES5v8qygxakh3209MW3FtrBESSQ
-	 HRrQhnxZr1Yb+498B0ydZeJ5O+trtro/YZ4To8vv6QlOEfa8byD/o/vQ8Ak3KzPhCtO1HmC5v00/
-	 Yw3WQ8iOpCQVb7DlWYuSgp3GU12p+YcLZMl14Y187XBcTJvfRHDT1uJdtPne5+kIz9n7UxH1R/40
-	 SvT+zveCp4kjXDLUJE1gO/zKypKaB7AKauvPxp94FjPmn8IM8+ckqCSHeP7eSj63juuwP4fDdS1F
-	 p8VRKepwuIHpYcGWhLerMtrDAxATLV
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+7ec955e36bb239bd720f@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] KASAN: slab-out-of-bounds Read in dsa_user_prechangeupper
-Date: Tue, 16 Jan 2024 18:02:45 +0800
-X-OQ-MSGID: <20240116100244.645287-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000002faa2060f02e766@google.com>
-References: <00000000000002faa2060f02e766@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q9B1eHrF"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55817a12ad8so7507450a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 02:09:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705399743; x=1706004543; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S2ouztY5FabhLEMLctP28JtMU7jyUhI1ZTSnZTMlTAg=;
+        b=q9B1eHrFHUDyg6oHJxlggKLaG/0tGSQ+Zla/7lHkRYedNN37FY5khEQuXQY6nOmPtr
+         cjaVCtHpsQUNbAZNSO7UMrfkgfefHjVsWGKECcrgbJtKoIpxZyn8mWU0bPyUrx5h0g3Q
+         pVDifD8UhImFU0rs/ZlLLoJ5StJApIOZ6aLTp1jiLNmGQSP5+HigbLMzKI8MW0sEm4lq
+         IgOV05K36zeo9cEfFWjsQwuKLV/Lc+X4LD/ouw5YRMQiqqzlavcSK11yxot4JyM6hMC5
+         GGDaYHOkO9D9xJhJI86c2eKsLwdhVs1eYXUKi/QaCvpatZqn/bqG8Q2r6xYrRhf8xuLa
+         h4Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705399743; x=1706004543;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S2ouztY5FabhLEMLctP28JtMU7jyUhI1ZTSnZTMlTAg=;
+        b=BpkixHqzMPpixXY3bcblR/xzIW3iSyFjY0v6xSoYYfx6z5qt49yiC0lZB5K1q6JwwV
+         X/xsCNpfKBQErHC1KLU7qM0uS9upYlE2NHnOcIysh2pa/DcHHsNRqdgGzoNtEvaIl3ks
+         3ONdrZRl+lB2O+NtI2hmh4pOYHmcr3isAcr7n5+EGj5eCcMIkzhQxL7fehiLFG9F0Sz8
+         +0b7CuoQm/LLflJvdFaPB7MWKCyu0fqsjnsqubpw+YjZae6SL2zfLMBXYbueCusiiRy3
+         8vQJBY1SFIN5C5YoMypnLqpO5VOQ37rDlVSuk1Q022eDHRh+xB8z2GHfeb7DsLrieOVP
+         +9vQ==
+X-Gm-Message-State: AOJu0YwCcRuQwDtrLHIS+HOuNjnOMV1OvE0f6XDbiBo/OOEcEHLNvXtc
+	c+BSxYfZT+jIR8X8+fjGCyBxJ3hhsRs3hQ==
+X-Google-Smtp-Source: AGHT+IHmCqFOcCJrghmCUjCf+psCuvdWnLq3g1eg7KArxDOrcVfD+DKcH+WHPqkU7gLc5Pmes4Phmw==
+X-Received: by 2002:a05:6402:1d97:b0:559:6abf:5226 with SMTP id dk23-20020a0564021d9700b005596abf5226mr1009637edb.73.1705399743036;
+        Tue, 16 Jan 2024 02:09:03 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id cq13-20020a056402220d00b0055946388052sm2507937edb.43.2024.01.16.02.09.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jan 2024 02:09:02 -0800 (PST)
+Message-ID: <6badfa7b-543f-4aa0-87db-bac27c2d1f46@linaro.org>
+Date: Tue, 16 Jan 2024 11:09:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/5] dt-bindings: clock: sophgo: add sysclk for SG2042
+Content-Language: en-US
+To: Chen Wang <unicornxw@gmail.com>, aou@eecs.berkeley.edu,
+ chao.wei@sophgo.com, conor@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ mturquette@baylibre.com, palmer@dabbelt.com, paul.walmsley@sifive.com,
+ richardcochran@gmail.com, robh+dt@kernel.org, sboyd@kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, guoren@kernel.org,
+ jszhang@kernel.org, inochiama@outlook.com, samuel.holland@sifive.com
+Cc: Chen Wang <unicorn_wang@outlook.com>
+References: <cover.1705388518.git.unicorn_wang@outlook.com>
+ <7071845b8d1ff6aa91112c91feb62bc875066d9e.1705388518.git.unicorn_wang@outlook.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <7071845b8d1ff6aa91112c91feb62bc875066d9e.1705388518.git.unicorn_wang@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-please test slab-out-of-bounds Read in dsa_user_prechangeupper
+On 16/01/2024 08:20, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+> 
+> Add bindings for the clocks of which configuration registers are in the
+> range of SYS_CTRL in the memory-map.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 3e7aeb78ab01
+This means it is not a separate device and should be just merged with
+parent node. Otherwise please give us some arguments why this should be
+a separate device node.
 
-diff --git a/net/dsa/user.c b/net/dsa/user.c
-index b738a466e2dc..2034587b3a68 100644
---- a/net/dsa/user.c
-+++ b/net/dsa/user.c
-@@ -2865,14 +2865,16 @@ static int dsa_user_changeupper(struct net_device *dev,
- static int dsa_user_prechangeupper(struct net_device *dev,
- 				   struct netdev_notifier_changeupper_info *info)
- {
--	struct dsa_port *dp = dsa_user_to_port(dev);
-+	const struct rtnl_link_ops *ops = dev->rtnl_link_ops;
-+	struct dsa_port *dp = ops->priv_size >= sizeof(*dp) ? 
-+		dsa_user_to_port(dev) : NULL;
- 
- 	if (!dsa_user_dev_check(dev))
- 		return NOTIFY_DONE;
- 
--	if (netif_is_bridge_master(info->upper_dev) && !info->linking)
-+	if (netif_is_bridge_master(info->upper_dev) && !info->linking && dp)
- 		dsa_port_pre_bridge_leave(dp, info->upper_dev);
--	else if (netif_is_lag_master(info->upper_dev) && !info->linking)
-+	else if (netif_is_lag_master(info->upper_dev) && !info->linking && dp)
- 		dsa_port_pre_lag_leave(dp, info->upper_dev);
- 	/* dsa_port_pre_hsr_leave is not yet necessary since hsr devices cannot
- 	 * meaningfully placed under a bridge yet
--- 
-2.43.0
+
+> 
+> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+> 
+> .
+
+Some stray characters above ^^^. Clean your commit msg. Also, I have
+doubts it passes checkpatch.
+
+
+Best regards,
+Krzysztof
 
