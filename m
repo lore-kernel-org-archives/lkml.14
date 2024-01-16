@@ -1,102 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4821CD31
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68961D53D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705428745; cv=none; b=NcjCNhQaGhhk8ia0xd9L9JkDmpdls3B+5643B/5RparYwaKV/kctxOqlrBhDFgHrkfqxzYasIM1GJOG4aLv3X+dUIBz2pKQMGPKhzjeQ1vlwjWni49XTEShzVGYhkxbZUyZmtXkzAfOMky1I4sQ4hQ7z66mP7P0mROS9KLgYGms=
+	t=1705428763; cv=none; b=EkXYXJqXGT9MtDDlwPvZgOJQTc8tBZ3uOpsgDByR6A0Elpn39KD8mspI+ynD/gmS7x4QfiZi0fc8bMCs9xrv89Kjy4pqww1vrBhRAAY8h4KDNte82VCnTa9xpUy0YuIAULmAzTcQp44Mpp8NUn9LzAIMWjc3GwLqtNKQ3fVdXQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705428745; c=relaxed/simple;
-	bh=MzloDO27ZW8iHVaQfONrrD83ZThr7ywLNoiZklqYLQg=;
-	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To:User-Agent:
-	 X-Scanned-By; b=W3wcwV/+4Z5mTtGT08b9RVnKp4zKvUKIOXHhBeXa752wzsWtaezg2cIYqFw4WowWzBRJMWbaQzr6XaV4lPUzDIpuza4LUYFO46ydUatN3EZfybzVN2gXtHdcxA5vjrrXppZRAUJTcx9m2pZwLdKRTKwe7VL+60jpyp/uI4pmtkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XThYApht; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1705428763; c=relaxed/simple;
+	bh=ZbOM1bu5cjFjk4zYWaRFdyLilrDy9vA0J/xM/tBuRRQ=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=MVpt6V2/S6bI4iy0TmQ+y/AOTqw97CZi6nu9iRnIc+SheNsXMuP5yn/b+iymqWElZUn2Y7GJuHw2mkKXaYBINggN5BEEuqlr2LzIRUsxV9HUmW4Opp9viIclJnXhvupCzPpk34pG4ddDd431Lj8WMAnrlORGhu3YpRQQ6t3/nyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IEXjQx4f; arc=none smtp.client-ip=209.85.166.45
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XThYApht"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705428743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MzloDO27ZW8iHVaQfONrrD83ZThr7ywLNoiZklqYLQg=;
-	b=XThYAphtO5oC09pqbVpprFoMhGx3c1EwR8767fSji683MpUfwWcHRyDfvu1SJS0ytupayG
-	SFI+I/fQQuYw6QSLfG0qsmrp8LFppZ/H7f7rvTh7P78jGxnGRi2ag6TePGUsUaoJC7HAsM
-	9kPP4O+k+VuHvNKeQY8ZvS3PmWdzAzM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-326-7HYs3mdCN72aoZUinQmBcQ-1; Tue, 16 Jan 2024 13:12:17 -0500
-X-MC-Unique: 7HYs3mdCN72aoZUinQmBcQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4E26F8493E6;
-	Tue, 16 Jan 2024 18:12:16 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.96])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 647A41BDB0;
-	Tue, 16 Jan 2024 18:12:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 16 Jan 2024 19:11:03 +0100 (CET)
-Date: Tue, 16 Jan 2024 19:10:59 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Onkarnarth <onkarnath.1@samsung.com>, frederic@kernel.org,
-	quic_neeraju@quicinc.com, joel@joelfernandes.org,
-	josh@joshtriplett.org, boqun.feng@gmail.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang1211@gmail.com, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, r.thapliyal@samsung.com,
-	maninder1.s@samsung.com, tj@kernel.org, peterz@infradead.org
-Subject: Re: [PATCH 1/1] rcu/sync: remove un-used rcu_sync_enter_start
- function
-Message-ID: <20240116181058.GB12342@redhat.com>
-References: <CGME20240111092805epcas5p2ebb993010ae31d039e8f9de1e7818f7c@epcas5p2.samsung.com>
- <20240111092722.322454-1-onkarnath.1@samsung.com>
- <de792eee-1f44-48e2-a122-c3ded1645155@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IEXjQx4f"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7bf617dcedaso5603639f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:12:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705428761; x=1706033561; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gsw0Y1ya1uuqQW7F3Kv8ai7chNdrtK1tF8GNiYzbLyY=;
+        b=IEXjQx4fFr9GWrfwtHpDJIXIOqTSsrYEaMQZQalgteHcsIwrDTfL4bDNIskfS0JmnX
+         aeKeg+uVybK/hZjzmpwBIxoGNQOV+pmBJ0kc0tB03DopO9M+pCEkMBAec1wQFap1ocEc
+         2oihUDkFfAPIRmzj3tOoMDyvMTe8JQrFMChpnjgTEyfQPlSj9yBuUW5lETE4FAW5Oatb
+         s4Fb41YToIQXEDH5pNaGQQSSMHsHOdi3tFD8uD2UbbNuMAgRlpgKjAk6K0hZawnbgBQd
+         iY8RXofmM8Sg5Q1xFVYPRVNPJ7RP3jAmwpNMt/d0RyMdoGe8CAR4Hmezyxpe9KjLhldu
+         xtsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705428761; x=1706033561;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gsw0Y1ya1uuqQW7F3Kv8ai7chNdrtK1tF8GNiYzbLyY=;
+        b=P3acdubxrXh0iPUOTsNvSYN3vecmS1W+sC6OfWMCGqOWRu6ppabL2j01ofBucn8Z2p
+         88H+LeB+39FPlkev7+vJF2yyTYuVFWKTa5XNIWUhdtVe2gDu/VWxnOSy8dcEMphmpfOZ
+         wE4NmALm8aDYcodhPrT1perj+TR6MC3gixXXANkCPiAtjDXqfwDQK5QCkTAtDhv5F6Co
+         zN15fG0zjMkB2ILUyASZ+2GxKaP1sihSwEClzk/x4p6evdxOZ3IIbmwiFPO+fFyyVJCI
+         ZPbGgsgZEaIlWPbhHxOZD1VC88zMq/s7/CDKywG3hx23uVxrcrA46gjeKC52cY7m9m4f
+         uPvA==
+X-Gm-Message-State: AOJu0Yzc8wZn1MY3qi2uP0uhLCY4k/NP9GL1iFy6jgRD3ie9ko1p3GSp
+	FpU5GOdKx+Qn55XatoJIUIY8OYUS/k9UMsCO68QE0HSarfoOvg==
+X-Google-Smtp-Source: AGHT+IHsTZN8Hh2PBiqRYmvVF1oqi281eXU5A/Ytv6gA5Rfcjg510T4d0Xlr9PLKT5w/4djQJrnCcPZkqN7Sx16pNBE=
+X-Received: by 2002:a05:6602:42d6:b0:7be:fac5:76a5 with SMTP id
+ ce22-20020a05660242d600b007befac576a5mr9115659iob.43.1705428760966; Tue, 16
+ Jan 2024 10:12:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de792eee-1f44-48e2-a122-c3ded1645155@paulmck-laptop>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+References: <20240110102102.61587-1-tudor.ambarus@linaro.org> <20240110102102.61587-2-tudor.ambarus@linaro.org>
+In-Reply-To: <20240110102102.61587-2-tudor.ambarus@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Tue, 16 Jan 2024 12:12:29 -0600
+Message-ID: <CAPLW+4ndoSq-u7=m40BXrDHa20eyUrNq1-RMwtJJDdXGLBWUWg@mail.gmail.com>
+Subject: Re: [PATCH 01/18] tty: serial: samsung: prepare for different IO types
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	andre.draszik@linaro.org, peter.griffin@linaro.org, kernel-team@android.com, 
+	willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/16, Paul E. McKenney wrote:
+On Wed, Jan 10, 2024 at 4:21=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
+.org> wrote:
 >
-> On Thu, Jan 11, 2024 at 02:57:22PM +0530, Onkarnarth wrote:
-> > From: Onkarnath <onkarnath.1@samsung.com>
-> >
-> > With commit '6a010a49b63a ("cgroup: Make !percpu threadgroup_rwsem
-> > operations optional")' usage of rcu_sync_enter_start is removed.
-> >
-> > So this function can also be removed.
-> >
-> > Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
-> > Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+> GS101's Connectivity Peripheral blocks (peric0/1 blocks) which
+> include the I3C and USI (I2C, SPI, UART) only allow 32-bit
+> register accesses. If using 8-bit register accesses, a SError
+> Interrupt is raised causing the system unusable.
+>
+> Instead of specifying the reg-io-width =3D 4 everywhere, for each node,
+> the requirement should be deduced from the compatible.
+>
+> Prepare the samsung tty driver to allow IO types different than
+> UPIO_MEM. ``struct uart_port::iotype`` is an unsigned char where all
+> its 8 bits are exposed to uapi. We can't make NULL checks on it to
+> verify if it's set, thus always set it from the driver's data.
+> Use u8 for the ``iotype`` member of ``struct s3c24xx_uart_info`` to
+> emphasize that the iotype is an 8 bit mask.
+>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
-
-
-For the record, this was already discussed, see
-https://lore.kernel.org/all/20220725121208.GB28662@redhat.com/
-
-Note also the patch in this message, __rcu_sync_enter(wait => false)
-is a better alternative if someone needs rcu_sync_enter_start() again.
-
-This patch probably makes sense anyway. Not only cgroup_favor_dynmods()
-can use __rcu_sync_enter(), freeze_super() can use it too to avoid
-3 synchronize_rcu()'s in a row.
-
-Oleg.
-
+>  drivers/tty/serial/samsung_tty.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsun=
+g_tty.c
+> index 71d17d804fda..b8fe9df20202 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -84,6 +84,7 @@ struct s3c24xx_uart_info {
+>         unsigned long           clksel_mask;
+>         unsigned long           clksel_shift;
+>         unsigned long           ucon_mask;
+> +       u8                      iotype;
+>
+>         /* uart port features */
+>
+> @@ -1742,7 +1743,6 @@ static void s3c24xx_serial_init_port_default(int in=
+dex) {
+>
+>         spin_lock_init(&port->lock);
+>
+> -       port->iotype =3D UPIO_MEM;
+>         port->uartclk =3D 0;
+>         port->fifosize =3D 16;
+>         port->flags =3D UPF_BOOT_AUTOCONF;
+> @@ -1989,6 +1989,8 @@ static int s3c24xx_serial_probe(struct platform_dev=
+ice *pdev)
+>                 break;
+>         }
+>
+> +       ourport->port.iotype =3D ourport->info->iotype;
+> +
+>         if (np) {
+>                 of_property_read_u32(np,
+>                         "samsung,uart-fifosize", &ourport->port.fifosize)=
+;
+> @@ -2399,6 +2401,7 @@ static const struct s3c24xx_serial_drv_data s3c6400=
+_serial_drv_data =3D {
+>                 .name           =3D "Samsung S3C6400 UART",
+>                 .type           =3D TYPE_S3C6400,
+>                 .port_type      =3D PORT_S3C6400,
+> +               .iotype         =3D UPIO_MEM,
+>                 .fifosize       =3D 64,
+>                 .has_divslot    =3D 1,
+>                 .rx_fifomask    =3D S3C2440_UFSTAT_RXMASK,
+> @@ -2428,6 +2431,7 @@ static const struct s3c24xx_serial_drv_data s5pv210=
+_serial_drv_data =3D {
+>                 .name           =3D "Samsung S5PV210 UART",
+>                 .type           =3D TYPE_S3C6400,
+>                 .port_type      =3D PORT_S3C6400,
+> +               .iotype         =3D UPIO_MEM,
+>                 .has_divslot    =3D 1,
+>                 .rx_fifomask    =3D S5PV210_UFSTAT_RXMASK,
+>                 .rx_fifoshift   =3D S5PV210_UFSTAT_RXSHIFT,
+> @@ -2457,6 +2461,7 @@ static const struct s3c24xx_serial_drv_data s5pv210=
+_serial_drv_data =3D {
+>                 .name           =3D "Samsung Exynos UART",        \
+>                 .type           =3D TYPE_S3C6400,                 \
+>                 .port_type      =3D PORT_S3C6400,                 \
+> +               .iotype         =3D UPIO_MEM,                     \
+>                 .has_divslot    =3D 1,                            \
+>                 .rx_fifomask    =3D S5PV210_UFSTAT_RXMASK,        \
+>                 .rx_fifoshift   =3D S5PV210_UFSTAT_RXSHIFT,       \
+> @@ -2517,6 +2522,7 @@ static const struct s3c24xx_serial_drv_data s5l_ser=
+ial_drv_data =3D {
+>                 .name           =3D "Apple S5L UART",
+>                 .type           =3D TYPE_APPLE_S5L,
+>                 .port_type      =3D PORT_8250,
+> +               .iotype         =3D UPIO_MEM,
+>                 .fifosize       =3D 16,
+>                 .rx_fifomask    =3D S3C2410_UFSTAT_RXMASK,
+>                 .rx_fifoshift   =3D S3C2410_UFSTAT_RXSHIFT,
+> @@ -2546,6 +2552,7 @@ static const struct s3c24xx_serial_drv_data artpec8=
+_serial_drv_data =3D {
+>                 .name           =3D "Axis ARTPEC-8 UART",
+>                 .type           =3D TYPE_S3C6400,
+>                 .port_type      =3D PORT_S3C6400,
+> +               .iotype         =3D UPIO_MEM,
+>                 .fifosize       =3D 64,
+>                 .has_divslot    =3D 1,
+>                 .rx_fifomask    =3D S5PV210_UFSTAT_RXMASK,
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
+>
