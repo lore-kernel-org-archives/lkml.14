@@ -1,118 +1,89 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.fris.de (unknown [116.203.77.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA121CF89
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4711CF87;
+	Tue, 16 Jan 2024 18:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fris.de
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705428694; cv=none; b=iOs1usSQ+jULk1oSmJirKKOgBlxGXKqsDD0JRB7EPeTaagqzN4i/y2G9DavVQazk+cyw7AQ7MArBUr5hyqh/xebBs2KgQX2iueFq46EidKfwW62AFGfCgWzIZvm7K2RVjbzsp66vA1WjZLNK+Oj3KKbVsmEfN1bmYFi7gs9bz64=
+	t=1705428694; cv=none; b=s6Vokf72EWzBX8dE2Bj4wsgFJnm3hHsGJRkrOIlrxJhiZq8MyZZgvyH5jEC3gQMSsfmqQOTgUMU1BVGwQy/FlQTqxw2epQDrBWQtIYHC+CdGYBWTJavgf0Ia6tW42usM/Y1+S5C/Qf0jHmfgxItBQU4UJXggjcP22QIHbSCCUR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705428694; c=relaxed/simple;
-	bh=M0Ooulm9S8WHLNo6AfrCErL0/OwFMQeru2lh9LT1eww=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=tR3jjARvpKvcA9O9dCuSF4lzdjgHGufKN/8NuEfVED16smCiqb33vKHCzLa0W4/g3PSRk30iSmS48o6YhPny1B3jDu+5WFPBp0Nv9uZ/x/4hPYVUH7QGheya4DpeMjfaXfELos1IQl/Xh9DxyYWvOwbbXDoG8J9WkwMyXItxMrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tmddb43k; arc=none smtp.client-ip=209.85.166.52
+	bh=gY8YGXwKOb339LG32IE073RzsRu5jVChs1T+/qOikqM=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:
+	 X-Last-TLS-Session-Version; b=Pnc55ItNnDLcYZZCQH8a04I1SQ8VkJAHCG8bm3HGEAa6dwVRlgn0VYYB0sAm6WpSPYyayUoVufDpc2Mld7wuQfKKErF4VHyzWChCQzcLfkeVk+CdRqab5GLoGEFuop8hq5hNTxaEZOZjW2+pwtKIAoC0cOf2uqfYY0EO5eE5xT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=1iw6Gtit; arc=none smtp.client-ip=116.203.77.234
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tmddb43k"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7bc3e297bc9so473628039f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:11:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705428692; x=1706033492; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SNxgcWOo1csnjFsBhzJAhb4fTQBuYKqyH36PPDUAqrM=;
-        b=tmddb43klQoDUO20LffXTBLPfgv4Y9FAsY3TKpVG1j6i6Mwoin4jsgY10a/KNQ7JoS
-         JJaNAFKUgr2U+TVWa2mUpPgkbD9owDRbNonMWozlnjB6RyIdbAyOM/Nx45qJgfffrv3H
-         rvHoOsUqLiJfUYDMp12k9HlQ8fuf/LDeGp3QSKOtAZlyLoYkNd9lixsp4KHnR43mdMOq
-         p0PfTYEDXjOhD5XacqcnKFR7zuXSrVolRnlvtiZ9id0U3/rS+SZFwbeXZMxuUmfPJNsO
-         mkLddh5Grv2lHkTlQsRtYUcoAtsdaxT49lb+Wl72hEvD+s/BTKLhKPB1gJB8SePSvuai
-         UUzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705428692; x=1706033492;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SNxgcWOo1csnjFsBhzJAhb4fTQBuYKqyH36PPDUAqrM=;
-        b=Lr+fwYbzBqdMUpBdMb6siiAdcmgBi5yCh4ezJXJ8DblyUFLK/69rXgCKwgm7lbanZB
-         g+ktdM14qZbKr2OJtDz9WjLBxV8/0LUlLuXugCIpYD3R/AifM7WiZzP9Luh5EqvGEZ9w
-         S4hEfakW/MWBDx6klmqHIhxisAjX6MMHktEEVYaEKezDg8Dqzo+LkLVdLrbBMXy7ONCp
-         io1sUM4nDZszCF+HvuWgWWX+M2FMb8DrMIYiWgOvfSqA6C7UFVxI3kt7HgButsypziTw
-         VvKbni5PApWVIBzUQi3AUts2wwi2vPnwF3xt3dueMcclW5v4WrQJcm4N2BZ0oWnfeq5Q
-         PX5w==
-X-Gm-Message-State: AOJu0YwM0Ja5Tm5DnkJuqtkOQJ8LVI76CKQExuIHTZHBxYEu957A1qe2
-	cRQVSqOQxL2H4GNNZhfqaVeqscwrW9G9i15mb21xvHLN4t4xyg==
-X-Google-Smtp-Source: AGHT+IE5QD79wikGUbt+f+gyh/dGDvkkcbx8JHtG+ewUTqw1m7M5U8NmftDLIr2A/UQiHvfv2iLRDc2vlArXMBbwfU0=
-X-Received: by 2002:a6b:cd0c:0:b0:7bf:554c:bb63 with SMTP id
- d12-20020a6bcd0c000000b007bf554cbb63mr1637673iog.14.1705428692146; Tue, 16
- Jan 2024 10:11:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="1iw6Gtit"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6EABDC0359;
+	Tue, 16 Jan 2024 19:11:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
+	t=1705428690; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=yjFpr0ZCRTUXhWOcwt8Uq8uGB9wjDpQAUtj/tOfndBg=;
+	b=1iw6GtitMXQnbDzQJV/2A+ZknFJoJmt9ov8vJGEhzDS3CbtPE35CJK89oG7K8QDnPDW8+Z
+	pam3fXuhCtk15kLDD8CRI7iLIAqPHTL3G+VUAPfVbOkJwELuqFle6krRa+9DbVrzTo2+CI
+	CrZbyL/1+3IG/GqAJ2aK7sY8SzaU+TXS87G35/gqK0di7+ns1uqQn2muEaIcszm2e/rzSh
+	O0bgAwip0OiSAbsmRygufW7esnBNGL6MR5nwXUYJbOmn7cGN1ohMEsWhakvETGImvC8yfT
+	46RfVhkSB+HXPlugxq3s08Ryn+OPd+hkdfWZk+gtv5EVMSqp97HeAU22JyTYGw==
+From: Frieder Schrempf <frieder@fris.de>
+To: Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Yang Xiwen <forbidden405@foxmail.com>
+Subject: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Sielaff
+Date: Tue, 16 Jan 2024 19:10:26 +0100
+Message-ID: <20240116181100.382388-2-frieder@fris.de>
+In-Reply-To: <20240116181100.382388-1-frieder@fris.de>
+References: <20240116181100.382388-1-frieder@fris.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109125814.3691033-1-tudor.ambarus@linaro.org> <20240109125814.3691033-4-tudor.ambarus@linaro.org>
-In-Reply-To: <20240109125814.3691033-4-tudor.ambarus@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Tue, 16 Jan 2024 12:11:20 -0600
-Message-ID: <CAPLW+4=BO6jkN+RRhO=8=79XtoOTRdfrEQBgDDzq8seWi8YMaA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/12] dt-bindings: serial: samsung: do not allow
- reg-io-width for gs101
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: peter.griffin@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
-	gregkh@linuxfoundation.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	robh+dt@kernel.org, conor+dt@kernel.org, andi.shyti@kernel.org, 
-	alim.akhtar@samsung.com, jirislaby@kernel.org, s.nawrocki@samsung.com, 
-	tomasz.figa@gmail.com, cw00.choi@samsung.com, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-serial@vger.kernel.org, andre.draszik@linaro.org, 
-	kernel-team@android.com, willmcvicker@google.com, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Jan 9, 2024 at 6:59=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro.=
-org> wrote:
->
-> All gs101 serial ports are restricted to 32-bit register accesses.
-> This requirement will be inferred from the compatible. Do not allow
-> the reg-io-width property for the google,gs101-uart compatible.
->
-> Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> ---
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Add "Sielaff GmbH & Co. KG Automatenbau Herrieden" (https://sielaff.de).
 
-> v3: collect Peter's R-b tag
-> v2: new patch
->
->  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b=
-/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> index 133259ed3a34..0f0131026911 100644
-> --- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> @@ -143,6 +143,8 @@ allOf:
->      then:
->        required:
->          - samsung,uart-fifosize
-> +      properties:
-> +        reg-io-width: false
->
->  unevaluatedProperties: false
->
-> --
-> 2.43.0.472.g3155946c3a-goog
->
->
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+Changes in v2:
+* Add Acked-by from Conor (Thanks!)
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 309b94c328c84..8825a9f60ac5a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1233,6 +1233,8 @@ patternProperties:
+     description: Si-En Technology Ltd.
+   "^si-linux,.*":
+     description: Silicon Linux Corporation
++  "^sielaff,.*":
++    description: Sielaff GmbH & Co. KG Automatenbau Herrieden
+   "^siemens,.*":
+     description: Siemens AG
+   "^sifive,.*":
+-- 
+2.43.0
+
