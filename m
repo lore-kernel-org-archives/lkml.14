@@ -1,235 +1,126 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BE51E882;
-	Tue, 16 Jan 2024 04:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="146236512"
-X-IronPort-AV: E=Sophos;i="6.04,198,1695654000"; 
-   d="scan'208";a="146236512"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 13:52:29 +0900
-Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 07564CD6C9;
-	Tue, 16 Jan 2024 13:52:27 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 3D19CD3F0C;
-	Tue, 16 Jan 2024 13:52:26 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id ADDC920098E39;
-	Tue, 16 Jan 2024 13:52:25 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 6383C1A0070;
-	Tue, 16 Jan 2024 12:52:25 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-kernel@vger.kernel.org
-Cc: Li Zhijian <lizhijian@fujitsu.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH 37/42] drivers/scsi/scsi_sysfs: Convert snprintf to sysfs_emit
-Date: Tue, 16 Jan 2024 12:51:46 +0800
-Message-Id: <20240116045151.3940401-35-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240116045151.3940401-1-lizhijian@fujitsu.com>
-References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
- <20240116045151.3940401-1-lizhijian@fujitsu.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C412B1EB41;
+	Tue, 16 Jan 2024 04:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S5Ilz3IE"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40G4d7wR003050;
+	Tue, 16 Jan 2024 04:52:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=ekRfnElQ5SP2PMw3QDmn8+FB0j9H41Ob685N6KWrRjI=; b=S5
+	Ilz3IEGgOeeid3oYBUvEnQ5MJ3SHi957PWGh1InDL6PiVxN9vf4YdmxA4EXtZyt+
+	/0edyjoYix+XRVV1mYz6rB8MVj38JJxhFIc/LOs8n/7C3OykG/B0RF6EUElc3dbt
+	w3Z16J39XwyWsTzqCnOwvR+tNTPvjScXm6cw9NwoN1pn00tn7SDIunt4tvcFVqcV
+	gYd0UggaaVsHud5N2DLHyoBgwNGiPFEUhn40xkFKZvlV144nZlieAtN6CAaEIPbl
+	+sogt/XkJjPo7HNpSDjOJwC+SPlUJ/bpa5dzrhLU2EWM+TN+zeBHT2CCDXpqHeLZ
+	BMTyy+dyXLjjJxZKQ/xQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vnb300sxm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 04:52:55 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40G4qs1h006123
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 04:52:54 GMT
+Received: from [10.216.3.129] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 15 Jan
+ 2024 20:52:47 -0800
+Message-ID: <1b7912c5-983c-b642-ca56-ae1e2def9633@quicinc.com>
+Date: Tue, 16 Jan 2024 10:22:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28122.004
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28122.004
-X-TMASE-Result: 10--15.188200-10.000000
-X-TMASE-MatchedRID: e6WPXQD7Ri84ibokZ3+Q0CoiRKlBVkYIBXngI6jFvpfvd49YGReckE1N
-	J2MN+nPkgxCMf8A0YpR5sRK06wHV4dL4Vi2vvkbTrMZ+BqQt2NrBOVz0Jwcxl6vCrG0TnfVUg9x
-	e4gtUJtpqw4mhfH/CjyHVzwndHHhl/625ZdmTyUizRPQ8T4oe5Rgff28UuvITd3XtjqAaoMLndM
-	EZZ6ppQ4E14EZ4ciLbm11lBSAav6kfE8yM4pjsDwtuKBGekqUpI/NGWt0UYPCv86Cgtufh8rUcX
-	rQaDbBd7I2Y/HHWTXGIPKgr0MF740Ib4fU9zdME
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v6 3/6] PCI: qcom: Add missing icc bandwidth vote for cpu
+ to PCIe path
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Bjorn
+ Helgaas" <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Brian Masney <bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <vireshk@kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
+ <20240112-opp_support-v6-3-77bbf7d0cc37@quicinc.com>
+ <fecfd2d9-7302-4eb6-92d0-c2efbe824bf4@linaro.org>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <fecfd2d9-7302-4eb6-92d0-c2efbe824bf4@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: pghQY40iUmtKbJFkO2Y2Zr7yPjkseDrw
+X-Proofpoint-GUID: pghQY40iUmtKbJFkO2Y2Zr7yPjkseDrw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ phishscore=0 impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ clxscore=1011 malwarescore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=706
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
+ definitions=main-2401160035
 
-Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-or sysfs_emit_at() when formatting the value to be returned to user space.
 
-coccinelle complains that there are still a couple of functions that use
-snprintf(). Convert them to sysfs_emit().
 
-> ./drivers/scsi/scsi_sysfs.c:1112:9-17: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:1202:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:231:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:277:9-17: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:327:9-17: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:385:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:402:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:680:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:689:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:701:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:722:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:858:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:873:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:953:8-16: WARNING: please use sysfs_emit
-> ./drivers/scsi/scsi_sysfs.c:979:8-16: WARNING: please use sysfs_emit
+On 1/12/2024 8:47 PM, Bryan O'Donoghue wrote:
+> On 12/01/2024 14:22, Krishna chaitanya chundru wrote:
+>> CPU-PCIe path consits for registers PCIe BAR space, config space.
+>> As there is less access on this path compared to pcie to mem path
+>> add minimum vote i.e GEN1x1 bandwidth always.
+>>
+>> In suspend remove the cpu vote after register space access is done.
+>>
+>> Fixes: c4860af88d0c ("PCI: qcom: Add basic interconnect support")
+> 
+> If this patch is a Fixes then don't you need the accompanying dts change 
+> as a parallel Fixes too ?
+> 
+> i.e. without the dts update - you won't have the nodes in the dts to 
+> consume => applying this code to the stable kernel absent the dts will 
+> result in no functional change and therefore no bugfix.
+> 
+> I'm not sure if you are asked to put a Fixes here but it seems to be it 
+> should either be dropped or require a parallel Fixes: tag for the dts 
+> and yaml changes.
+> 
+> What is the bug this change fixes in the backport ?
+> 
+There is no change required in the dts because the cpu-pcie path is
+already present in the dts.
+So till now driver is ignoring that path, that's why we tagged with
+fixed.
 
-No functional change intended
-
-CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
-CC: "Martin K. Petersen" <martin.petersen@oracle.com>
-CC: linux-scsi@vger.kernel.org
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
- drivers/scsi/scsi_sysfs.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
-index 24f6eefb6803..e82dc010fea0 100644
---- a/drivers/scsi/scsi_sysfs.c
-+++ b/drivers/scsi/scsi_sysfs.c
-@@ -228,7 +228,7 @@ show_shost_state(struct device *dev, struct device_attribute *attr, char *buf)
- 	if (!name)
- 		return -EINVAL;
- 
--	return snprintf(buf, 20, "%s\n", name);
-+	return sysfs_emit(buf, "%s\n", name);
- }
- 
- /* DEVICE_ATTR(state) clashes with dev_attr_state for sdev */
-@@ -274,7 +274,7 @@ show_shost_active_mode(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 
- 	if (shost->active_mode == MODE_UNKNOWN)
--		return snprintf(buf, 20, "unknown\n");
-+		return sysfs_emit(buf, "unknown\n");
- 	else
- 		return show_shost_mode(shost->active_mode, buf);
- }
-@@ -324,7 +324,7 @@ show_shost_eh_deadline(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 
- 	if (shost->eh_deadline == -1)
--		return snprintf(buf, strlen("off") + 2, "off\n");
-+		return sysfs_emit(buf, "off\n");
- 	return sprintf(buf, "%u\n", shost->eh_deadline / HZ);
- }
- 
-@@ -382,7 +382,7 @@ static ssize_t
- show_host_busy(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	struct Scsi_Host *shost = class_to_shost(dev);
--	return snprintf(buf, 20, "%d\n", scsi_host_busy(shost));
-+	return sysfs_emit(buf, "%d\n", scsi_host_busy(shost));
- }
- static DEVICE_ATTR(host_busy, S_IRUGO, show_host_busy, NULL);
- 
-@@ -399,7 +399,7 @@ show_nr_hw_queues(struct device *dev, struct device_attribute *attr, char *buf)
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct blk_mq_tag_set *tag_set = &shost->tag_set;
- 
--	return snprintf(buf, 20, "%d\n", tag_set->nr_hw_queues);
-+	return sysfs_emit(buf, "%d\n", tag_set->nr_hw_queues);
- }
- static DEVICE_ATTR(nr_hw_queues, S_IRUGO, show_nr_hw_queues, NULL);
- 
-@@ -677,7 +677,7 @@ sdev_show_device_busy(struct device *dev, struct device_attribute *attr,
- 		char *buf)
- {
- 	struct scsi_device *sdev = to_scsi_device(dev);
--	return snprintf(buf, 20, "%d\n", scsi_device_busy(sdev));
-+	return sysfs_emit(buf, "%d\n", scsi_device_busy(sdev));
- }
- static DEVICE_ATTR(device_busy, S_IRUGO, sdev_show_device_busy, NULL);
- 
-@@ -686,7 +686,7 @@ sdev_show_device_blocked(struct device *dev, struct device_attribute *attr,
- 		char *buf)
- {
- 	struct scsi_device *sdev = to_scsi_device(dev);
--	return snprintf(buf, 20, "%d\n", atomic_read(&sdev->device_blocked));
-+	return sysfs_emit(buf, "%d\n", atomic_read(&sdev->device_blocked));
- }
- static DEVICE_ATTR(device_blocked, S_IRUGO, sdev_show_device_blocked, NULL);
- 
-@@ -698,7 +698,7 @@ sdev_show_timeout (struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	struct scsi_device *sdev;
- 	sdev = to_scsi_device(dev);
--	return snprintf(buf, 20, "%d\n", sdev->request_queue->rq_timeout / HZ);
-+	return sysfs_emit(buf, "%d\n", sdev->request_queue->rq_timeout / HZ);
- }
- 
- static ssize_t
-@@ -719,7 +719,7 @@ sdev_show_eh_timeout(struct device *dev, struct device_attribute *attr, char *bu
- {
- 	struct scsi_device *sdev;
- 	sdev = to_scsi_device(dev);
--	return snprintf(buf, 20, "%u\n", sdev->eh_timeout / HZ);
-+	return sysfs_emit(buf, "%u\n", sdev->eh_timeout / HZ);
- }
- 
- static ssize_t
-@@ -855,7 +855,7 @@ show_state_field(struct device *dev, struct device_attribute *attr, char *buf)
- 	if (!name)
- 		return -EINVAL;
- 
--	return snprintf(buf, 20, "%s\n", name);
-+	return sysfs_emit(buf, "%s\n", name);
- }
- 
- static DEVICE_ATTR(state, S_IRUGO | S_IWUSR, show_state_field, store_state_field);
-@@ -870,7 +870,7 @@ show_queue_type_field(struct device *dev, struct device_attribute *attr,
- 	if (sdev->simple_tags)
- 		name = "simple";
- 
--	return snprintf(buf, 20, "%s\n", name);
-+	return sysfs_emit(buf, "%s\n", name);
- }
- 
- static ssize_t
-@@ -950,7 +950,7 @@ static ssize_t
- show_iostat_counterbits(struct device *dev, struct device_attribute *attr,
- 			char *buf)
- {
--	return snprintf(buf, 20, "%d\n", (int)sizeof(atomic_t) * 8);
-+	return sysfs_emit(buf, "%d\n", (int)sizeof(atomic_t) * 8);
- }
- 
- static DEVICE_ATTR(iocounterbits, S_IRUGO, show_iostat_counterbits, NULL);
-@@ -976,7 +976,7 @@ sdev_show_modalias(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	struct scsi_device *sdev;
- 	sdev = to_scsi_device(dev);
--	return snprintf (buf, 20, SCSI_DEVICE_MODALIAS_FMT "\n", sdev->type);
-+	return sysfs_emit(buf, SCSI_DEVICE_MODALIAS_FMT "\n", sdev->type);
- }
- static DEVICE_ATTR(modalias, S_IRUGO, sdev_show_modalias, NULL);
- 
-@@ -1109,9 +1109,9 @@ sdev_show_dh_state(struct device *dev, struct device_attribute *attr,
- 	struct scsi_device *sdev = to_scsi_device(dev);
- 
- 	if (!sdev->handler)
--		return snprintf(buf, 20, "detached\n");
-+		return sysfs_emit(buf, "detached\n");
- 
--	return snprintf(buf, 20, "%s\n", sdev->handler->name);
-+	return sysfs_emit(buf, "%s\n", sdev->handler->name);
- }
- 
- static ssize_t
-@@ -1199,8 +1199,8 @@ sdev_show_queue_ramp_up_period(struct device *dev,
- {
- 	struct scsi_device *sdev;
- 	sdev = to_scsi_device(dev);
--	return snprintf(buf, 20, "%u\n",
--			jiffies_to_msecs(sdev->queue_ramp_up_period));
-+	return sysfs_emit(buf, "%u\n",
-+			  jiffies_to_msecs(sdev->queue_ramp_up_period));
- }
- 
- static ssize_t
--- 
-2.29.2
-
+-Krishna Chaitanya
+>> cc: stable@vger.kernel.org
+>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> 
+> ---
+> bod
