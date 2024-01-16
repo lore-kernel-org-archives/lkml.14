@@ -1,208 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805F279C1;
-	Tue, 16 Jan 2024 04:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48A8748F
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 04:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TlIC598w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705377915; x=1736913915;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=PmF7R1D/OpCff71q0v3OfMS8MEdcHDacMxC+ENKx5jE=;
-  b=TlIC598wQ2zF+ogUt7ZqWqjQ33MlSaqB7qNXbfQlf4wFXGgk93SNhiuB
-   yNVIiZvEzBPA8E7ZKsGMQGQ87v6QYdm8viQDVpUfw0GkSfJjZHsQee7pG
-   pqmvzXnUQ+BCtSkXVj1vJ5/HJcA0iBPIjjKMaRhCZswRn3cHl7snXaBLI
-   zjRUNJn3xwXgT1f1Q6ttXQ72rLhfALA7nMuK3+GZdg70sQAyktcUvsF22
-   9iVm7SqhnouqGWXlfYOSOp7+BzCwH7ufc0ocQsVw/Jxb0J5xfo+vP1iZJ
-   cwyqNDcjnjWfadkxhTwCytSNAo5wDghOJhq/pJ+QhVTA8PE99pX9LujTH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="6844853"
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="scan'208";a="6844853"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 20:05:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="818030380"
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="scan'208";a="818030380"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jan 2024 20:05:13 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 15 Jan 2024 20:05:13 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 15 Jan 2024 20:05:13 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 15 Jan 2024 20:05:13 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 15 Jan 2024 20:05:12 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MC8665R4kp1MmPuFEdYVfQf75DXPv22aooH0qcHlbeCRrS+ZIHs2wuO93aHqptFlxpSjIYDf2C0eVtNN+f1Qzci22GRDCv8Avh7ppDxQ5sBjhWf8a8uK/YvMw9hOQ9qF8bHuWQlkPw6zCm+Wa5C8KL1k7AbGZ7kOR59vO0SP9u2Gw9wtDolSZ61WgUmn1nkwg6LGIZmt7EuJ9chrculUlza2riCEVHkkt7TqfWzx1zmngV6lvRPcubxgAOoitCYwlVk3OW9yP1gRl82BeoYXrb6v24JYjlqK5jY+i8P7fvdijwOADoSBJ0yWXfwqMWv7i8laLLn8VS4o2DN+MT2gXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PmF7R1D/OpCff71q0v3OfMS8MEdcHDacMxC+ENKx5jE=;
- b=htQ9EB91kRfcJcpkJicZXp4vU/pRoqwpqb0VVVPMTJiZIi5gnfeZbGr5+jTv9em3seRQVm6hWh+bzZRp/VQGx/VCpYaFGK8XXO0T/TwTJJIbaY4ESOtbRpzhjcc0/6HtzjCM+77EWh6/CNpvVcvMLVs63bJXtAszZiJBipxsqPgsoy3ydyZC34tFkLByizrnpHYFJr4fkDtsB4vApqQnTvd/DRhWqDrv2xwCKXmB9IHW1Nq+HqDKVtMUdtO4cA5r7dSKAZm6HmLlkM61vJ7dmpHngcNIskE89y7tmdRqthPgmU09/D/4/16mZSkD4BHeb6pXW6Garo7GI/Xb8/36WA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by IA0PR11MB7813.namprd11.prod.outlook.com (2603:10b6:208:402::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Tue, 16 Jan
- 2024 04:05:08 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::a8e9:c80f:9484:f7cb]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::a8e9:c80f:9484:f7cb%3]) with mapi id 15.20.7181.022; Tue, 16 Jan 2024
- 04:05:08 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com"
-	<seanjc@google.com>, "olvaffe@gmail.com" <olvaffe@gmail.com>, "Lv, Zhiyuan"
-	<zhiyuan.lv@intel.com>, "Wang, Zhenyu Z" <zhenyu.z.wang@intel.com>, "Ma,
- Yongwei" <yongwei.ma@intel.com>, "vkuznets@redhat.com" <vkuznets@redhat.com>,
-	"wanpengli@tencent.com" <wanpengli@tencent.com>, "jmattson@google.com"
-	<jmattson@google.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"gurchetansingh@chromium.org" <gurchetansingh@chromium.org>,
-	"kraxel@redhat.com" <kraxel@redhat.com>, "zzyiwei@google.com"
-	<zzyiwei@google.com>, "ankita@nvidia.com" <ankita@nvidia.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "maz@kernel.org"
-	<maz@kernel.org>, "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-	"james.morse@arm.com" <james.morse@arm.com>, "suzuki.poulose@arm.com"
-	<suzuki.poulose@arm.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>
-Subject: RE: [PATCH 0/4] KVM: Honor guest memory types for virtio GPU devices
-Thread-Topic: [PATCH 0/4] KVM: Honor guest memory types for virtio GPU devices
-Thread-Index: AQHaP7tymmMn9RzSAkmqnV+LZ1Ybo7DLoueAgAPOSYCAAIYUAIAAoD4AgAAM2ACAAB54gIAKXh0AgACHppCAADe5sA==
-Date: Tue, 16 Jan 2024 04:05:08 +0000
-Message-ID: <BN9PR11MB5276B5603D9D777F01D64EDA8C732@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240105091237.24577-1-yan.y.zhao@intel.com>
- <20240105195551.GE50406@nvidia.com>
- <ZZuQEQAVX28v7p9Z@yzhao56-desk.sh.intel.com>
- <20240108140250.GJ50406@nvidia.com>
- <ZZyG9n0qZEr6dLlZ@yzhao56-desk.sh.intel.com>
- <20240109002220.GA439767@nvidia.com>
- <ZZyrS4RiHvktDZXb@yzhao56-desk.sh.intel.com>
- <20240115163050.GI734935@nvidia.com> 
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|IA0PR11MB7813:EE_
-x-ms-office365-filtering-correlation-id: 78d05ba9-2ca9-45ee-1e7e-08dc164853e9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8jDJSrrGjdp2kWU1pfTSAD84ey9EWELdtYT7oICcc1QxdcQccGwBe3rZ+PJaSUFKhiNx/hPghsyMykvxgpUp2uNLvTVLOWAWg1WWbALinfiHRcAQIiCdPPnS1FrbnCxm1ljBtsyRd2dWsCbzNS6U/iaSFkCtMIhHKfCWslL3x0XfvTl3GsHZZ5McbbvvKM8Jnu7lRnbMQD144cBzMImA6pEoieXUl+xXCN/HwTk2GTdFxJ6jSHg4naKHElD+Y9nEWJ+l+QLIjjiGyFiw7wQCaGZwKLPsbRGErfZ67XzCWvGnLLMB5CT4E5C76I9P4VuS9/ue25ooceFL9Gc1A62fQmM82pRm1PnCnbeX32/0j36CXY5xZo8iPE8URtekSEuOjSaSdPlkYW5ItPGfB3ikqvQBgFlm3pBEE8MlGA26mnlg7QmsXgxfJaD8ZzxliH1wr5Z8r9Nwq0Ars1AV4id5juFMYN19SYcML/CgC9t9OCQinxevv5QqFKPQDmwmu+H95/f7+aVSb4l0tj+ermRaBXDcohZXper2vk2HivbeuC5bzRAqAIqzq4lpDHQSqWrRSrqup4/eR5cKxOZyJw+xegUMug5XyvJ/uZ5aEgt/LXdQ2qyn7lj/4I6DaqV70FB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(396003)(366004)(376002)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(38100700002)(71200400001)(83380400001)(26005)(122000001)(66446008)(66556008)(64756008)(8676002)(66946007)(66476007)(8936002)(52536014)(4326008)(76116006)(110136005)(6636002)(316002)(54906003)(6506007)(55016003)(33656002)(82960400001)(9686003)(478600001)(7696005)(86362001)(2906002)(7416002)(38070700009)(5660300002)(41300700001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?nWBN9rNHMm/JMd56MFiD5/X02nuuSfiRbKPchMYHJtp4YGrnsQ7FQsrQlc/k?=
- =?us-ascii?Q?8Dhq6P6alJTVaA6TQSnOKcR9xn/k4jHYeh4nkK2kZur2SnBXryzrDIRZqCO6?=
- =?us-ascii?Q?9PE9Jv2GEP8HpYyva2lMyPvdQMpg6N3QcfMMitEsDLGeNBMImhxKZInYg4A5?=
- =?us-ascii?Q?XY332RZOX9Tksno8rWRvJd7BC5Ml3r/zttJjku1wNsENLyS4ZI7Cy+7dPCYv?=
- =?us-ascii?Q?3fblsjXzWmtR2ozNU8wIcY8ddKJedAMhOrNoI34XxTcZlRfbORJtJ4YqomGr?=
- =?us-ascii?Q?kRAeJOIFMB+cXlklu7MIfsvO9SWnuaPI7bS8cbEHSKgmmgQCTp8ozoh2CTFV?=
- =?us-ascii?Q?iJsaKTWFrpcJhCOk4Z/PjYZJz8x8P6f6XT+iZD49Vy7XsO8gpdoDcW2ysOXX?=
- =?us-ascii?Q?4IqD+wcJZIpJ976llC2Z95jVcT2wDcEvgKayYZ3x1qUwzkkKUbYrTSSZ26zB?=
- =?us-ascii?Q?NTqdZUhoX6e0iMOHV6Sn7CUrShSAiDZ0QxX1yhGnWoMvTX29jeF/osb5mXlh?=
- =?us-ascii?Q?lnzm43HOYDixtolqiSKO3o3rtEQEb/T2NPKEUWQF61Aetd+AF1JVhV8oSDjL?=
- =?us-ascii?Q?w+OyNDbo1ebIZe4BwQDg2fPtJgQFAzrGbkh6RsYNVqOg9KwomQNWkpAHX49i?=
- =?us-ascii?Q?Cjtiz7oP4xMjvqjMK0z1nIc34qjj8+Z7GK4SKTefJVDBSckoGE9fdaAxOiC3?=
- =?us-ascii?Q?1+R7Lt0EIc5NZ5X93OOFmZ3QR5Ofzk7VrU8B4Uylk+QLFur6KQPFDGDcIt92?=
- =?us-ascii?Q?0sZPKr4Rm8ewYAybBuou8MZ+JeVK5qzw8C31mUe52zX3XSO2s2l4o8+oOTWU?=
- =?us-ascii?Q?2VMP4ftYbveipUA6lai8SzBOvV6DMWnL0SEKRl2I/w24+zm2CJLBiw1ZF6zP?=
- =?us-ascii?Q?PiGBi4FRTszHfP6rIYv7tV8ao92ZNfpJ6nEz9/btb9Tor5+jtmmdvwIuhUr1?=
- =?us-ascii?Q?6mjB0x7cdOtOk/AVWa1uAXIocym4xfaHKz+9IBaaLXK5u9UOSTZMRoXbUGQ9?=
- =?us-ascii?Q?aFwPxr8o1QLgTmqr+M12cFVdO4sPS3qx6m3qCGuPiu6436xu23FAnnbzCeIC?=
- =?us-ascii?Q?6bkiZfdX2IdFsee662GwBvRhn2rRehdfzyW5j1cNtH9i5jSxFnBzs2q5tr9s?=
- =?us-ascii?Q?wjGVewnj2f8KNCKWA4gvtcavm7LQIiIOtoDD5xF/D63+Q64HAC5AnBGGAQ2p?=
- =?us-ascii?Q?pPW0edlSO7SbJ/tCL8sL+lYe87Ugg1x20de67tIrYG4Kbr8t51XWRZ3j4dDB?=
- =?us-ascii?Q?XSOIIP3c5szGWFyHkTYuqO8rmU0iVkJNKjcxU7WN8LbiuP4Fgpzr67qIh0LV?=
- =?us-ascii?Q?vxYgZyZ93la+fBqkPj5S1i8c5MFY06HPu37iMvHvncAens/oanO0AZVQWyP4?=
- =?us-ascii?Q?WYRIeuHSDoWxb5l1sHOMjhRVIIcsI6lReiF7bIAVJuuYP3xWkbi8OZYq7ruD?=
- =?us-ascii?Q?I9sqSbNpgTVtlJeewXSIUL7+utRGE/Fn5vL2DZrTFDOCqOvrnRdFystZXo5z?=
- =?us-ascii?Q?67OA2xN1w0TAXYfR21iXKWGnlV1JdESyVVQVCiowCjZTM+e+6wC+QFsg7ki4?=
- =?us-ascii?Q?Q7Uy2eka93bbvw7XEVi+bqQL1WhCLfulZWWhax3K?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="S3/uqofw"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6dde173384aso4798585a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 20:11:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1705378262; x=1705983062; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CWChxn/etZA7mSQDyr9oFtgmtnkj4VOXoiVZv/wz84A=;
+        b=S3/uqofwLHBKs07l+vV+CovnspE1KLCytBwYGJRoDZGiLzVND6UAp923pAYYK1gfo+
+         ac+4TWZx2MA5z51oFvkxm1CNA7GbafUMobgYJmBa7c387qlp7kIlOxRMHoXe80mP/AuZ
+         PkPu5WA+K+R6sao72nRNbMie6JumBSqbGpX8sH8k6DyGekHKbt6nK10up4ssW6viUZQi
+         qiva6S5JWLIsFxuhwhP0K+L57GnLTKgZHBIeyBHpvEDj3IyOMqFnitkCUMP5u/DBxswj
+         HqrznQgIKwfEVFWwhy+hFoU7BDDo/hhRWnuVfjFBxeBJAXyiAt2LG5uHaMecuzT7XHwI
+         QUSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705378262; x=1705983062;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CWChxn/etZA7mSQDyr9oFtgmtnkj4VOXoiVZv/wz84A=;
+        b=OI+6flxnD74SvDdEn4tISYwZC0HaqMHbE0iyOMrIJFG5Zj8yiuPEoutBsfKiysXzhU
+         +R+LPIAemBueUGqDcl+BuJP9MTfydAXe52E9MhR/eThLrawV5j7Sn5ZO/rHE6Au6NrXB
+         G6HOigCrVs5eF0Rby/P+BmpypF29ZqIZyPHzDY+nDQa0GdGJZ9u6KrI+Uw1ReeGNeweQ
+         /i8uP71kp0MZCXcQ+bYIgYGy+pcshOsCDy04r/qq5A5noctLbEsIziY9ufU6L7hbta+V
+         58FnBs2hOu048uNchyBKYZexATvY8ribVGGKgwBscAlCxHXY0kf6c8QRv3w4vXK3gV97
+         G2kg==
+X-Gm-Message-State: AOJu0Yzk1JpF5cvFD/JeMb/zX6HHQerPs4B2nwYfD3j3tMl5GUC0EsQ3
+	VMMq9otZPiKPu/gNuqEGca99w5SJ+0QvUg==
+X-Google-Smtp-Source: AGHT+IEfWmKba6ELkIwXAP6st2nVX8PTgS7saJtspXT16S/FqI+k9e3xGVVjwrIlscveCrb7r7KkdQ==
+X-Received: by 2002:a05:6808:21a7:b0:3bc:29c2:2b97 with SMTP id be39-20020a05680821a700b003bc29c22b97mr9492923oib.88.1705378262660;
+        Mon, 15 Jan 2024 20:11:02 -0800 (PST)
+Received: from hsinchu15.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id e3-20020a056a0000c300b006da14f68ac1sm8348585pfj.198.2024.01.15.20.10.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 20:11:02 -0800 (PST)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	conor+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	robh+dt@kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	thierry.reding@gmail.com,
+	aou@eecs.berkeley.edu
+Cc: zong.li@sifve.com,
+	vincent.chen@sifive.com,
+	linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	nylon7717@gmail.com,
+	Nylon Chen <nylon.chen@sifive.com>
+Subject: [v6 0/3] Change PWM-controlled LED pin active mode and algorithm
+Date: Tue, 16 Jan 2024 12:10:51 +0800
+Message-ID: <20240116041054.11641-1-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78d05ba9-2ca9-45ee-1e7e-08dc164853e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2024 04:05:08.0886
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yHCXk+8JyUcK2wZrzBvZk3nhP7VMhG0cvw9FgbqyLxQv/ZVsZg0V3w3JM9YY7eejUpwfdYkCnHE2sa16H4wmFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7813
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-> From: Tian, Kevin
-> Sent: Tuesday, January 16, 2024 8:46 AM
->=20
-> > From: Jason Gunthorpe <jgg@nvidia.com>
-> > Sent: Tuesday, January 16, 2024 12:31 AM
-> >
-> > On Tue, Jan 09, 2024 at 10:11:23AM +0800, Yan Zhao wrote:
-> >
-> > > > Well, for instance, when you install pages into the KVM the hypervi=
-sor
-> > > > will have taken kernel memory, then zero'd it with cachable writes,
-> > > > however the VM can read it incoherently with DMA and access the
-> > > > pre-zero'd data since the zero'd writes potentially hasn't left the
-> > > > cache. That is an information leakage exploit.
-> > >
-> > > This makes sense.
-> > > How about KVM doing cache flush before installing/revoking the
-> > > page if guest memory type is honored?
-> >
-> > I think if you are going to allow the guest to bypass the cache in any
-> > way then KVM should fully flush the cache before allowing the guest to
-> > access memory and it should fully flush the cache after removing
-> > memory from the guest.
->=20
-> For GPU passthrough can we rely on the fact that the entire guest memory
-> is pinned so the only occurrence of removing memory is when killing the
-> guest then the pages will be zero-ed by mm before next use? then we
-> just need to flush the cache before the 1st guest run to avoid informatio=
-n
-> leak.
+According to the circuit diagram of User LEDs - RGB described in the
+manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.pdf[1].
 
-Just checked your past comments. If there is no guarantee that the removed
-pages will be zero-ed before next use then yes cache has to be flushed
-after the page is removed from the guest. :/
+The behavior of PWM is acitve-high.
 
->=20
-> yes it's a more complex issue if allowing guest to bypass cache in a
-> configuration mixing host mm activities on guest pages at run-time.
->=20
-> >
-> > Noting that fully removing the memory now includes VFIO too, which is
-> > going to be very hard to co-ordinate between KVM and VFIO.
->=20
+According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manual[2].
 
-Probably we could just handle cache flush in IOMMUFD or VFIO type1
-map/unmap which is the gate of allowing/denying non-coherent DMAs
-to specific pages.
+The pwm algorithm is (PW) pulse active time  = (D) duty * (T) period.
+The `frac` variable is pulse "inactive" time so we need to invert it.
+
+So this patchset removes active-low in DTS and adds reverse logic to the driver.
+
+Updated patches: 1
+New patches: 1
+Unchanged patches: 1
+
+Links:
+- [0]: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f8698_hifive-unleashed-a00-schematics-1.pdf
+- [1]: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76f4192_hifive-unmatched-schematics-v3.pdf
+- [2]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b16acba_fu740-c000-manual-v1p6.pdf
+
+Changed in v6:
+ - Separate the idempotent test bug fixes into a new patch.
+ - Move the reversing the duty before the line checking
+   state->enabled.
+ - Fix the algorithm and change it to take the minimum value first and
+   then reverse it.
+
+Changed in v5:
+ - Add the updates to the PWM algorithm based on version 2 back in.
+ - Replace div64_ul with DIV_ROUND_UP_ULL to correct the error in the
+   period value of the idempotent test in pwm_apply_state_debug.
+
+Changed in v4:
+ - Remove previous updates to the PWM algorithm.
+
+Changed in v3:
+ - Convert the reference link to standard link.
+ - Move the inverted function before taking the minimum value.
+ - Change polarity check condition(high and low).
+ - Pick the biggest period length possible that is not bigger than the
+   requested period.
+
+Changed in v2:
+ - Convert the reference link to standard link.
+ - Fix typo: s/sifive unmatched:/sifive: unmatched:/.
+ - Remove active-low from hifive-unleashed-a00.dts.
+ - Include this reference link in the dts and pwm commit messages.
+
+
+Nylon Chen (3):
+  riscv: dts: sifive: unleashed/unmatched: Remove PWM controlled LED's
+    active-low properties
+  pwm: sifive: change the PWM controlled LED algorithm
+  pwm: sifive: Fix the error in the idempotent test within the
+    pwm_apply_state_debug function
+
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++----
+ arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++--------
+ drivers/pwm/pwm-sifive.c                            |  9 +++++----
+ 3 files changed, 13 insertions(+), 16 deletions(-)
+
+-- 
+2.42.0
+
