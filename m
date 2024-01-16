@@ -1,201 +1,93 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7F61BF36
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 14:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yngvason.is
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b="XIIFNFPd"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-db3a09e96daso7830095276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 06:12:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=yngvason.is; s=google; t=1705414340; x=1706019140; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9gCKsoJIp890TMevRWkiJ5yhUQIvz900NU/IXPPBb5k=;
-        b=XIIFNFPd2SSB3BFqh/xSBIA2EFwuQpmUD0kcTskx8DH0iffotd+MEwEi0lmQAFUuDt
-         LL2aLDKXbYyLtlzG+FUOtkaW7F9jADi7KyQKvrq5uNnVF/5YWVgqkmsqDuyLLdp2HxPR
-         lwI3kxqXj1/NrAWfKHqRrlFsV9C2xf6hgwiEg=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542131BDEC;
+	Tue, 16 Jan 2024 14:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5ff4b02a187so9839397b3.1;
+        Tue, 16 Jan 2024 06:13:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705414340; x=1706019140;
+        d=1e100.net; s=20230601; t=1705414435; x=1706019235;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9gCKsoJIp890TMevRWkiJ5yhUQIvz900NU/IXPPBb5k=;
-        b=S/gxCzSqutI5N3nvgF973mTT8B9ybcpr7FS028VL/AYzE59sW91qVvksBoSRTEkIfJ
-         zu6feudoV396PH1obsLgySatFx/IPm61gfWyQdxTO/jnRfjSbnnvvBsYLOy6TOBJTi2e
-         JbBb2RIfSUC7No2F20XGt7L6bkM7Xlv7e8o+ia3dlAOLZOJXUBBN3F6nAR9ik3R8b4vI
-         Gwo6NRBvGr5/41sPAssJtYIUC9UqMD5hpenmZuvY0MkCTilGmeLasaubLu5g6Ajitb/Q
-         4XUqLf+cx+3bKYMNgPjB6kj4r8FajFRiAjaesyXSnA+zWc9WeIghIxx73tYUe4JOw0XQ
-         wXog==
-X-Gm-Message-State: AOJu0YzrLjjSD0Y6s7EnxMvoc52DyLjIhf+kPUBjH3inRiIBcNuPcDbn
-	jJOeuVq+LgajW53Xt3gVb+Qgid1TNOC++bx5Zr16EtiPWUXrcg==
-X-Google-Smtp-Source: AGHT+IE41A58zXOP4mN6YBTW2CozoInidfluxDAZAPGf3XWYIJx5iW5A7pw47X0/O2DADgCiiAJSZrcdEWBROikbKfY=
-X-Received: by 2002:a05:6902:511:b0:dbd:231:1d67 with SMTP id
- x17-20020a056902051100b00dbd02311d67mr3842729ybs.104.1705414339805; Tue, 16
- Jan 2024 06:12:19 -0800 (PST)
+        bh=0sqbUk2C6b7oHNAWGCQckjFoAuDgEH4C3P1gTqqawwA=;
+        b=BR26XPmktfaU+CEn+uFdgac2RdcCa5vRlNxC8rlVIDotqeBefX2q6X/sedrT5rd/oY
+         XAH2ZTg7l863oDJaUInAiTVJQaeooH4J8Jlz4nVeaXvc4/PrLsBzGR4dd/XyPs62CLQd
+         mE5L6SjGbsC+DXacY7iCioTfPff4jz528L2rpif/95yHdGD63YocojZ1eu6wQnVkUn/4
+         IZTYpsL115p8Y1nvmm6kKt0t8ttUwk8prc4Vy0RF/hFnaqLEcnTKfcXYxM8pfr2A0sDS
+         pwp9ALHxf+09h/3HBbZR5Wc+eleP6SNdLocOrGR76J1tKQfNlVrz+3NiK+gSfyXYMBpU
+         4ulA==
+X-Gm-Message-State: AOJu0YymKvNDumSAaDAOGRU/QkG2WwwtXZtKF7rtY54wFTbo9BA0y6rd
+	y3uk9qSe+DNWHtmZ0V1JEOGQkm4BGMpdCA==
+X-Google-Smtp-Source: AGHT+IHJCuG5fGG5xtCd6dsPl+0LMYoHb/eov4Ep5uFYCcFe4YivlUTIiG5IEn+n/W/zNWUVVpbZgA==
+X-Received: by 2002:a0d:d805:0:b0:5ff:409d:5a74 with SMTP id a5-20020a0dd805000000b005ff409d5a74mr2063693ywe.21.1705414435078;
+        Tue, 16 Jan 2024 06:13:55 -0800 (PST)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id p10-20020a81980a000000b005effa4feef0sm4842844ywg.58.2024.01.16.06.13.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jan 2024 06:13:54 -0800 (PST)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5ff4da9494cso9604817b3.3;
+        Tue, 16 Jan 2024 06:13:54 -0800 (PST)
+X-Received: by 2002:a05:690c:1d:b0:5f6:e8c8:9b6c with SMTP id
+ bc29-20020a05690c001d00b005f6e8c89b6cmr6746864ywb.46.1705414434365; Tue, 16
+ Jan 2024 06:13:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115160554.720247-1-andri@yngvason.is> <20240115160554.720247-3-andri@yngvason.is>
- <20240116114235.GA311990@toolbox> <CAFNQBQz3TNj_7BSmFw4CFMNuR4B+1d+y3f058s+rzTuzdYogqA@mail.gmail.com>
- <20240116132918.GB311990@toolbox>
-In-Reply-To: <20240116132918.GB311990@toolbox>
-From: Andri Yngvason <andri@yngvason.is>
-Date: Tue, 16 Jan 2024 14:11:43 +0000
-Message-ID: <CAFNQBQyfWmfu5T7bgZDZFGfyhsxQi7YXmY_wPc9Y+mm5iSspXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] drm/uAPI: Add "force color format" drm property as
- setting for userspace
-To: Sebastian Wick <sebastian.wick@redhat.com>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, amd-gfx@lists.freedesktop.org, 
-	intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Werner Sembach <wse@tuxedocomputers.com>, dri-devel@lists.freedesktop.org
+References: <20240112200750.4062441-1-sboyd@kernel.org> <20240112200750.4062441-2-sboyd@kernel.org>
+ <ZaZtbU9hre3YhZam@FVFF77S0Q05N>
+In-Reply-To: <ZaZtbU9hre3YhZam@FVFF77S0Q05N>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 16 Jan 2024 15:13:42 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU0qtMeX=7SY+32=30-QGMRniFVCCm217REJ1X+ZNJ=Aw@mail.gmail.com>
+Message-ID: <CAMuHMdU0qtMeX=7SY+32=30-QGMRniFVCCm217REJ1X+ZNJ=Aw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] arm64: Unconditionally call unflatten_device_tree()
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev, linux-um@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, kunit-dev@googlegroups.com, 
+	linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org, 
+	Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-=C3=BEri., 16. jan. 2024 kl. 13:29 skrifa=C3=B0i Sebastian Wick
-<sebastian.wick@redhat.com>:
->
-> On Tue, Jan 16, 2024 at 01:13:13PM +0000, Andri Yngvason wrote:
-[...]
-> > =C5=9Fri., 16. jan. 2024 kl. 11:42 skrifa=C4=9Fi Sebastian Wick
-> > <sebastian.wick@redhat.com>:
-> > >
-> > > On Mon, Jan 15, 2024 at 04:05:52PM +0000, Andri Yngvason wrote:
-> > > > From: Werner Sembach <wse@tuxedocomputers.com>
-> > > >
-> > > > Add a new general drm property "force color format" which can be us=
-ed
-> > > > by userspace to tell the graphics driver which color format to use.
-> > >
-> > > I don't like the "force" in the name. This just selects the color
-> > > format, let's just call it "color format" then.
-> > >
-> >
-> > In previous revisions, this was "preferred color format" and "actual
-> > color format", of which the latter has been dropped. I recommend
-> > reading the discussion for previous revisions.
->
-> Please don't imply that I didn't read the thread I'm answering to.
->
-> > There are arguments for adding "actual color format" later and if it
-> > is added later, we'd end up with "color format" and "actual color
-> > format", which might be confusing, and it is why I chose to call it
-> > "force color format" because it clearly communicates intent and
-> > disambiguates it from "actual color format".
->
-> There is no such thing as "actual color format" in upstream though.
-> Basing your naming on discarded ideas is not useful. The thing that sets
-> the color space for example is called "Colorspace", not "force
-> colorspace".
->
+Hi Mark,
 
-Sure, I'm happy with calling it whatever people want. Maybe we can
-have a vote on it?
-
-> > [...]
-> > > > @@ -1396,6 +1404,15 @@ static const u32 dp_colorspaces =3D
-> > > >   *   drm_connector_attach_max_bpc_property() to create and attach =
-the
-> > > >   *   property to the connector during initialization.
-> > > >   *
-> > > > + * force color format:
-> > > > + *   This property is used by userspace to change the used color f=
-ormat. When
-> > > > + *   used the driver will use the selected format if valid for the=
- hardware,
-> > >
-> > > All properties are always "used", they just can have different values=
+On Tue, Jan 16, 2024 at 12:51=E2=80=AFPM Mark Rutland <mark.rutland@arm.com=
+> wrote:
+> On Fri, Jan 12, 2024 at 12:07:44PM -0800, Stephen Boyd wrote:
+> > Call this function unconditionally so that we can populate an empty DTB
+> > on platforms that don't boot with a firmware provided or builtin DTB.
+> > There's no harm in calling unflatten_device_tree() unconditionally.
+>
+> For better or worse, that's not true: there are systems the provide both =
+a DTB
+> *and* ACPI tables, and we must not consume both at the same time as those=
+ can
+> clash and cause all sorts of problems. In addition, we don't want people =
+being
+> "clever" and describing disparate portions of their system in ACPI and DT=
 .
-> > > You probably want to talk about the auto mode here.
-> >
-> > Maybe we can say something like: If userspace does not set the
-> > property or if it is explicitly set to zero, the driver will select
-> > the appropriate color format based on other constraints.
->
-> The property can be in any state without involvement from user space.
-> Don't talk about setting it, talk about the state it is in:
->
->   When the color format is auto, the driver will select a format.
->
 
-Ok.
+We'd get to the latter anyway, when plugging in a USB device where the
+circuitry on/behind the USB device is described in DT.
 
-> > >
-> > > > + *   sink, and current resolution and refresh rate combination. Dr=
-ivers to
-> > >
-> > > If valid? So when a value is not actually supported user space can st=
-ill
-> > > set it? What happens then? How should user space figure out if the
-> > > driver and the sink support the format?
-> >
-> > The kernel does not expose this property unless it's implemented in the=
- driver.
->
-> If the driver simply doesn't support *one format*, the enum value for
-> that format should not be exposed, period. This isn't about the property
-> on its own.
+Gr{oetje,eeting}s,
 
-Right, understood. You mean that enum should only contain values that
-are supported by the driver.
+                        Geert
 
->
-> > This was originally "preferred color format". Perhaps the
-> > documentation should better reflect that it is now a mandatory
-> > constraint which fails the modeset if not satisfied.
->
-> That would definitely help.
->
-> > >
-> > > For the Colorspace prop, the kernel just exposes all formats it suppo=
-rts
-> > > (independent of the sink) and then makes it the job of user space to
-> > > figure out if the sink supports it.
-> > >
-> > > The same could be done here. Property value is exposed if the driver
-> > > supports it in general, commits can fail if the driver can't support =
-it
-> > > for a specific commit because e.g. the resolution or refresh rate. Us=
-er
-> > > space must look at the EDID/DisplayID/mode to figure out the supporte=
-d
-> > > format for the sink.
-> >
-> > Yes, we can make it possible for userspace to discover which modes are
-> > supported by the monitor, but there are other constraints that need to
-> > be satisfied. This was discussed in the previous revision.
->
-> I mean, yes, that's what I said. User space would then only be
-> responsible for checking the sink capabilities and the atomic check
-> would take into account other (non-sink) constraints.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Since we need to probe using TEST_ONLY anyway, we'll end up with two
-mechanisms to do the same thing where one of them depends on the other
-for completeness.
-
->
-> > In any case, these things can be added later and need not be a part of
-> > this change set.
->
-> No, this is the contract between the kernel and user space and has to be
-> figured out before we can merge new uAPI.
->
-> >
-> > [...]
-> >
-
-Thanks,
-Andri
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
