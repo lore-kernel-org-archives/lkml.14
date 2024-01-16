@@ -1,93 +1,208 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A0324A1E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 00:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-360d8e54839so16832675ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 16:15:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705364106; x=1705968906;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Ttfg8e+l7Pf8JPjsubqsBYFdtQZcrWDkbVYDFVSeKE=;
-        b=E2Av9bWlLi7VfoItzwnk0kHF7r1bPP3S1CNQNPHo9sxO3Y+6DFxaIbxXRqxUuXu1zX
-         YPO3J9dZl72kYt/QxrMuZUeuRXfktXFiC5qbL99w1aAqkkL0FikKxMielhtFeFlcL+Ea
-         ptg+qxsvZKa/y5URsHqNEnCv9O2yYQyfVRcLNqc7xEAKkvrUjn6BDrIkK8PmSFd76Uty
-         XurRcpIAJ29hCgdaTSOVWLoCVT02pHIFsVnRxDY80Iy1qU2f2zax7k5SRbeOZOmaDBW7
-         o9++kdlpgKZwzOwsBQu51BZC1vK+yOkM1bovbq9ydR6cfPs+VtxAJ0gc9do9FjBROnC+
-         spbA==
-X-Gm-Message-State: AOJu0YyBMIM1jDEhoW6K3xIyC9udjL6d96yjFJv4yZUvfYWozxikogSW
-	m20wp0+48mmR67GAqX4AC9jrPI1JNagTrIRQcf1+hqugpo28
-X-Google-Smtp-Source: AGHT+IFGTgS6MHmhKPTniQgzpxXjY7g1P5ddmxnoLlaSEWBso7gpLJmGUwlhRf5f4DNuPH0a6b/G4UNUzmP12kFQFW0of3GILwm7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E717F24B47;
+	Tue, 16 Jan 2024 00:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7Mf4fZh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B18A7C433F1;
+	Tue, 16 Jan 2024 00:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705364108;
+	bh=o/feyg3aKDchmvkxAx61iJnI4d72t/vgzyPqN8xgjQY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=q7Mf4fZh2IXKpUqGxkRGzQcGMSD/EB2LOoAEQCRFk7r1g9cwq08pIuij4t2kQkEoF
+	 F2Lk9nWb7jTBHe6Jfc/ioXBKciVAzAsCe8D6K5DvEO23usMdrsHS3jvEFVxG0lG46+
+	 3VArqYtDgsVKZKRdAerRnhLjdTMxEH6ERCLKhFcCV+Nz8BsJ/xPb/nkuFb3p+hrmg5
+	 XKtlfxRgDW9kZ9v9PhwLMzQn6+jMPlzjv6KFVpLxYbf30IsgEJCjg8aNUHu+74n0qQ
+	 535C1jfi/uZ3XZmaxr/lZtD4Dzmx26YDQL9FmKqzeGKyoI5yWtIvprL6huiy7CjVfH
+	 7b1cLcefzvJ9A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Mukesh Ojha <quic_mojha@quicinc.com>,
+	Joyyoung Huang <huangzaiyang@oppo.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Sasha Levin <sashal@kernel.org>,
+	kyungmin.park@samsung.com,
+	linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 7/8] PM / devfreq: Synchronize devfreq_monitor_[start/stop]
+Date: Mon, 15 Jan 2024 19:14:53 -0500
+Message-ID: <20240116001457.214018-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116001457.214018-1-sashal@kernel.org>
+References: <20240116001457.214018-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:16cf:b0:35f:b1e7:cac with SMTP id
- 15-20020a056e0216cf00b0035fb1e70cacmr667931ilx.4.1705364106568; Mon, 15 Jan
- 2024 16:15:06 -0800 (PST)
-Date: Mon, 15 Jan 2024 16:15:06 -0800
-In-Reply-To: <tencent_6C6006C093630366C97083A2C44897777705@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c92714060f050503@google.com>
-Subject: Re: [syzbot] [btrfs?] KASAN: slab-out-of-bounds Read in
- getname_kernel (2)
-From: syzbot <syzbot+33f23b49ac24f986c9e8@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.208
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Mukesh Ojha <quic_mojha@quicinc.com>
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-UBSAN: array-index-out-of-bounds in btrfs_dev_replace_by_ioctl
+[ Upstream commit aed5ed595960c6d301dcd4ed31aeaa7a8054c0c6 ]
 
-BTRFS info (device loop0): disabling free space tree
-BTRFS info (device loop0): clearing compat-ro feature flag for FREE_SPACE_TREE (0x1)
-BTRFS info (device loop0): clearing compat-ro feature flag for FREE_SPACE_TREE_VALID (0x2)
-================================================================================
-UBSAN: array-index-out-of-bounds in fs/btrfs/dev-replace.c:746:2
-index 4087 is out of range for type '__u8[1025]' (aka 'unsigned char[1025]')
-CPU: 1 PID: 5485 Comm: syz-executor.0 Not tainted 6.7.0-rc5-syzkaller-00200-g3bd7d7488169-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106
- ubsan_epilogue lib/ubsan.c:217 [inline]
- __ubsan_handle_out_of_bounds+0x11c/0x150 lib/ubsan.c:348
- btrfs_dev_replace_by_ioctl+0x1c1/0x1f10 fs/btrfs/dev-replace.c:746
- btrfs_ioctl_dev_replace+0x2c9/0x390 fs/btrfs/ioctl.c:3299
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:871 [inline]
- __se_sys_ioctl+0xf8/0x170 fs/ioctl.c:857
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x45/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-RIP: 0033:0x7f573be7cba9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f573cc170c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f573bf9bf80 RCX: 00007f573be7cba9
-RDX: 0000000020000540 RSI: 00000000ca289435 RDI: 0000000000000005
-RBP: 00007f573bec847a R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f573bf9bf80 R15: 00007fff8c99b838
- </TASK>
-================================================================================
+There is a chance if a frequent switch of the governor
+done in a loop result in timer list corruption where
+timer cancel being done from two place one from
+cancel_delayed_work_sync() and followed by expire_timers()
+can be seen from the traces[1].
 
+while true
+do
+        echo "simple_ondemand" > /sys/class/devfreq/1d84000.ufshc/governor
+        echo "performance" > /sys/class/devfreq/1d84000.ufshc/governor
+done
 
-Tested on:
+It looks to be issue with devfreq driver where
+device_monitor_[start/stop] need to synchronized so that
+delayed work should get corrupted while it is either
+being queued or running or being cancelled.
 
-commit:         3bd7d748 Merge tag 'io_uring-6.7-2023-12-15' of git://..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1761a2bde80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=53ec3da1d259132f
-dashboard link: https://syzkaller.appspot.com/bug?extid=33f23b49ac24f986c9e8
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1290befbe80000
+Let's use polling flag and devfreq lock to synchronize the
+queueing the timer instance twice and work data being
+corrupted.
+
+[1]
+...
+..
+<idle>-0    [003]   9436.209662:  timer_cancel   timer=0xffffff80444f0428
+<idle>-0    [003]   9436.209664:  timer_expire_entry   timer=0xffffff80444f0428  now=0x10022da1c  function=__typeid__ZTSFvP10timer_listE_global_addr  baseclk=0x10022da1c
+<idle>-0    [003]   9436.209718:  timer_expire_exit   timer=0xffffff80444f0428
+kworker/u16:6-14217    [003]   9436.209863:  timer_start   timer=0xffffff80444f0428  function=__typeid__ZTSFvP10timer_listE_global_addr  expires=0x10022da2b  now=0x10022da1c  flags=182452227
+vendor.xxxyyy.ha-1593    [004]   9436.209888:  timer_cancel   timer=0xffffff80444f0428
+vendor.xxxyyy.ha-1593    [004]   9436.216390:  timer_init   timer=0xffffff80444f0428
+vendor.xxxyyy.ha-1593    [004]   9436.216392:  timer_start   timer=0xffffff80444f0428  function=__typeid__ZTSFvP10timer_listE_global_addr  expires=0x10022da2c  now=0x10022da1d  flags=186646532
+vendor.xxxyyy.ha-1593    [005]   9436.220992:  timer_cancel   timer=0xffffff80444f0428
+xxxyyyTraceManag-7795    [004]   9436.261641:  timer_cancel   timer=0xffffff80444f0428
+
+[2]
+
+ 9436.261653][    C4] Unable to handle kernel paging request at virtual address dead00000000012a
+[ 9436.261664][    C4] Mem abort info:
+[ 9436.261666][    C4]   ESR = 0x96000044
+[ 9436.261669][    C4]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 9436.261671][    C4]   SET = 0, FnV = 0
+[ 9436.261673][    C4]   EA = 0, S1PTW = 0
+[ 9436.261675][    C4] Data abort info:
+[ 9436.261677][    C4]   ISV = 0, ISS = 0x00000044
+[ 9436.261680][    C4]   CM = 0, WnR = 1
+[ 9436.261682][    C4] [dead00000000012a] address between user and kernel address ranges
+[ 9436.261685][    C4] Internal error: Oops: 96000044 [#1] PREEMPT SMP
+[ 9436.261701][    C4] Skip md ftrace buffer dump for: 0x3a982d0
+...
+
+[ 9436.262138][    C4] CPU: 4 PID: 7795 Comm: TraceManag Tainted: G S      W  O      5.10.149-android12-9-o-g17f915d29d0c #1
+[ 9436.262141][    C4] Hardware name: Qualcomm Technologies, Inc.  (DT)
+[ 9436.262144][    C4] pstate: 22400085 (nzCv daIf +PAN -UAO +TCO BTYPE=--)
+[ 9436.262161][    C4] pc : expire_timers+0x9c/0x438
+[ 9436.262164][    C4] lr : expire_timers+0x2a4/0x438
+[ 9436.262168][    C4] sp : ffffffc010023dd0
+[ 9436.262171][    C4] x29: ffffffc010023df0 x28: ffffffd0636fdc18
+[ 9436.262178][    C4] x27: ffffffd063569dd0 x26: ffffffd063536008
+[ 9436.262182][    C4] x25: 0000000000000001 x24: ffffff88f7c69280
+[ 9436.262185][    C4] x23: 00000000000000e0 x22: dead000000000122
+[ 9436.262188][    C4] x21: 000000010022da29 x20: ffffff8af72b4e80
+[ 9436.262191][    C4] x19: ffffffc010023e50 x18: ffffffc010025038
+[ 9436.262195][    C4] x17: 0000000000000240 x16: 0000000000000201
+[ 9436.262199][    C4] x15: ffffffffffffffff x14: ffffff889f3c3100
+[ 9436.262203][    C4] x13: ffffff889f3c3100 x12: 00000000049f56b8
+[ 9436.262207][    C4] x11: 00000000049f56b8 x10: 00000000ffffffff
+[ 9436.262212][    C4] x9 : ffffffc010023e50 x8 : dead000000000122
+[ 9436.262216][    C4] x7 : ffffffffffffffff x6 : ffffffc0100239d8
+[ 9436.262220][    C4] x5 : 0000000000000000 x4 : 0000000000000101
+[ 9436.262223][    C4] x3 : 0000000000000080 x2 : ffffff889edc155c
+[ 9436.262227][    C4] x1 : ffffff8001005200 x0 : ffffff80444f0428
+[ 9436.262232][    C4] Call trace:
+[ 9436.262236][    C4]  expire_timers+0x9c/0x438
+[ 9436.262240][    C4]  __run_timers+0x1f0/0x330
+[ 9436.262245][    C4]  run_timer_softirq+0x28/0x58
+[ 9436.262255][    C4]  efi_header_end+0x168/0x5ec
+[ 9436.262265][    C4]  __irq_exit_rcu+0x108/0x124
+[ 9436.262274][    C4]  __handle_domain_irq+0x118/0x1e4
+[ 9436.262282][    C4]  gic_handle_irq.30369+0x6c/0x2bc
+[ 9436.262286][    C4]  el0_irq_naked+0x60/0x6c
+
+Link: https://lore.kernel.org/all/1700860318-4025-1-git-send-email-quic_mojha@quicinc.com/
+Reported-by: Joyyoung Huang <huangzaiyang@oppo.com>
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/devfreq/devfreq.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 42c1eed44529..216594b86119 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -438,10 +438,14 @@ static void devfreq_monitor(struct work_struct *work)
+ 	if (err)
+ 		dev_err(&devfreq->dev, "dvfs failed with (%d) error\n", err);
+ 
++	if (devfreq->stop_polling)
++		goto out;
++
+ 	queue_delayed_work(devfreq_wq, &devfreq->work,
+ 				msecs_to_jiffies(devfreq->profile->polling_ms));
+-	mutex_unlock(&devfreq->lock);
+ 
++out:
++	mutex_unlock(&devfreq->lock);
+ 	trace_devfreq_monitor(devfreq);
+ }
+ 
+@@ -459,6 +463,10 @@ void devfreq_monitor_start(struct devfreq *devfreq)
+ 	if (devfreq->governor->interrupt_driven)
+ 		return;
+ 
++	mutex_lock(&devfreq->lock);
++	if (delayed_work_pending(&devfreq->work))
++		goto out;
++
+ 	switch (devfreq->profile->timer) {
+ 	case DEVFREQ_TIMER_DEFERRABLE:
+ 		INIT_DEFERRABLE_WORK(&devfreq->work, devfreq_monitor);
+@@ -467,12 +475,16 @@ void devfreq_monitor_start(struct devfreq *devfreq)
+ 		INIT_DELAYED_WORK(&devfreq->work, devfreq_monitor);
+ 		break;
+ 	default:
+-		return;
++		goto out;
+ 	}
+ 
+ 	if (devfreq->profile->polling_ms)
+ 		queue_delayed_work(devfreq_wq, &devfreq->work,
+ 			msecs_to_jiffies(devfreq->profile->polling_ms));
++
++out:
++	devfreq->stop_polling = false;
++	mutex_unlock(&devfreq->lock);
+ }
+ EXPORT_SYMBOL(devfreq_monitor_start);
+ 
+@@ -489,6 +501,14 @@ void devfreq_monitor_stop(struct devfreq *devfreq)
+ 	if (devfreq->governor->interrupt_driven)
+ 		return;
+ 
++	mutex_lock(&devfreq->lock);
++	if (devfreq->stop_polling) {
++		mutex_unlock(&devfreq->lock);
++		return;
++	}
++
++	devfreq->stop_polling = true;
++	mutex_unlock(&devfreq->lock);
+ 	cancel_delayed_work_sync(&devfreq->work);
+ }
+ EXPORT_SYMBOL(devfreq_monitor_stop);
+-- 
+2.43.0
 
