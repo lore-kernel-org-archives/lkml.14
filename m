@@ -1,120 +1,163 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA381C6A1;
-	Tue, 16 Jan 2024 16:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FF21CA88
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 16:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJ4pRd6x"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3366ddd1eddso8211063f8f.0;
-        Tue, 16 Jan 2024 08:58:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BcKDiB1w"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc221ed88d9so1475227276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 08:58:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705424283; x=1706029083; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hWIMOxwPuwlyypi9mGRlB1wNl0jlfrKw1ScuZdtPpAE=;
-        b=iJ4pRd6xT/iZA0xUDuiNyKnNuxPjyrb+y0dg1DUodjolwttlJibv05ZLkLL6+3gKD3
-         0zpkPkM+3JvxcVNrqIvpY5V5eOYK/2nrKPxQf83UIBkxMRebE89lvbcKsSn6TwyCzhXh
-         NiuPFXkVTIZ9APRuDOrJOVWWQnwdrC5z/1yFImsAxNpYCcbtt16zBxjIhsLCFx5XMF0W
-         lKP4f7WHj50jjsr4r92UHwYgOsOYCrqdJDY1paSfS6p3YCrx8HDA3nFkxrMS6aLqv/p7
-         PVQ7tR6g5VQZXfoIOazul/LAqAFhDl+tNk2QOgvyJSXrxLsD/ctQpEmOF0mTFCmSnHkN
-         2YTw==
+        d=google.com; s=20230601; t=1705424292; x=1706029092; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iVWfZWnnweCon4Kq5ddDNFgrUnMdPNHcYUHJ92vD+fM=;
+        b=BcKDiB1weZXUJwMlaTv/EgPOVKRTt8dZPbbdEATc3se1Um22mq+4h8H+JG9Ef/GN4Y
+         hdFbgH0sfTz8U+NUIpnvfBR+ygWYu3B/RA7eOxq5fStU6dpFkqjzYAicPuuOetDyDmZU
+         qZJJjaOs6m/vQp/G+gcGUC6DZFfHQ4RP0X8VCBorCiwY6JBzWY17KfkAQpgTqeFT2gX6
+         xvDQ7amljxoqf28GJSg//qlDDGSxso2Bxe/gMtxcvEwIHsesF8sj9AHS6sJwskzRA1tT
+         zVE1wEV/3CPCMyEEvSuVzWxUvPjPT7+zE5ZEaZ0CjRU5m44lrQg9ZUu/nqn0Vy4ldBTt
+         GGoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705424283; x=1706029083;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hWIMOxwPuwlyypi9mGRlB1wNl0jlfrKw1ScuZdtPpAE=;
-        b=Pn0GM/BnPhjvmGoo7LTZFwfqkPNI2QZ7NJylHmOEYw5BE8kDvwDPbDtJ265lkrIY63
-         rDcnM+CzNFLRqhSwEyLCcn4OwBLCzgVjoVnaMoUCaxH3VwFNRwqrlkGu7y362xKKxaiK
-         /RJzC/SYu8qb79nKqR7l4Q5b77xYsXmhT9Yaih6CDdumIvWqkLw1zR4b8WhFJXJG+52a
-         fyZk/WhexuWFdhettmt6OZo7rl503/vwd35zXcWzzcjREvr+sndkM7a4mRWsjzrGcEd5
-         W8eHzKhyF6xKXTVDbXqe7EJq04h0WULoRI2v/8LoEd4BF3U2nT6PV06TpxAlqULBgK4F
-         oNoA==
-X-Gm-Message-State: AOJu0Yy/oNVHxiswgEBPJIrqc2WWX+xWzsGvBg9BTyG4x/d6Kf9QLGSn
-	LJVAz7S0MH1AYNI6dxFMH6U=
-X-Google-Smtp-Source: AGHT+IEzI3h4gWrHRgRIUCmkOWf7L17Yh04pMYuuDkCdMR3c+TIBaC98FCnb6ejWkKylpXq7lzn3Qw==
-X-Received: by 2002:a5d:5943:0:b0:336:608f:91eb with SMTP id e3-20020a5d5943000000b00336608f91ebmr2017052wri.95.1705424282738;
-        Tue, 16 Jan 2024 08:58:02 -0800 (PST)
-Received: from krava ([83.240.60.213])
-        by smtp.gmail.com with ESMTPSA id co8-20020a0560000a0800b00336755f15b0sm15100243wrb.68.2024.01.16.08.58.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 08:58:02 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 16 Jan 2024 17:58:01 +0100
-To: Artem Savkov <asavkov@redhat.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yonghong Song <yonghong.song@linux.dev>
-Subject: Re: [PATCH bpf-next v2] selftests/bpf: fix potential premature
- unload in bpf_testmod
-Message-ID: <ZaajJVrGLakTmtH1@krava>
-References: <82f55c0e-0ec8-4fe1-8d8c-b1de07558ad9@linux.dev>
- <20240110085737.8895-1-asavkov@redhat.com>
+        d=1e100.net; s=20230601; t=1705424292; x=1706029092;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iVWfZWnnweCon4Kq5ddDNFgrUnMdPNHcYUHJ92vD+fM=;
+        b=mO+MThX2f7AuU1FWPNMIu/Q+wWbfVs9bujr7WI9JbG5o0928f2xvFx/BWvR66G+AFK
+         zNkH7FaZaoqIbTVYtH91WS/QZc5NFURFrBy0ONA38Dh36TyAdwNJgX3s0oA1igNsYuU4
+         x94azbVDf/h70EJjql4nC35IcTxsjJ5h2oryy7OqguW4/g6cqE3I2v8HjfcRlVmdRH19
+         YAaAuexiL/MCHaTmS3/9t5xbgxNCOKlFKQlhU6brwNQU3FWWWe0z0X4EzJSg/lGpSIIY
+         bPZ7R5TIQmzRfkEfSW974TyBV72Vdj7E5xvUCxF88WMcklytj+F/xKSIHDMM0rnnz93g
+         /ceg==
+X-Gm-Message-State: AOJu0YyJuYKu61ycr0DJnimqEIHqFBjF2gNJ144pnGujt3VLYxisqfNP
+	BgvLV7UoIXFhSogpWTe3+NUSuaVjQ9jOH8RB8A==
+X-Google-Smtp-Source: AGHT+IE1nNWckKzVXkEfyiJOevcVb97W+XKPvrnyDZ0rTYxlLX73urn1E9g8V7tpxUADNAsDNPFxeA2opfI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1002:b0:dbe:ae9c:ee49 with SMTP id
+ w2-20020a056902100200b00dbeae9cee49mr351073ybt.6.1705424292219; Tue, 16 Jan
+ 2024 08:58:12 -0800 (PST)
+Date: Tue, 16 Jan 2024 08:58:10 -0800
+In-Reply-To: <72edaedc-50d7-415e-9c45-f17ffe0c1c23@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240110085737.8895-1-asavkov@redhat.com>
+Mime-Version: 1.0
+References: <20240112091128.3868059-1-foxywang@tencent.com>
+ <ZaFor2Lvdm4O2NWa@google.com> <CAN35MuSkQf0XmBZ5ZXGhcpUCGD-kKoyTv9G7ya4QVD1xiqOxLg@mail.gmail.com>
+ <72edaedc-50d7-415e-9c45-f17ffe0c1c23@linux.ibm.com>
+Message-ID: <Zaa1omCaDQOxxy2j@google.com>
+Subject: Re: [PATCH] KVM: irqchip: synchronize srcu only if needed
+From: Sean Christopherson <seanjc@google.com>
+To: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Yi Wang <up2wing@gmail.com>, pbonzini@redhat.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	wanpengli@tencent.com, Yi Wang <foxywang@tencent.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 09:57:37AM +0100, Artem Savkov wrote:
-> It is possible for bpf_kfunc_call_test_release() to be called from
-> bpf_map_free_deferred() when bpf_testmod is already unloaded and
-> perf_test_stuct.cnt which it tries to decrease is no longer in memory.
-> This patch tries to fix the issue by waiting for all references to be
-> dropped in bpf_testmod_exit().
-> 
-> The issue can be triggered by running 'test_progs -t map_kptr' in 6.5,
-> but is obscured in 6.6 by d119357d07435 ("rcu-tasks: Treat only
-> synchronous grace periods urgently").
-> 
-> Fixes: 65eb006d85a2a ("bpf: Move kernel test kfuncs to bpf_testmod")
-> Signed-off-by: Artem Savkov <asavkov@redhat.com>
-> Acked-by: Yonghong Song <yonghong.song@linux.dev>
+On Tue, Jan 16, 2024, Christian Borntraeger wrote:
+>=20
+>=20
+> Am 15.01.24 um 17:01 schrieb Yi Wang:
+> > Many thanks for your such kind and detailed reply, Sean!
+> >=20
+> > On Sat, Jan 13, 2024 at 12:28=E2=80=AFAM Sean Christopherson <seanjc@go=
+ogle.com> wrote:
+> > >=20
+> > > +other KVM maintainers
+> > >=20
+> > > On Fri, Jan 12, 2024, Yi Wang wrote:
+> > > > From: Yi Wang <foxywang@tencent.com>
+> > > >=20
+> > > > We found that it may cost more than 20 milliseconds very accidental=
+ly
+> > > > to enable cap of KVM_CAP_SPLIT_IRQCHIP on a host which has many vms
+> > > > already.
+> > > >=20
+> > > > The reason is that when vmm(qemu/CloudHypervisor) invokes
+> > > > KVM_CAP_SPLIT_IRQCHIP kvm will call synchronize_srcu_expedited() an=
+d
+> > > > might_sleep and kworker of srcu may cost some delay during this per=
+iod.
+> > >=20
+> > > might_sleep() yielding is not justification for changing KVM.  That's=
+ more or
+> > > less saying "my task got preempted and took longer to run".  Well, ye=
+ah.
+> >=20
+> > Agree. But I suppose it may be one of the reasons that makes  time of
+> > KVM_CAP_SPLIT_IRQCHIP delayed, of course, the kworker has the biggest
+> > suspicion :)
+> >=20
+> > >=20
+> > > > Since this happens during creating vm, it's no need to synchronize =
+srcu
+> > > > now 'cause everything is not ready(vcpu/irqfd) and none uses irq_sr=
+cu now.
+> >=20
+> > ....
+> >=20
+> > > And on x86, I'm pretty sure as of commit 654f1f13ea56 ("kvm: Check ir=
+qchip mode
+> > > before assign irqfd"), which added kvm_arch_irqfd_allowed(), it's imp=
+ossible for
+> > > kvm_irq_map_gsi() to encounter a NULL irq_routing _on x86_.
+> > >=20
+> > > But I strongly suspect other architectures can reach kvm_irq_map_gsi(=
+) with a
+> > > NULL irq_routing, e.g. RISC-V dynamically configures its interrupt co=
+ntroller,
+> > > yet doesn't implement kvm_arch_intc_initialized().
+> > >=20
+> > > So instead of special casing x86, what if we instead have KVM setup a=
+n empty
+> > > IRQ routing table during kvm_create_vm(), and then avoid this mess en=
+tirely?
+> > > That way x86 and s390 no longer need to set empty/dummy routing when =
+creating
+> > > an IRQCHIP, and the worst case scenario of userspace misusing an ioct=
+l() is no
+> > > longer a NULL pointer deref.
+>=20
+> Sounds like a good idea. This should also speedup guest creation on s390 =
+since
+> it would avoid one syncronize_irq.
+> >=20
+> > To setup an empty IRQ routing table during kvm_create_vm() sounds a goo=
+d idea,
+> > at this time vCPU have not been created and kvm->lock is held so skippi=
+ng
+> > synchronization is safe here.
+> >=20
+> > However, there is one drawback, if vmm wants to emulate irqchip itself,
+> > e.g. qemu with command line '-machine kernel-irqchip=3Doff' may not nee=
+d
+> > irqchip in kernel. How do we handle this issue?
+>=20
+> I would be fine with wasted memory.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
++1.  If we really, really want to avoid the negligible memory overhead, we =
+could
+pre-configure a static global table and directly use that as the dummy tabl=
+e (and
+exempt it from being freed by free_irq_routing_table()).
 
-jirka
+> The only question is does it have a functional impact or can we simply ig=
+nore
+> the dummy routing.
 
-> ---
->  tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> index 91907b321f913..e7c9e1c7fde04 100644
-> --- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> +++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> @@ -2,6 +2,7 @@
->  /* Copyright (c) 2020 Facebook */
->  #include <linux/btf.h>
->  #include <linux/btf_ids.h>
-> +#include <linux/delay.h>
->  #include <linux/error-injection.h>
->  #include <linux/init.h>
->  #include <linux/module.h>
-> @@ -544,6 +545,14 @@ static int bpf_testmod_init(void)
->  
->  static void bpf_testmod_exit(void)
->  {
-> +        /* Need to wait for all references to be dropped because
-> +         * bpf_kfunc_call_test_release() which currently resides in kernel can
-> +         * be called after bpf_testmod is unloaded. Once release function is
-> +         * moved into the module this wait can be removed.
-> +         */
-> +	while (refcount_read(&prog_test_struct.cnt) > 1)
-> +		msleep(20);
-> +
->  	return sysfs_remove_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
->  }
->  
-> -- 
-> 2.43.0
-> 
+Given the lack of sanity checks on kvm->irq_routing, I'm pretty sure the on=
+ly way
+for there to be functional impact is if there's a latent NULL pointer deref=
+ hiding
+somewhere.
