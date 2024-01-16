@@ -1,52 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8586FBF
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 03:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B250F6FD5
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 04:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T1ixhSOi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705377171; x=1736913171;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q7/n37rsiUDah4i6i7efQa9HUh2Mt2hfaHw7PEa91PA=;
-  b=T1ixhSOigHS9jIfxn6Dd8gttKW2yzdc3WDOME6ICubhl/FrBN6sUQw8Q
-   G4zn6k7i7rLWDWiboS8WwmHQrQbV5wIjS6nk1OARHtjZ5xdqgS0Bjiukw
-   wH3aUP79roM6iqKOhlH0C4tdSxKnW2seLMagJI9Q3/ptKQq5/ab6n6zOS
-   5Jfe3Eau9BB+rC836rFzOj+M3XFiW9i1poC/mLpqg4dRIh2mw8yNVARVV
-   fZlXcGgntWkedNtSTIR3uC7tGSNumd/1w55Fxqx9d63fLa6i6eheHj8ux
-   mAIiS3b8qwRQDS2qAUFLg0RSwH9RlGB5ooAeTncifhVO3NhlkgimLpQig
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="430914078"
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="scan'208";a="430914078"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 19:52:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="scan'208";a="32314188"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 15 Jan 2024 19:52:48 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rPaSs-000CwO-1n;
-	Tue, 16 Jan 2024 03:51:17 +0000
-Date: Tue, 16 Jan 2024 11:45:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kunwu Chan <chentao@kylinos.cn>, jgross@suse.com,
-	boris.ostrovsky@oracle.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: Re: [PATCH] x86/xen: Fix some null pointer dereference issues in
- smp.c
-Message-ID: <202401161119.iof6BQsf-lkp@intel.com>
-References: <20240115100138.34340-1-chentao@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SuQnNGW0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705377736;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eN8wKTG2df7ETKZTMCzRD2NROS0XfcHgZd5DcL2huf8=;
+	b=SuQnNGW0nW5MjJIg/Zp94ZkT3eG8+T4L1WsFcsgCG1wqoOVq6AOGjgSjA65pYsKXJWlZTB
+	KUPNJY8xkPgtyW8A2QJiGv6cy0s2F4UB2xGqzcZ0mvWJscwzTL8s/kOE2fDZ51Edbt0dXo
+	/LeoIkPg0FRbhLnGuuOGQIam1S7mA+Q=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-362-bw-2pFa3OBGmihYXVmnHeg-1; Mon, 15 Jan 2024 23:02:13 -0500
+X-MC-Unique: bw-2pFa3OBGmihYXVmnHeg-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7833761135dso906712485a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 20:02:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705377733; x=1705982533;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eN8wKTG2df7ETKZTMCzRD2NROS0XfcHgZd5DcL2huf8=;
+        b=oBehDQRhMF3cZ62YFaZUrKcA4cPMrgU4TDzwobpvAj2/vC65fJ+PSKVT0tU7OTnPCp
+         IeujMQADRd66NcXmaKwH5vVkc672+KrG0bALfDkbZT8CUvGcYx64UVP7k/Sudksci9Hh
+         yqMsYNRPJbUZjoi+fU+jpISLyuIZsBwl82WSTC2N8uUPy9u9bT0OB3Alu96TMMmzbRm/
+         RBlKw0DH7/UCiBBMN73CrNHOKzHuhGD99W5LyhucmdbdKRQYYN124U+msRZBcTY+RO3P
+         Ls5gL+3hqtprxWhG4qkbR5OUqmkOr32ZKjpavi3qGnvn9fW5ghlfjj17n9IyMgVOvP4C
+         sCoQ==
+X-Gm-Message-State: AOJu0Yzdv2JIOovLTJqSMd9ZI8X7Qj//EnR03SMLEeNv23jaVrWwMRPa
+	GYGvGe9kvLV41Uji/X4XrMjvV4813wqMowWNnhEY45nOBeMu6ROILeWmn0X+oU4iDGBUuxDwj1n
+	Ni9q0/9GtbG3FIOJKrBr6/J/L9tQl6G0F
+X-Received: by 2002:a05:620a:2983:b0:783:5195:408a with SMTP id r3-20020a05620a298300b007835195408amr5876981qkp.79.1705377733415;
+        Mon, 15 Jan 2024 20:02:13 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEN6gIx9IqGFmyh2GEnwwBhoFZGR41zZEGHlDZ1mVdZGWyhXlUZdr2U8IoRwrewEbsHOcJ1Pg==
+X-Received: by 2002:a05:620a:2983:b0:783:5195:408a with SMTP id r3-20020a05620a298300b007835195408amr5876971qkp.79.1705377733112;
+        Mon, 15 Jan 2024 20:02:13 -0800 (PST)
+Received: from LeoBras.redhat.com ([2804:1b3:a803:26a5:3f32:e12b:5335:3c2d])
+        by smtp.gmail.com with ESMTPSA id b6-20020a05620a126600b0078323aef218sm3401340qkl.80.2024.01.15.20.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 20:02:12 -0800 (PST)
+From: Leonardo Bras <leobras@redhat.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Leonardo Bras <leobras@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] spinlock: Fix failing build for PREEMPT_RT
+Date: Tue, 16 Jan 2024 01:02:09 -0300
+Message-ID: <ZaX_wZTlhFI6eVoq@LeoBras>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <yzh3yw3fsdptmlo4d27zakov3wkqzo35wenro3zaafyagfovuz@mp42k5gyfgcg>
+References: <20240115201935.2326400-1-leobras@redhat.com> <yzh3yw3fsdptmlo4d27zakov3wkqzo35wenro3zaafyagfovuz@mp42k5gyfgcg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,123 +72,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240115100138.34340-1-chentao@kylinos.cn>
+Content-Transfer-Encoding: 8bit
 
-Hi Kunwu,
+On Mon, Jan 15, 2024 at 04:54:14PM -0500, Kent Overstreet wrote:
+> On Mon, Jan 15, 2024 at 05:19:34PM -0300, Leonardo Bras wrote:
+> > Since 1d71b30e1f85 ("sched.h: Move (spin|rwlock)_needbreak() to
+> > spinlock.h") build fails for PREEMPT_RT, since there is no definition
+> > available of either spin_needbreak() and rwlock_needbreak().
+> > 
+> > Since it was moved on the mentioned commit, it was placed inside a
+> > !PREEMPT_RT part of the code, making it out of reach for an RT kernel.
+> > 
+> > Fix this by moving code it a few lines down so it can be reached by an
+> > RT build, where it can also make use of the *_is_contended() definition
+> > added by the spinlock_rt.h.
+> > 
+> > Fixes: d1d71b30e1f85 ("sched.h: Move (spin|rwlock)_needbreak() to
+> > spinlock.h")
+> > Signed-off-by: Leonardo Bras <leobras@redhat.com>
+> 
+> I've picked this up - thanks!
+> 
 
-kernel test robot noticed the following build warnings:
+Awesome! Thanks!
 
-[auto build test WARNING on tip/x86/core]
-[also build test WARNING on linus/master v6.7 next-20240112]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Leo
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kunwu-Chan/x86-xen-Fix-some-null-pointer-dereference-issues-in-smp-c/20240115-180429
-base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/20240115100138.34340-1-chentao%40kylinos.cn
-patch subject: [PATCH] x86/xen: Fix some null pointer dereference issues in smp.c
-config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240116/202401161119.iof6BQsf-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240116/202401161119.iof6BQsf-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401161119.iof6BQsf-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> arch/x86/xen/smp.c:68:6: warning: variable 'rc' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-      68 |         if (!resched_name)
-         |             ^~~~~~~~~~~~~
-   arch/x86/xen/smp.c:127:9: note: uninitialized use occurs here
-     127 |         return rc;
-         |                ^~
-   arch/x86/xen/smp.c:68:2: note: remove the 'if' if its condition is always false
-      68 |         if (!resched_name)
-         |         ^~~~~~~~~~~~~~~~~~
-      69 |                 goto fail;
-         |                 ~~~~~~~~~
-   arch/x86/xen/smp.c:64:8: note: initialize the variable 'rc' to silence this warning
-      64 |         int rc;
-         |               ^
-         |                = 0
-   1 warning generated.
-
-
-vim +68 arch/x86/xen/smp.c
-
-    61	
-    62	int xen_smp_intr_init(unsigned int cpu)
-    63	{
-    64		int rc;
-    65		char *resched_name, *callfunc_name, *debug_name;
-    66	
-    67		resched_name = kasprintf(GFP_KERNEL, "resched%d", cpu);
-  > 68		if (!resched_name)
-    69			goto fail;
-    70		per_cpu(xen_resched_irq, cpu).name = resched_name;
-    71		rc = bind_ipi_to_irqhandler(XEN_RESCHEDULE_VECTOR,
-    72					    cpu,
-    73					    xen_reschedule_interrupt,
-    74					    IRQF_PERCPU|IRQF_NOBALANCING,
-    75					    resched_name,
-    76					    NULL);
-    77		if (rc < 0)
-    78			goto fail;
-    79		per_cpu(xen_resched_irq, cpu).irq = rc;
-    80	
-    81		callfunc_name = kasprintf(GFP_KERNEL, "callfunc%d", cpu);
-    82		if (!callfunc_name)
-    83			goto fail;
-    84		per_cpu(xen_callfunc_irq, cpu).name = callfunc_name;
-    85		rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_VECTOR,
-    86					    cpu,
-    87					    xen_call_function_interrupt,
-    88					    IRQF_PERCPU|IRQF_NOBALANCING,
-    89					    callfunc_name,
-    90					    NULL);
-    91		if (rc < 0)
-    92			goto fail;
-    93		per_cpu(xen_callfunc_irq, cpu).irq = rc;
-    94	
-    95		if (!xen_fifo_events) {
-    96			debug_name = kasprintf(GFP_KERNEL, "debug%d", cpu);
-    97			if (!debug_name)
-    98				goto fail;
-    99			per_cpu(xen_debug_irq, cpu).name = debug_name;
-   100			rc = bind_virq_to_irqhandler(VIRQ_DEBUG, cpu,
-   101						     xen_debug_interrupt,
-   102						     IRQF_PERCPU | IRQF_NOBALANCING,
-   103						     debug_name, NULL);
-   104			if (rc < 0)
-   105				goto fail;
-   106			per_cpu(xen_debug_irq, cpu).irq = rc;
-   107		}
-   108	
-   109		callfunc_name = kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
-   110		if (!callfunc_name)
-   111			goto fail;
-   112		per_cpu(xen_callfuncsingle_irq, cpu).name = callfunc_name;
-   113		rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_SINGLE_VECTOR,
-   114					    cpu,
-   115					    xen_call_function_single_interrupt,
-   116					    IRQF_PERCPU|IRQF_NOBALANCING,
-   117					    callfunc_name,
-   118					    NULL);
-   119		if (rc < 0)
-   120			goto fail;
-   121		per_cpu(xen_callfuncsingle_irq, cpu).irq = rc;
-   122	
-   123		return 0;
-   124	
-   125	 fail:
-   126		xen_smp_intr_free(cpu);
-   127		return rc;
-   128	}
-   129	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
