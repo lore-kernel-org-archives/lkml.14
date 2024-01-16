@@ -1,80 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D0E1D69B;
-	Tue, 16 Jan 2024 19:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FBB1D53C;
+	Tue, 16 Jan 2024 19:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705433958; cv=none; b=aPAjAtS83vLg7uweNn3pLa3O6EGps3s5KwZ9r3s5MrWX4+bzGYqeEh3Jxzu1/6fkthd+Xke4Gve4eLqsPycAvbutq/iaV19zNJzEjncCkuXeO3NhQKZ8UD9HMKPnFf7lZtsymZyItkwZmOMO7adXhU53aqFWvPZT2VgkjCPO/t8=
+	t=1705433997; cv=none; b=mYfd/JSl9owTGX1ZxFSSswiH2K3jqCWFEiLKsLcBvwu47Sw8CGM2yhSMDpnoWJDGDuratbyn+1dE3461y6L5X+33HQZjxmXa5pbLZ7VkZuwdQuv9hlQzgzOR29mTwnFgr6WCg5FOXQYCB5Z80WygD3fTf09uoXj4Elgh7KSV8cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705433958; c=relaxed/simple;
-	bh=pjDgdDVU36HSsdeAh8iqjM/fJHnEYcbqQIdZRgQQpxo=;
-	h=Received:DKIM-Signature:Received:X-Gm-Message-State:
-	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gmail-Original-Message-ID:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding; b=jZ68VpzCp5BRlmh+yNyNeL486EcklZhG++UJsAi6Jq/+M8OU4lWxNnP76imAQznPOnNe9JzNm/3XDoGOiEdbymG6JJN54gyfyvLJXvEx1+icnmhiT29xFE6rE6O6G++foRbfnpZ8CI7HdOd7x2L+FIrR5TPzRox9n+dDbFaMrbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHdd04mx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705433997; c=relaxed/simple;
+	bh=/TXrWyHiiSTgpveq6sOiQ38RhpDY6Y4heRubaDLwPmE=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type; b=Yv52fNl1rwu3G2x5RvroxE6SeFVSNaFk1lEESj6TiLDaQKdUibSAeNH3igk7xJIH2QZDMJYBaOo21I8V+YjHb8wHGKL3Et6WksVPck/VVUC7omDmlBNA5wjG2T/HQ091gjZgu0GBTu/68djCPJSRAeGLPvQpljkwx3jKyb7jImI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ir7VTOym; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHdd04mx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5238C433A6;
-	Tue, 16 Jan 2024 19:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705433957;
-	bh=pjDgdDVU36HSsdeAh8iqjM/fJHnEYcbqQIdZRgQQpxo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iHdd04mxCP+tOwIJVpVwsLiix52+TwrftpE748cBUHhjPy92EUpa6S++7uqtmVG/z
-	 TNw6IND5Q2iTwLW0o8XJI7dh8mF5cjI5oPpGvMq5ovWMsBLI4BHDSk7v/TbKZC+WtD
-	 xeRjeZWTXdp43zoGXVMvssyHaRkfIZ1yNIoo00OWd54XUCHGrv8JUpb0UaKo/dwprh
-	 E4tDiVadkiMzCQdRFEwfnc1y6Dby2nqUYq7q3qrlYf72er/mY43ps+UHnIrlHd5+Ia
-	 qSMnxm0UO7eTv4tNwagpV8JHgS3gNHPgCDXP0QQnB9cYhPA3OnR4VBTuXGmkQ27H6B
-	 5hF2abXdNgMPw==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2cd0f4f306fso119800291fa.0;
-        Tue, 16 Jan 2024 11:39:17 -0800 (PST)
-X-Gm-Message-State: AOJu0YxnbBV862HtwpLzo+JRd+A6VI13ZyPqsXj8LnRbO8UUr/abKF8c
-	nDGx1W8eQOGBGRsNKJOm+pl+aD5YEpxc5ZH3NA==
-X-Google-Smtp-Source: AGHT+IHXHjYON9ofprozxosV1rLsC6hkADTeC9xOtqdXDcdf4lotORYA2DspdiZkDAvS/+SWb8KBa8qFkc+G/Bp+/vM=
-X-Received: by 2002:a2e:390a:0:b0:2cc:ea0d:f6c0 with SMTP id
- g10-20020a2e390a000000b002ccea0df6c0mr3767274lja.83.1705433955919; Tue, 16
- Jan 2024 11:39:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ir7VTOym"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5ff63b12340so378157b3.0;
+        Tue, 16 Jan 2024 11:39:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705433995; x=1706038795; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/TXrWyHiiSTgpveq6sOiQ38RhpDY6Y4heRubaDLwPmE=;
+        b=Ir7VTOymj2T743RlreOVTjvsCZcKpCZEVDxtDJQPynYtwfj2H3+8soewz43jQybRfI
+         1A0uuzt+HdLJ+2vXlSRPGeJgJsB9seVL6tlB1vRXTNCGun6lU6tsrFFEacUYcGS4WkKW
+         CZ69mtZmVzRF9VUvC091ml10H3BDWCbRThUSpblmMtPZDUIz1lDqevgKthAS/K1SnAe5
+         cEm02aMLLZv6J2IS7AXn/3tQKBQ6d3Pe10blzTpnANbYZGRa2eKO5qefqqtoUr5U4Y13
+         p5M/NblL8VNtQY2Iv91ju9t+HOFnsrze8bKkgR7yF1mIiHIxN1/VilfvGKgTq65fjON3
+         GxZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705433995; x=1706038795;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/TXrWyHiiSTgpveq6sOiQ38RhpDY6Y4heRubaDLwPmE=;
+        b=Xp2Fi+t6pc84iDhtzZJSmvfYKwsNzyOlsLKUqYyCkc84nAvOcHZUPefxiBDNbBxSIz
+         xcqXNL/v1J+CROZ0JfYbmOvUdgbKBPhw55be4W9HWwfHssUruz7CV8dLBbbPKML6Ihw7
+         HdsKxekx4O3+TXHSSBeZvJWV+PkLUEfGTw9oyJaAvrb0ubMLHju1bevqMhFh0MvM4CiX
+         TgtAcgg8C91hIgJOqtE49ulXpVZKZpF86NublR4JP2t10xt1Ys8ZaXDa8MQ0jUFope27
+         HhApzKkU5JouBb2CAGbtUSoblPLqDyDZvc8lb2xZkFUtU8MV1orcIFDh1s8fP1VuWbX1
+         y6aA==
+X-Gm-Message-State: AOJu0YxTUcmJr4v6e1+T4gV97lXUWa2dbUXw8YW6oUJPdP9lkBTtBIGn
+	faTdbOdwWyGnKV34+VrNEqTRUxi6Ejk1JZIpvKo=
+X-Google-Smtp-Source: AGHT+IHl7pQB/4BopFUtAbosETyvinXpzrfJUa2QsBn7qAYwOuBOVtdkXkA/phlJcO5qEAjLc6AKbVoymoezexRzl3E=
+X-Received: by 2002:a05:690c:f90:b0:5ff:56b4:263e with SMTP id
+ df16-20020a05690c0f9000b005ff56b4263emr1259306ywb.101.1705433995037; Tue, 16
+ Jan 2024 11:39:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240116084618.3112410-1-tim@feathertop.org> <20240116084618.3112410-3-tim@feathertop.org>
- <170543385965.291741.2100641423770592209.robh@kernel.org>
-In-Reply-To: <170543385965.291741.2100641423770592209.robh@kernel.org>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Tue, 16 Jan 2024 13:39:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ0BfVY0zO4SAB6rjZVvXYrZObZ+6bfWkPBC1NO=VOzFA@mail.gmail.com>
-Message-ID: <CAL_JsqJ0BfVY0zO4SAB6rjZVvXYrZObZ+6bfWkPBC1NO=VOzFA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: rockchip: rk809 fix compatible string in examples
-To: Tim Lunn <tim@feathertop.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Lee Jones <lee@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Zhang Qing <zhangqing@rock-chips.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Chris Zhong <zyw@rock-chips.com>
+References: <20240108135421.684263-1-tmaimon77@gmail.com> <20240108135421.684263-8-tmaimon77@gmail.com>
+ <23fdd643-ae30-474b-93b0-fb98edeb0071@linaro.org>
+In-Reply-To: <23fdd643-ae30-474b-93b0-fb98edeb0071@linaro.org>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Tue, 16 Jan 2024 21:39:44 +0200
+Message-ID: <CAP6Zq1i88mx8hfE-Ui_yMDOUxB5YofyyRSygBY8zuPq71ptHqg@mail.gmail.com>
+Subject: Re: [PATCH v22 7/8] arm64: dts: nuvoton: npcm8xx: replace reg with
+ syscon property
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com, joel@jms.id.au, 
+	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
+	openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 16, 2024 at 1:37=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
+Hi Krzysztof,
+
+Thanks for your comment.
+
+On Wed, 10 Jan 2024 at 22:59, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
->
-> On Tue, 16 Jan 2024 19:46:17 +1100, Tim Lunn wrote:
-> > Fix typo in the example specifying wrong compatible string
+> On 08/01/2024 14:54, Tomer Maimon wrote:
+> > Replace reg with syscon property since the clock registers handle the
+> > reset registers as well.
 > >
-> > Signed-off-by: Tim Lunn <tim@feathertop.org>
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > > ---
-> >
-> >  Documentation/devicetree/bindings/mfd/rockchip,rk809.yaml | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
 >
-> Acked-by: Rob Herring <robh@kernel.org>
+> NAK for the same reasons as previous patch.
+Will explain more in the commit message
+>
+> Best regards,
+> Krzysztof
+>
 
-Err, withdrawn. This doesn't pass tests.
+Best regards,
 
-Rob
+Tomer
