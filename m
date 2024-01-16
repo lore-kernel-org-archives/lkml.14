@@ -1,138 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010B91D545
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4025A1CF96
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705431519; cv=none; b=fPLP4yV5fbQQS+KZ1FM5ZXzJaiW8/FWXNK8CpCslrIdrSVXzNImiVHSpiy84nN0MYIaeJ+wX1eMasFRM+h/rwbruT8kF607jIQARdX+NGhPevTJ7lAnCVlDqB8a/HsGOReN8oqkR1hO4dBdMVd+S4gg2jG9AiNm3Zn/feYBjMuw=
+	t=1705431572; cv=none; b=c9bHHkKMGmWeLuZXs7JFflZN4ArPxloCd3kLHIDGrkoSrpuWJHGekJwq6P5Kr6nxcfPYhl19khUrDTa5PfQWGTm9QkNc4i8UoG23kvaZRBYYRERdx0Cexpm4vFCRCVHUpYFUv7A2wHNbk3lwG0LA9dXTI/ux9zuXiPv17XLOwFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705431519; c=relaxed/simple;
-	bh=Sh+VUyorUwfwt3DtfokrDMEMXGc/bg5xuZ8tbxNpivs=;
-	h=DKIM-Signature:Received:X-MC-Unique:Received:
-	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
-	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:
-	 Content-Transfer-Encoding; b=IClnlg6O96n9B8TRuowGr4gLEfrHvqWa0QwSa5jyTbNugU5vS7b9hklWPfsPdKh1NF43NSU/25Xfb5BA54RmD6yvFQpw5I83WhS6FbsaMM6wFr2a8jQElXkAELLGRiPLAN80VWP91MMwzN3YMcmFFGDQqqNB7Mod0LjrmV+r/LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hnh5b9lJ; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1705431572; c=relaxed/simple;
+	bh=gkyZzKo67p/K4XJ/v/j2QoEZUBgFvMHFIhSYARSxsVc=;
+	h=DKIM-Signature:Received:X-QQ-mid:Message-ID:X-QQ-XMAILINFO:
+	 X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding; b=hOgtp/C2P7fTPqEAoeLi7SVQpSyB9LlyYIN3qxwWx46iRL8+TZ88kt+YanR+hCT7ZomLbmGcZ2SBfVhM4HlMAx6Ner8/aLePz+IOg1PhNwbphiCGf4a6m+qemeVrrRxocM7uQkv9uL5pqSS+tjSheneOHVR4LMRFJWhN3pKMZUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=XUo49PwV; arc=none smtp.client-ip=203.205.221.231
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hnh5b9lJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705431516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GGtxsaBcIsbwgFk8xTkmWG+OKYIfaAELOe769Qye7L0=;
-	b=Hnh5b9lJ4yJevc8/Hgt8DRorItP0gegf29xgGgh/8UJo2dR1ILH4ovroAUirOXmV4wprRw
-	QPR4uwpYLXU8yrLeO4zAo9C3vxQ8AGtdxwmzaSehnh+kv3WgYmLkx1lUAPyEHEcHSrI2Mk
-	nE6Htz37Se1DceJ/TuXXr+aoONTKQcI=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-c_qwqBxlPbGj40TnpBCD4A-1; Tue, 16 Jan 2024 13:58:32 -0500
-X-MC-Unique: c_qwqBxlPbGj40TnpBCD4A-1
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-5e617562a65so183024737b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:58:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705431512; x=1706036312;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GGtxsaBcIsbwgFk8xTkmWG+OKYIfaAELOe769Qye7L0=;
-        b=W4vNzKAMXkq2HDOzUiEmA20f9MkO98Kw9VoaV1Yoq9h5EojbtvKHlqOiGBzJ0pw3bw
-         iBvR4nDzWyoBx5LcZtcr/EVwFqMxYy8ZzypsuEfbwVq4jUrpP+QFrD7UAuKQr5bCCEGw
-         qpnyw+65FmRWZ2D840EHLaZLq0zOpNcP5Wf8m1MxM56Ci9QXtYqe56+H6L86MQNJqrpI
-         7o1VI4PlVbqVlmFZiYSYG3/aq8M5S6CmrCakJUrLjihUis4DuiRgouzRHNPWiB5y8Lc0
-         cncM/30xQTrRx3S8dBGGTwb/8uYnKnfBBeiWGnF1IBruTnxbEWbM8u+Q3g6W+3Xa9CI8
-         Fxcg==
-X-Gm-Message-State: AOJu0YyTS22Xgzrl3Rq5HVMzheJ/lzHO76lhWqO/mIx62SGZHgrB/ejz
-	/TALzV+R3MFWZz14aEHMQXly5248TSA4OSaBHuaTUyNFpUwK2W6ET9F6/24rfIZT88afbgQxT+k
-	7WWetUfHmv8T3y/yKx5QN6HWNW5CK5k57VJ2kZG+Akc+y/vwm
-X-Received: by 2002:a81:e60c:0:b0:5f8:1f59:fd02 with SMTP id u12-20020a81e60c000000b005f81f59fd02mr5347973ywl.13.1705431512154;
-        Tue, 16 Jan 2024 10:58:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH2FPqlLgrZtRGp97ysG2vhyXsVT8O2mzxPiCpvhJ9h+PAjf/LwrYSrPudl/CHkL3IjaTeEoBHWECQld7EHMaw=
-X-Received: by 2002:a81:e60c:0:b0:5f8:1f59:fd02 with SMTP id
- u12-20020a81e60c000000b005f81f59fd02mr5347964ywl.13.1705431511935; Tue, 16
- Jan 2024 10:58:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="XUo49PwV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1705431560; bh=eU+5dXg85Q+B81rY0M0vNH6+0V5kiwkRjQQOQ1SSHXM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=XUo49PwVC2aBRTKCtYmWtuep2mOnv8c3Hx9NgRkfNbqppcO5iIew7q53je3XRlpnE
+	 RWUFmATSVQFgb+9t1FQUUHJ2eSQ8CB9qb1Ud+fv/pjfDF433YFkvK2mStqVzceMpLE
+	 4ep8PJLFCKEp6ppdEirygVeQCQoiisXpWpqXGJXk=
+Received: from cyy-pc.lan ([218.70.255.58])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id CB393AE5; Wed, 17 Jan 2024 02:50:51 +0800
+X-QQ-mid: xmsmtpt1705431051t62kvvjaw
+Message-ID: <tencent_8637383EE0A2C7CC870036AAF01909B26A0A@qq.com>
+X-QQ-XMAILINFO: OXUTDCKaRCI/pPaxgHCPsD+M4r1SEnCJrBxnBy7Ka/EB+lId5sgWUrLuwKK82z
+	 /DpM7g9jLXDIjKq4ic6w2U8cnSgaZgQgrYb+9su1bhY+dbfzG0zYXESNcnTxko0ApvwdfRG1pcjf
+	 +hvgdXiwdZtqNOYNSqPkexn4cIR81SX/ApJ/48521J7hjEDdtKfF4lkmSxSR+Gq3hiNxOsOoZBT8
+	 nIWsYd2E2F/1s1vooCMFYkt96jL1WB3tU6LKmu5Z5LTTTLAC6OSPzZ0Y4WpbYxnAIvQIAqoiyOct
+	 I4H/t6hiSolUPfnJUsPc8sG+ER9DptBzHe/2rhDdqzLkAtaoqy7POSaxaiK5NoRNChMpzXqAXU1r
+	 u6tmaxQxMI+ZRFoINfnp/hITYqMYlLib9LsKrXd2BFl8RnpOBG7/RT4XNnHDE5k4KjhRyujVTMz+
+	 i/4txcNwwEIXau5hg/XMa+bcZZskdMGHhGPB6Zd2d3HwXcqmZbz8ygtNwdf020KkAVeOlHUpvGgM
+	 rVpX0LAC49wdYnaLwyOwpT1cscby9faywQkKF+O4ymZiIoUVICqsb0LEKEXrps1ZsuJIbHBPbUac
+	 dcP5YNl1ed+pdbZx/gRWmlAGTfTaIvxgiI719hQs0UkFileTmc21cyjjNysxShQbulWEX0Xq+tDM
+	 auxhwKDVuelidp1XwYt3obbD06gnQidmxBIyYvcNZgeYh+OWphcGJeC7SgVtUkxKj5Qw0kW9+XfO
+	 axSKgpE7swGSaDKt93e2qCrXQ56GMlERPbbYnqI3wPxp8QhuUAQ5t75ik0dODp68ReRaC9tOchqr
+	 BOZqKhy11+QlAHWHL7f6CUSTOCxbVhqYlTPj2OxXadCaVfvjow/vnptWHfKEdjsfDF4DE4SY3Jfx
+	 Q/fSGLf0pVG4fzfWTkl0DxAxr7EMjF3ubCW2wKqOmG0vW43tQOtZDk85vUhJOafjCrtZWwfWZ7az
+	 /UjHugQO3+2o8Vg4TsIeaZoRU+7TrFEAVyrkQNbXPhS00PgfK7P1k58cqqKGegZcIrhsgLM4Q=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Yangyu Chen <cyy@cyyself.name>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Jiuyang Liu <liu@jiuyang.me>,
+	Yichuan Gao <i@gycis.me>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: [PATCH v2 1/1] drm/ttm: allocate dummy_read_page without DMA32 on fail
+Date: Wed, 17 Jan 2024 02:50:34 +0800
+X-OQ-MSGID: <20240116185034.175354-1-cyy@cyyself.name>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <tencent_53C5DA6E8E55B80731AE21328D037C908208@qq.com>
+References: <tencent_53C5DA6E8E55B80731AE21328D037C908208@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1704919215-91319-1-git-send-email-steven.sistare@oracle.com> <1704919215-91319-11-git-send-email-steven.sistare@oracle.com>
-In-Reply-To: <1704919215-91319-11-git-send-email-steven.sistare@oracle.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Tue, 16 Jan 2024 19:57:56 +0100
-Message-ID: <CAJaqyWdTBexyY-ra=UkUfUU75YS2Zncm5-9iHv-0Rqa3_mD=9A@mail.gmail.com>
-Subject: Re: [RFC V1 10/13] vdpa_sim: flush workers on suspend
-To: Steve Sistare <steven.sistare@oracle.com>
-Cc: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Dragos Tatulea <dtatulea@nvidia.com>, 
-	Eli Cohen <elic@nvidia.com>, Xie Yongji <xieyongji@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 10, 2024 at 9:40=E2=80=AFPM Steve Sistare <steven.sistare@oracl=
-e.com> wrote:
->
-> To pass ownership of a live vdpa device to a new process, the user
-> suspends the device, calls VHOST_NEW_OWNER to change the mm, and calls
-> VHOST_IOTLB_REMAP to change the user virtual addresses to match the new
-> mm.  Flush workers in suspend to guarantee that no worker sees the new
-> mm and old VA in between.
->
+Some platforms may not have any memory in ZONE_DMA32 and use IOMMU to allow
+32-bit-DMA-only device to work. Forcing GFP_DMA32 on dummy_read_page will
+fail on such platforms. Retry after fail will get this works on such
+platforms.
 
-The worker should already be stopped by the end of the suspend ioctl,
-so maybe we can consider this a fix?
+Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+---
+ drivers/gpu/drm/ttm/ttm_device.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
-> ---
->  drivers/vdpa/vdpa_sim/vdpa_sim.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdp=
-a_sim.c
-> index 6304cb0b4770..8734834983cb 100644
-> --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> @@ -74,6 +74,17 @@ static void vdpasim_worker_change_mm_sync(struct vdpas=
-im *vdpasim,
->         kthread_flush_work(work);
->  }
->
-> +static void flush_work_fn(struct kthread_work *work) {}
-> +
-> +static void vdpasim_flush_work(struct vdpasim *vdpasim)
-> +{
-> +       struct kthread_work work;
-> +
-> +       kthread_init_work(&work, flush_work_fn);
-> +       kthread_queue_work(vdpasim->worker, &work);
-> +       kthread_flush_work(&work);
-
-Wouldn't it be better to cancel the work with kthread_cancel_work_sync here=
-?
-
-> +}
-> +
->  static struct vdpasim *vdpa_to_sim(struct vdpa_device *vdpa)
->  {
->         return container_of(vdpa, struct vdpasim, vdpa);
-> @@ -512,6 +523,8 @@ static int vdpasim_suspend(struct vdpa_device *vdpa)
->         vdpasim->running =3D false;
->         mutex_unlock(&vdpasim->mutex);
->
-> +       vdpasim_flush_work(vdpasim);
-> +
->         return 0;
->  }
->
-> --
-> 2.39.3
->
+diff --git a/drivers/gpu/drm/ttm/ttm_device.c b/drivers/gpu/drm/ttm/ttm_device.c
+index d48b39132b32..c9fa8561f71f 100644
+--- a/drivers/gpu/drm/ttm/ttm_device.c
++++ b/drivers/gpu/drm/ttm/ttm_device.c
+@@ -95,11 +95,17 @@ static int ttm_global_init(void)
+ 	ttm_pool_mgr_init(num_pages);
+ 	ttm_tt_mgr_init(num_pages, num_dma32);
+ 
+-	glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32);
++	glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32 |
++					   __GFP_NOWARN);
+ 
++	/* Retry without GFP_DMA32 for platforms DMA32 is not available */
+ 	if (unlikely(glob->dummy_read_page == NULL)) {
+-		ret = -ENOMEM;
+-		goto out;
++		glob->dummy_read_page = alloc_page(__GFP_ZERO);
++		if (unlikely(glob->dummy_read_page == NULL)) {
++			ret = -ENOMEM;
++			goto out;
++		}
++		pr_warn("Using GFP_DMA32 fallback for dummy_read_page\n");
+ 	}
+ 
+ 	INIT_LIST_HEAD(&glob->device_list);
+-- 
+2.43.0
 
