@@ -1,94 +1,148 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC8711C83;
-	Tue, 16 Jan 2024 08:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA1A12B66;
+	Tue, 16 Jan 2024 08:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d44X7WCb"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40G7w0lc000737;
-	Tue, 16 Jan 2024 08:34:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=2QthArlBLZq6aeSqRFl9tCpSTmPf13Utla69eVdn+G4=;
- b=d44X7WCbEmktfd055Y/6MkcyBX4EzoIm5/dVVtPiPEGJmKk+ivl9esnI9eBtA7KshRak
- BhhYASBpEd2Bw4m1Hk9fYgecJgLSn7yz3VO29PXxLGdsKc03j0LhKWiUp3xqOM4sMP8e
- izAJFADFgOdk8xlEAjDuBGYw5pHH/2/FgheAD98MDphGBECLVTHU6LI/8CK7BklOg9B/
- 4PQckxHIufiLqmiernQXQcP8gzmxXpyCSgA6yDu2UeN7kQwTnwUy16sCGr6EmcUTgBQz
- Y1n06xTxPUaaoDKj+4wSkfJ0ZUuPO6qqjkXcNDVHRkXlv2LzTV3f25jb/w6mcaK2OpRS Ng== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnnvd0wpb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 08:34:13 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40G7wiDu003371;
-	Tue, 16 Jan 2024 08:34:13 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnnvd0wne-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 08:34:13 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40G75leT008785;
-	Tue, 16 Jan 2024 08:34:12 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm57ydknv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 08:34:12 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40G8Y6nb18678426
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 08:34:06 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A454620040;
-	Tue, 16 Jan 2024 08:34:06 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C8DE320043;
-	Tue, 16 Jan 2024 08:34:05 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.82.162])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 16 Jan 2024 08:34:05 +0000 (GMT)
-Date: Tue, 16 Jan 2024 09:34:04 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Tony Krowiak <akrowiak@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, jjherne@linux.ibm.com, borntraeger@de.ibm.com,
-        pasic@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
-        imbrenda@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, gor@linux.ibm.com
-Subject: Re: [PATCH v4 3/6] s390/vfio-ap: let 'on_scan_complete' callback
- filter matrix and update guest's APCB
-Message-ID: <ZaY/fGxUMx2z4OQH@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240115185441.31526-1-akrowiak@linux.ibm.com>
- <20240115185441.31526-4-akrowiak@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="Tmh2CNU0";
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="Hsp2M8Hd"
+Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id E94B126;
+	Tue, 16 Jan 2024 08:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1705393200;
+	bh=xtKnc81qgkt1hp+yrgP4nxQ9fcDthRgPBw7xJL7BYSI=;
+	h=Date:To:CC:From:Subject;
+	b=Tmh2CNU0YPPx7m00AJ8Ts3TC0cvRijx7y5OQAghP2q4LAOj1teg55gQ9M/Pqg2XUo
+	 XzC4lBOqxRSQckTX3O8jGHYLwKH6p6cHkFJfn8ECtw93HPN+HsvIK8Z9pBHmjkpNTU
+	 ZE3+MNpGIGy1G9MM/jUiOXTG/WiSq9UeDFWYclGw=
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id E95371DF9;
+	Tue, 16 Jan 2024 08:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1705393603;
+	bh=xtKnc81qgkt1hp+yrgP4nxQ9fcDthRgPBw7xJL7BYSI=;
+	h=Date:To:CC:From:Subject;
+	b=Hsp2M8HdMaGF1tAVu4ui6wCeB6rYF4iWde/iHCQy0hsmyhUH1Ad4GxCxJWwYqqASC
+	 xfmP5DiWsUHmdK1ITnGmLikpv7/3aWh3kTgEsa8C1Ocib3mwjGlsCATy5mXD2Hlehw
+	 NxVIbqgEW+E0IOhhqFilnFxI1YIWsiSs/LopraQ8=
+Received: from [192.168.211.197] (192.168.211.197) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Tue, 16 Jan 2024 11:26:43 +0300
+Message-ID: <667a5bc4-8cb5-47ce-a7f1-749479b25bec@paragon-software.com>
+Date: Tue, 16 Jan 2024 11:26:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240115185441.31526-4-akrowiak@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: F-SuVrMPFcULgGLnlAYeUzH-KTeEzO3a
-X-Proofpoint-ORIG-GUID: sPodZ57JKvrcl3Z3PKuYRtq9lqq8UU18
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_04,2024-01-15_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=695
- lowpriorityscore=0 bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0
- adultscore=0 clxscore=1011 phishscore=0 impostorscore=0 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401160067
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: <ntfs3@lists.linux.dev>
+CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Subject: [PATCH] fs/ntfs3: Use kvfree to free memory allocated by kvmalloc
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: vobn-exch-01.paragon-software.com (172.30.72.13) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-On Mon, Jan 15, 2024 at 01:54:33PM -0500, Tony Krowiak wrote:
-Hi Tony,
 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+---
+  fs/ntfs3/attrlist.c | 4 ++--
+  fs/ntfs3/bitmap.c   | 4 ++--
+  fs/ntfs3/frecord.c  | 4 ++--
+  fs/ntfs3/super.c    | 2 +-
+  4 files changed, 7 insertions(+), 7 deletions(-)
 
-No Fixes tag for this patch?
+diff --git a/fs/ntfs3/attrlist.c b/fs/ntfs3/attrlist.c
+index 48e7da47c6b7..9f4bd8d26090 100644
+--- a/fs/ntfs3/attrlist.c
++++ b/fs/ntfs3/attrlist.c
+@@ -29,7 +29,7 @@ static inline bool al_is_valid_le(const struct 
+ntfs_inode *ni,
+  void al_destroy(struct ntfs_inode *ni)
+  {
+      run_close(&ni->attr_list.run);
+-    kfree(ni->attr_list.le);
++    kvfree(ni->attr_list.le);
+      ni->attr_list.le = NULL;
+      ni->attr_list.size = 0;
+      ni->attr_list.dirty = false;
+@@ -318,7 +318,7 @@ int al_add_le(struct ntfs_inode *ni, enum ATTR_TYPE 
+type, const __le16 *name,
+          memcpy(ptr, al->le, off);
+          memcpy(Add2Ptr(ptr, off + sz), le, old_size - off);
+          le = Add2Ptr(ptr, off);
+-        kfree(al->le);
++        kvfree(al->le);
+          al->le = ptr;
+      } else {
+          memmove(Add2Ptr(le, sz), le, old_size - off);
+diff --git a/fs/ntfs3/bitmap.c b/fs/ntfs3/bitmap.c
+index 63f14a0232f6..845f9b22deef 100644
+--- a/fs/ntfs3/bitmap.c
++++ b/fs/ntfs3/bitmap.c
+@@ -124,7 +124,7 @@ void wnd_close(struct wnd_bitmap *wnd)
+  {
+      struct rb_node *node, *next;
 
-Thanks!
+-    kfree(wnd->free_bits);
++    kvfree(wnd->free_bits);
+      wnd->free_bits = NULL;
+      run_close(&wnd->run);
+
+@@ -1360,7 +1360,7 @@ int wnd_extend(struct wnd_bitmap *wnd, size_t 
+new_bits)
+          memcpy(new_free, wnd->free_bits, wnd->nwnd * sizeof(short));
+          memset(new_free + wnd->nwnd, 0,
+                 (new_wnd - wnd->nwnd) * sizeof(short));
+-        kfree(wnd->free_bits);
++        kvfree(wnd->free_bits);
+          wnd->free_bits = new_free;
+      }
+
+diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
+index 6ff4f70ba077..2636ab7640ac 100644
+--- a/fs/ntfs3/frecord.c
++++ b/fs/ntfs3/frecord.c
+@@ -778,7 +778,7 @@ static int ni_try_remove_attr_list(struct ntfs_inode 
+*ni)
+      run_deallocate(sbi, &ni->attr_list.run, true);
+      run_close(&ni->attr_list.run);
+      ni->attr_list.size = 0;
+-    kfree(ni->attr_list.le);
++    kvfree(ni->attr_list.le);
+      ni->attr_list.le = NULL;
+      ni->attr_list.dirty = false;
+
+@@ -927,7 +927,7 @@ int ni_create_attr_list(struct ntfs_inode *ni)
+      return 0;
+
+  out:
+-    kfree(ni->attr_list.le);
++    kvfree(ni->attr_list.le);
+      ni->attr_list.le = NULL;
+      ni->attr_list.size = 0;
+      return err;
+diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
+index 65ef4b57411f..c55a29793a8d 100644
+--- a/fs/ntfs3/super.c
++++ b/fs/ntfs3/super.c
+@@ -625,7 +625,7 @@ static void ntfs3_free_sbi(struct ntfs_sb_info *sbi)
+  {
+      kfree(sbi->new_rec);
+      kvfree(ntfs_put_shared(sbi->upcase));
+-    kfree(sbi->def_table);
++    kvfree(sbi->def_table);
+      kfree(sbi->compress.lznt);
+  #ifdef CONFIG_NTFS3_LZX_XPRESS
+      xpress_free_decompressor(sbi->compress.xpress);
+-- 
+2.34.1
+
