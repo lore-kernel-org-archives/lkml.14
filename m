@@ -1,113 +1,80 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713801CD25
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2784C10A1D;
+	Tue, 16 Jan 2024 18:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705429299; cv=none; b=Dh2OGJF2rEk+EuZWrx7ArNwUS2DDTL+E5PihJDK1HDlCE7tmOjRaAQlkpg0L1oMk4GZDKGbt36yCV7RAnVS3NFzvjttHri5E0B6XNu/QCRRR4g+VdwSpUTF0GBotDUNcUEX425HtkeqK+tDPjD5qrmlW0O4rquD6pMDjHQJNEUE=
+	t=1705429367; cv=none; b=lBC2Ee+6lHMUhuTH3JB7C2oVCceBLZcuUVTtCwh1exh0vjcSLgP0j3WZBwqGrM1vax3M0Ebbrnk10Q5MRkULH5t4dMTyz1sZMqrecwWT/oDTVgkpN+2pvXQWtRCnFBjBkhQXH1X0Ru00XoT4CbtHC1QzQOdVlZ0LWB8sCxx7QUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705429299; c=relaxed/simple;
-	bh=iGtilefM/gHGUZFo8PnOopvTKNySbPwZh2/Qz7KBUmA=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=dD/DI3OPTci8Z+e2cN4wXA5arLQbfMxdSOWAPEdaKdLLFhxB1ChFqLhDloal3hcqt+i46Aa5MWE0Y4C/zBaajsG+V0q/Zt1VtsepsaBWXZn8pkDJbNJrwElMqwiSortpWBZPFtohp8VD4o0RS06LBpyMcL0m7/3RUiHxCMy5eII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TQ6sLM2u; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1705429367; c=relaxed/simple;
+	bh=24yf9WQZM8mCzBoY4DhIxhCfHQZP8hu82jOqs15h0jg=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=RZco8vEJ7rZYjwc/s5veyZx0m7cpsjM5xWvDQx4fH8c64LLue1qy7ch8sMy/jglDMxewbUT766CTs8HySrsXxYQ8FgNPiYlNKwEqZGsC8wNtQZC9tyQ2mObE4jymNYBuO2sRkxEiP/TL/rEIOJb9eXH7VB8KRq1DIyDAzKljG6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBatexrm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TQ6sLM2u"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-28cc07d8876so5688181a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:21:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705429297; x=1706034097; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XJipabZ4zYazV9lmvPELaW28mg+mGYQPV3OWXJ3l8Lg=;
-        b=TQ6sLM2uV/PtTURW4b5q+1sq0c8VHyX0LyJC/8bqwJmaO7dbxAYGctcl0Hu+Lp6AHq
-         rgL/WQeVkGbL7MHjCYPb8jsQXGlckhtMXRQMH7UffadiN1essyf/AMnissPDyJvK+X7J
-         tklzASBDvFEOLgNbfit72lUKYpftxmKjI6QkyivkLvtQ9n2b57+W4cBWSuHBfP9wfBXI
-         86c1fTgJua8pPh2dBSwNsJ245NvIUs4OTUyKAZyxyV1S6v5FHnxYrGdSLErYOJ+Yq+2T
-         zTDXeiszorLzW18N6o8JeR4OTu9/IxjtbCAGydwz/cJB6qJVrVC+cuKaV0XdeqUBemxm
-         s2ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705429297; x=1706034097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XJipabZ4zYazV9lmvPELaW28mg+mGYQPV3OWXJ3l8Lg=;
-        b=TLtoxCrw+Prmjgjmj0aKAHtX3gj4rXpSTivxvMwRsE45hp09URgTiCB0UT8vncz/NY
-         Ek7aJWNKXtMbYGLRhnsfm69+sFFu09sp4IsLK1jLoSlm6sqHBXH1JHNxeWo9t+U+cc9B
-         YeHY/xUmvrhxWt7hYzSH/tPz2SGYAlN+pKiIJi7hjaaoy8U7b1CObgufW/3tzNtaSluM
-         I+JESeruZOgaQcztXSahQSNloD68a6hFIMq07+V/BWUPQ4TVoO020+6JuksHlFY/bE+O
-         6+E6A7lAmOJSH/pakr87BnenodF71+81RDZMzy8DYSwqVYw/zXrXUwEedmNe019dShxw
-         3ODg==
-X-Gm-Message-State: AOJu0YyqiqdfVWJlnXOMmAqVfc3i8JiVjn27fZo59G2+vE/W1touLfck
-	gqCYdNlr6qaRFP7bWQtaprIDyQO7uL2Q0vuGoDvtUexkUqWB6Q==
-X-Google-Smtp-Source: AGHT+IGD45n2Kmp+42UAAvN1CntcTMHyFOTUd0Yzi86RjPsn4J8yQSUWK55vtqIj7sCnDXiqs0FpmeClEfHPtw8H6Y4=
-X-Received: by 2002:a17:90a:d193:b0:28e:79ea:924d with SMTP id
- fu19-20020a17090ad19300b0028e79ea924dmr948652pjb.92.1705429296877; Tue, 16
- Jan 2024 10:21:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBatexrm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D20CC433F1;
+	Tue, 16 Jan 2024 18:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705429366;
+	bh=24yf9WQZM8mCzBoY4DhIxhCfHQZP8hu82jOqs15h0jg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=CBatexrm9aBNAYXsNpveWnrw+Di773YudoVO/VDqgpP9FKlSYHdGeCs9ySe0HGtWK
+	 so2FLx7CeRayeJj9Z8kDp8bZqEEJxqHCJNS8c7tRBEMn8ySC/D9sH5IShv/Qo2Gila
+	 wWFRNUHVyYshYfyYmIKD3cxzN/7U7Wl9fvvywrJvdzChhTimASQuKCYIKy5nyIsOoN
+	 f/v4avvA0QcnowjCCBcL0oOvQHhzavvXAnirlz3cJXInydu6jFKaIIj/QeIkONkFoS
+	 KSS5MkeXX+d1acaZzpQ/8hWvCjtvGU+aU4P2i/MhH3Czdl1GJCYXt9uBuT7TSbAFul
+	 v2V7zez4Z1JzA==
+Date: Tue, 16 Jan 2024 12:22:44 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH 11/14] phy: cadence-torrent: add suspend and resume
+ support
+Message-ID: <20240116182244.GA101245@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110102102.61587-1-tudor.ambarus@linaro.org> <20240110102102.61587-11-tudor.ambarus@linaro.org>
-In-Reply-To: <20240110102102.61587-11-tudor.ambarus@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Tue, 16 Jan 2024 12:21:25 -0600
-Message-ID: <CAPLW+4=YYdUSaaLcsdEyPswC4s6onxuSh24vSfw4xys=sPZG_Q@mail.gmail.com>
-Subject: Re: [PATCH 10/18] tty: serial: samsung: make max_count unsigned int
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	andre.draszik@linaro.org, peter.griffin@linaro.org, kernel-team@android.com, 
-	willmcvicker@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102-j7200-pcie-s2r-v1-11-84e55da52400@bootlin.com>
 
-On Wed, Jan 10, 2024 at 4:23=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
-.org> wrote:
->
-> ``max_count`` negative values are not used. Since ``port->fifosize``
-> is an unsigned int, make ``max_count`` the same.
->
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> ---
->  drivers/tty/serial/samsung_tty.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsun=
-g_tty.c
-> index 90c49197efc7..dbbe6b8e3ceb 100644
-> --- a/drivers/tty/serial/samsung_tty.c
-> +++ b/drivers/tty/serial/samsung_tty.c
-> @@ -760,8 +760,8 @@ static irqreturn_t s3c24xx_serial_rx_chars_dma(void *=
-dev_id)
->  static void s3c24xx_serial_rx_drain_fifo(struct s3c24xx_uart_port *ourpo=
-rt)
->  {
->         struct uart_port *port =3D &ourport->port;
-> +       unsigned int max_count =3D port->fifosize;
+On Mon, Jan 15, 2024 at 05:14:52PM +0100, Thomas Richard wrote:
+> Add suspend and resume support.
+> The alread_configured flag is cleared during suspend stage to force the
+> phy initialization during the resume stage.
 
-What if port->fifosize is 0? Then this code below:
+s/alread_configured/already_configured/
 
-    while (max_count-- > 0) {
+Wrap to fill 75 columns.  Add a blank line if you intend two
+paragraphs.
 
-would cause int overflow, if max_count is unsigned?
+I don't know whether there's a strong convention in drivers/phy, but I
+see several commit logs that capitalize "PHY".  "Phy" is not a
+standard English word, so I think the capitalization makes it easier
+to read.
 
->         unsigned int fifocnt =3D 0;
-> -       int max_count =3D port->fifosize;
->         u32 ufcon, ufstat, uerstat;
->         u8 ch, flag;
->
-> --
-> 2.43.0.472.g3155946c3a-goog
->
->
+Bjorn
