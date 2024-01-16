@@ -1,275 +1,234 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D526C1B94D;
-	Tue, 16 Jan 2024 11:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TDn2V4TgszvV1n;
-	Tue, 16 Jan 2024 19:33:38 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4177418006E;
-	Tue, 16 Jan 2024 19:35:02 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Tue, 16 Jan 2024 19:35:01 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH 2/3] perf: script: use capstone disasm engine to show assembly instructions
-Date: Tue, 16 Jan 2024 19:34:36 +0800
-Message-ID: <20240116113437.1507537-3-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240116113437.1507537-1-changbin.du@huawei.com>
-References: <20240116113437.1507537-1-changbin.du@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796081B942;
+	Tue, 16 Jan 2024 11:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TWw0KRFu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705404907; x=1736940907;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZY/fiyQnA9sc5ZnYUaIZivwe3nv7/wn4Lxg4uGWvHfU=;
+  b=TWw0KRFu+WMvWRgl/VkUPxaBuM3n+T9T43i1ZXXNT091UpEVBykw8/TF
+   EHrW8i/DzwquSAuVnagoERFfSdkhT5S9T46vOXwb5XzzMHkLCHdivXTUL
+   oVZcfYUK/qzqH6LyaHn8HoUaadzsEu2JfcuUCl1ZYEHb1zW5M5CpAfUNw
+   Ms77InTq5lllmK6mxAnk4prIeh4VHB1FI2b/GIiyb3efwtAocdQ+sy/wk
+   9Vsna37twwAGYy3hpWUTcMjoirH6nRGjlbHSWLHhYGuwRxZLikmKb1/8W
+   WT15GhkJ1KzvYCL/kpFO7ejRBF9/ABhRgPIaUdiwSN4AAcbWaAyOUqXBb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="7204364"
+X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
+   d="scan'208";a="7204364"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 03:35:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="1115259479"
+X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
+   d="scan'208";a="1115259479"
+Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Jan 2024 03:35:02 -0800
+Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rPhif-0000dC-0X;
+	Tue, 16 Jan 2024 11:35:01 +0000
+Date: Tue, 16 Jan 2024 19:34:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	v9fs@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	kernel@pengutronix.de,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>
+Subject: Re: [PATCH 1/3] usb: gadget: function: 9pfs
+Message-ID: <202401161937.9wbYLZdb-lkp@intel.com>
+References: <20240116-ml-topic-u9p-v1-1-ad8c306f9a4e@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240116-ml-topic-u9p-v1-1-ad8c306f9a4e@pengutronix.de>
 
-Currently, the instructions of samples are shown as raw hex strings
-which are hard to read. x86 has a special option '--xed' to disassemble
-the hex string via intel XED tool.
+Hi Michael,
 
-Here we use capstone as our disassembler engine to give more friendly
-instructions. We select libcapstone because capstone can provide more
-insn details. Perf will fallback to raw instructions if libcapstone is
-not available.
+kernel test robot noticed the following build warnings:
 
-The advantages compared to XED tool:
- * Support arm, arm64, x86-32, x86_64 (more could be supported),
-   xed only for x86_64.
- * Immediate address operands are shown as symbol+offs.
+[auto build test WARNING on 052d534373b7ed33712a63d5e17b2b6cdbce84fd]
 
-Before:
-$ sudo perf record --event intel_pt//u -- ls
-$ sudo perf script --insn-trace
-            perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
-            perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
-            perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
-            perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
-            perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
-            perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
-            perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
+url:    https://github.com/intel-lab-lkp/linux/commits/Michael-Grzeschik/usb-gadget-function-9pfs/20240116-095914
+base:   052d534373b7ed33712a63d5e17b2b6cdbce84fd
+patch link:    https://lore.kernel.org/r/20240116-ml-topic-u9p-v1-1-ad8c306f9a4e%40pengutronix.de
+patch subject: [PATCH 1/3] usb: gadget: function: 9pfs
+config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20240116/202401161937.9wbYLZdb-lkp@intel.com/config)
+compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 9bde5becb44ea071f5e1fa1f5d4071dc8788b18c)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240116/202401161937.9wbYLZdb-lkp@intel.com/reproduce)
 
-After:
-$ sudo perf script --insn-trace
-            perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: cmpq $-0xfff, %rax
-            perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: jae __GI___ioctl+0x10
-            perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: retq
-            perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: testl %eax, %eax
-            perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: jne perf_evsel__enable_cpu+0xad
-            perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: movq 0xa8(%r12), %rax
-            perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: movq 0x20(%rax), %rdx
-            perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf) insn: cmpl %edx, %ebx
-            perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf) insn: jl perf_evsel__enable_cpu+0x60
-            perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf) insn: xorl %eax, %eax
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401161937.9wbYLZdb-lkp@intel.com/
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/builtin-script.c  |   8 +--
- tools/perf/util/Build        |   1 +
- tools/perf/util/print_insn.c | 118 +++++++++++++++++++++++++++++++++++
- tools/perf/util/print_insn.h |  14 +++++
- 4 files changed, 136 insertions(+), 5 deletions(-)
- create mode 100644 tools/perf/util/print_insn.c
- create mode 100644 tools/perf/util/print_insn.h
+All warnings (new ones prefixed by >>):
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index b1f57401ff23..c32a326e660f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -34,6 +34,7 @@
- #include "util/event.h"
- #include "ui/ui.h"
- #include "print_binary.h"
-+#include "print_insn.h"
- #include "archinsn.h"
- #include <linux/bitmap.h>
- #include <linux/kernel.h>
-@@ -1511,11 +1512,8 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 	if (PRINT_FIELD(INSNLEN))
- 		printed += fprintf(fp, " ilen: %d", sample->insn_len);
- 	if (PRINT_FIELD(INSN) && sample->insn_len) {
--		int i;
--
--		printed += fprintf(fp, " insn:");
--		for (i = 0; i < sample->insn_len; i++)
--			printed += fprintf(fp, " %02x", (unsigned char)sample->insn[i]);
-+		printed += fprintf(fp, " insn: ");
-+		printed += sample__fprintf_insn(sample, thread, machine, fp);
- 	}
- 	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 988473bf907a..c33aab53d8dd 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -32,6 +32,7 @@ perf-y += perf_regs.o
- perf-y += perf-regs-arch/
- perf-y += path.o
- perf-y += print_binary.o
-+perf-y += print_insn.o
- perf-y += rlimit.o
- perf-y += argv_split.o
- perf-y += rbtree.o
-diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-new file mode 100644
-index 000000000000..c8d9741748cd
---- /dev/null
-+++ b/tools/perf/util/print_insn.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Instruction binary disassembler based on capstone.
-+ *
-+ * Author(s): Changbin Du <changbin.du@huawei.com>
-+ */
-+#include "print_insn.h"
-+#include <stdlib.h>
-+#include <string.h>
-+#include <stdbool.h>
-+#include "util/debug.h"
-+#include "util/symbol.h"
-+#include "machine.h"
-+
-+size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
-+{
-+	int printed = 0;
-+
-+	for (int i = 0; i < sample->insn_len; i++)
-+		printed += fprintf(fp, "%02x ", (unsigned char)sample->insn[i]);
-+	return printed;
-+}
-+
-+#ifdef HAVE_LIBCAPSTONE_SUPPORT
-+#include <capstone/capstone.h>
-+
-+static int capstone_init(struct machine *machine, csh *cs_handle)
-+{
-+	cs_arch arch;
-+	cs_mode mode;
-+
-+	if (machine__is(machine, "x86_64")) {
-+		arch = CS_ARCH_X86;
-+		mode = CS_MODE_64;
-+	} else if (machine__normalized_is(machine, "x86")) {
-+		arch = CS_ARCH_X86;
-+		mode = CS_MODE_32;
-+	} else if (machine__normalized_is(machine, "arm64")) {
-+		arch = CS_ARCH_ARM64;
-+		mode = CS_MODE_ARM;
-+	} else if (machine__normalized_is(machine, "arm")) {
-+		arch = CS_ARCH_ARM;
-+		mode = CS_MODE_ARM + CS_MODE_V8;
-+	} else {
-+		return -1;
-+	}
-+
-+	if (cs_open(arch, mode, cs_handle) != CS_ERR_OK) {
-+		pr_warning_once("cs_open failed\n");
-+		return -1;
-+	}
-+
-+	cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
-+	if (machine__normalized_is(machine, "x86"))
-+		cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
-+
-+	return 0;
-+}
-+
-+static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
-+			     cs_insn *insn, FILE *fp)
-+{
-+	struct addr_location al;
-+	size_t printed = 0;
-+
-+	if (insn->detail && insn->detail->x86.op_count == 1) {
-+		cs_x86_op *op = &insn->detail->x86.operands[0];
-+
-+		addr_location__init(&al);
-+		if (op->type == X86_OP_IMM &&
-+		    thread__find_symbol(thread, sample->cpumode, op->imm, &al)) {
-+			printed += fprintf(fp, "%s ", insn[0].mnemonic);
-+			printed += symbol__fprintf_symname_offs(al.sym, &al, fp);
-+			return printed;
-+		}
-+	}
-+
-+	printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
-+	return printed;
-+}
-+
-+size_t sample__fprintf_insn(struct perf_sample *sample, struct thread *thread,
-+			    struct machine *machine, FILE *fp)
-+{
-+	static csh cs_handle;
-+	cs_insn *insn;
-+	size_t count;
-+	size_t printed = 0;
-+	int ret;
-+
-+	ret = capstone_init(machine, &cs_handle);
-+	if (ret < 0) {
-+		/* fallback */
-+		return sample__fprintf_insn_raw(sample, fp);
-+	}
-+
-+	count = cs_disasm(cs_handle, (uint8_t *)sample->insn, sample->insn_len,
-+			  sample->ip, 1, &insn);
-+	if (count > 0) {
-+		if (machine__normalized_is(machine, "x86"))
-+			printed += print_insn_x86(sample, thread, &insn[0], fp);
-+		else
-+			printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
-+		cs_free(insn, count);
-+	} else {
-+		printed += fprintf(fp, "illegal instruction");
-+	}
-+
-+	cs_close(&cs_handle);
-+	return printed;
-+}
-+#else
-+size_t sample__fprintf_insn(struct perf_sample *sample, struct thread *thread __maybe_unused,
-+			    struct machine *machine __maybe_unused, FILE *fp)
-+{
-+	return sample__fprintf_insn_raw(sample, fp);
-+}
-+#endif
-diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
-new file mode 100644
-index 000000000000..af8fa5d01fb7
---- /dev/null
-+++ b/tools/perf/util/print_insn.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef PERF_PRINT_ISNS_H
-+#define PERF_PRINT_ISNS_H
-+
-+#include <stddef.h>
-+#include <stdio.h>
-+#include "event.h"
-+#include "util/thread.h"
-+
-+size_t sample__fprintf_insn(struct perf_sample *sample, struct thread *thread,
-+			    struct machine *machine, FILE *fp);
-+size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
-+
-+#endif /* PERF_PRINT_ISNS_H */
+>> drivers/usb/gadget/function/f_9pfs.c:197:4: warning: format specifies type 'unsigned int' but the argument has type 'size_t' (aka 'unsigned long') [-Wformat]
+     196 |         p9_debug(P9_DEBUG_TRANS, "mux %p got %u bytes\n", usb9pfs,
+         |                                              ~~
+         |                                              %zu
+     197 |                  rc.capacity - rc.offset);
+         |                  ^~~~~~~~~~~~~~~~~~~~~~~
+   include/net/9p/9p.h:55:36: note: expanded from macro 'p9_debug'
+      55 |         _p9_debug(level, __func__, fmt, ##__VA_ARGS__)
+         |                                    ~~~    ^~~~~~~~~~~
+>> drivers/usb/gadget/function/f_9pfs.c:286:6: warning: no previous prototype for function 'disable_endpoints' [-Wmissing-prototypes]
+     286 | void disable_endpoints(struct usb_composite_dev *cdev,
+         |      ^
+   drivers/usb/gadget/function/f_9pfs.c:286:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     286 | void disable_endpoints(struct usb_composite_dev *cdev,
+         | ^
+         | static 
+>> drivers/usb/gadget/function/f_9pfs.c:825:12: warning: no previous prototype for function 'usb9pfs_modinit' [-Wmissing-prototypes]
+     825 | int __init usb9pfs_modinit(void)
+         |            ^
+   drivers/usb/gadget/function/f_9pfs.c:825:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     825 | int __init usb9pfs_modinit(void)
+         | ^
+         | static 
+>> drivers/usb/gadget/function/f_9pfs.c:838:13: warning: no previous prototype for function 'usb9pfs_modexit' [-Wmissing-prototypes]
+     838 | void __exit usb9pfs_modexit(void)
+         |             ^
+   drivers/usb/gadget/function/f_9pfs.c:838:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     838 | void __exit usb9pfs_modexit(void)
+         | ^
+         | static 
+   4 warnings generated.
+
+
+vim +197 drivers/usb/gadget/function/f_9pfs.c
+
+   184	
+   185	static struct p9_req_t *usb9pfs_rx_header(struct f_usb9pfs *usb9pfs, struct usb_request *req)
+   186	{
+   187		struct p9_req_t *p9_rx_req;
+   188		struct p9_fcall	rc;
+   189		int ret;
+   190	
+   191		/* start by reading header */
+   192		rc.sdata = req->buf;
+   193		rc.offset = 0;
+   194		rc.capacity = rc.size = P9_HDRSZ;
+   195	
+   196		p9_debug(P9_DEBUG_TRANS, "mux %p got %u bytes\n", usb9pfs,
+ > 197			 rc.capacity - rc.offset);
+   198	
+   199		ret = p9_parse_header(&rc, &rc.size, NULL, NULL, 0);
+   200		if (ret) {
+   201			p9_debug(P9_DEBUG_ERROR,
+   202				 "error parsing header: %d\n", ret);
+   203			return NULL;
+   204		}
+   205	
+   206		p9_debug(P9_DEBUG_TRANS,
+   207			 "mux %p pkt: size: %d bytes tag: %d\n",
+   208			 usb9pfs, rc.size, rc.tag);
+   209	
+   210		p9_rx_req = p9_tag_lookup(usb9pfs->client, rc.tag);
+   211		if (!p9_rx_req || (p9_rx_req->status != REQ_STATUS_SENT)) {
+   212			p9_debug(P9_DEBUG_ERROR, "Unexpected packet tag %d\n", rc.tag);
+   213			return NULL;
+   214		}
+   215	
+   216		if (rc.size > p9_rx_req->rc.capacity) {
+   217			p9_debug(P9_DEBUG_ERROR,
+   218				 "requested packet size too big: %d for tag %d with capacity %zd\n",
+   219				 rc.size, rc.tag, p9_rx_req->rc.capacity);
+   220			return NULL;
+   221		}
+   222	
+   223		if (!p9_rx_req->rc.sdata) {
+   224			p9_debug(P9_DEBUG_ERROR,
+   225				 "No recv fcall for tag %d (req %p), disconnecting!\n",
+   226				 rc.tag, p9_rx_req);
+   227			p9_req_put(usb9pfs->client, p9_rx_req);
+   228			return NULL;
+   229		}
+   230	
+   231		return p9_rx_req;
+   232	}
+   233	
+   234	static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
+   235	{
+   236		struct f_usb9pfs *usb9pfs = ep->driver_data;
+   237		struct usb_composite_dev *cdev = usb9pfs->function.config->cdev;
+   238		struct p9_req_t *p9_rx_req;
+   239		unsigned long flags;
+   240	
+   241		switch (req->status) {
+   242		case 0:				/* normal completion? */
+   243			spin_lock_irqsave(&usb9pfs->req_lock, flags);
+   244			p9_rx_req = usb9pfs_rx_header(usb9pfs, req);
+   245			if (!p9_rx_req) {
+   246				spin_unlock_irqrestore(&usb9pfs->req_lock, flags);
+   247				goto free_req;
+   248			}
+   249	
+   250			memcpy(p9_rx_req->rc.sdata, req->buf, req->actual);
+   251			p9_rx_req->rc.size = req->actual;
+   252	
+   253			p9_client_cb(usb9pfs->client, p9_rx_req, REQ_STATUS_RCVD);
+   254			p9_req_put(usb9pfs->client, p9_rx_req);
+   255	
+   256			usb9pfs->p9_tx_req = NULL;
+   257	
+   258			usb9pfs_transmit(usb9pfs);
+   259	
+   260			spin_unlock_irqrestore(&usb9pfs->req_lock, flags);
+   261	
+   262			return;
+   263	free_req:
+   264		default:
+   265			dev_err(&cdev->gadget->dev, "%s usb9pfs complete --> %d, %d/%d\n",
+   266				ep->name, req->status, req->actual, req->length);
+   267			usb_ep_free_request(ep == usb9pfs->in_ep ?
+   268					    usb9pfs->out_ep : usb9pfs->in_ep,
+   269					    req->context);
+   270			free_ep_req(ep, req);
+   271			return;
+   272		}
+   273	
+   274		p9_client_cb(usb9pfs->client, p9_rx_req, REQ_STATUS_ERROR);
+   275	}
+   276	
+   277	static void disable_ep(struct usb_composite_dev *cdev, struct usb_ep *ep)
+   278	{
+   279		int value;
+   280	
+   281		value = usb_ep_disable(ep);
+   282		if (value < 0)
+   283			dev_info(&cdev->gadget->dev, "disable %s --> %d\n", ep->name, value);
+   284	}
+   285	
+ > 286	void disable_endpoints(struct usb_composite_dev *cdev,
+   287			struct usb_ep *in, struct usb_ep *out,
+   288			struct usb_ep *iso_in, struct usb_ep *iso_out)
+   289	{
+   290		disable_ep(cdev, in);
+   291		disable_ep(cdev, out);
+   292	}
+   293	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
