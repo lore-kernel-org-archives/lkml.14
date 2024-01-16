@@ -1,137 +1,93 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D52031D;
-	Tue, 16 Jan 2024 21:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231742031D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 21:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705441152; cv=none; b=aRN58YqO0b4adomtP9e2akTLNEw8NlKSY9gQGZIM0jOKpNuu86nAAvlEImJ3UEv0aW9b7jn4/Jt+oHmo/qv+dftMSoHA6vobpe/8PwvEtepXjGKz36cjB85jBHXi2k8GKGLbrQRym5aFhwlzfPdvSyavmCB34OMIzSY9/h7HYrY=
+	t=1705441169; cv=none; b=GNfNTRy+a56EHrzDTe/ChheRDz8ZMdurygL0i58Hvys2n6mfDvebw6t7H18JmX1IPh2BIw1VCByPGVjoEecibrlF3myfDefd20kSU/lMzpToN4X2BSfIni9D8VtvAtKXz8Q/0SkA9a0eCdREmQAB8YXqfAY7n9Rbd2sqRdppM5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705441152; c=relaxed/simple;
-	bh=9cVaDEGyE++XlGIZR4zuk6VP7XM32B9Tm1rS1HSDeWQ=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:
-	 Received:Received:Received:Received:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:Content-Language:To:Cc:References:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-TM-AS-GCONF:X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=qQr1HpIU9iSel7QLx3XO0MSfxy3K1/kAhI/W6I6CjKypWJHHUfuM3C998TymkCJLdePTZfa4c9zKUWuId8G3+UkhHyALTBgRhLf27QUHB5GyQ2jT/oxF7R7qfvdddByqIMhP8QlurC5qK6bBcgtHxd8YPnGhJ+Z1Tl9AD0ichcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pBCDyTAq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1705441169; c=relaxed/simple;
+	bh=zZoAMhSNnLaP8BjduYu5bdBbD/Mt3VUCcdoe1rW7jfA=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
+	 From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GC1MRtcEuMi/0NMuzNQmAr08dH0jHyeQA2b+t7ZihNinsD62FwdIL/Dtt1VgIopQbCohDX3O96vWzzpjbPHHhG1IQ3oJuXcos2FDfuKxkf5Vza4Z+eGoO/OSxhSPjY9iBKPkfky2VCavbbPdYXhzkko4TBl0pUN8TO+HnAtekM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gc80Ilmc; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pBCDyTAq"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GLbCeX011034;
-	Tue, 16 Jan 2024 21:38:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=C34bD3H/UW2o8lGJiE4Kl6JTQHvAgZThBzA+i3EkQj4=;
- b=pBCDyTAqmIHQUh+WookDoNH+IaXDelj8E17v4vrqhzDtkWmm7/W79f09VlO9RLAGsyDQ
- 5XpT7BzXBzTjat8kOoLEtQhpr9KxbD+064D4h/Kv3zpIGju3wjpHoQsaR04CV45RsRLy
- mwDHnngbbdsjZJ4GoMXL9UeYcBYBpvvlqNYzpes9ouanXZZFKZJLU+y4Zn4mjexMEeC+
- J+JXb79X5lSv/4+BxOa9PQ1axgPBcfkRayp9wEdkfHZwtntkgxQ7MPF8hm3dI4B22KDu
- v1d0B+0w3llpJDEop1ib9yzyU1dw11yK3m8mXS4fZ3V3FytdkvKZTAW6yspngS4k46S2 ug== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vp1vcg1jp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 21:38:51 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GLcDTF016360;
-	Tue, 16 Jan 2024 21:38:51 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vp1vcg1hs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 21:38:51 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GJ6ONT023421;
-	Tue, 16 Jan 2024 21:38:49 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm6bkh59q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 21:38:49 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GLcmas66912726
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 21:38:49 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A30145804B;
-	Tue, 16 Jan 2024 21:38:48 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8250858055;
-	Tue, 16 Jan 2024 21:38:47 +0000 (GMT)
-Received: from [9.61.126.152] (unknown [9.61.126.152])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Jan 2024 21:38:47 +0000 (GMT)
-Message-ID: <92007644-72e3-4312-b9e9-e93e5142e090@linux.ibm.com>
-Date: Tue, 16 Jan 2024 13:38:46 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gc80Ilmc"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d5f56912daso5042515ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 13:39:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705441167; x=1706045967; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h1vNJBlEh8DhYGD6roTSgxFREzSSomsGca9zVOoxkHA=;
+        b=gc80IlmcStaFnSwod0PPETx7oyNvF22aWiH9Ydx01wX3TMKWKB2A9MmMEWAshXF0d2
+         tPL/wlpiXS+eq7T9syl8yC8Sl7gQT8s5Wpj6MtVTtacBeiNC5hg027w8fCEgAROnHFEL
+         Za1hiW2QQ9ukb/31SWMQOk8cMd+xaEbeeULWJs0yJMJK8RyDIXItu8TezR9Qqeou2hSc
+         9C3HNVsKCTFMdOjsOWyS/XsBKURIul6qSjTZyuiFwcKhe98zJRmSEhowcD0ZG7k4FVoS
+         XOdR3MrnZpd0mYs2Wa/pANaJdEb242tsDlx0MSTFK2xJR5McMjt7dKPrfF1D73wWyEVF
+         kyBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705441167; x=1706045967;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h1vNJBlEh8DhYGD6roTSgxFREzSSomsGca9zVOoxkHA=;
+        b=mSo7hDlv6hKj2nQtpObVX5krEnoJBbc6wGdjQ1e5iQ3FH2A1Sq2SBbhlOjSck2rDoY
+         8IHZpj3hdrwtxzgTgucGaNVfG/ojIVrLyVZ8igF6d8lJRCmvabyLggBBPs0vMkxxXh4v
+         YE3n2rLtuBWsB+FIikXfsnXIakz4fpVpzezj/ZpDyeELx5w+DgdXIN/Rz7JdDRieJog+
+         sfqZInr3MtyO8yxJdRR8uoy0Tjr6n62b8qoNakpWktssD1Nyyj46/iFAR9UiLFa+hi/p
+         6mJdb2g0DL+QVMEhYTR5h7cjpo2CUsiA94wsIuftovltf7rjz5aq8Z0hvowIuvu93nF3
+         HT0Q==
+X-Gm-Message-State: AOJu0YyQNthEHD78qvaqe4NbcZ79ES1PJ71XFKXVEH7BL9WgRbHrftyp
+	y5zsmBd7V06T3zzY+iwfx1w=
+X-Google-Smtp-Source: AGHT+IFtB06t8e2Z2ul6N1BmmHOA/WphDQZ/RnQiKeBm58pTznSISZi7C3iWQOJdEw0Ok48Blqm8ug==
+X-Received: by 2002:a17:902:ea10:b0:1d3:f285:ab4 with SMTP id s16-20020a170902ea1000b001d3f2850ab4mr9385379plg.121.1705441167438;
+        Tue, 16 Jan 2024 13:39:27 -0800 (PST)
+Received: from LAPTOP-7VGLEE77 (19.216.252.27.dyn.cust.vf.net.nz. [27.252.216.19])
+        by smtp.gmail.com with ESMTPSA id w9-20020a170902a70900b001d49f61cb64sm9643014plq.262.2024.01.16.13.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 13:39:27 -0800 (PST)
+Date: Wed, 17 Jan 2024 10:38:13 +1300
+From: Hoorad Farrokh <hourrad.f@gmail.com>
+To: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: prism2mgmt: Fixed a parentheses coding style
+Message-ID: <ooj7nta3skljhnpwtz3wk37uztyayaewfoz2k2b7bnfivnoqtr@ymml6q24k5y2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 25/42] drivers/scsi/ibmvscsi: Convert snprintf to
- sysfs_emit
-Content-Language: en-US
-To: Li Zhijian <lizhijian@fujitsu.com>, linux-kernel@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin
- <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
- <20240116045151.3940401-1-lizhijian@fujitsu.com>
- <20240116045151.3940401-23-lizhijian@fujitsu.com>
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
-In-Reply-To: <20240116045151.3940401-23-lizhijian@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: T9F9F6QalnDwMMGJCSEfB4HU9ZM759gq
-X-Proofpoint-ORIG-GUID: s4AnZKTFZA-kPfDCUxWgqMxp7_K2Rqb-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_12,2024-01-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- mlxlogscore=888 clxscore=1011 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 impostorscore=0 spamscore=0 adultscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401160170
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 1/15/24 20:51, Li Zhijian wrote:
-> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-> or sysfs_emit_at() when formatting the value to be returned to user space.
-> 
-> coccinelle complains that there are still a couple of functions that use
-> snprintf(). Convert them to sysfs_emit().
-> 
->> ./drivers/scsi/ibmvscsi/ibmvfc.c:3483:8-16: WARNING: please use sysfs_emit
->> ./drivers/scsi/ibmvscsi/ibmvfc.c:3493:8-16: WARNING: please use sysfs_emit
->> ./drivers/scsi/ibmvscsi/ibmvfc.c:3503:8-16: WARNING: please use sysfs_emit
->> ./drivers/scsi/ibmvscsi/ibmvfc.c:3513:8-16: WARNING: please use sysfs_emit
->> ./drivers/scsi/ibmvscsi/ibmvfc.c:3522:8-16: WARNING: please use sysfs_emit
->> ./drivers/scsi/ibmvscsi/ibmvfc.c:3530:8-16: WARNING: please use sysfs_emit
-> 
-> No functional change intended
-> 
-> CC: Tyrel Datwyler <tyreld@linux.ibm.com>
-> CC: Michael Ellerman <mpe@ellerman.id.au>
-> CC: Nicholas Piggin <npiggin@gmail.com>
-> CC: Christophe Leroy <christophe.leroy@csgroup.eu>
-> CC: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-> CC: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-> CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> CC: "Martin K. Petersen" <martin.petersen@oracle.com>
-> CC: linux-scsi@vger.kernel.org
-> CC: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
+Fixed a coding style problem.
 
-Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Signed-off-by: Hoorad Farrokh <hourrad.f@gmail.com>
+---
+ drivers/staging/wlan-ng/prism2mgmt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/wlan-ng/prism2mgmt.c b/drivers/staging/wlan-ng/prism2mgmt.c
+index d5737166564e..a1adf69ba9f9 100644
+--- a/drivers/staging/wlan-ng/prism2mgmt.c
++++ b/drivers/staging/wlan-ng/prism2mgmt.c
+@@ -1288,8 +1288,8 @@ int prism2mgmt_wlansniff(struct wlandevice *wlandev, void *msgp)
+ 
+ 		/* Set the driver state */
+ 		/* Do we want the prism2 header? */
+-		if ((msg->prismheader.status ==
+-		     P80211ENUM_msgitem_status_data_ok) &&
++		if (msg->prismheader.status ==
++		     P80211ENUM_msgitem_status_data_ok &&
+ 		    (msg->prismheader.data == P80211ENUM_truth_true)) {
+ 			hw->sniffhdr = 0;
+ 			wlandev->netdev->type = ARPHRD_IEEE80211_PRISM;
+-- 
+2.42.0
 
