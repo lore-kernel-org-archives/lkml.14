@@ -1,80 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE1210A3C
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 06:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA50110A05;
+	Tue, 16 Jan 2024 06:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kapsi.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kapsi.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+wjo1Py"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705387862; x=1736923862;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OPysNPwhIAnQcyfr8stWiSetUkU3Df0caepIuGAELpQ=;
-  b=f+wjo1PyeSZNm+MdCutB69AEtDUkQoumvidaBXt7OeYXFXa7wqkdCCON
-   pkf/noYX/8EuSRQUjvsSY7gWi12jDlHUIBmhjoWiRn8kLMZQSDpmRxhT6
-   t/ARliqJ5L+hroSNIUb3FJj3aJTuYxJzOVbW4y/8yEoNnZ5IVnhAnbsmr
-   cVdgEl1e3HwFSPSogA6wzQgBt4iR9Wyy4MCIPR/6x7bRTPIRUqkmmtnkW
-   8JhizHbSasSfoiNK+OnFmo3n4QzVmzHHN67uLthdap0C5Qx2Fo7VqMQR1
-   bxZp5fF7W6Rx0RM8GJTvMAnL+dnMooL7vhicuQxoclCabYIG9tz460boH
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="6488761"
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="scan'208";a="6488761"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 22:51:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="scan'208";a="25688932"
-Received: from uschumac-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.213.254])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 22:50:57 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 55B9010A17B; Tue, 16 Jan 2024 09:50:53 +0300 (+03)
-Date: Tue, 16 Jan 2024 09:50:53 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv5 16/16] x86/acpi: Add support for CPU offlining for ACPI
- MADT wakeup method
-Message-ID: <20240116065053.7a6omvqi3jmncppg@box.shutemov.name>
-References: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
- <20231222235209.32143-17-kirill.shutemov@linux.intel.com>
- <fa1e3873-6218-461b-85fa-1ff353380532@suse.com>
+	dkim=pass (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="EWb1mvNP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+	s=20161220; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
+	To:Subject:From:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=l9cbtoVxmahu43eSHexnSSM/C+AFOi8SW69yat4JZ0A=; b=EWb1mvNPtJnN6SSi52fNO/z6wg
+	wbhDrovcJ/US7uMMt3iw6ibEiLzJEgT6aJ10GwT7gae7oM84PF7RZcrJthI7NZIQaDQQ4ryYGLESs
+	idq9FSTqiNIL/N+ZGX/A2LK0e1pxSKxb4amtoubTbfTVC5MQBuV4LEZdL3IKMtha/Q4xyME1tR4WC
+	GeeMoxppEqJm6xYUjUKYg2iE/ZrlgdnpSHteFEUgTqaFwrVw8QoczfS8ItSv579rlps7A/pi1sH2H
+	CzDvslR+repTDMWObh+jKvWrqKeK85YMxChoGOhlzMLUBtA8hXQy8AtGxjB7VxP644Ihd5tphh5Uj
+	K4Cwnzlg==;
+Received: from [39.110.237.146] (helo=[10.19.62.31])
+	by mail.kapsi.fi with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <cyndis@kapsi.fi>)
+	id 1rPd44-006n2A-2f;
+	Tue, 16 Jan 2024 08:36:49 +0200
+Message-ID: <84be2248-9789-4b32-8f89-296c0f195835@kapsi.fi>
+Date: Tue, 16 Jan 2024 15:36:38 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa1e3873-6218-461b-85fa-1ff353380532@suse.com>
+User-Agent: Mozilla Thunderbird
+From: Mikko Perttunen <cyndis@kapsi.fi>
+Subject: Re: [PATCH v3 2/5] gpu: host1x: Add Tegra SE to SID table
+To: Akhil R <akhilrajeev@nvidia.com>, herbert@gondor.apana.org.au,
+ davem@davemloft.net, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+ catalin.marinas@arm.com, will@kernel.org, mperttunen@nvidia.com,
+ linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org
+References: <20240109091708.66977-1-akhilrajeev@nvidia.com>
+ <20240109091708.66977-3-akhilrajeev@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <20240109091708.66977-3-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 39.110.237.146
+X-SA-Exim-Mail-From: cyndis@kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 
-On Mon, Jan 15, 2024 at 03:19:43PM +0200, Nikolay Borisov wrote:
-> > +	/* Switch to identity mapping */
-> > +	movq	%rsi, %rax
-> > +	movq	%rax, %cr3
+On 1/9/24 18:17, Akhil R wrote:
+> Add Tegra Security Engine details to the SID table in host1x driver.
+> These will be referred when registering the SE as host1x device.
+
+Technically, these entries are required to be in place any time we want 
+to configure SE's stream ID. Register writes to stream ID registers fail 
+otherwise.
+
 > 
-> nit: Can't you move directly to cr3
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> ---
+>   drivers/gpu/host1x/dev.c | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/gpu/host1x/dev.c b/drivers/gpu/host1x/dev.c
+> index 42fd504abbcd..b564c7042235 100644
+> --- a/drivers/gpu/host1x/dev.c
+> +++ b/drivers/gpu/host1x/dev.c
+> @@ -214,6 +214,30 @@ static const struct host1x_info host1x07_info = {
+>    * and firmware stream ID in the MMIO path table.
+>    */
+>   static const struct host1x_sid_entry tegra234_sid_table[] = {
+> +	{
+> +		/* SE2 MMIO */
+> +		.base = 0x1658,
+> +		.offset = 0x90,
+> +		.limit = 0x90
+> +	},
+> +	{
+> +		/* SE4 MMIO */
+> +		.base = 0x1660,
+> +		.offset = 0x90,
+> +		.limit = 0x90
+> +	},
+> +	{
+> +		/* SE2 channel */
+> +		.base = 0x1738,
+> +		.offset = 0x90,
+> +		.limit = 0x90
+> +	},
+> +	{
+> +		/* SE4 channel */
+> +		.base = 0x1740,
+> +		.offset = 0x90,
+> +		.limit = 0x90
+> +	},
+>   	{
+>   		/* VIC channel */
+>   		.base = 0x17b8,
 
-For some reason, I thought I couldn't. Will fix.
+With the commit message slightly adjusted,
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Acked-by: Mikko Perttunen <mperttunen@nvidia.com>
