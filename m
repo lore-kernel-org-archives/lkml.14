@@ -1,37 +1,37 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1A71BF26;
-	Tue, 16 Jan 2024 13:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87EB1BF29;
+	Tue, 16 Jan 2024 13:42:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rd8Ppt88"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ce6j5P/j"
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40GDfjEm027724;
-	Tue, 16 Jan 2024 07:41:45 -0600
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40GDfn7v071425;
+	Tue, 16 Jan 2024 07:41:49 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705412505;
-	bh=VxBu6hTc7ywOegJWteYHT/TCvPqzN88cxPO+F6jKmMM=;
-	h=From:To:CC:Subject:Date;
-	b=Rd8Ppt885MWHWlQgDEy+mSAXBW7wBXHwsTI3QItR97AXcKl1ctZ8mG3ZmZfrU7M+4
-	 enatlivoWXLL2xrV7dqRzdqyDgzq4Ie5JsrkU3hMSIJd44HtPyKj0BsyIlWmnhe912
-	 nnSJwcsGlWtblf5XuKgQCJebpWZk4PNphWgBsvH8=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40GDfi3G026997
+	s=ti-com-17Q1; t=1705412509;
+	bh=aZhgKfvmpDmT/vHDRDphJaSYdogh+5E+fwDnTAIZayE=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=Ce6j5P/jyUuCFkwCdU7HutsJCyiCGK8AUBMRQaEtQ5Blj0HiFLNdWKEwtdblKOBSF
+	 IudktK+XbGQrTkw1NpBHyjWHGBjxK52Kb3BoYaImyxCFn5E0iAY8Kg+/NnOPo055XB
+	 D8Kur2Pwkx44nVk3T+yQTmPI+HaRU5RCnN1JUPA8=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40GDfnIA027046
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 16 Jan 2024 07:41:45 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 16 Jan 2024 07:41:49 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 16
- Jan 2024 07:41:44 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 07:41:48 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 16 Jan 2024 07:41:44 -0600
+ Frontend Transport; Tue, 16 Jan 2024 07:41:48 -0600
 Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40GDfgKd063303;
-	Tue, 16 Jan 2024 07:41:43 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40GDfmRo063370;
+	Tue, 16 Jan 2024 07:41:48 -0600
 From: Devarsh Thakkar <devarsht@ti.com>
 To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
         <airlied@gmail.com>, <daniel@ffwll.ch>,
@@ -43,10 +43,12 @@ To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
         <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>
 CC: <praneeth@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
         <devarsht@ti.com>
-Subject: [RFC PATCH 0/3] Add display sharing support in tidss
-Date: Tue, 16 Jan 2024 19:11:39 +0530
-Message-ID: <20240116134142.2092483-1-devarsht@ti.com>
+Subject: [RFC PATCH 3/3] arm64: dts: ti: k3-am62x: Add overlay to use DSS in display sharing mode
+Date: Tue, 16 Jan 2024 19:11:42 +0530
+Message-ID: <20240116134142.2092483-4-devarsht@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240116134142.2092483-1-devarsht@ti.com>
+References: <20240116134142.2092483-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,67 +59,98 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This adds display sharing support in tidss display driver along with an
-example overlay devicetree file using which can be used to enable display
-sharing on AM62x devices with device manager core i.e. R5F expected to run
-a custom firmware which supports corresponding display sharing
-configuration.
+This overlay needs to be used with display sharing supported device
+manager firmware only.
 
-As resources can be partitioned at different levels a flexible scheme is
-followed while designing devicetree bindings and driver changes keeping in
-mind possible scenarios in which resources can be partitioned and various
-DSS hardware IP's supported across different devices.
+Remote core running this firmware has write access to "common" register
+space, VIDL pipeline, OVR1 overlay and VP1 videoport.
 
-A rebased version of this patch has been tested on AM62P SoC which also
-supports same DSS IP as AM62x and the patch with display sharing
-functionality is already available in vendor-specific kernel source tree
-[1] along with documentation which explains the design [2] and DM firmware
-support [3].
+The processing core running Linux is provided write access to VID
+pipeline and "common1" register space.
 
-NOTE1: This is marked as RFC for upstream since AM62P is not yet supported
-in upstream tree and for AM62x SoC which is the target SoC for this patch,
-the dss sharing functionality is not validated on upstream tree due to
-missing OLDI support and display sharing DM firmware support, but we still
-wanted to get some feedback on this.
+The VP1 video port is shared between Linux and remote core with remote
+core configuring the overlay manager to set Zorder 1 for VID pipeline
+and Zorder 2 for VIDL pipeline.
 
-NOTE2: This series depends on :
-https://lore.kernel.org/all/20240115125716.560363-1-devarsht@ti.com/
+Add reserved memory region for framebuffer region used by remote core in
+dss shared mode overlay file so that Linux does not re-use the same
+while allocating memory.
 
-[1] :
-https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/commit/?h=09.01.00.007&id=d805270609cfb6b2e67bd2fd5959d71f48393196 
-https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/commit/?h=09.01.00.007&id=93d751a94cbf9ad07c7f658e78aa510d919d7cd6
-https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/commit/?h=09.01.00.007&id=665c17837dc8bed27e8d63388f8f7f7a85c0cd94
-https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/commit/?h=ti-linux-6.1.y-cicd&id=f8d7f1a9617862af922c6bc10e0765ba4f4857d6
- 
-[2] :
-https://software-dl.ti.com/processor-sdk-linux/esd/AM62PX/09_01_00_08/exports/docs/linux/Foundational_Components/Kernel/Kernel_Drivers/Display/DSS7.html#driver-features
-(Display Sharing mode feature description)
-https://software-dl.ti.com/processor-sdk-linux/esd/AM62PX/09_01_00_08/exports/docs/linux/How_to_Guides/Target/How_to_enable_display_sharing_between_remotecore_and_Linux.html
-(How To Guide)
-https://software-dl.ti.com/processor-sdk-linux/esd/AM62PX/09_01_00_08/exports/docs/system/Demo_User_Guides/Display_Cluster_User_Guide.html
-(Display Cluster user guide with demo details)
+Also add a label for reserved memory region in base device-tree file so
+that it can be referred back in overlay file.
 
-[3] :
-https://git.ti.com/cgit/processor-firmware/ti-linux-firmware/tree/ti-dm/am62pxx/dss_display_share.wkup-r5f0_0.release.strip.out?h=ti-linux-firmware-next
-
-Devarsh Thakkar (3):
-  dt-bindings: display: ti,am65x-dss: Add support for display sharing
-    mode
-  drm/tidss: Add support for display sharing
-  arm64: dts: ti: k3-am62x: Add overlay to use DSS in display sharing
-    mode
-
- .../bindings/display/ti/ti,am65x-dss.yaml     |  82 ++++++
- arch/arm64/boot/dts/ti/Makefile               |   1 +
- .../dts/ti/k3-am62x-sk-dss-shared-mode.dtso   |  23 ++
- drivers/gpu/drm/tidss/tidss_crtc.c            | 120 ++++++++-
- drivers/gpu/drm/tidss/tidss_dispc.c           | 254 ++++++++++++++++--
- drivers/gpu/drm/tidss/tidss_dispc.h           |   2 +-
- drivers/gpu/drm/tidss/tidss_drv.c             |  33 ++-
- drivers/gpu/drm/tidss/tidss_drv.h             |   6 +
- 8 files changed, 481 insertions(+), 40 deletions(-)
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+ arch/arm64/boot/dts/ti/Makefile               |  1 +
+ .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi |  2 +-
+ .../dts/ti/k3-am62x-sk-dss-shared-mode.dtso   | 33 +++++++++++++++++++
+ 3 files changed, 35 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm64/boot/dts/ti/k3-am62x-sk-dss-shared-mode.dtso
 
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+index 52c1dc910308..ff832741b367 100644
+--- a/arch/arm64/boot/dts/ti/Makefile
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -35,6 +35,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-csi2-ov5640.dtbo
+ dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-csi2-tevi-ov5640.dtbo
+ dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-csi2-imx219.dtbo
+ dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-hdmi-audio.dtbo
++dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-dss-shared-mode.dtbo
+ 
+ # Boards with AM64x SoC
+ dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
+diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+index 33768c02d8eb..8b55ca10102f 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+@@ -34,7 +34,7 @@ memory@80000000 {
+ 		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
+ 	};
+ 
+-	reserved-memory {
++	reserved_memory: reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
+diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-dss-shared-mode.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-dss-shared-mode.dtso
+new file mode 100644
+index 000000000000..02153748a5c2
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-dss-shared-mode.dtso
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * DT overlay to enable display sharing mode for AM62P DSS0
++ * This is compatible with custom AM62 Device Manager firmware
++ *
++ * Copyright (C) 2023 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++/plugin/;
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++&dss0 {
++	ti,dss-shared-mode;
++	ti,dss-shared-mode-vp = "vp1";
++	ti,dss-shared-mode-vp-owned = <0>;
++	ti,dss-shared-mode-common = "common1";
++	ti,dss-shared-mode-planes = "vid";
++	ti,dss-shared-mode-plane-zorder = <0>;
++	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&reserved_memory {
++	#address-cells = <2>;
++	#size-cells = <2>;
++	rtos_framebuffer_memory_region: rtos-framebuffer-memory@94800000 {
++		compatible = "shared-dma-pool";
++		reg = <0x00 0x94800000 0x00 0x08000000>;
++		no-map;
++	};
++};
 -- 
 2.34.1
 
