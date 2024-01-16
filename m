@@ -1,47 +1,37 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E6D38C;
-	Tue, 16 Jan 2024 02:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="hIz5LCPN"
-Received: from localhost.localdomain (unknown [10.101.200.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id BCE413F24E;
-	Tue, 16 Jan 2024 02:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1705370904;
-	bh=TXWQTtrX0W6hq4HrMu5964Ajg8E/3U66zO5MnWRJ90Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=hIz5LCPNMpeb4+xXz/OOolPfcA5R0kLA0iULHSO3f991nC+4jUxEzuwyiLDPTvjhg
-	 f8AUzP14i67BHo7PC0+hDoV6BCNspohdGunFd7Mola806QcPwQhRKRD/uaxfpIrjFc
-	 YZhbE/pU78C8x3ieusWIyPmYH7SCXpNkgo3/l1Tu2/eZoUpKe2F4IkEGQoPV7SnX3L
-	 vCq0shdXKzcNmKaJkrFWhLDsNHCtX4uRG6enkuvEbGyB5jWZurro8ItwgZjIfgL7he
-	 kLDUTgrlrjDkVzmDngcCxJqWzXl9nyUkJIeL75OOsQzv8HfOEansqY5o+c+RPxANVf
-	 ITPVChzD6jhIw==
-From: Yo-Jung Lin <leo.lin@canonical.com>
-To: 
-Cc: leo.lin@canonical.com,
-	andy.chi@canonical.com,
-	0xff07@gmail.com,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Stefan Binding <sbinding@opensource.cirrus.com>,
-	Kailang Yang <kailang@realtek.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Shenghao Ding <shenghao-ding@ti.com>,
-	Matthew Anderson <ruinairas1992@gmail.com>,
-	Vitaly Rodionov <vitalyr@opensource.cirrus.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: hda/realtek: Enable mute/micmute LEDs and limit mic boost on HP ZBook
-Date: Tue, 16 Jan 2024 10:07:19 +0800
-Message-Id: <20240116020722.27236-1-leo.lin@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C4228F6;
+	Tue, 16 Jan 2024 02:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W-kJsPU_1705370940;
+Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0W-kJsPU_1705370940)
+          by smtp.aliyun-inc.com;
+          Tue, 16 Jan 2024 10:09:02 +0800
+From: Ruidong Tian <tianruidong@linux.alibaba.com>
+To: linux-kernel@vger.kernel.org
+Cc: james.clark@arm.com,
+	coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	mike.leach@linaro.org,
+	alexander.shishkin@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	leo.yan@linaro.org,
+	al.grant@arm.com,
+	mathieu.poirier@linaro.org,
+	tor@ti.com,
+	acme@redhat.com,
+	Ruidong Tian <tianruidong@linux.alibaba.com>
+Subject: [PATCH v3 1/1] perf scripts python: arm-cs-trace-disasm.py: add option to print virtual address
+Date: Tue, 16 Jan 2024 10:08:52 +0800
+Message-Id: <20240116020854.56030-2-tianruidong@linux.alibaba.com>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20240116020854.56030-1-tianruidong@linux.alibaba.com>
+References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
+ <20240116020854.56030-1-tianruidong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,26 +40,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On some HP ZBooks, the audio LEDs can be enabled by
-ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF. So use it accordingly.
+arm-cs-trace-disasm just print offset for library dso now:
 
-Signed-off-by: Yo-Jung Lin <leo.lin@canonical.com>
+    0000000000002200 <memcpy>:
+        2200: d503201f      nop
+        2204: 8b020024      add     x4, x1, x2
+        2208: 8b020005      add     x5, x0, x2
+
+Add a option `-a` to print virtual offset other than offset:
+
+    # perf script -s scripts/python/arm-cs-trace-disasm.py -- -d llvm-objdump -a
+    ...
+    ffffb4c23200 <memcpy>:
+        ffffb4c23200: d503201f      nop
+        ffffb4c23204: 8b020024      add     x4, x1, x2
+        ffffb4c23208: 8b020005      add     x5, x0, x2
+    ...
+
+Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/scripts/python/arm-cs-trace-disasm.py | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index b68c94757051..311c4eee9770 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -9955,6 +9955,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8c71, "HP EliteBook 845 G11", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c72, "HP EliteBook 865 G11", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c96, "HP", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
-+	SND_PCI_QUIRK(0x103c, 0x8c97, "HP ZBook", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
- 	SND_PCI_QUIRK(0x103c, 0x8ca4, "HP ZBook Fury", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8ca7, "HP ZBook Fury", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8cf5, "HP ZBook Studio 16", ALC245_FIXUP_CS35L41_SPI_4_HP_GPIO_LED),
+diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+index d973c2baed1c..78419498237e 100755
+--- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
++++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+@@ -36,7 +36,10 @@ option_list = [
+ 		    help="Set path to objdump executable file"),
+ 	make_option("-v", "--verbose", dest="verbose",
+ 		    action="store_true", default=False,
+-		    help="Enable debugging log")
++		    help="Enable debugging log"),
++	make_option("-a", "--vaddr", dest="vaddr",
++			action="store_true", default=False,
++			help="Enable virtual address")
+ ]
+ 
+ parser = OptionParser(option_list=option_list)
+@@ -108,6 +111,14 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
+ 			m = disasm_re.search(line)
+ 			if m is None:
+ 				continue
++
++		# Replace offset with virtual address
++		if (options.vaddr == True):
++			offset = re.search(r"^\s*([0-9a-fA-F]+)", line).group()
++			if offset:
++				virt_addr = dso_start + int(offset, 16)
++				line = line.replace(offset.lstrip(), "%x" % virt_addr)
++
+ 		print("\t" + line)
+ 
+ def print_sample(sample):
 -- 
-2.34.1
+2.33.1
 
