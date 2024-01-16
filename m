@@ -1,113 +1,105 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B296130E4F;
-	Tue, 16 Jan 2024 19:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C37524B54;
+	Tue, 16 Jan 2024 19:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434688; cv=none; b=euMd0lYYpvbBiBnJLzEe1P697HhyuvkLw1AMbN5jE5X5Qu8jeIoCuBaLgCaifCzuoNM8tmuMY/HkM5yCWr6XlPXkIWPLxzCBaNOdt/1qGauNRZrJO8bkaqRuW7uuBMRJW3q7+glD2hLeDh9hOTfs0TGex4jhTA8J0R8EBaVqkYk=
+	t=1705434690; cv=none; b=SafSoQOcOS36AJdSXLrJ8/xZ0/ulPXWIY9TLdswwerXwRpHn4jP6V7Ah5maLn2huIc2q/WlUHrGgdBCiAstBGGhLDyF5DCXWPVbLMzAUmNCe7Fs3D98aVPzfL2YE+qFoxtIN54guGb/D/S5FNOi9RsQvS/QiECCnqtPnOebLRzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434688; c=relaxed/simple;
-	bh=8LNFAiNLxDK9BNpZe1yap94I2WcbyLVKDUX+vZ5KaBQ=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type; b=D5TeW1AC5SW66Rh/M+2k5NJYzJTSvn9jSFvMIkEdgNGs0iCQVKkrX/+gG2Lv7qzAyL1d0imBtQexujygqaL9hYCxRUAHilGBIRdWTLooUkTOw4d9X2NUQltvfFpynO4wzDkZrUPVoQkioJoaNaVrQYJE9KckgzDRpWJoo9ajSMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhndZ5PJ; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705434690; c=relaxed/simple;
+	bh=BtqA+sNM66b7KK6xY6BvU9nMAVkX1m27+Hn1UAJLH6I=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
+	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=D087vg1AEstZRsCxh9mqWWCKAJdX66WRlrRFxHNJRHjymtPKsgLhd4qxFYp13o4c8DeWvX1VVtNzazjXdlPiEVxtMG2iAgukNmI/cKrUUG4VPDPbOdsgBOQ1Cqmk177H8DvnNBrOhjsiiWe0/BMOUOxn7LVVijvxGtzVONJ1xT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3ivBYF8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhndZ5PJ"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbed4b84667so9604472276.0;
-        Tue, 16 Jan 2024 11:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705434685; x=1706039485; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K8w04xiJGT72J3l5pZYydZFnp7VG18KNZBIm6eg0WXU=;
-        b=ZhndZ5PJmmeC7K11+j75TJ+jargGUCHC4OeVaOK/SjRtsuBWvD/V9Wpzg/AyPqXkku
-         1Wc3jXyhonOnE7xkkpmcgTPhT1DkbwbVsdFELECY6KXrSZBcVQNgEoaMc1MEJ8WYimK5
-         k0+vYaRAz+ACl1MKOaAObtLxN+sPvuy1uJJBKo6vHL7p6gaAO1wDQCQZHuheVttnUHvP
-         d+pYcFcenLOP+bu9tAThFs51K97bRTp2w7a0AubNz7btfw8bBiDbEMaoDrLRR8PDLSK6
-         Vxmf6E/bggwxD/F4PutNEnTp9UHMLWuH0HQamzXWaGof5x71hxCDID/lRGfACMu8enaq
-         ql1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705434685; x=1706039485;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K8w04xiJGT72J3l5pZYydZFnp7VG18KNZBIm6eg0WXU=;
-        b=QvzTYrBnAnY6Ncifi0VW7nBOWLhK8rT6qrli2WHqUEtPaL5l1rLvx4WDpxQExLZAKK
-         B/MbDXRe5/In5ZVdzwwfO6QcaCzSOnQ7agdW+uQVWPvLDRkDbO9ze7TRVxk5/q/6hvpc
-         L1HTHzdFNaWxynb4wWoqa1mgLFziTzIk7xmBhrV9xvPxr/0ISbb95k9Urj+G5af8fABd
-         KsDQgrk/2c69pKOt13VHqpT6HU+lCVqMZCg7G5pKYdRPy/kbmucv2wFvEwDF2LpbuN0/
-         AM3yP7FREM/ZJ6YzfroK/NFx5sir9tZNcud4U9nkfuqjfU/P7zE5fAp9Pep60XLmfCSK
-         IPww==
-X-Gm-Message-State: AOJu0YzENZgs6D/MVl0bGIsR7fT4SflMd6wKAPj/7X+7qdQMO23Xdufg
-	5GTVSVo+4XkmN/dmOWbseoUbHD2KGooTMyq128I=
-X-Google-Smtp-Source: AGHT+IEcHHyG+hJdFrG3M4zsgP7m+03vGfwWM2Y7XjxHTSXuNkOfPFJRl4DAeDiaEXh4RoBm4dUCzVDv8eYRlr6MSWI=
-X-Received: by 2002:a25:910:0:b0:dc2:266a:7814 with SMTP id
- 16-20020a250910000000b00dc2266a7814mr1142886ybj.120.1705434685611; Tue, 16
- Jan 2024 11:51:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3ivBYF8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B0A4C433C7;
+	Tue, 16 Jan 2024 19:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705434690;
+	bh=BtqA+sNM66b7KK6xY6BvU9nMAVkX1m27+Hn1UAJLH6I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=P3ivBYF8+ZfglOggXQY6KJXkhCccMKNjJycz+oNjFXzZiljnbzf2LVmcfGnLOXE8s
+	 T9+n/IncH+Vwzjuginpv7ovLbrUBJ9SvU5/Ip22xj3cSLtJKDvTZYZZMHkdSslyYCY
+	 Wp3PcDMLhW6rUlqFnOjw3qH2zdbl+xaN9oinrIq9NHaRHgLWG9NPBCAFEudOybW3H+
+	 bdSRB3H1ogLWb2UdJvDdsuSaQNCz3HWaaLWOqIDGgFNtJCke8Zz/4UGSdWIndGSuZL
+	 lzI7Bh3guIpzssupWy1WTzd5SI51n1lCQ8O2YT9RzQDliR+quRbUFq27CkNdnVgUpJ
+	 8MvExmnFNCKUw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: duanqiangwen <duanqiangwen@net-swift.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	jiawenwu@trustnetic.com,
+	mengyuanlou@net-swift.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	bhelgaas@google.com,
+	maciej.fijalkowski@intel.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 049/104] net: wangxun: fix changing mac failed when running
+Date: Tue, 16 Jan 2024 14:46:15 -0500
+Message-ID: <20240116194908.253437-49-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116194908.253437-1-sashal@kernel.org>
+References: <20240116194908.253437-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108135421.684263-1-tmaimon77@gmail.com> <20240108135421.684263-4-tmaimon77@gmail.com>
- <99eca166-7d78-4ada-ac0a-ad67f3d8eb33@linaro.org>
-In-Reply-To: <99eca166-7d78-4ada-ac0a-ad67f3d8eb33@linaro.org>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Tue, 16 Jan 2024 21:51:14 +0200
-Message-ID: <CAP6Zq1g7NoLVbAUyeQ8jm3qZvjLV6HSVZB+r-X7dxvVNtvddPg@mail.gmail.com>
-Subject: Re: [PATCH v22 3/8] arm: dts: nuvoton: npcm7xx: modify rst syscon node
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com, joel@jms.id.au, 
-	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.12
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,
+From: duanqiangwen <duanqiangwen@net-swift.com>
 
-Thanks for your comment.
+[ Upstream commit 87e839c82cc36346a2cd183ca941316902110716 ]
 
-On Wed, 10 Jan 2024 at 23:01, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 08/01/2024 14:54, Tomer Maimon wrote:
-> > rst node name and compatible property modified since clock and reset are
-> > handled in the same memory region.
-> >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-> > index 868454ae6bde..f72c5a03d04c 100644
-> > --- a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-> > +++ b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-> > @@ -93,8 +93,8 @@ gcr: gcr@800000 {
-> >                       reg = <0x800000 0x1000>;
-> >               };
-> >
-> > -             rst: rst@801000 {
-> > -                     compatible = "nuvoton,npcm750-rst", "syscon", "simple-mfd";
-> > +             clk_rst: syscon@801000 {
-> > +                     compatible = "nuvoton,npcm750-clk-rst", "syscon", "simple-mfd";
->
-> NAK. This breakes the users, is not justified, is not explained.
-Sorry, I didn't understand, which user it is breaking? there isn't a
-device tree node that uses the rst node.
-Should I explain it better in the commit message?
->
-> Best regards,
-> Krzysztof
->
+in some bonding mode, service need to change mac when
+netif is running. Wangxun netdev add IFF_LIVE_ADDR_CHANGE
+priv_flag to support it.
 
-Best regards,
+Signed-off-by: duanqiangwen <duanqiangwen@net-swift.com>
+Link: https://lore.kernel.org/r/20231206095044.17844-1-duanqiangwen@net-swift.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/wangxun/ngbe/ngbe_main.c   | 1 +
+ drivers/net/ethernet/wangxun/txgbe/txgbe_main.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-Tomer
+diff --git a/drivers/net/ethernet/wangxun/ngbe/ngbe_main.c b/drivers/net/ethernet/wangxun/ngbe/ngbe_main.c
+index a4d63d2f3c5b..2085b9c38a15 100644
+--- a/drivers/net/ethernet/wangxun/ngbe/ngbe_main.c
++++ b/drivers/net/ethernet/wangxun/ngbe/ngbe_main.c
+@@ -580,6 +580,7 @@ static int ngbe_probe(struct pci_dev *pdev,
+ 
+ 	netdev->priv_flags |= IFF_UNICAST_FLT;
+ 	netdev->priv_flags |= IFF_SUPP_NOFCS;
++	netdev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+ 
+ 	netdev->min_mtu = ETH_MIN_MTU;
+ 	netdev->max_mtu = WX_MAX_JUMBO_FRAME_SIZE -
+diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
+index d60c26ba0ba4..2482b661bc99 100644
+--- a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
++++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
+@@ -637,6 +637,7 @@ static int txgbe_probe(struct pci_dev *pdev,
+ 
+ 	netdev->priv_flags |= IFF_UNICAST_FLT;
+ 	netdev->priv_flags |= IFF_SUPP_NOFCS;
++	netdev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+ 
+ 	netdev->min_mtu = ETH_MIN_MTU;
+ 	netdev->max_mtu = WX_MAX_JUMBO_FRAME_SIZE -
+-- 
+2.43.0
+
