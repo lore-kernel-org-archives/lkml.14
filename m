@@ -1,111 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E77274E3C;
-	Tue, 16 Jan 2024 19:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7ED76902
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 19:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434420; cv=none; b=MvlZy2dQDH0ej0t+LddXaVVyV1HtIwnU7Sbuhm56JnzlMXb8HLAx3aTZSi27Bb3rGnNV1H/Daa6IfpWpEEFl/V6Rdot+tZgCfiv5DsvhDKsxf+N7SNZwT3FD/IQ1e3LEkcroRvPnCeT5eqLv2ikqZodh0NuvZiRyNVv80OZC9eQ=
+	t=1705434424; cv=none; b=t4TzipNhi8HHMyIg4xaclA6k2dHWPaOoTUsx0zAiA4GZoVyLbPFMDh1SoSTSt5oEf6cRmkp3KfUzAraPTC0cXZ34Sh3f5/ZWLJquZe0T3ppcBHWGlQvfNk/L847e26p69V0Fv7nxcg5u1lIC0Fl+rdwUSaOAEgdMn5/LaS4lYZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434420; c=relaxed/simple;
-	bh=jUHpHxhjYTN/68x+epj3CFaEsOY4Qf0DcyLchOF4UPs=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
-	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=gpzcB1LSrpd8wQcFIwTgLTPxj1EnmTrHQUUV14UXG7p3m+1eJC/C8o/2i8t+KglOd5ag5DCurF5sF83fCs0wkUmMsSiSMzynP+LVXu8mfKqRuP6b+1PnqwtIKfuahupM2L0s2e1EFxon/+kyElOb+U5CKa2YfGiKNngr25IEIhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htNck777; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htNck777"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E646C433A6;
-	Tue, 16 Jan 2024 19:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705434420;
-	bh=jUHpHxhjYTN/68x+epj3CFaEsOY4Qf0DcyLchOF4UPs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=htNck777v1LPCWLUa3vxnEHm2aCfFQXW8Wc2/Ybu2FL7tZI/awlFcMcnWBDiXY5lW
-	 uR3o3GwQRZ3Dku+dOWR9m89SLCkOtUZ/HApb4C71pKdy10VEF3D0ug9pI9gPQCBB8o
-	 6ti71CQB/fKk2DR6eWi049N80Pgl7HKUtHi5zRFLvJM9h2csW57j0u5DSmKP+RQUv/
-	 I8bddAMZ1Fjn0UCwceF8Q7g/qSx5U0X5F+Nl+h7+Sjii810mouoe8D5SdD5MBq7Tdp
-	 AMhmYUQZh34AfkuXVy5EBFr1lGKNLd6rs+0i1NtDSflfrlZ2rmGHHy5IgWdZdQt6FC
-	 qo1gK5VBWp0fA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Suman Ghosh <sumang@marvell.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	sgoutham@marvell.com,
-	lcherian@marvell.com,
-	gakula@marvell.com,
-	jerinj@marvell.com,
-	hkelam@marvell.com,
-	sbhatta@marvell.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.7 105/108] octeontx2-af: Fix max NPC MCAM entry check while validating ref_entry
-Date: Tue, 16 Jan 2024 14:40:11 -0500
-Message-ID: <20240116194225.250921-105-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116194225.250921-1-sashal@kernel.org>
-References: <20240116194225.250921-1-sashal@kernel.org>
+	s=arc-20240116; t=1705434424; c=relaxed/simple;
+	bh=EfwE9uaTGSc2UjtKTV2wy76THTUsBDCa58I0a7iq2Wo=;
+	h=Received:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+	 User-Agent; b=CL4lxq6FwRgke/r4VYBOHcLrQzFBhlQ3fBn7PbrbtA94rcLzbSuKcKUwt6iLBM9afMmcjko4Te4UmX2l+VvW5QhI0ttMP+VPFEY/y0MIDPYHrj0kw8D3nxvrEfLHyvkE2MLAJq6VxjFACRV/9g/Qy9DdYjv+ALHzXWq4bFhSLAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 40GJkt1u005515;
+	Tue, 16 Jan 2024 20:46:55 +0100
+Date: Tue, 16 Jan 2024 20:46:55 +0100
+From: Willy Tarreau <w@1wt.eu>
+To: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+Cc: Charles Mirabile <cmirabil@redhat.com>, linux-kernel@vger.kernel.org,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Subject: Re: [PATCH] nolibc/stdlib: Improve `getauxval(3)` implementation
+Message-ID: <20240116194655.GA5511@1wt.eu>
+References: <20240116181147.2230944-1-cmirabil@redhat.com>
+ <ZabQVvpZ4e7hTwcb@biznet-home.integral.gnuweeb.org>
+ <ZabRwdcgU/H8i5Ja@1wt.eu>
+ <ZabSG4R45sC0s23d@1wt.eu>
+ <ZabUyZG3C3LUax6f@biznet-home.integral.gnuweeb.org>
+ <ZabXyRMECEnMUizk@biznet-home.integral.gnuweeb.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZabXyRMECEnMUizk@biznet-home.integral.gnuweeb.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-From: Suman Ghosh <sumang@marvell.com>
+On Wed, Jan 17, 2024 at 02:23:53AM +0700, Ammar Faizi wrote:
+> On Wed, Jan 17, 2024 at 02:11:12AM +0700, Ammar Faizi wrote:
+> > On Tue, Jan 16, 2024 at 07:59:39PM +0100, Willy Tarreau wrote:
+> > > On Tue, Jan 16, 2024 at 07:58:09PM +0100, Willy Tarreau wrote:
+> > > > On Wed, Jan 17, 2024 at 01:52:06AM +0700, Ammar Faizi wrote:
+> > > > > What do you think about other architectures? Will it potentially be
+> > > > > misinterpreted?
+> > > > 
+> > > > Indeed, it would fail on a 64-bit big endian architecture. Let's
+> > > > just declare the local variable the same way as it is in the spec,
+> > > > it will be much cleaner and more reliable.
+> > > 
+> > > With that said, if previous code used to work on such architectures,
+> > > maybe the definition above is only for x86_64 and differs on other
+> > > archs. Maybe it's really defined as two longs ?
+> > 
+> > I just took a look at the kernel source code:
+> > https://github.com/torvalds/linux/blob/v6.7/fs/binfmt_elf.c#L226-L261
+> > 
+> > The auxv is stored in `elf_info` variable, the type is `elf_addr_t`. Not
+> > sure what kind of typedef is that. I'll check.
+> > 
+> > Each auxv entry is added using this macro:
+> > 
+> >  #define NEW_AUX_ENT(id, val) \
+> >          do { \
+> >                  *elf_info++ = id; \
+> >                  *elf_info++ = val; \
+> >          } while (0)
+> > 
+> > where `id` is the type. That clearly implies `type` and `val` have the
+> > same size on the Linux kernel.
+> 
+> So here is the result:
+> 
+> 1. 'elf_addr_t' defintion ( https://github.com/torvalds/linux/blob/v6.7/include/linux/elf.h#L38-L62 ):
+> 
+>   (simplified)
+>   #if ELF_CLASS == ELFCLASS32
+>   #define elf_addr_t	Elf32_Off
+>   #else
+>   #define elf_addr_t	Elf64_Off
+>   #endif
+> 
+> 2. 'Elf32_Off' and 'Elf64_Off' typedefs ( https://github.com/torvalds/linux/blob/v6.7/include/uapi/linux/elf.h#L8-L23 )
+> 
+>   typedef __u32  Elf32_Off;
+>   typedef __u64  Elf64_Off;
+> 
+> Assuming 'ELFCLASS32' is for 32-bit architectures, then it's two __u64
+> on 64-bit arch, and two __u32 on 32-bit arch. That is identical to
+> 'unsigned long' for both cases (on Linux). So it's fine to have
+> 'unsigned long' for both 'type' and 'value'.
 
-[ Upstream commit 4ebb1f95e0c3c3e0eec5bb21aa43097580c4b6e4 ]
+Yeah I agree, thanks for checking.
 
-As of today, the last MCAM entry was not getting allocated because of
-a <= check with the max_bmap count. This patch modifies that and if the
-requested entry is greater than the available entries then set it to the
-max value.
-
-Signed-off-by: Suman Ghosh <sumang@marvell.com>
-Link: https://lore.kernel.org/r/20240101145042.419697-1-sumang@marvell.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
-index 0bcf3e559280..3784347b6fd8 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
-@@ -2678,18 +2678,17 @@ int rvu_mbox_handler_npc_mcam_alloc_entry(struct rvu *rvu,
- 	rsp->entry = NPC_MCAM_ENTRY_INVALID;
- 	rsp->free_count = 0;
- 
--	/* Check if ref_entry is within range */
--	if (req->priority && req->ref_entry >= mcam->bmap_entries) {
--		dev_err(rvu->dev, "%s: reference entry %d is out of range\n",
--			__func__, req->ref_entry);
--		return NPC_MCAM_INVALID_REQ;
--	}
-+	/* Check if ref_entry is greater that the range
-+	 * then set it to max value.
-+	 */
-+	if (req->ref_entry > mcam->bmap_entries)
-+		req->ref_entry = mcam->bmap_entries;
- 
- 	/* ref_entry can't be '0' if requested priority is high.
- 	 * Can't be last entry if requested priority is low.
- 	 */
- 	if ((!req->ref_entry && req->priority == NPC_MCAM_HIGHER_PRIO) ||
--	    ((req->ref_entry == (mcam->bmap_entries - 1)) &&
-+	    ((req->ref_entry == mcam->bmap_entries) &&
- 	     req->priority == NPC_MCAM_LOWER_PRIO))
- 		return NPC_MCAM_INVALID_REQ;
- 
--- 
-2.43.0
-
+Willy
