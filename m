@@ -1,128 +1,118 @@
-Received: from mail.fris.de (unknown [116.203.77.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75431CF80;
-	Tue, 16 Jan 2024 18:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fris.de
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA121CF89
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705428694; cv=none; b=SKbCJHJuMn/5s+xjiMqCPfX3Smo9oa8ZDgc1sch6VkkolbQAIfL5dV3RXvW1uldAk6ftn6YPlCNBGsX9bbcdpPIGVTIZOiITwWs5F+cwZilJbBuHST6AnvIixHP5cq1MpmscZSIEPIfcsUymuUUP0WSq6S6d5VN8xf9iVxNzON4=
+	t=1705428694; cv=none; b=iOs1usSQ+jULk1oSmJirKKOgBlxGXKqsDD0JRB7EPeTaagqzN4i/y2G9DavVQazk+cyw7AQ7MArBUr5hyqh/xebBs2KgQX2iueFq46EidKfwW62AFGfCgWzIZvm7K2RVjbzsp66vA1WjZLNK+Oj3KKbVsmEfN1bmYFi7gs9bz64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705428694; c=relaxed/simple;
-	bh=GXTCt2puEC8n4+KVjswTePXCWATNvAVVWhSqZSB21Qo=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:X-Last-TLS-Session-Version;
-	b=hANarosFW1zRrR3KGWRmfiyZk0r5mzk+NwyRLA65J+pEUuso8Wiglz5LA3U2xc5DhacoYw3itboSWa0oPI1SFktNIqbrMf1m4QYOYQHu2tBB3T+xhymW488ZuMvTUozqTLMKzz/KeinPfZFZJjxD5FmSBLwSRQRK+YMfLhfuf5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=ZwV73gzm; arc=none smtp.client-ip=116.203.77.234
+	bh=M0Ooulm9S8WHLNo6AfrCErL0/OwFMQeru2lh9LT1eww=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=tR3jjARvpKvcA9O9dCuSF4lzdjgHGufKN/8NuEfVED16smCiqb33vKHCzLa0W4/g3PSRk30iSmS48o6YhPny1B3jDu+5WFPBp0Nv9uZ/x/4hPYVUH7QGheya4DpeMjfaXfELos1IQl/Xh9DxyYWvOwbbXDoG8J9WkwMyXItxMrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tmddb43k; arc=none smtp.client-ip=209.85.166.52
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="ZwV73gzm"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 55B54C0354;
-	Tue, 16 Jan 2024 19:11:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
-	t=1705428688; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=8F+jBEwJoQNU4CLdgGATObLnvkE7jK0zgOw0cTlpNEM=;
-	b=ZwV73gzmZ1RhRnjO0kp4qkFsvxRqrX9mOe0piUCiPEDu/AF5mMv+ScRHfSmgnGI3Uyp0mH
-	hSLtiCKHrjohrIx3PGgNg5nPG+P3s2Rfv2jf1dxrRv5inE6CrTH/oAuMjbIldTxaw6hgZU
-	aJ1NG/+GjcuoRN76bmxeRrJ6T6YOAURkUU0yhNHhFXmxK/eaSwbCd0TSE0+1j+ewUvBIEv
-	MMHJfdplajEs4gxiny8fU89Pw6a5onltdH1INn00Ntusd8Ol7BYhRKoI6LPQ9Nr127Vvbi
-	TheONUNZ9e9UrURkQ/Gw0rmAFXYHo7TImGUckDVaEql99VLkVlh2dspXszOU+w==
-From: Frieder Schrempf <frieder@fris.de>
-To: Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Li Yang <leoyang.li@nxp.com>,
-	netdev@vger.kernel.org,
-	Richard Cochran <richardcochran@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Christoph Niedermaier <cniedermaier@dh-electronics.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	James Hilliard <james.hilliard1@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
-	=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Stefan Wahren <stefan.wahren@chargebyte.com>,
-	Tim Harvey <tharvey@gateworks.com>,
-	Yang Xiwen <forbidden405@foxmail.com>,
-	Yannic Moog <y.moog@phytec.de>
-Subject: [PATCH v2 0/3] ARM: dts: imx6dl: Add support for Sielaff i.MX6 Solo board
-Date: Tue, 16 Jan 2024 19:10:25 +0100
-Message-ID: <20240116181100.382388-1-frieder@fris.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tmddb43k"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7bc3e297bc9so473628039f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:11:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705428692; x=1706033492; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SNxgcWOo1csnjFsBhzJAhb4fTQBuYKqyH36PPDUAqrM=;
+        b=tmddb43klQoDUO20LffXTBLPfgv4Y9FAsY3TKpVG1j6i6Mwoin4jsgY10a/KNQ7JoS
+         JJaNAFKUgr2U+TVWa2mUpPgkbD9owDRbNonMWozlnjB6RyIdbAyOM/Nx45qJgfffrv3H
+         rvHoOsUqLiJfUYDMp12k9HlQ8fuf/LDeGp3QSKOtAZlyLoYkNd9lixsp4KHnR43mdMOq
+         p0PfTYEDXjOhD5XacqcnKFR7zuXSrVolRnlvtiZ9id0U3/rS+SZFwbeXZMxuUmfPJNsO
+         mkLddh5Grv2lHkTlQsRtYUcoAtsdaxT49lb+Wl72hEvD+s/BTKLhKPB1gJB8SePSvuai
+         UUzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705428692; x=1706033492;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SNxgcWOo1csnjFsBhzJAhb4fTQBuYKqyH36PPDUAqrM=;
+        b=Lr+fwYbzBqdMUpBdMb6siiAdcmgBi5yCh4ezJXJ8DblyUFLK/69rXgCKwgm7lbanZB
+         g+ktdM14qZbKr2OJtDz9WjLBxV8/0LUlLuXugCIpYD3R/AifM7WiZzP9Luh5EqvGEZ9w
+         S4hEfakW/MWBDx6klmqHIhxisAjX6MMHktEEVYaEKezDg8Dqzo+LkLVdLrbBMXy7ONCp
+         io1sUM4nDZszCF+HvuWgWWX+M2FMb8DrMIYiWgOvfSqA6C7UFVxI3kt7HgButsypziTw
+         VvKbni5PApWVIBzUQi3AUts2wwi2vPnwF3xt3dueMcclW5v4WrQJcm4N2BZ0oWnfeq5Q
+         PX5w==
+X-Gm-Message-State: AOJu0YwM0Ja5Tm5DnkJuqtkOQJ8LVI76CKQExuIHTZHBxYEu957A1qe2
+	cRQVSqOQxL2H4GNNZhfqaVeqscwrW9G9i15mb21xvHLN4t4xyg==
+X-Google-Smtp-Source: AGHT+IE5QD79wikGUbt+f+gyh/dGDvkkcbx8JHtG+ewUTqw1m7M5U8NmftDLIr2A/UQiHvfv2iLRDc2vlArXMBbwfU0=
+X-Received: by 2002:a6b:cd0c:0:b0:7bf:554c:bb63 with SMTP id
+ d12-20020a6bcd0c000000b007bf554cbb63mr1637673iog.14.1705428692146; Tue, 16
+ Jan 2024 10:11:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20240109125814.3691033-1-tudor.ambarus@linaro.org> <20240109125814.3691033-4-tudor.ambarus@linaro.org>
+In-Reply-To: <20240109125814.3691033-4-tudor.ambarus@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Tue, 16 Jan 2024 12:11:20 -0600
+Message-ID: <CAPLW+4=BO6jkN+RRhO=8=79XtoOTRdfrEQBgDDzq8seWi8YMaA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/12] dt-bindings: serial: samsung: do not allow
+ reg-io-width for gs101
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: peter.griffin@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
+	gregkh@linuxfoundation.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	robh+dt@kernel.org, conor+dt@kernel.org, andi.shyti@kernel.org, 
+	alim.akhtar@samsung.com, jirislaby@kernel.org, s.nawrocki@samsung.com, 
+	tomasz.figa@gmail.com, cw00.choi@samsung.com, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-serial@vger.kernel.org, andre.draszik@linaro.org, 
+	kernel-team@android.com, willmcvicker@google.com, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Tue, Jan 9, 2024 at 6:59=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro.=
+org> wrote:
+>
+> All gs101 serial ports are restricted to 32-bit register accesses.
+> This requirement will be inferred from the compatible. Do not allow
+> the reg-io-width property for the google,gs101-uart compatible.
+>
+> Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
 
-This series adds upstream support for the Sielaff i.MX6 Solo board.
-It is used as controller and user interface in vending machines. It
-is based on the i.MX6 Solo SoC and features the following
-peripherals and interfaces:
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
-* 512 MB DDR3 RAM
-* 512 MB NAND Flash
-* 1 MB NOR Flash
-* SD card
-* Debug LED
-* Debug UART
-* Key Inputs
-* RTC
-* RS232
-* 100 MBit Ethernet
-* USB Hub
-* USB OTG
-* HDMI
-* 7" LVDS IPS panel
-* PWM Backlight
-* Optional Extension Board with USB Ethernet NIC
-
-Patch 1 adds the vendor prefix, patch 2 adds the DT bindings and
-patch 3 adds the DT.
-
-Changes in v2:
-* Add Acked-by from Conor (Thanks!)
-* Fix touchscreen node names (Thanks Fabio!)
-
-Frieder Schrempf (3):
-  dt-bindings: vendor-prefixes: Add Sielaff
-  dt-bindings: arm: fsl: Add Sielaff i.MX6 Solo board
-  ARM: dts: imx6dl: Add support for Sielaff i.MX6 Solo board
-
- .../devicetree/bindings/arm/fsl.yaml          |   1 +
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/arm/boot/dts/nxp/imx/Makefile            |   1 +
- arch/arm/boot/dts/nxp/imx/imx6dl-sielaff.dts  | 533 ++++++++++++++++++
- 4 files changed, 537 insertions(+)
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-sielaff.dts
-
--- 
-2.43.0
-
+> v3: collect Peter's R-b tag
+> v2: new patch
+>
+>  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b=
+/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> index 133259ed3a34..0f0131026911 100644
+> --- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> @@ -143,6 +143,8 @@ allOf:
+>      then:
+>        required:
+>          - samsung,uart-fifosize
+> +      properties:
+> +        reg-io-width: false
+>
+>  unevaluatedProperties: false
+>
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
+>
