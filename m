@@ -1,59 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CECF20DD7
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 20:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECDC210EC;
+	Tue, 16 Jan 2024 20:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705435789; cv=none; b=QE7ITi6peZHE8oRDcRIdTVuJ2bUB2gxAqS6IINHp6/rKpwF7sdtnRYIe5J9SPGFFwV9fy2KhW0DVz1rrgosRdvNGxctzwkNCZ1V5ro+5mNqmRTPRPczJR+QBPV86N0cqkVhCZTammqes5nWdvo7+x8rWtKbYjXeA0IhI0Ggi594=
+	t=1705435869; cv=none; b=LfYiwizqVcBkDrZFSpWzXNoUtHjdk9o7YFJRlowzS25v/kcnwdBF2xJSrNFAXrrYJvasOOlZzjyp4yMmUHW6rAlIor6Y9YfMB5Dvzq91Lzsk2xoXt/2DdUSP0QUzS36N2WtD6G887SkZbMC9yk7nXo9xeQq7jjxcpsNQlWRIfPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705435789; c=relaxed/simple;
-	bh=gdAk4kWrtWiAqmSMBrHr5e88tr+iTIpY2yL02fV4bbc=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-Id:
-	 In-Reply-To:References:X-Mailer:Mime-Version:Content-Type:
-	 Content-Transfer-Encoding; b=ebeF2sdTCeQ+775bi7suVh7gZnmo1u1kcOlaDX5q4Pv4X/9lU/AgMRPBv+HIGZ9vxNpast+DiUwJofE/SSeDfegMgrzzl1Asm4pGg3c996NUWWpwQkSroJ5ZVPZfRlj5KsQAIKtvOZrHgn1rLiRKbyLsdP8N/XoTFjyWseLxivo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Ximf6L/F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705435869; c=relaxed/simple;
+	bh=Ot5DoXHaRejr+Ouk7XMENcjD7AuNVLbmSQjIHDwjPeI=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-GND-Sasl; b=U5yHh18cPNkaf3yANFkvIvwH4qhKPZ4qA+Q7Ao80oviUrckQi2EqIUTIdM4+46YuW6b7Tx2Mu4FievBsj3YFtKfHEMns5m/qtzt+WjZb6rxBS/+Prsp0Reg2FtbpiAwVTc2N+yPWLFZLBBpJVVqujNN2+/S6gUTTkNxH9LagXDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WbvBWDaH; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Ximf6L/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA47C433F1;
-	Tue, 16 Jan 2024 20:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1705435788;
-	bh=gdAk4kWrtWiAqmSMBrHr5e88tr+iTIpY2yL02fV4bbc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ximf6L/FlFDOaC4lTZoERv3GRCOcXwpMDcTwLfIBdb9Y7QbGHchGwcV6jPEk2RLln
-	 Sijv3uG5gjBvBQmdHDch73vEq6QYRibVjWCh4aty4p61vKoEa+9ZGgM1FbU1iiEtnp
-	 8Sn75qvrUvjgbGKnvWPhxZNc7B1SWoxQo7vFhyC4=
-Date: Tue, 16 Jan 2024 12:09:44 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Matthew Wilcox <willy@infradead.org>,
- Yosry Ahmed <yosryahmed@google.com>, Christoph Hellwig <hch@infradead.org>,
- Nhat Pham <nphamcs@gmail.com>, Domenico Cerasuolo
- <cerasuolodomenico@gmail.com>, konrad.wilk@oracle.com,
- vitaly.wool@konsulko.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: kill frontswap
-Message-Id: <20240116120944.01f25e65d13f0fc7e2a2df34@linux-foundation.org>
-In-Reply-To: <20230717160227.GA867137@cmpxchg.org>
-References: <20230714194610.828210-1-hannes@cmpxchg.org>
-	<ZLIVleBYOm4HIGTZ@casper.infradead.org>
-	<20230717141250.GA866068@cmpxchg.org>
-	<901409ed-504b-9500-54d8-e42f832e07b0@suse.cz>
-	<20230717160227.GA867137@cmpxchg.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WbvBWDaH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2233040004;
+	Tue, 16 Jan 2024 20:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1705435856;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=boLTDxiJRvuGbhONOmfvkdNsFpD/vXpoBMU87w5mD8k=;
+	b=WbvBWDaHd/y7DH+O+mClgauo0TFfzW4s+WOGBo3FcocXlI/MIYyhppWOD2/Z6hylV41+k9
+	GdwSS39jouA2y9ffGk+8N1/TzyZr53wdHTLznzIIWSQWmlGuPZwcP8BHW0TuIkrmnSGd5y
+	+sfyhiB7D65S7C8N0437c5c0D3+wavBZuQPPOmQLNX7hQfBJvKsRwBGg0lg9sAHuFvOEJ+
+	St5QGEKDC7/D9tK16XhPFi+F0QsWJY/1vqCQkvl0FaFR4Se7bneP64Bh53ZuMoRlwRByCC
+	+C/rbOd1tQ8R42DeSxsRApcjsCqf/AuCTGf1KEz1VaKynENntWKecBLyifB2sQ==
+Date: Tue, 16 Jan 2024 21:10:52 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Dharma Balasubiramani <dharma.b@microchip.com>,
+	conor.dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nicolas.ferre@microchip.com,
+	claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, lee@kernel.org,
+	thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+	linux-pwm@vger.kernel.org, linux4microchip@microchip.com
+Subject: Re: [PATCH v2 2/3] dt-bindings: atmel,hlcdc: convert pwm bindings to
+ json-schema
+Message-ID: <20240116201052544a0791@mail.local>
+References: <20240116113800.82529-1-dharma.b@microchip.com>
+ <20240116113800.82529-3-dharma.b@microchip.com>
+ <20240116-rising-gap-df4124f191a0@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240116-rising-gap-df4124f191a0@spud>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Mon, 17 Jul 2023 12:02:27 -0400 Johannes Weiner <hannes@cmpxchg.org> wrote:
+On 16/01/2024 18:03:19+0000, Conor Dooley wrote:
+> On Tue, Jan 16, 2024 at 05:07:59PM +0530, Dharma Balasubiramani wrote:
+> > Convert device tree bindings for Atmel's HLCDC PWM controller to YAML
+> > format.
+> > 
+> > Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> > ---
+> > changelog
+> > v1 -> v2
+> > - Remove the explicit copyrights.
+> > - Modify title (not include words like binding/driver).
+> > - Modify description actually describing the hardware and not the driver.
+> > - Remove pinctrl properties which aren't required.
+> > - Drop parent node and it's other sub-device node which are not related here.
+> > ---
+> >  .../bindings/pwm/atmel,hlcdc-pwm.yaml         | 47 +++++++++++++++++++
+> >  .../bindings/pwm/atmel-hlcdc-pwm.txt          | 29 ------------
+> >  2 files changed, 47 insertions(+), 29 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml b/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
+> > new file mode 100644
+> > index 000000000000..751122309fa9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
+> > @@ -0,0 +1,47 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> 
+> The original file has no license, but was originally written by a
+> free-electrons employee, so the relicensing here is fine.
+> 
 
-> The only user of frontswap is zswap, and has been for a long
-> time. Have swap call into zswap directly and remove the indirection.
+I confirm relicensing is fine, even assigning the copyright to
+Microchip (note that Bootlin is legally the same entity as
+free-electrons)
 
-This falls afoul of "mm: zswap: multiple zpools support".  Could we
-please have a version against mm-unstable or linux-next?
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/atmel,hlcdc-pwm.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Atmel's HLCDC's PWM controller
+> > +
+> > +maintainers:
+> > +  - Nicolas Ferre <nicolas.ferre@microchip.com>
+> > +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
+> > +
+> > +description: |
+> 
+> Again, the | is not needed here.
+> 
+> > +  The LCDC integrates a Pulse Width Modulation (PWM) Controller. This block
+> > +  generates the LCD contrast control signal (LCD_PWM) that controls the
+> > +  display's contrast by software. LCDC_PWM is an 8-bit PWM signal that can be
+> > +  converted to an analog voltage with a simple passive filter. LCD display
+> > +  panels have different backlight specifications in terms of minimum/maximum
+> > +  values for PWM frequency. If the LCDC PWM frequency range does not match the
+> > +  LCD display panel, it is possible to use the standalone PWM Controller to
+> > +  drive the backlight.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: atmel,hlcdc-pwm
+> > +
+> > +  "#pwm-cells":
+> > +    const: 3
+> > +    description: |
+> > +      This PWM chip uses the default 3 cells bindings defined in pwm.yaml in
+> > +      this directory.
+> 
+> I would delete this description tbh.
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#pwm-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    pwm: pwm {
+> > +      compatible = "atmel,hlcdc-pwm";
+> > +      pinctrl-names = "default";
+> > +      pinctrl-0 = <&pinctrl_lcd_pwm>;
+> > +      #pwm-cells = <3>;
+> > +    };
+> 
+> The label here is not used and can be dropped. Otherwise,
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> 
+> 
+> Cheers,
+> Conor.
+> 
+> > diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> > deleted file mode 100644
+> > index afa501bf7f94..000000000000
+> > --- a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> > +++ /dev/null
+> > @@ -1,29 +0,0 @@
+> > -Device-Tree bindings for Atmel's HLCDC (High-end LCD Controller) PWM driver
+> > -
+> > -The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
+> > -See ../mfd/atmel-hlcdc.txt for more details.
+> > -
+> > -Required properties:
+> > - - compatible: value should be one of the following:
+> > -   "atmel,hlcdc-pwm"
+> > - - pinctr-names: the pin control state names. Should contain "default".
+> > - - pinctrl-0: should contain the pinctrl states described by pinctrl
+> > -   default.
+> > - - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
+> > -   bindings defined in pwm.yaml in this directory.
+> > -
+> > -Example:
+> > -
+> > -	hlcdc: hlcdc@f0030000 {
+> > -		compatible = "atmel,sama5d3-hlcdc";
+> > -		reg = <0xf0030000 0x2000>;
+> > -		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
+> > -		clock-names = "periph_clk","sys_clk", "slow_clk";
+> > -
+> > -		hlcdc_pwm: hlcdc-pwm {
+> > -			compatible = "atmel,hlcdc-pwm";
+> > -			pinctrl-names = "default";
+> > -			pinctrl-0 = <&pinctrl_lcd_pwm>;
+> > -			#pwm-cells = <3>;
+> > -		};
+> > -	};
+> > -- 
+> > 2.25.1
+> > 
+
+
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
