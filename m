@@ -1,220 +1,270 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE29D1CAB8
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 17:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=134.134.136.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705427200; cv=fail; b=T5HnKroVgKzFMNRS7NDL8yL7Prg/68SjvOLlbjQV/LgaPWyhfQmHffKoowWSEI8DP/WON6EsSj+zL3+kI+5MAJ35HDcd3x//k25b5j3YFrObF6Dza0KaifV+eGx2dU1KAjQDrrTb9HG3VKJW3ks2hALwq4tNX6hIiew2LsWjspQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705427200; c=relaxed/simple;
-	bh=SpKLAP+9YP0g4x+2jmoMG/PyzXoNpOPMbh+sAPKTgxg=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:
-	 Received:ARC-Message-Signature:ARC-Authentication-Results:Received:
-	 Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:Content-Type:
-	 Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	b=Ql2/Kvu7AdvRRhW7dxif37LdPhzfSqFxi85FkQJwYt+vCYwCBoPpTYI1vjDzlX8eMoHf0MSllRw5YNJP2YFVOV3otwIfgeXd5c51XjBqhy0ayhu+piIJudk+FSnGkzy59vAYL2VRnmd21laNc2GDWCM9bqE8/J8LQmYCXD4tVxU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CVWOdHbr; arc=fail smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746541CD03
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 17:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705427251; cv=none; b=cffMmO1vOOMdou1EyFMcjX+FJ5HxxhWrxMRMV5bdxzPkx0+KcAGHZ7gjODwXZfHDQUveNXkUZlww7RMZJQeSeAwEcd0Ls/ycAHfaK5h1ZwAyiF6pWPgt/7o/smzJVW4tKn/Y8vcX0nhFD9nDu9sbkY8fMDHdtxwRxG+ofdDPxzs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705427251; c=relaxed/simple;
+	bh=0/isWeFMhnfYH9X/K89t23Z1ify73WMdfmYzYqWJFYs=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Received:Received:X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:
+	 X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=g8D7hSLr3bRUcnyd3alrrfsXoh89uxa2OI/zpca1Uuxkr2eUQeFOATvVxhytghrZLQHCA1LDHO30yBl5JrMlphx56Lu3HmWO2HkGzqj/0LCzyQFB32PJ6Fu27KSHd2bRn3WfzltZbWNq3qs4Jxk/vlzianeWXoi/LqnAlTL61no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JgDdCfzb; arc=none smtp.client-ip=209.85.219.54
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CVWOdHbr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705427198; x=1736963198;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=SpKLAP+9YP0g4x+2jmoMG/PyzXoNpOPMbh+sAPKTgxg=;
-  b=CVWOdHbrFYUGCLBHbSytBhwzKdvPcYBjtDhgW6SWmOoTXI8BBn7S/hhz
-   kJFMxW76yLC38kQ5rG1zddiE5F6vLgNOWbqSuWan3O0hEn5vGckrFRMia
-   W7P4HqNKTjXUYzwN1+2gAfGck+jvuBvsPfejdD8e8ovKSwz+VazyCFje8
-   va6YdeoeJDx0QKBXe0NR4DmzAETlSQOKecftDwuCRjXheReBZqty4JgD/
-   Wng54YkA6/TFyNmhsQFF4XIs2I67kJlQvLYYGw5qSlbtmns8b+DmuHX5S
-   l/O10jHHw3t57t2dC6Tck2Be4n+LKr2jxWbdQAa1Au/ihTHGZSix5T8aM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="390388872"
-X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
-   d="scan'208";a="390388872"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 09:46:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="784207599"
-X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
-   d="scan'208";a="784207599"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Jan 2024 09:46:37 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Jan 2024 09:46:37 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Jan 2024 09:46:37 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 16 Jan 2024 09:46:37 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 16 Jan 2024 09:46:36 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C+v24+cEEb0fClJgPV2akJ67FJrY4UF7iY++AEbtvq/pg5EYz/5ZVTu07hLHShendhIIm3Qe1pVqdW8C6qKLhzqKmOlhuDPf3HdMTcau/k9dlgYX5TQt6qOR+VLD5j9LLw6gcc/liC7isQ5JGUP4Hz0WupxjHXN48+2X7t4yNqB+uATAnzGBspF6cQ5hvAxFg3lKJ+/jYGa9HzoT28NWr50/RjTURVnlUqv9W5qrAQO3CuhhaQt/eCrTaTFPDRuUc8xDZwxkKxigQ9p68wn6uuCtJWfEw/POjt1VKQn84JEnyfgAHE/eR3H3KmUCwqmoOxdgJOEoCrt08m+GrSkjdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J5Xj8lGAzcl2eG/6TZBA/2kO37ybvrr4jdnUZji/lY8=;
- b=BCiOTAoYcH10/dc6vWn4RurPyE9KFpdsTfq7FF46gRlg+sH2egFaoGGHfv9cd8RL7NlecRlyvm1L5h3uLMDRA8Xjh3cxOuSyfITblEpnTgY8TzwEz5Q9I3UZjcYrmscrFMA4n/4UWuzaMOZDPhNBZ3tEth3pzwFZeWiNQKVY7l0ETDqt6e74JaBfbIbwuMg1ZvmV2ZbmeqxSqOnaXyx8UZ2F/PdAbHRb6X00Vf8Zw6K354Lq0U7sGfHmIBZMia47ZJELW/4AmNva5aQ0QbxdvC4GbWJglrKtW0NwfoYJXbWYWBFcRRycN8dkQgKcl1f/AiDT1HKh9RxxLdaIdjG3IQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
- DS0PR11MB8665.namprd11.prod.outlook.com (2603:10b6:8:1b8::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.23; Tue, 16 Jan 2024 17:46:29 +0000
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::f105:47dd:6794:6821]) by DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::f105:47dd:6794:6821%4]) with mapi id 15.20.7202.020; Tue, 16 Jan 2024
- 17:46:29 +0000
-From: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
-To: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, "Javier Martinez
- Canillas" <javierm@redhat.com>, =?UTF-8?q?Ma=C3=ADra=20Canal?=
-	<mcanal@igalia.com>, Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>,
-	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
-Subject: [PATCH] drm/tests: mm: Call drm_mm_print in drm_test_mm_debug
-Date: Tue, 16 Jan 2024 18:46:02 +0100
-Message-ID: <20240116174602.1019512-1-michal.winiarski@intel.com>
-X-Mailer: git-send-email 2.43.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0080.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1f::15) To DM4PR11MB5373.namprd11.prod.outlook.com
- (2603:10b6:5:394::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgDdCfzb"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-681397137afso36301336d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 09:47:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705427249; x=1706032049; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g9/4nniJGFU/CJ741SHgigkRUcx2eNLr43luj0B9gCo=;
+        b=JgDdCfzbjFH4zXvklclmlKlMDSD9C7xv2bLN9uD4D09+iVxeXFER3EDM+Y7GWIOrg4
+         ZedMFu760OgXTziWxhFhJ7JvzwGtByp8mDCvrjwPbcHdYVHAGosWDn0USVuOcOuzT+sp
+         wTqX9mQHTt+98irpf3ClNdNMMc/yS5ZlOMHk23UKEiCuwxS8h91SW5Wy9Qb5cktgMyFJ
+         Gfi6PxXyeCZbXp5dqFrbyu1bJEB86GSXG4+ZBuRpV0/zQ9kMOAPWCwMw8yJXMyDlixxt
+         HJkiuRT3V73lCSNQVV8chdVFQ6xfc4KRkxkIKAYsfNx8SCSfuy+LNTp4jmnymhUBAhT0
+         ss5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705427249; x=1706032049;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g9/4nniJGFU/CJ741SHgigkRUcx2eNLr43luj0B9gCo=;
+        b=Xwx3ehFX36zBvQIXZyEpWtXRdwz5DGmAUnmGRBx3YLRsuBjCPxSty7GQwd8MLrKX1c
+         Z2GSwzWxtQXi8RoYR21J7Z5LdachRKAljaGobqr9bepeZ6zDx3CeP4hcnMsAnw5jayRx
+         EgSCRBffL1HZkvDN/v3E+QrdS3bQL35/awftfWbzw0RVxgeN8/2GnJNmFanyqCvCma8j
+         mOJ6hVIIEldRMYxwwv23XPd5pTAqtKEmUeLcawAdcVvtvx0YECkXTbjDmY5YUqVxGPzT
+         Ce7aDNK93ZuH+HNZEf7XokG39oKCeFVhLkhhyI21PlNpsEA3mcmo3ifXRwuvg6Zabik1
+         ZkkA==
+X-Gm-Message-State: AOJu0YwwING76rNnx7gUN9lT1dPFjdA4J3Ihne/Fn8KVtlCk75zedQoj
+	69rHc8kcfADG5VwBgVlFtPjHwF8IhEo=
+X-Google-Smtp-Source: AGHT+IFXJouSw95e5E+j0j8szvGi8jRVVra1MtGJCx70Xo0HVBxxoP00gvporqcrWgkbwTDErYFspw==
+X-Received: by 2002:a05:6214:268c:b0:67f:ae28:f570 with SMTP id gm12-20020a056214268c00b0067fae28f570mr8802004qvb.124.1705427249406;
+        Tue, 16 Jan 2024 09:47:29 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id x19-20020ad44593000000b0067f678747ffsm4374070qvu.50.2024.01.16.09.47.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 09:47:28 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailauth.nyi.internal (Postfix) with ESMTP id 680CC27C0067;
+	Tue, 16 Jan 2024 12:47:28 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 16 Jan 2024 12:47:28 -0500
+X-ME-Sender: <xms:L8GmZXDE44Ovaf7yrVs4hEM2dSIfgB0nt5mV9F1hMT6Gxe1oDNZ1kA>
+    <xme:L8GmZdhfrUkc-tZCq36f_zkEN7PPVOQ9kNB-7VDd_bVu348q0kE7Wl3PS-FE_BHCe
+    4YpS-1RkvkJAaX-6g>
+X-ME-Received: <xmr:L8GmZSk3bsUrx7VybiKonzy71rAqVRBvtU6DZocnhi6rfBOARzKFUAQrzkM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdejfedguddtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveei
+    udffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:L8GmZZy-K8KzzzZp7crcaPGswomQYzi7RLUkB4rCUkt_0AHdo-0u7Q>
+    <xmx:L8GmZcQU9DXRH5UPSPgt3hYdMcy7nshMVoRKqr6MjiPYqAlJopEOOQ>
+    <xmx:L8GmZcaLK-HVrz-c5wJDGWgfwg7huG7dNfToFMzjnl18VUAaRqECeQ>
+    <xmx:MMGmZfE7rZPZEML_xUoDcPVJhGzFdKM4opR9mbgTx5c0FwNlFQyY2g>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 16 Jan 2024 12:47:27 -0500 (EST)
+Date: Tue, 16 Jan 2024 09:47:08 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	longman@redhat.com, linux-kernel@vger.kernel.org,
+	niuzhiguo84@gmail.com, ke.wang@unisoc.com, xuewen.yan@unisoc.com
+Subject: Re: [PATCH] lockdep: fix deadlock issue between lockdep and rcu
+Message-ID: <ZabBHHwZd70IDDxP@boqun-archlinux>
+References: <1705308796-13547-1-git-send-email-zhiguo.niu@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|DS0PR11MB8665:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b68c35d-75bd-4005-90e1-08dc16bb11fa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gIe55Q0wbrHidFugKwvxCXU8eKAbRdACO1H5ZIsXCjrBYbX1QvlMoEHeOe1dWY2PrX+Q2rjMkzUqvXqRgUAozESyHQUqq4iDLyzAgmR0pYyy1nFk07k21QxbudCHUMTL0czzts78FaDycA5NJtcn5Ei+GUN456gJXyVdRCihDnorUDdLzsLp5lI8ouOtbtVklSJT8hohT7OMicm9Hgcapqg8TyUBrSUREktj/LOJ4W1g68jwarCCa3CCWs3Ptg1eSVLzzgL3XvCFiQahlu4XrkAvUZTZjzgQg1Yh+Ux2nxutSQqDItIrvHTZxdsUuePcCtxnCt1E/aGs8VNlWOBouV8w1zLK75kWW4/cIAd8FE6v9Jq8jfBTUlq+ncHB9kWpDcf/xODtRMBZp/tFiWL3WQw3jng2xZV+Q9+KwfipEgbZ086ZGJJhm9noyI6k5TJ7v6QSFgq4r3YHr3Cjy3xVg8z0TU6y6tzJY9jGtxSuffJ5FYhBLq4oMX7d+hFhK5k2OWEBEBwH3KVmhiC0MGjq1qqBL2d5jfGT27vrp05hMwI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(396003)(136003)(376002)(39860400002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(82960400001)(38100700002)(36756003)(86362001)(26005)(1076003)(83380400001)(41300700001)(478600001)(6512007)(66556008)(66946007)(316002)(66476007)(6666004)(2616005)(54906003)(6486002)(6506007)(2906002)(7416002)(5660300002)(4326008)(8936002)(8676002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RS9lUm9hdEx6RVovTGp4a20yNldOY0ZhTklNWHk4VXcyQ3h5S1Q2SlFoVytq?=
- =?utf-8?B?QjdrY1VKZWUrOUgxb1VWTThzQ0xXN2tRRFhraU8reWtHR2o1eDJDeU5ZemxQ?=
- =?utf-8?B?elNnMmFpKzhSMzNZYnQzK3lRRHdkY3U2NFdFNEdFTUFZRzA0UWI1N2M2SWN0?=
- =?utf-8?B?L3JYeDZvYUYzZngraENMRlRvOEMwMDNqL2hJL2g4QmswRVFpeGV3YWw4UTRn?=
- =?utf-8?B?MWlaL2JDb0puR1BPd3FmQ25PYmxFRDZEbU1QTDgrR1hGdXFiZUN2Y0xmdk5s?=
- =?utf-8?B?UFl3YWpxcURXRHdYS1JES1pKMG9CM0pPa3hFWUFRSFNiQ3JDUlNaTWx5Qk8r?=
- =?utf-8?B?N0lzZTN6UWdPaDNCR2dIaWhrTUdlVitnd0J3R2dvbUk1ZU5aT3F0SCtvZnZj?=
- =?utf-8?B?azJlMDNpYnNES0t2S1BVakVzL3hLT1B4aUREUVJzSVNqdmd0Mm5DNWlLVE5a?=
- =?utf-8?B?ZEpCM21TR2k4QnZOY3g5eU5CbGxDY1oyTjRxZEZmOWpKK2QyaDFyVFF3VnlR?=
- =?utf-8?B?czZyMDFBY3Y4MEhHa1MyMXh1QzdkR1Z3bk5MZDcwMGJrL1AwMmlIVjEvTFpN?=
- =?utf-8?B?VlBMTXdQcDNhdDdBQjdoZXhFL1R3bW5tY04xaGQ0MXVIU1hqejNyc0daamc4?=
- =?utf-8?B?S29yRkVQK1d5TDltcExvK3lxTko5SVByVW1qMzUxNkFGaVhWS28yMVRTRGtz?=
- =?utf-8?B?bGNiY1BGNGcwcWVDQngrS0E3cU5Vb29vVGo2eWFSVy9HMGpwVnk1RCtJekxp?=
- =?utf-8?B?YXNBMlgrZE5xMlo4cWxOQVdyalNPV0xQbTFPM1hhaVVBbExCNG1sQ24xcjZr?=
- =?utf-8?B?eXJQZFNYeGVmdzdGNy9VQkpyS09kQzdtU2d0UjBYTGV2RCtzZHNaNnRMUVIz?=
- =?utf-8?B?VC9LNmEvRTA3dFUxTlpKRUdvZ2VOS2VKVnRFYklRV3l2VmZ6TkpSKzluMkNm?=
- =?utf-8?B?NHhLLzAxSUkyYXA3RTg2cFMwRXJYOEJuTXJvVzBuMkZTamtCeVJ3c3JhWTZ6?=
- =?utf-8?B?a2NNNmdDTVBkUUVDL3AzQkQ4alJBTU0rcVlNV3JEaDdyZ0k1TlFnTVpjK3VR?=
- =?utf-8?B?SVZPMmpsMWlSSzVhL3JoeFZFRFl1TDJCeDlOckNrQm9iaUNVeEhEb2M4ZS84?=
- =?utf-8?B?S1RDN3dReDJpTlp2VUZJLzV3M0N0OHJOZmVjaU5Hc2ZjZEJTY1phT1RnK0N3?=
- =?utf-8?B?K0xBeElHQ2VtRnh3a2k4bWhXOVJhRXdQWnQ1UzFkckNOcVdwVEgwbjRBaktV?=
- =?utf-8?B?SzZPaFNwdmw1NmRnVG1lUml1QWN6Rmh1Zk1BSVVGMG9tYWExVmduT2hySW4z?=
- =?utf-8?B?U0xPdlVIaHJwUS94VkwwMU83dXQyWkthSktDNmNKY1VkZTRmcGRURVBNVDl1?=
- =?utf-8?B?bnBlVXRiSU5CZ1ErSWM4d2ZXOWNCZjM0cGtJY21ycjVVMEFtNWpKam1rZFlj?=
- =?utf-8?B?bFdFVTdGUngzM2sxYlFJbU94ZjRTWWR2VUw5K056cjZha2l5bnRHSGdjYVcw?=
- =?utf-8?B?UWRIQ0JRZ0hYRy9PRWZtaDF1UmNRczNiZks1cElQSDJ6aGdrZDJZd0poQkRt?=
- =?utf-8?B?bVF5NFY1ejgzYlZldjMrdkkwckgwQlRrTnVQQnNyT3F3L3FQODdwQkx1Tmd0?=
- =?utf-8?B?aW54bUNIVTBsNi9YS25CSWwrMmlJZ2JiNW5GUTY4VnZCeU5GOEdKM0RCZkk1?=
- =?utf-8?B?NkZ5TDkySGF5MjlvTHB0YVczcnF1bHc1Q2h3RXVXcTl5QVR5QU9zcDhObFYv?=
- =?utf-8?B?V010Um11N0h3Z25OMkdBcWVCSXN3bzVVL2QreUpWay80SjZTUm9wT0NudzU0?=
- =?utf-8?B?SGtqd0x5V3piaU5IL3dER2JiUzlLWkk5MXBtTTl6ZDI4dFdhaVlReFYzVE5o?=
- =?utf-8?B?R1hkZXVNWFNYT2s4dUtrZCtQYXBSeURRL1lTOUJmNTVkNWNIZEFobmxZSGxn?=
- =?utf-8?B?MTZ0VWdWYys3M3F6QWRlSGIvUGlVdW0wTXFmcnFqTlQ5aDhIcUgzaWhGeGln?=
- =?utf-8?B?cDdFa05yeGRXakpSOUN3R3JqM2lERFBpb2FoeG5uWFJtL3ZLREdRWWFTWXNC?=
- =?utf-8?B?VHpIS2s0L1BJZVhRMWFWVE56ZkprVGhYOC9UcUkzR3hHa1p0VmhCUDB5VVhX?=
- =?utf-8?B?VHFYTDNLR1FQYW9jd001Zzlwd1EwSnlibFBIeERwV3hMVjRmQko4OGVVS1Nw?=
- =?utf-8?B?VXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b68c35d-75bd-4005-90e1-08dc16bb11fa
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 17:46:29.8629
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6t/UB8eJtH0iwV7TawGcz/z1UKSq5dOYmnZhal/Ge6UuJeJl55CR1sxPr+HqjqsdsHyY9dL6CmdXA8hgVzrmnQCp14nnQv50bOnc1piPDZc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8665
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1705308796-13547-1-git-send-email-zhiguo.niu@unisoc.com>
 
-The original intent behind the test was to sanity check whether calling
-the debug iterator (drm_mm_print) doesn't cause any problems.
-Unfortunately - this call got accidentally removed during KUnit
-transition. Restore it.
+On Mon, Jan 15, 2024 at 04:53:16PM +0800, Zhiguo Niu wrote:
+> There is a deadlock scenario between lockdep and rcu when
+> rcu nocb feature is enabled, just as following call stack:
+> 
+>      rcuop/x
+> -000|queued_spin_lock_slowpath(lock = 0xFFFFFF817F2A8A80, val = ?)
+> -001|queued_spin_lock(inline) // try to hold nocb_gp_lock
+> -001|do_raw_spin_lock(lock = 0xFFFFFF817F2A8A80)
+> -002|__raw_spin_lock_irqsave(inline)
+> -002|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F2A8A80)
+> -003|wake_nocb_gp_defer(inline)
+> -003|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F30B680)
+> -004|__call_rcu_common(inline)
+> -004|call_rcu(head = 0xFFFFFFC082EECC28, func = ?)
+> -005|call_rcu_zapped(inline)
+> -005|free_zapped_rcu(ch = ?)// hold graph lock
+> -006|rcu_do_batch(rdp = 0xFFFFFF817F245680)
+> -007|nocb_cb_wait(inline)
+> -007|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F245680)
+> -008|kthread(_create = 0xFFFFFF80803122C0)
+> -009|ret_from_fork(asm)
+> 
+>      rcuop/y
+> -000|queued_spin_lock_slowpath(lock = 0xFFFFFFC08291BBC8, val = 0)
+> -001|queued_spin_lock()
+> -001|lockdep_lock()
+> -001|graph_lock() // try to hold graph lock
+> -002|lookup_chain_cache_add()
+> -002|validate_chain()
+> -003|lock_acquire
+> -004|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F211D80)
+> -005|lock_timer_base(inline)
+> -006|mod_timer(inline)
+> -006|wake_nocb_gp_defer(inline)// hold nocb_gp_lock
+> -006|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F2A8680)
+> -007|__call_rcu_common(inline)
+> -007|call_rcu(head = 0xFFFFFFC0822E0B58, func = ?)
+> -008|call_rcu_hurry(inline)
+> -008|rcu_sync_call(inline)
+> -008|rcu_sync_func(rhp = 0xFFFFFFC0822E0B58)
+> -009|rcu_do_batch(rdp = 0xFFFFFF817F266680)
+> -010|nocb_cb_wait(inline)
+> -010|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F266680)
+> -011|kthread(_create = 0xFFFFFF8080363740)
+> -012|ret_from_fork(asm)
+> 
+> rcuop/x and rcuop/y are rcu nocb threads with the same nocb gp thread.
+> 
 
-Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
----
- drivers/gpu/drm/tests/drm_mm_test.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Nice! Looks like you find the root cause ;-) nocb_gp_lock and graph_lock
+have an ABBA deadlock due to lockdep's dependency on RCU. I assume this
+actually fixes the problem you saw?
 
-diff --git a/drivers/gpu/drm/tests/drm_mm_test.c b/drivers/gpu/drm/tests/drm_mm_test.c
-index 4e9247cf9977f..1eb0c304f9607 100644
---- a/drivers/gpu/drm/tests/drm_mm_test.c
-+++ b/drivers/gpu/drm/tests/drm_mm_test.c
-@@ -188,13 +188,13 @@ static void drm_test_mm_init(struct kunit *test)
- 
- static void drm_test_mm_debug(struct kunit *test)
- {
-+	struct drm_printer p = drm_debug_printer(test->name);
- 	struct drm_mm mm;
- 	struct drm_mm_node nodes[2];
- 
- 	/* Create a small drm_mm with a couple of nodes and a few holes, and
- 	 * check that the debug iterator doesn't explode over a trivial drm_mm.
- 	 */
--
- 	drm_mm_init(&mm, 0, 4096);
- 
- 	memset(nodes, 0, sizeof(nodes));
-@@ -209,6 +209,9 @@ static void drm_test_mm_debug(struct kunit *test)
- 	KUNIT_ASSERT_FALSE_MSG(test, drm_mm_reserve_node(&mm, &nodes[1]),
- 			       "failed to reserve node[0] {start=%lld, size=%lld)\n",
- 			       nodes[0].start, nodes[0].size);
-+
-+	drm_mm_print(&mm, &p);
-+	KUNIT_SUCCEED(test);
- }
- 
- static bool expect_insert(struct kunit *test, struct drm_mm *mm,
--- 
-2.43.0
+However, I want to suggest a different fix, please see below:
 
+> This patch release the graph lock before lockdep call_rcu.
+> 
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+> ---
+>  kernel/locking/lockdep.c | 38 +++++++++++++++++++++++++-------------
+>  1 file changed, 25 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 151bd3d..c1d432a 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -6186,23 +6186,29 @@ static struct pending_free *get_pending_free(void)
+>  /*
+>   * Schedule an RCU callback if no RCU callback is pending. Must be called with
+>   * the graph lock held.
+> + *
+> + * Return true if graph lock need be released by the caller, otherwise false
+> + * means graph lock is released by itself.
+>   */
+> -static void call_rcu_zapped(struct pending_free *pf)
+> +static bool call_rcu_zapped(struct pending_free *pf)
+>  {
+>  	WARN_ON_ONCE(inside_selftest());
+>  
+>  	if (list_empty(&pf->zapped))
+> -		return;
+> +		return true;
+>  
+>  	if (delayed_free.scheduled)
+> -		return;
+> +		return true;
+>  
+>  	delayed_free.scheduled = true;
+>  
+>  	WARN_ON_ONCE(delayed_free.pf + delayed_free.index != pf);
+>  	delayed_free.index ^= 1;
+>  
+> +	lockdep_unlock();
+>  	call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
+> +
+> +	return false;
+>  }
+>  
+>  /* The caller must hold the graph lock. May be called from RCU context. */
+> @@ -6228,6 +6234,7 @@ static void free_zapped_rcu(struct rcu_head *ch)
+>  {
+>  	struct pending_free *pf;
+>  	unsigned long flags;
+> +	bool need_unlock;
+>  
+>  	if (WARN_ON_ONCE(ch != &delayed_free.rcu_head))
+>  		return;
+> @@ -6243,9 +6250,9 @@ static void free_zapped_rcu(struct rcu_head *ch)
+>  	/*
+>  	 * If there's anything on the open list, close and start a new callback.
+>  	 */
+> -	call_rcu_zapped(delayed_free.pf + delayed_free.index);
+> -
+> -	lockdep_unlock();
+> +	need_unlock = call_rcu_zapped(delayed_free.pf + delayed_free.index);
+> +	if (need_unlock)
+> +		lockdep_unlock();
+
+Instead of returning a bool to control the unlock, I think it's better
+that we refactor the call_rcu_zapped() a bit, so it becomes a
+prepare_call_rcu_zapped():
+
+	// See if we need to queue an RCU callback, must called with
+	// the lockdep lock held, returns false if either we don't have
+	// any pending free or the callback is already scheduled.
+	// Otherwise, a call_rcu() must follow this function call.
+	static bool prepare_call_rcu_zapped(struct pending_free *pf)
+	{
+		WARN_ON_ONCE(inside_selftest());
+	
+		if (list_empty(&pf->zapped))
+			return false;
+	
+		if (delayed_free.scheduled)
+			return false;
+	
+		delayed_free.scheduled = true;
+	
+		WARN_ON_ONCE(delayed_free.pf + delayed_free.index != pf);
+		delayed_free.index ^= 1;
+	
+		return true;
+	}
+
+, and here we can:
+
+	<lockdep_lock() is called previous>
+	need_callback = prepare_call_rcu_zapped(...);
+	lockdep_unlock();
+  	raw_local_irq_restore(flags);
+
+	if (need_callback)
+		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
+
+compared to your fix, we don't have a special logic where
+call_rcu_zapped() can be an unlock in some conditions, which prevents
+local correctness reasoning.
+
+Thoughts?
+
+Regards,
+Boqun
+
+>  	raw_local_irq_restore(flags);
+>  }
+>  
+[...]
