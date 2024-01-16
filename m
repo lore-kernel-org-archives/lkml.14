@@ -1,126 +1,162 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C412B1EB41;
-	Tue, 16 Jan 2024 04:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S5Ilz3IE"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40G4d7wR003050;
-	Tue, 16 Jan 2024 04:52:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ekRfnElQ5SP2PMw3QDmn8+FB0j9H41Ob685N6KWrRjI=; b=S5
-	Ilz3IEGgOeeid3oYBUvEnQ5MJ3SHi957PWGh1InDL6PiVxN9vf4YdmxA4EXtZyt+
-	/0edyjoYix+XRVV1mYz6rB8MVj38JJxhFIc/LOs8n/7C3OykG/B0RF6EUElc3dbt
-	w3Z16J39XwyWsTzqCnOwvR+tNTPvjScXm6cw9NwoN1pn00tn7SDIunt4tvcFVqcV
-	gYd0UggaaVsHud5N2DLHyoBgwNGiPFEUhn40xkFKZvlV144nZlieAtN6CAaEIPbl
-	+sogt/XkJjPo7HNpSDjOJwC+SPlUJ/bpa5dzrhLU2EWM+TN+zeBHT2CCDXpqHeLZ
-	BMTyy+dyXLjjJxZKQ/xQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vnb300sxm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 04:52:55 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40G4qs1h006123
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 04:52:54 GMT
-Received: from [10.216.3.129] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 15 Jan
- 2024 20:52:47 -0800
-Message-ID: <1b7912c5-983c-b642-ca56-ae1e2def9633@quicinc.com>
-Date: Tue, 16 Jan 2024 10:22:44 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26071171E;
+	Tue, 16 Jan 2024 04:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="125645468"
+X-IronPort-AV: E=Sophos;i="6.04,198,1695654000"; 
+   d="scan'208";a="125645468"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 13:52:20 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 85CBDC14A5;
+	Tue, 16 Jan 2024 13:52:17 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id AEBB4BF3FC;
+	Tue, 16 Jan 2024 13:52:16 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 4BFBC6B4C7;
+	Tue, 16 Jan 2024 13:52:16 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.226.45])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id D68F01A0161;
+	Tue, 16 Jan 2024 12:52:15 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: linux-kernel@vger.kernel.org
+Cc: Li Zhijian <lizhijian@fujitsu.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	linux-input@vger.kernel.org
+Subject: [PATCH 09/42] drivers/hid/hid-lenovo: Convert snprintf to sysfs_emit
+Date: Tue, 16 Jan 2024 12:51:18 +0800
+Message-Id: <20240116045151.3940401-7-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240116045151.3940401-1-lizhijian@fujitsu.com>
+References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
+ <20240116045151.3940401-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v6 3/6] PCI: qcom: Add missing icc bandwidth vote for cpu
- to PCIe path
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Brian Masney <bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <vireshk@kernel.org>,
-        <quic_vbadigan@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-3-77bbf7d0cc37@quicinc.com>
- <fecfd2d9-7302-4eb6-92d0-c2efbe824bf4@linaro.org>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <fecfd2d9-7302-4eb6-92d0-c2efbe824bf4@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: pghQY40iUmtKbJFkO2Y2Zr7yPjkseDrw
-X-Proofpoint-GUID: pghQY40iUmtKbJFkO2Y2Zr7yPjkseDrw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- phishscore=0 impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0
- clxscore=1011 malwarescore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=706
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
- definitions=main-2401160035
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28122.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28122.005
+X-TMASE-Result: 10--8.440000-10.000000
+X-TMASE-MatchedRID: R1u6Jncx2x04ibokZ3+Q0CoiRKlBVkYIBXngI6jFvpfvd49YGReckE1N
+	J2MN+nPkgxCMf8A0YpR5sRK06wHV4TBF7stuNMMxTuctSpiuWyUUi4Ehat0546MQi364g884JmV
+	7j1WQqoeX81JAaXNO9negIXkiA/apHxPMjOKY7A8LbigRnpKlKSPzRlrdFGDwJh5lryUC0+jUrH
+	d8FT6b0HReObJMOgmzR5gvrzvL35ST76aKysvrqA==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
+Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+or sysfs_emit_at() when formatting the value to be returned to user space.
 
+coccinelle complains that there are still a couple of functions that use
+snprintf(). Convert them to sysfs_emit().
 
-On 1/12/2024 8:47 PM, Bryan O'Donoghue wrote:
-> On 12/01/2024 14:22, Krishna chaitanya chundru wrote:
->> CPU-PCIe path consits for registers PCIe BAR space, config space.
->> As there is less access on this path compared to pcie to mem path
->> add minimum vote i.e GEN1x1 bandwidth always.
->>
->> In suspend remove the cpu vote after register space access is done.
->>
->> Fixes: c4860af88d0c ("PCI: qcom: Add basic interconnect support")
-> 
-> If this patch is a Fixes then don't you need the accompanying dts change 
-> as a parallel Fixes too ?
-> 
-> i.e. without the dts update - you won't have the nodes in the dts to 
-> consume => applying this code to the stable kernel absent the dts will 
-> result in no functional change and therefore no bugfix.
-> 
-> I'm not sure if you are asked to put a Fixes here but it seems to be it 
-> should either be dropped or require a parallel Fixes: tag for the dts 
-> and yaml changes.
-> 
-> What is the bug this change fixes in the backport ?
-> 
-There is no change required in the dts because the cpu-pcie path is
-already present in the dts.
-So till now driver is ignoring that path, that's why we tagged with
-fixed.
+> ./drivers/hid/hid-lenovo.c:558:8-16: WARNING: please use sysfs_emit
+> ./drivers/hid/hid-lenovo.c:602:8-16: WARNING: please use sysfs_emit
+> ./drivers/hid/hid-lenovo.c:792:8-16: WARNING: please use sysfs_emit
+> ./drivers/hid/hid-lenovo.c:822:8-16: WARNING: please use sysfs_emit
+> ./drivers/hid/hid-lenovo.c:852:8-16: WARNING: please use sysfs_emit
+> ./drivers/hid/hid-lenovo.c:882:8-16: WARNING: please use sysfs_emit
+> ./drivers/hid/hid-lenovo.c:912:8-16: WARNING: please use sysfs_emit
+> ./drivers/hid/hid-lenovo.c:941:8-16: WARNING: please use sysfs_emit
 
--Krishna Chaitanya
->> cc: stable@vger.kernel.org
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> 
-> ---
-> bod
+No functional change intended
+
+CC: Jiri Kosina <jikos@kernel.org>
+CC: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+CC: linux-input@vger.kernel.org
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+ drivers/hid/hid-lenovo.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+index 149a3c74346b..26768c319361 100644
+--- a/drivers/hid/hid-lenovo.c
++++ b/drivers/hid/hid-lenovo.c
+@@ -555,7 +555,7 @@ static ssize_t attr_fn_lock_show(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data->fn_lock);
++	return sysfs_emit(buf, "%u\n", data->fn_lock);
+ }
+ 
+ static ssize_t attr_fn_lock_store(struct device *dev,
+@@ -599,8 +599,7 @@ static ssize_t attr_sensitivity_show_cptkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n",
+-		cptkbd_data->sensitivity);
++	return sysfs_emit(buf, "%u\n", cptkbd_data->sensitivity);
+ }
+ 
+ static ssize_t attr_sensitivity_store_cptkbd(struct device *dev,
+@@ -789,7 +788,7 @@ static ssize_t attr_press_to_select_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data_pointer->press_to_select);
++	return sysfs_emit(buf, "%u\n", data_pointer->press_to_select);
+ }
+ 
+ static ssize_t attr_press_to_select_store_tpkbd(struct device *dev,
+@@ -819,7 +818,7 @@ static ssize_t attr_dragging_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data_pointer->dragging);
++	return sysfs_emit(buf, "%u\n", data_pointer->dragging);
+ }
+ 
+ static ssize_t attr_dragging_store_tpkbd(struct device *dev,
+@@ -849,7 +848,7 @@ static ssize_t attr_release_to_select_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data_pointer->release_to_select);
++	return sysfs_emit(buf, "%u\n", data_pointer->release_to_select);
+ }
+ 
+ static ssize_t attr_release_to_select_store_tpkbd(struct device *dev,
+@@ -879,7 +878,7 @@ static ssize_t attr_select_right_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data_pointer->select_right);
++	return sysfs_emit(buf, "%u\n", data_pointer->select_right);
+ }
+ 
+ static ssize_t attr_select_right_store_tpkbd(struct device *dev,
+@@ -909,8 +908,7 @@ static ssize_t attr_sensitivity_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n",
+-		data_pointer->sensitivity);
++	return sysfs_emit(buf, "%u\n", data_pointer->sensitivity);
+ }
+ 
+ static ssize_t attr_sensitivity_store_tpkbd(struct device *dev,
+@@ -938,8 +936,7 @@ static ssize_t attr_press_speed_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n",
+-		data_pointer->press_speed);
++	return sysfs_emit(buf, "%u\n", data_pointer->press_speed);
+ }
+ 
+ static ssize_t attr_press_speed_store_tpkbd(struct device *dev,
+-- 
+2.29.2
+
