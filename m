@@ -1,101 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82817131754;
-	Tue, 16 Jan 2024 19:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434693; cv=none; b=YksD1rHYvOmbWnCFsUUD/teXzR3e4SCQ9E8wx4AYaEu39/EZDzkRqK5eXRZsaYcx0crvKRTyoIuShswKt0HVq+Fe7ncSCyM4zA7OIU6c1/V2GDJ7fOHIi3jXa3J83uxguE9nDd0G/6mhAH1S1JMylr+ZDYRHNpzfuKzoh51Hi20=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434693; c=relaxed/simple;
-	bh=85DQhWZkGB6JLAW1Xfb+aDd9xevlmh3rNEDoesQ+fm4=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
-	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=rCilaS6Ht/7Hxz91Xsp2tbYeitGHVFal4CWIWJsIdwNk7VdW4DifDWZdUJIzkIfY/sfp8+zs8doBG1+HM0pUL6x1dM0qrBM18hwZ+bqSXCFhaU1Be/wJkrmfSmQE+dxibOTUgZMEivXgDbs608FpU82jSzFUozGnEjbQoLHI3Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KYM4D/5J; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KYM4D/5J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28B52C43601;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1749131745;
 	Tue, 16 Jan 2024 19:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705434693;
-	bh=85DQhWZkGB6JLAW1Xfb+aDd9xevlmh3rNEDoesQ+fm4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KYM4D/5JCj6ICTczexvJwVjdT2aSGEjNjn5YGURSiJzCMyvx6AlT7H9iNu5Cpgrvd
-	 UGo9J3P4qG06DF6JbyKjZVxcynZXBjAuOW0SiqRx5Hy+PNRvCzqkZ3P1Z89v5tD621
-	 0FbMJkVxgSgHhxXnHLZcxUJyXVKyPMOK/O8KIAZEtyCEpcSyRCyi8div2rdhj1m6+V
-	 pAToAC7oTHAkW9juNMK38YW6Q1OHdK61WVU0ItV2lJgd3stKNGpOevaZdYxpCVcdav
-	 +C95cVOoQBsAkEGPpctcO39vqRef0FjXB692P8zIqYg3HGrA/TeHyPzyEGkJ0a1q3Z
-	 kDa6OfuBC/eAQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Hou Tao <houtao1@huawei.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 051/104] bpf: Set uattr->batch.count as zero before batched update or deletion
-Date: Tue, 16 Jan 2024 14:46:17 -0500
-Message-ID: <20240116194908.253437-51-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116194908.253437-1-sashal@kernel.org>
-References: <20240116194908.253437-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705434694; cv=none; b=atnRxaW+SCJ/sVVoMdPwYv/PhIeJqeVh5lpNmup7oj4WkYqtA/ynUYyciXi0aMLcGkRYDyU3rY7p6eCzCXM9bqeGvDTaqWZqWuwldrYFugVkRx60PKypCtFZpKg2f9nAx4CvfjfWmJ6Nd6Aqamp6Qp8hNHpNWw/Zsv/DwC7413A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705434694; c=relaxed/simple;
+	bh=LYFKZ7TRuYk1pl41vPfkzt1g9GP165KZ2d+LPbo5cvk=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:X-IronPort-AV:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rzp7GM1z/1QoZm8wN9K8ZU7Ku4muncPBl4JJYW3pC3EkWtHm7DvvqBSXh/9Zxnxhsvcz+IC4AJdx4AYdvHTYGCj9ax24NC0LoNMMgIyQiiDpTxtOgL2ydYGwz5RuYxZ5QQe8pjzkDFAvJvvOOQSDQGz75Rzg7W/RsbtRHdSULa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RbmnggF/; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RbmnggF/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705434693; x=1736970693;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LYFKZ7TRuYk1pl41vPfkzt1g9GP165KZ2d+LPbo5cvk=;
+  b=RbmnggF/qb4euGFspfd8dksFx7iB6jZlhwTgWHYoaw5z7Ytk2jiXrHLL
+   ADYyOL7qK7GibbMkeQzhGdD0rFQgfMITiVdlOaS9ENdLEMzZ3LIN26HbU
+   TIthaAzpacSclhdAPbn9fqoq43X4ZhXTs32yQgofEIgWWqTW0ZiZppAkP
+   YK+uH3WQkbzpLk/dkTRXzLKzrt2vxAqSZU8SFLU4mQG1KxjD03mIyjst8
+   MHv54LrUwCorB261Zcv8AM/HZsnNheVzkONyieMrYCniyhlDQD9R5vTII
+   2Q+PbBZ4hFOnfR/pmLANz9dVQ/RhdEJH+bvLoizUzKofpJ69WWLnH/ga4
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="18562463"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="18562463"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 11:51:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="907479092"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="907479092"
+Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 16 Jan 2024 11:51:28 -0800
+Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rPpT4-0001AK-0z;
+	Tue, 16 Jan 2024 19:51:26 +0000
+Date: Wed, 17 Jan 2024 03:51:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, v9fs@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, kernel@pengutronix.de,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>
+Subject: Re: [PATCH 1/3] usb: gadget: function: 9pfs
+Message-ID: <202401170342.VrKVlN1a-lkp@intel.com>
+References: <20240116-ml-topic-u9p-v1-1-ad8c306f9a4e@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.12
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240116-ml-topic-u9p-v1-1-ad8c306f9a4e@pengutronix.de>
 
-From: Hou Tao <houtao1@huawei.com>
+Hi Michael,
 
-[ Upstream commit 06e5c999f10269a532304e89a6adb2fbfeb0593c ]
+kernel test robot noticed the following build warnings:
 
-generic_map_{delete,update}_batch() doesn't set uattr->batch.count as
-zero before it tries to allocate memory for key. If the memory
-allocation fails, the value of uattr->batch.count will be incorrect.
+[auto build test WARNING on 052d534373b7ed33712a63d5e17b2b6cdbce84fd]
 
-Fix it by setting uattr->batch.count as zero beore batched update or
-deletion.
+url:    https://github.com/intel-lab-lkp/linux/commits/Michael-Grzeschik/usb-gadget-function-9pfs/20240116-095914
+base:   052d534373b7ed33712a63d5e17b2b6cdbce84fd
+patch link:    https://lore.kernel.org/r/20240116-ml-topic-u9p-v1-1-ad8c306f9a4e%40pengutronix.de
+patch subject: [PATCH 1/3] usb: gadget: function: 9pfs
+config: alpha-kismet-CONFIG_NET_9P-CONFIG_USB_F_9PFS-0-0 (https://download.01.org/0day-ci/archive/20240117/202401170342.VrKVlN1a-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20240117/202401170342.VrKVlN1a-lkp@intel.com/reproduce)
 
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Link: https://lore.kernel.org/r/20231208102355.2628918-6-houtao@huaweicloud.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/syscall.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401170342.VrKVlN1a-lkp@intel.com/
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index d77b2f8b9364..164a5902571a 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1673,6 +1673,9 @@ int generic_map_delete_batch(struct bpf_map *map,
- 	if (!max_count)
- 		return 0;
- 
-+	if (put_user(0, &uattr->batch.count))
-+		return -EFAULT;
-+
- 	key = kvmalloc(map->key_size, GFP_USER | __GFP_NOWARN);
- 	if (!key)
- 		return -ENOMEM;
-@@ -1730,6 +1733,9 @@ int generic_map_update_batch(struct bpf_map *map, struct file *map_file,
- 	if (!max_count)
- 		return 0;
- 
-+	if (put_user(0, &uattr->batch.count))
-+		return -EFAULT;
-+
- 	key = kvmalloc(map->key_size, GFP_USER | __GFP_NOWARN);
- 	if (!key)
- 		return -ENOMEM;
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for NET_9P when selected by USB_F_9PFS
+   
+   WARNING: unmet direct dependencies detected for NET_9P
+     Depends on [n]: NET [=n]
+     Selected by [y]:
+     - USB_F_9PFS [=y] && USB_SUPPORT [=y] && USB_GADGET [=y]
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
