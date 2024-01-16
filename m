@@ -1,223 +1,154 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2040.outbound.protection.outlook.com [40.107.93.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8861BF22;
-	Tue, 16 Jan 2024 14:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E12A2563;
+	Tue, 16 Jan 2024 14:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BtjL7S50"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDcBnL020915;
-	Tue, 16 Jan 2024 14:26:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=563hyhN6PruHR//yyU44tkKDZlemsjBJokIOuA8XpMA=;
- b=BtjL7S50WEvXsNpcdzEbQUc1ivUL2sQFXg4WkrZQSI7WSFdhJa8JFvzVPq5ETXNKO7R2
- dYvYk6AZjLfuJffgjzqyofmGovNATSgPKCJzhrUNo8sOXUgsWe6Uejxw3L+NPyig9ZJT
- /7Zi0EM6s6q593SXRtNlQy2kmQCsWGFj0uz3DQkcE1Q/D4SlXbSvxXPTUi9nizn9fJ4B
- olbsGXHj8W/ch6ArpjHUpjW2GJR6/2xagGA7Dod8/fLwgP/EO/lB/BD+H2+9GI910nZV
- 3mm6cSMj8Zg/Jb7rgeJ1HFoZ/QG/Sy2HQxY51EphaF/xEqyQFVIhac0htg+ftkjZPU4+ 8Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vntutht8d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:26:57 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GDcEPP021008;
-	Tue, 16 Jan 2024 14:26:56 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vntutht79-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:26:56 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDUd2P011053;
-	Tue, 16 Jan 2024 14:26:55 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm57yf7cf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:26:55 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GEQrIK8520338
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 14:26:53 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E744220040;
-	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B08BA20049;
-	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
-Received: from [9.152.212.51] (unknown [9.152.212.51])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
-Message-ID: <f81cf759-d5a4-4b46-bd2c-2e11355447a8@linux.ibm.com>
-Date: Tue, 16 Jan 2024 15:26:52 +0100
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aGj7n1r6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aw//XRofcSo0Vwht2vHleoTSIlHH1RKg4dbCUlQTt5n412JtxOrmpXonVIoSQ8gYT2Pr/SpFSDhsAS5MSjHo9+UO3YoQ2pvGS0T0D2VQL2Xlf48i3HLa32wwnWcxudDpLsZnIUUfqi2mObIV5DIRH11+7PH/PGRSPFSCBEF4KuB4XUY1XzwExBYYBbc+ZW30RBLq0aOEObl5HSWrRLQHvKmJ03Mo5V5851Ov7OON6zGzlvQS3DRpFZxKsucvKOfwLr953uUJoHCo3F04L06J28kNgUKOYwHwjZwDn9l+3ltAeWS++NrRE2So0z5sjp/cvRh3jyz63xGXoumcYFHM8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vyM5Rg/rDIjkGQERyt74b7460YcodZePpOgnWPw7Gu4=;
+ b=fWOJAYxf2roDnB8fxmBCVGevXLqE7HCkrReJumeaoh64zUmu4OcW5ac7sNzkPrpMuhQloTZVNbAX5TiwhEsuXSeZMOfK4tIHjbk2G9B7GzinEqLS3+/9WsktDIyMMHPS/sAnFXh2lS7AEvRFrdWTOwymnJ63bwK0IMetjRje+fDyzHE37AA/AUdPJFDDGr7QkObRtiP0MeTFWFeaIKf7jh104KzC04A9ZEZaUoUK/a6MlJFWOtlPF4Fi3MGP1Nqb6cS1kAet5K/d/ZgzdpvfJ7efzGQkHiNRO74Gq3BPKcs9MUDyl/hK04cDQRJGesT+EkoUiWbanqiGOyorvczk7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vyM5Rg/rDIjkGQERyt74b7460YcodZePpOgnWPw7Gu4=;
+ b=aGj7n1r6ca8tabEWe4Ah6+dWQ0msg1+wdCkq/xkjNGPeOg7OAVU4qBk4FY0f+JvNU1qDEvyuy1O9ytVguhTAF6vYcdXdrCs28CNWClxYg4IRsfAN3bALP1nNgV/MKU8EdT33OJtjMO1qeNdbstdfCeel7rOKN6tzX66pD3STewgRzFOA3XjR/FlnJAf1+9cTGEwkHXrnsISxhl1BAASqnOxrYQ4JwZwUwqXqQfpgFDF65pYP5RX6RaNTtx3QX3d3i4gMiHFwCkMG02/uxb7MB4ujVRz31iNtbopleCmJxATI9y1aDJABW0oxsflbjJgNhjF9QZxjWv1TtKawsH+93Q==
+Received: from SJ0PR05CA0006.namprd05.prod.outlook.com (2603:10b6:a03:33b::11)
+ by IA0PR12MB8982.namprd12.prod.outlook.com (2603:10b6:208:481::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Tue, 16 Jan
+ 2024 14:33:12 +0000
+Received: from SJ1PEPF00001CDF.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b:cafe::c6) by SJ0PR05CA0006.outlook.office365.com
+ (2603:10b6:a03:33b::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23 via Frontend
+ Transport; Tue, 16 Jan 2024 14:33:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SJ1PEPF00001CDF.mail.protection.outlook.com (10.167.242.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.16 via Frontend Transport; Tue, 16 Jan 2024 14:33:12 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 16 Jan
+ 2024 06:33:03 -0800
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Tue, 16 Jan 2024 06:33:03 -0800
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.986.41 via Frontend
+ Transport; Tue, 16 Jan 2024 06:33:00 -0800
+From: Vidya Sagar <vidyas@nvidia.com>
+To: <bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
+	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V2] PCI: Clear errors logged in Secondary Status Register
+Date: Tue, 16 Jan 2024 20:02:58 +0530
+Message-ID: <20240116143258.483235-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240104013229.693041-1-vidyas@nvidia.com>
+References: <20240104013229.693041-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf: script: use capstone disasm engine to show
- assembly instructions
-Content-Language: en-US
-To: Changbin Du <changbin.du@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20240116113437.1507537-1-changbin.du@huawei.com>
- <20240116113437.1507537-3-changbin.du@huawei.com>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20240116113437.1507537-3-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Dmeu7BjrOZpCuXbYqStmWBaO4GpsXjVx
-X-Proofpoint-ORIG-GUID: XeZRs5Dnq8rPoViFwKzkFA_oD2NSIE7d
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_08,2024-01-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
- priorityscore=1501 mlxscore=0 suspectscore=0 adultscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401160113
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDF:EE_|IA0PR12MB8982:EE_
+X-MS-Office365-Filtering-Correlation-Id: ee05d27c-f132-417e-e689-08dc16a0115b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8k9MPPa/z7PWEugWSeuKValHgkOblPHq4Y7LPkNgDltOq5hXhCdHAdU8oWno1E4p7UiZ4hnwcFWfA/G7qZJb7wOZCBTB/lo6JTYs3ppDjLHM3o0uAxkSpmFjjrZ8mYTH5RyKBrmFCHXEq3WZiuDXxO30Pi7htWKQE/A3wsNjVojF3G3jsMItnx0wIT7KZ/sxdWc6E5RcnmEqoWlVPuYWTojQWhgPZ1oD79VVm8t0MWAFnOzuLlO6M41UlyEgbydIOg9u26nNOz8q1v2bUqMi//9ocaBQFhj7sJhVzh8WaAg/ohBg1QqZwPz5YJZcUi6xVarTiCE+87OpLwDp83QoGsE35dCRuXnJp1EbV+lIA0ah7lSVFDo2ltus8wQGFMF4wPObZxjGxx6k36GamND4j6LxQmFgzc1eVrZJzrhZpHjnwlHBK7VzpJbZn2UMnGPlD1e99e9qEa58WJC585a7PDMHPdFXtnj6IeUHZQ48Jds3BYw04q8BgEBDF2GK4Nz71YTDnhSXNn/4QmD8Ucz2svuDDfWoEKtQQIIKSZ1dzkSVDwBpUO+9zNWG0KXLFN1A9FeZOyeW8BidNMwe1eQykqY5TMjc1BJZ50r9Mx/GgncY//h2c7MSHtbEUB6kQBoDeWL7tOZsEbKRoqf1m7dSM0hW3sCfdz3EYbha5n5+HGLWr0cdVZiLdO+AmWG715mxNc+nDj9PyX//Yk1x+07xnYBgOiClZ7tgQmHfrL9hmfdHUk27W3pCXZZ8HK2eUO8c
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(39860400002)(376002)(396003)(230922051799003)(64100799003)(82310400011)(451199024)(1800799012)(186009)(40470700004)(36840700001)(46966006)(5660300002)(86362001)(41300700001)(82740400003)(7636003)(356005)(2906002)(6916009)(316002)(70206006)(54906003)(70586007)(2616005)(7696005)(478600001)(4326008)(36860700001)(47076005)(8936002)(8676002)(336012)(426003)(26005)(83380400001)(40460700003)(36756003)(40480700001)(1076003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 14:33:12.1269
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee05d27c-f132-417e-e689-08dc16a0115b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CDF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8982
 
-On 1/16/24 12:34, Changbin Du wrote:
-> Currently, the instructions of samples are shown as raw hex strings
-> which are hard to read. x86 has a special option '--xed' to disassemble
-> the hex string via intel XED tool.
-> 
-> Here we use capstone as our disassembler engine to give more friendly
-> instructions. We select libcapstone because capstone can provide more
-> insn details. Perf will fallback to raw instructions if libcapstone is
-> not available.
-> 
-> The advantages compared to XED tool:
->  * Support arm, arm64, x86-32, x86_64 (more could be supported),
->    xed only for x86_64.
->  * Immediate address operands are shown as symbol+offs.
-> 
-> Before:
-> $ sudo perf record --event intel_pt//u -- ls
-> $ sudo perf script --insn-trace
->             perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
->             perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
->             perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
->             perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
->             perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
->             perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
->             perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
-> 
-> After:
-> $ sudo perf script --insn-trace
->             perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: cmpq $-0xfff, %rax
->             perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: jae __GI___ioctl+0x10
->             perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: retq
->             perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: testl %eax, %eax
->             perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: jne perf_evsel__enable_cpu+0xad
->             perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: movq 0xa8(%r12), %rax
->             perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: movq 0x20(%rax), %rdx
->             perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf) insn: cmpl %edx, %ebx
->             perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf) insn: jl perf_evsel__enable_cpu+0x60
->             perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf) insn: xorl %eax, %eax
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
+The enumeration process leaves the 'Received Master Abort' bit set in
+the Secondary Status Register of the downstream port in the following
+scenarios.
 
-....
+(1) The device connected to the downstream port has ARI capability
+    and that makes the kernel set the 'ARI Forwarding Enable' bit in
+    the Device Control 2 Register of the downstream port. This
+    effectively makes the downstream port forward the configuration
+    requests targeting the devices downstream of it, even though they
+    don't exist in reality. It causes the downstream devices return
+    completions with UR set in the status in turn causing 'Received
+    Master Abort' bit set.
 
-> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-> new file mode 100644
-> index 000000000000..c8d9741748cd
-> --- /dev/null
-> +++ b/tools/perf/util/print_insn.c
-> @@ -0,0 +1,118 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Instruction binary disassembler based on capstone.
-> + *
-> + * Author(s): Changbin Du <changbin.du@huawei.com>
-> + */
-> +#include "print_insn.h"
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <stdbool.h>
-> +#include "util/debug.h"
-> +#include "util/symbol.h"
-> +#include "machine.h"
-> +
-> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
-> +{
-> +	int printed = 0;
-> +
-> +	for (int i = 0; i < sample->insn_len; i++)
-> +		printed += fprintf(fp, "%02x ", (unsigned char)sample->insn[i]);
-> +	return printed;
-> +}
-> +
-> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
-> +#include <capstone/capstone.h>
-> +
-> +static int capstone_init(struct machine *machine, csh *cs_handle)
-> +{
-> +	cs_arch arch;
-> +	cs_mode mode;
-> +
-> +	if (machine__is(machine, "x86_64")) {
-> +		arch = CS_ARCH_X86;
-> +		mode = CS_MODE_64;
-> +	} else if (machine__normalized_is(machine, "x86")) {
-> +		arch = CS_ARCH_X86;
-> +		mode = CS_MODE_32;
-> +	} else if (machine__normalized_is(machine, "arm64")) {
-> +		arch = CS_ARCH_ARM64;
-> +		mode = CS_MODE_ARM;
-> +	} else if (machine__normalized_is(machine, "arm")) {
-> +		arch = CS_ARCH_ARM;
-> +		mode = CS_MODE_ARM + CS_MODE_V8;
-> +	} else {
-> +		return -1;
-> +	}
-> ...
+    In contrast, if the downstream device doesn't have ARI capability,
+    the 'ARI Forwarding Enable' bit in the downstream port is not set
+    and any configuration requests targeting the downstream devices
+    that don't exist are terminated (section 6.13 of PCI Express Base
+    6.0 spec) in the downstream port itself resulting in no change of
+    the 'Received Master Abort' bit.
 
-Did you forgot to support s390? Or was it omitted on intention?
-Something along the lines will support s390:
+(2) A PCIe switch is connected to the downstream port and when the
+    enumeration flow tries to explore the presence of devices that
+    don't really exist downstream of the switch, the downstream
+    port receives the completions with UR set causing the 'Received
+    Master Abort' bit set.
 
- # git diff util/print_insn.c
-diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-index c8d9741748cd..c5127910c75b 100644
---- a/tools/perf/util/print_insn.c
-+++ b/tools/perf/util/print_insn.c
-@@ -41,6 +41,9 @@ static int capstone_init(struct machine *machine, csh *cs_handle)
-        } else if (machine__normalized_is(machine, "arm")) {
-                arch = CS_ARCH_ARM;
-                mode = CS_MODE_ARM + CS_MODE_V8;
-+       } else if (machine__normalized_is(machine, "s390x")) {
-+               arch = CS_ARCH_SYSZ;
-+               mode = CS_MODE_BIG_ENDIAN;
-        } else {
-                return -1;
-        }
-  #
+Clear 'Received Master Abort' bit to keep the bridge device in a clean
+state post enumeration.
 
-Thanks a lot for including these line in your next version.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+V2:
+* Changed commit message based on Bjorn's feedback
 
+ drivers/pci/probe.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 795534589b98..640d2871b061 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1470,6 +1470,9 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	}
+ 
+ out:
++	/* Clear errors in the Secondary Status Register */
++	pci_write_config_word(dev, PCI_SEC_STATUS, 0xffff);
++
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+ 
+ 	pm_runtime_put(&dev->dev);
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.25.1
 
