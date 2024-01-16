@@ -1,114 +1,108 @@
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.215])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C03938C;
-	Tue, 16 Jan 2024 02:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EC810FA
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 02:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hFQ5vDCS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=bDHIH
-	1quueGsNnOP4D3RZ6pHrBtyn71jVIoHgB5hwh4=; b=hFQ5vDCSlq+XZf096lLjr
-	YTetwEZgnl4Kikbcm6PmPAkELiuhk4sOTB2JpF7P8iuLjH22OplNXpVBa0576zDa
-	VZdrB73Lfus5YOLAPxhVPGqC7s8w/r3E/8xXO171Je4fNi5XSjxlmcIZ1G1gV5gM
-	uBCrSEtXIQFz619/+BfCrI=
-Received: from localhost.localdomain (unknown [111.202.47.2])
-	by zwqz-smtp-mta-g3-4 (Coremail) with SMTP id _____wC3v+Ky4qVleFbHBA--.54402S2;
-	Tue, 16 Jan 2024 09:58:10 +0800 (CST)
-From: wangkeqi <wangkeqi_chris@163.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	wangkeqi <wangkeqiwang@didiglobal.com>,
-	kernel test robot <oliver.sang@intel.com>,
-	fengwei.yin@intel.com
-Subject: [PATCH net v2] connector: Change the judgment conditions for clearing proc_event_num_listeners
-Date: Tue, 16 Jan 2024 09:57:53 +0800
-Message-Id: <20240116015753.209781-1-wangkeqi_chris@163.com>
-X-Mailer: git-send-email 2.27.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l7cgm7UT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705371464; x=1736907464;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bnd+0r4fwqlSyS3EZsPS5rfw18q8XJApJd8vw2m7e2Q=;
+  b=l7cgm7UT2Gjla5M6qbsq/s04kmSCmCSPYQs4iKSUgifto/7D+ZXOk2tZ
+   9BgxLyOrygRcjWRQycmrN6Sr7c5J39Z1kfIh9dwtuNhprvZUBftFEmtme
+   yCc6smIY+UnW5sNzCTTiHVN7rQAvBXpyE0dUrS2RCp/UtYhCofJaEhdXw
+   TpMrVhxg4lb3mE5GdMT74v5A8DQqX25li78VgH3KmZ6Hm3k/liLcAUvbi
+   LlD/CBfTLuJbVE43NiSIHvtrV5Ko0yid3aB6HQwC+sWhR7MCB5Anc06g+
+   GqyS/LYBsR9aR4PJfhSedtb2lKanggoepYe+61IADmbQM3yBHuZ5uYyo+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="399408245"
+X-IronPort-AV: E=Sophos;i="6.04,197,1695711600"; 
+   d="scan'208";a="399408245"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 18:17:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="776874695"
+X-IronPort-AV: E=Sophos;i="6.04,197,1695711600"; 
+   d="scan'208";a="776874695"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 15 Jan 2024 18:17:39 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rPZ1C-000Ctu-2B;
+	Tue, 16 Jan 2024 02:17:36 +0000
+Date: Tue, 16 Jan 2024 10:12:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: oe-kbuild-all@lists.linux.dev, kernel_team@skhynix.com,
+	akpm@linux-foundation.org, ying.huang@intel.com, namit@vmware.com,
+	vernhao@tencent.com, mgorman@techsingularity.net, hughd@google.com,
+	willy@infradead.org, david@redhat.com, peterz@infradead.org,
+	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [PATCH v6 6/7] mm: Defer TLB flush by keeping both src and dst
+ folios at migration
+Message-ID: <202401160941.4iwBnNkq-lkp@intel.com>
+References: <20240115081953.2521-7-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3v+Ky4qVleFbHBA--.54402S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZw43JFWxtw1kuFyfur1rJFb_yoW5XFyxpa
-	yqvFsxZF48KF1fWw1DA3W29F13Za4kXF1UCrWIk34kurZxWrWkAF48tFsavF9xA34vkr12
-	qw12gFW3uF4DC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbvtAUUUUU=
-X-CM-SenderInfo: 5zdqwy5htlsupkul2qqrwthudrp/1tbiVBhn3GVOBDmFSQAAst
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240115081953.2521-7-byungchul@sk.com>
 
-From: wangkeqi <wangkeqiwang@didiglobal.com>
+Hi Byungchul,
 
-It is inaccurate to judge whether proc_event_num_listeners is
-cleared by cn_netlink_send_mult returning -ESRCH.
-In the case of stress-ng netlink-proc, -ESRCH will always be returned,
-because netlink_broadcast_filtered will return -ESRCH,
-which may cause stress-ng netlink-proc performance degradation.
-Therefore, the judgment condition is modified to whether
-there is a listener.
+kernel test robot noticed the following build errors:
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202401112259.b23a1567-oliver.sang@intel.com
-Fixes: c46bfba133 ("connector: Fix proc_event_num_listeners count not cleared")
-Signed-off-by: wangkeqi <wangkeqiwang@didiglobal.com>
-Cc: fengwei.yin@intel.com
----
- drivers/connector/cn_proc.c   | 6 ++++--
- drivers/connector/connector.c | 6 ++++++
- include/linux/connector.h     | 1 +
- 3 files changed, 11 insertions(+), 2 deletions(-)
+[auto build test ERROR on 0dd3ee31125508cd67f7e7172247f05b7fd1753a]
 
-diff --git a/drivers/connector/cn_proc.c b/drivers/connector/cn_proc.c
-index 3d5e6d705..b09f74ed3 100644
---- a/drivers/connector/cn_proc.c
-+++ b/drivers/connector/cn_proc.c
-@@ -108,8 +108,10 @@ static inline void send_msg(struct cn_msg *msg)
- 		filter_data[1] = 0;
- 	}
- 
--	if (cn_netlink_send_mult(msg, msg->len, 0, CN_IDX_PROC, GFP_NOWAIT,
--			     cn_filter, (void *)filter_data) == -ESRCH)
-+	if (netlink_has_listeners(get_cdev_nls(), CN_IDX_PROC))
-+		cn_netlink_send_mult(msg, msg->len, 0, CN_IDX_PROC, GFP_NOWAIT,
-+			     cn_filter, (void *)filter_data);
-+	else
- 		atomic_set(&proc_event_num_listeners, 0);
- 
- 	local_unlock(&local_event.lock);
-diff --git a/drivers/connector/connector.c b/drivers/connector/connector.c
-index 7f7b94f61..1b2cd410e 100644
---- a/drivers/connector/connector.c
-+++ b/drivers/connector/connector.c
-@@ -129,6 +129,12 @@ int cn_netlink_send(struct cn_msg *msg, u32 portid, u32 __group,
- }
- EXPORT_SYMBOL_GPL(cn_netlink_send);
- 
-+struct sock *get_cdev_nls(void)
-+{
-+	return cdev.nls;
-+}
-+EXPORT_SYMBOL_GPL(get_cdev_nls);
-+
- /*
-  * Callback helper - queues work and setup destructor for given data.
-  */
-diff --git a/include/linux/connector.h b/include/linux/connector.h
-index cec2d99ae..255466aea 100644
---- a/include/linux/connector.h
-+++ b/include/linux/connector.h
-@@ -127,6 +127,7 @@ int cn_netlink_send_mult(struct cn_msg *msg, u16 len, u32 portid,
-  */
- int cn_netlink_send(struct cn_msg *msg, u32 portid, u32 group, gfp_t gfp_mask);
- 
-+struct sock *get_cdev_nls(void);
- int cn_queue_add_callback(struct cn_queue_dev *dev, const char *name,
- 			  const struct cb_id *id,
- 			  void (*callback)(struct cn_msg *, struct netlink_skb_parms *));
+url:    https://github.com/intel-lab-lkp/linux/commits/Byungchul-Park/x86-tlb-Add-APIs-manipulating-tlb-batch-s-arch-data/20240115-162220
+base:   0dd3ee31125508cd67f7e7172247f05b7fd1753a
+patch link:    https://lore.kernel.org/r/20240115081953.2521-7-byungchul%40sk.com
+patch subject: [PATCH v6 6/7] mm: Defer TLB flush by keeping both src and dst folios at migration
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20240116/202401160941.4iwBnNkq-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240116/202401160941.4iwBnNkq-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401160941.4iwBnNkq-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/loongarch/include/asm/vdso.h:10,
+                    from arch/loongarch/include/asm/elf.h:13,
+                    from include/linux/elf.h:6,
+                    from include/linux/module.h:19,
+                    from lib/test_bitops.c:9:
+>> include/linux/mm.h:2046:43: error: 'struct arch_tlbflush_unmap_batch' declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
+    2046 | static inline void migrc_flush_end(struct arch_tlbflush_unmap_batch *arch) {}
+         |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: all warnings being treated as errors
+
+
+vim +2046 include/linux/mm.h
+
+  2040	
+  2041	#if defined(CONFIG_MIGRATION) && defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
+  2042	extern void migrc_flush_start(void);
+  2043	extern void migrc_flush_end(struct arch_tlbflush_unmap_batch *arch);
+  2044	#else
+  2045	static inline void migrc_flush_start(void) {}
+> 2046	static inline void migrc_flush_end(struct arch_tlbflush_unmap_batch *arch) {}
+  2047	#endif
+  2048	
+
 -- 
-2.27.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
