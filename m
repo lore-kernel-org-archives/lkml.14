@@ -1,56 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2084.outbound.protection.outlook.com [40.107.244.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147A912B90
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 06:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8814313AC0;
+	Tue, 16 Jan 2024 06:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZgdWIgUW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705384905;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Qw6FiQjfkuQIwLM/Cd1XVofWUckSVDRH6rB1Jby9Xc=;
-	b=ZgdWIgUWdhvc1+ubJRVcVOHyWzne2tMQHCw+X88XdvcjO9VvSwd1GiYO7vNVqUxFy+GK1y
-	KfQW9WuGNcF/34TEvfw+NfdRqO4DVTpKfKgOT0lwqVCry2r9JMg3PuMHQtSnICWO7yYxO+
-	QnJC2v3F6g8k88nFo5NgPOqpAnqizC0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-eny1oHpJPiGlyNf6cxFRLg-1; Tue,
- 16 Jan 2024 01:01:37 -0500
-X-MC-Unique: eny1oHpJPiGlyNf6cxFRLg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1FB9B1C05ABF;
-	Tue, 16 Jan 2024 06:01:37 +0000 (UTC)
-Received: from virt-mtcollins-01.lab.eng.rdu2.redhat.com (virt-mtcollins-01.lab.eng.rdu2.redhat.com [10.8.1.196])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 125332026D6F;
-	Tue, 16 Jan 2024 06:01:37 +0000 (UTC)
-From: Shaoqin Huang <shahuang@redhat.com>
-To: Oliver Upton <oliver.upton@linux.dev>,
-	Marc Zyngier <maz@kernel.org>,
-	kvmarm@lists.linux.dev
-Cc: Eric Auger <eauger@redhat.com>,
-	Shaoqin Huang <shahuang@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 4/5] KVM: selftests: aarch64: Introduce pmu_event_filter_test
-Date: Tue, 16 Jan 2024 01:01:22 -0500
-Message-Id: <20240116060129.55473-5-shahuang@redhat.com>
-In-Reply-To: <20240116060129.55473-1-shahuang@redhat.com>
-References: <20240116060129.55473-1-shahuang@redhat.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="APLA+PRi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X2mVWKWeZChwv+6tAtcHT9GEc92pB2XrsEcgBKlGf9fzHRy/banlXdGKth5eVY12JLI+O7hJ0u+8sked982NQ5PbnETWNqmGdEOyhFIUPn/cMVfxdqlTaECiZikOyvjuCYebMRGAJ1v2vbMcxEiXFgeqmhArVDpvBe1sOXok7nDqxk/AVSk/gc7KROBZ0y+E2Q5kB2jegwK+CZ9wQUmX+unFSMnnsS9+vIyWaiHr6siqu1Zk9ZXS7Bi+D4KVyk/wfrFOzEwBshER3c1Eyk9vVJUYs5WnDPdPo6TrfKTOEEkN/pLL6L2aG8A/u35fKvawqjdkX2OVljzUi0CQyL2wEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=23qfJyyQElZ/W2BCyaMzcwLb7JV0O1JD8VgDz1zSepk=;
+ b=mfwNxSnekOpnixyW/MBP6x4DaCnfZeRsE+1w0BPTmxW4emIKp73mYQeDMv2pSA6WF4k01kJA64/sUtogBXNwh/BhBGHrfl1n75RnwSi3iShYX+SEb2s4S/x72nHDFC14TCqi+/mA3NPxJix1JlkgMmJ/uHcCEfWb6EnHjYBYmiwvVh6VEUTnthLD7WZQCM6cxLDIhEdYOGf++XjwNKwS5QmWEQhUXfRTDp7HpaFrETjqge+wtY1cKdAewr+vIyFeP2P0bVBrmH+QdsGvlxREve3fTz+nAc3T9nzpmG3WDYle8NgZifJx6FiYoJUvZNwrs3aS3Hlb9PKKRw6Y3BNZkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=23qfJyyQElZ/W2BCyaMzcwLb7JV0O1JD8VgDz1zSepk=;
+ b=APLA+PRi3oSZGEtWvp4xFkuqrdvVUJUmVf7dFFBHwvj/90vWcgQ1hGm1IwH4StFReTrOhEcm74U2cbLfe8qtaHIJwEUiZjrvP9PO6e2WID1Q4g6finSjJLjjq8YSdHdy9YbxqUGeGjxVDzob2ZpK9V6q84eQEroZogzhEHhK/OdxfFssljvPyQD9vCh1xINpQEav2lVp47LTIZwS49oaCIVp1/MT4vvRy45DkyywQ1mep/tIA0SvuuqrDJk51Qujp7bc7VcpoJImMLZa1hHc8r1AbSErIUBzV2sEp47pGznDZCgcYuriAQrQXe0uUOgRHR6rjMDPKzeie5274mmB/g==
+Received: from MW2PR16CA0001.namprd16.prod.outlook.com (2603:10b6:907::14) by
+ IA1PR12MB9029.namprd12.prod.outlook.com (2603:10b6:208:3f0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.24; Tue, 16 Jan
+ 2024 06:04:30 +0000
+Received: from MWH0EPF000989E8.namprd02.prod.outlook.com
+ (2603:10b6:907:0:cafe::3d) by MW2PR16CA0001.outlook.office365.com
+ (2603:10b6:907::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.26 via Frontend
+ Transport; Tue, 16 Jan 2024 06:04:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ MWH0EPF000989E8.mail.protection.outlook.com (10.167.241.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.16 via Frontend Transport; Tue, 16 Jan 2024 06:04:30 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 15 Jan
+ 2024 22:04:14 -0800
+Received: from e558209-lcelt.nvidia.com (10.126.230.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Mon, 15 Jan 2024 22:04:12 -0800
+From: Haotien Hsu <haotienh@nvidia.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+CC: Utkarsh Patel <utkarsh.h.patel@intel.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Sing-Han Chen <singhanc@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+	Wayne Chang <waynec@nvidia.com>, <linux-usb@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, WK Tsai <wtsai@nvidia.com>, Haotien Hsu
+	<haotienh@nvidia.com>
+Subject: [PATCH v5] ucsi_ccg: Refine the UCSI Interrupt handling
+Date: Tue, 16 Jan 2024 14:03:23 +0800
+Message-ID: <20240116060323.844959-1-haotienh@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,321 +71,247 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E8:EE_|IA1PR12MB9029:EE_
+X-MS-Office365-Filtering-Correlation-Id: 469c6bbc-4f24-4983-bff9-08dc16590105
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7XIA0RxEsQc2+GNPe0DsplQXFi7Xknv0MnxYpouKrhPFRU2GFecRqvrfYOkKL22Gb4OKOlpTU1Aq9KmmQU6mh0sNzdZu0amIq0ObyI8GnfXQQ+naheY8UsuVqc7M2Q1vrB1vlxaFmHlgxY7k7iwAjNtYPY16C37v+f2wrPJK8DU3M6+/KSdOIX+u8JvcChkkUz117FQyrQGqzlxryMrvbwxJn7MtKI7uk2hn8/iEnN9uWlw4v77bDEQEyEUlz4bGNFayOWSpGdMZHzMPHT+Be5DPvZ2YLt4vu4CpKi52HAbxgZBwYDl/o+/6vyYu0nfVrvQuxku+z22+7nx/PfSDg9ml0SfJKd/B1orx+4tiLLdZxCdupKSfJxl6nx365QlKDGwYSC320jN4CkbKCHgoB/1pDn7fCf4IYLdo3y9HeLGR56Eqpjn+wqV9rLZ8jvcTMzZOdJej0uFpS6m2LAaATA4e43qzFfjxxcdP7T0GXdIlSmC9LGLTJbRhpLeThWwOatr4OJWhwFzje0SWr7HcCktFHjiorLHnl9wP4YUr1cUrjnELaAkTrsYhs014eUBr+sj8HkHCiaB+89Obu6VxtrJk6UAIRWdffHumnZcnMWlccKCiGMkLXWXGvvkd24FtUpb54tgByOZNrznGwaSQLM1qqtlTqAWUyixGFsDtF0ee8GKwxH+V686vzgBIbAQi+XOi3w19WBPcb9Pb7m3VgIFZAD4vZds4OCMQMpto9x7CCjRshxn68IikTDNOlO2d
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(346002)(39860400002)(396003)(230922051799003)(1800799012)(451199024)(82310400011)(64100799003)(186009)(40470700004)(46966006)(36840700001)(40460700003)(40480700001)(2906002)(5660300002)(41300700001)(36756003)(8936002)(110136005)(316002)(54906003)(107886003)(8676002)(426003)(26005)(336012)(2616005)(478600001)(86362001)(7696005)(70586007)(70206006)(1076003)(6666004)(47076005)(16526019)(7636003)(356005)(83380400001)(82740400003)(36860700001)(4326008);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 06:04:30.4041
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 469c6bbc-4f24-4983-bff9-08dc16590105
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E8.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9029
 
-Introduce pmu_event_filter_test for arm64 platforms. The test configures
-PMUv3 for a vCPU, and sets different pmu event filters for the vCPU, and
-check if the guest can see those events which user allow and can't use
-those events which use deny.
+With the Cypress CCGx Type-C controller the following error is
+sometimes observed on boot:
+[   16.087147] ucsi_ccg 1-0008: failed to reset PPM!
+[   16.087319] ucsi_ccg 1-0008: PPM init failed (-110)
 
-This test refactor the create_vpmu_vm() and make it a wrapper for
-__create_vpmu_vm(), which allows some extra init code before
-KVM_ARM_VCPU_PMU_V3_INIT.
+When the above timeout occurs the following happens:
+1. The function ucsi_reset_ppm() is called to reset UCSI controller.
+   This function performs an async write to start reset and then
+   polls for completion.
+2. An interrupt occurs when the reset completes. In the interrupt
+   handler, the OPM field in the INTR_REG is cleared and this clears
+   the CCI data in the PPM. Hence, the reset completion status is
+   cleared.
+3. The function ucsi_reset_ppm() continues to poll for the reset
+   completion, but has missed the reset completion event and
+   eventually timeouts.
 
-And this test use the KVM_ARM_VCPU_PMU_V3_FILTER attribute to set the
-pmu event filter in KVM. And choose to filter two common event
-branches_retired and instructions_retired, and let the guest to check if
-it see the right pmceid register.
+In this patch, we store CCI when handling the interrupt and make
+reading after async write gets the correct value.
 
-Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
+To align with the CCGx UCSI interface guide, this patch updates the
+driver to copy CCI and MESSAGE_IN before they are reset when UCSI
+interrupt acknowledged.
+
+When a new command is sent, the driver will clear the old CCI to avoid
+ucsi_ccg_read() getting wrong CCI after ucsi_ccg_async_write() when
+the UCSI interrupt is not handled.
+
+Finally, acking the UCSI_READ_INT interrupt before calling complete()
+in ISR to ensure that the ucsi_ccg_sync_write() would wait for the
+interrupt handling to complete.
+
 ---
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../kvm/aarch64/pmu_event_filter_test.c       | 219 ++++++++++++++++++
- .../selftests/kvm/include/aarch64/vpmu.h      |   4 +
- .../testing/selftests/kvm/lib/aarch64/vpmu.c  |  14 +-
- 4 files changed, 236 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
+V1->V2
+- Fix uninitialized symbol 'cci'
+v2->v3
+- Remove misusing Reported-by tags
+v3->v4
+- Add comments for op_lock
+v4->v5
+- Specify the endianness of registers in struct op_region
+- Replace ccg_op_region_read() with inline codes
+- Replace ccg_op_region_clean() with inline codes
+- Replace stack memory with GFP_ATOMIC allocated memory in ccg_op_region_update()
+- Add comments for resetting CCI in ucsi_ccg_async_write()
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index b60852c222ac..5f126e1a1dbf 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -155,6 +155,7 @@ TEST_GEN_PROGS_aarch64 += aarch64/arch_timer
- TEST_GEN_PROGS_aarch64 += aarch64/debug-exceptions
- TEST_GEN_PROGS_aarch64 += aarch64/hypercalls
- TEST_GEN_PROGS_aarch64 += aarch64/page_fault_test
-+TEST_GEN_PROGS_aarch64 += aarch64/pmu_event_filter_test
- TEST_GEN_PROGS_aarch64 += aarch64/psci_test
- TEST_GEN_PROGS_aarch64 += aarch64/set_id_regs
- TEST_GEN_PROGS_aarch64 += aarch64/smccc_filter
-diff --git a/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
-new file mode 100644
-index 000000000000..d280382f362f
---- /dev/null
-+++ b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
-@@ -0,0 +1,219 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * pmu_event_filter_test - Test user limit pmu event for guest.
-+ *
-+ * Copyright (c) 2023 Red Hat, Inc.
-+ *
-+ * This test checks if the guest only see the limited pmu event that userspace
-+ * sets, if the guest can use those events which user allow, and if the guest
-+ * can't use those events which user deny.
-+ * This test runs only when KVM_CAP_ARM_PMU_V3, KVM_ARM_VCPU_PMU_V3_FILTER
-+ * is supported on the host.
-+ */
-+#include <kvm_util.h>
-+#include <processor.h>
-+#include <vgic.h>
-+#include <vpmu.h>
-+#include <test_util.h>
-+#include <perf/arm_pmuv3.h>
-+
-+struct pmce{
-+	uint64_t pmceid0;
-+	uint64_t pmceid1;
-+} supported_pmce, guest_pmce;
-+
-+static struct vpmu_vm *vpmu_vm;
-+
-+#define FILTER_NR 10
-+
-+struct test_desc {
-+	const char *name;
-+	struct kvm_pmu_event_filter filter[FILTER_NR];
+Signed-off-by: Sing-Han Chen <singhanc@nvidia.com>
+Signed-off-by: Haotien Hsu <haotienh@nvidia.com>
+---
+ drivers/usb/typec/ucsi/ucsi_ccg.c | 92 ++++++++++++++++++++++++++++---
+ 1 file changed, 84 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
+index 449c125f6f87..cd92fae485d0 100644
+--- a/drivers/usb/typec/ucsi/ucsi_ccg.c
++++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+@@ -192,6 +192,12 @@ struct ucsi_ccg_altmode {
+ 	bool checked;
+ } __packed;
+ 
++#define CCGX_MESSAGE_IN_MAX 4
++struct op_region {
++	__le32 cci;
++	__le32 message_in[CCGX_MESSAGE_IN_MAX];
 +};
 +
-+#define __DEFINE_FILTER(base, num, act)		\
-+	((struct kvm_pmu_event_filter) {	\
-+		.base_event	= base,		\
-+		.nevents	= num,		\
-+		.action		= act,		\
-+	})
+ struct ucsi_ccg {
+ 	struct device *dev;
+ 	struct ucsi *ucsi;
+@@ -222,6 +228,13 @@ struct ucsi_ccg {
+ 	bool has_multiple_dp;
+ 	struct ucsi_ccg_altmode orig[UCSI_MAX_ALTMODES];
+ 	struct ucsi_ccg_altmode updated[UCSI_MAX_ALTMODES];
 +
-+#define DEFINE_FILTER(base, act) __DEFINE_FILTER(base, 1, act)
-+
-+#define EMPTY_FILTER	{ 0 }
-+
-+#define SW_INCR		0x0
-+#define INST_RETIRED	0x8
-+#define BR_RETIRED	0x21
-+
-+static void guest_code(void)
-+{
-+	uint64_t pmceid0 = read_sysreg(pmceid0_el0);
-+	uint64_t pmceid1 = read_sysreg(pmceid1_el0);
-+
-+	GUEST_ASSERT_EQ(guest_pmce.pmceid0, pmceid0);
-+	GUEST_ASSERT_EQ(guest_pmce.pmceid1, pmceid1);
-+
-+	GUEST_DONE();
-+}
-+
-+static void guest_get_pmceid(void)
-+{
-+	supported_pmce.pmceid0 = read_sysreg(pmceid0_el0);
-+	supported_pmce.pmceid1 = read_sysreg(pmceid1_el0);
-+
-+	GUEST_DONE();
-+}
-+
-+static void pmu_event_filter_init(struct vpmu_vm *vm, void *arg)
-+{
-+	struct kvm_device_attr attr = {
-+		.group	= KVM_ARM_VCPU_PMU_V3_CTRL,
-+		.attr	= KVM_ARM_VCPU_PMU_V3_FILTER,
-+	};
-+	struct kvm_pmu_event_filter *filter = (struct kvm_pmu_event_filter *)arg;
-+
-+	while (filter && filter->nevents != 0) {
-+		attr.addr = (uint64_t)filter;
-+		vcpu_ioctl(vm->vcpu, KVM_SET_DEVICE_ATTR, &attr);
-+		filter++;
-+	}
-+}
-+
-+static void create_vpmu_vm_with_filter(void *guest_code,
-+				       struct kvm_pmu_event_filter *filter)
-+{
-+	vpmu_vm = __create_vpmu_vm(guest_code, pmu_event_filter_init, filter);
-+}
-+
-+static void run_vcpu(struct kvm_vcpu *vcpu)
-+{
-+	struct ucall uc;
-+
-+	while (1) {
-+		vcpu_run(vcpu);
-+		switch (get_ucall(vcpu, &uc)) {
-+		case UCALL_DONE:
-+			return;
-+		default:
-+			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-+		}
-+	}
-+}
-+
-+static void set_pmce(struct pmce *pmce, int action, int event)
-+{
-+	int base = 0;
-+	uint64_t *pmceid = NULL;
-+
-+	if (event >= 0x4000) {
-+		event -= 0x4000;
-+		base = 32;
-+	}
-+
-+	if (event >= 0 && event <= 0x1F) {
-+		pmceid = &pmce->pmceid0;
-+	} else if (event >= 0x20 && event <= 0x3F) {
-+		event -= 0x20;
-+		pmceid = &pmce->pmceid1;
-+	} else {
-+		return;
-+	}
-+
-+	event += base;
-+	if (action == KVM_PMU_EVENT_ALLOW)
-+		*pmceid |= BIT(event);
-+	else
-+		*pmceid &= ~BIT(event);
-+}
-+
-+static void prepare_guest_pmce(struct kvm_pmu_event_filter *filter)
-+{
-+	struct pmce pmce_mask = { ~0, ~0 };
-+	bool first_filter = true;
-+
-+	while (filter && filter->nevents != 0) {
-+		if (first_filter) {
-+			if (filter->action == KVM_PMU_EVENT_ALLOW)
-+				memset(&pmce_mask, 0, sizeof(pmce_mask));
-+			first_filter = false;
-+		}
-+
-+		set_pmce(&pmce_mask, filter->action, filter->base_event);
-+		filter++;
-+	}
-+
-+	guest_pmce.pmceid0 = supported_pmce.pmceid0 & pmce_mask.pmceid0;
-+	guest_pmce.pmceid1 = supported_pmce.pmceid1 & pmce_mask.pmceid1;
-+}
-+
-+static void run_test(struct test_desc *t)
-+{
-+	pr_debug("Test: %s\n", t->name);
-+
-+	create_vpmu_vm_with_filter(guest_code, t->filter);
-+	prepare_guest_pmce(t->filter);
-+	sync_global_to_guest(vpmu_vm->vm, guest_pmce);
-+
-+	run_vcpu(vpmu_vm->vcpu);
-+
-+	destroy_vpmu_vm(vpmu_vm);
-+}
-+
-+static struct test_desc tests[] = {
-+	{"without_filter", { EMPTY_FILTER }},
-+	{"member_allow_filter",
-+	 {DEFINE_FILTER(SW_INCR, 0), DEFINE_FILTER(INST_RETIRED, 0),
-+	  DEFINE_FILTER(BR_RETIRED, 0), EMPTY_FILTER}},
-+	{"member_deny_filter",
-+	 {DEFINE_FILTER(SW_INCR, 1), DEFINE_FILTER(INST_RETIRED, 1),
-+	  DEFINE_FILTER(BR_RETIRED, 1), EMPTY_FILTER}},
-+	{"not_member_deny_filter",
-+	 {DEFINE_FILTER(SW_INCR, 1), EMPTY_FILTER}},
-+	{"not_member_allow_filter",
-+	 {DEFINE_FILTER(SW_INCR, 0), EMPTY_FILTER}},
-+	{ 0 }
-+};
-+
-+static void for_each_test(void)
-+{
-+	struct test_desc *t;
-+
-+	for (t = &tests[0]; t->name; t++)
-+		run_test(t);
-+}
-+
-+static bool kvm_supports_pmu_event_filter(void)
-+{
-+	int r;
-+
-+	vpmu_vm = create_vpmu_vm(guest_code);
-+
-+	r = __kvm_has_device_attr(vpmu_vm->vcpu->fd, KVM_ARM_VCPU_PMU_V3_CTRL,
-+				  KVM_ARM_VCPU_PMU_V3_FILTER);
-+
-+	destroy_vpmu_vm(vpmu_vm);
-+	return !r;
-+}
-+
-+static bool host_pmu_supports_events(void)
-+{
-+	vpmu_vm = create_vpmu_vm(guest_get_pmceid);
-+
-+	memset(&supported_pmce, 0, sizeof(supported_pmce));
-+	sync_global_to_guest(vpmu_vm->vm, supported_pmce);
-+	run_vcpu(vpmu_vm->vcpu);
-+	sync_global_from_guest(vpmu_vm->vm, supported_pmce);
-+	destroy_vpmu_vm(vpmu_vm);
-+
-+	return supported_pmce.pmceid0 & (BR_RETIRED | INST_RETIRED);
-+}
-+
-+int main(void)
-+{
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+	TEST_REQUIRE(kvm_supports_pmu_event_filter());
-+	TEST_REQUIRE(host_pmu_supports_events());
-+
-+	for_each_test();
-+}
-diff --git a/tools/testing/selftests/kvm/include/aarch64/vpmu.h b/tools/testing/selftests/kvm/include/aarch64/vpmu.h
-index 644dae3814b5..f103d0824f8a 100644
---- a/tools/testing/selftests/kvm/include/aarch64/vpmu.h
-+++ b/tools/testing/selftests/kvm/include/aarch64/vpmu.h
-@@ -18,6 +18,10 @@ struct vpmu_vm {
- 	int gic_fd;
++	/*
++	 * This spinlock protects op_data which includes CCI and MESSAGE_IN that
++	 * will be updated in ISR
++	 */
++	spinlock_t op_lock;
++	struct op_region op_data;
  };
  
-+struct vpmu_vm *__create_vpmu_vm(void *guest_code,
-+				 void (*init_pmu)(struct vpmu_vm *vm, void *arg),
-+				 void *arg);
-+
- struct vpmu_vm *create_vpmu_vm(void *guest_code);
- 
- void destroy_vpmu_vm(struct vpmu_vm *vpmu_vm);
-diff --git a/tools/testing/selftests/kvm/lib/aarch64/vpmu.c b/tools/testing/selftests/kvm/lib/aarch64/vpmu.c
-index b3de8fdc555e..76ea03d607f1 100644
---- a/tools/testing/selftests/kvm/lib/aarch64/vpmu.c
-+++ b/tools/testing/selftests/kvm/lib/aarch64/vpmu.c
-@@ -7,8 +7,9 @@
- #include <vpmu.h>
- #include <perf/arm_pmuv3.h>
- 
--/* Create a VM that has one vCPU with PMUv3 configured. */
--struct vpmu_vm *create_vpmu_vm(void *guest_code)
-+struct vpmu_vm *__create_vpmu_vm(void *guest_code,
-+				 void (*init_pmu)(struct vpmu_vm *vm, void *arg),
-+				 void *arg)
- {
- 	struct kvm_vcpu_init init;
- 	uint8_t pmuver;
-@@ -50,12 +51,21 @@ struct vpmu_vm *create_vpmu_vm(void *guest_code)
- 		    "Unexpected PMUVER (0x%x) on the vCPU with PMUv3", pmuver);
- 
- 	/* Initialize vPMU */
-+	if (init_pmu)
-+		init_pmu(vpmu_vm, arg);
-+
- 	vcpu_ioctl(vpmu_vm->vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
- 	vcpu_ioctl(vpmu_vm->vcpu, KVM_SET_DEVICE_ATTR, &init_attr);
- 
- 	return vpmu_vm;
+ static int ccg_read(struct ucsi_ccg *uc, u16 rab, u8 *data, u32 len)
+@@ -305,12 +318,42 @@ static int ccg_write(struct ucsi_ccg *uc, u16 rab, const u8 *data, u32 len)
+ 	return 0;
  }
  
-+/* Create a VM that has one vCPU with PMUv3 configured. */
-+struct vpmu_vm *create_vpmu_vm(void *guest_code)
++static int ccg_op_region_update(struct ucsi_ccg *uc, u32 cci)
 +{
-+	return __create_vpmu_vm(guest_code, NULL, NULL);
++	u16 reg = CCGX_RAB_UCSI_DATA_BLOCK(UCSI_MESSAGE_IN);
++	struct op_region *data = &uc->op_data;
++	unsigned char *buf;
++	size_t size = sizeof(data->message_in);
++
++	buf = kzalloc(size, GFP_ATOMIC);
++	if (!buf)
++		return -ENOMEM;
++	if (UCSI_CCI_LENGTH(cci)) {
++		int ret = ccg_read(uc, reg, (void *)buf, size);
++
++		if (ret) {
++			kfree(buf);
++			return ret;
++		}
++	}
++
++	spin_lock(&uc->op_lock);
++	data->cci = cci;
++	if (UCSI_CCI_LENGTH(cci))
++		memcpy(&data->message_in, buf, size);
++	spin_unlock(&uc->op_lock);
++	kfree(buf);
++	return 0;
 +}
 +
- void destroy_vpmu_vm(struct vpmu_vm *vpmu_vm)
+ static int ucsi_ccg_init(struct ucsi_ccg *uc)
  {
- 	close(vpmu_vm->gic_fd);
+ 	unsigned int count = 10;
+ 	u8 data;
+ 	int status;
+ 
++	spin_lock_init(&uc->op_lock);
++
+ 	data = CCGX_RAB_UCSI_CONTROL_STOP;
+ 	status = ccg_write(uc, CCGX_RAB_UCSI_CONTROL, &data, sizeof(data));
+ 	if (status < 0)
+@@ -520,9 +563,20 @@ static int ucsi_ccg_read(struct ucsi *ucsi, unsigned int offset,
+ 	u16 reg = CCGX_RAB_UCSI_DATA_BLOCK(offset);
+ 	struct ucsi_capability *cap;
+ 	struct ucsi_altmode *alt;
+-	int ret;
++	int ret = 0;
++
++	if (offset == UCSI_CCI) {
++		spin_lock(&uc->op_lock);
++		memcpy(val, &(uc->op_data).cci, val_len);
++		spin_unlock(&uc->op_lock);
++	} else if (offset == UCSI_MESSAGE_IN) {
++		spin_lock(&uc->op_lock);
++		memcpy(val, &(uc->op_data).message_in, val_len);
++		spin_unlock(&uc->op_lock);
++	} else {
++		ret = ccg_read(uc, reg, val, val_len);
++	}
+ 
+-	ret = ccg_read(uc, reg, val, val_len);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -559,9 +613,18 @@ static int ucsi_ccg_read(struct ucsi *ucsi, unsigned int offset,
+ static int ucsi_ccg_async_write(struct ucsi *ucsi, unsigned int offset,
+ 				const void *val, size_t val_len)
+ {
++	struct ucsi_ccg *uc = ucsi_get_drvdata(ucsi);
+ 	u16 reg = CCGX_RAB_UCSI_DATA_BLOCK(offset);
+ 
+-	return ccg_write(ucsi_get_drvdata(ucsi), reg, val, val_len);
++	/*
++	 * UCSI may read CCI instantly after async_write,
++	 * clear CCI to avoid caller getting wrong data before we get CCI from ISR
++	 */
++	spin_lock(&uc->op_lock);
++	uc->op_data.cci = 0;
++	spin_unlock(&uc->op_lock);
++
++	return ccg_write(uc, reg, val, val_len);
+ }
+ 
+ static int ucsi_ccg_sync_write(struct ucsi *ucsi, unsigned int offset,
+@@ -615,13 +678,18 @@ static irqreturn_t ccg_irq_handler(int irq, void *data)
+ 	u16 reg = CCGX_RAB_UCSI_DATA_BLOCK(UCSI_CCI);
+ 	struct ucsi_ccg *uc = data;
+ 	u8 intr_reg;
+-	u32 cci;
+-	int ret;
++	u32 cci = 0;
++	int ret = 0;
+ 
+ 	ret = ccg_read(uc, CCGX_RAB_INTR_REG, &intr_reg, sizeof(intr_reg));
+ 	if (ret)
+ 		return ret;
+ 
++	if (!intr_reg)
++		return IRQ_HANDLED;
++	else if (!(intr_reg & UCSI_READ_INT))
++		goto err_clear_irq;
++
+ 	ret = ccg_read(uc, reg, (void *)&cci, sizeof(cci));
+ 	if (ret)
+ 		goto err_clear_irq;
+@@ -629,13 +697,21 @@ static irqreturn_t ccg_irq_handler(int irq, void *data)
+ 	if (UCSI_CCI_CONNECTOR(cci))
+ 		ucsi_connector_change(uc->ucsi, UCSI_CCI_CONNECTOR(cci));
+ 
+-	if (test_bit(DEV_CMD_PENDING, &uc->flags) &&
+-	    cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))
+-		complete(&uc->complete);
++	/*
++	 * As per CCGx UCSI interface guide, copy CCI and MESSAGE_IN
++	 * to the OpRegion before clear the UCSI interrupt
++	 */
++	ret = ccg_op_region_update(uc, cci);
++	if (ret)
++		goto err_clear_irq;
+ 
+ err_clear_irq:
+ 	ccg_write(uc, CCGX_RAB_INTR_REG, &intr_reg, sizeof(intr_reg));
+ 
++	if (!ret && test_bit(DEV_CMD_PENDING, &uc->flags) &&
++	    cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))
++		complete(&uc->complete);
++
+ 	return IRQ_HANDLED;
+ }
+ 
 -- 
-2.40.1
+2.34.1
 
