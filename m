@@ -1,115 +1,92 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5E71CD0A;
-	Tue, 16 Jan 2024 16:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0501CA9C
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 16:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705424297; cv=none; b=bLsEF6fCrv9do+K8T8bV3wLO1EemtXmERz0MgydlIrdYFbTpxi3HQngsU5j02FjcoV2SR89/Lr+EvK0/za2D9vEQJj/FWxMm7ReHRc+10nTtUCJWZ9de76Hzeq+SWqjNnfBNp0Cg+wC4HdtG7bEVyizEnCDcCUdUtXDq7dn3c2k=
+	t=1705424319; cv=none; b=Nve2DAB/GJ3IvVh58y4ibNEqfwXQ5dqZGkf7iIPWyD7auf6z+Hiv3I8llG8IcluGjwfR2lvfyi2Z29y+3gdBUfYmickc4akCSIYtQTSRlOU7k+87ehrDowLt5AkbEFfETw0UZYLRm/4Li5hs7ZzAATrwaRQ0yc31PU6JfnTNots=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705424297; c=relaxed/simple;
-	bh=EG56JEJr5SSFJa1ProkXXetHXw6Bmln8ueAcpqQwFV4=;
-	h=Received:DKIM-Signature:Received:Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:Content-Language:To:CC:
-	 References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-Originating-IP:X-ClientProxiedBy:X-QCInternal:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details; b=uAQloF64iHPTMCvZy4yAAS75WyIPXc3lel+txursAimIGINgS9BYi4YB/RMINgaOHBedtapwqw76tPxn3VJ8P2bPTzPCfkqbKfi7sKBNOuyUeEDCLQWwxBMNP5P0RJIDu+J1ki48yJUdOGHcdQJInamN0vQIYA1yrsZ1LOOIeXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iZXCTlrI
+	s=arc-20240116; t=1705424319; c=relaxed/simple;
+	bh=EzGq4CAIyuPivzAKnK9cT206XFZLx0RSCBYeBqadKqM=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Mailer; b=ATOc96AyvDmraFANutlwmWDBnaVgDnEo1K1PwOUvWvoi0fVNA2/yeZ7zHG4KzHx9plshs7KrXXba3MfGNxeVYBvSTiFmkzqUIahSWUZ14m1HMDdfq1Zv1sNu/31M9mkePDzyZ9LhpphxKTD961EpdFtiOxQcAdJRkVH7KCBt1oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=uye0HLSl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iZXCTlrI"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40GE0SRq017782;
-	Tue, 16 Jan 2024 16:58:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=GGCf2oVrPExymJ+LoSpyhflVsJy1oqjW5/tJ73eB70E=; b=iZ
-	XCTlrIAErVdZlGVSb/i0Hn44IG2n7ptRNNEWTfgWeaRMxPgVw0V0TRLwmy+15mH5
-	L/UtoABG2B4NixijR3ewBDVmHgykD+H2Tot3Fu6yTW2UBDsTs0prmJTdnRtU+OI0
-	lxo6Us7c8jAddwoqqjOM1+E6vCekAvtEKo8MXHeOvB+sYYlnaluhxVmEVtUsXAqS
-	a5uUTWyz8DjNTrrxVEUZIGpxk40mRzC1V4qpgQKz12cHOPIJQVARyc4dy0snPa6n
-	WAoo6QpBnRHwukKm+AuZoF/6fg22a3N+IFimqZzthfc3E2+1Iagyfo7e1wnKthc2
-	ElhK4/w/trbrxkAnaprA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vnq4t13k8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 16:58:06 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40GGw56q005399
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 16:58:05 GMT
-Received: from [10.227.110.203] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 16 Jan
- 2024 08:58:04 -0800
-Message-ID: <b4f29511-e001-4964-b88d-208dabf88121@quicinc.com>
-Date: Tue, 16 Jan 2024 08:58:04 -0800
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="uye0HLSl"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7bb5be6742fso96697639f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 08:58:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705424317; x=1706029117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Lvta5bGdKwksZo0+l1KEGWg49E9lz3g/VdkEuYjFXQ=;
+        b=uye0HLSl4kwVOhyvJrG2NsIqrZQDiceHim88KBTXa2ojTktbRP+DbmiwtTlFgo0hP1
+         ceKPILk2f/F1WiSJurMv30O5jYCZjZR2Wi+6EWnc+SQYjR1ZkNFSNmewcmqdkzzpsSHr
+         KXougct4jGsU7fYYnIB7I4ivSLJrdYyx0w8+25GgkSVgIZ54u8tv1au2l8i2dOAERNY4
+         DSbxqKsUWp6Aet2nhaviCXRk8W2QGKIM8NHEVXuj71rtmtjEM/grKA+cKn+7fupa9ZvE
+         mmFQuSz+kl5WS2JOo5FvUqN22uFsTgopGNQs175BxvNbKrZTaJSVicIozLfXPEg5limP
+         K6mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705424317; x=1706029117;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Lvta5bGdKwksZo0+l1KEGWg49E9lz3g/VdkEuYjFXQ=;
+        b=jWUXTdbz4fYktS/vazpRF73XmkwC5S7JRIVVuv50Rrx8KOC4MHgAddJMWB06gVc5fV
+         qAiZFSiJf+lt5YOm5Qzq+b5mP0c1WxCzaSd+SP9VsqMtLDLJk1QR2j0Ut8oUbENlI4D3
+         r4joNu9+sP/iyWJtT9E8arAIzZVDFzW+Ag5Y8hBCeW0PcpJBxQME7fjJz7ckcFzpR+Yk
+         c0KrOseM0Vs1dk2PDRa5u+icv39qix5F3WFm6bSJbcw4JvdFy6wtIm+3dXv8Pp3ikEDT
+         3JeX8vbuQ2cL2WJv07ULaDaW9XGqR+Q0rklxIiVU4+oobOhgJWeOAV08rxkAf19FxqBH
+         242g==
+X-Gm-Message-State: AOJu0YwsTPNkE61zLry+dQva2z4v0GUUYTmP3+e9jFns6R5iqUsxElaK
+	bb0M3CIA8swmdFihgdSp8Q/bpKV0lEaHRA==
+X-Google-Smtp-Source: AGHT+IEjtSTkxVzMVFADP/Qqq8E5bXQZvkvA2xVWQ+NExmQCm+K6BPI49WHSYQ9vpnvZdYbfmFl8uw==
+X-Received: by 2002:a05:6602:14c7:b0:7be:edbc:629f with SMTP id b7-20020a05660214c700b007beedbc629fmr13678177iow.0.1705424317488;
+        Tue, 16 Jan 2024 08:58:37 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id r8-20020a056638100800b0046dfd35b042sm2995191jab.73.2024.01.16.08.58.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 08:58:35 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: djeffery@redhat.com, ming.lei@redhat.com
+In-Reply-To: <20240115145626.665562-1-shikemeng@huaweicloud.com>
+References: <20240115145626.665562-1-shikemeng@huaweicloud.com>
+Subject: Re: [PATCH] sbitmap: remove stale comment in sbq_calc_wake_batch
+Message-Id: <170542431569.238046.5650778720274078505.b4-ty@kernel.dk>
+Date: Tue, 16 Jan 2024 09:58:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: ath11k: document HAL_RX_BUF_RBM_SW4_BM
-Content-Language: en-US
-To: Kalle Valo <kvalo@kernel.org>
-CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240111-document-hal_rx_buf_rbm_sw4_bm-v1-1-ad277e8ab3cc@quicinc.com>
- <874jfg7xm4.fsf@kernel.org>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <874jfg7xm4.fsf@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: yQp3OW0jwCxWbxg37ISj41BS-p-b-ZMg
-X-Proofpoint-ORIG-GUID: yQp3OW0jwCxWbxg37ISj41BS-p-b-ZMg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- clxscore=1015 malwarescore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=371 priorityscore=1501 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401160134
+X-Mailer: b4 0.12.5-dev-2aabd
 
-On 1/14/2024 7:17 AM, Kalle Valo wrote:
-> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
+
+On Mon, 15 Jan 2024 22:56:26 +0800, Kemeng Shi wrote:
+> After commit 106397376c036 ("sbitmap: fix batching wakeup"), we may wake
+> up more than one queue for each batch. Just remove stale comment that
+> we wake up only one queue for each batch.
 > 
->> Commit 7636c9a6e7d7 ("wifi: ath11k: Add multi TX ring support for WCN6750")
->> added HAL_RX_BUF_RBM_SW4_BM to enum hal_rx_buf_return_buf_manager. However,
->> as flagged by the kernel-doc script, the documentation was not updated:
->>
->> drivers/net/wireless/ath/ath11k/hal.h:689: warning: Enum value 'HAL_RX_BUF_RBM_SW4_BM' not described in enum 'hal_rx_buf_return_buf_manager'
->>
->> So update the documentation. No functional changes, compile tested only.
->>
->> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 > 
-> I'm not really a fan of kernel-doc in wireless drivers, it feels more
-> unnecessary work. Should we remove the kernel-doc markings from ath11k
-> altogether?
 
-Are you not a fan of kernel-doc format specifically, or not a fan of
-documentation at all?
+Applied, thanks!
 
-I'm personally a fan of documentation since good documentation makes the
-code more maintainable. Yes, there is a cost in creating and maintaining
-the documentation, but this is hopefully offset by cost saving when new
-developers are trying to understand and modify the code.
+[1/1] sbitmap: remove stale comment in sbq_calc_wake_batch
+      commit: 5c7fa5c8ad79a1d7cc9f59636e2f99e8b5471248
 
-I'm also a fan of consistency. And since kernel-doc is the standard
-format defined for the kernel, it is my personal preference to use that
-format.
+Best regards,
+-- 
+Jens Axboe
 
-I'm curious what others think of the ath10/11/12k level and style of
-documentation.
 
-/jeff
+
