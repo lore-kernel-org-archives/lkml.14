@@ -1,141 +1,132 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8C812B7B;
-	Tue, 16 Jan 2024 07:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ECF111AD
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 07:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gH7MHFK3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1705390662; x=1736926662;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W2Z5WovOkoDhRrX3oZ/2SAj8+B2nb1yllR5MhnzNHik=;
-  b=gH7MHFK3Qvhg+39qCyI0l9EQynOo2OfkTZWU4XIvZSeuOsh1ZR3us1R3
-   /YGIJ3UOwnxRFGpCJrFQd6TU8LhA7NMQ/OQ8RiObTOn97ZuRmGvAF+/w/
-   P6slbE3Pfmz740oGOuzF5SnhL+46qVaUhnK8aQ9Ur6rA+OgUJI9TMvrjZ
-   kNxVWdJBkk0B/ldkoaivyY6a0Ta5Lrn67Hd5yaK3YJNlPS1daarc4phS9
-   gTTLXhfrcxE5N2LpOqqEZARt3YN5cBDA1FdnplCs4piNRtEnocDukQPOr
-   2u1xTJIfk7z+u9jPHkwA6AJeSiJ7AZ8J+L3N5fqNIFrbsyXd/6IyEemIl
-   A==;
-X-CSE-ConnectionGUID: IsWRT3HCQVmB2vjRJZ30Vg==
-X-CSE-MsgGUID: fn1riB1hQsScBhpbjzpgYw==
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="asc'?scan'208";a="14788093"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jan 2024 00:37:40 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Jan 2024 00:37:38 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 16 Jan 2024 00:37:34 -0700
-Date: Tue, 16 Jan 2024 07:36:58 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Inochi Amaoto <inochiama@outlook.com>
-CC: Conor Dooley <conor@kernel.org>, Michael Turquette
-	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Chao
- Wei <chao.wei@sophgo.com>, Chen Wang <unicorn_wang@outlook.com>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang <jszhang@kernel.org>, Liu
- Gui <kenneth.liu@sophgo.com>, Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
-	<dlan@gentoo.org>, <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v6 1/4] dt-bindings: clock: sophgo: Add clock controller
- of SG2000 series SoC
-Message-ID: <20240116-doubling-fanning-2a46405942ae@wendy>
-References: <20240115-spendable-achiness-cff7918fe810@spud>
- <IA1PR20MB4953C0E6DCC3C4CC0A398529BB732@IA1PR20MB4953.namprd20.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGyolOc4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705390674;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CPJb7cadTIjcWryPVz+kharVhiS/ZoG1eeWlNYM9Uak=;
+	b=gGyolOc4kY2tavH0/vQihn9pQcu/zp7INJaopgUMH3XslI4bY0hwMnUgX0cNRa3bzNEWlY
+	rAj+Z6r+MkVlHkhop6Az3UYFDVpVDYOpDfnxHUTuxC2SMVDwxJcb1wz6lSu5/UPudGhK4O
+	jat9YQfWDI2Kw7ralJnbp9dGwe87CcI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-160-iiOZ5s8ZNniHQ21THwcW_Q-1; Tue, 16 Jan 2024 02:37:52 -0500
+X-MC-Unique: iiOZ5s8ZNniHQ21THwcW_Q-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-67ef8bbfe89so207095536d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jan 2024 23:37:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705390672; x=1705995472;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CPJb7cadTIjcWryPVz+kharVhiS/ZoG1eeWlNYM9Uak=;
+        b=uf44cT7gLlcVyLzS7fhFCpHTbHn3m0ppajc3mvqVddXMN2y2WpcG5Dj+0fHrBsSI7u
+         VMLCdzQkRwWAur1PEJkf7GG8CanKIKAKW53p35tXAoVdUlYbQfhdJV6Kbzu050pcS2UO
+         64WcMS8WLTtjyWPdPSnTz4d1okwdOKQhQCSpQjwobqtqp6WnnUvUhNGoNR3RaLUb9fv0
+         Ag/ih6sKnD8kvs+VO+HpXlD3/urYOVfxvSsKzBFlFChnvnLiqcbV6UuL01U6v48xxRhF
+         yPXHg6WLVkPxLZ6MwKf5sG0kH4YMi3A5juuOTiKATiqhjo0ykGi0soi0uryo6/DGVmRY
+         2aMQ==
+X-Gm-Message-State: AOJu0YxPA1DFCjYT7four+AFLBcReptM+L1pnqymlAcpDDbPeTXeUyjf
+	xeMX/2tNCG2MogtQ1Nin/Zqq4JE3hB+EHNOaKlCpIXaOptFbah2+t58f9QgLmIKbowKmpj8Lvnv
+	iAGxlPDjCWdV0CFQlANjm4QGjGaRnbKnD
+X-Received: by 2002:ad4:5f8a:0:b0:681:23ef:9b2 with SMTP id jp10-20020ad45f8a000000b0068123ef09b2mr9108952qvb.54.1705390672382;
+        Mon, 15 Jan 2024 23:37:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGzNVPOVK5WUwki2xRcl/qqtOEgixBSzvyPbGkgE8FwdFmWowCPeLaA6V4n48GMgyR44mAHFw==
+X-Received: by 2002:ad4:5f8a:0:b0:681:23ef:9b2 with SMTP id jp10-20020ad45f8a000000b0068123ef09b2mr9108944qvb.54.1705390672165;
+        Mon, 15 Jan 2024 23:37:52 -0800 (PST)
+Received: from LeoBras.redhat.com ([2804:1b3:a803:64aa:6db9:6544:60c:9e16])
+        by smtp.gmail.com with ESMTPSA id mx13-20020a0562142e0d00b00681756b66e2sm28438qvb.35.2024.01.15.23.37.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 23:37:51 -0800 (PST)
+From: Leonardo Bras <leobras@redhat.com>
+To: Leonardo Bras <leobras@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] spinlock: Fix failing build for PREEMPT_RT
+Date: Tue, 16 Jan 2024 04:37:48 -0300
+Message-ID: <ZaYyTKgmwsUP454I@LeoBras>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116073234.2355850-3-leobras@redhat.com>
+References: <20240116073234.2355850-2-leobras@redhat.com> <20240116073234.2355850-3-leobras@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eB8X+Pg8BaNk7w+A"
-Content-Disposition: inline
-In-Reply-To: <IA1PR20MB4953C0E6DCC3C4CC0A398529BB732@IA1PR20MB4953.namprd20.prod.outlook.com>
-
---eB8X+Pg8BaNk7w+A
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 16, 2024 at 08:27:59AM +0800, Inochi Amaoto wrote:
-> >On Sun, Jan 14, 2024 at 12:16:58PM +0800, Inochi Amaoto wrote:
-> >> SG2000 series SoC has the same clock as CV1810 series, but the clock
-> >> related to A53 is functional in SG2000 series. So a new compatible
-> >> string is needed for the new SoC.
-> >>
-> >> Add definition for the clock controller of the SG2000 series SoC.
-> >>
-> >> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-> >> Link: https://github.com/sophgo/sophgo-doc/releases/tag/sg2000-datashe=
-et-v1.0-alpha
-> >> ---
-> >>  Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml | 3 ++-
-> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk=
-=2Eyaml b/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
-> >> index c1dc24673c0d..59ef41adb539 100644
-> >> --- a/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
-> >> +++ b/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
-> >> @@ -4,7 +4,7 @@
-> >>  $id: http://devicetree.org/schemas/clock/sophgo,cv1800-clk.yaml#
-> >>  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>
-> >> -title: Sophgo CV1800 Series Clock Controller
-> >> +title: Sophgo CV1800/SG2000 Series Clock Controller
-> >>
-> >>  maintainers:
-> >>    - Inochi Amaoto <inochiama@outlook.com>
-> >> @@ -14,6 +14,7 @@ properties:
-> >>      enum:
-> >>        - sophgo,cv1800-clk
-> >>        - sophgo,cv1810-clk
-> >> +      - sophgo,sg2000-clk
-> >
-> >I recall before you mentioned that the Sophgo folks were considering
-> >renaming one of their devices. Is the sg2000 the renamed one, or a
-> >different chip?
+On Tue, Jan 16, 2024 at 04:32:32AM -0300, Leonardo Bras wrote:
+> Since 1d71b30e1f85 ("sched.h: Move (spin|rwlock)_needbreak() to
+> spinlock.h") build fails for PREEMPT_RT, since there is no definition
+> available of either spin_needbreak() and rwlock_needbreak().
+> 
+> Since it was moved on the mentioned commit, it was placed inside a
+> !PREEMPT_RT part of the code, making it out of reach for an RT kernel.
+> 
+> Fix this by moving code it a few lines down so it can be reached by an
+> RT build, where it can also make use of the *_is_contended() definition
+> added by the spinlock_rt.h.
+> 
+> Fixes: d1d71b30e1f85 ("sched.h: Move (spin|rwlock)_needbreak() to
+> spinlock.h")
+> Signed-off-by: Leonardo Bras <leobras@redhat.com>
+> ---
+>  include/linux/spinlock.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
+> index eaac8b0da25b8..3fcd20de6ca88 100644
+> --- a/include/linux/spinlock.h
+> +++ b/include/linux/spinlock.h
+> @@ -449,6 +449,12 @@ static __always_inline int spin_is_contended(spinlock_t *lock)
+>  	return raw_spin_is_contended(&lock->rlock);
+>  }
+>  
+> +#define assert_spin_locked(lock)	assert_raw_spin_locked(&(lock)->rlock)
+> +
+> +#else  /* !CONFIG_PREEMPT_RT */
+> +# include <linux/spinlock_rt.h>
+> +#endif /* CONFIG_PREEMPT_RT */
+> +
+>  /*
+>   * Does a critical section need to be broken due to another
+>   * task waiting?: (technically does not depend on CONFIG_PREEMPTION,
+> @@ -480,12 +486,6 @@ static inline int rwlock_needbreak(rwlock_t *lock)
+>  #endif
+>  }
+>  
+> -#define assert_spin_locked(lock)	assert_raw_spin_locked(&(lock)->rlock)
+> -
+> -#else  /* !CONFIG_PREEMPT_RT */
+> -# include <linux/spinlock_rt.h>
+> -#endif /* CONFIG_PREEMPT_RT */
+> -
+>  /*
+>   * Pull the atomic_t declaration:
+>   * (asm-mips/atomic.h needs above definitions)
+> -- 
+> 2.43.0
+> 
 
-> The sg2000/sg2002 SoCs have one A53 core which cv1812/cv1813 SoCs
-> don't have. I prefer sg2000/sg2002 are different chips, or at least
-> an enhanced version of existed cv1812/cv1813. It is not a simple
-> rename.
->=20
-> For this patch, the sg2000 doesn't need to disable A53 related clocks
-> like cv18xx series. So this compatible is needed to bind to this new
-> logic.
 
-I'm not disputing the unique compatible - you previously mentioned that
-Sophgo were considering rebranding the cvXXXX series of chips going
-forward and that one particular chip might undergo a name change.
-I was wondering if this was that chip or just another device in the
-series.
+Nevermind, sent this one by mistake.
 
-Thanks,
-Conor.
-
---eB8X+Pg8BaNk7w+A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaYyFgAKCRB4tDGHoIJi
-0ny6AQD8jsSGjB9PRHJIURaIii46XV0kYNTdn/N7cJvxFm0LXQEApESH0dzNDVT/
-TL70OnJGXzymk7n0pSlvQzK/NlNa2gY=
-=HiGa
------END PGP SIGNATURE-----
-
---eB8X+Pg8BaNk7w+A--
