@@ -1,99 +1,91 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7ED76902
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 19:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D237764E;
+	Tue, 16 Jan 2024 19:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434424; cv=none; b=t4TzipNhi8HHMyIg4xaclA6k2dHWPaOoTUsx0zAiA4GZoVyLbPFMDh1SoSTSt5oEf6cRmkp3KfUzAraPTC0cXZ34Sh3f5/ZWLJquZe0T3ppcBHWGlQvfNk/L847e26p69V0Fv7nxcg5u1lIC0Fl+rdwUSaOAEgdMn5/LaS4lYZE=
+	t=1705434423; cv=none; b=uf7dc4lMuStYJYDm0QnkJhKeMyVw3R71+MbWkcEmlm/2uwd/BRvNxjEf4umx/HwwOnKefacN6mQkMioFUJqlm+xMYKN91SECVTdT0roUJpnwv0KY0dJIt+kBNfVof0uQE4/NJUghHR6u+2m9aFiNkvJf+bpoU54T2tOwed4zRww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434424; c=relaxed/simple;
-	bh=EfwE9uaTGSc2UjtKTV2wy76THTUsBDCa58I0a7iq2Wo=;
-	h=Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 User-Agent; b=CL4lxq6FwRgke/r4VYBOHcLrQzFBhlQ3fBn7PbrbtA94rcLzbSuKcKUwt6iLBM9afMmcjko4Te4UmX2l+VvW5QhI0ttMP+VPFEY/y0MIDPYHrj0kw8D3nxvrEfLHyvkE2MLAJq6VxjFACRV/9g/Qy9DdYjv+ALHzXWq4bFhSLAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 40GJkt1u005515;
-	Tue, 16 Jan 2024 20:46:55 +0100
-Date: Tue, 16 Jan 2024 20:46:55 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Cc: Charles Mirabile <cmirabil@redhat.com>, linux-kernel@vger.kernel.org,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Subject: Re: [PATCH] nolibc/stdlib: Improve `getauxval(3)` implementation
-Message-ID: <20240116194655.GA5511@1wt.eu>
-References: <20240116181147.2230944-1-cmirabil@redhat.com>
- <ZabQVvpZ4e7hTwcb@biznet-home.integral.gnuweeb.org>
- <ZabRwdcgU/H8i5Ja@1wt.eu>
- <ZabSG4R45sC0s23d@1wt.eu>
- <ZabUyZG3C3LUax6f@biznet-home.integral.gnuweeb.org>
- <ZabXyRMECEnMUizk@biznet-home.integral.gnuweeb.org>
+	s=arc-20240116; t=1705434423; c=relaxed/simple;
+	bh=XwWy4btrdrFDaQdryPSsdCI1nnvmIWTXvP6El7XQBd4=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
+	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=ZQU6ECRnLAKlxU12kKzv87lGdOiesvj0dX4/hmn+0DFV6JwkelWfuqQrhJF7I45XqaKkyzjJgd7fQ3McXbekpMVGRwNW8+e/Wj0qZbezzVNbkjSthoP+6waQ5jiEe4kQHVqcst0x81C3gpbY7etFRZGh3EjB2CWqk+8xuRzhcsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aPgKkpRL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aPgKkpRL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAC96C433F1;
+	Tue, 16 Jan 2024 19:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705434423;
+	bh=XwWy4btrdrFDaQdryPSsdCI1nnvmIWTXvP6El7XQBd4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aPgKkpRL4FF62p42D0YP0Hs/OSvxl25yzZ9x2xEhGtnVA6xusJM4TCGAxpaRRNt3O
+	 Ep2Aji5ek5e67EV4RNY3njmoTVooH4q+nnBhAJbdXQLukqrcN23VfeCqzoAA3Sudvo
+	 VnSaOVQIHenQLtIDQqN/MSBtajaFaGl1OJZQMceH8/0xy+kEgBQav1++/nwyuBgDQf
+	 HAF3zHnsCZBRXQ8Y+PvW+Yt/J132RZFmGTZW7wGd0gTXWm32o3JPTy1zUlPaW30L3O
+	 Cb7cbCiMwSBvoSe2Dh4NnPzh0NsDi1iwyZsxS/MzmnUzlG5eROZSJ4gnxgpH39XvZK
+	 ZkPg/fQqb+iBA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Mina Almasry <almasrymina@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	dhowells@redhat.com,
+	syoshida@redhat.com,
+	kuniyu@amazon.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.7 106/108] net: kcm: fix direct access to bv_len
+Date: Tue, 16 Jan 2024 14:40:12 -0500
+Message-ID: <20240116194225.250921-106-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116194225.250921-1-sashal@kernel.org>
+References: <20240116194225.250921-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZabXyRMECEnMUizk@biznet-home.integral.gnuweeb.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 17, 2024 at 02:23:53AM +0700, Ammar Faizi wrote:
-> On Wed, Jan 17, 2024 at 02:11:12AM +0700, Ammar Faizi wrote:
-> > On Tue, Jan 16, 2024 at 07:59:39PM +0100, Willy Tarreau wrote:
-> > > On Tue, Jan 16, 2024 at 07:58:09PM +0100, Willy Tarreau wrote:
-> > > > On Wed, Jan 17, 2024 at 01:52:06AM +0700, Ammar Faizi wrote:
-> > > > > What do you think about other architectures? Will it potentially be
-> > > > > misinterpreted?
-> > > > 
-> > > > Indeed, it would fail on a 64-bit big endian architecture. Let's
-> > > > just declare the local variable the same way as it is in the spec,
-> > > > it will be much cleaner and more reliable.
-> > > 
-> > > With that said, if previous code used to work on such architectures,
-> > > maybe the definition above is only for x86_64 and differs on other
-> > > archs. Maybe it's really defined as two longs ?
-> > 
-> > I just took a look at the kernel source code:
-> > https://github.com/torvalds/linux/blob/v6.7/fs/binfmt_elf.c#L226-L261
-> > 
-> > The auxv is stored in `elf_info` variable, the type is `elf_addr_t`. Not
-> > sure what kind of typedef is that. I'll check.
-> > 
-> > Each auxv entry is added using this macro:
-> > 
-> >  #define NEW_AUX_ENT(id, val) \
-> >          do { \
-> >                  *elf_info++ = id; \
-> >                  *elf_info++ = val; \
-> >          } while (0)
-> > 
-> > where `id` is the type. That clearly implies `type` and `val` have the
-> > same size on the Linux kernel.
-> 
-> So here is the result:
-> 
-> 1. 'elf_addr_t' defintion ( https://github.com/torvalds/linux/blob/v6.7/include/linux/elf.h#L38-L62 ):
-> 
->   (simplified)
->   #if ELF_CLASS == ELFCLASS32
->   #define elf_addr_t	Elf32_Off
->   #else
->   #define elf_addr_t	Elf64_Off
->   #endif
-> 
-> 2. 'Elf32_Off' and 'Elf64_Off' typedefs ( https://github.com/torvalds/linux/blob/v6.7/include/uapi/linux/elf.h#L8-L23 )
-> 
->   typedef __u32  Elf32_Off;
->   typedef __u64  Elf64_Off;
-> 
-> Assuming 'ELFCLASS32' is for 32-bit architectures, then it's two __u64
-> on 64-bit arch, and two __u32 on 32-bit arch. That is identical to
-> 'unsigned long' for both cases (on Linux). So it's fine to have
-> 'unsigned long' for both 'type' and 'value'.
+From: Mina Almasry <almasrymina@google.com>
 
-Yeah I agree, thanks for checking.
+[ Upstream commit b15a4cfe100b9acd097d3ae7052448bd1cdc2a3b ]
 
-Willy
+Minor fix for kcm: code wanting to access the fields inside an skb
+frag should use the skb_frag_*() helpers, instead of accessing the
+fields directly.
+
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+Link: https://lore.kernel.org/r/20240102205959.794513-1-almasrymina@google.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/kcm/kcmsock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
+index 65d1f6755f98..1184d40167b8 100644
+--- a/net/kcm/kcmsock.c
++++ b/net/kcm/kcmsock.c
+@@ -634,7 +634,7 @@ static int kcm_write_msgs(struct kcm_sock *kcm)
+ 
+ 		msize = 0;
+ 		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++)
+-			msize += skb_shinfo(skb)->frags[i].bv_len;
++			msize += skb_frag_size(&skb_shinfo(skb)->frags[i]);
+ 
+ 		iov_iter_bvec(&msg.msg_iter, ITER_SOURCE,
+ 			      skb_shinfo(skb)->frags, skb_shinfo(skb)->nr_frags,
+-- 
+2.43.0
+
