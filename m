@@ -1,95 +1,142 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070AF1DA4B;
-	Tue, 16 Jan 2024 22:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B13D1DA50;
+	Tue, 16 Jan 2024 22:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705443568; cv=none; b=H5QeBYv6oaKPg4ldMTjNs2jw7JXdAaWnj+PBf0jTk/CmLBSlF1lXzOmB9hE6iMN11uvZSlXmwbcdMZ9coWEHjn+q3Tl0/NrbmBdcPvC7qiy9C1R5qnmLkAdkImxjEDDLuaP62I70T+RjLCrnWzwIS1Xjh+2W+g4zEVtZ7bW6K2A=
+	t=1705443738; cv=none; b=FbDCA6fK6KP+x+DH2rThVwfRWGYy7YvL6V2xyE58i5dU5f47xptXAVk/Kf7bVZBxm20LXQVOHWg4wekpDtUAu1s9Taoh9ulcMsaQKHErVl2TVpY1dArwR0q0jtsHf+lSCbGnBMQAzQz22A3Zgq49lvZ03RJghP8GMc8knBTaR0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705443568; c=relaxed/simple;
-	bh=ik2oY4JRBWR6rvEPEnHpEDt7BIuzwUBEczKTn6ckrrM=;
-	h=DKIM-Signature:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding; b=U7jqotkhmzAZVId3rugjDST7f8vjHsSKVrrFDrLrnrc1xQHyrajKAimjoAgeR31nP8nqOyJbv2sYbcZvotdWS4rWWg16/YBvFn8YvPbT0DH8Cg57ywfVy8ZKY2bsV1g4mOko5aTYlYou68jQYoELJ1w9JE0/iu5wxgOWhRh95TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FBmMA7aF; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1705443738; c=relaxed/simple;
+	bh=P3ol08Fw41CIfzFFQooVhb0iE3Fv1ZRgddqxkDDBgGg=;
+	h=DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type; b=G3XXjjFM2QFpmnWtvhIHvMcHCURrPOJczb2KkgnLFizvWK7B+bF0gy+7HQjZSCOEthFsI07+CFdTRh88yKIiYQwq2ycIC7HrQAK7XsaHXqYSc4uRlf7Fq4hJS/FwfAPkuXM9/KLFgXxiVFtjPqznCNzEk8QAHZYYCno6K7+K194=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=lxkQ+G6s; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FBmMA7aF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=gO384S22CcX+AdiDGbsRafLHAmf11EYzzlC346GiPdM=; b=FBmMA7aFfDHBS2zFkio9GGDiKl
-	ZYzNT0szbWM8hCEJuCQ+iPTwmBOafYjkpJQPMBLAJnud3AP93Bd876K5Zf6c1MGEkEIIlZDBONZ1X
-	T9BZIN44Qu+gH1bQAWgC8Fx0fr8mxnnGSPazpkheTe4P4gGJa6+DZElkjCld1yNmIG75b/IcA55SK
-	FFqzIl9KYx63A94AQ05E2xMmBfnU9tdP57Goa2T2T2hqajs4H4sLNS2WLjINPz3c1BWK2xg4CParl
-	BqMzaxTz4ReP8a9XOv2yheWr/dBlEuH2XX3XDqZoJvoFWF8ckWBrnr0wnNqdV5g102f2naP2Yv5Fi
-	ApJmfc8A==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPrmD-00DoD6-0D;
-	Tue, 16 Jan 2024 22:19:21 +0000
-Message-ID: <c16ff365-6d7d-40a1-b096-e4d5cc127c68@infradead.org>
-Date: Tue, 16 Jan 2024 14:19:17 -0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lxkQ+G6s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1705443731;
+	bh=AxIQOMJi6FIcABc8p8DFjfS3N7iZ0CR4Tu2qx3sFLAs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=lxkQ+G6sqWoHvr9pwuzJeAVNYHtUK9BYGqsXPYEeYIrdHAJ5/11VUhkvS5EiPScaT
+	 JVCm8S8CuKXrtjkT6a+2bUwxYfIS/Mv1jMXEv8GawzP9YwJMX8q7XJxybrsICrVPtk
+	 vkktWDAOWOkafvMqnJz/6cmgQ/oaRCdbHSKDXmMZQ/rivDMCkGyRxyYzr25gMrUfV1
+	 XExGCfilTnw+uWQyb4QVMo41rmwu3aLKDW6vHKPFip/mu8rCnIH3vWzk7dtOiIB2Bi
+	 QWIkerNtRfbNel09XWVDixut9KeqiH1GIGxQZ9s0xg1arcmdzNTl25T7goOyqAmqtl
+	 1mUfX9NDSJKaw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TF3Qq0kyGz4xP9;
+	Wed, 17 Jan 2024 09:22:11 +1100 (AEDT)
+Date: Wed, 17 Jan 2024 09:22:09 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yury Norov <yury.norov@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the mm-nonmm-unstable
+ branch of the mm tree
+Message-ID: <20240117092209.7157a9c2@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 4/4] mseal:add documentation
-Content-Language: en-US
-To: Jonathan Corbet <corbet@lwn.net>, jeffxu@chromium.org,
- akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
- sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, usama.anjum@collabora.com
-Cc: jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org, deraadt@openbsd.org
-References: <20240104185138.169307-1-jeffxu@chromium.org>
- <20240104185138.169307-5-jeffxu@chromium.org> <87y1cp9gvd.fsf@meer.lwn.net>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <87y1cp9gvd.fsf@meer.lwn.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/ieYZL_P0CFftq=Ot5lzFi/N";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/ieYZL_P0CFftq=Ot5lzFi/N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 1/16/24 12:13, Jonathan Corbet wrote:
-> jeffxu@chromium.org writes:
-> 
->> From: Jeff Xu <jeffxu@chromium.org>
->>
->> Add documentation for mseal().
->>
->> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
->> ---
->>  Documentation/userspace-api/mseal.rst | 181 ++++++++++++++++++++++++++
->>  1 file changed, 181 insertions(+)
->>  create mode 100644 Documentation/userspace-api/mseal.rst
-> 
-> You need to add this file to index.rst or it won't be part of the docs
-> build.  Sphinx should have warned you about that when you did your test
-> build.
+After merging the mm tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-Yes, I have already asked Jeff to add this to his patch:
+In file included from include/uapi/linux/posix_types.h:5,
+                 from include/uapi/linux/types.h:14,
+                 from include/linux/types.h:6,
+                 from include/linux/kasan-checks.h:5,
+                 from include/asm-generic/rwonce.h:26,
+                 from ./arch/powerpc/include/generated/asm/rwonce.h:1,
+                 from include/linux/compiler.h:251,
+                 from include/linux/array_size.h:5,
+                 from include/linux/kernel.h:16,
+                 from lib/group_cpus.c:6:
+lib/group_cpus.c: In function 'group_cpus_evenly':
+include/linux/stddef.h:8:14: error: invalid initializer
+    8 | #define NULL ((void *)0)
+      |              ^
+lib/group_cpus.c:356:59: note: in expansion of macro 'NULL'
+  356 |         cpumask_var_t npresmsk __free(free_cpumask_var) =3D NULL;
+      |                                                           ^~~~
 
-diff -- a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
---- a/Documentation/userspace-api/index.rst
-+++ b/Documentation/userspace-api/index.rst
-@@ -23,6 +23,7 @@ place where this information is gathered
-    ebpf/index
-    ELF
-    ioctl/index
-+   mseal
-    iommu
-    iommufd
-    media/index
+Caused by commit
 
+  f004021b058f ("lib/group_cpus: fix initialization section in group_cpus_e=
+venly()")
 
--- 
-#Randy
+CONFIG_CPUMASK_OFFSTACK is not set for this build (so cpumask_var_t is
+an single element array, not a pointer).
+
+I applied this hack for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 17 Jan 2024 09:15:07 +1100
+Subject: [PATCH] fix up for "lib/group_cpus: fix initialization section in =
+group_cpus_evenly()"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ lib/group_cpus.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/lib/group_cpus.c b/lib/group_cpus.c
+index c9c95b21e6c6..2c54b49d4c59 100644
+--- a/lib/group_cpus.c
++++ b/lib/group_cpus.c
+@@ -353,7 +353,11 @@ struct cpumask *group_cpus_evenly(unsigned int numgrps)
+ {
+ 	cpumask_var_t *node_to_cpumask __free(free_node_to_cpumask) =3D alloc_nod=
+e_to_cpumask();
+ 	struct cpumask *masks __free(kfree) =3D kcalloc(numgrps, sizeof(*masks), =
+GFP_KERNEL);
++#ifdef CONFIG_CPUMASK_OFFSTACK
+ 	cpumask_var_t npresmsk __free(free_cpumask_var) =3D NULL;
++#else
++	cpumask_var_t npresmsk __free(free_cpumask_var);
++#endif
+ 	int curgrp, nr_present, nr_others;
+=20
+ 	if (!masks || !node_to_cpumask || !alloc_cpumask_var(&npresmsk, GFP_KERNE=
+L))
+--=20
+2.43.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ieYZL_P0CFftq=Ot5lzFi/N
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWnAZEACgkQAVBC80lX
+0GzXmwf+JI6+3rRdCG2/ZbxzjpcItSDfA73tvA0ndNYsQrlKjzOTdmKl95Au5BaL
+ZYhjfIlgXrcmS+5Kkm+cyH8bVaW6dJc6dDa2LDCpoFTUp2tY5YMc+TJMuJnBthwe
+bqgEVaslkVU2qZ/7daLN9rZ0zPDlS0CQcDqQESh1jARcI7OdH64f3fLO6ZuqODHx
+n12YedFA0ZYRg4LgkWTkhPI+sW9WuM2ZbSU0OOeSNuKECNnNEvISbRzEcKG7nPlQ
+WyR9kVAYXoL+aAh6fQ8yhOePwnhbZlZxCAbifK3FQk16WA2Vvq8GvJ85DjDYA4Ow
+BXFiokhnnDaikcXhGk3s2D8Dsobg0A==
+=slum
+-----END PGP SIGNATURE-----
+
+--Sig_/ieYZL_P0CFftq=Ot5lzFi/N--
