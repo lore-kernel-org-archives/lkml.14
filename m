@@ -1,75 +1,109 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9019118E06;
-	Tue, 16 Jan 2024 16:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B978C1BF3D;
+	Tue, 16 Jan 2024 16:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaRpGFRh"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc226dca91aso722543276.2;
-        Tue, 16 Jan 2024 08:48:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705423729; x=1706028529; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1D0TMKULcW7shsmS9YGoPaXfQ5EhcN/xDlG/ssZSxT4=;
-        b=EaRpGFRhe1/NDjC99qZdXyxqjtTZp9XU7MIzrf2d+JvY4RLyrfEHnrrtPDO/AJXFnZ
-         ltOApXwkjPoPsMgL6Ul5N/Q15m8yaztXVa0vnqZp1qHrqDJjdfS8O4f1EhwqIFnNXZK+
-         4NrQ8LtlPxLERfpafzljH/S02kKgo7SOKilP2c9hacVhiMA1gv2ODH3k3shTzc5mQGuk
-         Rq1KZ2VtH2abtSxBTKatdggkfV8KeUkDaxHbf9i9cgTj9pndB2YQpDtDjHTO3w06P3uD
-         E/ja6qhc0K11TxXA73KgiipYf/BUQJL+KqsmS1X1BIfrupzr1Q2JT427ZaOksiiAiD8I
-         fPaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705423729; x=1706028529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1D0TMKULcW7shsmS9YGoPaXfQ5EhcN/xDlG/ssZSxT4=;
-        b=cpHqvNPFDw4lsx4KJRp6cgf6ddXew4PFTQ+l1zn/Rr2G0qhNvacAvoE7Gf2HwhtpSe
-         YYdZQfNR9Bl+dVK/5EJNaaUHW7P164OZ7WrBC6ypthSfTw53uDrGC6rCRL+SYqaidOek
-         1kELQy5JGQ9lSNZTE9cgVAu44GLjUA+Sp3OY8bzQKsSg9Srfy6sRqa8QHFVynwojWpwe
-         KeBgezD26X8ahkC86dtuFgGksb9AalkUcLMP2A+qP6bChK2PMvjAzJr0I5mihpnVJqZE
-         czcsg6gprEsI5rNFEBFmKRIde12D27KJpUSBWSkk8VAizA1qHRE8xqwZuOchNS/4bid6
-         n4ag==
-X-Gm-Message-State: AOJu0Yzmlk2+xjF9Az8/v6rGTYmhoRn1CgEiM8oHyEuMSdrWsmtTg9MP
-	gheaFi9ocvEY97c44yCyZC0aLHZ3k0eG+Odv5g==
-X-Google-Smtp-Source: AGHT+IGs+u1mE8vGPkyvP0ludW6a4HcjeQGxNTlp7GV0XIK2lTCnRTsLLbcRVX3pWg3hNIqii6ldLQ5LLybNmit2rzU=
-X-Received: by 2002:a05:6902:1026:b0:dbf:11e:d09e with SMTP id
- x6-20020a056902102600b00dbf011ed09emr5137880ybt.54.1705423729478; Tue, 16 Jan
- 2024 08:48:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sECyj7ns"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20690C433F1;
+	Tue, 16 Jan 2024 16:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705423838;
+	bh=2NPjzps+hJ+aAwUViw/dVtWsbpS2ZynMXSxeOnl8abA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=sECyj7ns3TuopVn59k97q26ied+kCapNq22izPEJWbJP1Mhof5souh6+5pWT9qIHL
+	 BJOriWroXYFjbgNCUGoNSjOvpieAZ613hJoTkaRTPbdxiZDc1ageTrG/CsPvCgksQx
+	 Tt1XmN9mIfVAlqjkTmTGyTTY+qotN1HM3XaZNGkYM7yXTWVFqDwlmO1Aw92XPK0pBd
+	 Fhlm1d2URKXwlDGao0khj/36je+iaZf4D8YR+IP597Qs4TT7bJcfqAp05OO2pDDiEp
+	 /diRbsuVL+c2We5mbtVNTIhHWqsDYtZ3qFgukdkrLsYJqFG5WIkSRSo8QQIz5o766l
+	 DVrUlF4ti2oDA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id DC23ECE04A3; Tue, 16 Jan 2024 08:50:35 -0800 (PST)
+Date: Tue, 16 Jan 2024 08:50:35 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Onkarnarth <onkarnath.1@samsung.com>
+Cc: frederic@kernel.org, quic_neeraju@quicinc.com, joel@joelfernandes.org,
+	josh@joshtriplett.org, boqun.feng@gmail.com, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+	qiang.zhang1211@gmail.com, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org, r.thapliyal@samsung.com,
+	maninder1.s@samsung.com, tj@kernel.org, oleg@redhat.com,
+	peterz@infradead.org
+Subject: Re: [PATCH 1/1] rcu/sync: remove un-used rcu_sync_enter_start
+ function
+Message-ID: <de792eee-1f44-48e2-a122-c3ded1645155@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <CGME20240111092805epcas5p2ebb993010ae31d039e8f9de1e7818f7c@epcas5p2.samsung.com>
+ <20240111092722.322454-1-onkarnath.1@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115082028.9992-1-sunhao.th@gmail.com> <20240115082028.9992-2-sunhao.th@gmail.com>
- <3c69823d-1e46-60f4-5a41-d6a2983af532@iogearbox.net>
-In-Reply-To: <3c69823d-1e46-60f4-5a41-d6a2983af532@iogearbox.net>
-From: Hao Sun <sunhao.th@gmail.com>
-Date: Tue, 16 Jan 2024 17:48:38 +0100
-Message-ID: <CACkBjsYDDNtnws6afjkRWAg4Z6YkBU4m6Ywy-Wr3fjUB2Lic9Q@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] selftests/bpf: Add test for alu on PTR_TO_FLOW_KEYS
-To: Daniel Borkmann <daniel@iogearbox.net>
-Cc: bpf@vger.kernel.org, willemb@google.com, ast@kernel.org, andrii@kernel.org, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111092722.322454-1-onkarnath.1@samsung.com>
 
-On Tue, Jan 16, 2024 at 5:20=E2=80=AFPM Daniel Borkmann <daniel@iogearbox.n=
-et> wrote:
->
-> On 1/15/24 9:20 AM, Hao Sun wrote:
-> > Add a test case for PTR_TO_FLOW_KEYS alu. Testing if alu with
-> > variable offset on flow_keys is rejected.
-> >
-> > Signed-off-by: Hao Sun <sunhao.th@gmail.com>
->
-> Thanks applied, I've also added a note that we already have coverage
-> on the success case. Do you plan to follow up with checking the
-> remaining pointer types as Eduard suggested earlier?
->
+On Thu, Jan 11, 2024 at 02:57:22PM +0530, Onkarnarth wrote:
+> From: Onkarnath <onkarnath.1@samsung.com>
+> 
+> With commit '6a010a49b63a ("cgroup: Make !percpu threadgroup_rwsem
+> operations optional")' usage of rcu_sync_enter_start is removed.
+> 
+> So this function can also be removed.
+> 
+> Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
+> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
 
-Yes, will do it in the following days.
+Adding Oleg, Peter, and Tejun for their thoughts.  Any objections?
+
+							Thanx, Paul
+
+> ---
+>  include/linux/rcu_sync.h |  1 -
+>  kernel/rcu/sync.c        | 16 ----------------
+>  2 files changed, 17 deletions(-)
+> 
+> diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+> index 0027d4c8087c..3860dbb9107a 100644
+> --- a/include/linux/rcu_sync.h
+> +++ b/include/linux/rcu_sync.h
+> @@ -37,7 +37,6 @@ static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+>  }
+>  
+>  extern void rcu_sync_init(struct rcu_sync *);
+> -extern void rcu_sync_enter_start(struct rcu_sync *);
+>  extern void rcu_sync_enter(struct rcu_sync *);
+>  extern void rcu_sync_exit(struct rcu_sync *);
+>  extern void rcu_sync_dtor(struct rcu_sync *);
+> diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
+> index e550f97779b8..86df878a2fee 100644
+> --- a/kernel/rcu/sync.c
+> +++ b/kernel/rcu/sync.c
+> @@ -24,22 +24,6 @@ void rcu_sync_init(struct rcu_sync *rsp)
+>  	init_waitqueue_head(&rsp->gp_wait);
+>  }
+>  
+> -/**
+> - * rcu_sync_enter_start - Force readers onto slow path for multiple updates
+> - * @rsp: Pointer to rcu_sync structure to use for synchronization
+> - *
+> - * Must be called after rcu_sync_init() and before first use.
+> - *
+> - * Ensures rcu_sync_is_idle() returns false and rcu_sync_{enter,exit}()
+> - * pairs turn into NO-OPs.
+> - */
+> -void rcu_sync_enter_start(struct rcu_sync *rsp)
+> -{
+> -	rsp->gp_count++;
+> -	rsp->gp_state = GP_PASSED;
+> -}
+> -
+> -
+>  static void rcu_sync_func(struct rcu_head *rhp);
+>  
+>  static void rcu_sync_call(struct rcu_sync *rsp)
+> -- 
+> 2.25.1
+> 
