@@ -1,212 +1,147 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04170125BC;
-	Tue, 16 Jan 2024 09:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2009D1759B;
+	Tue, 16 Jan 2024 09:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IzVl8V+8"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40G7xBZW006658;
-	Tue, 16 Jan 2024 09:49:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	qcppdkim1; bh=wQAX+VhAFdlMCGP8X0aXUlSO5dSynGBqLOMB5EIi+c0=; b=Iz
-	Vl8V+8rellap5+ZCBBWVu4RT5fxmQ5cybHN0TztDyoyQi7Q6yk+U/IOhSOQc4Uf3
-	5BEDzGGkfJRWz9AN3XTa5Li7JbyVYD+eEJlMY3H/02uW9vi08yDKY3WUUQJTV5N6
-	rI/HPqwDgl07dpr/bwlbrM2yOfZ8VGy8FM7l8Ks/FA0I4ICkpXAoJjlJplxSgIiW
-	s4CGLVn0u7cUUHXXuvlDbiq2evMa5xPOinbSEAb7RpY4lHtEjmyAcamKLTTZmDg0
-	5QpXoIRY6sQCekkOfZt3SRp1db0UJlRotHuZn1muDLWdsKXBbGBtSsoW2EJjg1+a
-	A6q7vqea6N35wuZG/BGg==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vnnvbg6wc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 09:49:45 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 40G9nfs0006270;
-	Tue, 16 Jan 2024 09:49:41 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3vkkkkmgev-1;
-	Tue, 16 Jan 2024 09:49:41 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40G9nfIj006250;
-	Tue, 16 Jan 2024 09:49:41 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-riteshk-hyd.qualcomm.com [10.147.241.247])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 40G9neYq006247;
-	Tue, 16 Jan 2024 09:49:41 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2314801)
-	id A6ADB601957; Tue, 16 Jan 2024 15:19:39 +0530 (+0530)
-From: Ritesh Kumar <quic_riteshk@quicinc.com>
-To: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, quic_bjorande@quicinc.com,
-        geert+renesas@glider.be, arnd@arndb.de, neil.armstrong@linaro.org,
-        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
-        m.szyprowski@samsung.com
-Cc: Ritesh Kumar <quic_riteshk@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com
-Subject: [PATCH 2/2] arm64: dts: qcom: qcm6490-idp: add display and panel
-Date: Tue, 16 Jan 2024 15:19:35 +0530
-Message-Id: <20240116094935.9988-3-quic_riteshk@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240116094935.9988-1-quic_riteshk@quicinc.com>
-References: <20240116094935.9988-1-quic_riteshk@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: SEevayCsF1JDhR8GJCr30yUJJZMM-uWv
-X-Proofpoint-ORIG-GUID: SEevayCsF1JDhR8GJCr30yUJJZMM-uWv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 mlxscore=0
- adultscore=0 impostorscore=0 suspectscore=0 clxscore=1015 spamscore=0
- malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401160077
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="toruq78z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705398631;
+	bh=UhAc640PaJinIZCgzAtBALA3kzwWcWZJV4KxCNouBhI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=toruq78zOjfa52lWdFcpKqifq7gMh27B2Yu1NqAIk+nd8FwGejgfp4OjHDqCQCL8s
+	 dmWZdUZtc49lF1mPSDbqTNlWLMTzjeW5AaLTIPZW8XSmcio+zcn3fJkFJuXDDaY5DV
+	 AY11YMmYo2ncG1U5sSU+uSrgAsaAfKsRWG54TSDmUW+mxF3MxSW+W5m/xhWCS7s0Yg
+	 TNSFyH/31W6nmJQGtTx9X0Fgompf+n3uMLGFiTdQTOcNJ2VMoQ6LPtGhLb7NhJcG1S
+	 /9NKMw1carOKq3rHn719e1YB+/5mN4PMhDzjfDs/zw+Gk1bxSdkD8rHpDQkNFeFoQ2
+	 KfdYYwt33MvDw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CA3393782066;
+	Tue, 16 Jan 2024 09:50:30 +0000 (UTC)
+Message-ID: <3b3fdb3b-a22e-499d-89a6-ee06e5f91ee1@collabora.com>
+Date: Tue, 16 Jan 2024 10:50:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 02/26] thermal/of: Migrate to
+ thermal_zone_device_register()
+Content-Language: en-US
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: rafael@kernel.org, rui.zhang@intel.com, lukasz.luba@arm.com,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20231221124825.149141-1-angelogioacchino.delregno@collabora.com>
+ <20231221124825.149141-3-angelogioacchino.delregno@collabora.com>
+ <415ca710-1b28-47e5-bffa-3f9f76c59041@linaro.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <415ca710-1b28-47e5-bffa-3f9f76c59041@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Enable Display Subsystem with Novatek NT36672E Panel
-on qcm6490 idp platform.
+Il 15/01/24 18:17, Daniel Lezcano ha scritto:
+> On 21/12/2023 13:48, AngeloGioacchino Del Regno wrote:
+>> The thermal API has a new thermal_zone_device_register() function which
+>> is deprecating the older thermal_zone_device_register_with_trips() and
+>> thermal_tripless_zone_device_register().
+>>
+>> Migrate to the new thermal zone device registration function.
+> 
+> Sounds good to me.
+> 
+> May be add "No functional change intended" ?
+> 
 
-Signed-off-by: Ritesh Kumar <quic_riteshk@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 100 +++++++++++++++++++++++
- 1 file changed, 100 insertions(+)
+Yeah, makes sense - will add "This patch brings no functional changes".
 
-diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-index 2a6e4907c5ee..efa5252130a1 100644
---- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-@@ -9,6 +9,7 @@
- #define PM7250B_SID 8
- #define PM7250B_SID1 9
- 
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7280.dtsi"
- #include "pm7250b.dtsi"
-@@ -38,6 +39,25 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	lcd_disp_bias: lcd-disp-bias-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd_disp_bias";
-+		regulator-min-microvolt = <5500000>;
-+		regulator-max-microvolt = <5500000>;
-+		gpio = <&pm7250b_gpios 2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_disp_bias_en>;
-+	};
-+
-+	pm8350c_pwm_backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pm8350c_pwm 3 65535>;
-+		enable-gpios = <&pm8350c_gpios 7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_lcd_bl_en>;
-+	};
-+
- 	reserved-memory {
- 		xbl_mem: xbl@80700000 {
- 			reg = <0x0 0x80700000 0x0 0x100000>;
-@@ -420,6 +440,86 @@
- 	};
- };
- 
-+&gpu {
-+	status = "disabled";
-+};
-+
-+&mdss {
-+	status = "okay";
-+};
-+
-+&mdss_dsi {
-+	vdda-supply = <&vreg_l6b_1p2>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "novatek,nt36672e";
-+		reg = <0>;
-+
-+		reset-gpios = <&tlmm 44 GPIO_ACTIVE_HIGH>;
-+
-+		vddi-supply = <&vreg_l8c_1p62>;
-+		avdd-supply = <&lcd_disp_bias>;
-+		avee-supply = <&lcd_disp_bias>;
-+
-+		backlight = <&pm8350c_pwm_backlight>;
-+
-+		port {
-+			panel0_in: endpoint {
-+				remote-endpoint = <&mdss_dsi0_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&mdss_dsi0_out {
-+	remote-endpoint = <&panel0_in>;
-+	data-lanes = <0 1 2 3>;
-+};
-+
-+&mdss_dsi_phy {
-+	vdds-supply = <&vreg_l10c_0p88>;
-+	status = "okay";
-+};
-+
-+&pm7250b_gpios {
-+	lcd_disp_bias_en: lcd-disp-bias-en-state {
-+		pins = "gpio2";
-+		function = "func1";
-+		bias-disable;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+		input-disable;
-+		output-enable;
-+		power-source = <0>;
-+	};
-+};
-+
-+&pm8350c_gpios {
-+	pmic_lcd_bl_en: pmic-lcd-bl-en-state {
-+		pins = "gpio7";
-+		function = "normal";
-+		bias-disable;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+		output-low;
-+		power-source = <0>;
-+	};
-+
-+	pmic_lcd_bl_pwm: pmic-lcd-bl-pwm-state {
-+		pins = "gpio8";
-+		function = "func1";
-+		bias-disable;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+		output-low;
-+		power-source = <0>;
-+	};
-+};
-+
-+&pm8350c_pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pmic_lcd_bl_pwm>;
-+	status = "okay";
-+};
-+
- &qupv3_id_0 {
- 	status = "okay";
- };
--- 
-2.17.1
+Cheers!
+
+>> Signed-off-by: AngeloGioacchino Del Regno 
+>> <angelogioacchino.delregno@collabora.com > ---
+>>   drivers/thermal/thermal_of.c | 37 ++++++++++++++++--------------------
+>>   1 file changed, 16 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/thermal/thermal_of.c b/drivers/thermal/thermal_of.c
+>> index 1e0655b63259..62a903ad649f 100644
+>> --- a/drivers/thermal/thermal_of.c
+>> +++ b/drivers/thermal/thermal_of.c
+>> @@ -471,16 +471,12 @@ static struct thermal_zone_device 
+>> *thermal_of_zone_register(struct device_node *
+>>                                   const struct thermal_zone_device_ops *ops)
+>>   {
+>>       struct thermal_zone_device *tz;
+>> -    struct thermal_trip *trips;
+>> -    struct thermal_zone_params tzp = {};
+>> -    struct thermal_zone_device_ops *of_ops;
+>> +    struct thermal_zone_device_params tzdp;
+>>       struct device_node *np;
+>> -    int delay, pdelay;
+>> -    int ntrips, mask;
+>>       int ret;
+>> -    of_ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+>> -    if (!of_ops)
+>> +    tzdp.ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+>> +    if (!tzdp.ops)
+>>           return ERR_PTR(-ENOMEM);
+>>       np = of_thermal_zone_find(sensor, id);
+>> @@ -490,30 +486,29 @@ static struct thermal_zone_device 
+>> *thermal_of_zone_register(struct device_node *
+>>           ret = PTR_ERR(np);
+>>           goto out_kfree_of_ops;
+>>       }
+>> +    tzdp.type = np->name;
+>> -    trips = thermal_of_trips_init(np, &ntrips);
+>> -    if (IS_ERR(trips)) {
+>> +    tzdp.trips = thermal_of_trips_init(np, &tzdp.num_trips);
+>> +    if (IS_ERR(tzdp.trips)) {
+>>           pr_err("Failed to find trip points for %pOFn id=%d\n", sensor, id);
+>> -        ret = PTR_ERR(trips);
+>> +        ret = PTR_ERR(tzdp.trips);
+>>           goto out_kfree_of_ops;
+>>       }
+>> -    ret = thermal_of_monitor_init(np, &delay, &pdelay);
+>> +    ret = thermal_of_monitor_init(np, &tzdp.polling_delay, &tzdp.passive_delay);
+>>       if (ret) {
+>>           pr_err("Failed to initialize monitoring delays from %pOFn\n", np);
+>>           goto out_kfree_trips;
+>>       }
+>> -    thermal_of_parameters_init(np, &tzp);
+>> +    thermal_of_parameters_init(np, &tzdp.tzp);
+>> -    of_ops->bind = thermal_of_bind;
+>> -    of_ops->unbind = thermal_of_unbind;
+>> +    tzdp.ops->bind = thermal_of_bind;
+>> +    tzdp.ops->unbind = thermal_of_unbind;
+>> +    tzdp.mask = GENMASK_ULL((tzdp.num_trips) - 1, 0);
+>> +    tzdp.devdata = data;
+>> -    mask = GENMASK_ULL((ntrips) - 1, 0);
+>> -
+>> -    tz = thermal_zone_device_register_with_trips(np->name, trips, ntrips,
+>> -                             mask, data, of_ops, &tzp,
+>> -                             pdelay, delay);
+>> +    tz = thermal_zone_device_register(&tzdp);
+>>       if (IS_ERR(tz)) {
+>>           ret = PTR_ERR(tz);
+>>           pr_err("Failed to register thermal zone %pOFn: %d\n", np, ret);
+>> @@ -531,9 +526,9 @@ static struct thermal_zone_device 
+>> *thermal_of_zone_register(struct device_node *
+>>       return tz;
+>>   out_kfree_trips:
+>> -    kfree(trips);
+>> +    kfree(tzdp.trips);
+>>   out_kfree_of_ops:
+>> -    kfree(of_ops);
+>> +    kfree(tzdp.ops);
+>>       return ERR_PTR(ret);
+>>   }
+> 
+
+
 
