@@ -1,143 +1,81 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC0CD79E1;
-	Tue, 16 Jan 2024 04:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxbesfC6Zl3pEAAA--.2668S3;
-	Tue, 16 Jan 2024 12:50:39 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxfs0bC6Zl4UgDAA--.15317S4;
-	Tue, 16 Jan 2024 12:50:38 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Hou Tao <houtao@huaweicloud.com>,
-	bpf@vger.kernel.org,
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482EE11181
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 04:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="WCWJvECM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=lClxhiG7kPciwzOgT7N9lpSqHzzXmh68CO/DdbLniM4=; b=WCWJvECMzP18zlfiqAgmLtYK9B
+	7FoSNN0Rx8W4NA4lp7OfrC+VCLJ6jNC7axeCVcvVI1qyTym5ARO2W/mYSCyEWBtctnhwpQ5h2lGqe
+	9cwx0Tr1wfwEp18q6n97bdVDNcrDdbTTOkyYQK88Fi1QKCMPNixb4lm8rdU6S/GoNhoy3KZcWheZQ
+	YgD6jiSygxm2HKWkR+ReauFXYb5d9yPiVSGTo1lsbDRB0Il3LngupnHkt84qozAN31stOezZsjP7V
+	oVRJBdKAmb8NySiMftR+adkjM1ZKOu7MDpM7TbsH6nH798+luyXOrn6esqueBgtdPDMmF3Ojh0Ns0
+	mW7wAUwQ==;
+Received: from [177.45.63.147] (helo=steammachine.lan)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1rPbQn-006r0R-Be; Tue, 16 Jan 2024 05:52:09 +0100
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v4 2/2] selftests/bpf: Skip callback tests if jit is disabled in test_verifier
-Date: Tue, 16 Jan 2024 12:50:30 +0800
-Message-ID: <20240116045030.23739-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240116045030.23739-1-yangtiezhu@loongson.cn>
-References: <20240116045030.23739-1-yangtiezhu@loongson.cn>
+Cc: kernel-dev@igalia.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	Simon Ser <contact@emersion.fr>,
+	Pekka Paalanen <ppaalanen@gmail.com>,
+	daniel@ffwll.ch,
+	Daniel Stone <daniel@fooishbar.org>,
+	=?UTF-8?q?=27Marek=20Ol=C5=A1=C3=A1k=27?= <maraeo@gmail.com>,
+	Dave Airlie <airlied@gmail.com>,
+	ville.syrjala@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH 0/2] drm/atomic: Allow drivers to write their own plane check for async 
+Date: Tue, 16 Jan 2024 01:51:57 -0300
+Message-ID: <20240116045159.1015510-1-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+IME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxfs0bC6Zl4UgDAA--.15317S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFW3tr1UtrW5ur1xGr1kCrX_yoW5Cw48pF
-	WkXF1qkF1UX3WIgry7Aws3GFWY9w4kX3y8GFy5G3y8Z3WkCr43Jr1fKFyYvF9xGrW5Xa4f
-	Za1DurWUuw4UJFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
 
-If CONFIG_BPF_JIT_ALWAYS_ON is not set and bpf_jit_enable is 0, there
-exist 6 failed tests.
+Hi,
 
-  [root@linux bpf]# echo 0 > /proc/sys/net/core/bpf_jit_enable
-  [root@linux bpf]# echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
-  [root@linux bpf]# ./test_verifier | grep FAIL
-  #106/p inline simple bpf_loop call FAIL
-  #107/p don't inline bpf_loop call, flags non-zero FAIL
-  #108/p don't inline bpf_loop call, callback non-constant FAIL
-  #109/p bpf_loop_inline and a dead func FAIL
-  #110/p bpf_loop_inline stack locations for loop vars FAIL
-  #111/p inline bpf_loop call in a big program FAIL
-  Summary: 768 PASSED, 15 SKIPPED, 6 FAILED
+AMD hardware can do more on the async flip path than just the primary plane, so
+to lift up the current restrictions, this patchset allows drivers to write their
+own check for planes for async flips.
 
-The test log shows that callbacks are not allowed in non-JITed programs,
-interpreter doesn't support them yet, thus these tests should be skipped
-if jit is disabled, copy some check functions from the other places under
-tools directory, and then handle this case in do_test_single().
+I'm not sure if adding something new to drm_plane_funcs is the right way to do,
+because if we want to expand the other object types (crtc, connector) we would
+need to add their own drm_XXX_funcs, so feedbacks are welcome!
 
-With this patch:
+	André
 
-  [root@linux bpf]# echo 0 > /proc/sys/net/core/bpf_jit_enable
-  [root@linux bpf]# echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
-  [root@linux bpf]# ./test_verifier | grep FAIL
-  Summary: 768 PASSED, 21 SKIPPED, 0 FAILED
+André Almeida (2):
+  drm/atomic: Allow drivers to write their own plane check for async
+    flips
+  drm/amdgpu: Implement check_async_props for planes
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/testing/selftests/bpf/test_verifier.c | 23 +++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ .../amd/display/amdgpu_dm/amdgpu_dm_plane.c   | 30 +++++++++
+ drivers/gpu/drm/drm_atomic_uapi.c             | 62 ++++++++++++++-----
+ include/drm/drm_atomic_uapi.h                 | 12 ++++
+ include/drm/drm_plane.h                       |  5 ++
+ 4 files changed, 92 insertions(+), 17 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 1a09fc34d093..02c4a0bbdc5e 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -74,6 +74,7 @@
- 		    1ULL << CAP_BPF)
- #define UNPRIV_SYSCTL "kernel/unprivileged_bpf_disabled"
- static bool unpriv_disabled = false;
-+static bool jit_disabled;
- static int skips;
- static bool verbose = false;
- static int verif_log_level = 0;
-@@ -1355,6 +1356,16 @@ static bool is_skip_insn(struct bpf_insn *insn)
- 	return memcmp(insn, &skip_insn, sizeof(skip_insn)) == 0;
- }
- 
-+static bool is_ldimm64_insn(struct bpf_insn *insn)
-+{
-+	return insn->code == (BPF_LD | BPF_IMM | BPF_DW);
-+}
-+
-+static bool insn_is_pseudo_func(struct bpf_insn *insn)
-+{
-+	return is_ldimm64_insn(insn) && insn->src_reg == BPF_PSEUDO_FUNC;
-+}
-+
- static int null_terminated_insn_len(struct bpf_insn *seq, int max_len)
- {
- 	int i;
-@@ -1622,6 +1633,16 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 	alignment_prevented_execution = 0;
- 
- 	if (expected_ret == ACCEPT || expected_ret == VERBOSE_ACCEPT) {
-+		if (fd_prog < 0 && saved_errno == EINVAL && jit_disabled) {
-+			for (i = 0; i < prog_len; i++, prog++) {
-+				if (!insn_is_pseudo_func(prog))
-+					continue;
-+				printf("SKIP (callbacks are not allowed in non-JITed programs)\n");
-+				skips++;
-+				goto close_fds;
-+			}
-+		}
-+
- 		if (fd_prog < 0) {
- 			printf("FAIL\nFailed to load prog '%s'!\n",
- 			       strerror(saved_errno));
-@@ -1844,6 +1865,8 @@ int main(int argc, char **argv)
- 		return EXIT_FAILURE;
- 	}
- 
-+	jit_disabled = !is_jit_enabled();
-+
- 	/* Use libbpf 1.0 API mode */
- 	libbpf_set_strict_mode(LIBBPF_STRICT_ALL);
- 
 -- 
-2.42.0
+2.43.0
 
