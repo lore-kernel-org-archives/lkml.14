@@ -1,187 +1,139 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4996D134C9
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D014134C1;
+	Tue, 16 Jan 2024 10:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="kpHNPqFe"
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D635A3F273
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1705400459;
-	bh=xU+S+uXFFj2cwv3uk43aNu2KbGErrv7KCMlpZ+iS0ZQ=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=kpHNPqFejZke64zOWf2zxi+lbiuNCMCJojW0Ct0GdDMO+82GoqKeG34bOH8oxcKqK
-	 6My5kg/DyaEhpprQPMI7WVQ2LSGB6iIGFdld7SrlG30lCDPhGfhD2jL7k20ryjWXCK
-	 czdIe8uq6lPuyU48nRCrsEhOKdySM/lcO86X4+1LPXnDYI9WpG6xRuxSyIck0Jz/na
-	 P7ZtEsTF7Jrn+zx/0HNhBEosloaR0mcY6YUEfLh1FdUy2dOzWvvEzHT4gw8PdJCjon
-	 IiOkT02FbqdFkzt4eSsnDUUWh9OvD+hzR1tIOS71JTqDgj6O5PPm78UfxdB0ACHxxZ
-	 oL2Osk49yWyWQ==
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7835bb86ca6so356446085a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 02:20:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705400458; x=1706005258;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xU+S+uXFFj2cwv3uk43aNu2KbGErrv7KCMlpZ+iS0ZQ=;
-        b=TZA57r+O7WQEvZRdedolu5TD1WmOcs5GUNMSsPWT2cucQi0+pD8a/336RiNRx9f/aX
-         1N0VQ9pgG/hCwzXc4rkRkZM2j3fRdpzV17xNcDmRaQnLDm770vVKGyAWpSuiLvHTJIn7
-         ZoaYsX7rPYa8y9bh6npD+H+lyZ+C4tJ1JzwT7q9+qOXGsA+xOvLo8fGD2PWBbYGHgv7O
-         Pcea2P1wMeJ5QhalK09TfHdZWK+k6mNrMFxNPK9dPuauliQYdkTJgtW/rn9fWytxAQtn
-         rL1nlCY820Jv4O7vOw9fPOEU2avZ7BO3zw87e402dztjHk2ZTlrKET63WKCX09/l01dL
-         UPCQ==
-X-Gm-Message-State: AOJu0YxxK7zA+jUJG34BS7yp4wMtiBcFNQ7c6xkwg/xUkBSOvHm4vKpP
-	ZQe9GZgmXBm2K7IB0ouku98UgCUYSUBss2Of4xvzyrsyU4lmTQicuThXHaysxndy81w+9uTRBDB
-	qW+wU5CgRn7qfKHndgp1zZtAVh4jGS3x7/McztfZmlzIne2kttnSuX0eFWm/pGgTT
-X-Received: by 2002:a05:622a:314:b0:42a:9f3:f98f with SMTP id q20-20020a05622a031400b0042a09f3f98fmr59858qtw.31.1705400458723;
-        Tue, 16 Jan 2024 02:20:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFyHQK1zxeZizu8qJrW9Hsx4AGxq9c2N/E+5X7YH8Yr1ZSbWwOhH277LwZ3NAq14oAPDip5nwCUUFeB0BgriaE=
-X-Received: by 2002:a05:622a:314:b0:42a:9f3:f98f with SMTP id
- q20-20020a05622a031400b0042a09f3f98fmr59852qtw.31.1705400458380; Tue, 16 Jan
- 2024 02:20:58 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 16 Jan 2024 02:20:57 -0800
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20240116041054.11641-2-nylon.chen@sifive.com>
-References: <20240116041054.11641-1-nylon.chen@sifive.com> <20240116041054.11641-2-nylon.chen@sifive.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SklX3cVU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705400640; x=1736936640;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=YniVLZD2s3E4XeUi3U56nsCA0cbZEvcrCwDUGCUg620=;
+  b=SklX3cVUqlzCqfl6Rpb+SaaYOZ9te08JZHY3fLYzxK3wohb84042IAmP
+   e+Dz3fh/ZTICyxGi9iOjTcKslJEe2Zej9Y6vbg0MO49zloNINv/8YBdhG
+   0IOcWhzNNrIeHSfCkaVmRuBpP8nhTPioO4TACOenMB9i45Uxm4Wyxon/y
+   C6Y262FlqLSxQD0V/h4qa31Y/f/34bJAH50vPEv8R7ew0CeP+1wWJ5God
+   z95z6PtxkrPqPXKz8nZmZVqKzdpk1HSgdCwZdIjFJqbv5zk63C1pfVQyZ
+   Jx9YARFfAiNncavNV4ytTpERCTuuvyayJy5Fg0DOVS6JnTnpE0J4UxOcm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="466194397"
+X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
+   d="scan'208";a="466194397"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 02:14:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
+   d="scan'208";a="18417568"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.35.68])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 02:14:51 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 16 Jan 2024 12:14:47 +0200 (EET)
+To: Gui-Dong Han <2045gemini@gmail.com>
+cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+    linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+    baijiaju1990@outlook.com, stable@vger.kernel.org
+Subject: Re: [PATCH] tty: fix atomicity violation in n_tty_read
+In-Reply-To: <20240112125801.2650-1-2045gemini@gmail.com>
+Message-ID: <7f51ab12-bbfe-0aae-3755-275ee4762f03@linux.intel.com>
+References: <20240112125801.2650-1-2045gemini@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Tue, 16 Jan 2024 02:20:57 -0800
-Message-ID: <CAJM55Z9ZbmbPKaJ8LJ5KyoCW9fAEJaT3Q4PbcadwLNCq1NXbxA@mail.gmail.com>
-Subject: Re: [v6 1/3] riscv: dts: sifive: unleashed/unmatched: Remove PWM
- controlled LED's active-low properties
-To: Nylon Chen <nylon.chen@sifive.com>, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	conor+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org, 
-	u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com, 
-	aou@eecs.berkeley.edu
-Cc: zong.li@sifve.com, vincent.chen@sifive.com, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, nylon7717@gmail.com, 
-	Conor Dooley <conor.dooley@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-Nylon Chen wrote:
-> This removes the active-low properties of the PWM-controlled LEDs in
-> the HiFive Unmatched device tree.
->
-> The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.pdf[1].
->
-> Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f8698_hifive-unleashed-a00-schematics-1.pdf [0]
-> Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76f4192_hifive-unmatched-schematics-v3.pdf [1]
->
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> Co-developed-by: Zong Li <zong.li@sifve.com>
-> Signed-off-by: Zong Li <zong.li@sifve.com>
-> Co-developed-by: Vincent Chen <vincent.chen@sifive.com>
-> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+On Fri, 12 Jan 2024, Gui-Dong Han wrote:
+
+> In n_tty_read():
+>     if (packet && tty->link->ctrl.pktstatus) {
+>     ...
+>     spin_lock_irq(&tty->link->ctrl.lock);
+>     cs = tty->link->ctrl.pktstatus;
+>     tty->link->ctrl.pktstatus = 0;
+>     spin_unlock_irq(&tty->link->ctrl.lock);
+>     *kb++ = cs;
+>     ...
+> 
+> In n_tty_read() function, there is a potential atomicity violation issue.
+> The tty->link->ctrl.pktstatus might be set to 0 after being checked, which
+> could lead to incorrect values in the kernel space buffer
+> pointer (kb/kbuf). The check if (packet && tty->link->ctrl.pktstatus)
+> occurs outside the spin_lock_irq(&tty->link->ctrl.lock) block. This may
+> lead to tty->link->ctrl.pktstatus being altered between the check and the
+> lock, causing *kb++ = cs; to be assigned with a zero pktstatus value.
+> 
+> This possible bug is found by an experimental static analysis tool
+> developed by our team, BassCheck[1]. This tool analyzes the locking APIs
+> to extract function pairs that can be concurrently executed, and then
+> analyzes the instructions in the paired functions to identify possible
+> concurrency bugs including data races and atomicity violations. The above
+> possible bug is reported when our tool analyzes the source code of
+> Linux 5.17.
+> 
+> To resolve this atomicity issue, it is suggested to move the condition
+> check if (packet && tty->link->ctrl.pktstatus) inside the spin_lock block.
+> With this patch applied, our tool no longer reports the bug, with the
+> kernel configuration allyesconfig for x86_64. Due to the absence of the
+> requisite hardware, we are unable to conduct runtime testing of the patch.
+> Therefore, our verification is solely based on code logic analysis.
+> 
+> [1] https://sites.google.com/view/basscheck/
+> 
+> Fixes: 64d608db38ff ("tty: cumulate and document tty_struct::ctrl* members")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gui-Dong Han <2045gemini@gmail.com>
 > ---
->  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++----
->  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++--------
->  2 files changed, 8 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> index 900a50526d77..11e7ac1c54bb 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> @@ -49,7 +49,7 @@ led-controller {
->  		compatible = "pwm-leds";
->
->  		led-d1 {
-> -			pwms = <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> +			pwms = <&pwm0 0 7812500 0>;
->  			active-low;
->  			color = <LED_COLOR_ID_GREEN>;
->  			max-brightness = <255>;
-> @@ -57,7 +57,7 @@ led-d1 {
->  		};
->
->  		led-d2 {
-> -			pwms = <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> +			pwms = <&pwm0 1 7812500 0>;
->  			active-low;
->  			color = <LED_COLOR_ID_GREEN>;
->  			max-brightness = <255>;
-> @@ -65,7 +65,7 @@ led-d2 {
->  		};
->
->  		led-d3 {
-> -			pwms = <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> +			pwms = <&pwm0 2 7812500 0>;
->  			active-low;
->  			color = <LED_COLOR_ID_GREEN>;
->  			max-brightness = <255>;
-> @@ -73,7 +73,7 @@ led-d3 {
->  		};
->
->  		led-d4 {
-> -			pwms = <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> +			pwms = <&pwm0 3 7812500 0>;
->  			active-low;
->  			color = <LED_COLOR_ID_GREEN>;
->  			max-brightness = <255>;
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> index 07387f9c135c..b328ee80693f 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> @@ -51,8 +51,7 @@ led-controller-1 {
->  		compatible = "pwm-leds";
->
->  		led-d12 {
-> -			pwms = <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> -			active-low;
-> +			pwms = <&pwm0 0 7812500 0>;
+>  drivers/tty/n_tty.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
+> index f252d0b5a434..df54ab0c4d8c 100644
+> --- a/drivers/tty/n_tty.c
+> +++ b/drivers/tty/n_tty.c
+> @@ -2222,19 +2222,23 @@ static ssize_t n_tty_read(struct tty_struct *tty, struct file *file, u8 *kbuf,
+>  	add_wait_queue(&tty->read_wait, &wait);
+>  	while (nr) {
+>  		/* First test for status change. */
+> +		spin_lock_irq(&tty->link->ctrl.lock);
+>  		if (packet && tty->link->ctrl.pktstatus) {
+>  			u8 cs;
+> -			if (kb != kbuf)
+> +			if (kb != kbuf) {
+> +				spin_unlock_irq(&tty->link->ctrl.lock);
+>  				break;
+> -			spin_lock_irq(&tty->link->ctrl.lock);
+> +			}
+>  			cs = tty->link->ctrl.pktstatus;
+>  			tty->link->ctrl.pktstatus = 0;
+>  			spin_unlock_irq(&tty->link->ctrl.lock);
+>  			*kb++ = cs;
+>  			nr--;
+>  			break;
+> +		} else {
+> +			spin_unlock_irq(&tty->link->ctrl.lock);
 
-Here you remove the active-low property, but you don't above. I'm not sure
-what's the right thing to do, but I would have expected the same change in both
-places.
+This seems way over-engineered. Wouldn't it be much simpler to just test 
+if cs is non-zero after the original critical section to detect if there 
+were any changes into pktstatus before the lock was acquired? That would 
+avoid all this lock dance and enlarging the critical section.
 
-/Emil
+>  		}
+> -
+> +
 
->  			color = <LED_COLOR_ID_GREEN>;
->  			max-brightness = <255>;
->  			label = "d12";
-> @@ -68,20 +67,17 @@ multi-led {
->  			label = "d2";
->
->  			led-red {
-> -				pwms = <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
-> +				pwms = <&pwm0 2 7812500 0>;
->  				color = <LED_COLOR_ID_RED>;
->  			};
->
->  			led-green {
-> -				pwms = <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
-> +				pwms = <&pwm0 1 7812500 0>;
->  				color = <LED_COLOR_ID_GREEN>;
->  			};
->
->  			led-blue {
-> -				pwms = <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
-> +				pwms = <&pwm0 3 7812500 0>;
->  				color = <LED_COLOR_ID_BLUE>;
->  			};
->  		};
-> --
-> 2.42.0
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Spurious changes like this should not be included into patches.
+
+>  		if (!input_available_p(tty, 0)) {
+>  			up_read(&tty->termios_rwsem);
+>  			tty_buffer_flush_work(tty->port);
+> 
+
+-- 
+ i.
+
