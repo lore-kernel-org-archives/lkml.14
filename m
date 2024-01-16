@@ -1,72 +1,95 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19897125B2
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 09:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04EC125DD
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 09:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GDvzY5ew"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1705396619; bh=lIy9wHh+g96JsNjrDnYthtgcgqnhJ+ghbboFhC4b3To=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=GDvzY5ewoL1j17KitP4H3tK8g2EywKVAr2IQkjbgVQGZUE6X9nZesquh2vLubtaXd
-	 lHAx33DgORPvanZ0fW57m41RyIy/Lh8jFU96z90dj6SrqrGbkK3dQeKYRqXcRPAfDc
-	 oLffTSYwNrkC/tthZ7+HTm6fM14Dd54AVwxZBmGg=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id 35E86CCF; Tue, 16 Jan 2024 17:13:30 +0800
-X-QQ-mid: xmsmtpt1705396410tsyui8bbs
-Message-ID: <tencent_674ACC74C977BF672C3C2F37AC97E236F409@qq.com>
-X-QQ-XMAILINFO: NvH2zBBgt3uTqLDJ+oJttz4uiJ218HS117yUUOijsOcEdfAtEXrfmON6pnQFf2
-	 hgqXiout9Fq0RRqgkq1zRMqtDmwEChyznopyzyMhizf0sxWr4WIyNeS6fABqIjZh3wqHODFlqkKn
-	 dlbv3gZyffNSEI75IJlYEiu3zJ2eNeX990/YlNEMcf+EF+eImZTKCHeox/anL7KI9pSZ0WYuoRoX
-	 zO+IkvIBkH+/NmtHsmMrHitu+gzWslPMWpSYLwXwpHpQjlGTWoIF1gjZS6k0uhFdsaXojL5cyhM0
-	 nbE+/nH9fMN5isOZskjPoyoa8cpgQ76vu/pkm0+Io1BqK5PSRr4Yqj/OF6Yaf64ZFcMrZB4zCcUR
-	 hY1Igpq1vF4d9YnhLhfZyAoxQSEyEbxOPSkbo/fDZmYV52aodqyk8D0c6JAqdyH0FxWFw8pppccI
-	 6x5U3ToOU4YxO33jrT2MJZh4eqcsllKI5OPkqgarXPSqvLnif8qvURkJUaB1TAEk1sMZFlCdYe/C
-	 QSYAeechqvDZsFHD04nkLf0BbhZdoyCmRdFdlFg4U/ZAmddtU8B8xw0er3DaLm0p2XWbFL9BA73z
-	 9jxRXgKMFbtJdBodbBxSiJBl7DjKris0gMNNTfz3ps9sf4V8S0uY5jTdVuFDexapgRf9G6svdiSJ
-	 WkryBXrtMIPxhNH0ipq3yXLKUFcTuRc1joY0f+5gu94LzCd87f5FPo/A9mMy6epAr9JyucMRAsTy
-	 MtAlBq6ZJb1hYkkewqaEtjp4Ru96+xf8WRLcYM/ysr8f73lGql8lrYCD7OibWNdIS9FzoaveTK1q
-	 ZESCWPl5pBHy6iv5LwEoewNkQMrXP2OkHhWSkfblx9HXrzRf3mgSP9usfIGipjs+S9ccUzj9UdM/
-	 PhtADsig80062YgrKSn1s1g7TQiGHVDE3UtKdZX0yiXctFIT86rkReIoCuoTGZXiDSFo0OsffFip
-	 crc3PiLPU=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+7ec955e36bb239bd720f@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] KASAN: slab-out-of-bounds Read in dsa_user_prechangeupper
-Date: Tue, 16 Jan 2024 17:13:31 +0800
-X-OQ-MSGID: <20240116091330.572860-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000002faa2060f02e766@google.com>
-References: <00000000000002faa2060f02e766@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1UCSgVcN"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d3ea8d0f9dso299315ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 01:25:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705397100; x=1706001900; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uKa6o7frE7cAq4cWeMN0RRhba2ve9NcMTWMZZZ/7rLg=;
+        b=1UCSgVcN3J5ZBZyv0E6V74mSHAYrBp6qhfr/3qW+E6PC7WCnO5PFeRkzWD+oxULWrH
+         1i31SnfhhleHzQ98BEHpHxcn1IUTGGrmHgp3tWTzW/veRxUezN8WFRwTbpAQw+fzS4UT
+         gEfvc9tPpWzz//8nIjU37vFoiigkt3ffF38RWWRtGC7YcSNz4xqrBcvWgjR+xmzicN5I
+         cp/CRVwqlGqqtLTfaO5VWsN8m9a9tcptp4GaFWXS39winiv/ga20xO8K5PsKnkHaBcQH
+         ZuaRZo0TG55nfRb0Jpi53ZuNmijz8m72xy9XZE5pvMHuAkFDK2CuNw3i7BTNVzaJliD4
+         /jvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705397100; x=1706001900;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uKa6o7frE7cAq4cWeMN0RRhba2ve9NcMTWMZZZ/7rLg=;
+        b=D5W9o+VPbaEJXK9lVfqIJqkHwwx6LyO4J5roLxPzH0LBaxrUaYFcsya54yOp30sGkH
+         4xOabO3DgYcgg6sLy3625WDSmMRCgttgElkxo3yfPXvi8ygMIsCIAejbK3PpVrOyeuaM
+         ue3TXxkBHd+T4TWE21stUT+dLMIXiA7oOCabpqCgd8CTS8vR/uTrFjL6eumBTUnMsuAg
+         NK67/UXxaj+4/+gW7kDqtx4vhgdu6VOmSHEc5Tz51TLNI9Kayp5NAJm4iao1xmgOHpqb
+         dwc/mf5aVVgvI/MDUYBkyvx42nacBwTz1blLttgOGPEmdm4UzjpTwBY6wuYVr6KMuHoA
+         6q0Q==
+X-Gm-Message-State: AOJu0Yynduv4avu8+lKd+WJYoAH3HllX/GhEuZEO4NKbru3bnP+3k3j7
+	7BASvK0vZpwU/Xpo17rCn7j0zapwldh/XN+Lzu2jQ2lznXLf
+X-Google-Smtp-Source: AGHT+IH2N+LXlQ1VOCyauXZQF1qVOnbGiJyJ6dzx3F/X3/F1giNPKttpEmDP+89ak1lCUrtIkPCBp85ezYuDsYasAK4=
+X-Received: by 2002:a17:902:fc46:b0:1d5:ad0f:7354 with SMTP id
+ me6-20020a170902fc4600b001d5ad0f7354mr508581plb.21.1705397099900; Tue, 16 Jan
+ 2024 01:24:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000653bb6060afad327@google.com> <0000000000004d67e4060f0bcc7b@google.com>
+In-Reply-To: <0000000000004d67e4060f0bcc7b@google.com>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Tue, 16 Jan 2024 10:24:48 +0100
+Message-ID: <CANp29Y4Aq4SteF7HqnexK4azquKrUbV9-dcfBqsxFf3snMJrew@mail.gmail.com>
+Subject: Re: [syzbot] [bfs?] general protection fault in bfs_get_block (2)
+To: syzbot <syzbot+dc6ed11a88fb40d6e184@syzkaller.appspotmail.com>
+Cc: aivazian.tigran@gmail.com, axboe@kernel.dk, brauner@kernel.org, 
+	jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel-mentees@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, yuran.pereira@hotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-please test slab-out-of-bounds Read in dsa_user_prechangeupper
+#syz fix: fs: Block writes to mounted block devices
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 3e7aeb78ab01
-
-diff --git a/net/dsa/user.c b/net/dsa/user.c
-index b738a466e2dc..e6bb2c527067 100644
---- a/net/dsa/user.c
-+++ b/net/dsa/user.c
-@@ -2865,7 +2865,8 @@ static int dsa_user_changeupper(struct net_device *dev,
- static int dsa_user_prechangeupper(struct net_device *dev,
- 				   struct netdev_notifier_changeupper_info *info)
- {
--	struct dsa_port *dp = dsa_user_to_port(dev);
-+	const struct rtnl_link_ops *ops = dev->rtnl_link_ops;
-+	struct dsa_port *dp = ops->priv_size ? dsa_user_to_port(dev) : NULL;
- 
- 	if (!dsa_user_dev_check(dev))
- 		return NOTIFY_DONE;
-
+On Tue, Jan 16, 2024 at 9:20=E2=80=AFAM syzbot
+<syzbot+dc6ed11a88fb40d6e184@syzkaller.appspotmail.com> wrote:
+>
+> syzbot suspects this issue was fixed by commit:
+>
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
+>
+>     fs: Block writes to mounted block devices
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D16c3c513e8=
+0000
+> start commit:   98b1cc82c4af Linux 6.7-rc2
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Daec35c1281ec0=
+aaf
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Ddc6ed11a88fb40d=
+6e184
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D16783b84e80=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D165172a0e8000=
+0
+>
+> If the result looks correct, please mark the issue as fixed by replying w=
+ith:
+>
+> #syz fix: fs: Block writes to mounted block devices
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisect=
+ion
+>
