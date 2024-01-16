@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544E31CF89
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 19:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545151CF8F;
+	Tue, 16 Jan 2024 19:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705431739; cv=none; b=h6Bo3xOk1UuvsQvWaD27csnrDx0R4y9lFcpIy/HMYbnXAGdd84/GnuxOTT2zTyQ3UM+zYL4vTUbV07TBLEb2mm99zcs+H8IeMn6tPUfgyaSYFPyF66AIefXQjSLRK/N5ypIS/J02aazelVN1WwyxPSTVD97tdrI0i2rofz025vs=
+	t=1705431739; cv=none; b=AJWDikvdxNIWezvaE8AA5e6kgNFFoGBgEbkkbtcDzO84L8FuEidQf4JmkdzV+VIGrxCutJC/gI+ZhKlT5M0aBIxc27qzmI42Tw0Jgw0lZrkLDR9gAgfFh9pi7e4ROxt1z/KvFJcKIn29Km/r+3BAeBDyMktx5msWm/3LQD2PSDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705431739; c=relaxed/simple;
-	bh=nALsHW0nNNJnXAJRWWBsEyVYTDQ9rQY/BR0V0vrFWNI=;
+	bh=oxwRyeIL7M3hBA9vL9BEAgyW9LT9u2t413CGMrrBAAY=;
 	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
 	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=p+V/4mygXygmx75PvS2Cp/Ty/NVw5mApvrt3g+DieKVJj06josn4J7R/hkmoyFGWWm8oCxfTvu2VbCTQKn7IAUdUlqOBGExQrxjjvtYrsOVKqyCjl8UAzkYRQgRbZXc9HJzWLgZdPbolCgsV1gZQM5TzqZgOMwaf/oDVdhVF7RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6PpYbQl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GxcklUavu9RIEhjDVPuJzPN14tKjhTewAJJGOLJI+Q8aDr+XzojMAEm2bAR+RknHjXUjeP8fP12+A76a4RD5PWyxrzaA+PlW5ROzV0JUt/yM419rEcJdq3g1jrJuF3aHBSku2Z662AZxs7w1X+oe2C1XE05GUXAO6cTi4F1Mryk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQlmYwfL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6PpYbQl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0742FC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQlmYwfL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DCB27C433F1;
 	Tue, 16 Jan 2024 19:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705431739;
-	bh=nALsHW0nNNJnXAJRWWBsEyVYTDQ9rQY/BR0V0vrFWNI=;
+	s=k20201202; t=1705431738;
+	bh=oxwRyeIL7M3hBA9vL9BEAgyW9LT9u2t413CGMrrBAAY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=t6PpYbQlUEiZuShVumRV8qr5Hb38KRxKM8Nz8OxFvaM5KGLNuU0BEDAgpzyaUO09+
-	 ukOszsK1sRpK1XM//w3GC5kfKuGl0UQ3ybI/WU7OVHrjyMw6S79dudEJL/7lwMoxVE
-	 MaW45AeZKZyvvN+a1+8NTrqL/nWxSFVsQr0jnz1BpSk7UjKbevsp71N3O9LCWG7m3t
-	 pzUOAgSBsK4JA99uA+7vUMG1u7LtjRjhnTnRiHGYPAtWkD76xOOdOJ2NgeQ6Dqr/lc
-	 I8eXqQA5ywl228EKmPt3WXpxPESlEG+uLbK4m+w1Fgg/vRujuSDI0H4hmVJ4m75Wiq
-	 cWkLE+n2N/KxA==
+	b=BQlmYwfLboHO4veFxacQLWA1eyijOjOtpvGdOcLB0sJS7z9eyKYF2Kv6ylK8KAJzX
+	 udynA+l1fx/Jxo9NUVI+CNFE1qI3OrGTniJeYVSiJ4reRLREBBQL3xHMvrqwwiw/Gu
+	 IKzO4vBoMYNROkk2z4d2RP8CjLajJTU237dQ/uqq0sx/B6CYDpjTbzThBUiNq0wnpX
+	 X8gNWgdAyEN8wYTXEhaE3JMmp6ZzcwihS2XBvNccMc8QH4mfkSIhbeDlc+owz8aiyj
+	 pGCvOM0Ta4kMlmWsLhLO9yha6U0JHDHRCENEuJlyVpAG6ox/Y412LVgVi4G1swMuoJ
+	 UFwOnulWFyR1w==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DEBD7D8C98B;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C2AD0D8C987;
 	Tue, 16 Jan 2024 19:02:18 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -38,36 +38,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [GIT PULL] f2fs update for 6.8-rc1
+Subject: Re: [f2fs-dev] [PATCH 1/5] virtio_blk: cleanup zoned device probing
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <170543173890.30188.4422376381888328277.git-patchwork-notify@kernel.org>
+ <170543173879.30188.5344312872944674652.git-patchwork-notify@kernel.org>
 Date: Tue, 16 Jan 2024 19:02:18 +0000
-References: <ZaAzOgd3iWL0feTU@google.com>
-In-Reply-To: <ZaAzOgd3iWL0feTU@google.com>
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+References: <20231217165359.604246-2-hch@lst.de>
+In-Reply-To: <20231217165359.604246-2-hch@lst.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: axboe@kernel.dk, dm-devel@lists.linux.dev, linux-scsi@vger.kernel.org,
+ martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, virtualization@lists.linux.dev,
+ dlemoal@kernel.org, stefanha@redhat.com, pbonzini@redhat.com,
+ linux-f2fs-devel@lists.sourceforge.net, linux-btrfs@vger.kernel.org
 
 Hello:
 
-This pull request was applied to jaegeuk/f2fs.git (dev)
-by Linus Torvalds <torvalds@linux-foundation.org>:
+This series was applied to jaegeuk/f2fs.git (dev)
+by Jens Axboe <axboe@kernel.dk>:
 
-On Thu, 11 Jan 2024 10:28:10 -0800 you wrote:
-> Hi Linus,
+On Sun, 17 Dec 2023 17:53:55 +0100 you wrote:
+> Move reading and checking the zoned model from virtblk_probe_zoned_device
+> into the caller, leaving only the code to perform the actual setup for
+> host managed zoned devices in virtblk_probe_zoned_device.
 > 
-> Happy new year!
-> 
-> Could you please consider this pull request?
-> 
-> Thank you.
+> This allows to share the model reading and sharing between builds with
+> and without CONFIG_BLK_DEV_ZONED, and improve it for the
+> !CONFIG_BLK_DEV_ZONED case.
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev,GIT,PULL] f2fs update for 6.8-rc1
-    https://git.kernel.org/jaegeuk/f2fs/c/70d201a40823
+  - [f2fs-dev,1/5] virtio_blk: cleanup zoned device probing
+    https://git.kernel.org/jaegeuk/f2fs/c/77360cadaae5
+  - [f2fs-dev,2/5] virtio_blk: remove the broken zone revalidation support
+    https://git.kernel.org/jaegeuk/f2fs/c/a971ed800211
+  - [f2fs-dev,3/5] block: remove support for the host aware zone model
+    https://git.kernel.org/jaegeuk/f2fs/c/7437bb73f087
+  - [f2fs-dev,4/5] block: simplify disk_set_zoned
+    https://git.kernel.org/jaegeuk/f2fs/c/d73e93b4dfab
+  - [f2fs-dev,5/5] sd: only call disk_clear_zoned when needed
+    https://git.kernel.org/jaegeuk/f2fs/c/5cc99b89785c
 
 You are awesome, thank you!
 -- 
