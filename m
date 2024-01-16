@@ -1,142 +1,138 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B13D1DA50;
-	Tue, 16 Jan 2024 22:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0EE1D695
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 22:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705443738; cv=none; b=FbDCA6fK6KP+x+DH2rThVwfRWGYy7YvL6V2xyE58i5dU5f47xptXAVk/Kf7bVZBxm20LXQVOHWg4wekpDtUAu1s9Taoh9ulcMsaQKHErVl2TVpY1dArwR0q0jtsHf+lSCbGnBMQAzQz22A3Zgq49lvZ03RJghP8GMc8knBTaR0Q=
+	t=1705443758; cv=none; b=HSlVwDBmcn0vhRVllc61zsnFzvGLzmmXb8MJx5BU/ZwG3pfp8jM17FnLLpP3Yg7hLNL8T2TQXuNg77dLnfkmmoKHNovTuzaTDU00cEqBftlT6rpudj4YKdw16HijkYJKqfDPJ6zOgxNSW8gEQHfYzaVu0J/MWS0ZlZWaQbbaOHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705443738; c=relaxed/simple;
-	bh=P3ol08Fw41CIfzFFQooVhb0iE3Fv1ZRgddqxkDDBgGg=;
-	h=DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type; b=G3XXjjFM2QFpmnWtvhIHvMcHCURrPOJczb2KkgnLFizvWK7B+bF0gy+7HQjZSCOEthFsI07+CFdTRh88yKIiYQwq2ycIC7HrQAK7XsaHXqYSc4uRlf7Fq4hJS/FwfAPkuXM9/KLFgXxiVFtjPqznCNzEk8QAHZYYCno6K7+K194=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=lxkQ+G6s; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1705443758; c=relaxed/simple;
+	bh=sbxLU4K44Nbc78E8GhhYwOgfUA4LM4PzvW498gGHVXk=;
+	h=Received:DKIM-Signature:Received:Received:Received:From:Subject:
+	 Date:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-B4-Tracking:To:CC:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Originating-IP:
+	 X-ClientProxiedBy:X-QCInternal:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=sJgiOJ2RniSw+zrNM9zX4hOaPXjcVfdQfLzKyVuBhoN4plh8mtT5t/NIA0Xgiy9/OPw05AR6OzqBW4xLJKsGNGL1Po1E5rTFGkgcYCovuObPqxIx5256llWQ8lvAyuNbB+WqA1lqqab57CRCDu900rTnhW6YTheTBvKiyi7rqFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=edYH7d1y; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lxkQ+G6s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1705443731;
-	bh=AxIQOMJi6FIcABc8p8DFjfS3N7iZ0CR4Tu2qx3sFLAs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=lxkQ+G6sqWoHvr9pwuzJeAVNYHtUK9BYGqsXPYEeYIrdHAJ5/11VUhkvS5EiPScaT
-	 JVCm8S8CuKXrtjkT6a+2bUwxYfIS/Mv1jMXEv8GawzP9YwJMX8q7XJxybrsICrVPtk
-	 vkktWDAOWOkafvMqnJz/6cmgQ/oaRCdbHSKDXmMZQ/rivDMCkGyRxyYzr25gMrUfV1
-	 XExGCfilTnw+uWQyb4QVMo41rmwu3aLKDW6vHKPFip/mu8rCnIH3vWzk7dtOiIB2Bi
-	 QWIkerNtRfbNel09XWVDixut9KeqiH1GIGxQZ9s0xg1arcmdzNTl25T7goOyqAmqtl
-	 1mUfX9NDSJKaw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TF3Qq0kyGz4xP9;
-	Wed, 17 Jan 2024 09:22:11 +1100 (AEDT)
-Date: Wed, 17 Jan 2024 09:22:09 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yury Norov <yury.norov@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the mm-nonmm-unstable
- branch of the mm tree
-Message-ID: <20240117092209.7157a9c2@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="edYH7d1y"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40GLL1mZ026373;
+	Tue, 16 Jan 2024 22:22:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=7AV5VoHdOHUZxO
+	DEMYQjLyEgyVUtFRZTLR40V2UbT/A=; b=edYH7d1yeTvorFTi2KppjnBohU9xe3
+	vB8XUACyV75xtxEnI1DfuA0cqdWKWk7zSk3xmI2A7mwZ3z58D9iEfEdW6o5hSlyB
+	hI9c8D5CGQkgF7oUni3goYhSQRkYUxE7hvImHEDfyAmfMTIYMNP9Bg4JJGJjm91Y
+	X7qaGctHtvHZy4EAh3eLwrZ0ohKonSm60tKJilH7TyYXO5++SIK1J83goyj4abek
+	kDl3kHfGp7QVu8UlFyqX30bHhmfi8wVb/mr0qECLtrZiV6CPY6ewxbCJ9Wi5noCb
+	WiemmXR9E/KOZiG6z2+UUlTiIRnb86PTn+SSkFOxGqtGzigzeBgVV2IA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vnnvbj2c7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 22:22:24 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40GMMOVM031751
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 22:22:24 GMT
+Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 16 Jan 2024 14:22:23 -0800
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+Subject: [PATCH RFC 0/4] Support for Simulated Panels
+Date: Tue, 16 Jan 2024 14:22:03 -0800
+Message-ID: <20240116-jz-test-sim-panel-v1-0-f9511f46c9c7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ieYZL_P0CFftq=Ot5lzFi/N";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIwBp2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDQwMj3awq3ZLU4hLd4sxc3YLEvNQcXXPDZEOTRFMzc0OzVCWgvoKi1LT
+ MCrCZ0UpBbs5KsbW1AH85X/hoAAAA
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Sam Ravnborg
+	<sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: <quic_abhinavk@quicinc.com>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>
+X-Mailer: b4 0.13-dev-f0463
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705443743; l=1781;
+ i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
+ bh=sbxLU4K44Nbc78E8GhhYwOgfUA4LM4PzvW498gGHVXk=;
+ b=Iiu5CRgKl4sCyrzbXTiUzle3E6Qau88ltJzDaSZL10ByoX4rjplNQLaDypmUyEjLdCzVRZ0nG
+ 3lo1c+EHTA4AHFzJl7ZTZu2NSqx8efNkVXGyUNHawQrRcYvolcHYi8O
+X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
+ pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ZoCCy9smX5TsYNCWEwZdheKzq5GFiTjw
+X-Proofpoint-ORIG-GUID: ZoCCy9smX5TsYNCWEwZdheKzq5GFiTjw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-16_14,2024-01-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 mlxlogscore=793 lowpriorityscore=0 mlxscore=0
+ adultscore=0 impostorscore=0 suspectscore=0 clxscore=1015 spamscore=0
+ malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401160176
 
---Sig_/ieYZL_P0CFftq=Ot5lzFi/N
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This series introduces a simulated MIPI DSI panel.
 
-Hi all,
+Currently, the only way to validate DSI connectors is with a physical
+panel. Since obtaining physical panels for all possible DSI configurations
+is logistically infeasible, introduce a way for DSI drivers to simulate a
+panel.
 
-After merging the mm tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+This will be helpful in catching DSI misconfiguration bugs and catching
+performance issues for high FPS panels that might not be easily
+obtainable.
 
-In file included from include/uapi/linux/posix_types.h:5,
-                 from include/uapi/linux/types.h:14,
-                 from include/linux/types.h:6,
-                 from include/linux/kasan-checks.h:5,
-                 from include/asm-generic/rwonce.h:26,
-                 from ./arch/powerpc/include/generated/asm/rwonce.h:1,
-                 from include/linux/compiler.h:251,
-                 from include/linux/array_size.h:5,
-                 from include/linux/kernel.h:16,
-                 from lib/group_cpus.c:6:
-lib/group_cpus.c: In function 'group_cpus_evenly':
-include/linux/stddef.h:8:14: error: invalid initializer
-    8 | #define NULL ((void *)0)
-      |              ^
-lib/group_cpus.c:356:59: note: in expansion of macro 'NULL'
-  356 |         cpumask_var_t npresmsk __free(free_cpumask_var) =3D NULL;
-      |                                                           ^~~~
+For now, the simulated panel driver only supports setting customized
+modes via the panel_simlation.mode modparam. Eventually, we would like
+to add more customizations (such as configuring DSC, dual DSI, etc.).
 
-Caused by commit
-
-  f004021b058f ("lib/group_cpus: fix initialization section in group_cpus_e=
-venly()")
-
-CONFIG_CPUMASK_OFFSTACK is not set for this build (so cpumask_var_t is
-an single element array, not a pointer).
-
-I applied this hack for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 17 Jan 2024 09:15:07 +1100
-Subject: [PATCH] fix up for "lib/group_cpus: fix initialization section in =
-group_cpus_evenly()"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- lib/group_cpus.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Jessica Zhang (4):
+      drm/panel: add driver for simulated panel
+      drm/dsi: Add API to register simulated DSI panel
+      drm/panel: Introduce simulated panel bridge API
+      drm/msm/dsi: Add simulated panel support
 
-diff --git a/lib/group_cpus.c b/lib/group_cpus.c
-index c9c95b21e6c6..2c54b49d4c59 100644
---- a/lib/group_cpus.c
-+++ b/lib/group_cpus.c
-@@ -353,7 +353,11 @@ struct cpumask *group_cpus_evenly(unsigned int numgrps)
- {
- 	cpumask_var_t *node_to_cpumask __free(free_node_to_cpumask) =3D alloc_nod=
-e_to_cpumask();
- 	struct cpumask *masks __free(kfree) =3D kcalloc(numgrps, sizeof(*masks), =
-GFP_KERNEL);
-+#ifdef CONFIG_CPUMASK_OFFSTACK
- 	cpumask_var_t npresmsk __free(free_cpumask_var) =3D NULL;
-+#else
-+	cpumask_var_t npresmsk __free(free_cpumask_var);
-+#endif
- 	int curgrp, nr_present, nr_others;
-=20
- 	if (!masks || !node_to_cpumask || !alloc_cpumask_var(&npresmsk, GFP_KERNE=
-L))
---=20
-2.43.0
+ drivers/gpu/drm/bridge/panel.c           |  24 +++++
+ drivers/gpu/drm/drm_mipi_dsi.c           |  30 +++++++
+ drivers/gpu/drm/drm_panel.c              |  33 +++++++
+ drivers/gpu/drm/msm/dsi/dsi.c            |   4 +
+ drivers/gpu/drm/msm/dsi/dsi_host.c       |   9 +-
+ drivers/gpu/drm/msm/dsi/dsi_manager.c    |   8 +-
+ drivers/gpu/drm/panel/Kconfig            |   9 ++
+ drivers/gpu/drm/panel/Makefile           |   1 +
+ drivers/gpu/drm/panel/panel-simulation.c | 147 +++++++++++++++++++++++++++++++
+ include/drm/drm_bridge.h                 |   1 +
+ include/drm/drm_mipi_dsi.h               |   1 +
+ include/drm/drm_panel.h                  |   1 +
+ 12 files changed, 266 insertions(+), 2 deletions(-)
+---
+base-commit: 9ba3471618f1ab8df2f2689a34a505a72e05760a
+change-id: 20240102-jz-test-sim-panel-71c14a56716e
 
---=20
-Cheers,
-Stephen Rothwell
+Best regards,
+-- 
+Jessica Zhang <quic_jesszhan@quicinc.com>
 
---Sig_/ieYZL_P0CFftq=Ot5lzFi/N
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWnAZEACgkQAVBC80lX
-0GzXmwf+JI6+3rRdCG2/ZbxzjpcItSDfA73tvA0ndNYsQrlKjzOTdmKl95Au5BaL
-ZYhjfIlgXrcmS+5Kkm+cyH8bVaW6dJc6dDa2LDCpoFTUp2tY5YMc+TJMuJnBthwe
-bqgEVaslkVU2qZ/7daLN9rZ0zPDlS0CQcDqQESh1jARcI7OdH64f3fLO6ZuqODHx
-n12YedFA0ZYRg4LgkWTkhPI+sW9WuM2ZbSU0OOeSNuKECNnNEvISbRzEcKG7nPlQ
-WyR9kVAYXoL+aAh6fQ8yhOePwnhbZlZxCAbifK3FQk16WA2Vvq8GvJ85DjDYA4Ow
-BXFiokhnnDaikcXhGk3s2D8Dsobg0A==
-=slum
------END PGP SIGNATURE-----
-
---Sig_/ieYZL_P0CFftq=Ot5lzFi/N--
