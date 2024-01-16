@@ -1,154 +1,107 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978751B944
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 11:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BDE1B95E;
+	Tue, 16 Jan 2024 11:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DMbwMIhW"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e779f0273so18124215e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 03:59:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705406380; x=1706011180; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4mY+tIwBKHmUxob9qZlCJ14coqBFslOG9Pxb8dXi/Ag=;
-        b=DMbwMIhWc9YAULkQpaZV2B2+1jhwM3RsttaozkThlzJfMQUrNLED/13rYnU+6gzOsa
-         aHTAIbI0ZQavKHIeT81zLRKVaN7OOu2zThFDLQNCas/qKLuzLKx0v880ihTpesWwMNWo
-         EasgmGRrScjGOCPRHQm/lNoane+Q3OUeqxmCTnhUR+eeea6w9uWK2SPfWkR1fmZbrycW
-         9SR1EAhbXpvk6ytjhP1Sy+J7Ek4mnOP9SGf9d/D8sDV4K/9ZylZx1U7Jb0vGIpkt40dc
-         JEsn84fOn88nIMjmPq3n6WABJRe6PoYJI4TBG1uav3Fy00dDotlnk03P0EtT09nfi2ef
-         WsSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705406380; x=1706011180;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4mY+tIwBKHmUxob9qZlCJ14coqBFslOG9Pxb8dXi/Ag=;
-        b=o757a2Lza9CnEhcNhXLoprwO2buzz8wSE4wZ0UtaweKk3Uoa5r1I/xlzxNyZfSIoOa
-         5QdVOR8xdJUYUrSMVzOH3ESypHfoPBBxMkzlFLLbRSLVDSQiVNWffukArqUOPSkIqyXP
-         dm+3rokZLMu1OOJS9sriERDvwPwQBkhhBmTvRD9//b0JpFO/wVjttDFRabWql3q+XedQ
-         Vnk6B65dn6Smy64feqaqrx30RvFGsCGcRVENXNMMm9m4cLxwHrzjoKcZy4+UVzy0O9II
-         qY0+UHsiAY2uztW6s1qF6GPDMYfnmG62Xv0FTs8jhhnPlTuZN5dNMnk11WxCyHcEGCTN
-         Yz4w==
-X-Gm-Message-State: AOJu0YyFzJ7fHVLF5wPByWRRtq7YItelve7dzNTKxdI2X5BfdiJGWqmd
-	p40hwqLfCvqFIq4ErqGn8G1lS3IKMNfToA==
-X-Google-Smtp-Source: AGHT+IGYJaZEn2g6guZI4dv6kZznoWhyov0C2/HFwMpWczK/1npe7aC2mGDSbL9GE9DZBkZ84UN4ug==
-X-Received: by 2002:a05:600c:211a:b0:40e:6ba4:e056 with SMTP id u26-20020a05600c211a00b0040e6ba4e056mr2674818wml.18.1705406379859;
-        Tue, 16 Jan 2024 03:59:39 -0800 (PST)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:fab3:687:ead6:5b40])
-        by smtp.gmail.com with ESMTPSA id p31-20020a05600c1d9f00b0040e6ea6d2d0sm3279722wms.24.2024.01.16.03.59.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 03:59:39 -0800 (PST)
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: andersson@kernel.org
-Cc: Amit Pundir <amit.pundir@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: qcom: sdm845: Fix wild reboot during Antutu test
-Date: Tue, 16 Jan 2024 12:59:20 +0100
-Message-Id: <20240116115921.804185-1-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UXajY778"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ItFa1DOCRgTxW6m3CaY9nWa0lJcJTXwOy57Nt6dOVZ9SaEIz7CrI3upjBz4hLm5mf+53vVshbFW12j2GSR1qYScZjGtAa7vENLmJG1/3K4pdi75QWjifWWBSpR8UK3jrZOMSFw5Z4YGTYwOLLC3gRzSLLlvgTWXoc4fQyip9OEh4sN13Mjjm1jcLEYfokHqNm+xzwrRjZRibR5XHxacyYbMHbm2xdEoH+aORhkILgITAdbeMLKJSwO9WW9lGL02/UoHy7LsgW+si6TpLXKDtLFZYXBxFc3IAUyTJ9sxHs5875MGXn8LCiooL0BPpy6/kwJvUtWZ+NS8xKYqgeeTeYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AA2KB+HyJRDry8LXwRmr4qcxP3kHwIiMY/OLaAbBEz8=;
+ b=P3fbjU7sTuG+jqq2fciagqf6rAGGiAwrX3MSX70WPpNNPqxzw5GRzOhC0SGBQ27I2zPOaNL30RQCURX3QGHim/1xK+N7WjNmWxKVm0DdwKzAjw7cQrjwqqnGhpgrofBHuj8ZIwiTDlnZpG38cv1bpIMTDiwFIGk7qTbvNyB1sIRBbcqFpd1E0qGdMRrgbhL9yHnzxKyfk+lUXa07B0h4R7eecBPm52RB5L+3bRRlH5LYNd4jFODxP4OhehYxRwHvVIyyCHti76ljYjLZ7sIoykL9+EU2GA9xUPk4554ZteWxyu2LxYmLur1sdh2I9q88ISvJPFOijYzXVWbrOlSp6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AA2KB+HyJRDry8LXwRmr4qcxP3kHwIiMY/OLaAbBEz8=;
+ b=UXajY778nU1nZBulWsBMlWW8Cz1wJOQ8szRCLhTxApKc6fm/1sGJmCr9R1g5DgKPiIv3R+u8Am9id23ruH2DdY5tTy2CIYikzcVqh2D+M1nHmzIA7Qcnv79Chgyj3yChUo7PZWD2avue+BM14sZioEbI5PJYrkfopKgxXrG3AerjQL+kq/UTY2S3PE1n8iKu1ZiGgvWJZ9IO0HSimoPQlYA54pHXdAL9yYVrVztnK5E482mHJBKCPDF4k3YJl0xSYhM2rcBsV1xspAwR59XToUs8W1BM2S6QjCgNK0nPNFubXnDUhS/4K1BTjrHdkI46Cl50iW512cpSrbU21PQvAw==
+Received: from PH7PR10CA0015.namprd10.prod.outlook.com (2603:10b6:510:23d::17)
+ by DM6PR12MB4355.namprd12.prod.outlook.com (2603:10b6:5:2a3::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Tue, 16 Jan
+ 2024 11:59:53 +0000
+Received: from SN1PEPF0002BA4B.namprd03.prod.outlook.com
+ (2603:10b6:510:23d:cafe::2e) by PH7PR10CA0015.outlook.office365.com
+ (2603:10b6:510:23d::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23 via Frontend
+ Transport; Tue, 16 Jan 2024 11:59:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SN1PEPF0002BA4B.mail.protection.outlook.com (10.167.242.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.16 via Frontend Transport; Tue, 16 Jan 2024 11:59:52 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 16 Jan
+ 2024 03:59:38 -0800
+Received: from pohsuns-pegasus.nvidia.com (10.126.230.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Tue, 16 Jan 2024 03:59:36 -0800
+From: Pohsun Su <pohsuns@nvidia.com>
+To: <daniel.lezcano@linaro.org>, <tglx@linutronix.de>,
+	<thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC: <sumitg@nvidia.com>, <linux-kernel@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>, Pohsun Su <pohsuns@nvidia.com>
+Subject: [PATCH 0/2] clocksource: fix Tegra234 SoC Watchdog Timer.
+Date: Tue, 16 Jan 2024 19:58:36 +0800
+Message-ID: <20240116115838.16544-1-pohsuns@nvidia.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4B:EE_|DM6PR12MB4355:EE_
+X-MS-Office365-Filtering-Correlation-Id: ecbe1b9a-2039-42dd-460d-08dc168aa609
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	uieTyePWM62dq9369HG20xXT/xSpSGn5apbCtB8RkNnZbIDjcUnkLfkxNwC398xx0j0CgYaqlNA1bJRkkTSUi7sLbqzhLyTfBaxpJRIgFKtceDNnwQ3vj5nSGV/kh4dPu1jtags58IDvpcSzI4BIaoMgdgNkHP1v0Fccly4xGQNLTIgAkr03P2koso+NfFCLQpJ2cADwnx6H2+zthLYmcOUYHd8wkFYxn2s7m5LSYQXJ46hC9mzeqNXf922THmF/pcEHEUJ8UiwQMywDhBZw3Tt3xpI/VtS5iZF0J3ZcTV/nT+WzETcbujB5kPXTNKp5jes2wL1kqQNivgiAktPMhk89vDLH2eswIpEPWLvQCP8q6mL6nrvXnA0YzWuk0VkbQH8i/g3bo+KP/N95MYqlbUyfJL51AMJ49g8hXL1r2L5rwvO6R74/qaEgj/H48gFAdC/2jfwAJpbaXim2dHJ4RtTOanDTcKmCUKgMiPkW+joGQaj9NrQFSGwJuB9Icg7BkJOUtdXN2y4RSI9zM45TKWtSh7iGkx4KOIud/sq0BwzvE1639jO/KtmfxerxOPkUmrOAws3+A12p7wx1shsfTd6OD2oOlZF4/UNIJe5kgLmNWwg3poRsPGUyroXek4bL+t311oFdbe2iqwSxLzzddDqeuMy7UFAOlCXQ4rsUZTaPx5qhI7/FaQX8ijjURqOXhIohwAWCVRxrOpaqusiFN+aynAcitnGZLS75LX1LcbjV7hYxBg7Lmj2/DFOQJ4n9Gx4WgwF8u8AjpBBNnifp4g==
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(376002)(346002)(136003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(82310400011)(40470700004)(36840700001)(46966006)(82740400003)(2906002)(5660300002)(4744005)(36860700001)(36756003)(86362001)(41300700001)(7636003)(356005)(54906003)(6636002)(316002)(2616005)(110136005)(70586007)(70206006)(478600001)(7696005)(83380400001)(47076005)(16526019)(26005)(1076003)(107886003)(336012)(4326008)(8676002)(8936002)(426003)(40480700001)(40460700003)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 11:59:52.5285
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecbe1b9a-2039-42dd-460d-08dc168aa609
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4B.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4355
 
-Running an Antutu benchmark makes the board to do a hard reboot.
+This set of patches includes a fix for watchdog for it may not bark
+due to self-pinging and adds WDIOC_GETTIMELEFT support.
 
-Cause: it appears the gpu-bottom and gpu-top temperature sensors are showing
-too high temperatures, above 115°C.
+Pohsun Su (2):
+  clocksource/drivers/timer-tegra186: add WDIOC_GETTIMELEFT support
+  clocksource/drivers/timer-tegra186: fix watchdog self-pinging.
 
-Out of tree configuratons show the gpu thermal zone is configured to
-be mitigated at 85°C with devfreq.
+ drivers/clocksource/timer-tegra186.c | 65 ++++++++++++++++++----------
+ 1 file changed, 43 insertions(+), 22 deletions(-)
 
-Add the DT snippet to enable the thermal mitigation on the sdm845
-based board.
-
-Fixes: c79800103eb18 ("arm64: dts: sdm845: Add gpu and gmu device nodes")
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 32 ++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index c2244824355a..20fefd6af0f8 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -4764,6 +4764,8 @@ gpu: gpu@5000000 {
- 			interconnects = <&mem_noc MASTER_GFX3D 0 &mem_noc SLAVE_EBI1 0>;
- 			interconnect-names = "gfx-mem";
- 
-+			#cooling-cells = <2>;
-+
- 			status = "disabled";
- 
- 			gpu_opp_table: opp-table {
-@@ -5603,12 +5605,25 @@ gpu-top-thermal {
- 			thermal-sensors = <&tsens0 11>;
- 
- 			trips {
--				gpu1_alert0: trip-point0 {
-+                                gpu1_alert0: trip-point0 {
-+                                        temperature = <85000>;
-+                                        hysteresis = <2000>;
-+                                        type = "passive";
-+                                };
-+
-+				gpu1_alert1: trip-point1 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&gpu1_alert0>;
-+					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		gpu-bottom-thermal {
-@@ -5618,12 +5633,25 @@ gpu-bottom-thermal {
- 			thermal-sensors = <&tsens0 12>;
- 
- 			trips {
--				gpu2_alert0: trip-point0 {
-+                                gpu2_alert0: trip-point0 {
-+                                        temperature = <85000>;
-+                                        hysteresis = <2000>;
-+                                        type = "passive";
-+                                };
-+
-+				gpu2_alert1: trip-point1 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
- 			};
-+
-+			cooling-maps {
-+ 				map0 {
-+ 					trip = <&gpu2_alert0>;
-+					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+                                };
-+                        };
- 		};
- 
- 		aoss1-thermal {
 -- 
-2.34.1
+2.17.1
 
