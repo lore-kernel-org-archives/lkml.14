@@ -1,125 +1,87 @@
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D220134AB;
-	Tue, 16 Jan 2024 08:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=feathertop.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=feathertop.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=feathertop.org header.i=@feathertop.org header.b="BGKAYR0G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QGM83qJq"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailout.west.internal (Postfix) with ESMTP id 43AC53200AFB;
-	Tue, 16 Jan 2024 03:47:05 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Tue, 16 Jan 2024 03:47:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=feathertop.org;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1705394824; x=
-	1705481224; bh=zTC4+rP7zPq87zT19hFSzcCUDOL+iUa2sCx7guwY050=; b=B
-	GKAYR0GAy41IxWYnUGegfQpTZeNVJbSFfQ3ko0q2GWfg6+aQfurUIxmLduogVfQ+
-	5wBHN5kO39dEYoqsIsZH/ncN0fLJT6haFK2FaxSku1f6GMdD8e41NSx/KCt3xRZM
-	E2PmJTRFbFfZwgfyhdkEtkRZw6i5C5+TDxNZEX0curBVWnAwVnk43BAlbolqVooB
-	rQhlDNVn68emfebV3MtLLjUfgX3/2Or0YkUfsfuwMWdgQfaB8quBstUVr7ySNuh4
-	B5fMfiwwwoUUnxn561/wXzxhF8a2tz2ODbKefpGh7uGNQ617wlooAaq0akzv3U9W
-	xAFdUPst3AvUXV51HPdpw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1705394824; x=
-	1705481224; bh=zTC4+rP7zPq87zT19hFSzcCUDOL+iUa2sCx7guwY050=; b=Q
-	GM83qJqt5O2zD8hG4Pt1djzhrzjKqhCzfLYZPt0rUTkSGlApXxNmB5KtXQ4mnV40
-	Wii849W3dIVMVKWZpVknXogGMRFKwG7fuIMLXLjtFCPe4jP7Mm1bWYUZm/ce7Kpt
-	SKTi4Mqdxl1Nn4WxUABXvPDuQvC7cB/Lr60xCySoqkNdmI6qYodCXI1I/ZmSRPUI
-	2OHQCYGormjyxKAJmMrkWpSsKFkKmDem8PCsfiUbHzMXLILgRa8HkccQo/jgh9oM
-	dO9qfh/i9v7A86WZSrzjlbJP4NyrIp0oCyRDaqUTz3bOZcsBnf0y91/XcvpcbcmB
-	kWXfbt+eJTtXzYT9Mff4A==
-X-ME-Sender: <xms:iEKmZdAmXnmaMi8_jrAqghbo86srtykqlY5LKN9n2LGsS105oVdA0g>
-    <xme:iEKmZbiCq7OQR7R8qDCF3n1oYFmfR6RqCO_WGh83QIk6_G4F4Bj4-4ZtIkPT_V3_R
-    4ENUERupQ>
-X-ME-Received: <xmr:iEKmZYlQeKDQf-Q1mXsRrkL850qbon3zDPWSFO6IaHDC3ltskH1QvKLG1nCF6d-2YppyRMDr8Wr00C90IsiEg2E__CebaRvMW1A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdejvddguddvhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefvihhm
-    ucfnuhhnnhcuoehtihhmsehfvggrthhhvghrthhophdrohhrgheqnecuggftrfgrthhtvg
-    hrnhepfeffuefhteegieekjeevgfdtfeethefgvdfhteefueffuefhhfefkefgkeegheei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepthhimh
-    esfhgvrghthhgvrhhtohhprdhorhhg
-X-ME-Proxy: <xmx:iEKmZXzMxLwFWz5IL7_OnvdsngAwrsY5TxB52d0XgOZ8587NhM8Xtg>
-    <xmx:iEKmZSQ9Fnb7etvHE1G_chZQxIfIfW-qo2yla4Cj3q7QQtXL0dNLdA>
-    <xmx:iEKmZab8fFis2d40Kp5rrNjniwCQh4HcQvXmjMI4EdvfC3aHuFMA7A>
-    <xmx:iEKmZXJg1uzHP3whR3992-BxU7ogwXFFDuf04MGZzMIoiluL3FL_Hg>
-Feedback-ID: i1f8241ce:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 16 Jan 2024 03:46:59 -0500 (EST)
-Received: by feathertop.org (sSMTP sendmail emulation); Tue, 16 Jan 2024 19:46:56 +1100
-From: Tim Lunn <tim@feathertop.org>
-To: linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: Tim Lunn <tim@feathertop.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Chris Zhong <zyw@rock-chips.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Lee Jones <lee@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Zhang Qing <zhangqing@rock-chips.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: rockchip: Update rk809 example with audio codec properties
-Date: Tue, 16 Jan 2024 19:46:18 +1100
-Message-Id: <20240116084618.3112410-4-tim@feathertop.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240116084618.3112410-1-tim@feathertop.org>
-References: <20240116084618.3112410-1-tim@feathertop.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E17125B0;
+	Tue, 16 Jan 2024 08:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4TDhy80gLFz9xvNW;
+	Tue, 16 Jan 2024 16:29:36 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 8282314025A;
+	Tue, 16 Jan 2024 16:47:52 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwC38CSpQqZlOdikAA--.3968S2;
+	Tue, 16 Jan 2024 09:47:51 +0100 (CET)
+Message-ID: <3b440f064a1ae04d69f7e85f4077f8406c0eac67.camel@huaweicloud.com>
+Subject: Re: [PATCH v9 13/25] security: Introduce file_release hook
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Al Viro <viro@zeniv.linux.org.uk>, casey@schaufler-ca.com
+Cc: brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+ neilb@suse.de,  kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+ paul@paul-moore.com,  jmorris@namei.org, serge@hallyn.com,
+ zohar@linux.ibm.com,  dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
+ dhowells@redhat.com,  jarkko@kernel.org, stephen.smalley.work@gmail.com,
+ eparis@parisplace.org,  shuah@kernel.org, mic@digikod.net,
+ linux-kernel@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org,  linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org,  keyrings@vger.kernel.org,
+ selinux@vger.kernel.org,  linux-kselftest@vger.kernel.org, Roberto Sassu
+ <roberto.sassu@huawei.com>
+Date: Tue, 16 Jan 2024 09:47:34 +0100
+In-Reply-To: <20240115191508.GG1674809@ZenIV>
+References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
+	 <20240115181809.885385-14-roberto.sassu@huaweicloud.com>
+	 <20240115191508.GG1674809@ZenIV>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:GxC2BwC38CSpQqZlOdikAA--.3968S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw1DZr4xZrWxZr48XF43Wrg_yoWxArX_ur
+	yqkw1kC398CF47A3sruF1fZrZ2qFW8AF15X390qrnxWayfGa4IkFWF9rZ5Z348GF4IyF9I
+	gFn0vF4xKr1agjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267
+	AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
+	k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UQZ2-UUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAEBF1jj5iWWAABsn
 
-Update the example provided to include the properties for using
-rk817 audio codec.
+On Mon, 2024-01-15 at 19:15 +0000, Al Viro wrote:
+> On Mon, Jan 15, 2024 at 07:17:57PM +0100, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> >=20
+> > In preparation for moving IMA and EVM to the LSM infrastructure, introd=
+uce
+> > the file_release hook.
+> >=20
+> > IMA calculates at file close the new digest of the file content and wri=
+tes
+> > it to security.ima, so that appraisal at next file access succeeds.
+> >=20
+> > An LSM could implement an exclusive access scheme for files, only allow=
+ing
+> > access to files that have no references.
+>=20
+> Elaborate that last part, please.
 
-Signed-off-by: Tim Lunn <tim@feathertop.org>
----
+Apologies, I didn't understand that either. Casey?
 
- Documentation/devicetree/bindings/mfd/rockchip,rk809.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thanks
 
-diff --git a/Documentation/devicetree/bindings/mfd/rockchip,rk809.yaml b/Documentation/devicetree/bindings/mfd/rockchip,rk809.yaml
-index 3f31478932c2..c9c676d0922d 100644
---- a/Documentation/devicetree/bindings/mfd/rockchip,rk809.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rockchip,rk809.yaml
-@@ -161,10 +161,13 @@ examples:
-             clock-output-names = "xin32k", "rk808-clkout2";
-             interrupt-parent = <&gpio3>;
-             interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
-+            clock-names = "mclk";
-+            clocks = <&cru SCLK_I2S1_OUT>;
-             pinctrl-names = "default";
-             pinctrl-0 = <&pmic_int_l_pin>;
-             rockchip,system-power-controller;
-             wakeup-source;
-+            #sound-dai-cells = <0>;
- 
-             vcc1-supply = <&vcc_sysin>;
-             vcc2-supply = <&vcc_sysin>;
-@@ -312,5 +315,8 @@ examples:
-                     };
-                 };
-             };
-+            rk817_codec: codec {
-+                rockchip,mic-in-differential;
-+            };
-         };
-     };
--- 
-2.40.1
+Roberto
 
