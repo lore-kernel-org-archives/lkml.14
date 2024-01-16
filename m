@@ -1,151 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D232E7E774;
-	Tue, 16 Jan 2024 19:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DCF7E78A;
+	Tue, 16 Jan 2024 19:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434427; cv=none; b=Hq1UaIhdFFFdiExriD9dV4QF59kt1ZjcQW4TrGKQK0hyQo3notZc0nyv29q26PDHL2YL1wL76eImc7FXAl/GStDLT76dGGM+ADd/y6PKRJTjbTDuiCLH/zEBqo1H+bej7QbiJE4H+gfhdG/3/8cCiathX5gbaAKxA/vjzH5FFG4=
+	t=1705434427; cv=none; b=QPt5vG99wz89zMT8X4bpNwlRcJ79vbpYXHj5cOL6DG41mKI5+sVrTQN+w1eXfoSt4lH348lxlxnyZaEaF1RL6ePz5xTVpxB1fSNVClB0xc/SvyNvjLK/KC1wD+qNkpHRZdsfYnqZpmT4rhwV+qcwC+dbBBCzhgbvfSDWhx+C4so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705434427; c=relaxed/simple;
-	bh=yDsuU1Zw9gxCujhD8xa64udMU/oaPFDr1SbUE7U7jIE=;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
-	b=Gm5XytrZXJE5w3odaqk5Mo5ElW4TDCCIXpF/e4SziN325Iq1MSN3o+WhS4AnDyHDfXdLxyKK91ZUP0BUzTkSfzend3zDXmvT23mhheOeOroN8ZvuJpinfWBykbUUvzOIppRLDOVy/4YDF2Lvid3BuMb3fn8v4pS+YHV6FX4eQH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHwTTmLI; arc=none smtp.client-ip=10.30.226.201
+	bh=yg63Q6KN363mmGQBTPoS7pqAImXxdGR3CBoLen4GHOQ=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:X-stable:
+	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=FJF33kBc52zLrgv1ykw8YQcpsBSHtUxK1TQDiF+FOiNA4iVDYbNJXPtrzkS/vEeI7azAXEdIPJ2wmZ45c6lKEeX9rbBpx1McwDodaizCkis51IACTVReSOnMcDiRuqCZy4AYAGoCzPcoRw8vhqHKWY7gD3R4jux86B8LIudTeuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TCh4HanY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHwTTmLI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02D0EC433B2;
-	Tue, 16 Jan 2024 19:47:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TCh4HanY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7626AC433F1;
+	Tue, 16 Jan 2024 19:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705434426;
-	bh=yDsuU1Zw9gxCujhD8xa64udMU/oaPFDr1SbUE7U7jIE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VHwTTmLIU5WtY7YZEJ2Ur6v7Bc2ZO+L1BCAmSHvG3hHBEdwUCECGl2SJV8aBJvx3N
-	 v/Debi9V8tv6BQtgxHaOUxHee6rmDUHnYs+8gMn1l5ImaiTQGludKNR0jNBoz+XLq6
-	 g3grmjkpLmcStczkUuKYNMxNdHLf4gVUWD1A41xHYZfAAlMW2R6LDdGVhcZzt03++a
-	 C5iqveKFWqbVdu1TxuzWNT/RK6kfECrS6Rw4ayUSwjX5hRtxq7BLLbaIwzl5aB5ewK
-	 qbCgX0XpEI9IPmfuVImexA+tUOCKKmQBbsqRHkP5Vag1lcVDjyVzJFtfjJrX4ZlznG
-	 WokiLMswsbsMw==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 16 Jan 2024 14:46:01 -0500
-Subject: [PATCH 05/20] filelock: convert some internal functions to use
- file_lock_core instead
+	s=k20201202; t=1705434427;
+	bh=yg63Q6KN363mmGQBTPoS7pqAImXxdGR3CBoLen4GHOQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TCh4HanYOm4oXWaac5H06/bW5WrWu9LNmLtQTSVy99P7Sa7RHwdK830+yqZRfbDUn
+	 8v+re6gGMOzsiS7ecdQBKzagSG+sDbsOTOcHOhi8s7YIfymdB9/BcJeLWt1hYZQETW
+	 3XzExBKmDD76bov21B2h3nbed/hOyGSW90BtAnhfkRM/Sd/IjAKmrPE7vhAdDpSzCl
+	 gEB5LgPZ/9HJ3HB3gf3RZAbt2jOfxGSNbpyumF8gckqAAjTAZ16gNYkYbIH6hwcY7X
+	 9DAt6zSkUl/QGATO37zlF4ld8tYO7YdCKHpiTxauL2MzrnSbDhV0X+fvOCbMWA7Ltc
+	 HY9pHwLH3hzXw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>,
+	andrew@lunn.ch,
+	f.fainelli@gmail.com,
+	olteanv@gmail.com,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	ansuelsmth@gmail.com,
+	rmk+kernel@armlinux.org.uk,
+	kabel@kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.7 107/108] net: dsa: qca8k: put MDIO bus OF node on qca8k_mdio_register() failure
+Date: Tue, 16 Jan 2024 14:40:13 -0500
+Message-ID: <20240116194225.250921-107-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116194225.250921-1-sashal@kernel.org>
+References: <20240116194225.250921-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240116-flsplit-v1-5-c9d0f4370a5d@kernel.org>
-References: <20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org>
-In-Reply-To: <20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org>
-To: Christian Brauner <brauner@kernel.org>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Dominique Martinet <asmadeus@codewreck.org>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>, 
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
- Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
- Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
- Miklos Szeredi <miklos@szeredi.hu>, 
- Andreas Gruenbacher <agruenba@redhat.com>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
- Jan Kara <jack@suse.cz>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
- Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
- Ronnie Sahlberg <lsahlber@redhat.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev, 
- linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, 
- gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
- linux-trace-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1655; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=yDsuU1Zw9gxCujhD8xa64udMU/oaPFDr1SbUE7U7jIE=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlpt0gVcrXW2g/TK7GdwhFc0QwsV1CF3i6HJklQ
- lY6mK00vy6JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZabdIAAKCRAADmhBGVaC
- FUDwD/0W6sL9ycLrZsOaPzmRJdLOqA0UnNIsgyMABRAU9sMIKmGthsGs45uq3K4T6agyWoD6VJK
- VSypAHRxBZQQYwJNhZrGy5oQ4M1vheZK/uCLxUmZoHVsSluowKgeDURi3UZW0WGSR7LD6mxEB6h
- OUFMMarXNOjcKJPK81g8RX4RqG8fMz4u5SYy2tzwwKxBFhCwFz09yTbz9BDZwoZgWbNMYcqpRSk
- uhGEVNUfKx3yWIs9mva9QL3wlzUm4GD3T+DS/ukCdxtRAl2YVIpAzPc5bNvzWehP2uVwG+HK7qB
- Halx0h+4TVBQLFcp4saLYx0ujQ0D+H/6G7l0/Gxx6Rw2aB3A7KX8z6yO78dnRO5ZrD6ocU76GDZ
- PtelVsqxVFxIOvisTjXdUMPyfw72AU7tc9eRDV8jLdpgta2U2V+UPBl/mg4rNEabfJI4qbst3+0
- MuTAOQVIiRkrBd7uXHLnfZF0oSeqpoz659Vazg5Y6NeHRACxf07kXSJ1AqDNnCcvZCc+XqOBY0U
- ZKuLL1c+2c0gLjTQqAzbgUwPwe69JrA8hMO5avGsjuB808lw+YW53U8gNLEWyrZT+LFm4CyUCbu
- pfrKAIOtsH3h/mKbBFybrByDWokTbO2YXB9ySd5qgD/gqgniIMSLgG3kmfhTENkNyHT4RM8pH7s
- sTXiDx4/HahrMKA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7
+Content-Transfer-Encoding: 8bit
 
-Convert some internal fs/locks.c function to take and deal with struct
-file_lock_core instead of struct file_lock:
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-- locks_init_lock_heads
-- locks_alloc_lock
-- locks_init_lock
+[ Upstream commit 68e1010cda7967cfca9c8650ee1f4efcae54ab90 ]
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+of_get_child_by_name() gives us an OF node with an elevated refcount,
+which should be dropped when we're done with it. This is so that,
+if (of_node_check_flag(node, OF_DYNAMIC)) is true, the node's memory can
+eventually be freed.
+
+There are 2 distinct paths to be considered in qca8k_mdio_register():
+
+- devm_of_mdiobus_register() succeeds: since commit 3b73a7b8ec38 ("net:
+  mdio_bus: add refcounting for fwnodes to mdiobus"), the MDIO core
+  treats this well.
+
+- devm_of_mdiobus_register() or anything up to that point fails: it is
+  the duty of the qca8k driver to release the OF node.
+
+This change addresses the second case by making sure that the OF node
+reference is not leaked.
+
+The "mdio" node may be NULL, but of_node_put(NULL) is safe.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Alvin Šipraga <alsi@bang-olufsen.dk>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/locks.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/dsa/qca/qca8k-8xxx.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/fs/locks.c b/fs/locks.c
-index afe6e82a6207..42221cecd331 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -258,13 +258,13 @@ locks_free_lock_context(struct inode *inode)
+diff --git a/drivers/net/dsa/qca/qca8k-8xxx.c b/drivers/net/dsa/qca/qca8k-8xxx.c
+index ec57d9d52072..5f47a290bd6e 100644
+--- a/drivers/net/dsa/qca/qca8k-8xxx.c
++++ b/drivers/net/dsa/qca/qca8k-8xxx.c
+@@ -949,10 +949,15 @@ qca8k_mdio_register(struct qca8k_priv *priv)
+ 	struct dsa_switch *ds = priv->ds;
+ 	struct device_node *mdio;
+ 	struct mii_bus *bus;
++	int err;
++
++	mdio = of_get_child_by_name(priv->dev->of_node, "mdio");
+ 
+ 	bus = devm_mdiobus_alloc(ds->dev);
+-	if (!bus)
+-		return -ENOMEM;
++	if (!bus) {
++		err = -ENOMEM;
++		goto out_put_node;
++	}
+ 
+ 	bus->priv = (void *)priv;
+ 	snprintf(bus->id, MII_BUS_ID_SIZE, "qca8k-%d.%d",
+@@ -962,12 +967,12 @@ qca8k_mdio_register(struct qca8k_priv *priv)
+ 	ds->user_mii_bus = bus;
+ 
+ 	/* Check if the devicetree declare the port:phy mapping */
+-	mdio = of_get_child_by_name(priv->dev->of_node, "mdio");
+ 	if (of_device_is_available(mdio)) {
+ 		bus->name = "qca8k user mii";
+ 		bus->read = qca8k_internal_mdio_read;
+ 		bus->write = qca8k_internal_mdio_write;
+-		return devm_of_mdiobus_register(priv->dev, bus, mdio);
++		err = devm_of_mdiobus_register(priv->dev, bus, mdio);
++		goto out_put_node;
  	}
+ 
+ 	/* If a mapping can't be found the legacy mapping is used,
+@@ -976,7 +981,13 @@ qca8k_mdio_register(struct qca8k_priv *priv)
+ 	bus->name = "qca8k-legacy user mii";
+ 	bus->read = qca8k_legacy_mdio_read;
+ 	bus->write = qca8k_legacy_mdio_write;
+-	return devm_mdiobus_register(priv->dev, bus);
++
++	err = devm_mdiobus_register(priv->dev, bus);
++
++out_put_node:
++	of_node_put(mdio);
++
++	return err;
  }
  
--static void locks_init_lock_heads(struct file_lock *fl)
-+static void locks_init_lock_heads(struct file_lock_core *flc)
- {
--	INIT_HLIST_NODE(&fl->fl_core.fl_link);
--	INIT_LIST_HEAD(&fl->fl_core.fl_list);
--	INIT_LIST_HEAD(&fl->fl_core.fl_blocked_requests);
--	INIT_LIST_HEAD(&fl->fl_core.fl_blocked_member);
--	init_waitqueue_head(&fl->fl_core.fl_wait);
-+	INIT_HLIST_NODE(&flc->fl_link);
-+	INIT_LIST_HEAD(&flc->fl_list);
-+	INIT_LIST_HEAD(&flc->fl_blocked_requests);
-+	INIT_LIST_HEAD(&flc->fl_blocked_member);
-+	init_waitqueue_head(&flc->fl_wait);
- }
- 
- /* Allocate an empty lock structure. */
-@@ -273,7 +273,7 @@ struct file_lock *locks_alloc_lock(void)
- 	struct file_lock *fl = kmem_cache_zalloc(filelock_cache, GFP_KERNEL);
- 
- 	if (fl)
--		locks_init_lock_heads(fl);
-+		locks_init_lock_heads(&fl->fl_core);
- 
- 	return fl;
- }
-@@ -354,7 +354,7 @@ locks_dispose_list(struct list_head *dispose)
- void locks_init_lock(struct file_lock *fl)
- {
- 	memset(fl, 0, sizeof(struct file_lock));
--	locks_init_lock_heads(fl);
-+	locks_init_lock_heads(&fl->fl_core);
- }
- EXPORT_SYMBOL(locks_init_lock);
- 
-
+ static int
 -- 
 2.43.0
 
