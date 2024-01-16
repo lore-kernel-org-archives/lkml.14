@@ -1,97 +1,75 @@
-Received: from out203-205-251-72.mail.qq.com (out203-205-251-72.mail.qq.com [203.205.251.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A2A1BDC2
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 13:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="CzDoNhpN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1705410511; bh=pxcyGJeLrdotw9GYTqLreGiV8r21vRQ/d1wzlmuZ/So=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CzDoNhpN5i4JVoBZ3b+82pScNQenqBc/CC9ClPWZsF8ezQaVT/zesqHe5HkLYjJwc
-	 c/jU5DzQ7vANG553l6HIK8ewFaqp3k3Y0Gg91pZVmzCAtmkuSOQIToNr4PHOWNCZDk
-	 gI0QoNai84PiekSK0WoJsbUxtYXc96JM/tIyoyAA=
-Received: from cyy-pc.lan ([2001:da8:c800:d084:c65a:644a:13d7:e72c])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 880E6D7; Tue, 16 Jan 2024 21:02:08 +0800
-X-QQ-mid: xmsmtpt1705410128tzozwsdnv
-Message-ID: <tencent_7D66A3085F83608576A8E309EE714C5CC806@qq.com>
-X-QQ-XMAILINFO: OVFdYp27KdlJUb+gPn8mDFbwcFcUtRNz/Q2Z7eArW6SD5oISlxsWi3jjtYgj8m
-	 /t/Iq7DXN9342MVGfgi66yJcBdIUSRK5gLDF4Zg6ciFh8riHfuRKiu8xnDrmRuQsCXn7LKhcjDEC
-	 oohPcP+uGHORgqGtfy+w7o6ki23FgwpXYHOYrubHrcs/UTt2Je2YySpF52T1KF/ywflT6YDtxJ96
-	 jEMmBj5RKwfSHKVISNoiIcf6aOqJ4FxQtVm88wbRIKnNRtNDap9ii8dgUARiRykdTnynb547XVxm
-	 bnH7T6uUJ++aVEwjYBBzcLKZwDgEB93tLwHzjZfSxz/VOPKsZMJ6vDiJwPfglzyZ82GwYYChSLDQ
-	 DTZypplGiT2Huk42S9zLHVuYCoMM7XarZXHr+7blrwtYidglawixYsz+RSbSZjbndTMwolX3zKr7
-	 UiIIu2mcSDlnBQ3vMGzfIEAb5VvICBt0XBibNRur8Rd1dvROh3OGJUtnPNN2zHR/ZcG9hpx5iAxm
-	 d8SjsNROjaY5O0vKOOI9Hi48CQrlc4hZBCnvF3Gu3NoM69zEhUKNfBWsPLb7rCWA7Y6vt+UwBkQ2
-	 npoWkDjGyZGsy7FOPupR2leiOB0SEpoeRycWVv6QhuY0hjgTeKRaL73pHcvZx9X7hr6M9fJGWX03
-	 zu8pWabLdg4CqaV5dlveGuHByP3d0w4JAaqkXKo7+HMTXc1BBgBoqFfp4DLzYmzOBsC3RdOsdhHX
-	 TurQYav8W5U6Q3nHVxtSWNo5SPixeETGPALVj7rBf3cSHHd4FeB2UcDHfLQDgUtnIH7um7PuYAC0
-	 3WZ8XV3Y9Tj3JFQZ9xHHYMIbVxPDNnyVO9RKkidxojjeDcP4Jqu4D/Jux30eRjdjABMudwGjlfEX
-	 IoL48bWLOaZ69ravZpepVmUnkEm8tN62YSiwaD687ydbUId1nnAPqyEzwJFKs3jntDMrbVXhD1vN
-	 xPBpQ7cGK4BpWBxPX8XEkgs7dI2RU3krv2vyj5R2UXGEO/2bKDEjrmURs/s0uqIridolYLMNwduP
-	 mxVUJ3zrfW2vamL6PU
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Yangyu Chen <cyy@cyyself.name>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org,
-	Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Jiuyang Liu <liu@jiuyang.me>,
-	Yichuan Gao <i@gycis.me>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH 1/1] drm/ttm: allocate dummy_read_page without DMA32 on fail
-Date: Tue, 16 Jan 2024 21:02:03 +0800
-X-OQ-MSGID: <20240116130203.149635-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <tencent_40DF99E09A3681E339EE570C430878232106@qq.com>
-References: <tencent_40DF99E09A3681E339EE570C430878232106@qq.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BC861BDDA
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 13:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 386F12F4;
+	Tue, 16 Jan 2024 05:09:21 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.90.186])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 138893F6C4;
+	Tue, 16 Jan 2024 05:08:29 -0800 (PST)
+Date: Tue, 16 Jan 2024 13:08:20 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: "Christoph Lameter (Ampere)" <cl@linux.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Valentin.Schneider@arm.com,
+	Vanshidhar Konda <vanshikonda@os.amperecomputing.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>,
+	Matteo Carlini <Matteo.Carlini@arm.com>, akpm@linux-foundation.org,
+	yang@os.amperecomputing.com
+Subject: Re: [PATCH] ARM64: Dynamically allocate cpumasks and increase
+ supported CPUs to 512
+Message-ID: <ZaZ_xK5QHVPSD7N6@FVFF77S0Q05N>
+References: <794a1211-630b-3ee5-55a3-c06f10df1490@linux.com>
+ <ZaVRlHpAOoNIiRiY@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZaVRlHpAOoNIiRiY@shell.armlinux.org.uk>
 
-Some platforms may not have any memory in ZONE_DMA32 and use IOMMU to allow
-32-bit-DMA-only device to work. Forcing GFP_DMA32 on dummy_read_page will
-fail on such platforms. Retry after fail will get this works on such
-platforms.
+On Mon, Jan 15, 2024 at 03:39:00PM +0000, Russell King (Oracle) wrote:
+> On Thu, Dec 14, 2023 at 04:05:56PM -0800, Christoph Lameter (Ampere) wrote:
+> > +# Determines the placement of cpumasks.
+> > +#
+> > +# With CPUMASK_OFFSTACK the cpumasks are dynamically allocated.
+> > +# Useful for machines with lots of core because it avoids increasing
+> > +# the size of many of the data structures in the kernel.
+> > +#
+> > +# If this is off then the cpumasks have a static sizes and are
+> > +# embedded within data structures.
+> > +#
+> > +config CPUMASK_OFFSTACK
+> > +	def_bool y
+> > +	depends on NR_CPUS > 256
+> 
+> Should that be ">= 256" ?
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
----
- drivers/gpu/drm/ttm/ttm_device.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+I don't think that ">= 256" makes sense. Note that since the cpumasks are
+arrays of unsigned long, they're chunked into groups of 64 bits:
 
-diff --git a/drivers/gpu/drm/ttm/ttm_device.c b/drivers/gpu/drm/ttm/ttm_device.c
-index d48b39132b32..a07d9ea919b6 100644
---- a/drivers/gpu/drm/ttm/ttm_device.c
-+++ b/drivers/gpu/drm/ttm/ttm_device.c
-@@ -98,8 +98,13 @@ static int ttm_global_init(void)
- 	glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32);
- 
- 	if (unlikely(glob->dummy_read_page == NULL)) {
--		ret = -ENOMEM;
--		goto out;
-+		/* Retry without GFP_DMA32 */
-+		glob->dummy_read_page = alloc_page(__GFP_ZERO);
-+		if (unlikely(glob->dummy_read_page == NULL)) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+		pr_warn("Failed to allocate dummy_read_page with GFP_DMA32, some old graphics card only has 32bit DMA may not work properly.\n");
- 	}
- 
- 	INIT_LIST_HEAD(&glob->device_list);
--- 
-2.43.0
+    2 to  64 cpus:  1 x unsigned long =>  8 bytes
+   65 to 128 cpus:  2 x unsigned long => 16 bytes
+  129 to 192 cpus:  3 x unsigned long => 24 bytes
+  193 to 256 cpus:  4 x unsigned long => 32 bytes
+  257 to 320 cpus:  5 x unsigned long => 40 bytes
 
+... and so if a mask for 256 CPUs is too big to go in the stack, so is any mask
+for 193+ CPUs, and so ">= 256" should be clamped down to ">= 193" or "> 192".
+The boundary should be just after a multiple of 64.
+
+How did we choose 256 specifically? I note that x86-64 allows 512 CPUs before
+requiring CPUMASK_OFFSTACK, and I see that powerpc selects CPUMASK_OFFSTACK
+when NR_CPUS >= 8192.
+
+Mark.
