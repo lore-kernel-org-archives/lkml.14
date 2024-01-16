@@ -1,99 +1,128 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED811AAA6;
-	Tue, 16 Jan 2024 11:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B851A581;
+	Tue, 16 Jan 2024 11:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrAkO70f"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7bed9c7d33fso251668639f.1;
-        Tue, 16 Jan 2024 03:02:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705402956; x=1706007756; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iqOqjkfvNIfCwRpg7jTDgB80yQS5ORpkHz9Fa7X1S9c=;
-        b=OrAkO70fjv5QRopgqk90QncS6gRcLWY3IV2qv4EVOd0sUgl4Y9zfy6I3nLwefTGuP7
-         6Rks5+5OJuItVqkEI68+DLiI4moZ7XvFmO2tahtaQf9ba2HbX03dxhG7MR5G9cBEaFti
-         sq3FzaEI1ch4fZtJCLnajAoN8I4T/jv0E26Bb9XzG+KwuPnO3UH1jNcoXotIRS5GUyoQ
-         puzK2uPtHIzn+YZFndXKduGriZcO4VFSLnRvMoyV6P+7Bcw5QGgC/tO7xToOKZXx8Y01
-         4qnYavnoGiRq4hzXEYJWCUAPX2PS4/3FkSF46p//BB1F68az7ETyoyqmdUG096obxHph
-         AQaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705402956; x=1706007756;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iqOqjkfvNIfCwRpg7jTDgB80yQS5ORpkHz9Fa7X1S9c=;
-        b=qK7kaTI0Zu5p8a+hxoaCQUhmQwfz2rfBSreO8v2dXqJ2lu7d34SozZGaFjBOExOO98
-         dt7Us9jyCdfmZpX43BTN6A1crM1CtVseiMILXrrOEiifIeHBqJx4mA3qNcA71J5R+osx
-         qehD764ZVKmR7PWWSxZ1iZD3fhoKn2vf2j4SUGfyAI19cjp49wLExzrCI9sEwZwBz5aw
-         0QCKTPW7v5NkhX8yRaKvOgXmVfo27PPLsUMY/XKZlX+Lw/ODFuvhjRJNAp2J04GdW2n+
-         9lmUJIay6OZf3cLONlMy6cR5bvgjsG+l50gdRDIO/TkcL1Qa8D9wxn25ZpmYf6zqYbeW
-         8N/A==
-X-Gm-Message-State: AOJu0YzEYwZxVq/8RLHHXptEsP9MQRT/6QI68I9T7BMYYANzVFVEAFaU
-	O62qPy4fwl31vHxnPlxP4Tw=
-X-Google-Smtp-Source: AGHT+IF38h5TsIuDvf7jRRrOoP3knyuGMZBka8shy/jppv+UyVYarH52O8H/Y20aE9ADQLOtd8MhTQ==
-X-Received: by 2002:a5d:8d16:0:b0:7bb:5d51:46c8 with SMTP id p22-20020a5d8d16000000b007bb5d5146c8mr7181165ioj.18.1705402955921;
-        Tue, 16 Jan 2024 03:02:35 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id i13-20020a6bf40d000000b007bf32234124sm1689273iog.32.2024.01.16.03.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 03:02:35 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Matt Porter <mporter@kernel.crashing.org>,
-	Alexandre Bounine <alex.bou9@gmail.com>
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rapidio: remove redundant variable tmp
-Date: Tue, 16 Jan 2024 11:02:33 +0000
-Message-Id: <20240116110233.2247061-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jh8KHJD2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GA4WR0CZ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jh8KHJD2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GA4WR0CZ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 98A4D1FB95;
+	Tue, 16 Jan 2024 11:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1705403066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=TsvTliU/AduXv8+lyjjkHnFNXCRZ5gTEvS/YJHnYT4c=;
+	b=jh8KHJD2XI9MNvwOKBGUV3u89KpaECwx+WHsbVQXnR+JIfp+stGXAiY4Ae3T/PehyN4fdt
+	if0vMud4Wh4bU/5SDKD+Cb4UfyGDTc5kl4ps3YJEQqzPJSBvMfJsi+xuoPwGlLg8t/L5wK
+	t7l1L0Cs2e0JX9sXf6pTOw0ozeSIH+o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1705403066;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=TsvTliU/AduXv8+lyjjkHnFNXCRZ5gTEvS/YJHnYT4c=;
+	b=GA4WR0CZZi+rJybJiMLoiP8UmdYjQ0ruP6PzcjWiLiql8N4mBmgQnyqll+JWMmeXxuCzoT
+	wiqtKQPK62AIiHDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1705403066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=TsvTliU/AduXv8+lyjjkHnFNXCRZ5gTEvS/YJHnYT4c=;
+	b=jh8KHJD2XI9MNvwOKBGUV3u89KpaECwx+WHsbVQXnR+JIfp+stGXAiY4Ae3T/PehyN4fdt
+	if0vMud4Wh4bU/5SDKD+Cb4UfyGDTc5kl4ps3YJEQqzPJSBvMfJsi+xuoPwGlLg8t/L5wK
+	t7l1L0Cs2e0JX9sXf6pTOw0ozeSIH+o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1705403066;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=TsvTliU/AduXv8+lyjjkHnFNXCRZ5gTEvS/YJHnYT4c=;
+	b=GA4WR0CZZi+rJybJiMLoiP8UmdYjQ0ruP6PzcjWiLiql8N4mBmgQnyqll+JWMmeXxuCzoT
+	wiqtKQPK62AIiHDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 274D4132FA;
+	Tue, 16 Jan 2024 11:04:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cYYzCLpipmUwMgAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Tue, 16 Jan 2024 11:04:26 +0000
+From: Petr Vorel <pvorel@suse.cz>
+To: linux-man@vger.kernel.org
+Cc: Petr Vorel <pvorel@suse.cz>,
+	=?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+	Alejandro Colomar <alx@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	Matthias Gerstner <matthias.gerstner@suse.com>,
+	Avinesh Kumar <akumar@suse.de>
+Subject: [PATCH 1/1] socket.7: Mention CAP_NET_RAW on SO_MARK
+Date: Tue, 16 Jan 2024 12:04:18 +0100
+Message-ID: <20240116110418.2577798-1-pvorel@suse.cz>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: ***
+X-Spam-Score: 3.54
+X-Spamd-Result: default: False [3.54 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 R_MISSING_CHARSET(2.50)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 NEURAL_HAM_LONG(-1.00)[-0.999];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.16)[69.49%]
+X-Spam-Flag: NO
 
-The variable tmp is redundant, it is not being read after the
-assignment and hence it can be removed.
+Added in 079925cce1d0 ("net: allow SO_MARK with CAP_NET_RAW") in v5.17.
 
-Cleans up clang scan build warning:
-warning: Although the value stored to 'tmp' is used in the
-enclosing expression, the value is never actually read
-from 'tmp' [deadcode.DeadStores]
-
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
 ---
- drivers/rapidio/rio-scan.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ man7/socket.7 | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rapidio/rio-scan.c b/drivers/rapidio/rio-scan.c
-index fdcf742b2adb..8f1bc69f7153 100644
---- a/drivers/rapidio/rio-scan.c
-+++ b/drivers/rapidio/rio-scan.c
-@@ -528,7 +528,6 @@ static int rio_enum_peer(struct rio_net *net, struct rio_mport *port,
- {
- 	struct rio_dev *rdev;
- 	u32 regval;
--	int tmp;
- 
- 	if (rio_mport_chk_dev_access(port,
- 			RIO_ANY_DESTID(port->sys_size), hopcount)) {
-@@ -562,8 +561,7 @@ static int rio_enum_peer(struct rio_net *net, struct rio_mport *port,
- 	rio_mport_write_config_32(port, RIO_ANY_DESTID(port->sys_size),
- 				  hopcount,
- 				  RIO_HOST_DID_LOCK_CSR, port->host_deviceid);
--	while ((tmp = rio_get_host_deviceid_lock(port, hopcount))
--	       < port->host_deviceid) {
-+	while (rio_get_host_deviceid_lock(port, hopcount) < port->host_deviceid) {
- 		/* Delay a bit */
- 		mdelay(1);
- 		/* Attempt to acquire device lock again */
+diff --git a/man7/socket.7 b/man7/socket.7
+index 3ff8fe51b..3ebfc770b 100644
+--- a/man7/socket.7
++++ b/man7/socket.7
+@@ -614,7 +614,9 @@ Changing the mark can be used for mark-based
+ routing without netfilter or for packet filtering.
+ Setting this option requires the
+ .B CAP_NET_ADMIN
+-capability.
++or
++.B CAP_NET_RAW
++(since Linux 5.17) capability.
+ .TP
+ .B SO_OOBINLINE
+ If this option is enabled,
 -- 
-2.39.2
+2.43.0
 
