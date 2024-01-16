@@ -1,151 +1,109 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C5C1DA54
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 20:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD4938395;
+	Tue, 16 Jan 2024 20:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705437677; cv=none; b=TGwjZydGioqeOkqGheuhUf0Q8kBZfECs4mnNEHmoxHXqTYWzTC/ydiSQrubDke9XfU3QQahwmDAQcs22pqjra9GSd9v5o1EvDzsaCaivCxRmA+Y1ZMec1064GyXFijJ6Sb8qnxR208zjeHgAb01hqNOR0HXcpmThDL22GSwGriA=
+	t=1705437683; cv=none; b=V+w8bwlwipFFH5pW4xm3KZeXkDJawG33CBNUnEN5uw2tJbWHJlvrmxKqcrV91m/mJ8IQ/RxYUKSgCkRtsLrjcb86TMP9qkGBPG/WhwwcSEu2zj+3mO4n7lkHtLJZscwQ35Y6XTQLLBusK/NY0473un4g8QrBaxrIyrmvKxIjrik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705437677; c=relaxed/simple;
-	bh=XmFU90GyA+U8ut8T6e6djiZu0XPsCMUd4t+6dR5k/+M=;
+	s=arc-20240116; t=1705437683; c=relaxed/simple;
+	bh=XCvYWP355Fhaawn/5OW3KCqVRZ0sq76+8/0cmtgC4+E=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=ibiYLKtGplbvgSYLgW1ebo8W/0RcfQZWXB4g5OB7/Q6eE7gGHOvoaLFC3ftnnfZCPBBuhYzp3U4vd0gYVropk7ay/qC2VU82NjjPT12SwAhKRvY4EX6gsMdqGTD5zLHwnzJS5gdbBeTW2T1Xcs5tGRmYKI2a+W/LpxkvZ9MGlJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ts8kRwMJ; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding; b=rS0r9tUvDgGTgVotPadpUFQqGiUyXXlpzzoH2HJd+QEWu1m2KGReSPTo6NGsneXKtqOG/SgbUP+SDU66MMaQyNWorsAXve55N0C1sqTIv3Nsy26wT9o7Yr2nrELAX7mdYhaf+DxXzo5o0ntevRnRplCJDt3A3EU93mBsa3qpDvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gqVUde53; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ts8kRwMJ"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5592d1bc4fbso3053660a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 12:41:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqVUde53"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-429be9fe952so39550531cf.0;
+        Tue, 16 Jan 2024 12:41:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705437674; x=1706042474; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8AV6p1YAjXVsg43aeNRRf1sOrvdKTjzDvVP/4t3Uwmw=;
-        b=ts8kRwMJ7xz5DRtwYSMjVvt/3uO8Mk5kzCamTuEYmMdzeGT7EBe2NyE0Otb3cblzYt
-         2Fi33guScgSGkYfWADGPm4Nbbs5LaBfqAHCnz8+Sv65iOvGeZBsx+LQYtVLWmWAUstZP
-         wJdftkwqWHauS0oqOEKmsrsvTJcerVuhN9CEsC/XaJgZDjLgPpsJMwc10n7SD8d5aXfg
-         AeSXgE6BxbgXkGKBHOpT6lH1DqwdY0r3EGtR7ysogsJMsXiSMCRvp4zYR7uMYvORS/qQ
-         Rcotp1HjIwuBCRIeyT7m1BRrLcCxA+cFVgoYqrIDVC1KkpHUp3fL3FpXR55AknIVe6cA
-         dl5w==
+        d=gmail.com; s=20230601; t=1705437680; x=1706042480; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xKvjgEuWJbSxEFFzQ1IdsdgMBmwT8jOSBvK770lzRTk=;
+        b=gqVUde53KYqc4NgXkb4CK3vTrbAdbfO89o/6v3jyHWpbZwklI6HD0jJO09jB8oIs8s
+         OklonKEvIEWwotZqlcGi/JEWUTbKWGEcfRbwE/mPWAzXbLQvAaZli+J1EgPmgvDyR9md
+         iKAcNCecj2UKkCJ9GUpvSoVEylgW6AyiU6S4ckpGtd3jZMSof5U4N3LqxbtRqqRcL44l
+         97QvLYeQj5hwjWuhk1mgeAHKiCFoRKP2nylphwlOre/bV2P66tlI5VK9w1FRpR8CR/GM
+         joO4LX2M13MIZwj7hbWqo+Gvd3CXL9K2dwT3WvP8kw2ta7HVlJRTPBBcj5nWsu/f+7an
+         dguA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705437674; x=1706042474;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8AV6p1YAjXVsg43aeNRRf1sOrvdKTjzDvVP/4t3Uwmw=;
-        b=OipJxy7ahv+D/0sLgwVv+R6xHdF/uHxcvV7RlNNHuwPkxOSlQ88h5H4pbk5BrNRAiI
-         tRJopArbmt/vmoFBt4OK2+ptI9Uzob1Iuak6+PXffaZz1XsOmrkB+Yiq/Y2ItYB8TLUJ
-         Xu4UimugJmcGm1JMgRdwpLHJrh14Qta8aaA/NwOd68AUzDdDK17PDIqnm5iu9d38mR0E
-         OkLyAdt5BZopGAYC6X+IUvDJqFiRXpvKEMcpEfCNIyz0ogCZ5shRfBGm956+VMLRoF+D
-         2xLx+t1O6Ux3CLBkdoIiOtQf71Viy26Zq9S/XCM3kB2NusOR6prz3uCPuHPtttPp3wby
-         JYGA==
-X-Gm-Message-State: AOJu0YyzH0wGb9vsr+yuT/B/A3d2svPEoffkLrP0niDof/KwlO67iRMK
-	/zNM8cyDfiHVcj9kp+nQuhza3aP/FKuxug==
-X-Google-Smtp-Source: AGHT+IGl3VYM7br1rpA/tGxzWdbWhI2812qneSnFAhbs4UAwfYByZSo0BgNBilsbNauRHKNOQNbOTA==
-X-Received: by 2002:a17:906:c2d9:b0:a2b:969a:bb3b with SMTP id ch25-20020a170906c2d900b00a2b969abb3bmr3960198ejb.122.1705437673899;
-        Tue, 16 Jan 2024 12:41:13 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id ot8-20020a170906ccc800b00a28a8a7de10sm6904562ejb.159.2024.01.16.12.41.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 12:41:13 -0800 (PST)
-Message-ID: <05691d0e-2d23-4d0d-a773-13ec6305a5a0@linaro.org>
-Date: Tue, 16 Jan 2024 21:41:12 +0100
+        d=1e100.net; s=20230601; t=1705437680; x=1706042480;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xKvjgEuWJbSxEFFzQ1IdsdgMBmwT8jOSBvK770lzRTk=;
+        b=p2vRzbQHaUSpdpQurqw4EW66+NHGHPXl1QTbP+FfUaoS2EmIPO8iFUKH7aSxUfbgfC
+         RaZEsCBtnrTcIjQbZMBvwSFMULkWfNb7EIBwoZnl7/qll3kyFEdbOcVr1e6hkhnNrOph
+         ySssQHjOMk/BOxQavYUX1xvmPiFoyPBFgGaaG7IS00OOAn4i5t+rko9ZI8zMujOCC3w2
+         Xl/e0wtebOyPBlW2LfA0VTF4ji1LK/wm/Pa81A32/VtjAL0CjNFA7/RBnIVr2EzAp+tP
+         7JHCzANP9j42OUZf/IntgCzYBRDSeSDVlsyJaEGF43pAnNy8hkNe2NIMAlUkI+cuMfG6
+         J7vg==
+X-Gm-Message-State: AOJu0Yzt6CiZ7a5RpaakmHfy1OaHfD2QFy1lgmnRYPO3/cnR5w0/XsG6
+	oitxRpRSynM5d7LJCzyrp1j64RSKA/A=
+X-Google-Smtp-Source: AGHT+IGKcQ/SAihBdD6ihNwYRSNgO2+0Zfozh06Nmkz6o8mmNBZYDS1QuN1HRT5DTCFw6RwZ6BJ8AQ==
+X-Received: by 2002:ad4:5bc3:0:b0:681:78b8:1058 with SMTP id t3-20020ad45bc3000000b0068178b81058mr844835qvt.49.1705437679920;
+        Tue, 16 Jan 2024 12:41:19 -0800 (PST)
+Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
+        by smtp.gmail.com with ESMTPSA id d10-20020a0cfe8a000000b0067f454b5307sm4419061qvs.108.2024.01.16.12.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 12:41:19 -0800 (PST)
+From: Trevor Woerner <twoerner@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH 1/2] arm64: dts: rockchip: rock-pi-e: adjust phy-handle name
+Date: Tue, 16 Jan 2024 15:41:01 -0500
+Message-ID: <20240116204103.29318-1-twoerner@gmail.com>
+X-Mailer: git-send-email 2.43.0.76.g1a87c842ece3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v22 7/8] arm64: dts: nuvoton: npcm8xx: replace reg with
- syscon property
-Content-Language: en-US
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com, joel@jms.id.au,
- venture@google.com, yuenn@google.com, benjaminfair@google.com,
- openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240108135421.684263-1-tmaimon77@gmail.com>
- <20240108135421.684263-8-tmaimon77@gmail.com>
- <23fdd643-ae30-474b-93b0-fb98edeb0071@linaro.org>
- <CAP6Zq1i88mx8hfE-Ui_yMDOUxB5YofyyRSygBY8zuPq71ptHqg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAP6Zq1i88mx8hfE-Ui_yMDOUxB5YofyyRSygBY8zuPq71ptHqg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 16/01/2024 20:39, Tomer Maimon wrote:
-> Hi Krzysztof,
-> 
-> Thanks for your comment.
-> 
-> On Wed, 10 Jan 2024 at 22:59, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 08/01/2024 14:54, Tomer Maimon wrote:
->>> Replace reg with syscon property since the clock registers handle the
->>> reset registers as well.
->>>
->>> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->>> ---
->>
->> NAK for the same reasons as previous patch.
-> Will explain more in the commit message
+The rock-pi-e currently comes in 4 board spins, the latest one (v1.21)
+swaps out the Realtek 8211e PHY for an 8211f PHY. Therefore modify the
+phy-handle name to be more generic.
 
-No, this wasn't even tested. Build your code with W=1 and fix all
-warnings first. But anyway this is not the way to go.
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts
+index 018a3a5075c7..096cfa19036e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts
+@@ -146,7 +146,7 @@ &gmac2io {
+ 	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
+ 	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
+ 	clock_in_out = "input";
+-	phy-handle = <&rtl8211e>;
++	phy-handle = <&rtl8211>;
+ 	phy-mode = "rgmii";
+ 	phy-supply = <&vcc_io>;
+ 	pinctrl-names = "default";
+@@ -163,7 +163,7 @@ mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		rtl8211e: ethernet-phy@1 {
++		rtl8211: ethernet-phy@1 {
+ 			reg = <1>;
+ 			pinctrl-0 = <&eth_phy_int_pin>, <&eth_phy_reset_pin>;
+ 			pinctrl-names = "default";
+-- 
+2.43.0.76.g1a87c842ece3
 
