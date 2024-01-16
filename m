@@ -1,237 +1,155 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2127.outbound.protection.outlook.com [40.107.6.127])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64CC1BC3E;
-	Tue, 16 Jan 2024 11:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TDn3m4dBZz1wn3N;
-	Tue, 16 Jan 2024 19:34:44 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4810F1A016B;
-	Tue, 16 Jan 2024 19:35:03 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Tue, 16 Jan 2024 19:35:02 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH 3/3] perf: script: deprecate the '--xed' option
-Date: Tue, 16 Jan 2024 19:34:37 +0800
-Message-ID: <20240116113437.1507537-4-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240116113437.1507537-1-changbin.du@huawei.com>
-References: <20240116113437.1507537-1-changbin.du@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ACE1B800;
+	Tue, 16 Jan 2024 11:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kontron.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kontron.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="U/ce1Mgk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZvIe/3Mcwv/BRQfnAS07zi7moT/OssZ3QtpE13OtlGpkefHbyz6uLOG4IviT4QFF9O//oO6XEE+yHxUSJ8IxUTI0J1CysXW6sPmGgbwCsVKweiSkEFe/cnM17BNhCnsYFph6psgjx62vlfpP5B0VZBhkGos6nuOuNbyxov9jMLwT7Sf3w5FMI1rvIlm0dnbXXQbFN/A4Rv7ce2IQfZV0CWGtNuHvExD4b8W5/TOkO0X3RHFFnIGgOv9XmD3psG23vd/+OQUes6ODUGWu8HWf2zbtNG3Qi8Izin+vxuBIT/XI1eVq8StPUYSvMOvgUxmoItexY+tfxDqdYsNaAhKqUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2QtwA8IOOQZGoAbs29LfzS6BSh2yfFZ2wWkMHJm+9+8=;
+ b=MQNTFLlTrvG3aXp75/LNKeUu4II412gQDUrooW7Cypa2EYWQa0pcURH6rQ9VbF3ENogDFGmyRHXwHLbin/O6dx3Q0S5Hn76Uhl+bhgR5PJ8CZusKrVQNxudhL5ExoeGdo0qRm5I1C0e3YQyCDpsvkA3pUqaAbLtS7ZSDW68MPg14vSSFhDc9Gd+d8PxIbfRi1XjfNDtC3MHPhL5j4zvSzqTFb7Jn/sqpscYdlJNPrJ20AKAX/TDjdVrZbw5txe7rHujEaa1mbufDSzM48G3OTpFSulvgxzISK9QjDTLSI421v3P6tQuejuA0PqWsqyQn1u/8pr+SA6sv5jyrkYDPRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2QtwA8IOOQZGoAbs29LfzS6BSh2yfFZ2wWkMHJm+9+8=;
+ b=U/ce1Mgk+Gd2CI7wyozU5EGhIKpxPRQ/FulMTCBsmhxwyLgEwq2SGi9p30C6JP/aAXuOYSPhRM8WdlGqzSkV0uRjTPFO72OoT9P9ShB3eacGeKw8q10saF76u3xScVojyEb5LuXbzyGeqCL8yWZCT8zkbZ0x//HhjCV2xW4SFkQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kontron.de;
+Received: from PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:263::10)
+ by AS8PR10MB6150.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:548::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.23; Tue, 16 Jan
+ 2024 11:36:50 +0000
+Received: from PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9ecf:9946:bc16:21e6]) by PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9ecf:9946:bc16:21e6%6]) with mapi id 15.20.7181.020; Tue, 16 Jan 2024
+ 11:36:50 +0000
+Message-ID: <6ca830f6-09cd-433a-ae85-d8f4038dad90@kontron.de>
+Date: Tue, 16 Jan 2024 12:36:45 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] ARM: dts: imx6dl: Add support for Sielaff i.MX6 Solo
+ board
+Content-Language: en-US, de-DE
+To: Fabio Estevam <festevam@gmail.com>, Frieder Schrempf <frieder@fris.de>
+Cc: Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
+ Rob Herring <robh+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Andre Przywara <andre.przywara@arm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>,
+ James Hilliard <james.hilliard1@gmail.com>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ NXP Linux Team <linux-imx@nxp.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>
+References: <20240116105317.267525-1-frieder@fris.de>
+ <20240116105317.267525-4-frieder@fris.de>
+ <CAOMZO5DONvb8GpH0PrBaa_EW+br6jWeMC=Jx_y_Etz1EUg11mw@mail.gmail.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
+In-Reply-To: <CAOMZO5DONvb8GpH0PrBaa_EW+br6jWeMC=Jx_y_Etz1EUg11mw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR3P281CA0046.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:4a::12) To PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:102:263::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR10MB5681:EE_|AS8PR10MB6150:EE_
+X-MS-Office365-Filtering-Correlation-Id: daf5d03d-b876-4d38-bce7-08dc16876dd1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	JtoQg3Gb1ugJ+M9j2U0MlfYLX3uc+n7gzmMXW5bzPpRXmSzIEkNH3j/iNFHMRu1wSYN19Vy6ITcgZSMZQdo2j7vT9Y6/ZKuY1tzHagXU4z9/SdQYM6gQtKMyCQUVEe1ELGPqen8o0cxi6+Rrz0JzxZl0259eeV2RV/mg8hlmOhfTRSduR+u6hMiDNGzXhZz4aMVGEOq7ICk3giQQdsIjGODxckmq1EEgQ2ffeLM2/jwUcg49O90+G/7SUnCvEsg7jk/MdGv56EZGNUvEwBnKwXRXj+GgrA1/hKf3ZUI+OPrsQ+j3KQ+7hMlTwxq0vO9Ap5JX0lR+19vbqaS7HBakM80dOpe39uWqUfK7wnURoCthWJrzgKO0xBjcOVkO4fyA3E8rFiMMaUaTrOhUTGK8aCNyQkHN7WQ7ZQ+ql1tc4AL7DBr6mC7Xsy/0YntepXoU/sckn3+d09U83F5dll0ptuAMc6PV+bBnQptzBzhGMMn75B96A0uWZegyG/BtsgzrKh/w2ZEDmLlhY4ob5axVefo05pe2MPd88Bh9/qZtX1sxjwy+12OWpxRGFjWXkMd4FEyhU8gW76PJXF15Llf3RpBv/YYdvpMGb9w4AC7hIgT3J4HJfF3rmho+yQD9/L2Nec10n4PMsBipbIRgaE63wVmFV/qzANAxssVGNuLN1pw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(39860400002)(396003)(376002)(346002)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(38100700002)(41300700001)(6512007)(31686004)(36756003)(7416002)(2906002)(5660300002)(4744005)(83380400001)(26005)(2616005)(53546011)(6506007)(44832011)(478600001)(6486002)(6666004)(66946007)(66556008)(66476007)(54906003)(31696002)(316002)(4326008)(86362001)(110136005)(8936002)(8676002)(32563001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Mm02WFNYazZKZ0QyUjNESnNNZXN2WTBsRjFSWktyNlFuendoWlZMdzJvRHcw?=
+ =?utf-8?B?YUxVSjBybVpCcHB4ZHBFczZZR055c09FNUF2ZnRXdWFsR2U3ampCR3Z3VHg5?=
+ =?utf-8?B?QnRYQy9hUzhleUVwZ0R2VjkvZUdnKzIzUnVzYlJPQnNpaHhpVkRkcTEvMVlD?=
+ =?utf-8?B?TnhjRDY0WDVyT2UrS210M1lLeHBVTk5GQnJmS1lLM2ZMMHl0RUlPc3ZiWkdF?=
+ =?utf-8?B?ZHZheS9rYkk1a2hyUVhXenJnVlBnRm5oNDNJU2hubjd5MExwYUxJUjJXRXQy?=
+ =?utf-8?B?b3dXdmQ0ektyR05iYkM1VnovcTZKbW1zbUQ3VWRtdExUcWZUZ1JYa0tXVmhH?=
+ =?utf-8?B?TEVkcWFsMnZXaTNxL1phQ1NiZjExUWlZRXBncllJZ0F6UEdyT1Y1bldTbXB4?=
+ =?utf-8?B?SnJ6MVJHWVB4NjhhN0UyeWJ4NGpoQlZnUE00dDF4YkhIUko5QnprN2t2NFZH?=
+ =?utf-8?B?T1Y3eDdoMS9zV2QyOEhJTS8rRjhnYllUUjZlbmtGQ3didnpwMG9DYllLeUF1?=
+ =?utf-8?B?VVBqYmF6OEY4ZHRjTkZjcW5GenN5alF4T0pNeVQveG9ZZ1ZjVm5XeDBWSWFM?=
+ =?utf-8?B?MUFKdXNHVWxXRVhNVEErVHAwQ2lCcklVQmtNei9jaytFMDlnemtnalh5T2Vl?=
+ =?utf-8?B?dURnRU5FdDFvTkhkdFBrb1lWcEkvSUJGbDFIODJkRGo4WitIdkUrdzF4VTFQ?=
+ =?utf-8?B?VE5WK0QxNm5rWmwzRG4xaGFRK2IxM1dGeVV1b0R0SFNjNWgvK1M0Zmg5YW9v?=
+ =?utf-8?B?dmJxcXVBWmZ0R2tSQnpDbmlUbGdxRU9FUG03SmZ0bzMrMEIvWXNRUGUrdEZV?=
+ =?utf-8?B?SHMxdXZvV3c3Z2JFQ1V6MnhBT0JHS0RCQVlNQ2NzaVdJbW44VUR2SFE1amNt?=
+ =?utf-8?B?Z1ZnNkN6enJZTXlNY0hSbERIUXgvd1dnK25vZGZCbkxnb3dWeGNoUDU2WlhP?=
+ =?utf-8?B?STB4MXIzWnRjRkZNZVRyYmhmcHBVV29Va2krem9FVnM5bXdTSGJOOEQ5NGVK?=
+ =?utf-8?B?eWdTOWJZZ0NKbWJlQmlWVGxiWE5YK0NSMnJGdFdHZ2h6WVBqWkFZYzI1VkZT?=
+ =?utf-8?B?NUszOUEza2JLSWVzZE55Z2hRZmNVRXNlSWkrcUI2MGZMNFFaclo0M2h3bWZC?=
+ =?utf-8?B?Mlp4aTdOZnlqZmVVbUpMOGpHY0F5Mlh6VVhuaDd2ZjVucnFtVFE2UXFQOWRs?=
+ =?utf-8?B?MExOb1dOb0lQTTdDT3J3cFlBVm4rb2hDQ0VtN3RXTVRGWlArYzg4NGVqb3dq?=
+ =?utf-8?B?a1l3VDhMSGdiSUdDbTRFdCt0RHhTb1FaRnNWajVDQjNZREtPaWI0N3FNYVpq?=
+ =?utf-8?B?aEYva1ptRGJWR3RHMmJRU3ZySDYwOVRkQkNJVnZhMjFRU0lKdHJKL2tEdktm?=
+ =?utf-8?B?NDRWRFpza3R1YXpmNVI5TVN2Z0FRaTVxTXlCQ1pma3QvUFltNGd2bFFpYkhi?=
+ =?utf-8?B?ZlcvaVllTW1XSVgyRzVDSFpSdXBSQTM3akkyeDIvTnFUUGoyZEVvVlFlRUFi?=
+ =?utf-8?B?czl1QzZXaElSWlJERFhIamNqMGl1VitJK0RxWTJUVVUzOE8yVjVMc1B1ZmNq?=
+ =?utf-8?B?TkRDMkVyNTg5T2hQWXI4dUZObWRVMXA1RmxiSlBVOFprazBJeDVoTmt3bEVx?=
+ =?utf-8?B?dXRRWjZrYXVlUzhzSUdFeE9pUWVTSWVnVlI4SjQweVlxN1IvMzlnUmNQMXRX?=
+ =?utf-8?B?TlhJbFNlMzlPWElrWVQwMDA3SCtVaHNJcC9adnNydCtOZ0pzNHVVTVJ2ZjE5?=
+ =?utf-8?B?NnkwbHVhOGNuQ2dPQ3dKallqT3J0cjA4SGgwenU4aUJiZ0tuNlNWVmJNMWxo?=
+ =?utf-8?B?VmFDRHFDWHBJa2NSMXlQU0JRQmIxRmRYQzZCMEFZS3JqaHduK3gxRDNpTnRS?=
+ =?utf-8?B?TFpZdjBKM3h2UnZWaHFrcExnVG9HNjNBa2FZV1V1d3BObzRzai81VS8rZE1y?=
+ =?utf-8?B?U1FDOEVYVXNwclgvWS9jcHlFejZBNWVZd2xEbzJSUE9tUmFKd1h5V2l2OXBH?=
+ =?utf-8?B?a3BleWZMNXM3Y1Zhd2R0dmhkbEVpZVJpS05tb3BkWVhnaW1Rb1BJSUFraUQ1?=
+ =?utf-8?B?L1dWMDUzanhHbkdQcHFMUHhwWnlLcUtRZW9wM1JndldVa21STEQ1cTlNU2wy?=
+ =?utf-8?B?WWJmSDhTR1FPM1dPQ1I5OXdhNVpsQXkrVnUzUE01V1JFZCt1NlJVMS9yWTIx?=
+ =?utf-8?B?cFE9PQ==?=
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: daf5d03d-b876-4d38-bce7-08dc16876dd1
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 11:36:49.9965
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OH8w0irsuCn1wMj5KtQ4rXKX6kLe0XZpGeQJEkKj6Qb2h5MKuKaOtHFvbUWl96YNg3Wgvqq45/5cQpED1iJHdKyQ77IzWPfa20oA6tPp3c8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB6150
 
-Now perf can show assembly instructions with libcapstone for both x86 and
-Arm. So the old '--xed' option should not be used.
+Hi Fabio,
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/build-xed.txt     | 19 -------------------
- tools/perf/Documentation/perf-intel-pt.txt | 17 +++++------------
- tools/perf/Documentation/perf-script.txt   |  5 ++---
- tools/perf/Documentation/tips.txt          |  2 +-
- tools/perf/builtin-script.c                |  7 ++-----
- tools/perf/ui/browsers/res_sample.c        |  2 +-
- tools/perf/ui/browsers/scripts.c           |  4 ++--
- 7 files changed, 13 insertions(+), 43 deletions(-)
- delete mode 100644 tools/perf/Documentation/build-xed.txt
+On 16.01.24 12:21, Fabio Estevam wrote:
+> On Tue, Jan 16, 2024 at 7:54 AM Frieder Schrempf <frieder@fris.de> wrote:
+> 
+>> +&i2c3 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_i2c3>;
+>> +       clock-frequency = <100000>;
+>> +       status = "okay";
+>> +
+>> +       st1633@55 {
+> 
+> Please use a generic node name.
+> 
+>> +       gt911@5d {
+> 
+> Ditto.
 
-diff --git a/tools/perf/Documentation/build-xed.txt b/tools/perf/Documentation/build-xed.txt
-deleted file mode 100644
-index 6222c1e7231f..000000000000
---- a/tools/perf/Documentation/build-xed.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--
--For --xed the xed tool is needed. Here is how to install it:
--
--  $ git clone https://github.com/intelxed/mbuild.git mbuild
--  $ git clone https://github.com/intelxed/xed
--  $ cd xed
--  $ ./mfile.py --share
--  $ ./mfile.py examples
--  $ sudo ./mfile.py --prefix=/usr/local install
--  $ sudo ldconfig
--  $ sudo cp obj/examples/xed /usr/local/bin
--
--Basic xed testing:
--
--  $ xed | head -3
--  ERROR: required argument(s) were missing
--  Copyright (C) 2017, Intel Corporation. All rights reserved.
--  XED version: [v10.0-328-g7d62c8c49b7b]
--  $
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 2109690b0d5f..15ae7be599e4 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -115,9 +115,8 @@ toggle respectively.
- 
- perf script also supports higher level ways to dump instruction traces:
- 
--	perf script --insn-trace --xed
-+	perf script --insn-trace
- 
--Dump all instructions. This requires installing the xed tool (see XED below)
- Dumping all instructions in a long trace can be fairly slow. It is usually better
- to start with higher level decoding, like
- 
-@@ -130,12 +129,12 @@ or
- and then select a time range of interest. The time range can then be examined
- in detail with
- 
--	perf script --time starttime,stoptime --insn-trace --xed
-+	perf script --time starttime,stoptime --insn-trace
- 
- While examining the trace it's also useful to filter on specific CPUs using
- the -C option
- 
--	perf script --time starttime,stoptime --insn-trace --xed -C 1
-+	perf script --time starttime,stoptime --insn-trace -C 1
- 
- Dump all instructions in time range on CPU 1.
- 
-@@ -1243,12 +1242,6 @@ To display PEBS events from the Intel PT trace, use the itrace 'o' option e.g.
- 
- 	perf script --itrace=oe
- 
--XED
-----
--
--include::build-xed.txt[]
--
--
- Tracing Virtual Machines (kernel only)
- --------------------------------------
- 
-@@ -1306,7 +1299,7 @@ Without timestamps, --per-thread must be specified to distinguish threads.
- 
- perf script can be used to provide an instruction trace
- 
-- $ perf script --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script --guestkallsyms $KALLSYMS --insn-trace -F+ipc | grep -C10 vmresume | head -21
-        CPU 0/KVM  1440  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                movq  0x48(%rax), %r9
-        CPU 0/KVM  1440  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                movq  0x50(%rax), %r10
-        CPU 0/KVM  1440  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                movq  0x58(%rax), %r11
-@@ -1407,7 +1400,7 @@ There were none.
- 
- 'perf script' can be used to provide an instruction trace showing timestamps
- 
-- $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace -F+ipc | grep -C10 vmresume | head -21
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                 movq  0x48(%rax), %r9
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                 movq  0x50(%rax), %r10
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                 movq  0x58(%rax), %r11
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index ff9a52e44688..74a0bc2e117f 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -442,11 +442,10 @@ include::itrace.txt[]
- 	default, disable with --no-inline.
- 
- --insn-trace::
--	Show instruction stream for intel_pt traces. Combine with --xed to
--	show disassembly.
-+	Show instruction stream for intel_pt traces.
- 
- --xed::
--	Run xed disassembler on output. Requires installing the xed disassembler.
-+	Run xed disassembler on output. (deprecated)
- 
- -S::
- --symbols=symbol[,symbol...]::
-diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-index 825745a645c1..5e1182514730 100644
---- a/tools/perf/Documentation/tips.txt
-+++ b/tools/perf/Documentation/tips.txt
-@@ -15,7 +15,7 @@ To see callchains in a more compact form: perf report -g folded
- Show individual samples with: perf script
- Limit to show entries above 5% only: perf report --percent-limit 5
- Profiling branch (mis)predictions with: perf record -b / perf report
--To show assembler sample contexts use perf record -b / perf script -F +brstackinsn --xed
-+To show assembler sample contexts use perf record -b / perf script -F +brstackinsn
- Treat branches as callchains: perf report --branch-history
- To count events in every 1000 msec: perf stat -I 1000
- Print event counts in CSV format with: perf stat -x,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index c32a326e660f..9768d00323e6 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3776,10 +3776,7 @@ static int parse_xed(const struct option *opt __maybe_unused,
- 		     const char *str __maybe_unused,
- 		     int unset __maybe_unused)
- {
--	if (isatty(1))
--		force_pager("xed -F insn: -A -64 | less");
--	else
--		force_pager("xed -F insn: -A -64");
-+	pr_warning("xed option is deprecated\n");
- 	return 0;
- }
- 
-@@ -3915,7 +3912,7 @@ int cmd_script(int argc, const char **argv)
- 	OPT_CALLBACK_OPTARG(0, "insn-trace", &itrace_synth_opts, NULL, NULL,
- 			"Decode instructions from itrace", parse_insn_trace),
- 	OPT_CALLBACK_OPTARG(0, "xed", NULL, NULL, NULL,
--			"Run xed disassembler on output", parse_xed),
-+			"Run xed disassembler on output (deprecated)", parse_xed),
- 	OPT_CALLBACK_OPTARG(0, "call-trace", &itrace_synth_opts, NULL, NULL,
- 			"Decode calls from itrace", parse_call_trace),
- 	OPT_CALLBACK_OPTARG(0, "call-ret-trace", &itrace_synth_opts, NULL, NULL,
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-index 7cb2d6678039..382f1fb07a73 100644
---- a/tools/perf/ui/browsers/res_sample.c
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -83,7 +83,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		     r->tid ? "--tid " : "",
- 		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
- 		     extra_format,
--		     rstype == A_ASM ? "-F +insn --xed" :
-+		     rstype == A_ASM ? "-F +insn" :
- 		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
- 		     symbol_conf.inline_name ? "--inline" : "",
- 		     "--show-lost-events ",
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 47d2c7a8cbe1..056c51a95712 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -37,7 +37,7 @@ void attr_to_script(char *extra_format, struct perf_event_attr *attr)
- 	if (attr->read_format & PERF_FORMAT_GROUP)
- 		strcat(extra_format, " -F +metric");
- 	if (attr->sample_type & PERF_SAMPLE_BRANCH_STACK)
--		strcat(extra_format, " -F +brstackinsn --xed");
-+		strcat(extra_format, " -F +brstackinsn");
- 	if (attr->sample_type & PERF_SAMPLE_REGS_INTR)
- 		strcat(extra_format, " -F +iregs");
- 	if (attr->sample_type & PERF_SAMPLE_REGS_USER)
-@@ -107,7 +107,7 @@ static int list_scripts(char *script_name, bool *custom,
- 	if (evsel)
- 		attr_to_script(scriptc.extra_format, &evsel->core.attr);
- 	add_script_option("Show individual samples", "", &scriptc);
--	add_script_option("Show individual samples with assembler", "-F +insn --xed",
-+	add_script_option("Show individual samples with assembler", "-F +insn",
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
--- 
-2.25.1
+Ok, I'll change the node names to touchscreen@55 and touchscreen@5d.
 
+Thanks
+Frieder
