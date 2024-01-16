@@ -1,166 +1,196 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB1235F03;
-	Tue, 16 Jan 2024 21:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E555835291
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 21:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705441263; cv=none; b=aRy9C7qBozfjrUF3O2Qb7+UB3SZXaLfofm2Q/0TG+BhnWeTLxKP6FsyeQJrR6+K4UAcnqdOCQs663T25m1H2Z6/nps+l0gNzpda1DBw1ooNXbwNPSuYFHmh03Z9J1I2gW9yHY+fWNLdO+avr7x7QJ4TjdywDHKrRpTOINufpoNk=
+	t=1705441288; cv=none; b=Iq/tXRZVTN1q0OovC5yV3sXuMwnBSCN6vCPmxWwGAQLGh2SloXJxsih55qW0HIbg3GSV/CPZNHiqZmU8R/9WiEvUNYg78Nwmk79du5/vUpsNjkJkC6qYfbh07oXSF1hbTV3RpnN73h/CH/x/rE20myQ3BfgHMcHESUiqyZoDCh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705441263; c=relaxed/simple;
-	bh=5s8DRDqJVBVIIn+xD56hZynbIPJpLvIaUigTrdQ0amc=;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:X-B4-Tracking:To:
-	 Cc:X-Mailer; b=UsLRyOhPc8GX/9nlwxgfK+JoQxNpsaYP8YA14Vsf1Bgl/ZNgtvojU+/2PVzJFE7FGsIlEGK+VSWi7yCu4im4LYFz6dC4BUTFeUgoQLU+RhPbAMTozbJc2iQphFiEJIgXrJP/C+NCLNxfc2OQW3Wz5x4+jE6Hdc2d5r6E6e56S+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QRqih3UW; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1705441288; c=relaxed/simple;
+	bh=/LJidhTBr1TIpVkob74VQJvRJ4hEMWmnye+c9nRvJu4=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=jl3vMiUIqRcYslkpEW4A/5P0R8hQmipclLKiva80R7HNhz6+96KZ+b4+myPR4C/BqUoO8eS4Qo5y5iMUq4H6R4Llae3i4dAGmTK24zM1Jy5/dADBAL6UF/dzJh+paZ4/QitGstJzj1AGFa3gfcdj1sXe6vQmmWyl9XlVRsm+yAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LOb3vEPF; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QRqih3UW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705441259;
-	bh=5s8DRDqJVBVIIn+xD56hZynbIPJpLvIaUigTrdQ0amc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=QRqih3UWL6XALeYEJ3G3ySQNdQ6DRqtlu4INp/1PR3Ti+VUZiaBL29MQSdn1xwhnu
-	 Sb+vCARcXJmIow58sB022+q38ZNuEpUtBdNSXnZiVNz6WZK8ZdiC0xzyVNxkQEut6V
-	 uwx2bjhctlJnP7EVCTARg+Dgi51FfMoMsRvtDbSAchYw0XvMPXZhC+etI31NED4cHS
-	 KCZr8yYQ+G+Vwlh4c4Yntz68gesABsIA69nFsE/lEjYE6Pc7glZeNc0CZCjb8lbfpY
-	 rGl6Ur8VmZktvKcp0xT6LY1DkCdBQvRT0ECKaEVC8vyZ+5UGRI3XuSgYKGduvgnf+1
-	 ogLV6l3RcwKGg==
-Received: from [192.168.0.47] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0E6A1378000A;
-	Tue, 16 Jan 2024 21:40:54 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Tue, 16 Jan 2024 18:38:34 -0300
-Subject: [PATCH v3] arm64: dts: mt8183: Move CrosEC base detection node to
- kukui-based DTs
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LOb3vEPF"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-467010c1c72so5801506137.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 13:41:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705441284; x=1706046084; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ef0uuGFlu4TkR3S/PSmAQYeICoa3SoldbUHXTDWaWbk=;
+        b=LOb3vEPFzLM6fz1hE+kguHNcSWiSjFTFiWi7wZcOHdBo/Qw/DCMS3c1CjAt4uWFNKW
+         DRdeBbDxiPLN+f9WpqoA8UQs3i77Z9UnC9+zmzyVqS2tlkD60ErYYEal6BWxfwK/gI71
+         gV7guM8xaZLnYBi7426dsmnf8H2xlN2jARPoOq98Xn5174ziyrubMAjRIt9G/liYS21d
+         5aAiKs3M4QFWrlWbJ/pXa/uJTbWmabh2QAwU9/L48YlJTQ0AliOQ4/wDCBG+wOVpnW7b
+         J7T7OEuK1mhcDT6qalT/fcsddxqri2uzlud/B8ZIU9Y4g5dEz+kY9aHmGTl+DcPMwhdM
+         zQuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705441284; x=1706046084;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ef0uuGFlu4TkR3S/PSmAQYeICoa3SoldbUHXTDWaWbk=;
+        b=Hr780749aMt6Ci6JR19bEISUpIBq7RF8k/wBIM+RwMNpAx5ic4594kT7Jdz78oSuvv
+         eQ7YO1jkvi5/d76LHTJqDjIZrCkc3dv50fpDZ3Yh1CsjsaDS4XdJvpRKxroM5D5BwZsd
+         qH0z85LPMUVURe32oxtAOCigWRRE7M964Fmum5X2uu4a3NAm3cwH4Ut9ViqhHbVtVu9I
+         xd4ZJgK364P7MNYEVIleaXmvt7PaNzZ7GdXlh3J3r0RYUbTNBkek2syPNgCUYrsd1k6G
+         fHSvccuHmOyzW+YzDOLJVpUOmRo6xoqQ8qiXHGx+XRJkBO6KB/uCiyu1DAHr0v0gl5EN
+         xzqw==
+X-Gm-Message-State: AOJu0YwMkLSuhGRX1fbwX5EVb+iOu0nLCt2/8aMXYf97er4xvX1oRZiV
+	RUAe3uQg/fXDdOWPXkNwxR55ZGVkpHqRwi+sYEcNG0j5NbXfBA==
+X-Google-Smtp-Source: AGHT+IFmCZALerJPM8J0+yd5E6NTsF8sIZkFEH/Cm99GpS2xyCSz9bGTxCqGMHQSSQWncMPJb0wifoW6pfWzXgU7Iro=
+X-Received: by 2002:a05:6102:3641:b0:467:fb20:6a44 with SMTP id
+ s1-20020a056102364100b00467fb206a44mr4737690vsu.26.1705441283716; Tue, 16 Jan
+ 2024 13:41:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240116-mt8183-kukui-cbas-remove-v3-1-055e21406e86@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAFn3pmUC/03MTQ6CMBBA4auQrh3SHyzoynsYF0MZpIFSMgViQ
- ri7jSuX3+K9QyRiT0nci0Mw7T75OGeYSyHcgPObwHfZQktdSaUshLVRjYFxGzcPrsUETCHuBPZ
- at1YjOeqsyPnC1PvPb/18ZfccA6wDE/4Ptaq0NLq8yVttLCiYe8aFsYsPF6cJ28hYuhjEeX4B8
- 1CA46wAAAA=
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Enric Balletbo i Serra <eballetbo@kernel.org>, 
- Ikjoon Jang <ikjn@chromium.org>, Stephen Boyd <swboyd@chromium.org>, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- kernel@collabora.com
-X-Mailer: b4 0.12.4
+References: <20231219201102.41639-1-brgl@bgdev.pl> <19dca2a9-36e1-4a6b-9b65-db4c0a163d56@roeck-us.net>
+In-Reply-To: <19dca2a9-36e1-4a6b-9b65-db4c0a163d56@roeck-us.net>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 16 Jan 2024 22:41:12 +0100
+Message-ID: <CAMRc=McueRLdFJ_p-QPKPwFJatVXOG8hyeZKniAPGDBrNo2xFg@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The cbas node is used to describe base detection functionality in the
-ChromeOS EC, which is used for units that have a detachable keyboard and
-thus rely on this functionality to switch between tablet and laptop
-mode.
+On Tue, Jan 16, 2024 at 7:23=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> =
+wrote:
+>
+> Hi,
+>
+> On Tue, Dec 19, 2023 at 09:11:02PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > extra_checks is only used in a few places. It also depends on
+> > a non-standard DEBUG define one needs to add to the source file. The
+> > overhead of removing it should be minimal (we already use pure
+> > might_sleep() in the code anyway) so drop it.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> This patch triggers (exposes) the following backtrace.
+>
+> BUG: sleeping function called from invalid context at drivers/gpio/gpioli=
+b.c:3738
+> in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 7, name: kworker=
+/0:0
+> preempt_count: 1, expected: 0
+> RCU nest depth: 0, expected: 0
+> 3 locks held by kworker/0:0/7:
+>  #0: c181b3a4 ((wq_completion)events_freezable){+.+.}-{0:0}, at: process_=
+scheduled_works+0x23c/0x644
+>  #1: c883df28 ((work_completion)(&(&host->detect)->work)){+.+.}-{0:0}, at=
+: process_scheduled_works+0x23c/0x644
+>  #2: c24e1720 (&host->lock){-...}-{2:2}, at: sdhci_check_ro+0x14/0xd4
+> irq event stamp: 2916
+> hardirqs last  enabled at (2915): [<c0b18838>] _raw_spin_unlock_irqrestor=
+e+0x70/0x84
+> hardirqs last disabled at (2916): [<c0b1853c>] _raw_spin_lock_irqsave+0x7=
+4/0x78
+> softirqs last  enabled at (2360): [<c00098a4>] __do_softirq+0x28c/0x4b0
+> softirqs last disabled at (2347): [<c0022774>] __irq_exit_rcu+0x15c/0x1a4
+> CPU: 0 PID: 7 Comm: kworker/0:0 Tainted: G                 N 6.7.0-09928-=
+g052d534373b7 #1
+> Hardware name: Freescale i.MX25 (Device Tree Support)
+> Workqueue: events_freezable mmc_rescan
+>  unwind_backtrace from show_stack+0x10/0x18
+>  show_stack from dump_stack_lvl+0x34/0x54
+>  dump_stack_lvl from __might_resched+0x188/0x274
+>  __might_resched from gpiod_get_value_cansleep+0x14/0x60
+>  gpiod_get_value_cansleep from mmc_gpio_get_ro+0x20/0x30
 
-Despite the original commit having added the cbas node to the
-mt8183-kukui.dtsi, not all machines that include it are detachables. In
-fact all machines that include from mt8183-kukui-jacuzzi.dtsi are either
-clamshells (ie normal laptops) or convertibles, meaning the keyboard can
-be flipped but not detached. The detection for the keyboard getting
-flipped is handled by the driver bound to the keyboard-controller node
-in the EC.
+When getting GPIO value with a spinlock taken the driver *must* use
+the non-sleeping variant of this function: gpiod_get_value(). If the
+underlying driver can sleep then the developer seriously borked. The
+API contract has always been this way so I wouldn't treat it as a
+regression.
 
-Move the base detection node from the base kukui dtsi to the dtsis where
-all machines are detachables, and thus actually make use of the node.
+I'd start with checking if replacing this with gpiod_get_value()
+helps. Possibly even do:
 
-Fixes: 4fa8492d1e5b ("arm64: dts: mt8183: add cbas node under cros_ec")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
-Changes in v3:
-- Instead of deleting the node in jacuzzi, moved the node from kukui to
-  the dtsis including kukui that are detachables
+if (in_atomic())
+    gpiod_get_value();
+else
+    gpiod_get_value_cansleep();
 
-Changes in v2:
-- Moved cbas node removal to jacuzzi dtsi
----
- arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi  | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi        | 4 ----
- 4 files changed, 12 insertions(+), 4 deletions(-)
+Bartosz
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-index b6a9830af269..bfb9e42c8aca 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-@@ -360,6 +360,10 @@ pen_eject {
- };
- 
- &cros_ec {
-+	cbas {
-+		compatible = "google,cros-cbas";
-+	};
-+
- 	keyboard-controller {
- 		compatible = "google,cros-ec-keyb-switches";
- 	};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-index 306c95166f3f..5c1bf6a1e475 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-@@ -339,6 +339,10 @@ touch_pin_reset: pin_reset {
- };
- 
- &cros_ec {
-+	cbas {
-+		compatible = "google,cros-cbas";
-+	};
-+
- 	keyboard-controller {
- 		compatible = "google,cros-ec-keyb-switches";
- 	};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-index 382e4c6d7191..0f5fa893a774 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-@@ -343,6 +343,10 @@ rst_pin {
- };
- 
- &cros_ec {
-+	cbas {
-+		compatible = "google,cros-cbas";
-+	};
-+
- 	keyboard-controller {
- 		compatible = "google,cros-ec-keyb-switches";
- 	};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-index 5506de83f61d..66eb099e15f0 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-@@ -937,10 +937,6 @@ usbc_extcon: extcon0 {
- 			google,usb-port-id = <0>;
- 		};
- 
--		cbas {
--			compatible = "google,cros-cbas";
--		};
--
- 		typec {
- 			compatible = "google,cros-ec-typec";
- 			#address-cells = <1>;
-
----
-base-commit: 0f067394dd3b2af3263339cf7183bdb6ee0ac1f8
-change-id: 20240116-mt8183-kukui-cbas-remove-657b62aeced6
-
-Best regards,
--- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
-
+>  mmc_gpio_get_ro from esdhc_pltfm_get_ro+0x20/0x48
+>  esdhc_pltfm_get_ro from sdhci_check_ro+0x44/0xd4
+>  sdhci_check_ro from mmc_sd_setup_card+0x2a8/0x47c
+>  mmc_sd_setup_card from mmc_sd_init_card+0xfc/0x93c
+>  mmc_sd_init_card from mmc_attach_sd+0xd8/0x180
+>  mmc_attach_sd from mmc_rescan+0x2ac/0x30c
+>  mmc_rescan from process_scheduled_works+0x2e4/0x644
+>  process_scheduled_works from worker_thread+0x188/0x418
+>  worker_thread from kthread+0x11c/0x144
+>  kthread from ret_from_fork+0x14/0x38
+>
+> This is with the imx25-pdk qemu emulation when booting from mmc/sd card.
+> It isn't really surprising since sdhci_check_ro() calls the gpio code und=
+er
+> spin_lock_irqsave(). No idea how to fix that, so I won't even try.
+>
+> Bisect log attached for reference.
+>
+> Guenter
+>
+> ---
+> # bad: [052d534373b7ed33712a63d5e17b2b6cdbce84fd] Merge tag 'exfat-for-6.=
+8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat
+> # good: [70d201a40823acba23899342d62bc2644051ad2e] Merge tag 'f2fs-for-6.=
+8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs
+> git bisect start 'HEAD' '70d201a40823'
+> # good: [b6e1b708176846248c87318786d22465ac96dd2c] drm/xe: Remove uniniti=
+alized variable from warning
+> git bisect good b6e1b708176846248c87318786d22465ac96dd2c
+> # good: [7912a6391f3ee7eb9f9a69227a209d502679bc0c] Merge tag 'sound-6.8-r=
+c1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+> git bisect good 7912a6391f3ee7eb9f9a69227a209d502679bc0c
+> # bad: [a3cc31e75185f9b1ad8dc45eac77f8de788dc410] Merge tag 'libnvdimm-fo=
+r-6.8' of git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+> git bisect bad a3cc31e75185f9b1ad8dc45eac77f8de788dc410
+> # bad: [576db73424305036a6aa9e40daf7109742fbb1df] Merge tag 'gpio-updates=
+-for-v6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
+> git bisect bad 576db73424305036a6aa9e40daf7109742fbb1df
+> # good: [61f4c3e6711477b8a347ca5fe89e5e6613e0a147] Merge tag 'linux-watch=
+dog-6.8-rc1' of git://www.linux-watchdog.org/linux-watchdog
+> git bisect good 61f4c3e6711477b8a347ca5fe89e5e6613e0a147
+> # good: [12b7f4ddfcb66dafed432cf4a987f5b40179c0f1] Merge tag 'device_is_b=
+ig_endian-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/=
+driver-core into gpio/for-next
+> git bisect good 12b7f4ddfcb66dafed432cf4a987f5b40179c0f1
+> # good: [ede7511e7c22c9542a699ddff9f32de74e0bb972] gpiolib: cdev: include=
+ overflow.h
+> git bisect good ede7511e7c22c9542a699ddff9f32de74e0bb972
+> # bad: [f34fd6ee1be84c6e64574e9eb58f89d32c7f98a4] gpio: dwapb: Use generi=
+c request, free and set_config
+> git bisect bad f34fd6ee1be84c6e64574e9eb58f89d32c7f98a4
+> # good: [7dd1871e5049bbd40ee78ac94b1678ba5caf2486] gpio: tps65219: don't =
+use CONFIG_DEBUG_GPIO
+> git bisect good 7dd1871e5049bbd40ee78ac94b1678ba5caf2486
+> # bad: [0338f6a6fb659f083eca7dd5967bb668d14707f8] gpiolib: drop tabs from=
+ local variable declarations
+> git bisect bad 0338f6a6fb659f083eca7dd5967bb668d14707f8
+> # bad: [5d5dfc50e5689d5b09de4a323f84c28a6700d156] gpiolib: remove extra_c=
+hecks
+> git bisect bad 5d5dfc50e5689d5b09de4a323f84c28a6700d156
+> # first bad commit: [5d5dfc50e5689d5b09de4a323f84c28a6700d156] gpiolib: r=
+emove extra_checks
