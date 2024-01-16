@@ -1,104 +1,246 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D411B941;
-	Tue, 16 Jan 2024 15:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFFD1B941
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 15:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGiU5sr0"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5fc2e997804so34354777b3.3;
-        Tue, 16 Jan 2024 07:21:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="iSfpGGJf"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-68176e698e3so2106336d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 07:22:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705418517; x=1706023317; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=13JrJeAldiqSPGnO/8nR55kEZJiWwYEFrmzzkOgGtcQ=;
-        b=MGiU5sr0jaB0LuTRdMYYPfeLvvukL9kd+LHNrL7h3gLFGPIUbUkcSFJKc55BUNRPAR
-         3B3hzC5UY+Z0hjOXHcc3zOaSEwXQ5Ie6u1blh4dGg5UCDb+P6DYPcCKK0LI18hVOqyPC
-         TbtFaCKKlmQKgBaaEdMmcMJUDkf8baFgGsE+q0unb2n+N28uYrAKmOgWHXoXvfEyKru4
-         t3aLngBvolJuJAbsVYcI3SYyHx2lQUULBGYwccOug6eBsHHyFOJFnkLfZRhSBoZo7gVF
-         hrlZSi6mfHd0QSMHjBrwZ+pJjlEigfVbwtDGt8TcAJZID8NouOuBhhOZVd/WD8IRUTLH
-         pLvA==
+        d=ziepe.ca; s=google; t=1705418537; x=1706023337; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QVNYnSflADKfn6Wa9x8SjlhLp4T/UgcF3P1M8bBqp2w=;
+        b=iSfpGGJfQlw98r8dDStLZlxsygLeY+qWn3HGDVaWa03iRiBBoD4aUh6/SCWcSEpQz9
+         COoxQCvdX5qeQ695BMSXPtKJX490t7rAFfxrpmi3XETA1nigRV79NzIiRMA3qas68W9S
+         85us4DHVhKRoqeUrTX3r+wcoXFCxiEkdJq6DzA1PmWdqccQw5kXRoaDe+Erz2yJOZFOO
+         tNiHBpSZes4Mdn8DQ5KhMACZa52gfvO/V0dtyFytj7QBLYS9CnEeCavBMkBNT8ifXdRF
+         LKQDM9sc2TCw2TY9G24sqzYWVw+1uh7o6ZBUE4ZE6xPAUmUfIselx4Ao1NNxSRuvxZxp
+         LrLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705418517; x=1706023317;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=13JrJeAldiqSPGnO/8nR55kEZJiWwYEFrmzzkOgGtcQ=;
-        b=L0UY4xxWhbrZabhwvIgYrUpf9zUXx+LZj8GH9MK1UlaegCJoNJLBTttdFYKU7NnXCL
-         ZcHdUulMHNLfkxCMzFNGI94yeNztZrEvmCftzL1YEBveDeU8OAaLSNH7AHwjRMNBRSw9
-         0DpNHLyRbFCM2VcCfFPWLEQbg+QTknp/io1ZlG4a+ApCg3joPxyxBYNBft7IGIMDkhXa
-         bM2eQKIv6moFGJlUvx4Q42l0lReZdULx2oUDctv2Pr6ui8zFkAhiwXr4goQB9mQxbYgP
-         vhj3qb2hDrTzEOkXrXDYhFBEebDR8ccSrpvNmT9IiRBHUhPhHyQODRloPlyzvFafl0wm
-         s0aw==
-X-Gm-Message-State: AOJu0Ywa8ZIv/8nSAezRZ+OLoGu6EGZ+idlWoBjwNMAImNSG1UsSTe9Z
-	fU5xIS1sq2FQ6rRnFHIYHKiUUlb8Kf6HvssOEII=
-X-Google-Smtp-Source: AGHT+IFlQeu3q+ElU+rld3EnjOvz9eE/88otShb9zYT15iLTCLTu+OZ9uWUpKmfFbrAENM1p3a2FZ3JgKivbohmlLEI=
-X-Received: by 2002:a81:8584:0:b0:5fb:9705:5853 with SMTP id
- v126-20020a818584000000b005fb97055853mr5307731ywf.73.1705418517573; Tue, 16
- Jan 2024 07:21:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705418537; x=1706023337;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QVNYnSflADKfn6Wa9x8SjlhLp4T/UgcF3P1M8bBqp2w=;
+        b=BKyyirUHAPi/eviutWs0BrqbWOic5liVdbj7mMg67K9EyT/t3mjXRQGBRnJ6to8Vev
+         yBaOxadbhq6k/cYnKMmBSu+Yb1dTvrAE0Hsr0XvfZ7Etq6yp8TVPXBcp13ugRGRsHMA4
+         nuf2NS9C/Y8ZsGfSovUtbtiKLK8xcziGvvAjlLWJxodRC3RXMAv5tEU6GRRBMGo/9LmM
+         bN11ABHJEDysUOTyLikMEiXiTVsOHhLpJvce/rqL81/Afyz3BGsdt30G+YAprDkE3jYQ
+         mX+oYDfdvPbFDK1qcEMwk422blqrWDVOVsO5BCSPX1uiRUJhksl66/jJuNGswt0q7RCQ
+         WYpQ==
+X-Gm-Message-State: AOJu0Yzqp6ZBqFTGpa2WqwhPKZ75OIm1EgSrVzeQ+QUGCgyd2lLrF2fG
+	Jmieqi7tLYPIfIwSsjf/37kv2vY9aSnvLg1Sb2pz2nWIKHQ=
+X-Google-Smtp-Source: AGHT+IEueIiMfcoD8DOK4/6L5RoUPXk+O1mWcGM/B2o2NMVvvFcM55yhCNSeNwQe7/xXJ5jt56/QAw==
+X-Received: by 2002:a05:6214:dcd:b0:680:a1c:9c46 with SMTP id 13-20020a0562140dcd00b006800a1c9c46mr9465367qvt.33.1705418536859;
+        Tue, 16 Jan 2024 07:22:16 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id i12-20020a056214030c00b0067f812c4a58sm4199799qvu.60.2024.01.16.07.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 07:22:16 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rPlGZ-0045lK-Sc;
+	Tue, 16 Jan 2024 11:22:15 -0400
+Date: Tue, 16 Jan 2024 11:22:15 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Eric Badger <ebadger@purestorage.com>
+Cc: David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu/vt-d: Check for non-NULL domain on device release
+Message-ID: <20240116152215.GE50608@ziepe.ca>
+References: <20240113181713.1817855-1-ebadger@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108135421.684263-1-tmaimon77@gmail.com> <20240108135421.684263-2-tmaimon77@gmail.com>
- <20240109170830.GA2772086-robh@kernel.org> <CAP6Zq1jCHVrFfRa6c3DZ4t2aaJTkWukeEkia0AqhzppC0mjbfg@mail.gmail.com>
- <dc739435-d955-44f7-b5ee-9de4d5336725@linaro.org> <78875535469138a0fd0659d7e621a4f2.sboyd@kernel.org>
-In-Reply-To: <78875535469138a0fd0659d7e621a4f2.sboyd@kernel.org>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Tue, 16 Jan 2024 17:21:46 +0200
-Message-ID: <CAP6Zq1gcjayNA0j2fR-RW_mSJN41RS4PR2Q9AjLKFoGOvo-ecQ@mail.gmail.com>
-Subject: Re: [PATCH v22 1/8] dt-bindings: clock: npcm845: Add reference 25m
- clock property
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring <robh@kernel.org>, 
-	mturquette@baylibre.com, krzysztof.kozlowski+dt@linaro.org, 
-	tali.perry1@gmail.com, joel@jms.id.au, venture@google.com, yuenn@google.com, 
-	benjaminfair@google.com, openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240113181713.1817855-1-ebadger@purestorage.com>
 
-Hi Stephen,
+On Sat, Jan 13, 2024 at 10:17:13AM -0800, Eric Badger wrote:
+> In the kdump kernel, the IOMMU will operate in deferred_attach mode. In
+> this mode, info->domain may not yet be assigned by the time the
+> release_device function is called, which leads to the following crash in
+> the crashkernel:
 
-On Wed, 10 Jan 2024 at 23:46, Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Krzysztof Kozlowski (2024-01-10 12:54:14)
-> > On 10/01/2024 14:47, Tomer Maimon wrote:
-> > >>> +
-> > >>> +  clock-names:
-> > >>> +    items:
-> > >>> +      - const: refclk
-> > >>> +
-> > >>>    '#clock-cells':
-> > >>>      const: 1
-> > >>>      description:
-> > >>> @@ -30,12 +38,20 @@ properties:
-> > >>>  required:
-> > >>>    - compatible
-> > >>>    - reg
-> > >>> +  - clocks
-> > >>> +  - clock-names
-> > >>
-> > >> New required properties are an ABI break. That's fine if you explain why
-> > >> that's okay in the commit msg.
-> > > What do you mean?
-> >
-> > I think it was clear. Which part is not clear?
-> >
-> > > Could I add the new required properties to the required list?
-> >
-> > You just did, didn't you? And received feedback that you are breaking
-> > the ABI.
-> >
->
-> It's fine to break the ABI as long as the commit message explains that
-> the driver isn't merged yet.
+This never worked right? But why are you getting to release in a crash
+kernel in the first place, that seems kinda weird..
 
-Thanks for your clarification.
+>     BUG: kernel NULL pointer dereference, address: 000000000000003c
+>     ...
+>     RIP: 0010:do_raw_spin_lock+0xa/0xa0
+>     ...
+>     _raw_spin_lock_irqsave+0x1b/0x30
+>     intel_iommu_release_device+0x96/0x170
+>     iommu_deinit_device+0x39/0xf0
+>     __iommu_group_remove_device+0xa0/0xd0
+>     iommu_bus_notifier+0x55/0xb0
+>     notifier_call_chain+0x5a/0xd0
+>     blocking_notifier_call_chain+0x41/0x60
+>     bus_notify+0x34/0x50
+>     device_del+0x269/0x3d0
+>     pci_remove_bus_device+0x77/0x100
+>     p2sb_bar+0xae/0x1d0
+>     ...
+>     i801_probe+0x423/0x740
+> 
+> Signed-off-by: Eric Badger <ebadger@purestorage.com>
 
-Best regards,
+It should have a fixes line, but I'm not sure what it is..
 
-Tomer
+> ---
+>  drivers/iommu/intel/iommu.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+
+Unfortunately this issue is likely systemic in all the drivers.
+
+Something I've been thinking about for a while now is to have the
+option for the core code release to set the driver to a specific
+releasing domain (probably a blocking or identity global static)
+
+A lot of drivers are open coding this internally in their release
+functions, like Intel. But it really doesn't deserve to be special.
+
+Obviously if we structure things like that then this problem goes away
+too. It looks to me like domain_context_clear_one() is doing BLOCKED
+to me..
+
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 6fb5f6fceea1..26e450259889 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -3750,7 +3750,6 @@ static void domain_context_clear(struct device_domain_info *info)
+>  static void dmar_remove_one_dev_info(struct device *dev)
+>  {
+>  	struct device_domain_info *info = dev_iommu_priv_get(dev);
+> -	struct dmar_domain *domain = info->domain;
+>  	struct intel_iommu *iommu = info->iommu;
+>  	unsigned long flags;
+>  
+> @@ -3763,11 +3762,14 @@ static void dmar_remove_one_dev_info(struct device *dev)
+>  		domain_context_clear(info);
+>  	}
+>  
+> -	spin_lock_irqsave(&domain->lock, flags);
+> +	if (!info->domain)
+> +		return;
+> +
+> +	spin_lock_irqsave(&info->domain->lock, flags);
+>  	list_del(&info->link);
+> -	spin_unlock_irqrestore(&domain->lock, flags);
+> +	spin_unlock_irqrestore(&info->domain->lock, flags);
+>  
+> -	domain_detach_iommu(domain, iommu);
+> +	domain_detach_iommu(info->domain, iommu);
+>  	info->domain = NULL;
+>  }
+
+This function is almost a copy of device_block_translation(), with
+some bugs added :\
+
+Lu can they be made the same? It seems to me BLOCKED could always
+clear the domain context, even in scalable mode?
+
+Anyhow, my suggestion is more like:
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 15699fe5418e3d..6c683fd4bc05ec 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -3747,30 +3747,6 @@ static void domain_context_clear(struct device_domain_info *info)
+ 			       &domain_context_clear_one_cb, info);
+ }
+ 
+-static void dmar_remove_one_dev_info(struct device *dev)
+-{
+-	struct device_domain_info *info = dev_iommu_priv_get(dev);
+-	struct dmar_domain *domain = info->domain;
+-	struct intel_iommu *iommu = info->iommu;
+-	unsigned long flags;
+-
+-	if (!dev_is_real_dma_subdevice(info->dev)) {
+-		if (dev_is_pci(info->dev) && sm_supported(iommu))
+-			intel_pasid_tear_down_entry(iommu, info->dev,
+-					IOMMU_NO_PASID, false);
+-
+-		iommu_disable_pci_caps(info);
+-		domain_context_clear(info);
+-	}
+-
+-	spin_lock_irqsave(&domain->lock, flags);
+-	list_del(&info->link);
+-	spin_unlock_irqrestore(&domain->lock, flags);
+-
+-	domain_detach_iommu(domain, iommu);
+-	info->domain = NULL;
+-}
+-
+ /*
+  * Clear the page table pointer in context or pasid table entries so that
+  * all DMA requests without PASID from the device are blocked. If the page
+@@ -4284,7 +4260,6 @@ static void intel_iommu_release_device(struct device *dev)
+ {
+ 	struct device_domain_info *info = dev_iommu_priv_get(dev);
+ 
+-	dmar_remove_one_dev_info(dev);
+ 	intel_pasid_free_table(dev);
+ 	intel_iommu_debugfs_remove_dev(info);
+ 	kfree(info);
+@@ -4743,6 +4718,7 @@ static const struct iommu_dirty_ops intel_dirty_ops = {
+ 
+ const struct iommu_ops intel_iommu_ops = {
+ 	.blocked_domain		= &blocking_domain,
++	.release_domain		= &blocking_domain,
+ 	.capable		= intel_iommu_capable,
+ 	.hw_info		= intel_iommu_hw_info,
+ 	.domain_alloc		= intel_iommu_domain_alloc,
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 068f6508e57c9b..9fbbd83a82d4e9 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -442,6 +442,8 @@ static int iommu_init_device(struct device *dev, const struct iommu_ops *ops)
+ err_unlink:
+ 	iommu_device_unlink(iommu_dev, dev);
+ err_release:
++	if (ops->release_domain)
++		ops->release_domain->ops->attach_dev(ops->release_domain, dev);
+ 	if (ops->release_device)
+ 		ops->release_device(dev);
+ err_module_put:
+@@ -461,6 +463,15 @@ static void iommu_deinit_device(struct device *dev)
+ 
+ 	iommu_device_unlink(dev->iommu->iommu_dev, dev);
+ 
++	/*
++	 * If the iommu driver provides release_domain then the core code
++	 * ensures that domain is attached prior to calling release_device.
++	 * Drivers can use this to enforce a translation on the idle iommu.
++	 * Usually the global static blocked_domain is a good choice.
++	 */
++	if (ops->release_domain)
++		ops->release_domain->ops->attach_dev(ops->release_domain, dev);
++
+ 	/*
+ 	 * release_device() must stop using any attached domain on the device.
+ 	 * If there are still other devices in the group they are not effected
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index c34d0ef1703d68..1e8be165c878d8 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -511,6 +511,7 @@ struct iommu_ops {
+ 	struct module *owner;
+ 	struct iommu_domain *identity_domain;
+ 	struct iommu_domain *blocked_domain;
++	struct iommu_domain *release_domain;
+ 	struct iommu_domain *default_domain;
+ };
+ 
