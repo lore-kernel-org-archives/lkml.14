@@ -1,196 +1,119 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353651CD23
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C6A1CD0B;
+	Tue, 16 Jan 2024 18:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705428654; cv=none; b=edSFaZmunmiWg8wKHLFaFe8eBj28jihytyrnGRcm4fxrhJkEo6bTy1MZiGRtqkjDftqIohYRSD+8yCv66MY6kLEhAqhtqrYB0Wz+5glVX1tOqq+bKbHItVanaidCv+i7IiaxvCqvZAxy+sPKdXJQYWfKcDJEjUgo4xoeStw3gYA=
+	t=1705428675; cv=none; b=c6nseegCZ9VSREN7Qic0+PQyKZzcWq/4Qlslov94vBWtJzeqzD5CLzlmTDBYAadoiUjGoVHSm/fr1l9eP7FR9gHzmKYvpRgjDO6+V3BuBMm+3RyErNePdG6yMBixFTfQ2xKOR4ZBxjV9La+8IiagH2MkIfpVYMctpFAGtjyfe4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705428654; c=relaxed/simple;
-	bh=RweaeoVi9vb5w/OKvidzWBDb8rUFM94JEo/ugp/chiQ=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=NOB7kTMNrW6I/NUgWpLBkKIj07nbknjon3SuGvFQVFj12yLALBalcszMr6Am906iqwUXlrnLgEyLfi7799VkRGbey8rQqQ+tmLiiwqbDYZuIuAHqitdnPbQVHCGyPY/2P+qziIV0l07fgIedwaDccnx55ZUy1A5TbInC8Rdiwu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZlSze6c6; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZlSze6c6"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3606e211e5cso58733345ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:10:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705428652; x=1706033452; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WeHzMFOUSvfJb4dVqRpTD3wrNewNvV4aIi+VIi1fBLM=;
-        b=ZlSze6c6h/aQzBv+8+NEEFm/W0SPmA5x6ThNXmbaaBfAtv7l+/vJFFdB9qPDhKX/VJ
-         +QbNw2zq5fZUIxFbXY5CHm3q+ZDxE29QfMw664lFN2c02pFjnbYycB8UAbY2ciYkj22N
-         6cqNAZB5j8p8HyrbfoPHK/bej/xMNWL/9nFA6YlIM/uyWVBNsfMGYsbZNP74lY8EvW1+
-         pIGsqMBAZ+gQw1bZsPwhqCEF/MHoq5HUydds89O4AJ7PyESfTUYFFro6wYa5rWSktIJS
-         IZ/W66NH60eg/ugnlg9LPIEUOcgyZ0OQfaQH0AbDWG08t9I4AJkh6XEcibPcloKgHdvC
-         a2MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705428652; x=1706033452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WeHzMFOUSvfJb4dVqRpTD3wrNewNvV4aIi+VIi1fBLM=;
-        b=p5wCzN7ZuTtb8b82/2acIxh1H4bxwyJgneuDJ/eO0M05MBe1fGkw2Ms1KPUYu5ycPy
-         WwF94UVsbm0L/2XMs7O5rqyInsITh5f75aoAQ22pAr7e3yQ866Ejl4RSgDt2CFXGzwX9
-         1edUlFeSz39pD3Np4JMYKphEq/T7XHpK0EKsvqso3KZ/v2xxM8gkm4Gve2q8znpQt6ov
-         mCDJz+HvRNSQgTTwcIoeGL0MXdCyttZk1sVfqmOqjbe3DFGNqBosTen290RMP64biwhf
-         QJYLrrJSli5/taMoouT0iaHIO/P8tckqUE8bXZI+ikhZsPtQ8UxOoG9/x4lPxuLnuZBx
-         kiSg==
-X-Gm-Message-State: AOJu0YxCW7PFnPjpgDlmtH8kdFBXidjUfGq03WQMLks8MC8NLoAj93VB
-	8cOQDIz4GNS01CvAEk7w7wBL2KRgolXiI0+HfUFIHt70LQscaA==
-X-Google-Smtp-Source: AGHT+IF3T+HEuJ74amKUtc0+nZKPgelNphlTJZGAxgmPIeS7O6UgD2MbdqmRcHjgpUdSl6sAXtXDNAEaFWZmC5pnHvk=
-X-Received: by 2002:a6b:7d07:0:b0:7bf:1ddd:b900 with SMTP id
- c7-20020a6b7d07000000b007bf1dddb900mr6463930ioq.8.1705428652264; Tue, 16 Jan
- 2024 10:10:52 -0800 (PST)
+	s=arc-20240116; t=1705428675; c=relaxed/simple;
+	bh=HF08xReEYJVEYlyq4VqGFGWbxcsg4P7vW27ttWr2NEg=;
+	h=Received:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding; b=Yqv5zaMQ2+XkJZGANimrYL1L84VNuXIg35fqK7SWvzE14Zf4kK/9oiDy7ctNT835UaLrbeyl95vtTXC+aFYxMnURnboeXpLexFyU0NU+ECmxDn+XCMnwjOI/kGsEHXtNskJX05WWlzNy2O9/V43yypikr5FtPXJJhr/+JOW0yVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE5D4C433F1;
+	Tue, 16 Jan 2024 18:11:13 +0000 (UTC)
+Date: Tue, 16 Jan 2024 13:12:28 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ kernel test robot <oliver.sang@intel.com>, Ajay Kaher <akaher@vmware.com>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] eventfs: Create dentries and inodes at dir open
+Message-ID: <20240116131228.3ed23d37@gandalf.local.home>
+In-Reply-To: <CAHk-=wjna5QYoWE+v3BWDwvs8N=QWjNN=EgxTN4dBbmySc-jcg@mail.gmail.com>
+References: <20240116114711.7e8637be@gandalf.local.home>
+	<CAHk-=wjna5QYoWE+v3BWDwvs8N=QWjNN=EgxTN4dBbmySc-jcg@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109125814.3691033-1-tudor.ambarus@linaro.org> <20240109125814.3691033-6-tudor.ambarus@linaro.org>
-In-Reply-To: <20240109125814.3691033-6-tudor.ambarus@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Tue, 16 Jan 2024 12:10:40 -0600
-Message-ID: <CAPLW+4nWy_7w2Q703JE5hUQtFy3ABmvcfRhhB7pkrYKgLisGWQ@mail.gmail.com>
-Subject: Re: [PATCH v3 05/12] tty: serial: samsung: set UPIO_MEM32 iotype for gs101
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: peter.griffin@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
-	gregkh@linuxfoundation.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	robh+dt@kernel.org, conor+dt@kernel.org, andi.shyti@kernel.org, 
-	alim.akhtar@samsung.com, jirislaby@kernel.org, s.nawrocki@samsung.com, 
-	tomasz.figa@gmail.com, cw00.choi@samsung.com, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-serial@vger.kernel.org, andre.draszik@linaro.org, 
-	kernel-team@android.com, willmcvicker@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 9, 2024 at 7:00=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro.=
-org> wrote:
->
-> GS101's Connectivity Peripheral blocks (peric0/1 blocks) which
-> include the I3C and USI (I2C, SPI, UART) only allow 32-bit
-> register accesses.
->
-> Instead of specifying the reg-io-width =3D 4 everywhere, for each node,
-> the requirement should be deduced from the compatible.
->
-> Infer UPIO_MEM32 iotype from the "google,gs101-uart" compatible.
-> Update the uart info name to be GS101 specific in order to
-> differentiate from the other exynos platforms. All the other settings
-> are not changed.
->
-> exynos_fifoszdt_serial_drv_data was replaced by gs101_serial_drv_data
-> because the iotype restriction is gs101 specific and there was no other
-> user of exynos_fifoszdt_serial_drv_data.
->
-> Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> ---
+On Tue, 16 Jan 2024 09:55:15 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+> [ html crud because I still don't have power or real Internet, just trying
+> to keep an eye on things on my phone. Mailing lists removed to avoid
+> bounces, please put them back in replies that don't have my horrible
+> formatting ]
+> 
+> No.
+> 
+> Christ, you're making things worse again
+> 
+> The reason for the bug is that you're still messing with the dentries at
+> readdir() time.
 
-> v3: collect Peter's R-b tag
-> v2: new patch
->
->  drivers/tty/serial/samsung_tty.c | 38 +++++++++++++++++++++++---------
->  1 file changed, 28 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsun=
-g_tty.c
-> index ff646cddd3f8..a81b61953a28 100644
-> --- a/drivers/tty/serial/samsung_tty.c
-> +++ b/drivers/tty/serial/samsung_tty.c
-> @@ -2497,25 +2497,43 @@ static const struct s3c24xx_serial_drv_data exyno=
-s850_serial_drv_data =3D {
->         .fifosize =3D { 256, 64, 64, 64 },
->  };
->
-> -/*
-> - * Common drv_data struct for platforms that specify samsung,uart-fifosi=
-ze in
-> - * device tree.
-> - */
-> -static const struct s3c24xx_serial_drv_data exynos_fifoszdt_serial_drv_d=
-ata =3D {
-> -       EXYNOS_COMMON_SERIAL_DRV_DATA(),
-> +static const struct s3c24xx_serial_drv_data gs101_serial_drv_data =3D {
-> +       .info =3D {
-> +               .name           =3D "Google GS101 UART",
-> +               .type           =3D TYPE_S3C6400,
-> +               .port_type      =3D PORT_S3C6400,
-> +               .iotype         =3D UPIO_MEM32,
-> +               .has_divslot    =3D 1,
-> +               .rx_fifomask    =3D S5PV210_UFSTAT_RXMASK,
-> +               .rx_fifoshift   =3D S5PV210_UFSTAT_RXSHIFT,
-> +               .rx_fifofull    =3D S5PV210_UFSTAT_RXFULL,
-> +               .tx_fifofull    =3D S5PV210_UFSTAT_TXFULL,
-> +               .tx_fifomask    =3D S5PV210_UFSTAT_TXMASK,
-> +               .tx_fifoshift   =3D S5PV210_UFSTAT_TXSHIFT,
-> +               .def_clk_sel    =3D S3C2410_UCON_CLKSEL0,
-> +               .num_clks       =3D 1,
-> +               .clksel_mask    =3D 0,
-> +               .clksel_shift   =3D 0,
-> +       },
-> +       .def_cfg =3D {
-> +               .ucon           =3D S5PV210_UCON_DEFAULT,
-> +               .ufcon          =3D S5PV210_UFCON_DEFAULT,
-> +               .has_fracval    =3D 1,
-> +       },
-> +       /* samsung,uart-fifosize must be specified in the device tree. */
->         .fifosize =3D { 0 },
->  };
->
->  #define EXYNOS4210_SERIAL_DRV_DATA (&exynos4210_serial_drv_data)
->  #define EXYNOS5433_SERIAL_DRV_DATA (&exynos5433_serial_drv_data)
->  #define EXYNOS850_SERIAL_DRV_DATA (&exynos850_serial_drv_data)
-> -#define EXYNOS_FIFOSZDT_DRV_DATA (&exynos_fifoszdt_serial_drv_data)
-> +#define GS101_SERIAL_DRV_DATA (&gs101_serial_drv_data)
->
->  #else
->  #define EXYNOS4210_SERIAL_DRV_DATA NULL
->  #define EXYNOS5433_SERIAL_DRV_DATA NULL
->  #define EXYNOS850_SERIAL_DRV_DATA NULL
-> -#define EXYNOS_FIFOSZDT_DRV_DATA NULL
-> +#define GS101_SERIAL_DRV_DATA NULL
->  #endif
->
->  #ifdef CONFIG_ARCH_APPLE
-> @@ -2603,7 +2621,7 @@ static const struct platform_device_id s3c24xx_seri=
-al_driver_ids[] =3D {
->                 .driver_data    =3D (kernel_ulong_t)ARTPEC8_SERIAL_DRV_DA=
-TA,
->         }, {
->                 .name           =3D "gs101-uart",
-> -               .driver_data    =3D (kernel_ulong_t)EXYNOS_FIFOSZDT_DRV_D=
-ATA,
-> +               .driver_data    =3D (kernel_ulong_t)GS101_SERIAL_DRV_DATA=
-,
->         },
->         { },
->  };
-> @@ -2626,7 +2644,7 @@ static const struct of_device_id s3c24xx_uart_dt_ma=
-tch[] =3D {
->         { .compatible =3D "axis,artpec8-uart",
->                 .data =3D ARTPEC8_SERIAL_DRV_DATA },
->         { .compatible =3D "google,gs101-uart",
-> -               .data =3D EXYNOS_FIFOSZDT_DRV_DATA },
-> +               .data =3D GS101_SERIAL_DRV_DATA },
->         {},
->  };
->  MODULE_DEVICE_TABLE(of, s3c24xx_uart_dt_match);
-> --
-> 2.43.0.472.g3155946c3a-goog
->
->
+I may have deleted the comment, but the only reason I created the
+inodes/destries is to keep the consistent inode number as it's created at
+the time the inodes and dentries are.
+
+Ah I did delete the comment, but it is still applicable :-/
+
+       /*
+-        * Need to create the dentries and inodes to have a consistent
+-        * inode number.
++        * Need to make a struct eventfs_dent array, start by
++        * allocating enough for just the files, which is a fixed
++        * array. Then use realloc via add_entry() for the directories
++        * which is stored in a linked list.
+         */
+
+So if for some reason, user space did a getdents() and used the inode
+numbers to match what it found, they would likely be the same.
+
+> 
+> Just stop it. Readdir should not be creating dentries. Readdir should not
+> be even *looking* at dentries. You're not a virtual filesystem, the
+> dentries are just caches for filename lookup, and have *nothing* to do with
+> readdir.
+
+Actually, it's not looking at them. I did it as a way to just have the
+inode numbers be consistent.
+
+	dents[cnt].ino = d->d_inode->i_ino;
+
+Yes, that's the only reason I create them. The dentry/inode is not used for
+anything outside of that.
+
+> 
+> So just iterate over your own internal data structures in readdir. DO NOT
+> CREATE DENTRIES OR INODES FOR READDIR.
+> 
+> I've told you before, and I'll tell you again: either you are a real and
+> proper virtual filesystem and you let the vfs layer manage *everything*,
+> and the dentries and inodes are all you have. Or you are a *real*
+> filesystem and you maintain your own data structures and the dentries and
+> inodes are just the in-memory caches.
+> 
+> This "do both" is UNACCEPTABLE.
+> 
+
+The dentries were created for the inode numbers so that I did not need to
+add them to meta data. They are generated at creation time.
+
+I don't know how important inode numbers are. If they can all just have
+random inode numbers and it doesn't break user space, where an inode number
+will be one value at one read and another shortly after, is that going to
+cause a problem?
+
+Maybe I can just use a hash to generate he inode numbers from the name?
+Hopefully there will be no collisions. Then I don't need the dentry
+creation at all.
+
+I do realize that if the dentries get freed due to reclaim and recreated,
+their inode numbers will be different. But for a virtual file system, I
+don't know how important having consistent inode numbers is.
+
+-- Steve
+
