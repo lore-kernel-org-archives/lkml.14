@@ -1,104 +1,174 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2AC35F03;
-	Tue, 16 Jan 2024 21:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30B22031D;
+	Tue, 16 Jan 2024 21:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705441085; cv=none; b=rELVKzj8r4HhwDWm0rWjrHg99OPufdyMI2j0DGDUs/KNc7WxRfo2nE2teax+NNxUpGFccjjiuje7zxl65Ad4T/r4okJJrdNDciU8nH3etoeO4OXdDz363UpylKOKRjeyyxrR62vg9yS+mqdiM9+NUm4SnqI+2xJrDSaEeNW7e0o=
+	t=1705441115; cv=none; b=G39sbTwcO3vTggJGIaN39H1i8Ijp5KMWNYnYjA1Vgw8SODF/B7R6t0uJgcMxvVCKMBgnQ2iHvL8yIZwxKHO51QbfjWKxmUlB6+praVsV9+BPNF9lFKjQb7PM59Ani8bnbErOhOum8fIeCgGHFRonmN5lQz0MdhwrUx+1s6ITZDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705441085; c=relaxed/simple;
-	bh=Y/E4DSPhCGQwod2MxGfu/zAJG00FRP/drC0qA9lcfVU=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=MBZgIueAM8pu27F5a1i4hf66VRKCy0MS8Nsw5uxeRdofSZbe6iBZi9dWD834G/+LoU+V7O/6bB3MfJMQBxRDd0p/zkarrpmnro2XGJpdp9qfX3Twk+ONFnogwWFIgd8E6D5/sDBmGzM1kThCc364sD40yMsTn/NmCA1hkzu670k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hLx02xLs; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1705441115; c=relaxed/simple;
+	bh=0+B9f+SDQ7MNjWm/4XDd8U3BNj5wf0lOZ4O77VNib/o=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding; b=MsEsuFL9tbj2px4leklO0Mlh1l+4eoX4H6Aq6M/QGP5lzKxciHQ+aS+w69SkduC3Kqb0mQ2uAz2U/BK/JWW/TmtNFAePkb9vHGLOjgEHwOMq5yolbVtZU09alohuMPFDmaTi5VRA0MS8DU75AYmcWanvNWPnI2Oaa4XNTWnQ12M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLx02xLs"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6d9b050e88cso5792766b3a.0;
-        Tue, 16 Jan 2024 13:38:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705441083; x=1706045883; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sqRPOFeNao0i7ZbF0Cd/T0E9SrjM9ty6IYml6ss+0UE=;
-        b=hLx02xLsn0pw/dEqq5qsFoIivmOuh2HzYqZs87/CNueYMZ142ecK3GIKRz7AakRUpe
-         VnMdqPh/45qwDPCN2N2JHaA3SkCMiRwWbfMmXz6Bwo3z9zCPwhlapCO0GtQGflut6N4H
-         ing/s7AEk50Ap4psJpWvY9LzlzVTLb9CATRtVYJ7nr3RMf/riPVQTVVb3vioiO9SIXYz
-         3ELG6xmWdh0vQod84vSg/l+E6qicn2xWlyQNcHscwsdGckZ4fGjqShjO1i3CiXzWhGAy
-         F2q4e7D2vBNzDPrn58o0+weZRBLmkIsozhBrmAl+5rZZTCYWhNl7Zwj7PEs8N0M8np5F
-         HAnA==
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dad22e13dcso6507272b3a.3;
+        Tue, 16 Jan 2024 13:38:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705441083; x=1706045883;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sqRPOFeNao0i7ZbF0Cd/T0E9SrjM9ty6IYml6ss+0UE=;
-        b=sCs6dDnXS8Nu56DTZ9enPQ1jdwJsbPbripaG0xA6QfaO6NwjE7P+O+u7/ECfj5hBdT
-         pmg54PmqcCm+BqDcfrAovNaCQ4vjXMbXaeC31Xp7Q7Nlma06i3D1mrOt8T8ZWtAjZ74z
-         Vn8bd4NUpUf+QDKI7hsNb9DGUVVvXYtf7Jh/Rhlgzq1jkw0lOJ++eMzzc6iJA+7xeAn5
-         1aKlVsHNmdtpTmyYf5qVH160BRr49gweC0BtDkzBEH3bV+qP8pQFupjFc/TpZaiKd+ti
-         1BRCpNps+CMT4V+3arp3kTd8ovOSVpwEgy3EtQSS4Mo/eJBxYYifrJILSz2/n0vM1oCo
-         JXRA==
-X-Gm-Message-State: AOJu0Yxax/22goTDD41RlGZXonpdaumOVYphhso7k3gJsb/lPnSc3nkm
-	LfshR6vY2b1N1GStsMrYly5pCBMem9k=
-X-Google-Smtp-Source: AGHT+IFXf5o+kuqoq4WCaI99Sp9ISYaTPo88bvEfj86wrtLpICa2GS2gzaj62IwTl6iKekIdN7IROw==
-X-Received: by 2002:a05:6a20:94c9:b0:19b:4545:74c with SMTP id ht9-20020a056a2094c900b0019b4545074cmr1143672pzb.93.1705441083232;
-        Tue, 16 Jan 2024 13:38:03 -0800 (PST)
-Received: from [192.168.0.228] (c-24-20-51-242.hsd1.or.comcast.net. [24.20.51.242])
-        by smtp.gmail.com with ESMTPSA id h13-20020aa79f4d000000b006d92f081d9fsm52031pfr.31.2024.01.16.13.38.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 13:38:03 -0800 (PST)
-Message-ID: <c9112997-d2fd-4974-985b-7b96e41f4f7c@gmail.com>
-Date: Tue, 16 Jan 2024 13:38:01 -0800
+        d=1e100.net; s=20230601; t=1705441113; x=1706045913;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CS3/2X2nggEz5xQcw+haR7fO99OiHUdyAq+EW5k/HVg=;
+        b=pGUJvWwZCbDg1uwEOyEA4pTljZxFumLn8B7djXfDm1bbY9MnLsStRntZNC1+7ofZu5
+         ls9HhTtZxpNCqa5PElYVXPs5ECjNbNcZWUUqITsoOUFQK0EsrEvcQxq1n33TLcroLMbl
+         kh5Htaverf57HJol8Ey9me6cihDwrnRgjJua4MPAIaGTBNEyB6tnPnYLcWJxxc3YTFk1
+         EyYH+JkXBj1X2/rikXwgdSYS3xN3sIKzFvBSrmmUNzN3Fhv20fcF6TzvM41HTv4UNJva
+         5bZm58Z4ZtLC5iAK2U89MIXONx0/Im9lVR3IpHm7uka4k8ERudFX8QYG6CiWUryRSD21
+         gj1g==
+X-Gm-Message-State: AOJu0YxA7NZXZE29jNY+cOSpO5lbrPXlSluEDgUIIEsW87h3eQPLlr0/
+	a+Oc+Q//uv8PavMEOEyiynqHCnbsJSmJl5/gZnM=
+X-Google-Smtp-Source: AGHT+IFkQXg9vLFpGaAiphz/VKhWfCFU2OCPkVqdGN0YFWVKlYYU+8nDURTFF2PrpGk/SdJZYSfVdLSYD4s9dnUNQqQ=
+X-Received: by 2002:a05:6a20:ce4d:b0:19a:8556:8caa with SMTP id
+ id13-20020a056a20ce4d00b0019a85568caamr4805936pzb.13.1705441113058; Tue, 16
+ Jan 2024 13:38:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 26/42] drivers/scsi/ibmvscsi_tgt: Convert snprintf to
- sysfs_emit
-To: Li Zhijian <lizhijian@fujitsu.com>, linux-kernel@vger.kernel.org
-Cc: Michael Cyr <mikecyr@linux.ibm.com>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org, target-devel@vger.kernel.org
-References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
- <20240116045151.3940401-1-lizhijian@fujitsu.com>
- <20240116045151.3940401-24-lizhijian@fujitsu.com>
-Content-Language: en-US
-From: Tyrel Datwyler <turtle.in.the.kernel@gmail.com>
-In-Reply-To: <20240116045151.3940401-24-lizhijian@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240112034019.3558584-1-yangjihong1@huawei.com>
+In-Reply-To: <20240112034019.3558584-1-yangjihong1@huawei.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 16 Jan 2024 13:38:21 -0800
+Message-ID: <CAM9d7cgecXt=QsTpv-L2nF1w72_fwV4rZZGG0tZi-LwZS8P-jg@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Check whether pkg-config is installed when
+ libtraceevent is linked
+To: Yang Jihong <yangjihong1@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/15/24 20:51, Li Zhijian wrote:
-> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-> or sysfs_emit_at() when formatting the value to be returned to user space.
-> 
-> coccinelle complains that there are still a couple of functions that use
-> snprintf(). Convert them to sysfs_emit().
-> 
->> ./drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:3619:8-16: WARNING: please use sysfs_emit
->> ./drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:3625:8-16: WARNING: please use sysfs_emit
->> ./drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:3633:8-16: WARNING: please use sysfs_emit
-> 
-> No functional change intended
-> 
-> CC: Michael Cyr <mikecyr@linux.ibm.com>
-> CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> CC: "Martin K. Petersen" <martin.petersen@oracle.com>
-> CC: linux-scsi@vger.kernel.org
-> CC: target-devel@vger.kernel.org
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+Hello,
+
+On Thu, Jan 11, 2024 at 7:44=E2=80=AFPM Yang Jihong <yangjihong1@huawei.com=
+> wrote:
+>
+> If pkg-config is not installed when libtraceevent is linked, the build fa=
+ils.
+>
+> The error information is as follows:
+>
+>   $ make
+>   <SNIP>
+>   In file included from /home/yjh/projects_linux/perf-tool-next/linux/too=
+ls/perf/util/evsel.c:43:
+>   /home/yjh/projects_linux/perf-tool-next/linux/tools/perf/util/trace-eve=
+nt.h:149:62: error: operator '&&' has no right operand
+>     149 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=
+=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>         |                                                              ^~
+>   error: command '/usr/bin/gcc' failed with exit code 1
+>   cp: cannot stat 'python_ext_build/lib/perf*.so': No such file or direct=
+ory
+>   make[2]: *** [Makefile.perf:668: python/perf.cpython-310-x86_64-linux-g=
+nu.so] Error 1
+>   make[2]: *** Waiting for unfinished jobs....
+>
+> Because pkg-config is not installed, fail to get libtraceevent version in
+> Makefile.config file. As a result, LIBTRACEEVENT_VERSION is empty.
+> However, the preceding error information is not user-friendly.
+>
+> Identify errors in advance by checking that pkg-config is installed at
+> compile time.
+
+Thanks for working on this.  I also think we can disable it when
+pkg-config is not installed and continue to build.  But I guess it's
+usual to have pkg-config on a build environment so it'd be better
+to stop the build and warn the user.
+
+>
+> The build results of various scenarios are as follows:
+>
+> 1. build successful when libtraceevent is not linked and pkg-config is no=
+t installed
+>
+>   $ pkg-config --version
+>   -bash: /usr/bin/pkg-config: No such file or directory
+>   $ make clean >/dev/null
+>   $ make NO_LIBTRACEEVENT=3D1 >/dev/null
+>   Makefile.config:1133: No alternatives command found, you need to set JD=
+IR=3D to point to the root of your Java directory
+>     PERF_VERSION =3D 6.7.rc6.gd988c9f511af
+>   $ echo $?
+>   0
+>
+> 2. dummy pkg-config is missing when libtraceevent is linked
+>
+>   $ pkg-config --version
+>   -bash: /usr/bin/pkg-config: No such file or directory
+>   $ make clean >/dev/null
+>   $ make >/dev/null
+>   Makefile.config:221: *** Error: pkg-config needed by libtraceevent is m=
+issing on this system, please install it.  Stop.
+>   make[1]: *** [Makefile.perf:251: sub-make] Error 2
+>   make: *** [Makefile:70: all] Error 2
+>   $ echo $?
+>   2
+>
+> 3. build successful when libtraceevent is linked and pkg-config is instal=
+led
+>
+>   $ pkg-config --version
+>   0.29.2
+>   $ make clean >/dev/null
+>   $ make >/dev/null
+>   Makefile.config:1133: No alternatives command found, you need to set JD=
+IR=3D to point to the root of your Java directory
+>     PERF_VERSION =3D 6.7.rc6.gd988c9f511af
+>   $ echo $?
+>   0
+>
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+
 > ---
-
-Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-
+>  tools/perf/Makefile.config | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index aa55850fbc21..70c33c935a98 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -216,6 +216,12 @@ ifeq ($(call get-executable,$(BISON)),)
+>    dummy :=3D $(error Error: $(BISON) is missing on this system, please i=
+nstall it)
+>  endif
+>
+> +ifneq ($(NO_LIBTRACEEVENT),1)
+> +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
+> +  dummy :=3D $(error Error: $(PKG_CONFIG) needed by libtraceevent is mis=
+sing on this system, please install it)
+> +  endif
+> +endif
+> +
+>  ifneq ($(OUTPUT),)
+>    ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's=
+/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\=3D 371), 1)
+>      BISON_FILE_PREFIX_MAP :=3D --file-prefix-map=3D$(OUTPUT)=3D
+> --
+> 2.34.1
+>
