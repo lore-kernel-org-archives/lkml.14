@@ -1,176 +1,112 @@
-Received: from smtp.smtpout.orange.fr (smtp-21.smtpout.orange.fr [80.12.242.21])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 140832E653;
-	Tue, 16 Jan 2024 21:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.21
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B8A2E838
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 21:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705440120; cv=none; b=ogOzK1eQeKkD5QfYJejfgPefpgaEnTfpih/XTBG608oMuu9rQwofpDji0mKE93v1aBA51J+7+2crUpfoXGlRwdeD7ZXuSqIovnzTAy4+GHSFZc3ZcmLsoHs96W91NLWEFOtwXYBWifP11Fb7qYsBl1lrDc/W5aPfW9u6Z/aqAu4=
+	t=1705440348; cv=none; b=EEJ2SjTUb+8fHpOiFu5GweDp3KzfQc4mRWfdgQlLSrOa3BOU+u+8MDDLCQgvwB2+i+0hLCeK7l9ZIWgEAi7nxWLliFKq0lnfZmGiU9LmeOWCtDtYRrHxYU4XHUvQiMtNGJQ2jmORErUpzy5BboDAdMVCsaM+yZeWXT7746EYj3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705440120; c=relaxed/simple;
-	bh=U3x4ONFy9Ei70OFyJFkS3iOitDj71QgI6j6TOl7h2vo=;
-	h=Received:DKIM-Signature:X-ME-Helo:X-ME-Auth:X-ME-Date:X-ME-IP:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=AfygbzSzOKH7Dbs34TkPjCtLyAdHm/RAFA9kr7m3QfQUC9MQYhbto/1h68k0YVPnRZ33oqQLyRD7OwkLTYKPoI1n8Cu7VKJxgVcUz8p23qZSv0Xqgdd4u5QthQFCTnQz9ZugOrL+aAGhMM7MfkNEHqzlRzIadbko0NVYsHCKpw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=GaBM+qsL; arc=none smtp.client-ip=80.12.242.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1705440348; c=relaxed/simple;
+	bh=cTjaRffZLcdMx559tIlNBKaL3/5s/glalFdFLVPX+g0=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
+	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hv3eaV0qK0npWcCQ+F4uZQjK5kpQcU9rhvTT9fu/w3SLIq+vyxUJpYVQnSaBxvIvxitRuYPxnDt8wTIcEWqNa7SgoRkREt5quP0FeCcat3G+eKEqzw0RBEPLzhoGexyqeROxcL5i80yiixqUOQJSsmJXLsdT29QuEzaR/eFfWN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pa4l/4jb; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="GaBM+qsL"
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id Pql9rceCI6FTdPqlBrC9ak; Tue, 16 Jan 2024 22:14:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1705439658;
-	bh=wS8NzOHKk5phyyBMwvuAnpbVzPwUbfEIN5JtjGlJSK4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GaBM+qsLiFrpekYiaNN0jSJ1W0trwHwP5lRr1FwXjar/CcXCr5uiGbqgt42sVpPl2
-	 410dXKMWYXfBn15nVxKkWu2LMhEWwwDccADPFlhPKxL7i7OEn4Z74VGLjzvDgBYtc7
-	 9be/a0NZebkt2fhTQ1u8DU4vMxHgJsZB7BqQyizjR4wLED9wG9TbQVoK9On/UVwGZ7
-	 /YHvJ6B7ztLptm2TLilg6RFexTnEIXLSNdY4qgZIh/slb9feL7OLWpdYTaLsZZZdBX
-	 nc2vOWeovSzexpKdzCrJJ2YIycGvk6S23k2tcHGIzaot7XD9XdCR/M4Ac6Avfn9bYz
-	 pSdi+hyvh7Ktg==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 16 Jan 2024 22:14:18 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <de0bd3d3-bb7b-4f94-aae2-0d9323b273fb@wanadoo.fr>
-Date: Tue, 16 Jan 2024 22:14:10 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pa4l/4jb"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3368b9bbeb4so9187381f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 13:25:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705440345; x=1706045145; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ucvEqlwX+aOdzo8fM1tdvFKFaldc4mizPJaj9Q2q6P8=;
+        b=Pa4l/4jbNZBWmIxS9DcbZy5oInrhX7wifog2FBHrgbSZnm5LwfP2UypzBhemaJsH1y
+         a24eLEveqcwNtUL1hT29HlCI2iHjPiaVGvPjAwwJtWVTn2rl/yK5dekgd39x30kKez89
+         WacJFlU9cRY73yWPZC5cDymWwpHNW3MwBZyglioFafMo7uHSwHU+KKt5VBb2uxk45sjH
+         JLk3ATAJ5Tj2GvLof6RxRgJmmuHPh9VMvFbmeyPlgYV+1DMJktQ+BHNI1Y5kscpMWcco
+         iTFfs4GNWs3iAJ5ZVEVmCKGvpzKZQku8a7TFTsRoY8haZVIa6pcmzY8MZkQVmVcIqROn
+         REnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705440345; x=1706045145;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ucvEqlwX+aOdzo8fM1tdvFKFaldc4mizPJaj9Q2q6P8=;
+        b=TRkcXyhFZ1ZHzcb+tPAEZLL81I5vttDvVXMPWd5FUHm5PtfNigW3LWR4RJc5W32fGT
+         e5891B9EN1XCV5G/amW5SU//6o99wBuI1+Xp+15EBi+qrEiDU9FymdfRlClcxvIczIfF
+         qXV7nnkXBtzs8TCbU6rWD9+fSNyva6PQ3PAagMudS/CB7IDk8pF+Ia7NaNc97FqhSpkR
+         4q/ijuD11T/xxQ//GTvm+3FdxpgX28ZHUhGjNxNkwHpn6uZRkcdfkBT8JVOrQQ0Q/4c5
+         tZYJZQk2sHJrNFUETyuI1HPzyVQLpt7xqQv9sMXZTOxaQLL5s2xl/m12+ydKBG14B5tJ
+         s+3w==
+X-Gm-Message-State: AOJu0YyDm54DhnK5kXdHVbE4NmyjMzeUrEtkbJ3z6Wd1PApZc13p/zPF
+	A7S22/ys1M5HXvdU/Lbasl0=
+X-Google-Smtp-Source: AGHT+IGUpm4v0VccrEqtEaIXaoB4qyH5YiZh+EJc9iAON3+YhDLhkYnJlXUSQ/phXyCl9ja9j7qAbg==
+X-Received: by 2002:a5d:6d05:0:b0:337:8bc6:dc5 with SMTP id e5-20020a5d6d05000000b003378bc60dc5mr2657084wrq.165.1705440345062;
+        Tue, 16 Jan 2024 13:25:45 -0800 (PST)
+Received: from localhost (host86-162-136-255.range86-162.btcentralplus.com. [86.162.136.255])
+        by smtp.gmail.com with ESMTPSA id z6-20020a056000110600b003367a5b6b69sm61968wrw.106.2024.01.16.13.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 13:25:43 -0800 (PST)
+Date: Tue, 16 Jan 2024 21:23:29 +0000
+From: Lorenzo Stoakes <lstoakes@gmail.com>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Dave Chinner <david@fromorbit.com>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/1] mm: vmalloc: Mark vmap_init_free_space() with __init
+ tag
+Message-ID: <6d09807d-0476-4d9d-8753-dd6520c9a2eb@lucifer.local>
+References: <20240111132628.299644-1-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] usb: gadget: function: 9pfs
-Content-Language: en-MW
-To: Michael Grzeschik <m.grzeschik@pengutronix.de>,
- Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov
- <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>,
- Christian Schoenebeck <linux_oss@crudebyte.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: v9fs@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- kernel@pengutronix.de
-References: <20240116-ml-topic-u9p-v1-0-ad8c306f9a4e@pengutronix.de>
- <20240116-ml-topic-u9p-v1-1-ad8c306f9a4e@pengutronix.de>
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240116-ml-topic-u9p-v1-1-ad8c306f9a4e@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111132628.299644-1-urezki@gmail.com>
 
-Le 16/01/2024 à 02:49, Michael Grzeschik a écrit :
-> Add the new gadget function for 9pfs transport. This function is
-> defining an simple 9pfs transport interface that consists of one in and
-> one out endpoint. The endpoints transmit and receive the 9pfs protocol
-> payload when mounting a 9p filesystem over usb.
-> 
-> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+On Thu, Jan 11, 2024 at 02:26:28PM +0100, Uladzislau Rezki (Sony) wrote:
+> The vmap_init_free_space() function is called only once
+> therefore tag it with __init. Apart of that it access the
+> "vmlist" variable that is located in ".init.data" section.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202401112056.I41bELL4-lkp@intel.com/
+> Fixes: 86817057732 ("mm: vmalloc: remove global vmap_area_root rb-tree")
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 > ---
->   Documentation/filesystems/9p.rst     |  12 +
->   drivers/usb/gadget/Kconfig           |  11 +
->   drivers/usb/gadget/function/Makefile |   2 +
->   drivers/usb/gadget/function/f_9pfs.c | 849 +++++++++++++++++++++++++++++++++++
->   4 files changed, 874 insertions(+)
+>  mm/vmalloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 43a6608e1397..257981e37936 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -4834,7 +4834,7 @@ module_init(proc_vmalloc_init);
+>
+>  #endif
+>
+> -static void vmap_init_free_space(void)
+> +static void __init vmap_init_free_space(void)
+>  {
+>  	unsigned long vmap_start = 1;
+>  	const unsigned long vmap_end = ULONG_MAX;
+> --
+> 2.39.2
+>
 
-...
+Looks good to me too. Feel free to add:
 
-> +static int alloc_requests(struct usb_composite_dev *cdev,
-> +			  struct f_usb9pfs *usb9pfs)
-> +{
-> +	int result = 0;
-> +
-> +	usb9pfs->in_req = usb_ep_alloc_request(usb9pfs->in_ep, GFP_ATOMIC);
-> +	if (!usb9pfs->in_req)
-> +		goto fail;
-> +
-> +	usb9pfs->out_req = usb9pfs_alloc_ep_req(usb9pfs->out_ep, usb9pfs->buflen);
-> +	if (!usb9pfs->out_req)
-> +		goto fail_in;
-> +
-> +	usb9pfs->in_req->complete = usb9pfs_tx_complete;
-> +	usb9pfs->out_req->complete = usb9pfs_rx_complete;
-> +
-> +	/* length will be set in complete routine */
-> +	usb9pfs->in_req->context = usb9pfs->out_req->context = usb9pfs;
-> +
-> +	return 0;
-> +
-> +fail_in:
-> +	usb_ep_free_request(usb9pfs->in_ep, usb9pfs->in_req);
-> +fail:
-> +	return result;
-
-'result' is never overwritten, so we always return 0.
-Is it on purpose?
-
-> +}
-
-...
-
-> +static struct usb_function *usb9pfs_alloc(struct usb_function_instance *fi)
-> +{
-> +	struct f_usb9pfs_opts *usb9pfs_opts;
-> +	struct f_usb9pfs *usb9pfs;
-> +
-> +	usb9pfs = kzalloc(sizeof(*usb9pfs), GFP_KERNEL);
-> +	if (!usb9pfs)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	usb9pfs_opts = container_of(fi, struct f_usb9pfs_opts, func_inst);
-> +
-> +	mutex_lock(&usb9pfs_opts->lock);
-> +	usb9pfs_opts->refcnt++;
-> +	mutex_unlock(&usb9pfs_opts->lock);
-> +
-> +	usb9pfs->buflen = usb9pfs_opts->buflen;
-> +
-> +	usb9pfs->function.name = "usb9pfs";
-> +	usb9pfs->function.bind = usb9pfs_func_bind;
-> +	usb9pfs->function.set_alt = usb9pfs_set_alt;
-> +	usb9pfs->function.disable = usb9pfs_disable;
-> +	usb9pfs->function.strings = usb9pfs_strings;
-> +
-> +	usb9pfs->function.free_func = usb9pfs_free_func;
-> +
-> +	mutex_lock(&usb9pfs_ida_lock);
-> +
-> +	usb9pfs->index = ida_simple_get(&usb9pfs_ida, 0, 100, GFP_KERNEL);
-
-This API will soon be removed.
-Please use ida_alloc_max() instead.
-
-Also, there is no corresponding ida_free()? (or isa_simple_remove())
-
-> +	if (usb9pfs->index < 0) {
-> +		struct usb_function *ret = ERR_PTR(usb9pfs->index);
-> +
-> +		kfree(usb9pfs);
-> +		mutex_unlock(&usb9pfs_ida_lock);
-> +		return ret;
-> +	}
-> +
-> +	mutex_unlock(&usb9pfs_ida_lock);
-> +
-> +	usb9pfs->tag = kasprintf(GFP_KERNEL, "%s%d", usb9pfs->function.name,
-> +				 usb9pfs->index);
-
-Same here, it seems to be freed nowhere?
-I think that both should be added in usb9pfs_free_func().
-
-CJ
-
-> +
-> +	INIT_LIST_HEAD(&usb9pfs->function_list);
-> +
-> +	mutex_lock(&usb9pfs_lock);
-> +	list_add_tail(&usb9pfs->function_list, &usbg_function_list);
-> +	mutex_unlock(&usb9pfs_lock);
-> +
-> +	return &usb9pfs->function;
-> +}
-
-...
-
-
+Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
