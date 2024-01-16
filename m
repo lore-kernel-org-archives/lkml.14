@@ -1,335 +1,225 @@
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D822D7A5
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 21:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705439811; cv=none; b=u2pQ56xDftGC7BipV5r7XZ6+4s5OwxK+v0cTIKmnisYDni/dGEzKVEOzFPpVvbkuuKClI6WM3t6x47JOHi2Za9zHOEBQKufdyfY80u3/Yf0iQoc5yIKO8GuUNSGBupHK+xuE6L8K+7hhFILF7gjpE/kB8MhJN7OK8KvzmXlv5CI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705439811; c=relaxed/simple;
-	bh=xBHW4qYf3NcxxENUHmwdw0yhtGOW1i9//29Q4Cdd+0M=;
-	h=Received:From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=qwYg8h17+sVV+jzBIu38R44oQWxZpu86I/BOCkiXg7oEQ1cqKsyZCUna7yGvSjgeVCDLLLMkbqaXuD/2GC22W8avgTCn0eIQ8mhE66vV/e+uj/Dvbgwp3Q5mY/t99bPvWknrTOfbCul8O2474ZTiMqW/YRVse5DpFnVHOVq3fJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-24-108.elisa-laajakaista.fi [88.113.24.108])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id 655d8f3c-b4b4-11ee-a9de-005056bdf889;
-	Tue, 16 Jan 2024 23:15:39 +0200 (EET)
-From: andy.shevchenko@gmail.com
-Date: Tue, 16 Jan 2024 23:15:38 +0200
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 01/10] pci: add new set of devres functions
-Message-ID: <Zabx-u-R-VsYIeIz@surfacebook.localdomain>
-References: <20240115144655.32046-2-pstanner@redhat.com>
- <20240115144655.32046-3-pstanner@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD4F5BAE3
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 21:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705439824; cv=fail; b=l2o30GDW3vtJaS3XoD2o7Ci2cU1csXQkn9rqFiQ55ABbcjvqxkszAod+z2J55ZBDOxFOjqvFTbwIczZgg96HYyVcC0FePZ/VO6zBRAb13U2Z2noeyUIyj3OLoi5SqlIu0ajPllxa9oFi4kolKZXRMOttr38SumhEau69NhCR1PE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705439824; c=relaxed/simple;
+	bh=X3eJHWZIu36LUZ+qmJlOyus86Ruyfj6a5DBWt0b64F8=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:
+	 Received:ARC-Message-Signature:ARC-Authentication-Results:Received:
+	 Received:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:
+	 Message-ID:References:In-Reply-To:Accept-Language:Content-Language:
+	 X-MS-Has-Attach:X-MS-TNEF-Correlator:user-agent:
+	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
+	 x-ms-office365-filtering-correlation-id:x-ld-processed:
+	 x-ms-exchange-senderadcheck:x-ms-exchange-antispam-relay:
+	 x-microsoft-antispam:x-microsoft-antispam-message-info:
+	 x-forefront-antispam-report:
+	 x-ms-exchange-antispam-messagedata-chunkcount:
+	 x-ms-exchange-antispam-messagedata-0:Content-Type:Content-ID:
+	 Content-Transfer-Encoding:MIME-Version:
+	 X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-originalarrivaltime:
+	 X-MS-Exchange-CrossTenant-fromentityheader:
+	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+	 X-MS-Exchange-CrossTenant-userprincipalname:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+	b=l1d9FBy0FT72r8AGLT3d98VSnughfRsTtdaXsFYYsBiOZ+P++lp5yIimZ8k5d4QIxjGRliHOOrPhr1+nF9uDwCfw2MFfz32fcyZULbeubiBAypG1yG6n3L/fLfcgvXxdvdJtlSLGKNOlpToeROvgCOrQbCae1UR+sjn1st3hqN8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AlHmEvc7; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AlHmEvc7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705439824; x=1736975824;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=X3eJHWZIu36LUZ+qmJlOyus86Ruyfj6a5DBWt0b64F8=;
+  b=AlHmEvc7+YeUKhKtfh/O+UZbhtQKLx/QcL3Fxb2t51t9kH24i/Xgzl0n
+   g0ESQDkRoOvRZG0cjME5qXXYrf+bstQ5fZLbmUlrDwhBSz1n+xEtKaKZw
+   Gm/7Kl/uPN0X79Nd0XtkA4rVxi2gebRtUx26ygZ7sJEkTFHWbbfYsucsn
+   go1PmZ0f1YbM4IOL6kNRcjgNEyRWqc7hoHwOGOxGGYcNSsCpmIsPBv0JZ
+   Uk++JWnl0Sqb2lAbGyIrKfWdj/FXucOMcfmht55w13VNrMPkYOKv11tbu
+   aghCDz036xBuaoj5oflkKm22Et0VqO/tdwNjbB/qk9PUlp3rs0ouMS20P
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="7368496"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="7368496"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 13:17:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="874598480"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="874598480"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Jan 2024 13:17:02 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Jan 2024 13:17:01 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Jan 2024 13:17:01 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 16 Jan 2024 13:17:01 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 16 Jan 2024 13:17:01 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EYM3a7sqk0oxiTGUEoWz20IZ6Rd2V+RbQMef6sohrBz/XO92nvfAihCGl9RLgeGgcKXIRe30xnAj6LJeGLPDE/IA2MzpNSZgjH5KvxdBGsSr/TpEYrqMB5CPNbUI+gaeEhefAqPbxuFLZtAlQmWdlolw9YoufjTTYS6scUg3XoBSd2SIJU6lflQv/YOXSyC/hrijVnRz9I1v+8ZscC8C19nIggkpBYD9kFrTzlX4dg4CY8MhZYWeO7tC3LPhkvUbMiy3DlfUdWK/62dRQ2StgCVLW0U+WI8J1+S/NIo6J81WMbHnQ/du4RCsg4qVDuFBcb1e/zZDP7wu/E0pGPQbuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X3eJHWZIu36LUZ+qmJlOyus86Ruyfj6a5DBWt0b64F8=;
+ b=fbRB5HfC1eyTUkqBGW5kAp6aZA0z2fUEc5lDCbZFEaTRruUQ5Nzyyk9uSa3DY+V23nTBdAz90SCSHCpa1bk/YoT7w2x+bbOCQms2c3N0QTK9bU8jWmrB9WWF3fMjIZxpdegzOGsfzlXiCN3SupJORX8FsyyjPQkSqve5J9Q+4y8iMyyBl3e4vB/HPHfaNmVThgYkcxqFWBvJyqhJ+bpvJ7efCRQzRT2dR+I5j+MFeLk4lqwOUWeWSpikwFktPjsMJ5yH+6MLWyc/NYCXYEzxpZ25DHulDqACHH5M1MGLQVhU7QWGzgZEGOS78yDn+mZnTQkYlGlzDKN3g0ssLPzJ/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
+ by SN7PR11MB6703.namprd11.prod.outlook.com (2603:10b6:806:268::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Tue, 16 Jan
+ 2024 21:16:58 +0000
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ca1e:db:ee01:887]) by BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ca1e:db:ee01:887%5]) with mapi id 15.20.7181.019; Tue, 16 Jan 2024
+ 21:16:58 +0000
+From: "Huang, Kai" <kai.huang@intel.com>
+To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+CC: "Cui, Dexuan" <decui@microsoft.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"jpiotrowski@linux.microsoft.com" <jpiotrowski@linux.microsoft.com>,
+	"hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "thomas.lendacky@amd.com"
+	<thomas.lendacky@amd.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-coco@lists.linux.dev"
+	<linux-coco@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv2] x86/mm: Fix memory encryption features advertisement
+Thread-Topic: [PATCHv2] x86/mm: Fix memory encryption features advertisement
+Thread-Index: AQHaRH8fDWK2kmMhZkC3EKr4wXoBC7DcRqMAgAAGUACAAKy3AA==
+Date: Tue, 16 Jan 2024 21:16:58 +0000
+Message-ID: <a95e410a9b5b9662c415774aa254d85324c0258d.camel@intel.com>
+References: <20240111111224.25289-1-kirill.shutemov@linux.intel.com>
+	 <2b171c78e3dbc33f6fcf015c14c9e84825776798.camel@intel.com>
+	 <20240116105844.cjnwpzuywukfv5rs@box.shutemov.name>
+In-Reply-To: <20240116105844.cjnwpzuywukfv5rs@box.shutemov.name>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.50.2 (3.50.2-1.fc39) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|SN7PR11MB6703:EE_
+x-ms-office365-filtering-correlation-id: 603435ad-b72b-43be-d370-08dc16d87983
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HzVQHbAM+vw8EWPeGWGCvHRC6SnGOYZrABi5z+NaG3fzfKokcgyvGnnHIDADB8wMIZDFe0ZeIx52wT+8Izm6jkpyE2AYPzXWTXW0e3l1RS7p4hB9z8MQA9pVUISRVf+wnoJfPYLSKuF5hzTEsa5BNXHoh58mQJOC4/LShf1AoJ2dQe51Cs8JZ3uVZTWUTVGnh8dD7t5rUkAhjJXVGy4J/QiD5fBAUXX0YtmgkdAgLHIHxQzzwLRvOZHGwmbawhmrLmHVRNLlRRKDFSbf32X4RFhSI8w6Wio8V1frDHsROAWUTtd3EMO1/Ucjypqo376v3ywXldKecgcOFiw9JY1K5wJSUJ1R2Tj10lioh3Y0BAFcpsF+J3FBTt8hxAP2rZI19VdZbh0DOzWBqf9oPWnQrcCVZyr7zbiJbc6rDZauMdQMIvm1qAhdB/VREguFqhMMUQ8RBJjig/AwIhN81xLQDinnFA+/H3m8laxErzM0fPsbai/1lpFXPEX0NS5pvpdlgP3r4ZJSwHmwd7RqTDzLP585yJ5l1GieT0Jux1hyObDD6zb0Kw5Pv1/Fze+hRr9KJgw9//axUGZBxJ2FGbL9oV89NmDZvKqRsyfE71GrVu8ObS0MpIaomjzTzNEsVJdN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(366004)(396003)(346002)(39860400002)(230922051799003)(186009)(1800799012)(451199024)(64100799003)(71200400001)(2616005)(26005)(6506007)(6512007)(478600001)(5660300002)(83380400001)(2906002)(7416002)(4326008)(41300700001)(91956017)(6486002)(66446008)(76116006)(8936002)(6916009)(64756008)(66556008)(66946007)(66476007)(54906003)(316002)(8676002)(82960400001)(38070700009)(36756003)(122000001)(86362001)(38100700002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YjRvNStzS3ZSVGFMNy9mdFJnOHZSWk9iZjJtbFJLb0c2QlF4S3RkYitIdExl?=
+ =?utf-8?B?b05FWE1BOE4xWW16VEIwY1J0MHY4c3JkWjVUUXk4TTJnUmRHeTFlcWNCYXc3?=
+ =?utf-8?B?T0J2WnVmdjZCVU9Kb0ZjRWpiOTlQOXVXalp6U1h2UFJtdG1FR3FiYWp5ZkJ2?=
+ =?utf-8?B?VHpuTjIwRFJKamJIdnlZMjAwSUkvaG4vQ3U0V2tCdlZYSjNBTzRvbCtaWUtY?=
+ =?utf-8?B?MVc4bkJxU0o4b0xiQ0hjc0Z4dEdFand4cnNWRURPNSs4VWVTK0IwblRzT3FZ?=
+ =?utf-8?B?Yko5bWJCTEovVXdEY0pQODJzM1lWTkkwUHc5ZzMxYmwyT1gwdGx5SWhDdGxD?=
+ =?utf-8?B?bkxvRXJrZFZoSWl0ZDBrK0E2ZVZWK1pIR2p0UDFhcE1ub0l1RDFkbzJud1Rn?=
+ =?utf-8?B?RmMxTWlJbDh5a0FZbHUrek9pUlJHTE14bktpMWdKRERkbVNtaEdoNVB2Myt6?=
+ =?utf-8?B?Tlc0d0ZheWxZZkNaeFpDZWcwTUlsRklIczUwbnVNUjE1Mjg1aHA2Uk9Ra2E3?=
+ =?utf-8?B?Z3I2UzlsK0JRT28vSm5ZTkNCS29YVG9SM25XTEtsY3B5Y1lmVGcwcDB0RHAy?=
+ =?utf-8?B?NVR2RjNIRWExTUVZM0xTb2RudXJ1TlBMTENZOWRQTXA1enNlRENOTVFtd20v?=
+ =?utf-8?B?UnBLajZnSS91Yk92dW4vekRZLzczNmxsNG9hMS9UdjFDRVVKYW5yWkhldEJF?=
+ =?utf-8?B?cU9KdXU1aW13ZnJpUFpESDdOcU9hSGo0YVdUeWZHcVRLOEdod2krM3ZJS3Rn?=
+ =?utf-8?B?S3BDUWR6WnkyaW9zTXFobmV5bDV6SVhybjN3K3VhWUJCMFNZcC9DZW01c0l4?=
+ =?utf-8?B?V0lWZ2dIY1RWbkZiN1R0UHRPVDFqb0FOZ2dkQnlwV1VTaHE1S3pwYkVWcmxO?=
+ =?utf-8?B?aDBjTjZneHUzTy9MSmRqR0k3Q2JRUDdLc0QzK21tNVczVlRvV1VTMDNDY2dZ?=
+ =?utf-8?B?RFVlRkZ0Y2RXY3lhVlNtclZBNWZOZ1o0dFQrUm5lMStyZ2lETjVJTDdFNUhp?=
+ =?utf-8?B?U0lHZFRKcUI3Szd3cU82Y1g3dnlYTXdlbU53MDdKNUpyWW1TTTJiVFpKZzBE?=
+ =?utf-8?B?VFdlcm0vWGhUOXdMYm5BcXgxSC9KbXhlMUl0ekpsZnM1ejN1dXJlTFpZMTR1?=
+ =?utf-8?B?eWZxNXc0aW9kYk1YK0VKYXVDdkJpVyttZGtoaEN2d0k0OWR6RVFEZHF3MmNm?=
+ =?utf-8?B?L2x0a3hjUCtjOUMvMGp6ak5IcXFGVi84U0dkRnJRby9qZHJEVTVxQ3dSTUl6?=
+ =?utf-8?B?VVdOUVcyK0ZGSDVFVWR1eXVwWnJTV2dHb3RkVER0aWV5R3RCclVLWUwvT2E0?=
+ =?utf-8?B?ZU95WnVPVE1YODBNR2c5Qzh3S281VUYrOXhkNEZsU0QwU2grMUUxdmpaZ0dQ?=
+ =?utf-8?B?WXRSNC95TXVRV2pXbENCRnhIRGR6K2JpN0JLaFpRUWxiU0dvbld3T3VZRGNp?=
+ =?utf-8?B?OEh0dUoxZzhnZXBsMU1XdG1UMWc0TTcrQ3pWRko5Rks4azA0RURab3ZDUHJi?=
+ =?utf-8?B?aWx1R1M4Ymd2OVp6LzRodllNbVMxRTVPRS9ZRUVaMlhwSk5oVGEvZWIrUXQx?=
+ =?utf-8?B?ekZiT1RyYWpjajRQYnphL1lyUnNxWjhYRXhKZjduZ2txN2RMcXFCTXhFVHYr?=
+ =?utf-8?B?LzFkK0tiak1TTFdWTElGYktmM2FhbzVudWxETFZ0SjZCeVBBcTNNbjExdGJI?=
+ =?utf-8?B?WWEvS2poK2lRRVNhSWwwMnFKTjZVbS8wZjFPVjJhelhnMlJwRkI5US9LdjV3?=
+ =?utf-8?B?bWFJN01qSklVRjF0bmhqMXpDUDZLY2J4OFFVUDlyZFM3TzZWYUx6aVdHZy8z?=
+ =?utf-8?B?aUpqaHpIK3dvRmFCS3NOUURXZTkva1k3cGUyVjZVeWM5K2RmU3VVZHlnVHVn?=
+ =?utf-8?B?RjgwaWpOcmFOOER0Wnd3SVNBdGdxUlNjSHhJSXd1MlNpZ0paWEtTampkYjhp?=
+ =?utf-8?B?MGNiREE3eFFlZ1FJUTd3TzcyN1ZSL01XdTFqdWVjWjIzNUFvVCtnRjI4UnQx?=
+ =?utf-8?B?Z2VzRldUaHdpWEF2anFiZG83ZExxbTFEempmNTZOM0dhbmVwanZoUlRuV0Y1?=
+ =?utf-8?B?YXNaNjlqeE80U3NmN1J0TlFIZVdPa0xHNEFsYnJ0MjVmeE1DMEcrVjBzam9l?=
+ =?utf-8?B?dTUrL3JnK05IL3l0dmpGTFpaRVNhcUhpN3VQTjdLTk9nMVR5UHoreW9Kdm4r?=
+ =?utf-8?B?YlE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <911A3DA06AF35A428499117FA1B28702@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240115144655.32046-3-pstanner@redhat.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 603435ad-b72b-43be-d370-08dc16d87983
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2024 21:16:58.7130
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7TOekJI/uR8zxYKZsaJ1iwroq8pCADKd39FI6lzOEjGvv28CZ2Ko6GUukKDVUq/bVfPRiMm9+3tebEwvP1H8Hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6703
+X-OriginatorOrg: intel.com
 
-Mon, Jan 15, 2024 at 03:46:12PM +0100, Philipp Stanner kirjoitti:
-> PCI's devres API is not extensible to ranged mappings and has
-> bug-provoking features. Improve that by providing better alternatives.
-> 
-> When the original devres API for PCI was implemented, priority was given
-> to the creation of a set of "pural functions" such as
-> pcim_request_regions(). These functions have bit masks as parameters to
-> specify which BARs shall get mapped. Most users, however, only use those
-> to mapp 1-3 BARs.
-> A complete set of "singular functions" does not exist.
-> 
-> As functions mapping / requesting multiple BARs at once have (almost) no
-> mechanism in C to return the resources to the caller of the plural
-> function, the devres API utilizes the iomap-table administrated by the
-> function pcim_iomap_table().
-> 
-> The entire PCI devres implementation was strongly tied to that table
-> which only allows for mapping whole, complete BARs, as the BAR's index
-> is used as table index. Consequently, it's not possible to, e.g., have a
-> pcim_iomap_range() function with that mechanism.
-> 
-> An additional problem is that pci-devres has been ipmlemented in a sort
-> of "hybrid-mode": Some unmanaged functions have managed counterparts
-> (e.g.: pci_iomap() <-> pcim_iomap()), making their managed nature
-> obvious to the programmer. However, the region-request functions in
-> pci.c, prefixed with pci_, behave either managed or unmanaged, depending
-> on whether pci_enable_device() or pcim_enable_device() has been called
-> in advance.
-> 
-> This hybrid API is confusing and should be more cleanly separated by
-> providing always-managed functions prefixed with pcim_.
-> 
-> Thus, the existing devres API is not desirable because:
-> 	a) The vast majority of the users of the plural functions only
-> 	   ever sets a single bit in the bit mask, consequently making
-> 	   them singular functions anyways.
-> 	b) There is no mechanism to request / iomap only part of a BAR.
-> 	c) The iomap-table mechanism is over-engineered, complicated and
-> 	   can by definition not perform bounds checks, thus, provoking
-> 	   memory faults: pcim_iomap_table(pdev)[42]
-> 	d) region-request functions being sometimes managed and
-> 	   sometimes not is bug-provoking.
-> 
-> Implement a set of singular pcim_ functions that use devres directly
-> and bypass the legacy iomap table mechanism.
-> Add devres.c to driver-api documentation.
-
-...
-
-> +struct pcim_addr_devres {
-> +	enum pcim_addr_devres_type type;
-> +	void __iomem *baseaddr;
-> +	unsigned long offset;
-> +	unsigned long len;
-> +	short bar;
-> +};
-> +
-> +static inline void pcim_addr_devres_clear(struct pcim_addr_devres *res)
-> +{
-> +	res->type = PCIM_ADDR_DEVRES_TYPE_INVALID;
-> +	res->bar = -1;
-> +	res->baseaddr = NULL;
-> +	res->offset = 0;
-> +	res->len = 0;
-
-More robust (in case the data type gets extended) is memset() + individual
-(non-0) sets.
-
-> +}
-
-...
-
-> +static int __pcim_request_region_range(struct pci_dev *pdev, int bar,
-> +		unsigned long offset, unsigned long maxlen,
-> +		const char *name, int exclusive)
-> +{
-> +	resource_size_t start = pci_resource_start(pdev, bar);
-> +	resource_size_t len = pci_resource_len(pdev, bar);
-> +	unsigned long flags = pci_resource_flags(pdev, bar);
-> +
-> +	if (start == 0 || len == 0) /* that's an unused BAR. */
-> +		return 0;
-> +	if (len <= offset)
-> +		return  -EINVAL;
-> +
-> +	start += offset;
-> +	len -= offset;
-
-> +	if (len > maxlen && maxlen != 0)
-> +		len = maxlen;
-
-	if (maxlen && ...)
-
-?
-
-> +	if (flags & IORESOURCE_IO) {
-> +		if (!request_region(start, len, name))
-> +			return -EBUSY;
-> +	} else if (flags & IORESOURCE_MEM) {
-> +		if (!__request_mem_region(start, len, name, exclusive))
-> +			return -EBUSY;
-> +	} else {
-> +		/* That's not a device we can request anything on. */
-> +		return -ENODEV;
-> +	}
-
-Hmm... Not sure, but the switch-case against type might be considered:
-
-	switch (resource_type(...)) {
-		...
-	}
-
-> +	return 0;
-> +}
-
-> +static void __pcim_release_region_range(struct pci_dev *pdev, int bar,
-> +		unsigned long offset, unsigned long maxlen)
-> +{
-> +	resource_size_t start = pci_resource_start(pdev, bar);
-> +	resource_size_t len = pci_resource_len(pdev, bar);
-> +	unsigned long flags = pci_resource_flags(pdev, bar);
-> +
-> +	if (len <= offset || start == 0)
-> +		return;
-> +
-> +	if (len == 0 || maxlen == 0) /* This an unused BAR. Do nothing. */
-> +		return;
-> +
-> +	start += offset;
-> +	len -= offset;
-> +
-> +	if (len > maxlen)
-> +		len = maxlen;
-
-This part is quite a duplication of the above function, no?
-
-> +	if (flags & IORESOURCE_IO)
-> +		release_region(start, len);
-> +	else if (flags & IORESOURCE_MEM)
-> +		release_mem_region(start, len);
-> +}
-
-...
-
-> +static int __pcim_request_region(struct pci_dev *pdev, int bar,
-> +		const char *name, int exclusive)
-> +{
-> +	const unsigned long offset = 0;
-> +	const unsigned long len = pci_resource_len(pdev, bar);
-
-How const anyhow useful here?
-Ditto for other places like this.
-
-> +	return __pcim_request_region_range(pdev, bar, offset, len, name, exclusive);
-> +}
-
-...
-
-> +static int pcim_addr_resources_match(struct device *dev, void *a_raw, void *b_raw)
-> +{
-> +	struct pcim_addr_devres *a, *b;
-> +
-> +	a = a_raw;
-> +	b = b_raw;
-
-> +	(void)dev; /* unused. */
-
-Why do we need this?
-
-> +	if (a->type != b->type)
-> +		return 0;
-> +
-> +	switch (a->type) {
-> +	case PCIM_ADDR_DEVRES_TYPE_REGION:
-> +	case PCIM_ADDR_DEVRES_TYPE_REGION_MAPPING:
-> +		return a->bar == b->bar;
-> +	case PCIM_ADDR_DEVRES_TYPE_MAPPING:
-> +		return a->baseaddr == b->baseaddr;
-> +	case PCIM_ADDR_DEVRES_TYPE_REGION_RANGE_MAPPING:
-> +		return a->bar == b->bar &&
-> +			a->offset == b->offset && a->len == b->len;
-
-Indentation or made it a single line.
-
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-
-return directly from default case.
-
-> +}
-
-...
-
-> +/**
-> + * pcim_iomap_region - Request and iomap a PCI BAR
-> + * @pdev: PCI device to map IO resources for
-> + * @bar: Index of a BAR to map
-> + * @name: Name associated with the request
-> + *
-> + * Returns __iomem pointer on success, an IOMEM_ERR_PTR on failure.
-
-Please, make sure the kernel-doc won't complain
-
-	scripts/kernel-doc -v -none -Wall ...
-
-> + * Mapping and region will get automatically released on driver detach. If
-> + * desired, release manually only with pcim_iounmap_region().
-> + */
-> +void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar, const char *name)
-> +{
-> +	int ret = 0;
-
-Redundant assignment.
-
-> +	struct pcim_addr_devres *res;
-
-Perhaps reversed xmas tree order?
-
-> +	res = pcim_addr_devres_alloc(pdev);
-> +	if (!res)
-> +		return IOMEM_ERR_PTR(-ENOMEM);
-> +
-> +	res->type = PCIM_ADDR_DEVRES_TYPE_REGION_MAPPING;
-> +	res->bar = bar;
-> +
-> +	ret = __pcim_request_region(pdev, bar, name, 0);
-> +	if (ret != 0)
-> +		goto err_region;
-> +
-> +	res->baseaddr = pci_iomap(pdev, bar, 0);
-> +	if (!res->baseaddr) {
-> +		ret = -EINVAL;
-> +		goto err_iomap;
-> +	}
-> +
-> +	devres_add(&pdev->dev, res);
-> +	return res->baseaddr;
-> +
-> +err_iomap:
-> +	__pcim_release_region(pdev, bar);
-> +err_region:
-> +	pcim_addr_devres_free(res);
-> +
-> +	return IOMEM_ERR_PTR(ret);
-> +}
-
-...
-
-> +static int _pcim_request_region(struct pci_dev *pdev, int bar, const char *name,
-> +		int request_flags)
-
-Indentation?
-
-> +{
-> +	int ret = 0;
-
-Unneded assignment. Also fix this in other places.
-
-> +	struct pcim_addr_devres *res;
-> +
-> +	res = pcim_addr_devres_alloc(pdev);
-> +	if (!res)
-> +		return -ENOMEM;
-> +	res->type = PCIM_ADDR_DEVRES_TYPE_REGION;
-> +	res->bar = bar;
-> +
-> +	ret = __pcim_request_region(pdev, bar, name, request_flags);
-> +	if (ret != 0) {
-
-	if (ret)
-
-Also fix this in other places.
-
-> +		pcim_addr_devres_free(res);
-> +		return ret;
-> +	}
-> +
-> +	devres_add(&pdev->dev, res);
-> +	return 0;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+T24gVHVlLCAyMDI0LTAxLTE2IGF0IDEzOjU4ICswMzAwLCBraXJpbGwuc2h1dGVtb3ZAbGludXgu
+aW50ZWwuY29tIHdyb3RlOg0KPiBPbiBUdWUsIEphbiAxNiwgMjAyNCBhdCAxMDozNjoxMEFNICsw
+MDAwLCBIdWFuZywgS2FpIHdyb3RlOg0KPiA+IE9uIFRodSwgMjAyNC0wMS0xMSBhdCAxNDoxMiAr
+MDMwMCwgS2lyaWxsIEEuIFNodXRlbW92IHdyb3RlOg0KPiA+ID4gV2hlbiBtZW1vcnkgZW5jcnlw
+dGlvbiBpcyBlbmFibGVkLCB0aGUga2VybmVsIHByaW50cyB0aGUgZW5jcnlwdGlvbg0KPiA+ID4g
+Zmxhdm9yIHRoYXQgdGhlIHN5c3RlbSBzdXBwb3J0cy4NCj4gPiA+IA0KPiA+ID4gVGhlIGNoZWNr
+IGFzc3VtZXMgdGhhdCBldmVyeXRoaW5nIGlzIEFNRCBTTUUvU0VWIGlmIGl0IGRvZXNuJ3QgaGF2
+ZQ0KPiA+ID4gdGhlIFREWCBDUFUgZmVhdHVyZSBzZXQuDQo+ID4gPiANCj4gPiA+IEh5cGVyLVYg
+dlRPTSBzZXRzIGNjX3ZlbmRvciB0byBDQ19WRU5ET1JfSU5URUwgd2hlbiBpdCBydW5zIGFzIEwy
+IGd1ZXN0DQo+ID4gPiBvbiB0b3Agb2YgVERYLCBidXQgbm90IFg4Nl9GRUFUVVJFX1REWF9HVUVT
+VC4gSHlwZXItViBvbmx5IG5lZWRzIG1lbW9yeQ0KPiA+ID4gZW5jcnlwdGlvbiBlbmFibGVkIGZv
+ciBJL08gd2l0aG91dCB0aGUgcmVzdCBvZiBDb0NvIGVuYWJsaW5nLg0KPiA+ID4gDQo+ID4gPiBU
+byBhdm9pZCBjb25mdXNpb24sIGNoZWNrIHRoZSBjY192ZW5kb3IgZGlyZWN0bHkuDQo+ID4gPiAN
+Cj4gPiA+IFBvc3NpYmxlIGFsdGVybmF0aXZlIGlzIHRvIGNvbXBsZXRlbHkgcmVtb3ZpbmcgdGhl
+IHByaW50IHN0YXRlbWVudC4NCj4gPiA+IEZvciBhIHJlZ3VsYXIgVERYIGd1ZXN0LCB0aGUga2Vy
+bmVsIGFscmVhZHkgcHJpbnRzIGEgbWVzc2FnZSBpbmRpY2F0aW5nDQo+ID4gPiB0aGF0IGl0IGlz
+IGJvb3Rpbmcgb24gVERYLiBTaW1pbGFybHksIEFNRCBhbmQgSHlwZXItViBjYW4gYWxzbyBkaXNw
+bGF5DQo+ID4gPiBhIG1lc3NhZ2UgZHVyaW5nIHRoZWlyIGVudW1lcmF0aW9uIHByb2Nlc3MuDQo+
+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEtpcmlsbCBBLiBTaHV0ZW1vdiA8a2lyaWxsLnNo
+dXRlbW92QGxpbnV4LmludGVsLmNvbT4NCj4gPiA+IENjOiBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNy
+b3NvZnQuY29tPg0KPiA+ID4gQ2M6IEplcmVtaSBQaW90cm93c2tpIDxqcGlvdHJvd3NraUBsaW51
+eC5taWNyb3NvZnQuY29tPg0KPiA+IA0KPiA+IFNlZW1zIHRoaXMgZml4IGlzIGZvciB1c2Vyc3Bh
+Y2UgcnVubmluZyBpbiBoeXBlcnYgZW52aXJvbm1lbnQgYmVpbmcgYWJsZSB0byB1c2UNCj4gPiBz
+b21lIGVhc3kgZ3JlcCB0byBnZXQgd2hpY2ggY29jbyB2ZW5kb3IgaXQgaXMgcnVubmluZyBvbj8N
+Cj4gDQo+IE1ha2luZyBkZWNpc2lvbiBpbiB1c2Vyc3BhY2UgYnkJZ3JlcHBpbmcgZG1lc2cgaXMg
+YmFkIGlkZWEgYW5kIG5vYm9keQ0KPiBzaG91bGQgZG8gdGhpcy4gSXQgY2FuIGVhc2lseSBnaXZl
+IGZhbHNlIHJlc3VsdDogZG1lc2cgaXMgbm90IEFCSSwgZm9ybWF0DQo+IGNhbiBjaGFuZ2UgYW5k
+IHJpbmcgYnVmZmVyIGhhcyBmaW5pdGUgc2l6ZSwgdGhlIG1lc3NhZ2UgY2FuIGJlIG92ZXJyaWRk
+ZW4uDQo+IA0KPiBJZiB3ZSBuZWVkIGEgd2F5IGZvciB1c2Vyc3BhY2UgdG8gZGlzY292ZXIgd2hp
+Y2ggQ29DbyBlbnZpcm9ubWVudCBpdCBydW5zDQo+IG9uLCB3ZSBuZWVkIHByb3BlciBBQkkgZm9y
+IHRoYXQuIE1heWJlIHN5c2ZzIGZpbGUgb3Igc29tZXRoaW5nLg0KDQpZZWFoIGFncmVlZC4gIDot
+KQ0KDQo=
