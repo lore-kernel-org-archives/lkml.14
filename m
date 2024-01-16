@@ -1,109 +1,107 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD4B1CD25;
-	Tue, 16 Jan 2024 18:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4301CF83
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705429092; cv=none; b=UTOh9l36lgXICjrWcbGVKFpd/sTAJucW1t7A/DjdP09a63sF4bk0BydzDouqhG6rK6OLgoJ8h2YbqcdrawLl05d8DA0eB7yuXS/+59wxr1ACgP7AlTJulTWkZxxVJcbknREIpiqbSR0Z8/yOv0nA67Z9DeqPwnPOievcdl9HKh0=
+	t=1705429093; cv=none; b=i3ZavVtPBPAL8SDNDHyVLk2NN4LOwJroNBFYAVQ10be9roAnjjU4KZssWg4Fr4S5Wp4/WtO1O76hQ36OLI8ttRRxTAdg39LskQ0E6I1xBJyats8pOmCyYy2XurzRtwLVWPQ7Vo1CLVUlb8/nfeZ5wEhwA0ReUAh5jVkUVhk3Xm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705429092; c=relaxed/simple;
-	bh=D+9yhsbbiU3M8+XaRQAhZHfptq83I3P1xJofsv0BUiM=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:
-	 Received:Received:Received:Received:Received:From:To:Cc:Subject:
-	 Date:Message-Id:X-Mailer:X-TM-AS-GCONF:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:Content-Transfer-Encoding:
-	 X-Proofpoint-UnRewURL:MIME-Version:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details; b=jjKxR8y58+zF5YgHPP97LGJOGvcolZw8RJn+gUBHnjRuCkLYrAbfBdbepoB5ZA6iQtmJANvmfWdKk/tr3ig/91XJbPKGL65rdL6n+uQhJHdTwiHm47huUh0GMCxRAHaKeNO/dIDeiNTu09KjHZ2zwhJTgrphT9vl04tYVFoifv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e1yQNgZi; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1705429093; c=relaxed/simple;
+	bh=gKTkgQrZ49Y9ypGVnL4BuMEuKgsHCL1mmdyBQRQ7TyM=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=jMyC+Y9g/ldXYqhXpwLGjGcCyNWS6FgN1M+PYbKMa2Owdf7d8TxpUltR4pXrJd30bG0mRjfB/O7L3JDa9H2FdY2rqVKHCtYyBuoXVSMvD5KliqRrXHka3eYZHv0Vwds76SFw5sWXXo2sThy2RaY2UMDSiQZJ8ftxm+HNmuPpboE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zRp7oB14; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e1yQNgZi"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GHajnj013956;
-	Tue, 16 Jan 2024 18:17:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=aaFBe5zBgPU2Ep6HdcKRRKcDrXSVRkoQTfG6kuOOue8=;
- b=e1yQNgZi2knu+i4J+lf0I9IPs7YCcccNs9kaG7leYmy8z0TVLB8dbI9JPqA8Wx1cty7C
- clrqjMtlXhqa4uKMvJCgx5gaTwpfNrwoUjemEjcH6lMpuvTI3qT/xt7Ig9Ld8+sNeoqg
- wGrA+E11ed123sjzgohuVWEKlQH76dr5QUrR6v4N3ToyvKYhMs4dC5V5qc4ZE9+sziXn
- XHq4Tq06FfHIvtDeDBxOKX9rN60bjicFCElz6/XkcQ70tdH1oVCv2H66qByLCEIkBDxh
- lx6UhfcuRrOr9UYHoQJR6Kw/dq7ILrsQC3uXJhninZEOilxqwDEVcs1WZCyZIDUoNNco wA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnxbrhfaw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 18:17:59 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GIB8oi005724;
-	Tue, 16 Jan 2024 18:17:58 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnxbrhfab-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 18:17:58 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GGOVZo023364;
-	Tue, 16 Jan 2024 18:17:57 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm6bkg5h9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 18:17:57 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GIHugm22282748
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 18:17:56 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B02A058057;
-	Tue, 16 Jan 2024 18:17:56 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7B37F58059;
-	Tue, 16 Jan 2024 18:17:56 +0000 (GMT)
-Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Jan 2024 18:17:56 +0000 (GMT)
-From: Ninad Palsule <ninad@linux.ibm.com>
-To: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ninad Palsule <ninad@linux.ibm.com>, joel@jms.id.au
-Subject: [PATCH v2 0/1] Add more compatibility strings to tpm-tis-i2c
-Date: Tue, 16 Jan 2024 12:17:53 -0600
-Message-Id: <20240116181754.3905754-1-ninad@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: c5DCmR4WSTSNRNFjBtc9QCaZ2Rh_InRN
-X-Proofpoint-ORIG-GUID: L_XYt_5DC9FNJYzP1i59sreuXKJMWxtj
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zRp7oB14"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5ceb3fe708eso3608624a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 10:18:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705429091; x=1706033891; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nJooin9XTx4g3x3a9c7SBIxC9eNa2n9cCWHm63C9sSo=;
+        b=zRp7oB147QO+I2o3hq79h6wka3bcgMLkOSALgvFUpwnMywOFBP5kJPBEUC8PhpRXtA
+         KXiHqlvjR7vwXpd1xUvrsuJDsrw15v9nREGTbhv8LueGrYT7oam/uGLX5WimynX/F64h
+         1szairMFRms95dn9HP0UvQqPBZ7T3h6iMevoUt0AQUrM0D1JI240LeEGd+x6Ekqxrmdt
+         8SUYJWtYGNoSKs/YiLkTSsgDtBIplMQDJXA5217B7dHjfu5pMolmNVxPSJ/6YJFZkdSM
+         2wPCuBXEI+ekkwEbd9gxv9SA9eWdlzdeByBVwDjdmaET7tzcN0uCts/YS3hR3kydEWKH
+         lyNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705429091; x=1706033891;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nJooin9XTx4g3x3a9c7SBIxC9eNa2n9cCWHm63C9sSo=;
+        b=fdDjbOlk3poc9rHG3i4fOOWQWrgwcYLvMSx+xDgRbJGM6Sm7wcr3sB0zfaEbLVHtet
+         Czh+tCpGfqpdPDtWePQzGIo7jK6i+Y8QwJ3VdTDIViVONB5Zk/fFJt9YOQWpj4+PvN8x
+         2yhHI9i9kVgi6kFEmgnoVd3mMkaowQQIhewV11iUKPTJvnhpSkHjx53hzF+nk8RGPuiD
+         FaPk3WMDZHTDGcabXEEod/Z9gwVuCVQreik2kfMB0YqecAh4MCeOBgwphttkRgD6q0Rp
+         dGF+ob8AdOTwXHthqQemM3WJe9ra4Nq3puUPC1NwQ7UCkPuZ6NTbOsg3Hc8A3N/4A2Gs
+         e7dQ==
+X-Gm-Message-State: AOJu0Yy2D5ro+MbvnSnVijEoYary36Z8ZMz2nkrU7XaoZBcqrvRhZiDA
+	wQmt8tsTBJpnB/cJ2sh4j+04Uutz+VAUUf0nmeZiETFG4yIRtw==
+X-Google-Smtp-Source: AGHT+IGSVRpaZ7py0aGDcXqUGB1wR1pdRNGkrbP520E/PLnsPPWJZ6RT2l0QCqMxgJNKCi+AWA26QY6IY55+lhtrXOA=
+X-Received: by 2002:a17:90a:6586:b0:28c:4a6:2190 with SMTP id
+ k6-20020a17090a658600b0028c04a62190mr4488921pjj.10.1705429091652; Tue, 16 Jan
+ 2024 10:18:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_10,2024-01-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=872
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401160144
+References: <20240110102102.61587-1-tudor.ambarus@linaro.org> <20240110102102.61587-9-tudor.ambarus@linaro.org>
+In-Reply-To: <20240110102102.61587-9-tudor.ambarus@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Tue, 16 Jan 2024 12:18:00 -0600
+Message-ID: <CAPLW+4=yQYQvMKuMX68_kmCtV8C_EUD2a1UHQBCpg4x186FtaA@mail.gmail.com>
+Subject: Re: [PATCH 08/18] tty: serial: samsung: move open brace '{' on the
+ next line
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	andre.draszik@linaro.org, peter.griffin@linaro.org, kernel-team@android.com, 
+	willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The new IBM system1 bmc machine uses Nuvoton TPM chip. I had this commit
-as part of the device tree for new machine but reviewer suggested send
-the driver commit as separate patch. The version 2 includes common
-compatibility string for TPM 2.0.
+On Wed, Jan 10, 2024 at 4:23=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
+.org> wrote:
+>
+> Move open brace '{' following function definition on the next line.
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
 
-The patchset for IBM system1 bmc machine device tree is as follows:
-https://lore.kernel.org/linux-kernel/20231212164004.1683589-1-ninad@linux.ibm.com/
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
-Joel Stanley (1):
-  tpm: tis-i2c: Add more compatible strings
-
- drivers/char/tpm/tpm_tis_i2c.c | 1 +
- 1 file changed, 1 insertion(+)
-
--- 
-2.39.2
-
+>  drivers/tty/serial/samsung_tty.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsun=
+g_tty.c
+> index 11ae3a1dcdc3..b9d1ef67468c 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -1740,7 +1740,8 @@ static struct uart_driver s3c24xx_uart_drv =3D {
+>
+>  static struct s3c24xx_uart_port s3c24xx_serial_ports[UART_NR];
+>
+> -static void s3c24xx_serial_init_port_default(int index) {
+> +static void s3c24xx_serial_init_port_default(int index)
+> +{
+>         struct uart_port *port =3D &s3c24xx_serial_ports[index].port;
+>
+>         spin_lock_init(&port->lock);
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
+>
