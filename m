@@ -1,192 +1,269 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A9C1BF4A;
-	Tue, 16 Jan 2024 14:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B646EADF;
+	Tue, 16 Jan 2024 14:44:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YA0GU2wS";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5a3zr2BK";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jCdJL65X";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2QSGex3g"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BAD5E21F66;
-	Tue, 16 Jan 2024 14:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1705416122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVmq7YIGGUGkMgh2A0CtP10jz2Uu/1E09fSfuA5XwQI=;
-	b=YA0GU2wSpgqe9DKSzvBTdCq3JTYyXmniGTJpadtrHQk+Fil1EGE9flb6/y0KO2If5jdlie
-	59jOusMTeIilU/7mfmHSUTjuSKRKd1yn+3+cm7pWgc0W2EoPrB2ymT0R0H54HMgfneOlCO
-	r2UzlF4B9g+x0Q7fOX2r7IPnOAGRBRw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1705416122;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVmq7YIGGUGkMgh2A0CtP10jz2Uu/1E09fSfuA5XwQI=;
-	b=5a3zr2BKsBvChnuT9b655F5j3mxTUzn0mT/QBOhcde92//c3hPQMUdIC4/6u96CLABk6CD
-	zAoPevOTXQbs/eBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1705416121; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVmq7YIGGUGkMgh2A0CtP10jz2Uu/1E09fSfuA5XwQI=;
-	b=jCdJL65X91WBZ2AN13StTjxzqX6E0YeC7fFMX6KvEa45EWk+VljCLiIxwn/4wBru09J6Fm
-	c4asCAk+joi3wJ0vnwbPMxJtnFLJvRwxhv9yXzq/tPHsnxit6O0jgpYvZywJOmEITs2vAF
-	hlaRTUGfuo6XBgCVnrSm4JvemR/K++Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1705416121;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVmq7YIGGUGkMgh2A0CtP10jz2Uu/1E09fSfuA5XwQI=;
-	b=2QSGex3g4E5PESslKq1BJ3tqQfLauuBia2kXfoH9j3WfNdYMr96LHb+hU+o3CErMFrp0z9
-	c4OUzQjmd6yIS5Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A9A0132FA;
-	Tue, 16 Jan 2024 14:42:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Qi6WGbmVpmVldAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 16 Jan 2024 14:42:01 +0000
-Message-ID: <1bc8a5df-b413-4869-8931-98f5b9e82fe5@suse.cz>
-Date: Tue, 16 Jan 2024 15:42:01 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFUYMXcf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEA1C433C7;
+	Tue, 16 Jan 2024 14:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705416261;
+	bh=+IrwKlp6UAiY/ETGopdBM6vfi4zQT9+TOVEU95jc+QM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZFUYMXcfrcBlgMFmeOBG6QK4FPWpIj83Hl7iJD0gWIrgeXnRuvx/EFQ5Bir99Xz2O
+	 NlURbUxSzquu2iuaKBp4bgh0i5O4MRaSh2nUrLJlzqqM7EMHqZZTwcZ0KqEmSITu1G
+	 TJEH8sexIdawv5r1pF6yuifT/uLlkXjuszqmEPVyFiJasMWpFnmn06zgGyXprZJAQ7
+	 C6U2nIBTB+RWBh70+rKtDKE1rCaHduyAjpluD78FIJWCq7Xh80FJvVcVSBqm0vX6tO
+	 PiWlcaU3zYVKaNOya3HugBr7Es7jjmKT/IpncFTxda0NAQqQFMNBPxEpiTTbyOb3kh
+	 RysVJs8CatXXQ==
+Date: Tue, 16 Jan 2024 08:44:19 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: PCI: qcom,pcie-sm8550: move SM8550 to
+ dedicated schema
+Message-ID: <20240116144419.GA3856889-robh@kernel.org>
+References: <20240108-dt-bindings-pci-qcom-split-v1-0-d541f05f4de0@linaro.org>
+ <20240108-dt-bindings-pci-qcom-split-v1-1-d541f05f4de0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 0/3] reading proc/pid/maps under RCU
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- dchinner@redhat.com, casey@schaufler-ca.com, ben.wolsieffer@hefring.com,
- paulmck@kernel.org, david@redhat.com, avagin@google.com,
- usama.anjum@collabora.com, peterx@redhat.com, hughd@google.com,
- ryan.roberts@arm.com, wangkefeng.wang@huawei.com, Liam.Howlett@Oracle.com,
- yuzhao@google.com, axelrasmussen@google.com, lstoakes@gmail.com,
- talumbau@google.com, willy@infradead.org, mgorman@techsingularity.net,
- jhubbard@nvidia.com, vishal.moola@gmail.com, mathieu.desnoyers@efficios.com,
- dhowells@redhat.com, jgg@ziepe.ca, sidhartha.kumar@oracle.com,
- andriy.shevchenko@linux.intel.com, yangxingui@huawei.com,
- keescook@chromium.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, kernel-team@android.com
-References: <20240115183837.205694-1-surenb@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20240115183837.205694-1-surenb@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=jCdJL65X;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=2QSGex3g
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLk41rrgs15z4i1nmqiwtynpyh)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 MX_GOOD(-0.01)[];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 NEURAL_HAM_SHORT(-0.20)[-0.998];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-3.00)[99.99%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[36];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,redhat.com,schaufler-ca.com,hefring.com,google.com,collabora.com,arm.com,huawei.com,Oracle.com,gmail.com,infradead.org,techsingularity.net,nvidia.com,efficios.com,ziepe.ca,oracle.com,linux.intel.com,chromium.org,vger.kernel.org,kvack.org,android.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:97:from]
-X-Spam-Score: -4.50
-X-Rspamd-Queue-Id: BAD5E21F66
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240108-dt-bindings-pci-qcom-split-v1-1-d541f05f4de0@linaro.org>
 
-On 1/15/24 19:38, Suren Baghdasaryan wrote:
-
-Hi,
-
-> The issue this patchset is trying to address is mmap_lock contention when
-> a low priority task (monitoring, data collecting, etc.) blocks a higher
-> priority task from making updated to the address space. The contention is
-> due to the mmap_lock being held for read when reading proc/pid/maps.
-> With maple_tree introduction, VMA tree traversals are RCU-safe and per-vma
-> locks make VMA access RCU-safe. this provides an opportunity for lock-less
-> reading of proc/pid/maps. We still need to overcome a couple obstacles:
-> 1. Make all VMA pointer fields used for proc/pid/maps content generation
-> RCU-safe;
-> 2. Ensure that proc/pid/maps data tearing, which is currently possible at
-> page boundaries only, does not get worse.
-
-Hm I thought we were to only choose this more complicated in case additional
-tearing becomes a problem, and at first assume that if software can deal
-with page boundary tearing, it can deal with sub-page tearing too?
-
-> The patchset deals with these issues but there is a downside which I would
-> like to get input on:
-> This change introduces unfairness towards the reader of proc/pid/maps,
-> which can be blocked by an overly active/malicious address space modifyer.
-
-So this is a consequence of the validate() operation, right? We could avoid
-this if we allowed sub-page tearing.
-
-> A couple of ways I though we can address this issue are:
-> 1. After several lock-less retries (or some time limit) to fall back to
-> taking mmap_lock.
-> 2. Employ lock-less reading only if the reader has low priority,
-> indicating that blocking it is not critical.
-> 3. Introducing a separate procfs file which publishes the same data in
-> lock-less manner.
+On Mon, Jan 08, 2024 at 03:19:14PM +0100, Krzysztof Kozlowski wrote:
+> The qcom,pcie.yaml binding file containing all possible Qualcomm SoC
+> PCIe root complexes gets quite complicated with numerous if:then:
+> conditions customizing clocks, interrupts, regs and resets.  Adding and
+> reviewing new devices is difficult, so simplify it by having shared
+> common binding and file with only one group of compatible devices:
 > 
-> I imagine a combination of these approaches can also be employed.
-> I would like to get feedback on this from the Linux community.
+> 1. Copy all common qcom,pcie.yaml properties (so everything except
+>    supplies) to a new shared qcom,pcie-common.yaml schema.
+> 2. Move SM8550 PCIe compatible devices to dedicated binding file.
 > 
-> Note: mmap_read_lock/mmap_read_unlock sequence inside validate_map()
-> can be replaced with more efficiend rwsem_wait() proposed by Matthew
-> in [1].
+> This creates equivalent SM8550 schema file, except missing required
+> compatible which is actually redundant.
 > 
-> [1] https://lore.kernel.org/all/ZZ1+ZicgN8dZ3zj3@casper.infradead.org/
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  98 ++++++++++++
+>  .../devicetree/bindings/pci/qcom,pcie-sm8550.yaml  | 171 +++++++++++++++++++++
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         |  38 -----
+>  3 files changed, 269 insertions(+), 38 deletions(-)
 > 
-> Suren Baghdasaryan (3):
->   mm: make vm_area_struct anon_name field RCU-safe
->   seq_file: add validate() operation to seq_operations
->   mm/maps: read proc/pid/maps under RCU
-> 
->  fs/proc/internal.h        |   3 +
->  fs/proc/task_mmu.c        | 130 ++++++++++++++++++++++++++++++++++----
->  fs/seq_file.c             |  24 ++++++-
->  include/linux/mm_inline.h |  10 ++-
->  include/linux/mm_types.h  |   3 +-
->  include/linux/seq_file.h  |   1 +
->  mm/madvise.c              |  30 +++++++--
->  7 files changed, 181 insertions(+), 20 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> new file mode 100644
+> index 000000000000..125136176f93
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> @@ -0,0 +1,98 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/qcom,pcie-common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm PCI Express Root Complex Common Properties
+> +
+> +maintainers:
+> +  - Bjorn Andersson <andersson@kernel.org>
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +properties:
+> +  reg:
+> +    minItems: 4
+> +    maxItems: 6
+> +
+> +  reg-names:
+> +    minItems: 4
+> +    maxItems: 6
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 8
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 8
+> +
+> +  iommu-map:
+> +    minItems: 1
+> +    maxItems: 16
+> +
+> +  clocks:
+> +    minItems: 3
+> +    maxItems: 13
+> +
+> +  clock-names:
+> +    minItems: 3
+> +    maxItems: 13
+> +
+> +  dma-coherent: true
+> +
+> +  interconnects:
+> +    maxItems: 2
+> +
+> +  interconnect-names:
+> +    items:
+> +      - const: pcie-mem
+> +      - const: cpu-pcie
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    items:
+> +      - const: pciephy
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  perst-gpios:
+> +    description: GPIO controlled connection to PERST# signal
+> +    maxItems: 1
+> +
+> +  wake-gpios:
+> +    description: GPIO controlled connection to WAKE# signal
+> +    maxItems: 1
+> +
+> +required:
+> +  - reg
+> +  - reg-names
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - clocks
+> +  - clock-names
+> +
+> +anyOf:
+> +  - required:
+> +      - interrupts
+> +      - interrupt-names
+> +      - "#interrupt-cells"
+> +  - required:
+> +      - msi-map
+> +      - msi-map-mask
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml
+> new file mode 100644
+> index 000000000000..b6d025f153bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml
+> @@ -0,0 +1,171 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm SM8550 PCI Express Root Complex
+> +
+> +maintainers:
+> +  - Bjorn Andersson <andersson@kernel.org>
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +description:
+> +  Qualcomm SM8550 SoC (and compatible) PCIe root complex controller is based on
+> +  the Synopsys DesignWare PCIe IP.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: qcom,pcie-sm8550
+> +      - items:
+> +          - enum:
+> +              - qcom,pcie-sm8650
+> +          - const: qcom,pcie-sm8550
+> +
+> +  reg:
+> +    minItems: 5
+> +    maxItems: 6
+> +
+> +  reg-names:
+> +    minItems: 5
+> +    items:
+> +      - const: parf # Qualcomm specific registers
+> +      - const: dbi # DesignWare PCIe registers
+> +      - const: elbi # External local bus interface registers
+> +      - const: atu # ATU address space
+> +      - const: config # PCIe configuration space
+> +      - const: mhi # MHI registers
+> +
+> +  clocks:
+> +    minItems: 7
+> +    maxItems: 8
+> +
+> +  clock-names:
+> +    minItems: 7
+> +    items:
+> +      - const: aux # Auxiliary clock
+> +      - const: cfg # Configuration clock
+> +      - const: bus_master # Master AXI clock
+> +      - const: bus_slave # Slave AXI clock
+> +      - const: slave_q2a # Slave Q2A clock
+> +      - const: ddrss_sf_tbu # PCIe SF TBU clock
+> +      - const: noc_aggr # Aggre NoC PCIe AXI clock
+> +      - const: cnoc_sf_axi # Config NoC PCIe1 AXI clock
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    items:
+> +      - const: pci # PCIe core reset
+> +      - const: link_down # PCIe link down reset
+> +
+> +oneOf:
+> +  - properties:
+> +      interrupts:
+> +        maxItems: 1
+> +      interrupt-names:
+> +        items:
+> +          - const: msi
+> +
+> +  - properties:
+> +      interrupts:
+> +        minItems: 8
+> +      interrupt-names:
+> +        items:
+> +          - const: msi0
+> +          - const: msi1
+> +          - const: msi2
+> +          - const: msi3
+> +          - const: msi4
+> +          - const: msi5
+> +          - const: msi6
+> +          - const: msi7
 
+How does a given SoC have 1 or 8 interrupts? I guess it is possible. A 
+comment here would be helpful.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
