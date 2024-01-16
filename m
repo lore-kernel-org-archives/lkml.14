@@ -1,178 +1,165 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DB412B82;
-	Tue, 16 Jan 2024 08:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TDhrd4R7nz9xyNh;
-	Tue, 16 Jan 2024 16:24:49 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 0C1231409EB;
-	Tue, 16 Jan 2024 16:39:28 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwA3cCS4QKZlq8CkAA--.3812S2;
-	Tue, 16 Jan 2024 09:39:27 +0100 (CET)
-Message-ID: <909a681238012328b0ab5499a5b66bef95247a89.camel@huaweicloud.com>
-Subject: Re: [PATCH v3 5/5] ramfs: Initialize security of in-memory inodes
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Hugh Dickins <hughd@google.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
- Roberto Sassu <roberto.sassu@huawei.com>, casey@schaufler-ca.com,
- paul@paul-moore.com, jmorris@namei.org,  serge@hallyn.com
-Date: Tue, 16 Jan 2024 09:39:16 +0100
-In-Reply-To: <c1ab0a9160d9220fac6e9c8c2bfa9ea493a08699.camel@huaweicloud.com>
-References: <20231116090125.187209-1-roberto.sassu@huaweicloud.com>
-	 <20231116090125.187209-6-roberto.sassu@huaweicloud.com>
-	 <c1ab0a9160d9220fac6e9c8c2bfa9ea493a08699.camel@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30748125A3;
+	Tue, 16 Jan 2024 08:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akc4r1LU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFED1C433F1;
+	Tue, 16 Jan 2024 08:39:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705394386;
+	bh=zMBkNvcbW1+IjSGQQV5Zw6ssVa4un4ZiyvEjDOZ0/UQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=akc4r1LUSBobkRaqvTAjbmScrg3YVE9bgsGUF/R4Deev/WicJd81uP8RUtACPi+1Y
+	 ijs7qcDxLzOAa+xAz7a6M747uoIxAQo5W1buqO6IbRYpNLARGM1LZlKLpCzpaPanoJ
+	 HtCh/TOB3AMTxe/irtQDm0KrDJXZGhVCf9X6hsMyQiNY6/4nMdfzHmAGTM9to2Z7Fx
+	 tN28jAtzPrfmeKqGxcxuV+Rqc/NBoc4Yb262+SXGE0k7qlzQxm5ZY15dboItZUG56h
+	 o9+hrfGKOlQwMVMafr2ueLWjfs1fsjjVFRKsFgLCJKj8lC1tFdXaOcXSzeLm+7qHff
+	 o+GRrPnB19CCA==
+Date: Tue, 16 Jan 2024 10:39:04 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mm@kvack.org, Bibo Mao <maobibo@loongson.cn>,
+	linux-mips@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+	Li Xuefeng <lixuefeng@loongson.cn>,
+	Yang Tiezhu <yangtiezhu@loongson.cn>,
+	Gao Juxin <gaojuxin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Huang Pei <huangpei@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-kernel@vger.kernel.org, Yajun Deng <yajun.deng@linux.dev>
+Subject: Re: memblock_reserve for unadded region (was: [PATCH] MIPS:
+ loongson64: fix boot failure)
+Message-ID: <ZaZAqMwuql9Y5Gra@kernel.org>
+References: <20231225093025.23215-1-huangpei@loongson.cn>
+ <731134fd-4b3d-418c-84ee-80646bffcc01@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:GxC2BwA3cCS4QKZlq8CkAA--.3812S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr4fKFW8tr1DCFW7Wr4UArb_yoW5ZFWDpr
-	Z2q3Z8G3ZYqFyxGr1SqF4Duw1SqayrKr4DC3yxXw17A3Z7Cr1DtF1fKr13uF1rCrW8Cw1F
-	qF4j9r15uw1UArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgGb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJw
-	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
-	WIevJa73UjIFyTuYvjxUrR6zUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAEBF1jj5iWVQAAsr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <731134fd-4b3d-418c-84ee-80646bffcc01@flygoat.com>
 
-On Fri, 2024-01-12 at 09:17 +0100, Roberto Sassu wrote:
-> On Thu, 2023-11-16 at 10:01 +0100, Roberto Sassu wrote:
-> > From: Roberto Sassu <roberto.sassu@huawei.com>
-> >=20
-> > Add a call security_inode_init_security() after ramfs_get_inode(), to l=
-et
-> > LSMs initialize the inode security field. Skip ramfs_fill_super(), as t=
-he
-> > initialization is done through the sb_set_mnt_opts hook.
-> >=20
-> > Calling security_inode_init_security() call inside ramfs_get_inode() is
-> > not possible since, for CONFIG_SHMEM=3Dn, tmpfs also calls the former a=
-fter
-> > the latter.
-> >=20
-> > Pass NULL as initxattrs() callback to security_inode_init_security(), s=
-ince
-> > the purpose of the call is only to initialize the in-memory inodes.
->=20
-> Hugh, Andrew, is the patch fine for you? Casey would make a PR for the
-> patch set.
+On Mon, Jan 15, 2024 at 02:08:21PM +0000, Jiaxun Yang wrote:
+> Hi mm folks,
+> 
+> Just a quick question, what is the expected behavior of memblock_reserve
+> a region that is not added to memblock with memblock_add?
+> 
+> I'm unable to find any documentation about memblock_reserve in comments and
+> boot-time-mm, but as per my understanding to the code, this should be a
+> legit usage?
 
-(I guess putting the people of interest in To instead of CC could
-help...)
+Yes, memblock allows reserving memory that was not added to memblock with
+memblock_add().
+ 
+> In practical we run into uninitialized nid of reserved block problem, should
+> we fix it
+> in our usage, or on memblock side?
 
-Friendly ping... it would be awesome if you could Ack this patch so
-that Casey can still ask Linus to pull.
+Apparently it's a bug in memblock :(
 
-Thanks
-
-Roberto
-
+If you revert 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
+does the issue disappear?
+ 
 > Thanks
->=20
-> Roberto
->=20
-> > Cc: Hugh Dickins <hughd@google.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> 在 2023/12/25 09:30, Huang Pei 写道:
+> > Since commit 61167ad5fecd("mm: pass nid to reserve_bootmem_region()),
+> > loongson64 booting failed with CONFIG_DEFERRED_STRUCT_PAGE_INIT like
+> > this:
+> > ----------------------------------------------------------------------
+> >   Call Trace:
+> >   [<ffffffff8235d088>] reserve_bootmem_region+0xa8/0x184
+> >   [<ffffffff82333940>] memblock_free_all+0x104/0x2a8
+> >   [<ffffffff8231d8e4>] mem_init+0x84/0x94
+> >   [<ffffffff82330958>] mm_core_init+0xf8/0x308
+> >   [<ffffffff82318c38>] start_kernel+0x43c/0x86c
+> > 
+> >   Code: 10400028  2402fff0  de420000 <dc432880> 0203182b 14600022
+> >   64420070  00003025  24040003
+> > 
+> >   ---[ end trace 0000000000000000 ]---
+> >   Kernel panic - not syncing: Attempted to kill the idle task!
+> >   ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+> > ----------------------------------------------------------------------
+> > 
+> > The root cause is no memory region "0x0-0x1fffff" paired with
+> > memory-reserved region "0x0-0x1fffff" and "0x0-0xfff", with "memblock
+> > =debug":
+> > 
+> > ----------------------------------------------------------------------
+> >    memory[0x0]     [0x0000000000200000-0x000000000effffff],
+> >    0x000000000ee00000 bytes on node 0 flags: 0x0 !!!!here
+> >    memory[0x1]     [0x0000000090000000-0x00000000fdffffff],
+> >    0x000000006e000000 bytes on node 0 flags: 0x0
+> >    memory[0x2]     [0x0000000100000000-0x000000027fffffff],
+> >    0x0000000180000000 bytes on node 0 flags: 0x0
+> >    memory[0x3]     [0x0000100000000000-0x000010000fffffff],
+> >    0x0000000010000000 bytes on node 1 flags: 0x0
+> >    memory[0x4]     [0x0000100090000000-0x000010027fffffff],
+> >    0x00000001f0000000 bytes on node 1 flags: 0x0
+> >    reserved.cnt  = 0x1f
+> >    reserved[0x0]   [0x0000000000000000-0x000000000190c80a],
+> >    0x000000000190c80b bytes flags: 0x0 !!!!oops 0x0-0x1fffff not in memory[0]
+> >    reserved[0x1]   [0x000000000190c810-0x000000000190eea3],
+> >    0x0000000000002694 bytes flags: 0x0
+> > ----------------------------------------------------------------------
+> > 
+> > It caused memory-reserved region "0x0-0x1fffff" without valid node id
+> > in "memblock_get_region_node" from "memmap_init_reserved_pages", lead to
+> > "reserve_bootmem_region-> init_reserved_page -> early_pfn_to_nid()"
+> > accessing "node_data" out of bound.
+> > 
+> > To fix this bug, we should remove unnecessary memory block reservation.
+> > 
+> > +. no need to reserve 0x0-0x1fffff below kernel loading address, since
+> > it is not registered by "memblock_add_node"
+> > 
+> > +. no need to reserve 0x0-0xfff for exception handling if it is not
+> > registered by "memblock_add" either.
+> > 
+> > Fixes: commit 61167ad5fecd("mm: pass nid to reserve_bootmem_region())
+> > Signed-off-by: Huang Pei <huangpei@loongson.cn>
 > > ---
-> >  fs/ramfs/inode.c | 32 +++++++++++++++++++++++++++++++-
-> >  1 file changed, 31 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/fs/ramfs/inode.c b/fs/ramfs/inode.c
-> > index 4ac05a9e25bc..8006faaaf0ec 100644
-> > --- a/fs/ramfs/inode.c
-> > +++ b/fs/ramfs/inode.c
-> > @@ -102,11 +102,20 @@ ramfs_mknod(struct mnt_idmap *idmap, struct inode=
- *dir,
-> >  	int error =3D -ENOSPC;
-> > =20
-> >  	if (inode) {
-> > +		error =3D security_inode_init_security(inode, dir,
-> > +						     &dentry->d_name, NULL,
-> > +						     NULL);
-> > +		if (error) {
-> > +			iput(inode);
-> > +			goto out;
-> > +		}
-> > +
-> >  		d_instantiate(dentry, inode);
-> >  		dget(dentry);	/* Extra count - pin the dentry in core */
-> >  		error =3D 0;
-> >  		inode_set_mtime_to_ts(dir, inode_set_ctime_current(dir));
-> >  	}
-> > +out:
-> >  	return error;
-> >  }
-> > =20
-> > @@ -134,6 +143,15 @@ static int ramfs_symlink(struct mnt_idmap *idmap, =
-struct inode *dir,
-> >  	inode =3D ramfs_get_inode(dir->i_sb, dir, S_IFLNK|S_IRWXUGO, 0);
-> >  	if (inode) {
-> >  		int l =3D strlen(symname)+1;
-> > +
-> > +		error =3D security_inode_init_security(inode, dir,
-> > +						     &dentry->d_name, NULL,
-> > +						     NULL);
-> > +		if (error) {
-> > +			iput(inode);
-> > +			goto out;
-> > +		}
-> > +
-> >  		error =3D page_symlink(inode, symname, l);
-> >  		if (!error) {
-> >  			d_instantiate(dentry, inode);
-> > @@ -143,6 +161,7 @@ static int ramfs_symlink(struct mnt_idmap *idmap, s=
-truct inode *dir,
-> >  		} else
-> >  			iput(inode);
-> >  	}
-> > +out:
-> >  	return error;
-> >  }
-> > =20
-> > @@ -150,12 +169,23 @@ static int ramfs_tmpfile(struct mnt_idmap *idmap,
-> >  			 struct inode *dir, struct file *file, umode_t mode)
-> >  {
-> >  	struct inode *inode;
-> > +	int error;
-> > =20
-> >  	inode =3D ramfs_get_inode(dir->i_sb, dir, mode, 0);
-> >  	if (!inode)
-> >  		return -ENOSPC;
-> > +
-> > +	error =3D security_inode_init_security(inode, dir,
-> > +					     &file_dentry(file)->d_name, NULL,
-> > +					     NULL);
-> > +	if (error) {
-> > +		iput(inode);
-> > +		goto out;
-> > +	}
-> > +
-> >  	d_tmpfile(file, inode);
-> > -	return finish_open_simple(file, 0);
-> > +out:
-> > +	return finish_open_simple(file, error);
-> >  }
-> > =20
-> >  static const struct inode_operations ramfs_dir_inode_operations =3D {
->=20
+> >   arch/mips/kernel/traps.c    | 3 ++-
+> >   arch/mips/loongson64/numa.c | 2 --
+> >   2 files changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+> > index 246c6a6b0261..9b632b4c10c3 100644
+> > --- a/arch/mips/kernel/traps.c
+> > +++ b/arch/mips/kernel/traps.c
+> > @@ -2007,7 +2007,8 @@ unsigned long vi_handlers[64];
+> >   void reserve_exception_space(phys_addr_t addr, unsigned long size)
+> >   {
+> > -	memblock_reserve(addr, size);
+> > +	if(memblock_is_region_memory(addr, size))
+> > +		memblock_reserve(addr, size);
+> >   }
+> >   void __init *set_except_vector(int n, void *addr)
+> > diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
+> > index 8f61e93c0c5b..0f516dde81da 100644
+> > --- a/arch/mips/loongson64/numa.c
+> > +++ b/arch/mips/loongson64/numa.c
+> > @@ -130,8 +130,6 @@ static void __init node_mem_init(unsigned int node)
+> >   			memblock_reserve((node_addrspace_offset | 0xfe000000),
+> >   					 32 << 20);
+> > -		/* Reserve pfn range 0~node[0]->node_start_pfn */
+> > -		memblock_reserve(0, PAGE_SIZE * start_pfn);
+> >   	}
+> >   }
+> 
+> -- 
+> ---
+> Jiaxun Yang
+> 
 
+-- 
+Sincerely yours,
+Mike.
