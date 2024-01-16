@@ -1,184 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA33D67C70;
-	Tue, 16 Jan 2024 23:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B66167C51
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 23:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705448339; cv=none; b=qXOMEZD30fxwBFWLnnmTSvLaA9CyKWkVUB3O6bbnVAqe2nkwZ3ymLwX4VFSZCAxIdldxhPl2m+fGxQe0nrLBgKAVNfUL3jcTtMvF+FPY/Ku7oUZctpGKzPnYteJBd2dSqkw2jLAZw/w/cHHR5i6R2Q4MYb3XI7nRx/hQXMkVAAE=
+	t=1705448337; cv=none; b=LYQv9V+kMz9mvf2b+RxFERKqFgJIf8vkXNraPrHxK3KOL4+OBKcKrO/pr1gWoJq15tTStS72AQmOlE39PhiYQWX9enJC/+QViikLJm/2sGHLTL+IHbz7w4kPWXhMVdr8BFOjlJDcDkvDiO9wLtRSy47LrHnjGuinyf5zE0sg9AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705448339; c=relaxed/simple;
-	bh=kdVBorZqhrlAzJnHue7J/bMpS46boW/Qgz6CQs5DZdw=;
-	h=Received:Received:Message-ID:User-Agent:Date:From:To:Cc:Subject:
-	 References:MIME-Version:Content-Type; b=HNkCOi4aqKBChOr6+/+EhO8YaAsl9Mk7LIkYRHrwbEM1QyYV1twQDB+dN4zoG7dCJtgfdUM+WX/rmI44pQ4vIfIwh1nOw3pIi6xlR8qX4LyUJQ4932esgBuxwR0ekB9lfm7Zb0e3Yf9T37jbs42IAiufCh/Y8EneUlOinmlup4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CAE3C43399;
-	Tue, 16 Jan 2024 23:38:59 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rPt2U-00000001QfM-3DfO;
-	Tue, 16 Jan 2024 18:40:14 -0500
-Message-ID: <20240116234014.624901641@goodmis.org>
-User-Agent: quilt/0.67
-Date: Tue, 16 Jan 2024 17:55:33 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Christian Brauner <brauner@kernel.org>,
- Al  Viro <viro@ZenIV.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- linux-fsdevel@vger.kernel.org,
- kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH v3 2/2] eventfs: Do not create dentries nor inodes in iterate_shared
-References: <20240116225531.681181743@goodmis.org>
+	s=arc-20240116; t=1705448337; c=relaxed/simple;
+	bh=5etvGiu0T1Ci4UCNSgDgRVXFJ3x+Z9Hw03OC4MTU39A=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
+	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jKDg1CFUVKabHITmnpbgrcrlLxK87/GNIk5Kckiv6vgLXvAqsA7kdFRn1iUBlcS0KMan7FuDi9g4Cm8gAsS4aACe7oP5KEuIZJ8/LgW4L5UCcn1TxjHESYKlXaMDDBasKbHWXZXKzbqlUiKFwaUQniDzPx0nUaVuAuG3xuoakUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PczZcVmt; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PczZcVmt"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e879cf632so4649955e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 15:38:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705448330; x=1706053130; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BxQ/BWYR+PjxzLrNnVyzasE/2yl2t/5YvcquSYRLHa4=;
+        b=PczZcVmttdB2oNtEaUOd1mZx1188UY/XeuxJ6SKjTr6INC1DUPZkL9alXjSQY8sY1K
+         ag9KH7Zp+Rc9CG74yyVTSzRbj6+H9Lrkkih74oZNbEuau1kYv2TU/w2EfLn8ADOmtFp5
+         Rc+GlNTNoVugiU1TTSrNvCxleZQLqNozBSLoVfVbTXX1W7UTVJDILwLONkQLJMUFxCUU
+         K/1ig7JnREPPXBgE00LKxoI9ip0BWULP9tGta/K96tZx9pUBjbxH13SeZaq5Vy41H6tx
+         LOs+dj92R11E/Gm9tKJ39kIVG8/07iBDd5IbKsDsqDCk3exOFe3RMniJEsAVs0gey0Sx
+         AVxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705448330; x=1706053130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BxQ/BWYR+PjxzLrNnVyzasE/2yl2t/5YvcquSYRLHa4=;
+        b=AUuKbyc1X8aLtBqQR6y5XoAJCuZPyZxSm8+VfmsZPOgvVojGF/aq0ePs6BjWE4usYI
+         LAUWT8R7ZdfhlZj+Ku8QhOrOFQsha+zRXj/aSW1mw4A2mZlrYuN3CH5Dyxwhf0WosoER
+         ZY9EBoeMD5WdEgqtUjfgBPAEsWGlwJH5wFTBqgMZ6RIcTBqWXmrC7AlYiatIXyHBRF96
+         OKM6ONtb4qEfSXNHj1byxvXKQB5UQffXFO8J195lc6CfY1APMs2OxrJ2ejtJCRSye3iX
+         rTfqrpq6x2ulTpjp4eBXvtOKVKeNt0rID5ZnPuSmqC5sOgxffwEnuxn1y5KmJAfGy6LI
+         GXww==
+X-Gm-Message-State: AOJu0YxOlKyxmFBvHfWIoR/T+diRwc4winyFL95t/tfLUEcxUCvMjrx0
+	wbt77+PXh01Ul8lb8TDBl54=
+X-Google-Smtp-Source: AGHT+IEjCsioEZdDVJlyKy7MIaIRPNF+lvtLUa1ogCBD9vDCKU+cVFFygcJqpJOV53yY86Wy//8LpA==
+X-Received: by 2002:a7b:cd82:0:b0:40e:6930:4c99 with SMTP id y2-20020a7bcd82000000b0040e69304c99mr1719322wmj.113.1705448330318;
+        Tue, 16 Jan 2024 15:38:50 -0800 (PST)
+Received: from localhost (host86-162-136-255.range86-162.btcentralplus.com. [86.162.136.255])
+        by smtp.gmail.com with ESMTPSA id o31-20020a05600c511f00b0040e703ad630sm11812802wms.22.2024.01.16.15.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 15:38:49 -0800 (PST)
+Date: Tue, 16 Jan 2024 23:36:35 +0000
+From: Lorenzo Stoakes <lstoakes@gmail.com>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Dave Chinner <david@fromorbit.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH v3 05/11] mm/vmalloc: remove vmap_area_list
+Message-ID: <a5926122-cc27-43c0-b937-a70aa77a4005@lucifer.local>
+References: <20240102184633.748113-1-urezki@gmail.com>
+ <20240102184633.748113-6-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102184633.748113-6-urezki@gmail.com>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, Jan 02, 2024 at 07:46:27PM +0100, Uladzislau Rezki (Sony) wrote:
+> From: Baoquan He <bhe@redhat.com>
+>
+> Earlier, vmap_area_list is exported to vmcoreinfo so that makedumpfile
+> get the base address of vmalloc area. Now, vmap_area_list is empty, so
+> export VMALLOC_START to vmcoreinfo instead, and remove vmap_area_list.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> ---
+>  Documentation/admin-guide/kdump/vmcoreinfo.rst | 8 ++++----
+>  arch/arm64/kernel/crash_core.c                 | 1 -
+>  arch/riscv/kernel/crash_core.c                 | 1 -
+>  include/linux/vmalloc.h                        | 1 -
+>  kernel/crash_core.c                            | 4 +---
+>  kernel/kallsyms_selftest.c                     | 1 -
+>  mm/nommu.c                                     | 2 --
+>  mm/vmalloc.c                                   | 2 --
+>  8 files changed, 5 insertions(+), 15 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> index 78e4d2e7ba14..df54fbeaaa16 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> @@ -65,11 +65,11 @@ Defines the beginning of the text section. In general, _stext indicates
+>  the kernel start address. Used to convert a virtual address from the
+>  direct kernel map to a physical address.
+>
+> -vmap_area_list
+> ---------------
+> +VMALLOC_START
+> +-------------
+>
+> -Stores the virtual area list. makedumpfile gets the vmalloc start value
+> -from this variable and its value is necessary for vmalloc translation.
+> +Stores the base address of vmalloc area. makedumpfile gets this value
+> +since is necessary for vmalloc translation.
+>
+>  mem_map
+>  -------
+> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+> index 66cde752cd74..2a24199a9b81 100644
+> --- a/arch/arm64/kernel/crash_core.c
+> +++ b/arch/arm64/kernel/crash_core.c
+> @@ -23,7 +23,6 @@ void arch_crash_save_vmcoreinfo(void)
+>  	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
+>  	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
+>  	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
+> -	vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
+>  	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
+>  	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
+>  	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
+> diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
+> index 8706736fd4e2..d18d529fd9b9 100644
+> --- a/arch/riscv/kernel/crash_core.c
+> +++ b/arch/riscv/kernel/crash_core.c
+> @@ -8,7 +8,6 @@ void arch_crash_save_vmcoreinfo(void)
+>  	VMCOREINFO_NUMBER(phys_ram_base);
+>
+>  	vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
+> -	vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
+>  	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
+>  #ifdef CONFIG_MMU
+>  	VMCOREINFO_NUMBER(VA_BITS);
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index c720be70c8dd..91810b4e9510 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -253,7 +253,6 @@ extern long vread_iter(struct iov_iter *iter, const char *addr, size_t count);
+>  /*
+>   *	Internals.  Don't use..
+>   */
+> -extern struct list_head vmap_area_list;
+>  extern __init void vm_area_add_early(struct vm_struct *vm);
+>  extern __init void vm_area_register_early(struct vm_struct *vm, size_t align);
+>
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index d4313b53837e..b427f4a3b156 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -759,7 +759,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  	VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
+>  #endif
+>  	VMCOREINFO_SYMBOL(_stext);
+> -	VMCOREINFO_SYMBOL(vmap_area_list);
+> +	vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
+>
+>  #ifndef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(mem_map);
+> @@ -800,8 +800,6 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  	VMCOREINFO_OFFSET(free_area, free_list);
+>  	VMCOREINFO_OFFSET(list_head, next);
+>  	VMCOREINFO_OFFSET(list_head, prev);
+> -	VMCOREINFO_OFFSET(vmap_area, va_start);
+> -	VMCOREINFO_OFFSET(vmap_area, list);
+>  	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER + 1);
+>  	log_buf_vmcoreinfo_setup();
+>  	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
+> diff --git a/kernel/kallsyms_selftest.c b/kernel/kallsyms_selftest.c
+> index b4cac76ea5e9..8a689b4ff4f9 100644
+> --- a/kernel/kallsyms_selftest.c
+> +++ b/kernel/kallsyms_selftest.c
+> @@ -89,7 +89,6 @@ static struct test_item test_items[] = {
+>  	ITEM_DATA(kallsyms_test_var_data_static),
+>  	ITEM_DATA(kallsyms_test_var_bss),
+>  	ITEM_DATA(kallsyms_test_var_data),
+> -	ITEM_DATA(vmap_area_list),
+>  #endif
+>  };
+>
+> diff --git a/mm/nommu.c b/mm/nommu.c
+> index b6dc558d3144..5ec8f44e7ce9 100644
+> --- a/mm/nommu.c
+> +++ b/mm/nommu.c
+> @@ -131,8 +131,6 @@ int follow_pfn(struct vm_area_struct *vma, unsigned long address,
+>  }
+>  EXPORT_SYMBOL(follow_pfn);
+>
+> -LIST_HEAD(vmap_area_list);
+> -
+>  void vfree(const void *addr)
+>  {
+>  	kfree(addr);
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 786ecb18ae22..8c01f2225ef7 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -729,8 +729,6 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
+>
+>
+>  static DEFINE_SPINLOCK(free_vmap_area_lock);
+> -/* Export for kexec only */
+> -LIST_HEAD(vmap_area_list);
+>  static bool vmap_initialized __read_mostly;
+>
+>  static struct rb_root purge_vmap_area_root = RB_ROOT;
+> --
+> 2.39.2
+>
 
-The original eventfs code added a wrapper around the dcache_readdir open
-callback and created all the dentries and inodes at open, and increment
-their ref count. A wrapper was added around the dcache_readdir release
-function to decrement all the ref counts of those created inodes and
-dentries. But this proved to be buggy[1] for when a kprobe was created
-during a dir read, it would create a dentry between the open and the
-release, and because the release would decrement all ref counts of all
-files and directories, that would include the kprobe directory that was
-not there to have its ref count incremented in open. This would cause the
-ref count to go to negative and later crash the kernel.
+Looks good to me, I'm not _hugely_ familiar with this crash core stuff so:
 
-To solve this, the dentries and inodes that were created and had their ref
-count upped in open needed to be saved. That list needed to be passed from
-the open to the release, so that the release would only decrement the ref
-counts of the entries that were incremented in the open.
-
-Unfortunately, the dcache_readdir logic was already using the
-file->private_data, which is the only field that can be used to pass
-information from the open to the release. What was done was the eventfs
-created another descriptor that had a void pointer to save the
-dcache_readdir pointer, and it wrapped all the callbacks, so that it could
-save the list of entries that had their ref counts incremented in the
-open, and pass it to the release. The wrapped callbacks would just put
-back the dcache_readdir pointer and call the functions it used so it could
-still use its data[2].
-
-But Linus had an issue with the "hijacking" of the file->private_data
-(unfortunately this discussion was on a security list, so no public link).
-Which we finally agreed on doing everything within the iterate_shared
-callback and leave the dcache_readdir out of it[3]. All the information
-needed for the getents() could be created then.
-
-But this ended up being buggy too[4]. The iterate_shared callback was not
-the right place to create the dentries and inodes. Even Christian Brauner
-had issues with that[5].
-
-An attempt was to go back to creating the inodes and dentries at
-the open, create an array to store the information in the
-file->private_data, and pass that information to the other callbacks.[6]
-
-The difference between that and the original method, is that it does not
-use dcache_readdir. It also does not up the ref counts of the dentries and
-pass them. Instead, it creates an array of a structure that saves the
-dentry's name and inode number. That information is used in the
-iterate_shared callback, and the array is freed in the dir release. The
-dentries and inodes created in the open are not used for the iterate_share
-or release callbacks. Just their names and inode numbers.
-
-Linus did not like that either[7] and just wanted to remove the dentries
-being created in iterate_shared and use the hard coded inode numbers.
-
-[ All this while Linus enjoyed an unexpected vacation during the merge
-  window due to lack of power. ]
-
-[1] https://lore.kernel.org/linux-trace-kernel/20230919211804.230edf1e@gandalf.local.home/
-[2] https://lore.kernel.org/linux-trace-kernel/20230922163446.1431d4fa@gandalf.local.home/
-[3] https://lore.kernel.org/linux-trace-kernel/20240104015435.682218477@goodmis.org/
-[4] https://lore.kernel.org/all/202401152142.bfc28861-oliver.sang@intel.com/
-[5] https://lore.kernel.org/all/20240111-unzahl-gefegt-433acb8a841d@brauner/
-[6] https://lore.kernel.org/all/20240116114711.7e8637be@gandalf.local.home/
-[7] https://lore.kernel.org/all/20240116170154.5bf0a250@gandalf.local.home/
-
-Link: https://lore.kernel.org/linux-trace-kernel/20240116211353.573784051@goodmis.org
-
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Al  Viro <viro@ZenIV.linux.org.uk>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>
-Fixes: 493ec81a8fb8 ("eventfs: Stop using dcache_readdir() for getdents()")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202401152142.bfc28861-oliver.sang@intel.com
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 5edf0b96758b..10580d6b5012 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -727,8 +727,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 	struct eventfs_inode *ei_child;
- 	struct tracefs_inode *ti;
- 	struct eventfs_inode *ei;
--	struct dentry *ei_dentry = NULL;
--	struct dentry *dentry;
- 	const char *name;
- 	umode_t mode;
- 	int idx;
-@@ -749,11 +747,11 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 	mutex_lock(&eventfs_mutex);
- 	ei = READ_ONCE(ti->private);
--	if (ei && !ei->is_freed)
--		ei_dentry = READ_ONCE(ei->dentry);
-+	if (ei && ei->is_freed)
-+		ei = NULL;
- 	mutex_unlock(&eventfs_mutex);
- 
--	if (!ei || !ei_dentry)
-+	if (!ei)
- 		goto out;
- 
- 	/*
-@@ -780,11 +778,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 		if (r <= 0)
- 			continue;
- 
--		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
--		if (!dentry)
--			goto out;
--		ino = dentry->d_inode->i_ino;
--		dput(dentry);
-+		ino = EVENTFS_FILE_INODE_INO;
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
- 			goto out;
-@@ -808,11 +802,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 		name = ei_child->name;
- 
--		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
--		if (!dentry)
--			goto out_dec;
--		ino = dentry->d_inode->i_ino;
--		dput(dentry);
-+		ino = EVENTFS_DIR_INODE_INO;
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
- 			goto out_dec;
--- 
-2.43.0
-
-
+Acked-by: Lorenzo Stoakes <lstoakes@gmail.com>
