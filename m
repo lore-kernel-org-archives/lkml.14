@@ -1,65 +1,118 @@
-Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B515A1306E6
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 19:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.211.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968BA24B49;
+	Tue, 16 Jan 2024 19:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434680; cv=none; b=Tj0jLXowKLteUyYa6RdU/abcoPveOu3n7Rw+h/fCuZyyxhnxnz/ItdXybiRvSK/wMSIq8zot+65hpkn7WMHOtnzsYXRCCyQ5G5Cg4/wXG3g7S5TxILIrS3RGeFWC5KAt+mMklVpXZJxQSJdK+jWfoFhrVO2kBC+QGmXq3ekXWHA=
+	t=1705434682; cv=none; b=rRV6CSvyNrePymypIKElxd9oud8QObmjQZKfCCjnB0TKsp3njuErqNCGWdvriRqEJmjpC7VNwG/Ti9gTjzLYMkiYI+jnGMAJ/uOd8h0jZtHLL1hON3b2Uhtzx/1mDDD1ZceK1u7ptygY7cbQnLmTmc6kPJf9b9k9kOadhgSNvy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434680; c=relaxed/simple;
-	bh=lNLjE5Ct7TCX3VAQR/bkBi7r9pQaHxxrXyczWfCNM7Y=;
-	h=DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Bpl; b=R2djpDnV/6aAupATRovkI/ltkInflfRHRIkNAuASeFeZwFEz6kbEtJjSuBadNwJ5ee77nOkTVmatAmHimrmlvHv2tycjlc4+I7RrrPxPHJtzUvEhyMV5+uDk8AeotzvnxFmj37pJcIhiAkdH9B9bGt7Qm/CFL7dUiv9dG0/IfeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=ZfsqGwuv; arc=none smtp.client-ip=51.81.211.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+	s=arc-20240116; t=1705434682; c=relaxed/simple;
+	bh=xbDbzMEtgVcUrOQCXkaSw4wRsKzePZtQjF/09aWkAeA=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
+	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=NSdeU4qIzlXP35xgkvgvlwEKWb5TmjYLzCXK2aFYIxuXpr17QnhsPw/Lti7WCS1fQGdwArUwS8ZuvsLrFXIQPl1xrqB27LDIbp8rG72ONh5Efcla1nf9WRIDvgb25FxzvHhGQKhjYXYgoHeAjs61LsJgTs8wuUoLlZni90MyV4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QA/xK0xp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="ZfsqGwuv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=default; t=1705434679;
-	bh=lNLjE5Ct7TCX3VAQR/bkBi7r9pQaHxxrXyczWfCNM7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZfsqGwuvVjnK8KqRP4LmOWxvqY1WapyfrSzb3jpOuw66Ru21jLQz0aJnGRPwMYCp2
-	 yuF1K/j406IXlrs85snlFEoYwSnhHGXQFLe5wnGV6/jHIi3UZXlffkpbjOQKjBHnvz
-	 +UTufLL0z0mXnGcP64GVZLWfxl7WQlnOcVL5kk+9Z1rxGSaCX7Py7Q36+vHKdy7Omn
-	 2HstzeDQAAKO4kJgUxne/hnbnPzofdKRKHtgpDP4+Hihn48G83k6WdNdICizvhljn6
-	 UN7T1YT40EBLlx+6+7WK/bZH/5oy/qAkOE4gbeWZ1L4s5z/VtoDYTb+K1r1NE/2pux
-	 5nE0faM2N1l3w==
-Received: from biznet-home.integral.gnuweeb.org (unknown [182.253.126.189])
-	by gnuweeb.org (Postfix) with ESMTPSA id 6E97C24C3A2;
-	Wed, 17 Jan 2024 02:51:17 +0700 (WIB)
-Date: Wed, 17 Jan 2024 02:51:13 +0700
-From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-To: Willy Tarreau <w@1wt.eu>
-Cc: Charles Mirabile <cmirabil@redhat.com>, linux-kernel@vger.kernel.org,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Subject: Re: [PATCH] nolibc/stdlib: Improve `getauxval(3)` implementation
-Message-ID: <ZabeMQs8NEnvgUS2@biznet-home.integral.gnuweeb.org>
-References: <20240116181147.2230944-1-cmirabil@redhat.com>
- <ZabQVvpZ4e7hTwcb@biznet-home.integral.gnuweeb.org>
- <ZabRwdcgU/H8i5Ja@1wt.eu>
- <ZabSG4R45sC0s23d@1wt.eu>
- <ZabUyZG3C3LUax6f@biznet-home.integral.gnuweeb.org>
- <ZabXyRMECEnMUizk@biznet-home.integral.gnuweeb.org>
- <20240116194655.GA5511@1wt.eu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QA/xK0xp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73EACC43394;
+	Tue, 16 Jan 2024 19:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705434682;
+	bh=xbDbzMEtgVcUrOQCXkaSw4wRsKzePZtQjF/09aWkAeA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QA/xK0xprNc7T+oAOolTv7PWZrDfzVu2QrEs3RpNtlHG9amuoH0E8UvtuzXabHz+U
+	 hIYq6ZTJ3Bq1T7+JrMcXHuIt6/Befay6Md5blAlsf0IAeHBHqmRpPUx9Mo/XbvqmSG
+	 BM0R96kUk8KCID6L+hkPECY22bQg6Xo7DwjQiLDWMS02bJ5rJs6eL6EFab5pkGjAXE
+	 32jwlLoqU3i6m/RQfQtVxHPUu1sSqp65QC56iC9JBBeAnmnfC1U9ORQKMBap5lpW7E
+	 KHg+Wr5gKvSMWHiYaaEaU7uG4+ybhcRZ1mSKIjpHrLNgcMxHbIVGxGqFWLCAftA3eB
+	 8KZz60iUvCAOA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Felix Fietkau <nbd@nbd.name>,
+	Sasha Levin <sashal@kernel.org>,
+	lorenzo@kernel.org,
+	ryder.lee@mediatek.com,
+	kvalo@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	sujuan.chen@mediatek.com,
+	chui-hao.chiu@mediatek.com,
+	linux-wireless@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 048/104] wifi: mt76: mt7996: add PCI IDs for mt7992
+Date: Tue, 16 Jan 2024 14:46:14 -0500
+Message-ID: <20240116194908.253437-48-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116194908.253437-1-sashal@kernel.org>
+References: <20240116194908.253437-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240116194655.GA5511@1wt.eu>
-X-Bpl: hUx9VaHkTWcLO7S8CQCslj6OzqBx2hfLChRz45nPESx5VSB/xuJQVOKOB1zSXE3yc9ntP27bV1M1
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.12
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 16, 2024 at 08:46:55PM +0100, Willy Tarreau wrote:
-> Yeah I agree, thanks for checking.
+From: StanleyYP Wang <StanleyYP.Wang@mediatek.com>
 
-Reviewed-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+[ Upstream commit 3d3f117a259a65353bf2714a18e25731b3ca5770 ]
 
+Add PCI device IDs to enable mt7992 chipsets support.
+
+Signed-off-by: StanleyYP Wang <StanleyYP.Wang@mediatek.com>
+Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/mediatek/mt76/mt7996/pci.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/pci.c b/drivers/net/wireless/mediatek/mt76/mt7996/pci.c
+index c5301050ff8b..67c015896243 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7996/pci.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7996/pci.c
+@@ -17,11 +17,13 @@ static u32 hif_idx;
+ 
+ static const struct pci_device_id mt7996_pci_device_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7990) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7992) },
+ 	{ },
+ };
+ 
+ static const struct pci_device_id mt7996_hif_device_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7991) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x799a) },
+ 	{ },
+ };
+ 
+@@ -60,7 +62,9 @@ static void mt7996_put_hif2(struct mt7996_hif *hif)
+ static struct mt7996_hif *mt7996_pci_init_hif2(struct pci_dev *pdev)
+ {
+ 	hif_idx++;
+-	if (!pci_get_device(PCI_VENDOR_ID_MEDIATEK, 0x7991, NULL))
++
++	if (!pci_get_device(PCI_VENDOR_ID_MEDIATEK, 0x7991, NULL) &&
++	    !pci_get_device(PCI_VENDOR_ID_MEDIATEK, 0x799a, NULL))
+ 		return NULL;
+ 
+ 	writel(hif_idx | MT_PCIE_RECOG_ID_SEM,
+@@ -113,7 +117,7 @@ static int mt7996_pci_probe(struct pci_dev *pdev,
+ 
+ 	mt76_pci_disable_aspm(pdev);
+ 
+-	if (id->device == 0x7991)
++	if (id->device == 0x7991 || id->device == 0x799a)
+ 		return mt7996_pci_hif2_probe(pdev);
+ 
+ 	dev = mt7996_mmio_probe(&pdev->dev, pcim_iomap_table(pdev)[0],
 -- 
-Ammar Faizi
+2.43.0
 
