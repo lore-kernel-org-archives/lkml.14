@@ -1,106 +1,115 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D3F1D69E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 19:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75781EB5E;
+	Tue, 16 Jan 2024 19:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705431827; cv=none; b=a44I/ZXCQeJMwjY4fd+Kv3JwpAU+x6oycSIdW6BUxGhADwvi2Eq1GrspSkPens6kAscWh1gxRZhHWft8cUXyHhtDBjT+Vk2q/H1bS7Ze/iojUY5huoiZnt2rqUPfQQYxqC89K5b7s7Fh9/KcsojzGdxM4pMEjg5KroBjxVQ4Ioc=
+	t=1705431850; cv=none; b=N/TlZ35GDpXBB6jPaZnS82JLgVVW5M1tUK8lJ79QgAuuIdhQzOyic1TE9NO64IwY+Nw7nPqkRrkT0W5QUCIZAzQu2LqDxQKtW5tVvPQh8vuCXFOBH9pFDcki81RZDLuMUJhulfp+YsbHgcEEF6ohZn3L78mDzj/V2E8JVcoQnjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705431827; c=relaxed/simple;
-	bh=VZA7GkqNOsfGprEcp87CCflAFYwG+5mMjyW9KlFZQn4=;
+	s=arc-20240116; t=1705431850; c=relaxed/simple;
+	bh=dm1liQhJtUkVgWIxniNMTu3WXC8cfV96Gig0jkhd8J0=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
 	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=QjDpi61L/5Y7/jf6VnFBrndDfvgkp20ViGioQ3WB00TyN4NFeDLxWOTBSLFvnlafNvJsvIBRmlJ/A36LacgPDjDMFi/OmAKGM6PGCaSDVBaVIipwpKIrhkbvtxv4rICNB9EggGsptENyEJRfnvNjccO4asZyxOceTuPFDXyfbHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wl1DsCKo; arc=none smtp.client-ip=209.85.215.181
+	 Content-Type; b=SfyfZeHayXxfyPDUTtkTAFGOVBpciOxeE7HQIw0fSQt+K7Efni6o1APVOwv8IjAI2Poc7NX0JyJjypZSBWxJmcZwIcHyXVUGQ09QvpKOVyfcyCH3ymYmNhH1TJ2KSLvLJXNcIjMdFyMGB/jUGlRwd114u+9Y7EL//cklIieRljk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URFrkTNa; arc=none smtp.client-ip=209.85.128.175
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wl1DsCKo"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cde7afa1d7so4831296a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 11:03:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URFrkTNa"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5f15a1052b3so93254817b3.1;
+        Tue, 16 Jan 2024 11:04:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705431825; x=1706036625; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uFfdvwq+VA0URYaPaSoMqo8iUhwVlg2dLRJaPWnJEaM=;
-        b=wl1DsCKoZi5lhSn6aBjbNo4OCibtXReGj6Ct0mD9Ssrx1fhtqwdO1xKqXlBs1tVAwl
-         49a2sjup+mlL/Q+84agOxNIPABuSoEK5H/PaaeHy8EsFhTBXAyojP2dfd1P+liju6OHa
-         JDMME0y4wY5ZTt+FNaHXSLtXfaB21/ikaDeztQu8J5q3g/3/6H7v893ZdjCUHK59Mf34
-         lmF8kLDYsjHgIi8B8g1VvFBiy8iFcY9wgfvkRhyeCIwH9XQHTfBpn5xOzAZIqKsUNqdN
-         xqf+ky7WAXIqnRiatDZdWfdHodbBZdkyQ1D2pKSxvCUkKJXYB1VrsmrDdIum0NzmoKIA
-         nWMQ==
+        d=gmail.com; s=20230601; t=1705431848; x=1706036648; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=p0O8J1tKk/vVn8InKgNLS/4PstZ3a8iy9tIk4iRsjlc=;
+        b=URFrkTNaW838UPlyD67zfArGEBczk/55JuBVXRI6R47tsxHJpj5okDs4BjGczSs77p
+         trwUzyQvjNUMh1Hm9aeoifl5LFGSc/zQt3dyguAtu26WWZcicdw2APU5CZnJexMNb9fp
+         pSiNimow9f9BfwUFHGyjOCzkhidVUdNUzOX91VoVLumt12sD0yIUUr5BQHSyBBYAVapA
+         6nh1Shyy8O+BPV76nx+9+NfDCIbAPofb7Bv2IuEGOwLBmbScHzQ4KAcEb8A1+p8BZqrp
+         ISnunq9tgxV2fQIQZfTA+JXcBlapM//cQPD7OhUQSHV1qzS9syD+JTYomj8dJf/e4K/k
+         phDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705431825; x=1706036625;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uFfdvwq+VA0URYaPaSoMqo8iUhwVlg2dLRJaPWnJEaM=;
-        b=WdXxqN3rmjvBffVS2CH0YQezanq7WlRrT+JIC0HpU/aN0zegmlQkAsWjGgoUxkbUgd
-         xahMVw1yK6v+LR3dugvgRyAPSGmoY62ZlRLqysd4kWeUQiCbEPdshWaUIFfvuhlT7PEM
-         38HmO024pEZjg4PfrN98s4Q04SRKaSUba1L+us50YFY883IeO+7AB6l/JypJChqbU/ZX
-         RczeRnG4UzX63DTWBnGnIzTyeYnC9uC1sZbW+t520vIklMBAItFTMfzimlxMcY/e8kcB
-         C2UVXusl3WPMeepKxrV31yA/9AwNvfD98c4lAukeGjYoeLlLo1BSa8YmJ+nFKgtlvaD0
-         4k0A==
-X-Gm-Message-State: AOJu0YzSX3+xYbslgRTkbXgMviRJcmP+70PjN7VJU4kfOnXxijfyP/2y
-	HzyiZLgwiWkpyPfoYv0x2BounNT+JZh5XNIOqI5e12e/WhpPTw==
-X-Google-Smtp-Source: AGHT+IEPnUs5s+u4n2M6rGcq0735SPknT/v+moyBMuh8kF4qV4x/ZF7cpKSU/gDRB07cac8VXhFT6ikMNp/8rp5YiPo=
-X-Received: by 2002:a17:90b:70e:b0:28b:fa2e:ca56 with SMTP id
- s14-20020a17090b070e00b0028bfa2eca56mr4085660pjz.29.1705431825086; Tue, 16
- Jan 2024 11:03:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705431848; x=1706036648;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p0O8J1tKk/vVn8InKgNLS/4PstZ3a8iy9tIk4iRsjlc=;
+        b=PPRIRY6aXwJJT9/lOdvwQhnorpj+f/oo1+dt1ehiGDH3BD2/UHVTQzDzcJa9JZ0B5x
+         UXT4iegz1bgd4TP+ezGBvWfAn8YoCQXx1VRWMYr2xAVRfgvlH7H6t3MTx4K3xDRgymSD
+         FeQUTZFxc6BJj82r6haAk2weyCdkCYj/muybCubV4g4zpyolhus+/vSnKFT2qqerAvQd
+         YOvS22j8zJZAmEqwhbLjM0Sq/dVt3oi7KT8tbZQcoiBl49PaTb8FUseA7uUh7yYWmNSe
+         B/nFAKNdGoayUwMQjJMFsi5H7KgZwwbQz9/dk2PmC6iyf8zJyMqlFyHRwKkV3CjCo+Tx
+         w48w==
+X-Gm-Message-State: AOJu0YyNl9s8hYbkUpukhPlLoP1BsPLqlyyk1LFxdXvU/MdD9kDPJWhO
+	7fuK1jPApooBQDAssAcJczOil4BhAO6rvGmrBWc=
+X-Google-Smtp-Source: AGHT+IEXRnUGPJD1ri/U8Wt1UsnIWkVnxKEeRpoqtaXWVOvyxun/wO91g+xEArSw8LKoeOWz3vF8MWxtTZ4kYuvg0w4=
+X-Received: by 2002:a0d:df8d:0:b0:5ff:5f3a:4405 with SMTP id
+ i135-20020a0ddf8d000000b005ff5f3a4405mr651310ywe.30.1705431848648; Tue, 16
+ Jan 2024 11:04:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110102102.61587-1-tudor.ambarus@linaro.org> <20240110102102.61587-18-tudor.ambarus@linaro.org>
-In-Reply-To: <20240110102102.61587-18-tudor.ambarus@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Tue, 16 Jan 2024 13:03:34 -0600
-Message-ID: <CAPLW+4k091328krLB_KdHyobG-pR--Rt5WaN6c1ccpgdV8ry7Q@mail.gmail.com>
-Subject: Re: [PATCH 17/18] tty: serial: samsung: shrink port feature flags to u8
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	andre.draszik@linaro.org, peter.griffin@linaro.org, kernel-team@android.com, 
-	willmcvicker@google.com
+References: <20240108135421.684263-1-tmaimon77@gmail.com> <20240108135421.684263-6-tmaimon77@gmail.com>
+ <4e9cc473-dbab-4e7c-ac7f-871a4025ef5b@linaro.org>
+In-Reply-To: <4e9cc473-dbab-4e7c-ac7f-871a4025ef5b@linaro.org>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Tue, 16 Jan 2024 21:03:57 +0200
+Message-ID: <CAP6Zq1ii49BFPAg_erhiu6qMj7zC7iLg=C-N1c3UKy7iEe9CXQ@mail.gmail.com>
+Subject: Re: [PATCH v22 5/8] arm64: dts: nuvoton: npcm8xx: add clock reset
+ syscon node
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com, joel@jms.id.au, 
+	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
+	openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 4:25=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
-.org> wrote:
->
-> There's a single flag defined as of now. Shrink the feature flags to u8
-> and aim for a better memory footprint for ``struct s3c24xx_uart_info``.
->
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> ---
->  drivers/tty/serial/samsung_tty.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsun=
-g_tty.c
-> index 5df2bcebf9fb..598d9fe7a492 100644
-> --- a/drivers/tty/serial/samsung_tty.c
-> +++ b/drivers/tty/serial/samsung_tty.c
-> @@ -90,7 +90,7 @@ struct s3c24xx_uart_info {
->
->         /* uart port features */
->
-> -       unsigned int            has_divslot:1;
-> +       u8                      has_divslot:1;
+Hi Krzysztof,
 
-But that's already a bit field. Why does it matter which type it is?
+Thanks for your comments.
 
->  };
+On Wed, 10 Jan 2024 at 23:01, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
->  struct s3c24xx_serial_drv_data {
-> --
-> 2.43.0.472.g3155946c3a-goog
+> On 08/01/2024 14:54, Tomer Maimon wrote:
+> > Add clock reset syscon node to handle reset and clock registers
+> > controllers.
+> >
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+> > index 9c4df91031e7..7d5956e2c9f3 100644
+> > --- a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+> > +++ b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+> > @@ -22,6 +22,11 @@ gcr: system-controller@f0800000 {
+> >                       reg = <0x0 0xf0800000 0x0 0x1000>;
+> >               };
+> >
+> > +             clk_rst: syscon@f0801000 {
+> > +                     compatible = "nuvoton,npcm845-clk-rst", "syscon", "simple-mfd";
 >
+> This is not a simple-mfd. No children,
 >
+> > +                     reg = <0x0 0xf0801000 0x0 0xC4>;
+>
+> Use lowercase hex. Please store this feedback in your checklist and do
+> not repeat the same mistakes in further submissions.
+>
+> Best regards,
+> Krzysztof
+>
+will be fixed in the next version.
+
+Best regards,
+
+Tomer
