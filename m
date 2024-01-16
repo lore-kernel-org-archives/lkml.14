@@ -1,156 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917C21353E8;
-	Tue, 16 Jan 2024 19:52:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543EA13540D;
+	Tue, 16 Jan 2024 19:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434763; cv=none; b=LgiTCGmIN16WjYJxDnHKsOYJIU7qZrKjNQ6puZy/o3VFELD8LnyaYqbD236qCJ5oVha1GTcwGy7LbS25xxb/4Skwr10+q5Nz3MTTr2YrcmrtdkyFVPiyL8cNmf/0x3MAeeveBfLvvnYnhrM+tQGI89qScrn3eH6X40g3bCrBaoA=
+	t=1705434769; cv=none; b=Rvm3jGini79EU7Ky9HsK9DkD0pubz05+HTxgm8xzIK64rvaWqMD/g1lURGtq/rc7yGcgSfS3r4kIm2ztZapURXe4B5K+KmB5r2egGDbEXKjluwQQmfSYxq1D/ZfTEWyKHGmQhRwrT9Wl4GDguda+rwJDCZphc8MwTTaiuCzt4Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434763; c=relaxed/simple;
-	bh=ui90FwlGfZao1reJhg4CM3xRrOLD+afhMmeA+c7zqC0=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
-	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=nfqbiBx15XZo6ejz+IIDfWlaHWALJIj8QcpLJXqjh5ZFmnjk6Jnyzjat9d9v58gxUfsoXjET3RgCaW6H9B5Zi/AUXXZKUpMCJFGqcHfi/z6azGjSZ6xkov9nHs++9/FxGj6AW3EgwZNVI4Ki+9Nb3iWixTu9WWknkL22uSLlWgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fV2ex7eT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705434769; c=relaxed/simple;
+	bh=igwQ8TV2mQvIAUVH8VnNjV0M7RH3HutkarYq2gKU5qo=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=sHdIO0UYJSsxzhbGXWANwaMMlBCeM4uHLFgGpqEw8z73ih5ICaMPYZOl7/CEFrL+WXcSo4RxJ0SYvj6zO5obu6lqYZ8MNYN1SC2KBmYPn8eJq/TlYcbQtCeXJoKFRVnPzUF+prlXw+xvOWXE8ZrkRXosEDYvUoGg+qho+q0/rNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MPrQ4RJ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fV2ex7eT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79BF3C433C7;
-	Tue, 16 Jan 2024 19:52:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MPrQ4RJ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B710BC433F1;
+	Tue, 16 Jan 2024 19:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705434763;
-	bh=ui90FwlGfZao1reJhg4CM3xRrOLD+afhMmeA+c7zqC0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fV2ex7eTMHiae1V+vJ5pZNQudP42PbLwXmZlEKTbRmr+hUoG+aftm8NC4ShJN3rtm
-	 axZAJxNs+Tg2fFg7sT/WdJrPjilsUz14BjA3Q6owL4g93Ef01fDtFLtTuRDkPdYQ8T
-	 gxMNbm9yoR4RAlvBp2JKBn2hHpo2MaZXtkUpr0TTu5uuvbN3iIU4HapzGVgBfgvJ6c
-	 FOgdoQWFhZlPFfRFdb7NRqM+A6DEtIWHr7LQwuZLgnQQxeVmh+FYvvCooArVQIaK5C
-	 bu2PEEN7EAiIkpHn7/NgfM10kBfCaLYmtF/h3XcjC0N+lag3LPQttBbnwxw6F46GxM
-	 3utcp7dz9W9PQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ahmed Zaki <ahmed.zaki@intel.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Wojciech Drewek <wojciech.drewek@intel.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	anthony.l.nguyen@intel.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 074/104] ice: fix ICE_AQ_VSI_Q_OPT_RSS_* register values
-Date: Tue, 16 Jan 2024 14:46:40 -0500
-Message-ID: <20240116194908.253437-74-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116194908.253437-1-sashal@kernel.org>
-References: <20240116194908.253437-1-sashal@kernel.org>
+	s=k20201202; t=1705434768;
+	bh=igwQ8TV2mQvIAUVH8VnNjV0M7RH3HutkarYq2gKU5qo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MPrQ4RJ5J3UtRJ48Jr1q16AF0yP925Y0IOjaQDX7IC1z6m7nXyVK+1Bncqfb6PKgY
+	 RVvuGVlSqX5qGdSEebmpT9GSaVLmLxJuigP6LKThPGulhMtrtQ9oYGgvUZ4kz/IhiH
+	 PETQ8FViaMkNgAr3SzPSICSgX+EPqNJPgoQ7ilMDn+wQxJZ9hdBhJE4YY5Den9R+y7
+	 D/EJFq9NyxzcoI7GVRVk9McUaBBgxuo3aDK9yVufb8TigJuzwWtm4TS8gHeWvoXE/h
+	 /6o/WlCV6nE7pzb4wFMRANxe2qApDud+AX0DYFj7HJ7iRtEeDS8TRKRGJ9XpMwsH8Y
+	 rzduDhxOwNJIg==
+Date: Tue, 16 Jan 2024 13:52:46 -0600
+From: Rob Herring <robh@kernel.org>
+To: Tim Lunn <tim@feathertop.org>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Chris Zhong <zyw@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lee Jones <lee@kernel.org>, Zhang Qing <zhangqing@rock-chips.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] dt-bindings: rockchip: Add support for rk809
+ audio codec
+Message-ID: <20240116195246.GA306579-robh@kernel.org>
+References: <20240116132102.3272682-1-tim@feathertop.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.12
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240116132102.3272682-1-tim@feathertop.org>
 
-From: Ahmed Zaki <ahmed.zaki@intel.com>
+On Wed, Jan 17, 2024 at 12:20:59AM +1100, Tim Lunn wrote:
+> Rockchip RK809 shares the same audio codec as the rk817 mfd, it is also
+> using the same rk817_codec driver. However it is missing from the
+> bindings.
+> 
+> This series documents the audio codec properties in rockchip,rk809.yaml
+> bindings and updates example.
+> 
+> Changes in v2:
+> - Fix vcc-supply warning detected by dt_binding bot
+> - Fix missing include and pinctrl for codec example
 
-[ Upstream commit 20f73b60bb5c276cee9b1a530f100c677bc74af8 ]
+I just reviewed v1. Please apply those comments. And wait a bit between 
+sending new versions.
 
-Fix the values of the ICE_AQ_VSI_Q_OPT_RSS_* registers. Shifting is
-already done when the values are used, no need to double shift. Bug was
-not discovered earlier since only ICE_AQ_VSI_Q_OPT_RSS_TPLZ (Zero) is
-currently used.
-
-Also, rename ICE_AQ_VSI_Q_OPT_RSS_XXX to ICE_AQ_VSI_Q_OPT_RSS_HASH_XXX
-for consistency.
-
-Co-developed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
-Signed-off-by: Ahmed Zaki <ahmed.zaki@intel.com>
-Link: https://lore.kernel.org/r/20231213003321.605376-5-ahmed.zaki@intel.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/ice/ice_adminq_cmd.h |  8 ++++----
- drivers/net/ethernet/intel/ice/ice_lib.c        |  4 ++--
- drivers/net/ethernet/intel/ice/ice_virtchnl.c   | 12 +++++-------
- 3 files changed, 11 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-index 29f7a9852aec..fafe083d1446 100644
---- a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-+++ b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-@@ -491,10 +491,10 @@ struct ice_aqc_vsi_props {
- #define ICE_AQ_VSI_Q_OPT_RSS_GBL_LUT_M		(0xF << ICE_AQ_VSI_Q_OPT_RSS_GBL_LUT_S)
- #define ICE_AQ_VSI_Q_OPT_RSS_HASH_S		6
- #define ICE_AQ_VSI_Q_OPT_RSS_HASH_M		(0x3 << ICE_AQ_VSI_Q_OPT_RSS_HASH_S)
--#define ICE_AQ_VSI_Q_OPT_RSS_TPLZ		(0x0 << ICE_AQ_VSI_Q_OPT_RSS_HASH_S)
--#define ICE_AQ_VSI_Q_OPT_RSS_SYM_TPLZ		(0x1 << ICE_AQ_VSI_Q_OPT_RSS_HASH_S)
--#define ICE_AQ_VSI_Q_OPT_RSS_XOR		(0x2 << ICE_AQ_VSI_Q_OPT_RSS_HASH_S)
--#define ICE_AQ_VSI_Q_OPT_RSS_JHASH		(0x3 << ICE_AQ_VSI_Q_OPT_RSS_HASH_S)
-+#define ICE_AQ_VSI_Q_OPT_RSS_HASH_TPLZ		0x0U
-+#define ICE_AQ_VSI_Q_OPT_RSS_HASH_SYM_TPLZ	0x1U
-+#define ICE_AQ_VSI_Q_OPT_RSS_HASH_XOR		0x2U
-+#define ICE_AQ_VSI_Q_OPT_RSS_HASH_JHASH		0x3U
- 	u8 q_opt_tc;
- #define ICE_AQ_VSI_Q_OPT_TC_OVR_S		0
- #define ICE_AQ_VSI_Q_OPT_TC_OVR_M		(0x1F << ICE_AQ_VSI_Q_OPT_TC_OVR_S)
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index a66c3b6ccec1..4e7f67f54f1c 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -1186,12 +1186,12 @@ static void ice_set_rss_vsi_ctx(struct ice_vsi_ctx *ctxt, struct ice_vsi *vsi)
- 	case ICE_VSI_PF:
- 		/* PF VSI will inherit RSS instance of PF */
- 		lut_type = ICE_AQ_VSI_Q_OPT_RSS_LUT_PF;
--		hash_type = ICE_AQ_VSI_Q_OPT_RSS_TPLZ;
-+		hash_type = ICE_AQ_VSI_Q_OPT_RSS_HASH_TPLZ;
- 		break;
- 	case ICE_VSI_VF:
- 		/* VF VSI will gets a small RSS table which is a VSI LUT type */
- 		lut_type = ICE_AQ_VSI_Q_OPT_RSS_LUT_VSI;
--		hash_type = ICE_AQ_VSI_Q_OPT_RSS_TPLZ;
-+		hash_type = ICE_AQ_VSI_Q_OPT_RSS_HASH_TPLZ;
- 		break;
- 	default:
- 		dev_dbg(dev, "Unsupported VSI type %s\n",
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl.c b/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-index 62337e6569b2..e7ab78bb0f86 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-@@ -820,8 +820,8 @@ static int ice_vc_handle_rss_cfg(struct ice_vf *vf, u8 *msg, bool add)
- 		int status;
- 
- 		lut_type = ICE_AQ_VSI_Q_OPT_RSS_LUT_VSI;
--		hash_type = add ? ICE_AQ_VSI_Q_OPT_RSS_XOR :
--				ICE_AQ_VSI_Q_OPT_RSS_TPLZ;
-+		hash_type = add ? ICE_AQ_VSI_Q_OPT_RSS_HASH_XOR :
-+				ICE_AQ_VSI_Q_OPT_RSS_HASH_TPLZ;
- 
- 		ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
- 		if (!ctx) {
-@@ -829,11 +829,9 @@ static int ice_vc_handle_rss_cfg(struct ice_vf *vf, u8 *msg, bool add)
- 			goto error_param;
- 		}
- 
--		ctx->info.q_opt_rss = ((lut_type <<
--					ICE_AQ_VSI_Q_OPT_RSS_LUT_S) &
--				       ICE_AQ_VSI_Q_OPT_RSS_LUT_M) |
--				       (hash_type &
--					ICE_AQ_VSI_Q_OPT_RSS_HASH_M);
-+		ctx->info.q_opt_rss =
-+			FIELD_PREP(ICE_AQ_VSI_Q_OPT_RSS_LUT_M, lut_type) |
-+			FIELD_PREP(ICE_AQ_VSI_Q_OPT_RSS_HASH_M, hash_type);
- 
- 		/* Preserve existing queueing option setting */
- 		ctx->info.q_opt_rss |= (vsi->info.q_opt_rss &
--- 
-2.43.0
-
+Rob
