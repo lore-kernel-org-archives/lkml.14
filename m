@@ -1,90 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp68.iad3b.emailsrvr.com (smtp68.iad3b.emailsrvr.com [146.20.161.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FB721114
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F064414273
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705508468; cv=none; b=R/rnyrg4YykpVrlVMn8fQza+6UDquC3K/GKnLoMi4fyg/iv4FZYvoDgX+5VsOmg7hEDFj8OAoQjvhgAkX84HuNCaWw21TfrnABaOwIcnB6YXBUpuIqcFm7jMAXz3QqgopbI7M4IuvcTUTgEDJIhuUdgZ3Fs0Uj/m6ZJdLlrMtUw=
+	t=1705508542; cv=none; b=j6PnWgXNcGDIwntpKlNnqUJioL2PMKZc0ZlNkJzvxvIqAwtldOpMAkMJqR4gGGzdput00YqgVJyhnWTrLYm+xtnsfZ7JvCTfg/lxgVqEhnYjqI4SumazEcsa5ogbh7r8lEhe1e4oQrzOnEn0bPuLPcPpWz6X50mVAPHvTZ407Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705508468; c=relaxed/simple;
-	bh=flbXHwDCTp+j6stWsTGEWwJGNNEZkTEfymW8XvfG8QU=;
-	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:
-	 Organization:From:In-Reply-To:References:Cc:Subject:MIME-Version:
-	 Content-Type:Content-ID:Content-Transfer-Encoding:Date:Message-ID:
-	 X-Scanned-By; b=TAtfX+yyUO+YwHvz4NaC7eM7wCtW7OU0Db1RgTqefENBoXnWZhnpIcLb4T7HO9VGc7nc7DTpkNlq88vp8Khf3+ToINRlmEZ+wsB2G8o4+ttACarXKMb7NAZBy5FfitLWULTv4EJb1Tr8SOg3xlo9+Hha+kHrT4Hrscv9oV81MRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KbkJjw+O; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705508542; c=relaxed/simple;
+	bh=bnZ+5AE1obElm/T5IRAf2b28NzvSXqLt1dw/hEtldGM=;
+	h=DKIM-Signature:X-Auth-ID:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:
+	 Organization:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Classification-ID; b=rFlDKN/ol6ZqPuuzys6x9fRxz+rIgPOdfMQBIuK6NNui5bkuy2ptuT66YDi/tF51EZYYV+DX43WXMvLad+k36SSOgy0/m2LsdAetajdxcJqoOR1WyQIeFOZgiURd3ziNIgUit3K+SgYwGAi1kCbpJIdk5smElKZbUs+oKtJ5/00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=AKAmZKN2; arc=none smtp.client-ip=146.20.161.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KbkJjw+O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705508466;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=flbXHwDCTp+j6stWsTGEWwJGNNEZkTEfymW8XvfG8QU=;
-	b=KbkJjw+O9NUpd2Y+fzNf47ID31HSoVyH8vNl4EQg7pw2ZBT/N35EDbGfJL3tzSH7DYdk0z
-	PXwxhFLD9uXCRf6IPWC0Z0nlqIn327UQvF8kEMsChPgYrJIM53nom2fUnUFZe19xqVfEhH
-	YvHYC8fl7KLmCT66qUCB0nfyIk31TsI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-324-qCUP_KtoMCmRpnD6WO-2jA-1; Wed,
- 17 Jan 2024 11:21:04 -0500
-X-MC-Unique: qCUP_KtoMCmRpnD6WO-2jA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C5AF038149AF;
-	Wed, 17 Jan 2024 16:21:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2B2EF2026D6F;
-	Wed, 17 Jan 2024 16:21:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <2929034.1705508082@warthog.procyon.org.uk>
-References: <2929034.1705508082@warthog.procyon.org.uk>
-Cc: dhowells@redhat.com, Marc Dionne <marc.dionne@auristor.com>,
-    linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] afs: Fix missing/incorrect unlocking of RCU read lock
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="AKAmZKN2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1705499554;
+	bh=bnZ+5AE1obElm/T5IRAf2b28NzvSXqLt1dw/hEtldGM=;
+	h=Date:Subject:To:From:From;
+	b=AKAmZKN230qTVMSLPOgahnLAuNg2vrXwP/93fXmTm8YbXaSxkBJ74ISby+OGwfuR+
+	 JwBsca+r2iUaF0ZJoMf+EZdkwuSVgiOBQlozYLqC7D9A4NJUGeIlXaC0cwdKMCl7wv
+	 nYGhWXu+nFPVTTjwBH5Zi1upOpq9X+DAXp2uhS8A=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp1.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id DF6EE60097;
+	Wed, 17 Jan 2024 08:52:33 -0500 (EST)
+Message-ID: <d4779143-bb91-4d8e-a336-eeefc3131c05@mev.co.uk>
+Date: Wed, 17 Jan 2024 13:52:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2929562.1705508462.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jan 2024 16:21:02 +0000
-Message-ID: <2929563.1705508462@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] comedi: drivers: ni_tio: Fix arithmetic expression
+ overflow
+To: Denis Arefev <arefev@swemel.ru>
+Cc: H Hartley Sweeten <hsweeten@visionengravers.com>,
+ open list <linux-kernel@vger.kernel.org>, lvc-project@linuxtesting.org
+References: <20240117124229.37455-1-arefev@swemel.ru>
+Content-Language: en-GB
+From: Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+In-Reply-To: <20240117124229.37455-1-arefev@swemel.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Classification-ID: 504b7891-3038-4700-bb61-960c5ba746dc-1-1
 
-David Howells <dhowells@redhat.com> wrote:
+On 17/01/2024 12:42, Denis Arefev wrote:
+> The value of an arithmetic expression period_ns * 1000 is subject
+> to overflow due to a failure to cast operands to a larger data
+> type before performing arithmetic
+> 
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> 
+> Signed-off-by: Denis Arefev <arefev@swemel.ru>
+> ---
+>   drivers/comedi/drivers/ni_tio.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/comedi/drivers/ni_tio.c b/drivers/comedi/drivers/ni_tio.c
+> index da6826d77e60..acc914903c70 100644
+> --- a/drivers/comedi/drivers/ni_tio.c
+> +++ b/drivers/comedi/drivers/ni_tio.c
+> @@ -800,7 +800,7 @@ static int ni_tio_set_clock_src(struct ni_gpct *counter,
+>   				GI_PRESCALE_X2(counter_dev->variant) |
+>   				GI_PRESCALE_X8(counter_dev->variant), bits);
+>   	}
+> -	counter->clock_period_ps = period_ns * 1000;
+> +	counter->clock_period_ps = period_ns * 1000UL;
+>   	ni_tio_set_sync_mode(counter);
+>   	return 0;
+>   }
 
-> In afs_proc_addr_prefs_show(), we need to unlock the RCU read lock in bo=
-th
-> places before returning (and not lock it again).
-> =
+Looks good, thanks!
 
-> Fixes: f94f70d39cc2 ("afs: Provide a way to configure address priorities=
-")
-> Reported-by: Marc Dionne <marc.dionne@auristor.com>
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
 
-Actually:
+Could you resend it and Cc Greg Kroah-Hartman 
+<gregkh@linuxfoundation.org> ?  It's more likely to get applied that way 
+because I don't maintain my own kernel tree for comedi.  Feel free to 
+add my Reviewed-by line.
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202401172243.cd53d5f6-oliver.sang@i=
-ntel.com
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: linux-afs@lists.infradead.org
-> cc: linux-fsdevel@vger.kernel.org
-
-David
+-- 
+-=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
+-=( registered in England & Wales.  Regd. number: 02862268.  )=-
+-=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
+-=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
 
