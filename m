@@ -1,136 +1,176 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B250713FE4
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E78612B87;
+	Wed, 17 Jan 2024 09:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705482805; cv=none; b=bwzQI8JXSAuW0MXyKVnhc3Z6Os+/G6ecAq1VYUuJEEMQnqLHTYAZDAOLv3WQB7iq30YcrQqEKn8b9PhcVVBNHX9Cxk5yafE7UZ8hm3OfnNwUWsb7tvZYYAnLy40kNE6tMX+Bb2w3/F+A/AFOWF6uQ3pn/SIhFpqy37yynF0ay8o=
+	t=1705482904; cv=none; b=r20frNf+URdztRRAAVlP37TvdJrnBt+i8gjrao6WXY9ml5foWntvctoF/8AngDGhON4h2hiMUgBCKjrHMRxSJwgvK+lbRtRy4OPmlnauVrkCanfh29OLhnsK59dEGFCwJ9Z/PhEkrP5BkE22Ew3HPeZR5nWFg02+Ba9k4tgp+b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705482805; c=relaxed/simple;
-	bh=3QKG4X44VzuBpp0/MyF+g9YvHja0bvB6aou5vhWSoZU=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=OpCa+ipoRNcQPXJ8LaXSWnxZ/QyJAyn0cQaE+SltT8rlMRKlFHZcj3S+3tsgvQnlN7umx294Afb23FWxwOk3C14O85j31+9WaLktDOOizNV1/JKQEaEOebB5fTSQchP6KlwunTgwmxqvVZoXNV1JCxUgjpsrFebtACMZjXXS92I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pyisi1NY; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705482904; c=relaxed/simple;
+	bh=Q08/0JPUmIF735thgSiaVRZ0/n+iC0wKqyNqiaQTRFg=;
+	h=Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:Reply-To:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:X-Spam-Level:X-Rspamd-Server:
+	 X-Spamd-Result:X-Spam-Score:X-Rspamd-Queue-Id:X-Spam-Flag; b=t4/HjmfyFDatEDKso0hDGIBER4GWgBYSJRGCuF0mjblBMnUyKlC61RoM16uZeNAYGYtwkT5eSJy6wSxNKSufSTkq2n4L4Vz0E1N+x/yNACQb1P2DIZZ/FKeJIpRmtOiRp5SZMHD9XykRf6JceHN+8b77ab/draMWIvsKy/fQ2Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=08dFBzXg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rbOjr/Va; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=08dFBzXg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rbOjr/Va; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pyisi1NY"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cdeb954640so6655771fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 01:13:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705482802; x=1706087602; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wwyu1C0cyc8uW+GR2bf6x9B8R8CXK0267QnxkJZctz8=;
-        b=Pyisi1NYdbkco5BcsHIAcOFK7bNF8wYCKZ8MHxMWLaoht6FxWRgdZUXYZT3S8Gk6q/
-         Tk4ZAkousniJL19Zi5VtuU4kCrUHj6ohgCYOzKTYo21TPc8hyejiHjDrZQWtCTIaAYB4
-         MbofLk7JttO1LEEmSrD8+qQLYP2GhLy+ks30Z6td3o2GWOri6WLW8ppBPdXUSa38mKvQ
-         P6DQZoLE+yyuVfeMvib97kaxlANKbGOETRQDG6z/MDwAaRxF2TX9nnSIGov5J7wdicxd
-         GkkMv3tfvYnedEzC/hdn/+BR+4CuxJa5WEOPjB9fGD/dzfFza+ywyShJHFcVJZxd5d9v
-         lOzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705482802; x=1706087602;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wwyu1C0cyc8uW+GR2bf6x9B8R8CXK0267QnxkJZctz8=;
-        b=wlX5wIyM82wTi18s9+pohe9e/n4RJnUnxgNqBSEWZWXKZtwRptqjMzXsaey8hhw62U
-         8Zk/6mTY4Quxr857hY4qDuOBOc5OwQ5qVUqMeb7uB+HOskgi6yoIrdNa3ez5nkBwm5Ac
-         dSTT0CSIqmNvgilysknH5k9p2oXvuX+5k1La+ZKmd/DoIZpUgHs+WHyhd8x0E+7YPMud
-         kHcZCh8el7z3QLlxmtKYBlNsBAqNcCHBgD/+dIzRMe5UVtwo/XchpLg9Cv6whOBJrE+l
-         x4Gtb9fk2csjLM+sYjE8dD/c2GCAv5onygmoH+2cI4HNbcMhTmYvORUWzmfKT0iNXIYw
-         ZVZA==
-X-Gm-Message-State: AOJu0YxUkOqnzgbxB58r9+0rAVg1eCFCAwqXkOHDbYrRtro8x3etNC/k
-	D231YMklLKNf7z93aoHrbtbm32saBeWewg==
-X-Google-Smtp-Source: AGHT+IFMDBMxw1t88rGyo/U0DDixbc/dpcoDsnvG0JEuKbtjnQcp8QN9fqXEa+48olQLuSbz0vi3qw==
-X-Received: by 2002:a2e:8481:0:b0:2cd:7ac4:f9b5 with SMTP id b1-20020a2e8481000000b002cd7ac4f9b5mr4043594ljh.14.1705482801427;
-        Wed, 17 Jan 2024 01:13:21 -0800 (PST)
-Received: from [172.30.204.250] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id l6-20020a2ea306000000b002cc8772c87bsm1888797lje.76.2024.01.17.01.13.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jan 2024 01:13:20 -0800 (PST)
-Message-ID: <ca4f3f38-f0e5-4d10-b9eb-155f6ffbc57c@linaro.org>
-Date: Wed, 17 Jan 2024 10:13:15 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="08dFBzXg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rbOjr/Va";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="08dFBzXg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rbOjr/Va"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5C65C21FCD;
+	Wed, 17 Jan 2024 09:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1705482894;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b5zaWhkvNJdBjASJuwpU3R0cBDYHMrXzV9WEzpYwfmw=;
+	b=08dFBzXgiQcE1i2hs0Fm5UkqqLW8hPMRXWciY5xmruF5ZOkZm++PsoMJ0KuLh0BFebuS5+
+	jBCguZCyj7BvOkJL/mQkvEnHkeF/dPka72G9rUULvlvihfz2JrjH0c6GnvsjT6sxUpnoaU
+	/ARfTChNZLhp/1TH9IyEZMeRPBu3ugQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1705482894;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b5zaWhkvNJdBjASJuwpU3R0cBDYHMrXzV9WEzpYwfmw=;
+	b=rbOjr/VaeEC81vSd6ewwPHV/noSE8NXRAnsTQXHx6eab+mkd8gtLftkbyMS4nvn7S0+zJP
+	OwBakJJznCCNmsAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1705482894;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b5zaWhkvNJdBjASJuwpU3R0cBDYHMrXzV9WEzpYwfmw=;
+	b=08dFBzXgiQcE1i2hs0Fm5UkqqLW8hPMRXWciY5xmruF5ZOkZm++PsoMJ0KuLh0BFebuS5+
+	jBCguZCyj7BvOkJL/mQkvEnHkeF/dPka72G9rUULvlvihfz2JrjH0c6GnvsjT6sxUpnoaU
+	/ARfTChNZLhp/1TH9IyEZMeRPBu3ugQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1705482894;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b5zaWhkvNJdBjASJuwpU3R0cBDYHMrXzV9WEzpYwfmw=;
+	b=rbOjr/VaeEC81vSd6ewwPHV/noSE8NXRAnsTQXHx6eab+mkd8gtLftkbyMS4nvn7S0+zJP
+	OwBakJJznCCNmsAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E1C6B137EB;
+	Wed, 17 Jan 2024 09:14:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0mrONI2ap2WUFgAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Wed, 17 Jan 2024 09:14:53 +0000
+Date: Wed, 17 Jan 2024 10:14:52 +0100
+From: Petr Vorel <pvorel@suse.cz>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-man@vger.kernel.org,
+	Maciej =?iso-8859-2?Q?=AFenczykowski?= <maze@google.com>,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	Matthias Gerstner <matthias.gerstner@suse.com>,
+	Avinesh Kumar <akumar@suse.de>
+Subject: Re: [PATCH 1/1] socket.7: Mention CAP_NET_RAW on SO_MARK
+Message-ID: <20240117091452.GB2665992@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20240116110418.2577798-1-pvorel@suse.cz>
+ <ZaadPmLFCI4rsGy_@debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/6] PCI: qcom: Add missing icc bandwidth vote for cpu
- to PCIe path
-Content-Language: en-US
-To: Johan Hovold <johan@kernel.org>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Krishna chaitanya chundru <quic_krichai@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
- Rob Herring <robh+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>,
- Brian Masney <bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>,
- linux-arm-msm@vger.kernel.org, vireshk@kernel.org,
- quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
- quic_nitegupt@quicinc.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-3-77bbf7d0cc37@quicinc.com>
- <fecfd2d9-7302-4eb6-92d0-c2efbe824bf4@linaro.org>
- <f9a177e0-3698-4865-9463-220c65c653fb@linaro.org>
- <ZaZf4EyX5oADXG9N@hovoldconsulting.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <ZaZf4EyX5oADXG9N@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZaadPmLFCI4rsGy_@debian>
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=08dFBzXg;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="rbOjr/Va"
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	 HAS_REPLYTO(0.30)[pvorel@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.09)[64.27%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 REPLYTO_EQ_FROM(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:97:from];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -2.30
+X-Rspamd-Queue-Id: 5C65C21FCD
+X-Spam-Flag: NO
+
+Hi Alex,
+
+> Hi Petr,
+
+> On Tue, Jan 16, 2024 at 12:04:18PM +0100, Petr Vorel wrote:
+> > Added in 079925cce1d0 ("net: allow SO_MARK with CAP_NET_RAW") in v5.17.
+
+> > Signed-off-by: Petr Vorel <pvorel@suse.cz>
+
+> Patch applied.  Thanks!
+
+Thank you! BTW I don't see this patch in git tree [1], maybe you just haven't
+push yet.
+
+Kind regards,
+Petr
+
+[1] https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/
 
 
+> Have a lovely day,
+> Alex
 
-On 1/16/24 11:52, Johan Hovold wrote:
-> On Fri, Jan 12, 2024 at 11:33:15PM +0100, Konrad Dybcio wrote:
->> On 12.01.2024 16:17, Bryan O'Donoghue wrote:
->>> On 12/01/2024 14:22, Krishna chaitanya chundru wrote:
->>>> CPU-PCIe path consits for registers PCIe BAR space, config space.
->>>> As there is less access on this path compared to pcie to mem path
->>>> add minimum vote i.e GEN1x1 bandwidth always.
->>>>
->>>> In suspend remove the cpu vote after register space access is done.
->>>>
->>>> Fixes: c4860af88d0c ("PCI: qcom: Add basic interconnect support")
->>>
->>> If this patch is a Fixes then don't you need the accompanying dts change as a parallel Fixes too ?
->>>
->>> i.e. without the dts update - you won't have the nodes in the dts to consume => applying this code to the stable kernel absent the dts will result in no functional change and therefore no bugfix.
->>
->> The Fixes tag denotes a bug fix, its use for backport autosel is just
->> a nice "coincidence".
->>
->> Fixing a lack of a required icc path and having to rely on BL leftovers
->> / keepalive bus settings is definitely worth this tag in my eyes.
-> 
-> An incomplete implementation can sometimes be considered a bug, but not
-> always. If this is needed to enable a new use case, then it's hard to
-> argue that the original omission was a bug.
-> 
-> And as I just mentioned to Krishna, the above Fixes tag is not correct
-> as that commit did not *introduce* any issue. It solved the bit that was
-> strictly needed for sc8280xp, but now it seems you may need something
-> more for an even newer platform (even if no details and motivation was
-> included in the commit message as it should have been).
+> > ---
+> >  man7/socket.7 | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
 
-The PCIe hardware seems to be piggybacking off of others' bus
-bandwidth requests and I think it's just been pure luck that
-it didn't simply refuse to work on previous generations.
-
-So indeed, the commit message seems incomplete in explaining
-where the problem lies
-
-Konrad
+> > diff --git a/man7/socket.7 b/man7/socket.7
+> > index 3ff8fe51b..3ebfc770b 100644
+> > --- a/man7/socket.7
+> > +++ b/man7/socket.7
+> > @@ -614,7 +614,9 @@ Changing the mark can be used for mark-based
+> >  routing without netfilter or for packet filtering.
+> >  Setting this option requires the
+> >  .B CAP_NET_ADMIN
+> > -capability.
+> > +or
+> > +.B CAP_NET_RAW
+> > +(since Linux 5.17) capability.
+> >  .TP
+> >  .B SO_OOBINLINE
+> >  If this option is enabled,
+> > -- 
+> > 2.43.0
