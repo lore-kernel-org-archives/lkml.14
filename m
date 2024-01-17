@@ -1,61 +1,45 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90E1249E0;
-	Wed, 17 Jan 2024 19:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F71A1E877;
+	Wed, 17 Jan 2024 19:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705520144; cv=none; b=XULUPQEipaGUOt537HzxU7X99a3tv0UN0d9UJ7ZG1RBj33mIDumX0hX3PQSmQkx2UgI4pvhSrzFyiM8y+hH9kSTdxyoVvVdXSjyPfQqmsAJOvDFIqZJ6oympEMh5BrdIV3Z7Rr6dKbk7CzlmihV6LySbrbcKPncipUebwxPYWYs=
+	t=1705520332; cv=none; b=gG7dE7pTB29Nh7+jq1h42q/L9EXLXxix8iI9P4Oc7HGFZgBDk9qBxsKZbIGqaTOnvW7t7sB0XD/gyiWdwiEKiw5NilZTkg7GIu1uI8aR1QSgBIyiQLgjqsAkLfR0gDzP6YM9CYfVUyR4s24YlGaq/83/8XwbnREWR2bAiq2oRP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705520144; c=relaxed/simple;
-	bh=8O6ZpuJktfG7PP+qpivWRnoX8s1X5AAm7DEcq/yXN3A=;
-	h=Received:DKIM-Signature:Received:Received:Received:Date:From:To:
-	 Subject:Message-ID:MIME-Version:Content-Type:Content-Disposition:
-	 X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:X-HPE-SCL:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=tEQ5IOY+OM9917u+zTHuJVB/TgrDNq/uGRWgf7irMcLezIiDXstWV/arW85srGVoRwYNqfd40L0B3P1yYyVu/BGX5j3MyWcHQfi2xD0O/dKiYeOTlEaNpYWxFMn4/27uoLKErv6f7SCFTEIG0FDrcNJq4fvvJAKsdXiv8NHxRl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=KC9fgn+y; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="KC9fgn+y"
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40HH0uDr020284;
-	Wed, 17 Jan 2024 19:35:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=pps0720;
- bh=5NEj7FBKtmppNrd48cW0AoeV3qh+diVhVYhI4Gm/3pA=;
- b=KC9fgn+yBrtzXiYmu2c4kPQavGuUpPlwe1whyYZX0+gVFHcWseD7Eny7wbDBvHgXPXPV
- +3/IjU4YGo6i/S4o5mzQBPRdijP34GgNYRuTxfMysAJh6U0O66osoNF7VGFJt+INMY3k
- F8d71PxjYedjO67tJwXSF8J5Q0DfiA61vIPj6r6NDoZ3Ne3HDymb5HRsjFmKwmjf6EMv
- MhAIHZn4xmKlNFhQrbCdxoQHOd+PB2wpuGI8antb5EM3hBcTMqmSEGSOQXO4SXBoS+t5
- 6Z59sbhMYUk5rX0IRglIIsnhXCrBJfSHMJ1CtQxTJhwpvNINlmWJzSnphBcc1MCdX22u Yw== 
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3vphs7agry-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 19:35:03 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 37D908005DA;
-	Wed, 17 Jan 2024 19:35:02 +0000 (UTC)
-Received: from hpe.com (unknown [16.231.227.39])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id A33308005FE;
-	Wed, 17 Jan 2024 19:34:53 +0000 (UTC)
-Date: Wed, 17 Jan 2024 13:34:51 -0600
-From: Dimitri Sivanich <sivanich@hpe.com>
-To: David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Steve Wahl <steve.wahl@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>, iommu@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Subject: DMAR interrupt reservations exceed available resources on 32s Intel
- SPR
-Message-ID: <Zagr2/NXow4Ptv22@hpe.com>
+	s=arc-20240116; t=1705520332; c=relaxed/simple;
+	bh=qQ2aC4nPMxreqaxf3HfplVIIaem0J4U9g997mzbSJjk=;
+	h=Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=QPKi+JSRPVty+5qVA53iHTEuJEha3GPV7hqXOHxZKH6ogrNXxTinGpn6QQfKhl7nCwfKxOGK4YFZlK+dJS0Oxay5AJ+FCI6AS+lysuHLpILtIrUKUXWd7nxb92Xw4Ttr75f7rfSzhPAqaG2aUDMTKoN4Dm1OH1xPRcFvOMoIIP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 889F111FB;
+	Wed, 17 Jan 2024 11:39:34 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C77F3F766;
+	Wed, 17 Jan 2024 11:38:46 -0800 (PST)
+Date: Wed, 17 Jan 2024 19:38:44 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 3/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZagsxLBw3eZCpafI@pluto>
+References: <20240104-pinctrl-scmi-v2-0-a9bd86ab5a84@nxp.com>
+ <20240104-pinctrl-scmi-v2-3-a9bd86ab5a84@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,115 +48,296 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Proofpoint-GUID: O8L5LhUTcRVdzynEi5H33LOHC3iCxqM7
-X-Proofpoint-ORIG-GUID: O8L5LhUTcRVdzynEi5H33LOHC3iCxqM7
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-17_12,2024-01-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=877 bulkscore=0
- priorityscore=1501 clxscore=1011 spamscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401170142
+In-Reply-To: <20240104-pinctrl-scmi-v2-3-a9bd86ab5a84@nxp.com>
 
-We currently are running Sapphire Rapids systems with 32 sockets. We have
-noticed that on systems of this size we see the following warnings:
-    DMAR-IR: Enabled IRQ remapping in x2apic mode
-    Interrupt reservation exceeds available resources
-    DMAR: Can't request irq
-    DMAR: DRHD 97bfc000: failed to enable fault, interrupt, ret -28
+On Thu, Jan 04, 2024 at 06:48:47PM +0800, Peng Fan (OSS) wrote:
+> From: Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+> 
+> Add basic implementation of the SCMI v3.2 pincontrol protocol.
 
-There are 10 DMAR units per socket on these systems, so 320 DMAR units.  It
-appears that each is being allocated its own vector on the first cpu, as this
-happens prior to other cpus being started.  At the time that the DMAR vector
-allocations begin, cpu 0 has 186 vectors available (as does the global set),
-and that is the number of DMAR fault interrupts that show up as allocated
-(/proc/interrupts) after boot.
+Hi Peng,
 
-As a simple experiment, I patched the kernel to only allocate node 0 DMAR fault
-interrupt vectors while only the boot cpu is running, then to allocate fault
-interrupt vectors for the rest of the DMAR units as cpus on their respective
-nodes are coming up.  With that change, all 320 interrupts were allocated, and
-the interrupt affinity was set to the first cpu on each DMAR's respective node.
+a few minor remarks below but this LGTM, and in my testing I could not
+find any issue/misbehaviour at the protocol layer (i.e. stressing pinctrl_ops)
 
-Does this seem like a sensible approach to fixing this, or is there another
-avenue that we should be looking at?
+In general, can we stick to 80cols ? since it is how the SCMI stack is
+currently formatted and this patch introduced just few minor lomng lines
+that can be easily wrapped by moving a few params (or return types) on a
+new line....
 
-For illustrative purposes, here's the patch for the experiment described above:
+...but only when this does not render the thing unreadable of course, I
+mean just in the obvious places where it is just a matter of hitting a
+Return :D
 
-Index: linux/drivers/iommu/intel/dmar.c
-===================================================================
---- linux.orig/drivers/iommu/intel/dmar.c
-+++ linux/drivers/iommu/intel/dmar.c
-@@ -2055,6 +2055,38 @@ int dmar_set_interrupt(struct intel_iomm
- 	return ret;
- }
- 
-+int __init enable_remaining_drhd_fault_handling(int node)
-+{
-+        struct dmar_drhd_unit *drhd;
-+        struct intel_iommu *iommu;
-+
-+        /*
-+         * Enable fault control interrupt.
-+         */
-+        for_each_iommu(iommu, drhd) {
-+                u32 fault_status;
-+                int ret;
-+                if (iommu->node != node)
-+                        continue;
-+                ret = dmar_set_interrupt(iommu);
-+
-+                if (ret) {
-+                        pr_err("DRHD %Lx: failed to enable fault, interrupt, ret %d\n",
-+                               (unsigned long long)drhd->reg_base_addr, ret);
-+                        return -1;
-+                }
-+
-+                /*
-+                 * Clear any previous faults.
-+                 */
-+                dmar_fault(iommu->irq, iommu);
-+                fault_status = readl(iommu->reg + DMAR_FSTS_REG);
-+                writel(fault_status, iommu->reg + DMAR_FSTS_REG);
-+        }
-+
-+        return 0;
-+}
-+
- int __init enable_drhd_fault_handling(void)
- {
- 	struct dmar_drhd_unit *drhd;
-@@ -2065,7 +2097,10 @@ int __init enable_drhd_fault_handling(vo
- 	 */
- 	for_each_iommu(iommu, drhd) {
- 		u32 fault_status;
--		int ret = dmar_set_interrupt(iommu);
-+		int ret;
-+		if (iommu->node != 0)
-+			continue;
-+		ret = dmar_set_interrupt(iommu);
- 
- 		if (ret) {
- 			pr_err("DRHD %Lx: failed to enable fault, interrupt, ret %d\n",
-Index: linux/arch/x86/kernel/smpboot.c
-===================================================================
---- linux.orig/arch/x86/kernel/smpboot.c
-+++ linux/arch/x86/kernel/smpboot.c
-@@ -210,6 +210,7 @@ static void smp_callin(void)
- 	cpumask_set_cpu(cpuid, cpu_callin_mask);
- }
- 
-+extern int __init enable_remaining_drhd_fault_handling(int cpu);
- static int cpu0_logical_apicid;
- static int enable_start_cpu0;
- /*
-@@ -263,6 +264,7 @@ static void notrace start_secondary(void
- 
- 	x86_cpuinit.setup_percpu_clockev();
- 
-+	enable_remaining_drhd_fault_handling(cpu_to_node(smp_processor_id()));
- 	wmb();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
- }
+> 
+> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> Co-developed-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+
+[nitpick]: I have a silly spelling mistakes on email from checkpatch
+
+CHECK: From:/Signed-off-by: email comments mismatch: 'From: Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>' != 'Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+
+> ---
+>  MAINTAINERS                           |   6 +
+>  drivers/firmware/arm_scmi/Makefile    |   1 +
+>  drivers/firmware/arm_scmi/driver.c    |   2 +
+>  drivers/firmware/arm_scmi/pinctrl.c   | 930 ++++++++++++++++++++++++++++++++++
+>  drivers/firmware/arm_scmi/protocols.h |   1 +
+>  include/linux/scmi_protocol.h         |  73 +++
+>  6 files changed, 1013 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0275a2c58f0f..487bff0d44c0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -21322,6 +21322,12 @@ F:	include/linux/sc[mp]i_protocol.h
+>  F:	include/trace/events/scmi.h
+>  F:	include/uapi/linux/virtio_scmi.h
+>  
+> +SYSTEM CONTROL MANAGEMENT INTERFACE (SCMI) PINCTRL DRIVER
+> +M:	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> +L:	linux-arm-kernel@lists.infradead.org
+> +S:	Maintained
+> +F:	drivers/firmware/arm_scmi/pinctrl.c
+> +
+
+I've got to check this with Sudeep since giving exclusive maintainership
+of this bit could lead to troubles if the assigned maintainer becomes
+unresponsive, and it seems this is already the case indeed even before
+this thing is merged. Oleksii and EPAM will anyway maintain authorship
+in any case; I'll check with Sudeep, as said.
+
+>  SYSTEM RESET/SHUTDOWN DRIVERS
+>  M:	Sebastian Reichel <sre@kernel.org>
+>  L:	linux-pm@vger.kernel.org
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index a7bc4796519c..8e3874ff1544 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -11,6 +11,7 @@ scmi-transport-$(CONFIG_ARM_SCMI_HAVE_MSG) += msg.o
+>  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_VIRTIO) += virtio.o
+>  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_OPTEE) += optee.o
+>  scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o
+> +scmi-protocols-y += pinctrl.o
+>  scmi-module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
+>  
+>  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index a12afc254afa..4c3752749105 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -3050,6 +3050,7 @@ static int __init scmi_driver_init(void)
+>  	scmi_voltage_register();
+>  	scmi_system_register();
+>  	scmi_powercap_register();
+> +	scmi_pinctrl_register();
+>  
+>  	return platform_driver_register(&scmi_driver);
+>  }
+> @@ -3067,6 +3068,7 @@ static void __exit scmi_driver_exit(void)
+>  	scmi_voltage_unregister();
+>  	scmi_system_unregister();
+>  	scmi_powercap_unregister();
+> +	scmi_pinctrl_unregister();
+>  
+>  	scmi_transports_exit();
+>  
+> diff --git a/drivers/firmware/arm_scmi/pinctrl.c b/drivers/firmware/arm_scmi/pinctrl.c
+> new file mode 100644
+> index 000000000000..aa6e698e7b7c
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/pinctrl.c
+> @@ -0,0 +1,930 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * System Control and Management Interface (SCMI) Pinctrl Protocol
+> + *
+> + * Copyright (C) 2023 EPAM
+
+2023-2024
+
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/slab.h>
+> +
+> +#include "common.h"
+> +#include "protocols.h"
+> +
+> +/* Updated only after ALL the mandatory features for that version are merged */
+> +#define SCMI_PROTOCOL_SUPPORTED_VERSION                0x40000
+
+Why 0x40000, this should be 0x10000 I think looking at SCMI Pinctrl on v3.2-bet3,
+BUT there are still other missing (minor) features as of now related to v3.2-bet3
+(that impacts on all protocols like NEGOTIATE_PROTOCOL) and I will add those missing
+feats in the SCMI core shortly in the upcoming weeks.
+
+So, for the moment I would set this to 0x0, and I will bump it up to 0x10000
+when the still missing v3.2-bet3 features are all in, because if not we would
+be lying here saying that we now support Pinctrl 0x10000, while instead
+something is still missing.
+
+> +
+> +#define REG_TYPE_BITS GENMASK(9, 8)
+> +#define REG_CONFIG GENMASK(7, 0)
+> +
+> +#define GET_GROUPS_NR(x)	le32_get_bits((x), GENMASK(31, 16))
+> +#define GET_PINS_NR(x)		le32_get_bits((x), GENMASK(15, 0))
+> +#define GET_FUNCTIONS_NR(x)	le32_get_bits((x), GENMASK(15, 0))
+> +
+> +#define EXT_NAME_FLAG(x)	le32_get_bits((x), BIT(31))
+> +#define NUM_ELEMS(x)		le32_get_bits((x), GENMASK(15, 0))
+> +
+> +#define REMAINING(x)		le32_get_bits((x), GENMASK(31, 16))
+> +#define RETURNED(x)		le32_get_bits((x), GENMASK(11, 0))
+
+[snip]
+
+> +
+> +static int scmi_pinctrl_config_get_all(const struct scmi_protocol_handle *ph,
+> +				       u32 selector,
+> +				       enum scmi_pinctrl_selector_type type,
+> +				       u16 size, u8 *config_types,
+> +				       u32 *config_values)
+
+This function is a bit odd, since you provide a pair of arrays and their
+size to fetch all the results BUT there is no way, agfter the call, to know how
+many valid results have been filled in the array, so it is a bit difficult
+to use properly (given also that 0/0 is a valid config/val pair), BUT on the
+other side I cannot see this being called from anywhere as of now, so I think
+it can be left as it is and maybe will fix in the future when needed.
+
+Another option could be to drop it, but it worked fine anyway when tested, and
+needs only a minor fix (as said above) so I would keep even though unused.
+
+Up to you. No strong opinion since it does not misbehave anyway, it is
+just awkward a bit...
+
+> +{
+> +	int ret;
+> +	void *iter;
+> +	struct scmi_iterator_ops ops = {
+> +		.prepare_message = iter_pinctrl_conf_get_prepare_message,
+> +		.update_state = iter_pinctrl_conf_get_update_state,
+> +		.process_response = iter_pinctrl_conf_get_process_response,
+> +	};
+> +	struct scmi_conf_get_ipriv ipriv = {
+> +		.selector = selector,
+> +		.type = type,
+> +		.all = 1,
+> +		.config_types = config_types,
+> +		.config_values = config_values,
+> +	};
+> +
+> +	if (!config_values || !config_types || type == FUNCTION_TYPE)
+> +		return -EINVAL;
+> +
+> +	ret = scmi_pinctrl_validate_id(ph, selector, type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	iter = ph->hops->iter_response_init(ph, &ops, size, PINCTRL_CONFIG_GET,
+> +					    sizeof(struct scmi_msg_conf_get),
+> +					    &ipriv);
+> +
+> +	if (IS_ERR(iter))
+> +		return PTR_ERR(iter);
+> +
+> +	return ph->hops->iter_response_run(iter);
+> +}
+
+[snip]
+
+>  DECLARE_SCMI_REGISTER_UNREGISTER(reset);
+>  DECLARE_SCMI_REGISTER_UNREGISTER(sensors);
+> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+> index f2f05fb42d28..d8e2bb828ee7 100644
+> --- a/include/linux/scmi_protocol.h
+> +++ b/include/linux/scmi_protocol.h
+> @@ -717,6 +717,78 @@ struct scmi_powercap_proto_ops {
+>  					  u32 *power_thresh_high);
+>  };
+>  
+> +enum scmi_pinctrl_selector_type {
+> +	PIN_TYPE = 0,
+> +	GROUP_TYPE,
+> +	FUNCTION_TYPE,
+> +};
+> +
+> +/**
+> + * struct scmi_pinctrl_proto_ops - represents the various operations provided
+> + * by SCMI Pinctrl Protocol
+> + *
+> + * @count_get: returns count of the registered elements in given type
+> + * @name_get: returns name by index of given type
+> + * @group_pins_get: returns the set of pins, assigned to the specified group
+> + * @function_groups_get: returns the set of groups, assigned to the specified
+> + *	function
+> + * @mux_set: set muxing function for groups of pins
+> + * @config_get: returns configuration parameter for pin or group
+> + * @config_set: sets the configuration parameter for pin or group
+> + * @pin_request: aquire pin before selecting mux setting
+> + * @pin_free: frees pin, acquired by request_pin call
+> + */
+> +struct scmi_pinctrl_proto_ops {
+> +	int (*count_get)(const struct scmi_protocol_handle *ph,
+> +			 enum scmi_pinctrl_selector_type type);
+> +	int (*name_get)(const struct scmi_protocol_handle *ph, u32 selector,
+> +			enum scmi_pinctrl_selector_type type, const char **name);
+> +	int (*group_pins_get)(const struct scmi_protocol_handle *ph, u32 selector,
+> +			      const unsigned int **pins, unsigned int *nr_pins);
+> +	int (*function_groups_get)(const struct scmi_protocol_handle *ph, u32 selector,
+> +				   unsigned int *nr_groups, const unsigned int **groups);
+> +	int (*mux_set)(const struct scmi_protocol_handle *ph, u32 selector, u32 group);
+> +	int (*config_get)(const struct scmi_protocol_handle *ph, u32 selector,
+> +			  enum scmi_pinctrl_selector_type type,
+> +			  u8 config_type, u32 *config_value);
+> +	int (*config_get_all)(const struct scmi_protocol_handle *ph,
+> +			      u32 selector,
+> +			      enum scmi_pinctrl_selector_type type, u16 size,
+> +			      u8 *config_types, u32 *config_values);
+> +	int (*config_set)(const struct scmi_protocol_handle *ph, u32 selector,
+> +			  enum scmi_pinctrl_selector_type type,
+> +			  unsigned int nr_configs,
+> +			  u8 *config_type, u32 *config_value);
+> +	int (*pin_request)(const struct scmi_protocol_handle *ph, u32 pin);
+> +	int (*pin_free)(const struct scmi_protocol_handle *ph, u32 pin);
+> +};
+> +
+> +enum scmi_pinctrl_conf_type {
+> +	SCMI_PIN_NONE = 0x0,
+> +	SCMI_PIN_BIAS_BUS_HOLD = 0x1,
+> +	SCMI_PIN_BIAS_DISABLE = 0x2,
+> +	SCMI_PIN_BIAS_HIGH_IMPEDANCE = 0x3,
+> +	SCMI_PIN_BIAS_PULL_UP = 0x4,
+> +	SCMI_PIN_BIAS_PULL_DEFAULT = 0x5,
+> +	SCMI_PIN_BIAS_PULL_DOWN = 0x6,
+> +	SCMI_PIN_DRIVE_OPEN_DRAIN = 0x7,
+> +	SCMI_PIN_DRIVE_OPEN_SOURCE = 0x8,
+> +	SCMI_PIN_DRIVE_PUSH_PULL = 0x9,
+> +	SCMI_PIN_DRIVE_STRENGTH = 0xA,
+> +	SCMI_PIN_INPUT_DEBOUNCE = 0xB,
+> +	SCMI_PIN_INPUT_MODE = 0xC,
+> +	SCMI_PIN_PULL_MODE = 0xD,
+> +	SCMI_PIN_INPUT_VALUE = 0xE,
+> +	SCMI_PIN_INPUT_SCHMITT = 0xF,
+> +	SCMI_PIN_LOW_POWER_MODE = 0x10,
+> +	SCMI_PIN_OUTPUT_MODE = 0x11,
+> +	SCMI_PIN_OUTPUT_VALUE = 0x12,
+> +	SCMI_PIN_POWER_SOURCE = 0x13,
+> +	SCMI_PIN_SLEW_RATE = 0x20,
+> +	SCMI_PIN_OEM_START = 0xC0,
+> +	SCMI_PIN_OEM_END = 0xFF,
+> +};
+
+Can you move this enum above the pinctrl_proto_ops for consistency?
+
+Maybe use it in the ops prototype as the type of config_type param or
+is there a reason to stick with u8 config_type even having the enum ?
+We anyway place a u32 in the message at the end, so it does not seem
+any gain in size.
+
+Thanks,
+Cristian
