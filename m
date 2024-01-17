@@ -1,162 +1,153 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9461E87F;
-	Wed, 17 Jan 2024 22:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094B51E883;
+	Wed, 17 Jan 2024 22:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705531764; cv=none; b=KCWEIPMAeRVp2hEMG3HYRHP8G7T+muA2FYTZD8e3mA4NtBXprKEdUXQVrEqmaUcsFBz+zkUuxexkElHEAjr0/S3W6YghErQTOG/d7lAyoGq9JMlzORQmzE61L4t7WL1/yZ1SKd2kl9LRsZpIFbp0ee7X4FkX+ehwNg6Vp4HcwrY=
+	t=1705531833; cv=none; b=j1NSzEyb8mZykK+2F0jpKSrl+Lwz5TIELYURJBZUHUmEfwUlIFV6L+OAVkjIHqfl04yZKcQZ1wsqygo+N94YC5wZ9iRovW20GisD+0JccDwlj/pizATg4mWRxlVU4HPfaltxslh/h7P6yCVqtF6HQQFbj5OoLNLq8VMLl7qym3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705531764; c=relaxed/simple;
-	bh=qaE/HlWhBZGUp+I9ZP25s5E7Fw4PribzaVcu0eirskc=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=S59IA3M2IZVU5GSBe01KNd3izmr9i8dTQzTTN5Z6nZtc2codFpOjbxe7o2TONHGUkq+9FRkbTY5xLwvJKWIoshNXBMAGvuSVaZHVgd0ECd85cCCksBtGqr51CUF5gGdGi+H0s0+Z/dd0pnB1Oy9sRL3QsnwMR5BHKfHiOzy+qkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iIVKaUCh; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705531833; c=relaxed/simple;
+	bh=qguSOaKqDdDjb3/S9QpBOL7t0uNMFAuzVBe0jQZrzWk=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:X-IronPort-AV:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:User-Agent; b=sCCiAdYxbDJSpynN0Wxknc9b/BkIe2BR+l1eyhRebxYru4EQ1AGgyQWYlPH92MiIdB9OI5gV+CXOM23mciRo6unig3oYOLQYMCJG8xS4/4QECPY7zXQbbJI8J6kX/6/wTwH0RPjPzAUSseFYP3x2XkUx0LLMhoMLmjWVaqydcCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W9k2luvt; arc=none smtp.client-ip=192.55.52.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIVKaUCh"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2cd2f472665so123538171fa.2;
-        Wed, 17 Jan 2024 14:49:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705531760; x=1706136560; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9/mowEtNIcXszHVTA9q/88Y6qPyzZTlnvSSg/H5073M=;
-        b=iIVKaUChX9CXCmbFeQ7zAO48WoaIyCbPgpIjTjxU+Wcim++YI8r4FFBJhEmDxF5Bdn
-         Pop2+iI/0oAY1bldPdZokSI4CFI46H/vnx2cnbNoNu9O5Pd/ESK6nNhDHb/aBMALGPNE
-         NWm3TEBSLSS+rj5VmsYnN/nKUObq+qJBCb+TB+d2ApFYsmiXArgwL0JhNQyAHFYIdm55
-         Y5pP+hmLtmPo+j3H7yb1GzvJIoz/5bmMYLY8ZymGgG3Wq2rfnrPYRNhq4W9DJy8soThJ
-         ZxqdMtSTUQF7eeg4uBrLkMyDLhtDNhKGw7CSjoFGU2O8IQX46llokz3adSqHb/eDQTJw
-         HKkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705531760; x=1706136560;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9/mowEtNIcXszHVTA9q/88Y6qPyzZTlnvSSg/H5073M=;
-        b=kh8BfgiakWlwOgLzzHEldSElysIt7FeGyOeGRL85+SwcLCzOvpgMkFHaGdfURpkUbz
-         quVL2Ck5JJ+M/ofk7qx3AC12nEOt6cZyuGZ2OaYo8YXcDlUOk9vSbHBJ48KWA3OYdnFk
-         P27to6enh4lfB9P8ahjEeWOlvworoIHl7hqxHiJuy6dNu3cwpoVLPiWYTVyRWkpUjh3H
-         kFCBY0DYitkEwr2OD4a6BipUWnITqvI0j8fCFqP8btgOiOgGLyoYfFg30pa9QL6LnVgQ
-         mlXtbUD9WwHLaDkW5Go48R/OlwmKsnRKfRq+6/4hZgD/tamwaAYo6ehXQo5k6cnz/3lQ
-         6HDQ==
-X-Gm-Message-State: AOJu0YyrsgVaR4+R0E3zh/ZJC9dyvIWvhX4CwTwt7bfjB/Y4VGo6pnX7
-	IdAar9MzvNH7n9NMyHtt9cQ6GnExmqVJPBz71tM=
-X-Google-Smtp-Source: AGHT+IEUPDQNOlmNlr9Q7Qccr51WOHkRZxqKucf6Ci5wug+N0hT4DADtN5YAKbeFLlZqrJzLfSQ7B68V+QZk4yoFQuw=
-X-Received: by 2002:a2e:b6c1:0:b0:2cd:279a:d3a9 with SMTP id
- m1-20020a2eb6c1000000b002cd279ad3a9mr4183206ljo.51.1705531760260; Wed, 17 Jan
- 2024 14:49:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W9k2luvt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705531832; x=1737067832;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qguSOaKqDdDjb3/S9QpBOL7t0uNMFAuzVBe0jQZrzWk=;
+  b=W9k2luvt3WV1+LyCaW1k9sXa82I/Z9gY8kQHb2ipvlgVz559+5x8J6WG
+   BQevgEhXKWI9DX8kRxR8VshVqfM6x4SGoluwyJzLokaKiCUI502JyQa6/
+   luZXAP6FJ8K03lEJCx5zP+27YWQui+Q2fs+VYxkabOicBiEixd3LxaQay
+   r+GKDprHPj96OK1ZiD2QJYUsviEzBUth4axF0ypdVCcrrp6mqH3I9xoOu
+   d+4WBIDPhH8rIGGSa1vxAwSvB47kCJILeP0jOkJrKhT2wQNybcrCDY7gn
+   4iWO1aVXaZlb1mseNA9/sfnLxrKVeeKlfV7u6pmtVjZlzgOnxR9JRDSMR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="399955665"
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="399955665"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:50:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="760708067"
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="760708067"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:50:28 -0800
+Date: Wed, 17 Jan 2024 14:51:58 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc: rafael@kernel.org, lenb@kernel.org, robert.moore@intel.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, mcgrof@kernel.org, peterz@infradead.org,
+	j.granados@samsung.com, viresh.kumar@linaro.org,
+	linux-pm@vger.kernel.org, CobeChen@zhaoxin.com, TimGuo@zhaoxin.com,
+	LeoLiu-oc@zhaoxin.com, LindaChai@zhaoxin.com
+Subject: Re: [PATCH 3/3] ACPI: cpufreq: Add ITMT support when CPPC enabled
+ for Zhaoxin CPUs
+Message-ID: <20240117225158.GD13777@ranerica-svr.sc.intel.com>
+References: <20231228075705.26652-1-TonyWWang-oc@zhaoxin.com>
+ <20231228075705.26652-4-TonyWWang-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231227180306.6319-1-johan+linaro@kernel.org>
- <ZZ15c1HUQIH2cY5o@google.com> <ZZ1-ehpU-g6i9Qem@hovoldconsulting.com>
- <ZZ2IOQEekFffJoHQ@google.com> <ZZ5RVpL88XNbgKIy@hovoldconsulting.com>
-In-Reply-To: <ZZ5RVpL88XNbgKIy@hovoldconsulting.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Wed, 17 Jan 2024 17:49:07 -0500
-Message-ID: <CABBYNZJ_EAuGEdeW+vZzXu20nVqLkLwiQbYQ9XzoABxQ5rAzdQ@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: qca: fix device-address endianness
-To: Johan Hovold <johan@kernel.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, Johan Hovold <johan+linaro@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Bjorn Andersson <quic_bjorande@quicinc.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Doug Anderson <dianders@google.com>, 
-	Stephen Boyd <swboyd@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231228075705.26652-4-TonyWWang-oc@zhaoxin.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Hi Johan,
+On Thu, Dec 28, 2023 at 03:57:05PM +0800, Tony W Wang-oc wrote:
+> For Zhaoxin CPUs, the cores' highest frequencies may be different, which
+> means that cores may run at different max frequencies,
+> 
+> According to ACPI-spec6 chapter 8.4.7, the per-core highest frequency
+> value can be obtained via cppc.
+> 
+> The core with the higher frequency have better performance, which can be
+> called as preferred core. And better performance can be achieved by
+> making the scheduler to run tasks on these preferred cores.
+> 
+> The cpufreq driver can use the highest frequency value as the prioriy of
+> core to make the scheduler try to get better performace. More specifically,
+> in the acpi-cpufreq driver use cppc_get_highest_perf() to get highest
+> frequency value of each core, use sched_set_itmt_core_prio() to set
+> highest frequency value as core priority, and use sched_set_itmt_support()
+> provided by ITMT to tell the scheduler to favor on the preferred cores.
+> 
+> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+> ---
+>  drivers/cpufreq/acpi-cpufreq.c | 56 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 55 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+> index 37f1cdf46d29..f4c1ff9e4bb0 100644
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -663,8 +663,56 @@ static u64 get_max_boost_ratio(unsigned int cpu)
+>  
+>  	return div_u64(highest_perf << SCHED_CAPACITY_SHIFT, nominal_perf);
+>  }
+> +
+> +/* The work item is needed to avoid CPU hotplug locking issues */
+> +static void sched_itmt_work_fn(struct work_struct *work)
+> +{
+> +	sched_set_itmt_support();
+> +}
+> +
+> +static DECLARE_WORK(sched_itmt_work, sched_itmt_work_fn);
+> +
+> +static void set_itmt_prio(int cpu)
+> +{
+> +	static bool cppc_highest_perf_diff;
+> +	static struct cpumask core_prior_mask;
+> +	u64 highest_perf;
+> +	static u64 max_highest_perf = 0, min_highest_perf = U64_MAX;
+> +	int ret;
+> +
+> +	ret = cppc_get_highest_perf(cpu, &highest_perf);
+> +	if (ret)
+> +		return;
+> +
+> +	sched_set_itmt_core_prio(highest_perf, cpu);
+> +	cpumask_set_cpu(cpu, &core_prior_mask);
+> +
+> +	if (max_highest_perf <= min_highest_perf) {
+> +		if (highest_perf > max_highest_perf)
+> +			max_highest_perf = highest_perf;
+> +
+> +		if (highest_perf < min_highest_perf)
+> +			min_highest_perf = highest_perf;
+> +
+> +		if (max_highest_perf > min_highest_perf) {
+> +			/*
+> +			 * This code can be run during CPU online under the
+> +			 * CPU hotplug locks, so sched_set_itmt_support()
+> +			 * cannot be called from here.  Queue up a work item
+> +			 * to invoke it.
+> +			 */
+> +			cppc_highest_perf_diff = true;
+> +		}
+> +	}
+> +
+> +	if (cppc_highest_perf_diff && cpumask_equal(&core_prior_mask, cpu_online_mask)) {
+> +		pr_debug("queue a work to set itmt enabled\n");
+> +		schedule_work(&sched_itmt_work);
+> +	}
+> +}
 
-On Wed, Jan 10, 2024 at 3:12=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
-te:
->
-> On Tue, Jan 09, 2024 at 05:54:01PM +0000, Matthias Kaehlcke wrote:
-> > On Tue, Jan 09, 2024 at 06:12:26PM +0100, Johan Hovold wrote:
->
-> > > That depends on in what way the current devices are broken.
-> > >
-> > > Any machines that correctly specify their address in little-endian or=
-der
-> > > in the devicetree would no longer be configured using the wrong addre=
-ss.
-> > > So no problem there (except requiring users to re-pair their gadgets)=
-.
-> > >
-> > > And tools like btgmt is broken on all of these Qualcomm machine in an=
-y
-> > > case and would now start working as expected. So no problem there eit=
-her
-> > > (unless user space had adapted an inverted the addresses to btmgmt).
-> > >
-> > > So the first question is whether there actually is any boot firmware =
-out
-> > > there which passes the BD_ADDR in reverse order?
-> >
-> > Yes, (at least) the boot firmware for sc7180-trogdor devices.
-> >
-> > hexdump -C /proc/device-tree/soc\@0/geniqup\@8c0000/serial\@88c000/blue=
-tooth/local-bd-address
-> > 00000000  8c fd f0 40 15 dc
->
-> Indeed, this should have been LE order.
->
-> > hciconfig
-> > hci0:   Type: Primary  Bus: UART
-> >         BD Address: 8C:FD:F0:40:15:DC  ACL MTU: 1024:8  SCO MTU: 240:8
-> >         UP RUNNING
-> >         RX bytes:1700 acl:0 sco:0 events:95 errors:0
-> >         TX bytes:128949 acl:0 sco:0 commands:578 errors:0
->
-> And any user space tool overriding the address would currently need to
-> provide the address in reverse order on Qualcomm platforms like this
-> one (e.g. if generating the address for privacy reasons).
-
-Perhaps we could attempt to resolve the address byteorder, in
-userspace we use hwdb_get_company to resolve the company but since
-this shall only really care about Qualcomm range(s) perhaps we can
-hardcode them check in which order the address is, that said if the
-device is configured with a Static Random Address then that would not
-work, but that is only really possible for BLE only devices.
-
-> > > > I suggest adding a quirk like 'local-bd-address-msb-quirk' or
-> > > > 'qcom,local-bd-address-msb-quirk' to make sure existing devices kee=
-p
-> > > > working properly.
-> > >
-> > > I don't think that would work. If this is something that we really ne=
-ed
-> > > to handle, then there's probably no way around introducing new
-> > > compatible strings for boot firmware that isn't broken while maintain=
-ing
-> > > the current broken behaviour with respect to 'local-bd-address' for s=
-ome
-> > > of the current ones.
-> >
-> > I think it should work for sc7180-trogdor. For these devices the device=
- tree
-> > is bundled with the kernel image and can be updated. That might not be =
-true
-> > for other devices though.
->
-> Thanks for confirming.
->
-> I'm still hoping we can get away with not having to add quirks to
-> Bluetooth core for broken Qualcomm boot firmware. Let's see if anyone
-> knows of a use case that makes that impossible to avoid.
->
-> Johan
-
-
-
---=20
-Luiz Augusto von Dentz
+sched_itmt_work and this function is a duplicate of what the intel_pstate
+driver already does. It might be good if consolidate in a single place
+if you are going to pursue this approach.
