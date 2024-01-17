@@ -1,120 +1,92 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218231E877
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 19:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064D1249EE;
+	Wed, 17 Jan 2024 19:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705520349; cv=none; b=kO0B+80JVqpHKGINO5Nq92m6wLSOn7yQwzBOL5rxAuqSEam9QqVEiMXhTRWB6lB2xBniBIsxVYx0NVWwEM0lsvTULy/OjgJZ5MIMPO1aTlZpuRA1DUDm9Ny/15C4jLcyUIAVFzoimQisHYiRzZKLju2WOSTkam7LjJ7bGkU+YNs=
+	t=1705520358; cv=none; b=pd2vhZP8rxuGdA+C2mFoTJZhgr6V2xEE26+FCAtnIuJyadOppmR82rj8ECoNsr3A08jRdxPd1EMaeW2TrFKDooOZPDqnsGpsO7gsznYDuUNaWmyLlFme1cubixKjvIF2rf94L0pE9tWEW24OwZEWVT4WcIYFRA0qJ3syVogczPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705520349; c=relaxed/simple;
-	bh=jrjn3NC6NorunAtxuwbpds3Mq7BV0m/tHvQeaRNhu14=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=Fsih3i9bDXlC7MDrEZIqb/4EWCQ0xW/MmuLSIRFMroifDpRPElZVm2wyLBcpGSSZC6NDNEFjpV1dV/za7EQGNqn+scpxVjNInuNt67kkZd0ruQnl+3ca2Y3E/ij8U+zNi+6LAB2KeShw00ha6ND/IZATnHPMkcgnjHbVFl9GOoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hzC6adFO; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1705520358; c=relaxed/simple;
+	bh=qqBJ5vug6dV0ozKgqcaIGBYDgv7KtCxfYMh7ZJ6Q26I=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=d9O6aY98py+MFcMJvI96EppTKw8a/g8wsnjmCnkMLj3VJ6vbxDZ4PJlfCNBIlHgtyfZCGSnpaNdXeKcDXmAn1QZHUe/MzeZRUUq4YA4mRlC+cPaDvVTyTcgzOicxeSj3pM13SnpsR4+nnUaNrDiS1ZPqhRaY5OnDUnmnAKTaS+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orRxnePz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hzC6adFO"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6dddcf525f0so4017a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 11:39:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705520347; x=1706125147; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D6jKjCd8cxNvuyTvHeVd3uoTbVR5rb6TebJjLMiKkIw=;
-        b=hzC6adFOW26xtIv6lP8nODmMJFuen1RuNpycs9BQyFsoqvBxCCcWXpxgIuVDpBIHmr
-         ImIWpgUGZ15r2nvq9wlocAa5PXGkSYzTcMlX7kAma1QC6A5WxWVSn1LfOKq4PLYFnGbO
-         Znm5cOY/NsqKrn62yM/ZZ7xa0PGSRv6Sak/m0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705520347; x=1706125147;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D6jKjCd8cxNvuyTvHeVd3uoTbVR5rb6TebJjLMiKkIw=;
-        b=uQ/XNn0Z7DqhYHVZGcm7fRBBjC6QzjLoWSFntyNqK/k3wSk3HiKNSKdWrRN2bSO5j9
-         w2Eg6dLHcoblNhGJ8Kuu0DsTzULDLcEaAC0n7xxPFlOg7oXjlJwjVbik0ueqhhuMyNUO
-         eLAY7JUlPPUMyRX49kKOHDlMmMGv2Ow0Hk0EgiO36YE5KBdKSZu/mgi9/13gadgqd3LB
-         fm9yW1zRWO47VlX6mmARbSmm1wh4gXNgUW/LhO8FT9WS7oX/WyOOZdMXb0mrGrDo00t8
-         fMQ6dJ0jAg92UqwInysPXYBp7YWXqX/OfyFaw5hLKmqF51t5iFJwcSDIOVR9dBlfYdGM
-         bYLA==
-X-Gm-Message-State: AOJu0YyZOqqS/qj5fYv8luRbCDp8LdRCPbMh21vf2OppYoH8gVO+uqaL
-	z52DD49L+2Z+XBxZkVbvuJ8yMJJcwJHSWZAcYrCqB/6++ydq
-X-Google-Smtp-Source: AGHT+IGH9stHtp4vFELGxHWV6sZJ5VLgX2UrJI9VZ6g5lxacI7FFdFqxVb2ZT4UmOppnd/g7oFSkYQYXplKjNDdRHqY=
-X-Received: by 2002:a9d:63ce:0:b0:6db:ff8b:724e with SMTP id
- e14-20020a9d63ce000000b006dbff8b724emr548346otl.3.1705520347212; Wed, 17 Jan
- 2024 11:39:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orRxnePz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E773BC43394;
+	Wed, 17 Jan 2024 19:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705520357;
+	bh=qqBJ5vug6dV0ozKgqcaIGBYDgv7KtCxfYMh7ZJ6Q26I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=orRxnePz8lKyXr+Shhml4pKgH35Jq98oR0yKMRCVSvRdPt89dqd8YD1EAaHH1FYAo
+	 b1YS475T+RiWVkm65+l4ip+ukCfn8tdioNl9nx7fpInQeLqC9Nrzwn/lM2rZy8WKPj
+	 nq8961EIaresqnhqe0wVGapP70T1nfuuMAZIjubxrsRn/dKoqMlDmIr0LdZh6q8lIK
+	 8w7wMv9952y1yVGe8dIIeBKka/8Yag8C+MpbiU/3ksYdDz2CYgVJ0/eBB9qT4Y/DYl
+	 Y2q71urfRZ3QKbHNM/0VzD/dSKy1cYDJv7gqZzC16eNsvtbxduiSLAEEbcEhbHg7A5
+	 hBWLDtV0WGlzQ==
+Date: Wed, 17 Jan 2024 11:39:15 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Shakeel Butt <shakeelb@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+	Vasily Averin <vasily.averin@linux.dev>,
+	Michal Koutny <mkoutny@suse.com>, Waiman Long <longman@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>, Jiri Kosina <jikos@kernel.org>,
+	cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH RFC 1/4] fs/locks: Fix file lock cache accounting, again
+Message-ID: <20240117193915.urwueineol7p4hg7@treble>
+References: <cover.1705507931.git.jpoimboe@kernel.org>
+ <ac84a832feba5418e1b58d1c7f3fe6cc7bc1de58.1705507931.git.jpoimboe@kernel.org>
+ <6667b799702e1815bd4e4f7744eddbc0bd042bb7.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117103502.1.Ib726a0184913925efc7e99c4d4fc801982e1bc24@changeid>
-In-Reply-To: <20240117103502.1.Ib726a0184913925efc7e99c4d4fc801982e1bc24@changeid>
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Date: Wed, 17 Jan 2024 11:38:41 -0800
-Message-ID: <CAJMQK-j_gEfZqWppG3oVNWBopH9uVK-NrzXvoSr=ijF2pMycDA@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: parade-ps8640: Make sure we drop the AUX
- mutex in the error case
-To: Douglas Anderson <dianders@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Pin-yen Lin <treapking@chromium.org>, 
-	Robert Foss <rfoss@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6667b799702e1815bd4e4f7744eddbc0bd042bb7.camel@kernel.org>
 
-On Wed, Jan 17, 2024 at 10:35=E2=80=AFAM Douglas Anderson <dianders@chromiu=
-m.org> wrote:
->
-> After commit 26db46bc9c67 ("drm/bridge: parade-ps8640: Ensure bridge
-> is suspended in .post_disable()"), if we hit the error case in
-> ps8640_aux_transfer() then we return without dropping the mutex. Fix
-> this oversight.
->
-> Fixes: 26db46bc9c67 ("drm/bridge: parade-ps8640: Ensure bridge is suspend=
-ed in .post_disable()")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> Sorry for missing this in my review! :( Given that this is really
-> simple and I'd rather the buggy commit not be there for long, if I can
-> get a quick Reviewed-by tag on this patch I'll land it without the
-> typical stewing period.
->
+On Wed, Jan 17, 2024 at 02:00:55PM -0500, Jeff Layton wrote:
+> I'm really not a fan of tunables or different kconfig options,
+> especially for something niche like this.
+> 
+> I also question whether this accounting will show up under any real-
+> world workloads, and whether it was just wrong to revert those patches
+> back in 2021.
+> 
+> File locking is an activity where we inherently expect to block. Ideally
+> we don't if the lock is uncontended of course, but it's always a
+> possibility.
+> 
+> The benchmark that prompted the regression basically just tries to
+> create and release a bunch of file locks as quickly as possible.
+> Legitimate applications that do a lot of very rapid locking like this
+> benchmark are basically non-existent. Usually the pattern is:
+> 
+>     acquire lock
+>     do some (relatively slow) I/O
+>     release lock
+> 
+> In that sort of scenario, is this memcg accounting more than just line
+> noise? I wonder whether we should just bite the bullet and see whether
+> there are any real workloads that suffer due to SLAB_ACCOUNT being
+> enabled on these caches?
 
-Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
+That's a good point.  If the microbenchmark isn't likely to be even
+remotely realistic, maybe we should just revert the revert until if/when
+somebody shows a real world impact.
 
->  drivers/gpu/drm/bridge/parade-ps8640.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bri=
-dge/parade-ps8640.c
-> index 166bfc725ef4..14d4dcf239da 100644
-> --- a/drivers/gpu/drm/bridge/parade-ps8640.c
-> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
-> @@ -351,11 +351,13 @@ static ssize_t ps8640_aux_transfer(struct drm_dp_au=
-x *aux,
->         ret =3D _ps8640_wait_hpd_asserted(ps_bridge, 200 * 1000);
->         if (ret) {
->                 pm_runtime_put_sync_suspend(dev);
-> -               return ret;
-> +               goto exit;
->         }
->         ret =3D ps8640_aux_transfer_msg(aux, msg);
->         pm_runtime_mark_last_busy(dev);
->         pm_runtime_put_autosuspend(dev);
-> +
-> +exit:
->         mutex_unlock(&ps_bridge->aux_lock);
->
->         return ret;
-> --
-> 2.43.0.381.gb435a96ce8-goog
->
+Linus, any objections to that?
+
+-- 
+Josh
