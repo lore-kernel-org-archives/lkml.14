@@ -1,128 +1,113 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8759E25569
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 21:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A7925572;
+	Wed, 17 Jan 2024 21:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705526617; cv=none; b=NycFoxosUSmH3YBuna/Uazdq5SVIYz0Cjmy4ut08KFT0DjccHF/+1CfTaV0hcyQ0DfN/H2H4oyCvYaBM/22v5ME9Xobwbo83Zq8We/2zJu28hDqwcqoyJReejw06d6amSpeQSFGq4pCP6XnXvo+jDFqy+ZVwz+r/cWCp9XmBRj4=
+	t=1705526662; cv=none; b=Z6BjP5bZQto2BWTRZm2qzqAjXd2atc9+T6M9A0wATjmAz/vgk9q1rxiwdSpZX6xwGmRtBV0CZ/NLVbnQtUNQP6ctxSDXA51+PwlmIlj/pco0L3jMUO18GXaGVZ3+30P3hkfNpDRE4s384ljXHcYV7OFkXqiMXBV8JY+aqa9s9OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705526617; c=relaxed/simple;
-	bh=93LlwyHyTkQO2KrqYA5lB0CVoPPZAC3B0Z1WLjl1+Ww=;
-	h=Message-ID:DKIM-Signature:Date:MIME-Version:Subject:
-	 Content-Language:To:Cc:References:X-Report-Abuse:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-Migadu-Flow; b=ZKcN2w7nFP0G2ClptLw1tKyuPLdhug7/aEqeFe54/ZjtgcwXdRaJFZA9qhOyLr6XGbh1nNZpym0Sm2Lve4SNWOPiGYJRBCEOf5Zt4F5AWchgesgQfhRvRYTPY0FtkmLJ+kb8l1KwDhIw75jkzo2xdKlscGEMNRGr/RHApHpo4Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=h6m3Cvnd; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1705526662; c=relaxed/simple;
+	bh=Xi4AvMxwNhhjvnZxB9RNlBZlHJZqwbrZNMt87q40Y5Y=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding; b=KZwX8hy1IMUI98dOxhdvI9Y1bryqsOtZfWWxon/UJxdFYZsQI3RpMDbn4T+0Wlf5M9W6HcdB0dnErHf2t+uJePCuazQBLqrp/6b68Pc/o2M/Co7YD9Ah1WTcC9irjfsiCJ/65tz63oLZSW/g6zRdOm/ebIVV+7mVo+Wqd0ORO68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HetAil9r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h6m3Cvnd"
-Message-ID: <73235f05-8474-4341-b70b-34bd0e6dfac5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705526613;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ct5ToPw3LUaNOoDO1thQP66v+Llmlbh3AXHo2CAPhSc=;
-	b=h6m3CvndLIJ5uzrmzBqR1nJWilSirVxV4yW+4QLzpTzKLqgIyNSmf14X7yh2YdXJREN8jX
-	i/xsrAeU6zEK0x6m8rcAy1E4gxL0gxMcC6UGQXrSJUXqewmGBjkv8WNuBSNwmJLVk5Ceuf
-	eWkXKO6Nc2SIe0RB69QFBga8uc1sZK0=
-Date: Wed, 17 Jan 2024 13:23:25 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HetAil9r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 525B2C433F1;
+	Wed, 17 Jan 2024 21:24:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705526661;
+	bh=Xi4AvMxwNhhjvnZxB9RNlBZlHJZqwbrZNMt87q40Y5Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HetAil9r8Am1raizRyvhUG/lw4wfYEoQA/9APIZG3YginIabgQH0C8ANZXjw2Y2Z3
+	 jBVjrKFMwSrWTLn5+kyKOecmhQiS5HLDw1e7N7aJ6y6K+KXuxtm9rfcb+RUqi5qZYK
+	 J+TU5//SgG++UfdgVeSTAcfsZQ7CHLh8fkX5jswzbSmylMVy55rY9f9ocr+c7NSVh0
+	 0D+XfW7JgkTo+N15+rIdFFNFFIa3FAivl41puNP0wvNdnAyEIq+k/UKVowd11bihWw
+	 LLQTad7/nsLlcwHxghws/cLDX45lAIIpJZaRky5TGeuv/8NZZN2XaK6cSVsLHVNR3A
+	 wBilBn7I31hAA==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: Honggyu Kim <honggyu.kim@sk.com>,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	damon@lists.linux.dev,
+	dave.jiang@intel.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	lizhijian@cn.fujitsu.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com
+Subject: Re: [RFC PATCH 0/4] DAMON based 2-tier memory management for CXL memory
+Date: Wed, 17 Jan 2024 13:24:18 -0800
+Message-Id: <20240117212419.51845-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240117211103.51806-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] bpf: Allow setting SO_TIMESTAMPING* with
- bpf_setsockopt()
-Content-Language: en-US
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- =?UTF-8?Q?J=C3=B6rn-Thorben_Hinz?= <j-t.hinz@alumni.tu-berlin.de>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Shuah Khan <shuah@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Deepa Dinamani <deepa.kernel@gmail.com>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20240115134110.11624-1-j-t.hinz@alumni.tu-berlin.de>
- <65a69e1be51ef_380df0294d9@willemb.c.googlers.com.notmuch>
- <51fd5249-140a-4f1b-b20e-703f159e88a3@linux.dev>
- <65a7f855821cc_6d500294d0@willemb.c.googlers.com.notmuch>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <65a7f855821cc_6d500294d0@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 1/17/24 7:55 AM, Willem de Bruijn wrote:
-> Martin KaFai Lau wrote:
->> On 1/16/24 7:17 AM, Willem de Bruijn wrote:
->>> Jörn-Thorben Hinz wrote:
->>>> A BPF application, e.g., a TCP congestion control, might benefit from or
->>>> even require precise (=hardware) packet timestamps. These timestamps are
->>>> already available through __sk_buff.hwtstamp and
->>>> bpf_sock_ops.skb_hwtstamp, but could not be requested: BPF programs were
->>>> not allowed to set SO_TIMESTAMPING* on sockets.
->>
->> This patch only uses the SOF_TIMESTAMPING_RX_HARDWARE in the selftest. How about
->> others? e.g. the SOF_TIMESTAMPING_TX_* that will affect the sk->sk_error_queue
->> which seems not good. If rx tstamp is useful, tx tstamp should be useful also?
-> 
-> Good point. Or should not be allowed to be set from BPF.
-> 
-> That significantly changes process behavior, e.g., by returning POLLERR.
->   
->>>>
->>>> Enable BPF programs to actively request the generation of timestamps
->>>> from a stream socket. The also required ioctl(SIOCSHWTSTAMP) on the
->>>> network device must still be done separately, in user space.
->>
->> hmm... so both ioctl(SIOCSHWTSTAMP) of the netdevice and the
->> SOF_TIMESTAMPING_RX_HARDWARE of the sk must be done?
->>
->> I likely miss something. When skb is created  in the driver rx path, the sk is
->> not known yet though. How the SOF_TIMESTAMPING_RX_HARDWARE of the sk affects the
->> skb_shinfo(skb)->hwtstamps?
-> 
-> Indeed it does not seem to do anything in the datapath.
-> 
-> Requesting SOF_TIMESTAMPING_RX_SOFTWARE will call net_enable_timestamp
-> to start timestamping packets.
-> 
-> But SOF_TIMESTAMPING_RX_HARDWARE does not so thing.
-> 
-> Drivers do use it in ethtool get_ts_info to signal hardware
-> capabilities. But those must be configured using the ioctl.
-> 
-> It is there more for consistency with the other timestamp recording
-> options, I suppose.
-> 
+On Wed, 17 Jan 2024 13:11:03 -0800 SeongJae Park <sj@kernel.org> wrote:
 
-Thanks for the explanation on the SOF_TIMESTAMPING_RX_{HARDWARE,SOFTWARE}.
+[...]
+> Hi Honggyu,
+> 
+> On Wed, 17 Jan 2024 20:49:25 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+> 
+> > Hi SeongJae,
+> > 
+> > Thanks very much for your comments in details.
+> > 
+> > On Tue, 16 Jan 2024 12:31:59 -0800 SeongJae Park <sj@kernel.org> wrote:
+> > 
+[...]
+> > > To this end, I feel the problem might be able te be simpler, because this
+> > > patchset is trying to provide two sophisticated operations, while I think a
+> > > simpler approach might be possible.  My humble simpler idea is adding a DAMOS
+> > > operation for moving pages to a given node (like sys_move_phy_pages RFC[1]),
+> > > instead of the promote/demote.  Because the general pages migration can handle
+> > > multiple cases including the promote/demote in my humble assumption.
+[...]
+> > > In more detail, users could decide which is the appropriate node for promotion
+> > > or demotion and use the new DAMOS action to do promotion and demotion.  Users
+> > > would requested to decide which node is the proper promotion/demotion target
+> > > nodes, but that decision wouldn't be that hard in my opinion.
+> > > 
+> > > For this, 'struct damos' would need to be updated for such argument-dependent
+> > > actions, like 'struct damos_filter' is haing a union.
+> > 
+> > That might be a better solution.  I will think about it.
+> 
+> More specifically, I think receiving an address range as the argument might
+> more flexible than just NUMA node.  Maybe we can imagine proactively migrating
+> cold movable pages from normal zones to movable zones, to avoid normal zone
+> memory pressure.
 
-__sk_buff.hwtstamp should have the NIC rx timestamp then as long as the NIC is 
-ioctl configured.
+Yet another crazy idea.  Finding hot regions in the middle of cold region and
+move to besides of other hot pages.  As a result, memory is sorted by access
+temperature even in same node, and the system gains more spatial locality,
+which benefits general locality-based algorithms including DAMON's adaptive
+regions adjustment.
 
-Jorn, do you need RX_SOFTWARE? From looking at net_timestamp_set(), any socket 
-requested RX_SOFTWARE should be enough to get a skb->tstamp for all skbs. A 
-workaround is to manually create a socket and turn on RX_SOFTWARE.
 
-It will still be nice to get proper bpf_setsockopt() support for RX_SOFTWARE but 
-it should be considered together with how SO_TIMESTAMPING_TX_* should work in 
-bpf prog considering the TX tstamping does not have a workaround solution like 
-RX_SOFTWARE.
+Thanks,
+SJ
 
-It is probably cleaner to have a separate bit in sk->sk_tsflags for bpf such 
-that the bpf prog won't be affected by the userspace turning it on/off and it 
-won't change the userspace's expectation also (e.g. sk_error_queue and POLLERR).
-
-The part that needs more thoughts in the tx tstamp is how to notify the bpf prog 
-to consume it. Potentially the kernel can involve a bpf prog to collect the tx 
-timestamp when the bpf bit in sk->sk_tsflags is set. An example on how TCP-CC is 
-using it will help to think of the approach here.
-
+[...]
