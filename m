@@ -1,75 +1,66 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EA35CBD
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 02:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288F217E9;
+	Wed, 17 Jan 2024 02:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705458025; cv=none; b=TldjZ2EPL+h5/lrAiH+QRJauxqV4uWKvGV4++5t5ldG9w6AzjYD7jaD+8Qk+NAKMDyetMKCVs18K611fKOInhFrVNfDpy8MadJoDWoMNGwqAgTO2eIlrEttmKRVzo/2+nIvrge2Pgn4TZSJGS2HMJsXSLb2m3fDpkfjKd+jh5h4=
+	t=1705458166; cv=none; b=ddNM45kuj7D1rP/lTpOYM9rVZCjVqlUrTmFOsR5r1ALeOL8TtAEyeGtGUrGTO9e8pVKiX+FQHxqYpDRCaXe4DYrW/WvbY7ZFYGfMxn/xJOTh+cZ1MMa9iL+JljOhEFHUTUP8VHt+vtHerHoj2fIJ8kmonAG9/rSjC4IIUg+zGDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705458025; c=relaxed/simple;
-	bh=7CVCiHmkWEtjZaOJE+H1yk91VAqzvFxUdjW7LQYfSRc=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=Q58r2Xw9QBw5zOQAb5/UafCpxeEopgDR16LiHnK5khndtC2Uai38R7/H3I0SR37XretV/84Toy11xPeX66WORBW4LKcbBTk9z9UvKaDFitzJMGygu90KqDGnLfjKsN899jUzIoXZ4aNXr/mHasESZJ9wBsKMQUaK4jcmvYJvbK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=n3+HvqFW; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="n3+HvqFW"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78329cb6742so520565485a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 18:20:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1705458021; x=1706062821; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pYVZPcyXo7q2SktZ2+i1Gh7El+Ql5ZT8EyFJ+5OtVjg=;
-        b=n3+HvqFWQrMBUuylBVwt3ABK/gekkt2vCCFrQpILSDGnPprm4KmIx7xN8uPJRW3Rcb
-         zxpjFgxehAI02cDFVrb8GKcjysr9Wxbsz58PxnTX3Z+9zQp57g5Tc3xEz+Y40HCKqZzB
-         aWNlBjL3k/MAUt84DeIl6zEF5Memal1tiRlfSvVQOL5Nlbunvj0pPjLPzMwEYp/ml/DF
-         5SIuprZxl1MxC3psmlSUyklaKPcU42MZS2vACLz2gsCcOIMScSZ69RPr4kI5y6zTjrf0
-         mbcRziPs2AdU8N7VthB8R0n8UV7PUZg7mLHHVUsHVbExMKGl//EdnyX4Z0hvvNRW4Td3
-         bJXQ==
+	s=arc-20240116; t=1705458166; c=relaxed/simple;
+	bh=tjALmxBXd+DQQfMR8Vt2M3FgcBoGxOGfirrdXlPsCzE=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fpsC/x51VsnfqbUDM0p2RJUgYn8z6680ZwryEosA1Tv0fSWGNpa4Spgnn2ljLAKrd0BSBZUhbbtB5EjG/f884R4rtFVfUDFahVQ7kSM6g2d+AwFEnd5tcbVs9Gr8jeV60wyBnnOpLiRkxgqthVka3Blu3yZo3QTbOSlyuE8PD2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e0af93fdaaso2743778a34.3;
+        Tue, 16 Jan 2024 18:22:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705458021; x=1706062821;
+        d=1e100.net; s=20230601; t=1705458163; x=1706062963;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pYVZPcyXo7q2SktZ2+i1Gh7El+Ql5ZT8EyFJ+5OtVjg=;
-        b=h9RpN4vnvL1hEL+Re79teDtk/yPAFzM8SVLN7pL5YIVkdyzhBWpvYHv2J72ytJDSFw
-         6N2dV7XtpxfNbY2YX0xrZ1vOfBgGUITgYYgHpjCKNwXnc/bqUeHM/j7Uw+tQGWTIXgCp
-         aRVgCAJmC6DrIGcgNY/ePc87KAsLmtDja8HntkU/t6PQjT7+MElqVqanTCWoAPtdXkFu
-         jqHeJn5unmGEDNkh/ehCos27F4s5yX4ob4l/qL7c8fK2yDbRhacuITbccFxXj/4DMq8O
-         Dqp67mDQoIKwqK121c0qZVcrQOGBi8s7gdz67leuaCXrfGO5Q2iaO7vUaCFHu46rbPe5
-         nY3g==
-X-Gm-Message-State: AOJu0YwLz/Hxg/+9CfS8GaL/bI3Kfz767/oWOQ3VlaJ49SplwbdyGujn
-	hgXCuVZXqiy1VOLRBZqrjOB9ilZRvIsThg==
-X-Google-Smtp-Source: AGHT+IFaky36LUNJ0WdGHSeGcJ+zHWWfUOIMulY4AsqbXvuDUu75qz5IBEXI5urAHMTEk+MnU6c9iQ==
-X-Received: by 2002:a05:620a:4554:b0:783:539a:f319 with SMTP id u20-20020a05620a455400b00783539af319mr7292948qkp.13.1705458021691;
-        Tue, 16 Jan 2024 18:20:21 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id wa12-20020a05620a4d0c00b0078321f3e7c7sm4172575qkn.114.2024.01.16.18.20.20
+        bh=ZvCzHdCCoUAYXVnW660xRj2+vdtdV/6HpzjQHQyUWDg=;
+        b=Tf1BAQ1F1E1AB3kfFhoUA9iitz+MtlUAbNil35kah3J1p7rz7DcThbb7pRfRujZiCl
+         4S/8wKIg1fpIVNd2UWD2xVPRyaPLUDzxyWui8cBu5augkR+k/WX5Yn2yKBksPzJf+Q8Y
+         x7yqT2X2uW3XGw83K08IFXXRNh0xePF7vyi7UCJCFivxTljbsAQ4s0M0VlEf4WeKK1uu
+         +c/WTdk27J46r3bZVaVglr6rhIuCGsbdKVOTScr1FKG940eYPQreV+4F9BU9Gb+STwmZ
+         kgqBzLaYw+KJh9T/LhTh82FxFwTVFhFR9i6OIT/A4vb3fG6aByljVAeeynNrEkGVgTtP
+         PjMw==
+X-Gm-Message-State: AOJu0YzzAD0Ds9i/1xSg4eeCulho8/7PbFY5ndsVoXOmdSzJVlss44Tr
+	+EMjJqWfs7WzBW4qagBEEkI=
+X-Google-Smtp-Source: AGHT+IG7lJq8taiu2dFLP1BoUfxhekVtzTOyRXf1mavjJxh6yyLEVNpTV0pczEs0cRrNHW+EnYQYNg==
+X-Received: by 2002:a9d:6488:0:b0:6e0:16cb:4b4d with SMTP id g8-20020a9d6488000000b006e016cb4b4dmr9345003otl.29.1705458163117;
+        Tue, 16 Jan 2024 18:22:43 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id y27-20020aa79e1b000000b006d9ac481eccsm258477pfq.220.2024.01.16.18.22.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 18:20:21 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rPvXQ-004Zr6-Fb;
-	Tue, 16 Jan 2024 22:20:20 -0400
-Date: Tue, 16 Jan 2024 22:20:20 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Eric Badger <ebadger@purestorage.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iommu/vt-d: Check for non-NULL domain on device release
-Message-ID: <20240117022020.GH50608@ziepe.ca>
-References: <20240113181713.1817855-1-ebadger@purestorage.com>
- <20240116152215.GE50608@ziepe.ca>
- <46a61123-dd22-46cb-8b2a-15431fcc03f1@arm.com>
+        Tue, 16 Jan 2024 18:22:42 -0800 (PST)
+Date: Wed, 17 Jan 2024 02:22:40 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Dexuan Cui <decui@microsoft.com>, ak@linux.intel.com, arnd@arndb.de,
+	bp@alien8.de, brijesh.singh@amd.com, dan.j.williams@intel.com,
+	dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
+	jane.chu@oracle.com, kirill.shutemov@linux.intel.com,
+	kys@microsoft.com, linux-hyperv@vger.kernel.org, luto@kernel.org,
+	mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
+	tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
+	Jason@zx2c4.com, nik.borisov@suse.com, mikelley@microsoft.com,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, Tianyu.Lan@microsoft.com,
+	rick.p.edgecombe@intel.com, andavis@redhat.com, mheslin@redhat.com,
+	vkuznets@redhat.com, xiaoyao.li@intel.com
+Subject: Re: [PATCH v3 08/10] x86/hyperv: Use TDX GHCI to access some MSRs in
+ a TDX VM with the paravisor
+Message-ID: <Zac58P0MgEQ_ITOf@liuwe-devbox-debian-v2>
+References: <20230824080712.30327-1-decui@microsoft.com>
+ <20230824080712.30327-9-decui@microsoft.com>
+ <f488fede-5c28-4840-af3c-3faa9a31caa0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,58 +69,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <46a61123-dd22-46cb-8b2a-15431fcc03f1@arm.com>
+In-Reply-To: <f488fede-5c28-4840-af3c-3faa9a31caa0@intel.com>
 
-On Wed, Jan 17, 2024 at 01:57:34AM +0000, Robin Murphy wrote:
-> > > ---
-> > >   drivers/iommu/intel/iommu.c | 10 ++++++----
-> > >   1 file changed, 6 insertions(+), 4 deletions(-)
-> > 
-> > Unfortunately this issue is likely systemic in all the drivers.
+Hi Dave
+
+I was away and only saw your email now. Sorry for the late reply.
+
+On Mon, Dec 04, 2023 at 07:10:29AM -0800, Dave Hansen wrote:
+> On 8/24/23 01:07, Dexuan Cui wrote:
+> > +#ifdef CONFIG_INTEL_TDX_GUEST
+> > +static void hv_tdx_msr_write(u64 msr, u64 val)
+> > +{
+> > +	struct tdx_hypercall_args args = {
+> > +		.r10 = TDX_HYPERCALL_STANDARD,
+> > +		.r11 = EXIT_REASON_MSR_WRITE,
+> > +		.r12 = msr,
+> > +		.r13 = val,
+> > +	};
+> > +
+> > +	u64 ret = __tdx_hypercall(&args);
+> > +
+> > +	WARN_ONCE(ret, "Failed to emulate MSR write: %lld\n", ret);
+> > +}
 > 
-> All two of the drivers which support deferred attach, that is.
-
-We could call release_device on an unlikely error unwind path with a
-NULL domain for all drivers.
-
-> > Something I've been thinking about for a while now is to have the
-> > option for the core code release to set the driver to a specific
-> > releasing domain (probably a blocking or identity global static)
-> > 
-> > A lot of drivers are open coding this internally in their release
-> > functions, like Intel. But it really doesn't deserve to be special.
+> First of all, I'd really appreciate if you could seek out explicit acks
+> for this kind of stuff before merging it.  This surprised me.
 > 
-> Either way it shouldn't apply in this case, though. Crash kernels *are*
-> special. The whole point of deferred attach is that we don't disturb
-> anything unless we've got as far as definitely using a given default domain
-> (from which we can infer the relevant client device should have been reset
-> and quiesced). 
 
-If only it were so simple.. It assumes drivers are structured to reset
-their devices using only MMIO before doing anything to setup DMA and
-trigger an iommu attach. A lot of drivers aren't and this whole scheme
-turns a bit sketchy.
+I eyeballed the code and thought it only touched only the Hyper-V files,
+so I merged this series without waiting.
 
-Some devices can't even do it at all. eg mlx5 has the crashing kernel
-quiet the device before passing over to the crash kernel because there
-is no way beyond FLR to regain control of a mlx5 device.
+> Can you please merge these generic things back into the main TDX code?
+> There's nothing Hyper-V specific about any of this code.  Basically, you
+> can make a hv_tdx_whatever() variant, but make _that_ in the generic TDX
+> code and then export only _that_.
 
-> Thus regardless of why release might get called, if a
-> deferred attach never happened then the release should still avoid touching
-> any hardware configuration either.
+The code is still there. Dexuan, can you send a patch to do the
+refactoring?
 
-Interesting point.. Makes sense to me
-
-> I'd suggest using dev->iommu->attach_deferred as the condition rather than a
-> NULL domain, to be clear that it's the *only* valid reason to not have a
-> domain at this point.
-
-So if we take this release_domain approach and we have the core code
-not call it for the defered attach case then the driver's
-release_device should just free memory allocated by probe and not
-touch the data structures?
-
-Then the idea is that drivers would only manipulate their STE/DTE/etc
-under attach and never in probe/release.
-
-Jason
+Wei.
