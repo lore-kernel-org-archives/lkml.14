@@ -1,138 +1,103 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0A424204
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 19:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B67E24A1B;
+	Wed, 17 Jan 2024 19:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705518351; cv=none; b=g86oIQVBdX32q8nUJdh0QoeqJlgPmVlrD3x9uaS4wL5KHFeiDLMNE/Q9wkhTnRYiw8k/5A5PH9SrAULbVUmy3Wo8KrSV9luhmBv1naqN96Pgy70ja0654kmuiYZZCftmq8NdnwZ8wMDS+hFfINWx3k4MdL30CS+9cKSBUwJEjQM=
+	t=1705518355; cv=none; b=JFoLHXiB7AX0EBF8EUVMi9WWnaQjD/j3YNwRQZ83z1K3nhzJMYGRCDCuVAAuKHmHUjO+m7zonjrwkNTnhT+k4SIeHJzGKGJ85Hdfll7QfisO01dhhymWsTtjt4fyaptuWHSOMkh7zzKsvKTyFY7kE9XpzurenFlUhSeVE/fBtSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705518351; c=relaxed/simple;
-	bh=YlxqM4DyCpZEyO5is3UfPRushkiakegLMnu449V7+Wc=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
-	 To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=TH9FS0zVf6+zkx+JMxH6gAet/lhcJy1LojIUB+XCOjCEy65sLodCY8IB3SkByjCPoPWIC70tnR1A/ENyS1DGuZMBsSS++T7E30W9Y3Y13CgaYUIGAeyLfDz/b98YnEMJ6c4A/yWGFPLy6uG9grNDkzFZd8oMKMhpH/v4D/PhlK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nRzZsFvT; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705518355; c=relaxed/simple;
+	bh=+oH4EJn5sUeFLh47JfQVauFBQi5fBhiUE512d5N7kvA=;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
+	 In-Reply-To:To:Cc:X-Mailer; b=Ly8OsUnIq0HntFeg15UQuk5noXnWdyNqnkrAsYJ/8kDKXyI2KmlD8XWpMsf0RCVwu9ui812gHoEwQNITcZoFJqu9Khkx+Y90QlxEXa0iBpsFtmi13jrOgJ8mb4exHfIzY4F0PGgi4kPPUBPvELtCrMWiEQmrm5OSWr6nBE7XMIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=3mnn8/Xz; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nRzZsFvT"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40e88012233so13145585e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 11:05:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705518348; x=1706123148; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RnfczORJSbsGVoVGrb/m1mmcyOVrLC0qsA2hV/d6ukI=;
-        b=nRzZsFvTAbKFDZUI4TW2eP93EedFJm/a9koatLpjaSEescOJklzLj0XoltxubevyKo
-         mZNftqI0g1mfkrElIOiGmacwSM4TgRjmlsuA3enmHClqrHus7YFfMiYSttgS1cXNsM/5
-         6lh6ZNa0+KZoI73RqXB3X0lhXEaDT7GE4VldVla3zWCoHJ6Wwq0XOMdY3zVlOspE4Mo1
-         M+F8k5+J8/NAe58/fa1k/oJ/nWJ1guJivJxwEehm1Dr42g3ZBCKfJZyoPPZuKde+tVLT
-         O5+AITfgGFCEGE4OKHUQ8XwjOXmHBfKGlvpuvt2kGrYyGaRdaEzSx0845k13/UfaKvzK
-         i+tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705518348; x=1706123148;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RnfczORJSbsGVoVGrb/m1mmcyOVrLC0qsA2hV/d6ukI=;
-        b=uWZ/ZzXeiNtMo72O6finXv8LycHL0f8gacqRtuweCT/B/QWrnoSJmoZzq4k2IuRiRx
-         OOkV8Bh/nK9Ck9Tf/BEgyNqEonkBLNYxlwP/9hECjCyc46qQ4sZC0W1CtitbrdMQ82iy
-         Xds6uri7QmQtWAkZ85GJoyK0F878FlRbS6KaMstkxDgJixMc3PAbzGnnkJBgOXTuerD7
-         PXrSEM6frgS9OmBps5GJFO1wQFtW6lG1cOL8qbz7pfKh8R2dg3o61dPM1PogcgbvW9iB
-         jeETAF3GRcAR/tbVPdnmZwH9HDXXP1h3wp9EncYxT73LH54ysJ+7LCy/8s2QblV8k9GC
-         OYQg==
-X-Gm-Message-State: AOJu0YxuvkVd+ghk/Qj3m/Pbamrmk3R13fyo7DTTbkB4lSOQIKyL4yTe
-	SI2BEYtDX0qHeKgj7MPJziA2/Tcz10ZqcQ==
-X-Google-Smtp-Source: AGHT+IFjOAbVcdEkgihXfHhvNXsBwaNTwbfFSXRW2fS9/g1h1+klXB2XmHVhRP/XMMzSQL/Kn1Ppjg==
-X-Received: by 2002:a05:600c:4212:b0:40e:5d1d:8746 with SMTP id x18-20020a05600c421200b0040e5d1d8746mr4309045wmh.178.1705518348163;
-        Wed, 17 Jan 2024 11:05:48 -0800 (PST)
-Received: from vingu-book.. ([2a01:e0a:f:6020:bb1a:7f34:40f9:f455])
-        by smtp.gmail.com with ESMTPSA id f7-20020a05600c4e8700b0040e89ade92fsm2813520wmq.14.2024.01.17.11.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jan 2024 11:05:47 -0800 (PST)
-From: Vincent Guittot <vincent.guittot@linaro.org>
-To: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	sudeep.holla@arm.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: lukasz.luba@arm.com,
-	ionela.voinescu@arm.com,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [Resend PATCH] topology: Set capacity_freq_ref in all cases
-Date: Wed, 17 Jan 2024 20:05:45 +0100
-Message-Id: <20240117190545.596057-1-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="3mnn8/Xz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705518352;
+	bh=+oH4EJn5sUeFLh47JfQVauFBQi5fBhiUE512d5N7kvA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=3mnn8/XzjgRV1yrJ/b0Bpm/qJbxf1HJflc3HSRevLRGcD9H1U+Ce3fwTb+l8Zkrmh
+	 5NuxGp1EfTM/lzvqF+GqpNEuINU5oIotPcGQeBygv86q6ra+vwW3hCEyp+lU3OEiW3
+	 pa2Kph7RhoRy7rAJ2dePc1+8MI8Fkqi+ge0nqRdLqMjDWGv5UViLhTgmxvcLkL7wKV
+	 lqwywWw1tFai/KHSQqVsq0bARuIqLDtPI8YpQSRSiv0zTZXMRJNsPlumyCMLoEViTR
+	 l786E/N96/lOKdR/os3q9AD58zgFDOMI2TvsGtytN9kFu/ZFCmLsXvJgc70YnVYGIo
+	 ZXP4l9e61jYfA==
+Received: from [192.168.0.47] (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AE9B73782033;
+	Wed, 17 Jan 2024 19:05:47 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Wed, 17 Jan 2024 16:03:22 -0300
+Subject: [PATCH v3 1/4] firmware: coreboot: Generate modalias uevent for
+ devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240117-coreboot-mod-defconfig-v3-1-049565a27bba@collabora.com>
+References: <20240117-coreboot-mod-defconfig-v3-0-049565a27bba@collabora.com>
+In-Reply-To: <20240117-coreboot-mod-defconfig-v3-0-049565a27bba@collabora.com>
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Brian Norris <briannorris@chromium.org>, 
+ Julius Werner <jwerner@chromium.org>, 
+ Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, kernel@collabora.com, 
+ chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.12.4
 
-If "capacity-dmips-mhz" is not set, raw_capacity is null and we skip the
-normalization step which includes setting per_cpu capacity_freq_ref.
-Always register the notifier but skip the capacity normalization if
-raw_capacity is null.
+Generate a modalias uevent for devices in the coreboot bus to allow
+userspace to automatically load the corresponding modules.
 
-Fixes: 9942cb22ea45 ("sched/topology: Add a new arch_scale_freq_ref() method")
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Acked-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 ---
+ drivers/firmware/google/coreboot_table.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Resend with correct email address for Sudeep
+diff --git a/drivers/firmware/google/coreboot_table.c b/drivers/firmware/google/coreboot_table.c
+index 2a4469bf1b81..c1b9a9e8e8ed 100644
+--- a/drivers/firmware/google/coreboot_table.c
++++ b/drivers/firmware/google/coreboot_table.c
+@@ -53,11 +53,20 @@ static void coreboot_bus_remove(struct device *dev)
+ 		driver->remove(device);
+ }
+ 
++static int coreboot_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
++{
++	struct coreboot_device *device = CB_DEV(dev);
++	u32 tag = device->entry.tag;
++
++	return add_uevent_var(env, "MODALIAS=coreboot:t%08X", tag);
++}
++
+ static struct bus_type coreboot_bus_type = {
+ 	.name		= "coreboot",
+ 	.match		= coreboot_bus_match,
+ 	.probe		= coreboot_bus_probe,
+ 	.remove		= coreboot_bus_remove,
++	.uevent		= coreboot_bus_uevent,
+ };
+ 
+ static void coreboot_device_release(struct device *dev)
 
- drivers/base/arch_topology.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 5aaa0865625d..2aa0c6425290 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -417,9 +417,6 @@ init_cpu_capacity_callback(struct notifier_block *nb,
- 	struct cpufreq_policy *policy = data;
- 	int cpu;
- 
--	if (!raw_capacity)
--		return 0;
--
- 	if (val != CPUFREQ_CREATE_POLICY)
- 		return 0;
- 
-@@ -436,9 +433,11 @@ init_cpu_capacity_callback(struct notifier_block *nb,
- 	}
- 
- 	if (cpumask_empty(cpus_to_visit)) {
--		topology_normalize_cpu_scale();
--		schedule_work(&update_topology_flags_work);
--		free_raw_capacity();
-+		if (raw_capacity) {
-+			topology_normalize_cpu_scale();
-+			schedule_work(&update_topology_flags_work);
-+			free_raw_capacity();
-+		}
- 		pr_debug("cpu_capacity: parsing done\n");
- 		schedule_work(&parsing_done_work);
- 	}
-@@ -458,7 +457,7 @@ static int __init register_cpufreq_notifier(void)
- 	 * On ACPI-based systems skip registering cpufreq notifier as cpufreq
- 	 * information is not needed for cpu capacity initialization.
- 	 */
--	if (!acpi_disabled || !raw_capacity)
-+	if (!acpi_disabled)
- 		return -EINVAL;
- 
- 	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL))
 -- 
-2.34.1
+2.43.0
 
