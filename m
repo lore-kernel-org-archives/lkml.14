@@ -1,139 +1,161 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC5B2233E;
-	Wed, 17 Jan 2024 14:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD2820B38;
+	Wed, 17 Jan 2024 14:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705503014; cv=none; b=GsMI7zn00Dxoffnqh+WS0NB/e4pWzDJLzDSXChqEWlf74CgsZUi11QEvDIN6bMAdy9caFRIuaOW/7TPKx1OZy9QdxmhqfNfdTg3fCYv8WDH7pCIJCY7eIY+iYxq2rao4bTYQ7dSb4GomcsGol7Rn+VJvw03s9MBibJheFure8MA=
+	t=1705503139; cv=none; b=JsdBGG+t1G+DctDEipGoY1S8MMYFfnJAUt5ZqFtoTh8Kl+hc73MG9ebpHURuAX1y8Vny5kVmRPO0LhO4/qsCEsQMFDWs4YhsV1hfCbSrUycKkh8xJecm7dkVw8/Qb0Wvrc9tqwZn75gzUuPIS2YlfJPwfKVBUZiFemriWWyGnos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705503014; c=relaxed/simple;
-	bh=UUfJqxwzaJfKgat15q/d3JONEvY5L8ZpIJR57kcne6I=;
-	h=DKIM-Signature:X-IronPort-AV:Received:Received:Received:
-	 X-Farcaster-Flow-ID:Received:Received:From:To:CC:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 X-Originating-IP:X-ClientProxiedBy:Content-Type:
-	 Content-Transfer-Encoding; b=BJHvZqRhnG07OAsiFa+gPPSrhdWH6IVpqHbtbop8t94nsVh9EzCfwaY7b9YN4tqnGDyQgC3vQQg8zP3JKAns7grNGTf9g4kcmn2iJxuFf0NQtItdku2gHk/ImoJiC6DYcpqfNWdfykijpetUFO7RXqxjliBvcMI6NE+lZCU+TgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=SY/xaT2i; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1705503139; c=relaxed/simple;
+	bh=2fMFVmmLcybgOzonSAH/hVLVnteRTXL5AUOqv3OZBKA=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=PSWcgrEOQw7cmfz0S8U4ypeqNLMSp6/pqE/UoecK8jSaYkGDLseLMGdRnOgDcBxC78kGkqwo66M8/fZbu50WTrWDQHs8HevxP8nPE3axr116QNj2LdYOVrfAq1XBY+sj91DjHfYwTruK7AP3x2oKPeyPjVERJy7yJzgtStdyqz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEaoM5zA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SY/xaT2i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1705503013; x=1737039013;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=K22H13Upw8ZJvq6V1e5pgkkFku3zAKlZ1ZPbskJJqpo=;
-  b=SY/xaT2i20T4hrpzetlE1V0HFVckm5+tLUPrJfEIJk19tXYpiYqwI0iG
-   Pfq16mALcaNfH6/ZbPe3RRQkqp+lZpzreg/O9xXNPwyT+Sdx7IJzwVX33
-   KxKnXwlXj3bPZPUgR06plYhZ/u1axC+vHRPYYWde5yKuSVUQ7EL09ivoq
-   g=;
-X-IronPort-AV: E=Sophos;i="6.05,200,1701129600"; 
-   d="scan'208";a="697789089"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-1197e3af.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:50:12 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-2a-m6i4x-1197e3af.us-west-2.amazon.com (Postfix) with ESMTPS id B58F8100FC5;
-	Wed, 17 Jan 2024 14:50:03 +0000 (UTC)
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:29526]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.41.57:2525] with esmtp (Farcaster)
- id bc9be742-cddd-4430-a2bc-c8966b4ce96c; Wed, 17 Jan 2024 14:50:03 +0000 (UTC)
-X-Farcaster-Flow-ID: bc9be742-cddd-4430-a2bc-c8966b4ce96c
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:50:02 +0000
-Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
- EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:49:58 +0000
-From: Alexander Graf <graf@amazon.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>, <x86@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Andrew Morton
-	<akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, "Tom
- Lendacky" <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>, Stanislav Kinsburskii
-	<skinsburskii@linux.microsoft.com>, <arnd@arndb.de>, <pbonzini@redhat.com>,
-	<madvenka@linux.microsoft.com>, Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 16/17] tracing: Add config option for kexec handover
-Date: Wed, 17 Jan 2024 14:47:03 +0000
-Message-ID: <20240117144704.602-17-graf@amazon.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240117144704.602-1-graf@amazon.com>
-References: <20240117144704.602-1-graf@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEaoM5zA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7098C433C7;
+	Wed, 17 Jan 2024 14:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705503138;
+	bh=2fMFVmmLcybgOzonSAH/hVLVnteRTXL5AUOqv3OZBKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fEaoM5zAmPOxyG/9s5w4W0YKD/idcpTs77OU8rQ7lwa8es5pCsvPmquvOvbGahx+d
+	 kKohTXG5rwx5Z+7iEFZiEaQeCwltEY0qdjUdJ5du3iXy92JqZ+NyZN/oIwGZrzw+6b
+	 EzOpQxs7tY3EubXzIUHXu4lCSexXrhNOlbh39AzjPE2IOHuozyBFummBKx1ryl6kSg
+	 kNK0pyzqTKGh0BL4om28Tx3BWAA+JLl/5KTelq+dBHRWS+y0U1E8eq1VUhQrzgWHem
+	 o734PeQOZhScEx6nsxG/EqKZQwuF3oxWn9yvbHxbHXPtRk2dmTEPNfsVviAneY8cKy
+	 3bwk/8C9ervmg==
+Date: Wed, 17 Jan 2024 08:52:16 -0600
+From: Rob Herring <robh@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org,
+	Simon Glass <sjg@chromium.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] kbuild: simplify dtbs_install by reading the list of
+ compiled DTBs
+Message-ID: <20240117145216.GA2296118-robh@kernel.org>
+References: <20240109120738.346061-1-masahiroy@kernel.org>
+ <20240109120738.346061-3-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240109120738.346061-3-masahiroy@kernel.org>
 
-Now that all bits are in place to allow ftrace to pass its trace data
-into the next kernel on kexec, let's give users a kconfig option to
-enable the functionality.
+On Tue, Jan 09, 2024 at 09:07:35PM +0900, Masahiro Yamada wrote:
+> Retrieve the list of *.dtb(o) files from arch/*/boot/dts/dtbs-list
+> instead of traversing the directory tree again.
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
+Don't you need dtbs-list in .gitignore?
 
----
-
-v1 -> v2:
-
-  - Select crc32
----
- kernel/trace/Kconfig | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 61c541c36596..418a5ae11aac 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -1169,6 +1169,20 @@ config HIST_TRIGGERS_DEBUG
- 
-           If unsure, say N.
- 
-+config FTRACE_KHO
-+	bool "Ftrace Kexec handover support"
-+	depends on KEXEC_KHO
-+	select CRC32
-+	help
-+          Enable support for ftrace to pass metadata across kexec so the new
-+	  kernel continues to use the previous kernel's trace buffers.
-+
-+	  This can be useful when debugging kexec performance or correctness
-+	  issues: The new kernel can dump the old kernel's trace buffer which
-+	  contains all events until reboot.
-+
-+	  If unsure, say N.
-+
- source "kernel/trace/rv/Kconfig"
- 
- endif # FTRACE
--- 
-2.40.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+> 
+> Please note that 'make dtbs_install' installs *.dtb(o) files directly
+> added to dtb-y because scripts/Makefile.dtbinst installs $(dtb-y)
+> without expanding the -dtbs suffix.
+> 
+> This commit preserves this behavior.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  Makefile                 |  2 +-
+>  scripts/Kbuild.include   |  6 ------
+>  scripts/Makefile.dtbinst | 32 ++++++++++++++++++--------------
+>  3 files changed, 19 insertions(+), 21 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index db7f9e34a24e..dae6825b8082 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1407,7 +1407,7 @@ endif
+>  dtbs_check: dtbs
+>  
+>  dtbs_install:
+> -	$(Q)$(MAKE) $(dtbinst)=$(dtstree) dst=$(INSTALL_DTBS_PATH)
+> +	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.dtbinst obj=$(dtstree)
+>  
+>  ifdef CONFIG_OF_EARLY_FLATTREE
+>  all: dtbs
+> diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+> index 7778cc97a4e0..2f331879816b 100644
+> --- a/scripts/Kbuild.include
+> +++ b/scripts/Kbuild.include
+> @@ -113,12 +113,6 @@ endef
+>  # $(Q)$(MAKE) $(build)=dir
+>  build := -f $(srctree)/scripts/Makefile.build obj
+>  
+> -###
+> -# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.dtbinst obj=
+> -# Usage:
+> -# $(Q)$(MAKE) $(dtbinst)=dir
+> -dtbinst := -f $(srctree)/scripts/Makefile.dtbinst obj
+> -
+>  ###
+>  # Shorthand for $(Q)$(MAKE) -f scripts/Makefile.clean obj=
+>  # Usage:
+> diff --git a/scripts/Makefile.dtbinst b/scripts/Makefile.dtbinst
+> index 4405d5b67578..67956f6496a5 100644
+> --- a/scripts/Makefile.dtbinst
+> +++ b/scripts/Makefile.dtbinst
+> @@ -8,32 +8,36 @@
+>  #   $INSTALL_PATH/dtbs/$KERNELRELEASE
+>  # ==========================================================================
+>  
+> -src := $(obj)
+> -
+>  PHONY := __dtbs_install
+>  __dtbs_install:
+>  
+>  include include/config/auto.conf
+>  include $(srctree)/scripts/Kbuild.include
+> -include $(kbuild-file)
+>  
+> -dtbs    := $(addprefix $(dst)/, $(dtb-y) $(if $(CONFIG_OF_ALL_DTBS),$(dtb-)))
+> -subdirs := $(addprefix $(obj)/, $(subdir-y) $(subdir-m))
+> -
+> -__dtbs_install: $(dtbs) $(subdirs)
+> -	@:
+> +dst := $(INSTALL_DTBS_PATH)
+>  
+>  quiet_cmd_dtb_install = INSTALL $@
+>        cmd_dtb_install = install -D $< $@
+>  
+> -$(dst)/%.dtb: $(obj)/%.dtb
+> +$(dst)/%: $(obj)/%
+>  	$(call cmd,dtb_install)
+>  
+> -$(dst)/%.dtbo: $(obj)/%.dtbo
+> -	$(call cmd,dtb_install)
+> +dtbs := $(patsubst $(obj)/%,%,$(call read-file, $(obj)/dtbs-list))
+>  
+> -PHONY += $(subdirs)
+> -$(subdirs):
+> -	$(Q)$(MAKE) $(dtbinst)=$@ dst=$(if $(CONFIG_ARCH_WANT_FLAT_DTB_INSTALL),$(dst),$(patsubst $(obj)/%,$(dst)/%,$@))
+> +ifdef CONFIG_ARCH_WANT_FLAT_DTB_INSTALL
+> +
+> +define gen_install_rules
+> +$(dst)/%: $(obj)/$(1)%
+> +	$$(call cmd,dtb_install)
+> +endef
+> +
+> +$(foreach d, $(sort $(dir $(dtbs))), $(eval $(call gen_install_rules,$(d))))
+> +
+> +dtbs := $(notdir $(dtbs))
+> +
+> +endif # CONFIG_ARCH_WANT_FLAT_DTB_INSTALL
+> +
+> +__dtbs_install: $(addprefix $(dst)/, $(dtbs))
+> +	@:
+>  
+>  .PHONY: $(PHONY)
+> -- 
+> 2.40.1
+> 
