@@ -1,192 +1,348 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBD224212;
-	Wed, 17 Jan 2024 20:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705523172; cv=fail; b=gBrPscnBlGTelPz92Fc98fTXZsBMqI8pAKe8mxCezZcJxd/GS0VzJLKIKlafwAdsRMI11Cm7kbOukeYvHNOaCjmVcR7piO3hK9Lv2SNfbK0dLyLoPw0wS+GZEaXC69isWKz3L+HXR0qof5RoiwyiDdLxC2y14HBVZeNpfxdbuiA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705523172; c=relaxed/simple;
-	bh=7D6ZtiJkYbqcXnxHQT7SZKbItYXhtlXEclFhrND0sEs=;
-	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
-	 Received:Received:X-MS-Exchange-Authentication-Results:
-	 Received-SPF:Received:Received:Received:Received:From:To:CC:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-	 Content-Type:X-NV-OnPremToCloud:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=r8kmDjPQ8DaOV6lq5KqsvPZrhe/RYFi2uSTiM+d2pmC8sHiBRfCOSdUEid86pktMix33ZsesFYBDxmba3lNfhc/hFRWnNuW75Ln1tDSwqIq8Tk4BF3ipHezzAqMXS6Oxr7ybn9JJSnd+/7wd5VKIIi5dU94OMnKp7lZsxV33JDI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=m9GvoshX; arc=fail smtp.client-ip=40.107.94.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAA924B2F;
+	Wed, 17 Jan 2024 20:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705523212; cv=none; b=dZpXhPlbynjl9jy51bjrWhwRt8Yo3IhNrDld0fHJgva4DyjzFz/rt5Xwitk2i2txUIwxT/QGOBBbz33hT3HhxqXihbl2mno5eTwBII8Q7F3rkg+gppEoZEeEuRG1+EJEtL6NFF8g7wi0AWERw5X1DgktFYbpF4+hMbqBOd6gL0U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705523212; c=relaxed/simple;
+	bh=jGM28CC2YWMbqnoVLLqFN+N4yr4yanJQQwPKgy2CviA=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:X-Google-Original-Message-ID:Date:From:To:Cc:Subject:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=DTzXSItZWWxqqctj7GplFd60CZ25ntzyCz94yNGCSm+KxyPTs8Wr22B/en5YxjdEOvQm/rgZA0W1GH7yzGqTYmCiU+8Dv1xzukr7TjLRhUbpVprSK9enzfRe2/VZ4ZVlreebeYdwA4X59RDz1VovGN7XCBLRowgmWmziVvWOvic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IqtXpwHh; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="m9GvoshX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HOp9t3RYyttwm7m2FFTA6BZOlRC8xFHVa1zuhIVcmPyLWYacHdugA0f8fPG6bza9Yi5DeA8nLNYL90CqcoQ67RE4A+GYmVOyvFr4FWf8/AtpD17BUXhC1Uw5VcHObh4viZce9VdvPXqB1omvPVaGiFHFdXJTZKR+Cbr3gj9LWDV0lUT3PlmxBoLjaxw7+iXeVbdRv4Sv5Ujfu7ZXlZ+k4qvvu5b3bD0A1hK8wYVHWN2EssVAWgEj/EtPlV0H8rhKcxnVJU6dBvXXRjdtSmsZ/l8A5MhhOysFtvUUe4LkPszUZztgnmIuOFdWX0nlgzGHzaIJV3xMhG5DJ7/LBM1CcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OnjgjbY1gsMSXE7gOiJP98ucV4gUu7z4kxx2Su1xqt4=;
- b=kcjObB0huBwdsjK+0OqQkHHOStmQAkEZJp0LH0GXOCeTTkdz/YtUY1SYeI+x8aYPSjIeMdlNAFRypPnV3/xQfCqoDDO0tuC92L7o8akXoQCrDatkVo/oLk3ojrLZWqsRRuOk+xnKFz1ZfJfGNHInAroQGgSQk27IMwYlbW6HbYJ1jGsBzPFwARtLkTUo5RKEcNL2Vo7XwqT7U+vQXVJ5WhhMSobOuvWXP/33SrDbvZYBWrsA8NhRAfIFPi6SNBPpru/0AaFOML9+Sm4iH5aIqFL6+ojfTrFW0ARa4p0WPQQwK8zQ+v0aynS5DFR1oscq5/pz6U2okuxJSdQ+jAukdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OnjgjbY1gsMSXE7gOiJP98ucV4gUu7z4kxx2Su1xqt4=;
- b=m9GvoshX6I46n4t0ndS4I4WVUB60qcuWfdLR+YLlyHt6i6AvgfQojJsvKSdnEs6qKd2I86xyV6kvYW81rOegXsoNMbYNbIhyF943R/CHILQ3rVUl2gxGM1awamf/LVRGudIVgEmX2xhCHpgoArbTlC+GJUZWDqmVc8iMQ1uC+cCQd8y8rM62s9VHyrSCSJbOcMeTPtDZXhvml6FvLNMnumpKrvlbIWNHkFp6xh17Qm/ACib6zXjI+LdN0iDm6H1U9gNm00lgVS5y6wj+5pHehU5KJk74FM9e4FQ/t8Rjc9Kn1V0rzTW7PSRCpNK65cM5ZD5GKBcX7dwO4tdER/Pl0Q==
-Received: from BL1PR13CA0238.namprd13.prod.outlook.com (2603:10b6:208:2bf::33)
- by SN7PR12MB6766.namprd12.prod.outlook.com (2603:10b6:806:26a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Wed, 17 Jan
- 2024 20:26:08 +0000
-Received: from BL02EPF0001A0FB.namprd03.prod.outlook.com
- (2603:10b6:208:2bf:cafe::e8) by BL1PR13CA0238.outlook.office365.com
- (2603:10b6:208:2bf::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.8 via Frontend
- Transport; Wed, 17 Jan 2024 20:26:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- BL02EPF0001A0FB.mail.protection.outlook.com (10.167.242.102) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.16 via Frontend Transport; Wed, 17 Jan 2024 20:26:07 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 17 Jan
- 2024 12:25:58 -0800
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Wed, 17 Jan 2024 12:25:57 -0800
-Received: from build-petlozup-20240109T002231482.internal (10.127.8.12) by
- mail.nvidia.com (10.126.190.180) with Microsoft SMTP Server id 15.2.986.41
- via Frontend Transport; Wed, 17 Jan 2024 12:25:57 -0800
-From: Petlozu Pravareshwar <petlozup@nvidia.com>
-To: <thierry.reding@gmail.com>, <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<p.zabel@pengutronix.de>, <dmitry.osipenko@collabora.com>,
-	<ulf.hansson@linaro.org>, <kkartik@nvidia.com>, <cai.huoqing@linux.dev>,
-	<spatra@nvidia.com>, <linux-tegra@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <petlozup@nvidia.com>
-Subject: [PATCH V2 3/3] soc/tegra: pmc: Update scratch as an optional aperture
-Date: Wed, 17 Jan 2024 20:25:04 +0000
-Message-ID: <20240117202504.943476-3-petlozup@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240117202504.943476-1-petlozup@nvidia.com>
-References: <20240117202504.943476-1-petlozup@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IqtXpwHh"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40e7065b692so42130345e9.3;
+        Wed, 17 Jan 2024 12:26:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705523208; x=1706128008; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=P8rf2SDpeJIDnLRy/4kZh4YbVZ8HNJJqeRRnm/LfsEg=;
+        b=IqtXpwHhDiYv5u03XtQExMKkOQ1v3O+ZI8zN3Pt9l0Pn39es5f3SE1W+BEt367/fqR
+         MYkvJlt8yhxgCtA1YD56Mg/ocfQI8jfL6hfMAY5TGNMrGTMG3vsFJRlpkzzLezyAiI4p
+         S4Gckg0u9oafHaQCYoibG7Rc8K3ePOJWFauphaJSfzLK3KTtEiMjhwSQNueJkhUtCLY1
+         t9uH6P8BjMVcqDCfEagrUf9tZuSaImmQRsP9njwnl3x8ekWNx6VJOnn++jo+c409D/iU
+         n3Bm/wHRGIpBmEP5pD+dCuENoDrio0SuLil0eTw/euG0PXzjzObtIxI3Y5XvNxkFfnNx
+         +hHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705523208; x=1706128008;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P8rf2SDpeJIDnLRy/4kZh4YbVZ8HNJJqeRRnm/LfsEg=;
+        b=TXdvxyp1/eIQiA9OHO5N+xYaRSVgkvsVdgRrTjfw14hbb6HzCf6/mSRsSZD8Ow0yvr
+         0K9AzFZABsuFLJQT1kX13nYXqAULsm9nuJ+ojv1x5LclsjJ2SDFsDWNJK/otmSGr69Dx
+         JV3kTiDjes+KIXtep8zGdBkT1/tbMIuW2pu4x2A3bXRJl/api1IYAYcl/jNhO6/UKQC4
+         BUD4m9BYrJkaOT48xbw6wIlnZvW96dbmiwlnB8b7INLVxb6NcEfcjXZ0m4XtGn86sj2T
+         t66PKAGb6VxR7edpfwRIuQmdrkjqyZJ3iHn6WLGYzStF+AakSa35vRb9tua2LO2viH/F
+         Vzvw==
+X-Gm-Message-State: AOJu0YyoATPPOGCnV0vYnI9weFzdrL3TCPGTx1EwFSTeXu6XR8yG7o5o
+	N4Dl29i4vEru/CDg361cpmQ=
+X-Google-Smtp-Source: AGHT+IG3pkOgSDyG+Mim9jG1CanLVxlpdPUceoeyNtzuTV3xqSw0NqiLc1i5iKJYa6LT/U+Zz9yseA==
+X-Received: by 2002:a05:600c:2215:b0:40d:88f2:fe7c with SMTP id z21-20020a05600c221500b0040d88f2fe7cmr5184282wml.77.1705523208064;
+        Wed, 17 Jan 2024 12:26:48 -0800 (PST)
+Received: from Ansuel-xps. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.gmail.com with ESMTPSA id n18-20020a05600c501200b0040e77ce8768sm11653057wmr.16.2024.01.17.12.26.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 12:26:47 -0800 (PST)
+Message-ID: <65a83807.050a0220.506d0.65fd@mx.google.com>
+X-Google-Original-Message-ID: <ZagyqhEwZnMWHnn6@Ansuel-xps.>
+Date: Wed, 17 Jan 2024 21:03:54 +0100
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Sergey Ryazanov <ryazanov.s.a@gmail.com>
+Cc: Robert Marko <robert.marko@sartura.hr>, Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [net-next PATCH RFC v3 1/8] dt-bindings: net: document ethernet
+ PHY package nodes
+References: <20231126015346.25208-1-ansuelsmth@gmail.com>
+ <20231126015346.25208-2-ansuelsmth@gmail.com>
+ <0926ea46-1ce4-4118-a04c-b6badc0b9e15@gmail.com>
+ <659aedb1.df0a0220.35691.1853@mx.google.com>
+ <0f4ec2ff-4ef7-4667-adef-d065cfbc0a91@gmail.com>
+ <65a7210f.df0a0220.d10b2.1162@mx.google.com>
+ <c81af808-d836-4054-b596-4a53b05f4c78@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FB:EE_|SN7PR12MB6766:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9c87052d-7dc8-44b9-4f44-08dc179a898a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	FTdVH/CjXtosKIB5Vr8+zR/kk6NYAOwqNZLqSLFxnqndMO0AG8PoXs0SN+HmOEaARA1f04aaEH1ey94Jzcka8l9O6d582HLVwbB/seN+sRLZO0kEJKDItGhInlK2UsJoVgl04IHVKEUwINh9/Qs3iJ+oMN3Vb6kTWZR9bMP3txkltCrLbnbA17rCOrjauaI5DBgAjnp6QzQHm2aImQyeMUTAjXS3L28ckGfSuSqwdNwSRXkdBxKt7ZnNjfQEwbqMM19C+F/mLD8eStw5EwzOw0Kh7XqmUizQ7Apoq5X1yWnEHk7Gyw21zJjZbS0NFYrrCAh2IZQjSrfVeYkqVJ00fjnns0wfWjS15ledDlg4CqIFmo5wlm12Z3GHq7sInRj9FuArwvGrAwRKbnRAgRYOhUtdekO4kF5GKlg0RbMzjFXZU8BOAe4DxUjWzrG6Zz84lmPjb57BQNCcNq+XdqIpJQzZFkC9GqJnHD5pXOenhZwZiPqtLZQfN6hY4h8UeHUqzo9D3ItRByH5K29dYh6GmEFYA545bVPyivG6SQzNPM10X9wTelW1RC0+pDpKrTMPqPkblvpxeIQViAUiHjbG7+zr7w9f4vPMILctb2iuPUmCr50IPnk4BDBpfoQIlMtQQHBi3rYbkDXDxAKBZZ+USMOEuz2xPi/N6eDBVCToCxyV/Kk4811S0uSh2w+7fYIbZGzg+ZYRX9+LlCud0xeZqtU3DiY50R0PkYEiw7r3+cuVpvVjoZ10TuHmjqO6o7a+
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(396003)(136003)(39860400002)(230922051799003)(451199024)(1800799012)(82310400011)(64100799003)(186009)(46966006)(36840700001)(40470700004)(921011)(5660300002)(7416002)(2906002)(41300700001)(82740400003)(1076003)(26005)(2616005)(40460700003)(83380400001)(40480700001)(336012)(426003)(6666004)(36860700001)(478600001)(47076005)(107886003)(4326008)(8676002)(86362001)(8936002)(70206006)(70586007)(7636003)(316002)(36756003)(110136005)(356005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 20:26:07.7525
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c87052d-7dc8-44b9-4f44-08dc179a898a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A0FB.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6766
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c81af808-d836-4054-b596-4a53b05f4c78@gmail.com>
 
-Scratch address space register is used to store reboot reason. For
-some Tegra234 systems, the scratch space is not available to store
-the reboot reason. This is because scratch region on these systems
-is not accessible by the kernel as restricted by the Hypervisor.
-Such systems would delist scratch aperture from PMC DT node.
+On Wed, Jan 17, 2024 at 09:39:25PM +0200, Sergey Ryazanov wrote:
+> Hi Christian,
+> 
+> On 17.01.2024 02:36, Christian Marangi wrote:
+> > On Sun, Jan 07, 2024 at 11:49:12PM +0200, Sergey Ryazanov wrote:
+> > > Hi Christian,
+> > > 
+> > > On 07.01.2024 20:30, Christian Marangi wrote:
+> > > > On Sun, Jan 07, 2024 at 08:00:33PM +0200, Sergey Ryazanov wrote:
+> > > > > On 26.11.2023 03:53, Christian Marangi wrote:
+> > > > > > Document ethernet PHY package nodes used to describe PHY shipped in
+> > > > > > bundle of 4-5 PHY. The special node describe a container of PHY that
+> > > > > > share common properties. This is a generic schema and PHY package
+> > > > > > should create specialized version with the required additional shared
+> > > > > > properties.
+> > > > > > 
+> > > > > > Example are PHY package that have some regs only in one PHY of the
+> > > > > > package and will affect every other PHY in the package, for example
+> > > > > > related to PHY interface mode calibration or global PHY mode selection.
+> > > > > > 
+> > > > > > The PHY package node MUST declare the base address used by the PHY driver
+> > > > > > for global configuration by calculating the offsets of the global PHY
+> > > > > > based on the base address of the PHY package and declare the
+> > > > > > "ethrnet-phy-package" compatible.
+> > > > > > 
+> > > > > > Each reg of the PHY defined in the PHY package node is absolute and will
+> > > > > > reference the real address of the PHY on the bus.
+> > > > > > 
+> > > > > > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> > > > > > ---
+> > > > > >     .../bindings/net/ethernet-phy-package.yaml    | 75 +++++++++++++++++++
+> > > > > >     1 file changed, 75 insertions(+)
+> > > > > >     create mode 100644 Documentation/devicetree/bindings/net/ethernet-phy-package.yaml
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/net/ethernet-phy-package.yaml b/Documentation/devicetree/bindings/net/ethernet-phy-package.yaml
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..244d4bc29164
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/net/ethernet-phy-package.yaml
+> > > > > > @@ -0,0 +1,75 @@
+> > > > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > > > > +%YAML 1.2
+> > > > > > +---
+> > > > > > +$id: http://devicetree.org/schemas/net/ethernet-phy-package.yaml#
+> > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > +
+> > > > > > +title: Ethernet PHY Package Common Properties
+> > > > > > +
+> > > > > > +maintainers:
+> > > > > > +  - Christian Marangi <ansuelsmth@gmail.com>
+> > > > > > +
+> > > > > > +description:
+> > > > > > +  This schema describe PHY package as simple container for
+> > > > > > +  a bundle of PHYs that share the same properties and
+> > > > > > +  contains the PHYs of the package themself.
+> > > > > > +
+> > > > > > +  Each reg of the PHYs defined in the PHY package node is
+> > > > > > +  absolute and describe the real address of the PHY on the bus.
+> > > > > > +
+> > > > > > +properties:
+> > > > > > +  $nodename:
+> > > > > > +    pattern: "^ethernet-phy-package(@[a-f0-9]+)?$"
+> > > > > > +
+> > > > > > +  compatible:
+> > > > > > +    const: ethernet-phy-package
+> > > > > > +
+> > > > > > +  reg:
+> > > > > > +    minimum: 0
+> > > > > > +    maximum: 31
+> > > > > > +    description:
+> > > > > > +      The base ID number for the PHY package.
+> > > > > > +      Commonly the ID of the first PHY in the PHY package.
+> > > > > > +
+> > > > > > +      Some PHY in the PHY package might be not defined but
+> > > > > > +      still exist on the device (just not attached to anything).
+> > > > > > +      The reg defined in the PHY package node might differ and
+> > > > > > +      the related PHY might be not defined.
+> > > > > > +
+> > > > > > +  '#address-cells':
+> > > > > > +    const: 1
+> > > > > > +
+> > > > > > +  '#size-cells':
+> > > > > > +    const: 0
+> > > > > > +
+> > > > > > +patternProperties:
+> > > > > > +  ^ethernet-phy(@[a-f0-9]+)?$:
+> > > > > > +    $ref: ethernet-phy.yaml#
+> > > > > > +
+> > > > > > +required:
+> > > > > > +  - compatible
+> > > > > > +  - reg
+> > > > > > +
+> > > > > > +additionalProperties: true
+> > > > > > +
+> > > > > > +examples:
+> > > > > > +  - |
+> > > > > > +    mdio {
+> > > > > > +        #address-cells = <1>;
+> > > > > > +        #size-cells = <0>;
+> > > > > > +
+> > > > > > +        ethernet-phy-package@16 {
+> > > > > > +            #address-cells = <1>;
+> > > > > > +            #size-cells = <0>;
+> > > > > > +            compatible = "ethernet-phy-package";
+> > > > > > +            reg = <0x16>;
+> > > > > > +
+> > > > > > +            ethernet-phy@16 {
+> > > > > > +              reg = <0x16>;
+> > > > > > +            };
+> > > > > > +
+> > > > > > +            phy4: ethernet-phy@1a {
+> > > > > > +              reg = <0x1a>;
+> > > > > > +            };
+> > > > > > +        };
+> > > > > > +    };
+> > > > > 
+> > > > > So, we ended up on a design where we use the predefined compatible string
+> > > > > 'ethernet-phy-package' to recognize a phy package inside the
+> > > > > of_mdiobus_register() function. During the V1 discussion, Vladimir came up
+> > > > > with the idea of 'ranges' property usage [1]. Can we use 'ranges' to
+> > > > > recognize a phy package in of_mdiobus_register()? IMHO this will give us a
+> > > > > clear DT solution. I mean 'ranges' clearly indicates that child nodes are in
+> > > > > the same address range as the parent node. Also we can list all child
+> > > > > addresses in 'reg' to mark them occupied.
+> > > > > 
+> > > > >     mdio {
+> > > > >       ...
+> > > > > 
+> > > > >       ethernet-phy-package@16 {
+> > > > >         compatible = "qcom,qca8075";
+> > > > >         reg = <0x16>, <0x17>, <0x18>, <0x19>, <0x1a>;
+> > > > >         ranges;
+> > > > >         ...
+> > > > > 
+> > > > >         ethernet-phy@16 {
+> > > > >           reg = <0x16>;
+> > > > >         };
+> > > > > 
+> > > > >         ethernet-phy@1a {
+> > > > >           reg = <0x1a>;
+> > > > >         };
+> > > > >       };
+> > > > >     };
+> > > > > 
+> > > > > Did you find some issues with the 'ranges' conception?
+> > > > 
+> > > > Nope it's ok but it might pose some confusion with the idea that the
+> > > > very first element MUST be THE STARTING ADDR of the PHY package. (people
+> > > > might think that it's just the list of the PHYs in the package and
+> > > > remove the hardware unconnected ones... but that would be fault of who
+> > > > write the DT anyway.)
+> > > 
+> > > Make sense. I do not insist on addresses listing. Mainly I'm thinking of a
+> > > proper way to show that child nodes are accessible directly on the parent
+> > > bus, and introducing the special compatibility string, while we already have
+> > > the 'ranges' property.
+> > > 
+> > > But it's good to know Rob's opinion on whether it is conceptually right to
+> > > use 'ranges' here.
+> > > 
+> > 
+> > I wonder if something like this might make sense... Thing is that with
+> > the ranges property we would have the define the address in the PHY
+> > Package node as offsets...
+> > 
+> > An example would be
+> > 
+> >      mdio {
+> >          #address-cells = <1>;
+> >          #size-cells = <0>;
+> > 
+> >          ethernet-phy-package@10 {
+> >              #address-cells = <1>;
+> >              #size-cells = <0>;
+> >              compatible = "qcom,qca807x-package";
+> >              reg = <0x10>;
+> >              ranges = <0x0 0x10 0x5>;
+> > 
+> >              qcom,package-mode = "qsgmii";
+> > 
+> >              ethernet-phy@0 {
+> >                  reg = <0>;
+> > 
+> >                  leds {
+> > 
+> > 		...
+> > 
+> > With a PHY Package at 0x10, that span 5 address and the child starts at
+> > 0x0 offset.
+> > 
+> > This way we would be very precise on describing the amount of address
+> > used by the PHY Package without having to define the PHY not actually
+> > connected.
+> > 
+> > PHY needs to be at an offset to make sense of the ranges first element
+> > property (0x0). With a non offset way we would have to have something
+> > like
+> > 
+> > ranges = <0x10 0x10 0x5>;
+> > 
+> > With the child and tha parent always matching.
+> > 
+> > (this is easy to handle in the parsing and probe as we will just
+> > calculate the real address based on the base address of the PHY package
+> > + offset)
+> 
+> On one hand it makes sense and looks useful for software development. On
+> another, it looks like a violation of the main DT designing rule, when DT
+> should be used to describe that hardware properties, which can not be learnt
+> from other sources.
+> 
+> As far as I understand this specific chip, each of embedded PHYs has its own
+> MDIO bus address and not an offset from a main common address. Correct me
+> please, if I am got it wrong.
+>
 
-Hence this change makes scratch as optional aperture and also avoids
-registering reboot notifier if scratch address space isn't mapped.
+Correct, it's a quad PHY but each PHY have it's own address and they
+can't be changed (they are incremental from the base one)
 
-Signed-off-by: Petlozu Pravareshwar <petlozup@nvidia.com>
----
- drivers/soc/tegra/pmc.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+We have lots of device that have this (it's present in 99% of the the
+ipq40xx and ipq807x SoC) and the common setup is putting the quad PHY
+and connect only some port to it. (the address are occupiaed anyway just
+the ethernet port is not connected)
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 0bc983f6b088..6948f78c7a4a 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -2903,11 +2903,16 @@ static int tegra_pmc_probe(struct platform_device *pdev)
- 		if (IS_ERR(pmc->aotag))
- 			return PTR_ERR(pmc->aotag);
- 
-+		/* "scratch" is an optional aperture */
- 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 						"scratch");
--		pmc->scratch = devm_ioremap_resource(&pdev->dev, res);
--		if (IS_ERR(pmc->scratch))
--			return PTR_ERR(pmc->scratch);
-+		if (res) {
-+			pmc->scratch = devm_ioremap_resource(&pdev->dev, res);
-+			if (IS_ERR(pmc->scratch))
-+				return PTR_ERR(pmc->scratch);
-+		} else {
-+			pmc->scratch = NULL;
-+		}
- 	}
- 
- 	pmc->clk = devm_clk_get_optional(&pdev->dev, "pclk");
-@@ -2919,12 +2924,15 @@ static int tegra_pmc_probe(struct platform_device *pdev)
- 	 * PMC should be last resort for restarting since it soft-resets
- 	 * CPU without resetting everything else.
- 	 */
--	err = devm_register_reboot_notifier(&pdev->dev,
--					    &tegra_pmc_reboot_notifier);
--	if (err) {
--		dev_err(&pdev->dev, "unable to register reboot notifier, %d\n",
--			err);
--		return err;
-+	if (pmc->scratch) {
-+		err = devm_register_reboot_notifier(&pdev->dev,
-+						    &tegra_pmc_reboot_notifier);
-+		if (err) {
-+			dev_err(&pdev->dev,
-+				"unable to register reboot notifier, %d\n",
-+				err);
-+			return err;
-+		}
- 	}
- 
- 	err = devm_register_sys_off_handler(&pdev->dev,
+Honestly I don't think it's a violation, IMHO quite the opposite. If DT
+is there to describe the hardware, defining each PHY of the package as a
+separate one is wrong and actually cause confusion by dropping entirely
+any description that they are indeed in a package and that on the BUS
+there may be address used without anything connected.
+
+I'm more convinced with the ranges property as we can't put a size to
+the reg property. (due to mdio node having address-cell to 0, changing
+this will affect also every other phy node and that is problematic)
+
+> > I hope Rob can give more feedback about this, is this what you were
+> > thinking with the usage of ranges property?
+> > 
+> > (this has also the bonus point of introducing some validation in the PHY
+> > core code to make sure the right amount of PHY are defined in the
+> > package by checking if the number of PHY doesn't exceed the value set in
+> > ranges.)
+> 
+> Yep, I am also would like to hear some clarification from Rob regarding
+> acceptable 'range' property usage and may be some advice on how to specify
+> the size of occupied addresses. Rob?
+> 
+> --
+> Sergey
+
 -- 
-2.25.1
-
+	Ansuel
