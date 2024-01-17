@@ -1,647 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E400E22636;
-	Wed, 17 Jan 2024 16:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705508111; cv=none; b=t8OkREobosDG6Hps8HgvmVN9wfPGM3IYcd6+vEh1mHdZVklwK3x9FNURZJf4GiLeiFvTiqNOyo2aO1LaXXUdYvP/t+YGZThnx74tHaDEqWF75mcOqjcFHISKXw+3uxUVpAvkdlpvsUeDgXhqhuEUTIJjBkMaeE8Cy4DtcKb6grc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705508111; c=relaxed/simple;
-	bh=SbzlSXpRvsUpXUW2hg2vsE65KIFNDSoztygwRFd62Iw=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=FN2Vgt/5iJ/EQx3gi6+Rb5k6K2yl10IwLS7e4fM6amsa8W7BTbmRM9jTVGyD+NvIsJqTZQAv+oWtKdJQMuhTy4xA5Qz5fSrAZt7dauf2sMBJlHeRyut3a/XnWXB7D6TgrMPL4CFvq5UN95AoptssMaQpRrxUWnuOhLNYisHWvGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyvIhOFN; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D811F602;
+	Wed, 17 Jan 2024 16:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705508272; cv=fail; b=A4G61EuSSVtYU65ZJRCuKzydbyPg48kEARGUtPNK/WJB0VU7B7HPpU1G6wv7Ti8gsjY7dHhonVUPQ6qUkY7RWjbXQKWNMntXI2HknLUvlK+jI01bbDx3BvyxgrmfYesoSDRiCX35Simvp4eGVb/L/13qmMn1DIMi2aGnLndHE1s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705508272; c=relaxed/simple;
+	bh=vGKjnTl4+LqZ9xW9WbSSzC1uVdlNJCQHuSKnXf5g+wA=;
+	h=Received:DKIM-Signature:Received:Received:Received:
+	 ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
+	 Received:Received:Message-ID:Date:User-Agent:Subject:To:Cc:
+	 References:Content-Language:From:Organization:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:
+	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:
+	 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID; b=AFX4hY9cnHUM6r+IKz6/5X6sVaUBDN2m2d8qpBqneyoN2xzLC4uWFBdc8HmoiQOhrk/rHxIFGbzdUzLVd4fdHBo5zO0GFtgqvHtUYmyEbwnK1F41CI0KxUZBf0C2X5j84Cvn+Tob1Xh25/GcUO1xDpkXMjc6XzmuvyzJeZRZ/MU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=GT1VoC0C; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=BKko5IBb; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyvIhOFN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00CBFC43394;
-	Wed, 17 Jan 2024 16:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705508109;
-	bh=SbzlSXpRvsUpXUW2hg2vsE65KIFNDSoztygwRFd62Iw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZyvIhOFND4/d9lgtxET6AjQNr+5TfCtZM72YHaWKxkzrkGQQiTjsV9vryPHqzZ+YD
-	 nikLvgD8vIOlWx2dg/RxMbT9yTi45l0If5wWqleb9NUPwrIO7Utw2dFYRv9BbQ5thl
-	 oq/k8a+Xpp96kJTTRTzadt3PiWBxGR07IUBye6LrA5ZURe8VwAF63VYK3YQt7Hx0V7
-	 0LZkLVxG9ySD0LuEtsK2rtOov5hIK6A5yzj1J1gM0ttDApF6T1dTp2+rCc3mgQq7h5
-	 Ny6MIwcEY3L/zvvsiGDImPueYgg9GbH32KR0/avBtRTZs1r727xCk6NKUACNQutpU8
-	 a+3aeBum1musA==
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Shakeel Butt <shakeelb@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Tejun Heo <tj@kernel.org>,
-	Vasily Averin <vasily.averin@linux.dev>,
-	Michal Koutny <mkoutny@suse.com>,
-	Waiman Long <longman@redhat.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Jiri Kosina <jikos@kernel.org>,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH RFC 3/4] mitigations: Expand 'mitigations=off' to include optional software mitigations
-Date: Wed, 17 Jan 2024 08:14:45 -0800
-Message-ID: <c9b3d9cf9d6eac76daadd0a0b224e69607a1da3d.1705507931.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1705507931.git.jpoimboe@kernel.org>
-References: <cover.1705507931.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GT1VoC0C";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="BKko5IBb"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40HG0ni8029319;
+	Wed, 17 Jan 2024 16:17:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=hsrPGYzklSDwmLX7oIwjh3x1rXVuMgjbWXHPwUaBOLY=;
+ b=GT1VoC0CAapOzuUGIK5SVQNRils4RqrTxbkzlqFahoBFYfisYg7r6MQtipq/gRfjqFBL
+ qXLAKZbXMlRIhcuvZN4fAb7tJTzfNlpy2KbpXCAuQfPiJzZvhjIdsX7MWcPd4Bjp2czr
+ ogIKMvyakzI/+EpTXop7l1q9VKjLV5eujMSdfHtnPBxsIPpXMWsIwmmKaMAeicqbUa+U
+ 3CXioz2lnLW+1CmZYeeNIeMvl901qJyAraP6/iopPNg2tAdlBXZUijJ28a45QIrEca4f
+ GEDIQr5BVkgOPCR60+Rm4CCrTsW/G3bacwoQT3QJMLlCrRJYvizv3fX85Yr+LrFGIeK6 vQ== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vknu9r0hk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Jan 2024 16:17:06 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40HEvCZG023306;
+	Wed, 17 Jan 2024 16:17:04 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vkgyajy38-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Jan 2024 16:17:04 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yi52vUm7bGNTWsXnvdDzU7rXHl7J/9qRMtEsoSTWxUvF2FUub5no//ViOOCyTqr4/9tD5VpA3GYQasqO5SayTlj8B4Y5WrNK8NUMmmmUppxlmSzFY+WYbpMFx2zcgp486T9Ymgs+5CA3ZYXUp/ryy2ChxVNRQMCCF33Vwhv9ifTQEQ+Mh0kNP1UVuYX1sXGu4zXmi1iNc0YpdP3xWGOTnI62oE713tQyL4PqV2Z55FP2JmRu0umBWJEcYn87sWNK2yFcbWBSZzIW98+WEmRoy8YUaB4QR/8IN3dKjJptMDKX+43Eqq5GD1cbLjYpiSodInR0BucPoZ28gOhAgoPzfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hsrPGYzklSDwmLX7oIwjh3x1rXVuMgjbWXHPwUaBOLY=;
+ b=kllQtvYq3hQf53s3GvA6eXw6oFMpkK7qoQQUFAc2Y2E61dUszi9XAh7mmBcUf8xTdVoTkn3sInRuBq+k5oyLfsoWVOV96QEJBoDiu+JK+MZPjUITOZ+UO/aA6pxYsCUgrRoctXLvMZBIExxor3DSZLW+EnYwcfZt9ZwUYIrmAOiMOleFxqU8hTLy6GswLe9hyEMae7r/HpQgWrzlsSOOE7KkfZ8iNdQ0CaGhdp53oVxUK3JMJUZYmFIEiz5293bkQUAF0DS7y6WXwbPOdtBRYegQHj4TQ6abWgi0W01L7wFbibTYjEdKccPT/w8jyVEA1iIFrAGyPXmjbhyO4TVcEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hsrPGYzklSDwmLX7oIwjh3x1rXVuMgjbWXHPwUaBOLY=;
+ b=BKko5IBbXZAur5UvwpjTWL3xmPvai0NWU1sy6+HsogjarUCfQBd8IDFHaLtKAKpkvFGZSF/uJWpGKw9LiDzRjVZCzOfuTStqJX3pjZbCz9zxUkOGhmI/NhUPtZsJI8TOTko6PEJfh43zKUSKwDIRSL/mEreLtP9DFZqIIg3hf2U=
+Received: from CH2PR10MB4312.namprd10.prod.outlook.com (2603:10b6:610:7b::9)
+ by PH0PR10MB5612.namprd10.prod.outlook.com (2603:10b6:510:fa::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24; Wed, 17 Jan
+ 2024 16:17:02 +0000
+Received: from CH2PR10MB4312.namprd10.prod.outlook.com
+ ([fe80::c29d:4ecf:e593:8f43]) by CH2PR10MB4312.namprd10.prod.outlook.com
+ ([fe80::c29d:4ecf:e593:8f43%7]) with mapi id 15.20.7202.024; Wed, 17 Jan 2024
+ 16:17:02 +0000
+Message-ID: <16a6e6e9-b7b0-40bb-9860-324ab7515a5a@oracle.com>
+Date: Wed, 17 Jan 2024 16:16:56 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/16] block atomic writes
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, axboe@kernel.dk, kbusch@kernel.org,
+        sagi@grimberg.me, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
+        jack@suse.cz, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        tytso@mit.edu, jbongio@google.com, linux-scsi@vger.kernel.org,
+        ming.lei@redhat.com, jaswin@linux.ibm.com, bvanassche@acm.org
+References: <20231219151759.GA4468@lst.de>
+ <fff50006-ccd2-4944-ba32-84cbb2dbd1f4@oracle.com>
+ <20231221065031.GA25778@lst.de>
+ <b60e39ce-04bf-4ff9-8879-d9e0cf5d84bd@oracle.com>
+ <20231221121925.GB17956@lst.de>
+ <df2b6c6e-6415-489d-be19-7e2217f79098@oracle.com>
+ <20231221125713.GA24013@lst.de>
+ <9bee0c1c-e657-4201-beb2-f8163bc945c6@oracle.com>
+ <20231221132236.GB26817@lst.de>
+ <6135eab3-50ce-4669-a692-b4221773bb20@oracle.com>
+ <20240117150200.GA30112@lst.de>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20240117150200.GA30112@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0234.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:315::11) To CH2PR10MB4312.namprd10.prod.outlook.com
+ (2603:10b6:610:7b::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR10MB4312:EE_|PH0PR10MB5612:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1b75a5f-7406-400f-bd74-08dc1777bc98
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	fKRcuBK9u5ijkWSi8h1RaEzZZhJTTvVbwPqrxCUlrYjEg+yRzrf2dZTGHHhdxZDJSa2EyNSATh6QPg3LSpIRM8h3/HepDBKmXMeCJM0hyIkeKsMBjGgpAduAkziru0rq9hrR/ltYYALIQzJ5MhO3/bkXPQTXimBiEjvDm0JZSdj9Rt0KNjEmMYK7zi1fduCXMgCLHRBx56iaBnlhtzqGZTKPvZUlBeu6PN3ooyIPrurtVEXXTMFz9gP0mxcfm9BIMn6Rr0m4Dwj5I8WqTMj0DqoFfVCXrnNZ62Lprv+/kfpu3biuprhOWXhtFnw37Xz8cvOAYgZZoLpyaUVdSLYpKjF42zlB6SjR5uYAemHi9XGSQizUj0AbyVESsrazDo8Hd/G2xPS8dWj3T48ONYHUOaC4X6va4jr+Jaq/FpV8BJ4qvGnWQTcfyF4O3VOL03NbasBQMe/EUOfqYxJ/TzrgTS0aRxNhBSn0c5PuUsyPVV5rwdltRM0H4COdk4uBxz4z+Bi1USU8lP7FDB+IDFt+xQCksiSn/kJqwmye5+cerdDqD6brmE0FKwYhA9BWPv7D+TZ94sa3TbDvpApoyBLxBd3DAJSByLRVNOmmlZGWb/s15HcmNWNkmzSq77Tq/ryKDwQFCpsx5eFUfdFq1TnXxQ==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR10MB4312.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(346002)(376002)(39860400002)(396003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(7416002)(41300700001)(5660300002)(2906002)(36756003)(31696002)(316002)(6916009)(66946007)(66476007)(66556008)(86362001)(6512007)(53546011)(6506007)(36916002)(26005)(6486002)(2616005)(83380400001)(478600001)(6666004)(38100700002)(8676002)(8936002)(31686004)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?TmZRQ2xNOVl2QmMxcU9XdGxPR1ZWalRINUhrd2lkZ0tkLzZ6d251eEo2anp2?=
+ =?utf-8?B?T2ZUNUZBWFhlY05kQXlMVlpDVlloQWl1WXl3b2ZFZlBGSDErTUNpYytIS0FU?=
+ =?utf-8?B?RFRsWGd3MG1BQ1FuWTU3Wmh6TytneUdJTGhERXFuaFlhN0hLb05pdXZZakFk?=
+ =?utf-8?B?dTlscVB5eU95bFNIeStwNlFvSGM5cjVzaVZjTnVrVmZkNzJNbUdHKzFzQ0dz?=
+ =?utf-8?B?a0JGYk9BT0dZa29pTGRTKzgzL1VoRU9KNno5VTU4UDhzYk5raHRhaDVYNGsz?=
+ =?utf-8?B?WHlhZWRtYTN4clhoR0FQOGRqTk5NY2xuZDVNSDZheVNPbDdrQjlnT1QyN2ty?=
+ =?utf-8?B?MU9QREFUaElOeDkzT0orYzRRYXBQYWlPTG1YRWdKUitPaFhFK05QRk5CSUwz?=
+ =?utf-8?B?Z2pVSkV5UzVrR2NhaG9wS2JHV0E2ZWRFUVdLYUtBN1pRaVFTTzV6WkNnTWxN?=
+ =?utf-8?B?eXRzdGNCV0U1WktiVDdYWXV6bVNaa2laYzYyeWtEUjhSalAwZXBHdGw4T2Va?=
+ =?utf-8?B?ckJJbVNnOFEzNHRVdkpjR1l2dGNJOHVHY1RORWtZNmdGS3orOWtrRGl6Y0kv?=
+ =?utf-8?B?MERLdFJ0MCt1bWl0WXNvbnllclBRYlBSZEMveW1jL1dvanAzNWFQN3ZReG5i?=
+ =?utf-8?B?NUZEeXRtQm1xaGIwaXMwMWFpSHVYOTVmSmhkbFBZOGlGRDlvdjd5NnphWUZO?=
+ =?utf-8?B?TEZETUJiemc2V0hpenVTbmFOb21BV3haN3FZYnVEbVByL1ZZdm5DSS9IbDB1?=
+ =?utf-8?B?bGJsWnl4amxsU2xDbDdKdzR0Q0VoUFN2MlZBSDhtc1RkcDNIWjdJcmtRZ2lV?=
+ =?utf-8?B?QzhWeDlhQmlvRG1abzREdG5yaTlzUWN0YnBpRXVBNjFmVzMrV2JYKzNYN3JG?=
+ =?utf-8?B?TFhjeU5JYzN0R2FuWVJqYjltSWdkM0hoUmg0SGtYRENkeWFub0tPNTl5Q2Q5?=
+ =?utf-8?B?eFlJOGZMazZhMUdSN0tKci9RVXJFTS9hbTUrQ1Bkc0g1MTI3MnVFUzJkNm0z?=
+ =?utf-8?B?SXhjc3BoYUNkL3BmdkFwRTNPMjV0aDhqa015RElhbU9VRk9VT0oyRmR2Q1dK?=
+ =?utf-8?B?UzFVYmt3bGhmT2t3MHBtUWFqN1U4ZG5nbmZIQUMwcGw3UDVpM0d2Tm1sbTFu?=
+ =?utf-8?B?dFBkcnVKQzBMei9ETmxvRm1tS05DRHJuNitKMUJpMGRyRnJlemUxTU9ONmEx?=
+ =?utf-8?B?aHloNGpZQlluUDBsL2Y5ZTVLcFNnVklqMWhlY2RJS1AzS2pWYlducFMvNWpU?=
+ =?utf-8?B?VkhCTHZ1YUlBWVV0dW9ZWndlSW9aL3YyWVRhcUpKb095dVpCRXVUYTA5ckdD?=
+ =?utf-8?B?WkNheFNBNXNQUW1hNFdNQWlUdThGbjA4NWgwaGhlbXNzZ3BMZkxrL21rMFZv?=
+ =?utf-8?B?dVJYQk5mSUtvQjk1NHBoNVRjUC9pTlVkMStzYjJpTUVQcmtqYnpLaHRpYzNM?=
+ =?utf-8?B?b1gvOXJWdTBmbEF0OW1pSUV5TDJRZVM0dVU4cWxULzBaVVNLK3N3M0RMcExB?=
+ =?utf-8?B?aE9OSkhEYkgvbFk0MnJPNGhFYTNWbHd3TXBUNWhUNGJyVHE4bGtLUmowaGtN?=
+ =?utf-8?B?KzhaRVNXWmNsTUxFY29vUTgvVmgrZEpmZ1EySXNSNlFMdkhpc2xzOU82bksz?=
+ =?utf-8?B?TVpPZVRTZk0va2xsem5DaGJ0RW11QUJVeXczRitNbWFaR0RUdFhMNXE1aExv?=
+ =?utf-8?B?K1ZiUmFtK1dlVmZDdW96MU9Ja28wWktvOXlNZTFZMUNSYzBQQ0QxczdocXEw?=
+ =?utf-8?B?SGdtUkd3Q0JZdFZWT2VZZ3RmVUc4U3JSSzlkbC9lMTV5TE5LOXpYb0dISFkz?=
+ =?utf-8?B?TlJYTEJiRVhPTmlnZWpOcGVDQnpJNFhOOGhJbDNWd3UxVTB1U0I2eHFZUlZ0?=
+ =?utf-8?B?MzdUNjZ2cWN1OG0zdTFUdkN2U21VM3pwN1dLUVNweENOL3E1TWU5M2Z3VGVl?=
+ =?utf-8?B?NG9oTE9kZkI5VVZ6YlloTjR4bWxIUWJ3Ukcya2o0bVJvTVJrbUkyVHh4bHBo?=
+ =?utf-8?B?VkNXc3dETmFacjlOK2p1RnNSb1VSQU96MEJsNG85SzV2dlQxNDY1YUp1YXRl?=
+ =?utf-8?B?SjJ4ekw4SGk0bFpZdHpSVEhNK0dia2cwSUY1ZTZKOFc2eDlURWwwRU1UOVhJ?=
+ =?utf-8?B?NFN2aVJUckQyNzJuSEo4MHh6KzNuSW56Rk9qazlRSDFNRE9vaUswU1lEZDhn?=
+ =?utf-8?B?MkE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	VV55dGg41VOucT2EEgJKXa4t9Pc0ruOnMFprcYxMoKKZIQ858AO4YXOJ5b4WbXeifShvCa/G0KOzauUfrCXRF6qNE8HgFuH3pO23kLof1rpAZ9fcOcAJMTMo2J++ytDaYwsmG74V3ELKyBYURqBTf0zjsfsigeuwAOOECpnIIOUq2zIWs9NiYCwyiucVmTY7bfHddGjw1/qwTyJvtBIWXlZmX1uj/twB/qeIjNFjztL2teqm7eeO/6aIJI10OfeqtE2CbDNbAkTT9+A/3LJEm3cYcLcIKXA6j7ALrU7nSXGHECNOi3Lo15oLNUzOrVL4qPoOaS1vM1lZQQsPXNrhssj6Tbif/7WA+JkOmGjuigxwsWZWC4Q6V+8q0bXrgpn0R5s/5O77O9MsMjKjBaIiTAOEAQNik0oIOyRhd+UWPP6ijV1iurPOTfk0P8TC17umCy8yCA0W1Qy1G8fTZYKNwgX37WhWYXfFiOkhIu5+lGmCkAj9CXFUtky00ML/AFaPUVHjqWUbet2+PZaww/GIvD9zEzId9lgAREDW4FV6ACM1X0gyYK/zGPE7ec9ka8W/QYYgOV+DxfJnYgcMRe6pKRr8hGLBRt+0mI1EK7mS8vQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1b75a5f-7406-400f-bd74-08dc1777bc98
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR10MB4312.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 16:17:02.0932
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PzND9t4/dah0BYxAuCz8JMntmF68wCjG2UNs/XZmEyMNIjbOoEN7yUYBci4NLfjfpmxihStwfEphBKLQHZF4aQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5612
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-17_10,2024-01-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 spamscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401170118
+X-Proofpoint-ORIG-GUID: 90JbNHEOxNoeFC3dFCu7wbV64oKuXJB1
+X-Proofpoint-GUID: 90JbNHEOxNoeFC3dFCu7wbV64oKuXJB1
 
-The 'mitigations=off' cmdline option disables all CPU mitigations at
-runtime.  It's intended for users who are running with trusted user
-space and don't want the performance impact associated with all the
-mitigations.
+On 17/01/2024 15:02, Christoph Hellwig wrote:
+> On Tue, Jan 16, 2024 at 11:35:47AM +0000, John Garry wrote:
+>> As such, we then need to set atomic write unit max = min(queue max
+>> segments, BIO_MAX_VECS) * LBS. That would mean atomic write unit max 256 *
+>> 512 = 128K (for 512B LBS). For a DMA controller of max segments 64, for
+>> example, then we would have 32K. These seem too low.
+> 
+> I don't see how this would work if support multiple sectors.
+> 
+>>
+>> Alternative I'm thinking that we should just limit to 1x iovec always, and
+>> then atomic write unit max = (min(queue max segments, BIO_MAX_VECS) - 1) *
+>> PAGE_SIZE [ignoring first/last iovec contents]. It also makes support for
+>> non-enterprise NVMe drives more straightforward. If someone wants, they can
+>> introduce support for multi-iovec later, but it would prob require some
+>> more iovec length/alignment rules.
+> 
+> Supporting just a single iovec initially is fine with me, as extending
+> that is pretty easy.  Just talk to your potential users that they can
+> live with it.
 
-Up until now, it was only used for CPU mitigations.  However, there can
-also be optional software mitigations which have performance impact.
+Yeah, any porting I know about has just been using aio with 
+IO_CMD_PWRITE, so would be ok
 
-Expand 'mitigations=' to include optional software mitigations.  After
-all there's nothing in the "mitigations" name which limits it to CPU
-vulnerabilities.
+> 
+> I'd probably still advertise the limits even if it currently always is 1.
+> 
 
-In theory we could introduce separate {cpu,sw}_mitigations= options, but
-for the time being there's no need to separate them out.
+I suppose that we don't need any special rule until we support > 1, as 
+we cannot break anyone already using > 1 :)
 
-It's simpler to have them combined since the use case of "I have trusted
-user space and don't want the performance impacts of unneeded
-mitigations" is the same, regardless of the source of the bug.
-
-Move the interfaces around and rename them to reflect the new broader
-impact of mitigations=off.
-
-No functional changes.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- .../admin-guide/kernel-parameters.txt         | 27 ++++++----
- arch/arm64/kernel/cpufeature.c                |  2 +-
- arch/arm64/kernel/proton-pack.c               |  6 +--
- arch/powerpc/kernel/security.c                | 14 +++---
- arch/s390/kernel/nospec-branch.c              |  2 +-
- arch/x86/kernel/cpu/bugs.c                    | 35 ++++++-------
- arch/x86/kvm/mmu/mmu.c                        |  2 +-
- arch/x86/mm/pti.c                             |  3 +-
- include/linux/bpf.h                           |  5 +-
- include/linux/cpu.h                           |  3 --
- include/linux/mitigations.h                   |  4 ++
- kernel/Makefile                               |  3 +-
- kernel/cpu.c                                  | 43 ----------------
- kernel/mitigations.c                          | 50 +++++++++++++++++++
- 14 files changed, 109 insertions(+), 90 deletions(-)
- create mode 100644 include/linux/mitigations.h
- create mode 100644 kernel/mitigations.c
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 91987b06bc52..24e873351368 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3391,16 +3391,23 @@
- 			https://repo.or.cz/w/linux-2.6/mini2440.git
- 
- 	mitigations=
--			[X86,PPC,S390,ARM64] Control optional mitigations for
--			CPU vulnerabilities.  This is a set of curated,
--			arch-independent options, each of which is an
--			aggregation of existing arch-specific options.
-+			[KNL] Control optional mitigations for CPU
-+			vulnerabilities and performance-impacting
-+			software vulnerabilities.  This is a set of
-+			curated, arch-independent options, each of which
-+			is an aggregation of existing arch-specific
-+			options.
- 
- 			off
--				Disable all optional CPU mitigations.  This
--				improves system performance, but it may also
--				expose users to several CPU vulnerabilities.
--				Equivalent to: if nokaslr then kpti=0 [ARM64]
-+				Disable all optional mitigations.  This
-+				improves system performance, but may also
-+				expose users to several vulnerabilities.
-+
-+				Equivalent to:
-+
-+					       CPU mitigations:
-+					       ----------------
-+					       if nokaslr then kpti=0 [ARM64]
- 					       gather_data_sampling=off [X86]
- 					       kvm.nx_huge_pages=off [X86]
- 					       l1tf=off [X86]
-@@ -3426,7 +3433,7 @@
- 					       kvm.nx_huge_pages=force.
- 
- 			auto (default)
--				Mitigate all CPU vulnerabilities, but leave SMT
-+				Enable all optional mitigations, but leave SMT
- 				enabled, even if it's vulnerable.  This is for
- 				users who don't want to be surprised by SMT
- 				getting disabled across kernel upgrades, or who
-@@ -3434,7 +3441,7 @@
- 				Equivalent to: (default behavior)
- 
- 			auto,nosmt
--				Mitigate all CPU vulnerabilities, disabling SMT
-+				Enable all optional mitigations, disabling SMT
- 				if needed.  This is for users who always want to
- 				be fully mitigated, even if it means losing SMT.
- 				Equivalent to: l1tf=flush,nosmt [X86]
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 01a4c1d7fc09..ae37898e5b1a 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1719,7 +1719,7 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
- 		}
- 	}
- 
--	if (cpu_mitigations_off() && !__kpti_forced) {
-+	if (mitigations_off() && !__kpti_forced) {
- 		str = "mitigations=off";
- 		__kpti_forced = -1;
- 	}
-diff --git a/arch/arm64/kernel/proton-pack.c b/arch/arm64/kernel/proton-pack.c
-index 6268a13a1d58..00242edf1885 100644
---- a/arch/arm64/kernel/proton-pack.c
-+++ b/arch/arm64/kernel/proton-pack.c
-@@ -91,7 +91,7 @@ early_param("nospectre_v2", parse_spectre_v2_param);
- 
- static bool spectre_v2_mitigations_off(void)
- {
--	bool ret = __nospectre_v2 || cpu_mitigations_off();
-+	bool ret = __nospectre_v2 || mitigations_off();
- 
- 	if (ret)
- 		pr_info_once("spectre-v2 mitigation disabled by command line option\n");
-@@ -421,7 +421,7 @@ early_param("ssbd", parse_spectre_v4_param);
-  */
- static bool spectre_v4_mitigations_off(void)
- {
--	bool ret = cpu_mitigations_off() ||
-+	bool ret = mitigations_off() ||
- 		   __spectre_v4_policy == SPECTRE_V4_POLICY_MITIGATION_DISABLED;
- 
- 	if (ret)
-@@ -1000,7 +1000,7 @@ void spectre_bhb_enable_mitigation(const struct arm64_cpu_capabilities *entry)
- 		/* No point mitigating Spectre-BHB alone. */
- 	} else if (!IS_ENABLED(CONFIG_MITIGATE_SPECTRE_BRANCH_HISTORY)) {
- 		pr_info_once("spectre-bhb mitigation disabled by compile time option\n");
--	} else if (cpu_mitigations_off() || __nospectre_bhb) {
-+	} else if (mitigations_off() || __nospectre_bhb) {
- 		pr_info_once("spectre-bhb mitigation disabled by command line option\n");
- 	} else if (supports_ecbhb(SCOPE_LOCAL_CPU)) {
- 		state = SPECTRE_MITIGATED;
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index 4856e1a5161c..52cf79b5d87a 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -64,7 +64,7 @@ void __init setup_barrier_nospec(void)
- 	enable = security_ftr_enabled(SEC_FTR_FAVOUR_SECURITY) &&
- 		 security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR);
- 
--	if (!no_nospec && !cpu_mitigations_off())
-+	if (!no_nospec && !mitigations_off())
- 		enable_barrier_nospec(enable);
- }
- 
-@@ -135,7 +135,7 @@ early_param("nospectre_v2", handle_nospectre_v2);
- #ifdef CONFIG_PPC_E500
- void __init setup_spectre_v2(void)
- {
--	if (no_spectrev2 || cpu_mitigations_off())
-+	if (no_spectrev2 || mitigations_off())
- 		do_btb_flush_fixups();
- 	else
- 		btb_flush_enabled = true;
-@@ -331,7 +331,7 @@ void setup_stf_barrier(void)
- 
- 	stf_enabled_flush_types = type;
- 
--	if (!no_stf_barrier && !cpu_mitigations_off())
-+	if (!no_stf_barrier && !mitigations_off())
- 		stf_barrier_enable(enable);
- }
- 
-@@ -530,7 +530,7 @@ void setup_count_cache_flush(void)
- {
- 	bool enable = true;
- 
--	if (no_spectrev2 || cpu_mitigations_off()) {
-+	if (no_spectrev2 || mitigations_off()) {
- 		if (security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED) ||
- 		    security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED))
- 			pr_warn("Spectre v2 mitigations not fully under software control, can't disable\n");
-@@ -700,13 +700,13 @@ void setup_rfi_flush(enum l1d_flush_type types, bool enable)
- 
- 	enabled_flush_types = types;
- 
--	if (!cpu_mitigations_off() && !no_rfi_flush)
-+	if (!mitigations_off() && !no_rfi_flush)
- 		rfi_flush_enable(enable);
- }
- 
- void setup_entry_flush(bool enable)
- {
--	if (cpu_mitigations_off())
-+	if (mitigations_off())
- 		return;
- 
- 	if (!no_entry_flush)
-@@ -715,7 +715,7 @@ void setup_entry_flush(bool enable)
- 
- void setup_uaccess_flush(bool enable)
- {
--	if (cpu_mitigations_off())
-+	if (mitigations_off())
- 		return;
- 
- 	if (!no_uaccess_flush)
-diff --git a/arch/s390/kernel/nospec-branch.c b/arch/s390/kernel/nospec-branch.c
-index d1b16d83e49a..75ec4ad4198b 100644
---- a/arch/s390/kernel/nospec-branch.c
-+++ b/arch/s390/kernel/nospec-branch.c
-@@ -59,7 +59,7 @@ early_param("nospectre_v2", nospectre_v2_setup_early);
- 
- void __init nospec_auto_detect(void)
- {
--	if (test_facility(156) || cpu_mitigations_off()) {
-+	if (test_facility(156) || mitigations_off()) {
- 		/*
- 		 * The machine supports etokens.
- 		 * Disable expolines and disable nobp.
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index bb0ab8466b91..45d4c2664011 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -16,6 +16,7 @@
- #include <linux/sched/smt.h>
- #include <linux/pgtable.h>
- #include <linux/bpf.h>
-+#include <linux/mitigations.h>
- 
- #include <asm/spec-ctrl.h>
- #include <asm/cmdline.h>
-@@ -243,7 +244,7 @@ static const char * const mds_strings[] = {
- 
- static void __init mds_select_mitigation(void)
- {
--	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off()) {
-+	if (!boot_cpu_has_bug(X86_BUG_MDS) || mitigations_off()) {
- 		mds_mitigation = MDS_MITIGATION_OFF;
- 		return;
- 	}
-@@ -255,7 +256,7 @@ static void __init mds_select_mitigation(void)
- 		static_branch_enable(&mds_user_clear);
- 
- 		if (!boot_cpu_has(X86_BUG_MSBDS_ONLY) &&
--		    (mds_nosmt || cpu_mitigations_auto_nosmt()))
-+		    (mds_nosmt || mitigations_auto_nosmt()))
- 			cpu_smt_disable(false);
- 	}
- }
-@@ -317,7 +318,7 @@ static void __init taa_select_mitigation(void)
- 		return;
- 	}
- 
--	if (cpu_mitigations_off()) {
-+	if (mitigations_off()) {
- 		taa_mitigation = TAA_MITIGATION_OFF;
- 		return;
- 	}
-@@ -358,7 +359,7 @@ static void __init taa_select_mitigation(void)
- 	 */
- 	static_branch_enable(&mds_user_clear);
- 
--	if (taa_nosmt || cpu_mitigations_auto_nosmt())
-+	if (taa_nosmt || mitigations_auto_nosmt())
- 		cpu_smt_disable(false);
- }
- 
-@@ -408,7 +409,7 @@ static void __init mmio_select_mitigation(void)
- 
- 	if (!boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA) ||
- 	     boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN) ||
--	     cpu_mitigations_off()) {
-+	     mitigations_off()) {
- 		mmio_mitigation = MMIO_MITIGATION_OFF;
- 		return;
- 	}
-@@ -451,7 +452,7 @@ static void __init mmio_select_mitigation(void)
- 	else
- 		mmio_mitigation = MMIO_MITIGATION_UCODE_NEEDED;
- 
--	if (mmio_nosmt || cpu_mitigations_auto_nosmt())
-+	if (mmio_nosmt || mitigations_auto_nosmt())
- 		cpu_smt_disable(false);
- }
- 
-@@ -481,7 +482,7 @@ early_param("mmio_stale_data", mmio_stale_data_parse_cmdline);
- 
- static void __init md_clear_update_mitigation(void)
- {
--	if (cpu_mitigations_off())
-+	if (mitigations_off())
- 		return;
- 
- 	if (!static_key_enabled(&mds_user_clear))
-@@ -611,7 +612,7 @@ static void __init srbds_select_mitigation(void)
- 		srbds_mitigation = SRBDS_MITIGATION_HYPERVISOR;
- 	else if (!boot_cpu_has(X86_FEATURE_SRBDS_CTRL))
- 		srbds_mitigation = SRBDS_MITIGATION_UCODE_NEEDED;
--	else if (cpu_mitigations_off() || srbds_off)
-+	else if (mitigations_off() || srbds_off)
- 		srbds_mitigation = SRBDS_MITIGATION_OFF;
- 
- 	update_srbds_msr();
-@@ -742,7 +743,7 @@ static void __init gds_select_mitigation(void)
- 		goto out;
- 	}
- 
--	if (cpu_mitigations_off())
-+	if (mitigations_off())
- 		gds_mitigation = GDS_MITIGATION_OFF;
- 	/* Will verify below that mitigation _can_ be disabled */
- 
-@@ -841,7 +842,7 @@ static bool smap_works_speculatively(void)
- 
- static void __init spectre_v1_select_mitigation(void)
- {
--	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V1) || cpu_mitigations_off()) {
-+	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V1) || mitigations_off()) {
- 		spectre_v1_mitigation = SPECTRE_V1_MITIGATION_NONE;
- 		return;
- 	}
-@@ -974,7 +975,7 @@ static void __init retbleed_select_mitigation(void)
- {
- 	bool mitigate_smt = false;
- 
--	if (!boot_cpu_has_bug(X86_BUG_RETBLEED) || cpu_mitigations_off())
-+	if (!boot_cpu_has_bug(X86_BUG_RETBLEED) || mitigations_off())
- 		return;
- 
- 	switch (retbleed_cmd) {
-@@ -1068,7 +1069,7 @@ static void __init retbleed_select_mitigation(void)
- 	}
- 
- 	if (mitigate_smt && !boot_cpu_has(X86_FEATURE_STIBP) &&
--	    (retbleed_nosmt || cpu_mitigations_auto_nosmt()))
-+	    (retbleed_nosmt || mitigations_auto_nosmt()))
- 		cpu_smt_disable(false);
- 
- 	/*
-@@ -1391,7 +1392,7 @@ static enum spectre_v2_mitigation_cmd __init spectre_v2_parse_cmdline(void)
- 	int ret, i;
- 
- 	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2") ||
--	    cpu_mitigations_off())
-+	    mitigations_off())
- 		return SPECTRE_V2_CMD_NONE;
- 
- 	ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
-@@ -1885,7 +1886,7 @@ static enum ssb_mitigation_cmd __init ssb_parse_cmdline(void)
- 	int ret, i;
- 
- 	if (cmdline_find_option_bool(boot_command_line, "nospec_store_bypass_disable") ||
--	    cpu_mitigations_off()) {
-+	    mitigations_off()) {
- 		return SPEC_STORE_BYPASS_CMD_NONE;
- 	} else {
- 		ret = cmdline_find_option(boot_command_line, "spec_store_bypass_disable",
-@@ -2283,9 +2284,9 @@ static void __init l1tf_select_mitigation(void)
- 	if (!boot_cpu_has_bug(X86_BUG_L1TF))
- 		return;
- 
--	if (cpu_mitigations_off())
-+	if (mitigations_off())
- 		l1tf_mitigation = L1TF_MITIGATION_OFF;
--	else if (cpu_mitigations_auto_nosmt())
-+	else if (mitigations_auto_nosmt())
- 		l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
- 
- 	override_cache_bits(&boot_cpu_data);
-@@ -2410,7 +2411,7 @@ static void __init srso_select_mitigation(void)
- {
- 	bool has_microcode = boot_cpu_has(X86_FEATURE_IBPB_BRTYPE);
- 
--	if (cpu_mitigations_off())
-+	if (mitigations_off())
- 		return;
- 
- 	if (!boot_cpu_has_bug(X86_BUG_SRSO)) {
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 0b1f991b9a31..f0d105f740ed 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -6819,7 +6819,7 @@ static int get_nx_huge_pages(char *buffer, const struct kernel_param *kp)
- static bool get_nx_auto_mode(void)
- {
- 	/* Return true when CPU has the bug, and mitigations are ON */
--	return boot_cpu_has_bug(X86_BUG_ITLB_MULTIHIT) && !cpu_mitigations_off();
-+	return boot_cpu_has_bug(X86_BUG_ITLB_MULTIHIT) && !mitigations_off();
- }
- 
- static void __set_nx_huge_pages(bool val)
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index 669ba1c345b3..16a63c241e1e 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -28,6 +28,7 @@
- #include <linux/mm.h>
- #include <linux/uaccess.h>
- #include <linux/cpu.h>
-+#include <linux/mitigations.h>
- 
- #include <asm/cpufeature.h>
- #include <asm/hypervisor.h>
-@@ -84,7 +85,7 @@ void __init pti_check_boottime_disable(void)
- 		return;
- 	}
- 
--	if (cpu_mitigations_off())
-+	if (mitigations_off())
- 		pti_mode = PTI_FORCE_OFF;
- 	if (pti_mode == PTI_FORCE_OFF) {
- 		pti_print_if_insecure("disabled on command line.");
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index e30100597d0a..04356b9fa82a 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -30,6 +30,7 @@
- #include <linux/static_call.h>
- #include <linux/memcontrol.h>
- #include <linux/cfi.h>
-+#include <linux/mitigations.h>
- 
- struct bpf_verifier_env;
- struct bpf_verifier_log;
-@@ -2214,12 +2215,12 @@ static inline bool bpf_allow_uninit_stack(void)
- 
- static inline bool bpf_bypass_spec_v1(void)
- {
--	return cpu_mitigations_off() || perfmon_capable();
-+	return mitigations_off() || perfmon_capable();
- }
- 
- static inline bool bpf_bypass_spec_v4(void)
- {
--	return cpu_mitigations_off() || perfmon_capable();
-+	return mitigations_off() || perfmon_capable();
- }
- 
- int bpf_map_new_fd(struct bpf_map *map, int flags);
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index fc8094419084..b8c81d924a62 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -212,7 +212,4 @@ void cpuhp_report_idle_dead(void);
- static inline void cpuhp_report_idle_dead(void) { }
- #endif /* #ifdef CONFIG_HOTPLUG_CPU */
- 
--extern bool cpu_mitigations_off(void);
--extern bool cpu_mitigations_auto_nosmt(void);
--
- #endif /* _LINUX_CPU_H_ */
-diff --git a/include/linux/mitigations.h b/include/linux/mitigations.h
-new file mode 100644
-index 000000000000..5acc80d49230
---- /dev/null
-+++ b/include/linux/mitigations.h
-@@ -0,0 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+extern bool mitigations_off(void);
-+extern bool mitigations_auto_nosmt(void);
-diff --git a/kernel/Makefile b/kernel/Makefile
-index ce105a5558fc..d1514432bbc7 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -10,7 +10,8 @@ obj-y     = fork.o exec_domain.o panic.o \
- 	    extable.o params.o \
- 	    kthread.o sys_ni.o nsproxy.o \
- 	    notifier.o ksysfs.o cred.o reboot.o \
--	    async.o range.o smpboot.o ucount.o regset.o ksyms_common.o
-+	    async.o range.o smpboot.o ucount.o regset.o ksyms_common.o \
-+	    mitigations.o
- 
- obj-$(CONFIG_USERMODE_DRIVER) += usermode_driver.o
- obj-$(CONFIG_MULTIUSER) += groups.o
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index e6ec3ba4950b..e273478cd437 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -3195,46 +3195,3 @@ void __init boot_cpu_hotplug_init(void)
- 	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
- 	this_cpu_write(cpuhp_state.target, CPUHP_ONLINE);
- }
--
--/*
-- * These are used for a global "mitigations=" cmdline option for toggling
-- * optional CPU mitigations.
-- */
--enum cpu_mitigations {
--	CPU_MITIGATIONS_OFF,
--	CPU_MITIGATIONS_AUTO,
--	CPU_MITIGATIONS_AUTO_NOSMT,
--};
--
--static enum cpu_mitigations cpu_mitigations __ro_after_init =
--	CPU_MITIGATIONS_AUTO;
--
--static int __init mitigations_parse_cmdline(char *arg)
--{
--	if (!strcmp(arg, "off"))
--		cpu_mitigations = CPU_MITIGATIONS_OFF;
--	else if (!strcmp(arg, "auto"))
--		cpu_mitigations = CPU_MITIGATIONS_AUTO;
--	else if (!strcmp(arg, "auto,nosmt"))
--		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
--	else
--		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
--			arg);
--
--	return 0;
--}
--early_param("mitigations", mitigations_parse_cmdline);
--
--/* mitigations=off */
--bool cpu_mitigations_off(void)
--{
--	return cpu_mitigations == CPU_MITIGATIONS_OFF;
--}
--EXPORT_SYMBOL_GPL(cpu_mitigations_off);
--
--/* mitigations=auto,nosmt */
--bool cpu_mitigations_auto_nosmt(void)
--{
--	return cpu_mitigations == CPU_MITIGATIONS_AUTO_NOSMT;
--}
--EXPORT_SYMBOL_GPL(cpu_mitigations_auto_nosmt);
-diff --git a/kernel/mitigations.c b/kernel/mitigations.c
-new file mode 100644
-index 000000000000..2828a755a719
---- /dev/null
-+++ b/kernel/mitigations.c
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/cache.h>
-+#include <linux/init.h>
-+#include <linux/mitigations.h>
-+#include <linux/printk.h>
-+#include <linux/string.h>
-+
-+enum mitigations {
-+	MITIGATIONS_OFF,
-+	MITIGATIONS_AUTO,
-+	MITIGATIONS_AUTO_NOSMT,
-+};
-+
-+static enum mitigations mitigations __ro_after_init =
-+	MITIGATIONS_AUTO;
-+
-+/*
-+ * The "mitigations=" cmdline option is for toggling optional CPU or software
-+ * mitigations which may impact performance.  Mitigations should only be turned
-+ * off if user space and VMs are running trusted code.
-+ */
-+static int __init mitigations_parse_cmdline(char *arg)
-+{
-+	if (!strcmp(arg, "off"))
-+		mitigations = MITIGATIONS_OFF;
-+	else if (!strcmp(arg, "auto"))
-+		mitigations = MITIGATIONS_AUTO;
-+	else if (!strcmp(arg, "auto,nosmt"))
-+		mitigations = MITIGATIONS_AUTO_NOSMT;
-+	else
-+		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n", arg);
-+
-+	return 0;
-+}
-+early_param("mitigations", mitigations_parse_cmdline);
-+
-+/* mitigations=off */
-+bool mitigations_off(void)
-+{
-+	return mitigations == MITIGATIONS_OFF;
-+}
-+EXPORT_SYMBOL_GPL(mitigations_off);
-+
-+/* mitigations=auto,nosmt */
-+bool mitigations_auto_nosmt(void)
-+{
-+	return mitigations == MITIGATIONS_AUTO_NOSMT;
-+}
-+EXPORT_SYMBOL_GPL(mitigations_auto_nosmt);
--- 
-2.43.0
-
+Thanks,
+John
