@@ -1,126 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D391714002;
-	Wed, 17 Jan 2024 09:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E4D13FEB;
+	Wed, 17 Jan 2024 09:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705482224; cv=none; b=XMWWddm21l45L3C4phYvr0qMF4ne/Bx35briSnrqCvdT6ayGEPE1uxThpdfiOz+/YYczly3CPyGMjxAHtkReyn/zUK3QqV6X/Ig5J2NjT/+Nk2ox1q4Nu/LMXdOp+WkgZCIXKWmwMuWDzW0PnCdJto6v1E2r1GhDSwe//MHJdGQ=
+	t=1705482329; cv=none; b=aBgvWQF8RdNFnIqLazCe8NRSK4b0r6EtLXHlaoWUTMRD3AydowMdR2X81ua59qcphXDzW5ZBNz3fMJAuGe9pDuup2x+Fd6XxKROUV4tk/TYU8ZU+7RR23BGmykvGFkNAqZeOssygdQ6Td4SO2n9ENLe1rW86zs09PFv0jbiwDOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705482224; c=relaxed/simple;
-	bh=l7DGGpCso7bX08YQvGfXDvfIrpjxnzkTzOG8xe3VBVk=;
-	h=Received:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=b2L1xI0r05QMH+7VLsztpxk6mfG0IzeRzNEZ3JhHCC9s1XRRMrVbqm5dC0L18jBXnBMZLks/M0JuXMHpKVBsbRPNFOyX19iWL0+oTzrGVq4NDTFhFPWkn4lUZEr8hqC+9w9Slvgfg92qyZlpWTW70jrnq8z6NdUjIHnI0xeXfzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/HNpbZG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705482329; c=relaxed/simple;
+	bh=QjVZzgsoUCIQOhRoRyHOoQyDEOaOpNj7mno8pFnCy3c=;
+	h=Received:DKIM-Signature:Received:Date:Message-ID:From:To:Cc:
+	 Subject:In-Reply-To:References:User-Agent:MIME-Version:
+	 Content-Type:X-SA-Exim-Connect-IP:X-SA-Exim-Rcpt-To:
+	 X-SA-Exim-Mail-From:X-SA-Exim-Scanned; b=lkPvI43QeiddspAfAILUR6V6TGZSTjlHOoQ4fOh7eMtIjs04iL+d6n7Dec152/faGw8xQQkfVC0ozV51ZAAR6wjmf5dfF837TRLV4A9pyau327FfYazXzKgCoSRTjIedbhIlmnkb5hTgAKUXC9Qk90zdAkE/vd+bLFpulyKHOdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCaJdEiz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/HNpbZG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA95C43390;
-	Wed, 17 Jan 2024 09:03:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCaJdEiz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36C63C433C7;
+	Wed, 17 Jan 2024 09:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705482224;
-	bh=l7DGGpCso7bX08YQvGfXDvfIrpjxnzkTzOG8xe3VBVk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q/HNpbZGrfbAT3q2jXppVUPeibMPSrHpQGFDwjq9X7e77lqAhcVCXQOtPAWynwfsm
-	 0McWzvFtXOpJLL+PgsIuaj7P1Tkwv9Sv9S5lf7jIoL+U2p8LtIJ/Gq+dhu8c/4XDve
-	 J2agzb07jUmA3XTb7fZ7pYeyHrJt+bmysAS+oA10d55K/mOOezsjn+PjqudEHz+Oda
-	 CcosS1+qu5BVsJFVpip0kVWav3TU1jmelziY20pqKvDDgUAmOrD40S1RfVv3udz5sX
-	 NOOQmwLBunfxQSxFZHTRFBe7U8eNYfDIsdQOAZsMFlN8LQoXnhbzsNALsrPrfaiC5g
-	 u98tTjQjFzAPA==
-Received: from johan by xi.lan with local (Exim 4.96.2)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1rQ1pt-00086W-0L;
-	Wed, 17 Jan 2024 10:03:49 +0100
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/3] ASoC: codecs: lpass-wsa-macro: fix compander volume hack
-Date: Wed, 17 Jan 2024 10:03:30 +0100
-Message-ID: <20240117090331.31111-3-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240117090331.31111-1-johan+linaro@kernel.org>
-References: <20240117090331.31111-1-johan+linaro@kernel.org>
+	s=k20201202; t=1705482329;
+	bh=QjVZzgsoUCIQOhRoRyHOoQyDEOaOpNj7mno8pFnCy3c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CCaJdEiz9sEN3YsVzKpzPy+g/kw6UwNviLrMNVL62CeC6ug+Li0OtXwrJ6yWvTnTd
+	 I9r8+xPrgoSzhejU/0sIYT41ah6cKHSj4jUyF+hNnioBh3xskm1dwh39hs29j3f3pS
+	 wuM6uy/IEtsMX24fd4H2sKSMLwhjukwM8dYG7fn81elOCCDLUrvKvsAPdV/Oi8bkyH
+	 Jrjds7o46fAqGGviG/t8orQhB9xCCrm/GhPprbBTggJALtvj3zY5zzx6yUspz36Jmr
+	 Q3DFU3jnU5z54sWQFmQVQb5E2X8NKIZ+P/+/guqgzGoB+45gbfCYRwCCt8umkdc3a3
+	 JHxfy4+rP35HA==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rQ1rS-00CNKU-LA;
+	Wed, 17 Jan 2024 09:05:26 +0000
+Date: Wed, 17 Jan 2024 09:05:25 +0000
+Message-ID: <8734uwxrca.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org,
+	Hector Martin <marcan@marcan.st>,
+	Ian Rogers <irogers@google.com>,
+	acme@redhat.com,
+	james.clark@arm.com,
+	john.g.garry@oracle.com,
+	leo.yan@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	mike.leach@linaro.org,
+	namhyung@kernel.org,
+	suzuki.poulose@arm.com,
+	tmricht@linux.ibm.com,
+	will@kernel.org
+Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
+In-Reply-To: <20240116170348.463479-1-mark.rutland@arm.com>
+References: <20240116170348.463479-1-mark.rutland@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: mark.rutland@arm.com, linux-kernel@vger.kernel.org, marcan@marcan.st, irogers@google.com, acme@redhat.com, james.clark@arm.com, john.g.garry@oracle.com, leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, mike.leach@linaro.org, namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-The LPASS WSA macro codec driver is updating the digital gain settings
-behind the back of user space on DAPM events if companding has been
-enabled.
+Hi Mark,
 
-As compander control is exported to user space, this can result in the
-digital gain setting being incremented (or decremented) every time the
-sound server is started and the codec suspended depending on what the
-UCM configuration looks like.
+On Tue, 16 Jan 2024 17:03:48 +0000,
+Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> Currently the perf tool doesn't deteect support for extneded event types
+> on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
+> hardware events into per-PMU events. This is due to the detection of
+> extended event types not handling mandatory filters required by the
+> M1/M2 PMU driver.
 
-Soon enough playback will become distorted (or too quiet).
+Thanks for looking into this.
 
-This is specifically a problem on the Lenovo ThinkPad X13s as this
-bypasses the limit for the digital gain setting that has been set by the
-machine driver.
+I've given your patch a go on my M1 box, and it indeed makes things
+substantially better:
 
-Fix this by simply dropping the compander gain offset hack. If someone
-cares about modelling the impact of the compander setting this can
-possibly be done by exporting it as a volume control later.
+$ sudo ./perf stat -e cycles ~/hackbench 100 process 1000
+Running with 100*40 (== 4000) tasks.
+Time: 3.419
 
-Note that the volume registers still need to be written after enabling
-clocks in order for any prior updates to take effect.
+ Performance counter stats for '/home/maz/hackbench 100 process 1000':
 
-Fixes: 2c4066e5d428 ("ASoC: codecs: lpass-wsa-macro: add dapm widgets and route")
-Cc: stable@vger.kernel.org      # 5.11
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- sound/soc/codecs/lpass-wsa-macro.c | 7 -------
- 1 file changed, 7 deletions(-)
+   174,783,472,090      apple_firestorm_pmu/cycles/                                             (93.10%)
+    39,134,744,813      apple_icestorm_pmu/cycles/                                              (71.86%)
 
-diff --git a/sound/soc/codecs/lpass-wsa-macro.c b/sound/soc/codecs/lpass-wsa-macro.c
-index 7e21cec3c2fb..6ce309980cd1 100644
---- a/sound/soc/codecs/lpass-wsa-macro.c
-+++ b/sound/soc/codecs/lpass-wsa-macro.c
-@@ -1584,7 +1584,6 @@ static int wsa_macro_enable_interpolator(struct snd_soc_dapm_widget *w,
- 	u16 gain_reg;
- 	u16 reg;
- 	int val;
--	int offset_val = 0;
- 	struct wsa_macro *wsa = snd_soc_component_get_drvdata(component);
- 
- 	if (w->shift == WSA_MACRO_COMP1) {
-@@ -1623,10 +1622,8 @@ static int wsa_macro_enable_interpolator(struct snd_soc_dapm_widget *w,
- 					CDC_WSA_RX1_RX_PATH_MIX_SEC0,
- 					CDC_WSA_RX_PGA_HALF_DB_MASK,
- 					CDC_WSA_RX_PGA_HALF_DB_ENABLE);
--			offset_val = -2;
- 		}
- 		val = snd_soc_component_read(component, gain_reg);
--		val += offset_val;
- 		snd_soc_component_write(component, gain_reg, val);
- 		wsa_macro_config_ear_spkr_gain(component, wsa,
- 						event, gain_reg);
-@@ -1654,10 +1651,6 @@ static int wsa_macro_enable_interpolator(struct snd_soc_dapm_widget *w,
- 					CDC_WSA_RX1_RX_PATH_MIX_SEC0,
- 					CDC_WSA_RX_PGA_HALF_DB_MASK,
- 					CDC_WSA_RX_PGA_HALF_DB_DISABLE);
--			offset_val = 2;
--			val = snd_soc_component_read(component, gain_reg);
--			val += offset_val;
--			snd_soc_component_write(component, gain_reg, val);
- 		}
- 		wsa_macro_config_ear_spkr_gain(component, wsa,
- 						event, gain_reg);
+       3.568145595 seconds time elapsed
+
+      12.203084000 seconds user
+      55.135271000 seconds sys
+
+However, I'm seeing some slightly odd behaviours:
+
+$ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
+Running with 100*40 (== 4000) tasks.
+Time: 3.313
+
+ Performance counter stats for '/home/maz/hackbench 100 process 1000':
+
+   <not supported>      apple_firestorm_pmu/cycles:k/                                         
+   <not supported>      apple_icestorm_pmu/cycles:k/                                          
+
+       3.467568841 seconds time elapsed
+
+      13.080111000 seconds user
+      53.162099000 seconds sys
+
+I would have expected it to count, but it didn't. For that to work, I
+have to add the 'H' modifier:
+
+$ sudo ./perf stat -e cycles:Hk ~/hackbench 100 process 1000
+Running with 100*40 (== 4000) tasks.
+Time: 3.335
+
+ Performance counter stats for '/home/maz/hackbench 100 process 1000':
+
+   183,756,134,397      apple_firestorm_pmu/cycles:Hk/                                          (85.56%)
+    37,302,841,991      apple_icestorm_pmu/cycles:Hk/                                           (72.10%)
+
+       3.490138958 seconds time elapsed
+
+      13.376772000 seconds user
+      53.326289000 seconds sys
+
+But my perf-foo is as basic as it gets, so it is likely that I'm
+missing something.
+
+Thanks,
+
+	M.
+
 -- 
-2.41.0
-
+Without deviation from the norm, progress is not possible.
