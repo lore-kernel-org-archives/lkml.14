@@ -1,95 +1,132 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD761C11
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 23:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D61028DA0;
+	Wed, 17 Jan 2024 23:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705535305; cv=none; b=gwo7+FzEuSd+gSiLhtAcclbGbmPm0dWmHAa3tqCDb2k0hXkqKnVTfTv7pv84r+V8nSKKFO9hEOssgDOfcmMyMfo9axVP9cGGyyN/R6EihoQqlfJU6jfCcMVrhdGXRUYHA2g1ojdZspQwCUJTgeYddDi5/CXwE6TfDDJI+VDhyjA=
+	t=1705535398; cv=none; b=bKoIEV1yxsnC9feH5hVUSqBdQL17IdFyq4m+7woTjc5onP/nG0QlxS0LDk1YZUEJaJFfKLodpgLRS3KArAVMaYpBg97RmPBaIhFD3phfKpXT4aduB7OIvLF92tUOakIq9TFfRVHhLSiG/6XVhkX0kUe1n56T4PGYD/hk0Kvh8+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705535305; c=relaxed/simple;
-	bh=o/7Dr1KrXaPTWwgbqvtbLp3agio8da0eexlUCdi+K7w=;
+	s=arc-20240116; t=1705535398; c=relaxed/simple;
+	bh=aam7oYF4g9EqqlqYBqV3eSxfKV7feMrcfKtaXfjRZzc=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type; b=K67wcOSuGLS9JeRGyoF4MlOiwkegUL2xUAFLIya2Lfpcq6rEkjt4eLkGFSUMesi/5BITtpTCye690671qWHqOBhMAXsh/uUSI+f1w0xaUc14L0+Rpg5VzqH1s4J9uAj0wAqcwpIlHgOJ/S/yB4JBV4r2svd8qw7os0IUCTbsAcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uxw1g9MW; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding; b=cBI4qiLVb+VqACLNe67X5zkvFdsz+HbW2YsNDMJVDBBCQfSkDWa5YnzoalcUktOqyNRWOo5kE+4HzRCrrLa9R4ySZ9iw7S1XJnDk/+gxP16C0Gf/o/TQwtAkzZRm1GvI5bQWa8ERifrqUJAN8OVDdUuFn51L5CB0eh5g8+xvcSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hS4vIWTM; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uxw1g9MW"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a28ab7ae504so1095296366b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 15:48:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hS4vIWTM"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6d9344f30caso141912b3a.1;
+        Wed, 17 Jan 2024 15:49:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705535302; x=1706140102; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VCBKt8IzuP6x9scNJoSJcUgrz4a37akazxYAWOrz96o=;
-        b=uxw1g9MWVUCcPP0CpYrws6CY7oOjlfiM6QFyWfqMSDv4QC6WiiJZaGtlPeDLCj2jVr
-         +XByPsD35RogMr4H4//gs2uhKeNok2DjlFtjEyuNe2zB7IoLC/UzbSO1R3tsgW8dp0+9
-         GAglm6oefXT7Eae0pqGc2juEb4YMxvPhjbZkzM4NQKyDa+whVmf2IQ+3Q0K/+sVFivFb
-         Yqftu15VetQJuRZkmDzdlLmQc8mZCO5M1nJ2JcnjwHZNerLayvg6l+LWUiC1z3ZLpE0U
-         /1xKaln4a8i9ln6Tr2gOBZIQT+MfefdT3OCUlIEMF2D+OIZuFnlvNWPIAg4y0v7rrUiE
-         4xUw==
+        d=gmail.com; s=20230601; t=1705535396; x=1706140196; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hAK0YIohDCD4eqIjGEjkntfc4ZRv0vFsNjgtuUpGJzk=;
+        b=hS4vIWTMdj+37jcRQeX1A5+dc6gfvPnhdjGcP/XZeeLk1Ait4kp1QtRVgPTkcRDO6E
+         rD6/fQp4LjoADwRr7n8xAu4AK+nQHiw6smYzHUCGOFI6ibZv//5lstbvKqr6hajz2NDo
+         Mz7HVdgjm7voS7h09n9f4wwuJBl8Uj/Ytqtp/WCI+4fHZJVJuIyyZIDSWIOqx1Kfhe2i
+         l97H+FKgFM5+DxcF2bfrp3beY1LTEE0X6my9lNSUeSf8D6RiT4CV9WBrWGKI7YESP0l/
+         naODLVn3ThtemtPWZQsESz9Er7ubJKsfImI2qnHNsnYc9bFAqTqtX1aPkE1Vxk4MBAf0
+         GqBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705535302; x=1706140102;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1705535396; x=1706140196;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VCBKt8IzuP6x9scNJoSJcUgrz4a37akazxYAWOrz96o=;
-        b=mh6YHBtZTAHAUnop4GjuF4CwQh7PuTZ9pxunXsY0lgE5n0eviDs5H5Grpj+ceiTmr8
-         ZRXDyGQTbw0Y4Gj06h7YmNu4oljMJ87/rUa3360Bri1jAm844nHsqeaRPpvvvg2cFiSI
-         7MOoTBc/0Ek+eq1HsyfSt0q/vYEzrPdXAubEjFJOgZv4xDtP+BBIK7sfDoLRF/gATK0p
-         RZbRRmjtzitNmk3B+f6MuypszzeQRLy3P+vu1281QAF2Zwbk8/qHL0ezHzKs/aiypRS6
-         7/GsBgK3eKj93KqBFHyejGoKX/PDA1/pKzGGl8eyqXctTyU+a8Q6ukfNmyg4bFMktceJ
-         tOdQ==
-X-Gm-Message-State: AOJu0YxxDrXu8NH92fSypAAA5NlyDkmn0BoJQtM/SWlAOGt/wWJPtpFi
-	USNM8F3cLAS5s1Ma850nd4S6VkaQKfnY+/NUgPdOMCFMpip+
-X-Google-Smtp-Source: AGHT+IHa4FJiq0gIOz5Xu8OFGK5EDo+l00VS9u+UDHJc/7nb2ZqSAqIo5sEY/iucx2Cc8EJZlYP9InkzXT4x1GRvqCg=
-X-Received: by 2002:a17:906:60cb:b0:a26:ee83:8841 with SMTP id
- f11-20020a17090660cb00b00a26ee838841mr4895563ejk.33.1705535301782; Wed, 17
- Jan 2024 15:48:21 -0800 (PST)
+        bh=hAK0YIohDCD4eqIjGEjkntfc4ZRv0vFsNjgtuUpGJzk=;
+        b=TDPwosLvhhO+CBxRbIzE1U0uXIxRfegoNBSwlq83Hz+1+ISRSedkuPDvFTG6l+Z5Hg
+         BufQ15IagWnTLvt1PeEMgnxhBLeLsyKVDvssSAnV8KlJXo1jEsI4Tkahl4eDy6waUz++
+         KukjGrJxCb8rb+yr3zClNIdy6NJdUBO50rKchsIk6pM+2TdmuHuE4/BagJJwPzrhq6OR
+         WT9u13+fhX+CXu+xU7t0iX+iHS1gS3qyYd5LynkPW29vgHSwhpmttW/sYEfcjhm0M7vw
+         x1AmktHmybaI5AAK7QjKDB2AKuua97Yqh4BdIPhQXaaUub8uQmuRO9xG84hnLILUbQHK
+         g/5g==
+X-Gm-Message-State: AOJu0Yyk9L/cSNIHa9baKvAX91ALDkQRy93IO9dgjY0egN/rnXEkQl/D
+	UMvZRA4mj9QqSAyr0jypa0WJZhx9vlk1kXS/Ju+Qxdn1k3L6jFvzkt2V3bSk
+X-Google-Smtp-Source: AGHT+IH7xPafH8KvpsM4vbXJlq4re+OuijYTPfbCQ+YJ7Q1peqpvAzPfTDXAdQ9+c924WtLjZNGMQg==
+X-Received: by 2002:a05:6a00:3923:b0:6da:ed17:bfa7 with SMTP id fh35-20020a056a00392300b006daed17bfa7mr124169pfb.6.1705535395774;
+        Wed, 17 Jan 2024 15:49:55 -0800 (PST)
+Received: from eldorado.. (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id u20-20020aa78494000000b006dab0d09ef0sm2001796pfn.45.2024.01.17.15.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 15:49:55 -0800 (PST)
+From: Florian Fainelli <f.fainelli@gmail.com>
+To: linux-mips@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] MIPS: Alchemy: Fix missing prototypes
+Date: Wed, 17 Jan 2024 15:49:44 -0800
+Message-Id: <20240117234948.923273-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117-b4-zswap-lock-optimize-v1-0-23f6effe5775@bytedance.com>
- <CAJD7tkY7Xvjg37EEw2M=uRknphY0pf3ZVpyX2s2QyiJ=Axhihw@mail.gmail.com> <CAF8kJuP4o3Ebg-aYKF9=ftbdu97RnkXnYL-8RuVjYAeXd+ng3A@mail.gmail.com>
-In-Reply-To: <CAF8kJuP4o3Ebg-aYKF9=ftbdu97RnkXnYL-8RuVjYAeXd+ng3A@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 17 Jan 2024 15:47:45 -0800
-Message-ID: <CAJD7tkYfo6mNjHQJt4yfVuh55tMyVMRnbeq5ki42tYHBEgP_eA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] mm/zswap: optimize the scalability of zswap rb-tree
-To: Chris Li <chrisl@kernel.org>
-Cc: Chengming Zhou <zhouchengming@bytedance.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, 
-	Nhat Pham <nphamcs@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-> Currently the xarray patch should have everything it takes to use RCU
-> read lock. However taking out the tree spinlock is more work than
-> previously. If we are going to remove the tree spinlock, I think we
-> should revert back to doing a zswap tree lookup and return the zswap
-> entry with reference increased. The tree mapping can still decouple
-> from the zswap entry reference count drop to zero.  Anyway, my V1 of
-> the xarray patch will not include removing the tree spinlock.
+We have a number of missing prototypes warnings for board_setup(),
+alchemy_set_lpj() and prom_init_cmdline(), prom_getenv() and
+prom_get_ethernet_addr(). Fix those by providing definitions for the
+first two functions in au1000.h which is included everywhere relevant,
+and including prom.h for the last three.
 
-Interesting. What do you mean by removing the tree spinlock? My
-assumption was that the xarray reduces lock contention because we do
-not need a lock to do lookups, but we still need the lock otherwise.
-Did you have something in mind to completely remove the tree lock?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/mips/alchemy/common/prom.c            | 1 +
+ arch/mips/alchemy/common/setup.c           | 4 +---
+ arch/mips/include/asm/mach-au1x00/au1000.h | 3 +++
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
->
-> > The reason why I think we should wait for the xarray patch(es) is
-> > there is a chance we may see less improvements from splitting the tree
-> > if it was an xarray. If we merge this series first, there is no way to
-> > know.
-> >
-> > Chris, do you intend to send the xarray patch(es) anytime soon?
->
-> Thanks for the heads up. Let me send it out now.
+diff --git a/arch/mips/alchemy/common/prom.c b/arch/mips/alchemy/common/prom.c
+index b13d8adf3be4..20d30f6265cd 100644
+--- a/arch/mips/alchemy/common/prom.c
++++ b/arch/mips/alchemy/common/prom.c
+@@ -40,6 +40,7 @@
+ #include <linux/string.h>
+ 
+ #include <asm/bootinfo.h>
++#include <prom.h>
+ 
+ int prom_argc;
+ char **prom_argv;
+diff --git a/arch/mips/alchemy/common/setup.c b/arch/mips/alchemy/common/setup.c
+index 2388d68786f4..a7a6d31a7a41 100644
+--- a/arch/mips/alchemy/common/setup.c
++++ b/arch/mips/alchemy/common/setup.c
+@@ -30,13 +30,11 @@
+ #include <linux/mm.h>
+ #include <linux/dma-map-ops.h> /* for dma_default_coherent */
+ 
++#include <asm/bootinfo.h>
+ #include <asm/mipsregs.h>
+ 
+ #include <au1000.h>
+ 
+-extern void __init board_setup(void);
+-extern void __init alchemy_set_lpj(void);
+-
+ static bool alchemy_dma_coherent(void)
+ {
+ 	switch (alchemy_get_cputype()) {
+diff --git a/arch/mips/include/asm/mach-au1x00/au1000.h b/arch/mips/include/asm/mach-au1x00/au1000.h
+index a7eec3364a64..41546777902b 100644
+--- a/arch/mips/include/asm/mach-au1x00/au1000.h
++++ b/arch/mips/include/asm/mach-au1x00/au1000.h
+@@ -597,6 +597,9 @@
+ 
+ #include <asm/cpu.h>
+ 
++void alchemy_set_lpj(void);
++void board_setup(void);
++
+ /* helpers to access the SYS_* registers */
+ static inline unsigned long alchemy_rdsys(int regofs)
+ {
+-- 
+2.34.1
 
-Awesome, thanks! I assume Chengming can test whether this series
-provides the same benefits with the xarray.
