@@ -1,93 +1,360 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D670B250E6;
-	Wed, 17 Jan 2024 19:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E744B241E0
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 19:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705518373; cv=none; b=SM+UrC4Q3EWF4uPS78a6V3oaEp+1X4XpXh1JGYiZl5Qig/reeVOnSdl2WuiV/oc+FegCHvh0sj/r+Vv61m9HF8djt8bpDfshPdJCEx3RWcxgqts3GemT5m6FzHa2SLihJSk0OUSe40HFxXmKevZI0lu6IGXApcr5LssTLIhQJpA=
+	t=1705518602; cv=none; b=Zx3Z8/DQy+xI5Ia8cSc9qYYAW9cnZsR/CWUu6o7KyziUm/6JQgNvQcEYB3JhGMFeVi5w0o6nd8cgKhiNa/6vXqacOP+qKU0Jydho7tLE9RFr4JUHqrZuorOH5TguTYzcxuLa7migYMl8gwipREpigiNs07Cc1+1MigOcai8fLVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705518373; c=relaxed/simple;
-	bh=7YAKPQ9tYWmvfAcseobwrvrV34TmrklbQkwFX2veRSg=;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer; b=Ki5DRS2t505FXzPZkMRkqdsUWQuU9LqoDwStLmduyW6X0QJUolCJfz1Ytf1FTZQIm/PAFLbv+mRGyZ119PPZtH/61RdtPJI3aAXD6XgrgjRTv072PztweAdkV4CEQ933CoWYIWEfdlNqOC1B9ssIDuF8Mi8LGYQzU6bwVkrzrqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ORwyB35h; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1705518602; c=relaxed/simple;
+	bh=pOBH5kk4rTVzyMww58JwBtZRXinWstPMBFhlHEVIRHE=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type; b=OZn6R6vDxN5+HnFgBQpfegZezE2sX41rZKGCutSn5dtABG7yGPTyscwBCgkYdluCm5mn8nwIu9PV3CILFP1M798i4UXJoSL7yovqxaHr4CC7GhBQ8nWa6wDo2wNEJrCdYeEh/wqAvpx31Q1GbPDCAuihNI3q3XyE90j8O6M4WOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C6aNlgK2; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ORwyB35h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705518370;
-	bh=7YAKPQ9tYWmvfAcseobwrvrV34TmrklbQkwFX2veRSg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ORwyB35hhAm9kLf8Bcd4HROoAmtgxqxmS2ACAQ3fMDQGcNkW2bMbpuzV+ZJ5HxfpD
-	 DgAY4TMzhNP4tMx939kuxoUA+F9xlD9veVlaQg4tWJiRsBCsOmBIkRGzN+hCYE7k6x
-	 DVjsw7r6MSfnrTTzQzk+Y9s2tdeuvcgvQJoZRHMdPrki05SHAIUfJNbz0iXuO/7fc/
-	 mgjeG7NuuLZyX2a3WZVDL8s2UEnuznork+NcgqPbtL39ZBcHT5hnLTHqIG31x89TLz
-	 jiSZiPUltHzQnngZFxZxJeyJwLWx2hPufU4p3uo56YXb2CJDicn3CZ93w4Zn6ndz+z
-	 WTUBtWQUORmaw==
-Received: from [192.168.0.47] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E08823782033;
-	Wed, 17 Jan 2024 19:06:04 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Wed, 17 Jan 2024 16:03:25 -0300
-Subject: [PATCH v3 4/4] arm64: defconfig: Enable support for cbmem entries
- in the coreboot table
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C6aNlgK2"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50eaaf2c7deso12921457e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 11:09:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705518598; x=1706123398; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NAzAJO3N1I1OhZ284fvmMR+G059lfg2vntURweb1Fq0=;
+        b=C6aNlgK2KCFeKX2M6Xtewg67xtun5EJRmPCerSQINq3ssRC9dfHbeBJ+FcmBvW33Pv
+         kGVIkSHXcKsaWGN6ERTg6ThV/99bXMeGi5FME2hz7+AxBMInxt3NrjJNeYN1iCN9S5hP
+         eC6BwnlV4Ry2n80A+9+rp1NugHYgg6Opdnrg2GM89V/PvkCZAHjBKPgkrBa3MTC1AF87
+         jkmlYVd9E1/3mBpyRXmmQssWi/Rv8fpDZGDFv47P3UvrMPphnHlInJMxDbYuz8sZ3BYV
+         kW/4Mz7siPZb0NBJUI8w9LeRkyiUsqHjxasuWy9XyewhGfpKSbweH6UJRVvUTN517qQa
+         w6xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705518598; x=1706123398;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NAzAJO3N1I1OhZ284fvmMR+G059lfg2vntURweb1Fq0=;
+        b=KqkwnP0M26jizOVo+YdoHGetD1YjJwDniUY4PyWkLnhC3pGVjxXOyjwu24fxhGJt2i
+         NpQI1fpOi4W+xq5KdhYtFpfa3ym/6X/1N8wqpGNKLKginyoM3n/TqcvtrhH+QibX400i
+         S6dEhP8M7ZfjbPXFCuB5vQyF/D5bpr86tdRbyXi6fqq8Snit9jdpwao7EB11Z4HdYi4F
+         Xh6IuzE22KsHRMRTBpBZ57HysrjqVdfxsOMvQ2FUvvPVvZqIGjSYhPw9QTHn8ejqfrmv
+         4DBQCPjaig1PKLlnLF9Pim0XLBSHaZxznmbygnvHFISmfjaYyJTGn46mOwaBdOxl8BGz
+         VrRg==
+X-Gm-Message-State: AOJu0Yx4FGvne2Eql55dYy69IY/UW1USnuCSHPAyKHpVWvQquXPDApRs
+	lEjDV9ob9FtagUJUXTyPJRaFuDPW/Xrt9b+Ak1BwKFWR6gK26g==
+X-Google-Smtp-Source: AGHT+IGlDOdd3qY094t3cuOIq0BxFxAUEV6oA7vLrb7WTMrXhkU9b2CulrxydgXjlkSNoz4gun1ky/i7gRaQohSADr4=
+X-Received: by 2002:a19:770f:0:b0:50e:ac2a:6b6d with SMTP id
+ s15-20020a19770f000000b0050eac2a6b6dmr4104291lfc.119.1705518597942; Wed, 17
+ Jan 2024 11:09:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240117-coreboot-mod-defconfig-v3-4-049565a27bba@collabora.com>
-References: <20240117-coreboot-mod-defconfig-v3-0-049565a27bba@collabora.com>
-In-Reply-To: <20240117-coreboot-mod-defconfig-v3-0-049565a27bba@collabora.com>
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Brian Norris <briannorris@chromium.org>, 
- Julius Werner <jwerner@chromium.org>, 
- Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, kernel@collabora.com, 
- chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.12.4
+References: <20240117173458.2312669-1-quic_sibis@quicinc.com> <20240117173458.2312669-4-quic_sibis@quicinc.com>
+In-Reply-To: <20240117173458.2312669-4-quic_sibis@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 17 Jan 2024 21:09:46 +0200
+Message-ID: <CAA8EJpqUgqHfMOZip58yGpt6S3XSBz+9BeXZSL_JmWar_JbO4g@mail.gmail.com>
+Subject: Re: [RFC 3/7] firmware: arm_scmi: Add QCOM vendor protocol
+To: Sibi Sankar <quic_sibis@quicinc.com>
+Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, andersson@kernel.org, 
+	konrad.dybcio@linaro.org, jassisinghbrar@gmail.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	quic_rgottimu@quicinc.com, quic_kshivnan@quicinc.com, conor+dt@kernel.org, 
+	Amir Vajid <avajid@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Enable the cbmem driver and dependencies in order to support reading
-cbmem entries from the coreboot table, which are used to store logs from
-coreboot on arm64 Chromebooks, and provide useful information for
-debugging the boot process on those devices.
+On Wed, 17 Jan 2024 at 19:36, Sibi Sankar <quic_sibis@quicinc.com> wrote:
+>
+> From: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+>
+> SCMI QCOM vendor protocol provides interface to communicate with SCMI
+> controller and enable vendor specific features like bus scaling capable
+> of running on it.
+>
+> Signed-off-by: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+> Co-developed-by: Ramakrishna Gottimukkula <quic_rgottimu@quicinc.com>
+> Signed-off-by: Ramakrishna Gottimukkula <quic_rgottimu@quicinc.com>
+> Co-developed-by: Amir Vajid <avajid@quicinc.com>
+> Signed-off-by: Amir Vajid <avajid@quicinc.com>
+> Co-developed-by: Sibi Sankar <quic_sibis@quicinc.com>
+> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> ---
+>  drivers/firmware/arm_scmi/Kconfig            |  11 ++
+>  drivers/firmware/arm_scmi/Makefile           |   1 +
+>  drivers/firmware/arm_scmi/qcom_scmi_vendor.c | 160 +++++++++++++++++++
+>  include/linux/qcom_scmi_vendor.h             |  36 +++++
+>  4 files changed, 208 insertions(+)
+>  create mode 100644 drivers/firmware/arm_scmi/qcom_scmi_vendor.c
+>  create mode 100644 include/linux/qcom_scmi_vendor.h
+>
+> diff --git a/drivers/firmware/arm_scmi/Kconfig b/drivers/firmware/arm_scmi/Kconfig
+> index aa5842be19b2..86b5d6c18ec4 100644
+> --- a/drivers/firmware/arm_scmi/Kconfig
+> +++ b/drivers/firmware/arm_scmi/Kconfig
+> @@ -180,4 +180,15 @@ config ARM_SCMI_POWER_CONTROL
+>           called scmi_power_control. Note this may needed early in boot to catch
+>           early shutdown/reboot SCMI requests.
+>
+> +config QCOM_SCMI_VENDOR_PROTOCOL
+> +       tristate "Qualcomm Technologies, Inc. Qcom SCMI vendor Protocol"
+> +       depends on ARM || ARM64 || COMPILE_TEST
+> +       depends on ARM_SCMI_PROTOCOL
+> +       help
+> +         The SCMI QCOM vendor protocol provides interface to communicate with SCMI
+> +         controller and enable vendor specific features like bus scaling.
+> +
+> +         This driver defines the commands or message ID's used for this
+> +         communication and also exposes the ops used by the clients.
+> +
+>  endmenu
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index a7bc4796519c..eaeb788b93c6 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
+>  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-module.o
+>
+>  obj-$(CONFIG_ARM_SCMI_POWER_CONTROL) += scmi_power_control.o
+> +obj-$(CONFIG_QCOM_SCMI_VENDOR_PROTOCOL) += qcom_scmi_vendor.o
+>
+>  ifeq ($(CONFIG_THUMB2_KERNEL)$(CONFIG_CC_IS_CLANG),yy)
+>  # The use of R7 in the SMCCC conflicts with the compiler's use of R7 as a frame
+> diff --git a/drivers/firmware/arm_scmi/qcom_scmi_vendor.c b/drivers/firmware/arm_scmi/qcom_scmi_vendor.c
+> new file mode 100644
+> index 000000000000..878b99f0d1ef
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/qcom_scmi_vendor.c
+> @@ -0,0 +1,160 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2024, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/qcom_scmi_vendor.h>
+> +
+> +#include "common.h"
+> +
+> +#define        EXTENDED_MSG_ID                 0
+> +#define        SCMI_MAX_TX_RX_SIZE             128
+> +#define        PROTOCOL_PAYLOAD_SIZE           16
+> +#define        SET_PARAM                       0x10
+> +#define        GET_PARAM                       0x11
+> +#define        START_ACTIVITY                  0x12
+> +#define        STOP_ACTIVITY                   0x13
+> +
+> +static int qcom_scmi_set_param(const struct scmi_protocol_handle *ph, void *buf, u64 algo_str,
+> +                              u32 param_id, size_t size)
+> +{
+> +       int ret = -EINVAL;
+> +       struct scmi_xfer *t;
+> +       u32 *msg;
+> +
+> +       if (!ph || !ph->xops)
+> +               return ret;
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+Drop init of ret, return -EINVAL directly here.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 361c31b5d064..49121133f045 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -255,6 +255,9 @@ CONFIG_INTEL_STRATIX10_RSU=m
- CONFIG_MTK_ADSP_IPC=m
- CONFIG_QCOM_QSEECOM=y
- CONFIG_QCOM_QSEECOM_UEFISECAPP=y
-+CONFIG_GOOGLE_FIRMWARE=y
-+CONFIG_GOOGLE_CBMEM=m
-+CONFIG_GOOGLE_COREBOOT_TABLE=m
- CONFIG_EFI_CAPSULE_LOADER=y
- CONFIG_IMX_SCU=y
- CONFIG_IMX_SCU_PD=y
+> +
+> +       ret = ph->xops->xfer_get_init(ph, SET_PARAM, size + PROTOCOL_PAYLOAD_SIZE,
+> +                                     SCMI_MAX_TX_RX_SIZE, &t);
+> +       if (ret)
+> +               return ret;
+> +
+> +       msg = t->tx.buf;
+> +       *msg++ = cpu_to_le32(EXTENDED_MSG_ID);
+> +       *msg++ = cpu_to_le32(algo_str & GENMASK(31, 0));
+> +       *msg++ = cpu_to_le32((algo_str & GENMASK(63, 32)) >> 32);
+> +       *msg++ = cpu_to_le32(param_id);
+
+First, this header ops looks like a generic code which can be extracted.
+
+Second, using GENMASK here in the ops doesn't make any sense. The
+values will be limited to u32 anyway.
+
+> +       memcpy(msg, buf, size);
+> +       ret = ph->xops->do_xfer(ph, t);
+> +       ph->xops->xfer_put(ph, t);
+> +
+> +       return ret;
+> +}
+> +
+> +static int qcom_scmi_get_param(const struct scmi_protocol_handle *ph, void *buf, u64 algo_str,
+> +                              u32 param_id, size_t tx_size, size_t rx_size)
+> +{
+> +       int ret = -EINVAL;
+> +       struct scmi_xfer *t;
+> +       u32 *msg;
+> +
+> +       if (!ph || !ph->xops || !buf)
+> +               return ret;
+
+Drop init of ret, return -EINVAL directly here.
+
+> +
+> +       ret = ph->xops->xfer_get_init(ph, GET_PARAM, tx_size + PROTOCOL_PAYLOAD_SIZE,
+> +                                     SCMI_MAX_TX_RX_SIZE, &t);
+> +       if (ret)
+> +               return ret;
+> +
+> +       msg = t->tx.buf;
+> +       *msg++ = cpu_to_le32(EXTENDED_MSG_ID);
+> +       *msg++ = cpu_to_le32(algo_str & GENMASK(31, 0));
+> +       *msg++ = cpu_to_le32((algo_str & GENMASK(63, 32)) >> 32);
+> +       *msg++ = cpu_to_le32(param_id);
+> +       memcpy(msg, buf, tx_size);
+> +       ret = ph->xops->do_xfer(ph, t);
+> +       if (t->rx.len > rx_size) {
+> +               pr_err("SCMI received buffer size %zu is more than expected size %zu\n",
+> +                      t->rx.len, rx_size);
+> +               return -EMSGSIZE;
+> +       }
+> +       memcpy(buf, t->rx.buf, t->rx.len);
+> +       ph->xops->xfer_put(ph, t);
+> +
+> +       return ret;
+> +}
+> +
+> +static int qcom_scmi_start_activity(const struct scmi_protocol_handle *ph,
+> +                                   void *buf, u64 algo_str, u32 param_id, size_t size)
+> +{
+> +       int ret = -EINVAL;
+> +       struct scmi_xfer *t;
+> +       u32 *msg;
+> +
+> +       if (!ph || !ph->xops)
+> +               return ret;
+
+You can guess the comment here.
+
+> +
+> +       ret = ph->xops->xfer_get_init(ph, START_ACTIVITY, size + PROTOCOL_PAYLOAD_SIZE,
+> +                                     SCMI_MAX_TX_RX_SIZE, &t);
+> +       if (ret)
+> +               return ret;
+> +
+> +       msg = t->tx.buf;
+> +       *msg++ = cpu_to_le32(EXTENDED_MSG_ID);
+> +       *msg++ = cpu_to_le32(algo_str & GENMASK(31, 0));
+> +       *msg++ = cpu_to_le32((algo_str & GENMASK(63, 32)) >> 32);
+> +       *msg++ = cpu_to_le32(param_id);
+> +       memcpy(msg, buf, size);
+> +       ret = ph->xops->do_xfer(ph, t);
+> +       ph->xops->xfer_put(ph, t);
+> +
+> +       return ret;
+> +}
+> +
+> +static int qcom_scmi_stop_activity(const struct scmi_protocol_handle *ph, void *buf, u64 algo_str,
+> +                                  u32 param_id, size_t size)
+> +{
+> +       int ret = -EINVAL;
+> +       struct scmi_xfer *t;
+> +       u32 *msg;
+> +
+> +       if (!ph || !ph->xops)
+> +               return ret;
+> +
+> +       ret = ph->xops->xfer_get_init(ph, STOP_ACTIVITY, size + PROTOCOL_PAYLOAD_SIZE,
+> +                                     SCMI_MAX_TX_RX_SIZE, &t);
+> +       if (ret)
+> +               return ret;
+> +
+> +       msg = t->tx.buf;
+> +       *msg++ = cpu_to_le32(EXTENDED_MSG_ID);
+> +       *msg++ = cpu_to_le32(algo_str & GENMASK(31, 0));
+> +       *msg++ = cpu_to_le32((algo_str & GENMASK(63, 32)) >> 32);
+> +       *msg++ = cpu_to_le32(param_id);
+> +       memcpy(msg, buf, size);
+> +       ret = ph->xops->do_xfer(ph, t);
+> +       ph->xops->xfer_put(ph, t);
+> +
+> +       return ret;
+> +}
+> +
+> +static struct qcom_scmi_vendor_ops qcom_proto_ops = {
+> +       .set_param = qcom_scmi_set_param,
+> +       .get_param = qcom_scmi_get_param,
+> +       .start_activity = qcom_scmi_start_activity,
+> +       .stop_activity = qcom_scmi_stop_activity,
+> +};
+> +
+> +static int qcom_scmi_vendor_protocol_init(const struct scmi_protocol_handle *ph)
+> +{
+> +       u32 version;
+> +
+> +       ph->xops->version_get(ph, &version);
+> +
+> +       dev_info(ph->dev, "qcom scmi version %d.%d\n",
+> +                PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct scmi_protocol qcom_scmi_vendor = {
+> +       .id = QCOM_SCMI_VENDOR_PROTOCOL,
+> +       .owner = THIS_MODULE,
+> +       .instance_init = &qcom_scmi_vendor_protocol_init,
+> +       .ops = &qcom_proto_ops,
+> +};
+> +module_scmi_protocol(qcom_scmi_vendor);
+> +
+> +MODULE_DESCRIPTION("QTI SCMI vendor protocol");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/qcom_scmi_vendor.h b/include/linux/qcom_scmi_vendor.h
+> new file mode 100644
+> index 000000000000..bde57bb18367
+> --- /dev/null
+> +++ b/include/linux/qcom_scmi_vendor.h
+> @@ -0,0 +1,36 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * QTI SCMI vendor protocol's header
+> + *
+> + * Copyright (c) 2024, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _QCOM_SCMI_VENDOR_H
+> +#define _QCOM_SCMI_VENDOR_H
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/device.h>
+> +#include <linux/types.h>
+> +
+> +#define QCOM_SCMI_VENDOR_PROTOCOL    0x80
+> +
+> +struct scmi_protocol_handle;
+> +extern struct scmi_device *get_qcom_scmi_device(void);
+> +
+> +/**
+> + * struct qcom_scmi_vendor_ops - represents the various operations provided
+> + *                              by qcom scmi vendor protocol
+> + */
+> +struct qcom_scmi_vendor_ops {
+> +       int (*set_param)(const struct scmi_protocol_handle *ph, void *buf, u64 algo_str,
+> +                        u32 param_id, size_t size);
+> +       int (*get_param)(const struct scmi_protocol_handle *ph, void *buf, u64 algo_str,
+> +                        u32 param_id, size_t tx_size, size_t rx_size);
+> +       int (*start_activity)(const struct scmi_protocol_handle *ph, void *buf, u64 algo_str,
+> +                             u32 param_id, size_t size);
+> +       int (*stop_activity)(const struct scmi_protocol_handle *ph, void *buf, u64 algo_str,
+> +                            u32 param_id, size_t size);
+> +};
+> +
+> +#endif /* _QCOM_SCMI_VENDOR_H */
+> +
+> --
+> 2.34.1
+>
+>
+
 
 -- 
-2.43.0
-
+With best wishes
+Dmitry
