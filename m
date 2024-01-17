@@ -1,95 +1,85 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6849ABA4B;
-	Wed, 17 Jan 2024 07:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6DBC133
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705476697; cv=none; b=OdSUH2qWl5CV/++u0ABO72pN5vDqUCkVDlpC01FvCOTQw7jSbDBz2BPzq5ulrKmnNUGIpk/zmb6Juh3eiPjzqFt0Rab0Wmf00gSV5N6wkWmlptRlKJFt+3G4Jh0ZgYWCn1/8rf4K9kU0nzlyG1r/M8tzw67XrREiKiPB1gPJOzI=
+	t=1705476833; cv=none; b=Ub1CCMpMxEiBu5lrWVp3RaTKzaSa+PYikUzXABQIqD69QFp8uN5gqYO+C4nyKhyztnP43Zp9uLq/pKzMiItVgMJ53OyQwmVvhoJyTXDwXeWicJpvXKsNMrUc3aCGtGBV689izLqFJHd7YFODiIzxZoN9cqZkPLi93jtlw2ZqKg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705476697; c=relaxed/simple;
-	bh=6DBmh5VudcgrGyumJ5ceN/k6JjkuLlAOr34rh1d6IVg=;
-	h=X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:X-CID-BVR:
-	 X-CID-BAS:X-CID-FACTOR:X-UUID:Received:Received:X-ns-mid:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=Z+wqSNQ6/0nVLmCAH4qQ7xn3Q8w64f0IxcdyEkUpHqiSz/Vdjlrw5oa0oDGZ8912BM2eDKo/nix+hdpEvdv3eoU50+yujBzBipzgR/AOyGNraMeZ6phA+4KeXvCxf7/tnz40JYEM1+d19nZerW4l6Pe/iU1bv99HEvGAgVk4V4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 98846c88b5f0479da8554ea9b061d516-20240117
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:ba636615-2455-415e-8dd8-38c78f84f03c,IP:20,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:30
-X-CID-INFO: VERSION:1.1.35,REQID:ba636615-2455-415e-8dd8-38c78f84f03c,IP:20,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:30
-X-CID-META: VersionHash:5d391d7,CLOUDID:dfd7f082-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:2401171531288ICAXGXH,BulkQuantity:0,Recheck:0,SF:38|24|17|19|44|66|1
-	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
-	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
-X-UUID: 98846c88b5f0479da8554ea9b061d516-20240117
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 2021478520; Wed, 17 Jan 2024 15:31:27 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 81F37E000EB9;
-	Wed, 17 Jan 2024 15:31:27 +0800 (CST)
-X-ns-mid: postfix-65A7824F-336142280
-Received: from kernel.. (unknown [172.20.15.234])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 05727E000EB9;
-	Wed, 17 Jan 2024 15:31:26 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: dmitry.torokhov@gmail.com,
-	aduggan@synaptics.com,
-	cheiny@synaptics.com
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH v2] Input: synaptics-rmi4: Add a null pointer check to the rmi_driver_probe
-Date: Wed, 17 Jan 2024 15:31:24 +0800
-Message-Id: <20240117073124.143636-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1705476833; c=relaxed/simple;
+	bh=3YX7pDoceQX+E+TvVPVvV9f2P0ODXQ1tsjMOk7kPRaE=;
+	h=Message-ID:DKIM-Signature:Date:MIME-Version:Subject:
+	 Content-Language:To:Cc:References:X-Report-Abuse:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-Migadu-Flow; b=b4tSdTJJGhbjAtDQhL5+LrjMNCyCRmS4mL/BHYgSXeua5IMvEEdPKQNezs1C2NX975TBXgtmli4PeQemty0AT6YsNbq1DkR1aj9M7ntHRmtYUxNa0vm3g86OXpuI0IWjYVDT2kjJKEpbGSKmANjOnn958+w3/267+PrHr4WCgYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aQdvwjzu; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aQdvwjzu"
+Message-ID: <51fd5249-140a-4f1b-b20e-703f159e88a3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705476829;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oceJQDqoX4I7y29qmqcV6++w314V1TBOmZ9jW9CBGiQ=;
+	b=aQdvwjzuKH4Mw5ibWflyGPsS2g6+/CnLCjfdWOoPu0k8znSNt+CmydaGi3uV2EL0WxLGIj
+	HOh40RCMoLdQ5nCvicBMUfyAcwmxm+kSVLSCdG3nstmn6gvvdTFHBlB5ZxjM1kHTX/1RBu
+	BRRVKyn3CHDDArGpEzjoYJHSW7U+2oc=
+Date: Tue, 16 Jan 2024 23:33:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH bpf-next] bpf: Allow setting SO_TIMESTAMPING* with
+ bpf_setsockopt()
+Content-Language: en-US
+To: =?UTF-8?Q?J=C3=B6rn-Thorben_Hinz?= <j-t.hinz@alumni.tu-berlin.de>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Deepa Dinamani <deepa.kernel@gmail.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240115134110.11624-1-j-t.hinz@alumni.tu-berlin.de>
+ <65a69e1be51ef_380df0294d9@willemb.c.googlers.com.notmuch>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <65a69e1be51ef_380df0294d9@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-devm_kasprintf() returns a pointer to dynamically allocated memory
-which can be NULL upon failure. Ensure the allocation was successful
-by checking the pointer validity.
+On 1/16/24 7:17 AM, Willem de Bruijn wrote:
+> Jörn-Thorben Hinz wrote:
+>> A BPF application, e.g., a TCP congestion control, might benefit from or
+>> even require precise (=hardware) packet timestamps. These timestamps are
+>> already available through __sk_buff.hwtstamp and
+>> bpf_sock_ops.skb_hwtstamp, but could not be requested: BPF programs were
+>> not allowed to set SO_TIMESTAMPING* on sockets.
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
-v2: Change title and remove dev_err
----
- drivers/input/rmi4/rmi_driver.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This patch only uses the SOF_TIMESTAMPING_RX_HARDWARE in the selftest. How about 
+others? e.g. the SOF_TIMESTAMPING_TX_* that will affect the sk->sk_error_queue 
+which seems not good. If rx tstamp is useful, tx tstamp should be useful also?
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_dri=
-ver.c
-index 258d5fe3d395..8da104e99e7b 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -1197,6 +1197,10 @@ static int rmi_driver_probe(struct device *dev)
- 		rmi_driver_set_input_params(rmi_dev, data->input);
- 		data->input->phys =3D devm_kasprintf(dev, GFP_KERNEL,
- 						"%s/input0", dev_name(dev));
-+		if (!data->input->phys) {
-+			retval =3D -ENOMEM;
-+			goto err;
-+		}
- 	}
-=20
- 	retval =3D rmi_init_functions(data);
---=20
-2.39.2
+>>
+>> Enable BPF programs to actively request the generation of timestamps
+>> from a stream socket. The also required ioctl(SIOCSHWTSTAMP) on the
+>> network device must still be done separately, in user space.
+
+hmm... so both ioctl(SIOCSHWTSTAMP) of the netdevice and the 
+SOF_TIMESTAMPING_RX_HARDWARE of the sk must be done?
+
+I likely miss something. When skb is created in the driver rx path, the sk is 
+not known yet though. How the SOF_TIMESTAMPING_RX_HARDWARE of the sk affects the 
+skb_shinfo(skb)->hwtstamps?
+
+
 
