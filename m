@@ -1,43 +1,51 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEDC1EB37
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 13:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B243C1EB44
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 13:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705497513; cv=none; b=ZugxZagycs/ORpSsYcfhXxJps1KmAE7kjOwXSf8vjsmd/v6gYGBiXAGo5rkh1ahl+3kiQzgHJLoaWPFOeVqncfk4hOxeitLaLnB9Rs2zjghoCtQaNcE18kRqkdwCt7P0xOpeGdxoIo+RtJGgEv1Xk9ssMDnSu9mcix11DsPy1gk=
+	t=1705497513; cv=none; b=B02y2qEiTm5MSuAi5sPAuAUchtnKVcCZLLT2M6HDYBq7v82jRGFcrFhlMJPBjoiUmcNWKPdbrT7A9VJYBvaYFmyKzPD3Ibz54S8WIOFIo3a57mxy3+5/jEKFit7CeasBn4nCJ61UtGdjbcV9xDPlmciOX6FObgOt5+zvrm6oC4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705497513; c=relaxed/simple;
-	bh=VRbUn2kwlJHScFcg9cybX+heoKEbz8MvlzYOFtqqSbw=;
+	bh=4pfhhJ6nKwIRmP3erZaYcFWifxCQ0B5IiO08u5mirU0=;
 	h=DKIM-Signature:Received:Received:X-UD-Smtp-Session:From:To:Cc:
-	 Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=FaXTvQV5pJGx8HHIiHqR9gaAvwV1fGiiRmwbYMkenLQzk+ikbE5RiNmMhNxbSeCarA7XN+El0Dx8BeWETp2NlrpIFIIKzsfEmj6OENmdG2vWgGXfRSuqyYlQGTAKM8VpQB5sBEc54JZCT5hJucrvejTq862oO38XLUoOc3DflHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BRaVVMb8; arc=none smtp.client-ip=194.117.254.33
+	 Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding; b=gqCCJ76rWNeJ76RCV+MEUzCxEoHcR5CyfWBChEg61KMuYyUTiZyE9wCHIRrhUWA1bxf+agj33fKpMjm0wSaZjEtuQjgHu486/zfpjCCjimFpRE/LXMjupJ67hyHP6+zHK2PBtZ5x8TVmyvsPDVA3iMrfVYQfsc/UAqOumzY6uRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ko9Y1Kto; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BRaVVMb8"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ko9Y1Kto"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=P+ka5e/ApWfpXi
-	TpFT175X3zjIXXrZ2y+vntVR5PtKg=; b=BRaVVMb88P6BozbG10zXOnYXgs7ZG1
-	t9JXR8o3RvijMTF79nghqWMyXJQTqBwAsWUh1wZujaxvjn3J8W3HFk9hJuCAK99F
-	BJlzjqZpPBZTr7nwo0/FGtC9wmvm7fpDqSoIWm2kV4rCUO5WH/UvfQRpEOUlOWBw
-	hwRI7mrIA5wCfp3icHkW3tDu8vpfPnu01M5dGtHArJCnp54hMvTGoEqCmP+wxvhw
-	U3xXU8TTmhpLNZ9bsbze61QyUV2iI9gKp5hvbtcpdrMWOVn6T94N9hNT/6kto4Bm
-	/+dY+0NIOcUNfNRIr81bZtEN5tE7w+/gr105akDoo5KB8DIh4Ox8SBng==
-Received: (qmail 2754576 invoked from network); 17 Jan 2024 14:18:20 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Jan 2024 14:18:20 +0100
-X-UD-Smtp-Session: l3s3148p1@bymoFCQPzKpehhtJ
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=Gm6DXUbLl/SBcL7Tq61flrVhouAD9tPRtlD6zCnjH7E=; b=ko9Y1K
+	toxtvK1ef7XAsff+gKBYfzKSmnxs+07pLBPemTTr/T/TfWtRAARlQDGVT6w0AtZM
+	KVLGx68BuO7gBwCGCLV0nfw60/gZ+hoO5yaRIAo0t+aYsYumr/SPTkxQXKnaS/kz
+	yYBsrYCscYLh8oaQ77WTzTu/090v4d9iLOdgXE4Vmk5xagMt3mFqrEr3I9C3VQoj
+	DX9tn6qPkn85qmvRo3pibZxKm3a5T63MnE5cPjqGHb736XuQTCSCZaQqHB6VdOzu
+	uwf5ceQEr1BffMkcm6WWGeCoT30EucjP6LENAqWannaesTwEEWBqScLBvzPScetC
+	IcCA0SHuZgfV8N9A==
+Received: (qmail 2754662 invoked from network); 17 Jan 2024 14:18:21 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Jan 2024 14:18:21 +0100
+X-UD-Smtp-Session: l3s3148p1@1My/FCQP4qpehhtJ
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-renesas-soc@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 0/2] arm64: dts: renesas: ulcb-kf: add GNSS support
-Date: Wed, 17 Jan 2024 14:18:05 +0100
-Message-Id: <20240117131807.24997-1-wsa+renesas@sang-engineering.com>
+Subject: [RFC PATCH v3 2/2] arm64: dts: renesas: ulcb-kf: add node for GNSS
+Date: Wed, 17 Jan 2024 14:18:07 +0100
+Message-Id: <20240117131807.24997-3-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240117131807.24997-1-wsa+renesas@sang-engineering.com>
+References: <20240117131807.24997-1-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,19 +54,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It has been a while. But now the driver changes for GNSS are upstream,
-so we can add support to the KingFisher board. First clean up the 3.3V
-regulators as suggested by Geert, then add the node. Further comments in
-the individual patches.
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+Changes since last version:
 
+* use 'reg_3p3v' instead of custom regulator
 
-Wolfram Sang (2):
-  arm64: dts: renesas: ulcb-kf: drop duplicate 3.3v regulators
-  arm64: dts: renesas: ulcb-kf: add node for GNSS
+ arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 42 ++++++++----------------
- 1 file changed, 14 insertions(+), 28 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+index 40a5f98c1190..e3cc0e0e73cc 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+@@ -392,6 +392,13 @@ &scif1 {
+ 	pinctrl-names = "default";
+ 
+ 	status = "okay";
++
++	gnss {
++		compatible = "u-blox,neo-m8";
++		reset-gpios = <&gpio_exp_75 6 GPIO_ACTIVE_LOW>;
++		vcc-supply = <&reg_3p3v>;
++		current-speed = <9600>;
++	};
+ };
+ 
+ &sdhi3 {
 -- 
 2.39.2
 
