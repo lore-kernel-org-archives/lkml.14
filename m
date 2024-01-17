@@ -1,70 +1,89 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC0A1EA66
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 12:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D881EB21;
+	Wed, 17 Jan 2024 12:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705495933; cv=none; b=J+hVzfwxbskfKK65EstkTY4YZaEpqtg+w/1i7T1lDYiMjRrsozO1NRZMF9Jgm2LCoRhikM/X2xwoS+mx1vcdRNl7096fRcLaBpr/BZmQidk4wkJ7lcd4w9SpykwtpZMDWj5hjPaArP8dD3VFSFmsneAR40kVqtec4gUaSfU3tkE=
+	t=1705496044; cv=none; b=ixBj+lqm6auPEJdAweS2leNtZaRwyFpT4aQXXzLPQ+TkxwljiI+XcudUhvdUSDHFHyQMFYQEssz8bfAd1RXoDAW6SQfaFQJd2YalSFMxdVTfWru5jBqfRA136w6xJqrmCgcwCp1l4h8XmtcmXnLgwH6rv44eMd5KLK9aBIpbMdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705495933; c=relaxed/simple;
-	bh=/mrGijzcsXN5iPj8NAqokoHh+7OsAXjyewzktejtc+s=;
-	h=From:DKIM-Signature:To:Cc:Subject:Date:Message-Id:MIME-Version:
-	 Content-Transfer-Encoding; b=q8wUScNUrmF1QXIs6QD1Bu4DaK33I4KEuKVfGBvG1GQRx7BXOBrhwTCUWvDJiQoZeUNsubAyJ5Q8uCgeX9kokrwuUC+9nq0YmbTEfE1pfELqH8wwb52jIXhF6KcKToqKL2w/8uQYiS+7xH3stooBLbYs3VKiQ/SJMw7KZCVoKns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=q4Pb8xR2; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+	s=arc-20240116; t=1705496044; c=relaxed/simple;
+	bh=Te8NTGw84sq6fD3KbNxfL2JPnc0/l3/OI5enP65sT0A=;
+	h=DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To; b=Fx05w1KrqwSryy8CK1tJiAcFjC0Xj8ZyTVFzxXCvUFzaIkMw8Ey6zyNBadQFoxMdYuYtvPluDgOQqwNW6rONX2aoxZaHFCz+WUO29tKM1lEvgKztGgVV89WIrWyU9tM42+ZtLg/dm41dJoKwjPzgbpiHp89c677eFoKqpNb1Pqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZN4LXGT0; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="q4Pb8xR2"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1705495349;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pGI0D05eJ+uxsZQGv4OCXwlgzFlgbXKFeDQnZN4BBMo=;
-	b=q4Pb8xR2Le7s8FICVd4sbQMgz/ILE1f1a0DMVmUVvDHP0zXmGR6NPKShbe8iKxeBTxYBnH
-	m46gkMtMTvSER9wjKevQIn83VBQJxErZmdpuLOLtHyID12dGWwrig48GfnBRwMh5N8vkcg
-	jM1ZYPwcuVd8wmhkS+TjDmGKgjcmKFg=
-To: Ian Abbott <abbotti@mev.co.uk>
-Cc: H Hartley Sweeten <hsweeten@visionengravers.com>,
-	linux-kernel@vger.kernel.org (open list),
-	lvc-project@linuxtesting.org
-Subject: [PATCH] comedi: drivers: ni_tio: Fix arithmetic expression overflow
-Date: Wed, 17 Jan 2024 15:42:29 +0300
-Message-Id: <20240117124229.37455-1-arefev@swemel.ru>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZN4LXGT0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705496040;
+	bh=Te8NTGw84sq6fD3KbNxfL2JPnc0/l3/OI5enP65sT0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZN4LXGT0WP7ooNM12xFITUbxvx4BmsSa/HItkaFNLZ0O7MDWcxIdwV85dbPzFCQ4e
+	 Ih2vk6+jLCCBcB5fqKCCv5P2+1FU8+o0gmR6AOsV6lywD1lu+kIibQc37R74kw9e7n
+	 CazY9P/SmlrrEYHJGb6PR1U2FHN9DKdWjA610OZDg0JGsOITJTZLhgtD0Pc4bQIEoA
+	 EMDihzrTGq2xN/ZWGhU0uWkvP6hUPMlkoNkg9yKFVwEc9Bf4bDLdqtZYddpWg9I3fF
+	 ujhT8FTiwLi8TsI83uROliSbK1oWGq+G6+jIA9iFtWEt9tPaty9Zc7S7K8mOmfQ87I
+	 pMecTRJFlx2dQ==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DE242378202D;
+	Wed, 17 Jan 2024 12:53:55 +0000 (UTC)
+Date: Wed, 17 Jan 2024 09:53:23 -0300
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Tzung-Bi Shih <tzungbi@kernel.org>, kernel@collabora.com,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Abhijit Gangurde <abhijit.gangurde@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] firmware: coreboot: Generate aliases for coreboot
+ modules
+Message-ID: <49b42da1-a74b-433c-b018-0742f850f680@notapiano>
+References: <20240111151226.842603-1-nfraprado@collabora.com>
+ <20240111151226.842603-3-nfraprado@collabora.com>
+ <ZaQU_QqGXwkSgU_Y@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZaQU_QqGXwkSgU_Y@smile.fi.intel.com>
 
-The value of an arithmetic expression period_ns * 1000 is subject
-to overflow due to a failure to cast operands to a larger data
-type before performing arithmetic
+On Sun, Jan 14, 2024 at 07:08:13PM +0200, Andy Shevchenko wrote:
+> On Thu, Jan 11, 2024 at 12:11:47PM -0300, Nícolas F. R. A. Prado wrote:
+> > Generate aliases for coreboot modules to allow automatic module probing.
+> 
+> ...
+> 
+> > +/**
+> > + * struct coreboot_device_id - Identifies a coreboot table entry
+> > + * @tag: tag ID
+> > + */
+> > +struct coreboot_device_id {
+> > +	__u32 tag;
+> > +};
+> 
+> Don't you want to have a driver data or so associated with this?
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+There's no need for it currently in any driver. This struct is being created
+simply to allow auto modprobe. So it seems reasonable to leave it out and add it
+later when/if needed.
 
-Signed-off-by: Denis Arefev <arefev@swemel.ru>
----
- drivers/comedi/drivers/ni_tio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/comedi/drivers/ni_tio.c b/drivers/comedi/drivers/ni_tio.c
-index da6826d77e60..acc914903c70 100644
---- a/drivers/comedi/drivers/ni_tio.c
-+++ b/drivers/comedi/drivers/ni_tio.c
-@@ -800,7 +800,7 @@ static int ni_tio_set_clock_src(struct ni_gpct *counter,
- 				GI_PRESCALE_X2(counter_dev->variant) |
- 				GI_PRESCALE_X8(counter_dev->variant), bits);
- 	}
--	counter->clock_period_ps = period_ns * 1000;
-+	counter->clock_period_ps = period_ns * 1000UL;
- 	ni_tio_set_sync_mode(counter);
- 	return 0;
- }
--- 
-2.25.1
-
+Thanks,
+Nícolas
