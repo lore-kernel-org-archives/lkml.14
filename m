@@ -1,38 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CDD20334
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:36:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750BD20B35
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705502214; cv=none; b=FCnPZXKvLa1KoPAoXkBtdcYlScU5QXRZVMoXJxf85jg9OOM5u34Vdsvkhua1cG/+R0AtIuhV0CrIPZjGDheVBUAmBbB6oZVvUqFV+lOVgfdgg4hs4v7K2RNbQIbUE9tBK7obXKaegC0v+EHUWG4EbyVNc7d7L8svzEfo/YspCoE=
+	t=1705502214; cv=none; b=rByHLMiISWrTqzOqKfBnSOESQkJa5oVs2MF5+al2QJGanJLGysG/3focToT0S6T7rOI4q1W9O72imtFcpbksblxUOb+uMILsDtpw+naBNIAvIDp49ulT5TTsKaYkMM9y8cBjaQCHjeh//iXFfaQqH7nmlyJ2/J1rIKAvB63ZFos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705502214; c=relaxed/simple;
-	bh=+l/2J1wuNvwwox8H/9diOMBy2Vp1lI/iE/4NnUV0Ybw=;
+	bh=GD76TU70lFmz5imut84Og/YwBOUVo8vHQeAC83rp8IM=;
 	h=Received:Received:Message-ID:User-Agent:Date:From:To:Cc:Subject:
-	 References:MIME-Version:Content-Type; b=FZNMTsUO2lvJrMLYd/9JDY4wuxXJ9/MB8Yfkb217f+wgowVEs/9Q4YMgoA4HKRXR3PnXU8g+/Bg5+m53nx4R3WC1/LgK3LoDJ71FZM/5A3id7/czR6lf+WgRrSWNxjeidDqWxT3yMsy0lCpOip8KsPlVNsxyXQzb89usGYjlxk0=
+	 References:MIME-Version:Content-Type; b=Qp1rqwTqHRhsa2b1GT2qd4bc0r0UFnciQhEV2fJyP1IKHBe4y38DopnMeh2+Bb8bb8bH6N6hcZVRoWlEiRFkK/63FAjrUNLCg7ByIr0R+Bg1VJByKx2ncMXg+oKWsioq13JGrMi+xDLxeY7CUp8R8vvWXX5WbXK4R3PJxDucWh0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9275BC43399;
-	Wed, 17 Jan 2024 14:36:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B2EC433C7;
+	Wed, 17 Jan 2024 14:36:54 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rQ73S-00000001XY4-2pb8;
+	id 1rQ73S-00000001XZ3-49ps;
 	Wed, 17 Jan 2024 09:38:10 -0500
-Message-ID: <20240117143810.531966508@goodmis.org>
+Message-ID: <20240117143810.857039986@goodmis.org>
 User-Agent: quilt/0.67
-Date: Wed, 17 Jan 2024 09:35:49 -0500
+Date: Wed, 17 Jan 2024 09:35:51 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Christian Brauner <brauner@kernel.org>,
- Al  Viro <viro@ZenIV.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [for-linus][PATCH 1/3] eventfs: Have the inodes all for files and directories all be the
- same
+ Erick Archer <erick.archer@gmx.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [for-linus][PATCH 3/3] eventfs: Use kcalloc() instead of kzalloc()
 References: <20240117143548.595884070@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,66 +39,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Erick Archer <erick.archer@gmx.com>
 
-The dentries and inodes are created in the readdir for the sole purpose of
-getting a consistent inode number. Linus stated that is unnecessary, and
-that all inodes can have the same inode number. For a virtual file system
-they are pretty meaningless.
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-Instead use a single unique inode number for all files and one for all
-directories.
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
-Link: https://lore.kernel.org/all/20240116133753.2808d45e@gandalf.local.home/
-Link: https://lore.kernel.org/linux-trace-kernel/20240116211353.412180363@goodmis.org
+[1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240115181658.4562-1-erick.archer@gmx.com
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Al  Viro <viro@ZenIV.linux.org.uk>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/tracefs/event_inode.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index fdff53d5a1f8..5edf0b96758b 100644
+index 10580d6b5012..6795fda2af19 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -32,6 +32,10 @@
-  */
- static DEFINE_MUTEX(eventfs_mutex);
+@@ -97,7 +97,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	/* Preallocate the children mode array if necessary */
+ 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+ 		if (!ei->entry_attrs) {
+-			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
++			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
+ 						  GFP_NOFS);
+ 			if (!ei->entry_attrs) {
+ 				ret = -ENOMEM;
+@@ -874,7 +874,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	}
  
-+/* Choose something "unique" ;-) */
-+#define EVENTFS_FILE_INODE_INO		0x12c4e37
-+#define EVENTFS_DIR_INODE_INO		0x134b2f5
-+
- /*
-  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
-  * its parent's list and will have is_freed set (under eventfs_mutex).
-@@ -352,6 +356,9 @@ static struct dentry *create_file(const char *name, umode_t mode,
- 	inode->i_fop = fop;
- 	inode->i_private = data;
+ 	if (size) {
+-		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
++		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+ 		if (!ei->d_children) {
+ 			kfree_const(ei->name);
+ 			kfree(ei);
+@@ -941,7 +941,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 		goto fail;
  
-+	/* All files will have the same inode number */
-+	inode->i_ino = EVENTFS_FILE_INODE_INO;
-+
- 	ti = get_tracefs(inode);
- 	ti->flags |= TRACEFS_EVENT_INODE;
- 	d_instantiate(dentry, inode);
-@@ -388,6 +395,9 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
- 	inode->i_op = &eventfs_root_dir_inode_operations;
- 	inode->i_fop = &eventfs_file_operations;
- 
-+	/* All directories will have the same inode number */
-+	inode->i_ino = EVENTFS_DIR_INODE_INO;
-+
- 	ti = get_tracefs(inode);
- 	ti->flags |= TRACEFS_EVENT_INODE;
- 
+ 	if (size) {
+-		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
++		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+ 		if (!ei->d_children)
+ 			goto fail;
+ 	}
 -- 
 2.43.0
 
