@@ -1,243 +1,239 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC3512B96;
-	Wed, 17 Jan 2024 16:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705509296; cv=fail; b=WbO/BVs46slcfzzKd8A4U8yMi8cD6Ccicmvlfdtzs+VYcEFRWmaNoL54abfioO1F98o21VQGbihk842qs8HJIPDfn7kLhOCGBOAy/1C8aGdg8RQtBC9hYX068YgkHYMxzt8iwneG5z6zxBkbnisukTjTz3/UR1Dwa5aGnjdG9hQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705509296; c=relaxed/simple;
-	bh=ukXvCvcHCkD/0WF/tKr1bbTWLhK0w5MtUQfTuxjRUbM=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:Received:Received:Received:Received:
-	 ARC-Message-Signature:ARC-Authentication-Results:Received:Received:
-	 From:To:CC:Subject:Thread-Topic:Thread-Index:Date:Message-ID:
-	 References:In-Reply-To:Accept-Language:Content-Language:
-	 X-MS-Has-Attach:X-MS-TNEF-Correlator:x-ms-publictraffictype:
-	 x-ms-traffictypediagnostic:x-ms-office365-filtering-correlation-id:
-	 x-ms-exchange-senderadcheck:x-ms-exchange-antispam-relay:
-	 x-microsoft-antispam:x-microsoft-antispam-message-info:
-	 x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-	 X-MS-Exchange-CrossTenant-userprincipalname:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	b=UmwOD7QZneome+IvUaf9qbJj/9LxeOpua2g1VhrEvAZjEPpNl9lcxhjP4Ve515r3PIHK016FxwJdK/Wq4u27Ci9UPbSEgJVA0/e5wFpPr7qCTuV74tOhoiiJnfi1bYyExfW9yrkBDUkQwrl4a1o/jzH+OBtDH4Lnqnsd+9cgzpI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QrIihL2S; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400D4224D2;
+	Wed, 17 Jan 2024 16:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.235.3
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705509330; cv=none; b=KED0/f2vpjLkgvDskG57GKZxIAvX7PUqpF55mh88RFGpmrW5/0z/c7LsWelHbD+0KMwhod1N7VJie/IIoy8lUAT9CQFFdNlxZws2lT8qiasOP0nu4Deip48jKuuklaZ317JmSGcLpjZTImB/+Rb1b26PY0zw87/9qZymansZIUg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705509330; c=relaxed/simple;
+	bh=Lg4fjwQ0RsegVVSUFk0J1M0jxOQPKcQD+1HOemMkLXw=;
+	h=Received:DKIM-Signature:X-Virus-Scanned:Received:Received:
+	 DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:Subject:
+	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=Kq0WJLzmGyhYSZpMOOAPqcSevTBm+CpZFesTnL7FeezYqdX1GtRM1Tc4ziqw4yTXqQs6UEH15c4gPu1igwrTiMbCtAUUMzrCk9hzaErFhzFdcEDFGa9rvk2m+hZqW968LCCVbxm6Bv5cNNBoyVFzJfVgxnxpXu2UP8FUD0D9JAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alu.hr; spf=pass smtp.mailfrom=alu.hr; dkim=pass (2048-bit key) header.d=alu.hr header.i=@alu.hr header.b=iNl/Zmpg; dkim=fail (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b=HrHEWwuM reason="signature verification failed"; arc=none smtp.client-ip=161.53.235.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alu.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alu.hr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QrIihL2S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705509294; x=1737045294;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ukXvCvcHCkD/0WF/tKr1bbTWLhK0w5MtUQfTuxjRUbM=;
-  b=QrIihL2SJfisjqKsuDAPVPgH6Azk60onvXG8SlyTSNbLNUT2CKIwaLEX
-   E1oQhgQ1th8DLS9xjs/zKCRIlmfghg+Hj2jRx7HfUu2savouY6vaXsND5
-   zRm3HvwSQOkRJ7Rzm3VubYACtMhNSr2X/elHee0YPpUPRs51g/iQErdtw
-   BPtp8dmR9CfVCSL8/kcR/npIRRBnWSQkNOukg4YxDnJSeWCv7P1qGlOqS
-   4nF393Tz9Iksv5g54SjwTFJLWuwR86V4ssGaKFTyWcB/0YEgZ3eRON9O6
-   dCTgnO0/1tDE8EjlvKppc22qjRubRV44VMx3j9fSYS993MmVo5oTbhrgO
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="102106"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="102106"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 08:34:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="32852503"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Jan 2024 08:34:54 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 17 Jan 2024 08:34:53 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 17 Jan 2024 08:34:52 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 17 Jan 2024 08:34:52 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Jan 2024 08:34:51 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EGdh81jHviwp3tda5PO9SR9a5qvTtQcajJdNiUdeyrguxhejTAcH385rqqpv9WDi9gNfphCl3jHWbfKE/vs03t9pUZYEA/s0FerjyzLzCELWtl37m81J7oQqD65XzcjthsQj4qgOQp03Z074Gw8I01rsZ4CE/Rg8stIx6o3KxmFp71kCRWm1MqiIcKt1+jjGniV0icchxvD+3Lbvn3bnr87vR+4flMESIOza87MUkcvRQ2QS5wFkIWEpuvhvfTfvTDn9ieC6poGkSGO+l4E3W5+Fe6UEMMIyvwJeJ3hKPKT+hEDI9hfsezQ9OpjhqTn2oDQj7ZG4I7VUaJytWQ0CHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B8ga3Wng9QqZcE2QTizg2MCLVYjZCMsKhbNNxbr9mJU=;
- b=EShndH6GeH7Y4/4VLBcPL6PcxrFN47qsQ4XgtV1neA5Y+ZcyldUC3KgSQAt8sFOvpM/vJLQl9w3UkQVJPXYuO4QYru02+BUddSqsLAjBRA9LdJyeAvQnza6hYDPkLxe3CmKUhXYXEMg1ckVEQPC0FEx/Q+dsji5tskrpMAuT4hONxn+c+30he5X8Tm9mlsEhlaw5rySzhSPYBHok6DyKNEyRcl0TeI94EHCXhtEQfYrTmDwgwcOLfUOOh+XlspqsYBOFmVLT0yCUCPwR47gdIhiFfbxwwccO2ffIy66refaOlNC2OmrKkrdCcdM38oy2ceo95/3piDMNRBcr88DUNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
- by MW3PR11MB4571.namprd11.prod.outlook.com (2603:10b6:303:59::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.26; Wed, 17 Jan
- 2024 16:34:49 +0000
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::8ccb:4e83:8802:c277]) by SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::8ccb:4e83:8802:c277%4]) with mapi id 15.20.7202.020; Wed, 17 Jan 2024
- 16:34:49 +0000
-From: "Li, Xin3" <xin3.li@intel.com>
-To: "Gao, Chao" <chao.gao@intel.com>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "seanjc@google.com"
-	<seanjc@google.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "Yang, Weijiang"
-	<weijiang.yang@intel.com>, "Huang, Kai" <kai.huang@intel.com>
-Subject: RE: [PATCH v4 1/2] KVM: VMX: Cleanup VMX basic information defines
- and usages
-Thread-Topic: [PATCH v4 1/2] KVM: VMX: Cleanup VMX basic information defines
- and usages
-Thread-Index: AQHaRT8NfyvFkqdAjk6/fSX6qVKXsrDcFbiAgAIkzVA=
-Date: Wed, 17 Jan 2024 16:34:49 +0000
-Message-ID: <SA1PR11MB67340002B67910588EE335B1A8722@SA1PR11MB6734.namprd11.prod.outlook.com>
-References: <20240112093449.88583-1-xin3.li@intel.com>
- <ZaY0UbFjwCYh4u/r@chao-email>
-In-Reply-To: <ZaY0UbFjwCYh4u/r@chao-email>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|MW3PR11MB4571:EE_
-x-ms-office365-filtering-correlation-id: ead5bef0-c596-4d75-a76d-08dc177a393c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CtLZ6K5P8MMs3mgjbj9M3ypVg3uFg399Q2r/hRCUYng+9biqClVcnxcU43Jh/fLiEvzehmkbRDtn5lZ5iJtNDyibgwEoFbQUFLwvKJBljU3zJHusfHihrWiH5+C052tub4033ZZJLieGSHQvXb2iYGeC4FJZVbhT+x4ZY5U7WbI4bJt7Le6jzUiyf8sKx6OxK2lQHObnkcp86P0BzxGk3T39W59wBePIL5dcZRpX0t2UgyuPpkItKRaZNguLxM0qoNwxSyNLuRIxZM/cATr5spgrivw8uxFLRjbAWJ0CJ+V29VPaFmBHr8auEec/UGiGvYHv0X6KAf7jX4xfWfe6N8sgj9G0witdbBpfVoHSpwV6NYmxK6Sywa7LvVTNTFVLCBBGmBPWK3XaZKqSPALksErHL+DCFYNrTzCXrUUPFo/sktu8KBVidHtl6zIDpjDemhPcScwvUYHlcVI4DPESo7cEcVuLvINPkdIJgcIwlWzQ1TEQ22q93h6DD/ANZjA+Rs/iZ8HUe7gvH2L6AppmsuZB8OVZTMm/KVJj5BR4i8dscCXZX4arvMfvNVrzLHG+/F1D+NgX6WkPBceykn2f21LNQaj/gw/vJqhXQs92i43y+Xz1FYkByQ89/N8wnOBM
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(376002)(366004)(346002)(396003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(71200400001)(82960400001)(6506007)(7696005)(122000001)(54906003)(316002)(64756008)(9686003)(66446008)(66946007)(66476007)(66556008)(41300700001)(6636002)(76116006)(38070700009)(478600001)(38100700002)(7416002)(5660300002)(55016003)(2906002)(86362001)(83380400001)(8936002)(8676002)(6862004)(52536014)(4326008)(33656002)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?1HYcYvwZm5bLQcnCZvIc47JNlPwhf+eC1ynKkJebmu3dtYtkoxcSQlJKoZdv?=
- =?us-ascii?Q?PApat4kM6pXlYcx4b6c6QErw/oLuPAo6GqLgYHgdERZiGbOgPwLqOlv8bYGQ?=
- =?us-ascii?Q?+K6xh29Df0AKpkntAAu4IkxKC15XXibKSKWJ8KOZmDoIeD756uODn0Vjo7tF?=
- =?us-ascii?Q?NNoJZpQGbnxoOB36zWfkx2sQQ2/kFi2Ji2C2+Fky8VYYGo0qIxzxGg2qLaJJ?=
- =?us-ascii?Q?JIqV+/95i85CiSewlgdAlFfHP98Faol2+27uE066EmjiBasxsjc6bIDh51jQ?=
- =?us-ascii?Q?TbmbNiq7WknoX8JRMjLFRruiKpUU9oFWCFevdvEvo2fZ4ch65ottf8zv78eK?=
- =?us-ascii?Q?a5ilQNVhLBf3TR+MKTh1fxUw7YwCNx6mJ2BSpd5rAz4qh9O1Ayv+ZKkna+RF?=
- =?us-ascii?Q?2jRHkT4g0Ucb84sDCaSs1hobAF7nrfl3zzdL0rvPZWk9THULz9hDkSiA0MLT?=
- =?us-ascii?Q?bti1Gy2RGjaQ92i7fuyBcO0z4GeTdEHedbOI8OEfPQpEfEROUH905fNg8eOz?=
- =?us-ascii?Q?k0lL9HYwsfIbnm8x4fKvdr0uvybE7sfTHCiwWJfH1cHYZxPQE56H7v7DleH1?=
- =?us-ascii?Q?VxHmxtD2gBIB3cnItQc3nyRswcEHUDwPSlRdsrBSCKe/hFpFM64YQhi0s8Jy?=
- =?us-ascii?Q?ri0jp79JVrBEE3u75hmjbPHGO4hUNsOYWFKauOAmtb+mIOjpK84RJcy/Oina?=
- =?us-ascii?Q?8yehUObLEfqf6WIaE896it8YKIjfAXhJzQUGgI1ZMXijK8+roiVb+5nCv4FL?=
- =?us-ascii?Q?8X3+uhq7yf4jid8GchCvVCUoLMWyVInGezD28+KI+XkLBxZoknjxs6p7mu9F?=
- =?us-ascii?Q?eXdbPf3hX8vcxNsa10O7yu/t4nst05MRoItD88Q27PDmE4bLuGuLEnqo9/Hz?=
- =?us-ascii?Q?CVLIZOjFyAGzilcxtpmhXY0ArVDTBFbIiEfAFH8aVMG6e2j7rRrwLI9DGjEU?=
- =?us-ascii?Q?K/3mqXWxRF11KEbtqD/C/ZnUl6NavpgjqMihog+syUKKJfzIr2hRyisMtXDm?=
- =?us-ascii?Q?5XEoI9V6TNccx9JeeJ9deUw23RvKv5uqdvBbCLVsFq7LiOrDwJrVVdZjkS2B?=
- =?us-ascii?Q?TD0EvU6Uj/gOKytS0AxNXUpp+ZXPfHOG5+ph5Rf6+dDW7pFDo1QbHR0XY/c/?=
- =?us-ascii?Q?Obmhka7Hen3iHOLDEiOz6rKgxutpPw0bI3cwbLwLu2CB4NkBKGR6mjKvJeem?=
- =?us-ascii?Q?NSeDNo8BCAjEdokcFaPqr4LP7Yl5Wfguz5cdUAuGLOQZx59agYjUuwki6LC9?=
- =?us-ascii?Q?+nT7PXtAcYWFRlLrw0tT4eOyrPuKpQdMmeMG9LCos5+hkV95aty0hEFHZFLA?=
- =?us-ascii?Q?AKl4+mVYS6erOEykKBSIFQNmX0XVyVwmnPX6KiafJ5akUCKpOpdL7ZGuxWYs?=
- =?us-ascii?Q?1Ip/eTcTzOEfaMoH/CKw2gLhyHEWr5qtsbyQiDiPjQKfXAWGrUG1cO+xkZdr?=
- =?us-ascii?Q?UtqFs3zIIfBTkQtpxHkNEcy6I6299U8YlMN8ninGsTIA2fklJnw/+l/ReRVY?=
- =?us-ascii?Q?jACI6p5XKm9mp89AXQNOfO4NKKAya4uQy5vuuz3VQbZQozOj6LPtBS3FCNxp?=
- =?us-ascii?Q?00dcbLXNwDQJvDGluzU=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=alu.hr header.i=@alu.hr header.b="iNl/Zmpg";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="HrHEWwuM"
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id D8F92601A1;
+	Wed, 17 Jan 2024 17:35:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.hr; s=mail;
+	t=1705509321; bh=Lg4fjwQ0RsegVVSUFk0J1M0jxOQPKcQD+1HOemMkLXw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iNl/ZmpgoS2jzx5d7itltBgCAAxwZu8NoF6X2JJ7hnGcvecGzJOcpp6goT6Qsd8s4
+	 N4offvodEOLVFtDcFJYVjLHbIAMzE3IOqWti+5TJybUbyQdUsP7fajk0NSoCmE2+pb
+	 WnHzuTYHnbEmUdaR7hnlbE9ZS2XtYxP1bzHAWe94qhcSYqZrCAq6/eiETVF/vQHg6P
+	 Uyniu5LwmepT3Q9/sPFMbwM8z60qnts/hCgo9oXmuZFwaV2o6Gv8d8ULLUBT035yLF
+	 GNKByCS/aMuEkOFVe8BNmduwuzx+PvmPsc5ajbb2okw18Vq3RkSTQ8sDrV5iNIKJ7Z
+	 EuRQF5EVhvaFQ==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id ZZk3stcJxdOg; Wed, 17 Jan 2024 17:35:19 +0100 (CET)
+Received: from [10.0.1.190] (unknown [161.53.83.23])
+	by domac.alu.hr (Postfix) with ESMTPSA id 387C06019B;
+	Wed, 17 Jan 2024 17:35:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1705509319; bh=Lg4fjwQ0RsegVVSUFk0J1M0jxOQPKcQD+1HOemMkLXw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HrHEWwuMqeSVDWoVoNIMCgv4UgKqLRcwjZ+KdZYsqsFpChtIDa1Zck3FgxZQHh9F3
+	 nJpUoNvCTmjIXIFuCBQ8nuEDXnGoUJFhRjf7PzEkLUY8HoXvqluT+vt0YO2KJ5M1Eb
+	 kQquSa0tEbnWdNPk85kbb2vIuqbRYmtyzHTv/1RhaNRYURzJ8UuoW1uOjbLD4psqMF
+	 8FtWwNPthuA1g7iRMgK/Wfp7CSv15NU3kHX3wuaac5VGAO6V/8PZ0YoVo2spTpbpDh
+	 Kbjo/mzwCZGZwVS9yVTapabCJoYH6DZNwIl32O3Z/XUf+Es6SpBxr0KR99FYWnmO9u
+	 hwBWR+bYqDkeQ==
+Message-ID: <ccb8b694-4361-40bc-b7df-528a6616c15b@alu.unizg.hr>
+Date: Wed, 17 Jan 2024 17:35:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ead5bef0-c596-4d75-a76d-08dc177a393c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2024 16:34:49.3322
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zyYxAHmNVUK7fTidJNyiWCXXz2Zh76x1ESDBbQetAv3vLJy0aI1w2ihJNGAftKMogfgpbMGAiyW/7qKl/na1yw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4571
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH AUTOSEL 6.7 021/108] r8169: improve RTL8411b phy-down
+ fixup
+Content-Language: en-US
+To: Andrew Lunn <andrew@lunn.ch>, Mirsad Todorovac <mirsad.todorovac@alu.hr>
+Cc: Jakub Kicinski <kuba@kernel.org>, Sasha Levin <sashal@kernel.org>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+ Simon Horman <horms@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ nic_swsd@realtek.com, edumazet@google.com, pabeni@redhat.com,
+ netdev@vger.kernel.org
+References: <20240116194225.250921-1-sashal@kernel.org>
+ <20240116194225.250921-21-sashal@kernel.org>
+ <20240116174315.2629f21c@kernel.org>
+ <4523ad21-d06a-4ba2-9b46-974a6093b189@alu.unizg.hr>
+ <2c590117-96fa-4e0b-84bd-9e3ea138d93b@lunn.ch>
+From: Mirsad Todorovac <mirsad.todorovac@alu.hr>
+In-Reply-To: <2c590117-96fa-4e0b-84bd-9e3ea138d93b@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> >+#define VMX_BASIC_FEATURES_MASK			\
-> >+	(VMX_BASIC_DUAL_MONITOR_TREATMENT |	\
-> >+	 VMX_BASIC_INOUT |			\
-> >+	 VMX_BASIC_TRUE_CTLS)
-> >+
-> >+#define VMX_BASIC_RESERVED_BITS			\
-> >+	(GENMASK_ULL(63, 56) | GENMASK_ULL(47, 45) | BIT_ULL(31))
->=20
-> When we add a new feature (e.g., in CET series, bit 56 is added), the abo=
-ve
-> two macros need to be modified.
->=20
-> Would it be better to use a macro for bits exempt from the bitwise check =
-below
-> e.g.,
->=20
-> #define VMX_BASIC_MULTI_BITS_FEATURES_MASK
->=20
-> 	(GENMASK_ULL(53, 50) | GENMASK_ULL(44, 32) | GENMASK_ULL(30, 0))
->=20
-> and do
-> 	if (!is_bitwise_subset(vmx_basic, data,
-> 			       ~VMX_BASIC_MULTI_BITS_FEATURES_MASK)
->=20
-> then we don't need to change the macro when adding new features.
+On 1/17/24 14:44, Andrew Lunn wrote:
+> On Wed, Jan 17, 2024 at 11:30:53AM +0100, Mirsad Todorovac wrote:
+>> On 1/17/24 02:43, Jakub Kicinski wrote:
+>>> On Tue, 16 Jan 2024 14:38:47 -0500 Sasha Levin wrote:
+>>>> Mirsad proposed a patch to reduce the number of spinlock lock/unlock
+>>>> operations and the function code size. This can be further improved
+>>>> because the function sets a consecutive register block.
+>>>
+>>> Clearly a noop and a lot of LoC changed. I vote to drop this from
+>>> the backport.
+>>
+>> Dear Jakub,
+>>
+>> I will not argue with a senior developer, but please let me plead for the
+>> cause.
+>>
+>> There are a couple of issues here:
+>>
+>> 1. Heiner's patch generates smaller and faster code, with 100+
+>> spin_lock_irqsave()/spin_unlock_restore() pairs less.
+>>
+>> According to this table:
+>>
+>> [1] https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook-1c.2023.06.11a.pdf#table.3.1
+>>
+>> The cost of single lock can be 15.4 - 101.9 ns (for the example CPU),
+>> so total savings would be 1709 - 11310 ns. But as the event of PHY power
+>> down is not frequent, this might be a insignificant saving indeed.
+>>
+>> 2. Why I had advertised atomic programming of RTL registers in the first
+>> place?
+>>
+>> The mac_ocp_lock was introduced recently:
+>>
+>> commit 91c8643578a21e435c412ffbe902bb4b4773e262
+>> Author: Heiner Kallweit <hkallweit1@gmail.com>
+>> Date:   Mon Mar 6 22:23:15 2023 +0100
+>>
+>>      r8169: use spinlock to protect mac ocp register access
+>>
+>>      For disabling ASPM during NAPI poll we'll have to access mac ocp
+>>      registers in atomic context. This could result in races because
+>>      a mac ocp read consists of a write to register OCPDR, followed
+>>      by a read from the same register. Therefore add a spinlock to
+>>      protect access to mac ocp registers.
+>>
+>>      Reviewed-by: Simon Horman <simon.horman@corigine.com>
+>>      Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>      Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+>>      Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>>      Signed-off-by: David S. Miller <davem@davemloft.net>
+>>
+>> Well, the answer is in the question - the very need for protecting the access
+>> to RTL_W(8|16|32) with locks comes from the fact that something was accessing
+>> the RTL card asynchronously.
+>>
+>> Forgive me if this is a stupid question ...
+>>
+>> Now - do we have a guarantee that the card will not be used asynchronously
+>> half-programmed from something else in that case, leading to another spurious
+>> lockup?
+>>
+>> IMHO, shouldn't the entire reprogramming of PHY down recovery of the RTL 8411b
+>> be done atomically, under a single spin_lock_irqsave()/spin_unlock_irqrestore()
+>> pair?
+> 
+> Hi Mirsad
+> 
+> Please take a read of:
+> 
+> https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> 
+> Do you think this patch fulfils these criteria? In particularly, "It
+> must either fix a real bug that bothers people...".
+> 
+> I agree with Heiner, this appears to be just an optimisation,
 
-Sounds a good idea to me, and just need to add comments about why.
+Hi Andrew,
 
->=20
-> >+
-> > static int vmx_restore_vmx_basic(struct vcpu_vmx *vmx, u64 data)
-> > {
-> >-	const u64 feature_and_reserved =3D
-> >-		/* feature (except bit 48; see below) */
-> >-		BIT_ULL(49) | BIT_ULL(54) | BIT_ULL(55) |
-> >-		/* reserved */
-> >-		BIT_ULL(31) | GENMASK_ULL(47, 45) | GENMASK_ULL(63, 56);
-> > 	u64 vmx_basic =3D vmcs_config.nested.basic;
-> >
-> >-	if (!is_bitwise_subset(vmx_basic, data, feature_and_reserved))
-> >+	static_assert(!(VMX_BASIC_FEATURES_MASK &
-> VMX_BASIC_RESERVED_BITS));
-> >+
-> >+	if (!is_bitwise_subset(vmx_basic, data,
-> >+			       VMX_BASIC_FEATURES_MASK |
-> VMX_BASIC_RESERVED_BITS))
-> > 		return -EINVAL;
-> >
-> > 	/*
-> > 	 * KVM does not emulate a version of VMX that constrains physical
-> > 	 * addresses of VMX structures (e.g. VMCS) to 32-bits.
-> > 	 */
-> >-	if (data & BIT_ULL(48))
-> >+	if (data & VMX_BASIC_32BIT_PHYS_ADDR_ONLY)
-> > 		return -EINVAL;
->=20
-> Side topic:
->=20
-> Actually, there is no need to handle bit 48 as a special case. If we add =
-bit 48
-> to VMX_BASIC_FEATURES_MASK, the bitwise check will fail if bit 48 of @dat=
-a is 1.
+Yes, I wasn't aware of the 100 lines limit, and yes, this is not a bug fix,
+but an improvement (optimisation).
 
-Good point!  This is also what you suggested above.
+I think by this I can join to consensus, this patch is not a candidate for
+backporting. :-/
+
+However, I am concerned about the possibility of two kernel threads accessing
+the RTL NIC intermittently attempting to program the NIC over the RTL_(R|W)(8|16|32)
+instructions (which are expanded to readl/writel and assembly).
+
+AFAICS, nothing prevents two (or more) threads to decide in unlikely but
+possible case to program the card at the same time. (Do we have a guard lock
+against this?)
+
+mac_ocp_lock appears to be acquired and released for each RTL_(R|W)(8|16|32),
+with the exception of r8168_mac_ocp_modify().
+
+To be true to the facts, each byte will go to the right port due to address/data
+pairs used in each call - however, I am worried whether there could be a scenario
+like this:
+
+
+        CPU 1                                          CPU 2
+
+    start programming NIC
+    programming NIC
+    (preempted in spin_lock_irqsave()
+                                                   start programming NIC
+					          programming NIC
+					          programming NIC
+					          programming NIC
+					          preempted in spin_lock_irqsave()
+    (resume control in spin_unlock_irqrestore()
+    programming NIC
+    programming NIC
+    (preempted in spin_lock_irqsave()
+					          continue programming NIC
+					          programming NIC
+					          programming NIC
+						  end programming NIC
+    (resume control in spin_unlock_irqrestore()
+    programming NIC
+    end programming NIC
+
+Now, every byte, word or longword will come to the right place, thanks to
+RTL_(R|W)(8|16|32) having the address/data pairs - but I worry that this
+jumping from sequence to sequence might confuse the NIC.
+
+I mean, if those latches behind the addresses cause some physical effect, maybe
+the ORDER is also important, not just that every byte, word or longword comes
+to the right address?
+
+r8168_mac_ocp_read()/r8168_mac_ocp_write() guarantee that every piece of
+data will end being read or written at the right address, OK. But this
+does not seem to guarantee the SEQUENTIAL ORDER of the programming.
+
+I mean, if we are dealing with physical hardware like a NIC, the order
+of (especially writing) data might be crucial. 8-/
+
+Am I making any sense?
+
+Are we algorithmically secured that two threads will never attempt to
+write data to NIC hardware registers?
+
+Thanks.
+
+Best regards,
+Mirsad Todorovac
+
+
+>       Andrew
+
+-- 
+CARNet system engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb
+
+CARNet sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
 
