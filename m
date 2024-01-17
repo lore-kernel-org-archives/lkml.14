@@ -1,126 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0150422EE0;
-	Wed, 17 Jan 2024 18:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C883A23747;
+	Wed, 17 Jan 2024 18:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705515590; cv=none; b=CkqNDY2w/N9BpzN4foTzuOPDgnqvMtHoKv1fQhFtlvjb96LyxXD7XXy1gvAIfMfvXaM3gpdVxikuXZZdWi6nG3zjgAOwl/KgC+XF6g2zPltxaG3iVHK0OZMiHcVsYRhY4enB/jqhWNb+f5bBpKikGqNv6f4YrRzVkykDxchZYb8=
+	t=1705515739; cv=none; b=LrsiDYL9v8abxPmWKj5eNqOVsL+oH5YdZ9jSvaWRIbzEiaOQGgx1hQx2aPlyyKu0IYXCvTNH2gz0YpS3EAgYmrEpXawL6abVQox26wLPZDm4B9aT4lzdapln+LW60wMYlEf313r6jbJ/9jHEZgLVXQvYE1HIjaPivK57AfiCEGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705515590; c=relaxed/simple;
-	bh=qGlcZRV44crjqbw1JQjmrtKXLKflvsUJg8srLpQ9eco=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Cookie; b=JPVk6j/BIC9MkBXnO1Fon03MyJMeTIuR2lr/iEgHbopUkyD0sKssYOyy4dbDNMA4mmBVsygeXrpanYgne12YVxHmnkwTP+hpV/q5Rpk7KIEz4Tkis5NlnLHaA3ULtZqseJ2jDzwo05/YA+WCbYUEaxqlbx5oB4tpN6ky+LenneM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adFzkfSO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705515739; c=relaxed/simple;
+	bh=3VdOjc3X148qsKr0xLzhVrZ+WN/d9jtjGD8XrGEuK1E=;
+	h=Received:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-Mail-ID; b=EPOEJtB8pOMiyuo2x/HBIM5ST9JpxmQXcCz18GtOmSYHJlMYs2Iq/xk82i/iC9XWNClBdmfjsKISsO7HFTAffSC9SYsK8c7wU165Nk7cG3ijT6dtaRE/lnRYYGdXmi8DhkIbEZro09VOygKstz/3ZTKq7LO14z/itCkfVSrdwJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=x2pbTALC; arc=none smtp.client-ip=134.0.28.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adFzkfSO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03A2C433C7;
-	Wed, 17 Jan 2024 18:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705515589;
-	bh=qGlcZRV44crjqbw1JQjmrtKXLKflvsUJg8srLpQ9eco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=adFzkfSOVycGp6YJDdZ0RCzxsP3syYVSeLMqqsOZ2+IuVdDJ2F8BeiEZNAE1+G4nF
-	 uwAy1cm7aUll6YGX/rBgIeKNLKAaCuI5SRH0Cz7M9HPA5oXrvwX0jXpLe3F92eTv7T
-	 Ogmf+M5bUkMIe876iFliMxq/yQ00eg0kxxKUTe9WQR8fgsEQ/jj17xF8697FV8TOeT
-	 KnfylJh+dP0/v2DiUa4OVGZ7NUKojv0MbupGpFswIpMRO2dtm+68PJS0BTDts6m6lO
-	 7A9FabHDWunu3/oDuIUv1IZW72VZpvSJeGtaBrmZ49gDYAydA3jj382NAIIRfi13lH
-	 di4hlLX2dmdHQ==
-Date: Wed, 17 Jan 2024 18:19:43 +0000
-From: Mark Brown <broonie@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Theodore Ts'o <tytso@mit.edu>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Greg KH <greg@kroah.com>, Neal Gompa <neal@gompa.dev>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Nikolai Kondrashov <spbnick@gmail.com>,
-	Philip Li <philip.li@intel.com>,
-	Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <c69a3103-ae4d-459a-b5f4-d3bbe2af6fb2@sirena.org.uk>
-References: <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
- <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
- <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
- <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
- <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
- <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
- <2024011532-mortician-region-8302@gregkh>
- <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
- <20240117055457.GL911245@mit.edu>
- <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="x2pbTALC"
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+	by mxout2.routing.net (Postfix) with ESMTP id 452265FC7E;
+	Wed, 17 Jan 2024 18:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1705515353;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=faaWm9kKMcck2ImmwhnetGgTDP4WHiKRSvb4Y2er2NM=;
+	b=x2pbTALCTpXpjTlSpbqC3CbYw83ZKHbpjyKWCW5LEU1zrgBGHziOM2hEt9jrSmRH9Q+P8E
+	0CYzL4UsE/VqPJTdzPkoa9ZKjGMQSTcnutw/dA+0cJe+4LCSK2d4LKUqDj4A9iqTyjHtAL
+	Md7Tdrl08PIPHBM4nLUnzRQBceXLJes=
+Received: from frank-G5.. (fttx-pool-217.61.151.254.bambit.de [217.61.151.254])
+	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 367C93601D6;
+	Wed, 17 Jan 2024 18:15:52 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Sam Shih <sam.shih@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v3 0/2] Add reset controller to mt7988 infracfg
+Date: Wed, 17 Jan 2024 19:15:43 +0100
+Message-Id: <20240117181545.60355-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7aTkAu68BodLGEOk"
-Content-Disposition: inline
-In-Reply-To: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
-X-Cookie: Nostalgia isn't what it used to be.
+Content-Transfer-Encoding: 8bit
+X-Mail-ID: 2b681597-9b8b-4c5c-8a97-97f5be73149f
+
+From: Frank Wunderlich <frank-w@public-files.de>
+
+Infracfg on mt7988 supports reset controller function which is
+needed to get lvts thermal working.
+
+Patches are based on clk-next due to recently added mt7988 clock driver:
+https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
+
+changes:
+ v3:
+   - start resets on RST0 offset (LVTS is RST1)
+   - rename offset constants with MT7988 prefix (else collision with reset.h)
+ v2:
+   - change value of constant to 0 from 9
+   - add missing SoB and commit-message for binding-patch
 
 
---7aTkAu68BodLGEOk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Frank Wunderlich (2):
+  dt-bindings: reset: mediatek: add MT7988 reset IDs
+  clk: mediatek: add infracfg reset controller for mt7988
 
-On Wed, Jan 17, 2024 at 08:03:35AM -0500, James Bottomley wrote:
+ drivers/clk/mediatek/clk-mt7988-infracfg.c    | 23 +++++++++++++++++++
+ .../reset/mediatek,mt7988-resets.h            |  6 +++++
+ 2 files changed, 29 insertions(+)
 
-> I also have to say, that for all the complaints there's just not any
-> open source pull for test tools (there's no-one who's on a mission to
-> make them better).  Demanding that someone else do it is proof of this
-> (if you cared enough you'd do it yourself).  That's why all our testing
-> infrastructure is just some random set of scripts that mostly does what
-> I want, because it's the last thing I need to prove the thing I
-> actually care about works.
+-- 
+2.34.1
 
-> Finally testing infrastructure is how OSDL (the precursor to the Linux
-> foundation) got started and got its initial funding, so corporations
-> have been putting money into it for decades with not much return (and
-> pretty much nothing to show for a unified testing infrastructure ...
-> ten points to the team who can actually name the test infrastructure
-> OSDL produced) and have finally concluded it's not worth it, making it
-> a 10x harder sell now.
-
-I think that's a *bit* pessimistic, at least for some areas of the
-kernel - there is commercial stuff going on with kernel testing with
-varying degrees of community engagement (eg, off the top of my head
-Baylibre, Collabora and Linaro all have offerings of various kinds that
-I'm aware of), and some of that does turn into investments in reusable
-things rather than proprietary stuff.  I know that I look at the
-kernelci.org results for my trees, and that I've fixed issues I saw
-purely in there.  kselftest is noticably getting much better over time,
-and LTP is quite active too.  The stuff I'm aware of is more focused
-around the embedded space than the enterprise/server space but it does
-exist.  That's not to say that this is all well resourced and there's no
-problem (far from it), but it really doesn't feel like a complete dead
-loss either.
-
-Some of the issues come from the different questions that people are
-trying to answer with testing, or the very different needs of the
-tests that people want to run - for example one of the reasons
-filesystems aren't particularly well covered for the embedded cases is
-that if your local storage is SD or worse eMMC then heavy I/O suddenly
-looks a lot more demanding and media durability a real consideration.
-
---7aTkAu68BodLGEOk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWoGj8ACgkQJNaLcl1U
-h9BXrwf/ax2MGFfufapvl5UITLAL098Oq/M/cEtg80e2uwB7x6eMnWfzLW5If0FL
-7TaDVEb9oUXdsBZAVdETKiszFMAVH6+owpWtLGMkd1CWHbsH4OqpzuITEVsfidM0
-YogO4PuLXHCJdoPOogl32UraTyhxJKgYRqy3tr8Mv0UNnA+KpvSgfS/dX7AJOw0h
-KLFxAYjNa3JG6SbHJgS2Fw40YWY1kw1fdt193Div+CCIWgkd0SVwg+jIA7xsakb5
-YDVyHHT3WY5OpUc+5Ay/WeoDxFlFFmS91U457Dokm+/VS5WjYYJWc1eLKGkx6w+X
-otunFRoyx0Y6IoJhrDegDIRv82SVvA==
-=x1fy
------END PGP SIGNATURE-----
-
---7aTkAu68BodLGEOk--
