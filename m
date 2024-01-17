@@ -1,169 +1,145 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2109.outbound.protection.outlook.com [40.107.95.109])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A811514277;
-	Wed, 17 Jan 2024 10:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.109
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705486839; cv=fail; b=eA76yoTNOES89jpQcc6joodfqjll0qchcxSHyhH5EKaVJOCoYW3qXm/Rsv+GcxRwt5PVswE5aiOvLwugHIZFMLrL0ZTqbKwypFp0glt9r5rwbptC2NuGMulXh4z7q9mxowFGIeqyP4UHv7qYJFNAexKUzhNe2FtGY72nfxqaQX0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705486839; c=relaxed/simple;
-	bh=ZO1FTeXElU2ol5fqIdN4uJZMgdCT61GvVkPrvOcqnU4=;
-	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
-	 Received:Received:X-MS-Exchange-Authentication-Results:
-	 Received-SPF:Received:Received:Received:Received:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:Content-Type:
-	 X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=SVtFSPhoL+Sx32EcRCBZaCVL2tKxI9AkqSfm9SFBYxuf4l0ZLhm4kuvrVxww0EZzd+Nbom88eKlCXwcpN5bPY950/HvjVprjyqR09+uwzFHBwaCfGtCrcdorcIVoBhcbWFAna2TdlmRAiUor65gi22weA7yKbVhkufxRFxtksB4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=Sony.onmicrosoft.com; dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b=sUvW3FQy; arc=fail smtp.client-ip=40.107.95.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=Sony.onmicrosoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344F81429B
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 10:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705486871; cv=none; b=Hbu57SFBV95pmHi86rH8dWv8zRMWHy16uBj2oZl3bZveDVc05qFLSGrhSWliJ6wfm0uR0enbp4JJbY9BnGvF0NCaG+ErFsV5FX8OPsuQZB3pMDf+FHDh7kTKr2uojydt1Ljv+KVbzafW23PcCouyZ/4/RJCNCuCjQbjty8RWCdM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705486871; c=relaxed/simple;
+	bh=fA8fOIDmpDf6O1sgGqy94Z1yqgjC5fUGvhAPgezy1N0=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 References:User-agent:From:To:Cc:Subject:Date:In-reply-to:
+	 Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding; b=jtWsY8u+OmOtckkaSvF0m8z67wXVNVWT2WA8wCYXuYsKUUnVoe3QPdfDEgmxLpG9Jl38AWxctd9rxAUdC0VSuwmS3XnSgcpl/QqPNRWDoLxknD8tvyi/Hxd3bJS2zgdhai12c4IMw8ez9hkpxtRM0gpAb69ESgSrf9ecI+NhXho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=owr485wz; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="sUvW3FQy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XS0KCMZJZKeQXDNac2ICTq1mjN3Ntdrn0KbMQI30fRjx5Gd4oWwjbuChE3dvNj3d2fjUxarMXzaMEbajWNNGt9j5rLQ9m4Zrqdz7QALnKTefaaV09+UejLZuTCrqHCARje/difd8iwP5WweSz6zXusdYUqVyMVH7TWEdvXIJNqv8Z9zbAIiL0ABZM3vSkjXemC0KEsY/MIYSNyxdcgtwYjNljU8SE2FEdoGTPKUsIUfCfr/K4PobMEjaRnUvdpORwiY/RF84SPTG7dmbk2uYok4oBgARM7UELTdjXDDU+lYReJtdXmDdowQuLs6fkFsGgNLjkFnTxO5lB7MxeH6/dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5NZPgxJJ0zMuZrzMyjoQsDTd66g9dkfB8y8E7ne2rXk=;
- b=MlRXzhthHavD7HRzZbq3o899TDIsAVp12izAm2vjNp5hkhJ2UL9B5SO7FlW4JeH1KhezrfGzFKIOthGpYy7s0bsWKXuNyBIyjddPo3txnzT931EHbDYvOlYCjrSRHRJy9wRjmSmLq+W79Syb3QuB1g+bX3tJq9Q5pMD/Qs7YbiwgXT2DlHABChqNdeH55C1KI1D4cPKlCZWqany4qOe3CWmwCN2oVPCytMkEyvkKsZsjFisYikDgdey1Rcrl052NA3xi+gkyYIaT4cuMMnvTp2BtP6JE+ZJWxKjVoHw4AbAoidTvPUY2AnuB8wX8brZHrPWaq2sSjbNzCo/RwaeGOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 121.100.38.196) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=mail.sony.com; dmarc=fail (p=none sp=none pct=100) action=none
- header.from=sony.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5NZPgxJJ0zMuZrzMyjoQsDTd66g9dkfB8y8E7ne2rXk=;
- b=sUvW3FQyV4QLJZiM8QvuhO98qWQMeURnFpRSAMHcn3IYZmMkZSV7oaLf3yk1Y0ulrrdsgan6OfGfTE1aLkfC5GWpZyois16rRjvRXyl2o22D/bT3cZHPWa+gob+U1nO8LYf1AkLh7xqNQ+qVTwNO80jEw7PiW6L+YZ0FMHim5yo=
-Received: from SA0PR12CA0001.namprd12.prod.outlook.com (2603:10b6:806:6f::6)
- by CH2PR13MB4458.namprd13.prod.outlook.com (2603:10b6:610:6c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Wed, 17 Jan
- 2024 10:20:34 +0000
-Received: from SN1PEPF0002636C.namprd02.prod.outlook.com
- (2603:10b6:806:6f:cafe::d1) by SA0PR12CA0001.outlook.office365.com
- (2603:10b6:806:6f::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23 via Frontend
- Transport; Wed, 17 Jan 2024 10:20:34 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 121.100.38.196)
- smtp.mailfrom=mail.sony.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=sony.com;
-Received-SPF: Fail (protection.outlook.com: domain of mail.sony.com does not
- designate 121.100.38.196 as permitted sender)
- receiver=protection.outlook.com; client-ip=121.100.38.196;
- helo=gepdcl07.sg.gdce.sony.com.sg;
-Received: from gepdcl07.sg.gdce.sony.com.sg (121.100.38.196) by
- SN1PEPF0002636C.mail.protection.outlook.com (10.167.241.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.16 via Frontend Transport; Wed, 17 Jan 2024 10:20:33 +0000
-Received: from gepdcl02.s.gdce.sony.com.sg (SGGDCSE1NS07.sony.com.sg [146.215.123.196])
-	by gepdcl07.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 40HAKFSa007071
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 17 Jan 2024 18:20:15 +0800
-Received: from mail.sony.com ([43.88.80.246])
-	by gepdcl02.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 40HAEv8O028952;
-	Wed, 17 Jan 2024 18:14:57 +0800
-Received: by mail.sony.com (Postfix, from userid 1000)
-	id 9768920C0300; Wed, 17 Jan 2024 15:43:16 +0530 (IST)
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
-To: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, rdunlap@infradead.org, pmladek@suse.com
-Cc: rostedt@goodmis.org, senozhatsky@chromium.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        taichi.shimoyashiki@sony.com, daniel.palmer@sony.com,
-        anandakumar.balasubramaniam@sony.com, sreenath.vijayan@sony.com
-Subject: [PATCH v3 0/2] Add support to dump printk buffer to console via sysrq
-Date: Wed, 17 Jan 2024 15:42:18 +0530
-Message-ID: <cover.1705331453.git.sreenath.vijayan@sony.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="owr485wz"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e7065b692so35883075e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 02:21:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705486867; x=1706091667; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5mSVG7D4F/4/rMlg7YZmDmtDRH4U8gyyZuRonzPy+H4=;
+        b=owr485wzoOgCgR7SlEzjfEy+Cl+cdj/22FfX4CcxSFSHtx6Dt5iAJWgkJ0q5VZ9vgr
+         fs7rgRtaCBVN6c42pRwbYb8evWjvVvU3jLcYijFTgLSqyD7vsjSQv1US48gLqli2zy7o
+         sl2nLgXJh+kTaivTGzjvSvkHGKPOSd2xcUPuLxd75bGf2zurL7wwL9l11ceCVYHhu68w
+         705aJgy0G0wQ/dztCtwdFlPA35w1xzpdIey9R5kLsb3qL5K6VgQdN+dVs0IPnEuIsD/p
+         4yALn3JWFMKsLSs6wqC8SE0pSMLj/O3eTYZy9Pb4C7KFFkzApvdDILDlbuOPWRNQDlGI
+         oW1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705486867; x=1706091667;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5mSVG7D4F/4/rMlg7YZmDmtDRH4U8gyyZuRonzPy+H4=;
+        b=r/MpAnVOiVgvyBISvrE9Yz9DT7obIB1wekNrw/6B8xcXyifEcoGfDO/1MOBzxIHLOY
+         Vzk5wTu+SPabRQwphg3Xl9Lr2w+fx/E/Hnr+StU/s1aFYA835L389HOcqEDh4qIeZPr6
+         Ha799V3GMqqLN0EzHhFnM1UPPSuYIw/F/TqZLAsNOhOxUUwC7sGESyvxHI5feT06b02w
+         tPB7bglqgRJW0YWQK2r5vVGUaOlZcIfQOJEtbuUyDMq1iLjaEutyF0ohRM/fKOADNXay
+         AzHGinAW/Or7Nl0RxzW84oIRAb/g40yFrwlLNISP92M6FGTzSVn+xIAxciHI26OJR5sQ
+         0NbQ==
+X-Gm-Message-State: AOJu0Yzcx0mrL5M07skw4APXZjJo18/RGPkXQqnRU0+8+p/xzG7p7lkn
+	MMZwtlhGxRgn5lDkvaDsvfDqFlg5rNPxgQ==
+X-Google-Smtp-Source: AGHT+IHkPtaUfaJlpb5rgGajtKU+P5rzVz0YPS17UdzuHDV8aXYHDcinmlVZjk1+b215qJd7ggkx8A==
+X-Received: by 2002:a05:600c:22cc:b0:40e:3dcd:2e24 with SMTP id 12-20020a05600c22cc00b0040e3dcd2e24mr4695637wmg.180.1705486867325;
+        Wed, 17 Jan 2024 02:21:07 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:c1f6:14ce:b96f:2df5])
+        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0040e526bd5fdsm1894578wmn.1.2024.01.17.02.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 02:21:06 -0800 (PST)
+References: <20231222111658.832167-1-jbrunet@baylibre.com>
+ <20231222111658.832167-3-jbrunet@baylibre.com>
+ <4rdb2be2bfzak3s4uaizthcdcdwdrxnx4kr2sgn527hvsie3pb@gfqciim7yryz>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: pwm: amlogic: add new compatible
+ for meson8 pwm type
+Date: Wed, 17 Jan 2024 11:16:31 +0100
+In-reply-to: <4rdb2be2bfzak3s4uaizthcdcdwdrxnx4kr2sgn527hvsie3pb@gfqciim7yryz>
+Message-ID: <1jfrywxnu5.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002636C:EE_|CH2PR13MB4458:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 215908f2-2468-4479-7eb6-08dc1745f10c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	LHKX8ce1yPfvGhnLQtTH1ptrj+z1EU3P4yjt5eg+zyfdtaRXEbZHzDoellX2XiJP6N4FGL5NpzVpwZMxa0NZ/Z8rjUzwF5T3OEofzw2u2+SbcI+2ziWvIW0aqEANXeGdwzcyG6Tt1aTyQiIOe8VsV17oELTQTPTM+1DtlF4Ogxy0BhTTeEUF+GbqdOsxMw6hnyuKyNbTJ0j+FOkvAOtW3ghx+XSF3Y2v0pTpTk/q0m8bF5Qd1pIOr7Ha305gmBOP2lvssuZ4Z0C9Yp7SyciHMbYCTxD+klVkIMrotkeZPstZlaCPEdi2FQZhD4rLVCA9Y9tbqaU2OjwJiVD+Q6Xby1CWeb+oZjWptDwg0J0g2anyCJv8OgV1d451TPLNX3FDqhv2mWDD52nn42vAOUVlyJj2rfQbZgs8VLnXqrZDhkvHraUoJA0gadih941DFChlLTaRbwRNARmoVQkrbXMlSp84zcZcqj5c4jroEMKaycCn5zNIrvHZL3Xb/v8WMHbKowQmHPPQNgTNQqF9+r2ngUncu7/VAtGZ52JEwJ4wcNHUPqmW8hvXxMJjJH9yMru5fyqMJLop2sE2JlncCqbOYRjHqjfAefWxxzvH3zzBYQsfi0VrsO9sC1X70yLHv8h/P/cLNTaZXSRiD5lRZd5mSY9nwGmjgzg0eJcbjK0GqwTJj09zheanvTGLMwpnDRddzYAtxdi757eGpVO533mYIRH8i3RisfyAb2qXt3RK3hfJqODqYK76lgKal0rFPw2L3EfYWVMooN4pmmBvHvb9zA==
-X-Forefront-Antispam-Report:
-	CIP:121.100.38.196;CTRY:SG;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:gepdcl07.sg.gdce.sony.com.sg;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(376002)(39860400002)(396003)(230173577357003)(230922051799003)(230273577357003)(1800799012)(64100799003)(451199024)(82310400011)(40470700004)(46966006)(35950700001)(81166007)(82960400001)(356005)(41300700001)(47076005)(40480700001)(40460700003)(36756003)(8676002)(450100002)(316002)(42186006)(8936002)(70206006)(70586007)(26005)(107886003)(4326008)(82740400003)(83170400001)(498600001)(966005)(5660300002)(44832011)(2616005)(336012)(6266002)(426003)(83380400001)(2906002);DIR:OUT;SFP:1102;
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 10:20:33.3296
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 215908f2-2468-4479-7eb6-08dc1745f10c
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[121.100.38.196];Helo=[gepdcl07.sg.gdce.sony.com.sg]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002636C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB4458
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
 
-This patch series does two things:
+On Wed 17 Jan 2024 at 10:58, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
+onix.de> wrote:
 
-1) Add function to dump the printk buffer messages directly to
-consoles. To do this properly, access to printk private items
-like PRINTK_MESSAGE_MAX is required. So, the function is
-implemented in printk.c as suggested by John Ogness. This
-function may sleep as it needs console related locks.
+> [[PGP Signed Part:Undecided]]
+> Hello,
+>
+> On Fri, Dec 22, 2023 at 12:16:50PM +0100, Jerome Brunet wrote:
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Do=
+cumentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> index a1d382aacb82..eece390114a3 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> @@ -21,23 +21,35 @@ properties:
+>>            - amlogic,meson-g12a-ee-pwm
+>>            - amlogic,meson-g12a-ao-pwm-ab
+>>            - amlogic,meson-g12a-ao-pwm-cd
+>> -          - amlogic,meson-s4-pwm
+>> +        deprecated: true
+>>        - items:
+>>            - const: amlogic,meson-gx-pwm
+>>            - const: amlogic,meson-gxbb-pwm
+>> +        deprecated: true
+>>        - items:
+>>            - const: amlogic,meson-gx-ao-pwm
+>>            - const: amlogic,meson-gxbb-ao-pwm
+>> +        deprecated: true
+>>        - items:
+>>            - const: amlogic,meson8-pwm
+>>            - const: amlogic,meson8b-pwm
+>> +        deprecated: true
+>
+> I think deprecating the old binding and adding a new compatible should
+> be done in two commits.
 
-2) Add code in sysrq.c to call the above mentioned function
-when sysrq+D is pressed. As the above function may sleep,
-it cannot be called from interrupt context. A work is queued
-in the system unbound workqueue to call the function when
-the key is pressed.
+Hi Uwe,
 
-Link to previous discussion:
-- https://lore.kernel.org/linux-serial/20231221133953.1507021-1-sreenath.vijayan@sony.com/
+There was the same comment on v3 and Krzysztof said it should be done
+like this:
 
-Changelog:
-V2 -> V3:
-- split the implementation into two commits
-- added function in printk.c to dump printk buffer to consoles
-- added Suggested-by tag
-- removed code to dump printk buffer from sysrq.c and called
-  new function
+https://lore.kernel.org/linux-pwm/e127dcef-3149-443a-9a8c-d24ef4054f09@lina=
+ro.org
 
-V1 -> V2:
-- modified kernel ring buffer to printk ring buffer
-- allocated buf dynamically to prevent stack frame size warnings
-- used buf of size 2048 to match PRINTK_MESSAGE_MAX and added comment
+I tend to agree with Krzysztof on this but, as I previously said,
+I don't really mind one way or the other. Just have to pick one.
 
--- Sreenath
+>
+>> +      - const: amlogic,meson8-pwm-v2
+>> +      - items:
+>> +          - enum:
+>> +              - amlogic,meson8b-pwm-v2
+>> +              - amlogic,meson-gxbb-pwm-v2
+>> +              - amlogic,meson-axg-pwm-v2
+>> +              - amlogic,meson-g12-pwm-v2
+>> +          - const: amlogic,meson8-pwm-v2
+>> +      - const: amlogic,meson-s4-pwm
+>
+> Best regards
+> Uwe
 
-Sreenath Vijayan (2):
-  printk: Add function to dump printk buffer directly to consoles
-  tty/sysrq: Dump printk ring buffer messages via sysrq
 
- Documentation/admin-guide/sysrq.rst |  2 ++
- drivers/tty/sysrq.c                 | 20 ++++++++++++++++-
- include/linux/printk.h              |  4 ++++
- kernel/printk/printk.c              | 33 +++++++++++++++++++++++++++++
- 4 files changed, 58 insertions(+), 1 deletion(-)
-
--- 
-2.43.0
-
+--=20
+Jerome
