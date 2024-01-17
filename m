@@ -1,131 +1,112 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ACB224E2;
-	Wed, 17 Jan 2024 17:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222F5225D1;
+	Wed, 17 Jan 2024 17:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705511841; cv=none; b=KMRypw/eFm7U7Tpf1ICFA1uMG+GD/InSGq6UL5H/pAP9Hl2xdfCsmUu5yW2fa2I8HyoPSugGKYlAa1TM/KlHbYdLGHM3LFfqiWnX9cjYGd2rG5OxVImFlXwdINkOeH0DGvSkzb5jO3icPEUe7AMwv5CkEwYvuWyGsJRkIzqRf0A=
+	t=1705512043; cv=none; b=Y+nldQHgSVjZ+CR6rG/gsrzOmRbQ2ASG1ZnveZX5XRZbYDjYVaf4XjB+3QibZ8VZpfN/HKw0d97Z5d+hirIPPzfAEazMdQlIljNUnIP9hCOhJXOgrQQ/xki32egPajmnUX0MIJ758uz5QTunAf7lpC8rVWPNeDHWACJY1i3ZWdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705511841; c=relaxed/simple;
-	bh=ejjzp/N6GXN4bKMnwIhWefZoBsy9/Ncj1iYqg76d+58=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Content-Transfer-Encoding:Message-Id:References:To:X-Mailer; b=M6qspfOgsXlC04t+N1b2F64eQm6Dr8Ow63oA8yNVqRXyRZUBYplDejbMHfZYH/E7jDyIH8oZorTLObq8ZilYvTsBvVOe5EQgNoqz1i/3Kgj7tZYI/QYJbRxbgPB9+JMq4hRSFo1ZkG7kIAH/RcGP1t6lwH/+tFsVi2F9iuR3Zn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lz3ZGuPF; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705512043; c=relaxed/simple;
+	bh=PJ+rmEVufpKJK7ECKejpevEIw04o5RmMCUfmqWdgfYA=;
+	h=Received:DKIM-Signature:Received:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gmail-Original-Message-ID:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding; b=lQ5LUwyv3jq+hB1mLc55iGmnAclxf0vXnVS8T347bxryxYxKJ/6ZRKOC3+RIVt/GzT15Y34JCiUogVKRwzZQEEg41838Hts+cpzhopmCb7iO8sZbDchS9oae2Rr4d4on6DYc3IVeyH6cp8yt0yImlvbfNqc4r8o8WPFwbJtKmr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n84nGxTl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lz3ZGuPF"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5ce9555d42eso8894851a12.2;
-        Wed, 17 Jan 2024 09:17:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705511839; x=1706116639; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TSQYgrBx5fi8DsH2MSKPE2LLO3oMaLJBOPol1630iF8=;
-        b=lz3ZGuPFXJY9Un1zMmQ0Fj8dEg2EOOVA1TLPeggyGfky/IeF08RUe8w6PDo4xyPKDK
-         NksAdoc5L+gkqL30SYcHFepJYmKYN7Moe/eseUPaTAvhp3rxRSKuoxnmQY9Nb6uwla1N
-         0MtV4pfplvXh+AApg4IRW2Rp3FTfBnU0mGVS+EB9kaVSjQWvB4L3BYI1r96v2v3UGQ6o
-         SzabGSQVB6HeJWeg4bIN0y0ObizMzUGV2IzDJBp7rDtKAe15R8u+dHd0DDk2dMiPfJOM
-         fwa+p0Zu7hbqMpCCifGMo92VdeFfnRHaEzSVugqnHFiATzPAM0N9+fyKRbMNe+aGLRLj
-         OWXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705511839; x=1706116639;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TSQYgrBx5fi8DsH2MSKPE2LLO3oMaLJBOPol1630iF8=;
-        b=mphvV957IBUkLp00zBWyC+I6mrSmj4Him2AevkC9+MgJxTFRXAE4G4kgnSpHU2k4mC
-         oPQ2FhkX5h/p3y8o0b9zkBNqh3mIkVKBa1HwLHpcL7yTyd8ekzgw5qAsye3SaeaxZy5W
-         cjk8IDjdYvFsx+/INgl2FWXEq/IAS75zzcd0Eqm6dlyXIQfQKHlDsBv/QluRPTq2Q2sl
-         eUdA0hS5le2J4qRdg8sknugmQbURHmKVD3VNDfavSFYaljE4wnk1wqQNhXWXMBCEnbfS
-         /SBi2iB0RPD/lPyIBroODZoTx0xOtp86fAYJkkdwbOZq6Q7hdQ4F0dyMPCrFOccRyRdG
-         OINQ==
-X-Gm-Message-State: AOJu0YwTckMRqRlKQRrgOOBktl5cCxlMZVBWmBM4sqYdu7XlolcNVJuI
-	n6hFsybg3MeDRMNGcFTfPYk=
-X-Google-Smtp-Source: AGHT+IHZLiEhkAGCO6fxuR340lb3hy6gE48f7FNrKp4J/ab4F+00vkM6h8bDVacvwPY5snvCFhrYLA==
-X-Received: by 2002:a05:6a21:a597:b0:199:144b:e205 with SMTP id gd23-20020a056a21a59700b00199144be205mr10417656pzc.99.1705511839576;
-        Wed, 17 Jan 2024 09:17:19 -0800 (PST)
-Received: from smtpclient.apple ([2402:d0c0:11:86::1])
-        by smtp.gmail.com with ESMTPSA id jw10-20020a056a00928a00b006d9af59eecesm1685787pfb.20.2024.01.17.09.17.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jan 2024 09:17:19 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n84nGxTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22A4C43394;
+	Wed, 17 Jan 2024 17:20:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705512042;
+	bh=PJ+rmEVufpKJK7ECKejpevEIw04o5RmMCUfmqWdgfYA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=n84nGxTlQzqYATBfX/bwXAVjLaPoqbuwNMsnqS9bma7YsiFVqFJvMvv21EW+n2O/Y
+	 LFKrGGgJcM+boD/EoHhLprgzUZFltjCK29BETXyD7+uHcD6f8HLtZDvtPjC3zKaWky
+	 TsuKIKZZ5aFeMzZXAvbezlMMvOA0SagXfBHPdG1d8D2wg+YA76e2sABuh6IsQkbUdg
+	 LKp7MNyCY3AelzuHF3wDBYtJ4RMAWUtHsOBs8yFyYOyKpjGtO/zf1n6iNjaGO4vJ5k
+	 AYTR/0ZwefiPrGoAiAkkB5v9yqJecIKVZQ584F93Vk+3nUXLgIm+n58JsoNeLaQ2z/
+	 UlpIMuBO88OIw==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cca5d81826so147690561fa.2;
+        Wed, 17 Jan 2024 09:20:42 -0800 (PST)
+X-Gm-Message-State: AOJu0YxvCnijtCXayx2y97uV4NH7u44rkjrIFlkxGy154WMmVV5U2Xv7
+	1rDw3gHyXol3PvN3sK23llTMRO6B8p13U3Mlw0s=
+X-Google-Smtp-Source: AGHT+IGWX8Q7kIeReZ1qlFFAmoXEkNjfJOJA/MMkOeb2LWn3zknnJyvhTG046Opvn1prfXImsNgRRSgq8fIZUlkJ+JQ=
+X-Received: by 2002:a2e:904c:0:b0:2cd:fe3:1f86 with SMTP id
+ n12-20020a2e904c000000b002cd0fe31f86mr4393999ljg.80.1705512040844; Wed, 17
+ Jan 2024 09:20:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
-Subject: Re: [PATCH] afs: Fix missing/incorrect unlocking of RCU read lock
-From: Alan Huang <mmpgouride@gmail.com>
-In-Reply-To: <2929034.1705508082@warthog.procyon.org.uk>
-Date: Thu, 18 Jan 2024 01:15:02 +0800
-Cc: Marc Dionne <marc.dionne@auristor.com>,
- linux-afs@lists.infradead.org,
- linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20240117111000.12763-1-yangtiezhu@loongson.cn> <20240117111000.12763-4-yangtiezhu@loongson.cn>
+In-Reply-To: <20240117111000.12763-4-yangtiezhu@loongson.cn>
+From: Song Liu <song@kernel.org>
+Date: Wed, 17 Jan 2024 09:20:29 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW6mWoQQ1M-uPE_i+RWv=t5GaVqUDAObWgpEC-PCYSbwHQ@mail.gmail.com>
+Message-ID: <CAPhsuW6mWoQQ1M-uPE_i+RWv=t5GaVqUDAObWgpEC-PCYSbwHQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 3/3] selftests/bpf: Skip callback tests if jit
+ is disabled in test_verifier
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Hou Tao <houtao@huaweicloud.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <D21C0923-8182-43A4-A3D0-0DB9DC07F638@gmail.com>
-References: <2929034.1705508082@warthog.procyon.org.uk>
-To: David Howells <dhowells@redhat.com>
-X-Mailer: Apple Mail (2.3774.300.61.1.2)
 
+On Wed, Jan 17, 2024 at 3:10=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+[...]
+> @@ -1622,6 +1624,16 @@ static void do_test_single(struct bpf_test *test, =
+bool unpriv,
+>         alignment_prevented_execution =3D 0;
+>
+>         if (expected_ret =3D=3D ACCEPT || expected_ret =3D=3D VERBOSE_ACC=
+EPT) {
+> +               if (fd_prog < 0 && saved_errno =3D=3D EINVAL && jit_disab=
+led) {
+> +                       for (i =3D 0; i < prog_len; i++, prog++) {
+> +                               if (!insn_is_pseudo_func(prog))
+> +                                       continue;
+> +                               printf("SKIP (callbacks are not allowed i=
+n non-JITed programs)\n");
+> +                               skips++;
+> +                               goto close_fds;
+> +                       }
+> +               }
+> +
 
-> 2024=E5=B9=B41=E6=9C=8818=E6=97=A5 00:14=EF=BC=8CDavid Howells =
-<dhowells@redhat.com> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> In afs_proc_addr_prefs_show(), we need to unlock the RCU read lock in =
-both
-> places before returning (and not lock it again).
->=20
-> Fixes: f94f70d39cc2 ("afs: Provide a way to configure address =
-priorities")
-> Reported-by: Marc Dionne <marc.dionne@auristor.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: linux-afs@lists.infradead.org
-> cc: linux-fsdevel@vger.kernel.org
-> ---
-> fs/afs/proc.c |    5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/afs/proc.c b/fs/afs/proc.c
-> index 3bd02571f30d..15eab053af6d 100644
-> --- a/fs/afs/proc.c
-> +++ b/fs/afs/proc.c
-> @@ -166,7 +166,7 @@ static int afs_proc_addr_prefs_show(struct =
-seq_file *m, void *v)
->=20
-> if (!preflist) {
-> seq_puts(m, "NO PREFS\n");
-> - return 0;
-> + goto out;
-> }
->=20
-> seq_printf(m, "PROT SUBNET                                      PRIOR =
-(v=3D%u n=3D%u/%u/%u)\n",
-> @@ -191,7 +191,8 @@ static int afs_proc_addr_prefs_show(struct =
-seq_file *m, void *v)
-> }
-> }
->=20
-> - rcu_read_lock();
-> +out:
-> + rcu_read_unlock();
+I would put this chunk above "alignment_prevented_execution =3D 0;".
 
-What about using:
+@@ -1619,6 +1621,16 @@ static void do_test_single(struct bpf_test
+*test, bool unpriv,
+                goto close_fds;
+        }
 
-	guard(rcu)();
++       if (fd_prog < 0 && saved_errno =3D=3D EINVAL && jit_disabled) {
++               for (i =3D 0; i < prog_len; i++, prog++) {
++                       if (!insn_is_pseudo_func(prog))
++                               continue;
++                       printf("SKIP (callbacks are not allowed in
+non-JITed programs)\n");
++                       skips++;
++                       goto close_fds;
++               }
++       }
++
+        alignment_prevented_execution =3D 0;
+
+        if (expected_ret =3D=3D ACCEPT || expected_ret =3D=3D VERBOSE_ACCEP=
+T) {
+
+Other than this,
+
+Acked-by: Song Liu <song@kernel.org>
 
 Thanks,
-Alan
-
-> return 0;
-> }
->=20
->=20
-
+Song
