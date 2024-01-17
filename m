@@ -1,84 +1,92 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B1420DC9;
-	Wed, 17 Jan 2024 15:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+Received: from mx4.securetransport.de (mx4.securetransport.de [178.254.6.145])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD33B1E485;
+	Wed, 17 Jan 2024 15:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.254.6.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705503781; cv=none; b=ShvCXpZcLtuxPV/qPVAu27yNFfvcEoLW/Ss4idR4NUDHajb358FUpjFl5epMmz/9nGYjfLB9dNMejVwE9tKhxHyw84ao5oVo6jDaZB0Y/Al3zyy9sGFY9lVin19ccn0NBA+rpGC4p9KierEzbb5h9O6p+NoPRzO/en8gCV5QHdI=
+	t=1705503973; cv=none; b=dnFpGkhI3LPaR9Ik3sNcIRe0Zw88gSbQN7YsmnBi2McJI7SXjbhWDUpj4sxPPoVjbSm9C0Ck1RDzfg5Q6/+lQVi6b504PQ6Tzry2sKWu0nltOFHE9AK7ZlaiO5vPc2WS4U8wO8673/F+8cMjYBSkdZKDVOBMyONN33o7el/7UdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705503781; c=relaxed/simple;
-	bh=U30tMly9NPtZKE/JLAer7cPf9aPNHRLrxBNVnRZE3JQ=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:Date:
-	 From:To:CC:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-EXCLAIMER-MD-CONFIG; b=KIc278C4vxcYdceNYCUMct+pbWSNmtHwrqCLbosKlhDr4Td2A8doRAdiPzAUzovB2RCH5QjhVaTELBizJBaZ/k2IisRF9c7ydH95tIhX8Pw+Ro3oRVpcrrvCEIfO163hirzFLAtRlrKT7usiMltJg0DEnAWump7ERQtWo418kJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=n1mG+MAt; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1705503973; c=relaxed/simple;
+	bh=0puuW3TJ0FCRviSMs7e5yTWLZRzhlBbPbMaNHCKi2EQ=;
+	h=DKIM-Signature:From:To:CC:Subject:Date:Message-ID:X-klartext:
+	 In-Reply-To:References:MIME-Version:Content-Type; b=LDtqCfPBDa1xaykrWJUG6TWzBVJ+A2GqcFFjAY/DKS/pCwR/MjZlkf+sa40PWDQLzqK3Hwtj1bic+vdMpUcK+H+HWBW8/qz2zEQt1MwgBkP9TZ4KCtFDq6bIN8BQY3hU6/ZF1D3Fk4pBfP5xK9dK57uqTJwRHsfUZW+crQR+ZUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com; spf=pass smtp.mailfrom=dh-electronics.com; dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b=MDJEmvVv; arc=none smtp.client-ip=178.254.6.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dh-electronics.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n1mG+MAt"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40HF2ahI038819;
-	Wed, 17 Jan 2024 09:02:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705503756;
-	bh=4DKlR/XOa60vrF3LRv1+V3xGI1FNo5diw36Qw9hUvYk=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=n1mG+MAtJict0pt9BdpTauvbJuIkiaD9OHne+EyNTqVoouMvoP4mdHBu2qLYyg3yl
-	 Dk8xmHYMPK80Aa6uqzrOwCT8uLFaGJN5akUIR0sYYSDtjkhgsjSTmAv1n4iWyCjJaG
-	 k1kYvWk59o01beoGg/bGgM/YWkC9YhJbDinXbe2g=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40HF2axQ017179
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 17 Jan 2024 09:02:36 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 17
- Jan 2024 09:02:35 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 17 Jan 2024 09:02:35 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40HF2ZrE008378;
-	Wed, 17 Jan 2024 09:02:35 -0600
-Date: Wed, 17 Jan 2024 09:02:35 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Wadim Egorov <w.egorov@phytec.de>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Garrett Giordano
-	<ggiordano@phytec.com>
-Subject: Re: [PATCH 15/16] arm64: dts: ti: phycore*: Clarify GPL-2.0 as
- GPL-2.0-only
-Message-ID: <20240117150235.37sw7ec3hegelno3@maturely>
-References: <20240110140903.4090946-1-nm@ti.com>
- <20240110140903.4090946-16-nm@ti.com>
- <fb8232b1-9708-4b57-b67c-92ec6ccf9fd0@phytec.de>
+	dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b="MDJEmvVv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dh-electronics.com;
+	s=dhelectronicscom; t=1705503387;
+	bh=8zEDP540sjwJaBrMK5oZNAb5uebPyAwo3ymgl0om22g=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=MDJEmvVvjPOMDdAmlvf/L+gbqe/avosXlfx/ll/72v6KZtxWHsyHrUuRGZ2MUempq
+	 ehcjuB8jZS+tdZFgS/R1zeFwA5dgJYrLQKKocgtF2bA4jwrvCLPuoRjD23ABWm+OOW
+	 Q3rfTgicGG915sTiu4xOkORDo54i3EiOT+XB40P8DlFfseAzy3e2rnBAA2CHzaXu6E
+	 mPjVbtdWRs7Hq83gnIdPGILVDVRPtluoQCS+Bw4TWE7t0jokB0GFVp4/WQnytRGjFL
+	 LieTe2jaOOHRNAf57WmOJjGk+H8iDnwAkTAa0IfEqp4u3uJD9I827K9Z+0d2VnKj4V
+	 nhErBTHFZ72tA==
+From: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+To: <crescentcy.hsieh@moxa.com>
+CC: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
+	<LinoSanfilippo@gmx.de>, <lukas@wunner.de>, <linux-kernel@vger.kernel.org>,
+	<linux-serial@vger.kernel.org>, <cniedermaier@dh-electronics.com>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/2] tty: serial: Cleanup the bit shift with macro
+Date: Wed, 17 Jan 2024 15:56:23 +0100
+Message-ID: <20240117145623.3556-1-cniedermaier@dh-electronics.com>
+X-klartext: yes
+In-Reply-To: <20231201071554.258607-2-crescentcy.hsieh@moxa.com>
+References: <20231201071554.258607-2-crescentcy.hsieh@moxa.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <fb8232b1-9708-4b57-b67c-92ec6ccf9fd0@phytec.de>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 
-On 03:29-20240117, Wadim Egorov wrote:
-> Hey Nishanth,
+Hi everyone,
+
+> This patch replaces the bit shift code with "_BITUL()" macro inside
+> "serial_rs485" struct.
 > 
-> I am also okay to have our device trees using the additional MIT license.
+> Signed-off-by: Crescent CY Hsieh <crescentcy.hsieh@moxa.com>
+> ---
+>  include/uapi/linux/serial.h | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 > 
+> diff --git a/include/uapi/linux/serial.h b/include/uapi/linux/serial.h
+> index 53bc1af67..6c75ebdd7 100644
+> --- a/include/uapi/linux/serial.h
+> +++ b/include/uapi/linux/serial.h
+> @@ -11,6 +11,7 @@
+>  #ifndef _UAPI_LINUX_SERIAL_H
+>  #define _UAPI_LINUX_SERIAL_H
+>  
+> +#include <linux/const.h>
+>  #include <linux/types.h>
+>  
+>  #include <linux/tty_flags.h>
+> @@ -140,14 +141,14 @@ struct serial_icounter_struct {
+>   */
+>  struct serial_rs485 {
+>  	__u32	flags;
+> -#define SER_RS485_ENABLED		(1 << 0)
+> -#define SER_RS485_RTS_ON_SEND		(1 << 1)
+> -#define SER_RS485_RTS_AFTER_SEND	(1 << 2)
 
-OK - I can respin the series. I take it that I can retain your Acks.
+In the old definition (1 << 3) wasn't used.
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+> -#define SER_RS485_RX_DURING_TX		(1 << 4)
+> -#define SER_RS485_TERMINATE_BUS		(1 << 5)
+> -#define SER_RS485_ADDRB			(1 << 6)
+> -#define SER_RS485_ADDR_RECV		(1 << 7)
+> -#define SER_RS485_ADDR_DEST		(1 << 8)
+> +#define SER_RS485_ENABLED		_BITUL(0)
+> +#define SER_RS485_RTS_ON_SEND		_BITUL(1)
+> +#define SER_RS485_RTS_AFTER_SEND	_BITUL(2)
+> +#define SER_RS485_RX_DURING_TX		_BITUL(3)
+
+Isn't it a break if number 3 isn't skipped here as well?
+
+Regards
+Christoph
