@@ -1,139 +1,254 @@
-Received: from mail1.perex.cz (mail1.perex.cz [77.48.224.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265B91DDFF;
-	Wed, 17 Jan 2024 12:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.48.224.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE681E89E;
+	Wed, 17 Jan 2024 12:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705494379; cv=none; b=jkvzeucYVHsj/ptBcQ+ClXroSbWwn4zjBVWyLbV1uZfyznwLHeMSOBVRy4QHAAZIEaE9x4zOt2rFqxIt03Cb9FXyqR9w79vG2ZflsSMy0DksYKfk0UDc8BmhCvWzcR2bVXJSPkvet/AB/kFSelylpUHFsP3L+kaTeUVi+axzdQA=
+	t=1705494386; cv=none; b=RiptsqIlgXJy4+XFlww+7Lrv2y5aKkxhrhpB5ie+q0fI0MYd/a+g8GqluSHxA6jBbg+1/BQ6Hrg/qCeKVPNKxN+CzVx5RYnX8zn9iPT/eeXawveAobZWCmcbM5pB+knk+/fVFJVEl0WhJ68rR5N3ve9+R8fSUMh6XHaAWpNR26w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705494379; c=relaxed/simple;
-	bh=dKEbtr22JSoM2eDC7MVGxfwSL8ybqJWGhJQldTcN6lQ=;
-	h=Received:DKIM-Filter:DKIM-Signature:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:Content-Language:To:References:
-	 From:Autocrypt:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	b=t1eulXJAieSskbliYP4erwpwzUZK2tnTSS/ZdjbtNAQ63ZENHvrpNO1/4imK2Q5DjsVTG+J1wSjgYcHGVg6J2klF734+rNtMV4XKeEGtDr6HH5qZ0twgJlaiabjnl+2+/0pT81vEH2vK8G9W/VzkvgYGkHxNLIY9WHp3CRzgAuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz; spf=pass smtp.mailfrom=perex.cz; dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b=ahjmqSdd; arc=none smtp.client-ip=77.48.224.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perex.cz
+	s=arc-20240116; t=1705494386; c=relaxed/simple;
+	bh=dMRPNMfnZdbmEGK6soJL6Xz1KLZ8SkRSDkiKqO49UNg=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=KP+gVB4u3z35sSTJjMXDrnYBt0fuj8l9/wevWaSlyGdOjm0J35iNjNNjVCQU3ohCRF52UnBCf/h16V36JzUAXENW8+hR7Cy1u7g7A30ZdAHbC/WOoZuW4hey0thNwqCih4oxDugisRkKzasOXU1QrDHs3JJaMBPy2E5Or+6C6B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c6ye0WbO; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="ahjmqSdd"
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-	by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 617D93347;
-	Wed, 17 Jan 2024 13:20:17 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 617D93347
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-	t=1705494017; bh=gqVNwJd9myQDNzn0BB/yVFVboWoPFQOlC3FiaBFsGzk=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ahjmqSddrDRceTKPhmKEq0cJFidxd4tm0nuAI3QjmBiZu8tjQYF4NjS/ptOt/eegV
-	 aTm7vS0427H638/hfYKlh8gTylT0mPmmjMXSB5i1UyX1YSPgZvG0G8rmfAA83WxF/j
-	 dtFNShBzABakwI8scjP0YzuToMYgJRAlufB/y2jQ=
-Received: from [192.168.100.98] (unknown [192.168.100.98])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: perex)
-	by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-	Wed, 17 Jan 2024 13:20:11 +0100 (CET)
-Message-ID: <473c1c2b-3426-4ec7-8319-dd08f3ae5a0c@perex.cz>
-Date: Wed, 17 Jan 2024 13:20:09 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6ye0WbO"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cc9fa5e8e1so126497861fa.3;
+        Wed, 17 Jan 2024 04:26:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705494383; x=1706099183; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cIIWT/IwddEjV/+NQCreP/WJZ3qm+exSEEdJpu8py0I=;
+        b=c6ye0WbOsOAhJevuZwqFKy8hl2MgS4oYGlIyQuEpfDuLqB1BE/+HmvmSEfXdFwvhzA
+         QEX2DQaedMOJcxgoAmYWrMV5Kmdql8cLIN8Ynib8hr/BsZBd0k5tTFepATQjYy/qqmmQ
+         QoJCa0TSG6zY6cUTH1otZqKcWkJ+NkNbhttw4PeFjpgTJ9H53CS61STqyuLQzFpvusUs
+         RPcJbRuSU+R7XMlVbxNWaePRpdkSI6bnDNxDmAlrbf2B9YirIu8/Ktg1VSjeUiLpf6xd
+         yNyfYBM0L12gs5wGof2FCqL6HUbg6sMOPMa4PtYodpN0Sy3dIk3eScaVZtUvf/SSt7Ou
+         eskA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705494383; x=1706099183;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cIIWT/IwddEjV/+NQCreP/WJZ3qm+exSEEdJpu8py0I=;
+        b=Vb+jGRFORvHfiN5MK4BVOi+rYFKMPbu86TXJt/43KVNBqmea8YwF13bUSYOeQpLJHN
+         mxyo/javkspm/SSwCT1vmjXNZB0yjHn70vvlgqMrFTNg5cM8fBAO4F6AxxH0j8RX+eWC
+         SoeiBIfxuhwayIBTMV8xqiH+SjztRBZOwokxXyNcSKsYE09qQjie0tx399x1cjr440mA
+         kAsMA8sK3XdHTX+OVXPvtf/KnYjwROx7XTnMs2G7+RdCPJaSwQcPFhnx+sWixG59kC8D
+         5O6Sn01mtdBPLUd483aNgMX6psZtrcezdFwTUCMo7wQ4vEufODw0f0560nlN+sJtDasy
+         djFg==
+X-Gm-Message-State: AOJu0Yx4th74YHW9J5qHW2UFpZBmh9XvFmyjjsEm3HNRvlcPKfVlyESO
+	Nm84Yxz6ZW5hZhtSqvmrSwI=
+X-Google-Smtp-Source: AGHT+IH04Dhy+IcBK3g3YpdoPAtLwrds9n6xYVLzNmpNU02GKxauyyc5Vl900ghZfaRlcXGzL4XucA==
+X-Received: by 2002:a05:6512:488e:b0:50d:1c9d:59e4 with SMTP id eq14-20020a056512488e00b0050d1c9d59e4mr3708593lfb.47.1705494382623;
+        Wed, 17 Jan 2024 04:26:22 -0800 (PST)
+Received: from pc636 (host-90-235-20-191.mobileonline.telia.com. [90.235.20.191])
+        by smtp.gmail.com with ESMTPSA id p3-20020a056512312300b0050e7fe17591sm240685lfd.137.2024.01.17.04.26.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 04:26:22 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 17 Jan 2024 13:26:19 +0100
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH v4 1/4] rcu: Reduce synchronize_rcu() latency
+Message-ID: <ZafHa37MS_eYMEr6@pc636>
+References: <20240104162510.72773-1-urezki@gmail.com>
+ <20240104162510.72773-2-urezki@gmail.com>
+ <8edf32ff-ea10-43f3-8820-b67f1691bad2@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: soc-core.c: Add "Unknown" and "Unknown Product" to
- dmi_blacklist
-Content-Language: en-US
-To: Daniel Abrecht <linux-sound@nodmarc.danielabrecht.ch>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <78a54997daea2b327ad59d495bc33851@abrecht.li>
-From: Jaroslav Kysela <perex@perex.cz>
-Autocrypt: addr=perex@perex.cz; keydata=
- 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
-In-Reply-To: <78a54997daea2b327ad59d495bc33851@abrecht.li>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8edf32ff-ea10-43f3-8820-b67f1691bad2@paulmck-laptop>
 
-On 17. 01. 24 13:14, Daniel Abrecht wrote:
-> In U-Boot, the default for DMI vendor / product if not set is "Unknown"
-> and "Unknown Product".
-> See
-> https://source.denx.de/u-boot/u-boot/-/blob/v2023.10/lib/smbios.c?ref_type=tags#L272
+> > +/*
+> > + * There are three lists for handling synchronize_rcu() users.
+> > + * A first list corresponds to new coming users, second for users
+> > + * which wait for a grace period and third is for which a grace
+> > + * period is passed.
+> > + */
+> > +static struct sr_normal_state {
+> > +	struct llist_head srs_next;	/* request a GP users. */
+> > +	struct llist_head srs_wait;	/* wait for GP users. */
+> > +	struct llist_head srs_done;	/* ready for GP users. */
+> > +
+> > +	/*
+> > +	 * In order to add a batch of nodes to already
+> > +	 * existing srs-done-list, a tail of srs-wait-list
+> > +	 * is maintained.
+> > +	 */
+> > +	struct llist_node *srs_wait_tail;
+> > +} sr;
 > 
-> This patch adds them to the dmi_blacklist.
+> Please put this in the rcu_state structure.  Having the separate structure
+> is fine (it does group the fields nicely, plus you can take a pointer
+> to it in the functions using this state), but it is good to have the
+> state in one place.
 > 
-> Signed-off-by: Daniel Abrecht <public@danielabrecht.ch>
-
-I think that there's a whitespace issue, but for the contents:
-
-Acked-by: Jaroslav Kysela <perex@perex.cz>
-
-
-> ---
->    sound/soc/soc-core.c | 2 ++
->    1 file changed, 2 insertions(+)
+> Also, please add the data structures in a separate patch.  This might
+> save someone a lot of time and effort should someone breaks the kernel
+> in a way that depends on data-structure size.  It would be much easier
+> for us if their bisection converged on the commit that adds the data
+> structures instead of the commit that also adds a lot of code.
 > 
-> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-> index f8524b5bfb33..aa1a31abbe3a 100644
-> --- a/sound/soc/soc-core.c
-> +++ b/sound/soc/soc-core.c
-> @@ -1804,6 +1804,8 @@ static const char * const dmi_blacklist[] = {
->        "Board Manufacturer",
->        "Board Vendor Name",
->        "Board Product Name",
-> +    "Unknown",
-> +    "Unknown Product",
->        NULL,    /* terminator */
->    };
+I put the data under rcu_state in the patch-3 in this series. But i can
+create a separate patch for this purpose. Should i split it or not?
+
+> > +	/* Finally. */
+> > +	complete(&rs->completion);
+> > +}
+> > +
+> > +static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+> > +{
+> > +	struct llist_node *done, *rcu, *next;
+> > +
+> > +	done = llist_del_all(&sr.srs_done);
+> > +	if (!done)
+> > +		return;
+> > +
+> > +	llist_for_each_safe(rcu, next, done)
+> > +		rcu_sr_normal_complete(rcu);
+> > +}
+> > +static DECLARE_WORK(sr_normal_gp_cleanup, rcu_sr_normal_gp_cleanup_work);
 > 
+> Why not put this into the sr_normal_state structure?  You can use
+> __WORK_INITIALIZER() to initialize it, as is done in a number of other
+> places in the kernel.
+> 
+It is not a big problem. I can move it under "rcu_state" also!
 
--- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+> > +/*
+> > + * Helper function for rcu_gp_cleanup().
+> > + */
+> > +static void rcu_sr_normal_gp_cleanup(void)
+> > +{
+> > +	struct llist_node *head, *tail;
+> > +
+> > +	if (llist_empty(&sr.srs_wait))
+> > +		return;
+> > +
+> > +	tail = READ_ONCE(sr.srs_wait_tail);
+> > +	head = __llist_del_all(&sr.srs_wait);
+> > +
+> > +	if (head) {
+> > +		/* Can be not empty. */
+> > +		llist_add_batch(head, tail, &sr.srs_done);
+> > +		queue_work(system_highpri_wq, &sr_normal_gp_cleanup);
+> > +	}
+> > +}
+> > +
+> > +/*
+> > + * Helper function for rcu_gp_init().
+> > + */
+> > +static void rcu_sr_normal_gp_init(void)
+> > +{
+> > +	struct llist_node *head, *tail;
+> > +
+> > +	if (llist_empty(&sr.srs_next))
+> > +		return;
+> > +
+> > +	tail = llist_del_all(&sr.srs_next);
+> > +	head = llist_reverse_order(tail);
+> 
+> Again, reversing the order is going to cause trouble on large systems.
+> Let's please not do that.  (I could have sworn that this was not present
+> in the last series...)
+> 
+> > +	/*
+> > +	 * A waiting list of GP should be empty on this step,
+> > +	 * since a GP-kthread, rcu_gp_init() -> gp_cleanup(),
+> > +	 * rolls it over. If not, it is a BUG, warn a user.
+> > +	 */
+> > +	WARN_ON_ONCE(!llist_empty(&sr.srs_wait));
+> > +
+> > +	WRITE_ONCE(sr.srs_wait_tail, tail);
+> > +	__llist_add_batch(head, tail, &sr.srs_wait);
+> > +}
+> > +
+> > +static void rcu_sr_normal_add_req(struct rcu_synchronize *rs)
+> > +{
+> > +	llist_add((struct llist_node *) &rs->head, &sr.srs_next);
+> > +}
+> > +
+> >  /*
+> >   * Initialize a new grace period.  Return false if no grace period required.
+> >   */
+> > @@ -1456,6 +1556,7 @@ static noinline_for_stack bool rcu_gp_init(void)
+> >  	/* Record GP times before starting GP, hence rcu_seq_start(). */
+> >  	rcu_seq_start(&rcu_state.gp_seq);
+> >  	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+> > +	rcu_sr_normal_gp_init();
+> >  	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("start"));
+> >  	rcu_poll_gp_seq_start(&rcu_state.gp_seq_polled_snap);
+> >  	raw_spin_unlock_irq_rcu_node(rnp);
+> > @@ -1825,6 +1926,9 @@ static noinline void rcu_gp_cleanup(void)
+> >  	}
+> >  	raw_spin_unlock_irq_rcu_node(rnp);
+> >  
+> > +	// Make synchronize_rcu() users aware of the end of old grace period.
+> > +	rcu_sr_normal_gp_cleanup();
+> > +
+> >  	// If strict, make all CPUs aware of the end of the old grace period.
+> >  	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
+> >  		on_each_cpu(rcu_strict_gp_boundary, NULL, 0);
+> > @@ -3561,6 +3665,38 @@ static int rcu_blocking_is_gp(void)
+> >  	return true;
+> >  }
+> >  
+> > +/*
+> > + * Helper function for the synchronize_rcu() API.
+> > + */
+> > +static void synchronize_rcu_normal(void)
+> > +{
+> > +	struct rcu_synchronize rs;
+> > +
+> > +	if (!READ_ONCE(rcu_normal_wake_from_gp)) {
+> > +		wait_rcu_gp(call_rcu_hurry);
+> > +		return;
+> > +	}
+> > +
+> > +	init_rcu_head_on_stack(&rs.head);
+> > +	init_completion(&rs.completion);
+> > +
+> > +	/*
+> > +	 * This code might be preempted, therefore take a GP
+> > +	 * snapshot before adding a request.
+> > +	 */
+> > +	if (IS_ENABLED(CONFIG_RCU_SR_NORMAL_DEBUG_GP))
+> > +		rs.head.func = (void *) get_state_synchronize_rcu();
+> > +
+> > +	rcu_sr_normal_add_req(&rs);
+> > +
+> > +	/* Kick a GP and start waiting. */
+> > +	(void) start_poll_synchronize_rcu();
+> 
+> It is unfortunate that the debugging requires an extra timestamp.
+> The ways I can think of to avoid this have problems, though.  If this
+> thing was replicated per leaf rcu_node structure, the usual approach
+> would be to protect it with that structure's ->lock.
+> 
+Hmm.. a per-node approach can be deployed later. As discussed earlier :)
 
+Debugging part i do not follow, could you please elaborate a bit?
+
+Thanks!
+
+--
+Uladzislau Rezki
