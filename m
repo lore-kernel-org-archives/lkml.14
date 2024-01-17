@@ -1,46 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A05224CE
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBB122627
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705509381; cv=none; b=lcwEOsWj2rauzDL6aJTLoeknQ2zojSYPoexv/hxTLuyrB7xxO7zZhF435Vt/DTdK3Rxsqc9Q9J9/I3aP34rlyoXIDVjZlC7NaP7MTo5nbnybeTnP7bQdByTCQlOnb4BP/rMJ4ACN6iqJjbWb+vBzW5iYgZ+pCRY9hb+lO3Pczfw=
+	t=1705509381; cv=none; b=g7tWV0A7WOlANcip8Egr+i9c6OMrVIeJet5fCtrGtSSTbaxFFbaGI8HW325SnfgyLLXJTCoWgOj1JD3psSejhuX2RDEsKIBq80FOKin7ByT7GxYOUgUCGXJ8hP/HzB2KG2iCcgSqJz4ZFP7lUXXqG8IN0Dpd8VVwzDu2QGXdevg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705509381; c=relaxed/simple;
-	bh=RIu0wCoHEEwmwrWrI4fk2QwIf3Z4+DNKewqmZMfVEmc=;
+	bh=zEdw6+4t3gWkhLRYybEMf2j+xLGxSJtwIdZKm2vmD5o=;
 	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:From:To:Cc:
-	 Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-Scanned-By; b=Qr7gjkm5bRHyLNBJgIsFyeIQtqyvuqUbIWeMenbIbxuNrYBHSXsN7JqhNzQe6Cu5N4/GV5H//MkF1JM3FaCCKfczpH99Zp1xcTprvjlLHOVWmK2m6TLyhPNBxYA82293JVzgG94K+ZQC2Wk+3SkjqympOm5GnoYOEsneXArcrvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CybQiS4s; arc=none smtp.client-ip=170.10.133.124
+	 Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:
+	 X-Scanned-By; b=ogWnQ9xfffFM7wkDv8Lls374dcIj2nqK1P8phNjPRuSdtv6QufIWIczPDG1+9Ouy7Nb0nmIvloh+WnNYNbUqJ4W64Ylt7OXf9JlfOGfQxTFKI+cJE6RdgDhj1L91w2/bQvlaSKfX295emjWtwOHNVqFsac379gZ/qudZ/LYbido=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dYd+rijC; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CybQiS4s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dYd+rijC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705509378;
+	s=mimecast20190719; t=1705509377;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pwiZxk2/LIns0OuqqkiNPgLv6/0v49jXf5KKeW3bftU=;
-	b=CybQiS4s10mbG/ljtqMfKn7WsMwnsAP2UKXEni/lP08tGdpiRW0lt62zf323r8oJwwF8fc
-	PqDTan7vqHTMOxN1RHVQPHFD3enCDDc+vg175+Z0zBeiFgBeBQhVuLf/61d3gpEVJUTuzE
-	G4Dw0ioduPrGJWqkQI4pb+NGwJyqb9Y=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rjFWU3VSZDE3kD8BQKWbnkhbf707TtYyOuJ5RUq9a7I=;
+	b=dYd+rijCtLuhpHxqD2GM/s1eEji4x9ju/WUGUDIR4I1OySoLrqetavToRevo7Owzwv1cAr
+	RcjzbUHVeroLbVjjkGYI1J6loG161bAaOgHRoA2NMGReP+bEoUa10/DMNgyOOLgFZYbxJC
+	sFAMyVsW3aMZjDuGTy7F/V/d8Xvc/jY=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-306-Ry1xxOizP6KjrjiwrnqQ_w-1; Wed, 17 Jan 2024 11:36:16 -0500
-X-MC-Unique: Ry1xxOizP6KjrjiwrnqQ_w-1
+ us-mta-594-zLf2wzouOPWbYK-3U-_Ipw-1; Wed, 17 Jan 2024 11:36:06 -0500
+X-MC-Unique: zLf2wzouOPWbYK-3U-_Ipw-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BEFDB81DA88;
-	Wed, 17 Jan 2024 16:36:14 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A874982A6CF;
+	Wed, 17 Jan 2024 16:36:04 +0000 (UTC)
 Received: from llong.com (unknown [10.22.16.147])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 272321121306;
-	Wed, 17 Jan 2024 16:36:13 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4A0101121312;
+	Wed, 17 Jan 2024 16:36:02 +0000 (UTC)
 From: Waiman Long <longman@redhat.com>
 To: Tejun Heo <tj@kernel.org>,
 	Zefan Li <lizefan.x@bytedance.com>,
@@ -78,11 +77,9 @@ Cc: cgroups@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	Costa Shulyupin <cshulyup@redhat.com>,
 	Waiman Long <longman@redhat.com>
-Subject: [RFC PATCH 6/8] cgroup/cpuset: Enable dynamic rcu_nocb mode on isolated CPUs
-Date: Wed, 17 Jan 2024 11:35:09 -0500
-Message-Id: <20240117163511.88173-7-longman@redhat.com>
-In-Reply-To: <20240117163511.88173-1-longman@redhat.com>
-References: <20240117163511.88173-1-longman@redhat.com>
+Subject: [RFC PATCH 0/8] cgroup/cpuset: Support RCU_NOCB on isolated partitions
+Date: Wed, 17 Jan 2024 11:35:03 -0500
+Message-Id: <20240117163511.88173-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,94 +89,52 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-The patch adds RCU no-callback isolation mode dynamically to isolated
-CPUs within isolated partitions when the full CPU isolation mode is
-enabled. This isolation feature will only be available for use by cpuset
-if the "rcu_nocb" boot command line option is specified in the kernel
-command line with or without the optional CPU list argument.
+This patch series is based on the RFC patch from Frederic [1]. Instead
+of offering RCU_NOCB as a separate option, it is now lumped into a
+root-only cpuset.cpus.isolation_full flag that will enable all the
+additional CPU isolation capabilities available for isolated partitions
+if set. RCU_NOCB is just the first one to this party. Additional dynamic
+CPU isolation capabilities will be added in the future.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/cgroup/cpuset.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+The first 2 patches are adopted from Federic with minor twists to fix
+merge conflicts and compilation issue. The rests are for implementing
+the new cpuset.cpus.isolation_full interface which is essentially a flag
+to globally enable or disable full CPU isolation on isolated partitions.
+On read, it also shows the CPU isolation capabilities that are currently
+enabled. RCU_NOCB requires that the rcu_nocbs option be present in
+the kernel boot command line. Without that, the rcu_nocb functionality
+cannot be enabled even if the isolation_full flag is set. So we allow
+users to check the isolation_full file to verify that if the desired
+CPU isolation capability is enabled or not.
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index d1d4ce213979..40bbb0a9cb84 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -218,6 +218,11 @@ enum isolated_cpus_modifiers {
-  */
- static cpumask_var_t	isolated_cpus;
- 
-+/*
-+ * rcu_nocb_mask set up at boot time.
-+ */
-+static cpumask_var_t	rcu_nocb_mask_preset;
-+
- /*
-  * Enable full CPU isolation in isolated partitions, if set.
-  */
-@@ -229,15 +234,26 @@ static bool isolation_full;
- static int isolation_flags;
- 
- enum cpuset_isolation_types {
-+	ISOL_TYPE_RCU,	/* RCU no-callback CPU mode */
- 	ISOL_TYPE_MAX,
- };
- 
-+enum cpuset_isolation_flags {
-+	ISOL_FLAG_RCU = BIT(ISOL_TYPE_RCU),
-+};
-+
- static const char * const isolation_type_names[ISOL_TYPE_MAX] = {
-+	[ISOL_TYPE_RCU] = "rcu_nocbs",
- };
- 
- /* Detect the cpuset isolation modes that can be enabled */
- static __init int set_isolation_flags(void)
- {
-+	if (rcu_nocb_enabled(NULL)) {
-+		BUG_ON(!zalloc_cpumask_var(&rcu_nocb_mask_preset, GFP_KERNEL));
-+		(void)rcu_nocb_enabled(rcu_nocb_mask_preset);
-+		isolation_flags |= ISOL_FLAG_RCU;
-+	}
- 	return 0;
- }
- late_initcall(set_isolation_flags);
-@@ -1554,6 +1570,7 @@ static int partition_xcpus_del(int old_prs, struct cpuset *parent,
- static int update_isolation_cpumasks(struct cpumask *mask, int modifier)
- {
- 	int err;
-+	bool enable = (modifier == ISOL_CPUS_ADD);
- 
- 	lockdep_assert_cpus_held();
- 
-@@ -1569,6 +1586,25 @@ static int update_isolation_cpumasks(struct cpumask *mask, int modifier)
- 	if (WARN_ON_ONCE(cpumask_empty(mask)))
- 		return -EINVAL;
- 
-+	err = 0;
-+	if (isolation_flags & ISOL_FLAG_RCU) {
-+		/*
-+		 * When disabling rcu_nocb, make sure that we don't touch any
-+		 * CPUs that have already been set in rcu_nocb_mask_preset.
-+		 */
-+		if (!enable && cpumask_intersects(mask, rcu_nocb_mask_preset)) {
-+			cpumask_var_t tmp_mask;
-+
-+			if (WARN_ON_ONCE(!alloc_cpumask_var(&tmp_mask, GFP_KERNEL)))
-+				return -ENOMEM;
-+			if (cpumask_andnot(tmp_mask, mask, rcu_nocb_mask_preset))
-+				err = rcu_nocb_cpumask_update(tmp_mask, enable);
-+			free_cpumask_var(tmp_mask);
-+		} else {
-+			err = rcu_nocb_cpumask_update(mask, enable);
-+		}
-+	}
-+	WARN_ON_ONCE(err);
- 	return err;
- }
- 
+Only sanity checking has been done so far. More testing, especially on
+the RCU side, will be needed.
+
+[1] https://lore.kernel.org/lkml/20220525221055.1152307-1-frederic@kernel.org/
+
+Frederic Weisbecker (2):
+  rcu/nocb: Pass a cpumask instead of a single CPU to offload/deoffload
+  rcu/nocb: Prepare to change nocb cpumask from CPU-hotplug protected
+    cpuset caller
+
+Waiman Long (6):
+  rcu/no_cb: Add rcu_nocb_enabled() to expose the rcu_nocb state
+  cgroup/cpuset: Better tracking of addition/deletion of isolated CPUs
+  cgroup/cpuset: Add cpuset.cpus.isolation_full
+  cgroup/cpuset: Enable dynamic rcu_nocb mode on isolated CPUs
+  cgroup/cpuset: Document the new cpuset.cpus.isolation_full control
+    file
+  cgroup/cpuset: Update test_cpuset_prs.sh to handle
+    cpuset.cpus.isolation_full
+
+ Documentation/admin-guide/cgroup-v2.rst       |  24 ++
+ include/linux/rcupdate.h                      |  15 +-
+ kernel/cgroup/cpuset.c                        | 237 ++++++++++++++----
+ kernel/rcu/rcutorture.c                       |   6 +-
+ kernel/rcu/tree_nocb.h                        | 118 ++++++---
+ .../selftests/cgroup/test_cpuset_prs.sh       |  23 +-
+ 6 files changed, 337 insertions(+), 86 deletions(-)
+
 -- 
 2.39.3
 
