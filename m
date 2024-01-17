@@ -1,121 +1,178 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MTA-12-4.privateemail.com (mta-12-4.privateemail.com [198.54.127.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEA2249FE
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 19:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FEA24A00;
+	Wed, 17 Jan 2024 20:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705521595; cv=none; b=HroeNAk305uJNe+903V2RUymInVk/mly0+TcJ2MRgwMCSEqPyRZdvxLzwkxGRZuGqz8kfYGeKW5DDK0zjPeLXtGwcz1XiNxji32bD5yJj26Lvym1n1idjaoL2h/Vb99Hu/ftF5cHuuKWRXUGkANbbfc57VLW+wtSiB2el5R7Iuo=
+	t=1705521626; cv=none; b=AEPpO1juVRQUxOeQWYoF9yi+WG8vw54J8CWj47X0Oo42/m8L/wolPIhQuqj+G4uCAqjuBxiF/+sfK9k1WgGcE5K+W9V2Al0U8IMIUjPFN9UWTQg/j2uoGjWPwRJavh1Yht7v13TZS81zAVHrT2mNTwwm9Xup8F1Wi4iA7Hc7TUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705521595; c=relaxed/simple;
-	bh=+Pta81SYiRfwNxuzxNVy3EkmBMZfAF6F0bWsk98YHZA=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
-	 To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding; b=r94cUN7GjJ4ivOH5X1bo8yMdgqGU7DDkxEbVRzqOZlc/iNqBcXxnF8xohTQvMRecNJWm/oZYfT4NrRXFj+igySf8AhyWP3naagCrTDqITaFF9cPir7lDnnRegu5LOS8Zc8McFxSJ1Ag4Tez/AB9paRLJdvSXiur9B5VspNo8ZUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Mypx634N; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1705521626; c=relaxed/simple;
+	bh=YVcIYhmkjZDzczcsw0If+iQoXd/UI9stcIz62mPaVPg=;
+	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:X-Virus-Scanned; b=W3mesiM9EKZ3Y2H/o4jJ3uhrzvjs7Na3+yCBzleL7M67VnmeQp1WghPfaMDTfEaLwPw0MF/nlNfjOfYzgjtHZ7E4wzlfRIuhLGbnrZRNeWALTo6nbKnYVwKAFthouGeqYMAd/EHj67QBIq20Kk1B1zsA31wVylLa2jpfiJi0MkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pappasbrent.com; spf=pass smtp.mailfrom=pappasbrent.com; dkim=pass (2048-bit key) header.d=pappasbrent.com header.i=@pappasbrent.com header.b=OtPPLGUi; arc=none smtp.client-ip=198.54.127.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pappasbrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pappasbrent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Mypx634N"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33678156e27so9854252f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 11:59:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1705521592; x=1706126392; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5aqDc7wFhUblpWDXInFN43NA3e6m4V27astgceGCPPc=;
-        b=Mypx634NcdzTEaOULIugJpe3EZe2ebqIWSbsV8qkPUUhF0rUnsFQlz4zL0ghhG5AJM
-         peFT2A+nX3uIL9zcQlfsaMCk6FM/Q+oh8IVNnn9fK0O4X/yokOaSt/1PG7KDgcbiwYCs
-         bqc88IJChTMvgonM++wbveF6+MWCK0mNM7kdmqw+QecaNE6zFjwYxCZPE8GebN+jg6JO
-         cFoax6IRM1Hi1Q/evyNW+/2PUqNisIduZ/sw/bQfDH0q0S+Z7VbM/ZRTFTRFbTj2emPF
-         RAJrZWCeuRajsWVrfH726JLSTceUsFoRHnO1ylpfAhCsJPE17S9tRbYaXfr8gvQq4jZn
-         +xxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705521592; x=1706126392;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5aqDc7wFhUblpWDXInFN43NA3e6m4V27astgceGCPPc=;
-        b=Zf0Jqcxwit/mfPdviTA2xiGibPIO6fqn/I5X/hpNUTiP3i/uQsDaBbd+9BH1MF6RgO
-         C3wWn1rmKftBWEA+dJ8GcWRMc0fP/ZSl/AxMNYX2ylKzFwbCFU40nfv85V4LuVMkZFTN
-         NwLAbWzA0mEdZxl6wCDxP2H8Cccufx6UQ0TMEGO284ySxYbc7o2NT5obBA5Vk8Prqr5y
-         rCLyRwq+wrYoH9//eP+tqAZqHhwbNbJ4ZjuNOXXR82g2CUFX8X8hl34j7VAmUk4GOKzv
-         +F91hhCt4UjrPFbH/KTgvxckuKsQVmyVSbtdqtMwxiwqxOh+cti2GLdjoVAtJhrqbnAb
-         Qltw==
-X-Gm-Message-State: AOJu0Yzgsjz2Cg+OLxaGekd1l4VWa4dfmMee5YEHVslq/t2rv4f/ObQl
-	75yPvRdEycTlqNPxd+TMF9pnpzceOBRhQw==
-X-Google-Smtp-Source: AGHT+IH/7y3jh4RsdypLFLgoZFvg4xOYBxfTQlbB2rSxLluKLmi1ibIVgsCqywHLSrX2RjCOL7MVgw==
-X-Received: by 2002:adf:eb92:0:b0:337:9f43:93dc with SMTP id t18-20020adfeb92000000b003379f4393dcmr3455303wrn.141.1705521592223;
-        Wed, 17 Jan 2024 11:59:52 -0800 (PST)
-Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id i6-20020adfb646000000b00337bc2176f6sm2350294wre.81.2024.01.17.11.59.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jan 2024 11:59:52 -0800 (PST)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Qinglin Pan <panqinglin2020@iscas.ac.cn>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	linux-riscv@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=pappasbrent.com header.i=@pappasbrent.com header.b="OtPPLGUi"
+Received: from mta-12.privateemail.com (localhost [127.0.0.1])
+	by mta-12.privateemail.com (Postfix) with ESMTP id 736051800046;
+	Wed, 17 Jan 2024 15:00:16 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=pappasbrent.com;
+	s=default; t=1705521616;
+	bh=YVcIYhmkjZDzczcsw0If+iQoXd/UI9stcIz62mPaVPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OtPPLGUi2sxy5zPEQ45+tx8wpT2Kyjm8lc4idSwuV1jaXN3PLxOKr1uRndAw2QN4n
+	 +Mp3v2BT4i1+77NusW+08hG7LRXDdaPVdGWgpLcqRbw3N9CNhszYvIlRIQb/jm2buS
+	 j+onlQY5XNkHOWtUTyBsh4SF+BCA/xw61ETYbypLwcgtwAdBVo7jrc0kBxgdlhW0/N
+	 WHuJJogZmUGptz+SuqBVjUMNIIx8hJsBtiMF3wHQCUFgeoiAp7XlCTHSXM9//vPPSm
+	 lw/zN5TO22JTrpiQ1Z26+nS15QCSxpD87o0ae9So87/QdF0qZbhDL5CkZLBjZq4XHS
+	 i2+sGnuVWVUTA==
+Received: from pappasbrent.com (050-088-208-203.res.spectrum.com [50.88.208.203])
+	by mta-12.privateemail.com (Postfix) with ESMTPA;
+	Wed, 17 Jan 2024 15:00:06 -0500 (EST)
+Date: Wed, 17 Jan 2024 15:00:03 -0500
+From: Brent Pappas <bpappas@pappasbrent.com>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Kalle Valo <kvalo@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH 2/2] riscv: Fix hugetlb_mask_last_page() when NAPOT is enabled
-Date: Wed, 17 Jan 2024 20:57:41 +0100
-Message-Id: <20240117195741.1926459-3-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240117195741.1926459-1-alexghiti@rivosinc.com>
-References: <20240117195741.1926459-1-alexghiti@rivosinc.com>
+Subject: Re: [PATCH] wifi: mac80211: tx: Add __must_hold() annotation
+Message-ID: <Zagxwx40ja4JRUQ2@pappasbrent.com>
+References: <20240113011145.10888-2-bpappas@pappasbrent.com>
+ <87sf31hhfp.fsf@kernel.org>
+ <26d364547d3bbb04800877e899cfebe0e1ec4dc0.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <26d364547d3bbb04800877e899cfebe0e1ec4dc0.camel@sipsolutions.net>
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-When NAPOT is enabled, a new hugepage size is available and then we need
-to make hugetlb_mask_last_page() aware of that.
+Thanks for the feedback Johannes. As I mentioned in my original email, I'm still
+learning the RCU API, so I appreciate the insight from someone more
+knowledgeable.
 
-Fixes: 82a1a1f3bfb6 ("riscv: mm: support Svnapot in hugetlb page")
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/mm/hugetlbpage.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+> Much better to put something lockdep_assert_held() or similar into the right
+> places.
 
-diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-index 24c0179565d8..87af75ee7186 100644
---- a/arch/riscv/mm/hugetlbpage.c
-+++ b/arch/riscv/mm/hugetlbpage.c
-@@ -125,6 +125,26 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- 	return pte;
- }
- 
-+unsigned long hugetlb_mask_last_page(struct hstate *h)
-+{
-+	unsigned long hp_size = huge_page_size(h);
-+
-+	switch (hp_size) {
-+#ifndef __PAGETABLE_PMD_FOLDED
-+	case PUD_SIZE:
-+		return P4D_SIZE - PUD_SIZE;
-+#endif
-+	case PMD_SIZE:
-+		return PUD_SIZE - PMD_SIZE;
-+	case napot_cont_size(NAPOT_CONT64KB_ORDER):
-+		return PMD_SIZE - napot_cont_size(NAPOT_CONT64KB_ORDER);
-+	default:
-+		break;
-+	}
-+
-+	return 0UL;
-+}
-+
- static pte_t get_clear_contig(struct mm_struct *mm,
- 			      unsigned long addr,
- 			      pte_t *ptep,
--- 
-2.39.2
+I'm not committed to using __must_hold(); would you be willing to accept this
+patch if I change it to use lockdep_assert_held() instead?
 
+> The function ieee80211_set_beacon_cntdwn() is called from a number of places
+> in this file, some of which acquire RCU critical section, and some of which
+> acquire no locks nor RCU critical section at all.
+
+Grepping through tx.c, I see ieee80211_set_beacon_cntdwn() is invoked in three
+places:
+
+- Line 5285: Inside the definition of ieee80211_beacon_get_ap(), which is only
+  invoked in critical sections (both directly and in another nested call).
+- Line 5439: Directly inside a critical section.
+- Line 5471: Directly inside a critical section (same as previous).
+
+> I tried to fix this in sparse many years ago, some code even got merged (and
+> then reverted), and if the experience tells me anything then that it's pretty
+> much not fixable.
+
+I'm sorry to hear that; a solution to this problem sounds very useful. I'm
+currently working on making my own static analyzer for performing more checks
+than what sparse currently provides. Since you've worked on this problem and
+have deeper insight into than I do, what sort of checks would you like to see
+added to a tool like sparse (besides checking whether specific locks are held)?
+
+Thank you,
+Brent
+
+The 01/15/2024 14:13, Johannes Berg wrote:
+> On Sat, 2024-01-13 at 08:32 +0200, Kalle Valo wrote:
+> > 
+> > >  static void ieee80211_set_beacon_cntdwn(struct ieee80211_sub_if_data *sdata,
+> > >  					struct beacon_data *beacon,
+> > >  					struct ieee80211_link_data *link)
+> > > +	__must_hold(link)
+> > 
+> > Oh, never seen __must_hold() before and looks very useful. So does this
+> > work with RCU, mutexes and spinlocks?
+> > 
+> > In case others are interested, here's the documentation I was able to find:
+> > 
+> > https://docs.kernel.org/dev-tools/sparse.html#using-sparse-for-lock-checking
+> > 
+> 
+> Except it's not actually useful, and looks more useful than it is. IMHO
+> it's actually more harmful than anything else.
+> 
+> One might even consider this patch a good example! The function
+> ieee80211_set_beacon_cntdwn() is called from a number of places in this
+> file, some of which acquire RCU critical section, and some of which
+> acquire no locks nor RCU critical section at all. Most of them nest and
+> are called in RCU.
+> 
+> However, there's basically no way to get sparse to warn on this. Even
+> inserting a function
+> 
+> void test(void);
+> void test(void)
+> {
+>         ieee80211_set_beacon_cntdwn(NULL, NULL, NULL);
+> }
+> 
+> will not cause sparse to complain, where this *clearly* doesn't hold an
+> locks.
+> 
+> 
+> Also, as we (should) all know, the argument to __acquires(),
+> __releases() and __must_check() is pretty much ignored. I tried to fix
+> this in sparse many years ago, some code even got merged (and then
+> reverted), and if the experience tells me anything then that it's pretty
+> much not fixable.
+> 
+> __acquires() and __releases() at least are useful for tracking that you
+> don't have a mismatch, e.g. a function that __acquires() but then takes
+> a lock in most paths but forgot one, for example. With __must_hold(),
+> this really isn't the case.
+> 
+> And then we could argue that at least it has a documentation effect, but
+> ... what does it even mean to "hold 'link'"? There isn't even a lock,
+> mutex or otherwise, in the link. You can't "own" a reference to it, or
+> anything like that. The closest thing in current kernels would be to
+> maybe see if you have the wiphy mutex, but that's likely not the case in
+> these paths and RCU was used to get to the link struct ...
+> 
+> 
+> IOW, I find this lacking from an implementation/validation point of
+> view, and lacking if not outright confusing from a documentation point
+> of view. Much better to put something lockdep_assert_held() or similar
+> into the right places.
+> 
+> As for your comment about RCU in ath11k (which points back to this
+> thread): I don't find
+> 
+> 	RCU_LOCKDEP_WARN(!rcu_read_lock_held());
+> or
+> 	WARN_ON_ONCE(!rcu_read_lock_held());
+> 
+> very persuasive, it's much better to have it checked with
+> rcu_dereference_protected(), rcu_dereference_check(), the condition
+> argument to list_for_each_rcu(), or (in the case of wiphy) our wrappers
+> around these like wiphy_dereference(). I cannot think of any case where
+> you'd want to ensure that some code is in an RCU critical section
+> without it actually using RCU - and if it does you have
+> rcu_dereference() and all those things that (a) check anyway, and also
+> (b) serve as their own documentation.
+> 
+> 
+> Anyway, long story short: I don't see value in this patch and won't be
+> applying it unless somebody here can convince me otherwise, ideally
+> addressing the concerns stated above.
+> 
+> johannes
