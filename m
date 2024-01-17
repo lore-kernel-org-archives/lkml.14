@@ -1,106 +1,95 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E3F225CF
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8284224D6;
+	Wed, 17 Jan 2024 16:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705510266; cv=none; b=WN3c49IX424RkDvZemJ7LvFzLaXfhlAR5jjLBvLyBzRMTg0PNoz+E+T0irr0p9gFMxWefWhx7Zgk3cml6w3MjqDXMIDeoQ1kx4qd88cgPWXHH45liK/b9v7TI2Qr25FPSpYY4oOKgO5bJtIQZgD7OFKm0r7LDo+T44V9C/FADbk=
+	t=1705510320; cv=none; b=sp90fCAdjRGYgLzcDwX+X2+JZnKHN6ZYov+ccuAXPKvzDsP9TNTmbR3XNn5R+aEI7cc9XMQNJ9m8L9A7akyO0zXYCgKLHjSEG72UYlG/wUIm4BimJ1m6noGeQi9IQUTc2DP88ZHRdqmQCfGXRZyOkJaPKQb8dAshAZQdufcTVYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705510266; c=relaxed/simple;
-	bh=faT2uRrQt3V7tKi/jCpPpD6mGOoqk18135qnLaMNQ6w=;
-	h=Date:DKIM-Signature:X-Report-Abuse:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To:X-Migadu-Flow; b=BCpQc7jnhw52gpz0VMclEX3bIjnAfW/fN6+qwMUFnbyR08WoADN4AdNMJm5n7Mu0GkFWX/ZYQ1mbsoPpTLG5GkBF8cVJ6uhjfc3oyji2jWXU5TExk2Cw2Hi9bIEgSYbl8a1eqdLZGkye4f06ks9BjYe9dQ/oV9qsCKuBxiVCRvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BspoeQJt; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BspoeQJt"
-Date: Wed, 17 Jan 2024 17:50:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705510261;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zsMBTqAbxvDSq34Y8PBcrq1QpEjPS4gVtR8AVs1aPo0=;
-	b=BspoeQJtQ3UPfpuJmKzVnJGZaqu6V2IgvIXmri1tYRZK2y0xcxPjnsCRf7Xs6Hj33dsr19
-	MNRPJ4vUXh4baAxJUXOshQkM6a9UfonXktAjkK426LQgS0DFmZbAQ1G6W9LQlRCO/cssRo
-	KcxndU/YA7T217PRGN6/swdvxkMLfmA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: "sundongxu (A)" <sundongxu3@huawei.com>
-Cc: Marc Zyngier <maz@kernel.org>, yuzenghui@huawei.com,
-	james.morse@arm.com, suzuki.poulose@arm.com, will@kernel.org,
-	catalin.marinas@arm.com, wanghaibin.wang@huawei.com,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, jiangkunkun@huawei.com
-Subject: Re: [bug report] GICv4.1: VM performance degradation due to not
- trapping vCPU WFI
-Message-ID: <ZagFVNsA1aLuxorp@linux.dev>
-References: <a481ef04-ddd2-dfc1-41b1-d2ec45c6a3b5@huawei.com>
- <86v87t8ras.wl-maz@kernel.org>
- <89fe1503-6d62-90ca-5edb-e11c74846a00@huawei.com>
+	s=arc-20240116; t=1705510320; c=relaxed/simple;
+	bh=/MO/EiEiyuqafKAOteDF8mFDYGfee9/3z57wVlNcZ+Y=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:Received:Received:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:
+	 X-Gmail-Original-Message-ID:Message-ID:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding; b=QY2wmZNkWwLbCv9KMKWaTflz6rF0pNHtwbE7KsuUcvxH0Zn8o3YcfJvV7ZmUsPAxsaL9u7TSjh8RCgs0Eq6ZUWcu33nRo0BjSV+EvrN7/7mEYNOHc4PLbTdC3NjAjAkPxSSwR8SQo4VegY42wJAp5fLjDPKRbvR5/yVunheZP5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-559b3ee02adso2393941a12.3;
+        Wed, 17 Jan 2024 08:51:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705510317; x=1706115117;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/MO/EiEiyuqafKAOteDF8mFDYGfee9/3z57wVlNcZ+Y=;
+        b=k9+kXhjRXBiMYEkZECn7Adb0JcXvb5uyEySGhEVz6m7tk7eeOoxVoKvWOjYVWkKn7Q
+         fYnBjNfA8DalfrOpKNdHHxiygxh4zyJI8V5NjCsENCk4ddqw2dsDVq4EpwBk8uakeE9B
+         GeiMnL7DywYxQci3xFMAHHV7yV9+m1UPrz9oJExGMaLtYsEY6T2bgIwZYH7f6VABfEi7
+         WsJLE2ciP7kBCS40+M2MmEu4PoHq4pnQuhSZXADCZUBko4AvljjPT3imazDMFMQL+Mcd
+         qlKTlOGDQXe9mv7Y0ZWmi0dBa5V2XiHsCM/eSXyCYaR9T0QJ05aVVAhn0xPlXktnA54F
+         pvHA==
+X-Gm-Message-State: AOJu0Ywf2S4htSKHcFHbUUxKedqdeuM33Yqy8rhHG5J9xcWanaK8dLdJ
+	X5g14wkcSmq2e1RTMniNmrr9+7Y3bSa3UA==
+X-Google-Smtp-Source: AGHT+IEaOzWXhyWLBy8CSyyXKVdkEUG87Vb1LXXQfW5Y9Ua2bAGMGy4jyKApG1X1Pro4wEVR+GAlow==
+X-Received: by 2002:aa7:da4e:0:b0:559:d09d:8702 with SMTP id w14-20020aa7da4e000000b00559d09d8702mr592930eds.120.1705510316672;
+        Wed, 17 Jan 2024 08:51:56 -0800 (PST)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id z3-20020aa7c643000000b00559b4df9f06sm2057016edr.65.2024.01.17.08.51.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jan 2024 08:51:56 -0800 (PST)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-555e07761acso13752596a12.0;
+        Wed, 17 Jan 2024 08:51:56 -0800 (PST)
+X-Received: by 2002:a17:907:1115:b0:a28:f816:c4bb with SMTP id
+ qu21-20020a170907111500b00a28f816c4bbmr3124469ejb.117.1705510316339; Wed, 17
+ Jan 2024 08:51:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <89fe1503-6d62-90ca-5edb-e11c74846a00@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+References: <2929034.1705508082@warthog.procyon.org.uk> <2929563.1705508462@warthog.procyon.org.uk>
+In-Reply-To: <2929563.1705508462@warthog.procyon.org.uk>
+From: Marc Dionne <marc.dionne@auristor.com>
+Date: Wed, 17 Jan 2024 12:51:44 -0400
+X-Gmail-Original-Message-ID: <CAB9dFduVrz=-bb8YSmJq4Ec7Nr3K49ubznoTa0sdCyZzkddyRA@mail.gmail.com>
+Message-ID: <CAB9dFduVrz=-bb8YSmJq4Ec7Nr3K49ubznoTa0sdCyZzkddyRA@mail.gmail.com>
+Subject: Re: [PATCH] afs: Fix missing/incorrect unlocking of RCU read lock
+To: David Howells <dhowells@redhat.com>
+Cc: linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 17, 2024 at 10:20:32PM +0800, sundongxu (A) wrote:
-> On 2024/1/16 19:13, Marc Zyngier wrote:
-> > On Tue, 16 Jan 2024 03:26:08 +0000, "sundongxu (A)" <sundongxu3@huawei.com> wrote:
-> >> We found a problem about GICv4/4.1, for example:
-> >> We use QEMU to start a VM (4 vCPUs and 8G memory), VM disk was
-> >> configured with virtio, and the network is configured with vhost-net,
-> >> the CPU affinity of the vCPU and emulator is as follows, in VM xml:
+On Wed, Jan 17, 2024 at 12:21=E2=80=AFPM David Howells <dhowells@redhat.com=
+> wrote:
+>
+> David Howells <dhowells@redhat.com> wrote:
+>
+> > In afs_proc_addr_prefs_show(), we need to unlock the RCU read lock in b=
+oth
+> > places before returning (and not lock it again).
+> >
+> > Fixes: f94f70d39cc2 ("afs: Provide a way to configure address prioritie=
+s")
+> > Reported-by: Marc Dionne <marc.dionne@auristor.com>
+>
+> Actually:
+>
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202401172243.cd53d5f6-oliver.sang@=
+intel.com
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > cc: linux-afs@lists.infradead.org
+> > cc: linux-fsdevel@vger.kernel.org
+>
+> David
 
-<snip>
+The fix looks fine.
 
-> >>   <cputune>
-> >>     <vcpupin vcpu='0' cpuset='4'/>
-> >>     <vcpupin vcpu='1' cpuset='5'/>
-> >>     <vcpupin vcpu='2' cpuset='6'/>
-> >>     <vcpupin vcpu='3' cpuset='7'/>
-> >>     <emulatorpin cpuset='4,5,6,7'/>
-> >>   </cputune>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 
-</snip>
-
-> > Effectively, we apply the same principle to vSGIs as to vLPIs, and it
-> > was found that this heuristic was pretty beneficial to vLPIs. I'm a
-> > bit surprised that vSGIs are so different in their usage pattern.
-> 
-> IMO, the point is hypervisor not trapping vCPU WFI, rather than
-> vSGI/vLPI usage pattern.
-
-Sure, that's what's affecting your use case, but the logic in the kernel
-came about because improving virtual interrupt injection has been found
-to be generally useful.
-
-> > 
-> > Does it help if you move your "emulatorpin" to some other physical
-> > CPUs?
-> 
-> Yes，it does, in kernel 5.10 or 6.5rc1.
-
-Won't your VM have a poor experience in this configuration regardless of WFx
-traps? The value of vCPU pinning is to *isolate* the vCPU threads from
-noise/overheads of the host and scheduler latencies. Seems to me that
-VMM overhead threads are being forced to take time away from the guest.
-
-Nevertheless, disabling WFI traps isn't going to work well for
-overcommitted scenarios. The thought of tacking on more hacks in KVM has be
-a bit uneasy, perhaps instead we can give userspace an interface to explicitly
-enable/disable WFx traps and let it pick a suitable policy.
-
--- 
-Thanks,
-Oliver
+Marc
