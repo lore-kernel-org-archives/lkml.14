@@ -1,262 +1,335 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA1C13FFC
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C208821;
+	Wed, 17 Jan 2024 09:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705483433; cv=none; b=N1aURGFyjOTdDpsbH5mUIcopcZ8Li2LFY0vbRMKzFxpuo8Ea1uBWe2QQWAixKfqN5iBfeh9vrfr1wGPF783VYTzQdM7LM5dQ5xNG0CLuDHxzdoC4JvB+34X2i5Zh1MOD8PEbtMqeLPoREC+CH+mGAIN9MR6A2ASKwRv0xNbmgv0=
+	t=1705483538; cv=none; b=rj5q5tijtwWXAFOaErSsseDr+Z6+Gio7UFgidueYXWNuNIn4S9/hdmT2YMG5pTrTl+UcKdoIz9f8ZFCemdtVb7PN/snmzYeBH2yDfkB7UEO0QyEuagdGzsq+6GnVJR1d8qtyMQWp+6YiGBvEZUdr7/azTFcJRBGbut8S9jZBeh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705483433; c=relaxed/simple;
-	bh=lWCmSuBadnYIWvHfK92ODIlIKaW1aWLiYyH2QfP4qS0=;
-	h=X-Report-Abuse:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
-	 X-Developer-Signature:X-Developer-Key:X-Migadu-Flow; b=XZwrU3vk3mVh7zilWQaYH6PSLT3BuMNrJjVD3b83TIRK4TODJuJaiuQDvYc4FdgfHphuol4l4NKZmOnxYG28RjT0fHlCkO70NDZUVoX6gPOMPKDmBcJU4wRewwSgSjI1xKRa5aKJLfZvqKDwnhUZkw1uOZPMm/hM7rzi4HwAYLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <zhouchengming@bytedance.com>
-Date: Wed, 17 Jan 2024 09:23:19 +0000
-Subject: [PATCH 2/2] mm/zswap: split zswap rb-tree
+	s=arc-20240116; t=1705483538; c=relaxed/simple;
+	bh=5kgnAlvlBsiiZ9hTQj2WHgZnMlxZblSiJVehmmU3CLY=;
+	h=Received:Received:Received:From:To:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:Content-Type:
+	 X-Originating-IP:X-ClientProxiedBy:X-MAIL; b=qjhWvArd9hLWLfU2uZVQG7UTO75i2u+8oROACPURH6BBtscZsYxJ4hjV36gRF9wobkbxTw/ZqngRrXirztki8w4W3G0BQILS+8MNrUuA+XPFZ/teWUcenM1Ib0XQqgfo0g/zFW20K13dGiGt/qAHsbLmzx719IpO5Hd8HKUmauk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 40H9Nr92093466;
+	Wed, 17 Jan 2024 17:23:53 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TFKy31gghz2RN2qm;
+	Wed, 17 Jan 2024 17:16:43 +0800 (CST)
+Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 17 Jan 2024 17:23:51 +0800
+From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To: Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Zhaoyang Huang <huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
+Subject: [RFC PATCH 1/1] block: introduce activity based ioprio
+Date: Wed, 17 Jan 2024 17:23:48 +0800
+Message-ID: <20240117092348.2873928-1-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240117-b4-zswap-lock-optimize-v1-2-23f6effe5775@bytedance.com>
-References: <20240117-b4-zswap-lock-optimize-v1-0-23f6effe5775@bytedance.com>
-In-Reply-To: <20240117-b4-zswap-lock-optimize-v1-0-23f6effe5775@bytedance.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yosry Ahmed <yosryahmed@google.com>, Chengming Zhou <zhouchengming@bytedance.com>, linux-kernel@vger.kernel.org,
- Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, Chris Li <chriscli@google.com>, Nhat Pham <nphamcs@gmail.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705483421; l=6988;
- i=zhouchengming@bytedance.com; s=20231204; h=from:subject:message-id;
- bh=lWCmSuBadnYIWvHfK92ODIlIKaW1aWLiYyH2QfP4qS0=;
- b=Tp7gp92PMp6MGPWK007HHErLLXRRti2ol0tPfgAeuf/e7QHzpBZVxtF6qPxzxG+cOwOgSILPL
- u9CHXBpgp53AbUL8faDQ8nGv9D6JVfeVhKjhfFoPEK1liA2cepBCes0
-X-Developer-Key: i=zhouchengming@bytedance.com; a=ed25519;
- pk=xFTmRtMG3vELGJBUiml7OYNdM393WOMv0iWWeQEVVdA=
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 40H9Nr92093466
 
-Each swapfile has one rb-tree to search the mapping of swp_entry_t to
-zswap_entry, that use a spinlock to protect, which can cause heavy lock
-contention if multiple tasks zswap_store/load concurrently.
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-Optimize the scalability problem by splitting the zswap rb-tree into
-multiple rb-trees, each corresponds to SWAP_ADDRESS_SPACE_PAGES (64M),
-just like we did in the swap cache address_space splitting.
+This commit try to introduce a feature which adjust the request ioprio
+based on the folio's activity. The original idea comes from LRU_GEN
+which provides more precised folio activity than before. This commit try
+to adjust the request's ioprio when certain part of its folios are hot,
+which indicate that this request carry important contents and need be
+scheduled ealier.
 
-Although this method can't solve the spinlock contention completely, it
-can mitigate much of that contention. Below is the results of kernel build
-in tmpfs with zswap shrinker enabled:
+This commit is tested via bellowing script[1] on a v6.6 android system and
+get better iowait result[2] when mglru enabled, where
+1. fault_latency.bin is an ebpf based test result which measure all task's
+   iowait latency when scheduled in/out.
+2. costmem generate page fault by mmaping a file and access the VA.
+3. dd generate concurrent vfs io.
 
-     linux-next  zswap-lock-optimize
-real 1m9.181s    1m3.820s
-user 17m44.036s  17m40.100s
-sys  7m37.297s   4m54.622s
+[1]
+./fault_latency.bin 1 5 > /data/dd_costmem &
+costmem -c0 -a2048000 -b128000 -o0 1>/dev/null &
+costmem -c0 -a2048000 -b128000 -o0 1>/dev/null &
+costmem -c0 -a2048000 -b128000 -o0 1>/dev/null &
+costmem -c0 -a2048000 -b128000 -o0 1>/dev/null &
+dd if=/dev/block/sda of=/data/ddtest bs=1024 count=2048000 &
+dd if=/dev/block/sda of=/data/ddtest1 bs=1024 count=2048000 &
+dd if=/dev/block/sda of=/data/ddtest2 bs=1024 count=2048000 &
+dd if=/dev/block/sda of=/data/ddtest3 bs=1024 count=2048000
 
-So there are clearly improvements.
+[2]
+mainline:
+Summary for 5932.00(ms)
+    All Faults:       1398   235.67 counts/sec
+        Iowait:        553    93.22 counts/sec
+   All latency:    7432948  1253.03 us/ms
+        Iowait:    1321971   222.85 us/ms
+Summary for 6706.00(ms)
+    All Faults:       1921   286.46 counts/sec
+        Iowait:       1273   189.83 counts/sec
+   All latency:   25890252  3860.76 us/ms
+        Iowait:    4468861   666.40 us/ms
+Summary for 5838.00(ms)
+    All Faults:       1580   270.64 counts/sec
+        Iowait:        619   106.03 counts/sec
+   All latency:    6862215  1175.44 us/ms
+        Iowait:    1077616   184.59 us/ms
+Summary for 5916.00(ms)
+    All Faults:       1195   201.99 counts/sec
+        Iowait:        494    83.50 counts/sec
+   All latency:    4555134   769.97 us/ms
+        Iowait:     902513   152.55 us/ms
+Summary for 6229.00(ms)
+    All Faults:       1395   223.95 counts/sec
+        Iowait:        359    57.63 counts/sec
+   All latency:    6091882   977.99 us/ms
+        Iowait:    1251183   200.86 us/ms
+Summary for 6059.00(ms)
+    All Faults:       1201   198.22 counts/sec
+        Iowait:        299    49.35 counts/sec
+   All latency:    5612143   926.25 us/ms
+        Iowait:    1155555   190.72 us/ms
+Summary for 6005.00(ms)
+    All Faults:        847   141.05 counts/sec
+        Iowait:        320    53.29 counts/sec
+   All latency:    5852541   974.61 us/ms
+        Iowait:     433719    72.23 us/ms
+Summary for 5895.00(ms)
+    All Faults:       1039   176.25 counts/sec
+        Iowait:        288    48.85 counts/sec
+   All latency:    4184680   709.87 us/ms
+        Iowait:     686266   116.41 us/ms
+Summary for 6371.00(ms)
+    All Faults:       1176   184.59 counts/sec
+        Iowait:        269    42.22 counts/sec
+   All latency:    6282918   986.17 us/ms
+        Iowait:    1160952   182.22 us/ms
+Summary for 6113.00(ms)
+    All Faults:       1322   216.26 counts/sec
+        Iowait:        281    45.97 counts/sec
+   All latency:    7208880  1179.27 us/ms
+        Iowait:    1336650   218.66 us/ms
 
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+commit:
+Summary for 7225.00(ms)
+    All Faults:       1384   191.56 counts/sec
+        Iowait:        285    39.45 counts/sec
+   All latency:    6593081   912.54 us/ms
+        Iowait:     934041   129.28 us/ms
+Summary for 6567.00(ms)
+    All Faults:       1378   209.84 counts/sec
+        Iowait:        167    25.43 counts/sec
+   All latency:    3761554   572.80 us/ms
+        Iowait:     220621    33.60 us/ms
+Summary for 6118.00(ms)
+    All Faults:       1304   213.14 counts/sec
+        Iowait:        268    43.81 counts/sec
+   All latency:    3835332   626.89 us/ms
+        Iowait:     413900    67.65 us/ms
+Summary for 6155.00(ms)
+    All Faults:       1177   191.23 counts/sec
+        Iowait:        185    30.06 counts/sec
+   All latency:    4839084   786.20 us/ms
+        Iowait:     660002   107.23 us/ms
+Summary for 6448.00(ms)
+    All Faults:       1283   198.98 counts/sec
+        Iowait:        353    54.75 counts/sec
+   All latency:    4798334   744.16 us/ms
+        Iowait:    1258045   195.11 us/ms
+Summary for 6179.00(ms)
+    All Faults:       1285   207.96 counts/sec
+        Iowait:        137    22.17 counts/sec
+   All latency:    3668456   593.70 us/ms
+        Iowait:     419731    67.93 us/ms
+Summary for 6165.00(ms)
+    All Faults:       1500   243.31 counts/sec
+        Iowait:        182    29.52 counts/sec
+   All latency:    3357435   544.60 us/ms
+        Iowait:     279828    45.39 us/ms
+Summary for 6270.00(ms)
+    All Faults:       1507   240.35 counts/sec
+        Iowait:        361    57.58 counts/sec
+   All latency:    4428320   706.27 us/ms
+        Iowait:     741304   118.23 us/ms
+Summary for 6597.00(ms)
+    All Faults:       1263   191.45 counts/sec
+        Iowait:        238    36.08 counts/sec
+   All latency:    5115168   775.38 us/ms
+        Iowait:     950482   144.08 us/ms
+Summary for 6503.00(ms)
+    All Faults:       1456   223.90 counts/sec
+        Iowait:        402    61.82 counts/sec
+   All latency:    6782757  1043.02 us/ms
+        Iowait:    1483803   228.17 us/ms
+
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 ---
- include/linux/zswap.h |  4 +--
- mm/swapfile.c         |  2 +-
- mm/zswap.c            | 69 ++++++++++++++++++++++++++++++++-------------------
- 3 files changed, 47 insertions(+), 28 deletions(-)
+ block/Kconfig.iosched |  7 +++++
+ block/mq-deadline.c   | 70 +++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 64 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/zswap.h b/include/linux/zswap.h
-index eca388229d9a..91895ce1fdbc 100644
---- a/include/linux/zswap.h
-+++ b/include/linux/zswap.h
-@@ -30,7 +30,7 @@ struct zswap_lruvec_state {
- bool zswap_store(struct folio *folio);
- bool zswap_load(struct folio *folio);
- void zswap_invalidate(int type, pgoff_t offset);
--int zswap_swapon(int type);
-+int zswap_swapon(int type, unsigned long nr_pages);
- void zswap_swapoff(int type);
- void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg);
- void zswap_lruvec_state_init(struct lruvec *lruvec);
-@@ -51,7 +51,7 @@ static inline bool zswap_load(struct folio *folio)
+diff --git a/block/Kconfig.iosched b/block/Kconfig.iosched
+index 27f11320b8d1..cd6fcfca7782 100644
+--- a/block/Kconfig.iosched
++++ b/block/Kconfig.iosched
+@@ -44,4 +44,11 @@ config BFQ_CGROUP_DEBUG
+ 	Enable some debugging help. Currently it exports additional stat
+ 	files in a cgroup which can be useful for debugging.
+ 
++config ACTIVITY_BASED_IOPRIO
++	bool "Enable folio activity based ioprio on deadline"
++	depends on LRU_GEN && MQ_IOSCHED_DEADLINE
++	default n
++	help
++	This item enable the feature of adjust request's priority by
++	calculating its folio's activity.
+ endmenu
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index f958e79277b8..dfb43fff2ffe 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -15,6 +15,7 @@
+ #include <linux/compiler.h>
+ #include <linux/rbtree.h>
+ #include <linux/sbitmap.h>
++#include <linux/mm_inline.h>
+ 
+ #include <trace/events/block.h>
+ 
+@@ -224,14 +225,42 @@ static void deadline_remove_request(struct request_queue *q,
+ 		q->last_merge = NULL;
  }
  
- static inline void zswap_invalidate(int type, pgoff_t offset) {}
--static inline int zswap_swapon(int type)
-+static inline int zswap_swapon(int type, unsigned long nr_pages)
- {
- 	return 0;
- }
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 6c53ea06626b..35aa17b2a2fa 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3164,7 +3164,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 	if (error)
- 		goto bad_swap_unlock_inode;
- 
--	error = zswap_swapon(p->type);
-+	error = zswap_swapon(p->type, maxpages);
- 	if (error)
- 		goto free_swap_address_space;
- 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index d88faea85978..4a6dbc620c7c 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -239,6 +239,7 @@ struct zswap_tree {
- };
- 
- static struct zswap_tree *zswap_trees[MAX_SWAPFILES];
-+static unsigned int nr_zswap_trees[MAX_SWAPFILES];
- 
- /* RCU-protected iteration */
- static LIST_HEAD(zswap_pools);
-@@ -265,6 +266,10 @@ static bool zswap_has_pool;
- * helpers and fwd declarations
- **********************************/
- 
-+#define swap_zswap_tree(entry)					\
-+	(&zswap_trees[swp_type(entry)][swp_offset(entry)	\
-+		>> SWAP_ADDRESS_SPACE_SHIFT])
++static enum dd_prio dd_req_ioprio(struct request *rq)
++{
++	enum dd_prio prio;
++	const u8 ioprio_class = dd_rq_ioclass(rq);
++#ifdef CONFIG_ACTIVITY_BASED_IOPRIO
++	struct bio *bio;
++	struct bio_vec bv;
++	struct bvec_iter iter;
++	struct page *page;
++	int gen = 0;
++	int cnt = 0;
 +
- #define zswap_pool_debug(msg, p)				\
- 	pr_debug("%s pool %s/%s\n", msg, (p)->tfm_name,		\
- 		 zpool_get_type((p)->zpools[0]))
-@@ -865,7 +870,7 @@ static enum lru_status shrink_memcg_cb(struct list_head *item, struct list_lru_o
- 	 * until the entry is verified to still be alive in the tree.
- 	 */
- 	swpoffset = swp_offset(entry->swpentry);
--	tree = zswap_trees[swp_type(entry->swpentry)];
-+	tree = swap_zswap_tree(entry->swpentry);
- 	list_lru_isolate(l, item);
++	if (req_op(rq) == REQ_OP_READ) {
++		__rq_for_each_bio(bio, rq) {
++			bio_for_each_bvec(bv, bio, iter) {
++				page = bv.bv_page;
++				gen += PageWorkingset(page) ? 1 : 0;
++				cnt++;
++			}
++		}
++		prio = (gen >= cnt / 2) ? ioprio_class_to_prio[IOPRIO_CLASS_RT] :
++			ioprio_class_to_prio[ioprio_class];
++	} else
++		prio = ioprio_class_to_prio[ioprio_class];
++#else
++	prio = ioprio_class_to_prio[ioprio_class];
++#endif
++	return prio;
++}
++
+ static void dd_request_merged(struct request_queue *q, struct request *req,
+ 			      enum elv_merge type)
+ {
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+-	const u8 ioprio_class = dd_rq_ioclass(req);
+-	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
++	const enum dd_prio prio = dd_req_ioprio(req);
+ 	struct dd_per_prio *per_prio = &dd->per_prio[prio];
+-
  	/*
- 	 * It's safe to drop the lock here because we return either
-@@ -1494,10 +1499,9 @@ static void zswap_fill_page(void *ptr, unsigned long value)
- bool zswap_store(struct folio *folio)
+ 	 * if the merge was a front merge, we need to reposition request
+ 	 */
+@@ -248,8 +277,7 @@ static void dd_merged_requests(struct request_queue *q, struct request *req,
+ 			       struct request *next)
  {
- 	swp_entry_t swp = folio->swap;
--	int type = swp_type(swp);
- 	pgoff_t offset = swp_offset(swp);
- 	struct page *page = &folio->page;
--	struct zswap_tree *tree = zswap_trees[type];
-+	struct zswap_tree *tree = swap_zswap_tree(swp);
- 	struct zswap_entry *entry, *dupentry;
- 	struct scatterlist input, output;
- 	struct crypto_acomp_ctx *acomp_ctx;
-@@ -1569,7 +1573,7 @@ bool zswap_store(struct folio *folio)
- 		src = kmap_local_page(page);
- 		if (zswap_is_page_same_filled(src, &value)) {
- 			kunmap_local(src);
--			entry->swpentry = swp_entry(type, offset);
-+			entry->swpentry = swp;
- 			entry->length = 0;
- 			entry->value = value;
- 			atomic_inc(&zswap_same_filled_pages);
-@@ -1651,7 +1655,7 @@ bool zswap_store(struct folio *folio)
- 	mutex_unlock(&acomp_ctx->mutex);
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+-	const u8 ioprio_class = dd_rq_ioclass(next);
+-	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
++	const enum dd_prio prio = dd_req_ioprio(next);
  
- 	/* populate entry */
--	entry->swpentry = swp_entry(type, offset);
-+	entry->swpentry = swp;
- 	entry->handle = handle;
- 	entry->length = dlen;
+ 	lockdep_assert_held(&dd->lock);
  
-@@ -1711,10 +1715,9 @@ bool zswap_store(struct folio *folio)
- bool zswap_load(struct folio *folio)
+@@ -745,10 +773,30 @@ static int dd_request_merge(struct request_queue *q, struct request **rq,
  {
- 	swp_entry_t swp = folio->swap;
--	int type = swp_type(swp);
- 	pgoff_t offset = swp_offset(swp);
- 	struct page *page = &folio->page;
--	struct zswap_tree *tree = zswap_trees[type];
-+	struct zswap_tree *tree = swap_zswap_tree(swp);
- 	struct zswap_entry *entry;
- 	u8 *dst;
- 
-@@ -1757,7 +1760,7 @@ bool zswap_load(struct folio *folio)
- 
- void zswap_invalidate(int type, pgoff_t offset)
- {
--	struct zswap_tree *tree = zswap_trees[type];
-+	struct zswap_tree *tree = swap_zswap_tree(swp_entry(type, offset));
- 	struct zswap_entry *entry;
- 
- 	/* find */
-@@ -1772,37 +1775,53 @@ void zswap_invalidate(int type, pgoff_t offset)
- 	spin_unlock(&tree->lock);
- }
- 
--int zswap_swapon(int type)
-+int zswap_swapon(int type, unsigned long nr_pages)
- {
--	struct zswap_tree *tree;
-+	struct zswap_tree *trees, *tree;
-+	unsigned int nr, i;
- 
--	tree = kzalloc(sizeof(*tree), GFP_KERNEL);
--	if (!tree) {
-+	nr = DIV_ROUND_UP(nr_pages, SWAP_ADDRESS_SPACE_PAGES);
-+	trees = kvcalloc(nr, sizeof(*tree), GFP_KERNEL);
-+	if (!trees) {
- 		pr_err("alloc failed, zswap disabled for swap type %d\n", type);
- 		return -ENOMEM;
- 	}
- 
--	tree->rbroot = RB_ROOT;
--	spin_lock_init(&tree->lock);
--	zswap_trees[type] = tree;
-+	for (i = 0; i < nr; i++) {
-+		tree = trees + i;
-+		tree->rbroot = RB_ROOT;
-+		spin_lock_init(&tree->lock);
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+ 	const u8 ioprio_class = IOPRIO_PRIO_CLASS(bio->bi_ioprio);
+-	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
+-	struct dd_per_prio *per_prio = &dd->per_prio[prio];
++	struct dd_per_prio *per_prio;
+ 	sector_t sector = bio_end_sector(bio);
+ 	struct request *__rq;
++#ifdef CONFIG_ACTIVITY_BASED_IOPRIO
++	enum dd_prio prio;
++	struct bio_vec bv;
++	struct bvec_iter iter;
++	struct page *page;
++	int gen = 0;
++	int cnt = 0;
++
++	if (bio_op(bio) == REQ_OP_READ) {
++		bio_for_each_bvec(bv, bio, iter) {
++			page = bv.bv_page;
++			gen += PageWorkingset(page) ? 1 : 0;
++			cnt++;
++		}
 +	}
-+
-+	nr_zswap_trees[type] = nr;
-+	zswap_trees[type] = trees;
- 	return 0;
- }
++	prio = (gen >= cnt / 2) ? ioprio_class_to_prio[IOPRIO_CLASS_RT] :
++			ioprio_class_to_prio[ioprio_class];
++#else
++	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
++#endif
++	per_prio = &dd->per_prio[prio];
  
- void zswap_swapoff(int type)
+ 	if (!dd->front_merges)
+ 		return ELEVATOR_NO_MERGE;
+@@ -798,10 +846,8 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 	struct request_queue *q = hctx->queue;
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+ 	const enum dd_data_dir data_dir = rq_data_dir(rq);
+-	u16 ioprio = req_get_ioprio(rq);
+-	u8 ioprio_class = IOPRIO_PRIO_CLASS(ioprio);
+ 	struct dd_per_prio *per_prio;
+-	enum dd_prio prio;
++	enum dd_prio prio = dd_req_ioprio(rq);
+ 
+ 	lockdep_assert_held(&dd->lock);
+ 
+@@ -811,7 +857,6 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 	 */
+ 	blk_req_zone_write_unlock(rq);
+ 
+-	prio = ioprio_class_to_prio[ioprio_class];
+ 	per_prio = &dd->per_prio[prio];
+ 	if (!rq->elv.priv[0]) {
+ 		per_prio->stats.inserted++;
+@@ -920,8 +965,7 @@ static void dd_finish_request(struct request *rq)
  {
--	struct zswap_tree *tree = zswap_trees[type];
--	struct zswap_entry *entry, *n;
-+	struct zswap_tree *trees = zswap_trees[type];
-+	unsigned int i;
+ 	struct request_queue *q = rq->q;
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+-	const u8 ioprio_class = dd_rq_ioclass(rq);
+-	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
++	const enum dd_prio prio = dd_req_ioprio(rq);
+ 	struct dd_per_prio *per_prio = &dd->per_prio[prio];
  
--	if (!tree)
-+	if (!trees)
- 		return;
- 
--	/* walk the tree and free everything */
--	spin_lock(&tree->lock);
--	rbtree_postorder_for_each_entry_safe(entry, n, &tree->rbroot, rbnode)
--		zswap_free_entry(entry);
--	tree->rbroot = RB_ROOT;
--	spin_unlock(&tree->lock);
--	kfree(tree);
-+	for (i = 0; i < nr_zswap_trees[type]; i++) {
-+		struct zswap_tree *tree = trees + i;
-+		struct zswap_entry *entry, *n;
-+
-+		/* walk the tree and free everything */
-+		spin_lock(&tree->lock);
-+		rbtree_postorder_for_each_entry_safe(entry, n,
-+						     &tree->rbroot,
-+						     rbnode)
-+			zswap_free_entry(entry);
-+		tree->rbroot = RB_ROOT;
-+		spin_unlock(&tree->lock);
-+	}
-+
-+	kvfree(trees);
-+	nr_zswap_trees[type] = 0;
- 	zswap_trees[type] = NULL;
- }
- 
-
+ 	/*
 -- 
-b4 0.10.1
+2.25.1
+
