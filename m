@@ -1,177 +1,191 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2121.outbound.protection.outlook.com [40.107.100.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB73E14009
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 11:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705490394; cv=none; b=g6HBtYv8FDO6GVkyLyO8W0cx3hbsrY/p9yxBl43m3FtKofDSwLejHvpcVrvR/ENd5Zuszn7nNkFjCRO3V/MaOGGzRIGrCG1oqZfdNpPRZrGyc955ti7KtX9/G62APMA6nEq5hhtajx3oNtEjSgDgu/Lyuq7Yr+ZEfWvjvfI6fhE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705490394; c=relaxed/simple;
-	bh=dT/BD5MMQJCCJLpq6m9UaYhVT1B0s097HLeiOnUzMCI=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=m6B8S888N4U4R94Rs8GhgmKmvRO421myHYPRPM2IE3POTdvbRyTMYX75249DAWKmc8QnzZ5zB0p2T3DrDkytdkPTfapUmeHSMh+rQ1rjvhLbL1dnFXeu5oINdEOJXiXgjR9CQIiVdmAmG9LzQN31VPN3GL8gfw3/u+o2c95qlvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CB9nR2zq; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFE11D697;
+	Wed, 17 Jan 2024 11:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.121
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705490489; cv=fail; b=UDq/7wkJYAdCQabe1rnsf5tGBMTc4zJQyrYXh+zeaCm/YC9bTYXUL+ql79+3lLrWHLB/wun2gQAFyhCMv58h/GpF5dIxryKBR7xHnMOB/d1X4OiIxCpfKrccMMY7p7FnhYRoKEeDvHro15eG2/UaYax2gfnHIdBF0+Vw8F/CVlA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705490489; c=relaxed/simple;
+	bh=BCh2q5Tk2/R59h3MSewVzFJoLeEuMsWynLM8dyMpfA8=;
+	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
+	 Received:Received:X-MS-Exchange-Authentication-Results:
+	 Received-SPF:Received:Received:Received:Received:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:X-EOPAttributedMessage:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:Content-Type:
+	 X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=jxws8FON25ydWeT8+YStNdeUqxXVIAkAw635cxRzsAvZpSuKV3Z+1tnuq2PSVrdQb1qp1yVwF0HQCfGDJaaGQa86247C2+iVfEoMXKhW0QAvyG5nMmFwLuutyJtr/fPobhMAdOhJ9/A08Nsdipflu8zXQdRZrEfUrRmZ51D/xpE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=Sony.onmicrosoft.com; dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b=W742/1UG; arc=fail smtp.client-ip=40.107.100.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=Sony.onmicrosoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CB9nR2zq"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-50e7abe4be4so14656615e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 03:19:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705490391; x=1706095191; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vb3+8GHoqEmmb8dVvoIrvUYoEjQsTnM0E51KKL4K2GE=;
-        b=CB9nR2zqBANyvup9vOCYVRSWrorL7NzK/N1xnzoUSpt+6FuP+oBqCRcNnnc/NehXTO
-         /m+IbzDcdFI8yxvyHIUZd5shnAi5SHU88kasPOaBX1nGb/GwaAGbDOa6C8EpPz2glejl
-         YJSEOQXFqswCkOCpiEiIDsuKypa/lgRXAQhmiskEnzKoiqn/tYEv6MX18W6HczTWX6db
-         QyLPda36nwWqOKr694onuxB6OFnSAfTHu8iEFolgIM5g2vr9Ng59O4Az3BqB09nym10A
-         VQlcsx5jOR9YwwagG+n94D25H8Zw8ZiIJjHQBv8GjqavbL85X6GwTMXoO+Ix38yHtwxF
-         5D7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705490391; x=1706095191;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vb3+8GHoqEmmb8dVvoIrvUYoEjQsTnM0E51KKL4K2GE=;
-        b=vDRAU02dZKLLRrx+7z/TbQu3vcb48c39iFbSLXSfyUiIwdPCZItvuSqww5CyEOSy1E
-         T5VkJ0aRQ1VarNRQo6j5jA393AvxTSCmy544O6selU6EWa9AK/N7VXA1vtwfZMhm05xH
-         uv4IFZzrHuDdrqG+tjQ+LJdJ1lUhNCGGyyvb3NnMPt2q4HTxoYCJkfnW+9dBTs5Jxg2u
-         R2sog/Ot+InaFNtuYDjTDBC7j3OTrifm/65dcDtFwQ0NiV0y4Zwj0Y69Da8QsK6Wbsit
-         L0r/AxHNVr4wuUQilHyl69Rz9nFC8adJF+ZL3IIptMkEjiQyiHRAxSlbXhm4OJlMNJfn
-         crlA==
-X-Gm-Message-State: AOJu0YyyMxX8lFxSv/WeisKmgoaYwTeaMVveOWhy2FPdrDonQl+ggoKr
-	UlSjAVSzf3OQwp3+Q3XIxe1xfhmgApy6fg==
-X-Google-Smtp-Source: AGHT+IGE4IVFFyPSb/Mw4jfpIM1GwDNCqwJRmL5TgW27hPdnqvrbLomb+PNAtZtcrtACY75tyRP8LA==
-X-Received: by 2002:a05:6512:1c6:b0:50e:d48b:7ff1 with SMTP id f6-20020a05651201c600b0050ed48b7ff1mr4363219lfp.133.1705490390963;
-        Wed, 17 Jan 2024 03:19:50 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id o17-20020a17090608d100b00a27c463fbdesm7661110eje.211.2024.01.17.03.19.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jan 2024 03:19:50 -0800 (PST)
-Message-ID: <d8fba488-bdea-420b-84f2-a222315e1b81@linaro.org>
-Date: Wed, 17 Jan 2024 12:19:48 +0100
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="W742/1UG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X53tbEx631u30xHyXgdcMcUg1s80YZwVEwNg/0yHIkitumL6RqGnZSUZ7Yr26h/WcmpUnV0rQsUx/hnolbTrpzOWbG1ECzWdMXvVGjKrDll0AqkBgMzaROS5cUDeZzJPSFhT3KsPnpGCQHgRt5C0p501GSoaZ2iNLVlaCDFCbl/ON69SLjOrCMoqInx5Dl2pLj13GxXpRKuoUkaZDEWwJK9RKv/yU/V7/Gv4eBt65eN8q39ulnSyfj3ibztC8IakywgSEgMCoGfR6SrG9MNKXf8qchmST2+SYplqN43gY8por/VwPXDi5zRo6EpNz7PWFP27mKa8su8aI3DxckA3sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HLRaZ2XnB9Rpbe5Pr/xd1PmmB0yRDEZ04eKbHFb+Ibo=;
+ b=KiDoYUbQTlaGsj0bNxchPVHqfdvgAcjX56aH1Hxk2rLXJdR7TjEwTT9w29WeFuLdVSmH6adG9taMy3DQQEgzw+06q1OgiY6LtV5Z/VHUsI5gwDZNxY4iDYmCS6yXzKIEUoR6t0+914E1/rlbRfQPCOiT0YEghMqPLW6Cqt7m5z1rDbdJqwCrr5VXQiqCIugSujYgfZ3fnc+qdtaKs2q1VideaAWPQl8AYiTWAo597ekHBJE1KgbsLPcq2zG3gwAEBT72I4wTMF+bjPwBIWMlk8dGBB9lUQJy6tcl0DFBptU7G31gvRpbK7+ESkcCvTab90TPsneBdMyEF5Mq2D8yxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 121.100.38.196) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=mail.sony.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=sony.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HLRaZ2XnB9Rpbe5Pr/xd1PmmB0yRDEZ04eKbHFb+Ibo=;
+ b=W742/1UGxuSsmI88dqxEgWVa+AAHgjwyMVtXYVLI+xnn8doOBzz8BI3Zx8A3utglx1rsImabz1n7szM2P15dbcgA6m/CTqI++SOv62KZxWiNzj0MbvUWWgRLB7tVER4c1bDR6Ln0U7T4G/acVw6EXt5VsEgV+uGcHh2OM8WF0/Y=
+Received: from CY5PR22CA0061.namprd22.prod.outlook.com (2603:10b6:930:80::6)
+ by SA1PR13MB4878.namprd13.prod.outlook.com (2603:10b6:806:1a2::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Wed, 17 Jan
+ 2024 11:21:23 +0000
+Received: from CY4PEPF0000E9D6.namprd05.prod.outlook.com
+ (2603:10b6:930:80:cafe::b9) by CY5PR22CA0061.outlook.office365.com
+ (2603:10b6:930:80::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23 via Frontend
+ Transport; Wed, 17 Jan 2024 11:21:23 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 121.100.38.196)
+ smtp.mailfrom=mail.sony.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=sony.com;
+Received-SPF: Fail (protection.outlook.com: domain of mail.sony.com does not
+ designate 121.100.38.196 as permitted sender)
+ receiver=protection.outlook.com; client-ip=121.100.38.196;
+ helo=gepdcl07.sg.gdce.sony.com.sg;
+Received: from gepdcl07.sg.gdce.sony.com.sg (121.100.38.196) by
+ CY4PEPF0000E9D6.mail.protection.outlook.com (10.167.241.80) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.14 via Frontend Transport; Wed, 17 Jan 2024 11:21:23 +0000
+Received: from gepdcl02.s.gdce.sony.com.sg (SGGDCSE1NS07.sony.com.sg [146.215.123.196])
+	by gepdcl07.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 40HBL5YJ004733
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 17 Jan 2024 19:21:05 +0800
+Received: from mail.sony.com ([43.88.80.246])
+	by gepdcl02.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 40HBFsxD021765;
+	Wed, 17 Jan 2024 19:15:54 +0800
+Received: by mail.sony.com (Postfix, from userid 1000)
+	id C59B920C0300; Wed, 17 Jan 2024 16:44:13 +0530 (IST)
+From: Sreenath Vijayan <sreenath.vijayan@sony.com>
+To: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
+        jirislaby@kernel.org, rdunlap@infradead.org, pmladek@suse.com
+Cc: rostedt@goodmis.org, senozhatsky@chromium.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        taichi.shimoyashiki@sony.com, daniel.palmer@sony.com,
+        anandakumar.balasubramaniam@sony.com, sreenath.vijayan@sony.com
+Subject: [PATCH v3 2/2] tty/sysrq: Dump printk ring buffer messages via sysrq
+Date: Wed, 17 Jan 2024 16:43:52 +0530
+Message-ID: <57daf43c5270f7532b269b9f0e90d126ca012354.1705331453.git.sreenath.vijayan@sony.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1705331453.git.sreenath.vijayan@sony.com>
+References: <cover.1705331453.git.sreenath.vijayan@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: PCI: ti,j721e-pci-*: Add checks for
- max-link-speed
-Content-Language: en-US
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- vigneshr@ti.com, afd@ti.com, srk@ti.com
-References: <20240117102526.557006-1-s-vadapalli@ti.com>
- <20240117102526.557006-3-s-vadapalli@ti.com>
- <4282b248-cb7f-4486-bde6-105a3aed6be2@linaro.org>
- <92ceb1ea-78db-4bc4-af1f-a1690eaca24c@ti.com>
- <42f44ecc-c7f4-4209-8cb5-805891c35413@linaro.org>
- <e79a1896-470e-4fba-85b0-f857a4290cbb@ti.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <e79a1896-470e-4fba-85b0-f857a4290cbb@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D6:EE_|SA1PR13MB4878:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 43f05b76-3282-4d73-3a1d-08dc174e703e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	/Q4fOTTI5kIXPzkJhxQMN/W+/70PFScFTjillhpY5FshjnSONS/w7Xp3BI+vOHAuh0+oXvC3yaucl07M8UywIqUsWWvssOODQ0tONzzBlovcfK7BDM2wjbohMNJ8TBwxgdeJtes/z75qMaJS6HoE3wNkMTUp/x0btUmGb++nv5FKCQwnv6DRUoOyP9vBBkJM0AlyrqrGMbK2l69zLEHexk1ldTPA9B4kDDB2erSXqL75c01hh90rHU214kBT0AJXOTSRbLCiwBaF6VPv43UzlV2TPtSs8qng9mb4beJlHsdtw2GG9dpUmSvXH3VwYWo/aX8DVT9pqeBiVrHNC+LY5y025E7DGVIHGOdogin9i0Gkuyo5Fcl0ZokFsg8ST1WvmQRUgZt8wkf6bGQ66CA6Crysgj1OiT4O5u9XA+9CPQBoxdSaMkd2ADQJElawmPNhEq9oytte7jM5xUa9/eO5swo+Lo4Vr0FZ+LF/ew/tJlBnJr8pDkBrond1r7TVeye1eHrIH0q9K/xFwRIyrwWECtzDy2yUNIjaRE8Wa5CfK3e4sD+OrZN+LjHdY++LaI8n3Bedz+SXWXhdm6mV1aIxVmafI7n44gERZOMhggnkT+KeBLvzzU7P0VVvzL8a+dVsBOuJOGP4FoYkfKLMOsunsek4/kHBPmSROLC7hkVjinp7nNCmHCfcVIUrDOoWb6Dv+BBLCpRwzvuf9oB9qwiR1mtzc4T9tohiu2Iw6mRs6fYTqChOFqAglDrq3UB8ZNqU
+X-Forefront-Antispam-Report:
+	CIP:121.100.38.196;CTRY:SG;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:gepdcl07.sg.gdce.sony.com.sg;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(376002)(396003)(39860400002)(230922051799003)(451199024)(1800799012)(64100799003)(82310400011)(40470700004)(46966006)(336012)(426003)(6266002)(26005)(83380400001)(107886003)(6666004)(2616005)(47076005)(35950700001)(5660300002)(44832011)(4326008)(8676002)(15650500001)(41300700001)(2906002)(8936002)(498600001)(316002)(450100002)(42186006)(70206006)(70586007)(36756003)(83170400001)(82740400003)(81166007)(356005)(82960400001)(40480700001)(40460700003);DIR:OUT;SFP:1102;
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 11:21:23.0594
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43f05b76-3282-4d73-3a1d-08dc174e703e
+X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[121.100.38.196];Helo=[gepdcl07.sg.gdce.sony.com.sg]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9D6.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR13MB4878
 
-On 17/01/2024 12:15, Siddharth Vadapalli wrote:
-> 
-> 
-> On 17/01/24 16:30, Krzysztof Kozlowski wrote:
->> On 17/01/2024 11:58, Siddharth Vadapalli wrote:
->>> On 17/01/24 16:05, Krzysztof Kozlowski wrote:
->>>> On 17/01/2024 11:25, Siddharth Vadapalli wrote:
->>>>> Extend the existing compatible based checks for validating and enforcing
->>>>> the "max-link-speed" property.
->>>>
->>>> Based on what? Driver or hardware? Your entire change suggests you
->>>
->>> Hardware. The PCIe controller on AM64 SoC supports up to Gen2 link speed while
->>> the PCIe controllers on other SoCs support Gen3 link speed.
->>>
->>>> should just drop it from the binding, because this can be deduced from
->>>> compatible.
->>>
->>> Could you please clarify? Isn't the addition of the checks for "max-link-speed"
->>> identical to the checks which were added for "num-lanes", both of which are
->>> Hardware specific?
->>
->> Compatible defines these values, at least what it looks like from the patch.
-> 
-> In this patch, I have added checks for the "max-link-speed" property in the same
-> section that "num-lanes" is being evaluated. 
+When terminal is unresponsive, one cannot use dmesg to view printk
+ring buffer messages. Also, syslog services may be disabled,
+to check the messages after a reboot, especially on embedded systems.
+In this scenario, dump the printk ring buffer messages via sysrq
+by pressing sysrq+D.
 
-I know what you did in patch. I read it.
+Signed-off-by: Sreenath Vijayan <sreenath.vijayan@sony.com>
+Signed-off-by: Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
+---
+ Documentation/admin-guide/sysrq.rst |  2 ++
+ drivers/tty/sysrq.c                 | 20 +++++++++++++++++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-> The values for "max-link-speed" are
-> based on the Hardware support and this patch is validating the "max-link-speed"
-> property in the device-tree nodes for the devices against the Hardware supported
-> values which this patch is adding in the corresponding section. Kindly let me
-> know if I misunderstood what you meant to convey.
-
-Nothing of this is relevant.
-
-I used two entirely different wordings for this and you still don't get
-it, so I don't know if I have third one.
-
-Maybe this:
-Move it to driver match data.
-
-So three entirely different wordings for the same. I don't have fourth...
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
+index 51906e47327b..246a7b61a0eb 100644
+--- a/Documentation/admin-guide/sysrq.rst
++++ b/Documentation/admin-guide/sysrq.rst
+@@ -152,6 +152,8 @@ Command	    Function
+             will be printed to your console. (``0``, for example would make
+             it so that only emergency messages like PANICs or OOPSes would
+             make it to your console.)
++
++``D``	    Dump the printk ring buffer
+ =========== ===================================================================
+ 
+ Okay, so what can I use them for?
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index 6b4a28bcf2f5..1976412706a4 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -450,6 +450,24 @@ static const struct sysrq_key_op sysrq_unrt_op = {
+ 	.enable_mask	= SYSRQ_ENABLE_RTNICE,
+ };
+ 
++static void dmesg_dump_callback(struct work_struct *work)
++{
++	dump_printk_buffer();
++}
++
++static DECLARE_WORK(sysrq_dmesg_work, dmesg_dump_callback);
++
++static void sysrq_handle_dmesg_dump(u8 key)
++{
++	queue_work(system_unbound_wq, &sysrq_dmesg_work);
++}
++static struct sysrq_key_op sysrq_dmesg_dump_op = {
++	.handler        = sysrq_handle_dmesg_dump,
++	.help_msg       = "dump-dmesg(D)",
++	.action_msg     = "Dump dmesg",
++	.enable_mask    = SYSRQ_ENABLE_DUMP,
++};
++
+ /* Key Operations table and lock */
+ static DEFINE_SPINLOCK(sysrq_key_table_lock);
+ 
+@@ -505,7 +523,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
+ 	NULL,				/* A */
+ 	NULL,				/* B */
+ 	NULL,				/* C */
+-	NULL,				/* D */
++	&sysrq_dmesg_dump_op,		/* D */
+ 	NULL,				/* E */
+ 	NULL,				/* F */
+ 	NULL,				/* G */
+-- 
+2.43.0
 
