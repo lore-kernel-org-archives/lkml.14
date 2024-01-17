@@ -1,90 +1,132 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD12C11184;
-	Wed, 17 Jan 2024 08:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AED511707
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 08:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705480336; cv=none; b=Ln2GoJHJ/WB/bcibE2wgkiqbZiYplDesjCyUBAPBvvJEf2LfpXVwSdixcgbWzwY6kzEkyVWDJvnWYyPus3SGYeKGN9z94k2qg4QmWt6E9SmwA5H333AxGhYFm2JpazkJt+7uGyk5VYP4w9KQI1d1VJg9YIe80PAj+DN6jO5eZY8=
+	t=1705480392; cv=none; b=JkPNYUkvfLrmk8n8wfNiZUTiApU7IMZ7RyIx2wxhVQ/QO9k/KiAPOr1LFnmLMBqX6GZAPToTVx6buPJyGfLcnCv3d8kQsy6j0H4wz6o28yhWDlHtTOvdZ6m/Z6fM275rQn5e/YjMa7lo5ITpA5rcuOpFex45vjRB0CeB5kUf8LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705480336; c=relaxed/simple;
-	bh=XlOdioolNpHZ22pGKvy5zetAA92JxS98QovQH+mfn3w=;
-	h=DKIM-Signature:X-IronPort-AV:Received:Received:From:To:Cc:Subject:
-	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	b=EZOe1/3E+wmtIzAxtPZDNbGtSf8+Rn+OUA+Cmvi+z6N4eMHDRxS+fxuCBCl2BtCCEFMazYJO/LLXL06cFX4g6S4ZFORBnCI+zoia8IgmlHZJxsEoaTDxdaHmuXaDBK+QsMQbkRYO96JlDtPyn54FaS/yJ2NjQy7RPaJvP5+h6jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=Zk7290XY; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1705480392; c=relaxed/simple;
+	bh=eoprG9W1CI6YhzvZtTCTti0GN5/NLnpiNoVjdZZRl+s=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
+	 From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kax+aYxSW3a5E9WnXuOEf9m2VtBWBmXjs7x+xPOCrxE3I491ObiSURr1yeaTMjRks/4CAqw0nnRL9ASgpHDc4bjT7dVb525GH8wxpUGuDTmV1aDBwBOfO7Yrx4+pDJu+Msu7IQa/FnS4drpMp34AXV3sN+g+HxwYMC3xF8bNhj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l1tJfG7b; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Zk7290XY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1tJfG7b"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-21085f78398so668418fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 00:33:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1705480333; x=1737016333;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/BP+4dKkLlCq8jJBHaVZ/NNx1yUpZgjmOcoJ+fxKctc=;
-  b=Zk7290XYlrFAWjMeH+aPSKckunErlx1XeIqcciwNwiJkvaBEwYJHUui9
-   AO0fDDmcKd1rFHnoXSzcHSPqV8Vl3PrUO4IGnvDvJQe9Q6PUP7Ief5uOs
-   7daWor66gzA2W50QnfokxlftdgIJJ3WGGj9f6wsCKpuSSMz68iSwtUu3B
-   iy5tnnnZsdvSokXhy/Sx3+eGaqPOCoq4dDZFQ30bAuLf2iX05K1DbeUjk
-   chG1YCys1zmWAhNgYy25WErni9PcbkVkMSNOFa6ICVhE0G6BfZoKNaId3
-   8wyYIeeDoOHW8JbiugyD5ZLqK0BpCX60mY7FOC8pdibnhjCB5cABpDwie
-   A==;
-X-IronPort-AV: E=Sophos;i="6.05,200,1701126000"; 
-   d="scan'208";a="34933155"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 17 Jan 2024 09:32:10 +0100
-Received: from steina-w.tq-net.de (steina-w.tq-net.de [10.123.53.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id DB006280075;
-	Wed, 17 Jan 2024 09:32:09 +0100 (CET)
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] of: property: Make 'no port node found' output a debug message
-Date: Wed, 17 Jan 2024 09:32:06 +0100
-Message-Id: <20240117083206.2901534-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+        d=gmail.com; s=20230601; t=1705480390; x=1706085190; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iKjg9sUKFpQLbZiqakql5s58345FDY6ZbRep1Ynzd4U=;
+        b=l1tJfG7bdwqRT9Wtapwd/sXqrb6dBw4XKz7DjZNhWIRhIvsScGGxuYwC8F+GDhfl8O
+         9pADIinwAHI/DPUFiUYfDkimQfvi797Zg2x0b7TAAJAr9BAyZA84pgCyIp6WWc1wUTFe
+         kpzIS7Z2kIxftqWmXdyKkCcHos3ECyoQ3GJ22X1vir5mu/z57fMsttcCrhcV6kzQ8WSd
+         IWU3Qb3CkrCvWHXCKJ2E7ZRPgCOYDZHBw8WUAeZjyWSTCGbEGKErdjmrSgi6el2nYTsS
+         JBFj43WZqgNuFSh9/CRcuiqp4qXcr6Tr0+7ZQvTUuxE52FwWUwAMgvGWCP0WZVfde+uv
+         BzwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705480390; x=1706085190;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iKjg9sUKFpQLbZiqakql5s58345FDY6ZbRep1Ynzd4U=;
+        b=YVH5ccdnzyPnUxXUtS0DayfCJy36uJJkBoWF30riWXXqVl8Sj+NRCbzSkZYkafPape
+         LJiSvW7LgQbsJdgBdxHukig/9qc77QWKCI5+OghFz90CIaGPXS1nBbJSJoxYL30tP4ud
+         etm+SxjGdwn/Bqud3BIjj+WBIzjJ5SemoMhNghg5Wz2sldO4NLj/7cVrmdE8pKg2YNCt
+         8TpIs0IZJdvXmZEW1QUUIMBQYUwZkLd0ui1f/H/+BjeSWKOYu6E+uXLoVGzlyR1P0fiL
+         dFpQ/2J0BEaTwdP64Srh8oNM/1ZPILTXqe/yMP+XZnpH5hjent93sXTT9BPnFtjZPPZJ
+         vsEw==
+X-Gm-Message-State: AOJu0Yzsz16y3tcM2WfIelGE7NmwvDy9MVF0Msf84BtB3TwYUXwocoxh
+	hpuvgItk7eWX2mlmnDDNXNumRBojDBI=
+X-Google-Smtp-Source: AGHT+IEbHuR38nMGqgjQmlvJ44fhnJ/8d0Ju2lZC8gAshMctaEeLRcpyEp+Imcu3HcafB6XYVh8NYA==
+X-Received: by 2002:a05:6870:514d:b0:206:785e:9c with SMTP id z13-20020a056870514d00b00206785e009cmr11618314oak.23.1705480389919;
+        Wed, 17 Jan 2024 00:33:09 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:5c15:9a6:f612:d37a])
+        by smtp.gmail.com with ESMTPSA id bj18-20020a056a02019200b005c2420fb198sm9889731pgb.37.2024.01.17.00.33.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 00:33:09 -0800 (PST)
+Date: Wed, 17 Jan 2024 00:33:07 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Russ Weight <russ.weight@linux.dev>, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware_loader: introduce __free() cleanup hanler
+Message-ID: <ZaeQw7VXhnirX4pQ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-There are cases where an unavailable port is not an error, making this
-error message a false-positive. Since commit d56de8c9a17d8 ("usb: typec:
-tcpm: try to get role switch from tcpc fwnode") the role switch is tried
-on the port dev first and tcpc fwnode afterwards. If using the latter
-bindings getting from port dev fails every time. The kernel log is flooded
-with the messages like:
- OF: graph: no port node found in /soc@0/bus@42000000/i2c@42530000/usb-typec@50
-Silence this message by making it a debug message.
+Define cleanup handler using facilities from linux/cleanup.h to simplify
+error handling in code using firmware loader. This will allow writing code
+like this:
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+int driver_update_firmware(...)
+{
+	const struct firmware *fw_entry __free(firmware) = NULL;
+	int error;
+
+	...
+	error = request_firmware(&fw_entry, fw_name, dev);
+	if (error) {
+		dev_err(dev, "failed to request firmware %s: %d",
+			fw_name, error);
+		return error;
+	}
+
+	error = check_firmware_valid(fw_entry);
+	if (error)
+		return error;
+
+	guard(mutex)(&instance->lock);
+
+	error = use_firmware(instance, fw);
+	if (error)
+		return error;
+
+	return 0;
+}
+
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/of/property.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 641a40cf5cf34..a02a985c13baa 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -665,7 +665,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 		of_node_put(node);
+If this is acceptable sticking it into an immutable branch would be very
+helpful. Thanks!
+
+ include/linux/firmware.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/linux/firmware.h b/include/linux/firmware.h
+index de7fea3bca51..2035a0d9cc86 100644
+--- a/include/linux/firmware.h
++++ b/include/linux/firmware.h
+@@ -4,6 +4,7 @@
  
- 		if (!port) {
--			pr_err("graph: no port node found in %pOF\n", parent);
-+			pr_debug("graph: no port node found in %pOF\n", parent);
- 			return NULL;
- 		}
- 	} else {
+ #include <linux/types.h>
+ #include <linux/compiler.h>
++#include <linux/cleanup.h>
+ #include <linux/gfp.h>
+ 
+ #define FW_ACTION_NOUEVENT 0
+@@ -196,4 +197,6 @@ static inline void firmware_upload_unregister(struct fw_upload *fw_upload)
+ 
+ int firmware_request_cache(struct device *device, const char *name);
+ 
++DEFINE_FREE(firmware, struct firmware *, release_firmware(_T))
++
+ #endif
 -- 
-2.34.1
+2.43.0.381.gb435a96ce8-goog
 
+
+-- 
+Dmitry
