@@ -1,47 +1,48 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A644215B7;
-	Wed, 17 Jan 2024 01:10:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F464439;
+	Wed, 17 Jan 2024 01:10:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705453809; cv=none; b=o/cu+/W+TfH4KXICxirfEi2o4k6pEotywDA8xkNxRrn4FbcikYu+AOLslPx2jypmQpduEE8tCjYC3swy4KlfuLNh98wbzMPJ3OEIg+KkFB9o5mYUbXKofQHcakkl37gBgOtmUOoE5lX8dYZgq33ix6/7jiVMMpp3Arboie+kWy0=
+	t=1705453810; cv=none; b=Oz4z4KgDA3Ul96S4C6j6tIPPJuZRhdGbo+w3QfTZk1DMRUK87mUrfeAmmdU0P3CDCoB41MHPBuoD2iOqVhg945faaZLjvuN7zaJxh7jhCQzeIPCqbSmR6XnitBFt5Q6dcKyqPklKfSzb0/DOOxsO6KZmOFk/iSGsJ3VkHWgFRac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705453809; c=relaxed/simple;
-	bh=TpY9YZBMiKLnHcXHU3L0fU+AEI3fIwR1kbbzoZ8IsGk=;
+	s=arc-20240116; t=1705453810; c=relaxed/simple;
+	bh=BL5aX056bFvjCHUcg1YEdagctUIsMeId5BQPF5YJ4yk=;
 	h=DKIM-Signature:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=VOVj+rR4YAOw7KweUNVYLFIuE5vavvlPKbVsmrvgUcnZymGdfSTCgrP9AiQU1QVRHwWYE+vQMAtNi8DuVzoFvIkl8Zcvh6hBCNP7LG2YpNp1u2nslmfraaGPg7RHY8E67QYShRU2EfjRb0gDvFk3xDFk/HDHwcFSjuOV8TC+ARc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jjZQJqeL; arc=none smtp.client-ip=198.137.202.133
+	 Content-Transfer-Encoding; b=inGGmQQkFqo9dI8L+TWk1EyHXDlsnd4YkNGWr5rxnjs34yVtmc1SsQwTBGWCLAQuezlmh+8+B9IIohvmiilSqfmHRi3iALn/LMsmdKy7MMa2YOpyc28Lr3izui8doGXyOcJ4+xiVN1ahlMmrh9HmjSvJ4dsAUtTXY0rNtKfez1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ub7fms35; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jjZQJqeL"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ub7fms35"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=YqDqQhI9Tad8JS90rKrmaa82AwzcW8UAGZbm+qX2YYg=; b=jjZQJqeLLU5KIm7iuhwNWUMoFZ
-	nakExqXN44Zy8V8KZ8rsEiJ6HgVaahmmM2bjzZhjKSXYi+meoqiKvkeoiwOeqsvlsc3iXMxrV/k8+
-	qlfW0Sstf4IJZrSvTDBReP7XHpZ019qDtiSo9nledLSWCbXN0KO8xOdLzPmo/8thrdjYG3DRJuxj0
-	Hg1DBQVMSUKnXARbDIotMuKMv0N4vhFQZrVLK2O2xVw+KRLtK94bRa9WVeXqgxOTDGPxAy7H8MydE
-	Mm2p+xDg4MW1VvsBDXKaGzrWS5YaaE9b/jN2vxnTW6uavKPuV219wQJI3F+ImL9b9yw9b+iNm4DVK
-	xlDHonrQ==;
+	bh=D/gE019ZmSvllJYQDA3FYN3rYxglmvvmTrq1Zs40Zjg=; b=Ub7fms35Rr/W6I8goOAVJ/n37j
+	93C1RMl31TxjlgXAzSRAoUug9b1v+9mpr93BhuQBPb5XZ+aEQQ3eSj8epa1n0d/lJt5aiy+DwIHgY
+	olICA6Z3j9WCx/36EY48o+bMg85VkHC7xnwNLrFaDRLaxDQbT+rf4PzzBK5cvtdT0F1m6+SzmFREt
+	lui6vzNfq8FC/3xrMbJhFUgG3SISwCtEtGl5yJI9H14+iZRu6c9SCWwRXqiESh3LJ7KDWrBJOV2Nr
+	sWKOsXCL1DQro1d+2jsVKfjFg3i1o4tylfEqH0LyJJ6eCKKTQfmPeGzbobPbLEHgDpPgzitt/rrW7
+	ahNq5Q7Q==;
 Received: from [50.53.46.231] (helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPuRT-00E6zu-05;
-	Wed, 17 Jan 2024 01:10:07 +0000
+	id 1rPuRU-00E6zu-0o;
+	Wed, 17 Jan 2024 01:10:08 +0000
 From: Randy Dunlap <rdunlap@infradead.org>
 To: linux-kernel@vger.kernel.org
 Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Paul Walmsley <paul@pwsan.com>,
 	Tony Lindgren <tony@atomide.com>,
 	linux-omap@vger.kernel.org,
 	Russell King <linux@armlinux.org.uk>,
 	linux-arm-kernel@lists.infradead.org,
 	patches@armlinux.org.uk
-Subject: [PATCH 05/13] ARM: OMAP2+: CMINST: use matching function name in kernel-doc
-Date: Tue, 16 Jan 2024 17:09:53 -0800
-Message-ID: <20240117011004.22669-6-rdunlap@infradead.org>
+Subject: [PATCH 09/13] ARM: OMAP2+: prm44xx: fix a kernel-doc warning
+Date: Tue, 16 Jan 2024 17:09:57 -0800
+Message-ID: <20240117011004.22669-10-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240117011004.22669-1-rdunlap@infradead.org>
 References: <20240117011004.22669-1-rdunlap@infradead.org>
@@ -53,12 +54,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Prevent a kernel-doc warning by using the correct function name in
-a kernel-doc comment:
+Use the correct function name in a kernel-doc comment to prevent a
+warning:
 
-cminst44xx.c:249: warning: expecting prototype for omap4_cminst_clkdm_force_sleep(). Prototype was for omap4_cminst_clkdm_force_wakeup() instead
+prm44xx.c:421: warning: expecting prototype for omap44xx_prm_clear_context_lost_flags_old(). Prototype was for omap44xx_prm_clear_context_loss_flags_old() instead
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Paul Walmsley <paul@pwsan.com>
 Cc: Tony Lindgren <tony@atomide.com>
 Cc: linux-omap@vger.kernel.org
 Cc: Russell King <linux@armlinux.org.uk>
@@ -67,18 +69,18 @@ Cc: patches@armlinux.org.uk
 ---
 KernelVersion: 0dd3ee31125508cd67f7e717
 
- arch/arm/mach-omap2/cminst44xx.c |    2 +-
+ arch/arm/mach-omap2/prm44xx.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff -- a/arch/arm/mach-omap2/cminst44xx.c b/arch/arm/mach-omap2/cminst44xx.c
---- a/arch/arm/mach-omap2/cminst44xx.c
-+++ b/arch/arm/mach-omap2/cminst44xx.c
-@@ -237,7 +237,7 @@ static void omap4_cminst_clkdm_disable_h
+diff -- a/arch/arm/mach-omap2/prm44xx.c b/arch/arm/mach-omap2/prm44xx.c
+--- a/arch/arm/mach-omap2/prm44xx.c
++++ b/arch/arm/mach-omap2/prm44xx.c
+@@ -407,7 +407,7 @@ static bool omap44xx_prm_was_any_context
  }
  
  /**
-- * omap4_cminst_clkdm_force_sleep - try to take a clockdomain out of idle
-+ * omap4_cminst_clkdm_force_wakeup - try to take a clockdomain out of idle
-  * @part: PRCM partition ID that the clockdomain registers exist in
-  * @inst: CM instance register offset (*_INST macro)
-  * @cdoffs: Clockdomain register offset (*_CDOFFS macro)
+- * omap44xx_prm_clear_context_lost_flags_old - clear context loss flags
++ * omap44xx_prm_clear_context_loss_flags_old - clear context loss flags
+  * @part: PRM partition ID (e.g., OMAP4430_PRM_PARTITION)
+  * @inst: PRM instance offset (e.g., OMAP4430_PRM_MPU_INST)
+  * @idx: CONTEXT register offset
