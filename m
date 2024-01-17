@@ -1,118 +1,153 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F00122EE3
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 18:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED49322EE3
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 18:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705516537; cv=none; b=J9s40ybWDAbiau3zvc3PBN1UJfEo5d6jLTryCpwudXf/EAQpgN23fGSZ9zM+uKHjbt/4WZHuOiL9otpZPQDl8OCGvvI2lKtrr3RTLm78QFy4F9JyriHd5/SB5wbGlFTgtheZjU3YSOtXHNuaeZceJL2kXG3ILpyB8G/75Z/0Qnk=
+	t=1705516625; cv=none; b=b+qaum5vZTtP1UZysmO2q83YGhEBypkQBGu3bZ9IASlMISpcv27wC3QLK2Zjzp+RCebPxxYi40VMLIcD6TZX5SVmzJwimqlOG9vcf6HPmC9rJXB/Wl/dvgXevUAc4+Zd5CD5FhL4lySFdtO93lTIfRLydCB7D5S/O34sLQw3OIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705516537; c=relaxed/simple;
-	bh=tugHWeY5jAaSBGspVjSdqKXVWtqduV8QmkpnxiUidqw=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
-	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=SzRrd+yT7BBfK7yfddjK320h4pSHfnVk5BEEOfQv3hPywg9MWrQoESm4FP6n+9r7Raul/wyTVe1ViZUgSnxObhaqSgC3ld5T/ADvjpe5QNkhzVnKSsx44xXwa0CuzxO7ZniD+jj+KZ0kwNC1bJKMZYpNBjWqYxgVYJrkrldAKDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RCj9hkDV; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1705516625; c=relaxed/simple;
+	bh=M3l5RgHD/1od8oUBFbbVk+/yrSOKVdEfp8uFd/iHBNk=;
+	h=From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:In-Reply-To:
+	 References:Date:Message-ID:MIME-Version:Content-Type; b=VcmXVCEFF2fB0PLS7gjemgqD+6nDPuqJqDPu1iu7nWqZSbzsrP6fx53y2N2Ds+miUyaC3AlHy66KacejWHy5IiSTGuYsEwL59j1ovmdzn+snJpBdUuyYHvmCVQmm8VlPkaSMmAmEkKrDPvN1FdqI6omMWde/WZSSRCpq4SL5cfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Us1t548C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1fiu9cZJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RCj9hkDV"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6ddf1e88e51so5526360a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 10:35:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705516534; x=1706121334; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dGYRtDKlKnGOQduq4VNWov4UOWEDuy3ZPEgEUd75zZg=;
-        b=RCj9hkDV2f4FaPshDzZz2wXBHJRCnQUA64oQRebW8lCbOn1Qf6xNXaWy+CF9w6ytDv
-         M/RtDaJT1xt8MrKKr7U/uF5E9AqYNgVZ61iqknH60uYjJwrPSx/EtAYtONsS7tAm8Y0G
-         jHi6ehK8P5M3w2czPtk5oaIGNWSOS+lFcUHxw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705516534; x=1706121334;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dGYRtDKlKnGOQduq4VNWov4UOWEDuy3ZPEgEUd75zZg=;
-        b=iVWgsHFWOOBpQnQQYMcMvOtbOk9b200b8x8WhxQqyHHozL7W2mdBjV9z5b5dH8Na2L
-         DiOk0IoEiIfq1MGSl/meQLHKWotRI3gtDNc/Vzu3RB0QfTzcliWc5ObLcMuuUjNH7JyM
-         vXrZ9EAdgBtZli6+l33Tw+Oaeu2XeuWqcXC1D5osiq5k9NFv+bP48McVrELjulRK4XnV
-         vIIgIaueA3CTVLCCX2FVD5o3uOYvLewJI6DCdBA1lcvW6N7IrKPC9y/voUCsI4TwkanY
-         wkj2She84Ulv0y5Gh/G4IxFO3zhrGze09zVlJ1rtAUyM28l9pDyTyDYDL0xgs2b5HKj0
-         08aQ==
-X-Gm-Message-State: AOJu0Yzpgw4iFiPhOcrzt6W+1tXp7mQ97ZWhOEJ4i4caqVKe2oj4bR1D
-	qEL1JgSFbd9YR6B3+Z87O1V16CWjPhPe
-X-Google-Smtp-Source: AGHT+IFZnL0+bJFVTkL8YnbJPonvdMeWIW2tBeoi/pmAtih3evTSdKFPj5YogL3HK+ZLXPIM8Jrk8w==
-X-Received: by 2002:a05:6358:5398:b0:175:b906:8c87 with SMTP id z24-20020a056358539800b00175b9068c87mr7650557rwe.21.1705516534518;
-        Wed, 17 Jan 2024 10:35:34 -0800 (PST)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:bcd0:3985:867:5ea4])
-        by smtp.gmail.com with ESMTPSA id ko18-20020a056a00461200b006dab0d72cd0sm1762215pfb.214.2024.01.17.10.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jan 2024 10:35:34 -0800 (PST)
-From: Douglas Anderson <dianders@chromium.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Pin-yen Lin <treapking@chromium.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/bridge: parade-ps8640: Make sure we drop the AUX mutex in the error case
-Date: Wed, 17 Jan 2024 10:35:03 -0800
-Message-ID: <20240117103502.1.Ib726a0184913925efc7e99c4d4fc801982e1bc24@changeid>
-X-Mailer: git-send-email 2.43.0.381.gb435a96ce8-goog
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Us1t548C";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1fiu9cZJ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705516621;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TInfxfPQEeri/W24YA0NOZ5UGgw0IlviSgqagYig9g0=;
+	b=Us1t548CfcLMVvk1nGnos3AyugjPKcLo6H6PgP3kETIEoTUzstXdAtZ5Y9p0yvLXGctlaZ
+	7+gywGyxroo4ruCw+O8GKRYrSK3zWX05SEvBVK9OTqoU41PsQYi6ZF6u8HqO0uXopO6Juh
+	5DiYYUUG7CmAuucdjjR4uL6ZQDPG6Z1KOiaq6CiQSt88gTULHpoQdbt1ixBHhBhnvhCZQS
+	K0fd2RIAXA2xGiognJLgOERqhwbXUOpU0qmeQ334EgY4KUyi0k2IgJjDAQAz1NanKe6wjL
+	UU7uAB2MnR6+sCO9qPCO2oKj8BOJgbHC8acfJZ8zSSwe6g9+hoAWjLAOgz/qYQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705516621;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TInfxfPQEeri/W24YA0NOZ5UGgw0IlviSgqagYig9g0=;
+	b=1fiu9cZJaesRbpdNrzOYWuNgPdeQbfScYq6QxpSGWyqYpLvKFJ+qXrCXL37qN/VVT1GRFV
+	+f12xE+XPOgfteCQ==
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Jiri Slaby
+ <jirislaby@kernel.org>, Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, boqun.feng@gmail.com, bristot@redhat.com,
+ bsegall@google.com, dietmar.eggemann@arm.com, jstultz@google.com,
+ juri.lelli@redhat.com, longman@redhat.com, mgorman@suse.de,
+ mingo@redhat.com, rostedt@goodmis.org, swood@redhat.com,
+ vincent.guittot@linaro.org, vschneid@redhat.com, will@kernel.org
+Subject: Re: [PATCH] futex: Avoid reusing outdated pi_state.
+In-Reply-To: <20240116130810.ji1YCxpg@linutronix.de>
+References: <20240116130810.ji1YCxpg@linutronix.de>
+Date: Wed, 17 Jan 2024 19:37:00 +0100
+Message-ID: <87wms7g62b.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-After commit 26db46bc9c67 ("drm/bridge: parade-ps8640: Ensure bridge
-is suspended in .post_disable()"), if we hit the error case in
-ps8640_aux_transfer() then we return without dropping the mutex. Fix
-this oversight.
+On Tue, Jan 16 2024 at 14:08, Sebastian Andrzej Siewior wrote:
+> @@ -628,10 +628,15 @@ int futex_unqueue(struct futex_q *q)
+>  /*
+>   * PI futexes can not be requeued and must remove themselves from the
+>   * hash bucket. The hash bucket lock (i.e. lock_ptr) is held.
+> + * If the PI futex was not acquired (due to timeout or signal) then it removes
+> + * its rt_waiter before it removes itself from the futex queue. The unlocker
+> + * will remove the futex_q from the queue if it observes an empty waitqueue.
+> + * Therefore the unqueue is optional in this case.
 
-Fixes: 26db46bc9c67 ("drm/bridge: parade-ps8640: Ensure bridge is suspended in .post_disable()")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-Sorry for missing this in my review! :( Given that this is really
-simple and I'd rather the buggy commit not be there for long, if I can
-get a quick Reviewed-by tag on this patch I'll land it without the
-typical stewing period.
+This explanation is as confusing as the changelog.
 
- drivers/gpu/drm/bridge/parade-ps8640.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+>   */
+> -void futex_unqueue_pi(struct futex_q *q)
+> +void futex_unqueue_pi(struct futex_q *q, bool have_lock)
+>  {
+> -	__futex_unqueue(q);
+> +	if (have_lock || !plist_node_empty(&q->list))
+> +		__futex_unqueue(q);
 
-diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
-index 166bfc725ef4..14d4dcf239da 100644
---- a/drivers/gpu/drm/bridge/parade-ps8640.c
-+++ b/drivers/gpu/drm/bridge/parade-ps8640.c
-@@ -351,11 +351,13 @@ static ssize_t ps8640_aux_transfer(struct drm_dp_aux *aux,
- 	ret = _ps8640_wait_hpd_asserted(ps_bridge, 200 * 1000);
- 	if (ret) {
- 		pm_runtime_put_sync_suspend(dev);
--		return ret;
-+		goto exit;
- 	}
- 	ret = ps8640_aux_transfer_msg(aux, msg);
- 	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
-+
-+exit:
- 	mutex_unlock(&ps_bridge->aux_lock);
- 
- 	return ret;
--- 
-2.43.0.381.gb435a96ce8-goog
+If 'have_lock == true' then 'plist_node_empty()' must be 'false' with
+you moving the callsite up, no?
 
+So that 'have_lock' arguments is clearly pointless.
+
+>  	BUG_ON(!q->pi_state);
+>  	put_pi_state(q->pi_state);
+> diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
+> index 8b195d06f4e8e..c7133ffb381fd 100644
+> --- a/kernel/futex/futex.h
+> +++ b/kernel/futex/futex.h
+> @@ -252,7 +252,7 @@ static inline void futex_queue(struct futex_q *q, struct futex_hash_bucket *hb)
+>  	spin_unlock(&hb->lock);
+>  }
+>  
+> -extern void futex_unqueue_pi(struct futex_q *q);
+> +extern void futex_unqueue_pi(struct futex_q *q, bool have_lock);
+>  
+>  extern void wait_for_owner_exiting(int ret, struct task_struct *exiting);
+>  
+> diff --git a/kernel/futex/pi.c b/kernel/futex/pi.c
+> index 90e5197f4e569..4023841358eea 100644
+> --- a/kernel/futex/pi.c
+> +++ b/kernel/futex/pi.c
+> @@ -1070,6 +1070,7 @@ int futex_lock_pi(u32 __user *uaddr, unsigned int flags, ktime_t *time, int tryl
+>  	 * haven't already.
+>  	 */
+>  	res = fixup_pi_owner(uaddr, &q, !ret);
+> +	futex_unqueue_pi(&q, !ret);
+>  	/*
+>  	 * If fixup_pi_owner() returned an error, propagate that.  If it acquired
+>  	 * the lock, clear our -ETIMEDOUT or -EINTR.
+> @@ -1077,7 +1078,6 @@ int futex_lock_pi(u32 __user *uaddr, unsigned int flags, ktime_t *time, int tryl
+>  	if (res)
+>  		ret = (res < 0) ? res : 0;
+>  
+> -	futex_unqueue_pi(&q);
+
+Without the have_lock argument these two hunks are not required.
+
+>  	spin_unlock(q.lock_ptr);
+>  	goto out;
+>  
+> @@ -1135,6 +1135,7 @@ int futex_unlock_pi(u32 __user *uaddr, unsigned int flags)
+>  
+>  	hb = futex_hash(&key);
+>  	spin_lock(&hb->lock);
+> +retry_hb:
+>  
+>  	/*
+>  	 * Check waiters first. We do not trust user space values at
+> @@ -1177,12 +1178,15 @@ int futex_unlock_pi(u32 __user *uaddr, unsigned int flags)
+>  		/*
+>  		 * Futex vs rt_mutex waiter state -- if there are no rt_mutex
+>  		 * waiters even though futex thinks there are, then the waiter
+> -		 * is leaving and the uncontended path is safe to take.
+> +		 * is leaving. We need to remove it from the list so that the
+> +		 * current PI-state is not observed by future pi_futex_lock()
+> +		 * caller before the leaving waiter had a chance to clean up.
+>  		 */
+>  		rt_waiter = rt_mutex_top_waiter(&pi_state->pi_mutex);
+>  		if (!rt_waiter) {
+> +			__futex_unqueue(top_waiter);
+>  			raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock);
+> -			goto do_uncontended;
+> +			goto retry_hb;
+
+This clearly lacks a comment that there might be more than one waiter in
+the hash-bucket which removed itself from the rtmutex and is now blocked
+on the hash bucket lock.
+
+Thanks,
+
+        tglx
