@@ -1,197 +1,209 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2082.outbound.protection.outlook.com [40.107.223.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F51225D9;
-	Wed, 17 Jan 2024 17:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705513578; cv=fail; b=QYXD6MbgHRyhSo0eEYkj28ESfFHZedCBqvlk8ecZkJadhoiFQDM5qneGgukEG1wYy8Pyn3HeYYRafd0p/i/cW7xcaWbn6lKBb+sZGq9tamBmEPF/FSu/qrTbYrSovqLmaU+vUT2Bb1u0TR4TcRcD7xTWvbWAQKNWMtx5q4STvQg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705513578; c=relaxed/simple;
-	bh=3PCe4rKGV9GAbI9m/DvJ8P7IR6KZb9qJ9FfYKSwmpqU=;
-	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
-	 Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 Content-Type:Content-Disposition:In-Reply-To:X-ClientProxiedBy:
-	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=PSUhWlIgc3lNCkkuvSgmFCu+TWSyGOaDEmEveHNdQH6mZ70lFz4KXzwueghoxrrr/0fNtOjdLO4C0btuNIaG9MsembaD/weG+cvPKuUTXoE1jh8KcX6AE/83uj8CvEBHHcB8zDu1Pb7KBWFJoVHaNRlYavYP+WIu9GlxgxPT610=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=PWTnAMar; arc=fail smtp.client-ip=40.107.223.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C039C22EE3
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 17:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705514040; cv=none; b=IwIowDWBP22UZN4oVksWQpZtGvWKAEsr3ZWYgKS5koC89S04caRCZcp60Nlz6owE34ow/cwrSvvqpxjZofSchwJLjDgi5Z9eRQk69IZ0i0op8k/5B3QoZ7XIIDt79u92IBm+sNeI68i8l4RdRxFt0hrTPtiK8jRxnPeNCozQJcY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705514040; c=relaxed/simple;
+	bh=JjfVt3N71j4YPkrlh+5PUtWAmKzZVN5cdfHnZnYczp0=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:From:Reply-To:Subject:
+	 Content-Language:To:Cc:References:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding; b=Wu4nz26+RqbhAd1uXGTnJWFsG3Oy+8VKacJe7MgWFp33TGCVWezxjUWl+u+GGx8YXCwvUHmWi3cXEhmQquJ7zzwdnVqB2wQ26tEZhqCBXzwXSFrctEGcXEeaExW6X5kJiiFwliZpt747vBs6ldq8f1gks5Tyqd6QB3t6f1b4W78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t9VKz8Jp; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="PWTnAMar"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FEgqqTv9v5Q6PpUcJqJKGUKffS+aIAfR4eWRh3IY2U/zNwFtyyBeV3AYRcG9MS4jvu1ECktEPufPnvmU9t1/J9LXhgoaiQJchfrUK3yBtFjHVnE8gSoto8Jmt1oCiqOrEAycR+m7YwAPmSR5HCZJ97mh2CW7UIrNO2ak2fu/KdaDNbA9AngFGU60OOS8QjYIPVCOWclLcw74cVxZAuHdyHpTsSWz+sr8yTCeVOy+TTNLTkEy8YJdkyTtQf+lacJXu/xCDhwkhouO2cLjfYACrC9nfNGipc68EzK6jfl/iDFREFa33SeSQ+Vc/BMK5L2Ltf0m3TBQgWdorkzhfA3qhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JSZZORtYz4RmGXqeJrrchaVb5t8o+R8JsKdCxgpbMGc=;
- b=RXloIi53fpLOlSLCwxDzB17DCNrJKpz7aY/LAl/OBjrPyP1u36LbOhUYLu3UTJ6dqHIZnpqjlqmATmV1d2tp8ClAk+AKSkx+M5AyYSQwTdMzxT3cS1SL9AMB0Zt8HtiTdlYs79MG71+C0kvrRNI0WErALbYXpvbQGjnTcQGAnUcT4AUlAF2X6sBfoVjBmVBWC7lS6VNXty4zrl1eUVrE8Ua03XhZ8VsllhLr416wj45utCTjOiusCCNIt0YYwghw9ACk02bnzHfJdGHNfbxZjHFN/ukvDR82vS6cMiJPl5b+2iaOgGdYsOEL6tp8QAQj/3521vnc61cm4kG9JOqCQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JSZZORtYz4RmGXqeJrrchaVb5t8o+R8JsKdCxgpbMGc=;
- b=PWTnAMarKuMXB4qWQaT1H6cnaeCV8kqFXq7ctM0jKoyGwF3V1yfEd/LnLM+gY2p732VNXgfSvx3tPkMYLIsYz0sMwPSD9ZnbS2AM18nSIvMHXO5GJo0jF+WyOU86tVDVqLRM+NMJh18mA2FryeLSFTmeawD4r1ZEApZOH7WNUQU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from MW4PR17MB5515.namprd17.prod.outlook.com (2603:10b6:303:126::5)
- by DS0PR17MB6890.namprd17.prod.outlook.com (2603:10b6:8:12b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.19; Wed, 17 Jan
- 2024 17:46:13 +0000
-Received: from MW4PR17MB5515.namprd17.prod.outlook.com
- ([fe80::f5ca:336b:991c:167b]) by MW4PR17MB5515.namprd17.prod.outlook.com
- ([fe80::f5ca:336b:991c:167b%4]) with mapi id 15.20.7181.029; Wed, 17 Jan 2024
- 17:46:13 +0000
-Date: Wed, 17 Jan 2024 12:46:03 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-	corbet@lwn.net, akpm@linux-foundation.org, honggyu.kim@sk.com,
-	rakie.kim@sk.com, hyeongtak.ji@sk.com, mhocko@kernel.org,
-	vtavarespetr@micron.com, jgroves@micron.com,
-	ravis.opensrc@micron.com, sthanneeru@micron.com,
-	emirakhur@micron.com, Hasan.Maruf@amd.com, seungjun.ha@samsung.com,
-	hannes@cmpxchg.org, dan.j.williams@intel.com
-Subject: Re: [PATCH 1/3] mm/mempolicy: implement the sysfs-based
- weighted_interleave interface
-Message-ID: <ZagSW5TXzZeKErlW@memverge.com>
-References: <20240112210834.8035-1-gregory.price@memverge.com>
- <20240112210834.8035-2-gregory.price@memverge.com>
- <87le8r1dzr.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZadkmWj3Rd483f68@memverge.com>
- <87o7dkzbsv.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o7dkzbsv.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-ClientProxiedBy: SJ0PR03CA0112.namprd03.prod.outlook.com
- (2603:10b6:a03:333::27) To MW4PR17MB5515.namprd17.prod.outlook.com
- (2603:10b6:303:126::5)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t9VKz8Jp"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e72a567eeso37796575e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:53:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705514037; x=1706118837; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eW5dEglpjib4OhaJPnLBXWIaNV1VhhWKpxCN1epSIBk=;
+        b=t9VKz8Jpk6GgEJeeeIG0oKqauKJ/Ika+8YJmknIiD/MPQEZ+CoaA8J0+zL2ln0amZb
+         CPx80YB5tm3TjvOS+ku+jbt736Z3b4kSlAaCyn8iYLJxrYthoZ07PD+pWm4VhH4V3+qe
+         vecrD2LuJqj7pCPkT80EqU2xT04dg1p2eun+X2Xi4iicoHQTFS4d43CaUzyklN1y6rK/
+         qhNV3TqodNl0j04DwJhGhisKzvYlCB1MeDQq+33YE0pvk9BnReOyDNWJKQa7IdoHlCjN
+         pKHTTtL7Kpgd5u1HC2ytatHqub1K3D+5+Xgqdemuv+qEIDPVZyt2YXT+VrbuyHxVwuPP
+         VZGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705514037; x=1706118837;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eW5dEglpjib4OhaJPnLBXWIaNV1VhhWKpxCN1epSIBk=;
+        b=xAFyqcUaz3kwUfss4u8eBiLepzRtC5vA7e3YkcGbIxqLiSUAzQetkgTat3LCGzbwqJ
+         PRep6HROb0yMRowPrMdKUxccqya7/t83sgJn60TRIm2w1mIFeW9OoSFDpRTKwFeGIG0d
+         5mVIcj3FwlicKtOJ0f0IPHsWFUKTIC1E6g0IdShRUE0wl5tjn3bgaG08/bDj+XOf1K+b
+         37P2LGCIFKquMtsCsW9kLLLWcnn9FeluBb8+Cu+ogvXeVeADI0O/VIYC1NuQ6ivu74g6
+         akztjKufNUWqTA02HEAMq4F+849HjAygYNvtMdEuhpL099ecVQ87MccAu2wmmqPnG8DH
+         j8Tg==
+X-Gm-Message-State: AOJu0Yzn5NLDDfwX2yIrm0Zb/wK0FVK3T+3CW5A344I3xj1tBQP5/Xy8
+	s7rV4j1EC8UoOpXpFuMvb00M3d+LR7fbgg==
+X-Google-Smtp-Source: AGHT+IF9x4mzdWYcyOfkG+g6M+1NIbBX7DCz1g2FkPEH84IOqSkzdWWBeewh4OkOtgYis9oLLtkJWg==
+X-Received: by 2002:a05:600c:a41:b0:40e:38a3:70f2 with SMTP id c1-20020a05600c0a4100b0040e38a370f2mr2358767wmq.65.1705514037014;
+        Wed, 17 Jan 2024 09:53:57 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:de9a:cd03:1fa1:d6f1? ([2a01:e0a:982:cbb0:de9a:cd03:1fa1:d6f1])
+        by smtp.gmail.com with ESMTPSA id fa6-20020a05600c518600b0040e861ad5d2sm5252331wmb.0.2024.01.17.09.53.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jan 2024 09:53:56 -0800 (PST)
+Message-ID: <105a6adb-bef3-4c89-a6db-7f27bcd46200@linaro.org>
+Date: Wed, 17 Jan 2024 18:53:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR17MB5515:EE_|DS0PR17MB6890:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0fd1f319-69f4-4600-b5ec-08dc17843250
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	N5zpcdKnO1oJJFMUuqBr9/fQfyAvarPM/FZkflc82TEGzDdWCKvI3a5YCJKMG+StDybWo26sFO/UE2JsU7UKljy7hs3PH88E1o7EUhFVu10/ofR+mdFmfKzJfDmQ05kIO+zd6/lHjm4PcT3/9nTeAWHvOxGKzvzdspIjEhGDws3JO5o0jUB+L5OLbHjKpLal3KuvgyKU8bXDCBkre4YmGatm1VVj76mdVTrqz9HnNtK/z/uYg+to5cQfr67hoH1rXecn1+Xp2OG1eOYtbicTNt/5i6252MWtJz6HgwV36WsY+dxPudUlyulRv+J01FaFmf/qPZN3gGZyZHpuWTKcLuS1Un4mi9z3kHzrsZ+2YTKBzS0jX5danlRJtYjrvAH00CvUhej+H4vC6+BBtTHlvc+xoikIVprUXNnRFXQCyV97VkNcK/k/f/Ea0oLarPtwiD+nUZwGef9ajZlvJ+yhM+E6CwO/Lf4ueKoLfmz+rQPN4teT3cTyL3jHhSgWgKGJJfHJELT6dGgIcKKB86+qsLZ00FuyL1/bAoU2ULnK+38Z1zcAxDE7wetGxsPTIY0FK/jJU7COfDuZi1rfDUvNImhV9lRHhdCwZju/MmIZW/1Yk2UbnoRdxiTY92PGhUkX
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR17MB5515.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(396003)(346002)(39850400004)(376002)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(2616005)(26005)(6666004)(6506007)(6512007)(2906002)(83380400001)(7416002)(8676002)(478600001)(66556008)(5660300002)(6486002)(66946007)(4326008)(6916009)(66476007)(8936002)(44832011)(41300700001)(316002)(38100700002)(36756003)(86362001)(16393002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?j0cmSXBYdpFL0l1eBzxGyr1XropQu3o1m44KoyQCRKxJhXCqEERpBz2Lf2zF?=
- =?us-ascii?Q?zzVobL/l8p+O5J6UZurGDDfQx2bWdnofF1ZYn+InMCMjJaWkiAmAItzhk7OD?=
- =?us-ascii?Q?6CI0CsdsOAyXJz30MI/xJCAPg903LfBOGcL/Kvu+vhQvGQjekAHdwZg+cKr8?=
- =?us-ascii?Q?lQMrsXv/STxlU8Sz6Zd8KAKFfQIYGNwi6G6WKl2cDXzI7ZXJX8QfKrhGHFjZ?=
- =?us-ascii?Q?ore/+K0cQjNHXJeQIexb9jFuAWQplAgwgHS4+59hwQvRkzUaFfKlLEvSc9yf?=
- =?us-ascii?Q?7wVVj0jFMfyxn16FBx5KuxXdvv+g7Ip+ENkx5H3YP6FKqVULz4qA0eK2LacA?=
- =?us-ascii?Q?NuAugLI18u1b3tkZ22nWb8Qt1PdrdEkXt10FW+uzBB28IfAMSXlP68gZIzHA?=
- =?us-ascii?Q?y3bZ71kaM3wk51l8VX6k49KLUwgCM49eliuYI+GslvDAs/RoAhWakPcseLHM?=
- =?us-ascii?Q?kLTWDFqvb6dc3KQW56f3HbWTy3OYA3PWXszj/RsDvgYbXiONXWHKckQyUwAA?=
- =?us-ascii?Q?tdS/puKeYrKwdHAvsrKI53+djsAwxkho4Q9iFwnAJmLwxJ5hkUgr+5Q5U/j9?=
- =?us-ascii?Q?bwp1Yoqip25KWNjoIuGqVlyJ+uq4NhrxZRdidfdOXan6Tt9HiMCDc/Q7Zfbo?=
- =?us-ascii?Q?X/JELV7OFLSXNPkuuzmjTW019pTngEAtm+HT7ZBOfOBkxqKpSavYP3tkniOL?=
- =?us-ascii?Q?87EIJLrP94nleV7IjVaNVGmoyxRO+n07ezwujft0ZQLCaOikNDuQkw1lqVPm?=
- =?us-ascii?Q?x+DYcDoAwfdnGSt1pS+8LvjpMIIgPteDgC7a07e4wpRzFkNBK+Jo1KjbsgJe?=
- =?us-ascii?Q?+SUC4641n1CTj2BiVX+kWfrCu/T9iJ84Qd+8rKEcPCe/SdzCa4N2miWzyh54?=
- =?us-ascii?Q?YvduN7/CM+37alsEV4UHHuLx5/FA8wscBvaLSVq7q5WCdsq9PolUGKCINWzN?=
- =?us-ascii?Q?UWX05t3Vl/gdjeSc1SrhDxAD1d+9qcvN0w01IDFcXXrJpjZvuWz3sG4LU3vB?=
- =?us-ascii?Q?CyP0TVr8ELGmdkyrAfi033LJFq0ItmxFpnDKqy9XHroRkSlDPf7tO3wozAVU?=
- =?us-ascii?Q?6KM4/cwT18r4uW+9Ox0cyp2Z+RvVrrUJ/GM7BlXrWCJHaqdpPmtzOKFgEVQh?=
- =?us-ascii?Q?v1KxkaCE7eLjfMQJw8l+8zggVIUfr0BFcsHdogyKIRJeWOdcV45oJfuZiiGT?=
- =?us-ascii?Q?4NPu15zS3jlrTquQGg3q90tlDFsQoLDwPzRfOx4zlqzAoOTrP7tkVbQJ2meL?=
- =?us-ascii?Q?o9KCXqpetQxOHFpt93JJ09j3yLB/RlDDAWBnXDDEFCX9JUCerzzvfu04YQ1S?=
- =?us-ascii?Q?v5MfQfpC+oX0zecm+R7mu1FD2dLp0te/DZpOCw6xcOL/LI45/5l0FJghoLIq?=
- =?us-ascii?Q?Umoh5wkXV1+YgcJST2g0yqH7MaYkEqe+j6B99hqrjxiKtos4CPFIxCPZUCwj?=
- =?us-ascii?Q?XvMqjUmoS8qDqjjUL0FM7r2m00mOB7TB9H4selbHq87x2/LIA1wRZdcLFBI3?=
- =?us-ascii?Q?TZ9nLovvauyB8th8l+/vVJZpGXtEHFj/vXla7CT1oGvqWz/PRckyi1wuUFY1?=
- =?us-ascii?Q?E6vTcPKlxoxN0+ccLj/wYv+Rcdu1ek09qvnF0ldEoFAMot0I4kehWOXKzBLf?=
- =?us-ascii?Q?ug=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fd1f319-69f4-4600-b5ec-08dc17843250
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR17MB5515.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 17:46:12.9083
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: U91Xgsj2DB2IO3ZT8ALfEpxRlsvOjNkJGn90KIv2hVqcX8henYzCaeSLpTTZT9q9exnXNWejLbtb3wppMHAmYVF4Y3M7hIjO9CiW01VpTFc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR17MB6890
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 0/9] PCI: introduce the concept of power sequencing of
+ PCIe devices
+Content-Language: en-US, fr
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kalle Valo <kvalo@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Chris Morgan <macromorgan@hotmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>,
+ Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Terry Bowman <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>,
+ Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>,
+ Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20240117160748.37682-1-brgl@bgdev.pl>
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+In-Reply-To: <20240117160748.37682-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 17, 2024 at 02:58:08PM +0800, Huang, Ying wrote:
-> Gregory Price <gregory.price@memverge.com> writes:
+On 17/01/2024 17:07, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> > We haven't had the discussion on how/when this should happen yet,
-> > though, and there's some research to be done.  (i.e. when should DRAM
-> > weights be set? should the entire table be reweighted on hotplug? etc)
+> The responses to the RFC were rather positive so here's a proper series.
 > 
-> Before that, I'm OK to remove default_iw_table and use hard coded "1" as
-> default weight for now.
+> During last year's Linux Plumbers we had several discussions centered
+> around the need to power-on PCI devices before they can be detected on
+> the bus.
+> 
+> The consensus during the conference was that we need to introduce a
+> class of "PCI slot drivers" that would handle the power-sequencing.
+> 
+> After some additional brain-storming with Manivannan and the realization
+> that DT maintainers won't like adding any "fake" nodes not representing
+> actual devices, we decided to reuse existing PCI infrastructure.
+> 
+> The general idea is to instantiate platform devices for child nodes of
+> the PCIe port DT node. For those nodes for which a power-sequencing
+> driver exists, we bind it and let it probe. The driver then triggers a
+> rescan of the PCI bus with the aim of detecting the now powered-on
+> device. The device will consume the same DT node as the platform,
+> power-sequencing device. We use device links to make the latter become
+> the parent of the former.
+> 
+> The main advantage of this approach is not modifying the existing DT in
+> any way and especially not adding any "fake" platform devices.
+> 
+> Changes since RFC:
+> - move the pwrseq functionality out of the port driver and into PCI core
+> - add support for WCN7850 to the first pwrseq driver (and update bindings)
+> - describe the WLAN modules in sm8550-qrd and sm8650-qrd
+> - rework Kconfig options, drop the defconfig changes from the series as
+>    they are no longer needed
+> - drop the dt-binding changes for PCI vendor codes
+> - extend the DT bindings for ath11k_pci with strict property checking
+> - various minor tweaks and fixes
+> 
+> Bartosz Golaszewski (7):
+>    arm64: dts: qcom: qrb5165-rb5: describe the WLAN module of QCA6390
+>    PCI: create platform devices for child OF nodes of the port node
+>    PCI: hold the rescan mutex when scanning for the first time
+>    PCI/pwrseq: add pwrseq core code
+>    dt-bindings: wireless: ath11k: describe QCA6390
+>    dt-bindings: wireless: ath11k: describe WCN7850
+>    PCI/pwrseq: add a pwrseq driver for QCA6390
+> 
+> Neil Armstrong (2):
+>    arm64: dts: qcom: sm8550-qrd: add Wifi nodes
+>    arm64: dts: qcom: sm8650-qrd: add Wifi nodes
+> 
+>   .../net/wireless/qcom,ath11k-pci.yaml         |  89 ++++++
+>   arch/arm64/boot/dts/qcom/qrb5165-rb5.dts      |  29 ++
+>   arch/arm64/boot/dts/qcom/sm8250.dtsi          |  10 +
+>   arch/arm64/boot/dts/qcom/sm8550-qrd.dts       |  37 +++
+>   arch/arm64/boot/dts/qcom/sm8550.dtsi          |  10 +
+>   arch/arm64/boot/dts/qcom/sm8650-qrd.dts       |  29 ++
+>   arch/arm64/boot/dts/qcom/sm8650.dtsi          |  10 +
+>   drivers/pci/Kconfig                           |   1 +
+>   drivers/pci/Makefile                          |   1 +
+>   drivers/pci/bus.c                             |   9 +-
+>   drivers/pci/probe.c                           |   2 +
+>   drivers/pci/pwrseq/Kconfig                    |  16 ++
+>   drivers/pci/pwrseq/Makefile                   |   4 +
+>   drivers/pci/pwrseq/pci-pwrseq-qca6390.c       | 267 ++++++++++++++++++
+>   drivers/pci/pwrseq/pwrseq.c                   |  82 ++++++
+>   drivers/pci/remove.c                          |   3 +-
+>   include/linux/pci-pwrseq.h                    |  24 ++
+>   17 files changed, 621 insertions(+), 2 deletions(-)
+>   create mode 100644 drivers/pci/pwrseq/Kconfig
+>   create mode 100644 drivers/pci/pwrseq/Makefile
+>   create mode 100644 drivers/pci/pwrseq/pci-pwrseq-qca6390.c
+>   create mode 100644 drivers/pci/pwrseq/pwrseq.c
+>   create mode 100644 include/linux/pci-pwrseq.h
 > 
 
-Can't quite do that. default_iw_table is a static structure because we
-need a reliable default structure not subject to module initialization
-failure.  Otherwise we can end up in a situation where iw_table is NULL
-during some allocation path if the sysfs structure fails to setup fully.
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-QRD
 
-There's no good reason to fail allocations just because sysfs failed to
-initialization for some reason.  I'll leave default_iw_table with a size
-of MAX_NUMNODES for now (nr_node_ids is set up at runtime per your
-reference to `setup_nr_node_ids` below, so we can't use it for this).
-
-> >
-> >> u8 __rcu *iw_table;
-> >> 
-> >> Then, we only need to allocate nr_node_ids elements now.
-> >> 
-> >
-> > We need nr_possible_nodes to handle hotplug correctly.
-> 
-> nr_node_ids >= num_possible_nodes().  It's larger than any possible node
-> ID.
->
-
-nr_node_ids gets setup at runtime, while the default_iw_table needs
-to be a static structure (see above).  I can make default_iw_table
-MAX_NUMNODES and subsequent allocations of iw_table be nr_node_ids,
-but that makes iw_table a different size at any given time.
-
-This *will* break if "true hotplug" ever shows up and possible_nodes !=
-MAX_NUMNODES. But I can write it up if it's a sticking point for you.
-
-Ultimately we're squabbling over, at most, about ~3kb of memory, just
-keep that in mind. (I guess if you spawn 3000 threads and each tries a
-concurrent write to sysfs/node1, you'd eat 3MB view briefly, but that
-is a truly degenerate case and I can think of more denegerate things).
-
-> 
-> When "true node hotplug" becomes reality, we can make nr_node_ids ==
-> MAX_NUMNODES.  So, it's safe to use it.  Please take a look at
-> setup_nr_node_ids().
-> 
-
-~Gregory
+Thanks,
+Neil
