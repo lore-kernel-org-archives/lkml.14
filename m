@@ -1,84 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42431224FB;
-	Wed, 17 Jan 2024 17:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686E7225A1;
+	Wed, 17 Jan 2024 17:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705511360; cv=none; b=ISkMvfBlgiWEMt2un+rhuy0q8lcTZpaRzuYESOKIkN9QKjI4/w9K5lY86UpnnthjV+SMCdKFEC7kM1PZcpb5rQ/RjK6u2kDC8ROnMbKWoO2v+WeE2pE0PS1yVVRTfXRt9pTlBauHX7rqs2b7qIQ+grGlsU2w5a9MkozFLEx79Tg=
+	t=1705511475; cv=none; b=UvMKZbBTqrxlpsWH0NqYrjXhTZ7AZzhmCEqZjr/fs/ZG3F9VEvjIKXOLbF62kcwS41vInkiu3KYD+e1/RxoXJmilxzMapoRVwNIJawahon63iTY9KxJDbEmgIpLRY4mglhvvd+tbrflHZsg9DcVzgoIWKk0h1iPLDu1Uoovt4cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705511360; c=relaxed/simple;
-	bh=31ia4BHPVzV6at4JXVjCNm7JNSTI1HhyWm9vSSLO+Tg=;
-	h=Received:DKIM-Signature:Date:From:To:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition; b=owdPJhdiLaAjayuBa4lIC5DtYWvK/h/2Y3oHs5Yv5PpPAHKrk0SFEWfpYg0Bq1tCwOihELR+fUTyh/x3o4iOUdZHYGLvIJ7urgx21tRLfnzY4vTkkZi+Ism8ZXguHkZ/h0iPcXBbrZwb+r6d7WS2RXh/PL9qIBJNegpXJIrVf9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+jXHZSL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+jXHZSL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49629C433F1;
-	Wed, 17 Jan 2024 17:09:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705511359;
-	bh=31ia4BHPVzV6at4JXVjCNm7JNSTI1HhyWm9vSSLO+Tg=;
-	h=Date:From:To:Subject:From;
-	b=M+jXHZSLtK+cSLaHmgoOuITwXrCxy5auWiQGwKRyqpFwqy0EPTubTFzl4KzEc4gXA
-	 d1ju+ikfeH+Et/5ZQfj2WpKcdvoEsH9mWxuCT/weDQal8nm1aD+TdGqKgL5ZcAnpql
-	 FAPv1Frlv3wSJYgGKKr/0FYA0vtOPyweL2gm9QZky1749bNYXZIrhwAul2BT77th9a
-	 Tu4Jr+z2K/2qIP06rOXMIXnFKilzPhwh8v8zyE2Gi25pSy9yrxx74hNnCOJln1b1eH
-	 cLh9q4Tot7/HEk7IKNW2AdFLhtE8kQHrXIeecOyipC43jrNx4MPTjxG5ahkge4lX3o
-	 BT+Ca+DedbiqA==
-Date: Wed, 17 Jan 2024 18:09:15 +0100
-From: Helge Deller <deller@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	John David Anglin <dave.anglin@bell.net>
-Subject: [GIT PULL] parisc architecture fixes for v6.8-rc1
-Message-ID: <ZagJuxudO7V510hS@p100>
+	s=arc-20240116; t=1705511475; c=relaxed/simple;
+	bh=PZbG6wx6NcdMWESuC+ecFyqFqTXV45MvcYYsex4YP8g=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding; b=NZEVrEYX4qgqe9DI4BiIBmiGRMcevI1jVDlLN+PxOyDOUxjJ4xXFD39EcDqrD4RyO+q06oppkOpCPQtlhNIata+DvzANbBt2vDM2rsuRaZKNT7/yvincfQtKYR/Iw7Cf54yvPAH+lz6lOwjqinlejPgXIWO1PlToubkLF1COxYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-50e7f58c5fbso15360504e87.1;
+        Wed, 17 Jan 2024 09:11:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705511471; x=1706116271;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DP69PvOk+lQM9++boQDvvmgfxQpk6r9vRPbBVvGiiUQ=;
+        b=krbpWVZ61mdHvgvJJ3zFaSrZR6Fi7EjCT4579nNbPKPjgZSOJVUzha4tii//XxkVub
+         6hdSFHqoQ4yUaPd2lHxZp+2rvS53Hfq2Ky5gYoUH+9vaKXuYzxrG8rJpbLC4K5zUDvII
+         K8D3oKrXYSamrutm0oqtH5/lrzIGOQ74ezBW3Nk+Jev4U79TQyyHCdNd5dQEYqT5gqeP
+         D9aJ++TH/enRhNN0z3zjScc4/3j7gvH/WIHvoQ37BCS0BBgr8b9cwHBS5OgljhhT6Xll
+         DI17cZSy781zwUx8RMiwMea0v+DI9iqCrFHS0Gx5EJNamUgWDlIgq+FWbyJljwL82kD+
+         KVmw==
+X-Gm-Message-State: AOJu0YzH97Vq5uO9s2o2N0l+1ztyXUyXHYTb+09djTduGpeQcIm5mf7D
+	6I8AlP+fe5k3buInp8JrQh8=
+X-Google-Smtp-Source: AGHT+IFjaNiYH3oaekOUfuYUMYM7ygcB8kqWaLO9WOSCMI6Gia6+k0oGOt0Aicaumyp4mmYxC/UTew==
+X-Received: by 2002:a05:6512:1155:b0:50e:7be3:c707 with SMTP id m21-20020a056512115500b0050e7be3c707mr5552398lfg.19.1705511471369;
+        Wed, 17 Jan 2024 09:11:11 -0800 (PST)
+Received: from localhost (fwdproxy-cln-005.fbsv.net. [2a03:2880:31ff:5::face:b00c])
+        by smtp.gmail.com with ESMTPSA id p26-20020a1709061b5a00b00a298ade2e72sm7992905ejg.195.2024.01.17.09.11.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 09:11:11 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: lstoakes@gmail.com,
+	willy@infradead.org,
+	mike.kravetz@oracle.com,
+	linux-mm@kvack.org (open list:MEMORY MANAGEMENT),
+	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] selftests/mm: run_vmtests.sh: add hugetlb_madv_vs_map
+Date: Wed, 17 Jan 2024 09:10:58 -0800
+Message-Id: <20240117171058.2192286-2-leitao@debian.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240117171058.2192286-1-leitao@debian.org>
+References: <20240117171058.2192286-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+hugetlb_madv_vs_map selftest was not part of the mm test-suite since we
+didn't have a fix for the problem it found.
 
-Please pull a two small fixes for the parisc architecture.
-Both are tagged for stable series.
+Now that the problem is already fixed (see previous commit), let's
+enable this selftest in the default test-suite.
 
-Ensure power button works on qemu and fix firmware start address
-calculation on machines with 32-bit firmware running a 64-bit Linux kernel.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ tools/testing/selftests/mm/run_vmtests.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks!
-Helge
+diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+index a5e6ba8d3579..f41e1978e4d4 100755
+--- a/tools/testing/selftests/mm/run_vmtests.sh
++++ b/tools/testing/selftests/mm/run_vmtests.sh
+@@ -256,6 +256,7 @@ nr_hugepages_tmp=$(cat /proc/sys/vm/nr_hugepages)
+ # For this test, we need one and just one huge page
+ echo 1 > /proc/sys/vm/nr_hugepages
+ CATEGORY="hugetlb" run_test ./hugetlb_fault_after_madv
++CATEGORY="hugetlb" run_test ./hugetlb_madv_vs_map
+ # Restore the previous number of huge pages, since further tests rely on it
+ echo "$nr_hugepages_tmp" > /proc/sys/vm/nr_hugepages
+ 
+-- 
+2.34.1
 
-----------------------------------------------------------------
-The following changes since commit 0dd3ee31125508cd67f7e7172247f05b7fd1753a:
-
-  Linux 6.7 (2024-01-07 12:18:38 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git tags/parisc-for-6.8-rc1
-
-for you to fetch changes up to 6472036581f947109b20664121db1d143e916f0b:
-
-  parisc/power: Fix power soft-off button emulation on qemu (2024-01-07 22:59:16 +0100)
-
-----------------------------------------------------------------
-parisc architecture fixes for kernel v6.8-rc1:
-
-- Fix PDC address calculation with narrow firmware (64-bit kernel
-  on 32-bit firmware)
-- Fix kthread which checks power button get started on qemu too
-
-----------------------------------------------------------------
-Helge Deller (2):
-      parisc/firmware: Fix F-extend for PDC addresses
-      parisc/power: Fix power soft-off button emulation on qemu
-
- arch/parisc/kernel/firmware.c | 4 ++--
- drivers/parisc/power.c        | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
