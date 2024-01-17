@@ -1,127 +1,69 @@
-Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C183C121;
-	Wed, 17 Jan 2024 09:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECDA1426E
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705485132; cv=none; b=M4adgzi1hG1usKcyB4kqG9/kwNwRlp3nDN7PLdd1sb00XhdmRDyNSB0qvtsl6irfSqQWkCj533oBaRgQGc/y2U5rGRTq4ZY4cYj0ThEjFK2kigfMw/YqUe+eFTxR+zD9BPKFRE6aeIA9U2LYR/PkDkHFf+DZQUIbT+qodrbObzc=
+	t=1705485143; cv=none; b=UXSfNav65GU9aN5XSwz5E8y4VBfQb4aXyQU7QHYPBpjEny7rR9Uk5RsJ4GVPzePQaQBAS2YCTqcePaO6hvy4TMyIot6Xnf8b6/9vhBdnJw2ktlkDNwtArUn2aHX68gQlDQIhzalaoQAeOwXT39nSEQT5qA4HU/kv91IirNrjncU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705485132; c=relaxed/simple;
-	bh=1fXBZ0F6PnMKVX2UfbVlTh+qiCRuwH+ropgNz+S7/3U=;
-	h=Received:Date:Message-ID:From:To:Cc:Subject:In-Reply-To:
-	 References:User-Agent:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding; b=FxE1DC7yEPQFQNKcmXiDnPvG9hh8Q8cvzW8JWCwkrxWo+lorRcrwqGDsNuzDswhe1doQfOYD8y/DNnQtF55GXZsQVRFJEWUdgvPpPU+dqznIOZR8M9bnNnzgfwBOz17bpCHHQF+M/swi6+1uTot+kAXpmsc6D2KkI3+3XioX8j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
-Received: from SIOS1075.ysato.ml (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id B272C1C00D1;
-	Wed, 17 Jan 2024 18:46:10 +0900 (JST)
-Date: Wed, 17 Jan 2024 18:46:10 +0900
-Message-ID: <8734uwwavx.wl-ysato@users.sourceforge.jp>
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-sh@vger.kernel.org,	Damien Le Moal <dlemoal@kernel.org>,	Rob
- Herring <robh+dt@kernel.org>,	Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>,	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,	Michael Turquette
- <mturquette@baylibre.com>,	Stephen Boyd <sboyd@kernel.org>,	Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,	Maxime Ripard
- <mripard@kernel.org>,	Thomas Zimmermann <tzimmermann@suse.de>,	David Airlie
- <airlied@gmail.com>,	Daniel Vetter <daniel@ffwll.ch>,	Thomas Gleixner
- <tglx@linutronix.de>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
- =?ISO-8859-2?Q?Wilczy=F1ski?= <kw@linux.com>,	Bjorn Helgaas
- <bhelgaas@google.com>,	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,	Magnus Damm <magnus.damm@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,	Lee Jones
- <lee@kernel.org>,	Helge Deller <deller@gmx.de>,	Heiko Stuebner
- <heiko@sntech.de>,	Jernej Skrabec <jernej.skrabec@gmail.com>,	Chris Morgan
- <macromorgan@hotmail.com>,	Yang Xiwen <forbidden405@foxmail.com>,	Sebastian
- Reichel <sre@kernel.org>,	Randy Dunlap <rdunlap@infradead.org>,	Arnd
- Bergmann <arnd@arndb.de>,	Vlastimil Babka <vbabka@suse.cz>,	Hyeonggon Yoo
- <42.hyeyoo@gmail.com>,	David Rientjes <rientjes@google.com>,	Baoquan He
- <bhe@redhat.com>,	Andrew Morton <akpm@linux-foundation.org>,	Guenter Roeck
- <linux@roeck-us.net>,	Stephen Rothwell <sfr@canb.auug.org.au>,	Azeem Shaikh
- <azeemshaikh38@gmail.com>,	Javier Martinez Canillas <javierm@redhat.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,	Palmer Dabbelt <palmer@rivosinc.com>,
-	Bin Meng <bmeng@tinylab.org>,	Jonathan Corbet <corbet@lwn.net>,	Jacky Huang
- <ychuang3@nuvoton.com>,	Lukas Bulwahn <lukas.bulwahn@gmail.com>,	Biju Das
- <biju.das.jz@bp.renesas.com>,	Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@pengutronix.de>,	Sam Ravnborg <sam@ravnborg.org>,	Sergey
- Shtylyov <s.shtylyov@omp.ru>,	Michael Karcher
- <kernel@mkarcher.dialup.fu-berlin.de>,	Laurent Pinchart
- <laurent.pinchart+renesas@ideasonboard.com>,	linux-ide@vger.kernel.org,
-	devicetree@vger.kernel.org,	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,	linux-clk@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,	linux-pci@vger.kernel.org,
-	linux-serial@vger.kernel.org,	linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v6 17/37] dt-bindings: interrupt-controller: renesas,sh7751-intc: Add json-schema
-In-Reply-To: <CACRpkdYLsf-uWdMCTpieji7u1-H3oTGojvC4xm7Erox97XJ6RQ@mail.gmail.com>
-References: <cover.1704788539.git.ysato@users.sourceforge.jp>
-	<bc794e2165244bd0cee81bc0106f1e2d1bef1613.1704788539.git.ysato@users.sourceforge.jp>
-	<CACRpkdYLsf-uWdMCTpieji7u1-H3oTGojvC4xm7Erox97XJ6RQ@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
- Emacs/28.2 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1705485143; c=relaxed/simple;
+	bh=a0voOYbt1IzxAQ/bf3kPxdBL1u9I41DQqbrFxRE+vsI=;
+	h=Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:Content-Type; b=k/+sxCnPLhXLgHsy65+g4GC+pphVUuXYw8c2E6FcipDjF5wCDyZm8U9RTtjsEArBlyvgJzl/i75zt94l6LbKW/i8UpPz6BJnJSEDBK9nnidzaqqfA1ZIV7GPnCWiWA8OPWq/ZRxi/OROa+9Zg8vqImkZ2nzpRzynvonSCcB+SKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i5e860cd7.versanet.de ([94.134.12.215] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rQ2ab-0006Am-SJ; Wed, 17 Jan 2024 10:52:05 +0100
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Alex Bee <knaerzche@gmail.com>,
+ Maxime Ripard <mripard@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel test robot <lkp@intel.com>
+Subject:
+ Re: (subset) [PATCH] drm/rockchip: inno_hdmi: Explicitly include drm_atomic.h
+Date: Wed, 17 Jan 2024 10:52:04 +0100
+Message-ID: <3186012.MsWZr2WtbB@diego>
+In-Reply-To: <170548481754.96553.11502916321137598260.b4-ty@kernel.org>
+References:
+ <20240115092434.41695-2-knaerzche@gmail.com>
+ <170548481754.96553.11502916321137598260.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, 09 Jan 2024 21:30:34 +0900,
-Linus Walleij wrote:
->=20
-> Hi Yoshinori,
->=20
-> thanks for your patch!
->=20
-> On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
-> <ysato@users.sourceforge.jp> wrote:
->=20
-> > +  renesas,icr-irlm:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: If true four independent interrupt requests mode (ICR=
-.IRLM is 1).
-> > +
-> > +  renesas,ipr-map:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    description: |
-> > +      IRQ to IPR mapping definition.
-> > +      1st - INTEVT code
-> > +      2nd - Register
-> > +      3rd - bit index
->=20
-> (...)
->=20
-> > +            renesas,ipr-map =3D <0x240 IPRD IPR_B12>, /* IRL0 */
-> > +                              <0x2a0 IPRD IPR_B8>,  /* IRL1 */
-> > +                              <0x300 IPRD IPR_B4>,  /* IRL2 */
-> > +                              <0x360 IPRD IPR_B0>,  /* IRL3 */
-> (...)
->=20
-> Is it really necessary to have all this in the device tree?
->=20
-> You know from the compatible that this is "renesas,sh7751-intc"
-> and I bet this table will be the same for any sh7751 right?
->=20
-> Then just put it in a table in the driver instead and skip this from
-> the device tree and bindings. If more interrupt controllers need
-> to be supported by the driver, you can simply look up the table from
-> the compatible string.
+Hi Maxime,
 
-The SH interrupt controller has the same structure, only this part is diffe=
-rent for each SoC.
-Currently, we are targeting only the 7751, but in the future we plan to han=
-dle all SoCs.
-Is it better to differentiate SoC only by compatible?
+Am Mittwoch, 17. Januar 2024, 10:46:57 CET schrieb Maxime Ripard:
+> On Mon, 15 Jan 2024 10:24:35 +0100, Alex Bee wrote:
+> > Commit d3e040f450ec ("drm/rockchip: inno_hdmi: Get rid of mode_set")
+> > started using drm_atomic_get_new_connector_state and
+> > drm_atomic_get_new_crtc_state which are defined in drm_atomic.h
+> > Building does currently only work if CONFIG_OF and CONFIG_DRM_PANEL_BRIDGE
+> > are enabled since this will include drm_atomic.h via drm_bridge.h (see
+> > drm_of.h).
+> > 
+> > [...]
+> 
+> Applied to drm/drm-misc (drm-misc-next).
 
-> Yours,
-> Linus Walleij
->=20
+wouldn't have drm-misc-next-fixes been more appropriate?
+Because I _think_ the change causing the issue made it in during the
+current merge-window?
 
---=20
-Yosinori Sato
+Heiko
+
+
