@@ -1,119 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.perex.cz (mail1.perex.cz [77.48.224.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4571EA66;
-	Wed, 17 Jan 2024 12:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265B91DDFF;
+	Wed, 17 Jan 2024 12:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.48.224.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705494286; cv=none; b=ERIUEhe1bLKxMpLh7tWjkK3ATJ3sBtq9mRRVxJP1BwtvWuI3KSGFnmB8a/Gh6uTJ1fS0MMUm2hVyP24uxQrK28lojv9qkmur/elCCydPCqDaBJb+7oIVFMcQjuX3X93APYLdNo3Q1auWASsIQw3rGxjlcV0yAgizbBiZXIux5Xc=
+	t=1705494379; cv=none; b=jkvzeucYVHsj/ptBcQ+ClXroSbWwn4zjBVWyLbV1uZfyznwLHeMSOBVRy4QHAAZIEaE9x4zOt2rFqxIt03Cb9FXyqR9w79vG2ZflsSMy0DksYKfk0UDc8BmhCvWzcR2bVXJSPkvet/AB/kFSelylpUHFsP3L+kaTeUVi+axzdQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705494286; c=relaxed/simple;
-	bh=Xy6TRFXQaiav1mUE6Mj0qop4Z4Iqz9qTKNCOmawbTfI=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=e9jXm3YXwdqedbOY5HlZfiLRicmMFvevVyrpyPvkRjY0SvIVw2lVKDr9MLjMzw2/NOVlMORZEZSHidrfamKYxytZU2Dxs1MG2zX5Dr1mvFR1EmcvlTfr1coSZM6HzE64Edg7FRa2LF6MrYrW5xEQQ2LTxWhoITwgTynaQyLyxag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNNBdjQY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705494379; c=relaxed/simple;
+	bh=dKEbtr22JSoM2eDC7MVGxfwSL8ybqJWGhJQldTcN6lQ=;
+	h=Received:DKIM-Filter:DKIM-Signature:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:Content-Language:To:References:
+	 From:Autocrypt:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	b=t1eulXJAieSskbliYP4erwpwzUZK2tnTSS/ZdjbtNAQ63ZENHvrpNO1/4imK2Q5DjsVTG+J1wSjgYcHGVg6J2klF734+rNtMV4XKeEGtDr6HH5qZ0twgJlaiabjnl+2+/0pT81vEH2vK8G9W/VzkvgYGkHxNLIY9WHp3CRzgAuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz; spf=pass smtp.mailfrom=perex.cz; dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b=ahjmqSdd; arc=none smtp.client-ip=77.48.224.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perex.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNNBdjQY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F16C433C7;
-	Wed, 17 Jan 2024 12:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705494286;
-	bh=Xy6TRFXQaiav1mUE6Mj0qop4Z4Iqz9qTKNCOmawbTfI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bNNBdjQYNnD5VX30shshT50y20FdZWnH7XdxOhigSAhyFn/qxTzvmn/R/EcRSTzsF
-	 s61UAuRCy/JgUHGHfMYsLaXHuLS8awbxzJPrk7aBUrZOB9wRf1bE+4I3UuIrY3S1cu
-	 HKt0fZEttCO+ij1ueCh9T6XbU0J0RfYGQeWoG2ezKP8nZg/Qw41uHleRJkrEXhpv/x
-	 Ua3RHCKwRZpiyY3iVM3SWKELVSjhXIeevMpAa/vleOIrSzVvUAA7qiRyJp9AOuJu7C
-	 UcIhLGjkeEiiNfrzayr0pzfn9323rAJGoCePkjZuNktE5Zl0fcqHiDORZqm0lQOPNk
-	 V4E0Vi4pMOYOw==
-Date: Wed, 17 Jan 2024 13:24:42 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Petr Vorel <pvorel@suse.cz>
-Cc: linux-man@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] MAINTAINERS: Add man-pages git trees
-Message-ID: <ZafHChsGiKCLh9od@debian>
-References: <20240117122257.2707637-1-pvorel@suse.cz>
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="ahjmqSdd"
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+	by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 617D93347;
+	Wed, 17 Jan 2024 13:20:17 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 617D93347
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+	t=1705494017; bh=gqVNwJd9myQDNzn0BB/yVFVboWoPFQOlC3FiaBFsGzk=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ahjmqSddrDRceTKPhmKEq0cJFidxd4tm0nuAI3QjmBiZu8tjQYF4NjS/ptOt/eegV
+	 aTm7vS0427H638/hfYKlh8gTylT0mPmmjMXSB5i1UyX1YSPgZvG0G8rmfAA83WxF/j
+	 dtFNShBzABakwI8scjP0YzuToMYgJRAlufB/y2jQ=
+Received: from [192.168.100.98] (unknown [192.168.100.98])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: perex)
+	by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+	Wed, 17 Jan 2024 13:20:11 +0100 (CET)
+Message-ID: <473c1c2b-3426-4ec7-8319-dd08f3ae5a0c@perex.cz>
+Date: Wed, 17 Jan 2024 13:20:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cA7PbLj8K5bpE6aw"
-Content-Disposition: inline
-In-Reply-To: <20240117122257.2707637-1-pvorel@suse.cz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: soc-core.c: Add "Unknown" and "Unknown Product" to
+ dmi_blacklist
+Content-Language: en-US
+To: Daniel Abrecht <linux-sound@nodmarc.danielabrecht.ch>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <78a54997daea2b327ad59d495bc33851@abrecht.li>
+From: Jaroslav Kysela <perex@perex.cz>
+Autocrypt: addr=perex@perex.cz; keydata=
+ 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
+In-Reply-To: <78a54997daea2b327ad59d495bc33851@abrecht.li>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 17. 01. 24 13:14, Daniel Abrecht wrote:
+> In U-Boot, the default for DMI vendor / product if not set is "Unknown"
+> and "Unknown Product".
+> See
+> https://source.denx.de/u-boot/u-boot/-/blob/v2023.10/lib/smbios.c?ref_type=tags#L272
+> 
+> This patch adds them to the dmi_blacklist.
+> 
+> Signed-off-by: Daniel Abrecht <public@danielabrecht.ch>
 
---cA7PbLj8K5bpE6aw
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jan 2024 13:24:42 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Petr Vorel <pvorel@suse.cz>
-Cc: linux-man@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] MAINTAINERS: Add man-pages git trees
+I think that there's a whitespace issue, but for the contents:
 
-On Wed, Jan 17, 2024 at 01:22:57PM +0100, Petr Vorel wrote:
-> The maintainer uses both.
->=20
-> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+Acked-by: Jaroslav Kysela <perex@perex.cz>
 
-Reviewed-by: Alejandro Colomar <alx@kernel.org>
-
-(We sent it almost at the same time.  :)
 
 > ---
-> Changes v1->v2:
-> * Add a second tree
->=20
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 391bbb855cbe..3f6a19f3e5e0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12833,6 +12833,8 @@ M:	Alejandro Colomar <alx@kernel.org>
->  L:	linux-man@vger.kernel.org
->  S:	Maintained
->  W:	http://www.kernel.org/doc/man-pages
-> +T:	git git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
-> +T:	git git://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.=
-git
-> =20
->  MANAGEMENT COMPONENT TRANSPORT PROTOCOL (MCTP)
->  M:	Jeremy Kerr <jk@codeconstruct.com.au>
-> --=20
-> 2.43.0
->=20
+>    sound/soc/soc-core.c | 2 ++
+>    1 file changed, 2 insertions(+)
+> 
+> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+> index f8524b5bfb33..aa1a31abbe3a 100644
+> --- a/sound/soc/soc-core.c
+> +++ b/sound/soc/soc-core.c
+> @@ -1804,6 +1804,8 @@ static const char * const dmi_blacklist[] = {
+>        "Board Manufacturer",
+>        "Board Vendor Name",
+>        "Board Product Name",
+> +    "Unknown",
+> +    "Unknown Product",
+>        NULL,    /* terminator */
+>    };
+> 
 
---=20
-<https://www.alejandro-colomar.es/>
-Looking for a remote C programming job at the moment.
+-- 
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
 
---cA7PbLj8K5bpE6aw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmWnxwoACgkQnowa+77/
-2zIqPQ//RqNkJeUcDj0HkcJ1lXUdiAGPN8qRBTBNj2D9EFwYFWPKibGKBer8eB7+
-9jS4VH1pFIlho2sRJHo2cGzyY3JXTW2MhbxNrOxKayIdrQ3Il09qNyhMvqo8tf3V
-cjCE9tlzabrlm6QTmIlVka+KXa+PtSErNXrZQ+P6aoTTNYsZfcLQhNPFzM2/8obJ
-uMgN7z5b+mk31NPMOKOb4gkfgzebKQAjYg/fgFN1y2Cxw7xXWHfvo4QaqICkCF1y
-vzj8/9jpjLjOB/Jipn9R3K/I1dGXMwvNkJTVSQuhnKTqetB3pT+jvQcP/PAKhb1d
-0xaY+D7o6U+X7MTa/XIqUjoRBtBz7EQWYnD/b5E6XbetnqfXZA8pxeiVXM+YCLmk
-4qKAqVIsGPlYAI/OXL2frnWcSp7nNjY3J74Q8W2fvgDJBazwA9wLATsDcT8D6fBQ
-QEOZql8Xm7HnHlcPbYDmkZcu0+qouiiOyeXkc9viai9fO9BomoOHju3qXbmEc8Ux
-eYIglEHvKgZPCNKHUN4VQTPAxw4kymQXSvqk529IDmYQvEVruGKDZpWqw6Yy0ZZn
-wGJ1HY14gaKfz0NJ+1N4+dV7GgQ+kLL7w3fUj8eweiEnwyYL4JImvNdGHhk8S48X
-8jII7NEDplCoIEVTaEOL3jmkLdhqsI1EypqhVAfazuRP3ZZN1Sc=
-=KIVD
------END PGP SIGNATURE-----
-
---cA7PbLj8K5bpE6aw--
