@@ -1,146 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5FE1EB31
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 12:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1B21EA66;
+	Wed, 17 Jan 2024 12:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705495805; cv=none; b=W6we9gD/AXrcrjPmwzYnHQWEWAkDFuqj+EvAPjQ8oNpv7/DLubFvzPtCzivTfYn08t+wHG02wSJhqMy1TPXsLei8Bf8lIQqojyv3988AXig/Ws+G6HgeQctBRWvC78qQVngoCmX3ftwmPz34s1g3mXXYnMqQXDyU/Lq6vl0IfTo=
+	t=1705495876; cv=none; b=nxjfwNEKenx4X68FVtOVl5EEX3gV9qXL/U5RGLZKXXr8eVtCBfsj6/zJ0xEBURVr+WadDUZBApWZK7zirD9ChzG20nMNOI6fRWEGgiCOr/0uQmCqqwsY89ZqKIAFqOHLQ9Mb8U1X0LtzHvF1qHr2yoO/lQ/iK5eqLnPlK48qH8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705495805; c=relaxed/simple;
-	bh=1tF+iNymQ3u/B3owteRUWMK6CBDXOeX7qDZGurXYa1A=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:User-Agent; b=p6FU9P2vZL6o+12V5e60ymDjvaDc10hlluZX+aYlXRuJJ6G4T1Uxpt+HQXkTEdZummh7E/McMYF+/UM67yTR+P1gIJUEgBEimI9tooDL6wAT8bk2mUdgSyLCwc+8Ii/jLkUjq/AvM6dPfbi/gms1zs5QbhdZV9N8BnYj2dTtI8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DufsnQKi; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705495876; c=relaxed/simple;
+	bh=WmJLRAU5oXetMyOkN2h2YdwPSM5CqSZifVrpaIDjSDM=;
+	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=svlgLFK8AZtA2VR4koyAfkuIq/I3jV/1/8fPtWlrj0gSMLv6PzGG47nsEaTu/YTHJwrH+/JEH+EmWgiTgfYlGdkO+tt524Ia8sSNKEq1ZjUiB85cwt/6hILcasnQYnF47oH1qiFM903w8FahjnhkcbnBSYdhYe5udOwywme3cdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzEOWWnX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DufsnQKi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705495804; x=1737031804;
-  h=date:from:to:cc:subject:message-id;
-  bh=1tF+iNymQ3u/B3owteRUWMK6CBDXOeX7qDZGurXYa1A=;
-  b=DufsnQKiVgHkB9UTfbKJTazB+f1qs71M5njD1+PJ2c69QUQZ18BbimT7
-   hFYMhVRibFWEzdqhUwqLCO3DNbq+YvFys/NO82WrL8X9uMDNM/1jUACqV
-   8DAsd//P8lSIgM35ve8iD4UofVjbY6qp5pSdHz/SgHnHKZJEzFhlcNqiw
-   CPp/9nqNh5lhY/Egrh2AcM+r/ns7axDdlqd1ajatI8Vv46jfPMrJfcUe6
-   CMszopu87OHjpWj2mVI0U2avTubDyJrMUmKz9wLh4rlwxTN0A8NqF7gM4
-   VFXwkqX2NbxfHRNtLdC+ELHZ1kzU1yhq5fZGDo4DVZ26DIbBNvEIT43dN
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="48901"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="48901"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 04:50:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="1115666691"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="1115666691"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Jan 2024 04:50:02 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQ5Ml-00020I-3C;
-	Wed, 17 Jan 2024 12:49:59 +0000
-Date: Wed, 17 Jan 2024 20:49:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 1ac6b49423e83af2abed9be7fbdf2e491686c66b
-Message-ID: <202401172043.otw1sdyr-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzEOWWnX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFEFC433C7;
+	Wed, 17 Jan 2024 12:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705495875;
+	bh=WmJLRAU5oXetMyOkN2h2YdwPSM5CqSZifVrpaIDjSDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LzEOWWnXRo3Q4Hpy2+ku7iBz9Gd1twyi/lmwKnWM+7/jjSrvyp4NErfaE01ZliRgz
+	 j70/pMh+66EmeSQnG9us0BKF/7OsaqyCOBf0XzQ9Rqb0TecevhcKIetAqvixhEtvow
+	 XPAEaXeZ/HbM3+C9xqEAKm8nbxxb4Zjtg9mTbr0jrS82n71pyxChVuth3lKxrWx2Ol
+	 8x1u+CFUopgwp1aAUXPpfvcl5UcZNFmN6qkXrUy6kKS78GTMa+6ldfggRoeYZORQ7d
+	 /ukgsCODd304EyWHfVS/vcKL1wCXXC3pneNFpGSoLCdyB356eOai2c+GeQbphUuI2k
+	 dyjeTJvyVg0wA==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rQ5O4-0005Vv-0V;
+	Wed, 17 Jan 2024 13:51:20 +0100
+Date: Wed, 17 Jan 2024 13:51:20 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>, gregkh@linuxfoundation.org,
+	hdegoede@redhat.com, fabrice.gasnier@foss.st.com,
+	quic_jackp@quicinc.com, saranya.gopal@intel.com,
+	quic_linyyuan@quicinc.com, andriy.shevchenko@linux.intel.com,
+	minhuadotchen@gmail.com, johan+linaro@kernel.org, robh@kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.7 044/108] usb: typec: ucsi: fix UCSI on buggy
+ Qualcomm devices
+Message-ID: <ZafNSGNaw310xgTm@hovoldconsulting.com>
+References: <20240116194225.250921-1-sashal@kernel.org>
+ <20240116194225.250921-44-sashal@kernel.org>
+ <ZaeJ8Sh4JLo5GAQw@hovoldconsulting.com>
+ <CAA8EJpoQZc0f2HusJOMa_45bh8Eh=sVg-aOUbNR3S0+oQQQ+MQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8EJpoQZc0f2HusJOMa_45bh8Eh=sVg-aOUbNR3S0+oQQQ+MQ@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: 1ac6b49423e83af2abed9be7fbdf2e491686c66b  Merge branch into tip/master: 'x86/tdx'
+On Wed, Jan 17, 2024 at 02:17:40PM +0200, Dmitry Baryshkov wrote:
+> On Wed, 17 Jan 2024 at 10:03, Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Tue, Jan 16, 2024 at 02:39:10PM -0500, Sasha Levin wrote:
+> > > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > >
+> > > [ Upstream commit 1d103d6af241dbfc7e11eb9a46dff65db257a37f ]
+> > >
+> > > On sevral Qualcomm platforms (SC8180X, SM8350, SC8280XP) a call to
+> > > UCSI_GET_PDOS for non-PD partners will cause a firmware crash with no
+> > > easy way to recover from it. Since we have no easy way to determine
+> > > whether the partner really has PD support, shortcut UCSI_GET_PDOS on
+> > > such platforms. This allows us to enable UCSI support on such devices.
 
-elapsed time: 1583m
+> > Correct me if I'm wrong Dmitry, but while the commit message makes this
+> > sound like a fix, it is not needed unless you backport follow-on patches
+> > that enable UCSI on these platforms.
+> >
+> > So this one can be dropped from all stable queues (unless you're
+> > backporting patches that enable new features and that depend on this
+> > one).
+> 
+> Exactly. It didn't have the Fixes: tag. So I'm completely unsure why
+> it ended up in the autosel queue at all.
 
-configs tested: 70
-configs skipped: 0
+AUTOSEL is Sasha's machine-learning based tool for picking potential
+fixes also among commits that lack a Fixes tag.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                                 defconfig   clang
-arm64                             allnoconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                           allnoconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240116   clang
-i386         buildonly-randconfig-002-20240116   clang
-i386         buildonly-randconfig-003-20240116   clang
-i386         buildonly-randconfig-004-20240116   clang
-i386         buildonly-randconfig-005-20240116   clang
-i386         buildonly-randconfig-006-20240116   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240116   clang
-i386                  randconfig-002-20240116   clang
-i386                  randconfig-003-20240116   clang
-i386                  randconfig-004-20240116   clang
-i386                  randconfig-005-20240116   clang
-i386                  randconfig-006-20240116   clang
-i386                  randconfig-011-20240116   gcc  
-i386                  randconfig-012-20240116   gcc  
-i386                  randconfig-013-20240116   gcc  
-i386                  randconfig-014-20240116   gcc  
-i386                  randconfig-015-20240116   gcc  
-i386                  randconfig-016-20240116   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                       allyesconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                            allyesconfig   gcc  
-openrisc                         allyesconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                           allyesconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                          allyesconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                          rv32_defconfig   clang
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                               allyesconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-um                               allmodconfig   clang
-um                               allyesconfig   clang
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240117   gcc  
-x86_64       buildonly-randconfig-002-20240117   gcc  
-x86_64       buildonly-randconfig-003-20240117   gcc  
-x86_64       buildonly-randconfig-004-20240117   gcc  
-x86_64       buildonly-randconfig-005-20240117   gcc  
-x86_64       buildonly-randconfig-006-20240117   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240117   clang
-x86_64                randconfig-002-20240117   clang
-x86_64                          rhel-8.3-rust   clang
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Johan
