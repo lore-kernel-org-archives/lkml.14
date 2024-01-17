@@ -1,149 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C3263A;
-	Wed, 17 Jan 2024 00:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F3910E9;
+	Wed, 17 Jan 2024 00:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705452226; cv=none; b=KQoP/MAPCPsoq8fEny9wc3MQm+WENrq3Aub9lBdttIlssDn64rpBZMw3YocAaFQVGcrGIUxNVCP1VaPSHz5Nvtdqeo+TZoTEv8Efam34QRb9YIWo9puCs96IoVddx10+jfe5BInyI+cpzYBBnZBdooRdX+tA0bq6nD1d6UHC48I=
+	t=1705452366; cv=none; b=YFm9V6py98Q+hAXg0UD5W0RHoBo5/hRR4ob7tXS1HRepy1vo1SF/nXb29vg2lfrDg+pysPCbcmHUzSH96ZSAcDuiQUHvEO5PnnvM+q2srp7hBS3vfmWNXnPhgcFuvS3SNjCTLjgYBvHbq8K203uPNU2PsqDrPs1SBn92RMoFw3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705452226; c=relaxed/simple;
-	bh=Fd1/m6W/7fQ9XN1TYZqc9RLgN+U7zTJsTX6ScmfLWYY=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To; b=SY5NPctRsJaa11OMhdPQr2nH+tdzY0MQsfiyFm0uM1wuRQkSqjjLed9PAIZ2mlT4YhXoeZHCum5pfigUsUO/L5DKDz8NMXJjrJMrbOuEC5Ypw/ZoOUKpWQTWaJORmrICjB/qcOjBTQvBnVwsITKEnJLoBVkRUMVFCuHeIzoNtp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7Sitg07; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705452366; c=relaxed/simple;
+	bh=sPPRMtzitfA1rzjzKYhYQH1roHXakfuZRbwwYXenG9U=;
+	h=DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type; b=jebXGTAtgKH/1LVjDoW0i/6RmmT1VBCAhckm3GtchX4nrkqkrxNUxeJs0JytvKQl+9AAsV2B/QBLllddzF79swrZfa0cxZEP3tMhJM0hzLMIRYYC+Yx4mY1clmgBNGg2ftUMOZXGnULC4fkxlDNFXshcHt8MOySimV4PLwhJToU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GzkwTOHC; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7Sitg07"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04E06C433F1;
-	Wed, 17 Jan 2024 00:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705452225;
-	bh=Fd1/m6W/7fQ9XN1TYZqc9RLgN+U7zTJsTX6ScmfLWYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R7Sitg07xOY91zBapUfyHoEiSypKN33bESw8zBP0x2z1bFXn1ZeWuzlUoOHDOUGBU
-	 prdXYzQ4xY2Ec5CqF7gHIkkYeqgyf0LDrHPhtESZxBAM3sowZ+bsHEmOqIpDebdNtJ
-	 M3io07zoT09M5Vs/8iFOTO+jzZD+stXWlEDkPfVdI5UMwyV8eBY20uY3cdS1nhD23Q
-	 rrLnpkMDLcqSNa5+QqEA6Xz0H8wFTrNGjX9Ng/9ebLwUAbGRRDGl87oFYJzkdHlEyD
-	 cA8Mz9wCQCNzFs4xSx2+P8AdQi1adtjGwO6chdD3QOwqn4UXm3ItItcSfrNEoh+BW7
-	 yXfnt0Jmc6HFw==
-Date: Wed, 17 Jan 2024 01:43:41 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: Re: [PATCH] tick-sched: fix idle and iowait sleeptime accounting vs
- CPU hotplug
-Message-ID: <ZacivexXEcL1KvOc@pavilion.home>
-References: <20240115163555.1004144-1-hca@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GzkwTOHC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1705452357;
+	bh=9Ygua69Jodct9U/NXrL9McrdGQOHloyD8Glis1dIoTI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=GzkwTOHCggK5kSbWP0EMTbSbgukF6MSfk4Yhd3nGhOiK+IPbpn3XBkmXnZfFJy/dj
+	 T7E5kR7HCd/S68ij2RtAK7Ti5JrsLscbXWXxHw5XWhKTcGNcFHFzLPRSsiuWh7qYQT
+	 gOpEIg/rb69jtFfLLPBMgfx2z5CRrI0NMLJ4PGupN78PtA+5xgFT+s99LV65kwQOnF
+	 H4XN0f9v4yhujaT47CdUV/uJQQb4amNbf0amxidcxQexgiw9huJmlM/eF1dKXzBAZR
+	 rXYys9kSdxVomOTkvmLyN1UoekzOluykbwcm/C220NF2q5aUT5Rv5HUBZIUoJZnHfo
+	 COnayWR39iNbg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TF6cj5656z4wxZ;
+	Wed, 17 Jan 2024 11:45:55 +1100 (AEDT)
+Date: Wed, 17 Jan 2024 11:45:53 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: David Sterba <dsterba@suse.cz>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the btrfs tree
+Message-ID: <20240117114553.62798913@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240115163555.1004144-1-hca@linux.ibm.com>
+Content-Type: multipart/signed; boundary="Sig_/Vf4B7AVV628jMlIiYUJtMvU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Le Mon, Jan 15, 2024 at 05:35:55PM +0100, Heiko Carstens a écrit :
-> When offlining and onlining CPUs the overall reported idle and iowait
-> times as reported by /proc/stat jump backward and forward:
-> 
-> > cat /proc/stat
-> cpu  132 0 176 225249 47 6 6 21 0 0
-> cpu0 80 0 115 112575 33 3 4 18 0 0
-> cpu1 52 0 60 112673 13 3 1 2 0 0
-> 
-> > chcpu -d 1
-> > cat /proc/stat
-> cpu  133 0 177 226681 47 6 6 21 0 0
-> cpu0 80 0 116 113387 33 3 4 18 0 0
-> 
-> > chcpu -e 1
-> > cat /proc/stat
-> cpu  133 0 178 114431 33 6 6 21 0 0 <---- jump backward
-> cpu0 80 0 116 114247 33 3 4 18 0 0
-> cpu1 52 0 61 183 0 3 1 2 0 0        <---- idle + iowait start with 0
-> 
-> > chcpu -d 1
-> > cat /proc/stat
-> cpu  133 0 178 228956 47 6 6 21 0 0 <---- jump forward
-> cpu0 81 0 117 114929 33 3 4 18 0 0
-> 
-> Reason for this is that get_idle_time() in fs/proc/stat.c has different
-> sources for both values depending on if a CPU is online or offline:
-> 
-> - if a CPU is online the values may be taken from its per cpu
->   tick_cpu_sched structure
-> 
-> - if a CPU is offline the values are taken from its per cpu cpustat
->   structure
-> 
-> The problem is that the per cpu tick_cpu_sched structure is set to zero on
-> CPU offline. See tick_cancel_sched_timer() in kernel/time/tick-sched.c.
-> 
-> Therefore when a CPU is brought offline and online afterwards both its idle
-> and iowait sleeptime will be zero, causing a jump backward in total system
-> idle and iowait sleeptime. In a similar way if a CPU is then brought
-> offline again the total idle and iowait sleeptimes will jump forward.
-> 
-> It looks like this behavior was introduced with commit 4b0c0f294f60
-> ("tick: Cleanup NOHZ per cpu data on cpu down").
-> 
-> This was only noticed now on s390, since we switched to generic idle time
-> reporting with commit be76ea614460 ("s390/idle: remove arch_cpu_idle_time()
-> and corresponding code").
-> 
-> Fix this by preserving the values of idle_sleeptime and iowait_sleeptime
-> members of the per-cpu tick_sched structure on CPU hotplug.
-> 
-> Fixes: 4b0c0f294f60 ("tick: Cleanup NOHZ per cpu data on cpu down")
-> Reported-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-> ---
->  kernel/time/tick-sched.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> index a17d26002831..d2501673028d 100644
-> --- a/kernel/time/tick-sched.c
-> +++ b/kernel/time/tick-sched.c
-> @@ -1576,13 +1576,18 @@ void tick_setup_sched_timer(void)
->  void tick_cancel_sched_timer(int cpu)
->  {
->  	struct tick_sched *ts = &per_cpu(tick_cpu_sched, cpu);
-> +	ktime_t idle_sleeptime, iowait_sleeptime;
->  
->  # ifdef CONFIG_HIGH_RES_TIMERS
->  	if (ts->sched_timer.base)
->  		hrtimer_cancel(&ts->sched_timer);
->  # endif
->  
-> +	idle_sleeptime = ts->idle_sleeptime;
-> +	iowait_sleeptime = ts->iowait_sleeptime;
->  	memset(ts, 0, sizeof(*ts));
-> +	ts->idle_sleeptime = idle_sleeptime;
-> +	ts->iowait_sleeptime = iowait_sleeptime;
+--Sig_/Vf4B7AVV628jMlIiYUJtMvU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-And this is safe because it is in global stop machine. So we are
-guaranteed that nobody sees the transitionning state. In the worst
-case ts->idle_sleeptime_seq is observed as changed to 0 in read_seqcount_retry()
-and the values are simply fetched again.
+Hi all,
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+The following commits are also in the btrfs-fixes tree as different
+commits (but the same patches):
 
-This makes me think that we should always use cpustat[CPUTIME_IDLE] instead of
-maintaining this separate ts->idle_sleeptime field. kcpustat even has a seqcount
-that would make ts->idle_sleeptime_seq obsolete. Then the tick based idle accounting
-could disappear on nohz, along with a few hacks. Instead of that we are
-currently maintaining two different idle accounting that are roughly the same.
+  4b60f3880d23 ("btrfs: zoned: factor out prepare_allocation_zoned()")
+  62ec22633c6a ("btrfs: zoned: optimize hint byte for zoned allocator")
+  690381ca057e ("btrfs: fix unbalanced unlock of mapping_tree_lock")
+  92dd093f23d2 ("btrfs: avoid copying BTRFS_ROOT_SUBVOL_DEAD flag to snapsh=
+ot of subvolume being deleted")
+  a5592dcde6c6 ("btrfs: fix kvcalloc() arguments order in btrfs_ioctl_send(=
+)")
+  aa434e486204 ("btrfs: ref-verify: free ref cache before clearing mount op=
+t")
+  c31b9639579d ("btrfs: zoned: fix lock ordering in btrfs_zone_activate()")
+  de4b77527d36 ("btrfs: don't abort filesystem when attempting to snapshot =
+deleted subvolume")
 
-But anyway this is all a different story, just mumbling to myself for the next
-nohz cleanups.
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks!
+--Sig_/Vf4B7AVV628jMlIiYUJtMvU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWnI0EACgkQAVBC80lX
+0Gzu+Af/cCGM8JwobPJfq5KT6L3+uo63PfOC92qrzqfBaYm98MNhWSDSzBEivUKR
+i6uo9ytXSLs+cBdpyVGQUIwhYiiX54OqgyE1/IYH18NlCRsRfpcBNB9EAKuvIwjs
+6Myj1apV/8ebp7oz/8CtLr6etKH85qoFWg3riPkjvF3kLx72lbGd3eA/8C5JZsRA
+en9hmT7KgfvoywmB6iiqJDV2/KPkRkbQ6Y0pz1IVYfynCbp+7p1GywNVAPWXm5xm
++GYx+5puJnynrHewjLU6ECHPPBSJVyGCC9q76uZTLU675i29LbIsT2YwUVpgFeEo
+dzLcJCj9Hj3SeLWRQThO2oj88MPI+w==
+=dQcS
+-----END PGP SIGNATURE-----
+
+--Sig_/Vf4B7AVV628jMlIiYUJtMvU--
