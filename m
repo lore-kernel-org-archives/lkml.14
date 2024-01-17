@@ -1,87 +1,78 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9081864;
-	Wed, 17 Jan 2024 01:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F42138E;
+	Wed, 17 Jan 2024 01:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705455964; cv=none; b=AetgyY0t5dXtJKL3zqw/blDihMWkB+G1ZEBaKNT9gkX6gvYzQTbjHE65FWNcSaXz1ceonvhrk+OOkn7gmEGsGrmOB3C8OInC3yftU9klf6804yWnmbnJ+Z4z5dpIRhnm9GUrYI+w5+35gPGMUthlChFinDLSmk78sTmrNpaJEdk=
+	t=1705456227; cv=none; b=PQfka2S+m+3bNWuC6qaZWMUhB7nsaPFYXAZMwS5sBtkuJfNr+e0R3QrxkWsVHlq9Cko6auk/6HPsS6C7e64GNMtWbl3ITdm2cu7C2L66Yo5VGD6+m8jwz38/hW3ONgza1BnlOBull0ujN3n14De2xfpOQfES0yacwth1WQKDgpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705455964; c=relaxed/simple;
-	bh=fgPwF9xhCsHvun6QMTgmDHGlC69r9M6BgvAyZFblfY0=;
-	h=X-UUID:X-CID-O-RULE:X-CID-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:
-	 X-CID-BVR:X-CID-BAS:X-CID-FACTOR:X-UUID:X-User:Received:From:To:Cc:
-	 Subject:Date:Message-Id:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding; b=PR8HAIYk76xkzgZSgTwbwKg1Nzv9Ap2y2z54sM6KvRJOfvqkydPwGp8RN11gIw7YdkzW9SjsQL0g365WXzXANWdJf9EZ7q6JlZKFAF52ggRZEWI9KT5DT7rB0JFOr04n7gck1H8bnoCaBIIYGkc+6q8Zk5+2Bt6Rq5EEbK4aJ74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 711b0d93f1fa43b4b0a2a28e58723e95-20240117
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:003e1394-ef5b-4aef-aabe-c69c16c4d8b7,IP:5,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-INFO: VERSION:1.1.35,REQID:003e1394-ef5b-4aef-aabe-c69c16c4d8b7,IP:5,URL
-	:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:-10
-X-CID-META: VersionHash:5d391d7,CLOUDID:00573e2f-1ab8-4133-9780-81938111c800,B
-	ulkID:240117094108WJOCVTCR,BulkQuantity:1,Recheck:0,SF:38|24|17|19|44|66|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:41,QS:nil,BEC:nil,COL
-	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: 711b0d93f1fa43b4b0a2a28e58723e95-20240117
-X-User: yaolu@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.169)] by mailgw
-	(envelope-from <yaolu@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 298752770; Wed, 17 Jan 2024 09:45:49 +0800
-From: Lu Yao <yaolu@kylinos.cn>
-To: paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com
-Cc: linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lu Yao <yaolu@kylinos.cn>
-Subject: [PATCH] lsm: Resolve compiling 'security.c' error
-Date: Wed, 17 Jan 2024 09:45:41 +0800
-Message-Id: <20240117014541.8887-1-yaolu@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1705456227; c=relaxed/simple;
+	bh=v0QaZYpEZ3EFQmzffLDj90LOeySkJ3srG0m9pc8pkIg=;
+	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
+	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lX9GniebjwsoYpSd5SRCQNbfna0yUb25pKGV2QNEwvSR8khRFNPMS+TbboIxjVClwIW9quV7XKj/gtJjJLXoDXOS0M0zZ7NNBpiINjRBhQirLKs46V+VWDf9WAFXz1Sp1iTegjrZZY5WTRY9GDJQd2LSmiWRd9a77D/imKPOVYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fe+J+1fQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fe+J+1fQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 77D5FC433B1;
+	Wed, 17 Jan 2024 01:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705456226;
+	bh=v0QaZYpEZ3EFQmzffLDj90LOeySkJ3srG0m9pc8pkIg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=fe+J+1fQeEeBbQf9b95iompFPFXp2s81IkS6RA7zGHpStFWC4UbxMNEVreMWYCgvQ
+	 Yd/omDU82ALi8Lzmn3R8JpNXajnARFcOT7hU8ypz3c03u+z77X6lUfuUoGGsAX+cyw
+	 yff/HHU4ZMwwk4W08s0LJdMxvm+VrjrarKv45rdVWhDEljur/rjGNCU607uLtJIQUB
+	 v6Lf/DElaKO+lYQpWVaXzKMPGvogaCRsl5jTyNoytKVLhRvnUnN7LE+hbh70Sx4Wn8
+	 D65B5qINCNp436ZbVN9qmbDqc4h9dVupGNvs2XJsHV03Yz+npnWqMnamzqE+bbWYQS
+	 tWNvSKpnPbgmA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 64D20D8C985;
+	Wed, 17 Jan 2024 01:50:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] net: dsa: vsc73xx: Add null pointer check to
+ vsc73xx_gpio_probe
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170545622640.24208.16006278091291103156.git-patchwork-notify@kernel.org>
+Date: Wed, 17 Jan 2024 01:50:26 +0000
+References: <20240111072018.75971-1-chentao@kylinos.cn>
+In-Reply-To: <20240111072018.75971-1-chentao@kylinos.cn>
+To: Kunwu Chan <chentao@kylinos.cn>
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kunwu.chan@hotmail.com
 
-The following error log is displayed during the current compilation
-  > 'security/security.c:810:2: error: ‘memcpy’ offset 32 is
-  > out of the bounds [0, 0] [-Werror=array-bounds]'
+Hello:
 
-GCC version is '10.3.0 (Ubuntu 10.3.0-1ubuntu1~18.04~1)'
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Signed-off-by: Lu Yao <yaolu@kylinos.cn>
----
- security/security.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, 11 Jan 2024 15:20:18 +0800 you wrote:
+> devm_kasprintf() returns a pointer to dynamically allocated memory
+> which can be NULL upon failure.
+> 
+> Cc: Kunwu Chan <kunwu.chan@hotmail.com>
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> 
+> [...]
 
-diff --git a/security/security.c b/security/security.c
-index 0144a98d3712..37168f6bee25 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -792,7 +792,7 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, size_t *uctx_len,
- 	size_t nctx_len;
- 	int rc = 0;
- 
--	nctx_len = ALIGN(struct_size(nctx, ctx, val_len), sizeof(void *));
-+	nctx_len = ALIGN(sizeof(struct lsm_ctx) + val_len, sizeof(void *));
- 	if (nctx_len > *uctx_len) {
- 		rc = -E2BIG;
- 		goto out;
+Here is the summary with links:
+  - [v2] net: dsa: vsc73xx: Add null pointer check to vsc73xx_gpio_probe
+    https://git.kernel.org/netdev/net/c/776dac5a6627
+
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
