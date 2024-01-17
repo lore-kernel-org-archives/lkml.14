@@ -1,59 +1,59 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E7820B1E
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A3021A0D
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705500925; cv=none; b=HCHdBm7kRzHHA2vqynzgoyg63s5WOJMMkd2w2IFPTzTS+l2PtQKlweOD06ExdB12pExLHvq/QYrzl1fArewf06BJ/esedJ7aeXtly3owqeiQdpvaNQFvGLlw69lRmG0DMXK1enE/Zvbz2C+xmNS9m1Ejl7/VvT2NveeVKDck//M=
+	t=1705500927; cv=none; b=XFx4lXvDTPczMVTm7LvmMipH2w60/TmWJfkgn+JyMNLg+BSQKlO+Abxi195lDYnAFwDqsYdYBDK/NXWK0how32oQExgFAmytTe+bhNOT3FSlniFf+3uygpE36lbukleOXzK0gfvLyCxnYs3xVwi2qSFGfckIS98f8IR1udhZ/mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705500925; c=relaxed/simple;
-	bh=Imf7O7zcNOVCd81mclixADJXwQRt2xYwWPLl/E/y0Hc=;
+	s=arc-20240116; t=1705500927; c=relaxed/simple;
+	bh=FPdDtBY/haMyEKtF5ifHGuWUBOHsyQehBf2C9JkxJ6I=;
 	h=Received:DKIM-Signature:Received:Received:Received:Received:From:
 	 To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding:Content-Type:
-	 X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Virus-Version; b=XAj2sM4h2BGKQa1K4iyMusOOPaYT3VBJMxxbhZgUFw2vRKPyudMPKICbiwV30TNMxi7e+1NxKUS7fWf5qc7PHz6IQbGT2v/RZz7KBej3BS3xwF+pTamYWG7fRv3YDRX/xxNdE3s45Z7TABG6rnZMpID8vwC/DSkNbdk36sGtsYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=kdHSy9Px; arc=none smtp.client-ip=67.231.156.173
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID:
+	 X-Proofpoint-Virus-Version; b=gXXtWIcTR0wk9DA0Zgqq+pTgdhIrZQHb4HpObY2Xhhp7equVO6WXGD0fPhApEIPGsBhZ0ox5DTknJ/CMbsV2EdyIW8VwIXXRbseePK6VWx1VvUvGqXZw5KEDHVgglpOOPzR88FDWwkgm7ampTZXhZs+toZisREyulsiG9jL21qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=QnZPcMGE; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="kdHSy9Px"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40H8Ydfc012684;
-	Wed, 17 Jan 2024 06:15:00 -0800
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="QnZPcMGE"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40H7jROr028480;
+	Wed, 17 Jan 2024 06:15:07 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=AyLoq4qCvNRklZsb/iMNJS5tPScAkgwgIIVRtypuMfA=; b=kdH
-	Sy9Px9R7Tvl0q0/LYGJ+MZyus/ZDTBeBOZy34UQ9y2H9pwUcWnTzOS7W3NwtO/sM
-	y8eVeyPel4oTGTL0sIugJbEAbmjOE73fmhn62MPlfZR7mqnN/LrI9CyaqJMyCgtb
-	+PrqOmXTw0FUTqXeHlmXsFO9sS1VuIQZGohS8AYJXa0Srvi6bke3M8czpke7q/q1
-	oa+QtSyI6pvH0UsI6lfC/v9rcw2Ggp2PdRlGBoQeFPckXoi8uGsZLS0I9a8FRI8k
-	wiqHsjKFL8kGXDbabTOG0ZjMhmlolBwO4WM4HBgFmvrYh8ds2yponi2/E3uay9UJ
-	u6Z2Sc138bK8bCvMTRA==
+	pfpt0220; bh=/xN3AdF7Ae4eT32Wd+i6HZ8ojNOSTLKCSBZfFn/Vwhk=; b=QnZ
+	PcMGEQGEOruHyipobT//aEmS6RsveLW385X87nb9Zyg0VpGIayETnKDrfBsK635A
+	/WbQHy4+dymBS8AOUJmFMKFt6LVOeAzlMftiUyXABzwEp82tkdo/BcX4q/O8waxI
+	YfuD2J0DhM1TXH7G1PudFQ6gNjPxJKagHceFoa5qhy9fZpJsG4dq3yNYxlZugVaL
+	DO2MZ20lxt9ztBTyWNUfahBqaUjKBirL4y1hqKLNBleTUXAtdNnlr6jDAQYqnZzu
+	Q4TjrC8U4dsqutLiLUNUNHDMnmYJFKpZeeXAThGJNGMfRX91iVXh7q/gJY0ciFDC
+	MVaMOlIIJQsGjmdTKwg==
 Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vp0ge393y-1
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3vpask953w-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 06:15:00 -0800 (PST)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+	Wed, 17 Jan 2024 06:15:07 -0800 (PST)
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
  (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 17 Jan
- 2024 06:14:58 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Wed, 17 Jan 2024 06:14:58 -0800
+ 2024 06:15:06 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
+ Transport; Wed, 17 Jan 2024 06:15:06 -0800
 Received: from localhost.localdomain (unknown [10.28.36.167])
-	by maili.marvell.com (Postfix) with ESMTP id D7A7D5B6931;
-	Wed, 17 Jan 2024 06:14:54 -0800 (PST)
+	by maili.marvell.com (Postfix) with ESMTP id 8BE755B6963;
+	Wed, 17 Jan 2024 06:15:02 -0800 (PST)
 From: Amit Singh Tomar <amitsinght@marvell.com>
 To: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
 CC: <fenghua.yu@intel.com>, <reinette.chatre@intel.com>, <james.morse@arm.com>,
         <gcherian@marvell.com>, <robh@kernel.org>, <peternewman@google.com>,
         <dfustini@baylibre.com>, <jonathan.cameron@huawei.com>,
         Amit Singh Tomar <amitsinght@marvell.com>
-Subject: [PATCH v1 12/14] arm_mpam: Program Downstream priority value
-Date: Wed, 17 Jan 2024 19:44:03 +0530
-Message-ID: <20240117141405.3063506-13-amitsinght@marvell.com>
+Subject: [PATCH v1 14/14] arm64/mpam: resctrl: export DSPRI value to info directory
+Date: Wed, 17 Jan 2024 19:44:05 +0530
+Message-ID: <20240117141405.3063506-15-amitsinght@marvell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240117141405.3063506-1-amitsinght@marvell.com>
 References: <20240117141405.3063506-1-amitsinght@marvell.com>
@@ -65,76 +65,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: zpp2hqTM8jJAkQKnD65_Nno9V8gilWRY
-X-Proofpoint-ORIG-GUID: zpp2hqTM8jJAkQKnD65_Nno9V8gilWRY
+X-Proofpoint-ORIG-GUID: ZnrcZP3-NuROoWY2QqQdv4tcfeVQxXYM
+X-Proofpoint-GUID: ZnrcZP3-NuROoWY2QqQdv4tcfeVQxXYM
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-17_08,2024-01-17_01,2023-05-22_02
 
-Now that Downstream priorities values can be passed from resource control
-schemata file, let's program it into memory mapped Priority Partition
-Configuration Register.
+Now that, we have support for priority partitioning, let's export
+Downstream priority value (maximum value that user can supply) to
+info directory. This value is visible under resource directory
+to which this control (Downstream priority partition ) is applied.
 
 Signed-off-by: Amit Singh Tomar <amitsinght@marvell.com>
 ---
 Changes since RFC:
-		* Priority value is inverted based on DSPRI_0_IS_LOW value.
+                * No change, it's new patch.
 ---
- drivers/platform/mpam/mpam_devices.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ fs/resctrl/rdtgroup.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/platform/mpam/mpam_devices.c b/drivers/platform/mpam/mpam_devices.c
-index 9953f2050d35..388d57281fd8 100644
---- a/drivers/platform/mpam/mpam_devices.c
-+++ b/drivers/platform/mpam/mpam_devices.c
-@@ -1101,6 +1101,7 @@ static void mpam_reprogram_ris_partid(struct mpam_msc_ris *ris, u16 partid,
- 	struct mpam_props *rprops = &ris->props;
- 	u16 dspri = GENMASK((rprops->dspri_wd - 1), 0);
- 	u16 intpri = GENMASK((rprops->intpri_wd - 1), 0);
-+	u8 dspri_part_0_low, dspri_rprops, dspri_cfg;
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index d71fac0ae4d4..8c3df4bb8ee9 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -1118,6 +1118,16 @@ static int rdt_bit_usage_show(struct kernfs_open_file *of,
+ 	return 0;
+ }
  
- 	lockdep_assert_held(&msc->lock);
- 
-@@ -1143,18 +1144,33 @@ static void mpam_reprogram_ris_partid(struct mpam_msc_ris *ris, u16 partid,
- 	if (mpam_has_feature(mpam_feat_ccap_part, rprops))
- 		mpam_write_partsel_reg(msc, CMAX, cmax);
- 
--	if (mpam_has_feature(mpam_feat_intpri_part, rprops) ||
--	    mpam_has_feature(mpam_feat_dspri_part, rprops)) {
-+	if (mpam_has_feature(mpam_feat_intpri_part, rprops)) {
- 		/* aces high? */
- 		if (!mpam_has_feature(mpam_feat_intpri_part_0_low, rprops))
- 			intpri = 0;
--		if (!mpam_has_feature(mpam_feat_dspri_part_0_low, rprops))
--			dspri = 0;
- 
- 		if (mpam_has_feature(mpam_feat_intpri_part, rprops))
- 			pri_val |= FIELD_PREP(MPAMCFG_PRI_INTPRI, intpri);
--		if (mpam_has_feature(mpam_feat_dspri_part, rprops))
--			pri_val |= FIELD_PREP(MPAMCFG_PRI_DSPRI, dspri);
++static int rdt_max_dspri_show(struct kernfs_open_file *of,
++				struct seq_file *seq, void *v)
++{
++	struct resctrl_schema *s = of->kn->parent->priv;
++	struct rdt_resource *r = s->res;
 +
-+		mpam_write_partsel_reg(msc, PRI, pri_val);
-+	}
++	seq_printf(seq, "%u\n", r->default_dspri_ctrl);
++	return 0;
++}
 +
-+	dspri_rprops = mpam_has_feature(mpam_feat_dspri_part,
-+					rprops);
-+	dspri_part_0_low = mpam_has_feature(mpam_feat_dspri_part_0_low,
-+						rprops);
-+	if (dspri_rprops) {
-+		dspri_cfg = mpam_has_feature(mpam_feat_dspri_part,
-+						cfg);
-+		if (dspri_cfg) {
-+			pri_val |= (!dspri_part_0_low)
-+			? FIELD_PREP(MPAMCFG_PRI_DSPRI, cfg->dspri ^ dspri)
-+			: FIELD_PREP(MPAMCFG_PRI_DSPRI, cfg->dspri & dspri);
-+		} else {
-+			pri_val |= (!dspri_part_0_low)
-+			? FIELD_PREP(MPAMCFG_PRI_DSPRI, 0)
-+			: FIELD_PREP(MPAMCFG_PRI_DSPRI, dspri);
-+		}
+ static int rdt_min_bw_show(struct kernfs_open_file *of,
+ 			     struct seq_file *seq, void *v)
+ {
+@@ -1713,6 +1723,13 @@ static struct rftype res_common_files[] = {
+ 		.seq_show	= rdt_bit_usage_show,
+ 		.fflags		= RF_CTRL_INFO | RFTYPE_RES_CACHE,
+ 	},
++	{
++		.name           = "max_dspri",
++		.mode           = 0444,
++		.kf_ops         = &rdtgroup_kf_single_ops,
++		.seq_show       = rdt_max_dspri_show,
++		.fflags         = RF_CTRL_INFO | RFTYPE_RES_CACHE,
++	},
+ 	{
+ 		.name		= "min_bandwidth",
+ 		.mode		= 0444,
+@@ -2009,6 +2026,9 @@ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
  
- 		mpam_write_partsel_reg(msc, PRI, pri_val);
- 	}
+ 	/* loop over enabled controls, these are all alloc_capable */
+ 	list_for_each_entry(s, &resctrl_schema_all, list) {
++		if (s->ctrl_type == SCHEMA_DSPRI)
++			continue;
++
+ 		r = s->res;
+ 		fflags =  r->fflags | RF_CTRL_INFO;
+ 		ret = rdtgroup_mkdir_info_resdir(s, s->name, fflags);
 -- 
 2.25.1
 
