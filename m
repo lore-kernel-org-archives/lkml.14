@@ -1,146 +1,119 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E6F1E89D;
-	Wed, 17 Jan 2024 12:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4571EA66;
+	Wed, 17 Jan 2024 12:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705494211; cv=none; b=U88HFfRm8vwLcYQAH/tIcGQkgRiHiW02T5On+bC0kKcb5fVKHjytfnGClycr5f0Eg9j29OEuyCz+5udEKei9PHccVW+sQq+lCQuPaD4Rer3kOPXHfYQaPcCZH8EYsw6Fw/naErc179CrHeV2zk9PjcNE+mKrQ75iA3E6H3aHzmw=
+	t=1705494286; cv=none; b=ERIUEhe1bLKxMpLh7tWjkK3ATJ3sBtq9mRRVxJP1BwtvWuI3KSGFnmB8a/Gh6uTJ1fS0MMUm2hVyP24uxQrK28lojv9qkmur/elCCydPCqDaBJb+7oIVFMcQjuX3X93APYLdNo3Q1auWASsIQw3rGxjlcV0yAgizbBiZXIux5Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705494211; c=relaxed/simple;
-	bh=Uihxw91v6Hf2KMjiixiJuIJGsDzSTmIKEICPHaC3EO4=;
-	h=Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-Spam-Level:X-Spamd-Bar:X-Rspamd-Server:X-Spamd-Result:
-	 X-Spam-Score:X-Rspamd-Queue-Id:X-Spam-Flag; b=S3nY02hLrCVPrLrKVbvMC0teMYSof4vnB9gRGcf4q6Ryf5wQjg338lK1n4lz+9RI9dxBLqZx+IA8IiI4wsoox1EgHk1MxP63u1Ohie9I8iLsoe0LZ2FYEuLWMeKgm+eHKQDMHNdbyIVwVrB/N2/YJ67o5ELY5ENdy15mFC3LX8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cxeRzz1p; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jVUZ15yk; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cxeRzz1p; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jVUZ15yk; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1705494286; c=relaxed/simple;
+	bh=Xy6TRFXQaiav1mUE6Mj0qop4Z4Iqz9qTKNCOmawbTfI=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=e9jXm3YXwdqedbOY5HlZfiLRicmMFvevVyrpyPvkRjY0SvIVw2lVKDr9MLjMzw2/NOVlMORZEZSHidrfamKYxytZU2Dxs1MG2zX5Dr1mvFR1EmcvlTfr1coSZM6HzE64Edg7FRa2LF6MrYrW5xEQQ2LTxWhoITwgTynaQyLyxag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNNBdjQY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cxeRzz1p";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jVUZ15yk";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cxeRzz1p";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jVUZ15yk"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 42DF91FC0B;
-	Wed, 17 Jan 2024 12:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1705494208; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=wBFi5EOSqhi2GZ/s3YhGCxOR9Jei6qFUO/vhKFfgYy8=;
-	b=cxeRzz1p6DSQWW+0tfZehSvcSaRcEU2JsJGYthlX6CCD3b85jIF5LotbFWoToykvZEwP0M
-	9T1RnyL9nh0C7hd3kDwbQL+5Rte5/1wY1LDsvAVICCsJd6dIN1yz39ltmJFMNuocCNxv7t
-	RTaX+o10YFoaclDiQ+dVM1tgMSic/vg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1705494208;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=wBFi5EOSqhi2GZ/s3YhGCxOR9Jei6qFUO/vhKFfgYy8=;
-	b=jVUZ15ykWc7NZTMTzU8bmrbtzdqqm7X/T5NsPA2IzZ+OvR8JWqwZG1Q0st815seu9lczPy
-	zu9GBLYBRyQ0faBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1705494208; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=wBFi5EOSqhi2GZ/s3YhGCxOR9Jei6qFUO/vhKFfgYy8=;
-	b=cxeRzz1p6DSQWW+0tfZehSvcSaRcEU2JsJGYthlX6CCD3b85jIF5LotbFWoToykvZEwP0M
-	9T1RnyL9nh0C7hd3kDwbQL+5Rte5/1wY1LDsvAVICCsJd6dIN1yz39ltmJFMNuocCNxv7t
-	RTaX+o10YFoaclDiQ+dVM1tgMSic/vg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1705494208;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=wBFi5EOSqhi2GZ/s3YhGCxOR9Jei6qFUO/vhKFfgYy8=;
-	b=jVUZ15ykWc7NZTMTzU8bmrbtzdqqm7X/T5NsPA2IzZ+OvR8JWqwZG1Q0st815seu9lczPy
-	zu9GBLYBRyQ0faBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 07DB513800;
-	Wed, 17 Jan 2024 12:23:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KDxkAMDGp2WSVwAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 17 Jan 2024 12:23:28 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: linux-man@vger.kernel.org
-Cc: Petr Vorel <pvorel@suse.cz>,
-	Alejandro Colomar <alx@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNNBdjQY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F16C433C7;
+	Wed, 17 Jan 2024 12:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705494286;
+	bh=Xy6TRFXQaiav1mUE6Mj0qop4Z4Iqz9qTKNCOmawbTfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bNNBdjQYNnD5VX30shshT50y20FdZWnH7XdxOhigSAhyFn/qxTzvmn/R/EcRSTzsF
+	 s61UAuRCy/JgUHGHfMYsLaXHuLS8awbxzJPrk7aBUrZOB9wRf1bE+4I3UuIrY3S1cu
+	 HKt0fZEttCO+ij1ueCh9T6XbU0J0RfYGQeWoG2ezKP8nZg/Qw41uHleRJkrEXhpv/x
+	 Ua3RHCKwRZpiyY3iVM3SWKELVSjhXIeevMpAa/vleOIrSzVvUAA7qiRyJp9AOuJu7C
+	 UcIhLGjkeEiiNfrzayr0pzfn9323rAJGoCePkjZuNktE5Zl0fcqHiDORZqm0lQOPNk
+	 V4E0Vi4pMOYOw==
+Date: Wed, 17 Jan 2024 13:24:42 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: Petr Vorel <pvorel@suse.cz>
+Cc: linux-man@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] MAINTAINERS: Add man-pages git trees
-Date: Wed, 17 Jan 2024 13:22:57 +0100
-Message-ID: <20240117122257.2707637-1-pvorel@suse.cz>
-X-Mailer: git-send-email 2.43.0
+Subject: Re: [PATCH v2 1/1] MAINTAINERS: Add man-pages git trees
+Message-ID: <ZafHChsGiKCLh9od@debian>
+References: <20240117122257.2707637-1-pvorel@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: ***
-X-Spamd-Bar: +++
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=cxeRzz1p;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=jVUZ15yk
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [3.49 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[24.71%]
-X-Spam-Score: 3.49
-X-Rspamd-Queue-Id: 42DF91FC0B
-X-Spam-Flag: NO
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cA7PbLj8K5bpE6aw"
+Content-Disposition: inline
+In-Reply-To: <20240117122257.2707637-1-pvorel@suse.cz>
 
-The maintainer uses both.
 
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
-Changes v1->v2:
-* Add a second tree
+--cA7PbLj8K5bpE6aw
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 17 Jan 2024 13:24:42 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: Petr Vorel <pvorel@suse.cz>
+Cc: linux-man@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] MAINTAINERS: Add man-pages git trees
 
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+On Wed, Jan 17, 2024 at 01:22:57PM +0100, Petr Vorel wrote:
+> The maintainer uses both.
+>=20
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 391bbb855cbe..3f6a19f3e5e0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12833,6 +12833,8 @@ M:	Alejandro Colomar <alx@kernel.org>
- L:	linux-man@vger.kernel.org
- S:	Maintained
- W:	http://www.kernel.org/doc/man-pages
-+T:	git git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
-+T:	git git://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.git
- 
- MANAGEMENT COMPONENT TRANSPORT PROTOCOL (MCTP)
- M:	Jeremy Kerr <jk@codeconstruct.com.au>
--- 
-2.43.0
+Reviewed-by: Alejandro Colomar <alx@kernel.org>
 
+(We sent it almost at the same time.  :)
+
+> ---
+> Changes v1->v2:
+> * Add a second tree
+>=20
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 391bbb855cbe..3f6a19f3e5e0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12833,6 +12833,8 @@ M:	Alejandro Colomar <alx@kernel.org>
+>  L:	linux-man@vger.kernel.org
+>  S:	Maintained
+>  W:	http://www.kernel.org/doc/man-pages
+> +T:	git git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
+> +T:	git git://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.=
+git
+> =20
+>  MANAGEMENT COMPONENT TRANSPORT PROTOCOL (MCTP)
+>  M:	Jeremy Kerr <jk@codeconstruct.com.au>
+> --=20
+> 2.43.0
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+Looking for a remote C programming job at the moment.
+
+--cA7PbLj8K5bpE6aw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmWnxwoACgkQnowa+77/
+2zIqPQ//RqNkJeUcDj0HkcJ1lXUdiAGPN8qRBTBNj2D9EFwYFWPKibGKBer8eB7+
+9jS4VH1pFIlho2sRJHo2cGzyY3JXTW2MhbxNrOxKayIdrQ3Il09qNyhMvqo8tf3V
+cjCE9tlzabrlm6QTmIlVka+KXa+PtSErNXrZQ+P6aoTTNYsZfcLQhNPFzM2/8obJ
+uMgN7z5b+mk31NPMOKOb4gkfgzebKQAjYg/fgFN1y2Cxw7xXWHfvo4QaqICkCF1y
+vzj8/9jpjLjOB/Jipn9R3K/I1dGXMwvNkJTVSQuhnKTqetB3pT+jvQcP/PAKhb1d
+0xaY+D7o6U+X7MTa/XIqUjoRBtBz7EQWYnD/b5E6XbetnqfXZA8pxeiVXM+YCLmk
+4qKAqVIsGPlYAI/OXL2frnWcSp7nNjY3J74Q8W2fvgDJBazwA9wLATsDcT8D6fBQ
+QEOZql8Xm7HnHlcPbYDmkZcu0+qouiiOyeXkc9viai9fO9BomoOHju3qXbmEc8Ux
+eYIglEHvKgZPCNKHUN4VQTPAxw4kymQXSvqk529IDmYQvEVruGKDZpWqw6Yy0ZZn
+wGJ1HY14gaKfz0NJ+1N4+dV7GgQ+kLL7w3fUj8eweiEnwyYL4JImvNdGHhk8S48X
+8jII7NEDplCoIEVTaEOL3jmkLdhqsI1EypqhVAfazuRP3ZZN1Sc=
+=KIVD
+-----END PGP SIGNATURE-----
+
+--cA7PbLj8K5bpE6aw--
