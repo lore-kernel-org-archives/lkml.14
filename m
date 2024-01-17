@@ -1,61 +1,53 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-251-59.mail.qq.com (out203-205-251-59.mail.qq.com [203.205.251.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C4EBE5D
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47C1BE6B;
+	Wed, 17 Jan 2024 07:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705478013; cv=none; b=Aj1M7eqmo1iFZuBXwEIo8tiF5VzbQ1oPbIXUM8RxRtBB8G5yHZfQAqFLubc918DBUyjM2sKjUXXNlX6mbCLAexHteJtk+dgCZWAiK+Q5PndTsPv+QPeG6gHJaafABNF4ehyQW2eoRqn/8t/dJoz1fYGBUaroCm/mMM+wI3jnGY8=
+	t=1705478033; cv=none; b=uUuFWaqLFCj+ocjyVV5h9jWZ4AMugvP5A6nWS/m0KXzzo3BXegr42312XdOFuIFMAs6V0c0yrQJ+uU6TOysKGSu7+1SIfkvqg9p5ZfenA2qIaZOvWY9ZvSxbE3LYikoaSSZ1AJXXukDWGe8kYAB5QRsb9LsaEbQaogqYTewGYLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705478013; c=relaxed/simple;
-	bh=hfcKU0T9ux7f18MyIgB3bldh72prD6P12m0I8ogtZmc=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=mrfbVhpHBc6eBggqiZJQZ/b0hDxVkia94NGMBMzsRfId2Xg2uQz78QF5a1ixiC0AtKUyqAYj2B3N89Uv1yFYS+kiLQpBC809+M8u800b0hkhfp6N0HV4E4mhSxQqmbmAqisbxNSf58gx+JTxk/U5o6Cs2ZMOaLNCffvEpLJdJ5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oNQWovoj; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705478033; c=relaxed/simple;
+	bh=nQBIfiMdjuXoRVFhHvhcr0wzkugaOIbQV7K82qxMKUQ=;
+	h=DKIM-Signature:Received:X-QQ-mid:Message-ID:X-QQ-XMAILINFO:
+	 X-QQ-XMRINFO:X-OQ-MSGID:Date:MIME-Version:User-Agent:
+	 Content-Language:To:Cc:From:Subject:Content-Type:
+	 Content-Transfer-Encoding; b=Qfu+6gzZkh585qyExRlP4AWhL0eF3tQ2TWBM2wjdb3gbhkkT0gPQhe3CD+O+H3pVNBPvK4O1NTTKc0+suapWOHAlNbWjfNb+eHNrPB5k+v0V9+9S7+XhEXVybq+HgH/8IJxlECKMM7qgv7MsLuIVK4FUinbD433tumyg71eopTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=Y4E0/MfR; arc=none smtp.client-ip=203.205.251.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oNQWovoj"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a298accc440so1312045166b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 23:53:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705478009; x=1706082809; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QE3OUQRuGSCtW+LMwKGY7wcojZHP4WoZBJh6yPHInRY=;
-        b=oNQWovojV8utcIHcDxBwF1J55wDFzrGZxlyWdJdCH2o+snIZg4QeAEnIldBA6iZw+G
-         e6n8uyiSN7tHCW6niLNdMdVTw0iIPQnLjIgmXNAsQDNVLpw4tz8uRVni6KVkjU3c4+O8
-         nR4vIDZ52m2b6wrLq1x2rfNNDBZUsBnCAzKjf31LZr0E7g3slgX9FyQT4FvI8QQQOA4t
-         uRZOMNrUt3M8Fqaefb+ORL20yCWi/b9DVYMZzwlEJQAgImoRVJ4nOZbf2Ot8BYNVH8rD
-         QDOqFLlo540y6a7UYEKwN5hDncwyTTfHGhROA9TT29LCQbKZekYUf2eahLe2vEyc/Q5+
-         ixLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705478010; x=1706082810;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QE3OUQRuGSCtW+LMwKGY7wcojZHP4WoZBJh6yPHInRY=;
-        b=CQkYcbybVJpvGkW+m6tE70DgEh0TCm9ygZdU4C20M5eQEd1OzxVi6uzXxyJqovoHhy
-         ar/ONFPHbrRwZeITDSmdfmUUsP4taYFK3+PlN7dz0FYvZ7f+8VaPKqLRvzlzBh8NoDRT
-         JIecxNcyNCzXsaS5NoHTHRJTnS4Z5S+bsiBL+/l1sLSg+WtrIVTMfOhvt6+wPDrAls1O
-         /l9e7JVPHFq0PJ0YgZF0LNW2fFeckmuokS/svO8PfFThXiQsZZIYmp0KxtdUKc/zXcgX
-         6twdqgPDiSnmsvIsDRC3wRGn+1YuzCWtVd+eE6dvnEkQsBImnQmh0deEKYUjJlsK7eG7
-         H+iw==
-X-Gm-Message-State: AOJu0YyzpxwNVw14QXYc1dZ8ItxeNy662/kwQfQP1fLTlzVjKVyfeRr6
-	srnMOukNk92lZdKSUgQZNOy4bfwE1JpVeA==
-X-Google-Smtp-Source: AGHT+IGOIfJsDAIIKbl91OQ3OxwXoT1xUsFqQeHRB4B2LpbiDpFOuSXJ26PeNH3axOB4TCm1K60k0w==
-X-Received: by 2002:a17:906:3e42:b0:a2a:c2b7:ee92 with SMTP id t2-20020a1709063e4200b00a2ac2b7ee92mr4124991eji.50.1705478009768;
-        Tue, 16 Jan 2024 23:53:29 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id rh5-20020a17090720e500b00a26b44ac54dsm7372797ejb.68.2024.01.16.23.53.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 23:53:29 -0800 (PST)
-Message-ID: <5648e6e3-e2b1-4fa3-a0cd-74a0f0c0aa30@linaro.org>
-Date: Wed, 17 Jan 2024 08:53:27 +0100
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Y4E0/MfR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1705478028;
+	bh=H88yXa+7QlAq2GcfOoSWuyw4EXHKRyO0Rb0v/DyhfrM=;
+	h=Date:To:Cc:From:Subject;
+	b=Y4E0/MfR/sgsy8/ydlsu67vwBZLVIbJsDpwqIJiGoAjmbggy268kngECd3Wwclqk1
+	 WQ19Hh22mRoWbDXN2W06OpKwoO2JhCLPe6/DD3F67axDcViHmggvMgqZh9cFZF5/TP
+	 UXkUtAEM0h9TMu1AeUvk7269UGMzAIy8kuVOaQN8=
+Received: from [192.168.3.231] ([116.128.244.171])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id BE82DAF9; Wed, 17 Jan 2024 15:47:40 +0800
+X-QQ-mid: xmsmtpt1705477660tlh8pq5do
+Message-ID: <tencent_0C621A54ED78C4A1ED4ECA25F87A9619CE09@qq.com>
+X-QQ-XMAILINFO: OLnGMPzD2sDVyWBygWfLrWKTpzeb6UejZtAoI3WoEBPougL/n1DQA5eQtbXaof
+	 QdIu7RaIESJhN17S3AjdqcJN9fAsz8iRoX+Vzd3GgrWGWBf+VPdPP2c+Ds4sUMJklxVGjWlAWs7y
+	 KeRn+vYBa44I0aonijPPSl+xORRM8CMGcQCh6vqZHLvuF/58PZgQ/XFrgJp52tR5QB5ExxtIZy5B
+	 364kcVq3i3bYze5an/bBkLsG4ZOratEO6i/HL1V50nUKI3Ob32iP0U0bAUqak6QLWyCHImn0z3fE
+	 TpXmbbHzI7XPD0kkSvgUPI+FFLKaPd0Ijg3KYPU/hBOnqzlL5Bbtpjdq98V1uBpd0Np9S37kYCdi
+	 QNn9GmtaEW9XZfDS2pnwkI91K4sm+KQz9Rdjc4dI2vnFMAWBV06KclwyWmGccNL2q2vaHL2KakXx
+	 JuZuBAGJT22DIo21y/RcHKKu+BlQNWHfrj7BmL0rYrzgtMnST9rx/deXQCYMd9Hj2KKeFojjp8kl
+	 mNsLZ4V1+08Eb3cyKqzvXPAl253wpY4x2yq8OJ0CuhTPuyIZhPa/1MUKBVBdpMjI2+u/bA6nphJ2
+	 BJ73clzFaubdeNLYD9NPvpVBioNXw+9/Amm743b4Qpw4GCxfqrUg9e5OVxpNRcUzEaLX4uT6Km2x
+	 5clNMrZDMwZQc4qwMmkuRuqQDE6wVVOIpY/WdlAEF2LlIzZkZqK8Pcg0/2QP2fPB7kJZrEvmvzOe
+	 IBWDmcEnhnQLiCImEE2tLstGi/eWOD9t/gUMhwMcmemtQZzC6RfBC8Z+uO9a3tjebWW9DZSkz8qt
+	 T7EiTLgdAGHgT/BFLE/fBtQsaUrvx6tz5fnadmED2mZUA869zoiyMNvR5LjXJvJW1zxIIc4m9JWT
+	 Gs+75/oDvqP3MH/eI3GOjsd0o7mMli1MqkrUSgKRCoG7gu8/jG7LuRl6/28yp0O9pr2yaZf9E6Id
+	 K00SYR4kqgVfcaS1sadkj/613oaJh0+s9fADLb7BN9kGFWx01Y7erEAsNm1OmtAWCfvWcSFpbFv8
+	 CoOH0aTDadjVLcmKTC3EBnhHkeBoc=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-OQ-MSGID: <5ad68cf2-0067-4b4e-bb05-b8098d918f56@foxmail.com>
+Date: Wed, 17 Jan 2024 15:47:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,112 +55,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: coresight: Remove pattern match
- of ETE node name
 Content-Language: en-US
-To: Jinlong Mao <quic_jinlmao@quicinc.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- Leo Yan <leo.yan@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
- Yuanfang Zhang <quic_yuanfang@quicinc.com>,
- Tao Zhang <quic_taozha@quicinc.com>
-References: <20240116064505.487-1-quic_jinlmao@quicinc.com>
- <20240116064505.487-2-quic_jinlmao@quicinc.com>
- <f616989b-2d84-483d-80c4-d3c6eb97b137@arm.com>
- <69875d89-651e-41ff-a1be-385dcbb15108@quicinc.com>
- <ff85db67-bd18-48fb-9050-81d731e5f402@linaro.org>
- <f74650fd-195f-4b93-a7e0-23b316dd74ad@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <f74650fd-195f-4b93-a7e0-23b316dd74ad@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quwenruo.btrfs@gmx.com
+Cc: chenxiaosong@kylinos.cn, liuzhengyuan@kylinos.cn, huhai@kylinos.cn,
+ liuyun01@kylinos.cn, zhangduo@kylinos.cn, liuzhucai@kylinos.cn,
+ zhangshida@kylinos.cn
+From: ChenXiaoSong <chenxiaosongemail@foxmail.com>
+Subject: Question about btrfs no space left error and forced readonly
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 17/01/2024 08:49, Jinlong Mao wrote:
-> 
-> 
-> On 1/17/2024 3:40 PM, Krzysztof Kozlowski wrote:
->> On 17/01/2024 03:14, Jinlong Mao wrote:
->>>>>          - const: arm,embedded-trace-extension
->>>>> @@ -55,13 +53,13 @@ examples:
->>>>>    # An ETE node without legacy CoreSight connections
->>>>>      - |
->>>>> -    ete0 {
->>>>> +    ete-0 {
->>>>
->>>> Why do we need the number ? why not simply "ete" as Krzysztof suggested ?
->>>>
->>>
->>> Hi Suzuki & Krzysztof ,
->>>
->>> If name all the ete nodes' name as 'ete', there will be error below when
->>> build images.
->>>
->>> arch/arm64/boot/dts/qcom/sm8450.dtsi:301.6-312.4: ERROR
->>
->> Why are you pasting DTSI for binding? How is it related? Do we talk
->> about DTSI here? No, this is a binding patch.
->>
-> 
-> Hi Krzysztof,
-> 
-> Do you mean the name in DTSI can be different from the name in binding ?
+Greetings,
 
-Yes, we do not talk about DTSI here, so I did not suggest anything about
-DTSI.
+We had a btrfs no space left error and forced readonly, the stack trace 
+is [1]. This happened on our kernel release version based on lts 4.19.
 
-Best regards,
-Krzysztof
+Is there already a fix patch for this issue?
+
+Or can anybody please advise on how to debug this further?
+
+Thanks,
+ChenXiaoSong.
+
+[1]
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328533] ------------[ 
+cut here ]------------
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328594] WARNING: CPU: 
+42 PID: 460094 at fs/btrfs/extent-tree.c:6805 
+__btrfs_free_extent.isra.71+0x65c/0xbd0 [btrfs]
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328595] Modules linked 
+in: rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace 
+fscache fuse xt_nat veth nf_conntrack_netlink xt_conntrack br_netfilter 
+bridge sch_htb xt_addrtype xt_set ipt_MASQUERADE xt_mark 
+ip_set_hash_ipportnet ip_set_bitmap_port ip_set_hash_ipportip 
+ip_set_hash_ipport dummy xt_comment iptable_nat nf_nat_ipv4 nf_nat 
+iptable_filter nls_utf8 isofs bonding 8021q garp mrp stp llc ip_set 
+nfnetlink ip_vs_sh ip_vs_wrr ip_vs_rr ip_vs nf_conntrack nf_defrag_ipv6 
+nf_defrag_ipv4 sunrpc amd64_edac_mod edac_mce_amd btrfs xor 
+zstd_decompress zstd_compress raid6_pq libcrc32c kvm_amd ccp kvm 
+irqbypass ipmi_ssif ast ttm drm_kms_helper syscopyarea sysfillrect igb 
+sysimgblt i2c_algo_bit fb_sys_fops pcspkr txgbe sg dca drm i2c_piix4 
+k10temp ipmi_si ipmi_devintf ipmi_msghandler binfmt_misc
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328634]  ip_tables 
+ext4 mbcache jbd2 sd_mod crc32c_intel ahci libahci megaraid_sas libata 
+dm_mirror dm_region_hash dm_log dm_mod
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328647] CPU: 42 PID: 
+460094 Comm: httpWorkerThrea Kdump: loaded Tainted: G        W 
+4.19.90-17.ky10.x86_64 #1
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328648] Hardware name: 
+Sugon H620-G30/65N32-US, BIOS 0SSSX245 06/07/2020
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328656] RIP: 
+0010:__btrfs_free_extent.isra.71+0x65c/0xbd0 [btrfs]
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328659] Code: 44 89 e9 
+ba c8 1a 00 00 48 c7 c6 a0 aa 06 c1 e8 fc ba 09 00 e9 fe fa ff ff 0f 0b 
+44 89 ee 48 c7 c7 68 7c 07 c1 e8 14 e9 2d e5 <0f> 0b e9 ce fa ff ff 41 
+83 f8 29 0f 86 d6 01 00 00 48 8b 7c 24 08
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328660] RSP: 
+0018:ffffae7f9f6e78c8 EFLAGS: 00010286
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328661] RAX: 
+0000000000000000 RBX: 000000000000a0c9 RCX: 0000000000000006
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328662] RDX: 
+0000000000000007 RSI: 0000000000000092 RDI: ffff90a4ffa96850
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328663] RBP: 
+00000470931db000 R08: 000000000210773e R09: 0000000000000004
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328664] R10: 
+00000000ffffffe4 R11: 0000000000000001 R12: ffff909b302e2a80
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328664] R13: 
+00000000ffffffe4 R14: 0000000000000000 R15: 000000000003fc62
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328666] FS: 
+00007f4aedae2700(0000) GS:ffff90a4ffa80000(0000) knlGS:0000000000000000
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328667] CS:  0010 DS: 
+0000 ES: 0000 CR0: 0000000080050033
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328667] CR2: 
+00007efce4073ff0 CR3: 0000006413d3c000 CR4: 00000000003406e0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328668] Call Trace:
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328682] 
+__btrfs_run_delayed_refs+0x4f8/0x1150 [btrfs]
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328707] 
+btrfs_run_delayed_refs+0xe7/0x1b0 [btrfs]
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328717] 
+btrfs_truncate_inode_items+0xa56/0xeb0 [btrfs]
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328728] 
+btrfs_evict_inode+0x496/0x4f0 [btrfs]
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328733]  evict+0xd2/0x1a0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328736] 
+__dentry_kill+0xdd/0x180
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328738] 
+dentry_kill+0x4d/0x260
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328740]  dput+0x183/0x200
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328743] __fput+0x118/0x1f0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328747] 
+task_work_run+0x8a/0xb0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328750] 
+do_exit+0x2ec/0xbf0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328753] 
+do_group_exit+0x3a/0xa0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328755] 
+get_signal+0x13f/0x7a0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328758] 
+do_signal+0x36/0x610
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328768] 
+exit_to_usermode_loop+0x71/0xe0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328770] 
+do_syscall_64+0x1a3/0x1d0
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328773] 
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328779] RIP: 
+0033:0x7f4b12fae10c
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328785] Code: Bad RIP 
+value.
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328785] RSP: 
+002b:00007f4aedae1550 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328786] RAX: 
+fffffffffffffe00 RBX: 00007f4b0d1914e0 RCX: 00007f4b12fae10c
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328787] RDX: 
+0000000000000000 RSI: 0000000000000080 RDI: 00007f4b0d19150c
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328787] RBP: 
+0000000000000000 R08: 0000000000000000 R09: 0000000794039ff8
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328788] R10: 
+0000000000000000 R11: 0000000000000246 R12: 00007f4b0d1914b8
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328789] R13: 
+0000000000008223 R14: 0000000000000000 R15: 00007f4b0d19150c
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328790] ---[ end trace 
+74a7f2461a0f9473 ]---
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.328961] BTRFS: error 
+(device dm-9) in __btrfs_free_extent:6805: errno=-28 No space left
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.439057] BTRFS info 
+(device dm-9): forced readonly
+Dec  8 15:25:17 pjdhcpaasnap8pn kernel: [13439425.439067] BTRFS: error 
+(device dm-9) in btrfs_run_delayed_refs:2935: errno=-28 No space left
 
