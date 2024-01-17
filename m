@@ -1,49 +1,47 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F7F17D9;
-	Wed, 17 Jan 2024 01:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8703881F;
+	Wed, 17 Jan 2024 01:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705453809; cv=none; b=O8KsZhPzw69oVqzzWhJ5Dn0oRYwYs12iARQ6o6FFlSKUSc0JSHA54I6WKMMJP0Gz7mdtVx6oLILyuxLPQanNovBy5ouimp0xzMVksn85SajZi/ik7j4tad8/S7GEuvGaJy0xfC6F6NF6KPhJyv5Sv1LWxauQX6cywYLgKbkzFmQ=
+	t=1705453811; cv=none; b=S4vv+dnZEtziUTxTCK+0bvqngYvL29LScwaWRVPdyaSBwk1Zonry5vbpm28+0eSHsfg9DJ8ywuzm889PKpBLdmImdEFMUbw5BDTWYOBW3Y+BuG+u3wRXIPEzmt8fMkEeqyeHeexpt/teuPnmWx1FJBYD+x1vgQl7fiunuUZ3yBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705453809; c=relaxed/simple;
-	bh=j6+RY7q13Y+Hd0Y8k8ykBta7KjT/Cne7jir5J+hsisM=;
+	s=arc-20240116; t=1705453811; c=relaxed/simple;
+	bh=pVMRQNIGeDoYkpfl9T3yFunV82OMlyMJoPN+08Vl4W8=;
 	h=DKIM-Signature:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding; b=tkzPFCaj+JAHIlC+wRCJgxWnCdAtJqP0HCBphn+UII25JZPKe88OmVSHEH04lC2HBeLehAhB/8pxd0bz5CON/hdWvi4ZXa8i3X0/R7G+cqkILL6h4kK4pEtp3RqGC/sIgMCVGUh60JtNKIP8BoKEtKfUWJjD3JngZ4yDAe5hNfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a0Z2lvui; arc=none smtp.client-ip=198.137.202.133
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding; b=Zkm3onX51+pjAGk0mjn6e8ftaOv2NxqRkF6RY3FzncS0JiAokkjb+r/eoI7KvsVJNQGBZyGoiKx+VPabS4BEfGljUM7FGggVDqJy/SiDFp8DcNMJJiugIQa89DpQvDsMqVc7LdAEZx1ib0rIrwZ+d5SBsw8I2adt059JNYwUWEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qyE3IUnN; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a0Z2lvui"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qyE3IUnN"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Sender:Reply-To:Content-ID:Content-Description;
-	bh=sGF6uJaEvsCufyOMbTpUXxplWqfaxnjoJpE5oP5VF1w=; b=a0Z2lvuiJXK7spdORx6yo8UPiY
-	S6VfPLuqkrMN1Rmy13cKrcTA9DQzC1NzIR0UCgmxeBtvg04Bw4MDskW4H5ehtawyqAWki0S4gk357
-	eGBfayq7HlV+RdUjQLa+uPqpi3lGP/r4dG9ASjuNUC1COkKNFD9SWP2TFNO4DpUfiJC3jieNojyA/
-	1TQy4S2RfrhwEACzbiuoyESQf4Habeh2SVi8uXxVvZvam441loTEbTNEtKtx5nnkijVXQOkcVwVuD
-	zvXOVqKfeJAN57bGmg4Ag+ZSIXGGWe+h5Ms73zTTge0Rq0MUvk+cQ2ToEGfZ22h7pAraFqV5JKGPg
-	JVkVIdxg==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=ClK/v0rLso9Z/3FXbTXuYzr4YDDul4TOjSdON3U06CE=; b=qyE3IUnNbpQg8QAafCaeH3WBy1
+	9fovh5jIgam0eMRhJ5/Hr5kJc7EgFDjXzY2o6yhAxzMpyKRtPQvFshWXZlGe+seDy/Tm9Q8NnMjTF
+	qbsYo4T5FFxNW7w4axUhZAZx0T6+duHkxkJHnb8ODMsflkj9gXE6PDx17kr/twLNz6n8d/V9J2nIX
+	uVyJOEHLarqkMtR85tzKBRAEdx8Li0kPxDTzaF+E3xc/BJA9M5/ZcCL76NpzgUDLNjULdbvsXRKsL
+	6PgENL3b9sYthOEFr+fqaFb4pgJhK3Z5G/71OPsbAaJ39eS+SAmLFtoMCBklt1f5KDCvBUCAk2vPk
+	K3Dos1jw==;
 Received: from [50.53.46.231] (helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPuRT-00E6zu-28;
-	Wed, 17 Jan 2024 01:10:07 +0000
+	id 1rPuRV-00E6zu-0M;
+	Wed, 17 Jan 2024 01:10:09 +0000
 From: Randy Dunlap <rdunlap@infradead.org>
 To: linux-kernel@vger.kernel.org
 Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Paul Walmsley <paul@pwsan.com>,
-	=?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
 	Tony Lindgren <tony@atomide.com>,
 	linux-omap@vger.kernel.org,
 	Russell King <linux@armlinux.org.uk>,
 	linux-arm-kernel@lists.infradead.org,
 	patches@armlinux.org.uk
-Subject: [PATCH 07/13] ARM: OMAP2+: hwmod: fix kernel-doc warnings
-Date: Tue, 16 Jan 2024 17:09:55 -0800
-Message-ID: <20240117011004.22669-8-rdunlap@infradead.org>
+Subject: [PATCH 12/13] ARM: OMAP2+: fix kernel-doc warnings
+Date: Tue, 16 Jan 2024 17:10:00 -0800
+Message-ID: <20240117011004.22669-13-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240117011004.22669-1-rdunlap@infradead.org>
 References: <20240117011004.22669-1-rdunlap@infradead.org>
@@ -53,21 +51,16 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use the correct function name in a kernel-doc comment.
-Use the correct function parameter names in kernel-doc comments.
-These changes prevent the following warnings:
+Use the correct function name in a comment.
+Use the correct function parameter name in a comment.
+These changes prevent the following kernel-doc warnings:
 
-omap_hwmod.c:910: warning: expecting prototype for _init_opt_clk(). Prototype was for _init_opt_clks() instead
-omap_hwmod.c:2311: warning: Excess function parameter 'n' description in '_init'
-omap_hwmod.c:2510: warning: Excess function parameter 'n' description in '_setup'
-omap_hwmod.c:3387: warning: Excess function parameter 'clockdomain' description in 'omap_hwmod_allocate_module'
+omap-secure.c:61: warning: expecting prototype for omap_sec_dispatcher(). Prototype was for omap_secure_dispatcher() instead
+omap-secure.c:191: warning: Excess function parameter 'clr_bits' description in 'rx51_secure_update_aux_cr'
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Paul Walmsley <paul@pwsan.com>
-Cc: "Benoît Cousson" <bcousson@baylibre.com>
 Cc: Tony Lindgren <tony@atomide.com>
 Cc: linux-omap@vger.kernel.org
 Cc: Russell King <linux@armlinux.org.uk>
@@ -76,47 +69,27 @@ Cc: patches@armlinux.org.uk
 ---
 KernelVersion: 0dd3ee31125508cd67f7e717
 
- arch/arm/mach-omap2/omap_hwmod.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm/mach-omap2/omap-secure.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff -- a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -900,7 +900,7 @@ static int _init_interface_clks(struct o
+diff -- a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
+--- a/arch/arm/mach-omap2/omap-secure.c
++++ b/arch/arm/mach-omap2/omap-secure.c
+@@ -47,7 +47,7 @@ static void __init omap_optee_init_check
  }
  
  /**
-- * _init_opt_clk - get a struct clk * for the hwmod's optional clocks
-+ * _init_opt_clks - get a struct clk * for the hwmod's optional clocks
-  * @oh: struct omap_hwmod *
-  *
-  * Called from _init_clocks().  Populates the @oh omap_hwmod_opt_clk
-@@ -2297,7 +2297,7 @@ static void __init parse_module_flags(st
+- * omap_sec_dispatcher: Routine to dispatch low power secure
++ * omap_secure_dispatcher - Routine to dispatch low power secure
+  * service routines
+  * @idx: The HAL API index
+  * @flag: The flag indicating criticality of operation
+@@ -183,7 +183,7 @@ static u32 rx51_secure_dispatcher(u32 id
  /**
-  * _init - initialize internal data for the hwmod @oh
-  * @oh: struct omap_hwmod *
-- * @n: (unused)
-+ * @data: (unused)
+  * rx51_secure_update_aux_cr: Routine to modify the contents of Auxiliary Control Register
+  *  @set_bits: bits to set in ACR
+- *  @clr_bits: bits to clear in ACR
++ *  @clear_bits: bits to clear in ACR
   *
-  * Look up the clocks and the address space used by the MPU to access
-  * registers belonging to the hwmod @oh.  @oh must already be
-@@ -2493,7 +2493,7 @@ static void _setup_postsetup(struct omap
- /**
-  * _setup - prepare IP block hardware for use
-  * @oh: struct omap_hwmod *
-- * @n: (unused, pass NULL)
-+ * @data: (unused, pass NULL)
-  *
-  * Configure the IP block represented by @oh.  This may include
-  * enabling the IP block, resetting it, and placing it into a
-@@ -3367,8 +3367,9 @@ static int omap_hwmod_check_module(struc
-  * omap_hwmod_allocate_module - allocate new module
-  * @dev: struct device
-  * @oh: module
-+ * @data: module data
-  * @sysc_fields: sysc register bits
-- * @clockdomain: clockdomain
-+ * @clkdm: clockdomain
-  * @rev_offs: revision register offset
-  * @sysc_offs: sysconfig register offset
-  * @syss_offs: sysstatus register offset
+  * Return the non-zero error value on failure.
+ */
