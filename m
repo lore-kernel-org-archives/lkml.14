@@ -1,115 +1,123 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D571D697
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 11:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7103C1DFC8
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 11:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705492068; cv=none; b=VESMJNMk945lEsdMD7gU6poSA6Jl2KH2zck8DUZdvbg+18cUuxY3vjhQGWZnKSqQTVsQYoM+tRbvS9MLgXUao+lJa7bQ86/GiC+AgAtqXTmmSXwUv1BrGf5f4WuNAH/ZRsWrY8k6qHrHYunf5Vob9M+xdfBcKAdoGkgMlGP0iXE=
+	t=1705492190; cv=none; b=r67ElquOeHRQrPU6p8kWq2pNDGF+KYIlyQtqImOmCIlSKAc0GNmrF6BGhzGeN+oWT+557vhQRPdPsCsrlK0zPbIZ07KnYNWmHf4VzoRYrFB1lSQww+3dJN7nEMAlrqIQaq7HiJgUCd1tYAjs0mtZZi8nMjlSy0BLPnxykRdavvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705492068; c=relaxed/simple;
-	bh=Nui8zu8V3ndYddOaheaEne/imbsV07hHxFFahrvH2Sg=;
+	s=arc-20240116; t=1705492190; c=relaxed/simple;
+	bh=kY5z25saFdI9aw7FeyrSL42gfsRrieLO5WzEyKAr6WE=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Date:
-	 Mime-Version:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	b=NIwt3HVCTMtoeUAR7mruhiK114qTKoCNUjL7qgNXj5v7bmDrYLzj+Vhdh6vN6chZgpY+KybmM7BcAw4utx9vSqXwDtAK+/6CXeg9IZwTJK09kZQcZr2Up62uvzQCTyn/f6zwm+RTbyAFCLgtdayvSwMlLc4LM47o7ZshtHB2+Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--badhri.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EwsqLbLw; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--badhri.bounces.google.com
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=Pd5kar+yqVAtEp+aN0nZoAajP3iuSb1oncsKZMNSUbJdHwFQ6ACU7VVhMLDki/69ZUD1VEzlpb44RwVZvrd/k0C6hAq5AQ2VIEd8JA313yKPHcMjM8DF0imJqmUDvHWVVhoun6UMX7glqyyW7R/15NVOO/v/afYwR3K7av4F6p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PZ8ySSrW; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EwsqLbLw"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-28bc9e1f43eso11160901a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 03:47:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZ8ySSrW"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50e80d40a41so13929336e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 03:49:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705492065; x=1706096865; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=W4MUqY7qziRkIoVCBAjHtlR0P63yXdlU8r3ZOJ0yHa4=;
-        b=EwsqLbLwrHC+6uec1zex3MPtORgYgWFtDZ6TP9jbVleJwmOBNJmyr49VRSFO3xKtje
-         tGYknPHymYsxUZuWNYD7QahGByjQ8hFrsaaTDJa3YLPSshOgLuHfvBgWdqMHRse4FPVW
-         mtm6xhudADl1OiO6tb1Xi1PSTh9mBlTQgWcxMHrCcERYI5QzBfS8G5YRc1yJcWAqP50Q
-         J4iVDzbXCiI73XO8EP4KFFC8WZ/hYrG8uaViZVgTSYV9hvt3Yb/YvoBvNqtvS42MYLQp
-         p0IOJ/qZpVVGdY4m8NoXLdWY5fm8P8R6ySNszP/bxDBtnjsjaOhM61w89c+A9ymhyN6a
-         LrzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705492065; x=1706096865;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=linaro.org; s=google; t=1705492186; x=1706096986; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W4MUqY7qziRkIoVCBAjHtlR0P63yXdlU8r3ZOJ0yHa4=;
-        b=Mn/6kjpNdHwqIfmV+vHV72hnOTajzyA2WvCtUgCQxan+oKTRXag+ri6sqyvfUENlIG
-         iAfrqIkMkMpNpI6R1wfnWGo3W0eI1rIu4qXRYB7GdiDjwQiV2A954Av2dCOdXpWqphhc
-         0mxhSIoH36FEwg19TZun9dQgOiFnsmwZlwtSYc9ssjIa1NRxOz+eRp4UF1A7Uu+dgDBB
-         AVyAAcBbgt12OYo8/gZp5RMzH8jUcTwIquWUxtBCckw9eoxXXm/h/HDJGVpQmgmLX44Y
-         AMPGfTgqaOUOPWci3HdvvCtEWHqM7vMuFW0NCVf2LV37wpXiDIB6I0PjFomXxOVs6qoJ
-         Hn+A==
-X-Gm-Message-State: AOJu0Ywq/HzkZlrGe0KrLqXgAixu5uqw8EW31lRA8pJXDMVvOcHlko4r
-	tZcbuZPZvIm3xTWQEtdw1R+6HL54kU9xNnEsZQ==
-X-Google-Smtp-Source: AGHT+IGbV5MXvSWEBDVzyqZxJqAc/AaSt2OI+WAdKyDsredw51/qTJldbeyuukgdzoqCm1Fy3ggzJuQQK8c=
-X-Received: from badhri.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:6442])
- (user=badhri job=sendgmr) by 2002:a17:90b:5292:b0:28b:d1dc:8836 with SMTP id
- si18-20020a17090b529200b0028bd1dc8836mr381586pjb.5.1705492065692; Wed, 17 Jan
- 2024 03:47:45 -0800 (PST)
-Date: Wed, 17 Jan 2024 11:47:42 +0000
+        bh=nxPSXuNJ8AUL8NOznZbrLecSi/2kLhBhAre/dygA9TY=;
+        b=PZ8ySSrWwGapa/1KMJlQT7mPhCQVdA1y/JSiwQiAdRM+qZ6dUoKYWUygKbyNzzjGk6
+         0qpVNL6ITvm3MzFEOB8df27RYtH4a6Jce4jMdqnXUQyHwt+625/vp4YMdr3JwgaPXybq
+         xPIe0A4CUMzouJvQKBqSy4D2GbSvV+6ifdZvesuRaxyyN60BKy3jyJHPcLJlzT7Nv+My
+         52CBt+GxfwIffBC1aQQuey3f8dLSIxrcpBwrSqk6dAcXOnZy1LVXCZ4ztAM0XUm0pNki
+         zCdXOitFYLvnJDsxf3Njh6OXMfStdh7aASe4AY7aPRFoG33monsH4hfs391bjTKAEQE2
+         plMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705492186; x=1706096986;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nxPSXuNJ8AUL8NOznZbrLecSi/2kLhBhAre/dygA9TY=;
+        b=Gxxy8nXoScvnQ1yE/02ZgNk0YvUx1Qk5T//I7kD1G165H+pMJ6zWR+KHp9ITcdFUSz
+         yeMbmzjtBtYWD3jHlzpmUoHY9ynAOTVAf5biI8jtwh136PwCq2c+kb2R2d50X3gh0ZVR
+         dBZdEaeSsuneqrgEfxAl134qSKJN0j/Hy84tAnRSIz+Pu3GfwaxfmLmT+jUKtLX1Dy6Z
+         ALe1xiqsT1sHuE+jff8XCy9J6txenJcoX8BZu1P2YZ8WT8UTK9jx+iziGXYm8XbiJyyb
+         45SB1pY4WmS5psZNtlkUzCqxoxgd/SU2utpMJUaXVo6CeOxjRqHnpNsi9OMcTPdp/kR0
+         nQcg==
+X-Gm-Message-State: AOJu0Yyud8FolHZPoUhtl2UizlY2MHBQKlENTA6HzB2rYy4gT4CTXt0P
+	TAyl+UbkuBw5AQAIDC1Un6Hnh4BCwN/RHjTTNW254V4GYIk=
+X-Google-Smtp-Source: AGHT+IHy6JI/EVohyYH/EoKmNFo6jqE894SOm3wbOmN+sb1Pd71wkWp/cNEanbOIXigvY3x3FzvuNw==
+X-Received: by 2002:a05:6512:3907:b0:50e:e888:2c3d with SMTP id a7-20020a056512390700b0050ee8882c3dmr3821308lfu.25.1705492186453;
+        Wed, 17 Jan 2024 03:49:46 -0800 (PST)
+Received: from [172.30.204.250] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id e8-20020a196748000000b0050ee78fd23esm228767lfj.262.2024.01.17.03.49.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jan 2024 03:49:46 -0800 (PST)
+Message-ID: <9b177f7b-8dbf-4193-9a70-94f7b80f0a87@linaro.org>
+Date: Wed, 17 Jan 2024 12:49:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240117114742.2587779-1-badhri@google.com>
-Subject: [PATCH v2] Revert "usb: typec: tcpm: fix cc role at port reset"
-From: Badhri Jagan Sridharan <badhri@google.com>
-To: gregkh@linuxfoundation.org, linux@roeck-us.net, 
-	heikki.krogerus@linux.intel.com
-Cc: kyletso@google.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rdbabiera@google.com, amitsd@google.com, 
-	stable@vger.kernel.org, frank.wang@rock-chips.com, 
-	Badhri Jagan Sridharan <badhri@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soc: qcom: rpmh-rsc: Enhance check for VREG in-flight
+ request
+To: Maulik Shah <quic_mkshah@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_eberman@quicinc.com, quic_collinsd@quicinc.com, quic_lsrao@quicinc.com
+References: <20240117-rpmh-rsc-fixes-v1-1-71ee4f8f72a4@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240117-rpmh-rsc-fixes-v1-1-71ee4f8f72a4@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This reverts commit 1e35f074399dece73d5df11847d4a0d7a6f49434.
 
-Given that ERROR_RECOVERY calls into PORT_RESET for Hi-Zing
-the CC pins, setting CC pins to default state during PORT_RESET
-breaks error recovery.
 
-4.5.2.2.2.1 ErrorRecovery State Requirements
-The port shall not drive VBUS or VCONN, and shall present a
-high-impedance to ground (above zOPEN) on its CC1 and CC2 pins.
+On 1/17/24 09:54, Maulik Shah wrote:
+> Each RPMh VREG accelerator resource has 3 or 4 contiguous 4-byte aligned
+> addresses associated with it. These control voltage, enable state, mode,
+> and in legacy targets, voltage headroom. The current in-flight request
+> checking logic looks for exact address matches. Requests for different
+> addresses of the same RPMh resource as thus not detected as in-flight.
+> 
+> Enhance the in-flight request check for VREG requests by ignoring the
+> address offset. This ensures that only one request is allowed to be
+> in-flight for a given VREG resource. This is needed to avoid scenarios
+> where request commands are carried out by RPMh hardware out-of-order
+> leading to LDO regulator over-current protection triggering.
+> 
+> Signed-off-by: Maulik Shah <quic_mkshah@quicinc.com>
+> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+> ---
+>   drivers/soc/qcom/rpmh-rsc.c | 20 +++++++++++++++++++-
+>   1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index a021dc71807b..5371d7e3090a 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -1,6 +1,7 @@
+>   // SPDX-License-Identifier: GPL-2.0
+>   /*
+>    * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
+>    */
+>   
+>   #define pr_fmt(fmt) "%s " fmt, KBUILD_MODNAME
+> @@ -91,6 +92,15 @@ enum {
+>   #define CMD_STATUS_ISSUED		BIT(8)
+>   #define CMD_STATUS_COMPL		BIT(16)
+>   
+> +#define ACCL_TYPE(addr)			((addr >> 16) & 0xF)
+> +#define VREG_ADDR(addr)			(addr & ~0xF)
 
-Hi-Zing the CC pins is the inteded behavior for PORT_RESET.
-CC pins are set to default state after tErrorRecovery in
-PORT_RESET_WAIT_OFF.
+It would be nice to add some #define FNAME GENMASK(x, y) accessed
+with FIELD_GET(FNAME, foobar), so that the code is a bit more
+self-explanatory
 
-4.5.2.2.2.2 Exiting From ErrorRecovery State
-A Sink shall transition to Unattached.SNK after tErrorRecovery.
-A Source shall transition to Unattached.SRC after tErrorRecovery.
-
-Cc: stable@vger.kernel.org
-Cc: Frank Wang <frank.wang@rock-chips.com>
-Fixes: 1e35f074399d ("usb: typec: tcpm: fix cc role at port reset")
-Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
----
- drivers/usb/typec/tcpm/tcpm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 5945e3a2b0f7..9d410718eaf4 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -4876,8 +4876,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		break;
- 	case PORT_RESET:
- 		tcpm_reset_port(port);
--		tcpm_set_cc(port, tcpm_default_state(port) == SNK_UNATTACHED ?
--			    TYPEC_CC_RD : tcpm_rp_cc(port));
-+		tcpm_set_cc(port, TYPEC_CC_OPEN);
- 		tcpm_set_state(port, PORT_RESET_WAIT_OFF,
- 			       PD_T_ERROR_RECOVERY);
- 		break;
-
-base-commit: 933bb7b878ddd0f8c094db45551a7daddf806e00
--- 
-2.43.0.429.g432eaa2c6b-goog
-
+Konrad
