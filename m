@@ -1,127 +1,131 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A8222325
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 15:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9144F219F9;
+	Wed, 17 Jan 2024 15:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705504404; cv=none; b=Nfyhgk+59UR5NH9nsjzxAJmbODB7tUvs1itYPYKqG5joEh6tt0uIv77abslLkoC5QYIjBoSJczsr+gAbm2z2AWLizgMJH3q3IZLtuyzSJ29QmFp+aIZTdrc2Olpb3TeEopg+/uxXXUZQhUMaW31OtcJ9azDGhjCld+tXR7ZzOtc=
+	t=1705504448; cv=none; b=JyV1EK5no2ZOgQiJqMygTCplTDhUYBVe9GLxSc+a3DZOGnjRzyosaRBsTsfsy1jP2uY6AFXvqKXKLzmG/LxMNpYtwcZQzc/sV+aUpNkwkQyZCNLG8n7SftCZAlF6g0NR8sA05CbSL/So3om8r+LGo0XAzm+LGPJid45AXHekgW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705504404; c=relaxed/simple;
-	bh=DoPT2kPCKFf6axbElxOjPA7nhJzePbYJNHAQ65rX3aQ=;
-	h=Received:Received:Received:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
-	 User-Agent:MIME-Version:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
-	 X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=iBhUTI1u6UjkkA83oj4jR1z0RX828S2BkrUwByMElLF0Z7mS0XA7vMNJ6O82GdeGuy3jv5eXbS35HWOf0Zh/RnfyeeBMOpXGPzZuIZR0BS7P9CwgufWrGqGqPR/vV9Tk7rQ6mAUyVL18Wu/FndaDjO6SsU5Y7W86MavET0ucTj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rQ7b0-0000IN-Ew; Wed, 17 Jan 2024 16:12:50 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rQ7ay-000UW3-1a; Wed, 17 Jan 2024 16:12:48 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rQ7ax-000C5F-36;
-	Wed, 17 Jan 2024 16:12:47 +0100
-Message-ID: <cf6440c08b8b7382e6693e18cdd29325aaea9cc9.camel@pengutronix.de>
-Subject: Re: [PATCH 11/14] phy: cadence-torrent: add suspend and resume
- support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy
- Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, Haojian
- Zhuang <haojian.zhuang@linaro.org>,  Vignesh R <vigneshr@ti.com>, Aaro
- Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod
- Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Tom
- Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,  Rob Herring
- <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com,  thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-Date: Wed, 17 Jan 2024 16:12:47 +0100
-In-Reply-To: <20240102-j7200-pcie-s2r-v1-11-84e55da52400@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
-	 <20240102-j7200-pcie-s2r-v1-11-84e55da52400@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1705504448; c=relaxed/simple;
+	bh=yIvwf7wNoEAO6MI1GMACRShu7NDGDDIrbkkSNppYfu0=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=M66eB1YPfuLMPfueCJrToN30NZYIzGfx02FQIno9EI37Z554ekok+ySLcVvtOG3at/V5MZiGWqh9P0XzHhIFDEumeWfuXCTW6ObDo9O/ZFOH756YOIhoB/O9VLNZfag5PhDb6DmltS4Pv+MmPOvoZXeVkDegoxayG8Cbs3rN2II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cb1HAWvl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cb1HAWvl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F7F4C433C7;
+	Wed, 17 Jan 2024 15:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705504448;
+	bh=yIvwf7wNoEAO6MI1GMACRShu7NDGDDIrbkkSNppYfu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cb1HAWvl9uQnhJ4NzockLmOP/ggSO4BrBLJ6Af/o6hVHVB+3b+P6gAqb7tGTrhs1p
+	 glATM1Y5uoveItyrKqBcmWfWSpGz59xmcVDxtxtKwvvIupC6yTFZBWC3lHnRdlQBr+
+	 /1qDSStK5xbccfGNFArI4GG0q5wRF4GsrrnlIRjhmAGUg2k1snPfZh0ybvXscE4eUc
+	 tnTNmuvtdHJCQ7aHt/8XZ4W222qK0hpzSrxQMA6gb1U1Wj901UtyNyMUisu30sFpBA
+	 l+PehzoM3sTpz1SvQGfE1eCWHLiXg03BTvEszKl/uDh6a4F2lJv0gfsL97jD0ICpRZ
+	 MGse9CWxPBCwQ==
+Date: Wed, 17 Jan 2024 15:14:04 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] dt-bindings: interrupt-controller: fsl, irqsteer:
+ Add power-domains
+Message-ID: <20240117-deceptive-knapsack-ba9885f7b35e@spud>
+References: <20240110094338.472304-1-alexander.stein@ew.tq-group.com>
+ <9230083.CDJkKcVGEf@steina-w>
+ <20240111-dullness-blooper-37644405c825@spud>
+ <13433324.uLZWGnKmhe@steina-w>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="T3KERiiprjwKtIAN"
+Content-Disposition: inline
+In-Reply-To: <13433324.uLZWGnKmhe@steina-w>
 
-Hi Thomas,
 
-On Mo, 2024-01-15 at 17:14 +0100, Thomas Richard wrote:
-> Add suspend and resume support.
-> The alread_configured flag is cleared during suspend stage to force the
-> phy initialization during the resume stage.
+--T3KERiiprjwKtIAN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 17, 2024 at 08:31:26AM +0100, Alexander Stein wrote:
+> Hi Conor,
 >=20
-> Based on the work of Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> Am Donnerstag, 11. Januar 2024, 17:49:03 CET schrieb Conor Dooley:
+> > On Thu, Jan 11, 2024 at 09:59:54AM +0100, Alexander Stein wrote:
+> > > Hi Conor,
+> > >=20
+> > > Am Mittwoch, 10. Januar 2024, 17:09:07 CET schrieb Conor Dooley:
+> > > > On Wed, Jan 10, 2024 at 10:43:38AM +0100, Alexander Stein wrote:
+> > > > > Some SoC like i.MX8QXP use a power-domain for this IP add it to t=
+he
+> > > > > supported proerties. Fixes the dtbs_check warning:
+> > > > > freescale/imx8qxp-tqma8xqp-mba8xx.dtb: irqsteer@56000000:
+> > > > > 'power-domains'
+> > > > >=20
+> > > > >  does not match any of the regexes: 'pinctrl-[0-9]+'
+> > > > >=20
+> > > > > from schema $id:
+> > > > > http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.y=
+aml#
+> > > > >=20
+> > > > > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> > > > > ---
+> > > > >=20
+> > > > > Notes:
+> > > > >     Please note that both the board dts and the DT node for irqst=
+eer
+> > > > >     being
+> > > > >     used, are still work-in-progress.
+> > > >=20
+> > > > The binding doesn't even support the imx8qxp's irqsteer yet, I think
+> > > > this should be added alongside support for that SoC. Am I missing
+> > > > something?
+> > >=20
+> > > I'm not sure if any additional SoC support is actually needed. 'fsl,i=
+mx-
+> > > irqsteer' is available and that's what I use in my WiP. Also imx8mp a=
+lso
+> > > just uses the generic compatible. Only imx8mq uses 'fsl,imx8m-irqstee=
+r'.
+> > Why doesn't it used "imx8mq-irqsteer"? Should it not have its own
+> > soc-specific compatible?
 >=20
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
->  drivers/phy/cadence/phy-cadence-torrent.c | 57 +++++++++++++++++++++++++=
-++++++
->  1 file changed, 57 insertions(+)
->=20
-> diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cade=
-nce/phy-cadence-torrent.c
-> index 70413fca5776..31b2594e5942 100644
-> --- a/drivers/phy/cadence/phy-cadence-torrent.c
-> +++ b/drivers/phy/cadence/phy-cadence-torrent.c
-> @@ -3006,6 +3006,62 @@ static void cdns_torrent_phy_remove(struct platfor=
-m_device *pdev)
-[...]
-> +static int cdns_torrent_phy_resume_noirq(struct device *dev)
-> +{
-> +	struct cdns_torrent_phy *cdns_phy =3D dev_get_drvdata(dev);
-> +	int node =3D cdns_phy->nsubnodes;
-> +	int ret, i;
-> +
-> +	ret =3D cdns_torrent_clk(cdns_phy);
-> +	if (ret)
-> +		goto clk_cleanup;
-> +
-> +	/* Enable APB */
-> +	reset_control_deassert(cdns_phy->apb_rst);
-> +
-> +	if (cdns_phy->nsubnodes > 1) {
-> +		ret =3D cdns_torrent_phy_configure_multilink(cdns_phy);
-> +		if (ret)
-> +			goto put_lnk_rst;
-> +	}
-> +
-> +	return 0;
-> +
-> +put_lnk_rst:
-> +	for (i =3D 0; i < node; i++)
-> +		reset_control_put(cdns_phy->phys[i].lnk_rst);
+> I would assume that "fsl,imx8m-irqsteer" is for the whole i.MX8M family. =
+I=20
+> don't think a soc-specific compatible is needed at all. On top I can't se=
+e any=20
+> difference between i.MX8M and i.MX8/i.MX8X.
+> If a soc-specific compatible is preferred, fine by me. But I don't expect=
+ any=20
+> difference despite imx8qxp/imx8qm requiring a power-domain.
 
-What is this intended to do? I expect this to explode in _remove, where
-the=C2=A0lnk_rst are put again. Should this be:
+Specific imx8mq compatibles exist for a wide range of peripherals, I'm
+not sure why the irqsteer would be an exception.
 
-		reset_control_assert(cdns_phy->phys[i].lnk_rst);
+Cheers,
+Conor.
 
-?
+--T3KERiiprjwKtIAN
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-regards
-Philipp
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZafuvAAKCRB4tDGHoIJi
+0ulnAP0fdOE5875N8QKNp6ri57q+vfJtAe+TtOeYTqrY+JryVAD+JzfzSt8WyMx4
+KJ1I3FC2Gdujite2qjcvvK5du14d0w0=
+=Efw8
+-----END PGP SIGNATURE-----
+
+--T3KERiiprjwKtIAN--
