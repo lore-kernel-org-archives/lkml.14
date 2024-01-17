@@ -1,178 +1,219 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D230F225DC;
-	Wed, 17 Jan 2024 16:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1311224D3
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705509461; cv=none; b=k9af4V0jGTTCyXH/sP07hWibvhoQOPMrAktbzrWb9y2MpBDZyCSsYjU99libZqX7nvy29OOQfr5021Tmj7jLI7AK5HW0frD1kGOolpbhC7QXq8OfpHRA4RRVpugnPR6ccvicy/QUHU1D5tsScN66GkFKeg6n3BHiK3xL2vG9aLo=
+	t=1705509584; cv=none; b=GKZhUHZD8l6IeXSwNf7eSjtXD2udkK5SoJIwA8PGTBRL9cin56bKKgdIRXTLcceUJJxGHJt9rMWL4unkMbPVoRltg/X4EIgLuhhGiVXHajgyyT6ZXFbhsZZN+GKmYRD98gi26NpdsiSQNfPCiz1YE7E89DEvLplHyGbHUvOZLak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705509461; c=relaxed/simple;
-	bh=pl8tjrmKOS5lUY6LjsQDjtwjBq2zjZttjuXZvCOf3I0=;
-	h=Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
-	 In-Reply-To:References:Organization:X-Mailer:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-Originating-IP:
-	 X-ClientProxiedBy; b=R9vCEEe5DyJE6i+lkbFLUDwS3rV83AnFF6T2EKgfLek83EahOalJZntWuLS7CkVovD1p6qzme0lE26WgWxZkuDF71X3bLwYDAH7iR1Y0qi03/arE/LmMM/PVEEY39jEQSvyjQ68d8TSN4MYjU3pgLeVauYf98h2QjveeA2aoJlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TFWgX6NMqz6J9bQ;
-	Thu, 18 Jan 2024 00:34:48 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 37BE2140AA7;
-	Thu, 18 Jan 2024 00:37:29 +0800 (CST)
-Received: from localhost (10.48.153.213) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 17 Jan
- 2024 16:37:28 +0000
-Date: Wed, 17 Jan 2024 16:37:25 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ceclan Dumitru <mitrutzceclan@gmail.com>
-CC: David Lechner <dlechner@baylibre.com>, <linus.walleij@linaro.org>,
-	<brgl@bgdev.pl>, <andy@kernel.org>, <linux-gpio@vger.kernel.org>, "Lars-Peter
- Clausen" <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
-	<chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
- =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
-	<mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
-	<hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 1/2] dt-bindings: adc: add AD7173
-Message-ID: <20240117163725.00003981@Huawei.com>
-In-Reply-To: <18c239af-71ee-49d8-878e-e1770c3e2d46@gmail.com>
-References: <20231220104810.3179-1-mitrutzceclan@gmail.com>
-	<CAMknhBELp3NQEHE16gHhC96bttoafQOGxx3a_dLZn9o2Ru7y9g@mail.gmail.com>
-	<20240116163003.0000039d@Huawei.com>
-	<18c239af-71ee-49d8-878e-e1770c3e2d46@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1705509584; c=relaxed/simple;
+	bh=M3t4lykNqYhmCjQO4zKq31KhD0/95qJoM+feR8YYTMs=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To:User-Agent:
+	 X-Scanned-By; b=BvuFCEWezHYB73SFAE4TjKJ1PgWI2T1xX7gEDlRehIyw2hz3ciwpWsT3Qy85bEfh8DSeKf4BQOKeFG61EXA+biHM/nvYVt0ze+gpiX/HUVBpRCLuelNHlNIgM3pSRWIMbtUHVCrIN4vrGONxKrl5zr14KHh1mrdWjx5Y1EsZYgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EqqdPV2S; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EqqdPV2S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705509582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9MEKaPLuC4dWjyeAAjRSNgqo7o077s9TgRJfiIfemoI=;
+	b=EqqdPV2SILocvrCJOjjGvYFBEYon/AWGInUeQD1r2FD4592EF7RdGYgkGQ5pd2V5QTPzu0
+	/TmfVmORiJCIlezG1UnS/8h9PeByj2niLp6XWety4Gfhe4TCtF8i3jZYad9nNG751j+m+o
+	1Q4g0DzhskdvxAFe3RaNTK6903yhXs4=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-389-a8vvGCybN5WY-ilt55kkNA-1; Wed,
+ 17 Jan 2024 11:39:36 -0500
+X-MC-Unique: a8vvGCybN5WY-ilt55kkNA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 921CE1C29EC6;
+	Wed, 17 Jan 2024 16:39:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.121])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 8BF4E3C25;
+	Wed, 17 Jan 2024 16:39:22 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 17 Jan 2024 17:38:18 +0100 (CET)
+Date: Wed, 17 Jan 2024 17:38:09 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Kees Cook <keescook@chromium.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Serge Hallyn <serge@hallyn.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Yafang Shao <laoar.shao@gmail.com>, Helge Deller <deller@gmx.de>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Adrian Reber <areber@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+	tiozhang <tiozhang@didiglobal.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Paulo Alcantara (SUSE)" <pc@manguebit.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	YueHaibing <yuehaibing@huawei.com>,
+	Paul Moore <paul@paul-moore.com>, Aleksa Sarai <cyphar@cyphar.com>,
+	Stefan Roesch <shr@devkernel.io>, Chao Yu <chao@kernel.org>,
+	xu xin <xu.xin16@zte.com.cn>, Jeff Layton <jlayton@kernel.org>,
+	Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>,
+	Dave Chinner <dchinner@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	Zheng Yejian <zhengyejian1@huawei.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	David Windsor <dwindsor@gmail.com>,
+	Mateusz Guzik <mjguzik@gmail.com>, Ard Biesheuvel <ardb@kernel.org>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Hans Liljestrand <ishkamiel@gmail.com>
+Subject: Re: [PATCH v14] exec: Fix dead-lock in de_thread with ptrace_attach
+Message-ID: <20240117163739.GA32526@redhat.com>
+References: <AM8PR10MB470801D01A0CF24BC32C25E7E40E9@AM8PR10MB4708.EURPRD10.PROD.OUTLOOK.COM>
+ <AM8PR10MB470875B22B4C08BEAEC3F77FE4169@AM8PR10MB4708.EURPRD10.PROD.OUTLOOK.COM>
+ <AS8P193MB1285DF698D7524EDE22ABFA1E4A1A@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+ <AS8P193MB12851AC1F862B97FCE9B3F4FE4AAA@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+ <AS8P193MB1285FF445694F149B70B21D0E46C2@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+ <20240116152210.GA12342@redhat.com>
+ <AS8P193MB128538BC3833E654F56DA801E4722@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8P193MB128538BC3833E654F56DA801E4722@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Wed, 17 Jan 2024 14:43:21 +0200
-Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
-
-> On 1/16/24 18:30, Jonathan Cameron wrote:
-> > On Mon, 15 Jan 2024 15:53:39 -0600
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >  =20
-> >> On Wed, Dec 20, 2023 at 4:48=E2=80=AFAM Dumitru Ceclan <mitrutzceclan@=
-gmail.com> wrote: =20
->=20
-> ...
->=20
-> >> Sorry for the late reply as I see this has been applied already but...=
- =20
-> > We have plenty of time.  Rather than dropping the ad7173 from my tree,
-> > I'd prefer to see additional patches on top to tidy up whatever
-> > makes sense from David's feedback.
-> >  =20
-> Alright then.
->=20
-> ...
->=20
+On 01/17, Bernd Edlinger wrote:
+>
 > >>
-> >> As discussed in v8 [1] it is not clear what signal this is. Based on
-> >> that discussion, I'm assuming the RDY signal, but how would bindings
-> >> consumers know that without a description since it is not the only
-> >> digital output signal of the chip? And why the ERROR signal was
-> >> omitted here was never addressed AFAICT.
-> >>
-> >> [1]: https://lore.kernel.org/linux-iio/20231217135007.3e5d959a@jic23-h=
-uawei/ =20
-> >=20
-> > I'd forgotten about that.  Adding interrupt-names would be the easiest
-> > way to resolve this.
-> >  =20
->=20
-> I'll add this, but my curiosity for the long run is: How should
-> differences between what bindings include and what drivers support
-> should be managed and documented?
+> >> The problem happens when a tracer tries to ptrace_attach
+> >> to a multi-threaded process, that does an execve in one of
+> >> the threads at the same time, without doing that in a forked
+> >> sub-process.  That means: There is a race condition, when one
+> >> or more of the threads are already ptraced, but the thread
+> >> that invoked the execve is not yet traced.  Now in this
+> >> case the execve locks the cred_guard_mutex and waits for
+> >> de_thread to complete.  But that waits for the traced
+> >> sibling threads to exit, and those have to wait for the
+> >> tracer to receive the exit signal, but the tracer cannot
+> >> call wait right now, because it is waiting for the ptrace
+> >> call to complete, and this never does not happen.
+> >> The traced process and the tracer are now in a deadlock
+> >> situation, and can only be killed by a fatal signal.
+> >
+> > This looks very confusing to me. And even misleading.
+> >
+> > So IIRC the problem is "simple".
+> >
+> > de_thread() sleeps with cred_guard_mutex waiting for other threads to
+> > exit and pass release_task/__exit_signal.
+> >
+> > If one of the sub-threads is traced, debugger should do ptrace_detach()
+> > or wait() to release this tracee, the killed tracee won't autoreap.
+> >
+>
+> Yes. but the tracer has to do its job, and that is ptrace_attach the
+> remaining treads, it does not know that it would avoid a dead-lock
+> when it calls wait(), instead of ptrace_attach.  It does not know
+> that the tracee has just called execve in one of the not yet traced
+> threads.
 
-Drivers almost always support a subset of functionality of the device.
-This isn't much different.  The driver 'should' use interrupt-names
-but it doesn't need to support all the things that the binding says should
-be in there.
+Hmm. I don't understand you.
 
-Sometimes we document things in a driver, but there isn't any obligation to
-do so and those docs are often out of date.
+I agree we have a problem which should be fixed. Just the changelog
+looks confusing to me, imo it doesn't explain the race/problem clearly.
 
->=20
-> ...
->=20
-> >>> +
-> >>> +  refin-supply:
-> >>> +    description: external reference supply, can be used as reference=
- for conversion.   =20
-> >>
-> >> If I'm understanding correctly, this represents both voltage inputs
-> >> REF+ and REF-, correct? The datasheet says "Reference Input Negative
-> >> Terminal. REF=E2=88=92 can span from AVSS to AVDD1 =E2=88=92 1 V". It =
-seems like they
-> >> should be separate supplies in case REF- is non-zero. Otherwise, how
-> >> can we know what voltage it is? (same comment applies to refin2.) =20
-> >=20
-> > Agreed, in this case these are directly used as references (we recently
-> > had another driver that could take a wide range of negative and positive
-> > inputs but in that case an internal reference was generated that didn't
-> > made it not matter exactly what was being supplied.  Not true here thou=
-gh!
-> >  =20
-> Wouldn't it be alright to specify that the voltage specified here should
-> be the actual difference (REF+)-(REF-)?
+> > Now. If debugger tries to take the same cred_guard_mutex before
+> > detach/wait we have a deadlock. This is not specific to ptrace_attach(),
+> > proc_pid_attr_write() takes this lock too.
+> >
+> > Right? Or are there other issues?
+> >
+>
+> No, proc_pid_attr_write has no problem if it waits for cred_guard_mutex,
+> because it is only called from one of the sibling threads,
 
-How do you establish the offset to apply to single ended channels if you do=
-n't
-know the value of REF- (relative to local ground)?
+OK, thanks, I was wrong. I forgot about "A task may only write its own attributes".
+So yes, ptrace_attach() is the only source of problematic mutex_lock() today.
+There were more in the past.
 
-So no - as the device supports single ended channels the difference isn't
-enough information.  It would probably be fine to do as you say if it
-were a device with only differential channels where all that matters is
-the scaling.
+> >> +		if (unlikely(t->ptrace)
+> >> +		    && (t != tsk->group_leader || !t->exit_state))
+> >> +			unsafe_execve_in_progress = true;
+> >
+> > The !t->exit_state is not right... This sub-thread can already be a zombie
+> > with ->exit_state != 0 but see above, it won't be reaped until the debugger
+> > does wait().
+> >
+>
+> I dont think so.
+> de_thread() handles the group_leader different than normal threads.
 
->=20
-> ...
->=20
-> >>> +required:
-> >>> +  - compatible
-> >>> +  - reg
-> >>> +  - interrupts   =20
-> >>
-> >> Why are interrupts required? What if the pin is not connected?
-> >> =20
-> > Ah. I clearly failed to review this one closely enough.
-> >=20
-> > Absolutely agree that interrupts should never be required.
-> > No need for the driver to work if they aren't, but the binding
-> > shouldn't require them!
-> >=20
-> > Jonathan
-> >  =20
->=20
-> To make sure that I understand, the driver will not probe without
-> interrupts, but it is alright to make then optional in the bindings?
+I don't follow...
 
-Yes - it is fine for a driver to only support a subset of functionality
-and fail to probe if that subset isn't what the hardware enables.
+I didn't say that t is a group leader. I said it can be a zombie sub-thread
+with ->exit_state != 0.
 
->=20
-> This is in the case that someone will want to use this binding and
-> implement reading with polling?
+> That means normal threads have to wait for being released from the zombie
+> state by the tracer:
+> sig->notify_count > 0, and de_thread is woken up by __exit_signal
 
-Yes.
+That is what I said before. Debugger should release a zombie sub-thread,
+it won't do __exit_signal() on its own.
 
-J
+> >> +	if (unlikely(unsafe_execve_in_progress)) {
+> >> +		spin_unlock_irq(lock);
+> >> +		sig->exec_bprm = bprm;
+> >> +		mutex_unlock(&sig->cred_guard_mutex);
+> >> +		spin_lock_irq(lock);
+> >
+> > I don't understand why do we need to unlock and lock siglock here...
+>
+> That is just a precaution because I did want to release the
+> mutexes exactly in the reverse order as they were acquired.
+
+To me this adds the unnecessary complication.
+
+> > But my main question is why do we need the unsafe_execve_in_progress boolean.
+> > If this patch is correct and de_thread() can drop and re-acquire cread_guard_mutex
+> > when one of the threads is traced, then why can't we do this unconditionally ?
+> >
+>
+> I just wanted to keep the impact of the change as small as possible,
+
+But the unsafe_execve_in_progress logic increases the impact and complicates
+the patch.
+
+I think the fix should be as simple as possible. (to be honest, right now
+I don't think this is a right approach).
+
+> including
+> possible performance degradation due to double checking of credentials.
+
+Not sure I understand, but you can add the performance improvements later.
+Not to mention that this should be justified, and the for_other_threads()
+loop added by this patch into de_thread() is not nice performance-wise.
+
+Oleg.
 
