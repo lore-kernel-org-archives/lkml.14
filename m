@@ -1,91 +1,126 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8260121A0A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 15:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E8321A0A;
+	Wed, 17 Jan 2024 15:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705506651; cv=none; b=sv9L0B790ivGZHPlMp2GUsUDoWoNlYxgFQULFOsqZBhXDWDSBNO9S+JQwwl8Mft8UXT9b4shkwW4PIbkmiC13W66VTbBr4AjnK48D1rcwdpkOO965JkEM0INfMtMvFz16SghppClErMHMfTYQ2+HodP2I1Q0rVK0ZI9xoNbJn38=
+	t=1705506813; cv=none; b=A9/0tpIF1apruAm0b8ZTb2HW413hXBkJE6zwRy1QeicqZF89u4ShDFzVc4WpI6eII7nKZYTzeYRGgZUlbsEtHpsXzQhlZYjQnHAzvYxTmJbjdhhG1lUoZjjbdK1GVDGmnL0H61OZ4ZW0oHc1tOcs+6E9jWMdOGCXlpLB5K+SHEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705506651; c=relaxed/simple;
-	bh=xSYpslgPqu0ADS1KRiqylr9PV+jhOYwPpXOXvMIDDhg=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=q31Lrxv1eAoFPfLgdnI+05qf5QhryFqxBuQFLiXQw0HGOzlmzkuLlNrMNqevK2a0cJ1sW4tpj4bsOaSu0tDW4Z1WCKaqe5s8nUoXl9Gta9UMkvo0vR6SpKSqCyKWIdhIOfsPg4q3jz6hJ4qdYFrd79Bme8f4gUFlROz0dq2PmUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ehvX45cL; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705506813; c=relaxed/simple;
+	bh=RN/TRAV+0bm5AnELjwjgmIYkKjf1u9x2nlP5hpU2ebs=;
+	h=Received:DKIM-Signature:Received:Received:Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-EXCLAIMER-MD-CONFIG; b=EVhH3G5SEckwbCHojO0hWFvEcw70CjI/MmwPZm1O9v9AMvYfrazyYxfEYmAXvHQO5zBNNfNxM2sVNsAT9mGQmxYYfWuws1xSx6TGVMFQedWEHuQ2exEkWQiJpqCHVjPrRcvX51pEWC2c0zG/7zibxg82CrGfCokYeUh1zDFNhME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PcSv0otR; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehvX45cL"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-557678c50feso2860705a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:50:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705506648; x=1706111448; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xSYpslgPqu0ADS1KRiqylr9PV+jhOYwPpXOXvMIDDhg=;
-        b=ehvX45cLWKuXJy+hA0VE10qA2/2w4kq1EXADRNUMJJ5ANDd+M36bdVs2EgV7sw4XNA
-         qXxH4asul2HGqiIT9XOmwI6WRKvJTfpVNDxFb385DrJzWPt8Y3rernVInFvRbbD47jPj
-         cvycaaDUN9xiEEDH5XVFv9aWi+9SN31/lVSk/ahoVNyb5L/l6JadBOkUuPOWdWiwoeA3
-         HzMBzN3HMjsn3FKuml5Qi/E2GGHnh4mfsZu0zGeDb5hVs5tN/Bwgplo8NVWyxSXbwwEo
-         PZ06YB+Kl08zBbvrpEGNrJt3QGHKFRLr0cxICCOhPstTMfgOaL9S6gXwbYqpkSkn/FCb
-         LPyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705506648; x=1706111448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xSYpslgPqu0ADS1KRiqylr9PV+jhOYwPpXOXvMIDDhg=;
-        b=WFuY31Yqh+NXGLP+XVshZwNRHMoA4mkzc/ybILhxslNwI3j7vr9Dy/cuza5bxYGHeo
-         e0cnDLo55SGpk+kdlKgAqpwkucGsfrzkfNVkWBmc3WfAAsNVA8li7OT8nRZ4V6ZH8yke
-         gmLQj08shTz1RYAFo+KMY9LrhcHvCaR5WgRD5Ylqfpn2EeWyIFrBTEGj6lTKJkhSVUlZ
-         3y3gusIDKjUavO4IN8pj2bcXd0r5WyKZQ/jxSnPbib3QXnjQlBFr6IkG9NHwTzySytp5
-         zxDcdQ/IeooOnrHZqbYCebMRAr0fhETSdySox17pz0A/t5aaavSaPSadPvtKFpP0kH4w
-         3Olg==
-X-Gm-Message-State: AOJu0Yzeuo3wz2h7PgTwOWjUm9UVbJZ3Bhw+f20uTCxO5ohm/ia+UnPU
-	1Zbtp64e4EMa2YjJ64MhxCJwojuuXhCod+c3gNg=
-X-Google-Smtp-Source: AGHT+IH+mfJ19/KktxfluLxfE5mB/RmmM9caU/WPO9DJMztL3Aa/mXpZ2vFGvUOTe6Z4CcxTCWzNBMhYWWpR3qysM6U=
-X-Received: by 2002:a05:6402:22d3:b0:559:c036:8456 with SMTP id
- dm19-20020a05640222d300b00559c0368456mr2375075edb.4.1705506647486; Wed, 17
- Jan 2024 07:50:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PcSv0otR"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40HFqhek107121;
+	Wed, 17 Jan 2024 09:52:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1705506764;
+	bh=UqoXHpuOsyXayN31wfG4/f1gx1ZHV/XtpeqO3uEEUxI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=PcSv0otRf22cpnWL4ex8dgpTo4kYPE2YfM2FC7uA12j/9tyFYkEgZ2AhY9W2/eqIL
+	 UCcCKSNc2rAQMq34hF8aMVsEK2gtD8n3zgq1B2X+uumQ7rbozLTXHpMAbIth4PU623
+	 ZP/avpnMlwdRxFKiL0uRf9F+iQpxHCSIF8/AviO8=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40HFqh7o004410
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 17 Jan 2024 09:52:43 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 17
+ Jan 2024 09:52:43 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 17 Jan 2024 09:52:43 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40HFqgSs087030;
+	Wed, 17 Jan 2024 09:52:42 -0600
+Message-ID: <55efd488-c6a0-4dca-baea-1fa93d13dd17@ti.com>
+Date: Wed, 17 Jan 2024 09:52:41 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+uifjNcZbb6=9-o9_cWCMyXRFZPHhyvWS2mys-YhfP9gaJ75w@mail.gmail.com>
- <97843013-7e06-449c-8418-3890657b2e26@redhat.com>
-In-Reply-To: <97843013-7e06-449c-8418-3890657b2e26@redhat.com>
-From: Karim Manaouil <kmanaouil.dev@gmail.com>
-Date: Wed, 17 Jan 2024 15:50:35 +0000
-Message-ID: <CA+uifjNw0W=EaUHbhq_CN8uOj0H_Yfu9JKSL1=EH6dnYkN3-ng@mail.gmail.com>
-Subject: Re: Debug: mm: meminfo reports 222GiB of AnonPages but sum of RSS in
- ps is barely 400MiB
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/11] ARM: dts: DRA7xx: Add device tree entry for SGX GPU
+To: Tony Lindgren <tony@atomide.com>
+CC: Frank Binns <frank.binns@imgtec.com>,
+        Matt Coster
+	<matt.coster@imgtec.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Adam
+ Ford <aford173@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?=
+	<bcousson@baylibre.com>,
+        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>, Paul Cercueil
+	<paul@crapouillou.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <linux-omap@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>
+References: <20240109171950.31010-1-afd@ti.com>
+ <20240109171950.31010-9-afd@ti.com> <20240110082924.GA5185@atomide.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20240110082924.GA5185@atomide.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed, Jan 17, 2024 at 2:15=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
+On 1/10/24 2:29 AM, Tony Lindgren wrote:
+> * Andrew Davis <afd@ti.com> [240109 17:20]:
+>> --- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+>> @@ -850,12 +850,19 @@ target-module@56000000 {
+>>   					<SYSC_IDLE_SMART>;
+>>   			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+>>   					<SYSC_IDLE_NO>,
+>> -					<SYSC_IDLE_SMART>;
+>> +					<SYSC_IDLE_SMART>,
+>> +					<SYSC_IDLE_SMART_WKUP>;
+> 
+> You probably checked this already.. But just in case, can you please
+> confirm this is intentional. The documentation lists the smart wakeup
+> capability bit as reserved for dra7, maybe the documentation is wrong.
+> 
 
-> Maybe we have something call mmget(mm) but never mmput(mm)? Are you
-> running any OOT drivers or "special" hw?
+It was an intentional change, although I'm not sure it is correct :)
 
-That's exactly the reason! I was writing some code to count the number
-of empty page tables in the system
-at any given point in time. I called get_task_mm(), but I forgot to
-call mmput() after that, and thus
-the memory was never released.
+This is how we had it in our "evil vendor tree" for years (back when it
+was hwmod based), so when converting these nodes to use "ti,sysc" I noticed
+this bit was set, but as you point out the documentation disagrees.
 
-I should have double checked, but thanks to your remark I immediately
-recognised the issue and fixed it
-(maybe I should have posted the code as well and mentioned that in my
-original email).
+I'd rather go with what has worked before, but it doesn't seem to
+break anything either way, so we could also break this change out into
+its own patch if you would prefer.
 
---
-Cheer
-Karim
+Andrew
+
+> Regards,
+> 
+> Tony
+> 
