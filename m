@@ -1,106 +1,79 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E78020305
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8162033F;
+	Wed, 17 Jan 2024 14:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705501565; cv=none; b=GzESjTBA43ZyYL0+B/ycGKPwNqdRFkjR8SRzHtLwAdBigBSXN8019uiDsxFpKII4Wrs0Q9O4nOrOTc4ibiCAXffL+M220M0ten/QC1XKiu45PK/k/AYuwiI+6ZZQ1mCrWH46StLaqi3vSCX0xeD1AK/1lZsFIfH9u3ZlYx1OnaQ=
+	t=1705501727; cv=none; b=qsmgo0NQIZ9VzLYoKSf00qE+lzlFD0C6cnT60vDho+RG6rKWnxT+O0gyPFoJG2QozTgLiHsmvDvTp9yAJThyFVflqceHCpsJRUO76NxowmWTboAAM27nfk4b15G83Ku/57RKtOFhWCS6ASEBLhObT2C8qr98qzfhu+Xo+xnHfyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705501565; c=relaxed/simple;
-	bh=IZH1c4qN0Nyx3Qk86dKABx77jYlSji40Miq7xcjuCTY=;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:Subject:
+	s=arc-20240116; t=1705501727; c=relaxed/simple;
+	bh=6a4mlGIcQJ+G6+bnDWd0rmwXDm0BP7zkGsQfwd6vtiU=;
+	h=Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
 	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-MBO-RS-META:X-MBO-RS-ID; b=aCsh10J+i2JxIOja5I+BnEsxdO2+z4DG4kUmFnFTOVd1nXaAoLtPf5cDg4Vx5RTevK+cS8UdIt0kL1l6Sdk4sKteGY1s+tM2k46wSOKuWU3LN73QzwyJUCIRtGh0lsIrili3K6tXDzCS3gKvRuGVUKOgMi2mTV0RAclsaNflCXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=iTM2+qGk; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="iTM2+qGk"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4TFSfX3cp8z9scX;
-	Wed, 17 Jan 2024 15:18:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1705501124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/04+AUA96JyRGSg7FmQ1Co1hzmApsEtK4+LDUq5qS9I=;
-	b=iTM2+qGklqomZrkR34x42hazC6kJ+uog03ScY7x+OSQ+DV8q006tTFpvfLKKULMIBRiWqv
-	27EL7iDbCy3fj06IcW2/nA9snnoZ1mVGwxb0sjVItvJfcbcbrPRzmIIMsCtIUdJHx1utqX
-	iPGZOTjyAMDlsbbhtmX4sji/Tq5cLiwpnleaR9feX9p53K5sKdyyjMYvrIxhWLdTr/XZMS
-	f8kEpLtVb4oZWUy2ygT7u/DRkJRsvxCvHxSRknEkc41Hao6kXYMWU9+9+UEiHAcBWDYEJI
-	etDj9lIp3kF4OjJdtUQlYD0Oy4YxpA22IM/DhB6dTh7upk9IVj0HCzWbAKpyHg==
-Message-ID: <48824a5d-223a-4ad2-b198-5fcb75a9cfde@mailbox.org>
-Date: Wed, 17 Jan 2024 15:18:41 +0100
+	 Content-Transfer-Encoding:X-bounce-key:X-HE-SMSGID; b=gXJ0zISElznFUK8K7jFAMM9xo8aKFMuHrAV0GQO7VFgj27IPakmNSbqIMbX6RimvbhFhKPr1KiBJCrSSClD49kOvW+aYF8Yxp90fmGE4ENTRd+zMZzjR7TZeI5kl8sW//yy6qtBrTJnjp/7KKbcKCHckMJHeunCfvY366KA6obk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rQ6u1-0007yx-EK; Wed, 17 Jan 2024 15:28:25 +0100
+Message-ID: <7c9a417c-920b-4463-966f-250da3697bbf@leemhuis.info>
+Date: Wed, 17 Jan 2024 15:28:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] drm/atomic: Allow drivers to write their own plane
- check for async
-Content-Language: de-CH-frami, en-CA
-To: Xaver Hugl <xaver.hugl@gmail.com>, Pekka Paalanen <ppaalanen@gmail.com>
-Cc: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, daniel@ffwll.ch,
- =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <maraeo@gmail.com>,
- linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, kernel-dev@igalia.com,
- alexander.deucher@amd.com, Joshua Ashton <joshua@froggi.es>,
- Dave Airlie <airlied@gmail.com>, christian.koenig@amd.com
-References: <20240116045159.1015510-1-andrealmeid@igalia.com>
- <20240116114522.5b83d8b6@eldfell>
- <a6099681-1ae9-48ef-99bc-d3c919007413@igalia.com>
- <20240116151414.10b831e6@eldfell>
- <47c6866a-34d6-48b1-a977-d21c48d991dc@igalia.com>
- <CAFZQkGyOQ5Tfu++-cHqgZ9NOJxqxm8cAF5XT18LmisuPAUbXAg@mail.gmail.com>
- <20240117105509.1984837f@eldfell>
- <CAFZQkGzite-CZoJcV80kNPe==OWFZa_cR1x3QRKuLd=HdOFw-A@mail.gmail.com>
-From: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>
-In-Reply-To: <CAFZQkGzite-CZoJcV80kNPe==OWFZa_cR1x3QRKuLd=HdOFw-A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/fair: Fix frequency selection for non invariant
+ case
+Content-Language: en-US, de-DE
+To: Ingo Molnar <mingo@kernel.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, wkarny@gmail.com,
+ torvalds@linux-foundation.org, qyousef@layalina.io, tglx@linutronix.de,
+ rafael@kernel.org, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+References: <20240114183600.135316-1-vincent.guittot@linaro.org>
+ <ZaZTlcFZaQefnf1v@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <ZaZTlcFZaQefnf1v@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: pgtcyajtxp3yqt1pxr8ffrrr7u18ejhe
-X-MBO-RS-ID: f6b5e7383e43717d63d
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705501725;80889283;
+X-HE-SMSGID: 1rQ6u1-0007yx-EK
 
-On 2024-01-17 13:57, Xaver Hugl wrote:
-> Am Mi., 17. Jan. 2024 um 09:55 Uhr schrieb Pekka Paalanen <ppaalanen@gmail.com>:
->> Is it important enough to be special-cased, e.g. to be always allowed
->> with async commits?
+On 16.01.24 10:59, Ingo Molnar wrote:
 > 
-> I thought so, and sent a patch to dri-devel to make it happen, but
-> there are some
-> concerns about untested driver paths.
-> https://lists.freedesktop.org/archives/dri-devel/2024-January/437511.html
+> * Vincent Guittot <vincent.guittot@linaro.org> wrote:
 > 
->> Now that I think of it, if userspace needs to wait for the in-fence
->> itself before kicking KMS async, that would defeat much of the async's
->> point, right? And cases where in-fence is not necessary are so rare
->> they might not even exist?
->>
->> So if driver/hardware cannot do IN_FENCE_FD with async, is there any
->> use of supporting async to begin with?
-> 
-> KWin never commits a buffer where IN_FENCE_FD would actually delay the
-> pageflip; it's really only used to disable implicit sync, as there's some edge
-> cases where it can wrongly delay the pageflip. The waiting for buffers to become
-> readable on the compositor side isn't really significant in terms of latency.
-> 
-> If hardware doesn't support IN_FENCE_FD with async commits, checking if the
-> fence is already signaled at commit time would thus still make things work, at
-> least for KWin.
+>> When frequency invariance is not enabled, get_capacity_ref_freq(policy)
+>> returns the current frequency and the performance margin applied by
+>> map_util_perf(), enabled the utilization to go above the maximum compute
+>> capacity and to select a higher frequency than the current one.
+>> [...]
+>> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Closes: https://lore.kernel.org/lkml/CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com/
+>> Reported-by: Wyes Karny <wkarny@gmail.com>
+>> Closes: https://lore.kernel.org/lkml/20240114091240.xzdvqk75ifgfj5yx@wyes-pc/
 
-That's how IN_FENCE_FD (and implicit sync) is handled anyway, in common code: It waits for all fences to signal before calling into the driver to commit the atomic commit.
+Thx for resolving this everyone. Allow me a quick question:
 
-I can't see why this wouldn't work with async commits, the same as with synchronous ones, with any driver.
+I noticed the two Closes: tags above are missing in the actual commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=e37617c8e53a1f7fcba6d5e1041f4fd8a2425c27
 
+Is there a overeager script here that removes them when it shouldn't?
 
--- 
-Earthling Michel Dänzer            |                  https://redhat.com
-Libre software enthusiast          |         Mesa and Xwayland developer
+Just asking, because the lack of these tags makes regression tracking
+hard. And Linus really wants those tags in cases like this[1].
 
+Ciao, Thorsten
+
+[1] for details, see:
+https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
