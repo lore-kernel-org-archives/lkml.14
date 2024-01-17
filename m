@@ -1,57 +1,66 @@
-Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E501E87F
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 22:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A2A1E889
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 23:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705532402; cv=none; b=nm6tlKIWKax/pTiCioSs9RY42e63u3AClEQlEHkwDKvusMg27vYnruX6yxHaDw1FPnkS+Y2dAaYk71RvAly02gkiWRkpXK/IkYvofF3wReARrDkysoU82pkBfXH6LrthJ0VOjH/1FH3zmxDL8uHg2MdDaysZtX8taUYwBzn7Fpc=
+	t=1705532439; cv=none; b=kubmNXuvGLCYiyOCbknjUCW6cIczuRm6+5IY00/Cqb5f6u/eVmvlHYe+zel4GTxbGVbk+95ItOJeZKfCkFFdqmehPQgKZmyo6kmtOci7cfhV15I+E55LBbBEAmBOSuR7H4WvhOXLd8Au69ftNwy/A3I68yq4JqxUc5PAmkyci24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705532402; c=relaxed/simple;
-	bh=FObMEG9ssP6EVkQwfmb1Z7fmrdBytj7a1ZYfLZDnpfI=;
-	h=DKIM-Signature:Received:X-QQ-mid:Message-ID:X-QQ-XMAILINFO:
-	 X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding; b=Ya/eNnPDXkijUKIgj06y4jmFMVC2aHLesuqWsQ69RUPCCLHPGC9hMV0juhz1xVoaWNV1xLCUn/D9D3zJJx37RmZJxQ1HXcRyGK7w37rPIzIJi6/HcVGMu9l476BkLELtNvQnfKr+O6MtBy/DoWR2xuTDECFdXPvF77Kkw1Z3CyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=oJJimgGU; arc=none smtp.client-ip=203.205.221.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1705532439; c=relaxed/simple;
+	bh=PmFsxi6d9e+Zlb3E4C1SRmLXOx2XOWKkOd3qfavXo9c=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding; b=AN9wViwdhjI80gfV/EaWja+yTvyWFiwRYV6praSD6dt93RYs4Rcrb8DMWvu3N3d1I/+3xTBxcN2meuq05mkfpfKhyguLR+TvZJdOowqCuI0y1iyjhK75oHf8ZwALUEpm+UsYGkRCqQCTQ44YXIsVCqtzw5pKDp3dKn+64BzBAa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCCjNYVK; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="oJJimgGU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1705532391; bh=Tx5/LMsBTm44kzFQz5r7HA6ynuPsj+cBA3RvPfiZMlY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=oJJimgGU5cs8o2UgNK6wzm4bv7X0iRZquEf7gknYyiKrqmCMXZ8XTdZSrHkwxRcwu
-	 WZfzeyEdOr0LILL7zLTFbKP8sB8LafAQOzkl6gi0xYbxLgeceVmdYhD5RFij0KAEFc
-	 zjRH5noztBQY96Y78QrsThcHO/NCupQdKYTt4ywM=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id D6EAFE7F; Thu, 18 Jan 2024 06:53:46 +0800
-X-QQ-mid: xmsmtpt1705532026t0bff7cu6
-Message-ID: <tencent_7ED368C373A96E43A20445F772B77FC6CF05@qq.com>
-X-QQ-XMAILINFO: Mm/8i8/T4yne3NoY8aU/S8yiD/jSml9ERdkv00aE8veahf1GW9yISaT/ZTZH+8
-	 Xi96g17tFUSjZIDz+P8DgsJYpq9uWoyfcR4bfVzB06HHRf3aAi6/GC3P+SktXz/DAtc1PX1T7N0f
-	 CbR4YJfT94MC2qHpXia6PnGDb9C6z40rnjmNRGBH7yrcXsWGdgZlrjFPaztzTRUrlPYzbYw1liur
-	 48JHG/VCR+GpvUd0KkY4J0VMpuLAX/X0lk24e+nAiXndfoDWyEoZdb9EYBCWyl6+45eFoZgFzER4
-	 tk/6wOFDmHOSWI9FUsDr6OuxsAmO0cy/TBseQILKrLKNf1Z1cK41m9E3GTT4XKqDeN43b1OzVX8A
-	 GHgos3MKhDa2tdtq+BS0YiTnz3zYkA1D58wUg3LgiQxWJF2/0Qqklbw8q9kvL9UO8Su76KkGOvcM
-	 pLdTYBH6msMFnDqWFxXuQd0VSDCPCQvFli+1GOWZ/Fc3WrhAZUMxwDVmQvP/sdQJ4Z59WHdLp7hQ
-	 +R//CDZ/+g2wAurAA4nSJQSJoYkpTYQ1vC49uyNjY5FgnP2zi97DulNrw1+v/tGCnvWDSFO2mtky
-	 Nk0hYdHQZWedMfK2eNtRjL4M+vOuRIi8od9GXUn65+RCs9ViWibTI2hhPrDDI3Cf0cECK8pt3O9P
-	 3o7andfUSB51+xz2b+6ACqK29NT2EJQwrqK6z+GMbLQm9yBv/oHHPXK4l+JhO/b82wPlin536nns
-	 f1rr1YoJwH6TkUJx1w9KffT7/d5NmEGA8oBpO4N54N2FAEbCeui+2wzPCXVLHQLgBER2jP5CXZ+x
-	 LQELSn6i34+Mk/LmvAMDfyhZfVF3capcN9vYZM7oiFrcCY+Be5X1HQsfxocEeRrco8zG9OtUV/Cp
-	 9odzmuVmSPNeKVCBHDV2Z5sF2zsc3qNULPqQ5wuB1xpd5vIt7SQG4U59bQKsH/yfNhUwDeeUVo
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+830d9e3fa61968246abd@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] general protection fault in btintel_read_version
-Date: Thu, 18 Jan 2024 06:53:47 +0800
-X-OQ-MSGID: <20240117225346.2504179-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000cde441060f230f4f@google.com>
-References: <000000000000cde441060f230f4f@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCCjNYVK"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d5dfda4319so19608515ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 15:00:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705532437; x=1706137237; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7m0N7t1XW7ex4DXEj0WY/wok48BDAnOfTPeDrj1R5vg=;
+        b=YCCjNYVKgMYt3kdgnP9VN9x82JBV/w+2HgkHZR5H1e0KsXjTPQw1qxK0842X+++fXW
+         LiwGvnybk+txfOlHgGihyg8aRxo7kfp38AtID73SJGxiEypKxP+JV3Nz8X48NFgR5JtT
+         PC45RTOF+K96BbIEeZV7cLRPv5aMw4o41f4c24u9XHNg5QfmM5pgAEJvbbSFzXZbpQdD
+         mAZiZsjwg2EozAEHaGIxb/YBLUPeAJyssrwtFwHY6vbn5D0txYCPkFOf0NZna1JFt5he
+         Q36r5ugppUNWzCYubrjdnbrjngHnVVdO9G/3WSOubZ+e2mB2asHgeOBBRKVW5Wzu1DKm
+         P+sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705532437; x=1706137237;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7m0N7t1XW7ex4DXEj0WY/wok48BDAnOfTPeDrj1R5vg=;
+        b=slc4g1mvAIbQUIzRWhNKrR0A7zdCqz32pfI+GrB+3uuXmk6M24XZIz2+GC3qOKdT2o
+         oGaki+ZpRrzagRFdMdq1KNLAqPJjWobJBukV60bxosiqNWmj5ukca9CVHDZkhOoZuT1K
+         EYsOPL7NZtixmjCbI9eglnh5CPFMcCjmsd65OkdmBII8JOh2GF9XFfPhL73DuN0Dwk/C
+         ElAc/lByiTyKxeauR0tXJje27zXkBu2w+UQx8jtIjR6CAJOIZtPdZyZ/itNkUa5bIyYb
+         DNkX7O2Gy7LsQdG/q6fffMfRVZfa/B03gGU0eH+uHeLBe7h5PH7fmyJDWk9kYYX4zTlY
+         n2ag==
+X-Gm-Message-State: AOJu0YyKm9HBVagjR5X5fFtaso3WJbtlDHyqqGr+njSGb3xshvL0BkWZ
+	NWhTbSWYPO8EOkQEeOwgPsBChGgo3oxHs8i2dopygs4X4FnRscOfNl2nPoad
+X-Google-Smtp-Source: AGHT+IFNBgUAqSpqdp6LHvt4RyUJrX42pQdx+maDN9Bq2jOF4HQOREnS0fyNSrZDosS3tCc+gKtx6w==
+X-Received: by 2002:a17:902:db06:b0:1d0:a9fa:5939 with SMTP id m6-20020a170902db0600b001d0a9fa5939mr1446plx.111.1705532436888;
+        Wed, 17 Jan 2024 15:00:36 -0800 (PST)
+Received: from daehojeong-desktop.mtv.corp.google.com ([2620:0:1000:8411:9c1b:9344:efbd:adc1])
+        by smtp.gmail.com with ESMTPSA id e2-20020a170902744200b001d5f5887ae8sm167964plt.10.2024.01.17.15.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 15:00:36 -0800 (PST)
+From: Daeho Jeong <daeho43@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	kernel-team@android.com
+Cc: Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs-tools: allocate logs after conventional area for HM zoned devices
+Date: Wed, 17 Jan 2024 15:00:32 -0800
+Message-ID: <20240117230032.2312067-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.43.0.381.gb435a96ce8-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,21 +69,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-please test null ptr deref in btintel_read_version
+From: Daeho Jeong <daehojeong@google.com>
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+Make to allocate logs after conventional area for HM zoned devices to
+spare them for file pinning support.
 
-diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
-index cdc5c08824a0..e5b043d96207 100644
---- a/drivers/bluetooth/btintel.c
-+++ b/drivers/bluetooth/btintel.c
-@@ -435,7 +435,7 @@ int btintel_read_version(struct hci_dev *hdev, struct intel_version *ver)
- 	struct sk_buff *skb;
- 
- 	skb = __hci_cmd_sync(hdev, 0xfc05, 0, NULL, HCI_CMD_TIMEOUT);
--	if (IS_ERR(skb)) {
-+	if (IS_ERR_OR_NULL(skb)) {
- 		bt_dev_err(hdev, "Reading Intel version information failed (%ld)",
- 			   PTR_ERR(skb));
- 		return PTR_ERR(skb);
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+ mkfs/f2fs_format.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mkfs/f2fs_format.c b/mkfs/f2fs_format.c
+index f2840c8..91a7f4b 100644
+--- a/mkfs/f2fs_format.c
++++ b/mkfs/f2fs_format.c
+@@ -557,7 +557,8 @@ static int f2fs_prepare_super_block(void)
+ 		c.cur_seg[CURSEG_COLD_DATA] = 0;
+ 		c.cur_seg[CURSEG_WARM_DATA] = next_zone(CURSEG_COLD_DATA);
+ 	} else if (c.zoned_mode) {
+-		c.cur_seg[CURSEG_HOT_NODE] = 0;
++		c.cur_seg[CURSEG_HOT_NODE] = c.zoned_model == F2FS_ZONED_HM ?
++			c.devices[0].total_segments : 0;
+ 		c.cur_seg[CURSEG_WARM_NODE] = next_zone(CURSEG_HOT_NODE);
+ 		c.cur_seg[CURSEG_COLD_NODE] = next_zone(CURSEG_WARM_NODE);
+ 		c.cur_seg[CURSEG_HOT_DATA] = next_zone(CURSEG_COLD_NODE);
+-- 
+2.43.0.381.gb435a96ce8-goog
 
