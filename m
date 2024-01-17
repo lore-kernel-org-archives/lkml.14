@@ -1,247 +1,343 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282CBBE68
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A431118D
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705477829; cv=none; b=kEMmua6tM0xmb+J1KUl/waoL6+iXK617F/TxQf/p7LngvC9NloybTyzKBJzVAiQrZ5rzl2LhLOf8ik2Zy3AeTL+GcIWYVRxiyVJ44M3PcKHomoj/1LmzNJll12eo3bqO++GZJ5t/vzdWQAZlaQ48sxueZ0YC+3U9quvn1nag4+s=
+	t=1705477977; cv=none; b=Ivgim5096vgXKqAk2lPcAsX+5APRcIRdFWG211TcXTmSXGA84uRgp3OfPlNxd8M6XLmMzfVemueT3NOS+d/kv4ijmRGlrzU6L5y65Xcq2fl9sYdHKcZRfHosSUhnagftgnnhQNgYPTn/OJ+UryN4CvfJzFpnS8gDriQf08x5x9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705477829; c=relaxed/simple;
-	bh=1JXndiYp2iQAHGlw0oYGUG+S46QUqzUPAszRxkP/nzc=;
-	h=Received:Received:Received:From:To:CC:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:X-MAIL; b=sHRo/FBNxMgcevqKdIcTEj6EVIAnkmSxCcNSQstXfzba3AUpKxbeE9LM6/s81iccc2gJIBNOBJ43xgfLYJL1Ou6QvvSjAL8iDJVxRKkpPwDKg+gyjtzzGdFWLzYI2oebjuQ3JFPSGtJsk7cWwTACVtobfDgIZRlup2De66L8Zjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 40H7nI9d052752;
-	Wed, 17 Jan 2024 15:49:18 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TFHrw4tb8z2RvjMG;
-	Wed, 17 Jan 2024 15:42:08 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 17 Jan 2024 15:49:16 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
-        <longman@redhat.com>, <boqun.feng@gmail.com>
-CC: <linux-kernel@vger.kernel.org>, <niuzhiguo84@gmail.com>,
-        <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>, <xuewen.yan@unisoc.com>
-Subject: [PATCH V2] lockdep: fix deadlock issue between lockdep and rcu
-Date: Wed, 17 Jan 2024 15:48:34 +0800
-Message-ID: <1705477714-10467-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	s=arc-20240116; t=1705477977; c=relaxed/simple;
+	bh=vkwsIUf+4GKH0Wt0J9vNBvR2nXIGyJtfH+L4SrHmTXs=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
+	 To:Cc:References:From:Autocrypt:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=u/t1Fi1xs5Yk+QxloO9T2K+R6qByX0IP5Gik8KOVmeCgMH6kYlK1e7+JBkjbBZSRbV+Y8Eir7zmUMLyedb+CCJdqAe6lkBAYcSOaXDKeqfuB1n1Pam26VebjwArkzdgxWy9jZUHgv65Pi275fpt7V7edUUTwmhEFpGYHbk/WEBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kcaCoWLo; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kcaCoWLo"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50eaabc36bcso13293986e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 23:52:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705477972; x=1706082772; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=j+K2InB5c7pevqOKaItUOOAK91DVhFyytK6/2No2oNQ=;
+        b=kcaCoWLo4XxuQcAGLYK07boM9eO4wPw7jC7fpAZObv6HOs/n3AJ2mKGQOuvwRbuPys
+         qU5ILYuZlNXKCjbtxeHnnKcbcl55KL+mvV0VTrt1fH0PcgTIGCxGnvLmjyKniSR1iGhQ
+         Z+cAZ05IjJ6INY4JUcg/SD2xBSgXznt8GnoX+YgZpQ6cxTxs5jgRJWscmbFPsqxbO4Y5
+         UW79pnFuTyVP7fQmGQ7Jm5SyLAH8rFXDWIUxzE23hW1pQacfUXR55jMiRY9cmH7no6Tk
+         OH4dV8LCZR3XWNW82fu/Cwf7xwfQXNBgJd45/SzjJWlXMjPCC+HWGTCm/mn3s1e8Cb0I
+         7TiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705477972; x=1706082772;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j+K2InB5c7pevqOKaItUOOAK91DVhFyytK6/2No2oNQ=;
+        b=uADuKDrejEfePRp1W5tHAUaCy8OwJKuWO24JN3zWMPL0+28KBzkCiuihIHYAJ8rY15
+         rWLQD8cjtfEsnXb9US2CeTXPeUBRswUt9IfyyPPaCDgPQ0SvZW26QQNTxQhAiyWSz8U/
+         GAz/9VleHvn0aor71mVNgKTx7pzTpjNaKmHR0yzVXe05n0/SMVbpngXYxj858OI2y2xD
+         QJvNac0lUcXefRZBiAy/LSMNLf1wlOzh4P1IwaKC4k0M7VbtNjIza9GB2coMne+GsJbU
+         ikyLVcEA+k9hzDGYJoDpPmp5GqPZpQRBpO2H5xWOXCq4SwQs7FW9o6h74X9LZDq5aRZI
+         Qu8Q==
+X-Gm-Message-State: AOJu0YzrxpTY6xl/0hEuypykaguB/f2v+jbDGK38a0PsrmQbrKYwIfF0
+	LmeLj4AiU1+ddm9PzM4lkPrhTkk931DtwA==
+X-Google-Smtp-Source: AGHT+IF2xiWl8vNXGE6vO/fEBuFw5+uLeoXH4/xHaaSSx9KWmrL0q7zvDIJBPPiaEGFb/o/5gZ7YZQ==
+X-Received: by 2002:ac2:5e27:0:b0:50e:b3bb:12aa with SMTP id o7-20020ac25e27000000b0050eb3bb12aamr3460970lfg.59.1705477972384;
+        Tue, 16 Jan 2024 23:52:52 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id rh5-20020a17090720e500b00a26b44ac54dsm7372797ejb.68.2024.01.16.23.52.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jan 2024 23:52:51 -0800 (PST)
+Message-ID: <3aef2fc5-f213-42e0-9b72-619364ef6c76@linaro.org>
+Date: Wed, 17 Jan 2024 08:52:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 40H7nI9d052752
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bindings: fpga: Convert fpga-region binding to yaml
+Content-Language: en-US
+To: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
+Cc: Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Tom Rix <trix@redhat.com>, Wu Hao <hao.wu@intel.com>,
+ Xu Yilun <yilun.xu@intel.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "open list:FPGA MANAGER FRAMEWORK" <linux-fpga@vger.kernel.org>
+References: <2a48c720bf0efce77d68a0bef10b47671b35506b.1705413862.git.michal.simek@amd.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <2a48c720bf0efce77d68a0bef10b47671b35506b.1705413862.git.michal.simek@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-There is a deadlock scenario between lockdep and rcu when
-rcu nocb feature is enabled, just as following call stack:
+On 16/01/2024 15:04, Michal Simek wrote:
+> Convert the generic fpga region DT binding to json-schema.
+> There are some differences compare to txt version.
+> 1. DT overlay can't be described in example that's why directly include
+> information from overlay to node which was referenced. It is visible in
+> example with /* DT Overlay contains: &... */
+> 
+> 2. All example have been rewritten to be simpler and describe only full
+> reconfiguration and partial reconfiguration with one bridge.
+> Completely drop the case where fpga region can inside partial
+> reconfiguration region which is already described in description
+> 
+> 3. Fixed some typos in descriptions compare to txt version but most of it
+> is just c&p from txt file.
+> 
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
 
-     rcuop/x
--000|queued_spin_lock_slowpath(lock = 0xFFFFFF817F2A8A80, val = ?)
--001|queued_spin_lock(inline) // try to hold nocb_gp_lock
--001|do_raw_spin_lock(lock = 0xFFFFFF817F2A8A80)
--002|__raw_spin_lock_irqsave(inline)
--002|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F2A8A80)
--003|wake_nocb_gp_defer(inline)
--003|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F30B680)
--004|__call_rcu_common(inline)
--004|call_rcu(head = 0xFFFFFFC082EECC28, func = ?)
--005|call_rcu_zapped(inline)
--005|free_zapped_rcu(ch = ?)// hold graph lock
--006|rcu_do_batch(rdp = 0xFFFFFF817F245680)
--007|nocb_cb_wait(inline)
--007|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F245680)
--008|kthread(_create = 0xFFFFFF80803122C0)
--009|ret_from_fork(asm)
+...
 
-     rcuop/y
--000|queued_spin_lock_slowpath(lock = 0xFFFFFFC08291BBC8, val = 0)
--001|queued_spin_lock()
--001|lockdep_lock()
--001|graph_lock() // try to hold graph lock
--002|lookup_chain_cache_add()
--002|validate_chain()
--003|lock_acquire
--004|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F211D80)
--005|lock_timer_base(inline)
--006|mod_timer(inline)
--006|wake_nocb_gp_defer(inline)// hold nocb_gp_lock
--006|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F2A8680)
--007|__call_rcu_common(inline)
--007|call_rcu(head = 0xFFFFFFC0822E0B58, func = ?)
--008|call_rcu_hurry(inline)
--008|rcu_sync_call(inline)
--008|rcu_sync_func(rhp = 0xFFFFFFC0822E0B58)
--009|rcu_do_batch(rdp = 0xFFFFFF817F266680)
--010|nocb_cb_wait(inline)
--010|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F266680)
--011|kthread(_create = 0xFFFFFF8080363740)
--012|ret_from_fork(asm)
+> +  --
+> +  [1] www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/ug/ug_partrecon.pdf
+> +  [2] tspace.library.utoronto.ca/bitstream/1807/67932/1/Byma_Stuart_A_201411_MAS_thesis.pdf
+> +  [3] https://www.xilinx.com/support/documentation/sw_manuals/xilinx14_1/ug702.pdf
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^fpga-region(-[0-9]|[1-9][0-9]+)?$"
 
-rcuop/x and rcuop/y are rcu nocb threads with the same nocb gp thread.
-This patch release the graph lock before lockdep call_rcu.
+I think you miss here one set of (). Please look at my previous pattern
+and test yours. This should fail, e.g. on fpga-region-0
 
-Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer in use")
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
-changes of v2: update patch according to Boqun's suggestions.
----
----
- kernel/locking/lockdep.c | 47 +++++++++++++++++++++++++++++++----------------
- 1 file changed, 31 insertions(+), 16 deletions(-)
+> +
+> +  compatible:
+> +    const: fpga-region
+> +
+> +  "#address-cells": true
+> +  "#size-cells": true
+> +
+> +  config-complete-timeout-us:
+> +    description:
+> +      The maximum time in microseconds time for the FPGA to go to operating
+> +      mode after the region has been programmed.
+> +
+> +  encrypted-fpga-config:
+> +    type: boolean
+> +    description:
+> +      Set if the bitstream is encrypted.
+> +
+> +  external-fpga-config:
+> +    type: boolean
+> +    description:
+> +      Set if the FPGA has already been configured prior to OS boot up.
+> +
+> +  firmware-name:
+> +    maxItems: 1
+> +    description:
+> +      Should contain the name of an FPGA image file located on the firmware
+> +      search path. If this property shows up in a live device tree it indicates
+> +      that the FPGA has already been programmed with this image.
+> +      If this property is in an overlay targeting an FPGA region, it is
+> +      a request to program the FPGA with that image.
+> +
+> +  fpga-bridges:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      Should contain a list of phandles to FPGA Bridges that must be
+> +      controlled during FPGA programming along with the parent FPGA bridge.
+> +      This property is optional if the FPGA Manager handles the bridges.
+> +      If the fpga-region is  the child of an fpga-bridge, the list should not
+> +      contain the parent bridge.
+> +
+> +  fpga-mgr:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Should contain a phandle to an FPGA Manager.  Child FPGA Regions
+> +      inherit this property from their ancestor regions.  An fpga-mgr property
+> +      in a region will override any inherited FPGA manager.
+> +
+> +  partial-fpga-config:
+> +    type: boolean
+> +    description:
+> +      Set if partial reconfiguration is to be done, otherwise full
+> +      reconfiguration is done.
+> +
+> +  region-freeze-timeout-us:
+> +    description:
+> +      The maximum time in microseconds to wait for bridges to successfully
+> +      become disabled before the region has been programmed.
+> +
+> +  region-unfreeze-timeout-us:
+> +    description:
+> +      The maximum time in microseconds to wait for bridges to successfully
+> +      become enabled after the region has been programmed.
+> +
+> +patternProperties:
+> +  "@(0|[1-9a-f][0-9a-f]*)$":
+> +    type: object
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3d..ddcaa69 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -6184,25 +6184,27 @@ static struct pending_free *get_pending_free(void)
- static void free_zapped_rcu(struct rcu_head *cb);
- 
- /*
-- * Schedule an RCU callback if no RCU callback is pending. Must be called with
-- * the graph lock held.
-- */
--static void call_rcu_zapped(struct pending_free *pf)
-+* See if we need to queue an RCU callback, must called with
-+* the lockdep lock held, returns false if either we don't have
-+* any pending free or the callback is already scheduled.
-+* Otherwise, a call_rcu() must follow this function call.
-+*/
-+static bool prepare_call_rcu_zapped(struct pending_free *pf)
- {
- 	WARN_ON_ONCE(inside_selftest());
- 
- 	if (list_empty(&pf->zapped))
--		return;
-+		return false;
- 
- 	if (delayed_free.scheduled)
--		return;
-+		return false;
- 
- 	delayed_free.scheduled = true;
- 
- 	WARN_ON_ONCE(delayed_free.pf + delayed_free.index != pf);
- 	delayed_free.index ^= 1;
- 
--	call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
-+	return true;
- }
- 
- /* The caller must hold the graph lock. May be called from RCU context. */
-@@ -6228,6 +6230,7 @@ static void free_zapped_rcu(struct rcu_head *ch)
- {
- 	struct pending_free *pf;
- 	unsigned long flags;
-+	bool need_callback;
- 
- 	if (WARN_ON_ONCE(ch != &delayed_free.rcu_head))
- 		return;
-@@ -6239,14 +6242,17 @@ static void free_zapped_rcu(struct rcu_head *ch)
- 	pf = delayed_free.pf + (delayed_free.index ^ 1);
- 	__free_zapped_classes(pf);
- 	delayed_free.scheduled = false;
-+	need_callback =
-+		prepare_call_rcu_zapped(delayed_free.pf + delayed_free.index);
-+	lockdep_unlock();
-+	raw_local_irq_restore(flags);
- 
- 	/*
--	 * If there's anything on the open list, close and start a new callback.
--	 */
--	call_rcu_zapped(delayed_free.pf + delayed_free.index);
-+	* If there's anything on the open list, close and start a new callback.
-+	*/
-+	if (need_callback)
-+		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
- 
--	lockdep_unlock();
--	raw_local_irq_restore(flags);
- }
- 
- /*
-@@ -6286,6 +6292,7 @@ static void lockdep_free_key_range_reg(void *start, unsigned long size)
- {
- 	struct pending_free *pf;
- 	unsigned long flags;
-+	bool need_callback;
- 
- 	init_data_structures_once();
- 
-@@ -6293,10 +6300,11 @@ static void lockdep_free_key_range_reg(void *start, unsigned long size)
- 	lockdep_lock();
- 	pf = get_pending_free();
- 	__lockdep_free_key_range(pf, start, size);
--	call_rcu_zapped(pf);
-+	need_callback = prepare_call_rcu_zapped(pf);
- 	lockdep_unlock();
- 	raw_local_irq_restore(flags);
--
-+	if (need_callback)
-+		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
- 	/*
- 	 * Wait for any possible iterators from look_up_lock_class() to pass
- 	 * before continuing to free the memory they refer to.
-@@ -6390,6 +6398,7 @@ static void lockdep_reset_lock_reg(struct lockdep_map *lock)
- 	struct pending_free *pf;
- 	unsigned long flags;
- 	int locked;
-+	bool need_callback = false;
- 
- 	raw_local_irq_save(flags);
- 	locked = graph_lock();
-@@ -6398,11 +6407,13 @@ static void lockdep_reset_lock_reg(struct lockdep_map *lock)
- 
- 	pf = get_pending_free();
- 	__lockdep_reset_lock(pf, lock);
--	call_rcu_zapped(pf);
-+	need_callback = prepare_call_rcu_zapped(pf);
- 
- 	graph_unlock();
- out_irq:
- 	raw_local_irq_restore(flags);
-+	if (need_callback)
-+		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
- }
- 
- /*
-@@ -6446,6 +6457,7 @@ void lockdep_unregister_key(struct lock_class_key *key)
- 	struct pending_free *pf;
- 	unsigned long flags;
- 	bool found = false;
-+	bool need_callback = false;
- 
- 	might_sleep();
- 
-@@ -6466,11 +6478,14 @@ void lockdep_unregister_key(struct lock_class_key *key)
- 	if (found) {
- 		pf = get_pending_free();
- 		__lockdep_free_key_range(pf, key, 1);
--		call_rcu_zapped(pf);
-+		need_callback = prepare_call_rcu_zapped(pf);
- 	}
- 	lockdep_unlock();
- 	raw_local_irq_restore(flags);
- 
-+	if (need_callback)
-+		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
-+
- 	/* Wait until is_dynamic_key() has finished accessing k->hash_entry. */
- 	synchronize_rcu();
- }
--- 
-1.9.1
+You put (0|[...) to disallow @0001? I personally would not care, dtc
+handles this, and the pattern is confusing. Just @[0-9a-z]+$
+
+> +
+> +  "^[^@]+$": true
+
+I dislike it. How is this binding supposed to be used? If in standalone
+way, then you allow any property so what's the point of this schema? If
+fpga-bridge.yaml is referenced by other device-specific binding, then
+all properties will be evaluated here, so the same: you allow any property.
+
+Depending on the usage, this might be just like other generic, common
+schemas, so end with "additionalPropeties: true".
+
+
+> +
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - fpga-mgr
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    /*
+> +     * Full Reconfiguration without Bridges with DT overlay
+> +     */
+> +    fpga_mgr0: fpga-mgr@f8007000 {
+> +      compatible = "xlnx,zynq-devcfg-1.0";
+> +      reg = <0xf8007000 0x100>;
+> +      clocks = <&clkc 12>;
+> +      clock-names = "ref_clk";
+> +      interrupt-parent = <&intc>;
+> +      interrupts = <0 8 4>;
+> +      syscon = <&slcr>;
+> +    };
+
+I suggest to drop this node. The contents does not really matter for the
+bridge.
+
+> +
+> +    fpga_region0: fpga-region {
+> +      compatible = "fpga-region";
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      fpga-mgr = <&fpga_mgr0>;
+> +
+> +      /* DT Overlay contains: &fpga_region0 */
+> +      firmware-name = "zynq-gpio.bin";
+> +      gpio@40000000 {
+> +        compatible = "xlnx,xps-gpio-1.00.a";
+> +        reg = <0x40000000 0x10000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +      };
+> +    };
+> +
+> +  - |
+> +    /*
+> +     * Partial reconfiguration with bridge
+> +     */
+> +    fpga_mgr1: fpga-mgr@f8007000 {
+> +      compatible = "xlnx,zynq-devcfg-1.0";
+> +      reg = <0xf8007000 0x100>;
+> +      clocks = <&clkc 12>;
+> +      clock-names = "ref_clk";
+> +      interrupt-parent = <&intc>;
+> +      interrupts = <0 8 4>;
+> +      syscon = <&slcr>;
+> +    };
+> +
+> +    fpga_bridge1: fpga-bridge@100000450 {
+> +      compatible = "xlnx,pr-decoupler-1.00", "xlnx,pr-decoupler";
+> +      reg = <0x10000045 0x10>;
+> +      clocks = <&clkc 15>;
+> +      clock-names = "aclk";
+> +    };
+
+Also drop both nodes.
+
+> +
+> +    fpga_region1: fpga-region {
+> +      compatible = "fpga-region";
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      fpga-mgr = <&fpga_mgr1>;
+> +      fpga-bridges = <&fpga_bridge1>;
+> +      partial-fpga-config;
+> +
+> +      /* DT Overlay contains: &fpga_region1 */
+> +      firmware-name = "zynq-gpio-partial.bin";
+> +      clk100: clk100 {
+> +        compatible = "fixed-clock";
+> +        #clock-cells = <0>;
+> +        clock-frequency = <100000000>;
+> +        bootph-all;
+> +      };
+> +      axi {
+> +        compatible = "simple-bus";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges;
+> +        gpio@40000000 {
+> +          compatible = "xlnx,xps-gpio-1.00.a";
+> +          reg = <0x40000000 0x10000>;
+> +          #gpio-cells = <2>;
+> +          gpio-controller;
+> +          clocks = <&clk100>;
+> +        };
+> +      };
+> +    };
+
+Best regards,
+Krzysztof
 
