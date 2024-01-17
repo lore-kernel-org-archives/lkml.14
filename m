@@ -1,180 +1,310 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02olkn2061.outbound.protection.outlook.com [40.92.48.61])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14617225A4;
-	Wed, 17 Jan 2024 16:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.48.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705509337; cv=fail; b=cvft3RvZh0uIv36IbtpJcTz2g6pwxcnItCsSFa20Glssu36rdmGHBxEkPvFryh+UH0c+iwnx20ra520o84d5Enh7zk0sMJcMV+HPo+Nfx9Y98Vo6eVK9gaj9CX7bWCXX+uEgWoNjLH1GMG8g7VGFsXZy2ki8N+G86dyxSEbvmFA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705509337; c=relaxed/simple;
-	bh=+D4tWsEoM2OrzLOfxrR+M5scNxOUB9PiqhrItWR9E1k=;
-	h=ARC-Message-Signature:ARC-Authentication-Results:Received:
-	 Received:Message-ID:Date:User-Agent:Subject:To:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-TMN:X-ClientProxiedBy:
-	 X-Microsoft-Original-Message-ID:MIME-Version:
-	 X-MS-Exchange-MessageSentRepresentingType:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SLBlob-MailProps:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=WDeTwsbMbNSoTDDSo4o5ANpUNlJ0xaxlQib1msBoO3HeIH939JrrEM92aery8tcgQzsY92zvvghrqsas15PUdTp3CThbA0HM34yBWqXldyQG3wIaH8lQhRK8YXdigyTHtkztTrtedfbQ7ND8vkm9zt+Trxqv/9SD5j5mKapM9AY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.de; spf=pass smtp.mailfrom=hotmail.de; arc=fail smtp.client-ip=40.92.48.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.de
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z4kN4EALZyLD4Vl/KBT0rksi53wc78xDsgiHEMISoKWrd2OhZ9BLK3cPNZiFFEERUIwKmyD8gXk1/B94K8+SmKPTrg8ZXh4M+p/rZDhGvBMSC40NX7DP04I/bAZiRrrxA9vsuFyiSMxHOhk+aVWJAFesYBWuzRXHfPgab3bIR5e+orVr/V38dMUsuc45gxjbNXeSG/ZnkaFaADjysnQ+1rQ+joJM7K+JJAz9pefHTUDW5F3yRZvO98ohmWempizGZig3+HeEI+HLgt4EiVUnetBunTh0ts7zD7iNQxe2HMLAYz3K2hJH6rPS66SyXFWmR5G3g7lavIUIoDPcmPnocA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ouXI60Rff+AQzOcciXLsiM5+c5RZDDUoHWczm7qxC4k=;
- b=LxKZWEmNaAm4VxozAo/nKuc6g/Yh+xCXPj6j03DFwNFf4D4fsuvK2aWwL5dqHvQLd9bMYnlQNRPpdTZEsrlj2mphkQiOAtZjxZypyKYiG5S4pvxJyhbpUL8Npe5SMBubaOSEH/u4CynGsJFPvZnY9Lw7X0Y3TZv9a0wGmfWSX792xdu71B2Hq664eapRqvYZeqreEGKDjCz/piYcIVdSa5fHtpLJOr1e6SXh9M+3CKdeodW04vrzYsN8GsNTWsg20LSQ83aDP3k2eUsCF0bbn3ZARGic3AKkETlETIS9zKtEJHAXi+skTEBUnJVwIN1QaUGaSYvwkgGxD3HJvwRWGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from AS8P193MB1285.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:333::21)
- by PAXP193MB2042.EURP193.PROD.OUTLOOK.COM (2603:10a6:102:233::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.28; Wed, 17 Jan
- 2024 16:35:33 +0000
-Received: from AS8P193MB1285.EURP193.PROD.OUTLOOK.COM
- ([fe80::897e:cfd5:b29b:c611]) by AS8P193MB1285.EURP193.PROD.OUTLOOK.COM
- ([fe80::897e:cfd5:b29b:c611%6]) with mapi id 15.20.7202.020; Wed, 17 Jan 2024
- 16:35:33 +0000
-Message-ID:
- <AS8P193MB1285F065377246F347231567E4722@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
-Date: Wed, 17 Jan 2024 17:36:29 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] net: stmmac: Wait a bit for the reset to take effect
-To: Paolo Abeni <pabeni@redhat.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Jiri Pirko <jiri@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>
-References: <AS8P193MB1285DECD77863E02EF45828BE4A1A@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
- <AS8P193MB1285EEAFE30C0DE7B201D33CE46C2@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
- <f5ddf800df95cdce32637d41bc1539aed0a7b6f3.camel@redhat.com>
-Content-Language: en-US
-From: Bernd Edlinger <bernd.edlinger@hotmail.de>
-In-Reply-To: <f5ddf800df95cdce32637d41bc1539aed0a7b6f3.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TMN: [hddFFBG+zeoc7G3cKArf9Nqq0weg2ODvoDbEj5En5uZSxhWtH2vUDb18lANsQW+I]
-X-ClientProxiedBy: FR4P281CA0213.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:e4::13) To AS8P193MB1285.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:20b:333::21)
-X-Microsoft-Original-Message-ID:
- <023b9ecf-0c53-4376-8bbe-231c41b844fb@hotmail.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437BF208AF
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705509373; cv=none; b=JW9bw4tdtB8l/D80YFC8oMPKJF/+9DB1OGA0rBmvyIJD26W7m7mxLtuAsimbL3wG5VLFr4oCz9OIzzprl2a29yZ7xeE6+yHzUUYTMvg/SuIfmu31HcJwGoUWseYyz54rbwUE4bQM0s3GXIbGN1nBhKvKM8ULTrwPIpjMiIYqcTw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705509373; c=relaxed/simple;
+	bh=+9dhGREDar7JnxPjUNvDr3ukqeiS2D+HMIM215GKB3o=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:From:To:Cc:
+	 Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-Scanned-By; b=qa8zXbCCKNCWn27Hu9uXmtfAFhNCUGYM6v22SZnY35jg74HZFrZgLGrMAti6doqz/WGHvpfDH0gfniKG7/apU9UUwn/6hKfQaDDycwqYilFjg7qXqaUT5Prq7dWGLmkkNa9lK/jrVLHcMuQCa4AqU+zc2NiwgYzAF7sh+Qt/DHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PSwJw1Vu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PSwJw1Vu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705509371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xvHDvVh6wugcYdMxmpgUJ/MFh5amT/B96L0R0KTNtzk=;
+	b=PSwJw1VuAZVaq/OfCcgClhl2B2DITBSh3Kv2ctq9ED6m1TIzI/MnC4savNOIljCJKfH0UF
+	VTelIHQGkETiV8WxfGMeQIlizJOhuHQbvIBV2Ex5LuC2CMtSYEKtBsJY6DZ6QsFnvkNzNS
+	rWT/smlaxB3BkYhIuB6UAdBi2l3zEzM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-473-xwCFczkROcG7hczghk4wLg-1; Wed, 17 Jan 2024 11:36:07 -0500
+X-MC-Unique: xwCFczkROcG7hczghk4wLg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5E6E782A6C6;
+	Wed, 17 Jan 2024 16:36:06 +0000 (UTC)
+Received: from llong.com (unknown [10.22.16.147])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B9285111E402;
+	Wed, 17 Jan 2024 16:36:04 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Shuah Khan <shuah@kernel.org>
+Cc: cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Mrunal Patel <mpatel@redhat.com>,
+	Ryan Phillips <rphillips@redhat.com>,
+	Brent Rowsell <browsell@redhat.com>,
+	Peter Hunt <pehunt@redhat.com>,
+	Cestmir Kalina <ckalina@redhat.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Alex Gladkov <agladkov@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Phil Auld <pauld@redhat.com>,
+	Paul Gortmaker <paul.gortmaker@windriver.com>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Costa Shulyupin <cshulyup@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: [RFC PATCH 1/8] rcu/nocb: Pass a cpumask instead of a single CPU to offload/deoffload
+Date: Wed, 17 Jan 2024 11:35:04 -0500
+Message-Id: <20240117163511.88173-2-longman@redhat.com>
+In-Reply-To: <20240117163511.88173-1-longman@redhat.com>
+References: <20240117163511.88173-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8P193MB1285:EE_|PAXP193MB2042:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54380be5-0921-43ec-a8d1-08dc177a52fb
-X-MS-Exchange-SLBlob-MailProps:
-	feAVlmA1hHUZZmI+UTsz2TlcID54zgy25WkyCZRWecTk5rYFuVB3uflnSjqT5MdgM5bnqIEWJMcXyko8/fTOE1N7rU7VRZL1vnMB0LYJbgDYG2QXbnRBXN2X3usLu6cMQUk8NKCYU9PhJoCB0KXeWNcIx3YzQVI40P9g674Dr3JINpKaFNMWW+Ol7Jb3YnJfcmNduN9lQXe4t0TUa3WIa6KQF4LQoiC5cHi6V3a+WcC7Sfa3oRK2rPOhZ3PtwugxzIXm1UbIzcmu/wdw3+XMlYuIcwP8YSopWVPOQA3K/zgOCs69OBvEYt4kt//xfB2cLSfMDkSfph/1AmiqCQnwWoT4ENUiJYeKf7PVW8pkWZWSwF+AvjOPbC+B7jkfXrrr3o2ErnpdFXnjCHxGY6Fwv2KXosJE0O2odeFGsi48YGI7HMNfzlfQEDqGJPOOcoNLJmpIvyzvNYTmmL4zY3CZrDeSFtlPaZPu0wlnkRuESbu5hsfsxCg7fqFA/vCY0T2UAvfAl4AP9pMvd3IZiUIzC63hf30rzKLDMwUieW016eUl8uowHUXPDH9xXxoTnz1pxM+R6ffMAXFIx1nbLNGxJOToew4akJeNvvBAxLlVTd5yKuujJ1hIZtd4c5WJn6Slz1JujlinVLgvM5uc+nanQURx9y6o1Aj0ZKoUsSLIgzQf3GGvsYhm4mRv+0crNLX419bA+pVhBSsOTAg+jjidAA==
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	yrRXuL/1JdTk2RKDOt0HPGxr1poO67UBHEnNBS8ZrGCgvaw3h1ef4mX1Pn8GKkTW+r9RfQva3jPlf6ajhc/3FLB0mniy/wBavHhgmOhu/SBxNMas16aIW9NOBb5SeEsz3QpykMUF71Q2PxnFsn/jKEUpmGYQV84Jg6aGzpWIwXOwKREmHSikCQ7puv2Yt9NSO7TuSBMvSo07Uqg1laRdPlLCyHjvvNE1JSVZHxAZHZ/Utv/N2wcJwrylArn9Zs4/T7VolIInV6eX3bOU2CVhehTNtZBkcHyxjx6yOcio/w6Jn3S91mU7V3t1DLuqqULvbtBLfACVxIws4kws76n1ggQ0jC/CIRqh+UZ85UZHlr/cAFfYsUXbOBgmTtV2F8hY3LaqGQVpJDUQdPlT6u5L4NZIvSsTVx6W2MjoFwz8rBC3uPiYO8dz/wp+ECv3Cr6R0K6UVNfYMFq18VnYFicsk8hHTf88AdNSEFIUEQO5qByNc0zMWek+eVUdwo4vuGjhQ4Mq8+lc4O4ylDN9kXhLG+I7BaXQm8q5SodTpKOaSxRbuQBb6LtCknCmmcXoucNt
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S1Y1TUVNc28zSCt0aU0vNVZrdUVDQkcxVGhXN0Rvamo2cUJBZ2NacWNJUVps?=
- =?utf-8?B?MGNLUnBEejVFYVY4ejVBYUFpTDVzY0ZpTXd0c3NLbk9CTmZmY0FHcjJwM2Nn?=
- =?utf-8?B?dGZsaXFZT0JGS3JiM3Fqcmc0SHlqcWcwOFAvVzkxQm0rUG8vN09objgvaVpi?=
- =?utf-8?B?MXNxb0dxbWxod3VwZDRNUmFkZG50VDNkbWNxN01VTjZlT2dCVS9ncmRoN0wv?=
- =?utf-8?B?TUxKQmc4Tm0zWXplT2JsdEdReFBrU1lkR0Rjb1ZJd1hnUFpiZ0svQXlaRWtp?=
- =?utf-8?B?Nkx1bXRqeXdtRjAwalU3b0c3ZWZUSk45OXVtMVY0M0Z6Q2lWM0dwbHVjTFcw?=
- =?utf-8?B?N3crck84TEEwSnIzU3J5Y2VxanpnUHVGMUJsa0p0U1lRTTQ4N1NPcmJFeTJG?=
- =?utf-8?B?dC9pQU1xOW5KdHlORzdqVHJNanNwczlGZTArTG5wdlkvaXBmd0VCSW45aitU?=
- =?utf-8?B?aDh0WEdJUi9FOXNQNnozR0tQLzJkZDRJZWozdldyUkRSc3d1dWVxelZiYlp2?=
- =?utf-8?B?c0NaZzdXSGVUZlVQbER3MGRXQWxwbzlYM3BJVlZYUXFleWFuckl1WjBDYmU5?=
- =?utf-8?B?Q1V2V0paVjFjbUZ2UVNJSk5WRUVoTmZMdkEzTnVDc2JzaUYzd24wK1UrZzR4?=
- =?utf-8?B?eFMzTStvdHRLWExiMy9WUmZHbVNYclMwZzFOQmlhaDJ2di9aVHNvcjdNVERp?=
- =?utf-8?B?V3N3STlsVDliYXpIbVhMVVpUNkVES3FPNmFJbjRPdkNkQmhZd0xYOVZsOE1T?=
- =?utf-8?B?bTNIazBOUEJnQkVoS3lhVXN4WHFwS0ZhNHNZbHVYZkJLR0dwNFZqcTNvYkVk?=
- =?utf-8?B?cjhyd2ZXUDF2aG9GMUp4d2lvZ0E4Vjdkak9lZ3h0b3JFZmN6RDNGUFhubXJh?=
- =?utf-8?B?eFJJcmxoUFNlNWxFajZqT1ZFcUpDdFVpV2tlalN4SnEyYytxR0ZDS2ZEeTB6?=
- =?utf-8?B?czBWL3JJdWNjWlRVWFhiYjZHVS8rSnJ6VHVMNk8xOFFBN1V2ODlFUDdBWUNN?=
- =?utf-8?B?RUNta0ppb1UxTHFTQXZJVmZOdlFtRFgxQzNrdjBLTlBmN1BzZWtDa2s1Rklx?=
- =?utf-8?B?dnE2bDFkYlN2Y3NVSjRZVEFJSDVwUVJnb2JHOGRWdXBvcDhIaFd2ZkVoOXBy?=
- =?utf-8?B?eXpPVFZWWk0xMXlKbFhvYm45NDBndzdnT0N2dUdHbktnOWRsdmErL2wvZGEw?=
- =?utf-8?B?amIxNHh2OWk5Rk9UaWdZSk1BVlBYY3N2OHpObG4wU0dEN1BqWjhEeDFibG5S?=
- =?utf-8?B?SXE0SGx2VURiRUx2cTlyZGQzbDI0QzF4ZEJHRnlDV200cjVsUmNSSDRtcFkv?=
- =?utf-8?B?WmVDTE9CQzh3UjVlMTBDVklseVhCQUhJcjFrRUdQemVsZ0ZFc2ZlQjZXSTgv?=
- =?utf-8?B?QTlDNnQwRVB5YlVMcTRLSjlFZ0tyMURyWitKZGRpMnFBY21obUo0VEJ1Wk8v?=
- =?utf-8?B?ZnVlTDl3dHlGaSszSG05VGx1N0hLZWQvcWtCYnJKL09Ma0FMNkhVUndPMXBU?=
- =?utf-8?B?azNUTXU2am01aDZGaXlZTENrTForOUh1VEpBckhDdkRocFF1c29CZzBhdGtM?=
- =?utf-8?B?bjdaOStlbWdQVGtwZkVUS04rN0tXWlFLMzZMZlJJRjAzVC9ld0h2V3dKMi91?=
- =?utf-8?B?TU40RVdneHpjdk1RVFIrYmJPam1nMjdYLzN6S3dlRWJ5VUNhb2l3OTU5Vkl0?=
- =?utf-8?B?NlpMbjhXSWVIVmFtZVV6d3graDVMTk91VGxQRXFVRXhmeldzUTNYMjFQZ3RU?=
- =?utf-8?Q?oMkd+/SXYiWJ3wpvVE=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-80ceb.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54380be5-0921-43ec-a8d1-08dc177a52fb
-X-MS-Exchange-CrossTenant-AuthSource: AS8P193MB1285.EURP193.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 16:35:32.9647
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXP193MB2042
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On 1/16/24 13:22, Paolo Abeni wrote:
->>
->> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->>
->> Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-> 
-> Please have a better look at the process documentation.
-> 
+From: Frederic Weisbecker <frederic@kernel.org>
 
-Yeah, I'm still new here.  Thanks for your patience...
+Currently the interface to toggle callbacks offloading state only takes
+a single CPU per call. Now driving RCU NOCB through cpusets requires
+to be able to change the offloading state of a whole set of CPUs.
 
-> No empty lines are allowed in the tag area.
-> 
+To make it easier, extend the (de-)offloading interface to support a
+cpumask.
 
-Ah, okay, understood.
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Zefan Li <lizefan.x@bytedance.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Phil Auld <pauld@redhat.com>
+Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+ include/linux/rcupdate.h |   9 ++--
+ kernel/rcu/rcutorture.c  |   4 +-
+ kernel/rcu/tree_nocb.h   | 102 ++++++++++++++++++++++++++-------------
+ 3 files changed, 76 insertions(+), 39 deletions(-)
 
-> A fixes tag is requires, something alike:
-> 
-> Fixes: <blamed commit hash> ("<blamed commit title>")
-> 
-> A bisection is not strictly required, you just need to be reasonably
-> confident about the the culprit.
-> 
-> You need to include the relevant target tree into the subj prefix (in
-> this case 'net').
-> 
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 0746b1b0b663..b649344075d2 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -142,13 +142,14 @@ static inline void rcu_irq_work_resched(void) { }
+ 
+ #ifdef CONFIG_RCU_NOCB_CPU
+ void rcu_init_nohz(void);
+-int rcu_nocb_cpu_offload(int cpu);
+-int rcu_nocb_cpu_deoffload(int cpu);
++int rcu_nocb_cpumask_update(const struct cpumask *cpumask, bool offload);
+ void rcu_nocb_flush_deferred_wakeup(void);
+ #else /* #ifdef CONFIG_RCU_NOCB_CPU */
+ static inline void rcu_init_nohz(void) { }
+-static inline int rcu_nocb_cpu_offload(int cpu) { return -EINVAL; }
+-static inline int rcu_nocb_cpu_deoffload(int cpu) { return 0; }
++static inline int rcu_nocb_cpumask_update(const struct cpumask *cpumask, bool offload)
++{
++	return -EINVAL;
++}
+ static inline void rcu_nocb_flush_deferred_wakeup(void) { }
+ #endif /* #else #ifdef CONFIG_RCU_NOCB_CPU */
+ 
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 7567ca8e743c..228a5488eb5e 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -2140,10 +2140,10 @@ static int rcu_nocb_toggle(void *arg)
+ 		r = torture_random(&rand);
+ 		cpu = (r >> 1) % (maxcpu + 1);
+ 		if (r & 0x1) {
+-			rcu_nocb_cpu_offload(cpu);
++			rcu_nocb_cpumask_update(cpumask_of(cpu), true);
+ 			atomic_long_inc(&n_nocb_offload);
+ 		} else {
+-			rcu_nocb_cpu_deoffload(cpu);
++			rcu_nocb_cpumask_update(cpumask_of(cpu), false);
+ 			atomic_long_inc(&n_nocb_deoffload);
+ 		}
+ 		toggle_delay = torture_random(&rand) % toggle_fuzz + toggle_interval;
+diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+index 4efbf7333d4e..60b0a15ed6e2 100644
+--- a/kernel/rcu/tree_nocb.h
++++ b/kernel/rcu/tree_nocb.h
+@@ -1203,29 +1203,23 @@ static long rcu_nocb_rdp_deoffload(void *arg)
+ 	return 0;
+ }
+ 
+-int rcu_nocb_cpu_deoffload(int cpu)
++static int rcu_nocb_cpu_deoffload(int cpu)
+ {
+ 	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+ 	int ret = 0;
+ 
+-	cpus_read_lock();
+-	mutex_lock(&rcu_state.barrier_mutex);
+-	if (rcu_rdp_is_offloaded(rdp)) {
+-		if (cpu_online(cpu)) {
+-			ret = work_on_cpu(cpu, rcu_nocb_rdp_deoffload, rdp);
+-			if (!ret)
+-				cpumask_clear_cpu(cpu, rcu_nocb_mask);
+-		} else {
+-			pr_info("NOCB: Cannot CB-deoffload offline CPU %d\n", rdp->cpu);
+-			ret = -EINVAL;
+-		}
+-	}
+-	mutex_unlock(&rcu_state.barrier_mutex);
+-	cpus_read_unlock();
++	if (cpu_is_offline(cpu))
++		return -EINVAL;
++
++	if (!rcu_rdp_is_offloaded(rdp))
++		return 0;
++
++	ret = work_on_cpu(cpu, rcu_nocb_rdp_deoffload, rdp);
++	if (!ret)
++		cpumask_clear_cpu(cpu, rcu_nocb_mask);
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(rcu_nocb_cpu_deoffload);
+ 
+ static long rcu_nocb_rdp_offload(void *arg)
+ {
+@@ -1236,12 +1230,6 @@ static long rcu_nocb_rdp_offload(void *arg)
+ 	struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
+ 
+ 	WARN_ON_ONCE(rdp->cpu != raw_smp_processor_id());
+-	/*
+-	 * For now we only support re-offload, ie: the rdp must have been
+-	 * offloaded on boot first.
+-	 */
+-	if (!rdp->nocb_gp_rdp)
+-		return -EINVAL;
+ 
+ 	if (WARN_ON_ONCE(!rdp_gp->nocb_gp_kthread))
+ 		return -EINVAL;
+@@ -1288,29 +1276,77 @@ static long rcu_nocb_rdp_offload(void *arg)
+ 	return 0;
+ }
+ 
+-int rcu_nocb_cpu_offload(int cpu)
++static int rcu_nocb_cpu_offload(int cpu)
+ {
+ 	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+-	int ret = 0;
++	int ret;
++
++	if (cpu_is_offline(cpu))
++		return -EINVAL;
++
++	if (rcu_rdp_is_offloaded(rdp))
++		return 0;
++
++	ret = work_on_cpu(cpu, rcu_nocb_rdp_offload, rdp);
++	if (!ret)
++		cpumask_set_cpu(cpu, rcu_nocb_mask);
++
++	return ret;
++}
++
++int rcu_nocb_cpumask_update(const struct cpumask *cpumask, bool offload)
++{
++	int cpu;
++	int err = 0;
++	int err_cpu;
++	cpumask_var_t saved_nocb_mask;
++
++	if (!alloc_cpumask_var(&saved_nocb_mask, GFP_KERNEL))
++		return -ENOMEM;
++
++	cpumask_copy(saved_nocb_mask, rcu_nocb_mask);
+ 
+ 	cpus_read_lock();
+ 	mutex_lock(&rcu_state.barrier_mutex);
+-	if (!rcu_rdp_is_offloaded(rdp)) {
+-		if (cpu_online(cpu)) {
+-			ret = work_on_cpu(cpu, rcu_nocb_rdp_offload, rdp);
+-			if (!ret)
+-				cpumask_set_cpu(cpu, rcu_nocb_mask);
++	for_each_cpu(cpu, cpumask) {
++		if (offload) {
++			err = rcu_nocb_cpu_offload(cpu);
++			if (err < 0) {
++				err_cpu = cpu;
++				pr_err("NOCB: offload cpu %d failed (%d)\n", cpu, err);
++				break;
++			}
+ 		} else {
+-			pr_info("NOCB: Cannot CB-offload offline CPU %d\n", rdp->cpu);
+-			ret = -EINVAL;
++			err = rcu_nocb_cpu_deoffload(cpu);
++			if (err < 0) {
++				err_cpu = cpu;
++				pr_err("NOCB: deoffload cpu %d failed (%d)\n", cpu, err);
++				break;
++			}
++		}
++	}
++
++	/* Rollback in case of error */
++	if (err < 0) {
++		err_cpu = cpu;
++		for_each_cpu(cpu, cpumask) {
++			if (err_cpu == cpu)
++				break;
++			if (cpumask_test_cpu(cpu, saved_nocb_mask))
++				WARN_ON_ONCE(rcu_nocb_cpu_offload(cpu));
++			else
++				WARN_ON_ONCE(rcu_nocb_cpu_deoffload(cpu));
+ 		}
+ 	}
++
+ 	mutex_unlock(&rcu_state.barrier_mutex);
+ 	cpus_read_unlock();
+ 
+-	return ret;
++	free_cpumask_var(saved_nocb_mask);
++
++	return err;
+ }
+-EXPORT_SYMBOL_GPL(rcu_nocb_cpu_offload);
++EXPORT_SYMBOL_GPL(rcu_nocb_cpumask_update);
+ 
+ #ifdef CONFIG_RCU_LAZY
+ static unsigned long
+-- 
+2.39.3
 
-The subject line is now:
-"net: stmmac: Wait a bit for the reset to take effect"
-
-So what exactly should I use here, next time?
-
-> Please include in the recipients list the persons that provided
-> feedback on previous release (Serge is missing).
-> 
-> I'm unsure why/how Andrew landed in the recipients list!?!
-> 
-
-My mistake, sorry for the spam, Andrew.
-
-
-Bernd.
