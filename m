@@ -1,196 +1,253 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2049.outbound.protection.outlook.com [40.107.8.49])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EDC13FFA;
-	Wed, 17 Jan 2024 09:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705484328; cv=fail; b=HWp7MPrjesFVCaeqwD+jrEryd5Q//xd2YGK7oUPoYWyDNtgmX9RHS1DX9kuQxEwmRaoPXFbjDUS060/kqvxJDa+VjI6YIWDDalsBSoVx5KAgFn393fp/3ihqJbGHTH5qn/tsqFdW8y+CEdOXw8fGW4xrGpyDgh0lNc6vZc9cCN4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705484328; c=relaxed/simple;
-	bh=hSWagL5dcx/5OT6R/IWxsNi1gwkL61YE9bkgAs2UJ6g=;
-	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
-	 Received:Received:From:To:CC:Subject:Thread-Topic:Thread-Index:
-	 Date:Message-ID:References:In-Reply-To:Accept-Language:
-	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:x-ld-processed:
-	 x-ms-exchange-senderadcheck:x-ms-exchange-antispam-relay:
-	 x-microsoft-antispam:x-microsoft-antispam-message-info:
-	 x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-	 X-MS-Exchange-CrossTenant-userprincipalname:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=er6l07SQxQT7TynG5rM06TME6cpsqBlgShwjGvyi23oeXHnPcFpB+GcdfKS1crUW9eFzhWQ9yY829f5Ef4FB2sZHE9cK22pGOuNpzhkdNA5KC5KT64ZuJX/xA4rOXTbZDqKENh1JVw+AwlAmPsbsl+yPUFEFwfNCa5Zm01q4fuQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=MKlhaZku; arc=fail smtp.client-ip=40.107.8.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87ABF14266
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705484354; cv=none; b=h66EO9zP+57VMCK9tq6WOvjUDVvzi7a3ZOLo329HGuP5+T+uV/iKqc4VH/k+pCvLKP1zV21oLeKs602dWzQQu858go7XIeM2VUPVR4DhKc506Je6euqE4vvA6hZYif+xp9WUd3aZrr3tlE139DIXUvi3kT0Khe3QK4iyUeUlkZY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705484354; c=relaxed/simple;
+	bh=OUbyHm3Ep8amQqoXsm1ozhAUSNIBr9wHY6wZYKCwNo4=;
+	h=Received:DKIM-Filter:DKIM-Signature:Received:Received:Received:
+	 Received:Received:X-AuditID:Received:Received:From:To:Cc:Subject:
+	 Date:Message-Id:X-Mailer:In-Reply-To:MIME-Version:
+	 Content-Transfer-Encoding:X-Brightmail-Tracker:
+	 X-Brightmail-Tracker:X-CMS-MailID:X-Msg-Generator:Content-Type:
+	 X-Sendblock-Type:CMS-TYPE:DLP-Filter:X-CFilter-Loop:
+	 X-CMS-RootMailID:References; b=RoIqAWOTgEl5hUb85pNahsYzl8ctO8IcFQhVDxDZGu4Jf6kKp6x4U9tWv8fh/eYak9O8yJKNarfAdfQlJw6WdWx00cEupquNGttPi6BurE3GMPIMBaUt+zU44sCOHQG0RWWx5VuwwmjHJIzhI7DMers6vjZ/ZxFG4YeFblEUccA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Q/w4HmFm; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MKlhaZku"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PdHaVjpG2LEtNYMhWv27yofDBpyQdLRwckifI/4ppZPUxVtU1KHF7/3/mf0fUjsF3sfRMq3mHr1ExRSW4KXBwUC+yxQcZ8OaOXqLWa7dMqvXB8xD2qp9/8wS+sECdsEsFmWnJ1rSX8u9jyIFNkFbU+DgIu9QtFPO7jmvIwwpcV1pXhu86ubWKO8kgHF48I714OBz1c3igdFQKrXhCO6pTjCxs1wMAkYf/L9Ojy2+6DsVJOdQshzO41CGNDWDOGUBHJuuykLXyMTNcglgnlPYOEfr8UzS7Mrl340zJf0vLL11qZT3c+PgxgmcH3J1zCIxJzcAFdX0pU3IZ6f9vQ5BmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IwnMclvjhftzISEw0rNhZQrRIofxZkPsSL1wqhtOzdE=;
- b=kVJKWEIpl9ceqzJHFTxYJJmNMK+gC/7C64NZU1pTHAQOjq7/5Mu+rFkMdX/9lcSRJbeZjdGM0uaSFk7g+2ztHrEihO/SmA3KrzxdZj2ZVss+afXU4QMcXB3OWDzjj0fXTF29MSPR5mf2uiR9CDD9OBEaHkIN4nWd7K6Ng1jERGZzhqXpunbmmjX0nx408j4TJkzrSulCuLzehwANFREKvm7JCbcrxhYUHYxSZSzsGf5jaWJeIjlqzGoTCrubIKPQ2byrOZHGoTYnZgZcrQc/aqtiX8a5y56D1wkOvkS2ji9rWVUx9Y8R9cpX+7Es2yYK/zVe5npAGfkTv2dfr/IEPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IwnMclvjhftzISEw0rNhZQrRIofxZkPsSL1wqhtOzdE=;
- b=MKlhaZkuHHxnTQI0cZawbNjZgQo6fRuL/UFnGMeGMqQBp1rSUCdhO8wIfwNsOk2Y5nfBOz2DYLryp8jhPfU9oK+izRzpikTNKxe1IVRhB+nA2qB9CL0OP9Darwq/VLP5n7vslBkMb7scnsoqvcbVKWkwiVpQ2ptlY8HXm+DUlAs=
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
- by AM0PR04MB7010.eurprd04.prod.outlook.com (2603:10a6:208:199::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Wed, 17 Jan
- 2024 09:38:43 +0000
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::748a:98f4:59fa:f206]) by AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::748a:98f4:59fa:f206%7]) with mapi id 15.20.7181.022; Wed, 17 Jan 2024
- 09:38:43 +0000
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: Francesco Dolcini <francesco@dolcini.it>
-CC: "marcel@holtmann.org" <marcel@holtmann.org>, "johan.hedberg@gmail.com"
-	<johan.hedberg@gmail.com>, "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
-	Marcel Ziswiler <marcel.ziswiler@toradex.com>, Amitkumar Karwar
-	<amitkumar.karwar@nxp.com>, "linux-bluetooth@vger.kernel.org"
-	<linux-bluetooth@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Sherry Sun <sherry.sun@nxp.com>, Rohit Fule
-	<rohit.fule@nxp.com>
-Subject: Re: [RFC PATCH] Bluetooth: btnxpuart: Fix nxp_setup in case chip is
- powered on late
-Thread-Topic: [RFC PATCH] Bluetooth: btnxpuart: Fix nxp_setup in case chip is
- powered on late
-Thread-Index: AQHaSSj19sN+8TuMTk2XZIqniCJI4Q==
-Date: Wed, 17 Jan 2024 09:38:43 +0000
-Message-ID:
- <AS4PR04MB9692991FC87A8FF21E455BC8E7722@AS4PR04MB9692.eurprd04.prod.outlook.com>
-References: <20240117030501.149114-1-neeraj.sanjaykale@nxp.com>
- <20240117090932.GA3787@francesco-nb>
-In-Reply-To: <20240117090932.GA3787@francesco-nb>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS4PR04MB9692:EE_|AM0PR04MB7010:EE_
-x-ms-office365-filtering-correlation-id: f4f7fcee-348f-4802-1022-08dc17401862
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- qTJPtMGJt0PuEcxfn+jBaKCw/E6SCTN+O5tYTMoZeltz0OFj1/uB/sNxuJaVWAm2WKbKvWDReDiBOwONG83YoiE05UoAb7ydfOKc3dwuuY471jxqUW56Ju2u+Wv2rpGNU/HxbYWJ+g2wUAyw+aSLRVYf/cFYRAjLN4sbWRcACollLWTSwgkcoxgEVqrufwASFIqtpyJO1eU0N0z13ibDozmnEYtDO33ZtoyD41IhIdUu42KtQdjqKYqCx3dw9l16I92zh6cKiNohKx43yfhbYrcJTtKFzfCOGtYm78dUMtz1FBPHDYNHqp7p8yMeiqRnf5ASQRFlngT0BFtQM2tn10LZfrbEYmGWN9Ej+RKWG43Quytmi3n9SkyuczSn6xg0OopSDbyhdNcE4kTFRKMKTI8Wv1gPpIBOeMl04MqJA5tALO6AXcPRb27GCcPkUBHB3v1DEXRYEykqNcdkAQi2FOI3V89+wd5O05VVqdrnDVkCc1QjL5BgrT2+4WPrhmt5YdapFwXxqqf0huudlvZLP3CakJGb4tG0JZFlkPcgnwhPRzNs8Lzwx50tQqiWmvB49FOZ7V+aAhJ4xG6VwKtkx701/XMed1ua8SD0gOKqDUAZORzgr62B0EOYqTUfIjql
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(376002)(136003)(396003)(366004)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(66946007)(66556008)(64756008)(66446008)(66476007)(76116006)(4326008)(52536014)(122000001)(8676002)(8936002)(54906003)(6916009)(38100700002)(316002)(9686003)(478600001)(41300700001)(7696005)(6506007)(71200400001)(83380400001)(26005)(38070700009)(2906002)(33656002)(5660300002)(86362001)(55016003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Io5qTITzwNIWkaL5ZltV5ozkPmFIKJofaUKd4RU5Hs1RA35bWysXAl5Vs7+/?=
- =?us-ascii?Q?Zg/m+t1hvKCHbGryYulZW+8hkqPe3xcYByKcBcUiPpulSA2/9jPoC02ulItc?=
- =?us-ascii?Q?dVRoKro5f03hjAZ81micE1tq9J2HW2pcgiZ/cWuixYeVf1P/qBjy2H4k6Tq3?=
- =?us-ascii?Q?56Rag/kgE6DhQNkztD3tw6sFaOPSrxq7P0y0QCIKLG+Fkn2qs7fnGfji5CId?=
- =?us-ascii?Q?tMZx5t1ObuJAZpY/ByD9dWeEjaJ8rO2Y7Vs+BtqrdeCYWpXBuNyQ8+MXyPSb?=
- =?us-ascii?Q?VY8uSiDBXH72ELQ0OFsribqy5u86S1OyDU+U1cKF7nDisoVnw6vR3dTu8541?=
- =?us-ascii?Q?uS+jzMdmt9C3DgiKuNN9IcL5Jbhbo6uiDsSGkrk6AW1oFu/OlushDgae2Ory?=
- =?us-ascii?Q?wq2inU3ZrI59GOK4OgeqpOkJzuZadas/ftBPp/J5vw6luDrzm00HD7cQSUff?=
- =?us-ascii?Q?UV6jZqOxZKFX8+DCfgbHAqbfGXOhpUiEylDC/CkNHxgVykPEmvLa3bHrrLyX?=
- =?us-ascii?Q?uL3a5c8rRQum93jA+V4byqUmnhcgvgoy3iueyZ805CrfOorFVvOpGLIKy2IQ?=
- =?us-ascii?Q?q4lizbbt8IAo8T9PClSBb7FCFnvnBp+ajyNSlVdZgKU2+f8OEa/xe5QKDzMD?=
- =?us-ascii?Q?gxNjaWYMw6rvzxvalo8AKXNjqdeQ36qxPztpOReyamwiDWkf7WTYWNgIJgkJ?=
- =?us-ascii?Q?z79YKAfsxOIajIITT0nVNyuEFpqWoBH23L3p1wEQv8dd8OaLGcYaixDXFLei?=
- =?us-ascii?Q?ZUwYztanDxr0mhDCcM0KSgK7r/xBfgyCfKnTum/GchzA5EbmQZ8fqzMX3P6t?=
- =?us-ascii?Q?/j3GhFfq2pmhARd3RLtXuxtNUI2NJre2NvIokb5VHp+s1QKSsKzdmEu+nbk4?=
- =?us-ascii?Q?Kg4PyiRhbPPcVnt6XFw35W+Ubgf2wGsoxtwBk6dKTRXyHSwMtCPmj8HCCJ0W?=
- =?us-ascii?Q?nz7m/Cf4Mzag/j7i9aVNXbaBDbOtGt+Pu/U6/8gfCitpki+3XSpbJvh242RU?=
- =?us-ascii?Q?IqrYv5uaf5tsJmZG6QGfdn1gHBFPTjnpBqNP33Goz8+ez/hPIqMn5/Z4R8DV?=
- =?us-ascii?Q?rKk4NQjVXiTqc6fFO3ogh5/tdycy/mjKhldIaWA0txfKRh/VKFM9ABgCmx0+?=
- =?us-ascii?Q?EQSjsQexl0JJLXRypQuDj6ahA3KKJ0dWbDf6d9Y63WT3/YpgOhNfQObWqmOR?=
- =?us-ascii?Q?/Vx9man7Ws04THLGp13bXQhXqmOvpHceF2x0yvwwGbtDdyUSDMjdo+NHujX7?=
- =?us-ascii?Q?GjirPqLfb5cyQzfakD+MsnnU5d4VNioFuBeH4ujh8Ih1EiEhWbmemnI6bUBi?=
- =?us-ascii?Q?nET+m84J/YV9ZQ2lPR0BXPg6rgsd3KX3MJ06eWksRM1j/JQZO5b9f5w5DIBW?=
- =?us-ascii?Q?1Ym/2hnfpfhhD+oUoygl5jz/g07u4Arm9i8p3GWZRaEftGbjJdkHKrouCa3/?=
- =?us-ascii?Q?Cnt4eWtoPCxS8FFvVNwwzcvO065WIpT9q1Fc0jgQgGnPAjt80JTpwfkVXAgt?=
- =?us-ascii?Q?K++SeQ1w4NNJvzm2NtFAUZnP8tcJr9mOuE9WJnClo0hRT4e/KtpE/jeilrXy?=
- =?us-ascii?Q?VUsW6W6jsaYe4xEZxSqX6BpewhFhU4t02x2o35Qe?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q/w4HmFm"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240117093904epoutp02251f1bd314d6e7cf1cd571058ff77360~rGPmZXpEc2359023590epoutp02F
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:39:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240117093904epoutp02251f1bd314d6e7cf1cd571058ff77360~rGPmZXpEc2359023590epoutp02F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1705484344;
+	bh=OGni/UXXm5nQUN7/SK+J7VW0F1JPyAGxNcWJ2RPs0Oc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Q/w4HmFmQA4ikyiGyF6/V8L0xa8orvecL+risCpMJLvOLuUNU9wyrqPRPBa4johyJ
+	 t7tjP5/L0z1yKgeRxTP0yZJ/nK7AE0GXM83+53LZe/h4bFsSTHo0cZ9IeaPSfBV3EM
+	 F4CxARh+CEx8Ss8pV55GUeyarJlwf6xUpY252vvk=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240117093903epcas5p33ebf38ce311b3613ceb267cf8b6c6346~rGPly6N7d0819308193epcas5p3G;
+	Wed, 17 Jan 2024 09:39:03 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4TFLRp0v26z4x9Q3; Wed, 17 Jan
+	2024 09:39:02 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	FF.DE.19369.530A7A56; Wed, 17 Jan 2024 18:39:02 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240117084516epcas5p2f0961781ff761ac3a3794c5ea80df45f~rFgoZi9GW2677426774epcas5p25;
+	Wed, 17 Jan 2024 08:45:16 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240117084516epsmtrp129edf63873e49147268cd0de33a16a40~rFgoYynpG3093530935epsmtrp10;
+	Wed, 17 Jan 2024 08:45:16 +0000 (GMT)
+X-AuditID: b6c32a50-c99ff70000004ba9-91-65a7a0351c8c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	59.0F.08755.C9397A56; Wed, 17 Jan 2024 17:45:16 +0900 (KST)
+Received: from AHRE124.. (unknown [109.105.118.124]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240117084515epsmtip1e99bc0aead86dc03cb69452d9c9772bd~rFgnJk8L00794407944epsmtip1P;
+	Wed, 17 Jan 2024 08:45:15 +0000 (GMT)
+From: Xiaobing Li <xiaobing.li@samsung.com>
+To: axboe@kernel.dk
+Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
+	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
+	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
+	ruyi.zhang@samsung.com, xiaobing.li@samsung.com
+Subject: Re: Re: [PATCH v6] io_uring: Statistics of the true utilization of
+ sq threads.
+Date: Wed, 17 Jan 2024 16:37:06 +0800
+Message-Id: <20240117083706.11766-1-xiaobing.li@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <e117f6e0-a8bc-4068-8bce-65a7c4e129cf@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4f7fcee-348f-4802-1022-08dc17401862
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2024 09:38:43.4081
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +KEhh2IiqXkJSRAAYtAdsBtp7DiwjyY9Lmwq64NS3Bdirr1MFFxaCz2798rui/LfBSpoLmKBhomgW3PLtSN+TWFdElpLMEpwiwqntNf74nY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7010
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKJsWRmVeSWpSXmKPExsWy7bCmuq7ZguWpBtOvMVrMWbWN0WL13X42
+	i3et51gsjv5/y2bxq/suo8XWL19ZLS7vmsNm8Wwvp8WXw9/ZLc5O+MBqMXXLDiaLjpbLjA48
+	Hjtn3WX3uHy21KNvyypGj8+b5AJYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0t
+	zJUU8hJzU22VXHwCdN0yc4AOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBTo
+	FSfmFpfmpevlpZZYGRoYGJkCFSZkZzw8/p+5YIF6xfxjLxgbGL/KdzFyckgImEjMOfCLrYuR
+	i0NIYA+jxKEDS9ghnE+MEk0bF7CBVAkJfGOU+DfDFqbj0IVTUEV7GSVuH+pggXBeMkp8vjiX
+	BaSKTUBb4vq6LlYQW0RAWGJ/RytYEbPAX0aJCS9/M4MkhAUiJTq/nWcCsVkEVCU+r/7MCGLz
+	CthI/Lv6mx1inbzE/oNnweo5BWwl7p18xAZRIyhxcuYTsGXMQDXNW2czgyyQEJjIIfHm4koW
+	iGYXiT8b5jBD2MISr45vgRoqJfGyvw3KLpY40vOdFaK5gVFi+u2rUAlriX9X9gAN4gDaoCmx
+	fpc+RFhWYuqpdUwQi/kken8/YYKI80rsmAdjq0qsvvQQ6gZpidcNv6HiHhJX/rQxQoJrAqPE
+	9i1n2CYwKsxC8tAsJA/NQli9gJF5FaNUakFxbnpqsmmBoW5eajk8opPzczcxgtOrVsAOxtUb
+	/uodYmTiYDzEKMHBrCTC62+wLFWINyWxsiq1KD++qDQntfgQoykwyCcyS4km5wMTfF5JvKGJ
+	pYGJmZmZiaWxmaGSOO/r1rkpQgLpiSWp2ampBalFMH1MHJxSDUxdny9vKd/X27BCuWPOF95d
+	6T6bbp1Ze27qfdb1rib/GfcZbNo1nafwQZL2y3nnLAoOyFxOj3u4e+N2mZrvS1dtVzgjv1v+
+	mktixELBPX3HnF82N+iZn40vuCn5N067dPvhW5nPu0Qa+NeWcAm+/OogYaI56cRxk6umS54k
+	bNQ6+lvap2pW2wk3awfm2VtuXnDflG73tmW99JSFy44tiM5csz4wjfHPxCUbSy5LbNo9VWCC
+	S4Rb5aQwvbQrdvlyDI3Oxq/b1comn77+xnTVxlgN45R3ldkvU3v1HmV/WPj615I1UXu2tQvv
+	Zwy+rGC9TTna9PD1AiG3KXsiogVEXY9//tU2N+xBkcy1lRPaj0qvUGIpzkg01GIuKk4EAGz2
+	6H84BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHLMWRmVeSWpSXmKPExsWy7bCSnO6cyctTDdZuFbOYs2obo8Xqu/1s
+	Fu9az7FYHP3/ls3iV/ddRoutX76yWlzeNYfN4tleTosvh7+zW5yd8IHVYuqWHUwWHS2XGR14
+	PHbOusvucflsqUffllWMHp83yQWwRHHZpKTmZJalFunbJXBlPDz+n7lggXrF/GMvGBsYv8p3
+	MXJySAiYSBy6cIq9i5GLQ0hgN6PEz/atLF2MHEAJaYk/f8ohaoQlVv57DlXznFHix9pVbCAJ
+	NgFtievrulhBbBGgov0drSwgNrNAJ5PE6896ILawQLjEweZbjCA2i4CqxOfVn8FsXgEbiX9X
+	f7NDLJCX2H/wLDOIzSlgK3Hv5COw+UJANQ1HWtkg6gUlTs58AnYbs4C6xPp5QhCr5CWat85m
+	nsAoOAtJ1SyEqllIqhYwMq9ilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dLzs/dxAiOEi3NHYzb
+	V33QO8TIxMF4iFGCg1lJhNffYFmqEG9KYmVValF+fFFpTmrxIUZpDhYlcV7xF70pQgLpiSWp
+	2ampBalFMFkmDk6pBqaNy5PalIxmT5I5ZcshWvI1meWzxYVz59l25rY4LNoafufY6WkyWp6s
+	ew5E2vEs3qT31LVrQndsUGpC/pOfvZZ9Ac8cE4T7P+9iO+rBefiBYbtncu7MU1YPRNuuN3Kx
+	pKreTp0rE2RYJPFXT5CVuzbeiTPlp9ZHrq9FzILrSnW6rNZPZeV+Vcbo5dLtMJfRifNXzaQQ
+	e4MZ5xQnCKsqbPiQyMnZ0FXLaL67nkksbvoi9jkWEp/S3Hq8Pt5/tFrtgXLjYukdRyzLza9Y
+	WM9763wt/jCrv3y1m1iv9vm3l6+WPrlw/m78uzM++ROqanc17Gg039IZfElcJtE0Jz3ORXVn
+	cuTy0h8mS/I3xSYrsRRnJBpqMRcVJwIAHZ05pQEDAAA=
+X-CMS-MailID: 20240117084516epcas5p2f0961781ff761ac3a3794c5ea80df45f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240117084516epcas5p2f0961781ff761ac3a3794c5ea80df45f
+References: <e117f6e0-a8bc-4068-8bce-65a7c4e129cf@kernel.dk>
+	<CGME20240117084516epcas5p2f0961781ff761ac3a3794c5ea80df45f@epcas5p2.samsung.com>
 
-Hi Francesco,
+On 1/12/24 2:58 AM, Jens Axboe wrote:
+>On 1/11/24 6:12 PM, Xiaobing Li wrote:
+>> On 1/10/24 16:15 AM, Jens Axboe wrote:
+>>> On 1/10/24 2:05 AM, Xiaobing Li wrote:
+>>>> On 1/5/24 04:02 AM, Pavel Begunkov wrote:
+>>>>> On 1/3/24 05:49, Xiaobing Li wrote:
+>>>>>> On 12/30/23 9:27 AM, Pavel Begunkov wrote:
+>>>>>>> Why it uses jiffies instead of some task run time?
+>>>>>>> Consequently, why it's fine to account irq time and other
+>>>>>>> preemption? (hint, it's not)
+>>>>>>>
+>>>>>>> Why it can't be done with userspace and/or bpf? Why
+>>>>>>> can't it be estimated by checking and tracking
+>>>>>>> IORING_SQ_NEED_WAKEUP in userspace?
+>>>>>>>
+>>>>>>> What's the use case in particular? Considering that
+>>>>>>> one of the previous revisions was uapi-less, something
+>>>>>>> is really fishy here. Again, it's a procfs file nobody
+>>>>>>> but a few would want to parse to use the feature.
+>>>>>>>
+>>>>>>> Why it just keeps aggregating stats for the whole
+>>>>>>> life time of the ring? If the workload changes,
+>>>>>>> that would either totally screw the stats or would make
+>>>>>>> it too inert to be useful. That's especially relevant
+>>>>>>> for long running (days) processes. There should be a
+>>>>>>> way to reset it so it starts counting anew.
+>>>>>>
+>>>>>> Hi, Jens and Pavel,
+>>>>>> I carefully read the questions you raised.
+>>>>>> First of all, as to why I use jiffies to statistics time, it
+>>>>>> is because I have done some performance tests and found that
+>>>>>> using jiffies has a relatively smaller loss of performance
+>>>>>> than using task run time. Of course, using task run time is
+>>>>>
+>>>>> How does taking a measure for task runtime looks like? I expect it to
+>>>>> be a simple read of a variable inside task_struct, maybe with READ_ONCE,
+>>>>> in which case the overhead shouldn't be realistically measurable. Does
+>>>>> it need locking?
+>>>>
+>>>> The task runtime I am talking about is similar to this:
+>>>> start = get_system_time(current);
+>>>> do_io_part();
+>>>> sq->total_time += get_system_time(current) - start;
+>>>
+>>> Not sure what get_system_time() is, don't see that anywhere.
+>>>
+>>>> Currently, it is not possible to obtain the execution time of a piece of 
+>>>> code by a simple read of a variable inside task_struct. 
+>>>> Or do you have any good ideas?
+>>>
+>>> I must be missing something, because it seems like all you need is to
+>>> read task->stime? You could possible even make do with just logging busy
+>>> loop time, as getrusage(RUSAGE_THREAD, &stat) from userspace would then
+>>> give you the total time.
+>>>
+>>> stat.ru_stime would then be the total time, the thread ran, and
+>>> 1 - (above_busy_stime / stat.ru_stime) would give you the time the
+>>> percentage of time the thread ran and did useful work (eg not busy
+>>> looping.
+>> 
+>> getrusage can indeed get the total time of the thread, but this
+>> introduces an extra function call, which is relatively more
+>> complicated than defining a variable. In fact, recording the total
+>> time of the loop and the time of processing the IO part can achieve
+>> our observation purpose. Recording only two variables will have less
+>> impact on the existing performance, so why not  choose a simpler and
+>> effective method.
+>
+>I'm not opposed to exposing both of them, it does make the API simpler.
+>If we can call it an API... I think the main point was using task->stime
+>for it rather than jiffies etc.
 
-Thankyou for the review comment.
+Hi, Jens and Pavel
+I modified the code according to your opinions.
 
-> > diff --git a/drivers/bluetooth/btnxpuart.c
-> > b/drivers/bluetooth/btnxpuart.c index 7f88b6f52f26..20a3a5bd5529
-> > 100644
-> > --- a/drivers/bluetooth/btnxpuart.c
-> > +++ b/drivers/bluetooth/btnxpuart.c
-> > @@ -1036,6 +1048,13 @@ static int nxp_setup(struct hci_dev *hdev)
-> >               err =3D nxp_download_firmware(hdev);
-> >               if (err < 0)
-> >                       return err;
-> > +     } else if (!serdev_device_get_cts(nxpdev->serdev)) {
-> > +             /* CTS is high and no bootloader signatures detected */
-> > +             bt_dev_dbg(hdev, "Controller not detected. Will check aga=
-in in %d
-> msec",
-> > +                        NXP_SETUP_RETRY_TIME_MS);
-> > +             schedule_delayed_work(&nxpdev->setup_retry_work,
-> > +                                   msecs_to_jiffies(NXP_SETUP_RETRY_TI=
-ME_MS));
-> > +             return -ENODEV;
-> why not just
->=20
-> return -EPROBE_DEFER;
->=20
-> and remove everything else, no need for any kind of retry or delayed work=
- if
-> the driver core takes care of it.
->=20
-Wouldn't returning -EPROBE_DEFER make more sense in driver probe context?
+I got the total time of the sqpoll thread through getrusage. 
+eg：
 
-Here, the driver probe registers an hci interface (hci_register_dev()), and=
- returns success to kernel.
+fdinfo.c:
++long sq_total_time = 0;
++long sq_work_time = 0;
+if (has_lock && (ctx->flags & IORING_SETUP_SQPOLL)) {
+	struct io_sq_data *sq = ctx->sq_data;
 
-The hci_register_dev() queues hdev->power_on work at the end, which opens t=
-he hci dev, and ultimately calls this setup function.
+	sq_pid = sq->task_pid;
+	sq_cpu = sq->sq_cpu;
++	struct rusage r;
++	getrusage(sq->thread, RUSAGE_SELF, &r);
++	sq_total_time = r.ru_stime.tv_sec * 1000000 + r.ru_stime.tv_usec;
++	sq_work_time = sq->work_time;
+}
 
-In this patch, we are queueing the same work from the delayed setup_retry_w=
-ork().
+seq_printf(m, "SqThread:\t%d\n", sq_pid);
+seq_printf(m, "SqThreadCpu:\t%d\n", sq_cpu);
++seq_printf(m, "SqTotalTime:\t%ldus\n", sq_total_time);
++seq_printf(m, "SqWorkTime:\t%ldus\n", sq_work_time);
+seq_printf(m, "UserFiles:\t%u\n", ctx->nr_user_files);
 
-Returning -ENODEV (or -EPROBE_DEFER) would only affect hci_dev_open(), whic=
-h is in power_on work context, and not driver probe context.
+The working time of the sqpoll thread is obtained through ktime_get().
+eg：
 
-Perhaps, we should call it hci_retry_power_on() work or something similar?
+sqpoll.c:
++ktime_t start, diff;
++start = ktime_get();
+list_for_each_entry(ctx, &sqd->ctx_list, sqd_list) {
+	int ret = __io_sq_thread(ctx, cap_entries);
 
-Please let me know your thoughts on this.
+	if (!sqt_spin && (ret > 0 || !wq_list_empty(&ctx->iopoll_list)))
+		sqt_spin = true;
+}
+if (io_run_task_work())
+	sqt_spin = true;
 
-Thanks,
-Neeraj
++diff = ktime_sub(ktime_get(), start);
++if (sqt_spin == true)
++	sqd->work_time += ktime_to_us(diff);
+
+The test results are as follows:
+Every 2.0s: cat /proc/9230/fdinfo/6 | grep -E Sq
+SqMask: 0x3
+SqHead: 3197153
+SqTail: 3197153
+CachedSqHead:   3197153
+SqThread:       9231
+SqThreadCpu:    11
+SqTotalTime:    92215321us
+SqWorkTime:     15106578us
+
+Do you think this solution work?
+
