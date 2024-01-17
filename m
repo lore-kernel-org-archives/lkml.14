@@ -1,115 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 879AE1DFC7;
-	Wed, 17 Jan 2024 12:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from abrecht.li (75-128-16-94.static.cable.fcom.ch [94.16.128.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E4B1DFC7;
+	Wed, 17 Jan 2024 12:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.16.128.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705493532; cv=none; b=Bl21fF2189kTKR0FseF7aRmCjBtDQhHJyKS0/4Vk9uipW2b2t+2+zHqio8Wfb9r6orOc+L0h5LhXTg21bLycksBOJWFxnLopHx1cBZ55Vg9UfZZlCmElVIOftMP1EH9Hx7yDkAtvD6XXheBrFaDisW2ArqZjoq20OZlcUkB8lTg=
+	t=1705493657; cv=none; b=c08L9wSW3OtLAvB6mfENkB8Pfv06YYK4JzYRn/L4hW2G+RGyveb3+bX50KbZBdHZZLBYFFC0e2zZlfR/bpyLS6NbdBPt89XYzbO/70YIfH2KvcPIqlBbN8iigGxQldSHckarbVOylSyHXQZPWqoSfheAVGogP1ki+UNRRw8RV4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705493532; c=relaxed/simple;
-	bh=+zNMd3dUbHss2EQOXbNle6Cu4g0DF1zxGNSVl8H+bjo=;
-	h=Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=MRjeZbnwkbEW1O1w5/oikGacWRXdqRt1OPmRaCEKUVBVyJPMXWkv8zQ3LKpX3Iwexu+CzXBzFDo7qYSvv/CwWBV2cExIVJBcjhENnGAk9UsuuEbbAPcHhRmhZ8ibcfpt3l3AYi2s8AHzncIHlMzj7WTK6tpwl0bm37ZThAjJUio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB1E611FB;
-	Wed, 17 Jan 2024 04:12:55 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.37.172])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC5503F766;
-	Wed, 17 Jan 2024 04:12:07 -0800 (PST)
-Date: Wed, 17 Jan 2024 12:12:05 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-	Ian Rogers <irogers@google.com>, acme@redhat.com,
-	james.clark@arm.com, john.g.garry@oracle.com, leo.yan@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
-	namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com,
-	will@kernel.org
-Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
-Message-ID: <ZafEFU7kwf6W0_Qx@FVFF77S0Q05N.cambridge.arm.com>
-References: <20240116170348.463479-1-mark.rutland@arm.com>
- <8734uwxrca.wl-maz@kernel.org>
+	s=arc-20240116; t=1705493657; c=relaxed/simple;
+	bh=RlZFmj9rLo2wrABejOWSXj94vkocMEJnlyZj1KYaC+A=;
+	h=DKIM-Filter:Received:MIME-Version:Date:From:To:Subject:Message-ID:
+	 X-Sender:Content-Type:Content-Transfer-Encoding; b=Dnfi7m8GGEZ9MrJhApdZE6fWNBX18XjyzVAtjeCTPI0zf5xYq+aGqvs+JBymb/TnRh0DQzG4JZ0ngIDZc+UacqFsdIW+pLt09w3Zerh6DEuhzYPJj6s1jwh4b4xeVbFwh1uf+8uMDcoUWGrju0zAj/gjMO9EVdhXGHGlnjWtauM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nodmarc.danielabrecht.ch; spf=pass smtp.mailfrom=nodmarc.danielabrecht.ch; arc=none smtp.client-ip=94.16.128.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nodmarc.danielabrecht.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nodmarc.danielabrecht.ch
+DKIM-Filter: OpenDKIM Filter v2.11.0 abrecht.li EE8F726B6536
+Received: from toucan.dmz.abrecht.li (unknown [IPv6:fc00:4::a3c:111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by abrecht.li (Postfix) with ESMTPSA id EE8F726B6536;
+	Wed, 17 Jan 2024 12:14:10 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8734uwxrca.wl-maz@kernel.org>
+Date: Wed, 17 Jan 2024 13:14:10 +0100
+From: Daniel Abrecht <linux-sound@nodmarc.danielabrecht.ch>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: soc-core.c: Add "Unknown" and "Unknown Product" to
+ dmi_blacklist
+Message-ID: <78a54997daea2b327ad59d495bc33851@abrecht.li>
+X-Sender: linux-sound@nodmarc.danielabrecht.ch
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 17, 2024 at 09:05:25AM +0000, Marc Zyngier wrote:
-> Hi Mark,
-> 
-> On Tue, 16 Jan 2024 17:03:48 +0000,
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> > 
-> > Currently the perf tool doesn't deteect support for extneded event types
-> > on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
-> > hardware events into per-PMU events. This is due to the detection of
-> > extended event types not handling mandatory filters required by the
-> > M1/M2 PMU driver.
-> 
-> Thanks for looking into this.
-> 
-> I've given your patch a go on my M1 box, and it indeed makes things
-> substantially better:
-> 
-> $ sudo ./perf stat -e cycles ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.419
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    174,783,472,090      apple_firestorm_pmu/cycles/                                             (93.10%)
->     39,134,744,813      apple_icestorm_pmu/cycles/                                              (71.86%)
-> 
->        3.568145595 seconds time elapsed
-> 
->       12.203084000 seconds user
->       55.135271000 seconds sys
+In U-Boot, the default for DMI vendor / product if not set is "Unknown" 
+and "Unknown Product".
+See 
+https://source.denx.de/u-boot/u-boot/-/blob/v2023.10/lib/smbios.c?ref_type=tags#L272
 
-Thanks for giving that a spin!
+This patch adds them to the dmi_blacklist.
 
-> However, I'm seeing some slightly odd behaviours:
-> 
-> $ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.313
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    <not supported>      apple_firestorm_pmu/cycles:k/                                         
->    <not supported>      apple_icestorm_pmu/cycles:k/                                          
-> 
->        3.467568841 seconds time elapsed
-> 
->       13.080111000 seconds user
->       53.162099000 seconds sys
-> 
-> I would have expected it to count, but it didn't. For that to work, I
-> have to add the 'H' modifier:
+Signed-off-by: Daniel Abrecht <public@danielabrecht.ch>
+---
+  sound/soc/soc-core.c | 2 ++
+  1 file changed, 2 insertions(+)
 
-Ok, so that'll have something to do with the way the tool chooses which
-perf_evant_attr::exclude_* bits to set. I thought that was the same for plain
-events and pmu_name/event/ events, but I could be mistaken.
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index f8524b5bfb33..aa1a31abbe3a 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1804,6 +1804,8 @@ static const char * const dmi_blacklist[] = {
+      "Board Manufacturer",
+      "Board Vendor Name",
+      "Board Product Name",
++    "Unknown",
++    "Unknown Product",
+      NULL,    /* terminator */
+  };
 
-Is that something you had tried prior to this patch, and did that "just work"
-with the explicit pmu_name/event/ syntax prior to this patch?
-
-e.g. did something like:
-
-	perf stat -e apple_firestorm_pmu/cycles/k -e apple_icestorm_pmu/cycles/k ./workload
-
-... happen to work withiout requiring the addition of 'H'?
-
-If so, does that behave the same before/after this patch?
-
-... and could you run that with '-vvv' and dump the output for comparison?
-
-Thanks,
-Mark.
+-- 
+2.39.2
