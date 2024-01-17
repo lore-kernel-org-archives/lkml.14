@@ -1,224 +1,155 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F2E14285
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 10:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FA41428B
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 10:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705485806; cv=none; b=jEfeVS3zL4gc3zweVE5hJZXDcOJ2NrgPFg4dntlLLrFsygvJYMKwfV/5l830Y7KqZUwakiITOZcVPQhXzK3Q7H72kuU/D/N6KtPByUVWce0ZMQFvDj3/jAl5D6DvHQvfOJJBJ9uZsxdEOQOU0KcjMAwslUVmZw8+AUVuU/xgcRM=
+	t=1705485807; cv=none; b=Oj07EmyWpu7NGzKkjvO3Mt5hkBfgSwTtJjpka4w9VwTG0E77Y26Kw6k0CANYRV41F++1awhhctxadGUYEHWKPZpo2IQMgmXLeesDdWkug47uKyAxQ/7SBeLWA5xjb3eNBYlz+d55zNdd84PaGBM4qWhHGjRTpvMSlepCiMv6Vb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705485806; c=relaxed/simple;
-	bh=2/Pg19mJk7/OgRvVH7Stv2YWNsahvj/2T/Oj3wiLOh4=;
-	h=Received:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
-	 X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=O+pLDaCaBitCsHrA0RS+BN2gmizGFFb4TlhxQdxLhgbP3GWhx22ooq08YJp6jBBKxcCuFKyDzrV7450xc7sv0ho9KNr0wb+VcaSPY4NFLBqPUc6KDYiBkfSqiqLa1DyQbOsi4rUgbrMr8MG5pLC/mdJ6TAOT0fQk5EoP4jgobhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rQ2lR-000651-VN; Wed, 17 Jan 2024 11:03:17 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rQ2lQ-000RMX-RA; Wed, 17 Jan 2024 11:03:16 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rQ2lQ-001aYu-2O;
-	Wed, 17 Jan 2024 11:03:16 +0100
-Date: Wed, 17 Jan 2024 11:03:16 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>, 
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/6] dt-bindings: pwm: amlogic: fix s4 bindings
-Message-ID: <awxboh3nv4r5p7v7vcgwttu2m74fws47johb73c5f7econ2qqu@zl5xbnoeyclq>
-References: <20231222111658.832167-1-jbrunet@baylibre.com>
- <20231222111658.832167-2-jbrunet@baylibre.com>
+	s=arc-20240116; t=1705485807; c=relaxed/simple;
+	bh=6Ba35sjl5j77N2GQR5J5Qza9P7y57/tDDptoGf9OcXI=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:MIME-Version:X-Received:Date:
+	 X-Google-Appengine-App-Id:X-Google-Appengine-App-Id-Alias:
+	 Message-ID:Subject:From:To:Content-Type; b=VAdAQHK4mXSIiKifCpMUm7pC3HPkIgq7VaUp2Q9Ut6KBiapXNNNOZiEw959tXX/wW/Fi4qp8nzX8CZ/sdRHuwIRlM0k4S3uIVFpuvSbAQZQOVkr5++chmr47oINDIzwERy6GCJJfikGhgZve98Yyt2NfJdHdDnmz0cH6KqILFcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3618e0060d1so10364975ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 02:03:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705485805; x=1706090605;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XnlLyvOefL1ydIX1ocF93Tqp6b+HX/ZrHqzQLe9vBGQ=;
+        b=tDZFztrZR+t+nN4RzcOhJZJqDjZDvQMif4Oi+bd4+6aYSo8IqT4CDfW8fdRxcOnl2k
+         Vx62bqRjlSayAjTMcnRzY/i+UQ9y5HjzXmQbKqnBTgssnl0wQ6aJjlynSAC00d1rM6QK
+         uwPCp5u9krd/auVeAYCpzh9uriw1TEG4pqCItpe8+D+1E7a0TrUU/j//cildmANBjh9x
+         hamPJWMktrbTiFEgpxKYjkAfdC6bidQom3+5qNdxytEZwC0DlB8apdg8fzykGr/aIHEG
+         y/JwpSl3QlhZGSUtuGIV0z6qfZdjobS7nvYYACeFQ4Sik1+BlEvp4jy6zqdVFMt2/jCO
+         EpEg==
+X-Gm-Message-State: AOJu0YyUv/LHU5xfbUo0jDxMASATot0RLYQjF151PM+GGCqtJ4/5fTCu
+	YXKVbEzb5mlRxpNygVtTdwoWETXGM8YftomAq8sx9biyO5P1
+X-Google-Smtp-Source: AGHT+IGvV1agZFiqt/a//m5HZbLHbz1/WZWfpE0D+BlA/d5KlOxjXPWsR2fYtwiSR0/K9fKYRy4Y+8tEhqSYGeXfTim+0tv4CjwG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bbfbzv6eijurrhvz"
-Content-Disposition: inline
-In-Reply-To: <20231222111658.832167-2-jbrunet@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Received: by 2002:a92:c565:0:b0:360:134:54b1 with SMTP id
+ b5-20020a92c565000000b00360013454b1mr1232890ilj.0.1705485805272; Wed, 17 Jan
+ 2024 02:03:25 -0800 (PST)
+Date: Wed, 17 Jan 2024 02:03:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000097c554060f215b50@google.com>
+Subject: [syzbot] [bluetooth?] possible deadlock in __flush_workqueue
+From: syzbot <syzbot+da0a9c9721e36db712e8@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    943b9f0ab2cf Add linux-next specific files for 20240117
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=121de2fbe80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=12af1d067b6a6d19
+dashboard link: https://syzkaller.appspot.com/bug?extid=da0a9c9721e36db712e8
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/9c032ce79e0f/disk-943b9f0a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/93163e287878/vmlinux-943b9f0a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/512cc2e14a4b/bzImage-943b9f0a.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+da0a9c9721e36db712e8@syzkaller.appspotmail.com
+
+Bluetooth: hci2: Opcode 0x0c03 failed: -110
+============================================
+WARNING: possible recursive locking detected
+6.7.0-next-20240117-syzkaller #0 Not tainted
+--------------------------------------------
+kworker/u5:1/21244 is trying to acquire lock:
+ffff88802e0a2538 ((wq_completion)hci2){+.+.}-{0:0}, at: __flush_workqueue+0x141/0x1340 kernel/workqueue.c:3147
+
+but task is already holding lock:
+ffff88802e0a2538 ((wq_completion)hci2){+.+.}-{0:0}, at: process_one_work+0x7ba/0x16e0 kernel/workqueue.c:2608
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock((wq_completion)hci2);
+  lock((wq_completion)hci2);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by kworker/u5:1/21244:
+ #0: ffff88802e0a2538 ((wq_completion)hci2){+.+.}-{0:0}, at: process_one_work+0x7ba/0x16e0 kernel/workqueue.c:2608
+ #1: ffffc9000dc27d80 ((work_completion)(&hdev->error_reset)){+.+.}-{0:0}, at: process_one_work+0x824/0x16e0 kernel/workqueue.c:2609
+
+stack backtrace:
+CPU: 1 PID: 21244 Comm: kworker/u5:1 Not tainted 6.7.0-next-20240117-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+Workqueue: hci2 hci_error_reset
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ check_deadlock kernel/locking/lockdep.c:3062 [inline]
+ validate_chain kernel/locking/lockdep.c:3856 [inline]
+ __lock_acquire+0x20e6/0x3b30 kernel/locking/lockdep.c:5137
+ lock_acquire kernel/locking/lockdep.c:5754 [inline]
+ lock_acquire+0x1b1/0x540 kernel/locking/lockdep.c:5719
+ __flush_workqueue+0x14b/0x1340 kernel/workqueue.c:3147
+ drain_workqueue+0x18f/0x3d0 kernel/workqueue.c:3312
+ destroy_workqueue+0xc3/0xb10 kernel/workqueue.c:4801
+ hci_release_dev+0x14e/0x620 net/bluetooth/hci_core.c:2808
+ bt_host_release+0x6a/0xb0 net/bluetooth/hci_sysfs.c:94
+ device_release+0xa1/0x240 drivers/base/core.c:2485
+ kobject_cleanup lib/kobject.c:682 [inline]
+ kobject_release lib/kobject.c:716 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1d0/0x440 lib/kobject.c:733
+ put_device+0x1f/0x30 drivers/base/core.c:3733
+ process_one_work+0x8d5/0x16e0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2707 [inline]
+ worker_thread+0x8b6/0x1290 kernel/workqueue.c:2788
+ kthread+0x2c1/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:242
+ </TASK>
 
 
---bbfbzv6eijurrhvz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On Fri, Dec 22, 2023 at 12:16:49PM +0100, Jerome Brunet wrote:
-> s4 has been added to the compatible list while converting the Amlogic PWM
-> binding documentation from txt to yaml.
->=20
-> However, on the s4, the clock bindings have different meaning compared to
-> the previous SoCs.
->=20
-> On the previous SoCs the clock bindings used to describe which input the
-> PWM channel multiplexer should pick among its possible parents.
->=20
-> This is very much tied to the driver implementation, instead of describing
-> the HW for what it is. When support for the Amlogic PWM was first added,
-> how to deal with clocks through DT was not as clear as it nowadays.
-> The Linux driver now ignores this DT setting, but still relies on the
-> hard-coded list of clock sources.
->=20
-> On the s4, the input multiplexer is gone. The clock bindings actually
-> describe the clock as it exists, not a setting. The property has a
-> different meaning, even if it is still 2 clocks and it would pass the che=
-ck
-> when support is actually added.
->=20
-> Also the s4 cannot work if the clocks are not provided, so the property no
-> longer optional.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-s/no/is no/
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-> Finally, for once it makes sense to see the input as being numbered
-> somehow. No need to bother with clock-names on the s4 type of PWM.
->=20
-> Fixes: 43a1c4ff3977 ("dt-bindings: pwm: Convert Amlogic Meson PWM binding=
-")
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 67 ++++++++++++++++---
->  1 file changed, 58 insertions(+), 9 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Doc=
-umentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> index 527864a4d855..a1d382aacb82 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> @@ -9,9 +9,6 @@ title: Amlogic PWM
->  maintainers:
->    - Heiner Kallweit <hkallweit1@gmail.com>
-> =20
-> -allOf:
-> -  - $ref: pwm.yaml#
-> -
->  properties:
->    compatible:
->      oneOf:
-> @@ -43,12 +40,8 @@ properties:
->      maxItems: 2
-> =20
->    clock-names:
-> -    oneOf:
-> -      - items:
-> -          - enum: [clkin0, clkin1]
-> -      - items:
-> -          - const: clkin0
-> -          - const: clkin1
-> +    minItems: 1
-> +    maxItems: 2
-> =20
->    "#pwm-cells":
->      const: 3
-> @@ -57,6 +50,55 @@ required:
->    - compatible
->    - reg
-> =20
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - amlogic,meson8-pwm
-> +              - amlogic,meson8b-pwm
-> +              - amlogic,meson-gxbb-pwm
-> +              - amlogic,meson-gxbb-ao-pwm
-> +              - amlogic,meson-axg-ee-pwm
-> +              - amlogic,meson-axg-ao-pwm
-> +              - amlogic,meson-g12a-ee-pwm
-> +              - amlogic,meson-g12a-ao-pwm-ab
-> +              - amlogic,meson-g12a-ao-pwm-cd
-> +    then:
-> +      # Historic bindings tied to the driver implementation
-> +      # The clocks provided here are meant to be matched with the input
-> +      # known (hard-coded) in the driver and used to select pwm clock
-> +      # source. Currently, the linux driver ignores this.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-I admit I didn't understand the relevant difference between the old and
-the new binding yet. (The driver currently doesn't support the s4,
-right?) Is it possible to detect if the dt uses the old or the new
-binding? If yes, I suggest to drop the old one from the binding and only
-keep it in the driver for legacy systems.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-> +      properties:
-> +        clock-names:
-> +          oneOf:
-> +            - items:
-> +                - enum: [clkin0, clkin1]
-> +            - items:
-> +                - const: clkin0
-> +                - const: clkin1
-> +
-> +  # Newer IP block take a single input per channel, instead of 4 inputs
-> +  # for both channels
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - amlogic,meson-s4-pwm
-
-The expectation is that this list contains all compatibles that are not
-included in the "historic" list above, right? Then maybe use "else:"
-instead of another explicit list?
-
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: input clock of PWM channel A
-> +            - description: input clock of PWM channel B
-> +        clock-names: false
-> +      required:
-> +        - clocks
-> +
->  additionalProperties: false
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bbfbzv6eijurrhvz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWnpeMACgkQj4D7WH0S
-/k7D8ggArnaDEUYvcg/pgZL5jLaqhKI+CoViERryuLi+QxBL1eWhFvl6XyVCjS7N
-FV4h2WdLIV3wdMGKYdCdv9hzleWVaVx1hJDLmOPunTO9QZUmMu6vRYVpsZcpuSpg
-T1LNgkK3uEcHBSt6YXynKssZK72/ydv0dDIZ6WZy5+dkdJfWxxCaXubS7Pd6lF8Y
-bnOKgErPh/7F0d17TOgIcrwUViGdVt6+d4NbgymqWCueJt/sqX5e81lTn+V3/knM
-NypPZ7UqCNgJ/zL9vJpJZsKQYNNM4yA5n0HlHgDZBlzLeYttXHUKhHqnArC4/PWF
-CTJ4QZ5qA38yQXWFHypZkl5dLHlniA==
-=ZKMp
------END PGP SIGNATURE-----
-
---bbfbzv6eijurrhvz--
+If you want to undo deduplication, reply with:
+#syz undup
