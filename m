@@ -1,172 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A6DE1EB21;
-	Wed, 17 Jan 2024 11:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C4881DA4C;
+	Wed, 17 Jan 2024 11:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705489816; cv=none; b=NrN0Jrya2clQUELOXNNYmBKOJ86tQqD7f+Qr75rrSAeeqYmyrIviyoqGRTG05oJO5rVGV5h47h9zihWp0zm4N6gtvKrPOpPBc0xJmxstV36TWLlNGuzJXXF3mC80hmqiQYgfTXyCvUzLtfkyrscc21GKMwnlZiiE1pwNnCzkI6I=
+	t=1705489847; cv=none; b=V2UuJWO00GG/nzvy39kRMC9PO0kVmc9UXVy/SbEM91BOXisMcw7uYYTUGEkrpQaprycQDwXeLNOZGEXSO3wPbv0Tj9SSpT4PKlgRB0cE0HGuysb4EYbpgAgOJ8j2oAdiHIwH50Jx1HHXLB/6aT9PbvWghS6YoowdeN0ooQ14bq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705489816; c=relaxed/simple;
-	bh=Hk5UpisSZLGFNyFw4ZvpOxdO81V2SRW39DUJ6gwVWtc=;
-	h=Received:Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:
-	 X-CM-TRANSID:X-CM-SenderInfo:X-Coremail-Antispam; b=NY2XVPJAFDo8jGVjN8EyolkChq7cNrg+fgG6ns1OA2DOUEb3koRKpD0yt4MQC7WY4OqTPQ1oERh4Vvz3XzWYpA1ufGNaTsCGf1Svkt9Ti0cUwab5hA8IB5z0rWhSNGGR2mYPKlu4+VSjh0WdkslLGuQgG6b908v0PAP1yTwIxbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxruuNtadldiYBAA--.5302S3;
-	Wed, 17 Jan 2024 19:10:05 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx7c6Jtadl+1MGAA--.32440S5;
-	Wed, 17 Jan 2024 19:10:04 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Hou Tao <houtao@huaweicloud.com>,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v5 3/3] selftests/bpf: Skip callback tests if jit is disabled in  test_verifier
-Date: Wed, 17 Jan 2024 19:10:00 +0800
-Message-ID: <20240117111000.12763-4-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240117111000.12763-1-yangtiezhu@loongson.cn>
-References: <20240117111000.12763-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1705489847; c=relaxed/simple;
+	bh=+Vkg04EQ/NJX+jN5XyPGUbM9KQ4RfjqcbzoXRUpVcH4=;
+	h=Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
+	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=day6cT/YOvmQiAPdiHhUnoqST3SRZLnAlYKIKbWsLxAxOW6CV+o4RmdZvQVAwqjgtEcCWfcMxL6+ZFdfzTA9OI0lG2O00EpdGnVwiIfibBJ064cuWpElCGr0dj9ENN3oWVfNpSFz4YVz2uquGuZCDheyM6QazQdTfu5s404UyAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A6E311FB;
+	Wed, 17 Jan 2024 03:11:30 -0800 (PST)
+Received: from [10.57.78.6] (unknown [10.57.78.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D2C73F5A1;
+	Wed, 17 Jan 2024 03:10:42 -0800 (PST)
+Message-ID: <016627c7-653d-4e1b-8e73-f73e166a7187@arm.com>
+Date: Wed, 17 Jan 2024 11:10:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx7c6Jtadl+1MGAA--.32440S5
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFW3tr1UtrW5ur1xGF1fKrX_yoWrXr1fpF
-	WkGF1qkF18XFyI93y2y3WfWF1Yyw1kXayUGryYg3y5Z3WkAr17Xrn7KFy3ZF9xWrWYva4f
-	Zw4xuFW8Gw4UJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 02/23] PM: EM: Extend em_cpufreq_update_efficiencies()
+ argument list
+Content-Language: en-US
+To: Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, rafael@kernel.org
+Cc: dietmar.eggemann@arm.com, rui.zhang@intel.com,
+ amit.kucheria@verdurent.com, amit.kachhap@gmail.com,
+ daniel.lezcano@linaro.org, viresh.kumar@linaro.org, len.brown@intel.com,
+ pavel@ucw.cz, mhiramat@kernel.org, qyousef@layalina.io, wvw@google.com,
+ xuewen.yan94@gmail.com
+References: <20240117095714.1524808-1-lukasz.luba@arm.com>
+ <20240117095714.1524808-3-lukasz.luba@arm.com>
+From: Hongyan Xia <hongyan.xia2@arm.com>
+In-Reply-To: <20240117095714.1524808-3-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If CONFIG_BPF_JIT_ALWAYS_ON is not set and bpf_jit_enable is 0, there
-exist 6 failed tests.
+On 17/01/2024 09:56, Lukasz Luba wrote:
+> In order to prepare the code for the modifiable EM perf_state table,
+> make em_cpufreq_update_efficiencies() take a pointer to the EM table
+> as its second argument and modify it to use that new argument instead
+> of the 'table' member of dev->em_pd.
+> 
+> No functional impact.
+> 
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>   kernel/power/energy_model.c | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+> index 8b9dd4a39f63..42486674b834 100644
+> --- a/kernel/power/energy_model.c
+> +++ b/kernel/power/energy_model.c
+> @@ -237,10 +237,10 @@ static int em_create_pd(struct device *dev, int nr_states,
+>   	return 0;
+>   }
+>   
+> -static void em_cpufreq_update_efficiencies(struct device *dev)
+> +static void
+> +em_cpufreq_update_efficiencies(struct device *dev, struct em_perf_state *table)
+>   {
+>   	struct em_perf_domain *pd = dev->em_pd;
+> -	struct em_perf_state *table;
+>   	struct cpufreq_policy *policy;
+>   	int found = 0;
+>   	int i;
+> @@ -254,8 +254,6 @@ static void em_cpufreq_update_efficiencies(struct device *dev)
+>   		return;
+>   	}
 
-  [root@linux bpf]# echo 0 > /proc/sys/net/core/bpf_jit_enable
-  [root@linux bpf]# echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
-  [root@linux bpf]# ./test_verifier | grep FAIL
-  #106/p inline simple bpf_loop call FAIL
-  #107/p don't inline bpf_loop call, flags non-zero FAIL
-  #108/p don't inline bpf_loop call, callback non-constant FAIL
-  #109/p bpf_loop_inline and a dead func FAIL
-  #110/p bpf_loop_inline stack locations for loop vars FAIL
-  #111/p inline bpf_loop call in a big program FAIL
-  Summary: 768 PASSED, 15 SKIPPED, 6 FAILED
+NIT: It's not shown here, but in the check above this line
 
-The test log shows that callbacks are not allowed in non-JITed programs,
-interpreter doesn't support them yet, thus these tests should be skipped
-if jit is disabled, just handle this case in do_test_single().
+	if (!_is_cpu_device(dev) || !pd)
 
-After including bpf/libbpf_internal.h, there exist some build errors:
+The !pd check should be removed because em_cpufreq_update_efficiencies() 
+is only called after doing
 
-  error: attempt to use poisoned "u32"
-  error: attempt to use poisoned "u64"
+	dev->em_pd->flags |= flags;
 
-replace u32 and u64 with __u32 and __u64 to fix them.
+So compiler will optimize the !pd out anyway. But this is not directly 
+related to the PR, so just a NIT.
 
-With this patch:
+>   
+> -	table = pd->table;
+> -
+>   	for (i = 0; i < pd->nr_perf_states; i++) {
+>   		if (!(table[i].flags & EM_PERF_STATE_INEFFICIENT))
+>   			continue;
+> @@ -397,7 +395,7 @@ int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
+>   
+>   	dev->em_pd->flags |= flags;
+>   
+> -	em_cpufreq_update_efficiencies(dev);
+> +	em_cpufreq_update_efficiencies(dev, dev->em_pd->table);
+>   
+>   	em_debug_create_pd(dev);
+>   	dev_info(dev, "EM: created perf domain\n");
 
-  [root@linux bpf]# echo 0 > /proc/sys/net/core/bpf_jit_enable
-  [root@linux bpf]# echo 0 > /proc/sys/kernel/unprivileged_bpf_disabled
-  [root@linux bpf]# ./test_verifier | grep FAIL
-  Summary: 768 PASSED, 21 SKIPPED, 0 FAILED
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Acked-by: Hou Tao <houtao1@huawei.com>
----
- tools/testing/selftests/bpf/test_verifier.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 1a09fc34d093..c7f57b5b04a7 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -41,6 +41,7 @@
- #include "test_btf.h"
- #include "../../../include/linux/filter.h"
- #include "testing_helpers.h"
-+#include "bpf/libbpf_internal.h"
- 
- #ifndef ENOTSUPP
- #define ENOTSUPP 524
-@@ -74,6 +75,7 @@
- 		    1ULL << CAP_BPF)
- #define UNPRIV_SYSCTL "kernel/unprivileged_bpf_disabled"
- static bool unpriv_disabled = false;
-+static bool jit_disabled;
- static int skips;
- static bool verbose = false;
- static int verif_log_level = 0;
-@@ -1143,8 +1145,8 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
- 		} while (*fixup_map_xskmap);
- 	}
- 	if (*fixup_map_stacktrace) {
--		map_fds[12] = create_map(BPF_MAP_TYPE_STACK_TRACE, sizeof(u32),
--					 sizeof(u64), 1);
-+		map_fds[12] = create_map(BPF_MAP_TYPE_STACK_TRACE, sizeof(__u32),
-+					 sizeof(__u64), 1);
- 		do {
- 			prog[*fixup_map_stacktrace].imm = map_fds[12];
- 			fixup_map_stacktrace++;
-@@ -1203,7 +1205,7 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
- 	}
- 	if (*fixup_map_reuseport_array) {
- 		map_fds[19] = __create_map(BPF_MAP_TYPE_REUSEPORT_SOCKARRAY,
--					   sizeof(u32), sizeof(u64), 1, 0);
-+					   sizeof(__u32), sizeof(__u64), 1, 0);
- 		do {
- 			prog[*fixup_map_reuseport_array].imm = map_fds[19];
- 			fixup_map_reuseport_array++;
-@@ -1622,6 +1624,16 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 	alignment_prevented_execution = 0;
- 
- 	if (expected_ret == ACCEPT || expected_ret == VERBOSE_ACCEPT) {
-+		if (fd_prog < 0 && saved_errno == EINVAL && jit_disabled) {
-+			for (i = 0; i < prog_len; i++, prog++) {
-+				if (!insn_is_pseudo_func(prog))
-+					continue;
-+				printf("SKIP (callbacks are not allowed in non-JITed programs)\n");
-+				skips++;
-+				goto close_fds;
-+			}
-+		}
-+
- 		if (fd_prog < 0) {
- 			printf("FAIL\nFailed to load prog '%s'!\n",
- 			       strerror(saved_errno));
-@@ -1844,6 +1856,8 @@ int main(int argc, char **argv)
- 		return EXIT_FAILURE;
- 	}
- 
-+	jit_disabled = !is_jit_enabled();
-+
- 	/* Use libbpf 1.0 API mode */
- 	libbpf_set_strict_mode(LIBBPF_STRICT_ALL);
- 
--- 
-2.42.0
-
+Reviewed-by: Hongyan Xia <hongyan.xia2@arm.com>
