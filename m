@@ -1,172 +1,146 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FBF24B2B
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 20:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4613724B2A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 20:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705523304; cv=none; b=FONWYAR8B43MCU5Zc+DTl04+L9suPRMer1+X1u+l5lUGlUhUDKwyRb+JBy09BYrgBRTMV1Sy1lkPtMXSVSCVmo3k62DO8CsOysCO6dd70MUHu/2Gpzn68L5ZMtWJiiuIh4Awb0KizdKxrsSJmCI98kxzX3OFpDT9Yd8rGPFBpkE=
+	t=1705523392; cv=none; b=nBjdOvDIOJWbjz62rWASGHQC7M47E0GywPF/6k8bKbTdOH0ktR3f0DxTggeg+Wb1upxy77QaA2MieKKlEmfw1nMqZo2O2K29hM+yI0IA2gUvMg/F6vLUf2U68eM4yMmAL+06DLAyHnZwvhHOLiRs65kihrUcWdcAVdHhxUEpDAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705523304; c=relaxed/simple;
-	bh=j6IwuGvjDuivPFpBvTy+hI+5ARRmCDLSvV9hRj9W8Kk=;
+	s=arc-20240116; t=1705523392; c=relaxed/simple;
+	bh=DvwjtH/oOZoE4Lq3KXQ0ZuGRWhuNqbTn1Q0x1w0hLN0=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=PqiCA48b1SLQ5eN1g7aLPnEgLaBG/WmeiP8r6VDYlEKHcvyzsKMV6zsJl5fn510W87fbIgAY7jyW1EKJn3XYorOJrkJmFpi6Ol6B68yy8qhTU+15CuYQyLWakYCyogPE5f0OW8iWphJiqex5dHcaKiywFQ54LI2007NbB/EEE0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c4r6N18W; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
+	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To; b=gmjdtcAAQLATdAeYZAgG+s8ZMt/ao6spLNz7rSt+MorKICI6Ffwt17WlvTJHoB8oaNkinEL1PB83fWnMTMxo+mvd0tUYO39gGaTCzFTbvRI2GdYFDo7x3qaIkYanRlp0SWFMMMWZY3fY8k6bQa9hM/UPlUUkncYqFfwCI/gVCKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PIPhefsK; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4r6N18W"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50ea8fbf261so13927703e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 12:28:22 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PIPhefsK"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3608bd50cbeso48286545ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 12:29:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705523300; x=1706128100; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4XXEeOxFhTAf2CSHz0sawVtjrADZ1Ztr/8L/2FW/dDU=;
-        b=c4r6N18WoZKVBmcCK64h0+mTG2kQElQvzD6810RmVUuhWEf8eGfQ8vyuJ4uAmztRx6
-         eN+W0lQpl4zVf0his03dkKy1deEf7P97cIKM79to8CXVa8M7kEVFSNLBFjVB43gQRZQ8
-         7AkxLAlGulnznO/raYwMkB5v1mIiyKOjbabM1kLcYNuUvrf3opsCw/7sUtVrmGiAwzBO
-         Kpix8ygdkBpOYO/ok9x/lRHo8T/85Zw9EsrNDt0QSqcTiFuXrXo7emelpJDWE4Wg5WZ/
-         RetgzgUmTBs+L52JDgt239Yya3f+xkWI+rMuMVSvdG4SL5mB4TGNCfIX+Z6evLRMVKKU
-         PVYA==
+        d=chromium.org; s=google; t=1705523390; x=1706128190; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RIlPx5Fv1DAFpxKYm/WA9Edd1lJzoBYsIqyytrhrcqw=;
+        b=PIPhefsKFx6wTlMDZcXOuwYnUDfvLAy+Mf3KHFzAEpgD0E8wRLcZB17Pl1SUHGVaOf
+         o2IPZKSENFndzu6VbFdBHM8B/61w6vLa0g4e2lTM5MVwwLzzBYT3yDTX+Al7iZc7LGwt
+         i3DRksrL1UCgtRc/FBRI045DVBQStG0E5Mi3I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705523300; x=1706128100;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1705523390; x=1706128190;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4XXEeOxFhTAf2CSHz0sawVtjrADZ1Ztr/8L/2FW/dDU=;
-        b=DUUdqhuUw1XtskxLsqIxsia13kncPVNMkcr3JEb5jvYssHtCZ+p0o+m32pttIsH8BI
-         /FudgodloYEI6p9k4PYeRa6WCW1SPd9vBS3bqlEqV+01eMIHQxahKBKEsVoMYr7e0JsI
-         GuEm6Ds0Ey3+jYdjEKeZatf+TuNIp0waPOGRSfpuYtdFCJYnE1KF9JTJlyEY0/lXCYlj
-         MP7HOq4c32+YLqFv3Xa/le3zErbmBhdXudf8jqG23fG63JeWtjJKgH+xPltF/1Xht3+C
-         9sT97jIBvtwzGvglGYQKFIlXR0+Ok6XU8pPJbDXAU5md67Ajj8BWVnQ7LZpIg5BK8tsK
-         A+vA==
-X-Gm-Message-State: AOJu0Yxxeu/P+suelRrfD5GwvObj0UPtmnEl04blAwYkB6l9Jeo/ug3a
-	/4F5hAImJjXjFTzGWav8moAq8AAz2bYpbg==
-X-Google-Smtp-Source: AGHT+IHInIpaQnmgeBjl7HU4+FsynSE8diK278pVPRTOCVbb7/4SjYUpQbyx5Y5RUbbYiGbj34LEYg==
-X-Received: by 2002:a05:6512:3b92:b0:50e:5448:3316 with SMTP id g18-20020a0565123b9200b0050e54483316mr5113500lfv.137.1705523300436;
-        Wed, 17 Jan 2024 12:28:20 -0800 (PST)
-Received: from [172.30.204.151] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id p3-20020a056512312300b0050e7fe17591sm366610lfd.137.2024.01.17.12.28.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jan 2024 12:28:20 -0800 (PST)
-Message-ID: <7e48e51e-e16a-41b9-800d-960c627b8da6@linaro.org>
-Date: Wed, 17 Jan 2024 21:28:18 +0100
+        bh=RIlPx5Fv1DAFpxKYm/WA9Edd1lJzoBYsIqyytrhrcqw=;
+        b=bvEVSrZH8PeXdnxL9KGvV6xufczx7XYZ1LXfj5noTvRdMTVClS8bAlqDL5ybIaVI/f
+         CddWRh4qpv7uTxcDhNabaSrkNNkZHd05087wmJ/OJ8UiaHqfLZ8Qsd+kQJMd8SghyqZx
+         jByFPpmzX8VYMEb2Z22Ajb0F58/8xWMyvN3CXF5ZDoZ/SWeMZa7LUN+W5Tnjotg9WB++
+         fQxbVW3KIqrA6Ldii3OTTvYN7jjlm8JHnN5CGYqQfdoyg7Lguni9mc8Lq0HMmJDzeluP
+         IULjtMLZRhxu2JFF0EbdX9Y0CzkenxHaIjiFWWxQt3QbquktTnN4h1wzs1AXS5erx6fQ
+         +lpQ==
+X-Gm-Message-State: AOJu0Yx2JHVPIhkRJhdwLeD/FfVmHa4Phf6v3DsFip2/EHjLbytQHGQC
+	jaDJOxS/NnYQ6oCUIwb6V0EKL/rOCblSyI9pHKFP/wBi/Q==
+X-Google-Smtp-Source: AGHT+IHJjq3/P/cxTVdyUMOXiREQLpfXVsK0F1ecX/lSR6DYwuuYkqGwGTfW8PHKlwr27gBVjNMOLQ==
+X-Received: by 2002:a92:b0e:0:b0:361:8f10:1a01 with SMTP id b14-20020a920b0e000000b003618f101a01mr3045834ilf.18.1705523390390;
+        Wed, 17 Jan 2024 12:29:50 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i15-20020a63cd0f000000b005ce6b79ab6asm64196pgg.82.2024.01.17.12.29.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 12:29:49 -0800 (PST)
+Date: Wed, 17 Jan 2024 12:29:49 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Nathan Lynch via B4 Relay <devnull+nathanl.linux.ibm.com@kernel.org>,
+	nathanl@linux.ibm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seq_buf: make DECLARE_SEQ_BUF() usable
+Message-ID: <202401171229.56A2F70@keescook>
+References: <20240116-declare-seq-buf-fix-v1-1-915db4692f32@linux.ibm.com>
+ <20240117093234.660d4150@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 4/7] soc: qcom: Utilize qcom scmi vendor protocol for bus
- dvfs
-Content-Language: en-US
-To: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
- cristian.marussi@arm.com, andersson@kernel.org, jassisinghbrar@gmail.com,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, quic_rgottimu@quicinc.com,
- quic_kshivnan@quicinc.com, conor+dt@kernel.org,
- Amir Vajid <avajid@quicinc.com>
-References: <20240117173458.2312669-1-quic_sibis@quicinc.com>
- <20240117173458.2312669-5-quic_sibis@quicinc.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240117173458.2312669-5-quic_sibis@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240117093234.660d4150@gandalf.local.home>
 
-
-
-On 1/17/24 18:34, Sibi Sankar wrote:
-> From: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+On Wed, Jan 17, 2024 at 09:32:34AM -0500, Steven Rostedt wrote:
 > 
-> This patch introduces a client driver that interacts with the SCMI QCOM
-> vendor protocol and passes on the required tuneables to start various
-> features running on the SCMI controller.
+> Kees,
 > 
-> Signed-off-by: Shivnandan Kumar <quic_kshivnan@quicinc.com>
-> Co-developed-by: Ramakrishna Gottimukkula <quic_rgottimu@quicinc.com>
-> Signed-off-by: Ramakrishna Gottimukkula <quic_rgottimu@quicinc.com>
-> Co-developed-by: Amir Vajid <avajid@quicinc.com>
-> Signed-off-by: Amir Vajid <avajid@quicinc.com>
-> Co-developed-by: Sibi Sankar <quic_sibis@quicinc.com>
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-> ---
+> Are you OK with this change? I ran it through my tests and have another
+> pull request ready to go that includes this. But I don't want to send it
+> without an Acked-by from you.
 
-[...]
+Yeah! This cleanly solves the lack of being able to add the "static",
+etc.
 
+Acked-by: Kees Cook <keescook@chromium.org>
 
-> +
-> +struct cpufreq_memfreq_map {
-> +	unsigned int			cpufreq_mhz;
-> +	unsigned int			memfreq_khz;
-> +};
+-Kees
 
-Weird use of tabs
+> 
+> Luckily, Linus is on non-voluntary vacation so we may still have time ;-)
+> 
+> -- Steve
+> 
+> 
+> On Tue, 16 Jan 2024 08:09:25 -0600
+> Nathan Lynch via B4 Relay <devnull+nathanl.linux.ibm.com@kernel.org> wrote:
+> 
+> > From: Nathan Lynch <nathanl@linux.ibm.com>
+> > 
+> > Using the address operator on the array doesn't work:
+> > 
+> > ./include/linux/seq_buf.h:27:27: error: initialization of ‘char *’
+> >   from incompatible pointer type ‘char (*)[128]’
+> >   [-Werror=incompatible-pointer-types]
+> >    27 |                 .buffer = &__ ## NAME ## _buffer,       \
+> >       |                           ^
+> > 
+> > Apart from fixing that, we can improve DECLARE_SEQ_BUF() by using a
+> > compound literal to define the buffer array without attaching a name
+> > to it. This makes the macro a single statement, allowing constructs
+> > such as:
+> > 
+> >   static DECLARE_SEQ_BUF(my_seq_buf, MYSB_SIZE);
+> > 
+> > to work as intended.
+> > 
+> > Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+> > Fixes: dcc4e5728eea ("seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()")
+> > ---
+> >  include/linux/seq_buf.h | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+> > index 5fb1f12c33f9..c44f4b47b945 100644
+> > --- a/include/linux/seq_buf.h
+> > +++ b/include/linux/seq_buf.h
+> > @@ -22,9 +22,8 @@ struct seq_buf {
+> >  };
+> >  
+> >  #define DECLARE_SEQ_BUF(NAME, SIZE)			\
+> > -	char __ ## NAME ## _buffer[SIZE] = "";		\
+> >  	struct seq_buf NAME = {				\
+> > -		.buffer = &__ ## NAME ## _buffer,	\
+> > +		.buffer = (char[SIZE]) { 0 },		\
+> >  		.size = SIZE,				\
+> >  	}
+> >  
+> > 
+> > ---
+> > base-commit: 70d201a40823acba23899342d62bc2644051ad2e
+> > change-id: 20240112-declare-seq-buf-fix-9803b7e679bc
+> > 
+> > Best regards,
+> 
 
-[...]
-
-> +static int get_mask(struct device_node *np, u32 *mask)
-> +{
-> +	struct device_node *dev_phandle;
-> +	struct device *cpu_dev;
-> +	int cpu, i = 0;
-> +	int ret = -ENODEV;
-
-Don't initialize ret here, return 0 instead of breaking and return
-enodev otherwise.
-
-> +
-> +	dev_phandle = of_parse_phandle(np, "qcom,cpulist", i++);
-> +	while (dev_phandle) {
-> +		for_each_possible_cpu(cpu) {
-> +			cpu_dev = get_cpu_device(cpu);
-> +			if (cpu_dev && cpu_dev->of_node == dev_phandle) {
-> +				*mask |= BIT(cpu);
-> +				ret = 0;
-> +				break;
-> +			}
-> +		}
-
-of_cpu_node_to_id()
-
-> +		dev_phandle = of_parse_phandle(np, "qcom,cpulist", i++);
-> +	}
-> +
-> +	return ret;
-> +}
-
-
-> +
-> +static struct cpufreq_memfreq_map *init_cpufreq_memfreq_map(struct device *dev,
-> +							    struct device_node *of_node,
-> +							    u32 *cnt)
-
-I really feel like this is trying to reinvent OPP..
-
-if you structure your entries like so:
-
-opp-0 {
-	opp-hz = /bits/ 64 <12341234 43214321>;
-};
-
-you'll be able to use all the fantastic APIs that have been
-created over the years!
-
-[...]
-
-> +			monitor->mon_type = (of_property_read_bool(monitor_np, "qcom,compute-mon")) ? 1 : 0;
-> +			monitor->ipm_ceil = (of_property_read_bool(monitor_np, "qcom,compute-mon")) ? 0 : 20000000;
-
-What does it even mean for a monitor to be a compute mon?
-
-There seem to be no dt-bindings for properties referenced in this
-driver, neither in the series nor in the dependencies. This is
-strictly required.
-
-Konrad
+-- 
+Kees Cook
