@@ -1,87 +1,77 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FF91F5E4;
-	Wed, 17 Jan 2024 13:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE3D1EB25
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 13:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705496666; cv=none; b=FCpKaNFvY1r3NOQ08aeOTDpFEpcF6ZPHOYIiU+DU8PDFJWAmpZ6nDAnhGGQbVUoiMHuUSgmzv9FTBiVNe+kT+xhLdpiEf5n0I39tsYZS7Xt7PzbSU4g9Xy8uqO73A2DLN43eEMk+eUZyXKAaJ5eYG79Z8u5wva0hT33pGXQ2Po8=
+	t=1705496781; cv=none; b=Xp8EOt6VggiQG0q3aka/ZOL4O8a27JetbiXmTbb1jDv09LkVNidlG1zlXzrFRnHZyJlCMv+tQAYOmeAaTivHbdSp1DQHGQ0Zi9qv3Qnxn6SNhAI6nXCOVq9mUpVhNyzwQfuj4QLqX86W5OTANRIRua09eUO0ekbnA3dDKYwnXJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705496666; c=relaxed/simple;
-	bh=1R2HZrvhp3KGom/Ay0gBer7DWNBPzHmKQrXQrLaX39o=;
-	h=Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:Reply-To:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-Spam-Level:X-Spam-Score:
-	 X-Spamd-Result:X-Spam-Flag; b=nyYNNPM32R3XHoxMdOdhPj42JG5YYVS6k0OkvdgCaxBDpkyCSFwMq8hmlANbJ4DXxavoV4/UrwisYrSiVYGPZGn++1R3sOzeL8hL+SO48z4oeuE3rQsCjKwDJBp9+JTNwtzpnP4deW5gOqQ69Qmuu4WepLQF15Htc99xaMVkHzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YJcMqHZX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Qv238zkP; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YJcMqHZX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Qv238zkP; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1705496781; c=relaxed/simple;
+	bh=KUk5+ghGU1Dz8moEKZE0YTPzqZIlcAHT48h0wD3N06o=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:
+	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
+	 X-Google-Smtp-Source:X-Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JPKdDQU2Q4x9ZiX0pFN8Vaityt8OANS93H+Gwg0C7F4cAdK0L7U5nTTBFEKeDNn6jY9Pa5f0WLZfrZPODbWNZi3/FiQ6knsLRp/1VNo9AxSNZoYXWLnCT+zxyyt4mwySFtH/gF6mlOAVmeZlMeIDN285QItwSj0Xi8uHYnXwye4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=amq5iLZg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YJcMqHZX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Qv238zkP";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YJcMqHZX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Qv238zkP"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2619622255;
-	Wed, 17 Jan 2024 13:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1705496662;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amq5iLZg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705496778;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AlPrrvZB1x28a4WGN8IeT0/QmFSzTIfNiilDMxfO5Rs=;
-	b=YJcMqHZXKlyH/FRfDMmTsYnI9Jm2EclpERipdemOUfe2FCRLEhSP/ewkuS2H+gZ3ip804y
-	lofBlVkomrGQh20iL4Ic626Yl2lVQReKp9sydPGWBr3+pvtPTlCAjk5slDQaDEw9P2XA7W
-	HQ2a/0s+6jzmObw2ecNYHkiah88h3qE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1705496662;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AlPrrvZB1x28a4WGN8IeT0/QmFSzTIfNiilDMxfO5Rs=;
-	b=Qv238zkPk06bZ8SrcG2t67z7xrgGu76moeH3+qjPoLlsRMI5TZAisZ0Nx/ARxzEikeOGT5
-	PZZ7W/yh1tUfwmAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1705496662;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AlPrrvZB1x28a4WGN8IeT0/QmFSzTIfNiilDMxfO5Rs=;
-	b=YJcMqHZXKlyH/FRfDMmTsYnI9Jm2EclpERipdemOUfe2FCRLEhSP/ewkuS2H+gZ3ip804y
-	lofBlVkomrGQh20iL4Ic626Yl2lVQReKp9sydPGWBr3+pvtPTlCAjk5slDQaDEw9P2XA7W
-	HQ2a/0s+6jzmObw2ecNYHkiah88h3qE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1705496662;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AlPrrvZB1x28a4WGN8IeT0/QmFSzTIfNiilDMxfO5Rs=;
-	b=Qv238zkPk06bZ8SrcG2t67z7xrgGu76moeH3+qjPoLlsRMI5TZAisZ0Nx/ARxzEikeOGT5
-	PZZ7W/yh1tUfwmAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E56AB13800;
-	Wed, 17 Jan 2024 13:04:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aR7eNVXQp2XsZQAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 17 Jan 2024 13:04:21 +0000
-Date: Wed, 17 Jan 2024 14:04:20 +0100
-From: Petr Vorel <pvorel@suse.cz>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-man@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] MAINTAINERS: Add man-pages git trees
-Message-ID: <20240117130420.GA2711070@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20240117122257.2707637-1-pvorel@suse.cz>
- <ZafHChsGiKCLh9od@debian>
+	bh=ZiRAkIYwyF6dllf/mwQhoMSqFIs1r4sZIk6Sk9RII6w=;
+	b=amq5iLZgk2kClDMmT8iErTtxxQ2RSMh3OWzXssW1QU284/FV2BVmclXHTaeMJBL+z6KR1L
+	BRNJdMiYh3Z4ZE96ZOyAzb6B4juiU31U70LBUlSgu7xAVV0ht8CqJGRnH2+4GWqPD+6dPq
+	z/xYyzoYuDW1/xaT/90gO7xszEOVCjs=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-691-EfOO17UzMeOBPQQa0guscg-1; Wed, 17 Jan 2024 08:06:15 -0500
+X-MC-Unique: EfOO17UzMeOBPQQa0guscg-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-78374422f12so60614485a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 05:06:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705496773; x=1706101573;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZiRAkIYwyF6dllf/mwQhoMSqFIs1r4sZIk6Sk9RII6w=;
+        b=MZWAtF64QT9xjEZTZjxv4JbY/zA92FpZqrr28wbUhzSFqh35dw9MRpfnaPNkH16ntu
+         HxuGeqphwsBGQ72TldOlJZdTkdoWYKk3cwL97zoZnv8h+FY/VGBmxA2QoT5w0v0qwLR9
+         rJNWd4+npVkHFQv5MQB1NWqbPiZTPF3oMyLipflUb5l6z6rmSGL8GJQ3p+jAEkcrFug5
+         JxWleCezj2PFBMhoaNcBiN+7fjlZJ2PsyHvp6M2ldGOSV7WaDzJMNx8WKy5uW1kS+zhe
+         nszNvIlZS3KVCcZv169EN3vLrMtnENj7sxkELicskjG+Y0fZ+/+d3hTqGtm2kwmGcVCS
+         zcDg==
+X-Gm-Message-State: AOJu0YySCtQARPWa5B9Fp1o4xrSgzTO9LJeZ3reM5eULvZGC1kDw9jIG
+	7ksy17x27I+ySFkTQUriE6Zxpj7bRs/RpfEDuPjmtcUePxpVNCebBT84+H+HvJcX9/X/1pZuX2G
+	8H7cZ5NLpWLyGvKzvOPCkCD2YT0pgjd28
+X-Received: by 2002:a05:620a:24d1:b0:783:5186:a4c1 with SMTP id m17-20020a05620a24d100b007835186a4c1mr8877052qkn.64.1705496773330;
+        Wed, 17 Jan 2024 05:06:13 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IECWy0fJTxzZUnQCSSIxrbIo9n8C1Lzg7gEFz/eieTQLB+KIyQAL1/f9qlc3IZ84pbdghTylw==
+X-Received: by 2002:a05:620a:24d1:b0:783:5186:a4c1 with SMTP id m17-20020a05620a24d100b007835186a4c1mr8877041qkn.64.1705496773030;
+        Wed, 17 Jan 2024 05:06:13 -0800 (PST)
+Received: from localhost.localdomain ([151.29.130.8])
+        by smtp.gmail.com with ESMTPSA id f14-20020a37ad0e000000b00781b8f4c89asm4470563qkm.43.2024.01.17.05.06.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 05:06:12 -0800 (PST)
+Date: Wed, 17 Jan 2024 14:06:08 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/4] kernel/workqueue: Distinguish between general
+ unbound and WQ_SYSFS cpumask changes
+Message-ID: <ZafQwMw8ZKztunMU@localhost.localdomain>
+References: <20240116161929.232885-1-juri.lelli@redhat.com>
+ <20240116161929.232885-4-juri.lelli@redhat.com>
+ <ZabRlEklmuqwFPj-@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,69 +80,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZafHChsGiKCLh9od@debian>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.52
-X-Spamd-Result: default: False [-0.52 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	 REPLYTO_EQ_FROM(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.02)[54.25%]
-X-Spam-Flag: NO
+In-Reply-To: <ZabRlEklmuqwFPj-@slm.duckdns.org>
 
-> On Wed, Jan 17, 2024 at 01:22:57PM +0100, Petr Vorel wrote:
-> > The maintainer uses both.
-
-> > Signed-off-by: Petr Vorel <pvorel@suse.cz>
-
-> Reviewed-by: Alejandro Colomar <alx@kernel.org>
-
-Thanks!
-
-> (We sent it almost at the same time.  :)
-
-Ah, sorry for not checking the ML. I should just ask you to add it yourself.
-
-Kind regards,
-Petr
-
+On 16/01/24 08:57, Tejun Heo wrote:
+> Hello, Juri.
+> 
+> On Tue, Jan 16, 2024 at 05:19:28PM +0100, Juri Lelli wrote:
+> > Both general unbound cpumask and per-wq (WQ_SYSFS) cpumask changes end
+> > up calling apply_wqattrs_prepare for preparing for the change, but this
+> > doesn't work well for general unbound cpumask changes as current
+> > implementation won't be looking at the new unbound_cpumask.
+> > 
+> > Fix the prepare phase for general unbound cpumask changes by checking
+> > which type of attributes (general vs. WQ_SYSFS) are actually changing.
+> > 
+> > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
 > > ---
-> > Changes v1->v2:
-> > * Add a second tree
+> >  kernel/workqueue.c | 17 +++++++++++------
+> >  1 file changed, 11 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> > index 3a1d5a67bd66a..2ef6573909070 100644
+> > --- a/kernel/workqueue.c
+> > +++ b/kernel/workqueue.c
+> > @@ -4359,7 +4359,17 @@ apply_wqattrs_prepare(struct workqueue_struct *wq,
+> >  	 * it even if we don't use it immediately.
+> >  	 */
+> >  	copy_workqueue_attrs(new_attrs, attrs);
+> > -	wqattrs_actualize_cpumask(new_attrs, unbound_cpumask);
+> > +
+> > +	/*
+> > +	 * Is the user changing the general unbound_cpumask or is this a
+> > +	 * WQ_SYSFS cpumask change?
+> > +	 */
+> > +	if (attrs == wq->unbound_attrs)
+> > +		cpumask_copy(new_attrs->cpumask, unbound_cpumask);
+> > +	else
+> > +		wqattrs_actualize_cpumask(new_attrs, unbound_cpumask);
+> > +
+> > +	cpumask_and(new_attrs->cpumask, new_attrs->cpumask, cpu_possible_mask);
+> 
+> This looks rather hacky. Can you elaborate how the current code misbehaves
+> with an example?
 
-> >  MAINTAINERS | 2 ++
-> >  1 file changed, 2 insertions(+)
+I was trying to address the fact that ordered unbound workqueues didn't
+seem to reflect unbound_cpumask changes, e.g.
 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 391bbb855cbe..3f6a19f3e5e0 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12833,6 +12833,8 @@ M:	Alejandro Colomar <alx@kernel.org>
-> >  L:	linux-man@vger.kernel.org
-> >  S:	Maintained
-> >  W:	http://www.kernel.org/doc/man-pages
-> > +T:	git git://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
-> > +T:	git git://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.git
+wq_unbound_cpumask=00000003
 
-> >  MANAGEMENT COMPONENT TRANSPORT PROTOCOL (MCTP)
-> >  M:	Jeremy Kerr <jk@codeconstruct.com.au>
-> > -- 
-> > 2.43.0
+edac-poller              ordered,E  0xffffffff 000000ff      kworker/R-edac-            351 0xffffffff 000000ff
+
+vs. 
+
+edac-poller              ordered,E  00000003                 kworker/R-edac-            349 00000003
+
+with the patch applied. But honestly, I'm now also not convinced what
+I'm proposing is correct, so I'll need to think more about it.
+
+Can you please confirm though that ordered unbound workqueues are not
+"special" for some reason and we would like them to follow
+unbound_cpumask changes as normal ubound workqueues?
+
+Thanks,
+Juri
+
