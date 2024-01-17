@@ -1,134 +1,59 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50B128DB5
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 22:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E41025630;
+	Wed, 17 Jan 2024 22:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705530030; cv=none; b=sjMWorPstzLh0QLnjinezycGb7ynHHqzEkaVSOgkXqIei27nc5FQj7U4sqUkqHYv3RV33Q8+qdbvDrBg+3+LKVQzhQuclMkNkq4JCjLw3KtpNvAcf9jMo3/ndvr6kIZrUXHrbBMHkTyqzhXSWins8hbAolMqNZUBVxsR3VwUgFc=
+	t=1705530216; cv=none; b=n790X1ns78zFpIqbzy3pkq1OC7CKVzAf3jQWaOx3Aq/T2AWPPiqW+/KfZuAS7qLhx5jMXnmAhrEJwqtwPrHaJC7+Csz7D46KzaNw3yPwdi+QGtXx0xRv2lO06NFPRSiT3tBgskq1JiYsO+/fq7uGLPhL/BQaPdxuL0O3m257F4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705530030; c=relaxed/simple;
-	bh=FePaCUEty5gnqt0K9AD8pYf32kGcc5Fn+FiwW9+63Wc=;
-	h=Date:DKIM-Signature:X-Report-Abuse:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To:X-Migadu-Flow; b=cVwg7XXmlpN6ScvuE3LbDrBfM1wc+F7Zw62khxw/cb2cZYjDmpfOu0TcpkeyXrv9HMw+vD+jJs50Fu184qw9ecnKS5SCGYGttTBQBqz9rV9va3SINyQJAcdX9D5Aq5dGKN9fmMfvuz+UlYpe6EwmUuHGPL3bySZreLzW4j+V/yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oo9nK5OL; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oo9nK5OL"
-Date: Wed, 17 Jan 2024 14:20:06 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705530026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oEcZHshrstC6C+wvUe816o9OqrS9R+Ox74x4Ua6+cNg=;
-	b=oo9nK5OLo2HbxZhIYJMCnLJpYtsivfboaj7C7gJ0VoDQxxdFw+ieXQh3sl0taplJs8h6VR
-	QHtAdhqNaftf5uCuLcn+Gug1pTa/9k1srBFS3O8bcAo1Y2G6At7h0Cmc+rTWn5qcGvGUQg
-	h1JE6ZW/8v0YWbpn8rfHURYglSWqHUo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Shakeel Butt <shakeelb@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-	Vasily Averin <vasily.averin@linux.dev>,
-	Michal Koutny <mkoutny@suse.com>, Waiman Long <longman@redhat.com>,
-	Muchun Song <muchun.song@linux.dev>, Jiri Kosina <jikos@kernel.org>,
-	cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH RFC 1/4] fs/locks: Fix file lock cache accounting, again
-Message-ID: <ZahSlnqw9yRo3d1v@P9FQF9L96D.corp.robot.car>
-References: <cover.1705507931.git.jpoimboe@kernel.org>
- <ac84a832feba5418e1b58d1c7f3fe6cc7bc1de58.1705507931.git.jpoimboe@kernel.org>
- <6667b799702e1815bd4e4f7744eddbc0bd042bb7.camel@kernel.org>
- <20240117193915.urwueineol7p4hg7@treble>
- <CAHk-=wg_CoTOfkREgaQQA6oJ5nM9ZKYrTn=E1r-JnvmQcgWpSg@mail.gmail.com>
- <CALvZod6LgX-FQOGgNBmoRACMBK4GB+K=a+DYrtExcuGFH=J5zQ@mail.gmail.com>
+	s=arc-20240116; t=1705530216; c=relaxed/simple;
+	bh=GzgtWrsrVSTETm0Nq6miwtI3r6kYiPkoq9PTnzBbi7A=;
+	h=Received:Received:Date:From:To:cc:Subject:In-Reply-To:Message-ID:
+	 References:MIME-Version:Content-Type; b=Z6/dNY5kRDD5kDLxgH3Ad/WAobhS+fwSoitB1EwEGj4nawavohSRjtseDs+DqQERDsbSPn87D264PYOKBE+9w3RqkLnRAGtNljO6GMaLfE8I3qNo1zJG+ioBqt+T/TG7oHXOyFMwlqmciT/OE/0IRZJ9lujG+s+aXuK6rrOOQXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=fail smtp.mailfrom=linux.com; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=linux.com
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 614C940A8B; Wed, 17 Jan 2024 14:23:33 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 5A16540A85;
+	Wed, 17 Jan 2024 14:23:33 -0800 (PST)
+Date: Wed, 17 Jan 2024 14:23:33 -0800 (PST)
+From: "Christoph Lameter (Ampere)" <cl@linux.com>
+To: Baruch Siach <baruch@tkos.co.il>
+cc: Christoph Hellwig <hch@lst.de>, 
+    Marek Szyprowski <m.szyprowski@samsung.com>, 
+    Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
+    Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+    Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev, 
+    devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    linux-kernel@vger.kernel.org, 
+    =?ISO-8859-2?Q?Petr_Tesa=F8=EDk?= <petr@tesarici.cz>, 
+    Ramon Fried <ramon@neureality.ai>
+Subject: Re: [PATCH RFC 1/4] of: get dma area lower limit
+In-Reply-To: <be71fbb0963584b8c401423d9dd2fba2511bd5b4.1703683642.git.baruch@tkos.co.il>
+Message-ID: <30d81f73-e27e-6cc4-5458-686e3ddd2e5c@linux.com>
+References: <cover.1703683642.git.baruch@tkos.co.il> <be71fbb0963584b8c401423d9dd2fba2511bd5b4.1703683642.git.baruch@tkos.co.il>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALvZod6LgX-FQOGgNBmoRACMBK4GB+K=a+DYrtExcuGFH=J5zQ@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, Jan 17, 2024 at 01:02:19PM -0800, Shakeel Butt wrote:
-> On Wed, Jan 17, 2024 at 12:21 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Wed, 17 Jan 2024 at 11:39, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> > >
-> > > That's a good point.  If the microbenchmark isn't likely to be even
-> > > remotely realistic, maybe we should just revert the revert until if/when
-> > > somebody shows a real world impact.
-> > >
-> > > Linus, any objections to that?
-> >
-> > We use SLAB_ACCOUNT for much more common allocations like queued
-> > signals, so I would tend to agree with Jeff that it's probably just
-> > some not very interesting microbenchmark that shows any file locking
-> > effects from SLAB_ALLOC, not any real use.
-> >
-> > That said, those benchmarks do matter. It's very easy to say "not
-> > relevant in the big picture" and then the end result is that
-> > everything is a bit of a pig.
-> >
-> > And the regression was absolutely *ENORMOUS*. We're not talking "a few
-> > percent". We're talking a 33% regression that caused the revert:
-> >
-> >    https://lore.kernel.org/lkml/20210907150757.GE17617@xsang-OptiPlex-9020/
-> >
-> > I wish our SLAB_ACCOUNT wasn't such a pig. Rather than account every
-> > single allocation, it would be much nicer to account at a bigger
-> > granularity, possibly by having per-thread counters first before
-> > falling back to the obj_cgroup_charge. Whatever.
-> >
-> > It's kind of stupid to have a benchmark that just allocates and
-> > deallocates a file lock in quick succession spend lots of time
-> > incrementing and decrementing cgroup charges for that repeated
-> > alloc/free.
-> >
-> > However, that problem with SLAB_ACCOUNT is not the fault of file
-> > locking, but more of a slab issue.
-> >
-> > End result: I think we should bring in Vlastimil and whoever else is
-> > doing SLAB_ACCOUNT things, and have them look at that side.
-> >
-> > And then just enable SLAB_ACCOUNT for file locks. But very much look
-> > at silly costs in SLAB_ACCOUNT first, at least for trivial
-> > "alloc/free" patterns..
-> >
-> > Vlastimil? Who would be the best person to look at that SLAB_ACCOUNT
-> > thing? See commit 3754707bcc3e (Revert "memcg: enable accounting for
-> > file lock caches") for the history here.
-> >
-> 
-> Roman last looked into optimizing this code path. I suspect
-> mod_objcg_state() to be more costly than obj_cgroup_charge(). I will
-> try to measure this path and see if I can improve it.
+On Wed, 27 Dec 2023, Baruch Siach wrote:
 
-It's roughly an equal split between mod_objcg_state() and obj_cgroup_charge().
-And each is comparable (by order of magnitude) to the slab allocation cost
-itself. On the free() path a significant cost comes simple from reading
-the objcg pointer (it's usually a cache miss).
+> of_dma_get_max_cpu_address() returns the highest CPU address that
+> devices can use for DMA. The implicit assumption is that all CPU
+> addresses below that limit are suitable for DMA. However the
+> 'dma-ranges' property this code uses also encodes a lower limit for DMA
+> that is potentially non zero.
 
-So I don't see how we can make it really cheap (say, less than 5% overhead)
-without caching pre-accounted objects.
+All of memory can be used for DMA by default (==ZONE_NORMAL). ZONE_DMA 
+defines a special range for devices that are unable to perform DMA to all 
+of memory. Usually due to the lack of address bit support.
 
-I thought about merging of charge and stats handling paths, which _maybe_ can
-shave off another 20-30%, but there still will be a double-digit% accounting
-overhead.
-
-I'm curious to hear other ideas and suggestions.
-
-Thanks!
+So I guess that the platform in question here has as a general limit as to 
+what address spaces I/O devices can do DMA to?
