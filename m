@@ -1,164 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EBC4685;
-	Wed, 17 Jan 2024 00:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667407493;
+	Wed, 17 Jan 2024 00:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705452408; cv=none; b=kL0M8Fwe44+bDNWuiVUL8jTBQ9HMQxqZVBF5bEFw1HUWKAKXPOyk82PZdJg0ximRTZd8tTb2J9zZ8Rq0+NaDwEmBQi9rqKtTEcwzUgzt84ag7afycxJnxmeUAOfg4/AG64as57qr6l+xMUh5M1iIuFjtKr0F4K349XLx1uUMaUg=
+	t=1705452422; cv=none; b=Eb2NPvxdxDxp6KG6GjVjpqav3hTYzox1VkR5GU1KWblK9ofZ2bggb25EKO3scFNqEUYpgiIYl/hRg/Pra2IGchb/mkDZyFwF4jh8NkFJedPhHbFBtyAMSPV3Vqjt4viVjAxA+kU15SOAsPKRCePONBhU2LZJbr1ruPTJH593RqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705452408; c=relaxed/simple;
-	bh=Rp5Mh0IN5g+mXkkdBQo6SGc/Tl24YpwvDJVIMMPS0jw=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KFQVjknxYY1prNYmt8TVLeL3dFuw9PUw5exb7nKEqo0re6pHEq4xl0e8Zl8q69XBd9WtK5A0ZD3NNdsy4FWYJWWrswMEunai/LRBx11X0q3zcqpmzPvMeGJQ0bgKJjuYHKvu51kj7e7v8J8t+AOINuoWsiZcUVNOA1mtzjGC7eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FXxgvPL9; arc=none smtp.client-ip=192.55.52.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705452422; c=relaxed/simple;
+	bh=X9InlawFstBGxNScZTHkILj/mXtio6Yl4UfO0dHueu4=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=fh/QTbW4NHehQaDB5eXbW8DzYLbFiHpiBwc/zAi2F4sVY1bo6pT4QTm3dH8pLawAdzFxXKzR/cGxpMcEz0N/aNjPaZMGRLuNNDokntr7QEzauog/Aj12dt8AZuYZiDbhIufkv2c79S0w4ExfNVb+XI00hmUE39MwC/CXlsIHdLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gpq6a7hR; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FXxgvPL9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705452406; x=1736988406;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Rp5Mh0IN5g+mXkkdBQo6SGc/Tl24YpwvDJVIMMPS0jw=;
-  b=FXxgvPL9XBXnmEt5hthUtiDFlZ3kyz3+DAlJgLpODtVer/GD/ePpyQ7h
-   fNggDSXY0YnDTOeDLnNguJ+vmUhGZTx5vrEyeQMaC1rKpdgu3K0JeEOF6
-   StZWFtpcMvksuBf8irz6/rS73c9mMBCE4ubejfpeducI1rmuU3kxSITZH
-   Wp3jojgij/2LRwgMh9VSQmij94ManLZBT8PpfawqqFN4gVnlNF4x/KW7Y
-   safk2abpuMhE8jQx7FHS8aW+pZh2pPP0j3OI4iD/g+2YldYEOGrHmE3Ns
-   zwsiSB6vyMChhLKWbi4Txcy5Cemfa8KYS7wzxFGzJ4jFdVYOrbiioCwQq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="399701073"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="399701073"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 16:46:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="760373669"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="760373669"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 16 Jan 2024 16:46:37 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rPu4h-0001Pg-0f;
-	Wed, 17 Jan 2024 00:46:35 +0000
-Date: Wed, 17 Jan 2024 08:45:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, 675146817@qq.com,
-	story_19872006@126.com, herbert@gondor.apana.org.au,
-	davem@davemloft.net, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, seanjc@google.com, kim.phillips@amd.com,
-	kirill.shutemov@linux.intel.com, jmattson@google.com,
-	babu.moger@amd.com, kai.huang@intel.com, acme@redhat.com,
-	aik@amd.com, namhyung@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, CobeChen@zhaoxin.com, TimGuo@zhaoxin.com,
-	LeoLiu-oc@zhaoxin.com, GeorgeXue@zhaoxin.com
-Subject: Re: [PATCH 3/3] crypto: Zhaoxin: Hardware Engine Driver for
- SHA1/256/384/512
-Message-ID: <202401170833.HWvPThMS-lkp@intel.com>
-References: <20240116063549.3016-4-TonyWWang-oc@zhaoxin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpq6a7hR"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-db3fa47c2f7so8768080276.0;
+        Tue, 16 Jan 2024 16:47:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705452420; x=1706057220; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X9InlawFstBGxNScZTHkILj/mXtio6Yl4UfO0dHueu4=;
+        b=gpq6a7hR9WGiBRE/p+rqQqYbiOSOQ0J5th/r5IPsIyA5FRWcFyS7vgrCNWcgtKol1/
+         V5BDHUcfS6PQKIN/1GjXKtIW5TYfvDO0h9ndpmuotsKN6+v7HnZU/tIXRo4dFuPlW7ki
+         bU5HelT1yLRpSb1hcXIGyzPlYBqwZyesFuAZB+W3spylyKYVx6v/kTzFfB1dXV6j6V59
+         zhhteSVzEZt2tTuRP6UZDkDFzRFw+bLVodd7yr+wlQGcC5eXVpysOE9OtckH2a5fPs7u
+         4HvziCbwb4PbvEUOYCNvxjWrPJPW38zJv2RNA62AjFqHNOacovacS/hFqFR4b2eQYe8y
+         AOIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705452420; x=1706057220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X9InlawFstBGxNScZTHkILj/mXtio6Yl4UfO0dHueu4=;
+        b=lO9kqxHznQnCsMRrx3Z1gBWZ9d2NkX1PPZo3rKUMVE3HW6EagnsAa8V2q63t8VGd2p
+         8IjH5G4Uw0J2h8tumYA2NBAfYyY/shKOytH429TolfMwt6asQhVJ82RstdxbRbVOfzm8
+         qbUU6/x+o3KjuaA5+7F1chHKsxIjpDg5YAbzmtXgFKySKvyrboVylEHuL2Rol2qUm3JZ
+         3gqx4UwvI/I2v3pgiYP0yuFlpmm3smo3mCtqkCmnuxJPBslSXy6D2p10/Oty50rflBQz
+         74xUFl6I3JpTunlPAx6UlzNqQ4O9lfcgq29JSdWfpkE4bFJIbcjqRWnwQbeOw6tU7sqL
+         8uPw==
+X-Gm-Message-State: AOJu0YwvFxBr9dn6MC7q2SKqJGtA/gCLMsbYJIxVAb0ENGRCcQQIeXZh
+	Q8KLExe5TsEvO30kY+0hRoidRDtX+vbYVXLhPnM=
+X-Google-Smtp-Source: AGHT+IHasD2VICwcJnewF3FZn++RvMvk9+/28DJTYBgl/i5H2vkxSLI7WTuDY778nK6zGKQ2is+V4DrZRbgFczBi0f8=
+X-Received: by 2002:a25:4686:0:b0:dbc:bff8:5228 with SMTP id
+ t128-20020a254686000000b00dbcbff85228mr4438870yba.31.1705452420251; Tue, 16
+ Jan 2024 16:47:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240116063549.3016-4-TonyWWang-oc@zhaoxin.com>
+References: <20240112091128.3868059-1-foxywang@tencent.com>
+ <ZaFor2Lvdm4O2NWa@google.com> <CAN35MuSkQf0XmBZ5ZXGhcpUCGD-kKoyTv9G7ya4QVD1xiqOxLg@mail.gmail.com>
+ <72edaedc-50d7-415e-9c45-f17ffe0c1c23@linux.ibm.com>
+In-Reply-To: <72edaedc-50d7-415e-9c45-f17ffe0c1c23@linux.ibm.com>
+From: Yi Wang <up2wing@gmail.com>
+Date: Wed, 17 Jan 2024 08:46:49 +0800
+Message-ID: <CAN35MuTOWYvboZtk_dQXEQ_+vDEO+ao9pzxLSkJj3x8RboAsSw@mail.gmail.com>
+Subject: Re: [PATCH] KVM: irqchip: synchronize srcu only if needed
+To: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	wanpengli@tencent.com, Yi Wang <foxywang@tencent.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Tony,
+On Wed, Jan 17, 2024 at 12:50=E2=80=AFAM Christian Borntraeger
+<borntraeger@linux.ibm.com> wrote:
+>
+>
+>
+> Am 15.01.24 um 17:01 schrieb Yi Wang:
+> > Many thanks for your such kind and detailed reply, Sean!
+> >
 
-kernel test robot noticed the following build errors:
+....
 
-[auto build test ERROR on herbert-cryptodev-2.6/master]
-[also build test ERROR on tip/x86/core linus/master v6.7 next-20240112]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> >>
+> >> So instead of special casing x86, what if we instead have KVM setup an=
+ empty
+> >> IRQ routing table during kvm_create_vm(), and then avoid this mess ent=
+irely?
+> >> That way x86 and s390 no longer need to set empty/dummy routing when c=
+reating
+> >> an IRQCHIP, and the worst case scenario of userspace misusing an ioctl=
+() is no
+> >> longer a NULL pointer deref.
+>
+> Sounds like a good idea. This should also speedup guest creation on s390 =
+since
+> it would avoid one syncronize_irq.
+> >
+> > To setup an empty IRQ routing table during kvm_create_vm() sounds a goo=
+d idea,
+> > at this time vCPU have not been created and kvm->lock is held so skippi=
+ng
+> > synchronization is safe here.
+> >
+> > However, there is one drawback, if vmm wants to emulate irqchip
+> > itself, e.g. qemu
+> > with command line '-machine kernel-irqchip=3Doff' may not need irqchip
+> > in kernel. How
+> > do we handle this issue?
+>
+> I would be fine with wasted memory. The only question is does it have a f=
+unctional
+> impact or can we simply ignore the dummy routing.
+>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tony-W-Wang-oc/crypto-padlock-sha-Matches-CPU-with-Family-with-6-explicitly/20240116-144827
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
-patch link:    https://lore.kernel.org/r/20240116063549.3016-4-TonyWWang-oc%40zhaoxin.com
-patch subject: [PATCH 3/3] crypto: Zhaoxin: Hardware Engine Driver for SHA1/256/384/512
-config: hexagon-randconfig-r071-20240117 (https://download.01.org/0day-ci/archive/20240117/202401170833.HWvPThMS-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240117/202401170833.HWvPThMS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401170833.HWvPThMS-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/crypto/zhaoxin-sha.c:17:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:337:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __raw_readb(PCI_IOBASE + addr);
-                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-   #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-                                                     ^
-   In file included from drivers/crypto/zhaoxin-sha.c:17:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:337:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-   #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-                                                     ^
-   In file included from drivers/crypto/zhaoxin-sha.c:17:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:337:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writeb(value, PCI_IOBASE + addr);
-                               ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
->> drivers/crypto/zhaoxin-sha.c:20:10: fatal error: 'asm/cpu_device_id.h' file not found
-   #include <asm/cpu_device_id.h>
-            ^~~~~~~~~~~~~~~~~~~~~
-   6 warnings and 1 error generated.
+Thanks for your reply, I will update the patch.
 
 
-vim +20 drivers/crypto/zhaoxin-sha.c
-
-  > 20	#include <asm/cpu_device_id.h>
-    21	#include <asm/fpu/api.h>
-    22	#include "zhaoxin-sha.h"
-    23	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+---
+Best wishes
+Yi Wang
