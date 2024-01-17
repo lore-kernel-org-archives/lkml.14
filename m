@@ -1,134 +1,209 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F13E4687
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 06:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3738D8821;
+	Wed, 17 Jan 2024 07:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705474598; cv=none; b=uOenoSk3THhn4J01HvseG4b0xkCLmiypXWX1a0AGvPNAxBjwDE+6wYKe8mYXRB7E6WVRZn0nqZbjR38wtdFIkAOvwoTVDRCVLXYQ/J/4OJzEAOIb7TKORA+DPh1wmX24RY04V/iMwmqYmF/f5SZ6IriVrJOTo7o8tbpqUbw6Rhs=
+	t=1705474816; cv=none; b=X4eyEruQAFuZpqfVpiKIeAV0/0b1KpA6uLhSwwbekBpHcwZ+EIiaoDBx8YrJAK67hNVeLe92gXyuNYfqStxVYyK16r2b3ZYx/GMiyYsqxyi6YzLqbs15nIfrdxnl5Gsb1YGqYnlUyb6lM1tLsRAqFc87xtZLELOnLlYZsWkK0W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705474598; c=relaxed/simple;
-	bh=4gLXLQ2IUbn664c7mSoZhG8SYyENSexnOQJPs3uwiuk=;
-	h=X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:X-CID-BVR:
-	 X-CID-BAS:X-CID-FACTOR:X-UUID:X-User:Received:From:To:Cc:Subject:
-	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	b=b/RHAZamwBsQBfAkbcvsA6i9ItL07vENcnffkm9UVyih1M5nHoMtkDhaVE2+4GeEX0Bo7Kamtv0rktJfUpUAeI7Aklaw1dhS1hd6n0wYEsAUl1eHGC7eBZHdjvo8MUdTw45zVsLm/GULs29iCGP3lgEBlOYI0TkG8cpMAPEIEZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b0b7b37ef2d4489598c09ef941f3e055-20240117
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:c789928d-2a0b-4da7-8aad-28eb354417c7,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.35,REQID:c789928d-2a0b-4da7-8aad-28eb354417c7,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:5d391d7,CLOUDID:cf5e578e-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:2401171451061ZY63EQJ,BulkQuantity:0,Recheck:0,SF:17|19|44|66|38|24|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: b0b7b37ef2d4489598c09ef941f3e055-20240117
-X-User: mengfanhui@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.13)] by mailgw
-	(envelope-from <mengfanhui@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
-	with ESMTP id 617716359; Wed, 17 Jan 2024 14:51:05 +0800
-From: mengfanhui <mengfanhui@kylinos.cn>
-To: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de
-Cc: linux-kernel@vger.kernel.org,
-	sagi@grimberg.me,
-	linux-nvme@lists.infradead.org,
-	mengfanhui@kylinos.cn
-Subject: [PATCH] nvme-multipath: fix bogus request queue reference put
-Date: Wed, 17 Jan 2024 14:50:43 +0800
-Message-Id: <20240117065043.79192-1-mengfanhui@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1705474816; c=relaxed/simple;
+	bh=k7OAtGL+2nxEw5zXMvTzAkCupl6TNovUqU9pBszDoZw=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:User-Agent:MIME-Version:
+	 Content-Type; b=oVhji3qY2ZDASvFIeKR64K0/TqlePKmrPcoNxgjIaf+iTMJvCMlBQ3SWCZnK4coyIfQpp1/bTlKjiKZhPx0xcfsjlfz4JpA1xkGCeH3flywncCEddwIj96VxbsQ03KXvh863CUW0Hc898AWKk0Df4ZlrXdVyhK9F2Bdk8qv45QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dC045jYB; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dC045jYB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705474814; x=1737010814;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=k7OAtGL+2nxEw5zXMvTzAkCupl6TNovUqU9pBszDoZw=;
+  b=dC045jYBJ/qgdV8IuFIERlO5KYgi4A3hOAEBcnDiXjd/LS+eSZ24PBno
+   ETE11v9wmP7J3vlX80uBPBwjpPsqtHRhOflpq9G4gaIP11PTLyC6lFHbu
+   cnirBb1/FLKhXPugVCVyf+bSw2bltCCtcCsuJsFQx0pdduwy0hvIhgAwK
+   /d+H1PobomQiJpViEpMp1sjjusqgps2k02xBuodsxj33tXVzK9Z1k2lm1
+   5MEwR21zzlxMC/UMwpaum4WiNG6FfYXujvrmrLjG0Ej2LOB+Kt/bGJ2ne
+   O2KMvPLlGa4/H4DbwBNL6G1+yYFK3gOBvQGFU9sk2/IiOJpHVDzIkZRBC
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="6805784"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="6805784"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 23:00:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="957456948"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="957456948"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 23:00:06 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-doc@vger.kernel.org>,
+  <linux-fsdevel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
+  <corbet@lwn.net>,  <akpm@linux-foundation.org>,  <honggyu.kim@sk.com>,
+  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <mhocko@kernel.org>,
+  <vtavarespetr@micron.com>,  <jgroves@micron.com>,
+  <ravis.opensrc@micron.com>,  <sthanneeru@micron.com>,
+  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
+  <seungjun.ha@samsung.com>,  <hannes@cmpxchg.org>,
+  <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/3] mm/mempolicy: implement the sysfs-based
+ weighted_interleave interface
+In-Reply-To: <ZadkmWj3Rd483f68@memverge.com> (Gregory Price's message of "Wed,
+	17 Jan 2024 00:24:41 -0500")
+References: <20240112210834.8035-1-gregory.price@memverge.com>
+	<20240112210834.8035-2-gregory.price@memverge.com>
+	<87le8r1dzr.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZadkmWj3Rd483f68@memverge.com>
+Date: Wed, 17 Jan 2024 14:58:08 +0800
+Message-ID: <87o7dkzbsv.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 
-From: Sagi Grimberg <sagi@grimberg.me>
+Gregory Price <gregory.price@memverge.com> writes:
 
-The mpath disk node takes a reference on the request mpath
-request queue when adding live path to the mpath gendisk.
-However if we connected to an inaccessible path device_add_disk
-is not called, so if we disconnect and remove the mpath gendisk
-we endup putting an reference on the request queue that was
-never taken [1].
+> On Mon, Jan 15, 2024 at 11:18:00AM +0800, Huang, Ying wrote:
+>> Gregory Price <gourry.memverge@gmail.com> writes:
+>> 
+>> > +static struct iw_table default_iw_table;
+>> > +/*
+>> > + * iw_table is the sysfs-set interleave weight table, a value of 0
+>> > + * denotes that the default_iw_table value should be used.
+>> > + *
+>> > + * iw_table is RCU protected
+>> > + */
+>> > +static struct iw_table __rcu *iw_table;
+>> > +static DEFINE_MUTEX(iw_table_mtx);
+>> 
+>> I greped "mtx" in kernel/*.c and mm/*.c and found nothing.  To following
+>> the existing coding convention, better to name this as iw_table_mutex or
+>> iw_table_lock?
+>> 
+>
+> ack.
+>
+>> And, I think this is used to protect both iw_table and default_iw_table?
+>> If so, it deserves some comments.
+>> 
+>
+> Right now default_iw_table cannot be updated, and so it is neither
+> protected nor requires protection.
+>
+> I planned to add the protection comment in the next patch series, which
+> would implement the kernel-side interface for updating the default
+> weights during boot/hotplug.
+>
+> We haven't had the discussion on how/when this should happen yet,
+> though, and there's some research to be done.  (i.e. when should DRAM
+> weights be set? should the entire table be reweighted on hotplug? etc)
 
-Fix that to check if we ever added a live path (using
-NVME_NS_HEAD_HAS_DISK flag) and if not, clear the disk->queue
-reference.
+Before that, I'm OK to remove default_iw_table and use hard coded "1" as
+default weight for now.
 
-[1]:
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 1372 at lib/refcount.c:28 refcount_warn_saturate+0xa6/0xf0
-CPU: 1 PID: 1372 Comm: nvme Tainted: G           O      5.7.0-rc2+ #3
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-1ubuntu1 04/01/2014
-RIP: 0010:refcount_warn_saturate+0xa6/0xf0
-RSP: 0018:ffffb29e8053bdc0 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff8b7a2f4fc060 RCX: 0000000000000007
-RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff8b7a3ec99980
-RBP: ffff8b7a2f4fc000 R08: 00000000000002e1 R09: 0000000000000004
-R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
-R13: fffffffffffffff2 R14: ffffb29e8053bf08 R15: ffff8b7a320e2da0
-FS:  00007f135d4ca800(0000) GS:ffff8b7a3ec80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005651178c0c30 CR3: 000000003b650005 CR4: 0000000000360ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- disk_release+0xa2/0xc0
- device_release+0x28/0x80
- kobject_put+0xa5/0x1b0
- nvme_put_ns_head+0x26/0x70 [nvme_core]
- nvme_put_ns+0x30/0x60 [nvme_core]
- nvme_remove_namespaces+0x9b/0xe0 [nvme_core]
- nvme_do_delete_ctrl+0x43/0x5c [nvme_core]
- nvme_sysfs_delete.cold+0x8/0xd [nvme_core]
- kernfs_fop_write+0xc1/0x1a0
- vfs_write+0xb6/0x1a0
- ksys_write+0x5f/0xe0
- do_syscall_64+0x52/0x1a0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>> > +static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+>> > +			  const char *buf, size_t count)
+>> > +{
+>> > +	struct iw_node_attr *node_attr;
+>> > +	struct iw_table __rcu *new;
+>> > +	struct iw_table __rcu *old;
+>> > +	u8 weight = 0;
+>> > +
+>> > +	node_attr = container_of(attr, struct iw_node_attr, kobj_attr);
+>> > +	if (count == 0 || sysfs_streq(buf, ""))
+>> > +		weight = 0;
+>> > +	else if (kstrtou8(buf, 0, &weight))
+>> > +		return -EINVAL;
+>> > +
+>> > +	new = kmalloc(sizeof(*new), GFP_KERNEL);
+>> > +	if (!new)
+>> > +		return -ENOMEM;
+>> > +
+>> > +	mutex_lock(&iw_table_mtx);
+>> > +	old = rcu_dereference_protected(iw_table,
+>> > +					lockdep_is_held(&iw_table_mtx));
+>> > +	/* If value is 0, revert to default weight */
+>> > +	weight = weight ? weight : default_iw_table.weights[node_attr->nid];
+>> 
+>> If we change the default weight in default_iw_table.weights[], how do we
+>> identify whether the weight has been customized by users via sysfs?  So,
+>> I suggest to use 0 in iw_table for not-customized weight.
+>> 
+>> And if so, we need to use RCU to access default_iw_table too.
+>>
+>
+> Dumb simplification on my part, I'll walk this back and add the 
+>
+> if (!weight) weight = default_iw_table[node]
+>
+> logic back into the allocator paths accordinly.
+>
+>> > +	memcpy(&new->weights, &old->weights, sizeof(new->weights));
+>> > +	new->weights[node_attr->nid] = weight;
+>> > +	rcu_assign_pointer(iw_table, new);
+>> > +	mutex_unlock(&iw_table_mtx);
+>> > +	kfree_rcu(old, rcu);
+>> 
+>> synchronize_rcu() should be OK here.  It's fast enough in this cold
+>> path.  This make it good to define iw_table as
+>> 
+> I'll take a look.
+>
+>> u8 __rcu *iw_table;
+>> 
+>> Then, we only need to allocate nr_node_ids elements now.
+>> 
+>
+> We need nr_possible_nodes to handle hotplug correctly.
 
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: mengfanhui <mengfanhui@kylinos.cn>
----
- drivers/nvme/host/multipath.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+nr_node_ids >= num_possible_nodes().  It's larger than any possible node
+ID.
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 2dd4137a08b2..3e579e49579c 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -895,6 +895,14 @@ void nvme_mpath_remove_disk(struct nvme_ns_head *head)
- 	/* make sure all pending bios are cleaned up */
- 	kblockd_schedule_work(&head->requeue_work);
- 	flush_work(&head->requeue_work);
-+	if (!test_bit(NVME_NSHEAD_DISK_LIVE, &head->flags)) {
-+		/*
-+		* if device_add_disk wasn't called, prevent
-+                * disk release to put a bogus reference on the
-+                * request queue
-+                */
-+		head->disk->queue = NULL;
-+	}
- 	put_disk(head->disk);
- }
- 
--- 
-2.25.1
+> I decided to simplify this down to MAX_NUMNODES *juuuuuust in case*
+> "true node hotplug" ever becomes a reality.  If that happens, then
+> only allocating space for possible nodes creates a much bigger
+> headache on hotplug.
+>
+> For the sake of that simplification, it seemed better to just eat the
+> 1KB.  If you really want me to do that, I will, but the MAX_NUMNODES
+> choice was an explicitly defensive choice.
 
+When "true node hotplug" becomes reality, we can make nr_node_ids ==
+MAX_NUMNODES.  So, it's safe to use it.  Please take a look at
+setup_nr_node_ids().
+
+>> > +static int __init mempolicy_sysfs_init(void)
+>> > +{
+>> > +	/*
+>> > +	 * if sysfs is not enabled MPOL_WEIGHTED_INTERLEAVE defaults to
+>> > +	 * MPOL_INTERLEAVE behavior, but is still defined separately to
+>> > +	 * allow task-local weighted interleave and system-defaults to
+>> > +	 * operate as intended.
+>> > +	 *
+>> > +	 * In this scenario iw_table cannot (presently) change, so
+>> > +	 * there's no need to set up RCU / cleanup code.
+>> > +	 */
+>> > +	memset(&default_iw_table.weights, 1, sizeof(default_iw_table));
+>> 
+>> This depends on sizeof(default_iw_table.weights[0]) == 1, I think it's
+>> better to use explicit loop here to make the code more robust a little.
+>> 
+>
+> oh hm, you're right.  rookie mistake on my part.
+>
+
+--
+Best Regards,
+Huang, Ying
