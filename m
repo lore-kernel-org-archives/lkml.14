@@ -1,107 +1,116 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42AC1DDC8;
-	Wed, 17 Jan 2024 10:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821F11DDDE;
+	Wed, 17 Jan 2024 10:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705487347; cv=none; b=ZafIEHpk14G4S0/AN+OF7JXZqBYBkbI8WdJZ104HFcxq4cqPqL7bF9kl86o5vNDtLAa8N9SSXXljDD9RBFnqJbiLJPM0Gg3OIHGlKjyjKaMKvJsJS7q6CnSAga6F14bYXoVW/XFJAvKlJs+HzYkScggpPG5hOcnACACbvB9IfZI=
+	t=1705487349; cv=none; b=V0NocLj50d54JkYNxV6pzVwAsE1EY/fUSmdwdQD7eF4OF66VoTxGXp3SDktfZdcsrWFk1Ks947pv/UBygo9DDz4eMeU9oiEoZgiMVhViTE/SFcYb41y6ZF2AViICv7cKKvYLyVzH/h+WN/pHTFhrzc8n8vVZZNirh3R3UTC01bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705487347; c=relaxed/simple;
-	bh=fn/GJyMwTt+UK9FTMORdK7KeF7Ng/MbdAFIOD30iFgQ=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-GND-Sasl; b=XydulKR5aso1biq5G3j76fAk4cBJeQInMnnBe8DTnbYKTLnZM2Hl+Xd2vBlloyo4xbjXOReTvZ2UWXHJZ7QZukK+gPLV9zGv2GPRpSTXJGW8eNuvcwT1H2FIFWkadDoMRR5EhySWkNjbXSk/0Yl5zvtfYtzUvV7ZQ4XGYbvAfXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=N32HXSuy; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1705487349; c=relaxed/simple;
+	bh=uzs6hr67x0wcN5kmfNYEWgn7qqBTKldWpYNeoxCt1GU=;
+	h=DKIM-Signature:Received:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding; b=LC/D1DfP3GjAPhw9/4b6BPcDYVaHhSC5ZMBNG5YQKo3ACwbu3iX/wM/WWu/E7tAB5eQ60XhanPDzwBaeW+LV7iZuilKe95Gn08mv8Xn7qasunKsvqEuXGrEJ5uHSOJevsz0nOw+wEJLenUPkUK+ZfdB+VzirkCnnmOWQ3dYj0Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=elOe0XkA; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="N32HXSuy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DC18C40011;
-	Wed, 17 Jan 2024 10:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1705487343;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zfeP++ce84dD1NKgVgvHGZi5163rCfdKWO3hg8LgOVI=;
-	b=N32HXSuy1FlHbm8WyQDHEDDv+uuPBFcXr2Bi+LQhw2GFP3ElffuZ/Xiv3dXLDxgp6aS9N7
-	UMzFd4ZwST898UyPfVXPpCcdmqAOrlJoTOER5tSGNFSiockd2+WkceaWkBlIF93/dqsLws
-	GG+wLuxlSOQj5ZpbMnsjbP3eWvkkGVi6DlLvESr1Si4pFc1iZOCGUKJNnZgyl2hVBpAzIp
-	R95oluJ7Hdp3vEP4gGYMVBVZhpBabXsNQXvZwtFtMjjXQinyU/gyawz1ZegFqcucszBWmg
-	/jEEF9YsZHKV9Ly5sh3nXk5kHct1271wv4izVbcGH5Vg8YgbHuGkh5C4kqi6vQ==
-From: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	mithat.guner@xeront.com,
-	erkin.bozoglu@xeront.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [RFC PATCH net-next 3/8] net: dsa: mt7530: do not use SW_PHY_RST to reset MT7531 switch
-Date: Wed, 17 Jan 2024 13:28:33 +0300
-Message-Id: <20240117102838.57445-4-arinc.unal@arinc9.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240117102838.57445-1-arinc.unal@arinc9.com>
-References: <20240117102838.57445-1-arinc.unal@arinc9.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="elOe0XkA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705487346;
+	bh=uzs6hr67x0wcN5kmfNYEWgn7qqBTKldWpYNeoxCt1GU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=elOe0XkAQYBaF2j+quVIDduCoSqMpPA4uttYtiJ8+edcOGA+F7BC3gngIGSXXrdBb
+	 iiEys6qytH/YYkK53Nty5Eg4uKsbqYwazpa2A0AMl2DPtOFLHbO9uCQbHtxIyjvgbT
+	 MIhixDNe1cQbm3cyTx1pCAbadStenTUAtl7gYl7e0s8URZTa+dnmfNOG7qHk0yo1NK
+	 oaIS2Z/V+8NCk1gixwj+yZvNF8SAQmdVgKKfUe1HOAjsox6dl9STPj4ktzL7ou8unL
+	 vPZqnAeyniR3OYZLLhzAnrDqGVLlmUMa4x+NEFhZqCOXGN6JQSogvsvbxqZsjGcHdZ
+	 k1iLtC4R3ZXDQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 93BB8378148C;
+	Wed, 17 Jan 2024 10:29:04 +0000 (UTC)
+Message-ID: <cf895498-ef54-4667-a205-cc3150be9a22@collabora.com>
+Date: Wed, 17 Jan 2024 11:29:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/7] Allow coreboot modules to autoload and enable
+ cbmem in the arm64 defconfig
+Content-Language: en-US
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: kernel@collabora.com, chrome-platform@lists.linux.dev,
+ Abhijit Gangurde <abhijit.gangurde@amd.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Brian Norris <briannorris@chromium.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Julius Werner <jwerner@chromium.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Schier <nicolas@fjasle.eu>, Nipun Gupta <nipun.gupta@amd.com>,
+ Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>,
+ U mang Jain <umang.jain@ideasonboard.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240112131857.900734-1-nfraprado@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240112131857.900734-1-nfraprado@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
 
-According to the document MT7531 Reference Manual for Development Board
-v1.0, the SW_PHY_RST bit on the SYS_CTRL register doesn't exist for
-MT7531. This is likely why forcing link down on all ports is necessary for
-MT7531.
+Il 12/01/24 14:18, Nícolas F. R. A. Prado ha scritto:
+> 
+> This series adds the missing pieces to the coreboot bus and the module
+> alias generation to allow coreboot modules to be automatically loaded
+> when matching devices are detected.
+> 
+> The configs for cbmem coreboot entries are then enabled in the arm64
+> defconfig, as modules, to allow reading logs from coreboot on arm64
+> Chromebooks, which is useful for debugging the boot process.
+> 
 
-Therefore, do not set SW_PHY_RST on mt7531_setup().
+For the entire series:
 
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- drivers/net/dsa/mt7530.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index d2e861361191..a43178b62817 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2434,14 +2434,12 @@ mt7531_setup(struct dsa_switch *ds)
- 	val = mt7530_read(priv, MT7531_TOP_SIG_SR);
- 	priv->p5_sgmii = !!(val & PAD_DUAL_SGMII_EN);
- 
--	/* all MACs must be forced link-down before sw reset */
-+	/* Force link down on all ports before internal reset */
- 	for (i = 0; i < MT7530_NUM_PORTS; i++)
- 		mt7530_write(priv, MT7530_PMCR_P(i), MT7531_FORCE_LNK);
- 
- 	/* Reset the switch through internal reset */
--	mt7530_write(priv, MT7530_SYS_CTRL,
--		     SYS_CTRL_PHY_RST | SYS_CTRL_SW_RST |
--		     SYS_CTRL_REG_RST);
-+	mt7530_write(priv, MT7530_SYS_CTRL, SYS_CTRL_SW_RST | SYS_CTRL_REG_RST);
- 
- 	if (!priv->p5_sgmii) {
- 		mt7531_pll_setup(priv);
--- 
-2.40.1
+> Changes in v2:
+> - Added commits for vpd, memconsole and framebuffer drivers to add them
+>    to the module device table
+> 
+> Nícolas F. R. A. Prado (7):
+>    firmware: coreboot: Generate modalias uevent for devices
+>    firmware: coreboot: Generate aliases for coreboot modules
+>    firmware: google: cbmem: Add to module device table
+>    firmware: google: vpd: Add to module device table
+>    firmware: google: memconsole: Add to module device table
+>    firmware: google: framebuffer: Add to module device table
+>    arm64: defconfig: Enable support for cbmem entries in the coreboot
+>      table
+> 
+>   arch/arm64/configs/defconfig                   |  3 +++
+>   drivers/firmware/google/cbmem.c                |  7 +++++++
+>   drivers/firmware/google/coreboot_table.c       |  9 +++++++++
+>   drivers/firmware/google/framebuffer-coreboot.c |  7 +++++++
+>   drivers/firmware/google/memconsole-coreboot.c  |  7 +++++++
+>   drivers/firmware/google/vpd.c                  |  7 +++++++
+>   include/linux/mod_devicetable.h                |  8 ++++++++
+>   scripts/mod/devicetable-offsets.c              |  3 +++
+>   scripts/mod/file2alias.c                       | 10 ++++++++++
+>   9 files changed, 61 insertions(+)
+> 
 
