@@ -1,36 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38E614000;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38B413FFF;
 	Wed, 17 Jan 2024 09:03:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705482224; cv=none; b=d+FDbz0HTEYvdcl607TSIOP1D21q/puSkew5GBW2YEyD4YfPxRg3v2FJeZXLLgOfxgJNIIB24SMokPzHpT7nlldf/9VvtsLVLlrY5yLzpABcnOSzozASgcsNO3pqDeqBExB/YvQ4GLXrLpsPpzA0Q6N2OUfaSZzRv86eZ5JqPr4=
+	t=1705482224; cv=none; b=auiSn3WmbR3x2k3Wdpn2gKb5SrWSM+OFCCsDFoNn9Xn3xfIUIgmvXohHQEJFHedqUJIiRgEVHJBd1IhuPtMP+MRG9NTIX9w5CISFJZQ306dIcoe/MKe018rKbNfITd4k9hG6+0nWDxFh/OsQD0IntNa/6grCQvIp/Jb0XNBRksw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705482224; c=relaxed/simple;
-	bh=vEtn9XD7xyubHLGGICH9x1XRbBU8Muy2s+oZUo5w6Zc=;
+	bh=i17ld0NFQa97QFBuw7o/jqfRb7C6LLoCeBGe1hJFLPM=;
 	h=Received:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=b3EnNd+pqpDO/8N/lkolsTjWZ0tUJCWSqnT/OCFw27eHcTSC74WJcRoi60SqPVa1IMk4gyF3k4Y6eKljzM42m8XZ1wrsBvu40xjxOIi5s3ChEd5OJhWvFK1U0RGAJVVF7cR9MZyZRZJba/rKXyjjiRIQIaaTsV4/sGxm8Qbe0vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEHLmJHo; arc=none smtp.client-ip=10.30.226.201
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding; b=B4AfLHK/N19MFm5qdtF3IBXeOVY7H+L1Pxru3JtgZQUpQaGyXvYB6zxMAOwt4tXa9PNv7+y1cpQ0nmD0/CM4AfR7U6iSieg8Jp5McmYCN0/HnaTzl6LDGkEGRb+j6JNRiTcLagaM2uAjvFhvCaNS1DTZJA3seTFD7kiZ8ENufT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QrhpPRAY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEHLmJHo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F50DC43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QrhpPRAY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D9E2C433C7;
 	Wed, 17 Jan 2024 09:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1705482224;
-	bh=vEtn9XD7xyubHLGGICH9x1XRbBU8Muy2s+oZUo5w6Zc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AEHLmJHoFnVJOtBCMyEqHJ7tYtCFYxtXYlp6KjBLXwAoLviq6KXa2J33VefHQsH5N
-	 RJHheVMGHfnUDlMf1IZhJQ3OTcPa5T5R5r+huyTsxRKJurmZWA6MNfc/Qxulfnr0fR
-	 S+JJH9NETF28J/AAsfq929kjrcK5p0HlY1yguZ2mrZjUd+K5C2GL9DIHYKPvmzgt3s
-	 NxpmdkBj+OLvgzGaPj68JFyRYne7FQeh7tP+Wp1jUMGZDrVmqVqGSs/8cN8rDrPUZ0
-	 VLeuOrCIv6whNLKISOaGRHA/ABShs/L0/X9Wke+QtxFxpsXC4aY0FiBKOKSiZOs1Wl
-	 7cAyQpSy2hITg==
+	bh=i17ld0NFQa97QFBuw7o/jqfRb7C6LLoCeBGe1hJFLPM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QrhpPRAYqKWIICjhvW+fdF36XLDjkM4tFHkyUpHf8lWZXG54jx90HhGsHVzbXbYwF
+	 G+LEa/vv4cI9poRBs8Lj4IpZfOSW6etkZA7ZHuqOFY7DOuX7T9OcxiLeEA3v6fC76B
+	 JhBsjOCR8ruvuUREs3USjx4j9DqymyXj+QW5iwzQDQ2wI4GLAt9fmzWYGAaMu8zJoq
+	 YjQDNL33u2o0usRIxt/T+E31cE0wJkOH8XeHJJH39pXdzlFn44dikF8g5VQRBKjjVB
+	 rQg0L2esBMDKlgP6P9Aguzn89nnxHqpwiJJsEHFsE/Z8rRw1yemyil11YmYc1gZPNT
+	 6z41o7oyF9N6w==
 Received: from johan by xi.lan with local (Exim 4.96.2)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1rQ1pt-00086Y-0d;
-	Wed, 17 Jan 2024 10:03:49 +0100
+	id 1rQ1ps-00086S-2s;
+	Wed, 17 Jan 2024 10:03:48 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Mark Brown <broonie@kernel.org>
 Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -42,12 +41,10 @@ Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
 	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 3/3] ASoC: codecs: wcd9335: drop unused gain hack remnant
-Date: Wed, 17 Jan 2024 10:03:31 +0100
-Message-ID: <20240117090331.31111-4-johan+linaro@kernel.org>
+Subject: [PATCH v2 0/3] ASoC: qcom: volume fixes and codec cleanups
+Date: Wed, 17 Jan 2024 10:03:28 +0100
+Message-ID: <20240117090331.31111-1-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240117090331.31111-1-johan+linaro@kernel.org>
-References: <20240117090331.31111-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,55 +53,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The vendor driver appears to be modifying the gain settings behind the
-back of user space but these hacks never made it upstream except for
-some essentially dead code that adds a constant zero to the current
-settings on DAPM events.
+To reduce the risk of speaker damage the PA gain needs to be limited on
+machines like the Lenovo Thinkpad X13s until we have active speaker
+protection in place.
 
-Note that the volume registers still need to be written after enabling
-clocks in order for any prior updates to take effect.
+Limit the gain to the current default setting provided by the UCM
+configuration which most user have so far been using (due to a bug in
+the configuration files which prevented hardware volume control [1]).
 
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- sound/soc/codecs/wcd9335.c | 4 ----
- 1 file changed, 4 deletions(-)
+Included is also a related fix for the LPASS WSA macro driver, which
+was changing the digital gain setting behind the back of user space and
+which can result in excessive (or too low) digital gain.
 
-diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
-index 43c648efd0d9..deb15b95992d 100644
---- a/sound/soc/codecs/wcd9335.c
-+++ b/sound/soc/codecs/wcd9335.c
-@@ -3033,7 +3033,6 @@ static int wcd9335_codec_enable_mix_path(struct snd_soc_dapm_widget *w,
- {
- 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
- 	u16 gain_reg;
--	int offset_val = 0;
- 	int val = 0;
- 
- 	switch (w->reg) {
-@@ -3073,7 +3072,6 @@ static int wcd9335_codec_enable_mix_path(struct snd_soc_dapm_widget *w,
- 	switch (event) {
- 	case SND_SOC_DAPM_POST_PMU:
- 		val = snd_soc_component_read(comp, gain_reg);
--		val += offset_val;
- 		snd_soc_component_write(comp, gain_reg, val);
- 		break;
- 	case SND_SOC_DAPM_POST_PMD:
-@@ -3294,7 +3292,6 @@ static int wcd9335_codec_enable_interpolator(struct snd_soc_dapm_widget *w,
- 	u16 gain_reg;
- 	u16 reg;
- 	int val;
--	int offset_val = 0;
- 
- 	if (!(snd_soc_dapm_widget_name_cmp(w, "RX INT0 INTERP"))) {
- 		reg = WCD9335_CDC_RX0_RX_PATH_CTL;
-@@ -3337,7 +3334,6 @@ static int wcd9335_codec_enable_interpolator(struct snd_soc_dapm_widget *w,
- 	case SND_SOC_DAPM_POST_PMU:
- 		wcd9335_config_compander(comp, w->shift, event);
- 		val = snd_soc_component_read(comp, gain_reg);
--		val += offset_val;
- 		snd_soc_component_write(comp, gain_reg, val);
- 		break;
- 	case SND_SOC_DAPM_POST_PMD:
+There are further Qualcomm codec drivers that similarly appear to
+manipulate various gain settings, but on closer inspection it turns out
+that they only write back the current settings. Tests reveal that these
+writes are indeed needed for any prior updates to take effect (at least
+for the WSA and RX macros).
+
+Johan
+
+[1] https://github.com/alsa-project/alsa-ucm-conf/pull/382
+
+
+Changes in v2
+ - keep the volume register write on power-on in lpass-wsa-macro
+ - drop the other patches removing volume register writes on DAPM events
+ - only drop the constant-zero gain offsets in wcd9335
+   
+
+Johan Hovold (3):
+  ASoC: qcom: sc8280xp: limit speaker volumes
+  ASoC: codecs: lpass-wsa-macro: fix compander volume hack
+  ASoC: codecs: wcd9335: drop unused gain hack remnant
+
+ sound/soc/codecs/lpass-wsa-macro.c | 7 -------
+ sound/soc/codecs/wcd9335.c         | 4 ----
+ sound/soc/qcom/sc8280xp.c          | 8 +++++---
+ 3 files changed, 5 insertions(+), 14 deletions(-)
+
 -- 
 2.41.0
 
