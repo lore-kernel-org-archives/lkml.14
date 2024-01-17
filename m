@@ -1,49 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A62120DC9
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573D921356
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705503539; cv=none; b=q1AW/bcGKhVEfBV3ijIF5TQufGqVIqe1vjIhaoaSjRfkInUSLVGVsYTg2Cpvp15IpHfDYDoeCmppzz/08akgg56GD/f2/chXbuOU/2PDT3Lp1Js1SbSqQiAYq8q7QG4X6aUSqglPeGN1ETOWzUKS3u//aINla1UOlnMC+nTY5V8=
+	t=1705503572; cv=none; b=EPyNsx7dRxGopzaDv+XgfNSof1QhM3vQWAPNNCbBk2KnjPOc8XAXf4ROY46PFRYX9gJpQ50JuSVMMoVQ9BFoq4cNl0JqsfgB6K+OZJbCYUc7qkaHXB4FbO9eYDPkWd9ol3du6bZoU2k/9jd4Y08g5m+8tcCtcIOPgO8ck2RMZfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705503539; c=relaxed/simple;
-	bh=IDdiZ9IYC/v8mbr8KV6qe4pnXWXW+PnOzhK1/6ZUJy0=;
-	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:Content-Language:To:Cc:
-	 References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-Scanned-By; b=H1KUBTIuDTha2EeSmF1Qhv1JcXhCCYZ014YKCQNZFstSZDZVuMh1iBiaEjM4WaRmeKS8oiPpmN5TKpMwOzEA/2av/rNI3Q3jv4G+VO0zBwRnYcbL/yPgfwEf1EU7BO19B2a/b9o+xYoN+wqj2QojdqxxrtRx5JZpmgHAM3c+Iww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QH/X3Cbw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705503572; c=relaxed/simple;
+	bh=7j81HGmM3UVZuMW1aajgnh/Tqkfv5ZlF1e2arTN11NI=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
+	 To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=LktqTKvQZCcqI7KMN68r7RzYrtN2XkXbk6JSyH7MgGeyLkyAwUGg8nElDOvt1dLMWn+r/SLehDD2eDsm7ee8qHYA7xK9sk7E+GkpxN0mhjNnw4BEHavOHEv0M12el5d+Q5KiofX98uc2bjZ51it6lZd29CCuJrTmpp62vqlawOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M126Baao; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QH/X3Cbw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705503536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2cRPPiRnQNPcYyC98LZkrWQLgYYclbEsGM6mbdQ/VDk=;
-	b=QH/X3CbwkLP/JKJO8N42FYESJuRuwiTpnCLRZ1fR5l2mcQT3N7axGy4M2Gkwlm7YYNDQ4v
-	cncb0Jz5RnjGI27Vg+ySPD0HcBas/Pn5q3VyrhtXbOCcEyOddSiN8RMiEifZinCQf8BGFB
-	uEwqGs9JOHBUOo6tS0NXQ/QSJpRtvEU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-53-SMMkAjH8P42wGL39CoVR7A-1; Wed, 17 Jan 2024 09:58:52 -0500
-X-MC-Unique: SMMkAjH8P42wGL39CoVR7A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 592971005055;
-	Wed, 17 Jan 2024 14:58:52 +0000 (UTC)
-Received: from [10.22.16.147] (unknown [10.22.16.147])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E4E8340C6E2B;
-	Wed, 17 Jan 2024 14:58:51 +0000 (UTC)
-Message-ID: <ba1bcfdd-ad61-429e-b332-cd9b52588a71@redhat.com>
-Date: Wed, 17 Jan 2024 09:58:51 -0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M126Baao"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40e884de7b9so11164535e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 06:59:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705503567; x=1706108367; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nmOxe8Kt63reb+K83M/fiIpc7ZoymLxbMzD4gGdoAzs=;
+        b=M126Baaoif7bxWr9cLsIatT/8b81mBZd4R7H9bNooD8W27aH0LrMDecGWraXMcRqC8
+         Ir2XCV3QW5PYHHEZyxbiTeHHcKTbpDjR0+sj4IAcyoWnPfqhEul5vKC2d6GpAHnQPeik
+         RfVme+heJWOj5cgrC3fNaO4kOw5O9+CkeB0Mxj6UzWe53WYVKsbVgIpFK/Lw69MGhDC1
+         tNDxkChPwapCvqQWBVrKshvO6rOwmxdBjbl9PrPGqABSStMEmZfwIIxmNT/swZBRRHS+
+         TuM7NxiyJInuDpgPPQmdz/SB4/Bjqsa4hE+fDa+fYE3Eew0ORyFTxVBaxLpeZ0Fq1T2d
+         7UdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705503567; x=1706108367;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmOxe8Kt63reb+K83M/fiIpc7ZoymLxbMzD4gGdoAzs=;
+        b=nt4wvnXZ99ZS9jVdXqQY9B01qXbN3EfSjzMFq/U5S5gfxED0NQS9Dv10jNBwyRhpFs
+         GPtiAC7/M5F1e1BzMLQ5K2OpUQWkOIo0Zzgy3MV6Ir9fIi0Hce8oOZhskYeNh1sprb6j
+         xO/GCoyyu1tnMYn0zIaz896qFiEDrYVwid32wed+mgyM1SbAOTXlid1LNdDNzgN/l+wE
+         cbKqHcj6Zdz+vANTViISQ/hAPpTp1zLmkjgVNLipxfkGRlMwGrUNZ4kG20KFVENBSjy5
+         gHIw5xSYjrj/OXycDKhqwZo0h+K9nsEMk9piW5HGIA2xs5RhKBxWz1z07sOxrQmQ5/KV
+         63ZQ==
+X-Gm-Message-State: AOJu0YyBnAI+7W4ASHBH9bn7Hz1m7vKEyvWuoCuYrRSh3UczAkT+H9Da
+	q7M6e4GKzClMYPb0XCQQx1YCchBfpj/iWw==
+X-Google-Smtp-Source: AGHT+IGy6qHkEPrF3Ir1FNIzi8E8U7HINl3OXeiajhONjDtBYPNIZN6SHJlqkSjxbgHRxUhaMtMqfg==
+X-Received: by 2002:a05:600c:84ca:b0:40e:4e54:3e46 with SMTP id er10-20020a05600c84ca00b0040e4e543e46mr4715735wmb.91.1705503567601;
+        Wed, 17 Jan 2024 06:59:27 -0800 (PST)
+Received: from [192.168.2.107] ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id bm19-20020a170906c05300b00a2362c5e3dbsm7856439ejb.151.2024.01.17.06.59.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jan 2024 06:59:27 -0800 (PST)
+Message-ID: <59a2e142-e970-4792-9233-7c447ac391b2@linaro.org>
+Date: Wed, 17 Jan 2024 14:59:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,219 +63,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] lockdep: fix deadlock issue between lockdep and rcu
+Subject: Re: [PATCH v3 08/12] arm64: dts: exynos: gs101: remove reg-io-width
+ from serial
 Content-Language: en-US
-To: Zhiguo Niu <zhiguo.niu@unisoc.com>, peterz@infradead.org,
- mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Cc: linux-kernel@vger.kernel.org, niuzhiguo84@gmail.com, ke.wang@unisoc.com,
- xuewen.yan@unisoc.com
-References: <1705477714-10467-1-git-send-email-zhiguo.niu@unisoc.com>
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <1705477714-10467-1-git-send-email-zhiguo.niu@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: peter.griffin@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+ gregkh@linuxfoundation.org, mturquette@baylibre.com, sboyd@kernel.org,
+ robh+dt@kernel.org, conor+dt@kernel.org, andi.shyti@kernel.org,
+ alim.akhtar@samsung.com, jirislaby@kernel.org, s.nawrocki@samsung.com,
+ tomasz.figa@gmail.com, cw00.choi@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-serial@vger.kernel.org, andre.draszik@linaro.org,
+ kernel-team@android.com, willmcvicker@google.com
+References: <20240109125814.3691033-1-tudor.ambarus@linaro.org>
+ <20240109125814.3691033-9-tudor.ambarus@linaro.org>
+ <CAPLW+4mUMx9RvFiS0L2U+_Fd_PzcHhmNbyR4cmUrYF3BVgb=Cw@mail.gmail.com>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <CAPLW+4mUMx9RvFiS0L2U+_Fd_PzcHhmNbyR4cmUrYF3BVgb=Cw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 1/17/24 02:48, Zhiguo Niu wrote:
-> There is a deadlock scenario between lockdep and rcu when
-> rcu nocb feature is enabled, just as following call stack:
->
->       rcuop/x
-> -000|queued_spin_lock_slowpath(lock = 0xFFFFFF817F2A8A80, val = ?)
-> -001|queued_spin_lock(inline) // try to hold nocb_gp_lock
-> -001|do_raw_spin_lock(lock = 0xFFFFFF817F2A8A80)
-> -002|__raw_spin_lock_irqsave(inline)
-> -002|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F2A8A80)
-> -003|wake_nocb_gp_defer(inline)
-> -003|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F30B680)
-> -004|__call_rcu_common(inline)
-> -004|call_rcu(head = 0xFFFFFFC082EECC28, func = ?)
-> -005|call_rcu_zapped(inline)
-> -005|free_zapped_rcu(ch = ?)// hold graph lock
-> -006|rcu_do_batch(rdp = 0xFFFFFF817F245680)
-> -007|nocb_cb_wait(inline)
-> -007|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F245680)
-> -008|kthread(_create = 0xFFFFFF80803122C0)
-> -009|ret_from_fork(asm)
->
->       rcuop/y
-> -000|queued_spin_lock_slowpath(lock = 0xFFFFFFC08291BBC8, val = 0)
-> -001|queued_spin_lock()
-> -001|lockdep_lock()
-> -001|graph_lock() // try to hold graph lock
-> -002|lookup_chain_cache_add()
-> -002|validate_chain()
-> -003|lock_acquire
-> -004|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F211D80)
-> -005|lock_timer_base(inline)
-> -006|mod_timer(inline)
-> -006|wake_nocb_gp_defer(inline)// hold nocb_gp_lock
-> -006|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F2A8680)
-> -007|__call_rcu_common(inline)
-> -007|call_rcu(head = 0xFFFFFFC0822E0B58, func = ?)
-> -008|call_rcu_hurry(inline)
-> -008|rcu_sync_call(inline)
-> -008|rcu_sync_func(rhp = 0xFFFFFFC0822E0B58)
-> -009|rcu_do_batch(rdp = 0xFFFFFF817F266680)
-> -010|nocb_cb_wait(inline)
-> -010|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F266680)
-> -011|kthread(_create = 0xFFFFFF8080363740)
-> -012|ret_from_fork(asm)
->
-> rcuop/x and rcuop/y are rcu nocb threads with the same nocb gp thread.
-> This patch release the graph lock before lockdep call_rcu.
->
-> Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer in use")
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> ---
-> changes of v2: update patch according to Boqun's suggestions.
-> ---
-> ---
->   kernel/locking/lockdep.c | 47 +++++++++++++++++++++++++++++++----------------
->   1 file changed, 31 insertions(+), 16 deletions(-)
->
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 151bd3d..ddcaa69 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -6184,25 +6184,27 @@ static struct pending_free *get_pending_free(void)
->   static void free_zapped_rcu(struct rcu_head *cb);
->   
->   /*
-> - * Schedule an RCU callback if no RCU callback is pending. Must be called with
-> - * the graph lock held.
-> - */
-> -static void call_rcu_zapped(struct pending_free *pf)
-> +* See if we need to queue an RCU callback, must called with
-> +* the lockdep lock held, returns false if either we don't have
-> +* any pending free or the callback is already scheduled.
-> +* Otherwise, a call_rcu() must follow this function call.
-> +*/
-> +static bool prepare_call_rcu_zapped(struct pending_free *pf)
->   {
->   	WARN_ON_ONCE(inside_selftest());
->   
->   	if (list_empty(&pf->zapped))
-> -		return;
-> +		return false;
->   
->   	if (delayed_free.scheduled)
-> -		return;
-> +		return false;
->   
->   	delayed_free.scheduled = true;
->   
->   	WARN_ON_ONCE(delayed_free.pf + delayed_free.index != pf);
->   	delayed_free.index ^= 1;
->   
-> -	call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
-> +	return true;
->   }
->   
->   /* The caller must hold the graph lock. May be called from RCU context. */
-> @@ -6228,6 +6230,7 @@ static void free_zapped_rcu(struct rcu_head *ch)
->   {
->   	struct pending_free *pf;
->   	unsigned long flags;
-> +	bool need_callback;
->   
->   	if (WARN_ON_ONCE(ch != &delayed_free.rcu_head))
->   		return;
-> @@ -6239,14 +6242,17 @@ static void free_zapped_rcu(struct rcu_head *ch)
->   	pf = delayed_free.pf + (delayed_free.index ^ 1);
->   	__free_zapped_classes(pf);
->   	delayed_free.scheduled = false;
-> +	need_callback =
-> +		prepare_call_rcu_zapped(delayed_free.pf + delayed_free.index);
-> +	lockdep_unlock();
-> +	raw_local_irq_restore(flags);
->   
->   	/*
-> -	 * If there's anything on the open list, close and start a new callback.
-> -	 */
-> -	call_rcu_zapped(delayed_free.pf + delayed_free.index);
-> +	* If there's anything on the open list, close and start a new callback.
-> +	*/
-> +	if (need_callback)
-> +		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
->   
-> -	lockdep_unlock();
-> -	raw_local_irq_restore(flags);
->   }
->   
->   /*
-> @@ -6286,6 +6292,7 @@ static void lockdep_free_key_range_reg(void *start, unsigned long size)
->   {
->   	struct pending_free *pf;
->   	unsigned long flags;
-> +	bool need_callback;
->   
->   	init_data_structures_once();
->   
-> @@ -6293,10 +6300,11 @@ static void lockdep_free_key_range_reg(void *start, unsigned long size)
->   	lockdep_lock();
->   	pf = get_pending_free();
->   	__lockdep_free_key_range(pf, start, size);
-> -	call_rcu_zapped(pf);
-> +	need_callback = prepare_call_rcu_zapped(pf);
->   	lockdep_unlock();
->   	raw_local_irq_restore(flags);
-> -
-> +	if (need_callback)
-> +		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
->   	/*
->   	 * Wait for any possible iterators from look_up_lock_class() to pass
->   	 * before continuing to free the memory they refer to.
-> @@ -6390,6 +6398,7 @@ static void lockdep_reset_lock_reg(struct lockdep_map *lock)
->   	struct pending_free *pf;
->   	unsigned long flags;
->   	int locked;
-> +	bool need_callback = false;
->   
->   	raw_local_irq_save(flags);
->   	locked = graph_lock();
-> @@ -6398,11 +6407,13 @@ static void lockdep_reset_lock_reg(struct lockdep_map *lock)
->   
->   	pf = get_pending_free();
->   	__lockdep_reset_lock(pf, lock);
-> -	call_rcu_zapped(pf);
-> +	need_callback = prepare_call_rcu_zapped(pf);
->   
->   	graph_unlock();
->   out_irq:
->   	raw_local_irq_restore(flags);
-> +	if (need_callback)
-> +		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
->   }
->   
->   /*
-> @@ -6446,6 +6457,7 @@ void lockdep_unregister_key(struct lock_class_key *key)
->   	struct pending_free *pf;
->   	unsigned long flags;
->   	bool found = false;
-> +	bool need_callback = false;
->   
->   	might_sleep();
->   
-> @@ -6466,11 +6478,14 @@ void lockdep_unregister_key(struct lock_class_key *key)
->   	if (found) {
->   		pf = get_pending_free();
->   		__lockdep_free_key_range(pf, key, 1);
-> -		call_rcu_zapped(pf);
-> +		need_callback = prepare_call_rcu_zapped(pf);
->   	}
->   	lockdep_unlock();
->   	raw_local_irq_restore(flags);
->   
-> +	if (need_callback)
-> +		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
-> +
->   	/* Wait until is_dynamic_key() has finished accessing k->hash_entry. */
->   	synchronize_rcu();
->   }
 
-LGTM.
 
-Reviewed-by: Waiman Long <longman@redhat.com>
+On 1/16/24 17:57, Sam Protsenko wrote:
+> On Tue, Jan 9, 2024 at 7:00 AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+>> Remove the reg-io-width property in order to comply with the bindings.
+>>
+>> The entire bus (PERIC) on which the GS101 serial resides only allows
+>> 32-bit register accesses. The reg-io-width dt property is disallowed
+>> for the "google,gs101-uart" compatible and instead the iotype is
+>> inferred from the compatible.
+>>
+>> Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>> ---
+> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+> 
+> Just out of curiosity (I probably missed the relevant discussion
+> earlier): what is the actual reason for moving 'reg-io-width' to the
+> driver's code as 'iotype'? I mean, what is the actual problem that's
 
+The majority (if not all?) of the hardware blocks in GS101 SoC require
+32 bit register access widths. Instead of specifying reg-io-width = 4
+everywhere in the device tree, we infer it from the compatibles.
+
+The relevant discussion is here:
+https://lore.kernel.org/linux-arm-kernel/db368449-f446-47e8-81b6-a11c2a872306@linaro.org/
+
+Cheers,
+ta
+
+> being solved by this -- is it to make the earlycon functional for
+> gs101? I'm asking because the bus width looks like a part of HW
+> description, which usually belongs to dts, from the design point of
+> view. Anyways, that's not a concern, just trying to understand the
+> decision.
