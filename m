@@ -1,91 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0828F21347;
-	Wed, 17 Jan 2024 15:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BC321A06;
+	Wed, 17 Jan 2024 15:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705504324; cv=none; b=t3uFqycTzxRkPE+/jbRkOqBKbXCQMPmYllpMPBRAE8hu4IccxtV4EpBqyZbW7SzYhVqOgyu3W1Wjfi2991gyr44xMp9HD0uE5UIklnkpgpxMqMOTHtTQYRNAZUgqabwDXwuzApI1j6OTeiAyi89J52VVCR+2xgoRQgpbEE9oIR8=
+	t=1705504328; cv=none; b=QqKcyml5uowD8Y/3SEZEykOFkS5s+XZ8/nyhZAjd4teEXJuJQ2AB2S8AnQsDZGtlImmMptTGrya3s+VULAA/LLAOlq3TBNbCS68xeZVCpOF5QG7w7d1L8Z7j6/k0QIaH2jX+ZrvpUSp8h1kg3GwklMgexmTnmgmURTBzyAZtK1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705504324; c=relaxed/simple;
-	bh=acCBulbuXyCgYg9lJzUatUvbDs5kj9YLkW2CYVibaBY=;
-	h=Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
-	 Content-Language:To:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=Ydxt7LAjVJV9pm2srOosvpJFbypikQ5/aBPGSdPoP/WkgldH6p1CFEwfrW1hTMyhayhN/vRufqb0c/iSfQIP5xT+j8dwGA2zwaobcpfb94GYSE2AqS7uDQdONx8QCroT1i9987GsoWm2hZVrEbN3ZLatX4NDG103mBCxmepgcP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 749B311FB;
-	Wed, 17 Jan 2024 07:12:47 -0800 (PST)
-Received: from [10.1.26.46] (e133047.arm.com [10.1.26.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF9593F5A1;
-	Wed, 17 Jan 2024 07:11:59 -0800 (PST)
-Message-ID: <e3e0147a-4fdb-4422-807d-24760c4ac30e@arm.com>
-Date: Wed, 17 Jan 2024 15:11:52 +0000
+	s=arc-20240116; t=1705504328; c=relaxed/simple;
+	bh=x1+8uF7RcxfIMN9GP9hFEOHeqmYRO26uThdUiQc+jYE=;
+	h=DKIM-Signature:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=lY4jQFUYpIXTEFYaHN9h/gGHFkZUnsW351JXl7m1pZIc5kQGfUVzrAZ4BDkdOKzwPb9Q+hdQBwnTNtZfFHyJtox1e48CZsEvTozolg2SZSNJXCTL8wooCPj0eW6ilMqQ+Q1xpe8hJtPLndCqIMF63k3Z78/BbHnoiOVG+O5k0DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EHA4zorv; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EHA4zorv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705504324;
+	bh=x1+8uF7RcxfIMN9GP9hFEOHeqmYRO26uThdUiQc+jYE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EHA4zorvTo9HZLf+qNYGMhXgSHZJjVLn+g6j/V+n2sb9GzM8Izm6S2Pk2h1ME5j2Z
+	 6x5JiIuYy+c1KYcTng+yRT1SwkOYBPOQbhO2aJyJfOkGqUJBWe3wZwdkOH3Jw+Csmn
+	 HzsTmGJryqCDLS+BHmyWAigvrKGpes1tBlf91AMURWbjs/YmsHfwQkkTVcaEQbr0Rg
+	 D94w+4i8eAaCehaOMMXkLeyxIa/T8spxGWHbW/OPjuDEA5dbRWfE6viNPPxZwxqrXc
+	 TFe0qiVELbmjI7vLAT+T0T2JJmVNUwNOh44IareAvyZQK7EeKmJbk4tleLphVJ9HKA
+	 kCPEoAsxvkw+Q==
+Received: from arisu.hitronhub.home (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E76F63781FC7;
+	Wed, 17 Jan 2024 15:12:02 +0000 (UTC)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Subject: [PATCH v5 0/4] visl: Add a tpg_verbose parameter for reference comparison
+Date: Wed, 17 Jan 2024 10:10:14 -0500
+Message-ID: <20240117151202.405426-1-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: block: ioprio: Update schedulers
-Content-Language: en-US
-To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "axboe@kernel.dk" <axboe@kernel.dk>, "bvanassche@acm.org"
- <bvanassche@acm.org>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "corbet@lwn.net" <corbet@lwn.net>
-References: <cde50a18-7c09-4d00-b3b8-32da2992c952@arm.com>
- <8085ea13-29d2-46bd-8ca9-407d22266d0c@wdc.com>
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <8085ea13-29d2-46bd-8ca9-407d22266d0c@wdc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 17/01/2024 12:49, Johannes Thumshirn wrote:
-> On 17.01.24 13:20, Christian Loehle wrote:
->> This doc hasn't been touched in a while, in the meantime some
->> new io schedulers were added (e.g. all of mq), some with ioprio
->> support.
->>
->> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
->> ---
->>   Documentation/block/ioprio.rst | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/block/ioprio.rst b/Documentation/block/ioprio.rst
->> index a25c6d5df87b..5410308888d2 100644
->> --- a/Documentation/block/ioprio.rst
->> +++ b/Documentation/block/ioprio.rst
->> @@ -9,14 +9,14 @@ Intro
->>   With the introduction of cfq v3 (aka cfq-ts or time sliced cfq), basic io
->>   priorities are supported for reads on files.  This enables users to io nice
->>   processes or process groups, similar to what has been possible with cpu
->> -scheduling for ages.  This document mainly details the current possibilities
->> -with cfq; other io schedulers do not support io priorities thus far.
->> +scheduling for ages. Support for io priorities is io scheduler dependent and
->> +currently supported by bfq, mq-deadline and cfq.
-> 
-> CFQ went away with blk-mq and got replaced by BFQ IIRC.
+When using visl in automated tests, we need to have output frames that
+can be compared to reference frames or hash of those to validate that
+the whole pipeline is working properly.
 
-Right, I'll remove the mentioning of CFQ here and in the introductory sentence.
-The introductory sentence also mentions "basic io priorities are supported for
-reads on files", a limitation which hasn't been there in a long time.
-Thanks, will send out v2 tomorrow.
+Make sure that a given input stream always outputs the same frames.
+This is done by removing TPG information like queues status and pointer
+values.
 
-> 
-> 
->>   
->>   Scheduling classes
->>   ------------------
->>   
->> -CFQ implements three generic scheduling classes that determine how io is
->> -served for a process.
->> +Three generic scheduling classes are implemented for io priorities that
->> +determine how io is served for a process.
->>   
->>   IOPRIO_CLASS_RT: This is the realtime io class. This scheduling class is given
->>   higher priority than any other in the system, processes from this class are
-> 
+Introduce the tpg_verbose parameter to allow adding the more verbose
+information that this patchset removes
+
+This also adds some stable variation in the frames so that different
+input give more different output.
+
+Changes since v4:
+ - Remove unnecessary changes in visl_get_ref_frames
+ - Fix missing space after &&
+Changes since v3:
+ - Fix some more permissions in vidtv
+ - Rename stable_output to tpg_verbose
+ - Rebase on media_stage/master to include AV1 support
+ - Remove code churn in visl_get_ref_frames()
+ - Remove code duplication in visl_tpg_fill_sequence()
+Changes since v2:
+ - Set parameters permissions to 0444 in visl and vidtv
+ - Make stable_output true by default
+ - Keep showing frames timestamps and remove vb2 buffer indexes only in
+   stable output mode
+ - Make codec_variablility non optional (remove parameter, keep
+   implementation)
+ - Add details on used variability fields
+Changes since v1:
+ - Fix typo in parameter documentation
+
+Detlev Casanova (4):
+  media: visl,vidtv: Set parameters permissions to 0444
+  media: visl: Add a tpg_verbose parameter
+  doc: visl: Document tpg_verbose parameter
+  visl: Add codec specific variability on output frames
+
+ Documentation/admin-guide/media/visl.rst      |  12 +-
+ .../media/test-drivers/vidtv/vidtv_bridge.c   |  26 +-
+ drivers/media/test-drivers/visl/visl-core.c   |  15 +-
+ drivers/media/test-drivers/visl/visl-dec.c    | 301 +++++++++++-------
+ drivers/media/test-drivers/visl/visl.h        |   1 +
+ 5 files changed, 217 insertions(+), 138 deletions(-)
+
+-- 
+2.43.0
 
