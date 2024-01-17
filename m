@@ -1,161 +1,278 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F73614AA5;
-	Wed, 17 Jan 2024 10:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5038D1DDCA
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 10:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705488990; cv=none; b=h5Xj6a8HHWPweOfQQDtLW+OiADIaXvhm/UDmXdC/WKXIo7ASlC5QzL4wtvmSF7nb9jjpRRquZq2MT/gtykpStcFWPjyNqrLiGKbIYggWTFNPvtW1qCg2A9EIbq/yD5sidfroOTQRCVkTpFGSYHlVLoqug4MAoi7GD2D4t+pQ308=
+	t=1705489070; cv=none; b=q1ZlWAFl1RCL0GMg41KdQrKP35dDyHmTuC9Av4/b+aswUb9OQ+MnWWXh5g7e+1SDHxuVXDdnbs1F/3H0J5VPlwUAl9WOgn4b6i5j1cVViehgsIBSuAN2MQpR2kdV/McI89zIyVW5wKGY7A8VA06bqASl1YFFUtn5foXyHuu6Ne8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705488990; c=relaxed/simple;
-	bh=WSGgAjBCNFTlFNiRizxkXoOuda2eNlpwVgzMjk2JrEU=;
-	h=Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-Spam-Level:X-Rspamd-Server:
-	 X-Spamd-Result:X-Spam-Score:X-Rspamd-Queue-Id:X-Spam-Flag; b=onMSHCOUvjhl6CXmgLNkDK220R+Iv8QxBKNUphM7zkvDIO8oI3YApJpyRYzkxYdlXb4IbzOIjcho55lbXSBeEdobtZ5YpryZnPaZa3y/2HEPNWYr/0XhKvjJABEsqO6o/BLDE1RHqvpN2b+b2zwFFqDS7032lcmECaMwxw6QH9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=styaGKmK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=acYuKKYP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=styaGKmK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=acYuKKYP; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1705489070; c=relaxed/simple;
+	bh=dFrcmnmkmmZdK1/Cl3suXD/fcMVdImKuOSnKRYIPDMQ=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 References:User-agent:From:To:Cc:Subject:Date:In-reply-to:
+	 Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding; b=Z1dRmoM4iWHNNVHdTvYgqEg2hV/p3er34K0gFJ2mQ/Xx6o4txtFMrID66zPR6yzt4WNGme7GpYWEDGllxeHnaD3WipX7os+J0uWMPYh2cu8cilmeFiU1ru2sBCeZvlN/biV/qO/soGFgez4u8sJymB2g76B2Aee40k8xeqoNZnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=SZoNNMed; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="styaGKmK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="acYuKKYP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="styaGKmK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="acYuKKYP"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7B2651FBF2;
-	Wed, 17 Jan 2024 10:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705488987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/I5YOhlPZDB0xCXK6u+NS0O9D8UoMYtDZ/TUkUtwk1Q=;
-	b=styaGKmK7tv1QTbE0Pf3u/0+YE7O7Z2/uW8YD4onOkDb/cErc4tbHMAfN05avlwMVr3zFT
-	ighay/d+y+cfahaxRPgDEwnd7iGEGI5iVmNwdorQijXp7NTVA8MLEtpFupCzthXOhdehpS
-	uiGbvYg9aU2eGzA1eG02fG0JhnRh82k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705488987;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/I5YOhlPZDB0xCXK6u+NS0O9D8UoMYtDZ/TUkUtwk1Q=;
-	b=acYuKKYPUiFqKzuymrfl73fv8gm0GAjTFE2S7Z8pvyWDqdMNmgotp757zT1ki/0uWozy+y
-	MsKc/qy/Qqxds7BQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705488987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/I5YOhlPZDB0xCXK6u+NS0O9D8UoMYtDZ/TUkUtwk1Q=;
-	b=styaGKmK7tv1QTbE0Pf3u/0+YE7O7Z2/uW8YD4onOkDb/cErc4tbHMAfN05avlwMVr3zFT
-	ighay/d+y+cfahaxRPgDEwnd7iGEGI5iVmNwdorQijXp7NTVA8MLEtpFupCzthXOhdehpS
-	uiGbvYg9aU2eGzA1eG02fG0JhnRh82k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705488987;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/I5YOhlPZDB0xCXK6u+NS0O9D8UoMYtDZ/TUkUtwk1Q=;
-	b=acYuKKYPUiFqKzuymrfl73fv8gm0GAjTFE2S7Z8pvyWDqdMNmgotp757zT1ki/0uWozy+y
-	MsKc/qy/Qqxds7BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6707313751;
-	Wed, 17 Jan 2024 10:56:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Z1SwF1uyp2V0OQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Wed, 17 Jan 2024 10:56:27 +0000
-Date: Wed, 17 Jan 2024 11:56:26 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: Dick Kennedy <dick.kennedy@broadcom.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Smart <james.smart@broadcom.com>, Hannes Reinecke <hare@suse.de>
-Subject: Re: Re: [PATCH] scsi: lpfc: use unsigned type for num_sge
-Message-ID: <bhbx4emtgs4dxwryeorgq2igq3b2lu3k2ycdyn4ebwpbw4kxtp@aijstnvpilho>
-References: <20231220162658.12392-1-dwagner@suse.de>
- <CAGx+d6cGuC8S2+_ipyKMtOxNQ5a0RW_H46jrwWJjwRx5TRw-ww@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="SZoNNMed"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e8ca16511so1730525e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 02:57:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705489066; x=1706093866; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZ0irsFSW2hXq1lOFv0C5tcSeX7I48ojxIzsNWQWXR4=;
+        b=SZoNNMedalO4Md7WPsiM4gwIJgP0t5mz/ggMg3LqIBvVGCPw+b5m+sxqhbiZMti8w6
+         q4z7C5q9ZQTGV+l65wwrsUcfNAOzwTJ2wXMvAmUJ+wVPA5JEIKx9IpQ3qcjnmotKsQ1b
+         pSWtRgx1cgxhN3wi3Q/TmzxpkiaQHb25BF/B70MKHW0SztFwvevWvunv7+dcch1G+lt3
+         /sK2tzZivYaJ+RuFRS7jdJS5pHk5hFgitvwb2TdXoiIgOcMty61EOfwqLgx4CkbWk5oQ
+         2B8vyfkVy46/qEk9oIoRs12XjqWcDz4rvxDWQkIzNlmXmfs58QtEji059HpeBKfDbMCv
+         Nk3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705489066; x=1706093866;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=AZ0irsFSW2hXq1lOFv0C5tcSeX7I48ojxIzsNWQWXR4=;
+        b=Ek8MGrYXyc+/8hMMc2o1gP+UL55p6tjb53bqif+bo1YHIdtLTPFadikIgxtIvpQgLB
+         oqndigETVNby5MKl2gR6EeDpZGaHCN3tXEwIKsPxwgMPj001KZL7GeRG56w2aonbW2BR
+         9EGrZZpE1lQrEpL7LaqSgt64RXzIpKw6WVnslqauH4wOHRsiXpAjpY4gvfMn4gf6vZ8+
+         Y0025YPlaOorR0fgA8bXSYp+WTrjgZ1U2pjZBRHqqg8ijmSWJqR+DFS7OV+20nM5y49c
+         hw6bzslRC9H7teXRdh+AZaDkUXvnEDM8GG/6C1NDB6auzt+sSCyUpZmhPJK4OFB5hudM
+         Frzg==
+X-Gm-Message-State: AOJu0YxmD5/Q8bdl5ZwsudD5F3Kj/HQRZolitR16n6g2HohCnvOrMV+j
+	9XJw2bAL31uvMH2AX9i5A74C5UcN5yzkmg==
+X-Google-Smtp-Source: AGHT+IG34Dap1ZJ3WGb+r28aPogMiJUvvKsLDnVhtoSaXpgGSZDDBQgsqehv2GQXT9TcoQZSM36iVw==
+X-Received: by 2002:a05:600c:364c:b0:40e:89f6:e2b with SMTP id y12-20020a05600c364c00b0040e89f60e2bmr434240wmq.31.1705489066317;
+        Wed, 17 Jan 2024 02:57:46 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:c1f6:14ce:b96f:2df5])
+        by smtp.gmail.com with ESMTPSA id f7-20020adffcc7000000b00337bf3586d6sm1376674wrs.103.2024.01.17.02.57.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 02:57:45 -0800 (PST)
+References: <20231222111658.832167-1-jbrunet@baylibre.com>
+ <20231222111658.832167-2-jbrunet@baylibre.com>
+ <awxboh3nv4r5p7v7vcgwttu2m74fws47johb73c5f7econ2qqu@zl5xbnoeyclq>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>, Rob
+ Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/6] dt-bindings: pwm: amlogic: fix s4 bindings
+Date: Wed, 17 Jan 2024 11:30:08 +0100
+In-reply-to: <awxboh3nv4r5p7v7vcgwttu2m74fws47johb73c5f7econ2qqu@zl5xbnoeyclq>
+Message-ID: <1jbk9kxm52.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGx+d6cGuC8S2+_ipyKMtOxNQ5a0RW_H46jrwWJjwRx5TRw-ww@mail.gmail.com>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=styaGKmK;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=acYuKKYP
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.02 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.01)[50.17%]
-X-Spam-Score: -3.02
-X-Rspamd-Queue-Id: 7B2651FBF2
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dick,
 
-On Fri, Dec 22, 2023 at 10:04:50AM -0800, Dick Kennedy wrote:
-> The change is good, however, I  don't think this was really the
-> problem.
+On Wed 17 Jan 2024 at 11:03, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
+onix.de> wrote:
 
-I tried to write the commit message based on the bug report we got. So
-yes, it's possible the it is not correct as I was not really involved
-and might missinterpret it.
+> [[PGP Signed Part:Undecided]]
+> On Fri, Dec 22, 2023 at 12:16:49PM +0100, Jerome Brunet wrote:
+>> s4 has been added to the compatible list while converting the Amlogic PWM
+>> binding documentation from txt to yaml.
+>>=20
+>> However, on the s4, the clock bindings have different meaning compared to
+>> the previous SoCs.
+>>=20
+>> On the previous SoCs the clock bindings used to describe which input the
+>> PWM channel multiplexer should pick among its possible parents.
+>>=20
+>> This is very much tied to the driver implementation, instead of describi=
+ng
+>> the HW for what it is. When support for the Amlogic PWM was first added,
+>> how to deal with clocks through DT was not as clear as it nowadays.
+>> The Linux driver now ignores this DT setting, but still relies on the
+>> hard-coded list of clock sources.
+>>=20
+>> On the s4, the input multiplexer is gone. The clock bindings actually
+>> describe the clock as it exists, not a setting. The property has a
+>> different meaning, even if it is still 2 clocks and it would pass the ch=
+eck
+>> when support is actually added.
+>>=20
+>> Also the s4 cannot work if the clocks are not provided, so the property =
+no
+>> longer optional.
+>
+> s/no/is no/
+>
+>> Finally, for once it makes sense to see the input as being numbered
+>> somehow. No need to bother with clock-names on the s4 type of PWM.
+>>=20
+>> Fixes: 43a1c4ff3977 ("dt-bindings: pwm: Convert Amlogic Meson PWM bindin=
+g")
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 67 ++++++++++++++++---
+>>  1 file changed, 58 insertions(+), 9 deletions(-)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Do=
+cumentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> index 527864a4d855..a1d382aacb82 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> @@ -9,9 +9,6 @@ title: Amlogic PWM
+>>  maintainers:
+>>    - Heiner Kallweit <hkallweit1@gmail.com>
+>>=20=20
+>> -allOf:
+>> -  - $ref: pwm.yaml#
+>> -
+>>  properties:
+>>    compatible:
+>>      oneOf:
+>> @@ -43,12 +40,8 @@ properties:
+>>      maxItems: 2
+>>=20=20
+>>    clock-names:
+>> -    oneOf:
+>> -      - items:
+>> -          - enum: [clkin0, clkin1]
+>> -      - items:
+>> -          - const: clkin0
+>> -          - const: clkin1
+>> +    minItems: 1
+>> +    maxItems: 2
+>>=20=20
+>>    "#pwm-cells":
+>>      const: 3
+>> @@ -57,6 +50,55 @@ required:
+>>    - compatible
+>>    - reg
+>>=20=20
+>> +allOf:
+>> +  - $ref: pwm.yaml#
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - amlogic,meson8-pwm
+>> +              - amlogic,meson8b-pwm
+>> +              - amlogic,meson-gxbb-pwm
+>> +              - amlogic,meson-gxbb-ao-pwm
+>> +              - amlogic,meson-axg-ee-pwm
+>> +              - amlogic,meson-axg-ao-pwm
+>> +              - amlogic,meson-g12a-ee-pwm
+>> +              - amlogic,meson-g12a-ao-pwm-ab
+>> +              - amlogic,meson-g12a-ao-pwm-cd
+>> +    then:
+>> +      # Historic bindings tied to the driver implementation
+>> +      # The clocks provided here are meant to be matched with the input
+>> +      # known (hard-coded) in the driver and used to select pwm clock
+>> +      # source. Currently, the linux driver ignores this.
+>
+> I admit I didn't understand the relevant difference between the old and
+> the new binding yet.
 
-> We would  like to know if this patch really solved an issue they
-> observed.
+Let's try to explain differently then:
+* So far each AML PWM IP has 2 pwm.
+* Up to G12, 4 input PLL/clocks are wired to the HW IP and there=20
+  mux/div/gate to select which input to take.
+  - The historic bindings just described how to setup each of the 2
+    internal muxes - 2 optionnal clocks.
+    The actual 4 inputs names from CCF are hard coded in
+    the driver. This is a pretty bad description. The driver has been
+    updated since then to use CCF to figure out the best parent
+    according to pwm rate so this setting is ignored now.
+  - The 'new' bindings (introduced in patch #2) fixes the problem above
+    but the meaning of the clock binding is different. It describes the
+    actual HW parents - 4 clocks, optionnal since some are not wired on
+    some PWM blocks. To avoid breaking the ABI, a new compatible for
+    these SoC is introduced.
+=20=20=20=20
+> (The driver currently doesn't support the s4, right?)
 
-Yes, it fixes the reported problem.
+Indeed. I know Amlogic is preparing the support. I could do it in this
+series but I prefer to encourage them to contribute. It should come
+shortly after this series is merged.
 
->  A good data point to know is what adapter they're using.
+Starting from s4 (prbably even a1 - up to people contributing this SoC
+to say) the mux/div/gate is no longer in the PWM IP. It has moved to the
+main clock controller. Again the clock binding describes something
+different. It is the 2 input clocks of each block, they are mandatory
+this time.
 
-A bunch of different HPE cards which show this log entry: SN1700E,
-SN1610E and SN1200E.
+> Is it possible to detect if the dt uses the old or the new
+> binding?
 
->  If that adapter supports hybrid sgl (i.e. phba->cfg_xpsgl), then we
->  would have set the max sg_tablesize = LPFC_MAX_SG_TABLESIZE = 0xffff.
-> 
->  But even then, this patch implies that dma_map_sg() returned a crazy
->  huge amount with the MSB set.
+Apart from the compatible, no.
 
-Sure, though this seems to be the case.
+> If yes, I suggest to drop the old one from the binding and only
+> keep it in the driver for legacy systems.
 
-One noteworthy information is that DIF needs to be enabled to trigger
-it:
+I don't this would be allowed by the DT maintainers.
+My understanding is that the old binding doc is here to stay.
+What could happen after sufficient time has past it remove the support
+for the old/historic binding in the driver. Driver are not required to
+support all possible bindings after all, especially if it is not used/tested
+anymore.
 
-# cat /sys/module/lpfc/parameters/lpfc_enable_bg
-1
-# cat /sys/module/lpfc/parameters/lpfc_prot_guard
-2
+>
+>> +      properties:
+>> +        clock-names:
+>> +          oneOf:
+>> +            - items:
+>> +                - enum: [clkin0, clkin1]
+>> +            - items:
+>> +                - const: clkin0
+>> +                - const: clkin1
+>> +
+>> +  # Newer IP block take a single input per channel, instead of 4 inputs
+>> +  # for both channels
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - amlogic,meson-s4-pwm
+>
+> The expectation is that this list contains all compatibles that are not
+> included in the "historic" list above, right? Then maybe use "else:"
+> instead of another explicit list?
+>
 
-Thanks,
-Daniel
+I suppose if, elseif, else is possible.
+
+I've done it this way because is slightly easier for human to read the
+doc and find what is related to what. If you this is important for you,
+I can change it.
+
+>> +    then:
+>> +      properties:
+>> +        clocks:
+>> +          items:
+>> +            - description: input clock of PWM channel A
+>> +            - description: input clock of PWM channel B
+>> +        clock-names: false
+>> +      required:
+>> +        - clocks
+>> +
+>>  additionalProperties: false
+>
+> Best regards
+> Uwe
+
+
+--=20
+Jerome
