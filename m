@@ -1,53 +1,61 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23B879CD;
-	Wed, 17 Jan 2024 01:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5713946C;
+	Wed, 17 Jan 2024 01:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705456751; cv=none; b=u58Hsz0rDa+IW/xa21GnMeMx9gJJNqrIeXCjmI29b5wa3vjR0aVdBsbW4Y1vZMJxynM4EZ1cCT08Lu9Y2o/0OdqnW+cGGAPpOH6/eyF1kZwccdzSeh/LMQPCQDX/ztsgix+ZQK/Uhd8hQjWN/pKQ15BvXqlQsiZtB3d5rghsOYU=
+	t=1705456757; cv=none; b=tJXZgcTpJzJZgYzRJe6Vj7b0s8VFzJRSVwjn1ebWfYlXRAcG/LSG5So2uwizK+NTNKRNJSjWWwrbfe7NyhYJQ+5u1q86pASQi3OBywESw60rgi5hS55EcdjxMseAkgLfVUql88PWNEppEHGCJXnKvwVofzFwYrDYGlN8w1IV8vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705456751; c=relaxed/simple;
-	bh=BaUnPERfltSlweCU2bEsRomZLwKQ8pBH51fb2myjJTk=;
-	h=Received:DKIM-Signature:Received:Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:Content-Language:To:CC:
-	 References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-Originating-IP:X-ClientProxiedBy:X-QCInternal:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details; b=VQHamEN7hdrLzODe/3/yaBKnwXjfRG8vu9cW5kT0pVZ/7VAAKI3SX07WXUNU52icFz/D5i11bnoiPqm3NgSRWYh2JQglKL/YT0x87AHcRWcZWSvKFgHhWYT5+KHjnQXiaOp8rKaWy4iJbErH6w+tynsfVNBRtrXe4noDjCro5LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=URP1xjnl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1705456757; c=relaxed/simple;
+	bh=E5ow6diaNQ48lD7Anp/oAQBB056Q8Gyv2r7qn2TTu+E=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=NYmAmDmqvZN9Nj7z6K18Bng8VPuGGeO1Bad6iK4/OcIzph+siO6HQhlmOoC+maAVsiVzQSbEqN8NR9Pl2zk7HfGS5DoIDhj6a851W5yYDPJVVRSGj778eoTQyV661Tr6+GLPtxHJ04eKr41Tq47GMUiDRo+rl8VlzCz5oVRaYVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VOVat90V; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="URP1xjnl"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40H0vNFc003306;
-	Wed, 17 Jan 2024 01:58:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=8ARN7Cx05ObbG1yQxAdeSnIi/eOGIcxsScGIi3qg6wc=; b=UR
-	P1xjnlZqjuAmOxARvFuzxkSs+0jp2RQxR7FrMBFkhYEzKuSL9MQmdKstipkm3p5R
-	Hfn7yLVZ0nnz42VNn5paiznMK+UfHJ2rBTAtA91uVKGDMHletpr8s1K0tDVEMxcK
-	F3SBhP5qsVWQIgM+wxKP2v0sFtQpqHBZplKbWaQxXzDl1fpoOJXtwCkqKwSrNmGo
-	qZGQsOqhjHl5zMOLd6gGSQ6GOfuliebbFa5wsWg1+m1TJ7kILNzGbhlF4No57jrd
-	wP2onHgXiLIsBvGioGM6jj4jmdYCSq1cYugtgxja1zF5v4fwaN8kxGS55OQJw7Le
-	8CG6kFmLoRknM9IYnDHw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vnnkeag9n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 01:58:48 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40H1wm4J002526
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 01:58:48 GMT
-Received: from [10.239.133.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 16 Jan
- 2024 17:58:43 -0800
-Message-ID: <41429e0b-e7f5-40a3-8dff-ebf1d26c9aac@quicinc.com>
-Date: Wed, 17 Jan 2024 09:58:43 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOVat90V"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5ce10b5ee01so7608344a12.1;
+        Tue, 16 Jan 2024 17:59:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705456755; x=1706061555; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6RtTfdNaQouSQ3pRDZPDIQJf3oZ3P1uDMrkg9TpWY0s=;
+        b=VOVat90V0SgJoVKaRO6fvTYSnYjVTLIuE0jQgx30v4tj90lGDtzdrR9iFJmTD3XSDT
+         OSxgGWhuePUKUqxIlHlKPX5u6lQzINn1uA/iVWBqhl4ot8usf5tYOdSRtGMpD+LjKE4M
+         puITaJl69AYrEoq26dZO3guVg19/xSIYboDqD2K7cr9uF78saBYtFHQICpAH8E9LCAg5
+         Mm9cYqE8Wb1/P+HgJKoE2Qm3q0fiMa/oXFf+RgvedhnPcb1a7JeU1wfLwil92VxtrfYh
+         CwlBAexOzMAIpHO0qyx4Cdi1lPsu/fzfataMN9o0hZSLrBBmGXrr48sZE7VcpodHVeeL
+         nvJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705456755; x=1706061555;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6RtTfdNaQouSQ3pRDZPDIQJf3oZ3P1uDMrkg9TpWY0s=;
+        b=Ji7egUKQtyRapGmD2+VV49unqgAVoryvW8wQtCouZ0AdTnRIDODzkKSe8YJs+mDCLs
+         Kc0/hIZ2x2eTHX0fuFOljGowef5wxGLxrslnPGbv3dftxfVqHVdVaSwGjsBWOGB/RkxU
+         OZoo4qrrij1sWUF8nTCDPjNrQmeE5Cm51zFIoD7/5ODMWjuLnBYLpQh57bi+7FgxyH9a
+         0A1lklRjSB43p9dXTlRXxnQEY5IZDJAykU6PSUBUfbX+bUmeuaMUSbZ6paGonJxtCLPj
+         zWZmOVwsGJBt6lC3wV0lg6BtdEjIoVTqXFhkDVTwvqKLBUhw5QAoq3x4kTWdLO+89pFo
+         51MA==
+X-Gm-Message-State: AOJu0Yzn6oQbaC8LztMcgR5ST2DVJv3P5H4FDdopltNeTmLyYukdnq6l
+	U36/BmIF9NMQ6D3oDV2zgU4=
+X-Google-Smtp-Source: AGHT+IFN8KqdmnpUYzYeF1EdLtwKlHcPIX+QQqdwNDeIb9Kp+UU5gb+ytl537LGBd83i8mJaAYXRIA==
+X-Received: by 2002:a05:6a20:158d:b0:19a:2b15:2a2f with SMTP id h13-20020a056a20158d00b0019a2b152a2fmr147623pzj.28.1705456754982;
+        Tue, 16 Jan 2024 17:59:14 -0800 (PST)
+Received: from [192.168.54.105] (static.220.238.itcsa.net. [190.15.220.238])
+        by smtp.gmail.com with ESMTPSA id e13-20020aa798cd000000b006da105deedesm237836pfm.197.2024.01.16.17.59.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jan 2024 17:59:14 -0800 (PST)
+Message-ID: <52792041-dae0-4c5f-9561-ace514950d9c@gmail.com>
+Date: Tue, 16 Jan 2024 22:41:26 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,107 +63,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] coresight: core: Add device name support
+Subject: Re: [PATCH 00/13] rust: kernel: documentation improvements
+To: Valentin Obst <kernel@valentinobst.de>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl
+ <aliceryhl@google.com>, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240116160141.165951-1-kernel@valentinobst.de>
 Content-Language: en-US
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
-        Leo Yan
-	<leo.yan@linaro.org>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mathieu
- Poirier <mathieu.poirier@linaro.org>
-CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20240115164252.26510-1-quic_jinlmao@quicinc.com>
- <cef041b7-70ac-47c9-888c-696a0cec04d1@arm.com>
-From: Jinlong Mao <quic_jinlmao@quicinc.com>
-In-Reply-To: <cef041b7-70ac-47c9-888c-696a0cec04d1@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: cWZZEmT7fsuxPyYV6xQd7TRWZpKmHbVb
-X-Proofpoint-ORIG-GUID: cWZZEmT7fsuxPyYV6xQd7TRWZpKmHbVb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_14,2024-01-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- clxscore=1015 bulkscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- impostorscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401170011
+From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+In-Reply-To: <20240116160141.165951-1-kernel@valentinobst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 1/16/24 13:01, Valentin Obst wrote:
+> This patch set aims to make small improvements to the documentation of
+> the kernel crate. It engages in a few different activities:
+> - fixing trivial typos (commit #1)
+> - updating code examples to better reflect an idiomatic coding style
+>    (commits #2,6)
+> - increasing the consistency within the crate's documentation as a whole
+>    (commits #3,5,7,8,9,12,13)
+> - adding more intra-doc links as well as srctree-relative links to C
+>    header files (commits #4,10,11)
+> 
+> Valentin Obst (13):
+>    rust: kernel: fix multiple typos in documentation
+>    rust: error: move unsafe block into function call
+>    rust: ioctl: end top level module docs with full stop
+>    rust: kernel: add srctree-relative doclinks
+>    rust: str: use `NUL` instead of 0 in doc comments
+>    rust: str: move SAFETY comment in front of unsafe block
+>    rust: kernel: unify spelling of refcount in docs
+>    rust: kernel: mark code fragments in docs with backticks
+>    rust: kernel: add blank lines in front of code blocks
+>    rust: kernel: add doclinks
+>    rust: kernel: add doclinks with html tags
+>    rust: kernel: remove unneeded doclink targets
+>    rust: locked_by: shorten doclink preview
+> 
+>   rust/kernel/allocator.rs          |  2 +-
+>   rust/kernel/error.rs              |  7 +---
+>   rust/kernel/init.rs               | 16 +++----
+>   rust/kernel/ioctl.rs              |  6 +--
+>   rust/kernel/lib.rs                |  2 +-
+>   rust/kernel/str.rs                | 15 +++----
+>   rust/kernel/sync/arc.rs           | 34 ++++++++-------
+>   rust/kernel/sync/condvar.rs       |  2 +
+>   rust/kernel/sync/lock.rs          | 13 ++++--
+>   rust/kernel/sync/lock/spinlock.rs |  2 +-
+>   rust/kernel/sync/locked_by.rs     |  5 ++-
+>   rust/kernel/task.rs               |  6 +--
+>   rust/kernel/types.rs              |  3 ++
+>   rust/kernel/workqueue.rs          | 70 +++++++++++++++----------------
+>   14 files changed, 98 insertions(+), 85 deletions(-)
+> 
 
+Add my `Reviewed-By` to all the patch series except [PATCH 11/13].
 
-On 1/16/2024 9:43 PM, Suzuki K Poulose wrote:
-> On 15/01/2024 16:42, Mao Jinlong wrote:
->> With current design, the name of the non-cpu bounded coresight
->> component is the device type with the number. And with 'ls' command
->> we can get the register address of the component. But from these
->> information, we can't know what the HW or system the component belongs
->> to. Add device-name in DT to support it.
->>
->> cti_sys0 -> ../../../devices/platform/soc@0/138f0000.cti/cti_sys0
->> cti_sys1 -> ../../../devices/platform/soc@0/13900000.cti/cti_sys1
->> tpdm0 -> ../../../devices/platform/soc@0/10b0d000.tpdm/tpdm0
->> tpdm1 -> ../../../devices/platform/soc@0/10c28000.tpdm/tpdm1
->> tpdm2 -> ../../../devices/platform/soc@0/10c29000.tpdm/tpdm2
-> 
-> Please could you rebase this on for-next/queue (which has all bells and 
-> whistles enabled to report Warnings), fixing the reported issue by 
-> kernel test robot ?
-> 
-I will rebase the patch.
-
-Thanks
-Jinlong Mao
-> Suzuki
-> 
-> 
->>
->> Change since V1:
->> 1. Change coresight-name to device name.
->> 2. Add the device-name in coresight dt bindings.
->>
->> Mao Jinlong (2):
->>    coresight: core: Add device name support
->>    dt-bindings: arm: Add device-name in the coresight components
->>
->>   .../bindings/arm/arm,coresight-catu.yaml      |  5 +++
->>   .../bindings/arm/arm,coresight-cpu-debug.yaml |  5 +++
->>   .../bindings/arm/arm,coresight-cti.yaml       |  5 +++
->>   .../arm/arm,coresight-dummy-sink.yaml         |  5 +++
->>   .../arm/arm,coresight-dummy-source.yaml       |  5 +++
->>   .../arm/arm,coresight-dynamic-funnel.yaml     |  5 +++
->>   .../arm/arm,coresight-dynamic-replicator.yaml |  5 +++
->>   .../bindings/arm/arm,coresight-etb10.yaml     |  5 +++
->>   .../bindings/arm/arm,coresight-etm.yaml       |  5 +++
->>   .../arm/arm,coresight-static-funnel.yaml      |  5 +++
->>   .../arm/arm,coresight-static-replicator.yaml  |  5 +++
->>   .../bindings/arm/arm,coresight-stm.yaml       |  5 +++
->>   .../bindings/arm/arm,coresight-tmc.yaml       |  5 +++
->>   .../bindings/arm/arm,coresight-tpiu.yaml      |  5 +++
->>   .../bindings/arm/qcom,coresight-tpda.yaml     |  5 +++
->>   .../bindings/arm/qcom,coresight-tpdm.yaml     |  5 +++
->>   drivers/hwtracing/coresight/coresight-core.c  | 33 ++++++++++---------
->>   .../hwtracing/coresight/coresight-platform.c  | 31 +++++++++++++++++
->>   include/linux/coresight.h                     |  1 +
->>   19 files changed, 130 insertions(+), 15 deletions(-)
->>
-> 
+Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
