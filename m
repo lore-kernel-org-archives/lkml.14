@@ -1,73 +1,90 @@
-Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B36125C0;
-	Wed, 17 Jan 2024 07:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
+Received: from eggs.gnu.org (eggs.gnu.org [209.51.188.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B31BA5E;
+	Wed, 17 Jan 2024 07:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.51.188.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705477537; cv=none; b=B0svbNU3az1Ib/USr45Czd4ld+no8iAROie7BpCU7UX1WhAqiHa7a+ai4qe4qOVBAmhnwOtTbqTL+r48AqAyhPxXlV9CjavsGH9QW/iu5UM4Pb9jZZjbfQy6tQ+Y8J0eJqMLA1y3UUywkSTEdqF9SwZQ2BMsEgdsDr9iwh4BcJc=
+	t=1705477762; cv=none; b=bNsjJP9KTS9kOQbn8ZXDOatOSBtlzN1i/PujWoSSozRz4/n+hh4EDUe2bvB/Vm97D3jRPNZQZuAIx1Zr0B81CWAngd8kMJoL+ZMR7RV5gSE6gcMZe99uf4WfvvM8PSkVQq+y3TxfeXBMa20aSgkQcYfVBBR7787Wez5gPgXo/YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705477537; c=relaxed/simple;
-	bh=XTlJMeq1LcRVPc4P3E1fOfdg//1N2HH8XnYT7USTq14=;
-	h=Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=O4/8dr3JjrfZKeMiKepOHGp+1e2V4n4IV8fUVRwU6ZG5Y6wM9dRCzsZKbJq/1F+prZJxk3wW8peay2PVZbUlqUMB7tRqzwQFdYrHyIeEBUaQZ73fsw7gL7V9JexlNDFYEu+pk1S1uX1nDiU9SMlicR1WWf0ODzl1+iKW8sPHR2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
-Received: by cae.in-ulm.de (Postfix, from userid 1000)
-	id 4EE1D140327; Wed, 17 Jan 2024 08:45:32 +0100 (CET)
-Date: Wed, 17 Jan 2024 08:45:32 +0100
-From: "Christian A. Ehrhardt" <lk@c--e.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	linux-usb@vger.kernel.org, Dell.Client.Kernel@dell.com,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jack Pham <quic_jackp@quicinc.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] usb: ucsi: Add missing ppm_lock
-Message-ID: <ZaeFnId6Ln3VUE5n@cae.in-ulm.de>
-References: <20240116224041.220740-1-lk@c--e.de>
- <20240116224041.220740-2-lk@c--e.de>
- <2024011726-exhaust-writing-29d4@gregkh>
+	s=arc-20240116; t=1705477762; c=relaxed/simple;
+	bh=2XzToVY0q4JUFU3kMeLMFuQRGZ2YIJknDuMFlolkBZA=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding; b=Z2WIKwrHtPsAJELXv3AVnXUBpMVjWONSk6YT3IZhNJZTC/+0qVETzq/u/Oc7SYxSXl1Anye/+iQsGvTZa/c8GOiULFemrnMGLVMLwQgJuLobSC0U7CwxkKNZbJl4piHjGDwJHD6riwXzvGfyAA+o8Dk+PTEz2t5hdPCnSLA0SyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org; spf=pass smtp.mailfrom=gnu.org; dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b=AMvdC0ZP; arc=none smtp.client-ip=209.51.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnu.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b="AMvdC0ZP"
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+	by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.90_1)
+	(envelope-from <othacehe@gnu.org>)
+	id 1rQ0fn-0000gN-SA; Wed, 17 Jan 2024 02:49:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+	s=fencepost-gnu-org; h=MIME-Version:References:In-Reply-To:Date:Subject:To:
+	From; bh=/ZQ3wluHD1LXJ5OmeEllMQ5XoD5EACpofJgC3PjE+Ps=; b=AMvdC0ZPFKA1Q6evA2ht
+	wwYcqtYBiPNmgwD/kSFelgFq3QZC137UqinGCRfN6cdk783BxlPqFuPJec02MJSZn8Bxq4pHqRgcI
+	kyzRMdUoQ7nphMnSndkR3Dn/SCPPW+tRjDBw8VAG2oTswtCj16UG0E9zIwwJ0VstigL5H+pQfML+4
+	hfbAeQV/t431ZJlKSUb01mtIOUOEovr2X6F22+KTRz+aehhCb2sRsNLp/+teh0MgUDrjqxW7WM/US
+	pwsLjVltdJlxm7Qp7hAl+JuU2zB/9WneIuyTqYCjryNh7rAw0TUc7yy2K4hlNutfj44sTuzh3u4gO
+	mik9BlhnWloJEg==;
+From: Mathieu Othacehe <othacehe@gnu.org>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Li Yang <leoyang.li@nxp.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Christoph Stoidner <c.stoidner@phytec.de>,
+	Wadim Egorov <w.egorov@phytec.de>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Mathieu Othacehe <othacehe@gnu.org>
+Subject: [PATCH v2 1/2] dt-bindings: arm: fsl: Add i.MX93 PHYTEC with Segin
+Date: Wed, 17 Jan 2024 08:49:10 +0100
+Message-ID: <20240117074911.7425-2-othacehe@gnu.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20240117074911.7425-1-othacehe@gnu.org>
+References: <20240117074911.7425-1-othacehe@gnu.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024011726-exhaust-writing-29d4@gregkh>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 17, 2024 at 06:44:40AM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Jan 16, 2024 at 11:40:39PM +0100, Christian A. Ehrhardt wrote:
-> > Calling ->sync_write must be done while holding the PPM lock as the
-> > mailbox logic does not support concurrent commands.
-> > 
-> > Thus protect the only call to ucsi_acknowledge_connector_change
-> > with the PPM lock as it calls ->sync_write. All other calls to
-> > ->sync_write already happen under the PPM lock.
-> > 
-> > Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
-> > ---
-> > NOTE: This is not a theoretical issue. I've seen problems resulting
-> > from the missing lock on real hardware.
-> 
-> What commit id does this fix?
+Add support for i.MX93 PHYTEC with Segin board.
 
-It's hard to tell (due to rewrites, logic and API changes). After
-digging a bit more I think it is at least a theoretical issues since
-the introduction of partner tasks.
+Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I'll wait a bit for additional feedback and fix this and other issues
-noticed by your patch bot (sorry for those) in the next iteration.
-
-> Should it be cc: stable?
-
-Not sure. The race is triggered much more ofter after the quirk added
-in patch 3/3, so this may not be a practical issue before that.
-I'll add the tag in the next iteration, though.
-
-   thanks   Christian
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 228dcc5c7d6f..196935d3abf0 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1275,6 +1275,12 @@ properties:
+           - const: tq,imx93-tqma9352        # TQ-Systems GmbH i.MX93 TQMa93xxCA/LA SOM
+           - const: fsl,imx93
+ 
++      - description: i.MX93 PHYTEC phyBOARD-Segin
++        items:
++          - const: phytec,imx93-phycore-segin
++          - const: phytec,imx93-phycore-som
++          - const: fsl,imx93
++
+       - description:
+           Freescale Vybrid Platform Device Tree Bindings
+ 
+-- 
+2.41.0
 
