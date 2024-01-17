@@ -1,140 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2553928DA2;
-	Wed, 17 Jan 2024 23:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AB92561F
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 23:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705535427; cv=none; b=VgmdRnSkf+lrEq/bvEG2HI4afHAVR4xm5xQNsV1V3u3oSP8jlnWxz9Jb47sTZwI5NqO9OAzxbIFFv6zlKLzZvYQSNTDJztCgOYLoKzvPiGgA8b9FOBlNOqqJ3693hu7OKDZqLxnDy5o/nzinCpfbT8/lbzJ3f3fP7zBq9f9t1Ws=
+	t=1705535540; cv=none; b=XMDzg9hN7chX7CqBIbOBBB57EgxqYVbha8KQ5r5/3VZYpATtB4uuhEiKdnbnXvgfhI5VhYbyuRJlbba/V5U3+IlvQQwu7Bvh1HxWcAl1iHujuwmAEDO2qfEP+lnxvdV2ArxwcLL+9yoHFgerk4CDP4FGaamN01DxbsY8y1nva1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705535427; c=relaxed/simple;
-	bh=vA/lVruIhcqs1iF8s5CGZ0Yh0/2pqLuM2zH9Xl5+LMk=;
+	s=arc-20240116; t=1705535540; c=relaxed/simple;
+	bh=ZDU13mwuLihNjeN96H7NkxU9PtW0yNhYdEB/vSRJVlc=;
 	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=VbYWysflFiemBwffQETR3JGxP6xIt34ms21SidcNaLlF7Md78KFVBrpnzeONutqeKik5UsVR9A3aWYfh2fGGiYRaHnFfrU+wOdsSu3D7SJVxchJ1nHbodiqY2HWKXDkgaM4psr933N28/940yDpl9jTPJEBBbLBgICHUHi2+WEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mdEA0SIJ; arc=none smtp.client-ip=192.198.163.11
+	 X-IronPort-AV:X-IronPort-AV:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:Content-Language:To:Cc:References:From:
+	 Autocrypt:In-Reply-To:Content-Type:Content-Transfer-Encoding; b=WNBwV/K7I7KosuG3hj/OPOz6mcJF5jzEBNWqg9wZy7rbo9DWvE9mAxd9gpGqnZyw9BoXcnzcJEeCYqGyZjiIGk5YIZbQnUNFHW6ZXzZfF4FaOCwnoUHxyPaR4WYskhbNIpSWAd3LQwbn0/soRdQVGrP0OLWjmeifPVEHGg81ATE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jgJsL126; arc=none smtp.client-ip=134.134.136.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mdEA0SIJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jgJsL126"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705535426; x=1737071426;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vA/lVruIhcqs1iF8s5CGZ0Yh0/2pqLuM2zH9Xl5+LMk=;
-  b=mdEA0SIJXVPT10H9EonAQAKCElUbjuqDiu6Rcx5BEvXOhdV9kBXOYHRp
-   CbOKfMHXHD3DWIWMhbrZjxVvGVQbCg7cXUodcRB4MZfsq7Tu0m6fHGK1j
-   PDKwBOp7GNCCNWHHzRP+rq16yb/Rldh1qOxmV8QuNB4kRF8H3cBPXzB6f
-   QcPuAonWAnB6XwgQCVFSA1aAEWXKVWj+RdxIYzPmZkMhI5TPQumaObfHw
-   /08WrjXgfGmN5g106R54gjSyuFxeAIk9JC8uDTRlCjl7Ki6/6P4O0VZY/
-   Bb3pq3YgGpEofs/v/60IScUqsTRLIgMdtsRVLMyXUTcjbBpXiHgp+lOa/
+  t=1705535538; x=1737071538;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZDU13mwuLihNjeN96H7NkxU9PtW0yNhYdEB/vSRJVlc=;
+  b=jgJsL1261F4twkFFKb35cl40G2dbn5oUIpKx6rQvZEN3vIZIPsZnW+Y8
+   2C8BC15ahNEBMhVZFXX0xM8wknXbpH6IghFN4aqQzXWPTNX1S0jvg8kQ4
+   VrI0Jc1Lm57atK0d8PGzfikPSQ70I+fjeziiS6DT9axWilEs3K0iPVy3k
+   MYiIaLPO0Hxrb/KjcVbJaP69N2tXK/6bi1k7neDfjq5TH7vdb3wWWeS9s
+   tENuq1Dij1qlYGvdBXdNQFicnqf24OOOsXxQMWgn7hrwZH800WWnYG5yq
+   Y2sEMN3xIL5mpaqJiQRi69oWXpaMMfC30K4OyC8SqfrRSQALVVXeSFh3r
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="7014415"
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="404070282"
 X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="7014415"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 15:50:25 -0800
+   d="scan'208";a="404070282"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 15:52:18 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="818647782"
 X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="26612682"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 17 Jan 2024 15:50:22 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQFfn-0002RC-2J;
-	Wed, 17 Jan 2024 23:50:19 +0000
-Date: Thu, 18 Jan 2024 07:49:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, devicetree@vger.kernel.org,
-	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Subject: Re: [PATCH 4/4] remoteproc: stm32: Add support of an OP-TEE TA to
- load the firmware
-Message-ID: <202401180740.1ud9PJYn-lkp@intel.com>
-References: <20240115135249.296822-5-arnaud.pouliquen@foss.st.com>
+   d="scan'208";a="818647782"
+Received: from mmccollu-mobl1.amr.corp.intel.com (HELO [10.209.20.138]) ([10.209.20.138])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 15:52:17 -0800
+Message-ID: <b3e5456a-7113-4868-b8ce-020421e898ba@intel.com>
+Date: Wed, 17 Jan 2024 15:52:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240115135249.296822-5-arnaud.pouliquen@foss.st.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/fpu: verify xstate buffer size according with
+ requested features
+Content-Language: en-US
+To: Andrei Vagin <avagin@gmail.com>
+Cc: Andrei Vagin <avagin@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+References: <20240116234901.3238852-1-avagin@google.com>
+ <30cd0be4-705f-4d63-bdad-fc57301e7eda@intel.com>
+ <CANaxB-xu+zG=5_EAe4zapC5a_x4CkkDovmVX7LjiLk+E7kU75g@mail.gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <CANaxB-xu+zG=5_EAe4zapC5a_x4CkkDovmVX7LjiLk+E7kU75g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Arnaud,
+On 1/17/24 14:30, Andrei Vagin wrote:
+> On Wed, Jan 17, 2024 at 11:34 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>> Seems like the real problem here is that the fault_in_readable() doesn't
+>> match the XRSTOR.  It's going to continue to be a problem as long as we
+>> don't know what memory XRSTOR tried to access.  We can try all day long
+>> to precalculate what XRSTOR _will_ do, but that seems a bit silly
+> 
+> I don't understand this part. The behavior of XRSTOR is well-defined
+> by CPU specifications, allowing us to easily precalculate the memory it
+> will attempt to access. What does it mean "we don't know what memory
+> XRSTOR tried to access"?
+> 
+> xrstor restores only features that are set in fx_sw->xfeatures.
 
-kernel test robot noticed the following build warnings:
+XSAVE is a big old pile of fun.  Someone is confused here and that
+someone might be me.  Let me walk through my logic a bit.  Maybe you can
+point out where I've gone wrong. :)
 
-[auto build test WARNING on remoteproc/rproc-next]
-[also build test WARNING on robh/for-next linus/master v6.7 next-20240117]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Take a look at the "Legacy Region of an XSAVE Area" in the SDM.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Arnaud-Pouliquen/remoteproc-Add-TEE-support/20240115-215613
-base:   git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git rproc-next
-patch link:    https://lore.kernel.org/r/20240115135249.296822-5-arnaud.pouliquen%40foss.st.com
-patch subject: [PATCH 4/4] remoteproc: stm32: Add support of an OP-TEE TA to load the firmware
-config: mips-randconfig-r112-20240117 (https://download.01.org/0day-ci/archive/20240118/202401180740.1ud9PJYn-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 9bde5becb44ea071f5e1fa1f5d4071dc8788b18c)
-reproduce: (https://download.01.org/0day-ci/archive/20240118/202401180740.1ud9PJYn-lkp@intel.com/reproduce)
+	The x87 state component comprises bytes 23:0 and bytes 159:32.
+	The SSE state component comprises bytes 31:24 and bytes 415:160.
+	The XSAVE feature set does not use bytes 511:416; bytes 463:416
+	are reserved.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401180740.1ud9PJYn-lkp@intel.com/
+and the next section:
 
-sparse warnings: (new ones prefixed by >>)
-   drivers/remoteproc/tee_remoteproc.c:82:26: sparse: sparse: symbol 'tee_rproc_ctx' was not declared. Should it be static?
-   drivers/remoteproc/tee_remoteproc.c:166:24: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *rsc_va @@     got void [noderef] __iomem * @@
-   drivers/remoteproc/tee_remoteproc.c:166:24: sparse:     expected void *rsc_va
-   drivers/remoteproc/tee_remoteproc.c:166:24: sparse:     got void [noderef] __iomem *
->> drivers/remoteproc/tee_remoteproc.c:233:31: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got void *rsc_va @@
-   drivers/remoteproc/tee_remoteproc.c:233:31: sparse:     expected void const volatile [noderef] __iomem *addr
-   drivers/remoteproc/tee_remoteproc.c:233:31: sparse:     got void *rsc_va
-   drivers/remoteproc/tee_remoteproc.c: note: in included file (through include/linux/preempt.h, include/linux/spinlock.h, include/linux/mmzone.h, ...):
-   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+	The XSAVE header of an XSAVE area comprises the 64 bytes
+	starting at offset 512 from the area’s base address:
+	...
+	Bytes 7:0 of the XSAVE header is a state-component bitmap (see
+	Section 13.1) called XSTATE_BV.
 
-vim +233 drivers/remoteproc/tee_remoteproc.c
+XRSTOR accesses memory based on XSTATE_BV (and XCOMP_BV which should be
+irrelevant here).  So we're looking for something at 512 bytes up in the
+XSAVE buffer.
 
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  215  
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  216  int tee_rproc_stop(struct tee_rproc *trproc)
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  217  {
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  218  	struct tee_ioctl_invoke_arg arg;
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  219  	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  220  	int ret;
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  221  
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  222  	prepare_args(trproc, TA_RPROC_FW_CMD_STOP_FW, &arg, param, 0);
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  223  
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  224  	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  225  	if (ret < 0 || arg.ret != 0) {
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  226  		dev_err(tee_rproc_ctx->dev,
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  227  			"TA_RPROC_FW_CMD_STOP_FW invoke failed TEE err: %x, ret:%x\n",
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  228  			arg.ret, ret);
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  229  		if (!ret)
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  230  			ret = -EIO;
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  231  	}
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  232  	if (trproc->rsc_va)
-6805d1065198e1 Arnaud Pouliquen 2024-01-15 @233  		iounmap(trproc->rsc_va);
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  234  	trproc->rsc_va = NULL;
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  235  
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  236  	return ret;
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  237  }
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  238  EXPORT_SYMBOL_GPL(tee_rproc_stop);
-6805d1065198e1 Arnaud Pouliquen 2024-01-15  239  
+Let's have gdb help us out a bit.  Where is sw_reserved?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+(gdb) print/d &((struct fxregs_state *)0)->sw_reserved
+$4 = 464
+
+Where does XRSTOR itself look?
+
+(gdb) print/d &((union fpregs_state *)0)->xsave->header.xfeatures
+$5 = 512
+
+(xfeatures aka. XSTATE_BV)
+
+There _was_ a reason once upon a time that the kernel started sticking a
+copy of XSTATE_BV in 'sw_reserved'.  I just forget what it is at the
+moment.  It's horribly confusing to it laid out like this, but the SDM
+is pretty clear: "the XSAVE feature set does not use bytes 511:416".
+
+"fx_sw" is actually a software-defined and software-only-consumed area
+of the XSAVE buffer, thus the '_sw'.  Nothing in the '_sw' section tells
+us how the hardware will behave.
+
+>> because the CPU knows where the fault happened.  It told us in CR2 and
+>> all we have to do is plumb that back to fault_in_readable().
+> 
+> I considered this option as well, but then I decided that this approach
+> is better. The most important aspect is that it always rejects bad
+> buffers, allowing a user space to detect an issue even when a fault
+> isn't triggered. I believe proper handling of xrstor page faults could
+> be a valuable additional improvement to this change. If we detect a
+> fault outside of a provided buffer, we can print a warning to signal
+> that check_xstate_in_sigframe is incomplete.
+
+I'm not really following the logic there.  What's the downside of taking
+the fault?
