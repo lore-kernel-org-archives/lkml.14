@@ -1,71 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385F71DFDF;
-	Wed, 17 Jan 2024 12:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from smtpfb1-g21.free.fr (smtpfb1-g21.free.fr [212.27.42.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAD0B1DFF2;
+	Wed, 17 Jan 2024 12:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705495739; cv=none; b=PlmxOk15Ed/FIT/UcXFw89roYHS+6e9mUlaQNXvwuj5v6KnFmTuX3wfk6g6wo3wzEEK9fiJsnWR0+m4rPC8wLNBYN5LycCB1JtVCS2+5aTyk/uvyX9F1YGEfDMlhmFAkutWkE+ovZi6p4rBKsCjeYmmaObk5+jlOE6GWpqlRgCc=
+	t=1705495778; cv=none; b=E6TkaBfyOj2OucPdrQMDCgvfRUkoNh0o9H36ArgJT3RYFUvYDSJammDH0OiqoAxZ5XgcWv0PtFWrF9+uDZj8VFcgeULgxdSKi7EpHNCQGTpo/7aVsIjz3fJNhbTpE/RJ34FR41BeYPOjciV0KCXoAjetlJjGEh4e1dCp1koUk1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705495739; c=relaxed/simple;
-	bh=wejZpnzi/xwTeuwzEhPmR77lS9Cix9wdR/4gBE+QuZs=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=eXr7Z1TN/jPqN0wWCzE/HecgmOCy4cUHyCTnjuc5je0RkRqhu2vtMGhXfcjvnvSfnHuZQRzpqt7HY10UTcVmnhcib359wr1vmNZoVU2xslyKZ/klQ1Tj4eLZxBjhU45a2ePH4TK2mFv0Bldlwd48s4NHNImy9ELmxVB05rFJzJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZm/mRIW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZm/mRIW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30278C433F1;
-	Wed, 17 Jan 2024 12:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705495738;
-	bh=wejZpnzi/xwTeuwzEhPmR77lS9Cix9wdR/4gBE+QuZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OZm/mRIWdMskF94PCgIsY7p9+Sc6+On2KL0u/wosBIwSUloPXk49taQQPNw9fwRvS
-	 joMbL9QNr9G2yHgrD0aMpr95fwC5klEyHkGUTsnETHnKZQt4DpSauAdVY4VETJFseQ
-	 1LEaR8YI2DbtwqY2whquDY7wU4WtcW0kXMUy4B9Rc51jx1EYHddsbFzFVFyGyMqNeU
-	 A6/sbvWc4u7yx34KP8osvXNwud8ROvCqmvNqUyslQ1iXbu3GtBIqshmwH7Du4VjQ6E
-	 aABO+5cGSxZ/8kywXYgkHAsVsKfNlzOBCHaxpvE5hWi2vhnOzf1X+H3yegq8x4Ko3y
-	 Joa6J3TeBXRRg==
-Date: Wed, 17 Jan 2024 13:48:46 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Andreas Gruenbacher <agruenba@redhat.com>, 
-	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Jan Kara <jack@suse.cz>, 
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Steve French <sfrench@samba.org>, 
-	Paulo Alcantara <pc@manguebit.com>, Ronnie Sahlberg <lsahlber@redhat.com>, 
-	Shyam Prasad N <sprasad@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-kernel@vger.kernel.org, v9fs@lists.linux.dev, linux-afs@lists.infradead.org, 
-	ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/20] filelock: split struct file_lock into file_lock
- and file_lease structs
-Message-ID: <20240117-wichtel-rennmaschine-d2d9174192be@brauner>
-References: <20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org>
+	s=arc-20240116; t=1705495778; c=relaxed/simple;
+	bh=yAVW7ObbCfhbkCbmZjm1w55Iw1QPKOCJ27ZxRHwf7e4=;
+	h=Received:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding; b=M8uz3yosHpj8StnMgFawHPweZ4bg/Ac33WAbJwGrpDQksey6bpn/yXULcBXT4Nd9qEdQtzMJ4Kljk8DHN85wk8PRx6z3eauzfD/ih6/+7yUhKT5ACzLCjRlSNPYTCCjS6fE+CU4lHe5t7LOVxpanR9eBxze87mPQnY9Q4IhGlqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=wifirst.fr; spf=fail smtp.mailfrom=wifirst.fr; arc=none smtp.client-ip=212.27.42.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=wifirst.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=wifirst.fr
+Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 9BBFBDF8932;
+	Wed, 17 Jan 2024 13:43:16 +0100 (CET)
+Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:aa1:d2f0:f6b3:db6:44c:eeef])
+	(Authenticated sender: isaias57@free.fr)
+	by smtp6-g21.free.fr (Postfix) with ESMTPSA id B2AF778034D;
+	Wed, 17 Jan 2024 13:42:57 +0100 (CET)
+From: Jean Thomas <jean.thomas@wifirst.fr>
+To: sean.wang@kernel.org,
+	linus.walleij@linaro.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Jean Thomas <jean.thomas@wifirst.fr>
+Subject: [PATCH 1/2] pinctrl: mediatek: mt7981: add additional uart group
+Date: Wed, 17 Jan 2024 13:42:33 +0100
+Message-Id: <20240117124234.3137050-1-jean.thomas@wifirst.fr>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-> I'd like to have this considered for inclusion in v6.9. Christian, would
-> you be amenable to shepherding this into mainline (assuming there are no
-> major objections, of course)?
+Add uart1_3 (pins 26, 27) group to the pinctrl driver for the
+MediaTek MT7981 SoC.
 
-Yes, of course I will be happy to.
+Signed-off-by: Jean Thomas <jean.thomas@wifirst.fr>
+---
+ drivers/pinctrl/mediatek/pinctrl-mt7981.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7981.c b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
+index 7e59a4407859..ca667ed25a4d 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt7981.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
+@@ -737,6 +737,9 @@ static int mt7981_uart1_1_funcs[] = { 2, 2, 2, 2, };
+ static int mt7981_uart1_2_pins[] = { 9, 10, };
+ static int mt7981_uart1_2_funcs[] = { 2, 2, };
+ 
++static int mt7981_uart1_3_pins[] = { 26, 27, };
++static int mt7981_uart1_3_funcs[] = { 2, 2, };
++
+ /* UART2 */
+ static int mt7981_uart2_1_pins[] = { 22, 23, 24, 25, };
+ static int mt7981_uart2_1_funcs[] = { 3, 3, 3, 3, };
+@@ -871,6 +874,8 @@ static const struct group_desc mt7981_groups[] = {
+ 	PINCTRL_PIN_GROUP("uart1_1", mt7981_uart1_1),
+ 	/* @GPIO(9,10): UART1(2) */
+ 	PINCTRL_PIN_GROUP("uart1_2", mt7981_uart1_2),
++	/* @GPIO(26,27): UART1(2) */
++	PINCTRL_PIN_GROUP("uart1_3", mt7981_uart1_3),
+ 	/* @GPIO(22,25): UART1(3) */
+ 	PINCTRL_PIN_GROUP("uart2_1", mt7981_uart2_1),
+ 	/* @GPIO(22,24) PTA_EXT(4) */
+@@ -933,7 +938,7 @@ static const struct group_desc mt7981_groups[] = {
+ static const char *mt7981_wa_aice_groups[] = { "wa_aice1", "wa_aice2", "wm_aice1_1",
+ 	"wa_aice3", "wm_aice1_2", };
+ static const char *mt7981_uart_groups[] = { "net_wo0_uart_txd_0", "net_wo0_uart_txd_1",
+-	"net_wo0_uart_txd_2", "uart0", "uart1_0", "uart1_1", "uart1_2", "uart2_0",
++	"net_wo0_uart_txd_2", "uart0", "uart1_0", "uart1_1", "uart1_2", "uart1_3", "uart2_0",
+ 	"uart2_0_tx_rx", "uart2_1", "wm_uart_0", "wm_aurt_1", "wm_aurt_2", };
+ static const char *mt7981_dfd_groups[] = { "dfd", "dfd_ntrst", };
+ static const char *mt7981_wdt_groups[] = { "watchdog", "watchdog1", };
+-- 
+2.39.2
+
