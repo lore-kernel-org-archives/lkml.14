@@ -1,289 +1,85 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138E122EF3
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 17:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461A2224F6
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 17:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705510835; cv=none; b=r4QdfUN21TqPtXvY/THSnl3/Q33b31vEF/rUhp22HROHmQ+qbhsDc/BSbCjoTAf13g8zh9psZB+f3CSyxuGvh8T8Alb39aomHzS2KNbgw2yJAgVvzmVeb0FgVPD3o4sOk2F8Vwyba36dYauKaWAMdwUkrMY44YNzrOkmgSlgFOY=
+	t=1705510871; cv=none; b=lSF3YA1f2aSGMEL5qGMeu35dyfVbww6SJ9DF48zcVBBr9xa98BDjzAXriFlxP+5yre9hlKNge+NmRzBM4HWbJ6IjQQF6i8yPUc4VtLGaMk63hVLYgkPOvAV9n3j2PdQTKjgdXT4xcbhyMql5rT+g2Bf45WURg0lqpTwSvojqBbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705510835; c=relaxed/simple;
-	bh=pq/Av+SSO69BeU9h8xuQL0aN3Uu8++2iivejVhGQ0P4=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type; b=I0dil4fXmJ9VDV+wxmPrs1RxB72i2+zD/bJ7a/WEKBw487e2hEhXY/NOE2DdMKE04zxxvQ/SiRLO3VivA0JtahVVZ21MF2++6NuylFbJ94hQHRi2T0bzJuW41gXtSeEis3n8M8nGJlXhP2EAlEs1/ZtwtZe+o3sP6lY7NQ1Gt6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WfDQxeks; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705510871; c=relaxed/simple;
+	bh=VEttfhQ1pwrDVRGckS4a10zqh/nueRRzPwdDk+mQMrA=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To; b=kEQUVF70vyRB7C2lwS2mzdtizIykKIwCrbcQRKCy9NKh3y/4lTO7318peAobEiYvBh5yDlgtgeykk1wllTTf8SPX5k3dRqedvIQHpK4j8zYf21T8LJ330BKcRwXujcHMOajGuAthUFLeLxrjKHjrdoznqDRkB+wCnnMMVRMHQEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NEbK969K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WfDQxeks"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5ff7ec8772dso1817647b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:00:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705510832; x=1706115632; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=cZ2p7jEyFK0ojPkUOrVvKOvjb7MyzhY/xh/W7SjMLt0=;
-        b=WfDQxeks9usOT6CfMsy6kO5Lyutt7cRJZq6JjRFOOdwWplzwUkEsrueDUPpmreZqAP
-         Fvk2j8GVgrrgA1D6taAlFnm1Xb3nhFkFhaT2femamQcT+3TO4M7NMXD+DUfnY0hol5fQ
-         FqnN0to2d52e+W10bEoxuMw+H+zRxTDbmgfscR3E9J98+mo7YcAT15qJmf7t8GKw+vYR
-         QsGXO8ZsWlytFJBZ/Mk2A+3YHdYQLcwRJU7feTlTejqf2BSJOZOpN0Iv/K7923XM2BpH
-         o+yEUmbZiH+qQhDUAOOx9Y6rdRU6VtjuqdrdOq3LdEVjQkgczScjOUj57UOCl6lTuFqI
-         vhKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705510832; x=1706115632;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cZ2p7jEyFK0ojPkUOrVvKOvjb7MyzhY/xh/W7SjMLt0=;
-        b=O4IgA1g5KYMAo07UvWCWuQdvUP8M8DxZDFwPqJN8HYmjKNcjDCKTcHgiI+1q9jNL0v
-         VCsNVvhZH2oqfLA2TuHgpsG3wsgpRhQaIapnaotGcJEj/k0OPXN4Rfy8vAKwQYduC1cB
-         p0P4uJ0Iy+Ee3Rw740fr2LdYtNfhk0RpSo7SvXBe36Ja9t2LGoBlmmr8hdV8GEQejkaw
-         XKx8ZMzvzZ0kVGCAEWFiI6Pws79FNYZBf/4Fz17ppBhSbI0XyeNMNUf8cO9+cMPwcckN
-         4jiai9N3q3jSpTPOtZc9GpZEGaqNafMnkTo0Hap1HL6kOXAT9ISuxN2e8K3YlfVwxSSC
-         18bg==
-X-Gm-Message-State: AOJu0YyDzVDVlJzvIXbG4OK7FfdV/rPI2pDon3bcfhpOMDAF4cGuyz9T
-	tslvlOMXQALVdsns/vv6NIrDB6PwFStwEuYzrgxt+uT0SsOpmQ==
-X-Google-Smtp-Source: AGHT+IF3FBzrMaCLiZsZn2QO1HbliJx8eevMzxoBDHbU8qLUWtN/6V0qU7QemeuQaYTOe3s7ypkdwkWCAQzUxQorL3M=
-X-Received: by 2002:a81:4e8f:0:b0:5ff:7a0c:b610 with SMTP id
- c137-20020a814e8f000000b005ff7a0cb610mr489485ywb.31.1705510831859; Wed, 17
- Jan 2024 09:00:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NEbK969K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66484C433C7;
+	Wed, 17 Jan 2024 17:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705510870;
+	bh=VEttfhQ1pwrDVRGckS4a10zqh/nueRRzPwdDk+mQMrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NEbK969KmwK8Bh26AXb670U6IIMZxfKt67vPnKDo87rXRWEsHDMvoHG+pMy1r8V+b
+	 9DHX2jwCsd82itYiXcryojmvgCyhm2QF6kAEBh3z5WXxB9+v887q66WotH85l1pD01
+	 fQJYqQERcsrFGvqlFfyLH1nZxSLtbsK0tws+6Iu0dAFttqFxkpSbZqiO3zWz3G9byq
+	 LUamJZ0iKK/zDjeenOqKyt/EmwoHAFM88aq9cwqBT0TLmHQIPcbTeQ3qOTAeUDfuro
+	 nhqnqg/42ywLhlEfgYJIPTf4rRaEworXsUUwaCinxRatZFYmQFIH38pC55MchYEXYz
+	 qxDKMPTRR0O+w==
+Date: Wed, 17 Jan 2024 18:01:07 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Eric Dumazet <edumazet@google.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Arjan van de Ven <arjan@infradead.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Rik van Riel <riel@surriel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sebastian Siewior <bigeasy@linutronix.de>,
+	Giovanni Gherdovich <ggherdovich@suse.cz>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: Re: [PATCH v10 05/20] timers: Introduce add_timer() variants which
+ modify timer flags
+Message-ID: <ZagH0wPCR9PusLxq@localhost.localdomain>
+References: <20240115143743.27827-1-anna-maria@linutronix.de>
+ <20240115143743.27827-6-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103-genpd-perf-order-v2-1-eeecfc55624b@gerhold.net>
-In-Reply-To: <20240103-genpd-perf-order-v2-1-eeecfc55624b@gerhold.net>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 17 Jan 2024 17:59:55 +0100
-Message-ID: <CAPDyKFrycE-ONA753Z4tnYP5_NsRCtSfGr12ctFNDftvEQL8Gw@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: domains: Scale down parent performance states in
- reverse order
-To: Stephan Gerhold <stephan@gerhold.net>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240115143743.27827-6-anna-maria@linutronix.de>
 
-On Wed, 3 Jan 2024 at 22:10, Stephan Gerhold <stephan@gerhold.net> wrote:
->
-> Power domains might have parent domains assigned that are automatically
-> managed by the PM domain core. In particular, parent domains are
-> automatically powered on/off and setting performance states on child
-> domains is translated to parent domains (e.g. using an OPP table from
-> the device tree).
->
-> Currently parent performance states are always adjusted before the
-> performance state of the child domain is changed.
->
-> However, typically a parent/child relationship between two power
-> domains with performance states models the requirement to keep the
-> parent domain at a performance state equal or higher to the child
-> domain. When scaling down there is a brief moment where the parent
-> domain will end up having a lower performance state than required by
-> the child domain.
->
-> To avoid this, we need to differentiate between scaling up/down and
-> adjust the order of operations:
->
->  - When scaling up, parent domains should be adjusted before the child
->    domain. In case of an error, the rollback happens in reverse order.
->
->  - When scaling down, parent domains should be adjusted after the child
->    domain, in reverse order, just as if we would rollback scaling up.
->    In case of an error, the rollback happens in normal order (just as
->    if we would normally scale up).
->
-> Implement this by moving the existing functionality of
-> _genpd_set_performance_state() to two separate functions that are
-> called in the proper iteration order.
->
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Le Mon, Jan 15, 2024 at 03:37:28PM +0100, Anna-Maria Behnsen a écrit :
+>  timer flags
 
-Thanks for posting this - and sorry for the delay Stephan!
+Yes ;-)
 
-I just wanted to let you know that I am looking at this right now and
-will be testing this on my end too. Allow me a few more days - I will
-get back to you again, asap.
+> 
+> A timer might be used as a pinned timer (using add_timer_on()) and later on
+> as non-pinned timer using add_timer(). When the "NOHZ timer pull at expiry
+> model" is in place, the TIMER_PINNED flag is required to be used whenever a
+> timer needs to expire on a dedicated CPU. Otherwise the flag must not be
+> set if expiration on a dedicated CPU is not required.
+> 
+> add_timer_on()'s behavior will be changed during the preparation patches
+> for the "NOHZ timer pull at expiry model" to unconditionally set
+> TIMER_PINNED flag. To be able to clear/ set the flag when queueing a
+> timer, two variants of add_timer() are introduced.
+> 
+> This is a preparatory patch and has no functional change.
+> 
+> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-Kind regards
-Uffe
-
-> ---
-> Changes in v2:
-> - Rebase to adjust for move of drivers/base/power/domain.c
->   to drivers/pmdomain/core.c
-> - Regenerate CC list
-> - No code changes
-> - Link to v1: https://lore.kernel.org/r/20231205-genpd-perf-order-v1-1-6597cc69a729@gerhold.net
-> ---
-> Related discussion: https://lore.kernel.org/linux-pm/ZWXgFNKgm9QaFuzx@gerhold.net/
-> ---
->  drivers/pmdomain/core.c | 124 ++++++++++++++++++++++++++++++------------------
->  1 file changed, 77 insertions(+), 47 deletions(-)
->
-> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-> index a1f6cba3ae6c..fec9dc6ab828 100644
-> --- a/drivers/pmdomain/core.c
-> +++ b/drivers/pmdomain/core.c
-> @@ -311,72 +311,102 @@ static int genpd_xlate_performance_state(struct generic_pm_domain *genpd,
->  }
->
->  static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
-> -                                       unsigned int state, int depth)
-> +                                       unsigned int state, int depth);
-> +
-> +static void _genpd_rollback_parent_state(struct gpd_link *link, int depth)
->  {
-> -       struct generic_pm_domain *parent;
-> -       struct gpd_link *link;
-> -       int parent_state, ret;
-> +       struct generic_pm_domain *parent = link->parent;
-> +       int parent_state;
->
-> -       if (state == genpd->performance_state)
-> -               return 0;
-> +       genpd_lock_nested(parent, depth + 1);
->
-> -       /* Propagate to parents of genpd */
-> -       list_for_each_entry(link, &genpd->child_links, child_node) {
-> -               parent = link->parent;
-> +       parent_state = link->prev_performance_state;
-> +       link->performance_state = parent_state;
->
-> -               /* Find parent's performance state */
-> -               ret = genpd_xlate_performance_state(genpd, parent, state);
-> -               if (unlikely(ret < 0))
-> -                       goto err;
-> +       parent_state = _genpd_reeval_performance_state(parent, parent_state);
-> +       if (_genpd_set_performance_state(parent, parent_state, depth + 1)) {
-> +               pr_err("%s: Failed to roll back to %d performance state\n",
-> +                      parent->name, parent_state);
-> +       }
->
-> -               parent_state = ret;
-> +       genpd_unlock(parent);
-> +}
->
-> -               genpd_lock_nested(parent, depth + 1);
-> +static int _genpd_set_parent_state(struct generic_pm_domain *genpd,
-> +                                  struct gpd_link *link,
-> +                                  unsigned int state, int depth)
-> +{
-> +       struct generic_pm_domain *parent = link->parent;
-> +       int parent_state, ret;
->
-> -               link->prev_performance_state = link->performance_state;
-> -               link->performance_state = parent_state;
-> -               parent_state = _genpd_reeval_performance_state(parent,
-> -                                               parent_state);
-> -               ret = _genpd_set_performance_state(parent, parent_state, depth + 1);
-> -               if (ret)
-> -                       link->performance_state = link->prev_performance_state;
-> +       /* Find parent's performance state */
-> +       ret = genpd_xlate_performance_state(genpd, parent, state);
-> +       if (unlikely(ret < 0))
-> +               return ret;
->
-> -               genpd_unlock(parent);
-> +       parent_state = ret;
->
-> -               if (ret)
-> -                       goto err;
-> -       }
-> +       genpd_lock_nested(parent, depth + 1);
->
-> -       if (genpd->set_performance_state) {
-> -               ret = genpd->set_performance_state(genpd, state);
-> -               if (ret)
-> -                       goto err;
-> -       }
-> +       link->prev_performance_state = link->performance_state;
-> +       link->performance_state = parent_state;
->
-> -       genpd->performance_state = state;
-> -       return 0;
-> +       parent_state = _genpd_reeval_performance_state(parent, parent_state);
-> +       ret = _genpd_set_performance_state(parent, parent_state, depth + 1);
-> +       if (ret)
-> +               link->performance_state = link->prev_performance_state;
->
-> -err:
-> -       /* Encountered an error, lets rollback */
-> -       list_for_each_entry_continue_reverse(link, &genpd->child_links,
-> -                                            child_node) {
-> -               parent = link->parent;
-> +       genpd_unlock(parent);
->
-> -               genpd_lock_nested(parent, depth + 1);
-> +       return ret;
-> +}
-> +
-> +static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
-> +                                       unsigned int state, int depth)
-> +{
-> +       struct gpd_link *link = NULL;
-> +       int ret;
-> +
-> +       if (state == genpd->performance_state)
-> +               return 0;
->
-> -               parent_state = link->prev_performance_state;
-> -               link->performance_state = parent_state;
-> +       /* When scaling up, propagate to parents first in normal order */
-> +       if (state > genpd->performance_state) {
-> +               list_for_each_entry(link, &genpd->child_links, child_node) {
-> +                       ret = _genpd_set_parent_state(genpd, link, state, depth);
-> +                       if (ret)
-> +                               goto rollback_parents_up;
-> +               }
-> +       }
->
-> -               parent_state = _genpd_reeval_performance_state(parent,
-> -                                               parent_state);
-> -               if (_genpd_set_performance_state(parent, parent_state, depth + 1)) {
-> -                       pr_err("%s: Failed to roll back to %d performance state\n",
-> -                              parent->name, parent_state);
-> +       if (genpd->set_performance_state) {
-> +               ret = genpd->set_performance_state(genpd, state);
-> +               if (ret) {
-> +                       if (link)
-> +                               goto rollback_parents_up;
-> +                       return ret;
->                 }
-> +       }
->
-> -               genpd_unlock(parent);
-> +       /* When scaling down, propagate to parents last in reverse order */
-> +       if (state < genpd->performance_state) {
-> +               list_for_each_entry_reverse(link, &genpd->child_links, child_node) {
-> +                       ret = _genpd_set_parent_state(genpd, link, state, depth);
-> +                       if (ret)
-> +                               goto rollback_parents_down;
-> +               }
->         }
->
-> +       genpd->performance_state = state;
-> +       return 0;
-> +
-> +rollback_parents_up:
-> +       list_for_each_entry_continue_reverse(link, &genpd->child_links, child_node)
-> +               _genpd_rollback_parent_state(link, depth);
-> +       return ret;
-> +rollback_parents_down:
-> +       list_for_each_entry_continue(link, &genpd->child_links, child_node)
-> +               _genpd_rollback_parent_state(link, depth);
->         return ret;
->  }
->
->
-> ---
-> base-commit: 0fef202ac2f8e6d9ad21aead648278f1226b9053
-> change-id: 20231205-genpd-perf-order-bf33029c25ac
->
-> Best regards,
-> --
-> Stephan Gerhold <stephan@gerhold.net>
->
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
