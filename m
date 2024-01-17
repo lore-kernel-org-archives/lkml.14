@@ -1,72 +1,209 @@
-Received: from mail114-240.sinamail.sina.com.cn (mail114-240.sinamail.sina.com.cn [218.30.114.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BFD1DA4C
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 22:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC64286B4;
+	Wed, 17 Jan 2024 22:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705531928; cv=none; b=l1xhvOoORGv2f5JZdxSNjZEAkfa8IFWpyHtqdzSRDyCfR6+f+rpA+y0Cm2QN+kwGzYECZ/TzxnqGHoHvN5IbtZmGa5TnDGA2wHcp8YBRTeNxaJLeNJSBRo+3G4tQ52TrDqVpEO1eLzKYV0FMTvhXRnGpHvSflT+EZAUS5ZCHr54=
+	t=1705531951; cv=none; b=FmEZ607rw+0+aUW+Siyz0FG9W26i8pM7I5rE+rY0QTLtwXcv6v8FDk/Nw2LjAxYKyae8hCBP+kgwDR5jzLE8lCkNwFVrxgAvLb/xBGHskDigJ08YDkHduHhQfje73CSYL88GGyaSJFM7OkVezVLo+MRaI8tZwNreePaY/KDlJEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705531928; c=relaxed/simple;
-	bh=hxqOcdY5nnRMFd7npMGrrV06xfgTFJ5Vl/wDk4qAM6w=;
-	h=X-SMAIL-HELO:Received:X-Sender:X-Auth-ID:X-SMAIL-MID:X-SMAIL-UIID:
-	 From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding; b=DcILXf5nBlBv4MdFsMvXC5dTVLT2zxCPjKxVZJ5P+4dQhvdmZKRRTpf/wwB7sQ/13EqlP6mzgnbaS9BXGC1zOYthdMb+3mmOG+ZKDTppi5v2rXBuZiLWbn6UfGJvLd5C6ETQi7+X1gMmH45w5YfaG0qumSFpocqnaRTv7ZThkVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.25.116.10])
-	by sina.com (172.16.235.24) with ESMTP
-	id 65A859E900001378; Wed, 18 Jan 2024 06:51:23 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 98099045089129
-X-SMAIL-UIID: EA8EC4B079434858BA960ECF55158D6A-20240118-065123-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+bfde3bef047a81b8fde6@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] KASAN: use-after-free Read in __skb_flow_dissect (3)
-Date: Thu, 18 Jan 2024 06:51:12 +0800
-Message-Id: <20240117225112.1186-1-hdanton@sina.com>
-In-Reply-To: <000000000000498a02060de59162@google.com>
-References: <000000000000498a02060de59162@google.com>
+	s=arc-20240116; t=1705531951; c=relaxed/simple;
+	bh=doFhJfl05v+z3nBhsaH55fnA1hNGIVH9nafMEuRT5eo=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To; b=oREhnQfFsxnu5qOJW2bP30jt6ho5RPPTwGqRtfVnXO1yN7y5GyWdCgyb/NEWiyc/j52R/7MTOSbWMKIdz2aiUrEXGlsCES/xSV9ZG3/WRi0Ehe+L8YIZVJqYc5zS7LPfCE7hqRaU4EcFqtoB/P4hEzY9DqdvmxkMBA5dLjnAEUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2N70P7B; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2N70P7B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2685C433F1;
+	Wed, 17 Jan 2024 22:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705531951;
+	bh=doFhJfl05v+z3nBhsaH55fnA1hNGIVH9nafMEuRT5eo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h2N70P7BMGUXLK6Qr3U4BMXvlsuJHU1R6xM5cjyddSnaOa2/2JVfJNQr+ZVe+OI1B
+	 aZ6/hf2eVLwVTE39E8ZVH6I8bswK1oxMSM9p7xRV9py9Zi4M6vYvMcH5Q+gOZlDD3g
+	 6ig8D406FeoTa7JMVtf0NSFyjahAN2a7sQ3UM+GPGcaqBa7E9wVHcFBQ91fgCuSYdn
+	 CSCYXmrVdWkGTmSh72dcles0VKALlL7+pnupHJPvkjbtjOsXqX1w3q8cT9XqMXvnxs
+	 3j6wNDyoPHJHZl1L1Z1pw5DGeJB9aNnA4NwaJ1Jzs9f3hFJeGDspzaUzsCXZE18JjW
+	 p3D2BIp9kpxyg==
+Date: Wed, 17 Jan 2024 23:52:25 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Lennert Buytenhek <kernel@wantstofly.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: ASMedia ASM1062 (AHCI) hang after "ahci 0000:28:00.0: Using
+ 64-bit DMA addresses"
+Message-ID: <ZahaKaV1jlHQ0sUx@x1-carbon>
+References: <ZaZ2PIpEId-rl6jv@wantstofly.org>
+ <ZaaQpiW3OOZTSyXw@x1-carbon>
+ <ZahDNr97MSPNSHW_@wantstofly.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZahDNr97MSPNSHW_@wantstofly.org>
 
-On Mon, 01 Jan 2024 09:18:16 -0800
-> syzbot found the following issue on:
+Hello Lennert,
+
+On Wed, Jan 17, 2024 at 11:14:30PM +0200, Lennert Buytenhek wrote:
+> On Tue, Jan 16, 2024 at 03:20:23PM +0100, Niklas Cassel wrote:
 > 
-> HEAD commit:    f5837722ffec Merge tag 'mm-hotfixes-stable-2023-12-27-15-0..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122dfc65e80000
+> > > On kernel 6.6.x, with an ASMedia ASM1062 (AHCI) controller, on an
+> 
+> Minor correction to this: lspci says that this is an ASM1062, but it's
+> actually an ASM1061.  I think that the two parts share a PCI device ID,
+> and I've submitted a PCI ID DB change here:
+> 
+> https://admin.pci-ids.ucw.cz/read/PC/1b21/0612
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
+FWIW, the kernel states that 0x0612 is ASM1062, and 0x0611 is ASM1061:
+https://github.com/torvalds/linux/blob/v6.7/drivers/ata/ahci.c#L603-L604
 
---- x/net/core/flow_dissector.c
-+++ y/net/core/flow_dissector.c
-@@ -1164,9 +1164,11 @@ proto_again:
- 	switch (proto) {
- 	case htons(ETH_P_IP): {
- 		const struct iphdr *iph;
--		struct iphdr _iph;
+But that could of course be incorrect.
+
+
+When you are dumping the LnkCap in the PCI ID DB change request,
+are you dumping the LnkCap for the AHCI controller or the PCI bridge?
+
+(Because you use # lspci -s 27:00.0 in the PCI ID DB change request,
+but # lspci -s 28:00.0 further down in this email.)
+
+(Perhaps the PCI bride only has one PCI lane, but the AHCI controller has two?)
+
+
+> > The DMA mask is set here:
+> > https://github.com/torvalds/linux/blob/v6.7/drivers/ata/ahci.c#L967
+> > 
+> > And should be called using:
+> > hpriv->cap & HOST_CAP_64
+> > https://github.com/torvalds/linux/blob/v6.7/drivers/ata/ahci.c#L1929
+> > 
+> > Where hpriv->cap is capabilities reported by the AHCI controller itself.
+> > So it definitely seems like your controller supports 64-bit addressing.
+> 
+> Perhaps, or maybe it's misreporting its capabilities, as it is an old
+> part (from 2011 or before), and given that it doesn't seem to support
+> 64-bit MSI addressing, either, which for a part with a 64-bit DMA engine
+> would be an odd restriction:
+> 
+> # lspci -s 28:00.0 -vv | grep -A1 MSI:
+>         Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>                 Address: fee00000  Data: 0000
+> #
+
+That just claims that MSIs have to use a 32-bit PCI address.
+
+See e.g.:
+00:02.0 VGA compatible controller: Intel Corporation Haswell-ULT Integrated Graphics Controller (rev 0b) (prog-if 00 [VGA controller])
+  Subsystem: Lenovo Device 3978
+  Flags: bus master, fast devsel, latency 0, IRQ 58
+  Memory at b0000000 (64-bit, non-prefetchable) [size=4M]
+  Memory at a0000000 (64-bit, prefetchable) [size=256M]
+  I/O ports at 4000 [size=64]
+  Expansion ROM at <unassigned> [disabled]
+  Capabilities: [90] MSI: Enable+ Count=1/1 Maskable- 64bit-
+  Capabilities: [d0] Power Management version 2
+  Capabilities: [a4] PCI Advanced Features
+  Kernel driver in use: i915
+
+It has 64-bit BARs, but does not support 64-bit MSIs.
+
+
+> 
+> (I checked the available datasheets, but there is no mention of whether
+> or not the part supports 64-bit DMA.)
+
+If you are curious, hpriv->cap is the HBA capabilities reported by the
+device, see:
+https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/serial-ata-ahci-spec-rev1-3-1.pdf
+
+3.1.1 Offset 00h: CAP – HBA Capabilities
+
+Bit 31 - Supports 64-bit Addressing (S64A).
+
+It seems a bit silly that the AHCI controller vendor accidentally set this
+bit to 1.
+
+
+> Per:
+> 
+> 	https://www.asus.com/motherboards-components/motherboards/workstation/pro-ws-wrx80e-sage-se-wifi/helpdesk_bios?model2Name=Pro-WS-WRX80E-SAGE-SE-WIFI
+> 
+> However, some Googling suggests that the ASM106x loads its own firmware
+> from a directly attached SPI flash chip, and there are several versions
+> of this firmware available in the wild, with different versions of the
+> firmware apparently available for legacy IDE mode and for AHCI mode.  If
+> (some of) the AHCI logic is indeed contained inside the firmware, I
+> could see a firmware bug leading to the controller incorrectly presenting
+> itself as being 64-bit DMA capable.
+> 
+> Some poking around in the BIOS image suggests that there is no copy of
+> the ASM106x firmware inside the BIOS image.  In other words, it could be
+> that, even though the machine is running the latest available BIOS, the
+> ASM1061 might be running an older firmware version.
+> 
+> The ASM1061 firmware does not seem to be readable from software via a
+> ROM BAR, and it doesn't seem to readable from software in general (the
+> vendor-supplied DOS .exe updater tool only allows you to erase or
+> update the SPI flash), so I can't check which firmware version it is
+> currently using.
+> 
+> 
+> > If that does not work, perhaps you could try this (completely untested) patch:
+> > (You might need to modify the strings to match the exact strings reported by
+> > your BIOS.)
+> 
+> Thanks for the patch!
+
+Assuming that you just have ASM106x controllers in your system,
+you could also replace it with a simple:
+
+@@ -1799,6 +1823,10 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+        if (ahci_broken_devslp(pdev))
+                hpriv->flags |= AHCI_HFLAG_NO_DEVSLP;
  
--		iph = __skb_header_pointer(skb, nhoff, sizeof(_iph), data, hlen, &_iph);
-+		if (pskb_network_may_pull(skb, sizeof(struct iphdr)))
-+			iph = (void *) skb_network_header(skb);
-+		else
-+			iph = NULL;
- 		if (!iph || iph->ihl < 5) {
- 			fdret = FLOW_DISSECT_RET_OUT_BAD;
- 			break;
---
++       /* must set flag prior to save config in order to take effect */
++       hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
++
+ #ifdef CONFIG_ARM64
+        if (pdev->vendor == PCI_VENDOR_ID_HUAWEI &&
+            pdev->device == 0xa235 &&
+
+
+Just for testing.
+
+
+> 
+> I will do some tests with PCI passthrough to a VM, to see whether, and if
+> it does, exactly how the controller mangles DMA addresses.
+
+Were you running in a VM when testing this?
+(Usually you need to pass through all PCI devices in the same iommu group.)
+
+The errors from your previous email:
+[IO_PAGE_FAULT domain=0x0035 address=0x7fffff00000 flags=0x0000]
+[Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged
+
+could also suggest an iommu issue. Have you tried booting with iommu=off
+and/or amd_iommu=off on the kernel command line?
+(Or temporarily disable the iommu in BIOS.)
+
+
+> 
+> I've also ordered a discrete PCIe card with an ASM1061 chip on it, and I
+> will perform similar tests with that card, to see exactly where the issue
+> is, i.e. whether it is specific to this mainboard or not.
+> 
+> I will follow up once I will have more information.
+
+Looking forward to hear your findings :)
+
+
+Kind regards,
+Niklas
