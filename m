@@ -1,212 +1,166 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AB8BE49;
-	Wed, 17 Jan 2024 07:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77171BE4B
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705477523; cv=none; b=TLf0yFhgD9Dx/dWqkpTFk8gIjrRoU93qUm/53IZTDJTguZ4EVkQvRhqg392CATBlsxjvWPo0SGLd1cjncW7GKjbCqWm5BLkQ+kDAWtEFS5P7A110M0aL1ZPK7H8ZtQYhP+pC+jt+TCg+AiYlHbea2JxQn2mgw/9yXEKre2UuX5c=
+	t=1705477524; cv=none; b=lRsfQROq5xRsavYkZzdsJu1dc/Oa1lPxqVefONcF9yxHYCmvBQcDMMjQW4m4DKdLolzyJn6iSyEyZq2bytqFs9/hEG8O0FQsyTVw0UeJMcon4wzwkK4HA6xKAPVxPCN7YIdoo6JppV6yNpUFP9b91NHtykgSosoAArELevrcG3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705477523; c=relaxed/simple;
-	bh=hQv+I0Eiq+7fB9xg1HNP3chTKc1a2Bf/A03yve21M1w=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:CC:References:From:Organization:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy:
-	 X-Proofpoint-Virus-Version; b=T4UJEA9o9xtFH2IHY8cBmfWmJpJa2dztefKj8FfGxveisZZwVaZBa7SOUFGzE2Jhjo3FdJ1RviJ2msj8i9KRS/ftba23GcWID7bfmyHYhi4seXOD1GxkzdlDOe4qpPnSW3xT1Yljrr6E+zeXf3Vynp7/1pE1Lhq27jPNQE8crf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=sZNaaTxt; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1705477524; c=relaxed/simple;
+	bh=Shhx/FKoSiVovdNrE+6my8ZiagZjnjMS2WCYpBGzifw=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:
+	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
+	 X-Google-Smtp-Source:X-Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ImslpsbkxJ1YoIfOzKPHKrQXRIadmY4CO8/CE+/BdTXZGPJyzgq1z1ST/qhCF+zZsCwz/Uf5RCdziInr+1LOYFGHWxS+68Ib1HeqDR3lkXqzyH6IjZbHIHCvUnNd7Y8OMZhYuxDWeHb46gZNLCL76nTa+1JZfWYlBtX/GQOKOcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dK5pX1U7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="sZNaaTxt"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40H3x5lt020013;
-	Wed, 17 Jan 2024 08:44:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=OZrP5toRyjcJF2MlSXBcWkH6wmirRqD90mK0q6wA+8s=; b=sZ
-	NaaTxtfHG0uZgegMGyKzip7iEYjjLmR6zGfV8xvOnL1Kid70iHiDFayu6HehNrgU
-	a//XoLX3+f2/t6xhEYxJsnpz2wahW6gYJ/fJGs6UxwU3bqn0Bjx4MpSoMldru9kw
-	7Zjq7yfBUTf15XqCv4vj8uM5d1ckOq7xKdqhTxWKJgdlSrncdwytdGgK6cBGqA4d
-	ui2WFAHsofdKJEscuoCSEXi6d7JeKmTwjhc/WIv3AMTbCATg9TCPuP1zlfi3AVjL
-	xPBEyj8BcVi1Fy0fQz9pt5pgUmM4JXVT6vDKB2w1+eK8U95tBjw7XGOCSrHIahjf
-	fVSXEmqnUGFRy63nR08Q==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vm4y501dw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 08:44:53 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 19FAC10007B;
-	Wed, 17 Jan 2024 08:44:52 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E4C96212317;
-	Wed, 17 Jan 2024 08:44:51 +0100 (CET)
-Received: from [10.252.22.63] (10.252.22.63) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 17 Jan
- 2024 08:44:51 +0100
-Message-ID: <b4f21821-fbfc-42cc-8bfb-ee8d650b46e1@foss.st.com>
-Date: Wed, 17 Jan 2024 08:44:50 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dK5pX1U7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705477521;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zQRlhXHXvsZ9EW9ID9S6e0YBzlBTE1L+rSpAnIyeWDk=;
+	b=dK5pX1U7a8wtL00MRrphVZx9CjecPMqL3HyCRddhMmF0+moDWFHivbY3JeGFt5EU9hxMnr
+	VIpAq/hdE0gfTIf8u9t2cosJD3wn8uOV8cUwQlPgvWQMeNkOz6Z1ZQ1OE5UTft3AO3iiuD
+	4VOt+ziErtNz93TL7cW53m8csmOGmX0=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-503-F1r4pmLMOOamGkKyAotx1w-1; Wed, 17 Jan 2024 02:45:16 -0500
+X-MC-Unique: F1r4pmLMOOamGkKyAotx1w-1
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-6d9b050e9a8so13510824b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 23:45:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705477515; x=1706082315;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zQRlhXHXvsZ9EW9ID9S6e0YBzlBTE1L+rSpAnIyeWDk=;
+        b=by8h7xcnx+9shj1QDwqkLXNBEH/kKnfep5I8OLH4rsZWyAmh1qFf6MmYQGqnEWvM5a
+         bEXqD+O+AM22EgCVQO7wBJ4fFzlze8/oRqoG1vckJKArOh9runO3VSTIPvxSglSN8FBy
+         AXyu6UCNNs9ixhs6DIVKxo5Cq05EesWRD10QBOyJLIr50DriIYa77gfDhdALYESnjJ1+
+         7WtE68nq3QXhCLiaLlDLA70jTmd1PsvCDguPZxWBcT+J0tI7j8iFcGsVM4fVYlNvhPcP
+         QSF5eTtCRlccRDlpqqBMMZ6x6qETHykO4rFnNvEFomqBC0oQ3dozaMivnVeM/0J0kgPj
+         /9Zg==
+X-Gm-Message-State: AOJu0YwFXEonFoI9EnnFzFtRjbxtIEZ4xJlbJONRAfaHmGlNyeCziRDL
+	girnaJRAkVZ+NCBTZ8DIiv0WTzXS8BTzwifZGNjzzdzxtRCVInZGLhWdPUEXr+eoXhajJm3LOmk
+	/ZiwxfIlFs609EbKzITS4YtjXDhi9tQzR
+X-Received: by 2002:a05:6a00:8c7:b0:6d9:9126:cab5 with SMTP id s7-20020a056a0008c700b006d99126cab5mr11556293pfu.57.1705477515216;
+        Tue, 16 Jan 2024 23:45:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHGcH2MWUG40J/v2AJAZDVhtAU4GRwWSH/jgWPbD8wsqM8XRIdzMPaD3wvgm9yUXrndNlaftg==
+X-Received: by 2002:a05:6a00:8c7:b0:6d9:9126:cab5 with SMTP id s7-20020a056a0008c700b006d99126cab5mr11556283pfu.57.1705477514814;
+        Tue, 16 Jan 2024 23:45:14 -0800 (PST)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id y14-20020a056a00190e00b006d9a0902937sm791572pfi.149.2024.01.16.23.45.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 23:45:14 -0800 (PST)
+Date: Wed, 17 Jan 2024 15:38:13 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Ondrej Kozina <okozina@redhat.com>
+Cc: kexec@lists.infradead.org, Milan Broz <gmazyland@gmail.com>, 
+	Thomas Staudt <tstaudt@de.ibm.com>, Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, 
+	Kairui Song <ryncsn@gmail.com>, dm-devel@redhat.com, Jan Pazdziora <jpazdziora@redhat.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: Re: [PATCH v2 0/5] Support kdump with LUKS encryption by reusing
+ LUKS volume key
+Message-ID: <qsioibxdey2cbxkpyv2gjg6a77votsg6ld2jp7ocvbiezaylxt@me3kgvu24vbs>
+References: <20240110071522.1308935-1-coxu@redhat.com>
+ <1edc32f2-858b-4afa-a883-2632be6d909e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: remoteproc: add compatibility for TEE
- support
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>
-References: <20240115135249.296822-1-arnaud.pouliquen@foss.st.com>
- <20240115135249.296822-3-arnaud.pouliquen@foss.st.com>
- <20240116192145.GA265232-robh@kernel.org>
-From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Organization: STMicroelectronics
-In-Reply-To: <20240116192145.GA265232-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-17_03,2024-01-16_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1edc32f2-858b-4afa-a883-2632be6d909e@redhat.com>
 
+On Tue, Jan 16, 2024 at 11:37:10AM +0100, Ondrej Kozina wrote:
+>Hi Coiby,
 
+Hi Ondrej,
 
-On 1/16/24 20:21, Rob Herring wrote:
-> On Mon, Jan 15, 2024 at 02:52:47PM +0100, Arnaud Pouliquen wrote:
->> The "st,stm32mp1-m4-tee" compatible is utilized in a system configuration
->> where the Cortex-M4 firmware is loaded by the Trusted execution Environment
->> (TEE).
->> This compatible is used in both the Linux and OP-TEE device-tree.
->> - In OP-TEE, a node is defined in the device tree with the
->>   st,stm32mp1-m4-tee to support signed remoteproc firmware.
->>   Based on DT properties, OP-TEE authenticates, loads, starts, and stops
->>   the firmware.
->> - On Linux, when the compatibility is set, the Cortex-M resets should not
->>   be declared in the device tree.
+>
+>I've started working on a patchset for systemd utility. I have one 
+>question/suggestion:
+>
+>On 10/01/2024 08:15, Coiby Xu wrote:
+>>LUKS is the standard for Linux disk encryption. Many users choose LUKS
+>>and in some use cases like Confidential VM it's mandated. With kdump
+>>enabled, when the 1st kernel crashes, the system could boot into the
+>>kdump/crash kernel and dump the memory image i.e. /proc/vmcore to a
+>>specified target. Currently, when dumping vmcore to a LUKS
+>>encrypted device, there are two problems,
 >>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
->> ---
->>  .../bindings/remoteproc/st,stm32-rproc.yaml   | 53 +++++++++++++++----
->>  1 file changed, 44 insertions(+), 9 deletions(-)
+>>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>>    machines, a system administrator may not have a chance to enter the
+>>    password to decrypt the device in kdump initramfs after the 1st kernel
+>>    crashes; For cloud confidential VMs, depending on the policy the
+>>    kdump kernel may not be able to unseal the key with TPM and the
+>>    console virtual keyboard is untrusted
 >>
->> diff --git a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
->> index 370af61d8f28..9fdfa30eff20 100644
->> --- a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
->> +++ b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
->> @@ -16,7 +16,12 @@ maintainers:
->>  
->>  properties:
->>    compatible:
->> -    const: st,stm32mp1-m4
->> +    enum:
->> +      - st,stm32mp1-m4
->> +      - st,stm32mp1-m4-tee
->> +    description:
->> +      Use "st,stm32mp1-m4" for the Cortex-M4 coprocessor management by Linux
-> 
-> What if other OSs want to manage the M4?
-
-Right, for instance this compatibles are also used by U-boot. I will change
- "by Linux"  by "by non secure context"
-
-
-> 
->> +      Use "st,stm32mp1-m4-tee" for the Cortex-M4 coprocessor management by secure context
->>  
->>    reg:
->>      description:
->> @@ -142,21 +147,41 @@ properties:
->>  required:
->>    - compatible
->>    - reg
->> -  - resets
->>  
->>  allOf:
->>    - if:
->>        properties:
->> -        reset-names:
->> -          not:
->> -            contains:
->> -              const: hold_boot
->> +        compatible:
->> +          contains:
->> +            const: st,stm32mp1-m4
->> +    then:
->> +      if:
->> +        properties:
->> +          reset-names:
->> +            not:
->> +              contains:
->> +                const: hold_boot
->> +      then:
->> +        required:
->> +          - st,syscfg-holdboot
->> +          - resets
->> +      else:
->> +        properties:
->> +          st,syscfg-holdboot: false
->> +        required:
->> +          - reset-names
-> 
-> Looks like a new required property.
-
-I just realize that it does not make sense. We execute this
-only if "reset-names" contains "hold_boot".
-I will remove it
-
-Thanks!
-Arnaud
-
-> 
->> +          - resets
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: st,stm32mp1-m4-tee
->>      then:
->> -      required:
->> -        - st,syscfg-holdboot
->> -    else:
->>        properties:
->>          st,syscfg-holdboot: false
->> +        reset-names: false
->> +        resets: false
->>  
->>  additionalProperties: false
->>  
->> @@ -188,5 +213,15 @@ examples:
->>        st,syscfg-rsc-tbl = <&tamp 0x144 0xFFFFFFFF>;
->>        st,syscfg-m4-state = <&tamp 0x148 0xFFFFFFFF>;
->>      };
->> +  - |
->> +    #include <dt-bindings/reset/stm32mp1-resets.h>
->> +    m4@10000000 {
->> +      compatible = "st,stm32mp1-m4-tee";
->> +      reg = <0x10000000 0x40000>,
->> +            <0x30000000 0x40000>,
->> +            <0x38000000 0x10000>;
->> +      st,syscfg-rsc-tbl = <&tamp 0x144 0xFFFFFFFF>;
->> +      st,syscfg-m4-state = <&tamp 0x148 0xFFFFFFFF>;
->> +    };
->>  
->>  ...
->> -- 
->> 2.25.1
+>>  - LUKS2 by default use the memory-hard Argon2 key derivation function
+>>    which is quite memory-consuming compared to the limited memory reserved
+>>    for kdump. Take Fedora example, by default, only 256M is reserved for
+>>    systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
+>>    to be reserved for kdump. Note if the memory reserved for kdump can't
+>>    be used by 1st kernel i.e. an user sees ~1300M memory missing in the
+>>    1st kernel.
+>>Besides users (at least for Fedora) usually expect kdump to work out of
+>>the box i.e. no manual password input is needed. And it doesn't make
+>>sense to derivate the key again in kdump kernel which seems to be
+>>redundant work.
 >>
+>>This patch set addresses the above issues by reusing the LUKS volume key
+>>in kdump kernel with the help of cryptsetup's new APIs
+>>(--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
+>>this kdump copy of LUKS volume key,
+>>
+>>  1. After the 1st kernel loads the initramfs during boot, systemd
+>>     use an user-input passphrase or TPM-sealed key to de-crypt the LUKS
+>>     volume key and then save the volume key to specified keyring
+>>     (using the --link-vk-to-keyring API) and the key will expire within
+>>     specified time.
+>>
+>>  2.  A user space tool (kdump initramfs builder) writes the key description to
+>>     /sys/kernel/crash_dm_crypt_key to inform the 1st kernel to save a
+>>     temporary copy of the volume key while building the kdump initramfs
+>
+>So this volume key copy cached by systemd utility in 1st kernel does 
+>not have to be readable from userspace.
+>
+>>
+>>  3. The kexec_file_load syscall saves the temporary copy of the volume
+>>     key to kdump reserved memory and wipe the copy.
+>>
+>>  4. When the 1st kernel crashes and the kdump initramfs is booted, the kdump
+>>     initramfs asks the kdump kernel to create a user key using the
+>>     key stored in kdump reserved memory by writing the key
+>>     description to /sys/kernel/crash_dm_crypt_key. Then the LUKS
+>>     encrypted devide is unlocked with libcryptsetup's
+>>     --volume-key-keyring API.
+>
+>Unlike here where it has to readable from uspace so that libcryptsetup 
+>can verify the volume key.
+>
+>Is it correct?
+>O.
+
+Oh, my assumed --link-vk-to-keyring only support user key which must be
+wrong. So yes, you are absolutely correct that "volume key copy cached
+by systemd utility in 1st kernel does not have to be readable from
+userspace". Thanks for the suggestion!
+
+
+-- 
+Best regards,
+Coiby
+
