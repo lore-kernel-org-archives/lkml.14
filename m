@@ -1,68 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95311DDD8
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1364C14264
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705484834; cv=none; b=XZZqdi/fPgeIKasVwmrhf/6wZm056qH2HsYQ8f6moHqFmlpkTCQ1dhVMgo8B3m1Ui1l910csUblft1+0aazdPsoKH9X/LsqMQoN9/FGsXzpsomHwbiwhxPzTK0dHScle8w6SZ6sUgcTZ7JFAIc3nbVsgcuex46RKNUgLjk6NfMg=
+	t=1705484963; cv=none; b=DC5ZVDC5wdlVS4Eu9tTcbQjXbVfvCuup44Vm4YZ29tqDipbQawKpSXYX676RYAdzrafawRS620i958FUuYdARJeV+scJqDqdn371U50N31OEUOw3rITdWf4t+3JRoopB8QQ4r4vm2iByW0FcbR+22PFoeDbuCrhiqsO33KKAiX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705484834; c=relaxed/simple;
-	bh=DzKkZ7pwJrE9T6YvgnxaoBeYmKwKiuExIE8dk9CyibA=;
-	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
-	 Message-Id:Date:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Mailer; b=cjaw3bvQ9OXzcpixLDGgYrDsHjkodNBcmYr+p8i28M4nSv2olZz1roQc/fUBlGDywTtv4mYGYWJ35iYeouVgzfHQ/xksteVhfcyRxHGgIolguB0z/GBsEWi4KTsEOrFpWd/aBSfHFs6F89CHgAYOAqGJXZU9yx4ajlYw+jxYDoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCTf7WkK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCTf7WkK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 193A3C43399;
-	Wed, 17 Jan 2024 09:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705484834;
-	bh=DzKkZ7pwJrE9T6YvgnxaoBeYmKwKiuExIE8dk9CyibA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=PCTf7WkKYcQsxfBy5YaMXL+ElkORn7WfuEF8eFRn2qRb61DC+JtbEK8GFyFu8mUlw
-	 I1cYBv8LyBf8Ikv5AxqVrChMnQ9NKFjO3bIL7p/a3AnL2R4NL+lpb1v8eFLxf1Hb5D
-	 dkbaKdsyb6t5+8MZMeDJYwgJ5G+H4sRzm3GRGvUoVaAz/wbnobeCpMyTLbSXvpCCOt
-	 qRUTwHp0Kyurh5QmjUuA1x8xkuIVTvtpsaCpKn7db4IRokIT0svzO9o864B2EcfG5Z
-	 bjCTb3Pm0Ls+7VxbxW3r7wNLS+HSulQsgard3UH5d5G0nCP/WXhU3ZUU+FfggJtlIi
-	 GdSqHeYw/uzjw==
-From: Maxime Ripard <mripard@kernel.org>
-To: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Michal Wajdeczko <michal.wajdeczko@intel.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, 
- Javier Martinez Canillas <javierm@redhat.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <20240115171351.504264-6-michal.winiarski@intel.com>
-References: <20240115171351.504264-1-michal.winiarski@intel.com>
- <20240115171351.504264-6-michal.winiarski@intel.com>
-Subject: Re: (subset) [PATCH v5 5/5] drm/tests: managed: Add a simple test
- for drmm_managed_release
-Message-Id: <170548483207.96553.13751158453989527090.b4-ty@kernel.org>
-Date: Wed, 17 Jan 2024 10:47:12 +0100
+	s=arc-20240116; t=1705484963; c=relaxed/simple;
+	bh=7GWS1V6NjJSHOFU7bkOXSHE/D7l3qrvU5HZcUfH1Vnk=;
+	h=X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:X-CID-BVR:
+	 X-CID-BAS:X-CID-FACTOR:X-UUID:Received:Received:X-ns-mid:Received:
+	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding; b=NcndrdFmYeVZvnpi7+ljvMn4+5sEs8rIsbkW6qgqh74qpMVsBWfiaXkW1vxl4UfhnXMmVOyJvViJyRdlGIbiRynsNINw2VHBr1BRxSp+UQouaH00Mg4RE0/Yv06ceaHWs+vjFUZZs3CsoD9meGXS/GbllIx9EvfmZdqkuCVremg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 6a3c479c79494d19a82d0990871f5611-20240117
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:99b7ab5f-8fc9-4f37-af81-8e90cc9060ab,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.35,REQID:99b7ab5f-8fc9-4f37-af81-8e90cc9060ab,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:5d391d7,CLOUDID:f0ac432f-1ab8-4133-9780-81938111c800,B
+	ulkID:240117174916YVG0YATC,BulkQuantity:0,Recheck:0,SF:66|24|17|19|44|102,
+	TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
+	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 6a3c479c79494d19a82d0990871f5611-20240117
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 757765849; Wed, 17 Jan 2024 17:49:15 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 0B315E000EB9;
+	Wed, 17 Jan 2024 17:49:15 +0800 (CST)
+X-ns-mid: postfix-65A7A29A-856248760
+Received: from kernel.. (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 911CEE000EB9;
+	Wed, 17 Jan 2024 17:49:14 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: aahringo@redhat.com,
+	teigland@redhat.com
+Cc: gfs2@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] fs: dlm: Simplify the allocation of slab caches in dlm_lowcomms_msg_cache_create
+Date: Wed, 17 Jan 2024 17:49:12 +0800
+Message-Id: <20240117094912.155729-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.12.3
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 15 Jan 2024 18:13:51 +0100, Michał Winiarski wrote:
-> Add a simple test that checks whether the action is called when
-> drmm_managed_release is called.
-> 
-> 
+Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+to simplify the creation of SLAB caches.
 
-Applied to drm/drm-misc (drm-misc-next).
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ fs/dlm/lowcomms.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
-Maxime
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index 6296c62c10fa..712165a1e567 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -248,7 +248,7 @@ struct kmem_cache *dlm_lowcomms_writequeue_cache_crea=
+te(void)
+=20
+ struct kmem_cache *dlm_lowcomms_msg_cache_create(void)
+ {
+-	return kmem_cache_create("dlm_msg", sizeof(struct dlm_msg), 0, 0, NULL)=
+;
++	return KMEM_CACHE(dlm_msg, 0);
+ }
+=20
+ /* need to held writequeue_lock */
+--=20
+2.39.2
 
