@@ -1,92 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1B21EA66;
-	Wed, 17 Jan 2024 12:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA171EA84;
+	Wed, 17 Jan 2024 12:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705495876; cv=none; b=nxjfwNEKenx4X68FVtOVl5EEX3gV9qXL/U5RGLZKXXr8eVtCBfsj6/zJ0xEBURVr+WadDUZBApWZK7zirD9ChzG20nMNOI6fRWEGgiCOr/0uQmCqqwsY89ZqKIAFqOHLQ9Mb8U1X0LtzHvF1qHr2yoO/lQ/iK5eqLnPlK48qH8I=
+	t=1705495895; cv=none; b=GRYY1TGI2+ll0K6aVd6uxj7eTNn+jEi9ltc/itB4mc83eQSGiN4bzlRJKHt0IrjU2J+VBC9HojKtOZshkID25jU9QcAiO9UXUdc7pI23lD4dAw2OiJJ/R8ARtYSJD95LuHHAobdOw4zgO+IgP+QRKfO+AbqQiUz2CC2RdKbVty4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705495876; c=relaxed/simple;
-	bh=WmJLRAU5oXetMyOkN2h2YdwPSM5CqSZifVrpaIDjSDM=;
-	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=svlgLFK8AZtA2VR4koyAfkuIq/I3jV/1/8fPtWlrj0gSMLv6PzGG47nsEaTu/YTHJwrH+/JEH+EmWgiTgfYlGdkO+tt524Ia8sSNKEq1ZjUiB85cwt/6hILcasnQYnF47oH1qiFM903w8FahjnhkcbnBSYdhYe5udOwywme3cdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzEOWWnX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705495895; c=relaxed/simple;
+	bh=yO3PcPcr3TdNoSrWsl3ZcspYVZ/UFMIpQ5ze0HLpjts=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding; b=Zgu3LK9AKqm7pm/ZuoVMgdLGrVFSxtpMgByRpO1qBWMkNBbGLRfGE0czjlF4JMK37KadPu20YwV2jVLirGndlsOALJX7B7kmMq+gbFADcb91iUFrMP0tMrA0iViuxPaQxz2VuX2fqpDYv7BLdUZHIO77+jeGlkldI7/CjLS5UG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=En3/+hhV; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzEOWWnX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFEFC433C7;
-	Wed, 17 Jan 2024 12:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705495875;
-	bh=WmJLRAU5oXetMyOkN2h2YdwPSM5CqSZifVrpaIDjSDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LzEOWWnXRo3Q4Hpy2+ku7iBz9Gd1twyi/lmwKnWM+7/jjSrvyp4NErfaE01ZliRgz
-	 j70/pMh+66EmeSQnG9us0BKF/7OsaqyCOBf0XzQ9Rqb0TecevhcKIetAqvixhEtvow
-	 XPAEaXeZ/HbM3+C9xqEAKm8nbxxb4Zjtg9mTbr0jrS82n71pyxChVuth3lKxrWx2Ol
-	 8x1u+CFUopgwp1aAUXPpfvcl5UcZNFmN6qkXrUy6kKS78GTMa+6ldfggRoeYZORQ7d
-	 /ukgsCODd304EyWHfVS/vcKL1wCXXC3pneNFpGSoLCdyB356eOai2c+GeQbphUuI2k
-	 dyjeTJvyVg0wA==
-Received: from johan by xi.lan with local (Exim 4.96.2)
-	(envelope-from <johan@kernel.org>)
-	id 1rQ5O4-0005Vv-0V;
-	Wed, 17 Jan 2024 13:51:20 +0100
-Date: Wed, 17 Jan 2024 13:51:20 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>, gregkh@linuxfoundation.org,
-	hdegoede@redhat.com, fabrice.gasnier@foss.st.com,
-	quic_jackp@quicinc.com, saranya.gopal@intel.com,
-	quic_linyyuan@quicinc.com, andriy.shevchenko@linux.intel.com,
-	minhuadotchen@gmail.com, johan+linaro@kernel.org, robh@kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.7 044/108] usb: typec: ucsi: fix UCSI on buggy
- Qualcomm devices
-Message-ID: <ZafNSGNaw310xgTm@hovoldconsulting.com>
-References: <20240116194225.250921-1-sashal@kernel.org>
- <20240116194225.250921-44-sashal@kernel.org>
- <ZaeJ8Sh4JLo5GAQw@hovoldconsulting.com>
- <CAA8EJpoQZc0f2HusJOMa_45bh8Eh=sVg-aOUbNR3S0+oQQQ+MQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="En3/+hhV"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-559eefa9dddso137638a12.1;
+        Wed, 17 Jan 2024 04:51:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705495892; x=1706100692; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dEtTvFikr2vB2TRmutE89D+8r4XFqE11/VEjO0rkFkE=;
+        b=En3/+hhVnjgfqqzPmsme7Pd+1b0oaMhGv/xIh6aZVc8WT6V23tR87K/oQyoz1cVkDP
+         dkBZ04Ch0YL8WMnR5Zh+rcUFmfeie88lmtiAhJklGKjTMEr6SV7j5/MGL6AZqrPbeWjq
+         za+kaqc1jyON6SUhWvwoSgLYj0sp/ZRVK/EnAqy+V9Kce0kgxQh5vdBwZkkLY2Ml3ClE
+         5f2z819gfRkq9FhTnPgmXH9TpJF9HpjWRQBSHL5ydSk4oFQ8ZwSIkcId4KQII44rUWuC
+         2xOAdeLnVFAJztxDJvJu+TFydj3/AhBuqpBQ9F71jFW73DZH4MaMNPrLFqgbmWp9429i
+         N9HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705495892; x=1706100692;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dEtTvFikr2vB2TRmutE89D+8r4XFqE11/VEjO0rkFkE=;
+        b=YA2PrKma0EfeUNE6wHZQ6P9nmiyOMjxrAsDbMJ6CLkeKbaTTBOqmswHiUhQdqFPaZZ
+         3tO+LCl1t0UNigua20KE18XrxRBMuHl8AD4oleThAVkDmGGXx2rkuP8pxka01jtAYluH
+         V3JFyrColf/HUxnLY0UpjhjzTh6FMTg7EacBvAW1A5VTh1tA4oWJfWYuge3VJ9ixmOsv
+         1hcPogCtQpl991kbGaFBzXjr9OrMuuUdf7Jw0EyPCc1S5V5PO7FXn2MelK0/URIzdnlm
+         cvwX0axMhl+6gCc7HL7hHytp5urmAJojcwWVsbGGN4xQE+VhDRd+rBzvcQByh4aKrB9W
+         IGmw==
+X-Gm-Message-State: AOJu0YxT1NnF1E/Du+lrxS0vn0UqCDkv5q1YIKLI8OkJaKg1JGOU/AdZ
+	E7BNwRRxC4q0qb2ZZB6In9E=
+X-Google-Smtp-Source: AGHT+IF5Fh76o8X2KLAFPOWd9wsg6hqUbiHuyN84/6DtCphNtKqt/sOebS66Fh819kgSB2rnwfq4Pg==
+X-Received: by 2002:a17:906:2972:b0:a23:1163:24be with SMTP id x18-20020a170906297200b00a23116324bemr4253332ejd.95.1705495892316;
+        Wed, 17 Jan 2024 04:51:32 -0800 (PST)
+Received: from HYB-hhAwRlzzMZb.ad.analog.com ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id t13-20020a17090616cd00b00a2ea45637desm1277247ejd.112.2024.01.17.04.51.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 04:51:31 -0800 (PST)
+From: Dumitru Ceclan <mitrutzceclan@gmail.com>
+To: 
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>
+Subject: [PATCH v4 0/5] Add support for LTC6373
+Date: Wed, 17 Jan 2024 14:51:09 +0200
+Message-ID: <20240117125124.8326-1-mitrutzceclan@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJpoQZc0f2HusJOMa_45bh8Eh=sVg-aOUbNR3S0+oQQQ+MQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 17, 2024 at 02:17:40PM +0200, Dmitry Baryshkov wrote:
-> On Wed, 17 Jan 2024 at 10:03, Johan Hovold <johan@kernel.org> wrote:
-> >
-> > On Tue, Jan 16, 2024 at 02:39:10PM -0500, Sasha Levin wrote:
-> > > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > >
-> > > [ Upstream commit 1d103d6af241dbfc7e11eb9a46dff65db257a37f ]
-> > >
-> > > On sevral Qualcomm platforms (SC8180X, SM8350, SC8280XP) a call to
-> > > UCSI_GET_PDOS for non-PD partners will cause a firmware crash with no
-> > > easy way to recover from it. Since we have no easy way to determine
-> > > whether the partner really has PD support, shortcut UCSI_GET_PDOS on
-> > > such platforms. This allows us to enable UCSI support on such devices.
+This patch series adds support for the LTC6373 Instrumentation Amplifier within
+the existing HMC425A driver.
 
-> > Correct me if I'm wrong Dmitry, but while the commit message makes this
-> > sound like a fix, it is not needed unless you backport follow-on patches
-> > that enable UCSI on these platforms.
-> >
-> > So this one can be dropped from all stable queues (unless you're
-> > backporting patches that enable new features and that depend on this
-> > one).
-> 
-> Exactly. It didn't have the Fixes: tag. So I'm completely unsure why
-> it ended up in the autosel queue at all.
+The LTC6373 is a silicon, 3-bit Fully-Differential digital instrumentation
+amplifier that supports the following programmable gains (Vout/Vin):
+ G = 0.25, 0.5, 1, 2, 4, 8, 16 + Shutdown.
+The programmable interface consists of 3 digitally controled inputs.
 
-AUTOSEL is Sasha's machine-learning based tool for picking potential
-fixes also among commits that lack a Fixes tag.
+V3->V4
+ - Fix git commit message typo and remove newline between tags
+V2->V3
+ - Use return instead of break in *_gain_dB_to_code()
+ - Add new line before return in *_code_to_gain_dB()
+ - Match parameter alignment for added _powerdown functions
+ - Add precursor patch for using pointers in the match table
+ - Add chip_info attributes: has_powerdown and powerdown_val
+ - Change probe logic to use has_powerdown for default powerdown state
+ - Added 'Fixes' tag to commit message of 'add conditional GPIO array...' 
+V1->V2
+ Driver:
+ - Fix chip info table indent
+ - Remove enable attribute
+ - Add ext_info powerdown attribute
+ - Enable by default powerdown attribute
+ - Set default gain after disabling powerdown to min value
+ Binding:
+ - Fix conditional checking of GPIO array size for LTC6373
+ - Add precursor commit for correctly checking gpio size depending upon compatible
 
-Johan
+Dumitru Ceclan (5):
+  dt-bindings: iio: hmc425a: add conditional GPIO array size constraints
+  dt-bindings: iio: hmc425a: add entry for LTC6373
+  iio: amplifiers: hmc425a: move conversion logic
+  iio: amplifiers: hmc425a: use pointers in match table
+  iio: amplifiers: hmc425a: add support for LTC6373 Instrumentation
+    Amplifier
+
+ .../bindings/iio/amplifiers/adi,hmc425a.yaml  |  47 +++-
+ drivers/iio/amplifiers/hmc425a.c              | 253 +++++++++++++-----
+ 2 files changed, 236 insertions(+), 64 deletions(-)
+
+-- 
+2.42.0
+
