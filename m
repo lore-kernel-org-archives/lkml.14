@@ -1,90 +1,106 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168B3208A6
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E78020305
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705501459; cv=none; b=Icx2Q0SsxZfK+oslRBHB+2BSyEhFvKfeSZvAvTLJOKCYoOcOtmlJAqsOBESpJi22oSaOj5xOhvP+HoWAhTXp43iEh3lOcUgMvc94Pn/ukmSr7rjt0LztxEX/Ed+R30zSwxCcCzBMjmwoORBtRXP835VVfZysN6o2f/QmtkwUzf0=
+	t=1705501565; cv=none; b=GzESjTBA43ZyYL0+B/ycGKPwNqdRFkjR8SRzHtLwAdBigBSXN8019uiDsxFpKII4Wrs0Q9O4nOrOTc4ibiCAXffL+M220M0ten/QC1XKiu45PK/k/AYuwiI+6ZZQ1mCrWH46StLaqi3vSCX0xeD1AK/1lZsFIfH9u3ZlYx1OnaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705501459; c=relaxed/simple;
-	bh=Mp3GlUUoo01KnvzhVZ4uGnXB45N7hYQAgn8WLuIHFWg=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=B/yPBpGwC9Ln9LfEdp00Gyfj0wsVVFPL6QNMelKHsh1wBiPgzJHK7LuAD4Z+got9m7tBjFdjy1VblsEQJsQFsq4o8sDlSYgJsnXUJ/Zcw7k+rZ0rMK59btxsvpSQF2kvkkilNxd6lTLnLaJul7SH9Na9W741Pcp82KVIkNgtd0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZAvP4Nrg; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1705501565; c=relaxed/simple;
+	bh=IZH1c4qN0Nyx3Qk86dKABx77jYlSji40Miq7xcjuCTY=;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:Subject:
+	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-MBO-RS-META:X-MBO-RS-ID; b=aCsh10J+i2JxIOja5I+BnEsxdO2+z4DG4kUmFnFTOVd1nXaAoLtPf5cDg4Vx5RTevK+cS8UdIt0kL1l6Sdk4sKteGY1s+tM2k46wSOKuWU3LN73QzwyJUCIRtGh0lsIrili3K6tXDzCS3gKvRuGVUKOgMi2mTV0RAclsaNflCXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=iTM2+qGk; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZAvP4Nrg"
-Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DF5547EC;
-	Wed, 17 Jan 2024 15:23:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1705501387;
-	bh=Mp3GlUUoo01KnvzhVZ4uGnXB45N7hYQAgn8WLuIHFWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZAvP4NrgylHtA2g5djrWcEdwtXZB1cAqCj2R2E7ke3jj3Dlehc6XREpG7y/5a8tt1
-	 Lm6f64tQwV6VvzBEbU4yLB918ZJ5ZMDLJZWF6s8R47G9/eht7tNlOhCP4d8Cz4Qmua
-	 XuKtSf7xgV1mM+h2vZG345z8Yy80X9J20pTZGLx4=
-Date: Wed, 17 Jan 2024 16:24:20 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-	michal.simek@amd.com, dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] drm: xlnx: zynqmp_dpsub: Make drm bridge discoverable
-Message-ID: <20240117142420.GE17920@pendragon.ideasonboard.com>
-References: <20240112234222.913138-1-anatoliy.klymenko@amd.com>
- <20240112234222.913138-2-anatoliy.klymenko@amd.com>
- <98a9f4f1-dd55-47c3-bb1b-07e201b299cd@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="iTM2+qGk"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4TFSfX3cp8z9scX;
+	Wed, 17 Jan 2024 15:18:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1705501124;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/04+AUA96JyRGSg7FmQ1Co1hzmApsEtK4+LDUq5qS9I=;
+	b=iTM2+qGklqomZrkR34x42hazC6kJ+uog03ScY7x+OSQ+DV8q006tTFpvfLKKULMIBRiWqv
+	27EL7iDbCy3fj06IcW2/nA9snnoZ1mVGwxb0sjVItvJfcbcbrPRzmIIMsCtIUdJHx1utqX
+	iPGZOTjyAMDlsbbhtmX4sji/Tq5cLiwpnleaR9feX9p53K5sKdyyjMYvrIxhWLdTr/XZMS
+	f8kEpLtVb4oZWUy2ygT7u/DRkJRsvxCvHxSRknEkc41Hao6kXYMWU9+9+UEiHAcBWDYEJI
+	etDj9lIp3kF4OjJdtUQlYD0Oy4YxpA22IM/DhB6dTh7upk9IVj0HCzWbAKpyHg==
+Message-ID: <48824a5d-223a-4ad2-b198-5fcb75a9cfde@mailbox.org>
+Date: Wed, 17 Jan 2024 15:18:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <98a9f4f1-dd55-47c3-bb1b-07e201b299cd@ideasonboard.com>
+Subject: Re: [PATCH 0/2] drm/atomic: Allow drivers to write their own plane
+ check for async
+Content-Language: de-CH-frami, en-CA
+To: Xaver Hugl <xaver.hugl@gmail.com>, Pekka Paalanen <ppaalanen@gmail.com>
+Cc: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, daniel@ffwll.ch,
+ =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <maraeo@gmail.com>,
+ linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, kernel-dev@igalia.com,
+ alexander.deucher@amd.com, Joshua Ashton <joshua@froggi.es>,
+ Dave Airlie <airlied@gmail.com>, christian.koenig@amd.com
+References: <20240116045159.1015510-1-andrealmeid@igalia.com>
+ <20240116114522.5b83d8b6@eldfell>
+ <a6099681-1ae9-48ef-99bc-d3c919007413@igalia.com>
+ <20240116151414.10b831e6@eldfell>
+ <47c6866a-34d6-48b1-a977-d21c48d991dc@igalia.com>
+ <CAFZQkGyOQ5Tfu++-cHqgZ9NOJxqxm8cAF5XT18LmisuPAUbXAg@mail.gmail.com>
+ <20240117105509.1984837f@eldfell>
+ <CAFZQkGzite-CZoJcV80kNPe==OWFZa_cR1x3QRKuLd=HdOFw-A@mail.gmail.com>
+From: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>
+In-Reply-To: <CAFZQkGzite-CZoJcV80kNPe==OWFZa_cR1x3QRKuLd=HdOFw-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: pgtcyajtxp3yqt1pxr8ffrrr7u18ejhe
+X-MBO-RS-ID: f6b5e7383e43717d63d
 
-On Wed, Jan 17, 2024 at 04:06:31PM +0200, Tomi Valkeinen wrote:
-> On 13/01/2024 01:42, Anatoliy Klymenko wrote:
-> > Assign device of node to bridge prior registering it. This will
-> > make said bridge discoverable by separate crtc driver.
+On 2024-01-17 13:57, Xaver Hugl wrote:
+> Am Mi., 17. Jan. 2024 um 09:55 Uhr schrieb Pekka Paalanen <ppaalanen@gmail.com>:
+>> Is it important enough to be special-cased, e.g. to be always allowed
+>> with async commits?
 > 
-> I think a few words on why this is needed (and why it wasn't needed 
-> before) would be nice.
+> I thought so, and sent a patch to dri-devel to make it happen, but
+> there are some
+> concerns about untested driver paths.
+> https://lists.freedesktop.org/archives/dri-devel/2024-January/437511.html
 > 
-> Other than that:
+>> Now that I think of it, if userspace needs to wait for the in-fence
+>> itself before kicking KMS async, that would defeat much of the async's
+>> point, right? And cases where in-fence is not necessary are so rare
+>> they might not even exist?
+>>
+>> So if driver/hardware cannot do IN_FENCE_FD with async, is there any
+>> use of supporting async to begin with?
 > 
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> KWin never commits a buffer where IN_FENCE_FD would actually delay the
+> pageflip; it's really only used to disable implicit sync, as there's some edge
+> cases where it can wrongly delay the pageflip. The waiting for buffers to become
+> readable on the compositor side isn't really significant in terms of latency.
+> 
+> If hardware doesn't support IN_FENCE_FD with async commits, checking if the
+> fence is already signaled at commit time would thus still make things work, at
+> least for KWin.
 
-Agreed. With a better commit message,
+That's how IN_FENCE_FD (and implicit sync) is handled anyway, in common code: It waits for all fences to signal before calling into the driver to commit the atomic commit.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+I can't see why this wouldn't work with async commits, the same as with synchronous ones, with any driver.
 
-> > Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
-> > ---
-> >   drivers/gpu/drm/xlnx/zynqmp_dp.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > index a0606fab0e22..d60b7431603f 100644
-> > --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > @@ -1721,6 +1721,7 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
-> >   	bridge->ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID
-> >   		    | DRM_BRIDGE_OP_HPD;
-> >   	bridge->type = DRM_MODE_CONNECTOR_DisplayPort;
-> > +	bridge->of_node = dp->dev->of_node;
-> >   	dpsub->bridge = bridge;
-> >   
-> >   	/*
 
 -- 
-Regards,
+Earthling Michel Dänzer            |                  https://redhat.com
+Libre software enthusiast          |         Mesa and Xwayland developer
 
-Laurent Pinchart
