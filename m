@@ -1,59 +1,59 @@
 Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510D621A19
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F295E224DA
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 14:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705500909; cv=none; b=VtqFKZsQHz2N4+ZE3EbRf6zSZFbJtCA4OVwg8asyORptkgK+f0Q1BmY2GmBSzSXVI3uPRMBm1+FHQB1VAzK44Vx0016gbRDT7qt4/KNAFJ4VEHQ0zVOeukfyA7nW0e1ORAWBDcQ71ddSD8YCTnohE1t3i2Lxvh/VF2oBfzDcYfI=
+	t=1705500913; cv=none; b=LsTCiglRl21L0RUW40zlr3ZhYK2zT7VO1UKwKvSIgcV9P3LmZnc2ev4mAfbutHiE1GAIFnjBgyBydLvUeoAkH8FR3iMQViO2Vp86+9Ecv/cG0j0awnam/Lnz0gpHBgjYWauSnykISdkqcWEJCvzp35bPu6ZOR1KoYLGUFBFxFyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705500909; c=relaxed/simple;
-	bh=DrmYJbwpv8RVrBaCOAySn0hApY2UP4eG38NIM3IFk5w=;
+	s=arc-20240116; t=1705500913; c=relaxed/simple;
+	bh=R2ihv3gxBjZQJ8LHAqGvREa3UZH1OP8g3M6pOjjvNd0=;
 	h=Received:DKIM-Signature:Received:Received:Received:Received:From:
 	 To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding:Content-Type:
 	 X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID:
-	 X-Proofpoint-Virus-Version; b=kMxSlmDAqkPyJtXFHTbMtcGZkt6Ne+Tx3GEkMcRJoTsu3/AV2BJB984/wXtiAiLH0MuYQQ0rLPSBZ4Q/NRPxQVXn+TC/499hdmk8XR4Mzmcz2JYA2t1uRrvGaT2iKh5H/3d5JHoN3UP9Ep+ddrzQp3YGnLwrOy64IjnB+4cjYwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=LmEOAJxG; arc=none smtp.client-ip=67.231.148.174
+	 X-Proofpoint-Virus-Version; b=N+QvQWRAqPypHUjIa7KTQuK8cj8OWmSB7yJFPI56fRltjgubnhzztD3SWuhvcorgny84uWdhcR0uzkJ5gdAqO8K6+r4sGca/DzJs1fDyAlavw7Z0YP78RVFIZpbt5XLsmcz3JN1ee7I7avjz0GZcbIRb+CA/+BI7VF0NQ7KaY7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=O/fsvbkW; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="LmEOAJxG"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="O/fsvbkW"
 Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40H7jfHh028536;
-	Wed, 17 Jan 2024 06:14:48 -0800
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40H7jROq028480;
+	Wed, 17 Jan 2024 06:14:56 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=zo41x27c4kcVqmTh43FB/0d5x1krHnjvte4oiC06x+E=; b=LmE
-	OAJxGpsu0A1Vo6q7FUpeLRx7pafIP/fl1ytcFclFCkWwZRv3aEddZdOd6ZUuGhAz
-	siBW9l9Yi1RbbYBtuIwuuYYqJA5IMWOibKh7Anr96/t7hvR8+/rMxOwhZfr19WKY
-	vD5gcb8+7I/+XfPNLM3QnEZnK/A9Z7PTYngnw6v0WrYcGVvD+cxVFYCtTknK4Plb
-	vJEKuFpstWJXD6lXxUHEdqhivwU8QofQgcZbQMrMpDaA9UmWOjvMvi6xSJKS/3GY
-	Tg07T4paMRYTbBrUaXiZ/n4/lkTp6txI61KrRLm96HAXv85PCGtAPFelAVp/TdRX
-	FIv8i0sF5gZLRjA1Gng==
+	pfpt0220; bh=l+S3NRJZhZMZgic+Qg3QaXyHk6lYRiz6QfTJLOdTtvU=; b=O/f
+	svbkW6gIfyjwmzl/FgCh5iDYg3mix3P3+KVpgMAEqve/+AsSgxL6BV4lvUhkCoHf
+	mCGvyeGIDFklERsAt54ZI7TLXsfmgiivYxvmJLRpi9zm6iczAXQYRHxhXd4EBwTk
+	fXFC67TQA1r6rWymkarDh1f9Owr/THgfkfkJtWqkLpLwhDOm12Y+kGsQE88KBkDd
+	U+TwIFtfKlCC6OTlsNNu1AHA0FqFJVi6UA24loSUsGZZ36BpijjYHORHXoEadpiu
+	1tLPGvJsv3Pa/gYb3067n5D0Px+5+Xi+bnYbD/Pzucmgs5EHDq/Hd52AXjknIQb3
+	Tk1UEan28F1T0uLDDmA==
 Received: from dc5-exch02.marvell.com ([199.233.59.182])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3vpask952s-1
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3vpask9538-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 06:14:48 -0800 (PST)
+	Wed, 17 Jan 2024 06:14:56 -0800 (PST)
 Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
  (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 17 Jan
- 2024 06:14:46 -0800
+ 2024 06:14:54 -0800
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
  (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Wed, 17 Jan 2024 06:14:46 -0800
+ Transport; Wed, 17 Jan 2024 06:14:54 -0800
 Received: from localhost.localdomain (unknown [10.28.36.167])
-	by maili.marvell.com (Postfix) with ESMTP id 492455B6932;
-	Wed, 17 Jan 2024 06:14:43 -0800 (PST)
+	by maili.marvell.com (Postfix) with ESMTP id 00B125B6932;
+	Wed, 17 Jan 2024 06:14:50 -0800 (PST)
 From: Amit Singh Tomar <amitsinght@marvell.com>
 To: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
 CC: <fenghua.yu@intel.com>, <reinette.chatre@intel.com>, <james.morse@arm.com>,
         <gcherian@marvell.com>, <robh@kernel.org>, <peternewman@google.com>,
         <dfustini@baylibre.com>, <jonathan.cameron@huawei.com>,
         Amit Singh Tomar <amitsinght@marvell.com>
-Subject: [PATCH v1 09/14] fs/resctrl: set configuration based on Control type
-Date: Wed, 17 Jan 2024 19:44:00 +0530
-Message-ID: <20240117141405.3063506-10-amitsinght@marvell.com>
+Subject: [PATCH v1 11/14] arm_mpam: Fix Downstream and internal priority mask
+Date: Wed, 17 Jan 2024 19:44:02 +0530
+Message-ID: <20240117141405.3063506-12-amitsinght@marvell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240117141405.3063506-1-amitsinght@marvell.com>
 References: <20240117141405.3063506-1-amitsinght@marvell.com>
@@ -65,157 +65,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: ZUM7RWHKmN4PPOpzbZYqgyMr01Hrf6Xw
-X-Proofpoint-GUID: ZUM7RWHKmN4PPOpzbZYqgyMr01Hrf6Xw
+X-Proofpoint-ORIG-GUID: f_mntF0stDJ-zIfagyjHlMshtsHXYiSJ
+X-Proofpoint-GUID: f_mntF0stDJ-zIfagyjHlMshtsHXYiSJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-17_08,2024-01-17_01,2023-05-22_02
 
-Now that, we have support for different control types, divided into
-the BASIC and PRIORITY controls types. Schemata list is pertained to
-the SCHEMAT_BASIC control type that is used to set up/configure
-CAT (Cache Allocation Technology) and MBA (Memory Bandwidth Allocation)
-capabilities, and SCHEMAT_DSPRI used to configure downstream priority
-partitioning. Let's add boilerplate changes to set the control
-configuration based on different control types.
+MPAMF_PRI_IDR_NS[DSPRI_WD] determines the number of implemented bits in
+the downstream priority field (MPAMCFG_PRI_NS). For instance, if the value
+of DSPRI_WD is 4, then the maximum value for dspri is 0xf, and mask should
+be GENMASK(3,0).
+
+But with current implementation, it turned out to be GENMASK(4,0) .i.e.
+0x1f instead of 0xf.
+
+u16 dspri = GENMASK(rprops->dspri_wd, 0);
+
+Let's fix it (for both downstream, and internal), by subtracting 1 from
+DSPRI_WD, and INTPRI_WD value.
 
 Signed-off-by: Amit Singh Tomar <amitsinght@marvell.com>
 ---
 Changes since RFC:
-                * No change, it's new patch.
+		* Include fix for INTPRI as well.
 ---
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 6 ++++--
- drivers/platform/mpam/mpam_resctrl.c      | 9 ++++++---
- fs/resctrl/ctrlmondata.c                  | 3 ++-
- fs/resctrl/monitor.c                      | 3 ++-
- fs/resctrl/rdtgroup.c                     | 3 ++-
- include/linux/resctrl.h                   | 6 ++++--
- 6 files changed, 20 insertions(+), 10 deletions(-)
+ drivers/platform/mpam/mpam_devices.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index b34e86cfc111..4423d8979b5e 100644
---- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -39,7 +39,8 @@ static bool apply_config(struct rdt_hw_domain *hw_dom,
- }
+diff --git a/drivers/platform/mpam/mpam_devices.c b/drivers/platform/mpam/mpam_devices.c
+index 3ef9e5d70afc..9953f2050d35 100644
+--- a/drivers/platform/mpam/mpam_devices.c
++++ b/drivers/platform/mpam/mpam_devices.c
+@@ -1099,8 +1099,8 @@ static void mpam_reprogram_ris_partid(struct mpam_msc_ris *ris, u16 partid,
+ 	struct mpam_msc *msc = ris->msc;
+ 	u16 bwa_fract = MPAMCFG_MBW_MAX_MAX;
+ 	struct mpam_props *rprops = &ris->props;
+-	u16 dspri = GENMASK(rprops->dspri_wd, 0);
+-	u16 intpri = GENMASK(rprops->intpri_wd, 0);
++	u16 dspri = GENMASK((rprops->dspri_wd - 1), 0);
++	u16 intpri = GENMASK((rprops->intpri_wd - 1), 0);
  
- int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_domain *d,
--			    u32 closid, enum resctrl_conf_type t, u32 cfg_val)
-+			    u32 closid, enum resctrl_conf_type t, u32 cfg_val,
-+			    enum resctrl_ctrl_type type)
- {
- 	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
- 	struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(d);
-@@ -59,7 +60,8 @@ int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_domain *d,
- 	return 0;
- }
+ 	lockdep_assert_held(&msc->lock);
  
--int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid)
-+int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid,
-+				enum resctrl_ctrl_type type)
- {
- 	struct resctrl_staged_config *cfg;
- 	struct rdt_hw_domain *hw_dom;
-diff --git a/drivers/platform/mpam/mpam_resctrl.c b/drivers/platform/mpam/mpam_resctrl.c
-index 0de09e9deee5..7a797f9bcaed 100644
---- a/drivers/platform/mpam/mpam_resctrl.c
-+++ b/drivers/platform/mpam/mpam_resctrl.c
-@@ -920,7 +920,8 @@ u32 resctrl_arch_get_config(struct rdt_resource *r, struct rdt_domain *d,
- }
- 
- int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_domain *d,
--			    u32 closid, enum resctrl_conf_type t, u32 cfg_val)
-+			    u32 closid, enum resctrl_conf_type t, u32 cfg_val,
-+			    enum resctrl_ctrl_type type)
- {
- 	int err;
- 	u32 partid;
-@@ -983,7 +984,8 @@ int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_domain *d,
- }
- 
- /* TODO: this is IPI heavy */
--int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid)
-+int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid,
-+				enum resctrl_ctrl_type type)
- {
- 	int err = 0;
- 	struct rdt_domain *d;
-@@ -1000,7 +1002,8 @@ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid)
- 				continue;
- 
- 			err = resctrl_arch_update_one(r, d, closid, t,
--						      cfg->new_ctrl);
-+						      cfg->new_ctrl,
-+						      type);
- 			if (err)
- 				return err;
- 		}
-diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
-index f1f57bbfa094..005a91192847 100644
---- a/fs/resctrl/ctrlmondata.c
-+++ b/fs/resctrl/ctrlmondata.c
-@@ -405,7 +405,8 @@ ssize_t rdtgroup_schemata_write(struct kernfs_open_file *of,
- 			continue;
- 
- 		if (!strcmp(resname, s->name)) {
--			ret = resctrl_arch_update_domains(r, rdtgrp->closid);
-+			ret = resctrl_arch_update_domains(r, rdtgrp->closid,
-+							  s->ctrl_type);
- 			if (ret)
- 				goto out;
- 		}
-diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-index 6c0804273753..5eccb38cb7d7 100644
---- a/fs/resctrl/monitor.c
-+++ b/fs/resctrl/monitor.c
-@@ -514,7 +514,8 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
- 		return;
- 	}
- 
--	resctrl_arch_update_one(r_mba, dom_mba, closid, CDP_NONE, new_msr_val);
-+	resctrl_arch_update_one(r_mba, dom_mba, closid, CDP_NONE, new_msr_val,
-+				SCHEMA_BASIC);
- 
- 	/*
- 	 * Delta values are updated dynamically package wise for each
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 92d9bee210eb..d71fac0ae4d4 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -3136,7 +3136,8 @@ static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
- 				return ret;
- 		}
- 
--		ret = resctrl_arch_update_domains(r, rdtgrp->closid);
-+		ret = resctrl_arch_update_domains(r, rdtgrp->closid,
-+						  s->ctrl_type);
- 		if (ret < 0) {
- 			rdt_last_cmd_puts("Failed to initialize allocations\n");
- 			return ret;
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 2c0dc01d070e..f28d4ff737dc 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -334,7 +334,8 @@ int resctrl_rdtgroup_show(struct seq_file *seq, u32 closid, u32 rmid);
- u32 resctrl_arch_get_num_closid(struct rdt_resource *r);
- 
- struct rdt_domain *resctrl_arch_find_domain(struct rdt_resource *r, int id);
--int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid);
-+int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid,
-+				enum resctrl_ctrl_type type);
- 
- /* For use by arch code that needs to remap resctrl's smaller CDP closid */
- static inline u32 resctrl_get_config_index(u32 closid,
-@@ -374,7 +375,8 @@ resctrl_get_domain_from_cpu(int cpu, struct rdt_resource *r)
-  * Must be called on one of the domain's CPUs.
-  */
- int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_domain *d,
--			    u32 closid, enum resctrl_conf_type t, u32 cfg_val);
-+			    u32 closid, enum resctrl_conf_type t, u32 cfg_val,
-+			    enum resctrl_ctrl_type ctrl_type);
- 
- u32 resctrl_arch_get_config(struct rdt_resource *r, struct rdt_domain *d,
- 			    u32 closid, enum resctrl_conf_type type,
 -- 
 2.25.1
 
