@@ -1,75 +1,72 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3142232A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 15:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38EC21A0C
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 15:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705506155; cv=none; b=SUiIrMnunPdHIncEpebW9XXpfqS5U8e9hjLatrQJHNr+vbdoj1xoKIwjz+ziUROHMDfOLSjk1RXCZS++6cFlZ+Hfm4ffU/dVk5q33HXGZx3z8Fo4IshQACoKLBAWBsFGkGcXWrSgyX7CSuwz2OktCuL7/2WXojFwLCz8Dj6133c=
+	t=1705506309; cv=none; b=rrPKQ/3KFwCnEPGiK0/R+8DKFP8N/gxgiLWOIL8Co1ooA4lvnsPDvNqtxlikO6waT/yzQkXRhTLHgOpbh/JopBYNbVRcASTOxcek3eBeT9bDUpBfteY6B+koSprzMAKSbXsVCyti1bs03sBBd6MeXG2NOCLcwavfLRdWZxOTHtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705506155; c=relaxed/simple;
-	bh=PIaNYP7tKeLz3DbZoaeyg/wZV1PgwT/q0h8pnJkFj8A=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=su8bDWn+t57/2quKK5O8D7m/7nfhYMXF2wENqIeLa7UFmK6JUNJ07n2rBePh44OLYlGMD5Z97FZUkQu1OF0dUEE/MOuJyfOU1ZyeO8GqsKCOkvvIWS0vt9YW5o7dYg3fK5+MCqEwkyDKjoMXZawOonUrbvMRzFoRJV9tryFV6GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=SksRX1d6; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="SksRX1d6"
-Received: from localhost.localdomain (2.general.binli.uk.vpn [10.172.193.47])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id E5AEB3F6E1;
-	Wed, 17 Jan 2024 15:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1705506144;
-	bh=AoyQYoWLWFR0VSl3BzntiZASNvn8wxYLWDvkVYPdumk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=SksRX1d69ZG1ixWKGjJKDZYVQsvJqjcTlUJf3ldGK0f/uTHYrjw7ClcTe2BOy/Mzh
-	 5TCQmwIo83Tl/bYTFqnfNL/wRzRDUOepYLeAV5yZRPzvdSs3FxCi8Sxa1z8x4EjzQg
-	 sdEQqzh2swiWeQY59FW7osBZwctZF6C1PBFy9rOTaviunRAxmiVFHny1ZiyHP5a8u4
-	 6hwGOfzjLrkcJzmR27er98UOdUIof/VzochhSXS/fVU7XoNbXfVYK1R3MA5gY3TC+s
-	 ec6/h+9XVrvt6vqX8oefoEDtVHtW+uuhWP9q4eez6na80B1HYjT2zNZ4/Hk6zx1ngT
-	 6SWcRxPwyB2KQ==
-From: Bin Li <bin.li@canonical.com>
-To: tiwai@suse.com
-Cc: alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org,
-	aaron.ma@canonical.com,
-	libin.charles@gmail.com
-Subject: [PATCH] ALSA: hda/realtek: Enable headset mic on Lenovo M70 Gen5
-Date: Wed, 17 Jan 2024 23:41:23 +0800
-Message-Id: <20240117154123.21578-1-bin.li@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1705506309; c=relaxed/simple;
+	bh=fRfIfB275i6tbdA5GzDC+PKs467tlGzzsVCQ7WQHn4M=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:MIME-Version:X-Received:Date:In-Reply-To:
+	 X-Google-Appengine-App-Id:X-Google-Appengine-App-Id-Alias:
+	 Message-ID:Subject:From:To:Content-Type; b=NP3D2RlYnYL1JF+hecrpETrzyf2xo9A7pgrehuCmxSsgDUEQ+4UvnWl7ZGgexyDf50bqqqJ9FMsUJCFN8suPCbrDCdRfFt46+Qu4cMMNcNiU4D61vu79d4LzhlGkajormUUqA6CfqoFyefG+aavlnthf189racpCCF+GSCLXFQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3618e0060d1so12927285ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:45:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705506307; x=1706111107;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WnzSZvHffCKHfFrIDjf0t4Z+bI+RUL9lfT0kZL9cMH8=;
+        b=KMwkQNkzvhi3qxGJiZnigand5TiZUGLRinE+viXPbC1FSWgNhjrUWP3r7ofqNXia+e
+         iEu3wlg/UJ51WplGMwjYT7EgPso8q/AR1w7kGOwhvUfi37eImU/QQmFap1r8evxeONMN
+         agwIt1JYpyWHsN7LUkhpJ/SZJYajE9U6bMK0aAYEwjDtEqTbdb35MOKfkplJ0E7mSJW6
+         dIEckGtpQ8NA820s3aimR6gJ4eLAg2sT3O/WKrXSoIhPHON0QJF+Hf4humnMAwAS7eGa
+         sMRpT247Ubv4pgWQg6hZDTZoruZWOcUnxUkIFFotR64SDcGEiBP2MOhFQjSobv2bHU9B
+         Lr3A==
+X-Gm-Message-State: AOJu0YyycEMnuYANBJo/RBbnhGYcW1TmuVyJ064//olH4ePiEwyEjiV7
+	xOmSfU8AbMZFsaWYHpfnn19juvFd6KVJS0m1GqphYCB+du4l
+X-Google-Smtp-Source: AGHT+IEHwp2hpT3E9epLxabct7NyFU5ltsKSnDZZxzN5wpx4Cpjqcqc/8T25g25kKwor1m71AYCu8tCu/wCXyCVlNf6cyHxS+RhW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:12ce:b0:360:7c34:ffa7 with SMTP id
+ i14-20020a056e0212ce00b003607c34ffa7mr1284200ilm.1.1705506307119; Wed, 17 Jan
+ 2024 07:45:07 -0800 (PST)
+Date: Wed, 17 Jan 2024 07:45:07 -0800
+In-Reply-To: <tencent_891761177606DD73662373096203B5C44305@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000992331060f2621c9@google.com>
+Subject: Re: [syzbot] [bluetooth?] general protection fault in btintel_read_version
+From: syzbot <syzbot+830d9e3fa61968246abd@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Lenovo M70 Gen5 is equipped with ALC623, and it needs
-ALC283_FIXUP_HEADSET_MIC quirk to make its headset mic work.
+Hello,
 
-Signed-off-by: Bin Li <bin.li@canonical.com>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+syzbot tried to test the proposed patch but the build/boot failed:
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index b68c94757051..7057e888d373 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10231,6 +10231,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x3176, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x17aa, 0x3178, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x17aa, 0x31af, "ThinkCentre Station", ALC623_FIXUP_LENOVO_THINKSTATION_P340),
-+	SND_PCI_QUIRK(0x17aa, 0x334b, "Lenovo ThinkCentre M70 Gen5", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x17aa, 0x3801, "Lenovo Yoga9 14IAP7", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
- 	SND_PCI_QUIRK(0x17aa, 0x3802, "Lenovo Yoga DuetITL 2021", ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
- 	SND_PCI_QUIRK(0x17aa, 0x3813, "Legion 7i 15IMHG05", ALC287_FIXUP_LEGION_15IMHG05_SPEAKERS),
--- 
-2.34.1
+failed to checkout kernel repo https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git on commit 943b9f0ab2cf: failed to run ["git" "fetch" "--force" "--tags" "fc608f7504e8b3e110eb6e7b798cef357818c5e1" "943b9f0ab2cf"]: exit status 128
+fatal: couldn't find remote ref 943b9f0ab2cf
+
+
+
+Tested on:
+
+commit:         [unknown 
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 943b9f0ab2cf
+kernel config:  https://syzkaller.appspot.com/x/.config?x=12af1d067b6a6d19
+dashboard link: https://syzkaller.appspot.com/bug?extid=830d9e3fa61968246abd
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10f9e90be80000
 
