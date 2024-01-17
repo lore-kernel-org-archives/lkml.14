@@ -1,93 +1,130 @@
-Received: from office2.cesnet.cz (office2.cesnet.cz [78.128.248.237])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF3321A15;
-	Wed, 17 Jan 2024 15:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.128.248.237
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC23022301
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705507081; cv=none; b=dts0hmdtdMeQIaK9yLR3kaX1lNqoNm6Jf8fY0jiysYSs46ZfoWGOoL/RYazZhQhRajeEudvw5qzGsDQRwzz5C3bpP1E+4+Lhcq/4KvF7qwpMGikNcGyOQe3Bi9d5P2gGhEVPWkrCgKT5zHt5ZUBNZMIoExJ+/bFmDRrfwaTiT0U=
+	t=1705507311; cv=none; b=E1ZZAKLsDKGsJ4DZ/rbF51NbbzBEv3T7A+n0wVsARQtc3XzFTN3BKoHcVdJPn74eO0APSsSWRGLyY8XEpwU4hGvb6hP8DK5pCcP3OVZd+E9LPf1yznU9PtdmcPyDpohhOBAcUGUdlDtVQtdbisWpDyDOU8ytUj9YQ5iTrWb/CLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705507081; c=relaxed/simple;
-	bh=5eIV2ECbqThsSC3N7XQpfP+YzIOdiuURgqyHz3CBRLk=;
-	h=DKIM-Signature:Received:Resent-Date:Resent-Message-ID:Resent-From:
-	 Resent-To:Resent-Cc:Message-ID:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:To:Cc; b=eAYkla1Pjc7CuUM1I8lP7lMoI8K6mAOLUt3ios1/w3kwCGWHcvM5eO5nsGJs8iFlB4fawIW5MzQeVrGjY7WB4ljcLCj1ka9Dh21jLUPtJRCFD3rQqWW3QVXdn83DM2OEkyA+7CZyQsMqvYT6lDVHQiBT3XsJ8aj+LG8XQWMaGto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cesnet.cz; spf=pass smtp.mailfrom=cesnet.cz; dkim=pass (2048-bit key) header.d=cesnet.cz header.i=@cesnet.cz header.b=Z/MDljio; arc=none smtp.client-ip=78.128.248.237
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cesnet.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cesnet.cz
+	s=arc-20240116; t=1705507311; c=relaxed/simple;
+	bh=wLSVYE15E2g90Dj0K7HUb1DitgDJMY1HXgqE3IAaJfE=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding; b=uohFaVn5EP9281DQrmjpXjaMMs3pz58SsjpKmpn/3WVHMB16inzPg7XtPK14gjunjpzkms+W8PG94RAOOmc5IaKC1+1WEutcO0JMgOxCVrz3oNFdbRyH5CzNemyon/QX5Pf/MEC0VZ84pSyJ/sIbPcCGm6Z/DHpAAy+cHLYAeZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aqhsRBoW; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cesnet.cz header.i=@cesnet.cz header.b="Z/MDljio"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cesnet.cz;
-	s=office2-2020; t=1705506735;
-	bh=UVRbAJjGBCaUJ9jH+NLdOpNygaBZ83+KFG+cEO56Tk8=;
-	h=Resent-Date:Resent-From:Resent-To:Resent-Cc:From:Date:Subject:To:
-	 Cc;
-	b=Z/MDljioECiWXNTycDSwwYxnldNQGLyOPJzRLskim2kiKPn8DYB8tPP4FuBxvaIHB
-	 G3HMjCvSmhifwh5xCvC7GIsy4rj46t8ytCRwcUXpUFcwJSMGIPXXMbMKGUPPBErPBG
-	 XGtRYoqoz0YuCIM/USkmwbE8/9l9gDEGSESa6AWLxVHSFN72dE1VulrDKlrbLuTdjK
-	 +g+Mf/b/vEc8CpoRQqndVPfI9UuVbi64miMF+wvLIP+gna+QKcOxWweAc99wlEq0Ao
-	 34lr7ApgHvm+1BB4JI1jiDM8x/ez6ctjnjCqnGV+NNBVoPXiEpLdEfWugynj0hxtcn
-	 ZbBnPip+/+KGg==
-Received: from localhost (unknown [IPv6:2a07:b241:1002:700:41fe:11a9:b352:1c39])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by office2.cesnet.cz (Postfix) with ESMTPSA id 628111180072;
-	Wed, 17 Jan 2024 16:52:12 +0100 (CET)
-Resent-Date: Wed, 17 Jan 2024 16:52:10 +0100
-Resent-Message-ID: <262d0a5c-1813-4e64-899c-549aa5cf80a0@cesnet.cz>
-Resent-From: =?iso-8859-1?Q?Jan_Kundr=E1t?= <jan.kundrat@cesnet.cz>
-Resent-To: <linux-perf-users@vger.kernel.org>
-Resent-Cc: "Yann E. MORIN" <yann.morin.1998@free.fr>,
- <linux-kernel@vger.kernel.org>
-Message-ID: <e0fc158239e73f22405c78d5b3219c266e3763be.1705506665.git.jan.kundrat@cesnet.cz>
-From: =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>
-Date: Wed, 17 Jan 2024 16:50:47 +0100
-Subject: [PATCH] perf build: don't hardcode pkg-config path
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aqhsRBoW"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50ea9daac4cso11881271e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 08:01:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705507308; x=1706112108; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RPUZBZDrfdYl4F0b5cPRIc1XdwQaC23i574HsCddaAI=;
+        b=aqhsRBoWYZsp3mXhbHvf3T+adEsrC3ucM+vcdeDWh3WEE8M1J7Mw9hkO0pG56pJqxK
+         WYmb/VNA0Qbv+EnwQZ0TlH4a1dqcyqnyJaSqUKOcVitMVredvmHsyv1aJisCLHlJ/U7H
+         ZmnnRuTjtp8sm/s6reLnDQ2+q8QIWWNzyyDvPReRRihmc+6NkN/sVadju/yJMEURVoe3
+         HtV5SkoaXP1FuJPH8wxIbmfx5lX8rKEFbAs/Sizb9Cvl/uWzzL/BTKbDQ1iAfJIELlSS
+         4UvIzm8SpQxya9F2BAlGvVE2I/+THQvK834oetxXF+myF1KdGb3MtRVEuqYcWdGb6rAU
+         kDOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705507308; x=1706112108;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RPUZBZDrfdYl4F0b5cPRIc1XdwQaC23i574HsCddaAI=;
+        b=iY1oXbbDuKo6Hf+FNSX7twvSQJC+EtFPWBuGvA3ewPHKISVp752KecezWsGG63DjL6
+         gTdUKE7ypSORzWuCHtcUcXdAQlfPPG2XPZ4nvT1LctJpm4cCPghQT3zzgOJhjaYDLhqp
+         niHeLgYjGJhkqwAk/+GQ5KlqjmSXYJHSEiXQJwq/5b2AjbdbxVNK9baRi9Alf7htNQ39
+         hXCi1QUn69BtfX0Kw0XktsxvO9ZB0urRHPlcWXC+VlSMzzM0uxADE804dzcz9oC9fkiv
+         1t2AuxFBgDiD4pCJPLrswlYCxi6y8TL5R2auQ8kREWnwk+d3xIV+Jw6iX7jI7cjNNium
+         iYug==
+X-Gm-Message-State: AOJu0YzcpY+miu5TriS7iZ+0ZdACuc+zWPfs61fled6dLnz2Srm2aVqr
+	3pj9sYxUo0kdPHBKkiJeMelpeKFa9T8FXg==
+X-Google-Smtp-Source: AGHT+IGnzExKU0R4Qn+CYcC37yXpWuIxghDl3sUWiaidmjt27s2vQQnDPD+7b4ohIsNOYcVEgtoseQ==
+X-Received: by 2002:a05:6512:b19:b0:50e:2bf0:dd6a with SMTP id w25-20020a0565120b1900b0050e2bf0dd6amr5479909lfu.13.1705507307888;
+        Wed, 17 Jan 2024 08:01:47 -0800 (PST)
+Received: from krzk-bin.. ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id l18-20020a1709061c5200b00a2ed534f21esm834409ejg.63.2024.01.17.08.01.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 08:01:47 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] ASoC: allow up to eight CPU/codec DAIs
+Date: Wed, 17 Jan 2024 17:01:44 +0100
+Message-Id: <20240117160144.1305127-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: linux-perf-users@vger.kernel.org
-Cc: Yann E. MORIN <yann.morin.1998@free.fr>,
-    linux-kernel@vger.kernel.org
 
-On Buildroot and when building for Arm using the Bootlin toolchain, the
-actual `pkg-config` is named just `pkg-config`, not
-`arm-linux-pkg-config`. This patch allows the external build system
-(such as Buildroot) to pass a working path.
+Sound card on Qualcomm X1E80100 CRD board will use eight DAIs in one DAI
+link, so increase the limit.
 
-This is already done correctly in tools/build/feature/Makefile and
-tools/thermal/tmon/Makefile and also fixed in other places many years
-ago (9961aa665b70e47d6c80141c4a2482266010f246), but for some reason it
-was never fixed in this file.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Jan Kundrát <jan.kundrat@cesnet.cz>
-To: linux-perf-users@vger.kernel.org
-Cc: Yann E. MORIN <yann.morin.1998@free.fr>
-Cc: linux-kernel@vger.kernel.org
 ---
- tools/perf/Makefile.perf | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 86569f230e60..b69ab2ae77c6 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -188,7 +188,7 @@ HOSTLD  ?= ld
- HOSTAR  ?= ar
- CLANG   ?= clang
+The sound card machine driver is already accepted, but the DTS was not
+posted yet. I plan to post the DTS soon, after merge window.  The
+almost-ready-work-in-progress showing 8 codecs is available here:
+
+https://github.com/krzk/linux/blob/n/audio-sm8650-on-neil-codelinaro-topic-sm8650-upstream-integ/arch/arm64/boot/dts/qcom/x1e80100-crd.dts#L175
+---
+ sound/soc/soc-core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index f8524b5bfb33..516350533e73 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1037,7 +1037,7 @@ static int soc_dai_link_sanity_check(struct snd_soc_card *card,
+ 	return -EINVAL;
+ }
  
--PKG_CONFIG = $(CROSS_COMPILE)pkg-config
-+PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
- 
- RM      = rm -f
- LN      = ln -f
+-#define MAX_DEFAULT_CH_MAP_SIZE 7
++#define MAX_DEFAULT_CH_MAP_SIZE 8
+ static struct snd_soc_dai_link_ch_map default_ch_map_sync[MAX_DEFAULT_CH_MAP_SIZE] = {
+ 	{ .cpu = 0, .codec = 0 },
+ 	{ .cpu = 1, .codec = 1 },
+@@ -1046,6 +1046,7 @@ static struct snd_soc_dai_link_ch_map default_ch_map_sync[MAX_DEFAULT_CH_MAP_SIZ
+ 	{ .cpu = 4, .codec = 4 },
+ 	{ .cpu = 5, .codec = 5 },
+ 	{ .cpu = 6, .codec = 6 },
++	{ .cpu = 7, .codec = 7 },
+ };
+ static struct snd_soc_dai_link_ch_map default_ch_map_1cpu[MAX_DEFAULT_CH_MAP_SIZE] = {
+ 	{ .cpu = 0, .codec = 0 },
+@@ -1055,6 +1056,7 @@ static struct snd_soc_dai_link_ch_map default_ch_map_1cpu[MAX_DEFAULT_CH_MAP_SIZ
+ 	{ .cpu = 0, .codec = 4 },
+ 	{ .cpu = 0, .codec = 5 },
+ 	{ .cpu = 0, .codec = 6 },
++	{ .cpu = 0, .codec = 7 },
+ };
+ static struct snd_soc_dai_link_ch_map default_ch_map_1codec[MAX_DEFAULT_CH_MAP_SIZE] = {
+ 	{ .cpu = 0, .codec = 0 },
+@@ -1064,6 +1066,7 @@ static struct snd_soc_dai_link_ch_map default_ch_map_1codec[MAX_DEFAULT_CH_MAP_S
+ 	{ .cpu = 4, .codec = 0 },
+ 	{ .cpu = 5, .codec = 0 },
+ 	{ .cpu = 6, .codec = 0 },
++	{ .cpu = 7, .codec = 0 },
+ };
+ static int snd_soc_compensate_channel_connection_map(struct snd_soc_card *card,
+ 						     struct snd_soc_dai_link *dai_link)
 -- 
-2.43.0
-
+2.34.1
 
