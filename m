@@ -1,110 +1,110 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9C8225A1
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 17:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1B5225AA
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 17:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705511537; cv=none; b=dyE/6RTPXumTGFI8brWgtTGLOxa12LZP72skv6wNHJ/7grUJuJ1uD7YmoXHMIIL+jOytsSeHa9WauVI9DQh8nI4Azg4vbCIAUx2g+npSUpb2DUOQk14qQOgbdHa82qQycWr+YBE6PeFYO8AGXVWDhLyj1WZqmsbtKZzi5/sev38=
+	t=1705511717; cv=none; b=H6CfAWrWF6MTYcBWaMBaLsMZ2M5pZCnToEjsuraF5mDNlw43z/7QHaX1SRSuUa1ChI2GWo13EPxUsNjpQHKUOgW3IQV+4mtDgEuIQQ1l7qHlfmehZ7bqXyRyT6x+xJ1sMP96McSfZBMV79hz318BDqb0oJLQkGBox+4JtjQ5iGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705511537; c=relaxed/simple;
-	bh=jmlCqKtLGMs4Kwsd9u38y4zOPmq6VA6dw+7SLfxbteU=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Sender:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rf3Af/R5DGtmiqUCiwCB8cNLk4u0FJlGE55Rp/winETTGVZ/gGQeMq/q/zz1D+T2gyQux4DlRhX5FKxQ5lUIYEmc8ZzfRqiHjgN2Zgd5VqrjxdxzMnSlieM8UtC9twFmBot4wkaozKKlO+7WymBnNfdZiuoAdGjvXHZGc1VwgD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NbACLZtX; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705511717; c=relaxed/simple;
+	bh=T7IslF0lI3yblMUodVhB9tJHIl2XHIH3degOHlEEIZ4=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:Content-Language:To:Cc:
+	 References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Scanned-By; b=LFukDD/KsU25dg+f8k7eo4i2ihmUBYwr+JRC1WqNbhEGkStP0Porfm4G5qK8Drk4JJP4lyEOKst77yc7wEGEtlt2eT9Fj786s9aYX2VTD0NNdMBV8C3dHFaWvjvz//aDndDDzYLU5haPW+TSCiJEp6Fn+3dnWP1q+8zkrl613n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=POFlDrid; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbACLZtX"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6d9cb95ddd1so4906244b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 09:12:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705511535; x=1706116335; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4bWrXBozZxWT+Le+JKj0QjMD23koe1KxVtSt7dBjPW4=;
-        b=NbACLZtXAB5O5t1OLzVliUAT7bJc64/shxZjaPugQwWcE+Bf/lfDAXHouLaguUIVIG
-         uv4i8Jad4313oAuSTll8W2sn3VdlHhBf5kLygBejJC7N/IWazcDZ0fHWD9tvT6R+FBsN
-         Uvd+dcQfxiSgjuOXpv3CwrdheaEPg0qjfDMDAYcbopo8Hnghl7adF0FXrogl1oOLhz7s
-         T50T7rFqymsc0dyIZIc8nbsa0zEQnGTl63M+eUWXVZjR+x2koAOXup32HfTFdC+g9LXT
-         I1rswToLoJRA1hNuuwSOmJxQulNzTQx2j0+4jzaIbbRELVaNoiPoY29wiKC9ln+hwsJY
-         OGdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705511535; x=1706116335;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4bWrXBozZxWT+Le+JKj0QjMD23koe1KxVtSt7dBjPW4=;
-        b=hvUBXHxXc6XO0U6y4ggJIL7AWqNZrKLqQvj7AyZumk6yGzz3RrOGijGBv9EnO61j8s
-         U63KA3MKhu6l3oCUEYtJA41ZU3Krl3Z/AuoiINVWhks0IQHCoElLGQyksWKNdcjjXgpo
-         aGWExIaikAXi1EliC6XoHFVfuoU3eU3z+KZtjnqHCf3SjCusXgKFNs6zPGykkjlKWWJ8
-         XBj0sXAQrghUvMENZiPc2xLuWVRlaXWbDkXE+d9HTkvezyQeJA9/3nmsekMFuJqSBn2p
-         G0Nsy2mp2OqrNPIyTigZGpGKR63etDg3NPF9sblxx2UAo8ZRMKI9Nx4Zgbuo8H+XAK6O
-         MBPQ==
-X-Gm-Message-State: AOJu0Yw4mhZgPRP9pPqEHhZVHWUQip9TnBfAXWSdbNXgew1CawJboD8i
-	adIdzz8gpH7fmZqhDyZ0uuc=
-X-Google-Smtp-Source: AGHT+IFt2fYcxUQeurS5FmLTiZQ2Z6HQJOkGdK7DZBC4bp2HfFTY4wSTcEY39YdmqUns0jTPoGPS1g==
-X-Received: by 2002:a05:6a00:3a0e:b0:6d9:e5ae:2056 with SMTP id fj14-20020a056a003a0e00b006d9e5ae2056mr8107415pfb.60.1705511535288;
-        Wed, 17 Jan 2024 09:12:15 -0800 (PST)
-Received: from localhost (dhcp-72-235-13-140.hawaiiantel.net. [72.235.13.140])
-        by smtp.gmail.com with ESMTPSA id l18-20020a62be12000000b006db3149eacasm1671836pff.104.2024.01.17.09.12.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jan 2024 09:12:15 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Wed, 17 Jan 2024 07:12:13 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/4] kernel/workqueue: Distinguish between general
- unbound and WQ_SYSFS cpumask changes
-Message-ID: <ZagKbRlBxZHsKiw5@mtj.duckdns.org>
-References: <20240116161929.232885-1-juri.lelli@redhat.com>
- <20240116161929.232885-4-juri.lelli@redhat.com>
- <ZabRlEklmuqwFPj-@slm.duckdns.org>
- <ZafQwMw8ZKztunMU@localhost.localdomain>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="POFlDrid"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705511715;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gGm/eLi1COg3Vpc3apSqmPNHHb4PLdH7xLSc6T9224c=;
+	b=POFlDridqg/rsFuOtpj1oakrxzx5nOGKlm4VcJBEye7/Qh07bAxTWJsmaMjKggvs86tRdY
+	/9xdLu2uu/cUHjTCk+IW8CdxGJestkMmEQABb1RQTcBs2gfzqZn+PtkglcwX4FXFx6Gqv8
+	BsRJlk+om9005AZp9PoR5RW8Dv4Rat8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-631-7Yv0cQF3P-OKvQw7cQLm-g-1; Wed, 17 Jan 2024 12:15:11 -0500
+X-MC-Unique: 7Yv0cQF3P-OKvQw7cQLm-g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0782885CBA5;
+	Wed, 17 Jan 2024 17:15:10 +0000 (UTC)
+Received: from [10.22.16.147] (unknown [10.22.16.147])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C7E4F2026D6F;
+	Wed, 17 Jan 2024 17:15:07 +0000 (UTC)
+Message-ID: <5ee5bf79-6cdc-4d1b-a19f-f0d5165a5f16@redhat.com>
+Date: Wed, 17 Jan 2024 12:15:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZafQwMw8ZKztunMU@localhost.localdomain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/8] cgroup/cpuset: Support RCU_NOCB on isolated
+ partitions
+Content-Language: en-US
+To: Tejun Heo <tj@kernel.org>
+Cc: Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Frederic Weisbecker <frederic@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>,
+ cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Mrunal Patel <mpatel@redhat.com>,
+ Ryan Phillips <rphillips@redhat.com>, Brent Rowsell <browsell@redhat.com>,
+ Peter Hunt <pehunt@redhat.com>, Cestmir Kalina <ckalina@redhat.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Alex Gladkov <agladkov@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Phil Auld <pauld@redhat.com>, Paul Gortmaker <paul.gortmaker@windriver.com>,
+ Daniel Bristot de Oliveira <bristot@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Costa Shulyupin <cshulyup@redhat.com>
+References: <20240117163511.88173-1-longman@redhat.com>
+ <ZagJPoEsLZ6Dg-NG@mtj.duckdns.org>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <ZagJPoEsLZ6Dg-NG@mtj.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Hello,
 
-On Wed, Jan 17, 2024 at 02:06:08PM +0100, Juri Lelli wrote:
-> > This looks rather hacky. Can you elaborate how the current code misbehaves
-> > with an example?
-> 
-> I was trying to address the fact that ordered unbound workqueues didn't
-> seem to reflect unbound_cpumask changes, e.g.
-> 
-> wq_unbound_cpumask=00000003
-> 
-> edac-poller              ordered,E  0xffffffff 000000ff      kworker/R-edac-            351 0xffffffff 000000ff
-> 
-> vs. 
-> 
-> edac-poller              ordered,E  00000003                 kworker/R-edac-            349 00000003
-> 
-> with the patch applied. But honestly, I'm now also not convinced what
-> I'm proposing is correct, so I'll need to think more about it.
-> 
-> Can you please confirm though that ordered unbound workqueues are not
-> "special" for some reason and we would like them to follow
-> unbound_cpumask changes as normal ubound workqueues?
+On 1/17/24 12:07, Tejun Heo wrote:
+> Hello,
+>
+> On Wed, Jan 17, 2024 at 11:35:03AM -0500, Waiman Long wrote:
+>> The first 2 patches are adopted from Federic with minor twists to fix
+>> merge conflicts and compilation issue. The rests are for implementing
+>> the new cpuset.cpus.isolation_full interface which is essentially a flag
+>> to globally enable or disable full CPU isolation on isolated partitions.
+> I think the interface is a bit premature. The cpuset partition feature is
+> already pretty restrictive and makes it really clear that it's to isolate
+> the CPUs. I think it'd be better to just enable all the isolation features
+> by default. If there are valid use cases which can't be served without
+> disabling some isolation features, we can worry about adding the interface
+> at that point.
 
-They aren't special and should follow the normal unbound workqueue cpumask.
+My current thought is to make isolated partitions act like 
+isolcpus=domain, additional CPU isolation capabilities are optional and 
+can be turned on using isolation_full. However, I am fine with making 
+all these turned on by default if it is the consensus.
 
-Thanks.
+Cheers,
+Longman
 
--- 
-tejun
