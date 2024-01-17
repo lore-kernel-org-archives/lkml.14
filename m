@@ -1,116 +1,145 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAA11EA6E;
-	Wed, 17 Jan 2024 12:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36B61DFEC;
+	Wed, 17 Jan 2024 12:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705494425; cv=none; b=iWKcVFt9nA7u4Oi2GfESfi9RNPh3ckEgLE89Sdi1VQzlZYMRkgnckIMgRxDW/0XiWSSojuj4V5MSXsTgRVO+EgS4Z4sjT1rPo63DnKTEF8vU9qK8VFNAwsUnYybgucUU2qkWc+eYBOfwA6YYggK92+kYCK5Ph5IomrakCr1r/Yw=
+	t=1705494427; cv=none; b=AbUm4DlfDW7e1i30sjOuM7xJwa11TZHx+4QEsooj9nWgBnbtwpO+6KRinq8Ng+NgAD9z7cVfy/nL3GZXuFF15ytV7kSw3cNfcB4duKz+1jVqEb+Q4VuyVxttP8/tT+6pyF7cUdO7kAF+tZEPZjz7ehKrw3lqAuzQbTqyPyWmw38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705494425; c=relaxed/simple;
-	bh=66FzAt7nJpAY9ka7VMdHoplxE2iQOAZv1WQkaTZVLTI=;
-	h=DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:X-Spam; b=kzLsW74jUXEexFkygeWsiRGAbXGH+HTQGbcYDfw1wJntSCtJuvziXw8yW5g4EzJoolY48XqAeGNV1Uj2kCmO+hvAx2f+JGsfvLP6UAL21WWtNOv/+lY1LMdMfab2s1IrrPs1gb3w7Ng7XrWLvp0lxi5Vr6caoXIXEPWnmlUB2NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=223+VYq+; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1705494427; c=relaxed/simple;
+	bh=SPxDYahHv0nLu9NS4KwJmiOrGhMzRJC83ePBpU4CLVQ=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:X-IronPort-AV:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=UOfcufC9ZOXLonuFxdzxEyB/Mq4vZy334/NMso71PekLIv8hcAdhdyVOf0NWuo5aQi/I/kRkfFf4Lc5KSGWQJhi0puwxS+uR6HSIyTjD9kE4hsfqwcBpJVlw1tWsX6vK0hIAycNsB3no/abkcZqbkLzHAOrsFqA7WHzWszi1NIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Va+ueg3V; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="223+VYq+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1705494413;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SqXbfp61fzBHWNEqVrElLd46cr7HG/1wYVIvKKSn5jY=;
-	b=223+VYq+sNKlcr9ev/upoyhfOA7QKfzwcy2ytRmzFcW9tiJNZhBFP7Icx2D/cE6HkGGC+S
-	FicGrecQKa3T7e642ZdQ1PZ4aswWX37cF6RM4V98cRtvafDFiZ3eQI1HL1PqyVRzDB+uG5
-	6vxQNtWC63HTGIlz41RK8dew84Qpqa8=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <noname.nuno@gmail.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	linux-usb@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 1/4] usb: gadget: Support already-mapped DMA SGs
-Date: Wed, 17 Jan 2024 13:26:43 +0100
-Message-ID: <20240117122646.41616-2-paul@crapouillou.net>
-In-Reply-To: <20240117122646.41616-1-paul@crapouillou.net>
-References: <20240117122646.41616-1-paul@crapouillou.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Va+ueg3V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705494426; x=1737030426;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SPxDYahHv0nLu9NS4KwJmiOrGhMzRJC83ePBpU4CLVQ=;
+  b=Va+ueg3VyKLME0NjPbSrhJItg9qKUGE4RrXteaDXtsEI6q3ZXgDJCmBb
+   Tzw2Ju2uf/+DHUQ8chHre9wpAx8pp39P385kIE6GJwKLrS9ejZTkp0BAc
+   zXRBkVW85+5+xJ8BamiazlwVuTzMjP5C5WYOJCzujpx59qrlpjMnYvoMj
+   W+YoZM65N+PO7syDtPDSr0XhmUfjLHNTfadHbjji9Au7B+yD06W4i+OJk
+   ooiMNgYP+pl3vF1YlohACBbtPhiJ8S0VLJ1kDc+Ag6Tmp2Qd6xhmyFzIg
+   3vdJDASX1GnT0QD9t/QLOSpK8f+1yWO9yBWLVfgxT83R+qN65gwbZvHVE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="40816"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="40816"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 04:27:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="907745448"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="907745448"
+Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jan 2024 04:27:01 -0800
+Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rQ50V-0001yl-0l;
+	Wed, 17 Jan 2024 12:26:59 +0000
+Date: Wed, 17 Jan 2024 20:26:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pohsun Su <pohsuns@nvidia.com>, daniel.lezcano@linaro.org,
+	tglx@linutronix.de, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc: oe-kbuild-all@lists.linux.dev, sumitg@nvidia.com,
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+	Pohsun Su <pohsuns@nvidia.com>
+Subject: Re: [PATCH 1/2] clocksource/drivers/timer-tegra186: add
+ WDIOC_GETTIMELEFT support
+Message-ID: <202401172015.KdPd7tda-lkp@intel.com>
+References: <20240116115838.16544-2-pohsuns@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240116115838.16544-2-pohsuns@nvidia.com>
 
-Add a new 'sg_was_mapped' field to the struct usb_request. This field
-can be used to indicate that the scatterlist associated to the USB
-transfer has already been mapped into the DMA space, and it does not
-have to be done internally.
+Hi Pohsun,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/usb/gadget/udc/core.c | 7 ++++++-
- include/linux/usb/gadget.h    | 2 ++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
-index d59f94464b87..9d4150124fdb 100644
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -903,6 +903,11 @@ int usb_gadget_map_request_by_dev(struct device *dev,
- 	if (req->length == 0)
- 		return 0;
- 
-+	if (req->sg_was_mapped) {
-+		req->num_mapped_sgs = req->num_sgs;
-+		return 0;
-+	}
-+
- 	if (req->num_sgs) {
- 		int     mapped;
- 
-@@ -948,7 +953,7 @@ EXPORT_SYMBOL_GPL(usb_gadget_map_request);
- void usb_gadget_unmap_request_by_dev(struct device *dev,
- 		struct usb_request *req, int is_in)
- {
--	if (req->length == 0)
-+	if (req->length == 0 || req->sg_was_mapped)
- 		return;
- 
- 	if (req->num_mapped_sgs) {
-diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-index a771ccc038ac..c529e4e06997 100644
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -52,6 +52,7 @@ struct usb_ep;
-  * @short_not_ok: When reading data, makes short packets be
-  *     treated as errors (queue stops advancing till cleanup).
-  * @dma_mapped: Indicates if request has been mapped to DMA (internal)
-+ * @sg_was_mapped: Set if the scatterlist has been mapped before the request
-  * @complete: Function called when request completes, so this request and
-  *	its buffer may be re-used.  The function will always be called with
-  *	interrupts disabled, and it must not sleep.
-@@ -111,6 +112,7 @@ struct usb_request {
- 	unsigned		zero:1;
- 	unsigned		short_not_ok:1;
- 	unsigned		dma_mapped:1;
-+	unsigned		sg_was_mapped:1;
- 
- 	void			(*complete)(struct usb_ep *ep,
- 					struct usb_request *req);
+[auto build test ERROR on tip/timers/core]
+[also build test ERROR on linus/master v6.7 next-20240117]
+[cannot apply to daniel-lezcano/clockevents/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Pohsun-Su/clocksource-drivers-timer-tegra186-add-WDIOC_GETTIMELEFT-support/20240116-200217
+base:   tip/timers/core
+patch link:    https://lore.kernel.org/r/20240116115838.16544-2-pohsuns%40nvidia.com
+patch subject: [PATCH 1/2] clocksource/drivers/timer-tegra186: add WDIOC_GETTIMELEFT support
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20240117/202401172015.KdPd7tda-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240117/202401172015.KdPd7tda-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401172015.KdPd7tda-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/clocksource/timer-tegra186.c: In function 'tegra186_wdt_get_timeleft':
+>> drivers/clocksource/timer-tegra186.c:263:22: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
+     263 |         expiration = FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, readl_relaxed(wdt->regs + WDTSR));
+         |                      ^~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/FIELD_GET +263 drivers/clocksource/timer-tegra186.c
+
+   240	
+   241	static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
+   242	{
+   243		struct tegra186_wdt *wdt = to_tegra186_wdt(wdd);
+   244		u32 timeleft;
+   245		u32 expiration;
+   246	
+   247		if (!watchdog_active(&wdt->base)) {
+   248			/* return zero if the watchdog timer is not activated. */
+   249			return 0;
+   250		}
+   251	
+   252		/*
+   253		 * System power-on reset occurs on the fifth expiration of the watchdog timer and so
+   254		 * when the watchdog timer is configured, the actual value programmed into the counter
+   255		 * is 1/5 of the timeout value. Once the counter reaches 0, expiration count will be
+   256		 * increased by 1 and the down counter restarts.
+   257		 * Hence to get the time left before system reset we must combine 2 parts:
+   258		 * 1. value of the current down counter
+   259		 * 2. (number of counter expirations remaining) * (timeout/5)
+   260		 */
+   261	
+   262		/* Get the current number of counter expirations. Should be a value between 0 and 4. */
+ > 263		expiration = FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, readl_relaxed(wdt->regs + WDTSR));
+   264	
+   265		/* Convert the current counter value to seconds, rounding up to the nearest second. */
+   266		timeleft = FIELD_GET(TMRSR_PCV, readl_relaxed(wdt->tmr->regs + TMRSR));
+   267		timeleft = (timeleft + USEC_PER_SEC / 2) / USEC_PER_SEC;
+   268	
+   269		/*
+   270		 * Calculate the time remaining by adding the time for the counter value
+   271		 * to the time of the counter expirations that remain.
+   272		 */
+   273		timeleft += wdt->base.timeout * (4 - expiration) / 5;
+   274		return timeleft;
+   275	}
+   276	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
