@@ -1,35 +1,36 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A612881F;
-	Wed, 17 Jan 2024 03:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C5C1C05;
+	Wed, 17 Jan 2024 03:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705460958; cv=none; b=LwZf5NMRj5uKRQMZ8etu/JJoeEicZbCSsZ4witqIqNnbwiKR15XgN8zv5wZ1e1Y9QSm0qwsJWnp2VcBUHezeRA1nvaYGM/RJ3I1HLB4yS7l4h+HSj9BiaryTSjkUlffsIW9r092c7luOGtgYg6380U5xtI4rF8HNtqBf2hmb4X0=
+	t=1705461074; cv=none; b=S6+tqUenhK3CZzNQJtQkA1h0t12xEibHkLgM3IPnd9zfMIArpqApq9YrfxlIvg+vekOO4x75kSjwAu3JXKOwtT++RwO0bG2DiQvYVHM0y416gKATwF6d2fbGeRTdJedxujlqOpZe1PR9+vGezabLDaG8r0zWnungIsZ65S3t+fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705460958; c=relaxed/simple;
-	bh=W3rg5FlB9tMMoDc8+Qd/Q05sRobEmsQObUmMziWSXSs=;
+	s=arc-20240116; t=1705461074; c=relaxed/simple;
+	bh=nh2lhXlBjGkKVlhpGjA1fsfZKqu0JF42Z8AmKr3Wjrw=;
 	h=Received:Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:
 	 MIME-Version:Content-Type:X-Originating-IP:X-ClientProxiedBy:tUid:
 	 X-Abuse-Reports-To:Abuse-Reports-To:X-Complaints-To:
-	 X-Report-Abuse-To; b=T5V+6yugdKLOIQzjS/bQaOCWbJImT8a0ZmA6+GpRIVFa5wNTLWL5tKvfYQCtxDg7IHtcQDVnlXm3KAb/R0k0nS5X6a6iQLcEidSCLXybAAl0eugIE8IfMNrqm5UjhOBgJwXAGx3CwN5kAl9RkUwhVkekLrQY5aPRFRXPn1Pmv+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
+	 X-Report-Abuse-To; b=Uwj8hMU08kuLWv+1IWZJqmgASz0kMUfx2yWAT+sHs/s5tWXimA7FSy/hhM0mBkCTCuC0CXUqepfdePXqKBsbVD8UAg9OVoK+fWkVPTlu1L+kD4UD/cnHEFXm/aLh+KZhO01VpaDPpNm6uJaLJnrBUMp7AL+IkQMT0sxRt6Er7M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from unicom146.biz-email.net
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id NUA00111;
-        Wed, 17 Jan 2024 11:09:11 +0800
+Received: from unicom145.biz-email.net
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id NUC00007;
+        Wed, 17 Jan 2024 11:11:07 +0800
 Received: from localhost.localdomain.com (10.73.43.35) by
  jtjnmail201621.home.langchao.com (10.100.2.21) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Wed, 17 Jan 2024 11:09:11 +0800
+ 15.1.2507.34; Wed, 17 Jan 2024 11:11:06 +0800
 From: Bo Liu <liubo03@inspur.com>
-To: <m.tretter@pengutronix.de>, <kernel@pengutronix.de>, <mchehab@kernel.org>
+To: <sakari.ailus@linux.intel.com>, <laurent.pinchart@ideasonboard.com>,
+	<mchehab@kernel.org>
 CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Bo Liu
 	<liubo03@inspur.com>
-Subject: [PATCH] media: i2c: isl7998x: convert to use maple tree register cache
-Date: Tue, 16 Jan 2024 22:09:10 -0500
-Message-ID: <20240117030910.2790-1-liubo03@inspur.com>
+Subject: [PATCH] media: i2c: mt9v032: convert to use maple tree register cache
+Date: Tue, 16 Jan 2024 22:11:05 -0500
+Message-ID: <20240117031105.3054-1-liubo03@inspur.com>
 X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,7 +41,7 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-ClientProxiedBy: Jtjnmail201615.home.langchao.com (10.100.2.15) To
  jtjnmail201621.home.langchao.com (10.100.2.21)
-tUid: 2024117110911277784f801d71b02f9ce26acf89d9765
+tUid: 20241171111073ec408c72695cd09dedf78ca275dff02
 X-Abuse-Reports-To: service@corp-email.com
 Abuse-Reports-To: service@corp-email.com
 X-Complaints-To: service@corp-email.com
@@ -52,22 +53,22 @@ more appropriate for modern systems than those made by the rbtree cache.
 
 Signed-off-by: Bo Liu <liubo03@inspur.com>
 ---
- drivers/media/i2c/isl7998x.c | 2 +-
+ drivers/media/i2c/mt9v032.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/isl7998x.c b/drivers/media/i2c/isl7998x.c
-index 89e13ebbce0c..c7089035bbc1 100644
---- a/drivers/media/i2c/isl7998x.c
-+++ b/drivers/media/i2c/isl7998x.c
-@@ -1337,7 +1337,7 @@ static const struct regmap_config isl7998x_regmap = {
- 	.rd_table	= &isl7998x_readable_table,
- 	.wr_table	= &isl7998x_writeable_table,
- 	.volatile_table	= &isl7998x_volatile_table,
--	.cache_type	= REGCACHE_RBTREE,
-+	.cache_type	= REGCACHE_MAPLE,
+diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+index 3ca76eeae7ff..6dfbd1c56c22 100644
+--- a/drivers/media/i2c/mt9v032.c
++++ b/drivers/media/i2c/mt9v032.c
+@@ -988,7 +988,7 @@ static const struct regmap_config mt9v032_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 16,
+ 	.max_register = 0xff,
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
  };
  
- static int isl7998x_mc_init(struct isl7998x *isl7998x)
+ /* -----------------------------------------------------------------------------
 -- 
 2.31.1
 
