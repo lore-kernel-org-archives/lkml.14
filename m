@@ -1,186 +1,127 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FB4241E1;
-	Wed, 17 Jan 2024 15:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A8222325
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 15:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705504370; cv=none; b=Qg5uSAyHYutAKZqjiyzJod6Xebgm6ax5WvbUQrwTWsbSdxVFZV23fIbhporH1/RzYt+Tb8dVgnPWmW1k0wY90+lDjmw7sKUztI5SkIsJOLI2uxo+CllKpV/mYXM0PtOteYx5vfIPmmk9WVj5Owhm2f4OHQZSuVcDKufVaNg7Y04=
+	t=1705504404; cv=none; b=Nfyhgk+59UR5NH9nsjzxAJmbODB7tUvs1itYPYKqG5joEh6tt0uIv77abslLkoC5QYIjBoSJczsr+gAbm2z2AWLizgMJH3q3IZLtuyzSJ29QmFp+aIZTdrc2Olpb3TeEopg+/uxXXUZQhUMaW31OtcJ9azDGhjCld+tXR7ZzOtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705504370; c=relaxed/simple;
-	bh=dZbhxNc+daniXhZZf+t3TJzeHiXnNRJRWkFbbqG2bSw=;
-	h=Received:DKIM-Signature:Received:Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:Content-Language:To:CC:
-	 References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-Originating-IP:X-ClientProxiedBy:X-QCInternal:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details; b=gp/zJTqUB++sZ+8+tmjWv1Ufv7TgW/ToKOYTyC2W99q3NWeCZHanmM927DVZBKnEzDhGZfVYIvtzb2+ktn53MoLXJ0NLNlVQTadARJCV5buLAN55S/D59avcyWN9SZh2KqdRYi+GniHF4zXYG7dijgxAXHC+P7++Ye2HOdujruU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OjGZ50xr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OjGZ50xr"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40HBiDqo010828;
-	Wed, 17 Jan 2024 15:12:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=WfqDlO65ezyg65hyX4ylgHvZOhj/nO8njM69ZUbpPNU=; b=Oj
-	GZ50xru9UngP+s+07H2jGtm+Z89reJ2LL21vB09rkidBqFJsiJTsEAH8z47ZgTMD
-	+qyJV8rXuX/xrP9c3J1DmQjX9ECcH9dm4q0GyDBmMT7hvsYLPFSt2R4OE8G5a/rE
-	dMXukuyAIsoIdBSo7qURmO4+483WnA34aSTGf8Yrt37aD41DqePOKc+VnvpR1YBB
-	t8f45vz300UDGNcRa2VGjiLmEs2BvGkkDeXdEp27y1HJOA9WCbqfwroBObVR2oMV
-	CTD7dZqnHR0EaCkaiabzHpGVH+8NRPNWk2ETQAiETcTE9c39mj4rN8VbOpDNsAJL
-	RNoeDgy3Hz1hhXQ61u5w==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vp6sqsca8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 15:12:46 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40HFCjm7013305
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 15:12:45 GMT
-Received: from [10.253.12.80] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 17 Jan
- 2024 07:12:41 -0800
-Message-ID: <62428d47-20eb-4d02-886d-355d704de938@quicinc.com>
-Date: Wed, 17 Jan 2024 23:12:09 +0800
+	s=arc-20240116; t=1705504404; c=relaxed/simple;
+	bh=DoPT2kPCKFf6axbElxOjPA7nhJzePbYJNHAQ65rX3aQ=;
+	h=Received:Received:Received:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
+	 X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=iBhUTI1u6UjkkA83oj4jR1z0RX828S2BkrUwByMElLF0Z7mS0XA7vMNJ6O82GdeGuy3jv5eXbS35HWOf0Zh/RnfyeeBMOpXGPzZuIZR0BS7P9CwgufWrGqGqPR/vV9Tk7rQ6mAUyVL18Wu/FndaDjO6SsU5Y7W86MavET0ucTj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rQ7b0-0000IN-Ew; Wed, 17 Jan 2024 16:12:50 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rQ7ay-000UW3-1a; Wed, 17 Jan 2024 16:12:48 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rQ7ax-000C5F-36;
+	Wed, 17 Jan 2024 16:12:47 +0100
+Message-ID: <cf6440c08b8b7382e6693e18cdd29325aaea9cc9.camel@pengutronix.de>
+Subject: Re: [PATCH 11/14] phy: cadence-torrent: add suspend and resume
+ support
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy
+ Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, Haojian
+ Zhuang <haojian.zhuang@linaro.org>,  Vignesh R <vigneshr@ti.com>, Aaro
+ Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod
+ Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Tom
+ Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,  Rob Herring
+ <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com,  thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+Date: Wed, 17 Jan 2024 16:12:47 +0100
+In-Reply-To: <20240102-j7200-pcie-s2r-v1-11-84e55da52400@bootlin.com>
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+	 <20240102-j7200-pcie-s2r-v1-11-84e55da52400@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] arm64: dts: qcom: ipq9574: Add RDP433 board device
- tree
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Luo Jie
-	<quic_luoj@quicinc.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_suruchia@quicinc.com>,
-        <quic_soni@quicinc.com>, <quic_pavir@quicinc.com>,
-        <quic_souravp@quicinc.com>, <quic_linchen@quicinc.com>
-References: <20240110112059.2498-1-quic_luoj@quicinc.com>
- <20240110112059.2498-7-quic_luoj@quicinc.com>
- <FC335E96-9DE2-4BC8-BE45-8DE77AB453AE@linaro.org>
-From: Lei Wei <quic_leiwei@quicinc.com>
-In-Reply-To: <FC335E96-9DE2-4BC8-BE45-8DE77AB453AE@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: YPG6-Bzkpv1Pl2PyO3N_Y2tYcFRvCB_m
-X-Proofpoint-ORIG-GUID: YPG6-Bzkpv1Pl2PyO3N_Y2tYcFRvCB_m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-17_08,2024-01-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 spamscore=0 clxscore=1011 impostorscore=0 mlxscore=0
- bulkscore=0 mlxlogscore=967 malwarescore=0 adultscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401170110
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+Hi Thomas,
+
+On Mo, 2024-01-15 at 17:14 +0100, Thomas Richard wrote:
+> Add suspend and resume support.
+> The alread_configured flag is cleared during suspend stage to force the
+> phy initialization during the resume stage.
+>=20
+> Based on the work of Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+>=20
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+>  drivers/phy/cadence/phy-cadence-torrent.c | 57 +++++++++++++++++++++++++=
+++++++
+>  1 file changed, 57 insertions(+)
+>=20
+> diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cade=
+nce/phy-cadence-torrent.c
+> index 70413fca5776..31b2594e5942 100644
+> --- a/drivers/phy/cadence/phy-cadence-torrent.c
+> +++ b/drivers/phy/cadence/phy-cadence-torrent.c
+> @@ -3006,6 +3006,62 @@ static void cdns_torrent_phy_remove(struct platfor=
+m_device *pdev)
+[...]
+> +static int cdns_torrent_phy_resume_noirq(struct device *dev)
+> +{
+> +	struct cdns_torrent_phy *cdns_phy =3D dev_get_drvdata(dev);
+> +	int node =3D cdns_phy->nsubnodes;
+> +	int ret, i;
+> +
+> +	ret =3D cdns_torrent_clk(cdns_phy);
+> +	if (ret)
+> +		goto clk_cleanup;
+> +
+> +	/* Enable APB */
+> +	reset_control_deassert(cdns_phy->apb_rst);
+> +
+> +	if (cdns_phy->nsubnodes > 1) {
+> +		ret =3D cdns_torrent_phy_configure_multilink(cdns_phy);
+> +		if (ret)
+> +			goto put_lnk_rst;
+> +	}
+> +
+> +	return 0;
+> +
+> +put_lnk_rst:
+> +	for (i =3D 0; i < node; i++)
+> +		reset_control_put(cdns_phy->phys[i].lnk_rst);
+
+What is this intended to do? I expect this to explode in _remove, where
+the=C2=A0lnk_rst are put again. Should this be:
+
+		reset_control_assert(cdns_phy->phys[i].lnk_rst);
+
+?
 
 
-
-On 1/12/2024 11:05 PM, Dmitry Baryshkov wrote:
-> On 10 January 2024 13:20:59 EET, Luo Jie <quic_luoj@quicinc.com> wrote:
->> From: Lei Wei <quic_leiwei@quicinc.com>
->>
->> RDP433 board has four QCA8075 PHYs and two Aquantia 10G PHY onboard.
->>
->> Signed-off-by: Lei Wei <quic_leiwei@quicinc.com>
->> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
->> ---
->> arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts | 66 +++++++++++++++++++++
->> 1 file changed, 66 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
->> index 1bb8d96c9a82..298c0853b4d2 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
->> +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
->> @@ -60,3 +60,69 @@ rclk-pins {
->> 		};
->> 	};
->> };
->> +
->> +&qcom_ppe {
->> +	qcom,port_phyinfo {
->> +		ppe_port0: port@0 {
->> +			port_id = <1>;
->> +			phy-mode = "qsgmii";
->> +			phy-handle = <&phy0>;
->> +		};
->> +		ppe_port1: port@1 {
->> +			port_id = <2>;
->> +			phy-mode = "qsgmii";
->> +			phy-handle = <&phy1>;
->> +		};
->> +		ppe_port2: port@2 {
->> +			port_id = <3>;
->> +			phy-mode = "qsgmii";
->> +			phy-handle = <&phy2>;
->> +		};
->> +		ppe_port3: port@3 {
->> +			port_id = <4>;
->> +			phy-mode = "qsgmii";
->> +			phy-handle = <&phy3>;
->> +		};
->> +		ppe_port4: port@4 {
->> +			port_id = <5>;
->> +			phy-mode = "usxgmii";
->> +			phy-handle = <&phy4>;
->> +		};
->> +		ppe_port5: port@5 {
->> +			port_id = <6>;
->> +			phy-mode = "usxgmii";
->> +			phy-handle = <&phy5>;
->> +		};
->> +	};
->> +};
->> +
->> +&mdio {
->> +	reset-gpios = <&tlmm 60 GPIO_ACTIVE_LOW>;
->> +	status = "okay";
->> +
->> +	phy0: ethernet-phy@0 {
->> +		      reg = <16>;
->> +	      };
-> 
-> This part looks extremely wrong to me. If the reg is 16, then it should be @16 as well. You should have got a warning here.
-> 
-Sure, I will fix and update it. Thanks.
-
->> +
->> +	phy1: ethernet-phy@1 {
->> +		      reg = <17>;
->> +	      };
->> +
->> +	phy2: ethernet-phy@2 {
->> +		      reg = <18>;
->> +	      };
->> +
->> +	phy3: ethernet-phy@3 {
->> +		      reg = <19>;
->> +	      };
->> +
->> +	phy4: ethernet-phy@4 {
->> +		      compatible ="ethernet-phy-ieee802.3-c45";
->> +		      reg = <8>;
->> +	      };
->> +
->> +	phy5: ethernet-phy@5 {
->> +		      compatible ="ethernet-phy-ieee802.3-c45";
->> +		      reg = <0>;
->> +	      };
->> +};
-> 
+regards
+Philipp
