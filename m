@@ -1,125 +1,79 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABEFF8F47
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7EB8F47
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 07:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705475686; cv=none; b=UZCIltDopxeKFEuAfHew0nKiUPUTi8x+O7dY8W7xzDtbJkloLyv4Vp9KyHf3Oiv6zXBt1tqn95B6+MmrJfrNbKi7cYmbg+Nh0DUwWHpLmgXOSb6zTSmT8d9jzoJym3V6Mny/xOnPFCfdW2prpbBNwe8L5HsFDZiVbKEN5h3z470=
+	t=1705475905; cv=none; b=sop8MT5pJ6iy/rJo/9kIgjlTM0IL9QAiRrQvV4/B4PBXSK6pTfLsZvaZSj5qPofss1dwOzwDVRoiKQtjPyKAJrLSKlacz/MRWMRh6EokEEKF0zOnKo2w8T09BRCGhi+Dk6f09HOHp0edDXnAKmq3Qi3+2w/aHN8AigqdFQ9QN48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705475686; c=relaxed/simple;
-	bh=7Y28t4MZ3vmCFNG8OsjOXyi8bkTKzL2h4gy5nyYLaBE=;
-	h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
-	 X-CM-SenderInfo; b=m33PAptXyJiJ22o/INmsEnVGbXOH4OzO912Nq7AU2Beu9aJiVUnKQzz+t6N75kWrcCXVIs3w7sQ9YXGMcsFJliyhYB6xvEGwg/oHXiupUHoJ+SY1/EFJGQAKQz10SNjr8iSzhORS0pMWlmaFyGGmEQmPlM3poeJBQjrRoe3hc44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [183.159.170.179])
-	by mail-app2 (Coremail) with SMTP id by_KCgDHLK1QfqdlVgI6AA--.30090S2;
-	Wed, 17 Jan 2024 15:14:25 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Qiang Yu <yuq825@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Vasily Khoruzhick <anarsoul@gmail.com>,
-	dri-devel@lists.freedesktop.org,
-	lima@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] drm/lima: fix a memleak in lima_heap_alloc
-Date: Wed, 17 Jan 2024 15:13:28 +0800
-Message-Id: <20240117071328.3811480-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1705475905; c=relaxed/simple;
+	bh=C7GeLNiGP5bRjIx6Fc77DzlLph77+xnFMKo5ep5RaK8=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type; b=mWs0iM+62JWHTMaERkKG4rnka7c01W6cbPQWSBpWBpfn+u+KQR7Y1kynf9GwFJQSkmKWOqnQXn88NqPxcxjH1WgNpemydfRTooN2sHkVNhKTqXlobmRLx9AGgV9szTnsUWM01CBoQfSOuAdHlX8uCsOmW7Z3DpARmeHL3po0GDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T3wGXtpC; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T3wGXtpC"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-428405a0205so98711cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jan 2024 23:18:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705475903; x=1706080703; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3EQRRw7jZs+7rhvm0pp3ec3+dkHb+ZBu+iZ5gNOr0Ic=;
+        b=T3wGXtpCGfOVD18PsxQ0gk2eF85fKmp+c0MSpCMlWUkC4j/pR4mili5lzfmtEOJ0NU
+         v+ryiAM2RNshko4x0LABuVCSOYezRiA7bS64PtNe38BkHk45Mh0XbqJOVunPmKzr/Np+
+         k3U7JuYvDMY9dBV2+3EV5hzkrUKiAXnn0xbHOkc+jCtlAPWGeON9OXshEEDf0a4bP/xH
+         XycK0sTLb67DPCrQt3dyiN1+kHmySpa2H47D00/EkqL5uz3qJ0mHaaTijTYOUNV9hep/
+         lWKbWwtfmWswqeRBSIMVyQ0LOHxWDUAo/NXygaXFfL+9jX+jqA2XCQMkDflYi38Cp/uR
+         7xNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705475903; x=1706080703;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3EQRRw7jZs+7rhvm0pp3ec3+dkHb+ZBu+iZ5gNOr0Ic=;
+        b=fDbV8b2wyuzpnq4LUjDUoalovJoGWmfc6dKigswGP9HLUjjENR4ZmaPPqZXEB6A+o4
+         31xJAYz9zGaK87Qjn1A8zQHAgUQ9uenRV1yYjVIAKJOPNRjXrnJyAXImPN5pRmBlhNUP
+         BIeEJ/kvIZW9lU2Nb3Vna388mch6PXffwjsllN4s8WTDpXWwynM/isVuJIk5PT3w08JB
+         hA9UEvQc9/zQN408Deo+1k6LvTRdC9wp8ayHLNU50wNGCBGmnAmL6TXK/cFwTuY/B8dc
+         EbFN1t4Mgze0VFw6nqvTVehSSz2ieLO0MaojnqPVKrYrU7mD6txP710lVufu9EYSMKQU
+         3k6A==
+X-Gm-Message-State: AOJu0YwsS+j28h5E8ql4JTWBXRv0XVPNRly4C6maWMtRYUlpTIA71F4p
+	VyWCHJYcQgpxRFo0nvE0Ahh3skQ2ieE5BZXNEwGXl8COQYgxlik2UIbSzsSSdck1lk1M7qqQDf4
+	mVY/NOUmfwDc0Hmmymk7L6HLpcb3AHZUy4Ko5
+X-Google-Smtp-Source: AGHT+IHisHbbrW+bz2ZL8LW/3fp6Ge8sVTfhJBl8oWT0mBFwMPn6v8LATZsuXbACVPhDN7t1DQkN6aInw8vCPgmVgk0=
+X-Received: by 2002:ac8:6f11:0:b0:42a:220:82f3 with SMTP id
+ bs17-20020ac86f11000000b0042a022082f3mr87321qtb.21.1705475903265; Tue, 16 Jan
+ 2024 23:18:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:by_KCgDHLK1QfqdlVgI6AA--.30090S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4xCw1xuw4kur48AFy5Arb_yoW8XF4rpF
-	Z3CrWayr43Jw4xJrZxJFyDAF15Kws5JFy0kr1UJ39I9wsIyr4vgryrJasagF90qr9rCr13
-	GF1DKr1kuF12kaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYuWlDUUUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+References: <20240110095532.4776-1-quic_uaggarwa@quicinc.com>
+In-Reply-To: <20240110095532.4776-1-quic_uaggarwa@quicinc.com>
+From: Kuen-Han Tsai <khtsai@google.com>
+Date: Wed, 17 Jan 2024 15:17:55 +0800
+Message-ID: <CAKzKK0qJOz_+pNAVAD8Ub6TZ9uhFOzuDC_bws9MVzxNa7RqYhA@mail.gmail.com>
+Subject: Re: [RFC PATCH] usb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend
+To: Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-When lima_vm_map_bo fails, the resources need to be deallocated, or
-there will be memleaks.
+>         ret = dwc3_gadget_soft_disconnect(dwc);
+>         if (ret)
+>                 goto err;
 
-Fixes: 6aebc51d7aef ("drm/lima: support heap buffer creation")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
-Changelog:
+For improved readability, we can remove the goto statement and move
+the error handling logic here.
 
-v2: rearrange the error-handling to ladder tags.
----
- drivers/gpu/drm/lima/lima_gem.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
-index 4f9736e5f929..d3d82ee7fb4c 100644
---- a/drivers/gpu/drm/lima/lima_gem.c
-+++ b/drivers/gpu/drm/lima/lima_gem.c
-@@ -75,29 +75,36 @@ int lima_heap_alloc(struct lima_bo *bo, struct lima_vm *vm)
- 	} else {
- 		bo->base.sgt = kmalloc(sizeof(*bo->base.sgt), GFP_KERNEL);
- 		if (!bo->base.sgt) {
--			sg_free_table(&sgt);
--			return -ENOMEM;
-+			ret = -ENOMEM;
-+			goto err_out0;
- 		}
- 	}
- 
- 	ret = dma_map_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
- 	if (ret) {
--		sg_free_table(&sgt);
--		kfree(bo->base.sgt);
--		bo->base.sgt = NULL;
--		return ret;
-+		goto err_out1;
- 	}
- 
- 	*bo->base.sgt = sgt;
- 
- 	if (vm) {
- 		ret = lima_vm_map_bo(vm, bo, old_size >> PAGE_SHIFT);
--		if (ret)
--			return ret;
-+		if (ret) {
-+			goto err_out2;
-+		}
- 	}
- 
- 	bo->heap_size = new_size;
- 	return 0;
-+
-+err_out2:
-+	dma_unmap_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
-+err_out1:
-+	kfree(bo->base.sgt);
-+	bo->base.sgt = NULL;
-+err_out0:
-+	sg_free_table(&sgt);
-+	return ret;
- }
- 
- int lima_gem_create_handle(struct drm_device *dev, struct drm_file *file,
--- 
-2.34.1
-
+Thanks,
+Kuen-Han
