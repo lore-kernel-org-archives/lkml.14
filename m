@@ -1,322 +1,105 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2125.outbound.protection.outlook.com [40.107.93.125])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666628C00;
-	Thu, 18 Jan 2024 03:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.125
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705547754; cv=fail; b=rwHnNSRL+O9omftA2A5nfota5TyT3i9/KOhVqalBM2+5FMyZnjS/saXtSi91JDsAGAt5ZnQcU/NVCARiumwvJySKwblwEDiyfP88WsegAq8ChrXEiFaqftUBsnybn5l9oI8luRBkPyeGEgabMdhr3L99eJTWhyVqjpZ496bFvpc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705547754; c=relaxed/simple;
-	bh=sesuh+qoPB7lM+bqBSE4stgA0/huVj/Xqcl4MgkwXI0=;
-	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
-	 Received:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
-	 Content-Transfer-Encoding:Content-Type:X-ClientProxiedBy:
-	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=RkKb0JmjaqIj20eJYgGTenyEuq46xo5UU0ploLv6tL2s0mxI8Q6XoD9bXtKCU/gfmj/GYJ5/ketgrE6+YntX+s1FzZrdS/ZJO/HvJS4CAv5MbCXbxLN9G3aHTnOe2dtmd67aOXx90qeJWiITn4mZ78QD3eNhzaORGsYp88/JMVY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=SN5josso; arc=fail smtp.client-ip=40.107.93.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="SN5josso"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mAbjfZeHxX9kjreOHTjFLdKv8Y5CorVzkah2+7bwgE8GfCVoyTJZxJ6w2+0aghXRMfy++p6X6VhVRv3LUUz5o2BS4xRjAj1iF9UW3znghwJh3OeG/z8aqf/BiKjU9wE5nbP4FxQNP8AdcutDu1Npjfi9K5LgEkAaXP/WP6ev8HjoV4PBCXC/FH6snrxFYMCtkVZc3CQ26Kq+BA+uAFaVSccUe3LO0TqQ+RB7NFtHJh90CNCBtKi+818axXPkhcpAyZHBwkTh9OR9uTBDDEU2QrfyUHjNvBDPfWGwryE6Qy4M9B7hvSy+OBuaPaD0qCtRUX1pXqOxjbdnkvm7FzBMkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9rSlbDTD9GZa0ytWtqo/JoUbXLsumjW+eNlIQoOM3f0=;
- b=N/1bfAtk/bNS+82wBO20faNkEGa2AmpH7c7e/JqNcAPfcJKPM6GZad+ytNo95ch+Z8V7XymEwc0M4DmLdUMSljTsIwaNCTI0MWvnsKit3cSto7+eThHfiYB5uO7yjyC+h2Ver42VKBIiz5oxKDNQaScwn66XtiNohhw3A/K2zOuSOjCNqyTlSNDDvYLIQx6xMUfJZiSJFerSPxnbTwOZsHsXyswuuRZOuIKcwjCgNFOI7iQ9ejZzL+yliDueUoY5TyryK48jg3EC8eG4YFIbQxAkgltSKRVph2n7l9bfyn3OF+ncNV4Pkk63vGzOOcFwhFcutIabUySlmJt0M+ApOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9rSlbDTD9GZa0ytWtqo/JoUbXLsumjW+eNlIQoOM3f0=;
- b=SN5jossoaRxbHWXHt1L9IYwS7sHZ/G47hZpC70aFQ6tW6yJqjQamtFe570W5nVlPyUXfHKfOo8pn/aZ7+s7jwNj3jp1ApMVPfDF2WmzBjNEoIrejj3gBx+MOEZVxzoI176ByzJNW2vz5KiWwdm9glM687iToXSi5D0/Sfnpo3u4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from PH0PR01MB7975.prod.exchangelabs.com (2603:10b6:510:26d::15) by
- LV3PR01MB8439.prod.exchangelabs.com (2603:10b6:408:1a2::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.23; Thu, 18 Jan 2024 03:15:49 +0000
-Received: from PH0PR01MB7975.prod.exchangelabs.com ([fe80::91c:92f:45a5:e68a])
- by PH0PR01MB7975.prod.exchangelabs.com ([fe80::91c:92f:45a5:e68a%6]) with
- mapi id 15.20.7159.020; Thu, 18 Jan 2024 03:15:48 +0000
-From: Huang Shijie <shijie@os.amperecomputing.com>
-To: gregkh@linuxfoundation.org
-Cc: patches@amperecomputing.com,
-	rafael@kernel.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	yury.norov@gmail.com,
-	kuba@kernel.org,
-	vschneid@redhat.com,
-	mingo@kernel.org,
-	akpm@linux-foundation.org,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	tglx@linutronix.de,
-	jpoimboe@kernel.org,
-	ndesaulniers@google.com,
-	mikelley@microsoft.com,
-	mhiramat@kernel.org,
-	arnd@arndb.de,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8624D5395;
+	Thu, 18 Jan 2024 03:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705547984; cv=none; b=dMd7E6DasczxpgMci7Y+gyFqSQGO7Xt/3sBkDgUv0MlFwOjxuoAkBYhtkGXkck8nHY3zzdsjcldqfU74MHayN+jrojlIHGQUDgve9zv4c/1/SqAhuAMyovKBmUzfVUKPp9a/240pb4iSMlXJlh7ygQxK0pSuv8LHlhaOMVbejdY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705547984; c=relaxed/simple;
+	bh=CoGvzEWgsxwu3UrwcqmHbOPzRseiLOEg/obwf3keBrY=;
+	h=X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:X-CID-BVR:
+	 X-CID-BAS:X-CID-FACTOR:X-UUID:Received:Received:X-ns-mid:Received:
+	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding; b=eu1ybStLB5aN47L+rtLf8r1S/OKdV17M8dhDGzmGr8kd5G9+LXXJE1wmqY2ni3vw42aPg+ECa0CbAs5t9kciAeY4Z3JeKeN3k6lG4F4gzl1j51d1ZZtKO5HKmVzP/4H8IEeh18X/60g2XsaZ1TwC9AYUiazCNFsSUUzgbxMIaf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: f85114de2f7f4de78e595bf92527fc4d-20240118
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:e38ac366-c8a4-4215-88da-3343b4ffb5f2,IP:10,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:15
+X-CID-INFO: VERSION:1.1.35,REQID:e38ac366-c8a4-4215-88da-3343b4ffb5f2,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:15
+X-CID-META: VersionHash:5d391d7,CLOUDID:456f4a2f-1ab8-4133-9780-81938111c800,B
+	ulkID:240118111934Z45MBBSN,BulkQuantity:0,Recheck:0,SF:19|44|66|38|24|17|1
+	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: f85114de2f7f4de78e595bf92527fc4d-20240118
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 476209112; Thu, 18 Jan 2024 11:19:32 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 788FEE000EB9;
+	Thu, 18 Jan 2024 11:19:32 +0800 (CST)
+X-ns-mid: postfix-65A898C4-298668660
+Received: from kernel.. (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 8869DE000EB9;
+	Thu, 18 Jan 2024 11:19:31 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: peter.ujfalusi@gmail.com,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	mpe@ellerman.id.au,
-	linuxppc-dev@lists.ozlabs.org,
-	chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	linux-mips@vger.kernel.org,
-	cl@os.amperecomputing.com,
-	Huang Shijie <shijie@os.amperecomputing.com>
-Subject: [PATCH] init: refactor the generic cpu_to_node for NUMA
-Date: Thu, 18 Jan 2024 11:14:12 +0800
-Message-Id: <20240118031412.3300-1-shijie@os.amperecomputing.com>
-X-Mailer: git-send-email 2.40.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH0PR03CA0189.namprd03.prod.outlook.com
- (2603:10b6:610:e4::14) To PH0PR01MB7975.prod.exchangelabs.com
- (2603:10b6:510:26d::15)
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] dmaengine: ti: edma: Add some null pointer checks to the edma_probe
+Date: Thu, 18 Jan 2024 11:19:29 +0800
+Message-Id: <20240118031929.192192-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR01MB7975:EE_|LV3PR01MB8439:EE_
-X-MS-Office365-Filtering-Correlation-Id: 208619bf-361c-4a65-1167-08dc17d3c4b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Mr/1TD6778cFBBbyoZwmZ3Dbro4P1rF32pgJMbrvXd7c91uHJs7ylAiWynpwhmwqoJKFG6nO8EonUA1QYXYsRoij9X1b6s8dEQFBsoEgi1160WSdfY46bBIP5HUfBhVjpzC+MQIj5yDPREj+Ut35+osNSej/53NdFCM2YUsfhmwPpUqsconz26uHGdtsPfBEkKoPeAW60MGLbmIbGyCOprnH0Km+99N3YAcdvf+hLMCgoffY3XvNN5DD1MF9l794T4wzJJSvyjVzW3bECcSFudl5dz42feswWIcPyFLubKNfSkNaYLDnz2c7GoAkSCOZk58uItsNMx6y29FAyOMv4KDEnp2jKZ61Xa595fCQXrtFWiSj3CBod64YEJqSviA/mH0IPBhnT+8FDzUk78USP6huEcVGNvr6V/+Daff0TO5+0ILO38LLZKYF3CnOH0jg774vcRZbnKH0owQ7tI3/oKCfd7FgEUmYQT8GCEWIKxwQnp/aSDGuX1cXZNZ1LaK/o5ZQHNDVNjHNc3ICSNDvjLuzfuBxup+JX0Kw/HJL5sJg1Z5VW+9r78zo499YAllgstVLEslHwf7mzq/oBWIRXu7cjMtOLbDsWGemQ35+6ZCDNeaxJYdT7bClnXhdmiWqycXOW/eAqJgI/rSNVE6pZw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB7975.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(39850400004)(376002)(136003)(396003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(41300700001)(38100700002)(83380400001)(86362001)(66556008)(38350700005)(6486002)(6916009)(316002)(66476007)(2906002)(66946007)(5660300002)(7416002)(8936002)(4326008)(26005)(1076003)(2616005)(107886003)(478600001)(52116002)(6666004)(6506007)(6512007)(8676002)(41533002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UJEiEPaIt1t8oFSATzhnNIet9OVoj0Rut08gOAu6Aa8kMPHi1DSKtvAYxYl1?=
- =?us-ascii?Q?1XYTHXRv3nK6BYPCC6FWYNCWtvJPa21W9crvptdb8HxigtHrNJm19uQmjyCg?=
- =?us-ascii?Q?Am6u0F32bp7/0FQjCIyYhLI5JeRL1hFfpb+jM5Ms4xUK7wauiU7yC/UnDi6G?=
- =?us-ascii?Q?Sez+Bj/O9i8I2ZpzUqn6ng4blO7gGJtZtZW6qwJa5dVAg/kp1M89oQQ8McRF?=
- =?us-ascii?Q?PusPAawq0/dkNLE4TpNKaUr3frkQAEjRJ+uT4brzzmHAsjJmBC0kXkdvyF/Z?=
- =?us-ascii?Q?JzMQbsoHymkP+rt9IASiDzVYWbOlwCpYyXtRd7UT7ylCB1MV9Olyjr3H9K5U?=
- =?us-ascii?Q?aTozH+brI2E9pc2tM1ZZgRw3lFyNM2WQo/3S086bvBGmOYtkWW9Qa/szG5wH?=
- =?us-ascii?Q?72z7b3URoy2dUIgD7VIqJ3+RckUcrj/u7NFf6Qo5RCs0mYHd9xRUsNkcwq2D?=
- =?us-ascii?Q?OdZ8Dq4hJX6XqMUTc4jmRQbuYTgLaemcldMy3Da859+fbxjQPW8g++0GWrQe?=
- =?us-ascii?Q?mOUPNO8QoNZ43Gb4kwZSVKWrIYQfdKh6GFGwUhwJCMGqtvArW7OTgcTo2eBf?=
- =?us-ascii?Q?PLrOC8v5BT4ZrLHbTbGFKSTBi4okW6yx+xoaSgLydnNhiTQGB0tO194BhIV9?=
- =?us-ascii?Q?aEZ3H+H9k6wE0iPH2jgmpNxX8tkpI6oIEfmXSSwr5677C6ogRYwNqe/FPwjA?=
- =?us-ascii?Q?u6FPnQCUGhe/g7ouJVpcOH7egRGRTPuBrxhSMS3ffQDyzTLAiUDkZA9/o199?=
- =?us-ascii?Q?9lI7e+ARbgpgE3d5jkCUn69I/biA+ABw1FSFI9Q3z7PRFrEvSwASbfMo4Zom?=
- =?us-ascii?Q?lz0r6dsZp4RjjdrC+OSCA/h8l/E0wJ6g6aQhaWyqExupUHCF3jqAz8OoWByX?=
- =?us-ascii?Q?2B+EqGIyyfiT/c1D+LQkCrHoM/XelggCeUJGldq6BLc0YBzsgFVq47mw6cbJ?=
- =?us-ascii?Q?T4ftu3k5nx4REhDMJXcm+o6EQGFkH6bLUX/nRHz7mq672myYxaEyA3zCPMDs?=
- =?us-ascii?Q?gWEPk9z98iFnkEogREqIerzOJT+gPciS8wDDRtynC84mEOOA46bzJDQpB/ua?=
- =?us-ascii?Q?X3oiViqAlqI0xlx9S4NCLJPh1qkwzLlAHOJAvULzZ7OqlZHTBbvFs54OWv28?=
- =?us-ascii?Q?7tJWnZJxLSwTT680qO+ErMe+nqL88k9hHyyvgHbHSlAeqEvxTJbQxdM3E4Pc?=
- =?us-ascii?Q?PWntl5RwJcTPQBHHLq/vqrQ79SUbcmhCzwNggwqiN6h4E7SM6Zo2reosw6XD?=
- =?us-ascii?Q?BA/o1pk+ZkxwfskCn+V25P8nPbRFiUP1bLdYuNAZc0oQyNNInGOHQGeBcSVM?=
- =?us-ascii?Q?kUgF57Qaz7NXbQXrcavuCJINMv9V8ERGo4p+jIzLD7QMTTKC0vAgX9PCEikV?=
- =?us-ascii?Q?6ATF9PZB9deT9P8tPywpHfi7FOahNpbv32xYbTddYwpocDQZQtDt88XVef1o?=
- =?us-ascii?Q?K0Ka9/3bNC0Ia7SInuVhv5cZzhlGGzfhETNPsWonnjaFYcZPWpafGrIYUkrp?=
- =?us-ascii?Q?TAm86B7dOMn0HR5l1AsXMeqByRrt8hTp42nOvTjvfvFh0UCgC1n4VrJDPCUD?=
- =?us-ascii?Q?mN9m0M0pwUV9MEygu+q+q9q70ET7mdo44NvfQydYZAHUS9nLwnQviBZt3uLK?=
- =?us-ascii?Q?tSqoLbQn/5M1lf5FzoPoccc=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 208619bf-361c-4a65-1167-08dc17d3c4b7
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB7975.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2024 03:15:48.8422
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cNkIrnf8wHWP77puODQUm3mJvtTw6xor7pVIPEAzh+ivusw7ZlBMfayxuNMV9JS80Kdm4N2ziVL7OsyRuUB7UuRwbbjBnT9ZqPyKxxZm53yziDj50C5mb6ybcdaZvY2N
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR01MB8439
+Content-Transfer-Encoding: quoted-printable
 
-(0) We list the ARCHs which support the NUMA:
-       arm64, loongarch, powerpc, riscv,
-       sparc, mips, s390, x86,
+devm_kasprintf() returns a pointer to dynamically allocated memory
+which can be NULL upon failure. Ensure the allocation was successful
+by checking the pointer validity.
 
-(1) Some ARCHs in (0) override the generic cpu_to_node(), such as:
-       sparc, mips, s390, x86.
-
-    Since these ARCHs have their own cpu_to_node(), we do not care
-    about them.
-
-(2) The ARCHs enable NUMA and use the generic cpu_to_node.
-    From (0) and (1), we can know that four ARCHs support NUMA and
-    use the generic cpu_to_node:
-        arm64, loongarch, powerpc, riscv,
-
-    The generic cpu_to_node depends on percpu "numa_node".
-
-    (2.1) The loongarch sets "numa_node" in:
-          start_kernel --> smp_prepare_boot_cpu()
-
-    (2.2) The arm64, powerpc, riscv set "numa_node" in:
-       	  start_kernel --> arch_call_rest_init() --> rest_init()
-       	               --> kernel_init() --> kernel_init_freeable()
-                       --> smp_prepare_cpus()
-
-    (2.3) The first place calling the cpu_to_node() is early_trace_init():
-          start_kernel --> early_trace_init()--> __ring_buffer_alloc()
-	               --> rb_allocate_cpu_buffer()
-
-    (2.4) So it safe for loongarch. But for arm64, powerpc and riscv,
-          there are at least four places in the common code where
-	  the cpu_to_node() is called before it is initialized:
-	   a.) early_trace_init()         in kernel/trace/trace.c
-	   b.) sched_init()               in kernel/sched/core.c
-	   c.) init_sched_fair_class()    in kernel/sched/fair.c
-	   d.) workqueue_init_early()     in kernel/workqueue.c
-
-(3) In order to fix the issue, the patch refactors the generic cpu_to_node:
-    (3.1) change cpu_to_node to function pointer,
-          and export it for kernel modules.
-
-    (3.2) introduce _cpu_to_node() which is the original cpu_to_node().
-
-    (3.3) introduce smp_prepare_boot_cpu_start() to wrap the original
-          smp_prepare_boot_cpu(), and set cpu_to_node with
-	  early_cpu_to_node which works fine for arm64, powerpc,
-	  riscv and loongarch.
-
-    (3.4) introduce smp_prepare_cpus_done() to wrap the original
-          smp_prepare_cpus().
-	  The "numa_node" is ready after smp_prepare_cpus(),
-	  then set cpu_to_node with _cpu_to_node().
-
-Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
 ---
- drivers/base/arch_numa.c | 11 +++++++++++
- include/linux/topology.h |  6 ++----
- init/main.c              | 29 +++++++++++++++++++++++++++--
- 3 files changed, 40 insertions(+), 6 deletions(-)
+ drivers/dma/ti/edma.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
-index 5b59d133b6af..867a477fa975 100644
---- a/drivers/base/arch_numa.c
-+++ b/drivers/base/arch_numa.c
-@@ -61,6 +61,17 @@ EXPORT_SYMBOL(cpumask_of_node);
- 
- #endif
- 
-+#ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
-+#ifndef cpu_to_node
-+int _cpu_to_node(int cpu)
-+{
-+	return per_cpu(numa_node, cpu);
-+}
-+int (*cpu_to_node)(int cpu);
-+EXPORT_SYMBOL(cpu_to_node);
-+#endif
-+#endif
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index f1f920861fa9..5f8d2e93ff3f 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2404,6 +2404,11 @@ static int edma_probe(struct platform_device *pdev=
+)
+ 	if (irq > 0) {
+ 		irq_name =3D devm_kasprintf(dev, GFP_KERNEL, "%s_ccint",
+ 					  dev_name(dev));
++		if (!irq_name) {
++			ret =3D -ENOMEM;
++			goto err_disable_pm;
++		}
 +
- static void numa_update_cpu(unsigned int cpu, bool remove)
- {
- 	int nid = cpu_to_node(cpu);
-diff --git a/include/linux/topology.h b/include/linux/topology.h
-index 52f5850730b3..e7ce2bae11dd 100644
---- a/include/linux/topology.h
-+++ b/include/linux/topology.h
-@@ -91,10 +91,8 @@ static inline int numa_node_id(void)
- #endif
- 
- #ifndef cpu_to_node
--static inline int cpu_to_node(int cpu)
--{
--	return per_cpu(numa_node, cpu);
--}
-+extern int (*cpu_to_node)(int cpu);
-+extern int _cpu_to_node(int cpu);
- #endif
- 
- #ifndef set_numa_node
-diff --git a/init/main.c b/init/main.c
-index e24b0780fdff..b142e9c51161 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -870,6 +870,18 @@ static void __init print_unknown_bootoptions(void)
- 	memblock_free(unknown_options, len);
- }
- 
-+static void __init smp_prepare_boot_cpu_start(void)
-+{
-+	smp_prepare_boot_cpu();	/* arch-specific boot-cpu hooks */
+ 		ret =3D devm_request_irq(dev, irq, dma_irq_handler, 0, irq_name,
+ 				       ecc);
+ 		if (ret) {
+@@ -2420,6 +2425,11 @@ static int edma_probe(struct platform_device *pdev=
+)
+ 	if (irq > 0) {
+ 		irq_name =3D devm_kasprintf(dev, GFP_KERNEL, "%s_ccerrint",
+ 					  dev_name(dev));
++		if (!irq_name) {
++			ret =3D -ENOMEM;
++			goto err_disable_pm;
++		}
 +
-+#ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
-+#ifndef cpu_to_node
-+	/* The early_cpu_to_node should be ready now. */
-+	cpu_to_node = early_cpu_to_node;
-+#endif
-+#endif
-+}
-+
- asmlinkage __visible __init __no_sanitize_address __noreturn __no_stack_protector
- void start_kernel(void)
- {
-@@ -899,7 +911,7 @@ void start_kernel(void)
- 	setup_command_line(command_line);
- 	setup_nr_cpu_ids();
- 	setup_per_cpu_areas();
--	smp_prepare_boot_cpu();	/* arch-specific boot-cpu hooks */
-+	smp_prepare_boot_cpu_start();
- 	boot_cpu_hotplug_init();
- 
- 	pr_notice("Kernel command line: %s\n", saved_command_line);
-@@ -1519,6 +1531,19 @@ void __init console_on_rootfs(void)
- 	fput(file);
- }
- 
-+static void __init smp_prepare_cpus_done(unsigned int setup_max_cpus)
-+{
-+	/* Different ARCHs may override smp_prepare_cpus() */
-+	smp_prepare_cpus(setup_max_cpus);
-+
-+#ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
-+#ifndef cpu_to_node
-+	/* Change to the formal function. */
-+	cpu_to_node = _cpu_to_node;
-+#endif
-+#endif
-+}
-+
- static noinline void __init kernel_init_freeable(void)
- {
- 	/* Now the scheduler is fully set up and can do blocking allocations */
-@@ -1531,7 +1556,7 @@ static noinline void __init kernel_init_freeable(void)
- 
- 	cad_pid = get_pid(task_pid(current));
- 
--	smp_prepare_cpus(setup_max_cpus);
-+	smp_prepare_cpus_done(setup_max_cpus);
- 
- 	workqueue_init();
- 
--- 
-2.40.1
+ 		ret =3D devm_request_irq(dev, irq, dma_ccerr_handler, 0, irq_name,
+ 				       ecc);
+ 		if (ret) {
+--=20
+2.39.2
 
