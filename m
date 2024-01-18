@@ -1,125 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CA520B1C
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43E4241EC
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705578653; cv=none; b=UHfd8kn9FvZ2SxmcTrADdna57LG67bUnO3E7hWNe5okUgs5LcjN4gqyIXo4etH/J0EREIBTLvO2zZIFC3Dy3YWz49pQeJTUlEA8CPGw81dfi9HOJ1YkuFoES4+zzM49f6xR/lq9ewJ6+u6m66pEHjDEDH1UoDJF60DOfNhNB4us=
+	t=1705578690; cv=none; b=hRvBlaPnUVzRR8QJWASbtM0HDNOYUYjxLa7qYrTpf6xZzA79KAQ3ZZDzo8Z/6XtHbkSdiO+1LlMXQJQmpdtAxAh+xnK/joC2zUHUATGFM/7VwFPqiMvE/XEI2HjpFv/isALePIAMUJDymGtQyfh1qrQK6wwkJCQXUNMXdthXMHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705578653; c=relaxed/simple;
-	bh=gt35hwddnpNUWAan27VYVSM0nHY7vcCvCwkZZknrkR0=;
+	s=arc-20240116; t=1705578690; c=relaxed/simple;
+	bh=gjKL/IdNxXoEFbPq3V+ULP/88RRcg6e6ZtkZpfaK71w=;
 	h=DKIM-Signature:Received:X-MC-Unique:Received:
 	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
-	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:
-	 Content-Transfer-Encoding; b=i8tle6vivDF24j6LTpI9M7crIXH7tb4P4ltS1efWTqApBn23dJN7dMI/X2Stoomj/sYEHiO48/MmlBqCCPvIs0UFDcQJQ6lhZ10zzOwh/q1IuAck36WNpmq5Fx8g9HfZfrsA7mJxOwX4H75hsswqsNxsBo4LdgydIs0MuOJ+vII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SXjje/vT; arc=none smtp.client-ip=170.10.133.124
+	 X-Google-Smtp-Source:X-Received:Received:Received:From:To:Cc:
+	 Subject:In-Reply-To:References:X-Clacks-Overhead:Date:Message-ID:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding; b=IgZUcRmvbYNjms3NsRGMXt9H37ytG+/EJjOeYVIGFbEjFpq/uKquNjUoSPLtKkkpMQRhi2gLt3d1eEaaaROMmdWqLSr2Y3cQgwkHupuAbCTTq/lHxwmoAXXKgim8uQJxSzs05ivq3Ho8Pi/BCsYQwwmGskaDhm0yZQWz6/IrzxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g/40rDyY; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXjje/vT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g/40rDyY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705578651;
+	s=mimecast20190719; t=1705578687;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QT9qXfX+i5084J8ucGBrAuMK3QTq9k9pLJjBMMFh3rE=;
-	b=SXjje/vT9+vqiAGnAdtgnhGz12f4LEbUe02RAeji67okrlX0I3Z3/L0dP+cI6p84/aqNl9
-	LW7wvzgOsSmevT3K9vWUnfnPoavxQHB30rdIk2JzQu/KkHXFkyvaaL8x+KO+GQFuXjmbAK
-	i3gDJihQ37fN+PST0LnhUGnpjjrvwLs=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=dES9AcNoy5iDWvH8/jwu9Q9jSrExSLuFvfw2IDCTzWM=;
+	b=g/40rDyYgImzdIgUmY6USCskh1xCJgKzgCBMtHOJHkKgG3X8+WcNDMB0Zy8IXM723JsSXp
+	SZKNXxKQHy4Vd2vyFnx4ecsZn+DXZj6jrg0vuJoUnSHa8qFrY9IlEIa0jzhmwmzVXI7WWn
+	kyX+3F6yUWsPiGQR472j8Ac8JVAp+jM=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-168-uDcJ8n2rP3yT7AWla-_W5Q-1; Thu, 18 Jan 2024 06:50:49 -0500
-X-MC-Unique: uDcJ8n2rP3yT7AWla-_W5Q-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-28c391d255dso8324322a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 03:50:49 -0800 (PST)
+ us-mta-45-H6gAcLdePpGlksLQDrU77g-1; Thu, 18 Jan 2024 06:51:21 -0500
+X-MC-Unique: H6gAcLdePpGlksLQDrU77g-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-55731b63fe0so6774565a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 03:51:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705578649; x=1706183449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705578680; x=1706183480;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QT9qXfX+i5084J8ucGBrAuMK3QTq9k9pLJjBMMFh3rE=;
-        b=JiLc3nyTLFTQ3YjZmR4r3vgpC6YGCSCc3Z5ssR5EyBMNRGEMfHIVEw9VMfXqTAQ1Sg
-         veuQRSsglFOeOkau5chJOc1PsQg0D0Y6yTivJxhgT1++ONgm2Be5p1/x8tpIW2/uly/M
-         Zw5qh348+jJuN1GgFewJaP0naihMfq7IMnljXEYZ+3hGijVefX8Y1pvOvukx0iJ9fxSR
-         +8Foovs5ltA8HtkphYqhhBwTuwjwPrVGziexrsiw0SyAloyYXeCukfZfGT0sZ4j2L64d
-         kEXGXJfeDJkhwBIJKkxrKjt3H0/DVvYh0pmjai9iPmIRJkbg8jjVKIGhsQB7VXt34BWM
-         htFg==
-X-Gm-Message-State: AOJu0YxFbtXSwEKG8rdJGNHPodNXrAGssOqDDzZfjytzeXzUEbQAUlBV
-	YqM/xf6EqcvsYwS4Prk6DU6DUVw5+VGStv2//7vXPxYAx/DOOR+vub3rztYjWUb1J+GYGixDNPE
-	ByV9RBX46YhRc7EKHkUYChcmp1MdgtQW9DD2Jlw2bejOvvFPDfKgg49ZY5yjKc0HLe/LiO8FZaF
-	wtDw0fSPam1qnzwAZFBRSkozLOYtqQjl213Zfi
-X-Received: by 2002:a17:90a:fa08:b0:28f:423f:1cfe with SMTP id cm8-20020a17090afa0800b0028f423f1cfemr537976pjb.18.1705578648789;
-        Thu, 18 Jan 2024 03:50:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHVs+zCTtfvuguPsuMp6IoFUt9geCNapxlrZ6013/fZtiox4ORl6FknrWsaFGhDHw+mmfqpBre4bZ+1zAqDKZk=
-X-Received: by 2002:a17:90a:fa08:b0:28f:423f:1cfe with SMTP id
- cm8-20020a17090afa0800b0028f423f1cfemr537973pjb.18.1705578648531; Thu, 18 Jan
- 2024 03:50:48 -0800 (PST)
+        bh=dES9AcNoy5iDWvH8/jwu9Q9jSrExSLuFvfw2IDCTzWM=;
+        b=LQTAyy7KKPGKkFHNfiaUVwHIqlUJBCy4LQlNen6s26uBdsGIticzPP4ppzJ8rm4nqU
+         JXI3ALEayWRgcNyp7YpQepU0YKc3eoznidk/id0bwcf7OE+2W4sBzN2OLDJeguOIT96G
+         NTtz0VgLsnmRxqY8kiqJtNuuMHKpfH2+/ghJIKnJcL16Qg2KZLkf9mOoHiaPXx0xHPUW
+         Up+VJ5r3yWPDU/sYtWbTewdZVhOqkNxeulZ3LQ5BQxn59qzR7O6VJeHb3jAuPnTDxjCR
+         IdfI2WSHy06lTpFaH4zUsDCu3v8gV+x3sqo28NPCPGDB3XkbUSYf7VtQgajpYU+mhO2/
+         LV0w==
+X-Gm-Message-State: AOJu0YzimsgJZpd/PJL/Me9AQ2fIXzWfyQkYLcpL0zqwjQCdtwydqYJS
+	ylrvyuBo14VXXXSc1Z2PwR8cOUrqOIj4x3OIUEd0wTw8tjFsJ0a6LamqKKg/U5HV6gh7YTSJC3w
+	e51jq7ixleaccSpLTNQuK5qt9oslyOrcxP86HxrQKBmW2bhrV0g6z6DjewMXtNQ==
+X-Received: by 2002:aa7:cf07:0:b0:559:e763:6bfc with SMTP id a7-20020aa7cf07000000b00559e7636bfcmr477441edy.56.1705578680242;
+        Thu, 18 Jan 2024 03:51:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFZxNA+3we4N57JAj4aSvmZmv7PX3SA4s4PiqefRRfW+RbV+w2ZNWBG3LhJT8xEATP5sdjuAQ==
+X-Received: by 2002:aa7:cf07:0:b0:559:e763:6bfc with SMTP id a7-20020aa7cf07000000b00559e7636bfcmr477425edy.56.1705578679854;
+        Thu, 18 Jan 2024 03:51:19 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id b3-20020a0564021f0300b005545dffa0bdsm9338903edb.13.2024.01.18.03.51.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 03:51:19 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id ABB751088BAE; Thu, 18 Jan 2024 12:51:18 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ Network Development <netdev@vger.kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Boqun Feng <boqun.feng@gmail.com>, Daniel Borkmann
+ <daniel@iogearbox.net>, Eric Dumazet <edumazet@google.com>, Frederic
+ Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>, Paolo
+ Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Waiman Long <longman@redhat.com>, Will
+ Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Andrii
+ Nakryiko <andrii@kernel.org>, Cong Wang <xiyou.wangcong@gmail.com>, Hao
+ Luo <haoluo@google.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Jesper
+ Dangaard Brouer <hawk@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Jiri
+ Pirko <jiri@resnulli.us>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Ronak
+ Doshi <doshir@vmware.com>, Song Liu <song@kernel.org>, Stanislav Fomichev
+ <sdf@google.com>, VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+ Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next 15/24] net: Use nested-BH locking for XDP
+ redirect.
+In-Reply-To: <20240117180447.2512335b@kernel.org>
+References: <20231215171020.687342-1-bigeasy@linutronix.de>
+ <20231215171020.687342-16-bigeasy@linutronix.de>
+ <CAADnVQKJBpvfyvmgM29FLv+KpLwBBRggXWzwKzaCT9U-4bgxjA@mail.gmail.com>
+ <87r0iw524h.fsf@toke.dk> <20240112174138.tMmUs11o@linutronix.de>
+ <87ttnb6hme.fsf@toke.dk> <20240117180447.2512335b@kernel.org>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Thu, 18 Jan 2024 12:51:18 +0100
+Message-ID: <87bk9i6ert.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240116002817.216837-1-sashal@kernel.org> <20240116002817.216837-11-sashal@kernel.org>
- <ZabrPnsVr6WHz2lM@duo.ucw.cz>
-In-Reply-To: <ZabrPnsVr6WHz2lM@duo.ucw.cz>
-From: Andreas Gruenbacher <agruenba@redhat.com>
-Date: Thu, 18 Jan 2024 12:50:37 +0100
-Message-ID: <CAHc6FU70RD8fktBp=Srv6xeq3qXoLCdT8pi6y=1Y7bMHFK-mtQ@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 11/12] gfs2: Refcounting fix in gfs2_thaw_super
-To: Sasha Levin <sashal@kernel.org>, Pavel Machek <pavel@denx.de>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, gfs2@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 16, 2024 at 9:53=E2=80=AFPM Pavel Machek <pavel@denx.de> wrote:
-> Hi!
->
-> > From: Andreas Gruenbacher <agruenba@redhat.com>
-> >
-> > [ Upstream commit 4e58543e7da4859c4ba61d15493e3522b6ad71fd ]
-> >
-> > It turns out that the .freeze_super and .thaw_super operations require
-> > the filesystem to manage the superblock refcount itself.  We are using
-> > the freeze_super() and thaw_super() helpers to mostly take care of that
-> > for us, but this means that the superblock may no longer be around by
-> > when thaw_super() returns, and gfs2_thaw_super() will then access freed
-> > memory.  Take an extra superblock reference in gfs2_thaw_super() to fix
-> > that.
->
-> Patch was broken during backport.
->
-> > +++ b/fs/gfs2/super.c
-> > @@ -1013,6 +1013,7 @@ static int gfs2_freeze(struct super_block *sb)
-> >               goto out;
-> >       }
-> >
-> > +     atomic_inc(&sb->s_active);
-> >       for (;;) {
-> >               error =3D gfs2_lock_fs_check_clean(sdp, &sdp->sd_freeze_g=
-h);
-> >               if (!error)
-> > @@ -1034,6 +1035,7 @@ static int gfs2_freeze(struct super_block *sb)
-> >       error =3D 0;
-> >  out:
-> >       mutex_unlock(&sdp->sd_freeze_mutex);
-> > +     deactivate_super(sb);
-> >       return error;
-> >  }
->
-> Notice the goto out? That now jumps around the atomic_inc, but we
-> still do decrease. This will break 4.19, please fix or drop.
+Jakub Kicinski <kuba@kernel.org> writes:
 
-Thanks, Pavel.
+> On Wed, 17 Jan 2024 17:37:29 +0100 Toke H=C3=B8iland-J=C3=B8rgensen wrote:
+>> I am not contesting that latency is important, but it's a pretty
+>> fundamental trade-off and we don't want to kill throughput entirely
+>> either. Especially since this is global to the whole kernel; and there
+>> are definitely people who want to use XDP on an RT kernel and still
+>> achieve high PPS rates.
+>>=20
+>> (Whether those people really strictly speaking need to be running an RT
+>> kernel is maybe debatable, but it does happen).
+>>=20
+>> > I expected the lock operation (under RT) to always succeeds and not
+>> > cause any delay because it should not be contended.=20=20
+>>=20
+>> A lock does cause delay even when it's not contended. Bear in mind that
+>> at 10 Gbps line rate, we have a budget of 64 nanoseconds to process each
+>> packet (for 64-byte packets). So just the atomic op to figure out
+>> whether there's any contention (around 10ns on the Intel processors I
+>> usually test on) will blow a huge chunk of the total processing budget.
+>> We can't actually do the full processing needed in those 64 nanoseconds
+>> (not to mention the 6.4 nanoseconds we have available at 100Gbps), which
+>> is why it's essential to amortise as much as we can over multiple
+>> packets.
+>>=20
+>> This is all back-of-the-envelope calculations, of course. Having some
+>> actual numbers to look at would be great; I don't suppose you have a
+>> setup where you can run xdp-bench and see how your patches affect the
+>> throughput?
+>
+> A potentially stupid idea which I have been turning in my head is=20
+> how we could get away from having the driver handle details of NAPI
+> budgeting. It's an source of bugs and endless review comments.
+>
+> All drivers end up maintaining a counter of "how many packets have
+> I processed" and comparing that against the budget. Would it be crazy
+> if we put that inside napi_struct? Add a "budget" member inside
+> napi_struct as well, and:
+>
+> struct napi_struct {
+> ...
+> 	// poll state
+> 	unsigned int budget;
+> 	unsigned int rx_used;
+> ...
+> }
+>
+> static inline bool napi_rx_has_budget(napi)
+> {
+> 	return napi->budget > napi->rx_used;
+> }
+>
+> poll(napi) // no budget
+> {
+> 	while (napi_rx_has_budget(napi)) {
+> 		napi_gro_receive(napi, skb); /* does napi->rx_used++ */
+> 		// maybe add explicit napi_rx_count() if
+> 		// driver did something funny with the frame.
+> 	}
+> }
+>
+> We can also create napi_tx_has_budget() so that people stop being
+> confused whether budget is for Tx or not. And napi_xdp_comp_has_budget()
+> so that people stop completing XDP in hard irq context (budget=3D=3D0)...
+>
+> And we can pass napi into napi_consume_skb(), instead of, presumably
+> inexplicably to a newcomer, passing in budget.
+> And napi_complete_done() can lose the work_done argument, too.
 
-Sasha, you don't want that fix without "gfs2: Rework freeze / thaw
-logic" and the follow-up fixes, and backporting that probably isn't
-going to be worth it.
+I do agree that conceptually it makes a lot of sense to encapsulate the
+budget like this so drivers don't have to do all this state tracking
+themselves. It does appear that drivers are doing different things with
+the budget as it is today, though. For instance, the intel drivers seem
+to divide the budget over all the enabled RX rings(?); so I'm wondering
+if it'll be possible to unify drivers around a more opaque NAPI poll
+API?
 
-Thanks,
-Andreas
+-Toke
 
