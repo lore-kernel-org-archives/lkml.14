@@ -1,217 +1,89 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1E3138A
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 00:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2958185D;
+	Thu, 18 Jan 2024 00:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705539021; cv=none; b=OI4WjyqRtfIpcP6ARIJ6SMI6Lb2mBQErwpOmkPKghmaOQfqFKy55d0nbfP+ro4WGtHPli+2ZAbv8xV4wKGILXepchrklXhBRvEtbDGZ0pQx8i/kCY6TG8A23Q9xWZpNrvYzL8G0tANu+wQxJPt4FJ1bt2lub3TgiWLFS9SuuNs8=
+	t=1705539142; cv=none; b=tahq2OIT2b4znSUfnoDwijYLxT+pRzuq/KB/HdpexjkF+WeYMJZxaEsaH5GfGgl6S08ZcuQt2+SUVekPLD0R4D+v+ZdhkHDpNULkUSFW0sMI+sPZHiGtyqjumrzvMwL2kGRjmVCJPNNNsJgU98PPUMa/6dsw8urXNdHBKzDv3RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705539021; c=relaxed/simple;
-	bh=9y54p8f3U7fAOvV/a6ErT1Zn/mF3dyoC+RYR4mOlE2g=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:
-	 Content-Type:Content-Transfer-Encoding; b=Sys6zx3KN26D1YUTB2yHxHG+U+rP7MR5BzJfxEhKy0ul0iN4yXqfO4pnicoExs7W+ZfzAKhPRcdGbu3AgSbYlZTL6vDhq0WZTALH/mVeRqEMUKQ2jo7qMAU4wGshMzEaT2UqxmarbISIPbtQGgb3Iy5aSUnwUfq21o+/xcUA0Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=AJ6VgDKv; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1705539142; c=relaxed/simple;
+	bh=FirjylFd2MCTFO58V4vn7pDh9CrJrYnIJwrr78O9IR8=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:Received:Message-ID:Date:MIME-Version:User-Agent:Cc:
+	 Subject:Content-Language:To:References:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding; b=cgt/Htnb2p+g/MftM7jDS7Nxt43fMFatNwQXmjCh04bH70g+k1dxajif33HRZ2+1kmpitEALr2VfzhsVpciMinqUJjm8uuZ9yrPKOfozhT9No8qQx9FQGoXzXjYAPi1bZ455zoy2ExD05eroWUVGVSNvVtwkh0oud4H++P6wDn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U17CO2b+; arc=none smtp.client-ip=192.55.52.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="AJ6VgDKv"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3619cc9cc65so576955ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 16:50:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1705539019; x=1706143819; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7T6+PUqnYVA+g50Opqgq8C85S5Y3X7o8IynG4S0vGrI=;
-        b=AJ6VgDKvWwHVi1O9iRuO86BjZp/SyChIzxTF5THuUpO4PEKPb20NJUcOQdwY0f/4qg
-         SFmVPX1JyDx/asY/aekynhzxPKwyFJSMMdH7XFDLWi98QuRM3DqELglaDPS7POvl5dZz
-         +POrNJvqSH6TtRgJIWvz6iORW14cy5ULZWs3l52mNsYenAvbmEBQasBYiqZYUEdgHCEP
-         +h5AyaNgw+EnD4Fek/m1Aoq0J1V5AUc5iSz6XfV/eHAolwgsOH9ObGW5DyEiK0b4QJOn
-         9iC9q38r4X7Iz6iYq79x6CWX1+rj/AFu+RfPi9fRTAwhrzezofQMlWykqzHPKsKACo2C
-         Hviw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705539019; x=1706143819;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7T6+PUqnYVA+g50Opqgq8C85S5Y3X7o8IynG4S0vGrI=;
-        b=QW2Nb7f4VBgIGLNi3T3ueX5czWNW8jInbf9yrP8jWzevD66e3OpQ/Qqw5Jm/eH2CW8
-         W2UzIBsJ1R302p+dOuNbPX3XrN43AQrd7ycBSUX55BJcgcRWj9ER6cBwt/x0rMf/uKDU
-         dM7jL963+qMJSTsz8RKTm5kx7seQJckKDrB3Oc88TxWkxz64RoF4QBPujWI55IZcI4cc
-         AFz3AunyRhKuf6xEPqNJf+dRFXAMGs0uzfHnLLeIJmJ3TzILbZEdjcVysuCJ/SXM+EBD
-         PummjF7qRRZ+GpCb2pj4giA66+2PmLuADEf3AWiQWcYm/ZJ7ZCS7+sCxSQNp/8IUY9/M
-         F6Yg==
-X-Gm-Message-State: AOJu0YyKxkdiGuIPW4jC2pAteXLwKLTKWcrxncGhD3TpybxtqD8gBxq+
-	K77FRRtmHT9puqAZdUXXnehYUIwtA+7o3VKdx2QmhTsQtqmdR5tlKNwJYBb79HvLYlQbCvQ50eJ
-	3ZSDKUy1NEcQ0F15k7YgUVf5PasojYmZcgtj5Vg==
-X-Google-Smtp-Source: AGHT+IEztnAJuBWRCrV40VVKQMBOLrQVaqbPo6g4vRvGgSJFYuKBaidyQHihuBBVKuvITHf58HtS0rKgVyHFCdSjMVI=
-X-Received: by 2002:a92:4a0e:0:b0:35f:efdc:764e with SMTP id
- m14-20020a924a0e000000b0035fefdc764emr155882ilf.32.1705539018934; Wed, 17 Jan
- 2024 16:50:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U17CO2b+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705539141; x=1737075141;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FirjylFd2MCTFO58V4vn7pDh9CrJrYnIJwrr78O9IR8=;
+  b=U17CO2b+PAZoZLRfRXr5ILSxGFwyOyAj2MFpqs1MvTBVQsFoAvGFP+Yu
+   kYYuKXXsDB1h7txbiOU3zAQRZJj5QO07hV9S9sjsLom5KORJXUh3+GspM
+   nfNcKJMAYK581U7/008Ou7/VLyrWJ/5HlLjITjeKUv7boIaZe0vseh4Mw
+   bI5Jl/5mPqnUur8Rzhfd5v3dzM62l5uvgjavOj3m1yYepG3y17hvVR89S
+   e1YXexN/6yatSE0nV4Uy0x5ROymB+3DrpDTUCII3m0MUm/TScAt7xfV/C
+   +6pMdiYgfCYZ38dx/tOdtJD11B7/Xe6wvyyDbGalBK7myMbtqwl/8M53y
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="397467481"
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="397467481"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 16:52:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="186466"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by orviesa003.jf.intel.com with ESMTP; 17 Jan 2024 16:52:17 -0800
+Message-ID: <5a9c38ec-1dc2-40d3-99eb-02b87be660a6@linux.intel.com>
+Date: Thu, 18 Jan 2024 08:46:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231205085959.32177-1-zong.li@sifive.com> <CANXhq0r6A48q+ehayaURLO6snDEjzVJO6Ti+1we-57i0ORT9yg@mail.gmail.com>
- <CANXhq0qqv3MBEt8zsWBT+gkdyt1PD4ZjDSrznEotdFM7M7K+yQ@mail.gmail.com>
-In-Reply-To: <CANXhq0qqv3MBEt8zsWBT+gkdyt1PD4ZjDSrznEotdFM7M7K+yQ@mail.gmail.com>
-From: Zong Li <zong.li@sifive.com>
-Date: Thu, 18 Jan 2024 08:50:08 +0800
-Message-ID: <CANXhq0qNA5JO1xZLbuL6ig1Ddws0m2azMwCyqLFgN3B0VZmvEw@mail.gmail.com>
-Subject: Re: [PATCH] riscv: add CALLER_ADDRx support
-To: palmer@dabbelt.com, Palmer Dabbelt <palmer@rivosinc.com>, paul.walmsley@sifive.com, 
-	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v10 0/5] fix vt-d hard lockup when hotplug ATS capable
+ device
+Content-Language: en-US
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, kevin.tian@intel.com,
+ bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
+ robin.murphy@arm.com, lukas@wunner.de
+References: <20231228170206.720675-1-haifeng.zhao@linux.intel.com>
+ <1a2a4069-c737-4a3c-a2f6-cce06823331b@linux.intel.com>
+ <3ee904e9-8a93-4bd9-8df7-6294885589e4@linux.intel.com>
+ <42f7848a-0262-4871-b5dc-0e87beebfd11@linux.intel.com>
+ <dcd27bc8-5eca-41ae-bb86-fd8e657ccfed@linux.intel.com>
+ <d72d0a12-f3a4-4b4d-8b3b-5e59937a21d3@linux.intel.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <d72d0a12-f3a4-4b4d-8b3b-5e59937a21d3@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 10, 2024 at 11:33=E2=80=AFAM Zong Li <zong.li@sifive.com> wrote=
-:
->
-> On Fri, Dec 29, 2023 at 2:34=E2=80=AFPM Zong Li <zong.li@sifive.com> wrot=
-e:
-> >
-> > On Tue, Dec 5, 2023 at 5:00=E2=80=AFPM Zong Li <zong.li@sifive.com> wro=
-te:
-> > >
-> > > CALLER_ADDRx returns caller's address at specified level, they are us=
-ed
-> > > for several tracers. These macros eventually use
-> > > __builtin_return_address(n) to get the caller's address if arch doesn=
-'t
-> > > define their own implementation.
-> > >
-> > > In RISC-V, __builtin_return_address(n) only works when n =3D=3D 0, we=
- need
-> > > to walk the stack frame to get the caller's address at specified leve=
-l.
-> > >
-> > > data.level started from 'level + 3' due to the call flow of getting
-> > > caller's address in RISC-V implementation. If we don't have additiona=
-l
-> > > three iteration, the level is corresponding to follows:
-> > >
-> > > callsite -> return_address -> arch_stack_walk -> walk_stackframe
-> > > |           |                 |                  |
-> > > level 3     level 2           level 1            level 0
-> > >
-> > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > ---
-> > >  arch/riscv/include/asm/ftrace.h    |  5 ++++
-> > >  arch/riscv/kernel/Makefile         |  2 ++
-> > >  arch/riscv/kernel/return_address.c | 48 ++++++++++++++++++++++++++++=
-++
-> > >  3 files changed, 55 insertions(+)
-> > >  create mode 100644 arch/riscv/kernel/return_address.c
-> > >
-> > > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm=
-/ftrace.h
-> > > index 2b2f5df7ef2c..42777f91a9c5 100644
-> > > --- a/arch/riscv/include/asm/ftrace.h
-> > > +++ b/arch/riscv/include/asm/ftrace.h
-> > > @@ -25,6 +25,11 @@
-> > >
-> > >  #define ARCH_SUPPORTS_FTRACE_OPS 1
-> > >  #ifndef __ASSEMBLY__
-> > > +
-> > > +extern void *return_address(unsigned int level);
-> > > +
-> > > +#define ftrace_return_address(n) return_address(n)
-> > > +
-> > >  void MCOUNT_NAME(void);
-> > >  static inline unsigned long ftrace_call_adjust(unsigned long addr)
-> > >  {
-> > > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> > > index fee22a3d1b53..40d054939ae2 100644
-> > > --- a/arch/riscv/kernel/Makefile
-> > > +++ b/arch/riscv/kernel/Makefile
-> > > @@ -7,6 +7,7 @@ ifdef CONFIG_FTRACE
-> > >  CFLAGS_REMOVE_ftrace.o =3D $(CC_FLAGS_FTRACE)
-> > >  CFLAGS_REMOVE_patch.o  =3D $(CC_FLAGS_FTRACE)
-> > >  CFLAGS_REMOVE_sbi.o    =3D $(CC_FLAGS_FTRACE)
-> > > +CFLAGS_REMOVE_return_address.o =3D $(CC_FLAGS_FTRACE)
-> > >  endif
-> > >  CFLAGS_syscall_table.o +=3D $(call cc-option,-Wno-override-init,)
-> > >  CFLAGS_compat_syscall_table.o +=3D $(call cc-option,-Wno-override-in=
-it,)
-> > > @@ -46,6 +47,7 @@ obj-y +=3D irq.o
-> > >  obj-y  +=3D process.o
-> > >  obj-y  +=3D ptrace.o
-> > >  obj-y  +=3D reset.o
-> > > +obj-y  +=3D return_address.o
-> > >  obj-y  +=3D setup.o
-> > >  obj-y  +=3D signal.o
-> > >  obj-y  +=3D syscall_table.o
-> > > diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel/r=
-eturn_address.c
-> > > new file mode 100644
-> > > index 000000000000..c2008d4aa6e5
-> > > --- /dev/null
-> > > +++ b/arch/riscv/kernel/return_address.c
-> > > @@ -0,0 +1,48 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * This code come from arch/arm64/kernel/return_address.c
-> > > + *
-> > > + * Copyright (C) 2023 SiFive.
-> > > + */
-> > > +
-> > > +#include <linux/export.h>
-> > > +#include <linux/kprobes.h>
-> > > +#include <linux/stacktrace.h>
-> > > +
-> > > +struct return_address_data {
-> > > +       unsigned int level;
-> > > +       void *addr;
-> > > +};
-> > > +
-> > > +static bool save_return_addr(void *d, unsigned long pc)
-> > > +{
-> > > +       struct return_address_data *data =3D d;
-> > > +
-> > > +       if (!data->level) {
-> > > +               data->addr =3D (void *)pc;
-> > > +               return false;
-> > > +       }
-> > > +
-> > > +       --data->level;
-> > > +
-> > > +       return true;
-> > > +}
-> > > +NOKPROBE_SYMBOL(save_return_addr);
-> > > +
-> > > +void *return_address(unsigned int level)
-> > > +{
-> > > +       struct return_address_data data;
-> > > +
-> > > +       data.level =3D level + 3;
-> > > +       data.addr =3D NULL;
-> > > +
-> > > +       arch_stack_walk(save_return_addr, &data, current, NULL);
-> > > +
-> > > +       if (!data.level)
-> > > +               return data.addr;
-> > > +       else
-> > > +               return NULL;
-> > > +
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(return_address);
-> > > +NOKPROBE_SYMBOL(return_address);
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > Hi Palmer and all,
-> > I was wondering whether this patch is good for everyone? Thanks
->
-> Hi Palmer,
-> Is there any chance to include this patch in 6.8-rc1? Thanks
+On 1/17/24 5:00 PM, Ethan Zhao wrote:
+> +       /*
+> +        * If the ATS invalidation target device is gone this moment 
+> (surprise
+> +        * removed, died, no response) don't try this request again. this
+> +        * request will not get valid result anymore. but the request was
+> +        * already submitted to hardware and we predict to get a ITE in
+> +        * followed batch of request, if so, it will get handled then.
+> +        */
+> +       if (target_pdev && !pci_device_is_present(target_pdev))
+> +               return -EINVAL;
 
-Hi Palmer,
-I'm not sure if this patch is a feature or bug fix, would you consider
-it for 6.8-rcX? Thanks
+Again, we should not ignore the error triggered by the current request.
+Do not leave it to the next one. The WAIT descriptor is a fence. Handle
+everything within its boundary.
+
+Best regards,
+baolu
