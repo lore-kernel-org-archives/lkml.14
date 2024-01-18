@@ -1,139 +1,130 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A0D241F6
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 12:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C055E25116
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 12:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705581880; cv=none; b=Q/0oXQHwEfXAec3AeB6hjO4eGN4g/54V/YhbF8ckziqV2E7eS1Oznh1OLy8v/PqwQ90vyTdOwoJcWdir74+/s23Ub0OCPW/w76vEC0u1WhQsfjYnHlklKpmTu7mKRB5Xav044/XOITTcvyIlOQw/XPmt/CG89uTsVFRnpGk9/Z8=
+	t=1705581896; cv=none; b=ihvLkhaQRIooUThaDBpT6/ljmuhAhrkHCNrLW8qxJwNqL0DNZqwXkJWhdE+4Rev9YJXMjMT/lm5rtL0HYBC/LjK1+HsykrOLmZthfOfdcwOPu8GRvLglkEgZq5wErRqz5e6iLlWeUnqh5PWG25VtTmBuKykMxCDtrVpuvekNOyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705581880; c=relaxed/simple;
-	bh=eUedD1uUdxArJOmOqoy6JbY9jaRf2S8Q4mrkCLZfWL0=;
+	s=arc-20240116; t=1705581896; c=relaxed/simple;
+	bh=37Nm1D6XQrs+VsUMHb4aux5DEe0RfLXArjfaU4qNE7E=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Received:X-Received:MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gmail-Original-Message-ID:Message-ID:Subject:To:Cc:Content-Type:
-	 Content-Transfer-Encoding; b=iUkKFGdHPM+UGIvadQD0KRC/USZlhETCmcFlBxO6Cw9HWBQm5E5ySE6bVIv4fMZurZxDMXA8fhWz6kPogYjUgtV5S8sf+ohl85ukNGB9HApOJsTM7kDjy6R9bhrSjWFHm9wFALXZTaLaF9YQogsKViNTn7TyjmnYO8E0EH9sFPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lPj0WR9O; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=jeh/N8l1GoGqqpMv3fkRFScKv+/dyeIsr5K0pdnJe9D8WjZAc6Lw3rum/AHieyzSrRb1HS0PJZvNVLLzxiTnzIrtzw6ud9Ke37MYn7BWSNn03biZa2K6YxsxRGKJ5Doj+2q8WX/d9zP8RzpRDO0BSn77uo0JiLHpjpAYZ2NO410=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=sJB4mONY; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lPj0WR9O"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-559d3fbed6bso2204581a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 04:44:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="sJB4mONY"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3608cfa5ce6so56361385ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 04:44:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705581877; x=1706186677; darn=vger.kernel.org;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1705581894; x=1706186694; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vFs5WFNuIRub1VPrlJgHpKQe7Fz8TOGFyF7JArd77ng=;
-        b=lPj0WR9OpSLH2WErV6BvowmOD61lwR+hzkV77M4RflbHjAO3WBNOaf/l5XwN+dK10x
-         G17pb2HKZIlCklhtWRlD7+X7kbr6UbsK+0siR4/WsjaLgO0RSImF7Nrj701ZSXF5oZjM
-         2yDdIVMNmG4Q8MqheXlGp+JHz4L7r6gtVFkVc=
+        bh=6CWJqfzPlIKbIm9XXUGeYPV3xbAqaiB/K2JIOon3tWs=;
+        b=sJB4mONYac4ucb+zlyOttrKg+C2KJdOhwVGrwOOOqeAhzOkQgatCRZ/XS6iyDeRQ1J
+         LxKZhW6YnLCyUDVymX2un0bqI6gqc+ClQr8OJKRfF089QLglA8DMMRNoP1Fiae/4cOaT
+         tVKJBSMyPJUMOFEKv2+3d/St9EDiz4IkRbeG3JNmYLGeC0ZE0GDjA+GXyS+uL2NPWFW+
+         eChxVp1f7KztacUVaud4fLTsX+wqk9t47ltJNTwCL/KCf/021hCZVD7rOku9fDkSjeWy
+         9z8IToguiLrlmkU4jrVIXgf0HO0icZjunON4RNbgkUovKIXq9kg2Mn6sMp9bkYkbv9T0
+         plyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705581877; x=1706186677;
+        d=1e100.net; s=20230601; t=1705581894; x=1706186694;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vFs5WFNuIRub1VPrlJgHpKQe7Fz8TOGFyF7JArd77ng=;
-        b=AFOaDFJIGYw/i4TjUp2z6dUl/EzCnWD0anJbg0WQLqJp6RviOd6osBGHlVTc8bkoaT
-         +zMoNnpcl7iIATWOS3ibEIjraA3PHJvyM/rrp+zdOJnHwgZouObnGGqUY5hiUPszmlHP
-         glveg1RuOWIQ/a6rGnSbLaRRZJiOxKzdDfs35mC5p/oAb/pnnX+ChYo156keJw/Uhpev
-         U64ZDyJ5vHV8dY3g7hujGZlPVhs+LPt3KiVcKJkLhPNPpbV/XDyKoSYVbbn9tM/Z6I3b
-         yBQu/ste0AhYRr3Kz+ZAKtL6KU/k3Wd5vsgDDQ8+pj1aMLhIPfaSFzddPc14+uqtyAJp
-         crqQ==
-X-Gm-Message-State: AOJu0Yy7OMa+kORM6TZQp/ra9+sS9AA25tK3+EFlbJSyo8XCjbhHSpwG
-	ohpVGL5SzaDlDuNG5IZp+MOQcOJkVwfV5VN6wZ2ka/84F4d9EissA5nnMcIITzf/cvf5l0RZ0ow
-	Tdg==
-X-Google-Smtp-Source: AGHT+IGe43vCecsVlr1N5ANSBB1PkRhyzaSgXeQykdDcuZul+E9ssudUiSxjFjIWL0GM3IgxTjkKzA==
-X-Received: by 2002:a17:906:3719:b0:a27:7de8:9cd9 with SMTP id d25-20020a170906371900b00a277de89cd9mr323278ejc.23.1705581876722;
-        Thu, 18 Jan 2024 04:44:36 -0800 (PST)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id lb10-20020a170906adca00b00a2930696259sm9105582ejb.71.2024.01.18.04.44.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jan 2024 04:44:35 -0800 (PST)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3367a304091so10614122f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 04:44:35 -0800 (PST)
-X-Received: by 2002:adf:e6c6:0:b0:337:c6da:9705 with SMTP id
- y6-20020adfe6c6000000b00337c6da9705mr331995wrm.146.1705581875197; Thu, 18 Jan
- 2024 04:44:35 -0800 (PST)
+        bh=6CWJqfzPlIKbIm9XXUGeYPV3xbAqaiB/K2JIOon3tWs=;
+        b=WI+RzJWYB5yoe5AerVYwu6FUkyFaL+Et1IEIcqNrzJDKusB+oH+UNf1oKRDYaGca3N
+         XGxMnimDFWXe9seAOj0f61GDqROo4akHeD4mZbzxXUvhnkmuzq3qRuUpsKxI8VozPWk/
+         H8iPPxQITG7CBkxq54uBd2aQCK9JmWrdvPw2KWXlaqGjv4q3cOw44N+2TamqqOOIZ4/5
+         WoYEbW3VLLsWrjR2AlE4YfdpjZztrePrcb4fRdvMJobti24kL/3Twc+BPh0VaByGUvhG
+         njRtaue63Ty0krYTN+B8DWj6wusNI1cKrcMNPqGSJNDCZQWus42jlKPEsQ6D4+sKUFCY
+         1sxw==
+X-Gm-Message-State: AOJu0YzOJwZgIeEjLnGvaa06yXpuWiDrARIB6F/ifkXtLeqAd0wS5dgx
+	zVDDJcCg5aVLGwQNINjCrgiYU5nvdYd55B5t75JX70D3p7NtqA/iKNCadpOrrQIpkrfngxhg+X6
+	Rmmp2VdcIElvJ5yFArfKS/YMIFhAs/synXMF9LQ==
+X-Google-Smtp-Source: AGHT+IFJ1bu7mCR98lyWrW+kDP0nULQ1bDHopDCzu01vUiZEYsTfjPTku/pcO21lNxa+IQGYXi5gy2BL1dSF+jC1bNQ=
+X-Received: by 2002:a05:6e02:96d:b0:361:a21d:d492 with SMTP id
+ q13-20020a056e02096d00b00361a21dd492mr227444ilt.24.1705581893859; Thu, 18 Jan
+ 2024 04:44:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118121452.29151-1-benjamin.gaignard@collabora.com>
-In-Reply-To: <20240118121452.29151-1-benjamin.gaignard@collabora.com>
-From: Tomasz Figa <tfiga@chromium.org>
-Date: Thu, 18 Jan 2024 21:44:15 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5DddJt5EY8JnofJZuiQG8WqM7AjOF2cZ29Z=u6nh4YgCg@mail.gmail.com>
-Message-ID: <CAAFQd5DddJt5EY8JnofJZuiQG8WqM7AjOF2cZ29Z=u6nh4YgCg@mail.gmail.com>
-Subject: Re: [PATCH v2] media: media videobuf2: Stop direct calls to queue
- num_buffers field
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: m.szyprowski@samsung.com, mchehab@kernel.org, hverkuil-cisco@xs4all.nl, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@collabora.com
+References: <20231128145357.413321-1-apatel@ventanamicro.com>
+In-Reply-To: <20231128145357.413321-1-apatel@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Thu, 18 Jan 2024 18:14:42 +0530
+Message-ID: <CAAhSdy0Q8raGzH_mUsvAo++KmWu3yqBkjNTrn8CO-ZCiYEY9Cw@mail.gmail.com>
+Subject: Re: [PATCH 00/15] KVM RISC-V report more ISA extensions through ONE_REG
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Atish Patra <atishp@atishpatra.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Shuah Khan <shuah@kernel.org>, Andrew Jones <ajones@ventanamicro.com>, devicetree@vger.kernel.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 18, 2024 at 9:15=E2=80=AFPM Benjamin Gaignard
-<benjamin.gaignard@collabora.com> wrote:
+On Tue, Nov 28, 2023 at 8:24=E2=80=AFPM Anup Patel <apatel@ventanamicro.com=
+> wrote:
 >
-> Use vb2_get_num_buffers() to avoid using queue num_buffers field directly=
-.
-> This allows us to change how the number of buffers is computed in the
-> future.
+> This extends the KVM RISC-V ONE_REG interface to report more ISA extensio=
+ns
+> namely: Zbz, scalar crypto, vector crypto, Zfh[min], Zihintntl, Zvfh[min]=
+,
+> and Zfa.
 >
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> ---
-> version 2:
-> - Change vdev->queue->num_buffers to vb2_get_num_buffers(vdev->queue)
->   in vb2_ioctl_create_bufs().
-> - Remove Fixes tag
+> This series depends upon the "riscv: report more ISA extensions through
+> hwprobe" series.from Clement.
+> (Link: https://lore.kernel.org/lkml/20231114141256.126749-1-cleger@rivosi=
+nc.com/)
 >
->  drivers/media/common/videobuf2/videobuf2-core.c | 2 +-
->  drivers/media/common/videobuf2/videobuf2-v4l2.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> To test these patches, use KVMTOOL from the riscv_more_exts_v1 branch at:
+> https://github.com/avpatel/kvmtool.git
 >
-> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/me=
-dia/common/videobuf2/videobuf2-core.c
-> index 41a832dd1426..b6bf8f232f48 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-core.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-> @@ -989,7 +989,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb=
-2_memory memory,
->         bool no_previous_buffers =3D !q_num_bufs;
->         int ret =3D 0;
+> These patches can also be found in the riscv_kvm_more_exts_v1 branch at:
+> https://github.com/avpatel/linux.git
 >
-> -       if (q->num_buffers =3D=3D q->max_num_buffers) {
-> +       if (q_num_bufs =3D=3D q->max_num_buffers) {
->                 dprintk(q, 1, "maximum number of buffers already allocate=
-d\n");
->                 return -ENOBUFS;
->         }
-> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/me=
-dia/common/videobuf2/videobuf2-v4l2.c
-> index 54d572c3b515..6380155d8575 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> @@ -1029,7 +1029,7 @@ int vb2_ioctl_create_bufs(struct file *file, void *=
-priv,
->         int res =3D vb2_verify_memory_type(vdev->queue, p->memory,
->                         p->format.type);
+> Anup Patel (15):
+>   KVM: riscv: selftests: Generate ISA extension reg_list using macros
+>   RISC-V: KVM: Allow Zbc extension for Guest/VM
+>   KVM: riscv: selftests: Add Zbc extension to get-reg-list test
+>   RISC-V: KVM: Allow scalar crypto extensions for Guest/VM
+>   KVM: riscv: selftests: Add scaler crypto extensions to get-reg-list
+>     test
+>   RISC-V: KVM: Allow vector crypto extensions for Guest/VM
+>   KVM: riscv: selftests: Add vector crypto extensions to get-reg-list
+>     test
+>   RISC-V: KVM: Allow Zfh[min] extensions for Guest/VM
+>   KVM: riscv: selftests: Add Zfh[min] extensions to get-reg-list test
+>   RISC-V: KVM: Allow Zihintntl extension for Guest/VM
+>   KVM: riscv: selftests: Add Zihintntl extension to get-reg-list test
+>   RISC-V: KVM: Allow Zvfh[min] extensions for Guest/VM
+>   KVM: riscv: selftests: Add Zvfh[min] extensions to get-reg-list test
+>   RISC-V: KVM: Allow Zfa extension for Guest/VM
+>   KVM: riscv: selftests: Add Zfa extension to get-reg-list test
+
+The first PATCH is already merged in upstream Linux.
+
+I have rebased and queued the remaining patches for Linux-6.8.
+
+Regards,
+Anup
+
 >
-> -       p->index =3D vdev->queue->num_buffers;
-> +       p->index =3D vb2_get_num_buffers(vdev->queue);
->         fill_buf_caps(vdev->queue, &p->capabilities);
->         validate_memory_flags(vdev->queue, p->memory, &p->flags);
->         /*
+>  arch/riscv/include/uapi/asm/kvm.h             |  27 ++
+>  arch/riscv/kvm/vcpu_onereg.c                  |  54 +++
+>  .../selftests/kvm/riscv/get-reg-list.c        | 439 ++++++++----------
+>  3 files changed, 265 insertions(+), 255 deletions(-)
+>
 > --
-> 2.40.1
+> 2.34.1
 >
-
-Acked-by: Tomasz Figa <tfiga@chromium.org>
-
-Best regards,
-Tomasz
