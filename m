@@ -1,127 +1,137 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A6F1FAF;
-	Thu, 18 Jan 2024 02:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1CC63A4;
+	Thu, 18 Jan 2024 02:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705543478; cv=none; b=ZCZCCXDXi4O8uxWUnV4Dm9p5jPgMeE5FM/Mad6ST0NUlIyKe2CScOE1NlWXdBr4nWULtGajNRP1DZWDgIjV6EApNiZaqIHVDj8XzCnC4MRxhCVcSWWdQJFrP2DApq/5GwYCVaZhCp1XjJGZtKoq5H9M2pQGwphbHGwsL/cDIA+0=
+	t=1705543490; cv=none; b=Pp3C35IDmnU+4Hm7N0Gs7LRYnL0083fCZWzyir902UJWuZgYoCHg4QNjDuf5ZR1H8iw9co5CqPFLLSFfV6HDYbX32ZoWonGvEmwnNsrF6iEkwS02z0iG5Sp84blmFNmA7HKWb8ZR5NV2GiOoUlAIiPnnsPMUvCPVq8NsKJllLcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705543478; c=relaxed/simple;
-	bh=tHPwGIdFqi94LdAZOqJ7np7r/3FQCZ+fdVeRXwSazeE=;
-	h=Received:Received:Received:Received:From:To:CC:Subject:
-	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
-	 Accept-Language:Content-Language:X-MS-Has-Attach:
-	 X-MS-TNEF-Correlator:x-originating-ip:x-sender-location:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version:X-DNSRBL:
-	 X-SPAM-SOURCE-CHECK:X-MAIL; b=E18hjj8g8o4ZBBrpNbdeyz10s0kmZTf8KwOfS9Ery9/x8eUYSnGvVNPL50x2lVa5p097WCa6+VdwApcehwbvnpLevusfXbnSIrYf0WvFMX5MG2qPwpP+WNRHJajMqJ1mEAL78QxIwu1MDoA93BMVq/nYKmCGxr3a6KUDfsLkFTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 40I235rx063437;
-	Thu, 18 Jan 2024 10:03:06 +0800 (GMT-8)
-	(envelope-from hu.yadi@h3c.com)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
-	by mail.maildlp.com (Postfix) with ESMTP id D29152004BB7;
-	Thu, 18 Jan 2024 10:07:35 +0800 (CST)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.27; Thu, 18 Jan 2024 10:03:04 +0800
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
- by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
- mapi id 15.02.1258.027; Thu, 18 Jan 2024 10:03:04 +0800
-From: Huyadi <hu.yadi@h3c.com>
-To: =?utf-8?B?J01pY2thw6tsIFNhbGHDvG4n?= <mic@digikod.net>,
-        "'Christian
- Brauner'" <brauner@kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-CC: "jmorris@namei.org" <jmorris@namei.org>,
-        "serge@hallyn.com"
-	<serge@hallyn.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org"
-	<linux-security-module@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>,
-        "514118380@qq.com" <514118380@qq.com>,
-        Christian Brauner <brauner@kernel.org>,
-        "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjRdIHNlbGZ0ZXN0cy9tb3ZlX21vdW50X3NldF9n?=
- =?utf-8?Q?roup:Make_tests_build_with_old_libc?=
-Thread-Topic: [PATCH v4] selftests/move_mount_set_group:Make tests build with
- old libc
-Thread-Index: AQHaRII9d44IpKHVmkiSX1xdCq/Vx7DUFK8AgArGFwA=
-Date: Thu, 18 Jan 2024 02:03:04 +0000
-Message-ID: <b7872e67938f4022ad0537bc617403ed@h3c.com>
-References: <20240111113229.10820-1-hu.yadi@h3c.com>
- <20240111.mee0ohZie5he@digikod.net>
-In-Reply-To: <20240111.mee0ohZie5he@digikod.net>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1705543490; c=relaxed/simple;
+	bh=XNIIq6PjrrNjsY11XjebC3Pu5vgGDdfjY33hybEPFtg=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding; b=Ju+hV3UNZmUEJVwV5v/RHPlhofwxccCrTGm8jQpwhsZSwv+RAI1kabVH+qbO53LljmdYrORsGH+02r32QjPElj/CClGfAzbPgtGoW+gEylhXQwW89PnFuDCTLPt81Bz8OOZ+v3I9dGEne+bIVLKBZ9GrcRvy1K+Pcs3DHg4Lpfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CA2BaMyZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CA2BaMyZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49848C433C7;
+	Thu, 18 Jan 2024 02:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705543490;
+	bh=XNIIq6PjrrNjsY11XjebC3Pu5vgGDdfjY33hybEPFtg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CA2BaMyZWcW//E9N/pitv8U2ATbyOQ6mwGVGbU1UaoUJcalwYQ8hRBXOeaj2VOgGX
+	 reHmCT4l43M/VGtp27rrYVb87W4ytKRwRPD/3iaAyKUdRWeWMPhjddkUVtuvAfwUng
+	 DcmYuKzBobzzJ7idQt/1znlTC2MygQzs42bxM7nEw/5MaPQCMaQp/Lry1IEFUa6BOL
+	 Yvox0R04NYH+uIhntcSyNs6/9wTFsmQ9iRHhOYsgoYcBOCXtFhHiTj9d3Pgnl3uV71
+	 3+ArXQW6A5Q8cNjEgJJolGs8QflwpGP7wDwZQb+bsZkx8SnLypuGwIlHmsq34CQb6B
+	 KLcmzmLOKAKqg==
+Date: Wed, 17 Jan 2024 18:04:47 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ Network Development <netdev@vger.kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Boqun Feng <boqun.feng@gmail.com>, Daniel Borkmann
+ <daniel@iogearbox.net>, Eric Dumazet <edumazet@google.com>, Frederic
+ Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>, Paolo
+ Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Waiman Long <longman@redhat.com>, Will
+ Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Andrii
+ Nakryiko <andrii@kernel.org>, Cong Wang <xiyou.wangcong@gmail.com>, Hao Luo
+ <haoluo@google.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Jesper Dangaard
+ Brouer <hawk@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Jiri Pirko
+ <jiri@resnulli.us>, John Fastabend <john.fastabend@gmail.com>, KP Singh
+ <kpsingh@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Ronak Doshi
+ <doshir@vmware.com>, Song Liu <song@kernel.org>, Stanislav Fomichev
+ <sdf@google.com>, VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+ Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next 15/24] net: Use nested-BH locking for XDP
+ redirect.
+Message-ID: <20240117180447.2512335b@kernel.org>
+In-Reply-To: <87ttnb6hme.fsf@toke.dk>
+References: <20231215171020.687342-1-bigeasy@linutronix.de>
+	<20231215171020.687342-16-bigeasy@linutronix.de>
+	<CAADnVQKJBpvfyvmgM29FLv+KpLwBBRggXWzwKzaCT9U-4bgxjA@mail.gmail.com>
+	<87r0iw524h.fsf@toke.dk>
+	<20240112174138.tMmUs11o@linutronix.de>
+	<87ttnb6hme.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 40I235rx063437
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-DQo+T24gVGh1LCBKYW4gMTEsIDIwMjQgYXQgMDc6MzI6MjlQTSArMDgwMCwgSHUgWWFkaSB3cm90
-ZToNCj4+IEZyb206ICJIdS5ZYWRpIiA8aHUueWFkaUBoM2MuY29tPg0KPj4gDQo+PiBSZXBsYWNl
-IFNZU188c3lzY2FsbD4gd2l0aCBfX05SXzxzeXNjYWxsPi4gIFVzaW5nIHRoZSBfX05SXzxzeXNj
-YWxsPiANCj4+IG5vdGF0aW9uLCBwcm92aWRlZCBieSBVQVBJLCBpcyB1c2VmdWwgdG8gYnVpbGQg
-dGVzdHMgb24gc3lzdGVtcyANCj4+IHdpdGhvdXQgdGhlIFNZU188c3lzY2FsbD4gZGVmaW5pdGlv
-bnMuDQo+PiANCj4+IFJlcGxhY2UgU1lTX21vdmVfbW91bnQgd2l0aCBfX05SX21vdmVfbW91bnQN
-Cj4+IA0KPj4gU2ltaWxhciBjaGFuZ2VzOiBjb21taXQgODcxMjllZjEzNjAzICgic2VsZnRlc3Rz
-L2xhbmRsb2NrOiBNYWtlIHRlc3RzIA0KPj4gYnVpbGQgd2l0aCBvbGQgbGliYyIpDQo+PiANCj4+
-IEFja2VkLWJ5OiBNaWNrYcOrbCBTYWxhw7xuIDxtaWNAZGlnaWtvZC5uZXQ+DQo+DQo+U29ycnks
-IGl0IHNob3VsZCBoYXZlIGJlZW4gUmV2aWV3ZWQtYnk6IE1pY2thw6tsIFNhbGHDvG4gPG1pY0Bk
-aWdpa29kLm5ldD4NCj4NCj5BbHNvLCB0aGlzIGlzIG1haW50YWluZWQgYnkgdGhlIFZGUyBtYWlu
-dGFpbmVycy4gSSBDQ2VkIHRocmVlIHJlbGV2YW50IGFkZHJlc3Nlcy4NCg0KDQpBbnkgcHJvZ2Vz
-c3MgYWJvdXQgdGhpcyBwYXRjaCA/IA0KVGhhbmtzDQoNCj4NCj4+IFNpZ25lZC1vZmYtYnk6IEh1
-LllhZGkgPGh1LnlhZGlAaDNjLmNvbT4NCj4+IFN1Z2dlc3RlZC1ieTogSmlhbyA8amlhb3h1cG9A
-aDNjLmNvbT4NCj4+IFJldmlld2VkLWJ5OiBCZXJsaW4gPGJlcmxpbkBoM2MuY29tPg0KPj4gLS0t
-DQo+PiBDaGFuZ2VzIHY0IC0+IHYzOg0KPj4gIC0gQWRqdXN0IGNvbW1lbnRzIGZvciBjb25zaXN0
-ZW50DQo+PiAgLSBBZGQgQWNrZWQtYnkNCj4+IENoYW5nZXMgdjIgLT4gdjM6DQo+PiAgLSBBZGp1
-c3QgY29tbWVudHMNCj4+IENoYW5nZXMgdjEgLT4gdjI6DQo+PiAgLSBGaXggbWFpbCBvZiBTdWdn
-ZXN0ZWQtYnkgYW5kIFJldmlld2VkLWJ5DQo+PiANCj4+ICAuLi4vbW92ZV9tb3VudF9zZXRfZ3Jv
-dXAvbW92ZV9tb3VudF9zZXRfZ3JvdXBfdGVzdC5jICAgICAgICAgIHwgNCArKy0tDQo+PiAgMSBm
-aWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlm
-ZiAtLWdpdCANCj4+IGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbW92ZV9tb3VudF9zZXRfZ3Jv
-dXAvbW92ZV9tb3VudF9zZXRfZ3JvdXBfdGUNCj4+IHN0LmMgDQo+PiBiL3Rvb2xzL3Rlc3Rpbmcv
-c2VsZnRlc3RzL21vdmVfbW91bnRfc2V0X2dyb3VwL21vdmVfbW91bnRfc2V0X2dyb3VwX3RlDQo+
-PiBzdC5jIGluZGV4IDUwZWQ1ZDQ3NWRkMS4uYmNmNTFkNzg1YTM3IDEwMDY0NA0KPj4gLS0tIA0K
-Pj4gYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9tb3ZlX21vdW50X3NldF9ncm91cC9tb3ZlX21v
-dW50X3NldF9ncm91cF90ZQ0KPj4gc3QuYw0KPj4gKysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVz
-dHMvbW92ZV9tb3VudF9zZXRfZ3JvdXAvbW92ZV9tb3VudF9zZXRfZ3JvdQ0KPj4gKysrIHBfdGVz
-dC5jDQo+PiBAQCAtMjE4LDcgKzIxOCw3IEBAIHN0YXRpYyBib29sIG1vdmVfbW91bnRfc2V0X2dy
-b3VwX3N1cHBvcnRlZCh2b2lkKQ0KPj4gIAlpZiAobW91bnQoTlVMTCwgU0VUX0dST1VQX0ZST00s
-IE5VTEwsIE1TX1NIQVJFRCwgMCkpDQo+PiAgCQlyZXR1cm4gLTE7DQo+PiAgDQo+PiAtCXJldCA9
-IHN5c2NhbGwoU1lTX21vdmVfbW91bnQsIEFUX0ZEQ1dELCBTRVRfR1JPVVBfRlJPTSwNCj4+ICsJ
-cmV0ID0gc3lzY2FsbChfX05SX21vdmVfbW91bnQsIEFUX0ZEQ1dELCBTRVRfR1JPVVBfRlJPTSwN
-Cj4+ICAJCSAgICAgIEFUX0ZEQ1dELCBTRVRfR1JPVVBfVE8sIE1PVkVfTU9VTlRfU0VUX0dST1VQ
-KTsNCj4+ICAJdW1vdW50MigiL3RtcCIsIE1OVF9ERVRBQ0gpOw0KPj4gIA0KPj4gQEAgLTM2Myw3
-ICszNjMsNyBAQCBURVNUX0YobW92ZV9tb3VudF9zZXRfZ3JvdXAsIGNvbXBsZXhfc2hhcmluZ19j
-b3B5aW5nKQ0KPj4gIAkJICAgICAgIENMT05FX1ZNIHwgQ0xPTkVfRklMRVMpOyBBU1NFUlRfR1Qo
-cGlkLCAwKTsNCj4+ICAJQVNTRVJUX0VRKHdhaXRfZm9yX3BpZChwaWQpLCAwKTsNCj4+ICANCj4+
-IC0JQVNTRVJUX0VRKHN5c2NhbGwoU1lTX21vdmVfbW91bnQsIGNhX2Zyb20ubW50ZmQsICIiLA0K
-Pj4gKwlBU1NFUlRfRVEoc3lzY2FsbChfX05SX21vdmVfbW91bnQsIGNhX2Zyb20ubW50ZmQsICIi
-LA0KPj4gIAkJCSAgY2FfdG8ubW50ZmQsICIiLCBNT1ZFX01PVU5UX1NFVF9HUk9VUA0KPj4gIAkJ
-CSAgfCBNT1ZFX01PVU5UX0ZfRU1QVFlfUEFUSCB8IE1PVkVfTU9VTlRfVF9FTVBUWV9QQVRIKSwN
-Cj4+ICAJCSAgMCk7DQo+PiAtLQ0KPj4gMi4yMy4wDQo+PiANCj4+ICANCg==
+On Wed, 17 Jan 2024 17:37:29 +0100 Toke H=C3=B8iland-J=C3=B8rgensen wrote:
+> I am not contesting that latency is important, but it's a pretty
+> fundamental trade-off and we don't want to kill throughput entirely
+> either. Especially since this is global to the whole kernel; and there
+> are definitely people who want to use XDP on an RT kernel and still
+> achieve high PPS rates.
+>=20
+> (Whether those people really strictly speaking need to be running an RT
+> kernel is maybe debatable, but it does happen).
+>=20
+> > I expected the lock operation (under RT) to always succeeds and not
+> > cause any delay because it should not be contended. =20
+>=20
+> A lock does cause delay even when it's not contended. Bear in mind that
+> at 10 Gbps line rate, we have a budget of 64 nanoseconds to process each
+> packet (for 64-byte packets). So just the atomic op to figure out
+> whether there's any contention (around 10ns on the Intel processors I
+> usually test on) will blow a huge chunk of the total processing budget.
+> We can't actually do the full processing needed in those 64 nanoseconds
+> (not to mention the 6.4 nanoseconds we have available at 100Gbps), which
+> is why it's essential to amortise as much as we can over multiple
+> packets.
+>=20
+> This is all back-of-the-envelope calculations, of course. Having some
+> actual numbers to look at would be great; I don't suppose you have a
+> setup where you can run xdp-bench and see how your patches affect the
+> throughput?
+
+A potentially stupid idea which I have been turning in my head is=20
+how we could get away from having the driver handle details of NAPI
+budgeting. It's an source of bugs and endless review comments.
+
+All drivers end up maintaining a counter of "how many packets have
+I processed" and comparing that against the budget. Would it be crazy
+if we put that inside napi_struct? Add a "budget" member inside
+napi_struct as well, and:
+
+struct napi_struct {
+...
+	// poll state
+	unsigned int budget;
+	unsigned int rx_used;
+...
+}
+
+static inline bool napi_rx_has_budget(napi)
+{
+	return napi->budget > napi->rx_used;
+}
+
+poll(napi) // no budget
+{
+	while (napi_rx_has_budget(napi)) {
+		napi_gro_receive(napi, skb); /* does napi->rx_used++ */
+		// maybe add explicit napi_rx_count() if
+		// driver did something funny with the frame.
+	}
+}
+
+We can also create napi_tx_has_budget() so that people stop being
+confused whether budget is for Tx or not. And napi_xdp_comp_has_budget()
+so that people stop completing XDP in hard irq context (budget=3D=3D0)...
+
+And we can pass napi into napi_consume_skb(), instead of, presumably
+inexplicably to a newcomer, passing in budget.
+And napi_complete_done() can lose the work_done argument, too.
+
+Oh, and I'm bringing it up here, because CONFIG_RT can throw
+in "need_resched()" into the napi_rx_has_budget(), obviously.
