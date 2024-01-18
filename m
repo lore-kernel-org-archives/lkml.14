@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4365B2031B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106F41F61E;
 	Thu, 18 Jan 2024 08:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705566180; cv=none; b=IxdnOeE0619jf+QLsuUQBjlJ2wl+Uj+6kztnvdF4SuNybSUqihRrwDno5nyVqUWd0kfzKdiDP7wMvvmIs7aSIr4kXeFLYb8P4lT0+Ln37wgzpsM3vg9scMyhbR8KZTi18BkthxI6tUEJJhumcBrDAezK+r0Q/eF1kV+DuplOq4w=
+	t=1705566180; cv=none; b=vFDfdbkQsi22aHhF7AWkEyiCLwPXrd7Ncsaba91QoV/NAO1HnFmTgQSpIv2bjL7sw7Bb69763U7PmpFUXey27Oq5nnlNeGGwMWttkchC2QnSYwbpsi4K9YMOs8QWTE6B2f6M+iOCms+kh8Ovz5/LIiMbwJ2R2SZ1hdTVXkF3Hjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705566180; c=relaxed/simple;
-	bh=8w6Gxnkm6FXrOeCoZ4fa4npbHPlvL7OfG6RGXGY+akc=;
+	bh=caawVOpxHFy9cm3i7DwECM4693fhFarzsOiGy9doXoc=;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Endpoint-Received:X-Original-From:Reply-To; b=pVR5IV6mmWlX47kkKvUa6VHF+3orgvqU5+axzMpMSlHETd6w2C4uk5r2pfQCbdbknyMmiyusBk2FFPRA1dhN5RI7fF8tnukvhwQ43e6YvpCvuewJXKJWL+R8E2msXpF/pyMiANsps/2f1OM43SPSCkjG1PWfgXAKV9DinSwToy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyMT+u03; arc=none smtp.client-ip=10.30.226.201
+	 X-Endpoint-Received:X-Original-From:Reply-To; b=kGg7NNKG4NgCLan3iUDpj0/fLC5XQyYJ+QkHIKy8dsvMuSyBmohT0sIp02B5+hQBWfRXk0t+hwd3esoPRcdNgW23GFY8nCtc1C5FGv9gUZDgqC/wtM3Wce4idZYu+D6qkFM0iDZ2x5KhBZ2ArFyiY6F7lKVv4d+JZ/6lTjgDVco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3tctYZl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyMT+u03"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 15567C4AF78;
-	Thu, 18 Jan 2024 08:23:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3tctYZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E46C2C3279F;
+	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705566180;
-	bh=8w6Gxnkm6FXrOeCoZ4fa4npbHPlvL7OfG6RGXGY+akc=;
+	s=k20201202; t=1705566179;
+	bh=caawVOpxHFy9cm3i7DwECM4693fhFarzsOiGy9doXoc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oyMT+u03HplN+dyxhr6xfR0dGUD/X2yPqjrUdkddUmfcKkzzpWd0maCP1gpmYLSgt
-	 FJgLNGKTDN7FgaUEWQSUPt0IZsXCJaDKsbzrR5kgbEqrbbJtXwHq4aKxLx71C3Nm51
-	 7l+CrD7c2gQgVrjoPV5oW57fxBIvuZ4BzRAfHlRp+ZK759iwUfwlkOkiw3EXWY5lt8
-	 2e65JfAiLxYRSoFP76JzFb/q3EJcs0hKGDlWoHlVjKRNoGlRmSb6cx5AgRNckB5RTJ
-	 m57d/mdz33CUfb7AhQ0QekZ0IGSETU541DPrL60UM6NgFoa3+8h6CqXDsrMUr0Ioq4
-	 TgBqeBK85N7gA==
+	b=Q3tctYZlE3F8KTFiBWoxLgygJEsy4PQUNx815zXv2o6YEifS8+dZY9gP9cV9catzS
+	 HxbmK11saSzmdv4/Et5X3bkizyLcJv9UODcPksSSNuFfkarOgLUf96a18lNUNGAnht
+	 zdrWPrgVNRBlqvcozT91ugN/mOSy7qVCbR575vwT9Ae1WdHqYuk+U4SkR56lFi1bx0
+	 u1aycJ4rYqYQh74tud7/uiHrO0/s/aSeYbm3Hhu23JCyWespgF/E2ls1yJv1Vy6Rgq
+	 3tMSlUZnNislRokctY0LB9+mU+SZ+p+bG6n77iXoRm8g6LLX+RKNAry5U/yqYJTibr
+	 RYjiHUJsHKc1A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07A1C47DD3;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AE0C4707B;
 	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 From:
  Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Thu, 18 Jan 2024 11:21:12 +0300
-Subject: [PATCH v7 29/39] ASoC: ep93xx: Drop legacy DMA support
+Date: Thu, 18 Jan 2024 11:21:09 +0300
+Subject: [PATCH v7 26/39] gpio: ep93xx: add DT support for gpio-ep93xx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,24 +43,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240118-ep93xx-v7-29-d953846ae771@maquefel.me>
+Message-Id: <20240118-ep93xx-v7-26-d953846ae771@maquefel.me>
 References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
 In-Reply-To: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: Takashi Iwai <tiwai@suse.de>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=3001;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=4650;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=Edo7deD4TfxQT1IZ681PPthd594zbg9RMygPGh53NHw=; =?utf-8?q?b=3DQ8qPe8aKrV6g?=
- =?utf-8?q?xeJ4STmNjRtdysGFNN9JNZr8R5MjjWKKN7JNqXyZRHsxZAIunK/fYpDigLdskKLX?=
- SgDEzatiAac/u+xmfxsfXvaffv3kdVs8/DrYpZ9uhToI8hN5LrLZ
+ bh=veUYE/VzU1y37Z5M8NkA7tAbUvE+Vs49lzqAWz+krrk=; =?utf-8?q?b=3DJTMG/qh/vDZe?=
+ =?utf-8?q?kFRgJzcyfaGrSO16q59j+ZSCqkVPNE/iwmFTqTM0PAw+MouQO26uAVuPu0nPykhZ?=
+ THLAZeJ2BYF9RQ1QqxaquxZ6m8myDdjycGJkZxQ9wWdcHV05Qb1L
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received:
@@ -68,106 +64,142 @@ X-Endpoint-Received:
 X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
 Reply-To: <nikita.shubin@maquefel.me>
 
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-And rely on OF DMA.
+Add OF ID match table.
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
- sound/soc/cirrus/ep93xx-i2s.c | 19 -------------------
- sound/soc/cirrus/ep93xx-pcm.c | 19 +------------------
- 2 files changed, 1 insertion(+), 37 deletions(-)
+ drivers/gpio/gpio-ep93xx.c | 38 +++++++++++++++++++++++---------------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
 
-diff --git a/sound/soc/cirrus/ep93xx-i2s.c b/sound/soc/cirrus/ep93xx-i2s.c
-index 522de4b80293..9e83cdf8a943 100644
---- a/sound/soc/cirrus/ep93xx-i2s.c
-+++ b/sound/soc/cirrus/ep93xx-i2s.c
-@@ -24,7 +24,6 @@
- #include <sound/initval.h>
- #include <sound/soc.h>
+diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
+index a55f635585f4..ab798c848215 100644
+--- a/drivers/gpio/gpio-ep93xx.c
++++ b/drivers/gpio/gpio-ep93xx.c
+@@ -12,13 +12,13 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/slab.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
+ #include <linux/seq_file.h>
+-#include <linux/interrupt.h>
  
--#include <linux/platform_data/dma-ep93xx.h>
- #include <linux/soc/cirrus/ep93xx.h>
- 
- #include "ep93xx-pcm.h"
-@@ -80,19 +79,6 @@ struct ep93xx_i2s_info {
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
- };
- 
--static struct ep93xx_dma_data ep93xx_i2s_dma_data[] = {
--	[SNDRV_PCM_STREAM_PLAYBACK] = {
--		.name		= "i2s-pcm-out",
--		.port		= EP93XX_DMA_I2S1,
--		.direction	= DMA_MEM_TO_DEV,
--	},
--	[SNDRV_PCM_STREAM_CAPTURE] = {
--		.name		= "i2s-pcm-in",
--		.port		= EP93XX_DMA_I2S1,
--		.direction	= DMA_DEV_TO_MEM,
--	},
--};
--
- static inline void ep93xx_i2s_write_reg(struct ep93xx_i2s_info *info,
- 					unsigned reg, unsigned val)
+ struct ep93xx_gpio_irq_chip {
+ 	void __iomem *base;
+@@ -138,7 +138,8 @@ static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
  {
-@@ -198,11 +184,6 @@ static int ep93xx_i2s_dai_probe(struct snd_soc_dai *dai)
- {
- 	struct ep93xx_i2s_info *info = snd_soc_dai_get_drvdata(dai);
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+-	int port_mask = BIT(irqd_to_hwirq(d));
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
++	int port_mask = BIT(hwirq);
  
--	info->dma_params_tx.filter_data =
--		&ep93xx_i2s_dma_data[SNDRV_PCM_STREAM_PLAYBACK];
--	info->dma_params_rx.filter_data =
--		&ep93xx_i2s_dma_data[SNDRV_PCM_STREAM_CAPTURE];
--
- 	snd_soc_dai_init_dma_data(dai,	&info->dma_params_tx,
- 					&info->dma_params_rx);
+ 	if (irqd_get_trigger_type(d) == IRQ_TYPE_EDGE_BOTH)
+ 		eic->int_type2 ^= port_mask; /* switch edge direction */
+@@ -147,26 +148,28 @@ static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
+ 	ep93xx_gpio_update_int_params(eic);
  
-diff --git a/sound/soc/cirrus/ep93xx-pcm.c b/sound/soc/cirrus/ep93xx-pcm.c
-index fa72acd8d334..5ecb4671cbba 100644
---- a/sound/soc/cirrus/ep93xx-pcm.c
-+++ b/sound/soc/cirrus/ep93xx-pcm.c
-@@ -18,8 +18,6 @@
- #include <sound/soc.h>
- #include <sound/dmaengine_pcm.h>
- 
--#include <linux/platform_data/dma-ep93xx.h>
--
- #include "ep93xx-pcm.h"
- 
- static const struct snd_pcm_hardware ep93xx_pcm_hardware = {
-@@ -35,30 +33,15 @@ static const struct snd_pcm_hardware ep93xx_pcm_hardware = {
- 	.fifo_size		= 32,
- };
- 
--static bool ep93xx_pcm_dma_filter(struct dma_chan *chan, void *filter_param)
--{
--	struct ep93xx_dma_data *data = filter_param;
--
--	if (data->direction == ep93xx_dma_chan_direction(chan)) {
--		chan->private = data;
--		return true;
--	}
--
--	return false;
--}
--
- static const struct snd_dmaengine_pcm_config ep93xx_dmaengine_pcm_config = {
- 	.pcm_hardware = &ep93xx_pcm_hardware,
--	.compat_filter_fn = ep93xx_pcm_dma_filter,
- 	.prealloc_buffer_size = 131072,
- };
- 
- int devm_ep93xx_pcm_platform_register(struct device *dev)
- {
- 	return devm_snd_dmaengine_pcm_register(dev,
--		&ep93xx_dmaengine_pcm_config,
--		SND_DMAENGINE_PCM_FLAG_NO_DT |
--		SND_DMAENGINE_PCM_FLAG_COMPAT);
-+		&ep93xx_dmaengine_pcm_config, 0);
+ 	writeb(port_mask, eic->base + EP93XX_INT_EOI_OFFSET);
+-	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
++	gpiochip_disable_irq(gc, hwirq);
  }
- EXPORT_SYMBOL_GPL(devm_ep93xx_pcm_platform_register);
  
+ static void ep93xx_gpio_irq_mask(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ 
+-	eic->int_unmasked &= ~BIT(irqd_to_hwirq(d));
++	eic->int_unmasked &= ~BIT(hwirq);
+ 	ep93xx_gpio_update_int_params(eic);
+-	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
++	gpiochip_disable_irq(gc, hwirq);
+ }
+ 
+ static void ep93xx_gpio_irq_unmask(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ 
+-	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
+-	eic->int_unmasked |= BIT(irqd_to_hwirq(d));
++	gpiochip_enable_irq(gc, hwirq);
++	eic->int_unmasked |= BIT(hwirq);
+ 	ep93xx_gpio_update_int_params(eic);
+ }
+ 
+@@ -179,11 +182,11 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+-	irq_hw_number_t offset = irqd_to_hwirq(d);
+-	int port_mask = BIT(offset);
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
++	int port_mask = BIT(hwirq);
+ 	irq_flow_handler_t handler;
+ 
+-	gc->direction_input(gc, offset);
++	gc->direction_input(gc, hwirq);
+ 
+ 	switch (type) {
+ 	case IRQ_TYPE_EDGE_RISING:
+@@ -209,7 +212,7 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
+ 	case IRQ_TYPE_EDGE_BOTH:
+ 		eic->int_type1 |= port_mask;
+ 		/* set initial polarity based on current input level */
+-		if (gc->get(gc, offset))
++		if (gc->get(gc, hwirq))
+ 			eic->int_type2 &= ~port_mask; /* falling */
+ 		else
+ 			eic->int_type2 |= port_mask; /* rising */
+@@ -285,9 +288,8 @@ static int ep93xx_setup_irqs(struct platform_device *pdev,
+ 	if (girq->num_parents == 0)
+ 		return -EINVAL;
+ 
+-	girq->parents = devm_kcalloc(dev, girq->num_parents,
+-				   sizeof(*girq->parents),
+-				   GFP_KERNEL);
++	girq->parents = devm_kcalloc(dev, girq->num_parents, sizeof(*girq->parents),
++				     GFP_KERNEL);
+ 	if (!girq->parents)
+ 		return -ENOMEM;
+ 
+@@ -306,7 +308,7 @@ static int ep93xx_setup_irqs(struct platform_device *pdev,
+ 		girq->parent_handler = ep93xx_gpio_f_irq_handler;
+ 
+ 		for (i = 0; i < girq->num_parents; i++) {
+-			irq = platform_get_irq(pdev, i);
++			irq = platform_get_irq_optional(pdev, i);
+ 			if (irq < 0)
+ 				continue;
+ 
+@@ -359,9 +361,15 @@ static int ep93xx_gpio_probe(struct platform_device *pdev)
+ 	return devm_gpiochip_add_data(&pdev->dev, gc, egc);
+ }
+ 
++static const struct of_device_id ep93xx_gpio_match[] = {
++	{ .compatible = "cirrus,ep9301-gpio" },
++	{ /* sentinel */ }
++};
++
+ static struct platform_driver ep93xx_gpio_driver = {
+ 	.driver		= {
+ 		.name	= "gpio-ep93xx",
++		.of_match_table = ep93xx_gpio_match,
+ 	},
+ 	.probe		= ep93xx_gpio_probe,
+ };
 
 -- 
 2.41.0
