@@ -1,168 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF186FBC;
-	Thu, 18 Jan 2024 05:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7FE63B5
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 05:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705555404; cv=none; b=ZrdRxl504ecIo8RCK6IQfu0ZB0pujLHUty3gUQvullPTh5vuPVlbinfZyR6qh2/sXx4aQRAZolIWNzPyRfUDJm0GDksYHiF44pAmHwimoP5f7I8KdQRBaHRDJupG6mw6mz8ZMIQZsNDLAHA6lkHPhYd80w5dLr8AlwtdTlSiBS0=
+	t=1705555767; cv=none; b=D9csiXa0DdEgUfP5UmJQWQze0YpEeid/pMvYPe6IT5EI6B0FrYBQrQCngPTWayu26pjknMXdPcp21Yh16UCqymH+TFyoBXJj5SURW7De6oFzYLL0X0vYqpyv/+UZyBQ4sNy6NZgRwI55oG+lxFctUqQXb9benn4ExophHuCGqe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705555404; c=relaxed/simple;
-	bh=x/6No842LSfCPrLeri6/s3ezEv75k2+9QtC8rEcULB8=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=n0EeREYgNGN7cpXiCfGbnZKuZmz0DCb0SjlKTV+rmBLPB/7Taxdedj6+ioju48mpgskV6WpL3kWO5R0/dIu7ohAy/ueKLgvlHLAhq5sfGb/DxBeAPFGsk7Cy62NvF6kKUqhXIGC2AuRx+oMi+8CghlqhBYSyav38s6M6Qht2IO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X/oWadan; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705555767; c=relaxed/simple;
+	bh=SBVMA/CPQNcVCfcURUzuwVBCE1qUg3c5WG0zdMGFPQg=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
+	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To; b=G9afj1eCuwoH9xY5OZtyFTewHWtl6276rb82i2GZOtmX0HpVpPzcDeeu1kaTbmiu/D1quffw0rjss86VMJPi3rnx8llJrXll/ChoZfA0LZN/h2UwgV3injt/6zyi8LJAzDFI/IY+U6jztOQbFK//1+1Yv3dfcDqiO0pLNyhfaS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bies4SxQ; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X/oWadan"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705555402; x=1737091402;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x/6No842LSfCPrLeri6/s3ezEv75k2+9QtC8rEcULB8=;
-  b=X/oWadan1tGPzrQwSu4H3DjH5Yp6QU+B7g4JFM+R9T47x0otkONtykku
-   JS3vdZ64RUTdcY/crqa/lTOYRJ8G0UPurWYoM+l/+MCmkUthuyTv8/PB4
-   WkHz43l5of122zE8JVsUK909LZ03lX91vWrs4kwbTQxwlLIaDJaikjRtH
-   B7edSM70GrrfgW/o65wfsaVDdG5VK5+oCUzT3liN5IPYgR7NOi0EmBguZ
-   8Kvg+n9nGgAtpOvdGxtDGPRIdATBPrFyr1sywOdIPqG9NLy9NlMpf6se+
-   sPGuy+UMvIQEAVvOHMu8KccrW95fpbPEFdGV+fmDsFkEaUMFQZCn2zzE/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="390802140"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="390802140"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 21:23:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="1031539496"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="1031539496"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Jan 2024 21:23:14 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQKrw-0002g1-2H;
-	Thu, 18 Jan 2024 05:23:12 +0000
-Date: Thu, 18 Jan 2024 13:23:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 14/17] tracing: Add kho serialization of trace events
-Message-ID: <202401181352.qC85XHgx-lkp@intel.com>
-References: <20240117144704.602-15-graf@amazon.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bies4SxQ"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e800461baso31788065e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 21:29:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705555764; x=1706160564; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wWVOjE9eG7LQZ1p5rDtepmpo2WIDbMJDdYV1+1m1FBU=;
+        b=Bies4SxQOMm2y9Btq51UiXzVZwhtvjN5NVmtvQJ0eMUe5gfREJdCIWlM2FxjYkiBL3
+         viV/JtBvnRgvSaTfwEus92WDyzUb3MfLjJ5O9zlh/ZVwvyVQBv9ZeiJiF1E7DFlkoLLO
+         63j7Xl9jQkNSOsfYa7Ts9+OTe+0uab+XRsZ5WD7dEzWzmQQ+NdTwQcWCyP+4CkAEiz+r
+         ORCWpnC38A/1yZmryV8RrfSfvJ57rWs9JR8xGuX/rZYA8bP39uLvGBOE2VJtukBhe+Tc
+         C7nh4w/yN1i/HRgsTCxOEl+pkZ6R/0O2RS9YvtIv8EHNK1rY8hSfBv0GqE2qbHOeuljq
+         YHeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705555764; x=1706160564;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wWVOjE9eG7LQZ1p5rDtepmpo2WIDbMJDdYV1+1m1FBU=;
+        b=AmHS4oDe4VRYhaR9Prm//GufKo+f0CoqNQcSjkjQqZ2rhA2mKPA1PNYXlePu9sk23/
+         kIACPf2D1VtDPbJQdRICtiYDhIod4+qesjlHMJ7aQi7qVRrm92a/ucYT76ZDJM1C0cPA
+         3YxheZqTUd9jlhmkDnzS0WEPJP3zJC2JElv0oQGUvJ0oud175eabG0zw3bL0YhPf6zCM
+         T5u9GyIZfVNijr+Qu/YlZmNZaCDaf36TfHEKWMQvmOOybc5aJnJX/rbnRYy6yq32Ao3P
+         EYVfMCTxjK7uRXqu9gJ4PmEpzEiyBkMLHn6Ck8I7eab9qXRR7HO2Ij4iyVP0kwV41KN2
+         KJdA==
+X-Gm-Message-State: AOJu0Yw5+wFKQnWy+a6dZOnUmaP+jtwA0jnvRZAaQNkE3xJe/jJBRPKx
+	9XgNqG8W7bodyskPLLEjhtA9JY1WV2wGzBfaJnq4lD06Y+BgnaDNvwSMLeS89mg=
+X-Google-Smtp-Source: AGHT+IHaCjW/5P67xwqKO0g8DnWLu4YQwaK2HHCRSW+8Wlvh81P/g9nOxJOSa7NQjI8+GNuKu6R48Q==
+X-Received: by 2002:a05:600c:880e:b0:40e:4799:8a81 with SMTP id gy14-20020a05600c880e00b0040e47998a81mr66295wmb.281.1705555764049;
+        Wed, 17 Jan 2024 21:29:24 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id o21-20020a05600c4fd500b0040e34ca648bsm24586127wmq.0.2024.01.17.21.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 21:29:23 -0800 (PST)
+Date: Thu, 18 Jan 2024 08:29:20 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	=?iso-8859-1?Q?G=FCnter_R=F6ck?= <groeck@chromium.org>,
+	Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: [PATCH] pstore/ram: Return directly after a failed kasprintf()
+ call in ramoops_init_prz()
+Message-ID: <26759e3b-ff74-4b04-b06f-4d68fbc5f606@moroto.mountain>
+References: <644f44ad-7e2b-4a1a-bbd7-ccc79d479242@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240117144704.602-15-graf@amazon.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <644f44ad-7e2b-4a1a-bbd7-ccc79d479242@web.de>
 
-Hi Alexander,
+On Wed, Jan 17, 2024 at 09:24:12PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 17 Jan 2024 21:09:22 +0100
+> 
+> The result from a call of the function “kasprintf” was passed to
+> a subsequent function call without checking for a null pointer before
+> (according to a memory allocation failure).
+> This issue was detected by using the Coccinelle software.
+> 
+> Thus return directly after a failed kasprintf() call.
+> 
+> Fixes: 1227daa43bce1 ("pstore/ram: Clarify resource reservation labels")
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  fs/pstore/ram.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 88b34fdbf759..1a673a4af17c 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -595,6 +595,9 @@ static int ramoops_init_prz(const char *name,
+>  	}
+> 
+>  	label = kasprintf(GFP_KERNEL, "ramoops:%s", name);
+> +	if (!label)
+> +		return -ENOMEM;
+> +
+>  	*prz = persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info,
+>  				  cxt->memtype, PRZ_FLAG_ZAP_OLD, label);
+>  	kfree(label);
 
-kernel test robot noticed the following build warnings:
+This patch is fine as a clean up, but I think it's useful to say that
+if you pass a NULL label to persistent_ram_new() then it will return
+an error.  It won't crash.  So this patch is a nice cleanup but it's not
+a bug fix.
 
-[auto build test WARNING on linus/master]
-[cannot apply to tip/x86/core arm64/for-next/core akpm-mm/mm-everything v6.7 next-20240117]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+regards,
+dan carpenter
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Graf/mm-memblock-Add-support-for-scratch-memory/20240117-225136
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240117144704.602-15-graf%40amazon.com
-patch subject: [PATCH v3 14/17] tracing: Add kho serialization of trace events
-config: i386-randconfig-141-20240118 (https://download.01.org/0day-ci/archive/20240118/202401181352.qC85XHgx-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240118/202401181352.qC85XHgx-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401181352.qC85XHgx-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/trace/trace_output.c:731:12: warning: unsequenced modification and access to 'count' [-Wunsequenced]
-     731 |                 map[count++] = (struct trace_event_map) {
-         |                          ^
-     732 |                         .crc32 = count,
-         |                                  ~~~~~
-   1 warning generated.
-
-
-vim +/count +731 kernel/trace/trace_output.c
-
-   710	
-   711	static int __maybe_unused _trace_kho_write_events(void *fdt)
-   712	{
-   713		struct trace_event_call *call;
-   714		int count = __TRACE_LAST_TYPE - 1;
-   715		struct trace_event_map *map;
-   716		int err = 0;
-   717		int i;
-   718	
-   719		down_read(&trace_event_sem);
-   720		/* Allocate an array that we can place all maps into */
-   721		list_for_each_entry(call, &ftrace_events, list)
-   722			count++;
-   723	
-   724		map = vmalloc(count * sizeof(*map));
-   725		if (!map)
-   726			return -ENOMEM;
-   727	
-   728		/* Then fill the array with all crc32 values */
-   729		count = 0;
-   730		for (i = 1; i < __TRACE_LAST_TYPE; i++)
- > 731			map[count++] = (struct trace_event_map) {
-   732				.crc32 = count,
-   733				.type = count,
-   734			};
-   735	
-   736		list_for_each_entry(call, &ftrace_events, list) {
-   737			struct trace_event *event = &call->event;
-   738	
-   739			map[count++] = (struct trace_event_map) {
-   740				.crc32 = event2fp(event),
-   741				.type = event->type,
-   742			};
-   743		}
-   744		up_read(&trace_event_sem);
-   745	
-   746		/* And finally write it into a DT variable */
-   747		err |= fdt_property(fdt, "events", map, count * sizeof(*map));
-   748	
-   749		vfree(map);
-   750		return err;
-   751	}
-   752	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
