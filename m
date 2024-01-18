@@ -1,122 +1,87 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DEC1BDFC;
-	Thu, 18 Jan 2024 09:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1936B65B;
+	Thu, 18 Jan 2024 09:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705568415; cv=none; b=Qrg9lfuZ+AEy+V9ayRjdAzqwByaoBo1sgqL3YGf83dQqvAEH/fUcgyM8lujRz15hVxoE7ROUiuweI/Swo3B+tZ74n2gdbaTRMq3JetWymO6XijwWVblhWzBB3nvfaoD0UH43sAbIzlHmuqL5BOhRdURGqk6IMoBvp+i6qwLOaPw=
+	t=1705568455; cv=none; b=Jw/ic3+dE3r28cKNlGleeulm41TN9Xn488u8HPvWV4Qz8eYBzaMOPTqd83DDFTRH+qdyQuCkp77lwnq5RFEsOsg4Ja5JD/F6LoDSZ4PZo9BebuogKrkfNVO2PBSo3Q77kxtUC42mGcJIcZT+BX0PMdsYDO5+3IQ5RItvZEDKKFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705568415; c=relaxed/simple;
-	bh=Y5c3O312N9SbXppl8hxgrI1T9xBYSTxoqkJoAgsYevY=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=tXt5FCXmvLR8CDEBi0tmPpy3iZ4Uujmy3lXAdXU2DKZmzawlb2SlOthQcFGKcss1CdOUHmUdjoic64JsHZ2iWIvM0Bip7ecgHZ26Jok7O373HDh9JtAZV89bD7IKSlMhqq1dhhR3za188CggS1pRxAxG1VkySN7tccWmbX69lgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O80B3/RO; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705568455; c=relaxed/simple;
+	bh=wQDYeQ0wmedqZ4GGIB5Y5Vs5FdTbUXc48coPNKVmCnc=;
+	h=DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:X-IronPort-AV:
+	 X-Amp-Result:Received:Received:Received:From:To:CC:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 Content-Type; b=T2aJa6/vlyN1pBHdByXtRZA34pF1wN/ejsUpYB+KEjFTNIblnEZHLn4/4csmHYzWaXrQHFE0JZ9STP58Lhijjs+HMUd4kuRd0HojZT1YxffgRJeizGlXOoFU6aZ2Glr85Ye2K4/D1BQrM++sUT8at+nzQtjz2DSyrlAL4CTffLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=WtEWCMsV; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O80B3/RO"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-559533e2503so4726524a12.1;
-        Thu, 18 Jan 2024 01:00:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705568411; x=1706173211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2KsM8Ecei3qYCph9440/9O1dTpHBRWixGdUKkujVl64=;
-        b=O80B3/RO8odvo/JvzI1QZ2m/mSTWaFlCaNp3Tbi1P7+l+cJYDH8CX94F7X4PXD4V8Y
-         iCuSeZC9kTygL51CWfSUuDmu3duda5OoqAPQBG3lnXsx3S/D2OPj4QGmLfE5fpnc4NmP
-         GlfjpoHvxhBbmdKAaUKdw/xYpvLmNj+WQKhd/fbFOm0FST8vZhLgt+ZsQfB2zjjpFeGC
-         1qoC/79Bxk+GwJV2mKLmOnr7xbmTywQmRTrYAQ4M4b0LN7/1BqRUh25XnDHgDKHpNiac
-         BS1pk9kyGAAJyzm4yn6uTbaGL+gibgCmlToIILPIN1IKvmBT8q/2+1Q4weJOqIMyRsU1
-         j2Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705568411; x=1706173211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2KsM8Ecei3qYCph9440/9O1dTpHBRWixGdUKkujVl64=;
-        b=Iyjz86MLRxweaCJ09F/T4q4yg265Wue1/lEVEwY11DoWVt45dw5GoicMdXfYMnntoX
-         kRIKlNuHk/VD1eE/B0JTuTUQwTg+xHaeyxVMFJrvMUJumBZ6V/zEK+1Ub7C0dacvwunx
-         2/Df1Ou8mvDSgTnTHsndhOA9MJ15q9V5/ILM/UWgirz2WRY2utO13DJaOmDR124Um2Zo
-         O68bmdUIfxbn+RFqJecjJnBeyX7ICoxBVEo0XWhJ79zgqU/F3ognWmfVOlC/pdLzQfUv
-         r66UH0AtLyW6/0tIh77MmS0O4xLBFrfhj6isPVvygutJftyKDUaPgbH3xy+uWSxyP88N
-         BfUw==
-X-Gm-Message-State: AOJu0Yxq1vRfWdL0S45l0Wy/7rh0IzUu9sf2wAmklYkHfiQiKSRq1n+r
-	ojsT+PkgxLMxD8wsS2U1qBOnVH7v5A0TWAhLBz14eImi5sDKvDmsmLr2FaRfpoDY4e+ZpVBCMsU
-	EJIukX92QsflyjflvHwL9fq1huao=
-X-Google-Smtp-Source: AGHT+IFHOYN2jygcMXwIbC5+KZTfieuY5t4wVSO9sVSzq1MGnDTv9TZbfSq8+vMJSLcPjvH30DIks76ocbJIW2Bo0fs=
-X-Received: by 2002:a17:907:60c9:b0:a2e:70b4:28b0 with SMTP id
- hv9-20020a17090760c900b00a2e70b428b0mr341123ejc.3.1705568411275; Thu, 18 Jan
- 2024 01:00:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WtEWCMsV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1705568453; x=1737104453;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wQDYeQ0wmedqZ4GGIB5Y5Vs5FdTbUXc48coPNKVmCnc=;
+  b=WtEWCMsVzBXL3Lhy2mdqHhnZbxtMAUmGoQPUjDZcOoGmOY30HVb6BlI4
+   3iP30V/+WGcWGShfdlxLhjMOIWeNEU0oxIIcy968zvggi942uM2Xm8dJR
+   3VCUVAvTtLiNajgYv3K0e6Y4JHq5XbJV/N1vYTTmynNY/d8tAeQ7jRAxc
+   zqeIPktWX5JObvrjOmIZWGS08ri2rvLm57nSuLXRB+w7RHUpEM5C0zKFS
+   cwOnsOYMq32h6Lhd8/idVFMETGQN0IzXx4SknA1d8/JDzfBB+N5SQ6yR0
+   f/46HjD6hs+CECbUcu99xiQnQMhRgHijDOMGjOX32bAGcqUSnB3LTV7c4
+   Q==;
+X-CSE-ConnectionGUID: c0bxj8ciQ9SPhZEQOBFaUw==
+X-CSE-MsgGUID: 0lM+YwTKRzC6hB25oihWCA==
+X-IronPort-AV: E=Sophos;i="6.05,201,1701154800"; 
+   d="scan'208";a="15403437"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Jan 2024 02:00:52 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 18 Jan 2024 02:00:47 -0700
+Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 18 Jan 2024 02:00:44 -0700
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <richardcochran@gmail.com>,
+	<Divya.Koppera@microchip.com>, <maxime.chevallier@bootlin.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<UNGLinuxDriver@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net v2 0/2] net: micrel: Fixes for PHC for lan8814
+Date: Thu, 18 Jan 2024 09:59:14 +0100
+Message-ID: <20240118085916.1204354-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117223856.2303475-1-hugo@hugovil.com> <20240117223856.2303475-16-hugo@hugovil.com>
- <CAHp75Ve5PYQTRdxcffdQvYWJ-iwvfEHfMnL-vhs_mv7yg+GJ5Q@mail.gmail.com> <20240117185909.78bb633ea090f74de9f4f3b7@hugovil.com>
-In-Reply-To: <20240117185909.78bb633ea090f74de9f4f3b7@hugovil.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 18 Jan 2024 10:59:34 +0200
-Message-ID: <CAHp75Vc5mePmXaAbsex6=tHeLSfSj5gZiE4_DQ0-5R-4h6=U5w@mail.gmail.com>
-Subject: Re: [PATCH 15/18] serial: max310x: replace ENOTSUPP with preferred
- EOPNOTSUPP (checkpatch)
-To: Hugo Villeneuve <hugo@hugovil.com>, Kent Gibson <warthog618@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	cosmin.tanislav@analog.com, shc_work@mail.ru, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, Jan 18, 2024 at 1:59=E2=80=AFAM Hugo Villeneuve <hugo@hugovil.com> =
-wrote:
-> On Thu, 18 Jan 2024 01:24:11 +0200
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Jan 18, 2024 at 12:39=E2=80=AFAM Hugo Villeneuve <hugo@hugovil.=
-com> wrote:
+There are different issues with the PHC of lan8814.
+First issue is similar with the one on lan8841 which it has enabled by
+default the check regarding minorVersionPTP in the PTP header frame.
+So all the frames compliant to 8021AS will not be timestamped.
+The second issue is with setting and getting the time of the PHC. The
+issue is seen only when setting a time which is bigger than 2^32.
 
-...
+v1->v2:
+- replace hardcoded values with macros for PTP version
 
-> > > Fixes the following checkpatch warning:
-> > >
-> > >     WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
-> >
-> > NAK.
-> > It's a false positive.
-> >
-> > > According to include/linux/errno.h, ENOTSUPP is
-> > > "Defined for the NFSv3 protocol", so replace it with preferred EOPNOT=
-SUPP.
-> >
-> > The GPIO subsystem uses this internal error code internally. User
-> > space won't get it, so users may not see this one.
->
-> Hi Andy,
-> I will drop the patch then.
->
-> What about adding a comment to prevent future fixes?
->
-> -               return -ENOTSUPP;
-> +               return -ENOTSUPP; /*
-> +                                  * ENOTSUPP is used for backward compat=
-ibility
-> +                                  * with GPIO subsystem.
-> +                                  */
+Horatiu Vultur (2):
+  net: micrel: Fix PTP frame parsing for lan8814
+  net: micrel: Fix set/get PHC time for lan8814
 
-It's kinda useless to add it to a single (GPIO) driver.
-Rather it needs to be mentioned somewhere between
-https://www.kernel.org/doc/html/latest/driver-api/gpio/index.html.
+ drivers/net/phy/micrel.c | 72 ++++++++++++++++++++++------------------
+ 1 file changed, 40 insertions(+), 32 deletions(-)
 
-+Cc: Kent, Bart. It seems we have a handful of drivers violating this
-(basically following what checkpatch says) and GPIO not documenting
-this specific error code and its scope. Did I miss anything?
+-- 
+2.34.1
 
-
---=20
-With Best Regards,
-Andy Shevchenko
