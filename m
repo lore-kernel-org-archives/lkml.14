@@ -1,73 +1,43 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0B21B96A
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 08:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E746125A4;
+	Thu, 18 Jan 2024 08:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705568089; cv=none; b=a8IzauGjfRtWMytms1vSQFr4tIJ6rV+t9VO9GcQUz6WVO7vZSt9AFjKLyHVUlAZUF32pCxkSoAi0s5IdXExkqoQxxzneYV0sL1Rr0cqC2rq4pRKCEf/8RQtdOmLrQNX6AhF0oBoCqz7cnfHcUMWksPzGzP0uf00+0qJbeapo2Ic=
+	t=1705568182; cv=none; b=hi820GGcF5qoIFGtCRg4I+LqFR4lY6rzT0zfhTNpqFMxdwhCT+4R/BNNb5Lxs864DT62vesqz+urvofn4Fmq5Cw/04F5mPjwCXRGmWoDCc9yVCtDQRE1L+xZ5h6ZzaRIvjvlr1FNdCeioUla2R4t7TeFqdv0fMxcrvFK3JnP4SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705568089; c=relaxed/simple;
-	bh=MCxZ8z07WUK2BsrAfJ6Bu00FMqAk5lxvFXxpvD9oRSk=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
-	 X-Google-Original-From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding; b=B5jL1FOteiKWtp2Ok5bMh//s6nJjkU55Hh2JfDT6bXQ0JjZYOhTlYnkv/ewp+4Aw4TchIRyB44aTRSOILpXoHERw8iTHWEyuU/6czloYM0qvwwbOWUr8uPuT1935UI2+CkUrx46lKq5ylC25977i+kemH9i+iINB8EFTNkVQQ8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eoaQ1rq7; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eoaQ1rq7"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d5f10052easo12768615ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 00:54:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705568088; x=1706172888; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oz9mVOu+ad9eAvvgLiXYxdC8+oSkbRkyUjyWQjx33yM=;
-        b=eoaQ1rq78eTtzh0wFOS9Tz2aySgv13PGt+7LqbFZ58CqGGbyLnBm/JLNfMTa+fnqaj
-         UkoqWg0ZR5VQdEGutJsZNYQMt2hKnQgbYSo//p5u0QIhXYnGv4hHZIxnH5r5Vw8BFaFM
-         b4FV9RVa5L7OM8934MXFkCgDfeN9Wakj4eduM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705568088; x=1706172888;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oz9mVOu+ad9eAvvgLiXYxdC8+oSkbRkyUjyWQjx33yM=;
-        b=i23VjTFolcMAr7lUnQ91cUHws8KA5A5nhDYdiAYnVAwIR3HMsO2CQBLYEIXJNdI82r
-         CSAKPEOZFjMdvA37AgcIfVE89ck7RmyG8ZX9DkQj2jvn5x3jY21yN2WqpMMsJTXhNNsS
-         w94EvD6bpIJUhK2qbqu5Mvn1ozgcbkrYDS5+19WSHeL4OX5mXlYucdyTuRaEji+HStn7
-         O5y+24zuHt8yf0U2jw1HVyoyGM3sY3fSDEINlDtFWtLpkY0gwgaz0gWy0eLY3MhBKmSq
-         MugR6RX/Bx7YtoxA24dibUfnBE6W6pjwT1dcVgZRvzWlpEzNVpcYDdCaHnZ5fNy8ZMHk
-         RRkA==
-X-Gm-Message-State: AOJu0YyUwxCI1nYu9uw4cQObWPDQSS7Y4CkvY1xTIn8F2SzL1DDrxexV
-	cFho9OC3e/NnZRdbzQh/7X8Nk+0fdNxwtPobPjGeT44bbBEi34PC6g7icEydX2a+bp2oVbMws1f
-	VzQ==
-X-Google-Smtp-Source: AGHT+IHLBlmDFJj4oPMADbmRUKL9nH9CY9T4nkMaGF60d4eQZV9wC6gpHKuBd5hsyMwfFMYc1IoExw==
-X-Received: by 2002:a17:902:8606:b0:1d5:845:da16 with SMTP id f6-20020a170902860600b001d50845da16mr467559plo.126.1705568087823;
-        Thu, 18 Jan 2024 00:54:47 -0800 (PST)
-Received: from localhost ([2401:fa00:1:10:6a83:9579:c455:9664])
-        by smtp.gmail.com with UTF8SMTPSA id kf13-20020a17090305cd00b001d0ca40158dsm912379plb.280.2024.01.18.00.54.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jan 2024 00:54:47 -0800 (PST)
-From: Ting Shen <phoenixshen@chromium.org>
-X-Google-Original-From: Ting Shen <phoenixshen@google.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: fshao@chromium.org,
-	Ting Shen <phoenixshen@google.com>,
-	Benson Leung <bleung@chromium.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	chrome-platform@lists.linux.dev,
-	=?UTF-8?q?joewu=20=28=E5=90=B3=E4=BB=B2=E6=8C=AF=29?= <joewu@msi.com>,
-	linux-input@vger.kernel.org
-Subject: [PATCH] Input: cros_ec_keyb: add support for base attached event
-Date: Thu, 18 Jan 2024 16:52:43 +0800
-Message-ID: <20240118085310.1139545-1-phoenixshen@google.com>
-X-Mailer: git-send-email 2.43.0.381.gb435a96ce8-goog
+	s=arc-20240116; t=1705568182; c=relaxed/simple;
+	bh=6UEbkC6Uz+XVAzitmU1FaoCrGwDvahmcFEg1+YlZeH0=;
+	h=Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:X-Provags-ID:
+	 X-Spam-Flag:UI-OutboundReport; b=s9l7aBzIlcovGgblCVzyeGab5KpM+CPJbXjtnairBx2c92wSKd2XJJyFgX47nYxHzp1RKIRzg26nwTySNGCRy1ZGa91TyexHYTHtuFBVC6x8wzNaGhsXbHN5mOva/APynG0hFno+uzs1RLokrFgCVia7rbkvUM1eFr8Mwrg09dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; arc=none smtp.client-ip=212.227.126.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
+Received: from localhost.localdomain ([95.223.130.98]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1M1HuU-1rOin60jHu-002qo5; Thu, 18 Jan 2024 09:10:54 +0100
+From: Valentin Obst <kernel@valentinobst.de>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Trevor Gross <tmgross@umich.edu>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Valentin Obst <kernel@valentinobst.de>
+Subject: Re: [PATCH 02/13] rust: error: move unsafe block into function call
+Date: Thu, 18 Jan 2024 09:10:43 +0100
+Message-ID: <20240118081043.20703-1-kernel@valentinobst.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CALNs47vgfs+cFhYsTZU_RE5WxFZ4euMAhuKESJE6m7PFy0JTzQ@mail.gmail.com>
+References: <CALNs47vgfs+cFhYsTZU_RE5WxFZ4euMAhuKESJE6m7PFy0JTzQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,33 +45,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:kHADZcrp0dWzQt8WjQ0aquu0Y6gnR74KksxY2wXQXjIgNJmSV0t
+ 4KxUeXf0jaNxoeE4NMBRta6BjOrfFs2hMeyBiohHyCflOGG9a1bsKYgtoidqtg/gEcKtNpf
+ 5zFIJXDMlrSSo9KoRcIMpi45C5gJWUgP5bM15DNDNwc/PaeVbnd9xBROOgAZ5H5q/+fBwOJ
+ OeW94ribThuLnPpU9GjpQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lEgSvVlN96Y=;RUafqrZMhLZfe+8g03BEftJNnv1
+ clHtEqM8l9cNv9m0YvDYjdFEOLsPXgz4KVfQjesccCYiTpsjnrwclEKugfWGrP5oG/bZpCiws
+ KztCUwhDBiNR72+z/w631WlJEAEBaFCw/H/4c/aEBNuwcKTXvKXTyGONWIIBJUOgxfYOqYSh8
+ s72TBp4+qRTvqC0OTLLeMCVMBv3TyO8M5kAfQ6/4yAgnwgYLtuhcqRa+HmlSxHwsZZIcGodWW
+ Bx5keU95jDsdLDx6eAIWlS0bwmKMxOI3g6qbMLiYikhC+SNfsOwAqKVdPQLcy/fQ05HNqoc+V
+ fmZ5aaglFLutJGR7oJDKc5N8acJFSoy3N1RsYblUA4GoN/nlHGowSSWCb973kgO/d0rAJ9YRR
+ J/NbDFgEblnO7qn1vw5bLufuuQxQvsN44KNJASnGaz3l5C4AOt6zDLu5VQfrdgpIumnW0JcGT
+ 2ftYP7RCwpOXIowB9DG0GSmFTB+r6HTOEOw3vcujbzkJQuxfYKy0i1FR0AIVH4veYxetbVU0H
+ OhBezKz6ZguWxcFwy5CUXJgZ9vynL7374Nmkzp+8vNKYmA+KsFnU7nJQOhGVSJQlTMrpngS8c
+ js+fFIfzkAIW6FUlYkaAgyF6fWthbQZ0zVEs3eK+WthQQ1Tq8OEfeuF34UwZXsKM1ypNp89qb
+ RytoFKVomqMS1OU5M3D/stFDiqMV4u0ZdbPCP7I5Ro34ponZQtVMtQ06BjgAudWE3P9UAIgYy
+ ODtSBfNArXCsHH70y2rx+EuxfjwRM9tXFmfHrtryA+XfpIUWczAUMTzjJZIiWFDV9G7tpzI1R
+ u7g5JO5ptZSQ8u4pVLAH0VMpO4KwhC5vKMe+3aFRv7I9kb4kENVQa0MtfFQ8qEeSBuU3h6xTW
+ tmH70nsxPs/xj/g==
 
-This CL maps ChromeOS EC's BASE_ATTACHED event to SW_DOCK,
-to allow userspace detect that a keyboard is attached to the
-detachable device.
+> If you're up for it, that safety comment could also be improved.
+> Something like
+>
+>    // SAFETY: `pdev` points to a valid platform device
 
-Signed-off-by: Ting Shen <phoenixshen@google.com>
----
+Thanks, will include something like that in a v2.
 
- drivers/input/keyboard/cros_ec_keyb.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Just to make sure I got it correctly: Index is bounds checked [1] and
+thus there is no need to include it in the comment. Please object if
+that is wrong.
 
-diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
-index 30678a34cf647..d2e0d89d4ffdf 100644
---- a/drivers/input/keyboard/cros_ec_keyb.c
-+++ b/drivers/input/keyboard/cros_ec_keyb.c
-@@ -128,6 +128,11 @@ static const struct cros_ec_bs_map cros_ec_keyb_bs[] = {
- 		.code		= SW_TABLET_MODE,
- 		.bit		= EC_MKBP_TABLET_MODE,
- 	},
-+	{
-+		.ev_type	= EV_SW,
-+		.code		= SW_DOCK,
-+		.bit		= EC_MKBP_BASE_ATTACHED,
-+	},
- };
- 
- /*
--- 
-2.43.0.381.gb435a96ce8-goog
-
+[1]: https://elixir.bootlin.com/linux/v6.7/source/drivers/base/platform.c#L63
