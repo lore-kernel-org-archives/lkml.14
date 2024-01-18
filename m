@@ -1,64 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5E32562D;
-	Thu, 18 Jan 2024 11:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE8A20B1C
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705576240; cv=none; b=jcSzTMgM3Upg3bNDBLkbjXUM/CPui0YLrVPbQ1PdzruObCG0Rn+yo0HWy8o6TNLIWnFmptnflnmoAk7b5rdNwkRmHvxQWWRYX36R+gU1Fcbod63EqerNoKtulejyMMO7xeEApztC1QS8QDedKFoMb9KtHh939Dbwpi6QizHXnEY=
+	t=1705576266; cv=none; b=K+mqDMAkrqVK7EUkMEjZwZLkCzWS5TARm9FVBD8EFhK4L1VUUGfDEZe0RpjCkOQBxJ+cFY2y9jiyyLGbTjA458vEySBUQewaG7rJp5Ot/kI/j6Sq4uXVOQVj6CV4l5duqEgGSxrD/Pa3YxXjcjQZxm7BN2K0yMGGE4D1F5aXSdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705576240; c=relaxed/simple;
-	bh=veu7RX2solS5hYJqaxZL8z4co9rNydzvgvSTRDFC1Sg=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding; b=eenoM1SK0DjIWMQmqej+k1XGG7ElqIEbTh/UGpwdNLcfWo89APj48RjlsjgsCSYctUTZtCWLQBMQXsDjj2oyf+cfO20JCJUJWJHDio/7dJJdevmGSb1s/kNbZH0soyQKKt9uZSEliVTuhZErHeJFLyJmFRBTljIYbmMewZeimss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G89yLxGE; arc=none smtp.client-ip=192.55.52.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705576266; c=relaxed/simple;
+	bh=MRHRvuKE8pc+D3f1b42nfzYaXwOhFXgFU1guzsEssug=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding; b=g2t8QjGKR5sGP7FyBgmRAlxI7QyhI+XIFWhkVIGGiJVxzo3o6ziZ5X5FST072ygTun2YO2zHE0771et9jhcu0wopfVXTmSExmIAEuDo5/nhJeymohgcgIIQMiB/SjTsJ4rHQ/JlR3kMitwryyZlzlBDLXvE/SwolknIyDmsGe0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j7gdJb16; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G89yLxGE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705576238; x=1737112238;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=veu7RX2solS5hYJqaxZL8z4co9rNydzvgvSTRDFC1Sg=;
-  b=G89yLxGEaX1FEJ1e7bxJfuwqe6eJIHnu5A9ptVBqCeBpUvLkjcX4x9Jt
-   6wJAWGoswK7Ri/3fuDVrG49/O3deYBsBOg9aQvXZhBGk1xAVgkkGUuzkJ
-   SJ2nY9c++WQeQl9SjuIdU1uKkLpcAUefp+sNfZqJAo/gqsUYdqI36xXFi
-   oVVW9WQAuPzmEXK/fIoAP98IDleD/D3X4ywPuWTcJITbv/OHFBOSTZYNq
-   j+gwQ0TJ4EQzwGWN/LHmOKHLKdICLEMOKp8E1EvUbTH8corb9YLwzUW29
-   M0qVf7doXrnpGTSlGgsa99TCRadJZdQQCueqZeY0pJY9rT1idstbVAo0j
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="486571257"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="486571257"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 03:10:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="262471"
-Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
-  by fmviesa003.fm.intel.com with ESMTP; 18 Jan 2024 03:10:35 -0800
-From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-To: netdev@vger.kernel.org
-Cc: vadim.fedorenko@linux.dev,
-	jiri@resnulli.us,
-	davem@davemloft.net,
-	milena.olech@intel.com,
-	linux-kernel@vger.kernel.org,
-	pabeni@redhat.com,
-	kuba@kernel.org,
-	mschmidt@redhat.com,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jan Glaza <jan.glaza@intel.com>,
-	Jiri Pirko <jiri@nvidia.com>
-Subject: [PATCH net v5 4/4] dpll: fix register pin with unregistered parent pin
-Date: Thu, 18 Jan 2024 12:07:19 +0100
-Message-Id: <20240118110719.567117-5-arkadiusz.kubalewski@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20240118110719.567117-1-arkadiusz.kubalewski@intel.com>
-References: <20240118110719.567117-1-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7gdJb16"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6db0fdd2b8fso4729010b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 03:11:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705576264; x=1706181064; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hSY4Nm43lRTnU6AD88JOhWLYGY3O5OdAdVWfL2iISCI=;
+        b=j7gdJb16FeJjcnQIWCK5wLTmoCVT2hvetgS6tBoSpAt+wpftIIdMKywY7aX+W9RxCs
+         GSWbZpMivARunrranboT2J5vR1IaFesy91uIcIVrjwWoAQDuzC4jjELIr0fSd7ATKKHv
+         vqxyBP4yLmEstJJyRIdbKLxP5VItFrtcvV0dw4Y+p/Qj/MQQsknhXji84bO5vfjXvC5y
+         sKXulny+RRiJ6TT5Iwh3iiNDiqp7H/CEEagaxX9/5OtiK2bOKVMqBYy9hRG5mAJXp1O8
+         4kgXAEYI4z0pmEHundH29AEUu6RIXBqVlUlxiTLmJoynIAW2AFoF3/+dIDLn531IcXgx
+         d8cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705576264; x=1706181064;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hSY4Nm43lRTnU6AD88JOhWLYGY3O5OdAdVWfL2iISCI=;
+        b=B7m7nVCySFQoLxnKCmxF9KFezV9tSbNOcVu4Lp9QKsvnurU3Ph1LJxlI0UDcXOjALz
+         DB1ifxSt6PEET70lbdj12aKofyy0edbG9wB2s8b2LqNc1U44hpBY8cFI5WNJ7Osf0mzk
+         6WJuf8gZBT0jGqq2sN9nPhieyedc3oh1+wY+QVhSFucAtLP/P/1LjL7GgJrV2uW87daq
+         XRJTRqqa4+uExUzIyOiDSAVwpA+dSb1HFKY7tGJNXbkrRnwuINjmDPSdetDcIONDKTaO
+         +IcGgexaWpisuuj/dtdrhIN0fmcGG2P9jVCafc+QnXREObmIBJt8NQrIXBqgQvSdCr/+
+         OmOw==
+X-Gm-Message-State: AOJu0YzB2i4JPanoD57TZ8nI+0SYc3s01g7CAJL56YKlj628Bv3B3Tgr
+	cHbRvsYQTjMQp5cHijXtWRHijX/vMhiRBNzxBqJXYHkF0fjxm2UL
+X-Google-Smtp-Source: AGHT+IFGQGetHNHNcrVpJS0z9Hnh5gf6XgUI/KzMNMt8azUpdCJ3s6lHtwWV6MPeYa/gRhoS7M5+YQ==
+X-Received: by 2002:a05:6a00:a0f:b0:6da:d8c8:f2ad with SMTP id p15-20020a056a000a0f00b006dad8c8f2admr506148pfh.43.1705576264085;
+        Thu, 18 Jan 2024 03:11:04 -0800 (PST)
+Received: from barry-desktop.. (143.122.224.49.dyn.cust.vf.net.nz. [49.224.122.143])
+        by smtp.gmail.com with ESMTPSA id t19-20020a056a0021d300b006d9be753ac7sm3039107pfj.108.2024.01.18.03.10.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 03:11:03 -0800 (PST)
+From: Barry Song <21cnbao@gmail.com>
+To: ryan.roberts@arm.com,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	mhocko@suse.com,
+	shy828301@gmail.com,
+	wangkefeng.wang@huawei.com,
+	willy@infradead.org,
+	xiang@kernel.org,
+	ying.huang@intel.com,
+	yuzhao@google.com,
+	surenb@google.com,
+	steven.price@arm.com,
+	Barry Song <21cnbao@gmail.com>
+Subject: [PATCH RFC 0/6] mm: support large folios swap-in
+Date: Fri, 19 Jan 2024 00:10:30 +1300
+Message-Id: <20240118111036.72641-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231025144546.577640-1-ryan.roberts@arm.com>
+References: <20231025144546.577640-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,64 +83,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In case of multiple kernel module instances using the same dpll device:
-if only one registers dpll device, then only that one can register
-directly connected pins with a dpll device. When unregistered parent is
-responsible for determining if the muxed pin can be registered with it
-or not, the drivers need to be loaded in serialized order to work
-correctly - first the driver instance which registers the direct pins
-needs to be loaded, then the other instances could register muxed type
-pins.
+On an embedded system like Android, more than half of anon memory is actually
+in swap devices such as zRAM. For example, while an app is switched to back-
+ground, its most memory might be swapped-out.
 
-Allow registration of a pin with a parent even if the parent was not
-yet registered, thus allow ability for unserialized driver instance
-load order.
-Do not WARN_ON notification for unregistered pin, which can be invoked
-for described case, instead just return error.
+Now we have mTHP features, unfortunately, if we don't support large folios
+swap-in, once those large folios are swapped-out, we immediately lose the 
+performance gain we can get through large folios and hardware optimization
+such as CONT-PTE.
 
-Fixes: 9431063ad323 ("dpll: core: Add DPLL framework base functions")
-Fixes: 9d71b54b65b1 ("dpll: netlink: Add DPLL framework base functions")
-Reviewed-by: Jan Glaza <jan.glaza@intel.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
----
-v5:
-- make this patch fourth in the series, previously was third
+In theory, we don't need to rely on Ryan's swap out patchset[1]. That is to say,
+before swap-out, if some memory were normal pages, but when swapping in, we
+can also swap-in them as large folios. But this might require I/O happen at
+some random places in swap devices. So we limit the large folios swap-in to
+those areas which were large folios before swapping-out, aka, swaps are also
+contiguous in hardware. On the other hand, in OPPO's product, we've deployed
+anon large folios on millions of phones[2]. we enhanced zsmalloc and zRAM to
+compress and decompress large folios as a whole, which help improve compression
+ratio and decrease CPU consumption significantly. In zsmalloc and zRAM we can
+save large objects whose original size are 64KiB for example. So it is also a
+better choice for us to only swap-in large folios for those compressed large
+objects as a large folio can be decompressed all together.
 
- drivers/dpll/dpll_core.c | 6 ------
- 1 file changed, 6 deletions(-)
+Note I am moving my previous "arm64: mm: swap: support THP_SWAP on hardware
+with MTE" to this series as it might help review.
 
-diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
-index 55f6eda5d2d4..ac426a9be072 100644
---- a/drivers/dpll/dpll_core.c
-+++ b/drivers/dpll/dpll_core.c
-@@ -29,8 +29,6 @@ static u32 dpll_pin_xa_id;
- 	WARN_ON_ONCE(!xa_get_mark(&dpll_device_xa, (d)->id, DPLL_REGISTERED))
- #define ASSERT_DPLL_NOT_REGISTERED(d)	\
- 	WARN_ON_ONCE(xa_get_mark(&dpll_device_xa, (d)->id, DPLL_REGISTERED))
--#define ASSERT_PIN_REGISTERED(p)	\
--	WARN_ON_ONCE(!xa_get_mark(&dpll_pin_xa, (p)->id, DPLL_REGISTERED))
- 
- struct dpll_device_registration {
- 	struct list_head list;
-@@ -615,8 +613,6 @@ dpll_pin_register(struct dpll_device *dpll, struct dpll_pin *pin,
- 	    WARN_ON(!ops->state_on_dpll_get) ||
- 	    WARN_ON(!ops->direction_get))
- 		return -EINVAL;
--	if (ASSERT_DPLL_REGISTERED(dpll))
--		return -EINVAL;
- 
- 	mutex_lock(&dpll_lock);
- 	if (WARN_ON(!(dpll->module == pin->module &&
-@@ -694,8 +690,6 @@ int dpll_pin_on_pin_register(struct dpll_pin *parent, struct dpll_pin *pin,
- 	    WARN_ON(!ops->state_on_pin_get) ||
- 	    WARN_ON(!ops->direction_get))
- 		return -EINVAL;
--	if (ASSERT_PIN_REGISTERED(parent))
--		return -EINVAL;
- 
- 	mutex_lock(&dpll_lock);
- 	ret = dpll_xa_ref_pin_add(&pin->parent_refs, parent, ops, priv);
+[1] [PATCH v3 0/4] Swap-out small-sized THP without splitting
+https://lore.kernel.org/linux-mm/20231025144546.577640-1-ryan.roberts@arm.com/
+[2] OnePlusOSS / android_kernel_oneplus_sm8550 
+https://github.com/OnePlusOSS/android_kernel_oneplus_sm8550/tree/oneplus/sm8550_u_14.0.0_oneplus11
+
+Barry Song (2):
+  arm64: mm: swap: support THP_SWAP on hardware with MTE
+  mm: rmap: weaken the WARN_ON in __folio_add_anon_rmap()
+
+Chuanhua Han (4):
+  mm: swap: introduce swap_nr_free() for batched swap_free()
+  mm: swap: make should_try_to_free_swap() support large-folio
+  mm: support large folios swapin as a whole
+  mm: madvise: don't split mTHP for MADV_PAGEOUT
+
+ arch/arm64/include/asm/pgtable.h |  21 ++----
+ arch/arm64/mm/mteswap.c          |  42 ++++++++++++
+ include/asm-generic/tlb.h        |  10 +++
+ include/linux/huge_mm.h          |  12 ----
+ include/linux/pgtable.h          |  62 ++++++++++++++++-
+ include/linux/swap.h             |   6 ++
+ mm/madvise.c                     |  48 ++++++++++++++
+ mm/memory.c                      | 110 ++++++++++++++++++++++++++-----
+ mm/page_io.c                     |   2 +-
+ mm/rmap.c                        |   5 +-
+ mm/swap_slots.c                  |   2 +-
+ mm/swapfile.c                    |  29 ++++++++
+ 12 files changed, 301 insertions(+), 48 deletions(-)
+
 -- 
-2.38.1
+2.34.1
 
