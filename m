@@ -1,310 +1,155 @@
-Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A2C20305
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 10:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=91.207.212.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705572250; cv=fail; b=gRVpDfOan7v6bKSlWF3A+pB+PtIxiDPutGrNjcsrh6eYZgXlHStiGWOuIGlE04wGey16Qz4nmEtyaROROWkwZeM9QIt/81t3+szKx4MjJC9PEb4S9uiC/S1x2ztADobs8stW7EL0rXvrTPfweSIBJqHF1LZ7xVaw7dXmPhVC6cw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705572250; c=relaxed/simple;
-	bh=VtR4olttJYR9A8mpgEf5acxxYPiE7RemG7os7/6DCEk=;
-	h=Received:DKIM-Signature:Received:Received:Received:
-	 ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
-	 Received:Received:From:To:CC:Subject:Thread-Topic:Thread-Index:
-	 Date:Message-ID:References:In-Reply-To:Accept-Language:
-	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:
-	 x-ms-exchange-senderadcheck:x-ms-exchange-antispam-relay:
-	 x-microsoft-antispam:x-microsoft-antispam-message-info:
-	 x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:MIME-Version:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-	 X-MS-Exchange-CrossTenant-userprincipalname:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-	 X-EXCLAIMER-MD-CONFIG:X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID; b=WKFL1aFBUKnvnOURb6C39s6/aeWjagXiHAjQfMBFQXuGSKjsyhMAXbP2pEHaQgy8pUwuWvYbtE2xFevQ+TPLwNktrB6z000gFhAOmNRzZ7poJK3pTyEsnVxO4uvxtN+mMLqxHOfS3bFYS5/9CQs6uOsXZ8DoVNzHpAj0PqBCYh4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=kI6N06tN; dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b=VZLLKGKm; arc=fail smtp.client-ip=91.207.212.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20A02030E;
+	Thu, 18 Jan 2024 10:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705572323; cv=none; b=nH4QpuB1oLxP3IOKxi7lCwwT4ZYvnI7u/N4Y/ZbqPcVgmiV09ne9+nOlywjOZNx5p2qYddI0PgHJLLKul0/t0mm8SHO8FuUTdV8th5ezetaTyeeVB2bPB+rymAvdm6oIyA99j2S2exucmOjVDryPFncV8Fwov4olJsf6y0HSs4Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705572323; c=relaxed/simple;
+	bh=HhhsN2WfAyRDBWzaRYUFbUEE/c8KvI4/F0M8cPQbuYY=;
+	h=Received:DKIM-Signature:Received:Received:Received:Received:From:
+	 To:CC:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
+	 X-ClientProxiedBy:X-Proofpoint-Virus-Version; b=KcxJ2IeSLKWhRCi4giptxim0iXEbX7FLcQy/OAdrynh64eZ6Oz5EMkk8XB1bSuwdVvZrqhqlrfsnHXt+uXeejLWrj6kdGVOw9eunD58HxgTDohiC02uNc2DBbDFjQJwGZatjDTT81J8uFkNsiYNIjYjuwt1wWJJ7g8pPkwbknLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Hk4CdXV1; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="kI6N06tN";
-	dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b="VZLLKGKm"
-Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40I8Z2Xt016671;
-	Thu, 18 Jan 2024 09:39:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:mime-version; s=dk201812; bh=VtR4olttJYR9A8mpgEf5a
-	cxxYPiE7RemG7os7/6DCEk=; b=kI6N06tNdoYXxgXIYIhuUgCN4YFWBiz9O7iYH
-	Vlu4EiBExwh77pGw81tyxKH3z9SniV2gPN9NUb7XmCvehBh9RmuqSoxr7wuJy2o4
-	e9BiQYnB1r0Bb+XX5jeL45z84LZu+G9WPssECQHWGSntkmojLZfJ6srI73+W5/mo
-	htYW+UnSsQQC+GO/qxvHQazCPtXrM0sRTh6qpbCJU0MEogEOr71WE4XNXTpPQuPg
-	EFcVm6f9wMZh+kjeGf5bI/U4xcqeLO3vZG45hC74A2AOVZ/+V2HrjUyhAbMeZJid
-	9g/IH/s61KdTzGKLFAkGUg6agrhXjQbBZzG92VwJsG1WuFQVQ==
-Received: from hhmail05.hh.imgtec.org ([217.156.249.195])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 3vkhnsbmkw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 18 Jan 2024 09:39:02 +0000 (GMT)
-Received: from HHMAIL04.hh.imgtec.org (10.100.10.119) by
- HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Jan 2024 09:39:01 +0000
-Received: from GBR01-LO4-obe.outbound.protection.outlook.com (104.47.85.104)
- by email.imgtec.com (10.100.10.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 18 Jan 2024 09:39:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d//mKCL/uuEwhxUYg/C1GRKZgiNVoDomMAkc4X24fjpqDCFikxvHH2BqaqQcVSZ0hD6tGBbVkD5+hXDXqeIF8mOOSLkYYJyTW80v2HxQIhuDFVpEVmkjbq8JhvuEKlgoUspGjZAJj2kUnjQPrPpzXhjKklvqMul5yU+9IfrJ53jvAIuR5B5aQ/+zY5Pswp8aSIBG8mWRkaWiS2vjzg3ITBvSwrprZnmdoQMuoVO7TD/mjnw7iMeO7h78w85N+socvd8WjOYlTG/1DodAci/Yp6XhxtiClGyKG22i9uUM0LSoOc54KOY9TecYo08/wH+BaoPn/19XDraAz05I20gZ5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VtR4olttJYR9A8mpgEf5acxxYPiE7RemG7os7/6DCEk=;
- b=lsDDLFNVNVXSjf6GP3wTptvS6K0nIkZjj76K1ELNwb6vewHML4HQTr8bdS4e5aln6MTVAlDAJMcj/WZoDd301yRB3sJygxx+EhCsI2qTHAjzqEId+kj86IvQbbKOoe176YI//zhJzPlO/f1aO61Be7sdJx6BDrJPy/+zevycP4BB4k+fEUBeBg3RR8YCwCn52BS+OY3cBe6ITwQzdsPyW9XKI5RY/ffPkOZlS+dpXQHDm12VjUoWPykC0JWvLNd75QK4M1QJCU4AeWeGItCr1jMWeHIIA7FPxtOC+PQLHmKfwiQa4LPbtu0VKAlQL5fQsjCCW7wQS8ua9lQpvxUbXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=imgtec.com; dmarc=pass action=none header.from=imgtec.com;
- dkim=pass header.d=imgtec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=IMGTecCRM.onmicrosoft.com; s=selector2-IMGTecCRM-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VtR4olttJYR9A8mpgEf5acxxYPiE7RemG7os7/6DCEk=;
- b=VZLLKGKm5okNTCe3C58/s3xVd3wRvHaiYf3jGepv63RdybBgI7xGH7XScSvPeombU0aBrPLO+9g69d1NnmKG+rbW5dSY5KSuruNuE6V32I7Yv7H9Gq9CKGprpY8wqzK1/fjL7kXLudAhq0twNfw9fLOQ+otin7KK9nNeZndgq0I=
-Received: from CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:e7::8) by
- LO3P265MB2233.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:103::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.23; Thu, 18 Jan 2024 09:38:59 +0000
-Received: from CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
- ([fe80::238a:8c4:e3ab:ee06]) by CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
- ([fe80::238a:8c4:e3ab:ee06%7]) with mapi id 15.20.7202.024; Thu, 18 Jan 2024
- 09:38:59 +0000
-From: Matt Coster <Matt.Coster@imgtec.com>
-To: Randy Dunlap <rdunlap@infradead.org>
-CC: Maxime Ripard <mripard@kernel.org>, Frank Binns <Frank.Binns@imgtec.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann
-	<tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter
-	<daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/imagination: fix ARRAY_SIZE build error
-Thread-Topic: [PATCH] drm/imagination: fix ARRAY_SIZE build error
-Thread-Index: AQHaSfIpk+0dcLkog0Gt4kTl/cVwNA==
-Date: Thu, 18 Jan 2024 09:38:59 +0000
-Message-ID: <ca53a99f-4bd9-47cb-bf4f-869712ef950c@imgtec.com>
-References: <20240110002350.1096-1-rdunlap@infradead.org>
-In-Reply-To: <20240110002350.1096-1-rdunlap@infradead.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CWXP265MB3397:EE_|LO3P265MB2233:EE_
-x-ms-office365-filtering-correlation-id: 4dac2b76-d019-4c4f-6f16-08dc18094c1e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q4CNeRYVp4KBsHGIkI4zTBlIh1UpH3xf/0XVQo+zp8C19zsCdWPUQkrSDC9S6XerTZ1v1rERBxZ+ijrj7nBZ/oHvVnQ9Z2MyE/2502xQOMCbFQ2FCIBwREW6EEJ4iRbctO+35cZzTk18lHJD7lGEJmpthyweCBvvrFAFdvwgeahT1xETqgxpXwK8Ku6DZyluo3aeJKq2syoDE0ydkClQxqUMah6FK5ovWdWsZ5gzxVIMILDPiU6K2LnG03NgUE9CVcdHp5KIqvJ7PqqGv11ZopDpUNNIINhyr2/66y4CP1ZGB9H8qRXvpyUR64wAtqp3L9wXhmX+y36SkH1GFIcDmVU86ul7XNno4zVyXIDgAyvFSC1uq7ddOVuqu5aCOhGlFzf3rV5o3qIpT6pB7Q/W0JmSl2lRHPN+LPQfKftV0/wW0CqWI1aIWWUlzSvGM3N84EvTkkeV+427jefAUq7bKVeZMVWLDGOw2yWdW2Lhj6fVBzOcujywOgIgrbaLiQiXDdyoQUmYGMaRVh0LSJlwg4coBuQTQFd3LuYuF1aJqn5MYeMyVVZLb0zzIyzm/K7YrrGzjB+GqprhqH3W3MgvB12mj76nC0QUdDrbxpzRsE4LQiMY64wQMPTB7ta39gg1AaNdHG90BPui1A+G5zc6HG3tKTwSu4q1UqPLyuD4Z8kJfMSQ8Rm8N+GLKwGMTMft
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(376002)(366004)(39850400004)(230922051799003)(230173577357003)(230273577357003)(451199024)(186009)(64100799003)(1800799012)(26005)(83380400001)(122000001)(99936003)(38070700009)(31696002)(86362001)(36756003)(38100700002)(41300700001)(6916009)(66556008)(64756008)(76116006)(91956017)(66446008)(316002)(66946007)(54906003)(5660300002)(2906002)(8936002)(8676002)(4326008)(66476007)(31686004)(53546011)(2616005)(6512007)(478600001)(71200400001)(6506007)(6486002)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Wm9tOUFNVzFrQ1A4NitDLzlhSDdoSmFMLzd0OWQ5NXB0NXE4KzNRN3VWcmtr?=
- =?utf-8?B?cDlkUjdnOVBxYTQ4ckVueiswNG9xWEMzYlRoMWZiV1lSdE5teHR0bUlmYThC?=
- =?utf-8?B?RVplZ0toODB4R2l0UDRNS0tZbFJpaUQvWHl5TVozRkJENStNMW1FbGtXd3dG?=
- =?utf-8?B?cGVrbkxDckQxOVJKNUl6OFk5NnZEbkJOcG1QTXo5NG16R09oNE9MTk5IdkNQ?=
- =?utf-8?B?SmpDdGNJZWdScTB4OGNLK2NKUFRrcmduSEUwMzlwYUhtenhHck4yK0xkRW52?=
- =?utf-8?B?K2lyTWJCWDRzY0FOTGt0UitDVnpBZnpFRUdZVXNQTStZWVFMeWpXVmw1VFhj?=
- =?utf-8?B?RThSaVZJaTNEbzRTb2d5VVZ4VEl3TnNjUVBGd0lZRXhsYWpSYWwyQ0QrQlY5?=
- =?utf-8?B?akdobHRUVXhsUGt1cGZrVFgxc24zRmhUek4vL21HT0ZIc0RYZVg0T0c1QXZp?=
- =?utf-8?B?Rloyc3VjbFo4NG9NRUFiMkNqMzNnMVkwYmZIUy9FL0pYZU5VRGtnWVk1ZTJW?=
- =?utf-8?B?SkxuOUtpYlllT0dwT0wzTnJZNExMNElwZlpwWHB3dlpmUDFTNWdVdG5BYllk?=
- =?utf-8?B?aGNsc2kzVHJlMXdPS25ocGFoMndacGxURVJ1NG1jVWxUWjFUMkFRMUpsOGF4?=
- =?utf-8?B?UFBHNmtRZDZ4akdSRlFYdlV0Y0w2Rzk5QWJvK2xnMXRURWpUa2l6N0RSRmNS?=
- =?utf-8?B?Ly9uOFFFK2xJaXhxVzBuekpSZG90V1FiUUZsTTZqeStPSHI1bHRrZlhBbkpC?=
- =?utf-8?B?ZVdCVS8wUUZLbVNNUS9CbEoyd3lYaVcwQm9pbWxERU1PcTJ1ckFpZjl3NEdo?=
- =?utf-8?B?dzBMTFZnYTV5elhWRXRsam50MDdDKzNPdXgzVm9QeFJMdmNMMldwWVJvZXRW?=
- =?utf-8?B?Tm1SNXR5MkRJQVJPMXFPTmo4QlJSbU54YlZpRitRQjVIeTZYRitqaUIvRm02?=
- =?utf-8?B?ZDcvV2VDREkrWUlBWGdURjIzenJ2N2RVYVczK3JWUkRaNjROYTZicllLeGRu?=
- =?utf-8?B?NkRWTDdiYjNGREdSdzMzejFPbWg1OEhnMElLUC9JdVA4eXRZTU9xZmlLTmla?=
- =?utf-8?B?cnFLWHZtTUk2clA3SU5JeWFJU0J4a3N2SmFmNVBwRDRpNWpqc1pybUVoTkFD?=
- =?utf-8?B?SHA0dFpCdU5CSEFCL29JclZpTXFuOERrV1hGSldqVkU1OGFvMmlPSlpJMkFF?=
- =?utf-8?B?TVJPVCtxcnpVcWYxamtGYnFESVZVRVB1TG5qMnpjVVRwK01ZekFlK3l4cmda?=
- =?utf-8?B?M2NCM1UrSDNsKzEwTHFlSTNYUEVCR2Q2TERZUWtSSnNjVThOQVMwZ25vbER1?=
- =?utf-8?B?Zk5vd0txQWR0Vk8vNmRBMHVDcU1VOGhPMkZ3MjlQMTZBcmFNTE0wb05jQjBm?=
- =?utf-8?B?WUFFYzM1cCtaQkVhbnk2NFhYVzdEK0JxSVN0UjVGc0c5YjdKclJzZjZvSTU4?=
- =?utf-8?B?SHZwK0tBbERYUVV0REVsSDJTdlJYSVY5aHB5N0xWUTA1WmVGakJNV295aTMv?=
- =?utf-8?B?MExNKzZtY3RMUVdiYnhqdUNLd29vM0dMVTcrckEweTV4N1BTcEhvR0hjdHFz?=
- =?utf-8?B?WE9WQ2REaUtPQTlKSFZ2RFp5bld3eFdzMnJiNXNua0dtbk4xdUhnbHVlSHFX?=
- =?utf-8?B?QzhaTjhKeHpXeHpqWVFjTytOSDg0UnJJVGp3aGNTRHRkMDYyQU9TU1VscVVz?=
- =?utf-8?B?c2wvVHNNVXFOOGg5c05waUlSWmdRQTkwMjRNbUc5YW5wT3ZlbHkwenRUTHhQ?=
- =?utf-8?B?UnhGTjYrWW1qc3IzR1laaFErTDBJT24yU2xWTzN3OGJBOFhJaldLUmtvazlh?=
- =?utf-8?B?dnVrdklLOGpEZGhEMGNIRUZDbnN0TG9JOHBGV0dSenZHbXVqYUJ5bWE1NFQ4?=
- =?utf-8?B?OWUzbXcwUUgyRjhoT1RnRmhBR1dIWFpQNGgwaGpwbWRaT3hLNDlmSnBPZDhR?=
- =?utf-8?B?cy9DY0UvNGo2RHQ2TFdHYzNIa1hNM0R0YkxPMEZ6YVdxemFlYXJMenhpTHg0?=
- =?utf-8?B?Y2YxNlN4ekNHQStKYnYza3UzTmp6WmltZzhBS2hONDI2VEduSFlHaEtSR0h6?=
- =?utf-8?B?MkRRMGRzMWUrL0dVdjFqRi9HUjJ6V3NYQ0FZUUE4bDhSYVJidGREN0tLRDd4?=
- =?utf-8?B?TkRuT05SNDhYMDhiYys5ajQ3eDBLdTgyU29vajFSZnVoa3plNzdIem13QWV1?=
- =?utf-8?B?L1E9PQ==?=
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------VSXHJIzpOkssi5XYlMIQmLcZ"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Hk4CdXV1"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40I9gTqq025691;
+	Thu, 18 Jan 2024 11:04:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=GKqS8jq
+	xEEpUNyAQ+GwIQ0fVhoXxiu3PF3g7F74mv1g=; b=Hk4CdXV1ksC+LVQ5sYrNcdj
+	YVW3QTCU1pQ2iylO6ets36E5VeU7HqtdnrL0ILbQypQqR+jPshjDtkW4D5rfyV5q
+	pLq68VhMhJAA2uw+LtZKMHJe3qTRD/uChFIAuk1nb9OUiunnd67lHq5GO9eS6wIc
+	xj+P4c3g4h7s7VHYKqn7K/rgJRlIyhl/382Y8hU0TUZ2H4mrA+vlsQNH2uw4lrp6
+	yT3eFVUqOYSXiaoBMQD13BKgy2GM8gQUdBBk0GoYS7PE3pzAdsL7bg3QfI+sEKqI
+	t20zgGKIx1ag/kdUT3sMTpO37/0J50Zk1DW0yjKKnE8Jkj7okdiMcHdP1bLGvOA=
+	=
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vkmbhg0sp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jan 2024 11:04:44 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C8B110007D;
+	Thu, 18 Jan 2024 11:04:44 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2FB2121A223;
+	Thu, 18 Jan 2024 11:04:44 +0100 (CET)
+Received: from localhost (10.201.20.75) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 18 Jan
+ 2024 11:04:43 +0100
+From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Rob
+ Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+Subject: [PATCH v2 0/4] Introduction of a remoteproc tee to load signed firmware
+Date: Thu, 18 Jan 2024 11:04:29 +0100
+Message-ID: <20240118100433.3984196-1-arnaud.pouliquen@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dac2b76-d019-4c4f-6f16-08dc18094c1e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2024 09:38:59.0405
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d5fd8bb-e8c2-4e0a-8dd5-2c264f7140fe
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bS0g+uxxOjnHwfMUzjfcc4AgeotUCwRoaVImEBLly/1Jm9rWovB77NjOtZKd7chsj4OdBL5tusTLAHR5gmehxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO3P265MB2233
-X-OriginatorOrg: imgtec.com
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-ORIG-GUID: eNM24pFs6a6SxCBHpAEvmv_TWt4m65Gi
-X-Proofpoint-GUID: eNM24pFs6a6SxCBHpAEvmv_TWt4m65Gi
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-18_05,2024-01-17_01,2023-05-22_02
 
---------------VSXHJIzpOkssi5XYlMIQmLcZ
-Content-Type: multipart/mixed; boundary="------------1iMWcYMAjksFSu02Jek0jJeF";
- protected-headers="v1"
-From: Matt Coster <matt.coster@imgtec.com>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Maxime Ripard <mripard@kernel.org>, Frank Binns <frank.binns@imgtec.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Message-ID: <ca53a99f-4bd9-47cb-bf4f-869712ef950c@imgtec.com>
-Subject: Re: [PATCH] drm/imagination: fix ARRAY_SIZE build error
-References: <20240110002350.1096-1-rdunlap@infradead.org>
-In-Reply-To: <20240110002350.1096-1-rdunlap@infradead.org>
+Updates from the previous version [1]
+- fix issues reported by kernel test robot,
+- address Rob Herring comment on bindings.
 
---------------1iMWcYMAjksFSu02Jek0jJeF
-Content-Type: multipart/mixed; boundary="------------0GaWyy0ioj73MeSaJSolcdkR"
+[1] https://lore.kernel.org/linux-arm-kernel/20240115135249.296822-1-arnaud.pouliquen@foss.st.com/T/
 
---------------0GaWyy0ioj73MeSaJSolcdkR
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
 
-T24gMTAvMDEvMjAyNCAwMDoyMywgUmFuZHkgRHVubGFwIHdyb3RlOg0KPiBGaXggYSBidWls
-ZCBlcnJvciB3aGVuIHVzaW5nIEdDQyAxMy4yLjAgZnJvbSBrZXJuZWwub3JnIGNyb3NzdG9v
-bHMNCj4gYnkgY2hhbmdpbmcgQVJSQVlfU0laRSgpIHRvIHRoZSBtYWNybyBQVlJfTUlQU19Q
-VF9QQUdFX0NPVU5UOg0KDQpJIGFzc3VtZSB5b3UncmUgcmVmZXJyaW5nIHRvIHRoZSB4ODZf
-NjQgPT4gYWFyY2g2NCB0b29sY2hhaW4gaGVyZT8NCg0KPiBkcml2ZXJzL2dwdS9kcm0vaW1h
-Z2luYXRpb24vcHZyX3ZtX21pcHMuYzogSW4gZnVuY3Rpb24gJ3B2cl92bV9taXBzX2Zpbmkn
-Og0KPiAuLi9pbmNsdWRlL2xpbnV4L2FycmF5X3NpemUuaDoxMToyNTogd2FybmluZzogb3Zl
-cmZsb3cgaW4gY29udmVyc2lvbiBmcm9tICdsb25nIHVuc2lnbmVkIGludCcgdG8gJ2ludCcg
-Y2hhbmdlcyB2YWx1ZSBmcm9tICcxODQ0Njc0NDA3MzcwOTU1MTYxNScgdG8gJy0xJyBbLVdv
-dmVyZmxvd10NCj4gICAgIDExIHwgI2RlZmluZSBBUlJBWV9TSVpFKGFycikgKHNpemVvZihh
-cnIpIC8gc2l6ZW9mKChhcnIpWzBdKSArIF9fbXVzdF9iZV9hcnJheShhcnIpKQ0KPiAgICAg
-ICAgfCAgICAgICAgICAgICAgICAgICAgICAgICBeDQo+IGRyaXZlcnMvZ3B1L2RybS9pbWFn
-aW5hdGlvbi9wdnJfdm1fbWlwcy5jOjEwNToyNDogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1h
-Y3JvICdBUlJBWV9TSVpFJw0KPiAgICAxMDUgfCAgICAgICAgIGZvciAocGFnZV9uciA9IEFS
-UkFZX1NJWkUobWlwc19kYXRhLT5wdF9wYWdlcykgLSAxOyBwYWdlX25yID49IDA7IHBhZ2Vf
-bnItLSkgew0KPiAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn4N
-Cg0KSSBjYW4ndCBzZWVtIHRvIHJlcHJvZHVjZSB0aGlzIHVzaW5nIHRoZSBhYm92ZSB0b29s
-Y2hhaW4gKG9yIGFueSBvdGhlciksDQpldmVuIHdpdGggLVdvdmVyZmxvdyBleHBsaWNpdGx5
-IHNwZWNpZmllZC4NCg0KVGhlIHVzZSBvZiBBUlJBWV9TSVpFKCkgaW4gbG9vcCBib3VuZHMg
-aXMgYSBwcmV0dHkgY29tbW9uIGNvbnN0cnVjdGlvbiDigJMNCmV2ZW4gd2l0aGluIHRoZSBw
-dnIgZHJpdmVyLiBEbyB5b3Ugc2VlIHNpbWlsYXIgd2FybmluZ3MgYW55d2hlcmUgZWxzZT8N
-Cg0KUmVnYXJkcywNCk1hdHQNCg0KLS0NCk1hdHQgQ29zdGVyDQpJbWFnaW5hdGlvbiBUZWNo
-bm9sb2dpZXMNCg0KPiBGaXhlczogOTI3ZjNlMDI1M2MxICgiZHJtL2ltYWdpbmF0aW9uOiBJ
-bXBsZW1lbnQgTUlQUyBmaXJtd2FyZSBwcm9jZXNzb3IgYW5kIE1NVSBzdXBwb3J0IikNCj4g
-U2lnbmVkLW9mZi1ieTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+
-IENjOiBEb25hbGQgUm9ic29uIDxkb25hbGQucm9ic29uQGltZ3RlYy5jb20+DQo+IENjOiBN
-YXhpbWUgUmlwYXJkIDxtcmlwYXJkQGtlcm5lbC5vcmc+DQo+IENjOiBGcmFuayBCaW5ucyA8
-ZnJhbmsuYmlubnNAaW1ndGVjLmNvbT4NCj4gQ2M6IE1hdHQgQ29zdGVyIDxtYXR0LmNvc3Rl
-ckBpbWd0ZWMuY29tPg0KPiBDYzogTWFhcnRlbiBMYW5raG9yc3QgPG1hYXJ0ZW4ubGFua2hv
-cnN0QGxpbnV4LmludGVsLmNvbT4NCj4gQ2M6IFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVy
-bWFubkBzdXNlLmRlPg0KPiBDYzogRGF2aWQgQWlybGllIDxhaXJsaWVkQGdtYWlsLmNvbT4N
-Cj4gQ2M6IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4NCj4gQ2M6IGRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcNCj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL2lt
-YWdpbmF0aW9uL3B2cl92bV9taXBzLmMgfCAgICA0ICsrLS0NCj4gICAxIGZpbGUgY2hhbmdl
-ZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9pbWFnaW5hdGlvbi9wdnJfdm1fbWlwcy5jIGIvZHJpdmVycy9ncHUv
-ZHJtL2ltYWdpbmF0aW9uL3B2cl92bV9taXBzLmMNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L2ltYWdpbmF0aW9uL3B2cl92bV9taXBzLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2lt
-YWdpbmF0aW9uL3B2cl92bV9taXBzLmMNCj4gQEAgLTQ2LDcgKzQ2LDcgQEAgcHZyX3ZtX21p
-cHNfaW5pdChzdHJ1Y3QgcHZyX2RldmljZSAqcHZyXw0KPiAgIAlpZiAoIW1pcHNfZGF0YSkN
-Cj4gICAJCXJldHVybiAtRU5PTUVNOw0KPiAgIA0KPiAtCWZvciAocGFnZV9uciA9IDA7IHBh
-Z2VfbnIgPCBBUlJBWV9TSVpFKG1pcHNfZGF0YS0+cHRfcGFnZXMpOyBwYWdlX25yKyspIHsN
-Cj4gKwlmb3IgKHBhZ2VfbnIgPSAwOyBwYWdlX25yIDwgUFZSX01JUFNfUFRfUEFHRV9DT1VO
-VDsgcGFnZV9ucisrKSB7DQo+ICAgCQltaXBzX2RhdGEtPnB0X3BhZ2VzW3BhZ2VfbnJdID0g
-YWxsb2NfcGFnZShHRlBfS0VSTkVMIHwgX19HRlBfWkVSTyk7DQo+ICAgCQlpZiAoIW1pcHNf
-ZGF0YS0+cHRfcGFnZXNbcGFnZV9ucl0pIHsNCj4gICAJCQllcnIgPSAtRU5PTUVNOw0KPiBA
-QCAtMTAyLDcgKzEwMiw3IEBAIHB2cl92bV9taXBzX2Zpbmkoc3RydWN0IHB2cl9kZXZpY2Ug
-KnB2cl8NCj4gICAJaW50IHBhZ2VfbnI7DQo+ICAgDQo+ICAgCXZ1bm1hcChtaXBzX2RhdGEt
-PnB0KTsNCj4gLQlmb3IgKHBhZ2VfbnIgPSBBUlJBWV9TSVpFKG1pcHNfZGF0YS0+cHRfcGFn
-ZXMpIC0gMTsgcGFnZV9uciA+PSAwOyBwYWdlX25yLS0pIHsNCj4gKwlmb3IgKHBhZ2VfbnIg
-PSBQVlJfTUlQU19QVF9QQUdFX0NPVU5UIC0gMTsgcGFnZV9uciA+PSAwOyBwYWdlX25yLS0p
-IHsNCj4gICAJCWRtYV91bm1hcF9wYWdlKGZyb21fcHZyX2RldmljZShwdnJfZGV2KS0+ZGV2
-LA0KPiAgIAkJCSAgICAgICBtaXBzX2RhdGEtPnB0X2RtYV9hZGRyW3BhZ2VfbnJdLCBQQUdF
-X1NJWkUsIERNQV9UT19ERVZJQ0UpOw0KPiAgIA0K
---------------0GaWyy0ioj73MeSaJSolcdkR
-Content-Type: application/pgp-keys; name="OpenPGP_0x747F0A9036F90DFA.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x747F0A9036F90DFA.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+This series proposes the implementation of a remoteproc tee driver to
+communicate with a TEE trusted application responsible for authenticating and
+loading the remoteproc firmware image in an Arm secure context.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+1) Principle:
 
-xjMEYl2lchYJKwYBBAHaRw8BAQdAOYlooFfHTXzAQ9aGoSnT9JS9wq8xprG+KVLb
-kxJDF5DNJE1hdHQgQ29zdGVyIDxtYXR0LmNvc3RlckBpbWd0ZWMuY29tPsKWBBMW
-CAA+AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEBaQM/OcmnWHZcQChdH8K
-kDb5DfoFAmRHxyEFCQWsiK8ACgkQdH8KkDb5Dfr3+QEApzVEKHrbpxJqs79GRaXU
-/NAQBxzjwBd4wKxqr5gkUxYBAOuK7Ag2dAZzFUp73tKxIN9uyMdCLRXWvAYqYL7l
-uRIIwpYEExYIAD4WIQQFpAz85yadYdlxAKF0fwqQNvkN+gUCYl2lcgIbAwUJAeEz
-gAULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRB0fwqQNvkN+uO8AQDM69Bb0Wqj
-7kyzEejIZa9/93vdzHcDmuiQxxvXEUqQ3QEA9qBYj3PBnWD1Ijhj9bm/Z6S93d1x
-w97TbUrxgwJYtgrOOARiXaVyEgorBgEEAZdVAQUBAQdAJpULxfns06/aM1t5eqM/
-16RjuvPLtq6IRnk/FoNZRBUDAQgHwn4EGBYIACYCGwwWIQQFpAz85yadYdlxAKF0
-fwqQNvkN+gUCZEfHJwUJBayItQAKCRB0fwqQNvkN+oUpAQCzr1PYZLdOHo0mC9kK
-cCXza1Vj3VRNPMegCSi/y9+LogEA+lwceHgTNihH2EfhRGIEMRyJCSyze3qnj0bM
-2vS1pgHCfgQYFggAJhYhBAWkDPznJp1h2XEAoXR/CpA2+Q36BQJiXaVyAhsMBQkB
-4TOAAAoJEHR/CpA2+Q36hQMBAJQdksAMGUeGOri0s1I5uIdMJmhhegBeTk1GZpbx
-5oKxAQDyJegbW7BJHeFd1+GFSluU49tsGvF8mlUzdLb9LiJWA84zBGJdpfQWCSsG
-AQQB2kcPAQEHQEYOlTQaog5wQoLiS6u6OTaKjyi2mXKU9WbtwC/v39vdwsA1BBgW
-CAAmAhsCFiEEBaQM/OcmnWHZcQChdH8KkDb5DfoFAmRHxycFCQWsiDMAgXYgBBkW
-CAAdFiEEuKg5qCb8JioY2PpzebwZ89nearAFAmJdpfQACgkQebwZ89nearAP2AD/
-ToBHghxjebEQsJ5lINO0PlpCTSXXry3IXdmFTvkEUHkA/jjaGla5ImGH/q1xYjt0
-RbBybflzR7ibrXcoMFqkAqIGCRB0fwqQNvkN+iVNAP0SzMEkBYft0Mch8owZAl0G
-ePG2w4C2jSdSvvZC7owfnQEAzrnZuanxmAohlm6JFxel+uU3qzdIgBq2bJsDwXnK
-Cw/CwDUEGBYIACYWIQQFpAz85yadYdlxAKF0fwqQNvkN+gUCYl2l9AIbAgUJAeEz
-gACBCRB0fwqQNvkN+nYgBBkWCAAdFiEEuKg5qCb8JioY2PpzebwZ89nearAFAmJd
-pfQACgkQebwZ89nearAP2AD/ToBHghxjebEQsJ5lINO0PlpCTSXXry3IXdmFTvkE
-UHkA/jjaGla5ImGH/q1xYjt0RbBybflzR7ibrXcoMFqkAqIGocoA/j+eZa4A8PV9
-SfjDjTevuuodrN5Ajq3t8vhoDDR0NmmuAP95JQyBAYiVTVCEVs3gzMXnL7HkjeWc
-GOZEeJL7u0cxAw=3D=3D
-=3DLApB
------END PGP PUBLIC KEY BLOCK-----
+The remoteproc tee driver provides services to communicate with the OP-TEE
+trusted application running on the Trusted Execution Context (TEE).
+The trusted application in TEE manages the remote processor lifecycle:
 
---------------0GaWyy0ioj73MeSaJSolcdkR--
+- authenticating and loading firmware images,
+- isolating and securing the remote processor memories,
+- supporting multi-firmware (e.g., TF-M + Zephyr on a Cortex-M33),
+- managing the start and stop of the firmware by the TEE.
 
---------------1iMWcYMAjksFSu02Jek0jJeF--
+2) Format of the signed image:
 
---------------VSXHJIzpOkssi5XYlMIQmLcZ
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Refer to:
+https://github.com/OP-TEE/optee_os/blob/master/ta/remoteproc/src/remoteproc_core.c#L18-L57
 
------BEGIN PGP SIGNATURE-----
+3) OP-TEE trusted application API:
 
-wnsEABYIACMWIQS4qDmoJvwmKhjY+nN5vBnz2d5qsAUCZajxsgUDAAAAAAAKCRB5vBnz2d5qsAh7
-AP9VtxCVEYIlZejlIzPCVa/NpGH+VA86HY4w0epFIqPTmwD8C/IASwgtReTe/yUFRKaYqmM+ihKG
-dd8z3zvLHh88NA8=
-=Qcmg
------END PGP SIGNATURE-----
+Refer to:
+https://github.com/OP-TEE/optee_os/blob/master/ta/remoteproc/include/ta_remoteproc.h
 
---------------VSXHJIzpOkssi5XYlMIQmLcZ--
+4) OP-TEE signature script
+
+Refer to:
+https://github.com/OP-TEE/optee_os/blob/master/scripts/sign_rproc_fw.py
+
+Example of usage:
+sign_rproc_fw.py --in <fw1.elf> --in <fw2.elf> --out <signed_fw.sign> --key ${OP-TEE_PATH}/keys/default.pem
+
+
+5) Impact on User space Application
+
+No sysfs impact.the user only needs to provide the signed firmware image
+instead of the ELF image.
+
+
+For more information about the implementation, a presentation is available here
+(note that the format of the signed image has evolved between the presentation
+and the integration in OP-TEE).
+
+https://resources.linaro.org/en/resource/6c5bGvZwUAjX56fvxthxds
+
+Arnaud Pouliquen (4):
+  remoteproc: Add TEE support
+  dt-bindings: remoteproc: add compatibility for TEE support
+  remoteproc: stm32: create sub-functions to request shutdown and
+    release
+  remoteproc: stm32: Add support of an OP-TEE TA to load the firmware
+
+ .../bindings/remoteproc/st,stm32-rproc.yaml   |  52 ++-
+ drivers/remoteproc/Kconfig                    |   9 +
+ drivers/remoteproc/Makefile                   |   1 +
+ drivers/remoteproc/stm32_rproc.c              | 233 +++++++++--
+ drivers/remoteproc/tee_remoteproc.c           | 393 ++++++++++++++++++
+ include/linux/tee_remoteproc.h                |  99 +++++
+ 6 files changed, 740 insertions(+), 47 deletions(-)
+ create mode 100644 drivers/remoteproc/tee_remoteproc.c
+ create mode 100644 include/linux/tee_remoteproc.h
+
+
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+-- 
+2.25.1
+
