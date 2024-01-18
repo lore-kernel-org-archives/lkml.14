@@ -1,214 +1,105 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF5A2E403
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 18:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100A82E3F8;
+	Thu, 18 Jan 2024 18:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705604023; cv=none; b=NoQ/AnTU+PmQyYw67ItL9rQJM0/nuLk0e0UCtfyu75x81wpthXFERe4+lZKaff6dwSXu0HLAMFoYDSDbtXAke5P39MSyNrOEJaw045jAT3UZb/KbT4EgLaoyOms8yqCXjhrmtov5aCwebIi+Mue7ZgarZe0Nttcf2/NbbjWlwi0=
+	t=1705604395; cv=none; b=Zr1qeDm7RYAYrvmKH4eAHzDPNIJUpl1NgDqkB3eb0GT5+H7nseeEpZlIoQecm5UwmP8tLRnDzHduMa3nmHNrL74bdxPdNOcrqSLWbomSFpbHz4NHQCM10lwYCVpZQhO4jS5e5LMvPAv8KPhpgE5GNIOeJZkFZwQEn4qgI2nzf48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705604023; c=relaxed/simple;
-	bh=SSrbxqg7mxETW0fX4R7D09mC4obPL5B+tC1UjlKzuJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KcWGKGBOHduJIwJkt6ehogSYqSDXIFlu2VHQUDJ47svEXlTnveHpeF5Jhb5GKhsy4HzNYxSvhiAHKh2ikHBmCleME7YjKKA5FrLC1V3RaR0wTUPMJy4Fy/snpUrWmFuBOTBMzzYVj/2BD6UBT901OnA+8r6QBIU9OJscpy2FJq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XD0Na6Ei; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705604395; c=relaxed/simple;
+	bh=JrDbEJiAmEMkVSL2f4VBe7R8zB2xlRoKQCbjKC0tJkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K6iXKnPR9r9H1VfSH1dokWNfc/QqdJ7yRCKptoe4LEGz/9jWRREQOe1kWB+HZeomnlMQeSUKAQowZO2LhCd5Ga7g+z82KAFzIUMpf9/Yr9Ms1YBGlUj1gGS6iZW+18SJBW4TikTEYrgSoAFHYySy3yT5XjAZiU5bCxLH/LBWKN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uYEAzXFN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XD0Na6Ei"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dbe344a6cf4so6250276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 10:53:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705604020; x=1706208820; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5PF5X8GlaeqQs8DaRumhWkKtgXSZmtgvKGxrmWMH5I8=;
-        b=XD0Na6EioXlCaCESXQzBahPa/7rgsSx8lt43UMXIzoWf1hCM/H01EhaMg+NixR2npC
-         Ui94KTKUg7K8inuQsqd1Q+//TdTjYekGTnCMdvkYYG3fYbfwh4ZowcYbB6ar0MJivurX
-         ifMF8wMgVNXclXb2Ec77hZFQQ7jx6OieVxrr6iIghwywtsriSOPD9GceMty06YMyRaWU
-         pPIbpctlf2xPTuryI8EdEeBxWQuAz2m27v9Afw2pDCIBOb4+ux7CshkwLfM5Be62iAXd
-         3F9haFlRbvJ2sJ3QrL6XsaYMK0rBj53KoqrDMU5FQ7XlSlnqQAGf7cBtyZQWJc55eQ8Q
-         jeQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705604020; x=1706208820;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5PF5X8GlaeqQs8DaRumhWkKtgXSZmtgvKGxrmWMH5I8=;
-        b=CYsId9P7joQ7nq4uqEmFhTDwBwS/MEQ+t89IbDVV4sXDb0inqbZR0biKlMWonxNFiS
-         B7elnYa7L8JB0DRxbYlv9VYOirxo1IH47mpa78qsjqfgBrywb4aIf+JajtZy+e8IAACq
-         sqDogfMj9Y3/84rQxcGfeL5e9XlghlEDnI7ch4o24r0LDdU9YtvHS9yViKo+br/3LIzH
-         T9DNM2VUrwa9ZQEUIUIek6HCrYEFkLN8d5IVssSXJefbNaLFfkc43cZklcdi4elmvVAr
-         Dj9LMTYtzP3E8Cc6men7yHrmN9/mAHhwJRdKJYfsUgSiOI7jpMuHbSbQKGLzOP/93cUR
-         k6xg==
-X-Gm-Message-State: AOJu0YyhXWquEt4a8QULcG7vATatgdkxPvk4N9JhLoWn/BMC4OFW6txJ
-	ScApFcr05sVRCQYQ0N/rIQC57mklBY4ZqSFTVucG5JyfTl1YVFcZGP3XDV4tPrJmfVmve+g6aj0
-	sOq4y7wjQSWbtJY0bJa9BuF6CREjJjig14iVhwQ==
-X-Google-Smtp-Source: AGHT+IGYawuUGtABimou0KyICRk+SeNTYHoN53AbxiLx8Ab2OTyuWdrEN8ho0M8p1A0PFwuK2IM4wgevTE1M+mVqV8A=
-X-Received: by 2002:a25:941:0:b0:dc2:48af:bf0f with SMTP id
- u1-20020a250941000000b00dc248afbf0fmr1121704ybm.51.1705604020167; Thu, 18 Jan
- 2024 10:53:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uYEAzXFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1078AC433F1;
+	Thu, 18 Jan 2024 18:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705604394;
+	bh=JrDbEJiAmEMkVSL2f4VBe7R8zB2xlRoKQCbjKC0tJkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uYEAzXFNqT/XNb1HCZokdSBjq3KXUJ2zl/ePNNGUIY6qaGxKytxRGXeNsGeZkUYwF
+	 sfmH0FwW3qlDP/6sfQwii/OD3jSorvQgOoJ5B3DIbh1Qa6GmUA/+e4vIE4phT+dcBW
+	 tckJ9eK9UO+fVEy9kotaYtWFXnSI9vc7wLw3+XbQ=
+Date: Thu, 18 Jan 2024 19:59:51 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jacob Lott <jklott.git@gmail.com>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] staging: rts5208: Add more details to Kconfig help
+Message-ID: <2024011829-gusto-absently-8192@gregkh>
+References: <20240118175947.82297-1-jklott.git@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117160748.37682-1-brgl@bgdev.pl> <CAA8EJpoQfPqoMVyTmUjPs4c1Uc-p4n7zNcG+USNjXX0Svp362w@mail.gmail.com>
-In-Reply-To: <CAA8EJpoQfPqoMVyTmUjPs4c1Uc-p4n7zNcG+USNjXX0Svp362w@mail.gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 18 Jan 2024 20:53:29 +0200
-Message-ID: <CAA8EJpqyK=pkjEofWV595tp29vjkCeWKYr-KOJh_hBiBbkVBew@mail.gmail.com>
-Subject: Re: [PATCH 0/9] PCI: introduce the concept of power sequencing of
- PCIe devices
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>, 
-	Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Terry Bowman <terry.bowman@amd.com>, 
-	Lukas Wunner <lukas@wunner.de>, Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240118175947.82297-1-jklott.git@gmail.com>
 
-On Wed, 17 Jan 2024 at 20:16, Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Wed, 17 Jan 2024 at 18:08, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > The responses to the RFC were rather positive so here's a proper series.
-> >
-> > During last year's Linux Plumbers we had several discussions centered
-> > around the need to power-on PCI devices before they can be detected on
-> > the bus.
-> >
-> > The consensus during the conference was that we need to introduce a
-> > class of "PCI slot drivers" that would handle the power-sequencing.
-> >
-> > After some additional brain-storming with Manivannan and the realization
-> > that DT maintainers won't like adding any "fake" nodes not representing
-> > actual devices, we decided to reuse existing PCI infrastructure.
-> >
-> > The general idea is to instantiate platform devices for child nodes of
-> > the PCIe port DT node. For those nodes for which a power-sequencing
-> > driver exists, we bind it and let it probe. The driver then triggers a
-> > rescan of the PCI bus with the aim of detecting the now powered-on
-> > device. The device will consume the same DT node as the platform,
-> > power-sequencing device. We use device links to make the latter become
-> > the parent of the former.
-> >
-> > The main advantage of this approach is not modifying the existing DT in
-> > any way and especially not adding any "fake" platform devices.
->
-> I'd still like to see how this can be extended to handle BT power up,
-> having a single entity driving both of the BT and WiFI.
->
-> The device tree changes behave in exactly the opposite way: they
-> define regulators for the WiFi device, while the WiFi is not being
-> powered by these regulators. Both WiFi and BT are powered by the PMU,
-> which in turn consumes all specified regulators.
-
-Some additional justification, why I think that this should be
-modelled as a single instance instead of two different items.
-
-This is from msm-5.10 kernel:
+On Thu, Jan 18, 2024 at 12:59:48PM -0500, Jacob Lott wrote:
+> The current help text is short and triggers a
+> warning from checkpatch.pl. This patch adds more
+> details to the help text which should provide better
+> information for whether or not to enable the driver.
+> 
+> Signed-off-by: Jacob Lott <jklott.git@gmail.com>
+> ---
+>  drivers/staging/rts5208/Kconfig | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/rts5208/Kconfig b/drivers/staging/rts5208/Kconfig
+> index b864023d3ccb..c4664a26ba3b 100644
+> --- a/drivers/staging/rts5208/Kconfig
+> +++ b/drivers/staging/rts5208/Kconfig
+> @@ -3,7 +3,11 @@ config RTS5208
+>  	tristate "Realtek PCI-E Card Reader RTS5208/5288 support"
+>  	depends on PCI && SCSI
+>  	help
+> -	  Say Y here to include driver code to support the Realtek
+> -	  PCI-E card reader rts5208/rts5288.
+> +	  Choose Y here to enable support for the Realtek PCI-E card reader
+> +	  RTS5208/5288. This driver facilitates communication between the Linux
+> +	  kernel and the Realtek PCI-E card reader.
+>  
+> -	  If this driver is compiled as a module, it will be named rts5208.
+> +	  If you opt to compile this driver as a module, it will be named rts5208.
+> +	  Selecting N will exclude this driver from the kernel build. Choose option
+> +	  Y if your system includes the Realtek PCI-E card reader rts5208/rts5288.
+> +	  When in doubt, it is generally safe to select N.
+> -- 
+> 2.34.1
+> 
+> v3 fixes the tab spacing for line 6 in Kconfig
 
 
-===== CUT HERE =====
-/**
- * cnss_select_pinctrl_enable - select WLAN_GPIO for Active pinctrl status
- * @plat_priv: Platform private data structure pointer
- *
- * For QCA6490, PMU requires minimum 100ms delay between BT_EN_GPIO off and
- * WLAN_EN_GPIO on. This is done to avoid power up issues.
- *
- * Return: Status of pinctrl select operation. 0 - Success.
- */
-static int cnss_select_pinctrl_enable(struct cnss_plat_data *plat_priv)
-===== CUT HERE =====
+Hi,
 
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Also see the bt_configure_gpios() function in the same kernel.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
->
-> >
-> > Changes since RFC:
-> > - move the pwrseq functionality out of the port driver and into PCI core
-> > - add support for WCN7850 to the first pwrseq driver (and update bindings)
-> > - describe the WLAN modules in sm8550-qrd and sm8650-qrd
-> > - rework Kconfig options, drop the defconfig changes from the series as
-> >   they are no longer needed
-> > - drop the dt-binding changes for PCI vendor codes
-> > - extend the DT bindings for ath11k_pci with strict property checking
-> > - various minor tweaks and fixes
-> >
-> > Bartosz Golaszewski (7):
-> >   arm64: dts: qcom: qrb5165-rb5: describe the WLAN module of QCA6390
-> >   PCI: create platform devices for child OF nodes of the port node
-> >   PCI: hold the rescan mutex when scanning for the first time
-> >   PCI/pwrseq: add pwrseq core code
-> >   dt-bindings: wireless: ath11k: describe QCA6390
-> >   dt-bindings: wireless: ath11k: describe WCN7850
-> >   PCI/pwrseq: add a pwrseq driver for QCA6390
-> >
-> > Neil Armstrong (2):
-> >   arm64: dts: qcom: sm8550-qrd: add Wifi nodes
-> >   arm64: dts: qcom: sm8650-qrd: add Wifi nodes
-> >
-> >  .../net/wireless/qcom,ath11k-pci.yaml         |  89 ++++++
-> >  arch/arm64/boot/dts/qcom/qrb5165-rb5.dts      |  29 ++
-> >  arch/arm64/boot/dts/qcom/sm8250.dtsi          |  10 +
-> >  arch/arm64/boot/dts/qcom/sm8550-qrd.dts       |  37 +++
-> >  arch/arm64/boot/dts/qcom/sm8550.dtsi          |  10 +
-> >  arch/arm64/boot/dts/qcom/sm8650-qrd.dts       |  29 ++
-> >  arch/arm64/boot/dts/qcom/sm8650.dtsi          |  10 +
-> >  drivers/pci/Kconfig                           |   1 +
-> >  drivers/pci/Makefile                          |   1 +
-> >  drivers/pci/bus.c                             |   9 +-
-> >  drivers/pci/probe.c                           |   2 +
-> >  drivers/pci/pwrseq/Kconfig                    |  16 ++
-> >  drivers/pci/pwrseq/Makefile                   |   4 +
-> >  drivers/pci/pwrseq/pci-pwrseq-qca6390.c       | 267 ++++++++++++++++++
-> >  drivers/pci/pwrseq/pwrseq.c                   |  82 ++++++
-> >  drivers/pci/remove.c                          |   3 +-
-> >  include/linux/pci-pwrseq.h                    |  24 ++
-> >  17 files changed, 621 insertions(+), 2 deletions(-)
-> >  create mode 100644 drivers/pci/pwrseq/Kconfig
-> >  create mode 100644 drivers/pci/pwrseq/Makefile
-> >  create mode 100644 drivers/pci/pwrseq/pci-pwrseq-qca6390.c
-> >  create mode 100644 drivers/pci/pwrseq/pwrseq.c
-> >  create mode 100644 include/linux/pci-pwrseq.h
-> >
-> > --
-> > 2.40.1
-> >
-> >
->
->
-> --
-> With best wishes
-> Dmitry
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
+thanks,
 
-
--- 
-With best wishes
-Dmitry
+greg k-h's patch email bot
