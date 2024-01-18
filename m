@@ -1,299 +1,127 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF2925618;
-	Thu, 18 Jan 2024 13:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F3525618;
+	Thu, 18 Jan 2024 13:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705586367; cv=none; b=pWMl6IH+CaZ+Qjzwcw22KptnDPb2vjJ3u4PeiLEhibAA8E9U2jojXOnhHBK8VXKNwV9nSU6h/iKM90Ppf6zI3DSEFzw9ierjL/OBKeGhLr/+zn5sVyk+USUbk9GGmiBcN6yGcRmAeuonprDdI8jA3bLIdMJZFG/zfVcpgTZ1nFY=
+	t=1705586385; cv=none; b=PFBlc13zpEZYX+Pb5b2J7i1oVigmTx9jMT6E8UK5yn0QPhba5WaxgdBNA7SjDPIifAu9dfUoujTvkVga/NzSS+4/9WkUrYMNbZ/gZtZP9OVM62dyjKepddTQ0obvFbCvxkmeuhXLt1UHKKnk+6kHvo0lSl6tJErqNJolH3tKpjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705586367; c=relaxed/simple;
-	bh=dvH9k0mRMujShSF91uv3NEiynTKqv0VS5vKw2fzk+DU=;
+	s=arc-20240116; t=1705586385; c=relaxed/simple;
+	bh=y0IwCMSq9y/W9Z03dL7iPuixI88ZRL/QExoQtq9zsx8=;
 	h=Received:DKIM-Signature:Received:Received:Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:CC:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-EXCLAIMER-MD-CONFIG; b=h2p+ZhOOvgCcszSSGh5q7ET8tvM8Egh9c6kZkJXpTt/g4WC+qLx5fBNCvfxT/1xHWpxnoEfbHHoN3VH/GXm49YI+nkzU/HqQ++t3ofgiAkna2Yr926KScA0RmoXdvlWMoEZSyhR/PUrxDoHAUIV7MlPM83Tys9Cir7uLq1ttyf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jJB+uX+V; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	 Received:Received:Received:Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:Content-Language:To:Cc:References:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-TM-AS-GCONF:X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=VFAsGVdGKaRk+Vhp4j2IMRL0gpsjtx7FNzoWnYP+DJ1m2P+QIsep8aeZvS4ozw24MOh/LqAVNTC3F/vuXDvpiye8P/cGhhSAyoRPSCQcZUtN7ASgNvMzJkr49oLpoiAK7agPVeL3uknuIjD/tc46uf76iqaPm4R7jOAkASNUgok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VF0opJp6; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jJB+uX+V"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40IDwaTH023624;
-	Thu, 18 Jan 2024 07:58:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705586316;
-	bh=snlIxOjhPnpd8I0F6QTr9vWqcbTC7U09y0KvcNnsdjc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=jJB+uX+VpxQ7B/JOLFwwXCzgB8NiA0L8tTNoh7+xx5v39oSfgXW2F/LjGvNjvtlHg
-	 CXZnMTZtXzco9I39VoBbOiRfdzjQ4d8bRs3KtRm32sjhfA+EyDLcJiEpq4FODE2S6T
-	 wedoKOJUGA2fCeDGNjMHYHFUcWWRyT2iV9aJQc58=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40IDwaGP006099
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 18 Jan 2024 07:58:36 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 18
- Jan 2024 07:58:36 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 18 Jan 2024 07:58:35 -0600
-Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40IDwTOM036361;
-	Thu, 18 Jan 2024 07:58:30 -0600
-Message-ID: <57805224-f4f9-7773-03e3-4bdff8936c9c@ti.com>
-Date: Thu, 18 Jan 2024 19:28:29 +0530
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VF0opJp6"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40IDlrJo031053;
+	Thu, 18 Jan 2024 13:59:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Lck6vOjOvjxQAjcjvAn+cEAdJmJF2EitvA9Y4tvDYd4=;
+ b=VF0opJp6M0aeSvy7ZB5dvIOLP9AcQEy4OQRITalCHy1cylEAxs8PxcFcit58hs4GH9IG
+ CFEaLz/Cjvofs9rsTaHVJxK7DFTdsNUcMV1ZU/2N4ZGIbnpnBwoQb7FyzPMEjL91ab5/
+ myOP9zfgJL5Siu84Ukz70O8UpiqnnG4lCPe/8Y3n3huP3YYylDhBCin4uOts/u99ZANV
+ GtsD//T2VV+eemIhqtGpVuFUh6eYo55RaZPVzX8JCNjIQYlrz7srerV3wYbXzNk/4rOT
+ WVckFL+pcNNUMjuA4SnNUpQTUd4ECBx/7aLRRjWs+eRPcovXwVjmRzka5/NCym8iJFJ2 tA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vq56egbpp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jan 2024 13:59:39 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40IDmuHM002853;
+	Thu, 18 Jan 2024 13:59:39 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vq56egbns-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jan 2024 13:59:39 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40IAhkKM005797;
+	Thu, 18 Jan 2024 13:59:38 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm6bkuhs2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jan 2024 13:59:38 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40IDxbJJ21496478
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Jan 2024 13:59:37 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 483B458057;
+	Thu, 18 Jan 2024 13:59:37 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9026B5805D;
+	Thu, 18 Jan 2024 13:59:34 +0000 (GMT)
+Received: from [9.179.26.4] (unknown [9.179.26.4])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 18 Jan 2024 13:59:34 +0000 (GMT)
+Message-ID: <20a1a1f3-789a-4d91-9a94-dca16161afd7@linux.ibm.com>
+Date: Thu, 18 Jan 2024 14:59:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RFC PATCH 1/3] dt-bindings: display: ti,am65x-dss: Add support
- for display sharing mode
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-CC: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <praneeth@ti.com>, <a-bhatia1@ti.com>,
-        <j-luthra@ti.com>
-References: <20240116134142.2092483-1-devarsht@ti.com>
- <20240116134142.2092483-2-devarsht@ti.com>
- <20240117201342.GA3041972-robh@kernel.org>
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <20240117201342.GA3041972-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 00/15] net/smc: implement loopback-ism used by
+ SMC-D
+Content-Language: en-GB
+To: Wen Gu <guwen@linux.alibaba.com>, wintera@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
+        tonylu@linux.alibaba.com, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240111120036.109903-1-guwen@linux.alibaba.com>
+ <f98849a7-41e9-421b-97b7-36d720cc43ee@linux.alibaba.com>
+From: Wenjia Zhang <wenjia@linux.ibm.com>
+In-Reply-To: <f98849a7-41e9-421b-97b7-36d720cc43ee@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: yxDY2XYbBvhB-CiSls17Oh2zCdMfEgfq
+X-Proofpoint-GUID: cb_4uLsWVgsShUQGkDa-_w9LzrpbuFVD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-18_08,2024-01-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ mlxscore=0 malwarescore=0 mlxlogscore=685 phishscore=0 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401180101
 
-Hi Rob,
 
-Thanks for the quick review.
 
-On 18/01/24 01:43, Rob Herring wrote:
-> On Tue, Jan 16, 2024 at 07:11:40PM +0530, Devarsh Thakkar wrote:
->> Add support for using TI Keystone DSS hardware present in display
->> sharing mode.
+On 18.01.24 09:27, Wen Gu wrote:
+> 
+> 
+> On 2024/1/11 20:00, Wen Gu wrote:
+>> This patch set acts as the second part of the new version of [1] (The 
+>> first
+>> part can be referred from [2]), the updated things of this version are 
+>> listed
+>> at the end.
 >>
->> TI Keystone DSS hardware supports partitioning of resources between
->> multiple hosts as it provides separate register space and unique
->> interrupt line to each host.
->>
->> The DSS hardware can be used in shared mode in such a way that one or
->> more of video planes can be owned by Linux wherease other planes can be
->> owned by remote cores.
->>
->> One or more of the video ports can be dedicated exclusively to a
->> processing core, wherease some of the video ports can be shared between
->> two hosts too with only one of them having write access.
->>
->> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->> ---
->>  .../bindings/display/ti/ti,am65x-dss.yaml     | 82 +++++++++++++++++++
->>  1 file changed, 82 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
->> index 55e3e490d0e6..d9bc69fbf1fb 100644
->> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
->> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
->> @@ -112,6 +112,86 @@ properties:
->>        Input memory (from main memory to dispc) bandwidth limit in
->>        bytes per second
->>  
->> +  ti,dss-shared-mode:
->> +    type: boolean
->> +    description:
->> +      TI DSS7 supports sharing of display between multiple hosts
->> +      as it provides separate register space for display configuration and
->> +      unique interrupt line to each host.
 > 
-> If you care about line breaks, you need '|'. 
+> Hi Wenjia and Jan, I would appreciate any thoughts or comments you might 
+> have
+> on this series. Thank you very much!
 > 
+Hi Wen,
 
-Noted.
+I'm still in the middle of the proto type on IPPROTO_SMC and other 
+issues, so that I need more time to review this patch series.
 
->> +      One of the host is provided access to the global display
->> +      configuration labelled as "common" region of DSS allows that host
->> +      exclusive access to global registers of DSS while other host can
->> +      configure the display for it's usage using a separate register
->> +      space labelled as "common1".
->> +      The DSS resources can be partitioned in such a way that one or more
->> +      of the video planes are owned by Linux whereas other video planes
-> 
-> Your h/w can only run Linux?
-> 
-> What if you want to use this same binding to define the configuration to 
-> the 'remote processor'? You can easily s/Linux/the OS/, but it all 
-> should be reworded to describe things in terms of the local processor.
-> 
+Thank you for your patience!
+Wenjia
 
-It can run both Linux and RTOS or for that matter any other OS too. But yes I
-got your point, will reword accordingly.
-
->> +      can be owned by a remote core.
->> +      The video port controlling these planes acts as a shared video port
->> +      and it can be configured with write access either by Linux or the
->> +      remote core in which case Linux only has read-only access to that
->> +      video port.
-> 
-> What is the purpose of this property when all the other properties are 
-> required?
-> 
-
-The ti,dss-shared-mode and below group of properties are optional. But
-if ti,dss-shared-mode is set then only driver should parse below set of
-properties.
-
->> +
->> +  ti,dss-shared-mode-planes:
->> +    description:
->> +      The video layer that is owned by processing core running Linux.
->> +      The display driver running from Linux has exclusive write access to
->> +      this video layer.
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    enum: [vidl, vid]
->> +
->> +  ti,dss-shared-mode-vp:
->> +    description:
->> +      The video port that is being used in context of processing core
->> +      running Linux with display susbsytem being used in shared mode.
->> +      This can be owned either by the processing core running Linux in
->> +      which case Linux has the write access and the responsibility to
->> +      configure this video port and the associated overlay manager or
->> +      it can be shared between core running Linux and a remote core
->> +      with remote core provided with write access to this video port and
->> +      associated overlay managers and remote core configures and drives
->> +      this video port also feeding data from one or more of the
->> +      video planes owned by Linux, with Linux only having read-only access
->> +      to this video port and associated overlay managers.
->> +
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    enum: [vp1, vp2]
->> +
->> +  ti,dss-shared-mode-common:
->> +    description:
->> +      The DSS register region owned by processing core running Linux.
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    enum: [common, common1]
->> +
->> +  ti,dss-shared-mode-vp-owned:
->> +    description:
->> +      This tells whether processing core running Linux has write access to
->> +      the video ports enlisted in ti,dss-shared-mode-vps.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    enum: [0, 1]
-> 
-> This can be boolean. Do writes abort or just get ignored? The latter can 
-> be probed and doesn't need a property.
-> 
-
-Although we have kept all these properties as enums, but actually in driver we
-are treating them as array of enums and using device_property_read_u32_array.
-
-The reason being that for SoCs using am65x-dss bindings they can only have
-single entry either vp1 or vp2 or 0 or 1 as there are only two video ports. So
-for them the device tree overlay would look like :
-&dss0 {
-
-        ti,dss-shared-mode;
-
-        ti,dss-shared-mode-vp = "vp1";
-
-        ti,dss-shared-mode-vp-owned = <0>;
-
-        ti,dss-shared-mode-common = "common1";
-
-        ti,dss-shared-mode-planes = "vid";
-
-        ti,dss-shared-mode-plane-zorder = <0>;
-
-        interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_>;
-}
-
-But we also plan to extend these bindings to SoCs using
-Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml where there are
-multiple video ports. So in that the driver and bindings should support below
-configuration :
-
-&dss0 {
-
-        ti,dss-shared-mode;
-
-        ti,dss-shared-mode-vp = "vp1 vp2";
-
-        ti,dss-shared-mode-vp-owned = <0 1>;
-
-        ti,dss-shared-mode-common = "common_s1";
-
-        ti,dss-shared-mode-planes = "vid1 vidl1";
-
-        ti,dss-shared-mode-plane-zorder = <0 1>;
-
-        interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_>;
-}
-
-As I am using device_property_read_u32_array in driver I thought to keep this
-as uint32 in enum for am65x.yaml which works well with the driver.
-
->> +
->> +  ti,dss-shared-mode-plane-zorder:
->> +    description:
->> +      The zorder of the planes owned by Linux.
->> +      For the scenario where Linux is not having write access to associated
->> +      video port, this field is just for
->> +      informational purpose to enumerate the zorder configuration
->> +      being used by remote core.
->> +
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    enum: [0, 1]
-> 
-> I don't understand how 0 or 1 defines Z-order.
-> 
-
-As there are only two planes in total so z-order can be either 0 or 1 for the
-shared mode plane as there is only a single entry of plane.
-For e.g. if ti,dss-shared-mode-plane-zorder is 1 then it means the plane owned
-by Linux is programmed as topmost plane wherease the plane owned by remote
-core is programmed as the underneath one.
-
->> +
->> +dependencies:
->> +  ti,dss-shared-mode: [ 'ti,dss-shared-mode-planes', 'ti,dss-shared-mode-vp',
->> +                        'ti,dss-shared-mode-plane-zorder', 'ti,dss-shared-mode-vp-owned']
->> +  ti,dss-shared-mode-vp: ['ti,dss-shared-mode', 'ti,dss-shared-mode-planes',
->> +                          'ti,dss-shared-mode-plane-zorder', 'ti,dss-shared-mode-vp-owned']
->> +  ti,dss-shared-mode-planes: ['ti,dss-shared-mode', 'ti,dss-shared-mode-vp',
->> +                              'ti,dss-shared-mode-plane-zorder', 'ti,dss-shared-mode-vp-owned']
->> +  ti,dss-shared-mode-plane-zorder: ['ti,dss-shared-mode-planes', 'ti,dss-shared-mode-vp',
->> +                                    'ti,dss-shared-mode', 'ti,dss-shared-mode-vp-owned']
->> +  ti,dss-shared-mode-vp-owned: ['ti,dss-shared-mode-planes', 'ti,dss-shared-mode-vp',
->> +                                'ti,dss-shared-mode', 'ti,dss-shared-mode-plane-zorder']
->> +
->>  allOf:
->>    - if:
->>        properties:
->> @@ -123,6 +203,8 @@ allOf:
->>          ports:
->>            properties:
->>              port@0: false
->> +            ti,dss-shared-mode-vp:
->> +            enum: [vp2]
-> 
-> This should throw a warning. You just defined a property called 'enum'.
-> 
-
-Oops will fix this.
-
-Regards
-Devarsh
-
-> Rob
