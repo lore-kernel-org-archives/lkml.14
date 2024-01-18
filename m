@@ -1,38 +1,38 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A51524208
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 12:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B10D24218;
+	Thu, 18 Jan 2024 12:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705580147; cv=none; b=hrlwzYOEin7oE7WDFTxi97Ev4cTJb+4uRpfjChN80Nsw2chjgpz3HU7d2SbCXWICdKUAX/+nWlgWqdCYNBniCM1Oxl8FlhYx5uUuXAEi4bpRqJmiXGuFyhB+OUulwYDkRBj2M74IhBLBUCjwyegLQDA20IHxMPCyxr7MrHEmSxc=
+	t=1705580148; cv=none; b=l9tBIHtWyq457vabxIgIAHuBDi94djKCk6B6k7dWyXrwT1XsADIBqTArBUflXqNctg8HNBnAWIGdPvNMmxvCX5lkt7u0hno/2oJtjGUbE6hUXRdlCpNitkLHQsdI2mHWe04E1akOOnc46FUI5weNyNr0mCQbX9lB1Byn+MVuh2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705580147; c=relaxed/simple;
-	bh=XReaYeH4oa5Yd0af0EK3ve6Wbk3NV4Ikk1OxA1yci94=;
-	h=Received:Received:Received:From:To:Subject:Date:Message-Id:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo; b=kD8c+gpSXS7bafkGKJfpEUT/PmStYfyACwjAlvqiOvEQFTBN1NYZKw7nfvsX9fSfDvZismdtOuAo1ZQPXLJPtcIk3WIMZyi54cN0LwaJkdy+2umy1d3iGJ7UYQzPxvHF/L1wyjWhCCGj04Ld0eXREoXsYBSylzIGjOEWfdd76cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TG1sr6gJBz4f3mHh
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 20:15:28 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 15D6B1A016E
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 20:15:35 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP2 (Coremail) with SMTP id Syh0CgAnSQxlFqllWvbnBA--.43072S2;
-	Thu, 18 Jan 2024 20:15:34 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: akpm@linux-foundation.org,
-	jack@suse.cz,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] flex_proportions: remove unused fprop_local_single
-Date: Fri, 19 Jan 2024 04:13:21 +0800
-Message-Id: <20240118201321.759174-1-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1705580148; c=relaxed/simple;
+	bh=BU6iPWP8JpzxupBczLgy0WHA3CXaFrjVEYn7VAu6/aI=;
+	h=Received:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:
+	 X-CM-TRANSID:X-CM-SenderInfo:X-Coremail-Antispam; b=Nu2vUFOa4jhD5kleYhkjWv6ntbV1whwM20M1/u+QzMkRr8BiEkTwQaH2tGxvd2MQSNdEcEOhtnT1fGX2caLReS2I96m2dFIbQBhXiI5MrF81RKZvZCwiKo2z3JsnNxRUDFOYQufrJ6cjGtHSZzrOzYdE0XkvWMcA9FUzRg6RfwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxjutvFqlleqEBAA--.7733S3;
+	Thu, 18 Jan 2024 20:15:43 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxDc9vFqllhX0IAA--.43256S4;
+	Thu, 18 Jan 2024 20:15:43 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	lvjianmin@loongson.cn
+Subject: [PATCH v3 2/3] irqchip/loongson-eiointc: Refine irq affinity setting during resume
+Date: Thu, 18 Jan 2024 20:15:41 +0800
+Message-Id: <20240118121542.748351-3-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240118121542.748351-1-maobibo@loongson.cn>
+References: <20240118121542.748351-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,163 +40,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgAnSQxlFqllWvbnBA--.43072S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGF47CryrKFyUXry7ArWUJwb_yoWrGFy7pF
-	nxK3yYgr4xZa18Ww4kA3ySywn7t348Jr18Ja47Cw4kCwsFyw1vqas7KF4rZa4Yk34rZrnY
-	gFn8KFn8WFZ8AF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_
-	Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
-	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
-	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
-	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28I
-	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
-	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-	IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-	87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j-6pPUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-CM-TRANSID:AQAAf8DxDc9vFqllhX0IAA--.43256S4
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tFW8Aw4kKw4fCF1UXrWftFc_yoW8Xr1xpF
+	W3A3ZFvr4UGFyUXr9Ykw1Ut34aya95Z3y7tFW3Wa97uFs8Ww4DKF4FyFykZFW0k342yF1q
+	9F45X34ruFn8C3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjxUFc_-DUUUU
 
-The single variant of flex_proportions is not used. Simply remove it.
+During suspend and resume, CPUs except CPU0 are hot-unpluged and IRQs
+are migrated to CPU0. So it is not necessary to restore irq affinity for
+eiointc irq controller when system resumes. This patch removes the piece
+of code about irq affinity restoring in function eiointc_resume.
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- include/linux/flex_proportions.h | 32 -------------
- lib/flex_proportions.c           | 77 --------------------------------
- 2 files changed, 109 deletions(-)
+ drivers/irqchip/irq-loongson-eiointc.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/include/linux/flex_proportions.h b/include/linux/flex_proportions.h
-index 3e378b1fb0bc..e9a72fd0bfe7 100644
---- a/include/linux/flex_proportions.h
-+++ b/include/linux/flex_proportions.h
-@@ -38,38 +38,6 @@ int fprop_global_init(struct fprop_global *p, gfp_t gfp);
- void fprop_global_destroy(struct fprop_global *p);
- bool fprop_new_period(struct fprop_global *p, int periods);
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index 6143adb1b73b..86f4faad0695 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -315,23 +315,7 @@ static int eiointc_suspend(void)
  
--/*
-- *  ---- SINGLE ----
-- */
--struct fprop_local_single {
--	/* the local events counter */
--	unsigned long events;
--	/* Period in which we last updated events */
--	unsigned int period;
--	raw_spinlock_t lock;	/* Protect period and numerator */
--};
+ static void eiointc_resume(void)
+ {
+-	int i, j;
+-	struct irq_desc *desc;
+-	struct irq_data *irq_data;
 -
--#define INIT_FPROP_LOCAL_SINGLE(name)			\
--{	.lock = __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
--}
+ 	eiointc_router_init(0);
 -
--int fprop_local_init_single(struct fprop_local_single *pl);
--void fprop_local_destroy_single(struct fprop_local_single *pl);
--void __fprop_inc_single(struct fprop_global *p, struct fprop_local_single *pl);
--void fprop_fraction_single(struct fprop_global *p,
--	struct fprop_local_single *pl, unsigned long *numerator,
--	unsigned long *denominator);
--
--static inline
--void fprop_inc_single(struct fprop_global *p, struct fprop_local_single *pl)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	__fprop_inc_single(p, pl);
--	local_irq_restore(flags);
--}
--
- /*
-  * ---- PERCPU ----
-  */
-diff --git a/lib/flex_proportions.c b/lib/flex_proportions.c
-index 83332fefa6f4..84ecccddc771 100644
---- a/lib/flex_proportions.c
-+++ b/lib/flex_proportions.c
-@@ -83,83 +83,6 @@ bool fprop_new_period(struct fprop_global *p, int periods)
- 	return true;
+-	for (i = 0; i < nr_pics; i++) {
+-		for (j = 0; j < eiointc_priv[0]->vec_count; j++) {
+-			desc = irq_resolve_mapping(eiointc_priv[i]->eiointc_domain, j);
+-			if (desc && desc->handle_irq && desc->handle_irq != handle_bad_irq) {
+-				raw_spin_lock(&desc->lock);
+-				irq_data = irq_domain_get_irq_data(eiointc_priv[i]->eiointc_domain, irq_desc_get_irq(desc));
+-				eiointc_set_irq_affinity(irq_data, irq_data->common->affinity, 0);
+-				raw_spin_unlock(&desc->lock);
+-			}
+-		}
+-	}
  }
  
--/*
-- * ---- SINGLE ----
-- */
--
--int fprop_local_init_single(struct fprop_local_single *pl)
--{
--	pl->events = 0;
--	pl->period = 0;
--	raw_spin_lock_init(&pl->lock);
--	return 0;
--}
--
--void fprop_local_destroy_single(struct fprop_local_single *pl)
--{
--}
--
--static void fprop_reflect_period_single(struct fprop_global *p,
--					struct fprop_local_single *pl)
--{
--	unsigned int period = p->period;
--	unsigned long flags;
--
--	/* Fast path - period didn't change */
--	if (pl->period == period)
--		return;
--	raw_spin_lock_irqsave(&pl->lock, flags);
--	/* Someone updated pl->period while we were spinning? */
--	if (pl->period >= period) {
--		raw_spin_unlock_irqrestore(&pl->lock, flags);
--		return;
--	}
--	/* Aging zeroed our fraction? */
--	if (period - pl->period < BITS_PER_LONG)
--		pl->events >>= period - pl->period;
--	else
--		pl->events = 0;
--	pl->period = period;
--	raw_spin_unlock_irqrestore(&pl->lock, flags);
--}
--
--/* Event of type pl happened */
--void __fprop_inc_single(struct fprop_global *p, struct fprop_local_single *pl)
--{
--	fprop_reflect_period_single(p, pl);
--	pl->events++;
--	percpu_counter_add(&p->events, 1);
--}
--
--/* Return fraction of events of type pl */
--void fprop_fraction_single(struct fprop_global *p,
--			   struct fprop_local_single *pl,
--			   unsigned long *numerator, unsigned long *denominator)
--{
--	unsigned int seq;
--	s64 num, den;
--
--	do {
--		seq = read_seqcount_begin(&p->sequence);
--		fprop_reflect_period_single(p, pl);
--		num = pl->events;
--		den = percpu_counter_read_positive(&p->events);
--	} while (read_seqcount_retry(&p->sequence, seq));
--
--	/*
--	 * Make fraction <= 1 and denominator > 0 even in presence of percpu
--	 * counter errors
--	 */
--	if (den <= num) {
--		if (num)
--			den = num;
--		else
--			den = 1;
--	}
--	*denominator = den;
--	*numerator = num;
--}
--
- /*
-  * ---- PERCPU ----
-  */
+ static struct syscore_ops eiointc_syscore_ops = {
 -- 
-2.30.0
+2.39.3
 
