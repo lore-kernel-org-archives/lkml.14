@@ -1,97 +1,110 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from smtp91.iad3b.emailsrvr.com (smtp91.iad3b.emailsrvr.com [146.20.161.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115451E531;
-	Thu, 18 Jan 2024 13:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211BF1E531
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 13:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705584985; cv=none; b=ep9T7bD1FMPQcT7qvAFCuuo17n8NZZlWwgbg75D81PoxZN1XNauvU66xAlVi70gcM5F4oq/3hZKXWAySvcqqGlwWsuBOK92rrhHNRaeMYxyaxToSBhwbvgbsuehLqCAe2rXeO1iq4HigAadjtPzRCVdsaWquiyfX8oR446TuC4E=
+	t=1705585043; cv=none; b=ad/CET2CwNqX9fxUu5P4TnNsaKJ0Xw4sMrOy19PBjTjuthMtzxg/BHi1kF0q7AbO+gm/SIdti8p6Stb8KkBLUD1ZYCBGCFK2Ywkp2YsfoE3M/15fEScPoLmbdJx9UBJoUd9eZHtPaScIuSgsG1NST38qhEbGyOmCEUoVjDlbHKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705584985; c=relaxed/simple;
-	bh=6HbT2TMGthwgtVSIaK7teCrAT9dq/hLGM7wI/HBy21U=;
-	h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:X-HM-Spam-Status:
-	 X-HM-Tid:X-HM-MType:X-HM-Sender-Digest; b=TQImjODjPahMDJTXzZmsIgtLVE7QvX/uKhitYA8oBYoum1JW8API9Ub0SQJAjPFIzM1IFlJduuLOTLvAHbQk3rgps378jMk/Z0mOyMj9XpRrJopfVd2peq6sWt59kUt2WgyC1b9NMfVuEJF/bVhnRF5PUMOH5YQZz7iCzKO+1y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [113.118.189.0])
-	by mail-m121144.qiye.163.com (Hmail) with ESMTPA id 2B904AC0104;
-	Thu, 18 Jan 2024 21:30:29 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH v3 2/2] arm64: dts: qcom: ipq6018: enable sdhci node
-Date: Thu, 18 Jan 2024 21:30:22 +0800
-Message-Id: <20240118133022.553339-3-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240118133022.553339-1-amadeus@jmu.edu.cn>
-References: <20240118133022.553339-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1705585043; c=relaxed/simple;
+	bh=mXbhgCRiRp5xRyUf9RHxphlLEbt4CPMBAZblbL0e3ms=;
+	h=DKIM-Signature:X-Auth-ID:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:
+	 Organization:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Classification-ID; b=C79bZ2VIHpZaFc4veHRhMEwNF4VmHuRJNH/f1WIA4y4spcjvdp3v+hDs8n4tbWYyRAZgK6f9gF+t7eOQjLxhL0VT1DC1OBOu+7Ua4bZXryv+iwZKcre17IngDjrrXtQcE5CJvJCEMKYhrfcFkkp5IWsNTTMv1Z+Ys3A670idkeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=UVDwdd11; arc=none smtp.client-ip=146.20.161.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="UVDwdd11"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1705576280;
+	bh=mXbhgCRiRp5xRyUf9RHxphlLEbt4CPMBAZblbL0e3ms=;
+	h=Date:Subject:To:From:From;
+	b=UVDwdd11HZBATTYkvTjJBkt2gDMiUA1xvCW/586+YsyRZZSLp3xWJeSt0YxD3PyLQ
+	 /pg56IDpprZIpL765MIbg+U9zTntPcKPo2kyEdxCryUVGeTdzPubcAqp2GAvCoxFzA
+	 7oJYyh4t2xbODpYvkoWgkLLJkgSMBPpebnpBzUVs=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp4.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 808D720071;
+	Thu, 18 Jan 2024 06:11:19 -0500 (EST)
+Message-ID: <ccb81bc5-3c5c-46df-9f52-d6b6de790e1e@mev.co.uk>
+Date: Thu, 18 Jan 2024 11:11:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSB5IVhhOHRgZTBlCSkhNSlUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKSFVKSkNVSkNCVUtZV1kWGg8SFR0UWUFZT0tIVUpIQ0xISlVKS0tVS1kG
-X-HM-Tid: 0a8d1cc416abb039kuuu2b904ac0104
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ojo6Ohw6MzwjOhcjMhYhNQoR
-	F0sKFExVSlVKTEtOTkNPTUlCQk5NVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	SFVKSkNVSkNCVUtZV1kIAVlBSU1MSjcG
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] comedi: drivers: ni_tio: Fix arithmetic expression
+ overflow
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Denis Arefev <arefev@swemel.ru>
+Cc: H Hartley Sweeten <hsweeten@visionengravers.com>,
+ open list <linux-kernel@vger.kernel.org>, lvc-project@linuxtesting.org
+References: <20240118073619.40538-1-arefev@swemel.ru>
+ <2024011831-morphine-showroom-bc8f@gregkh>
+Content-Language: en-GB
+From: Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+In-Reply-To: <2024011831-morphine-showroom-bc8f@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Classification-ID: 337302d2-9ce4-4154-b6ec-dfafa35740e1-1-1
 
-Enable mmc device found on ipq6018 devices.
-This node supports both eMMC and SD cards.
+On 18/01/2024 09:32, Greg Kroah-Hartman wrote:
+> On Thu, Jan 18, 2024 at 10:36:19AM +0300, Denis Arefev wrote:
+>> The value of an arithmetic expression period_ns * 1000 is subject
+>> to overflow due to a failure to cast operands to a larger data
+>> type before performing arithmetic
+>>
+>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>>
+>> Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+>> Signed-off-by: Denis Arefev <arefev@swemel.ru>
+>> ---
+>>   drivers/comedi/drivers/ni_tio.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/comedi/drivers/ni_tio.c b/drivers/comedi/drivers/ni_tio.c
+>> index da6826d77e60..acc914903c70 100644
+>> --- a/drivers/comedi/drivers/ni_tio.c
+>> +++ b/drivers/comedi/drivers/ni_tio.c
+>> @@ -800,7 +800,7 @@ static int ni_tio_set_clock_src(struct ni_gpct *counter,
+>>   				GI_PRESCALE_X2(counter_dev->variant) |
+>>   				GI_PRESCALE_X8(counter_dev->variant), bits);
+>>   	}
+>> -	counter->clock_period_ps = period_ns * 1000;
+>> +	counter->clock_period_ps = period_ns * 1000UL;
+> 
+> Can period_ns ever be "too big" to cause such an overflow?
 
-Tested with:
-  eMMC (HS200)
-  SD Card (SDR50/SDR104)
+The period_ns value comes from user-space and could be any unsigned int 
+value.  It's used to let the driver know the period of an external clock 
+source.
 
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> And what commit id does this fix?
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 322eced0b876..420c192bccd9 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -441,6 +441,25 @@ dwc_1: usb@7000000 {
- 			};
- 		};
- 
-+		sdhc: mmc@7804000 {
-+			compatible = "qcom,ipq6018-sdhci", "qcom,sdhci-msm-v5";
-+			reg = <0x0 0x7804000 0x0 0x1000>,
-+			      <0x0 0x7805000 0x0 0x1000>;
-+			reg-names = "hc", "cqhci";
-+
-+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+
-+			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
-+				 <&gcc GCC_SDCC1_APPS_CLK>,
-+				 <&xo>;
-+			clock-names = "iface", "core", "xo";
-+			resets = <&gcc GCC_SDCC1_BCR>;
-+			max-frequency = <192000000>;
-+			status = "disabled";
-+		};
-+
- 		blsp_dma: dma-controller@7884000 {
- 			compatible = "qcom,bam-v1.7.0";
- 			reg = <0x0 0x07884000 0x0 0x2b000>;
+Fixes: 3e90b1c7ebe9 ("staging: comedi: ni_tio: tidy up 
+ni_tio_set_clock_src() and helpers")
+Cc: <stable@vger.kernel.org> # v5.15+
+
+The first affected kernel version is v3.17.  This patch should apply 
+cleanly to v5.13 onwards (when comedi was moved out of drivers/staging), 
+but earlier stable/longterm kernels would require a backported patch.
+
+@Denis, if you could add the above Fixes: and Cc: lines to a v2 patch, 
+that would be great!
+
+> 
+> thanks,
+> 
+> greg k-h
+
 -- 
-2.25.1
+-=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
+-=( registered in England & Wales.  Regd. number: 02862268.  )=-
+-=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
+-=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
 
