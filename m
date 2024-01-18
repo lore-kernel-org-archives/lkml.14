@@ -1,103 +1,124 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93E72E63A
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 20:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFE92E834
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 20:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705609625; cv=none; b=K4gQWU1jF+nLo5QQD1c78y7vLTWA9e4UiW7d6M8/4i8++2Enmp+BEtjRxwXG+cN9Ncqen/8Gmp9dixYGNZZeIGCHORcMI/geZ+xk4JhbvzuOa0VEt3jDd7fg9seYzxexANuokl/DdKjCXPv+keT04iOWkG3GqcjD02BHJ2GAOkA=
+	t=1705610409; cv=none; b=UXdCWDE4NMv0Y9L69oZeXhcZ4ZCSsS8PHpxMeX5VGXmR0w9NNyjKZG13lRGKCJGQy2owSOHZkXvusrx889qVwLGbSzrImk2c+BSq/B2tfyuA43bqAqwlc3lgAdqpv3gjkb4c8PqT8NWoDTWpe46vlg0Q056JA2wJo5QJskB/bac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705609625; c=relaxed/simple;
-	bh=2zzLYQkDGYleQ43sy5TztQij3R3Qs5VTOeNThZsU15k=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EcPyfCBRIAYvsrI127oyYv2eQkiWp6SpnMuVWKNspkKjfMCqEqqVnz5ULFS7rarvP4E/oU6Q6772Kxi9CemizMqhCzHpDNQQ+gFpmw1QZHqQels+TpxklKqWi/fGBtHxBgmRESBRjZN6ipdVw5/M9dGuNJOw8/dc7dbIRsEHzV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=GcMuP6v/; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1705610409; c=relaxed/simple;
+	bh=oj+woU1qlwRFN6R7LTRvUuNkhRxu+3svD2gHe+UFh4s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c2ukHaSBRRySaozF1NuVpXiutC8mOccEjuIrWq30cNabYm2kJ+K4BBfdgui2ZUjYYx4azHXThPNo5ZJ2yljzNC1G0NEJhFqhXZoYznnHhYmvbTgjJMVXEpuHYaSA0Tx6j/jFJhylf6h1pH7KvHsicMtqg0VkIKd1uqvniEAkR2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ODQEbv7z; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="GcMuP6v/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODQEbv7z"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso44451a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 12:40:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=oniM1tHRWysCpGkdbeyIlaVHtdrTecB+D1XxrJxUmwQ=;
-  b=GcMuP6v/mQZS2lVkPP8Lqtmczbc/jyYzEZN+c5PbtZm0I7tRFgbnfO2K
-   V0wA7jwC6iRd0hEAZbsSXkYHGSTDa9+RzF6TTkdp0bZZHYUOvJ1MTHXD6
-   XlBZ1EHdz6+Rig3IgSBfHWgVFqR3kb3BSoBh6jvZl0T0iSN/ehMFeWAyd
-   o=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.05,203,1701126000"; 
-   d="scan'208";a="147468856"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 21:26:59 +0100
-Date: Thu, 18 Jan 2024 21:26:59 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Li Zhijian <lizhijian@fujitsu.com>
-cc: linux-kernel@vger.kernel.org, Nicolas Palix <nicolas.palix@imag.fr>, 
-    cocci@inria.fr
-Subject: Re: [PATCH 01/42] coccinelle: device_attr_show.cocci: update
- description and warning message
-In-Reply-To: <20240116041129.3937800-2-lizhijian@fujitsu.com>
-Message-ID: <alpine.DEB.2.22.394.2401182125480.3296@hadrien>
-References: <20240116041129.3937800-1-lizhijian@fujitsu.com> <20240116041129.3937800-2-lizhijian@fujitsu.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        d=gmail.com; s=20230601; t=1705610408; x=1706215208; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=unJHXk3Hp2ibcUfqvrgh8Bl9tlcLgzvJdZ77M8CZ0h8=;
+        b=ODQEbv7zX2mpQI7rezUvLDEBO7Sl7liOiSHHMLumYSondnhPTSvwXhoV8STs+JI1sw
+         u3lkXrQBY/952G9E8Wzoa5UHaBj0mQPRcm+eqM1AZOyAoliWjXG0VZJKxaqIq3jUPJjl
+         03gTluZCInPuYZLuygMiUSdGOJIaELi9u0ayIWsMP6aTalXLqtuOcRBg9nCqV06xn0oq
+         BDPHaWaEI1W3iwG8BRnG0j/PbXOUUUaKrYIWeWw/Zs21l1yzH08WF6pkq5T7oLkz9m/5
+         nLLjUSKZ7FcZRG3eckBnGEaDHewdXSMtLJFIBVQljpt5orgp6cJ5i3d7splgNVv77idu
+         +4RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705610408; x=1706215208;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=unJHXk3Hp2ibcUfqvrgh8Bl9tlcLgzvJdZ77M8CZ0h8=;
+        b=cCcPGVz772NvDbtEyH8MZKhuMlykjZjPhIcd1/7NO0J/99Tdd8PmToTS3iYgBEQZMs
+         Q1tExn4fMxOFS2SFmfcginpAqQ7X06fBnBvp8t/FZ2WQvtLvZ1WWpQYhr22tV/yMNvNl
+         lKMZxy/3z3p7gYKSL0LnrrSpFzEBT/96zWPlWlhyp5pFnvTLaVcYKSEJMZYGhjctqBbI
+         aE8oe0uZ57otoyXxgWAdSRlkhBYhnBRBx5DoAyeMHzBGTPxzQvfigDAkM5S2mAaEp+QF
+         F3PDqyu3blyka07F32kszjd+2NFLFZ2a3TnUmTbhIWWB/8yV0MKTOKPfeCdqDe/Gpux4
+         vr3w==
+X-Gm-Message-State: AOJu0YyxAFMDYglx9I1JULWC9YmEoO9BHaBS9CWWeRbYua+Vkzc8lKAU
+	zQUKP6YFWUxDfK02evkEcEZmk/pyV4ElEgRGyuHlZw9LSrhDqVvUG2/yH6TJ0KMOg7RE6DR4RS2
+	JuymNqh5gJNBLg6c6jXZX6pCx5NY=
+X-Google-Smtp-Source: AGHT+IEHGBxZ+QDquZury3ZN0qWI8ZD51kO5nJOfoqW3hk/Y4+0Pwqs6gXwc5RgEeLIPsc4eU/plhD1Ma/HWdNbm13w=
+X-Received: by 2002:a17:90b:3794:b0:28d:dd91:fdf5 with SMTP id
+ mz20-20020a17090b379400b0028ddd91fdf5mr1436229pjb.23.1705610407970; Thu, 18
+ Jan 2024 12:40:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20240118133504.2910955-1-shy828301@gmail.com> <ZamGsyJ5JTQ9GYNL@casper.infradead.org>
+In-Reply-To: <ZamGsyJ5JTQ9GYNL@casper.infradead.org>
+From: Yang Shi <shy828301@gmail.com>
+Date: Thu, 18 Jan 2024 12:39:55 -0800
+Message-ID: <CAHbLzkotGn9HifF9GQB5W5wMPZpxQviCFTStHcQCD5D37v8UVw@mail.gmail.com>
+Subject: Re: [PATCH] mm: huge_memory: don't force huge page alignment on 32 bit
+To: Matthew Wilcox <willy@infradead.org>
+Cc: jirislaby@kernel.org, surenb@google.com, riel@surriel.com, cl@linux.com, 
+	akpm@linux-foundation.org, yang@os.amperecomputing.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On Tue, 16 Jan 2024, Li Zhijian wrote:
-
-> Update them according to latest Documentation/filesystems/sysfs.rst.
+On Thu, Jan 18, 2024 at 12:14=E2=80=AFPM Matthew Wilcox <willy@infradead.or=
+g> wrote:
 >
-> CC: Julia Lawall <Julia.Lawall@inria.fr>
-> CC: Nicolas Palix <nicolas.palix@imag.fr>
-> CC: cocci@inria.fr
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
->  scripts/coccinelle/api/device_attr_show.cocci | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
+> On Thu, Jan 18, 2024 at 05:35:04AM -0800, Yang Shi wrote:
+> > It doesn't make too much sense to force huge page alignment on 32 bit
+> > system due to the constrained virtual address space.
+> >
+> > [1] https://lore.kernel.org/linux-mm/CAHbLzkqa1SCBA10yjWTtA2mKCsoK5+M1B=
+thSDL8ROvUq2XxZMw@mail.gmail.com/T/#mf211643a0427f8d6495b5b53f8132f453d60ab=
+95
+> > [2] https://lore.kernel.org/linux-mm/CAHbLzkqa1SCBA10yjWTtA2mKCsoK5+M1B=
+thSDL8ROvUq2XxZMw@mail.gmail.com/T/#me93dff2ccbd9902c3e395e1c022fb454e48ecb=
+1d
 >
-> diff --git a/scripts/coccinelle/api/device_attr_show.cocci b/scripts/coccinelle/api/device_attr_show.cocci
-> index a28dc061653a..a621e9610479 100644
-> --- a/scripts/coccinelle/api/device_attr_show.cocci
-> +++ b/scripts/coccinelle/api/device_attr_show.cocci
-> @@ -1,10 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  ///
->  /// From Documentation/filesystems/sysfs.rst:
-> -///  show() must not use snprintf() when formatting the value to be
-> -///  returned to user space. If you can guarantee that an overflow
-> -///  will never happen you can use sprintf() otherwise you must use
-> -///  scnprintf().
-> +/// show() should only use sysfs_emit() or sysfs_emit_at() when formatting
-> +/// the value to be returned to user space.
->  ///
->  // Confidence: High
->  // Copyright: (C) 2020 Denis Efremov ISPRAS
-> @@ -46,10 +44,10 @@ ssize_t show(struct device *dev, struct device_attribute *attr, char *buf)
->  p << r.p;
->  @@
->
-> -coccilib.report.print_report(p[0], "WARNING: use scnprintf or sprintf")
-> +coccilib.report.print_report(p[0], "WARNING: please use sysfs_emit")
->
->  @script: python depends on org@
->  p << r.p;
->  @@
->
-> -coccilib.org.print_todo(p[0], "WARNING: use scnprintf or sprintf")
-> +coccilib.org.print_todo(p[0], "WARNING: please use sysfs_emit")
+> I feel sure there are shorter URLs for those messages ...
 
-Thanks for the suggestion, but it's not really consistent, because the
-patch rule still generates a call to scnprintf.  Would it be possible to
-fix that up?  Or should it be removed?
+Oh, yeah, I just found.
 
-thanks,
-julia
+[1] https://lore.kernel.org/linux-mm/d0a136a0-4a31-46bc-adf4-2db109a61672@k=
+ernel.org/
+[2] https://lore.kernel.org/linux-mm/CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZ=
+TRpU0eHHKD-sQ@mail.gmail.com/
+
+>
+> > @@ -811,6 +812,14 @@ static unsigned long __thp_get_unmapped_area(struc=
+t file *filp,
+> >       loff_t off_align =3D round_up(off, size);
+> >       unsigned long len_pad, ret;
+> >
+> > +     /*
+> > +      * It doesn't make too much sense to froce huge page alignment on
+> > +      * 32 bit system or compat userspace due to the contrained virtua=
+l
+> > +      * address space and address entropy.
+> > +      */
+>
+> I honestly wouldn't even comment this.  But if you must,
+>
+>         /* Using THP alignment is not as important as address randomisati=
+on */
+
+It is not only about address randomization. Removing the comment is fine to=
+o.
+
+>
+> > +     if (IS_ENABLED(CONFIG_32BIT) || in_compat_syscall())
+> > +             return 0;
+> > +
+> >       if (off_end <=3D off_align || (off_end - off_align) < size)
+> >               return 0;
+> >
+> > --
+> > 2.41.0
+> >
