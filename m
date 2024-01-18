@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCFC14AAD
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB76D1BC51;
+	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705566179; cv=none; b=OSy3ona41ze2L+KgkmseJ/eZthkVZ/U3u7Og9vWz3xHrHIyZAVQlDME9pyzvglpwD/IgMRot7yLPxiP50/AkYBtUwja2oIXB/nwqB0MO4bohePeb8zpq+24CvFIZzhcIhsT9UbIb2W/NNeI9ZisDpvytmcL2Y6Bobck/bKQI7co=
+	t=1705566180; cv=none; b=jMvKecJ1068peWQWYm4OO5k+mq9obX32hKDlb7vSEjwCJ9DwELqtwWCSvAQOJYI3l3DnQXnTdgNCXxQ6af9juP6yS5PgI96fm/azI64+NmRyVRQSEdB8eZ9d4tveC7dCR+kQE7b8dtBwjcE4B1oyAJB/cN+hIhi2RIFTjxq+GwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705566179; c=relaxed/simple;
-	bh=GmK8WYH0TDFeYdIsA8D0um51XHp8Hyracmc4Z1PNIyM=;
+	s=arc-20240116; t=1705566180; c=relaxed/simple;
+	bh=PLoU1mU1eyxV1XJ3D01B3s8uTgRFEUld/pgwgqXrpfc=;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Endpoint-Received:X-Original-From:Reply-To; b=RLs8nOJKq+g748DZ3mxVOW66ushIzJ2YOWW5i7ZHUtqzorvUeSXzSMIiakHqOoOayYY+KRaAyu8tZCVON/t/bTCTcic2n2bGbamAUmqX7LDMdVWjcaR4pg0wUTMWqPmp/bkdgZjSijyahTbO/DLRTkBgHdN03Tem51cl5cZh9WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqlSxlpV; arc=none smtp.client-ip=10.30.226.201
+	 X-Endpoint-Received:X-Original-From:Reply-To; b=dhIBVxg+ZqbGHwiAnPKH8COD5tb0bqGZZFn/ct/dmgI9nSBxK0c/vrXWBhuaFYvjYDJ3lGTqEMg/WO/WwGDFvpuqBkuk4kAIuzzQtwZD7MPgHvFQZwB2ujGqQ+YsIRF208tudo/dGcrZzhhHjJ12J4cTXqpmGKPRdYdNEU7PIRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kc3z3SjS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqlSxlpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A96A9C32791;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kc3z3SjS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BB5ABC32792;
 	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1705566179;
-	bh=GmK8WYH0TDFeYdIsA8D0um51XHp8Hyracmc4Z1PNIyM=;
+	bh=PLoU1mU1eyxV1XJ3D01B3s8uTgRFEUld/pgwgqXrpfc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=RqlSxlpVp2fMnKk7GVgg718xJWS0+ufKXw/3otc2oR4lZSJROZ0rwTR4KzH5sW6cc
-	 5QKLCJ4pQJ1X+OpWlKmxR9mflQdOjvydoNcyKhnF89QfTujiQyr+Na2N0BtQyO9Myq
-	 ZnM8dSO9ZVcdNPpwqtjoofMN5DPRn+HBq2jpS/2iTuF62HvWdQxwNFqrqb3zt3lzAl
-	 cJO7MWYLqCVKZFw/MVWGutLdQFaWGIVcnZLlbo7DbK8ar7/lnbIfUsE90Ol6oUl1CY
-	 B66uRb5qFr/3m+5c+vs8QKrPMk4pCnkyjl4edpS/pfmtvg3sAipJuzRI238uwatKEg
-	 SfH3ZKPsifVow==
+	b=kc3z3SjSoWd7/ygLcatNuBcoPEiQ5RP5tRoj53J5jPynFmEE+WKDqdwEyz443psNS
+	 j5hvgKgFn5EMMJfCnIghZX/g4l0ViFoZGa+EZ54M29Fwd2SZ10B5aaC2DwGLMNcOI4
+	 Uyxgz5XEk7TLmrovKXGKdjJERWJT+PuANAPqNBWMQNT3svo+C+aVSvkexmt07/z+y3
+	 +jm8aep4j3aboBV44kLU8kw7/l/gPs438pBVbjT6Ux3rEPSe40SoXCfaiBB/0TlvxW
+	 50QyMT+2GBTCsDOE23VQd31g5ALIqqGkoqtcaf4qTD6bx7ZOPz+ESHPC/GZW5sYB66
+	 sRg1QyMREmYeA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9995DC47DA2;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA30C47DB7;
 	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 From:
  Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Thu, 18 Jan 2024 11:21:03 +0300
-Subject: [PATCH v7 20/39] mtd: rawnand: add support for ts72xx
+Date: Thu, 18 Jan 2024 11:21:05 +0300
+Subject: [PATCH v7 22/39] ata: pata_ep93xx: add device tree support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,25 +43,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240118-ep93xx-v7-20-d953846ae771@maquefel.me>
+Message-Id: <20240118-ep93xx-v7-22-d953846ae771@maquefel.me>
 References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
 In-Reply-To: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-To: Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Christophe Kerello <christophe.kerello@foss.st.com>, 
- Chris Packham <chris.packham@alliedtelesis.co.nz>, 
- Daniel Golle <daniel@makrotopia.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Nikita Shubin <nikita.shubin@maquefel.me>, Johan Jonker <jbx6244@gmail.com>, 
- Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+To: Sergey Shtylyov <s.shtylyov@omp.ru>, 
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Arnd Bergmann <arnd@arndb.de>
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=7954;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=5849;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=pRPghqKSZ909yYBnF54STwKmGfbYJdixv7eXsyEdyO0=; =?utf-8?q?b=3D3n4M1RhtKJyD?=
- =?utf-8?q?0/YlsivN7sVnBXr/AWDeL7639RsGQBAFekQLinlBLewJaoMR4xl3Nj65BHs+yMM9?=
- LkG6hXdUCTzKMTFfQ0FOMvgiMCULeqriljrqyfJ8a8CYVhk8RuYD
+ bh=YnHuuNR42r95Z33jOF55JptGP8UIRag00a6cWLOpnB0=; =?utf-8?q?b=3DkwN2RGE5yNTv?=
+ =?utf-8?q?D9a1a1xQuEiY6b4Fab/BiotTpMtU+ApIyeKN6V+pti7GJiF4AlkNexDwin5Qwxbd?=
+ qAXnLn9aBCIxmissFP1yxp+7YhKQXN2RmaVDMaufLc96bO9B7sbJ
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received:
@@ -71,271 +65,175 @@ Reply-To: <nikita.shubin@maquefel.me>
 
 From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Technologic Systems has it's own nand controller implementation in CPLD.
+- add OF ID match table
+- drop platform DMA and filters
+- change DMA setup to OF, so we can defer probe
 
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Acked-by: Damien Le Moal <dlemoal@kernel.org>
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
- drivers/mtd/nand/raw/Kconfig                       |   6 +
- drivers/mtd/nand/raw/Makefile                      |   1 +
- drivers/mtd/nand/raw/technologic-nand-controller.c | 220 +++++++++++++++++++++
- 3 files changed, 227 insertions(+)
+ drivers/ata/pata_ep93xx.c | 81 +++++++++++++++++++++++++----------------------
+ 1 file changed, 43 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index cbf8ae85e1ae..5a51b835f6b6 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -449,6 +449,12 @@ config MTD_NAND_RENESAS
- 	  Enables support for the NAND controller found on Renesas R-Car
- 	  Gen3 and RZ/N1 SoC families.
+diff --git a/drivers/ata/pata_ep93xx.c b/drivers/ata/pata_ep93xx.c
+index c84a20892f1b..2bc446bdea06 100644
+--- a/drivers/ata/pata_ep93xx.c
++++ b/drivers/ata/pata_ep93xx.c
+@@ -44,8 +44,8 @@
+ #include <linux/delay.h>
+ #include <linux/dmaengine.h>
+ #include <linux/ktime.h>
++#include <linux/mod_devicetable.h>
  
-+config MTD_NAND_TS72XX
-+	tristate "ts72xx NAND controller"
-+	depends on ARCH_EP93XX && HAS_IOMEM
-+	help
-+	  Enables support for NAND controller on ts72xx SBCs.
-+
- comment "Misc"
+-#include <linux/platform_data/dma-ep93xx.h>
+ #include <linux/soc/cirrus/ep93xx.h>
  
- config MTD_SM_COMMON
-diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-index 25120a4afada..d0b0e6b83568 100644
---- a/drivers/mtd/nand/raw/Makefile
-+++ b/drivers/mtd/nand/raw/Makefile
-@@ -34,6 +34,7 @@ obj-$(CONFIG_MTD_NAND_MLC_LPC32XX)      += lpc32xx_mlc.o
- obj-$(CONFIG_MTD_NAND_SH_FLCTL)		+= sh_flctl.o
- obj-$(CONFIG_MTD_NAND_MXC)		+= mxc_nand.o
- obj-$(CONFIG_MTD_NAND_SOCRATES)		+= socrates_nand.o
-+obj-$(CONFIG_MTD_NAND_TS72XX)           += technologic-nand-controller.o
- obj-$(CONFIG_MTD_NAND_TXX9NDFMC)	+= txx9ndfmc.o
- obj-$(CONFIG_MTD_NAND_MPC5121_NFC)	+= mpc5121_nfc.o
- obj-$(CONFIG_MTD_NAND_VF610_NFC)	+= vf610_nfc.o
-diff --git a/drivers/mtd/nand/raw/technologic-nand-controller.c b/drivers/mtd/nand/raw/technologic-nand-controller.c
-new file mode 100644
-index 000000000000..63157e7b5572
---- /dev/null
-+++ b/drivers/mtd/nand/raw/technologic-nand-controller.c
-@@ -0,0 +1,220 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Technologic Systems TS72xx NAND controller driver
-+ *
-+ * Copyright (C) 2023 Nikita Shubin <nikita.shubin@maquefel.me>
-+ *
-+ * Derived from: plat_nand.c
-+ *  Author: Vitaly Wool <vitalywool@gmail.com>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/platnand.h>
-+
-+#define TS72XX_NAND_CONTROL_ADDR_LINE	BIT(22)	/* 0xN0400000 */
-+#define TS72XX_NAND_BUSY_ADDR_LINE	BIT(23)	/* 0xN0800000 */
-+
-+#define TS72XX_NAND_ALE			BIT(0)
-+#define TS72XX_NAND_CLE			BIT(1)
-+#define TS72XX_NAND_NCE			BIT(2)
-+
-+#define TS72XX_NAND_CTRL_CLE		(TS72XX_NAND_NCE | TS72XX_NAND_CLE)
-+#define TS72XX_NAND_CTRL_ALE		(TS72XX_NAND_NCE | TS72XX_NAND_ALE)
-+
-+struct ts72xx_nand_data {
-+	struct nand_controller	controller;
-+	struct nand_chip	chip;
-+	void __iomem		*base;
-+	void __iomem		*ctrl;
-+	void __iomem		*busy;
-+};
-+
-+static inline struct ts72xx_nand_data *chip_to_ts72xx(struct nand_chip *chip)
-+{
-+	return container_of(chip, struct ts72xx_nand_data, chip);
-+}
-+
-+static int ts72xx_nand_attach_chip(struct nand_chip *chip)
-+{
-+	switch (chip->ecc.engine_type) {
-+	case NAND_ECC_ENGINE_TYPE_ON_HOST:
-+		return -EINVAL;
-+	case NAND_ECC_ENGINE_TYPE_SOFT:
-+		if (chip->ecc.algo == NAND_ECC_ALGO_UNKNOWN)
-+			chip->ecc.algo = NAND_ECC_ALGO_HAMMING;
-+		chip->ecc.algo = NAND_ECC_ALGO_HAMMING;
-+		fallthrough;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static void ts72xx_nand_ctrl(struct nand_chip *chip, u8 value)
-+{
-+	struct ts72xx_nand_data *data = chip_to_ts72xx(chip);
-+	unsigned char bits = ioread8(data->ctrl) & ~GENMASK(2, 0);
-+
-+	iowrite8(bits | value, data->ctrl);
-+}
-+
-+static int ts72xx_nand_exec_instr(struct nand_chip *chip,
-+				const struct nand_op_instr *instr)
-+{
-+	struct ts72xx_nand_data *data = chip_to_ts72xx(chip);
-+	unsigned int timeout_us;
-+	u32 status;
+ #define DRV_NAME	"ep93xx-ide"
+@@ -126,7 +126,7 @@ enum {
+ };
+ 
+ struct ep93xx_pata_data {
+-	const struct platform_device *pdev;
++	struct platform_device *pdev;
+ 	void __iomem *ide_base;
+ 	struct ata_timing t;
+ 	bool iordy;
+@@ -135,9 +135,7 @@ struct ep93xx_pata_data {
+ 	unsigned long udma_out_phys;
+ 
+ 	struct dma_chan *dma_rx_channel;
+-	struct ep93xx_dma_data dma_rx_data;
+ 	struct dma_chan *dma_tx_channel;
+-	struct ep93xx_dma_data dma_tx_data;
+ };
+ 
+ static void ep93xx_pata_clear_regs(void __iomem *base)
+@@ -637,20 +635,13 @@ static void ep93xx_pata_release_dma(struct ep93xx_pata_data *drv_data)
+ 	}
+ }
+ 
+-static bool ep93xx_pata_dma_filter(struct dma_chan *chan, void *filter_param)
++static int ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+ {
+-	if (ep93xx_dma_chan_is_m2p(chan))
+-		return false;
+-
+-	chan->private = filter_param;
+-	return true;
+-}
+-
+-static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+-{
+-	const struct platform_device *pdev = drv_data->pdev;
++	struct platform_device *pdev = drv_data->pdev;
++	struct device *dev = &pdev->dev;
+ 	dma_cap_mask_t mask;
+ 	struct dma_slave_config conf;
 +	int ret;
-+
-+	switch (instr->type) {
-+	case NAND_OP_CMD_INSTR:
-+		ts72xx_nand_ctrl(chip, TS72XX_NAND_CTRL_CLE);
-+		iowrite8(instr->ctx.cmd.opcode, data->base);
-+		ts72xx_nand_ctrl(chip, TS72XX_NAND_NCE);
-+		break;
-+
-+	case NAND_OP_ADDR_INSTR:
-+		ts72xx_nand_ctrl(chip, TS72XX_NAND_CTRL_ALE);
-+		iowrite8_rep(data->base, instr->ctx.addr.addrs, instr->ctx.addr.naddrs);
-+		ts72xx_nand_ctrl(chip, TS72XX_NAND_NCE);
-+		break;
-+
-+	case NAND_OP_DATA_IN_INSTR:
-+		ioread8_rep(data->base, instr->ctx.data.buf.in, instr->ctx.data.len);
-+		break;
-+
-+	case NAND_OP_DATA_OUT_INSTR:
-+		iowrite8_rep(data->base, instr->ctx.data.buf.in, instr->ctx.data.len);
-+		break;
-+
-+	case NAND_OP_WAITRDY_INSTR:
-+		timeout_us = instr->ctx.waitrdy.timeout_ms * 1000;
-+		ret = readb_poll_timeout(data->busy, status, status & BIT(5), 0, timeout_us);
-+		if (ret)
-+			return ret;
-+
-+		break;
+ 
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
+@@ -660,22 +651,17 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+ 	 * to request only one channel, and reprogram it's direction at
+ 	 * start of new transfer.
+ 	 */
+-	drv_data->dma_rx_data.port = EP93XX_DMA_IDE;
+-	drv_data->dma_rx_data.direction = DMA_DEV_TO_MEM;
+-	drv_data->dma_rx_data.name = "ep93xx-pata-rx";
+-	drv_data->dma_rx_channel = dma_request_channel(mask,
+-		ep93xx_pata_dma_filter, &drv_data->dma_rx_data);
+-	if (!drv_data->dma_rx_channel)
+-		return;
++	drv_data->dma_rx_channel = dma_request_chan(dev, "rx");
++	if (IS_ERR(drv_data->dma_rx_channel)) {
++		ret = PTR_ERR(drv_data->dma_rx_channel);
++		return dev_err_probe(dev, ret, "rx DMA setup failed\n");
 +	}
-+
-+	if (instr->delay_ns)
-+		ndelay(instr->delay_ns);
+ 
+-	drv_data->dma_tx_data.port = EP93XX_DMA_IDE;
+-	drv_data->dma_tx_data.direction = DMA_MEM_TO_DEV;
+-	drv_data->dma_tx_data.name = "ep93xx-pata-tx";
+-	drv_data->dma_tx_channel = dma_request_channel(mask,
+-		ep93xx_pata_dma_filter, &drv_data->dma_tx_data);
+-	if (!drv_data->dma_tx_channel) {
+-		dma_release_channel(drv_data->dma_rx_channel);
+-		return;
++	drv_data->dma_tx_channel = dma_request_chan(&pdev->dev, "tx");
++	if (IS_ERR(drv_data->dma_tx_channel)) {
++		ret = PTR_ERR(drv_data->dma_tx_channel);
++		dev_err_probe(dev, ret, "tx DMA setup failed\n");
++		goto fail_release_rx;
+ 	}
+ 
+ 	/* Configure receive channel direction and source address */
+@@ -683,10 +669,10 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+ 	conf.direction = DMA_DEV_TO_MEM;
+ 	conf.src_addr = drv_data->udma_in_phys;
+ 	conf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-	if (dmaengine_slave_config(drv_data->dma_rx_channel, &conf)) {
+-		dev_err(&pdev->dev, "failed to configure rx dma channel\n");
+-		ep93xx_pata_release_dma(drv_data);
+-		return;
++	ret = dmaengine_slave_config(drv_data->dma_rx_channel, &conf);
++	if (ret) {
++		dev_err_probe(dev, ret, "failed to configure rx dma channel");
++		goto fail_release_dma;
+ 	}
+ 
+ 	/* Configure transmit channel direction and destination address */
+@@ -694,10 +680,20 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+ 	conf.direction = DMA_MEM_TO_DEV;
+ 	conf.dst_addr = drv_data->udma_out_phys;
+ 	conf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-	if (dmaengine_slave_config(drv_data->dma_tx_channel, &conf)) {
+-		dev_err(&pdev->dev, "failed to configure tx dma channel\n");
+-		ep93xx_pata_release_dma(drv_data);
++	ret = dmaengine_slave_config(drv_data->dma_tx_channel, &conf);
++	if (ret) {
++		dev_err_probe(dev, ret, "failed to configure tx dma channel");
++		goto fail_release_dma;
+ 	}
 +
 +	return 0;
-+}
 +
-+static int ts72xx_nand_exec_op(struct nand_chip *chip,
-+			       const struct nand_operation *op, bool check_only)
-+{
-+	unsigned int i;
-+	int ret;
++fail_release_rx:
++	dma_release_channel(drv_data->dma_rx_channel);
++fail_release_dma:
++	ep93xx_pata_release_dma(drv_data);
 +
-+	if (check_only)
-+		return 0;
-+
-+	for (i = 0; i < op->ninstrs; i++) {
-+		ret = ts72xx_nand_exec_instr(chip, &op->instrs[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct nand_controller_ops ts72xx_nand_ops = {
-+	.attach_chip = ts72xx_nand_attach_chip,
-+	.exec_op = ts72xx_nand_exec_op,
-+};
-+
-+static int ts72xx_nand_probe(struct platform_device *pdev)
-+{
-+	struct ts72xx_nand_data *data;
-+	struct fwnode_handle *child;
-+	struct mtd_info *mtd;
-+	int err;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	nand_controller_init(&data->controller);
-+	data->controller.ops = &ts72xx_nand_ops;
-+	data->chip.controller = &data->controller;
-+
-+	data->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(data->base))
-+		return PTR_ERR(data->base);
-+	data->ctrl = data->base + TS72XX_NAND_CONTROL_ADDR_LINE;
-+	data->busy = data->base + TS72XX_NAND_BUSY_ADDR_LINE;
-+
-+	child = fwnode_get_next_child_node(dev_fwnode(&pdev->dev), NULL);
-+	if (!child)
-+		return dev_err_probe(&pdev->dev, -ENXIO,
-+				"ts72xx controller node should have exactly one child\n");
-+
-+	nand_set_flash_node(&data->chip, to_of_node(child));
-+	mtd = nand_to_mtd(&data->chip);
-+	mtd->dev.parent = &pdev->dev;
-+	platform_set_drvdata(pdev, data);
-+
-+	/*
-+	 * This driver assumes that the default ECC engine should be TYPE_SOFT.
-+	 * Set ->engine_type before registering the NAND devices in order to
-+	 * provide a driver specific default value.
-+	 */
-+	data->chip.ecc.engine_type = NAND_ECC_ENGINE_TYPE_SOFT;
-+
-+	/* Scan to find existence of the device */
-+	err = nand_scan(&data->chip, 1);
++	return ret;
+ }
+ 
+ static void ep93xx_pata_dma_start(struct ata_queued_cmd *qc)
+@@ -954,7 +950,9 @@ static int ep93xx_pata_probe(struct platform_device *pdev)
+ 	drv_data->ide_base = ide_base;
+ 	drv_data->udma_in_phys = mem_res->start + IDEUDMADATAIN;
+ 	drv_data->udma_out_phys = mem_res->start + IDEUDMADATAOUT;
+-	ep93xx_pata_dma_init(drv_data);
++	err = ep93xx_pata_dma_init(drv_data);
 +	if (err)
-+		goto err_handle_put;
-+
-+	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
-+	if (err)
-+		goto err_clean_nand;
-+
-+	return 0;
-+
-+err_clean_nand:
-+	nand_cleanup(&data->chip);
-+err_handle_put:
-+	fwnode_handle_put(child);
-+	return err;
-+}
-+
-+static void ts72xx_nand_remove(struct platform_device *pdev)
-+{
-+	struct ts72xx_nand_data *data = platform_get_drvdata(pdev);
-+	struct nand_chip *chip = &data->chip;
-+	int ret;
-+
-+	ret = mtd_device_unregister(nand_to_mtd(chip));
-+	WARN_ON(ret);
-+	nand_cleanup(chip);
-+}
-+
-+static const struct of_device_id ts72xx_id_table[] = {
-+	{ .compatible = "technologic,ts7200-nand" },
++		return err;
+ 
+ 	/* allocate host */
+ 	host = ata_host_alloc(&pdev->dev, 1);
+@@ -1021,9 +1019,16 @@ static void ep93xx_pata_remove(struct platform_device *pdev)
+ 	ep93xx_ide_release_gpio(pdev);
+ }
+ 
++static const struct of_device_id ep93xx_pata_of_ids[] = {
++	{ .compatible = "cirrus,ep9312-pata" },
 +	{ /* sentinel */ }
 +};
-+MODULE_DEVICE_TABLE(of, ts72xx_id_table);
++MODULE_DEVICE_TABLE(of, ep93xx_pata_of_ids);
 +
-+static struct platform_driver ts72xx_nand_driver = {
-+	.driver = {
-+		.name = "ts72xx-nand",
-+		.of_match_table = ts72xx_id_table,
-+	},
-+	.probe = ts72xx_nand_probe,
-+	.remove_new = ts72xx_nand_remove,
-+};
-+module_platform_driver(ts72xx_nand_driver);
-+
-+MODULE_AUTHOR("Nikita Shubin <nikita.shubin@maquefel.me>");
-+MODULE_DESCRIPTION("Technologic Systems TS72xx NAND controller driver");
-+MODULE_LICENSE("GPL");
+ static struct platform_driver ep93xx_pata_platform_driver = {
+ 	.driver = {
+ 		.name = DRV_NAME,
++		.of_match_table = ep93xx_pata_of_ids,
+ 	},
+ 	.probe = ep93xx_pata_probe,
+ 	.remove_new = ep93xx_pata_remove,
 
 -- 
 2.41.0
