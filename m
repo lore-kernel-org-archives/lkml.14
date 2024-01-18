@@ -1,62 +1,26 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA46420B07
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 15:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55BD120B07
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 15:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705591507; cv=none; b=JVUi6cEi4o8xysVQA7kMVkFe7t5LVRZJla5FtCbsyxUSQSY5ygLMsR8aWiBhVEvj2/+B79rtd891XYs+qNvGWxXPYn6MXRSwOTFSsTLzkuV9zhbClDhsnaTN0z4FPSrAmWmGAW7/bILkEYBgpj7Iua4+R5TKcspED8SpftsMKy4=
+	t=1705591531; cv=none; b=UkRWtAjqs/Y/ktwMucYOWlYaErgV7Q8GZhNfnLMFQw6Sz+udKjGlvgqoSggHT9wP1svFhDMQE5/LakxRrpdSfFevB9Hleen5QZ/HHlZn4cc3Vsm6EKDjDo0mm/d8aVIqXRQD9kCXvdMpxz9HrjVLRLkZiXHEXFfoc2G9L+r/jeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705591507; c=relaxed/simple;
-	bh=IYR3Jzw01YcfGwtb5rambh1PKBRtFsitKigEFRyFURg=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=cqsWls+ZM3T182lrLx55qUUlZXtM7mJStD4N/pndh1JYQfajzIk4LAFtEVtU5n94/E/obYHOXHAiXlnsgnJE3WeIuJopxoT/TirRPAcOzIgKnj2FPdjKLFqjyAG7zK4YvEBTQm9nLMPfxacKrSgyPCwR9YvMSYTQKaBRHGaQJXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=OqXRnez2; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="OqXRnez2"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3608ec05dc2so6123505ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 07:25:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705591505; x=1706196305; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WFL5X15KuQLcS388GPwWZDaWQMBpmHgQW0pzQBtWIdI=;
-        b=OqXRnez2/w9xjjAHavbab/30k2EYJW18w2ZxWztwjtkFR5xNRChFkdI4OmSmiP+Vti
-         Xo41SHygdO52m0t0PFrJZJp0OxbNcnNL6ptIdO7x6Mugh+ZEXLt9A5IKGERWnwT0/unZ
-         +3pS6NWXb4lbIxt/9PAsmhYLWlABLCxJjqyzUoQenEWZBuVAhpF+Fl7VAORX2qyFH4sD
-         4uFCghGiCdwdZD+1YvPlmhfznmF/AnLlGjoOiNsddamVbDB07FoQqFi5PETj1Q9PV+DJ
-         LQxX9eTxwFTZVyeZ+5HpjmJYAQPtanF8brC5L1a+P2pAhsR3aEfVcbSSlbaFy7c3aEYZ
-         wJrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705591505; x=1706196305;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WFL5X15KuQLcS388GPwWZDaWQMBpmHgQW0pzQBtWIdI=;
-        b=t55winnOeLfQ2hF3JU0lEh6SujE+wrph8cgH58o3WkdsyHfyZwrFZpTWOMTGJkGvCB
-         g+4ynew9M6U+Y/ISRjthJM9Cv+Lv19ji1p5pSwVQIn4t8LxeptLdOsJVtNYhzzCqCufI
-         4vw5e5r5Pff8vLD/i8XlCpLtaoVVEfBQKNpHchduDrBax1FNvoxtoMpPbIg5bG3tWfB8
-         JsgTl2PIPb6fGRW0CEGhnX7XPEsRVJcyZPE+R9hFQCuc5neov1aTuMPOwEtjPy6KRtlr
-         ALmxWJ/CktuXxRBSAQjnW9Zb8dQMZ435MQD7zQiptfIJcJfUhjGyuSj6CrRGSBxXSXYa
-         XlEg==
-X-Gm-Message-State: AOJu0YxCIX7FrgAybOIOnZY367kAuiEMaD1nW/lr66KjLId0so/Yfxjn
-	FD7kDpj9Oarjc/Y5jk7/6mNJAKX/JlNtSK44nwkWaAcZ74HZe0ho1SOQPbt2jhMMYSDgsIvoDpP
-	9wrw=
-X-Google-Smtp-Source: AGHT+IGLSEKKcRl6iOEKMase+1gBLbVkYe0VPODaqFZN3SPVROjtQc5jyRCY5FjMsEu5XS88sJE4zQ==
-X-Received: by 2002:a5d:97d7:0:b0:7bf:356b:7a96 with SMTP id k23-20020a5d97d7000000b007bf356b7a96mr2205437ios.2.1705591504819;
-        Thu, 18 Jan 2024 07:25:04 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id j1-20020a02a681000000b0046eb643c68asm439333jam.44.2024.01.18.07.25.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jan 2024 07:25:04 -0800 (PST)
-Message-ID: <33cef193-044a-4f25-8248-b10a9db9e0ba@kernel.dk>
-Date: Thu, 18 Jan 2024 08:25:03 -0700
+	s=arc-20240116; t=1705591531; c=relaxed/simple;
+	bh=IQ27c7j5H8MWbotffGRB2CO6VNyTTb6PZHLkudr7AxA=;
+	h=Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
+	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=cBhfH0OylK5wcszvzMH2s4rx2WZEGuDsjDmVtcEOsf1AksMjoyJGARjGGh2E+24Nm8QCG1hAcsqZE+FjB7ynZEx41nHfNSMfq0AA7kjYCmI2M/G3qK6npL4y6ObBh9Yy4SQxrPUT3nQM3yyodhNYKDLFuumag1JphTzsPKbdtE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CD9A1042;
+	Thu, 18 Jan 2024 07:26:14 -0800 (PST)
+Received: from [10.57.77.97] (unknown [10.57.77.97])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 215073F73F;
+	Thu, 18 Jan 2024 07:25:24 -0800 (PST)
+Message-ID: <0450f151-143a-4ce8-8131-31180bbc13b8@arm.com>
+Date: Thu, 18 Jan 2024 15:25:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,66 +28,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] block: introduce activity based ioprio
-Content-Language: en-US
-To: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- steve.kang@unisoc.com
-References: <20240117092348.2873928-1-zhaoyang.huang@unisoc.com>
- <00afbc29-9f25-403e-af18-08953fa79e24@kernel.dk>
- <CAGWkznGSreuTvYUoqhL0KaWEg-NpBazfjAcjGLJ3Oh8puzQF0g@mail.gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CAGWkznGSreuTvYUoqhL0KaWEg-NpBazfjAcjGLJ3Oh8puzQF0g@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/6] mm: support large folios swap-in
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ david@redhat.com, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, mhocko@suse.com, shy828301@gmail.com,
+ wangkefeng.wang@huawei.com, willy@infradead.org, xiang@kernel.org,
+ ying.huang@intel.com, yuzhao@google.com, surenb@google.com,
+ steven.price@arm.com
+References: <20231025144546.577640-1-ryan.roberts@arm.com>
+ <20240118111036.72641-1-21cnbao@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240118111036.72641-1-21cnbao@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 1/18/24 12:48 AM, Zhaoyang Huang wrote:
->>> +static enum dd_prio dd_req_ioprio(struct request *rq)
->>> +{
->>> +     enum dd_prio prio;
->>> +     const u8 ioprio_class = dd_rq_ioclass(rq);
->>> +#ifdef CONFIG_ACTIVITY_BASED_IOPRIO
->>> +     struct bio *bio;
->>> +     struct bio_vec bv;
->>> +     struct bvec_iter iter;
->>> +     struct page *page;
->>> +     int gen = 0;
->>> +     int cnt = 0;
->>> +
->>> +     if (req_op(rq) == REQ_OP_READ) {
->>> +             __rq_for_each_bio(bio, rq) {
->>> +                     bio_for_each_bvec(bv, bio, iter) {
->>> +                             page = bv.bv_page;
->>> +                             gen += PageWorkingset(page) ? 1 : 0;
->>> +                             cnt++;
->>> +                     }
->>> +             }
->>> +             prio = (gen >= cnt / 2) ? ioprio_class_to_prio[IOPRIO_CLASS_RT] :
->>> +                     ioprio_class_to_prio[ioprio_class];
->>> +     } else
->>> +             prio = ioprio_class_to_prio[ioprio_class];
->>> +#else
->>> +     prio = ioprio_class_to_prio[ioprio_class];
->>> +#endif
->>> +     return prio;
->>> +}
->>
->> This is pretty awful imho, you're iterating the pages which isn't
->> exactly cheap. There's also a ternary operator (get rid of it), and
->> magic cnt / 2 which isn't even explained.
+On 18/01/2024 11:10, Barry Song wrote:
+> On an embedded system like Android, more than half of anon memory is actually
+> in swap devices such as zRAM. For example, while an app is switched to back-
+> ground, its most memory might be swapped-out.
+> 
+> Now we have mTHP features, unfortunately, if we don't support large folios
+> swap-in, once those large folios are swapped-out, we immediately lose the 
+> performance gain we can get through large folios and hardware optimization
+> such as CONT-PTE.
+> 
+> In theory, we don't need to rely on Ryan's swap out patchset[1]. That is to say,
+> before swap-out, if some memory were normal pages, but when swapping in, we
+> can also swap-in them as large folios. 
 
-> ok. The iterating is on purpose here to not enlarge the bio and
-> request structure. The magic number would be replaced by an more
-> sensible criteria like MULTI_GEN's thrashing tier things.
+I think this could also violate MADV_NOHUGEPAGE; if the application has
+requested that we do not create a THP, then we had better not; it could cause a
+correctness issue in some circumstances. You would need to pay attention to this
+vma flag if taking this approach.
 
-It's totally backwards, you're adding code that both dips into parts it
-very much should not, and attempting to fix things up after the fact.
-Again, not passing any judgement on whether this kind of thing makes
-sense, but if it did, you'd do it when adding the page to the bio, as I
-mentioned elsewhere in the email. There's no need to grow struct bio, it
-already has an ioprio field.
+> But this might require I/O happen at
+> some random places in swap devices. So we limit the large folios swap-in to
+> those areas which were large folios before swapping-out, aka, swaps are also
+> contiguous in hardware. 
 
--- 
-Jens Axboe
+In fact, even this may not be sufficient; it's possible that a contiguous set of
+base pages (small folios) were allocated to a virtual mapping and all swapped
+out together - they would likely end up contiguous in the swap file, but should
+not be swapped back in as a single folio because of this (same reasoning applies
+to cluster of smaller THPs that you mistake for a larger THP, etc).
+
+So you will need to check what THP sizes are enabled and check the VMA
+suitability regardless; Perhaps you are already doing this - I haven't looked at
+the code yet.
+
+I'll aim to review the code in the next couple of weeks.
+
+Thanks,
+Ryan
+
+> On the other hand, in OPPO's product, we've deployed
+> anon large folios on millions of phones[2]. we enhanced zsmalloc and zRAM to
+> compress and decompress large folios as a whole, which help improve compression
+> ratio and decrease CPU consumption significantly. In zsmalloc and zRAM we can
+> save large objects whose original size are 64KiB for example. So it is also a
+> better choice for us to only swap-in large folios for those compressed large
+> objects as a large folio can be decompressed all together.
+> 
+> Note I am moving my previous "arm64: mm: swap: support THP_SWAP on hardware
+> with MTE" to this series as it might help review.
+> 
+> [1] [PATCH v3 0/4] Swap-out small-sized THP without splitting
+> https://lore.kernel.org/linux-mm/20231025144546.577640-1-ryan.roberts@arm.com/
+> [2] OnePlusOSS / android_kernel_oneplus_sm8550 
+> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8550/tree/oneplus/sm8550_u_14.0.0_oneplus11
+> 
+> Barry Song (2):
+>   arm64: mm: swap: support THP_SWAP on hardware with MTE
+>   mm: rmap: weaken the WARN_ON in __folio_add_anon_rmap()
+> 
+> Chuanhua Han (4):
+>   mm: swap: introduce swap_nr_free() for batched swap_free()
+>   mm: swap: make should_try_to_free_swap() support large-folio
+>   mm: support large folios swapin as a whole
+>   mm: madvise: don't split mTHP for MADV_PAGEOUT
+> 
+>  arch/arm64/include/asm/pgtable.h |  21 ++----
+>  arch/arm64/mm/mteswap.c          |  42 ++++++++++++
+>  include/asm-generic/tlb.h        |  10 +++
+>  include/linux/huge_mm.h          |  12 ----
+>  include/linux/pgtable.h          |  62 ++++++++++++++++-
+>  include/linux/swap.h             |   6 ++
+>  mm/madvise.c                     |  48 ++++++++++++++
+>  mm/memory.c                      | 110 ++++++++++++++++++++++++++-----
+>  mm/page_io.c                     |   2 +-
+>  mm/rmap.c                        |   5 +-
+>  mm/swap_slots.c                  |   2 +-
+>  mm/swapfile.c                    |  29 ++++++++
+>  12 files changed, 301 insertions(+), 48 deletions(-)
+> 
 
