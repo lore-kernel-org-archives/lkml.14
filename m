@@ -1,230 +1,117 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E271D533
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 08:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165522032F;
+	Thu, 18 Jan 2024 08:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705566235; cv=none; b=r/Kq35JWyCADoRKYAyYwq5YewxcIqwAeokEwO2JaJtRQHLr1RYq2plqxlvD7Z17ly4OJO2YsTtT9mL19iEHz08+2IGEDgWXrHPoHvmB5yKL7Y3Fp3c2HmivT4QOcpOUtxtA13fHd+3phxyopcKEjOT/j4qq/5gkx+QNy7Bg2yW0=
+	t=1705566351; cv=none; b=OliqNNjH7M2XaysLlb7+maWkyP4QONQxUXUIQSMLrA2QuEqrYDSxCpZFBfK3OoXsxU8Qs2h3zHybso7SG9hwQbVFkxnfW3fznrjSK5+keURJkuMkdy7Zyc8ogmE3HDBCcf/m/A83gFeB31X+q2CcgbjSlDdC3dTsRnBcxJA1ixI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705566235; c=relaxed/simple;
-	bh=BdVsw0FTwqzD+KS2xpaOjxHqz260SFBO0mWzXEz7i7M=;
+	s=arc-20240116; t=1705566351; c=relaxed/simple;
+	bh=rjcD1lGmw7xFLuU8IAfAb0NXO+BHQ4z6dDgtWOpRPfU=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To:
-	 User-Agent; b=F6i8l8WlB3b1O7KP2Fg1ZDXoX5TDulOSa8GfNLxqnwJ2ITy6PfLr2aw0KOXpQWw3HYNmik6EdvhJsOr0ODuTtKLiLwK+LLklWDbGDmQwmQ7eMkyJ9gnabx5SmAskOL70Ym+xCCUhn0rpGytkWbVMcUFBbXL9vhqVs/hMfqZl4PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=X5r1MALB; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-Id:X-Mailer; b=GExvcawPMoFNw/iznX54mofk0+X/9kRfxSkLod4SiIWM36o0KMtjftjnf0UTHqTvuoZMm47WRIntS6qo8ieCwz2GluGC1Xd7YBwqBYdp64mnl1PKudUk400ddxynZuIrNqS1E3Wqi4vCHFbQKFOwGVFXkoBnTLR5INtymukwBI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hPOthjpz; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="X5r1MALB"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5cfa71498feso125833a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 00:23:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPOthjpz"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a2c67be31edso823971766b.0;
+        Thu, 18 Jan 2024 00:25:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1705566232; x=1706171032; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=welEo0/WJxuhwoTNRxCpfyX7sfk5voOc4sTxJMWj2Aw=;
-        b=X5r1MALBFW7ed78ST+6HoXg0Nu5rxmHBG0KX6AsJEKoSq2SZPRxGHTBsTjWSBkVVtZ
-         +NWuZRx1AdDpyvlpWruNDuv1aP5EKvr/ry7Qv1wLHXd3BskwZxenyM0neB5tdLWDOBC4
-         vvd290gTbbTRnN+PYblJEHY91cLuP7sEW/DFiUJYSCkUneY5+DZiIxn0h1gDpGQl3KqH
-         Y1OtF50CFf6rnMgQO7uzJdq8GNHs3WHPGImliLbIDNEVIejVXrz5MmrgUKoZvJNEznP+
-         gju2SwU2c+trLu1cHUbTkYSduSnX3Q5ZE+WRW/RsUnwYzSyCs2Wl87AWuaf2BAHA+UkR
-         gACw==
+        d=gmail.com; s=20230601; t=1705566348; x=1706171148; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ckg4aZXATh9bXDX8WnAIEQFE0u7PIBO0Zt6Knu3GQL0=;
+        b=hPOthjpzJ4+nLYZ02Flklkdfh7+2mh/7uxAgxU6+E4+2em3JHRUlRITXswCeSc3S8P
+         qtqtjLGGZJeTP7T3ofGK1sGrdhzNArtg7rphPijrp5Ea6qcvdjdujpJmyCWhUUE4lL7m
+         Rhp+RUIvo5XDtuJFvLdCBRpudNaS/hNW/bs/u179GvYL0P5ZAYX439u5xWQYiHJlYZum
+         m0+acibrrqwHrXBDHX6YI7tqWi4FXvnxVrqe3HHpSDfHkcuF6DPtFNXfDV89jFsRUR5n
+         rkowtQU9tfzQc5Wi92KPMt6/KzMAzsxyvHUukkI9rqEaeXq/mXOD4dZcScGMiNJe6WgS
+         fLGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705566232; x=1706171032;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=welEo0/WJxuhwoTNRxCpfyX7sfk5voOc4sTxJMWj2Aw=;
-        b=CfBu8VaooQrMz6b3Gluu0vpug5A7rNCK5+ihyVUzcJG1VmTR9sqvoWTAGpkyMJN+47
-         DWGgjb6p1W3Qy+zGhVkk2jafuX7X2CWOhwxS2QGK2NF488qgIVPzqYlWFJv0iZ8MvZ2X
-         0obGeNZh9awas9z88M/PeOyXMCqt4LRHLI2se8H1l5fLJpGSd/8+FlRZIz4NzU/gNv5q
-         a2SF3y9GbeWhQokcrAiPChye6AuEQyU9jTVyp2WdCIW/xAF0S4VZBnlUe3DoNjtmvtWT
-         pl5XyWDA7GP/jamGMSxmEafSCbOoph3cOh2R/E1qA/J03V+AJXZAiKS7DI/skyZnw7n/
-         AxQg==
-X-Gm-Message-State: AOJu0Yx0nGSlvvC4RrqGf7W/nVL0LudKKpj0TlIn1c85fgnsi9B7yUGe
-	3QYQgyUnLDIr3Citm6YYpjRJVK+ExQ5qaRKNaxVMQ6CTyg2znYBNguGgdZNaBV4=
-X-Google-Smtp-Source: AGHT+IGaoDDx9aDO0YNH0g7XdpqbNuTcRdbMFDYtV1SQWylCAw0oi0AjU/zcDHvavTfmpNNLtZt26w==
-X-Received: by 2002:a05:6a20:43a7:b0:19b:7e77:7279 with SMTP id i39-20020a056a2043a700b0019b7e777279mr643544pzl.18.1705566232336;
-        Thu, 18 Jan 2024 00:23:52 -0800 (PST)
-Received: from hsinchu15 (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id fc13-20020a056a002e0d00b006d9cf4b56edsm2812458pfb.175.2024.01.18.00.23.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Jan 2024 00:23:51 -0800 (PST)
-Date: Thu, 18 Jan 2024 16:23:47 +0800
-From: Nylon Chen <nylon.chen@sifive.com>
-To: alex@ghiti.fr
-Cc: apatel@ventanamicro.com, alexghiti@rivosinc.com,
-	catalin.marinas@arm.com, will@kernel.org, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, robh+dt@kernel.org,
-	frowand.list@gmail.com, rppt@kernel.org, akpm@linux-foundation.org,
-	anup@brainfault.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-mm@kvack.org, zong.li@sifive.com,
-	nylon7717@gmail.com
-Subject: Re: Fwd: [PATCH v8 0/4] riscv: Use PUD/P4D/PGD pages for the linear
- mapping
-Message-ID: <20240118082346.GB31078@hsinchu15>
-References: <20230316131711.1284451-1-alexghiti@rivosinc.com>
- <CAK9=C2XJtSG2d_nsyDv7kU1v7Jj0chdevqrMc0MpJswukcEABA@mail.gmail.com>
- <CAHVXubhhxpzHDM-n91V_rceY5t_VqLvrwZj3RP_tNL2=F9mqjQ@mail.gmail.com>
- <CAK9=C2WVOpSqtt8r1U4hnzSZ=cc1PocpukgQjNyahP2XuPhozw@mail.gmail.com>
- <d0087922-4721-ccf1-80bf-9f74099d0948@ghiti.fr>
- <CAPqJEFr6MgUyARfbWAo7EeQKLVd4xRJz_LOYN68UC-kPD1Hr5A@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1705566348; x=1706171148;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ckg4aZXATh9bXDX8WnAIEQFE0u7PIBO0Zt6Knu3GQL0=;
+        b=eBWFmIp4mekNoW4SOYBIDPfQg/3H0mgB0qrhPXB5uRnefywtQCwaG+RU/IEIaZc3uj
+         cUkB2xP9kWV0H2fvFNt3epaqzKn08PEK32FAtUR0fh0fHP7sKTgMM64pJXjHx7+k+tT/
+         CxoNBjYnWV8pKTeY52umlyfqqrKKqg84goOOB4DfTQhO9sm4UOjBbATPREOYz6zxwBdN
+         Q5N2iJ9c0+13kVegwjrpYFwmzab7GjP2oKqK+y8bxLCSI92qAj2Y1SmFgAjjWJiiEktO
+         7HMCUzT56DK4CHICTCn0Ta01J63DS2p6nTtc+PxmNWBViAjQTlRI5ZfcgIp41HpMxHAE
+         +3+g==
+X-Gm-Message-State: AOJu0Yy6ntuxYVZlsH2zelmtF51dXMRkpiddoLDIZCZq5l7gJfNGfP4/
+	22YKherGvkxDu8vFZS9aRMUw4pdJVObc+nSuaczBrSeBbzU6UKXj
+X-Google-Smtp-Source: AGHT+IH+yOi+2MEEHX62qfjwVkyt0comH1cbZHZP2TCk86e1/kvaMgtABMxehv4m6VtSPGcbVR1GBA==
+X-Received: by 2002:a17:906:30db:b0:a2c:cda6:e73a with SMTP id b27-20020a17090630db00b00a2ccda6e73amr138931ejb.98.1705566348076;
+        Thu, 18 Jan 2024 00:25:48 -0800 (PST)
+Received: from felia.fritz.box ([2a02:810d:7e40:14b0:1513:e9cf:521b:ef2a])
+        by smtp.gmail.com with ESMTPSA id v8-20020a170906488800b00a27aabff0dcsm8957644ejq.179.2024.01.18.00.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 00:25:47 -0800 (PST)
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To: Johannes Berg <johannes.berg@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	linux-wireless@vger.kernel.org
+Cc: Kalle Valo <kvalo@kernel.org>,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] wifi: clean up needless dependency on non-existing option KERNEL_6_2
+Date: Thu, 18 Jan 2024 09:25:45 +0100
+Message-Id: <20240118082545.22262-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPqJEFr6MgUyARfbWAo7EeQKLVd4xRJz_LOYN68UC-kPD1Hr5A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 
-> On 3/23/23 15:55, Anup Patel wrote:
-> > On Thu, Mar 23, 2023 at 6:24 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
-> >> Hi Anup,
-> >>
-> >> On Thu, Mar 23, 2023 at 1:18 PM Anup Patel <apatel@ventanamicro.com> wrote:
-> >>> Hi Alex,
-> >>>
-> >>> On Thu, Mar 16, 2023 at 6:48 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
-> >>>> This patchset intends to improve tlb utilization by using hugepages for
-> >>>> the linear mapping.
-> >>>>
-> >>>> As reported by Anup in v6, when STRICT_KERNEL_RWX is enabled, we must
-> >>>> take care of isolating the kernel text and rodata so that they are not
-> >>>> mapped with a PUD mapping which would then assign wrong permissions to
-> >>>> the whole region: it is achieved by introducing a new memblock API.
-> >>>>
-> >>>> Another patch makes use of this new API in arm64 which used some sort of
-> >>>> hack to solve this issue: it was built/boot tested successfully.
-> >>>>
-> >>>> base-commit-tag: v6.3-rc1
-> >>>>
-> >>>> v8:
-> >>>> - Fix rv32, as reported by Anup
-> >>>> - Do not modify memblock_isolate_range and fixes comment, as suggested by Mike
-> >>>> - Use the new memblock API for crash kernel too in arm64, as suggested by Andrew
-> >>>> - Fix arm64 double mapping (which to me did not work in v7), but ends up not
-> >>>>    being pretty at all, will wait for comments from arm64 reviewers, but
-> >>>>    this patch can easily be dropped if they do not want it.
-> >>>>
-> >>>> v7:
-> >>>> - Fix Anup bug report by introducing memblock_isolate_memory which
-> >>>>    allows us to split the memblock mappings and then avoid to map the
-> >>>>    the PUD which contains the kernel as read only
-> >>>> - Add a patch to arm64 to use this newly introduced API
-> >>>>
-> >>>> v6:
-> >>>> - quiet LLVM warning by casting phys_ram_base into an unsigned long
-> >>>>
-> >>>> v5:
-> >>>> - Fix nommu builds by getting rid of riscv_pfn_base in patch 1, thanks
-> >>>>    Conor
-> >>>> - Add RB from Andrew
-> >>>>
-> >>>> v4:
-> >>>> - Rebase on top of v6.2-rc3, as noted by Conor
-> >>>> - Add Acked-by Rob
-> >>>>
-> >>>> v3:
-> >>>> - Change the comment about initrd_start VA conversion so that it fits
-> >>>>    ARM64 and RISCV64 (and others in the future if needed), as suggested
-> >>>>    by Rob
-> >>>>
-> >>>> v2:
-> >>>> - Add a comment on why RISCV64 does not need to set initrd_start/end that
-> >>>>    early in the boot process, as asked by Rob
-> >>>>
-> >>>> Alexandre Ghiti (4):
-> >>>>    riscv: Get rid of riscv_pfn_base variable
-> >>>>    mm: Introduce memblock_isolate_memory
-> >>>>    arm64: Make use of memblock_isolate_memory for the linear mapping
-> >>>>    riscv: Use PUD/P4D/PGD pages for the linear mapping
-> >>> Kernel boot fine on RV64 but there is a failure which is still not
-> >>> addressed. You can see this failure as following message in
-> >>> kernel boot log:
-> >>>      0.000000] Failed to add a System RAM resource at 80200000
-> >> Hmmm I don't get that in any of my test configs, would you mind
-> >> sharing yours and your qemu command line?
-> > Try alexghiti_test branch at
-> > https://github.com/avpatel/linux.git
-> >
-> > I am building the kernel using defconfig and my rootfs is
-> > based on busybox.
-> >
-> > My QEMU command is:
-> > qemu-system-riscv64 -M virt -m 512M -nographic -bios
-> > opensbi/build/platform/generic/firmware/fw_dynamic.bin -kernel
-> > ./build-riscv64/arch/riscv/boot/Image -append "root=/dev/ram rw
-> > console=ttyS0 earlycon" -initrd ./rootfs_riscv64.img -smp 4
-> 
-> 
-> So splitting memblock.memory is the culprit, it "confuses" the resources
-> addition and I can only find hacky ways to fix that...
-Hi Alexandre,
+Commit ffbd0c8c1e7f ("wifi: mac80211: add an element parsing unit test")
+and commit 730eeb17bbdd ("wifi: cfg80211: add first kunit tests, for
+element defrag") add new configs that depend on !KERNEL_6_2, but the config
+option KERNEL_6_2 does not exist in the tree. This dependency is used for
+handling backporting to restrict the option to certain kernels but this
+really should not be carried around the mainline kernel tree.
 
-We encountered the same error as Anup. After adding your patch
-(3335068f87217ea59d08f462187dc856652eea15), we will not encounter the
-error again.
+Clean up this needless dependency on the non-existing option KERNEL_6_2.
 
-What I have observed so far is
+Question about this config option was raised and answered in the Link
+below.
 
-- before your patch
-When merging consecutive memblocks, if the memblock types are different,
-they will be merged into reserved
-- after your patch
-When consecutive memblocks are merged, if the memblock types are
-different, they will be merged into memory.
+Link: https://lore.kernel.org/lkml/CAKXUXMyfrM6amOR7Ysim3WNQ-Ckf9HJDqRhAoYmLXujo1UV+yA@mail.gmail.com/
 
-Such a result will cause the memory location of OpenSBI to be changed
-from reserved to memory. Will this have any side effects?
-> 
-> So given that the arm64 patch with the new API is not pretty and that
-> the simplest solution is to re-merge the memblock regions afterwards
-> (which is done by memblock_clear_nomap), I'll drop the new API and the
-> arm64 patch to use the nomap API like arm64: I'll take advantage of that
-> to clean setup_vm_final which I have wanted to do for a long time.
-> 
-> @Mike Thanks for you reviews!
-> 
-> @Anup Thanks for all your bug reports on this patchset, I have to
-> improve my test flow (it is in the work :)).
-> 
-> 
-> > Regards,
-> > Anup
-> >
-> >> Thanks
-> >>
-> >>> Regards,
-> >>> Anup
-> >>>
-> >>>>   arch/arm64/mm/mmu.c           | 25 +++++++++++------
-> >>>>   arch/riscv/include/asm/page.h | 19 +++++++++++--
-> >>>>   arch/riscv/mm/init.c          | 53 ++++++++++++++++++++++++++++-------
-> >>>>   arch/riscv/mm/physaddr.c      | 16 +++++++++++
-> >>>>   drivers/of/fdt.c              | 11 ++++----
-> >>>>   include/linux/memblock.h      |  1 +
-> >>>>   mm/memblock.c                 | 20 +++++++++++++
-> >>>>   7 files changed, 119 insertions(+), 26 deletions(-)
-> >>>>
-> >>>> --
-> >>>> 2.37.2
-> >>>>
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+ net/mac80211/Kconfig | 1 -
+ net/wireless/Kconfig | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/net/mac80211/Kconfig b/net/mac80211/Kconfig
+index cb0291decf2e..13438cc0a6b1 100644
+--- a/net/mac80211/Kconfig
++++ b/net/mac80211/Kconfig
+@@ -62,7 +62,6 @@ config MAC80211_KUNIT_TEST
+ 	depends on KUNIT
+ 	depends on MAC80211
+ 	default KUNIT_ALL_TESTS
+-	depends on !KERNEL_6_2
+ 	help
+ 	  Enable this option to test mac80211 internals with kunit.
+ 
+diff --git a/net/wireless/Kconfig b/net/wireless/Kconfig
+index a9ac85e09af3..10345388ad13 100644
+--- a/net/wireless/Kconfig
++++ b/net/wireless/Kconfig
+@@ -206,7 +206,6 @@ config CFG80211_KUNIT_TEST
+ 	depends on KUNIT
+ 	depends on CFG80211
+ 	default KUNIT_ALL_TESTS
+-	depends on !KERNEL_6_2
+ 	help
+ 	  Enable this option to test cfg80211 functions with kunit.
+ 
+-- 
+2.17.1
+
