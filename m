@@ -1,142 +1,106 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D88E2575C;
-	Thu, 18 Jan 2024 15:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B52E28DA0;
+	Thu, 18 Jan 2024 15:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705591842; cv=none; b=TcbYWxv4LnviAI5zXYAzaf/H8Vn/6oaFi34b1WLyinU/0CcTBMyyCl1j7qAvhCNSumuf8IWIhyn+HCDwqNq+mrx1+x/XPJBpXugSRyuh+G9U0MnDHR6gCKkXZn9FYSB2v0fnU6jxO6qD02RafE8UW+Q3tjLNzSLOnIpbUtsvW/4=
+	t=1705591851; cv=none; b=cWidihGQL2gPAYVc5NlszCYfgy/9PH2sjp0POGbv6SR6hQL5fw6H5dWB8yxrIcgFAqYPborNtkfYK+MzAhucnt3IhzC4SPPg6VSuioO/3cN73O/K/qAX6vLJfB7HicQqLVW2VAr7i3EZeagZhIvzZWEiHQ6Xm1ZVZsWCpUNNdMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705591842; c=relaxed/simple;
-	bh=i97GKmF7/horliTQA8nhUjf5fXwkyeIk9RiV/fzEVYg=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=L1IFrpIXOLvCumCyPZ+0h1YQY4bViwQHtgjxGRZ3gaFLAUV2S6CRjoVHFF0hT5mVPXdmzuLANFyMo9XgMJZOlIurt3BkCgjKvMIDk0avjCZItlosvmm9Wv2g14iFRk3gXheR1r9q56rBccaKI1SuGbmULza0GecjjKBAI5sWv/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WF7BofNa; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705591851; c=relaxed/simple;
+	bh=G6k5QZJJQlG0bYerdGXeKjq4mkXORrlnudd79/X2LTk=;
+	h=DKIM-Signature:Received:X-Originating-IP:Date:From:To:Cc:Subject:
+	 X-Priority:X-Mailer:In-Reply-To:References:X-NTES-SC:
+	 Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	 X-Coremail-Locale:X-CM-TRANSID:X-CM-SenderInfo:
+	 X-Coremail-Antispam; b=syJTaEOBFvPtcOT5VRc8DR/CXD4kRP5gW+mLjeS7QSRcbCC14LiIGscFsVp5w1n7TeCxdL22Z5RTbwqnAVusCfaTOO6yP7VPmHLTyopPKH0j6JEx5HGiZHXwMEMWuLnNj2emGaR2tiepTyBv0Y9Y9g6/eDNjM/xB7a5XyybiXV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=S6hIinqw reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF7BofNa"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2d04888d3dso705840566b.2;
-        Thu, 18 Jan 2024 07:30:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705591839; x=1706196639; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mU10kHzO5fudgGdcQQxn+WV1T9c5UCunJG3bnqaN414=;
-        b=WF7BofNaEY+/mCVmE3ZH7DBo9fTWZCZnv+plCCYVDI0EWp2cAgvjSoL9xA3UJaMwN3
-         Myxf51dw8renBouPfaVAUo63k0FnyTW+Z51vMPLJEq07LQtBKRY8pzNa30MLtH7gbKJl
-         MYxBKhkv2m5y+V2M5ncaZfYVNmqVYkCeXnMw7h0q3FPBHXcdxs/QHcGjxEBcmliyIP0f
-         CgHxVKEIqbUVlQvL/5uxHEgjDX6MavcKMH4BT5OcGOg+bYTmGNrkFBX7PdlVLvYnhnny
-         b8zX4q57bIdeJtoE49zO4xXSk2l8UepPxvSzfFBoZS7b5FAaYQ6GMVjbvfjQD9Mca1V2
-         Np6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705591839; x=1706196639;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mU10kHzO5fudgGdcQQxn+WV1T9c5UCunJG3bnqaN414=;
-        b=XQhOskBdXilsq+P4C3pvjhsMNqaw6ciRRDBYpxBchhK1Eqf6wWkxnb9ZQ/8Hjygga6
-         DSrjhmCrUb1kpcHybXlrNsZmEvPKfq+hrbbEj42kXmzN1+kJSJwplxR9HcTpyEypSv9b
-         vpChSKoHhVbDpLi73BJCxP12KFkNws4YUZWbXA0bs4NodWd6C8CVtMKQzquHNZDG+yxJ
-         3XghqppFB4qC9mDQeYkp11CcHxE9EoxvZQGpJeKXZhwNb1yCu3ukTPhwf1zwezg3mhBX
-         wxIJhrifGSAjB6Llu8oP8a+SaDQx+gUUQiI0gDjxPYADzA5PKn04F5FC/K0M58N1Licz
-         obRg==
-X-Gm-Message-State: AOJu0Yxf/avJx1ayzXG12EDRVFn4278B/nZRJWmGm3DRhH6R4oK3xrJC
-	kuwvOcOU1huX6JtRXqsWjkSncF4wfOLsayLXg9ETZifFBv8htWpt
-X-Google-Smtp-Source: AGHT+IEsRPFWhJZnfqCAmHFQB7Hyek8BcDEJ+ctwHCncmPszdoXFn6upJJR0k14cLPpVD85r89H8jg==
-X-Received: by 2002:a17:906:e1a:b0:a2c:f3a:b196 with SMTP id l26-20020a1709060e1a00b00a2c0f3ab196mr608382eji.118.1705591839314;
-        Thu, 18 Jan 2024 07:30:39 -0800 (PST)
-Received: from [192.168.100.74] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
-        by smtp.gmail.com with ESMTPSA id tl15-20020a170907c30f00b00a2e7b7fab35sm3401485ejc.14.2024.01.18.07.30.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jan 2024 07:30:38 -0800 (PST)
-Message-ID: <30b9ab0c-f3cb-4b5a-a726-de9f7c61769b@gmail.com>
-Date: Thu, 18 Jan 2024 16:30:37 +0100
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="S6hIinqw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=k7Js3whNoafE8HpT3cEPOm4zEuKs34CQiNnMBORABp0=; b=S
+	6hIinqw23jHFwxAKOAU5qGQHxOREw3W6X30NvNIYKsGmIk18Xwgkm+GHALicqGef
+	5GnUPROJ8heXkUMMq9XC9JpIkjELInczRc27M+enynYc6n+bEZ/j8HS+gkwPaS+9
+	HRGp9buQHrl55Q3ljuFXpTSirzWb1oNfvgsKlAyr/Q=
+Received: from wangkeqi_chris$163.com ( [111.201.26.240] ) by
+ ajax-webmail-wmsvr-40-112 (Coremail) ; Thu, 18 Jan 2024 23:14:38 +0800
+ (CST)
+Date: Thu, 18 Jan 2024 23:14:38 +0800 (CST)
+From: wangkeqi  <wangkeqi_chris@163.com>
+To: "Florian Westphal" <fw@strlen.de>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	wangkeqi <wangkeqiwang@didiglobal.com>, 
+	"kernel test robot" <oliver.sang@intel.com>, fengwei.yin@intel.com
+Subject: Re:Re: [PATCH net v2] connector: Change the judgment conditions for
+ clearing proc_event_num_listeners
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <20240117114713.GA11468@breakpoint.cc>
+References: <20240116015753.209781-1-wangkeqi_chris@163.com>
+ <20240117114713.GA11468@breakpoint.cc>
+X-NTES-SC: AL_Qu2bB/mSv0As7iWRZOkXnEoUgeo7WMqyv/km3YVWOJ80oSTg6zo7YmB+JmrtwMeALyS9rweaXBxhwcd4ZrhcW4ElP3INjEFyUfe1Gu3jlwAj
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] hwmon: Add support for Amphenol ChipCap 2
-Content-Language: en-US
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20240115-topic-chipcap2-v5-0-0cc7a15aeece@gmail.com>
- <20240115-topic-chipcap2-v5-5-0cc7a15aeece@gmail.com>
- <226d3abd-e372-4c66-b2b0-cc86e6a4bb27@sirena.org.uk>
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-In-Reply-To: <226d3abd-e372-4c66-b2b0-cc86e6a4bb27@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <1adb8c68.a950.18d1d237182.Coremail.wangkeqi_chris@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:_____wD3f7ZeQKll52NNAA--.2272W
+X-CM-SenderInfo: 5zdqwy5htlsupkul2qqrwthudrp/xtbBzxBo3GV4Ha1t0wAEs8
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hello Mark,
-
-On 18.01.24 14:49, Mark Brown wrote:
-> On Mon, Jan 15, 2024 at 09:02:25PM +0100, Javier Carrasco wrote:
-> 
->> +static int cc2_enable(struct cc2_data *data)
->> +{
->> +	int ret;
->> +
->> +	if (regulator_is_enabled(data->regulator))
->> +		return 0;
-> 
-> This is generally a sign that the regulator API usage is not good, the
-> driver should not rely on references to the regulator held by anything
-> else since whatever else is holding the regulator on could turn it off
-> at any time.  If the driver did the enable itself then it should know
-> that it did so and not need to query.
-> 
-
-The driver handles a dedicated regulator, but I wanted to account for
-the cases where the attempts to enable and disable the regulator fail
-and keep parity. If the disabling attempt fails, will the regulator not
-stay enabled? In that case, an additional call to regulator_enable would
-not be required, right?
-That is the only reason I am using regulator_is_enabled(), but maybe
-things don't work like that.
-
->> +	ret = regulator_enable(data->regulator);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/*
->> +	 * TODO: the startup-delay-us property of the regulator might be
->> +	 * added to the delay (if provided).
->> +	 * Currently there is no interface to read its value apart from
->> +	 * a direct access to regulator->rdev->constraints->enable_time,
->> +	 * which is discouraged like any direct access to the regulator_dev
->> +	 * structure. This would be relevant in cases where the startup delay
->> +	 * is in the range of milliseconds.
->> +	 */
->> +	usleep_range(CC2_STARTUP_TIME_US, CC2_STARTUP_TIME_US + 125);
-> 
-> Note that the regulator startup delay is the time taken for the
-> regulator to power up so if the device needs additional delay then that
-> will always need to be in addition to whatever the regulator is doing.
-
-What I mean by that is that the device cannot be ready until the
-regulator powers it up (obvious) plus the start up time of the device
-itself once it gets powered up. So if a regulator takes for example 1 ms
-to power up, the sleep function could (and should) wait for 1 ms longer.
-
-I could define a longer start up time to account for "slow" regulators
-while still staying in the command window range. Retries have already
-been taken into account for longer sleeps.
-
-Thank you for your feedback.
-
-Best regards,
-Javier Carrasco
+CklmIGNuX25ldGxpbmtfaGFzX2xpc3RlbmVycygpIGlzIHVzZWQgaW5zdGVhZCBvZiBwcm9jX2V2
+ZW50X251bV9saXN0ZW5lcnMsIEkgdGhpbmsgcHJvY19ldmVudF9udW1fbGlzdGVuZXJzIHdpbGwg
+YmUgY29tcGxldGVseSBtZWFuaW5nbGVzcy7CoApJIHJlYWQgdGhlIGNvZGUgYW5kIGZvdW5kIHRo
+YXQgdGhlcmUgaXMgbm90aGluZyB3cm9uZyB3aXRoIGNuX25ldGxpbmtfaGFzX2xpc3RlbmVycyBh
+cyBhIGp1ZGdtZW50IG9mIHdoZXRoZXIgdG8gc2VuZCBtc2cuwqAKc29ja19jbG9zZSB3aWxsIHVw
+ZGF0ZSB0aGUgbGlzdGVuZXJzLsKgVGhlIHByZXZpb3VzIHByb2NfZXZlbnRfbnVtX2xpc3RlbmVy
+cyBjb3VudCB3YXMgd3JvbmcsIG1ha2luZyBpdCBtZWFuaW5nbGVzcy7CoApCdXQgaWYgSSBjaGFu
+Z2UgaXQgdG8gY25fbmV0bGlua19oYXNfbGlzdGVuZXJzLCB3aWxsIGl0IGFmZmVjdCBzb21lIGxv
+dy1wcm9iYWJpbGl0eSBzY2VuYXJpb3M/CgoKQXQgMjAyNC0wMS0xNyAxOTo0NzoxMywgIkZsb3Jp
+YW4gV2VzdHBoYWwiIDxmd0BzdHJsZW4uZGU+IHdyb3RlOgo+d2FuZ2tlcWkgPHdhbmdrZXFpX2No
+cmlzQDE2My5jb20+IHdyb3RlOgo+PiBGcm9tOiB3YW5na2VxaSA8d2FuZ2tlcWl3YW5nQGRpZGln
+bG9iYWwuY29tPgo+PiAKPj4gSXQgaXMgaW5hY2N1cmF0ZSB0byBqdWRnZSB3aGV0aGVyIHByb2Nf
+ZXZlbnRfbnVtX2xpc3RlbmVycyBpcwo+PiBjbGVhcmVkIGJ5IGNuX25ldGxpbmtfc2VuZF9tdWx0
+IHJldHVybmluZyAtRVNSQ0guCj4+IEluIHRoZSBjYXNlIG9mIHN0cmVzcy1uZyBuZXRsaW5rLXBy
+b2MsIC1FU1JDSCB3aWxsIGFsd2F5cyBiZSByZXR1cm5lZCwKPj4gYmVjYXVzZSBuZXRsaW5rX2Jy
+b2FkY2FzdF9maWx0ZXJlZCB3aWxsIHJldHVybiAtRVNSQ0gsCj4+IHdoaWNoIG1heSBjYXVzZSBz
+dHJlc3MtbmcgbmV0bGluay1wcm9jIHBlcmZvcm1hbmNlIGRlZ3JhZGF0aW9uLgo+PiBUaGVyZWZv
+cmUsIHRoZSBqdWRnbWVudCBjb25kaXRpb24gaXMgbW9kaWZpZWQgdG8gd2hldGhlcgo+PiB0aGVy
+ZSBpcyBhIGxpc3RlbmVyLgo+PiAKPj4gUmVwb3J0ZWQtYnk6IGtlcm5lbCB0ZXN0IHJvYm90IDxv
+bGl2ZXIuc2FuZ0BpbnRlbC5jb20+Cj4+IENsb3NlczogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
+b2UtbGtwLzIwMjQwMTExMjI1OS5iMjNhMTU2Ny1vbGl2ZXIuc2FuZ0BpbnRlbC5jb20KPj4gRml4
+ZXM6IGM0NmJmYmExMzMgKCJjb25uZWN0b3I6IEZpeCBwcm9jX2V2ZW50X251bV9saXN0ZW5lcnMg
+Y291bnQgbm90IGNsZWFyZWQiKQo+PiBTaWduZWQtb2ZmLWJ5OiB3YW5na2VxaSA8d2FuZ2tlcWl3
+YW5nQGRpZGlnbG9iYWwuY29tPgo+PiBDYzogZmVuZ3dlaS55aW5AaW50ZWwuY29tCj4+IC0tLQo+
+PiAgZHJpdmVycy9jb25uZWN0b3IvY25fcHJvYy5jICAgfCA2ICsrKystLQo+PiAgZHJpdmVycy9j
+b25uZWN0b3IvY29ubmVjdG9yLmMgfCA2ICsrKysrKwo+PiAgaW5jbHVkZS9saW51eC9jb25uZWN0
+b3IuaCAgICAgfCAxICsKPj4gIDMgZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nvbm5lY3Rvci9jbl9wcm9j
+LmMgYi9kcml2ZXJzL2Nvbm5lY3Rvci9jbl9wcm9jLmMKPj4gaW5kZXggM2Q1ZTZkNzA1Li5iMDlm
+NzRlZDMgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvY29ubmVjdG9yL2NuX3Byb2MuYwo+PiArKysg
+Yi9kcml2ZXJzL2Nvbm5lY3Rvci9jbl9wcm9jLmMKPj4gQEAgLTEwOCw4ICsxMDgsMTAgQEAgc3Rh
+dGljIGlubGluZSB2b2lkIHNlbmRfbXNnKHN0cnVjdCBjbl9tc2cgKm1zZykKPj4gIAkJZmlsdGVy
+X2RhdGFbMV0gPSAwOwo+PiAgCX0KPj4gIAo+PiAtCWlmIChjbl9uZXRsaW5rX3NlbmRfbXVsdCht
+c2csIG1zZy0+bGVuLCAwLCBDTl9JRFhfUFJPQywgR0ZQX05PV0FJVCwKPj4gLQkJCSAgICAgY25f
+ZmlsdGVyLCAodm9pZCAqKWZpbHRlcl9kYXRhKSA9PSAtRVNSQ0gpCj4+ICsJaWYgKG5ldGxpbmtf
+aGFzX2xpc3RlbmVycyhnZXRfY2Rldl9ubHMoKSwgQ05fSURYX1BST0MpKQo+PiArCQljbl9uZXRs
+aW5rX3NlbmRfbXVsdChtc2csIG1zZy0+bGVuLCAwLCBDTl9JRFhfUFJPQywgR0ZQX05PV0FJVCwK
+Pj4gKwkJCSAgICAgY25fZmlsdGVyLCAodm9pZCAqKWZpbHRlcl9kYXRhKTsKPj4gKwllbHNlCj4+
+ICAJCWF0b21pY19zZXQoJnByb2NfZXZlbnRfbnVtX2xpc3RlbmVycywgMCk7Cj4KPkhvdyBpcyB0
+aGF0IHNlcmlhbGl6ZWQgdnMuIGNuX3Byb2NfbWNhc3RfY3RsPwo+Cj4xLiBuZXRsaW5rX2hhc19s
+aXN0ZW5lcnMoKSByZXR1cm5zIGZhbHNlCj4yLiAgb3RoZXIgY29yZSBoYW5kbGVzIFBST0NfQ05f
+TUNBU1RfTElTVEVOLCBhdG9taWNfaW5jIGNhbGxlZAo+My4gVGhpcyBjb3JlIChyZSlzZXRzIGNv
+dW50ZXIgdG8gMCwgYnV0IHRoZXJlIGFyZSBsaXN0ZW5lcnMsIHNvCj4gICAgYWxsIGZ1bmN0aW9u
+cyB0aGF0IGRvCj4KPiBpZiAoYXRvbWljX3JlYWQoJnByb2NfZXZlbnRfbnVtX2xpc3RlbmVycykg
+PCAxKQo+ICAgIHJldHVybjsKPgo+d2lsbCBub3QgZ2V0IGVuYWJsZWQvcmVtYWluIGRpc2FibGVk
+Lgo+Cj5Qcm9iYWJseSBiZXR0ZXIgdG8gYWRkIGNuX25ldGxpbmtfaGFzX2xpc3RlbmVycygpIGZ1
+bmN0aW9uCj5hbmQgdXNlIHRoYXQgaW5zdGVhZCBvZiB0aGUgKGluYWNjdXJhdGUpIGNvdW50ZXI/
+Cg==
