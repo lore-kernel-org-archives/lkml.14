@@ -1,127 +1,114 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0770C2E621;
-	Thu, 18 Jan 2024 19:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2412E627
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705605599; cv=none; b=VFSIVJQGl10seYYiQgI0w6c7vzuf1kmABAf4SsjPqTh7Mu36LRsZLKa1U+YnWhVQ+lhJDD/Z0h65ziOskib1GcZZAfP1rnClZAfttJ6MF0H5fWZB5PsiOwQpaAdlEbTaHUdDk06f29kaTgXG2yJxnlxfi3GK6/MlI6N80HpfxpQ=
+	t=1705605618; cv=none; b=qqZvafHJCJjggbOVUuwJJ09QBhpLzvnb+dcR1J9oYCaUush9TWWVPQdUbfIS/FcuB9LcE8cBLYFPNCJSWS6HhfoPxdZwjytig2/pBfwg8EDPNQUxzck7ZDO3t2QMIhP9PyFLMYH/3Aha0Rq+17SZBk6hqjnLsjugPNhWBPANO4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705605599; c=relaxed/simple;
-	bh=k+DLUCUySTV6V8E9Lndn3PNi1fHJQBJ4szoGQe+/80c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EYrHEyGOYeBvOCgoubBvfA+2Hecs/7LPpxdNoxCnTvLCfMgClTvRuDpaAT+Z/mm6zBIqnY677g0EuSR6RDRGfkQLHYbbQf9B1h+gpprYPqeiu/w0S2p51cx6t7FukkkfNSgh5K4r6iEkbDNvolS93z19fI71Psl36oPH0qnM2lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xS1ndC05; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1705605618; c=relaxed/simple;
+	bh=9nf9clFh0EbDats4Fa2YQ+RNXkctZPuqdS5Gbc572e8=;
+	h=Subject:Date:Message-ID:MIME-Version:Cc:From:To; b=rzHsDShP3PjcLP/gMi3plnZNTWJicQ9pOZGJz7w7Avh9WTHeOcl0I+n45YAbebnH/nbNStQ8ekJ/AyKJkXyzYIRlmeqFfPVrOAYit49kxNUhTw5BzHHCK/3a64klQ8SIAdRH9M9lvZ6tFpaSsd5E6MDhbQUol6gDSBRzcHFRN1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=uhigdn+i; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xS1ndC05"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=CVyOT8QbEHYRk9mH+KsZ3nHeW0+Yr46xVFfPsGvB808=; b=xS1ndC05K1OiYG5kf8lYaCBcaM
-	SEfb/ud6abcrXPFvrKDlcAizhXCIz6ETG9OP8EVi+XvfRG9/Hd0V98TPhwOYmDTSpTMkyxhck8ujS
-	0j1BJbD63m3Ny3+qZVR5K07bmAhmOHO5vu1/YVOfVo0/TEB62QNaRZ5SeILbWTaCRASBteBa96a2i
-	xFg/iFnBdACzscThlB7JG/BZfHFmLvrLoCHlp/509tescE7cIo610qmPTYu9qSF8mkOULY3Jx2PCT
-	7m7wARn+jl+E/rJj+j0bcloCd2YRRN8KcNHzGrf2HdvqN+14n3QJ0UQmHNXBH4YTTDACxQ+3OgZ57
-	GUW6eybg==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQXvg-003bOW-2E;
-	Thu, 18 Jan 2024 19:19:56 +0000
-Message-ID: <5500fa27-13a5-420a-a558-13037d954748@infradead.org>
-Date: Thu, 18 Jan 2024 11:19:56 -0800
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="uhigdn+i"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d70696b6faso8878695ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:20:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1705605615; x=1706210415; darn=vger.kernel.org;
+        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=CcmZDwBIevh96PY0m3UwCbyUVvMq97xdTBzYDcc3ymc=;
+        b=uhigdn+iIPaABls756LkC7gBE9iU1oKBRJ1HVHXUj/qGQQ+0wajKMgxRJab2xGW8G4
+         5AH/ASuxaBmKlIe7qozDTH8kSQzLWWpoMH4DdfKy7LvFYfxvEz+7clV6FNwQxuECKgx8
+         pDP/9PZjiExXG6Ag8QZZcS/8b0Bu8liF7fm4oK1Tf+hnaGazhlJEg5wuAsEOdu8r2rDK
+         O9U1WtMu65rMdKIzc57vXbUwrfQGG4FwMWMPN24MXADjdBnqmhNHssIUksG3xiTFhxWa
+         rTqeeWvnARzt5sdKVIbaF3V3exmiLpRgurBTRKE7YeRxYLIFxODrs/DNgjRDLND4Cwhb
+         ISng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705605615; x=1706210415;
+        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
+         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CcmZDwBIevh96PY0m3UwCbyUVvMq97xdTBzYDcc3ymc=;
+        b=OnihFpl/cqn/muoIeIotq8rYyDmVfIKaR+aRH2un3OztqKth3ZaZeQRKOtakKdU02j
+         sZo3Ho5tCzHxWFDZto/BPNrjOXii8cxGLVIz9t1V/LWVuFJHj6Y2ylHZ79HLwUV3MAfb
+         RmX1QdIDp7xP4mq1Cuzacw5ph7obn8DpTZNViEWEEygFpg0+Kb79L/odUp75NzhxBaMw
+         MgQtX+sIfehoPOVIdng4RcFTMq9kGZfecUj6JnpTML3olejpd255CuFQfAY4ug+/LCcH
+         uzNExTgdxZRboh65OeFNLgOjP/UMsXEpz+72gR5QD8S6292RU5PRi4QLdP4C1aGOWQEC
+         Mciw==
+X-Gm-Message-State: AOJu0YxdQPqn90kRw7gD6bwcBlBhp3bV3NsANm7kWQhiB06Bu95VoLMR
+	ROP8D8zSjtifKA5sRmK0fplDsSlsOibm1fNkVx7tCeopkAf/lNe3I2bL/dAdKW8=
+X-Google-Smtp-Source: AGHT+IFNJL1nqkL/h0IqxGVCUNhKrNSluuke+rosWvVVfdt8F4bqjY6XaJmILmyhvNBy5s5IaQsYwA==
+X-Received: by 2002:a17:902:ea12:b0:1d5:a5ba:1c49 with SMTP id s18-20020a170902ea1200b001d5a5ba1c49mr1372634plg.1.1705605614994;
+        Thu, 18 Jan 2024 11:20:14 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id kz3-20020a170902f9c300b001d70c695172sm1190896plb.78.2024.01.18.11.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 11:20:14 -0800 (PST)
+Subject: [PATCH] Makefile: Add HOST_GCC_SUFFIX and CROSS_GCC_SUFFIX
+Date: Thu, 18 Jan 2024 11:17:27 -0800
+Message-ID: <20240118191727.5547-1-palmer@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] staging: rts5208: Add more details to Kconfig help
-Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>, Jacob Lott <jklott.git@gmail.com>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240118175947.82297-1-jklott.git@gmail.com>
- <2024011829-gusto-absently-8192@gregkh>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <2024011829-gusto-absently-8192@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Cc: nathan@kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+  Palmer Dabbelt <palmer@rivosinc.com>
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: masahiroy@kernel.org, nicolas@fjasle.eu
 
+From: Palmer Dabbelt <palmer@rivosinc.com>
 
+I was just trying to track down a build bug with an old toolchain.
+Turns out Ubuntu installs old GCCs as something like
+riscv64-linux-gnu-gcc-10, which is a bit clunky to point the build at
+without a way to append a suffix to CC.
 
-On 1/18/24 10:59, Greg KH wrote:
-> On Thu, Jan 18, 2024 at 12:59:48PM -0500, Jacob Lott wrote:
->> The current help text is short and triggers a
->> warning from checkpatch.pl. This patch adds more
->> details to the help text which should provide better
->> information for whether or not to enable the driver.
->>
->> Signed-off-by: Jacob Lott <jklott.git@gmail.com>
->> ---
->>  drivers/staging/rts5208/Kconfig | 10 +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/staging/rts5208/Kconfig b/drivers/staging/rts5208/Kconfig
->> index b864023d3ccb..c4664a26ba3b 100644
->> --- a/drivers/staging/rts5208/Kconfig
->> +++ b/drivers/staging/rts5208/Kconfig
->> @@ -3,7 +3,11 @@ config RTS5208
->>  	tristate "Realtek PCI-E Card Reader RTS5208/5288 support"
->>  	depends on PCI && SCSI
->>  	help
->> -	  Say Y here to include driver code to support the Realtek
->> -	  PCI-E card reader rts5208/rts5288.
->> +	  Choose Y here to enable support for the Realtek PCI-E card reader
->> +	  RTS5208/5288. This driver facilitates communication between the Linux
->> +	  kernel and the Realtek PCI-E card reader.
->>  
->> -	  If this driver is compiled as a module, it will be named rts5208.
->> +	  If you opt to compile this driver as a module, it will be named rts5208.
->> +	  Selecting N will exclude this driver from the kernel build. Choose option
->> +	  Y if your system includes the Realtek PCI-E card reader rts5208/rts5288.
->> +	  When in doubt, it is generally safe to select N.
->> -- 
->> 2.34.1
->>
->> v3 fixes the tab spacing for line 6 in Kconfig
-> 
-> 
-> Hi,
-> 
-> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-> a patch that has triggered this response.  He used to manually respond
-> to these common problems, but in order to save his sanity (he kept
-> writing the same thing over and over, yet to different people), I was
-> created.  Hopefully you will not take offence and will fix the problem
-> in your patch and resubmit it so that it can be accepted into the Linux
-> kernel tree.
-> 
-> You are receiving this message because of the following common error(s)
-> as indicated below:
-> 
-> - This looks like a new version of a previously submitted patch, but you
->   did not list below the --- line any changes from the previous version.
+There's already LLVM_SUFFIX, but nothing similar for GCC.  I've split
+out the host and target suffixes as users probably don't have the same
+version of for both (unlike LLVM, where the cross compiler is likely to
+support the host target).
 
-Jacob,
-Immediately below the "---" line, not at the end of the patch.
+Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+---
+I've only given this some very minimal testing, but it at least works
+for my simple use case.
+---
+ Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
->   Please read the section entitled "The canonical patch format" in the
->   kernel file, Documentation/process/submitting-patches.rst for what
->   needs to be done here to properly describe this.
-> 
-> If you wish to discuss this problem further, or you have questions about
-> how to resolve this issue, please feel free to respond to this email and
-> Greg will reply once he has dug out from the pending patches received
-> from other developers.
-> 
-> thanks,
-> 
-> greg k-h's patch email bot
-> 
-
+diff --git a/Makefile b/Makefile
+index f1b2fd977275..36ce336cda3b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -433,8 +433,8 @@ endif
+ HOSTCC	= $(LLVM_PREFIX)clang$(LLVM_SUFFIX)
+ HOSTCXX	= $(LLVM_PREFIX)clang++$(LLVM_SUFFIX)
+ else
+-HOSTCC	= gcc
+-HOSTCXX	= g++
++HOSTCC	= gcc$(HOST_GCC_SUFFIX)
++HOSTCXX	= g++$(HOST_GCC_SUFFIX)
+ endif
+ HOSTRUSTC = rustc
+ HOSTPKG_CONFIG	= pkg-config
+@@ -480,7 +480,7 @@ OBJDUMP		= $(LLVM_PREFIX)llvm-objdump$(LLVM_SUFFIX)
+ READELF		= $(LLVM_PREFIX)llvm-readelf$(LLVM_SUFFIX)
+ STRIP		= $(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX)
+ else
+-CC		= $(CROSS_COMPILE)gcc
++CC		= $(CROSS_COMPILE)gcc$(CROSS_GCC_SUFFIX)
+ LD		= $(CROSS_COMPILE)ld
+ AR		= $(CROSS_COMPILE)ar
+ NM		= $(CROSS_COMPILE)nm
 -- 
-#Randy
+2.43.0
+
