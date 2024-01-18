@@ -1,227 +1,184 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.systec-electronic.com (mail.systec-electronic.com [77.220.239.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65522033C;
-	Thu, 18 Jan 2024 10:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6218022F06;
+	Thu, 18 Jan 2024 10:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.220.239.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705574238; cv=none; b=kJDLh80rPjDdujqN/qovrCD7s7XPyND36jwZjB0sooCIGcaVvNlYuhr4B98KsZ5ZXgNsy/VqmUHl+vgvSyZEHiedI0KyW08G7VQCdlcsvCcQUk+GcYKi1i3TjxVvSqXwZhJ9WVJIC4vttWjv280ol13ZG2YwT3HJx5nlJBKGJfk=
+	t=1705575022; cv=none; b=uePK3Mg5xV6eRNlUYBMi1bqFR9C5VFBC6pLfmBDqHu+9rB+UudS+cwEQMx45l+YSeNI255IKJtlydtymN4hJOk4p9j0G9l1K3uDmY17KPloki20Ri5wQZ7J9NcvpvGwJ4/bWhai8Q0tUUWLqPVgTzQUdtGWEr5cLlSqo5fACyqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705574238; c=relaxed/simple;
-	bh=RJ4L71AXZx+xhM6BQtxN0J2s4OHf6poSNuVUQ6oqgck=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
-	 X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To; b=e09sdgjSLbsyD3Tls69D0WKP+gRfTG9ZlPf6E+37lY2gwxXt470pOLhqxZE5gJJ0E3xAWZpIpbQjtEkOuStSSCIS4SAMOA8j1WojKj0cyKMsHMVSCb1Vmb1rIxbFiSqSDjdOeQFXucdKY93fiSYEyx6UQKaAOHZNzKoKh9MB3K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CiwIEf+s; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705575022; c=relaxed/simple;
+	bh=hDDXvdoNu8vOBXyjictCiicouiBYP0yBck+Nijapc7A=;
+	h=Received:Received:Received:DKIM-Filter:DKIM-Signature:
+	 X-Virus-Scanned:Received:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding; b=kTc/bUcpr5BBREXWoSNSZkHkIt6CwWiEMhA88OmVuBYdNIyWm0Av6aVMHsEtUHDrhLX/Sv0tDV6iQca/oC5OY+eDniuIQ+LzWrxZUTEv7H0vo5r3z+aN+igEnG0XOentxXCDG38id6EDkEMEaJpIEgePR7TRXQCtnW8eOSUqEKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com; spf=pass smtp.mailfrom=systec-electronic.com; dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b=jweTdpNd; arc=none smtp.client-ip=77.220.239.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=systec-electronic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiwIEf+s"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50e7e55c0f6so14725835e87.0;
-        Thu, 18 Jan 2024 02:37:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b="jweTdpNd"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.systec-electronic.com (Postfix) with ESMTP id 0935B9400107;
+	Thu, 18 Jan 2024 11:43:46 +0100 (CET)
+Received: from mail.systec-electronic.com ([127.0.0.1])
+ by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id kmPasBcjk7Jn; Thu, 18 Jan 2024 11:43:45 +0100 (CET)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.systec-electronic.com (Postfix) with ESMTP id D50E0941A5CF;
+	Thu, 18 Jan 2024 11:43:45 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.systec-electronic.com D50E0941A5CF
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705574235; x=1706179035; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qFraLko0Sunles8rE+veYeEajynN3b2IofKXL2TxPzM=;
-        b=CiwIEf+sfzHHyPumXgIbl2gYONHQn/+LjPavYTIDf2EJra036MWtWRDCmcPSdJlnWY
-         i73OIx79GJWrvHc3/+ZXcfq4paT3CIxNsbkJNYXzmzPFgUldrULwGhMvp3i7mB+NYp5j
-         dLoz6ebBclCUmhMR05bPV2hLLYFJXqwsu2HrCns2XpULBWCjfvbzaZuW+AvbWVho784R
-         eCZHLYqFoE+SGKufX162QhGL9FxFpQXi+qbZDk4oH0BsDq9yqptpCmjlUH23nVl6DOma
-         xbEehzssWCbd6f0T8lSTpTtIIk+EtwnxRgPDgrEoWHd9h1aQSFuuHUQTUd0AbRf+Qrqm
-         pIqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705574235; x=1706179035;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qFraLko0Sunles8rE+veYeEajynN3b2IofKXL2TxPzM=;
-        b=GqOnF2jmvUaBY1V1FX/uNymiksgDFlCOXwUxxxcvBF5jK1VkmwW+KNTgq5p0ktqTXQ
-         CnYfhYYJlLJRvc+LbghfBEuJ5D5E3yzKI+WjzappAZ+mIoLAyLA8JqaNqzdnb4kJvVvY
-         zNzB1FVNZfOcuh/BKmNaXKbWrLsvAsA0LVXujCptiwqWwSDArElozGNhQ9v5BTvez8q7
-         m8sipiTdsnvW/91nX0wUCayQDE005cGiRKlzZHxhuPQYJSpHYTFUpSVEBcGpJyFm6WKj
-         Z9huTuKyHd1ZfKBJVAJj+z19GXDHknDmFAFPvfTpObe33SVp6d7FL/FZJJjZNbayGQGZ
-         LYQg==
-X-Gm-Message-State: AOJu0Yx/STzLePLEQaGvD3Mdb8DuVTLU+DI3B4ddAM9NbKnXs0aa0wy3
-	J3kDe2mJCE81uZ0X9shUI20jfy9rAKeKNkaL8BGkLDC/rYgXHFM0
-X-Google-Smtp-Source: AGHT+IGztuqXWrg30hrZfO2olrqNs7VCjF+rYVLphMtpPYdpBGJVF7g0KOxH1eK3rpZyM9tMbah56Q==
-X-Received: by 2002:a05:6512:3081:b0:50e:bd4d:9e2a with SMTP id z1-20020a056512308100b0050ebd4d9e2amr226676lfd.96.1705574234582;
-        Thu, 18 Jan 2024 02:37:14 -0800 (PST)
-Received: from pc636 (host-90-235-20-191.mobileonline.telia.com. [90.235.20.191])
-        by smtp.gmail.com with ESMTPSA id b5-20020a056512060500b0050e6bf65b2asm590662lfe.288.2024.01.18.02.37.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 02:37:14 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 18 Jan 2024 11:37:11 +0100
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>, RCU <rcu@vger.kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [PATCH v4 1/4] rcu: Reduce synchronize_rcu() latency
-Message-ID: <Zaj_Vw8B5E28TqZ2@pc636>
-References: <20240104162510.72773-1-urezki@gmail.com>
- <20240104162510.72773-2-urezki@gmail.com>
- <ZaHGv3wMYP4LDCxG@localhost.localdomain>
+	d=systec-electronic.com; s=B34D3B04-5DC7-11EE-83E3-4D8CAB78E8CD;
+	t=1705574625; bh=WxeGf6vaj1r+8COYX0/cdjukb0tx7B8JYxC+WAtqHa0=;
+	h=From:To:Date:Message-ID:MIME-Version;
+	b=jweTdpNdDn+ajwP/fyZNxaw16T2I+A0f+HsXVCiLa0RmlDN5BV7ZKJJEojjIdF2i/
+	 3h9eSv7UAOOQmPSeCmz37EClt4Urbt8H/JKY8cLjL6+yxMuzBZ1aVXG+ZZ0cdgC7X+
+	 HvX0n+m0UtTlSq17Jb3IpZUUDWGFv+TnVmXdZRf+b7XCXvkN9EoYRRfsACnVJoIaUV
+	 +nblJVNJQ6QxuQ1GR0yt4WV0E4fjY8b279Gpfe1CYOSX4yUV0AuZ7pMpycUFf3adN0
+	 t5xsOZ8fzm/GJIPl8CB56tTlmm39Q8QzY+93gLz99AT68jFU6J+mVbB6JyObmCqyw0
+	 kgSv2fffF1GYQ==
+X-Virus-Scanned: amavis at systec-electronic.com
+Received: from mail.systec-electronic.com ([127.0.0.1])
+ by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id km2frKiTSdy9; Thu, 18 Jan 2024 11:43:45 +0100 (CET)
+Received: from ws-565760.systec.local (unknown [212.185.67.148])
+	by mail.systec-electronic.com (Postfix) with ESMTPSA id 822909400107;
+	Thu, 18 Jan 2024 11:43:45 +0100 (CET)
+From: Andre Werner <andre.werner@systec-electronic.com>
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux@armlinux.org.uk,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andre Werner <andre.werner@systec-electronic.com>
+Subject: [PATCH] net: phy: adin1100: Fix nullptr exception for phy interrupts
+Date: Thu, 18 Jan 2024 11:43:41 +0100
+Message-ID: <20240118104341.10832-1-andre.werner@systec-electronic.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZaHGv3wMYP4LDCxG@localhost.localdomain>
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jan 13, 2024 at 12:09:51AM +0100, Frederic Weisbecker wrote:
-> Le Thu, Jan 04, 2024 at 05:25:07PM +0100, Uladzislau Rezki (Sony) a écrit :
-> > diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-> > index 9b0b52e1836f..4812c6249185 100644
-> > --- a/kernel/rcu/Kconfig.debug
-> > +++ b/kernel/rcu/Kconfig.debug
-> > @@ -168,4 +168,16 @@ config RCU_STRICT_GRACE_PERIOD
-> >  	  when looking for certain types of RCU usage bugs, for example,
-> >  	  too-short RCU read-side critical sections.
-> >  
-> > +config RCU_SR_NORMAL_DEBUG_GP
-> > +	bool "Debug synchronize_rcu() callers for a grace period completion"
-> > +	depends on DEBUG_KERNEL && RCU_EXPERT
-> > +	default n
-> > +	help
-> > +	  This option enables additional debugging for detecting a grace
-> > +	  period incompletion for synchronize_rcu() users. If a GP is not
-> > +	  fully passed for any user, the warning message is emitted.
-> > +
-> > +	  Say Y here if you want to enable such debugging
-> > +	  Say N if you are unsure.
-> 
-> How about just reuse CONFIG_PROVE_RCU instead?
-> 
-Less extra CONFIG_* configuration we have the better approach is. I do
-not mind, so we can reuse it. Thanks for this point :)
+If using ADIN1100 as an external phy, e.g. in combination with
+"smsc95xx", we ran into nullptr exception by creating a link.
 
-I see in some places indeed it is used as a debugging peace.
+In our case the "smsc95xx" does not check for an available interrupt hand=
+ler
+on external phy driver to use poll instead of interrupts if no handler is
+available. So we decide to implement a small handler in the phy driver
+to support other MACs as well.
 
-> > +
-> >  endmenu # "RCU Debugging"
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 499803234176..b756c40e4960 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -1422,6 +1422,106 @@ static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
-> >  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> >  }
-> >  
-> > +/*
-> > + * There are three lists for handling synchronize_rcu() users.
-> > + * A first list corresponds to new coming users, second for users
-> > + * which wait for a grace period and third is for which a grace
-> > + * period is passed.
-> > + */
-> > +static struct sr_normal_state {
-> > +	struct llist_head srs_next;	/* request a GP users. */
-> > +	struct llist_head srs_wait;	/* wait for GP users. */
-> > +	struct llist_head srs_done;	/* ready for GP users. */
-> > +
-> > +	/*
-> > +	 * In order to add a batch of nodes to already
-> > +	 * existing srs-done-list, a tail of srs-wait-list
-> > +	 * is maintained.
-> > +	 */
-> > +	struct llist_node *srs_wait_tail;
-> > +} sr;
-> 
-> "sr" is good enough for a function scope variable but not for a file scope one.
-> 
-> At least "sr_state" would be better. Or maybe you don't even need to name that
-> struct and make instead:
-> 
-> struct {
->     ...
->     ...
-> } sr_normal_state;
-> 
-It is moved by the following patch in the series under the "rcu_state" struct variable.
+I update the driver to add an interrupt handler because libphy
+does not check if their is a interrupt handler available either.
 
-> 
-> > +
-> > +/* Disabled by default. */
-> > +static int rcu_normal_wake_from_gp;
-> > +module_param(rcu_normal_wake_from_gp, int, 0644);
-> > +
-> > +static void rcu_sr_normal_complete(struct llist_node *node)
-> > +{
-> > +	struct rcu_synchronize *rs = container_of(
-> > +		(struct rcu_head *) node, struct rcu_synchronize, head);
-> 
-> Should there be some union in struct rcu_synchronize between struct rcu_head
-> and struct llist_node?
-> 
-> Anyway it's stack allocated, they could even be separate fields.
-> 
-> > +	unsigned long oldstate = (unsigned long) rs->head.func;
-> 
-> Luckily struct callback_head layout allows such magic but if rcu_head
-> and llist_node were separate, reviewers would be less hurt.
-> 
-> If stack space really matters, something like the below?
-> 
-> struct rcu_synchronize {
-> 	union {
-> 		struct rcu_head head;
-> 		struct {
-> 			struct llist_node node;
-> 			unsigned long seq;
-> 		}
-> 	}
-> 	struct completion completion;
-> };
-> 
-> 
-We can do that. I am not sure if should be a separate patch or as a big
-change. I tend to separate it.
+There are several interrupts maskable at the phy, but only link change in=
+terrupts
+are handled by the driver yet.
 
-> > +
-> > +	WARN_ONCE(IS_ENABLED(CONFIG_RCU_SR_NORMAL_DEBUG_GP) &&
-> > +		!poll_state_synchronize_rcu(oldstate),
-> > +		"A full grace period is not passed yet: %lu",
-> > +		rcu_seq_diff(get_state_synchronize_rcu(), oldstate));
-> > +
-> > +	/* Finally. */
-> > +	complete(&rs->completion);
-> > +}
-> > +
-> [...]
-> > +
-> > +/*
-> > + * Helper function for rcu_gp_cleanup().
-> > + */
-> > +static void rcu_sr_normal_gp_cleanup(void)
-> > +{
-> > +	struct llist_node *head, *tail;
-> > +
-> > +	if (llist_empty(&sr.srs_wait))
-> > +		return;
-> > +
-> > +	tail = READ_ONCE(sr.srs_wait_tail);
-> 
-> Is the READ_ONCE() needed?
-> 
-> A part from those boring details:
-> 
-> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
->
-Appreciate for the review. I will fix all the comments.
+We tested the combination "smsc95xx" and "adin1100" with Linux Kernel 6.6=
+.9
+and Linux Kernel 6.1.0, respectively.
 
-Thanks!
+Signed-off-by: Andre Werner <andre.werner@systec-electronic.com>
+---
+ drivers/net/phy/adin1100.c | 58 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
---
-Uladzislau Rezki
+diff --git a/drivers/net/phy/adin1100.c b/drivers/net/phy/adin1100.c
+index 7619d6185801..ed8a7e6250cf 100644
+--- a/drivers/net/phy/adin1100.c
++++ b/drivers/net/phy/adin1100.c
+@@ -18,6 +18,12 @@
+ #define PHY_ID_ADIN1110				0x0283bc91
+ #define PHY_ID_ADIN2111				0x0283bca1
+=20
++#define ADIN_PHY_SUBSYS_IRQ_MASK		0x0021
++#define   ADIN_LINK_STAT_CHNG_IRQ_EN		BIT(1)
++
++#define ADIN_PHY_SUBSYS_IRQ_STATUS		0x0011
++#define   ADIN_LINK_STAT_CHNG			BIT(1)
++
+ #define ADIN_FORCED_MODE			0x8000
+ #define   ADIN_FORCED_MODE_EN			BIT(0)
+=20
+@@ -136,6 +142,56 @@ static int adin_config_aneg(struct phy_device *phyde=
+v)
+ 	return genphy_c45_config_aneg(phydev);
+ }
+=20
++static int adin_phy_ack_intr(struct phy_device *phydev)
++{
++	/* Clear pending interrupts */
++	int rc =3D phy_read_mmd(phydev, MDIO_MMD_VEND2, ADIN_PHY_SUBSYS_IRQ_STA=
+TUS);
++
++	return rc < 0 ? rc : 0;
++}
++
++static int adin_config_intr(struct phy_device *phydev)
++{
++	int ret, regval;
++
++	ret =3D adin_phy_ack_intr(phydev);
++
++	if (ret)
++		return ret;
++
++	regval =3D phy_read_mmd(phydev, MDIO_MMD_VEND2, ADIN_PHY_SUBSYS_IRQ_MAS=
+K);
++	if (regval < 0)
++		return regval;
++
++	if (phydev->interrupts =3D=3D PHY_INTERRUPT_ENABLED)
++		regval |=3D ADIN_LINK_STAT_CHNG_IRQ_EN;
++	else
++		regval &=3D ~ADIN_LINK_STAT_CHNG_IRQ_EN;
++
++	ret =3D phy_write_mmd(phydev, MDIO_MMD_VEND2,
++			    ADIN_PHY_SUBSYS_IRQ_MASK,
++			    regval);
++	return ret;
++}
++
++static irqreturn_t adin_phy_handle_interrupt(struct phy_device *phydev)
++{
++	int irq_status;
++
++	irq_status =3D phy_read_mmd(phydev, MDIO_MMD_VEND2, ADIN_PHY_SUBSYS_IRQ=
+_STATUS);
++	if (irq_status < 0) {
++		phy_error(phydev);
++		return IRQ_NONE;
++	}
++
++	if (!(irq_status & ADIN_LINK_STAT_CHNG))
++		return IRQ_NONE;
++
++	phy_trigger_machine(phydev);
++
++	return IRQ_HANDLED;
++}
++
+ static int adin_set_powerdown_mode(struct phy_device *phydev, bool en)
+ {
+ 	int ret;
+@@ -275,6 +331,8 @@ static struct phy_driver adin_driver[] =3D {
+ 		.probe			=3D adin_probe,
+ 		.config_aneg		=3D adin_config_aneg,
+ 		.read_status		=3D adin_read_status,
++		.config_intr		=3D adin_config_intr,
++		.handle_interrupt	=3D adin_phy_handle_interrupt,
+ 		.set_loopback		=3D adin_set_loopback,
+ 		.suspend		=3D adin_suspend,
+ 		.resume			=3D adin_resume,
+--=20
+2.43.0
+
