@@ -1,203 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8045D5390;
-	Thu, 18 Jan 2024 03:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=134.134.136.31
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705547624; cv=fail; b=uXuH1LERZuP9ZQyC0LFpzYNuLDwYG3wamO9dO4TCLCFEkACFQbI4/jpZrG4cdx+c/B9TvvLh+OcKzR5SM/bXStI8eFbGwE/JISlI4Enf0aBOQVBv1lD7OxfEYVq2Ph8FyOaAy39moKdMtRU5iaHbkHZEB+pvD/idcOJ1ks1sbOk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705547624; c=relaxed/simple;
-	bh=ay1FyfLCczy1pzQzBzj3G34cSQOPuEUr6wP2nZyPps4=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:
-	 ARC-Message-Signature:ARC-Authentication-Results:Received:Received:
-	 From:To:CC:Subject:Thread-Topic:Thread-Index:Date:Message-ID:
-	 References:In-Reply-To:Accept-Language:Content-Language:
-	 X-MS-Has-Attach:X-MS-TNEF-Correlator:user-agent:
-	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:
-	 x-ms-exchange-senderadcheck:x-ms-exchange-antispam-relay:
-	 x-microsoft-antispam:x-microsoft-antispam-message-info:
-	 x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:Content-ID:
-	 Content-Transfer-Encoding:MIME-Version:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-	 X-MS-Exchange-CrossTenant-userprincipalname:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	b=SxzRMupuIu6SK39bCWPQ/zp1gZYRrVvkcaOW+hPbt8PQF29No/2zVk2WKbIv/6ycX2ERKvFKLbgiIoNFoTep4txE06GReIzJ7nOggEmQQisk1B8b3CwZ0UzBh3SHZKwN9uG6ZETeFLwPT6xnBAL3wodCB2nmi6458D/zFjvnECI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJL5sQ/g; arc=fail smtp.client-ip=134.134.136.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FE08F40;
+	Thu, 18 Jan 2024 03:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705547745; cv=none; b=nLjNHpegCXPXFr2UiRtHirlN93qPje+aF+qPCW9PPxEBcOW0jVjWnWLNHEq4S91o9DRxW2w7VqCzRUVp4B5I85bP7J1MZ10Np7+YZGWU9IohnC651gHqaI9rGkz8iiaGVWCrROvQ4Ol3szzcFH04LAw1NvdJC5QevOgcTvZXbQ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705547745; c=relaxed/simple;
+	bh=ahcR17wy58ScwIXrUFs8un/n33HPyuW4frd6NNX2NPc=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=UYfLOCQdxK237xJBHJN+AdThDexWkiT6uzuaKoi23sLGem3q/EkFZiINks9mRPyxzHQKWubjQe9eO0hezrORL8pYrZz0spwfjQwdyi6HcEiDJy1QIOWSP+nP6xBNvEGzwd6Br+PouUWUfipHyqvWFOOEoJ3XxgwfrDhc/pzkmLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PRHpNnSy; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJL5sQ/g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705547622; x=1737083622;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=ay1FyfLCczy1pzQzBzj3G34cSQOPuEUr6wP2nZyPps4=;
-  b=cJL5sQ/gR+VejmGmCBsvZ5yOxx1HQoidSsyWSiZ8VmdAsZc+CTBbQmHj
-   MB0yGfNnI5zXwcF3m2eXtILUw3I//I5IvBfVxTodVZi9n+WTI3OkkpBqj
-   PJtwClIa9p1kJAn6gu945nO4tlalOwN26h8qKbGJMF6PN9ZYeYmMYa1jw
-   gFCia4QkAma7uaU3SlVScwtFaSZRbrk1EQ5Kl2/l9BhQhpL/G0KGCOGum
-   p/uh3f0SX1trzk3Wgvc7GjoAT8bR3YjF/Yi9hMrETzr6SE92BWo3/2Gv7
-   0Muz/iGcCj/S8mQWDDelMk1BIDTRGYL1SUS6RCT40+lF2wPCMfR3bFevz
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="464617724"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="464617724"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 19:13:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="777617244"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="777617244"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Jan 2024 19:13:41 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 17 Jan 2024 19:13:40 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 17 Jan 2024 19:13:40 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Jan 2024 19:13:40 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YDcpCa1QlFU7FgpBJKQ4m700BKoY15fregg7otc1wgzF0vJ55POOLTMwJ3Gji8TWK24PJhyuY8U7Qhsz/P7F+Lq+55LFwexYiJQ1DthyUuejo+726C2LknZZogBiB6NpJQAwQbicbdAArudb79kgLGfQRFCsQNcPXXwGANL8DbZtR6kcgWNygleFdP0rbZ2ypi4mVcMwn/6W73RfSmlOH5a8dOg3QNrUpIDG50d5beCU6g/H27Wlpod8npSfRbNi8c2WQQjncelJJ3las9lk156mOQzbrGSlnrue4sbog/tEPfTB4E1iDY6DXGlAceQCHRtvsiG08vDBtGEVjgd71w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ay1FyfLCczy1pzQzBzj3G34cSQOPuEUr6wP2nZyPps4=;
- b=WNbTheaJIal+EwPU8D4sryrodI7tzNQbzucEkL3T2cTQ/roEfn0bshif+BS/m5sPGkOntUYu5eYnVZAV/NNz2yc9b6veDGkSoy7S+/1G1T0iYUK8aVB2df/nfAl0UZRXL4Pj+hBm+GgpiM6NIHU5Zz5k4LsjmpfD7nFS3UqRlUc3YceJWp49UFGGBWnFavSAunqzMux2iFxboVKFuVWKkBZ0ic9J37wrcakpBEiqzPyi65bexvtqDr16Z2W1DeE+u6HckatS0ozj7YM8LFB97JPpe17gKUMk/nOB7JWOvB15//3J7k0kGR1OcalyQr0R4IhMxYlvb9z++HO38NrnBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by BL3PR11MB6508.namprd11.prod.outlook.com (2603:10b6:208:38f::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.30; Thu, 18 Jan
- 2024 03:13:32 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ca1e:db:ee01:887]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ca1e:db:ee01:887%5]) with mapi id 15.20.7202.020; Thu, 18 Jan 2024
- 03:13:32 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "Li, Xin3" <xin3.li@intel.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "Yang, Weijiang" <weijiang.yang@intel.com>, "seanjc@google.com"
-	<seanjc@google.com>, "x86@kernel.org" <x86@kernel.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>
-Subject: Re: [PATCH v4 1/2] KVM: VMX: Cleanup VMX basic information defines
- and usages
-Thread-Topic: [PATCH v4 1/2] KVM: VMX: Cleanup VMX basic information defines
- and usages
-Thread-Index: AQHaRT8Fg8dZJ6KNyk+kWUJ6VvYyeLDe7iCA
-Date: Thu, 18 Jan 2024 03:13:31 +0000
-Message-ID: <a6c44305e822b5525c50624d892b652b3f511b45.camel@intel.com>
-References: <20240112093449.88583-1-xin3.li@intel.com>
-In-Reply-To: <20240112093449.88583-1-xin3.li@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.50.2 (3.50.2-1.fc39) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|BL3PR11MB6508:EE_
-x-ms-office365-filtering-correlation-id: c35c140e-b2af-4044-cbfc-08dc17d37350
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9NU3dtpyo5w/FC53xMn5y0Ls/wx1SvtQODIMAeA9SLSy2xga10eGQAXy98+KHatfebPKMVtpuCeOI03jqkMLwngOmvt6i1uZ7udCSSafSsAHF/JooJIxyrFaz1DgnLtV0C3x8RM6avLQ3G85V/8XgYt4E7Ght8S78ntT3MZfSznEZGYpYuAWbZAWJ2K81JFKgF8F8a9mD7oT//sdlGCgZysgoQR4Vb94nnTJqlrV6UXFO67e0pyQjtUIWT3ud9+5uTYWBVC6yJwOVe7WhfuI1Ac1pNbT2otgIv1Xsyt1UQ3AEFG9uCR0WyWyF5coUPxDVFR/5X3sQ1J4qxyrjSOqClBa5dmghSvq1vhq4/wyoFYt3XzrQxUly0bmwmNjns1J0tIYSxZ70cRbl9m2HuSUFB/bIcXfNhLHce1Q2C5JWSYM/Cz7EsFTIjyuwoIQXvPZhndIWixJ6th+5PKoVWO9iQd+ys5yp2WmVusZqBtAHvUO1C7aHvmJzA/KIh/+FdKU0K7RWstMKl7KCTKQAh4X7xsusgtlM1Pj17v7cn9QouKA55B+cJvj5/o4HMQWsJ5LD2lIV4REeEpuRlJi/NeTNoS39Av3RH0VlS3OuF7f+X3OZpNJ2mih2BtYIvtv0IZd
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(39860400002)(396003)(366004)(376002)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(38070700009)(478600001)(7416002)(5660300002)(4326008)(4744005)(316002)(64756008)(6512007)(8936002)(66946007)(8676002)(6506007)(54906003)(110136005)(66476007)(66556008)(66446008)(76116006)(2616005)(6486002)(26005)(71200400001)(122000001)(2906002)(82960400001)(38100700002)(41300700001)(86362001)(36756003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UGZKYTZuS3JBMkRUQk83ajZidFd4SVZEeUluZzU5S3JtUDVEVUxNenQweDJD?=
- =?utf-8?B?UWFtenQ4RDRVZm1UL1YwS3pXNjNjU0Q3VjFleURFQ3ZsY2RzYloycjhKNTA0?=
- =?utf-8?B?Sm1Wa0I1bEFVN0xDeXMyMURydmVSU3NETEFxRGU4T3hFSkQzSFN5R0JjYXZ0?=
- =?utf-8?B?dG54YnNJNFVaTzNuZW4ybHdRMXdMLzUxY2NHYm8za29CeFl6elFRUHlNU0Fh?=
- =?utf-8?B?QWJ1WDdkaVZqTHA2RlFzeE1QdXBNNGFQNU5yb093ZXNLTWpmVkRPZUt3WEZT?=
- =?utf-8?B?WXcvNEN1YTQ3WjM3cnIxUjhyOC9ZWmNaSGZsMXA1ZEFGOXZEeVpDQWZhajRl?=
- =?utf-8?B?cFQ3dnR2S1RZczI3MlVjNWFaaU9tekxxa1ZiWFhzeTgvcXJBbnd6U1IzbER2?=
- =?utf-8?B?YWNGL2dFTjBRZm1Tb1Y1SXE2V2RrcHVXSXBQTGdoc0FBMVUxeTFoT3JzTS9l?=
- =?utf-8?B?eGwwTkNmc1dDbit0cHlRMGh2S3NoeWFCNU5veEwyWloxemhLMFZFTk1BSzJG?=
- =?utf-8?B?MjlBQkxqWU9IaERmeVc5OThnWndndlVFNVpNeHJFVWFwQVkzbmd6VXFFR1Q4?=
- =?utf-8?B?Q3p0SERuaWoxRERFZ1lyZzVHSms5REF5UHRKL2tJeWFER0FYOEJTYnZGcWpi?=
- =?utf-8?B?bWVISENNUEE0VWVrTTlGc2RCZ2JoRnR0NUNUZmtDZVM0YmtZQUxkUGgybVg2?=
- =?utf-8?B?YUdVWEdXKzBiYnp4Tm5Ya0ovMnV2bHUzUTBtVjBCb2dFQ1JNblVKZk9xekEy?=
- =?utf-8?B?cUZJQW8rZ01DL3hMRTBoTS8zdzVSdXprRXRDVGg3eG42VWgzMWRJOEVQQVRv?=
- =?utf-8?B?UDRuR0lqM2lzaG14MmZ5V2ltT3VWM3hnSGVpWnQyM2xNNXRhSmFDelRjcml6?=
- =?utf-8?B?M1ZXTmswOXpGcXhlbitLQmZFdnBWaFUzQjBsRkIyWHRWL2xHdUw3ZmR2WVNY?=
- =?utf-8?B?SXB3ekJJTVMxYWU0b0JTZXlmZ1IxUFNNanZkQUtFdnJhZXJydllCVVFXNzFs?=
- =?utf-8?B?QmFtV2VoVTVCRy9DbGY1SE1oSEs5NGdaWmJNWlBXSVJuSlpSeUVpT1JIdk1E?=
- =?utf-8?B?Mk1uTENVSTdJM2VoWStzNFF2bXBROS9VVDBRZ0ZRb2FNYi9GUllReGpkNHUw?=
- =?utf-8?B?ZG11R1pyTkUwRkdiaFVVOHVvdGJlSThNTTRoem9CVFJCT1htTEdLalVzYkRY?=
- =?utf-8?B?cmNGVWtDTHR6VVY3VTIyZ2V6SkZHSEJwUkdWdjloa01Vaktrd2Y4L1VrRkwx?=
- =?utf-8?B?aWt0TW5nV2xnb3ZYWjFrY2FMNHBIdm9paUEzalA2VE5MeTJLcXVHWDZCNzdQ?=
- =?utf-8?B?Zm9PeTZvdzVSdUk1aHRvVU5zOWRyYnY4TnUyVG1YMERxUll1WEQ4ODNZTlcz?=
- =?utf-8?B?OHErLzZxNUZVNWpxaGduT0E2eFc1ZzBjVTFsRXNrcXpIbitLcEdMMk1QRGRs?=
- =?utf-8?B?QkZIZk9XaS9ISENNV3JMcnBXNi90UFlMQ2VkNVVDekk4dEd3emJLYnNVQ2t5?=
- =?utf-8?B?ajJabThOVXZHNlE0ZWhzbmN3UEI5RENmdElPTlFtTTlrUEppd2xNdmg4RFZv?=
- =?utf-8?B?YmpnQUQyeXRSWE9tMTl1dHRHZ2V4V0ptc096aVZrK1Y1cmt3K3g3dE1ZYks4?=
- =?utf-8?B?M3FkQVdLd3Z0emcxZjY2eFQvTTZ2L09wRFlSMjkzT2MyUE9MbzE0S1BaVm5s?=
- =?utf-8?B?czVnQ3A4Q2ttbW0yQ2NhdDZ4Mm5NTzRYcTFrZW1lajNoTDJEUVZsdTF1UEN1?=
- =?utf-8?B?YnVRZlJ5Vm02SVBJbkVUdUk1S2tGYWdJK1pJWjVBWUhmaDZ5Z0FIVGVCYWN5?=
- =?utf-8?B?MklaQm9ZK1pjdlZtTGdDU1V5bFBacTBBTG9tMUREVGRsQWxXV0dWQU4zU0N3?=
- =?utf-8?B?RGNnQmJXdVJjbFVQQVRZN1JueWV0TS9wOFVyK0RFbXhiTWVsY2RvY0xPS1F2?=
- =?utf-8?B?SUF3MXFURjhXU3RXOVVpM2hPN2xDQng2QWNiVCtha3dUcW5rbS9lQi9jMHhj?=
- =?utf-8?B?TUVqbC91cEExOWZnZFhxVW1KU2RTRThyajNySGM5SDBpK1hXTUtWNXN1L2FE?=
- =?utf-8?B?SGo2cXpDQjlja3NCbTJqb3ZMclNsSXRiSEJ5bFI2bWg1d3U2ZnRzNGlhTUM1?=
- =?utf-8?B?bmxCazJVa0tGTmN3SVN6TmdYeE03TmNqQkdOdUZlM2NwQ3lrRU5PYmJDUVpx?=
- =?utf-8?B?ZWc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BE7859C65076994D8D64EA7BFE3A017B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRHpNnSy"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55783b7b47aso12860164a12.0;
+        Wed, 17 Jan 2024 19:15:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705547742; x=1706152542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qcEJsJxbIc0RAjynqcDHIyz4es0oO29gIuI17GO9R1g=;
+        b=PRHpNnSykpd6UBJWF4m5Ovfjm0DeBX9am3QF/cygxUT9eoQGK0p+MIPCVg2bYRID8+
+         5hJxg9MsokrobeqlPUYYUfFx+i7Ed69tKoZvYDS8FZagtCXwi+Q1hKajSHFVtEQier9w
+         tUJo+4I+iioqKPdTKsbJGDESOc+ehJw7g7v4+eIL2Hy7fuk9CEPWfVFaMdZlHXKmR4Ga
+         eiHBZ934CMIPlFYouCe5nYoQGlHHw1OJTSXOvyf301xQPBLAdq27erKRI56WVtWupV2u
+         UePUuwO419ubvMzw+of3RtxjEa0liz9DhzBdigS7xPbSdLYPQi0eqpNRgbDCg/fC8ZCD
+         pEYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705547742; x=1706152542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qcEJsJxbIc0RAjynqcDHIyz4es0oO29gIuI17GO9R1g=;
+        b=SbSFUkRQklxfTnrs2yIhs+D6o3gewSV/P5BzNTFiNEtUxBlzGj+IjrEf127UsUMw/S
+         B7N6gyj+pXifI8Na2qQjLdGM1ftr0snMdLjdYarQPicexX0dZzVYBnXaa9Oh6xKHezuh
+         DwoGwgNCyJ5zklZM25wlQ/WIVyD/IUqniIovOcDb3wv6SueCtCWloSuSBiQiT8jqXBMH
+         F5f7K2/n4bLkxuvrGgPfoSUuCD56BGbQWnJlUKdvcZwZ4bAl694kvu5UxIlCEMmKUUvz
+         bkq2LCJiE2k0m+HlyLmy1A+uIGeHq0CCTPWO9jC8ye4h/3TO1owwfK6d+shsI1SjMkIN
+         SOeA==
+X-Gm-Message-State: AOJu0YzyWBfQwVlIGfVT4Rla2Uwv3d7poxRMuH1XFVyImYcXc40OlY6a
+	c8+N8OGCxiBSb4D1U2fNHL004mNGlN8bpoLJlZQdRjxv15/jEZKyVoNL/IaAX266O04JCY2y2xi
+	KUIHM2ABkvGDpU6ISAYtnuvfGEzE=
+X-Google-Smtp-Source: AGHT+IG2KpdSARt9ngCj9PJk6H/6VhsAPH2Y6QTGCgL0gC6etSkuYrAHQ8YkaG8PI+ATXyYMa1Vr3+I3AlsDzkutXU4=
+X-Received: by 2002:aa7:c345:0:b0:555:e495:3540 with SMTP id
+ j5-20020aa7c345000000b00555e4953540mr154855edr.73.1705547742047; Wed, 17 Jan
+ 2024 19:15:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c35c140e-b2af-4044-cbfc-08dc17d37350
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2024 03:13:31.9837
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Fj+sQXFgFzyKWdNGtmViph4Il/ptsxMxWXGw9YifmOB5Xn/X0u01I90WccilZbesepvKIZDCFy67KfVndmMMiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6508
-X-OriginatorOrg: intel.com
+References: <20240115072306.303993-1-zegao@tencent.com> <CAM9d7cgXKaKTnfx9YJae2qqv0pXtWLVQPBN=2H0WZkenBjHFnQ@mail.gmail.com>
+ <CAD8CoPA6xBT9hbGZoviyyQm1bwn2Oh=v8QCMjxkMMOSN2zfC-A@mail.gmail.com>
+In-Reply-To: <CAD8CoPA6xBT9hbGZoviyyQm1bwn2Oh=v8QCMjxkMMOSN2zfC-A@mail.gmail.com>
+From: Ze Gao <zegao2021@gmail.com>
+Date: Thu, 18 Jan 2024 11:15:31 +0800
+Message-ID: <CAD8CoPA0YgVHVW1Ya1O0-vhmpCbiw2h3i29ayzKmg4YTu-zeKQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf sched: Fix task state report
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gRnJpLCAyMDI0LTAxLTEyIGF0IDAxOjM0IC0wODAwLCBYaW4gTGkgd3JvdGU6DQo+IERlZmlu
-ZSBWTVggYmFzaWMgaW5mb3JtYXRpb24gZmllbGRzIHdpdGggQklUX1VMTCgpL0dFTk1BU0tfVUxM
-KCksIGFuZA0KPiByZXBsYWNlIGhhcmRjb2RlZCBWTVggYmFzaWMgbnVtYmVycyB3aXRoIHRoZXNl
-IGZpZWxkIG1hY3Jvcy4NCj4gDQo+IFBlciBTZWFuJ3MgYXNrLCBzYXZlIHRoZSBmdWxsL3JhdyB2
-YWx1ZSBvZiBNU1JfSUEzMl9WTVhfQkFTSUMgaW4gdGhlDQo+IGdsb2JhbCB2bWNzX2NvbmZpZyBh
-cyB0eXBlIHU2NCB0byBnZXQgcmlkIG9mIHRoZSBoaS9sbyBjcnVkLCBhbmQgdGhlbg0KPiB1c2Ug
-Vk1YX0JBU0lDIGhlbHBlcnMgdG8gZXh0cmFjdCBpbmZvIGFzIG5lZWRlZC4NCj4gDQo+IFRlc3Rl
-ZC1ieTogU2hhbiBLYW5nIDxzaGFuLmthbmdAaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBY
-aW4gTGkgPHhpbjMubGlAaW50ZWwuY29tPg0KPiAtLS0NCj4gDQoNClsuLi5dDQoNCj4gKy8qIHg4
-NiBtZW1vcnkgdHlwZXMsIGV4cGxpY2l0bHkgdXNlZCBpbiBWTVggb25seSAqLw0KPiArI2RlZmlu
-ZSBNRU1fVFlQRV9XQgkJCQkweDZVTEwNCj4gKyNkZWZpbmUgTUVNX1RZUEVfVUMJCQkJMHgwVUxM
-DQo+ICsNCg0KWy4uLl0NCg0KPiAtI2RlZmluZSBWTVhfRVBUUF9NVF9XQgkJCQkweDZ1bGwNCj4g
-LSNkZWZpbmUgVk1YX0VQVFBfTVRfVUMJCQkJMHgwdWxsDQoNCkNvdWxkIHlvdSBhbHNvIHB1dCBz
-b21lIHdvcmRzIHRvIHRoZSBjaGFuZ2Vsb2cgdG8ganVzdGlmeSB5b3VyIGNoYW5nZSBhcm91bmQN
-Cm1lbW9yeSB0eXBlIG1hY3Jvcz8NCg==
+On Thu, Jan 18, 2024 at 11:00=E2=80=AFAM Ze Gao <zegao2021@gmail.com> wrote=
+:
+>
+> On Wed, Jan 17, 2024 at 9:35=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hello,
+> >
+> > On Sun, Jan 14, 2024 at 11:23=E2=80=AFPM Ze Gao <zegao2021@gmail.com> w=
+rote:
+> > >
+> > > Hi,
+> > >
+> > > The problems of task state report in both libtraceevent
+> > > and perf sched has been reported in [1]. In short, they
+> > > parsed the wrong state due to relying on the outdated
+> > > hardcoded state string to interpret the raw bitmask
+> > > from the record, which left the messes to maintain the
+> > > backward compatibilities for both tools.
+> > >
+> > > [1] has not managed to make itself into the kernel, the
+> > > problems and the solutions are well studied though.
+> > >
+> > > Luckily, as suggested by Steven, perf/libtraceevent
+> > > records the print format, especially the __print_flags()
+> > > part of the in-kernel tracepoint sched_switch in its
+> > > metadata, and we have a chance to build the state str
+> > > on the fly by parsing it.
+> > >
+> > > Now that libtraceevent has landed this solution in [2],
+> > > we now apply the same idea to perf as well.
+> >
+> > Thanks for your work.  But perf links libtraceevent
+> > conditionally so you need to make sure if it works without
+> > that too.
+>
+> Yes, I've tested with NO_LIBTRACEEVENT=3D1, and it turns
+> out perf removes perf sched subcmd without libtraceevent,
+
+FWIW,  commit 378ef0f5d9d7f4 ("perf build: Use libtraceevent
+from the system") has proved this as well.
+
+Regards,
+        -- Ze
+
+> which explains why the compiler does not complain no
+> evsel__intval() defined when !HAVE_LIBTRACEEVENT
+> given the fact so many references of evsel__intval() in
+> builtin-sched.c.
+> Here evsel__taskstate() uses the exact assumption as
+> evsel__intval(), so I put it next to it for clarity and it works
+> without a doubt.
+>
+> > I think all libtraceevent related stuff should be in the
+> > util/trace-event.c which is included only if the library is
+> > available.  Maybe util/trace-event-parse.c is a better
+> > place but then you need to tweak the python-ext-sources
+> > and Makefile.perf for the case it's not available.
+>
+> Thanks for pointing this out. I will do the hack if you insist
+> on this move :D. But I think the current version is clear
+> enough, otherwise we need to move all the parts guarded
+> by #ifdef HAVE_LIBTRACEEVENT out for complete decoupling.
+> What do you think of it?
+>
+> Thanks,
+>         -- Ze
+>
+> > Thanks,
+> > Namhyung
+> >
+> > >
+> > > Regards,
+> > >
+> > >         -- Ze
+> > >
+> > > [1]: https://lore.kernel.org/lkml/20230803083352.1585-1-zegao@tencent=
+.com/
+> > > [2]: https://lore.kernel.org/linux-trace-devel/20231224140732.7d41698=
+d@rorschach.local.home/
+> > >
+> > > Ze Gao (4):
+> > >   perf sched: Sync state char array with the kernel
+> > >   perf util: Add helpers to parse task state string from libtraceeven=
+t
+> > >   perf util: Add evsel__taskstate() to parse the task state info inst=
+ead
+> > >   perf sched: Commit to evsel__taskstate() to parse task state info
+> > >
+> > >  tools/perf/builtin-sched.c |  57 +++------------
+> > >  tools/perf/util/evsel.c    | 146 +++++++++++++++++++++++++++++++++++=
+++
+> > >  tools/perf/util/evsel.h    |   1 +
+> > >  3 files changed, 157 insertions(+), 47 deletions(-)
+> > >
+> > > --
+> > > 2.41.0
+> > >
