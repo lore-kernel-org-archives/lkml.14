@@ -1,121 +1,168 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAC2BE67;
-	Thu, 18 Jan 2024 08:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CC813AF8
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 08:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705565618; cv=none; b=px4bDbw7Bq6yp+gFQ/kvHWQB01rqWO0Gdc3FVgyZZ7yp5DT4+OPJ4O+YR+Lpfxj6hlqRjtJhFe475f2+ERIk3oSO+qf2UbgMZVbtjgUv6vJcO7Huj+ln8mbSC0EJodZ0S3Ng2MEx6JB+bGpEMw2u5AGJJ13FWIgcjkSEF8QUneQ=
+	t=1705565643; cv=none; b=ODZ9BTNOmBKUU7lZZDOS9CIDaHR20CMZPr6R8fden+8MNPq9P32wjhpvQ6ix9Skkos7+h2y1ak8wckix9LitRdLojS3dFpBk7F4O7jbIoDPUVUA4hXtjd8IYH+KctMqG/tYJPTDNtlgZPeuWk/PIpPaOzdhnIBl1WNghyAEineQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705565618; c=relaxed/simple;
-	bh=kCvOPst4rgL73b7SHnvOPtJ94GynuOZeJpfzDrg2Bpg=;
-	h=DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-Provags-ID:X-Spam-Flag:UI-OutboundReport; b=LZfLEFacz5IkAXkkbZ1Yl0Gt/3AkyzdOiPvMRuvnympr2sywfrldVVnGpYgueOdZRiZkpKw+4yK+BX5MiF+PtCLv2OCRUw4MPazxMMDAHHRs5rQkQHKp+lE/85xyU+EEMp+sM9DjxPumPa99diXJQMBpcMWGpxl85SvdNUYWdRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=E1DEYTOE; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1705565643; c=relaxed/simple;
+	bh=VAdc1NKbCLJXB5ZwNWmpBl+bYEPBUTw+cW5ZgUWrUe4=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:
+	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
+	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding; b=tsvM5InUJtkdW/PbZu0DItlolq8DSTeIq2LBLTA+2NOZj35TgNV9RxJkOpTvFPDiAs6jty9DkCyKhxYEE9Lc8d9LkIw2lXwZ3VwvuKuGJj2g6DpUsECJhXQxGWoaFVdyHM/V1TNce9c0vIZXHIi5aCgzekxptFPtYJG4++hR6g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MwCCmAkV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="E1DEYTOE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1705565610; x=1706170410; i=markus.elfring@web.de;
-	bh=kCvOPst4rgL73b7SHnvOPtJ94GynuOZeJpfzDrg2Bpg=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=E1DEYTOEdkkFLXcLzj5DUS+2aaHQQnoafCRqPQRfKxooC/Crbxo9QCcVLHBRzp/O
-	 Y1TKLzdMhnHX1cEytTsL9RVhB7AX3h8hvJF8mutUSeKIqYSiPrtejTgOGeY9t36BH
-	 W1n01pdEdnfLA5rXlFSyrSTAh5/jbc6naq0usZsXYvPhc3BohjSMw65t5FamTqQJG
-	 yaSECSbHrBt2C4KwYxNk9HN9prlwiDSxNyRJ3CRnZGqLXe8eouILQc6To5JRdpYgG
-	 KVL1d+kyPtzb4IpjSpAAm0SfM9IyUxTpb6FRRkKERaA63Eaba8dILCGuursz5+J5U
-	 LrlPDeLCL8tWD7QQzw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MGQGH-1rL9pL1EfV-00GYra; Thu, 18
- Jan 2024 09:07:02 +0100
-Message-ID: <efc748d7-1a67-476a-82a4-206a9ed252cb@web.de>
-Date: Thu, 18 Jan 2024 09:06:50 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MwCCmAkV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705565639;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5SsqaeFnNlDjnwQj4dzfPpX8ZsfHI+luLg/Td8wcFQ4=;
+	b=MwCCmAkVufJFzH9Z3YqgOl7D9xa8dpaBbzzj9sIjhmObvrvR1eUwP6AbmxUCSKrlc5bGMi
+	nMFx5EB+Uu59QfPZpwawXgbUHlZaPnKlgupCy9+5t8xYSe96IKd2pa9pBZmxdKRDIG8q5V
+	oIkP/dCXNn5eUS2vNdoOaa3aCeeXg4A=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-479-r_XrlEscNA6F2ZA678WIuA-1; Thu, 18 Jan 2024 03:13:57 -0500
+X-MC-Unique: r_XrlEscNA6F2ZA678WIuA-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-558b04cb660so3559564a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 00:13:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705565636; x=1706170436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5SsqaeFnNlDjnwQj4dzfPpX8ZsfHI+luLg/Td8wcFQ4=;
+        b=JIc+jSM/RB2TgBc3DX1Qudqu31HL82DX659sX7VvvoWRMVr7eHG1ZLgzfyj8ASNVnJ
+         Vaz9s0bXSNipoBwwhMjH/QpMdOeDay1Np+Cnwj/NDsa7vgAuhxOWjAcxbvsFFDqZugp6
+         4Rmjc3ZOhMcVJpDkbr7kokfEKOOveIiz37B4jVYkb6Qtss5BMxvsalOUKQd3AUBzK4ex
+         A4Y8hiHAp7OKPMcbWThl6GNnmGxcqC7YPfnTfFrTr/363B4TxtnpfpCokpXtGn8Zce6u
+         68MdYBvWtOzP/QIQ7KcHjfrDXfY9wVrdac1CK1NuilKOKTEMcKBBDos8+d3pQIVcizPb
+         njFA==
+X-Gm-Message-State: AOJu0YwFwvPFGzwctHnElGUrFOtsPnuT6jfCVJVax0ftEkdy6VLLqg9S
+	uWMzA7gg4T93RpwmSooiQSHYGVqPHZBHZ6DALeI4CIc0kfRIx5FJwAYN8nh3gQmyrqEYvhISC6N
+	TVlHeKNL/Wx96/JkmbV1F4IhkiHDlUTfbPy9V/faOG0W7aj9MKSA6/lfRYBo0lmIOd25opGBGH/
+	fMP+5dsE71jvjgBMc6MWn5qU0tEoq0BLWsd1xW
+X-Received: by 2002:a17:906:f746:b0:a26:97fe:b8cc with SMTP id jp6-20020a170906f74600b00a2697feb8ccmr266444ejb.66.1705565636476;
+        Thu, 18 Jan 2024 00:13:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEC3cI8HvUGHgz6IrmlJYZMRWTXEOiyQ0Xwp7Yv8XXR/9cy35jOph4av3RGpi+WCBaGGtcY/I8OUZfAk0dVXVw=
+X-Received: by 2002:a17:906:f746:b0:a26:97fe:b8cc with SMTP id
+ jp6-20020a170906f74600b00a2697feb8ccmr266431ejb.66.1705565636180; Thu, 18 Jan
+ 2024 00:13:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/msm/adreno: Add a null pointer check in
- zap_shader_load_mdt()
-To: Kunwu Chan <chentao@kylinos.cn>, freedreno@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240116032732.65262-1-chentao@kylinos.cn>
- <9e390783-05c5-47fc-a0c6-b95e249fe691@web.de>
- <4d4f4ae4-e5e9-4d9e-ac25-d262e7ea23fc@kylinos.cn>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <4d4f4ae4-e5e9-4d9e-ac25-d262e7ea23fc@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
+References: <20240117-b4-wip-wacom-tests-fixes-v1-1-f317784f3c36@kernel.org> <CANRwn3QhYtuiGemwrf6_bYDDeAU0GrPm7T9ca3OzQaX8vGKPEQ@mail.gmail.com>
+In-Reply-To: <CANRwn3QhYtuiGemwrf6_bYDDeAU0GrPm7T9ca3OzQaX8vGKPEQ@mail.gmail.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Thu, 18 Jan 2024 09:13:44 +0100
+Message-ID: <CAO-hwJ+n7Bv8UgNaDCEtqoU=DWVxxVUJ7y+=nj_PKmrdtgorkA@mail.gmail.com>
+Subject: Re: [PATCH] selftests/hid: wacom: fix confidence tests
+To: Jason Gerecke <killertofu@gmail.com>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Jason Gerecke <jason.gerecke@wacom.com>, linux-input@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZAEHwbx6jQbZDr47gR/LgiXdS/Bw50dDuaXFMDByxqzOIN1swLJ
- Mp+oX0pb+WvOI6eOHDSGZI5vLw+JbCX0bkaCENs9ZKXZyacQrMdHeVe+7tWGuHhc2Pe4FsV
- MJZHADguhSiLqcwGyZ1wXvkTqYVhdDdCkhih01UaY2Ld0R1QUmARwKVi3yGNybAewP8+yTU
- IPQxfj9JZW/BZk9Z74qcA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:18ZZnxsG3g8=;b24lAmbYFzSGdfKDOiYpU/Be2jm
- QMSpsqM4qlNwDmDXCamIfP5CrdkxIwQ9i0lr34c0ts6NUR273+ajaQ6psrjP84YyImtl6ZsJV
- 0CDVAarmiQfPQUcD8PqSF6AfSZ8ZZ5vvSs3X0WwgZV6XHYT7bBXzxapU4rw38Hlyxyz2Xu51v
- rQd3Uevo1E3t/9GYTRLh0GKK+Y6egUCILRHenil2fqYVDCau6FerYRu3Xl9UK/iMnaI6QUNa7
- 78LNOloCvwz2om2K1IOMQhhmjVQF/6CO3Doljyt34R4Q36aUknoxQos6h9MNtji3rbiPlrU0I
- URqLa/AhzBElY8yskiPXD1oe6el+PptLeNGrFhy5gAQTCq8WDR2sztea620dlWDSrXR/JSpnp
- 7m/1cP7VsstjmMA+9AgVSnE5+qxvbEIhJr9qi6fGUq5ZJzAj0igir8+magl2aA1CBEZzvoLzZ
- /O8NH2WjmaJdXCdOy5NTkm5QZgQIKRekcZvMUt/dxXUGtHz8EXP5s3CQkqzx9Rk3hi9F11nHJ
- XesEvME19ykj/83a/7rc6gvWoxngWfehQVzBF1ZJ6Q0HX6pQBJ5c1jscLdDFnwpE6jEVklS/v
- tPRdt3MiSWMbfxxHXzNi14/nhPtZDo05rOP5mS6Qzx46MhW8oCS9fFLCPXO5eTx/AL16Y/9yW
- tJEFAAOWbUbGaTIu2x4QWB0IBdQj023UhjVb46fwjhQB5hC0pdzTw2tfUY6qM74e/9JPqniQ9
- GxJMWvi61sJejsuxcK7b8qXR0CiPr9oLv2NarKmudEAkFTKTPegiDtVlgpZU81E0mYhZAh3kC
- uM9TGebh1Dccv9QMHzijeANwnGeyc1L5ss2Cg/YaJG18XQeHclIj9Ipe0jJ01p0jhSrHLWsL0
- PuF2aPJ1Qo+j+rnv6EiaFyi7zSSckePNnmvbGWA7XtDV0TQd/wQnWV6s3CJ8Y7iiOps84DmPG
- blH2lA==
 
->>> kasprintf() returns a pointer to dynamically allocated memory
->>> which can be NULL upon failure. Ensure the allocation was successful
->>> by checking the pointer validity.
->> =E2=80=A6
->>> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
->>> @@ -144,6 +144,10 @@ static int zap_shader_load_mdt(struct msm_gpu *gp=
-u, const char *fwname,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *newname;
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 newname =3D kas=
-printf(GFP_KERNEL, "qcom/%s", fwname);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!newname) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-t =3D -ENOMEM;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 go=
-to out;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> =E2=80=A6
+On Wed, Jan 17, 2024 at 7:12=E2=80=AFPM Jason Gerecke <killertofu@gmail.com=
+> wrote:
+>
+> LGTM. Acked-by: Jason Gerecke <jason.gerecke@wacom.com>
+
+Thanks!
+
+I'll add a:
+Fixes: b0fb904d074e ("HID: wacom: Add additional tests of confidence behavi=
+or")
+
+And send to Linus in the next round for 6.8 so we also fix the future
+for-6.9 branches
+
+Cheers,
+Benjamin
+
+
+>
+>
+> Jason
+> ---
+> Now instead of four in the eights place /
+> you=E2=80=99ve got three, =E2=80=98Cause you added one  /
+> (That is to say, eight) to the two,     /
+> But you can=E2=80=99t take seven from three,    /
+> So you look at the sixty-fours....
+>
+>
+>
+> On Wed, Jan 17, 2024 at 5:27=E2=80=AFAM Benjamin Tissoires <bentiss@kerne=
+l.org> wrote:
 >>
->> How do you think about to avoid the repetition of the pointer check
->> for the variable =E2=80=9Cmem_region=E2=80=9D?
-> "mem_region"? Is this a clerical error, do you mean 'newname'?
+>> The device is exported with a fuzz of 4, meaning that the `+ t` here
+>> is removed by the fuzz algorithm, making those tests failing.
+>>
+>> Not sure why, but when I run this locally it was passing, but not in the
+>> VM.
+>>
+>> Link: https://gitlab.freedesktop.org/bentiss/hid/-/jobs/53692957#L3315
+>> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+>> ---
+>> Over the break the test suite wasn't properly running on my runner,
+>> and this small issue sneaked in.
+>> ---
+>>  tools/testing/selftests/hid/tests/test_wacom_generic.py | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/hid/tests/test_wacom_generic.py b/t=
+ools/testing/selftests/hid/tests/test_wacom_generic.py
+>> index 352fc39f3c6c..b62c7dba6777 100644
+>> --- a/tools/testing/selftests/hid/tests/test_wacom_generic.py
+>> +++ b/tools/testing/selftests/hid/tests/test_wacom_generic.py
+>> @@ -880,8 +880,8 @@ class TestDTH2452Tablet(test_multitouch.BaseTest.Tes=
+tMultitouch, TouchTabletTest
+>>          does not overlap with other contacts. The value of `t` may be
+>>          incremented over time to move the point along a linear path.
+>>          """
+>> -        x =3D 50 + 10 * contact_id + t
+>> -        y =3D 100 + 100 * contact_id + t
+>> +        x =3D 50 + 10 * contact_id + t * 11
+>> +        y =3D 100 + 100 * contact_id + t * 11
+>>          return test_multitouch.Touch(contact_id, x, y)
+>>
+>>      def make_contacts(self, n, t=3D0):
+>> @@ -902,8 +902,8 @@ class TestDTH2452Tablet(test_multitouch.BaseTest.Tes=
+tMultitouch, TouchTabletTest
+>>          tracking_id =3D contact_ids.tracking_id
+>>          slot_num =3D contact_ids.slot_num
+>>
+>> -        x =3D 50 + 10 * contact_id + t
+>> -        y =3D 100 + 100 * contact_id + t
+>> +        x =3D 50 + 10 * contact_id + t * 11
+>> +        y =3D 100 + 100 * contact_id + t * 11
+>>
+>>          # If the data isn't supposed to be stored in any slots, there i=
+s
+>>          # nothing we can check for in the evdev stream.
+>>
+>> ---
+>> base-commit: 80d5a73edcfbd1d8d6a4c2b755873c5d63a1ebd7
+>> change-id: 20240117-b4-wip-wacom-tests-fixes-298b50bea47f
+>>
+>> Best regards,
+>> --
+>> Benjamin Tissoires <bentiss@kernel.org>
+>>
+>>
 
-Please take another look at implementation details:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/gpu/drm/msm/adreno/adreno_gpu.c?h=3Dv6.7#n124
-
-
-=E2=80=A6
->> Can the usage of other labels become more appropriate?
-
-I propose to reconsider also the influence of the label =E2=80=9Cout=E2=80=
-=9D here.
-https://elixir.bootlin.com/linux/v6.7/source/drivers/gpu/drm/msm/adreno/ad=
-reno_gpu.c#L167
-
-Regards,
-Markus
