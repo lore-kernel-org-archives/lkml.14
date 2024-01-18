@@ -1,108 +1,74 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902011F946;
-	Thu, 18 Jan 2024 09:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDB21CFA4;
+	Thu, 18 Jan 2024 09:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705569133; cv=none; b=fNBlSFv2EUtGZz1iguA5Yv15ypldPZTidWSQr+sfh7101/dlkd85zYOVMMQ+ojwVT1GmljDQ+caWB/u61nHtfJYyeTf8P7x5GLOm841Ry2EB1I7rtZV115Z/TscK9O4OXOaCHgoSpDJOIezgiib9Yf3ynrhVL5tIgFjEplXCprc=
+	t=1705569412; cv=none; b=fhK3sZuVl4EmC7Lg9aYxQmagg8mHq+hIN98dtYoQ15Jzd6Qc79LbYawgxltmjBBrac6RLibnrKUudtyoQE1j3mkBXmX/+3W50ZuOijQTcokpWL4WuF+94FGHB2YTOPq96r5CaDI/fiGxwO1jzoXWbFMpm2FxCPZH5NLACb2SVCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705569133; c=relaxed/simple;
-	bh=jTOMwYZYOjAXt29qPZUugCW1mNVTtziQZT6XubxjnG0=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:From:
-	 To:CC:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:X-Proofpoint-Virus-Version; b=EnUjo+TtLhPYP6Ef1JxaBxRber6Pxi4OkwL8d5y2miwcZxicOD8hXV/T3h6aaUS9CbfDY9aiLeKVrZtwGddbGL2R+UENTFCKc9rkJYdotMPMASUziokoqfP4SCaxFo9tRBLa9PpHP1idorsiecuC5o4s0YVPN5mMbG6lp/vMEx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=JOxknQum; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1705569412; c=relaxed/simple;
+	bh=hkSwAwQRpBVseHgROkd3gsrJJPpKcp0eBJDtMHc3a+E=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:References:Date:
+	 In-Reply-To:Message-ID:User-Agent:MIME-Version:Content-Type; b=iLgoCSD3KXY2zfjnGCI6zYkpbwrUBBRmuUq7jICQTMPV+cHG8l1Q8Lc99H+q51ivFsQIyT9Y1Rc+Ozrl89KgF1V8d8X8hiCHjz7lE+Ja8Fq4LjZd+XoLLYOASEDTOWzqBWs5AO0051UYkK6l5296OxLbCKuTndgLtSBDto6ka/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2eKbhW8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="JOxknQum"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40I8U27e001957;
-	Thu, 18 Jan 2024 10:11:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=LT44wAO
-	mjaAsg0tliRvC01UNCZUXx9vWqUxQLz5cG+g=; b=JOxknQumFVqkmGPewGIFhcW
-	VgEzl9Eyj6chqTZSrOBSfRA1tK6acLWSJWan3bLlFFCBXhacQiHEZfVZt8UKZ95s
-	KC+fwOHOiNMlxOoYrrQGvUH1Cak3Wd8mf4fNNtzX6gDUL/6RSGpebg335Rxyjqyj
-	463STz6RQ5YXkhOKX80Unal+0eFDnRJ0X5jPC/uxB1tfGujMwvBzv2uBZuG5cuoe
-	4VKBb2nuzRPRetVkkUFDYcm2r9dIEm5iYYpZWEtRRT8y5x8qGgbUCQBKmdli4jnn
-	UnDr+Vgx3GvpRz7+Sj3McIwGyl0zm9W3yUugwA0G8FE4/VM6MAhpLszbF8WI7yg=
-	=
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vkmde7t9u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jan 2024 10:11:50 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BA15310007D;
-	Thu, 18 Jan 2024 10:11:48 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 56946217B6B;
-	Thu, 18 Jan 2024 10:11:48 +0100 (CET)
-Received: from localhost (10.201.21.102) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 18 Jan
- 2024 10:11:48 +0100
-From: Valentin Caron <valentin.caron@foss.st.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby
-	<jirislaby@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Valentin Caron
-	<valentin.caron@foss.st.com>
-Subject: [PATCH v2] dt-bindings: serial: stm32: add power-domains property
-Date: Thu, 18 Jan 2024 10:11:35 +0100
-Message-ID: <20240118091135.3314330-1-valentin.caron@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2eKbhW8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EC78C433F1;
+	Thu, 18 Jan 2024 09:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705569411;
+	bh=hkSwAwQRpBVseHgROkd3gsrJJPpKcp0eBJDtMHc3a+E=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=c2eKbhW8+VELAfIZkBmxFmTtcVYAYHVxudUEoUa8C6BT7UDa7CrtEx0hOzD7ynmy6
+	 PEAJS2VtbXTXLbbHR967Pwj18CzcqAuJynlG5N1Q4aPpDmz/6Cgs5zFfzjw3kuyqEH
+	 AKJoyVXLr6iRk+TL7r1uJ6wQ6eFNLZyF+i+XQQhkZh816wzUMLJeS+liBDirGxIsXg
+	 qIUcstuK9WjTxY3oLcZHNBS5R4i59Ry9EVGzTnWotr1/9S8OjMSXG9dWTIzxgzyJB9
+	 Srj9nY8LweUGWVY0hVRO1xLGbGsT5x1i6RW1piRzz2e1LLT4XCWLHJDbNjYWLIA76B
+	 N+g+PN+BZlD1w==
+From: Kalle Valo <kvalo@kernel.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>,  "David S . Miller"
+ <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  "open
+ list:MAC80211" <linux-wireless@vger.kernel.org>,  "open list:NETWORKING
+ [GENERAL]" <netdev@vger.kernel.org>,  open list
+ <linux-kernel@vger.kernel.org>,  Jun Ma <Jun.Ma2@amd.com>
+Subject: Re: [PATCH] wifi: mac80211: Drop WBRF debugging statements
+References: <20240117030525.539-1-mario.limonciello@amd.com>
+Date: Thu, 18 Jan 2024 11:16:47 +0200
+In-Reply-To: <20240117030525.539-1-mario.limonciello@amd.com> (Mario
+	Limonciello's message of "Tue, 16 Jan 2024 21:05:25 -0600")
+Message-ID: <87il3r3ssg.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-18_04,2024-01-17_01,2023-05-22_02
 
-STM32 serial may be in a power domain.
-Allow a single 'power-domains' entry for STM32 serial devices.
+Mario Limonciello <mario.limonciello@amd.com> writes:
 
-Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
----
-Since v1:
- - Change commit message after Krzysztof review
+> Due to the way that debugging is used in the mac80211 subsystem
+> this message ends up being noisier than it needs to be.
+>
+> As the statement is only useful at a first stage of triage for
+> BIOS bugs, just drop it.
+>
+> Cc: Jun Ma <Jun.Ma2@amd.com>
+> Suggested-by: Kalle Valo <kvalo@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
- Documentation/devicetree/bindings/serial/st,stm32-uart.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks for the patch.
 
-diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-index 1df8ffe95fc61..62f97da1b2fd7 100644
---- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-@@ -58,6 +58,9 @@ properties:
- 
-   wakeup-source: true
- 
-+  power-domains:
-+    maxItems: 1
-+
-   rx-threshold:
-     description:
-       If value is set to 1, RX FIFO threshold is disabled.
+Tested-by: Kalle Valo <kvalo@kernel.org>
 
-base-commit: 0c84bea0cabc4e2b98a3de88eeb4ff798931f056
+It would be good to get this to v6.8 but we cannot take this to wireless
+tree yet, only after we have fast forwarded the tree.
+
 -- 
-2.25.1
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
