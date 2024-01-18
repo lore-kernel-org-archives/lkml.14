@@ -1,103 +1,128 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B465D29438;
-	Thu, 18 Jan 2024 19:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B427D29438
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705607470; cv=none; b=Gifnecaj33Z+NOoL6XwvN0fvYjPPELcP1qMFEupD0QhxDWcmLSDgRDC4vDOtIM6CMXd2mjmCjn8nNBFcprA1FHgp0OEqMpUkqr6ZuA0o6c1AHf/t0qcKR8aBsWrU4NAq6Aa9OwtX0rlny7DCqePI/f3tcaIz686lPobjY2WIFWI=
+	t=1705607608; cv=none; b=Vns88hCMz4jhEzaOa3QNFN4p+v1fe4i3UBtTNt8eVlDEg/Bh9NOBZkM/JmcyPBmrCFQPmK3s0v85+3/aaT3SZYGG8ijqYSSrTR+fOHSocC8dMophodbP1vy53SMWNkmqP32COv5q0NYaA9Hj0pbuCW445SqqM2WU6yGVryrraKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705607470; c=relaxed/simple;
-	bh=zpB1vJKPFUrLosU/KAweJYdV+HjG58GHXZeRiTmNml8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pMBNYuevx1uIjfknaxC4c0oOHWM1/2gvc02Q83xGkmGPiksirZbmNbsJUIE8HvOpga71RyaCFAXCm3/uuaT75iR7WkLpVnyN65oBKsEJD93i6tKxlZpfqV5QMbp++b5oPr+fryRS4IG9kCWoT+Q6ho6OItJrCbcTp1XJZ4SgqZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vf5BUayt; arc=none smtp.client-ip=209.85.160.180
+	s=arc-20240116; t=1705607608; c=relaxed/simple;
+	bh=ePXeyzFZc4C49wzR3oENG78fjC6VcRFcvWg3hVa5eyI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gG78iZ655//ntHHP9Q4J3dHPdrSha3aBfraJqLyXCM8Gxa33Y5ffpS5S3ROqcVyqNKkbK8ZMK45seI6KLjboTFtzw3dgjP41B+etJqvzLrW24EwpSX6Sq1v2quWWx/KurnkKsh93eTzTx0/1b2cdV+Cv+7V3q6ZCZvQnx/Fnpe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3zBoLq8; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vf5BUayt"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-429af318342so356601cf.0;
-        Thu, 18 Jan 2024 11:51:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3zBoLq8"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2901ac9ba23so60697a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:53:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705607468; x=1706212268; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BTvQsNfYLosp4zMJSEtUdKK37sRRAVysKUE3QZOulFY=;
-        b=Vf5BUaytpNyv8X8NJdmPAk1jwzR4pztTa9b0LqE9F5Buw6maMiNZN/V4ID4cKsbOqH
-         H1xio/zgF6AXByxnraeRhxLKibx1J/vBQpcyARnKZ2UHj6tQOk+zU/5Qy75udcAQhJBd
-         L7n4S8eyG2ppsnyqobF+MxAlDQzTcd9wsT87ik0imLO6lTVaUbu4/l6jGEAA99BcXSxy
-         6ndPr8bMM70Sm5PG8WCCLXge1Ht8oRkHI46vmSXf1VAdV17+QcTZiMNuhND9aCXHC9iV
-         dk0diyTIBdnax/8wOYZu/u9JVPQ8/dS4JOtcvgI1E56q7q7xvKKL2zNQHoh0mcNThF2Z
-         lxjA==
+        d=gmail.com; s=20230601; t=1705607605; x=1706212405; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EZGu56SQkPq5onYvWGLXuBppyU+oGKlhQFwb+ijLfmY=;
+        b=E3zBoLq85OWnbe3fb7J1MONR3TC6NDVHj4dASxvdmX8EKjEnGUDvnURqDedsUzqWQR
+         M9h5OmtuuWiWW5CAL9+95U13AcM3UxX1EjKirntM4mBCBP0aR1hAgM2vGljMiubCbe5r
+         bs0P2D59JBURWadp4fmkb1fsI8oK9DOgKXWpkA7B970imuj05VNsNrzjHxmcwl2UqgFT
+         di1jx5hEQkC4H4PcYkob0LVHFZnnJsCNcnM2PeW75XP1K9pYcECY9e3K5FOKydqozNfa
+         SI2D6H5+sVUUpxcwAfOWWX6GNHsEJrAvbKHFkAcbUpuNPmSILbKmH7VsjWDRI3/EztTl
+         SRUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705607468; x=1706212268;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BTvQsNfYLosp4zMJSEtUdKK37sRRAVysKUE3QZOulFY=;
-        b=AbjfA4K7tHz7+sD96OjbQCyG+U9CPjkRgR7L5IXmxzidp+n7KKcnyYnauvzPN+H1O+
-         g8RVPF4paLx/JT91GukC3/lxVnAZGqYS3icRQChbicFo+6doXZViYU+ls5Y0onpwYt4J
-         f0p1mRqrLyz5xk4lJ1+/7shunXEgphpyfj2mDLnYeungSqfLzUE+dXl9iN6Wg46o+3SL
-         h6mej64w2ijhefOCoIuT7DejiJARRHPqFF5w58rb0FAHBnwQvLTzHQUYzJWae8XSeLFo
-         h+lGA7fZ+ah3iGeXy1Lv1zS1WN3o+Gf64+aFmBObsDfxxNwYNcsk4t8wCoshKC0ubkJh
-         16Ag==
-X-Gm-Message-State: AOJu0YwwS0Z4nkepRtBM10g7LR5yDtEd4NvA5tB0mupeGxgmI2uBwkkS
-	DFpesGFoMTk4j/7BvaDGWkMpWBV1YoM3Ttc3S4ULrodg21IGkpq2
-X-Google-Smtp-Source: AGHT+IFuzwMJ2IKpO0vPscGpujBJTJMHffiNlful/2XZ3SiEHAezwmJr9V7vyeM/KC94kkWc9UiFVQ==
-X-Received: by 2002:a05:622a:2d4:b0:42a:212d:4a30 with SMTP id a20-20020a05622a02d400b0042a212d4a30mr494962qtx.29.1705607467542;
-        Thu, 18 Jan 2024 11:51:07 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id c25-20020ac853d9000000b004283695a39bsm6944302qtq.94.2024.01.18.11.51.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jan 2024 11:51:07 -0800 (PST)
-Message-ID: <4c0fd569-3381-421a-82de-4c85b8a4cb59@gmail.com>
-Date: Thu, 18 Jan 2024 11:51:01 -0800
+        d=1e100.net; s=20230601; t=1705607605; x=1706212405;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EZGu56SQkPq5onYvWGLXuBppyU+oGKlhQFwb+ijLfmY=;
+        b=mn7pOp252CM02tNGn7Wb4I5dg+n2a41qs18YKe9cejS2a4US6YIcdCol1QbuHasgqY
+         Nka+Rzkdl/HjVLTidhWslZE4vr7mGBnAD9zfwgYGnbboQ/KhgfmpKzSMvz9GT/Icus4V
+         YN5+urH3uBJmVmRnPzaWkCrp6ZHSf0sxYqt5Jd0dPcPMAITPVVGq1CsqYfgxEjpmC8Up
+         9WNNN13CXjqDWTwoMHxgdHCX5HJSNpWPzpIVfGcrCKoEMFyH65dziWj7UvcXPpR1WIiR
+         yAwEh7LdkHOCqtQVNXJJeptQTqQNhan9j5RX+y76TPfMgznvyW+qJQpTLzILh6krqQJD
+         BeWg==
+X-Gm-Message-State: AOJu0Yx/PoE4gnnUvhxA6GaZ7a7tCDUgEiX/GOoMNgnKySz2s3FzpW2/
+	lQdSZnXPN4cnRm/PJJZxYoYuGRyUWcBzRH3P/4m1n/6nubCYYtA7
+X-Google-Smtp-Source: AGHT+IGupQ8PU7Fa42u1C/IqqWB8MyHGZKGwJuxOH+hIX+ZSLySKufDFO7aZHyUgiK3OvCOu6aLdhw==
+X-Received: by 2002:a17:90b:1043:b0:28f:f82f:1881 with SMTP id gq3-20020a17090b104300b0028ff82f1881mr1085121pjb.54.1705607604959;
+        Thu, 18 Jan 2024 11:53:24 -0800 (PST)
+Received: from localhost.localdomain (c-67-174-241-145.hsd1.ca.comcast.net. [67.174.241.145])
+        by smtp.gmail.com with ESMTPSA id nc15-20020a17090b37cf00b0028feef1f7adsm2251388pjb.50.2024.01.18.11.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 11:53:24 -0800 (PST)
+From: Yang Shi <shy828301@gmail.com>
+To: jirislaby@kernel.org,
+	surenb@google.com,
+	riel@surriel.com,
+	willy@infradead.org,
+	cl@linux.com,
+	akpm@linux-foundation.org
+Cc: yang@os.amperecomputing.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: huge_memory: don't force huge page alignment on 32 bit
+Date: Thu, 18 Jan 2024 05:35:04 -0800
+Message-Id: <20240118133504.2910955-1-shy828301@gmail.com>
+X-Mailer: git-send-email 2.39.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.7 00/28] 6.7.1-rc1 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com
-References: <20240118104301.249503558@linuxfoundation.org>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240118104301.249503558@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/18/24 02:48, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.7.1 release.
-> There are 28 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 20 Jan 2024 10:42:49 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.1-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+From: Yang Shi <yang@os.amperecomputing.com>
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
+boundaries") caused two issues [1] [2] reported on 32 bit system or compat
+userspace.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+It doesn't make too much sense to force huge page alignment on 32 bit
+system due to the constrained virtual address space.
+
+[1] https://lore.kernel.org/linux-mm/CAHbLzkqa1SCBA10yjWTtA2mKCsoK5+M1BthSDL8ROvUq2XxZMw@mail.gmail.com/T/#mf211643a0427f8d6495b5b53f8132f453d60ab95
+[2] https://lore.kernel.org/linux-mm/CAHbLzkqa1SCBA10yjWTtA2mKCsoK5+M1BthSDL8ROvUq2XxZMw@mail.gmail.com/T/#me93dff2ccbd9902c3e395e1c022fb454e48ecb1d
+
+Fixes: efa7df3e3bb5 ("mm: align larger anonymous mappings on THP boundaries")
+Reported-by: Jiri Slaby <jirislaby@kernel.org>
+Reported-by: Suren Baghdasaryan <surenb@google.com>
+Tested-by: Jiri Slaby <jirislaby@kernel.org>
+Tested-by: Suren Baghdasaryan <surenb@google.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Christopher Lameter <cl@linux.com>
+Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
+---
+ mm/huge_memory.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 94ef5c02b459..e9fbaccbe0c0 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -37,6 +37,7 @@
+ #include <linux/page_owner.h>
+ #include <linux/sched/sysctl.h>
+ #include <linux/memory-tiers.h>
++#include <linux/compat.h>
+ 
+ #include <asm/tlb.h>
+ #include <asm/pgalloc.h>
+@@ -811,6 +812,14 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
+ 	loff_t off_align = round_up(off, size);
+ 	unsigned long len_pad, ret;
+ 
++	/*
++	 * It doesn't make too much sense to froce huge page alignment on
++	 * 32 bit system or compat userspace due to the contrained virtual
++	 * address space and address entropy.
++	 */
++	if (IS_ENABLED(CONFIG_32BIT) || in_compat_syscall())
++		return 0;
++
+ 	if (off_end <= off_align || (off_end - off_align) < size)
+ 		return 0;
+ 
 -- 
-Florian
+2.41.0
 
