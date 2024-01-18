@@ -1,103 +1,88 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2498F2E3F9
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3BB2E3FB
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705605475; cv=none; b=Xt38BBvS/1XwW2VDbBDdD9kEM4MmLxBkJ2uzRnBL4TsDfo/KGJCa5ATzxfsEzOY0h3KUgxXa38EeBS26GLYJVOhj2PPcTDyHt5wn5k4FvZkLzyv0twWJy4K1wB6uLUFCOSlGdJh0/6W3LY/egUKsO6Y/LEPZqY3R93paflhxoO4=
+	t=1705605569; cv=none; b=oqO35Vr70prnqP5dHqBU1LeCqFlQwCAiuMvp8fKK9QM+Zd+xnUSRe0Qn032CXJVXtT08W8j+Vqt2/u/8yOJkwQwrwmeaDMnky5SYIwGOAGr4Wo0E9k7OwiMtyv6ZGMfPY9po9z4TH9cBd2b9o0OceB1duVKBAbY163ZNI6NUT1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705605475; c=relaxed/simple;
-	bh=U74K1kY2dyd5hSBstEhod90EVhWSL5ywn5NpSDxh7c4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CoQduO1SuIQ6ahAYoS8k7SrkLiSoMSbD9iYmKJwSx095WUMBqi/MlTrAy8kgLLcQwVX6RBzQEb+yfmmSfist+IvjzZPlPsyYcdlDzjAsa/KlB1tREfLTwY1JsBJAPpxzzixfqRPS5ozApjzSSJltcbkeXfDraqJkUwhyFnP4wio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fXZmjKD6; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705605569; c=relaxed/simple;
+	bh=LdQBpPSFJZHAxiRnzyNT29aUGLfrazztcyszNCh7pSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ckuAFIR4O5eDQ/6/aGgbeyKtvjZjmgPE92IVtBKr+8lc04soSAbPdeQUJAl6B6CqPvUBJ8xjsksam7kmNTu6ObTubXaczVRPSy+W3E38c/z9IhGtLUqxismqlT0Use0hiueovwpgMjs3gkZ8tokNz03Dt1NDOVA2x7xDShb+w0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=fG0aH+Do; arc=none smtp.client-ip=209.85.217.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXZmjKD6"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78370566ae3so170185a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:17:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="fG0aH+Do"
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-467021612acso3096354137.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:19:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705605473; x=1706210273; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+QqmfYbfkxReSZlnA0Rop1TbT1YTY/BIoy1a4nhbFg4=;
-        b=fXZmjKD6Z9WHoINhGVd1ujQcXjK1EcK/zWD0jK9JeDTM5Oy6lTqeKZ/m8LJtSEegeA
-         hC+BJMSqxrp3eh/fOT5+6xFmZwWpjzgzhXtVBFBJZ7OGsVm37CkbJbWlvSord7h1pdAS
-         DCE8q8R5abmzDpS/arojPFa2TFDVnvevgVuHGiNo7u4VrzWBwVCL/Mi4uBk6oS7+i/wR
-         nYJ5OHsUSlcYkD14Xcy8INe41hjECfMILQVBZunywDb0DLnw2f7G6EPL/lFySgd8GXDw
-         OLcAmEKqstFi3RfJ7Y2FK+pPZ4p1BN48G0z/5OyY+h8qyfRdK1T4U//tj/8/ORTQoyxd
-         YA0A==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1705605566; x=1706210366; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9MU572EdVLdUkapQWYdIbhqtVcpdD79Cvhg2J7pciqk=;
+        b=fG0aH+DoYij4ZEzRUztp/ojc8RpIIsAf7UwTvSnfWKcz0La4x+Ct3BW641mq4lVArJ
+         BsNlKYaPYPTMvlQG36Tje9XJ8Gq2u0RgtbVloUNgICreHryw18K0YHR7wFnmz9txKzZy
+         Dz+YDuThPHnuYA8rFddVdr65vxdD+BClcHyU30Xq8n/2KIrQg2nwarLwoVASABN+GIB8
+         iqQJwn6vUg5IkGq73oeDyQsC4R8Lo0b9+TSAYxiJlb5ZtRH7ZAhAMZEhXQF628D6H79U
+         b/UCF9+JxbnHY7qUpbNM9PGUDdxRyGzcO8IqB1h5r96qb4JU1Y4vPlks7XWWSusSKdC0
+         laPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705605473; x=1706210273;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+QqmfYbfkxReSZlnA0Rop1TbT1YTY/BIoy1a4nhbFg4=;
-        b=cmn6qXSa3NYJdyB+Ok/x3SDEno0ar8m5HJgCzdYIRMNlUK9gZAcyJkbt8Q+1J0Mtxm
-         mlqa03CX8roVtNrCj4axNiHzEJOwxuWAiOpYaKdGiJ778M3M8h7PaHt1hB17BdSDgnLO
-         kwEneYFq+AbFBzm4To49rZNtD9dKJc1criQG+EkMOo9NK+cGhvzZlsmZ9rvrY6GNFfnW
-         G9CmHbXyT059EoXZ4wf+pNxpkujJK3oAjBi2jdJT43xB8nT4D2NimmwvEwlwPbLYzL/G
-         QPw1FtKYGx4pJ7wBmiD3uCGoz8RbLOjxRjcD28wenv4lqhm7zSXZvp2DYTligyJ1uQHh
-         OqdQ==
-X-Gm-Message-State: AOJu0YzsQ2/QCCctwOoj7n2Dod//5d1IR9NN7Qxi+F8Gxy5tJrtmvewv
-	PYykeIhBdiE9SLjsbCPHyyyhc0Fy2G4rxRDxNxdVkObQmA2ibcNT
-X-Google-Smtp-Source: AGHT+IEb91YYCfcYQfOZMQ7J1lypHUmBWTsBrt2DsHYjfZ5XQJgJkP+UK/FcAq+zUwbeP7RGZvAJgA==
-X-Received: by 2002:a05:620a:6881:b0:783:843d:df5b with SMTP id rv1-20020a05620a688100b00783843ddf5bmr266388qkn.7.1705605472745;
-        Thu, 18 Jan 2024 11:17:52 -0800 (PST)
-Received: from me.mynetworksettings.com (pool-74-98-201-227.pitbpa.fios.verizon.net. [74.98.201.227])
-        by smtp.gmail.com with ESMTPSA id s16-20020a05620a081000b0076efaec147csm5461145qks.45.2024.01.18.11.17.52
+        d=1e100.net; s=20230601; t=1705605566; x=1706210366;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9MU572EdVLdUkapQWYdIbhqtVcpdD79Cvhg2J7pciqk=;
+        b=CSxQdtnHK1KjTBhtLWxzqD/tgb7+ECvm8yFzsq9RCACg2QCg0DjNbcuzezqX9HtFWX
+         mTI/0CIpVvuSEwEMDyzvzb1RIi0JplMjtepnQW9N56tIqBtsrAin9+bBMnYpU5nwTZI0
+         OMDzaB9t/Nq30YuwcR2GvXBpQGIL1AzT6VPVqQ12qHpOu/y93iJ5eX+UUCHWR5Mckwe3
+         JCYvU1JcqqauDBXoORtlDVLsVJ3a1e2UW7Mn6Hpkk+CDL6mmpbb7eJdhsbe+MI2txZxj
+         m3OZi9WJNTuT0DZaxRYmNAGzF7KO5fCuECOpp/rlxeIBbL+Kuk6BcNL1nnuGpskRUCuE
+         IpUw==
+X-Gm-Message-State: AOJu0YzO/oYvcYwxcAA+WGha9v189KiZNZ4tz7XuaVxLmxg0ELe8WBnv
+	Q+liuEou5qkAFW4Opg6qM3m7bOEAnrqSIkyJotwbCRgiz2xb8FOjRjAcUaBlMZI=
+X-Google-Smtp-Source: AGHT+IGKfTocm4eVWCtnjc03F2xb43OO+W4kEUU4mAbk31KIM3WqWdepd95bP8ts1QqIQXTIPbACQA==
+X-Received: by 2002:a67:fe45:0:b0:468:1083:39ea with SMTP id m5-20020a67fe45000000b00468108339eamr1375691vsr.20.1705605566127;
+        Thu, 18 Jan 2024 11:19:26 -0800 (PST)
+Received: from localhost ([2620:10d:c091:400::5:8773])
+        by smtp.gmail.com with ESMTPSA id om9-20020a0562143d8900b00681a83650b9sm64917qvb.41.2024.01.18.11.19.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 11:17:52 -0800 (PST)
-From: Jacob Lott <jklott.git@gmail.com>
-To: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Jacob Lott <jklott.git@gmail.com>
-Subject: [PATCH v3] staging: rts5208: Add more details to Kconfig help
-Date: Thu, 18 Jan 2024 14:17:04 -0500
-Message-Id: <20240118191703.89535-1-jklott.git@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Thu, 18 Jan 2024 11:19:25 -0800 (PST)
+Date: Thu, 18 Jan 2024 14:19:24 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Shakeel Butt <shakeelb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+	Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Michal Hocko <mhocko@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: writeback: ratelimit stat flush from
+ mem_cgroup_wb_stats
+Message-ID: <20240118191924.GN939255@cmpxchg.org>
+References: <20240118184235.618164-1-shakeelb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240118184235.618164-1-shakeelb@google.com>
 
-The current help text is short and triggers a
-warning from checkpatch.pl. This patch adds more
-details to the help text which should provide better
-information for whether or not to enable the driver.
+On Thu, Jan 18, 2024 at 06:42:35PM +0000, Shakeel Butt wrote:
+> One of our workloads (Postgres 14) has regressed when migrated from 5.10
+> to 6.1 upstream kernel. The regression can be reproduced by sysbench's
+> oltp_write_only benchmark. It seems like the always on rstat flush in
+> mem_cgroup_wb_stats() is causing the regression. So, rate limit that
+> specific rstat flush. One potential consequence would be the dirty
+> throttling might be decided on stale memcg stats. However from our
+> benchmarks and production traffic we have not observed any change in the
+> dirty throttling behavior of the application.
+> 
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-Signed-off-by: Jacob Lott <jklott.git@gmail.com>
----
-v2 -> v3: Fixed spacing and newline in text
-v1 -> v2: Corrected line spacing based off feedback
-
- drivers/staging/rts5208/Kconfig | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/staging/rts5208/Kconfig b/drivers/staging/rts5208/Kconfig
-index b864023d3ccb..c4664a26ba3b 100644
---- a/drivers/staging/rts5208/Kconfig
-+++ b/drivers/staging/rts5208/Kconfig
-@@ -3,7 +3,11 @@ config RTS5208
- 	tristate "Realtek PCI-E Card Reader RTS5208/5288 support"
- 	depends on PCI && SCSI
- 	help
--	  Say Y here to include driver code to support the Realtek
--	  PCI-E card reader rts5208/rts5288.
-+	  Choose Y here to enable support for the Realtek PCI-E card reader
-+	  RTS5208/5288. This driver facilitates communication between the Linux
-+	  kernel and the Realtek PCI-E card reader.
- 
--	  If this driver is compiled as a module, it will be named rts5208.
-+	  If you opt to compile this driver as a module, it will be named rts5208.
-+	  Selecting N will exclude this driver from the kernel build. Choose option
-+	  Y if your system includes the Realtek PCI-E card reader rts5208/rts5288.
-+	  When in doubt, it is generally safe to select N.
--- 
-2.34.1
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
