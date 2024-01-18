@@ -1,91 +1,160 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F482D797;
-	Thu, 18 Jan 2024 18:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E373C2D60D
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 18:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705603029; cv=none; b=R0qseoOojybk3E8qn5EbYDJrjn99cw+/qpvQzDQkRHjyy4lmr/XdFRVmeZ64avq3XY2h7duI/kUZa1F2f4B3/Xhs1ZSWFL6Utr/1r56J4mwxOjWCe632hUNLOPr6BQjUql71kE6yUHFOa67Zwu7nXL/mvrxTlSpAKed1x74w+YU=
+	t=1705603077; cv=none; b=UP6Hj8r2zIEKxrpXdQckalq3luncOx2n+ixyCDAPYYYYa2ifPiCIwShIIq1E1M2/3Y60Zk6N7EHh+ugyTMRPijJOo8M+hHzdiFUw6DgLmkkBdD+q1FOJBJSCGckZOjEWc7DZYHS3bjU65ZjCKYhoG6Kfq1jDqlk0pcXayFFmiAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705603029; c=relaxed/simple;
-	bh=B12x5CU3LJAATEvwezybaFPvAgE1iCNB0PAo3tZON0Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gpTGdWjtM6DU3iT/v53Krqfzr6RI2nu7xSyyRWkDVOE2XMPsKr0hjYFp69MNaZjRCedJszuBjJuO4HmFeIYXy9wtYz8OybCp0o4Hijsp3OawNksIERJxgdPjCouMuEnv3S55skp8I+vlr0Yk0wvZu5SgL3M3mjIfY0IiVfcwHvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T1tN/aj+; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1705603077; c=relaxed/simple;
+	bh=ZhsWxCBVmOS0Tg3/E7fdxwBul+lFxvp6eiP7y0G0MJI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UyfHBG9Dj3wqa9A06pPnFOfPvGStphchMZUlcRy0FRCh+elCsAOyeDtQRgDlV6jzvxjabIkcd/JmEE3T8wayB25cVx52AVi4hiv1vUIulKQNw9QnjeWlegDctIvmmDFS8r84u4Vumitd/lQdYeFLgNM5Nl4Dl40I38ai/izaieo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ms6PVIMw; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T1tN/aj+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705603026;
-	bh=B12x5CU3LJAATEvwezybaFPvAgE1iCNB0PAo3tZON0Y=;
-	h=Date:From:To:Cc:Subject:From;
-	b=T1tN/aj+jOtqsSFJBIUGFabkBd+Gj6AIapWW+uI7ctwXpcFOY3P9CrOYWSsAWR0wQ
-	 rAgdU8RV7LFieTsYwb5lhSKh64lF8XybTXPoepaFemc4CBuvwgPh7Xg/ROd3IDKcdK
-	 vkHOhW46eH4DXdOBCX3DRgjKckb7VYvaYfQcXYi+cJ4MMrC3fWnuMakG2MB9XF8x0Q
-	 fKx0fK2REDa0nGx2arEVJjLNAUqpAMpl6YUTVx6FE+2sbLOngGffeCWasFLlJdls9x
-	 bKqXovIjuuw9l1E/+w5Ow7Bc0mB9xHlGWyHATrTZ92aJ2oGav87yvE66XP6FpJTgur
-	 Hh3/ytjo04XHw==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EFFA83782079;
-	Thu, 18 Jan 2024 18:37:02 +0000 (UTC)
-Date: Thu, 18 Jan 2024 15:36:30 -0300
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com,
-	Macpaul Lin <macpaul.lin@mediatek.com>,
-	Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Chen-Yu Tsai <wenst@chromium.org>
-Subject: Probe failure of usb controller @11290000 on MT8195 after
- next-20231221
-Message-ID: <9fce9838-ef87-4d1b-b3df-63e1ddb0ec51@notapiano>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ms6PVIMw"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a271a28aeb4so1361545066b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 10:37:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705603074; x=1706207874; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9bYBrB0Absrq0cOqKL/yLzU6Obd9P2ZIGfMVvbGA9S8=;
+        b=Ms6PVIMwof0GmyX9h71WtN7TsGa7oBd0FG8ZUY3VkyGXSj7sDCb3etAtSYDDeDeePp
+         gNBqu1SeJAonfMLXR8IGtag0xLXIcx98EYE0JrnE7HPC0INaJIrf3HAZB5Uwdg2Ro4Gg
+         ttScGyrd9ehcTH1KcpC2rJZvf47rb4f4GcyTGEVscURHYaapstkg8H5ghHc9Dq78bRNx
+         4o7Lhu2V0fjBaE+yhRHdMoE4wWOUldTzQ7NOFW24iv8eo7XDVxJrZkQoFEa9q36Go2tu
+         eQEXmxtFLIscIpPgdxCI9pqmtGUPL10Dkd0u1UZV8F5+qBy/33x6u8miBBdMP6w+QNcA
+         eoJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705603074; x=1706207874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9bYBrB0Absrq0cOqKL/yLzU6Obd9P2ZIGfMVvbGA9S8=;
+        b=NDCWsu2tlZGPH55QgzOE+rqON/awXa/afDj3/rqp0Q4IUIflJrj//54ZuEe+sd1CSd
+         KKXGCC5vv8vLjxFH5Zy1//5QXxupv6ZxRLOXQKPg/rD+FXI6Ap5TU+pXm8wv1VNGzNR1
+         0o+I76JnE6cYher2gh08NNEiRpzLFZ5hexgWSKJKCXDM7VwoIUPSQ/VzcG9NgyA5W0FI
+         CnoDDgD/uSCxYrwZmCd6Lawqy75YSg0eNBDLNTrYM0Dp2Z1hg/1QgBXJTNAoOigLr+ez
+         +WAFveXl05s4liam7EyU/Pj3NczegxtS6C6NfDkFp7BC32cFdVIvVCt3CveXHuofxw5o
+         0ISg==
+X-Gm-Message-State: AOJu0Ywaadc0+foT+VlsIQJGnCVgSM+07adSa/3fshHh3k4v8hBAo6R/
+	B9TpdQRxsmDutQL0rznO147t0GMvPPCuy+rQDJwa7btmbjFd5GB5m9aHmuhsF3K+V4hoeYszi9r
+	Pc5A3XbvKDqRfuJozo2H73Jl22v5WS1nHuhVu
+X-Google-Smtp-Source: AGHT+IFeUx3hVxaDTHPRbozzkWnnAPGABzgGB8u4CWgMJ1hUMaUFdcZoBq0X8CuWN6gIpHNy8n//Rg5/P84Vg2NyiSQ=
+X-Received: by 2002:a17:906:6150:b0:a2f:17d6:68b1 with SMTP id
+ p16-20020a170906615000b00a2f17d668b1mr716320ejl.30.1705603073825; Thu, 18 Jan
+ 2024 10:37:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20240117-b4-zswap-lock-optimize-v1-0-23f6effe5775@bytedance.com>
+ <CAJD7tkY7Xvjg37EEw2M=uRknphY0pf3ZVpyX2s2QyiJ=Axhihw@mail.gmail.com>
+ <20240118153425.GI939255@cmpxchg.org> <CAJD7tkY48=2-4_iG6c-FcbzT3EBriem2spOFTTpGMfqmOmsx2Q@mail.gmail.com>
+ <20240118180655.GM939255@cmpxchg.org>
+In-Reply-To: <20240118180655.GM939255@cmpxchg.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 18 Jan 2024 10:37:17 -0800
+Message-ID: <CAJD7tkaNA5r7it0NBf+uR5yytJccbV_dLQmPFN0NG5b=+EcOTg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] mm/zswap: optimize the scalability of zswap rb-tree
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Chengming Zhou <zhouchengming@bytedance.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Chris Li <chriscli@google.com>, Nhat Pham <nphamcs@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Jan 18, 2024 at 10:07=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.or=
+g> wrote:
+>
+> On Thu, Jan 18, 2024 at 09:30:12AM -0800, Yosry Ahmed wrote:
+> > On Thu, Jan 18, 2024 at 7:34=E2=80=AFAM Johannes Weiner <hannes@cmpxchg=
+.org> wrote:
+> > >
+> > > On Wed, Jan 17, 2024 at 10:37:22AM -0800, Yosry Ahmed wrote:
+> > > > On Wed, Jan 17, 2024 at 1:23=E2=80=AFAM Chengming Zhou
+> > > > <zhouchengming@bytedance.com> wrote:
+> > > > >
+> > > > > When testing the zswap performance by using kernel build -j32 in =
+a tmpfs
+> > > > > directory, I found the scalability of zswap rb-tree is not good, =
+which
+> > > > > is protected by the only spinlock. That would cause heavy lock co=
+ntention
+> > > > > if multiple tasks zswap_store/load concurrently.
+> > > > >
+> > > > > So a simple solution is to split the only one zswap rb-tree into =
+multiple
+> > > > > rb-trees, each corresponds to SWAP_ADDRESS_SPACE_PAGES (64M). Thi=
+s idea is
+> > > > > from the commit 4b3ef9daa4fc ("mm/swap: split swap cache into 64M=
+B trunks").
+> > > > >
+> > > > > Although this method can't solve the spinlock contention complete=
+ly, it
+> > > > > can mitigate much of that contention. Below is the results of ker=
+nel build
+> > > > > in tmpfs with zswap shrinker enabled:
+> > > > >
+> > > > >      linux-next  zswap-lock-optimize
+> > > > > real 1m9.181s    1m3.820s
+> > > > > user 17m44.036s  17m40.100s
+> > > > > sys  7m37.297s   4m54.622s
+> > > > >
+> > > > > So there are clearly improvements. And it's complementary with th=
+e ongoing
+> > > > > zswap xarray conversion by Chris. Anyway, I think we can also mer=
+ge this
+> > > > > first, it's complementary IMHO. So I just refresh and resend this=
+ for
+> > > > > further discussion.
+> > > >
+> > > > The reason why I think we should wait for the xarray patch(es) is
+> > > > there is a chance we may see less improvements from splitting the t=
+ree
+> > > > if it was an xarray. If we merge this series first, there is no way=
+ to
+> > > > know.
+> > >
+> > > I mentioned this before, but I disagree quite strongly with this
+> > > general sentiment.
+> > >
+> > > Chengming's patches are simple, mature, and have convincing
+> > > numbers. IMO it's poor form to hold something like that for "let's se=
+e
+> > > how our other experiment works out". The only exception would be if w=
+e
+> > > all agree that the earlier change flies in the face of the overall
+> > > direction we want to pursue, which I don't think is the case here.
+> >
+> > My intention was not to delay merging these patches until the xarray
+> > patches are merged in. It was only to wait until the xarray patches
+> > are *posted*, so that we can redo the testing on top of them and
+> > verify that the gains are still there. That should have been around
+> > now, but the xarray patches were posted in a form that does not allow
+> > this testing (because we still have a lock on the read path), so I am
+> > less inclined.
+> >
+> > My rationale was that if the gains from splitting the tree become
+> > minimal after we switch to an xarray, we won't know. It's more
+> > difficult to remove optimizations than to add them, because we may
+> > cause a regression. I am kind of paranoid about having code sitting
+> > around that we don't have full information about how much it's needed.
+>
+> Yeah I understand that fear.
+>
+> I expect the splitting to help more than the move to xarray because
+> it's the writes that are hot. Luckily in this case it should be fairly
+> easy to differential-test after it's been merged by changing that tree
+> lookup macro/function locally to always return &trees[type][0], right?
 
-KernelCI has identified a failure in the probe of one of the USB controllers on
-the MT8195-Tomato Chromebook [1]:
-
-[   16.336840] xhci-mtk 11290000.usb: uwk - reg:0x400, version:104
-[   16.337081] xhci-mtk 11290000.usb: xHCI Host Controller
-[   16.337093] xhci-mtk 11290000.usb: new USB bus registered, assigned bus number 5
-[   16.357114] xhci-mtk 11290000.usb: clocks are not stable (0x1003d0f)
-[   16.357119] xhci-mtk 11290000.usb: can't setup: -110
-[   16.357128] xhci-mtk 11290000.usb: USB bus 5 deregistered
-[   16.359484] xhci-mtk: probe of 11290000.usb failed with error -110
-
-A previous message [2] suggests that a force-mode phy property that has been
-merged might help with addressing the issue, however it's not clear to me how,
-given that the controller at 1129000 uses a USB2 phy and the phy driver patch
-only looks for the property on USB3 phys.
-
-Worth noting that the issue doesn't always happen. For instance the test did
-pass for next-20240110 and then failed again on today's next [3]. But it does
-seem that the issue was introduced, or at least became much more likely, between
-next-20231221 and next-20240103, given that it never happened out of 10 runs
-before, and after that has happened 5 out of 7 times.
-
-Note: On the Tomato Chromebook specifically this USB controller is not connected
-to anything.
-
-[1] https://linux.kernelci.org/test/case/id/659ce3506673076a8c52a428/
-[2] https://lore.kernel.org/all/239def9b-437b-9211-7844-af4332651df0@mediatek.com/
-[3] https://linux.kernelci.org/test/case/id/65a8c66ee89acb56ac52a405/
-
-Thanks,
-Nícolas
+Yeah that's exactly what I had in mind. Once we have a version of the
+xarray patch without the locking on the read side we can test with
+that. Chengming, does this sound reasonable to you?
