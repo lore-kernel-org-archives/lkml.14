@@ -1,182 +1,105 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DDC2C854
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 16:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850202CCB2;
+	Thu, 18 Jan 2024 16:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705596704; cv=none; b=osV8G1wAnSVMNavdpFLRuWKtv9FAqdsHwVapKxgGYHSpu4Ain/B5eUF9lufT5/Fh3QwSDt85TnkkOaWPiGSA7m5KNafSeKNVDdrs3uC3A68QJUa8AvUx1zWI7RS+DB0TP/NmuOWBcueYOEE2ooUnjfQDsBbQRj4fpOFDxFP31Yk=
+	t=1705596714; cv=none; b=I55ymS6QdYNnZwpcB/ORaCBUKlFD+xBAMDFvw8K1f8P+27EVD0tMEFjtp0PwG+ZVm8YEJ1FwcYyQz0b1mZUzsiSAkLwgclXKmq9HZpnHf+tKKB3H3bL7Lxkng+wNq5STwjlCpCSP5T8+Grvt/HRUkvrC83C7mfYvlvF0GEGW+oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705596704; c=relaxed/simple;
-	bh=14xW5IVrKIpJGz/yr9+qq5cM96Op15M2455Tb9jMzzs=;
-	h=DKIM-Signature:X-IronPort-AV:Received:Date:From:To:cc:Subject:
-	 In-Reply-To:Message-ID:References:MIME-Version:Content-Type; b=C3PcBoO4ZH+9rlg72FF6mMYMPd4IydJ6c23z+UypKDW2fZQ74Dbri8TWLMX8hIy/50q01GsKXHBoDG8HRN1bnK2gGPnB7EvdG7gi96Jm5z6CLIKu0HCFKbTICWKPhga9a67gQTvh7X0dWSrOQdRi+l3qL/92/Jp6A0c+kvJx7O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=W9x5+EdN; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1705596714; c=relaxed/simple;
+	bh=g4k6Us6qSFK82rGxtE1fQ0gk7/WowjsnzucPID1s3Gs=;
+	h=DKIM-Signature:Received:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:References:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding; b=WZ7zp2KNRRZRQmFOJYM1L5vSLsQlh+rJPtnygd/HFYtQ27q3qmugwGhNtPNGPW3SyGrnKHYGCGbUCCzZ8BlwLPlp+47wPHRdG5/G4RrQjVeqz4xaoI75EUn3w1adhthQQq86fFo+Rn3ZwBNO4q97k/3wn99BskHybPA0kbBw4N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mfnkzC+w; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="W9x5+EdN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Wal7fV7cRwOFll72GvMrIpK0k8njziAPKD8Xje7t6Do=;
-  b=W9x5+EdNKB/hi7roS1ZRx5XOHNiU/TCne/i41BfmUzpyDrT6eYkn/VzX
-   iQPll/9EJnTSzQRROx4oCUnvKajvzQu1pMabI2HKt90PohfUeOsEYAHU6
-   nojSh9yeZhC6+bjmmJCkSd9rgsFH+i/aKxT2mUgxD72S6cDrqEb0BAnQV
-   w=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.05,203,1701126000"; 
-   d="scan'208";a="77204690"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 17:50:28 +0100
-Date: Thu, 18 Jan 2024 17:50:27 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>, 
-    linux-kernel@vger.kernel.org
-Subject: Re: EEVDF and NUMA balancing
-In-Reply-To: <CAKfTPtA31Z0N9hd4z_GPvoZwK=KTf4fPbx_jDbK653mdVDLEbw@mail.gmail.com>
-Message-ID: <424169db-49df-f168-d7f7-b48efe6ada@inria.fr>
-References: <alpine.DEB.2.22.394.2310032059060.3220@hadrien> <CAKfTPtCRN_eWgVdK2-h6E_ifJKwwJEtMjeNjB=5DXZFWyBS+tQ@mail.gmail.com> <93112fbe-30be-eab8-427c-5d4670a0f94e@inria.fr> <CAKfTPtAeFvrZxApK3RruWwCjMxbQvOkU+_YgZSo4QPT_AD6FxA@mail.gmail.com>
- <9dc451b5-9dd8-89f2-1c9c-7c358faeaad@inria.fr> <CAKfTPtDCsLnDnVje9maP5s-L7TbtSu4CvF19xHOxbkvSNd7vZg@mail.gmail.com> <2359ab5-4556-1a73-9255-3fcf2fc57ec@inria.fr> <6618dcfa-a42f-567c-2a9d-a76786683b29@inria.fr> <CAKfTPtDrULyOB9+RhjoPfCpHKVhx5kRf6dq79DSE6jZgsEairw@mail.gmail.com>
- <edbd8ecd-148c-b366-fd46-3531dec39d49@inria.fr> <cecfd395-f067-99e1-bdd2-fec2ebc3db3@inria.fr> <CAKfTPtCAcHuzhcDvry6_nH2K29wc-LEo2yOi-J-mnZkwMvGDbw@mail.gmail.com> <cfae246d-9383-59d-ee5b-81ea3dd0a795@inria.fr> <CAKfTPtD0B29zadkeEOCWvry123zWVEEm41ouKj7noXwQdoh2+Q@mail.gmail.com>
- <7a845b43-bd8e-6c7d-6bca-2e6f174f671@inria.fr> <36f2cc93-db10-5977-78ab-d9d07c3f445@inria.fr> <CAKfTPtA31Z0N9hd4z_GPvoZwK=KTf4fPbx_jDbK653mdVDLEbw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mfnkzC+w"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+	bh=C8m0IK49u5sZ+IzhyuhM102/BfnX6Kya5OFI36Y2IJ8=; b=mfnkzC+wSFRKo6Wrp4w+dDHALj
+	AIYZJI/XLWHabwPfImc0z7vz21lEFEItsfn5e3al/7st7Fgq5b3txT95wDkaL0fRY2v6LjWXmoiH9
+	3BQCOeorz5T0vSRaTRTdIgPaKgPygtBb7J8dxSF11zEw+rSurypmHmX1fKkC8cexxoxp448GIItep
+	lUptGLhlsXy4PhjnJMlBGK3n0k7vTLoefj3634I+KyWNpRX/a8h4zwb2JVkh8pc4nMniE+bfjOFOt
+	2mouyE3kJAqI3AhtuaMlv+XtAf1Qh7W1KeUneahJvtAS39KgFfvD252biSAiBdifJwQ8xndAGrfGa
+	SHJYGH/w==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rQVcO-003JGo-1Q;
+	Thu, 18 Jan 2024 16:51:52 +0000
+Message-ID: <954506be-2c8a-443a-8cc3-db0fcad9539f@infradead.org>
+Date: Thu, 18 Jan 2024 08:51:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] staging: rts5208: Add more details to Kconfig help
+Content-Language: en-US
+To: Jacob Lott <jklott.git@gmail.com>, gregkh@linuxfoundation.org,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240118160901.71756-1-jklott.git@gmail.com>
+ <3f4582ac-8180-417b-a83a-0b9f362cc5a0@infradead.org>
+ <5a60b50d-34f5-42a2-8112-f988b89f1e7f@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <5a60b50d-34f5-42a2-8112-f988b89f1e7f@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
-On Thu, 18 Jan 2024, Vincent Guittot wrote:
+On 1/18/24 08:50, Jacob Lott wrote:
+> 
+> On 1/18/24 11:47 AM, Randy Dunlap wrote:
+>> Hi--
+>>
+>> On 1/18/24 08:09, Jacob Lott wrote:
+>>> The current help text is short and triggers a
+>>> warning from checkpatch.pl. This patch adds more
+>>> details to the help text which should provide better
+>>> information for whether or not to enable the driver.
+>>>
+>>> Signed-off-by: Jacob Lott <jklott.git@gmail.com>
+>>> ---
+>>>   drivers/staging/rts5208/Kconfig | 10 +++++++---
+>>>   1 file changed, 7 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/rts5208/Kconfig b/drivers/staging/rts5208/Kconfig
+>>> index b864023d3ccb..4f9cc3f00e1a 100644
+>>> --- a/drivers/staging/rts5208/Kconfig
+>>> +++ b/drivers/staging/rts5208/Kconfig
+>>> @@ -3,7 +3,11 @@ config RTS5208
+>>>       tristate "Realtek PCI-E Card Reader RTS5208/5288 support"
+>>>       depends on PCI && SCSI
+>>>       help
+>>> -      Say Y here to include driver code to support the Realtek
+>>> -      PCI-E card reader rts5208/rts5288.
+>>> +      Choose Y here to enable support for the Realtek PCI-E card reader
+>> Above line is indented with spaces. It should be on tab + 2 spaces.
+>>
+>>> +      RTS5208/5288. This driver facilitates communication between the Linux
+>>> +      kernel and the Realtek PCI-E card reader.
+>>>   -      If this driver is compiled as a module, it will be named rts5208.
+>>> +      If you opt to compile this driver as a module, it will be named rts5208.
+>>> +      Selecting N will exclude this driver from the kernel build. Choose option
+>>> +      Y if your system includes the Realtek PCI-E card reader rts5208/rts5288.
+>>> +      When in doubt, it is generally safe to select N.
+>> That's not incorrect, but it is verbose IMO.
+>> More than we usually say.
+>>
+>>> \ No newline at end of file
+>> Please add a newline at the end of the file.
+>>
+>> thanks.
+> In general is there an option/additional check I can run besides checkpatch.pl to catch issues with tabs, newlines, col width, etc?
 
-> Hi Julia,
->
-> Sorry for the delay. I have been involved on other perf regression
->
-> On Fri, 5 Jan 2024 at 18:27, Julia Lawall <julia.lawall@inria.fr> wrote:
-> >
-> >
-> >
-> > On Fri, 5 Jan 2024, Julia Lawall wrote:
-> >
-> > >
-> > >
-> > > On Fri, 5 Jan 2024, Vincent Guittot wrote:
-> > >
-> > > > On Fri, 5 Jan 2024 at 15:51, Julia Lawall <julia.lawall@inria.fr> wrote:
-> > > > >
-> > > > > > Your system is calling the polling mode and not the default
-> > > > > > cpuidle_idle_call() ? This could explain why I don't see such problem
-> > > > > > on my system which doesn't have polling
-> > > > > >
-> > > > > > Are you forcing the use of polling mode ?
-> > > > > > If yes, could you check that this problem disappears without forcing
-> > > > > > polling mode ?
-> > > > >
-> > > > > I expanded the code in do_idle to:
-> > > > >
-> > > > >                 if (cpu_idle_force_poll) { c1++;
-> > > > >                         tick_nohz_idle_restart_tick();
-> > > > >                         cpu_idle_poll();
-> > > > >                 } else if (tick_check_broadcast_expired()) { c2++;
-> > > > >                         tick_nohz_idle_restart_tick();
-> > > > >                         cpu_idle_poll();
-> > > > >                 } else { c3++;
-> > > > >                         cpuidle_idle_call();
-> > > > >                 }
-> > > > >
-> > > > > Later, I have:
-> > > > >
-> > > > >         trace_printk("force poll: %d: c1: %d, c2: %d, c3: %d\n",cpu_idle_force_poll, c1, c2, c3);
-> > > > >         flush_smp_call_function_queue();
-> > > > >         schedule_idle();
-> > > > >
-> > > > > force poll, c1 and c2 are always 0, and c3 is always some non-zero value.
-> > > > > Sometimes small (often 1), and sometimes large (304 or 305).
-> > > > >
-> > > > > So I don't think it's calling cpu_idle_poll().
-> > > >
-> > > > I agree that something else
-> > > >
-> > > > >
-> > > > > x86 has TIF_POLLING_NRFLAG defined to be a non zero value, which I think
-> > > > > is sufficient to cause the issue.
-> > > >
-> > > > Could you trace trace_sched_wake_idle_without_ipi() ans csd traces as well ?
-> > > > I don't understand what set need_resched() in your case; having in
-> > > > mind that I don't see the problem on my Arm systems and IIRC Peter
-> > > > said that he didn't face the problem on his x86 system.
-> > >
-> > > TIF_POLLING_NRFLAG doesn't seem to be defined on Arm.
-> > >
-> > > Peter said that he didn't see the problem, but perhaps that was just
-> > > random.  It requires a NUMA move to occur.  I make 20 runs to be sure to
-> > > see the problem at least once.  But another machine might behave
-> > > differently.
-> > >
-> > > I believe the call chain is:
-> > >
-> > > scheduler_tick
-> > >   trigger_load_balance
-> > >     nohz_balancer_kick
-> > >       kick_ilb
-> > >         smp_call_function_single_async
-> > >           generic_exec_single
-> > >             __smp_call_single_queue
-> > >               send_call_function_single_ipi
-> > >                 call_function_single_prep_ipi
-> > >                   set_nr_if_polling <====== sets need_resched
-> > >
-> > > I'll make a trace to reverify that.
-> >
-> > This is what I see at a tick, which corresponds to the call chain shown
-> > above:
-> >
-> >           bt.B.x-4184  [046]   466.410605: bputs:                scheduler_tick: calling trigger_load_balance
-> >           bt.B.x-4184  [046]   466.410605: bputs:                trigger_load_balance: calling nohz_balancer_kick
-> >           bt.B.x-4184  [046]   466.410605: bputs:                trigger_load_balance: calling kick_ilb
-> >           bt.B.x-4184  [046]   466.410607: bprint:               trigger_load_balance: calling smp_call_function_single_async 22
-> >           bt.B.x-4184  [046]   466.410607: bputs:                smp_call_function_single_async: calling generic_exec_single
-> >           bt.B.x-4184  [046]   466.410607: bputs:                generic_exec_single: calling __smp_call_single_queue
-> >           bt.B.x-4184  [046]   466.410608: bputs:                __smp_call_single_queue: calling send_call_function_single_ipi
-> >           bt.B.x-4184  [046]   466.410608: bputs:                __smp_call_single_queue: calling call_function_single_prep_ipi
-> >           bt.B.x-4184  [046]   466.410608: bputs:                call_function_single_prep_ipi: calling set_nr_if_polling
-> >           bt.B.x-4184  [046]   466.410609: sched_wake_idle_without_ipi: cpu=22
->
-> I don't know if you have made progress on this in the meantime.
+Not that I know of.
 
-Not really.  Basically after do_idle, there is the call to
-flush_smp_call_function_queue that invokes the deposited functions, which
-in our case is at best going to raise a softirq, and the call to schedule.
-Raising a softirq doesn't happen because of the check for need_resched.
-But even if that test were removed, it would still not be useful because
-there would be the ksoftirqd running on the idle core that would eliminate
-the imbalance between the sockets.  Maybe there could be some way to call
-run_rebalance_domains directly from nohz_csd_func, since
-run_rebalance_domains doesn't use its argument, but at the moment
-run_rebalance_domains is not visible to nohz_csd_func.
-
->
-> Regarding the trace above, do you know if anything happens on CPU22
-> just before the scheduler tried to kick the ILB on it ?
-
-I don't think so.  It's idle.
-
-> Have you found why TIF_POLLING_NRFLAG seems to be always set when the
-> kick_ilb happens ? It should be cleared once entering the idle state.
-
-Actually, I don't think it is always set.  It switches back and forth
-between two cases.  I will look for the traces that show that.
-
-> Could you check your cpuidle driver ?
-
-Check what specifically?
-
-thanks,
-julia
+-- 
+#Randy
