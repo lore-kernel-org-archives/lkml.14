@@ -1,182 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178381F610;
-	Thu, 18 Jan 2024 09:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221C1208C2;
+	Thu, 18 Jan 2024 09:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705570072; cv=none; b=BB+osyaSS81eDAZgCrjYZOzAAHp/n81bJrzRgmP48maqbPyz0XUa88xxR3mOeNV8SqcF6gbPCQkp1vbFCVIsV9mc/uFQ0SdPtzo+jKabvkGXqtskX+rtpTF06rcXXPykesnrG5TIRCrv9AIj00Szwd5/Fp/UWKBXcw/0OZVP0ow=
+	t=1705570083; cv=none; b=Z9TH9hssX/TqEqSsLikGqAq8Nas/2eJ874YIFFpGlm7xlfxMHabhpM9/DT75cIGnAi9u3JFXJoqDNexw+v1xv9HYHq27Ot8ztmjgCprByK/H6lp0w3Q0F1udfbYfjKmNg+0pMS/KE+BHsDMOZMRGApPLhe63d8SpY8z1pwPM0aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705570072; c=relaxed/simple;
-	bh=We42sBxpYqbo9Mmli+qZoQhq0Gf1SBcgshlP/yaPCZI=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:From:Date:To:cc:Subject:In-Reply-To:
-	 Message-ID:References:MIME-Version:Content-Type; b=EwD2l8gOo0HrAoD9ok/V0Q4UaTs6rmX5rSvYQ1vunwAVy7FEUc2xo/V7WRkxMXlXjLOmVLrv+7UnoRDok5fz9ZpfYcW/0P6WLtrgm/x8a044L1zEN6pk1HHTZ1TKxlARBoKu5LaIm0dVrm2MdaCfWnW3HYMBVsjaBtTo9YiM8u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OCN3Zo1T; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OCN3Zo1T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705570071; x=1737106071;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=We42sBxpYqbo9Mmli+qZoQhq0Gf1SBcgshlP/yaPCZI=;
-  b=OCN3Zo1TlF53xTXL0YUuifxwi3J35Tel+ySBbry0tnkHBiF1ioflGTUX
-   eEyKmtqtne5SUUTiL+1Gs6VxhVRTJJJRz4ANDFcO0bFpzEZxwKU0VwMZZ
-   LIPNMMj+39Skq+efN9uBmaIRP6PmNPBLZTPcnXH85JWxh93yym6B3UzL2
-   AG9sTDHbf8l8a/fEnlrnIrswyldF6uKnL2REfrXFT/6yKyrCYpF4vuFTi
-   aFmDy3ZXzR/QePPpkmv5EAhxxFUCEHKVLfm/mnTKtyysrOEsa7BDHo9Ye
-   scevbUgZLCJVhKLD94a9mv8lVoF1ezNxjBegZb3bUACQJbIE5UW8WKd/X
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="293169"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="293169"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 01:27:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="26727893"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.254.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 01:27:46 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 18 Jan 2024 11:27:41 +0200 (EET)
-To: Jonathan Woithe <jwoithe@just42.net>
-cc: Igor Mammedov <imammedo@redhat.com>, linux-pci@vger.kernel.org, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-    Rob Herring <robh@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Andy Shevchenko <andriy.shevchenko@intel.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
-In-Reply-To: <ZajJzcquyvRebAFN@marvin.atrad.com.au>
-Message-ID: <c930a6db-f1cd-88e2-03b5-9280b755df08@linux.intel.com>
-References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com> <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com> <ZZaiLOR4aO84CG2S@marvin.atrad.com.au> <ZZ+gEmxI/TxdbmyQ@marvin.atrad.com.au> <ZajJzcquyvRebAFN@marvin.atrad.com.au>
+	s=arc-20240116; t=1705570083; c=relaxed/simple;
+	bh=/gGlNbjmBlv+zqsAjlslP3odFZZNblilnBYeDhn2ZF0=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:Content-Language:To:Cc:References:
+	 From:Autocrypt:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	b=BuWqPWcKRjfNbwrCuqqQX7U+y1edArUGsnqZogkqkByg4VWvNhu5rM8/mbiuIThkt9/ejDNUfaUGpVc5a3LdaTuJVwFkLmfq337zdnlm7EPww3BCT0dqYUIuNHBsj2os+ToO3kLEwGS0n7AUoy6vCgqPKX+b3tgWQiXMtH3155I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-337c4f0f9daso1144341f8f.2;
+        Thu, 18 Jan 2024 01:28:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705570079; x=1706174879;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HtL2iiU0nfDyiRt9tTd7AcJL7rTNP36DMyPCVn7+M1g=;
+        b=kteP3YSl6cprDjf0LNvTFO4Kjc1cwkeO0h+EWbdDcWCUfy4+MoqIE3gdX8qXK52btj
+         NGxCErgQQpHK4br4QBSYtk5xF4jk9q1fxOaz8zUc51sJvVG7z5Lb6KNfYr4aXuZYT0k7
+         LWj+JEax1mHZhnnB2yns04REZGkKlb+ZjAtkM7JFVph+50VmQxiQUUlTylE7Tkoll1JX
+         yJVeroAS56AqoxJ7ib8MIgEnz1/nubhm2sy9Gd+GkoeU3BGJAnEEBdFKRcNVF0efEbU2
+         pgk/mAoalughEBnPY1iwL2rKDDcfqYdgsrFMLDC6iVadJhav5AP/WZyFPAe4QiamMN2e
+         xAIA==
+X-Gm-Message-State: AOJu0YwH12yvj44y9Ajh+rsg40T76d2Bx+qBDZHkSyJzvDwNnqpyismH
+	IIMSCLw0HBvJ5XHL0CPDe8T1cM4ZU79m0AzvBJKGy0FWY8wdiOtI
+X-Google-Smtp-Source: AGHT+IG6za6b8jwYD4LwX7XKgr9Z+tKljQ/nxcyEXNh0uBsl4XKUVhBHAWteLRwcTYZXVlvhLnzTSg==
+X-Received: by 2002:a5d:5441:0:b0:336:6ba1:556d with SMTP id w1-20020a5d5441000000b003366ba1556dmr371299wrv.84.1705570079173;
+        Thu, 18 Jan 2024 01:27:59 -0800 (PST)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
+        by smtp.gmail.com with ESMTPSA id b16-20020adfe650000000b00337a81a0a89sm3533054wrn.114.2024.01.18.01.27.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jan 2024 01:27:58 -0800 (PST)
+Message-ID: <02bec7b8-7754-4b9d-84ae-51621d6aa7ec@kernel.org>
+Date: Thu, 18 Jan 2024 10:27:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1115935032-1705570061=:1058"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: gadget: u_serial: Add null pointer checks after
+ RX/TX submission
+Content-Language: en-US
+To: Kuen-Han Tsai <khtsai@google.com>, gregkh@linuxfoundation.org,
+ quic_prashk@quicinc.com, stern@rowland.harvard.edu,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20240116141801.396398-1-khtsai@google.com>
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20240116141801.396398-1-khtsai@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 16. 01. 24, 15:16, Kuen-Han Tsai wrote:
+> Commit ffd603f21423 ("usb: gadget: u_serial: Add null pointer check in
+> gs_start_io") adds null pointer checks to gs_start_io(), but it doesn't
+> fully fix the potential null pointer dereference issue. While
+> gserial_connect() calls gs_start_io() with port_lock held, gs_start_rx()
+> and gs_start_tx() release the lock during endpoint request submission.
+> This creates a window where gs_close() could set port->port_tty to NULL,
+> leading to a dereference when the lock is reacquired.
+> 
+> This patch adds a null pointer check for port->port_tty after RX/TX
+> submission, and removes the initial null pointer check in gs_start_io()
+> since the caller must hold port_lock and guarantee non-null values for
+> port_usb and port_tty.
 
---8323328-1115935032-1705570061=:1058
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Or you switch to tty_port refcounting and need not fiddling with this at 
+all ;).
 
-On Thu, 18 Jan 2024, Jonathan Woithe wrote:
+thanks,
+-- 
+js
+suse labs
 
-> On Thu, Jan 11, 2024 at 06:30:22PM +1030, Jonathan Woithe wrote:
-> > On Thu, Jan 04, 2024 at 10:48:53PM +1030, Jonathan Woithe wrote:
-> > > On Thu, Jan 04, 2024 at 01:12:10PM +0100, Igor Mammedov wrote:
-> > > > On Thu, 28 Dec 2023 18:57:00 +0200
-> > > > Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> > > >=20
-> > > > > Hi all,
-> > > > >=20
-> > > > > Here's a series that contains two fixes to PCI bridge window sizi=
-ng
-> > > > > algorithm. Together, they should enable remove & rescan cycle to =
-work
-> > > > > for a PCI bus that has PCI devices with optional resources and/or
-> > > > > disparity in BAR sizes.
-> > > > >=20
-> > > > > For the second fix, I chose to expose find_empty_resource_slot() =
-from
-> > > > > kernel/resource.c because it should increase accuracy of the cann=
-ot-fit
-> > > > > decision (currently that function is called find_resource()). In =
-order
-> > > > > to do that sensibly, a few improvements seemed in order to make i=
-ts
-> > > > > interface and name of the function sane before exposing it. Thus,=
- the
-> > > > > few extra patches on resource side.
-> > > > >=20
-> > > > > Unfortunately I don't have a reason to suspect these would help w=
-ith
-> > > > > the issues related to the currently ongoing resource regression
-> > > > > thread [1].
-> > > >=20
-> > > > Jonathan,
-> > > > can you test this series on affected machine with broken kernel to =
-see if
-> > > > it's of any help in your case?
-> > >=20
-> > > Certainly, but it will have to wait until next Thursday (11 Jan 2024)=
-=2E  I'm
-> > > still on leave this week, and when at work I only have physical acces=
-s to
-> > > the machine concerned on Thursdays at present.
-> > >=20
-> > > Which kernel would you prefer I apply the series to?
-> >=20
-> > I was very short of time today but I did apply the above series to the
-> > 5.15.y branch (since I had this source available), resulting in version
-> > 5.15.141+.  Unfortunately, in the rush I forgot to do a clean after the
-> > bisect reset, so the resulting kernel was not correctly built.  It boot=
-ed
-> > but thought it was a different version and therefore none of the module=
-s
-> > could be found.  As a result, the test is invalid.
-> >=20
-> > I will try again in a week when I next have physical access to the syst=
-em.=20
-> > Apologies for the delay.  In the meantime, if there's a specific kernel=
- I
-> > should apply the patch series against please let me know.  As I underst=
-and
-> > it, you want it applied to one of the kernels which failed, making 5.15=
-=2Ey
-> > (for y < 145) a reasonable choice.
->=20
-> I did a "make clean" to reset the source tree and recompiled.  However, i=
-t
-> errored out:
->=20
->   drivers/pci/setup-bus.c:988:24: error: =E2=80=98RESOURCE_SIZE_MAX=E2=80=
-=99 undeclared
->   drivers/pci/setup-bus.c:998:17: error: =E2=80=98pci_bus_for_each_resour=
-ce=E2=80=99 undeclared
->=20
-> This was with the patch series applied against 5.15.141.  It seems the pa=
-tch
-> targets a kernel that's too far removed from 5.15.x.
->=20
-> Which kernel would you like me to apply the patch series to and test?
-
-Two argument version of pci_bus_for_each_resource() is quite new (so=20
-either 6.6 or 6.7). If want to attempt to compile in 5.15.x, you need=20
-this:
-
-include/linux/limits.h:#define RESOURCE_SIZE_MAX        ((resource_size_t)~=
-0)
-
-And to add one extra argument into pci_bus_for_each_resource(bus, r) in=20
-pbus_upstream_assigned_limit():
-
-=09...
-=09while ((bus =3D bus->parent)) {
-+=09=09unsigned int i;
-=09=09if (pci_is_root_bus(bus))
-=09=09=09break;
-
--=09=09pci_bus_for_each_resource(bus, r) {
-+=09=09pci_bus_for_each_resource(bus, r, i) {
-
-Note I've written this "patch" by hand inline so patch command cannot=20
-apply it but you need to edit those in.
-
-
---=20
- i.
-
---8323328-1115935032-1705570061=:1058--
