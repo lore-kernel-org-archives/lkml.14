@@ -1,101 +1,158 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF452942C;
-	Thu, 18 Jan 2024 15:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726C51DDC6;
+	Thu, 18 Jan 2024 15:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705591855; cv=none; b=B7VeDWQ4/qNBEXuH2lAoEcJ+RREXLidUQpaGAudjNLqWt7m91GZFAsr2LgZ0MvTFJ6bhn28p4tRSlchS6e9nWJ2JgR7FnNYOm9VNXIqJmcNRMdhBYAv3eO1iq2ZK2B0+MAAa0N3WVDg96x0/KeQTZItPLQk2I4l664hseKl2BdA=
+	t=1705591869; cv=none; b=TGQRdajfSEklpld05RcSDhEynvvnz26hznAWIrk4QhR5PEaXYYqgHFMqPaYNIBHJp1ONUzbVmuMGWUaoxXaPEdQOY7BECRS0hU5jGN3GwRwD8JYhiIYrEqq8suXzQVzxy1Gz2Rz34mLJgPG2lgflmk4dltdC+L2Xo/sYb5UAnms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705591855; c=relaxed/simple;
-	bh=sR4Gjgkr5f7lPiJTtQ258jvkdgDh+7iqHe3YtVU7osI=;
+	s=arc-20240116; t=1705591869; c=relaxed/simple;
+	bh=l79NY2dKBoF9XTkQ1wdRVseM0jwGQtTbZVF6sXmEHUg=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
 	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=AH9ar7TlL/7+Xs2rskiYxlVRQ5O/pcxV9Ny1x/uDAQm4H1hHNP9Tp4qJW99XWTETX74x5DMZEDRwnKq2GOxoZmsDJSnMZquyD/BfB6ly6iOhE7M/bljitRitN3CC795S4QCvZXwy011wL889guvbUdAaS3O8FVeBYKDyZnTlu1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XmgBfyTN; arc=none smtp.client-ip=209.85.208.47
+	 Content-Type:Content-Transfer-Encoding; b=q2qSJMRE5NlRR53JEtuPLbVcWEK03vn7iTpKmwGeT9VRvP6P7Z+UzNc04Yj7dsTgZ104UM0Tn73l4OI2NiRzqLRfhbRt/EfbfO3gqrXVYMrXCf+8L/JW/191EfbWJNUjbcgvl9y/ovZKMI+9XTPv+I141JLvapSBfEpUseYRwZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gmp1uWa1; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmgBfyTN"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-559de6145c3so2036696a12.1;
-        Thu, 18 Jan 2024 07:30:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gmp1uWa1"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2cddb0ee311so38235121fa.0;
+        Thu, 18 Jan 2024 07:31:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705591852; x=1706196652; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1705591865; x=1706196665; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sR4Gjgkr5f7lPiJTtQ258jvkdgDh+7iqHe3YtVU7osI=;
-        b=XmgBfyTNhg8BzestlRjRm/5P9kywEB1yQtIftRj8gzFiohuv6Mb3fCCjrArry80Prz
-         6oXcFQWiBA8mVd3UuV0h/0qdLdtr64XlPN083iMfNEG8Y6NDs/PTvSZSgDCRWFcCT2XU
-         KvOaPC+Ep+pCoQWg0+wXu1qNg4g/7/aGDCxvwNmZTmbKudRkrwqstSFU+NGSGNkwI8Nl
-         pwrBWCyrCQbcoSmSTLnNBJYMQXFm9kdhNi03ImoGCn6rXXCrVDcqyolaZPt9CxDeSdrL
-         gcSYn9rgNrw/JKnoPpfPMEX+F1qm6PM+kmgOUoKr/y6tZpiUWKlw9myZIb6w8dGrcKT4
-         qoTQ==
+        bh=ClAFFQl72AYBcbeJb8sfymN7hdNir4YEOmgS30D5baQ=;
+        b=Gmp1uWa1C/YZ/Zbt2WvqJtKhJQLxijsxmx8hYfHqPYvsvjBmIcqOMOF/71MEz0YHNp
+         EPucKN0HtwS5oLowmGEuuljlBlo1P3YIk/TWktm8khco6IfSQl/NQp6O39ctP4a6+75I
+         rHAzr3/I09TMExRbKrc1E0kbcHvS4Ofh+QZBKJAEbvk9ZOeGvgOp7QAeST5PBhAS/IJt
+         uZdcme7E8NhUTRvUkkNxuceF6i+lHDIR/G4+n5WWzIq0ziPugpnoYNfmg6kQEz/bFYAi
+         cFNSZNqY7Q/BzsoobOoLYz6UzsBnZC/H7vj/JQeBdwbsKplEOGeHcWZLhmco3TPQs1Bd
+         Q23A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705591852; x=1706196652;
+        d=1e100.net; s=20230601; t=1705591865; x=1706196665;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sR4Gjgkr5f7lPiJTtQ258jvkdgDh+7iqHe3YtVU7osI=;
-        b=Lkx4V2tfIvbRyeSysqVEgXXT9Z1+d4fGkAkF7i0J1/fCxbGbivtfovaUDd1LLSOGaY
-         ab2ttiNEvEWfs77qDUcfGd/uUgeu26YzcjHlRo+szxQZuBO5cBjVbMTzlUQR3yLNVvr6
-         zUn8zSfiQj4mKZ0KQ51ninweOLAgiCIJ4aHrgrcXlueh5V2xYWvtWcERcnVKuBEFwURs
-         qdfmoumeZMWbbBLP9R6Q0On+NGKK8XvhLVVFSh6ux4fIV9Nuae3XJIG3qujWcsMJYWWz
-         /KtmrPILzzFn+YnXgEfg+jBNmHZa6GP5ht4A8bHsBzvsLlTeGA2x2AE7uWkeCcBNK9Ec
-         bViA==
-X-Gm-Message-State: AOJu0YzLqzFIk3KJGPi8tgZumiOIXMDD4ntm1pZpz3WtCT95WUYu0RNx
-	UHk3otR0VdbAQC3/OqwGR9Bm0LCEfRk5OtMEv6eq6p9rrk2l2sWmVgC3RwnS2OKVDB1akyJzUhy
-	N0l0Oe2pUDqDQ2LAyexpYWiJE+us=
-X-Google-Smtp-Source: AGHT+IF3+SHu0T6cDVGDTcp/GtaO4zkfkIK9JDPE9OwVQcUA6ZMTlisQ0pqI7xW+sE9ZnLJvvHg6Yb//GzmIF4eMKuI=
-X-Received: by 2002:a17:906:e958:b0:a2c:f60d:576f with SMTP id
- jw24-20020a170906e95800b00a2cf60d576fmr533862ejb.50.1705591852402; Thu, 18
- Jan 2024 07:30:52 -0800 (PST)
+        bh=ClAFFQl72AYBcbeJb8sfymN7hdNir4YEOmgS30D5baQ=;
+        b=LtYU/pNS611HcZCGvj+kkeAwwSbv7jPAH3bJ1YxVHu2eLE/FdZ4I4/GXqFn5FPW/Xz
+         16xtVUN3oxNgMiiK0Z11dNR5qQlErQlLV9c2sNFtP1mmxTOzw6FDoeThoFtc2PPLdvv/
+         yo/EXe94ct85i0hNyPNraznT6SD8ODSPi5TLF7jxPlVI8Zw/o0jIgnOqO5bnlBoD14Cz
+         SRpqIqmxT+sM9EfEHZDdz9AZl8sYF9b3s6JCUVmcp06ee6W1VOloP4usO9cHHnCFLW88
+         X9Je9N/hP0PvkmJuQMbo2kmzVKuqKLh/e0IvLK8L7JntK4eKcZ1nH3aaPF9oIf05cJXd
+         SBrA==
+X-Gm-Message-State: AOJu0YzWUNhdA70iporOcYaE+UGUQF6tdSwLinPLWDZzRYS8xH3aD+kS
+	33w8Lj9EjGu+6xl0ucAsGCf0q2cu3vMFjAIC2OryDqw5C8Zo7G5zIJrZwpaszADotPdDs4buv74
+	Z01qVjnFeEVZWNZ/Mi50AI005Z238ctWrAbM=
+X-Google-Smtp-Source: AGHT+IGsbx3wnyrWjOXm3YY25A2iEm2aIDxpxx8+OisUG8gtw4CKBY18wsSvaREIQJhkNkfjUX4WeruJYPCN39awfzE=
+X-Received: by 2002:a2e:6e06:0:b0:2cd:df43:9539 with SMTP id
+ j6-20020a2e6e06000000b002cddf439539mr247922ljc.193.1705591865219; Thu, 18 Jan
+ 2024 07:31:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118152213.2644269-1-hugo@hugovil.com> <20240118152213.2644269-9-hugo@hugovil.com>
-In-Reply-To: <20240118152213.2644269-9-hugo@hugovil.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 18 Jan 2024 17:30:16 +0200
-Message-ID: <CAHp75Vf7j6_xPceGuDWB5Mno2eJreyyD8B4i4GyyiMyKZPiwLA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/17] serial: max310x: use separate regmap name for
- each port
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	cosmin.tanislav@analog.com, shc_work@mail.ru, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
-	=?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
+References: <20231227180306.6319-1-johan+linaro@kernel.org>
+ <ZZ15c1HUQIH2cY5o@google.com> <ZZ1-ehpU-g6i9Qem@hovoldconsulting.com>
+ <ZZ2IOQEekFffJoHQ@google.com> <ZZ5RVpL88XNbgKIy@hovoldconsulting.com>
+ <CABBYNZJ_EAuGEdeW+vZzXu20nVqLkLwiQbYQ9XzoABxQ5rAzdQ@mail.gmail.com> <ZajkA6oxtMcxKY4X@hovoldconsulting.com>
+In-Reply-To: <ZajkA6oxtMcxKY4X@hovoldconsulting.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Thu, 18 Jan 2024 10:30:50 -0500
+Message-ID: <CABBYNZLV9o9hsYGVTGA7dPby-j1P_a35yNrDy4d9PMJq=TaRsQ@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: qca: fix device-address endianness
+To: Johan Hovold <johan@kernel.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>, Johan Hovold <johan+linaro@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	Bjorn Andersson <quic_bjorande@quicinc.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Doug Anderson <dianders@google.com>, 
+	Stephen Boyd <swboyd@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 18, 2024 at 5:22=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> =
-wrote:
->
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
->
-> Use a separate regmap name for each port so they can each have their own
-> debugfs entry, allowing to access each port registers independently.
->
-> For example, a four channels/ports device like the MAX14830 will have fou=
-r
-> entries in its regmap debugfs:
->
-> $ find /sys/kernel/debug/regmap -type d | grep spi0.0
+Hi Johan,
 
-Just a side note for the future. The above is an example of "Useless
-use of grep".
-`find` has a `-name` parameter for such, using `find ...-name
-'spi0.0*'` makes the grep unnecessary.
+On Thu, Jan 18, 2024 at 3:40=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
+te:
+>
+> On Wed, Jan 17, 2024 at 05:49:07PM -0500, Luiz Augusto von Dentz wrote:
+> > On Wed, Jan 10, 2024 at 3:12=E2=80=AFAM Johan Hovold <johan@kernel.org>=
+ wrote:
+> > > On Tue, Jan 09, 2024 at 05:54:01PM +0000, Matthias Kaehlcke wrote:
+>
+> > > > hciconfig
+> > > > hci0:   Type: Primary  Bus: UART
+> > > >         BD Address: 8C:FD:F0:40:15:DC  ACL MTU: 1024:8  SCO MTU: 24=
+0:8
+> > > >         UP RUNNING
+> > > >         RX bytes:1700 acl:0 sco:0 events:95 errors:0
+> > > >         TX bytes:128949 acl:0 sco:0 commands:578 errors:0
+> > >
+> > > And any user space tool overriding the address would currently need t=
+o
+> > > provide the address in reverse order on Qualcomm platforms like this
+> > > one (e.g. if generating the address for privacy reasons).
+> >
+> > Perhaps we could attempt to resolve the address byteorder, in
+> > userspace we use hwdb_get_company to resolve the company but since
+> > this shall only really care about Qualcomm range(s) perhaps we can
+> > hardcode them check in which order the address is, that said if the
+> > device is configured with a Static Random Address then that would not
+> > work, but that is only really possible for BLE only devices.
+>
+> It's not just Qualcomm ranges; The Lenovo ThinkPad X13s that I noticed
+> this on has been assigned a Wistron OUI, for example.
 
-> /sys/kernel/debug/regmap/spi0.0-port0
-> /sys/kernel/debug/regmap/spi0.0-port1
-> /sys/kernel/debug/regmap/spi0.0-port2
-> /sys/kernel/debug/regmap/spi0.0-port3
+Well we could still attempt to check if it has a valid OUI and then it
+fail swap and check again.
+
+> We're still hoping to learn how to retrieve this address (from the
+> secure world firmware) so that we can set it directly from the driver,
+> but for now it needs to be set using btmgmt (or the local-bd-address
+> devicetree property).
+>
+> As was discussed here:
+>
+>         https://github.com/bluez/bluez/issues/107
+>
+> it would be useful to teach bluetoothd to (generate and) set an address
+> for devices that lack (accessible) persistent storage. And any such
+> generic tool would need to work using the standard interfaces and the
+> address endianness that those interfaces expect.
+
+Yep, patches are welcome in this regard, note that we do something like thi=
+s:
+
+https://github.com/bluez/bluez/blob/master/src/adapter.c#L9847
+
+But the first thing it checks is if the controller supports BR/EDR, so
+if you want to extend that we need at least the OUI portion to be able
+to allocate a valid public address, we could perhaps attempt to fetch
+the manufacturer somehow or use the controller manufacturer
+(adapter->manufacturer) in case there is nothing else to use.
+
+> And from skimming the Bluetooth spec, I was under the impression that
+> random addresses applied also to non-BLE devices (e.g. requiring the two
+> most-significants bits to be 1).
+
+Not really, BR/EDR/classic addresses are always considered public
+addresses, the HCI interface doesn't even have an address type to be
+able to handle something like a random address or privacy for the same
+reason.
+
+> But to summarise, I don't really see any way around fixing the Qualcomm
+> driver.
+>
+> Johan
+
+
 
 --=20
-With Best Regards,
-Andy Shevchenko
+Luiz Augusto von Dentz
