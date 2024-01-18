@@ -1,141 +1,129 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FAC29429;
-	Thu, 18 Jan 2024 16:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE892E3E8;
+	Thu, 18 Jan 2024 16:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705594382; cv=none; b=LtDIgnRKyCHhdoNJOsvHbR4vcE70fiibb8xOWi5spcWi5mqVXr1co/c7Yak8oqdlXSt8VYkJOlTsehH6gpaXM6jj5P7B5kuVTDrzDYDevhU/SkcIzLPzZXQ2igqB1roKjyVMkYEiv5CnCD73nX3/YO9jCcfUAS1SX5HUWffmYGc=
+	t=1705594478; cv=none; b=HN0uaRFNpYLrAYAwuIiX9hxIweqehA5gvMAQsdTJQAAPcPTaGA2gF0gwu2/VHqwdkWwVWu1YbwwZD0e6i8BC9/3zQK9KogDb5/Nfyl1lmfYEnBSeQy+FLDjl1ln5XqrO5aOM7kLNRhLoeuN0fiG2xmUP/eeZytIgkTBSCqIhbbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705594382; c=relaxed/simple;
-	bh=HIsuhJz2xjOzaNn4dAfL5qjx0UdbR6tCoP9H0Jum8ZU=;
-	h=Received:DKIM-Signature:Received:Received:Received:From:Date:
-	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-ID:References:In-Reply-To:To:CC:X-Mailer:X-Originating-IP:
-	 X-ClientProxiedBy:X-QCInternal:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=KcN1EIi+9LDEspLz3eWYBoIWsvj/jv7DYFyb6RdJjgjDDSerLLS+MX7+6wk3/8QAXOW8Av/9Uad6CUlO3JadsqcMq+ctArZ5SM1IE2jp7AkmMadOQO9iBROyrcgeHI1EtEAcBMsGZt4b4ezErG3eYhmUDPcocQAt916VYjATQq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aqbaR28G; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1705594478; c=relaxed/simple;
+	bh=OWJUIlewldnhlZ2AChJ/wqce0X7gESh3qoR1yipsHrM=;
+	h=Received:DKIM-Signature:Received:Received:Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-EXCLAIMER-MD-CONFIG; b=mZZFicBqPi2/xoq3r34H+PzPPbIwUod47ItOP9g5SfOKUPZFEFeBGiN+SMC1OjsHl4wuI/VkUalKfGexijaCltZoMyWKlI0NxvLtjqAtUfk/p51BUH6TS3lOso8ygUQICE45J5B3kvpJ6htKiQjb6QU4qCFdS5NU+qZOwNi6aB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RQ+1uv5x; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aqbaR28G"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40IET6px016240;
-	Thu, 18 Jan 2024 16:12:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=gBb3H3vMQRpyKqlY5i8ArYeJx6IwM8jcS43UCmibO1c
-	=; b=aqbaR28Gq4WV3D/zxTdSUoX15fis5yV5IWvxNtcHg1rhYKUPzZ/3hhfdPsx
-	2Vel1SCcJbfc5CnzKWq4y3QGXFD/O/oyOyKYa0UHUIthX4BNVc+COkacu8/ebLMG
-	c6ox0ePFEyenwZbJrFhxogbnftbcOOLwPsbodkLJglFt1iKRSRQanEYK43zNp1Q3
-	EFRFqZYfw4fn9LiqCKckImZ9DaTzngLMC4S7xtslvHRRVaVpmiHn1zSTEmkkUm7n
-	O31BK9sOtFbQqPwBgR98Z/SYIyU7kDqQiit9h9wpwrcZWwInde4p3CPw3jdDMWI7
-	OBNw+VmC7Oz5s3ZzvTz1doErp2g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vpx8shg6k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jan 2024 16:12:56 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40IGCtC3025424
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jan 2024 16:12:55 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 18 Jan
- 2024 08:12:55 -0800
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 18 Jan 2024 08:12:55 -0800
-Subject: [PATCH 3/5] wifi: ath10k: fix htt_q_state_conf & htt_q_state
- kernel-doc
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RQ+1uv5x"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40IGEIXt054990;
+	Thu, 18 Jan 2024 10:14:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1705594459;
+	bh=O+AzhLX1Qjz+NgbNfuUYk2TlA6YH0ew00AyhB6CMsZU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=RQ+1uv5x0K/hjJoCY1DZHu7rVt2cbqnK/UTnqP0CpjE4+LMBg80mK2/80QcNx0UI5
+	 PRV1DyfKlGHCsy9MYo8ioT7gYNOdUxF2fDKE+o/L3bIWwJ+SDEy3nsZ4I4T2Zfy00j
+	 ZHsuWtY/ZJ8HVC+M7j5RbmYnl1ZjlYH9iM4HqRJI=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40IGEIW6014540
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 18 Jan 2024 10:14:18 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 18
+ Jan 2024 10:14:18 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 18 Jan 2024 10:14:18 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40IGEHix097023;
+	Thu, 18 Jan 2024 10:14:17 -0600
+Message-ID: <eaa10f7c-4c8e-4330-b156-8f0edbdaabdf@ti.com>
+Date: Thu, 18 Jan 2024 10:14:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] arm64: dts: ti: k3-j784s4-main: Convert
+ serdes_ln_ctrl node into reg-mux
+To: Chintan Vankar <c-vankar@ti.com>, Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>, Tero Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>,
+        <tony@atomide.com>
+References: <20240118094454.2656734-1-c-vankar@ti.com>
+ <20240118094454.2656734-2-c-vankar@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20240118094454.2656734-2-c-vankar@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240118-ath10k-kerneldoc-v1-3-99c7e8d95aad@quicinc.com>
-References: <20240118-ath10k-kerneldoc-v1-0-99c7e8d95aad@quicinc.com>
-In-Reply-To: <20240118-ath10k-kerneldoc-v1-0-99c7e8d95aad@quicinc.com>
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-CC: <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-X-Mailer: b4 0.12.3
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 25DU34vyzjr2CZfbOjgPkHjPEQdnnPFR
-X-Proofpoint-GUID: 25DU34vyzjr2CZfbOjgPkHjPEQdnnPFR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-18_08,2024-01-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- phishscore=0 priorityscore=1501 mlxlogscore=999 impostorscore=0 mlxscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
- definitions=main-2401180118
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Currently kernel-doc reports:
-drivers/net/wireless/ath/ath10k/htt.h:1488: warning: cannot understand function prototype: 'struct htt_q_state_conf '
-drivers/net/wireless/ath/ath10k/htt.h:1542: warning: cannot understand function prototype: 'struct htt_q_state '
+On 1/18/24 3:44 AM, Chintan Vankar wrote:
+> This removes a dependency on the parent node being a syscon node.
+> Convert from mmio-mux to reg-mux adjusting node name and properties
+> as needed.
+> 
+> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+> index f2b720ed1e4f..56c8eaad6324 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+> @@ -52,12 +52,12 @@ serdes_ln_ctrl: mux-controller@4080 {
+>   			compatible = "reg-mux";
 
-Update the kernel-doc for these two structs to resolve the warnings.
+Seems this was already a "reg-mux", so the commit message is a bit
+off, you are not converting from "mmio-mux" here.
 
-No functional changes, compile tested only.
+Thinking about this, if this was already a "reg-mux" then this node
+was likely broken by my reg-mux update as it doubles the offset (reg
+is offset 0x4080 which adds to the already offset in masks). I did
+check for this before sending my patch, but seems this one node
+was added after I sent it, but before it was taken. Re-checking
+this is the only instance of this issue, and this patch fixes the
+issue.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/net/wireless/ath/ath10k/htt.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+So you should reword the commit message to include that this is
+actually a fix and add:
 
-diff --git a/drivers/net/wireless/ath/ath10k/htt.h b/drivers/net/wireless/ath/ath10k/htt.h
-index 4a9270e2a4c8..eb0ce2f49315 100644
---- a/drivers/net/wireless/ath/ath10k/htt.h
-+++ b/drivers/net/wireless/ath/ath10k/htt.h
-@@ -3,7 +3,7 @@
-  * Copyright (c) 2005-2011 Atheros Communications Inc.
-  * Copyright (c) 2011-2017 Qualcomm Atheros, Inc.
-  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-- * Copyright (c) 2021, 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2021, 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #ifndef _HTT_H_
-@@ -1474,15 +1474,19 @@ enum htt_q_depth_type {
- #define HTT_TX_Q_STATE_ENTRY_MULTIPLIER		0
- 
- /**
-- * htt_q_state_conf - part of htt_frag_desc_bank_cfg for host q state config
-+ * struct htt_q_state_conf - part of htt_frag_desc_bank_cfg for host q state config
-  *
-  * Defines host q state format and behavior. See htt_q_state.
-  *
-+ * @paddr: Queue physical address
-+ * @num_peers: Number of supported peers
-+ * @num_tids: Number of supported TIDs
-  * @record_size: Defines the size of each host q entry in bytes. In practice
-  *	however firmware (at least 10.4.3-00191) ignores this host
-  *	configuration value and uses hardcoded value of 1.
-  * @record_multiplier: This is valid only when q depth type is MSDUs. It
-  *	defines the exponent for the power of 2 multiplication.
-+ * @pad: struct padding for 32-bit alignment
-  */
- struct htt_q_state_conf {
- 	__le32 paddr;
-@@ -1518,7 +1522,7 @@ struct htt_frag_desc_bank_cfg64 {
- #define HTT_TX_Q_STATE_ENTRY_EXP_LSB		6
- 
- /**
-- * htt_q_state - shared between host and firmware via DMA
-+ * struct htt_q_state - shared between host and firmware via DMA
-  *
-  * This structure is used for the host to expose it's software queue state to
-  * firmware so that its rate control can schedule fetch requests for optimized
+Fixes: 2765149273f4 ("mux: mmio: use reg property when parent device is not a syscon")
 
--- 
-2.42.0
+looks good to me otherwise:
 
+Acked-by: Andrew Davis <afd@ti.com>
+
+>   			reg = <0x00004080 0x30>;
+>   			#mux-control-cells = <1>;
+> -			mux-reg-masks = <0x4080 0x3>, <0x4084 0x3>, /* SERDES0 lane0/1 select */
+> -					<0x4088 0x3>, <0x408c 0x3>, /* SERDES0 lane2/3 select */
+> -					<0x4090 0x3>, <0x4094 0x3>, /* SERDES1 lane0/1 select */
+> -					<0x4098 0x3>, <0x409c 0x3>, /* SERDES1 lane2/3 select */
+> -					<0x40a0 0x3>, <0x40a4 0x3>, /* SERDES2 lane0/1 select */
+> -					<0x40a8 0x3>, <0x40ac 0x3>; /* SERDES2 lane2/3 select */
+> +			mux-reg-masks = <0x0 0x3>, <0x4 0x3>, /* SERDES0 lane0/1 select */
+> +					<0x8 0x3>, <0xc 0x3>, /* SERDES0 lane2/3 select */
+> +					<0x10 0x3>, <0x14 0x3>, /* SERDES1 lane0/1 select */
+> +					<0x18 0x3>, <0x1c 0x3>, /* SERDES1 lane2/3 select */
+> +					<0x20 0x3>, <0x24 0x3>, /* SERDES2 lane0/1 select */
+> +					<0x28 0x3>, <0x2c 0x3>; /* SERDES2 lane2/3 select */
+>   			idle-states = <J784S4_SERDES0_LANE0_PCIE1_LANE0>,
+>   				      <J784S4_SERDES0_LANE1_PCIE1_LANE1>,
+>   				      <J784S4_SERDES0_LANE2_IP3_UNUSED>,
