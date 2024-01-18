@@ -1,80 +1,133 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1135D250EF;
-	Thu, 18 Jan 2024 13:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3FD25541
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 13:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705584684; cv=none; b=JrwN8ZEfiaX+r/3Odvjg0hSBi7Gvhf2aOrnEyVmVarSvPRhjwSbP4/04EzHU4QbfQLOgTOqAzy6fqVkjxtdOscw7ZEt2Ne2H3SoEIC++orl8YP9XV8HYCpPLi7mIbilE68ZHD2IjLwHKmjwc8oE0XApoDLN5Yids8wqPTX7Zro0=
+	t=1705584862; cv=none; b=gIKZ5/es5qjODXo6IFVVWtpbDNAffl4kI2I0KdZaFq7IfHd3j6SglERMK3yiHHC1do1242zMCwYSkVVJbHaKvl9k1mJacuBYtLjujD81Q4mU1thZRAw5DiVy9koFal+xVrwym0DSnkThlmdreM6l6CqGxBmfjF5AZgeJVtk4u/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705584684; c=relaxed/simple;
-	bh=YCSLDRcNcUHZlJNPEpFCiUHc+hOkTwgbBxDfzJO2/IQ=;
-	h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:X-HM-Spam-Status:
-	 X-HM-Tid:X-HM-MType:X-HM-Sender-Digest; b=o9MkWdVQcetH/LlWGMNoYfRa11k5HVIefO5jp/BqtbG0zvSU2aAB6HLTBQEJV01SmAcC+HvNtTSv+zROk3BhY7gEeRORIO9ITLx3vQMNZWDXffgp0fyC88l9pCAge0U5JlPN9Lp24k9gT1+EbLl3r6y8laJJ/gIx0dv7a2Grz9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [113.118.189.0])
-	by mail-m121144.qiye.163.com (Hmail) with ESMTPA id 48E0DAC009B;
-	Thu, 18 Jan 2024 21:30:28 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Robert Marko <robimarko@gmail.com>
-Subject: [PATCH v3 1/2] arm64: dts: qcom: ipq6018: add LDOA2 regulator
-Date: Thu, 18 Jan 2024 21:30:21 +0800
-Message-Id: <20240118133022.553339-2-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240118133022.553339-1-amadeus@jmu.edu.cn>
-References: <20240118133022.553339-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1705584862; c=relaxed/simple;
+	bh=cvBbavxq/YxOjTZc3o8gTyrEuL5y+Usgr/yLRKRZpFI=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
+	 To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=CJQZhXrQE0pQ0G0AcUVujKTmAfgSUYTr933zLWtuVw8MU/oliJhEybIoQpDXyID8CQDPcC+iF9e3wjuThZ03yGmK55yB6SsEZfi3zyPXKx2imwwIB8gCQtjbUAsEJxB0H5uuMZUuoWnBQxQ7S5D9TVj+L27I5ZUkHHEdTJb4tYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B+Ix+HCw; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B+Ix+HCw"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40e8801221cso17550305e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 05:34:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705584859; x=1706189659; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4YHeLV0TQs3MeVFgQiX7V8lAzpJlQDaK5HPvbw2WeUM=;
+        b=B+Ix+HCwDjC2JTCpcF/fKiYxYP8ABgwEwt6PPwomv8UGsiJjAGexglVJ5isGo9PAVN
+         uuvqWjDfZ+3B9TcxERoMQttD4DxhiTHu2vGrJR+gR+qCFfgIvEb8hxIie+VJPDfFn/Lq
+         bPXtS0nw2TvpIk2DOTwrExVq7i4Fdt/jCbcbBDAQ2xhVyej53uTode9SRuCyifgCveNq
+         G8uI5CeEXAUueAjyNw2PpO2wXmqTXbQ9Ylr+17KAjD6DU3bi6vNBniDyIB+sGLSZ68ou
+         P7PVN9Thte8BE6rkWL9hgoy5RcaJqAsfloH5++U5DxYgNOEdH/qjfqwAdxI7bnp57JGD
+         +dZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705584859; x=1706189659;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4YHeLV0TQs3MeVFgQiX7V8lAzpJlQDaK5HPvbw2WeUM=;
+        b=tPFcpWLSXZOrq/CSjIR1pxKiP4Td404l5tzKw7AIHeEThqE8vuAjhzuCqi753Y0lcd
+         bUCeJ98RxwpUbxsbeeG0+fK+ejSY1rE31XQWvgkQ3w0aytQVfdKcpHH7yYCZ1wBAkkgz
+         XV+0CWGwOVpZNyrdef0t6ksTe8f+oNGHOGXIwrjrTtOA4YbtFJGgitWgHKnnQd9yNwoS
+         tETzPwD5rxqazDYN2qLLY0WtOKtOSkTYNYmkF6Nk/pKG+RoB6YKGjONtSbyZ9UWEMeYl
+         QrdJYZrA5MOQdJShd2watTiFXWX0QuaLNnmJ5Isi1i0KEotpI5s2RORArUXFaAOktb6o
+         th6Q==
+X-Gm-Message-State: AOJu0YwcHlwvYxN5sxzqmGC1VqtUNZBF+guvNB06gPB2kyourJQcXXzC
+	q3/WTsZLnG1K2VeDlipm7PPjhDbtChKKfWyMcsj5R7RX9tTsrhQFfnk1CuB8YRs=
+X-Google-Smtp-Source: AGHT+IFjO+J+fPdCGYBGEmiIzZ273KdF1+pqEd1e1bkQkfXM4BvS/2gJPylNcqOCshGB4EJoZn84vA==
+X-Received: by 2002:a1c:7510:0:b0:40e:89da:7b71 with SMTP id o16-20020a1c7510000000b0040e89da7b71mr538405wmc.100.1705584858904;
+        Thu, 18 Jan 2024 05:34:18 -0800 (PST)
+Received: from [192.168.100.86] ([37.228.218.3])
+        by smtp.gmail.com with ESMTPSA id j7-20020a05600c190700b0040e52cac976sm29348312wmq.29.2024.01.18.05.34.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jan 2024 05:34:18 -0800 (PST)
+Message-ID: <da27f648-fca4-42a5-8099-e6e19fa76220@linaro.org>
+Date: Thu, 18 Jan 2024 13:34:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGk1CVk9JQxkeQ0JDSU9PH1UTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKSFVKSkNVSkNCVUtZV1kWGg8SFR0UWUFZT0tIVUpNQ0xDS1VKS0tVSkJLS1kG
-X-HM-Tid: 0a8d1cc41355b039kuuu48e0dac009b
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mi46LSo*TjwqOhcCSRANNRMJ
-	ER4wCjpVSlVKTEtOTkNPTUlCSkpOVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	SFVKSkNVSkNCVUtZV1kIAVlBSUlKTTcG
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] media: venus: add new rate control type MBR for
+ encoder
+Content-Language: en-US
+To: Sachin Kumar Garg <quic_sachinku@quicinc.com>, hverkuil-cisco@xs4all.nl,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20240118105934.137919-1-quic_sachinku@quicinc.com>
+ <20240118105934.137919-3-quic_sachinku@quicinc.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240118105934.137919-3-quic_sachinku@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add LDOA2 regulator of MP5496 to support SDCC voltage scaling.
+On 18/01/2024 10:59, Sachin Kumar Garg wrote:
+>   
+> -		switch (*in) {
+> -		case HFI_RATE_CONTROL_OFF:
+> -		case HFI_RATE_CONTROL_CBR_CFR:
+> -		case HFI_RATE_CONTROL_CBR_VFR:
+> -		case HFI_RATE_CONTROL_VBR_CFR:
+> -		case HFI_RATE_CONTROL_VBR_VFR:
+> -		case HFI_RATE_CONTROL_CQ:
+> -			break;
+> -		default:
+> -			ret = -EINVAL;
+> -			break;
+> +		if (hfi_ver == HFI_VERSION_4XX) {
+> +			switch (*in) {
+> +			case HFI_RATE_CONTROL_OFF:
+> +			case HFI_RATE_CONTROL_CBR_CFR:
+> +			case HFI_RATE_CONTROL_CBR_VFR:
+> +			case HFI_RATE_CONTROL_VBR_CFR:
+> +			case HFI_RATE_CONTROL_VBR_VFR:
+> +			case HFI_RATE_CONTROL_CQ:
+> +			case HFI_RATE_CONTROL_MBR_CFR:
+> +				break;
+> +			default:
+> +				ret = -EINVAL;
+> +				break;
+> +			}
+> +		} else {
+> +			switch (*in) {
+> +			case HFI_RATE_CONTROL_OFF:
+> +			case HFI_RATE_CONTROL_CBR_CFR:
+> +			case HFI_RATE_CONTROL_CBR_VFR:
+> +			case HFI_RATE_CONTROL_VBR_CFR:
+> +			case HFI_RATE_CONTROL_VBR_VFR:
+> +			case HFI_RATE_CONTROL_CQ:
+> +				break;
+> +			default:
+> +				ret = -EINVAL;
+> +				break;
+> +			}
 
-Suggested-by: Robert Marko <robimarko@gmail.com>
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+The if/else you have here seems like a needless replication
+
+Just have =>
+
+case HFI_RATE_CONTROL_MBR_CFR:
+    if (hfi_ver == HFI_VERSION_4XX)
+
 ---
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 5e1277fea725..322eced0b876 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -174,6 +174,11 @@ ipq6018_s2: s2 {
- 						regulator-max-microvolt = <1062500>;
- 						regulator-always-on;
- 					};
-+
-+					ipq6018_l2: l2 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <3300000>;
-+					};
- 				};
- 			};
- 		};
--- 
-2.25.1
-
+bod
