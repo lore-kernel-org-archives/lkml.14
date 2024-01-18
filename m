@@ -1,1368 +1,703 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835512C6B2;
-	Thu, 18 Jan 2024 13:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FA925550
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 13:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705583716; cv=none; b=m5PkDkd0UEU/+4bU+/4zCSukU32+Zx3mPTaQWrPjImNBmzmApcvxhoyK1u/q0lLz4vvSIkLtAyDXEU4rgm9qnhdewUzczGsDoHU5vn+ide7kKm2Q4C+iw78H/VBKielOeXb/1cjchYZF2F4fpICX91SWVvD2hmoFzt3OJuVRWL4=
+	t=1705583738; cv=none; b=sKSm7OLs53rqbFXPzZK+gsj7cd6q6t8ipC/x88rmISX1uDmyxmggGrTFMnzoPJQ6CC6+OZ/p98o6ME1JtdS+AM8bJE6PvfpmGAgO1uXREwyYcT51cTyX+H7O+/mKAZ3m0XFTIu8cjQ229SBKnGhzR90mOcqwQo/PWkjf8pI3xPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705583716; c=relaxed/simple;
-	bh=hfKlShOlUPotX7gAy0eNNhVUmeANLAXd/pIV2rRl9z0=;
-	h=Received:Received:Received:From:To:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:X-Virus-Scanned; b=QFnQeF+fguzLxmTrURFHtDdKyUewiaTE3kdNWY6VtPp9mUa96flxXUNi9vrCyTVwBqcKpvQO9r1ss+wde5kRwXazgXFpTL0HOhdQ1rfujL5ztYxckfyQE377W4cf8JoteRPqyj8nH22ZN9z7CQK2FFFgHPTXGlzUYrzpSm/Zk1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DD4E02022F8;
-	Thu, 18 Jan 2024 14:15:11 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B0A5201730;
-	Thu, 18 Jan 2024 14:15:11 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 2E02A183AC0B;
-	Thu, 18 Jan 2024 21:15:09 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: hverkuil@xs4all.nl,
-	sakari.ailus@iki.fi,
-	tfiga@chromium.org,
-	m.szyprowski@samsung.com,
-	mchehab@kernel.org,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	shengjiu.wang@gmail.com,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v12 14/15] media: imx-asrc: Add memory to memory driver
-Date: Thu, 18 Jan 2024 20:32:07 +0800
-Message-Id: <1705581128-4604-15-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1705581128-4604-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1705581128-4604-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1705583738; c=relaxed/simple;
+	bh=FO5gQAMQok6d3q0BpSDkG373SE76pdyjyAOUvGhlTGg=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=tGbmT0NAh5jTAwuc13p93s62r0Zugn4QfYCE1tnm4ek7B4qGfaVGjz63O39qnyQLcVGMehQZjhGJsDVB9EVDuhXljf1yY+xUviaGtPAQ/eHo/eqFD8WCWXeE0Henf0B0pNoTPfnKQaqOgpDcYqpz6fHIprnKIoUmXz9VQn0ys8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6YuOy4V; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6YuOy4V"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50e9e5c97e1so15573029e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 05:15:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705583734; x=1706188534; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FjLLZkFenZkp1+ctnAb+pv80xaeiCf5FQ7yqzNCpmxw=;
+        b=l6YuOy4VL09MR64R30Bd9KYoHKgoHhGOcCtK2uf7ZdppC5Y3jThKU4JuMRzz8Okp6N
+         UzVgK2Qv9A6rqM1t3UTA1UXsS3Qhy+dz/0Utjq2nIjlaMSE/QtZMnsBi9FteMu10xVam
+         Y3T1y+44G97B7gLhPKqyCOuvq50s3UKT3DGaiRVX/Yhpm+55qbREDiC+JP8k6Tv8GGO5
+         9pTcHIwF0TTv1JtCbIWSQUtx1GqM41DeAqldaOhksiZuZdN6968UkZLHIxjhXokfrqCq
+         bd4u4ndXamZA2iluZIt2VcjyfX6BK6XX7wa8ZIeDukv+uolefExwozfpbtt3lxupB9px
+         NFgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705583734; x=1706188534;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FjLLZkFenZkp1+ctnAb+pv80xaeiCf5FQ7yqzNCpmxw=;
+        b=jmsJbYgJVPgMYSEX+61VPiM5mkalSNFcl7AzuFPpAxXFeHxbcCbme/zBqUqnKX3U6+
+         bHqQ0Ux63/QxeEC92VPTUuMULoACJcIpAVWE8u7ZJ/HFTraZvP4zRmg2oIshDwQuGBWr
+         Q3uZlWIZlk2FmTc+IPoDWggH7B5pgA1lwWh/+YrAtUK6Mkdl2r0O51CiIphm6EHl50kV
+         AAqvB22+8CTEtewftMl4Odlaqwx34qiT/PHChWfJz7HVaCx60+A5fYwOiiEoG5a/Xh5O
+         nlFyL0xs3O/oaWPtll0CAfVpUoa8JRtKX5M9c7CvULcT/emXoqDYui1c/6xvIswGKI2s
+         J/wg==
+X-Gm-Message-State: AOJu0Yyr0nPh5IQa7hGaYxgWAwLE0fm+yJ3DQJh982QDA4g1iquU165k
+	SRptmW7DS743XBJ/C4Z54/ZOZnrnE186MiIfKivwX6zr6klc4PKO
+X-Google-Smtp-Source: AGHT+IEARGC1Q6/l/I32gVn9JGD+TDNV8GLoYpX3OdmMJ1T0B7/PZWxLKsjSCuu0NZ9MbnZkZQtV4Q==
+X-Received: by 2002:a05:6512:3dab:b0:50e:630d:7364 with SMTP id k43-20020a0565123dab00b0050e630d7364mr585649lfv.28.1705583733993;
+        Thu, 18 Jan 2024 05:15:33 -0800 (PST)
+Received: from pc636 (host-90-235-20-191.mobileonline.telia.com. [90.235.20.191])
+        by smtp.gmail.com with ESMTPSA id y17-20020a199151000000b0050e84a3d75bsm634211lfj.254.2024.01.18.05.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 05:15:33 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 18 Jan 2024 14:15:31 +0100
+To: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Dave Chinner <david@fromorbit.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH v3 04/11] mm: vmalloc: Remove global vmap_area_root
+ rb-tree
+Message-ID: <Zakkc5jrxmJj-plk@pc636>
+References: <20240102184633.748113-1-urezki@gmail.com>
+ <20240102184633.748113-5-urezki@gmail.com>
+ <63104f8e-2fe3-46b2-842c-f11f8bb4b336@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63104f8e-2fe3-46b2-842c-f11f8bb4b336@lucifer.local>
 
-Implement the ASRC memory to memory function using
-the v4l2 framework, user can use this function with
-v4l2 ioctl interface.
+On Tue, Jan 16, 2024 at 11:25:43PM +0000, Lorenzo Stoakes wrote:
+> On Tue, Jan 02, 2024 at 07:46:26PM +0100, Uladzislau Rezki (Sony) wrote:
+> > Store allocated objects in a separate nodes. A va->va_start
+> > address is converted into a correct node where it should
+> > be placed and resided. An addr_to_node() function is used
+> > to do a proper address conversion to determine a node that
+> > contains a VA.
+> >
+> > Such approach balances VAs across nodes as a result an access
+> > becomes scalable. Number of nodes in a system depends on number
+> > of CPUs.
+> >
+> > Please note:
+> >
+> > 1. As of now allocated VAs are bound to a node-0. It means the
+> >    patch does not give any difference comparing with a current
+> >    behavior;
+> >
+> > 2. The global vmap_area_lock, vmap_area_root are removed as there
+> >    is no need in it anymore. The vmap_area_list is still kept and
+> >    is _empty_. It is exported for a kexec only;
+> >
+> > 3. The vmallocinfo and vread() have to be reworked to be able to
+> >    handle multiple nodes.
+> >
+> > Reviewed-by: Baoquan He <bhe@redhat.com>
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  mm/vmalloc.c | 240 +++++++++++++++++++++++++++++++++++++--------------
+> >  1 file changed, 173 insertions(+), 67 deletions(-)
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 06bd843d18ae..786ecb18ae22 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -728,11 +728,9 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
+> >  #define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
+> >
+> >
+> > -static DEFINE_SPINLOCK(vmap_area_lock);
+> >  static DEFINE_SPINLOCK(free_vmap_area_lock);
+> >  /* Export for kexec only */
+> >  LIST_HEAD(vmap_area_list);
+> > -static struct rb_root vmap_area_root = RB_ROOT;
+> >  static bool vmap_initialized __read_mostly;
+> >
+> >  static struct rb_root purge_vmap_area_root = RB_ROOT;
+> > @@ -772,6 +770,38 @@ static struct rb_root free_vmap_area_root = RB_ROOT;
+> >   */
+> >  static DEFINE_PER_CPU(struct vmap_area *, ne_fit_preload_node);
+> >
+> > +/*
+> > + * An effective vmap-node logic. Users make use of nodes instead
+> > + * of a global heap. It allows to balance an access and mitigate
+> > + * contention.
+> > + */
+> > +struct rb_list {
+> 
+> I'm not sure this name is very instructive - this contains a red/black tree
+> root node, a list head and a lock, but the meaning of it is that it stores
+> a red/black tree and a list of vmap_area objects and has a lock to protect
+> access.
+> 
+> A raw 'list_head' without a comment is always hard to parse, maybe some
+> comments/embed in vmap_node?
+> 
+> At the very least if you wanted to keep the name generic it should be
+> something like ordered_rb_tree or something like this.
+> 
+I can add a comment in the vmap_node. rb_list describes a single, solid
+data structure where a list and rb-tree are part of one entity protected
+by lock. Similar to the B+tree where you have leaf nodes linked between
+each other in order to do a fast sequential traversal.
 
-User send the output and capture buffer to driver and
-driver store the converted data to the capture buffer.
+> > +	struct rb_root root;
+> > +	struct list_head head;
+> > +	spinlock_t lock;
+> > +};
+> > +
+> > +static struct vmap_node {
+> > +	/* Bookkeeping data of this node. */
+> > +	struct rb_list busy;
+> > +} single;
+> 
+> This may be a thing about encapsulation/naming or similar, but I'm a little
+> confused as to why the rb_list type is maintained as a field rather than
+> its fields embedded?
+> 
+The "struct vmap_node" will be extended by the following patches in the
+series.
 
-This feature can be shared by ASRC and EASRC drivers
+> > +
+> > +static struct vmap_node *vmap_nodes = &single;
+> > +static __read_mostly unsigned int nr_vmap_nodes = 1;
+> > +static __read_mostly unsigned int vmap_zone_size = 1;
+> 
+> It might be worth adding a comment here explaining that we're binding to a
+> single node for now to maintain existing behaviour (and a brief description
+> of what these values mean - for instance what unit vmap_zone_size is
+> expressed in?)
+> 
+Right. Agree on it :)
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- drivers/media/platform/nxp/Kconfig    |   13 +
- drivers/media/platform/nxp/Makefile   |    1 +
- drivers/media/platform/nxp/imx-asrc.c | 1256 +++++++++++++++++++++++++
- 3 files changed, 1270 insertions(+)
- create mode 100644 drivers/media/platform/nxp/imx-asrc.c
+> > +
+> > +static inline unsigned int
+> > +addr_to_node_id(unsigned long addr)
+> > +{
+> > +	return (addr / vmap_zone_size) % nr_vmap_nodes;
+> > +}
+> > +
+> > +static inline struct vmap_node *
+> > +addr_to_node(unsigned long addr)
+> > +{
+> > +	return &vmap_nodes[addr_to_node_id(addr)];
+> > +}
+> > +
+> >  static __always_inline unsigned long
+> >  va_size(struct vmap_area *va)
+> >  {
+> > @@ -803,10 +833,11 @@ unsigned long vmalloc_nr_pages(void)
+> >  }
+> >
+> >  /* Look up the first VA which satisfies addr < va_end, NULL if none. */
+> > -static struct vmap_area *find_vmap_area_exceed_addr(unsigned long addr)
+> > +static struct vmap_area *
+> > +find_vmap_area_exceed_addr(unsigned long addr, struct rb_root *root)
+> >  {
+> >  	struct vmap_area *va = NULL;
+> > -	struct rb_node *n = vmap_area_root.rb_node;
+> > +	struct rb_node *n = root->rb_node;
+> >
+> >  	addr = (unsigned long)kasan_reset_tag((void *)addr);
+> >
+> > @@ -1552,12 +1583,14 @@ __alloc_vmap_area(struct rb_root *root, struct list_head *head,
+> >   */
+> >  static void free_vmap_area(struct vmap_area *va)
+> >  {
+> > +	struct vmap_node *vn = addr_to_node(va->va_start);
+> > +
+> 
+> I'm being nitty here, and while I know it's a vmalloc convention to use
+> 'va' and 'vm', perhaps we can break away from the super short variable name
+> convention and use 'vnode' or something for these values?
+> 
+> I feel people might get confused between 'vm' and 'vn' for instance.
+> 
+vnode, varea?
 
-diff --git a/drivers/media/platform/nxp/Kconfig b/drivers/media/platform/nxp/Kconfig
-index 40e3436669e2..8d0ca335601f 100644
---- a/drivers/media/platform/nxp/Kconfig
-+++ b/drivers/media/platform/nxp/Kconfig
-@@ -67,3 +67,16 @@ config VIDEO_MX2_EMMAPRP
- 
- source "drivers/media/platform/nxp/dw100/Kconfig"
- source "drivers/media/platform/nxp/imx-jpeg/Kconfig"
-+
-+config VIDEO_IMX_ASRC
-+	tristate "NXP i.MX ASRC M2M support"
-+	depends on V4L_MEM2MEM_DRIVERS
-+	depends on MEDIA_SUPPORT
-+	select VIDEOBUF2_DMA_CONTIG
-+	select V4L2_MEM2MEM_DEV
-+	select MEDIA_CONTROLLER
-+	help
-+	    Say Y if you want to add ASRC M2M support for NXP CPUs.
-+	    It is a complement for ASRC M2P and ASRC P2M features.
-+	    This option is only useful for out-of-tree drivers since
-+	    in-tree drivers select it automatically.
-diff --git a/drivers/media/platform/nxp/Makefile b/drivers/media/platform/nxp/Makefile
-index 4d90eb713652..1325675e34f5 100644
---- a/drivers/media/platform/nxp/Makefile
-+++ b/drivers/media/platform/nxp/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_VIDEO_IMX8MQ_MIPI_CSI2) += imx8mq-mipi-csi2.o
- obj-$(CONFIG_VIDEO_IMX_MIPI_CSIS) += imx-mipi-csis.o
- obj-$(CONFIG_VIDEO_IMX_PXP) += imx-pxp.o
- obj-$(CONFIG_VIDEO_MX2_EMMAPRP) += mx2_emmaprp.o
-+obj-$(CONFIG_VIDEO_IMX_ASRC) += imx-asrc.o
-diff --git a/drivers/media/platform/nxp/imx-asrc.c b/drivers/media/platform/nxp/imx-asrc.c
-new file mode 100644
-index 000000000000..0c25a36199b1
---- /dev/null
-+++ b/drivers/media/platform/nxp/imx-asrc.c
-@@ -0,0 +1,1256 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2014-2016 Freescale Semiconductor, Inc.
-+// Copyright (C) 2019-2023 NXP
-+//
-+// Freescale ASRC Memory to Memory (M2M) driver
-+
-+#include <linux/dma/imx-dma.h>
-+#include <linux/pm_runtime.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-event.h>
-+#include <media/v4l2-fh.h>
-+#include <media/v4l2-ioctl.h>
-+#include <media/v4l2-mem2mem.h>
-+#include <media/videobuf2-dma-contig.h>
-+#include <sound/dmaengine_pcm.h>
-+#include <sound/fsl_asrc_common.h>
-+
-+#define V4L_CAP OUT
-+#define V4L_OUT IN
-+
-+#define ASRC_xPUT_DMA_CALLBACK(dir) \
-+	(((dir) == V4L_OUT) ? asrc_input_dma_callback \
-+	: asrc_output_dma_callback)
-+
-+#define DIR_STR(dir) (dir) == V4L_OUT ? "out" : "cap"
-+
-+/* Maximum output and capture buffer size */
-+#define ASRC_M2M_BUFFER_SIZE (512 * 1024)
-+
-+/* Maximum output and capture period size */
-+#define ASRC_M2M_PERIOD_SIZE (48 * 1024)
-+
-+struct asrc_pair_m2m {
-+	struct fsl_asrc_pair *pair;
-+	struct asrc_m2m *m2m;
-+	struct v4l2_fh fh;
-+	struct v4l2_ctrl_handler ctrl_handler;
-+	int channels[2];
-+	unsigned int sequence[2];
-+	s64 src_rate_off_prev;		/* Q31.32 */
-+	s64 dst_rate_off_prev;		/* Q31.32 */
-+	s64 src_rate_off_cur;		/* Q31.32 */
-+	s64 dst_rate_off_cur;		/* Q31.32 */
-+};
-+
-+struct asrc_m2m {
-+	struct fsl_asrc_m2m_pdata pdata;
-+	struct v4l2_device v4l2_dev;
-+	struct v4l2_m2m_dev *m2m_dev;
-+	struct video_device *dec_vdev;
-+	struct mutex mlock; /* v4l2 ioctls serialization */
-+	struct platform_device *pdev;
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	struct media_device	mdev;
-+#endif
-+};
-+
-+static u32 formats[] = {
-+	V4L2_AUDIO_FMT_S8,
-+	V4L2_AUDIO_FMT_S16_LE,
-+	V4L2_AUDIO_FMT_U16_LE,
-+	V4L2_AUDIO_FMT_S24_LE,
-+	V4L2_AUDIO_FMT_S24_3LE,
-+	V4L2_AUDIO_FMT_U24_LE,
-+	V4L2_AUDIO_FMT_U24_3LE,
-+	V4L2_AUDIO_FMT_S32_LE,
-+	V4L2_AUDIO_FMT_U32_LE,
-+	V4L2_AUDIO_FMT_S20_3LE,
-+	V4L2_AUDIO_FMT_U20_3LE,
-+	V4L2_AUDIO_FMT_FLOAT_LE,
-+	V4L2_AUDIO_FMT_IEC958_SUBFRAME_LE,
-+};
-+
-+#define NUM_FORMATS ARRAY_SIZE(formats)
-+
-+static const s64 asrc_v1_m2m_rates[] = {
-+	5512, 8000, 11025, 12000, 16000,
-+	22050, 24000, 32000, 44100,
-+	48000, 64000, 88200, 96000,
-+	128000, 176400, 192000,
-+};
-+
-+static const s64 asrc_v2_m2m_rates[] = {
-+	8000, 11025, 12000, 16000,
-+	22050, 24000, 32000, 44100,
-+	48000, 64000, 88200, 96000,
-+	128000, 176400, 192000, 256000,
-+	352800, 384000, 705600, 768000,
-+};
-+
-+static u32 find_fourcc(snd_pcm_format_t format)
-+{
-+	snd_pcm_format_t fmt;
-+	unsigned int k;
-+
-+	for (k = 0; k < NUM_FORMATS; k++) {
-+		fmt = v4l2_fourcc_to_audfmt(formats[k]);
-+		if (fmt == format)
-+			return formats[k];
-+	}
-+
-+	return 0;
-+}
-+
-+static snd_pcm_format_t find_format(u32 fourcc)
-+{
-+	unsigned int k;
-+
-+	for (k = 0; k < NUM_FORMATS; k++) {
-+		if (formats[k] == fourcc)
-+			return v4l2_fourcc_to_audfmt(formats[k]);
-+	}
-+
-+	return 0;
-+}
-+
-+static int asrc_check_format(struct asrc_pair_m2m *pair_m2m, u8 dir, u32 format)
-+{
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	struct fsl_asrc_m2m_pdata *pdata = &m2m->pdata;
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	snd_pcm_format_t fmt;
-+	u64 format_bit = 0;
-+	int i;
-+
-+	for (i = 0; i < NUM_FORMATS; ++i) {
-+		if (formats[i] == format) {
-+			fmt = v4l2_fourcc_to_audfmt(formats[i]);
-+			format_bit = pcm_format_to_bits(fmt);
-+			break;
-+		}
-+	}
-+
-+	if (dir == IN && !(format_bit & pdata->fmt_in))
-+		return find_fourcc(pair->sample_format[V4L_OUT]);
-+	if (dir == OUT && !(format_bit & pdata->fmt_out))
-+		return find_fourcc(pair->sample_format[V4L_CAP]);
-+
-+	return format;
-+}
-+
-+static int asrc_check_channel(struct asrc_pair_m2m *pair_m2m, u8 dir, u32 channels)
-+{
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	struct fsl_asrc_m2m_pdata *pdata = &m2m->pdata;
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+
-+	if (channels < pdata->chan_min || channels > pdata->chan_max)
-+		return pair->channels;
-+
-+	return channels;
-+}
-+
-+static inline struct asrc_pair_m2m *asrc_m2m_fh_to_ctx(struct v4l2_fh *fh)
-+{
-+	return container_of(fh, struct asrc_pair_m2m, fh);
-+}
-+
-+/**
-+ * asrc_read_last_fifo: read all the remaining data from FIFO
-+ *	@pair: Structure pointer of fsl_asrc_pair
-+ *	@dma_vaddr: virtual address of capture buffer
-+ *	@length: payload length of capture buffer
-+ */
-+static void asrc_read_last_fifo(struct fsl_asrc_pair *pair, void *dma_vaddr, u32 *length)
-+{
-+	struct fsl_asrc *asrc = pair->asrc;
-+	enum asrc_pair_index index = pair->index;
-+	u32 i, reg, size, t_size = 0, width;
-+	u32 *reg32 = NULL;
-+	u16 *reg16 = NULL;
-+	u8  *reg24 = NULL;
-+
-+	width = snd_pcm_format_physical_width(pair->sample_format[V4L_CAP]);
-+	if (width == 32)
-+		reg32 = dma_vaddr + *length;
-+	else if (width == 16)
-+		reg16 = dma_vaddr + *length;
-+	else
-+		reg24 = dma_vaddr + *length;
-+retry:
-+	size = asrc->get_output_fifo_size(pair);
-+	if (size + *length > ASRC_M2M_BUFFER_SIZE)
-+		goto end;
-+
-+	for (i = 0; i < size * pair->channels; i++) {
-+		regmap_read(asrc->regmap, asrc->get_fifo_addr(OUT, index), &reg);
-+		if (reg32) {
-+			*reg32++ = reg;
-+		} else if (reg16) {
-+			*reg16++ = (u16)reg;
-+		} else {
-+			*reg24++ = (u8)reg;
-+			*reg24++ = (u8)(reg >> 8);
-+			*reg24++ = (u8)(reg >> 16);
-+		}
-+	}
-+	t_size += size;
-+
-+	/* In case there is data left in FIFO */
-+	if (size)
-+		goto retry;
-+end:
-+	/* Update payload length */
-+	if (reg32)
-+		*length += t_size * pair->channels * 4;
-+	else if (reg16)
-+		*length += t_size * pair->channels * 2;
-+	else
-+		*length += t_size * pair->channels * 3;
-+}
-+
-+static int asrc_m2m_start_streaming(struct vb2_queue *q, unsigned int count)
-+{
-+	struct asrc_pair_m2m *pair_m2m = vb2_get_drv_priv(q);
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	struct fsl_asrc *asrc = pair->asrc;
-+	struct device *dev = &m2m->pdev->dev;
-+	struct vb2_v4l2_buffer *buf;
-+	bool request_flag = false;
-+	int ret;
-+
-+	dev_dbg(dev, "Start streaming pair=%p, %d\n", pair, q->type);
-+
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to power up asrc\n");
-+		goto err_pm_runtime;
-+	}
-+
-+	/* Request asrc pair/context */
-+	if (!pair->req_pair) {
-+		/* flag for error handler of this function */
-+		request_flag = true;
-+
-+		ret = asrc->request_pair(pair->channels, pair);
-+		if (ret) {
-+			dev_err(dev, "failed to request pair: %d\n", ret);
-+			goto err_request_pair;
-+		}
-+
-+		ret = asrc->m2m_prepare(pair);
-+		if (ret) {
-+			dev_err(dev, "failed to start pair part one: %d\n", ret);
-+			goto err_start_part_one;
-+		}
-+
-+		pair->req_pair = true;
-+	}
-+
-+	/* Request dma channels */
-+	if (V4L2_TYPE_IS_OUTPUT(q->type)) {
-+		pair_m2m->sequence[V4L_OUT] = 0;
-+		pair->dma_chan[V4L_OUT] = asrc->get_dma_channel(pair, IN);
-+		if (!pair->dma_chan[V4L_OUT]) {
-+			dev_err(dev, "[ctx%d] failed to get input DMA channel\n", pair->index);
-+			ret = -EBUSY;
-+			goto err_dma_channel;
-+		}
-+	} else {
-+		pair_m2m->sequence[V4L_CAP] = 0;
-+		pair->dma_chan[V4L_CAP] = asrc->get_dma_channel(pair, OUT);
-+		if (!pair->dma_chan[V4L_CAP]) {
-+			dev_err(dev, "[ctx%d] failed to get output DMA channel\n", pair->index);
-+			ret = -EBUSY;
-+			goto err_dma_channel;
-+		}
-+	}
-+
-+	v4l2_m2m_update_start_streaming_state(pair_m2m->fh.m2m_ctx, q);
-+
-+	return 0;
-+
-+err_dma_channel:
-+	if (request_flag && asrc->m2m_unprepare)
-+		asrc->m2m_unprepare(pair);
-+err_start_part_one:
-+	if (request_flag)
-+		asrc->release_pair(pair);
-+err_request_pair:
-+	pm_runtime_put_sync(dev);
-+err_pm_runtime:
-+	/* Release buffers */
-+	if (V4L2_TYPE_IS_OUTPUT(q->type)) {
-+		while ((buf = v4l2_m2m_src_buf_remove(pair_m2m->fh.m2m_ctx)))
-+			v4l2_m2m_buf_done(buf, VB2_BUF_STATE_QUEUED);
-+	} else {
-+		while ((buf = v4l2_m2m_dst_buf_remove(pair_m2m->fh.m2m_ctx)))
-+			v4l2_m2m_buf_done(buf, VB2_BUF_STATE_QUEUED);
-+	}
-+	return ret;
-+}
-+
-+static void asrc_m2m_stop_streaming(struct vb2_queue *q)
-+{
-+	struct asrc_pair_m2m *pair_m2m = vb2_get_drv_priv(q);
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	struct fsl_asrc *asrc = pair->asrc;
-+	struct device *dev = &m2m->pdev->dev;
-+
-+	dev_dbg(dev, "Stop streaming pair=%p, %d\n", pair, q->type);
-+
-+	v4l2_m2m_update_stop_streaming_state(pair_m2m->fh.m2m_ctx, q);
-+
-+	/* Stop & release pair/context */
-+	if (asrc->m2m_stop)
-+		asrc->m2m_stop(pair);
-+
-+	if (pair->req_pair) {
-+		if (asrc->m2m_unprepare)
-+			asrc->m2m_unprepare(pair);
-+		asrc->release_pair(pair);
-+		pair->req_pair = false;
-+	}
-+
-+	/* Release dma channel */
-+	if (V4L2_TYPE_IS_OUTPUT(q->type)) {
-+		if (pair->dma_chan[V4L_OUT])
-+			dma_release_channel(pair->dma_chan[V4L_OUT]);
-+	} else {
-+		if (pair->dma_chan[V4L_CAP])
-+			dma_release_channel(pair->dma_chan[V4L_CAP]);
-+	}
-+
-+	pm_runtime_put_sync(dev);
-+}
-+
-+static int asrc_m2m_queue_setup(struct vb2_queue *q,
-+				unsigned int *num_buffers, unsigned int *num_planes,
-+				unsigned int sizes[], struct device *alloc_devs[])
-+{
-+	struct asrc_pair_m2m *pair_m2m = vb2_get_drv_priv(q);
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	u32 size;
-+
-+	/*
-+	 * The capture buffer size depends on output buffer size
-+	 * and the convert ratio.
-+	 *
-+	 * Here just use a fix length for capture and output buffer.
-+	 * User need to care about it.
-+	 */
-+	if (V4L2_TYPE_IS_OUTPUT(q->type))
-+		size = pair->buf_len[V4L_OUT];
-+	else
-+		size = pair->buf_len[V4L_CAP];
-+
-+	if (*num_planes)
-+		return sizes[0] < size ? -EINVAL : 0;
-+
-+	*num_planes = 1;
-+	sizes[0] = size;
-+
-+	return 0;
-+}
-+
-+static void asrc_m2m_buf_queue(struct vb2_buffer *vb)
-+{
-+	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-+	struct asrc_pair_m2m *pair_m2m = vb2_get_drv_priv(vb->vb2_queue);
-+
-+	/* queue buffer */
-+	v4l2_m2m_buf_queue(pair_m2m->fh.m2m_ctx, vbuf);
-+}
-+
-+static const struct vb2_ops asrc_m2m_qops = {
-+	.wait_prepare		= vb2_ops_wait_prepare,
-+	.wait_finish		= vb2_ops_wait_finish,
-+	.start_streaming	= asrc_m2m_start_streaming,
-+	.stop_streaming		= asrc_m2m_stop_streaming,
-+	.queue_setup		= asrc_m2m_queue_setup,
-+	.buf_queue		= asrc_m2m_buf_queue,
-+};
-+
-+/* Init video buffer queue for src and dst. */
-+static int asrc_m2m_queue_init(void *priv, struct vb2_queue *src_vq,
-+			       struct vb2_queue *dst_vq)
-+{
-+	struct asrc_pair_m2m *pair_m2m = priv;
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	int ret;
-+
-+	src_vq->type = V4L2_BUF_TYPE_AUDIO_OUTPUT;
-+	src_vq->io_modes = VB2_MMAP | VB2_DMABUF;
-+	src_vq->drv_priv = pair_m2m;
-+	src_vq->buf_struct_size = sizeof(struct v4l2_m2m_buffer);
-+	src_vq->ops = &asrc_m2m_qops;
-+	src_vq->mem_ops = &vb2_dma_contig_memops;
-+	src_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
-+	src_vq->lock = &m2m->mlock;
-+	src_vq->dev = &m2m->pdev->dev;
-+
-+	ret = vb2_queue_init(src_vq);
-+	if (ret)
-+		return ret;
-+
-+	dst_vq->type = V4L2_BUF_TYPE_AUDIO_CAPTURE;
-+	dst_vq->io_modes = VB2_MMAP | VB2_DMABUF;
-+	dst_vq->drv_priv = pair_m2m;
-+	dst_vq->buf_struct_size = sizeof(struct v4l2_m2m_buffer);
-+	dst_vq->ops = &asrc_m2m_qops;
-+	dst_vq->mem_ops = &vb2_dma_contig_memops;
-+	dst_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
-+	dst_vq->lock = &m2m->mlock;
-+	dst_vq->dev = &m2m->pdev->dev;
-+
-+	ret = vb2_queue_init(dst_vq);
-+	return ret;
-+}
-+
-+static int asrc_m2m_op_s_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct asrc_pair_m2m *pair_m2m =
-+		container_of(ctrl->handler, struct asrc_pair_m2m, ctrl_handler);
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	int ret = 0;
-+
-+	switch (ctrl->id) {
-+	case V4L2_CID_M2M_AUDIO_SOURCE_RATE:
-+		pair->rate[V4L_OUT] = ctrl->qmenu_int[ctrl->val];
-+		break;
-+	case V4L2_CID_M2M_AUDIO_DEST_RATE:
-+		pair->rate[V4L_CAP] = ctrl->qmenu_int[ctrl->val];
-+		break;
-+	case V4L2_CID_M2M_AUDIO_SOURCE_RATE_OFFSET:
-+		pair_m2m->src_rate_off_cur = *ctrl->p_new.p_s64;
-+		break;
-+	case V4L2_CID_M2M_AUDIO_DEST_RATE_OFFSET:
-+		pair_m2m->dst_rate_off_cur = *ctrl->p_new.p_s64;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct v4l2_ctrl_ops asrc_m2m_ctrl_ops = {
-+	.s_ctrl = asrc_m2m_op_s_ctrl,
-+};
-+
-+static const struct v4l2_ctrl_config asrc_src_rate_off_control = {
-+	.ops = &asrc_m2m_ctrl_ops,
-+	.id = V4L2_CID_M2M_AUDIO_SOURCE_RATE_OFFSET,
-+	.name = "Audio Source Sample Rate Offset",
-+	.type = V4L2_CTRL_TYPE_INTEGER64,
-+	.min = v4l2_ctrl_fp_compose(-128, 0, 32),
-+	.max = v4l2_ctrl_fp_compose(127, 0xffffffff, 32),
-+	.def = 0,
-+	.step = 1,
-+	.fraction_bits = 32,
-+};
-+
-+static const struct v4l2_ctrl_config asrc_dst_rate_off_control = {
-+	.ops = &asrc_m2m_ctrl_ops,
-+	.id = V4L2_CID_M2M_AUDIO_DEST_RATE_OFFSET,
-+	.name = "Audio Dest Sample Rate Offset",
-+	.type = V4L2_CTRL_TYPE_INTEGER64,
-+	.min = v4l2_ctrl_fp_compose(-128, 0, 32),
-+	.max = v4l2_ctrl_fp_compose(127, 0xffffffff, 32),
-+	.def = 0,
-+	.step = 1,
-+	.fraction_bits = 32,
-+};
-+
-+/* system callback for open() */
-+static int asrc_m2m_open(struct file *file)
-+{
-+	struct asrc_m2m *m2m = video_drvdata(file);
-+	struct fsl_asrc *asrc = m2m->pdata.asrc;
-+	struct video_device *vdev = video_devdata(file);
-+	struct fsl_asrc_pair *pair;
-+	struct asrc_pair_m2m *pair_m2m;
-+	int ret = 0;
-+
-+	if (mutex_lock_interruptible(&m2m->mlock))
-+		return -ERESTARTSYS;
-+
-+	pair = kzalloc(sizeof(*pair) + asrc->pair_priv_size, GFP_KERNEL);
-+	if (!pair) {
-+		ret = -ENOMEM;
-+		goto err_alloc_pair;
-+	}
-+
-+	pair_m2m = kzalloc(sizeof(*pair_m2m), GFP_KERNEL);
-+	if (!pair_m2m) {
-+		ret = -ENOMEM;
-+		goto err_alloc_pair_m2m;
-+	}
-+
-+	pair->private = (void *)pair + sizeof(struct fsl_asrc_pair);
-+	pair->asrc = asrc;
-+
-+	pair->buf_len[V4L_OUT] = ASRC_M2M_BUFFER_SIZE;
-+	pair->buf_len[V4L_CAP] = ASRC_M2M_BUFFER_SIZE;
-+
-+	pair->channels = 2;
-+	pair->rate[V4L_OUT] = 8000;
-+	pair->rate[V4L_CAP] = 8000;
-+	pair->sample_format[V4L_OUT] = SNDRV_PCM_FORMAT_S16_LE;
-+	pair->sample_format[V4L_CAP] = SNDRV_PCM_FORMAT_S16_LE;
-+
-+	init_completion(&pair->complete[V4L_OUT]);
-+	init_completion(&pair->complete[V4L_CAP]);
-+
-+	v4l2_fh_init(&pair_m2m->fh, vdev);
-+	v4l2_fh_add(&pair_m2m->fh);
-+	file->private_data = &pair_m2m->fh;
-+
-+	pair_m2m->pair = pair;
-+	pair_m2m->m2m = m2m;
-+	/* m2m context init */
-+	pair_m2m->fh.m2m_ctx = v4l2_m2m_ctx_init(m2m->m2m_dev, pair_m2m,
-+						 asrc_m2m_queue_init);
-+	if (IS_ERR(pair_m2m->fh.m2m_ctx)) {
-+		ret = PTR_ERR(pair_m2m->fh.m2m_ctx);
-+		goto err_ctx_init;
-+	}
-+
-+	v4l2_ctrl_handler_init(&pair_m2m->ctrl_handler, 4);
-+
-+	if (m2m->pdata.rate_min == 5512) {
-+		v4l2_ctrl_new_int_menu(&pair_m2m->ctrl_handler, &asrc_m2m_ctrl_ops,
-+				       V4L2_CID_M2M_AUDIO_SOURCE_RATE,
-+				       ARRAY_SIZE(asrc_v1_m2m_rates) - 1, 1, asrc_v1_m2m_rates);
-+		v4l2_ctrl_new_int_menu(&pair_m2m->ctrl_handler, &asrc_m2m_ctrl_ops,
-+				       V4L2_CID_M2M_AUDIO_DEST_RATE,
-+				       ARRAY_SIZE(asrc_v1_m2m_rates) - 1, 1, asrc_v1_m2m_rates);
-+	} else {
-+		v4l2_ctrl_new_int_menu(&pair_m2m->ctrl_handler, &asrc_m2m_ctrl_ops,
-+				       V4L2_CID_M2M_AUDIO_SOURCE_RATE,
-+				       ARRAY_SIZE(asrc_v2_m2m_rates) - 1, 0, asrc_v2_m2m_rates);
-+		v4l2_ctrl_new_int_menu(&pair_m2m->ctrl_handler, &asrc_m2m_ctrl_ops,
-+				       V4L2_CID_M2M_AUDIO_DEST_RATE,
-+				       ARRAY_SIZE(asrc_v2_m2m_rates) - 1, 0, asrc_v2_m2m_rates);
-+	}
-+
-+	v4l2_ctrl_new_custom(&pair_m2m->ctrl_handler, &asrc_src_rate_off_control, NULL);
-+	v4l2_ctrl_new_custom(&pair_m2m->ctrl_handler, &asrc_dst_rate_off_control, NULL);
-+
-+	if (pair_m2m->ctrl_handler.error) {
-+		ret = pair_m2m->ctrl_handler.error;
-+		v4l2_ctrl_handler_free(&pair_m2m->ctrl_handler);
-+		goto err_ctrl_handler;
-+	}
-+
-+	pair_m2m->fh.ctrl_handler = &pair_m2m->ctrl_handler;
-+
-+	mutex_unlock(&m2m->mlock);
-+
-+	return 0;
-+
-+err_ctrl_handler:
-+	v4l2_m2m_ctx_release(pair_m2m->fh.m2m_ctx);
-+err_ctx_init:
-+	v4l2_fh_del(&pair_m2m->fh);
-+	v4l2_fh_exit(&pair_m2m->fh);
-+	kfree(pair_m2m);
-+err_alloc_pair_m2m:
-+	kfree(pair);
-+err_alloc_pair:
-+	mutex_unlock(&m2m->mlock);
-+	return ret;
-+}
-+
-+static int asrc_m2m_release(struct file *file)
-+{
-+	struct asrc_m2m *m2m = video_drvdata(file);
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(file->private_data);
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+
-+	mutex_lock(&m2m->mlock);
-+	v4l2_ctrl_handler_free(&pair_m2m->ctrl_handler);
-+	v4l2_m2m_ctx_release(pair_m2m->fh.m2m_ctx);
-+	v4l2_fh_del(&pair_m2m->fh);
-+	v4l2_fh_exit(&pair_m2m->fh);
-+	kfree(pair_m2m);
-+	kfree(pair);
-+	mutex_unlock(&m2m->mlock);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_file_operations asrc_m2m_fops = {
-+	.owner          = THIS_MODULE,
-+	.open           = asrc_m2m_open,
-+	.release        = asrc_m2m_release,
-+	.poll           = v4l2_m2m_fop_poll,
-+	.unlocked_ioctl = video_ioctl2,
-+	.mmap           = v4l2_m2m_fop_mmap,
-+};
-+
-+static int asrc_m2m_querycap(struct file *file, void *priv,
-+			     struct v4l2_capability *cap)
-+{
-+	strscpy(cap->driver, M2M_DRV_NAME, sizeof(cap->driver));
-+	strscpy(cap->card, M2M_DRV_NAME, sizeof(cap->card));
-+	cap->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_AUDIO_M2M;
-+
-+	return 0;
-+}
-+
-+static int enum_fmt(struct v4l2_fmtdesc *f, u64 fmtbit)
-+{
-+	snd_pcm_format_t fmt;
-+	int i, num;
-+
-+	num = 0;
-+
-+	for (i = 0; i < NUM_FORMATS; ++i) {
-+		fmt = v4l2_fourcc_to_audfmt(formats[i]);
-+		if (pcm_format_to_bits(fmt) & fmtbit) {
-+			if (num == f->index)
-+				break;
-+			/*
-+			 * Correct type but haven't reached our index yet,
-+			 * just increment per-type index
-+			 */
-+			++num;
-+		}
-+	}
-+
-+	if (i < NUM_FORMATS) {
-+		/* Format found */
-+		f->pixelformat = formats[i];
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int asrc_m2m_enum_fmt_aud_cap(struct file *file, void *fh,
-+				     struct v4l2_fmtdesc *f)
-+{
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(fh);
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+
-+	return enum_fmt(f, m2m->pdata.fmt_out);
-+}
-+
-+static int asrc_m2m_enum_fmt_aud_out(struct file *file, void *fh,
-+				     struct v4l2_fmtdesc *f)
-+{
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(fh);
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+
-+	return enum_fmt(f, m2m->pdata.fmt_in);
-+}
-+
-+static int asrc_m2m_g_fmt_aud_cap(struct file *file, void *fh,
-+				  struct v4l2_format *f)
-+{
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(fh);
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+
-+	f->fmt.audio.channels = pair->channels;
-+	f->fmt.audio.buffersize = pair->buf_len[V4L_CAP];
-+	f->fmt.audio.audioformat = find_fourcc(pair->sample_format[V4L_CAP]);
-+
-+	return 0;
-+}
-+
-+static int asrc_m2m_g_fmt_aud_out(struct file *file, void *fh,
-+				  struct v4l2_format *f)
-+{
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(fh);
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+
-+	f->fmt.audio.channels = pair->channels;
-+	f->fmt.audio.buffersize = pair->buf_len[V4L_OUT];
-+	f->fmt.audio.audioformat = find_fourcc(pair->sample_format[V4L_OUT]);
-+
-+	return 0;
-+}
-+
-+/* output for asrc */
-+static int asrc_m2m_s_fmt_aud_cap(struct file *file, void *fh,
-+				  struct v4l2_format *f)
-+{
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(fh);
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	struct device *dev = &m2m->pdev->dev;
-+
-+	f->fmt.audio.audioformat = asrc_check_format(pair_m2m, OUT, f->fmt.audio.audioformat);
-+	f->fmt.audio.channels = asrc_check_channel(pair_m2m, OUT, f->fmt.audio.channels);
-+
-+	if (pair_m2m->channels[V4L_CAP] > 0 &&
-+	    pair_m2m->channels[V4L_CAP] != f->fmt.audio.channels) {
-+		dev_err(dev, "channels don't match for cap and out\n");
-+		return -EINVAL;
-+	}
-+
-+	pair_m2m->channels[V4L_CAP] = f->fmt.audio.channels;
-+	pair->channels = f->fmt.audio.channels;
-+	pair->sample_format[V4L_CAP] = find_format(f->fmt.audio.audioformat);
-+
-+	return 0;
-+}
-+
-+/* input for asrc */
-+static int asrc_m2m_s_fmt_aud_out(struct file *file, void *fh,
-+				  struct v4l2_format *f)
-+{
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(fh);
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	struct device *dev = &m2m->pdev->dev;
-+
-+	f->fmt.audio.audioformat = asrc_check_format(pair_m2m, IN, f->fmt.audio.audioformat);
-+	f->fmt.audio.channels = asrc_check_channel(pair_m2m, IN, f->fmt.audio.channels);
-+	if (pair_m2m->channels[V4L_OUT] > 0 &&
-+	    pair_m2m->channels[V4L_OUT] != f->fmt.audio.channels) {
-+		dev_err(dev, "channels don't match for cap and out\n");
-+		return -EINVAL;
-+	}
-+
-+	pair_m2m->channels[V4L_OUT] = f->fmt.audio.channels;
-+	pair->channels = f->fmt.audio.channels;
-+	pair->sample_format[V4L_OUT] = find_format(f->fmt.audio.audioformat);
-+
-+	return 0;
-+}
-+
-+static int asrc_m2m_try_fmt_audio_cap(struct file *file, void *fh,
-+				      struct v4l2_format *f)
-+{
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(fh);
-+
-+	f->fmt.audio.audioformat = asrc_check_format(pair_m2m, OUT, f->fmt.audio.audioformat);
-+	f->fmt.audio.channels = asrc_check_channel(pair_m2m, OUT, f->fmt.audio.channels);
-+
-+	return 0;
-+}
-+
-+static int asrc_m2m_try_fmt_audio_out(struct file *file, void *fh,
-+				      struct v4l2_format *f)
-+{
-+	struct asrc_pair_m2m *pair_m2m = asrc_m2m_fh_to_ctx(fh);
-+
-+	f->fmt.audio.audioformat = asrc_check_format(pair_m2m, IN, f->fmt.audio.audioformat);
-+	f->fmt.audio.channels = asrc_check_channel(pair_m2m, IN, f->fmt.audio.channels);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_ioctl_ops asrc_m2m_ioctl_ops = {
-+	.vidioc_querycap		= asrc_m2m_querycap,
-+
-+	.vidioc_enum_fmt_audio_cap	= asrc_m2m_enum_fmt_aud_cap,
-+	.vidioc_enum_fmt_audio_out	= asrc_m2m_enum_fmt_aud_out,
-+
-+	.vidioc_g_fmt_audio_cap		= asrc_m2m_g_fmt_aud_cap,
-+	.vidioc_g_fmt_audio_out		= asrc_m2m_g_fmt_aud_out,
-+
-+	.vidioc_s_fmt_audio_cap		= asrc_m2m_s_fmt_aud_cap,
-+	.vidioc_s_fmt_audio_out		= asrc_m2m_s_fmt_aud_out,
-+
-+	.vidioc_try_fmt_audio_cap	= asrc_m2m_try_fmt_audio_cap,
-+	.vidioc_try_fmt_audio_out	= asrc_m2m_try_fmt_audio_out,
-+
-+	.vidioc_qbuf			= v4l2_m2m_ioctl_qbuf,
-+	.vidioc_dqbuf			= v4l2_m2m_ioctl_dqbuf,
-+
-+	.vidioc_create_bufs		= v4l2_m2m_ioctl_create_bufs,
-+	.vidioc_prepare_buf		= v4l2_m2m_ioctl_prepare_buf,
-+	.vidioc_reqbufs			= v4l2_m2m_ioctl_reqbufs,
-+	.vidioc_querybuf		= v4l2_m2m_ioctl_querybuf,
-+	.vidioc_streamon		= v4l2_m2m_ioctl_streamon,
-+	.vidioc_streamoff		= v4l2_m2m_ioctl_streamoff,
-+	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
-+	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
-+};
-+
-+/* dma complete callback */
-+static void asrc_input_dma_callback(void *data)
-+{
-+	struct fsl_asrc_pair *pair = (struct fsl_asrc_pair *)data;
-+
-+	complete(&pair->complete[V4L_OUT]);
-+}
-+
-+/* dma complete callback */
-+static void asrc_output_dma_callback(void *data)
-+{
-+	struct fsl_asrc_pair *pair = (struct fsl_asrc_pair *)data;
-+
-+	complete(&pair->complete[V4L_CAP]);
-+}
-+
-+/* config dma channel */
-+static int asrc_dmaconfig(struct asrc_pair_m2m *pair_m2m,
-+			  struct dma_chan *chan,
-+			  u32 dma_addr, dma_addr_t buf_addr, u32 buf_len,
-+			  int dir, int width)
-+{
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	struct fsl_asrc *asrc = pair->asrc;
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	struct device *dev = &m2m->pdev->dev;
-+	struct dma_slave_config slave_config;
-+	enum dma_slave_buswidth buswidth;
-+	unsigned int sg_len, max_period_size;
-+	struct scatterlist *sg;
-+	int ret, i;
-+
-+	switch (width) {
-+	case 8:
-+		buswidth = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+		break;
-+	case 16:
-+		buswidth = DMA_SLAVE_BUSWIDTH_2_BYTES;
-+		break;
-+	case 24:
-+		buswidth = DMA_SLAVE_BUSWIDTH_3_BYTES;
-+		break;
-+	case 32:
-+		buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+		break;
-+	default:
-+		dev_err(dev, "invalid word width\n");
-+		return -EINVAL;
-+	}
-+
-+	memset(&slave_config, 0, sizeof(slave_config));
-+	if (dir == V4L_OUT) {
-+		slave_config.direction = DMA_MEM_TO_DEV;
-+		slave_config.dst_addr = dma_addr;
-+		slave_config.dst_addr_width = buswidth;
-+		slave_config.dst_maxburst = asrc->m2m_get_maxburst(IN, pair);
-+	} else {
-+		slave_config.direction = DMA_DEV_TO_MEM;
-+		slave_config.src_addr = dma_addr;
-+		slave_config.src_addr_width = buswidth;
-+		slave_config.src_maxburst = asrc->m2m_get_maxburst(OUT, pair);
-+	}
-+
-+	ret = dmaengine_slave_config(chan, &slave_config);
-+	if (ret) {
-+		dev_err(dev, "failed to config dmaengine for %s task: %d\n",
-+			DIR_STR(dir), ret);
-+		return -EINVAL;
-+	}
-+
-+	max_period_size = rounddown(ASRC_M2M_PERIOD_SIZE, width * pair->channels / 8);
-+	/* scatter gather mode */
-+	sg_len = buf_len / max_period_size;
-+	if (buf_len % max_period_size)
-+		sg_len += 1;
-+
-+	sg = kmalloc_array(sg_len, sizeof(*sg), GFP_KERNEL);
-+	if (!sg)
-+		return -ENOMEM;
-+
-+	sg_init_table(sg, sg_len);
-+	for (i = 0; i < (sg_len - 1); i++) {
-+		sg_dma_address(&sg[i]) = buf_addr + i * max_period_size;
-+		sg_dma_len(&sg[i]) = max_period_size;
-+	}
-+	sg_dma_address(&sg[i]) = buf_addr + i * max_period_size;
-+	sg_dma_len(&sg[i]) = buf_len - i * max_period_size;
-+
-+	pair->desc[dir] = dmaengine_prep_slave_sg(chan, sg, sg_len,
-+						  slave_config.direction,
-+						  DMA_PREP_INTERRUPT);
-+	kfree(sg);
-+	if (!pair->desc[dir]) {
-+		dev_err(dev, "failed to prepare dmaengine for %s task\n", DIR_STR(dir));
-+		return -EINVAL;
-+	}
-+
-+	pair->desc[dir]->callback = ASRC_xPUT_DMA_CALLBACK(dir);
-+	pair->desc[dir]->callback_param = pair;
-+
-+	return 0;
-+}
-+
-+static void asrc_m2m_set_ratio_mod(struct asrc_pair_m2m *pair_m2m)
-+{
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	struct fsl_asrc *asrc = pair->asrc;
-+	s32 src_rate_int, dst_rate_int;
-+	s64 src_rate_frac;
-+	s64 dst_rate_frac;
-+	u64 src_rate, dst_rate;
-+	u64 ratio_pre, ratio_cur;
-+	s64 ratio_diff;
-+
-+	if (!asrc->m2m_set_ratio_mod)
-+		return;
-+
-+	if (pair_m2m->src_rate_off_cur == pair_m2m->src_rate_off_prev &&
-+	    pair_m2m->dst_rate_off_cur == pair_m2m->dst_rate_off_prev)
-+		return;
-+
-+	/*
-+	 * use maximum rate 768kHz as limitation, then we can shift right 21 bit for
-+	 * division
-+	 */
-+	src_rate_int = pair->rate[V4L_OUT];
-+	src_rate_frac = pair_m2m->src_rate_off_prev;
-+
-+	src_rate = ((s64)src_rate_int << 32) + src_rate_frac;
-+
-+	dst_rate_int = pair->rate[V4L_CAP];
-+	dst_rate_frac = pair_m2m->dst_rate_off_prev;
-+
-+	dst_rate = ((s64)dst_rate_int << 32) + dst_rate_frac;
-+	dst_rate >>= 21;
-+	do_div(src_rate, dst_rate);
-+	ratio_pre = src_rate;
-+
-+	src_rate_frac = pair_m2m->src_rate_off_cur;
-+	src_rate = ((s64)src_rate_int << 32) + src_rate_frac;
-+
-+	dst_rate_frac = pair_m2m->dst_rate_off_cur;
-+	dst_rate = ((s64)dst_rate_int << 32) + dst_rate_frac;
-+	dst_rate >>= 21;
-+	do_div(src_rate, dst_rate);
-+	ratio_cur = src_rate;
-+
-+	ratio_diff = ratio_cur - ratio_pre;
-+	asrc->m2m_set_ratio_mod(pair, ratio_diff << 10);
-+
-+	pair_m2m->src_rate_off_prev = pair_m2m->src_rate_off_cur;
-+	pair_m2m->dst_rate_off_prev = pair_m2m->dst_rate_off_cur;
-+}
-+
-+/* main function of converter */
-+static void asrc_m2m_device_run(void *priv)
-+{
-+	struct asrc_pair_m2m *pair_m2m = priv;
-+	struct fsl_asrc_pair *pair = pair_m2m->pair;
-+	struct asrc_m2m *m2m = pair_m2m->m2m;
-+	struct fsl_asrc *asrc = pair->asrc;
-+	struct device *dev = &m2m->pdev->dev;
-+	enum asrc_pair_index index = pair->index;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
-+	unsigned int out_buf_len;
-+	unsigned int cap_dma_len;
-+	unsigned int width;
-+	u32 fifo_addr;
-+	int ret;
-+
-+	/* set ratio mod */
-+	asrc_m2m_set_ratio_mod(pair_m2m);
-+
-+	src_buf = v4l2_m2m_next_src_buf(pair_m2m->fh.m2m_ctx);
-+	dst_buf = v4l2_m2m_next_dst_buf(pair_m2m->fh.m2m_ctx);
-+
-+	src_buf->sequence = pair_m2m->sequence[V4L_OUT]++;
-+	dst_buf->sequence = pair_m2m->sequence[V4L_CAP]++;
-+
-+	width = snd_pcm_format_physical_width(pair->sample_format[V4L_OUT]);
-+	fifo_addr = asrc->paddr + asrc->get_fifo_addr(IN, index);
-+	out_buf_len = vb2_get_plane_payload(&src_buf->vb2_buf, 0);
-+	if (out_buf_len < width * pair->channels / 8 ||
-+	    out_buf_len > ASRC_M2M_BUFFER_SIZE ||
-+	    out_buf_len % (width * pair->channels / 8)) {
-+		dev_err(dev, "out buffer size is error: [%d]\n", out_buf_len);
-+		goto end;
-+	}
-+
-+	/* dma config for output dma channel */
-+	ret = asrc_dmaconfig(pair_m2m,
-+			     pair->dma_chan[V4L_OUT],
-+			     fifo_addr,
-+			     vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0),
-+			     out_buf_len, V4L_OUT, width);
-+	if (ret) {
-+		dev_err(dev, "out dma config error\n");
-+		goto end;
-+	}
-+
-+	width = snd_pcm_format_physical_width(pair->sample_format[V4L_CAP]);
-+	fifo_addr = asrc->paddr + asrc->get_fifo_addr(OUT, index);
-+	cap_dma_len = asrc->m2m_calc_out_len(pair, out_buf_len);
-+	if (cap_dma_len > 0 && cap_dma_len <= ASRC_M2M_BUFFER_SIZE) {
-+		/* dma config for capture dma channel */
-+		ret = asrc_dmaconfig(pair_m2m,
-+				     pair->dma_chan[V4L_CAP],
-+				     fifo_addr,
-+				     vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0),
-+				     cap_dma_len, V4L_CAP, width);
-+		if (ret) {
-+			dev_err(dev, "cap dma config error\n");
-+			goto end;
-+		}
-+	} else if (cap_dma_len > ASRC_M2M_BUFFER_SIZE) {
-+		dev_err(dev, "cap buffer size error\n");
-+		goto end;
-+	}
-+
-+	reinit_completion(&pair->complete[V4L_OUT]);
-+	reinit_completion(&pair->complete[V4L_CAP]);
-+
-+	/* Submit DMA request */
-+	dmaengine_submit(pair->desc[V4L_OUT]);
-+	dma_async_issue_pending(pair->desc[V4L_OUT]->chan);
-+	if (cap_dma_len > 0) {
-+		dmaengine_submit(pair->desc[V4L_CAP]);
-+		dma_async_issue_pending(pair->desc[V4L_CAP]->chan);
-+	}
-+
-+	asrc->m2m_start(pair);
-+
-+	if (!wait_for_completion_interruptible_timeout(&pair->complete[V4L_OUT], 10 * HZ)) {
-+		dev_err(dev, "out DMA task timeout\n");
-+		goto end;
-+	}
-+
-+	if (cap_dma_len > 0) {
-+		if (!wait_for_completion_interruptible_timeout(&pair->complete[V4L_CAP], 10 * HZ)) {
-+			dev_err(dev, "cap DMA task timeout\n");
-+			goto end;
-+		}
-+	}
-+
-+	/* read the last words from FIFO */
-+	asrc_read_last_fifo(pair, vb2_plane_vaddr(&dst_buf->vb2_buf, 0), &cap_dma_len);
-+	/* update payload length for capture */
-+	vb2_set_plane_payload(&dst_buf->vb2_buf, 0, cap_dma_len);
-+
-+end:
-+	src_buf = v4l2_m2m_src_buf_remove(pair_m2m->fh.m2m_ctx);
-+	dst_buf = v4l2_m2m_dst_buf_remove(pair_m2m->fh.m2m_ctx);
-+
-+	v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_DONE);
-+	v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
-+
-+	v4l2_m2m_job_finish(m2m->m2m_dev, pair_m2m->fh.m2m_ctx);
-+}
-+
-+static int asrc_m2m_job_ready(void *priv)
-+{
-+	struct asrc_pair_m2m *pair_m2m = priv;
-+
-+	if (v4l2_m2m_num_src_bufs_ready(pair_m2m->fh.m2m_ctx) > 0 &&
-+	    v4l2_m2m_num_dst_bufs_ready(pair_m2m->fh.m2m_ctx) > 0) {
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_m2m_ops asrc_m2m_ops = {
-+	.job_ready = asrc_m2m_job_ready,
-+	.device_run = asrc_m2m_device_run,
-+};
-+
-+static const struct media_device_ops asrc_m2m_media_ops = {
-+	.req_validate = vb2_request_validate,
-+	.req_queue = v4l2_m2m_request_queue,
-+};
-+
-+static int asrc_m2m_probe(struct platform_device *pdev)
-+{
-+	struct fsl_asrc_m2m_pdata *data = pdev->dev.platform_data;
-+	struct device *dev = &pdev->dev;
-+	struct asrc_m2m *m2m;
-+	int ret;
-+
-+	m2m = devm_kzalloc(dev, sizeof(*m2m), GFP_KERNEL);
-+	if (!m2m)
-+		return -ENOMEM;
-+
-+	m2m->pdata = *data;
-+	m2m->pdev = pdev;
-+
-+	ret = v4l2_device_register(dev, &m2m->v4l2_dev);
-+	if (ret) {
-+		dev_err(dev, "failed to register v4l2 device\n");
-+		goto err_register;
-+	}
-+
-+	m2m->m2m_dev = v4l2_m2m_init(&asrc_m2m_ops);
-+	if (IS_ERR(m2m->m2m_dev)) {
-+		ret = PTR_ERR(m2m->m2m_dev);
-+		dev_err_probe(dev, ret, "failed to register v4l2 device\n");
-+		goto err_m2m;
-+	}
-+
-+	m2m->dec_vdev = video_device_alloc();
-+	if (!m2m->dec_vdev) {
-+		ret = -ENOMEM;
-+		goto err_vdev_alloc;
-+	}
-+
-+	mutex_init(&m2m->mlock);
-+
-+	m2m->dec_vdev->fops = &asrc_m2m_fops;
-+	m2m->dec_vdev->ioctl_ops = &asrc_m2m_ioctl_ops;
-+	m2m->dec_vdev->minor = -1;
-+	m2m->dec_vdev->release = video_device_release;
-+	m2m->dec_vdev->lock = &m2m->mlock; /* lock for ioctl serialization */
-+	m2m->dec_vdev->v4l2_dev = &m2m->v4l2_dev;
-+	m2m->dec_vdev->vfl_dir = VFL_DIR_M2M;
-+	m2m->dec_vdev->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_AUDIO_M2M;
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	m2m->mdev.dev = &pdev->dev;
-+	strscpy(m2m->mdev.model, M2M_DRV_NAME, sizeof(m2m->mdev.model));
-+	media_device_init(&m2m->mdev);
-+	m2m->mdev.ops = &asrc_m2m_media_ops;
-+	m2m->v4l2_dev.mdev = &m2m->mdev;
-+#endif
-+
-+	ret = video_register_device(m2m->dec_vdev, VFL_TYPE_AUDIO, -1);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to register video device\n");
-+		goto err_vdev_register;
-+	}
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	ret = v4l2_m2m_register_media_controller(m2m->m2m_dev, m2m->dec_vdev,
-+						 MEDIA_ENT_F_PROC_AUDIO_RESAMPLER);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "Failed to init mem2mem media controller\n");
-+		goto error_v4l2;
-+	}
-+
-+	ret = media_device_register(&m2m->mdev);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "Failed to register mem2mem media device\n");
-+		goto error_m2m_mc;
-+	}
-+#endif
-+
-+	video_set_drvdata(m2m->dec_vdev, m2m);
-+	platform_set_drvdata(pdev, m2m);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+error_m2m_mc:
-+	v4l2_m2m_unregister_media_controller(m2m->m2m_dev);
-+#endif
-+error_v4l2:
-+	video_unregister_device(m2m->dec_vdev);
-+err_vdev_register:
-+	video_device_release(m2m->dec_vdev);
-+err_vdev_alloc:
-+	v4l2_m2m_release(m2m->m2m_dev);
-+err_m2m:
-+	v4l2_device_unregister(&m2m->v4l2_dev);
-+err_register:
-+	return ret;
-+}
-+
-+static void asrc_m2m_remove(struct platform_device *pdev)
-+{
-+	struct asrc_m2m *m2m = platform_get_drvdata(pdev);
-+
-+	pm_runtime_disable(&pdev->dev);
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	media_device_unregister(&m2m->mdev);
-+	v4l2_m2m_unregister_media_controller(m2m->m2m_dev);
-+#endif
-+	video_unregister_device(m2m->dec_vdev);
-+	video_device_release(m2m->dec_vdev);
-+	v4l2_m2m_release(m2m->m2m_dev);
-+	v4l2_device_unregister(&m2m->v4l2_dev);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+/* suspend callback for m2m */
-+static int asrc_m2m_suspend(struct device *dev)
-+{
-+	struct asrc_m2m *m2m = dev_get_drvdata(dev);
-+	struct fsl_asrc *asrc = m2m->pdata.asrc;
-+	struct fsl_asrc_pair *pair;
-+	unsigned long lock_flags;
-+	int i;
-+
-+	for (i = 0; i < PAIR_CTX_NUM; i++) {
-+		spin_lock_irqsave(&asrc->lock, lock_flags);
-+		pair = asrc->pair[i];
-+		if (!pair || !pair->req_pair) {
-+			spin_unlock_irqrestore(&asrc->lock, lock_flags);
-+			continue;
-+		}
-+		if (!completion_done(&pair->complete[V4L_OUT])) {
-+			if (pair->dma_chan[V4L_OUT])
-+				dmaengine_terminate_all(pair->dma_chan[V4L_OUT]);
-+			asrc_input_dma_callback((void *)pair);
-+		}
-+		if (!completion_done(&pair->complete[V4L_CAP])) {
-+			if (pair->dma_chan[V4L_CAP])
-+				dmaengine_terminate_all(pair->dma_chan[V4L_CAP]);
-+			asrc_output_dma_callback((void *)pair);
-+		}
-+
-+		if (asrc->m2m_pair_suspend)
-+			asrc->m2m_pair_suspend(pair);
-+
-+		spin_unlock_irqrestore(&asrc->lock, lock_flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static int asrc_m2m_resume(struct device *dev)
-+{
-+	struct asrc_m2m *m2m = dev_get_drvdata(dev);
-+	struct fsl_asrc *asrc = m2m->pdata.asrc;
-+	struct fsl_asrc_pair *pair;
-+	unsigned long lock_flags;
-+	int i;
-+
-+	for (i = 0; i < PAIR_CTX_NUM; i++) {
-+		spin_lock_irqsave(&asrc->lock, lock_flags);
-+		pair = asrc->pair[i];
-+		if (!pair || !pair->req_pair) {
-+			spin_unlock_irqrestore(&asrc->lock, lock_flags);
-+			continue;
-+		}
-+		if (asrc->m2m_pair_resume)
-+			asrc->m2m_pair_resume(pair);
-+
-+		spin_unlock_irqrestore(&asrc->lock, lock_flags);
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops asrc_m2m_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(asrc_m2m_suspend,
-+				      asrc_m2m_resume)
-+};
-+
-+static const struct platform_device_id asrc_m2m_driver_ids[] __always_unused = {
-+	{ .name = M2M_DRV_NAME },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, asrc_m2m_driver_ids);
-+
-+static struct platform_driver asrc_m2m_driver = {
-+	.probe  = asrc_m2m_probe,
-+	.remove_new = asrc_m2m_remove,
-+	.id_table = asrc_m2m_driver_ids,
-+	.driver = {
-+		.name = M2M_DRV_NAME,
-+		.pm = &asrc_m2m_pm_ops,
-+	},
-+};
-+module_platform_driver(asrc_m2m_driver);
-+
-+MODULE_DESCRIPTION("Freescale ASRC M2M driver");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+> >  	/*
+> >  	 * Remove from the busy tree/list.
+> >  	 */
+> > -	spin_lock(&vmap_area_lock);
+> > -	unlink_va(va, &vmap_area_root);
+> > -	spin_unlock(&vmap_area_lock);
+> > +	spin_lock(&vn->busy.lock);
+> > +	unlink_va(va, &vn->busy.root);
+> > +	spin_unlock(&vn->busy.lock);
+> >
+> >  	/*
+> >  	 * Insert/Merge it back to the free tree/list.
+> > @@ -1600,6 +1633,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+> >  				int node, gfp_t gfp_mask,
+> >  				unsigned long va_flags)
+> >  {
+> > +	struct vmap_node *vn;
+> >  	struct vmap_area *va;
+> >  	unsigned long freed;
+> >  	unsigned long addr;
+> > @@ -1645,9 +1679,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+> >  	va->vm = NULL;
+> >  	va->flags = va_flags;
+> >
+> > -	spin_lock(&vmap_area_lock);
+> > -	insert_vmap_area(va, &vmap_area_root, &vmap_area_list);
+> > -	spin_unlock(&vmap_area_lock);
+> > +	vn = addr_to_node(va->va_start);
+> > +
+> > +	spin_lock(&vn->busy.lock);
+> > +	insert_vmap_area(va, &vn->busy.root, &vn->busy.head);
+> > +	spin_unlock(&vn->busy.lock);
+> >
+> >  	BUG_ON(!IS_ALIGNED(va->va_start, align));
+> >  	BUG_ON(va->va_start < vstart);
+> > @@ -1871,26 +1907,61 @@ static void free_unmap_vmap_area(struct vmap_area *va)
+> >
+> >  struct vmap_area *find_vmap_area(unsigned long addr)
+> >  {
+> > +	struct vmap_node *vn;
+> >  	struct vmap_area *va;
+> > +	int i, j;
+> >
+> > -	spin_lock(&vmap_area_lock);
+> > -	va = __find_vmap_area(addr, &vmap_area_root);
+> > -	spin_unlock(&vmap_area_lock);
+> > +	/*
+> > +	 * An addr_to_node_id(addr) converts an address to a node index
+> > +	 * where a VA is located. If VA spans several zones and passed
+> > +	 * addr is not the same as va->va_start, what is not common, we
+> > +	 * may need to scan an extra nodes. See an example:
+> 
+> For my understading when you say 'scan an extra nodes' do you mean scan
+> just 1 extra node, or multiple? If the former I'd replace this with 'may
+> need to scan an extra node' if the latter then 'may ened to scan extra
+> nodes'.
+> 
+> It's a nitty language thing, but also potentially changes the meaning of
+> this!
+> 
+Typo, i should replace it to: scan extra nodes.
 
+> > +	 *
+> > +	 *      <--va-->
+> > +	 * -|-----|-----|-----|-----|-
+> > +	 *     1     2     0     1
+> > +	 *
+> > +	 * VA resides in node 1 whereas it spans 1 and 2. If passed
+> > +	 * addr is within a second node we should do extra work. We
+> > +	 * should mention that it is rare and is a corner case from
+> > +	 * the other hand it has to be covered.
+> 
+> A very minor language style nit, but you've already said this is not
+> common, I don't think you need this 'We should mention...' bit. It's not a
+> big deal however!
+> 
+No problem. We can remove it!
+
+> > +	 */
+> > +	i = j = addr_to_node_id(addr);
+> > +	do {
+> > +		vn = &vmap_nodes[i];
+> >
+> > -	return va;
+> > +		spin_lock(&vn->busy.lock);
+> > +		va = __find_vmap_area(addr, &vn->busy.root);
+> > +		spin_unlock(&vn->busy.lock);
+> > +
+> > +		if (va)
+> > +			return va;
+> > +	} while ((i = (i + 1) % nr_vmap_nodes) != j);
+> 
+> If you comment above suggests that only 1 extra node might need to be
+> scanned, should we stop after one iteration?
+> 
+Not really. Though we can improve it further to scan backward.
+
+> > +
+> > +	return NULL;
+> >  }
+> >
+> >  static struct vmap_area *find_unlink_vmap_area(unsigned long addr)
+> >  {
+> > +	struct vmap_node *vn;
+> >  	struct vmap_area *va;
+> > +	int i, j;
+> >
+> > -	spin_lock(&vmap_area_lock);
+> > -	va = __find_vmap_area(addr, &vmap_area_root);
+> > -	if (va)
+> > -		unlink_va(va, &vmap_area_root);
+> > -	spin_unlock(&vmap_area_lock);
+> > +	i = j = addr_to_node_id(addr);
+> > +	do {
+> > +		vn = &vmap_nodes[i];
+> >
+> > -	return va;
+> > +		spin_lock(&vn->busy.lock);
+> > +		va = __find_vmap_area(addr, &vn->busy.root);
+> > +		if (va)
+> > +			unlink_va(va, &vn->busy.root);
+> > +		spin_unlock(&vn->busy.lock);
+> > +
+> > +		if (va)
+> > +			return va;
+> > +	} while ((i = (i + 1) % nr_vmap_nodes) != j);
+> 
+> Maybe worth adding a comment saying to refer to the comment in
+> find_vmap_area() to see why this loop is necessary.
+> 
+OK. We can do it to make it better for reading.
+
+> > +
+> > +	return NULL;
+> >  }
+> >
+> >  /*** Per cpu kva allocator ***/
+> > @@ -2092,6 +2163,7 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
+> >
+> >  static void free_vmap_block(struct vmap_block *vb)
+> >  {
+> > +	struct vmap_node *vn;
+> >  	struct vmap_block *tmp;
+> >  	struct xarray *xa;
+> >
+> > @@ -2099,9 +2171,10 @@ static void free_vmap_block(struct vmap_block *vb)
+> >  	tmp = xa_erase(xa, addr_to_vb_idx(vb->va->va_start));
+> >  	BUG_ON(tmp != vb);
+> >
+> > -	spin_lock(&vmap_area_lock);
+> > -	unlink_va(vb->va, &vmap_area_root);
+> > -	spin_unlock(&vmap_area_lock);
+> > +	vn = addr_to_node(vb->va->va_start);
+> > +	spin_lock(&vn->busy.lock);
+> > +	unlink_va(vb->va, &vn->busy.root);
+> > +	spin_unlock(&vn->busy.lock);
+> >
+> >  	free_vmap_area_noflush(vb->va);
+> >  	kfree_rcu(vb, rcu_head);
+> > @@ -2525,9 +2598,11 @@ static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
+> >  static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
+> >  			      unsigned long flags, const void *caller)
+> >  {
+> > -	spin_lock(&vmap_area_lock);
+> > +	struct vmap_node *vn = addr_to_node(va->va_start);
+> > +
+> > +	spin_lock(&vn->busy.lock);
+> >  	setup_vmalloc_vm_locked(vm, va, flags, caller);
+> > -	spin_unlock(&vmap_area_lock);
+> > +	spin_unlock(&vn->busy.lock);
+> >  }
+> >
+> >  static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+> > @@ -3715,6 +3790,7 @@ static size_t vmap_ram_vread_iter(struct iov_iter *iter, const char *addr,
+> >   */
+> >  long vread_iter(struct iov_iter *iter, const char *addr, size_t count)
+> >  {
+> > +	struct vmap_node *vn;
+> >  	struct vmap_area *va;
+> >  	struct vm_struct *vm;
+> >  	char *vaddr;
+> > @@ -3728,8 +3804,11 @@ long vread_iter(struct iov_iter *iter, const char *addr, size_t count)
+> 
+> Unrelated to your change but makes me feel a little unwell to see 'const
+> char *addr'! Can we change this at some point? Or maybe I can :)
+> 
+You are welcome :)
+
+> >
+> >  	remains = count;
+> >
+> > -	spin_lock(&vmap_area_lock);
+> > -	va = find_vmap_area_exceed_addr((unsigned long)addr);
+> > +	/* Hooked to node_0 so far. */
+> > +	vn = addr_to_node(0);
+> 
+> Why can't we use addr for this call? We already enforce the node-0 only
+> thing by setting nr_vmap_nodes to 1 right? And won't this be potentially
+> subtly wrong when we later increase this?
+> 
+I used to have 0 here. But please note, it is changed by the next patch in
+this series.
+
+> > +	spin_lock(&vn->busy.lock);
+> > +
+> > +	va = find_vmap_area_exceed_addr((unsigned long)addr, &vn->busy.root);
+> >  	if (!va)
+> >  		goto finished_zero;
+> >
+> > @@ -3737,7 +3816,7 @@ long vread_iter(struct iov_iter *iter, const char *addr, size_t count)
+> >  	if ((unsigned long)addr + remains <= va->va_start)
+> >  		goto finished_zero;
+> >
+> > -	list_for_each_entry_from(va, &vmap_area_list, list) {
+> > +	list_for_each_entry_from(va, &vn->busy.head, list) {
+> >  		size_t copied;
+> >
+> >  		if (remains == 0)
+> > @@ -3796,12 +3875,12 @@ long vread_iter(struct iov_iter *iter, const char *addr, size_t count)
+> >  	}
+> >
+> >  finished_zero:
+> > -	spin_unlock(&vmap_area_lock);
+> > +	spin_unlock(&vn->busy.lock);
+> >  	/* zero-fill memory holes */
+> >  	return count - remains + zero_iter(iter, remains);
+> >  finished:
+> >  	/* Nothing remains, or We couldn't copy/zero everything. */
+> > -	spin_unlock(&vmap_area_lock);
+> > +	spin_unlock(&vn->busy.lock);
+> >
+> >  	return count - remains;
+> >  }
+> > @@ -4135,14 +4214,15 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
+> >  	}
+> >
+> >  	/* insert all vm's */
+> > -	spin_lock(&vmap_area_lock);
+> >  	for (area = 0; area < nr_vms; area++) {
+> > -		insert_vmap_area(vas[area], &vmap_area_root, &vmap_area_list);
+> > +		struct vmap_node *vn = addr_to_node(vas[area]->va_start);
+> >
+> > +		spin_lock(&vn->busy.lock);
+> > +		insert_vmap_area(vas[area], &vn->busy.root, &vn->busy.head);
+> >  		setup_vmalloc_vm_locked(vms[area], vas[area], VM_ALLOC,
+> >  				 pcpu_get_vm_areas);
+> > +		spin_unlock(&vn->busy.lock);
+> 
+> Hmm, before we were locking/unlocking once before the loop, now we're
+> locking on each iteration, this seems inefficient.
+> 
+> Seems like we need logic like:
+> 
+> /* ... something to check nr_vms > 0 ... */
+> struct vmap_node *last_node = NULL;
+> 
+> for (...) {
+> 	struct vmap_node *vnode = addr_to_node(vas[area]->va_start);
+> 
+> 	if (vnode != last_node) {
+> 		spin_unlock(last_node->busy.lock);
+> 		spin_lock(vnode->busy.lock);
+> 		last_node = vnode;
+> 	}
+> 
+> 	...
+> }
+> 
+> if (last_node)
+> 	spin_unlock(last_node->busy.lock);
+> 
+> To minimise the lock twiddling. What do you think?
+>
+This per-cpu-allocator prefetches several VA units per-cpu. I do not
+find it as critical because it is not a hot path for the per-cpu allocator. 
+When its buffers are exhausted it does an extra prefetch. So it is not
+frequent.
+
+> 
+> >  	}
+> > -	spin_unlock(&vmap_area_lock);
+> >
+> >  	/*
+> >  	 * Mark allocated areas as accessible. Do it now as a best-effort
+> > @@ -4253,55 +4333,57 @@ bool vmalloc_dump_obj(void *object)
+> >  {
+> >  	void *objp = (void *)PAGE_ALIGN((unsigned long)object);
+> >  	const void *caller;
+> > -	struct vm_struct *vm;
+> >  	struct vmap_area *va;
+> > +	struct vmap_node *vn;
+> >  	unsigned long addr;
+> >  	unsigned int nr_pages;
+> > +	bool success = false;
+> >
+> > -	if (!spin_trylock(&vmap_area_lock))
+> > -		return false;
+> 
+> Nitpick on style for this, I really don't know why you are removing this
+> early exit? It's far neater to have a guard clause than to nest a whole
+> bunch of code below.
+> 
+Hm... I can return back as it used to be. I do not have a strong opinion here.
+
+> > -	va = __find_vmap_area((unsigned long)objp, &vmap_area_root);
+> > -	if (!va) {
+> > -		spin_unlock(&vmap_area_lock);
+> > -		return false;
+> > -	}
+> > +	vn = addr_to_node((unsigned long)objp);
+> 
+> Later in the patch where you fix build bot issues with the below
+> __find_vmap_area() invocation, you move from addr to (unsigned long)objp.
+> 
+> However since you're already referring to that here, why not change what
+> addr refers to and use that in both instances, e.g.
+> 
+> unsigned long addr = (unsigned long)objp;
+> 
+> Then update things that refer to the objp value as necessary.
+> 
+That is what i was thinking of. We can send a separate patch for this.
+
+> >
+> > -	vm = va->vm;
+> > -	if (!vm) {
+> > -		spin_unlock(&vmap_area_lock);
+> > -		return false;
+> > +	if (spin_trylock(&vn->busy.lock)) {
+> > +		va = __find_vmap_area(addr, &vn->busy.root);
+> > +
+> > +		if (va && va->vm) {
+> > +			addr = (unsigned long)va->vm->addr;
+> > +			caller = va->vm->caller;
+> > +			nr_pages = va->vm->nr_pages;
+> 
+> Again it feels like you're undoing some good here, now you're referencing
+> va->vm over and over when you could simply assign vm = va->vm as the
+> original code did.
+> 
+> Also again it'd be nicer to use an early exit/guard clause approach.
+> 
+We can change it in separate patch.
+
+> > +			success = true;
+> > +		}
+> > +
+> > +		spin_unlock(&vn->busy.lock);
+> >  	}
+> > -	addr = (unsigned long)vm->addr;
+> > -	caller = vm->caller;
+> > -	nr_pages = vm->nr_pages;
+> > -	spin_unlock(&vmap_area_lock);
+> > -	pr_cont(" %u-page vmalloc region starting at %#lx allocated at %pS\n",
+> > -		nr_pages, addr, caller);
+> > -	return true;
+> > +
+> > +	if (success)
+> > +		pr_cont(" %u-page vmalloc region starting at %#lx allocated at %pS\n",
+> > +			nr_pages, addr, caller);
+> 
+> With the redefinition of addr, you could then simply put va->vm->addr here.
+> 
+> > +
+> > +	return success;
+> >  }
+> >  #endif
+> 
+> These are all essentially style nits (the actual bug was fixed by your
+> follow up patch for the build bots) :)
+> 
+Right :)
+
+> >
+> >  #ifdef CONFIG_PROC_FS
+> >  static void *s_start(struct seq_file *m, loff_t *pos)
+> > -	__acquires(&vmap_purge_lock)
+> > -	__acquires(&vmap_area_lock)
+> 
+> Do we want to replace these __acquires() directives? I suppose we simply
+> cannot now we need to look up the node.
+> 
+Yep. It is reworked anyway in another patch.
+
+> >  {
+> > +	struct vmap_node *vn = addr_to_node(0);
+> 
+> Hm does the procfs operation span only one node? I guess we can start from
+> the initial node for an iteration, but I wonder if '&vmap_nodes[0]' here is
+> a more 'honest' thing to do rather than to assume that address 0 gets
+> translated to node zero here?
+> 
+> I think a comment like:
+> 
+> /* We start from node 0 */
+> 
+> Would be useful here at any rate.
+> 
+It works since nr_nodes is set to 1. By later patches in this series
+it is fulfilled and completed.
+
+> > +
+> >  	mutex_lock(&vmap_purge_lock);
+> > -	spin_lock(&vmap_area_lock);
+> > +	spin_lock(&vn->busy.lock);
+> >
+> > -	return seq_list_start(&vmap_area_list, *pos);
+> > +	return seq_list_start(&vn->busy.head, *pos);
+> >  }
+> >
+> >  static void *s_next(struct seq_file *m, void *p, loff_t *pos)
+> >  {
+> > -	return seq_list_next(p, &vmap_area_list, pos);
+> > +	struct vmap_node *vn = addr_to_node(0);
+> 
+> This one I'm a little more uncertain of, obviously comments above still
+> apply but actually shouldn't we add a check to see if we're at the end of
+> the list and should look at the next node?
+> 
+> Even if we only have one for now, I don't like the idea of leaving in
+> hardcoded things that might get missed when we move to nr_vmap_nodes > 1.
+> 
+> For instance right now if you increased this above 1 it'd break things
+> right?
+> 
+> I'd say better to write logic assuming nr_vmap_nodes _could_ be > 1 even
+> if, to start, it won't be.
+> 
+Same as above. It is incomplete and stick to a single node. Further
+patches solve this fully.
+
+> > +	return seq_list_next(p, &vn->busy.head, pos);
+> >  }
+> >
+> >  static void s_stop(struct seq_file *m, void *p)
+> > -	__releases(&vmap_area_lock)
+> > -	__releases(&vmap_purge_lock)
+> >  {
+> > -	spin_unlock(&vmap_area_lock);
+> > +	struct vmap_node *vn = addr_to_node(0);
+> 
+> See comments above about use of addr_to_node(0).
+> 
+All this s_start/s_next/etc are removed and reworked by following
+patches.
+
+> > +
+> > +	spin_unlock(&vn->busy.lock);
+> >  	mutex_unlock(&vmap_purge_lock);
+> >  }
+> >
+> > @@ -4344,9 +4426,11 @@ static void show_purge_info(struct seq_file *m)
+> >
+> >  static int s_show(struct seq_file *m, void *p)
+> >  {
+> > +	struct vmap_node *vn;
+> >  	struct vmap_area *va;
+> >  	struct vm_struct *v;
+> >
+> > +	vn = addr_to_node(0);
+> 
+> This one is really quite icky, should we make it easy for a vmap_area to
+> know its vmap_node? How is this going to work once nr_vmap_nodes > 1?
+> 
+Same as above.
+
+Thank you for the review! I can fix the comments as separate patches if
+no objections.
+
+--
+Uladzislau Rezki
