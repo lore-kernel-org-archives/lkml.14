@@ -1,148 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391F729A2;
-	Thu, 18 Jan 2024 04:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF4433C7
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 04:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705552782; cv=none; b=iAo9rnV+QKsBrcA4XvmSLcveFgt0FIC4piMxFpecEu7FI9CHebP1zxb5lraDbfUcGJfsj2AQHOCqwWtErAdmIa0F5UrBIz4VFkN3j1hQ8jkIcMwdqQ1T9tFdRie8XzbUWZpx/U6dWKeUnKyLmdoMLXHTpaYYdF5gaJKCPsYmjyM=
+	t=1705553227; cv=none; b=kvSirAk++qkNvdzW83Q2G9+jpK6yxYIC4ySXucpHRRJJTIWTuZV6KtpVBN3+BdGmSTKBn80tbre6gmmzf5SqlYwYDx2PH0HqKpFT3TUHhL3UeiFDdBsXmPH1Nu+EJskOf9+UryBxJnFBeN9KmEXjxL18ncWHJX5kG9NIYlYRyW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705552782; c=relaxed/simple;
-	bh=WNBz0nAGev6j0DP23tPtu2NqwCR+QLRtNKY/oIRIW4M=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:From:To:Cc:Subject:In-Reply-To:References:
-	 Date:Message-ID:User-Agent:MIME-Version:Content-Type; b=G3OGJqLDGzZ/+NmC8ROcRHfzVoLmYW9Wr1pkJBUQMn7tepuNyHfWbnzPZ7nk52qevLZR+CrdgAX16rgyTnYraVrSHV3VctREByXFJzHvzqNQca8BfHNgMt4WnFS3sLh34b1m5Wf4ViKDkWSuhcNui2viGEtQiu2hWKghj3Qxdb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eaC+mKo5; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eaC+mKo5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705552780; x=1737088780;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=WNBz0nAGev6j0DP23tPtu2NqwCR+QLRtNKY/oIRIW4M=;
-  b=eaC+mKo5/j399IO5PLQMlDI/plGuijrXP0ydOndcQkCCP8lwKNZ401Qi
-   EUrV8qvN46n5YddsZLGqcFvBayfIIPeEbFsUlwmFhn9yQQxoQRUfTreOL
-   6aBbbGm4g1ul3qMwhm3Z6xr7n1EgyAfnSMyA/9U1pB/IIF5nBkMJ79eZJ
-   toY0yePYEdli1DnqcOCd4ZrhVSfxiJy9NZ3t7GJVtEAiKCzaskDaculRz
-   7dU1XubXZCE9dl8KySMLOFitPQ/5bMN4Kh+nnjZb0tLLJg0TP1mejNCLN
-   9dKnl/jCeDGlcUMscCxJILqp51OvKVMISnbXuPVQhri2pa4PNtzp5kuP4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="390796593"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="390796593"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 20:39:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="26359903"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 20:39:34 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-doc@vger.kernel.org>,
-  <linux-fsdevel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
-  <corbet@lwn.net>,  <akpm@linux-foundation.org>,  <honggyu.kim@sk.com>,
-  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <mhocko@kernel.org>,
-  <vtavarespetr@micron.com>,  <jgroves@micron.com>,
-  <ravis.opensrc@micron.com>,  <sthanneeru@micron.com>,
-  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
-  <seungjun.ha@samsung.com>,  <hannes@cmpxchg.org>,
-  <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/3] mm/mempolicy: implement the sysfs-based
- weighted_interleave interface
-In-Reply-To: <ZagSW5TXzZeKErlW@memverge.com> (Gregory Price's message of "Wed,
-	17 Jan 2024 12:46:03 -0500")
-References: <20240112210834.8035-1-gregory.price@memverge.com>
-	<20240112210834.8035-2-gregory.price@memverge.com>
-	<87le8r1dzr.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZadkmWj3Rd483f68@memverge.com>
-	<87o7dkzbsv.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZagSW5TXzZeKErlW@memverge.com>
-Date: Thu, 18 Jan 2024 12:37:36 +0800
-Message-ID: <87bk9jz27j.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1705553227; c=relaxed/simple;
+	bh=Q75w7nD4kKcQBLdkK7LKAfVYbQplE7hzg5drjIwxGA0=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:MIME-Version:X-Received:Date:In-Reply-To:
+	 X-Google-Appengine-App-Id:X-Google-Appengine-App-Id-Alias:
+	 Message-ID:Subject:From:To:Content-Type; b=gQhFMa5ajfSHVCo1Q1BhcN6xUcmrE8rb4m4/bpgfJKbOrG92xaLLF41piys1jW6m3jTlE0tcKyGPLQSfqyUwB1jg2OTkcQ/CUWF/+HvXWZyRXpf4S70Px+tJYT2Gew6Ykos/NmYUFazDg90LXGgPC763egyMtU56zDDoy0ddsb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-360a49993dfso79927885ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 20:47:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705553225; x=1706158025;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ymoVARgRYWdIms/xo+octeg0XEPb8BZOwxsFtI4Grg4=;
+        b=v6VVSqE6ztbYikOee1C6bFDBRfLMxllQP/ZNr0WGTou28Ty9nIlE6VgwEgl12nnprC
+         I4EtH6LAMb50twKAr8kWgGnH4O6eIRKgn5Q9Yo/mXNpEZClrDWPncaqhpzyw9Si7sUh4
+         rWNvXvOWXVRiXTobxEG//cTO+O3Qaqbp1mPDp7nKqcYWpsefx6lLGflqqrJGZcMvpE6o
+         zKkiLzyHsUl8LMMYP1lDd6y3vfuUc+yWGEpx7Aqd62EhRPiB6UvQ5a5XRlyHSwlHYNof
+         GmwfDHzCYkLww4Skrt2bizQCCDHlMmVkmoAAQ7KGXF1pkdnEL+u1fEcG16V1f54tt8mD
+         qB7g==
+X-Gm-Message-State: AOJu0Yy7Cu2q60+S1GiULV3IesNv77DUq8BKdjrBa8vmpgS7yb+odqjn
+	ZBAKAlAw44S8D77q9Yl/jf+1j+K0kg6qD5IInX+F+Oys++9Wgi45sZOBiNtSfAZCf9y60is1eZq
+	WWW8sfmlIjtkBTueVO+WMc4jea9wGRqQjDfKem4DuQC/O/XpreU2n818=
+X-Google-Smtp-Source: AGHT+IEH+woEwYdSe7g/Y57PZBA4qKJtYRxtNII4slp4OUaaC4bIxOSd7vASigIipTBSUTWvRb/insfrES6MdicNCz7xcfOqIgQP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+X-Received: by 2002:a05:6e02:1d8a:b0:361:9bd6:9dab with SMTP id
+ h10-20020a056e021d8a00b003619bd69dabmr46284ila.1.1705553225166; Wed, 17 Jan
+ 2024 20:47:05 -0800 (PST)
+Date: Wed, 17 Jan 2024 20:47:05 -0800
+In-Reply-To: <20240118043359.1367-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000021b4fb060f310e4c@google.com>
+Subject: Re: [syzbot] [net?] KASAN: use-after-free Read in __skb_flow_dissect (3)
+From: syzbot <syzbot+bfde3bef047a81b8fde6@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Gregory Price <gregory.price@memverge.com> writes:
+Hello,
 
-> On Wed, Jan 17, 2024 at 02:58:08PM +0800, Huang, Ying wrote:
->> Gregory Price <gregory.price@memverge.com> writes:
->> 
->> > We haven't had the discussion on how/when this should happen yet,
->> > though, and there's some research to be done.  (i.e. when should DRAM
->> > weights be set? should the entire table be reweighted on hotplug? etc)
->> 
->> Before that, I'm OK to remove default_iw_table and use hard coded "1" as
->> default weight for now.
->> 
->
-> Can't quite do that. default_iw_table is a static structure because we
-> need a reliable default structure not subject to module initialization
-> failure.  Otherwise we can end up in a situation where iw_table is NULL
-> during some allocation path if the sysfs structure fails to setup fully.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-As the first simplest implementation, we can avoid default_iw_table[].
-Becuse it's constant.
+net/core/filter.c:2162:23: error: invalid operands to binary - (have 'sk_buff_data_t' {aka 'unsigned int'} and 'unsigned char *')
 
-> There's no good reason to fail allocations just because sysfs failed to
-> initialization for some reason.  I'll leave default_iw_table with a size
-> of MAX_NUMNODES for now (nr_node_ids is set up at runtime per your
-> reference to `setup_nr_node_ids` below, so we can't use it for this).
 
-We allocate memory during module initialization all over the places in
-kernel.  I don't think it will cause any issue in practice.  Just some
-additional checking for "default_iw_table == NULL".
+Tested on:
 
-And, we cannot make it just static, because we need to use RCU to keep
-it consistent.  Otherwise, it may be changed during reading.
+commit:         296455ad Merge tag 'char-misc-6.8-rc1' of git://git.ke..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+kernel config:  https://syzkaller.appspot.com/x/.config?x=da1c95d4e55dda83
+dashboard link: https://syzkaller.appspot.com/bug?extid=bfde3bef047a81b8fde6
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1049e9dde80000
 
->> >
->> >> u8 __rcu *iw_table;
->> >> 
->> >> Then, we only need to allocate nr_node_ids elements now.
->> >> 
->> >
->> > We need nr_possible_nodes to handle hotplug correctly.
->> 
->> nr_node_ids >= num_possible_nodes().  It's larger than any possible node
->> ID.
->>
->
-> nr_node_ids gets setup at runtime, while the default_iw_table needs
-> to be a static structure (see above).  I can make default_iw_table
-> MAX_NUMNODES and subsequent allocations of iw_table be nr_node_ids,
-> but that makes iw_table a different size at any given time.
->
-> This *will* break if "true hotplug" ever shows up and possible_nodes !=
-> MAX_NUMNODES. But I can write it up if it's a sticking point for you.
-
-I don't think it is an issue for "true hotplug".  Because we can set
-nr_node_ids = MAX_NUMNODES even if there is something called "true
-hotplug".
-
-> Ultimately we're squabbling over, at most, about ~3kb of memory, just
-> keep that in mind. (I guess if you spawn 3000 threads and each tries a
-> concurrent write to sysfs/node1, you'd eat 3MB view briefly, but that
-> is a truly degenerate case and I can think of more denegerate things).
-
-Not just for memory wastage, it's about proper API too.
-
->> 
->> When "true node hotplug" becomes reality, we can make nr_node_ids ==
->> MAX_NUMNODES.  So, it's safe to use it.  Please take a look at
->> setup_nr_node_ids().
->> 
-
---
-Best Regards,
-Huang, Ying
