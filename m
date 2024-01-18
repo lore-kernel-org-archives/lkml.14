@@ -1,105 +1,214 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F38D25742
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 17:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C272C6AA
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 17:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705597642; cv=none; b=NxLdrFIrdqf7pLxbw7nfEnHxtewCTK5Xho3o9n1sWwyYBeqG8EtTeAuYjmh4UP2mrUPyLcRlkHUhRD5W7RwzG2fUZEzlmdo+pdIESYVlMntOxrqNf0a7lmsodT7dcdhv5LNCaU526FjPD7wdP5LhgrWPRXMyvwHBRyRNJ/qBzbw=
+	t=1705597728; cv=none; b=Vo7KkeOwVL750vhkB8HiVHE9GBiU6gkB6riKOkM/5Wd5fSy7zIk4nPRO0ReUqDHre0yTC3x3crSYAGJlKiCNuAd4OFdzs+Zs/EZwDh105kSTKXIDFt7Md/YFzEq9+KW5ZMOhZEBPUrGxHPgSJSNrWulvNw/9fGsBTH+UeB5rrQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705597642; c=relaxed/simple;
-	bh=HlYwd4ZgoThSOWDK/BI/ByWriREGCZu6HCgLz+Vx7lU=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type; b=RsEfrhlHVZBnP4e27F74tYtlhhXLfh2JyomeSggXKi7dNwzWt4vOXUa3HP+OqQ6tFXCX+NkVuD8OzJPmDTuJ6Gs5t6/a4Jw5zpc0Nxn5WeHV2JZbuw5/rmRn8H7H9IKO4KasrNl68cfZfmp6hZazI1N6D+S5nuwxfZ3aC55aGW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k7aVVcZA; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1705597728; c=relaxed/simple;
+	bh=BqHMQ6YFIEXyylSMaRcciYAELO9Rvlk6sWFPcaGy7lY=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Disposition; b=KrqLXb9oiEKLSTad8q8swXwYE+E1COvaFZmeacJUtCewgEOlBF6CAYYPP97f0THwCC2+zUE6I8A0xIbj3Km2fL+KMWAaBnurcjVAZ9TIx9EHRptKuvV/RVibBVV2ncUPats+aMHqlk/MrZRmWNyLUCgECHd2BdZ4Cz4sMKyb4q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TM3sI8z0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k7aVVcZA"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a26fa294e56so1307142266b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 09:07:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705597639; x=1706202439; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HlYwd4ZgoThSOWDK/BI/ByWriREGCZu6HCgLz+Vx7lU=;
-        b=k7aVVcZAG91ZgvgGHqLQQus/CNIUKv7CBvOaehJ259V1nsQ1NsDBWRAMgXD8FUePSu
-         Ze2xRB6mKfmC2fagT5JZ1BkuKsdgJO/00DEQlpQQp9Swe/d+ATmDeXVqXANRoaWHhV3I
-         ByzP+wsrK1G6T17xEWKnvkL54F2JUI0jSOitM0m3kybWLu5Z+MJsJcFn/E9jYz5lEjzd
-         zoZ0aHRLlSJN+ALep+hZhW0k1MhrDedlq6a96SFxg3W59Fz1PYXGmRCz8P1rqrIUue/a
-         ABdvX8hx9AwIz1MsBcaUFAbJzJU6IHnWBnP/hKHqVyVGL99qLSMJ9fg5xenqIgrLOKyi
-         PtSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705597639; x=1706202439;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HlYwd4ZgoThSOWDK/BI/ByWriREGCZu6HCgLz+Vx7lU=;
-        b=C2rbr6uPt7E3rIX7vNzKr9EZDtB+ENcJHeCUBYgvnWFuyDIjFoXa6PXdC/qaYeDqOh
-         pGSwsAZ+JK3eFp5+xGONH/rCI55JDj9RRfc7Bqcwg8cbCg1OufLHcPiyMmFFYZMNZ9h0
-         Mmylr0cjBrjIpnguGqBta/hI5QvDe709Nj28gbo7lVYU/Tkmo7mK8RJaxpv1/70ia7Ru
-         SjIbcezWC57WnlHeDCKinTMTD5oS/T8WZQdL3kYjSD/8LGKvSHZO9uLZh4CjkK3PJoOw
-         X9rjvkxGaCsL+ZWHLzg7bQSHWKy7VfsEhJd3lL5xsDICn+mGoHhvgPPFcY2YucZL76Y1
-         lGTQ==
-X-Gm-Message-State: AOJu0YyC8mrNOX+V05WV3O+6ZylasxY1PFyBGsfgIvW72L5WLoZV0N48
-	VjtlGNuEu3E64tth/Z8PKSUmIHZkPgEU78DaiaXhCiaAjU/rXRzjhl6GZ1m1SceU+B48qWcmydP
-	3pT2L337+l+8/fHVesPpyYZEHQc+UtTenaKBc
-X-Google-Smtp-Source: AGHT+IH8tvSJMBVtMjgt9oPnZXK6j/SOiKaEy5MCl32mJd7TLLo+oh5V3GfqfLmK0RNVJ0qI/u/fj1frwUcpuq7wqzA=
-X-Received: by 2002:a17:906:eb4a:b0:a29:8155:b813 with SMTP id
- mc10-20020a170906eb4a00b00a298155b813mr781055ejb.85.1705597639224; Thu, 18
- Jan 2024 09:07:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TM3sI8z0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D522EC433F1;
+	Thu, 18 Jan 2024 17:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705597727;
+	bh=BqHMQ6YFIEXyylSMaRcciYAELO9Rvlk6sWFPcaGy7lY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TM3sI8z0/fLbaBsVARuM0qfPzLel71oCvcuLvOpc1FwFWRpPlQej5E6zDU2UP54mO
+	 8BSchZRU5yCGfeP6gb7WY92/yhnS02D8MYlOb8vwPD4K43WDVJ1z+fMdo4x0v8LbBo
+	 ap51aUNozhn5FABjiyzxLbwDcUWesRJ+UVcKSa0Q3RZo2GhgVe8rhs7Z4gCOZR1GuC
+	 3+7EV95euytlzKQM8cyrfriWgM+6H328wVPNEdD8nNuS7bMdaRqtRuAj7R/eAv+FjR
+	 mkUoN0uWvOUMB6jalDgYTDkHYYlyGlJP7pXVJIawVCcau2t831FRnHWcr+Cn9YwWEP
+	 lCPKMF7UFg88Q==
+Date: Thu, 18 Jan 2024 22:38:43 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: Generic phy updates for 6.8
+Message-ID: <ZalbG7hfGcZ0USyt@matsya>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKEwX=NLe-N6dLvOVErPSL3Vfw6wqHgcUBQoNRLeWkN6chdvLQ@mail.gmail.com>
- <20240116133145.12454-1-debug.penguin32@gmail.com> <CAKEwX=PjraCg_NjP4Tnkbv8uqnVw8yJGh-mbuZC02Gp6HMcDBw@mail.gmail.com>
- <CAJD7tkb_uC_K7+C3GjVqg1rDRCmUkbHcEw950CkUHG66yokbcg@mail.gmail.com> <20240118161601.GJ939255@cmpxchg.org>
-In-Reply-To: <20240118161601.GJ939255@cmpxchg.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 18 Jan 2024 09:06:43 -0800
-Message-ID: <CAJD7tkb+NCocjpjvM08Nv2fPMDqm4t-YH05TJckz8m1AYFNWUg@mail.gmail.com>
-Subject: Re: [PATCH] mm/zswap: Improve with alloc_workqueue() call
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Nhat Pham <nphamcs@gmail.com>, Ronald Monthero <debug.penguin32@gmail.com>, sjenning@redhat.com, 
-	ddstreet@ieee.org, vitaly.wool@konsulko.com, akpm@linux-foundation.org, 
-	chrisl@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZTEEkJLh/19BT52x"
+Content-Disposition: inline
 
-> > > On a different note, I wonder if it would help to perform synchronous
-> > > reclaim here instead. With our current design, the zswap store failure
-> > > (due to global limit hit) would leave the incoming page going to swap
-> > > instead, creating an LRU inversion. Not sure if that's ideal.
-> >
-> > The global shrink path keeps reclaiming until zswap can accept again
-> > (by default, that means reclaiming 10% of the total limit). I think
-> > this is too expensive to be done synchronously.
->
-> That thresholding code is a bit weird right now.
->
-> It wakes the shrinker and rejects at the same time. We're guaranteed
-> to see rejections, even if the shrinker has no trouble flushing some
-> entries a split second later.
->
-> It would make more sense to wake the shrinker at e.g. 95% full and
-> have it run until 90%.
->
-> But with that in place we also *should* do synchronous reclaim once we
-> hit 100%. Just enough to make room for the store. This is important to
-> catch the case where reclaim rate exceeds swapout rate. Rejecting and
-> going to swap means the reclaimer will be throttled down to IO rate
-> anyway, and the app latency isn't any worse. But this way we keep the
-> pipeline alive, and keep swapping out the oldest zswap entries,
-> instead of rejecting and swapping what would be the hottest ones.
 
-I fully agree with the thresholding code being weird, and with waking
-up the shrinker before the pool is full. What I don't understand is
-how we can do synchronous reclaim when we hit 100% and still respect
-the acceptance threshold :/
+--ZTEEkJLh/19BT52x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Are you proposing we change the semantics of the acceptance threshold
-to begin with?
+Hello Linus,
+
+Please pull to receive Generic phy subsystem updates for v6.8-rc1. This
+primarily includes bunch of new device support for Qualcomm, mediatek and T=
+I soc
+
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
+
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git tags/phy-=
+for-6.8
+
+for you to fetch changes up to 2029e71482fcd94dcc7df2c66c7fa635479748bf:
+
+  phy: ti: j721e-wiz: Add SGMII support in WIZ driver for J784S4 (2023-12-2=
+2 21:20:08 +0530)
+
+----------------------------------------------------------------
+phy-for-6.8
+
+- New Support
+  - Qualcomm SM8650 UFS, PCIe and USB/DP Combo PHY, eUSB2 PHY, SDX75 USB3,
+    X1E80100 USB3 support
+  - Mediatek MT8195 support
+  - Rockchip RK3128 usb2 support
+  - TI SGMII mode for J784S4
+
+- Updates
+  - Qualcomm v7 register offsets updates
+  - Mediatek tphy support for force phy mode switch
+
+----------------------------------------------------------------
+Abel Vesa (12):
+      phy: qcom-qmp: qserdes-com: Add some more v6 register offsets
+      phy: qcom-qmp: qserdes-txrx: Add some more v6.20 register offsets
+      phy: qcom-qmp: pcs: Add v7 register offsets
+      phy: qcom-qmp: pcs-usb: Add v7 register offsets
+      phy: qcom-qmp: qserdes-com: Add v7 register offsets
+      phy: qcom-qmp: qserdes-txrx: Add V6 N4 register offsets
+      phy: qcom-qmp: qserdes-txrx: Add v7 register offsets
+      dt-bindings: phy: qcom: snps-eusb2: Document the X1E80100 compatible
+      dt-bindings: phy: qcom,sc8280xp-qmp-usb43dp-phy: Document X1E80100 co=
+mpatible
+      phy: qcom-qmp-combo: Add x1e80100 USB/DP combo phys
+      dt-bindings: phy: qcom,sc8280xp-qmp-usb3-uni: Add X1E80100 USB PHY bi=
+nding
+      phy: qcom-qmp-usb: Add Qualcomm X1E80100 USB3 PHY support
+
+Alex Bee (2):
+      phy: rockchip-inno-usb2: Split ID interrupt phy registers
+      phy: phy-rockchip-inno-usb2: Add RK3128 support
+
+Can Guo (1):
+      phy: qualcomm: phy-qcom-qmp-ufs: Rectify SM8550 UFS HS-G4 PHY Settings
+
+Chintan Vankar (2):
+      phy: ti: gmii-sel: Enable SGMII mode for J784S4
+      phy: ti: j721e-wiz: Add SGMII support in WIZ driver for J784S4
+
+Christophe JAILLET (1):
+      phy: core: Remove usage of the deprecated ida_simple_xx() API
+
+Chunfeng Yun (2):
+      dt-bindings: phy: mediatek: tphy: add a property for force-mode switch
+      phy: mediatek: tphy: add support force phy mode switch
+
+Krzysztof Kozlowski (1):
+      dt-bindings: phy: qcom,sc8280xp-qmp-usb43dp-phy: fix path to header
+
+Michael Walle (1):
+      dt-bindings: phy: add compatible for Mediatek MT8195
+
+Neil Armstrong (9):
+      dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy: document the SM8650 QMP =
+UFS PHY
+      dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: document the SM8650 QMP=
+ PCIe PHYs
+      dt-bindings: phy: qcom,sc8280xp-qmp-usb43dp-phy: document the SM8650 =
+QMP USB/DP Combo PHY
+      dt-bindings: phy: qcom,snps-eusb2: document the SM8650 Synopsys eUSB2=
+ PHY
+      phy: qcom: qmp-ufs: add QMP UFS PHY tables for SM8650
+      phy: qcom: qmp-pcie: add QMP PCIe PHY tables for SM8650
+      phy: qcom: qmp-combo: add QMP USB3/DP PHY tables for SM8650
+      dt-bindings: phy: amlogic,meson-axg-mipi-pcie-analog: drop text about=
+ parent syscon and drop example
+      dt-bindings: phy: amlogic,g12a-mipi-dphy-analog: drop unneeded reg pr=
+operty and example
+
+Randy Dunlap (1):
+      phy: renesas: phy-rcar-gen2: use select for GENERIC_PHY
+
+Rohit Agarwal (1):
+      phy: qcom-qmp-usb: Add Qualcomm SDX75 USB3 PHY support
+
+Wang Jinchao (1):
+      phy: phy-can-transceiver: insert space after include
+
+ .../phy/amlogic,g12a-mipi-dphy-analog.yaml         |  12 -
+ .../phy/amlogic,meson-axg-mipi-pcie-analog.yaml    |  17 -
+ .../devicetree/bindings/phy/mediatek,dsi-phy.yaml  |   1 +
+ .../devicetree/bindings/phy/mediatek,tphy.yaml     |   9 +
+ .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml   |   5 +
+ .../bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml    |   2 +
+ .../phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml        |   3 +
+ .../phy/qcom,sc8280xp-qmp-usb43dp-phy.yaml         |   8 +-
+ .../bindings/phy/qcom,snps-eusb2-phy.yaml          |   2 +
+ drivers/phy/mediatek/phy-mtk-tphy.c                |  25 ++
+ drivers/phy/phy-can-transceiver.c                  |  10 +-
+ drivers/phy/phy-core.c                             |   4 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-combo.c          | 174 +++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c           |  65 ++++
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-ufs-v6.h     |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-usb-v7.h     |  17 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v7.h         |  32 ++
+ drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h |   5 +
+ drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v7.h |  87 ++++++
+ .../qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v6.h    |   8 +
+ .../phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6.h    |   1 +
+ .../phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h |   4 +
+ .../phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_n4.h |  51 +++
+ .../phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v7.h    |  78 +++++
+ drivers/phy/qualcomm/phy-qcom-qmp-ufs.c            | 114 ++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp-usb.c            | 344 +++++++++++++++++=
+++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |   6 +
+ drivers/phy/renesas/Kconfig                        |   2 +-
+ drivers/phy/rockchip/phy-rockchip-inno-usb2.c      | 156 ++++++++--
+ drivers/phy/ti/phy-gmii-sel.c                      |   2 +-
+ drivers/phy/ti/phy-j721e-wiz.c                     |   1 +
+ 31 files changed, 1168 insertions(+), 78 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-usb-v7.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v7.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v7.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_n4.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v7.h
+
+--=20
+~Vinod
+
+--ZTEEkJLh/19BT52x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmWpWxsACgkQfBQHDyUj
+g0cwKQ/8DYJoqw2RMtjHRt6gSY1mjM1QYcg5huMAqqoN5ydO8jZNuIFNEi6TbnNG
+U7Z8nX4dEfCh0LGh++6+7oeYDSuhUW5Y9OgWv47zjD0oCh4N7l0oClMkQwvElNmz
++epkNQZ6xSLTtlEU7HnF5t0aBeYj/84yx63S1ybtWtS86bE0kIX4sE++11ABJ/I8
+L3lhYi2I6yyCcHiLfsiKPijy5MxajCs/DMrd4Zz5zuGK/1QIgQh2l1Vm8/djqZDs
+dac8V0wV5YoCkw23uwQKpSjdoygWJjpUY/FmxcgwACqXsU3UHhPu8xvU4jeeGTik
+9W3Rq5jNBJBNe1Y3gYlMgpPxvTjaEm4CG8ld34rKpdhX0BjRnMddXa/gvgCO7ktx
+G1pGkYjNg5uRzcjRSCpiR/i9mO53PoxnrRDDhBQiRsyer88XRb0La+T12wmquDSj
+fUJGJY+yHGEmrUV02VEE5daiGLMwqntRCjpzlqkTXV0DFzrTtLiXCbX16iH2VQRO
+E8LsZg+GlulcFalLpdkoYGlRRK3Waqja3cf+iAw+yeoxJamUSHz6Vjt9MJ+WqZ9b
+Qc83cKSRyEuAcVDMkgk1t5Xoqk4+a1poi2hwbgoDbc4tznyxR1Efdh3qKG9Zctkl
+hwserpeQQb5h3epLSdO5rTHK4jeelN1SHiWokjucqraOGrIDnVk=
+=sslt
+-----END PGP SIGNATURE-----
+
+--ZTEEkJLh/19BT52x--
