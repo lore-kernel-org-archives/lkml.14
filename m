@@ -1,51 +1,82 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.124.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045B624A0C;
-	Thu, 18 Jan 2024 11:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.124.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E4D241E6;
+	Thu, 18 Jan 2024 11:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705577439; cv=none; b=E9ISZHOV1jHEXcylzFVd5ujefgbNqg3bt/0wAqxitmHi2IybqHCxWfCFY6Mvd1eQ+t+CwyfmtpasOaJNrAeW7n6mMIfNccoqJi7pi1WmUyIVqHTeEp34GxrkRn9/PwNrZxc2jKf50Zi47X6TE3ny9Xq74S/fWYfI4tp3nxSAogU=
+	t=1705577477; cv=none; b=YcB9jCsdv/axBt8FBQIsnTJFvO8VuE/krHrRcRCK0CgOLV3fdcN116Ncu15/lqXzhgOmC/Nlmbo9iHZgrgm6DDnK7aphILJHiBLqSMQWxsvhc+MV2C4YMRTzATcCHeF9YN9+xC4Vg3MoXw6PXrBhKkaNd7WVIMwbVmAVKsRab8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705577439; c=relaxed/simple;
-	bh=MTfDNh/H4RzACudbIKWTS9CwPWm85VD13SywdtsfirI=;
-	h=X-QQ-mid:X-QQ-Originating-IP:Received:X-QQ-SSF:X-QQ-FEAT:
-	 X-QQ-GoodBg:X-BIZMAIL-ID:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID; b=JdO2N9p86UrwqBO9VfkSpnPE4Rd7oLkKMr5IA1T4ADc8NpuCGP7UZXXfKd+SwHVlfAt3uHtrdMD50y+oAMY7kenTlgbPyxqd3Q++I1Gzi59NN6VV6FiyZn1XU0H3UXXKfXybFxl8xDbSD5PmA1DAIzcqDHTnumEkQR3HspfFFCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.124.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp73t1705577390tkg4v9vl
-X-QQ-Originating-IP: aAaUCGoHCcdq2hp9fxQg6peErxbrvoXx7bAu/R6yqng=
-Received: from localhost ( [183.209.108.228])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 18 Jan 2024 19:29:48 +0800 (CST)
-X-QQ-SSF: 01400000000000504000000A0000000
-X-QQ-FEAT: 3M0okmaRx3ibVvpE3700jKK10kv893khAgTcIyG6+NPJ+eepQqQ0gVty3jdFg
-	K/uKj5OqV0RO6mEgw4TclQmACO/shCVYvH3En/+KEyKkKNsBQXnJ/oMH3C4yO8QeB1wDS9c
-	0CYh3pAxHXHVBf5jgWwgZsBWmD9zWufKb9BVmr4aw2M3cwEkVQyzjXZe5blV/GHmA4OnvOP
-	P9VKVgfiG9Q16PbOuV0DONspkzna8UdleWXn3Xn+5ua/fJLimjm4WK/h5gHxnKjSZfokqkV
-	3NguAy1Bp3sH/Vj4RZ+ZLO171tDHaCGOz9zBRe7o7J47vVqLyVoQoKPnL+IYuO9LsOE0FGq
-	UtaSRbsNBh0CSxfxB5ioAZAsTHMYrx37Ol5zzgjr6/jclqYngv2VrLRS4eFM3Cy7ScRxMa6
-	24UsMzyQaZw=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 10002877068990544694
-From: Dawei Li <dawei.li@shingroup.cn>
-To: tglx@linutronix.de,
-	maz@kernel.org
-Cc: sdonthineni@nvidia.com,
+	s=arc-20240116; t=1705577477; c=relaxed/simple;
+	bh=/2dkV31yHAb+Qfdj4xcle6MF5whChIwDA5UIkWma74Q=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding; b=MNldedp/zqG3ocQ14XbkvSA70wldmShuNqE4XRvycDHZKWQe9/6n5UZku535rCOjE5T/pt94M2PJzVWxQTkRIAH/HT76Sm8HKMK+1GcvDO6a+9ukIBn+vwq4qMbpJC0G7ViG18VG4MNErUERZjBUhgjNHeo6RX1ettNgyErLxOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7lRovnW; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7lRovnW"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6dde528dbe8so5745804a34.0;
+        Thu, 18 Jan 2024 03:31:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705577475; x=1706182275; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/2dkV31yHAb+Qfdj4xcle6MF5whChIwDA5UIkWma74Q=;
+        b=R7lRovnWvQGeiG9FmMLsbXMp2xqKSHnQxw5u5oJNJe+yFrTn9KtLAPXLFHXAxpbP55
+         Q2UuPMbMFUp8uKFr3PV4WCSJYuz3MWpPsH7NfejpjgzpD+NynFrB9mVhIWHfZY3xmjA1
+         us6Xs3yif20x23sZkuPGAoAqgnpCK92vGo7Hb/Mf/3Ha05ICa+vkcFxZkS70GUewqJvq
+         jOBeC0N79l8TUcbH2CspZ+Fmz/rbBaZdpyxs895zpgwFg7XuVDeXnSzWwZXjy0/1DEiS
+         d+4lzU6MALmOc7qT7uAJB/VNETSPZVkvmJh4v9FI4kzhPAEAhEIbXsYt54tJLSzeHQtT
+         s6+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705577475; x=1706182275;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/2dkV31yHAb+Qfdj4xcle6MF5whChIwDA5UIkWma74Q=;
+        b=sifHrSW1qdmBnxdoeX9qWuvD8Ykd4V4Ryzazq3K6H+/ldB+Ydi9pbpDpvjDjXs2Rnv
+         nshDut+Mxq7DZ4zo3Ay2wRsj5nBB+T+9r9FcEJfd4e+TcmplioY9PT3rLVHGoUBT7S3S
+         XI4oD81p59czXK7SKlWMe4ORjySE/hQS/Hk8fMp5gmbxfroCm7OouqMSPpCJIfHRuESy
+         n5K1tqvI7tF+TZS1iqY00aNIoqNufeg24cOstNb//scrT4am/oWQch5cpJ5LXDWZv8pg
+         21wbgXWmTN/MxgDqC+QJOoOVR1emwPOUQCidLlua8AMSnhZsdGPpe+jX7XrbkI3Xt9Hm
+         U3Zw==
+X-Gm-Message-State: AOJu0YwOgy0/JXKvHNbHoDR/wsJa2L3Ux5iygG7d4ZXudR7I5GMA91Jt
+	C2DGyu1aAdfKAZb9Fy9kfMyGCK/0BDkdobNj1L0EopaOEinwloY1
+X-Google-Smtp-Source: AGHT+IG7KytPhcCCGt0DJgflFsul/IGg9dbIsuDpZgqGurOYArTCDBoYnurv27JfOgVVV7C9JzB4IA==
+X-Received: by 2002:a05:6359:689:b0:175:abbe:58b9 with SMTP id ei9-20020a056359068900b00175abbe58b9mr592825rwb.64.1705577474866;
+        Thu, 18 Jan 2024 03:31:14 -0800 (PST)
+Received: from toyko-2.5 ([45.32.55.39])
+        by smtp.gmail.com with ESMTPSA id u22-20020aa78496000000b006d974d47a8csm3096710pfn.115.2024.01.18.03.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 03:31:14 -0800 (PST)
+From: amazingfate <liujianfeng1994@gmail.com>
+To: nicolas@ndufresne.ca
+Cc: conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	elezegarcia@gmail.com,
+	ezequiel@vanguardiasur.com.ar,
+	heiko@sntech.de,
+	knaerzche@gmail.com,
+	krzysztof.kozlowski+dt@linaro.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	dawei.li@shingroup.cn,
-	set_pte_at@outlook.com,
-	stable@vger.kernel.org
-Subject: [PATCH 4/4] genirq: Initialize resend_node hlist for all irq_desc
-Date: Thu, 18 Jan 2024 19:27:39 +0800
-Message-Id: <20240118112739.2000497-5-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240118112739.2000497-1-dawei.li@shingroup.cn>
-References: <20240118112739.2000497-1-dawei.li@shingroup.cn>
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	liujianfeng1994@gmail.com,
+	mchehab@kernel.org,
+	p.zabel@pengutronix.de,
+	robh+dt@kernel.org,
+	sfr@canb.auug.org.au
+Subject: Re: [PATCH v3 0/2] [v3]Add hantro g1 video decoder support for RK3588
+Date: Thu, 18 Jan 2024 19:30:51 +0800
+Message-Id: <20240118113051.10773-1-liujianfeng1994@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <5490507acc121113e52a8cdddb155fddf6dbb374.camel@ndufresne.ca>
+References: <5490507acc121113e52a8cdddb155fddf6dbb374.camel@ndufresne.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,37 +84,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-For !CONFIG_SPARSE_IRQ kernel, early_irq_init() is supposed to
-initialize all the desc entries in system, desc->resend_node
-included.
+Hi Nicolas,
 
-Thus, initialize desc->resend_node for all irq_desc entries, rather
-than irq_desc[0] only, which is the current implementation is about.
+Wed, 17 Jan 2024 14:16:24 -0500, Nicolas Dufresne wrote:
+>The only concern I have is that we rejected enabling this VPU on RK3399, since
+>having two H.264 decoders was confusing userspace softwares at the time, causing
+>the slow one to be picked sometimes. I know the selection is not fully
+>implemented in GStreamer either, not sure for LibreELEC ffmpeg fork, Chromium or
+>Cros-codec.
 
-Fixes: bc06a9e08742 ("genirq: Use hlist for managing resend handlers")
-Cc: stable@vger.kernel.org
+Only H264 decoder is disabled for RK3399 in driver code, and RK3399 does
+have this VPU node in devicetree to support other codecs like MPEG or VP8.
 
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- kernel/irq/irqdesc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>Of course, its not a problem now, but only when someone provides an rkvdec2
+>driver that enables the much more capable HW decoder. Shall we hold on H.264
+>mainline for now ?
 
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 27ca1c866f29..371eb1711d34 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -600,7 +600,7 @@ int __init early_irq_init(void)
- 		mutex_init(&desc[i].request_mutex);
- 		init_waitqueue_head(&desc[i].wait_for_threads);
- 		desc_set_defaults(i, &desc[i], node, NULL, NULL);
--		irq_resend_init(desc);
-+		irq_resend_init(&desc[i]);
- 	}
- 	return arch_early_irq_init();
- }
--- 
-2.27.0
+RK356x also has the same situation. That is why this patch shares the same
+compatible string with RK356X. Before rkvdec2 launching mainline, this
+hantro g1 vpu is the only H264 decoder to use on these socs. We can keep
+H.264 enabled, and disable it for RK356x and RK3588 just like what we did
+to RK3399 when rkvdec2 launches.
 
+Jianfeng
