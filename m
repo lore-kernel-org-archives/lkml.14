@@ -1,104 +1,103 @@
-Received: from smtp71.ord1d.emailsrvr.com (smtp71.ord1d.emailsrvr.com [184.106.54.71])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF4024B40
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 15:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=184.106.54.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BE92575C
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 15:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705591908; cv=none; b=t5VxC1jl3kP7dltA8M+res1ZzUVLQqoNLTpLQZbcekARONGc/jsNZ4+bFkVOXj/qIbQFFLhZZV0iH0FKizIOwiI0l8gXdQ3jwFvKUtP8zHmd0XD2HkvrThnYqxEeuEwspmpak6gs+IDRut1KLIN/jcB1u5JqVrLhHP5EnpICNQI=
+	t=1705591952; cv=none; b=E85aLseQ2pZPEQujQj1BTB1lNdTUwndeafMbBin2h00wxG7eaj2CO37ImnnaSWvK3XY/5sPP5qsxYgwoP0b1l2BaP/brJsdrk6/JW17NPIgUAsEqTZYGFnp4YRm9hR4mUpu+MQpnJG1JAmHiwlgOjIp0EiJ2qHsd/NfCeA+6pBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705591908; c=relaxed/simple;
-	bh=781GUzTrZR4lCWVjwiN2ZImuwJhWCk5byAoPzKtiyGE=;
-	h=DKIM-Signature:X-Auth-ID:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:Content-Language:To:Cc:References:From:
-	 Organization:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-Classification-ID; b=D2/ZR/5FjSfOi3JYiQAbjLjYTK2xw9z1i3zX91d0zg6P28ROJB/2YXriBQe0ZOfKAz0YLXy8DVecYmu/o/OD0vrmMU0f9QlUDSkMxNYbE4Bhihb4GW6m0usA6raZrV+sgM8vRTSpn8kEMtNn+Hd3rMxs2zo/qjvIrYxmvtnza/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=hUEZ8kij; arc=none smtp.client-ip=184.106.54.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1705591952; c=relaxed/simple;
+	bh=NH/52USESWX/025MLcTJ6cVm9KuDjzjd5hFj4uGgKqA=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 Mail-Followup-To:MIME-Version:Content-Type:Content-Disposition; b=hi46o5Fho1EqeR3nz182EgP4xpn7QlB8YtxgZwcYNo/rnRWBH2iliwjc6fOZfCWhr4cCUn7AQX2z9NW/rwrIrKRRgZOKPt90NkcEVvLEyy2c4Iv5OB8RTEwk22nZLLg4pII8Qgo8/7p86Xig27At985fIcPqzwZZ2jwsbi5d++0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKIroSt6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="hUEZ8kij"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1705591432;
-	bh=781GUzTrZR4lCWVjwiN2ZImuwJhWCk5byAoPzKtiyGE=;
-	h=Date:Subject:To:From:From;
-	b=hUEZ8kijvooAGFa9qlCf3BydtAWS9IJUIAITwfdqlgCIzth6uo/EOmFlkATt0BwHV
-	 2xx+eWgYTXOlgNKTwYDGLem1K5S+YR/eF6j7U/vhFC2XKtHq/C++kSrFnA0XRieWW+
-	 QJ+zHeMoIqMT2mRhme7YFioRx9u0RZDfW5bHqUN0=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp17.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id BF753200A8;
-	Thu, 18 Jan 2024 10:23:51 -0500 (EST)
-Message-ID: <02c0b221-9d4e-43fd-9dc8-40827698e947@mev.co.uk>
-Date: Thu, 18 Jan 2024 15:23:50 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKIroSt6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC7EAC433F1;
+	Thu, 18 Jan 2024 15:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705591952;
+	bh=NH/52USESWX/025MLcTJ6cVm9KuDjzjd5hFj4uGgKqA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=MKIroSt6lXEKXaW8LCFPoSsCdjkVBNMdDh4OwkAUPMa+c4EeXxQZce1qojt4K+jRr
+	 zRPxQP/bhxY8ALNlY6DLgb1CfD9zdGxGXJLOKfJOJJkA8DA7ImEr5tGrVu2aMyLysj
+	 t0tuu2Eh/TOX4GmhS2m5JaWFUjVMLUbZKlxHNNBOPOd6LkTFG1zfMeC2C1o7Y5jIpT
+	 zynEbInLm74oT4C73gymPTjFaVj29z+ffyW18ObgO7XN91QrTC+ePQg/qvOQpyWOtw
+	 UhknVtn5vBVJAB5Z/WHPsKJsDvSV6krDZdqc9PEEUsuPwnkLuje+ZSXb7SGYichrxo
+	 4W4dCQJSw/5rw==
+Date: Thu, 18 Jan 2024 23:32:24 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linuxfoundation.org>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Yue Hu <huyue2@coolpad.com>, David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>, Chao Yu <chao@kernel.org>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>
+Subject: [GIT PULL] erofs fixes for 6.8-rc1
+Message-ID: <ZalEiKJWhdH2D9JV@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linuxfoundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Yue Hu <huyue2@coolpad.com>, David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>, Chao Yu <chao@kernel.org>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] comedi: drivers: ni_tio: Fix arithmetic expression
- overflow
-Content-Language: en-GB
-To: David Laight <David.Laight@ACULAB.COM>,
- 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
- Denis Arefev <arefev@swemel.ru>
-Cc: H Hartley Sweeten <hsweeten@visionengravers.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20240118123747.45795-1-arefev@swemel.ru>
- <2024011842-groggy-badly-393c@gregkh>
- <3f8d1a69e3434d2085aa3564357fa31d@AcuMS.aculab.com>
-From: Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-In-Reply-To: <3f8d1a69e3434d2085aa3564357fa31d@AcuMS.aculab.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: 89e0e230-a6d3-467b-8623-55334269d420-1-1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On 2024-01-18 14:37, David Laight wrote:
->> -----Original Message-----
->> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Sent: 18 January 2024 14:14
->> To: Denis Arefev <arefev@swemel.ru>
->> Cc: Ian Abbott <abbotti@mev.co.uk>; H Hartley Sweeten <hsweeten@visionengravers.com>; linux-
->> kernel@vger.kernel.org; lvc-project@linuxtesting.org; stable@vger.kernel.org
->> Subject: Re: [PATCH] comedi: drivers: ni_tio: Fix arithmetic expression overflow
->>
->> On Thu, Jan 18, 2024 at 03:37:47PM +0300, Denis Arefev wrote:
->>> The value of an arithmetic expression period_ns * 1000 is subject
->>> to overflow due to a failure to cast operands to a larger data
->>> type before performing arithmetic
->>>
->>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>>
->>> Fixes: 3e90b1c7ebe9 ("staging: comedi: ni_tio: tidy up ni_tio_set_clock_src() and helpers")
->>> Cc: <stable@vger.kernel.org> # v5.15+
->>> Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
->>> Signed-off-by: Denis Arefev <arefev@swemel.ru>
->>> Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
->>> ---
->>>   drivers/comedi/drivers/ni_tio.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/comedi/drivers/ni_tio.c b/drivers/comedi/drivers/ni_tio.c
->>> index da6826d77e60..acc914903c70 100644
->>> --- a/drivers/comedi/drivers/ni_tio.c
->>> +++ b/drivers/comedi/drivers/ni_tio.c
->>> @@ -800,7 +800,7 @@ static int ni_tio_set_clock_src(struct ni_gpct *counter,
->>>   				GI_PRESCALE_X2(counter_dev->variant) |
->>>   				GI_PRESCALE_X8(counter_dev->variant), bits);
->>>   	}
->>> -	counter->clock_period_ps = period_ns * 1000;
->>> +	counter->clock_period_ps = period_ns * 1000UL;
-> 
-> What about 32bit systems...
+Hi Linus,
 
-Oh, good point.  It should be 1000ULL.
+Could you consider this pull request for v6.8?
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
--=( registered in England & Wales.  Regd. number: 02862268.  )=-
--=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
--=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
+It simply contains a fixed commit of the previous problematic one
+mentioned in [1] and a folio helper cleanup.
+
+All commits have been in -next and no potential merge conflict is
+observed.
+
+[1] https://lore.kernel.org/r/ZZ6M8CCkunjfbt+%2F@debian
+
+Thanks,
+Gao Xiang
+
+The following changes since commit 0dd3ee31125508cd67f7e7172247f05b7fd1753a:
+
+  Linux 6.7 (2024-01-07 12:18:38 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.8-rc1-fixes
+
+for you to fetch changes up to 2b872b0f466d2acb4491da845c66b49246d5cdf9:
+
+  erofs: Don't use certain unnecessary folio_*() functions (2024-01-15 23:52:52 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Fix a "BUG: kernel NULL pointer dereference" issue due to
+   inconsistent on-disk indices of compressed inodes against
+   per-sb `available_compr_algs` generated by Syzkaller;
+
+ - Don't use certain unnecessary folio_*() helpers if the folio
+   type (page cache) is known.
+
+----------------------------------------------------------------
+David Howells (1):
+      erofs: Don't use certain unnecessary folio_*() functions
+
+Gao Xiang (1):
+      erofs: fix inconsistent per-file compression format
+
+ fs/erofs/decompressor.c |  2 +-
+ fs/erofs/fscache.c      |  6 +++---
+ fs/erofs/zmap.c         | 23 +++++++++++++----------
+ 3 files changed, 17 insertions(+), 14 deletions(-)
