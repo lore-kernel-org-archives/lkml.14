@@ -1,103 +1,106 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839F42C845
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 17:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DF125770
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 17:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705597237; cv=none; b=oh/KR2vxgpXejTPF6ZPgY0+nQhF+QtiBvovrHLpPrkaok6lhjPnUHYss/Nr9T3OCXdgNdTq8JOMldmtdjf4grYajthYYZnvlsITxjVfGA6kfi/8YavoCfzF6ULINoSuzSEU5VIz8jyPDhYRPFpB47hyQJE7B/Xk2Kzn5EfbHcEw=
+	t=1705597422; cv=none; b=G6IMYz45STOFhgtL4mvyfNbkSImO1YFlrBWt5q2bmqWGRi5gTnpOQOg5aOXV6YIIthBiQ1LhTz9F1RD9p4t7ykAviOedGG6AR7YhnUkPvMQXBAQ1bavYsKwb8oCc/UWtl6ib9HCSLAc61I/aG1aiuIAlD7QPVTXN5lB2sQp0OcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705597237; c=relaxed/simple;
-	bh=1m1rU7Y8d2rR1bpdRYBhiZEswfbajZFmkz5LTl7Jhps=;
+	s=arc-20240116; t=1705597422; c=relaxed/simple;
+	bh=Xf0vVZ0CtTzvbv85PyOM6avhkZxNdVgvuagjNBhMa1Y=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
 	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=NXN3ZkwM83bkzBd8VfzbiKjgOUcIX7lSINzVQUlcYStQuN9rZ0hsXQvC9RMA6PsySNsYV9AavriMYZOLriYwzgEvjX2/f6+PtSvnYTvszW9Uk7poEmVF98WOSojyTzKE9zXVMorzn4e4G5H8oRMSY3r4NlwlVW3d58sGbrMGqbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N/+XHgjh; arc=none smtp.client-ip=209.85.218.43
+	 Content-Type:Content-Transfer-Encoding; b=N4fqjq6USvv73W4kyMkR0ZHi3gTGOoxo8YTLCW6cBTrdU9dh5qgZ0SUTHtRGKCHX9clCAwxblfR5vGxGQmRoGqsFAAu283ZswCtPs89YMSVczBE7Q1OpX/Am+H5R3lM8T9w66VUkOqlYz+Y52TLgRJfJVfwmI5XT4qIPUlj6S6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O2lU76t/; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N/+XHgjh"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2e0be86878so184795666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 09:00:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O2lU76t/"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55a45a453eeso455213a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 09:03:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705597233; x=1706202033; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1705597419; x=1706202219; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8kjrBGDaeevj+9jk3sVLGectZbotvZgvQYBHMTvFb5U=;
-        b=N/+XHgjhqwm2At02+oHFpLYFf+JI0hb5k0w6bNYKpWQ2W34qfJ/CdPLAr6VupDiKrj
-         kKJN/j7GoQkl42e5vNEfiP7yjUfoEcEd7QVtRRsV5zdWIEE9BpwKkoOW6uRP1I/hxCyZ
-         RQTbCgZtcrdO2R7g9gjuOysPW6TvwAlt2szNye7Kh5guiMm/b/fCPD6kt8dr4jEBy64A
-         cAbKoiUbh8+EK1p00Io3XuLdcywk3MtA7ZHLGGCgxx1jKXpzej2iBihlv5iPsjXj1CWO
-         0Z06WdzzvjtTZtsi1uJdlKkgPjcy+UCG5RO6R7s7+TXuMcwoUBtPMZ8anTAe3tqQ4xw2
-         SiZQ==
+        bh=I307JXW0PD3nSS/XpS3TGtlMDXTLZF0yfATueCQN9yk=;
+        b=O2lU76t/64m0d1/ZEP1LQfa7s1/pDFGJkIqkQftSHgfGCced079mY1aJw79LEr3jY/
+         riyOmYXjhDzfmfjJOwlRv5HkUdaBMv5KprvBUf4Dq2Q7W08s7V5yVJIMRN8+GJ7DX4Nz
+         dStyNkR+NZVPBD8dp5pKX6ARPrVk0HoiionD0vE0IXKu+5HJ3jZGd5L2Zb+pyZ1ppjQO
+         XwrRBqNDDCVvDZz3xbjL/QyxkBOsusPSnBT9MMtkxJif5sHwRcJKErHGLv22gYyQnUoe
+         1b2U+WKOxqz5pkEu09DW+mzed2fk1k+aY1QNCTgU1Po9GdFFSzjm0QEXcV8LdNUCAaQk
+         3zHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705597233; x=1706202033;
+        d=1e100.net; s=20230601; t=1705597419; x=1706202219;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8kjrBGDaeevj+9jk3sVLGectZbotvZgvQYBHMTvFb5U=;
-        b=L4wPI5MRBJQR/484ZHfCV5FtlDzu5IQNZ9XUq+2ebiOM1os+4zEOIcO/PeLINLW/tJ
-         v4Qzkf8O4TVF55PePeRDt4E1DYjmFazpm8EpKYQjbCTlkDLBzJCum+zW/NfZf2WNL4cb
-         00SMeoTD5S+acF0RXPqZGlKbzCFH093D1mPoSzlIeJCUpe8yWeK1quWXF8CmodnU2BWz
-         Lx/9bBFyRdT+SLdgdJv64u4QKt0N+637DYIN+IMdjp9P68vEBCSFCO1a+wAn7w/ZnyGp
-         q3CZ1yjJrCEBB+npa50VgeSfrl6BgkxLQD7WBBtSEw3rwQbr42pWpOfky7If02/peN+O
-         8d1w==
-X-Gm-Message-State: AOJu0YxYhnC4BQO+KWkZLavxfzNqubyDHVzlt0hZTdg7v8DEvE1kZR8O
-	6fQMx4ll9LIBAI3rqvaUb13YOiA0kWcxoCPzuXxLRhuDnHjnhtpaQM4SYwg3OEHGDBeRG2QFxjJ
-	4nAx1Cam2U6iyUwUw03TZYCUq1JHF2J1Vfr60szXy45v9Gn1uJw==
-X-Google-Smtp-Source: AGHT+IEY7bH4EZyhQcqbaeJB5aahjldR3PVHe/EF5sQKj6HHgdkvOZdE0UuKm5RU377WEgOy+N+2DVi3r3gxBrmCQ3M=
-X-Received: by 2002:a17:907:3c0f:b0:a2b:a4c1:52ef with SMTP id
- gh15-20020a1709073c0f00b00a2ba4c152efmr1065632ejc.3.1705597233504; Thu, 18
- Jan 2024 09:00:33 -0800 (PST)
+        bh=I307JXW0PD3nSS/XpS3TGtlMDXTLZF0yfATueCQN9yk=;
+        b=qFKcmGEJ1pk2E/lc1uJgW3lMfA3i9SdQG+d2B8mb/NUAIpirgkG/ttfh9myhGZ8qGM
+         4mz5ZnsixpwRAb7/JASrlr2M6eFMua4tXbT4+zTimL8lRnYF2qVpinPaFyOrP3wBjYuo
+         06AcmM8+7F7qGjqb6xSuzJjYhSWOZ/kLQIIDRwvywe2ks/ViF3UGq1ZujpN5j6wjUVNd
+         QhflXX49fCv42TS6hveKsvK1X754+Gxw54UaGn7se8rgIdxRrk/31CmzERIMFsRtJgbA
+         iMURiEunvZr6V77lYUHQs9PepJKi1ZCvp20wFrAFwixZ89C49Sq0qtbQceMM+PwfjWEe
+         hmmQ==
+X-Gm-Message-State: AOJu0YzexxvrQTJBpmHdtND8DedfkEUGDYeDIsyNfgZ32EFA6V8uZLDM
+	NXcxaReHA8B3v6eGoxx1P670cfAfyaGHtJaH6xZJxBv7LZtIyekAzMfdCadZmi5j2uo28CzQmr3
+	h4GFeLRYwOCQzk1tJCDafTastOKH+xxqXF/3Z
+X-Google-Smtp-Source: AGHT+IHuKD7maC0nGcnATuuHa2w9rlSgs1J23fq1aMgrTRCopXT2ixM6PjBqomxuPr8I6ScWM/QfYuNvRMXHzYokJDI=
+X-Received: by 2002:a17:906:ca41:b0:a2e:d88b:53ae with SMTP id
+ jx1-20020a170906ca4100b00a2ed88b53aemr674261ejb.129.1705597419020; Thu, 18
+ Jan 2024 09:03:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117-zswap-xarray-v1-0-6daa86c08fae@kernel.org>
- <20240117-zswap-xarray-v1-1-6daa86c08fae@kernel.org> <CAJD7tkYEx57CPBoaN9GW4M3Mx-+jEsOMWJ02nLKSKD-MLb-WPA@mail.gmail.com>
- <ZaktH7xc72x4Xr3d@casper.infradead.org>
-In-Reply-To: <ZaktH7xc72x4Xr3d@casper.infradead.org>
+References: <CAKEwX=NLe-N6dLvOVErPSL3Vfw6wqHgcUBQoNRLeWkN6chdvLQ@mail.gmail.com>
+ <20240116133145.12454-1-debug.penguin32@gmail.com> <CAKEwX=PjraCg_NjP4Tnkbv8uqnVw8yJGh-mbuZC02Gp6HMcDBw@mail.gmail.com>
+ <CAJD7tkb_uC_K7+C3GjVqg1rDRCmUkbHcEw950CkUHG66yokbcg@mail.gmail.com>
+ <20240118161601.GJ939255@cmpxchg.org> <20240118164839.GK939255@cmpxchg.org>
+In-Reply-To: <20240118164839.GK939255@cmpxchg.org>
 From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 18 Jan 2024 08:59:55 -0800
-Message-ID: <CAJD7tkapY4nx=uAXuyQhJN=rz7QPj6p9OJzpPwZGr_7+7Ywotw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: zswap.c: add xarray tree to zswap
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Chris Li <chrisl@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	=?UTF-8?B?V2VpIFh177+8?= <weixugc@google.com>, Yu Zhao <yuzhao@google.com>, 
-	Greg Thelen <gthelen@google.com>, Chun-Tse Shao <ctshao@google.com>, 
-	=?UTF-8?Q?Suren_Baghdasaryan=EF=BF=BC?= <surenb@google.com>, 
-	Brain Geffon <bgeffon@google.com>, Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Mel Gorman <mgorman@techsingularity.net>, Huang Ying <ying.huang@intel.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, Kairui Song <kasong@tencent.com>, 
-	Zhongkun He <hezhongkun.hzk@bytedance.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Barry Song <v-songbaohua@oppo.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Chengming Zhou <zhouchengming@bytedance.com>
+Date: Thu, 18 Jan 2024 09:03:03 -0800
+Message-ID: <CAJD7tkZRMK2F09jgnjqPkoJtbFJ=Dj=QBtZbqXREKp4WE=_wyg@mail.gmail.com>
+Subject: Re: [PATCH] mm/zswap: Improve with alloc_workqueue() call
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Nhat Pham <nphamcs@gmail.com>, Ronald Monthero <debug.penguin32@gmail.com>, sjenning@redhat.com, 
+	ddstreet@ieee.org, vitaly.wool@konsulko.com, akpm@linux-foundation.org, 
+	chrisl@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 18, 2024 at 5:52=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
+On Thu, Jan 18, 2024 at 8:48=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
 > wrote:
 >
-> On Wed, Jan 17, 2024 at 10:20:29PM -0800, Yosry Ahmed wrote:
-> > >         /* walk the tree and free everything */
-> > >         spin_lock(&tree->lock);
-> > > +
-> > > +       xas_for_each(&xas, e, ULONG_MAX)
-> >
-> > Why not use xa_for_each?
+> On Thu, Jan 18, 2024 at 11:16:08AM -0500, Johannes Weiner wrote:
+> > > > On Tue, Jan 16, 2024 at 5:32=E2=80=AFAM Ronald Monthero
+> > > > > @@ -1620,7 +1620,8 @@ static int zswap_setup(void)
+> > > > >                 zswap_enabled =3D false;
+> > > > >         }
+> > > > >
+> > > > > -       shrink_wq =3D create_workqueue("zswap-shrink");
+> > > > > +       shrink_wq =3D alloc_workqueue("zswap-shrink",
+> > > > > +                       WQ_UNBOUND|WQ_MEM_RECLAIM, 1);
 >
-> xas_for_each() is O(n) while xa_for_each() is O(n log n), as mentioned
-> in the fine documentation.  If you don't need to drop the lock while
-> in the body of the loop, always prefer xas_for_each().
+> > What could make a difference though is the increased concurrency by
+> > switching max_active from 1 to 0. This could cause a higher rate of
+> > shrinker runs, which might increase lock contention and reclaim
+> > volume. That part would be good to double check with the shrinker
+> > benchmarks.
+>
+> Nevermind, I clearly can't read.
 
-Thanks for pointing this out. Out of ignorance, I skipped reading the
-doc for this one and operated under the general assumption to use xa_*
-functions were possible.
+Regardless of max_active, we only have one shrink_work per zswap pool,
+and we can only have one instance of the work running at any time,
+right?
 
-The doc also says we should hold either the RCU read lock or the
-xa_lock while iterating, we are not doing either here, no?
+>
+> Could still be worthwhile testing with the default 0, but it's not a
+> concern in the patch as-is.
+>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>
