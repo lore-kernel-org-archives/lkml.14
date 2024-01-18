@@ -1,53 +1,53 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41B22E65F
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D952E83A
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705607616; cv=none; b=KeLFRNq8/aqMYrfOcdPXmtTmiRO4b53iuvQMne2GBNLcpTHB00fjUoYOFNjlMXiB5lcCB3zhhsJKZ/YOsZ3KUEf2K02wHV3GgTKI68T/82WYm1Q9kWC53bsqjd6LrR3gd9/LrrDo2uHZhIU3ThZDTqPpLo0gtsvwTyaTS0VfE2I=
+	t=1705607618; cv=none; b=a5TCmIC+CLA2V1V+C3YA/DuTpUegVE4+/017yZT4gaB4uxo7IYZBUw/pkH+zlImys5z0ApTnYDsaewSp94tcyOHkN7ovhg8KtnzCEA7yvujhW5G9HSVVNYh4nhkrt74xg4Wy7ZvyGrD1RoLECKwbrOaeDdoVnRUSPzLczgcgvn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705607616; c=relaxed/simple;
-	bh=PFKESGwT+52VOtSt0GyKDZV9D4/icQHM8Qc6/fiJ5to=;
+	s=arc-20240116; t=1705607618; c=relaxed/simple;
+	bh=TJ0HS9DsmpIK3Lc89zTlK7cbKY5l8+Fb4v4FOr6pRxc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AJPI84w59lCHnIEIhsNLO4bTBdHZA2CuJppGgRS37/Va99wxrztvquAxK7I2Q98x9mjKZU6C+SULAvFaRmE1N2kVcgOsSNMPostWYvXsF5wzeGHKC2usCSmjFiYkWjISx3P9cc8VKLM5QQf9xuk5h2UZCSdYQX3zMRlItrbGMXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H0AZCVIQ; arc=none smtp.client-ip=209.85.208.170
+	 MIME-Version; b=uZ/0/E5RKyuoebSEG81vHFdw8xGmvbUtko56T5eF0Q9oGKCIodqRG88O+QCp8DPlUo/W6YcfbqKmQ5cvqJyFvfRxJhbkN++KFPZ+pIK9sRsoXGUJ4jjhaVNvDMwIwgslA/tAqA04kCjwIJSW6rs5hMmuVHI3e+E+M0NyYu9NQKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DCEdkRnP; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0AZCVIQ"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ccbc328744so584081fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:53:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DCEdkRnP"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ccb4adbffbso783861fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:53:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705607612; x=1706212412; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705607615; x=1706212415; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V8Jw334gbtlpfyMf//A4Kl+X5QTyArqRPZ+OYE2aYXw=;
-        b=H0AZCVIQpttS+i1l6sJXD97GXIyng2oe7ZvdWlWmzWbgzpRMhFmr+QityO3sCO7W05
-         Sidqg9A8azgwJjPSh4GdxEyJB1Tf9FpyAHX1Adb4uPjsUYye89nEbPcnOEpj+SD9O3eK
-         L3YVX7RfLNt3C5/LopkdQLx+5n7Pn66IJiFEs=
+        bh=oAiOdmemfs++EaElh/QkCQxHrKK1nXdTbeGxucqp/W4=;
+        b=DCEdkRnPJcYRGsVC1akc8QKlqgmuk0TJIBRhO05kOxoaHkTrRgCjlK5dmiZDDERzVq
+         NHeSJSkwXBBIaYW8oFG0ipPzYeqhlALLU+dMppExs4sNn2zXEPI2sOysWAWrykAZZORD
+         aOoUdqja7eFPWExmPkPDtxoXwgWn9J8pkePjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705607612; x=1706212412;
+        d=1e100.net; s=20230601; t=1705607615; x=1706212415;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V8Jw334gbtlpfyMf//A4Kl+X5QTyArqRPZ+OYE2aYXw=;
-        b=PesIfJ5rS0HYfFyEew4ojviRca5phsHHDtK06UBdPZ3uStsHaIwZm0GXbuzodR5fJs
-         I5eLLFNj+jDdPL2C2yH2IrhJQwWliim6ztCZtHEGDfN9k5wrhr0ulUaNaSwfaqVuAsa0
-         hhHs8gUY/5hGoFdB0LeTfNmbKDF+T/zpVaqkiALdlL2ZZLPR1hGJM++sIvI+P8NQMJEU
-         GL5WOJUwbZnIx8khNJChpOZsrX/MGUe/KITJBqgUakVSo/KnwPmGcRXl8LRs9Fx3FlRx
-         du5EN2uVZ8h0RbTrPEuKnHCLFSabRCMCvD98IIab43gRuYktlx5rkcaf6xxSu7fdXx+R
-         hxWg==
-X-Gm-Message-State: AOJu0YzUqKfIW3vuaqWbWsygyvcnk/lMrsyDOdadkD6bxLQxtRBetNgu
-	fDEucbbgnbdTyc88vUF4Un89pZSoObUsnwJAhRIPHaw/4lsLe0GMI5yzbM++yg==
-X-Google-Smtp-Source: AGHT+IGs3IPfRmNPEfLm8x5S3sBVMFQ5OIhoPRJwNBQiMD7pjy+Duv2NI5PaO+U99JoQtUzE9H6YTg==
-X-Received: by 2002:a2e:930d:0:b0:2cc:a5ae:f122 with SMTP id e13-20020a2e930d000000b002cca5aef122mr715385ljh.78.1705607611722;
-        Thu, 18 Jan 2024 11:53:31 -0800 (PST)
+        bh=oAiOdmemfs++EaElh/QkCQxHrKK1nXdTbeGxucqp/W4=;
+        b=BRegwWm3hOp7JXT51PMC1jLP6IrTM5okS0fEw9xnK+ubRglccwxF+ckOFt3ZtQ6niD
+         hNYadr+hERaMKqixlaeoSXeBruSqyuAVnJYkfguiLZ6Z45hU0fvecEZjkhP5Z8uHgs1T
+         CfBVnuRbCBU93Zuf8xPJjHCSZ9iD6RUalt3Og5yfeQ4ahVgQHo/foj5M10sbrlpaGYnS
+         ZEnlL5Ro5DU8QUMiuYI17I6cZtRFSAUED8sxu5BGNbSBrKDCmjkSuZ0evfL/UjDR5UaP
+         aC2ONnz/7tZzmzGpo9brrY9LtJTlyc0BDfThdyI3aJWDgC7/yqXrGnhuCLJfh8NLt/2O
+         fPMw==
+X-Gm-Message-State: AOJu0YzF59YPhS7GQfVEEcWmv8THveZhByZW8WbjoY3xHCzSNN4v6D/i
+	xBLXhodT+zhlAnLjO6vIgFaKV7Xc9xcRGTPfUzwtqNiFXKMztAOauhECqrKQuA==
+X-Google-Smtp-Source: AGHT+IEy33EOIoM9A41TAqaa5BgK/M3wGgbb3sgYuQYOQsgSDzkgvy6rte8dlH1jvozcsJ8pHI/OXw==
+X-Received: by 2002:a2e:b708:0:b0:2cd:2606:70e2 with SMTP id j8-20020a2eb708000000b002cd260670e2mr807557ljo.20.1705607614870;
+        Thu, 18 Jan 2024 11:53:34 -0800 (PST)
 Received: from cracow.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
-        by smtp.gmail.com with ESMTPSA id 2-20020a05651c00c200b002ccd3e8a59esm2333345ljr.121.2024.01.18.11.53.31
+        by smtp.gmail.com with ESMTPSA id 2-20020a05651c00c200b002ccd3e8a59esm2333345ljr.121.2024.01.18.11.53.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 11:53:31 -0800 (PST)
+        Thu, 18 Jan 2024 11:53:34 -0800 (PST)
 From: Lukasz Majczak <lma@chromium.org>
 To: Gwendal Grignou <gwendal@chromium.org>,
 	Tzung-Bi Shih <tzungbi@kernel.org>,
@@ -61,9 +61,9 @@ To: Gwendal Grignou <gwendal@chromium.org>,
 	linux-kernel@vger.kernel.org,
 	chrome-platform@lists.linux.dev
 Cc: Lukasz Majczak <lma@chromium.org>
-Subject: [PATCH v2 1/3] platform/chrome: Update binary interface for EC-based watchdog
-Date: Thu, 18 Jan 2024 19:53:22 +0000
-Message-ID: <20240118195325.2964918-2-lma@chromium.org>
+Subject: [PATCH v2 3/3] mfd: cros_ec: Register EC-based watchdog subdevice
+Date: Thu, 18 Jan 2024 19:53:24 +0000
+Message-ID: <20240118195325.2964918-4-lma@chromium.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 In-Reply-To: <20240118195325.2964918-1-lma@chromium.org>
 References: <20240118195325.2964918-1-lma@chromium.org>
@@ -75,114 +75,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update structures and defines related to EC_CMD_HANG_DETECT
-to allow usage of new EC-based watchdog.
+Add ChromeOS EC-based watchdog as EC subdevice.
 
 Signed-off-by: Lukasz Majczak <lma@chromium.org>
 ---
- .../linux/platform_data/cros_ec_commands.h    | 78 +++++++++----------
- 1 file changed, 35 insertions(+), 43 deletions(-)
+ drivers/mfd/cros_ec_dev.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index 7dae17b62a4d..ecc47d5fe239 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -3961,60 +3961,52 @@ struct ec_response_i2c_passthru {
- } __ec_align1;
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index 603b1cd52785..d0140a285f69 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -91,6 +91,10 @@ static const struct mfd_cell cros_usbpd_notify_cells[] = {
+ 	{ .name = "cros-usbpd-notify", },
+ };
  
- /*****************************************************************************/
--/* Power button hang detect */
--
-+/* AP hang detect */
- #define EC_CMD_HANG_DETECT 0x009F
- 
--/* Reasons to start hang detection timer */
--/* Power button pressed */
--#define EC_HANG_START_ON_POWER_PRESS  BIT(0)
--
--/* Lid closed */
--#define EC_HANG_START_ON_LID_CLOSE    BIT(1)
--
-- /* Lid opened */
--#define EC_HANG_START_ON_LID_OPEN     BIT(2)
--
--/* Start of AP S3->S0 transition (booting or resuming from suspend) */
--#define EC_HANG_START_ON_RESUME       BIT(3)
--
--/* Reasons to cancel hang detection */
-+#define EC_HANG_DETECT_MIN_TIMEOUT 5
-+#define EC_HANG_DETECT_MAX_TIMEOUT 65535
- 
--/* Power button released */
--#define EC_HANG_STOP_ON_POWER_RELEASE BIT(8)
-+/* EC hang detect commands */
-+enum ec_hang_detect_cmds {
-+	/* Reload AP hang detect timer. */
-+	EC_HANG_DETECT_CMD_RELOAD = 0x0,
- 
--/* Any host command from AP received */
--#define EC_HANG_STOP_ON_HOST_COMMAND  BIT(9)
-+	/* Stop AP hang detect timer. */
-+	EC_HANG_DETECT_CMD_CANCEL = 0x1,
- 
--/* Stop on end of AP S0->S3 transition (suspending or shutting down) */
--#define EC_HANG_STOP_ON_SUSPEND       BIT(10)
-+	/* Configure watchdog with given reboot timeout and
-+	 * cancel currently running AP hang detect timer.
-+	 */
-+	EC_HANG_DETECT_CMD_SET_TIMEOUT = 0x2,
- 
--/*
-- * If this flag is set, all the other fields are ignored, and the hang detect
-- * timer is started.  This provides the AP a way to start the hang timer
-- * without reconfiguring any of the other hang detect settings.  Note that
-- * you must previously have configured the timeouts.
-- */
--#define EC_HANG_START_NOW             BIT(30)
-+	/* Get last hang status - whether the AP boot was clear or not */
-+	EC_HANG_DETECT_CMD_GET_STATUS = 0x3,
- 
--/*
-- * If this flag is set, all the other fields are ignored (including
-- * EC_HANG_START_NOW).  This provides the AP a way to stop the hang timer
-- * without reconfiguring any of the other hang detect settings.
-- */
--#define EC_HANG_STOP_NOW              BIT(31)
-+	/* Clear last hang status. Called when AP is rebooting/shutting down
-+	 * gracefully.
-+	 */
-+	EC_HANG_DETECT_CMD_CLEAR_STATUS = 0x4
++static const struct mfd_cell cros_ec_wdt_cells[] = {
++	{ .name = "cros-ec-wdt-drv", }
 +};
++
+ static const struct cros_feature_to_cells cros_subdevices[] = {
+ 	{
+ 		.id		= EC_FEATURE_CEC,
+@@ -107,6 +111,11 @@ static const struct cros_feature_to_cells cros_subdevices[] = {
+ 		.mfd_cells	= cros_usbpd_charger_cells,
+ 		.num_cells	= ARRAY_SIZE(cros_usbpd_charger_cells),
+ 	},
++	{
++		.id		= EC_FEATURE_HANG_DETECT,
++		.mfd_cells	= cros_ec_wdt_cells,
++		.num_cells	= ARRAY_SIZE(cros_ec_wdt_cells),
++	},
+ };
  
- struct ec_params_hang_detect {
--	/* Flags; see EC_HANG_* */
--	uint32_t flags;
--
--	/* Timeout in msec before generating host event, if enabled */
--	uint16_t host_event_timeout_msec;
-+	uint16_t command; /* enum ec_hang_detect_cmds */
-+	/* Timeout in seconds before generating reboot */
-+	uint16_t reboot_timeout_sec;
-+} __ec_align2;
- 
--	/* Timeout in msec before generating warm reboot, if enabled */
--	uint16_t warm_reboot_timeout_msec;
--} __ec_align4;
-+/* Status codes that describe whether AP has boot normally or the hang has been
-+ * detected and EC has reset AP
-+ */
-+enum ec_hang_detect_status {
-+	EC_HANG_DETECT_AP_BOOT_NORMAL = 0x0,
-+	EC_HANG_DETECT_AP_BOOT_EC_WDT = 0x1,
-+	EC_HANG_DETECT_AP_BOOT_COUNT,
-+};
- 
-+struct ec_response_hang_detect {
-+	uint8_t status; /* enum ec_hang_detect_status */
-+} __ec_align1;
- /*****************************************************************************/
- /* Commands for battery charging */
- 
+ static const struct mfd_cell cros_ec_platform_cells[] = {
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
