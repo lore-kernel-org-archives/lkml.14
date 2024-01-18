@@ -1,142 +1,106 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F74628DA9;
-	Thu, 18 Jan 2024 15:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15081DA35;
+	Thu, 18 Jan 2024 15:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705592970; cv=none; b=cbOf+eJtR1CtAzSCxJzqNjZHDJCa9pP/2pR46rsRnEr6SvDuvXlOMj6C9kH+FL4EIpc7n/kTeYAfChLPwsdDnnQ2spSV6xj4XU/sJhyKQVr3bDtonuyo2gqLmE+wZETJqSkkNhpW4tVbb+qtz4WsNAVtoQvta+GFeYvKszNwnzM=
+	t=1705593063; cv=none; b=p/pmszJmAVIR5/HvfnJosLJmGCYFoO0XNiIu7Umh9hwxZ9U+iknT2Gvmqc+6QpdoXnLcHdMmidta8eyG766aqvKqIMnvSRmW8dwbQ97avvWzd1PAqWKJ4y6M9KOqXrKFBx7kgfCW33U0F5odqugLhn6DvIJUMTqBa/ae9ntOjjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705592970; c=relaxed/simple;
-	bh=QboJPgVs2VQtu7EcSaHZOW9/KLxh1z+JQ7085wVOEqc=;
-	h=Received:DKIM-Signature:Received:Received:Received:From:To:CC:
-	 Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy:
-	 X-QCInternal:X-Proofpoint-Virus-Version:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details; b=E8Ssdbw/0yiDNotYo9ANTy6xF0EkSODhCSq9xYOGdlABEJKP80JGeKAUeFKJGHJztfyYI0Im+mcgmWSRI1wIa6hUz2b2fsmuwGJ84U6XhFVzD5s9Q0tBzY/bvuEPofN8Ci6mrrlXkUrnwnRjahhvEQAR7GCEmWD+vvLvMFu7lnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a8zsqaCQ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1705593063; c=relaxed/simple;
+	bh=i7QMK4xNmUlb/uOg6tklgUsItoJCol15VXLsf5LHIzo=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=qaBjn2auKyVFtS6EkjvSUtm8b5Jdc7kBo4jaZRA4k0OYrl5Vrl6PxJAVrmXG+ouzEO6inokBYKnaEO/QVsUQkniiP7HD5XHwIY+1z/M2r8/FK0+fKR0g/4LfRTCn2r48RiEp0JhEXNF3Ot+a82aN5TQnNAVxWz10xOnl9J6zBXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Os1pFQWL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a8zsqaCQ"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40IEPCrS002892;
-	Thu, 18 Jan 2024 15:49:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding; s=qcppdkim1; bh=rpFfB4jGj6+d+f1dIWgC
-	5FJtUd61jkYOQ1ScgiCwKJs=; b=a8zsqaCQNZ3chi3YrITtvVqj2g12mJz4rCjh
-	A/tLCG+BGOHl+ksDiN8ZP474D2qwv38ej+Hq5MwwkUVgbdQS1KDugOJw8+ks+ZmD
-	BXGYsbfyJV2xeK2BRanzTHX1bxETdmV1rUFJ6v5NmLbm6FqnhYGcd4NADIm8aWea
-	ckmhgpHB7x36p1hEbkiprcvHhNFbnDrsSjy7Z2mxSHYmTEl5v/S8V4Ig6HBIYQ3d
-	VP6mo2KHNH5tF1JCx+wJfb1eHA29eEQyYie40hC/s3iurJ2e4+PRTd2w1FVTVPdt
-	QiK3tl89clvWAdGjaRi/Kf98016gZiGr6kGUgMYBMh8v7krscw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vq5qrg6tp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jan 2024 15:49:23 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40IFnNc5011085
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jan 2024 15:49:23 GMT
-Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 18 Jan 2024 07:49:19 -0800
-From: Krishna Kurapati <quic_kriskura@quicinc.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Hardik Gajjar
-	<hgajjar@de.adit-jv.com>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_ppratap@quicinc.com>, <quic_wcheng@quicinc.com>,
-        <quic_jackp@quicinc.com>, Krishna Kurapati <quic_kriskura@quicinc.com>
-Subject: [PATCH] usb: gadget: ncm: Fix endianness of wMaxSegmentSize variable in ecm_desc
-Date: Thu, 18 Jan 2024 21:18:53 +0530
-Message-ID: <20240118154910.8765-1-quic_kriskura@quicinc.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Os1pFQWL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9A7C433C7;
+	Thu, 18 Jan 2024 15:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705593061;
+	bh=i7QMK4xNmUlb/uOg6tklgUsItoJCol15VXLsf5LHIzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Os1pFQWLAs6HL5sCelpJgswM+4HzYO7cHmxQGsdNOwTyD1xmYFT0goriQ1r6bzmrh
+	 7Fqs6NY4z78VJqthHqPhjechpDpILEo6nN3+n6vKMMe4CvCcZSleNcuPZf4cEVPwXT
+	 Lxh2tA1d2h1swPnnSoVnSGI2BauvWEI0xSV8eNZQ=
+Date: Thu, 18 Jan 2024 16:50:59 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jacob Lott <jklott.git@gmail.com>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rts5208: Add more details to Kconfig help
+Message-ID: <2024011848-daycare-handrail-88a6@gregkh>
+References: <20240118154044.68425-1-jklott.git@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 48kkOIk1KSaMS8jKqh5-jxyho3kfRjqP
-X-Proofpoint-ORIG-GUID: 48kkOIk1KSaMS8jKqh5-jxyho3kfRjqP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-18_08,2024-01-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 mlxscore=0 adultscore=0
- priorityscore=1501 impostorscore=0 clxscore=1015 malwarescore=0
- phishscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2311290000 definitions=main-2401180115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240118154044.68425-1-jklott.git@gmail.com>
 
-Recent commit [1] added support for changing max segment size of the NCM
-interface via configfs. But the value of segment size value stored in
-ncm_opts need to be converted to little endian before saving it in
-ecm_desc. Also while initialising the value of segment size in opts during
-instance allocation, the value ETH_FRAME_LEN needs to be assigned directly
-without any conversion as ETH_FRAME_LEN and the variable max_segment_size
-are native endian. The current implementaion modifies it into little endian
-thus breaking things for big endian targets.
+On Thu, Jan 18, 2024 at 10:40:44AM -0500, Jacob Lott wrote:
+> The current help text is short and triggers a
+> warning from checkpatch.pl.  This patch adds more
+> details to the help text which should provide better information
+> for whether or not to enable the driver.
+> 
+> Signed-off-by: Jacob Lott <jklott.git@gmail.com>
+> ---
+>  drivers/staging/rts5208/Kconfig | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/rts5208/Kconfig b/drivers/staging/rts5208/Kconfig
+> index b864023d3ccb..76a083fbe401 100644
+> --- a/drivers/staging/rts5208/Kconfig
+> +++ b/drivers/staging/rts5208/Kconfig
+> @@ -3,7 +3,11 @@ config RTS5208
+>  	tristate "Realtek PCI-E Card Reader RTS5208/5288 support"
+>  	depends on PCI && SCSI
+>  	help
+> -	  Say Y here to include driver code to support the Realtek
+> -	  PCI-E card reader rts5208/rts5288.
+> +      Choose Y here to enable support for the Realtek PCI-E card reader RTS5208/5288.
+> +	  This driver facilitates communication between the Linux kernel and the Realtek
+> +	  PCI-E card reader.
+>  
+> -	  If this driver is compiled as a module, it will be named rts5208.
+> +	  If you opt to compile this driver as a module, it will be named rts5208. Selecting
+> +	  N will exclude this driver from the kernel build. Choose option Y if your system includes
+> +	  the Realtek PCI-E card reader rts5208/rts5288. When in doubt, it is generally safe
+> +	  to select N.
+> \ No newline at end of file
+> -- 
+> 2.34.1
+> 
+> 
 
-Fix endianness while assigning these variables.
-While at it, fix up some stray spaces in comments added in code.
+Hi,
 
-[1]: https://lore.kernel.org/all/20231221153216.18657-1-quic_kriskura@quicinc.com/
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Fixes: 1900daeefd3e ("usb: gadget: ncm: Add support to update wMaxSegmentSize via configfs")
-Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
----
-Since the patch was tested on ARM based QC devices, no issues were seen
-as these devices were little endian. Thanks to Maciej Żenczykowski for
-pointing it out offline over ACK that the patch breaks functionality for
-big endian devices.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
- drivers/usb/gadget/function/f_ncm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
-diff --git a/drivers/usb/gadget/function/f_ncm.c b/drivers/usb/gadget/function/f_ncm.c
-index a1575a0ca568..ca5d5f564998 100644
---- a/drivers/usb/gadget/function/f_ncm.c
-+++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -105,8 +105,8 @@ static inline struct f_ncm *func_to_ncm(struct usb_function *f)
- 
- /*
-  * Although max mtu as dictated by u_ether is 15412 bytes, setting
-- * max_segment_sizeto 15426 would not be efficient. If user chooses segment
-- * size to be (>= 8192), then we can't aggregate more than one  buffer in each
-+ * max_segment_size to 15426 would not be efficient. If user chooses segment
-+ * size to be (>= 8192), then we can't aggregate more than one buffer in each
-  * NTB (assuming each packet coming from network layer is >= 8192 bytes) as ep
-  * maxpacket limit is 16384. So let max_segment_size be limited to 8000 to allow
-  * at least 2 packets to be aggregated reducing wastage of NTB buffer space
-@@ -1489,7 +1489,7 @@ static int ncm_bind(struct usb_configuration *c, struct usb_function *f)
- 	ncm_data_intf.bInterfaceNumber = status;
- 	ncm_union_desc.bSlaveInterface0 = status;
- 
--	ecm_desc.wMaxSegmentSize = ncm_opts->max_segment_size;
-+	ecm_desc.wMaxSegmentSize = cpu_to_le16(ncm_opts->max_segment_size);
- 
- 	status = -ENODEV;
- 
-@@ -1685,7 +1685,7 @@ static struct usb_function_instance *ncm_alloc_inst(void)
- 		kfree(opts);
- 		return ERR_CAST(net);
- 	}
--	opts->max_segment_size = cpu_to_le16(ETH_FRAME_LEN);
-+	opts->max_segment_size = ETH_FRAME_LEN;
- 	INIT_LIST_HEAD(&opts->ncm_os_desc.ext_prop);
- 
- 	descs[0] = &opts->ncm_os_desc;
--- 
-2.42.0
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
+thanks,
+
+greg k-h's patch email bot
