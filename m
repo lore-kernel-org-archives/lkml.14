@@ -1,118 +1,143 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E55BE7F;
-	Thu, 18 Jan 2024 09:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DB41BC33;
+	Thu, 18 Jan 2024 09:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705569642; cv=none; b=KBbdTkKARUH2JdcXrFR53L8C95arH4DRZJybGWdia1iCOhGotizLTSCHIZJDPVDqhjyUfIG/URtNID0IlppHMuAiq40d1/2hWRXC+oTFPveTepXt5O2C7jXGC6awl1GJNdS8t8fi2jafHAK4pNYxHdkIsUvYKlg50g2uiZ7q3Js=
+	t=1705569676; cv=none; b=Z2/ZaKK9MAB2w+C9b5/X+fDh0HuuKlwYuKFJ4BvfDLOBR3RkNIuhVxzgq52ygub2KO0jdX4f4cYEHzMJl1/mDag9HvFct+Ll0t8KBusEC2xB7tGok5rcME1ltsqqTZGpsJ6gEBQgYWozcRFsw00To4qkSLbEPH7uEmdDjWHL8BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705569642; c=relaxed/simple;
-	bh=icgK142jnhKCNQrfFxL3msTXe+wMu7KCrBK09QWJP30=;
-	h=Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:X-Provags-ID:
-	 X-Spam-Flag:UI-OutboundReport; b=dNVXnvy6LvCjSgvSpWkTH2E/cEARwvPHrYQ41ddF1PSt6WAHwFA8fxZSn8niWeu19Pb+1yyShPpQWmWvzs3ZUnt3iXlvtiKTd9SS9Wm4ZDMKOkfvOMFnZUNqGEaQYCDHd5vZAHndxJPTO2ibeA2OxsM278U8PReSN9Pt5ePKoek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
-Received: from localhost.localdomain ([95.223.130.98]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MFJfN-1rK2q03Bbl-00FlBA; Thu, 18 Jan 2024 10:14:49 +0100
-From: Valentin Obst <kernel@valentinobst.de>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Trevor Gross <tmgross@umich.edu>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Valentin Obst <kernel@valentinobst.de>
-Subject: Re: [PATCH 11/13] rust: kernel: add doclinks with html tags
-Date: Thu, 18 Jan 2024 10:14:37 +0100
-Message-ID: <20240118091437.25001-1-kernel@valentinobst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CALNs47v1y6aXBFka6Af1BNykycjNce6Rnjvf0sw4r1vMegFhBw@mail.gmail.com>
-References: <CALNs47v1y6aXBFka6Af1BNykycjNce6Rnjvf0sw4r1vMegFhBw@mail.gmail.com>
+	s=arc-20240116; t=1705569676; c=relaxed/simple;
+	bh=kNuDy3QbrcPdmFFi0m7j/Zge1439ZBqnmZlKGQqeyHE=;
+	h=Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
+	 In-Reply-To:References:Organization:X-Mailer:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Originating-IP:
+	 X-ClientProxiedBy; b=AdFypVv1JhMl9JHi/GyNyfKNnZOWt7WWojKylPomoGXe1YpyYdeCBZahRWr7bCsapWs0i5f15p1qbcKUZau5e65Yq//7CawqYv55rE7Jr1X2PYHF0A6zjjjlQ2bhShP75oZtsvyGfClTYymo4mth+Mu5o8jBSABKgcsMTUnziOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TFxy82Wlbz687NT;
+	Thu, 18 Jan 2024 17:18:56 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id F25DA1400CD;
+	Thu, 18 Jan 2024 17:21:10 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Jan
+ 2024 09:21:10 +0000
+Date: Thu, 18 Jan 2024 09:21:10 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Ceclan Dumitru <mitrutzceclan@gmail.com>
+CC: David Lechner <dlechner@baylibre.com>, <linus.walleij@linaro.org>,
+	<brgl@bgdev.pl>, <andy@kernel.org>, <linux-gpio@vger.kernel.org>, "Lars-Peter
+ Clausen" <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Michael Walle <michael@walle.cc>, Andy Shevchenko
+	<andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
+	<chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
+ =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
+	<mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
+	<hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 1/2] dt-bindings: adc: add AD7173
+Message-ID: <20240118092110.00002c44@Huawei.com>
+In-Reply-To: <cf48e196-a569-4287-93b7-b5f06c34d6f6@gmail.com>
+References: <20231220104810.3179-1-mitrutzceclan@gmail.com>
+	<CAMknhBELp3NQEHE16gHhC96bttoafQOGxx3a_dLZn9o2Ru7y9g@mail.gmail.com>
+	<20240116163003.0000039d@Huawei.com>
+	<18c239af-71ee-49d8-878e-e1770c3e2d46@gmail.com>
+	<20240117163725.00003981@Huawei.com>
+	<cf48e196-a569-4287-93b7-b5f06c34d6f6@gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:HvRMwuW92UrERzMMxxxPExZjYNfh58cwuz0pbbQTI6gocQRi/8L
- e2FqSqk+w9T2rAu/GwwyOE97vt7WoJyKpUpI4inBQ3E5HIfNGeJ06bj5TNFCwmlcwh9CxM7
- SafIUROvPyDhbklQPpjTaqo9D9nZ9ZiyHlUtv4W0ckPi577PjCIr40dXpZkQdjk+AC4d2oV
- DlFnEL7VgDVIB9ClBZuxg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Z3VQi8fndeQ=;rNfQTWLsJhh6/edYb5PLoOPvPoj
- PpTg2MU7cjWUzfh8LIeVa4jWTCRE6XgkiXkrXfVt/+EYaIahhKJLfUkYeX6tPLdbRYB/UL19B
- e8RspkweSeZB1Z5cQ2/vHKzl/bl/zLcn0ClxeWp7ZsZ1z2wduMDCYIRCA90DeWAWI388n6bWB
- L9+LQL4wTpwLRz3xO/WKUdxwHQcAYpDKHCFlarqaER1iCSjOqegXpyQX75G08hx705UOMw37r
- Rb0zBRmHhLSD8tw6v0qxh0ll+Bq9gfDgDMMgGhvw1uSe9Wh5YjAUd+LZAEoVI4ILDMgk9TST5
- KghkvrE7N1hjYdq/rwlq24FFmwwXKhILsrF567ZnVv5p4ZsMHZo2kuTVOSbNbZWjM/aBekVj8
- fx2YpFeGKAFxjOVkNLdPwO/onx7BcKFMoaKUMm1AJorAWbRtXYHcBIqGkYRFQSu2QZPW1yZ9y
- jbrOwJZYgl+lfTGBSyr1w+eM1sVNfxjebeWgj3Th0MRGwqL/AvJdmQjxYrRuoSHJBSToxCuPY
- LcNqL12yhg4hzFOysKyc7bWny1DIWwW1UzP4QmGbuCPWMI7BehGwF5JOIjtUwpz80FRV/An9f
- MdEayP7wRf8twfGWuQGYXiRgobvrSAgmMmLyozL/KqoKkIZF/3GLG0LXR2fEDFJ6Ndwt2eFff
- Wg3xJ1rd8YqKJznBy1wzoYd+PNZWo/+31it0oGEb39G9rBWfXfZIu7FWTqe7bu6/zJpnI4/nb
- YFpBuOAUFBbnL+c4ToRTbjTIPTwwcqWVQA47rtcKJ26DQeN64rlBZ49RqGtWZSRv1/QPMshhd
- Dhm27KS67oCHcch0z9Ao3z6jEsYHhRe9Y6Z+xoTNqACC49y9G9aikMRoPW+/CIgPJukfOV1LY
- wgbSYHMsMcfEThA==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-> Std sometimes does something like this, which links to the slice primitive.
->
->     [`&[u8]`](prim@slice)
+On Thu, 18 Jan 2024 10:10:46 +0200
+Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
 
-This would indeed link `&[u8]` to the slice type. But I agree, both,
-linking to slice and to `u8` is not necessary as it is common knowledge.
-However, if it is a slice over a more complicated/custom type it might
-be worth linking to it, and in that case the 'code' tag syntax would be
-the only option we have at the moment.
+> On 1/17/24 18:37, Jonathan Cameron wrote:
+> > On Wed, 17 Jan 2024 14:43:21 +0200
+> > Ceclan Dumitru <mitrutzceclan@gmail.com> wrote: =20
+> >> On 1/16/24 18:30, Jonathan Cameron wrote: =20
+> >>> On Mon, 15 Jan 2024 15:53:39 -0600
+> >>> David Lechner <dlechner@baylibre.com> wrote: =20
+> >>>> On Wed, Dec 20, 2023 at 4:48=E2=80=AFAM Dumitru Ceclan <mitrutzcecla=
+n@gmail.com> wrote:   =20
+>=20
+> ...
+>=20
+> >>>>> +
+> >>>>> +  refin-supply:
+> >>>>> +    description: external reference supply, can be used as referen=
+ce for conversion.     =20
+> >>>> If I'm understanding correctly, this represents both voltage inputs
+> >>>> REF+ and REF-, correct? The datasheet says "Reference Input Negative
+> >>>> Terminal. REF=E2=88=92 can span from AVSS to AVDD1 =E2=88=92 1 V". I=
+t seems like they
+> >>>> should be separate supplies in case REF- is non-zero. Otherwise, how
+> >>>> can we know what voltage it is? (same comment applies to refin2.)   =
+=20
+> >>> Agreed, in this case these are directly used as references (we recent=
+ly
+> >>> had another driver that could take a wide range of negative and posit=
+ive
+> >>> inputs but in that case an internal reference was generated that didn=
+'t
+> >>> made it not matter exactly what was being supplied.  Not true here th=
+ough!
+> >>>    =20
+> >> Wouldn't it be alright to specify that the voltage specified here shou=
+ld
+> >> be the actual difference (REF+)-(REF-)? =20
+> > How do you establish the offset to apply to single ended channels if yo=
+u don't
+> > know the value of REF- (relative to local ground)?
+> >=20
+> > So no - as the device supports single ended channels the difference isn=
+'t
+> > enough information.  It would probably be fine to do as you say if it
+> > were a device with only differential channels where all that matters is
+> > the scaling. =20
+>=20
+> 	I suppose that you are referring to the first page presentation: "Cross
+> point multiplexer; 8 full differential or 16 single-ended channels". I
+> consider this to be a bit misleading as all channels are actually fully
+> differential (must select positive and negative source, AVSS is not one
+> of them).
+>=20
+>=20
+> 	Even more, the datasheet specifies that when using "single-ended"
+> inputs you need to select which of the pins is the common one and
+> connect it to the desired GND (be it AVSS, REF-):
+>=20
+> "Because there is a cross point mux, the user can set any of the analog
+> inputs as the common pin. An example of such a scenario is to connect
+> the AIN16 pin to AVSS or to the REFOUT voltage (that is, AVSS +
+> 2.5 V)" (ad7173-8 page 27)
+>=20
+> 	For me this is 100% the case that this is a fully differential ADC in
+> which the datasheet presents a way to use it single-ended. Let's say
+> that we are using EXT_REF, and REF- is non zero. If someone connects
+> AVSS to the desired common pin, the ADC will still measure correctly the
+> difference of voltage between AIN_POS and AIN_NEG and compare it to the
+> EXT_REF.
 
-> What exactly is going on with Arc, is it not getting linked correctly
-> when it has generics? I don't quite follow what <code> does.
+Thanks for the explanation. I indeed was mislead by the introduction!
+Seems that the difference in the reference inputs is sufficient for this
+device.
 
-In this case it is about the `&`:
+Jonathan
 
-<code>&[`Arc<T>`]</code>
 
-Here, `&Arc<T>` is formatted as code, but only the `Arc<T>` is a
-clickable link. While
-
-[`&Arc<T>`]
-
-results in:
-
-```
-/// over [&`Arc<T>`] because the latter results in a double-indirection: a pointer
-    |           ^^^^^^^^ no item named `&Arc` in scope
-```
-
-using:
-
-&[`Arc<T>`]
-
-would result in a link, but `&` is not formatted as code. Finally,
-
-[`&Arc<T>`](Arc)
-
-would work but `&` is part of the clickable link now. Thus,
-using the html tag here is the only way I found to get the
-'cleanest' form in the rendered document.
-
-> If rustdoc just isn't making good choices in certain places or isn't
-> flexible enough, could you write issues in the Rust repo? Better to
-> get inconveniences fixed upstream if possible.
-
-I like the idea of finding a proper solution to that in rustdoc
-instead of cluttering the source code with html tags. If nobody
-strongly objects I'd drop the whole patch in v2 and open an issue
-in the rust repo.
-
-	- Valentin
