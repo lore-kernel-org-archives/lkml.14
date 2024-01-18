@@ -1,97 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39C212D616
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 17:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ACC2D043
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 17:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705599388; cv=none; b=Wa9h8wXna73cUAZbsi5uRPUDncalTsnuoZ/InVCniPpQQjaoz1ZahkekUouyixvY256pAfWuzfre95B2KJBLlED+owAqXlko7hbrAJJyC8vxsDqLaSvyi7M69oRPDJldx8pB1XiaKdnxfqiMXQpKLhVZ8e1W2hX64ju56ysIWU4=
+	t=1705599473; cv=none; b=QSGdGWb1ur71Ee3rDFFL/U2M7J9aaqgoAnS0x6ZqeqVWCXUNCtZLxF1uUD9bjBzSrZoLZkmpw95A9IjVg5BfECTkI4/F6WQ4akiXKaMouB1u1bWYOPJ3ySYhSc7aOZx4H1AfVbF7960G6iO+qZNwpEHylXOm0I6tfsEpWZzMg1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705599388; c=relaxed/simple;
-	bh=lm3pt7KdFYd/SORPvxfLYNRuDhB8ojSgjUEPfZzkQK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type; b=sgoKsj/3NXxR3MCWzl33VjAhZyxtg/xaOmt63FgU1R0uZKFAKWfYzWbmfmoCiVu0NI83Wi6QTNxPxsBwwjNw6vKJcs9h+XYEyOHmt/P0kmeAyvj8S2jJCiLU8ijBxEdT+5CYKdWSZpf8/bKes+5kc4Ksdaf7BV64gjWcAFTPpMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA9681042;
-	Thu, 18 Jan 2024 09:37:10 -0800 (PST)
-Received: from [192.168.1.13] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 234A23F5A1;
-	Thu, 18 Jan 2024 09:36:19 -0800 (PST)
-Message-ID: <82d272fb-ffc3-4d55-b92a-497cbc13fc03@arm.com>
-Date: Thu, 18 Jan 2024 18:36:14 +0100
+	s=arc-20240116; t=1705599473; c=relaxed/simple;
+	bh=1SLI49q2Cr6+OAuuBarj8au+Z71GOo7Ef/S9Ci54CE0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AEEqyYERACR2c6MwVNS5ZEHEXHFSJkRvdyak6BFjDsRecgTtX4+8RbTCB3uP58GyJT1WNZniYimq76pxLoAJ4F2Fq0EVnSATDo5xE9Sx6HlYU7IXl0p5YNDii/V+YvFf5aNAlYf+WfB67qMEQT769+MFmtDJw1meeRp24c9zyIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FUSPlF9W; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FUSPlF9W"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50e7b273352so14126714e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 09:37:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705599470; x=1706204270; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1SLI49q2Cr6+OAuuBarj8au+Z71GOo7Ef/S9Ci54CE0=;
+        b=FUSPlF9WB085QF7cJzz1E0xej1kqNK/KXaLSzAFL0voBevC1hHVPvBuo6b/DkCF1cu
+         BLmndNOizxdd6WaRIl1BHCLESE1vC7MdrKnJpd59QxXcUwu4sJQdyIr2JihLSmzkXETZ
+         IP0ugCWsGJ95Hlppst+a0XwqXhzN0JduauLrYB+yjk5g0kAFf4JxSgWAcsubChF3JfJF
+         Uc3wkvFTjIyeGxWwUk95lFaCEQrQ8QU3zvGuyY0gSd349tWVQRrB0yvMq1fiyFjJfMom
+         e1fmMJZiOZ5+dv9r+Ik/kkDzzzddvVk/+gQW6JnQR8uWq2+AkcLuWHyqbkhONWX9s56r
+         daAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705599470; x=1706204270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1SLI49q2Cr6+OAuuBarj8au+Z71GOo7Ef/S9Ci54CE0=;
+        b=PppJHx856FGlE5iptWnHvNa8FOc7V3OR817nso4ZyOsF8qwPyN2n2Qc+f1MDBxXBfx
+         YWY1Ttuh1V0LQKvaGSEj7Mehh3+nWqlQaAQc9lqlbUjR9JB5zWGO1xMfUf+vMdaevf/y
+         pbIfsds3Ww+wouLtQ8rZLJ8NtR/NmrgHeBq44U+ZHQP5YBb9WRr+ViAVG1G1G6q8oKlT
+         NNX1pJuy69R2WAPmnyRB+KxfgPyxKkjib6hfsc3Y1l+WJ90GF42FDrqaLDo3lUoy78m+
+         KmS2OfRKJHDZUjcAJprJO+BOAwSJI/WN2JCMK9F62ZLOG19ScgyFZ314hgYdaRl291qO
+         UjdQ==
+X-Gm-Message-State: AOJu0YxzNr/+ddTzuVWDQj59lzhH42bpIT9LuqSGTlLxUD8Lza+N1InE
+	74MVqpVABWt89rN2ygSxLsJBjR3mwHgtswBJQQidBK1Fgn+XZdtiP7/Yaiamap9BIaJMcM/D0ry
+	icvC0/AUfIzYuccvTVk+5EwdPHr8aniIzZ+4N
+X-Google-Smtp-Source: AGHT+IF3AEnWYHNRp1Oqp8aUrRQqBgoYUu3uvzRdmsLIYUSCDnQo/aN4tWsJAvsGDTsSZ+ipTWaOuVXwRwbmGHd4+xU=
+X-Received: by 2002:a19:4342:0:b0:50e:f5c4:ce39 with SMTP id
+ m2-20020a194342000000b0050ef5c4ce39mr607267lfj.53.1705599470178; Thu, 18 Jan
+ 2024 09:37:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Resend PATCH] topology: Set capacity_freq_ref in all cases
-To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- bristot@redhat.com, vschneid@redhat.com, sudeep.holla@arm.com,
- gregkh@linuxfoundation.org, rafael@kernel.org, linux-kernel@vger.kernel.org
-Cc: lukasz.luba@arm.com, ionela.voinescu@arm.com
-References: <20240117190545.596057-1-vincent.guittot@linaro.org>
-Content-Language: en-US
-From: Pierre Gondois <pierre.gondois@arm.com>
-In-Reply-To: <20240117190545.596057-1-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240117-b4-zswap-lock-optimize-v1-0-23f6effe5775@bytedance.com> <20240117-b4-zswap-lock-optimize-v1-1-23f6effe5775@bytedance.com>
+In-Reply-To: <20240117-b4-zswap-lock-optimize-v1-1-23f6effe5775@bytedance.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 18 Jan 2024 09:37:14 -0800
+Message-ID: <CAJD7tkbvoODVN4vcO7cxrtacc7TG8BOXOOoDoNr6nv3eZXOsmw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/zswap: make sure each swapfile always have zswap rb-tree
+To: Chengming Zhou <zhouchengming@bytedance.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, Chris Li <chriscli@google.com>, 
+	Nhat Pham <nphamcs@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Pierre Gondois <pierre.gondois@arm.com>
+On Wed, Jan 17, 2024 at 1:23=E2=80=AFAM Chengming Zhou
+<zhouchengming@bytedance.com> wrote:
+>
+> Not all zswap interfaces can handle the absence of the zswap rb-tree,
+> actually only zswap_store() has handled it for now.
+>
+> To make things simple, we make sure each swapfile always have the
+> zswap rb-tree prepared before being enabled and used. The preparation
+> is unlikely to fail in practice, this patch just make it explicit.
+>
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
 
-On 1/17/24 20:05, Vincent Guittot wrote:
-> If "capacity-dmips-mhz" is not set, raw_capacity is null and we skip the
-> normalization step which includes setting per_cpu capacity_freq_ref.
-> Always register the notifier but skip the capacity normalization if
-> raw_capacity is null.
-> 
-> Fixes: 9942cb22ea45 ("sched/topology: Add a new arch_scale_freq_ref() method")
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
-> 
-> Resend with correct email address for Sudeep
-> 
->   drivers/base/arch_topology.c | 13 ++++++-------
->   1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 5aaa0865625d..2aa0c6425290 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -417,9 +417,6 @@ init_cpu_capacity_callback(struct notifier_block *nb,
->   	struct cpufreq_policy *policy = data;
->   	int cpu;
->   
-> -	if (!raw_capacity)
-> -		return 0;
-> -
->   	if (val != CPUFREQ_CREATE_POLICY)
->   		return 0;
->   
-> @@ -436,9 +433,11 @@ init_cpu_capacity_callback(struct notifier_block *nb,
->   	}
->   
->   	if (cpumask_empty(cpus_to_visit)) {
-> -		topology_normalize_cpu_scale();
-> -		schedule_work(&update_topology_flags_work);
-> -		free_raw_capacity();
-> +		if (raw_capacity) {
-> +			topology_normalize_cpu_scale();
-> +			schedule_work(&update_topology_flags_work);
-> +			free_raw_capacity();
-> +		}
->   		pr_debug("cpu_capacity: parsing done\n");
->   		schedule_work(&parsing_done_work);
->   	}
-> @@ -458,7 +457,7 @@ static int __init register_cpufreq_notifier(void)
->   	 * On ACPI-based systems skip registering cpufreq notifier as cpufreq
->   	 * information is not needed for cpu capacity initialization.
->   	 */
-> -	if (!acpi_disabled || !raw_capacity)
-> +	if (!acpi_disabled)
->   		return -EINVAL;
->   
->   	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL))
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
