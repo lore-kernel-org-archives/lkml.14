@@ -1,176 +1,126 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BA6C127
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 07:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9488947A;
+	Thu, 18 Jan 2024 07:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705563100; cv=none; b=uE4Fj8X2r6EUC1v9Avb0RFmREP6NDTChmz9AY0jwuok4ZC8IWn7CSpZp+3+tozfP5+Ev8zd3dh8oFhBtD1eEfzgHIaW5JMm8vZX10uHTvXMOdeeJMgpc3tGPzDyYbI1GBT8UpzOJwxrpZnb2oMXIevsc8atQ7NLEB5JWKCwTmKU=
+	t=1705563338; cv=none; b=HaIu9sffC5rxgbUwAVigm7zbnpnEW6rDQDyhwWTlDr4mFNOQYAQRXO0Zst8YhvNXTTWLqTBd9pb2iQrLpHWS/3B8PQAlvs02jIbllPNksVPRuDLSR27pGI+ShQ1h0Wtb43885KVyP7arP9uQePNLCdv6uJeim3zSAEcxShjqKn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705563100; c=relaxed/simple;
-	bh=dcyPHowVowojvYwqybjhAHT+o5+hBycJepvY2VZ/r+w=;
-	h=DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:Subject:
-	 From:To:Cc:References:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Report-Abuse-To:X-Report-Abuse:
-	 X-Complaints-To:X-ForwardEmail-Version:X-ForwardEmail-Sender:
-	 X-ForwardEmail-ID; b=kivErcx1mL+AfMOPbnu0PHFs+qZK02wRcJ70TZFKPCrbDCLY6Z8ytl9h1jGE0Cz+PPo+sKnkqK8yijeP9TBTP29Fhs8LLC6DbuXjlhrjKGflqD/dPRdTXx68LdvEPNKc2PdNfMjvp0tLD8QdeJQReNeYnudAamTyUy+DjrX5ixc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=zGmVbKeo; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1705563338; c=relaxed/simple;
+	bh=OX3x/t7S5eYlemp0ECxrgPOLlFI4fZcRLUMx0aAs7nI=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding; b=o0MjZU7Tlj6lmtyow6RWWFOAcHPHfzU9QgfO8kYW+blL7/72SocnFWCnnvIVVp4mk4UP8G5x3mtuhYz2bvvP93wwrOeyiO5ftpaKPI4/Y8UbNGzHJctYlXNvdSnigjiadxVEcNOhnEfeLqBsH0l9APKBvk1FjdsD004e2g0Yqf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iKA7nlHW; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="zGmVbKeo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: References: Cc:
- To: From: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1705563094;
- bh=D9ZkcwjkVkGoVyXUCHS1LAJlQ3CiUF2oO0UMAU5d3Pw=;
- b=zGmVbKeofuLzzupz6023S9mfUpt7WC2oeGojsHwqrzjGIcQZqyCvckAOc5KjTW0uBnKRvjxYF
- jVL6pe7g5uLQbLhuDntzSY/Lxik7FZqvEkn+V0BJkqly72pbde5zMmgEfBfRKLh4eBqfp/NAa6q
- uJaGnMQgtlCT/h8lqueW09QYKbklZ2ScALkaLHoshupJlflgcZIDosgZbJHTh3DgW1qwwCjcSdF
- YnPYSbKMEMo9OdZAwt0O3+v7gCBAprI6fPBmxH5Ho+6hlflbYmcPF60mfKB1HJqux7+zKPUAMOa
- RqpVY2Yoc80wyhERLm2tG4TWrBXa+PoD/MwHNIuuZfwA==
-Message-ID: <df78489b-7546-46ea-b09f-39a80692a962@kwiboo.se>
-Date: Thu, 18 Jan 2024 08:31:30 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iKA7nlHW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705563336; x=1737099336;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OX3x/t7S5eYlemp0ECxrgPOLlFI4fZcRLUMx0aAs7nI=;
+  b=iKA7nlHWLI9Q22jR603zMvvMhyViy6ILJuOPm7YQZQd7S2lheIt1K606
+   AunPK/fnksvZa7kWdBZSSKKWW1eitXw5kJMekUSj23oKLhjGYmmLkz5D/
+   wPuluL3YiKjUADTvk/iikXU+FFp/GCIfRGezE3/GQXphj3K70eTgkn0Is
+   30+qhMj05laAbDe17irKF3YNK5apP9br6j2Z0LY5VEgfhZcmGgKdgj1Pi
+   UxBxjMKfsegK18JQgxUAqqVnK4QaeP+ode3r6f/tW2x8IQVPPxL3AcwEf
+   0yokM6o/d6zfxAQ5qvRvtOFMDU2Y5ZvyE7MK+Jz6XS0rLNkfpvRGdqtcS
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="7067652"
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="7067652"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 23:35:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="26391581"
+Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.245.82.157])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 23:35:33 -0800
+Date: Thu, 18 Jan 2024 08:35:25 +0100
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: linan666@huaweicloud.com
+Cc: song@kernel.org, shli@fb.com, neilb@suse.com, zlliu@suse.com,
+ linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yukuai3@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
+ yangerkun@huawei.com
+Subject: Re: [PATCH v2 1/3] md: Don't clear MD_CLOSING when the raid is
+ about to stop
+Message-ID: <20240118083525.00002b15@linux.intel.com>
+In-Reply-To: <20240117093707.2767209-2-linan666@huaweicloud.com>
+References: <20240117093707.2767209-1-linan666@huaweicloud.com>
+	<20240117093707.2767209-2-linan666@huaweicloud.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: rock-pi-e: fix location of snps
- properties
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Trevor Woerner <twoerner@gmail.com>, "Chen-Yu Tsai" <wens@csie.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20240116204103.29318-1-twoerner@gmail.com>
- <20240116204103.29318-2-twoerner@gmail.com>
- <CAGb2v67KfNR_U_Qz85aqY1D0DKE9mo-X_L8MGvT7cdcZGUHVUg@mail.gmail.com>
- <20240117054705.GA33225@localhost>
- <852071ad-24e8-40a8-9b10-623abf1dc4bf@kwiboo.se>
-Content-Language: en-US
-In-Reply-To: <852071ad-24e8-40a8-9b10-623abf1dc4bf@kwiboo.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 65a8d3d6d66eecd94fbb69d3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2024-01-17 09:15, Jonas Karlman wrote:
-> On 2024-01-17 06:47, Trevor Woerner wrote:
->> On Wed 2024-01-17 @ 12:38:39 PM, Chen-Yu Tsai wrote:
->>> On Wed, Jan 17, 2024 at 4:41 AM Trevor Woerner <twoerner@gmail.com> wrote:
->>>>
->>>> A number of snps (Synopsys) properties are not in their correct location.
->>>
->>> Nope. If you read the snps,dwmac.yaml binding file, you'll see that these
->>> properties have been deprecated. They are properties pertaining to the PHY
->>> and should be described under the PHY node. Support for reset GPIOs on PHY
->>> devices in phylib has been there since v4.16. The snps prefixed properties
->>> were deprecated in v5.3.
->>
->> If that's the case, then the bindings and the drivers are out of sync in both
->> U-Boot and Linux. I discovered this issue while working with older and newer
->> revisions of the rock-pi-e board. The first three spins of the rock-pi-e have
->> the rtl8211e PHY but the last one (v1.21) has the rtl8211f PHY.
->>
->> With the existing layout nothing works in U-Boot and in Linux the rtl8211e
->> works but not the rtl8211f. With this patch both the rtl8211e and the rtl8211f
->> PHYs work using the exact same device trees on both older and newer rock-pi-e
->> boards in both U-Boot and Linux.
-> 
-> For linux this is probably related to the same chicken-and-egg reset
-> issue outlined at [1]. The phy is not reset before it is probed and
-> cannot be probed because it is not reset.
-> 
-> As for U-Boot the designware/gmac_rockchip ethernet driver may need some
-> adjustments to properly integrate with eth-phy uclass to properly reset
-> the phy described in a ethernet-phy node before it can be probed.
-> 
-> Following config options is disabled for rock-pi-e-rk3328 defconfig:
-> 
-> # CONFIG_DM_ETH_PHY is not set
-> # CONFIG_PHY_REALTEK is not set
-> 
-> Also the driver needs to be updated to make use eth-phy uclass for it to
-> work correctly. More similar to how the dwc_eth_qos driver works related
-> to ethernet phy.
+On Wed, 17 Jan 2024 17:37:05 +0800
+linan666@huaweicloud.com wrote:
 
-I have just sent out a U-Boot series that fix ethernet on the v1.21
-revision of the ROCK Pi E board, see [2].
-
-Would expect that ethernet also starts to work in linux with those
-patches applied to U-Boot. I only tested and verified ethernet in U-Boot.
-
-Hopefully someone can take a closer look at the issue on linux side
-so that it does not need to depend on PHY being reset by the bootloader.
-
-[2] https://lore.kernel.org/u-boot/20240118071949.927089-1-jonas@kwiboo.se/T/
-
-Regards,
-Jonas
-
+> From: Li Nan <linan122@huawei.com>
 > 
-> [1] https://lore.kernel.org/linux-rockchip/47d55aca-bee6-810f-379f-9431649fefa6@kwiboo.se/
+> The raid should not be opened anymore when it is about to be stopped.
+> However, other processes can open it again if the flag MD_CLOSING is
+> cleared before exiting. From now on, this flag will not be cleared when
+> the raid will be stopped.
 > 
-> Regards,
-> Jonas
+> Fixes: 065e519e71b2 ("md: MD_CLOSING needs to be cleared after called
+> md_set_readonly or do_md_stop") Signed-off-by: Li Nan <linan122@huawei.com>
+> ---
+>  drivers/md/md.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 > 
->>
->> Comparing the rock-pi-e's dts file with the one from the roc-rk3328-cc board,
->> which also uses the layout in this patch, and which also uses the rtl8211e
->> external PHY, is what led me in this direction.
->>
->>>
->>> ChenYu
->>>
->>>> Fixes: b918e81f2145 ("arm64: dts: rockchip: rk3328: Add Radxa ROCK Pi E")
->>>> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
->>>> ---
->>>>  arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts | 10 +++++-----
->>>>  1 file changed, 5 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts
->>>> index 096cfa19036e..0739b8fec86e 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dts
->>>> @@ -150,8 +150,11 @@ &gmac2io {
->>>>         phy-mode = "rgmii";
->>>>         phy-supply = <&vcc_io>;
->>>>         pinctrl-names = "default";
->>>> -       pinctrl-0 = <&rgmiim1_pins>;
->>>> +       pinctrl-0 = <&rgmiim1_pins>, <&eth_phy_reset_pin>;
->>>>         snps,aal;
->>>> +       snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
->>>> +       snps,reset-active-low;
->>>> +       snps,reset-delays-us = <0 10000 50000>;
->>>>         snps,rxpbl = <0x4>;
->>>>         snps,txpbl = <0x4>;
->>>>         tx_delay = <0x26>;
->>>> @@ -165,13 +168,10 @@ mdio {
->>>>
->>>>                 rtl8211: ethernet-phy@1 {
->>>>                         reg = <1>;
->>>> -                       pinctrl-0 = <&eth_phy_int_pin>, <&eth_phy_reset_pin>;
->>>> +                       pinctrl-0 = <&eth_phy_int_pin>;
->>>>                         pinctrl-names = "default";
->>>>                         interrupt-parent = <&gpio1>;
->>>>                         interrupts = <24 IRQ_TYPE_LEVEL_LOW>;
->>>> -                       reset-assert-us = <10000>;
->>>> -                       reset-deassert-us = <50000>;
->>>> -                       reset-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
->>>>                 };
->>>>         };
->>>>  };
->>>> --
->>>> 2.43.0.76.g1a87c842ece3
->>>>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 9bdd57324c37..4bf821b89415 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -6254,7 +6254,15 @@ static void md_clean(struct mddev *mddev)
+>  	mddev->persistent = 0;
+>  	mddev->level = LEVEL_NONE;
+>  	mddev->clevel[0] = 0;
+> -	mddev->flags = 0;
+> +	/*
+> +	 * Don't clear MD_CLOSING, or mddev can be opened again.
+> +	 * 'hold_active != 0' means mddev is still in the creation
+> +	 * process and will be used later.
+> +	 */
+> +	if (mddev->hold_active)
+> +		mddev->flags = 0;
+> +	else
+> +		mddev->flags &= BIT_ULL_MASK(MD_CLOSING);
+>  	mddev->sb_flags = 0;
+>  	mddev->ro = MD_RDWR;
+>  	mddev->metadata_type[0] = 0;
+> @@ -7728,6 +7736,12 @@ static int md_ioctl(struct block_device *bdev,
+> blk_mode_t mode, 
+>  	case STOP_ARRAY:
+>  		err = do_md_stop(mddev, 0, bdev);
+> +		if (!err)
+> +			/*
+> +			 * mddev has been stopped, keep flag the
+> +			 * MD_CLOSING to prevent reuse.
+> +			 */
+> +			did_set_md_closing = false;
 
+Hello Nan,
+The meaning of the "did_set_md_closing" is to notify that MD_CLOSING was set in
+this function, to know how to behave on error.
+You gave it another meaning "Do not clear MD_CLOSING because we want it to stay"
+Please consider how to solve this confusion. I see the comment you added but I
+think we can have this solved better, maybe just name it as "clear_md_closing"?
+
+Anyway it looks acceptable to me:
+Acked-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+
+Thanks,
+Mariusz
