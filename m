@@ -1,116 +1,145 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E30250E1;
-	Thu, 18 Jan 2024 13:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555CC250EF
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 13:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705583263; cv=none; b=FNmm1dvampa7D1mqoKIVSOFYJQRQl+l3Yk08hvCt5jAnibRMyxsmml/YqmvNyIIkJc0kuugLZAL43m7oVztLRZhpryARTXL57y0QIN5Yaj3qwh4RP5WdDfYmkGFXXzXGoizpKv28Z8QdFACgn4ZjGxRXln5Oh/K/aJWNxpKoFRo=
+	t=1705583504; cv=none; b=M/HuH8XXw5t4FKpce+AXcpnBxTaX301N1gdNR4faBfk50xC8D1OZLGruZkN2UoLWCf/j6r4tYSFZ22MnuDvTiFvGXNiS01t//L5pg3Li5qCbgl45V3Eu72fPW+vLVvGTWoTrdU1rxs6U1QJKa0HHcIjzS+dMGbRzAdOxEw/UGKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705583263; c=relaxed/simple;
-	bh=BtEeITIhhSJByudkXtg5B1z1EVkxDfr9R3qotxd8td8=;
-	h=Received:Received:Received:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo; b=qFp+5Gic0+Ig+LIzTVAkauHUFILXlzGrzZ3JftEbzeLEDpdmxYHHcp8l1K7HH7MKIVC6ILwIGzs4DgXzKDpfvmy1bKWZz9uHMizdQYimcUrnwwPUr2wHNrs3DnOSoQL1+0OvGoD5Sjs60zBqMByfQwn2dNG9ErK6nj1a/yQ3Ktk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TG31s54KGz4f3m6x;
-	Thu, 18 Jan 2024 21:07:29 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id D245A1A09E5;
-	Thu, 18 Jan 2024 21:07:35 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBXKBGWIqllGLveBA--.44857S4;
-	Thu, 18 Jan 2024 21:07:35 +0800 (CST)
-From: Li Lingfeng <lilingfeng@huaweicloud.com>
-To: allison.karlitskaya@redhat.com,
-	hch@infradead.org,
-	axboe@kernel.dk,
-	yukuai1@huaweicloud.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	houtao1@huawei.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	lilingfeng@huaweicloud.com
-Subject: [PATCH] block: Move checking GENHD_FL_NO_PART to bdev_add_partition()
-Date: Thu, 18 Jan 2024 21:04:01 +0800
-Message-Id: <20240118130401.792757-1-lilingfeng@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1705583504; c=relaxed/simple;
+	bh=n++XuhRB4EVG1dnVu6UFfzLPoEhlNslsnkhQrRbhM9k=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=EKzvhF8933eBbUM+o2Z4i0BVLXXwWJ1Y0NOyWPK0jEU0btM2YaIGebkf91NQnGLvms5ouiULW/7UMzewbexZpzAcfSDE4RJKLQ4I8w7Eta1kQoEO3vGVEIh1pvZnXz3M6LERPExR2J0d1OTVgB3/t7TtntYYi0C4iuqYscK6Kig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qRGqsq+1; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qRGqsq+1"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7d2c21d77afso356270241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 05:11:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705583501; x=1706188301; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MHW8mrwPYeD3SY8y17cH7gnw3XovI7cNYSvj0nnf3+8=;
+        b=qRGqsq+1bJuMzygpcPUnex5SggsPvLRZYTJseFdBGyl4S/GAZKSuc7bdKJ4EjIdPmO
+         hdJbXf83QFKgssHvoAAGG1ZyqA9VDp1iB5g/O1pI+5UQvDmBCffzWB9C4FkEJyXknb98
+         Ez0ibwxLiYz6GZ0QwMFqKfE0SPZlmRIKIZifWQ2sQrJ6buPgp1eHUrtQiUxRrKE0LXLf
+         zHVOuqd704GbXXI28ckuPnx5KtXwNCjiGA+Xo3bonHuN+rwkj+srZUVeG31S8zky+GxE
+         8OsymlU/9SdFKfojInsqMLnOYxQvE8J2YHnaNHmTl7QbL5IOG5UfKpFP2uT9RyllV1Ke
+         ilMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705583501; x=1706188301;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MHW8mrwPYeD3SY8y17cH7gnw3XovI7cNYSvj0nnf3+8=;
+        b=QbxrrvkjmgmimdnqwCPVSpYzK+MMYXxmiaUArdTfvgDVXyo8iYYJeI28CtvJed2NMf
+         AVUjm4xRGWAJGFPonqzpdsxAfUsMlI4W9k1aqo45sxC4DVjUVRsv3XLtq5aY7VPQoDZV
+         9+ONwh/qImDO8b1TlWZjPEEu+by1d7RsbfJjd1zD6kDyKFHx6QY/nHe9E1FOhAYYyvDX
+         1cvsXassf+gcztzfJVh6VMRQsFoX4/RSWaGkMIbfUAWmdLFMkecLXB194NX38D8GRlgz
+         +6hepwz+FOGV7P/e3H8nQDC/8ExxUQjSFrSXo8+TNRvwF5zBa5loi0y3qNfMPqvPxD9O
+         6eTQ==
+X-Gm-Message-State: AOJu0Yz/7TwoHZk9JuxCPJZeuogSuoPNxlUHlT3MVoRRTJ0VoXroZZlw
+	rLgCp8dzxd9S/EufVUJ7g10wFfiO178oysLOevsRYNQmBH/zAWEEtBKxjPWx+h6pBB7hQewbsAp
+	4wom6O87KmFcUlOOLOZLkHpxKcqwROvwnJ5YH8g==
+X-Google-Smtp-Source: AGHT+IGTGw8HnvT5D8+nH/KgquXG/RE7XEsMEneP3Lg56sqfViwsfnFVV4sR0gvqRyQwQNymy/UlduMSCG1+S/3he4Q=
+X-Received: by 2002:a05:6122:128b:b0:4b7:2c46:32bb with SMTP id
+ i11-20020a056122128b00b004b72c4632bbmr1337533vkp.13.1705583501195; Thu, 18
+ Jan 2024 05:11:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXKBGWIqllGLveBA--.44857S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tryUurWxJF18Zry5Cr17KFg_yoW8AFy7pr
-	s8XrWjyw1UKFn8uayUta1xu3W5W3Z3JFs7K3yxAw4FvrW3AwnrtFy09ayY9a1Yqr9IkrWS
-	vr4SqrWkAFyxCrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	fUouWlDUUUU
-X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
+References: <20240117160748.37682-1-brgl@bgdev.pl> <20240117160748.37682-5-brgl@bgdev.pl>
+ <65a7feb3ea48f_3b8e294bf@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <65a7feb3ea48f_3b8e294bf@dwillia2-xfh.jf.intel.com.notmuch>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 18 Jan 2024 14:11:30 +0100
+Message-ID: <CAMRc=McUdR5oVEpbwXF+Sc1OaEtYH-UCv0ScFwrbGyWtyh8W0A@mail.gmail.com>
+Subject: Re: [PATCH 4/9] PCI: create platform devices for child OF nodes of
+ the port node
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>, 
+	Robert Richter <rrichter@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Terry Bowman <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Li Lingfeng <lilingfeng3@huawei.com>
+On Wed, Jan 17, 2024 at 5:22=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
+com> wrote:
+>
+> Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > In order to introduce PCI power-sequencing, we need to create platform
+> > devices for child nodes of the port node. They will get matched against
+> > the pwrseq drivers (if one exists) and then the actual PCI device will
+> > reuse the node once it's detected on the bus.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> [..]
+> > diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> > index d749ea8250d6..77be0630b7b3 100644
+> > --- a/drivers/pci/remove.c
+> > +++ b/drivers/pci/remove.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include <linux/pci.h>
+> >  #include <linux/module.h>
+> > +#include <linux/of_platform.h>
+> >  #include "pci.h"
+> >
+> >  static void pci_free_resources(struct pci_dev *dev)
+> > @@ -18,11 +19,11 @@ static void pci_stop_dev(struct pci_dev *dev)
+> >       pci_pme_active(dev, false);
+> >
+> >       if (pci_dev_is_added(dev)) {
+> > -
+> >               device_release_driver(&dev->dev);
+> >               pci_proc_detach_device(dev);
+> >               pci_remove_sysfs_dev_files(dev);
+> >               of_pci_remove_node(dev);
+> > +             of_platform_depopulate(&dev->dev);
+> >
+> >               pci_dev_assign_added(dev, false);
+>
+> Why is pci_stop_dev() not in strict reverse order of
+> pci_bus_add_device()? I see that pci_dev_assign_added() was already not
+> in reverse "add" order before your change, but I otherwise would have
+> expected of_platform_depopulate() before of_pci_remove_node() (assumed
+> paired with of_pci_make_dev_node()).
 
-Commit 1a721de8489f ("block: don't add or resize partition on the disk
-with GENHD_FL_NO_PART") prevented all operations about partitions on disks
-with GENHD_FL_NO_PART in blkpg_do_ioctl() since they are meaningless.
-However, it changed error code in some scenarios. So move checking
-GENHD_FL_NO_PART to bdev_add_partition() to eliminate impact.
+The naming here is confusing but the two have nothing in common. One
+is used by CONFIG_PCI_DYNAMIC_OF_NODES to *create* new DT nodes for
+detected PCI devices. The one I'm adding, creates power sequencing
+*devices* (no nodes) for *existing* DT nodes.
 
-Fixes: 1a721de8489f ("block: don't add or resize partition on the disk with GENHD_FL_NO_PART")
-Reported-by: Allison Karlitskaya <allison.karlitskaya@redhat.com>
-Closes: https://lore.kernel.org/all/CAOYeF9VsmqKMcQjo1k6YkGNujwN-nzfxY17N3F-CMikE1tYp+w@mail.gmail.com/
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- block/ioctl.c           | 2 --
- block/partitions/core.c | 5 +++++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+So the order is not really relevant here but I can change in v2.
 
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 9c73a763ef88..438f79c564cf 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -20,8 +20,6 @@ static int blkpg_do_ioctl(struct block_device *bdev,
- 	struct blkpg_partition p;
- 	sector_t start, length;
- 
--	if (disk->flags & GENHD_FL_NO_PART)
--		return -EINVAL;
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EACCES;
- 	if (copy_from_user(&p, upart, sizeof(struct blkpg_partition)))
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index e6ac73617f3e..8bc68e8acafd 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -439,6 +439,11 @@ int bdev_add_partition(struct gendisk *disk, int partno, sector_t start,
- 		goto out;
- 	}
- 
-+	if (disk->flags & GENHD_FL_NO_PART) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
- 	if (partition_overlaps(disk, start, length, -1)) {
- 		ret = -EBUSY;
- 		goto out;
--- 
-2.39.2
-
+Bartosz
