@@ -1,106 +1,101 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B52E28DA0;
-	Thu, 18 Jan 2024 15:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF452942C;
+	Thu, 18 Jan 2024 15:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705591851; cv=none; b=cWidihGQL2gPAYVc5NlszCYfgy/9PH2sjp0POGbv6SR6hQL5fw6H5dWB8yxrIcgFAqYPborNtkfYK+MzAhucnt3IhzC4SPPg6VSuioO/3cN73O/K/qAX6vLJfB7HicQqLVW2VAr7i3EZeagZhIvzZWEiHQ6Xm1ZVZsWCpUNNdMk=
+	t=1705591855; cv=none; b=B7VeDWQ4/qNBEXuH2lAoEcJ+RREXLidUQpaGAudjNLqWt7m91GZFAsr2LgZ0MvTFJ6bhn28p4tRSlchS6e9nWJ2JgR7FnNYOm9VNXIqJmcNRMdhBYAv3eO1iq2ZK2B0+MAAa0N3WVDg96x0/KeQTZItPLQk2I4l664hseKl2BdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705591851; c=relaxed/simple;
-	bh=G6k5QZJJQlG0bYerdGXeKjq4mkXORrlnudd79/X2LTk=;
-	h=DKIM-Signature:Received:X-Originating-IP:Date:From:To:Cc:Subject:
-	 X-Priority:X-Mailer:In-Reply-To:References:X-NTES-SC:
-	 Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	 X-Coremail-Locale:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam; b=syJTaEOBFvPtcOT5VRc8DR/CXD4kRP5gW+mLjeS7QSRcbCC14LiIGscFsVp5w1n7TeCxdL22Z5RTbwqnAVusCfaTOO6yP7VPmHLTyopPKH0j6JEx5HGiZHXwMEMWuLnNj2emGaR2tiepTyBv0Y9Y9g6/eDNjM/xB7a5XyybiXV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=S6hIinqw reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1705591855; c=relaxed/simple;
+	bh=sR4Gjgkr5f7lPiJTtQ258jvkdgDh+7iqHe3YtVU7osI=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=AH9ar7TlL/7+Xs2rskiYxlVRQ5O/pcxV9Ny1x/uDAQm4H1hHNP9Tp4qJW99XWTETX74x5DMZEDRwnKq2GOxoZmsDJSnMZquyD/BfB6ly6iOhE7M/bljitRitN3CC795S4QCvZXwy011wL889guvbUdAaS3O8FVeBYKDyZnTlu1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XmgBfyTN; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="S6hIinqw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=k7Js3whNoafE8HpT3cEPOm4zEuKs34CQiNnMBORABp0=; b=S
-	6hIinqw23jHFwxAKOAU5qGQHxOREw3W6X30NvNIYKsGmIk18Xwgkm+GHALicqGef
-	5GnUPROJ8heXkUMMq9XC9JpIkjELInczRc27M+enynYc6n+bEZ/j8HS+gkwPaS+9
-	HRGp9buQHrl55Q3ljuFXpTSirzWb1oNfvgsKlAyr/Q=
-Received: from wangkeqi_chris$163.com ( [111.201.26.240] ) by
- ajax-webmail-wmsvr-40-112 (Coremail) ; Thu, 18 Jan 2024 23:14:38 +0800
- (CST)
-Date: Thu, 18 Jan 2024 23:14:38 +0800 (CST)
-From: wangkeqi  <wangkeqi_chris@163.com>
-To: "Florian Westphal" <fw@strlen.de>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	wangkeqi <wangkeqiwang@didiglobal.com>, 
-	"kernel test robot" <oliver.sang@intel.com>, fengwei.yin@intel.com
-Subject: Re:Re: [PATCH net v2] connector: Change the judgment conditions for
- clearing proc_event_num_listeners
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <20240117114713.GA11468@breakpoint.cc>
-References: <20240116015753.209781-1-wangkeqi_chris@163.com>
- <20240117114713.GA11468@breakpoint.cc>
-X-NTES-SC: AL_Qu2bB/mSv0As7iWRZOkXnEoUgeo7WMqyv/km3YVWOJ80oSTg6zo7YmB+JmrtwMeALyS9rweaXBxhwcd4ZrhcW4ElP3INjEFyUfe1Gu3jlwAj
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmgBfyTN"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-559de6145c3so2036696a12.1;
+        Thu, 18 Jan 2024 07:30:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705591852; x=1706196652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sR4Gjgkr5f7lPiJTtQ258jvkdgDh+7iqHe3YtVU7osI=;
+        b=XmgBfyTNhg8BzestlRjRm/5P9kywEB1yQtIftRj8gzFiohuv6Mb3fCCjrArry80Prz
+         6oXcFQWiBA8mVd3UuV0h/0qdLdtr64XlPN083iMfNEG8Y6NDs/PTvSZSgDCRWFcCT2XU
+         KvOaPC+Ep+pCoQWg0+wXu1qNg4g/7/aGDCxvwNmZTmbKudRkrwqstSFU+NGSGNkwI8Nl
+         pwrBWCyrCQbcoSmSTLnNBJYMQXFm9kdhNi03ImoGCn6rXXCrVDcqyolaZPt9CxDeSdrL
+         gcSYn9rgNrw/JKnoPpfPMEX+F1qm6PM+kmgOUoKr/y6tZpiUWKlw9myZIb6w8dGrcKT4
+         qoTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705591852; x=1706196652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sR4Gjgkr5f7lPiJTtQ258jvkdgDh+7iqHe3YtVU7osI=;
+        b=Lkx4V2tfIvbRyeSysqVEgXXT9Z1+d4fGkAkF7i0J1/fCxbGbivtfovaUDd1LLSOGaY
+         ab2ttiNEvEWfs77qDUcfGd/uUgeu26YzcjHlRo+szxQZuBO5cBjVbMTzlUQR3yLNVvr6
+         zUn8zSfiQj4mKZ0KQ51ninweOLAgiCIJ4aHrgrcXlueh5V2xYWvtWcERcnVKuBEFwURs
+         qdfmoumeZMWbbBLP9R6Q0On+NGKK8XvhLVVFSh6ux4fIV9Nuae3XJIG3qujWcsMJYWWz
+         /KtmrPILzzFn+YnXgEfg+jBNmHZa6GP5ht4A8bHsBzvsLlTeGA2x2AE7uWkeCcBNK9Ec
+         bViA==
+X-Gm-Message-State: AOJu0YzLqzFIk3KJGPi8tgZumiOIXMDD4ntm1pZpz3WtCT95WUYu0RNx
+	UHk3otR0VdbAQC3/OqwGR9Bm0LCEfRk5OtMEv6eq6p9rrk2l2sWmVgC3RwnS2OKVDB1akyJzUhy
+	N0l0Oe2pUDqDQ2LAyexpYWiJE+us=
+X-Google-Smtp-Source: AGHT+IF3+SHu0T6cDVGDTcp/GtaO4zkfkIK9JDPE9OwVQcUA6ZMTlisQ0pqI7xW+sE9ZnLJvvHg6Yb//GzmIF4eMKuI=
+X-Received: by 2002:a17:906:e958:b0:a2c:f60d:576f with SMTP id
+ jw24-20020a170906e95800b00a2cf60d576fmr533862ejb.50.1705591852402; Thu, 18
+ Jan 2024 07:30:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <1adb8c68.a950.18d1d237182.Coremail.wangkeqi_chris@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3f7ZeQKll52NNAA--.2272W
-X-CM-SenderInfo: 5zdqwy5htlsupkul2qqrwthudrp/xtbBzxBo3GV4Ha1t0wAEs8
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+References: <20240118152213.2644269-1-hugo@hugovil.com> <20240118152213.2644269-9-hugo@hugovil.com>
+In-Reply-To: <20240118152213.2644269-9-hugo@hugovil.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 18 Jan 2024 17:30:16 +0200
+Message-ID: <CAHp75Vf7j6_xPceGuDWB5Mno2eJreyyD8B4i4GyyiMyKZPiwLA@mail.gmail.com>
+Subject: Re: [PATCH v2 08/17] serial: max310x: use separate regmap name for
+ each port
+To: Hugo Villeneuve <hugo@hugovil.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	cosmin.tanislav@analog.com, shc_work@mail.ru, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
+	=?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-CklmIGNuX25ldGxpbmtfaGFzX2xpc3RlbmVycygpIGlzIHVzZWQgaW5zdGVhZCBvZiBwcm9jX2V2
-ZW50X251bV9saXN0ZW5lcnMsIEkgdGhpbmsgcHJvY19ldmVudF9udW1fbGlzdGVuZXJzIHdpbGwg
-YmUgY29tcGxldGVseSBtZWFuaW5nbGVzcy7CoApJIHJlYWQgdGhlIGNvZGUgYW5kIGZvdW5kIHRo
-YXQgdGhlcmUgaXMgbm90aGluZyB3cm9uZyB3aXRoIGNuX25ldGxpbmtfaGFzX2xpc3RlbmVycyBh
-cyBhIGp1ZGdtZW50IG9mIHdoZXRoZXIgdG8gc2VuZCBtc2cuwqAKc29ja19jbG9zZSB3aWxsIHVw
-ZGF0ZSB0aGUgbGlzdGVuZXJzLsKgVGhlIHByZXZpb3VzIHByb2NfZXZlbnRfbnVtX2xpc3RlbmVy
-cyBjb3VudCB3YXMgd3JvbmcsIG1ha2luZyBpdCBtZWFuaW5nbGVzcy7CoApCdXQgaWYgSSBjaGFu
-Z2UgaXQgdG8gY25fbmV0bGlua19oYXNfbGlzdGVuZXJzLCB3aWxsIGl0IGFmZmVjdCBzb21lIGxv
-dy1wcm9iYWJpbGl0eSBzY2VuYXJpb3M/CgoKQXQgMjAyNC0wMS0xNyAxOTo0NzoxMywgIkZsb3Jp
-YW4gV2VzdHBoYWwiIDxmd0BzdHJsZW4uZGU+IHdyb3RlOgo+d2FuZ2tlcWkgPHdhbmdrZXFpX2No
-cmlzQDE2My5jb20+IHdyb3RlOgo+PiBGcm9tOiB3YW5na2VxaSA8d2FuZ2tlcWl3YW5nQGRpZGln
-bG9iYWwuY29tPgo+PiAKPj4gSXQgaXMgaW5hY2N1cmF0ZSB0byBqdWRnZSB3aGV0aGVyIHByb2Nf
-ZXZlbnRfbnVtX2xpc3RlbmVycyBpcwo+PiBjbGVhcmVkIGJ5IGNuX25ldGxpbmtfc2VuZF9tdWx0
-IHJldHVybmluZyAtRVNSQ0guCj4+IEluIHRoZSBjYXNlIG9mIHN0cmVzcy1uZyBuZXRsaW5rLXBy
-b2MsIC1FU1JDSCB3aWxsIGFsd2F5cyBiZSByZXR1cm5lZCwKPj4gYmVjYXVzZSBuZXRsaW5rX2Jy
-b2FkY2FzdF9maWx0ZXJlZCB3aWxsIHJldHVybiAtRVNSQ0gsCj4+IHdoaWNoIG1heSBjYXVzZSBz
-dHJlc3MtbmcgbmV0bGluay1wcm9jIHBlcmZvcm1hbmNlIGRlZ3JhZGF0aW9uLgo+PiBUaGVyZWZv
-cmUsIHRoZSBqdWRnbWVudCBjb25kaXRpb24gaXMgbW9kaWZpZWQgdG8gd2hldGhlcgo+PiB0aGVy
-ZSBpcyBhIGxpc3RlbmVyLgo+PiAKPj4gUmVwb3J0ZWQtYnk6IGtlcm5lbCB0ZXN0IHJvYm90IDxv
-bGl2ZXIuc2FuZ0BpbnRlbC5jb20+Cj4+IENsb3NlczogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-b2UtbGtwLzIwMjQwMTExMjI1OS5iMjNhMTU2Ny1vbGl2ZXIuc2FuZ0BpbnRlbC5jb20KPj4gRml4
-ZXM6IGM0NmJmYmExMzMgKCJjb25uZWN0b3I6IEZpeCBwcm9jX2V2ZW50X251bV9saXN0ZW5lcnMg
-Y291bnQgbm90IGNsZWFyZWQiKQo+PiBTaWduZWQtb2ZmLWJ5OiB3YW5na2VxaSA8d2FuZ2tlcWl3
-YW5nQGRpZGlnbG9iYWwuY29tPgo+PiBDYzogZmVuZ3dlaS55aW5AaW50ZWwuY29tCj4+IC0tLQo+
-PiAgZHJpdmVycy9jb25uZWN0b3IvY25fcHJvYy5jICAgfCA2ICsrKystLQo+PiAgZHJpdmVycy9j
-b25uZWN0b3IvY29ubmVjdG9yLmMgfCA2ICsrKysrKwo+PiAgaW5jbHVkZS9saW51eC9jb25uZWN0
-b3IuaCAgICAgfCAxICsKPj4gIDMgZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMiBk
-ZWxldGlvbnMoLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nvbm5lY3Rvci9jbl9wcm9j
-LmMgYi9kcml2ZXJzL2Nvbm5lY3Rvci9jbl9wcm9jLmMKPj4gaW5kZXggM2Q1ZTZkNzA1Li5iMDlm
-NzRlZDMgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvY29ubmVjdG9yL2NuX3Byb2MuYwo+PiArKysg
-Yi9kcml2ZXJzL2Nvbm5lY3Rvci9jbl9wcm9jLmMKPj4gQEAgLTEwOCw4ICsxMDgsMTAgQEAgc3Rh
-dGljIGlubGluZSB2b2lkIHNlbmRfbXNnKHN0cnVjdCBjbl9tc2cgKm1zZykKPj4gIAkJZmlsdGVy
-X2RhdGFbMV0gPSAwOwo+PiAgCX0KPj4gIAo+PiAtCWlmIChjbl9uZXRsaW5rX3NlbmRfbXVsdCht
-c2csIG1zZy0+bGVuLCAwLCBDTl9JRFhfUFJPQywgR0ZQX05PV0FJVCwKPj4gLQkJCSAgICAgY25f
-ZmlsdGVyLCAodm9pZCAqKWZpbHRlcl9kYXRhKSA9PSAtRVNSQ0gpCj4+ICsJaWYgKG5ldGxpbmtf
-aGFzX2xpc3RlbmVycyhnZXRfY2Rldl9ubHMoKSwgQ05fSURYX1BST0MpKQo+PiArCQljbl9uZXRs
-aW5rX3NlbmRfbXVsdChtc2csIG1zZy0+bGVuLCAwLCBDTl9JRFhfUFJPQywgR0ZQX05PV0FJVCwK
-Pj4gKwkJCSAgICAgY25fZmlsdGVyLCAodm9pZCAqKWZpbHRlcl9kYXRhKTsKPj4gKwllbHNlCj4+
-ICAJCWF0b21pY19zZXQoJnByb2NfZXZlbnRfbnVtX2xpc3RlbmVycywgMCk7Cj4KPkhvdyBpcyB0
-aGF0IHNlcmlhbGl6ZWQgdnMuIGNuX3Byb2NfbWNhc3RfY3RsPwo+Cj4xLiBuZXRsaW5rX2hhc19s
-aXN0ZW5lcnMoKSByZXR1cm5zIGZhbHNlCj4yLiAgb3RoZXIgY29yZSBoYW5kbGVzIFBST0NfQ05f
-TUNBU1RfTElTVEVOLCBhdG9taWNfaW5jIGNhbGxlZAo+My4gVGhpcyBjb3JlIChyZSlzZXRzIGNv
-dW50ZXIgdG8gMCwgYnV0IHRoZXJlIGFyZSBsaXN0ZW5lcnMsIHNvCj4gICAgYWxsIGZ1bmN0aW9u
-cyB0aGF0IGRvCj4KPiBpZiAoYXRvbWljX3JlYWQoJnByb2NfZXZlbnRfbnVtX2xpc3RlbmVycykg
-PCAxKQo+ICAgIHJldHVybjsKPgo+d2lsbCBub3QgZ2V0IGVuYWJsZWQvcmVtYWluIGRpc2FibGVk
-Lgo+Cj5Qcm9iYWJseSBiZXR0ZXIgdG8gYWRkIGNuX25ldGxpbmtfaGFzX2xpc3RlbmVycygpIGZ1
-bmN0aW9uCj5hbmQgdXNlIHRoYXQgaW5zdGVhZCBvZiB0aGUgKGluYWNjdXJhdGUpIGNvdW50ZXI/
-Cg==
+On Thu, Jan 18, 2024 at 5:22=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> =
+wrote:
+>
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+>
+> Use a separate regmap name for each port so they can each have their own
+> debugfs entry, allowing to access each port registers independently.
+>
+> For example, a four channels/ports device like the MAX14830 will have fou=
+r
+> entries in its regmap debugfs:
+>
+> $ find /sys/kernel/debug/regmap -type d | grep spi0.0
+
+Just a side note for the future. The above is an example of "Useless
+use of grep".
+`find` has a `-name` parameter for such, using `find ...-name
+'spi0.0*'` makes the grep unnecessary.
+
+> /sys/kernel/debug/regmap/spi0.0-port0
+> /sys/kernel/debug/regmap/spi0.0-port1
+> /sys/kernel/debug/regmap/spi0.0-port2
+> /sys/kernel/debug/regmap/spi0.0-port3
+
+--=20
+With Best Regards,
+Andy Shevchenko
