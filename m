@@ -1,103 +1,175 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95E86286AF;
-	Thu, 18 Jan 2024 15:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E2061E532
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 15:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705590844; cv=none; b=pxLUadBW0Jh2+kY/A3FS6zNwolavrGTWQTJ/pQBvid7gv8UykSzl3Yg1D2UGAPg2O7htYprcqAQYdOx3BjS7frE7iEkDq/vIN/eMKW+cMXtBeZ97w1i+Ax7iggaVOJBO2bPeXFnO/idWunqrW1yOEQ51pwoYy25fXqsqyqrMJS4=
+	t=1705590952; cv=none; b=TMEgRtvZ4L7NffPER/uQ3DEDVd912Y6uHIZZ8IYNBi3h0P6JUMx4xPps2gg9aofhghiu1KNHK1+552QneL59+dZ1Q+1HnPRJfuJSWgomXQmY9uwpa6qdSQ82yN48SI3WfLw1DkkSjE0BYI/XO3KKmYlVHxPvl7agbnSeQcCS+no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705590844; c=relaxed/simple;
-	bh=Kp2BlCBZMsuGi/OMB6tp4CaDWFkRha05w33XL2xn/Ws=;
-	h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
-	 X-CM-SenderInfo; b=j4XwqmUIRiv8R8veNoW0lLmtUS9W4iw7HbGd0beTt8PfR61oUvpZhNArowMScI/ISmjkoI5OxB5e2VE9PPCaJXAT5jNo+Ua6b8gT6ywvivdv8iARNBmifkLHB8f3O4bjqIwSJpFbCiTm/Hkf/q96kwQPEhj8dKTS+OT7a5vWRdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [183.159.169.110])
-	by mail-app4 (Coremail) with SMTP id cS_KCgDHwX8gQKllMBo+AA--.10025S2;
-	Thu, 18 Jan 2024 23:13:37 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kate Hsuan <hpa@redhat.com>,
-	Dan Carpenter <error27@gmail.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Brent Pappas <bpappas@pappasbrent.com>,
-	Alan Cox <alan@linux.intel.com>,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] media: atomisp: ssh_css: Fix a null-pointer dereference in load_video_binaries
-Date: Thu, 18 Jan 2024 23:13:00 +0800
-Message-Id: <20240118151303.3828292-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1705590952; c=relaxed/simple;
+	bh=/hJ+jFjPcZBpWrtzOj9idrYCeyAyNSL3T466ON4vT4M=;
+	h=Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
+	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=JkYFTENi//nHBaPY5WJBwk9Ecocm02RNjjQhDO35ixZ/m3MnCzWCbKjkN5rczcVVIV/gvuyTeckVZM9ufgEmg7TZNbWHCChvacfauWsJ8GRNgtplA6E5dk7L97rAvzOwhhT29QTtWu5yuRicsROOWU2ejgI4A/UKlA/EJJ8f83w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E4711042;
+	Thu, 18 Jan 2024 07:16:27 -0800 (PST)
+Received: from [10.57.77.97] (unknown [10.57.77.97])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE12B3F73F;
+	Thu, 18 Jan 2024 07:15:37 -0800 (PST)
+Message-ID: <9e60b948-0044-4826-8551-0a3888650657@arm.com>
+Date: Thu, 18 Jan 2024 15:15:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cS_KCgDHwX8gQKllMBo+AA--.10025S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw15uw1xGrW5KF1xuF1rWFg_yoW8Xr17pF
-	48Aw1DCFWUXFn2kanIkry7GF90v34v9ay5W34vqa4F9a92ya4qqF15Kay5Gr9Yvr4DJ3yq
-	vFyYgrWUXF4FyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/13] mm/gup: Drop folio_fast_pin_allowed() in hugepd
+ processing
+Content-Language: en-GB
+To: Jason Gunthorpe <jgg@nvidia.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "peterx@redhat.com" <peterx@redhat.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ James Houghton <jthoughton@google.com>, David Hildenbrand
+ <david@redhat.com>, "Kirill A . Shutemov" <kirill@shutemov.name>,
+ Yang Shi <shy828301@gmail.com>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+ Rik van Riel <riel@surriel.com>, Andrea Arcangeli <aarcange@redhat.com>,
+ Axel Rasmussen <axelrasmussen@google.com>, Mike Rapoport <rppt@kernel.org>,
+ John Hubbard <jhubbard@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Michael Ellerman <mpe@ellerman.id.au>, Andrew Jones
+ <andrew.jones@linux.dev>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ Mike Kravetz <mike.kravetz@oracle.com>, Muchun Song <muchun.song@linux.dev>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, Christoph Hellwig
+ <hch@infradead.org>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>
+References: <20240103091423.400294-1-peterx@redhat.com>
+ <20240103091423.400294-7-peterx@redhat.com>
+ <20240115183748.GR734935@nvidia.com>
+ <c60c9d88-33aa-4312-a23c-20206e503b6e@csgroup.eu>
+ <20240116123138.GZ734935@nvidia.com>
+ <44e450cb-5d3f-407e-97a3-024eb936f74b@csgroup.eu>
+ <20240117132243.GG734935@nvidia.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240117132243.GG734935@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The allocation failure of mycs->yuv_scaler_binary in load_video_binaries
-is followed with a dereference of mycs->yuv_scaler_binary after the
-following call chain:
+On 17/01/2024 13:22, Jason Gunthorpe wrote:
+> On Tue, Jan 16, 2024 at 06:32:32PM +0000, Christophe Leroy wrote:
+>>>> hugepd is a page directory dedicated to huge pages, where you have huge
+>>>> pages listed instead of regular pages. For instance, on powerpc 32 with
+>>>> each PGD entries covering 4Mbytes, a regular page table has 1024 PTEs. A
+>>>> hugepd for 512k is a page table with 8 entries.
+>>>>
+>>>> And for 8Mbytes entries, the hugepd is a page table with only one entry.
+>>>> And 2 consecutive PGS entries will point to the same hugepd to cover the
+>>>> entire 8Mbytes.
+>>>
+>>> That still sounds alot like the ARM thing - except ARM replicates the
+>>> entry, you also said PPC relicates the entry like ARM to get to the
+>>> 8M?
+>>
+>> Is it like ARM ? Not sure. The PTE is not in the PGD it must be in a L2 
+>> directory, even for 8M.
+> 
+> Your diagram looks almost exactly like ARM to me.
+> 
+> The key thing is that the address for the L2 Table is *always* formed as:
+> 
+>    L2 Table Base << 12 + L2 Index << 2 + 00
+> 
+> Then the L2 Descriptor must contains bits indicating the page
+> size. The L2 Descriptor is replicated to every 4k entry that the page
+> size covers.
+> 
+> The only difference I see is the 8M case which has a page size greater
+> than a single L1 entry.
+> 
+>> Yes that's how it works on powerpc. For 8xx we used to do that for both 
+>> 8M and 512k pages. Now for 512k pages we do kind of like ARM (which 
+>> means replicating the entry 128 times) as that's needed to allow mixing 
+>> different page sizes for a given PGD entry.
+> 
+> Right, you want to have granular page sizes or it becomes unusable in
+> the general case
+>  
+>> But for 8M pages that would mean replicating the entry 2048 times. 
+>> That's a bit too much isn't it ?
+> 
+> Indeed, de-duplicating the L2 Table is a neat optimization.
+> 
+>>> So if you imagine a pmd_leaf(), pmd_leaf_size() and a pte_leaf_size()
+>>> that would return enough information for both.
+>>
+>> pmd_leaf() ? Unless I'm missing something I can't do leaf at PMD (PGD) 
+>> level. It must be a two-level process even for pages bigger than a PMD 
+>> entry.
+> 
+> Right, this is the normal THP/hugetlb situation on x86/etc. It
+> wouldn't apply here since it seems the HW doesn't have a bit in the L1
+> descriptor to indicate leaf.
+> 
+> Instead for PPC this hugepd stuff should start to follow Ryan's
+> generic work for ARM contig:
+> 
+> https://lore.kernel.org/all/20231218105100.172635-1-ryan.roberts@arm.com/
+> 
+> Specifically the arch implementation:
+> 
+> https://lore.kernel.org/linux-mm/20231218105100.172635-15-ryan.roberts@arm.com/
+> 
+> Ie the arch should ultimately wire up the replication and variable
+> page size bits within its implementation of set_ptes(). set_ptes()s
+> gets a contiguous run of address and should install it with maximum
+> use of the variable page sizes. The core code will start to call
+> set_ptes() in more cases as Ryan gets along his project.
 
-sh_css_pipe_load_binaries
-  |-> load_video_binaries (mycs->yuv_scaler_binary == NULL)
-  |
-  |-> sh_css_pipe_unload_binaries
-        |-> unload_video_binaries
+Note that it's not just set_ptes() that you want to batch; there are other calls
+that can benefit too. See patches 2 and 3 in the series you linked. (although
+I'm working with DavidH on this and the details are going to change a little).
 
-In unload_video_binaries, it calls to ia_css_binary_unload with argument
-&pipe->pipe_settings.video.yuv_scaler_binary[i], which refers to the
-same memory slot as mycs->yuv_scaler_binary. Thus, a null-pointer
-dereference is triggered.
+> 
+> For the purposes of GUP, where are are today and where we are going,
+> it would be much better to not have a special PPC specific "hugepd"
+> parser. Just process each of the 4k replicates one by one like ARM is
+> starting with.
+> 
+> The arch would still have to return the correct page address from
+> pte_phys() which I think Ryan is doing by having the replicates encode
+> the full 4k based address in each entry.
 
-Fixes: a49d25364dfb ("staging/atomisp: Add support for the Intel IPU v2")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
-Changelog:
+Yes; although its actually also a requirement of the arm architecture. Since the
+contig bit is just a hint that the HW may or may not take any notice of, the
+page tables have to be correct for the case where the HW just reads them in base
+pages. Fixing up the bottom bits should be trivial using the PTE pointer, if
+needed for ppc.
 
-v2: change fix approach to set mycs->num_yuv_scaler = 0 in
-load_video_binaries. Change the fix tag to correct commit.
----
- drivers/staging/media/atomisp/pci/sh_css.c | 1 +
- 1 file changed, 1 insertion(+)
+> The HW will ignore those low
+> bits and pte_phys() then works properly. This would work for PPC as
+> well, excluding the 8M optimization.
+> 
+> Going forward I'd expect to see some pte_page_size() that returns the
+> size bits and GUP can have logic to skip reading replicates.
 
-diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-index f35c90809414..638f08b3f21b 100644
---- a/drivers/staging/media/atomisp/pci/sh_css.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css.c
-@@ -4719,6 +4719,7 @@ static int load_video_binaries(struct ia_css_pipe *pipe)
- 						  sizeof(struct ia_css_binary),
- 						  GFP_KERNEL);
- 		if (!mycs->yuv_scaler_binary) {
-+			mycs->num_yuv_scaler = 0;
- 			err = -ENOMEM;
- 			return err;
- 		}
--- 
-2.34.1
+Yes; pte_batch_remaining() in patch 2 is an attempt at this. But as I said the
+details will likely change a little.
+
+> 
+> The advantage of all this is that it stops making the feature special
+> and the work Ryan is doing to generically push larger folios into
+> set_ptes will become usable on these PPC platforms as well. And we can
+> kill the PPC specific hugepd.
+> 
+> Jason
 
