@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1051D53B;
-	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF471F93F;
+	Thu, 18 Jan 2024 08:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705566180; cv=none; b=irG1SKnxDGVsg5fbnngRd/2DMbKPF+v0p4a3EubzcNSIw/3wUP+7uUxc8PryYCUUCs/F8P3vKsEeEBDIJA2fydY8tBmKE0zhfW0VzYbpLNWIQzSbXdN6ISX3JfymwBHTZpM7W0Gy89tCUiDAJ3vEYPb/v0gHYjOCTJpjg6aMRk4=
+	t=1705566180; cv=none; b=MH/i62ONQ8JZeDVNKICugUt2YCx9MShAzzDH1JjUA/uv4ATYKaPoAAqpwAKfuHrcgw+5zwdyP7HGnH1+6az7d3qi5oziDZw2TnW4SzoIoEv+VmKXzgv21JKKXqhFMssQzzNUTpIXRdiBhJqdrEm8xvXbxkZD0X9EmLWwVAA0PMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705566180; c=relaxed/simple;
-	bh=z8ZWhs/5zvx3G6R8b4jbvSH/4gHgw6KY8ml450z0UoI=;
+	bh=XRF+V2sXxESLFZ4PXmdnkTRjQnltJI55wSg9W1jq2SY=;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Endpoint-Received:X-Original-From:Reply-To; b=ok1srWmVEUf7Qmjcqq8gxvB+LlDk/CcUi4E5VxbKFvspY0ayWzJ9aO3IzEvkZS38zYsjuCid4dzgm1m89xS2NQQNTb6eyt1Rn0KklvIB7N3J9YuGqNs4z2KlYC8ad/RGHP6YNRvcU1MlC84nVru9vcOUDFV2gZp9xgG1uSV+MgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXc38j1v; arc=none smtp.client-ip=10.30.226.201
+	 X-Endpoint-Received:X-Original-From:Reply-To; b=IKAMCPyknBBA5WJ2eSBy9yzarUp9r1Pa0A53X4RJzPa8jYv8MS55ILl91v8WV8hP8wc4gxNqBfsRapiP//fuJNo+Lgf4Mw7/c8mHy4TDY8egLYVPRYS5sCL+RREzhMEvr4J/Km7ATGBuZjy8CckONaGkBoCrvKrJ4mB3BrtIMAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qfIBw6f1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXc38j1v"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C532FC4AF69;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qfIBw6f1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EBF4AC3279E;
 	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705566179;
-	bh=z8ZWhs/5zvx3G6R8b4jbvSH/4gHgw6KY8ml450z0UoI=;
+	s=k20201202; t=1705566180;
+	bh=XRF+V2sXxESLFZ4PXmdnkTRjQnltJI55wSg9W1jq2SY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ZXc38j1vrJJgeg/2Z50HDuv7OfUkCYRnOx91SzVe00S423JHJtIoRbXQ2fgYKT2lB
-	 /JR67prOkaZcXN/jBzD9zVT3571LxAhbb86tBPYfVYlhhLyUt1Sg1/f90OiDHPNolb
-	 OC2Fl4PCC7CaUA/2OPMwVaJK0u08tz3h0Tl13TRFfDzwZ61bkN9aSRYkm4Pi+vGKp4
-	 5wIIW/+1c7w+GqeHdoKk69NsW9LLPHbbQOzCHfH/sGkP1q52BWnVetcjAlWVa/ZEv8
-	 DBHFAMewvPTiiRE722j2vYCeJ0DG0nfzpPYfe81A8fjAcXbvVqoz4OBbrbXERx1I8R
-	 BkSfFmUMueyhw==
+	b=qfIBw6f1xIyxvfg8e2GJgp/fjTWlMXrvF/iTpo5w48BMvefli1FooCtBtffPGz1ba
+	 AJSHPm+63xTFbNvy5lOz5b2AiKWdb8l+4ihAjibiXV8R9hv/Zsw9v02rRdMwtXzKFb
+	 BB5LJSdlR3j/xiznpjnfBBtzx4dbbylIYF950PiuWAMTBXCaaKzt3F+8s9SHXlGNJm
+	 dfX+V/2xVFFcuWFrKLBvCdUbgzkmbbmEp4mlnsgRpoBF31Nt1L8s6zI3FgfP8YHDis
+	 X726LGqM8vKDlrWt4kgvuXYpN1Go2x9Ui5mHj57CzJDpnsIEsnQQo7f28VJ5BAA4bw
+	 aK/BzxighOXgw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61DDC47DB3;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2B5C47DCF;
 	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 From:
  Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Thu, 18 Jan 2024 11:21:06 +0300
-Subject: [PATCH v7 23/39] dt-bindings: input: Add Cirrus EP93xx keypad
+Date: Thu, 18 Jan 2024 11:21:10 +0300
+Subject: [PATCH v7 27/39] ASoC: dt-bindings: ep93xx: Document DMA support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,23 +43,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240118-ep93xx-v7-23-d953846ae771@maquefel.me>
+Message-Id: <20240118-ep93xx-v7-27-d953846ae771@maquefel.me>
 References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
 In-Reply-To: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+To: Hartley Sweeten <hsweeten@visionengravers.com>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
  Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Arnd Bergmann <arnd@arndb.de>, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=3131;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=1224;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=BmV75DVRygMtC4JmBqsWTX4r3uOQf/4IH1RLZhibCAg=; =?utf-8?q?b=3DOBawJ32qPb0E?=
- =?utf-8?q?pmaY5WJpsBDFeavQvwN3PHyH+NIqjt/H1+PnPgIJ/GBO3Bb5/hICNfBlEkSZyFqi?=
- xZdjr1jjCselO2y/Rqr1RLoqITzCOf24ZseR7VbjkoS2DE9XPipk
+ bh=wr/vd6cvCnFly70ysS4iWWMOpIK2XGwrRTm9djXX73Y=; =?utf-8?q?b=3D5BK4ou90b75h?=
+ =?utf-8?q?8YMCk1k2YTaRK1prEVw9ypyTU0ek0nSj/tkqJsie5s2TaedrPAr9mYMkaqgpjh9i?=
+ WFKJ9kFUCQ89gaW99IW0xZjghzO6srOsfIMJjesJjIebpkt3RdDs
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received:
@@ -69,107 +71,45 @@ Reply-To: <nikita.shubin@maquefel.me>
 
 From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Add YAML bindings for ep93xx SoC keypad.
+Document DMA support in binding document.
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
- .../bindings/input/cirrus,ep9307-keypad.yaml       | 87 ++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+ .../devicetree/bindings/sound/cirrus,ep9301-i2s.yaml         | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/cirrus,ep9307-keypad.yaml b/Documentation/devicetree/bindings/input/cirrus,ep9307-keypad.yaml
-new file mode 100644
-index 000000000000..a0d2460c55ab
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/cirrus,ep9307-keypad.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/cirrus,ep9307-keypad.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,ep9301-i2s.yaml b/Documentation/devicetree/bindings/sound/cirrus,ep9301-i2s.yaml
+index 453d493c941f..36a320ddf534 100644
+--- a/Documentation/devicetree/bindings/sound/cirrus,ep9301-i2s.yaml
++++ b/Documentation/devicetree/bindings/sound/cirrus,ep9301-i2s.yaml
+@@ -40,6 +40,16 @@ properties:
+       - const: sclk
+       - const: lrclk
+ 
++  dmas:
++    items:
++      - description: out DMA channel
++      - description: in DMA channel
 +
-+title: Cirrus ep93xx keypad
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
 +
-+maintainers:
-+  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
-+
-+allOf:
-+  - $ref: /schemas/input/matrix-keymap.yaml#
-+
-+description:
-+  The KPP is designed to interface with a keypad matrix with 2-point contact
-+  or 3-point contact keys. The KPP is designed to simplify the software task
-+  of scanning a keypad matrix. The KPP is capable of detecting, debouncing,
-+  and decoding one or multiple keys pressed simultaneously on a keypad.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: cirrus,ep9307-keypad
-+      - items:
-+          - enum:
-+              - cirrus,ep9312-keypad
-+              - cirrus,ep9315-keypad
-+          - const: cirrus,ep9307-keypad
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  debounce-delay-ms:
-+    description: |
-+          Time in microseconds that key must be pressed or
-+          released for state change interrupt to trigger.
-+
-+  cirrus,prescale:
-+    description: row/column counter pre-scaler load value
-+    $ref: /schemas/types.yaml#/definitions/uint16
-+    maximum: 1023
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - linux,keymap
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/input/input.h>
-+    #include <dt-bindings/clock/cirrus,ep9301-syscon.h>
-+    keypad@800f0000 {
-+        compatible = "cirrus,ep9307-keypad";
-+        reg = <0x800f0000 0x0c>;
-+        interrupt-parent = <&vic0>;
-+        interrupts = <29>;
-+        clocks = <&eclk EP93XX_CLK_KEYPAD>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&keypad_default_pins>;
-+        linux,keymap = <KEY_UP>,
-+                       <KEY_DOWN>,
-+                       <KEY_VOLUMEDOWN>,
-+                       <KEY_HOME>,
-+                       <KEY_RIGHT>,
-+                       <KEY_LEFT>,
-+                       <KEY_ENTER>,
-+                       <KEY_VOLUMEUP>,
-+                       <KEY_F6>,
-+                       <KEY_F8>,
-+                       <KEY_F9>,
-+                       <KEY_F10>,
-+                       <KEY_F1>,
-+                       <KEY_F2>,
-+                       <KEY_F3>,
-+                       <KEY_POWER>;
-+    };
+ required:
+   - compatible
+   - '#sound-dai-cells'
+@@ -61,6 +71,8 @@ examples:
+                  <&syscon 30>,
+                  <&syscon 31>;
+         clock-names = "mclk", "sclk", "lrclk";
++        dmas = <&dma0 0 1>, <&dma0 0 2>;
++        dma-names = "tx", "rx";
+     };
+ 
+ ...
 
 -- 
 2.41.0
