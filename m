@@ -1,36 +1,36 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195212C87B;
-	Thu, 18 Jan 2024 15:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C482D021;
+	Thu, 18 Jan 2024 15:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705593200; cv=none; b=B0Er9kCMGYdla++jU0c3qGIQhqYv78fBuDbCNAgJjBv0gz0e5Q2YHacY9MtlrYBFeM011cunItxUTFy4ItyBP967j4NAvNxnkZe7RFrxqzvPxyRDqWUmu6N+XFHOZGuGDZ5NJmLbCQgSs+Uf8Kbr8zD/2WcSPSIwxnAMgBH1q+o=
+	t=1705593200; cv=none; b=ToRgF6u5ZXVo0GQ5csI9W3k5wp24GPX6ZdzUDNPlmXL0Ps+H5mMMf+HltvIZTI2OntO2JEs6myudA7m/0S1YCtkglxhEvVHcILVYsWAl03Fr7H0fyY3HYEopk8KIZzvNPynrxQT22Xy0HraoaQZDdwpZgfuf/4P+6QTg5BMvgGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705593200; c=relaxed/simple;
-	bh=xzQLFAs+rRFfxr6J7S8JlG4vDnB1j5DDn8mbNfzk1ls=;
+	bh=zkHzvVhKkqmhHXMYvIXk97BK8Hudfzm2zXC5uewsDi0=;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-GND-Sasl; b=HZh0jxGKM+g+KVIq5lMsVgcvPLPoJnx6C98NSSb71+VOG+VOZ5lAI9oUK7qUIBS0bEDMPlLiAZOO8q3KXQb7bqA0IrNASGbGWT89uXVHe459nUFWYD3chFM/MbolqBhToiHi9uTk5hjgHP35JD5Jr04o+ppSmzF14kbNgMH1HoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ao9vC9F3; arc=none smtp.client-ip=217.70.183.199
+	 Content-Transfer-Encoding:X-GND-Sasl; b=KPjbILItP2CpqrJqOvmS/e+MEO0qf7yNcCPZFi4RzGl/y6EMVUb5D2BfhoN0+4T/PFECBKzHMncHfCkfVQjEfrpcp8yegemc/RjfWLeUPDGZ7hhHR4fN6B6+pfUJsX2TfC7YwT3lJxLd+vJN+LFX8m6ZOQKxxBUTGHHUWMzmyco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m03HPZLJ; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ao9vC9F3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 80730FF80E;
-	Thu, 18 Jan 2024 15:53:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m03HPZLJ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CBB0AE0008;
+	Thu, 18 Jan 2024 15:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705593196;
+	t=1705593191;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rupw/qNEahXEF1JzKP5nTnlz5TBibUxNV4VZL8oYtQI=;
-	b=ao9vC9F3NhLvnS+h+nvf1DYYi5HsezeiClWz1wX3PjBn/BWKmrit20JSNsmrHIkuOTu1Yb
-	BZ6iFqFt9YW3WRraVqFvbgHbTLUEnXjN/iXcCOuVM0JGhqAsggYz30pLzLAICrCTfe8Tzu
-	wj5Hn1HJeJCDSr50BqCccnFZC21aidsVtGfCYBO48Kxl6NAN1PU7MRcxS4cU4rrtLfd6Gj
-	KWa0esBoJWs6Y0eWt08yc80crAWOaqQjn/flEBVpB3QEapu1iShNIUZVg6VUUf9nyOKs9K
-	HwOsYx6IEuNSvFJ2W6OlRJVSviHY1VO/T2UrTeAaAU28AzkExEIv3Z91l3fNlg==
+	bh=lbVsbmHE4CGNjOWLyfslnCmWW1EMalEIZK9eUB8mHKE=;
+	b=m03HPZLJGGZzR0nGC6CmmyVbkycBEN896zgtCF/JeExvmK9+IvWaNPFjqHXLToMqYoAe3r
+	YuBDwidAECZxSchieL2eyhTkcF30v8pksFvRT+TigBQ7iM68hA58qPc3fCrxtLCYGJo6i9
+	+AfClGfXd1AYm1fekdAVXF3xd8CxzvuCH7QpEf8mDDUYq5UhebhJtQ1Xh1w3vtUsyRoUM7
+	cNZ73+4YK2G16Wxn2+dMjhMBSImOkUNXhRsA+VTSR7Vh+ad+/KzeyAv8d0JV/1BZdjAzLr
+	Fm2be0L0vqixc86+Kp0bIW7FPHtDJNw8raRH6md6q+G+VaZX/8dTF6m2S5yUaw==
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
 To: Paul Burton <paulburton@kernel.org>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -45,10 +45,12 @@ Cc: Vladimir  Kondratiev <vladimir.kondratiev@mobileye.com>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v6 12/15] MIPS: mobileye: Add EPM5 device tree
-Date: Thu, 18 Jan 2024 16:52:41 +0100
-Message-ID: <20240118155252.397947-13-gregory.clement@bootlin.com>
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v6 07/15] dt-bindings: mips: cpus: Sort the entries
+Date: Thu, 18 Jan 2024 16:52:36 +0100
+Message-ID: <20240118155252.397947-8-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240118155252.397947-1-gregory.clement@bootlin.com>
 References: <20240118155252.397947-1-gregory.clement@bootlin.com>
@@ -61,56 +63,49 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: gregory.clement@bootlin.com
 
-Add a device tree for the Mobileye EPM5 evaluation board.
+The entries were nearly sorted but there were still some entries at
+the wrong places. Let's fix it.
 
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- arch/mips/boot/dts/mobileye/Makefile       |  4 ++++
- arch/mips/boot/dts/mobileye/eyeq5-epm5.dts | 24 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 arch/mips/boot/dts/mobileye/Makefile
- create mode 100644 arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
+ Documentation/devicetree/bindings/mips/cpus.yaml | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/mips/boot/dts/mobileye/Makefile b/arch/mips/boot/dts/mobileye/Makefile
-new file mode 100644
-index 0000000000000..01c01c3aad81d
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright 2023 Mobileye Vision Technologies Ltd.
-+
-+dtb-$(CONFIG_MACH_EYEQ5)		+= eyeq5-epm5.dtb
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts b/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
-new file mode 100644
-index 0000000000000..ff16c3c760a19
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/*
-+ * Copyright 2023 Mobileye Vision Technologies Ltd.
-+ */
-+
-+/dts-v1/;
-+
-+#include "eyeq5.dtsi"
-+
-+/ {
-+	compatible = "mobileye,eyeq5-epm5", "mobileye,eyeq5";
-+	model = "Mobile EyeQ5 MP5 Evaluation board";
-+
-+	chosen {
-+		bootargs = "earlycon";
-+		stdout-path = "serial2:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x08000000 0x0 0x08000000>,
-+		      <0x8 0x00000000 0x0 0x78000000>;
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/mips/cpus.yaml b/Documentation/devicetree/bindings/mips/cpus.yaml
+index cf382dea3922c..9bc47868d28b6 100644
+--- a/Documentation/devicetree/bindings/mips/cpus.yaml
++++ b/Documentation/devicetree/bindings/mips/cpus.yaml
+@@ -23,22 +23,22 @@ properties:
+       - brcm,bmips4380
+       - brcm,bmips5000
+       - brcm,bmips5200
+-      - ingenic,xburst-mxu1.0
+       - ingenic,xburst-fpu1.0-mxu1.1
+       - ingenic,xburst-fpu2.0-mxu2.0
++      - ingenic,xburst-mxu1.0
+       - ingenic,xburst2-fpu2.1-mxu2.1-smt
+       - loongson,gs264
+       - mips,m14Kc
+-      - mips,mips4Kc
+-      - mips,mips4KEc
+-      - mips,mips24Kc
++      - mips,mips1004Kc
+       - mips,mips24KEc
++      - mips,mips24Kc
++      - mips,mips4KEc
++      - mips,mips4Kc
+       - mips,mips74Kc
+-      - mips,mips1004Kc
+       - mti,interaptiv
+-      - mti,mips24KEc
+       - mti,mips14KEc
+       - mti,mips14Kc
++      - mti,mips24KEc
+ 
+   reg:
+     maxItems: 1
 -- 
 2.43.0
 
