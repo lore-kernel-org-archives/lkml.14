@@ -1,115 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312C725756
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 14:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0487425756;
+	Thu, 18 Jan 2024 14:04:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705586591; cv=none; b=RnGsrSWFrj91jnLODSJ54GtREs3AZHmbU6W0e1gDy8R0q9GnYCxnqcn0CZgo+Ve8358U5N5SttK8O2Hn2gCNolhM3oTnDACk9vif97eOU3Tl9AfYnnbfDBZ8W9vkxY8nfcObkMvq+7Wdzb8oLi1LcmOYLPyUYlqx34XqkN4tfHI=
+	t=1705586647; cv=none; b=sDOcOgs0HJhPgzJMFDjREJk6msnKoooQY9l47WHDMqhMx3k5Xw5sAvVPP/cfzxuXBzLcOQtw7sY0TbjrB9tZwsFbmgw9YgRh+M/SEv7S/fSCxPETDH1jrSDtB+9Z4LH7n5QNCdXtMLhMyA/xzHxBAHoDGSvDiGKwSAGmgQnNmlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705586591; c=relaxed/simple;
-	bh=uhV16wnieYwv/Ds4uqX9IBESqkQ1oFL+RjEaWA4KddM=;
-	h=Received:DKIM-Signature:Received:Date:Message-ID:From:To:Cc:
-	 Subject:In-Reply-To:References:User-Agent:MIME-Version:
-	 Content-Type:X-SA-Exim-Connect-IP:X-SA-Exim-Rcpt-To:
-	 X-SA-Exim-Mail-From:X-SA-Exim-Scanned; b=DvbWsx+8R2HFMesRsHajr3oKiXQSvFsNThnDWxOvTrQJBzBIkG5S8ucsFATjmXd+iPQhHsISDZaTWvxA/S+RFYZvctRF6n8gtXQjdtlA8yE8eS6RcSihp6+m/ePNImAybviFy2UKz5bsp6DtcVcEdhp6eumtRfMs+KyxBLEcU2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MyZ1lXKP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705586647; c=relaxed/simple;
+	bh=CUg/TAW5ytfIjj6h763t+wFJWAbSx/xoyYthkV8NQsw=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=o8jx6fnVxTLeJZlobmeTzrxdWJCDLg4PoDBESZP/8M5uYASHPazazBtgEpzXKXITOgKcydjenbCB0FdGKoUnaQ5QMDWzpCMzXwsiMYVfwGL80d+mzHNYXKym5xVPfE9Y72paVMt0D6SORq0f7ANxGf1x2IkgMGMTaX1i3VblYDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMD+2c7m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MyZ1lXKP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E9BC433F1;
-	Thu, 18 Jan 2024 14:03:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMD+2c7m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235EFC433C7;
+	Thu, 18 Jan 2024 14:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705586591;
-	bh=uhV16wnieYwv/Ds4uqX9IBESqkQ1oFL+RjEaWA4KddM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MyZ1lXKP28PLpAfX//g87ugprOgymDbZMag0oNDVMYCk8JKdUtEdD+sF72DnS2770
-	 77465tOUq48RHtBN/m44kWSbYTlolVN15q2zyNhkhz0aaCF5rRpXv9nLAtJlb2rphi
-	 81crClnuY4BADUX7O3xjW596AMKNXB08yQ2NGLLevivW8a8GmTZod8x67ngnJldTzR
-	 +CYH6hkXiloFSTxCafkOz7JGGeGSH49ccPslYZCvAUvDBCvV1ihi+K4QlB9HXX5aDa
-	 AOxaAFCkPNKHcJ9fBCpF6laWVb925tPzMFwcoAxm22qiBsgIMzTTAwAw3snBEIbfTg
-	 ox/CzKJFPS5IA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rQSz6-00CiJP-Rb;
-	Thu, 18 Jan 2024 14:03:08 +0000
-Date: Thu, 18 Jan 2024 14:03:08 +0000
-Message-ID: <87zfx2wxgj.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Dawei Li <dawei.li@shingroup.cn>
-Cc: tglx@linutronix.de,
-	sdonthineni@nvidia.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	set_pte_at@outlook.com
-Subject: Re: [PATCH 2/4] irqchip/gic: Implement generic gic_irq() API for GIC & GIC-v3
-In-Reply-To: <20240118112739.2000497-3-dawei.li@shingroup.cn>
-References: <20240118112739.2000497-1-dawei.li@shingroup.cn>
-	<20240118112739.2000497-3-dawei.li@shingroup.cn>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1705586646;
+	bh=CUg/TAW5ytfIjj6h763t+wFJWAbSx/xoyYthkV8NQsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kMD+2c7m48E+1LfIfW+gz6LyGmuyZHIcsjo4I51x0Xi4IGHP+SSSKLhhuj8pELn/e
+	 gcEr8byzzO2s9rRHsI39ryc5D/qCW8NI1KH2Nl8LX2wWHNF81V6om2WgY8Wu9fU8sU
+	 eBWzg7CWnzrbmYt7IzUWTqOJnAz9OEDpSPYDC/DDE5r56LLFxBoAgtHIc1vfClonU4
+	 GhhkempOC9za8YIdB7a3HN/BzzaQBEIsaqPZZMy6pxp08wpvBv1543I2PuJlfsymnD
+	 bQAlyzsxkvz6cA6VzxFLSXgSbHX1e21brkbVw0GFg910JDMTY80FFPVnnk2el6rv6p
+	 j3iRVHA0xb/lw==
+Date: Thu, 18 Jan 2024 15:04:01 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org, jack@suse.cz, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: improve dump_mapping() robustness
+Message-ID: <20240118-etwas-anbruch-9075adb23bd2@brauner>
+References: <937ab1f87328516821d39be672b6bc18861d9d3e.1705391420.git.baolin.wang@linux.alibaba.com>
+ <20240118013857.GO1674809@ZenIV>
+ <ZaiJIIrzUR7qPkjC@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: dawei.li@shingroup.cn, tglx@linutronix.de, sdonthineni@nvidia.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, set_pte_at@outlook.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZaiJIIrzUR7qPkjC@casper.infradead.org>
 
-On Thu, 18 Jan 2024 11:27:37 +0000,
-Dawei Li <dawei.li@shingroup.cn> wrote:
-> 
-> GIC & GIC-v3 share same gic_irq() implementations, unify them into a
-> generic API.
-> 
-> Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> ---
->  drivers/irqchip/irq-gic-common.h | 5 +++++
->  drivers/irqchip/irq-gic-v3.c     | 5 -----
->  drivers/irqchip/irq-gic.c        | 5 -----
->  3 files changed, 5 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
-> index f407cce9ecaa..ed18db4ab2c5 100644
-> --- a/drivers/irqchip/irq-gic-common.h
-> +++ b/drivers/irqchip/irq-gic-common.h
-> @@ -19,6 +19,11 @@ struct gic_quirk {
->  	u32 mask;
->  };
->  
-> +static inline unsigned int gic_irq(struct irq_data *d)
-> +{
-> +	return d->hwirq;
-> +}
-> +
->  int gic_configure_irq(unsigned int irq, unsigned int type,
->                         void __iomem *base, void (*sync_access)(void));
->  void gic_dist_config(void __iomem *base, int gic_irqs,
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index b9d9375a3434..474a498a521e 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -181,11 +181,6 @@ static enum gic_intid_range get_intid_range(struct irq_data *d)
->  	return __get_intid_range(d->hwirq);
->  }
->  
-> -static inline unsigned int gic_irq(struct irq_data *d)
-> -{
-> -	return d->hwirq;
-> -}
-> -
+> Agreed that it's not enough.  It does usually work, and it's very
 
-I'd rather not do that. If anything, I'd get rid of the helper
-altogether, as we have irqd_to_hwirq() that does the same job, and
-actually preserves the typing.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Wasn't the intent to just get somewhat further and accepting that this
+might crash no matter what?
