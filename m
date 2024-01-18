@@ -1,68 +1,68 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B427D29438
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EB12E652
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705607608; cv=none; b=Vns88hCMz4jhEzaOa3QNFN4p+v1fe4i3UBtTNt8eVlDEg/Bh9NOBZkM/JmcyPBmrCFQPmK3s0v85+3/aaT3SZYGG8ijqYSSrTR+fOHSocC8dMophodbP1vy53SMWNkmqP32COv5q0NYaA9Hj0pbuCW445SqqM2WU6yGVryrraKE=
+	t=1705607613; cv=none; b=dqxh3E5P8VbK9UxtRbkzdTeiplZjDDuYMHUbl/XaPhrl8Iw+QSzh0kIACsWq6DHK90NO5Irr2Sa6EWfivxypH/gWJsbuRudwlyydSHkNg9sk/0Qqi4BBvGsjsbHHJONPrKOW/HsiXqtu1wQLziqsMtoEy3IN0og6lnvmV6HVnbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705607608; c=relaxed/simple;
-	bh=ePXeyzFZc4C49wzR3oENG78fjC6VcRFcvWg3hVa5eyI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gG78iZ655//ntHHP9Q4J3dHPdrSha3aBfraJqLyXCM8Gxa33Y5ffpS5S3ROqcVyqNKkbK8ZMK45seI6KLjboTFtzw3dgjP41B+etJqvzLrW24EwpSX6Sq1v2quWWx/KurnkKsh93eTzTx0/1b2cdV+Cv+7V3q6ZCZvQnx/Fnpe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3zBoLq8; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705607613; c=relaxed/simple;
+	bh=3H0/PUm19INCLpIv8lZ7mMSa24z+/2A2899KRBqjzRs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=spsCCX80VtXhtzuzvFsexiUh435TrDIljAtaQVuGE2oX0IuAMbx5aipIDJ7Vhk8M6V3tMI1wjqGiacCk+yLjIJ3frBU7LKVl1bBy3RtK+/QaUR42foWlzSVuoGKRrVRQtn3rrvgM0m3tP48PqMafSbVDFmpqRMkpeJj7tKCWcik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nUkXCAb4; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3zBoLq8"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2901ac9ba23so60697a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:53:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nUkXCAb4"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2cd2f472665so419971fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:53:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705607605; x=1706212405; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705607610; x=1706212410; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EZGu56SQkPq5onYvWGLXuBppyU+oGKlhQFwb+ijLfmY=;
-        b=E3zBoLq85OWnbe3fb7J1MONR3TC6NDVHj4dASxvdmX8EKjEnGUDvnURqDedsUzqWQR
-         M9h5OmtuuWiWW5CAL9+95U13AcM3UxX1EjKirntM4mBCBP0aR1hAgM2vGljMiubCbe5r
-         bs0P2D59JBURWadp4fmkb1fsI8oK9DOgKXWpkA7B970imuj05VNsNrzjHxmcwl2UqgFT
-         di1jx5hEQkC4H4PcYkob0LVHFZnnJsCNcnM2PeW75XP1K9pYcECY9e3K5FOKydqozNfa
-         SI2D6H5+sVUUpxcwAfOWWX6GNHsEJrAvbKHFkAcbUpuNPmSILbKmH7VsjWDRI3/EztTl
-         SRUQ==
+        bh=3aPW495Dn9XKu9eq4/g3SllgOOtpizGjdMGk5c2KiHI=;
+        b=nUkXCAb4Fm5bxn7eBWh51/ApFEuauRltQor1g8kFVg83WGzquCQKb1xIx+pReuKrK6
+         dBr+YoZ4F1bkEYKycZKmUcbQgYq28kT+NgRwsELQSOoZmPL+pj9YfrKdc3EfBHshUcCH
+         1tffyZK6rqPmGnh9aUhDeh/40wumRL4wqpxJ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705607605; x=1706212405;
+        d=1e100.net; s=20230601; t=1705607610; x=1706212410;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EZGu56SQkPq5onYvWGLXuBppyU+oGKlhQFwb+ijLfmY=;
-        b=mn7pOp252CM02tNGn7Wb4I5dg+n2a41qs18YKe9cejS2a4US6YIcdCol1QbuHasgqY
-         Nka+Rzkdl/HjVLTidhWslZE4vr7mGBnAD9zfwgYGnbboQ/KhgfmpKzSMvz9GT/Icus4V
-         YN5+urH3uBJmVmRnPzaWkCrp6ZHSf0sxYqt5Jd0dPcPMAITPVVGq1CsqYfgxEjpmC8Up
-         9WNNN13CXjqDWTwoMHxgdHCX5HJSNpWPzpIVfGcrCKoEMFyH65dziWj7UvcXPpR1WIiR
-         yAwEh7LdkHOCqtQVNXJJeptQTqQNhan9j5RX+y76TPfMgznvyW+qJQpTLzILh6krqQJD
-         BeWg==
-X-Gm-Message-State: AOJu0Yx/PoE4gnnUvhxA6GaZ7a7tCDUgEiX/GOoMNgnKySz2s3FzpW2/
-	lQdSZnXPN4cnRm/PJJZxYoYuGRyUWcBzRH3P/4m1n/6nubCYYtA7
-X-Google-Smtp-Source: AGHT+IGupQ8PU7Fa42u1C/IqqWB8MyHGZKGwJuxOH+hIX+ZSLySKufDFO7aZHyUgiK3OvCOu6aLdhw==
-X-Received: by 2002:a17:90b:1043:b0:28f:f82f:1881 with SMTP id gq3-20020a17090b104300b0028ff82f1881mr1085121pjb.54.1705607604959;
-        Thu, 18 Jan 2024 11:53:24 -0800 (PST)
-Received: from localhost.localdomain (c-67-174-241-145.hsd1.ca.comcast.net. [67.174.241.145])
-        by smtp.gmail.com with ESMTPSA id nc15-20020a17090b37cf00b0028feef1f7adsm2251388pjb.50.2024.01.18.11.53.23
+        bh=3aPW495Dn9XKu9eq4/g3SllgOOtpizGjdMGk5c2KiHI=;
+        b=XcQQ2JC8iHjfa/acCSn3+5gsKTplXNp6Q406DFN0r/Dw9pLI1lJqpNnyf2+C1WsOg+
+         EyRBgI+BEM/HwMKYioVjQ6Q2e2p//jr5W2JG9rDg6Wvz8uhF7meCtak5sZjs7MAvdYG1
+         GPX/xYNzNvwQHsg2DKtM8ayljmyGp4tZ/yIC5waYuv6Cj5REqgmgkUDP9AY66tzfv0E2
+         g0HWKQJElLrNAT8eDL4umTeUJzIN77RemDm9sWPrnKXcvuvpiwlBnQyQvgU6bAssUUib
+         77BhtKOKpp5qEGh03wD/Xkrrsfc4GfOmIm9Sz1+BxThLopdnS2ASuiCcgX3TujP8O/JQ
+         826w==
+X-Gm-Message-State: AOJu0YxzPebgMVg9PWKhVDmVbTcJvfoHX62EA5mHaKwuyh//UYPfapaR
+	ewdCYiQ7XkrPHqefjAU2vxcw3iYk0LYUvMXlcrCad+ce+LvNR0oeuGL7tjc0Sg==
+X-Google-Smtp-Source: AGHT+IEQUXVT5KEHfXYHFybVLkF/rXq4pvbsHcbBHj4RJlJoq000BasTt83sR+KbR0Z2WXwNkpVTEw==
+X-Received: by 2002:a2e:9d9a:0:b0:2cc:db7e:aac2 with SMTP id c26-20020a2e9d9a000000b002ccdb7eaac2mr836985ljj.58.1705607609722;
+        Thu, 18 Jan 2024 11:53:29 -0800 (PST)
+Received: from cracow.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
+        by smtp.gmail.com with ESMTPSA id 2-20020a05651c00c200b002ccd3e8a59esm2333345ljr.121.2024.01.18.11.53.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 11:53:24 -0800 (PST)
-From: Yang Shi <shy828301@gmail.com>
-To: jirislaby@kernel.org,
-	surenb@google.com,
-	riel@surriel.com,
-	willy@infradead.org,
-	cl@linux.com,
-	akpm@linux-foundation.org
-Cc: yang@os.amperecomputing.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: huge_memory: don't force huge page alignment on 32 bit
-Date: Thu, 18 Jan 2024 05:35:04 -0800
-Message-Id: <20240118133504.2910955-1-shy828301@gmail.com>
-X-Mailer: git-send-email 2.39.0
+        Thu, 18 Jan 2024 11:53:29 -0800 (PST)
+From: Lukasz Majczak <lma@chromium.org>
+To: Gwendal Grignou <gwendal@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Radoslaw Biernacki <biernacki@google.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Lee Jones <lee@kernel.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chrome-platform@lists.linux.dev
+Cc: Lukasz Majczak <lma@chromium.org>
+Subject: [PATCH v2 0/3] Introduce EC-based watchdog
+Date: Thu, 18 Jan 2024 19:53:21 +0000
+Message-ID: <20240118195325.2964918-1-lma@chromium.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,58 +71,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Yang Shi <yang@os.amperecomputing.com>
+Chromeos devices are equipped with the embedded controller (EC)
+that can be used as a watchdog. The following patches
+updates the structures and definitions required to
+communicate with EC-based watchdog and implements the
+driver itself.
 
-The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
-boundaries") caused two issues [1] [2] reported on 32 bit system or compat
-userspace.
+The first version of this patch was sent here:
+https://patchwork.kernel.org/project/linux-watchdog/patch/20240117102450.4080839-1-lma@chromium.org/
 
-It doesn't make too much sense to force huge page alignment on 32 bit
-system due to the constrained virtual address space.
+Changelog
+V1->V2:
+* Splitted into three patches
+* Supplement the watchdog configuration with min/max timeouts
+* Removed struct cros_ec_wdt_data  and get aligned to watchdog framework
+* Simplified suspend/resume callbacks
+* Removed excessive log messages
+* Reworked cros_ec_wdt_send_hang_detect() function to be more generic
+* Usage of devm_* allowed to delete .remove module callback
+* Changed MODULE_ALIAS to MODULE_DEVICE_TABLE
+* Moved clearing bootstatus (on EC) to probe() and thanks to that
+  got rid of .shutdown() module callback
+* Fixed/removed comments, removed unused includes and general cleanup
 
-[1] https://lore.kernel.org/linux-mm/CAHbLzkqa1SCBA10yjWTtA2mKCsoK5+M1BthSDL8ROvUq2XxZMw@mail.gmail.com/T/#mf211643a0427f8d6495b5b53f8132f453d60ab95
-[2] https://lore.kernel.org/linux-mm/CAHbLzkqa1SCBA10yjWTtA2mKCsoK5+M1BthSDL8ROvUq2XxZMw@mail.gmail.com/T/#me93dff2ccbd9902c3e395e1c022fb454e48ecb1d
+Best regards,
+Lukasz
 
-Fixes: efa7df3e3bb5 ("mm: align larger anonymous mappings on THP boundaries")
-Reported-by: Jiri Slaby <jirislaby@kernel.org>
-Reported-by: Suren Baghdasaryan <surenb@google.com>
-Tested-by: Jiri Slaby <jirislaby@kernel.org>
-Tested-by: Suren Baghdasaryan <surenb@google.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Christopher Lameter <cl@linux.com>
-Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
----
- mm/huge_memory.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Lukasz Majczak (3):
+  platform/chrome: Update binary interface for EC-based watchdog
+  watchdog: Add ChromeOS EC-based watchdog driver
+  mfd: cros_ec: Register EC-based watchdog subdevice
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 94ef5c02b459..e9fbaccbe0c0 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -37,6 +37,7 @@
- #include <linux/page_owner.h>
- #include <linux/sched/sysctl.h>
- #include <linux/memory-tiers.h>
-+#include <linux/compat.h>
- 
- #include <asm/tlb.h>
- #include <asm/pgalloc.h>
-@@ -811,6 +812,14 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
- 	loff_t off_align = round_up(off, size);
- 	unsigned long len_pad, ret;
- 
-+	/*
-+	 * It doesn't make too much sense to froce huge page alignment on
-+	 * 32 bit system or compat userspace due to the contrained virtual
-+	 * address space and address entropy.
-+	 */
-+	if (IS_ENABLED(CONFIG_32BIT) || in_compat_syscall())
-+		return 0;
-+
- 	if (off_end <= off_align || (off_end - off_align) < size)
- 		return 0;
- 
+ MAINTAINERS                                   |   6 +
+ drivers/mfd/cros_ec_dev.c                     |   9 +
+ drivers/watchdog/Kconfig                      |  11 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/cros_ec_wdt.c                | 202 ++++++++++++++++++
+ .../linux/platform_data/cros_ec_commands.h    |  78 +++----
+ 6 files changed, 264 insertions(+), 43 deletions(-)
+ create mode 100644 drivers/watchdog/cros_ec_wdt.c
+
 -- 
-2.41.0
+2.43.0.429.g432eaa2c6b-goog
 
