@@ -1,96 +1,69 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11DA2C6B8
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 16:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363952D02B;
+	Thu, 18 Jan 2024 17:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705597125; cv=none; b=WZ4hFNrtySWofoWUoLcTDvq+bNq8wdNq9yU4mRoufswtUH+9vSbMG09FAmFoZImRd7QFzno5FSycCqMy5H6EbwwFqnC0QePpok0ez/8Wcwrkfj0xXZtHSyGelm+9aK+oyF+S4ZCly//Qj1azpjpE4bc6S35QqisuJpPexV+uSC8=
+	t=1705597220; cv=none; b=n9tnq8PZ1WDteWui05kpE6bNizW+Vm+EovOYy1Wj5wIW/IEuRA5SMJvpuYzuLyLZegXh+XOEqm0F1KYn1ZwVaPYlj8zgoegS1FtF8sgaQVava2vl23Z04gZ1oXidmwBSP0uHqd444rkz8SXBqmlQA6fMYHPlDW+URz6hS+JXcGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705597125; c=relaxed/simple;
-	bh=Z5thKj8FdeMPyV5/0e6dgRb4ppMPY94gIbrMAFviSyo=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Reply-To:Date:
-	 Mime-Version:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	b=PMsp0ZrGi2hjg+Y+xfqMYTUgRu054AnXIIBy2Fueak/CGKFku18ny5vPHbZQPx86GGhxgu84RNAHJ2GVJRcyr2oLXFAY7pei/AmaLaW/uldTlp/67kLY4JzjINgo/GVw21b8f7+u/I8G8RPG2I6hGDAyFt5uWTtOudzorfXTK6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AXAHcms6; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1705597220; c=relaxed/simple;
+	bh=ZQkTj7v3P3b8slVfFVO0LEhYN51N22sIpr/cgL8WBSg=;
+	h=DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=Z1OIKdNHih8W9WEPFM2aRQodQXOih/IUuN/O1yLZk/EBm6gwB+gEtKUeWKPDukCSQO8qZe8EVGDBNlVgBY7Nn/Ae0dyeKt3KsmePNXQ0qb01W4IeEFLpU97Qvdhg8fGyLo7ETLrb5I3tvf4pDnxLIXXqRX46tTwAegURxn0SUwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Pmo5tso8; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AXAHcms6"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5cf962e1fcbso1532847a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 08:58:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705597123; x=1706201923; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qOJj2c9xW4mty6RVL8pJG7rPEgOg5AXdEBigC3Y4jtY=;
-        b=AXAHcms6dIN13GnNTUE4FzFUwDA+eem9NXCDkkP1Od/czzNHTQr5OhOGk3QX0KEonr
-         NFd962j41sNkyewHIRD2Pm8NuJ7Z9pSIC4YT5VAZHsNCzfr8w3UUtbiNs2ExsTKyMgCY
-         VPP22Ti95YqC1gsjrIuJDDCdljmhHYMv/YSgrGox2+0Dd0pcidQqrQmHBKcGdqSRad9z
-         W9gFvyUKaU7nAS7+3lDqzzr6LMANTRMi4pJ1hBq4g6SFR2+vQlGsqC4054u9TYqLwB7z
-         Kw8ZvoyFNt29tMdbe+C/uhbzCIhoyWBLVxslky0kROZFzx4jGyj7dK8sMxfVr8sEh0xX
-         Jzsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705597123; x=1706201923;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOJj2c9xW4mty6RVL8pJG7rPEgOg5AXdEBigC3Y4jtY=;
-        b=dcsz3++ALtA7cS/IoLnlWf7yFN7OtNU39jHVUdoviPWlsI702gnFxv2I6088ZrgBVt
-         MzBYseF4KIyzV5fVbR4LSvWoHIzQz29r+w4T7xUvD+iCaGMF161KOaikSZLdBI050eyv
-         w2j9nZnLkQZlgiwgpP3n/y9MOmoXKjs7PoPAhqPSkBclumbPV0ub6QuBRGPh5BchYWcz
-         vA9L9UtGvgPhLBW8sntjDrIVKdHmqnL2l4DaAEnQVJlqYQ5LWsmNpeaqFXos5uWyRSBu
-         d5kxxkbQlNVDtTDZaB98hOgX01chvobQNpTijFgHnHAhyU8huyM/SKh6pxr8p9dnP+P+
-         eDdw==
-X-Gm-Message-State: AOJu0YwD2zIoHsPZCZwB/V6Vj/19W7H4ruBXqvqkXzpyY2qy1IXpfzR7
-	OKh+BOGEw2Gph983TAHqIEoT3VteXrTDPGg1rNuyRjSzjChNHHfQZxCMw5Fea/f6frehw5wELD0
-	hbQ==
-X-Google-Smtp-Source: AGHT+IGe39iSbo3pp4Oh1OoPuJaAYSL8rktRk+jxW6UtZTirBf1ZCu2iYHNI0H7nbbmWrSXesSiYDaEUb0M=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:2fc1:0:b0:5ca:3e8f:6d6a with SMTP id
- v184-20020a632fc1000000b005ca3e8f6d6amr6924pgv.12.1705597123202; Thu, 18 Jan
- 2024 08:58:43 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 18 Jan 2024 08:58:38 -0800
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Pmo5tso8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=0tuU5//Jtkk4REo0lwHCqrHwmxJPEkKkKcI8xTrY0ts=; b=Pmo5tso8M37VzKsnub2PaUM2i/
+	KTG/bCFboCVTfbvP87Gk6zFJwzphCJsWVihUJuzNDyho9s5F5Nh/F5Xfqrctk2FV8G36iDvat+T2A
+	tbzyFHV5I6+ih8DTPTMQJxoL9QQnWf1lhcnCQBLfNeaJ29XANT9Ity7oIvbebs34Nw5s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rQVkP-005UmY-SR; Thu, 18 Jan 2024 18:00:09 +0100
+Date: Thu, 18 Jan 2024 18:00:09 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	richardcochran@gmail.com, Divya.Koppera@microchip.com,
+	maxime.chevallier@bootlin.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net v2 2/2] net: micrel: Fix set/get PHC time for lan8814
+Message-ID: <139fe4c1-6a3e-4ef3-a178-ebbe09652966@lunn.ch>
+References: <20240118085916.1204354-1-horatiu.vultur@microchip.com>
+ <20240118085916.1204354-3-horatiu.vultur@microchip.com>
+ <6fa37dfd-3c92-4842-9785-1b17bbbedc9d@lunn.ch>
+ <20240118152353.syk3v7kgf3mutqpp@DEN-DL-M31836.microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.381.gb435a96ce8-goog
-Message-ID: <20240118165838.1934853-1-seanjc@google.com>
-Subject: [ANNOUNCE] PUCK Notes - 2024.01.17 - TDP MMU for IOMMU
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jason Gunthorpe <jgg@nvidia.com>, Yan Zhao <yan.y.zhao@intel.com>, 
-	David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240118152353.syk3v7kgf3mutqpp@DEN-DL-M31836.microchip.com>
 
-Recording and slides:
+> > Maybe submit this for net-next?
+> 
+> Anyway, I don't have strong feelings about this, if it goes to net or
+> net-next, I just want to fix this at some point :)
 
-  https://drive.google.com/corp/drive/folders/1sSr_8FE5KjjGGnpX7_QlHAX3QGoRnck7?resourcekey=0-UB_vbXfpY4Dezo9xI_-6iA
+Please submit to net-next. I think the ML bot which picks out patches
+to backport is likely to see the work Fix in the subject and decided
+to backport it anyway. But its not our problem if the bot breaks the
+stable rules.
 
-Key Takeways:
+Is there any danger of regressions? Could the higher word actually
+have a value for some reason today, which is being ignored. Would this
+change then jump the time forward?
 
- - Having KVM notify (or install PTEs in) the IOMMU page tables for _all_ PTEs
-   created by KVM may not be necessary to achieve the desired performance, e.g.
-   proactively mapping in the IOMMU may only be necessary when swapping in
-   memory for oversubscribed VMs.
-
- - Synchronously notifying/installing could be a net negative for guest
-   performance, e.g. could add significant latency in KVM's page fault path if
-   a PTE operation necessitates an IOMMU TLB invalidation.
-
- - Despite hardware vendors' intentions/claims, CPU and IOMMU page table entries
-   aren't 100% interchangeable.  E.g. even on Intel, where the formats are
-   compatible, it's still possible to create EPT PTEs (CPU) that are not usable
-   in the IOMMU.
-
- - Given the above, having KVM manage and/or notify IOMMU Page tables would be
-   a premature optimization.
-
- - Recommended next step is to explore using heterogeneous memory management
-   (HMM) to manage IOMMU page tables and coordinate with mmu_notifiers, and see
-   if HMM can be optimized to meet the performance goals without involving KVM.
+       Andrew
