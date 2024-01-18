@@ -1,113 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60631170A;
-	Thu, 18 Jan 2024 08:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAF5C126
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705565869; cv=none; b=ezTLZHHAznBmyTborYO+N55PkasmKqbTuDtESJZJGN3zKcnYL4pV8RiRtz5Ksdc5aZS2aVbaSnY4YrQTXXWc3bBl7W6g3pVsGyC/Od6tZhEVaKcdqUmfRuTKNz7xL4VLPF/NAQ8iHoM5wTQKECdX54A5t2TiJxQq65Lh6WdoesA=
+	t=1705566179; cv=none; b=UJOIwaX2G1UpduoS11o2fw/EtXFtA6yKwCjnDmO8GYOz1IW5dpJ2p3FVY7bInqBE2G2RcLJcktIzScXFSLzung4Q4+HRRWEAmfC2ZULJxIPkj/iwaZ768Lb8xQ9D/TOOKRHQSQr973hPkHpC6H7MSAbnZCAkT3EMgXJW+Lz8F5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705565869; c=relaxed/simple;
-	bh=/Frwy4cBveeSxvMgx3OjZscR3f48byOksWLqeCmuCRw=;
-	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To; b=LyQLZT5pQL63LYN7ZLMxXfWRVYatJRl8UmTjj0s+GwIbpL+R+Ou9a+BoXo2XI19W01jqGoFL57sLRsxnNakDh6qs5MEMC6c+4YtorLZur/FQ2dOCEWUSGu8eGthw7XvUzH+A0aA35nqJDL6RUG83L76rOaNpuOaRGOZwhA3rxPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQGJ+MAV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705566179; c=relaxed/simple;
+	bh=rdeMJ54UDpLRwou5AAi1qhJ+l2f3fkTzSdFE/M1TJBw=;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
+	 In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To; b=sgMRx0QP5gpfkq36qiVxaH0bwlgfehYvX7+TDZV0z+H8n6qFnpjc7z8WBI6GyCijWLwR6e+k814UxyqpyY45jGJXLDU/KUiL6rV5rDE4gZil0VfprSDamGQMHv2WMlMPKGkpv5vbRkIE7xl9yOEBbuw6P7cqM3tkaDqOWvT9CBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KupzRSKw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQGJ+MAV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 197C3C433C7;
-	Thu, 18 Jan 2024 08:17:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KupzRSKw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AFA6DC43394;
+	Thu, 18 Jan 2024 08:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705565869;
-	bh=/Frwy4cBveeSxvMgx3OjZscR3f48byOksWLqeCmuCRw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CQGJ+MAVvemjTDRtxWOquEkXyP9FZ9rDWI3WpkFGVvZzW0wHPmCyhAgNx4Y8RRbje
-	 eqS8j2rIEFvwUd1FWZWN30IhP4bmHdOAOhFzMYnuAI7BJmyhFlxSDkYZKrPyw8D5CM
-	 Aq3k3D+mNPPpJ/h41/FyvqT9TlDyeYqEa1X6SVTAPGAV0S5yYB6r0VISNO4I73Aycl
-	 dt2KI7SroyN7E8awCf2HbjzT/qipOgoMSkrctWbCtrQzjjP0rMY4Hu1uVd93wSlvy7
-	 ifLMM/bIWqO0fVaRHwpWHzaFhAyQstFrFUG9+fnvQ1O4YeZ49V2oD0fn5/j33+bdd9
-	 Zo3afNDv2SU8w==
-Received: from johan by xi.lan with local (Exim 4.96.2)
-	(envelope-from <johan@kernel.org>)
-	id 1rQNb1-0001nu-0b;
-	Thu, 18 Jan 2024 09:17:55 +0100
-Date: Thu, 18 Jan 2024 09:17:55 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Doug Anderson <dianders@google.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-	Stephen Boyd <swboyd@google.com>
-Subject: Re: [PATCH] Bluetooth: qca: fix device-address endianness
-Message-ID: <Zajes1rCgGOY9jXe@hovoldconsulting.com>
-References: <20231227180306.6319-1-johan+linaro@kernel.org>
- <ZZ15c1HUQIH2cY5o@google.com>
- <ZZ1-ehpU-g6i9Qem@hovoldconsulting.com>
- <ZZ2IOQEekFffJoHQ@google.com>
- <ZZ5RVpL88XNbgKIy@hovoldconsulting.com>
- <CAD=FV=W61ZHYJADiR1CYgS-aNisDR4KoEA3RW2_8kW3KUd1g5g@mail.gmail.com>
+	s=k20201202; t=1705566178;
+	bh=rdeMJ54UDpLRwou5AAi1qhJ+l2f3fkTzSdFE/M1TJBw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=KupzRSKwfCCtWTBu6otka3WpGqV6YM9bqsCsvpqlseCpByGglp1mtCSrH0lgtuUCb
+	 xvaeG5WwWxIf1fAnsxXQ8bLwLvzMwVbTJmflrIECe8Ojz0VqbUl8Aw62n5JBJZArye
+	 llQ3vQnECkFQrEoZqQgDGf6c6L4RxixyPA2Ewwbqh29kSecv/qgoeUMh2Tl+H/otkN
+	 OpqnBsKtfTTwx4O+YHUqgYvhNwXkaSgXWjDFUZNvVGKyuIlhoYifZuRvF5BMLN/gL3
+	 QevyO2T6/Z+RRbt4FyN2pSL0HeuRavIOZTlT1xL03BNg5MPbCGhJK3HaXVegZ5Qlpt
+	 qsnQ4FoCLl11A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92569C47DA2;
+	Thu, 18 Jan 2024 08:22:58 +0000 (UTC)
+From:
+ Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
+Date: Thu, 18 Jan 2024 11:20:44 +0300
+Subject: [PATCH v7 01/39] ARM: ep93xx: Add terminator to gpiod_lookup_table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=W61ZHYJADiR1CYgS-aNisDR4KoEA3RW2_8kW3KUd1g5g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240118-ep93xx-v7-1-d953846ae771@maquefel.me>
+References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
+In-Reply-To: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
+To: Hartley Sweeten <hsweeten@visionengravers.com>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, "Wu, Aaron" <Aaron.Wu@analog.com>, 
+ Olof Johansson <olof@lixom.net>, Lee Jones <lee@kernel.org>, 
+ Ralf Baechle <ralf@linux-mips.org>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Andy Shevchenko <andriy.shevchenko@intel.com>
+X-Mailer: b4 0.13-dev-e3e53
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=863;
+ i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
+ bh=V19ji6HRT/LvwSZh25S7DqwrqE2geyei6CamYGzg/Hc=; =?utf-8?q?b=3DYR1wB031b++R?=
+ =?utf-8?q?wryG4mHPVamzIXC2oyPM3Zu9KFhD3ooTRX5FUQNHjBLVAwtpkLRZM/E0zEh7uKZE?=
+ +8poBxUwCRq+UbGwKikH2jXXdCCQCO/FeFkZ/Bt3+BH9FmY0cNWn
+X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
+ pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
+X-Endpoint-Received:
+ by B4 Relay for nikita.shubin@maquefel.me/20230718 with auth_id=65
+X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Reply-To: <nikita.shubin@maquefel.me>
 
-On Wed, Jan 17, 2024 at 01:52:08PM -0800, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, Jan 10, 2024 at 12:12 AM Johan Hovold <johan@kernel.org> wrote:
-> >
-> > > > So the first question is whether there actually is any boot firmware out
-> > > > there which passes the BD_ADDR in reverse order?
-> > >
-> > > Yes, (at least) the boot firmware for sc7180-trogdor devices.
-> > >
-> > > hexdump -C /proc/device-tree/soc\@0/geniqup\@8c0000/serial\@88c000/bluetooth/local-bd-address
-> > > 00000000  8c fd f0 40 15 dc
-> >
-> > Indeed, this should have been LE order.
-> 
-> In case it adds any extra data points, we also do similar with the
-> WiFi MAC address and it also seems to be big endian.
-> 
-> lazor-rev9 /proc/device-tree/soc@0/wifi@18800000 # hexdump -C local-mac-address
-> 00000000  8c fd f0 3e 3e 86                                 |...>>.|
-> 00000006
-> 
-> lazor-rev9 /proc/device-tree/soc@0/wifi@18800000 # ifconfig wlan0 | grep ether
->         ether 8c:fd:f0:3e:3e:86  txqueuelen 1000  (Ethernet)
+From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Yes, wifi and ethernet MAC addresses are always big endian (i.e. on the
-wire as well as in UIs).
+Without the terminator, if a con_id is passed to gpio_find() that
+does not exist in the lookup table the function will not stop looping
+correctly, and eventually cause an oops.
 
-When the corresponding devicetree property for Bluetooth device
-addresses was added, Marcel explicitly requested that the address be
-provided in little-endian order:
+Fixes: b2e63555592f ("i2c: gpio: Convert to use descriptors")
+Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+---
+ arch/arm/mach-ep93xx/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-	"I would prefer the boot loader actually providing the BD
-	 Address in the correct byte order as the protocol expects and
-	 not yet another form. The string representation is just for
-	 reference since that is what most people have seen so far."
+diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
+index 71b113976420..8b1ec60a9a46 100644
+--- a/arch/arm/mach-ep93xx/core.c
++++ b/arch/arm/mach-ep93xx/core.c
+@@ -339,6 +339,7 @@ static struct gpiod_lookup_table ep93xx_i2c_gpiod_table = {
+ 				GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
+ 		GPIO_LOOKUP_IDX("G", 0, NULL, 1,
+ 				GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
++		{ }
+ 	},
+ };
+ 
 
-	https://lore.kernel.org/all/41A0C162-4AC5-4969-813D-9E2C7F5D5031@holtmann.org/
+-- 
+2.41.0
 
-and this is also what made it into the binding:
-
-	28517c02e1dd ("dt-bindings: net: document Bluetooth bindings in one place")
-
-Perhaps someone should have pushed back at the time to avoid this
-(apparent) inconsistency, but this is what we have since 2017.
-
-Johan
