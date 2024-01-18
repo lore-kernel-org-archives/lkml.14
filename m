@@ -1,207 +1,104 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A63646;
-	Thu, 18 Jan 2024 14:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20DA635
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 14:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705589179; cv=none; b=Abf0YrfiSBgKV8ysXnu6Cab7IzPelj0TUC/oy/CTFbk0iChOtu/KX3JvJtzzJ9QSej8zv5JsBROnXI3PtPVLyuZEftdhx0oBuo9K/Oxv5WXiULwRDaGL8jcT85/l4Nuzq9fLVO1Q19ADBDaHrDmL74Qru+FzE2CEjItYdzBoPFE=
+	t=1705589308; cv=none; b=gRvPzmpafRJKN0+TJJ0DSKqSCcL8a8/rBjdA0wAVhDfi0oCjOuXNxyZMrNVZfFpZSRJ+GXojigAQpjK0gjj5iyH+IX0bf5rLrZ/C573MOBKor1tQ7GrLaETm9EEmRZOMwBZooNae+IV+RkEH25zw4FwKGrIFuWgawzC/kVLdGQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705589179; c=relaxed/simple;
-	bh=V/rb3e7RICwYcaa6sGQk5hX7onXeunnOrGGXPUjSP4s=;
+	s=arc-20240116; t=1705589308; c=relaxed/simple;
+	bh=nWxZoXnqA+m1F8noLorBvRBbVwo3Ghzh5g/uhciY28M=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
-	 From:To:Cc:Message-ID:In-Reply-To:References:Subject:Mime-Version:
-	 Content-Type:Content-Transfer-Encoding; b=JbI01cXbPwgIwxKVY3BcvNhB15Yrk76nvgh9GDAKJGUsrazDTU46bdMOOES6YI3QZlU+3amiA2qyGSLDk3L8RNXajmzr3MXepSbifd/HbSAnZUD7qFoRO5a4hozTez7E6893cvZ+cu2e63bBJEBziaovkW+GnE3uZ9O3f3OYtiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b2s3Dih+; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=MfV6Ny6wEblINxz+gtimY5m/xer9ahYBZ1/XMKvYX5czet/NyCfsjYlTLISbsvejyBWWIuGQzFcY4e7MKOyvV5SnI0qH1EMZ4KqBYog3Kzr8LQCHHY8VxbhqPo7jPiVSP6poU1PpUhHjDOZ1vfAn/yvyIOj/ZeJ7GbcGgPj7YuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=JC5eM+Id; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2s3Dih+"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-68192840641so2338746d6.1;
-        Thu, 18 Jan 2024 06:46:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="JC5eM+Id"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78315243c11so858255485a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 06:48:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705589177; x=1706193977; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V/rb3e7RICwYcaa6sGQk5hX7onXeunnOrGGXPUjSP4s=;
-        b=b2s3Dih+kRIgNm+BIW8vVCPxX42jWdNMQLlFDCtbcXwUZA9gS/B5PET0r40/8yIGQu
-         mm10HhoDzSj/cgqHMwuXoYQX853qJgiMEmSZ9vnQYFoainGHwQp2Pogre0zPjBAezzhk
-         90tqPPm0oIcT+LfdosPSfcwrkvv2+4NgNkejyqOqdW3o9lERHDLp1wF8iiZDPdMgAhD6
-         EQDtjG+rlyS00Czczv3q3efIHu0PODN2r0pdz7iqtFsrsVD3t8N0ArjHqAP1C6D6i2R7
-         +yRhLULldk1tN5GHUVzPzZOPBnc9ez/8vIvcs+HLZqBO66cKi2hMUj8LIML6q1eNlzKQ
-         8eIA==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1705589304; x=1706194104; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xVxmjtoLbdX7EDdsXjVidtJhDNnF1SPUOgvPjPFVQ/I=;
+        b=JC5eM+IdEFqp/QQyuKFN34vpDujVCLKPsdUzSJjHOp8HWybJE//p2V9mB9pB9okE04
+         LZhAWy+6OjKPvWWEQS/a5UZ9gHreuv1a6AWyZCfPnPTtI2dtA7vi0+48t5m217wAXQj0
+         +oRS7YJAtPOHwPmpk6mv0P0hXzT0UxNXRdHFOFAYK/eDUgQRIHPVMEjsg0GIg1Gu+hMh
+         Ftk7neIj4tzi0pXEnMufMPcbchxpich5SCX9na/Hok/BS5d8lHwhrhFRxhzq59DBygMz
+         RdusKzdY5OUsx5VquPMpb8G2Ycdi+r7+usqHX2O+iwY7eFxVuT5Smc7P/v/heLrrjI0v
+         53Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705589177; x=1706193977;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=V/rb3e7RICwYcaa6sGQk5hX7onXeunnOrGGXPUjSP4s=;
-        b=MZrI4kbRyn9fPKmOklZQBlcEGRKr+HIsciEfrD2tQgGM7QFe03I5ZntHs4i+biFAWe
-         APwE6CH5EFSR8QCawJm805js1/wzbbElImSf3QapkR1VkvN++LANH5/0L7Q/5a9HMUUZ
-         J3WqjasnvuZRND352oGuQJzX6Nql3kyu8UYLmn6kezFd1vQ8i5OAmmYF6dVJAmKk2zrZ
-         TO6sOj4oPrsnRhHDk2eOPEfrokdDkb+k7IqpM0GxIcPZSDavqxcqYHey+DmKWJKnckV4
-         HKpxPSF16aGRCwsdvGs+EBgvZXGyZe3IgZ4jPutblNHVGm82D+MM3iL3Hruyto6gf5W8
-         F13g==
-X-Gm-Message-State: AOJu0YzfDlxnjOAT4Mqp9fMwNYsFQXLN2nY9d0D1qrU5Xz8tpthxXREU
-	4hPEPgbHgeNbRXFQoKsfnbFNcC7p/7J08vKFO1TyVTf+DvQYvcRV
-X-Google-Smtp-Source: AGHT+IH+TgHvABrEncSHKKQdsk7gG56NyZWGS0rBtCCs3JQZ1KTPsJYVteYbiXaQa404+RhgAHTUBw==
-X-Received: by 2002:a05:6214:d08:b0:681:8230:3136 with SMTP id 8-20020a0562140d0800b0068182303136mr831375qvh.78.1705589176859;
-        Thu, 18 Jan 2024 06:46:16 -0800 (PST)
-Received: from localhost (131.65.194.35.bc.googleusercontent.com. [35.194.65.131])
-        by smtp.gmail.com with ESMTPSA id kh13-20020a056214514d00b006816b56e1desm2425026qvb.129.2024.01.18.06.46.16
+        d=1e100.net; s=20230601; t=1705589304; x=1706194104;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xVxmjtoLbdX7EDdsXjVidtJhDNnF1SPUOgvPjPFVQ/I=;
+        b=Py0yi5X4ZOcIyNgcWYjMecNKHQ07xIukMyVH6113Po2JfuncWQND+ryLEs9pS4FlWE
+         01vy7toJbMYmQ4CKpNHFlFN19OfOg4fNDR20BK6Od6Y8ZtkxR+221Ra7SyhJY95fOeQp
+         49xVcaGfVPgkLLGsYs8z1RCDsObUtEN1CbeY5HxAWvGcp4MuA5jvlkvl31wXG4riaWfR
+         Z/4FZrhI1VtO2p0DFak8TpccRqhWdQXBxsa0+UmWdXcZC6u73B+xFfjQDkLiYSDnK0Uk
+         W9GEpORBuRsmFgmE19yNUUv7cR5O6mGTes3ca+h2NTNQ/3ePRVTCNkjEmxpTBNmFXGhv
+         CZZg==
+X-Gm-Message-State: AOJu0Yy5RPwfPEZfonVZjIsFziNkfWVOouRnV0DGBwZ7CDdPjCuMt5Q0
+	F1pnKDfZaQVuLv9XsBZ2gc+45YwTI+Z+QesAMAgyOjzvPaOaqeovebbRKaKEVS4=
+X-Google-Smtp-Source: AGHT+IGajBJ36LmLjSs9/3yRFfq0ausFe3LXPKC7KV8Lu+uOJ5KX+HjVmDDJ/4m3FU3/212zX7RDlg==
+X-Received: by 2002:a05:6214:5186:b0:681:7567:86ee with SMTP id kl6-20020a056214518600b00681756786eemr1017913qvb.71.1705589304433;
+        Thu, 18 Jan 2024 06:48:24 -0800 (PST)
+Received: from localhost ([2620:10d:c091:400::5:e85f])
+        by smtp.gmail.com with ESMTPSA id w20-20020a0562140b3400b006817d42eac6sm1361209qvj.53.2024.01.18.06.48.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 06:46:16 -0800 (PST)
-Date: Thu, 18 Jan 2024 09:46:16 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: =?UTF-8?B?SsO2cm4tVGhvcmJlbiBIaW56?= <j-t.hinz@alumni.tu-berlin.de>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- bpf@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- linux-kselftest@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, 
- Deepa Dinamani <deepa.kernel@gmail.com>
-Message-ID: <65a939b85a763_1c8cde29423@willemb.c.googlers.com.notmuch>
-In-Reply-To: <f4e27abc6741c175b4b1baf1331c30aaedeab290.camel@alumni.tu-berlin.de>
-References: <20240115134110.11624-1-j-t.hinz@alumni.tu-berlin.de>
- <65a69e1be51ef_380df0294d9@willemb.c.googlers.com.notmuch>
- <f4e27abc6741c175b4b1baf1331c30aaedeab290.camel@alumni.tu-berlin.de>
-Subject: Re: [PATCH bpf-next] bpf: Allow setting SO_TIMESTAMPING* with
- bpf_setsockopt()
+        Thu, 18 Jan 2024 06:48:24 -0800 (PST)
+Date: Thu, 18 Jan 2024 09:48:19 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Christopher Li <chrisl@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Wei =?utf-8?B?WHXvv7w=?= <weixugc@google.com>,
+	Yu Zhao <yuzhao@google.com>, Greg Thelen <gthelen@google.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Suren =?utf-8?B?QmFnaGRhc2FyeWFu77+8?= <surenb@google.com>,
+	Brain Geffon <bgeffon@google.com>, Minchan Kim <minchan@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Huang Ying <ying.huang@intel.com>, Nhat Pham <nphamcs@gmail.com>,
+	Kairui Song <kasong@tencent.com>,
+	Zhongkun He <hezhongkun.hzk@bytedance.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Barry Song <v-songbaohua@oppo.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Chengming Zhou <zhouchengming@bytedance.com>
+Subject: Re: [PATCH 0/2] RFC: zswap tree use xarray instead of RB tree
+Message-ID: <20240118144819.GE939255@cmpxchg.org>
+References: <20240117-zswap-xarray-v1-0-6daa86c08fae@kernel.org>
+ <CAJD7tkbQb5nAQdhHXELQsUWs8KhwnoOZ7C8Eu2o7tCYSKeY9Ug@mail.gmail.com>
+ <CANeU7Q=mphnSfiZRwFhqFTy56d2ifa5Pz-aa1h3O1PXUo_cu=Q@mail.gmail.com>
+ <CAJD7tkaTZz9-rtYab+pvf31dprjMLstnHeXk6HZ_0C-8Np=06A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJD7tkaTZz9-rtYab+pvf31dprjMLstnHeXk6HZ_0C-8Np=06A@mail.gmail.com>
 
-J=C3=B6rn-Thorben Hinz wrote:
-> On Tue, 2024-01-16 at 10:17 -0500, Willem de Bruijn wrote:
-> > J=C3=B6rn-Thorben Hinz wrote:
-> > > A BPF application, e.g., a TCP congestion control, might benefit
-> > > from or
-> > > even require precise (=3Dhardware) packet timestamps. These
-> > > timestamps are
-> > > already available through __sk_buff.hwtstamp and
-> > > bpf_sock_ops.skb_hwtstamp, but could not be requested: BPF programs=
+On Wed, Jan 17, 2024 at 11:05:15PM -0800, Yosry Ahmed wrote:
+> > I think it makes the review easier. The code adding and removing does
+> > not have much overlap. Combining it to a single patch does not save
+> > patch size. Having the assert check would be useful for some bisecting
+> > to narrow down which step causing the problem. I am fine with squash
+> > it to one patch as well.
+> 
+> I think having two patches is unnecessarily noisy, and we add some
+> debug code in this patch that we remove in the next patch anyway.
+> Let's see what others think, but personally I prefer a single patch.
 
-> > > were
-> > > not allowed to set SO_TIMESTAMPING* on sockets.
-> > > =
-
-> > > Enable BPF programs to actively request the generation of
-> > > timestamps
-> > > from a stream socket. The also required ioctl(SIOCSHWTSTAMP) on the=
-
-> > > network device must still be done separately, in user space.
-> > > =
-
-> > > This patch had previously been submitted in a two-part series
-> > > (first
-> > > link below). The second patch has been independently applied in
-> > > commit
-> > > 7f6ca95d16b9 ("net: Implement missing
-> > > getsockopt(SO_TIMESTAMPING_NEW)")
-> > > (second link below).
-> > > =
-
-> > > On the earlier submission, there was the open question whether to
-> > > only
-> > > allow, thus enforce, SO_TIMESTAMPING_NEW in this patch:
-> > > =
-
-> > > For a BPF program, this won't make a difference: A timestamp, when
-> > > accessed through the fields mentioned above, is directly read from
-> > > skb_shared_info.hwtstamps, independent of the places where NEW/OLD
-> > > is
-> > > relevant. See bpf_convert_ctx_access() besides others.
-> > > =
-
-> > > I am unsure, though, when it comes to the interconnection of user
-> > > space
-> > > and BPF "space", when both are interested in the timestamps. I
-> > > think it
-> > > would cause an unsolvable conflict when user space is bound to use
-> > > SO_TIMESTAMPING_OLD with a BPF program only allowed to set
-> > > SO_TIMESTAMPING_NEW *on the same socket*? Please correct me if I'm
-> > > mistaken.
-> > =
-
-> > The difference between OLD and NEW only affects the system calls. It
-> > is not reflected in how the data is stored in the skb, or how BPF can=
-
-> > read the data. A process setting SO_TIMESTAMPING_OLD will still allow=
-
-> > BPF to read data using SO_TIMESTAMPING_NEW.
-> > =
-
-> > But, he one place where I see a conflict is in setting sock_flag
-> > SOCK_TSTAMP_NEW. That affects what getsockopt returns and which cmsg
-> > is written:
-> > =
-
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 if (sock_flag(sk, SOCK_TSTAMP_NEW))
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 put=
-_cmsg_scm_timestamping64(msg, tss);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 else
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 put=
-_cmsg_scm_timestamping(msg, tss);
-> > =
-
-> > So a process could issue setsockopt SO_TIMESTAMPING_OLD followed by
-> > a BPF program that issues setsockopt SO_TIMESTAMPING_NEW and this
-> > would flip SOCK_TSTAMP_NEW.
-> > =
-
-> > Just allowing BPF to set SO_TIMESTAMPING_OLD does not fix it, as it
-> > just adds the inverse case.
-> Thanks for elaborating on this. I see I only thought of half the
-> possible conflicting situations.
-> =
-
-> > =
-
-> > A related problem is how does the BPF program know which of the two
-> > variants to set. The BPF program is usually compiled and loaded
-> > independently of the running process.
-> True, that is an additional challenge. And with respect to CO-RE, I
-> think a really portable BPF program could (or at least should) not even=
-
-> decide on NEW or OLD at compile time.
-> =
-
-> > =
-
-> > Perhaps one option is to fail the setsockop if it would flip
-> > sock_flag SOCK_TSTAMP_NEW. But only if called from BPF, as else it
-> > changes existing ABI.
-> > =
-
-> > Then a BPF program can attempt to set SO_TIMESTAMPING NEW, be
-> > prepared to handle a particular errno, and retry with
-> > SO_TIMESTAMPING_OLD.
-> Hmm, would be possible, yes. But sounds like a weird and unexpected
-> special-case behavior to the occasional BPF user.
-
-Agreed. So perhaps we're back to where we say: this is a new feature
-for BPF, only support it on modern environments that use
-SO_TIMESTAMPING_NEW?
-
++1
