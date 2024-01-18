@@ -1,26 +1,51 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85A6124;
-	Thu, 18 Jan 2024 02:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBA42115;
+	Thu, 18 Jan 2024 02:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705543634; cv=none; b=uHlLekUJG4qH5JoQQwS8M/cyhZg0m7ihpo/U/WMCjWzMYO2Q9XuekrEB9NnlYmBVJYgUqivoAfYLdGhlptrtfS3gblVK6NaSGnhoC98NndAxJ+7+rofNryJnpEKEo1s0sdq5NVjYGuZvpqe4CZus+27eHrekR0UdRHq+gs2UAqo=
+	t=1705543753; cv=none; b=ej4d7ElJY/M0gG2UFAYJECbPPUcRWV0Zx5fRRha12G7bZ5K65o214/aT/XKi0GENT7rC1kEQ9AMLsoj9CzYX3xzmBqVFXUS5qwiZBr+i6fXFbEipStynkGoWFtxV9bFHjkfsz6/h8DNgprMz8VpFAefrpWh+otJEGCTXPyGgJqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705543634; c=relaxed/simple;
-	bh=p8ztB7SmZU1W5DwouAvpA1NwnVxwUnbtN1u7pC+nywU=;
-	h=X-Alimail-AntiSpam:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=UjYcHY/vCU5CdSlcbpWwZW0jDFEbZIUJysI3owHg5B7f9eI6YbVHWuH/5N3pxjU7KdBZdUW8Y+MDrUOwWj87AA4SEeOoV2WU8LYWUpVjg/eMRx1UiBfrrjvuv/4Xs1V4DFruIDTCdFRBe2eHn8GuqZCxUGl/X59R8ZaxGDaxAec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W-r297T_1705543621;
-Received: from 30.221.131.86(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W-r297T_1705543621)
-          by smtp.aliyun-inc.com;
-          Thu, 18 Jan 2024 10:07:02 +0800
-Message-ID: <b5de921a-27d8-4e68-8915-04e9aa06fb0d@linux.alibaba.com>
-Date: Thu, 18 Jan 2024 10:07:01 +0800
+	s=arc-20240116; t=1705543753; c=relaxed/simple;
+	bh=z3G3oCbHidD8qynDWfVmNenXA6fw2hQV7eZGCKnPYyE=;
+	h=X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:X-CID-BVR:
+	 X-CID-BAS:X-CID-FACTOR:X-UUID:Received:Received:X-ns-mid:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=kpNAS1jXVZ/E25p6Ts3EdHPsmjzpWAEn8deAVsxM90f5HsuKXtCLlTETrJoSEzqbsltOUJ3qVymZMk0Mw1gwEunWCnLUA8WoOQrAcf5iu2OHtvSe0P36KOvKUAK3NzQE6bt5vaN8jtpYHrq0oZJIL9SC/7xGdNwRUfoDryZRTu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 96769b9c0fbc46cd8ed79cbbd996c5c5-20240118
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:ee66016e-655b-450a-83d8-1a213d165016,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:1
+X-CID-INFO: VERSION:1.1.35,REQID:ee66016e-655b-450a-83d8-1a213d165016,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:1
+X-CID-META: VersionHash:5d391d7,CLOUDID:1b50787f-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:240118100344LP7I44R2,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|42|7
+	4|64|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 96769b9c0fbc46cd8ed79cbbd996c5c5-20240118
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 696325700; Thu, 18 Jan 2024 10:03:42 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id D0A45E000EB9;
+	Thu, 18 Jan 2024 10:03:41 +0800 (CST)
+X-ns-mid: postfix-65A886FD-772615417
+Received: from [172.20.15.234] (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 46FA7E000EB9;
+	Thu, 18 Jan 2024 10:03:38 +0800 (CST)
+Message-ID: <e583bcd5-cae6-4299-8800-80e862a6bd8f@kylinos.cn>
+Date: Thu, 18 Jan 2024 10:03:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,106 +53,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net/smc: fix illegal rmb_desc access in SMC-D
- connection dump
-To: dust.li@linux.alibaba.com, wenjia@linux.ibm.com, jaka@linux.ibm.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- yepeilin.cs@gmail.com, ubraun@linux.ibm.com, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240117122749.63785-1-guwen@linux.alibaba.com>
- <20240118015018.GB89692@linux.alibaba.com>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <20240118015018.GB89692@linux.alibaba.com>
+Subject: Re: [PATCH] pstore/ram: Return directly after a failed kasprintf()
+ call in ramoops_init_prz()
+To: Markus Elfring <Markus.Elfring@web.de>, linux-hardening@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, Joel Fernandes <joel@joelfernandes.org>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?=
+ <groeck@chromium.org>, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+References: <644f44ad-7e2b-4a1a-bbd7-ccc79d479242@web.de>
+Content-Language: en-US
+From: Kunwu Chan <chentao@kylinos.cn>
+In-Reply-To: <644f44ad-7e2b-4a1a-bbd7-ccc79d479242@web.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+Hi Markus,
+Thanks for your patch.
 
+On 2024/1/18 04:24, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 17 Jan 2024 21:09:22 +0100
+>=20
+> The result from a call of the function =E2=80=9Ckasprintf=E2=80=9D was =
+passed to
+> a subsequent function call without checking for a null pointer before
+> (according to a memory allocation failure).
+> This issue was detected by using the Coccinelle software.
+>=20
+> Thus return directly after a failed kasprintf() call.
+>=20
+> Fixes: 1227daa43bce1 ("pstore/ram: Clarify resource reservation labels"=
+)
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>   fs/pstore/ram.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>=20
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 88b34fdbf759..1a673a4af17c 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -595,6 +595,9 @@ static int ramoops_init_prz(const char *name,
+>   	}
+>=20
+>   	label =3D kasprintf(GFP_KERNEL, "ramoops:%s", name);
+> +	if (!label)
+> +		return -ENOMEM;
+> +
 
-On 2024/1/18 09:50, Dust Li wrote:
-> On Wed, Jan 17, 2024 at 08:27:49PM +0800, Wen Gu wrote:
->> A crash was found when dumping SMC-D connections. It can be reproduced
->> by following steps:
->>
->> - run nginx/wrk test:
->>   smc_run nginx
->>   smc_run wrk -t 16 -c 1000 -d <duration> -H 'Connection: Close' <URL>
->>
->> - continuously dump SMC-D connections in parallel:
->>   watch -n 1 'smcss -D'
->>
->> BUG: kernel NULL pointer dereference, address: 0000000000000030
->> CPU: 2 PID: 7204 Comm: smcss Kdump: loaded Tainted: G	E      6.7.0+ #55
->> RIP: 0010:__smc_diag_dump.constprop.0+0x5e5/0x620 [smc_diag]
->> Call Trace:
->>   <TASK>
->>   ? __die+0x24/0x70
->>   ? page_fault_oops+0x66/0x150
->>   ? exc_page_fault+0x69/0x140
->>   ? asm_exc_page_fault+0x26/0x30
->>   ? __smc_diag_dump.constprop.0+0x5e5/0x620 [smc_diag]
->>   ? __kmalloc_node_track_caller+0x35d/0x430
->>   ? __alloc_skb+0x77/0x170
->>   smc_diag_dump_proto+0xd0/0xf0 [smc_diag]
->>   smc_diag_dump+0x26/0x60 [smc_diag]
->>   netlink_dump+0x19f/0x320
->>   __netlink_dump_start+0x1dc/0x300
->>   smc_diag_handler_dump+0x6a/0x80 [smc_diag]
->>   ? __pfx_smc_diag_dump+0x10/0x10 [smc_diag]
->>   sock_diag_rcv_msg+0x121/0x140
->>   ? __pfx_sock_diag_rcv_msg+0x10/0x10
->>   netlink_rcv_skb+0x5a/0x110
->>   sock_diag_rcv+0x28/0x40
->>   netlink_unicast+0x22a/0x330
->>   netlink_sendmsg+0x1f8/0x420
->>   __sock_sendmsg+0xb0/0xc0
->>   ____sys_sendmsg+0x24e/0x300
->>   ? copy_msghdr_from_user+0x62/0x80
->>   ___sys_sendmsg+0x7c/0xd0
->>   ? __do_fault+0x34/0x160
->>   ? do_read_fault+0x5f/0x100
->>   ? do_fault+0xb0/0x110
->>   ? __handle_mm_fault+0x2b0/0x6c0
->>   __sys_sendmsg+0x4d/0x80
->>   do_syscall_64+0x69/0x180
->>   entry_SYSCALL_64_after_hwframe+0x6e/0x76
->>
->> It is possible that the connection is in process of being established
->> when we dump it. Assumed that the connection has been registered in a
->> link group by smc_conn_create() but the rmb_desc has not yet been
->> initialized by smc_buf_create(), thus causing the illegal access to
->> conn->rmb_desc. So fix it by checking before dump.
->>
->> Fixes: ce51f63e63c5 ("net/smc: Prevent kernel-infoleak in __smc_diag_dump()")
-> 
-> ce51f63e63c5 ("net/smc: Prevent kernel-infoleak in __smc_diag_dump()")
-> only add a memset() of 'struct smcd_diag_dmbinfo dinfo', which I don't
-> think is not the real cause of the bug.
-> 
+This part looks good to me.
 
-After re-checking the definition of Fixes tag, I agree that
-ce51f63e63c5 is not appropriate and
-4b1b7d3b30a6 ("net/smc: add SMC-D diag support") should be used.
+Commit 1227daa43bce1 ("pstore/ram: Clarify resource reservation labels")
+introduce another two more kasprintf in the ramoops_init_przs.
 
-Thank you!
+Could you fix it together?
+>   	*prz =3D persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info,
+>   				  cxt->memtype, PRZ_FLAG_ZAP_OLD, label);
+>   	kfree(label);
+> --
+> 2.43.0
+>=20
+--=20
+Thanks,
+   Kunwu
 
->> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
->> ---
->> net/smc/smc_diag.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
->> index 52f7c4f1e767..5a33908015f3 100644
->> --- a/net/smc/smc_diag.c
->> +++ b/net/smc/smc_diag.c
->> @@ -164,7 +164,7 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
->> 	}
->> 	if (smc_conn_lgr_valid(&smc->conn) && smc->conn.lgr->is_smcd &&
->> 	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
->> -	    !list_empty(&smc->conn.lgr->list)) {
->> +	    !list_empty(&smc->conn.lgr->list) && smc->conn.rmb_desc) {
->> 		struct smc_connection *conn = &smc->conn;
->> 		struct smcd_diag_dmbinfo dinfo;
->> 		struct smcd_dev *smcd = conn->lgr->smcd;
->> -- 
->> 2.43.0
