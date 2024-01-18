@@ -1,354 +1,170 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4850A2E82B
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22D42E620
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705607617; cv=none; b=l3qBEtxpD/PZGxY+RtEnJ63QVjbezOEYIsIVrFLMTawc/5EiB5571DWVgWnbGYklnTs6NzAbyef5jFeMgx5e6d2YqphVJBAHN3iUUMp3RILr6JReYuZJ1sNGaXH//ABszaGp3/8rkCqJGszDJCQeti5snmYRc+qKGgXIp/HgTUw=
+	t=1705607665; cv=none; b=RXiyV+xR5fbRUOaqyFNnhLI1LHZPXvHFKbLGXNj5SzX5qUJ45igQyacD5dD4ms4hQ/QjYPBotY91gWPnKyZBIuLBrJrs1zvYTltyW6A5mdTcWEuosyNI93uxyBl3YC/aNiOOHoj5QM+ItHf+64XUO+lLV/4Ox/Y43pISvxbAo34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705607617; c=relaxed/simple;
-	bh=SZPHFukP2vPjARVRx6o9EqSmOJNzMlyzLKxUxHTg/6E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W3q/aGDmyW2J/nMzKBMFiqKx7NCXsjzKKQIkIi7diGnbZ7ntMQr+rpdKJbZnb8i7c4TnT+3/4oELFjFj/AHT8T2g6nHEvYh4WPa62VoYrtuuhGLTITecWFCbyBlDX1rap38VuUGvf50bc9e8kkgwtMfDmA8HTJh+s1T7bCauESY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kX86jqz2; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1705607665; c=relaxed/simple;
+	bh=lwmGzM8D/DsKOwpziwD+eg4vluIE54Sx00TNVz8Fat8=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=sungf0kWyWrrJxGS91RxgVwhQ4NxyU5P8mr04DnuZpEbQeRpDMD7kZ2KknYYn4OtOyrJji33nAueR7GrqIHL8wIaJa3M7T7REztuxdMoPMnJYT6NcASBhmoWVKo55TYZ/CXx+9zhSvwgZbmOMiV8zEusSNgT6retbqmLvxv67Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fB3++jEZ; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kX86jqz2"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ccea11b6bbso815011fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:53:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fB3++jEZ"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cdfed46372so25203a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 11:54:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705607613; x=1706212413; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7DL4Xb2/mJV98z6ViovAZ4ufx02hdHfeh6ifkPAErM4=;
-        b=kX86jqz2XmnUXBCGyW7RrhZuGfx4mBjw9yHjSXuLZzLi0zI6UNZJlPUjFUKsUClJkI
-         EoiKz2rGT03YksuGPK7ftwV9EYgrFcObY+AZPAQfOMqivukEp5z7OGkXnx3ko/GzsfYB
-         FgMyoIlpLTmtiAVzKsObMPFZcpUcPDUkLHZkY=
+        d=broadcom.com; s=google; t=1705607663; x=1706212463; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFnqHhzfXfGsBcGKTh6i/IxLQyyEDg67xxlpXPYw8NY=;
+        b=fB3++jEZzDJp++BlZC2kzStHE7WPci0AhC+q1aiFkQmpj7NpfxIgiRAsBa1vCVQUr4
+         f9URWh+h3FjQa97wkgogSbgNOmKXolTuH4s95Tel9iT5oR1yTjOml1J3Y6Aa2pcdb+ge
+         0Cl/+kt2eazLBvjQFkCPWk17wvfUAuVieLJ2M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705607613; x=1706212413;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7DL4Xb2/mJV98z6ViovAZ4ufx02hdHfeh6ifkPAErM4=;
-        b=iD020Zn/DOC6wp2BnQaqQUM8WpmBmx7AoKsj0HQBWD3f99VyvPzH4Bxlgdm8KySTAy
-         M8zvIqhCVC6i/xMu4OVpNo/BZIogherzWz3tVqIZPfESHaG80Gk1LzHvEH52AvwAPklf
-         u7+SRBxApvm3O0ed9UmJvbjIXOIY2vAu4kl+Rx+Kaln5f+jU/REjVquKZpijp4T3xdko
-         H9vnc6CjhCRunT9WUuL0PIV05dDUGh6+m79YClzyLwv3waCAkK+i0sTY2D0PwGMz1dBR
-         cV1OvXHzBk2iOwm3GHO3TWCXizXQxQptu5FZR+JqNnKDoJQ1Z4qGn4EXIk1wYtdPiub6
-         y0DA==
-X-Gm-Message-State: AOJu0YxDthqhj8CN17zfLccWlc1Ej62dSOvOEYvinCJbDC29n9BT0pTW
-	UT9G91VsO4uyUxDIGYQ/PrSM4/U2kJ5tX/S/JX3iV7M8IqRoJZT8wSsl1kIDFb8wzUp8tM9jbah
-	ogQ==
-X-Google-Smtp-Source: AGHT+IF4XNDOxUa6mccHuHFzuRwablf8OZq3KHR8qjMuUGwsvzt65X8VFU1m0U5drZq/eNDXlQycow==
-X-Received: by 2002:a2e:b056:0:b0:2cd:2796:8e26 with SMTP id d22-20020a2eb056000000b002cd27968e26mr1907649ljl.7.1705607613393;
-        Thu, 18 Jan 2024 11:53:33 -0800 (PST)
-Received: from cracow.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
-        by smtp.gmail.com with ESMTPSA id 2-20020a05651c00c200b002ccd3e8a59esm2333345ljr.121.2024.01.18.11.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 11:53:33 -0800 (PST)
-From: Lukasz Majczak <lma@chromium.org>
-To: Gwendal Grignou <gwendal@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Radoslaw Biernacki <biernacki@google.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Lee Jones <lee@kernel.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	linux-watchdog@vger.kernel.org,
+        d=1e100.net; s=20230601; t=1705607663; x=1706212463;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFnqHhzfXfGsBcGKTh6i/IxLQyyEDg67xxlpXPYw8NY=;
+        b=OYn2yGdSboxrti9KhEU9DWsYCl3EUQm+dXnNW2dXCWC2HL0wq15g2hXuk3zBXfl3QA
+         qcX7lbGjWcjO1G+DaTdROuY8F/YrJTNKigZVHPA1nzGAITUMtxqfQhMAwlCfpqDOy+uU
+         IdGUIQaDaq030chqfKmTbpzKaedHKNrkf5XEa0EomXQLEILcTil3HNhEv5Kqy1bnx97k
+         AlFVSPoVD7ciG9zFx0504zL+97MCkbuJ67xW0T2QFkWEybJ9juKkIdAnyJqCXDMImwUx
+         xp4viKuvLcDVKZDIDjqTb3t5GEUOZnXuruam/rkW2PGKUWqdyNnBbjRj8Eu6zDwED2nP
+         3Quw==
+X-Gm-Message-State: AOJu0YzBGB7EPHTzcMnQsjp6HlvdUWLQ4vqmHgy4magyksMtk/fcBgfb
+	Y5J+v8qZL7nkScuMI8Vq4vEMeHDfLKLHbtgh0DYQP4mcKhSnW0dwLGinm29h0w==
+X-Google-Smtp-Source: AGHT+IFLcvCL/9hqBlYEM8zweYTHrBmeLTcHJFleUdviSh98eTvEiqMjeYkNEnRyXIECSfhyc563Ow==
+X-Received: by 2002:a17:90b:1107:b0:290:26d:acef with SMTP id gi7-20020a17090b110700b00290026dacefmr1200568pjb.38.1705607663026;
+        Thu, 18 Jan 2024 11:54:23 -0800 (PST)
+Received: from bcacpedev-irv-3.lvn.broadcom.net ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id rr12-20020a17090b2b4c00b0028d9b5d41edsm2263805pjb.38.2024.01.18.11.54.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jan 2024 11:54:22 -0800 (PST)
+From: dregan@broadcom.com
+To: dregan@broadcom.com,
+	dregan@mail.com,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	computersforpeace@gmail.com,
+	kdasu.kdev@gmail.com,
+	linux-mtd@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	chrome-platform@lists.linux.dev
-Cc: Lukasz Majczak <lma@chromium.org>
-Subject: [PATCH v2 2/3] watchdog: Add ChromeOS EC-based watchdog driver
-Date: Thu, 18 Jan 2024 19:53:23 +0000
-Message-ID: <20240118195325.2964918-3-lma@chromium.org>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-In-Reply-To: <20240118195325.2964918-1-lma@chromium.org>
-References: <20240118195325.2964918-1-lma@chromium.org>
+	joel.peshkin@broadcom.com,
+	tomer.yacoby@broadcom.com,
+	dan.beygelman@broadcom.com,
+	william.zhang@broadcom.com,
+	anand.gore@broadcom.com,
+	kursad.oney@broadcom.com,
+	florian.fainelli@broadcom.com,
+	rafal@milecki.pl,
+	bcm-kernel-feedback-list@broadcom.com,
+	andre.przywara@arm.com,
+	baruch@tkos.co.il,
+	linux-arm-kernel@lists.infradead.org,
+	dan.carpenter@linaro.org
+Subject: [PATCH v2 00/10] mtd: rawnand: brcmnand: driver and doc updates
+Date: Thu, 18 Jan 2024 11:53:46 -0800
+Message-Id: <20240118195356.133391-1-dregan@broadcom.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Embedded Controller (EC) present on Chromebook devices
-can be used as a watchdog.
-Implement a driver to support it.
+From: David Regan <dregan@broadcom.com>
 
-Signed-off-by: Lukasz Majczak <lma@chromium.org>
----
- MAINTAINERS                    |   6 +
- drivers/watchdog/Kconfig       |  11 ++
- drivers/watchdog/Makefile      |   1 +
- drivers/watchdog/cros_ec_wdt.c | 202 +++++++++++++++++++++++++++++++++
- 4 files changed, 220 insertions(+)
- create mode 100644 drivers/watchdog/cros_ec_wdt.c
+This patch series is an update from the previous version [1] after
+exex_op support and fixes (patch 1 to 4 from the previous version.)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ef90ddc0fda6..aaae581aae70 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4981,6 +4981,12 @@ R:	Sami Kyöstilä <skyostil@chromium.org>
- S:	Maintained
- F:	drivers/platform/chrome/cros_hps_i2c.c
- 
-+CHROMEOS EC WATCHDOG
-+M:	Lukasz Majczak <lma@chromium.org>
-+L:	chrome-platform@lists.linux.dev
-+S:	Maintained
-+F:	drivers/watchdog/cros_ec_wdt.c
-+
- CHRONTEL CH7322 CEC DRIVER
- M:	Joe Tessler <jrt@google.com>
- L:	linux-media@vger.kernel.org
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 7d22051b15a2..4700b218340f 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -181,6 +181,17 @@ config BD957XMUF_WATCHDOG
- 	  watchdog. Alternatively say M to compile the driver as a module,
- 	  which will be called bd9576_wdt.
- 
-+config CROS_EC_WATCHDOG
-+	tristate "ChromeOS EC-based watchdog"
-+	select WATCHDOG_CORE
-+	depends on CROS_EC
-+	help
-+	  Watchdog driver for Chromebook devices equipped with embedded controller.
-+	  Trigger event is recorded in EC and checked on the subsequent boot.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called cros_ec_wdt.
-+
- config DA9052_WATCHDOG
- 	tristate "Dialog DA9052 Watchdog"
- 	depends on PMIC_DA9052 || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 7cbc34514ec1..3710c218f05e 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -217,6 +217,7 @@ obj-$(CONFIG_XEN_WDT) += xen_wdt.o
- 
- # Architecture Independent
- obj-$(CONFIG_BD957XMUF_WATCHDOG) += bd9576_wdt.o
-+obj-$(CONFIG_CROS_EC_WATCHDOG) += cros_ec_wdt.o
- obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
- obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
- obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-diff --git a/drivers/watchdog/cros_ec_wdt.c b/drivers/watchdog/cros_ec_wdt.c
-new file mode 100644
-index 000000000000..1915b8d55e45
---- /dev/null
-+++ b/drivers/watchdog/cros_ec_wdt.c
-@@ -0,0 +1,202 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2024 Google LLC.
-+ * Author: Lukasz Majczak <lma@chromium.com>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_device.h>
-+#include <linux/watchdog.h>
-+
-+#define CROS_EC_WATCHDOG_DEFAULT_TIME 30 /* seconds */
-+#define DRV_NAME "cros-ec-wdt-drv"
-+
-+union cros_ec_wdt_data {
-+	struct ec_params_hang_detect req;
-+	struct ec_response_hang_detect resp;
-+} __packed;
-+
-+static int cros_ec_wdt_send_cmd(struct cros_ec_device *cros_ec,
-+				union cros_ec_wdt_data *arg)
-+{
-+	int ret;
-+	struct {
-+		struct cros_ec_command msg;
-+		union cros_ec_wdt_data data;
-+	} __packed buf = {
-+		.msg = {
-+			.version = 0,
-+			.command = EC_CMD_HANG_DETECT,
-+			.insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
-+				   sizeof(struct ec_response_hang_detect) :
-+				   0,
-+			.outsize = sizeof(struct ec_params_hang_detect),
-+		},
-+		.data.req = arg->req
-+	};
-+
-+	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-+	if (ret < 0)
-+		return ret;
-+
-+	arg->resp = buf.data.resp;
-+
-+	return 0;
-+}
-+
-+static int cros_ec_wdt_ping(struct watchdog_device *wdd)
-+{
-+	struct cros_ec_device *cros_ec = watchdog_get_drvdata(wdd);
-+	union cros_ec_wdt_data arg;
-+	int ret;
-+
-+	arg.req.command = EC_HANG_DETECT_CMD_RELOAD;
-+	ret = cros_ec_wdt_send_cmd(cros_ec, &arg);
-+	if (ret < 0)
-+		dev_dbg(wdd->parent, "Failed to ping watchdog (%d)", ret);
-+
-+	return ret;
-+}
-+
-+static int cros_ec_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct cros_ec_device *cros_ec = watchdog_get_drvdata(wdd);
-+	union cros_ec_wdt_data arg;
-+	int ret;
-+
-+	/* Prepare watchdog on EC side */
-+	arg.req.command = EC_HANG_DETECT_CMD_SET_TIMEOUT;
-+	arg.req.reboot_timeout_sec = wdd->timeout;
-+	ret = cros_ec_wdt_send_cmd(cros_ec, &arg);
-+	if (ret < 0)
-+		dev_dbg(wdd->parent, "Failed to start watchdog (%d)", ret);
-+
-+	return ret;
-+}
-+
-+static int cros_ec_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct cros_ec_device *cros_ec = watchdog_get_drvdata(wdd);
-+	union cros_ec_wdt_data arg;
-+	int ret;
-+
-+	arg.req.command = EC_HANG_DETECT_CMD_CANCEL;
-+	ret = cros_ec_wdt_send_cmd(cros_ec, &arg);
-+	if (ret < 0)
-+		dev_dbg(wdd->parent, "Failed to stop watchdog (%d)", ret);
-+
-+	return ret;
-+}
-+
-+static int cros_ec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int t)
-+{
-+	unsigned int old_timeout = wdd->timeout;
-+	int ret;
-+
-+	wdd->timeout = t;
-+	ret = cros_ec_wdt_start(wdd);
-+	if (ret < 0)
-+		wdd->timeout = old_timeout;
-+
-+	return ret;
-+}
-+
-+static const struct watchdog_info cros_ec_wdt_ident = {
-+	.options          = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.firmware_version = 0,
-+	.identity         = DRV_NAME,
-+};
-+
-+static const struct watchdog_ops cros_ec_wdt_ops = {
-+	.owner		 = THIS_MODULE,
-+	.ping		 = cros_ec_wdt_ping,
-+	.start		 = cros_ec_wdt_start,
-+	.stop		 = cros_ec_wdt_stop,
-+	.set_timeout = cros_ec_wdt_set_timeout,
-+};
-+
-+static int cros_ec_wdt_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
-+	struct cros_ec_device *cros_ec = ec_dev->ec_dev;
-+	struct watchdog_device *wdd;
-+	union cros_ec_wdt_data arg;
-+	int ret = 0;
-+
-+	wdd = devm_kzalloc(&pdev->dev, sizeof(struct watchdog_device), GFP_KERNEL);
-+	if (!wdd)
-+		return -ENOMEM;
-+
-+	arg.req.command = EC_HANG_DETECT_CMD_GET_STATUS;
-+	ret = cros_ec_wdt_send_cmd(cros_ec, &arg);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to get watchdog bootstatus");
-+
-+	wdd->parent = &pdev->dev;
-+	wdd->info = &cros_ec_wdt_ident;
-+	wdd->ops = &cros_ec_wdt_ops;
-+	wdd->timeout = CROS_EC_WATCHDOG_DEFAULT_TIME;
-+	wdd->min_timeout = EC_HANG_DETECT_MIN_TIMEOUT;
-+	wdd->max_timeout = EC_HANG_DETECT_MAX_TIMEOUT;
-+	if (arg.resp.status == EC_HANG_DETECT_AP_BOOT_EC_WDT)
-+		wdd->bootstatus = WDIOF_CARDRESET;
-+
-+	arg.req.command = EC_HANG_DETECT_CMD_CLEAR_STATUS;
-+	ret = cros_ec_wdt_send_cmd(cros_ec, &arg);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to clear watchdog bootstatus");
-+
-+	watchdog_stop_on_reboot(wdd);
-+	watchdog_stop_on_unregister(wdd);
-+	watchdog_set_drvdata(wdd, cros_ec);
-+	platform_set_drvdata(pdev, wdd);
-+
-+	return devm_watchdog_register_device(dev, wdd);
-+}
-+
-+static int __maybe_unused cros_ec_wdt_suspend(struct platform_device *pdev, pm_message_t state)
-+{
-+	struct watchdog_device *wdd = platform_get_drvdata(pdev);
-+	int ret = 0;
-+
-+	if (watchdog_active(wdd))
-+		ret = cros_ec_wdt_stop(wdd);
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused cros_ec_wdt_resume(struct platform_device *pdev)
-+{
-+	struct watchdog_device *wdd = platform_get_drvdata(pdev);
-+	int ret = 0;
-+
-+	if (watchdog_active(wdd))
-+		ret = cros_ec_wdt_start(wdd);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver cros_ec_wdt_driver = {
-+	.probe		= cros_ec_wdt_probe,
-+	.suspend	= pm_ptr(cros_ec_wdt_suspend),
-+	.resume		= pm_ptr(cros_ec_wdt_resume),
-+	.driver		= {
-+		.name	= DRV_NAME,
-+	},
-+};
-+
-+module_platform_driver(cros_ec_wdt_driver);
-+
-+static const struct platform_device_id cros_ec_wdt_id[] = {
-+	{ DRV_NAME, 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, cros_ec_wdt_id);
-+MODULE_DESCRIPTION("Cros EC Watchdog Device Driver");
-+MODULE_LICENSE("GPL");
+It updates all the BCMBCA SoC to support the nand controller and add
+functions to handle BCMBCA specific needs on ECC and Write Protection
+usage. The device tree document is also updated accordingly with the new
+properties needed by the driver.
+
+In addition there is a bug fix for exec_op helper functions and on-die ECC.
+
+[1] https://lore.kernel.org/lkml/20230606231252.94838-1-william.zhang@broadcom.com/
+
+Changes in v2:
+- Revert the new compatible string nand-bcmbca
+- Drop the BCM63168 compatible fix to avoid any potential ABI
+Incompatibility issue
+- Simplify the explanation for brcm,nand-use-wp
+- Keep the interrupt name requirement when interrupt number is specified
+- Add nand controller node label for 4908 so it is consistent with other
+SoC's and can be referenced by board dts file
+- Drop the is_param argument to the read data bus function now that we
+have the exec_op API to read the parameter page and ONFI data
+- Minor cosmetic fixes
+- Added patches 8, 9, 10 to patch series
+
+William Zhang (7):
+  dt-bindings: mtd: brcmnand: Updates for bcmbca SoCs
+  ARM: dts: broadcom: bcmbca: Add NAND controller node
+  arm64: dts: broadcom: bcmbca: Add NAND controller node
+  mtd: rawnand: brcmnand: Rename bcm63138 nand driver
+  mtd: rawnand: brcmnand: Add BCMBCA read data bus interface
+  mtd: rawnand: brcmnand: Add support for getting ecc setting from strap
+  mtd: rawnand: brcmnand: Support write protection setting from dts
+
+ David Regan (3):
+  mtd: rawnand: brcmnand: exec_op helper functions return type fixes
+  mtd: rawnand: brcmnand: update log level messages
+  mtd: rawnand: brcmnand: allow for on-die ecc
+
+.../bindings/mtd/brcm,brcmnand.yaml           |  36 ++++-
+ arch/arm/boot/dts/broadcom/bcm47622.dtsi      |  17 ++
+ arch/arm/boot/dts/broadcom/bcm63138.dtsi      |  10 +-
+ arch/arm/boot/dts/broadcom/bcm63148.dtsi      |  17 ++
+ arch/arm/boot/dts/broadcom/bcm63178.dtsi      |  17 ++
+ arch/arm/boot/dts/broadcom/bcm6756.dtsi       |  17 ++
+ arch/arm/boot/dts/broadcom/bcm6846.dtsi       |  17 ++
+ arch/arm/boot/dts/broadcom/bcm6855.dtsi       |  17 ++
+ arch/arm/boot/dts/broadcom/bcm6878.dtsi       |  17 ++
+ arch/arm/boot/dts/broadcom/bcm947622.dts      |   4 +
+ arch/arm/boot/dts/broadcom/bcm963138.dts      |   4 +
+ arch/arm/boot/dts/broadcom/bcm963138dvt.dts   |  12 +-
+ arch/arm/boot/dts/broadcom/bcm963148.dts      |   4 +
+ arch/arm/boot/dts/broadcom/bcm963178.dts      |   4 +
+ arch/arm/boot/dts/broadcom/bcm96756.dts       |   4 +
+ arch/arm/boot/dts/broadcom/bcm96846.dts       |   4 +
+ arch/arm/boot/dts/broadcom/bcm96855.dts       |   4 +
+ arch/arm/boot/dts/broadcom/bcm96878.dts       |   4 +
+ .../boot/dts/broadcom/bcmbca/bcm4908.dtsi     |   5 +-
+ .../boot/dts/broadcom/bcmbca/bcm4912.dtsi     |  17 ++
+ .../boot/dts/broadcom/bcmbca/bcm63146.dtsi    |  17 ++
+ .../boot/dts/broadcom/bcmbca/bcm63158.dtsi    |  17 ++
+ .../boot/dts/broadcom/bcmbca/bcm6813.dtsi     |  17 ++
+ .../boot/dts/broadcom/bcmbca/bcm6856.dtsi     |  17 ++
+ .../boot/dts/broadcom/bcmbca/bcm6858.dtsi     |  17 ++
+ .../boot/dts/broadcom/bcmbca/bcm94912.dts     |   4 +
+ .../boot/dts/broadcom/bcmbca/bcm963146.dts    |   4 +
+ .../boot/dts/broadcom/bcmbca/bcm963158.dts    |   4 +
+ .../boot/dts/broadcom/bcmbca/bcm96813.dts     |   4 +
+ .../boot/dts/broadcom/bcmbca/bcm96856.dts     |   4 +
+ .../boot/dts/broadcom/bcmbca/bcm96858.dts     |   4 +
+ drivers/mtd/nand/raw/brcmnand/Makefile        |   2 +-
+ drivers/mtd/nand/raw/brcmnand/bcm63138_nand.c |  99 ------------
+ drivers/mtd/nand/raw/brcmnand/bcmbca_nand.c   | 126 +++++++++++++++
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c      | 146 +++++++++++++++---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.h      |   2 +
+ 36 files changed, 576 insertions(+), 139 deletions(-)
+ delete mode 100644 drivers/mtd/nand/raw/brcmnand/bcm63138_nand.c
+ create mode 100644 drivers/mtd/nand/raw/brcmnand/bcmbca_nand.c
+
 -- 
-2.43.0.429.g432eaa2c6b-goog
+2.37.3
 
