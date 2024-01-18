@@ -1,122 +1,122 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D95C127;
-	Thu, 18 Jan 2024 08:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2543F125A2;
+	Thu, 18 Jan 2024 08:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705567932; cv=none; b=VAgPa5tlgvmKWifEevBScSf0zSslw7Lus6kELVjf9k4oZL8Hu0c5yvk+VatpZgkhgo6DCQySlVB4QFCZ0KB83V0TRhcELOfVtWzxDjeIfmU8bexyu09H1LCEd+QeUJ+pEa3oIUNYNpW7qAOF0pTJANvcrcKrtxzsHeXjNQ1IHPQ=
+	t=1705567983; cv=none; b=f5OTom4qRfsuwef7kWgzBKqhgqwio3vWlYAgiwf8cDzUkoXrx1gYqcV6Z3sUyvU+BCN7vDr8tt+mmqtMTG4RW7b8CrEtD8rhtY9cPckFZA4x4crljbO+PLSDynq90K6YBbfVfxkpIO9FfAmkfup3JXI+DiaOg8oK3i9Z8OrTwyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705567932; c=relaxed/simple;
-	bh=vQSPSERsnHNwWcVWo9MElcDWrIIeQkXtCXQfi4Nvayc=;
-	h=Received:Received:Received:Subject:To:CC:References:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-Originating-IP:
-	 X-ClientProxiedBy; b=j0A45+Ya2jhRGGojgV60Mq9SPr6Y5VN/zzsVZzDW1I02CXNf8XJEwM7lHBpK4F7mpByQ/43jvd5zp70Nk+v4pIdRiBy0q8O01jNBElTQAErF24jZiVbZkfTYrVVC/0i3jXtuQ6SKWSiNftSp9EwBHk4RT45WLUVrUdgutoQOUQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TFxKx2r8nzWm6l;
-	Thu, 18 Jan 2024 16:51:01 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8E6FF140134;
-	Thu, 18 Jan 2024 16:52:04 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Jan
- 2024 16:52:04 +0800
-Subject: Re: [RFC PATCH net-next v5 2/2] net: add netmem to skb_frag_t
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Mina Almasry
-	<almasrymina@google.com>, Jason Gunthorpe <jgg@nvidia.com>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	=?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>, Shakeel Butt
-	<shakeelb@google.com>
-References: <20240109011455.1061529-1-almasrymina@google.com>
- <20240109011455.1061529-3-almasrymina@google.com>
- <5219f2cd-6854-0134-560d-8ae3f363b53f@huawei.com>
- <CAHS8izOtr+jfqQ6xCB3CoN-K_V1-4hPsB4-k5+1z-M3Qy2BbwA@mail.gmail.com>
- <0711845b-c435-251f-0bbc-20b243721c06@huawei.com>
- <CAHS8izOxvMVGXKpLBvVgyyS5_94WGG8Aca=O_zGMX+db-3gBXg@mail.gmail.com>
- <66bc7b8f-51b6-0d9e-db5b-47e7ee5e9029@huawei.com>
- <CAHS8izOnhtQGeQ-EFmYjZyZ0eW2LqO0Rrm73eAB2su=UA34yTw@mail.gmail.com>
- <20240116000129.GX734935@nvidia.com>
- <9c1a6725-c4c3-2bb1-344f-5e71f8ce7e63@huawei.com>
- <20240116121611.GY734935@nvidia.com>
- <CAHS8izPa6ostY7qZUAmm4g8N3rfWoVBK6r5z0_MycxfsEVH4jw@mail.gmail.com>
- <CAHS8izO1-+MczzFw_R80uv=aK5A9bUNcKroY=H9Euk+ZPnnGPw@mail.gmail.com>
- <65a8225348b92_11eb12942c@willemb.c.googlers.com.notmuch>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <1a4ff438-581f-1e14-6dfb-051d26d752a2@huawei.com>
-Date: Thu, 18 Jan 2024 16:52:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1705567983; c=relaxed/simple;
+	bh=EUxlP8TQSaz+aUuKrg3IdzttUBIfYpiIjK9Vzhpp42o=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:Content-Language:To:Cc:References:
+	 From:Autocrypt:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	b=gwKrURGLVIDMSwp+IKxjucu4GXukR7NIHoy3BJ5uaYgYKfXvwPtScpRybsHOM9u4yQ+xPcvXX8mQtZFeU0BP4fkPDRF8HqTesSfD6WMUEeK0X9IhNvji84P1hXnX6k5dozJh8vIiICqXviWClyHI+/KcKi85TbsnkSzAVMYcHsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-337cc8e72f5so350401f8f.1;
+        Thu, 18 Jan 2024 00:53:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705567980; x=1706172780;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HohZ+568aayDubztr663VwJJUa0UzFWr0ovhCgvpAek=;
+        b=AFrktMN3Fy5zL0nvD46EGSlak7Kdo7sYFlp7iChPk6NxgAZOCBwLmYxYntTARnklnq
+         n6zoO1tGaDTQloLG4siRZ0nIYutlZlI6PWCECEOqEyOuvJFDEeVp88DUGmX5dfIcbYih
+         6hL2CagM6ouoou7Qr6yAbXfecUpmle29BYm8u7yAcsnLnhcJkBUaMXW6PAHDRV7iCHJa
+         CBcPizPcOMAC67MeNzXbCXY8LHGyhgKEoop5R2jWDIaEBuLk62L7ylQmPTRAFKaAjf2O
+         JzNbLRQfP6fYueKqjTe9vbePJd7ijzAyuGPrKc8ssj0Q1/RwjzgMfa0SYMyaJVgfX5h0
+         jKJw==
+X-Gm-Message-State: AOJu0YylXLY47IU404XA7Bn8uCymJGqCUMVUqKAyB5w7Kgxf2QzUB0mL
+	Ul21u3/rWSzEPdlzjy4v9jf1o03m0x/f0Wrd+JBB68LW6NuY9f6z
+X-Google-Smtp-Source: AGHT+IEobU2BzLTBC4QUkEIMS2hdODPazKfKEqI4sJLh5EvmiCS6FVLZ6S+Sa9SNIdMf6VqydiwnfQ==
+X-Received: by 2002:a5d:6843:0:b0:337:c4af:7251 with SMTP id o3-20020a5d6843000000b00337c4af7251mr248353wrw.125.1705567980217;
+        Thu, 18 Jan 2024 00:53:00 -0800 (PST)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
+        by smtp.gmail.com with ESMTPSA id s15-20020a5d6a8f000000b00336898daceasm1132882wru.96.2024.01.18.00.52.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jan 2024 00:52:59 -0800 (PST)
+Message-ID: <e75d0f43-50b7-48b3-8980-d66736daa736@kernel.org>
+Date: Thu, 18 Jan 2024 09:52:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <65a8225348b92_11eb12942c@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 31/45] tty: vt: use VESA blanking constants
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+To: Thomas Zimmermann <tzimmermann@suse.de>, gregkh@linuxfoundation.org
+Cc: linux-fbdev@vger.kernel.org, linux-parisc@vger.kernel.org,
+ Helge Deller <deller@gmx.de>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ linux-serial@vger.kernel.org
+References: <20240118075756.10541-1-jirislaby@kernel.org>
+ <20240118075756.10541-32-jirislaby@kernel.org>
+ <39622a13-3999-4bf6-b8fc-f7a70c8cd5da@suse.de>
+ <4976e06c-dffd-4b93-a828-34f998f2472a@kernel.org>
+ <4ae60e8c-6a86-4895-b8fe-48de5b64b6c8@suse.de>
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <4ae60e8c-6a86-4895-b8fe-48de5b64b6c8@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2024/1/18 2:54, Willem de Bruijn wrote:
-> 
-> I agree. A concern with CONFIGs is that what matters in practice is
-> which default the distros compile with. In this case, adding hurdles
-> to using the feature likely for no real reason.
-> 
-> Static branches are used throughout the kernel in performance
-> sensitive paths, exactly because they allow optional paths effectively
-> for free. I'm quite surprised that this issue is being raised so
-> strongly here, as they are hardly new or controversial.
+On 18. 01. 24, 9:41, Thomas Zimmermann wrote:
+> Is it hard to get a new UAPI header accepted (honest question)?
 
-The new or controversial part about its usage in the devmem patchset as my
-understanding is:
-1. It is assumed the devmem and normal page processing in networking does
-   not have to be treated equally in the same system, either the performance
-   of devmem is favored or the performance of normal page is favored. I think
-   if distros is starting to worry about the CONFIG for devmem, devmem must be
-   quite popular that we might need the best performance of both. IMHO, static
-   branches might be just a convenient way to start supporting the devmem for
-   now as we seems to not have a clear idea of unified handling or proper API
-   for both devmem and normal page.
+Not at all, IMO. The header just needs to be correct™ as it would be set 
+in stone once released.
 
-2. Specifically to skb_frag_page(), if the returning NULL is to catch its misuse
-   for devmem, then I am agreed with this generally. But the NULL returning
-   handling in kcm_write_msgs() seems to suggest otherwise to me. Isn't it
-   reasonable to make the semantic obvious by using WARN_ON or BUG_ON directly in
-   skb_frag_page(), and returning NULL does not 100% reliably crash the thread as
-   suggested by jason?
+thanks,
+-- 
+js
+suse labs
 
-> 
-> But perhaps best is to show with data. Is there a representative page
-> pool benchmark that exercises the most sensitive case (XDP_DROP?) that
-> we can run with and without a static branch to demonstrate that any
-> diff is within the noise?
-> 
->>> But none of this is related to correctness. Code calling
->>> skb_frag_page() will fail or crash if it's not handled correctly
->>> regardless of the implementation details of skb_frag_page(). In the
->>> devmem series we add support to handle it correctly via [1] & [2].
->>>
->>> --
->>> Thanks,
->>> Mina
->>
->>
->>
->> -- 
->> Thanks,
->> Mina
-> 
-> 
-> 
-> .
-> 
