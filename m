@@ -1,36 +1,36 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C482D021;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE3E2D051;
 	Thu, 18 Jan 2024 15:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705593200; cv=none; b=ToRgF6u5ZXVo0GQ5csI9W3k5wp24GPX6ZdzUDNPlmXL0Ps+H5mMMf+HltvIZTI2OntO2JEs6myudA7m/0S1YCtkglxhEvVHcILVYsWAl03Fr7H0fyY3HYEopk8KIZzvNPynrxQT22Xy0HraoaQZDdwpZgfuf/4P+6QTg5BMvgGI=
+	t=1705593201; cv=none; b=R5A2yihTYJ2eupR9Z5WlsqlHqCrQJuGBD4uWkUxnc9z7aefX7ijjVwoYchsmhb9rwxsYBNX0KhcWT/Pvdo/frDXdYmar7D62/lqglaXXV9jc7a1rRT1Yyq5h8ogIz1lIbBuVP6OHa0/R9SnaczZLhLI0ylDGKldtByawB5jKw0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705593200; c=relaxed/simple;
-	bh=zkHzvVhKkqmhHXMYvIXk97BK8Hudfzm2zXC5uewsDi0=;
+	s=arc-20240116; t=1705593201; c=relaxed/simple;
+	bh=9HL/x4Nj/uz8p4t8CXOhsS0Z/OjK0DF1R3RA4ctG+tM=;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-GND-Sasl; b=KPjbILItP2CpqrJqOvmS/e+MEO0qf7yNcCPZFi4RzGl/y6EMVUb5D2BfhoN0+4T/PFECBKzHMncHfCkfVQjEfrpcp8yegemc/RjfWLeUPDGZ7hhHR4fN6B6+pfUJsX2TfC7YwT3lJxLd+vJN+LFX8m6ZOQKxxBUTGHHUWMzmyco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m03HPZLJ; arc=none smtp.client-ip=217.70.183.196
+	 Content-Transfer-Encoding:X-GND-Sasl; b=aWY+A7BJBrZMXmAMGQ48vjSlPvgcj9bFXA9cAXxWU+XPQs10C1kvmxwFJGsMHoTJtJ+iVsdlh1d5MlVqsMrRsVouZlelON2JyfHpRsFR9gINGH08K5DxEY+WspUB5lv3LUsRupdOqTBOVmMtElMl3EoSyiow9v253yEu/HILwEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ICObkfrh; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m03HPZLJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CBB0AE0008;
-	Thu, 18 Jan 2024 15:53:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ICObkfrh"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 802DA24000D;
+	Thu, 18 Jan 2024 15:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705593191;
+	t=1705593197;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lbVsbmHE4CGNjOWLyfslnCmWW1EMalEIZK9eUB8mHKE=;
-	b=m03HPZLJGGZzR0nGC6CmmyVbkycBEN896zgtCF/JeExvmK9+IvWaNPFjqHXLToMqYoAe3r
-	YuBDwidAECZxSchieL2eyhTkcF30v8pksFvRT+TigBQ7iM68hA58qPc3fCrxtLCYGJo6i9
-	+AfClGfXd1AYm1fekdAVXF3xd8CxzvuCH7QpEf8mDDUYq5UhebhJtQ1Xh1w3vtUsyRoUM7
-	cNZ73+4YK2G16Wxn2+dMjhMBSImOkUNXhRsA+VTSR7Vh+ad+/KzeyAv8d0JV/1BZdjAzLr
-	Fm2be0L0vqixc86+Kp0bIW7FPHtDJNw8raRH6md6q+G+VaZX/8dTF6m2S5yUaw==
+	bh=2Wk0pf2LEOjDnkraDRWIDqQ91OCoFBDydZfp83yb0pk=;
+	b=ICObkfrhVIHgn2/dVXNwYAHoxENoGLbIjx1QIIjPcwCxfvaRJ4hqwiBaPg7p1x17ZfYuUM
+	NoWoMfxgCXKdGIYm+4SZNXHFIZL72qhvdMreTvAKzVxJpLH4INcduxhD2oE0Mbp0+HrXfu
+	SNRbirW29ieyLLTnsemvcCl7WmWMrUO8kak3vogQfyBlVghBPH51DDMJI95Cege7xNMi3V
+	rf4+7c3xCBE67NzwIr0OQ+cjOx+Srda5BZprKyyInRu+MoVKTZjaAjtlk9GbK1rJutIzJl
+	X6cCnFuPB+aTAyySklrY9Qa4S2FYzBa7AF8kveXgNeQD23v+9fk33vj7FVphJQ==
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
 To: Paul Burton <paulburton@kernel.org>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -45,12 +45,10 @@ Cc: Vladimir  Kondratiev <vladimir.kondratiev@mobileye.com>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 07/15] dt-bindings: mips: cpus: Sort the entries
-Date: Thu, 18 Jan 2024 16:52:36 +0100
-Message-ID: <20240118155252.397947-8-gregory.clement@bootlin.com>
+	Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v6 13/15] MIPS: Share generic kernel code with other architecture
+Date: Thu, 18 Jan 2024 16:52:42 +0100
+Message-ID: <20240118155252.397947-14-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240118155252.397947-1-gregory.clement@bootlin.com>
 References: <20240118155252.397947-1-gregory.clement@bootlin.com>
@@ -63,49 +61,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: gregory.clement@bootlin.com
 
-The entries were nearly sorted but there were still some entries at
-the wrong places. Let's fix it.
+Some architectures might seek to utilize a significant portion of the
+generic kernel code while maintaining independence from the generic
+kernel due to specific peculiarities.
 
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This patch allows for the reuse of core code, preventing unnecessary
+duplication.
+
+Suggested-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- Documentation/devicetree/bindings/mips/cpus.yaml | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/mips/Kbuild           | 1 +
+ arch/mips/Kconfig          | 3 +++
+ arch/mips/generic/Makefile | 6 +++---
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mips/cpus.yaml b/Documentation/devicetree/bindings/mips/cpus.yaml
-index cf382dea3922c..9bc47868d28b6 100644
---- a/Documentation/devicetree/bindings/mips/cpus.yaml
-+++ b/Documentation/devicetree/bindings/mips/cpus.yaml
-@@ -23,22 +23,22 @@ properties:
-       - brcm,bmips4380
-       - brcm,bmips5000
-       - brcm,bmips5200
--      - ingenic,xburst-mxu1.0
-       - ingenic,xburst-fpu1.0-mxu1.1
-       - ingenic,xburst-fpu2.0-mxu2.0
-+      - ingenic,xburst-mxu1.0
-       - ingenic,xburst2-fpu2.1-mxu2.1-smt
-       - loongson,gs264
-       - mips,m14Kc
--      - mips,mips4Kc
--      - mips,mips4KEc
--      - mips,mips24Kc
-+      - mips,mips1004Kc
-       - mips,mips24KEc
-+      - mips,mips24Kc
-+      - mips,mips4KEc
-+      - mips,mips4Kc
-       - mips,mips74Kc
--      - mips,mips1004Kc
-       - mti,interaptiv
--      - mti,mips24KEc
-       - mti,mips14KEc
-       - mti,mips14Kc
-+      - mti,mips24KEc
+diff --git a/arch/mips/Kbuild b/arch/mips/Kbuild
+index af2967bffb73d..d683993ed331c 100644
+--- a/arch/mips/Kbuild
++++ b/arch/mips/Kbuild
+@@ -17,6 +17,7 @@ obj- := $(platform-y)
+ # mips object files
+ # The object files are linked as core-y files would be linked
  
-   reg:
-     maxItems: 1
++obj-y += generic/
+ obj-y += kernel/
+ obj-y += mm/
+ obj-y += net/
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 797ae590ebdba..5549d26448941 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -109,6 +109,9 @@ config MIPS_FIXUP_BIGPHYS_ADDR
+ config MIPS_GENERIC
+ 	bool
+ 
++config MACH_GENERIC_CORE
++	bool
++
+ config MACH_INGENIC
+ 	bool
+ 	select SYS_SUPPORTS_32BIT_KERNEL
+diff --git a/arch/mips/generic/Makefile b/arch/mips/generic/Makefile
+index e37a59bae0a62..56011d738441f 100644
+--- a/arch/mips/generic/Makefile
++++ b/arch/mips/generic/Makefile
+@@ -4,9 +4,9 @@
+ # Author: Paul Burton <paul.burton@mips.com>
+ #
+ 
+-obj-y += init.o
+-obj-y += irq.o
+-obj-y += proc.o
++obj-$(CONFIG_MACH_GENERIC_CORE) += init.o
++obj-$(CONFIG_MACH_GENERIC_CORE) += irq.o
++obj-$(CONFIG_MACH_GENERIC_CORE) += proc.o
+ 
+ obj-$(CONFIG_YAMON_DT_SHIM)		+= yamon-dt.o
+ obj-$(CONFIG_LEGACY_BOARD_SEAD3)	+= board-sead3.o
 -- 
 2.43.0
 
