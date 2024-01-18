@@ -1,28 +1,28 @@
 Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2120125544;
-	Thu, 18 Jan 2024 13:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48CB25546;
+	Thu, 18 Jan 2024 13:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705584293; cv=none; b=r4a32t7KNQgdgSgviaAtBn5kyk0DIgXUvkgs6IKBG8SaHrMQsikBRiUo+GSDwqQ5vQTNkxroVauaoBYwUoVCc4iUJ6T6oFHFO/olNbo9ewkciiSNYV+wLC6nS7s4f3USN1+9zWehizamTS1s0ctyKbGnlqqcDwThY5CzoqOhGV8=
+	t=1705584294; cv=none; b=uT4F6d5Fjr0dbyalk/TbmKli7C9esyXi8JTcUV6W3VNSgXKkCfqqZn7AMdukyKg89b4eiHzf+asLjCAlaE8q7TiITvF6mxqLuCNXmciw/sj2Yj8qnB8XRJfht//NcqQoU0uf3FOIJZ0/GkKXyE8I5qkRir8Nt0PoibpR/VWe/pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705584293; c=relaxed/simple;
-	bh=NZRW6tzTmDle8kSotz8FaxRCcE6d0Ym/4Gh5ibq+z7o=;
+	s=arc-20240116; t=1705584294; c=relaxed/simple;
+	bh=CNk2VPYgaHZVUWLkXbMZyzxsjX0YYQCq1bBFNAfMI2M=;
 	h=Received:Received:Received:From:To:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:X-Virus-Scanned; b=NND6JOtNxKDLM0x7VVVp3928KdKD6dWUlzxI/1YdpCTiVItGM/9+sDKgOgHGPw/1xC/6vmSh6Oj/uSeZfjT6zsUXZa4HQN0ijKtSIZRz2mo1zeIUtvD0zqIHVrCEmS2KohdpNhlm4/qKt8c2nRq1Ob8a19+01qrXHd2sNO3BwpQ=
+	 X-Mailer:In-Reply-To:References:X-Virus-Scanned; b=VSLQ4yeb/asPTzv5k77cW3cwVnlVLSMZJmZ9dkql2MqOSmsO/mpO4v6iJszP+LsMA/m7hEXeRmTyJI1pJiFqtHGWOJV9m8x/EmMm6YgCPUDWhpXcmBmWwYIxQdQpDt1bzzehhVPolQQnh5JT6z9Vc5FZGmtAmEgm8GneqWx6P+w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C0E51A124D;
-	Thu, 18 Jan 2024 14:14:54 +0100 (CET)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 49CF01A17C4;
+	Thu, 18 Jan 2024 14:14:57 +0100 (CET)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E817F1A1241;
-	Thu, 18 Jan 2024 14:14:53 +0100 (CET)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 129271A0762;
+	Thu, 18 Jan 2024 14:14:57 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id E0AEB18002A2;
-	Thu, 18 Jan 2024 21:14:51 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 0DDCE18002A2;
+	Thu, 18 Jan 2024 21:14:54 +0800 (+08)
 From: Shengjiu Wang <shengjiu.wang@nxp.com>
 To: hverkuil@xs4all.nl,
 	sakari.ailus@iki.fi,
@@ -41,9 +41,9 @@ To: hverkuil@xs4all.nl,
 	tiwai@suse.com,
 	alsa-devel@alsa-project.org,
 	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v12 03/15] ASoC: fsl_asrc: move fsl_asrc_common.h to include/sound
-Date: Thu, 18 Jan 2024 20:31:56 +0800
-Message-Id: <1705581128-4604-4-git-send-email-shengjiu.wang@nxp.com>
+Subject: [PATCH v12 05/15] ASoC: fsl_easrc: register m2m platform device
+Date: Thu, 18 Jan 2024 20:31:58 +0800
+Message-Id: <1705581128-4604-6-git-send-email-shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1705581128-4604-1-git-send-email-shengjiu.wang@nxp.com>
 References: <1705581128-4604-1-git-send-email-shengjiu.wang@nxp.com>
@@ -54,61 +54,58 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Move fsl_asrc_common.h to include/sound that it can be
-included from other drivers.
+Register m2m platform device,that user can
+use M2M feature.
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 Acked-by: Mark Brown <broonie@kernel.org>
 ---
- {sound/soc/fsl => include/sound}/fsl_asrc_common.h | 0
- sound/soc/fsl/fsl_asrc.h                           | 2 +-
- sound/soc/fsl/fsl_asrc_dma.c                       | 2 +-
- sound/soc/fsl/fsl_easrc.h                          | 2 +-
- 4 files changed, 3 insertions(+), 3 deletions(-)
- rename {sound/soc/fsl => include/sound}/fsl_asrc_common.h (100%)
+ sound/soc/fsl/fsl_easrc.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_asrc_common.h b/include/sound/fsl_asrc_common.h
-similarity index 100%
-rename from sound/soc/fsl/fsl_asrc_common.h
-rename to include/sound/fsl_asrc_common.h
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index 1c492eb237f5..66544624de7b 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -10,7 +10,7 @@
- #ifndef _FSL_ASRC_H
- #define _FSL_ASRC_H
+diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
+index cf7ad30a323b..ccbf45c7abf4 100644
+--- a/sound/soc/fsl/fsl_easrc.c
++++ b/sound/soc/fsl/fsl_easrc.c
+@@ -2075,6 +2075,7 @@ MODULE_DEVICE_TABLE(of, fsl_easrc_dt_ids);
+ static int fsl_easrc_probe(struct platform_device *pdev)
+ {
+ 	struct fsl_easrc_priv *easrc_priv;
++	struct fsl_asrc_m2m_pdata m2m_pdata;
+ 	struct device *dev = &pdev->dev;
+ 	struct fsl_asrc *easrc;
+ 	struct resource *res;
+@@ -2190,6 +2191,19 @@ static int fsl_easrc_probe(struct platform_device *pdev)
+ 		goto err_pm_disable;
+ 	}
  
--#include  "fsl_asrc_common.h"
-+#include  <sound/fsl_asrc_common.h>
++	m2m_pdata.asrc = easrc;
++	m2m_pdata.fmt_in = FSL_EASRC_FORMATS;
++	m2m_pdata.fmt_out = FSL_EASRC_FORMATS | SNDRV_PCM_FMTBIT_IEC958_SUBFRAME_LE;
++	m2m_pdata.rate_min = 8000;
++	m2m_pdata.rate_max = 768000;
++	m2m_pdata.chan_min = 1;
++	m2m_pdata.chan_max = 32;
++	easrc->m2m_pdev = platform_device_register_data(&pdev->dev,
++							M2M_DRV_NAME,
++							PLATFORM_DEVID_AUTO,
++							&m2m_pdata,
++							sizeof(m2m_pdata));
++
+ 	return 0;
  
- #define ASRC_M2M_INPUTFIFO_WML		0x4
- #define ASRC_M2M_OUTPUTFIFO_WML		0x2
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index f501f47242fb..f067bf1ecea7 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -12,7 +12,7 @@
- #include <sound/dmaengine_pcm.h>
- #include <sound/pcm_params.h>
+ err_pm_disable:
+@@ -2199,6 +2213,11 @@ static int fsl_easrc_probe(struct platform_device *pdev)
  
--#include "fsl_asrc_common.h"
-+#include <sound/fsl_asrc_common.h>
- 
- #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
- 
-diff --git a/sound/soc/fsl/fsl_easrc.h b/sound/soc/fsl/fsl_easrc.h
-index c9f770862662..a24e540876a4 100644
---- a/sound/soc/fsl/fsl_easrc.h
-+++ b/sound/soc/fsl/fsl_easrc.h
-@@ -9,7 +9,7 @@
- #include <sound/asound.h>
- #include <linux/dma/imx-dma.h>
- 
--#include "fsl_asrc_common.h"
-+#include <sound/fsl_asrc_common.h>
- 
- /* EASRC Register Map */
+ static void fsl_easrc_remove(struct platform_device *pdev)
+ {
++	struct fsl_asrc *easrc = dev_get_drvdata(&pdev->dev);
++
++	if (easrc->m2m_pdev && !IS_ERR(easrc->m2m_pdev))
++		platform_device_unregister(easrc->m2m_pdev);
++
+ 	pm_runtime_disable(&pdev->dev);
+ }
  
 -- 
 2.34.1
