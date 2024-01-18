@@ -1,75 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D531286B6;
-	Thu, 18 Jan 2024 15:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D88E2575C;
+	Thu, 18 Jan 2024 15:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705591613; cv=none; b=pJzADmVstUGnDcNm6ULIS63EV7oYUA0X1kUX7qPZSBqgtdUaO+I7IJGEQIJcIA6CvXQ0LxuIbPFESzecKUkJYPrXMNrCUJj25VHgkOI0a15hUPXPEq1kRMIVuzjKA5dmx8gAeSkB1cxBvqk7lhPf1R93OY0N+jUI3kcWXwZXQUM=
+	t=1705591842; cv=none; b=TcbYWxv4LnviAI5zXYAzaf/H8Vn/6oaFi34b1WLyinU/0CcTBMyyCl1j7qAvhCNSumuf8IWIhyn+HCDwqNq+mrx1+x/XPJBpXugSRyuh+G9U0MnDHR6gCKkXZn9FYSB2v0fnU6jxO6qD02RafE8UW+Q3tjLNzSLOnIpbUtsvW/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705591613; c=relaxed/simple;
-	bh=fu6GheHEBNxmSs1bBTsooD1uUVG41pw1PIGUREayObY=;
-	h=Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=RU/9W63JUOsqX8G0g9BPfhmMhBewZeXiLijzERJ2NfjTKM4DNUUqdY/SG9J+OjTfD1sDyPx0wf9f6ZLtlfIcQWGXAC/Op3AK3KTL4v9c5WK18cZB8UXoUJNXKonTdXwiH8WS1jqZaybl78yrmWsWFmWlPdO8kjfb03wXGtby4Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A8C11042;
-	Thu, 18 Jan 2024 07:27:36 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.28.174])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73C1F3F73F;
-	Thu, 18 Jan 2024 07:26:47 -0800 (PST)
-Date: Thu, 18 Jan 2024 15:26:43 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev, linux-um@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, kunit-dev@googlegroups.com,
-	linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org,
-	Frank Rowand <frowand.list@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/6] arm64: Unconditionally call unflatten_device_tree()
-Message-ID: <ZalDM90KoQ2Il0j7@FVFF77S0Q05N.cambridge.arm.com>
-References: <20240112200750.4062441-1-sboyd@kernel.org>
- <20240112200750.4062441-2-sboyd@kernel.org>
- <ZaZtbU9hre3YhZam@FVFF77S0Q05N>
- <434b21afe1899b1567f3617261594842.sboyd@kernel.org>
+	s=arc-20240116; t=1705591842; c=relaxed/simple;
+	bh=i97GKmF7/horliTQA8nhUjf5fXwkyeIk9RiV/fzEVYg=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
+	 To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=L1IFrpIXOLvCumCyPZ+0h1YQY4bViwQHtgjxGRZ3gaFLAUV2S6CRjoVHFF0hT5mVPXdmzuLANFyMo9XgMJZOlIurt3BkCgjKvMIDk0avjCZItlosvmm9Wv2g14iFRk3gXheR1r9q56rBccaKI1SuGbmULza0GecjjKBAI5sWv/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WF7BofNa; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF7BofNa"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2d04888d3dso705840566b.2;
+        Thu, 18 Jan 2024 07:30:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705591839; x=1706196639; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mU10kHzO5fudgGdcQQxn+WV1T9c5UCunJG3bnqaN414=;
+        b=WF7BofNaEY+/mCVmE3ZH7DBo9fTWZCZnv+plCCYVDI0EWp2cAgvjSoL9xA3UJaMwN3
+         Myxf51dw8renBouPfaVAUo63k0FnyTW+Z51vMPLJEq07LQtBKRY8pzNa30MLtH7gbKJl
+         MYxBKhkv2m5y+V2M5ncaZfYVNmqVYkCeXnMw7h0q3FPBHXcdxs/QHcGjxEBcmliyIP0f
+         CgHxVKEIqbUVlQvL/5uxHEgjDX6MavcKMH4BT5OcGOg+bYTmGNrkFBX7PdlVLvYnhnny
+         b8zX4q57bIdeJtoE49zO4xXSk2l8UepPxvSzfFBoZS7b5FAaYQ6GMVjbvfjQD9Mca1V2
+         Np6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705591839; x=1706196639;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mU10kHzO5fudgGdcQQxn+WV1T9c5UCunJG3bnqaN414=;
+        b=XQhOskBdXilsq+P4C3pvjhsMNqaw6ciRRDBYpxBchhK1Eqf6wWkxnb9ZQ/8Hjygga6
+         DSrjhmCrUb1kpcHybXlrNsZmEvPKfq+hrbbEj42kXmzN1+kJSJwplxR9HcTpyEypSv9b
+         vpChSKoHhVbDpLi73BJCxP12KFkNws4YUZWbXA0bs4NodWd6C8CVtMKQzquHNZDG+yxJ
+         3XghqppFB4qC9mDQeYkp11CcHxE9EoxvZQGpJeKXZhwNb1yCu3ukTPhwf1zwezg3mhBX
+         wxIJhrifGSAjB6Llu8oP8a+SaDQx+gUUQiI0gDjxPYADzA5PKn04F5FC/K0M58N1Licz
+         obRg==
+X-Gm-Message-State: AOJu0Yxf/avJx1ayzXG12EDRVFn4278B/nZRJWmGm3DRhH6R4oK3xrJC
+	kuwvOcOU1huX6JtRXqsWjkSncF4wfOLsayLXg9ETZifFBv8htWpt
+X-Google-Smtp-Source: AGHT+IEsRPFWhJZnfqCAmHFQB7Hyek8BcDEJ+ctwHCncmPszdoXFn6upJJR0k14cLPpVD85r89H8jg==
+X-Received: by 2002:a17:906:e1a:b0:a2c:f3a:b196 with SMTP id l26-20020a1709060e1a00b00a2c0f3ab196mr608382eji.118.1705591839314;
+        Thu, 18 Jan 2024 07:30:39 -0800 (PST)
+Received: from [192.168.100.74] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
+        by smtp.gmail.com with ESMTPSA id tl15-20020a170907c30f00b00a2e7b7fab35sm3401485ejc.14.2024.01.18.07.30.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jan 2024 07:30:38 -0800 (PST)
+Message-ID: <30b9ab0c-f3cb-4b5a-a726-de9f7c61769b@gmail.com>
+Date: Thu, 18 Jan 2024 16:30:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <434b21afe1899b1567f3617261594842.sboyd@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/5] hwmon: Add support for Amphenol ChipCap 2
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
+ Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20240115-topic-chipcap2-v5-0-0cc7a15aeece@gmail.com>
+ <20240115-topic-chipcap2-v5-5-0cc7a15aeece@gmail.com>
+ <226d3abd-e372-4c66-b2b0-cc86e6a4bb27@sirena.org.uk>
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+In-Reply-To: <226d3abd-e372-4c66-b2b0-cc86e6a4bb27@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 16, 2024 at 05:27:18PM -0800, Stephen Boyd wrote:
-> Quoting Mark Rutland (2024-01-16 03:51:14)
-> > Hi Stephen,
-> > 
-> > On Fri, Jan 12, 2024 at 12:07:44PM -0800, Stephen Boyd wrote:
-> > > Call this function unconditionally so that we can populate an empty DTB
-> > > on platforms that don't boot with a firmware provided or builtin DTB.
-> > > There's no harm in calling unflatten_device_tree() unconditionally.
-> > 
-> > For better or worse, that's not true: there are systems the provide both a DTB
-> > *and* ACPI tables, and we must not consume both at the same time as those can
-> > clash and cause all sorts of problems. In addition, we don't want people being
-> > "clever" and describing disparate portions of their system in ACPI and DT.
-> > 
-> > It is a very deliberate choice to not unflatten the DTB when ACPI is in use,
-> > and I don't think we want to reopen this can of worms.
+Hello Mark,
+
+On 18.01.24 14:49, Mark Brown wrote:
+> On Mon, Jan 15, 2024 at 09:02:25PM +0100, Javier Carrasco wrote:
 > 
-> Hmm ok. I missed this part. Can we knock out the initial_boot_params in
-> this case so that we don't unflatten a DTB when ACPI is in use?
+>> +static int cc2_enable(struct cc2_data *data)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (regulator_is_enabled(data->regulator))
+>> +		return 0;
+> 
+> This is generally a sign that the regulator API usage is not good, the
+> driver should not rely on references to the regulator held by anything
+> else since whatever else is holding the regulator on could turn it off
+> at any time.  If the driver did the enable itself then it should know
+> that it did so and not need to query.
+> 
 
-Why is that better than just not calling unflatten_device_tree(), as we do
-today?
+The driver handles a dedicated regulator, but I wanted to account for
+the cases where the attempts to enable and disable the regulator fail
+and keep parity. If the disabling attempt fails, will the regulator not
+stay enabled? In that case, an additional call to regulator_enable would
+not be required, right?
+That is the only reason I am using regulator_is_enabled(), but maybe
+things don't work like that.
 
-The cover letter says this is all so that we can run DT tests for the clk
-framework; why can't that just depend on the system being booted with DT rather
-than ACPI? We have other tests which are architecture and/or configuration
-dependent...
+>> +	ret = regulator_enable(data->regulator);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * TODO: the startup-delay-us property of the regulator might be
+>> +	 * added to the delay (if provided).
+>> +	 * Currently there is no interface to read its value apart from
+>> +	 * a direct access to regulator->rdev->constraints->enable_time,
+>> +	 * which is discouraged like any direct access to the regulator_dev
+>> +	 * structure. This would be relevant in cases where the startup delay
+>> +	 * is in the range of milliseconds.
+>> +	 */
+>> +	usleep_range(CC2_STARTUP_TIME_US, CC2_STARTUP_TIME_US + 125);
+> 
+> Note that the regulator startup delay is the time taken for the
+> regulator to power up so if the device needs additional delay then that
+> will always need to be in addition to whatever the regulator is doing.
 
-Mark.
+What I mean by that is that the device cannot be ready until the
+regulator powers it up (obvious) plus the start up time of the device
+itself once it gets powered up. So if a regulator takes for example 1 ms
+to power up, the sleep function could (and should) wait for 1 ms longer.
+
+I could define a longer start up time to account for "slow" regulators
+while still staying in the command window range. Retries have already
+been taken into account for longer sleeps.
+
+Thank you for your feedback.
+
+Best regards,
+Javier Carrasco
