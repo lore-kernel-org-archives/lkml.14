@@ -1,28 +1,28 @@
 Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D20184C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D5C241FB;
 	Thu, 18 Jan 2024 13:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705584293; cv=none; b=iWssVWKd1UvQQl7lOTvGEg8oOBLvW7rJPolNb27L+ep1GD15H5Rpcvbe33/BE8IRpJBVybDgohQ7YrY9681kKzkgFFeOTAjlfbUF5w0G226YyglVUB+ZmvqCfCDfQA+4qpMq+z/hVeivNURXji6F5AaoVrUZ+ca4JUt729YiqL4=
+	t=1705584293; cv=none; b=FezkHwEBBWsbEZk7JAefzFz2XIIJCA8EiZzGmyzpkvha8fC2hW8RR2sjgNnICgDCXQ6qbO2kFD9cqMAZ0FMOTqyQSkRjfG7FeZh+b17FY0WBW3MjoBCl/8Ts1wXeVmPQbri4BQJT3D/idpAs0szgM9j80Iip302YXrYzFyC8az8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705584293; c=relaxed/simple;
-	bh=onNdsPb+69WqAEQtLe5+cbbnN6bq1q8qyW8fuoVDI4g=;
+	bh=ImzNxqs0xkj2U6J7gTa9sJdI5GGIwkLF3v5xPj/nHYQ=;
 	h=Received:Received:Received:From:To:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:X-Virus-Scanned; b=oJ8uQ/Lffs0oOhPKtP5HxC36w36UoEoGuSyUucGJfzzgBgKdXCUTnFxAoRofHql9hu8swCzUrFQVAigCMm2FSo3Y/bY/3vvLSjwgYyJxwlclBx//9cxraGuRAUDBnyA38JLnjNQ32Qs0Z57UemHZWQEDO8RI+rAmJZ0KRSi/uqw=
+	 X-Mailer:In-Reply-To:References:X-Virus-Scanned; b=Pn710p+LQtVLD5BOwNluwFyMJWGDdkZTvwIyvGBVPnwWjdI/sAAmExANdYq+2kY6EzuzZxO3Y1ObkHakbdZ5TxzNpTaoew1fCs/AyJMtmMokV2VlTGOWoqhCQB4kPU8fYYrLZ7WWw4xYxZHTo0xzvzjmXgAFq41vQ6ugaVspZkY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D32B01A2299;
-	Thu, 18 Jan 2024 14:14:58 +0100 (CET)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DEBD41A1241;
+	Thu, 18 Jan 2024 14:14:55 +0100 (CET)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9BE161A0762;
-	Thu, 18 Jan 2024 14:14:58 +0100 (CET)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7D75A1A0762;
+	Thu, 18 Jan 2024 14:14:55 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 971391834898;
-	Thu, 18 Jan 2024 21:14:56 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 784DA183AC0A;
+	Thu, 18 Jan 2024 21:14:53 +0800 (+08)
 From: Shengjiu Wang <shengjiu.wang@nxp.com>
 To: hverkuil@xs4all.nl,
 	sakari.ailus@iki.fi,
@@ -41,9 +41,9 @@ To: hverkuil@xs4all.nl,
 	tiwai@suse.com,
 	alsa-devel@alsa-project.org,
 	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v12 06/15] media: uapi: Add V4L2_CAP_AUDIO_M2M capability flag
-Date: Thu, 18 Jan 2024 20:31:59 +0800
-Message-Id: <1705581128-4604-7-git-send-email-shengjiu.wang@nxp.com>
+Subject: [PATCH v12 04/15] ASoC: fsl_asrc: register m2m platform device
+Date: Thu, 18 Jan 2024 20:31:57 +0800
+Message-Id: <1705581128-4604-5-git-send-email-shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1705581128-4604-1-git-send-email-shengjiu.wang@nxp.com>
 References: <1705581128-4604-1-git-send-email-shengjiu.wang@nxp.com>
@@ -54,55 +54,110 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-V4L2_CAP_AUDIO_M2M is similar to V4L2_CAP_VIDEO_M2M flag.
+Register m2m platform device, that user can
+use M2M feature.
 
-It is used for audio memory to memory case.
+Defined platform data structure and platform
+driver name.
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/userspace-api/media/v4l/vidioc-querycap.rst    | 3 +++
- Documentation/userspace-api/media/videodev2.h.rst.exceptions | 1 +
- include/uapi/linux/videodev2.h                               | 1 +
- 3 files changed, 5 insertions(+)
+ include/sound/fsl_asrc_common.h | 23 +++++++++++++++++++++++
+ sound/soc/fsl/fsl_asrc.c        | 18 ++++++++++++++++++
+ 2 files changed, 41 insertions(+)
 
-diff --git a/Documentation/userspace-api/media/v4l/vidioc-querycap.rst b/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
-index 6c57b8428356..1c0d97bf192a 100644
---- a/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
-+++ b/Documentation/userspace-api/media/v4l/vidioc-querycap.rst
-@@ -173,6 +173,9 @@ specification the ioctl returns an ``EINVAL`` error code.
- 	interface. A video overlay device typically stores captured images
- 	directly in the video memory of a graphics card, with hardware
- 	clipping and scaling.
-+    * - ``V4L2_CAP_AUDIO_M2M``
-+      - 0x00000008
-+      - The device supports the audio Memory-To-Memory interface.
-     * - ``V4L2_CAP_VBI_CAPTURE``
-       - 0x00000010
-       - The device supports the :ref:`Raw VBI Capture <raw-vbi>`
-diff --git a/Documentation/userspace-api/media/videodev2.h.rst.exceptions b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
-index 3e58aac4ef0b..da6d0b8e4c2c 100644
---- a/Documentation/userspace-api/media/videodev2.h.rst.exceptions
-+++ b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
-@@ -197,6 +197,7 @@ replace define V4L2_CAP_META_OUTPUT device-capabilities
- replace define V4L2_CAP_DEVICE_CAPS device-capabilities
- replace define V4L2_CAP_TOUCH device-capabilities
- replace define V4L2_CAP_IO_MC device-capabilities
-+replace define V4L2_CAP_AUDIO_M2M device-capabilities
+diff --git a/include/sound/fsl_asrc_common.h b/include/sound/fsl_asrc_common.h
+index 3b53d366182f..c709b8906929 100644
+--- a/include/sound/fsl_asrc_common.h
++++ b/include/sound/fsl_asrc_common.h
+@@ -71,6 +71,7 @@ struct fsl_asrc_pair {
+  * @dma_params_rx: DMA parameters for receive channel
+  * @dma_params_tx: DMA parameters for transmit channel
+  * @pdev: platform device pointer
++ * @m2m_pdev: m2m platform device pointer
+  * @regmap: regmap handler
+  * @paddr: physical address to the base address of registers
+  * @mem_clk: clock source to access register
+@@ -103,6 +104,7 @@ struct fsl_asrc {
+ 	struct snd_dmaengine_dai_dma_data dma_params_rx;
+ 	struct snd_dmaengine_dai_dma_data dma_params_tx;
+ 	struct platform_device *pdev;
++	struct platform_device *m2m_pdev;
+ 	struct regmap *regmap;
+ 	unsigned long paddr;
+ 	struct clk *mem_clk;
+@@ -139,6 +141,27 @@ struct fsl_asrc {
+ 	void *private;
+ };
  
- # V4L2 pix flags
- replace define V4L2_PIX_FMT_PRIV_MAGIC :c:type:`v4l2_pix_format`
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 2c23f0b369e4..6cd65969c2b5 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -473,6 +473,7 @@ struct v4l2_capability {
- #define V4L2_CAP_VIDEO_CAPTURE		0x00000001  /* Is a video capture device */
- #define V4L2_CAP_VIDEO_OUTPUT		0x00000002  /* Is a video output device */
- #define V4L2_CAP_VIDEO_OVERLAY		0x00000004  /* Can do video overlay */
-+#define V4L2_CAP_AUDIO_M2M		0x00000008  /* audio memory to memory */
- #define V4L2_CAP_VBI_CAPTURE		0x00000010  /* Is a raw VBI capture device */
- #define V4L2_CAP_VBI_OUTPUT		0x00000020  /* Is a raw VBI output device */
- #define V4L2_CAP_SLICED_VBI_CAPTURE	0x00000040  /* Is a sliced VBI capture device */
++/**
++ * struct fsl_asrc_m2m_pdata - platform data
++ * @asrc: pointer to struct fsl_asrc
++ * @fmt_in: input sample format
++ * @fmt_out: output sample format
++ * @chan_min: minimum channel number
++ * @chan_max: maximum channel number
++ * @rate_min: minimum rate
++ * @rate_max: maximum rete
++ */
++struct fsl_asrc_m2m_pdata {
++	struct fsl_asrc *asrc;
++	u64 fmt_in;
++	u64 fmt_out;
++	int chan_min;
++	int chan_max;
++	int rate_min;
++	int rate_max;
++};
++
++#define M2M_DRV_NAME "fsl_asrc_m2m"
+ #define DRV_NAME "fsl-asrc-dai"
+ extern struct snd_soc_component_driver fsl_asrc_component;
+ 
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 7d8643ee0ba0..5ecb5d869607 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -1187,6 +1187,7 @@ static int fsl_asrc_runtime_suspend(struct device *dev);
+ static int fsl_asrc_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
++	struct fsl_asrc_m2m_pdata m2m_pdata;
+ 	struct fsl_asrc_priv *asrc_priv;
+ 	struct fsl_asrc *asrc;
+ 	struct resource *res;
+@@ -1368,6 +1369,18 @@ static int fsl_asrc_probe(struct platform_device *pdev)
+ 		goto err_pm_get_sync;
+ 	}
+ 
++	m2m_pdata.asrc = asrc;
++	m2m_pdata.fmt_in = FSL_ASRC_FORMATS;
++	m2m_pdata.fmt_out = FSL_ASRC_FORMATS | SNDRV_PCM_FMTBIT_S8;
++	m2m_pdata.rate_min = 5512;
++	m2m_pdata.rate_max = 192000;
++	m2m_pdata.chan_min = 1;
++	m2m_pdata.chan_max = 10;
++	asrc->m2m_pdev = platform_device_register_data(&pdev->dev,
++						       M2M_DRV_NAME,
++						       PLATFORM_DEVID_AUTO,
++						       &m2m_pdata,
++						       sizeof(m2m_pdata));
+ 	return 0;
+ 
+ err_pm_get_sync:
+@@ -1380,6 +1393,11 @@ static int fsl_asrc_probe(struct platform_device *pdev)
+ 
+ static void fsl_asrc_remove(struct platform_device *pdev)
+ {
++	struct fsl_asrc *asrc = dev_get_drvdata(&pdev->dev);
++
++	if (asrc->m2m_pdev && !IS_ERR(asrc->m2m_pdev))
++		platform_device_unregister(asrc->m2m_pdev);
++
+ 	pm_runtime_disable(&pdev->dev);
+ 	if (!pm_runtime_status_suspended(&pdev->dev))
+ 		fsl_asrc_runtime_suspend(&pdev->dev);
 -- 
 2.34.1
 
