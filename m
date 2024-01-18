@@ -1,92 +1,89 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C772333EA;
-	Thu, 18 Jan 2024 05:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DB78F4F;
+	Thu, 18 Jan 2024 05:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705556592; cv=none; b=oGOH7p0ufQ3kXl8BGyCiNsyw6P6EmIUGToG5+sMLyfqyq/ZsBBZ7Ye6TCuWEseQH8evjQmlH/AU5lYqP0JHLy9yv700lnnEaXlPk4IHcT0iu51NIngikd92N5STGmK4Uj2YSSZ5Ye/oK1d6E0bmvTdIOt9nNnsqqYOTOxtvYArI=
+	t=1705556992; cv=none; b=J/kaizWAV1L2YMxYiEKjKii3q2DH406irYw/QnXSLD72sSZ/L8BSeJPYN3m7Oe20hJkJInjbCS4ENRd2EAH3H+ro814kTZs9fN6PjigNcYYF3ZOll6ZJOngN9JEkkPV4uyZ+6wK88CZRKdmaVc3YhTDiaUSzq0NdUvjLHS0Bs3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705556592; c=relaxed/simple;
-	bh=N8lyXV983QZcIN4IypN9VKPidDixXf4Ufs7PA3JcatQ=;
-	h=X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:X-CID-BVR:
-	 X-CID-BAS:X-CID-FACTOR:X-UUID:Received:Received:X-ns-mid:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=u3VoVaW6bzEj5lKYs4m8UFESVnFFhleV98IcQ5mBJU30R+Mcw33LwH431KNHPraOZxktGIHEv+j1UBhw7Opb4882zLcbvzfw8BIj+qJaPxyBE19GvT8EjZKfGXV7QHpSvRwiNgPYrsgzaOky7+tOTvsmex1RM8WaE5B5He8uaZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 6d39311e58964ef3910abf0a8c644cd4-20240118
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:f8b43031-f88e-4f9b-bc87-756d56c07d5b,IP:10,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-10
-X-CID-INFO: VERSION:1.1.35,REQID:f8b43031-f88e-4f9b-bc87-756d56c07d5b,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-META: VersionHash:5d391d7,CLOUDID:8b8e7a7f-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:240118134304ZHV6LL3N,BulkQuantity:0,Recheck:0,SF:24|17|19|44|66|38|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 6d39311e58964ef3910abf0a8c644cd4-20240118
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1039748442; Thu, 18 Jan 2024 13:43:01 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 1B115E000EB9;
-	Thu, 18 Jan 2024 13:43:01 +0800 (CST)
-X-ns-mid: postfix-65A8BA64-89835715
-Received: from kernel.. (unknown [172.20.15.234])
-	by mail.kylinos.cn (NSMail) with ESMTPA id A0077E000EB9;
-	Thu, 18 Jan 2024 13:42:59 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: nm@ti.com,
-	ssantosh@kernel.org,
-	ulf.hansson@linaro.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] pmdomain: Add a null pointer check to the omap_prm_domain_init
-Date: Thu, 18 Jan 2024 13:42:57 +0800
-Message-Id: <20240118054257.200814-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1705556992; c=relaxed/simple;
+	bh=VpKUFfNg/HrPvFXUCiGE71qPbuDU/sf0aYz4C+NnmAU=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:References:Date:
+	 In-Reply-To:Message-ID:User-Agent:MIME-Version:Content-Type; b=WGtcskfKz5GKz4mekGUbA5usRL5tiBEWtSB6Tchg7cx5FbnkQHIYeS8o5ohrGtHu7D2FRv8vX7UMMpdRkKV3dVfQzgB1JPSn+WIzIEnHIBGnbyDn+bNmm+ku17WBxAX3o/XToxB5/bz9QkmANDFYZltgpZuw7T+CA7fDnyUappg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mGdytAg/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mGdytAg/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3632EC433A6;
+	Thu, 18 Jan 2024 05:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705556991;
+	bh=VpKUFfNg/HrPvFXUCiGE71qPbuDU/sf0aYz4C+NnmAU=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=mGdytAg/rbFbk1cpzazA43EoXsrFTY6KGL7S6PGPYTpHuXImmM/jrLoxSpgG2sfJe
+	 1S5sNO/EA4PFssquqitUBjqZsJuco7+tIbd4QmpdgQECqR7IOmUL2v56972UxANpNo
+	 45xFQNOBdEmO/NHTpvMdzylYa54Na0Qq02Lxj2vmZyy9Yze08jaX++9LcIxey4+HbI
+	 9kH+JBbtqvO+SMlb5NEqKBrEnyw0PeY1toDUy9v3dQYodY5sPk3DKYVe4IaOd6ftBY
+	 WX9zwwqHjxriA0ani2taf+bn+9GJwo3Etn+ZwYf/T+0i1GLr380x5acgN4K8H0l/XL
+	 VvyKkq8aT0GlA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: "David S . Miller" <davem@davemloft.net>,  Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
+ <pabeni@redhat.com>,  Rob Herring <robh+dt@kernel.org>,  Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  Bjorn Andersson <andersson@kernel.org>,  Konrad
+ Dybcio <konrad.dybcio@linaro.org>,  Catalin Marinas
+ <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Bjorn Helgaas
+ <bhelgaas@google.com>,  Heiko Stuebner <heiko@sntech.de>,  Jernej Skrabec
+ <jernej.skrabec@gmail.com>,  Chris Morgan <macromorgan@hotmail.com>,
+  Linus Walleij <linus.walleij@linaro.org>,  Geert Uytterhoeven
+ <geert+renesas@glider.be>,  Arnd Bergmann <arnd@arndb.de>,  Neil Armstrong
+ <neil.armstrong@linaro.org>,  =?utf-8?Q?N=C3=ADcolas?= F . R . A . Prado
+ <nfraprado@collabora.com>,  Marek Szyprowski <m.szyprowski@samsung.com>,
+  Peng Fan <peng.fan@nxp.com>,  Robert Richter <rrichter@amd.com>,  Dan
+ Williams <dan.j.williams@intel.com>,  Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>,  Terry Bowman <terry.bowman@amd.com>,
+  Lukas Wunner <lukas@wunner.de>,  Huacai Chen <chenhuacai@kernel.org>,
+  Alex Elder <elder@linaro.org>,  Srini Kandagatla
+ <srinivas.kandagatla@linaro.org>,  Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,  Abel Vesa <abel.vesa@linaro.org>,
+  linux-wireless@vger.kernel.org,  netdev@vger.kernel.org,
+  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-arm-msm@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+  linux-pci@vger.kernel.org,  Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 9/9] PCI/pwrseq: add a pwrseq driver for QCA6390
+References: <20240117160748.37682-1-brgl@bgdev.pl>
+	<20240117160748.37682-10-brgl@bgdev.pl>
+Date: Thu, 18 Jan 2024 07:49:41 +0200
+In-Reply-To: <20240117160748.37682-10-brgl@bgdev.pl> (Bartosz Golaszewski's
+	message of "Wed, 17 Jan 2024 17:07:48 +0100")
+Message-ID: <87mst342dm.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-devm_kasprintf() returns a pointer to dynamically allocated memory
-which can be NULL upon failure. Ensure the allocation was successful
-by checking the pointer validity.
+Bartosz Golaszewski <brgl@bgdev.pl> writes:
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- drivers/pmdomain/ti/omap_prm.c | 2 ++
- 1 file changed, 2 insertions(+)
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Add a PCI power sequencing driver that's capable of correctly powering
+> up the ath11k module on QCA6390 and WCN7850 using the PCI pwrseq
+> functionality.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> [Neil: add support for WCN7850]
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-diff --git a/drivers/pmdomain/ti/omap_prm.c b/drivers/pmdomain/ti/omap_pr=
-m.c
-index c2feae3a634c..b8ceb3c2b81c 100644
---- a/drivers/pmdomain/ti/omap_prm.c
-+++ b/drivers/pmdomain/ti/omap_prm.c
-@@ -695,6 +695,8 @@ static int omap_prm_domain_init(struct device *dev, s=
-truct omap_prm *prm)
- 	data =3D prm->data;
- 	name =3D devm_kasprintf(dev, GFP_KERNEL, "prm_%s",
- 			      data->name);
-+	if (!name)
-+		return -ENOMEM;
-=20
- 	prmd->dev =3D dev;
- 	prmd->prm =3D prm;
---=20
-2.39.2
+Here also: ath12k supports WCN7850, not ath11k.
 
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
