@@ -1,104 +1,171 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BABF28DCB
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 16:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7120D2C18F;
+	Thu, 18 Jan 2024 16:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705594147; cv=none; b=SW2MDscyHCTAw1jiFeOx7pUevR3Ev4sDv6Lqc6DVo0Jtz1Ptc2ZdPgDwXKDNdoAYFnLbBIYCc5I/X/Rn8U7EOY7VjTaTbcku16YONGN9tvAnbnwgoR7obF3m2GO7auXBR7cvIzPx7CBu2jc+AG+JY9vNSbfJjz8FH40SrGsD3xY=
+	t=1705594193; cv=none; b=P2Xnmy0PWtuPAZi2spYaeMG4w1z+0504hZ6QYQYVlC+CywSrz15UkHX9Clv+96g0pZSSqTwGI480Zv63jQuDcuNSQEitlLnMGkphYaq1+Zus3gUtt1LlDy+inXk5sQxg93UDjI937Q88sv7R1w4b2+uV6cI9rV5m+ACcBcCLWKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705594147; c=relaxed/simple;
-	bh=kHzuk/kNSL6JIRdg7lH2BgyUkGbVunML4qI1j50U/aU=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
-	 To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=E7rkDHwjlXkcOQLnZHPBKlPD24OdWBhI2pqekID2NiDEW1YADLkkf2E1nu7C/IXHhkVJH3DSTnOmmlzbRzcHWHLgIts7uyqvs/GqgR9oCpDYB1uXzIJqalneGKNg/6nm9gY4Wlg5gUEID/zUUici5vSxVeoZRpr4YSxyI4jdGQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T34mUrxK; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705594193; c=relaxed/simple;
+	bh=MhRgs4SfId0IliF1C6eg+0vnzN3x0xDMakUJ9MxoW+U=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=YwcsdmamPZPVCAyTB7FEhzwYObfktm7uiGrpIFY/bYVuCAAdDLRsjsyLFal7+ceKagQXlIKiKOwQBXEtrUa/b4s6kBb/qmp5kxAOhO1XKhQHZqs2x5hu4Ty7sK8NpLhsHGX+8AffnQ0In75j1zgofUt32YjrUYkmEsbyWboH+fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOOwysb2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T34mUrxK"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4298761b728so16802751cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 08:09:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705594145; x=1706198945; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kDM781oFpgaSAT0QQI2tKSG6Pv6TalHpG0gxNI4eT4Y=;
-        b=T34mUrxK9p/b7EaXg0Zf2KokQCrtlboryqCjf6NexicVwTCqleMS+Rm2YTSWxbVRlt
-         TSKTOYsocg/aZ/QCMjwZRw8FtplNVjiGHdIIRuHdr2T6EaCRhQe9PGsGy3BGlN1b3gs2
-         jmtxsl3Dt0SJZwbFBgfoV806Q2I1KJm/FD/E+3qzKKCIkcqn55nAAkPgj+ZXxIY6dGiW
-         JS6SH7c/23/tfwIBOMUIx24yKHGJ6T4xGqdfD7uIaPS2dH1b1vCuptJEIf6+uFZs3rVA
-         fQ5haCM5gXZIPcj28UAVZnPNz38+73pcH3kCmy08NWSV2SObhE633MN/+I5KwR1SbxSk
-         kwdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705594145; x=1706198945;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kDM781oFpgaSAT0QQI2tKSG6Pv6TalHpG0gxNI4eT4Y=;
-        b=csq3OgqYjWpjsYtvw5U13LO1AilMD/ElqbMCPY+4XCbh0IstYNzmUHE52XIx7jWidD
-         D75RbgW+kxluC5+XZG4EX02t3Fhx+6jMMdntCQzZACO4bO5X+SIFSPcaivyrInnQA6hM
-         KJ8YSV6xS4wdgk9nJ54lPnjQG1Wqoh9GUxoSJRMktkLotQudpOd5hXbvf0a3Kj8SrMPH
-         Rag7Ysoykj9WAAPqLNGe8vSd6eC/0GwFmOz3SEmm7fYRvPNXeB2D6nX52DbVoDqFyASC
-         3x5R+3rtEiL1atmvXdOvEOln8NOQJi64e6K5fdS9CruxAnxdoBquMItLqu1GCx/7vPaM
-         X9NA==
-X-Gm-Message-State: AOJu0YzYHRVyJsc78N63/sWI4Tmg5XaXc/ypleSOLzY7Mn6sVezdRIgC
-	I5a+CP64wFbHRmrSqiYeeHqCxnnjAeNdz3D0Tzw9frEFI+qZkCk5
-X-Google-Smtp-Source: AGHT+IF0+tItICVcJXLHzZ8+UXQlKYxINubxeC3GTQ4wEZYESJxViQuSAVZO0+FI3GoxlJHS+PzTsw==
-X-Received: by 2002:ac8:118f:0:b0:42a:1c4c:f662 with SMTP id d15-20020ac8118f000000b0042a1c4cf662mr1398446qtj.3.1705594145125;
-        Thu, 18 Jan 2024 08:09:05 -0800 (PST)
-Received: from me.mynetworksettings.com (pool-74-98-201-227.pitbpa.fios.verizon.net. [74.98.201.227])
-        by smtp.gmail.com with ESMTPSA id fw6-20020a05622a4a8600b00427f89957d9sm6863013qtb.79.2024.01.18.08.09.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 08:09:04 -0800 (PST)
-From: Jacob Lott <jklott.git@gmail.com>
-To: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Jacob Lott <jklott.git@gmail.com>
-Subject: [PATCH v2] staging: rts5208: Add more details to Kconfig help
-Date: Thu, 18 Jan 2024 11:09:01 -0500
-Message-Id: <20240118160901.71756-1-jklott.git@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOOwysb2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 472AEC433F1;
+	Thu, 18 Jan 2024 16:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705594193;
+	bh=MhRgs4SfId0IliF1C6eg+0vnzN3x0xDMakUJ9MxoW+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NOOwysb2saJ3EFaZXFxosNe9UNtVudcOvkatUxZo2Yg8vaqhHUtK/9tyVcFy1UEB7
+	 8ouvns+SVlkqj5JW/fkEFsMu+oAuXKM1duNgSBdY/6pqqFHRJtyh5Ll6k6aYhrt6OS
+	 xvnuZpCM4OlvW+eEZ4RwQGtN+zxu4/lU8ej8CqF0pwUvwXAmu6aFaGc0cWwEYPeGSz
+	 hSxaxzXKm8QSKLtf9zLQlMztOG1FOxiza5lgvxCPem/j5ilDD509LODn7+EVMsaZV3
+	 LxMTTFN21gdQv9C0nlPwjv9Z059wXehasApwVqouWT6G9Sd0qNkp1HbNaXm4m2p7Ng
+	 fJ4+HvnBrf2hA==
+Date: Thu, 18 Jan 2024 16:09:47 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Kim Seer Paller <kimseer.paller@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Crt Mori <cmo@melexis.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v6 1/2] dt-bindings: iio: frequency: add admfm2000
+Message-ID: <20240118-steadily-coauthor-de8275118901@spud>
+References: <20240118085856.70758-1-kimseer.paller@analog.com>
+ <20240118085856.70758-2-kimseer.paller@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="L+4Loj8oukG31gb2"
+Content-Disposition: inline
+In-Reply-To: <20240118085856.70758-2-kimseer.paller@analog.com>
 
-The current help text is short and triggers a
-warning from checkpatch.pl. This patch adds more
-details to the help text which should provide better
-information for whether or not to enable the driver.
 
-Signed-off-by: Jacob Lott <jklott.git@gmail.com>
----
- drivers/staging/rts5208/Kconfig | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+--L+4Loj8oukG31gb2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/staging/rts5208/Kconfig b/drivers/staging/rts5208/Kconfig
-index b864023d3ccb..4f9cc3f00e1a 100644
---- a/drivers/staging/rts5208/Kconfig
-+++ b/drivers/staging/rts5208/Kconfig
-@@ -3,7 +3,11 @@ config RTS5208
- 	tristate "Realtek PCI-E Card Reader RTS5208/5288 support"
- 	depends on PCI && SCSI
- 	help
--	  Say Y here to include driver code to support the Realtek
--	  PCI-E card reader rts5208/rts5288.
-+      Choose Y here to enable support for the Realtek PCI-E card reader
-+	  RTS5208/5288. This driver facilitates communication between the Linux
-+	  kernel and the Realtek PCI-E card reader.
- 
--	  If this driver is compiled as a module, it will be named rts5208.
-+	  If you opt to compile this driver as a module, it will be named rts5208.
-+	  Selecting N will exclude this driver from the kernel build. Choose option
-+	  Y if your system includes the Realtek PCI-E card reader rts5208/rts5288.
-+	  When in doubt, it is generally safe to select N.
-\ No newline at end of file
--- 
-2.34.1
+Hey,
 
+On Thu, Jan 18, 2024 at 04:58:55PM +0800, Kim Seer Paller wrote:
+> Dual microwave down converter module with input RF and LO frequency
+> ranges from 0.5 to 32 GHz and an output IF frequency range from 0.1 to
+> 8 GHz. It consists of a LNA, mixer, IF filter, DSA, and IF amplifier
+> for each down conversion path.
+>=20
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+> ---
+> V5 -> V6: Moved array of switch and attenuation GPIOs to the channel node.
+>           Changed pin coords with friendly names. Removed Reviewed-by tag.
+> V4 -> V5: Added Reviewed-by tag.
+> V3 -> V4: Updated the description of the properties with multiple entries=
+ and
+>           defined the order.
+> V2 -> V3: Adjusted indentation to resolve wrong indentation warning.=20
+>           Changed node name to converter. Updated the descriptions to cla=
+rify
+>           the properties.
+> V1 -> V2: Removed '|' after description. Specified the pins connected to
+>           the GPIOs. Added additionalProperties: false. Changed node name=
+ to gpio.
+>           Aligned < syntax with the previous syntax in the examples.
+>=20
+>  .../bindings/iio/frequency/adi,admfm2000.yaml | 129 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 +
+>  2 files changed, 136 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adi,a=
+dmfm2000.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,admfm200=
+0.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,admfm2000.yaml
+> new file mode 100644
+> index 000000000000..6f2c91c38666
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/frequency/adi,admfm2000.yaml
+> @@ -0,0 +1,129 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2023 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/frequency/adi,admfm2000.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ADMFM2000 Dual Microwave Down Converter
+> +
+> +maintainers:
+> +  - Kim Seer Paller <kimseer.paller@analog.com>
+> +
+> +description:
+> +  Dual microwave down converter module with input RF and LO frequency ra=
+nges
+> +  from 0.5 to 32 GHz and an output IF frequency range from 0.1 to 8 GHz.
+> +  It consists of a LNA, mixer, IF filter, DSA, and IF amplifier for each=
+ down
+> +  conversion path.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,admfm2000
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^channel@[0-1]$":
+> +    type: object
+> +    description: Represents a channel of the device.
+> +
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          The channel number.
+> +        minimum: 0
+> +        maximum: 1
+> +
+> +      adi,mode:
+> +        description:
+> +          RF path selected for the channel.
+> +            0 - Direct IF mode
+> +            1 - Mixer mode
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1]
+
+How come this is an enum, rather than a boolean property such as
+"adi,mixer-mode"?
+
+Cheers,
+Conor.
+
+--L+4Loj8oukG31gb2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZalNSwAKCRB4tDGHoIJi
+0qUEAP4wbPpsMMqtWJOb6/QiW0MysXXQK+sUEvHTlHRvuvRArwD/ZLMdTg0x8lnf
+WkfJ4ASDBBU6gUzxhaCqkRYPQxWwkQs=
+=GfIu
+-----END PGP SIGNATURE-----
+
+--L+4Loj8oukG31gb2--
