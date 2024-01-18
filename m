@@ -1,131 +1,102 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD3B2E40B;
-	Thu, 18 Jan 2024 19:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDE7A53;
+	Thu, 18 Jan 2024 19:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705605040; cv=none; b=YnsW1llbtz+c3h5orx632px94Dpm09blYLseXwrL+ZcL2mg7LlWXzBqMuTW50HAKEL4CGcZwQfaS7crjkVIjAJExuDr1NEb5/w1R9M4X5g9wBduV/vJmlGW0y5BIcl+FcQ82cn4hPoqasdOagiPe+E13YheabVLXGIOsqHflH0I=
+	t=1705605110; cv=none; b=jEKhfBFeaVqhbX6+V13PhznDub0RDX6F1nViqjFyP2e+4kdHRKZeV6WApFhsyEOXOKqOvfCuHoGlJjRI6oYKTbjXRtXm5aTrCYYjmrbHHlAeS/S2d0YA+uyDWkCybyHeovUcVGZ2jgP6R/N+xNKxMHvFE1n8uHV0dMRx5yVh5CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705605040; c=relaxed/simple;
-	bh=QGy/gV3NdSFRk3x+356l/x+E2n1PrWJbsuTSzohNMVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wh1a3k2p3kDcQ4Pk8V1SkNNaOqyuhkx+INj0F6k4ZqwOtLPwCpucdwP8gko5n1iPlk/iG60wrKD3/EidcStlF1MKtLLSdWjk/YmkfR6YzFLm4hlY1HqZ7T70o96erPSI1J028Of2WjfZ5OlLkmMcLpT6FOjW1gQuzL1qdLroIHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mqelJzJc; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705605110; c=relaxed/simple;
+	bh=CzGdsxbWfshAQQ1x1+6Iwwi7kLWw3u+Utd5pS0gHUvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M4b52DCafq60TOeCF2ENL4C/EXWW/fZqPq4oN8Gp9RxaSEjlF6LTg0p/od2HylJVEY+1Ohh7stGrE5Dzm59r2ApW5/H5fjpimmT9gxeOcqEkRrvLm9kgAn7rgrUaUvkr5yNYjK5dUrXjaUGMc9lRbRNFUlxZUZj9ygV4nfZQ9+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PG+azenK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqelJzJc"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d70b0e521eso6198505ad.1;
-        Thu, 18 Jan 2024 11:10:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705605038; x=1706209838; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1v/TZYvh2MJ80QgyM922C9D8jEpr9cFLhd1cuq1fI6E=;
-        b=mqelJzJc1bl3B1Bax3INUnxYfwhpd7xy2fIdI8nZga9r3lW2Tp4Xdekf/BrEZP/C79
-         bCDKs1qVPWtaRsQUHi44i9wsnjauVQJblnbqYyCL/TZInsx6kYRiJiB1FQjPAGQkYvS7
-         a/92ERBno4m4EpZqwm48UE9BQkdl90u8PLnYx3JYS93wNuWb6YJUrhHvGjWhzwu54tiQ
-         EbpmYl9qzSuodkwruRMRRJaQ2t6zy1t5Ft2xb8pNx/RPwRwfh1/NfMBbYm7toXk1fNWJ
-         KH/51nZRSZOC+/D5VX7HasUNaQKy3KPMKZu+aMPCQ1Ta+lLUPPXzQ/zYiQ2fMswHIwz0
-         PCmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705605038; x=1706209838;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1v/TZYvh2MJ80QgyM922C9D8jEpr9cFLhd1cuq1fI6E=;
-        b=oE9LxE1V53Oz6ZA8g/ZoF6a3LHmXQBdCR9+jml8kJr+kDY/AFDBOQO8cAUkku1GOLt
-         +zJXMPTcw8fIq2iAnLYFsLiQTfg+4O7fRDfe/D2f8UNEWW/ooeR4Eaj1/h9tLxzqbtd6
-         scTHb6EZHK4QL7W7kceetnYnYH0oq1Pt1Hh72ExsuJF+SOlHCANWAITe0KOeeEc+IlUz
-         lseHjSRUsOIQmTuIS/qoPOmVEQ0Ey1MuW5LJAWU68hfm0FKedV7Ihq3vAWxIDwneylqk
-         dFQxuOnV1fIDnHPcsloRGfcuHBi0YiW7ppWtz4zy0mvcaMM2APVvJnrlkt4QzaaJAdL+
-         uleQ==
-X-Gm-Message-State: AOJu0YzOHTqNs9aaDgLK50vGgbQ5Ir6PCzWw87ZcHct5tXAvV78wshUD
-	jcqJAR8GCUFijtWD4EuoyFkhw7Qtr4StyGdxoOGIs6EJaNQyfT7/
-X-Google-Smtp-Source: AGHT+IH4Ocz9kjSah+mw055Dw5Myw+oA+YfyxXg4b3gE3cy9rSFukaLV5FVQ5ejGALvuuCDYVFztVg==
-X-Received: by 2002:a17:902:ebc5:b0:1d6:fc43:6005 with SMTP id p5-20020a170902ebc500b001d6fc436005mr1824509plg.133.1705605038093;
-        Thu, 18 Jan 2024 11:10:38 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id bi3-20020a170902bf0300b001d6fe15b563sm1704682plb.157.2024.01.18.11.10.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jan 2024 11:10:37 -0800 (PST)
-Message-ID: <96dc2b0b-ad51-42f9-a305-744d9d97272e@gmail.com>
-Date: Thu, 18 Jan 2024 11:10:31 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PG+azenK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFB49C433F1;
+	Thu, 18 Jan 2024 19:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705605110;
+	bh=CzGdsxbWfshAQQ1x1+6Iwwi7kLWw3u+Utd5pS0gHUvU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PG+azenKFTCrBS6VUA/0COoE3WL3pEpO8Q3dSfPnDnKNFFmrPMnQrW1Xsfgq/wY9E
+	 vaAv4jdysU9lGrWF5wNfp5YTvX2fENcwWafE1ressJhz78AEaIl5JZQBU3H+4LCh8e
+	 xRZnLaYK4r5AREkRyJufbT0IXMOXwpoZhUdGEiL8Eu2L80mFzYd6qXe+uQOn13AHJk
+	 w71upUXFA7P+bmtsrBkhEUewveuzy+TDVbkPgB5nfRsBeV8xmLKFpuXrH2n8yEfOG9
+	 aEs9pJ9CGuTO4PBIgca4yzShJZbFGf2IWWZbaLB9oNQcotGJcxDJLf0/B0lzOFZgse
+	 7chD5R0wOPWIQ==
+Date: Thu, 18 Jan 2024 12:11:48 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
+Subject: Re: [GIT PULL]: dmaengine updates for v6.8
+Message-ID: <20240118191148.GA3329935@dev-arch.thelio-3990X>
+References: <ZalezMgxAVyu5WEE@matsya>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/100] 6.1.74-rc1 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- Stefan Wiehler <stefan.wiehler@nokia.com>
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com
-References: <20240118104310.892180084@linuxfoundation.org>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240118104310.892180084@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZalezMgxAVyu5WEE@matsya>
 
-+Stefan,
+Hi Vinod,
 
-On 1/18/24 02:48, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.74 release.
-> There are 100 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Jan 18, 2024 at 10:54:28PM +0530, Vinod Koul wrote:
+> Heya Linus,
 > 
-> Responses should be made by Sat, 20 Jan 2024 10:42:49 +0000.
-> Anything received after that time might be too late.
+> Last pull request for the night to receive the dmaengine subsystem
+> updates containing one new driver, couple of device support (qualcomm,
+> sf-pdma) and driver updates.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.74-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
+> The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
 > 
-> thanks,
+>   Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
 > 
-> greg k-h
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-6.8-rc1
+> 
+> for you to fetch changes up to 3d0b2176e04261ab4ac095ff2a17db077fc1e46d:
+> 
+>   dmaengine: xilinx: xdma: statify xdma_prep_interleaved_dma (2023-12-22 21:17:52 +0530)
+> 
+> ----------------------------------------------------------------
+> dmaengine updates for v6.8
+> 
+>  New support:
+>   - Loongson LS2X APB DMA controller
+>   - sf-pdma: mpfs-pdma support
+>   - Qualcomm X1E80100 GPI dma controller support
+> 
+>  Updates:
+>   - Xilinx XDMA updates to support interleaved DMA transfers
+>   - TI PSIL threads for AM62P and J722S and cfg register regions description
+>   - axi-dmac Improving the cyclic DMA transfers
+>   - Tegra Support dma-channel-mask property
+>   - Remaining platform remove callback returning void conversions
 
-ARM and ARM64 builds worked fine and passed tests, however BMIPS_GENERIC 
-fails to build with:
+<snip>
 
-arch/mips/kernel/smp.c: In function 'start_secondary':
-arch/mips/kernel/smp.c:340:2: error: implicit declaration of function 
-'rcutree_report_cpu_starting'; did you mean 'rcu_cpu_starting'? 
-[-Werror=implicit-function-declaration]
-   rcutree_report_cpu_starting(cpu);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   rcu_cpu_starting
-cc1: all warnings being treated as errors
-host-make[5]: *** [scripts/Makefile.build:250: arch/mips/kernel/smp.o] 
-Error 1
-host-make[4]: *** [scripts/Makefile.build:500: arch/mips/kernel] Error 2
-host-make[3]: *** [scripts/Makefile.build:500: arch/mips] Error 2
-host-make[3]: *** Waiting for unfinished jobs....
+> Jan Kuliga (8):
+>       dmaengine: xilinx: xdma: Get rid of unused code
+>       dmaengine: xilinx: xdma: Add necessary macro definitions
+>       dmaengine: xilinx: xdma: Ease dma_pool alignment requirements
+>       dmaengine: xilinx: xdma: Rework xdma_terminate_all()
+>       dmaengine: xilinx: xdma: Add error checking in xdma_channel_isr()
+>       dmaengine: xilinx: xdma: Add transfer error reporting
+>       dmaengine: xilinx: xdma: Prepare the introduction of interleaved DMA transfers
+>       dmaengine: xilinx: xdma: Implement interleaved DMA transfers
 
-which is caused by 7c20a4cc189eff36d5aeb586008a540d8024fbff ("mips/smp: 
-Call rcutree_report_cpu_starting() earlier").
+This pull request appears to be missing some fixes for the clang
+warnings introduced by this series, which will break the build with
+CONFIG_WERROR=y:
 
-It looks like rcutree_report_cpu_starting() has been introduced 
-448e9f34d91d1a4799fdb06a93c2c24b34b6fd9d ("rcu: Standardize explicit 
-CPU-hotplug calls") which is in v6.7.
+https://lore.kernel.org/20231222-dma-xilinx-xdma-clang-fixes-v1-0-84a18ff184d2@kernel.org/
 
-For MIPS, it would like an adequate fix would be to 
-'s/rcutree_report_cpu_starting/rcu_cpu_starting/' for the 6.1 and 6.6 
-branches.
-
-Stefan, do you agree?
--- 
-Florian
-
+Cheers,
+Nathan
