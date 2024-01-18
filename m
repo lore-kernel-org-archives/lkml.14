@@ -1,57 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f73.google.com (mail-lf1-f73.google.com [209.85.167.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3180A375;
-	Thu, 18 Jan 2024 14:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5D91DDCE
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 14:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705588609; cv=none; b=sN6Fb0vX7lmKJBsR7kkKl2KJ03cD0z/lPP6ZvR5dyGj07+ba+L+KGz8d76pFeR6LxjajgptUbvjGmqlhe2P0yfo5GablPX+mSAP92UdubI/VhVilLatqI9/N/+bHcjc5tdoKMlZu9d8EkuIx5m+vgd3KPtvjxtLtMZXX2LiB5C0=
+	t=1705588616; cv=none; b=Ef34mu74CH/Pj8pNL8zs4fmfaIZmdaDNI/ksWUGNjybLCKEHvnY2av2axMHGEQMxRSL8c7zhkVaVgBoeUQsunEjn6kpTENUcepAgtIIu8iXqp+K+61SuKkFJcroFPIGsmIJq2h5EyOMFHMpr2aBw6wMDAzym1wM0aqinPcyR52c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705588609; c=relaxed/simple;
-	bh=qMt2J9WJVh8Lt5ah5A2hje2wNwvlh9tADBFQTncWdZ0=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=TeU+icpSMENUPb2eninezaM8xZNs7sr77WDwNDBCnzcgA6kL9IJ4LPOgboyvecvewDpLo3adajb0/CSKbL2v0JyBFLjYRNtf9QQBrNnWA4/VChVt03dPmT0zp2io38tdvQdT4Fg0nGfkPNFQ4UJHbqvKb5y+l8G9tGv28ULRDqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZEanvXW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705588616; c=relaxed/simple;
+	bh=jhNAUl+zNRT0DrGGSk/2IHTE6BjJ/ijabDZTUKUpX+o=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Date:
+	 Mime-Version:X-Developer-Key:X-Developer-Signature:X-Mailer:
+	 Message-ID:Subject:From:To:Cc:Content-Type; b=U2u8VXtqeqWS0wa+e82ZD8khUaWvBf+azUTJdrT306i1OhnxkuX5fGQMQ6WXx7A1RDGcogjshUpv/D3cPMa418FWqyZxqmyWj5P93nfWI7wr7JOwlc+BpQ9NqeocBvFAkvYsC95yfTEvXD86TiuHm9TlLxwznq7zb4EDALJrCyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vZ6nQwB3; arc=none smtp.client-ip=209.85.167.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZEanvXW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282DBC433F1;
-	Thu, 18 Jan 2024 14:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705588608;
-	bh=qMt2J9WJVh8Lt5ah5A2hje2wNwvlh9tADBFQTncWdZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EZEanvXWX4JwfldgWL7suTBzVUCnAVAeMd7rwByUUcbkTM23v34drO9DkKByRHcsx
-	 bMbtTyLqKBtw1aTaAzIZ7W+s4FUcXThq17tZXtTujAqYocTUChK1Gk4zN66S/Yuwt8
-	 HQ6Yv96H971uPjWFigf9xB1TkaHNSfBB6PIu+oulbJe3VNHjLBg8SjMZQiYR9KfLn6
-	 gjbhRMu1I1aqCe5ZXKMLkPinpYVLTznO1QtlguVmTK2f+w7ZfVUaIW1YXDy4Dc3wHX
-	 u4sT9HL4Vb+pUjnrs40Ji3aVmJ7/WhVNjIIpOyeMrrOnTc7tKdT67kVquKnOyW7qrk
-	 ZXNOZxHyKsW+A==
-Date: Thu, 18 Jan 2024 15:36:43 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Kemeng Shi <shikemeng@huaweicloud.com>, jack@suse.cz
-Cc: viro@zeniv.linux.org.uk, akpm@linux-foundation.org, tj@kernel.org, 
-	xiujianfeng@huawei.com, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCH] writeback: move wb_wakeup_delayed defination to
- fs-writeback.c
-Message-ID: <20240118-werkvertrag-wahrsagung-3011377aef2d@brauner>
-References: <20240118203339.764093-1-shikemeng@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vZ6nQwB3"
+Received: by mail-lf1-f73.google.com with SMTP id 2adb3069b0e04-50e75f8d722so387467e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 06:36:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705588612; x=1706193412; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0v0DKUVm/o60VD+s4pHxHrhv8BixZc6h40304F/G0T0=;
+        b=vZ6nQwB3rF9RTmCwwzjKD2KEIdqtgr0KLnHrSxJL2zk8sXvhd6qYWtegXpkjj8qdIC
+         pHFpRjwyld5aCBq6ajCNCzkBzZDod4NBaLqv9sGvrgzTrKNn77BYjmlU14htf0ERuvDq
+         BFINVc5iNyeiN830lIZWYJ/WsPWjWrGR28WKNK/LnpWpcpFffwtm2dsbUsFX37snAQkF
+         kdiyAuRTyT93bY598ii8s04i1xC+rB08NpHkUs8kiuTL6kinup0jxt6voRzw2buFadDf
+         vnPfzU0vVsfv9T4BASs68dWq4i9A7220APwzAD6p4UNU2Zk0EdAqZvbEeLxh1ymlXehn
+         3zsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705588612; x=1706193412;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0v0DKUVm/o60VD+s4pHxHrhv8BixZc6h40304F/G0T0=;
+        b=PIGg6pT/ibJpWO8w7zQR4Vp9Vg0aZTvx1ajC8ucQ/85SvbVDEpm5K4TehCncZAqWsO
+         Z3U/W0sAz4MXlXKfNSXyMv/gBFd/xEpUsQojjIV+ZJKl/231wjrnbl2ZDz6F0nCkPwRY
+         /9OzXX4SKCdCiUTZNlwRYDzBekSr0J3X3jp37gl6e4qwKESkzo9ooArYDIm77KJHJEyg
+         hkbUOES85qrgKZwRjEF8rb1f2EqDvswKKQXyW+XprBtATHaIox64Vn5mj4F2yRsJE7QQ
+         /kUy9rUt8zxzKtOLcVq/FgnGjl9udJXWuRbt0jYKiU/GYnDphvUaVskzhuiD4sTsGCEI
+         dqaA==
+X-Gm-Message-State: AOJu0YzIEtt0mFYea4OoiN5OkqVTJEOW1FP5hAj9jNqiXvqZm+XufA+G
+	WIKjQR//SGlePLTwSK0/LcwQctPyoa2djjQt4S/I+k1fi/BB0t58+f4KFIa+aF6frUaog6xWXys
+	GNK8Lw769ymQGpw==
+X-Google-Smtp-Source: AGHT+IH++RrT7XJnlPbyNQDU0b3yDi12ZhV2bf8Jr+2xWg4gaqXlF8npqL0MspBZqGkPjDN99AkA5+X00UUBHLY=
+X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
+ (user=aliceryhl job=sendgmr) by 2002:a05:6512:34c1:b0:50e:b2ba:147 with SMTP
+ id w1-20020a05651234c100b0050eb2ba0147mr6622lfr.2.1705588612573; Thu, 18 Jan
+ 2024 06:36:52 -0800 (PST)
+Date: Thu, 18 Jan 2024 14:36:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240118203339.764093-1-shikemeng@huaweicloud.com>
+Mime-Version: 1.0
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4635; i=aliceryhl@google.com;
+ h=from:subject; bh=jhNAUl+zNRT0DrGGSk/2IHTE6BjJ/ijabDZTUKUpX+o=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBlqTHLOLO4pSaf2+zw3LdhQoTIc4w+uP2NKl9Y9
+ /cn6Z7VrtmJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZakxywAKCRAEWL7uWMY5
+ Rk99D/0TYZ05gVZnIv1O/8NQ7Qj2KOYRm7SGdDQU0riJGIupvyVGm85cuWSZ+eFKcM2VZQIbXqQ
+ AKCyaWC79/EkRmp0tOTOA8dWiYyfYcAsdUCaEDMuPeGV72JyAeYpHSYHdOSgBOqf2EMr4dPBTA8
+ lK7aYxg/qAUulf8m8m4uEHjVy0qSglOrzsshCv7uM6U0F3RjjdjcsQh2YnvBEXHV4gBT15TmLP4
+ EY9QNde/ga8sOa7g4jIRvKg9TbpuImJQbL781fMYeXpfziHfGQqUoWX2N9PYym8i2i4raxaHaRO
+ CeItS4DcdWjdqqgHAxRI2LA97Aou6+QeD7irIJmsm1E9LClzp0XaUGNlJ2QRFYIndXRzq5gNQC6
+ szUZZcnDUdFW8JTMDTgNXnpNR6H+xL4rtW6aLwO530sIYCeSKpa1SgnqLwbo8Dhpmz52O9/IIuf
+ J9BIO3+QS6OQAoMc/wm1F8rnH8Y3EFaAp0RNVEtET3HldJjSC5WH+fw7vP/E7YMPddtpa/lQXRI
+ x2J4ruw9QgvhMQvEZ9ui2v9J+hQHIbVjuWoWb103Ga0kRT2g3oVkYcIFVA63Q0+Rjm6Bp60Nr37
+ hXK6bG4BCWgN01WrjKI6GvH/32QP+6h+2SlX/3YzYu/4pe3tjebyngBh9tP9hTVwCNGrExsbf3M DOXWb0TOVvL4wXA==
+X-Mailer: git-send-email 2.43.0.381.gb435a96ce8-goog
+Message-ID: <20240118-alice-file-v3-0-9694b6f9580c@google.com>
+Subject: [PATCH v3 0/9] File abstractions needed by Rust Binder
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, 
+	Matthew Wilcox <willy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 19, 2024 at 04:33:39AM +0800, Kemeng Shi wrote:
-> The wb_wakeup_delayed is only used in fs-writeback.c. Move it to
-> fs-writeback.c after defination of wb_wakeup and make it static.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
+This patchset contains the file abstractions needed by the Rust
+implementation of the Binder driver.
 
-I'll leave that for Jan to review.
+Please see the Rust Binder RFC for usage examples:
+https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/
+
+Users of "rust: file: add Rust abstraction for `struct file`":
+        [PATCH RFC 02/20] rust_binder: add binderfs support to Rust binder
+        [PATCH RFC 03/20] rust_binder: add threading support
+
+Users of "rust: cred: add Rust abstraction for `struct cred`":
+        [PATCH RFC 05/20] rust_binder: add nodes and context managers
+        [PATCH RFC 06/20] rust_binder: add oneway transactions
+        [PATCH RFC 11/20] rust_binder: send nodes in transaction
+        [PATCH RFC 13/20] rust_binder: add BINDER_TYPE_FD support
+
+Users of "rust: security: add abstraction for secctx":
+        [PATCH RFC 06/20] rust_binder: add oneway transactions
+
+Users of "rust: types: add `NotThreadSafe`":
+        [PATCH 5/9] rust: file: add `FileDescriptorReservation`
+
+Users of "rust: file: add `FileDescriptorReservation`":
+        [PATCH RFC 13/20] rust_binder: add BINDER_TYPE_FD support
+        [PATCH RFC 14/20] rust_binder: add BINDER_TYPE_FDA support
+
+Users of "rust: task: add `Task::current_raw`":
+        [PATCH 7/9] rust: file: add `Kuid` wrapper
+        [PATCH 8/9] rust: file: add `DeferredFdCloser`
+
+Users of "rust: file: add `Kuid` wrapper":
+        [PATCH RFC 05/20] rust_binder: add nodes and context managers
+        [PATCH RFC 06/20] rust_binder: add oneway transactions
+
+Users of "rust: file: add `DeferredFdCloser`":
+        [PATCH RFC 14/20] rust_binder: add BINDER_TYPE_FDA support
+
+Users of "rust: file: add abstraction for `poll_table`":
+        [PATCH RFC 07/20] rust_binder: add epoll support
+
+This patchset has some uses of read_volatile in place of READ_ONCE.
+Please see the following rfc for context on this:
+https://lore.kernel.org/all/20231025195339.1431894-1-boqun.feng@gmail.com/
+
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Changes in v3:
+- Completely rewrite comments about refcounting in the first patch.
+  - And add a note to the documentation in fs/file.c.
+- Discuss speculation gadgets in commit message for the Kuid wrapper.
+- Introduce NotThreadSafe and Task::current_raw patches and use them in
+  later patches.
+- Improve safety comments in DeferredFdCloser.
+- Some other minor changes.
+- Link to v2: https://lore.kernel.org/r/20231206-alice-file-v2-0-af617c0d9d94@google.com
+
+Changes in v2:
+- Update various docs and safety comments.
+- Rename method names to match the C name.
+- Use ordinary read instead of READ_ONCE in File::cred.
+- Changed null check in secctx.
+- Add type alias for PhantomData in FileDescriptorReservation.
+- Use Kuid::from_raw in Kuid::current_euid.
+- Make DeferredFdCloser fallible if it is unable to schedule a task
+  work. And also schedule the task work *before* closing the file.
+- Moved PollCondVar to rust/kernel/sync.
+- Updated PollCondVar to use wake_up_pollfree.
+- Link to v1: https://lore.kernel.org/all/20231129-alice-file-v1-0-f81afe8c7261@google.com/
+
+Link to RFC:
+https://lore.kernel.org/all/20230720152820.3566078-1-aliceryhl@google.com/
+
+---
+Alice Ryhl (6):
+  rust: security: add abstraction for secctx
+  rust: types: add `NotThreadSafe`
+  rust: task: add `Task::current_raw`
+  rust: file: add `Kuid` wrapper
+  rust: file: add `DeferredFdCloser`
+  rust: file: add abstraction for `poll_table`
+
+Wedson Almeida Filho (3):
+  rust: file: add Rust abstraction for `struct file`
+  rust: cred: add Rust abstraction for `struct cred`
+  rust: file: add `FileDescriptorReservation`
+
+ fs/file.c                       |   7 +
+ rust/bindings/bindings_helper.h |   8 +
+ rust/helpers.c                  |  94 ++++++
+ rust/kernel/cred.rs             |  74 +++++
+ rust/kernel/file.rs             | 512 ++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs              |   3 +
+ rust/kernel/security.rs         |  71 +++++
+ rust/kernel/sync.rs             |   1 +
+ rust/kernel/sync/lock.rs        |  15 +-
+ rust/kernel/sync/poll.rs        | 113 +++++++
+ rust/kernel/task.rs             | 112 ++++++-
+ rust/kernel/types.rs            |  17 ++
+ 12 files changed, 1015 insertions(+), 12 deletions(-)
+ create mode 100644 rust/kernel/cred.rs
+ create mode 100644 rust/kernel/file.rs
+ create mode 100644 rust/kernel/security.rs
+ create mode 100644 rust/kernel/sync/poll.rs
+---
+base-commit: 711cbfc717650532624ca9f56fbaf191bed56e67
+change-id: 20231123-alice-file-525b98e8a724
+
+Best regards,
+--
+Alice Ryhl <aliceryhl@google.com>
