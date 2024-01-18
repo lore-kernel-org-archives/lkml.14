@@ -1,169 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8A9B641;
-	Thu, 18 Jan 2024 06:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E222CB641
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 06:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705557701; cv=none; b=tAqVhTKDQ3tXfBk24F7rivOyWp2rD1Fuqv9AJkwUox6jgIymq3l2oK8HPLwM+MFJIplYs3Yo08987Q4HNc0qAmQUV/5R9/1zxEOgO1iXUc2ZXFWa+VfxSc+Mw8x1E33Sxh05X5lbBdCI102HDExPqyHPpL73xKQu9cTHrQO2xRo=
+	t=1705557749; cv=none; b=KJCHfrtZPpNsCd7aAflgaDbqs2BaUw/ufhbCsJ8TNs6NIrPG4BV6vzCTMxYt3tYoMcwJ29gEOmNfSanPkKEnQMSH3XPLYpXXM3EC0bzTGQYDRyPcbmwWacZPBUhDh6Sqa6q6rtDa2huVKOI6HTq4xQBqu+lvAgS04AIlcfly/wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705557701; c=relaxed/simple;
-	bh=qWJUF4vEm8pjestSXCI6d81SET0D64/8tA+HGwOLl+4=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To; b=Fqyp4Wceoaf82o3DLjq5Fjlgb58agVdvDDDT7PjAObfggTBiOTaVxgysQwPTGW/BNJGRngyfAJ+f5rbS0x7RCzy3c+FnMkm9phbLq1M7wBkWXQ3+zRALiTm3a/7BVGIyV7Refoaain/SgFqPzZ/TthxMHB1+5sCUwR50fkcUTmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YOwqiBC0; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705557749; c=relaxed/simple;
+	bh=u5RaG/b4PJwUTnZ4ynSVNBmNKKCbc+bIbPvRY2XtEzg=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=EWHTiNezULjzTIj4ra8xsevxrbhhe86KI8TiHa3TPh9tCTlN0QIZKy8ifdLq1rQbBa6wC2EWfLeCaJLuqQGHn+iSZp48K/euxP95HNxC+P6maOxwksDsW2HPnnNgwVLCa88PWrmQZwGi1oO9fkWIQYum8b3HOgeDEt+FW5gsgho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ly0XfBQ2; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YOwqiBC0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705557700; x=1737093700;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=qWJUF4vEm8pjestSXCI6d81SET0D64/8tA+HGwOLl+4=;
-  b=YOwqiBC0SNdRxo1BTKGv/aZSFSlYpRoGeeg/xn/C1FPUkxxH36vBUJUY
-   btiVs4Noy9vDlGF+UDIAMJ6o+NzlbX1HW4mhlSRFgHb/l5fFC0BKb3M22
-   FwZwssi15DYcqNeovUaRFTc0+l+Syj/Ix0v8MnziwzxyIrfwNSa1C5nPw
-   5IRfPNg+Q3rUo73g4lvUzrOvIFL1QwRQGYKvpB2CKByaSOfuKHqOkmPL+
-   vUY4qcweu2vwmUjFR9H5y7Gg01nfDFa5eQS13eiohgNu28SCb+VPxYquU
-   Fah6Fi0RsEFOoRTEsEvg/DgUywCooG6a8aHYnrmAHL28buQOVEPaVEUEW
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="397512970"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="397512970"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 22:00:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="903714547"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="903714547"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Jan 2024 22:00:03 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 3440039B; Thu, 18 Jan 2024 08:00:02 +0200 (EET)
-Date: Thu, 18 Jan 2024 08:00:02 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Esther Shimanovich <eshimanovich@chromium.org>
-Cc: Lukas Wunner <lukas@wunner.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
-Message-ID: <20240118060002.GV2543524@black.fi.intel.com>
-References: <20231221-thunderbolt-pci-patch-4-v4-1-2e136e57c9bc@chromium.org>
- <20231228132517.GA12586@wunner.de>
- <20231228133949.GG2543524@black.fi.intel.com>
- <CA+Y6NJFQq39WSSwHwm37ZQV8_rwX+6k5r+0uUs_d1+UyGGLqUw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ly0XfBQ2"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2ac304e526so1174613466b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jan 2024 22:02:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705557746; x=1706162546; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7nGZnmxJ3pdqJ6wmKHxjoSZlS4o/scgVJ84X1tEAH1s=;
+        b=Ly0XfBQ23Fhj0TGVr9IWC9zTGMyuAwRnc63/qpxHvop5SOIpup7rzbDR5rbtR4xUFM
+         AEUu91f+DfIPBBWBxWyt/ZN3iPBFLzWEfxp+GGtajLQ8GwYnSzRzOo4mFM9vT/TYr8j1
+         kjmO203b74+XtV4qOQCwnvVKqFoUwmQKWJNIHxHB7EsFm9l24ZRSuS12NglUia06ywfR
+         UatGA30NaC6fLc0s7EdO/XubUbUwdFV19rOIkEr68zILaUwK7lw0AVFpIgMhMQ8DrnV4
+         3/R4M/Z2rwXMUbkHI1ED/tVSKx1EaGSEkYt4hV7Fnn+CRDLoS+pSdpqmEmJCs1nvhSNT
+         cqtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705557746; x=1706162546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7nGZnmxJ3pdqJ6wmKHxjoSZlS4o/scgVJ84X1tEAH1s=;
+        b=PtOomfu27TRcAYFMP2IMcSr4N9JzAi7enr31XllyoH+td1/6kRc0hVg3Yk2RJ3WYva
+         AlCVyCeQgoSaOgSfAhCnuEqNB+mazg8ILUqDGx4L0+oHE2TgjU84ZtSM/SvHMoQ2aH9r
+         IcrSdFJd9pggyxoFgOaiYbE1Wf1lnA61D0qfIn8UTNrh5ga/N3mTv046aa6XuedCJR11
+         Hgm6+7CgaxsNlMukSyBSOCn7kXb3GqE0fQ21Dkztiyk4jpt3k3gNPcBy0f1RRi4bdHxF
+         zn2QAsG8ULyMOQdPMf3Y5itdJZ0I9smmQUGk9Gidd+6KYvXd/HW/sBrN7FDyJ1bkwEF1
+         iUvA==
+X-Gm-Message-State: AOJu0YzYocE3m5mzLQrRsce3fkGdVj+2tdRLHkBmzRuYrDc5ZsSBhZkM
+	7qBBXMwjT6lnfkQIXng683EZTgv4/Rz/LxgU1cfg/MJWs1WJfe0TYNZU4/cYClSE4hgCAeilbj0
+	V8s1+V8IM15rp79c7h++56tvpznQDhTy4jaXy
+X-Google-Smtp-Source: AGHT+IElbfBnRmPumPhcTCydVvIUyicQ24usBsNFChB+mW2xoUWE6BD0Q0nCfme+EK+zG6f0T/PILhv2JAz0JmB3eaI=
+X-Received: by 2002:a17:906:3797:b0:a2d:b4d3:b89a with SMTP id
+ n23-20020a170906379700b00a2db4d3b89amr176271ejc.134.1705557746073; Wed, 17
+ Jan 2024 22:02:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+Y6NJFQq39WSSwHwm37ZQV8_rwX+6k5r+0uUs_d1+UyGGLqUw@mail.gmail.com>
+References: <20240117-zswap-xarray-v1-0-6daa86c08fae@kernel.org>
+In-Reply-To: <20240117-zswap-xarray-v1-0-6daa86c08fae@kernel.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Wed, 17 Jan 2024 22:01:48 -0800
+Message-ID: <CAJD7tkbQb5nAQdhHXELQsUWs8KhwnoOZ7C8Eu2o7tCYSKeY9Ug@mail.gmail.com>
+Subject: Re: [PATCH 0/2] RFC: zswap tree use xarray instead of RB tree
+To: Chris Li <chrisl@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, =?UTF-8?B?V2VpIFh177+8?= <weixugc@google.com>, 
+	Yu Zhao <yuzhao@google.com>, Greg Thelen <gthelen@google.com>, 
+	Chun-Tse Shao <ctshao@google.com>, =?UTF-8?Q?Suren_Baghdasaryan=EF=BF=BC?= <surenb@google.com>, 
+	Brain Geffon <bgeffon@google.com>, Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Mel Gorman <mgorman@techsingularity.net>, Huang Ying <ying.huang@intel.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, Kairui Song <kasong@tencent.com>, 
+	Zhongkun He <hezhongkun.hzk@bytedance.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Barry Song <v-songbaohua@oppo.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Chengming Zhou <zhouchengming@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 17, 2024 at 04:21:18PM -0500, Esther Shimanovich wrote:
-> Thank you for all your comments! I really appreciate all your help
-> with this. I will address the style feedback once we reach a decision
-> on how we will fix this bug.
-> I first will respond to your comments, and then I will list out the
-> possible solutions to this bug, in a way that takes into account all
-> of your insights.
-> 
-> On Tue, Dec 26, 2023 at 7:15 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > Can you include a citation (spec name, revision, section) for this
-> > DMAR requirement?
-> >
-> This was my mistake–I misinterpreted what a firmware developer told
-> me. This is a firmware ACPI requirement from windows, which is not in
-> the DMAR spec. Windows uses it to identify externally exposed PCIE
-> root ports.
-> https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
-> 
-> > But I don't see where the defect is here.  And I doubt that this is
-> > really a unique situation.  So it's likely that this will happen on
-> > other systems, and we don't want to have to add quirks every time
-> > another one shows up.
-> ...
-> > don't have the new interface.  But we at least need a plan that
-> > doesn't require quirks indefinitely.
-> ...
-> On Thu, Dec 28, 2023 at 8:41 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > This is not scalable at all. You would need to include lots of systems
-> > here. And there should be no issue at all anyways.
-> My team tests hundreds of different devices, and this is the only one
-> which exhibited this issue that we’ve seen so far.
-> No other devices we’ve seen so far have a discrete internal
-> Thunderbolt controller which is treated as a removable device.
-> Therefore, we don’t expect that a large number of devices will need
-> this quirk.
+That's a long CC list for sure :)
 
-Well that's pretty much all Intel Titan Ridge and Maple Ridge based
-systems. Some early ones did not use IOMMU but all the rest do.
+On Wed, Jan 17, 2024 at 7:06=E2=80=AFPM Chris Li <chrisl@kernel.org> wrote:
+>
+> The RB tree shows some contribution to the swap fault
+> long tail latency due to two factors:
+> 1) RB tree requires re-balance from time to time.
+> 2) The zswap RB tree has a tree level spin lock protecting
+> the tree access.
+>
+> The swap cache is using xarray. The break down the swap
+> cache access does not have the similar long time as zswap
+> RB tree.
 
-> > There is really nothing "unique" here. It's exactly as specified by
-> > this:
-> >
-> > https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
-> >
-> > and being used in many many system already out there and those have been
-> > working just fine.
-> I don’t know how many computers have a discrete Thunderbolt chip that
-> is separate from their CPU, but this doesn’t seem to be a common
-> occurrence.
-> These devices were made during a narrow window of time when CPUs
-> didn’t have Thunderbolt features yet, so a separate JHL6540 chip had
-> to be added so that Lenovo could include Thunderbolt on X1 Carbon Gen
-> 7/8.
+I think the comparison to the swap cache may not be valid as the swap
+cache has many trees per swapfile, while zswap has a single tree.
 
-Before Intel Ice Lake it was all discrete and it is still discrete with
-the Barlow Ridge controller who will have exact same ExternalFacing port
-as the previous models.
+>
+> Moving the zswap entry to xarray enable read side
+> take read RCU lock only.
 
-> As you said, these devices do indeed work fine in cases where you
-> don’t care if a PCI Thunderbolt device is internal or external, which
-> is most cases.
-> Problems happen only whenever someone adds a security policy, or some
-> other feature that cares about the distinction between a fixed or
-> removable PCI device.
+Nice.
 
-Do we have such security policy in the mainline kernel?
+>
+> The first patch adds the xarray alongside the RB tree.
+> There is some debug check asserting the xarray agrees with
+> the RB tree results.
+>
+> The second patch removes the zwap RB tree.
 
-> > This has been working just fine so far and as far as I can tell there is
-> > no such "policy" in place in the mainline kernel.
-> Correct, there is no such policy in the mainline kernel as of now. The
-> bug is that the linux kernel’s “removable” property is inaccurate for
-> this device.
+The breakdown looks like something that would be a development step,
+but for patch submission I think it makes more sense to have a single
+patch replacing the rbtree with an xarray.
 
-Or perhaps the "policy" should know this better? IIRC there were some
-"exceptions" in the Chrome kernel that allowed to put these devices into
-"allowlist" is this not the case anymore?
+>
+> I expect to merge the zswap rb tree spin lock with the xarray
+> lock in the follow up changes.
 
-> > Can you elaborate what the issue is and which mainline kernel you are
-> > using to reproduce this?
-> Thanks for this question! On a Lenovo Thinkpad Gen 7/Gen 8 computer
-> with the linux kernel installed, when you look at the properties of
-> the JHL6540 Thunderbolt controller, you see that it is incorrectly
-> labeled as removable. I have replicated this bug on the b85ea95d0864
-> Linux 6.7-rc1 kernel.
-> 
-> Before my patch, you see that the JHL6540 controller is inaccurately
-> labeled “removable”:
-> $ udevadm info -a -p /sys/bus/pci/devices/0000:05:00.0 | grep -e
-> {removable} -e {device} -e {vendor} -e looking
->   looking at device '/devices/pci0000:00/0000:00:1d.4/0000:05:00.0':
->     ATTR{device}=="0x15d3"
->     ATTR{removable}=="removable"
->     ATTR{vendor}=="0x8086"
+Shouldn't this simply be changing uses of tree->lock to use
+xa_{lock/unlock}? We also need to make sure we don't try to lock the
+tree when operating on the xarray if the caller is already holding the
+lock, but this seems to be straightforward enough to be done as part
+of this patch or this series at least.
 
-This is actually accurate. The Thunderbolt controller is itself
-hot-removable and that BTW happens to be hot-removed when fwupd applies
-firmware upgrades to the device.
+Am I missing something?
+
+>
+> I can surely use some help in reviewing and testing.
+>
+> Signed-off-by: Chris Li <chrisl@kernel.org>
+> ---
+> Chris Li (2):
+>       mm: zswap.c: add xarray tree to zswap
+>       mm: zswap.c: remove RB tree
+>
+>  mm/zswap.c | 120 ++++++++++++++++++++++++++++++-------------------------=
+------
+>  1 file changed, 59 insertions(+), 61 deletions(-)
+> ---
+> base-commit: d7ba3d7c3bf13e2faf419cce9e9bdfc3a1a50905
+> change-id: 20240104-zswap-xarray-716260e541e3
+>
+> Best regards,
+> --
+> Chris Li <chrisl@kernel.org>
+>
