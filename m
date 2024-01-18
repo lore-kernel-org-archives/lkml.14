@@ -1,75 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7948628DBC;
-	Thu, 18 Jan 2024 14:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CE3A53;
+	Thu, 18 Jan 2024 14:41:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705588807; cv=none; b=ZQhhGJglnEoUlmqSp5nqkoSZupY4KhEo5aXnSA3G2OLiDMFi3MPhdQzluZqSGCc3F12h7pJmChwO9r+AbPeqzpS9094xxCNNaIj72hoDlO8XX6FBSIQiZ1ubMI0BE1p1MlR4lJM0jT7QTKzIme/nLzHU8/3xuIdtCbE7N/5Uv3M=
+	t=1705588866; cv=none; b=Tse9Jmuc3Se9G0KdHoQoPiygiCu6Qetx854mECegmIjl2RVFzUnvs007hJH6aZP/NeTKk51vCeXG6l8r0IwsjMKFNTyVBbkcP7vp1Sn9EaN8zv3MzQyKByO+15wzdPhAb/eeKVztTwugVBL651sBmNW4+JAGYzF/UAt1CPbbxXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705588807; c=relaxed/simple;
-	bh=1nGWSp2zbP5zgxUJ8GSxRXbppy2TjMZIkx7qciwfVuU=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=o//1jMTVITXsIuyxpxsqKkcxCG6g5nsyHgR3i+YS0ipzCmfCs4uD2JtgwPYl7WsRfZq1BnOdfClcg6NfjSc3wRBaoFSJEYgErx8ddj0aTHST22A4TrGUGucYKZP4XK8UkV2Rrrf3z0rUNLvp10SVgeTMtmXZuF7Ni/e8b1ody7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GsE7mzch; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705588866; c=relaxed/simple;
+	bh=jbr6rdJ/qeiYoL30WlSwpGj5SzBJllrSxz7PDcWI+jY=;
+	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:Reply-To:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Iu4X6JgJi0zz57ZDhDUd4nmKDWVhVmapkEmoWvPCG4NakKm2nl89tLpJjxYIWVhdfu2500wA7UxGqX4lAEs9AP6mSDTtqC/n3s0aV3EZfF4DURRtuUbGRjX6rx60GPyR1OhY35F3eKrxYhNDS0WGM5Mr/MmieLqVvJKdNBVKnQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UC4J9KD5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GsE7mzch"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2121C43390;
-	Thu, 18 Jan 2024 14:40:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UC4J9KD5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4E4C433F1;
+	Thu, 18 Jan 2024 14:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705588807;
-	bh=1nGWSp2zbP5zgxUJ8GSxRXbppy2TjMZIkx7qciwfVuU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GsE7mzchC2s7r2VpOmfcp3QvxQXlGFOFsAYC1iBrR1oMYD65tocIuxZi9vVBxClP9
-	 zamWGzAShyLQR2o7kN43PX4G8bW0Mt5KeNWLDdvgcAtvnEtk7WvwjLrBFX7MJon/fI
-	 kJSJMgLaikOopKrzAbwN0pURT2XHAUSByDaIBTXBlVhqnvRSHdawO1Ch9g3p6jd3ws
-	 KOLiND4rWH2eO/mpzC7Odx1TrajDypR960RTn/CZ62UIOrMZNUpgoQ94mUtZJrSHJ7
-	 g3/DDUqiePBG4u/MGqU7DCH5sCdvw/Eg6ghChp59ZRSkdE2a8DwxacaNSDxqOVXJbb
-	 sn9k2EPFf6RZA==
-Date: Thu, 18 Jan 2024 15:40:02 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: syzbot <syzbot+3abaeed5039cc1c49c7c@syzkaller.appspotmail.com>, 
-	axboe@kernel.dk, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [reiserfs?] possible deadlock in chown_common
-Message-ID: <20240118-badeverbot-gemustert-e87bd2a23bfc@brauner>
-References: <0000000000006308a805eaa57d87@google.com>
- <000000000000b5b973060f269eb3@google.com>
- <20240117165236.kcmlvjedoae6yd76@quack3>
+	s=k20201202; t=1705588865;
+	bh=jbr6rdJ/qeiYoL30WlSwpGj5SzBJllrSxz7PDcWI+jY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=UC4J9KD5DkWzus10ieCSPso1KKv+GxZN/efrkkYGlvJNq/8JzrklGZZzUcPtoBb63
+	 nRapeeZ4STrBg/h272xm9P0M/cjCjO/a3PJukYYbM0pg12EIHLoWCdGBdlL7hrnTz6
+	 Q0xQFpSNsaIyesZZax+USYwBtamZ7n8nt4Lc+KD7mGl2n9vzgQLBSZdivVJEoDINek
+	 /ehG0nL5Z3nlJphQVJaxyRrt3m7B9Xr7rqZpVT9yiEjEp8Shq7F7UzYC5/uhNGqS0V
+	 txOjVqMWDqHHtVyrPN5axaMQ2A8HHJjsxEhPI3vtmHEmQDJ4u9YFfKKh+K1oPTt9Db
+	 4H95w7BbPSRPA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id CB27ECE0546; Thu, 18 Jan 2024 06:41:04 -0800 (PST)
+Date: Thu, 18 Jan 2024 06:41:04 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chen Zhongjin <chenzhongjin@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, yangjihong1@huawei.com,
+	naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+	davem@davemloft.net, mhiramat@kernel.org, tglx@linutronix.de,
+	peterz@infradead.org, pmladek@suse.com, dianders@chromium.org,
+	npiggin@gmail.com, mpe@ellerman.id.au, jkl820.git@gmail.com,
+	juerg.haefliger@canonical.com, rick.p.edgecombe@intel.com,
+	eric.devolder@oracle.com, mic@digikod.net
+Subject: Re: [PATCH] kprobes: Use synchronize_rcu_tasks_rude in
+ kprobe_optimizer
+Message-ID: <526b12e4-4bb0-47b1-bece-66b47bfc0a92@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240117061636.288412-1-chenzhongjin@huawei.com>
+ <20240117123133.2e40438936167e6a4aec8b16@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240117165236.kcmlvjedoae6yd76@quack3>
+In-Reply-To: <20240117123133.2e40438936167e6a4aec8b16@linux-foundation.org>
 
-On Wed, Jan 17, 2024 at 05:52:36PM +0100, Jan Kara wrote:
-> On Wed 17-01-24 08:20:06, syzbot wrote:
-> > syzbot suspects this issue was fixed by commit:
-> > 
-> > commit 6f861765464f43a71462d52026fbddfc858239a5
-> > Author: Jan Kara <jack@suse.cz>
-> > Date:   Wed Nov 1 17:43:10 2023 +0000
-> > 
-> >     fs: Block writes to mounted block devices
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ecbc83e80000
-> > start commit:   2bca25eaeba6 Merge tag 'spi-v6.1' of git://git.kernel.org/..
-> > git tree:       upstream
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9df203be43a870b5
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3abaeed5039cc1c49c7c
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1539e7b8880000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c6cb32880000
-> > 
-> > If the result looks correct, please mark the issue as fixed by replying with:
+On Wed, Jan 17, 2024 at 12:31:33PM -0800, Andrew Morton wrote:
+> On Wed, 17 Jan 2024 06:16:36 +0000 Chen Zhongjin <chenzhongjin@huawei.com> wrote:
 > 
-> Makes sense:
-> 
-> #syz fix: fs: Block writes to mounted block devices
+> > There is a deadlock scenario in kprobe_optimizer():
+> > 
+> > pid A				pid B			pid C
+> > kprobe_optimizer()		do_exit()		perf_kprobe_init()
+> > mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
+> > synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
+> > // waiting tasks_rcu_exit_srcu	kernel_wait4()
+> > 				// waiting pid C exit
+> > 
+> > To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
+> > rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
+> > that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
 
-I remember once trying to chase that bug down and being very confused.
+Hello, Chen Zhongjin,
+
+Relying on the non-preemptability of the last portion of the do_exit()
+function does appear to be the basis for a much better solution than
+what we currently have.  So at the very least, thank you for the idea!!!
+I feel a bit silly for not having thought of it myself.  ;-)
+
+However, just invoking synchronize_rcu_tasks_rude() will be bad for both
+energy efficiency and real-time response.  This is due to the fact that
+synchronize_rcu_tasks_rude() sends an IPI to each and every online CPUs,
+almost none of which will be in the non-preemptible tail of do_exit()
+at any given time.  These additional unnecessary IPIs will drain battery
+when they hit idle CPUs and degrade real-time response when they hit
+CPUs running aggressive real-time applications.  Which might not make
+people happy.
+
+So, would you be willing to use RCU's do_exit() hooks and RCU's hook
+into the scheduler (either rcu_note_context_switch() or rcu_tasks_qs(),
+whichever would work better) maintain a per-CPU variable that is a
+pointer to the task in the non-preemptible tail of do_exit() if there
+is one or NULL otherwise?  This would get us the deadlock-avoidance
+simplicity of your underlying idea, while avoiding (almost all of)
+the energy-efficiency and real-time-response issues with your patch.
+
+This does require a bit of memory-ordering care, so if you would prefer
+that I do the implementation, just let me know.
+
+(The memory-ordering trick is to use "smp_mb(); smp_load_acquire();" to
+sample the counter and "smp_store_release(); smp_mb();" to update it.)
+
+							Thanx, Paul
+
+> > Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+> 
+> Thanks.  Should we backport this fix into earlier kernels?  If so, are
+> we able to identify a suitable Fixes: target?
