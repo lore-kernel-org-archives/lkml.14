@@ -1,132 +1,206 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DD2646;
-	Thu, 18 Jan 2024 14:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A481E4A1
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 14:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705589095; cv=none; b=XjHO98/vVqsB8VTqXEskc8BXj1r8ygmUkyAlHvnEDMkL+X3Md3paN58zjxBdwRj1PrtCT/vJcJZORsgVCv+Fz++7oCZDs5XzMOlUJTx1icB1U+fXHIdSuUlU6rTI93FLZx5Z8pcRsxQxw1v3BOxrhB0WVcJWutVojKnZchme96k=
+	t=1705589128; cv=none; b=JnmvlZNjF7q1QYHswm5WFdVocWpJlFXyf8N5BQLnt6qIPyn/XSZ9mZXq80MeUe9fRL276Rdw/dwETKqZdSZQx4P2HNh6wCCjQALUjEKrAgNFdlJ6mkjm4GlZmKvPlmdQzDwN+bJpigwdvmrSllyM7XuUCwgpMqqK4z6NqReet0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705589095; c=relaxed/simple;
-	bh=FIWDXh4TMq/7lMeI0IsyQDpPlkd6cnqeXUZhP3qX+A4=;
-	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:Reply-To:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rPkS8VEk9xFotx7xJCr1tDhS6u2xcGdUZOSZv61tiuJS8SaSv0FVB7aCkaAwi14nNTRns9RJhNN0hmW8s1+Ge3gGZCLyMwVvkkbjFDKB6WIIV7YL6Mzu3GDpT891Qk5LuPaq7wrPq/tVuTvohh+fEo6fUOuJAWDcC3HPz+fOJ34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OmfPqywr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OmfPqywr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA55C433C7;
-	Thu, 18 Jan 2024 14:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705589094;
-	bh=FIWDXh4TMq/7lMeI0IsyQDpPlkd6cnqeXUZhP3qX+A4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=OmfPqywrN5vo9zYO6l/kHSO0GOcSt6zCu+Wvibnqme2XW7kQSLfgRs0oWVczAxoXe
-	 d6NWhfOKeQzHtrGjDkmxJlAEDlDzn3aD8aNL9vRJZEm0SjDI+MQR6heyuF2Kv6CW7I
-	 773MMllTjQ9wrci5Imq1JsL9U1M5cYXzd6kpocvZLYQDtVCWtxChhMg/+ixVvuyszl
-	 kvdhYJNQgYKH9322x923TgetLy3Ir43rUh4POtkDWjS+AUPtvnW4hZb6NEV/nwBkaV
-	 tNYjpb78YnDRALYsi4jarc2aLh02j7nV1vdnmHF+qZRk/fceXJFO19DW67eglBw8bc
-	 zbcaUrPpDWnew==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 50520CE0546; Thu, 18 Jan 2024 06:44:54 -0800 (PST)
-Date: Thu, 18 Jan 2024 06:44:54 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Chen Zhongjin <chenzhongjin@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, yangjihong1@huawei.com,
-	naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-	davem@davemloft.net, mhiramat@kernel.org, akpm@linux-foundation.org,
-	tglx@linutronix.de, peterz@infradead.org, pmladek@suse.com,
-	dianders@chromium.org, npiggin@gmail.com, mpe@ellerman.id.au,
-	jkl820.git@gmail.com, juerg.haefliger@canonical.com,
-	rick.p.edgecombe@intel.com, eric.devolder@oracle.com,
-	mic@digikod.net
-Subject: Re: [PATCH v2] kprobes: Use synchronize_rcu_tasks_rude in
- kprobe_optimizer
-Message-ID: <47e87ff3-2925-4671-89a6-067f36f25d19@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240118021842.290665-1-chenzhongjin@huawei.com>
- <20240117212646.5f0ddf0c@gandalf.local.home>
+	s=arc-20240116; t=1705589128; c=relaxed/simple;
+	bh=jWDkfChzYYvTaG6H6B35gjloWDfYxgMr/RX4Mzi9osU=;
+	h=Received:Date:From:To:Cc:Subject:Message-ID:X-Mailer:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding; b=Y5yawU1VNspqh+FBDw7gRRnOYcC6PhrY6xYZBsaBM8VA+x6MvoBefwUrKnn3uNkd+VLiJ18xPPPR/ZCbf4E7yxJpfC8rpZ0tomBweV7lJaWOcYKCmB1r2osr3lj6i4dEOY4Hiw2MhfrZebOhnqmuvnc+m/g/YeCRJdhtR0hY8h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F007FC433F1;
+	Thu, 18 Jan 2024 14:45:26 +0000 (UTC)
+Date: Thu, 18 Jan 2024 09:46:45 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Erick Archer <erick.archer@gmx.com>, Nathan Lynch <nathanl@linux.ibm.com>
+Subject: [GIT PULL] eventfs: Fix for readdir and a seq_buf fix
+Message-ID: <20240118094645.58edbfb7@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240117212646.5f0ddf0c@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 17, 2024 at 09:26:46PM -0500, Steven Rostedt wrote:
-> On Thu, 18 Jan 2024 02:18:42 +0000
-> Chen Zhongjin <chenzhongjin@huawei.com> wrote:
-> 
-> > There is a deadlock scenario in kprobe_optimizer():
-> > 
-> > pid A				pid B			pid C
-> > kprobe_optimizer()		do_exit()		perf_kprobe_init()
-> > mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
-> > synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
-> > // waiting tasks_rcu_exit_srcu	kernel_wait4()
-> > 				// waiting pid C exit
-> > 
-> > To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
-> > rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
-> > that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
-> > 
-> 
-> Did lockdep detect this? If not, we should fix that.
-> 
-> I'm also thinking if we should find another solution, as this seems more of
-> a work around than a fix.
 
-My suggestion is at 526b12e4-4bb0-47b1-bece-66b47bfc0a92@paulmck-laptop.
+Linus,
 
-Better suggestions are of course welcome.  ;-)
+This includes the fix to eventfs that we discussed. It removes the creation
+of dentries/inodes from the readdir() logic. I also threw in a seq_buf fix
+that was sent to me not to long ago.
 
-> > Fixes: a30b85df7d59 ("kprobes: Use synchronize_rcu_tasks() for optprobe with CONFIG_PREEMPT=y")
-> > Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
-> > ---
-> > v1 -> v2: Add Fixes tag
-> > ---
-> >  arch/Kconfig     | 2 +-
-> >  kernel/kprobes.c | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/Kconfig b/arch/Kconfig
-> > index f4b210ab0612..dc6a18854017 100644
-> > --- a/arch/Kconfig
-> > +++ b/arch/Kconfig
-> > @@ -104,7 +104,7 @@ config STATIC_CALL_SELFTEST
-> >  config OPTPROBES
-> >  	def_bool y
-> >  	depends on KPROBES && HAVE_OPTPROBES
-> > -	select TASKS_RCU if PREEMPTION
-> > +	select TASKS_RUDE_RCU
-> 
-> Is this still a bug if PREEMPTION is not enabled?
+More eventfs fixes and a seq_buf fix for 6.8:
 
-Both "select" clauses would be needed for this patch, if I understand
-correctly.
+- Hard-code the inodes for eventfs to the same number for files, and
+  the same number for directories.
 
-							Thanx, Paul
+- Have getdent() not create dentries/inodes in iterate_shared() as now
+  it has hard-coded inode numbers
 
-> -- Steve
-> 
-> >  
-> >  config KPROBES_ON_FTRACE
-> >  	def_bool y
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index d5a0ee40bf66..09056ae50c58 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -623,7 +623,7 @@ static void kprobe_optimizer(struct work_struct *work)
-> >  	 * Note that on non-preemptive kernel, this is transparently converted
-> >  	 * to synchronoze_sched() to wait for all interrupts to have completed.
-> >  	 */
-> > -	synchronize_rcu_tasks();
-> > +	synchronize_rcu_tasks_rude();
-> >  
-> >  	/* Step 3: Optimize kprobes after quiesence period */
-> >  	do_optimize_kprobes();
-> 
+- Use kcalloc() instead of kzalloc() on a list of elements
+
+- Fix seq_buf warning and make static work properly.
+
+
+Please pull the latest eventfs-v6.8-2 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+eventfs-v6.8-2
+
+Tag SHA1: 09d733778820003cca5836364cbc0b162d70bb7e
+Head SHA1: 7a8e9cdf9405819105ae7405cd91e482bf574b01
+
+
+Erick Archer (1):
+      eventfs: Use kcalloc() instead of kzalloc()
+
+Nathan Lynch (1):
+      seq_buf: Make DECLARE_SEQ_BUF() usable
+
+Steven Rostedt (Google) (2):
+      eventfs: Have the inodes all for files and directories all be the same
+      eventfs: Do not create dentries nor inodes in iterate_shared
+
+----
+ fs/tracefs/event_inode.c | 36 ++++++++++++++++++------------------
+ include/linux/seq_buf.h  |  3 +--
+ 2 files changed, 19 insertions(+), 20 deletions(-)
+---------------------------
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index fdff53d5a1f8..6795fda2af19 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -32,6 +32,10 @@
+  */
+ static DEFINE_MUTEX(eventfs_mutex);
+ 
++/* Choose something "unique" ;-) */
++#define EVENTFS_FILE_INODE_INO		0x12c4e37
++#define EVENTFS_DIR_INODE_INO		0x134b2f5
++
+ /*
+  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
+  * its parent's list and will have is_freed set (under eventfs_mutex).
+@@ -93,7 +97,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	/* Preallocate the children mode array if necessary */
+ 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+ 		if (!ei->entry_attrs) {
+-			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
++			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
+ 						  GFP_NOFS);
+ 			if (!ei->entry_attrs) {
+ 				ret = -ENOMEM;
+@@ -352,6 +356,9 @@ static struct dentry *create_file(const char *name, umode_t mode,
+ 	inode->i_fop = fop;
+ 	inode->i_private = data;
+ 
++	/* All files will have the same inode number */
++	inode->i_ino = EVENTFS_FILE_INODE_INO;
++
+ 	ti = get_tracefs(inode);
+ 	ti->flags |= TRACEFS_EVENT_INODE;
+ 	d_instantiate(dentry, inode);
+@@ -388,6 +395,9 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
+ 	inode->i_op = &eventfs_root_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+ 
++	/* All directories will have the same inode number */
++	inode->i_ino = EVENTFS_DIR_INODE_INO;
++
+ 	ti = get_tracefs(inode);
+ 	ti->flags |= TRACEFS_EVENT_INODE;
+ 
+@@ -717,8 +727,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	struct eventfs_inode *ei_child;
+ 	struct tracefs_inode *ti;
+ 	struct eventfs_inode *ei;
+-	struct dentry *ei_dentry = NULL;
+-	struct dentry *dentry;
+ 	const char *name;
+ 	umode_t mode;
+ 	int idx;
+@@ -739,11 +747,11 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 	mutex_lock(&eventfs_mutex);
+ 	ei = READ_ONCE(ti->private);
+-	if (ei && !ei->is_freed)
+-		ei_dentry = READ_ONCE(ei->dentry);
++	if (ei && ei->is_freed)
++		ei = NULL;
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	if (!ei || !ei_dentry)
++	if (!ei)
+ 		goto out;
+ 
+ 	/*
+@@ -770,11 +778,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 		if (r <= 0)
+ 			continue;
+ 
+-		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
+-		if (!dentry)
+-			goto out;
+-		ino = dentry->d_inode->i_ino;
+-		dput(dentry);
++		ino = EVENTFS_FILE_INODE_INO;
+ 
+ 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
+ 			goto out;
+@@ -798,11 +802,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		name = ei_child->name;
+ 
+-		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
+-		if (!dentry)
+-			goto out_dec;
+-		ino = dentry->d_inode->i_ino;
+-		dput(dentry);
++		ino = EVENTFS_DIR_INODE_INO;
+ 
+ 		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
+ 			goto out_dec;
+@@ -874,7 +874,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	}
+ 
+ 	if (size) {
+-		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
++		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+ 		if (!ei->d_children) {
+ 			kfree_const(ei->name);
+ 			kfree(ei);
+@@ -941,7 +941,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 		goto fail;
+ 
+ 	if (size) {
+-		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
++		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+ 		if (!ei->d_children)
+ 			goto fail;
+ 	}
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 5fb1f12c33f9..c44f4b47b945 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -22,9 +22,8 @@ struct seq_buf {
+ };
+ 
+ #define DECLARE_SEQ_BUF(NAME, SIZE)			\
+-	char __ ## NAME ## _buffer[SIZE] = "";		\
+ 	struct seq_buf NAME = {				\
+-		.buffer = &__ ## NAME ## _buffer,	\
++		.buffer = (char[SIZE]) { 0 },		\
+ 		.size = SIZE,				\
+ 	}
+ 
