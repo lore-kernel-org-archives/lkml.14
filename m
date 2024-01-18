@@ -1,156 +1,128 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B5125579;
-	Thu, 18 Jan 2024 14:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AAB28DA0;
+	Thu, 18 Jan 2024 14:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705586678; cv=none; b=pIuxoYazXE8YUx0RYt2AsFGy0GShV7cBOtLlSZMP1044uM3hgZqAplvsP00yVA5tPVCN+4KALUW1aUR3an5nkc4twkv3qzpQqWsEXalsenhqFUMbBgeHUpYSi54g2jjaZVLWRLTsi8cwdgXI8sAZsEcYb3kRxwOciCaATxB00ZU=
+	t=1705586859; cv=none; b=nRJbj6ZtNMubqhVBf6LYF2jwb6a5jBUKNcquyi3lFPfkGeOiV/71GsCl2nMitGISW3ivXlND4btzB+/oEfPiuMGI82HHxF8XvgH3iMOMo5ScvnfSJ3iQyuQt6K5tj98Zw06PyPWGLwoVDa/W7WcKCqLC9reyub6e70ZlZBmmPNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705586678; c=relaxed/simple;
-	bh=maSG38FRSlRqfJJYy0Qy2S5rKAfADRtfQn+zD30T+/0=;
-	h=Received:X-Virus-Scanned:Received:DKIM-Signature:Received:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NWSxiwLBCyIVg6MwNUZIuUVFMrUpo6bDSpFyH3xGPP0ctiavYq9d+0aXF8OhsHe01JnVy9nAiTM+iqsEahG76zXbAr+E3bIuTU84F9aFv2U61b/6PTR1ODU0Z3zMv9Wp6bmkw/mmU1cz0UzygB5F3tYowERIq+jrgRLlQUyYY3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Kt3H5wHF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1705586859; c=relaxed/simple;
+	bh=z/2Bwgab96DZ5PKg8s3ghLC/ddBRjyNUGU5ig9YwyrQ=;
+	h=DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:To:Content-Language:Cc:From:Subject:
+	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
+	 UI-OutboundReport; b=Gy8vlPDWh+kkprwJr3npdGwaamUM8LROFuD6GnXzI2Bbgeh5wMfy7KHJxvAK+h2bo5nMJRV+yR+/wTwKH0o4d9RFlNFL0U5a/aq0dsSZs2A4DA7jS3SMQWQzJkpMZ2hpRKzR4AQALRzHNRbZrXsEhEsDguqLpQPF2vcX3zE48C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XC6tRtmu; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Kt3H5wHF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 30A1640E0196;
-	Thu, 18 Jan 2024 14:04:28 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id gLCyDuDGzu6c; Thu, 18 Jan 2024 14:04:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1705586665; bh=VoFIqBDZC2Z/liH3WDJQdK5q0qjW6OBA8h6YdVHmZ98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kt3H5wHF/tNwLtW0f/4BhPNVZfeZzR6mmo1JsyrecxQ+2GjqAAk0RKd5bm9OTceZV
-	 ZI4o3+1pW10/YCYAjSmp9UY18092RN0MwaIH0wIuYAegxBGvqSXma0EgQR8Sy6RcKl
-	 rBG4WgZ6pAD8UZbYEpW93HQM4eZuX5CQ9Y7UhuLrOK69EjAXTq3EMkECWHa2PTW4ue
-	 XW/SlAblPN+o9dG+CC22p6CNi8IB4fovTsV9CK4CWTp7hzv9f0Xrddo0UgWOYUWQju
-	 EZejyWpOy/70tZ4einnZMW+vh+90oPY6IDrBkcUGk6fK0dzQmz9rQ55dywi7JS1HWo
-	 FOR1rqhVcTEd6o1S0VvY6doKJMxIfFx8acDkSQ6SFhEkrYk1q/747p6PHa/ObA5Qa5
-	 X18JH1GeIgQPZV0u5ZAeQON0wKpolt4u0Mm9y/60ACtbuU+nC0U9I4xjB6aiy0rySY
-	 glGjVUm1L+SycV0gvjuaZM0iEeuD4cUHW+PlExWusVm0PlQeuKS4WOoQ1pkk8YAbwo
-	 LPmS6KEkc7fAdpOUZb1UQnIPXB0ihX5/+qbd320usnEtD+9ts8haiaDrIj1TwhwGEn
-	 tqsZVPxmjb6GleGKcm3rQNfHV7dFtnCUQ8PyZnS9byl/kg/IKbV6mcGIRo0nUmvQ+P
-	 H1RPqdZLPDbBogXGZW/d2hqs=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 443BF40E0177;
-	Thu, 18 Jan 2024 14:03:49 +0000 (UTC)
-Date: Thu, 18 Jan 2024 15:03:43 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Michael Roth <michael.roth@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
-	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
-	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com, liam.merwick@oracle.com
-Subject: Re: [PATCH v1 17/26] crypto: ccp: Handle non-volatile INIT_EX data
- when SNP is enabled
-Message-ID: <20240118140333.GJZakvtcJO1QYh8C8-@fat_crate.local>
-References: <20231230161954.569267-1-michael.roth@amd.com>
- <20231230161954.569267-18-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XC6tRtmu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1705586827; x=1706191627; i=markus.elfring@web.de;
+	bh=z/2Bwgab96DZ5PKg8s3ghLC/ddBRjyNUGU5ig9YwyrQ=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=XC6tRtmunKwtM100D+Ewfm+CP19mBGN08XuDCnaMsEymoQGu+u7vI9noGUs/48rY
+	 37lO6G0Z7s4rxiJBdFOdWpHLXgkm6MWomCvWn1LAVRJh6RTBnLjbBsp+1AaW3QKca
+	 j39hinGd9YSL8oQLtAEux1AKzZ6XzkIratnfA+VOGaeDJ3mSzq/V0QrVB03p346JB
+	 5SD9TFL8tmm5r82DQ9X3KVoFC0LUBcu/NyxZb5gklB1tOY4jsp5oUy4KkN4+UfVZG
+	 PWBL4HPpTsukMlZanE0H7VNrkc0VzEDJMNv4a86cxO6WM4nxKJYlhdm4HitY7iLQq
+	 o7iKj5i5hC7nnlrpzA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MeUXu-1qsVjz2Us8-00aRKh; Thu, 18
+ Jan 2024 15:07:07 +0100
+Message-ID: <14171fc4-8157-4919-86b8-bdec0493197d@web.de>
+Date: Thu, 18 Jan 2024 15:06:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231230161954.569267-18-michael.roth@amd.com>
+User-Agent: Mozilla Thunderbird
+To: linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>, Kunwu Chan <chentao@kylinos.cn>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] pstore/ram_core: Improve exception handling in
+ persistent_ram_new()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Q1rClzpMoW580z9Pvdi2Z3ZRHk52p2E2Q6XVLqRrNKlPpyakmvP
+ WdtYc8MLDxlgfuZiuPwGEHQI/kjaJnFeixYPqtoMPMyJoqoY6e8MtQV2fEre9niN1hh7or4
+ s8Nr82P4exdDLiTP+N0qKILv0/L4zk7aThKqlkzvZRNByhS/hQzzihNIIIt0uYBXfUk1GlZ
+ L2br0gqeFgTPu1dbLfm8A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:y1tJt7FpCs4=;72+dE2IeuiHLVRsnwrXAscXo/3+
+ lvUW7Cwig10uWMNkk8VoZsjoGTxhO8UkBuBLgmhNJbQQWUF4MZhVLvjFe+O45x6d8XsykU/+t
+ Zajbvk0S9m5vDTZDvONSCr+BSAbeYmZqEJijzswUGv+BNHWchFEAo7wiUULf3sCC/NBgs5u2b
+ MAq729vxCM+AA+uW3vRSEVD+epSW40GANRTa3ASQUuYI/P4ulMciw1Um5GwO7T/DLUPzQXwri
+ 3jFe6WGOiXNHrck3PozMnN2DtgFGgdHs8bUN0LN1hSBhTdPWbu7w8QE8Hpd3YSbMBVe0RIXk4
+ WJqosgBJkZlZvitPC0bbUZuwlbQ2R0P0gmx+JDjMmB8inYk/ACtrIfuv7WAEDR34/OxzcTnWh
+ xXan8ZTp3CYVvR81IFTH/2ze3HtRME4f5vZgCrf8SYacxEWMTcfudBmj4dE92NteLTFYo0UKs
+ Ydz8njlWcFwb4RhD2/wosXv5Bx6nJcp1dTO3debhxvVIROfRLYsrNOCF/DKPCW8NKCmsOzHJ5
+ HasbMgzopiHBANof97ShXv4O86FG7MgE1au11CCDvWsRRz/koRr36At3moaZwScQfYeYY2Q/l
+ ByqJXMBADHYdsAf5vE4L6yp35o5syjIQRJW5omsvy/9VqffBtOfcv+2poKy0Y/JSES9zg/2iY
+ DDhMPPsYzMFhJhc2MPGirACcfowJfOpYHuDGdrR0bSA7pcujnsOYNMOpcfsxu+kcFxRsCkjy1
+ v3xUKTfv1iD9gXNTsan/jNxruyGuh7K+WUWfxMeLa93S3oBkVuUXAmqQnSv8/A+Nf/aIDziaR
+ w4rjbwWwrDmE1EhVBvC6w/MIC1woQH2EcKIYlE2+n7fa/98AJbwa1Q/eNK1maP6+naBUZ71aq
+ 6CF8to4q7Z/arkn+R5WnPIU5ZZ4WKgKiiBkCNYwRIbkZr//5yHJra6Jw10d+9YzmtjxNzL6tU
+ EzlcPw==
 
-On Sat, Dec 30, 2023 at 10:19:45AM -0600, Michael Roth wrote:
->  drivers/crypto/ccp/sev-dev.c | 104 ++++++++++++++++++++++++++---------
->  1 file changed, 79 insertions(+), 25 deletions(-)
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Thu, 18 Jan 2024 14:57:21 +0100
 
-Some minor cleanups ontop:
+* Omit an initialisation (for the variable =E2=80=9Cret=E2=80=9D)
+  which became unnecessary with this refactoring
+  because a memory allocation failure will be directly indicated
+  by a corresponding return statement in an if branch.
 
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index dfe7f7afc411..a72ed4466d7b 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -266,16 +266,15 @@ static int sev_read_init_ex_file(void)
- }
- 
- /*
-- * When SNP is enabled, the pages comprising the buffer used to populate
-- * the file specified by the init_ex_path module parameter needs to be set
-- * to firmware-owned, which removes the mapping from the kernel direct
-- * mapping since generally the hypervisor does not access firmware-owned
-- * pages. However, in this case the hypervisor does need to read the
-- * buffer to transfer the contents to the file at init_ex_path, so this
-- * function is used to create a temporary virtual mapping to be used for
-- * this purpose.
-+ * When SNP is enabled, the pages comprising the buffer used to populate the
-+ * file specified by the init_ex_path module parameter needs to be set to
-+ * firmware-owned. This removes the mapping from the kernel direct mapping since
-+ * generally the hypervisor does not access firmware-owned pages. However, in
-+ * this case the hypervisor does need to read the buffer to transfer the
-+ * contents to the file at init_ex_path, so create a temporary virtual mapping
-+ * to be used for this purpose.
-  */
--static void *vmap_sev_init_ex_buffer(void)
-+static void *vmap_init_ex_buf(void)
+* Move a call of the function =E2=80=9Ckstrdup=E2=80=9D before two other s=
+tatements.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/pstore/ram_core.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+index f1848cdd6d34..5047a8502e17 100644
+=2D-- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -586,21 +586,23 @@ struct persistent_ram_zone *persistent_ram_new(phys_=
+addr_t start, size_t size,
+ 			unsigned int memtype, u32 flags, char *label)
  {
- 	struct page *pages[NV_PAGES];
- 	unsigned long base_pfn;
-@@ -292,6 +291,11 @@ static void *vmap_sev_init_ex_buffer(void)
- 	return vmap(pages, NV_PAGES, VM_MAP, PAGE_KERNEL_RO);
- }
- 
-+static void destroy_init_ex_buf(void *buf)
-+{
-+	vunmap(buf);
-+}
+ 	struct persistent_ram_zone *prz;
+-	int ret =3D -ENOMEM;
++	int ret;
+
+ 	prz =3D kzalloc(sizeof(struct persistent_ram_zone), GFP_KERNEL);
+ 	if (!prz) {
+ 		pr_err("failed to allocate persistent ram zone\n");
+-		goto err;
++		return ERR_PTR(-ENOMEM);
++	}
 +
- static int sev_write_init_ex_file(void)
- {
- 	struct sev_device *sev = psp_master->sev_data;
-@@ -315,7 +319,7 @@ static int sev_write_init_ex_file(void)
- 		return ret;
++	prz->label =3D kstrdup(label, GFP_KERNEL);
++	if (!prz->label) {
++		kfree(prz);
++		return ERR_PTR(-ENOMEM);
  	}
- 
--	sev_init_ex_buffer = vmap_sev_init_ex_buffer();
-+	sev_init_ex_buffer = vmap_init_ex_buf();
- 	if (!sev_init_ex_buffer) {
- 		dev_err(sev->dev, "SEV: failed to map non-volative memory area\n");
- 		return -EIO;
-@@ -329,12 +333,12 @@ static int sev_write_init_ex_file(void)
- 		dev_err(sev->dev,
- 			"SEV: failed to write %u bytes to non volatile memory area, ret %ld\n",
- 			NV_LENGTH, nwrite);
--		vunmap(sev_init_ex_buffer);
-+		destroy_init_ex_buf(sev_init_ex_buffer);
- 		return -EIO;
- 	}
- 
- 	dev_dbg(sev->dev, "SEV: write successful to NV file\n");
--	vunmap(sev_init_ex_buffer);
-+	destroy_init_ex_buf(sev_init_ex_buffer);
- 
- 	return 0;
- }
 
--- 
-Regards/Gruss,
-    Boris.
+ 	/* Initialize general buffer state. */
+ 	raw_spin_lock_init(&prz->buffer_lock);
+ 	prz->flags =3D flags;
+-	prz->label =3D kstrdup(label, GFP_KERNEL);
+-	if (!prz->label)
+-		goto err;
+-
+ 	ret =3D persistent_ram_buffer_map(start, size, prz, memtype);
+ 	if (ret)
+ 		goto err;
+=2D-
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
