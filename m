@@ -1,127 +1,138 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07DD1F612;
-	Thu, 18 Jan 2024 09:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2431B96A;
+	Thu, 18 Jan 2024 09:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705569077; cv=none; b=U+FboYDaPteve8ED0o5CShSsB55KjTIASF9LBbHfFffPMiJVMJloNOuUNq1r70q6jHiFoB0AOR8z+TkdZJeaxp+iXBkRarTpBnAD9lD/anQVOvpDMdhYhAFJMfye7PIkYGZYSETRc5VJcWDq6Ydvk3+nxj+vjJBF1ZRe9jraR6Q=
+	t=1705569123; cv=none; b=RxvMxIly+otN/jghSqmBzDNmpSZQ7ziqYOBaKIzD8l5PNLuBZW3gnbgm0ilcjhE0fS9Mxvm4nh0zsTS1WfQiSUZ9Vmfc9k7BOHGWquO6wUEtZlxub+CwjY706vHrxT6mbg6hbzde7KkqCmIP3HSYDul3LiuJF+qktTy/tiJiqXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705569077; c=relaxed/simple;
-	bh=+/27fsSo5Q8BHlr5z3DMuLaGjV2Gb6vyDVHqeEU1qMI=;
-	h=X-Alimail-AntiSpam:Received:Date:From:To:Cc:Subject:Message-ID:
-	 Reply-To:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=LbYbVHadsP/ILcnNKPPoLwUqGtnJt3rGwEwDJ9ROyla1r+CPAV2gPjFfhgiH1WXgUkEqrLe7mX7jubhmE1c15NWHr4wse9HDqSl86x39gKDEjGc/yB51icLm/SQWfe3mBtzzf/dHLi2Ze+eZENmfhd6oEtcaZQmnCjjkXcb6KCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=dust.li@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W-sM7b6_1705569070;
-Received: from localhost(mailfrom:dust.li@linux.alibaba.com fp:SMTPD_---0W-sM7b6_1705569070)
-          by smtp.aliyun-inc.com;
-          Thu, 18 Jan 2024 17:11:10 +0800
-Date: Thu, 18 Jan 2024 17:11:09 +0800
-From: Dust Li <dust.li@linux.alibaba.com>
-To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com,
-	jaka@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com
-Cc: alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
-	ubraun@linux.ibm.com, linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] net/smc: fix illegal rmb_desc access in SMC-D
- connection dump
-Message-ID: <20240118091109.GD89692@linux.alibaba.com>
-Reply-To: dust.li@linux.alibaba.com
-References: <20240118043210.47618-1-guwen@linux.alibaba.com>
+	s=arc-20240116; t=1705569123; c=relaxed/simple;
+	bh=ULtFfcGqT5XGv+KCHCFhylQch68gZp9QuOmFfi0jSLQ=;
+	h=Received:DKIM-Signature:Received:Received:Received:From:To:CC:
+	 Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 X-Originating-IP:X-ClientProxiedBy:X-QCInternal:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details; b=MTHVjGtE2+5M/Y/DYEeEjCoDiYFdMfOtoec3uspIDxsUoSw56p/DmzLt9m6iIH0WJWJSIueWIFWYlOw9xfnGZd6t5b465VHMGXJLDYVWaYzcGN0jx8QZR0iMjajE0jb0mT+TlD8TX3PySMuy3LErZcWRfkbrOyKpgeVdKGFSFeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y0pcGrQY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y0pcGrQY"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40I5A2PR023821;
+	Thu, 18 Jan 2024 09:11:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=RTeWeFc9BGldA+QSl7OVVIf82YSnY2lNKVdyeiEAse8=; b=Y0
+	pcGrQYp7ulsvyE7dzdoMyrtf6XxSZF6DojEEWUHfImG6ODLef25vvXjHeiMK1wRA
+	81Hj8JvXUKMcY2x/z0jjke2FHFrpS+R5soMRfcVxkVtEl9HBYwSTTpIhPyC5JvS/
+	fg0GnBks7BEK7EElSNEakhjDEf5X1QqDfeeK1T6DRuchb99jTZxCAsZrerLTip29
+	LNl585HzGQX6ksCdraLHSVP5c/IrqHgZ1bolSSSjwo8+8+jGa2cDyQz3umptI1ro
+	6j9xiOIjX87V4Seo9Ql51E70OROLv22Kl63AetRANahxy5K30bW/2LkZJp3RllPn
+	uw/vfTLevERyVpQFTL9Q==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vpkjrhrca-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jan 2024 09:11:59 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40I9Bw2r003203
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jan 2024 09:11:58 GMT
+Received: from hu-uaggarwa-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 18 Jan 2024 01:11:55 -0800
+From: Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        "Uttkarsh
+ Aggarwal" <quic_uaggarwa@quicinc.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v2] usb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend
+Date: Thu, 18 Jan 2024 14:41:46 +0530
+Message-ID: <20240118091146.3101-1-quic_uaggarwa@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240118043210.47618-1-guwen@linux.alibaba.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: GjPwsHW9zhFdjMXcb2JDo2WNoI80MV2Z
+X-Proofpoint-GUID: GjPwsHW9zhFdjMXcb2JDo2WNoI80MV2Z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-18_04,2024-01-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=1 phishscore=0
+ lowpriorityscore=1 suspectscore=0 adultscore=0 impostorscore=0
+ mlxlogscore=659 clxscore=1015 malwarescore=0 priorityscore=1501
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401180065
 
-On Thu, Jan 18, 2024 at 12:32:10PM +0800, Wen Gu wrote:
->A crash was found when dumping SMC-D connections. It can be reproduced
->by following steps:
->
->- run nginx/wrk test:
->  smc_run nginx
->  smc_run wrk -t 16 -c 1000 -d <duration> -H 'Connection: Close' <URL>
->
->- continuously dump SMC-D connections in parallel:
->  watch -n 1 'smcss -D'
->
-> BUG: kernel NULL pointer dereference, address: 0000000000000030
-> CPU: 2 PID: 7204 Comm: smcss Kdump: loaded Tainted: G	E      6.7.0+ #55
-> RIP: 0010:__smc_diag_dump.constprop.0+0x5e5/0x620 [smc_diag]
-> Call Trace:
->  <TASK>
->  ? __die+0x24/0x70
->  ? page_fault_oops+0x66/0x150
->  ? exc_page_fault+0x69/0x140
->  ? asm_exc_page_fault+0x26/0x30
->  ? __smc_diag_dump.constprop.0+0x5e5/0x620 [smc_diag]
->  ? __kmalloc_node_track_caller+0x35d/0x430
->  ? __alloc_skb+0x77/0x170
->  smc_diag_dump_proto+0xd0/0xf0 [smc_diag]
->  smc_diag_dump+0x26/0x60 [smc_diag]
->  netlink_dump+0x19f/0x320
->  __netlink_dump_start+0x1dc/0x300
->  smc_diag_handler_dump+0x6a/0x80 [smc_diag]
->  ? __pfx_smc_diag_dump+0x10/0x10 [smc_diag]
->  sock_diag_rcv_msg+0x121/0x140
->  ? __pfx_sock_diag_rcv_msg+0x10/0x10
->  netlink_rcv_skb+0x5a/0x110
->  sock_diag_rcv+0x28/0x40
->  netlink_unicast+0x22a/0x330
->  netlink_sendmsg+0x1f8/0x420
->  __sock_sendmsg+0xb0/0xc0
->  ____sys_sendmsg+0x24e/0x300
->  ? copy_msghdr_from_user+0x62/0x80
->  ___sys_sendmsg+0x7c/0xd0
->  ? __do_fault+0x34/0x160
->  ? do_read_fault+0x5f/0x100
->  ? do_fault+0xb0/0x110
->  ? __handle_mm_fault+0x2b0/0x6c0
->  __sys_sendmsg+0x4d/0x80
->  do_syscall_64+0x69/0x180
->  entry_SYSCALL_64_after_hwframe+0x6e/0x76
->
->It is possible that the connection is in process of being established
->when we dump it. Assumed that the connection has been registered in a
->link group by smc_conn_create() but the rmb_desc has not yet been
->initialized by smc_buf_create(), thus causing the illegal access to
->conn->rmb_desc. So fix it by checking before dump.
->
->Fixes: 4b1b7d3b30a6 ("net/smc: add SMC-D diag support")
->Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+In current scenario if Plug-out and Plug-In performed continuously
+there could be a chance while checking for dwc->gadget_driver in
+dwc3_gadget_suspend, a NULL pointer dereference may occur.
 
-Reviewed-by: Dust Li <dust.li@linux.alibaba.com>
+Call Stack:
 
-Best regards,
-Dust
+	CPU1:                           CPU2:
+	gadget_unbind_driver            dwc3_suspend_common
+	dw3_gadget_stop                 dwc3_gadget_suspend
+                                        dwc3_disconnect_gadget
 
->---
->v2->v1: corrected the commit in Fixes tag.
->(https://lore.kernel.org/netdev/20240117122749.63785-1-guwen@linux.alibaba.com/)
->
-> net/smc/smc_diag.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
->index 52f7c4f1e767..5a33908015f3 100644
->--- a/net/smc/smc_diag.c
->+++ b/net/smc/smc_diag.c
->@@ -164,7 +164,7 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
-> 	}
-> 	if (smc_conn_lgr_valid(&smc->conn) && smc->conn.lgr->is_smcd &&
-> 	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
->-	    !list_empty(&smc->conn.lgr->list)) {
->+	    !list_empty(&smc->conn.lgr->list) && smc->conn.rmb_desc) {
-> 		struct smc_connection *conn = &smc->conn;
-> 		struct smcd_diag_dmbinfo dinfo;
-> 		struct smcd_dev *smcd = conn->lgr->smcd;
->-- 
->2.32.0.3.g01195cf9f
+CPU1 basically clears the variable and CPU2 checks the variable.
+Consider CPU1 is running and right before gadget_driver is cleared
+and in parallel CPU2 executes dwc3_gadget_suspend where it finds
+dwc->gadget_driver which is not NULL and resumes execution and then
+CPU1 completes execution. CPU2 executes dwc3_disconnect_gadget where
+it checks dwc->gadget_driver is already NULL because of which the
+NULL pointer deference occur.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 9772b47a4c291 ("usb: dwc3: gadget: Fix suspend/resume during device mode")
+Signed-off-by: Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>
+---
+
+Changes in v2:
+Added cc and fixes tag missing in v1.
+
+Link to v1:
+https://lore.kernel.org/linux-usb/0ef3fb11-a207-2db4-1714-b3bca2ce2cea@quicinc.com/T/#t
+
+drivers/usb/dwc3/gadget.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 019368f8e9c4..564976b3e2b9 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -4709,15 +4709,13 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ 	unsigned long flags;
+ 	int ret;
+ 
+-	if (!dwc->gadget_driver)
+-		return 0;
+-
+ 	ret = dwc3_gadget_soft_disconnect(dwc);
+ 	if (ret)
+ 		goto err;
+ 
+ 	spin_lock_irqsave(&dwc->lock, flags);
+-	dwc3_disconnect_gadget(dwc);
++	if (dwc->gadget_driver)
++		dwc3_disconnect_gadget(dwc);
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ 
+ 	return 0;
+-- 
+2.17.1
+
