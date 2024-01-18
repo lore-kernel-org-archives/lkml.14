@@ -1,112 +1,72 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF632C18D;
-	Thu, 18 Jan 2024 16:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A714728E0B;
+	Thu, 18 Jan 2024 16:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705594194; cv=none; b=idD7omE58vf/SwKGKveQMQvnhLc2QHv5yMz5y5KJ2PfXKgLghrYFvtpx8SeB6f0RlQWWPDkG99GMD+AnloU9MnBPqY4m2K85fskjQ5ZAEC14z7NjQlAssBf+m90nTchHEXfEiPaWOAF+8C6Y/8fFkwrRfC+2xyd5JhOa6+8YKck=
+	t=1705594310; cv=none; b=vED4mcPDvviUPX/XJAwGfuajGyOjBwbIlXMv/tQSoQmZoDdTmTRWivEkLAipRdvCiKw8h6FbsnzNSM3YK4mw0z2LHHPQ1uujbR41qETzSlIkbifWpPSo+6rXh/44iRBn3ziW8h8CmP6n2PVaA7l+BQ8S0yfROmllGmzpJ4iyZaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705594194; c=relaxed/simple;
-	bh=sat5XVJBaEElPICy/YsSs9yFT4hHkFR3P2GPDCmg8WA=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=Yq7ML1POWOiC8wJKYDSkF7UsCLLEPJ8WRMIvnZfJjHqGFc9qVjxzoOB/UV2zpMFUtp+zIJM0kTTye/R/PYFFzmStFZmk+yuDQbW+83aGxerWL6rPRojraNYoLdYbgLEWfOSms8FHpDN3aE3bsaBi0u+bM1FgF+o2m/A/HigPlCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nmNLol1R; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705594310; c=relaxed/simple;
+	bh=+amD+bxZBryr3MMtjAsPlP/HGDcam0tceeZ5dyFYnZo=;
+	h=Received:DKIM-Filter:DKIM-Signature:From:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding; b=qGsp5YCF4LQQnJ6a92asLJfBn/U8hYFQDJPxzz3xec56aakkmG7jEgyMV0Di57+8VGia6zwJ/aS6HYuKjCtZkmkQC13eB3DIMpXhUEND4co7FM4xM2Zn7e7ahyEMItluuNr2VGaQwIbsD0OJYGeicfo4jjp/bW3LLxBb471285k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Lzr3rovx; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmNLol1R"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6dc36e501e1so8956259a34.1;
-        Thu, 18 Jan 2024 08:09:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705594192; x=1706198992; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sat5XVJBaEElPICy/YsSs9yFT4hHkFR3P2GPDCmg8WA=;
-        b=nmNLol1RMxQK9iu5sy4g7PWZVTWXUNfv2wQZq04p/uzW+0u3Vc8Jl57wa2bM57oLMP
-         mOxk7u+kCEezhmaKLGfe6+dpE8ptM/m4OUbbhK+Rg1K4xaj9R1dLtkeLeulKZsLzfKX2
-         ZpgwQUl5NyBajcX1SsoKGLzlkz7hP5FDBcwkoZqJZhcoWQlLZKu581jzv6xVdzwmxBUi
-         kdbwQSweWbt47SYdZYmJGkiL+hCQlyovRYorZ60iOMHXAVENyLU1pWeEqLafHaSllBCC
-         i2KsObBw+C76IOnwOdNzxuN3M2nUBnFT0mU/Nq9w9lNjx7dS/d6Vw9toe9X2TekfyBsZ
-         C5GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705594192; x=1706198992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sat5XVJBaEElPICy/YsSs9yFT4hHkFR3P2GPDCmg8WA=;
-        b=kwM7UxB54QU+j1BZG+qKUjrh+iZhtxNZkYkYvqs3LLrJ61dZS70lczQoHQiSdlfQc+
-         43n6OMx9WDordfLDevraY7kDsLWvuQblEzRuB5wuj46VUVpkoxo6+L7Xj2y+3sY3wbVd
-         qZeAb6jWAhwISy5SkbFt4x7+helPlrDTjYFOGho0veuGohxqOFDyDxt8zyGMJx1rCHrH
-         XqcUGSxmBEOGmR07g2Gw2gIkAu9rKz+YiZWYM04SA+IbNfZzfV9XoTFq6gnGN0aBn+Ms
-         YwIZegSgnMmoJKMP+HIiDDP8kXKrcBnZrCsLsnS5viE7kFiz50QWx83yYlWqTmkKpDQQ
-         xF1A==
-X-Gm-Message-State: AOJu0Yy/DQ4Rzf1qzTReXD4W+DFpC00WRLbvEqwPh3cptcm0CEBkjX6H
-	R5Bke7y68lMEE0kmXVknAB0OyZRhu+9wzI7RZTgJFHawAvsH32XDIzfumGlo3Wfxjhl3R3lVl8/
-	cIi/9jgSIaoIgtCLZi9m6A9BNxbg=
-X-Google-Smtp-Source: AGHT+IE8BxWk8xSUOVo/9OK4svfp7Z2O77w7n+F5xbpJMja3d2YxFrdU7cRXJ7Wmp+b8zwZAJyZxdCAh53nVnb00V48=
-X-Received: by 2002:a05:6830:1e38:b0:6dd:eb6c:8c7 with SMTP id
- t24-20020a0568301e3800b006ddeb6c08c7mr1066678otr.40.1705594192185; Thu, 18
- Jan 2024 08:09:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Lzr3rovx"
+Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 73EE47A21;
+	Thu, 18 Jan 2024 16:11:42 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 73EE47A21
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1705594302; bh=3HRi5GF1TAeVY+4xKMDRwDNwSXAhBkYztTTb+LS76kQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Lzr3rovxmvJUfX+bMePUILHF7PgF8v3kiBM5p+bLyZ4I1cZpbR+lL+Yq3sfn5IYVi
+	 KURA+k9GC589XVm4nGvW9PUQUf2cL1PnXElx/Isdl6NCxCiJdMEvPNoRG6l8fip/Wu
+	 Yclt2QELWVIZWq7E3o4kTlEt77ZEsaGALRZ+NeK6nniAiQg8dgB5ZYLWs2sn8JS0bS
+	 /A8boPr0v6/z1r3+wlwr6XsTL3PXLedgYLB+whbvwlU5C1lse1xJIVG88Yce6K1hTS
+	 cCX2Zn2yHBfvT/SfC4sbdR6rSzUxti3RlTsa8Evlm15i4kghta4yvZuvogfRujyRq6
+	 ZoS8tRy5bCVsg==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: Remove reference to syscall trampoline in PTI
+In-Reply-To: <dd0e864d-295a-4edc-bfd7-ad5de88d7a0c@suse.com>
+References: <20231102130204.41043-1-nik.borisov@suse.com>
+ <dd0e864d-295a-4edc-bfd7-ad5de88d7a0c@suse.com>
+Date: Thu, 18 Jan 2024 09:11:41 -0700
+Message-ID: <87edee1v0i.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230307102441.94417-1-conor.dooley@microchip.com>
- <20230608-dispatch-sneer-aa09bd7b2eb8@wendy> <CANiq72nnph7LS1fLRtHz8NJ91PWXPaUnm0EuoV3wrbvK398AnA@mail.gmail.com>
- <20230608-spiritism-gonad-5f5aff4c3a24@wendy> <20240117-swiftly-parasail-618d62972d6e@spud>
- <CANiq72mVKCOAuK4Qe+8AHmpkFwyJsVfx8AqB7ccGi3DYpSSWcw@mail.gmail.com> <20240118-implode-delirium-eefdd86e170e@spud>
-In-Reply-To: <20240118-implode-delirium-eefdd86e170e@spud>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 18 Jan 2024 17:09:40 +0100
-Message-ID: <CANiq72nx1s_nyvPW86jL7eiOxROr18LfOJqNtw8L42CP+gkhRg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] RISC-V: enable rust
-To: Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-riscv@lists.infradead.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 18, 2024 at 4:49=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
+Nikolay Borisov <nik.borisov@suse.com> writes:
+
+> On 2.11.23 =D0=B3. 15:02 =D1=87., Nikolay Borisov wrote:
+>> Commit bf904d2762ee ("x86/pti/64: Remove the SYSCALL64 entry trampoline")
+>> removed the syscall trampoline and instead opted to enable using the
+>> default syscall64 entry point by mapping the percpu TSS. Unfortunately
+>> the PTI documentation wasn't updated when the respective changes were
+>> made, so let's bring the doc up to speed.
+>>=20
+>> Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
 >
-> The bit that worries me most is bindgen, and in particular detecting the
-> version of libclang used. I mentioned to Nathan or Nick about needing a
-> buildtime test for the version of LIBCLANG being used.
-> I'm less worried about this for LLVM=3D1 builds, since while I think it i=
-s
-> possible to provide a LIBCLANG path to the build system, I suspect that
-> for LLVM=3D1 builds it's almost always going to match the LLVM toolchain
-> in use.
+> Ping
 
-`scripts/rust_is_available.sh` tests whether `libclang` is at least
-the minimum LLVM supported version; and under `LLVM=3D1` builds, it also
-tests whether the `bindgen` found one matches the C compiler. Do you
-mean something like that?
+Hmm...this has indeed languished for a while.  I was waiting for an ack
+from x86land, but I guess I'll just apply it unless somebody screams.
 
-For `bindgen` under GCC builds, we will eventually want a "proper" way
-to use GCC instead (or possibly other approaches like querying the
-information): https://github.com/rust-lang/rust-bindgen/issues/1949.
-Recently, there has been a thread in our Zulip and a couple people are
-experimenting: https://rust-for-linux.zulipchat.com/#narrow/stream/288089-G=
-eneral/topic/Bindgen.20--.20GCC.20backend.20port
+Thanks,
 
-> I'll do another rebase and resend after the merge window closes I
-> suppose :)
-
-Thanks!
-
-Cheers,
-Miguel
+jon
