@@ -1,162 +1,102 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78B3241E2;
-	Thu, 18 Jan 2024 12:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEED1241E2;
+	Thu, 18 Jan 2024 12:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705581357; cv=none; b=C36MNhYe+fPLIT2DuSylRZRIVEGkaIzFf1BjOlSuDI/Gn2kJkk6dYnSF0xU9OFPF53Pg+L4DrKU0vrJYWNuJ1Qt6t5eO1sz2DBAkBr8an9ncM1esqyFcAjGrdieeqWU3n/9uw4G23ypYwYoVlXmuyHS34AGBGCZVyvKO3r+Ga1Y=
+	t=1705581406; cv=none; b=Xu6dA+EqkQ/yh0ufoVobGZ8/z2RnZ7u32uM6qu6qqJu30R7n1Olu+/FgKsGy547Q4vh57TsGriHfs+FVNdW5XtQboh6XKBj3LTXNmpzv451tI/px2iQn3rQNyinQwkylud7bsWVAA6EK+VeXQoIkbl7zKZGcSzAjeEwUW9AGbz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705581357; c=relaxed/simple;
-	bh=9A1ZUxsy/AB+rOw07Sr8ohg0qHFUf+8+K2LosBjInkU=;
-	h=Received:Received:Received:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo; b=GQdffU+44hBtARWPJbn9je7baFK2ysISUUltaNRxskZaTEHSgGL2FOR1j10ykhAuWOwA+PSaGxbhhWYuIlECtTl/8/BJFwEEh+dViw/QP7K3yOfitVsERJu0fLDDh5Ngm3L5uspwmjuVeiLROyCyDSv16kAaA79nawzxPRbLzYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TG2KH3xJdz4f3kFk;
-	Thu, 18 Jan 2024 20:35:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 5072C1A017A;
-	Thu, 18 Jan 2024 20:35:51 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP4 (Coremail) with SMTP id gCh0CgAHWmwmG6lle9LlBA--.42947S2;
-	Thu, 18 Jan 2024 20:35:51 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	akpm@linux-foundation.org
-Cc: tj@kernel.org,
-	xiujianfeng@huawei.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH] writeback: move wb_wakeup_delayed defination to fs-writeback.c
-Date: Fri, 19 Jan 2024 04:33:39 +0800
-Message-Id: <20240118203339.764093-1-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1705581406; c=relaxed/simple;
+	bh=GSZCSpOqqzhMr6RwGuO1VJCCM884qyencHZG28chH8c=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding; b=EBT01LHbZ0PLetbh9RZn3D9ORQU2HAcw98kwH1wABok7hfPYeDFfSTqVf2cqExwktn5TN0WKayeA1GPRAOn/qhcu0OZnfAdtqEMSiZyflMncMzfmxuQYRTuHuA/S5/JBOatIE8e5ecmt0wWL0aFzKHHIb0GibED8BooIXnLMnRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkXhqtgp; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkXhqtgp"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-336c9acec03so9986388f8f.2;
+        Thu, 18 Jan 2024 04:36:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705581403; x=1706186203; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vA5DjepX8LO8HhgjcEQi+IWwObZWbeSNM5x2007oZCo=;
+        b=lkXhqtgphqWJDB2Fde4+QiEg7VNhst1hP3USufwGsHPUrHj62X3Ybs4Fmo5s7WRGyj
+         C86EekwaYn62lWAW7u2kydmMFlNZWL4r3LFErsMfcFVHrZP7YDBacZRJYaTkAQsye0j/
+         qTPCEgm2ScDAvrvn6X7soXDnKYlJTb9Hx2Eb8m0yes8RQ5r4CWlKw6ID7r0ZZzCv0EHs
+         +1/MJgEp0zfPfbHY1gTcj+yo5NW2JwusNwTFfWN04yZ4kJc/CWdqLWIgNTMDKdLuCoNw
+         0rtgSEx+DAJQAxe1N7Hu8l2PjdNkLnY4GezMRDUNX4OOGoEpuiwOdM3nh/W4KpnPWjfA
+         As+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705581403; x=1706186203;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vA5DjepX8LO8HhgjcEQi+IWwObZWbeSNM5x2007oZCo=;
+        b=hyPBoRIk5jUDI2nV2GH2j4H57qRgcLvaRIV2cWpgBdKy6A/j78zuqHqiysODae6o40
+         e93xm60uow3H0FQemVMjkMlafDbxgshuBv1TRhvhewCEh20mBwQeLOITAcYxwpIdric+
+         xIgiTxJg0uR0kVMgMPiyBknRqOiH2KFVZOguEbKMNmxXlbO24YatAjw5PNpdYEHZ4+0C
+         FStBoZb1wGc44Jiiv3rk+3+ikfiKqaI3eyBp0opC3tL2Hqx6oERsJUER3yC1hsgBDxVG
+         b/BInnm49gZ3B8AK4qbLYFt4T1KngoPIfotCGG5XccJpW5ddxggYklMCcEqq03QeKUCM
+         RsVQ==
+X-Gm-Message-State: AOJu0YzS4xl97S9dqmdukj+/3oRooj0ubAWECPFsyH7hIHjf3Crwceu8
+	Al94qeC+R0hfb5szE31/uQFNzNET3NaqMzKHQHTD7UjxfwnJvY5H
+X-Google-Smtp-Source: AGHT+IHaaeFxW7LHOmm4opdqNbFrJe66ZBuztiswDWE9W2nJuSGi1SBoZ4OebX2R7NA/FUs/dGT+vg==
+X-Received: by 2002:a5d:4051:0:b0:336:ba58:dade with SMTP id w17-20020a5d4051000000b00336ba58dademr460304wrp.62.1705581402845;
+        Thu, 18 Jan 2024 04:36:42 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id cp32-20020a056000402000b00337c55d9a28sm3027825wrb.93.2024.01.18.04.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 04:36:42 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] comedi: ni_mio_common: remove redundant assignment to variable status1
+Date: Thu, 18 Jan 2024 12:36:41 +0000
+Message-Id: <20240118123641.2542208-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHWmwmG6lle9LlBA--.42947S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFy3ur1kKw4UJFWDury5CFg_yoWrJw17pF
-	y3K3sxJF48Zry7WrsxWay2gr1Yg3ykKr47GFyxWFs7tr9rua1Y9FWvgry0yF1UCrZ3ZFW3
-	ur4FvrW8urW0yr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_
-	tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gc
-	CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
-	r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87
-	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IY
-	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU01mh7UUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-The wb_wakeup_delayed is only used in fs-writeback.c. Move it to
-fs-writeback.c after defination of wb_wakeup and make it static.
+The variable status1 is being assigned a value that is never read, the
+assignment is redundant and can be removed.
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Cleans up clang scan build warning:
+warning: Although the value stored to 'status1' is used in the enclosing
+expression, the value is never actually read from 'status1'
+[deadcode.DeadStores]
+
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- fs/fs-writeback.c           | 25 +++++++++++++++++++++++++
- include/linux/backing-dev.h |  1 -
- mm/backing-dev.c            | 25 -------------------------
- 3 files changed, 25 insertions(+), 26 deletions(-)
+ drivers/comedi/drivers/ni_mio_common.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 1767493dffda..5ab1aaf805f7 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -141,6 +141,31 @@ static void wb_wakeup(struct bdi_writeback *wb)
- 	spin_unlock_irq(&wb->work_lock);
- }
+diff --git a/drivers/comedi/drivers/ni_mio_common.c b/drivers/comedi/drivers/ni_mio_common.c
+index 980f309d6de7..824b026238b5 100644
+--- a/drivers/comedi/drivers/ni_mio_common.c
++++ b/drivers/comedi/drivers/ni_mio_common.c
+@@ -3798,8 +3798,7 @@ static int ni_serial_hw_readwrite8(struct comedi_device *dev,
+ 	devpriv->dio_control &= ~NISTC_DIO_CTRL_HW_SER_START;
  
-+/*
-+ * This function is used when the first inode for this wb is marked dirty. It
-+ * wakes-up the corresponding bdi thread which should then take care of the
-+ * periodic background write-out of dirty inodes. Since the write-out would
-+ * starts only 'dirty_writeback_interval' centisecs from now anyway, we just
-+ * set up a timer which wakes the bdi thread up later.
-+ *
-+ * Note, we wouldn't bother setting up the timer, but this function is on the
-+ * fast-path (used by '__mark_inode_dirty()'), so we save few context switches
-+ * by delaying the wake-up.
-+ *
-+ * We have to be careful not to postpone flush work if it is scheduled for
-+ * earlier. Thus we use queue_delayed_work().
-+ */
-+static void wb_wakeup_delayed(struct bdi_writeback *wb)
-+{
-+	unsigned long timeout;
-+
-+	timeout = msecs_to_jiffies(dirty_writeback_interval * 10);
-+	spin_lock_irq(&wb->work_lock);
-+	if (test_bit(WB_registered, &wb->state))
-+		queue_delayed_work(bdi_wq, &wb->dwork, timeout);
-+	spin_unlock_irq(&wb->work_lock);
-+}
-+
- static void finish_writeback_work(struct bdi_writeback *wb,
- 				  struct wb_writeback_work *work)
- {
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 1a97277f99b1..8e7af9a03b41 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -38,7 +38,6 @@ struct backing_dev_info *bdi_alloc(int node_id);
- 
- void wb_start_background_writeback(struct bdi_writeback *wb);
- void wb_workfn(struct work_struct *work);
--void wb_wakeup_delayed(struct bdi_writeback *wb);
- 
- void wb_wait_for_completion(struct wb_completion *done);
- 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 1e3447bccdb1..039dc74b505a 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -372,31 +372,6 @@ static int __init default_bdi_init(void)
- }
- subsys_initcall(default_bdi_init);
- 
--/*
-- * This function is used when the first inode for this wb is marked dirty. It
-- * wakes-up the corresponding bdi thread which should then take care of the
-- * periodic background write-out of dirty inodes. Since the write-out would
-- * starts only 'dirty_writeback_interval' centisecs from now anyway, we just
-- * set up a timer which wakes the bdi thread up later.
-- *
-- * Note, we wouldn't bother setting up the timer, but this function is on the
-- * fast-path (used by '__mark_inode_dirty()'), so we save few context switches
-- * by delaying the wake-up.
-- *
-- * We have to be careful not to postpone flush work if it is scheduled for
-- * earlier. Thus we use queue_delayed_work().
-- */
--void wb_wakeup_delayed(struct bdi_writeback *wb)
--{
--	unsigned long timeout;
--
--	timeout = msecs_to_jiffies(dirty_writeback_interval * 10);
--	spin_lock_irq(&wb->work_lock);
--	if (test_bit(WB_registered, &wb->state))
--		queue_delayed_work(bdi_wq, &wb->dwork, timeout);
--	spin_unlock_irq(&wb->work_lock);
--}
--
- static void wb_update_bandwidth_workfn(struct work_struct *work)
- {
- 	struct bdi_writeback *wb = container_of(to_delayed_work(work),
+ 	/* Wait until STC says we're done, but don't loop infinitely. */
+-	while ((status1 = ni_stc_readw(dev, NISTC_STATUS1_REG)) &
+-	       NISTC_STATUS1_SERIO_IN_PROG) {
++	while (ni_stc_readw(dev, NISTC_STATUS1_REG) & NISTC_STATUS1_SERIO_IN_PROG) {
+ 		/* Delay one bit per loop */
+ 		udelay((devpriv->serial_interval_ns + 999) / 1000);
+ 		if (--count < 0) {
 -- 
-2.30.0
+2.39.2
 
