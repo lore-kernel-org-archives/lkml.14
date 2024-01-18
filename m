@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E09124214;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B13E2421B;
 	Thu, 18 Jan 2024 12:15:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705580146; cv=none; b=pPM1WJVE4AChm29P+i+pAv6MQmNO4SRx4rqKNbtaMb2hr11qyzqhR1ycBp31VN4XpvMhQKqsm68SEtgcg99mxGSpP1qpMB14ox6+C00JrUZ+fAVItdupGz7mEtmT3D0k6lWEvVq4tQ/VcUkWv1zCUlfQbVJSy2K4plPuG2+ATkM=
+	t=1705580147; cv=none; b=GbZRwxzrlCdkZo7zMo15lVNoyGxdBADTZQ5SlsAivLRVUJj8TFtL+c6j2YcRgE4fuTE6My6m/MJ0exICCJoTAtmjPDPsXebEe3iIETvHqtbBjXTwc2U/DaeIDGxmeuaBzLDlYRGl0V28jUAJKRyhOS8kUf+ZDTaMGN84PUhGYWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705580146; c=relaxed/simple;
-	bh=lJonT7GG/6TvNPs8K6JrEe+ywpeClThCGZjjQOYiQ/Y=;
+	s=arc-20240116; t=1705580147; c=relaxed/simple;
+	bh=xz7VFVSXmHsJL25MZP1wXpZaPyCu/LG5PboNLXh64Uw=;
 	h=Received:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam; b=V1k3tn1zgWdoShLkNwGDiAqp0U9+JLGT/+ho2Bx9oBpwbs7D/47toEktwyA5+44OrY6J06icWO8M2i4TkFDKomdCk0KQmJ1epzEEktWT186YFGbK3xtnIjK6QZ7+xDDoeXJT6PilQrCTuJ+ul9ntQoOXXdk5LMhHpnjJdesMQ6U=
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:
+	 X-CM-TRANSID:X-CM-SenderInfo:X-Coremail-Antispam; b=TbZKhNcwE11QNFodEmVdWQnRAaqawJWobILIEMPVN2Wc6LRduOWfFRVyM8Us0omUYeUA7CIeEqDJ18o8Qhn6t5P3f6Vlj9XMI2wPDOVSRCIzU5OCzWD/WiK8MDpbQEGW2f3algJCcJGSROsmYGllsBRvzjpoyaavOgAJsHnyIsg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxXetvFqllcqEBAA--.7671S3;
-	Thu, 18 Jan 2024 20:15:43 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxdfFwFqllfKEBAA--.8164S3;
+	Thu, 18 Jan 2024 20:15:44 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxDc9vFqllhX0IAA--.43256S2;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxDc9vFqllhX0IAA--.43256S5;
 	Thu, 18 Jan 2024 20:15:43 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
@@ -27,10 +27,12 @@ Cc: linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Sergey Shtylyov <s.shtylyov@omp.ru>,
 	lvjianmin@loongson.cn
-Subject: [PATCH v3 0/3] irqchip/loongson-eiointc: Refine irq affinity setting during resume
-Date: Thu, 18 Jan 2024 20:15:39 +0800
-Message-Id: <20240118121542.748351-1-maobibo@loongson.cn>
+Subject: [PATCH v3 3/3] irqchip/loongson-eiointc: Typo fix in function eiointc_domain_alloc
+Date: Thu, 18 Jan 2024 20:15:42 +0800
+Message-Id: <20240118121542.748351-4-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240118121542.748351-1-maobibo@loongson.cn>
+References: <20240118121542.748351-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,56 +40,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxDc9vFqllhX0IAA--.43256S2
+X-CM-TRANSID:AQAAf8DxDc9vFqllhX0IAA--.43256S5
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWrKFWxJFy8AFyfXFyfXw4rXrc_yoW8Jr48p3
-	ySkasI9r4DAry7Za4Sqr48K3WSvwsYvrZrJa97K3yxAwn8CryUKr4rtF1YvrWUC3y7JF42
-	qF45WF4Uuan8C3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
-	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjxU2puWDUUUU
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKF47tr1DWFWfGFWUurW5CFX_yoWDWrb_ur
+	y2ywnxGryYvr1IqFn7Gr1avF9Fg3s8WFnY9F4q9F9xC34Utw18CrW2vwnrJFs7KF4rAFn3
+	CrZ8JrySyryIvosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
+	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
+	vjDU0xZFpf9x07jrPEfUUUUU=
 
-During suspend and resume, other CPUs are hot-unpluged and IRQs are
-migrated to CPU0. So it is not necessary to restore irq affinity for
-eiointc irq controller.
+There is small typo in function eiointc_domain_alloc, and there is no
+definition about struct eiointc, instead it should be struct eiointc_priv.
+It is strange that there is no warning with gcc compiler. This patch
+fixes the typo issue.
 
-Also there is some optimization for the interrupt dispatch function
-eiointc_irq_dispatch. There are 256 IRQs supported for eiointc, eiointc
-irq handler reads the bitmap and find pending irqs when irq happens.
-So there are four times of consecutive iocsr_read64 operations for the
-total 256 bits to find all pending irqs. If the pending bitmap is zero,
-it means that there is no pending irq for the this irq bitmap range,
-we can skip handling to avoid some useless operations such as clearing
-hw ISR.
-
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- Changes in v3:
-   Split the patch into three small patches
+ drivers/irqchip/irq-loongson-eiointc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Changes in v2:
-   Modify changelog and comments
----
-Bibo Mao (3):
-  irqchip/loongson-eiointc: Skip handling if there is no pending irq
-  irqchip/loongson-eiointc: Refine irq affinity setting during resume
-  irqchip/loongson-eiointc: Typo fix in function eiointc_domain_alloc
-
- drivers/irqchip/irq-loongson-eiointc.c | 29 +++++++++++---------------
- 1 file changed, 12 insertions(+), 17 deletions(-)
-
-
-base-commit: 052d534373b7ed33712a63d5e17b2b6cdbce84fd
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index 86f4faad0695..1a25e0613d50 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -252,7 +252,7 @@ static int eiointc_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 	int ret;
+ 	unsigned int i, type;
+ 	unsigned long hwirq = 0;
+-	struct eiointc *priv = domain->host_data;
++	struct eiointc_priv *priv = domain->host_data;
+ 
+ 	ret = irq_domain_translate_onecell(domain, arg, &hwirq, &type);
+ 	if (ret)
 -- 
 2.39.3
 
