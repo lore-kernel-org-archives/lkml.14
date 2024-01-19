@@ -1,80 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB444EB4C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5C154BFC;
 	Fri, 19 Jan 2024 16:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705680109; cv=none; b=XJ8fnUyxrmbplPrkad+bgfDj7Gyvbyvfb7MiWaVW4aB8zw7DFFcKaowurHwS/7GXHcklk4d31ehBM8qUREez+H3NS1gpaogwRSWcXGCxISC6IRN1Nsw5IQ1SOlxKos4SZ/WeO8YNt9BsLqUur29o9R+DMVY5DLjFgc23P9CmUaE=
+	t=1705680111; cv=none; b=RXQYVBoRNkZ0MAmKYGEbE1/Zq1DLeQScJbw8UxQVRhUD5TqeDCrIlmGHtmfRmgIKbGaKOWI50uX+iCEqADmOkU9qZ/Iulg+7bm9RIeXmaSQvsdIC+L4zJdcndyyBDrSi5fQMaJF6BqZwhu0V1KcTosX6+li+FlC6la/v9R2KpEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705680109; c=relaxed/simple;
-	bh=7qML3c1LMzQXGojxAojijvNWm8TwkKyneuzH927V+uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s8VQyN2cBojOduf40UN6g8YgDad9hS/YW9s5XfKZ9ZOSnCz3pPZHGFn0FW506rJoi+UQ2bnm20Nj7imv8gpHjHZq9Y1K8qMeQLZJ8ub/z9pCf38h519Y5nRF+pxZiFUsKkuni95EJzbAZmmAnpxZmwdavGa+eIO0q7oZXi/gnU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XoVVSUTe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705680111; c=relaxed/simple;
+	bh=8kuc08C2taB58eMQ6rGGFADhFfGm4/dWdPXlBPFcrus=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=jEIGjJWkV7oiv17imMjVczr9Sn86o/m1/ej0VoyC5iBEulsH6ToPjykjZFuFO9FvMv/k49rmnYTukI5cmHvp2kgh3Zx9mzzfod3akKBiasZx6hBJIsySrpM/bKMGaa+xbdc40dma7v5NMDaTMoMcJwFX32IA3RC94zn+kr6fhFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZFPK9QiI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kuDG/Evb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XoVVSUTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE3CC433C7;
-	Fri, 19 Jan 2024 16:01:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705680109;
-	bh=7qML3c1LMzQXGojxAojijvNWm8TwkKyneuzH927V+uk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XoVVSUTeN+pVBsFKN0+rHCtayvXr0yQntKR6hDJp34GwwhQdj3mSiBFG1uHy8pFQU
-	 7kW61EVQe+wj/STMZq6CD2B8EOwG14utCHWcUpzoaAIGPKk+ENAu5tPoFZNzYyPTcQ
-	 4s2KWrznVXGoWxXL4wTItj3Cq6n+AC/Q/h0uB664=
-Date: Fri, 19 Jan 2024 17:01:46 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com
-Subject: Re: [PATCH 6.7 00/28] 6.7.1-rc1 review
-Message-ID: <2024011935-pushchair-affected-e2f0@gregkh>
-References: <20240118104301.249503558@linuxfoundation.org>
- <CA+G9fYv4PdOsuFmd2BGoq57omiXWuvnSpJJ1HuLYT0rJ_h9xEw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZFPK9QiI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kuDG/Evb"
+Date: Fri, 19 Jan 2024 15:47:13 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705679234;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OFazF9OBwT3EjQqG8QuBCT1kbtLVarHDzsAbA8dTKw4=;
+	b=ZFPK9QiIICfd8WUV0M7dre8KmtFwLNjg/6SE4JlANPlmsZ781B/ossw5+vZB7K74lBxE1s
+	/A+WYMOH8FtXds5SG7TuDi+KZ/f73fJLxkqX0vpNceovvg2Gsszed/YTCrgQLD9FsWf8MN
+	7Z8p7ZKlNACtXyBw1ga3Qrbe0+01hMd/vq6FtGOn+GPSLry3AtY3c8aXqvm17HgCWoDSFS
+	j4HD1ioYtW2XCg9qqqK5eKDNcd8lnXAG14KL1SVSzibxq3FWuWM0flT0jxeWXtOS1yZQ7t
+	OnpQNWNyF0HaEXq/k/fohU9Z5hr7mOIXPCMggMS8bglWH7QseOl7yRK4LwN5Pw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705679234;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OFazF9OBwT3EjQqG8QuBCT1kbtLVarHDzsAbA8dTKw4=;
+	b=kuDG/EvbM+WAIO/NIPmWXdZoSDPWxyZ/aVvK9yTG2xXRNSdkFU3RWl+Xi1h7BRXQyP7u2f
+	QnEaaZvu7OIZFZAA==
+From: "tip-bot2 for Heiko Carstens" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] tick-sched: Fix idle and iowait sleeptime
+ accounting vs CPU hotplug
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240115163555.1004144-1-hca@linux.ibm.com>
+References: <20240115163555.1004144-1-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYv4PdOsuFmd2BGoq57omiXWuvnSpJJ1HuLYT0rJ_h9xEw@mail.gmail.com>
+Message-ID: <170567923344.398.15988931354472984709.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 19, 2024 at 09:18:29PM +0530, Naresh Kamboju wrote:
-> On Thu, 18 Jan 2024 at 16:20, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 6.7.1 release.
-> > There are 28 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 20 Jan 2024 10:42:49 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.1-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> The arm allmodconfig clang-17 build failed on 6.7.y, Linux next and mainline.
+The following commit has been merged into the timers/core branch of tip:
 
-So 6.7.0 is also broken?
+Commit-ID:     71fee48fb772ac4f6cfa63dbebc5629de8b4cc09
+Gitweb:        https://git.kernel.org/tip/71fee48fb772ac4f6cfa63dbebc5629de8b4cc09
+Author:        Heiko Carstens <hca@linux.ibm.com>
+AuthorDate:    Mon, 15 Jan 2024 17:35:55 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 19 Jan 2024 16:40:38 +01:00
 
-thanks,
+tick-sched: Fix idle and iowait sleeptime accounting vs CPU hotplug
 
-greg k-h
+When offlining and onlining CPUs the overall reported idle and iowait
+times as reported by /proc/stat jump backward and forward:
+
+cpu  132 0 176 225249 47 6 6 21 0 0
+cpu0 80 0 115 112575 33 3 4 18 0 0
+cpu1 52 0 60 112673 13 3 1 2 0 0
+
+cpu  133 0 177 226681 47 6 6 21 0 0
+cpu0 80 0 116 113387 33 3 4 18 0 0
+
+cpu  133 0 178 114431 33 6 6 21 0 0 <---- jump backward
+cpu0 80 0 116 114247 33 3 4 18 0 0
+cpu1 52 0 61 183 0 3 1 2 0 0        <---- idle + iowait start with 0
+
+cpu  133 0 178 228956 47 6 6 21 0 0 <---- jump forward
+cpu0 81 0 117 114929 33 3 4 18 0 0
+
+Reason for this is that get_idle_time() in fs/proc/stat.c has different
+sources for both values depending on if a CPU is online or offline:
+
+- if a CPU is online the values may be taken from its per cpu
+  tick_cpu_sched structure
+
+- if a CPU is offline the values are taken from its per cpu cpustat
+  structure
+
+The problem is that the per cpu tick_cpu_sched structure is set to zero on
+CPU offline. See tick_cancel_sched_timer() in kernel/time/tick-sched.c.
+
+Therefore when a CPU is brought offline and online afterwards both its idle
+and iowait sleeptime will be zero, causing a jump backward in total system
+idle and iowait sleeptime. In a similar way if a CPU is then brought
+offline again the total idle and iowait sleeptimes will jump forward.
+
+It looks like this behavior was introduced with commit 4b0c0f294f60
+("tick: Cleanup NOHZ per cpu data on cpu down").
+
+This was only noticed now on s390, since we switched to generic idle time
+reporting with commit be76ea614460 ("s390/idle: remove arch_cpu_idle_time()
+and corresponding code").
+
+Fix this by preserving the values of idle_sleeptime and iowait_sleeptime
+members of the per-cpu tick_sched structure on CPU hotplug.
+
+Fixes: 4b0c0f294f60 ("tick: Cleanup NOHZ per cpu data on cpu down")
+Reported-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lore.kernel.org/r/20240115163555.1004144-1-hca@linux.ibm.com
+
+---
+ kernel/time/tick-sched.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index a17d260..d250167 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -1576,13 +1576,18 @@ void tick_setup_sched_timer(void)
+ void tick_cancel_sched_timer(int cpu)
+ {
+ 	struct tick_sched *ts = &per_cpu(tick_cpu_sched, cpu);
++	ktime_t idle_sleeptime, iowait_sleeptime;
+ 
+ # ifdef CONFIG_HIGH_RES_TIMERS
+ 	if (ts->sched_timer.base)
+ 		hrtimer_cancel(&ts->sched_timer);
+ # endif
+ 
++	idle_sleeptime = ts->idle_sleeptime;
++	iowait_sleeptime = ts->iowait_sleeptime;
+ 	memset(ts, 0, sizeof(*ts));
++	ts->idle_sleeptime = idle_sleeptime;
++	ts->iowait_sleeptime = iowait_sleeptime;
+ }
+ #endif
+ 
