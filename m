@@ -1,167 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856674C624;
-	Fri, 19 Jan 2024 17:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C9B4C624;
+	Fri, 19 Jan 2024 17:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705683882; cv=none; b=Z+NSAc3g+P+l+LSBGu9huLZjomy8ZnrjPC+CjEHpJB/tld0cyWVxMP6mpGEz72hWb8u0NErsewLmIFnRPY528syL8uN7Kn2fss7jP3LRh4rDjI/RDkeCbjfjCMG6/kxBJWHIEeQNszFnrQZ61cGqeo/zzaAwOYOBoCJvQOqJaQM=
+	t=1705683900; cv=none; b=TpS3suaInW+SPgr0a2IY0+9u0pOT33eZh0fUjP7090mpJhOVo9HKI5Ax2Px09xDGlckkwe8pZKoJhc+XDZIOso8rBpVQJX/RAFavCGwqjH7RtSQP0bm0ISe9yrGgzKX0wGnrFUgyU6tF1PWu06IOrfJ+6xomUIQP1x1QxTsbDlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705683882; c=relaxed/simple;
-	bh=tvfI8kzKELJg8x51eYsi4QeGQs90pS6wbtnENBmug60=;
+	s=arc-20240116; t=1705683900; c=relaxed/simple;
+	bh=OQZrjxKzIhKg+foJNv2n8JT3D+7G1NjqrJIhys/Imjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gUknaLLRdW3AxTA6m9QXy6uaXExEnI1jFb0waMMSJrjXaO9Tnnsf4at7dwahNEHqBJNXbRjjVozPcnqbbUZEaX0jl4eCUuiSSEgcK0XGOuToltvFsRnsRx6oKcHwjploMSY7KPMV+cYbnFYuR3rsdiM2ldg76lamcXfzI1ChrEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSXISuze; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=L43Db3HMiWYIxApRLPSecL7KT2AJ3j+6pp5KK0qwlwv8Q0GHafNVBniTQLwE8Hn1Wpr4x5rmP1/QRokeLI5U01Wnxv49eBv/sMpD5v9sYik+Z8g9SMcItHCnvanH7BBdGkB0A3ItfPbl08QSN+tp9H8b64WO1cr/l87LZD/a63s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aAs5qV0R; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSXISuze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F17C433C7;
-	Fri, 19 Jan 2024 17:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705683882;
-	bh=tvfI8kzKELJg8x51eYsi4QeGQs90pS6wbtnENBmug60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nSXISuze5qHDFLd+8VIc670Qh4sfOq0Q9HsJU09eHWdo6qBL7KyIFvRN2hMPNHC9e
-	 nzytI2kZ3IeSWiAJ5mOsLjDjIrb+/C9B6vdVWUBGoiLP/M4Irl7kQpf5QmGvM/N3uJ
-	 n5HJ/AXMY+SxfLpeBQHGjk8ljy23nTkpZDvTxjYWggOytjqPJJnw+UREkmID1xhhAb
-	 UdsCtNvnu7laUhbyDOU8nJKxaN4vm3Rx5FET/e8eIj0RcUgt2p1djP+DUI2Pva1Bpb
-	 KYJ9Pp0e8//x5vSyoCLH0qCmBEGJl7HcQPzvqzUKwPIx5DQNMxZvhNaYLqeqqUsKCi
-	 aKCikeAxBareA==
-Date: Fri, 19 Jan 2024 17:04:36 +0000
-From: Conor Dooley <conor@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	Frank Wunderlich <linux@fw-web.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sam Shih <sam.shih@mediatek.com>,
-	Daniel Golle <daniel@makrotopia.org>, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: Re: Aw: Re: [PATCH v3 1/2] dt-bindings: reset: mediatek: add MT7988
- reset IDs
-Message-ID: <20240119-dupe-obligate-707b3a01b356@spud>
-References: <20240117184111.62371-1-linux@fw-web.de>
- <20240117184111.62371-2-linux@fw-web.de>
- <20240118-calcium-krypton-3c787b8d1912@spud>
- <trinity-afc4f48e-65e1-46ee-a78b-1d670cc0f310-1705615200900@3c-app-gmx-bap21>
- <43f946cc-07e1-48c5-9b31-40fc9bc93037@collabora.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aAs5qV0R"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=LLJKl+AAhGh5Pf+cmVaB+vB6xM+m/TjxoqlPtwqp82Y=; b=aAs5qV0R1R25DORcXY14HSEdj1
+	yyfgveXeG8pK/B7oxJxjhIL8/ufipq4KtMZLgZZVeS/ydew7vUWSjXdq+Vt2fGJXGTrGL2a50LpyL
+	1f06jFZRfy95zgVSMZSD/VDD370A4n7N54iUA+dt0ge/EHwRxvne//fbHSXQ0RHAJ5S/pX2FeqlRU
+	XRbUz+8iw/JkjoouqeQzedGdwpD/kIyhBAbfUjqpbO6dOgeGNV7v55Gl5UhDC6ow1liWD+FSr222R
+	Q36hS3jw/qp0gcifKR7Zo7vBznlQF4usXtVtdlRsrqdJCD+S7P9yo9l6Y5IVPhHvPnR5+aVzbGGkH
+	RZCtTnSA==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rQsIa-00000005ofX-2S7M;
+	Fri, 19 Jan 2024 17:04:56 +0000
+Date: Fri, 19 Jan 2024 17:04:56 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] idr test suite: Remove usage of the deprecated
+ ida_simple_xx() API
+Message-ID: <ZaqruGVz734zjxrZ@casper.infradead.org>
+References: <81f44a41b7ccceb26a802af473f931799445821a.1705683269.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hqUNFAuri8IfMYKy"
-Content-Disposition: inline
-In-Reply-To: <43f946cc-07e1-48c5-9b31-40fc9bc93037@collabora.com>
-
-
---hqUNFAuri8IfMYKy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <81f44a41b7ccceb26a802af473f931799445821a.1705683269.git.christophe.jaillet@wanadoo.fr>
 
-On Fri, Jan 19, 2024 at 10:28:30AM +0100, AngeloGioacchino Del Regno wrote:
-> Il 18/01/24 23:00, Frank Wunderlich ha scritto:
-> > > Gesendet: Donnerstag, 18. Januar 2024 um 17:49 Uhr
-> > > Von: "Conor Dooley" <conor@kernel.org>
-> > > On Wed, Jan 17, 2024 at 07:41:10PM +0100, Frank Wunderlich wrote:
-> > > > From: Frank Wunderlich <frank-w@public-files.de>
-> > > >=20
-> > > > Add reset constants for using as index in driver and dts.
-> > > >=20
-> > > > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > > > ---
-> > > > v3:
-> > > > - add pcie reset id as suggested by angelo
-> > > >=20
-> > > > v2:
-> > > >   - add missing commit message and SoB
-> > > >   - change value of infrareset to 0
-> > > > ---
-> > > >   include/dt-bindings/reset/mediatek,mt7988-resets.h | 6 ++++++
-> > > >   1 file changed, 6 insertions(+)
-> > > >=20
-> > > > diff --git a/include/dt-bindings/reset/mediatek,mt7988-resets.h b/i=
-nclude/dt-bindings/reset/mediatek,mt7988-resets.h
-> > > > index 493301971367..0eb152889a89 100644
-> > > > --- a/include/dt-bindings/reset/mediatek,mt7988-resets.h
-> > > > +++ b/include/dt-bindings/reset/mediatek,mt7988-resets.h
-> > > > @@ -10,4 +10,10 @@
-> > > >   /* ETHWARP resets */
-> > > >   #define MT7988_ETHWARP_RST_SWITCH		0
-> > > >=20
-> > > > +/* INFRA resets */
-> > > > +#define MT7988_INFRA_RST0_PEXTP_MAC_SWRST	0
-> > > > +#define MT7988_INFRA_RST1_THERM_CTRL_SWRST	1
-> > >=20
-> > > These are just "random" numbers, why not continue the numbering from =
-the
-> > > ETHWARP?
-> >=20
-> > i can do...basicly these consts are used in DTS and driver only as inde=
-x.
-> >=20
-> > @angelo what do you think? I though also in leaving some space to allow=
- grouping RST0 and RST1
-> > when more consts are added, else the numbers are mixed up.
-> >=20
-> > so e.g. let RST0 start at 20 and RST1 at 40 (or even higher, because RS=
-T0 and RST1 can have up to 32 resets).
-> > That will allow adding more reset constants between my values and havin=
-g raising numbers.
->=20
-> The resets are organized on a per-reset-controller basis, so, the ETHWARP
-> reset controller's first reset is RST_SWITCH, the second one is RST_somet=
-hing_else,
-> etc. while the first reset of the INFRA reset controller is PEXTP_MAC_SWR=
-ST.
->=20
-> That's why ETHWARP has a reset index 0 and INFRA also starts at 0.
-> I think that the numbering is good as it is, and having one driver start =
-at index 5
-> while the other starts at index 12 would only overcomplicate registering =
-the resets
-> in each driver, or waste bytes by making unnecessarily large arrays, for =
-(imo) no
-> good reason.
->=20
-> This is one header, but it should "in theory" be more than one... so we w=
-ould have
-> one for each hardware block - but that'd make the reset directory over-cr=
-owded, as
-> other MediaTek SoCs have got even more resets in even more hardware block=
-s than the
-> MT7988. That'd be something like ~4 reset headers per SoC (and will incre=
-ase with
-> newer ones)...
-> ...and this is why we have one binding header for resets.
+On Fri, Jan 19, 2024 at 05:54:44PM +0100, Christophe JAILLET wrote:
+> ida_alloc() and ida_free() should be preferred to the deprecated
+> ida_simple_get() and ida_simple_remove().
+> 
+> Note that the upper limit of ida_simple_get() is exclusive, but the one of
+> ida_alloc_range()/ida_alloc_max() is inclusive. But because of the ranges
+> used for the tests, there is no need to adjust them.
+> 
+> While at it remove some useless {}.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> It should be a question of weeks now before being able to remove the
+> ida_simple_*() API.
+> So it is time to convert the testing framework.
 
-That's okay. The commit message leaves me, who clearly isn't a mediatek
-guy, with no information as to why these are not one contiguous set.
-IMO being for different reset controllers entirely is fine.
+Oh, that's fantastic news!  Thank you for finishing off this conversion!
 
-> On the topic of leaving space to allow grouping RST0/RST1: -> No. <-
-> The indices have to start from zero and have to be sequential, with no ho=
-les.
+I don't have anything pending for the IDA/IDR/XArray right now.  Either
+Andrew can grab this as a misc patch, or we can leave it for a cycle and
+I'll put it in along with the removal of the rest of the simple API.  If
+the former,
 
-Agreed.
+Acked-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
---hqUNFAuri8IfMYKy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaqrpAAKCRB4tDGHoIJi
-0kpNAP0fXJ5CKQv/dcdDfDwM6QxpaHDnXco2vvD9zatS35PP3QEAyXeJjQ1mosMC
-HzNIVUEk3x7CKsrxFYlJvszPHJz8fAs=
-=leay
------END PGP SIGNATURE-----
-
---hqUNFAuri8IfMYKy--
+> ---
+>  tools/testing/radix-tree/idr-test.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/testing/radix-tree/idr-test.c b/tools/testing/radix-tree/idr-test.c
+> index ca24f6839d50..bb41e93e2acd 100644
+> --- a/tools/testing/radix-tree/idr-test.c
+> +++ b/tools/testing/radix-tree/idr-test.c
+> @@ -503,14 +503,12 @@ void ida_simple_get_remove_test(void)
+>  	DEFINE_IDA(ida);
+>  	unsigned long i;
+>  
+> -	for (i = 0; i < 10000; i++) {
+> -		assert(ida_simple_get(&ida, 0, 20000, GFP_KERNEL) == i);
+> -	}
+> -	assert(ida_simple_get(&ida, 5, 30, GFP_KERNEL) < 0);
+> +	for (i = 0; i < 10000; i++)
+> +		assert(ida_alloc_max(&ida, 20000, GFP_KERNEL) == i);
+> +	assert(ida_alloc_range(&ida, 5, 30, GFP_KERNEL) < 0);
+>  
+> -	for (i = 0; i < 10000; i++) {
+> -		ida_simple_remove(&ida, i);
+> -	}
+> +	for (i = 0; i < 10000; i++)
+> +		ida_free(&ida, i);
+>  	assert(ida_is_empty(&ida));
+>  
+>  	ida_destroy(&ida);
+> -- 
+> 2.43.0
+> 
