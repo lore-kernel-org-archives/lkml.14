@@ -1,174 +1,156 @@
-Received: from mail.systec-electronic.com (mail.systec-electronic.com [77.220.239.22])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1EC3C064;
-	Fri, 19 Jan 2024 09:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.220.239.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFAE1EB52;
+	Fri, 19 Jan 2024 09:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705656914; cv=none; b=dsYClYp1/hpMz96YiDgFfklulg7v2W0UxXJ/UjeJmEtGk8SpHJ+JzleYmKINNNH4dKJmYiyBoEY76tSqksF2wOn6daSn1/HUQHmsVHdzRkgKH7ERDtX7qf68vxD3KADqAuXaGahWOqzy0vensfJeZJZXQBnclqVfUmkouB8gDjk=
+	t=1705657064; cv=none; b=EZVUwBEeiUK0s2Wbs6Ca6ymBpqoWwLeDzSNS+JdTFHXAa2RZ0c8im0sa0eCx3qtDV+k8fuRgzCJq+Ee7a6ABKfR5UCq0mOZngdlozCcjPuqSzjPKsqgkkTOp9Pp+KM/O0jcqZdgtpYlrzrqonQj7QCXfe6D0yQSa84o/oK8Odag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705656914; c=relaxed/simple;
-	bh=bSZg78YFLl5BAM4tDcveDpHKCzqi35Xitbywtzj/TzU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bxc6nCS5/dU8WQPEivSA3VOVWch9gJ9qrXmH5FKXLlNmPXY9fqJSD9D8/UZ/Fv+riqb0rzC7mjn5gcwzQjCPCFFvD27y/W/uHEUiJvUecanT8GJqxi4vbJ+vl/54WK4LILcdveTFx699j0bpvAXeDJQIoYEQpNKEnFU3zagsi2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com; spf=pass smtp.mailfrom=systec-electronic.com; dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b=ic+Y+WSh; arc=none smtp.client-ip=77.220.239.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=systec-electronic.com
+	s=arc-20240116; t=1705657064; c=relaxed/simple;
+	bh=VQjoaasfjGj4Pt4jE9IK07lq2R6F63SB0ntq1hY/FL4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WT5Jar/Rg5gqe71HTRMyaOVI3vp4+X5O1MkXGG5Y+OSMtOsDe4HHOOg6PFU84/OG0SrJ2wd+E8GhWttraSDnz+KsAhyLmOCKWwI5OQnJMGESqPWESmOsYQY1gx376zVvfYyBgESfJK2WvrevBRJTl3d1hovfHoNhNUR5PQFAi4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=HoREC4/W; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b="ic+Y+WSh"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.systec-electronic.com (Postfix) with ESMTP id 60C9B940010D;
-	Fri, 19 Jan 2024 10:35:07 +0100 (CET)
-Received: from mail.systec-electronic.com ([127.0.0.1])
- by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id BqlB-VJgbLlM; Fri, 19 Jan 2024 10:35:07 +0100 (CET)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.systec-electronic.com (Postfix) with ESMTP id 374269400115;
-	Fri, 19 Jan 2024 10:35:07 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.systec-electronic.com 374269400115
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=systec-electronic.com; s=B34D3B04-5DC7-11EE-83E3-4D8CAB78E8CD;
-	t=1705656907; bh=MTKWH6m4my9WXHOKN9l10Su/eSbqGp9VEHgcHaprZdI=;
-	h=From:To:Date:Message-ID:MIME-Version;
-	b=ic+Y+WSh3a6qyxugTBTDCRUWeMFXox7Nyf4qJ0JAWApiwd4e5cWhQiNNSwbqWAJgc
-	 O3tUWLS6RTIoM9i0qFk6Nu6jnGzLwN6LzGJl5iQZoHLiRh3dBCDBJX/n4IPOvsQHgi
-	 N18ilCmBVaywNWn1xV6+i3WeOIOt7PojhCf5xP0JsC4S3Nqkx1RAk2aWIcHQx+2Wu6
-	 fHX7wPNe7/7sntYrtrBwc6pKmxT+MabBdoIvl9eOMsL796leM3PRquQRdwwa0FDO+V
-	 yhBmSbM8a+2wjsWB4xvGdnQkQfmNRDLmB3V9NEcEg1XqkDToA6Wp6sOoDVCIugkuwd
-	 IeYSnKKETVdPw==
-X-Virus-Scanned: amavis at systec-electronic.com
-Received: from mail.systec-electronic.com ([127.0.0.1])
- by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id hfwp1lJeY7RI; Fri, 19 Jan 2024 10:35:07 +0100 (CET)
-Received: from ws-565760.systec.local (unknown [212.185.67.148])
-	by mail.systec-electronic.com (Postfix) with ESMTPSA id D3D6B940010D;
-	Fri, 19 Jan 2024 10:35:06 +0100 (CET)
-From: Andre Werner <andre.werner@systec-electronic.com>
-To: andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: linux@armlinux.org.uk,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andre Werner <andre.werner@systec-electronic.com>
-Subject: [RFC net-next v3 2/2] net: phy: adin1100: Add interrupt support for link change
-Date: Fri, 19 Jan 2024 10:32:26 +0100
-Message-ID: <20240119093503.6370-2-andre.werner@systec-electronic.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240119093503.6370-1-andre.werner@systec-electronic.com>
-References: <20240119093503.6370-1-andre.werner@systec-electronic.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="HoREC4/W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1705657058; x=1705916258;
+	bh=8e/rU8mWyRsdYMtNFKOr1SDmHGWMG+cSiKUa3CJl5vE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=HoREC4/WD32aiGHQKEf6Vt8D/QhA2+yVfqPC26y7RcTkaqB76qxUQGajzuP/uqxu3
+	 LjsnRWMss/mjzog+QG4sGSF0w4VkIpuTt4GqDkLzqMEWJ1D2H9AGi1t/86SdJ7ShTr
+	 KkzkFa+PBukrlzQLg78oNaRHNRzZ+rRJLx8Cl7+2IUjiFrGyH9SdPOS04esJf6/1xr
+	 3zgULcYWxRQi+XKqin1dF99vjuTEDnw7jyPdTbl7YrpdDLvXH8PeERRSkDHdj52arq
+	 0w9Kw7yekiwbuQeRATcEkaJFNivDu0Y2BysYVYZquCpVylzVs6bJM+38lxNSFSSgni
+	 +1fbwBwxh59lQ==
+Date: Fri, 19 Jan 2024 09:37:12 +0000
+To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Dan Williams <dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 2/9] rust: cred: add Rust abstraction for `struct cred`
+Message-ID: <67a9f08d-d551-4238-b02d-f1c7af3780ae@proton.me>
+In-Reply-To: <20240118-alice-file-v3-2-9694b6f9580c@google.com>
+References: <20240118-alice-file-v3-0-9694b6f9580c@google.com> <20240118-alice-file-v3-2-9694b6f9580c@google.com>
+Feedback-ID: 71780778:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-An interrupt handler was added to the driver as well as functions
-to enable interrupts at the phy.
+On 1/18/24 15:36, Alice Ryhl wrote:
+> diff --git a/rust/kernel/cred.rs b/rust/kernel/cred.rs
+> new file mode 100644
+> index 000000000000..ccec77242dfd
+> --- /dev/null
+> +++ b/rust/kernel/cred.rs
+> @@ -0,0 +1,65 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Credentials management.
+> +//!
+> +//! C header: [`include/linux/cred.h`](../../../../include/linux/cred.h)
 
-There are several interrupts maskable at the phy, but only link change
-interrupts are handled by the driver yet.
+IIRC you can use `srctree/include/..` to avoid the `../..` madness.
 
-Signed-off-by: Andre Werner <andre.werner@systec-electronic.com>
----
-v3:
-- Correct rashly format error that was reported by checker.
----
- drivers/net/phy/adin1100.c | 61 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+> +//!
+> +//! Reference: <https://www.kernel.org/doc/html/latest/security/credenti=
+als.html>
+> +
+> +use crate::{
+> +    bindings,
+> +    types::{AlwaysRefCounted, Opaque},
+> +};
+> +
+> +/// Wraps the kernel's `struct cred`.
+> +///
+> +/// # Invariants
+> +///
+> +/// Instances of this type are always ref-counted, that is, a call to `g=
+et_cred` ensures that the
+> +/// allocation remains valid at least until the matching call to `put_cr=
+ed`.
+> +#[repr(transparent)]
+> +pub struct Credential(Opaque<bindings::cred>);
+> +
+> +// SAFETY: By design, the only way to access a `Credential` is via an im=
+mutable reference or an
+> +// `ARef`. This means that the only situation in which a `Credential` ca=
+n be accessed mutably is
+> +// when the refcount drops to zero and the destructor runs. It is safe f=
+or that to happen on any
+> +// thread, so it is ok for this type to be `Send`.
 
-diff --git a/drivers/net/phy/adin1100.c b/drivers/net/phy/adin1100.c
-index 7619d6185801..32700b44e486 100644
---- a/drivers/net/phy/adin1100.c
-+++ b/drivers/net/phy/adin1100.c
-@@ -18,6 +18,12 @@
- #define PHY_ID_ADIN1110				0x0283bc91
- #define PHY_ID_ADIN2111				0x0283bca1
-=20
-+#define ADIN_PHY_SUBSYS_IRQ_MASK		0x0021
-+#define   ADIN_LINK_STAT_CHNG_IRQ_EN		BIT(1)
-+
-+#define ADIN_PHY_SUBSYS_IRQ_STATUS		0x0011
-+#define   ADIN_LINK_STAT_CHNG			BIT(1)
-+
- #define ADIN_FORCED_MODE			0x8000
- #define   ADIN_FORCED_MODE_EN			BIT(0)
-=20
-@@ -136,6 +142,59 @@ static int adin_config_aneg(struct phy_device *phyde=
-v)
- 	return genphy_c45_config_aneg(phydev);
- }
-=20
-+static int adin_phy_ack_intr(struct phy_device *phydev)
-+{
-+	/* Clear pending interrupts */
-+	int rc =3D phy_read_mmd(phydev, MDIO_MMD_VEND2,
-+			      ADIN_PHY_SUBSYS_IRQ_STATUS);
-+
-+	return rc < 0 ? rc : 0;
-+}
-+
-+static int adin_config_intr(struct phy_device *phydev)
-+{
-+	int ret, regval;
-+
-+	ret =3D adin_phy_ack_intr(phydev);
-+
-+	if (ret)
-+		return ret;
-+
-+	regval =3D phy_read_mmd(phydev, MDIO_MMD_VEND2,
-+			      ADIN_PHY_SUBSYS_IRQ_MASK);
-+	if (regval < 0)
-+		return regval;
-+
-+	if (phydev->interrupts =3D=3D PHY_INTERRUPT_ENABLED)
-+		regval |=3D ADIN_LINK_STAT_CHNG_IRQ_EN;
-+	else
-+		regval &=3D ~ADIN_LINK_STAT_CHNG_IRQ_EN;
-+
-+	ret =3D phy_write_mmd(phydev, MDIO_MMD_VEND2,
-+			    ADIN_PHY_SUBSYS_IRQ_MASK,
-+			    regval);
-+	return ret;
-+}
-+
-+static irqreturn_t adin_phy_handle_interrupt(struct phy_device *phydev)
-+{
-+	int irq_status;
-+
-+	irq_status =3D phy_read_mmd(phydev, MDIO_MMD_VEND2,
-+				  ADIN_PHY_SUBSYS_IRQ_STATUS);
-+	if (irq_status < 0) {
-+		phy_error(phydev);
-+		return IRQ_NONE;
-+	}
-+
-+	if (!(irq_status & ADIN_LINK_STAT_CHNG))
-+		return IRQ_NONE;
-+
-+	phy_trigger_machine(phydev);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int adin_set_powerdown_mode(struct phy_device *phydev, bool en)
- {
- 	int ret;
-@@ -275,6 +334,8 @@ static struct phy_driver adin_driver[] =3D {
- 		.probe			=3D adin_probe,
- 		.config_aneg		=3D adin_config_aneg,
- 		.read_status		=3D adin_read_status,
-+		.config_intr		=3D adin_config_intr,
-+		.handle_interrupt	=3D adin_phy_handle_interrupt,
- 		.set_loopback		=3D adin_set_loopback,
- 		.suspend		=3D adin_suspend,
- 		.resume			=3D adin_resume,
+IMO the only important part is that calling `drop`/`dec_ref` is OK from
+any thread.
+
+In general I think it might be a good idea to make
+`AlwaysRefCounted: Send + Sync`. But that is outside the scope of this
+patch.
+
+> +unsafe impl Send for Credential {}
+> +
+> +// SAFETY: It's OK to access `Credential` through shared references from=
+ other threads because
+> +// we're either accessing properties that don't change or that are prope=
+rly synchronised by C code.
+> +unsafe impl Sync for Credential {}
+> +
+> +impl Credential {
+> +    /// Creates a reference to a [`Credential`] from a valid pointer.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The caller must ensure that `ptr` is valid and remains valid for=
+ the lifetime of the
+> +    /// returned [`Credential`] reference.
+> +    pub unsafe fn from_ptr<'a>(ptr: *const bindings::cred) -> &'a Creden=
+tial {
+> +        // SAFETY: The safety requirements guarantee the validity of the=
+ dereference, while the
+> +        // `Credential` type being transparent makes the cast ok.
+> +        unsafe { &*ptr.cast() }
+> +    }
+> +
+> +    /// Returns the effective UID of the given credential.
+> +    pub fn euid(&self) -> bindings::kuid_t {
+> +        // SAFETY: By the type invariant, we know that `self.0` is valid=
+.
+
+Is `euid` an immutable property, or why does this memory access not race
+with something?
+
 --=20
-2.43.0
+Cheers,
+Benno
+
+> +        unsafe { (*self.0.get()).euid }
+> +    }
+> +}
+> +
+> +// SAFETY: The type invariants guarantee that `Credential` is always ref=
+-counted.
+> +unsafe impl AlwaysRefCounted for Credential {
+> +    fn inc_ref(&self) {
+> +        // SAFETY: The existence of a shared reference means that the re=
+fcount is nonzero.
+> +        unsafe { bindings::get_cred(self.0.get()) };
+> +    }
+> +
+> +    unsafe fn dec_ref(obj: core::ptr::NonNull<Credential>) {
+> +        // SAFETY: The safety requirements guarantee that the refcount i=
+s nonzero. The cast is okay
+> +        // because `Credential` has the same representation as `struct c=
+red`.
+> +        unsafe { bindings::put_cred(obj.cast().as_ptr()) };
+> +    }
+> +}
 
