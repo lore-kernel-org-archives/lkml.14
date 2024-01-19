@@ -1,45 +1,46 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937401871;
-	Fri, 19 Jan 2024 03:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461F2F2B;
+	Fri, 19 Jan 2024 03:24:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705634659; cv=none; b=FwbsixQ3l6EbAXDN0oJ1FhUsCfwCHcPmLkqoUjQXbMPfQYC0WgCpZpzmFnzfI/g2Y4piqQLLc2PN/ygMZtG4+PEbUmIX7iNLWtJYYxT4K+zlqM9bx9KsCLeZ31e4RfOci1At+bLG1Lr3sbRbGAIjrNjIGF1CNv9oEjxDy/7yysw=
+	t=1705634660; cv=none; b=V7sY5lgrDaABJNnnC1QYKQpvVmqwSAL+z0nty4xXdv2qlQtZwPYzA3XNLQGvLzNd3mieokUD49KfA+S38YvWoelu2MtXyNLFfauvNO5uXa6Po8s5/iQhR5Uo8kVGbFUoMM73lLDnT7gE43XHoP+ab3mcXwiy2H5aWgUOB5bWGis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705634659; c=relaxed/simple;
-	bh=q3BAwQaLruax6gV3H4LnyOgpi7PP/QnMfK/62uH8xS8=;
+	s=arc-20240116; t=1705634660; c=relaxed/simple;
+	bh=T+3zWalF6/27EpFGiFk1gvRl2sWZ0e1oM7gA6gMUwzI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IX1nHhpNC9a8BvV24RZ63/W4n1eKjFTH2HWCKOdo7BK9ThiJeyW2wuodB0dKl840EgHaLfBfaCcszGpLFSHE00k25UlhtnJDQYTrc99coHy3iiTzZYvFhbaoD8yz/YERzjiZCXbqJECEEJwIsihQ5DO4rRnJwvir9LSukGFlpsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hjgaYRZt; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=nkxMND7SvsoHXh01+64sJ/5MKE9mj+I4y6G7Jo3VAylL7tj9UhIvO9bbfde64d3DygVerd52GsSviqUyJZvwZdqYBwYKZEwELrx4vmjTlwuqZOveC4nkIx9BHz5q7TgK6bPF32UqDG6QBBixMiZQHziE5Q6VkbEsqyMmFwsxJKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WgRj65ff; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hjgaYRZt"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40INo94J020152;
-	Fri, 19 Jan 2024 03:23:53 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WgRj65ff"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40J3LagT022579;
+	Fri, 19 Jan 2024 03:24:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=QIca7MaulpDNMwfzHR3x
-	O7EG2aOUeN+8nCZFiqJnttU=; b=hjgaYRZt8HRAlfhY5vH4H7KBoGPvUxiqmxAS
-	5ubASOudUSQjAQ+VrDQB7EUPN4U2AMkkzcJXpKIyo0b+ETJ7R1w6Onx7r9ayZuc4
-	qhs/c1ea02Cr42EMmOIycX/AwWOaCWmttSC1vqOfgfaNjt9lasgCZNWoRdzulElh
-	gi9r5isH2VFvYDekShOpfbdoW6GcjO9/ipBr4rFAnu7PKtbAaKc3/+1ksniTz1e6
-	pmmm3UrV0m/yf52nVmQK4aJfEFwmPa+V+JdXVtSAtFxywTbHCbbczMH98aPP/fmM
-	DuUZqns0cpedOR3KqYT+O9pYUyS7PJ+8W5fktX+F8184FcB9Rg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vpx8sjsk4-1
+	:mime-version:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=pW4KtRe6XcXAMu1Blt4aTmvI/ZZlOs/VU6634F+3EwU=; b=Wg
+	Rj65ffIR2FuKfXewL6LhOqLd+tS9K57CE6mGJHgoiDNly4eNcNXgqDQV337VVJhM
+	nFMKkuuW4308a49J7U0MwhNojeexaAHM8Rxt4X5wgla9/zlZ8SMvsKtUcCHpRY6d
+	3nNyyPssoeK+l3amh7B6gr4mB0HKgPf0YJMVG9ID315XyCOjBCb32eB3UY6gzfl/
+	qWhijoKKLlB2BgUxrU5OQtRJ+19yydToQjJIJCSfI109ZRIMHnVXJ36V7ezmBecp
+	hjgq8tUwpS8wK9QJFbmL0GlYuVgoXlcgX5C8/1zTHWSVxq+6QKpbVZlgSDXOE4dx
+	pCdjx6546UJRpclF3COA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vq3ns9upv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jan 2024 03:23:52 +0000 (GMT)
+	Fri, 19 Jan 2024 03:24:03 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40J3NpeH003044
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40J3O27e025913
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jan 2024 03:23:51 GMT
+	Fri, 19 Jan 2024 03:24:02 GMT
 Received: from taozha-gv.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 18 Jan 2024 19:23:47 -0800
+ 15.2.1118.40; Thu, 18 Jan 2024 19:23:57 -0800
 From: Tao Zhang <quic_taozha@quicinc.com>
 To: Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose
@@ -62,9 +63,9 @@ CC: Tao Zhang <quic_taozha@quicinc.com>,
 	<quic_tsoni@quicinc.com>,
         Song Chai <quic_songchai@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
         <andersson@kernel.org>
-Subject: [PATCH v4 05/10] coresight-tpda: Add support to configure CMB element
-Date: Fri, 19 Jan 2024 11:22:58 +0800
-Message-ID: <1705634583-17631-6-git-send-email-quic_taozha@quicinc.com>
+Subject: [PATCH v4 07/10] coresight-tpdm: Add pattern registers support for CMB
+Date: Fri, 19 Jan 2024 11:23:00 +0800
+Message-ID: <1705634583-17631-8-git-send-email-quic_taozha@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1705634583-17631-1-git-send-email-quic_taozha@quicinc.com>
 References: <1705634583-17631-1-git-send-email-quic_taozha@quicinc.com>
@@ -74,254 +75,307 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: HOlpjMKIvAxtsFHZDwbL05fV7Cf55U_D
-X-Proofpoint-GUID: HOlpjMKIvAxtsFHZDwbL05fV7Cf55U_D
+X-Proofpoint-GUID: pdva50fm3M3qvqnzH9_mbg8CzFchirIg
+X-Proofpoint-ORIG-GUID: pdva50fm3M3qvqnzH9_mbg8CzFchirIg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-18_12,2024-01-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- phishscore=0 priorityscore=1501 mlxlogscore=814 impostorscore=0 mlxscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
- definitions=main-2401190012
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 lowpriorityscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 suspectscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401190012
 
-Read the CMB element size from the device tree. Set the register
-bit that controls the CMB element size of the corresponding port.
+Timestamps are requested if the monitor’s CMB data set unit input
+data matches the value in the Monitor CMB timestamp pattern and mask
+registers (M_CMB_TPR and M_CMB_TPMR) when CMB timestamp enabled
+via the timestamp insertion enable register bit(CMB_TIER.PATT_TSENAB).
+The pattern match trigger output is achieved via setting values into
+the CMB trigger pattern and mask registers (CMB_XPR and CMB_XPMR).
+After configuring a pattern through these registers, the TPDM subunit
+will assert an output trigger every time it receives new input data
+that matches the configured pattern value. Values in a given bit
+number of the mask register correspond to the same bit number in
+the corresponding pattern register.
 
-Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
 ---
- drivers/hwtracing/coresight/coresight-tpda.c | 123 +++++++++++--------
- drivers/hwtracing/coresight/coresight-tpda.h |   6 +
- 2 files changed, 79 insertions(+), 50 deletions(-)
+ .../testing/sysfs-bus-coresight-devices-tpdm  | 30 ++++++
+ drivers/hwtracing/coresight/coresight-tpdm.c  | 98 ++++++++++++++++++-
+ drivers/hwtracing/coresight/coresight-tpdm.h  | 39 ++++++++
+ 3 files changed, 166 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tpda.c b/drivers/hwtracing/coresight/coresight-tpda.c
-index 4ac954f4bc13..987a69428c93 100644
---- a/drivers/hwtracing/coresight/coresight-tpda.c
-+++ b/drivers/hwtracing/coresight/coresight-tpda.c
-@@ -18,6 +18,7 @@
- #include "coresight-priv.h"
- #include "coresight-tpda.h"
- #include "coresight-trace-id.h"
-+#include "coresight-tpdm.h"
- 
- DEFINE_CORESIGHT_DEVLIST(tpda_devs, "tpda");
- 
-@@ -28,24 +29,57 @@ static bool coresight_device_is_tpdm(struct coresight_device *csdev)
- 			CORESIGHT_DEV_SUBTYPE_SOURCE_TPDM);
- }
- 
-+static void tpdm_clear_element_size(struct coresight_device *csdev)
-+{
-+	struct tpda_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
+index 3ae21ccf3f29..898aee81e20d 100644
+--- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
++++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
+@@ -184,3 +184,33 @@ Description:	(Write) Set the data collection mode of CMB tpdm. Continuous
+ 		Accepts only one of the 2 values -  0 or 1.
+ 		0 : Continuous CMB collection mode.
+ 		1 : Trace-on-change CMB collection mode.
 +
-+	drvdata->dsb_esize = 0;
-+	drvdata->cmb_esize = 0;
-+}
++What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_trig_patt/xpr[0:1]
++Date:		March 2023
++KernelVersion	6.7
++Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
++Description:
++		(RW) Set/Get the value of the trigger pattern for the CMB
++		subunit TPDM.
 +
-+static void tpda_set_element_size(struct tpda_drvdata *drvdata, u32 *val)
-+{
++What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_trig_patt/xpmr[0:1]
++Date:		March 2023
++KernelVersion	6.7
++Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
++Description:
++		(RW) Set/Get the mask of the trigger pattern for the CMB
++		subunit TPDM.
 +
-+	if (drvdata->dsb_esize == 64)
-+		*val |= TPDA_Pn_CR_DSBSIZE;
-+	else if (drvdata->dsb_esize == 32)
-+		*val &= ~TPDA_Pn_CR_DSBSIZE;
++What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_patt/tpr[0:1]
++Date:		March 2023
++KernelVersion	6.7
++Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
++Description:
++		(RW) Set/Get the value of the pattern for the CMB subunit TPDM.
 +
-+	if (drvdata->cmb_esize == 64)
-+		*val |= FIELD_PREP(TPDA_Pn_CR_CMBSIZE, 0x2);
-+	else if (drvdata->cmb_esize == 32)
-+		*val |= FIELD_PREP(TPDA_Pn_CR_CMBSIZE, 0x1);
-+	else if (drvdata->cmb_esize == 8)
-+		*val &= ~TPDA_Pn_CR_CMBSIZE;
-+}
-+
- /*
-- * Read the DSB element size from the TPDM device
-+ * Read the element size from the TPDM device. One TPDM must have at least one of the
-+ * element size property.
-  * Returns
-- *    The dsb element size read from the devicetree if available.
-- *    0 - Otherwise, with a warning once.
-+ *    0 - The element size property is read
-+ *    Others - Cannot read the property of the element size
-  */
--static int tpdm_read_dsb_element_size(struct coresight_device *csdev)
-+static int tpdm_read_element_size(struct tpda_drvdata *drvdata,
-+				  struct coresight_device *csdev)
- {
--	int rc = 0;
--	u8 size = 0;
-+	int rc = -EINVAL;
-+	struct tpdm_drvdata *tpdm_data = dev_get_drvdata(csdev->dev.parent);
-+
-+	if (tpdm_has_dsb_dataset(tpdm_data)) {
-+		rc = fwnode_property_read_u8(dev_fwnode(csdev->dev.parent),
-+				"qcom,dsb-element-size", &drvdata->dsb_esize);
-+	}
-+	if (tpdm_has_cmb_dataset(tpdm_data)) {
-+		rc = fwnode_property_read_u8(dev_fwnode(csdev->dev.parent),
-+				"qcom,cmb-element-size", &drvdata->cmb_esize);
-+	}
- 
--	rc = fwnode_property_read_u8(dev_fwnode(csdev->dev.parent),
--			"qcom,dsb-element-size", &size);
- 	if (rc)
- 		dev_warn_once(&csdev->dev,
--			"Failed to read TPDM DSB Element size: %d\n", rc);
-+			"Failed to read TPDM Element size: %d\n", rc);
- 
--	return size;
-+	return rc;
- }
- 
- /*
-@@ -56,11 +90,12 @@ static int tpdm_read_dsb_element_size(struct coresight_device *csdev)
-  * Parameter "inport" is used to pass in the input port number
-  * of TPDA, and it is set to -1 in the recursize call.
-  */
--static int tpda_get_element_size(struct coresight_device *csdev,
-+static int tpda_get_element_size(struct tpda_drvdata *drvdata,
-+				 struct coresight_device *csdev,
- 				 int inport)
- {
--	int dsb_size = -ENOENT;
--	int i, size;
-+	int rc = 0;
-+	int i;
- 	struct coresight_device *in;
- 
- 	for (i = 0; i < csdev->pdata->nr_inconns; i++) {
-@@ -69,30 +104,26 @@ static int tpda_get_element_size(struct coresight_device *csdev,
- 			continue;
- 
- 		/* Ignore the paths that do not match port */
--		if (inport > 0 &&
-+		if (inport >= 0 &&
- 		    csdev->pdata->in_conns[i]->dest_port != inport)
- 			continue;
- 
- 		if (coresight_device_is_tpdm(in)) {
--			size = tpdm_read_dsb_element_size(in);
-+			if ((drvdata->dsb_esize) || (drvdata->cmb_esize))
-+				return -EEXIST;
-+			rc = tpdm_read_element_size(drvdata, in);
-+			if (rc)
-+				return rc;
- 		} else {
- 			/* Recurse down the path */
--			size = tpda_get_element_size(in, -1);
--		}
--
--		if (size < 0)
--			return size;
--
--		if (dsb_size < 0) {
--			/* Found a size, save it. */
--			dsb_size = size;
--		} else {
--			/* Found duplicate TPDMs */
--			return -EEXIST;
-+			rc = tpda_get_element_size(drvdata, in, -1);
-+			if (rc)
-+				return rc;
- 		}
++What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_patt/tpmr[0:1]
++Date:		March 2023
++KernelVersion	6.7
++Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
++Description:
++		(RW) Set/Get the mask of the pattern for the CMB subunit TPDM.
+diff --git a/drivers/hwtracing/coresight/coresight-tpdm.c b/drivers/hwtracing/coresight/coresight-tpdm.c
+index b55aee65a856..079c875ad667 100644
+--- a/drivers/hwtracing/coresight/coresight-tpdm.c
++++ b/drivers/hwtracing/coresight/coresight-tpdm.c
+@@ -66,6 +66,26 @@ static ssize_t tpdm_simple_dataset_show(struct device *dev,
+ 			return -EINVAL;
+ 		return sysfs_emit(buf, "0x%x\n",
+ 				drvdata->dsb->msr[tpdm_attr->idx]);
++	case CMB_TRIG_PATT:
++		if (tpdm_attr->idx >= TPDM_CMB_MAX_PATT)
++			return -EINVAL;
++		return sysfs_emit(buf, "0x%x\n",
++			drvdata->cmb->trig_patt[tpdm_attr->idx]);
++	case CMB_TRIG_PATT_MASK:
++		if (tpdm_attr->idx >= TPDM_CMB_MAX_PATT)
++			return -EINVAL;
++		return sysfs_emit(buf, "0x%x\n",
++			drvdata->cmb->trig_patt_mask[tpdm_attr->idx]);
++	case CMB_PATT:
++		if (tpdm_attr->idx >= TPDM_CMB_MAX_PATT)
++			return -EINVAL;
++		return sysfs_emit(buf, "0x%x\n",
++			drvdata->cmb->patt_val[tpdm_attr->idx]);
++	case CMB_PATT_MASK:
++		if (tpdm_attr->idx >= TPDM_CMB_MAX_PATT)
++			return -EINVAL;
++		return sysfs_emit(buf, "0x%x\n",
++			drvdata->cmb->patt_mask[tpdm_attr->idx]);
  	}
- 
--	return dsb_size;
-+
-+	return rc;
+ 	return -EINVAL;
  }
+@@ -118,6 +138,30 @@ static ssize_t tpdm_simple_dataset_store(struct device *dev,
+ 			ret = size;
+ 		}
+ 		break;
++	case CMB_TRIG_PATT:
++		if (tpdm_attr->idx < TPDM_CMB_MAX_PATT) {
++			drvdata->cmb->trig_patt[tpdm_attr->idx] = val;
++			ret = size;
++		}
++		break;
++	case CMB_TRIG_PATT_MASK:
++		if (tpdm_attr->idx < TPDM_CMB_MAX_PATT) {
++			drvdata->cmb->trig_patt_mask[tpdm_attr->idx] = val;
++			ret = size;
++		}
++		break;
++	case CMB_PATT:
++		if (tpdm_attr->idx < TPDM_CMB_MAX_PATT) {
++			drvdata->cmb->patt_val[tpdm_attr->idx] = val;
++			ret = size;
++		}
++		break;
++	case CMB_PATT_MASK:
++		if (tpdm_attr->idx < TPDM_CMB_MAX_PATT) {
++			drvdata->cmb->patt_mask[tpdm_attr->idx] = val;
++			ret = size;
++		}
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -279,10 +323,32 @@ static void tpdm_enable_dsb(struct tpdm_drvdata *drvdata)
  
- /* Settings pre enabling port control register */
-@@ -109,7 +140,7 @@ static void tpda_enable_pre_port(struct tpda_drvdata *drvdata)
- static int tpda_enable_port(struct tpda_drvdata *drvdata, int port)
+ static void tpdm_enable_cmb(struct tpdm_drvdata *drvdata)
  {
- 	u32 val;
--	int size;
-+	int rc;
+-	u32 val;
++	u32 val, i;
  
- 	val = readl_relaxed(drvdata->base + TPDA_Pn_CR(port));
- 	/*
-@@ -117,29 +148,21 @@ static int tpda_enable_port(struct tpda_drvdata *drvdata, int port)
- 	 * Set the bit to 0 if the size is 32
- 	 * Set the bit to 1 if the size is 64
- 	 */
--	size = tpda_get_element_size(drvdata->csdev, port);
--	switch (size) {
--	case 32:
--		val &= ~TPDA_Pn_CR_DSBSIZE;
--		break;
--	case 64:
--		val |= TPDA_Pn_CR_DSBSIZE;
--		break;
--	case 0:
--		return -EEXIST;
--	case -EEXIST:
-+	tpdm_clear_element_size(drvdata->csdev);
-+	rc = tpda_get_element_size(drvdata, drvdata->csdev, port);
-+	if (!rc && ((drvdata->dsb_esize) || (drvdata->cmb_esize))) {
-+		tpda_set_element_size(drvdata, &val);
-+		/* Enable the port */
-+		val |= TPDA_Pn_CR_ENA;
-+		writel_relaxed(val, drvdata->base + TPDA_Pn_CR(port));
-+	} else if (rc == -EEXIST)
- 		dev_warn_once(&drvdata->csdev->dev,
--			"Detected multiple TPDMs on port %d", -EEXIST);
--		return -EEXIST;
--	default:
--		return -EINVAL;
--	}
--
--	/* Enable the port */
--	val |= TPDA_Pn_CR_ENA;
--	writel_relaxed(val, drvdata->base + TPDA_Pn_CR(port));
-+			      "Detected multiple TPDMs on port %d", -EEXIST);
-+	else
-+		dev_warn_once(&drvdata->csdev->dev,
-+			      "Didn't find TPDM element size");
+ 	if (tpdm_has_cmb_dataset(drvdata)) {
++		/* Configure pattern registers */
++		for (i = 0; i < TPDM_CMB_MAX_PATT; i++) {
++			writel_relaxed(drvdata->cmb->patt_val[i],
++				drvdata->base + TPDM_CMB_TPR(i));
++			writel_relaxed(drvdata->cmb->patt_mask[i],
++				drvdata->base + TPDM_CMB_TPMR(i));
++			writel_relaxed(drvdata->cmb->trig_patt[i],
++				drvdata->base + TPDM_CMB_XPR(i));
++			writel_relaxed(drvdata->cmb->trig_patt_mask[i],
++				drvdata->base + TPDM_CMB_XPMR(i));
++		}
++
+ 		val = readl_relaxed(drvdata->base + TPDM_CMB_CR);
++		/*
++		 * Set to 0 for continuous CMB collection mode,
++		 * 1 for trace-on-change CMB collection mode.
++		 */
++		if (drvdata->cmb->trace_mode)
++			val |= TPDM_CMB_CR_MODE;
++		else
++			val &= ~TPDM_CMB_CR_MODE;
++
++		/* Set the enable bit of CMB control register to 1 */
+ 		val |= TPDM_CMB_CR_ENA;
  
--	return 0;
-+	return rc;
- }
- 
- static int __tpda_enable(struct tpda_drvdata *drvdata, int port)
-diff --git a/drivers/hwtracing/coresight/coresight-tpda.h b/drivers/hwtracing/coresight/coresight-tpda.h
-index b3b38fd41b64..29164fd9711f 100644
---- a/drivers/hwtracing/coresight/coresight-tpda.h
-+++ b/drivers/hwtracing/coresight/coresight-tpda.h
-@@ -10,6 +10,8 @@
- #define TPDA_Pn_CR(n)		(0x004 + (n * 4))
- /* Aggregator port enable bit */
- #define TPDA_Pn_CR_ENA		BIT(0)
-+/* Aggregator port CMB data set element size bit */
-+#define TPDA_Pn_CR_CMBSIZE		GENMASK(7, 6)
- /* Aggregator port DSB data set element size bit */
- #define TPDA_Pn_CR_DSBSIZE		BIT(8)
- 
-@@ -25,6 +27,8 @@
-  * @csdev:      component vitals needed by the framework.
-  * @spinlock:   lock for the drvdata value.
-  * @enable:     enable status of the component.
-+ * @dsb_esize   Record the DSB element size.
-+ * @cmb_esize   Record the CMB element size.
-  */
- struct tpda_drvdata {
- 	void __iomem		*base;
-@@ -32,6 +36,8 @@ struct tpda_drvdata {
- 	struct coresight_device	*csdev;
- 	spinlock_t		spinlock;
- 	u8			atid;
-+	u8			dsb_esize;
-+	u8			cmb_esize;
+ 		/* Set the enable bit of CMB control register to 1 */
+@@ -886,6 +952,22 @@ static struct attribute *tpdm_dsb_msr_attrs[] = {
+ 	NULL,
  };
  
- #endif  /* _CORESIGHT_CORESIGHT_TPDA_H */
++static struct attribute *tpdm_cmb_trig_patt_attrs[] = {
++	CMB_TRIG_PATT_ATTR(0),
++	CMB_TRIG_PATT_ATTR(1),
++	CMB_TRIG_PATT_MASK_ATTR(0),
++	CMB_TRIG_PATT_MASK_ATTR(1),
++	NULL,
++};
++
++static struct attribute *tpdm_cmb_patt_attrs[] = {
++	CMB_PATT_ATTR(0),
++	CMB_PATT_ATTR(1),
++	CMB_PATT_MASK_ATTR(0),
++	CMB_PATT_MASK_ATTR(1),
++	NULL,
++};
++
+ static struct attribute *tpdm_dsb_attrs[] = {
+ 	&dev_attr_dsb_mode.attr,
+ 	&dev_attr_dsb_trig_ts.attr,
+@@ -932,6 +1014,18 @@ static struct attribute_group tpdm_cmb_attr_grp = {
+ 	.is_visible = tpdm_cmb_is_visible,
+ };
+ 
++static struct attribute_group tpdm_cmb_trig_patt_grp = {
++	.attrs = tpdm_cmb_trig_patt_attrs,
++	.is_visible = tpdm_cmb_is_visible,
++	.name = "cmb_trig_patt",
++};
++
++static struct attribute_group tpdm_cmb_patt_grp = {
++	.attrs = tpdm_cmb_patt_attrs,
++	.is_visible = tpdm_cmb_is_visible,
++	.name = "cmb_patt",
++};
++
+ static const struct attribute_group *tpdm_attr_grps[] = {
+ 	&tpdm_attr_grp,
+ 	&tpdm_dsb_attr_grp,
+@@ -940,6 +1034,8 @@ static const struct attribute_group *tpdm_attr_grps[] = {
+ 	&tpdm_dsb_patt_grp,
+ 	&tpdm_dsb_msr_grp,
+ 	&tpdm_cmb_attr_grp,
++	&tpdm_cmb_trig_patt_grp,
++	&tpdm_cmb_patt_grp,
+ 	NULL,
+ };
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-tpdm.h b/drivers/hwtracing/coresight/coresight-tpdm.h
+index 2af92c270ed1..8cb8a9b35384 100644
+--- a/drivers/hwtracing/coresight/coresight-tpdm.h
++++ b/drivers/hwtracing/coresight/coresight-tpdm.h
+@@ -11,12 +11,23 @@
+ 
+ /* CMB Subunit Registers */
+ #define TPDM_CMB_CR		(0xA00)
++/*CMB subunit timestamp pattern registers*/
++#define TPDM_CMB_TPR(n)		(0xA08 + (n * 4))
++/*CMB subunit timestamp pattern mask registers*/
++#define TPDM_CMB_TPMR(n)	(0xA10 + (n * 4))
++/*CMB subunit trigger pattern registers*/
++#define TPDM_CMB_XPR(n)		(0xA18 + (n * 4))
++/*CMB subunit trigger pattern mask registers*/
++#define TPDM_CMB_XPMR(n)	(0xA20 + (n * 4))
+ 
+ /* Enable bit for CMB subunit */
+ #define TPDM_CMB_CR_ENA		BIT(0)
+ /* Trace collection mode for CMB subunit */
+ #define TPDM_CMB_CR_MODE	BIT(1)
+ 
++/*Patten register number*/
++#define TPDM_CMB_MAX_PATT		2
++
+ /* DSB Subunit Registers */
+ #define TPDM_DSB_CR		(0x780)
+ #define TPDM_DSB_TIER		(0x784)
+@@ -151,6 +162,22 @@
+ 		tpdm_simple_dataset_rw(msr##nr,			\
+ 		DSB_MSR, nr)
+ 
++#define CMB_TRIG_PATT_ATTR(nr)					\
++		tpdm_simple_dataset_rw(xpr##nr,			\
++		CMB_TRIG_PATT, nr)
++
++#define CMB_TRIG_PATT_MASK_ATTR(nr)				\
++		tpdm_simple_dataset_rw(xpmr##nr,		\
++		CMB_TRIG_PATT_MASK, nr)
++
++#define CMB_PATT_ATTR(nr)					\
++		tpdm_simple_dataset_rw(tpr##nr,			\
++		CMB_PATT, nr)
++
++#define CMB_PATT_MASK_ATTR(nr)					\
++		tpdm_simple_dataset_rw(tpmr##nr,		\
++		CMB_PATT_MASK, nr)
++
+ /**
+  * struct dsb_dataset - specifics associated to dsb dataset
+  * @mode:             DSB programming mode
+@@ -186,9 +213,17 @@ struct dsb_dataset {
+ /**
+  * struct cmb_dataset
+  * @trace_mode:       Dataset collection mode
++ * @patt_val:         Save value for pattern
++ * @patt_mask:        Save value for pattern mask
++ * @trig_patt:        Save value for trigger pattern
++ * @trig_patt_mask:   Save value for trigger pattern mask
+  */
+ struct cmb_dataset {
+ 	u32			trace_mode;
++	u32			patt_val[TPDM_CMB_MAX_PATT];
++	u32			patt_mask[TPDM_CMB_MAX_PATT];
++	u32			trig_patt[TPDM_CMB_MAX_PATT];
++	u32			trig_patt_mask[TPDM_CMB_MAX_PATT];
+ };
+ 
+ /**
+@@ -225,6 +260,10 @@ enum dataset_mem {
+ 	DSB_PATT,
+ 	DSB_PATT_MASK,
+ 	DSB_MSR,
++	CMB_TRIG_PATT,
++	CMB_TRIG_PATT_MASK,
++	CMB_PATT,
++	CMB_PATT_MASK
+ };
+ 
+ /**
 -- 
 2.17.1
 
