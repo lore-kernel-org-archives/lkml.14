@@ -1,54 +1,56 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251624C61B
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 11:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9704CB27
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 11:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705662710; cv=none; b=Hz5EJd7csHkRmf5Fnyy8GQMuHX4Hsxs9d/3UToVLghIpPW1s66Mjb2kJUVKYIrCiM9n1lhwLoJ3bHr2HRlwQavSjAom+DI7lNdYp3Dayu4V/swsK2uEXeRnzNPA2vTlenq8XNNq3TFOiWSGfFVzTBAP7x1GA76U5+wqUvFd1TOg=
+	t=1705662713; cv=none; b=htoyHdZYKYrEkqkMcvg1oiR5wDpULWuUf9TyfLAo9iz8n3JhAT0CxIVCgkj4Bgo7peehCSgPYRCqP9l4tW6HEQDovJauS/LsiBcECT94M6XoJlCpWQVeBDYY+bEGwoogzObj6azQiOUnjjLI/mlKRUyqm9IuuwgTvx5CWQiD+mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705662710; c=relaxed/simple;
-	bh=OGQtZLKrPxDoakHtxJ2AlI+ihVOAm30q1lZ5mJXixds=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gPRuNj4xliCF3TWXtIh5jaIo7ZnuHuiz7wUGVe/beHAxdoF++zG6JHOcDJ95Lf6O0b+1ucCQ0pwANddbifSRt49+WanqtKnyAWtTLk2bKi2YNOXRWRRvwPmnKqjLgMWJ/DPfXMFz0uOi204o4nDOBY09wAIkX/4h2nzG6H5G39k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C0BSiKTF; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1705662713; c=relaxed/simple;
+	bh=Q1QOlBpvgW2lI3s9WzUF/2MwY4ank0KkttexA0jdNsg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C/tO5NhwwNWrNajmLsATtZgE/apdmGVuVYETbv4lVzsgoTUtMC9Nnh9FpYuTVWWkNMm8hoO/bUrJEDq3m2zoLYIYjXSQHlR2+Uaze20lglR37OrASw42Mn+CSD5Jl9WRlOBaYzbgo+jwQ1y+I+3MBF0Rs6gEQM7r4b76KzLAvsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p+mWiE6Q; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C0BSiKTF"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3366e78d872so503345f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 03:11:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p+mWiE6Q"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-337d58942c9so644886f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 03:11:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705662706; x=1706267506; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gde/CEZexSF+MgWdYhtnhm3Pk0rf6HJ1JZWUNmdN21Q=;
-        b=C0BSiKTFXb1hujP8Z8m3Q9r7oUJYd4RtKU3rxnv1Fa2+0yR8HtMcyOTYk4VoJULia+
-         WUfqqosU6BvHEughcdD3p7EaiwdglVwMxP/pxH4r31yuTWaUbZvvUWhSf2+SsE35h02m
-         IilTp0n//2hyrQVzUd7Kh4BGjZWQJInUE9xcNGHpF+v55XOT/9Qb2km8w3E9mpLxf6h0
-         h5NvI7PpZ0v7gRDAEDku/co6tzAZZjFuyFoKSC5O9mw3YtvxyDckwNAGruJA163G9hll
-         lPmz+I/7HmKoeqTu3fQhHALLAQZeQEDsRwuw7FfprGCuvnTOwm0GT724FrmQNOeTFijv
-         cjiw==
+        d=linaro.org; s=google; t=1705662709; x=1706267509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZrfLoymuWUhsr76oTazWVDUYhWCX3sd9OJ85HADWWNI=;
+        b=p+mWiE6Q2Ezb8fir6WhV3WFBpmpDTALVEks1BGz8jqx+Myqu4KD0Eb3HQbddpUc9X6
+         l6LkuAv4r1TjMO2tP1xJmTL5gqPSY4LeKRCkAiXpGUUjeeDD4GsWvl5ah97/zHzd+H5q
+         pStGCTJ0YihkYmHbch56ik1XyFe09VPASKPTUkIotQk6n0oPryhRlLAUdPmYdarijjoK
+         aHQ4mh2u3QXIj/RfawvqR4MgmemzOhE234eWgyGaqgExabU1gh/AH8LGLcJan/Ray/5L
+         eDoH4w8LqXCYA2eG9+KWuAOIxIYd84nKqCraiyqkU7jC6tJZYc8z/JehagnVFUe4qvUx
+         td2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705662706; x=1706267506;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Gde/CEZexSF+MgWdYhtnhm3Pk0rf6HJ1JZWUNmdN21Q=;
-        b=AWSoqoag8eStkf3++Ue1Fojzvsx4NluIaU2EMo0dUFmySbRTek/yUjcYEZR6+mTYNL
-         ti3BdGyCKRmS7jkty3V8o3uAQLT1gD7dTyvsrj0Ok3+PCUZLrDNeyfxZDQIFUSGAQa/J
-         T6y1AMbnwE0ZuLaz5+8AyHZ3Mps0ZM76kgqz4F5VaXZ1zbpTf5jRn/tQzOIos8eTZ6Gw
-         TpqQgKYE78DriO3HgnVe6bvh0bjC15WRJ5QGjsmSiALvvKM+cNFq6cyyN8Z1RQdKD0oA
-         /iyw6BJdPvJ8BMI5f36wWSIdVnbv48Eywpu2Bf6dGn1XaICqgmqUDUI7QzKLaDHBTB1I
-         ZaIQ==
-X-Gm-Message-State: AOJu0YyDKqUzWHGSYkMVikYKlNxO86GcQJ1Y+c1rXMM864FuSIdun3vV
-	78AU0A8wwxeFJoFyCvpCKVhcIFbYeC4DTJOTfG7Sl2BYC2kGYd57qveR8j2FgJo=
-X-Google-Smtp-Source: AGHT+IGtifd9K3NZvVC90VJrmNNTi5MUmQ5FbQ71/eCU55PSRhdJPA5+wlVQwRHcx3gTkzT850iqRQ==
-X-Received: by 2002:a5d:5183:0:b0:337:bf81:e06c with SMTP id k3-20020a5d5183000000b00337bf81e06cmr639071wrv.79.1705662706307;
-        Fri, 19 Jan 2024 03:11:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705662709; x=1706267509;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZrfLoymuWUhsr76oTazWVDUYhWCX3sd9OJ85HADWWNI=;
+        b=AL8xdOllOBEB0WnyZk1ouxFZq6YyJQjE1liweJXNwLcjEg0AxpsmOmcDDoQUEpCDYp
+         Q8/YmIB0pPW2BKMrMNHxtU0Ld3N01DMAymta7Dp8BcRwEEvoOoEjw4FC2r/guMeXAn9b
+         52gF3LE/XqFzJHXHDBhxiY5tSEbI8wFp+FSPiTLg9zk5xBoT/QT4lcb0kkjoZCcsncqP
+         H/aYHgoYxbZn3V4j6xyQlAMenS7O2lg6RYcyeycm00YFcXGFOixCE2E8Gvxf24wR5Gze
+         92fyon6SbjAnzI1G3XFFa/D0M1kLfNL3aM71EGZgjuMmPoZxqfjIDtH6MS598OOHEv/C
+         9yLw==
+X-Gm-Message-State: AOJu0YxJO63v/4TPwFpRWgACcPsabihGr26uXEVeI7PhOPRilZN5nfUf
+	qJwbWTU7oKo1hZSN3pZ+XFRxMFGflh7IouO+5hP0mD0f69UIVbU0H+EoJbagkRU=
+X-Google-Smtp-Source: AGHT+IF8b3Ntvez/7FhtUFVXpwKWJ5oukJOvrp5B/i9t3tP0V/2tMqFw13SH7EBSfEwPVE+l+w369Q==
+X-Received: by 2002:adf:e303:0:b0:337:c0b9:f6f5 with SMTP id b3-20020adfe303000000b00337c0b9f6f5mr1301770wrj.102.1705662709072;
+        Fri, 19 Jan 2024 03:11:49 -0800 (PST)
 Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id o10-20020a5d62ca000000b00337d4ce6ab4sm3341868wrv.20.2024.01.19.03.11.45
+        by smtp.gmail.com with ESMTPSA id o10-20020a5d62ca000000b00337d4ce6ab4sm3341868wrv.20.2024.01.19.03.11.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jan 2024 03:11:45 -0800 (PST)
+        Fri, 19 Jan 2024 03:11:48 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: peter.griffin@linaro.org,
 	mturquette@baylibre.com,
@@ -71,11 +73,15 @@ Cc: andi.shyti@kernel.org,
 	semen.protsenko@linaro.org,
 	willmcvicker@google.com,
 	kernel-team@android.com,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v4 0/8] GS101 Oriole: CMU_PERIC0 support and USI updates
-Date: Fri, 19 Jan 2024 11:11:24 +0000
-Message-ID: <20240119111132.1290455-1-tudor.ambarus@linaro.org>
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Wolfram Sang <wsa@kernel.org>,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 2/8] dt-bindings: i2c: exynos5: add google,gs101-hsi2c compatible
+Date: Fri, 19 Jan 2024 11:11:26 +0000
+Message-ID: <20240119111132.1290455-3-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+In-Reply-To: <20240119111132.1290455-1-tudor.ambarus@linaro.org>
+References: <20240119111132.1290455-1-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,77 +90,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v4 drops the serial patches as they should be queued through the tty
-tree. It also fixes the CMU PERIC0 DIV widths -> from 3 to 4. Saw the
-bug while enabling SPI.
+Add google,gs101-hsi2c dedicated compatible for representing
+I2C of Google GS101 SoC.
 
-This patch set shall be queued after the cmu_misc clock name fixes from:
-https://lore.kernel.org/linux-arm-kernel/20240109114908.3623645-1-tudor.ambarus@linaro.org/
+Acked-by: Wolfram Sang <wsa@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c-exynos5.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Users that want to test the series must merge the serial patches to
-infer the 32-bit register accesses from the compatible, otherwise
-they'll see a Serror Interrupt as in this patch set we remove the
-reg-io-width = <4> property. The serial set can be found at:
-https://lore.kernel.org/linux-arm-kernel/20240119104526.1221243-1-tudor.ambarus@linaro.org/T/#t
-
-Add support for PERIC0 clocks. Use them for USI in serial and I2C
-configurations. Tested the serial at different baudrates (115200,
-1M, 3M) and the I2C with an at24 eeprom, all went fine.
-
-Cheers,
-ta
-
-Changes in v4:
-- drop all serial patches as they should be taken via Greg's tty tree
-- fix CMU PERIC0 DIV widths -> from 3 to 4. Discovered the bug while
-  testing SPI
-- collect Sam's R-b tags
-
-Changes in v3:
-- rename cmu_peric0 clocks to just "bus" and "ip" and then comply with
-  the change in device tree and clock driver
-- reposition ``iotype`` of ``struct s3c24xx_uart_info`` to reduce the
-  memory footprint of the struct. A patch set reworking the members of
-  the struct will follow.
-- fix the usi8 clocks order in the device tree
-- collect Peter's R-b tags
-- changes log in each patch set as well, in the comments section under
-  ```---```
-
-Changes in v2:
-- gs101 serial - infer the reg-io-width from the compatible as the entire
-  PERIC block allows just 32-bit register accesses.
-- identify the critical clocks faaaaaaarom PERIC0 and mark them accordingly
-  (if disabled theslocks hang the system even if their parents are
-   still enabled).
-- update dtsi and use USI's gate clocks instead of the dividers clocks
-- move hsi2c_8 cells and pinctrls into dtsi
-- address Sam's cosmetic changes in the device tree files
-- drop defconfig patches (savedefconfig output & at24 eeprom enablement)
-- collect Acked-by and Reviewed-by tags
-- changes log in each patch as well, in the comments section under
-  ```---```
-
-
-Tudor Ambarus (8):
-  dt-bindings: clock: google,gs101-clock: add PERIC0 clock management
-    unit
-  dt-bindings: i2c: exynos5: add google,gs101-hsi2c compatible
-  clk: samsung: gs101: add support for cmu_peric0
-  arm64: dts: exynos: gs101: remove reg-io-width from serial
-  arm64: dts: exynos: gs101: enable cmu-peric0 clock controller
-  arm64: dts: exynos: gs101: update USI UART to use peric0 clocks
-  arm64: dts: exynos: gs101: define USI8 with I2C configuration
-  arm64: dts: exynos: gs101: enable eeprom on gs101-oriole
-
- .../bindings/clock/google,gs101-clock.yaml    |  25 +-
- .../devicetree/bindings/i2c/i2c-exynos5.yaml  |   1 +
- .../boot/dts/exynos/google/gs101-oriole.dts   |  14 +
- arch/arm64/boot/dts/exynos/google/gs101.dtsi  |  54 +-
- drivers/clk/samsung/clk-gs101.c               | 583 ++++++++++++++++++
- include/dt-bindings/clock/google,gs101.h      |  81 +++
- 6 files changed, 745 insertions(+), 13 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-exynos5.yaml b/Documentation/devicetree/bindings/i2c/i2c-exynos5.yaml
+index df9c57bca2a8..cc8bba5537b9 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-exynos5.yaml
++++ b/Documentation/devicetree/bindings/i2c/i2c-exynos5.yaml
+@@ -33,6 +33,7 @@ properties:
+           - const: samsung,exynos7-hsi2c
+       - items:
+           - enum:
++              - google,gs101-hsi2c
+               - samsung,exynos850-hsi2c
+           - const: samsung,exynosautov9-hsi2c
+       - const: samsung,exynos5-hsi2c    # Exynos5250 and Exynos5420
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
