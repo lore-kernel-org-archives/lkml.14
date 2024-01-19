@@ -1,131 +1,105 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F25851C52
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.21
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78AF851C52
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705995270; cv=none; b=G+H+YqsLcoh565XhjCMn/XyLvlm9D+LZmA96LCuLWzwNEhbAOAxd+yOX6RPGbyedz47Cm9AUx+DCpDc9Cq5rbBnyA3RZtR08HtLbt8KH9L2nmBVQ1xYqsg2qwHbuYZcJ8BzqSQQCkQwgTxRONox2qkfIjShAMTSJI9Mq6S5EZ0o=
+	t=1705995280; cv=none; b=F+fwZ3qjcEk6t3Lp/GboHEttgPnSvxLiiJKejiHjHNx8j/lXcQQofTsU0Bw29HywKl1FdDaAD8QJaYrGlgMg7qlwZ2CHMOUUjsdQnJhVH3WN/E29f0qSukbsZiAHWR67z4sksA5vmFgHoOs8LGRNwYDUZ7IxpJIF93Q4WHOcXLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705995270; c=relaxed/simple;
-	bh=FvWzwHTDVEyet3HZiGtusiSZVWNkuF9rpU6YASueXuo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=EXGsBhrFqLQzMOChgfr18ICnmLe/mtYip6vVbaUu80JJtG3/VdxSurNLadpnIaPxKdKrgDeXjcFDquWI7TxhoJk1w7cNxcLshdMb2mk83PjlyQ3+XT+et+PHvwnmj8Z8Ll8NnbVYHFIdP91wlfSPkhW4D302bZARDaAthjliTzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=d/t1jmYw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jVAGtaaU; arc=none smtp.client-ip=64.147.123.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="d/t1jmYw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jVAGtaaU"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 978493200AF5;
-	Tue, 23 Jan 2024 02:34:26 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 23 Jan 2024 02:34:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1705995266; x=1706081666; bh=TWAFZjSQ6D
-	f63rcQm0mLoFKrDX1HkRJ7iYKKyR4vOb0=; b=d/t1jmYwEbp6g7avHbkITWc3wd
-	1goEo1tNaVMIJpAt67kobRXr/1wuYI6dbIzguIHLYHSkl71WlDeqVXHg/SGzGqoU
-	xiKpi4Z6z1wYeni5QoXvWUlE3ONFBWERNSJRY65pWz/Sj8IMsXtNx7YHQXslnrhi
-	G5rHwvVlR3MJ623wVrNDpTMWSoMx7iwOvGUF4NGcfd6xD89yMlFBoG+qRCFNha9k
-	LiTaUqwAKwcR8GFmEnAiFeBG7rkajJ+8cBMZRoxAwiikgP1qfUfhKOgrXGbiTL24
-	8ECPdr+rcQMUKQto37fQfPBV0ZlaXa2VPzdeXLSE5YXIyGU29/cLur2A8+bw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1705995266; x=1706081666; bh=TWAFZjSQ6Df63rcQm0mLoFKrDX1H
-	kRJ7iYKKyR4vOb0=; b=jVAGtaaU4oNW9+LiowsUYxrJDZd8xQ4fdYXQoDt0o0Pr
-	rYZc0o1bQflxH91jWzhUWSH8UoE7ki954hKoLa/qGfY1CTkxUC5bpuLZq0JcXgtT
-	g8L4qRyvhik6krVKU0NM2OsklUfT97H0Y0LvhHHMnXA0zC/QYfTiDP7eHRzKu7FC
-	56HbUvK8IDCPWWODIIvrSrFojJklplHxDBG8HIv7fRYVLL9eGzSe8LcWs4tqcLEp
-	QBMe83/fzlBJpHNUlnsaQ2p56o+fO2bp+85+WB5lhiM8Alm+TnklV82Ay11qL9Z+
-	KFR6au3fa/329RulocRIn5fm3R2ZQR46FDW/vLCriA==
-X-ME-Sender: <xms:AWyvZXEzKdynUjnxVDjbwLDx7QbYSxuTclNydqMznDzEC7hCBlFq5w>
-    <xme:AWyvZUWJ5HNXmuTQ58NsThBKGs41v4eQf-7H4SdMj6m4NBMgUVLdYcDiJ-fwg6ddq
-    qoG4Ofl6X-d8071o1U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekjedguddtiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeekudfggedvgfegffeffedvffelgfeludfhueefjeeiveektdevfeehjeff
-    keehveenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdr
-    uggv
-X-ME-Proxy: <xmx:AWyvZZLIngQF7PL50_kSnfKfZSVdZctg6rHBgUEoBxjpmpfXbyu-NQ>
-    <xmx:AWyvZVH-SWe21EYEGA09JyIq4REqB3QFDQYgyU4MsFycwrtuy-iz0w>
-    <xmx:AWyvZdXS7WG1yXXS5uebGyBElLsB300WmYC9_dGmoO2BBkvKkXos4g>
-    <xmx:AmyvZcHuxjtWK1rR5murBek_j9Wy1PMPe2kZgqhvmLAszEGAgy_tog>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 107D6B6008D; Tue, 23 Jan 2024 02:34:25 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
+	s=arc-20240116; t=1705995280; c=relaxed/simple;
+	bh=1kP/gzgmwnK29sBXxqvZB+h7KVeZ3iSmyB/mZ/UrIWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TG7ZlFkMf2hpd9kIyZfs0zWAvZG/fO13027pSaDHA5AjdvBh9eMbaPg5wFwX1MslOmhpNOKS6MUHnZlC2j5203QUi696WGBwBc+ndxMNgi3hJCX4R/5oaWnx6BFS0YPdXRSNHbVvJa3UNFYCUj9pi9NiPByyt+irRXYMDi5HD68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8DxWPDl3allVekBAA--.9190S3;
+	Fri, 19 Jan 2024 10:26:45 +0800 (CST)
+Received: from Board-3A3000 (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxlczh3all+OkJAA--.1584S2;
+	Fri, 19 Jan 2024 10:26:43 +0800 (CST)
+Date: Fri, 19 Jan 2024 10:26:41 +0800
+From: Huang Pei <huangpei@loongson.cn>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Yajun Deng <yajun.deng@linux.dev>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] memblock: fix crash when reserved memory is not added to
+ memory
+Message-ID: <20240119022641.xyw4n4dj2iw2deas@Board-3A3000>
+References: <20240118061853.2652295-1-yajun.deng@linux.dev>
+ <ZajIQGtqUNWgBWkk@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <3da403ff-365d-4cea-86f0-4009d1da6baa@app.fastmail.com>
-In-Reply-To: <efebd848-c952-41f8-9422-fe2235d92259@app.fastmail.com>
-References: <20240117104448.6852-1-arnd@kernel.org>
- <efebd848-c952-41f8-9422-fe2235d92259@app.fastmail.com>
-Date: Tue, 23 Jan 2024 08:34:04 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Janne Grunau" <j@jannau.net>, "Arnd Bergmann" <arnd@kernel.org>,
- "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
- =?UTF-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
-Cc: asahi@lists.linux.dev, "Hector Martin" <marcan@marcan.st>,
- "Sven Peter" <sven@svenpeter.dev>, "Asahi Lina" <lina@asahilina.net>,
- dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm: apple: mark local functions static
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZajIQGtqUNWgBWkk@kernel.org>
+X-CM-TRANSID:AQAAf8Bxlczh3all+OkJAA--.1584S2
+X-CM-SenderInfo: xkxd0whshlqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tF13Aw4UCrW8Zw17Kw1UXFc_yoW8GFWrpF
+	W8G3WF9FZ8WFykuF4DJw1Ygrn3Z3Wxtay29rWYy34kZF9xWr9xWF4rW3yq9F98tw4xWr1S
+	vF4vva43X34UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
+	cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
+	80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIF
+	yTuYvjxU2MKZDUUUU
+X-Gw-Check: 94f2b8af54bc04a2
 
-On Mon, Jan 22, 2024, at 21:50, Janne Grunau wrote:
-> On Wed, Jan 17, 2024, at 11:44, Arnd Bergmann wrote:
->> 
->> -int parse_sample_rate_bit(struct dcp_parse_ctx *handle, unsigned int 
->> *ratebit)
->> +static int parse_sample_rate_bit(struct dcp_parse_ctx *handle, 
->> unsigned int *ratebit)
->>  {
->>  	s64 rate;
->>  	int ret = parse_int(handle, &rate);
->> @@ -715,7 +715,7 @@ int parse_sample_rate_bit(struct dcp_parse_ctx 
->> *handle, unsigned int *ratebit)
->>  	return 0;
->>  }
->> 
->> -int parse_sample_fmtbit(struct dcp_parse_ctx *handle, u64 *fmtbit)
->> +static int parse_sample_fmtbit(struct dcp_parse_ctx *handle, u64 *fmtbit)
->>  {
->>  	s64 sample_size;
->>  	int ret = parse_int(handle, &sample_size);
->
-> thanks, patch included in my dev branch and will be in the next pull 
-> request I'll send to Hector.
->
-> I suppose the recipients are generated by an automated 
-> get_maintainers.pl invocation. Is that desired for out of tree drivers?
+On Thu, Jan 18, 2024 at 08:42:08AM +0200, Mike Rapoport wrote:
+> (adding Huang Pei to verify this fixes the crash on loongarch)
+> 
+It fixed 61167ad5fecd on MIPS/loongson64, tested on 3b1500 with only
+this one;
 
-I was wondering about that as well, as I don't usually send
-patches for code that isn't at least in linux-next yet.
+My loongarch64 machine is not available now, I can not test it, sorry.
+It is already applied a arch-specific workaround in v6.5+
 
-I ended up using what is in the MAINTAINERS file for this driver
-in the branch as that is is all I have at this point:
+> On Thu, Jan 18, 2024 at 02:18:53PM +0800, Yajun Deng wrote:
+> > After commit 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()"),
+> > we set nid on all reserved pages based on memory region, but some reserved
+> > memory may not be added to memory on certain architectures. The nid is
+> > invalid.
+> > 
+> > Add the nid check, make sure the nid is valid by early_pfn_to_nid().
+> > 
+> > Fixes: 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
+> > Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+> > ---
+> >  mm/memblock.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/mm/memblock.c b/mm/memblock.c
+> > index abd92869874d..4dcb2ee35eca 100644
+> > --- a/mm/memblock.c
+> > +++ b/mm/memblock.c
+> > @@ -2176,6 +2176,9 @@ static void __init memmap_init_reserved_pages(void)
+> >  			start = region->base;
+> >  			end = start + region->size;
+> >  
+> > +			if (nid == NUMA_NO_NODE || nid >= MAX_NUMNODES)
+> > +				nid = early_pfn_to_nid(PFN_DOWN(start));
+> > +
+> >  			reserve_bootmem_region(start, end, nid);
+> >  		}
+> >  	}
+> > -- 
+> > 2.25.1
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
 
-APPLE DRM DISPLAY DRIVER
-M:      Alyssa Rosenzweig <alyssa@rosenzweig.io>
-L:      dri-devel@lists.freedesktop.org
-S:      Maintained
-T:      git git://anongit.freedesktop.org/drm/drm-misc
-F:      drivers/gpu/drm/apple/
-
-I left out the drivers/gpu/ maintainer addresses though. 
-
-     Arnd
