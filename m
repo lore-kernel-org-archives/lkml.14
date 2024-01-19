@@ -1,53 +1,159 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9237E3C463;
-	Fri, 19 Jan 2024 09:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B36263A5
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 09:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705657391; cv=none; b=V3YSCGI+SuNqls4uX2zJ6PA6JcBj3IfEHVMyU/syx8jzR+QgEL9xSi8AVHypwX9BfLsYZXLpQa6swBs76YIsfJQd0A8tINPwvrw6CHhb5Y/5F4ybPSCIgJtrAu3SaVfb55aOvuK+LtkYMVKj1tvCTxIRAfikxK5X79LZatlib24=
+	t=1705657411; cv=none; b=MWB4DC9h8ia1zIvDavzY8+/st0f0VLXW0egyQYVoJwTjuJLD21qUTvicgEApcDlxKbLAZ666MofRbUBIVSWL3LDEDAzaXwhAp+h/KMR8Cl9CvGUMac7yQRjYTIyLCDBUzuWSR7z30LpZXy05WmpMu+v082yyI1RzuvrlD8/G7ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705657391; c=relaxed/simple;
-	bh=YAIzMiJuCKphBety3PsrZGEniRd5/SSgfqJPPSFwiyE=;
-	h=Date:From:To:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Xq7e3/if8FNJ1GXWSoSJ2ky/EEffhMC47PeOAcDDKMsKc8PDqWfsWrvTTZ6N7QVi45bz5uQ0Lx8QCiErmLfAJm3GzVeckTcVRcs+DYXA1c11EBvu3GLa61+JrL5ieEfP5/WkhpTZTYno+MSy1t4nm3KSeMJklWQ3sK+0vrZY2yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from linma$zju.edu.cn ( [42.120.103.58] ) by
- ajax-webmail-mail-app2 (Coremail) ; Fri, 19 Jan 2024 17:42:54 +0800
- (GMT+08:00)
-Date: Fri, 19 Jan 2024 17:42:54 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Lin Ma" <linma@zju.edu.cn>
-To: djohannes@sipsolutions.net, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v1] nl80211/cfg80211: add nla_policy for S1G
- band
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT5 build
- 20231205(37e20f0e) Copyright (c) 2002-2024 www.mailtech.cn
- mispb-4df6dc2c-e274-4d1c-b502-72c5c3dfa9ce-zj.edu.cn
-In-Reply-To: <20240119093724.7852-1-linma@zju.edu.cn>
-References: <20240119093724.7852-1-linma@zju.edu.cn>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1705657411; c=relaxed/simple;
+	bh=MyrGdixOQh5+O6FNsPkwb0T9MuBcR2dqrxMCHIVf4FI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B5ENXTRepucavSnIfKOymfpRZrkMpR0K7RgxTzzxUaOyWUp2zbuCm9Mu1c03yJCfh275TNOsurUizmPfC36GOPsOgteZgHUpYZmRswV0qJLn4roa2CidHegM+YIKjwS9bYCf8Dt6MGQSLKfl3vWIHER2foOgGqhCardTyxgNde4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XhvwkYrR; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XhvwkYrR"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a28bd9ca247so50514066b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 01:43:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705657407; x=1706262207; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O9OhX22hl+mcohFKfAH6L7j9MpKXYgZSlRgX13omB5c=;
+        b=XhvwkYrRv1rIfa9euloU5OA307mjMNKX+OYz+tANigklrWQg0K8ozkOsBOTdWf07GW
+         xy+yfs1u8yqWo7/K5wQC+XZUJmPfne3nqeEHD89rkeNDet50AlxPjBfHMrcjNIb0EPKI
+         ONAq1YRJXNEHvc5jGS4y2OY1F5J5XYpr9KJbthbp0p5blCayAvgwtYsEhe7BN4E/lnG9
+         ZEYVk6aXEWAq+hHt6UxsAuh03/fYCwAKinkbicZNkJuvd+XD9dM0reN7GrrB96b5NTzj
+         v+VmjkZwf4d29/qJ++U5jeypbqyOqNAex5O5sLB54sSdhCnitKq98CEjIjs4A//NitUu
+         RCmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705657407; x=1706262207;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O9OhX22hl+mcohFKfAH6L7j9MpKXYgZSlRgX13omB5c=;
+        b=hraH9KStmWdwzsUdK2ufRrwxHuq5KgnuDDuhsO4ChbLCl9VXCEcwGU7n6uwApJRkUT
+         yRIVowt1qf56zmI70HclL4EYGNLhWnWc0qQPCb3jcTBzXxBK5KcMIW3iOA+91JfT4Y6o
+         yhX3hctWw+32kamP1ZfMoPmALTIcBLIIcqLEj9UHWw8BsNVkFBEhEScb4VYWa96Rdfl6
+         rickBn0/nWtEWzp/1DN9bBQXKN12IVqlTX2NR8b3ehonxj+xYzJy1PlTSCcBhwfn1ABB
+         cxxA9Wjdf3qKXNUcvwQuEE13SrhZBLmydfX+izqZKESpwT0Ln+Y6l4gpa+OimLsCApji
+         jfCw==
+X-Gm-Message-State: AOJu0YyXztvKtJBYPfObJSWVkHVcNNChh4BnlPoTeMFj7BRY86Fxfokr
+	XR3qvehUEoW/p7LcJaGX1KBl4G2j/7idOImvXxqvRpIk1L7RI7mtiaO2yNIhT1c=
+X-Google-Smtp-Source: AGHT+IG2R86stteJmE6OKBrwM4yRlJjCaIoxlvGGlyTrsOLeAz965gWmbFA8ZpAMLP0yP+DiJ7Tinw==
+X-Received: by 2002:a17:907:9871:b0:a27:a258:f340 with SMTP id ko17-20020a170907987100b00a27a258f340mr1241557ejc.65.1705657407623;
+        Fri, 19 Jan 2024 01:43:27 -0800 (PST)
+Received: from [192.168.2.107] ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id wb3-20020a170907d50300b00a2cc6398083sm9055432ejc.10.2024.01.19.01.43.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jan 2024 01:43:27 -0800 (PST)
+Message-ID: <842d36c7-9452-431f-95c4-ff114484d201@linaro.org>
+Date: Fri, 19 Jan 2024 09:43:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <6acb79fc.79d3.18d211a170c.Coremail.linma@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:by_KCgBnja0fRKpldnZhAA--.9518W
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwMEEmWoIc4RlgAJs6
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWUJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 17/18] tty: serial: samsung: shrink port feature flags to
+ u8
+Content-Language: en-US
+To: Jiri Slaby <jirislaby@kernel.org>,
+ Sam Protsenko <semen.protsenko@linaro.org>
+Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+ gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, andre.draszik@linaro.org,
+ peter.griffin@linaro.org, kernel-team@android.com, willmcvicker@google.com
+References: <20240110102102.61587-1-tudor.ambarus@linaro.org>
+ <20240110102102.61587-18-tudor.ambarus@linaro.org>
+ <CAPLW+4k091328krLB_KdHyobG-pR--Rt5WaN6c1ccpgdV8ry7Q@mail.gmail.com>
+ <76e1dc42-cabe-4925-8aa1-c8f733fb36a2@linaro.org>
+ <8f3f85d0-866e-4e5a-8177-05c26c08b278@kernel.org>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <8f3f85d0-866e-4e5a-8177-05c26c08b278@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-SGVsbG8gdGhlcmUsCgo+IE91ciBkZXRlY3RvciBoYXMgaWRlbnRpZmllZCBhbm90aGVyIGNhc2Ug
-b2YgYW4gaW5jb21wbGV0ZSBwb2xpY3kuCj4gLi4uCgpJIG1hcmsgdGhlIG5ldC1uZXh0IHRhZyBm
-b3IgdGhpcyBvbmUgYW5kIGEgcHJldmlvdXMgc2VudCBvbmUgaW4gdGhpcwptb3JuaW5nIChbUEFU
-Q0ggbmV0LW5leHQgdjFdIG5laWdoYm91cjogY29tcGxlbWVudCBubF9udGJsX3Bhcm1fcG9saWN5
-KS4KClBsZWFzZSBsZXQgbWUga25vdyBpZiBzdWNoIG5sYV9wb2xpY3kgY29tcGxlbWVudGluZyBz
-aG91bGQgZ28gbmV0IGluc3RlYWQuCgpUaGFua3MhCgpSZWdhcmRzCkxpbg==
+
+
+On 1/19/24 09:07, Jiri Slaby wrote:
+
+Hi, Jiri!
+
+> On 19. 01. 24, 9:56, Tudor Ambarus wrote:
+>>
+>>
+>> On 1/16/24 19:03, Sam Protsenko wrote:
+>>> On Wed, Jan 10, 2024 at 4:25 AM Tudor Ambarus
+>>> <tudor.ambarus@linaro.org> wrote:
+>>>>
+>>>> There's a single flag defined as of now. Shrink the feature flags to u8
+>>>> and aim for a better memory footprint for ``struct s3c24xx_uart_info``.
+>>>>
+>>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>>>> ---
+>>>>   drivers/tty/serial/samsung_tty.c | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/tty/serial/samsung_tty.c
+>>>> b/drivers/tty/serial/samsung_tty.c
+>>>> index 5df2bcebf9fb..598d9fe7a492 100644
+>>>> --- a/drivers/tty/serial/samsung_tty.c
+>>>> +++ b/drivers/tty/serial/samsung_tty.c
+>>>> @@ -90,7 +90,7 @@ struct s3c24xx_uart_info {
+>>>>
+>>>>          /* uart port features */
+>>>>
+>>>> -       unsigned int            has_divslot:1;
+>>>> +       u8                      has_divslot:1;
+>>>
+>>> But that's already a bit field. Why does it matter which type it is?
+>>>
+>>
+>> If using unsigned int the bitfied is combined with the previous u8
+>> fields, whereas if using u8 the bitfield will be independently defined.
+>> So no benefit in terms of memory footprint, it's just a cosmetic change
+>> to align the bitfield with the previous u8 fields. Allowing u32 for just
+>> a bit can be misleading as one would ask itself where are the other
+>> bits. Between a u32 bitfield and a bool a u8 bitfield seems like a good
+>> compromise.
+> 
+> Why? What's wrong with bool? bitfields have terrible semantics wrt
+> atomic writes for example.
+> 
+
+Bool occupies a byte and if more port features will ever be added we'll
+occupy more bytes. Here's how the structure will look like with a bool:
+
+struct s3c24xx_uart_info {
+	const char  *              name;                 /*     0     8 */
+	enum s3c24xx_port_type     type;                 /*     8     4 */
+	unsigned int               port_type;            /*    12     4 */
+	unsigned int               fifosize;             /*    16     4 */
+	u32                        rx_fifomask;          /*    20     4 */
+	u32                        rx_fifoshift;         /*    24     4 */
+	u32                        rx_fifofull;          /*    28     4 */
+	u32                        tx_fifomask;          /*    32     4 */
+	u32                        tx_fifoshift;         /*    36     4 */
+	u32                        tx_fifofull;          /*    40     4 */
+	u32                        clksel_mask;          /*    44     4 */
+	u32                        clksel_shift;         /*    48     4 */
+	u32                        ucon_mask;            /*    52     4 */
+	u8                         def_clk_sel;          /*    56     1 */
+	u8                         num_clks;             /*    57     1 */
+	u8                         iotype;               /*    58     1 */
+	bool                       has_divslot;          /*    59     1 */
+
+	/* size: 64, cachelines: 1, members: 17 */
+	/* padding: 4 */
+};
+
+What's your preference?
+Thanks,
+ta
