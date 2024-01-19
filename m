@@ -1,122 +1,99 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF55BA2E
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 06:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FD61392
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 06:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705645468; cv=none; b=VC5Gk1aEF2aICHV9/sLTDalGyZpTo7ENnRKU8dRIL5BR8YVvDzRdjGfX028qGebYePC8FWhsD6v49Py5xpgDx9je+SphMyGehf8d8e2tOSivTEUL90/Xq4DnFxbIjzO0XnHv8TOCzcpzW0rnU5DHgd/Qazib3De8tPkg3jtWuts=
+	t=1705645542; cv=none; b=g/wM4Q2o8qbBq5VDxrpMUVC9U+1iltAolRfJZ11xQgjT1VQsAf0Ra1lbN2MPzpg9niBoMYKHyGw6CXOdRoAbyPC8fS0gOQRkgWefxRdFfZjBsOCOL0dFxLb0mV3Si1UoAvxjBK16pv1ocOnZkuRE20Si6dPazRvA6afo8v4J63g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705645468; c=relaxed/simple;
-	bh=NjXRZzRQRfi2WqiVfEKjjPOfMA6nHiBOBvPolNtw6Gw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yc6mnBvvNAKMisJienXnXLup4/0EPCb1uEEpAXt871iTp/QWMmfExqgbxW0q1WLExyw+z48OW5YRKL85ghrvLdF30BbfTMOQfOYGD+B5ypL46Y1rJKQ8lQpHUmxGctXT8PwkaBXkLXXg6JxPKxkyFtzsuDZt9LAAPhIK1+8+xJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Fg1AUJnO; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Fg1AUJnO"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d71c844811so2085055ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 22:24:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1705645467; x=1706250267; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ezGigqCkcdld0LRuOuJDBfz/9AsfE2OTVy2IitNYYM8=;
-        b=Fg1AUJnO5U6UK5VGg2rzQAfxTV62ERztv2aNZFsHt+uw/SSAW7w/shhbD14OMig8yC
-         RKelynFjupAa1O4ZzgSEdIaJO3gBnTwSxZbNHtULVEu2VQ+WhXr9r1hwSs15MgRcIFQW
-         4WmMpLbltrMZ1tqO/vU8PKv7FTE5AgiM3KE8NLIQgkGoNJu8KTWrC+NGAguQqV5yaN2d
-         pRBxWeIgJCe7O1tvxogjup1AsbOIAKZO9dk1x8/UrhaulZlhcbR/GPgkmo0wfrTfZEeG
-         0q8NOwIQKmXeKxV3Jb0ZYyRvQSNqFRTXYAlNrqpX4NTJJ0ukP+lew4ukLdx78CJF/KrD
-         hqZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705645467; x=1706250267;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ezGigqCkcdld0LRuOuJDBfz/9AsfE2OTVy2IitNYYM8=;
-        b=V3wltNpUQSrPMtjNzTmyeASNWFw3pN1dGkXkuxgMOc2d3QIWxLzRggcUKVnqoC2M9Z
-         3wf7/eIcZHxD+EZPTZOJmPpVF4ex+GkMHlhfmT3Rge5Xp9CXhJZm/jkrGE8jv0NA4MOV
-         +0iqGTzSOCHkk+GMhr8KE7uj4wAX00ZNVdsQjXqA94O59JBbWv5Nzki0WmROO2nr8oN8
-         uYJRjqpEYTuok5lJN1MoEN99JEm4HEUycnx/8ko7YDg9wWlzmVUGisYMWUgWhdCuN2pp
-         rUZsK5bJOtsxwufdrxbzIxrla0rMEYFPbPv2yg6364oNRnZoPuSGuHXdT3XXstupdAa+
-         n21g==
-X-Gm-Message-State: AOJu0YyuCpndZ1Z8Cw/0S+QAvfrzLjXzWiH0X8cvvDusjEAa3joxZQE2
-	/ahR0kxo7e+UwfKgKhKp8VbW6ZTsYDIXdtCdCvM7thk3JMaqYzsmg9KEaFYl2eo=
-X-Google-Smtp-Source: AGHT+IHbs1UCb6N4UA5U9mggCoxh/GqergCZhsihImGoe010eTwzBJXzkJPka6nGusHM57gdVMc67w==
-X-Received: by 2002:a17:902:c3d1:b0:1d7:19ec:2e55 with SMTP id j17-20020a170902c3d100b001d719ec2e55mr951130plj.59.1705645466629;
-        Thu, 18 Jan 2024 22:24:26 -0800 (PST)
-Received: from [10.254.224.1] ([139.177.225.241])
-        by smtp.gmail.com with ESMTPSA id jf4-20020a170903268400b001d0d312bc2asm2301115plb.193.2024.01.18.22.24.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jan 2024 22:24:26 -0800 (PST)
-Message-ID: <fa586d2c-179c-4315-9e32-0832cf22e186@bytedance.com>
-Date: Fri, 19 Jan 2024 14:24:21 +0800
+	s=arc-20240116; t=1705645542; c=relaxed/simple;
+	bh=i8XZbJ81fBFIDUQE1pTnGiBnGeAvnlapZf4vuAhH/i0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X3f7Ho7MMao4QOgVh0ZVIKWlCx3+ljrLzjdVmjn8Rm47EpIWG2MavNhKATpkk1QaSQ5GzNHJqPlFa86Ru9Rp38rjVLYJX9qRPBe1Rvej2ujONB4QJVViw3NqI/epnhtU3uAGnonILz3xe/zyYXs0haTyj6WjzVjJtRElxXf9X6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TGTyl1RKwz1FJX2;
+	Fri, 19 Jan 2024 14:21:19 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2FA22140684;
+	Fri, 19 Jan 2024 14:25:35 +0800 (CST)
+Received: from huawei.com (10.67.189.167) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 19 Jan
+ 2024 14:25:01 +0800
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+To: <mpe@ellerman.id.au>, <npiggin@gmail.com>, <christophe.leroy@csgroup.eu>,
+	<aneesh.kumar@kernel.org>, <naveen.n.rao@linux.ibm.com>,
+	<xiaojiangfeng@huawei.com>
+CC: <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<nixiaoming@huawei.com>, <wangbing6@huawei.com>, <wangfangpeng1@huawei.com>,
+	<douzhaolei@huawei.com>
+Subject: [PATCH] powerpc/kasan: Fix addr error caused by page alignment
+Date: Fri, 19 Jan 2024 14:05:13 +0800
+Message-ID: <1705644313-10627-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm/zswap: split zswap rb-tree
-Content-Language: en-US
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org,
- Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
- Chris Li <chriscli@google.com>
-References: <20240117-b4-zswap-lock-optimize-v1-0-23f6effe5775@bytedance.com>
- <20240117-b4-zswap-lock-optimize-v1-2-23f6effe5775@bytedance.com>
- <CAKEwX=Op6XTawUZg-4pDM70z4kB4-5Wo6Ss+ptyzkd+Ub3PDEQ@mail.gmail.com>
-From: Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <CAKEwX=Op6XTawUZg-4pDM70z4kB4-5Wo6Ss+ptyzkd+Ub3PDEQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-On 2024/1/19 03:24, Nhat Pham wrote:
-> On Wed, Jan 17, 2024 at 1:23 AM Chengming Zhou
-> <zhouchengming@bytedance.com> wrote:
->>
->> Each swapfile has one rb-tree to search the mapping of swp_entry_t to
->> zswap_entry, that use a spinlock to protect, which can cause heavy lock
->> contention if multiple tasks zswap_store/load concurrently.
->>
->> Optimize the scalability problem by splitting the zswap rb-tree into
->> multiple rb-trees, each corresponds to SWAP_ADDRESS_SPACE_PAGES (64M),
->> just like we did in the swap cache address_space splitting.
->>
->> Although this method can't solve the spinlock contention completely, it
->> can mitigate much of that contention. Below is the results of kernel build
->> in tmpfs with zswap shrinker enabled:
->>
->>      linux-next  zswap-lock-optimize
->> real 1m9.181s    1m3.820s
->> user 17m44.036s  17m40.100s
->> sys  7m37.297s   4m54.622s
-> 
-> That's really impressive, especially the sys time reduction :) Well done.
-> 
+In kasan_init_region, when k_start is not page aligned,
+at the begin of for loop, k_cur = k_start & PAGE_MASK
+is less than k_start, and then va = block + k_cur - k_start
+is less than block, the addr va is invalid, because the
+memory address space from va to block is not alloced by
+memblock_alloc, which will not be reserved
+by memblock_reserve later, it will be used by other places.
 
-Thanks!
+As a result, memory overwriting occurs.
 
->>
->> So there are clearly improvements.
->>
->> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> 
-> Code looks solid too. I haven't read the xarray patch series too
-> closely yet, but this patch series is clearly already an improvement.
-> It is simple, with existing precedent (from swap cache), and
-> experiments show that it works quite well to improve zswap's
-> performance.
-> 
-> If the xarray patch proves to be even better, we can always combine it
-> with this approach (a per-range xarray?), or replace it with the
-> xarray. But for now:
-> 
-> Acked-by: Nhat Pham <nphamcs@gmail.com>
-> 
+for example:
+int __init __weak kasan_init_region(void *start, size_t size)
+{
+[...]
+	/* if say block(dcd97000) k_start(feef7400) k_end(feeff3fe) */
+	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
+	[...]
+	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
+		/* at the begin of for loop
+		 * block(dcd97000) va(dcd96c00) k_cur(feef7000) k_start(feef7400)
+		 * va(dcd96c00) is less than block(dcd97000), va is invalid
+		 */
+		void *va = block + k_cur - k_start;
+		[...]
+	}
+[...]
+}
 
-Right, I agree. We should combine both approaches.
+Therefore, page alignment is performed on k_start before
+memblock_alloc to ensure the validity of the VA address.
+
+Fixes: 663c0c9496a6 ("powerpc/kasan: Fix shadow area set up for modules.")
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+---
+ arch/powerpc/mm/kasan/init_32.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/mm/kasan/init_32.c b/arch/powerpc/mm/kasan/init_32.c
+index a70828a..aa9aa11 100644
+--- a/arch/powerpc/mm/kasan/init_32.c
++++ b/arch/powerpc/mm/kasan/init_32.c
+@@ -64,6 +64,7 @@ int __init __weak kasan_init_region(void *start, size_t size)
+ 	if (ret)
+ 		return ret;
+ 
++	k_start = k_start & PAGE_MASK;
+ 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
+ 	if (!block)
+ 		return -ENOMEM;
+-- 
+1.8.5.6
+
