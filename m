@@ -1,131 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2DC24B5E;
-	Fri, 19 Jan 2024 12:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C7B4EB50
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 12:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705665994; cv=none; b=fys6OQ99osjyzRICREgt0Q1bBkwsI/KGicaQMu40XD7meewM0qbuMTQpFiy9neeYisZr/6ph6zLPwhhWUP2q0Mc5zQpAIa/NKzbiGKlaONhw1VYcmpRi/UgVRs4GmJrIPnuuu8bzaKo+C+dIMS8Z2gkGwjks03NJ7RgXdjaNUpA=
+	t=1705666026; cv=none; b=Ewt/DlmDOgdJXZDBSs4b3F0s+Ixz8fexfXzPBz5r+vkVWDyQ8VrZ7M29fLWUwXXvavDNC61Jq/+T1GctUyP8dpnGOnJjBqxlf9q1mUbc9unPvwOKFTgQdZLZCXAfWoeIgBHqFZk+AtbhX0p50jJ3i0Cmqz6IdSy6RuwDsM21cxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705665994; c=relaxed/simple;
-	bh=LBIinFDQssszesoyzQPNn2bzAGez/p/FgFeNd9nRoPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nBqXhkYkB9xWDUTfKWYapBY+MzZa8PzZOMXSzGo7RzN6XI6J2G75YoGWMRBi+/fe5YAwM/iQ7a2/LKoqdU9gE9nW4rJYUmN6364Gv7OQAtb1+pTYJ0E8gA/SWR1QnZe1cvnduhJIuImNI72CwF8iTzo31P3zxuwXTMp64OkNLFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dzf63w38; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dzf63w38"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4189CC433C7;
-	Fri, 19 Jan 2024 12:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705665994;
-	bh=LBIinFDQssszesoyzQPNn2bzAGez/p/FgFeNd9nRoPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dzf63w38v7dlUTgAIqcLppeDR+nGt9/JIRhA9/bG61yf19p8IdvCgX9LBivADSAJU
-	 w+Q4QLT1vJ96II4+Ta6i+0pj7xJ9MnuB0CVMXqJJBUI4H0xsx3a7+QPQoPqTFD49gj
-	 3p6ymRZbRnmASiaz0WW2c7EgqTiwo1rUhQVe0y0DdEY9EDe+0kefUHA8rk5ZErzFcn
-	 dQTYyQQ1qeLWhqkxRADyUQHK7WdPDZKtMEdGI2hfMpH2ZBKfFxGWr062UPpToZlbwC
-	 l/GJMlJPManWJboM3t0FdGR2o5odak1+4mooWI4+AyvmU2gYe4IZ4Lu7QaYM8U/f3y
-	 gkOx5Io65uLJQ==
-Date: Fri, 19 Jan 2024 13:06:25 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Niklas Cassel <Niklas.Cassel@wdc.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] PCI: dwc: Fix a 64bit bug in dw_pcie_ep_raise_msix_irq()
-Message-ID: <ZaplwRta8wqczSzW@x1-carbon>
-References: <3f9f779c-a32f-4925-9ff9-a706861d3357@moroto.mountain>
- <ZahE455neE3wPnHA@x1-carbon>
- <501533ad-7671-46aa-a034-91e0a6322e6c@moroto.mountain>
+	s=arc-20240116; t=1705666026; c=relaxed/simple;
+	bh=tmd5mZR1ZCIkmdnkG76q4Ufua5t2VjZtTUNZA7tujcs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=LJij5U+rTwv5b9EyG5lShedIIJ2GvV1Wu2TntQCS5Cgt8C2+8BCjLkvAfmQ5JQrwxi6pqE+0nAweb+Br9AD5tIlCQVjzQyUaDIGbGVr0MXeLVfSUny/Hc8QLXg2da1XJG1Do4lwssWFH91MJUUmfkQi6qwA+GuhWg0aGzBd7CHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7bbb3de4dcbso99640239f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 04:07:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705666024; x=1706270824;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZmjL8it3vaVyxB9k8RYv05dOTZ1QGE+xOhdnzh/v3Bg=;
+        b=NW1AftIFyg8wiAZkS2e31/CagDUu034F2OotYIHf2o4qYhj8TtGOk2VATouNqI0yKt
+         XhFI0bwzpPTRj9DSg6fyDVFI8QCUF272eBtH/Ry0biqQCGZh7pMuJ/xgMqwhs9qdLlHW
+         wQszHEFjf8heJ+oZ9ONWb2wdGz0VB6/PA7QP/HXfQc7Rdeol4v2s8IwFXTmzzEw4Bg92
+         81PULJUmwDZiDdLU8Xma3ZIsThiDIXZ1d3fWYhc1dloAwENuWHdjtmhoaE0ez3ORrajO
+         3ZfmobuJq5W4+gjMX3tY9lvsDTmy8X7ffm88gKRMmvmA0pUITyCwA+j86nJ8IPZpzkDl
+         qTPg==
+X-Gm-Message-State: AOJu0YymdDayj2psyIByQGrYVpcIGUbsU4EqxQXmLUTFXEIWZ4yrzf8b
+	1rgbieixXn02qIX7NsqX3HK6zjb+LL8vGsBt/NAKh00D6JPtImYOyiHOGaft75icXqPmQdQP6AW
+	PgTTsHICeWEdZvk/+illrwwiLoBOYXhKfXBfIXtP5TkS710Xr7lFbE9g=
+X-Google-Smtp-Source: AGHT+IHDmFYt++YhXJ1nz605+EsfMbqi5iZvYHBQU/zSMlscOx9RkeVNxYHaKIIJCgRySUnkRSC70GQCKGQfXfSjis9IbqAksODA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <501533ad-7671-46aa-a034-91e0a6322e6c@moroto.mountain>
+X-Received: by 2002:a05:6e02:16ce:b0:361:966c:8504 with SMTP id
+ 14-20020a056e0216ce00b00361966c8504mr366663ilx.6.1705666024097; Fri, 19 Jan
+ 2024 04:07:04 -0800 (PST)
+Date: Fri, 19 Jan 2024 04:07:04 -0800
+In-Reply-To: <20240119114735.2106-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000078d073060f4b51e7@google.com>
+Subject: Re: [syzbot] [net?] KASAN: use-after-free Read in __skb_flow_dissect (3)
+From: syzbot <syzbot+bfde3bef047a81b8fde6@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 19, 2024 at 11:25:51AM +0300, Dan Carpenter wrote:
-> On Wed, Jan 17, 2024 at 09:21:41PM +0000, Niklas Cassel wrote:
-> > Hello Dan,
-> > 
-> > On Wed, Jan 17, 2024 at 09:32:08PM +0300, Dan Carpenter wrote:
-> > > The "msg_addr" variable is u64.  However, the "tbl_offset" is an unsigned
-> > 
-> > Here you write tbl_offset.
-> > 
-> > > int.  This means that when the code does
-> > > 
-> > > 	msg_addr &= ~aligned_offset;
-> > > 
-> > > it will unintentionally zero out the high 32 bits.  Declare "tbl_offset"
-> > 
-> > Here you also write tbl_offset.
-> > 
-> 
-> That's so weird...  I can't imagine how that happened.  Do you think it
-> could be a Welsh mice situation where forest creatures are changing my
-> work when I'm away from my desk?  https://www.youtube.com/shorts/h8gkIbtaaek
+Hello,
 
-Yes, that it the most likely scenario :)
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KASAN: use-after-free Read in ipip_tunnel_xmit
 
-In fact, I think that is what happened with my original patch too...
+==================================================================
+BUG: KASAN: use-after-free in ipip_tunnel_xmit+0x580/0x610 net/ipv4/ipip.c:284
+Read of size 1 at addr ffff88812130000e by task syz-executor.0/5530
 
-Because while the C-standards says:
+CPU: 2 PID: 5530 Comm: syz-executor.0 Not tainted 6.7.0-syzkaller-g9d1694dc91ce-dirty #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc4/0x620 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ ipip_tunnel_xmit+0x580/0x610 net/ipv4/ipip.c:284
+ __netdev_start_xmit include/linux/netdevice.h:4989 [inline]
+ netdev_start_xmit include/linux/netdevice.h:5003 [inline]
+ xmit_one net/core/dev.c:3547 [inline]
+ dev_hard_start_xmit+0x137/0x6d0 net/core/dev.c:3563
+ __dev_queue_xmit+0x7b6/0x3ed0 net/core/dev.c:4351
+ dev_queue_xmit include/linux/netdevice.h:3171 [inline]
+ neigh_connected_output+0x426/0x5d0 net/core/neighbour.c:1592
+ neigh_output include/net/neighbour.h:542 [inline]
+ ip_finish_output2+0x82d/0x2540 net/ipv4/ip_output.c:235
+ __ip_finish_output net/ipv4/ip_output.c:313 [inline]
+ __ip_finish_output+0x38b/0x650 net/ipv4/ip_output.c:295
+ ip_finish_output+0x31/0x310 net/ipv4/ip_output.c:323
+ NF_HOOK_COND include/linux/netfilter.h:303 [inline]
+ ip_mc_output+0x1dd/0x6a0 net/ipv4/ip_output.c:420
+ dst_output include/net/dst.h:451 [inline]
+ ip_local_out+0xaf/0x1a0 net/ipv4/ip_output.c:129
+ iptunnel_xmit+0x5b4/0x9b0 net/ipv4/ip_tunnel_core.c:88
+ ip_tunnel_xmit+0x1e2d/0x34c0 net/ipv4/ip_tunnel.c:837
+ ipgre_xmit+0x49b/0x980 net/ipv4/ip_gre.c:665
+ __netdev_start_xmit include/linux/netdevice.h:4989 [inline]
+ netdev_start_xmit include/linux/netdevice.h:5003 [inline]
+ xmit_one net/core/dev.c:3547 [inline]
+ dev_hard_start_xmit+0x137/0x6d0 net/core/dev.c:3563
+ __dev_queue_xmit+0x7b6/0x3ed0 net/core/dev.c:4351
+ dev_queue_xmit include/linux/netdevice.h:3171 [inline]
+ __bpf_tx_skb net/core/filter.c:2135 [inline]
+ __bpf_redirect_no_mac net/core/filter.c:2169 [inline]
+ __bpf_redirect+0x745/0xf90 net/core/filter.c:2192
+ ____bpf_clone_redirect net/core/filter.c:2463 [inline]
+ bpf_clone_redirect+0x2b2/0x420 net/core/filter.c:2435
+ ___bpf_prog_run+0x3e44/0xabc0 kernel/bpf/core.c:1986
+ __bpf_prog_run512+0xb7/0xf0 kernel/bpf/core.c:2227
+ bpf_dispatcher_nop_func include/linux/bpf.h:1231 [inline]
+ __bpf_prog_run include/linux/filter.h:651 [inline]
+ bpf_prog_run include/linux/filter.h:658 [inline]
+ bpf_test_run+0x3d3/0x9c0 net/bpf/test_run.c:423
+ bpf_prog_test_run_skb+0xb75/0x1dd0 net/bpf/test_run.c:1056
+ bpf_prog_test_run kernel/bpf/syscall.c:4107 [inline]
+ __sys_bpf+0x11bf/0x4a00 kernel/bpf/syscall.c:5475
+ __do_sys_bpf kernel/bpf/syscall.c:5561 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5559 [inline]
+ __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5559
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd3/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+RIP: 0033:0x7f886727cce9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f8867f380c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007f886739bf80 RCX: 00007f886727cce9
+RDX: 0000000000000028 RSI: 0000000020000080 RDI: 000000000000000a
+RBP: 00007f88672c947a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f886739bf80 R15: 00007fff1deea708
+ </TASK>
 
-"""
-6.5.3.3 Unary arithmetic operators
-The result of the unary - operator is the negative of its (promoted) operand. The integer
-promotions are performed on the operand, and the result has the promoted type.
-"""
+The buggy address belongs to the physical page:
+page:ffffea000484c000 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x121300
+flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
+page_type: 0xffffffff()
+raw: 057ff00000000000 ffffea000484c008 ffffea000484c008 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+
+Memory state around the buggy address:
+ ffff8881212fff00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff8881212fff80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff888121300000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                      ^
+ ffff888121300080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888121300100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
 
 
-Of course, I also remember that implicit integer promotions are only up to
-"int" or "unsigned int".
+Tested on:
 
-Because of course it is fine to convert types smaller than int implicitly...
-but bigger than int? No way! :)
+commit:         9d1694dc Merge tag 'for-6.8/block-2024-01-18' of git:/..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=126c4f1be80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=70f4213b9a7b4f3a
+dashboard link: https://syzkaller.appspot.com/bug?extid=bfde3bef047a81b8fde6
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=148fbdc7e80000
 
-
-#include <stdio.h>
-#include <stdint.h>
-
-void main()
-{
-        uint16_t val_16 = 0xffff;
-        uint8_t mask_8 = 0xf0;
-
-        uint32_t val_32 = 0xffffffff;
-        uint16_t mask_16 = 0x00f0;
-
-        uint64_t val_64 = 0xffffffffffffffff;
-        uint32_t mask_32 = 0x000000f0;
-
-        uint16_t res_16 = val_16 & ~mask_8;
-        uint32_t res_32 = val_32 & ~mask_16;
-        uint64_t res_64 = val_64 & ~mask_32;
-
-        printf("16: res: %#llx val: %#llx mask: %#llx\n", res_16, val_16, mask_8);
-        printf("32: res: %#llx val: %#llx mask: %#llx\n", res_32, val_32, mask_16);
-        printf("64: res: %#llx val: %#llx mask: %#llx\n", res_64, val_64, mask_32);
-}
-
-output:
-16: res: 0xff0f val: 0xffff mask: 0xf0
-32: res: 0xffffff0f val: 0xffffffff mask: 0xf0
-64: res: 0xffffff0f val: 0xffffffffffffffff mask: 0xf0
-
-(Silly me for not also reading 6.3.1.1...)
-
-
-Kind regards,
-Niklas
