@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90760524A8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664831E48F
 	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 13:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705670739; cv=none; b=DThGHMWFi9SWB59cdbaVgrjGtgHC9cLm5lAjgz1mttTa22kSpI5JsES/UHj27qMpKsUFK3gp5NTC5E2OAFtEZMKDUTD1eZFvAn3H9gzACHo7co7TAyunnggKMgm8gjKsL4pK24hNG1SJSWizqxa0QqcfrXnxXFIrw+h5hhCdoDU=
+	t=1705670739; cv=none; b=YwBARdLhWucBHpeYZvSISkmvtLEUCIZpVLj/sFczdsWNlCtVIiIsgRbYlJclb2/uTINhQt0ryn4rGMDhe5FUWfE7UpiRHCpu5f0p5hBR4P9sZxCULZTjil1z3lalSL7PYkh61qPhHR3RmE7mutnM3gHKRVUQ1Rco7xQ3odfu/f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705670739; c=relaxed/simple;
-	bh=y/hGCVajOvX8o6Efi9UdqxsGrdX7qFeQ/WFMS56UPW4=;
+	bh=C3KOqcCPboHE8CVljWUDfdheWimD/KSO18sHrtBids4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aKSlxai51oZojz9oewuurJd4iMd1NXMdS5lAwpfzEc82LHoFKI06L1UfYztl0MrLONluEicQruiUcxZDKWV446L1fHEdjMhMDKK/GJfvHNt2Y6/dFgq3h1/BTfzl+etSDT7bROTbtvBN3QDIpEnG8PLlkRuF1BfHHfPh62596Mk=
+	 MIME-Version; b=gzZkw+WXm4Bnb4+pPKmELXXZy1ud0MPAaXlgv7jvjsPXDc16MIvXhaAkqoHrhw/z37C4q0/aHZzPz+pYstTZ6M/dhmYWoQScd64VL79bsV1P4kUt8jzOJQ2tflEc1xmgx8i835Vkv4Oa/dB+k3sinm82NUS15UhaFiLL6NECExs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rQos7-00074H-C1; Fri, 19 Jan 2024 14:25:23 +0100
+	id 1rQos7-00074J-C2; Fri, 19 Jan 2024 14:25:23 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rQos6-000viI-6t; Fri, 19 Jan 2024 14:25:22 +0100
+	id 1rQos6-000viN-8m; Fri, 19 Jan 2024 14:25:22 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rQos6-00F981-0Q;
+	id 1rQos6-00F98M-0b;
 	Fri, 19 Jan 2024 14:25:22 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Sebastian Reichel <sre@kernel.org>,
@@ -46,9 +46,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	linux-pm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [RFC PATCH v1 3/7] dt-bindings: power: reset: add bindings for NVMEM hardware storing PSCR Data
-Date: Fri, 19 Jan 2024 14:25:17 +0100
-Message-Id: <20240119132521.3609945-4-o.rempel@pengutronix.de>
+Subject: [RFC PATCH v1 5/7] power: reset: add PSCR NVMEM Driver for Storing Power State Change Reasons
+Date: Fri, 19 Jan 2024 14:25:19 +0100
+Message-Id: <20240119132521.3609945-6-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240119132521.3609945-1-o.rempel@pengutronix.de>
 References: <20240119132521.3609945-1-o.rempel@pengutronix.de>
@@ -64,75 +64,155 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add device tree bindings that describe hardware implementations of
-Non-Volatile Memory (NVMEM) used for storing Power State Change Reasons (PSCR).
+This driver utilizes the Power State Change Reasons (PSCR) framework to
+store specific power state change information, such as shutdown or
+reboot reasons, into a designated non-volatile memory (NVMEM) cell.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- .../bindings/power/reset/pscr-nvmem.yaml      | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/pscr-nvmem.yaml
+ drivers/power/reset/Kconfig      |  11 ++++
+ drivers/power/reset/Makefile     |   1 +
+ drivers/power/reset/pscr-nvmem.c | 100 +++++++++++++++++++++++++++++++
+ 3 files changed, 112 insertions(+)
+ create mode 100644 drivers/power/reset/pscr-nvmem.c
 
-diff --git a/Documentation/devicetree/bindings/power/reset/pscr-nvmem.yaml b/Documentation/devicetree/bindings/power/reset/pscr-nvmem.yaml
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index da76e84302b9..a110dff599af 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -324,3 +324,14 @@ menuconfig PSCR
+       timeouts.
+ 
+       If unsure, say N.
++
++if PSCR
++
++config PSCR_NVMEM
++	tristate "Generic NVMEM-based Power State Change Reason Tracking"
++	depends on OF
++	help
++	  Enabling this option adds support for storing power state change
++	  reasons in a NVMEM cell.
++
++endif
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index d9d744302c68..e7985d81ac8a 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -32,6 +32,7 @@ obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
+ obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
+ obj-$(CONFIG_POWER_RESET_RMOBILE) += rmobile-reset.o
+ obj-$(CONFIG_PSCR) += pscr.o
++obj-$(CONFIG_PSCR_NVMEM) += pscr-nvmem.o
+ obj-$(CONFIG_REBOOT_MODE) += reboot-mode.o
+ obj-$(CONFIG_SYSCON_REBOOT_MODE) += syscon-reboot-mode.o
+ obj-$(CONFIG_POWER_RESET_SC27XX) += sc27xx-poweroff.o
+diff --git a/drivers/power/reset/pscr-nvmem.c b/drivers/power/reset/pscr-nvmem.c
 new file mode 100644
-index 000000000000..0642b470af41
+index 000000000000..74048341b7d7
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/pscr-nvmem.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/state-change/pscr-nvmem.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/power/reset/pscr-nvmem.c
+@@ -0,0 +1,100 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) Vaisala Oyj. All rights reserved.
++// Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
++/*
++ * Based on drivers/power/reset/nvmem-reboot-mode.c
++ * Copyright (c) Vaisala Oyj. All rights reserved.
++ */
 +
-+title: Generic NVMEM Power State Change Reason storage
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/nvmem-consumer.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pscr.h>
 +
-+maintainers:
-+  - Oleksij Rempel <o.rempel@pengutronix.de>
++struct pscr_nvmem {
++	struct pscr_driver pscr_drv;
++	struct nvmem_cell *cell;
++	size_t max_magic_bytes;
++};
 +
-+description: This binding describes the Non-Volatile Memory (NVMEM) hardware
-+  that stores Power State Change Reasons (PSCR).
++static int pscr_nvmem_write(struct pscr_driver *pscr_drv, u32 magic)
++{
++	struct pscr_nvmem *priv = container_of(pscr_drv, struct pscr_nvmem,
++					       pscr_drv);
++	size_t size = min(priv->max_magic_bytes, sizeof(magic));
++	int ret;
 +
-+allOf:
-+  - $ref: pse-controller.yaml#
++	ret = nvmem_cell_write(priv->cell, &magic, size);
++	if (ret < 0)
++		dev_err(pscr_drv->dev, "update reason bits failed: %pe\n",
++			ERR_PTR(ret));
 +
-+properties:
-+  compatible:
-+    const: pscr-nvmem
++	return ret;
++}
 +
-+  nvmem-cells:
-+    description: |
-+      A phandle pointing to the nvmem-cells node where the power state change
-+      reasons are stored.
-+    maxItems: 1
++static int pscr_nvmem_probe(struct platform_device *pdev)
++{
++	const char *pscr = "pscr";
++	struct pscr_nvmem *priv;
++	size_t bytes, bits, magic_bits;
++	int ret;
 +
-+  nvmem-cell-names:
-+    items:
-+      - const: pscr
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
 +
-+  pscr-unknown:
-+  pscr-under-voltage:
-+  pscr-over-current:
-+  pscr-over-temperature:
++	priv->pscr_drv.dev = &pdev->dev;
++	priv->pscr_drv.write = pscr_nvmem_write;
 +
-+required:
-+  - compatible
-+  - nvmem-cells
-+  - nvmem-cell-names
++	priv->cell = devm_nvmem_cell_get(&pdev->dev, pscr);
++	if (IS_ERR(priv->cell))
++		return dev_err_probe(&pdev->dev, PTR_ERR(priv->cell),
++				     "failed to get the nvmem %s cell\n", pscr);
 +
-+additionalProperties: false
++	ret = nvmem_cell_get_size(priv->cell, &bytes, &bits);
++	if (ret < 0)
++		return dev_err_probe(&pdev->dev, ret, "failed to get the nvmem %s size\n",
++				     pscr);
 +
-+examples:
-+  - |
-+    power-state-change-reason {
-+      compatible = "pscr-nvmem";
-+      nvmem-cells = <&pscr_cell>;
-+      nvmem-cell-names = "pscr";
-+      pscr-unknown = <1>;
-+      pscr-under-voltage = <2>;
-+      pscr-over-temperature = <3>;
-+    };
-+...
++	if (!bytes || bytes > sizeof(u32) || bits > 32)
++		return dev_err_probe(&pdev->dev, -EINVAL, "invalid nvmem %s size. bytes: %zu, bits: %zu\n",
++				     pscr, bytes, bits);
++
++	ret = devm_pscr_register(&pdev->dev, &priv->pscr_drv);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "failed to register pscr driver\n");
++
++	magic_bits = fls(priv->pscr_drv.max_magic);
++	priv->max_magic_bytes = DIV_ROUND_UP(magic_bits, 8);
++
++	if (!bits)
++		bits = bytes * 8;
++
++	if (magic_bits > bits)
++		return dev_err_probe(&pdev->dev, -EINVAL, "provided magic can't fit into nvmem %s. bytes: %zu, bits: %zu, magic_bits: %zu\n",
++				     pscr, bytes, bits, magic_bits); 
++
++	return ret;
++}
++
++static const struct of_device_id pscr_nvmem_of_match[] = {
++	{ .compatible = "pscr-nvmem" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, pscr_nvmem_of_match);
++
++static struct platform_driver pscr_nvmem_driver = {
++	.probe = pscr_nvmem_probe,
++	.driver = {
++		.name = "pscr-nvmem",
++		.of_match_table = pscr_nvmem_of_match,
++	},
++};
++module_platform_driver(pscr_nvmem_driver);
++
++MODULE_AUTHOR("Oleksij Rempel <o.rempel@pengutronix.de>");
++MODULE_DESCRIPTION("NVMEM Driver for Power State Change Reason Tracking");
++MODULE_LICENSE("GPL v2");
 -- 
 2.39.2
 
