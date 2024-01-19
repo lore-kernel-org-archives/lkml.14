@@ -1,80 +1,167 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E306FB8
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFCF4A0C;
+	Fri, 19 Jan 2024 05:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705643811; cv=none; b=FGx76xO06QH2myqYefEr0sFaNftBRrxDsJupzX9uCHAcFDoEQ4mmqcYVzSdyLH7uBjAhBGNgXR4B6yZ/WLpO6FqGt4WABpZhzQeWEGNylRdzhkpaOBKefgX21w0z6I/HkBzhB2B9qN6SR8u2ssf/yCE43Mfyw9N/w+N4yMmHpO0=
+	t=1705643865; cv=none; b=UAoiKxvUrOLLJg7yoDXCH9cUh4vRkWqSyJGz+BtLBhAiRABG9tkYa/8QKJcS0pgEt5w4+Y9l3eshbE5E+YAbOrBS93gY4sV+wYIylFzU5c4PxzPMxdU28s9YfODcQCQ2DAuOL7znPfW7V7txsxjVegIHYo4enEFYdy0YbzmoFtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705643811; c=relaxed/simple;
-	bh=TtWZc7CQ2Ew+Rb+jFS85E6n8gecRO1MNLhd0axgfV5c=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=dYjYfygiMNqY+iCBlBpjxRSCUEOEEVe4aFcT/61dq51Bfulegvc9sxTzzIRF1sUpvHDRm11CIQmNfrqCwZ5lq5FZYZOSAzc8mu1eK2zAkXdncHNylsB0w1XLziwDTqYcicyxh5kDhgDlfd0EM6sRQnvg+T5DH2T2s1Kv6onKj5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=pddgZsIH; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="pddgZsIH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1705643498; bh=UQR5IqDtYYU9OvM5YX8pU7QSr13D2cdTiJmIWG6eCnE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=pddgZsIHZnwKZmYtMohAwBGMEZ8ibN+mWfPPJjk4IduoRs+ev6D2z6qxr2LYwijpJ
-	 r00E6BYWogEWA2GgdlQYGqpiGD96RHRyYN3EHwQI83CEhJ5r02ERyDUdNvdgkwfUqG
-	 wkq9yxaa2zT82Ru8sABtkXwjuy141uyHvcoH4FD4=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id CE43BAA1; Fri, 19 Jan 2024 13:51:36 +0800
-X-QQ-mid: xmsmtpt1705643496tigznyk37
-Message-ID: <tencent_1B2ECE8078726E5C2D856C0497A0E80EED0A@qq.com>
-X-QQ-XMAILINFO: NafziRg7Bx69+OV4WSENK3vpXadt+cQi1ic4ER0Uxy4MhXbVSqvmxAX8ttu6mV
-	 ZaGw5GCasqmF64lU1UfpTZxKVJKZgLZ69FO51mGh/H6y04m4rpTC6Tk42gh4K4S6cjQDvw9SKkoH
-	 q27gFtwE4Qbb+sWD9QoJrF+inMu1sO3gXm1R1Lnisb96kjNXdYx3Noa0nizINB4YRnq1CKcijBt2
-	 nH6QiWCUn5Ib+9YGVAToKQSLl34r3t9VOOZsaQ45usNwEMoqaSyX+6hN79+vpgkKZYQ8kJ6yhP8p
-	 BBPGgtUpTw3R0hncGamGgRKXfw4RXetoQaEXaqyxXJ+QTp3ewNS45OATl17rvC7dv8Xk+FLlN97a
-	 rBBAl0cRbIudRtWgBuCoBkZocIbCLUNbkde8vnLf8N8aJg8c0dtWgbwhzmv+RL7aIHnxS7fK8qvk
-	 0Mv9GZd+JYimn2lWaH3IpuBjAle0D44E9ZoR31lD5wdy9AgbTw+NhD0y5KMQiJFcLa/WD9AwPA21
-	 tdPBFztjzdGLqIHNtitlfd0X50mQ16chgEzX3JGozoeKUhEvAn1UG0w2tUBLh8xCIxP8fJht7PFj
-	 jIBCldvooH/HZqspnrYnPSnhPDXiyPaiKR3qG64LcotdgBja5SNXX80aA8MWD3N6jb0wV7Xw/xvv
-	 aEvub/DQy2nkVjCNHR0ouN8XUhyiL3COJXOw0bRKK7lZ2T4r7BhAGXi6vX70PiIMtMdqdyisnDfq
-	 hrVCkg4P+iEGiQDboHCf6GKupVfbcO9qspvyb+lVGZA20thiOM0sHgRYzLYC9KbuUiobSiO1wOEE
-	 MPCha3zJpRO3b7iG9G99GsDGrMVtkPElObPxkiz8xC7dOmVzQ82bY41OzBGsUc4bCIbbnkTlAHrR
-	 dFCoV/FbmLe5QQE9qA2RpgLMJ7M6MMc9QIWNwCFUoi1Wrm8XtjE5W7QQ1r4vng2w==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+fd404f6b03a58e8bc403@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [exfat?] kernel BUG in iov_iter_revert
-Date: Fri, 19 Jan 2024 13:51:37 +0800
-X-OQ-MSGID: <20240119055136.271506-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000007728e060f127eaf@google.com>
-References: <00000000000007728e060f127eaf@google.com>
+	s=arc-20240116; t=1705643865; c=relaxed/simple;
+	bh=YpuHcp6+Ti3Nxz4REWJ5idtkTVRA5Y18LT0RNIdJkOw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WB/on9237RPDbkUm43TnGqueooGSlk433AHJ8IXaMrCaE0rORRX8hj+w5RkAF2Hvl5JobzynGCiQWJ107xQKRDTMTNLl3L7kG0M1ZIv2zCLNipMSoVT2/QAaTz5Efk8n4LlN3tcDIl/i3mVKEXwZ33Cq6QUASgvz2BaWhRqmkjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso222753a12.3;
+        Thu, 18 Jan 2024 21:57:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705643863; x=1706248663;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pTo9VBdYCTdMSnliyvMcXcpJ1UufCYRIjm4qXNyfvm4=;
+        b=EFqSgkaDqqpjj5Su84qwxpSqftBrbcJEhF4niPnUvkeEPGxMCh9a29ONpTBUBxGw4S
+         h0DRiAGqVYpxGjD1C/qYiIEpzSEXyYgokyF/QAf4SgNaxcU5g/eVm5b9kddMVSnAtAfa
+         KQkrAUSWUg0kOcPv7Opm+hkyuG0aVZYDlKb75Rzy7cQYxIx3D9jx6By8I1dNwt92JVgN
+         OTJIirTMLACDcUiKR0fv6CQV+AhC2g5qNG2/OfK253woTujCDdeAyGroot+3TosSV/t9
+         GdyJswK+QI55SlHUuPid8xIui7jCjE9fvnv9BZFxd8Hx22yKQ+Lum0cTZBemk3rXbTC4
+         rY+g==
+X-Gm-Message-State: AOJu0YypNGx1x/JEbpLm4/SVZMCpbFRbeLgid7Ti05LEazxXkjhekQBK
+	Qp9YwG7/gIRleVVSlrZtTt0bvrFpkGv8W2lfN4388BxRft80yiXNOgXitkdwdi0Xk/Fm0Fk2AD9
+	8f/MmsNjU5KsuI8+MnrdYiBiidUU=
+X-Google-Smtp-Source: AGHT+IGU/4cpjmHUgt6iJLKo574CuwTxb4dYoIjbdba4DX8C8YrzMxXypUEoQr219U1oaKlD86OWqT+WAr9tCmYYfLI=
+X-Received: by 2002:a05:6a21:3183:b0:199:6bcb:573 with SMTP id
+ za3-20020a056a21318300b001996bcb0573mr2087238pzb.50.1705643863243; Thu, 18
+ Jan 2024 21:57:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240116170348.463479-1-mark.rutland@arm.com> <8734uwxrca.wl-maz@kernel.org>
+ <ZafEFU7kwf6W0_Qx@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <ZafEFU7kwf6W0_Qx@FVFF77S0Q05N.cambridge.arm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 18 Jan 2024 21:57:32 -0800
+Message-ID: <CAM9d7ciYEzX1EQ2tXT-FFK2z6Nid9vM6WgSYDFm-rzx=AWsxOA@mail.gmail.com>
+Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
+	Hector Martin <marcan@marcan.st>, Ian Rogers <irogers@google.com>, acme@redhat.com, 
+	james.clark@arm.com, john.g.garry@oracle.com, leo.yan@linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	mike.leach@linaro.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com, 
+	will@kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-please test kernel BUG in iov_iter_revert
+Hello,
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 052d534373b7
+Adding Ravi to CC.
 
-diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
-index 522edcbb2ce4..af8870145f67 100644
---- a/fs/exfat/inode.c
-+++ b/fs/exfat/inode.c
-@@ -534,7 +534,8 @@ static ssize_t exfat_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 		size = pos + ret;
- 
- 	/* zero the unwritten part in the partially written block */
--	if (rw == READ && pos < ei->valid_size && ei->valid_size < size) {
-+	if (ret == -EIOCBQUEUED && rw == READ && pos < ei->valid_size && 
-+			ei->valid_size < size) {
- 		iov_iter_revert(iter, size - ei->valid_size);
- 		iov_iter_zero(size - ei->valid_size, iter);
- 	}
+On Wed, Jan 17, 2024 at 4:12=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
+ wrote:
+>
+> On Wed, Jan 17, 2024 at 09:05:25AM +0000, Marc Zyngier wrote:
+> > Hi Mark,
+> >
+> > On Tue, 16 Jan 2024 17:03:48 +0000,
+> > Mark Rutland <mark.rutland@arm.com> wrote:
+> > >
+> > > Currently the perf tool doesn't deteect support for extneded event ty=
+pes
+> > > on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYP=
+E
+> > > hardware events into per-PMU events. This is due to the detection of
+> > > extended event types not handling mandatory filters required by the
+> > > M1/M2 PMU driver.
+> >
+> > Thanks for looking into this.
+> >
+> > I've given your patch a go on my M1 box, and it indeed makes things
+> > substantially better:
+> >
+> > $ sudo ./perf stat -e cycles ~/hackbench 100 process 1000
+> > Running with 100*40 (=3D=3D 4000) tasks.
+> > Time: 3.419
+> >
+> >  Performance counter stats for '/home/maz/hackbench 100 process 1000':
+> >
+> >    174,783,472,090      apple_firestorm_pmu/cycles/                    =
+                         (93.10%)
+> >     39,134,744,813      apple_icestorm_pmu/cycles/                     =
+                         (71.86%)
+> >
+> >        3.568145595 seconds time elapsed
+> >
+> >       12.203084000 seconds user
+> >       55.135271000 seconds sys
+>
+> Thanks for giving that a spin!
+>
+> > However, I'm seeing some slightly odd behaviours:
+> >
+> > $ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
+> > Running with 100*40 (=3D=3D 4000) tasks.
+> > Time: 3.313
+> >
+> >  Performance counter stats for '/home/maz/hackbench 100 process 1000':
+> >
+> >    <not supported>      apple_firestorm_pmu/cycles:k/
+> >    <not supported>      apple_icestorm_pmu/cycles:k/
 
+Hmm.. I guess this should look like apple_firestorm_pmu/cycles/k.
+IIRC there was a thread for this, right?
+
+> >
+> >        3.467568841 seconds time elapsed
+> >
+> >       13.080111000 seconds user
+> >       53.162099000 seconds sys
+> >
+> > I would have expected it to count, but it didn't. For that to work, I
+> > have to add the 'H' modifier:
+>
+> Ok, so that'll have something to do with the way the tool chooses which
+> perf_evant_attr::exclude_* bits to set. I thought that was the same for p=
+lain
+> events and pmu_name/event/ events, but I could be mistaken.
+
+I think it sets the attr.exclude_guest by event_attr_init().  Maybe
+it's deleted during the missing feature detection logic.  But IIUC
+it should work on each PMU separately.
+
+By the way, I really hope the kernel exports caps/exclude_bits
+for PMUs so that tools can see which bits are supported.  For
+example AMD IBS has CAP_NO_EXCLUDE so setting exclude_guest
+will fail to open.  Then it disables the new features added after
+that in the missing feature detection logic.
+
+If we know if it doesn't support any exclude bits, then tools can
+try other features after removing the bit first.
+
+Thanks,
+Namhyung
+
+>
+> Is that something you had tried prior to this patch, and did that "just w=
+ork"
+> with the explicit pmu_name/event/ syntax prior to this patch?
+>
+> e.g. did something like:
+>
+>         perf stat -e apple_firestorm_pmu/cycles/k -e apple_icestorm_pmu/c=
+ycles/k ./workload
+>
+> ... happen to work withiout requiring the addition of 'H'?
+>
+> If so, does that behave the same before/after this patch?
+>
+> ... and could you run that with '-vvv' and dump the output for comparison=
+?
+>
+> Thanks,
+> Mark.
