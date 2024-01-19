@@ -1,115 +1,87 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C5F537EA;
-	Fri, 19 Jan 2024 14:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDA9537FC;
+	Fri, 19 Jan 2024 14:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705673098; cv=none; b=cXHbeZ+FIm/+Xop1SK/WNxpUYufZiFbi71wJax04ZksEwdoq2nIq+GB4trW/waZugPENL9zVpdZIqqZmJCX8ijaL3DfLhPdqS+fn22dVElPYRCKLyVd9z/naMz0YM6dS47fDJsrQWAsPRExWKawOWw9n/vr7HRfIEIsllMbMDTA=
+	t=1705673247; cv=none; b=bpWLyVLihjVHwX4MZLWmJI2mW68BtpmDwDejrho2exmtPyng3j9rseOLqDbtn9CW8xTR4JaeM6fBGUc5bEnoCFJW49cTQP+wPQtQBUpJcVUDokZGHGT9elo+G0vxXUz0fR0Gq3P0T2fKuJCc6t6v54D/qi6lAb4Vr/Rcdwteo/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705673098; c=relaxed/simple;
-	bh=qaoEXV/u8siJjNT+jzeg5ORewGEo7Iu20ZxUN+Ot1gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pOvMylKmXjPkAl7euaHgTKN4YvHEuFV/o6uWiCHf4vdQn8BFoXqhR0W3K3GdzEBXcv5xATvM4dh1eACdvEdjxX355rhnB1N4ZPieoUoc7HNvxKDdj43XtBwAVwU3TP+nIQcrWZATHfGc9LCGmqebSejS5cUGU3zHdTOWxvHFhZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TBy6rvLi; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1705673247; c=relaxed/simple;
+	bh=mC2DXqdjEQC66exVDQPqaBRO3tMoWAaPPIKH8mIOQvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Owh6JKaec6KkoThyJz1zkhzBEeZNiyu52SwEHKGQJffRcuOF6go5WSsyIbvMCbiEkxf3R9FM/1314r3qKyBJMdCU3jOelcMfrbVsZStDkUBL9TfzVY9UlmsBnpMmNY6vOYs/i+39AhB7gfOJZCMSocekYlZyliP88SbSXyudTJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufaO3X1M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TBy6rvLi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5B3D620003;
-	Fri, 19 Jan 2024 14:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705673093;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LS64bqShtvNGI+XJwxvXBq3d8lOmvfDP9t+KLU3cghE=;
-	b=TBy6rvLiccH2faYMeE7D9LtdTZcTL2DorXmXaYU15CSo+lTv15nYakVXX/XCd/A/hMnVAN
-	eIBKvZNR+1OAHGaCfkFBPSj0fAWUrNkpHhWUKPvdW7K6AEsykZxcXXu2NwivKQrwv2ZDEr
-	6bhpGOKatOSpU5P8LQB73UyCgSomfCtNK1wMbJloFyJB6qhtsDfDQpCRX5TlzJ/BYNbgFt
-	TXa+SdEVUm+8dlNIelvRZL26nyRmZ0eOK7f7lV/Ihm2x4nRyU86zGyiVNRchKBtVViuFVk
-	gHfggVco8tjfrHj2F3/Pykvn2e2oKhokFaZLxQHaEbYtTlikTYB/abJvddVN+w==
-Date: Fri, 19 Jan 2024 15:04:51 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
-Cc: <marcin.s.wojtas@gmail.com>, <linux@armlinux.org.uk>,
- <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
- <pabeni@redhat.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, Antoine Tenart <atenart@kernel.org>
-Subject: Re: [net v4 PATCH 1/1] net: mvpp2: clear BM pool before
- initialization
-Message-ID: <20240119150451.476d6ba2@device-28.home>
-In-Reply-To: <20240119035914.2595665-1-jpatel2@marvell.com>
-References: <20240119035914.2595665-1-jpatel2@marvell.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufaO3X1M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6D53C433F1;
+	Fri, 19 Jan 2024 14:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705673246;
+	bh=mC2DXqdjEQC66exVDQPqaBRO3tMoWAaPPIKH8mIOQvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ufaO3X1MTWwDkyXWZKBoxgKn7aCg9nHlDWZjGZKfGaY6vrsNjBFSeiNYXa31tAviv
+	 7pIX7VMk0MJGBy8mIJ6sQqfUY77RBPB55RDba9QD3AAYXNXFRgoW/I+z6DIeJYklbt
+	 43ZskenGMSJn0neHKZ95l4Ms2joUjgufrHZMxn/hMR9NI26/jk3Jx7sUbVZxkfeyn0
+	 /v+QtLv2rNtLWbPWaTE0pDIcZQXMgzMfkhiyndYRQCU7vO0YSS5LIu/nO6wEVMk9PB
+	 v+s5j4xem+XNmFvxJH1RnjqSSqX/RibEZQnGS1IlctPul1z9UFREEzGFCQ1A5MqfZt
+	 zT+zriz43aK0g==
+Date: Fri, 19 Jan 2024 14:07:22 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	=?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+Subject: Re: [RFC PATCH v1 6/7] regulator: set Power State Change Reason
+ before hw_protection_shutdown()
+Message-ID: <ZaqCGgd77rs3yq59@finisterre.sirena.org.uk>
+References: <20240119132521.3609945-1-o.rempel@pengutronix.de>
+ <20240119132521.3609945-7-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Q0ELjM8ZH/7s+wG5"
+Content-Disposition: inline
+In-Reply-To: <20240119132521.3609945-7-o.rempel@pengutronix.de>
+X-Cookie: You might have mail.
 
-Hello,
 
-On Thu, 18 Jan 2024 19:59:14 -0800
-Jenishkumar Maheshbhai Patel <jpatel2@marvell.com> wrote:
+--Q0ELjM8ZH/7s+wG5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Register value persist after booting the kernel using
-> kexec which results in kernel panic. Thus clear the
-> BM pool registers before initialisation to fix the issue.
-> 
-> Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-> Signed-off-by: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
-> ---
-> v1-v2:
-> -Move comments outside the loop
-> -remove unrequired brances.
-> v2-v3:
-> -improve readability
-> -correct register read API
-> v3-v4:
-> -optimize the code
-> -improve readability
+On Fri, Jan 19, 2024 at 02:25:20PM +0100, Oleksij Rempel wrote:
 
-Thanks for taking the reviews into account, however ...
+> Store the state change reason to some black box, for later
+> investigation.
 
->  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 27 ++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> index 820b1fabe297..23adf53c2aa1 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> @@ -614,12 +614,38 @@ static void mvpp23_bm_set_8pool_mode(struct mvpp2 *priv)
->  	mvpp2_write(priv, MVPP22_BM_POOL_BASE_ADDR_HIGH_REG, val);
->  }
->  
-> +/* Cleanup pool before actual initialization in the OS */
-> +static void mvpp2_bm_pool_cleanup(struct mvpp2 *priv, int pool_id)
-> +{
-> +	unsigned int thread = mvpp2_cpu_to_thread(priv, get_cpu());
-> +	u32 val;
-> +	int i;
-> +
-> +	/* Drain the BM from all possible residues left by firmware */
-> +	for (i = 0; i < MVPP2_BM_POOL_SIZE_MAX; i++)
-> +		mvpp2_thread_read(priv, thread, MVPP2_BM_PHY_ALLOC_REG(pool_id));
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-... I think you didn't answer Antoine's comment on that loop from the
-V2, regarding what this does exactly. From the other sites this is
-used, it seems to perform an allocation from the pool, can you clarify
-how safe it is to do so here, if for example the BM was never configured
-by the firmware beforehand and is therefore already in a Stopped state ?
+--Q0ELjM8ZH/7s+wG5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And are we not risking any leak if there was something in the pool that
-we don't release ?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWqghoACgkQJNaLcl1U
+h9AqSQf/efBnzcrtjCJBKoNUTCFbiQ0DyNwDETiS+2ZruZjaSBcs7oxxPMuRyjxR
+nKcdtnG+U7hx1iD7o2hEJbTkxELEg9Zxf4RYfd9sIgzTA4KfuVRrsGd7AAqFM6hS
+/2bqpyennzYcbcom8RrNC+CLggjskFNS5W/fICtswq2L3dOrJ8IE7G2FKzEezWAH
+FFyUQSYM5TYee/Rnl/upEpmJAt0tgrshue0MSRfCmpL6WbmZW7pJhIzlDOeVeWKy
+CXQywnBxVMHyEpch/2DqlqWOUQXHLYJ2us1pLmINFt7ybc5QjAxZWhzL4T4Hj6Se
+pNFoMGrP2Vj42CPLvlPCv/5BNQcSew==
+=7Tuc
+-----END PGP SIGNATURE-----
 
-Maxime
-
+--Q0ELjM8ZH/7s+wG5--
