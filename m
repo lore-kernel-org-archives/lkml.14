@@ -1,187 +1,85 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5681B3C467;
-	Fri, 19 Jan 2024 13:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5664CE13
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 13:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705670085; cv=none; b=NvVS7WLlMgFUI5Ih8zt2T5uWahSm4vnsBe+jIsqbwnsYWTuEeAbYfoe1x2xLlcZtzmUzlgrcsZ8YhM4lLoVTcuqGM8hKaNASyNJ6eYb4qUmJraoDo/JCBlPc/vx4ZVOUbEvBx8hABXZJwEdYwi4Q8MbvKXmuMIy9IXI/oni/rSs=
+	t=1705670105; cv=none; b=VNoQuX3EnKRtinWZqUvAcFMeEVK0NQ6jmgSLrcM9C4WAOL05QXzVjcFao3tEhmo9jZkqQbqrYKa1PlCN/HJvr5L0qaZjEeQWf6nZOvee8f0SVmNLJCinemzq85GIUAPnNJz2J1WiJ33fmylQF9mWDqp833oc+BNg0tA7P7fxFxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705670085; c=relaxed/simple;
-	bh=allHfdLuykCl8Tg8ovI4lhyewPlE2kSFzObLQeJtgTE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YVcxRNEtUtYpkaRhSoWxDo1WTAgO12K9B2kLqm1kyOFPPO2n9Po/YOgvRQSotP9x7ouMD6X8QavvurHWX+RekPz9ss0rV0Fs7HbXTfCk7Svg7/GQMjE3u6VzPVbcF1bPjbreVi+EYY0cFI7not0ZopRLvmPy28QmNiPYX2rjYqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qWjqKg/O; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1705670105; c=relaxed/simple;
+	bh=K7kOg2NiZtuBd/Ch9PPGpxtgWQazDvlPeYhXWlOidms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OKIFPYtfa98zu1hSRBJoDMlD1ncfkY3sYZddRkIcxTqr2Ckn4yKhU+zKIODTG1gjCWDtQN8sdivAyuMhEKTsFytjXpOw1aOS/rq5ac2Co4mhMa1GNvvKYEagyCTjT9gVBxZWbYj7dc/uHPW9lbmxwd43RXqi+TFJwLR2twwA+KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QUxw6+ki; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qWjqKg/O"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40JDE56C129521;
-	Fri, 19 Jan 2024 07:14:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705670046;
-	bh=0p0YDW3jHe9RSxkQ7uT75oHghaehNTE0glSu3aemViw=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=qWjqKg/Ox1CNNQtPGOXTL/rli3f0mfUk6L4/m4SoJ4Edx4mhiXdMm/2bctz3ru67N
-	 aKnrSHS9GzgJKfHkv8V8k913q0UIWV7TmPUH5affwHMx30/zTAcAGeIxWYDxOhK3fR
-	 a9m+Vvzc7SvDy2ZCDvaasN6AEgKaPjMhmJAYDouA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40JDE5gV082162
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 19 Jan 2024 07:14:05 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 19
- Jan 2024 07:14:05 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 19 Jan 2024 07:14:05 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40JDE5P8012848;
-	Fri, 19 Jan 2024 07:14:05 -0600
-Date: Fri, 19 Jan 2024 07:14:05 -0600
-From: Nishanth Menon <nm@ti.com>
-To: <sabiya.d@mistralsolutions.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>,
-        Dasnavis Sabiya
-	<sabiya.d@ti.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am69-sk: Add support for OSPI
- flash
-Message-ID: <20240119131405.xumvsbgvqzgh4vje@defrost>
-References: <20240118153524.4135901-1-sabiya.d@ti.com>
- <20240118153524.4135901-3-sabiya.d@ti.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QUxw6+ki"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-337d5aa5ef6so460061f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:15:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705670102; x=1706274902; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7fb00m/4fXSK2elurL8+vFDfKU246XZ6cwAMjhuLk5M=;
+        b=QUxw6+kiVdLJijGvTouC1ji1sNFZkW/Jz4+S2Um3YLC5qjRlrm17GqKfanWkWNhwmh
+         S8uxs37UF7+riSTF/As5IqkiCNWKa/UXvXQ5QJEXfy0VGixWCGVhkva19d0iHsLPPVVr
+         l5yMutHil3QDVjEG9y66UZ8yCz0h636PKVaYXTiCzG7goOCWDuo2y1QUk8pTdNl8F5A7
+         mItvrF/S9/hUVrBmHL0nnXdyz8D4fs+qNVl2Ds7CALsrqxcUJviUvZMuUY8oy9D+2ycO
+         Qgs+7R8x50H5H8+Yzw3gV+wI+wL4pur5jfUGjpYl19I3N7FHMtcuXpApMLbeS3b7yXpu
+         8Afw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705670102; x=1706274902;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7fb00m/4fXSK2elurL8+vFDfKU246XZ6cwAMjhuLk5M=;
+        b=DONuldgkGPb52srsTt+uDhI4boAIvVlw0r+tGem4Jkikw6sBYMhzDmIKQgEoqzjyyr
+         YXxdVauJ2AAXhI6sl6yUyCq23a4Tu57RC4LIsIT/3ohHoVhCNzwv6d8emn62faDVPNZf
+         j1QBvLWw3luHEpVr3bl/JmDmgoiwgK/z/mjbfV/COEtHELlLtxuc6HtTyGhpHccToBDQ
+         wLfE2VNG2Yd4218aw9nXIfwnade2fK2wuGd8aYmMaxTkT+z/vDGHdfZcYD8fmFV0IRW5
+         pVPLHwKSJhVcXeJg2ZGPIDRZXavc8h2her3RBcOHQuTOpLNT9wiG0W+x/q0hKS0yK7ym
+         N6Qw==
+X-Gm-Message-State: AOJu0YzS/K0HsYF/SLqxtiSBiYf2nVhPaf0zqwQLdfoVSAtyCq+sWkvY
+	kr4g2aj9N/nKC4NFVDPxhDLoghJc4XBqQhd0U9nQoir12yn/4DRHRZXigSglZlQ=
+X-Google-Smtp-Source: AGHT+IECgnAsAQ/TbdhOd9jFSp2Z26ajBoyr6I+xGjnS5yL1Dyktn+STaFRaWg9vaz2rlfPJxWB7eA==
+X-Received: by 2002:adf:fa0e:0:b0:337:d932:4980 with SMTP id m14-20020adffa0e000000b00337d9324980mr936025wrr.143.1705670101770;
+        Fri, 19 Jan 2024 05:15:01 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id n7-20020adff087000000b00337bb0f370dsm6512697wro.40.2024.01.19.05.15.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jan 2024 05:15:01 -0800 (PST)
+Date: Fri, 19 Jan 2024 16:14:58 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Jacob Lott <jklott.git@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] staging: rts5208: Add more details to Kconfig help
+Message-ID: <b02e7a82-0db3-42f0-b5d9-e6d33b159192@moroto.mountain>
+References: <20240118191703.89535-1-jklott.git@gmail.com>
+ <ce1d6680-a7f5-4939-a47c-3079e7136c28@moroto.mountain>
+ <ab907c56-5d91-482c-8308-fe06c22c7f55@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240118153524.4135901-3-sabiya.d@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <ab907c56-5d91-482c-8308-fe06c22c7f55@gmail.com>
 
-On 21:05-20240118, sabiya.d@mistralsolutions.com wrote:
-> From: Dasnavis Sabiya <sabiya.d@ti.com>
+On Fri, Jan 19, 2024 at 06:42:57AM -0500, Jacob Lott wrote:
 > 
-> AM69 SK has S28HS512T OSPI flash connected to MCU OSPI0.
-> Enable support for the same. Also describe the partition
-> information according to the offsets in the bootloader.
-> 
-> Signed-off-by: Dasnavis Sabiya <sabiya.d@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am69-sk.dts | 81 +++++++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am69-sk.dts b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-> index feb571a5a0f5..f368105942eb 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-> @@ -474,6 +474,25 @@ J784S4_IOPAD(0x09C, PIN_OUTPUT, 0) /* (AF35) MCAN7_TX */
->  	};
->  };
->  
-> +&wkup_pmx0 {
-> +	bootph-all;
-> +	mcu_fss0_ospi0_pins_default: mcu-fss0-ospi0-default-pins {
-> +		pinctrl-single,pins = <
-> +			J784S4_WKUP_IOPAD(0x000, PIN_OUTPUT, 0) /* (E32) MCU_OSPI0_CLK */
-> +			J784S4_WKUP_IOPAD(0x02c, PIN_OUTPUT, 0) /* (A32) MCU_OSPI0_CSn0 */
-> +			J784S4_WKUP_IOPAD(0x00c, PIN_INPUT, 0) /* (B33) MCU_OSPI0_D0 */
-> +			J784S4_WKUP_IOPAD(0x010, PIN_INPUT, 0) /* (B32) MCU_OSPI0_D1 */
-> +			J784S4_WKUP_IOPAD(0x014, PIN_INPUT, 0) /* (C33) MCU_OSPI0_D2 */
-> +			J784S4_WKUP_IOPAD(0x018, PIN_INPUT, 0) /* (C35) MCU_OSPI0_D3 */
-> +			J784S4_WKUP_IOPAD(0x01c, PIN_INPUT, 0) /* (D33) MCU_OSPI0_D4 */
-> +			J784S4_WKUP_IOPAD(0x020, PIN_INPUT, 0) /* (D34) MCU_OSPI0_D5 */
-> +			J784S4_WKUP_IOPAD(0x024, PIN_INPUT, 0) /* (E34) MCU_OSPI0_D6 */
-> +			J784S4_WKUP_IOPAD(0x028, PIN_INPUT, 0) /* (E33) MCU_OSPI0_D7 */
-> +			J784S4_WKUP_IOPAD(0x008, PIN_INPUT, 0) /* (C34) MCU_OSPI0_DQS */
-> +		>;
-> +	};
-> +};
-> +
->  &wkup_pmx2 {
->  	bootph-all;
->  	pmic_irq_pins_default: pmic-irq-default-pins {
-> @@ -1073,3 +1092,65 @@ &main_mcan7 {
->  	pinctrl-0 = <&main_mcan7_pins_default>;
->  	phys = <&transceiver4>;
->  };
-> +
-> +&ospi0 {
-> +	bootph-all;
+> For the future when talking about line wrapping I've been going based off
+> VSCode's row/col count, is this not correct? For reference when writing the
+> commit I would use a new line before hitting 72 "col" on each row. I ask for
+> the future so I can make better commits.
 
-Only on the leaf nodes please.
+I don't know anything about VSCode so I can't answer the question.
+There aren't any tabs so really I can't imagine how VSCode could get the
+col count wrong...  (0_0)
 
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mcu_fss0_ospi0_pins_default>;
-> +
-> +	flash@0 {
-> +		bootph-all;
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0x0>;
-> +		spi-tx-bus-width = <8>;
-> +		spi-rx-bus-width = <8>;
-> +		spi-max-frequency = <25000000>;
-> +		cdns,tshsl-ns = <60>;
-> +		cdns,tsd2d-ns = <60>;
-> +		cdns,tchsh-ns = <60>;
-> +		cdns,tslch-ns = <60>;
-> +		cdns,read-delay = <4>;
-> +
-> +		partitions {
-> +			compatible = "fixed-partitions";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			partition@0 {
-> +				label = "ospi.tiboot3";
-> +				reg = <0x0 0x80000>;
-> +			};
-> +
-> +			partition@80000 {
-> +				label = "ospi.tispl";
-> +				reg = <0x80000 0x200000>;
-> +			};
-> +
-> +			partition@280000 {
-> +				label = "ospi.u-boot";
-> +				reg = <0x280000 0x400000>;
-> +			};
-> +
-> +			partition@680000 {
-> +				label = "ospi.env";
-> +				reg = <0x680000 0x40000>;
-> +			};
-> +
-> +			partition@6c0000 {
-> +				label = "ospi.env.backup";
-> +				reg = <0x6c0000 0x40000>;
-> +			};
-> +
-> +			partition@800000 {
-> +				label = "ospi.rootfs";
-> +				reg = <0x800000 0x37c0000>;
-> +			};
-> +
-> +			partition@3fc0000 {
-> +				label = "ospi.phypattern";
-> +				reg = <0x3fc0000 0x40000>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.34.1
-> 
-
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+regards,
+dan carpenter
