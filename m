@@ -1,415 +1,156 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E843C493;
-	Fri, 19 Jan 2024 10:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB51D4C63F
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 10:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705661169; cv=none; b=O0SLV933BiguqJRvmfaTAQCBv1T8Crqu2wSDKuTuXIwExRRioGctOVVbp47ISAc58Um3DsWq9o1DyTgUBA2oCH8o7C0Ajb2qb4ZdGqoxLRk2xetz4SUPQgBpKzAqJMOr/2mPsbCEH4phM4/gVGynuAwMDDLF3+RJqBMJXWrma7M=
+	t=1705661226; cv=none; b=fz7nmWwSbFnCwP63T1VbOaLrJ/IPL29SHS2ZVluzVU8ElhtmI64mJHLm+D3+ykAXiqj+fb0IqxxZojQfXgaRZBF1PWkeEmGkKi6XvUC/X1X8yfp+8rpTrQDA5BLAF3Bfp0Is8JOLesbpo4f2+BZ9xJppo4Un+1kq7kath8zZHrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705661169; c=relaxed/simple;
-	bh=KxQtTG+bdahH4GYu6kErROj559jzNsux+B3iRtc5c8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aj4L4CEIcWupXdh6Sz/+zuOyccaTMpkdDg/uQbMhiXYviHzNgqrD5uNywtHeLhH23zkSJHngs6fncx/65kSjlYJIIC3VPetJfekPOKk/pVjGkpBuLHdWz7uMWbg4E7amzYKqHWQvmq68sTpCebdySslZwIBJlVIFVptQA2xZXXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BvVAah7Z; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BvVAah7Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705661160;
-	bh=KxQtTG+bdahH4GYu6kErROj559jzNsux+B3iRtc5c8M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BvVAah7Zv6QVxEnxz+3I7hWNhOCCSDOu3AlrfK9FMiGkDbOaBSIpuW5qyZJLPYgCI
-	 DO6PglY4NRl/APDGYxX014XjygAlH9bbxjAZVSqmU6CppzakgNX2gGk5SM3BQM2LB+
-	 QicvBBFusU2sbxddA2fE08NYzPLWqqUeNYD2/nTJx9+cxwcPxM1dah6dAFiNjPCTPP
-	 74pqQD3jSlsEkkWI4eoF+YFpUXbHqf/Ip5H2ESRnS/+/jq/ShrCg46IiY+apXm8r1o
-	 0W+Nd8VLQYvkRHkHZxYq6QHcjY/a/aLJSX/J5cZIHYpvHpy7BCuYxQPIRcb4dHvagx
-	 /gj7t+53NJd9w==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id F101F3782083;
-	Fri, 19 Jan 2024 10:45:58 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: gregkh@linuxfoundation.org
-Cc: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	heikki.krogerus@linux.intel.com,
-	matthias.bgg@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	neil.armstrong@linaro.org,
-	andersson@kernel.org,
-	nathan@kernel.org,
-	luca.weiss@fairphone.com,
-	tianping.fang@mediatek.com,
-	linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	kernel@collabora.com,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH 2/2] usb: typec: mux: Add ITE IT5205 Alternate Mode Passive MUX driver
-Date: Fri, 19 Jan 2024 11:45:50 +0100
-Message-ID: <20240119104550.140061-3-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240119104550.140061-1-angelogioacchino.delregno@collabora.com>
-References: <20240119104550.140061-1-angelogioacchino.delregno@collabora.com>
+	s=arc-20240116; t=1705661226; c=relaxed/simple;
+	bh=ETC/EGX1MyUthxOTHArkuXLBSvEQThOYJygAtChSvQM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=pBBaKBVtUlaBg9psgTLMHJsO8GNqeBO+2qIgXEtVZq0dKV9vubhj+z9cYgc51/b4PJp7R1sQyFG7GpK/xjD5bP8Q5HwrJU4sm/wBFJWrRknaf2mmIjitGCM5V44Mo62daflIoqpnPwr/CsF8aGbYH+6qJ0HPPaitrBBx5YLiS0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7bb454e1d63so66553439f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 02:47:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705661224; x=1706266024;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a2Uin45Ye5HlZTRXE32SfNhV4oIroYjwVBWkxgygr5U=;
+        b=l1dR4pXHAxAntEQiCCSl+QbjTHZQgT1SYuMvuWD5tuvKX6TazSxaOXk8Hwc8tQpAyt
+         TwwwTfHxY0st9xfo3ZEE7K5ikfE0l606D2cHPa930tXGgenulWtuNNRH6IX/4Gt3Czhx
+         WyY4z0QECtT4tKQtkRqjin/OAY80J7nzGXmwKqMg33vLtJVJP5LUkt3vtMQIM63t+7mb
+         66OvIi1ZMw0KJskSmXhBaMu3jkU+qkrZomdpKFXH7MhBycPHLMCJIY8Hz5MDqCyb5IQ+
+         BpSjR1CUsht4ZgYTaztOwEp0dKRwTrei1nZKbtm+2I1wcYrxD/9Om0AJ02N3xs/DBoK4
+         ZYxQ==
+X-Gm-Message-State: AOJu0Yx95s2ABmyISJ4hzc5VymWrcpWLSmebY53jNb40THufqDDu+sDd
+	F3DBRoZ8IN1z0EfV2CGixl3xJgrNjx0p1bklal6DzSdy50R/9YDcz/Dxde2yWwfe5BO4ffpwIsL
+	g+zcXmD7CdVWJO4UWw7bQeEUmrTSeYsD8v9ZtFDiZ/IiSfYSESxm7Mig=
+X-Google-Smtp-Source: AGHT+IF/st1/kdZismRftsJiPvBCAZyKXCry7NDbQTrQh5aJUib5mEYKt0dqQIdh5DARhqizcGBAbukfuH8GRQOuPTAKtiBq+4xD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1569:b0:360:2a3:7dc0 with SMTP id
+ k9-20020a056e02156900b0036002a37dc0mr333164ilu.2.1705661223905; Fri, 19 Jan
+ 2024 02:47:03 -0800 (PST)
+Date: Fri, 19 Jan 2024 02:47:03 -0800
+In-Reply-To: <20240119103104.1990-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005bb05e060f4a3301@google.com>
+Subject: Re: [syzbot] [net?] KASAN: use-after-free Read in __skb_flow_dissect (3)
+From: syzbot <syzbot+bfde3bef047a81b8fde6@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The ITE IT5202 is a USB Type-C Alternate Mode Passive MUX, used for
-muxing the SBU lines of a Type-C port with DisplayPort altmode and
-also providing an orientation switch.
+Hello,
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/usb/typec/mux/Kconfig  |  10 ++
- drivers/usb/typec/mux/Makefile |   1 +
- drivers/usb/typec/mux/it5205.c | 292 +++++++++++++++++++++++++++++++++
- 3 files changed, 303 insertions(+)
- create mode 100644 drivers/usb/typec/mux/it5205.c
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KASAN: use-after-free Read in ipip_tunnel_xmit
 
-diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
-index d2cb5e733e57..399c7b0983df 100644
---- a/drivers/usb/typec/mux/Kconfig
-+++ b/drivers/usb/typec/mux/Kconfig
-@@ -36,6 +36,16 @@ config TYPEC_MUX_INTEL_PMC
- 	  control the USB role switch and also the multiplexer/demultiplexer
- 	  switches used with USB Type-C Alternate Modes.
- 
-+config TYPEC_MUX_IT5205
-+	tristate "ITE IT5205 Type-C USB Alt Mode Passive MUX driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Driver for the ITE IT5205 Type-C USB Alternate Mode Passive MUX
-+	  which provides support for muxing DisplayPort and sideband signals
-+	  on a common USB Type-C connector.
-+	  If compiled as a module, the module will be named it5205.
-+
- config TYPEC_MUX_NB7VPQ904M
- 	tristate "On Semiconductor NB7VPQ904M Type-C redriver driver"
- 	depends on I2C
-diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefile
-index 57dc9ac6f8dc..bb96f30267af 100644
---- a/drivers/usb/typec/mux/Makefile
-+++ b/drivers/usb/typec/mux/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_TYPEC_MUX_FSA4480)		+= fsa4480.o
- obj-$(CONFIG_TYPEC_MUX_GPIO_SBU)	+= gpio-sbu-mux.o
- obj-$(CONFIG_TYPEC_MUX_PI3USB30532)	+= pi3usb30532.o
- obj-$(CONFIG_TYPEC_MUX_INTEL_PMC)	+= intel_pmc_mux.o
-+obj-$(CONFIG_TYPEC_MUX_IT5205)		+= it5205.o
- obj-$(CONFIG_TYPEC_MUX_NB7VPQ904M)	+= nb7vpq904m.o
- obj-$(CONFIG_TYPEC_MUX_PTN36502)	+= ptn36502.o
- obj-$(CONFIG_TYPEC_MUX_WCD939X_USBSS)	+= wcd939x-usbss.o
-diff --git a/drivers/usb/typec/mux/it5205.c b/drivers/usb/typec/mux/it5205.c
-new file mode 100644
-index 000000000000..99203b8a086d
---- /dev/null
-+++ b/drivers/usb/typec/mux/it5205.c
-@@ -0,0 +1,292 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ITE IT5205 Type-C USB alternate mode passive mux
-+ *
-+ * Copyright (c) 2020 MediaTek Inc.
-+ * Copyright (c) 2024 Collabora Ltd.
-+ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+ *
-+ */
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mutex.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+#include <linux/usb/typec.h>
-+#include <linux/usb/typec_mux.h>
-+#include <linux/usb/typec_dp.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio.h>
-+#include <linux/usb/tcpm.h>
-+
-+#define IT5205_REG_CHIP_ID(x)	(0x4 + (x))
-+#define IT5205FN_CHIP_ID	0x35323035 /* "5205" */
-+
-+/* MUX power down register */
-+#define IT5205_REG_MUXPDR        0x10
-+#define IT5205_MUX_POWER_DOWN    BIT(0)
-+
-+/* MUX control register */
-+#define IT5205_REG_MUXCR         0x11
-+#define IT5205_POLARITY_INVERTED BIT(4)
-+#define IT5205_DP_USB_CTRL_MASK  GENMASK(3, 0)
-+#define IT5205_DP                0x0f
-+#define IT5205_DP_USB            0x03
-+#define IT5205_USB               0x07
-+
-+/* Vref Select Register */
-+#define IT5205_REG_VSR            0x10
-+#define IT5205_VREF_SELECT_MASK   GENMASK(5, 4)
-+#define IT5205_VREF_SELECT_3_3V   0x00
-+#define IT5205_VREF_SELECT_OFF    0x20
-+
-+/* CSBU Over Voltage Protection Register */
-+#define IT5205_REG_CSBUOVPSR      0x1e
-+#define IT5205_OVP_SELECT_MASK    GENMASK(5, 4)
-+#define IT5205_OVP_3_90V          0x00
-+#define IT5205_OVP_3_68V          0x10
-+#define IT5205_OVP_3_62V          0x20
-+#define IT5205_OVP_3_57V          0x30
-+
-+/* CSBU Switch Register */
-+#define IT5205_REG_CSBUSR         0x22
-+#define IT5205_CSBUSR_SWITCH      BIT(0)
-+
-+/* Interrupt Switch Register */
-+#define IT5205_REG_ISR            0x25
-+#define IT5205_ISR_CSBU_MASK      BIT(4)
-+#define IT5205_ISR_CSBU_OVP       BIT(0)
-+
-+struct it5205 {
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+	struct typec_switch_dev *sw;
-+	struct typec_mux_dev *mux;
-+};
-+
-+static int it5205_switch_set(struct typec_switch_dev *sw, enum typec_orientation orientation)
-+{
-+	struct it5205 *it = typec_switch_get_drvdata(sw);
-+
-+	switch (orientation) {
-+	case TYPEC_ORIENTATION_NORMAL:
-+		regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
-+				   IT5205_POLARITY_INVERTED, 0);
-+		break;
-+	case TYPEC_ORIENTATION_REVERSE:
-+		regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
-+				   IT5205_POLARITY_INVERTED, IT5205_POLARITY_INVERTED);
-+		break;
-+	case TYPEC_ORIENTATION_NONE:
-+		fallthrough;
-+	default:
-+		regmap_write(it->regmap, IT5205_REG_MUXCR, 0);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int it5205_mux_set(struct typec_mux_dev *mux, struct typec_mux_state *state)
-+{
-+	struct it5205 *it = typec_mux_get_drvdata(mux);
-+	u8 val;
-+
-+	switch (state->mode) {
-+	case TYPEC_STATE_USB:
-+		val = IT5205_USB;
-+		break;
-+	case TYPEC_DP_STATE_C:
-+		fallthrough;
-+	case TYPEC_DP_STATE_E:
-+		val = IT5205_DP;
-+		break;
-+	case TYPEC_DP_STATE_D:
-+		val = IT5205_DP_USB;
-+		break;
-+	case TYPEC_STATE_SAFE:
-+		fallthrough;
-+	default:
-+		val = 0;
-+		break;
-+	}
-+
-+	return regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
-+				  IT5205_DP_USB_CTRL_MASK, val);
-+}
-+
-+static irqreturn_t it5205_irq_handler(int irq, void *data)
-+{
-+	struct it5205 *it = data;
-+	int ret;
-+	u32 val;
-+
-+	ret = regmap_read(it->regmap, IT5205_REG_ISR, &val);
-+	if (ret)
-+		return IRQ_NONE;
-+
-+	if (val & IT5205_ISR_CSBU_OVP) {
-+		dev_warn(&it->client->dev, "Overvoltage detected!\n");
-+
-+		/* Reset CSBU */
-+		regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
-+				   IT5205_CSBUSR_SWITCH, 0);
-+		regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
-+				   IT5205_CSBUSR_SWITCH, IT5205_CSBUSR_SWITCH);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void it5205_enable_ovp(struct it5205 *it)
-+{
-+	/* Select Vref 3.3v */
-+	regmap_update_bits(it->regmap, IT5205_REG_VSR,
-+			   IT5205_VREF_SELECT_MASK, IT5205_VREF_SELECT_3_3V);
-+
-+	/* Trigger OVP at 3.68V */
-+	regmap_update_bits(it->regmap, IT5205_REG_CSBUOVPSR,
-+			   IT5205_OVP_SELECT_MASK, IT5205_OVP_3_68V);
-+
-+	/* Unmask OVP interrupt */
-+	regmap_update_bits(it->regmap, IT5205_REG_ISR,
-+			   IT5205_ISR_CSBU_MASK, 0);
-+
-+	/* Enable CSBU Interrupt */
-+	regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
-+			   IT5205_CSBUSR_SWITCH, IT5205_CSBUSR_SWITCH);
-+}
-+
-+static const struct regmap_config it5205_regmap = {
-+	.max_register = 0x2f,
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int it5205_probe(struct i2c_client *client)
-+{
-+	struct typec_switch_desc sw_desc = { };
-+	struct typec_mux_desc mux_desc = { };
-+	struct device *dev = &client->dev;
-+	struct it5205 *it;
-+	u32 val, chipid = 0;
-+	int i, ret;
-+
-+	it = devm_kzalloc(dev, sizeof(*it), GFP_KERNEL);
-+	if (!it)
-+		return -ENOMEM;
-+
-+	ret = devm_regulator_get_enable(dev, "vcc");
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get regulator\n");
-+
-+	it->client = client;
-+
-+	it->regmap = devm_regmap_init_i2c(client, &it5205_regmap);
-+	if (IS_ERR(it->regmap))
-+		return dev_err_probe(dev, PTR_ERR(it->regmap),
-+				     "Failed to init regmap\n");
-+
-+	/* IT5205 needs a long time to power up after enabling regulator */
-+	msleep(50);
-+
-+	/* Unset poweroff bit */
-+	ret = regmap_write(it->regmap, IT5205_REG_MUXPDR, 0);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to set power on\n");
-+
-+	/* Read the 32 bits ChipID */
-+	for (i = 3; i >= 0; i--) {
-+		ret = regmap_read(it->regmap, IT5205_REG_CHIP_ID(i), &val);
-+		if (ret)
-+			return ret;
-+
-+		chipid |= val << (i * 8);
-+	}
-+
-+	if (chipid != IT5205FN_CHIP_ID)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "Unknown ChipID 0x%x\n", chipid);
-+
-+	/* Initialize as USB mode with default (non-inverted) polarity */
-+	ret = regmap_write(it->regmap, IT5205_REG_MUXCR, IT5205_USB);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Cannot set mode to USB\n");
-+
-+	sw_desc.drvdata = it;
-+	sw_desc.fwnode = dev_fwnode(dev);
-+	sw_desc.set = it5205_switch_set;
-+
-+	it->sw = typec_switch_register(dev, &sw_desc);
-+	if (IS_ERR(it->sw))
-+		return dev_err_probe(dev, PTR_ERR(it->sw),
-+				     "failed to register typec switch\n");
-+
-+	mux_desc.drvdata = it;
-+	mux_desc.fwnode = dev_fwnode(dev);
-+	mux_desc.set = it5205_mux_set;
-+
-+	it->mux = typec_mux_register(dev, &mux_desc);
-+	if (IS_ERR(it->mux)) {
-+		typec_switch_unregister(it->sw);
-+		return dev_err_probe(dev, PTR_ERR(it->mux),
-+				     "failed to register typec mux\n");
-+	}
-+
-+	i2c_set_clientdata(client, it);
-+
-+	if (of_property_read_bool(dev->of_node, "ite,ovp-enable") && client->irq) {
-+		it5205_enable_ovp(it);
-+
-+		ret = devm_request_threaded_irq(dev, client->irq, NULL,
-+						it5205_irq_handler,
-+						IRQF_ONESHOT, dev_name(dev), it);
-+		if (ret) {
-+			typec_mux_unregister(it->mux);
-+			typec_switch_unregister(it->sw);
-+			return dev_err_probe(dev, ret, "Failed to request irq\n");
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void it5205_remove(struct i2c_client *client)
-+{
-+	struct it5205 *it = i2c_get_clientdata(client);
-+
-+	typec_mux_unregister(it->mux);
-+	typec_switch_unregister(it->sw);
-+}
-+
-+static const struct i2c_device_id it5205_table[] = {
-+	{ "it5205" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, it5205_table);
-+
-+static const struct of_device_id it5205_of_table[] = {
-+	{ .compatible = "ite,it5205" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, it5205_match_table);
-+
-+static struct i2c_driver it5205_driver = {
-+	.driver = {
-+		.name = "it5205",
-+		.of_match_table = it5205_of_table,
-+	},
-+	.probe = it5205_probe,
-+	.remove = it5205_remove,
-+	.id_table = it5205_table,
-+};
-+module_i2c_driver(it5205_driver);
-+
-+MODULE_AUTHOR("Tianping Fang <tianping.fang@mediatek.com>");
-+MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>");
-+MODULE_DESCRIPTION("ITE IT5205 alternate mode passive MUX driver");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
+==================================================================
+BUG: KASAN: use-after-free in ipip_tunnel_xmit+0x580/0x610 net/ipv4/ipip.c:284
+Read of size 1 at addr ffff888122e2000e by task syz-executor.0/5483
+
+CPU: 3 PID: 5483 Comm: syz-executor.0 Not tainted 6.7.0-syzkaller-g9d1694dc91ce-dirty #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc4/0x620 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ ipip_tunnel_xmit+0x580/0x610 net/ipv4/ipip.c:284
+ __netdev_start_xmit include/linux/netdevice.h:4989 [inline]
+ netdev_start_xmit include/linux/netdevice.h:5003 [inline]
+ xmit_one net/core/dev.c:3547 [inline]
+ dev_hard_start_xmit+0x137/0x6d0 net/core/dev.c:3563
+ __dev_queue_xmit+0x7b6/0x3ed0 net/core/dev.c:4351
+ dev_queue_xmit include/linux/netdevice.h:3171 [inline]
+ neigh_connected_output+0x426/0x5d0 net/core/neighbour.c:1592
+ neigh_output include/net/neighbour.h:542 [inline]
+ ip_finish_output2+0x82d/0x2540 net/ipv4/ip_output.c:235
+ __ip_finish_output net/ipv4/ip_output.c:313 [inline]
+ __ip_finish_output+0x38b/0x650 net/ipv4/ip_output.c:295
+ ip_finish_output+0x31/0x310 net/ipv4/ip_output.c:323
+ NF_HOOK_COND include/linux/netfilter.h:303 [inline]
+ ip_mc_output+0x1dd/0x6a0 net/ipv4/ip_output.c:420
+ dst_output include/net/dst.h:451 [inline]
+ ip_local_out+0xaf/0x1a0 net/ipv4/ip_output.c:129
+ iptunnel_xmit+0x5b4/0x9b0 net/ipv4/ip_tunnel_core.c:82
+ ip_tunnel_xmit+0x1e2d/0x34c0 net/ipv4/ip_tunnel.c:837
+ ipgre_xmit+0x49b/0x980 net/ipv4/ip_gre.c:665
+ __netdev_start_xmit include/linux/netdevice.h:4989 [inline]
+ netdev_start_xmit include/linux/netdevice.h:5003 [inline]
+ xmit_one net/core/dev.c:3547 [inline]
+ dev_hard_start_xmit+0x137/0x6d0 net/core/dev.c:3563
+ __dev_queue_xmit+0x7b6/0x3ed0 net/core/dev.c:4351
+ dev_queue_xmit include/linux/netdevice.h:3171 [inline]
+ __bpf_tx_skb net/core/filter.c:2135 [inline]
+ __bpf_redirect_no_mac net/core/filter.c:2169 [inline]
+ __bpf_redirect+0x745/0xf90 net/core/filter.c:2192
+ ____bpf_clone_redirect net/core/filter.c:2463 [inline]
+ bpf_clone_redirect+0x2b2/0x420 net/core/filter.c:2435
+ ___bpf_prog_run+0x3e44/0xabc0 kernel/bpf/core.c:1986
+ __bpf_prog_run512+0xb7/0xf0 kernel/bpf/core.c:2227
+ bpf_dispatcher_nop_func include/linux/bpf.h:1231 [inline]
+ __bpf_prog_run include/linux/filter.h:651 [inline]
+ bpf_prog_run include/linux/filter.h:658 [inline]
+ bpf_test_run+0x3d3/0x9c0 net/bpf/test_run.c:423
+ bpf_prog_test_run_skb+0xb75/0x1dd0 net/bpf/test_run.c:1056
+ bpf_prog_test_run kernel/bpf/syscall.c:4107 [inline]
+ __sys_bpf+0x11bf/0x4a00 kernel/bpf/syscall.c:5475
+ __do_sys_bpf kernel/bpf/syscall.c:5561 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5559 [inline]
+ __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5559
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd3/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+RIP: 0033:0x7fdcb227cce9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fdcb30990c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007fdcb239bf80 RCX: 00007fdcb227cce9
+RDX: 0000000000000028 RSI: 0000000020000080 RDI: 000000000000000a
+RBP: 00007fdcb22c947a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007fdcb239bf80 R15: 00007ffca7f31938
+ </TASK>
+
+The buggy address belongs to the physical page:
+page:ffffea00048b8800 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x122e20
+flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
+page_type: 0xffffffff()
+raw: 057ff00000000000 ffffea00048b8808 ffffea00048b8808 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+
+Memory state around the buggy address:
+ ffff888122e1ff00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888122e1ff80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff888122e20000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                      ^
+ ffff888122e20080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888122e20100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+
+
+Tested on:
+
+commit:         9d1694dc Merge tag 'for-6.8/block-2024-01-18' of git:/..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=12390e2de80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=70f4213b9a7b4f3a
+dashboard link: https://syzkaller.appspot.com/bug?extid=bfde3bef047a81b8fde6
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1647beede80000
 
