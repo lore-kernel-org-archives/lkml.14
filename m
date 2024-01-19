@@ -1,115 +1,100 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB5A5479F;
-	Fri, 19 Jan 2024 14:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47A753E24;
+	Fri, 19 Jan 2024 14:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705675723; cv=none; b=joNJEEXBAOJKZa7Bi7I3zeHkMS3pDy7XewFfW0vPUlIqj38+RrJnyzDnOG6AbR8LSAV0enFRga2EaKQaLF4FniUHKFYYegMakCunO8sAkbHttTGGc9OqfC4zXAsEDufNJpv0cQZ0n06v2vpP+9XDg9qhJpB1Z81piWgDLxJ3KKQ=
+	t=1705675771; cv=none; b=oFGsPLzW0UfZs5kvXHYKwXBgfi10TOPACmpF04B53LaHqlF5YIKg52ZGw/GwVFMPG4ODNZeSlrykJ+DmVsheWRyXQD9nQTnpr/Ydc9uKxxpB5/Jyvu06B45ahxndb9N+UOJJL9XyXrvM6M7Ta5PkX2kM3/dw5zM2/byexdS63q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705675723; c=relaxed/simple;
-	bh=N5dxDJ8RBtd+2+qEyuvlZWxCpwk9SOuLxT5zchJWh7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dtzIHl/RXVU9uF7rVI3EMgT1ARNg6YFOPGCLHw9mm5jslfR0PG1A9LurZNuGxch+ItjPgeAooVGJOq96m2m5EWxGA+7qLvTzYZWdv/7L/mCg77ca8RC6WQj9bJ1+B1VO4bHwToth1PcUoXK79mo5TCJ82sjYtjLkkdSq7ZnRQM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=r9plyTna; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1705675771; c=relaxed/simple;
+	bh=hCsjv91Yj4g0mu9TcH2Xv3lssnwsCBwDQBHzNUt9fjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjO5kBsdCiVJo8WZ0YDWdMM8+S7NIH8DyDXSAJsB6XPq2aAKhutOQ6zbY6XgnMuC1NPyy3WZscIC4xpG9TqUIxYgSHwLlyTojbXYDJfA7HKy5dmAVJdHeZ6+Tm8rnvPMCbb5i8sxdjkNxP11bd5DYYgVZ7kcyA29DchJT1Q9roY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcUDEGoO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="r9plyTna"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1705675228;
-	bh=N5dxDJ8RBtd+2+qEyuvlZWxCpwk9SOuLxT5zchJWh7g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r9plyTnaRfggs+rIScfK287Oih516Dx4TkppuV/JDCfjQgfyAWermTZsR6ZAya2I3
-	 wb7GRgjVdaKxlW/znjeJ5wNYkW/xctA0PBxSyoKF7K8ZnDKJ0Z94bgR3sXuN/Wyehe
-	 pGKCj8O4Ni1XC3yW8qjbnGfoNlVJ7A3OyZc6KO2mYfVsc13zsnUGCOotrYsty1jDIs
-	 JubAZi/oeqJrhw5fV4cn4GKIw/pmieaUx8olcVyqP/AVP7RARW7yYzKsU0A3bzFcka
-	 9/zhEecxDz478X7pB/3IzgZ73vyC72Jm/IxdTE5galtiE+s88ydg67OvdqAvfbNz8V
-	 MVqpTQRjAgTKw==
-Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TGj2h3Lv2zLdp;
-	Fri, 19 Jan 2024 09:40:28 -0500 (EST)
-Message-ID: <504085e9-bf91-4948-a158-abae5dcb276a@efficios.com>
-Date: Fri, 19 Jan 2024 09:40:27 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcUDEGoO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC55C433F1;
+	Fri, 19 Jan 2024 14:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705675771;
+	bh=hCsjv91Yj4g0mu9TcH2Xv3lssnwsCBwDQBHzNUt9fjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CcUDEGoOFlcLo+0ZJN8vUz0TsUYBvRn2MSjEw9MRuxGor91adf5VbKu9ojYSgtNO4
+	 kId5csymMPuYgpMxvigwacpP1EHfXn+XdukEQs+mkq0FIXTlFiOO1vs70PVVgY6sBP
+	 GGmRWFZXPvqkdoMGzh2Zq02GXHL+G8ZRV6Zyv39U9YPCxOzr+WKZJTKOcvrkds3kOm
+	 kwIMCj6z2iAaOIoYCCyryl9oS6K8Xbk/UCmSauqVHq1SHavRCY17ETnyjN6xVAB1nB
+	 HPESE3H8wd6ihIoJrc7/u+BqXZSA5mue2NeWPiEE087Z13Oa1ZwvXoRYSi8mLwnekj
+	 +5iwZ2vt9T5Sw==
+Date: Fri, 19 Jan 2024 14:49:26 +0000
+From: Simon Horman <horms@kernel.org>
+To: Suresh Kumar <suresh2514@gmail.com>
+Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i40e: print correct hw max rss count in kernel ring
+ buffer
+Message-ID: <20240119144926.GA89683@kernel.org>
+References: <20240119131652.8050-1-suresh2514@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ring-buffer: Simplify reservation with try_cmpxchg() loop
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-References: <20240118181206.4977da2f@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <20240118181206.4977da2f@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240119131652.8050-1-suresh2514@gmail.com>
 
-On 2024-01-18 18:12, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Fri, Jan 19, 2024 at 06:46:52PM +0530, Suresh Kumar wrote:
+> The value printed for  "HW max RSS count" is wrong in kernel dmesg for i40e
+> NICs:
 > 
-> Instead of using local_add_return() to reserve the ring buffer data,
-> Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify the
-> reservation with the time keeping code.
+>   ... i40e 0000:63:00.0: User requested queue count/HW max RSS count: 48/64
+> 
+> whereas  ethtool reports the correct value from "vsi->num_queue_pairs"
+> 
+> Channel parameters for eno33:
+> Pre-set maximums:
+> RX:     n/a
+> TX:     n/a
+> Other:      1
+> Combined:   96
+> Current hardware settings:
+> RX:     n/a
+> TX:     n/a
+> Other:      1
+> Combined:   96  <-------
+> 
+> and is misleading.
+> 
+> This value is printed from 'pf->rss_size_max' which seems hardcoded.
+> 
+> Below commit also removed this 64 limit:
+> 
+> Commit e56afa599609d3afe8b0ce24b553ab95e9782502
+> Author: Amritha Nambiar <amritha.nambiar@intel.com>
+> Date:   Wed Nov 8 16:38:43 2017 -0800
+> 
+>     i40e: Remove limit of 64 max queues per channel
 
-I admire the effort of trying to simplify the Ftrace ring buffer by bringing
-over ideas that worked well for LTTng. :-) As reviewer of the tracing subsystem,
-I certainly welcome the simplifications.
+Hi Suresh,
 
-> Although, it does not get rid of the double time stamps (before_stamp and
-> write_stamp), using cmpxchg() does get rid of the more complex case when
-> an interrupting event occurs between getting the timestamps and reserving
-> the data, as when that happens, it just tries again instead of dealing
-> with it.
+I think it would be more normal to cite this commit something like this:
 
-I understand that the reason why you need the before/after stamps and their
-associated complexity is because the Ftrace ring buffer ABI encodes event
-timestamps as delta from the previous event within the buffer as a mean of
-compressing the timestamp fields. If the delta cannot be represented in a
-given number of bits, then it inserts a 64-bit timestamp (not sure if that
-one is absolute or a delta from previous event).
+The limit of 64 was removed by
+commit e56afa599609 ("i40e: Remove limit of 64 max queues per channel")
 
-This timestamp encoding as delta between events introduce a strong
-inter-dependency between consecutive (nested) events, and is the reason
-why you are stuck with all this timestamp before/after complexity.
+Also, it's not clear to me if this should be considered a fix or not.
+If not, which I lean towards, then it should probably be targeted
+at iwl-next.
 
-The Common Trace Format specifies (and LTTng implements) a different way
-to achieve the same ring buffer space-savings achieved with timestamp deltas
-while keeping the timestamps semantically absolute from a given reference,
-hence without all the before/after timestamp complexity. You can see the
-clock value decoding procedure in the CTF2 SPEC RC9 [1] document. The basic
-idea on the producer side is to record the low-order bits of the current
-timestamp in the event header (truncating the higher order bits), and
-fall back on a full 64-bit value if the number of low-order bits overflows
-from the previous timestamp is more than 1, or if it is impossible to figure
-out precisely the timestamp of the previous event due to a race. This achieves
-the same space savings as delta timestamp encoding without introducing the
-strong event inter-dependency.
+	Subject: [PATCH iwl-next] ...
 
-The fact that Ftrace exposes this ring buffer binary layout as a user-space
-ABI makes it tricky to move to the Common Trace Format timestamp encoding.
-There are clearly huge simplifications that could be made by moving to this
-scheme though. Is there any way to introduce a different timestamp encoding
-scheme as an extension to the Ftrace ring buffer ABI ? This would allow us to
-introduce this simpler scheme and gradually phase out the more complex delta
-encoding when no users are left.
+If it is a fix, then it should have a Fixes tag and probably
+be targeted at iwl.
 
-Thoughts ?
+	Subject: [PATCH iwl] ...
 
-Thanks,
-
-Mathieu
-
-[1] https://diamon.org/ctf/files/CTF2-SPECRC-9.0.html#clk-val-update
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+...
