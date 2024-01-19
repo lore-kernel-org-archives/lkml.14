@@ -1,138 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF0E5472A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DA854F84
 	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 14:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705676069; cv=none; b=puLf5wkhSf86C/ONroohOquK64929aX/tkTiHTwRWYte17wLNcfRRONK2+eDTjNxo3Rv1r/2bUcxYUKoMGBlq3622Rt8Rdmjo9IE/7dFsTtnqWJ0U3Sa3neSHxEf1Vbcm839+G+5V8LY3ZNFPk7wvX4Jn307o8sJ/4okpoTnYoU=
+	t=1705676071; cv=none; b=JaqQxQrJs71oXb+2zA5BXf46rerEfkgbXzB2aiSME/1pIfXm7X+2nIRHgsmlMRAaXIlw9H4OnYgS80OECb2oSX1MmKOGHHt1xNjfh9hdYjAbs+h5mXt3meiOMMleIJ6BwjbpXBVpA/XyGIR5i1ppgjJLNR6bdgC/ITDpV/n9h+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705676069; c=relaxed/simple;
-	bh=oQxkSQ4O/ud5VcJBDiA8+ft0EzjaxWOJ7uOdw3yUGIk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=nmCZDMNZ293MdFiDOWhQ2zN2e5ehO9QUG0cCvBaiYYBMu1W01HML7G5NJw/GP2U+6jQ1Q6wOlg7YNKQgMQGQNppVs0lLV3+04MnbGaXLy1kGe9P2bRpgFd9ZwpZdoxqJLzFWy2UifNF+ANfs5MkGZcYhU/5Wc1FxPscB/1IUmT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VsAuQgls; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705676071; c=relaxed/simple;
+	bh=4yHIPIsRM+7ue0n2BdvcB1oXqKrqWvTmxWww/XwOPh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RXo3wlpRh4u61lSwusqJvgGdOkmPA5GNdcwQaVPoPkSRkb+qHrMSLa4szdhkmTe70zQgXFKURt3j8NArIC6yI10tj1gL6YQJmPtM4kG3pYmCzQ6gqnGHtoz2KBnED1dyXpfh9fv0YvrkYdPuCsPn8RJuAF8SeVigmJLPvA4PmGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jeT5TYDa; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VsAuQgls"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705676067;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jeT5TYDa"
+Message-ID: <2aeb7d61-5080-4089-b789-765399db74c8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705676067;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PNOeu1HbpskBZbW25MWU6cZYUz3N/w+rWXoFdZjNr5M=;
-	b=VsAuQglsbaetpoSH/asBihypGS1D0Lw/1Hfixu7SvUzNEBtDpzbPGLJg3/3S5MYotmstRH
-	Ov1A/bLDAig87eBKm7ho4iqKSsXAsqGLWpX4IyciMAXAqhuyvxjT0mMd2rH6CrkcHyAQZt
-	uz+uZctH4RMPgdteFvaBwiTwnA7sRKs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-VfYFFUBHNdin9KkcEv-clA-1; Fri, 19 Jan 2024 09:54:24 -0500
-X-MC-Unique: VfYFFUBHNdin9KkcEv-clA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1734E106D107;
-	Fri, 19 Jan 2024 14:54:23 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BB5F351D5;
-	Fri, 19 Jan 2024 14:54:16 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org,
-	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	akpm@linux-foundation.org,
-	ebiederm@xmission.com,
-	hbathini@linux.ibm.com,
-	piliu@redhat.com,
-	viro@zeniv.linux.org.uk,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 12/14] mips, crash: wrap crash dumping code into crash related ifdefs
-Date: Fri, 19 Jan 2024 22:52:39 +0800
-Message-ID: <20240119145241.769622-13-bhe@redhat.com>
-In-Reply-To: <20240119145241.769622-1-bhe@redhat.com>
-References: <20240119145241.769622-1-bhe@redhat.com>
+	bh=FqsslxIEMoApitxXr/jCsu5JyE/pWRxqwJQndEwBNxg=;
+	b=jeT5TYDa4WRfHh4yMTzZwdLf9kbdfdoaPY3/aBxVXcCzn7dnwo3nKeiLIdGzNtfFhxj0rW
+	aDY8uIJ1DGD3sIk20xaJ/bcYDK0pqdyxogfoVfzIsCnrl/GsdgXa/S4BST+KayxUfywkkd
+	cac3sPvodXoskwFwLcwlphMTcBZewbA=
+Date: Fri, 19 Jan 2024 23:04:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
+Subject: Re: [PATCH v4 3/7] padata: dispatch works on different nodes
+Content-Language: en-US
+To: Muchun Song <muchun.song@linux.dev>
+Cc: linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+ David Rientjes <rientjes@google.com>, Mike Kravetz
+ <mike.kravetz@oracle.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Tim Chen <tim.c.chen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ ligang.bdlg@bytedance.com
+References: <20240118123911.88833-1-gang.li@linux.dev>
+ <20240118123911.88833-4-gang.li@linux.dev>
+ <10f26c5c-760d-4f1b-abdc-8508971236ed@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Gang Li <gang.li@linux.dev>
+In-Reply-To: <10f26c5c-760d-4f1b-abdc-8508971236ed@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+X-Migadu-Flow: FLOW_OUT
 
-Now crash codes under kernel/ folder has been split out from kexec
-code, crash dumping can be separated from kexec reboot in config
-items on mips with some adjustments.
+On 2024/1/19 10:59, Muchun Song wrote:
+> On 2024/1/18 20:39, Gang Li wrote:
+>> --- a/kernel/padata.c
+>> +++ b/kernel/padata.c
+>> @@ -485,7 +485,8 @@ void __init padata_do_multithreaded(struct 
+>> padata_mt_job *job)
+>>       struct padata_work my_work, *pw;
+>>       struct padata_mt_job_state ps;
+>>       LIST_HEAD(works);
+>> -    int nworks;
+>> +    int nworks, nid;
+>> +    static atomic_t last_used_nid = ATOMIC_INIT(0);
+> last_used_nid is only used during boot time so it could be
+> __init_data. Otherwise, LGTM.
+> 
+> Reviewed-by: Muchun Song <muchun.song@linux.dev>
+> 
 
-Here use IS_ENABLED(CONFIG_CRASH_RESERVE) check to decide if compiling
-in the crashkernel reservation code.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/mips/kernel/setup.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
-
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 9c30de151597..12a1a4ffb602 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -442,8 +442,6 @@ static void __init mips_reserve_vmcore(void)
- #endif
- }
- 
--#ifdef CONFIG_KEXEC
--
- /* 64M alignment for crash kernel regions */
- #define CRASH_ALIGN	SZ_64M
- #define CRASH_ADDR_MAX	SZ_512M
-@@ -454,6 +452,9 @@ static void __init mips_parse_crashkernel(void)
- 	unsigned long long crash_size, crash_base;
- 	int ret;
- 
-+	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
-+		return;
-+
- 	total_mem = memblock_phys_mem_size();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
-@@ -489,6 +490,9 @@ static void __init request_crashkernel(struct resource *res)
- {
- 	int ret;
- 
-+	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
-+		return;
-+
- 	if (crashk_res.start == crashk_res.end)
- 		return;
- 
-@@ -498,15 +502,6 @@ static void __init request_crashkernel(struct resource *res)
- 			(unsigned long)(resource_size(&crashk_res) >> 20),
- 			(unsigned long)(crashk_res.start  >> 20));
- }
--#else /* !defined(CONFIG_KEXEC)		*/
--static void __init mips_parse_crashkernel(void)
--{
--}
--
--static void __init request_crashkernel(struct resource *res)
--{
--}
--#endif /* !defined(CONFIG_KEXEC)  */
- 
- static void __init check_kernel_sections_mem(void)
- {
--- 
-2.41.0
-
+OK, thanks.
