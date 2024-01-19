@@ -1,150 +1,119 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A571C184E
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 03:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4393E1C15
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 04:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705636798; cv=none; b=Mr20pU1eeCtC+HhUvKsJCdJeVsS+G46hQKwodWbXAVpO2RkkluYpsenjg7bUz+PgUvlQ3zVd3PU0Pp7b2QizxGZPoy/CaIvWTYkeMaAI+1Z3Q//KDtRssHBaBi2vXSLY2EATGUeV5ES05KvvqgrrwY9WIz73vxkliCJwzQlm6mk=
+	t=1705636856; cv=none; b=Vuw9AZNzp77FH/R6mQ8qi5XL11pZujP0iac85W9IcfDmpkAFPhhvn9Io1hCP8DE/JZV00B9DbS2m9rQkZn142HcBB/GLpE/GEplYVWP55M6Uz7nixWhL2vRJ7LtEtvqV3/4dc4lqO1bOC+Hv9c6bdLDJkIux+wdMwXXOicgsRVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705636798; c=relaxed/simple;
-	bh=5e9g7q6Oan2+OiKIu9+bnga3V9sAcKCrfBAEZwF7lOw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m4akZsRnHUt8aV3Z87XR/CNUYA6oidKIIIHOZPSh0WgvYhe658oQzrbwYIHJpahJN+FyTzddMOQJROPi3VwyjS+53PlMma99n79xUrMUzuQ5Ft/Q224w3KmO7pylYz49KfC0P4cknwOgAsyRTLGLn7WeIN5UQDvpMhfnl8gBH+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZQ5uodvV; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705636856; c=relaxed/simple;
+	bh=fkABRRGLW7RKFfCsuZ1YMNSS2p5FF4eBJVlssM9g2SQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gCXlhvYE22FmuRq2fXnOEUqH6og/fV4/Abndi7BJ+bUWOM1B1PDNb9gwLVJB8TnGEsKKfd6Ad/QhegXDpEi+EUOe3JtmFA/oVkGEtH65vdVgYk+Y/QuX7LaJfQKbwgpk+QgWsJLsLETsbMgWrJZboTK+8Tyv3XbyGJ4WGO8ck5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBy3Bzy9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQ5uodvV"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4672008b2c7so888863137.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 19:59:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705636795; x=1706241595; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TRMPaZA6cVxoYnie+2qHsbMZkkAgDRtDwgtb7B7rVgk=;
-        b=ZQ5uodvVt4G9lZ/jCkSZwICaxSTquaenmKnwuNWl7WZTZOUVyz21nDgWGme/RRfBb6
-         QOjR3IrO1GSeSqJgLf5kmQ2b5Y4OjXEUDeXe34nU+h7/j6v8jQUn/PmSyTQ2b4u8QyVG
-         /0DEFjeD/YXQEtOqhT47GoRRJAynx1v/8BGqfGewfd0iWCGh8m/y4z8kq3CYwGFSZTfU
-         fVF5ukUpihRFsxn1cYOSoRGeV0y39fXfXRy1C7FWChMcxS0o8kMhnnQcyt21T94GTyTA
-         FIhDtsCtKUa6907h3xGrmI1CLrjd7ECCBYB1THzA5OyUGS3c7I4NvyFTpg3pQsqI8z1+
-         HGxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705636795; x=1706241595;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TRMPaZA6cVxoYnie+2qHsbMZkkAgDRtDwgtb7B7rVgk=;
-        b=ICfPF8xzFvY/VJ1pXLemRVEYL0J9DoPeD0o/T2Fsqm7BdDtanprfJqQ1NKsUHQyhE2
-         aTTx5i7Q930P/VAIx5No8s/T2LH5HvIBH5SXWJUY2Bv1hDxwW/I/daoiGjt5qQObF1o2
-         OUUz4fuzV/QCVY3YZPjrJDBowiWCiPWh/0xyxteHndGxKdTLXd0FugoC6X+nIcZ71f6v
-         9jIvxyiPgQzj8WbrWVlOTlzxkvsTac+Yiu6HAF4WHENo4NeA9tnpD9tCxKTHB6Yn76gE
-         aWt3GCPL3fc1YI6F0XAQhIUmEvyrA7FLvqDjN98EoCZmazJX2eGw/BRn0fSvuyGzJnGh
-         3vMw==
-X-Gm-Message-State: AOJu0YxTOVvbVCH8cq5majNOknRBOZpx9iwzUzBB2vZqL34J1LHAC3uV
-	JQiKGwC8h0RJpSp0+WG/E+HcpzG5dHaAgPbRLEqhMuQkp0CXvwytvPCrwMtZ4WJbFagicawToSD
-	+GMUHaGsDCFsTK+S0hoTHYTDCoJSDMD2GhxKeFw==
-X-Google-Smtp-Source: AGHT+IGCG1fEx3hI5i+08dvBfYjHvAtAHA4tYqk2WlJ5JI20qJWhK4NM0fjnnykc6i/Fv8eTnpJMKke4sNcnSNQ/Sn4=
-X-Received: by 2002:a05:6102:3713:b0:469:93ac:6dd4 with SMTP id
- s19-20020a056102371300b0046993ac6dd4mr267534vst.21.1705636795545; Thu, 18 Jan
- 2024 19:59:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBy3Bzy9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94593C433F1;
+	Fri, 19 Jan 2024 04:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705636855;
+	bh=fkABRRGLW7RKFfCsuZ1YMNSS2p5FF4eBJVlssM9g2SQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lBy3Bzy9comrKqJeJgeD6XCK+VBjj983C6N/3sdm9lrSA7OacD9A8PzIG38XefnT9
+	 QtQMiPkdKNlG5Z4JJkTICAH6EPhIydHrtyJDwJBzMrpyroAkenkVb2Y33AN8is27iw
+	 wvatuMMCOgL52dOJTs0bKSYo7AEKvxRrruniMEyimuuNAa+xr8ug97P2pypwfBEcXB
+	 GANp5mLwuEyvnNWhZxA2+n4NhrH0ShYQCUXEPoKLUav36Iqa4MVABF8Ku0FQAZ4Smv
+	 GHHMl4QZ59PYVTxkpYPseZ/5/RiSO5iVP44f13M8K9a8g88T2RlaXa4qKgk5EccCyo
+	 IaGaEKea9b2Ow==
+From: alexs@kernel.org
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-kernel@vger.kernel.org
+Cc: Alex Shi <alexs@kernel.org>
+Subject: [PATCH] objtool: remove unused parameter
+Date: Fri, 19 Jan 2024 12:02:41 +0800
+Message-ID: <20240119040241.2925185-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118104320.029537060@linuxfoundation.org> <ab9bef24-a07b-4930-b09a-b3c0f4e04789@gmail.com>
-In-Reply-To: <ab9bef24-a07b-4930-b09a-b3c0f4e04789@gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 19 Jan 2024 09:29:44 +0530
-Message-ID: <CA+G9fYt3TKtjxV6=CQTwe5mDuYP7JYyFpkUb05StTEx7E4Mk3Q@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/150] 6.6.13-rc1 review
-To: Stefan Wiehler <stefan.wiehler@nokia.com>, Florian Fainelli <f.fainelli@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, 
-	rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 19 Jan 2024 at 00:52, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 1/18/24 02:47, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 6.6.13 release.
-> > There are 150 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 20 Jan 2024 10:42:49 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >       https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.13-rc1.gz
-> > or in the git tree and branch at:
-> >       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
->
-> Same as with 6.1:
->
-> ARM and ARM64 builds worked fine and passed tests, however BMIPS_GENERIC
-> fails to build with:
+From: Alex Shi <alexs@kernel.org>
 
-Following MIPS builds failed on 6.6.y and 6.1.y
-but passed 6.7.y and Linux-next and mainline builds.
+Remove unused file parameter from init_insn_state(), insn from
+has_modified_stack_frame().
 
-mips:
+Signed-off-by: Alex Shi <alexs@kernel.org>
+To: linux-kernel@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+---
+ tools/objtool/check.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-  * build/clang-17-defconfig
-  * build/clang-nightly-defconfig
-  * build/gcc-12-allmodconfig
-  * build/gcc-12-cavium_octeon_defconfig
-  * build/gcc-12-defconfig
-  * build/gcc-12-malta_defconfig
-  * build/gcc-8-allmodconfig
-  * build/gcc-8-cavium_octeon_defconfig
-  * build/gcc-8-defconfig
-  * build/gcc-8-malta_defconfig
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 548ec3cd7c00..ecc56a5ad174 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -274,8 +274,7 @@ static void init_cfi_state(struct cfi_state *cfi)
+ 	cfi->drap_offset = -1;
+ }
+ 
+-static void init_insn_state(struct objtool_file *file, struct insn_state *state,
+-			    struct section *sec)
++static void init_insn_state(struct insn_state *state, struct section *sec)
+ {
+ 	memset(state, 0, sizeof(*state));
+ 	init_cfi_state(&state->cfi);
+@@ -2681,7 +2680,7 @@ static bool is_special_call(struct instruction *insn)
+ 	return false;
+ }
+ 
+-static bool has_modified_stack_frame(struct instruction *insn, struct insn_state *state)
++static bool has_modified_stack_frame(struct insn_state *state)
+ {
+ 	struct cfi_state *cfi = &state->cfi;
+ 	int i;
+@@ -3474,7 +3473,7 @@ static int validate_sibling_call(struct objtool_file *file,
+ 				 struct instruction *insn,
+ 				 struct insn_state *state)
+ {
+-	if (insn_func(insn) && has_modified_stack_frame(insn, state)) {
++	if (insn_func(insn) && has_modified_stack_frame(state)) {
+ 		WARN_INSN(insn, "sibling call from callable instruction with modified stack frame");
+ 		return 1;
+ 	}
+@@ -3504,7 +3503,7 @@ static int validate_return(struct symbol *func, struct instruction *insn, struct
+ 		return 1;
+ 	}
+ 
+-	if (func && has_modified_stack_frame(insn, state)) {
++	if (func && has_modified_stack_frame(state)) {
+ 		WARN_INSN(insn, "return with modified stack frame");
+ 		return 1;
+ 	}
+@@ -3814,7 +3813,7 @@ static int validate_unwind_hints(struct objtool_file *file, struct section *sec)
+ 	if (!file->hints)
+ 		return 0;
+ 
+-	init_insn_state(file, &state, sec);
++	init_insn_state(&state, sec);
+ 
+ 	if (sec) {
+ 		sec_for_each_insn(file, sec, insn)
+@@ -4221,7 +4220,7 @@ static int validate_section(struct objtool_file *file, struct section *sec)
+ 		if (func->type != STT_FUNC)
+ 			continue;
+ 
+-		init_insn_state(file, &state, sec);
++		init_insn_state(&state, sec);
+ 		set_func_state(&state.cfi);
+ 
+ 		warnings += validate_symbol(file, sec, func, &state);
+-- 
+2.43.0
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-
->
-> arch/mips/kernel/smp.c: In function 'start_secondary':
-> arch/mips/kernel/smp.c:340:2: error: implicit declaration of function
-> 'rcutree_report_cpu_starting'; did you mean 'rcu_cpu_starting'?
-> [-Werror=implicit-function-declaration]
->    rcutree_report_cpu_starting(cpu);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->    rcu_cpu_starting
-> cc1: all warnings being treated as errors
-> host-make[5]: *** [scripts/Makefile.build:250: arch/mips/kernel/smp.o]
-> Error 1
-> host-make[4]: *** [scripts/Makefile.build:500: arch/mips/kernel] Error 2
-> host-make[3]: *** [scripts/Makefile.build:500: arch/mips] Error 2
-> host-make[3]: *** Waiting for unfinished jobs....
-
-same here.
-
-> which is caused by 1fa03a4622bb26a31279a453aa251154f11e6c70 ("mips/smp:
-> Call rcutree_report_cpu_starting() earlier").
->
-> It looks like rcutree_report_cpu_starting() has been introduced
-> 448e9f34d91d1a4799fdb06a93c2c24b34b6fd9d ("rcu: Standardize explicit
-> CPU-hotplug calls") which is in v6.7.
->
-> For MIPS, it would like an adequate fix would be to
-> 's/rcutree_report_cpu_starting/rcu_cpu_starting/' for the 6.1 and 6.6
-> branches.
-> --
-> Florian
-
---
-Linaro LKFT
-https://lkft.linaro.org
