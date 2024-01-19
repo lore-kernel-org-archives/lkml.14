@@ -1,97 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AD255C1B;
-	Fri, 19 Jan 2024 17:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE4B55E4A;
+	Fri, 19 Jan 2024 17:48:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705686480; cv=none; b=emP20kqjlBoBx+RwBg1tuRMo1Z8d+KPN5HkHEVPj+fiCcnI3OB9cmDCXfbrrCaLEuQTbh1pOrK23TrZpc0MADMub/QMMznZiXZkOuT0E/tchte5G8pPbNcT0HIif+09rECTxYtx+vsKVCa3HK9yyAKQZhOjqr7i4Y8cMfqVGfAA=
+	t=1705686498; cv=none; b=nwQenYjfTuISUbYufS2NhW5m2X/bf4wkGl1iUbV9CD2M0678MjszLtVLuc7As4918OJJLuXzVqKCC5EcrcbRe2at9k8HvDhcpFLg07zTZ5Lh5chgsxPUBNG+S+Zk2ubGTmPuGUIO5pcjVlTY9ARQ1PuXoa+XM6hhZBrj+a5Paj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705686480; c=relaxed/simple;
-	bh=IHTccTwRzqNIFFZ7ye2V9AMKJRjZryD1NVNDaqxcovw=;
+	s=arc-20240116; t=1705686498; c=relaxed/simple;
+	bh=P0KUF6vFTlftYyWUFDT96WHN8XRiIFXd1b2/AovY2hw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HUkePAgQS7lHJcheN/KYkBkqmX5pxtm91LeYtklNEzP2UO/DkA8ZxCL0hTeDh8w4gsD/o9wzg/SoS1DAfQEzn7fyym5AlJ4wvz3cDkNsjQyIJXn96AnEwPkgtQG6rT4CgjRo5VSdjtB0khDo+NAzm9WqR0QT+Kpf+T1SHxyj9qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AT1e8t+0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X8WapgewyzxhgcLamfu0BJqFHlH8Y/PQZy0bGtfGVLsZUSCcKV2L7zRHW47/ngXA7zJIxUHS7izINbcGOXccVZBQlXtJnIQ9hnoTOYrT1Qz8l82v9lxZHRmckfPVSA0xPZUZtONXjJEma0WA1xBWlBO0R3yV9/shct2goMvhzfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8l2whsR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AT1e8t+0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B93C433F1;
-	Fri, 19 Jan 2024 17:47:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8l2whsR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B518C433F1;
+	Fri, 19 Jan 2024 17:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705686479;
-	bh=IHTccTwRzqNIFFZ7ye2V9AMKJRjZryD1NVNDaqxcovw=;
+	s=k20201202; t=1705686497;
+	bh=P0KUF6vFTlftYyWUFDT96WHN8XRiIFXd1b2/AovY2hw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AT1e8t+0PvaMGkRhkP+p0BZ8a+0ud7vqglrmkmuOExdPbHUt4BqhlKr1vvT6FUvOr
-	 AZiQqfJb9vCkcTfPlBFo9Ls2CWSwYosc/wLQ6Rq0wWFyf33msbzowscGgksvSVAwuv
-	 V04WqX5oUDrMybrAzD+jftzFpEd0/RthrDmRr9S27T73he9gU8B/edEyncy748f81c
-	 j4bFgRsNSBaSDZlw74Tk9LzbfxEm/YewTHQLi5sUI3hHpa4Amea2quLbwbTVWFKI8E
-	 iFfa0nDksFZ4EzVQbDH8REuLce/h9mABUDsFhGLqD48BV2Pq+EW11PVWfNwjzr/h+9
-	 ody7KwVPhdF3w==
-Date: Fri, 19 Jan 2024 17:47:55 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Dave Martin <Dave.Martin@arm.com>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] arm64/signal: Don't assume that TIF_SVE means we saved
- SVE state
-Message-ID: <Zaq1y9XpmzTsXDp8@finisterre.sirena.org.uk>
-References: <20240119-arm64-sve-signal-regs-v1-1-b9fd61b0289a@kernel.org>
- <Zaqj0V82LD8wu6g+@e133380.arm.com>
+	b=A8l2whsRDimVA5MSS/fooSc43HMZGOw3e+psIFF/j1oxW2EmsXHFG1D4YvSgvIuH6
+	 iG1Zb2PwoSl6ZCX8Yrh+isB4kZCErgwIM9kDmhEmcfr9eAKlm6saKW9g6DDl7GpV4i
+	 ZSOGZi2k3LxyfhVWg1LZ8nrNbjSqYxzEg9DkRArtIfeqXDUUIUxgZSiGMUFYpvSUyt
+	 N4KAM+OLfp8736eK6ZLkE540xGh+g5jLNVZRPLQ45c7pXkZ6rO3c8ldkssh2898lih
+	 lMcILIdXvdVRY/4/QMFv6Ci7SgV+SpbvUku4VYZWpuX0TaZa2zaWXia+eRyjbV0bVr
+	 8Zo+PZg/w6ueg==
+Date: Fri, 19 Jan 2024 11:48:15 -0600
+From: Rob Herring <robh@kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andrew Davis <afd@ti.com>, Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>,
+	"H . Nikolaus Schaller" <hns@goldelico.com>,
+	Adam Ford <aford173@gmail.com>,
+	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	=?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-omap@vger.kernel.org,
+	linux-mips@vger.kernel.org
+Subject: Re: [PATCH 02/11] dt-bindings: gpu: Add PowerVR Series5 SGX GPUs
+Message-ID: <20240119174815.GA633343-robh@kernel.org>
+References: <20240109171950.31010-1-afd@ti.com>
+ <20240109171950.31010-3-afd@ti.com>
+ <e2fce141-4966-4e70-9a5c-865a2737174c@linaro.org>
+ <20240110083857.GB5185@atomide.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PdO/yksGZmL1ku6b"
-Content-Disposition: inline
-In-Reply-To: <Zaqj0V82LD8wu6g+@e133380.arm.com>
-X-Cookie: You might have mail.
-
-
---PdO/yksGZmL1ku6b
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240110083857.GB5185@atomide.com>
 
-On Fri, Jan 19, 2024 at 04:31:13PM +0000, Dave Martin wrote:
-> On Fri, Jan 19, 2024 at 12:29:13PM +0000, Mark Brown wrote:
+On Wed, Jan 10, 2024 at 10:38:57AM +0200, Tony Lindgren wrote:
+> * Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> [240109 19:53]:
+> > On 09/01/2024 18:19, Andrew Davis wrote:
+> > > The Imagination PowerVR Series5 "SGX" GPU is part of several SoCs from
+> > > multiple vendors. Describe how the SGX GPU is integrated in these SoC,
+> > > including register space and interrupts. Clocks, reset, and power domain
+> > > information is SoC specific.
+> > > 
+> > > Signed-off-by: Andrew Davis <afd@ti.com>
+> > > Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> > 
+> > 
+> > > +  clock-names:
+> > > +    minItems: 1
+> > > +    items:
+> > > +      - const: core
+> > > +      - const: mem
+> > > +      - const: sys
+> > 
+> > There are no devices currently using third clock, but I assume it is
+> > expected or possible.
+> 
+> I think the third clock is typically merged with one of the two clocks but
+> yeah possibly it's a separate clocke in some cases.
+> 
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Looks good to me too.
+> 
+> So for merging these, as many of the changes touch the omap variants, I
+> could set up an immutable branch with all the changes after -rc1. Or I can
+> ack the patches too if somebody has better ideas.
 
-> > When we are in a syscall we will only save the FPSIMD subset even though
-> > the task still has access to the full register set, and on context switch
+Just take all but patches 10 and 11. I don't think it matters if the 
+binding is there for them as long as it is all there in next. No one is 
+paying that close attention to the warnings I think.
 
-> (Pedantic nit: "A even if B" (= "A applies even in that subset of cases
-> where B"), instead of "A even though B" (= "A applies notwithstanding
-> that it is always the case that B") (?)  If the SVE trapping were
-> ripped out altogether, it would be a different and rather simpler
-> story...)
-
-I really can't follow what you're trying to say here.  I'm not sure I
-where the bit about "always" comes from here?
-
-> If the historical meanings of TIF_SVE have been split up (which seems a
-> good idea), does that resolve all of the "bare"
-> test_thread_flag(TIF_SVE) that were still there?
-
-There's a couple more, but this is all of them in the signal handling
-code - I should have one or two more patches.  Most of the usage is
-actually checking the trapping and therefore fine.
-
---PdO/yksGZmL1ku6b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWqtcgACgkQJNaLcl1U
-h9AnUwf/cnpsqEC3KvSy0DsFTKN0rbF0fDrKRjOyNBrxsRlSeBJVuMRm82vExP1y
-55AVWYomuk5PgouebJsPlcOP8+llMA3ADhGOG4Jq1vD2HYZ7mryl9Jm8S1NJ2omK
-QeGhhBBbFefKqAhPZNtNCH0YCAWIIYENLPO9AxL8Wc318R5mpoAVq4G6yYgy/IaC
-8qxER+wemvizj6fBGClDtCe3QVza+q85fAMkP/5ut7E1MFN77QBYcbKpqL7kBfyO
-n6InpHuFhsgF1VlzlyKUC0qEhDEgoQhASDKo2RWIy5aKrBBF5ZpOaDjyHBC6I8tS
-cRIuKdmODvJk17W3Z1ODokGNBJopsg==
-=vwkD
------END PGP SIGNATURE-----
-
---PdO/yksGZmL1ku6b--
+Rob
