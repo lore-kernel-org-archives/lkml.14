@@ -1,48 +1,48 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2065.outbound.protection.outlook.com [40.107.237.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B396FA9
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B1CD50F
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705643489; cv=fail; b=kAMJbkXGN9GvEg/g+TWPQCLso/v3tulaNQUU+C/hEBPXFnBvg0PlqwuUAk5Z0v79zIk3e+1MSl25NTWr7SpEfz8LP8JpGwU/x1Q17OQanZm6Fv1SonKvxFRf2Q2omPdcbs0lE87ly1Oq4xc9cYpgdxyo6OmXiPK1pmAT8s3sSmA=
+	t=1705643615; cv=fail; b=aCJxlbFxpKAskxJDFFFZmRvivgu5EMs7Nx5/OwZVqhKkPWrubbsqPPn/mHsfxnU0XdAZRA4OecKB4KT66lCDXl7zCBy08kVZv1OuAvApuK+v0aYP/SlUo5IqKFdCB3oVQRz/A137qTqAaX7dEisoO0DvQnCLc0Hc8uv2kstPkEg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705643489; c=relaxed/simple;
-	bh=dopTOgd0w3tkHYxazt1pikEj+X5QS5cKfyeyeOeyJKw=;
+	s=arc-20240116; t=1705643615; c=relaxed/simple;
+	bh=lgdwhjrNoN1VBNUmRO072H9fjegcwtEouUlR3nTNQVI=;
 	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OUIRPTNmsmQ/TY6Up56Km+2I17iT2UdYaI080iVYa7LRiorFDF8y6Z6YM3YC7YYfa5ND/KUhAb5YQTh+jy5YfAXqNf5tPzox4IHzT1BgJ4by1aMwLD4ODIli/oRgleWx/hPfVuP1BToCrbT+q2hI9GhlG065IU216K/EDhaB0LY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DxFYO4yO; arc=fail smtp.client-ip=40.107.237.61
+	 Content-Type:MIME-Version; b=mZuefPOL5N5P7sw/kn7q5Bp8WQ18f0fN1QO2drft0FJbSWy9fkh5MB8kQGGM3FvwxClNsmcllZBMb2v90qagiTrFBL1QMprRqJqzlSw0sN0Vg6V/I5IvdHmPDVK6ER2Cv/kx+O8Kfxi1AHbeFFSXIV1k3Me3FfOA1P37gJxX/7Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zwT6goAr; arc=fail smtp.client-ip=40.107.237.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DxFYO4yO"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zwT6goAr"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wb8uiCCSuK9tfSlTw42tvX0on1qCFcQfoxrY9+XY5GK2oWI6ZOSV2DNlgm7j07sSFbLO8FRSXJHTOtqKSeV/5/Zz8LWwOHZpl8Cs4krd6YHotrMn7RYLOkAvO2KsJGwM48zdaC7eNuk4clKGBnIZjokVoV4YbtEUQiRhAUQ7jCI8iab8ZOvR9kJ4OdkLVbc3/fPISjJl3YQ7e+i8O3rxncZc897dlMsmRTCRNynwtEJGwcusaFDNyVUVyEyub3fK+j3SoWFurvctswZDkHn0gYbeMM9eW6NocyH71NJShCBkxlzR2EI47mGlfbP0LerfQA6ovioCd0WQgo0RFitlMw==
+ b=mpPypsytkXCo+NzT+Q7P+D5xg8nlT1Dk6rkFUiuQKrAs33B2/npwoD7QhL/2lZxJwS6e3lytif6KyyVJJaIs+VUiLPtBCr48yVl+pKAGVEd9wXUX/Uq5Dy6mVXiX3AWUb3gmqmPp277Q+MY3BGt3VPi51BCmar4EwmxGYibQzlxV4nr8Blo1bcFLbUw9SgW6N/JXDlQSo5hmo5enJUxdjZM5wqQRTWxRLGymZsb++1FyueTK9X0c2KXp65BjBNjlrAkZ587iAfOG/y/SFxZBJXFn1HPafqMDvaWh8xOJQnoOg8zFvmfgWEFuQD+TXqGSTid07EMFkes+Em+XLIvXmA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fc1G93fYiLDIOzC5b4ngiV/zksrIUj19kdmeW+5op/w=;
- b=XM0VY4ISXlSovM70kK/PJbXDQKernmVR4WCjcjgn4SpMrpiTPBTLpsf1AOGV0zBR1RkQ3uPOdI8Zqd3C38OWaIrk/dJkxscDmDjQ8UMLY7HpvL+JbDhy6WfYI6+UXbpFmTDZ0fCvuDnxnEylT6PhLoOmo28Yjgpab1FRvf1Mmjzv674iqzKIEhNwSIqMJXNYsaXH/eQSZIylmpEEj5r8RovsyId8bpKP7iW/5K1ro3Ll4O4UixKLsB7eJT0nE3XQoiDXlo0FKgJGeKsU79mx1efEEduwQB7OPiyAqrzPEac84wyw7Wf4whQiuij2XmqVS0WN0nDY0ml5EgICjOUBzA==
+ bh=x+eqoXdyL2kS76ExX/cLxZ5lhIi+7BJYw2XkjhZMSNI=;
+ b=SoaptvV6eVpHqyCJ/zMffwmK+jA/b6JCfCLPdTyJHhT3gTCg5rvqAM2yNa2JxPm76J6pAHvSRwru8ZUjQ9b6NFeyee/Y+GM0Y8ePBR8/utb2SjCRYgMmRbywIvi7LaI1jCzvPheC7y2Keenz/tfJrk+AJNzaSZ7wfyEC5a7u2PbACuG/JrtecYYjpRuiM7PJyAV4HAb9RIKQmFgXFyDHhsi1jK3o/N4t35STO38mI/bUg1oj4Q/MzSYDXiywqOmWjlic4P0QNwfBi3ognLsclLDa8gZlOpuronWCe1pQ2MsenHLDhwQF6fl8Lpx/SGnXZdZNBBfVwL8wwifCM2l+5A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fc1G93fYiLDIOzC5b4ngiV/zksrIUj19kdmeW+5op/w=;
- b=DxFYO4yOXCU4Nukk2MBdGBjngqvEH/mAC81es5p6595E0ANitwU1TzUKtwblwoksyfBZRUlIMZ6BnQLSnFGMFlzX1NmBODQYLAgAskafErD1Yh1fmrRPDu+te5btZoAU8uk+mD7kvNQIpoSYWWH529iGLKSwq/NeO/lWsqBR7PA=
+ bh=x+eqoXdyL2kS76ExX/cLxZ5lhIi+7BJYw2XkjhZMSNI=;
+ b=zwT6goAr9zIQMTXqGN2qUsyI93q9D2prTqFq1gFbXRB33gnMhNp57f2q76uhNg4Hhv+6/6+MkeVpAlouefSrPM//n8Md5AFSDxry5Uz/Kje6wF1KbUM2D5o56mhwje/ftZsBWQzeFNhZBQ2DfDPMS1Zx1eaRikAbjJp+U7vgllk=
 Received: from MW4PR12MB7165.namprd12.prod.outlook.com (2603:10b6:303:21b::14)
  by PH8PR12MB7255.namprd12.prod.outlook.com (2603:10b6:510:224::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24; Fri, 19 Jan
- 2024 05:51:25 +0000
+ 2024 05:53:30 +0000
 Received: from MW4PR12MB7165.namprd12.prod.outlook.com
  ([fe80::374b:e99d:5ba7:1ec0]) by MW4PR12MB7165.namprd12.prod.outlook.com
  ([fe80::374b:e99d:5ba7:1ec0%4]) with mapi id 15.20.7202.024; Fri, 19 Jan 2024
- 05:51:25 +0000
+ 05:53:30 +0000
 From: "Klymenko, Anatoliy" <Anatoliy.Klymenko@amd.com>
 To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	"laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"aarten.lankhorst@linux.intel.com" <aarten.lankhorst@linux.intel.com>,
 	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
 	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
 	"daniel@ffwll.ch" <daniel@ffwll.ch>, "Simek, Michal" <michal.simek@amd.com>,
@@ -50,12 +50,14 @@ To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	"linux-arm-kernel@lists.infradead.org"
 	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] drm: xlnx: zynqmp_dpsub: Make drm bridge
-Thread-Topic: [PATCH 1/4] drm: xlnx: zynqmp_dpsub: Make drm bridge
-Thread-Index: AQHaSpuJcD4UUx/110SWZX+U0WFS0g==
-Date: Fri, 19 Jan 2024 05:51:25 +0000
+Subject: Re: [PATCH 3/4] drm: xlnx: zynqmp_dpsub: Don't generate vblank in
+ live mode
+Thread-Topic: [PATCH 3/4] drm: xlnx: zynqmp_dpsub: Don't generate vblank in
+ live mode
+Thread-Index: AQHaSpvU9W+NcWnB8E2zkfKtis0GmQ==
+Date: Fri, 19 Jan 2024 05:53:30 +0000
 Message-ID:
- <MW4PR12MB71654039C6E8B9ED30AC51BDE6702@MW4PR12MB7165.namprd12.prod.outlook.com>
+ <MW4PR12MB7165B7BEA23F4C4185A48EE9E6702@MW4PR12MB7165.namprd12.prod.outlook.com>
 References: <mailman.1660.1705501214.2415.dri-devel@lists.freedesktop.org>
 In-Reply-To: <mailman.1660.1705501214.2415.dri-devel@lists.freedesktop.org>
 Accept-Language: en-US
@@ -66,43 +68,43 @@ authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: MW4PR12MB7165:EE_|PH8PR12MB7255:EE_
-x-ms-office365-filtering-correlation-id: 0de0398f-f41d-4bae-9c2c-08dc18b2ac5f
+x-ms-office365-filtering-correlation-id: b8a8e41b-6aea-4547-c245-08dc18b2f6fc
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- ZB7FkdUzf8JJqItNWqED+hTN92LmKvrQOrVnSvBzwPMfpM23PGXG7+jp37Eho2t/KTOIzYBgEmaefMBXSTOqhupi0tleU9jBv4PMkD6YzbIOrm2B/k3+Lh4OZ3PBHXzgXhqh1V8gpaK3ldJ/aYdshq+409JT4u8zFDDVLjRL2sf0/0vR7qPQqYZalukvyQFOY0gLx9YjERIvbeFOGSWTIjZl7rrk5byfE9UYLiB2qn7OrbNMEzDrsBf7bxwEBAQiR0guRezgdld8MookZGuB56xlW8PJgioJ77wKIgCMt8+0VnBiEjDZAodWAdZeWvXOJa4jfyitDYE2lyVBIDSTZxC5pmAH3cbzdeHXYHIa+IB4exfXOn4okgFyiDVXaveuuAgv6wbwoMg9HKr3KUtstajnlwfo2lXG++6PvfCCNBRN3I5uLDE4beyO8QLeAhvawcBbOPZTx0gxNa0km+xZ8B/E4aX3rL2K3igWW6Us/7/mV/n6za+NoaEyTW3kaSMlPP6OQfSbNkF4eJwvz4vnrvaOAICZZsL+0HvWr1YxVUJIw2/qOot1uc2LEtKP2qkq/Va+53hcIuokEB0xru0WWxUWqBcMmOx6a5dU0Qxn4mE+2gMT2DItaHgqBdMh9GyG1+vLAa3MNHLN74IFX8is4Bv8XC/xWiUSJJfPL1THVG6PRcUaPYQPEtz77ByAnH7b
+ Xvssr+E24Y7rvrGOrMpYvxNJUO5aVygQO4bIiEa76jmGFCqkxQnQbEUTf0TYQ/uNHK694YurBw6e14xtWNxGRhwmoXySGEP6h3/Jj3JvhOWaOhYZf4S8lRj/UKUGyu8Q9uskcSaDsXwTk4ej967TUDunRonHE/gvp9iqFu2Yu/7tor22nX7K7IE87D1nDl7Jtzubh9uZfuEkEWVtWSoMgWbTrQtG0gnVFoxDetcW2haAeHLAn8+azGyoHWramRYDC48OUWkpDnzy30hdKypZnLTk3Qs/QqYu+jhYEKmkPS4/ax2pjEUiCnTSuI6C6bt/CtpYKQu69NMF6AI7uZvE7iuUMz4qWC7b9Lyl4g+8mOU4q7dbape8Mz8cN1ozamQvpHPcegTKy43acvcCt+KJUCqdJMmsTYNqcSzXrQa1Erk2SLperyACWE4bNzoZBbgp1Do9ZR+pWZVKtGcwEQk3+HiEIpYspLb865VCyov37D/1JqlE7O+HiJzHQ+o3sKjy/LsQbAnixaaHfSKVmskLkOJQ3J0y7y6Zoz7qTwBFMuUVA3ZkVhUk9eTxi7aI4wUOR16pt5BD8vurS1bodL4dsRuvR44oNjqXsjY2OSy3LJEbNtAtvb8AjaTWpzRY+AzoGIQnk86SR6ADdskk8zwuYg==
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7165.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(396003)(366004)(136003)(346002)(230173577357003)(230273577357003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(110136005)(9686003)(66446008)(122000001)(38100700002)(83380400001)(86362001)(33656002)(41300700001)(7696005)(6506007)(8936002)(8676002)(5660300002)(52536014)(316002)(66946007)(71200400001)(64756008)(66476007)(2906002)(7416002)(76116006)(66556008)(26005)(53546011)(478600001)(921011)(38070700009)(55016003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7165.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(396003)(366004)(136003)(346002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(110136005)(9686003)(66446008)(122000001)(38100700002)(83380400001)(86362001)(33656002)(41300700001)(7696005)(6506007)(8936002)(8676002)(5660300002)(52536014)(316002)(66946007)(71200400001)(64756008)(66476007)(2906002)(7416002)(76116006)(66556008)(26005)(53546011)(478600001)(921011)(38070700009)(55016003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?CPu2H2SJa1Y3e39IBFY691Yvv/e7bZ/L41bpPRlNRG+7dC60JmpXbyDAemNR?=
- =?us-ascii?Q?hkjRRl1Bv82hGC/O5/6FuLp4rkDg+fg1NAgNLuVUIpbq+xZhsLWWRtKymTYH?=
- =?us-ascii?Q?DMEjZ1lNpgj0xHfuT1ULREbLWfTMq74Sai8BDxoM3rAQ1XVCLwoK20hCPWQa?=
- =?us-ascii?Q?Kl4yFTuq7Z6uJwg4pQklX2Ncxcog+j+xZvntVDwTN4UEEfMb5gKG31SfKBLw?=
- =?us-ascii?Q?Ja3k+mTF4qXUx5h8RqEkENSwkfmS9Ix7exUA/JiiuaYQFEydF2ytxdm9yxDg?=
- =?us-ascii?Q?/WWUcgqcTZpQvTrjJ71HviQoClp23IENq+hqtE7t6M2F7FjUFEM72+T/3O7o?=
- =?us-ascii?Q?zYPvnpojVh6p26RmcOYrYGjgj3HXV/8ytnSI2kxD5xDFU+caEiKNmbNzHwaV?=
- =?us-ascii?Q?j+8xwEdbYo+KSI6qfAKGASlVngAcOsroy6yEz+IN/fMi+FOJP/Vx2x9TeRN/?=
- =?us-ascii?Q?DfkhTKuFulJWcNwGwPx+DvDUdGstwRJKz0FVhjUHwd1gWpWjis57hdHqZXTT?=
- =?us-ascii?Q?NQlkWCIcZKpjamxut4x6uuXMYFtNINwJUAzbHOUW9P5ZwRJSvxe4ss+C++Id?=
- =?us-ascii?Q?M6HksRdkogc5IgPyyqzjVAtPlJ5U97Xl9/IwapOd2Ph+d0Vh9AdAUwfXY7MI?=
- =?us-ascii?Q?C1++t6hzDZiEpZFI/QAlMNksbbCzK++UzXO6B/ZgSuC/Q9b7Mz51aqOlY8Er?=
- =?us-ascii?Q?sw7qfHybf1ZU4hJ/7taaJq0rZQgA+bE+UaEWVHA0IzoOH5fO8Xhz5/5Ol2+w?=
- =?us-ascii?Q?NzW3tN7wrNGmf4WP7pVQ6ioCoTXRCUA6QwA12l7BnIFe9aVLCGRO7L/Q5yQm?=
- =?us-ascii?Q?FOdQtBqxyxxQbZA36hbOn6iSyOBk2hBOb8WsytOb02FBolDCms8T5e0g7UPu?=
- =?us-ascii?Q?ZGvsQTSsn/TKhSNrIJbPIn1xnZOKsVf6Y12Nn5sd0j5+3gVxN2NM/lrq283x?=
- =?us-ascii?Q?WYRRocr1r8mlUjmrzDEnLHZn3q7zf93GaBfCi53t1t8ymQu8LQ/Pee655Wz8?=
- =?us-ascii?Q?poDAGeVN8498nrJSdEVCC+9+ul0wg5f0KkAlFbQrDKRlfS7WkwLlfJD5ScCr?=
- =?us-ascii?Q?Ja13/FbUyY6Wm+5x+wIugpcR7XoF+MMa++Kr8rBsGhcsg2PUoFVX2oXfYS3w?=
- =?us-ascii?Q?g5qx6PEhv8BKZTK5ztlIwCgDW8GPEztzqDqEFASHIHXDMxrHwtxs8hzW1krs?=
- =?us-ascii?Q?augO9xhMIukJ/b49zA30FcVYNF0nNomqmIb38XpaLpMh2qmIdlClI5xTimAu?=
- =?us-ascii?Q?BRl5jVc5YvIQsBC3/zvO5Ypz6yWnUAagxovt1z8WFXWvRgeUG2v8jcMeVSfE?=
- =?us-ascii?Q?+bw8xuxQ9yT5aj84i5nahhx+O+P7m6TmTybNE4e9/n4adDYQ/gr4H8GTMmga?=
- =?us-ascii?Q?4040LQSANvuuBZHD7cNfBEfsldW4KbrozYH9rGm1ktGh2jTlRs0SJiL7A0v2?=
- =?us-ascii?Q?L+s/yA3f71OH4FTTe4Q/TezkJo5vIWkm1drXF42Hhhd5ymILtJn9JAq/J5Br?=
- =?us-ascii?Q?N3lVkZ91waIvRBPdJo7W1DYx6x391sUSMlYBPRxXSJiu+0FfV1L3d6Ah2Zi9?=
- =?us-ascii?Q?CQRahI6dX+aMQKWGimE=3D?=
+ =?us-ascii?Q?CN7cv6Kw1trMY0y41uiVATWdp1z1X0G2a59D95oWVGQYBmL0oPLnZruZykZq?=
+ =?us-ascii?Q?jUoW1YLtL4zLzsEGzD6yfa7VZ2eVCHOmLATNF0gHBhO9js/FkdkTdVsJp/cX?=
+ =?us-ascii?Q?t1PCmPA+tXnH023Wh5Jzh7nMwnt6gd1q4UMs/0dwYg7GYAYAPONOkiRUu7uM?=
+ =?us-ascii?Q?H8FZNlcoiPAqfcfVBYUtvjYhUNgh+DvXLOweYiaDg7Gs+F5/uculGqNaekmg?=
+ =?us-ascii?Q?vd7V7ovG/gX/L29QeBaN0LE2T7+T7sqrSq50GV0fPPT7Pq2UoXzo8f/t7mkH?=
+ =?us-ascii?Q?aJy5Vku/VQY4cwN+GNRMaBFw1tmz7cTvMEyMeoqffWQ5mIdX5hXYOV586D2S?=
+ =?us-ascii?Q?aY1jVYdlPtYfYkf54hKlWtWKBFDJUbGghU5J9XO2GdfIS8SN0sK2w/wxXJOv?=
+ =?us-ascii?Q?DmfEEEYdqEJgO4lgdRw9g2F3c6MrwsPEOLxrBYlfe94tgf4jyT+b5QE27NqY?=
+ =?us-ascii?Q?O0I7ob/p063Q0/myztCCUSh/b3ge6wh8E5Jfqq7/JylJfrF3ENDClxwqGG9s?=
+ =?us-ascii?Q?0vXTu0Ik9RDl1tL7n3kDhCThOBx/Nn8+rXfWQke3issC1V1u0sTRzbS2AdFg?=
+ =?us-ascii?Q?djHokEJpGwQhnvHKgcOveV7AoZlBDRRhvv3L0E45FrTG0D/GKrxjmJwoYYTp?=
+ =?us-ascii?Q?0yFNvZ5Ym13W4N4U6a/XT7c+aOm1+yA3qL3oarQgUaFvtcmqUa3IOTjK5nau?=
+ =?us-ascii?Q?SE85sMkX9i68HHFbMW2YFyDRuWoxftGOrsclA12ayCHPjiEN+tilzIXJzAba?=
+ =?us-ascii?Q?hNcNd0t1gjBkDpF50v6ke+KYTtePhitu+RwBa/6d9CyNYp9j7EdDfTPiU8HD?=
+ =?us-ascii?Q?jmN73v16zx4gjdhp0IA99nwm+ho86HD5axrl5xsHt1B2zJPQk365bRLLHHl4?=
+ =?us-ascii?Q?YO9TvrBx2weqthE18zbUOeiuSyriHxONmbAGAk0/vUkkKW4HzD6qMWfidJFG?=
+ =?us-ascii?Q?oP2Ij1BhOWNsNYw1n628im0VUzISzLwRvyFUoi5d5KClwza9EKpJdGWPlu+4?=
+ =?us-ascii?Q?rNLc3KU9a8CBI0XVUQxg2MADh8FVy9WcAhffDTMwkv3wslyAMqlNzvDE3lDl?=
+ =?us-ascii?Q?Nr1GDcEYPFF23ouev0yzUS5iYs0A4veDfOKoVcJJa+Ck4CmZEhOsg+CMl/im?=
+ =?us-ascii?Q?rr8lVbLbB8uU8w0F0gdZoa4139PuWVjqJka7MsV1dXZmxHh2U/pQ1cSgyV0F?=
+ =?us-ascii?Q?MX3unWnrnUYk/J8N6EHfQitzN6mSig7PEQcGtA9ssS8bV0haC/Z4kZ1gkpSj?=
+ =?us-ascii?Q?+7J4iz3yCAh9E10Akb7dpuCvhpGH25fZUmZDFsKVon87KJvcumuJ+aXeh2Uv?=
+ =?us-ascii?Q?Ymm4coeN6meIeW7jnkBktKE75pYguMkyT0FPB/TRUBLeudibiBHTqVPIsoEf?=
+ =?us-ascii?Q?kFrjVUNE4S5alQC+QxO6+E/BMdKLSuZq6AzmYECPhhfWB2VlwVpbCaHOH/yc?=
+ =?us-ascii?Q?iCSqn6qn35E+4CHcQGFTYSyJa1TUgVKRt1QUpYeWrDNZs/vInOZXNwLeRoaa?=
+ =?us-ascii?Q?nVXCkJZr4EtxYZfrV//WZfiv0hDWyTbNIKbjgOtOdNrg5kBjxonumBzdejmI?=
+ =?us-ascii?Q?LFtIBn1rOe6x9wSlcCs=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -114,20 +116,20 @@ MIME-Version: 1.0
 X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7165.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0de0398f-f41d-4bae-9c2c-08dc18b2ac5f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2024 05:51:25.4507
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8a8e41b-6aea-4547-c245-08dc18b2f6fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2024 05:53:30.6570
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Gr1zrmIyU42WByaiCBMqmFQznIhIheeUv+TgnqR9Cn4pkS9W0xeNSiDEUdOEOsdzpMHm4rnckUX4TdmpWjmPZg==
+X-MS-Exchange-CrossTenant-userprincipalname: wOu33tud1k0XQJPM9LUd9jkG9rwqdqQqLNN072uXLLieFruXBQJdWDkxIRd3XxyybqgRWN1WemnhfgXp2ikxRQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7255
 
 Hi Tomi,
 
-Thanks for your response.=20
+Thank you for the review.
 
-> Date: Wed, 17 Jan 2024 16:06:31 +0200
+> Date: Wed, 17 Jan 2024 16:20:10 +0200
 > From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 > To: Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
 >         laurent.pinchart@ideasonboard.com, maarten.lankhorst@linux.intel.=
@@ -137,68 +139,84 @@ com,
 >         dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead=
 .org,
 >         linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 1/4] drm: xlnx: zynqmp_dpsub: Make drm bridge
->         discoverable
-> Message-ID: <98a9f4f1-dd55-47c3-bb1b-07e201b299cd@ideasonboard.com>
+> Subject: Re: [PATCH 3/4] drm: xlnx: zynqmp_dpsub: Don't generate
+>         vblank in live mode
+> Message-ID: <beb551c7-bb7e-4cd0-b166-e9aad90c4620@ideasonboard.com>
 > Content-Type: text/plain; charset=3DUTF-8; format=3Dflowed
 >=20
 > On 13/01/2024 01:42, Anatoliy Klymenko wrote:
-> > Assign device of node to bridge prior registering it. This will make
-> > said bridge discoverable by separate crtc driver.
+> > Filter out status register against interrupts' mask.
+> > Some events are being reported via DP status register, even if
+> > corresponding interrupts have been disabled. Avoid processing of such
+> > events in interrupt handler context.
 >=20
-> I think a few words on why this is needed (and why it wasn't needed
-> before) would be nice.
+> The subject talks about vblank and live mode, the the description doesn't=
+. Can
+> you elaborate in the desc a bit about when this is an issue and why it wa=
+sn't
+> before?
 
-Sure. I will update.=20
-"  ZynqMP DPSUB supports 2 input modes: DMA based and live video.
+Yes, I should make patch comment more consistent and elaborate. I will fix =
+it in the next version. Thank you.
 
-    In the first mode, the driver implements CRTC and DP encoder DRM bridge=
- to
-    model the complete display pipeline. In this case, DRM bridge is being =
-directly
-    instantiated within the driver, not using any bridge discovery mechanis=
-ms.
-
-    In the live video input mode video signal is generated by FPGA fabric a=
-nd passed
-    into DPSUB over the connected bus. In this mode driver exposes the DP e=
-ncoder as
-    a DRM bridge, expecting external CRTC to discover it via
-    drm_of_find_panel_or_bridge() or a similar call. This discovery relies =
-on
-    drm_bridge.of_node being properly set.
-
-    Assign device OF node to the bridge prior to registering it. This will
-    make said bridge discoverable by an external CRTC driver.".
-How does this sound?
-
->=20
-> Other than that:
->=20
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->=20
->   Tomi
 >=20
 > > Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
 > > ---
-> >   drivers/gpu/drm/xlnx/zynqmp_dp.c | 1 +
-> >   1 file changed, 1 insertion(+)
+> >   drivers/gpu/drm/xlnx/zynqmp_dp.c | 11 +++++++++--
+> >   1 file changed, 9 insertions(+), 2 deletions(-)
 > >
 > > diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c
 > > b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > index a0606fab0e22..d60b7431603f 100644
+> > index d60b7431603f..571c5dbc97e5 100644
 > > --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
 > > +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > @@ -1721,6 +1721,7 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
-> >       bridge->ops =3D DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID
-> >                   | DRM_BRIDGE_OP_HPD;
-> >       bridge->type =3D DRM_MODE_CONNECTOR_DisplayPort;
-> > +     bridge->of_node =3D dp->dev->of_node;
-> >       dpsub->bridge =3D bridge;
+> > @@ -1624,8 +1624,16 @@ static irqreturn_t zynqmp_dp_irq_handler(int irq=
+,
+> void *data)
+> >       u32 status, mask;
 > >
-> >       /*
+> >       status =3D zynqmp_dp_read(dp, ZYNQMP_DP_INT_STATUS);
+> > +     zynqmp_dp_write(dp, ZYNQMP_DP_INT_STATUS, status);
+> >       mask =3D zynqmp_dp_read(dp, ZYNQMP_DP_INT_MASK);
+> > -     if (!(status & ~mask))
+> > +
+> > +     /*
+> > +      * Status register may report some events, which corresponding in=
+terrupts
+> > +      * have been disabled. Filter out those events against interrupts=
+' mask.
+> > +      */
+> > +     status &=3D ~mask;
+> > +
+> > +     if (!status)
+> >               return IRQ_NONE;
+> >
+> >       /* dbg for diagnostic, but not much that the driver can do */ @@
+> > -1634,7 +1642,6 @@ static irqreturn_t zynqmp_dp_irq_handler(int irq, vo=
+id
+> *data)
+> >       if (status & ZYNQMP_DP_INT_CHBUF_OVERFLW_MASK)
+> >               dev_dbg_ratelimited(dp->dev, "overflow interrupt\n");
+> >
+> > -     zynqmp_dp_write(dp, ZYNQMP_DP_INT_STATUS, status);
+> >
+> >       if (status & ZYNQMP_DP_INT_VBLANK_START)
+> >               zynqmp_dpsub_drm_handle_vblank(dp->dpsub);
 >=20
+> Moving the zynqmp_dp_write() is not related to this fix, is it? I think i=
+t should be in
+> a separate patch.
 >=20
 
-Regards
+The sole purpose of zynqmp_dp_write() is to clear status register. The soon=
+er we do it the better (after reading status in the local variable of cours=
+e). We can also reuse status variable for in-place filtering against the in=
+terrupt mask, which makes this change dependent on zynqmp_dp_write() reorde=
+ring. I will add a comment explaining this. Is it ok?
+
+>   Tomi
+>=20
+
+Thank you,
 Anatoliy
+
