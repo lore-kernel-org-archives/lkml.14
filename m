@@ -1,179 +1,116 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2084.outbound.protection.partner.outlook.cn [139.219.17.84])
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8E31C30;
-	Fri, 19 Jan 2024 04:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705637262; cv=fail; b=ROAeq+8zqeMu4Mk3LR4WX6FriNtst1c4ib61vYKAt8JiHfHydcw02fi3GanwFteVGfe9SEqIBN1HP0rEQDAIIvo+l1N65NDNxw2zCd2bnyIczyGHeNdw2LzvO6F9d+xr5GJiQafTlPOeHTgO8wdtPg1kVrZSkICbyFurPsK0C8I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705637262; c=relaxed/simple;
-	bh=ZvL3V+AhywgSrOoq2sSvuSZDy3tF2fm83s+8ynxOPsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AQJFGAemAGppoL8ukX6pX+f6av+aYQOcrN+OEXKlGcBZScdqPPooh6nhrvqNa0wzVtcaquo0uKnKwvntHXk7vXf/N+0ooWZXeAhJCGnuHyB8qBrhwuanOc5TdVgHwAlzJHQznlAwdzZmWHExuk4rOgLWoqape+0nGQGNTMECeI8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b/NV0tR8sfdeADM+fRIu0FY7DFOZHod0JU0BRzqN0Yz3BbtCV01o5GiHJOpcjtUNMyJRBtx+uMZNcSn5CBM0qfe526rg+Xv0LpYCSJAzX11qbfb5jnOTtPINYJ8wFNUrEYDqbW/S8HHVIHN20Pg9LzZjthMgwi6SitiZ8eh6NhOy48crmxFrmAjJ8AYXF+d+Mkgo/G2/Aob82LP3Xzn2XR5JE8TNkpUOXsrMlDUZDCpdeHFPWghGsWHkogfEmHG9STrL87l3SVK0owjxHHYr0yXzKMApGq0ZnjcdKlvpqbd5LVYTIMSanA+zpiwgAH6VJ4bF7fYnupXVfKQKEffOYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zHN2yRlgc83yoJrdYEEwnwT3hYYCyF7Hma4hPrSLxnU=;
- b=A0RImxqRWeeTRrqlFC5QlqVn/uBBWOG8BZt+IsJwbzrSE0btPYfLaSt7VvCQAyVkGoX2HPfZpisPUrQ/A2KDQudSrX/otYW1QC9O7jprlSQQkbIdpH16LSGK1pxYOqjjvvgof89TuO7B68FAFq7/WS2XGG5fgmGpOKOWNtfviKCakFX3IReuLGmHaPOdkTM8bAIfyt21LzA9ki1vqgqbK05RKaLxBBv84wp6z3xmyGMcT51RZvZx1IpbYG82cYSQp+DcYYZerBkVwKglRdNQ7Z8qIAaC3OxLZLKe27bgpTvLjXpLYLm+9nbCINwx4gEeOEJ+6egfHdCYa4jAZK9cHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6) by ZQ0PR01MB1272.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:18::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.32; Fri, 19 Jan
- 2024 01:33:49 +0000
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- ([fe80::1dbb:b090:7d89:4e22]) by
- ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::1dbb:b090:7d89:4e22%4])
- with mapi id 15.20.7181.032; Fri, 19 Jan 2024 01:33:49 +0000
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Andi Shyti <andi.shyti@kernel.org>
-Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 RESEND] i2c: cadence: Add system suspend and resume PM support
-Date: Fri, 19 Jan 2024 09:33:26 +0800
-Message-ID: <20240119013326.3405484-1-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0025.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:c::7) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9E5C15D
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 04:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705638665; cv=none; b=Y5TGUwrAD6VImiQcTS4nchFLyHcwRd2hsxqYSaHiVuMImUFDBpuiuFBGKstEe6b1Ok10ANzPNSbcOkL1Pnk/qgepG5ysGifYsYP1PyG0VRu5BKLibV/f0nZ3x5dH9FEya+WJohG8jHndFaOzt0w2nE/BJzLQebK8/b5g1f1bvM0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705638665; c=relaxed/simple;
+	bh=yYYIxoLS/fTY0SERJ9JIVKX7ri9WHPUupunuOb2ocG4=;
+	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
+	 MIME-Version:Content-Type; b=ceY3SCW9hDHcjiNcBQaeOftIhEJLMFSOugzJM/S5bx0+JUgTrbxme0YII0seNEBdNsNN72VPipfKE2VLeZiUgWxDhmokIapzTl50MTccN/Bb4h5BlXxbEWTUuzDSGdjvyP/QqONZkMtkDVoBWvU1LbeQRskDXatnNt9bMTwtsic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=idP2yh0J; arc=none smtp.client-ip=44.202.169.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="idP2yh0J"
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+	by cmsmtp with ESMTPS
+	id QgWKr9XzKAxAkQgXArTuox; Fri, 19 Jan 2024 04:31:13 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id QgWtrBQmnjqQkQgWtr8ikr; Fri, 19 Jan 2024 04:30:55 +0000
+X-Authority-Analysis: v=2.4 cv=A7F/goaG c=1 sm=1 tr=0 ts=65a9faff
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=GOK2ftpeLzD+oWdoQAJCQkkPzUkEAfnVyOYW/U+5zoc=; b=idP2yh0JyCEkggwxJvTCl5d3Z/
+	PqaumAc4o/AxRH7PXFAVR5nbr6TeqS/YcF1f3AGI9/fcg5bH7hPGoc/8B0typya3nw7jIzrtj4JJJ
+	eJAkeBwLjf03MDZkmAhbqBF1TdyIpq1r/wnRynudHiJ8Gdit0nGXa4XvhSeQfj0D9oNChA2StyP4z
+	6GB4hsRP82Wzb89VV83vTC6ibeXvn8ho+kUz6J2FgH3DC5zshjxg3N9Ljscwp6ndyu08yl/E67Nfd
+	MLo1j8E+1xx9OCqPORTejm/DuQWU6DJtMuktHyMPK2/qrhhtzcbbBh7wUh2fFOkaw0PkpsjXUvqxc
+	PS9U70Mg==;
+Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:35842 helo=[10.0.1.47])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1rQgWq-000ehB-2P;
+	Thu, 18 Jan 2024 21:30:52 -0700
+Subject: Re: [PATCH 6.7 00/28] 6.7.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
+References: <20240118104301.249503558@linuxfoundation.org>
+In-Reply-To: <20240118104301.249503558@linuxfoundation.org>
+From: Ron Economos <re@w6rz.net>
+Message-ID: <69ce639b-0fee-6eb7-8f12-35aef792e243@w6rz.net>
+Date: Thu, 18 Jan 2024 20:30:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1272:EE_
-X-MS-Office365-Filtering-Correlation-Id: d89e61b0-d0ef-4615-f584-08dc188eafb8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	wA+9CpdICGnhXRtYYppajEP7uvl4h/k5vRfuyW2MtpYttl4SefVxZFM9FIXKgyeWIeEuLxy6CVtaXoiXCzKzlOUuZs7HMVyU1hII2VSrEK0ZAF2Yx3NWxozxfcGO9WXtngo0QhFjRmO1tTn6Ynv/UJpYSel09rBMVm6mtfqLxp/szQaKsMe69aK4wUYTT+JJ/0BC/Q0ew2e8OdvHOqoHPW5vHh4eX1nEVyKYK8e2WBX4Pfkd+fJt4V52DLemU8Ma/MzvZ81QGXWRmVjbDSU73ERQvL5SRzlXOO0C+e+N9tuGS4bvEm83+vhFMDtc98H67UHnsPsCPT33OcauPIsT6s53PlXZVqOJUOOXtamJxN5jafTr57DwsmZF49D9QpdgdVVNvjjHCAW57VHA1UvNIMD/wCFNSr6AqDKigxT9jpBGH+sCsBukcBhpvoF9K6I7cLnPSCE5wVzHmRb+nh5fm4UKTPUl6e3KjTaBM/KfMEfSDare131Md2jI1CpT8I9rjyr6UB7QhSTc6IjwQJ3byFGjYrKgfQEMvkBpL9wP1wQlX34//jtKLnuJE5Is4ydl
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(136003)(366004)(346002)(396003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(38100700002)(26005)(1076003)(2616005)(6666004)(52116002)(2906002)(5660300002)(15650500001)(83380400001)(41300700001)(508600001)(966005)(4326008)(8676002)(8936002)(66556008)(66476007)(54906003)(110136005)(66946007)(40180700001)(40160700002)(86362001)(36756003)(38350700005)(41320700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EeGM9vJB3C/IM6uCUI9CrZAddFDqBdmyITWlf9oI5iuE0u5lzVEfCcDdumrg?=
- =?us-ascii?Q?dwzpQngcAyLewWK8+Jxl3orjnjwYrSA3em5ECX292+jPfMYemsl1Q1YtwRTE?=
- =?us-ascii?Q?yP9q4ILEV4TZ67+YuiVTyLLjy2yiaokcd+QAp5hqxxE5n8hIR3ge1WkD9UV0?=
- =?us-ascii?Q?x0OgRm6St57eJT8kX3svFkdxvF8exBjovn+nZMDtMWZXJciZyhf8zcYkqdX3?=
- =?us-ascii?Q?QG4n+KrV8GnQs0XKTZ9myjNYQvW9avwhN4IzaTEqd4hqcI7cYk20fVGZikxI?=
- =?us-ascii?Q?9WKJwsDR376eragAe8gmPoDy83HM8NIdVvVgLE4eDY+GcrbNtSHflDIQR1wU?=
- =?us-ascii?Q?RYwb32SfxBRw/P7tTPMbEnYTx/DeomfjQ1cnmYGlsRQTozixQQtAihkkXRVv?=
- =?us-ascii?Q?D7F8xT8UTPaMrvZXEdPmKhIzmBYoE3WqiL34+suwZJ1Zdb9bS3ELfFeXeQT0?=
- =?us-ascii?Q?U5S+6eCxDp5g6FneLBtKCcmGeWGJ4TX3YsSrB8WaRO69t0dZ6dKqxrCSw5pm?=
- =?us-ascii?Q?GF3jqbXcM1m696NZ+kSbXaFe/zEYHIb6r/a9OSudyE4s3A47hhsgx2E3ufR3?=
- =?us-ascii?Q?uXGRFXjcHfF3iL1t7HN2jhLK5WyMf9ucv59v7Kna/9u1lnMzels9n6tvlCzX?=
- =?us-ascii?Q?Jbrpav3lpkl3nUdL9nvtyfUp62gs5rn/gIoOhCTG4bjOYfQC0gx/r5aqTZcD?=
- =?us-ascii?Q?eSr+pDBppJil1SUMJyoVZI/T+6ZYEWf4p00XMhKdYxC08PegiaevI3tZ6gh+?=
- =?us-ascii?Q?XLxsqkr6XJnbo61CY4zj5oWC67IYgu25wGDT2IgQwcTpdyBANM8kr5DfIsBE?=
- =?us-ascii?Q?MgQrYE5wJ4AlVQPyB7oOes6rYloO+db42lj8XOebCvnD1Cp8My21x9DqhrlF?=
- =?us-ascii?Q?OAN5jF7Wzv+3XqZxF5LR15zGwRtfTdZ+18seLcrpQ5c/PHqctNFuCbIqmOlM?=
- =?us-ascii?Q?tTdoN1EvtSxEBoQLzzUvEGvxVy+NOhewH02xHhuaa/+zt7iiyjuNwUDTXjxH?=
- =?us-ascii?Q?pbpTTuPfLMzl+j6wDmjI2NzSQky5N4UNqE8HwBQcgo32z7yTLL4ihP9j6aL0?=
- =?us-ascii?Q?wD+kkRY55+mDQkqOvRNkizR9HJWEDvgg/ttoZa7m6z5J/MFxgzte4tzoIJG9?=
- =?us-ascii?Q?aiVxTAgX28WRtt0NwtZ/YKMjdMSSqe7qcAlJ1rjHrw79Z6QM4MdUet82r8Oy?=
- =?us-ascii?Q?5EiCIUH4NhnBm/gGPnId/x6tcrAq6tbjGmZXTiG2aAXDqLlWxckgGR4ZsDNG?=
- =?us-ascii?Q?+MVtgM6J5oztrGFv3xT8cOrVgjVX9yWpHs3TyGcwTEkoDA0yznryNnQO7qBR?=
- =?us-ascii?Q?1VHRZQyvD6DB9FdSk1zkPTEoMWmIm5wBHV8/ZOmRI7WwaFpETCYcsvzefHcE?=
- =?us-ascii?Q?ldn+TP79eF3LRfxDkHVm/0oNof9mryIOaYcfOOZV/ZVMXOASZI6yorAc83+t?=
- =?us-ascii?Q?kT6VuIdx4tHp9rLnROGFmT1K1HRfmXVMqGWGvk0NhyHXC5aBEl+lbxddxjl3?=
- =?us-ascii?Q?iUWaVtERGRSRdGcj9Kq6TJCjS1wHZjVUCy2HS1D7fZEqvYVqgYnMi3elaTHt?=
- =?us-ascii?Q?9+2Qo+FqWM1315c5zX06rPpKSCFplg8N28B9PMXIzOwoJSTdJHGcBmAJVDos?=
- =?us-ascii?Q?EQ=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d89e61b0-d0ef-4615-f584-08dc188eafb8
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 01:33:49.4561
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UP+mF4bJgGMVpqvG+w9rg91J08WDTvW/tAF36R366lVU/AkbXvYDopo0YCH1TtOxceWAjW5m8aSbdvfx1AwQNwr0zQLxoZACfPDy0xHTnls=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1272
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 98.207.139.8
+X-Source-L: No
+X-Exim-ID: 1rQgWq-000ehB-2P
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:35842
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 4
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHE5ClEISnfl6xrlTqbDqwX3ftpcGX9r8ZkWuFcRy/xtlu/tues+W0BKgK2n8LnC5sVCYHw4U846dT0VM8bz2QNI+cNNHUMVzoGHNiL/SXm2OxgpD6kp
+ 1Ci1H3EDRjqx1ypyHEGBgwApOXvxzq4K/VmhJ/NIgrYClabPwmbftEYvAzE2GWR4dBX3MJKA256A8IO/Bu3vt5ZqKffor66kdlA=
 
-Enable device system suspend and resume PM support, and mark the device
-state as suspended during system suspend to reject any data transfer.
+On 1/18/24 2:48 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.7.1 release.
+> There are 28 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 20 Jan 2024 10:42:49 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
----
-Initial v2 was archived, previous discussion can be found in [1].
-[1]: https://lore.kernel.org/all/20231209131516.1916550-1-jisheng.teoh@starfivetech.com/
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Changes since v1:
-- Add missing err assignment in cdns_i2c_resume().
----
- drivers/i2c/busses/i2c-cadence.c | 33 ++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index de3f58b60dce..4bb7d6756947 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -1176,6 +1176,18 @@ static int __maybe_unused cdns_i2c_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
-+static int __maybe_unused cdns_i2c_suspend(struct device *dev)
-+{
-+	struct cdns_i2c *xi2c = dev_get_drvdata(dev);
-+
-+	i2c_mark_adapter_suspended(&xi2c->adap);
-+
-+	if (!pm_runtime_status_suspended(dev))
-+		return cdns_i2c_runtime_suspend(dev);
-+
-+	return 0;
-+}
-+
- /**
-  * cdns_i2c_init -  Controller initialisation
-  * @id:		Device private data structure
-@@ -1219,7 +1231,28 @@ static int __maybe_unused cdns_i2c_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
-+static int __maybe_unused cdns_i2c_resume(struct device *dev)
-+{
-+	struct cdns_i2c *xi2c = dev_get_drvdata(dev);
-+	int err;
-+
-+	err = cdns_i2c_runtime_resume(dev);
-+	if (err)
-+		return err;
-+
-+	if (pm_runtime_status_suspended(dev)) {
-+		err = cdns_i2c_runtime_suspend(dev);
-+		if (err)
-+			return err;
-+	}
-+
-+	i2c_mark_adapter_resumed(&xi2c->adap);
-+
-+	return 0;
-+}
-+
- static const struct dev_pm_ops cdns_i2c_dev_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(cdns_i2c_suspend, cdns_i2c_resume)
- 	SET_RUNTIME_PM_OPS(cdns_i2c_runtime_suspend,
- 			   cdns_i2c_runtime_resume, NULL)
- };
--- 
-2.43.0
+Tested-by: Ron Economos <re@w6rz.net>
 
