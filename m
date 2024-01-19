@@ -1,95 +1,104 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1CB524BE
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 13:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28594F1FA
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 13:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705669993; cv=none; b=UVLWJ/enMMf++oKqveZobEM2KRUNc2wt9XToDJnetn/7C5QlQLJd2M9TVTbHzuG1+a6T9maKGNWOEXHfPCkpfPnZRkZAeowwwRQ1NFtcCXCJtbHkdd4NrvPN48krwcO0rkac4SRkAhbA5MMw2rIwiPFAec4rdTNh/m5Bpj3TsiQ=
+	t=1705670085; cv=none; b=KheXgn1MiYSZW1iGrUSfna+lNgIuEvQc4LfFl8s8J4xvFFr3PG1QXRbDudq/aaa2ugux2iXb7luVYTO9JIQb4zARn3PnsKETUEk7o0XzpziUPZittJgODDZStIdZtRBl0wjtmk9JU217NlgDqojzXeiIWMTl8Fn18qSEGgBbNXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705669993; c=relaxed/simple;
-	bh=7yYw3HdVIVKI+DaJfJQbGJ7vrjbPdqrzwB/L6EsGIkM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IkEMJhIXt+XHn7sHo+A+O+5HFITpAEFNLGJfGvssWTlf0ZC1vqB9N9KRx5SlbB3MZvgdGxbGgYSpiraxsT65qm3iH5GjOmp4sBT+K/j97EZ346qd6Fc3hQ14bHZY4y4OtZ2sKuLvrq7pJyi3QLpszB/yR/MlrPNyzxS4sE6sRNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ppm1Z6EE; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705670085; c=relaxed/simple;
+	bh=Yd8Hfv3YoXkOkWdBGQbqAsfi6VWsPeqx8i7E6nlEngk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HvJtvAD/7Kw//kAoST7yrNWZJvZobviarKK0Xm6vXOdDN6IXZn/V50U6vigd65IpebptfMGJ1zQc1wDnjcMQvrQ9HK4qfCR1wxRh0FAuOHMLovlOTWbPEjOB+eFvqkpHSmRpQgYxuIbiK/Uug7RmhPFR/zEWpxAlApS2ThdL/og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dSN1zpzZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ppm1Z6EE"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5f8cf76ef5bso8852577b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:13:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705669991; x=1706274791; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xHnVbdVJT4h/CWS4BWjRC7l/yCMSQb2yUYxDH3FTp80=;
-        b=Ppm1Z6EELQ1HdOOhyKx2e6EXK5S/XQvbrA7BaM1qdl5X3z4ltkVx74bYiQeb5fGhr5
-         f6yhfvDq9XJrZxies0+mmbMT7aS3GTIVS7Ex8CbFSahr3yfNmYfJmkpT3BFUdST9spod
-         EkVMppeUIEeMD+OEGkSOTnqVHfHFTIArz1aTsMUZS37nNGv4SqGWnRZbNQxa+3mRC10Y
-         sQwwekRNfOxmo7EGVjguwADeaktuWVblPcy/IH0MtsnmZiqNVbkWQsfY9JYmk3M8qXFV
-         7Iao/Jqec8o9NJghuFKcDdDvwyA6zjtSAhZ0Bf2U6uO/3dWN5uP/8pkEGy2h946Vo4dQ
-         22Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705669991; x=1706274791;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xHnVbdVJT4h/CWS4BWjRC7l/yCMSQb2yUYxDH3FTp80=;
-        b=lpo47vYODOutj/eLPnO5nN7/j2DvkFTArdnYsqCAA+1gNnFALeOTrJzKR2QWv434Tu
-         Ipjb5TgjBehYCH2i9qTgUHXCwLTL2TmWaaevwFwkPljLTZGpKXmXrP+BEAS9ARuMNl9A
-         GMpMZp766BExoC8pvFW2FcQv2ZRvoWEOcV7t550PZfZiVo/WrcBM213APPtk+CrtPP8r
-         sW1cXzRRzv8Cigl/uXVxASk1G/MQHKw5onsTQSW+dG868LpPVgH2bWJFqPkgsUIkXM+e
-         SpcaPlrotWPl4m07wpDT42X6RktZILD/9qLbFr86BwxNOSN9BFUnrgtI91Lb+WItxEYa
-         t+Sw==
-X-Gm-Message-State: AOJu0YzCCEtultU8NfKWgUmSYKApM0AIgmJBrj/kpjkHGMR/ycgEQJpT
-	vqvDSONKBA/z58NYSHsOzRlBqLlE0peC3ZrK/5ZmTMVpBIv1Zvq0qdgA6KQ5nKmPA2sKul0DeS0
-	B48iRhdmY4lMNS+G+ZdcE88VC+NALL578kokOAw==
-X-Google-Smtp-Source: AGHT+IHfqnIizJU7bNVjSP0/AXHYr1nDGF7BowSr7g+dg3LcGz2IfpYeTEym8tB3K+krwyb0bUD/3CD8ALbza0lV2Kc=
-X-Received: by 2002:a81:8047:0:b0:5d7:2c6b:623 with SMTP id
- q68-20020a818047000000b005d72c6b0623mr2678702ywf.39.1705669990951; Fri, 19
- Jan 2024 05:13:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dSN1zpzZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705670082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FMCcNkW+birNtx8xk197SfIjTJCrWWEkNPF60sBeOCI=;
+	b=dSN1zpzZtzCKSrtGs9JnvjylOLcsMpVeCS7xMCJn8VteixadiV66E25Q9YpufTBx72zwdh
+	drGxPyQ2fFiuRvOJIa1IM6Ei5B6kOgYj5kTNaV/e0QoGcz0XkfbvsBzy3EK/NVKP0mbXO1
+	VRSV7dl+k+gq8KGOz+i3GM86y1RUuuU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-217--TNxNdLxPgGuY0vHTURHIQ-1; Fri, 19 Jan 2024 08:14:39 -0500
+X-MC-Unique: -TNxNdLxPgGuY0vHTURHIQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E7F93185A788;
+	Fri, 19 Jan 2024 13:14:38 +0000 (UTC)
+Received: from localhost.redhat.com (unknown [10.22.32.164])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6286C51D5;
+	Fri, 19 Jan 2024 13:14:38 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	shuah@kernel.org,
+	donettom@linux.vnet.ibm.com
+Subject: [PATCH v2] selftests: mm: fix map_hugetlb failure on 64K page size systems
+Date: Fri, 19 Jan 2024 06:14:29 -0700
+Message-ID: <20240119131429.172448-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119125812.239197-1-angelogioacchino.delregno@collabora.com> <20240119125812.239197-3-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240119125812.239197-3-angelogioacchino.delregno@collabora.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 19 Jan 2024 15:12:59 +0200
-Message-ID: <CAA8EJprHsBPOAA-M6Wk=maTCnJqORo+mLcW_0N8_+QRHYwLQwQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] usb: typec: mux: Add ITE IT5205 Alternate Mode
- Passive MUX driver
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	heikki.krogerus@linux.intel.com, matthias.bgg@gmail.com, 
-	neil.armstrong@linaro.org, andersson@kernel.org, nathan@kernel.org, 
-	luca.weiss@fairphone.com, tianping.fang@mediatek.com, 
-	linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Fri, 19 Jan 2024 at 14:58, AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> The ITE IT5202 is a USB Type-C Alternate Mode Passive MUX, used for
-> muxing the SBU lines of a Type-C port with DisplayPort altmode and
-> also providing an orientation switch.
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  drivers/usb/typec/mux/Kconfig  |  10 ++
->  drivers/usb/typec/mux/Makefile |   1 +
->  drivers/usb/typec/mux/it5205.c | 294 +++++++++++++++++++++++++++++++++
->  3 files changed, 305 insertions(+)
->  create mode 100644 drivers/usb/typec/mux/it5205.c
+On systems with 64k page size and 512M huge page sizes, the allocation
+and test succeeds but errors out at the munmap. As the comment states,
+munmap will failure if its not HUGEPAGE aligned. This is due to the
+length of the mapping being 1/2 the size of the hugepage causing the
+munmap to not be hugepage aligned. Fix this by making the mapping length
+the full hugepage if the hugepage is larger than the length of the
+mapping.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Nico Pache <npache@redhat.com>
+---
+ tools/testing/selftests/mm/map_hugetlb.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-
+diff --git a/tools/testing/selftests/mm/map_hugetlb.c b/tools/testing/selftests/mm/map_hugetlb.c
+index 193281560b61..86e8f2048a40 100644
+--- a/tools/testing/selftests/mm/map_hugetlb.c
++++ b/tools/testing/selftests/mm/map_hugetlb.c
+@@ -15,6 +15,7 @@
+ #include <unistd.h>
+ #include <sys/mman.h>
+ #include <fcntl.h>
++#include "vm_util.h"
+ 
+ #define LENGTH (256UL*1024*1024)
+ #define PROTECTION (PROT_READ | PROT_WRITE)
+@@ -58,10 +59,16 @@ int main(int argc, char **argv)
+ {
+ 	void *addr;
+ 	int ret;
++	size_t hugepage_size;
+ 	size_t length = LENGTH;
+ 	int flags = FLAGS;
+ 	int shift = 0;
+ 
++	hugepage_size = default_huge_page_size();
++	/* munmap with fail if the length is not page aligned */
++	if (hugepage_size > length)
++		length = hugepage_size;
++
+ 	if (argc > 1)
+ 		length = atol(argv[1]) << 20;
+ 	if (argc > 2) {
 -- 
-With best wishes
-Dmitry
+2.43.0
+
