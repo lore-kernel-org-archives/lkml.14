@@ -1,47 +1,40 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from mail115-171.sinamail.sina.com.cn (mail115-171.sinamail.sina.com.cn [218.30.115.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E589A3F8F5
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 10:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E139C4122E
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 10:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705660257; cv=none; b=U63AIk+j+Y3+kISTAHB/vuaLddMyVW0yKMsUa27goVMsuBbHXxOBkW13Qcu/IGtpMUWNNefnNtvLw4s75ZOvBQMNlMxcj3dqb8+fEgyIuwI5OaP41GICv8ocpAGQDmcSR+i2/KZ7fNFpxL8DTvFzbfO4RcpDdANkWPHm66u7B68=
+	t=1705660285; cv=none; b=GKsbzHGpQMmNX9LBi4achzO5O2gliAvIqDWb2VBQmUCCE33Zq6VJqjjo9AlCezUHAy3GgF4mVe4wY/MSc6W0EuLgsmTQ3MK6925MG2ryEq1wiroMfb8656/MnRa/U9JOnBmWN+NPQDN80ZnfYKnvLS0w6AyEErpYgkZP4rnQqhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705660257; c=relaxed/simple;
-	bh=PknrStiSFeg+3mCdlUNXpgCw2CuQmXxyTjIZlMddxGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KLlVPb8bu0SLESKCGaVR6dh1tZjIzK31I9XCScMJS30UdZVYWpO1tO7mmyPYaM0iknOyXK6WGQUljliPgQLjmk5jxglGla/Qe/VP1p1gPln1+nIQI8xDtrVpwZtlVs+rSU+m+hwKK0aR8mzi3QWfLIuxWRwpFURgP4UsVVQDRtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=Nu2l/pF0; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="Nu2l/pF0"
-Received: from localhost (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id C5A6F635B043;
-	Fri, 19 Jan 2024 11:22:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1705659735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=LttVVa3g+FcMM7+wKG/iSOZzeZ5h749vPmGrbkCjpb8=;
-	b=Nu2l/pF0q6dusVkP/ar33zJYozomAOYl2Cw1WzBjw//WCvwH6X5QKUohAvvmGD+KKSrAtF
-	2h4p2TuT4VT0glHtcO90hvQf1uhdjoewnmeL7ihlgv8SCtLowGZhomW7CwPma4xzm4+2I/
-	O1KdE0FhZnDSTlI+eo/nx6E+FUCzBtY=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/display: fix typo
-Date: Fri, 19 Jan 2024 11:22:15 +0100
-Message-ID: <20240119102215.201474-1-oleksandr@natalenko.name>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1705660285; c=relaxed/simple;
+	bh=Tepn9KHKy/gyaf7phXHDeeBgC9xy6xaiEQdxthcuYFU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oR0mZ9k2Tdbntu3TjPA4PHjabx4pZgmO5VKaY9Jl6SkLyFndQPx/YvddU6XxEGZjMPPFNUzGbN41VNfgN7DtasMeoRY1nPJW1igk1hzRHpmlTqJHplSGFQF5ktIKaAW98ajGOBSvUj71jvJxR41vBQQiiRvo/6lO2QCg6q03ndA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.10.220])
+	by sina.com (172.16.235.25) with ESMTP
+	id 65AA4F7200003A60; Fri, 19 Jan 2024 18:31:16 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 86315134210319
+X-SMAIL-UIID: B220F29846F14F409B6FE94FF12BD50A-20240119-183116-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+bfde3bef047a81b8fde6@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] KASAN: use-after-free Read in __skb_flow_dissect (3)
+Date: Fri, 19 Jan 2024 18:31:04 +0800
+Message-Id: <20240119103104.1990-1-hdanton@sina.com>
+In-Reply-To: <000000000000498a02060de59162@google.com>
+References: <000000000000498a02060de59162@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,38 +43,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While studying the code I've bumped into a small typo within the
-kernel-doc for two functions, apparently, due to copy-paste.
+On Mon, 01 Jan 2024 09:18:16 -0800
+> syzbot found the following issue on:
+> 
+> HEAD commit:    f5837722ffec Merge tag 'mm-hotfixes-stable-2023-12-27-15-0..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122dfc65e80000
 
-This commit fixes "sizo" word to be "size".
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
-Signed-off-by: Oleksandr Natalenko <oleksandr@natalenko.name>
----
- drivers/gpu/drm/display/drm_dp_dual_mode_helper.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/display/drm_dp_dual_mode_helper.c b/drivers/gpu/drm/display/drm_dp_dual_mode_helper.c
-index bd61e20770a5b..14a2a8473682b 100644
---- a/drivers/gpu/drm/display/drm_dp_dual_mode_helper.c
-+++ b/drivers/gpu/drm/display/drm_dp_dual_mode_helper.c
-@@ -52,7 +52,7 @@
-  * @adapter: I2C adapter for the DDC bus
-  * @offset: register offset
-  * @buffer: buffer for return data
-- * @size: sizo of the buffer
-+ * @size: size of the buffer
-  *
-  * Reads @size bytes from the DP dual mode adaptor registers
-  * starting at @offset.
-@@ -116,7 +116,7 @@ EXPORT_SYMBOL(drm_dp_dual_mode_read);
-  * @adapter: I2C adapter for the DDC bus
-  * @offset: register offset
-  * @buffer: buffer for write data
-- * @size: sizo of the buffer
-+ * @size: size of the buffer
-  *
-  * Writes @size bytes to the DP dual mode adaptor registers
-  * starting at @offset.
--- 
-2.43.0
-
+--- x/net/core/filter.c
++++ y/net/core/filter.c
+@@ -2161,6 +2161,10 @@ static int __bpf_redirect_no_mac(struct
+ 	}
+ 	skb_pop_mac_header(skb);
+ 	skb_reset_mac_len(skb);
++
++	if (skb->data[0] < 2)
++		flags = 0;
++
+ 	return flags & BPF_F_INGRESS ?
+ 	       __bpf_rx_skb_no_mac(dev, skb) : __bpf_tx_skb(dev, skb);
+ }
+--- x/net/ipv4/ipip.c
++++ y/net/ipv4/ipip.c
+@@ -281,6 +281,9 @@ static netdev_tx_t ipip_tunnel_xmit(stru
+ 	if (!pskb_inet_may_pull(skb))
+ 		goto tx_error;
+ 
++	if (skb->data[0] < 2)
++		DEV_STATS_INC(dev, tx_errors);
++
+ 	switch (skb->protocol) {
+ 	case htons(ETH_P_IP):
+ 		ipproto = IPPROTO_IPIP;
+@@ -302,6 +305,9 @@ static netdev_tx_t ipip_tunnel_xmit(stru
+ 
+ 	skb_set_inner_ipproto(skb, ipproto);
+ 
++	if (skb->data[0] < 2)
++		DEV_STATS_INC(dev, tx_errors);
++
+ 	if (tunnel->collect_md)
+ 		ip_md_tunnel_xmit(skb, dev, ipproto, 0);
+ 	else
+--- x/net/ipv4/ip_tunnel.c
++++ y/net/ipv4/ip_tunnel.c
+@@ -745,6 +745,9 @@ void ip_tunnel_xmit(struct sk_buff *skb,
+ 		}
+ 	}
+ 
++	if (skb->data[0] < 2)
++		DEV_STATS_INC(dev, tx_errors);
++
+ 	ip_tunnel_init_flow(&fl4, protocol, dst, tnl_params->saddr,
+ 			    tunnel->parms.o_key, RT_TOS(tos),
+ 			    dev_net(dev), tunnel->parms.link,
+@@ -828,6 +831,9 @@ void ip_tunnel_xmit(struct sk_buff *skb,
+ 		return;
+ 	}
+ 
++	if (skb->data[0] < 2)
++		DEV_STATS_INC(dev, tx_errors);
++
+ 	iptunnel_xmit(NULL, rt, skb, fl4.saddr, fl4.daddr, protocol, tos, ttl,
+ 		      df, !net_eq(tunnel->net, dev_net(dev)));
+ 	return;
+--
