@@ -1,43 +1,44 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2089.outbound.protection.outlook.com [40.107.100.89])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDA128E01
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C0B28E08
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705643694; cv=fail; b=dHJ6KbNDaTrbMjPxWZ5yUfBwQro8ZHLufaQN6StZguSWOPAtO0Fqrod+jS4FMoxrEjVxL7tOovedek+aiCXroPIyEWQzlP+Vm3HbqITnMDixotk4NT43+MEXHhgxuDCoL6bivI9nIt5e1U9WCWFSkAAChBBiLpQm7dRhSCDbQ/g=
+	t=1705643695; cv=fail; b=kFgcTr/swKQRFTmsnnCFoJVcze254YFC5+hwOEhQLzvKGJM6xAMqz9DP4kwn+iw7xvpjbA/4VMvcO2T3h7IqP0PhkmW12QtkR21kJHa1e2A2rf6OYt5asvO6G87v+DXr2j7e03ZNpkZT2UImW+hezXM/S/fMYOebQfkzRqOsJDo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705643694; c=relaxed/simple;
-	bh=9y++8i/x1wnKKUBICnnUCBnhcdc+5/XIpYLvyB8ideE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=km02/92sA5LgwcSSMxS0ZbVXgwkcOG5+6YZ8+HMJ0m1m5SbsISa6DqXYqG2V4VbT5+4D9fcfz1qqzZCNhRY71ryGdJquenLtkRhpvCtGYWyEEkUr8SwR7qiOenMxixByqapMQC5OEvbOAfoyS7dWNIbARl02mvGA1ocYBspCfQY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kUjKusND; arc=fail smtp.client-ip=40.107.100.89
+	s=arc-20240116; t=1705643695; c=relaxed/simple;
+	bh=PRmfjapv2gmPIQcMTytu3GqdUj/t4O/CYovSgnQrTN4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iDZVTXQTSI9klo6MSMjc/xMyE8XOnjoZor1XR0OVzZZcRxVrJpRtEDBiVd82Gh+m0LI76UST91cqRM7dApQeA07B884iScrE6m+Wyxzxp4itldGXrXhsUvxblrqpqyuMWW0axDWg/6oZKo8mD4HwHiY8J0NXOwf4D3qLmngotoY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AIw4LVtP; arc=fail smtp.client-ip=40.107.93.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kUjKusND"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AIw4LVtP"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aRujc5Ftm1prXFrjjEaAM5Xu3R9YTG1IZZZyqJybV6JyUJDuRJzaKS4oHhjIo889YAtBDGieyV3fwOouhsAhmSdMOsJNt+2P/BxblszI15sJkajd7AiS/gaeYfLbaiyT+5iYvsQRZkQEh7lOVj4KzmabMq7gGhBQV2aVRUgn7NUaVYAd+8iAqPt1IpAyd1trXq8DhlF7kNILy+4xN2s74FRN08ayDSP8fDuwHrg4pT6gLs1Qfb+yq3aGhbv3SZvQ8KOPJD50qhPwnmkfn7ZaeYSDdBggSLc7s8pJqNUhb0ogMvfxkM/UgDepMDAE7abAHyWbgc1dAXoPoxS57Lu6mQ==
+ b=E9Z9zCLLFk1u9VDg8B9zLbDO0WVsT4a9KdGWQy816d2pS2z8tElCNdW1EiHOoLT6Fdt1FghiAwfx9qbLX6GfNz03RxS3QZQSZlDbYe0JM0vQsB+52uqzbv75/yzfWrzFIUwjL5BKLaL2NA/D/TLHYHZS2yR0wcXsjmpx+e7m1HGI69GVg92uNnDTF2M7VQQ09bkkjJjCIiD0COV0MNmhdo9gZk13tZ4nRHRRS2E4fNC9u1nRMfqsWEktk130BDIvlz4S3OlXGz8ArO2jKnOhAbmFdrBzK7EAAvTvvah8CH2dvG4bl5IpVK3qVkoRJEsN9+oo9mvfATEMKUDyOVvCfw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WEhKkNPNY/gcwq9DcVM5e7tty+lzGg1BCdl7549XHR0=;
- b=dmNckWunBq2ZLPWWBV8mhyrV3uBEP+A0kflnNJ9NS8EJgACIiaB+8LAsc1Vo7SShRkKqUFSauFULKC0JKrndiXpacxJ7tNBlz50tCohv2B611LMc6ZzbuDurdA9liVTQ+xYukLVw3cxqc6J+/iPHglWjB6zQvIWOcStL5hU3N3PlJUDdcOrSkfx1AWnvl/2Iv6jqHNDNABuzHKa6BpH3DtO4alr65usfONHB/wU68ti+KDPUplMbp8HgBXxwQVfHsJK7Wqrj5mUxbOmCBK1TOwrg+cmK0NpPwiX3uVAwRsiewPqOA7KaFSzUv2F9dKV1IOPAq48xjjSg8AK/bh91uQ==
+ bh=sbYhtGPpxSXx/5jQiSZ/ohKOZc6mALk5xxnOCV2OPeg=;
+ b=hWMeAjST6/faYMIJDlM01if1q6Lw5F5fqJ0IJamgBrXI4+txZ/CasWvyiUlmmTMZIIXldWBJgX/ZvsXeRLkvMA9a2DKv7+ZxtGcdSO2/PEAj7p9OtjLRE2zsXtc18EAU6fEJ3rFLnSBRF4IV62unxxBSYgDlG/bBhcfeCXda7kcSytTQWB5XULUuIrKSJ97Jxwz/U+S5B9+cxIOzpdpNPviYnuZh8IyyaRjiyXUc2KXqXtmHV3mqgdHd+xuvaRUihMFkBrEVfFj8u2rzDhvTquXAXUfhS8F6KPhBTfCelFtKzRy3KX5YnAFlxQT5weKJ/T2DY2siGqlJH1IewTbRyg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WEhKkNPNY/gcwq9DcVM5e7tty+lzGg1BCdl7549XHR0=;
- b=kUjKusND7c8L7n1WHTqDEtqRyZkx+nU/wC4Ko4OfeRbfrNCIsVS4khPFA8XqKRtxW0Bc6vsm8VvqGPSFdiKPjzG6LaIgkCdT2alThqXdzr4+1vDZNMirWP6tcMXiDt6Z7RiUtqBNtSlkHMocFer1BYiUrGXQButClLc6K5ARJXg=
-Received: from DS7PR05CA0043.namprd05.prod.outlook.com (2603:10b6:8:2f::22) by
- DM6PR12MB4563.namprd12.prod.outlook.com (2603:10b6:5:28e::10) with Microsoft
+ bh=sbYhtGPpxSXx/5jQiSZ/ohKOZc6mALk5xxnOCV2OPeg=;
+ b=AIw4LVtPdxP60IPQCk3MPYsrXvlrZy4E0SEWbyLGsJH7PZKTfdJMYGyOx4Ewx+tHD5cq00YXBJ4y+hcdumawwQeMYlCubwjRkIr4hPg60ZZU7oADYEHbr6c0VH1vCOcM9jOTuS+fSwAh9W3Cq3yzizAQNi+agrNciJS9t6PxdUM=
+Received: from DS7PR05CA0048.namprd05.prod.outlook.com (2603:10b6:8:2f::19) by
+ CY8PR12MB7314.namprd12.prod.outlook.com (2603:10b6:930:52::19) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.26; Fri, 19 Jan 2024 05:54:50 +0000
+ 15.20.7202.24; Fri, 19 Jan 2024 05:54:50 +0000
 Received: from DS3PEPF000099DC.namprd04.prod.outlook.com
- (2603:10b6:8:2f:cafe::d8) by DS7PR05CA0043.outlook.office365.com
- (2603:10b6:8:2f::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.8 via Frontend
+ (2603:10b6:8:2f:cafe::3f) by DS7PR05CA0048.outlook.office365.com
+ (2603:10b6:8:2f::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.9 via Frontend
  Transport; Fri, 19 Jan 2024 05:54:50 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
@@ -48,27 +49,29 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  DS3PEPF000099DC.mail.protection.outlook.com (10.167.17.198) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7202.16 via Frontend Transport; Fri, 19 Jan 2024 05:54:49 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ 15.20.7202.16 via Frontend Transport; Fri, 19 Jan 2024 05:54:50 +0000
+Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 18 Jan
  2024 23:54:49 -0600
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 18 Jan
- 2024 23:54:38 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
+ (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Thu, 18 Jan
+ 2024 21:54:39 -0800
 Received: from xsjanatoliy50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
- Transport; Thu, 18 Jan 2024 23:54:37 -0600
+ Transport; Thu, 18 Jan 2024 23:54:39 -0600
 From: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
 To: <laurent.pinchart@ideasonboard.com>, <maarten.lankhorst@linux.intel.com>,
 	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
 	<daniel@ffwll.ch>, <michal.simek@amd.com>, <dri-devel@lists.freedesktop.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 0/4] Fixing live video input in ZynqMP DPSUB
-Date: Thu, 18 Jan 2024 21:54:33 -0800
-Message-ID: <20240119055437.2549149-1-anatoliy.klymenko@amd.com>
+Subject: [PATCH v2 2/4] drm: xlnx: zynqmp_dpsub: Fix timing for live mode
+Date: Thu, 18 Jan 2024 21:54:35 -0800
+Message-ID: <20240119055437.2549149-3-anatoliy.klymenko@amd.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240119055437.2549149-1-anatoliy.klymenko@amd.com>
+References: <20240119055437.2549149-1-anatoliy.klymenko@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,71 +82,50 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DC:EE_|DM6PR12MB4563:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2166c234-51f4-4422-48e0-08dc18b3263c
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DC:EE_|CY8PR12MB7314:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae8f9f3a-38b4-42a4-b7fe-08dc18b326cd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	EW2SGMcmjW1fN2wyTIuLX8t1q6N7kALkF53ZVHaaBJHtoAavYKOmycG3BlUom/52VE6bq1NlHl9dKG/ihWk9/kARoHst8FvALjp92Yetvwxss+zlNi1DZgkjemuJdonQZLa6/3Y3couzDSBmwa804dNm+0um8Ht+k4h3Ae+2wBDbxu388nY3M+t028T/pDZBOF2cRqq2fQ+Qlad9dB2yW1qMcKq6b36DYyBPUBe0Rpy50vJ4TTPUyuNG+Bk28WfpJGzKFwryuTW6MInmdLcHwOHHLtZhRepOv+qYvRcf8T712MBCCgD0TVjIIWd9JUtAU3ONc9zIJjdDqnpZ4PPYKkpq5Qq+PgIr5E7rgS0NMmdvkfA72vj52tptOikVjuzwmyUHBNXCjHndN6A9Gp8eEcFfLfuZE5NYkYKeVaqAHlChAKM+v6x96dvppwW9EJmmlFzTjjp6tWDlmzFgecm+cWQmX243xC/UR0rQ4quAT0fq/myVsro5quaLSG0rSGRB3ppPQc9NhvFQv6FvgSbTzW3CVCpDtR+wmHGboB/Ga2xv9Vv6sGLpyHAZ9B3QBzdo0pGiCDGyqPk53b1NBrZWS7KBz7xMbgrzCJ4SEVfCjfcksPY7VtRO0DXfgJfBIH9LjINDkEoc/SSS4HyAYlCiHpJXCGnkGZRmLrop8i+YhOF0xl7JhkzrXIZrFwnIoQyTaBZ1CfczDEL81o7VPGGRLAzp/imwoGQbr6CLL2QLgdzV0NkIu0zKbIuBQ2UYfT9iIRvvrWncYRKBW0YmiINJ8BkUObq+ELdAIXJlPxnuIX3nVUPdQtWS7CnOCrfl1aGU/12EcCAZQVsV+8Vqe7YXL8fuF4oiPaxz7yWZHEFkqINE22jAZ2Z1NOX6TFAwON7w
+	7HvAARaEqmz+Rn399qaiWlzaIxt2hXS70AtsNkDRdbGsvnviZO1E3TbxkM0mlEyUXmXWnUVfxkfQ9eCAAV+b0PN2iV4mVM8JevR2HlULS6g488NpeTqZXU+L31c23KHjivcqhxA+aqcy+c7HC1e/QKdS/hU9ShM3FguSvVRIdVTZYy2ID8xnSwK8+QQQCKcguv6gJDQc0KgnQ5KbzL768hHMKlUTwWJrI9v8BgOv6T8lue8YteFI6PM8JIIUsN9ZXdK+kwQeNv0VyLXE18AQDnvL7TflZx0UfwnBmKfE0I27eqW8TKY0hk/yXHXtJmyGEVpWq2N3T7SHzik0QGIqIAwXobr+DJk/YvQBl7oeKDa1g2ACy6NeocLDDQxcAKuV+uQogfnPZlNh/50Lc4AzxOvmKEGIyzeL39jzc99IVZM333Pyv1m4jZ4aeubWzZSMi/Ya7YT/VkjyMZe6r5y8LgUdXbyAuHRcOPH7bLCkikdLtN7ZP8w5w2FMWvtO2japrRpBPNOGkvgwH0cHWuxJY4LLvVjkQ8VJ2SDyHBNSUbtyCLS1S/WlubRPg7H4GPA06lYTtAF2x23sD4WUkdHtwAuS9nEp1n8qDGMeow82SOxueg0wnuwNTrNFcb/UrOy/M/3HV2vW6tg/il7hB0V7S5bDJcy4f+EJI7FkQXK0nwHw0UrBSTZ6XkXD61VMXiKVDqO8VuZfIZqRNiHdQRVwB0IiDWeGG+/DjhPBxv0nzvWdHidWRE+dlggxkU3RER1MktPlg68HbnKBKTRPq7KcFNm4dQ0v/b3UGhwqVL2rkVGLn96Ud2mueBE2PqQVaOULq7S4RkVMXDz5t+UN5T42+dJG4sJTLh6Xf4wzUK8Mc6ZeaeIRJhKmhbR3hk6i89aB
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(376002)(39860400002)(396003)(230173577357003)(230273577357003)(230922051799003)(1800799012)(82310400011)(451199024)(186009)(64100799003)(46966006)(36840700001)(40470700004)(921011)(40480700001)(40460700003)(966005)(83380400001)(2616005)(1076003)(426003)(336012)(8676002)(8936002)(5660300002)(47076005)(316002)(110136005)(6666004)(70206006)(70586007)(478600001)(44832011)(26005)(356005)(81166007)(82740400003)(2906002)(41300700001)(86362001)(36756003)(36860700001)(83996005)(2101003)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(136003)(39860400002)(376002)(230922051799003)(230273577357003)(230173577357003)(64100799003)(1800799012)(451199024)(82310400011)(186009)(40470700004)(36840700001)(46966006)(81166007)(356005)(41300700001)(36756003)(336012)(8936002)(8676002)(83380400001)(426003)(70586007)(316002)(70206006)(110136005)(44832011)(478600001)(6666004)(921011)(26005)(1076003)(82740400003)(2616005)(4744005)(2906002)(5660300002)(47076005)(36860700001)(40460700003)(86362001)(40480700001)(36900700001)(2101003)(83996005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 05:54:49.8684
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 05:54:50.8215
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2166c234-51f4-4422-48e0-08dc18b3263c
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae8f9f3a-38b4-42a4-b7fe-08dc18b326cd
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DS3PEPF000099DC.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4563
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7314
 
-Add few missing pieces to support ZynqMP DPSUB live video in mode.
+Expect external video timing in live video input mode, program
+DPSUB acordingly.
 
-ZynqMP DPSUB supports 2 modes of operations in regard to video data
-input.
-    
-In the first mode, DPSUB uses DMA engine to pull video data from memory
-buffers. To support this the driver implements CRTC and DRM bridge
-representing DP encoder.
-    
-In the second mode, DPSUB acquires video data pushed from FPGA and
-passes it downstream to DP output. This mode of operation is modeled in
-the driver as a DRM bridge that should be attached to some external
-CRTC.
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-Patches 1/4,2/4,3/4 are minor fixes.
+Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+---
+ drivers/gpu/drm/xlnx/zynqmp_disp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-DPSUB requires input live video format to be configured.
-Patch 4/4: The DP Subsystem requires the input live video format to be
-configured. In this patch, we are assuming that the CRTC's bus format is
-fixed (typical for FPGA CRTC) and comes from the device tree. This is a
-proposed solution, as there is no API to query CRTC output bus format
-or negotiate it in any other way.
-
-Changes in v2:
-- Address reviewers' comments:
-  - More elaborate and consistent comments / commit messages
-  - Fix includes' order
-  - Replace of_property_read_u32_index() with of_property_read_u32()
-
-Link to v1: https://lore.kernel.org/all/20240112234222.913138-1-anatoliy.klymenko@amd.com/
-
-Anatoliy Klymenko (4):
-  drm: xlnx: zynqmp_dpsub: Make drm bridge discoverable
-  drm: xlnx: zynqmp_dpsub: Fix timing for live mode
-  drm: xlnx: zynqmp_dpsub: Filter interrupts against mask
-  drm: xlnx: zynqmp_dpsub: Set live video in format
-
- drivers/gpu/drm/xlnx/zynqmp_disp.c      | 111 +++++++++++++++++++++---
- drivers/gpu/drm/xlnx/zynqmp_disp.h      |   3 +-
- drivers/gpu/drm/xlnx/zynqmp_disp_regs.h |   8 +-
- drivers/gpu/drm/xlnx/zynqmp_dp.c        |  15 +++-
- drivers/gpu/drm/xlnx/zynqmp_kms.c       |   2 +-
- 5 files changed, 119 insertions(+), 20 deletions(-)
-
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+index 407bc07cec69..8a39b3accce5 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+@@ -1166,7 +1166,7 @@ void zynqmp_disp_enable(struct zynqmp_disp *disp)
+ 	/* Choose clock source based on the DT clock handle. */
+ 	zynqmp_disp_avbuf_set_clocks_sources(disp, disp->dpsub->vid_clk_from_ps,
+ 					     disp->dpsub->aud_clk_from_ps,
+-					     true);
++					     disp->dpsub->vid_clk_from_ps);
+ 	zynqmp_disp_avbuf_enable_channels(disp);
+ 	zynqmp_disp_avbuf_enable_audio(disp);
+ 
 -- 
 2.25.1
 
