@@ -1,132 +1,170 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7682E5674D
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 22:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3610A56456;
+	Fri, 19 Jan 2024 22:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705704356; cv=none; b=IDWBL9wvkH9wOTfbuqMgOeRw39ETu2XdPOrHNeatllcTlf2ygxrIp6v/+y9KDvsa6JUi6He+GKK71dOe82f7iByAP4vjcLWDp2V+W2H0kDgTuM6dSzmOBnJmvngTLw/WYIKIWJ271jwNoEdd25OqELTv7OCr9hNNcAn9BwW9wv8=
+	t=1705704444; cv=none; b=rJk1UiaJEWBtDj9cEw0tf/ciOx7qiymHFHqa6WS37rHGEINb4HKDuUJ6uDQPnq04koYbFlSTHfOsmkzqH78fUkbMqqhbh5mbSbBZfLWExJpidy48gtQnsUT8eAluuwm7KwUoGh/XJAHT+Rl9W30ofGcAn5Sv1vfZGMhFd9n8gdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705704356; c=relaxed/simple;
-	bh=uA4FdWifBIyvvaSzLAe1j5JokAg2Yd8ZAqmFqenknLs=;
-	h=Subject:Date:Message-ID:MIME-Version:Cc:From:To; b=K1h4j+xhk1khz+/7kmjEIUdqcNf5qtEhuYk47HNUJfarx6rCu8kx6bLORQnp4gC7MHKUnSXmfbdC18SXIeCMp2bvREgGgvM+mH+fWT2P8dcfH2RrCiEIBLv4U8xMQU7fQ4ROUOjSB9DB2moV5pGI/T6RKqWCq8X28odVaVkjDd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=v7hoBNwf; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1705704444; c=relaxed/simple;
+	bh=VjppsFpbyCWxgORJcPpUoA4qYbTq4NNlOZd+L1VwhMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pM9XZilf5ZJfzg/slvOPkVBjcV6AyIqubk2cHjMGr6eKxXfhomtIGMfsWl1U55Odf6OU6W3WdohdKx3jNbel92aqcT7xCygs0SsT4LJ62eE9v4CPCjKhceb6b8FhMnaePtkVlXm6zxbHy8mLGUm/all6n9CoBEJIVYgl5s3SXho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=5I8brMRs; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="v7hoBNwf"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d70a98c189so9991015ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 14:45:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1705704354; x=1706309154; darn=vger.kernel.org;
-        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=2m1XhtygbnQtWGP2mbVBYdagXNcPKgbqxOJjRe6fvag=;
-        b=v7hoBNwfzatVyTIrzBUh27gG6hOIeg/qxyPjdrIrVIyLzgJ1iOWjNlUAgCWIN2xWrg
-         pfP1fnfOvio8jMiu0apESO3EKDCOpi7dj12x905G/0p+yNFlzhzSYZwOKfWzn7osYx5g
-         nlntyGT22bW1Yj/4vjxClsgHLNb5uM4nt85wI0NeKuZsFxRJfX+V+ERhBJFIvlnQfjLl
-         ohKh3gzbOnkbYZC1cwpgn0jPiMZRLvGBu1pdsBq7mUxn9UdUgqGboYgniTQshwVUq1JP
-         gJjgu0ROlvDpyUCOhjj3fx67JgL/vlejmDgzln8UqTIsSTmh28H1KkG7N9QVtykz6NlE
-         2grw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705704354; x=1706309154;
-        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
-         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2m1XhtygbnQtWGP2mbVBYdagXNcPKgbqxOJjRe6fvag=;
-        b=hlHB6YJ5WT2PNC6xP1G8zUgTVXDlT8r6waBxjymSVNAr/0eslB4jOZt5ocPkGxA+lF
-         4xV5wo0yR+04iXtv4pFW5Y6WwBwif0hpD9Z+RR6PUu/Z7u5CFNT2OIOqg4lebuDbxm1g
-         vk5f60WIBBKksdCWJsDVISudE3kz47SeBgpMvzElVTKLWFhYGLUk8sDp/fBf/fA7VT5n
-         iZgv06LqmGPl9DiRVTuGr5w/t87k6M5Mf6Tnqhywir4Nn1YjPpZv6OhfzUJyZMYAN97B
-         nBGKAGIBoBQPmOfRw2R9+W6MvkokFriiFm5lXt1YHe3G3bT5R4MxOqnuScIWdcCfKizb
-         TDEQ==
-X-Gm-Message-State: AOJu0YzZYMn2HLgfE73mJw3ZlJnFw0ypjmLQPKqsYzecnGD/6KgDfjs9
-	Y6T60D+5TJBka9KzzYOaZWx8HnJxHGjVTbY+y7W/Wj1JVVqEnGHEpJa/0XQxgwc=
-X-Google-Smtp-Source: AGHT+IGDYcz91ZsFkrsdeetEFLWkVDikcqnEMGNi7rrUqJxNwbVFtPK97ae9vNTPyqHIMS90uGoxFA==
-X-Received: by 2002:a17:902:6b02:b0:1d4:e2bc:88f1 with SMTP id o2-20020a1709026b0200b001d4e2bc88f1mr582016plk.110.1705704353758;
-        Fri, 19 Jan 2024 14:45:53 -0800 (PST)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id p20-20020a170902c71400b001d5e2127632sm3525800plp.9.2024.01.19.14.45.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jan 2024 14:45:53 -0800 (PST)
-Subject: [PATCH v2] tty: hvc: Fix the RISC-V SBI driver for a refactoring
-Date: Fri, 19 Jan 2024 14:44:05 -0800
-Message-ID: <20240119224404.26695-2-palmer@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5I8brMRs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705704438;
+	bh=VjppsFpbyCWxgORJcPpUoA4qYbTq4NNlOZd+L1VwhMw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=5I8brMRsyz14hP+kX8WRzO8EbIC5sNnul5fNCCC0rUXq6NdphWWXy4m28JaUND2sR
+	 XeK/RCtp/nJn5FdwzHYqBT8bdDZtaAGagm1r2Sxv0qJuMOhks7Q+zGvU0+FPTwPxfJ
+	 6res/AScL1rWZMnoyneFaD1DswIJfvtN2wlZVFGFh8roBcPB3rIRV84H7UoulIzpwB
+	 9qgweRcUDOohiNPOppHAaje9XVZIoTM0qiC+CT3i+SjnW5pPKfBIlo0eSXVBtqq4Ek
+	 tIUDD/BvzJEzzqY9TbKs871vMvLc0vFV8wstEPdcSxOqtox0qWhZHYEC9hIrVq8CQk
+	 BhsPshCEW5RAg==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BEE4A37813C4;
+	Fri, 19 Jan 2024 22:47:18 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id 2FE2510609DF; Fri, 19 Jan 2024 23:47:18 +0100 (CET)
+Date: Fri, 19 Jan 2024 23:47:18 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Johan Jonker <jbx6244@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Andy Yan <andy.yan@rock-chips.com>, Algea Cao <algea.cao@rock-chips.com>, 
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCH 3/3] phy: rockchip: Add Samsung HDMI/DP Combo PHY driver
+Message-ID: <eodlujrytdm6gugcbaz3efnjvgg7sbvsqedwllmleh4ar6e7cr@3ejicokdjzcd>
+References: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
+ <20240119193806.1030214-4-cristian.ciocaltea@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc: Greg KH <gregkh@linuxfoundation.org>, jirislaby@kernel.org,
-  Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, aou@eecs.berkeley.edu,
-  ajones@ventanamicro.com, apatel@ventanamicro.com, Atish Patra <atishp@rivosinc.com>,
-  linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-  linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@rivosinc.com>
-From: Palmer Dabbelt <palmer@rivosinc.com>
-To:         linux-riscv@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="h4tpubuhecincak7"
+Content-Disposition: inline
+In-Reply-To: <20240119193806.1030214-4-cristian.ciocaltea@collabora.com>
 
-From: Palmer Dabbelt <palmer@rivosinc.com>
 
-I missed the int->size_t refactoring in f32fcbedbe92 ("tty: hvc: convert
-to u8 and size_t"), which causes the newly used ops in 88ead68e764c
-("tty: Add SBI debug console support to HVC SBI driver") to fail to
-build due to a
+--h4tpubuhecincak7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-linux/drivers/tty/hvc/hvc_riscv_sbi.c:59:15: error: incompatible function pointer types initializing 'ssize_t (*)(uint32_t, const u8 *, size_t)' (aka 'long (*)(unsigned int, const unsigned char *, unsigned long)') with an expression of type 'int (uint32_t, const char *, int)' (aka 'int (unsigned int, const char *, int)') [-Wincompatible-function-pointer-types]
-        .put_chars = hvc_sbi_dbcn_tty_put,
+Hi Cristian,
 
-Fixes: f32fcbedbe92 ("tty: hvc: convert to u8 and size_t")
-Fixes: 88ead68e764c ("tty: Add SBI debug console support to HVC SBI driver")
-Link: https://lore.kernel.org/r/20240119215612.20529-2-palmer@rivosinc.com
-Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
----
-Changes since v1 <20240119215612.20529-2-palmer@rivosinc.com>:
-* Fix the return and arguments correctly.
-* Also fix the hvc_sbi_dbcn_tty_{get,put}().
----
- drivers/tty/hvc/hvc_riscv_sbi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Fri, Jan 19, 2024 at 09:38:03PM +0200, Cristian Ciocaltea wrote:
+> Add driver for the Rockchip HDMI/eDP TX Combo PHY found on RK3588 SoC.
+>=20
+> The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
+> and eDP links.  The maximum data rate is 12Gbps (HDMI 2.1 FRL), while
+> the minimum is 250Mbps (HDMI 2.1 TMDS).
+>=20
+> Co-developed-by: Algea Cao <algea.cao@rock-chips.com>
+> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
 
-diff --git a/drivers/tty/hvc/hvc_riscv_sbi.c b/drivers/tty/hvc/hvc_riscv_sbi.c
-index 2f3571f17ecd..f8cd3310ef35 100644
---- a/drivers/tty/hvc/hvc_riscv_sbi.c
-+++ b/drivers/tty/hvc/hvc_riscv_sbi.c
-@@ -15,7 +15,7 @@
- 
- #include "hvc_console.h"
- 
--static int hvc_sbi_tty_put(uint32_t vtermno, const char *buf, int count)
-+static ssize_t hvc_sbi_tty_put(uint32_t vtermno, const u8 *buf, size_t count)
- {
- 	int i;
- 
-@@ -25,7 +25,7 @@ static int hvc_sbi_tty_put(uint32_t vtermno, const char *buf, int count)
- 	return i;
- }
- 
--static int hvc_sbi_tty_get(uint32_t vtermno, char *buf, int count)
-+static ssize_t hvc_sbi_tty_get(uint32_t vtermno, u8 *buf, size_t count)
- {
- 	int i, c;
- 
-@@ -44,12 +44,12 @@ static const struct hv_ops hvc_sbi_v01_ops = {
- 	.put_chars = hvc_sbi_tty_put,
- };
- 
--static int hvc_sbi_dbcn_tty_put(uint32_t vtermno, const char *buf, int count)
-+static ssize_t hvc_sbi_dbcn_tty_put(uint32_t vtermno, const u8 *buf, size_t count)
- {
- 	return sbi_debug_console_write(buf, count);
- }
- 
--static int hvc_sbi_dbcn_tty_get(uint32_t vtermno, char *buf, int count)
-+static ssize_t hvc_sbi_dbcn_tty_get(uint32_t vtermno, u8 *buf, size_t count)
- {
- 	return sbi_debug_console_read(buf, count);
- }
--- 
-2.43.0
+The driver has multiple sequences looking like this (this is just one
+example of many):
 
+> +	hdptx_write(hdptx, CMN_REG0087, 0x04);
+> +	hdptx_write(hdptx, CMN_REG0089, 0x00);
+> +	hdptx_write(hdptx, CMN_REG008A, 0x55);
+> +	hdptx_write(hdptx, CMN_REG008B, 0x25);
+> +	hdptx_write(hdptx, CMN_REG008C, 0x2c);
+> +	hdptx_write(hdptx, CMN_REG008D, 0x22);
+> +	hdptx_write(hdptx, CMN_REG008E, 0x14);
+> +	hdptx_write(hdptx, CMN_REG008F, 0x20);
+> +	hdptx_write(hdptx, CMN_REG0090, 0x00);
+> +	hdptx_write(hdptx, CMN_REG0091, 0x00);
+> +	hdptx_write(hdptx, CMN_REG0092, 0x00);
+> +	hdptx_write(hdptx, CMN_REG0093, 0x00);
+> +	hdptx_write(hdptx, CMN_REG0095, 0x00);
+> +	hdptx_write(hdptx, CMN_REG0097, 0x02);
+> +	hdptx_write(hdptx, CMN_REG0099, 0x04);
+> +	hdptx_write(hdptx, CMN_REG009A, 0x11);
+> +	hdptx_write(hdptx, CMN_REG009B, 0x00);
+
+Instead of the repetitive calls to regmap_write, it's better to do
+it like this:
+
+static const struct reg_sequence some_init_seq[] =3D {
+	REG_SEQ0(CMN_REG0087, 0x04),
+	REG_SEQ0(CMN_REG0089, 0x00),
+	REG_SEQ0(CMN_REG008A, 0x55),
+	REG_SEQ0(CMN_REG008B, 0x25),
+	REG_SEQ0(CMN_REG008C, 0x2c),
+	REG_SEQ0(CMN_REG008D, 0x22),
+	REG_SEQ0(CMN_REG008E, 0x14),
+	REG_SEQ0(CMN_REG008F, 0x20),
+	REG_SEQ0(CMN_REG0090, 0x00),
+	REG_SEQ0(CMN_REG0091, 0x00),
+	REG_SEQ0(CMN_REG0092, 0x00),
+	REG_SEQ0(CMN_REG0093, 0x00),
+	REG_SEQ0(CMN_REG0095, 0x00),
+	REG_SEQ0(CMN_REG0097, 0x02),
+	REG_SEQ0(CMN_REG0099, 0x04),
+	REG_SEQ0(CMN_REG009A, 0x11),
+	REG_SEQ0(CMN_REG009B, 0x00),
+};
+
+regmap_multi_reg_write(hdptx->regmap, some_init_seq, ARRAY_SIZE(some_init_s=
+eq));
+
+> +static const struct of_device_id rockchip_hdptx_phy_of_match[] =3D {
+> +	{ .compatible =3D "rockchip,rk3588-hdptx-phy", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, rockchip_hdptx_phy_of_match);
+> +
+> +static struct platform_driver rockchip_hdptx_phy_driver =3D {
+> +	.probe  =3D rockchip_hdptx_phy_probe,
+> +	.driver =3D {
+> +		.name =3D "rockchip-hdptx-phy",
+> +		.pm =3D &rockchip_hdptx_phy_pm_ops,
+> +		.of_match_table =3D of_match_ptr(rockchip_hdptx_phy_of_match),
+
+Remove of_match_ptr(). It's a nop, since the driver depends on OF.
+
+Greetings,
+
+-- Sebastian
+
+--h4tpubuhecincak7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmWq++sACgkQ2O7X88g7
++pod7w//ThYbzmy1lztKq6Q/lBLNvHn771BBP8vGzErGsecU6e8sAv4yc8kjOk1X
+Tj3MAlMP9jrl35kNCouj55qupzaaUO4+kWxKWGSB9M0J2uwPPlnxWBghYrvlLqpU
+OpqdyhA2lY27WXb4opiG5WlO4fCka2gPvCmVaEgsRBzvGm8pE5XAEh6wFKyu1nQb
+3rKNhUxDyvE6xsEub1qA6EU4LUz+L5MgnewjZgUo9tXQ8sXZtCnzmio89mjKXxqy
+YZRJJeeMQo2lRD9CSMrrunqRMxfr++EAVfNabqjl6LeCj2LYUyquBVLrl5UWEgyl
+U0I1OanUHZf6bnSxjq4MWQXzsvGJFT8u0WaBExHeFMmiza1u9UOw/OojOsiYgipy
+82ZjkGUwrRRPFG9MR4gnFOAj6QRVcmGiuWcTpN7btyzYxkJok5mC3EJApnEhuSpQ
+q/3/RJ/twqXnmXM0sBVk83SFak8A7JkqIQvpLdAYmpykyzp6jB03CpXsE+LCBQD1
+BgHgTPwwYmd7cQPJO2hjMPYkxXDYYbPHCw+83UHmcDrA/AKO0cv75Y1Rvdtb/AxR
+8W3h5yOHNL3azY7kwDuVyCBaozX5e0+cyMeDSmj3BA6QsygUKvij7oo4GGX1lH+w
+AHedQgPgS8/v36Fe80myNNj/9bq691npdqKlsVJXXRIMI8mFL+w=
+=833U
+-----END PGP SIGNATURE-----
+
+--h4tpubuhecincak7--
