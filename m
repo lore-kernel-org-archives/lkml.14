@@ -1,130 +1,83 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6587554BE2;
-	Fri, 19 Jan 2024 17:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088BF1E87C;
+	Fri, 19 Jan 2024 17:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705686800; cv=none; b=Qn41F2cjwKULO5h/ttSpatZMN+naMitXNN/D3rKCWlZbPYDVqRxF7H5JScpxKdBu0GsYRc3AZa+w0N/WNCFBngZWQW7UZ7H2c9Reic1dkKpVy9M84jMxxDe0wvI0yzDB6EqztLjkVSaSuNXVkYpgsr5eV3fj4EfL69Ys5wku6kg=
+	t=1705686859; cv=none; b=g8WbwaP0O1EmYA+5/+dA7DJV8NI3TXbive00l/VtXqC2vKMIIofvi8owoExkEhwPVbTRABnqCSA1vDvsxhRuMybLfBtTa8ubrO0w0me0OUJ99j2oqzpacTX0yAsyQjPYTdPFt3UDMRiT8+wa+9KKuFu+uQDPu6D4Hz9wtH9aaEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705686800; c=relaxed/simple;
-	bh=joZ3oqdD35mH93NqBSHyDq6L05JkQomCwHe2AIIsFH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l9WXDcsXwMUu1v0Uct7TuEWlTdCfeTVlahdwmoSG3qLx9PSAtPcjheQGC21XF+l2Qnu8sgSYbkW/CC9OwQV8uADWlmEPq6cMZQdYhcB7ecLxAlcGe7gdvBEj2B/1Jg6A6J0l8cb4N06uHrepn8ipUVEhZZvsEGi2zdeniNx41Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U3tcY5DB; arc=none smtp.client-ip=209.85.215.174
+	s=arc-20240116; t=1705686859; c=relaxed/simple;
+	bh=E98o89P8+R8YAOCQwVZNOu3BKNa62BrRxKH6/6qwefY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LKIc2e+/DQ5k4s+YW3tbHALV2d1edLXbBWLXXudTrk/c0VjhlxOsf/qk/Q/CW0g7UYFs/sjvI4K5WxLtQUKWJe8P1zm0x/1gjP7uP7kMjyS5SC8a3/Kpv+SZF9yShPK4oNwW6JVjwajZLy0AdILRkfsgDukqgA3AuEpKN5tZpwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lk6c3C3n; arc=none smtp.client-ip=209.85.215.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3tcY5DB"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce942efda5so844531a12.2;
-        Fri, 19 Jan 2024 09:53:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lk6c3C3n"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cec32dedf3so753409a12.0;
+        Fri, 19 Jan 2024 09:54:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705686799; x=1706291599; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bWNsVy0kTO/oiTcTQ5yfNu1I6n3cORC/fqV3uGmtSiU=;
-        b=U3tcY5DBrj9pfParHxx3K/aaLviAFHR6SyDmAJoCN7dibKl7mVmgrUCmxse7eaeKlm
-         IjxKRlsd9tcnK2i9r0dNzAWIsFG3i8saNxytGql9qg7nAYLFvUJIueGPPrFUcNetji9i
-         TkrmiHjsUo90w2WMUXSgaaYHnKIHJXYOIvOyUZ8/ScMEGAwKTWz65OphehhalYZ2BOry
-         hJk8dz25Sq0aijDIaujRFtljfTojo3KgGTs+jtMBcQAgJZS+VKI9kDGAT++9YK3L36ro
-         SxyOA6hEKrCyWhu7+Shmp4iF18SxBanMCw5cZYDOi/1M67h4HwD2yOgGaw/wAj7M2lV5
-         ojUQ==
+        d=gmail.com; s=20230601; t=1705686857; x=1706291657; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/FKtHrE1aXZwBWr0DhHzM7pDrpBjBv62gCYMzeiuv8I=;
+        b=Lk6c3C3nMxaNidTHOP3amABgUxCQolWDf5WY2PYH/gRhXPwRW11WFU6DdHXOIf/2QQ
+         +dpi7BGKTXfenPcLN1BDeZCtm2CDugiJccyHfiUahf10zzieGVJc49BA3CmTyIMMPc4W
+         RPJs5qNEFT4K0ydw0UWQnkX7SIKA+XtZJIaZpWCp/jKP/sHrlellSSlumNIwpeTkGRk8
+         jJIlfsnMuYgwIH++DXDisVZX5K/QoZqsQ+ZNe//bH69gtzZ4FI5blIhGNPV0zXKlkCnS
+         UOp35Sk1qV8DyOgz5IIhuYQ6IfuCSY0bb5PEX3mfzu/ItDL2g50ZStCWI5leOsulG39I
+         o+Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705686799; x=1706291599;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bWNsVy0kTO/oiTcTQ5yfNu1I6n3cORC/fqV3uGmtSiU=;
-        b=kDqIF2GL3rSQ/i1vRealFroC77OSTNiEA+sLMf7djPvAYpKQ7I6LiuoqgVI65HwrQ3
-         4q+3XpVbZJwmfZv/rPsa78M0Jq5KfbgtBAmam7o+UXGuWaVgfYU5ZUh8nCA6A3XzFxSG
-         gI2m2o/ju+dTgHeJIa2Su95pkHiV1ZsGeZVa00pSMlfmxdE/RvtrqcN9Nno/ywDjUOen
-         BBqVDbExnyY5sdQvp6vw1TSonABVWajZasAkZtYJ4DLaeA4wPhSOKYEWjYrTp1bBFZvt
-         HLv5sBkJG0035oxVQuL2kKr+53W0EXemzqYyrzyEgJBpeYCzAbx2t+Rx4vQqL9OQOliv
-         7DuQ==
-X-Gm-Message-State: AOJu0YxwFm1yGJLh0fHJkYC/yjNAWyE1/T/MMuzOYFrNL7wzIHlRPRcU
-	jnKd6vXY8oWQR3Cu0Rv8a85bel0jkWevM/vXb2NR+WNi8hHm37wRu3Aqu8p6Z9FyWFtCtNvAyAr
-	GVvwREetyBMpXoB1LlZ/4kJyUy/8=
-X-Google-Smtp-Source: AGHT+IE1CSWzpt0z9AJr2t26c2E94K4ctR8RmKK6fIyBA6fD4c56V3CCGLhkExsI0hw3aMK6GoEBsCipVS/DU2ngbCc=
-X-Received: by 2002:a17:90a:bd03:b0:28c:cec8:cfe0 with SMTP id
- y3-20020a17090abd0300b0028ccec8cfe0mr120928pjr.94.1705686798681; Fri, 19 Jan
- 2024 09:53:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705686857; x=1706291657;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/FKtHrE1aXZwBWr0DhHzM7pDrpBjBv62gCYMzeiuv8I=;
+        b=ksHpnWEVZbRgWb7Ok99tuU2Kafk1JomktB/vju49kXcpLt7DA+NsnRD8LmOvkIggjj
+         Pbbb/M3Qi7TG7p3qjRM8NfkhxkIdyw+PQqukCL+UhKugrcGKNVm5C+vLBb7Zu5bXkqFJ
+         Df6HYPltrkQ57RhzMiSKDH+CpVPAdai+vDBAjDdpkLZuJatiJ5THOFnh6P1W3V8SQzFu
+         Tj14JoKUfychnk7+E4+MkBUYdnATR5XllXkFPo77NHoMej5blFiM2WL/RMMk/QUJEyrk
+         CZjwAAPlZkZjkXczIUhoZ3eqHY2VdEr6utuYRv1l4x9c1kbj1LRX9YxgrFkYCFYmt9c9
+         W7LQ==
+X-Gm-Message-State: AOJu0YxBnN1/yL61LPCdLCwT0Cij185cTSRPpAYvcwz2cTe2WkwE4guW
+	PR3ISzVt+1rj/WQDof7Jysfz6yAIVOzefe3A05AoEsGFc9mEGgfK+dPi7Ki5
+X-Google-Smtp-Source: AGHT+IEt4VmqIUe/VhRjbnK3usqLmrNWQ2R6dIVG6HfwlqryiDMyULoar3g15PVmOTWKMLHhe0EJmw==
+X-Received: by 2002:a17:90a:1344:b0:28e:6f44:46d5 with SMTP id y4-20020a17090a134400b0028e6f4446d5mr135498pjf.52.1705686857245;
+        Fri, 19 Jan 2024 09:54:17 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id nb17-20020a17090b35d100b00290394b25d5sm2953663pjb.22.2024.01.19.09.54.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jan 2024 09:54:15 -0800 (PST)
+Message-ID: <ea0e69ab-744b-4e75-8a17-6c0b59b16db3@gmail.com>
+Date: Fri, 19 Jan 2024 09:54:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118104301.249503558@linuxfoundation.org> <CA+G9fYv4PdOsuFmd2BGoq57omiXWuvnSpJJ1HuLYT0rJ_h9xEw@mail.gmail.com>
-In-Reply-To: <CA+G9fYv4PdOsuFmd2BGoq57omiXWuvnSpJJ1HuLYT0rJ_h9xEw@mail.gmail.com>
-From: Luna Jernberg <droidbittin@gmail.com>
-Date: Fri, 19 Jan 2024 18:53:05 +0100
-Message-ID: <CADo9pHgVDXXw6DcFTPHU+Cg10K4dusW61N4G5CFba-Qr99TS-Q@mail.gmail.com>
-Subject: Re: [PATCH 6.7 00/28] 6.7.1-rc1 review
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
-	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
-	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
-	conor@kernel.org, allen.lkml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MIPS: sgi-ip27: Fix missing prototypes
+Content-Language: en-US
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240119133216.83220-1-tsbogend@alpha.franken.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240119133216.83220-1-tsbogend@alpha.franken.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Works fine on my Dell Latitude 7390 laptop with model name    :
-Intel(R) Core(TM) i5-8350U CPU @ 1.70GHz
-and Crystal Linux: https://getcryst.al/site
+On 1/19/24 05:32, Thomas Bogendoerfer wrote:
+> Fix missing prototypes by making not shared functions static and
+> adding others to ip27-common.h. Also drop ip27-hubio.c as it's
+> not used for a long time.
+> 
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-Tested-by: Luna Jernberg <droidbittin@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
 
-Den fre 19 jan. 2024 kl 16:48 skrev Naresh Kamboju <naresh.kamboju@linaro.o=
-rg>:
->
-> On Thu, 18 Jan 2024 at 16:20, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 6.7.1 release.
-> > There are 28 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 20 Jan 2024 10:42:49 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patc=
-h-6.7.1-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git linux-6.7.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
->
-> Results from Linaro=E2=80=99s test farm.
-> The arm allmodconfig clang-17 build failed on 6.7.y, Linux next and mainl=
-ine.
-> but passed on 6.6.y.
->
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202401=
-17/testrun/22090095/suite/build/test/clang-17-allmodconfig/details/
->
-> ## Build
-> * kernel: 6.7.1-rc1
-> * git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-> * git branch: linux-6.7.y
-> * git commit: ef44e963b02edb00d4de5fa3528a21f3e7b33a85
-> * git describe: v6.7-29-gef44e963b02e
-> * test details:
-> https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.7.y/build/v6.7=
--29-gef44e963b02e/
->
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
->
