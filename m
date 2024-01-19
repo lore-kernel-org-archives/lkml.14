@@ -1,67 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994F433CE9;
-	Fri, 19 Jan 2024 13:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D852F33CE9;
+	Fri, 19 Jan 2024 13:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705669869; cv=none; b=iPm6IR0Ap5OAKgGPB05UYIV0+EoUGNb/yRqicNhs+Vqhs9XapEz+ZYm0//xa73DMM0fRGBWgxaqscW/47RvUtvKxys4HzikmV5bRDc58KJEIMTutuL/qHMlgLRCzsgTt2CZYuawkCL5oaVwL1d+BRbj1MglP16k7Q6AhpOuE9s0=
+	t=1705669882; cv=none; b=gM1hR1+NhGewmhRUGyLqYDiZo1SCFkevGyLgnU27EIP+Gtx9iT7gvk4PK7BwvNcp6ydBn8ECuGAkA8Bsw6cBKSwoILyR+J0DaGwn7oSaIK4TvcGs8AfQWUUmEp2tf/L1/WQZVunJXZ7qUWrY04YQogOaemJRX7JXh3u+ua/cKVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705669869; c=relaxed/simple;
-	bh=J/z83Xg047XGvf3ennA+Sk+uHgqEASMgOJ1cSPBD8MU=;
+	s=arc-20240116; t=1705669882; c=relaxed/simple;
+	bh=0AgduXsuld70K/EMlbZrFK/ZLPaT4SXhbyZdDcrTuzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FujAyaH/+fqV5aLho+I/esJTjDgADfBqz6HAKacDO84skOGHNuF2+4h5aXtgSEBUMfF8VxSWOO3aviOtM2zQaB1Z5ANwXTQlPW1ZfbL0zQLGybm3BNENleA4ljxpdjIU7MlV1GJp66V4D9crLZ7Uy10a+BuG9cD9JZ8iSdN6SCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H//34y5P; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZO18uSDivgHYs8Xl6/Qc2iMeNzBP0s6BgIXgYGB7P6f6dYGCELrzQxYXGWj/3NGtCb9nSNA7wN1/n4dx0eySgeBnmNLTVCNuHCuCAatQ48lGz5wrvdV9RWzNoFtlnhmZcBo1Z7pL+gdAuu29jhQa4HGZt8SrBDlUB4s/w73+sNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eEkPtlKJ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H//34y5P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705669867; x=1737205867;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=J/z83Xg047XGvf3ennA+Sk+uHgqEASMgOJ1cSPBD8MU=;
-  b=H//34y5PgWC1Vla0/wUmWRlQtBE7+jNgXIgoda0QbONjMUK8PixK5MbQ
-   juWwMtjL4g+Fn177LQclu66PAyoWDSskd6LWy3ehUJAv3EO9bFgbdK5km
-   FdYmfpuv/RC026xYl7NfOfby/2Upk0VUJGLlTFjZiqtXb57p7xAykvgjF
-   o31XXVJLnuzV8XcNN6zThQT3cvTPYZrxx6KGFid2No4LZ1dkFdIt04eNE
-   DiXx25jMcRVWG1+HbcN0qJwdShSlK4eHTHeUcMpMrMgFq7KQgRyB+m0AI
-   Qn1X5uV7v/5wPZda3hLhmjqzIwTfU1aKajRW52f558mwZN/LBIgAMp0Tv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="7443367"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="7443367"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 05:11:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="785069304"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="785069304"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 19 Jan 2024 05:11:01 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQoeA-00044W-37;
-	Fri, 19 Jan 2024 13:10:58 +0000
-Date: Fri, 19 Jan 2024 21:10:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Paul Cercueil <paul@crapouillou.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, Paul Cercueil <paul@crapouillou.net>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	linux-doc@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>, linux-media@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] usb: gadget: functionfs: Add DMABUF import
- interface
-Message-ID: <202401192043.6DTnLlKn-lkp@intel.com>
-References: <20240117122646.41616-4-paul@crapouillou.net>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eEkPtlKJ"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40JD0OLp017291;
+	Fri, 19 Jan 2024 13:11:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=y3roZCLy1ySD+5Ai9Ht2UZyOzehoiSJRmh+F6cP6vxc=;
+ b=eEkPtlKJixGFZWrJc0a0cE7/OPuyE4AQNMvB4RD4MomJoWpHNtzULXT3rUj8Bra2BKac
+ qWF16GxsLGE+tcQpBJbTsD9hLj2TFWYRXspN1fLWKsBEkpL2qRoFNL0P6bAasmJTvX/S
+ nUNoHXi5RuFDeJD0n3RqZgDpwfuU0uH5Lp5ymvlZtkCaQAYPpDmQg8ES5pN24/7GIwEx
+ j4aLL3+RY3wMFdMYKE/YVrbzneQrqb157DazL2Qu0opFfdx/WIvpIoBFksIhDbyq9woI
+ g0FtlH6ZBgQeuk8FRX49KHKwrevYtIsW9m+3HnNITiorZkf0w4h+D//lLEfc0XZUfqX3 eA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vqs1jhcrg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Jan 2024 13:11:05 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40JD0nHk018582;
+	Fri, 19 Jan 2024 13:11:05 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vqs1jhcr5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Jan 2024 13:11:05 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40JAM1gl030870;
+	Fri, 19 Jan 2024 13:11:04 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vm72khaks-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Jan 2024 13:11:04 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40JDB13E43188718
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 19 Jan 2024 13:11:01 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 585682004B;
+	Fri, 19 Jan 2024 13:11:01 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9E85B20040;
+	Fri, 19 Jan 2024 13:10:59 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.85.177])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 19 Jan 2024 13:10:59 +0000 (GMT)
+Date: Fri, 19 Jan 2024 14:10:57 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] livepatch: Move tests from lib/livepatch to
+ selftests/livepatch
+Message-ID: <Zap04ddls7ZvbL/U@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20240112-send-lp-kselftests-v6-0-79f3e9a46717@suse.com>
+ <20240112-send-lp-kselftests-v6-2-79f3e9a46717@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,98 +84,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240117122646.41616-4-paul@crapouillou.net>
+In-Reply-To: <20240112-send-lp-kselftests-v6-2-79f3e9a46717@suse.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: p-8a8pwvXQe30bZjF8SmExCBArjrS_A1
+X-Proofpoint-ORIG-GUID: LtCFlP5IylQnTIoJja1a4g7w6R36SAxv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-19_07,2024-01-19_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 mlxlogscore=875
+ bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2401190067
 
-Hi Paul,
+On Fri, Jan 12, 2024 at 02:43:51PM -0300, Marcos Paulo de Souza wrote:
+Hi Marcos,
+...
+>  arch/s390/configs/debug_defconfig                  |  1 -
+>  arch/s390/configs/defconfig                        |  1 -
+>  lib/Kconfig.debug                                  | 22 ----------
+...
+> diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
+> index 85490d9373fc..5948afeeb56c 100644
+> --- a/arch/s390/configs/debug_defconfig
+> +++ b/arch/s390/configs/debug_defconfig
+> @@ -884,4 +884,3 @@ CONFIG_ATOMIC64_SELFTEST=y
+>  CONFIG_STRING_SELFTEST=y
+>  CONFIG_TEST_BITOPS=m
+>  CONFIG_TEST_BPF=m
+> -CONFIG_TEST_LIVEPATCH=m
+> diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
+> index fb690fbbf54b..8d8c2989b6fe 100644
+> --- a/arch/s390/configs/defconfig
+> +++ b/arch/s390/configs/defconfig
+> @@ -813,4 +813,3 @@ CONFIG_KPROBES_SANITY_TEST=m
+>  CONFIG_PERCPU_TEST=m
+>  CONFIG_ATOMIC64_SELFTEST=y
+>  CONFIG_TEST_BPF=m
+> -CONFIG_TEST_LIVEPATCH=m
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 97ce28f4d154..c2147caa7da2 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2853,28 +2853,6 @@ config TEST_MEMCAT_P
+>  
+>  	  If unsure, say N.
+>  
+> -config TEST_LIVEPATCH
+> -	tristate "Test livepatching"
+> -	default n
+> -	depends on DYNAMIC_DEBUG
+> -	depends on LIVEPATCH
+> -	depends on m
+> -	help
+> -	  Test kernel livepatching features for correctness.  The tests will
+> -	  load test modules that will be livepatched in various scenarios.
+> -
+> -	  To run all the livepatching tests:
+> -
+> -	  make -C tools/testing/selftests TARGETS=livepatch run_tests
+> -
+> -	  Alternatively, individual tests may be invoked:
+> -
+> -	  tools/testing/selftests/livepatch/test-callbacks.sh
+> -	  tools/testing/selftests/livepatch/test-livepatch.sh
+> -	  tools/testing/selftests/livepatch/test-shadow-vars.sh
+> -
+> -	  If unsure, say N.
+> -
+>  config TEST_OBJAGG
+>  	tristate "Perform selftest on object aggreration manager"
+>  	default n
 
-kernel test robot noticed the following build errors:
+FWIW, for s390 part:
 
-[auto build test ERROR on usb/usb-testing]
-[also build test ERROR on usb/usb-next usb/usb-linus lwn/docs-next linus/master v6.7 next-20240119]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Alexander Gordeev <agordeev@linux.ibm.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Paul-Cercueil/usb-gadget-Support-already-mapped-DMA-SGs/20240117-203111
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-patch link:    https://lore.kernel.org/r/20240117122646.41616-4-paul%40crapouillou.net
-patch subject: [PATCH v4 3/4] usb: gadget: functionfs: Add DMABUF import interface
-config: arm-randconfig-r112-20240119 (https://download.01.org/0day-ci/archive/20240119/202401192043.6DTnLlKn-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce: (https://download.01.org/0day-ci/archive/20240119/202401192043.6DTnLlKn-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401192043.6DTnLlKn-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: dma_buf_get
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: dma_buf_detach
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced 2 more times
---
->> ld.lld: error: undefined symbol: dma_fence_init
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: dma_resv_add_fence
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: dma_fence_signal
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_dmabuf_io_complete) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_dmabuf_signal_done) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: dma_fence_release
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(dma_fence_put) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_dmabuf_unmap_work) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: dma_buf_put
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced 2 more times
---
->> ld.lld: error: undefined symbol: dma_buf_attach
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: dma_fence_context_alloc
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: dma_resv_test_signaled
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: dma_buf_map_attachment
-   >>> referenced by f_fs.c
-   >>>               drivers/usb/gadget/function/f_fs.o:(ffs_epfile_ioctl) in archive vmlinux.a
-..
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks!
