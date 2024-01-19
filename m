@@ -1,167 +1,125 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFCF4A0C;
-	Fri, 19 Jan 2024 05:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762384A0C;
+	Fri, 19 Jan 2024 06:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705643865; cv=none; b=UAoiKxvUrOLLJg7yoDXCH9cUh4vRkWqSyJGz+BtLBhAiRABG9tkYa/8QKJcS0pgEt5w4+Y9l3eshbE5E+YAbOrBS93gY4sV+wYIylFzU5c4PxzPMxdU28s9YfODcQCQ2DAuOL7znPfW7V7txsxjVegIHYo4enEFYdy0YbzmoFtQ=
+	t=1705644206; cv=none; b=QhWUeJL0luzKAbWI4S3F9WB1sopZt8ybrpsFPDV5S5VMV2jcE+HYka9WFEW8rAHMXVT0LBXmPIrLXCrCxAvCZcvr3cKQBSZ6BuAQ4W6Ed8K5PO+pDPMjyBibJU4k/KQgpDPfcuvUj++6k016rcQ5pFbekAUJ1aAKPj7xsaT2r8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705643865; c=relaxed/simple;
-	bh=YpuHcp6+Ti3Nxz4REWJ5idtkTVRA5Y18LT0RNIdJkOw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WB/on9237RPDbkUm43TnGqueooGSlk433AHJ8IXaMrCaE0rORRX8hj+w5RkAF2Hvl5JobzynGCiQWJ107xQKRDTMTNLl3L7kG0M1ZIv2zCLNipMSoVT2/QAaTz5Efk8n4LlN3tcDIl/i3mVKEXwZ33Cq6QUASgvz2BaWhRqmkjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso222753a12.3;
-        Thu, 18 Jan 2024 21:57:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705643863; x=1706248663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pTo9VBdYCTdMSnliyvMcXcpJ1UufCYRIjm4qXNyfvm4=;
-        b=EFqSgkaDqqpjj5Su84qwxpSqftBrbcJEhF4niPnUvkeEPGxMCh9a29ONpTBUBxGw4S
-         h0DRiAGqVYpxGjD1C/qYiIEpzSEXyYgokyF/QAf4SgNaxcU5g/eVm5b9kddMVSnAtAfa
-         KQkrAUSWUg0kOcPv7Opm+hkyuG0aVZYDlKb75Rzy7cQYxIx3D9jx6By8I1dNwt92JVgN
-         OTJIirTMLACDcUiKR0fv6CQV+AhC2g5qNG2/OfK253woTujCDdeAyGroot+3TosSV/t9
-         GdyJswK+QI55SlHUuPid8xIui7jCjE9fvnv9BZFxd8Hx22yKQ+Lum0cTZBemk3rXbTC4
-         rY+g==
-X-Gm-Message-State: AOJu0YypNGx1x/JEbpLm4/SVZMCpbFRbeLgid7Ti05LEazxXkjhekQBK
-	Qp9YwG7/gIRleVVSlrZtTt0bvrFpkGv8W2lfN4388BxRft80yiXNOgXitkdwdi0Xk/Fm0Fk2AD9
-	8f/MmsNjU5KsuI8+MnrdYiBiidUU=
-X-Google-Smtp-Source: AGHT+IGU/4cpjmHUgt6iJLKo574CuwTxb4dYoIjbdba4DX8C8YrzMxXypUEoQr219U1oaKlD86OWqT+WAr9tCmYYfLI=
-X-Received: by 2002:a05:6a21:3183:b0:199:6bcb:573 with SMTP id
- za3-20020a056a21318300b001996bcb0573mr2087238pzb.50.1705643863243; Thu, 18
- Jan 2024 21:57:43 -0800 (PST)
+	s=arc-20240116; t=1705644206; c=relaxed/simple;
+	bh=fElIcAvj+JU3H2ET/6sVLuziTay9kn5vl9dtRYelW34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CAX2zKByS9dnJ0nSyWCfZ0bGIxiBTCPVKXEsVOLh5RaGu+py2KT+9CY48+hSc1JluAztawCXUupiiQRnKEpI1n2G2TwIKmlJCRnF5Zti26BzmgebLkEm/+NJyeFZYAJ34xRHC7yoJBvEhqfkRXSPKBUVpJQ+zBKolZ2YmS6V+5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YeV+Fpez; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YeV+Fpez"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705644206; x=1737180206;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=fElIcAvj+JU3H2ET/6sVLuziTay9kn5vl9dtRYelW34=;
+  b=YeV+FpezRSAXXMAndxGm44UCHMLNXvXs+2OMRKBoXVGiccubsVFQTclM
+   GhBT/bWpTevuwhReE3boaUrGVLZno//kQ5gx35IN6TMh+Fdwwqm8HtiZM
+   hjPHkja4qJPlmlxXaVdiAoau4nNYanry/lrLkqbJa+gtlXH2VZRRdFxs5
+   3Z9q8+2HgSvcfYtoAKibNj0Q1S8+aghSi+IlDDrRIupFO8bi85948iRMI
+   BJlo0cfC4xqYbdYxTanZG3fgnOI5A3mdUX7d9DJkbKghXry7/hvHBlads
+   fJXvFl6Zi4HwEnHuUUz+jF3LuraJPJRXjWNGip1isyHySkAHyXnK07pVm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="14192965"
+X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
+   d="scan'208";a="14192965"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 22:03:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="875291857"
+X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
+   d="scan'208";a="875291857"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Jan 2024 22:03:22 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 572EEE3; Fri, 19 Jan 2024 07:37:56 +0200 (EET)
+Date: Fri, 19 Jan 2024 07:37:56 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Esther Shimanovich <eshimanovich@chromium.org>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <20240119053756.GC2543524@black.fi.intel.com>
+References: <20231221-thunderbolt-pci-patch-4-v4-1-2e136e57c9bc@chromium.org>
+ <20231228132517.GA12586@wunner.de>
+ <20231228133949.GG2543524@black.fi.intel.com>
+ <CA+Y6NJFQq39WSSwHwm37ZQV8_rwX+6k5r+0uUs_d1+UyGGLqUw@mail.gmail.com>
+ <20240118060002.GV2543524@black.fi.intel.com>
+ <23ee70d5-d6c0-4dff-aeac-08cc48b11c54@amd.com>
+ <ZalOCPrVA52wyFfv@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240116170348.463479-1-mark.rutland@arm.com> <8734uwxrca.wl-maz@kernel.org>
- <ZafEFU7kwf6W0_Qx@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <ZafEFU7kwf6W0_Qx@FVFF77S0Q05N.cambridge.arm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 18 Jan 2024 21:57:32 -0800
-Message-ID: <CAM9d7ciYEzX1EQ2tXT-FFK2z6Nid9vM6WgSYDFm-rzx=AWsxOA@mail.gmail.com>
-Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
-	Hector Martin <marcan@marcan.st>, Ian Rogers <irogers@google.com>, acme@redhat.com, 
-	james.clark@arm.com, john.g.garry@oracle.com, leo.yan@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	mike.leach@linaro.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com, 
-	will@kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZalOCPrVA52wyFfv@google.com>
 
-Hello,
+On Thu, Jan 18, 2024 at 08:12:56AM -0800, Dmitry Torokhov wrote:
+> On Thu, Jan 18, 2024 at 09:47:07AM -0600, Mario Limonciello wrote:
+> > On 1/18/2024 00:00, Mika Westerberg wrote:
+> > > > Before my patch, you see that the JHL6540 controller is inaccurately
+> > > > labeled “removable”:
+> > > > $ udevadm info -a -p /sys/bus/pci/devices/0000:05:00.0 | grep -e
+> > > > {removable} -e {device} -e {vendor} -e looking
+> > > >    looking at device '/devices/pci0000:00/0000:00:1d.4/0000:05:00.0':
+> > > >      ATTR{device}=="0x15d3"
+> > > >      ATTR{removable}=="removable"
+> > > >      ATTR{vendor}=="0x8086"
+> > > 
+> > > This is actually accurate. The Thunderbolt controller is itself
+> > > hot-removable and that BTW happens to be hot-removed when fwupd applies
+> > > firmware upgrades to the device.
+> 
+> This is quite interesting take. Does fwupd rip the controller out of the
+> box to update it? By that account your touchpad is also removable as it
+> may stop functioning when its firmware gets updated.
 
-Adding Ravi to CC.
+The Thunderbolt controller is connected to a hotpluggable PCIe root port
+so it will be dissappear from the userspace so that "removable" in that
+sense is accurate.
 
-On Wed, Jan 17, 2024 at 4:12=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
->
-> On Wed, Jan 17, 2024 at 09:05:25AM +0000, Marc Zyngier wrote:
-> > Hi Mark,
-> >
-> > On Tue, 16 Jan 2024 17:03:48 +0000,
-> > Mark Rutland <mark.rutland@arm.com> wrote:
-> > >
-> > > Currently the perf tool doesn't deteect support for extneded event ty=
-pes
-> > > on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYP=
-E
-> > > hardware events into per-PMU events. This is due to the detection of
-> > > extended event types not handling mandatory filters required by the
-> > > M1/M2 PMU driver.
-> >
-> > Thanks for looking into this.
-> >
-> > I've given your patch a go on my M1 box, and it indeed makes things
-> > substantially better:
-> >
-> > $ sudo ./perf stat -e cycles ~/hackbench 100 process 1000
-> > Running with 100*40 (=3D=3D 4000) tasks.
-> > Time: 3.419
-> >
-> >  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> >
-> >    174,783,472,090      apple_firestorm_pmu/cycles/                    =
-                         (93.10%)
-> >     39,134,744,813      apple_icestorm_pmu/cycles/                     =
-                         (71.86%)
-> >
-> >        3.568145595 seconds time elapsed
-> >
-> >       12.203084000 seconds user
-> >       55.135271000 seconds sys
->
-> Thanks for giving that a spin!
->
-> > However, I'm seeing some slightly odd behaviours:
-> >
-> > $ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
-> > Running with 100*40 (=3D=3D 4000) tasks.
-> > Time: 3.313
-> >
-> >  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> >
-> >    <not supported>      apple_firestorm_pmu/cycles:k/
-> >    <not supported>      apple_icestorm_pmu/cycles:k/
+> > Depending on the consumers of this removable attribute I wonder if we need
+> > to a new ATTR of "external" instead of overloading "removable".
+> 
+> Isn't this the same thing? From
+> Documentation/ABI/testing/sysfs-devices-removable:
+> 
+> What:		/sys/devices/.../removable
+> Date:		May 2021
+> Contact:	Rajat Jain <rajatxjain@gmail.com>
+> Description:
+> 		Information about whether a given device can be removed from the
+> 		platform by the	user. This is determined by its subsystem in a
+> 		bus / platform-specific way. This attribute is only present for
+> 		devices that can support determining such information:
+> 
+> 		===========  ===================================================
+> 		"removable"  device can be removed from the platform by the user
+> 		"fixed"      device is fixed to the platform / cannot be removed
+> 			     by the user.
+> 
+> Note this "by the user". Maybe we should add word "physically" here to
+> qualify the meaning completely, but that is what it is. Not that it
+> disappears from the bus or stops operating for some time because of
+> firmware updates, but it can be physically detached from the
+> platform/system.
 
-Hmm.. I guess this should look like apple_firestorm_pmu/cycles/k.
-IIRC there was a thread for this, right?
-
-> >
-> >        3.467568841 seconds time elapsed
-> >
-> >       13.080111000 seconds user
-> >       53.162099000 seconds sys
-> >
-> > I would have expected it to count, but it didn't. For that to work, I
-> > have to add the 'H' modifier:
->
-> Ok, so that'll have something to do with the way the tool chooses which
-> perf_evant_attr::exclude_* bits to set. I thought that was the same for p=
-lain
-> events and pmu_name/event/ events, but I could be mistaken.
-
-I think it sets the attr.exclude_guest by event_attr_init().  Maybe
-it's deleted during the missing feature detection logic.  But IIUC
-it should work on each PMU separately.
-
-By the way, I really hope the kernel exports caps/exclude_bits
-for PMUs so that tools can see which bits are supported.  For
-example AMD IBS has CAP_NO_EXCLUDE so setting exclude_guest
-will fail to open.  Then it disables the new features added after
-that in the missing feature detection logic.
-
-If we know if it doesn't support any exclude bits, then tools can
-try other features after removing the bit first.
-
-Thanks,
-Namhyung
-
->
-> Is that something you had tried prior to this patch, and did that "just w=
-ork"
-> with the explicit pmu_name/event/ syntax prior to this patch?
->
-> e.g. did something like:
->
->         perf stat -e apple_firestorm_pmu/cycles/k -e apple_icestorm_pmu/c=
-ycles/k ./workload
->
-> ... happen to work withiout requiring the addition of 'H'?
->
-> If so, does that behave the same before/after this patch?
->
-> ... and could you run that with '-vvv' and dump the output for comparison=
-?
->
-> Thanks,
-> Mark.
+That would be good to fully qualify what this means. But I get you it is
+intented to identify devices that can be physically unplugged from the
+system.
