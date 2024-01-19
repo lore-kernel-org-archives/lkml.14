@@ -1,128 +1,224 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C603CF57;
-	Fri, 19 Jan 2024 10:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A990DDA5;
+	Fri, 19 Jan 2024 10:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705659163; cv=none; b=Qhi9jlz3vBnQ+y9pLp3CPqg4LfVCnJTWX2xAWaVLzOp+AN4EMvy3AZ/mRJshIzZ6tqGA3kl2VyhXK1liauiz9WUy+Bi2IrTjX4FAB3RW7v2DXRwFBzcjXW6AXZiEPiZMazNGx8k5hsQ475BDlk9EYKIx8Ayd6m86ar4bE8V46sI=
+	t=1705659455; cv=none; b=sRnCtluJPQaQhqcFOE2q4Y9u+30z5lz+U39L7p9w6RkvWwsa9rAqyVhw5klhZz/2oUh7xMRpWgIT8u1LTZgFhr/guYJSwZwastVBiCUIIhfhhAN4I+YhaMJlTXNQmpoCR+5B8BddqPYXp/El7NhcKAPaSC9pHSIR7hJU9mSqtrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705659163; c=relaxed/simple;
-	bh=HuEMCJS9G0VJ8qDiv6qy19PqibIaS3UKkvvAZAJp5No=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gyQtpYISvwoUYALO6Ur27gje0jKDKaieXF8u2H+qHG86X3OAfVbvsCy0eHsElopnBOPINF1JgRMoJYb4O6QUiDWakxx0ndKkVIoPtUlwdkMVy1fxCVREWfOuyI4EbAIGS1CHYgPnt9+7Ccd39b4gw/SSgJKCbsPg+pVQALyDqSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pXzz3agU; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1705659455; c=relaxed/simple;
+	bh=+LtMZPOF1yo585gqDoaAA6wOBqB5Aivtv5s5vcPOK50=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tZgQggmxaIBhZGPqiYcwvztH04qeQ76aP/dy1q2F/ZW2GOITmLUk6xgfsNHoXvSg+cMbbyNxQsT8KkKlCvoBJoKYnH7TefkEY2S16NUcB0vuArxuGPipXsraI7tCLo4EpP3OA32REhblT4c3CoTiZS/IFQHb8WKfRh/+l82v2m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=xoV+DeqE; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pXzz3agU"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40J8gi4I021328;
-	Fri, 19 Jan 2024 10:12:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=U7EBF2ywQsmJhbqBYQAuBlZReDesIt1cR6QYeVj2qDU=; b=pX
-	zz3agUjyGjr0eUj/sFep1xt9BIbVn2y+9rZldpYKXAKGkTFbf3smNecKL6cRyJkF
-	/IT7qHDifSLCrnOy18uIjLPnNzBYfN/+JDHTjdxWQKW9HrIsvCMLRN0Y4YbjdG0z
-	hxBi+siMwTk3Wxe/n6EJj0oMjJcKkw1knEc6fC0jGCVFPf3ngyhAv53GAC6Kiqpy
-	ONGFZ966DtfYadqLBKfmA5eTVnFgVA3IR3Z6rOB5PnhiNNzY8l65sGAh+GppXFuf
-	x5ODX87ZzuQYMy5WMPCF0JHeGifodl+ft630xaMWtVNEha6LCKefXJCzlP1eYTCl
-	XzduEUp0+8sfWX3Aq0pg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vqn89g7wx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jan 2024 10:12:23 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40JACMed005039
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jan 2024 10:12:22 GMT
-Received: from [10.214.66.253] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 19 Jan
- 2024 02:12:16 -0800
-Message-ID: <d2cf0179-03d4-4766-b93e-f29e284e1048@quicinc.com>
-Date: Fri, 19 Jan 2024 15:42:12 +0530
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xoV+DeqE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1705659453; x=1737195453;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+LtMZPOF1yo585gqDoaAA6wOBqB5Aivtv5s5vcPOK50=;
+  b=xoV+DeqE3CUXdy9URhQDrHmi8k+DbWw6DW7QFEgyuC22WxnMn7oJCnG8
+   s9FetOukohBy7Kks+rOAaRAcEFSyDKBxr0FF3tpeGZvnU6rsCiJ7+9rtb
+   /RMpbH7id1llCfK3YyXIMKep2HrLYdd4tM3x9+8fR7uHpbwtiO5DACAL7
+   g1wAxD7+KoLBRGhGApgsakHy2S9vKFFz9p6IAqxmH3c+J9cDZxNCVUE5W
+   cq9EzMZhGghFIeg3KXL6XfFBpRfjz2TedigQiNjkrJ6xVCnWmXGTruLMm
+   pK2gA1x33p9xf98ja9jQwOQO/pLt9Kbqe1UcSdv6/vIZH7fGi1r7iN21e
+   g==;
+X-CSE-ConnectionGUID: K82mF02xSm2dPv+Ypq+eGQ==
+X-CSE-MsgGUID: vERtogOnTAm69wiMAgHXnw==
+X-IronPort-AV: E=Sophos;i="6.05,204,1701154800"; 
+   d="asc'?scan'208";a="245712682"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Jan 2024 03:17:26 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 19 Jan 2024 03:17:25 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 19 Jan 2024 03:17:23 -0700
+Date: Fri, 19 Jan 2024 10:16:46 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Changhuang Liang <changhuang.liang@starfivetech.com>
+CC: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Emil
+ Renner Berthing <kernel@esmil.dk>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jack
+ Zhu <jack.zhu@starfivetech.com>, <linux-media@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<devicetree@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: media: starfive: Match driver and
+ yaml property names
+Message-ID: <20240119-despair-festival-59ab2d4d896b@wendy>
+References: <20240119100639.84029-1-changhuang.liang@starfivetech.com>
+ <20240119100639.84029-2-changhuang.liang@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/5] iommu/arm-smmu: add ACTLR data and support for
- SM8550
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <joro@8bytes.org>,
-        <dmitry.baryshkov@linaro.org>, <jsnitsel@redhat.com>,
-        <quic_bjorande@quicinc.com>, <mani@kernel.org>,
-        <quic_eberman@quicinc.com>, <robdclark@chromium.org>,
-        <u.kleine-koenig@pengutronix.de>, <robh@kernel.org>,
-        <vladimir.oltean@nxp.com>, <quic_pkondeti@quicinc.com>,
-        <quic_molvera@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-References: <20240116150411.23876-1-quic_bibekkum@quicinc.com>
- <20240116150411.23876-5-quic_bibekkum@quicinc.com>
- <7d012b9f-b1ca-4633-8dc2-03d90c418e7d@linaro.org>
-From: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-In-Reply-To: <7d012b9f-b1ca-4633-8dc2-03d90c418e7d@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: A6zI8AaFwg0jpvyWzYPvukxFto6Y1_IC
-X-Proofpoint-ORIG-GUID: A6zI8AaFwg0jpvyWzYPvukxFto6Y1_IC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-19_04,2024-01-19_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=912 clxscore=1015
- suspectscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 malwarescore=0 impostorscore=0 adultscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401190044
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BFH1MedVdG7X979+"
+Content-Disposition: inline
+In-Reply-To: <20240119100639.84029-2-changhuang.liang@starfivetech.com>
 
+--BFH1MedVdG7X979+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jan 19, 2024 at 02:06:38AM -0800, Changhuang Liang wrote:
+> Drop some unused properties for clocks, resets and interrupts for
+> StarFive JH7110 camera subsystem.
 
-On 1/18/2024 11:28 PM, Konrad Dybcio wrote:
-> 
-> 
-> On 1/16/24 16:04, Bibek Kumar Patro wrote:
->> Add ACTLR data table for SM8550 along with support for
->> same including SM8550 specific implementation operations.
->>
->> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
->> ---
-> 
-> [...]
-> 
->> +static const struct actlr_variant sm8550_actlr[] = {
->> +    { .io_start = 0x15000000, .actlrcfg = sm8550_apps_actlr_cfg,
->> +            .num_actlrcfg = ARRAY_SIZE(sm8550_apps_actlr_cfg) },
->> +    { .io_start = 0x03da0000, .actlrcfg = sm8550_gfx_actlr_cfg,
->> +            .num_actlrcfg = ARRAY_SIZE(sm8550_gfx_actlr_cfg) },
->> +};
-> Just a nit again, but if struct definitions need to be wrapped, this looks
-> better:
-> 
-> {
->      .io_start = 0...,
->      .aclrcfg = ...,
->      .num_actlrcfg = ARR..,
-> }, {
->      .io_start = 0..,
->      .aclrcfg = ...,
->      .num_actlrcfg = ARR..,
-> };
-> 
+What do you mean "unused"?
 
-Noted, will wrap this to keep each member in a new line as shown.
-This looks much cleaner. Thanks for this suggestion.
+Do these clocks etc exist but are not used by the driver?
 
-Regards,
-Bibek
+Or do they not exist at all?
 
-> Konrad
+The two are very different!
+
+Thanks,
+Conor.
+
+>=20
+> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+> Reviewed-by: Jack Zhu <jack.zhu@starfivetech.com>
+> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+> ---
+>  .../bindings/media/starfive,jh7110-camss.yaml | 31 +++++--------------
+>  1 file changed, 8 insertions(+), 23 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/starfive,jh7110-cams=
+s.yaml b/Documentation/devicetree/bindings/media/starfive,jh7110-camss.yaml
+> index c66586d90fa2..2504381058b3 100644
+> --- a/Documentation/devicetree/bindings/media/starfive,jh7110-camss.yaml
+> +++ b/Documentation/devicetree/bindings/media/starfive,jh7110-camss.yaml
+> @@ -4,14 +4,14 @@
+>  $id: http://devicetree.org/schemas/media/starfive,jh7110-camss.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> =20
+> -title: Starfive SoC CAMSS ISP
+> +title: StarFive SoC CAMSS ISP
+> =20
+>  maintainers:
+>    - Jack Zhu <jack.zhu@starfivetech.com>
+>    - Changhuang Liang <changhuang.liang@starfivetech.com>
+> =20
+>  description:
+> -  The Starfive CAMSS ISP is a Camera interface for Starfive JH7110 SoC. =
+It
+> +  The StarFive CAMSS ISP is a Camera interface for StarFive JH7110 SoC. =
+It
+>    consists of a VIN controller (Video In Controller, a top-level control=
+ unit)
+>    and an ISP.
+> =20
+> @@ -28,26 +28,21 @@ properties:
+>        - const: isp
+> =20
+>    clocks:
+> -    maxItems: 7
+> +    maxItems: 3
+> =20
+>    clock-names:
+>      items:
+> -      - const: apb_func
+>        - const: wrapper_clk_c
+> -      - const: dvp_inv
+> -      - const: axiwr
+> -      - const: mipi_rx0_pxl
+>        - const: ispcore_2x
+>        - const: isp_axi
+> =20
+>    resets:
+> -    maxItems: 6
+> +    maxItems: 5
+> =20
+>    reset-names:
+>      items:
+>        - const: wrapper_p
+>        - const: wrapper_c
+> -      - const: axird
+>        - const: axiwr
+>        - const: isp_top_n
+>        - const: isp_top_axi
+> @@ -57,7 +52,7 @@ properties:
+>        - description: JH7110 ISP Power Domain Switch Controller.
+> =20
+>    interrupts:
+> -    maxItems: 4
+> +    maxItems: 3
+> =20
+>    ports:
+>      $ref: /schemas/graph.yaml#/properties/ports
+> @@ -125,34 +120,24 @@ examples:
+>          reg =3D <0x19840000 0x10000>,
+>                <0x19870000 0x30000>;
+>          reg-names =3D "syscon", "isp";
+> -        clocks =3D <&ispcrg 0>,
+> -                 <&ispcrg 13>,
+> -                 <&ispcrg 2>,
+> -                 <&ispcrg 12>,
+> -                 <&ispcrg 1>,
+> +        clocks =3D <&ispcrg 13>,
+>                   <&syscrg 51>,
+>                   <&syscrg 52>;
+> -        clock-names =3D "apb_func",
+> -                      "wrapper_clk_c",
+> -                      "dvp_inv",
+> -                      "axiwr",
+> -                      "mipi_rx0_pxl",
+> +        clock-names =3D "wrapper_clk_c",
+>                        "ispcore_2x",
+>                        "isp_axi";
+>          resets =3D <&ispcrg 0>,
+>                   <&ispcrg 1>,
+> -                 <&ispcrg 10>,
+>                   <&ispcrg 11>,
+>                   <&syscrg 41>,
+>                   <&syscrg 42>;
+>          reset-names =3D "wrapper_p",
+>                        "wrapper_c",
+> -                      "axird",
+>                        "axiwr",
+>                        "isp_top_n",
+>                        "isp_top_axi";
+>          power-domains =3D <&pwrc 5>;
+> -        interrupts =3D <92>, <87>, <88>, <90>;
+> +        interrupts =3D <92>, <87>, <90>;
+> =20
+>          ports {
+>              #address-cells =3D <1>;
+> --=20
+> 2.25.1
+>=20
+>=20
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+--BFH1MedVdG7X979+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZapMDgAKCRB4tDGHoIJi
+0lzdAP0XhGNQY1wQcLpLFfEc/Sj9meIVrA/jD1GxiMXgdQqWnQD/QUG80+qLfwIm
+6Glfk4ikQIoSAIG9e230u0TETuQEkQg=
+=ngD+
+-----END PGP SIGNATURE-----
+
+--BFH1MedVdG7X979+--
