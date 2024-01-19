@@ -1,63 +1,129 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D809B53E18
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 13:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F1354656
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 13:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705670825; cv=none; b=TV1qpytQnM3MLlpP68uJPMHcDWUiPXi4SKbrjss4SY5pJKcohTtXIb4CzZWnJ+Amsh5pE9XvsmkTyb2cMlEC5jfcbtio9s7LDYEYlFG+JFp/8BiDox2ueHMsMTuIEuQw5Dk89XVVMHVFyZfUcGzB1KgWoaXvvBSIMiLI8jTmqrs=
+	t=1705670830; cv=none; b=MOxKc4mZDxSOOG3nVNzlxmzTlVNxQKx1GSwe0Qw+rqIuvnhQ6z3vy/IxpnATMl3RsAnNpikg+P2ZoaDzNiGDld91tBr+uSlYDEK8K39XgFwg5QSofFUcSVAIrPwtDCdFTp8Y3kAiwZK20eRTyT6X05PdJqCMtruGMPdrHn1kIgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705670825; c=relaxed/simple;
-	bh=rgtudZZcADzLkHbzNldBWBixKJSfqWKiGj2a7fsnTUY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=QATsdiqCsDiGtQmuiZkOFwmsKm26oL0bkR9QpYnznSKArF5YR70/aIx6Fxlr/56+GPy6FGnnP0SSeVdRgDweCV0U8wVYSspUH6V2lQheWqHnsM5KwL/GQ9VzO4hiueljEyCrEjF3yDjm9FHP/v3sq/cEaAL7AxKjO3KThKmZPBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7bf44da02c3so57076139f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:27:03 -0800 (PST)
+	s=arc-20240116; t=1705670830; c=relaxed/simple;
+	bh=tkNP5hdtLMLmdRU6kGCnnq1HZvK5vqTcSU7Mp+tbZQE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A8crBc7+U+R4kDdTStecWqmieWhGk+UWqkbHo++QHsmXRBO5I+LRh6zKAsAhrxIydO3mTyFj3jCFXw35IDImk/2ElsUFsybrSkMFRj+QOlAY3J4V5ITEOFiwbqq5dbiyUtz6T/Zw6H86HL+amdRdA7CggHM7qE53FnLkiTrymb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fB4wcuiH; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fB4wcuiH"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dc202317415so639961276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:27:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705670827; x=1706275627; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=42jWvBuWK7I9LjSS4bPIwTmo8OJpE10eZpVzP5bii30=;
+        b=fB4wcuiH7Epb9QP7/JxhvLWtjh4BnKG0d9lSuS2SuzmdrHq8EdhUtOiACwFldx/wkL
+         sgdYMnSCDb6nK5din5kMrMloFFhf3M2P0kao1LPszPtGnb7JQYITE6s1ClX0yeCxkoO8
+         rX0sXoyL8Ob55mahZIfsEghci39GEXOu7dHAnzqkTDxlbJASGcxXZoocWZJfQIhbOKcS
+         teOciIwYXLwJYDpKAeJms/Wq0viDV+zASrJQpyTJ9oE5FUaxB29chXiuwFiID2NHjENK
+         GOlN8QSGtASuQ/igNrTURDBEG1ReCaGWqDi5i1AQEmPh+3G/3G8ZWfIGRG2om1Jg3pYA
+         2pNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705670823; x=1706275623;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rgtudZZcADzLkHbzNldBWBixKJSfqWKiGj2a7fsnTUY=;
-        b=kNffdQDf8lMrmviMQWyQKpGsXDhs40tX1/RaVx5pkTZ2gGSuVi99O9ks0Nu13UB0vj
-         +1JqkUDoLnBUoDFhM+6kIrHbJqruwlIYoPHi6CVFtO/tcyfagJtgwMWEDIOoTAVtqEGU
-         R4v7nyQyHaKizxjVwBDxPv2KPG8iv5400R4CJqO9LPeY5V1evUZ2xDuzfEmxUSEiykzP
-         aSBfJCFcNiPniipjofjEcJj6h6fdADn4HnHHKmsbZEeqvpf8FCYWn/BaDAbBA1WDRIac
-         slcyAsfGJ7jc5TeI7xLb0IGNLv40PhE+6sajygOTeefkGlNwn4hgRWVSnz6WB87cQw4a
-         oSjA==
-X-Gm-Message-State: AOJu0YzTpBmbQ44iI9WCVIvg68KL0+cfKsuT/wmpRj0Wj/qFvdU92XlJ
-	Vdb1C/ojmiau2NtwMTI1vORAEBeYFs3YLxXuFOrW2JbH5N+GOi5AnVG9lLlPZuZf2lIfFUStrX5
-	ORZt3Tbf9O24ZYgigTqZif/htfVFdGANlBEjUQBTjzMSO2m5L6dxpePGtTQ==
-X-Google-Smtp-Source: AGHT+IHErbubnXpCTDSsLjo5CDmb739Avmz/DA2UxK2vswc2ene9Kl7MvOIpm5mmTw9oVZAN1MMpprCFM1/JfyNBwGQ3tcXVkmTs
+        d=1e100.net; s=20230601; t=1705670827; x=1706275627;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=42jWvBuWK7I9LjSS4bPIwTmo8OJpE10eZpVzP5bii30=;
+        b=wiqqXd+9jsCLlSd6dpkCV4U9Fc8Upo0yTMIrsf1MyVfm75Cmuw2tc+jDDths7PiZPn
+         hrYWUYidoR/cIKTg7TW7tfRwFOOakkPmwxifuCliRmx9S5wf2tw0TdgSWbDi2kPt2rlS
+         KBro21CQaSW+mRNgEZztZZSMTTooO+w0HpIYRQ2dFnzqwuxODe7yIIklXy1Y2P0Yc3Tl
+         FWZz7bfVGel7mGbZeXzv9mZt9iBPXQJ5jF8yaOCJZOcGwu11uzbNo96YSyNBSwMTJ3WI
+         1VYiUFMXSGOfyaEQ6eJeFSyuMOuu8HYGagcZ+Njel2Ony32+PO55xIHkaJ6Xd8BAlxGp
+         y26A==
+X-Gm-Message-State: AOJu0Yzjkf1IIcfs16fQaSuG42RD6M3cnWPyVsfp3omGrOejLKEE+Frm
+	vgbES9zFlew0Vh/eEmbk9M7kQ50CtdP2RtVqfaStA8d9dxf/sTflct83lnQMg/GzXWSrfx8CibO
+	HCGGYUvU9i6hhKr7NCov+9cQ4v1iodGSPqdi4zA==
+X-Google-Smtp-Source: AGHT+IHcNZ3z0a6KFk4Azj3BQtD3k/0SlfNc1gxTnmWDbYZDfxsy/+8Zo5qiZ4T2sE8zVUc9JU70wOEc2pwAJXP0ECs=
+X-Received: by 2002:a25:c583:0:b0:dc2:46d7:d8d5 with SMTP id
+ v125-20020a25c583000000b00dc246d7d8d5mr1960765ybe.65.1705670827062; Fri, 19
+ Jan 2024 05:27:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2b0c:b0:7b7:d7af:97cf with SMTP id
- p12-20020a0566022b0c00b007b7d7af97cfmr123823iov.1.1705670822995; Fri, 19 Jan
- 2024 05:27:02 -0800 (PST)
-Date: Fri, 19 Jan 2024 05:27:02 -0800
-In-Reply-To: <00000000000060446d060af10f08@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000823321060f4c6fa7@google.com>
-Subject: Re: [syzbot] [syzbot] [can?] memory leak in j1939_netdev_start
-From: syzbot <syzbot+1d37bef05da87b99c5a6@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
+References: <1705669223-5655-1-git-send-email-quic_msarkar@quicinc.com> <1705669223-5655-3-git-send-email-quic_msarkar@quicinc.com>
+In-Reply-To: <1705669223-5655-3-git-send-email-quic_msarkar@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Fri, 19 Jan 2024 15:26:56 +0200
+Message-ID: <CAA8EJprWHiShFpZdb+pWsCoxNvNEoP+3By2x4u8rq+ek37hJXw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/6] dmaengine: dw-edma: Introduce helpers for getting
+ the eDMA/HDMA max channel count
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc: vkoul@kernel.org, jingoohan1@gmail.com, conor+dt@kernel.org, 
+	konrad.dybcio@linaro.org, manivannan.sadhasivam@linaro.org, 
+	robh+dt@kernel.org, quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com, 
+	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com, quic_krichai@quicinc.com, 
+	quic_vbadigan@quicinc.com, quic_parass@quicinc.com, quic_schintav@quicinc.com, 
+	quic_shijjose@quicinc.com, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+	Serge Semin <fancer.lancer@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+On Fri, 19 Jan 2024 at 15:00, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+>
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>
+> Add common helpers for getting the eDMA/HDMA max channel count.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c           | 18 ++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.c |  6 +++---
+>  include/linux/dma/edma.h                     | 14 ++++++++++++++
+>  3 files changed, 35 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 7fe1c19..2bd6e43 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -902,6 +902,24 @@ static int dw_edma_irq_request(struct dw_edma *dw,
+>         return err;
+>  }
+>
+> +static u32 dw_edma_get_max_ch(enum dw_edma_map_format mf, enum dw_edma_dir dir)
+> +{
+> +       if (mf == EDMA_MF_HDMA_NATIVE)
+> +               return HDMA_MAX_NR_CH;
 
-***
+This will break unless patch 5 is applied. Please move the
+corresponding definition to this path.
 
-Subject: [syzbot] [can?] memory leak in j1939_netdev_start
-Author: n.zhandarovich@fintech.ru
+> +
+> +       return dir == EDMA_DIR_WRITE ? EDMA_MAX_WR_CH : EDMA_MAX_RD_CH;
+> +}
+> +
+> +u32 dw_edma_get_max_rd_ch(enum dw_edma_map_format mf)
+> +{
+> +       return dw_edma_get_max_ch(mf, EDMA_DIR_READ);
+> +}
+> +
+> +u32 dw_edma_get_max_wr_ch(enum dw_edma_map_format mf)
+> +{
+> +       return dw_edma_get_max_ch(mf, EDMA_DIR_WRITE);
+> +}
+> +
+>  int dw_edma_probe(struct dw_edma_chip *chip)
+>  {
+>         struct device *dev;
 
-Test to make sure the issue is still standing.
 
-#syz test
+-- 
+With best wishes
+Dmitry
