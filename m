@@ -1,46 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141721E48E;
-	Fri, 19 Jan 2024 23:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BDF5914D;
+	Fri, 19 Jan 2024 23:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705707154; cv=none; b=D+eVO16eTUFLJkE6/LOvZZcBzZqRdMCzhTlwsR5r2hb2vbUVJiFzjisBY5cIRsuouaTLTa0NRfmnedoTNUcthyuYByxx2gt984H+WBGGTzCwj9PfX24P8HoXXBLvgnys/FDUMvAP1zI4y4wBsIzp5q1bck2dBua8Ywdaz3BIPBc=
+	t=1705707503; cv=none; b=I8So90JwjIV/CZOE+0nAEjhQXecYvLN2dB8P5bIo9+UMjEOBbqch9uyfzemH+82bTzMZKe7Tazk//uN92S9ZOxEf804lBf9T5se7BjlG+kygS7rPwsEIMROn2/QmBx5MPGqnG23S0SeHSBbRhSfTPgvIZqwAHShstOMr2qascxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705707154; c=relaxed/simple;
-	bh=0njnpt+axtxNz55+YBb6DRGhAstP7ROSY1y8ZGxyMYA=;
+	s=arc-20240116; t=1705707503; c=relaxed/simple;
+	bh=7+hMZpFmWpmV+mrB7PolbtyQ9ZwFs+8lmmyhfHO0Z3w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNPCWgLmx/C+4WJd51y/sSjdHVeneFvFFQ5PdRDoTwA+c32IoWAwtOPA2hD6OAQhJEHGgKVZzZtNpWHdZWVcRXc1c+tD7gfFu+K0ir8ejWbN+k1vLe8ZVOr3tWdOTaRDUO+Igqah/Rk4mHvlWxnFF2uRGHlxUEp2xLi6d/oKmhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXNx4Ijx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=erEMkH5S8/63VdF0JkwHGNPGPEMoixA0SYhL6euwdykc8a+R5Zc2E0mJpC8dP73+MLKUsdi79oVxAHmdjyJ+srVElZQUEmgdvTWsMPf2vthm7mj+dMr7ihzry5WiGycYEUi4LI5LvPW0r4vs1/Zj4QtPWdq43xKzbvnDC6OyWts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nNlwXZPQ; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXNx4Ijx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E681C433F1;
-	Fri, 19 Jan 2024 23:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705707153;
-	bh=0njnpt+axtxNz55+YBb6DRGhAstP7ROSY1y8ZGxyMYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cXNx4IjxStlOSl6cCEUs5p74oQm2K/C9FtBsTFIwE1sYXlWA5rpF2UQlm8B5pKGmP
-	 hVdPHLeWEn6plevX6SykFB7TBmsIHwclB3ixC1cYqFrkbO5WATNV3ELg41/nIi/3DP
-	 4Vp5ZVO1XYGEq00yGQyHNWug5VDWR3VIvpALDCs8HwX3T42/EylEkPgHRLZV2fxzYe
-	 aWNTn9IzyeTHK13xO03eZba8+xG/RC/sANUhEKHYr90VCmptLROLfYewzBoe3IR1Gj
-	 eBzF9CG5nEc/afr/XupJK5Gb4QxNjzdgW75GEDzU+ihqPPzRSUWTQomHsO0z4zoLqA
-	 pFQqiD7BXQP3Q==
-Date: Fri, 19 Jan 2024 17:32:31 -0600
-From: Rob Herring <robh@kernel.org>
-To: Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
-	git@xilinx.com, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
-	Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"open list:FPGA MANAGER FRAMEWORK" <linux-fpga@vger.kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: fpga: Convert fpga-region binding to yaml
-Message-ID: <20240119233231.GA1290941-robh@kernel.org>
-References: <4d87561dcbfab9e4818d7ad99caf89938774a839.1705491050.git.michal.simek@amd.com>
- <20240117214722.GA3176505-robh@kernel.org>
- <1aa2c865-3a9b-441a-ba61-b551f3f7a832@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nNlwXZPQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705707502; x=1737243502;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7+hMZpFmWpmV+mrB7PolbtyQ9ZwFs+8lmmyhfHO0Z3w=;
+  b=nNlwXZPQOhwHJ1BZNHRTlqOawB+Fa3NoJUy2vsaLzqgwplMSR6eAivfV
+   c8UtPUiutYFBDgv14OYSyTnhXQt9q1PnmrKyobTTneg6KCiVAgMO5I9NM
+   eq97iUfRuuqNG0WR/qwCP7TAJy45rUcmijenNFrgm5SRogKGiFP6YBwdu
+   lU5ClKaj4guxHt2oydb3kkywSh6cFgPRNTSEdXl3d3xVmoj/+M4EUSKru
+   anqpXoIBM9Ab1TucDBHe6VbCVNDqq6E8Nbu+IV+85n8Cs/wNHuLYzITAy
+   aMiP7/3YxLIx0jjvCZIxPgWoAj5B7xfohemtnfl7CAWC5w9Ed69X/PAr8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="751691"
+X-IronPort-AV: E=Sophos;i="6.05,206,1701158400"; 
+   d="scan'208";a="751691"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 15:38:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="855452102"
+X-IronPort-AV: E=Sophos;i="6.05,206,1701158400"; 
+   d="scan'208";a="855452102"
+Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Jan 2024 15:38:17 -0800
+Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rQyRD-0004VG-1j;
+	Fri, 19 Jan 2024 23:38:15 +0000
+Date: Sat, 20 Jan 2024 07:37:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lin Ma <linma@zju.edu.cn>, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, dsahern@kernel.org,
+	razor@blackwall.org, leon@kernel.org, haleyb.dev@gmail.com,
+	ja@ssi.bg, judyhsiao@chromium.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH net-next v1] neighbour: complement nl_ntbl_parm_policy
+Message-ID: <202401200717.gbJdfFML-lkp@intel.com>
+References: <20240119070847.5402-1-linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,114 +63,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1aa2c865-3a9b-441a-ba61-b551f3f7a832@amd.com>
+In-Reply-To: <20240119070847.5402-1-linma@zju.edu.cn>
 
-On Thu, Jan 18, 2024 at 01:34:16PM +0100, Michal Simek wrote:
-> 
-> 
-> On 1/17/24 22:47, Rob Herring wrote:
-> > On Wed, Jan 17, 2024 at 12:30:58PM +0100, Michal Simek wrote:
-> > > Convert the generic fpga region DT binding to json-schema.
-> > > There are some differences compare to txt version.
-> > > 1. DT overlay can't be described in example that's why directly include
-> > > information from overlay to node which was referenced. It is visible in
-> > > example with /* DT Overlay contains: &... */
-> > > 
-> > > 2. All example have been rewritten to be simpler and describe only full
-> > > reconfiguration and partial reconfiguration with one bridge.
-> > > Completely drop the case where fpga region can inside partial
-> > > reconfiguration region which is already described in description
-> > > 
-> > > 3. Fixed some typos in descriptions compare to txt version but most of it
-> > > is just c&p from txt file.
-> > > 
-> > > Signed-off-by: Michal Simek <michal.simek@amd.com>
+Hi Lin,
 
-[...]
+kernel test robot noticed the following build errors:
 
-> > > +additionalProperties: true
-> > 
-> > Why? This should only be used if another schema is going to include this
-> > one. That's not the case here.
-> 
-> In v2 we discussed this with Krzysztof. I used pattern properties from
-> simple-bus.yaml in v2.
-> 
-> https://lore.kernel.org/all/b2dd8bcd-1e23-4b68-b7b7-c01b034fc1fe@linaro.org/
+[auto build test ERROR on net-next/main]
 
-You didn't answer his question. You just picked up 
-'additionalProperties: true' which is easy because it avoids 'problems'.
+url:    https://github.com/intel-lab-lkp/linux/commits/Lin-Ma/neighbour-complement-nl_ntbl_parm_policy/20240119-151255
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240119070847.5402-1-linma%40zju.edu.cn
+patch subject: [PATCH net-next v1] neighbour: complement nl_ntbl_parm_policy
+config: arm-randconfig-001-20240120 (https://download.01.org/0day-ci/archive/20240120/202401200717.gbJdfFML-lkp@intel.com/config)
+compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project d92ce344bf641e6bb025b41b3f1a77dd25e2b3e9)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240120/202401200717.gbJdfFML-lkp@intel.com/reproduce)
 
-His question was is this a common schema referenced by other schemas? If 
-so, then use 'additionalProperties: true'. But it is not. You've 
-defined exactly what 'compatible' must be and that means it can't be a 
-common schema.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401200717.gbJdfFML-lkp@intel.com/
 
-> 
-> > 
-> > 'type: object' would be acceptable here as that says only nodes can be
-> > added.
-> 
-> What do you think should be patternProperties in this case?
+All errors (new ones prefixed by >>):
 
-You are the one with FPGAs, what do you need?
+>> net/core/neighbour.c:2296:3: error: use of undeclared identifier 'NPTPA_QUEUE_LEN_BYTES'; did you mean 'NDTPA_QUEUE_LENBYTES'?
+    2296 |         [NPTPA_QUEUE_LEN_BYTES]         = { .type = NLA_U32 },
+         |          ^~~~~~~~~~~~~~~~~~~~~
+         |          NDTPA_QUEUE_LENBYTES
+   include/uapi/linux/neighbour.h:160:2: note: 'NDTPA_QUEUE_LENBYTES' declared here
+     160 |         NDTPA_QUEUE_LENBYTES,           /* u32 */
+         |         ^
+   1 error generated.
 
 
-> I played with it a little bit but all nodes with @ are likely object type.
+vim +2296 net/core/neighbour.c
 
-'@' is only allowed in node names, so it's more than just likely.
+  2292	
+  2293	static const struct nla_policy nl_ntbl_parm_policy[NDTPA_MAX+1] = {
+  2294		[NDTPA_IFINDEX]			= { .type = NLA_U32 },
+  2295		[NDTPA_QUEUE_LEN]		= { .type = NLA_U32 },
+> 2296		[NPTPA_QUEUE_LEN_BYTES]         = { .type = NLA_U32 },
+  2297		[NDTPA_PROXY_QLEN]		= { .type = NLA_U32 },
+  2298		[NDTPA_APP_PROBES]		= { .type = NLA_U32 },
+  2299		[NDTPA_UCAST_PROBES]		= { .type = NLA_U32 },
+  2300		[NDTPA_MCAST_PROBES]		= { .type = NLA_U32 },
+  2301		[NDTPA_MCAST_REPROBES]		= { .type = NLA_U32 },
+  2302		[NDTPA_BASE_REACHABLE_TIME]	= { .type = NLA_U64 },
+  2303		[NDTPA_GC_STALETIME]		= { .type = NLA_U64 },
+  2304		[NDTPA_DELAY_PROBE_TIME]	= { .type = NLA_U64 },
+  2305		[NDTPA_RETRANS_TIME]		= { .type = NLA_U64 },
+  2306		[NDTPA_ANYCAST_DELAY]		= { .type = NLA_U64 },
+  2307		[NDTPA_PROXY_DELAY]		= { .type = NLA_U64 },
+  2308		[NDTPA_LOCKTIME]		= { .type = NLA_U64 },
+  2309		[NDTPA_INTERVAL_PROBE_TIME_MS]	= { .type = NLA_U64, .min = 1 },
+  2310	};
+  2311	
 
-> But what to do with others?
-> There are nodes as you see in examples like fixed-factor-clock nodes which
-> are also object type.
-
-Then the node names can be anything and you should use what I suggested.
-
-> Standard property like firmware-name or encrypted-fpga-config are coming via
-> overlay for sure. Others are not permitted. That's why others then listed
-> properties likely must be type object. Is there an elegant way to encode it?
-
-Sorry, I don't follow. You should list every possible property, then the 
-only thing left are nodes and my suggestion covers them. If there's a 
-pattern to the node names, then you can use patternProperties.
-
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    /*
-> > > +     * Full Reconfiguration without Bridges with DT overlay
-> > > +     */
-> > > +    fpga_region0: fpga-region {
-> > 
-> > Drop unused labels.
-> 
-> Actually it is kind of used. I kept it to be able to reference something in
-> comment below.
-
-Okay. Kind of outside the scope of examples and schema as I mentioned.
-
-
-> > > +      compatible = "fpga-region";
-> > > +      #address-cells = <1>;
-> > > +      #size-cells = <1>;
-> > > +      fpga-mgr = <&fpga_mgr0>;
-> > > +
-> > > +      /* DT Overlay contains: &fpga_region0 */
-> > > +      firmware-name = "zynq-gpio.bin";
-> > > +      gpio@40000000 {
-> > > +        compatible = "xlnx,xps-gpio-1.00.a";
-> > > +        reg = <0x40000000 0x10000>;
-> > 
-> > This example implies this is a translatable address, but the lack of
-> > 'ranges' in the parent prevents that. In turn, that means unit-addresses
-> > should be accepted in the parent node name as well.
-> 
-> v1 contains ranges property and it was removed based on Krzysztof comment
-> that fpga-region has no unit address that's why ranges shouldn't be used.
-> 
-> https://lore.kernel.org/all/c3c92468-a1db-498b-b4a2-7926b84cb5ea@linaro.org/
-
-Plain "ranges;" does not have a unit-address. But really, you should 
-allow a non-empty ranges too and therefore allow for a unit-address.
-
-Rob
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
