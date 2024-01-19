@@ -1,149 +1,101 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D52A1111
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 02:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E292E15A4
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 02:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705632457; cv=none; b=AHFIn/ooCagT8U1LZKjidSAKNqvlRZ4/8o6lV6sTbx4glcCQhU/xmoDricAZMvLUriN80AmKAgJAcoCldHkXZPOUCX3v6VsQPtfBUrcAfRPCcb7xoJFbjxHrwHUb6uHHqPG0gQtzwSuk5jfZY3H4Y7NzWkooRtVb1ShKSFEC9vA=
+	t=1705632748; cv=none; b=sb+f3n4U8RbePqCtxBerVBsUgj8i/j6AmWCbMRajXwlXX05YqTTz4rL/fr0YEY69/LdPLZmZDnMomDRR2DQ85Vwhp51ZEjr0FRtt6y27lopktfEN3PYTiSTSxH1e5IheHbOTWMA5SQ01KJY/2Q5L8d1sVLLHOgcrer+J4ELWAds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705632457; c=relaxed/simple;
-	bh=LC2ojcyVvYY18DsgCFhzHooTLnRNiqsKr5V2HXzBzPI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CARNOODyU2cpGlpyjy6rkIBn0qJrKXnCaYyO71+JtMVtm3JvldP/o3rjixZ9gQem/MrY6M5ztT8k2eyW0uTXjOOfUYrRsG14WI/rQPlWl464qNtQ2YE0AdbFhyIUHScjIxO4/IDN82prt6rpCcUL16bYn50lK5CnQRLttXKmIlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PrLk9fQH; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705632748; c=relaxed/simple;
+	bh=6S2qjNkz/Jifeoy79y+6wsAJfFEcpfQEqDGnMvPzCKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WBha/m/eknn74yRzBEmu/lPTli4lptUvf+INpZ7+Mtem8/aTM62Yy2zYawf3I1A8l56ghl++XUjXR4S8090Rs0mzAKm5yK9ipftwPhDXntcmsyVqYyLw6YwdO7y+w22tGfF3K2JIXo+y/Zz8puuHOTuEniJScbWPTk4T35atNtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwy9SS3Z; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrLk9fQH"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cdc1af60b2so3635931fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 18:47:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705632454; x=1706237254; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sd3GlzgGgJSlvg/FmViDsptsjJQ9iDHdHhzYDbLHp3M=;
-        b=PrLk9fQHCXcECjgwfGJUmOL17zKZrUhDN5Y4XE0Px14Y2zlsacIoFoQBb1ANItn8yA
-         N3EbOgbesx4pABUFpaEMlFZ9k0PDazn/qCmsdZSbbxNAn1cVKckirAAc2bl2mql/V0y0
-         EPz9qI6P4bOWcMpe6GPPudPzrPe49otXhHzsgtQMpjaBZfRmkFC+7xtjsY5Tc1zUv8x0
-         nDHTtoeXZp6UU5h2b4W7EZnuaFbYIqOBwx6V3ubANYS/gtFEvDgsyrRFW0XPXbx/8s7C
-         sQqo+4VfgbaREMwLMsa43vDfv+Vg8jJHFtFOAxYGc7drjCUsUXh5+u2YqW2Y8Ylj3tdO
-         xgYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705632454; x=1706237254;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sd3GlzgGgJSlvg/FmViDsptsjJQ9iDHdHhzYDbLHp3M=;
-        b=uqtEun+nHkGQWyrxeZQRcYhJRdklCQoX9F7xLwfQydiT1jT4KcF3zp2qS1Yh+bLIJV
-         Fw0QZC/8my08skrhIQaLJQmvqiIw5BO5Ewv+W4BDpaOTCIqjC0t5mP+rOFnx0BkPVLc4
-         maaf0qQWrKAtjqlFf4fdkQe9nbMKqU9LMPEM9gP806Yi+rKjptfB+cIRlcVHD5sFO1Ix
-         TjlU2otUi2oDB7/Ng3K2T0trTL7AiCLqMB9q6PgT261KgXRQ1QuAw2uOwhogr/jZOKET
-         gNN1JfcVbr2TgnWVPdR5tGarIcY4gxtE2We4LEvlh1EHkYUKjiAVrDOqaFQr4p3IsZmg
-         Qojg==
-X-Gm-Message-State: AOJu0YxIXdBDJaiG3O2Auv8MN8PKu+CghWNlSC/74C5PaVKOMazpLJR/
-	5wT8FmO0TsOoMmsxA+JLeeeBGF0eMWeCeibm6A+CcETsfdWQZTWPE0Y8dfTfIPXlJylNiiIoNAt
-	ZEFVKdoq0ihyEf48kTABL1EICyOVswxVn6DzFsg==
-X-Google-Smtp-Source: AGHT+IHJ2OOWYTIM69OkT1dj/zddfEE8UHpCG3z5tUsKf6gifQfhdC/9L0iSNGBSst5hbB5PUyd8mANhzOFTyTGCFog=
-X-Received: by 2002:a2e:bc11:0:b0:2cc:ce6d:5ade with SMTP id
- b17-20020a2ebc11000000b002ccce6d5ademr1319357ljf.84.1705632453818; Thu, 18
- Jan 2024 18:47:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwy9SS3Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705632747; x=1737168747;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=6S2qjNkz/Jifeoy79y+6wsAJfFEcpfQEqDGnMvPzCKM=;
+  b=bwy9SS3ZtH4lb/nWVNFDWJ5YHu/fvRyhETpzh7NLl/55xaL7aZUjg4VT
+   GUvq+4VzIx8fsqyxciVIf2nzYUb8waOLRnqN10OZy3dA1yaAVAnShT4zo
+   U3Xf5x6m7cHM3p4MGXmUBxMbaV0AJpaHsbi5ilB9rdwcj5er2qZ4lTKhb
+   7NGLl+S4zQrcFth0uFLPLfP+SznebzSWaOxk+g4XuwIvgqsZu0j+It5Cn
+   M5ZdpHDP+ARA8uTDwa2HeTbKKOuc3S4Nt6D5nzyDzttJ5QcXOfT2r2kYo
+   4Uzuyh1YHNXjGafQ4HpBNljLdZe5aDTKvalDKsqXnao0b8IGBbCWWQGgJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="537384"
+X-IronPort-AV: E=Sophos;i="6.05,203,1701158400"; 
+   d="scan'208";a="537384"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 18:52:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="761019511"
+X-IronPort-AV: E=Sophos;i="6.05,203,1701158400"; 
+   d="scan'208";a="761019511"
+Received: from pialybar-mobl2.amr.corp.intel.com (HELO desk) ([10.209.49.165])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 18:52:25 -0800
+Date: Thu, 18 Jan 2024 18:52:24 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, daniel.sneddon@linux.intel.com,
+	antonio.gomez.iglesias@linux.intel.com
+Subject: [PATCH] x86/msr-index: Fix the order of ARCH_CAP_XAPIC_DISABLE bit
+Message-ID: <243317ff6c8db307b7701a45f71e5c21da80194b.1705632532.git.pawan.kumar.gupta@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117071328.3811480-1-alexious@zju.edu.cn> <CAKGbVbuEyKaeZbvU-SREQkto5AqdQo-wjx=cjf2Sx3eDCnah+Q@mail.gmail.com>
-In-Reply-To: <CAKGbVbuEyKaeZbvU-SREQkto5AqdQo-wjx=cjf2Sx3eDCnah+Q@mail.gmail.com>
-From: Qiang Yu <yuq825@gmail.com>
-Date: Fri, 19 Jan 2024 10:47:21 +0800
-Message-ID: <CAKGbVbsp0Bhk3h3D4bkmpLT7HF6KykTJCUcb_JDL=UtJNc-h5A@mail.gmail.com>
-Subject: Re: [PATCH] [v2] drm/lima: fix a memleak in lima_heap_alloc
-To: Zhipeng Lu <alexious@zju.edu.cn>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Vasily Khoruzhick <anarsoul@gmail.com>, dri-devel@lists.freedesktop.org, 
-	lima@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-applied to drm-misc-next
+XAPIC_DISABLE bit of MSR_IA32_ARCH_CAP is not in correct order, fix it.
 
-On Wed, Jan 17, 2024 at 8:14=E2=80=AFPM Qiang Yu <yuq825@gmail.com> wrote:
->
-> Reviewed-by: Qiang Yu <yuq825@gmail.com>
->
-> On Wed, Jan 17, 2024 at 3:14=E2=80=AFPM Zhipeng Lu <alexious@zju.edu.cn> =
-wrote:
-> >
-> > When lima_vm_map_bo fails, the resources need to be deallocated, or
-> > there will be memleaks.
-> >
-> > Fixes: 6aebc51d7aef ("drm/lima: support heap buffer creation")
-> > Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-> > ---
-> > Changelog:
-> >
-> > v2: rearrange the error-handling to ladder tags.
-> > ---
-> >  drivers/gpu/drm/lima/lima_gem.c | 23 +++++++++++++++--------
-> >  1 file changed, 15 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lim=
-a_gem.c
-> > index 4f9736e5f929..d3d82ee7fb4c 100644
-> > --- a/drivers/gpu/drm/lima/lima_gem.c
-> > +++ b/drivers/gpu/drm/lima/lima_gem.c
-> > @@ -75,29 +75,36 @@ int lima_heap_alloc(struct lima_bo *bo, struct lima=
-_vm *vm)
-> >         } else {
-> >                 bo->base.sgt =3D kmalloc(sizeof(*bo->base.sgt), GFP_KER=
-NEL);
-> >                 if (!bo->base.sgt) {
-> > -                       sg_free_table(&sgt);
-> > -                       return -ENOMEM;
-> > +                       ret =3D -ENOMEM;
-> > +                       goto err_out0;
-> >                 }
-> >         }
-> >
-> >         ret =3D dma_map_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
-> >         if (ret) {
-> > -               sg_free_table(&sgt);
-> > -               kfree(bo->base.sgt);
-> > -               bo->base.sgt =3D NULL;
-> > -               return ret;
-> > +               goto err_out1;
-> >         }
-> >
-> >         *bo->base.sgt =3D sgt;
-> >
-> >         if (vm) {
-> >                 ret =3D lima_vm_map_bo(vm, bo, old_size >> PAGE_SHIFT);
-> > -               if (ret)
-> > -                       return ret;
-> > +               if (ret) {
-> > +                       goto err_out2;
-> > +               }
-> >         }
-> >
-> >         bo->heap_size =3D new_size;
-> >         return 0;
-> > +
-> > +err_out2:
-> > +       dma_unmap_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
-> > +err_out1:
-> > +       kfree(bo->base.sgt);
-> > +       bo->base.sgt =3D NULL;
-> > +err_out0:
-> > +       sg_free_table(&sgt);
-> > +       return ret;
-> >  }
-> >
-> >  int lima_gem_create_handle(struct drm_device *dev, struct drm_file *fi=
-le,
-> > --
-> > 2.34.1
-> >
+No functional change.
+
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+---
+ arch/x86/include/asm/msr-index.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 1d51e1850ed0..c72d68fc774f 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -152,6 +152,10 @@
+ 						 * are restricted to targets in
+ 						 * kernel.
+ 						 */
++#define ARCH_CAP_XAPIC_DISABLE		BIT(21)	/*
++						 * IA32_XAPIC_DISABLE_STATUS MSR
++						 * supported
++						 */
+ #define ARCH_CAP_PBRSB_NO		BIT(24)	/*
+ 						 * Not susceptible to Post-Barrier
+ 						 * Return Stack Buffer Predictions.
+@@ -166,11 +170,6 @@
+ 						 * Data Sampling (GDS).
+ 						 */
+ 
+-#define ARCH_CAP_XAPIC_DISABLE		BIT(21)	/*
+-						 * IA32_XAPIC_DISABLE_STATUS MSR
+-						 * supported
+-						 */
+-
+ #define MSR_IA32_FLUSH_CMD		0x0000010b
+ #define L1D_FLUSH			BIT(0)	/*
+ 						 * Writeback and invalidate the
+
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+-- 
+2.34.1
+
+
