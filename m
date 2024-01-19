@@ -1,93 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E972B1E520
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 19:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1447F5466D
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 19:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705692587; cv=none; b=k9DWSlqwDyQEkt4g2dsazzyzRYYlfq5erCA8XQfJR4e2Yc2raLVOGUPJW+0/rSvwDHEPW+lQpk77dtcbstLPoyxv4bjRg6+1hTwrNr0P14B4RahSexYeCZuZ6/vIWrjMKf8gRoES8GoeG6+zG22jyxHhuT5vcIcavizOBHSkKeo=
+	t=1705692622; cv=none; b=aidW6G1dCrPNio/j1NQSu1eWvOg6OLSL87u0Bzp8OXL/fUasTwv410BISIXddKqUy/xwcWtWwovXnxw9P4bpIMnCVFQz85W0Ok3V7dIM0FMWAEaZHqxkPahp93w4awjNsf1ZdlS4etSpbW/0DFnHBNd5/572sDPQYoY6vgRH3ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705692587; c=relaxed/simple;
-	bh=FEcAsUZWPrO8gUGoSTTntTr0QKjxJXyVj/rDXuZnSC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D1C3TUhlw8fabpgVetYC3vZgaO8mF2GExYMtaSEPiQtmJ58C37RG93mVuj3hmRRVrJ+NEKBLjO1CdAsMfcysQcC1gpvOI/giF7b7a1bpaHAR1ckai32Cv7Xakjq21O+K3/V1m8n7s2MhEV0YPfLg+D2MGLpaFXPm8SwM9i8P9Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mMDi64N0; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705692622; c=relaxed/simple;
+	bh=4okcQjoHZtRPK7y+6GvlMJHUm+mOGWVYBEIFCFvB/QU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rSgDn6hRr1V7l1Zc7PCV5iupykK/h9lPcImZAC/BIZG/aYLKzDRY6GP19LAi4sLKSioeT70pElZXqCbmpcQpD4wFaQ5PjFlF6xY+tkaOtdpfTLA/4eh+68VH1YhDrWOGvjozst4jOlyNHV5zzkRzqEi8+T4ot26cwu1ddqwem/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bhMkI0Yv; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mMDi64N0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705692585; x=1737228585;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FEcAsUZWPrO8gUGoSTTntTr0QKjxJXyVj/rDXuZnSC8=;
-  b=mMDi64N08Mm/jUCLkHoE89Gj1CruUztibfO7zX30EITgcqB3uUthHOKF
-   yTjTBybzzj0HV+gTmNmlVrOlttPuzrNFQ2BC3e5HLkjnpJWSoyRw+M44v
-   Gk2MgYKCG5td0BJ+W/ftP9uupzGQgDY22krF55rhFeG1uhcx+UT8I9lUi
-   ghcEZSoFMJYKgG57016+Fm1UJJeVBZMKra7pTzyU2IsR4il/1FYcVMv/G
-   SC1IauzVKtHl9ifrwF0N1c0PLPNqNqCk0UhN06G9kvkSmUi/Aq1XrdLQf
-   X6ilyl8tWoL6Xc8bFu/wX7Aew3hfvxoCPctjQooL7F68JbvtFg+FqhR6H
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="705486"
-X-IronPort-AV: E=Sophos;i="6.05,206,1701158400"; 
-   d="scan'208";a="705486"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 11:29:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,206,1701158400"; 
-   d="scan'208";a="742731"
-Received: from guptapa-mobl1.amr.corp.intel.com (HELO windy) ([10.125.112.71])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 11:29:42 -0800
-Date: Fri, 19 Jan 2024 08:21:04 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	kirill.shutemov@linux.intel.com, daniel.sneddon@linux.intel.com,
-	antonio.gomez.iglesias@linux.intel.com, rick.p.edgecombe@intel.com,
-	alexander.shishkin@intel.com
-Subject: Re: [PATCH] x86/lam: Disable ADDRESS_MASKING in most cases
-Message-ID: <20240119162104.4ehgnj4ptjrfwyhf@windy>
-References: <919b6370a908bb091779ec2eca7ca5e369d57847.1705631230.git.pawan.kumar.gupta@linux.intel.com>
- <8936e2c6-93b8-417e-9151-041c5f2e1102@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bhMkI0Yv"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a2fbb646eb4so9162566b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 11:30:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705692619; x=1706297419; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ugyBhCYqe/JSP/toMybx2mnqVSMpXtGwbZ5vXwky8K8=;
+        b=bhMkI0Yv2VR7gW1YjD3pGVaPe632+Sw0ZG08f1HwV1gL0L9KnjQL5eSZCf2jQzNjJM
+         QqbLRQ5el2W6fKkNJNS2MVd6U3YQP6nQbSq/b3ihiJCgexUBhDbbyKWHBCXM7w6nsfFs
+         oyrCTgRKU5R2gquk/meDWJyOyMbBSpGZSTUDoE9C/mnOe+HNgiIaJEMWB0rpbvJA6QKX
+         7Jagpt01i3bwmRpqsOCCj/jiHSGnLa0i7MZ5iQjx9CZOWN74GzP7GbFN5k9Rt98LRqvw
+         /9/5cYzWD2SpoVqjQ9WGz/Wlz03ufrtXvZYMRrIxhkK1Lvd6ap4I1wGq3qTkdRcISYwd
+         x0+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705692619; x=1706297419;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ugyBhCYqe/JSP/toMybx2mnqVSMpXtGwbZ5vXwky8K8=;
+        b=ScWWkE2Q19SrG07OMu6g6p/dEgZxvGQo5VAxr5F9IAc7KcoRVLDDFkxBAjg6IfSYag
+         29e3/VS4xMju0Q/+iIEknc8rkpW3OzGVXsWv94otxS8+VfHhJUqewOljJWUlPgziwAqO
+         9kaTF0i6nv1mo6rXd4wQLDbgvRWw/oZmEQK3+tqtttAc2GcPnemprjckqWAAOcnPDrAg
+         tOvKA6084EjV19/NzrlN8IQpGFJTr6rOqxuHUBrcuJxpxzyHswoMIsZN+o0bOMpch5uL
+         GPN1i0jF7/qaU9GVnrIsLnaSSfYQX6C0DgummMY4qkbRH8GrJp31NjyuKxd50Hpe9cWR
+         B86Q==
+X-Gm-Message-State: AOJu0Yx57nEEvZRyUSP4K8zwUlMSb6ZA28zeA+IpkxSPNMfbe6iONOls
+	i3S9GubZDjPynO4dQQxzMnH43z+WrjDXud399TwC+J5KqI6Cx1CLton7nOG8RVe0EONOxGuiHnV
+	cRVnkgc8p5cbITg/i2GTJsz6be+nejczzRbTy
+X-Google-Smtp-Source: AGHT+IE1cNh2Ok1Hw/xx/XTYjRdo3LIOnQNeZKcP5EuYjLQKeenERouSCa8xmrUhaf7ZVukdoVG9YNoA305yp3SzEtw=
+X-Received: by 2002:a17:906:2b85:b0:a2f:8533:af79 with SMTP id
+ m5-20020a1709062b8500b00a2f8533af79mr139810ejg.36.1705692619040; Fri, 19 Jan
+ 2024 11:30:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8936e2c6-93b8-417e-9151-041c5f2e1102@intel.com>
+References: <20240117-zswap-xarray-v1-0-6daa86c08fae@kernel.org>
+ <20240117-zswap-xarray-v1-1-6daa86c08fae@kernel.org> <CAJD7tkYEx57CPBoaN9GW4M3Mx-+jEsOMWJ02nLKSKD-MLb-WPA@mail.gmail.com>
+ <CAF8kJuO5tAqwyKQK7AasWgs3Ohfc2osD9oX0m8YAkfsAZsjjyQ@mail.gmail.com>
+In-Reply-To: <CAF8kJuO5tAqwyKQK7AasWgs3Ohfc2osD9oX0m8YAkfsAZsjjyQ@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Fri, 19 Jan 2024 11:29:42 -0800
+Message-ID: <CAJD7tkY6K8q1t-nzZ7oJu-f3OgS654PiOcQgU=E6f+0joYSzPA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm: zswap.c: add xarray tree to zswap
+To: Chris Li <chrisl@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, =?UTF-8?B?V2VpIFh177+8?= <weixugc@google.com>, 
+	Yu Zhao <yuzhao@google.com>, Greg Thelen <gthelen@google.com>, 
+	Chun-Tse Shao <ctshao@google.com>, =?UTF-8?Q?Suren_Baghdasaryan=EF=BF=BC?= <surenb@google.com>, 
+	Brain Geffon <bgeffon@google.com>, Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Mel Gorman <mgorman@techsingularity.net>, Huang Ying <ying.huang@intel.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, Kairui Song <kasong@tencent.com>, 
+	Zhongkun He <hezhongkun.hzk@bytedance.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Barry Song <v-songbaohua@oppo.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Chengming Zhou <zhouchengming@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 19, 2024 at 09:48:14AM -0800, Sohil Mehta wrote:
-> Hi Pawan,
-> 
-> On 1/18/2024 6:35 PM, Pawan Gupta wrote:
-> >  arch/x86/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 1566748f16c4..794517df8068 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -2270,6 +2270,7 @@ config RANDOMIZE_MEMORY_PHYSICAL_PADDING
-> >  config ADDRESS_MASKING
-> >  	bool "Linear Address Masking support"
-> >  	depends on X86_64
-> > +	depends on COMPILE_TEST || !SPECULATION_MITIGATIONS # wait for LASS
-> 
-> I was wondering if the COMPILE_TEST dependency here is a bit redundant.
-> 
-> Having ADDRESS_MASKING depend on just !SPECULATION_MITIGATIONS might be
-> enough to get the LAM code compile tested through various configurations.
+My previous email got messed up, sorry.
+
+> > > @@ -462,9 +463,9 @@ static void zswap_lru_putback(struct list_lru *list_lru,
+> > >  /*********************************
+> > >  * rbtree functions
+> > >  **********************************/
+> > > -static struct zswap_entry *zswap_rb_search(struct rb_root *root, pgoff_t offset)
+> > > +static struct zswap_entry *zswap_search(struct zswap_tree *tree, pgoff_t offset)
+> >
+> > Let's change the zswap_rb_* prefixes to zswap_tree_* instead of just
+> > zswap_*. Otherwise, it will be confusing to have both zswap_store and
+> > zswap_insert (as well as zswap_load and zswap_search).
 >
-> I don't have a strong preference here. Mainly looking to understand the
-> reasoning. Other than that the patch looks fine to me.
+> How about zswap_xa_* ?
 
-The goal is to compile test it whenever possible. As
-SPECULATION_MITIGATIONS are ON by default, it wont get tested for most
-configuration.
+SGTM.
+
+> >
+> > [..]
+> > > @@ -1790,15 +1808,21 @@ void zswap_swapon(int type)
+> > >  void zswap_swapoff(int type)
+> > >  {
+> > >         struct zswap_tree *tree = zswap_trees[type];
+> > > -       struct zswap_entry *entry, *n;
+> > > +       struct zswap_entry *entry, *e, *n;
+> > > +       XA_STATE(xas, tree ? &tree->xarray : NULL, 0);
+> > >
+> > >         if (!tree)
+> > >                 return;
+> > >
+> > >         /* walk the tree and free everything */
+> > >         spin_lock(&tree->lock);
+> > > +
+> > > +       xas_for_each(&xas, e, ULONG_MAX)
+> >
+> > Why not use xa_for_each?
+> >
+> > > +               zswap_invalidate_entry(tree, e);
+> > > +
+> > >         rbtree_postorder_for_each_entry_safe(entry, n, &tree->rbroot, rbnode)
+> > > -               zswap_free_entry(entry);
+> >
+> > Replacing zswap_free_entry() with zswap_invalidate_entry() is a
+> > behavioral change that should be done separate from this series, but I
+> > am wondering why it's needed. IIUC, the swapoff code should be making
+> > sure there are no ongoing swapin/swapout operations, and there are no
+> > pages left in zswap to writeback.
+> >
+> > Is it the case that swapoff may race with writeback, such that
+> > writeback is holding the last remaining ref after zswap_invalidate()
+> > is called, and then zswap_swapoff() is called freeing the zswap entry
+> > while writeback is still accessing it?
+>
+> For the RB tree the mapping is stored in the zswap entry as RB node.
+> That is different from xarray. Xarry stores the mapping outside of
+> zswap entry. Just freeing the entry does not remove the mapping from
+> xarray. Therefore it needs to call zswap_invalidate_entry() to remove
+> the entry from the xarray. I could call zswap_erase() then free entry.
+> I just think zswap_invalidate_entry() is more consistent with the rest
+> of the code.
+
+I see, but it's not clear to me if the xarray is being properly
+cleaned up in this case.
+
+Do we have to call xa_destroy() anyway to make sure everything is
+cleaned up in the xarray? In that case, we can just do that after the
+loop.
