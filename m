@@ -1,153 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C840AD50F;
-	Fri, 19 Jan 2024 08:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98417DDAE;
+	Fri, 19 Jan 2024 08:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705652241; cv=none; b=olh6BH2QsLQsMpQhZXsDajSt2DsR59T5Wh0BeDGeONwg7I/cGgguh9BBmKV0zzSP2AeMlwLTmj/nxg11WPpW+cj0NFd+pmQIPBBOBHsJPutbwFMmtn01BlZfXt9wUDsFO6G9eSKWBLDVOFYw3n3m7/4RyMI3F7ztlLCsO5X6hkg=
+	t=1705652308; cv=none; b=OwrDcJxstp/mw/U3V3yg2NdUJTwub/3xDk8FM1vE2zGzTnp22NSku5dc2Oeb26dlcYxwaMV6YY0XIC7wB1Zlm4qbUXuLMK36/73WPrS8o+vc3P0ytNKlOT1O6FgzVGRtSuHkw2qXSgY/jnpbk1PuElvXhpIdejJjp5xwUooxV6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705652241; c=relaxed/simple;
-	bh=fK4VruREjGzv4G2JJRe3w7i5qBgYFCIiHSzEs1R5aUo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OETkj8136Fm82jnm3amm0U/FDVCYenIePtbrW3wMDb2ZJphDtyxUZP4y8hfsFIRYFfucq/M/Qwdp0l6QryaEmH46G2G6YEHUuwkkLOy+DOiO+iVR5LtArPJpDbSx0cx17mrnSrPp2COfDeMQzpuKhyA59ryw4NuHppDFisNipMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9940EC433F1;
-	Fri, 19 Jan 2024 08:17:19 +0000 (UTC)
-Message-ID: <f985d664-d907-48ed-9b3d-dc956c178b88@xs4all.nl>
-Date: Fri, 19 Jan 2024 09:17:17 +0100
+	s=arc-20240116; t=1705652308; c=relaxed/simple;
+	bh=6CTE6LAnrQB+0P2CP0p6TXSTq8etgVJFCRPwsyZxmac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z2XGxUdtmxroMDqmYGo2d9pZJZwI43tHaavbj4zI6fQ1hJSL4Aoi11KY5DnL+Zwo7aNb225Ap7kKqeCy50I/RA2y6Ia/f6wOC45VOy1dL82ogAil357V7X2IwubN2YlHGb2YezjE0e/cdLh5P9N/drPogJqzqMLfFM7p7+MEKuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZFFVflYW; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZFFVflYW"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d70c3c2212so3979985ad.1;
+        Fri, 19 Jan 2024 00:18:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705652307; x=1706257107; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NbCRz2cw6/zLDH7CifVtlTehng6egnWg+bUjhT6zIbI=;
+        b=ZFFVflYWRWqvodh6Bb7EzVmhOu6xQAtxXL8ISdoPmq2oDKRz1JQGc7riYzbo6KIKfc
+         +GVo5ZS6In4w4zNNg6ru9yp1H74jRNX4R6wZqk0geq3DL9pUUnmhdAi8yihUjP8sSrhm
+         2gfYFABwgh4tPnOq/F4LBvkZaiPyWe60ZSpTjnuhDGFt3qoYI1BXl2wnriA/figjvR3i
+         qSKzF5DHoOqZ6DNeZ072uFHksS7G5LM3AIHkqk5X3ofgOu6u+9k+ORH2mxbhcSt7spgg
+         4izu+5tW5AKzZc2Fe3iJwUnhIS/3IvUhSOrclrmNvCdX+KkAHEJ6djS5qnLQyoG2bEEt
+         R2/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705652307; x=1706257107;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NbCRz2cw6/zLDH7CifVtlTehng6egnWg+bUjhT6zIbI=;
+        b=BCIfNaTcCO2TJSFXZ37wP6Da+bJYuC24TC150nzI+O6gU/0dLpy113JwH8AvYFlxIN
+         e2SLBWCUhze0K0DE4g5mfJxDuELfi6kA4u2l2/cpcJMcCVcmJ8DZjtzU0m5ZVtBAjMHf
+         7804taD0BJRqMuls7NmPvasFDcbJOoVEZSYggv1jwAnlWPS+4JWajtlFc9OyEnLMflvc
+         gHAp/Ei7OheRSkC900hVGQuGY8esFrwPhfaFqap8EC10C8aRtxCyFNEx9640fzlhcrzv
+         9jRfbcLw6TM0jZSJs9VsrNeYYEdqwsUm8Q57PIpr3h3Thn+2gKjBqYBkqdemEDR5bguY
+         0/Hg==
+X-Gm-Message-State: AOJu0YwC5P/1+rfaGTxf2rAKlXBNxDHGw4TeCrM4fR87cqgjgocwiVgs
+	rgdMWP667PXPFNIKZe/cYZbI9A+yzeEcXwKOTBfUclkXOZi0o0ufa07hA3rD
+X-Google-Smtp-Source: AGHT+IH0PK6h5IreGNnXp0U5KwwEXv/ewykeeZsJ3s7KAH+gXuCVNkGXaf22sVKIlOW/l+jlZ2ZXAA==
+X-Received: by 2002:a17:902:9309:b0:1d5:da9e:1f60 with SMTP id bc9-20020a170902930900b001d5da9e1f60mr829195plb.58.1705652306782;
+        Fri, 19 Jan 2024 00:18:26 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:f04f:73f4:b79:a70c])
+        by smtp.gmail.com with ESMTPSA id g8-20020a170902f74800b001d5f2483893sm2504936plw.270.2024.01.19.00.18.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jan 2024 00:18:26 -0800 (PST)
+Date: Fri, 19 Jan 2024 00:18:24 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-input@vger.kernel.org
+Subject: Re: [PATCH] Input: Remove usage of the deprecated ida_simple_xx() API
+Message-ID: <ZaowUOXG6zSnZXAb@google.com>
+References: <a885de14beead2cc3c1c946f192b8b178dac696a.1705349930.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linux Kernel Bugs] KASAN: slab-use-after-free Read in
- cec_queue_msg_fh and 4 other crashes in the cec device (`cec_ioctl`)
-Content-Language: en-US, nl
-To: "Yang, Chenyuan" <cy54@illinois.edu>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "jani.nikula@intel.com" <jani.nikula@intel.com>,
- "syzkaller@googlegroups.com" <syzkaller@googlegroups.com>,
- "mchehab@kernel.org" <mchehab@kernel.org>, "Zhao, Zijie"
- <zijie4@illinois.edu>, "Zhang, Lingming" <lingming@illinois.edu>
-References: <PH7PR11MB57688E64ADE4FE82E658D86DA09EA@PH7PR11MB5768.namprd11.prod.outlook.com>
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-In-Reply-To: <PH7PR11MB57688E64ADE4FE82E658D86DA09EA@PH7PR11MB5768.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a885de14beead2cc3c1c946f192b8b178dac696a.1705349930.git.christophe.jaillet@wanadoo.fr>
 
-Hi Chenyuan,
+On Mon, Jan 15, 2024 at 09:19:04PM +0100, Christophe JAILLET wrote:
+> ida_alloc() and ida_free() should be preferred to the deprecated
+> ida_simple_get() and ida_simple_remove().
+> 
+> Note that the upper limit of ida_simple_get() is exclusive, but the one of
+> ida_alloc_range() is inclusive. So a -1 has been added when needed.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-On 28/12/2023 03:33, Yang, Chenyuan wrote:
-> Hello,
-> 
->  
-> 
-> We encountered 5 different crashes in the cec device by using our generated syscall specification for it, here are the descriptions of these 5 crashes and the related files are attached:
-> 
-> 1. KASAN: slab-use-after-free Read in cec_queue_msg_fh (Reproducible)
-> 
-> 2. WARNING: ODEBUG bug in cec_transmit_msg_fh
-> 
-> 3. WARNING in cec_data_cancel
-> 
-> 4. INFO: task hung in cec_claim_log_addrs (Reproducible)
-> 
-> 5. general protection fault in cec_transmit_done_ts
-> 
->  
-> 
-> For “KASAN: slab-use-after-free Read in cec_queue_msg_fh”, we attached a syzkaller program to reproduce it. This crash is caused by ` list_add_tail(&entry->list, &fh->msgs);`
-> (https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L224 <https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L224>), which reads a
-> variable freed by `kfree(fh);` (https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-api.c#L684
-> <https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-api.c#L684>). The reproducible program is a Syzkaller program, which can be executed following this document:
-> https://github.com/google/syzkaller/blob/master/docs/executing_syzkaller_programs.md <https://github.com/google/syzkaller/blob/master/docs/executing_syzkaller_programs.md>.
-> 
->  
-> 
-> For “WARNING: ODEBUG bug in cec_transmit_msg_fh”, unfortunately we failed to reproduce it but we indeed trigger this crash almost every time when we fuzz the cec device only. We attached the report
-> and log for this bug. It tries freeing an active object by using `kfree(data);` (https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L930
-> <https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L930>).
-> 
->  
-> 
-> For “WARNING in cec_data_cancel”, it is an internal warning used in cec_data_cancel (https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L365
-> <https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L365>), which checks whether the transmit is the current or pending. Unfortunately, we also don't have the
-> reproducible program for this bug, but we attach the report and log.
-> 
->  
-> 
-> For “INFO: task hung in cec_claim_log_addrs”, the kernel hangs when the cec device ` wait_for_completion(&adap->config_completion);`
-> (https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L1579 <https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L1579>). We have a
-> reproducible C program for this.
-> 
->  
-> 
-> For “general protection fault in cec_transmit_done_ts”, the cec device tries derefencing a non-canonical address 0xdffffc00000000e0: 0000 [#1], which is related to the invocation `
-> cec_transmit_attempt_done_ts ` (https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L697
-> <https://elixir.bootlin.com/linux/v6.7-rc7/source/drivers/media/cec/core/cec-adap.c#L697>). It seems that the address of cec_adapter is totally wrong. We do not have a reproducible program for this
-> bug, but the log and report for it are attached.
-> 
->  
-> 
-> If you have any questions or require more information, please feel free to contact us.
+Applied, thank you.
 
-Can you retest with the patch below? I'm fairly certain this will fix issues 1 and 2.
-I suspect at least some of the others are related to 1 & 2, but since I could never
-get the reproducers working reliably, I had a hard time determining if there are more
-bugs or if this patch resolves everything.
-
-Your help testing this patch will be appreciated!
-
-Regards,
-
-	Hans
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
----
- drivers/media/cec/core/cec-adap.c | 3 +--
- drivers/media/cec/core/cec-api.c  | 3 +++
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/cec/core/cec-adap.c b/drivers/media/cec/core/cec-adap.c
-index 5741adf09a2e..079c3b142d91 100644
---- a/drivers/media/cec/core/cec-adap.c
-+++ b/drivers/media/cec/core/cec-adap.c
-@@ -936,8 +936,7 @@ int cec_transmit_msg_fh(struct cec_adapter *adap, struct cec_msg *msg,
- 	 */
- 	mutex_unlock(&adap->lock);
- 	wait_for_completion_killable(&data->c);
--	if (!data->completed)
--		cancel_delayed_work_sync(&data->work);
-+	cancel_delayed_work_sync(&data->work);
- 	mutex_lock(&adap->lock);
-
- 	/* Cancel the transmit if it was interrupted */
-diff --git a/drivers/media/cec/core/cec-api.c b/drivers/media/cec/core/cec-api.c
-index 67dc79ef1705..d64bb716f9c6 100644
---- a/drivers/media/cec/core/cec-api.c
-+++ b/drivers/media/cec/core/cec-api.c
-@@ -664,6 +664,8 @@ static int cec_release(struct inode *inode, struct file *filp)
- 		list_del_init(&data->xfer_list);
- 	}
- 	mutex_unlock(&adap->lock);
-+
-+	mutex_lock(&fh->lock);
- 	while (!list_empty(&fh->msgs)) {
- 		struct cec_msg_entry *entry =
- 			list_first_entry(&fh->msgs, struct cec_msg_entry, list);
-@@ -681,6 +683,7 @@ static int cec_release(struct inode *inode, struct file *filp)
- 			kfree(entry);
- 		}
- 	}
-+	mutex_unlock(&fh->lock);
- 	kfree(fh);
-
- 	cec_put_device(devnode);
 -- 
-2.42.0
-
-
+Dmitry
