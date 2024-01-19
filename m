@@ -1,187 +1,81 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB34856B71
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 17:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660D556447;
+	Fri, 19 Jan 2024 17:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705686870; cv=none; b=GW1RwOPHMFj3+CIW+1lquMzWRepCxHMUYeXLOZMuRyHta3ovWzh4rH++I6Q3drHf36hx0OVPodEg/xm9Jnr/d/L7Whb+zlxv9bRca6zNVIiJQBDFmHO0+clzFAsdMjPl4XHD9pdcArhBTYOGt8ipubCofBajpXN1xx5TdZ5HYpY=
+	t=1705686878; cv=none; b=lAfPp96w2x0K6IDx73xZyxAky9BpOB+1LYwHczFFTVZIIASs/p08yavguRZEbkFN3z1BSb7hXNAK0ym6mnpJYMq0iPI+EVvwa1xGNYGmixCCztFsJpbau3vXkPICxi+blacc6gD2QGZ1Ri193kCZcLZJl6WGu1kvp2VIDXoNE98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705686870; c=relaxed/simple;
-	bh=Y0JcJnqy3Dn6RKvJZKzPnPupBP3P2qu/sXGf3igKL0c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hxoOF19+z1blpqSMdUwcHpudu8ew9zbuw5Voy4P9+1/E5btuk6T3qeBQkK2jLBsDsmvX9yfk5ZVGL/ff1ypDqvlydXwvaGVWdDzu7gkTIG5hVQz5mwS3BhMASFP2z1OfetUZD7uo+eNMxsg1aBghUgW1VS80EMsrUwPGwCkmH/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NnqP8eXb; arc=none smtp.client-ip=209.85.210.54
+	s=arc-20240116; t=1705686878; c=relaxed/simple;
+	bh=68EYDYNAlpBFekQo0be4DE8uzhKhInrTxSE5YEYYVeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uEK2t8F9QBTvLdh3MPyxFQMZebOCdJ0gUR8DlwYqxU4sVn5Uo+/t5nbx1Kr8IwgvlN1YKJoJTR10L8wggSkCRIKLbIxXws2w2oZ2q/pvx641C8rTWb544Zgae19BTjUsZzYFrOLWLVwmajoEdfkDRaMlneYmJ0Ex3GDLWu0vWP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UZHbEDlw; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnqP8eXb"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6ddec302e68so139068a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 09:54:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZHbEDlw"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-28e884638f1so1035104a91.3;
+        Fri, 19 Jan 2024 09:54:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705686868; x=1706291668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mhh2ZhRu9KiZWKHPzosUKChvpXSmXetshKuywKmfueM=;
-        b=NnqP8eXbEnUh6I653KweAGDYCZ5QEeFjxO0y2Y3Y+l/+H5N/coaquKiTINlEydXfV/
-         CIB6nNhORwp7TbKmIsJsA7oKtFe2BPcQZBC/0Z+4EtH/wIjPLsxPA8d/mARnSejx5uxu
-         p5UhoR1e3Ss1FmB5MtV7IS+o3vUVdr2yIhFxt+u53EBtkUpL3hhoMjqSaQDMQp/1RPJh
-         bHg7f3tnlDelWB/b60KaGZe1z5nT3Chp3ELsvqHl1HJEI83OAk/px3e303o02ms9KPFG
-         vbg3uJJ3xlxVSS1aA/7EoFiLtwybXfSU6LlAPkzKkAIdeVDc6IwrvcG4jHTgkcNXU5Dv
-         7u1g==
+        d=gmail.com; s=20230601; t=1705686877; x=1706291677; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dFh01rJlM5Qj4ibHe2SAP3HVSgqlTX84yBGnp8DV3CY=;
+        b=UZHbEDlwmdV11MAr7VgtPyFzaVmHVi/5Tw+4UpvglSiLpYJarPepff3HOhpIBsG6fp
+         ewXkIx1GSld/IKVjr0lj/u1Sq2/zk+hJz+Zwx/0pkB+W+wTW67GYyL7jh34rgH7OiEdn
+         xtDiJIKKTNnrH+PTfaCZubpFUPSgP0kIz8Mq0W/jS/RNYVPrYy++iEBOYRaqPAlFF0eG
+         eEKjXkh7GRKCFU1IqTWNHZiQFLSCoDuhqf825JaUz4E9IDGYaWvG60L+iNK/2Leq9kK2
+         0MHB4exEk/yLBn/veqS2tS7qhNvf4TU7VWafO0eKWhcd5vVTEIfaPTCwkUPhOvfZw+11
+         QO8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705686868; x=1706291668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mhh2ZhRu9KiZWKHPzosUKChvpXSmXetshKuywKmfueM=;
-        b=WVsmJ3f49s3oH/ZL5QyRkPpDJK3Zw3OFz+5tVUXxSEAchHgRkS8GywMln9wUaBVP8a
-         aPy/t7y4EPrlT6SWHjHvEf+zDGw2z0BTqGC4/RLEsquSYGRtvUtraozgHmaygN1Mg0vd
-         /ABNtVTHt5rjMZxpnz5DInI879N2fMeWmzvyyISD44BYjHNsQgTLnjrSlOcWXSR3/ed5
-         dJkmyCOAu3NnXJMvQPRYIjknVTYStY9cUFRffa6K0TJG4vh12t316oyadTZ1eX077ruh
-         bLYJzPsMsJTt0CjhxIPvJe8R4OAWO8jtffAZbbEnBq5hSWbkKaVH+OuxtlHrAxzWOeZs
-         u3yA==
-X-Gm-Message-State: AOJu0YyMTv+o1SZtJfCW6RFFJ86nG2EPGGa/XsVG/FF+4Xgcu9IizCKv
-	mGYeQze7iXGwH9yVwhnB9dWGIE7wfsql4Ss7MQqTj+qa1vARDqVPBxWHrqVfJ78XNHHBR9WoczL
-	XwNeIYfG+BM62RpOZuPAC/GYij5s=
-X-Google-Smtp-Source: AGHT+IER7y62btloXzSo/unkZ+dMzfanmnio0IddGIAnWSKjaIHg8zw04Zop+g9zr766X9wugaW17z8srndYEEdlUEg=
-X-Received: by 2002:a05:6358:591c:b0:175:fe85:62f1 with SMTP id
- g28-20020a056358591c00b00175fe8562f1mr173044rwf.3.1705686867552; Fri, 19 Jan
- 2024 09:54:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705686877; x=1706291677;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dFh01rJlM5Qj4ibHe2SAP3HVSgqlTX84yBGnp8DV3CY=;
+        b=r4Kh5F+TUDtey3jO5kXzx5Eitvhpa3qQD5USgXc3W/m0nhIUTQ3VLbcLbmSpUb9k9M
+         aDClYRCO+x7DnGTH947XQdz8O6NBYfbEqy0oal1W/DRMtIny9P5naR88LhKImJodKwff
+         nGHfJm9I+VSJSpfIV0pBnAgVOczYqDpHbDO31lxfPOL4bBmqWot2Pxl+SsYXc1D5TPMj
+         FAbuYlIowRCoa/EvcOaaukvDSX/VTh7MB+Y+OVjPJ9UV1CF3eAbSxbvYOZ2c3GvG7P7V
+         IC7RPa8xDsUWdsm3fpde8djOwWVFghABRg4lvkrCL+QGkJ+sx4G9CtuCQVeW2KEnRjW7
+         NYYg==
+X-Gm-Message-State: AOJu0Yz9y+TcQiEk0zmGMcTDg9eYLM3yQwxjKhO3Qo1QaOkYWjtoKt/q
+	I77ZWNn3lToZEklZK1XYMDZWEoBZl6CpRJT4eC9GoX2TOS6aL3ay
+X-Google-Smtp-Source: AGHT+IH8vPjf5QLsN1MA6I4v0K8HgrqbnCPZPYq3zzvwbj1H3Kdx7ANiKO7xz+ZfZQd97C3fP1Ac1g==
+X-Received: by 2002:a17:90b:295:b0:290:2492:4420 with SMTP id az21-20020a17090b029500b0029024924420mr144066pjb.42.1705686876686;
+        Fri, 19 Jan 2024 09:54:36 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id nb17-20020a17090b35d100b00290394b25d5sm2953663pjb.22.2024.01.19.09.54.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jan 2024 09:54:36 -0800 (PST)
+Message-ID: <7006dcc3-cc31-4653-a504-4e0deb46e131@gmail.com>
+Date: Fri, 19 Jan 2024 09:54:35 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsOzpRPZGg23QqJAzKnqkZPKzvieeg=W7sgjgi3q0pBo0g@mail.gmail.com>
- <CANpmjNN-5PpSQ1A_9aM3u4ei74HuvCoThiLAHi=reXXQwer67A@mail.gmail.com> <CANpmjNM=92PcmODNPB4DrAhfLY=0mePCbyG9=8BGrQ4MC0xZ6w@mail.gmail.com>
-In-Reply-To: <CANpmjNM=92PcmODNPB4DrAhfLY=0mePCbyG9=8BGrQ4MC0xZ6w@mail.gmail.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Fri, 19 Jan 2024 22:54:16 +0500
-Message-ID: <CABXGCsM+9TxxY-bOUw6MyRV7CSZsyQpfDgvwgaBBKk9UONJkBw@mail.gmail.com>
-Subject: Re: regression/bisected commit 773688a6cb24b0b3c2ba40354d883348a2befa38
- make my system completely unusable under high load
-To: Marco Elver <elver@google.com>
-Cc: glider@google.com, dvyukov@google.com, eugenis@google.com, 
-	Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>, Andrey Konovalov <andreyknvl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MIPS: sgi-ip30: Fix missing prototypes
+Content-Language: en-US
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240119133757.96563-1-tsbogend@alpha.franken.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240119133757.96563-1-tsbogend@alpha.franken.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 19, 2024 at 4:00=E2=80=AFPM Marco Elver <elver@google.com> wrot=
-e:
-> I was afraid this would happen - could you try this patch series:
-> https://lore.kernel.org/all/20240118110216.2539519-2-elver@google.com/ [1=
-]
+On 1/19/24 05:37, Thomas Bogendoerfer wrote:
+> Include needed header files.
+> 
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-Thanks, this patch series definitely helped.
-I can again work at the computer when something is compiling in the backgro=
-und.
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
 
-> In addition, could you give some additional details about the number
-> of CPUs in your system?
-
-Hardware probe: https://linux-hardware.org/?probe=3Dba941d7a4e
-CPU: AMD Ryzen 7950x
-
-> And if possible, do you have a way to measure performance besides the
-> obvious lagging of the system? It would be interesting to know if the
-> fix in [1] regains performance fully.
-
-perf-2d5524635b00.data -
-https://mega.nz/file/Q0ACSI4a#QQ8Ntbw5zvP_YZMsXPzSr-PxLVCw8fwg2RJaVOghoOQ
-perf-773688a6cb24.data -
-https://mega.nz/file/F8wAgBZI#OQ75qLFyf2diFXrDs9bP6_5xDevVrs1KlNdeupWSJSQ
-perf-with-patchset.data -
-https://mega.nz/file/l8ZXnI6Y#SmrZpH2Em6xzlIZgJe50PwSw-zLK_4whRjx3t_058kE
-
-> perf diff perf-2d5524635b00.data perf-773688a6cb24.data
-No kallsyms or vmlinux with build-id
-c64a03a51e9503a251dbec8e5267fb3ae51914f2 was found
-# Event 'cycles:P'
-#
-# Baseline  Delta Abs  Shared Object
-Symbol
-
-                        >
-# ........  .........  ..............................................
-...........................................................................=
-...........................................................................=
-................>
-#
-    59.91%    +23.05%  [kernel.vmlinux]
-[k] 0xffffffff940065c0
-    17.88%     -7.89%  cc1
-[.] 0x0000000000207020
-     9.39%     -6.30%  cc1plus
-[.] 0x0000000000225110
-     1.37%     -1.29%  libpython3.12.so.1.0
-[.] 0x00000000000647e0
-     1.16%     -0.84%  libcef.so
-[.] 0x00000000021720e0
-     1.27%     -0.67%  as
-[.] 0x0000000000002090
-     0.78%     -0.54%  steamclient.so
-[.] 0x00000000001ed915
-     0.77%     -0.33%  chrome
-[.] 0x0000000002892080
-     0.54%     -0.32%  libc.so.6
-[.] _int_malloc
-     0.30%     -0.23%  libpixman-1.so.0.43.0
-[.] 0x00000000000078a7
-     0.31%     -0.19%  libc.so.6
-[.] _int_free
-
-
-> perf diff perf-2d5524635b00.data perf-with-patchset.data
-# Event 'cycles:P'
-#
-# Baseline  Delta Abs  Shared Object
-Symbol
-
-                        >
-# ........  .........  ..............................................
-...........................................................................=
-...........................................................................=
-................>
-#
-    17.88%    +12.61%  cc1
-[.] 0x0000000000207020
-               +3.89%  [kernel.vmlinux]
-[k] unwind_next_frame
-               +3.53%  [kernel.vmlinux]
-[k] kasan_check_range
-               +2.54%  [kernel.vmlinux]
-[k] debug_check_no_obj_freed
-     9.39%     +2.10%  cc1plus
-[.] 0x0000000000225110
-               +1.87%  [kernel.vmlinux]
-[k] rcu_is_watching
-               +1.41%  [kernel.vmlinux]
-[k] lock_release
-               +1.24%  [kernel.vmlinux]
-[k] __orc_find
-               +1.21%  [kernel.vmlinux]
-[k] lock_acquire
-               +1.08%  [kernel.vmlinux]
-[k] stack_trace_consume_entry
-               +1.08%  [kernel.vmlinux]
-[k] check_preemption_disabled
-     1.37%     +1.01%  libpython3.12.so.1.0
-[.] 0x00000000000647e0
-               +0.96%  [kernel.vmlinux]
-[k] stack_access_ok
-     1.27%     +0.79%  as
-[.] 0x0000000000002090
-
-
-Thanks!
-
---=20
-Best Regards,
-Mike Gavrilov.
