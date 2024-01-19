@@ -1,116 +1,65 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDA63C464
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 11:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662303C464
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 11:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705662032; cv=none; b=cP8trowtNAFmB8QtG3jDttJARCq4KqYReWs/gze93wDUwkKHkFAYIcYmWxsT04W5epr1xRO48veRzqrXJ+nVwabtjs6w0v5sk6uAi1FkAWmd9bx9WPbzAXHZcJWJfpHsxJZvftWYvY4JCdhedWT2+lnt3qQkTX4cM0S9mTNcHNI=
+	t=1705662074; cv=none; b=ibR7xj8Z4gxenIWjeX769ISr1rsRaTexFw4UFaXMuRUCRIdFTcOdnubW3nbIqJ+9w25b4YUMKnRsDPw22Lk6PKiGHMag/rCujvjfhbaa5E4G95Wp/uQXEPmKqv80/CnJAocr5vLYDbZ6reRfZRdQh55KDym0ZIBJmmTYm2xaTxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705662032; c=relaxed/simple;
-	bh=E8QfEkydkSnb7LnCdvu45N/wPlqfg3YPYucjEOTV77M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uvz76nr5HU8Y/xClj9i9GdU0JBgsUVPhQFuKVZsLiCL+6oAKEjxiKCuiWhbLgvPcKERIV+k+mXTRdgzS11YnP5hOqXA7a4MGi2J9DBrKtsQBnBwcGRPDbN9d0CV0y5C6ZmUq+gyw+B2BMsOIx0aiOEV83oZsA91oYb9zsqlRK6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1yHMRAb+; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1705662074; c=relaxed/simple;
+	bh=w5wBDo8jUiYzz+5J3il+LC9xZdfbGnzBJXcrQQHkLzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UGQlAG0rmwrU2Yr8oWdIWkIoSCJ4FC9zc4vulG4yAvgn0jdVQ6SRDPkaKOSC5ZngUEi9KP1GCK5lt+ntFCAdGo6nYSAujLE8oUMa9MyBC+YTB9u9IvxI6vESrTwWPRCV25D513J5SyGjksNt3mZEVF9oFGrWbeDN8LFz4xdyOMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cu-phil.org; spf=pass smtp.mailfrom=cu-phil.org; dkim=pass (2048-bit key) header.d=cu-phil.org header.i=@cu-phil.org header.b=gXOAHKO6; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cu-phil.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cu-phil.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1yHMRAb+"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc226bad48cso563470276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 03:00:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705662030; x=1706266830; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kW4AZyeA4bljp7x9nTqzteku8F1VnnufDy0bi8JpooQ=;
-        b=1yHMRAb+1SXiE6powORIeGNMTOF4ToxiH9amH3T7MYbW25EQS0AMbc6KZ2L776pNyH
-         Q7OdaDBityMNZqY4bTH8/5Xr1VnSgShiWiQVZdt2BcJdOCaxQglQ21CuAUKVuTAg8Wpx
-         5dG1za/Gsl3km/B2HsfbcqBp+/03RynS60Z7iEsIDVK6quRa9EImUFGTNSt6XsPwA8Ti
-         JAaeYqV6jrWziUXZqpVuDuDtupl2Si6xLp7hTWYq5Q+Tm0Tr+Gy7Bu3zsAjPdFhi8GyO
-         EBMN2SOZ0Z3+uSQUiMFem/CShgb7RBxec775vwwFPsnzHbSZcJ0WMu3AfE9J6R/5mYoa
-         Nxsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705662030; x=1706266830;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kW4AZyeA4bljp7x9nTqzteku8F1VnnufDy0bi8JpooQ=;
-        b=eJgRWHTh9p4B6d898MsNyBkTokiI4mNZcIgA/q/26WTQFxP6Epra6FjnMUrimOYYGp
-         DtMrzf7iV1RAWHC/yB2oiyEt1EUh6GJ33B6LTIgZWXzaMRQdvMFa0Y4bJHoW6zTp8v/b
-         QOqoAlA2d+828HkSAx8OJWgYxdTQ7vVu7wB39y6EXJ1KRWkRTj9UVJL+NlHwSnWrl0SX
-         FnbVcZr3CkFTvmHRmpTrhJxjg9gDbvghlGScTtCszXeI7E3oy1kaIxd/J5A+9BqtBet0
-         5ileUanZHcFLpJ5AqPUirxpvzxLjuy3nh/8z0TJdOac0J4YIWZJ/uUZ/qQuYxin/vpxz
-         ycXQ==
-X-Gm-Message-State: AOJu0YwuTi0ak06zHYQX/WtToU0zJhZ5xdo05c8G534vvZwHMEN+GcEB
-	dPUbCO97Hmo+oz/jbtpXvI5n6IU5X7l4ufk7a9HRttTZ3Nx93P96Ea6xh8ipzoTpv4A3r+r0WZo
-	8WTukbvGdflFn9aKR7kV+/yBLLLoFi8nZ9T46
-X-Google-Smtp-Source: AGHT+IH43KcVJy94YdV7VaeLq8V0TGB/qMQbBhYYFRL9gVy1PzmmQ0UZASDTafAYC5KFNDONbReJLFfeSMjgeji5Mjk=
-X-Received: by 2002:a25:8686:0:b0:dc2:5515:6f64 with SMTP id
- z6-20020a258686000000b00dc255156f64mr1546205ybk.93.1705662030096; Fri, 19 Jan
- 2024 03:00:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cu-phil.org header.i=@cu-phil.org header.b="gXOAHKO6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cu-phil.org
+	; s=ds202401; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=b6VkcU727MKQow5IhybOt1tkD+yKTAqrwjsZRcJZP2g=; b=gXOAHKO6FRDplvXdFDNzwxNJq9
+	wV9oO87QjA1bRFiSyF7PoiyDi5SzWl6/MXdYXELlQdi38HCotn8doggvAhM9vGd2eUXrD5kd7/rMf
+	4fy7ZbixepusSp6G6pX8ub5p0h+R/vTdA/mrh0lxAV/oLGDXQusdFO1lDjtcem4Q14sxNv/KuhNhd
+	4WzE3cBVS9Xx8ZbX/gwuz7MZib++AXQIzjMUxwx1KWNhspb2fPf35gx9e816cGF1um9q8F1R933zC
+	Fa1cSXFziq/JTUwqQ05iiU3hKWMy48YfETi3oaOT1FTQHYJ05SIDmtRWh2y8Bb+jq8smwr49ny+Ca
+	iQk2akEQ==;
+Received: from [84.215.119.50] (port=58153 helo=[192.168.0.2])
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <Ywe_Caerlyn@cu-phil.org>)
+	id 1rQlGr-000OQt-F9
+	for linux-kernel@vger.kernel.org;
+	Fri, 19 Jan 2024 10:34:41 +0100
+Message-ID: <e25d240b-67f1-44fe-97f1-02fbdd76c721@cu-phil.org>
+Date: Fri, 19 Jan 2024 10:34:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsOzpRPZGg23QqJAzKnqkZPKzvieeg=W7sgjgi3q0pBo0g@mail.gmail.com>
- <CANpmjNN-5PpSQ1A_9aM3u4ei74HuvCoThiLAHi=reXXQwer67A@mail.gmail.com>
-In-Reply-To: <CANpmjNN-5PpSQ1A_9aM3u4ei74HuvCoThiLAHi=reXXQwer67A@mail.gmail.com>
-From: Marco Elver <elver@google.com>
-Date: Fri, 19 Jan 2024 11:59:54 +0100
-Message-ID: <CANpmjNM=92PcmODNPB4DrAhfLY=0mePCbyG9=8BGrQ4MC0xZ6w@mail.gmail.com>
-Subject: Re: regression/bisected commit 773688a6cb24b0b3c2ba40354d883348a2befa38
- make my system completely unusable under high load
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: glider@google.com, dvyukov@google.com, eugenis@google.com, 
-	Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>, Andrey Konovalov <andreyknvl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Bit X (was Fair Source etc)
+To: linux-kernel@vger.kernel.org
+References: <92a99f69-3c6d-4c9b-b16c-19da17943eae@cu-phil.org>
+ <E1rPzsA-003sTD-Lh@smtp.domeneshop.no>
+From: Ywe Caerlyn <Ywe_Caerlyn@cu-phil.org>
+In-Reply-To: <E1rPzsA-003sTD-Lh@smtp.domeneshop.no>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 19 Jan 2024 at 11:54, Marco Elver <elver@google.com> wrote:
->
-> On Fri, 19 Jan 2024 at 11:46, Mikhail Gavrilov
-> <mikhail.v.gavrilov@gmail.com> wrote:
-> >
-> > Hi,
-> > I use a system with KASAN sanitizer everyday.
-> > Because I want to catch difficult-to-repeat bugs.
-> > And all worked fine until commit 773688a6cb24b0b3c2ba40354d883348a2befa38.
-> > After commit 773688a6cb24b0b3c2ba40354d883348a2befa38 all working
-> > jerky when I compile something.
-> > The sound is interrupted, the cursor moves jerkily if I try to do
-> > anything when all the cores are loaded.
-> >
-> > > git bisect bad
-> > 773688a6cb24b0b3c2ba40354d883348a2befa38 is the first bad commit
-> > commit 773688a6cb24b0b3c2ba40354d883348a2befa38
-> > Author: Andrey Konovalov <andreyknvl@google.com>
-> > Date:   Mon Nov 20 18:47:19 2023 +0100
-> >
-> >     kasan: use stack_depot_put for Generic mode
-> [...]
-> >  mm/kasan/common.c     |  3 ++-
-> >  mm/kasan/generic.c    | 22 ++++++++++++++++++----
-> >  mm/kasan/quarantine.c | 26 ++++++++++++++++++++------
-> >  3 files changed, 40 insertions(+), 11 deletions(-)
-> >
-> > I attached here my build .config and kernel log.
-> > Who could dig into it, please?
->
-> I was afraid this would happen - could you try this patch series:
-> https://lore.kernel.org/all/20240118110216.2539519-2-elver@google.com/ [1]
+I have gotten an apology for the Apple Faux Pa.
 
-In addition, could you give some additional details about the number
-of CPUs in your system?
-And if possible, do you have a way to measure performance besides the
-obvious lagging of the system? It would be interesting to know if the
-fix in [1] regains performance fully.
+Project is generalized to Bit X.
 
-One major difference is still that an atomic RMW is in the fast paths.
-This could be fixed by reverting
-773688a6cb24b0b3c2ba40354d883348a2befa38 on top of everything else,
-but we're not sure yet that's necessary because the cost of an atomic
-RMW really depends on the system you're working with.
+Channels: TBL Preacher - https://www.youtube.com/@I_T_San/  (will be 
+updated to TBL Pracher)
+
+Muclim: https://www.youtube.com/@Ywe_Caerlyn_Norway/videos
+
+-Peace.
