@@ -1,94 +1,167 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929DF4C624;
-	Fri, 19 Jan 2024 17:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856674C624;
+	Fri, 19 Jan 2024 17:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705683703; cv=none; b=tz6DN6+iNuDgHY4b2jozrftYRgynSGXeAJqBEmAPHwEVwlqp41Jghv9rz7Y3qvfUJ3A2UKgXvYG8UjG31msSQqJp3e6YFWsIKplniff0lyw2VSYh2OUZ7t7UKnsrlsrdF/X30AvelzB5B8qso9VDlNAqOM0WC7AodSfKpYD82io=
+	t=1705683882; cv=none; b=Z+NSAc3g+P+l+LSBGu9huLZjomy8ZnrjPC+CjEHpJB/tld0cyWVxMP6mpGEz72hWb8u0NErsewLmIFnRPY528syL8uN7Kn2fss7jP3LRh4rDjI/RDkeCbjfjCMG6/kxBJWHIEeQNszFnrQZ61cGqeo/zzaAwOYOBoCJvQOqJaQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705683703; c=relaxed/simple;
-	bh=UsJxvg/7MH4O5ZNxGWY9Nss1M9PXmgccOe40/l1xpxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QDTbXpyKeDu3kytuqau2hdwT/TuMSVJjptV60GxwAgu8kDD1MzW3VxjLkQPeS8t2qnQO58ov5txLI6GSYWfuoAC/mOKVkZacY8HmjLKUKoqeNhPpkoIkpo6U6wK4LjzXoRH7PuX+zvipUMEUiN5GDx/X8cELeRr28NEoPlou8jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n5Ys6O1a; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1705683882; c=relaxed/simple;
+	bh=tvfI8kzKELJg8x51eYsi4QeGQs90pS6wbtnENBmug60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gUknaLLRdW3AxTA6m9QXy6uaXExEnI1jFb0waMMSJrjXaO9Tnnsf4at7dwahNEHqBJNXbRjjVozPcnqbbUZEaX0jl4eCUuiSSEgcK0XGOuToltvFsRnsRx6oKcHwjploMSY7KPMV+cYbnFYuR3rsdiM2ldg76lamcXfzI1ChrEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSXISuze; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n5Ys6O1a"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6628760008;
-	Fri, 19 Jan 2024 17:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705683698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eVdcjZzigbSsBwmQGgrwuVfPvylwPhfnV7FRBwbX2os=;
-	b=n5Ys6O1a3pgFCD8YPEUweyidUInNABWxqlfLFXid906sTYe60ORvrlbK71CBI/isWeSzOn
-	bAJZB48SCZkaCy9IZUrW0gzUBsB+RqFunoD5ps9A3m1I2jeEiVpTmZLudBp9Pcb4asmMWY
-	NHMtmXg7wIHSoS6+BWV8qu4wJNhKLPJ8B87VkQd5BjefZ2ZuMnXsAP+0y8c+fmbzp+yEG5
-	bw/R/xpdxdvtVzf7gdyey4cBWrQclUNI4U1nSLKOh2tjtre/PiK8Vsnw3l10nkVUp5hlDf
-	GMNYIsamhO2Xv3ZeBmLJvyKpy9JyUf2jfZ7mDmgdt0eehFhUNHQs9hTxKH5rWg==
-Message-ID: <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com>
-Date: Fri, 19 Jan 2024 18:01:33 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSXISuze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F17C433C7;
+	Fri, 19 Jan 2024 17:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705683882;
+	bh=tvfI8kzKELJg8x51eYsi4QeGQs90pS6wbtnENBmug60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nSXISuze5qHDFLd+8VIc670Qh4sfOq0Q9HsJU09eHWdo6qBL7KyIFvRN2hMPNHC9e
+	 nzytI2kZ3IeSWiAJ5mOsLjDjIrb+/C9B6vdVWUBGoiLP/M4Irl7kQpf5QmGvM/N3uJ
+	 n5HJ/AXMY+SxfLpeBQHGjk8ljy23nTkpZDvTxjYWggOytjqPJJnw+UREkmID1xhhAb
+	 UdsCtNvnu7laUhbyDOU8nJKxaN4vm3Rx5FET/e8eIj0RcUgt2p1djP+DUI2Pva1Bpb
+	 KYJ9Pp0e8//x5vSyoCLH0qCmBEGJl7HcQPzvqzUKwPIx5DQNMxZvhNaYLqeqqUsKCi
+	 aKCikeAxBareA==
+Date: Fri, 19 Jan 2024 17:04:36 +0000
+From: Conor Dooley <conor@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Frank Wunderlich <linux@fw-web.de>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sam Shih <sam.shih@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: Aw: Re: [PATCH v3 1/2] dt-bindings: reset: mediatek: add MT7988
+ reset IDs
+Message-ID: <20240119-dupe-obligate-707b3a01b356@spud>
+References: <20240117184111.62371-1-linux@fw-web.de>
+ <20240117184111.62371-2-linux@fw-web.de>
+ <20240118-calcium-krypton-3c787b8d1912@spud>
+ <trinity-afc4f48e-65e1-46ee-a78b-1d670cc0f310-1705615200900@3c-app-gmx-bap21>
+ <43f946cc-07e1-48c5-9b31-40fc9bc93037@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/14] gpio: pca953x: move suspend/resume to
- suspend_noirq/resume_noirq
-Content-Language: en-US
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com>
- <20240116074333.GO5185@atomide.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <20240116074333.GO5185@atomide.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hqUNFAuri8IfMYKy"
+Content-Disposition: inline
+In-Reply-To: <43f946cc-07e1-48c5-9b31-40fc9bc93037@collabora.com>
 
-Hello Tony,
 
-On 1/16/24 08:43, Tony Lindgren wrote:
-> * Thomas Richard <thomas.richard@bootlin.com> [240115 16:16]:
->> Some IOs can be needed during suspend_noirq/resume_noirq.
->> So move suspend/resume callbacks to noirq.
-> 
-> So have you checked that the pca953x_save_context() and restore works
-> this way? There's i2c traffic and regulators may sleep.. I wonder if
-> you instead just need to leave gpio-pca953x enabled in some cases
-> instead?
-> 
+--hqUNFAuri8IfMYKy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes I tested it, and it works (with my setup).
-But this patch may have an impact for other people.
-How could I leave it enabled in some cases ?
+On Fri, Jan 19, 2024 at 10:28:30AM +0100, AngeloGioacchino Del Regno wrote:
+> Il 18/01/24 23:00, Frank Wunderlich ha scritto:
+> > > Gesendet: Donnerstag, 18. Januar 2024 um 17:49 Uhr
+> > > Von: "Conor Dooley" <conor@kernel.org>
+> > > On Wed, Jan 17, 2024 at 07:41:10PM +0100, Frank Wunderlich wrote:
+> > > > From: Frank Wunderlich <frank-w@public-files.de>
+> > > >=20
+> > > > Add reset constants for using as index in driver and dts.
+> > > >=20
+> > > > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> > > > ---
+> > > > v3:
+> > > > - add pcie reset id as suggested by angelo
+> > > >=20
+> > > > v2:
+> > > >   - add missing commit message and SoB
+> > > >   - change value of infrareset to 0
+> > > > ---
+> > > >   include/dt-bindings/reset/mediatek,mt7988-resets.h | 6 ++++++
+> > > >   1 file changed, 6 insertions(+)
+> > > >=20
+> > > > diff --git a/include/dt-bindings/reset/mediatek,mt7988-resets.h b/i=
+nclude/dt-bindings/reset/mediatek,mt7988-resets.h
+> > > > index 493301971367..0eb152889a89 100644
+> > > > --- a/include/dt-bindings/reset/mediatek,mt7988-resets.h
+> > > > +++ b/include/dt-bindings/reset/mediatek,mt7988-resets.h
+> > > > @@ -10,4 +10,10 @@
+> > > >   /* ETHWARP resets */
+> > > >   #define MT7988_ETHWARP_RST_SWITCH		0
+> > > >=20
+> > > > +/* INFRA resets */
+> > > > +#define MT7988_INFRA_RST0_PEXTP_MAC_SWRST	0
+> > > > +#define MT7988_INFRA_RST1_THERM_CTRL_SWRST	1
+> > >=20
+> > > These are just "random" numbers, why not continue the numbering from =
+the
+> > > ETHWARP?
+> >=20
+> > i can do...basicly these consts are used in DTS and driver only as inde=
+x.
+> >=20
+> > @angelo what do you think? I though also in leaving some space to allow=
+ grouping RST0 and RST1
+> > when more consts are added, else the numbers are mixed up.
+> >=20
+> > so e.g. let RST0 start at 20 and RST1 at 40 (or even higher, because RS=
+T0 and RST1 can have up to 32 resets).
+> > That will allow adding more reset constants between my values and havin=
+g raising numbers.
+>=20
+> The resets are organized on a per-reset-controller basis, so, the ETHWARP
+> reset controller's first reset is RST_SWITCH, the second one is RST_somet=
+hing_else,
+> etc. while the first reset of the INFRA reset controller is PEXTP_MAC_SWR=
+ST.
+>=20
+> That's why ETHWARP has a reset index 0 and INFRA also starts at 0.
+> I think that the numbering is good as it is, and having one driver start =
+at index 5
+> while the other starts at index 12 would only overcomplicate registering =
+the resets
+> in each driver, or waste bytes by making unnecessarily large arrays, for =
+(imo) no
+> good reason.
+>=20
+> This is one header, but it should "in theory" be more than one... so we w=
+ould have
+> one for each hardware block - but that'd make the reset directory over-cr=
+owded, as
+> other MediaTek SoCs have got even more resets in even more hardware block=
+s than the
+> MT7988. That'd be something like ~4 reset headers per SoC (and will incre=
+ase with
+> newer ones)...
+> ...and this is why we have one binding header for resets.
 
-Regards,
+That's okay. The commit message leaves me, who clearly isn't a mediatek
+guy, with no information as to why these are not one contiguous set.
+IMO being for different reset controllers entirely is fine.
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> On the topic of leaving space to allow grouping RST0/RST1: -> No. <-
+> The indices have to start from zero and have to be sequential, with no ho=
+les.
 
+Agreed.
+
+--hqUNFAuri8IfMYKy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaqrpAAKCRB4tDGHoIJi
+0kpNAP0fXJ5CKQv/dcdDfDwM6QxpaHDnXco2vvD9zatS35PP3QEAyXeJjQ1mosMC
+HzNIVUEk3x7CKsrxFYlJvszPHJz8fAs=
+=leay
+-----END PGP SIGNATURE-----
+
+--hqUNFAuri8IfMYKy--
