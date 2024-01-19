@@ -1,149 +1,110 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B921373;
-	Fri, 19 Jan 2024 15:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9BB1373
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 15:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705676470; cv=none; b=ZCNTToP48WdkpiHBFrUv0+Um/1QGdFOyK5OqeQSMgyCi5gMFYVHJJxA/0Hr5FsZFHELYJQFVnbbiY7D4frAupPVrFsGByyhACfjy5qIphTid0yTtagokjge2glhUfqp0DsnXgbf5LJTXp5qENAB5ug1Yy1Ttj6rujTm9NdzxtWw=
+	t=1705676622; cv=none; b=KpM8RmHceG0h1bSEw6xXrrtUHWjcvuD/mkQWELO1G1T0EqszGUnqmfbMcBM2T9wXB659o10C4yhQFbxZzcYZLm6ZNEZHB8ZvYFfCP/wDoWYk/6uJUqhOsn+PSNl698TGfHf3AAkDJsDW3ExJ+XOKictPoloJh33UVCcECJVYTS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705676470; c=relaxed/simple;
-	bh=5g/VRBSyUa+iW1jKewPy3IzLvCgCQnd3Skn6qtgX0n8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r7ZRTNncrUkIwTkUKZatz7FurvqTRpIiUA2eFjs8DMYAiWB19j+HnQApYXc10u/hQ5JZ1mLwMFYm2hfhz2/HsJblpW3DdvvqYiQL0GdCKipWoVzfRS5HtOKUco0DCNlobX+3Zhsfj7pEEimEF7WmSqI+4t1Nh1Ispp30dUcnAfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7171ADA7;
-	Fri, 19 Jan 2024 07:01:50 -0800 (PST)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD0F83F5A1;
-	Fri, 19 Jan 2024 07:01:01 -0800 (PST)
-Message-ID: <2f9131e4-1fdb-f80a-3b52-b98360164b3b@arm.com>
-Date: Fri, 19 Jan 2024 15:00:45 +0000
+	s=arc-20240116; t=1705676622; c=relaxed/simple;
+	bh=WThewpXt/M7/HyWVe33yqIVrMcMdh8fZCrQsnJP/J0U=;
+	h=Subject:Date:Message-ID:MIME-Version:Cc:From:To; b=UHK6O4ApAz6aah07O0hdT/lI3PUK76T/P2mbMfz2PHBnJfeK0cuHAfdYFDkIi1Y4bbcU1vN9kdyhzN41v6hLVILNUA4Fy1l1Yi2KKQ6pAeNuPUqNUgc5ITUyieB7pW4FAXaRVq9nwuj7hPZ1IQqGHBAsMytk8ndV93oswJIuGAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=N937FwuA; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="N937FwuA"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6d99980b2e0so895698b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 07:03:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1705676620; x=1706281420; darn=vger.kernel.org;
+        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=0OkN04rYJbcV5yI+1DylExB1sHf2862fFRZ4+hBrCQg=;
+        b=N937FwuAxKkX8EYhAlqq1ZBzryT6ydlbtB/20uNW4jbEKbcZjexmuJoTfHJZuvydw+
+         nxWQNKF/zx9Z/Mn84r17jM1A0U9/G9+CfyhhauJCUMu5kxPijFaUo4FJ6cIDrXxaTCRX
+         2VGiF2DliuahFMUVRTZzRZNizt20FD3T1xLqiabYjT/cykgsWjfXBfrfXj2k48GX78lR
+         VtxcXP4V5ef90BjULFASiZcQMgzJeJdKJvm+GQlInTUI93FkUFlPCDHghwqAcVuNE5fW
+         LL+3qi0cl0tuSqe2IBi5ZiaquC9bNdFUZHFvlOUf71hbQlczpYmabgmWi30noYVjYS6X
+         oxNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705676620; x=1706281420;
+        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
+         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0OkN04rYJbcV5yI+1DylExB1sHf2862fFRZ4+hBrCQg=;
+        b=KM5omW8sx0AtsYqPFP1vnxB4MPHpvQjLtFM3lhgnNrQ3NxvH351M7HzuNnRZJ4pBc6
+         ta823t5hxnY8T2isYDAjbpTG3SOG1bPoaG1ipx6foNkvt/u/HyRw3cFj6wwcFw2lMB11
+         1QC8kQ53DZZjCpbEfpXCMkQARpWJ2XbwCdgLMuURo7F8PjVOJn7aV6BX32qBPj4BmB2v
+         9QfRbJe0zRY18XCHbsjn2ATKa2WQmbPYsdx4NLq30q4kNyE0BQidcSADj8npprfJbD8m
+         NvBbcW2I6dr6fWXz0qeCiApTn4kcU9T0nXjMpX+4mtfz2jmr6YduEguYynSo8ZdcsJ0E
+         6U5g==
+X-Gm-Message-State: AOJu0YyhHLbA6lMGJft9Ow5mRGXe6HA5fGYyygkMXaEnJY+x1ZvgWByl
+	dLPG4rwnf6vGwvJvtypd+rJVdsGh9kl4kPaML4X9M6RbuQeRgAOb8MSmEEXmWqE=
+X-Google-Smtp-Source: AGHT+IHU8Y7GKeyuuZYXeP9FKdXHUATlkC+PPQYbKGR1PAMKpM6ElwORYAvxQJgd6B6GEHijfENnAQ==
+X-Received: by 2002:a05:6a20:2d0f:b0:19a:3a07:1f2d with SMTP id g15-20020a056a202d0f00b0019a3a071f2dmr3458624pzl.44.1705676620338;
+        Fri, 19 Jan 2024 07:03:40 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id d7-20020aa78147000000b006dbc6a5daa5sm750913pfn.154.2024.01.19.07.03.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jan 2024 07:03:39 -0800 (PST)
+Subject: [PATCH] lib: checksum: Fix build with CONFIG_NET=n
+Date: Fri, 19 Jan 2024 06:56:01 -0800
+Message-ID: <20240119145600.3093-2-palmer@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
-Content-Language: en-US
-To: Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>,
- Ian Rogers <irogers@google.com>, acme@redhat.com, john.g.garry@oracle.com,
- leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
- namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com,
- will@kernel.org
-References: <20240116170348.463479-1-mark.rutland@arm.com>
- <8734uwxrca.wl-maz@kernel.org>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <8734uwxrca.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Cc: Palmer Dabbelt <palmer@rivosinc.com>, davem@davemloft.net,
+  goldstein.w.n@gmail.com, dave.hansen@linux.intel.com, christophe.leroy@csgroup.eu, nathan@kernel.org,
+  ndesaulniers@google.com, lrh2000@pku.edu.cn, Arnd Bergmann <arnd@arndb.de>, masahiroy@kernel.org,
+  linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: charlie@rivosinc.com
 
+From: Palmer Dabbelt <palmer@rivosinc.com>
 
+The generic ipv6 checksums are only defined with CONFIG_NET=y, so gate
+the test as well.
 
-On 17/01/2024 09:05, Marc Zyngier wrote:
-> Hi Mark,
-> 
-> On Tue, 16 Jan 2024 17:03:48 +0000,
-> Mark Rutland <mark.rutland@arm.com> wrote:
->>
->> Currently the perf tool doesn't deteect support for extneded event types
->> on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
->> hardware events into per-PMU events. This is due to the detection of
->> extended event types not handling mandatory filters required by the
->> M1/M2 PMU driver.
-> 
-> Thanks for looking into this.
-> 
-> I've given your patch a go on my M1 box, and it indeed makes things
-> substantially better:
-> 
-> $ sudo ./perf stat -e cycles ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.419
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    174,783,472,090      apple_firestorm_pmu/cycles/                                             (93.10%)
->     39,134,744,813      apple_icestorm_pmu/cycles/                                              (71.86%)
-> 
->        3.568145595 seconds time elapsed
-> 
->       12.203084000 seconds user
->       55.135271000 seconds sys
-> 
-> However, I'm seeing some slightly odd behaviours:
-> 
-> $ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.313
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    <not supported>      apple_firestorm_pmu/cycles:k/                                         
->    <not supported>      apple_icestorm_pmu/cycles:k/                                          
-> 
->        3.467568841 seconds time elapsed
-> 
->       13.080111000 seconds user
->       53.162099000 seconds sys
-> 
-> I would have expected it to count, but it didn't. For that to work, I
-> have to add the 'H' modifier:
-> 
-> $ sudo ./perf stat -e cycles:Hk ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.335
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    183,756,134,397      apple_firestorm_pmu/cycles:Hk/                                          (85.56%)
->     37,302,841,991      apple_icestorm_pmu/cycles:Hk/                                           (72.10%)
-> 
->        3.490138958 seconds time elapsed
-> 
->       13.376772000 seconds user
->       53.326289000 seconds sys
-> 
-> But my perf-foo is as basic as it gets, so it is likely that I'm
-> missing something.
-> 
-> Thanks,
-> 
-> 	M.
-> 
+Fixes: 6f4c45cbcb00 ("kunit: Add tests for csum_ipv6_magic and ip_fast_csum")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401192143.jLdjbIy3-lkp@intel.com/
+Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+---
+That Fixes tag is against a PR I just sent up to Linus [1], sorry for
+missing this but it came in right when I was sending out the PR.
 
-The default for exclude_guest=1 is always set unless you use "perf kvm
-record". But unfortunately if you add _any_ modifier then all the
-default values get overwritten, which is why adding k stops it from working.
+1: https://lore.kernel.org/linux-riscv/mhng-690cf774-fd28-4d25-be9f-69e19fb84d5c@palmer-ri-x1c9/T/#u
+---
+ lib/checksum_kunit.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-It seems like a lot of the pain comes from the fact that the command
-line modifiers are includes, and the kernel options are excludes.
-Resulting in some complicated logic in get_event_modifier() to try to
-work out what you wanted, which I suppose it got it wrong in this scenario.
+diff --git a/lib/checksum_kunit.c b/lib/checksum_kunit.c
+index af3e5ca4e170..225bb7701460 100644
+--- a/lib/checksum_kunit.c
++++ b/lib/checksum_kunit.c
+@@ -593,6 +593,7 @@ static void test_ip_fast_csum(struct kunit *test)
+ 
+ static void test_csum_ipv6_magic(struct kunit *test)
+ {
++#if defined(CONFIG_NET)
+ 	const struct in6_addr *saddr;
+ 	const struct in6_addr *daddr;
+ 	unsigned int len;
+@@ -616,6 +617,7 @@ static void test_csum_ipv6_magic(struct kunit *test)
+ 		CHECK_EQ(expected_csum_ipv6_magic[i],
+ 			 csum_ipv6_magic(saddr, daddr, len, proto, csum));
+ 	}
++#endif /* !CONFIG_NET */
+ }
+ 
+ static struct kunit_case __refdata checksum_test_cases[] = {
+-- 
+2.43.0
 
-Another thing is that evsel__detect_missing_features() only works to
-remove arguments, where as for M1/M2 you want to _add_ exclude_guest
-back in again. But maybe not if you started adding modifiers...
-
-I don't really have an answer or a solution, but I was wondering if
-there was a bug that could be fixed so I went to look.
-
-My first thought was maybe we could ignore exclude_guest=0 on M1/M2
-rather than returning an error. I don't think it would be too surprising
-that guest samples are missing if they are never supported. Maybe the
-exclude_guest argument is only useful if it actually has an effect,
-rather than having an argument that always needs to be on anyway.
-
-Or secondly maybe we could make get_event_modifier() interact with
-evsel__detect_missing_features() but I can't imagine it being very
-maintainable once we start adding a few interactions. And it's still
-hard to predict what the user really wants given a single letter and
-many exclude_* options.
-
-James
