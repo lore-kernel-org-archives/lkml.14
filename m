@@ -1,70 +1,101 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A05446AD;
-	Fri, 19 Jan 2024 06:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92BD1392;
+	Fri, 19 Jan 2024 06:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705645544; cv=none; b=mnJXHDZnGYz+dQg5dApuVN8oGynwng2wnnaJstw2/zBaGtIOs5z/hfv2MczL0MJNy2E9p39XAtbbfShh3peTos0I1eXYUcLsBio6I4DMfyaI42wlPpT9jhbUqtUrr86Jxzl5JdrGTBe+/cKWlJQtx6tfB1igry4JxNw9Mgj/bFU=
+	t=1705645622; cv=none; b=h3kZPWZTIYTYkcSwaEVFRi2O2fsl4TiSaOhXwYJla0cEitwuCNUYmz098JC2JQNB27F/6OmheFHd59+JxhnIDnQqUTigyCzvpBSoY8SEUcX0F2L/yzHlTp31YVxWtYSTjj9aJiGiZAx+zVX4xP+HvOJogkx6lJGaKwfiLPSvgvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705645544; c=relaxed/simple;
-	bh=n0oMA9jH4bRR+Suw+AoQHKhq/uuTjcrp9SZ23w69f1c=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=sV/kYDYeDjU1l9G8V0B1BclnQYjeP/Uz4KxRcQSMCFDnpAKDH6C+fbqqlbV8qp15AX3ivPFPPWpJefsL3EUqPPmbYiJp8xUMI9gt/ikcnRYrjpdJRlTYwddkkYcXgQqwgYIHgNvqx2bvRL0LevSW97Eqiac6vS4Cb/wVjJcOm3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1705645622; c=relaxed/simple;
+	bh=BJBSrPNRreGjzWMMOUvCDXMWWWf3fGjxnuuwDjC+5Uw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sJHUEfW2htNxz71aTwqLcQDiKsez2C4sxNC2nsTCbDo5a3QqjbqEpHfCARkeTl/hMhbCVL/E3gsF6yQSfzAkSaidnx9Obdug33RXO6TPiXR75nwZxv9U5mdpET9LPxzS97Us/pCcIr3M7hPYF2QvwHSqfovuW1c1WFMz1hI48eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TGV3B1sCqzGpvx;
-	Fri, 19 Jan 2024 14:25:10 +0800 (CST)
-Received: from dggpeml500001.china.huawei.com (unknown [7.185.36.227])
-	by mail.maildlp.com (Postfix) with ESMTPS id E69E7140153;
-	Fri, 19 Jan 2024 14:25:30 +0800 (CST)
-Received: from [10.67.121.42] (10.67.121.42) by dggpeml500001.china.huawei.com
- (7.185.36.227) with Microsoft SMTP Server (version=TLS1_2,
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TGV4J5kQvz1xmS2;
+	Fri, 19 Jan 2024 14:26:08 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id A93B5140558;
+	Fri, 19 Jan 2024 14:26:55 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 19 Jan
- 2024 14:25:30 +0800
-Message-ID: <770ebd0a-6b79-4dab-bd9e-3defd712b74f@huawei.com>
-Date: Fri, 19 Jan 2024 14:25:30 +0800
+ 2024 14:26:28 +0800
+From: Ye Bin <yebin10@huawei.com>
+To: <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <linux-ext4@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <jack@suse.cz>, Ye Bin
+	<yebin10@huawei.com>
+Subject: [PATCH] ext4: forbid commit inconsistent quota data when errors=remount-ro
+Date: Fri, 19 Jan 2024 14:29:08 +0800
+Message-ID: <20240119062908.3598806-1-yebin10@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] some updates and cleanups for hisilicon/sec2.
-From: taoqi <taoqi10@huawei.com>
-To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<liulongfang@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
-References: <20231229064421.16981-1-taoqi10@huawei.com>
-In-Reply-To: <20231229064421.16981-1-taoqi10@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500001.china.huawei.com (7.185.36.227)
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-On 2023/12/29 14:44, Qi Tao wrote:
-> This seires patch mainly add some RAS registers to enhance the
-> DFX positioning function and fix some cleanup issues.
-> 
-> Qi Tao (3):
->    crypto: hisilicon/sec2 - updates the sec DFX function register
->    crypto: hisilicon/sec2 - modify nested macro call
->    crypto: hisilicon/sec2 - fix some cleanup issues
-> 
-> Wenkai Lin (1):
->    crypto: hisilicon/sec - remove unused parameter
-> 
->   drivers/crypto/hisilicon/sec2/sec_crypto.c | 33 ++++++++--------------
->   drivers/crypto/hisilicon/sec2/sec_main.c   |  5 ++++
->   2 files changed, 17 insertions(+), 21 deletions(-)
-> 
+There's issue as follows When do IO fault injection test:
+Quota error (device dm-3): find_block_dqentry: Quota for id 101 referenced but not present
+Quota error (device dm-3): qtree_read_dquot: Can't read quota structure for id 101
+Quota error (device dm-3): do_check_range: Getting block 2021161007 out of range 1-186
+Quota error (device dm-3): qtree_read_dquot: Can't read quota structure for id 661
 
-I want to follow up on the patch I submitted three weeks ago.
-please let me know if there is anything I can do to help move this 
-process forward.
+Now, ext4_write_dquot()/ext4_acquire_dquot()/ext4_release_dquot() may commit
+inconsistent quota data even if process failed. This may lead to filesystem
+corruption.
+To ensure filesystem consistent when errors=remount-ro there is need to call
+ext4_handle_error() to abort journal.
 
-Thanks，
-Qi Tao
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+---
+ fs/ext4/super.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 0980845c8b8f..ef41b452173e 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -6873,6 +6873,10 @@ static int ext4_write_dquot(struct dquot *dquot)
+ 	if (IS_ERR(handle))
+ 		return PTR_ERR(handle);
+ 	ret = dquot_commit(dquot);
++	if (ret < 0)
++		ext4_error_err(dquot->dq_sb, -ret,
++			       "Failed to commit dquot type %d",
++			       dquot->dq_id.type);
+ 	err = ext4_journal_stop(handle);
+ 	if (!ret)
+ 		ret = err;
+@@ -6889,6 +6893,10 @@ static int ext4_acquire_dquot(struct dquot *dquot)
+ 	if (IS_ERR(handle))
+ 		return PTR_ERR(handle);
+ 	ret = dquot_acquire(dquot);
++	if (ret < 0)
++		ext4_error_err(dquot->dq_sb, -ret,
++			      "Failed to acquire dquot type %d",
++			      dquot->dq_id.type);
+ 	err = ext4_journal_stop(handle);
+ 	if (!ret)
+ 		ret = err;
+@@ -6908,6 +6916,10 @@ static int ext4_release_dquot(struct dquot *dquot)
+ 		return PTR_ERR(handle);
+ 	}
+ 	ret = dquot_release(dquot);
++	if (ret < 0)
++		ext4_error_err(dquot->dq_sb, -ret,
++			       "Failed to release dquot type %d",
++			       dquot->dq_id.type);
+ 	err = ext4_journal_stop(handle);
+ 	if (!ret)
+ 		ret = err;
+-- 
+2.31.1
+
