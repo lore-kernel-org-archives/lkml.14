@@ -1,143 +1,152 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFC21E89E;
-	Fri, 19 Jan 2024 09:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705655194; cv=fail; b=dbb+NPxnfbqY9VQs6wxvHHBvr21xwMwW0Cwbj6EaiTQW408Fuj/ySJalnt8rMuMVuGai+QTTVoBf9SfTVC7IqYHnNkb2uAg38E2qfSeqilKz5ATWTcoiUoQYwCo3HSp84Mq93WIddoMzN1/vZAdlJc07C5TVh3IZ9dodNdp87os=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705655194; c=relaxed/simple;
-	bh=IZvjB7EN/4zNzdRQnCVGIQg4s42HWrXioCam/fK1DV0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m+cnZsxV8ut6SERmUrRjiLN36YOJQ2hUhHfKAB3SXqMq4UP1bxJvObX2UBl68lV+BWOdgFIA0aztEhJ4Bu/xkpOIv7H6a1/7bMh0T5+oW75xvXbFyQp0OtXzgK/bnivR3AhuUDpbYP/1T4h0AQkzOR3Ne7M3vAxSs+q10kESc3c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=twRq39oL; arc=fail smtp.client-ip=40.107.212.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="twRq39oL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Sfv7KOTQVQu5ozwi+Y8rHXbFDrRI2huujN6erunpMzUIOCyX8Xy3i/At2KNtoERysJdy13CfMlGO/RGe5yCV1CCRKJxLFjhJkJ20ZPFCGcPGniMqgv7+kf6Q4qmJQnW7hNTqB7bKBgjRSpZUVCKvMzLkEWa1uaJNKFwWTXw03jgb21sbfx3ZoMaqZZJwDFRnjt7/GZMPCcxAzsH7gfPzPxXdIxqFfCvPADkP9VJbUD2vI27LEfsAJpts07xXigowEFH/w3+Il/VTLqMro6UXXI/WMd809Gee24sWEWKw5EaTU3E8JIHZ6IE2sHG7VxyT8HXZPSker52uvOGxILQC3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=No7NU21ife6RzGvHBvQIbHlZ1whS1mUgP/ZoECpCgPo=;
- b=i5qE0PIl79fP8x4sNn2gv4ZfiRx2Dp8tjK+JMj1+KHaHd1ISj5FvesQnV8wnUP6BrXMldQrwirRPlb/ZmtGXQSKUJBGGWR/8fzLMIbx0TlzyZ91r1qr0HNn+Sic+g7gR/0dOX91y6Svozn/7cvpg1FVqmTE00NTBWCnOeSeOcocg6Wf4dtK/jL/HLhXxlieYDGO6Nl8nO3TI6nvTu76hROBT0CTHjmwX65U3EQ3KwXpydTRaAM5dFbbjDW9Msg6Ni01OAnmulbOldQXyEmUjP2I6reQyIh458n+N74HkkXiCl4Vk5EC5qLJdPwDhtoxHx23QwC4v/3ItAKNPtWinmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=No7NU21ife6RzGvHBvQIbHlZ1whS1mUgP/ZoECpCgPo=;
- b=twRq39oLD9T+KXqC2KD9tc+L9d5xeUiiDowEhvI7QYaKurL3Sjrc9hxSxvCVWHLeHiDCpcAhaqBwVrRQZayJwOztOKSNv4y0trSn4rxB8RD1BkmIciZdgusOjbs5560TaRqeH5/UDMaNC00FbVtnuDCGKXhTFdomKYe3ZoK6qAc=
-Received: from MW4PR04CA0347.namprd04.prod.outlook.com (2603:10b6:303:8a::22)
- by DS7PR12MB8250.namprd12.prod.outlook.com (2603:10b6:8:db::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24; Fri, 19 Jan
- 2024 09:06:27 +0000
-Received: from CO1PEPF000044F8.namprd21.prod.outlook.com
- (2603:10b6:303:8a:cafe::9e) by MW4PR04CA0347.outlook.office365.com
- (2603:10b6:303:8a::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24 via Frontend
- Transport; Fri, 19 Jan 2024 09:06:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F8.mail.protection.outlook.com (10.167.241.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7228.0 via Frontend Transport; Fri, 19 Jan 2024 09:06:27 +0000
-Received: from jasmine-meng.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 19 Jan
- 2024 03:06:05 -0600
-From: Meng Li <li.meng@amd.com>
-To: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Borislav Petkov
-	<bpetkov@amd.com>, Huang Rui <ray.huang@amd.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<x86@kernel.org>, <linux-acpi@vger.kernel.org>, Shuah Khan
-	<skhan@linuxfoundation.org>, <linux-kselftest@vger.kernel.org>, "Nathan
- Fontenot" <nathan.fontenot@amd.com>, Deepak Sharma <deepak.sharma@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>, Mario Limonciello
-	<mario.limonciello@amd.com>, Shimmer Huang <shimmer.huang@amd.com>, "Perry
- Yuan" <Perry.Yuan@amd.com>, Xiaojian Du <Xiaojian.Du@amd.com>, Viresh Kumar
-	<viresh.kumar@linaro.org>, Borislav Petkov <bp@alien8.de>, "Oleksandr
- Natalenko" <oleksandr@natalenko.name>, Meng Li <li.meng@amd.com>, Wyes Karny
-	<wyes.karny@amd.com>, Perry Yuan <perry.yuan@amd.com>
-Subject: [PATCH V14 7/7] Documentation: introduce amd-pstate preferrd core mode kernel command line options
-Date: Fri, 19 Jan 2024 17:05:02 +0800
-Message-ID: <20240119090502.3869695-8-li.meng@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240119090502.3869695-1-li.meng@amd.com>
-References: <20240119090502.3869695-1-li.meng@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7308023748;
+	Fri, 19 Jan 2024 09:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705655227; cv=none; b=s4G8NALHM88prmaAIoZgj72nqZpTdak57q6Z5I+ppXyD0SokaYBcfKP94M6QL1DxuhmIfVSmFP6wfoxQOkTBcqwy/WkgPx1s5EZ9Gogq7hnyp8WQMqN491M7Qzg7gPka30XSz1TiY/aPFJJ8K2RSJxPeyz8iZdee5npjoM6Lk5A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705655227; c=relaxed/simple;
+	bh=Slv8d7eQKvV+eggMm4UFOE19AueLbGSZmiXhxrd9QK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gonBhCw7eALs4/dcERGezThlzfm0DzNUYdZqxphTahgMuMg3H0/l6MV8HW461e6lTsfIa2eCieTObvDcGXaM9/gWr90X0I9Y+/QLg9q90ZJIXa2/lRrSz+jLx+nvfUlk2V69D5Vu0MPdoCgXqc7mkWSGIcktYRYLthFoeLNXgIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e9ef9853bso1344095e9.1;
+        Fri, 19 Jan 2024 01:07:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705655224; x=1706260024;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GoYThNNS5MoAsIIGpVFVtHuX2O5JRpT/wTmVa+X2uAo=;
+        b=AcliPhbTipJinxepqeCJgzCU7EJBfJPB5iMZud0TQxl3ztLA7uH7cVgLozhwTvASBw
+         gz3KnuiqeYykXemKeFDybGS08HQ9xwB5yLknK0ZC8r6bPG0pq95ao5vPMHwCdlSdE+Ku
+         CVBGp7tQ4A8jLeoBHwHrCsRnmb5nFWAKpElZ2CCl36QEYfJEVnP0nyAIvzPPercxntET
+         LrjDFLq9SPgKB+elU5BDHcrN9m51zwhS8ZPcoR0UuC5bA6YgF+0DPjANPklZmW5yhDp7
+         TpQNzl6EC38uzSI765gN5Z06KJuwhIHQODsviEI2VDz84ACjP/DNJWzg0KnjuFACQGhD
+         2DTg==
+X-Gm-Message-State: AOJu0Yxtwm6S5I+677zA4XsWjNoeMzCDoMBDPfA/4cw9WG0jF2cUigk8
+	LjmLGKwVNRgGkFQAu87sDBpmJJuHScSH4S3a+KzwGWBk2lQNHL/A
+X-Google-Smtp-Source: AGHT+IGCyPMa+NQSKe1KBnX5wxlxmtW4yJlidcrdOIiPxBbLWQeNbx7aj/Pyr9iu1PA92u8+QYQ7Zg==
+X-Received: by 2002:a1c:7507:0:b0:40e:437a:1b56 with SMTP id o7-20020a1c7507000000b0040e437a1b56mr330587wmc.143.1705655223557;
+        Fri, 19 Jan 2024 01:07:03 -0800 (PST)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
+        by smtp.gmail.com with ESMTPSA id i7-20020a5d6307000000b00337d71bb3c0sm2223128wru.46.2024.01.19.01.07.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jan 2024 01:07:03 -0800 (PST)
+Message-ID: <8f3f85d0-866e-4e5a-8177-05c26c08b278@kernel.org>
+Date: Fri, 19 Jan 2024 10:07:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 17/18] tty: serial: samsung: shrink port feature flags to
+ u8
+Content-Language: en-US
+To: Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Sam Protsenko <semen.protsenko@linaro.org>
+Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+ gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, andre.draszik@linaro.org,
+ peter.griffin@linaro.org, kernel-team@android.com, willmcvicker@google.com
+References: <20240110102102.61587-1-tudor.ambarus@linaro.org>
+ <20240110102102.61587-18-tudor.ambarus@linaro.org>
+ <CAPLW+4k091328krLB_KdHyobG-pR--Rt5WaN6c1ccpgdV8ry7Q@mail.gmail.com>
+ <76e1dc42-cabe-4925-8aa1-c8f733fb36a2@linaro.org>
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <76e1dc42-cabe-4925-8aa1-c8f733fb36a2@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F8:EE_|DS7PR12MB8250:EE_
-X-MS-Office365-Filtering-Correlation-Id: dec0e504-d57d-44fe-70cc-08dc18cdeb1b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0bZ+9mItUCQsNnwz4qvbMAxIfbok0qoYXtBj7Y0za9vLm/GBNuehQDT7vo81xDRw442MhHPk8E2wHcphTRG6Cwm++vgFKPBHQi6ikhBF9DW18n5/A7ajvnIy4wqY89fNzOisqXuYbnJ2DfrqSziJZJqPlk12aJAIH2wGl5+WbqOQ7Odgzn1fOZq1N+VqKdKsMfqUvaEvqTyP3GZ+1drEaDdrX63ghmr9Uo6diNLorxI3/6WUK+1Cg1LuKRoNHkE8upZpLcSYSASQVg1TDf61IqUzmNnuB/q/eBwI1UkDFPxHTGSfSI/IFexyc7TdcxCf0s8dAgBpZYgU9jLtDIc8J4Cq6ANfw/c6GltVzGXuY6JXOmWz1UuOQeHLtAiapXXiLnrOtOsrjpxAM0Z4ugYg6lQS0Ce1RH7CLKVAFwspSri9GY9HRZ1v0BF8kA9Z4oZBZyYRaik+ZFgdHQ8XnaeHIKu3QTSOj877t7XMI61xOekS5e/meqmiVOEi+j3Wjn6W+MiUs93gBfRlQCb8v2gbxOZ4nUoVOeBN5kxkPvhzzLQ5WQMtenXOppiHoL3AHCUj83ouTMw4n8CAX/2ZljRT2s6EEdeprIhdj5IFb6Oaj5f0cSSDlcC/EUku2jICYFBGARPuN52PUYoFCzkQqBWHWCXX2f/ij8oZkbR2/8V5ASIuZZfJA0EiwLDAM5K9jGneVwjCQBxuvVkkgbCz5sKQn/NBrOAH78mJOWVZwrn1+jdHbr6TphcVqzXqN5NKpCv1rz8XJT79LntqvIVlmc1MUh0Zwf7dm3DbKTAZiw0M0HznKk5lpCXctAjv9T4J+J0x
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(376002)(346002)(396003)(230922051799003)(186009)(451199024)(64100799003)(82310400011)(1800799012)(46966006)(40470700004)(36840700001)(26005)(16526019)(478600001)(81166007)(1076003)(426003)(336012)(40480700001)(40460700003)(356005)(7696005)(2616005)(6666004)(316002)(70586007)(70206006)(54906003)(83380400001)(110136005)(6636002)(86362001)(5660300002)(41300700001)(4326008)(7416002)(8936002)(8676002)(82740400003)(47076005)(2906002)(36860700001)(36756003)(36900700001)(14943795004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 09:06:27.0167
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dec0e504-d57d-44fe-70cc-08dc18cdeb1b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F8.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8250
 
-amd-pstate driver support enable/disable preferred core.
-Default enabled on platforms supporting amd-pstate preferred core.
-Disable amd-pstate preferred core with
-"amd_prefcore=disable" added to the kernel command line.
+On 19. 01. 24, 9:56, Tudor Ambarus wrote:
+> 
+> 
+> On 1/16/24 19:03, Sam Protsenko wrote:
+>> On Wed, Jan 10, 2024 at 4:25 AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+>>>
+>>> There's a single flag defined as of now. Shrink the feature flags to u8
+>>> and aim for a better memory footprint for ``struct s3c24xx_uart_info``.
+>>>
+>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>>> ---
+>>>   drivers/tty/serial/samsung_tty.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+>>> index 5df2bcebf9fb..598d9fe7a492 100644
+>>> --- a/drivers/tty/serial/samsung_tty.c
+>>> +++ b/drivers/tty/serial/samsung_tty.c
+>>> @@ -90,7 +90,7 @@ struct s3c24xx_uart_info {
+>>>
+>>>          /* uart port features */
+>>>
+>>> -       unsigned int            has_divslot:1;
+>>> +       u8                      has_divslot:1;
+>>
+>> But that's already a bit field. Why does it matter which type it is?
+>>
+> 
+> If using unsigned int the bitfied is combined with the previous u8
+> fields, whereas if using u8 the bitfield will be independently defined.
+> So no benefit in terms of memory footprint, it's just a cosmetic change
+> to align the bitfield with the previous u8 fields. Allowing u32 for just
+> a bit can be misleading as one would ask itself where are the other
+> bits. Between a u32 bitfield and a bool a u8 bitfield seems like a good
+> compromise.
 
-Signed-off-by: Meng Li <li.meng@amd.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Reviewed-by: Wyes Karny <wyes.karny@amd.com>
-Reviewed-by: Huang Rui <ray.huang@amd.com>
-Reviewed-by: Perry Yuan <perry.yuan@amd.com>
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
----
- Documentation/admin-guide/kernel-parameters.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+Why? What's wrong with bool? bitfields have terrible semantics wrt 
+atomic writes for example.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index e0891ac76ab3..88b29efc474f 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -363,6 +363,11 @@
- 			  selects a performance level in this range and appropriate
- 			  to the current workload.
- 
-+	amd_prefcore=
-+			[X86]
-+			disable
-+			  Disable amd-pstate preferred core.
-+
- 	amijoy.map=	[HW,JOY] Amiga joystick support
- 			Map of devices attached to JOY0DAT and JOY1DAT
- 			Format: <a>,<b>
 -- 
-2.34.1
+js
+suse labs
 
