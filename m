@@ -1,151 +1,108 @@
-Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE69256B82;
-	Fri, 19 Jan 2024 17:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
+Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F053A5786C
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 17:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705687067; cv=none; b=iix220sIkczb9xWLW8Y6TH1cJw48nqZk3Rc0FstQoOya6yw2GX9tNWyoOToV4JJGRxnf+eUav4NrcRcgr640eKxd4LY0pjzC1660TrE7jQrLHNYobME2/hiGtsNxFYD/hZ3aIxpIis+oiwZ3a1iriNXbyqSiNw80ZkUmDM5JX20=
+	t=1705687070; cv=none; b=gf/8RFWNLYGD1jG9UWu8/Kv2/FMtizFKdC/E/Z2WUS5MyOuIoyt124lRvrqLNeV0Gs+yaWz1JgBS1iTFrkR9fqTBPgrQtsprmylVP6HgRBvFB05ZdxWl+/sUZJyaE35JmsrAzTyWQvxmcuURbSlWPRWz2ocRyoR5H+9Q+MyKBsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705687067; c=relaxed/simple;
-	bh=3r6Ps27Llc8wvo+sl0Ydqk4JTC25uYydeBnhWmriC5I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GLmORX5qHF9A/w8TlZftW/n9bmFyLn8K9Hwqa8kOGx5H8JWqG0B/oEMTju6zQVrU4SjL6Bdz2cgAc4XPcQtjn0kyLvBS2mNqfbBLZawtlywfo4WasWK9KlTsH88P1wM5SyOsSV26sWB88EQ8WfUVKYJbPy04e2NAywcbNBxWkog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NSxh3Si6; arc=none smtp.client-ip=209.85.216.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSxh3Si6"
-Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-2904e0d4c8dso663413a91.2;
-        Fri, 19 Jan 2024 09:57:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705687065; x=1706291865; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E1I2P4swbcnd5P0eOoEyOlsfsVHIrwVgHFoyaM+P28Q=;
-        b=NSxh3Si6mI6xwqShVr4ZNNZRAizFAZ78zbYxhXyoEbBIlsFJRDK9nTQMPwUamUs8AN
-         5RSj21iCNCThx1t+wqJ6OdrIvRgEke39us6Ryfvs4x9JfhqZ6n3Qtmo80r40T2W7NdOf
-         QcE99dtt7gQ6JKk5Agh/Qp6S/1EZvlkHkRx2uzK0Ibn0iAdxXcXQG6IJa/4QX8+rzNDE
-         FBia38EFyWkiWiu9nBx0QGLDdpgwyc7r0uR2wiRsns96mnDneKHeS0occlrqrn5QHfMd
-         tqkWmXBYziVbBHNduDhzQprQUntM0N6Hxmmq8M9rNfYyap2GP6XQpe8sFZc+gHhAbuf6
-         PkBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705687065; x=1706291865;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E1I2P4swbcnd5P0eOoEyOlsfsVHIrwVgHFoyaM+P28Q=;
-        b=OtLNZewJy/8zcBO5Y9AkDKSebneW5ZFydg9fAC9h4yowu45Hsed5R39lmST9k4VGDK
-         glGPrNczRnZ2JexAZwFAjyweCnE637H6BVRS4qWg5xHUDDw5qyW1yF+/shH17JsPCsTH
-         CbDpWH8pMVVoskoLrG1smM52c6Bs4/DhMKe0gMpvWf4YiHpMei5njHkGXSCZhdI292+h
-         Bo9VCZCembjD8aRxg1PilkOk0GArDggwRLVOd5qNjNyGV7HyuBXb7AxhogCf0T3Uf/wl
-         s7IaqSYvcgLPKem5GO6JM5UmSOuQZL3to21+b782xleK9bCKyzCF51Ix1euV6nPC9RFt
-         SL+Q==
-X-Gm-Message-State: AOJu0YyqOJkFnX9BLg7MM3KqDlVvpJi47bJKJcJ9LbkI6xxQ8Wj3OTmF
-	u4zt8ZCD3FSuXjMOoOKfffsf6TJmfqMSKR4AC4++63n4WFPQ120=
-X-Google-Smtp-Source: AGHT+IGETO7vPXwpAB7/1ilhLgPkyDpKVIPod3/k8tQVATWjs2tASZ/4s1dh39hp1W1Mr1yBWeb+Cw==
-X-Received: by 2002:a17:90a:800c:b0:290:11a4:ec4b with SMTP id b12-20020a17090a800c00b0029011a4ec4bmr140830pjn.61.1705687065008;
-        Fri, 19 Jan 2024 09:57:45 -0800 (PST)
-Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id sh18-20020a17090b525200b002901ded7356sm4202670pjb.2.2024.01.19.09.57.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jan 2024 09:57:44 -0800 (PST)
-From: Gregory Price <gourry.memverge@gmail.com>
-X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	corbet@lwn.net,
-	akpm@linux-foundation.org,
-	gregory.price@memverge.com,
-	honggyu.kim@sk.com,
-	rakie.kim@sk.com,
-	hyeongtak.ji@sk.com,
-	mhocko@kernel.org,
-	ying.huang@intel.com,
-	vtavarespetr@micron.com,
-	jgroves@micron.com,
-	ravis.opensrc@micron.com,
-	sthanneeru@micron.com,
-	emirakhur@micron.com,
-	Hasan.Maruf@amd.com,
-	seungjun.ha@samsung.com,
-	hannes@cmpxchg.org,
-	dan.j.williams@intel.com
-Subject: [PATCH v2 2/3] mm/mempolicy: refactor a read-once mechanism into a function for re-use
-Date: Fri, 19 Jan 2024 12:57:29 -0500
-Message-Id: <20240119175730.15484-3-gregory.price@memverge.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240119175730.15484-1-gregory.price@memverge.com>
-References: <20240119175730.15484-1-gregory.price@memverge.com>
+	s=arc-20240116; t=1705687070; c=relaxed/simple;
+	bh=voIW9PusSvzcgKBkn4IpN4TfY7zjS3V3Y8OcuBR+d4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UEAxoNkJpPb5OcRAyM8C1X6/LKwXO00jUBs4JRUjiOPrsTrR2SGtpLDrFvJGxQF3f2AFWOWc+JCnx38J7KZT2Y7h4/FW25RYYF8v6MALQV0Nz4oOtfuMUCniN/eEXRInCD/CbXM+/7i2PpepjnC7sxGfb1/eJv00S8cu++aGop0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
+Received: by cae.in-ulm.de (Postfix, from userid 1000)
+	id 91CC1140186; Fri, 19 Jan 2024 18:57:46 +0100 (CET)
+Date: Fri, 19 Jan 2024 18:57:46 +0100
+From: "Christian A. Ehrhardt" <lk@c--e.de>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: =?iso-8859-1?Q?J=F6rg_R=F6del?= <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: Dell XPS 13 9360: DMAR errors `DRHD: handling fault status reg
+ 2` and `[INTR-REMAP] Request device [f0:1f.0] fault index 0x0`
+Message-ID: <Zaq4Gv2SWhd12Lx0@cae.in-ulm.de>
+References: <9a24c335-8ec5-48c9-9bdd-b0dac5ecbca8@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <9a24c335-8ec5-48c9-9bdd-b0dac5ecbca8@molgen.mpg.de>
 
-move the use of barrier() to force policy->nodemask onto the stack into
-a function `read_once_policy_nodemask` so that it may be re-used.
 
-Suggested-by: Huang Ying <ying.huang@intel.com>
-Signed-off-by: Gregory Price <gregory.price@memverge.com>
----
- mm/mempolicy.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+Hi Paul,
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index ae925216798f..427bddf115df 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1893,6 +1893,20 @@ unsigned int mempolicy_slab_node(void)
- 	}
- }
- 
-+static unsigned int read_once_policy_nodemask(struct mempolicy *pol,
-+					      nodemask_t *mask)
-+{
-+	/*
-+	 * barrier stabilizes the nodemask locally so that it can be iterated
-+	 * over safely without concern for changes. Allocators validate node
-+	 * selection does not violate mems_allowed, so this is safe.
-+	 */
-+	barrier();
-+	memcpy(mask, &pol->nodes, sizeof(nodemask_t));
-+	barrier();
-+	return nodes_weight(*mask);
-+}
-+
- /*
-  * Do static interleaving for interleave index @ilx.  Returns the ilx'th
-  * node in pol->nodes (starting from ilx=0), wrapping around if ilx
-@@ -1900,20 +1914,12 @@ unsigned int mempolicy_slab_node(void)
-  */
- static unsigned int interleave_nid(struct mempolicy *pol, pgoff_t ilx)
- {
--	nodemask_t nodemask = pol->nodes;
-+	nodemask_t nodemask;
- 	unsigned int target, nnodes;
- 	int i;
- 	int nid;
--	/*
--	 * The barrier will stabilize the nodemask in a register or on
--	 * the stack so that it will stop changing under the code.
--	 *
--	 * Between first_node() and next_node(), pol->nodes could be changed
--	 * by other threads. So we put pol->nodes in a local stack.
--	 */
--	barrier();
- 
--	nnodes = nodes_weight(nodemask);
-+	nnodes = read_once_policy_nodemask(pol, &nodemask);
- 	if (!nnodes)
- 		return numa_node_id();
- 	target = ilx % nnodes;
--- 
-2.39.1
+On Fri, Jan 19, 2024 at 01:59:29PM +0100, Paul Menzel wrote:
+> On a Dell XPS 13 9360 Linux 6.6.8, 6.6.11 and 6.7 (and earlier versions) log
+> the lines below when resuming from ACPI S3 (deep):
+> 
+>     [    0.000000] Linux version 6.7-amd64 (debian-kernel@lists.debian.org)
+> (x86_64-linux-gnu-gcc-13 (Debian 13.2.0-9) 13.2.0, GNU ld (GNU Binutils for
+> Debian) 2.41.50.20231227) #1 SMP PREEMPT_DYNAMIC Debian 6.7-1~exp1
+> (2024-01-08)
+>     [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.7-amd64
+> root=UUID=32e29882-d94d-4a92-9ee4-4d03002bfa29 ro quiet pci=noaer
+> mem_sleep_default=deep log_buf_len=8M
+>     […]
+>     [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
+>     […]
+>     [   99.711230] PM: suspend entry (deep)
+>     […]
+>     [   99.722101] printk: Suspending console(s) (use no_console_suspend to
+> debug)
+>     [  100.285178] ACPI: EC: interrupt blocked
+>     [  100.319908] ACPI: PM: Preparing to enter system sleep state S3
+>     [  100.331793] ACPI: EC: event blocked
+>     [  100.331798] ACPI: EC: EC stopped
+>     [  100.331800] ACPI: PM: Saving platform NVS memory
+>     [  100.335224] Disabling non-boot CPUs ...
+>     [  100.337412] smpboot: CPU 1 is now offline
+>     [  100.341065] smpboot: CPU 2 is now offline
+>     [  100.346441] smpboot: CPU 3 is now offline
+>     [  100.353086] ACPI: PM: Low-level resume complete
+>     [  100.353129] ACPI: EC: EC started
+>     [  100.353129] ACPI: PM: Restoring platform NVS memory
+>     [  100.355219] Enabling non-boot CPUs ...
+>     [  100.355244] smpboot: Booting Node 0 Processor 1 APIC 0x2
+>     [  100.355954] CPU1 is up
+>     [  100.355972] smpboot: Booting Node 0 Processor 2 APIC 0x1
+>     [  100.356698] CPU2 is up
+>     [  100.356716] smpboot: Booting Node 0 Processor 3 APIC 0x3
+>     [  100.357371] CPU3 is up
+>     [  100.360217] ACPI: PM: Waking up from system sleep state S3
+>     [  100.668380] ACPI: EC: interrupt unblocked
+>     [  100.668598] pcieport 0000:00:1c.0: Intel SPT PCH root port ACS
+> workaround enabled
+>     [  100.668606] pcieport 0000:00:1c.4: Intel SPT PCH root port ACS
+> workaround enabled
+>     [  100.668643] pcieport 0000:00:1d.0: Intel SPT PCH root port ACS
+> workaround enabled
+>     [  100.690996] DMAR: DRHD: handling fault status reg 2
+>     [  100.691001] DMAR: [INTR-REMAP] Request device [f0:1f.0] fault index
+> 0x0 [fault reason 0x25] Blocked a compatibility format interrupt request
+> 
+> But I am unable to find the device f0:1f.0:
+
+This is probably an ACPI enumerated device. These are platform
+devices that pose as a PCI device for the purpose of interrupt
+remapping but do not enumerate via PCI. The PCI ID assigned to
+these hidden devices is enumerated via ANDD entries in the
+DMAR table. You can decode this table with from
+/sys/firmware/acpi/tables/DMAR with iasl to verify.
+
+Your dmesg shows two ANDD records for your I2C controllers,
+so somehwo the I2C controller is sending interrups that DMAR
+doesn't like (probably because the I2C controller is not yet
+resumed properly).
+
+Thus my guess is that this is an issue with the suspend/resume hooks
+of the I2C controllers not with the IOMMU.
+
+      regards   Christian
 
