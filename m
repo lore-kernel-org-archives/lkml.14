@@ -1,56 +1,56 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1214C3DB
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 10:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DFD4CB2F
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 10:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705661136; cv=none; b=umqCIumCflpd8bXmJthClrqkxEjomPr4DDw2ZjYqavgP0G/+NQ22KS3YOZoxvE6H9hVIu0IDKqQoQA97+yrA9WGKU3Iy+iRZUCD+vJVrYwesQQXHfGkg90toojWuFOe6BJV31I/aEBJMYCr380p3j4D6OT4rytrtY0U74t2oMbE=
+	t=1705661136; cv=none; b=C2a45UX0R9PGfjfVY5Vv/telDy/czpGp9ShJSU+A6o6K57/gnuJI5iTjRacSTDUOkmdermJRKVb0k55z6w5POmgmsPUY8yqSYFP/YcWeTx4LpqGHHEQ8mUFU1qsUKDEpAzwoZLXeHf4FMmk2zFgXyGfepvgnfuEUuJhX17LnnnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705661136; c=relaxed/simple;
-	bh=f5+jITnMGsSkoaGcJ9ivQf1KA/7qNNBfZvlzYP28SkU=;
+	bh=kuYDD5uxgaAqiPArwaEVu4dV87lteqd14/0vwTxY710=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iVl6hnTPbuR+oF/yZTr+tIouIyzr6YlV19njjc9ER2X04oQyKTuwfcbYjzP9qi5Es7yd1jPaTI8GokceCbyyY2SdbIKdiik9/v2/CtSQqUdTVp4eHS6SwthHa/WTDP6eXq2Vlymh3ylVkH71NWJvtm6hzRX7BfEf+S+JCKz92Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LkwZvy5v; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=Lr9VzupTTz2feoRGZdxIyLemjbjJjCIk1a4w+aCrDhHyDd2hY0lkCiv9vDnfji2Xkaibs0BZR5EmQt+Ez04r7TW2LB2d67A6yNTEjmSHCJstjnKLGNHXapDrXoY+OmF4bM54UxcLPynsIkGCeoPkiLB45sVadAT+nRPolbg6L/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HyCBprv5; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LkwZvy5v"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e586a62f7so7077525e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 02:45:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HyCBprv5"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e8f710d44so7713245e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 02:45:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705661131; x=1706265931; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705661133; x=1706265933; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HTC4DdEvy8g2SMCw/JI6FV7yDSpa07/4JczZdfD8XG0=;
-        b=LkwZvy5vh7vbLaW/8pJmTy0jMLKyY4Oto277rPomyDnrAffvRqeclZDpZtTbNiB6W3
-         q2ytO/DFQWbBOAy/6CopA0mIqd//i/gD/KncMh0mf5A/3oP9h1Ucz/X2fSZMURdsycX4
-         J4gy0te4HviSt5qdyZDHW+e+BY3vFcEzBXLXoc9ZLGWEX44YGcQ6dw3HQ5e/ZGmkU9z7
-         /b6AZjaN/JCSQzBBHMjkGySX4yJQHbHDOPq+xF98SAS2L99KRhpSPzKSBYRxHbwioEn5
-         cpm3y0T3sdj4kwUcarU2wYARCn8lyxG3RY43Rs2JOsRVDw9OE4xMFCRX+3kg86sozO9M
-         U6eg==
+        bh=2al3iBNQhWlEPx3zO71H97w87oPbBhC1wsAJyE/YV+Q=;
+        b=HyCBprv5hj1T3vMbgBjHtlb2CTbcrtZMsEXtSdPFtLEEx4ZZFqkGHMbYkOa1mQNG7Z
+         EBALnaaspBl7HA1bvpn1qN6szerWEIYciGc8zqScRvq3+GGQYUFmE3WMyK55xKm0oRu6
+         cad1IDrU081KHxtalNev3KIXopfkWyA2tze8Z2lfD73e+MQ6jSujtXVL8sjcyfzhHuNY
+         GoQBbUu4LuC14bsCtp4RRdDCTIiyKI4yFWg0m1N+P4rT32db4hExV7I0mBwZKe7Z+dbb
+         bi3g7r+KPzInc8vCmSmVfk/+AfeHQTBv9+jxtDUamuWnNpjw90O+1Q4wN/TAJDSx1wKx
+         GUdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705661131; x=1706265931;
+        d=1e100.net; s=20230601; t=1705661133; x=1706265933;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HTC4DdEvy8g2SMCw/JI6FV7yDSpa07/4JczZdfD8XG0=;
-        b=a2CB0uygGCfKHFZtsvJcBFt8eZzcEJ1CzHn6lqv+O1QZmhfvBi2ofabC0rFwZkliSG
-         6LrzEuJE1uScspaaBpX59y3ADF31yGIbIrRbdcIRWFN8CfPbzgmH0Alabh9GhoxlFMLq
-         +CpVwy7e4DWv/tB34htx3WcwiLtFoswcsUd2Zb67Uezu7ibDnuQpoxte2/Rev2aTgmxG
-         KPwBb70Nxuqo0I1CKae7w71Kyf8IRfkozqLsaTe9YWiMgVlDIACG3kPhiZL3ArjR8lrW
-         cmM4N4iQetouXOpRKghELjpHPU3FWgcZYeDOapCYO0kDPd0c3Qr3wyCbmEL6W3vWcYuY
-         zMEg==
-X-Gm-Message-State: AOJu0YygHJKMen3W3fmi57bauKMjAHKANQAcj1YEjHqMLRicSdOT0DQA
-	O4WtGkrzNQhA9yG6azLkPnxaIT2MGWJbFeu0y1x2IUcCjt+5lxDsGkaLqmKZoDc=
-X-Google-Smtp-Source: AGHT+IFMYe0iBaJgLM0jN4384HDBV4gkQcxKrLQJyf9nqc8RpGHq9WbRuPOO/CoLSCk5Y4JF+E0+vA==
-X-Received: by 2002:a05:600c:3014:b0:40e:4870:d2a4 with SMTP id j20-20020a05600c301400b0040e4870d2a4mr1622675wmh.59.1705661131795;
-        Fri, 19 Jan 2024 02:45:31 -0800 (PST)
+        bh=2al3iBNQhWlEPx3zO71H97w87oPbBhC1wsAJyE/YV+Q=;
+        b=GCMmOMfKpCb3gikC/8IL33lAtIiYVu/bcYzTDfEq/8g+OLm/iPgKe8wX+40+gHLzlh
+         /VxrDEoOjC0d7URxrRsNriGW4XEF8ZtCrrWJpB23/3vu2z7ZF8y90dg6Vg6eo//9hpDx
+         91ovuK/XU9TxYmXP9M/dnGOgEcYiuAK7j/+a3bnPSsg/tJD7qiUlybCgZga7/Tb+rjte
+         b5JDuo/oAKAZ21vFEt+r1f752BplQV2TBx68zmMEe1ZEs0llowWbhyrRRPOXOaKFiVhI
+         T1Qjj85Go9otBeOu9A6aU5dOcgIUxTW3HS2Lq55IXHH4xp2uauJpzcNmTyllJp2t/Lwo
+         RZUQ==
+X-Gm-Message-State: AOJu0Yygmf+/cOGTokCwLt6WUWcYGrz+m4CrtcZJQl76LlYfM7A0g1oQ
+	zvvNibQAWzUrq4hySqtiw02vQZJ4l+Jj4nLuv4i+LXN8iPDlCMZkFNOYyIPp0Hs=
+X-Google-Smtp-Source: AGHT+IHXRVDj6Z2rHedmVBuRLxryu4//t1M2OscXjxE5zCpuJxJ49smSeqRP5ESmOv4g6vvM9Ij/5Q==
+X-Received: by 2002:a7b:c412:0:b0:40d:7d62:80ab with SMTP id k18-20020a7bc412000000b0040d7d6280abmr1306238wmi.117.1705661133590;
+        Fri, 19 Jan 2024 02:45:33 -0800 (PST)
 Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id fm16-20020a05600c0c1000b0040ea10178f3sm77470wmb.21.2024.01.19.02.45.30
+        by smtp.gmail.com with ESMTPSA id fm16-20020a05600c0c1000b0040ea10178f3sm77470wmb.21.2024.01.19.02.45.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jan 2024 02:45:31 -0800 (PST)
+        Fri, 19 Jan 2024 02:45:32 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: gregkh@linuxfoundation.org,
 	jirislaby@kernel.org,
@@ -70,9 +70,9 @@ Cc: alim.akhtar@samsung.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 03/19] tty: serial: samsung: prepare for different IO types
-Date: Fri, 19 Jan 2024 10:45:10 +0000
-Message-ID: <20240119104526.1221243-4-tudor.ambarus@linaro.org>
+Subject: [PATCH v2 05/19] tty: serial: samsung: add gs101 earlycon support
+Date: Fri, 19 Jan 2024 10:45:12 +0000
+Message-ID: <20240119104526.1221243-6-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 In-Reply-To: <20240119104526.1221243-1-tudor.ambarus@linaro.org>
 References: <20240119104526.1221243-1-tudor.ambarus@linaro.org>
@@ -84,97 +84,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-GS101's Connectivity Peripheral blocks (peric0/1 blocks) which
-include the I3C and USI (I2C, SPI, UART) only allow 32-bit
-register accesses. If using 8-bit register accesses, a SError
-Interrupt is raised causing the system unusable.
+The entire bus (PERIC) on which the GS101 serial resides only allows
+32-bit register accesses. The reg-io-width dt property is disallowed
+for the "google,gs101-uart" compatible and instead the iotype is
+inferred from the compatible. Always set UPIO_MEM32 iotype for the
+gs101 earlycon.
 
-Instead of specifying the reg-io-width = 4 everywhere, for each node,
-the requirement should be deduced from the compatible.
-
-Prepare the samsung tty driver to allow IO types different than
-UPIO_MEM. ``struct uart_port::iotype`` is an unsigned char where all
-its 8 bits are exposed to uapi. We can't make NULL checks on it to
-verify if it's set, thus always set it from the driver's data.
-Use u8 for the ``iotype`` member of ``struct s3c24xx_uart_info`` to
-emphasize that the iotype is an 8 bit mask.
-
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/tty/serial/samsung_tty.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/tty/serial/samsung_tty.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index 6fdb32b83346..9d3767021f9c 100644
+index 7a1b1ca82511..80b8fcf9e025 100644
 --- a/drivers/tty/serial/samsung_tty.c
 +++ b/drivers/tty/serial/samsung_tty.c
-@@ -84,6 +84,7 @@ struct s3c24xx_uart_info {
- 	unsigned long		clksel_mask;
- 	unsigned long		clksel_shift;
- 	unsigned long		ucon_mask;
-+	u8			iotype;
+@@ -2809,6 +2809,17 @@ OF_EARLYCON_DECLARE(exynos4210, "samsung,exynos4210-uart",
+ OF_EARLYCON_DECLARE(artpec8, "axis,artpec8-uart",
+ 			s5pv210_early_console_setup);
  
- 	/* uart port features */
- 
-@@ -1741,7 +1742,6 @@ static void s3c24xx_serial_init_port_default(int index) {
- 
- 	spin_lock_init(&port->lock);
- 
--	port->iotype = UPIO_MEM;
- 	port->uartclk = 0;
- 	port->fifosize = 16;
- 	port->flags = UPF_BOOT_AUTOCONF;
-@@ -1988,6 +1988,8 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
-+	ourport->port.iotype = ourport->info->iotype;
++static int __init gs101_early_console_setup(struct earlycon_device *device,
++					    const char *opt)
++{
++	/* gs101 always expects MMIO32 register accesses. */
++	device->port.iotype = UPIO_MEM32;
 +
- 	if (np) {
- 		of_property_read_u32(np,
- 			"samsung,uart-fifosize", &ourport->port.fifosize);
-@@ -2398,6 +2400,7 @@ static const struct s3c24xx_serial_drv_data s3c6400_serial_drv_data = {
- 		.name		= "Samsung S3C6400 UART",
- 		.type		= TYPE_S3C6400,
- 		.port_type	= PORT_S3C6400,
-+		.iotype		= UPIO_MEM,
- 		.fifosize	= 64,
- 		.has_divslot	= 1,
- 		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
-@@ -2427,6 +2430,7 @@ static const struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
- 		.name		= "Samsung S5PV210 UART",
- 		.type		= TYPE_S3C6400,
- 		.port_type	= PORT_S3C6400,
-+		.iotype		= UPIO_MEM,
- 		.has_divslot	= 1,
- 		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,
- 		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,
-@@ -2456,6 +2460,7 @@ static const struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
- 		.name		= "Samsung Exynos UART",	\
- 		.type		= TYPE_S3C6400,			\
- 		.port_type	= PORT_S3C6400,			\
-+		.iotype		= UPIO_MEM,			\
- 		.has_divslot	= 1,				\
- 		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,	\
- 		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,	\
-@@ -2516,6 +2521,7 @@ static const struct s3c24xx_serial_drv_data s5l_serial_drv_data = {
- 		.name		= "Apple S5L UART",
- 		.type		= TYPE_APPLE_S5L,
- 		.port_type	= PORT_8250,
-+		.iotype		= UPIO_MEM,
- 		.fifosize	= 16,
- 		.rx_fifomask	= S3C2410_UFSTAT_RXMASK,
- 		.rx_fifoshift	= S3C2410_UFSTAT_RXSHIFT,
-@@ -2545,6 +2551,7 @@ static const struct s3c24xx_serial_drv_data artpec8_serial_drv_data = {
- 		.name		= "Axis ARTPEC-8 UART",
- 		.type		= TYPE_S3C6400,
- 		.port_type	= PORT_S3C6400,
-+		.iotype		= UPIO_MEM,
- 		.fifosize	= 64,
- 		.has_divslot	= 1,
- 		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,
++	return s5pv210_early_console_setup(device, opt);
++}
++
++OF_EARLYCON_DECLARE(gs101, "google,gs101-uart", gs101_early_console_setup);
++
+ /* Apple S5L */
+ static int __init apple_s5l_early_console_setup(struct earlycon_device *device,
+ 						const char *opt)
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
