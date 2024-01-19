@@ -1,94 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EF857888;
-	Fri, 19 Jan 2024 21:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136C938E
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 21:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705698782; cv=none; b=HkQxKsVlFWWu40uSUCACddfAN2Ftmtq2A4cAJGS4qI9UZgUOiKCTVSTfa83BB+9mpBdsD8cjV/3JK6eTH6xEnwOENTM+0UGfwYH2OAveeJtqASjIS+ttXKBAO439fdYc5Wqw8U0Zgn4A+Q2DmLejsvY1EAUmTPSSRuNLIwyxG7I=
+	t=1705698898; cv=none; b=iekIKqporAU9EJEVXqd84kFG45tnyWNFtkfSak9KTGTW5V00DbQMPx6h5YVCMcT2Vmg8pQaQCmzRV9Qyr2dSHgHiESM1mhBQuGU3FVNMq9dkwnGrw44L91ggix53ldDdju1yhEK3BMnOOMxpHVdjneqxb3kwzYtDqd8FUZEgM+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705698782; c=relaxed/simple;
-	bh=K5XRA4pHgspNItWgN06atRk3dlBp3RHa7wRvvR+DpcI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=BkNAGy8iGELReRS122n53hrWa3WTExiO23CVQ8fI5Wt8Ejfqkgqbb6qElVy1ms2DE4K/JIRlNcmNNihE0QGv5qKScAjvNqHFV7KnflBBDOS7djF5QHT8hw28F+x3rrd+m+p9vgF8vJMlYbNK3dhr0qrfN+0VD2szgAMbE50fd+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmmPcA50; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705698898; c=relaxed/simple;
+	bh=F9F2GNKmjLUbux+84Pb89lxHGN+eZi/eIvcnBt3MVnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Sq/MXvw3hrPMdq9p5lxUJE/+pMOA7mxkeaTiKIj+2bfTv1fFJldXLIG6fopZBeT6rwmcglTYNXyYSpdqlWsRI5Xi1195gYtBOc24JgPL9+wCEY20stCu7/1kkvb4UBfiNxnp4B9CuIHZF0Wpvafb+xxVt9dGG49706Mk+bjT48A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Npu+jXgd; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmmPcA50"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A4AC433C7;
-	Fri, 19 Jan 2024 21:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705698782;
-	bh=K5XRA4pHgspNItWgN06atRk3dlBp3RHa7wRvvR+DpcI=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=jmmPcA50gLbqSB8r+VHjTHJbVd2EdfI8cUj6CWJcZR+McJ6OYl/pezGaDfOWzqVZT
-	 36nzUu3nIh1yAX5W74v9uT0P0SU3s8SsJbAMFf/IvlkKBaFEtvABuorRjdMDO/mTZp
-	 ffTFoD5vtDwi9KbjHz1BNBqbgQDMqwH7m9pSK9VJ30aRKFAirf5RoF+LKZPywCvjAc
-	 hRFVK8y/FK6qB4odZILqQIMTPHOZLwdfusTxCAbQ/Okwh6Dn3EMpI5AQxJDSQSLnaQ
-	 IPsiFYIW2ed4l68VMhRKjguD7WEt7rG4VGlFCqdZzVEFk7mQPyRVKwcM/BKYXxoAjd
-	 qVT17ntQRADJA==
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Npu+jXgd"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d5f1e0e32eso8923365ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 13:14:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705698896; x=1706303696; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1jO5gTxlFcZqy3fTlQWHVnYXrLv/qAX0Mnxwu0zISok=;
+        b=Npu+jXgdh1m5j24CHVteSOvlcRn7MaK7MqofDUJIix+GgSLeP6O6k2Tdb1ohzCK4ZC
+         nPRTHJhdhxwbJ9dl1oZ2Gn5aGuhcWMSgrFQvEMjunPub5aB9ZlNaznsFBMdObUs82kso
+         +z1973MPe3ZAWGYSKC29TH0D+kevL0dTJDUMI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705698896; x=1706303696;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1jO5gTxlFcZqy3fTlQWHVnYXrLv/qAX0Mnxwu0zISok=;
+        b=b0jyZ7k7Gkw2ZGq0O50DYH3SP4kaQG3LaDp/afcddlsvbKTzlSM7E9qsBgbWqwUaz1
+         EBTE8FEk37Y/pJ8haDya6qDiLWgAtEbsMtT+kgb6bWTqy1+3OYmw1AxhheIjYyQkRXPX
+         NlE9gxkkdiF8szWtdjAHiBD72G/xoGCDb2qbn52T/c1+Cz3JHkvM8ogydKnh0PSoj8uG
+         ASma5LAwGd3hcGcp6/4k40h1NQd3hggyolz3Rpctzqi3QX0DgxtNkHYV850EDMxGe2YD
+         R5QhSxMadzq80jO0/3aYOYQymK+twZe1t+iJSe/ROd2sCfPOrWPNYtlKKOuNoNKT4XbC
+         yUDw==
+X-Gm-Message-State: AOJu0YyWUV7k/jNL7KDvLrJY4rWITxTOOxQfR2ZPUGhFeFjUNsri30fM
+	M3mfN9yjnW9ieqKJyQZO8h69Mt2caPN1fnvqvWukBPlYRU/DuhOzgvxqFgLcoA==
+X-Google-Smtp-Source: AGHT+IHteMrsjbxz/XOxufy7SLo0IQwvOQ84Qlzbhc16uTdBfRGUnXUD7sidx0J4g0mfmpxi2kRqHg==
+X-Received: by 2002:a17:902:db05:b0:1d7:20a4:4a91 with SMTP id m5-20020a170902db0500b001d720a44a91mr502945plx.109.1705698896431;
+        Fri, 19 Jan 2024 13:14:56 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id kh6-20020a170903064600b001d5e1353693sm3433530plb.266.2024.01.19.13.14.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jan 2024 13:14:55 -0800 (PST)
+Date: Fri, 19 Jan 2024 13:14:55 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Andy Whitcroft <apw@canonical.com>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Brian Foster <bfoster@redhat.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Joe Perches <joe@perches.com>, Kees Cook <keescook@chromium.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [GIT PULL] strlcpy removal for v6.8-rc1
+Message-ID: <202401191311.B6AA79D@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 19 Jan 2024 21:12:58 +0000
-Message-Id: <CYIZR55BCZ5L.1DY4I65CDCLH8@seitikki>
-Cc: <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] crypto: asymmetric_keys: remove redundant pointer
- secs
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Colin Ian King" <colin.i.king@gmail.com>, "David Howells"
- <dhowells@redhat.com>, "Herbert Xu" <herbert@gondor.apana.org.au>, "David S
- . Miller" <davem@davemloft.net>, <keyrings@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20240118120745.2519762-1-colin.i.king@gmail.com>
-In-Reply-To: <20240118120745.2519762-1-colin.i.king@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu Jan 18, 2024 at 12:07 PM UTC, Colin Ian King wrote:
-> The pointer secs is being assigned a value however secs is never
-> read afterwards. The pointer secs is redundant and can be removed.
->
-> Cleans up clang scan build warning:
-> warning: Although the value stored to 'secs' is used in the enclosing
-> expression, the value is never actually read from 'secs'
-> [deadcode.DeadStores]
->
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  crypto/asymmetric_keys/verify_pefile.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_k=
-eys/verify_pefile.c
-> index f440767bd727..2863984b6700 100644
-> --- a/crypto/asymmetric_keys/verify_pefile.c
-> +++ b/crypto/asymmetric_keys/verify_pefile.c
-> @@ -28,7 +28,7 @@ static int pefile_parse_binary(const void *pebuf, unsig=
-ned int pelen,
->  	const struct pe32plus_opt_hdr *pe64;
->  	const struct data_directory *ddir;
->  	const struct data_dirent *dde;
-> -	const struct section_header *secs, *sec;
-> +	const struct section_header *sec;
->  	size_t cursor, datalen =3D pelen;
-> =20
->  	kenter("");
-> @@ -110,7 +110,7 @@ static int pefile_parse_binary(const void *pebuf, uns=
-igned int pelen,
->  	ctx->n_sections =3D pe->sections;
->  	if (ctx->n_sections > (ctx->header_size - cursor) / sizeof(*sec))
->  		return -ELIBBAD;
-> -	ctx->secs =3D secs =3D pebuf + cursor;
-> +	ctx->secs =3D pebuf + cursor;
-> =20
->  	return 0;
->  }
+Hi Linus,
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Please pull this strlcpy removal for v6.8-rc1. As promised, it is the
+"part 2" of the hardening tree, late in -rc1 now that all the other trees
+with strlcpy() removals have landed. One new user appeared (in bcachefs)
+but was a trivial refactor. The kernel is now free of the strlcpy() API!
 
-BR, Jarkko
+Thanks!
 
+-Kees
+
+The following changes since commit b0d326da462e20285236e11e4cbc32085de9f363:
+
+  Merge tag 'sched-urgent-2024-01-18' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2024-01-18 11:57:33 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/strlcpy-removal-v6.8-rc1
+
+for you to fetch changes up to d26270061ae66b915138af7cd73ca6f8b85e6b44:
+
+  string: Remove strlcpy() (2024-01-19 11:59:11 -0800)
+
+----------------------------------------------------------------
+strlcpy removal for v6.8-rc1
+
+- Remove of the final (very recent) user of strlcpy() (in bcachefs).
+
+- Remove the strlcpy() API. Long live strscpy().
+
+----------------------------------------------------------------
+Kees Cook (2):
+      bcachefs: Replace strlcpy() with strscpy()
+      string: Remove strlcpy()
+
+ fs/bcachefs/super.c                           |  4 +--
+ include/linux/fortify-string.h                | 51 ---------------------------
+ include/linux/string.h                        |  3 --
+ lib/nlattr.c                                  |  2 +-
+ lib/string.c                                  | 15 --------
+ lib/test_fortify/write_overflow-strlcpy-src.c |  5 ---
+ lib/test_fortify/write_overflow-strlcpy.c     |  5 ---
+ 7 files changed, 3 insertions(+), 82 deletions(-)
+ delete mode 100644 lib/test_fortify/write_overflow-strlcpy-src.c
+ delete mode 100644 lib/test_fortify/write_overflow-strlcpy.c
+
+-- 
+Kees Cook
