@@ -1,65 +1,71 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662303C464
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 11:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663D53C499
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 11:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705662074; cv=none; b=ibR7xj8Z4gxenIWjeX769ISr1rsRaTexFw4UFaXMuRUCRIdFTcOdnubW3nbIqJ+9w25b4YUMKnRsDPw22Lk6PKiGHMag/rCujvjfhbaa5E4G95Wp/uQXEPmKqv80/CnJAocr5vLYDbZ6reRfZRdQh55KDym0ZIBJmmTYm2xaTxw=
+	t=1705662244; cv=none; b=FXosRNaxyrhIQIskPzFXpxDqSDLFXueqfIxAq+T+dmvVVlU/7sVKjfrlmyPz14bmlb8rQTA876PFctnX9vYDet21ikYXzscoLX5y78ribN7IoVUWTfSi7idCj8sif570tLAPRtcob85iwssy+gkT++QW2rF9t15vTU9zUmAZkSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705662074; c=relaxed/simple;
-	bh=w5wBDo8jUiYzz+5J3il+LC9xZdfbGnzBJXcrQQHkLzM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UGQlAG0rmwrU2Yr8oWdIWkIoSCJ4FC9zc4vulG4yAvgn0jdVQ6SRDPkaKOSC5ZngUEi9KP1GCK5lt+ntFCAdGo6nYSAujLE8oUMa9MyBC+YTB9u9IvxI6vESrTwWPRCV25D513J5SyGjksNt3mZEVF9oFGrWbeDN8LFz4xdyOMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cu-phil.org; spf=pass smtp.mailfrom=cu-phil.org; dkim=pass (2048-bit key) header.d=cu-phil.org header.i=@cu-phil.org header.b=gXOAHKO6; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cu-phil.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cu-phil.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cu-phil.org header.i=@cu-phil.org header.b="gXOAHKO6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cu-phil.org
-	; s=ds202401; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=b6VkcU727MKQow5IhybOt1tkD+yKTAqrwjsZRcJZP2g=; b=gXOAHKO6FRDplvXdFDNzwxNJq9
-	wV9oO87QjA1bRFiSyF7PoiyDi5SzWl6/MXdYXELlQdi38HCotn8doggvAhM9vGd2eUXrD5kd7/rMf
-	4fy7ZbixepusSp6G6pX8ub5p0h+R/vTdA/mrh0lxAV/oLGDXQusdFO1lDjtcem4Q14sxNv/KuhNhd
-	4WzE3cBVS9Xx8ZbX/gwuz7MZib++AXQIzjMUxwx1KWNhspb2fPf35gx9e816cGF1um9q8F1R933zC
-	Fa1cSXFziq/JTUwqQ05iiU3hKWMy48YfETi3oaOT1FTQHYJ05SIDmtRWh2y8Bb+jq8smwr49ny+Ca
-	iQk2akEQ==;
-Received: from [84.215.119.50] (port=58153 helo=[192.168.0.2])
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <Ywe_Caerlyn@cu-phil.org>)
-	id 1rQlGr-000OQt-F9
-	for linux-kernel@vger.kernel.org;
-	Fri, 19 Jan 2024 10:34:41 +0100
-Message-ID: <e25d240b-67f1-44fe-97f1-02fbdd76c721@cu-phil.org>
-Date: Fri, 19 Jan 2024 10:34:40 +0100
+	s=arc-20240116; t=1705662244; c=relaxed/simple;
+	bh=IF/Rdlrjllh8QV/PUzrMwYrGi6xbVZIT9IwYV2AAntU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=pjdGYeiPBA/LPaAgaNH9CylEHHE943GQlN3MHloHa++EUYI2VY6mX+pp2sC+AswM8GJqw2s2BOpPOQvVgjTDZezNAVGbOA7Ap9nT3FWUzUcgzhW5+sCGa0uZhPZ+FVhZtGgpTaGUEGZ3gAVtDZjUzXCpNk0kcShh87gP1NH6IK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7bf2a5cd631so83518939f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 03:04:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705662242; x=1706267042;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dOtvIsf9ONM/3dDPhEij7SYWNFyY5phEsz4MSqai1n0=;
+        b=qfwveKSYGbyWTQraY8Ms48Uf6/wWvObNvylTcni020gZedP8rvwhzBlF6v3qZYF8z+
+         hEO00+3dL1bvyLBGNZECWNPYH0X2+8c8E/OR5fAovxSDKB5YjTcEs+ZHvocHFybvswsC
+         UzKVq4rUA4ejXFl7OO0x2VfQGelThYXS+9wZUdKzYMc/inb1fO9bYEjKgpnn9G6kcunc
+         Tbx6RJ5ISRNqs93ojMtPy35rwDdzFa/1HgL+L8q97GFbxpTefG+g8hoTkTGI4BYp0+Ka
+         rzocnRlsOvKMzeU97DxADQXiCBBbumtHADfO8CUFUq2RXTPKf4gTCt5lKovg7yOLmPfz
+         MYHg==
+X-Gm-Message-State: AOJu0Yz4LLFeWb1gmx9MAKQHkSi68BIg/0Ztnj9xRR1lMOYfF5d3z5zJ
+	WgNU7YPDc+poZ0u2REKwfr7jcvMz4kATSoBhGXW7r90bTN8J4lDRpiNInWPqKPFUgYvYvWWC8z6
+	PIonw1kxTAti6h/ebigGnE7GslTIH4rrs0iNGYswNElFQm7tb27zCpG4=
+X-Google-Smtp-Source: AGHT+IHkC02YIb7UAr9lOtTJxcbJydZGSWnFwflcqCDXH0WO+28lddqWBJidlqX0g/rdd0vtVjksdXFRGIKIxGoCrCmlBEybfx/E
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Bit X (was Fair Source etc)
-To: linux-kernel@vger.kernel.org
-References: <92a99f69-3c6d-4c9b-b16c-19da17943eae@cu-phil.org>
- <E1rPzsA-003sTD-Lh@smtp.domeneshop.no>
-From: Ywe Caerlyn <Ywe_Caerlyn@cu-phil.org>
-In-Reply-To: <E1rPzsA-003sTD-Lh@smtp.domeneshop.no>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:3410:b0:7ba:9bc1:1fe0 with SMTP id
+ n16-20020a056602341000b007ba9bc11fe0mr109222ioz.1.1705662242621; Fri, 19 Jan
+ 2024 03:04:02 -0800 (PST)
+Date: Fri, 19 Jan 2024 03:04:02 -0800
+In-Reply-To: <tencent_1B2ECE8078726E5C2D856C0497A0E80EED0A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000141046060f4a7031@google.com>
+Subject: Re: [syzbot] [exfat?] kernel BUG in iov_iter_revert
+From: syzbot <syzbot+fd404f6b03a58e8bc403@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-I have gotten an apology for the Apple Faux Pa.
+Hello,
 
-Project is generalized to Bit X.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Channels: TBL Preacher - https://www.youtube.com/@I_T_San/  (will be 
-updated to TBL Pracher)
+failed to checkout kernel repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git on commit 052d534373b7: failed to run ["git" "fetch" "--force" "--tags" "4d52a57a3858a6eee0d0b25cc3a0c9533f747d8f" "052d534373b7"]: exit status 128
+fatal: couldn't find remote ref 052d534373b7
 
-Muclim: https://www.youtube.com/@Ywe_Caerlyn_Norway/videos
 
--Peace.
+
+Tested on:
+
+commit:         [unknown 
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 052d534373b7
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7c8840a4a09eab8
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd404f6b03a58e8bc403
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=147423afe80000
+
