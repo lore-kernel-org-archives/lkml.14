@@ -1,77 +1,84 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA259461;
-	Fri, 19 Jan 2024 23:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AD59461
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 23:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705707712; cv=none; b=I8kyJ5E1vQXG7bPbmgKumjpWqHc7jP3CQmqLggWGf2aw9Z+U8FZxi2rN6JnLb7nIW89F++1FrhNMObl29tiVRzLI2bw2N5vH/qM64DFTnvLLDU+I+W9e+OZ8MIqA6VzQCvnCfJocnS8gvHhy4u1d8Q8HlcEmZYQk8ym2YdyDpVs=
+	t=1705707739; cv=none; b=LuMu2QHU5Br6twlfy+d8VV2rBSy2YsW+IA6RmYnTyE3GRS7KJNZRLXzMoajn8KeiigYulnpJYVdze+8UViDoJqicimhEfwBT5N8BxzQaJA6aamuwi7GtJ49owMqK/D8csZIFyDbXg0lzWr+NagzyKGr6qD4c0xqDJlFpWmPWfyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705707712; c=relaxed/simple;
-	bh=ftKWeC6U9mzF1f0nXgLSRHkw3HDVdEK9xa/ts4/b2a8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Mig9AmCTHY6HhFkI1SLlmrq7PJKqbX5bJfjISmieK1yVsC59gQNY9Q5uZIlcSUy6zdHofP8bsyB2F1uLU4PiML29FzT50583uKeVF5NS0/8F5CbHvacED/cDlzJ/gJhrZ1HNAj1GCQ/4dgldYpcozxWzxc0jTK2iVAyfMf46JTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fAIBFn/K; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1705707739; c=relaxed/simple;
+	bh=EOMoCb0F8Dvt63jasgfU+CKNZAPBehIsLSRKgEsVDww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LUOhFP+q8piv2QnAsEMJNyuyIAcw3PQ6kSi6IkRjuN7dSB4wYPbMX0tBe9Z37htEuodT86jp5tjcb7Fq1T/biOEbjy5pv1pARWPYtyMvZgXJe08HhHcUBoMX0T1tXGjZ9M90wCMnYsTaAc0G2q2E0gp3NbGMAshFR/3PW34iX5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EQub/PmV; arc=none smtp.client-ip=192.55.52.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fAIBFn/K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705707708;
-	bh=ftKWeC6U9mzF1f0nXgLSRHkw3HDVdEK9xa/ts4/b2a8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=fAIBFn/KL8w35tVinmyADRLk4ZjK+GQMugMRZu4hA4eDNll7kti+U8LA7IAMOM9E/
-	 Xnj425A36TCWh4TAW2nepY2GYzL5Jv2g86ekrG2l1yeHjBnJc6wOYfxgThb2lehhxK
-	 R5d2WBcfPDTQI1gEgmH+8dr30wmOgVw2zSgPdHglYt3Qm9nXRGepWXxbPKNJ9NJoFw
-	 Lb6UGQRNtx+D/x0zLALK3Y4X0Mgr/l7N/yTmxQX2743tSTYtiQiqwtBoypkLnDAjws
-	 d13e2BV2qwLPpLZeKwjYtCuZs9gh7PJJZv5oX2u4B3FuZvAoWMeXfU8BnjuJ7f2nqi
-	 UK/Z7ChrS0qhA==
-Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BEFB4378143B;
-	Fri, 19 Jan 2024 23:41:47 +0000 (UTC)
-Message-ID: <417281cd-23b1-4948-8c5a-b9820dff65aa@collabora.com>
-Date: Sat, 20 Jan 2024 01:41:47 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EQub/PmV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705707737; x=1737243737;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EOMoCb0F8Dvt63jasgfU+CKNZAPBehIsLSRKgEsVDww=;
+  b=EQub/PmVO3hDNhbT7lhY2gUB7lMo7URUPVjeeRhEt+8hJfgPh9Eo0/Xj
+   YSKf87T1idi4lYpbaMVDapRW0RvezdHIkyhfGOSvd47iDgcUjSRtvOcuN
+   qjuC11mNbignR4meGdUePiCh3b+UySW7hOIvSUMottDOuwmiCZ6SSx8sq
+   AF8W1rtfdCcbahSXy6sbB2WU50kgesaGS+TPZak6NeGJ3825knCCpp9T9
+   51Cu2AqkpZvYSc5iHc4gvgufJV9RgflQLSk1TPHmCzeMcVqOrLyGpD39I
+   VsutC72v0S31qYFdzpFsnvfXLTP3cykflD3lmX6XFmlmM1+G3XAAJRVH3
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="400526768"
+X-IronPort-AV: E=Sophos;i="6.05,206,1701158400"; 
+   d="scan'208";a="400526768"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 15:42:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,206,1701158400"; 
+   d="scan'208";a="707461"
+Received: from guptapa-mobl1.amr.corp.intel.com (HELO windy) ([10.125.112.71])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 15:42:17 -0800
+Date: Fri, 19 Jan 2024 12:54:42 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	kirill.shutemov@linux.intel.com, daniel.sneddon@linux.intel.com,
+	antonio.gomez.iglesias@linux.intel.com, rick.p.edgecombe@intel.com,
+	alexander.shishkin@intel.com
+Subject: Re: [PATCH] x86/lam: Disable ADDRESS_MASKING in most cases
+Message-ID: <20240119205442.x44qiu7yjbo4xkdi@windy>
+References: <919b6370a908bb091779ec2eca7ca5e369d57847.1705631230.git.pawan.kumar.gupta@linux.intel.com>
+ <8936e2c6-93b8-417e-9151-041c5f2e1102@intel.com>
+ <20240119162104.4ehgnj4ptjrfwyhf@windy>
+ <3c65826f-d313-4455-842b-da9fc4a271a5@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Add support for RK3588 HDMI/DP Combo PHY
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Philipp Zabel <p.zabel@pengutronix.de>, Johan Jonker <jbx6244@gmail.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>,
- Algea Cao <algea.cao@rock-chips.com>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com
-References: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
-In-Reply-To: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3c65826f-d313-4455-842b-da9fc4a271a5@intel.com>
 
-On 1/19/24 21:38, Cristian Ciocaltea wrote:
-> Add driver and bindings to support the Rockchip HDMI/eDP TX Combo PHY 
-> found on RK3588 SoC.
+On Fri, Jan 19, 2024 at 03:36:22PM -0800, Sohil Mehta wrote:
+> On 1/19/2024 8:21 AM, Pawan Gupta wrote:
 > 
-> The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
-> and eDP links.
+> > The goal is to compile test it whenever possible. As
+> > SPECULATION_MITIGATIONS are ON by default, it wont get tested for most
+> > configuration.
 > 
-> The HDMI link has been tested on Rock 5B and EVB1 boards.
+> Sure, that would help increase the compile coverage. I wasn't sure how
+> much of a difference it would make. Anyways, the restriction is expected
+> to be short lived until LASS is available.
 
-I missed to highlight there is no eDP support provided by the current
-implementation.  Downstream kernel has a separate driver for that and at
-the moment I don't have the hardware to wire this up.
+True.
 
-Will include this statement in v2.
+> Please feel free to add:
+> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+
+Thanks
