@@ -1,144 +1,139 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2085.outbound.protection.partner.outlook.cn [139.219.146.85])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1A136AE0;
-	Fri, 19 Jan 2024 14:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705674709; cv=fail; b=W+4QDmCHZ54f+JQJpJ9KeZ4Sv9nLNG4+lPIxtKWUVPkN+rXW180KamfDKtDiwZ8w2eqEsfPyZVACy+W8XzRaXE5tiRFJXQZ3lyDEg/H4FySyxiHudNi7s1pjReHBU4LjdgdZZICyHrytCTrHrLJCOqgZhDeO0BSFaGa5Nxr1qI4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705674709; c=relaxed/simple;
-	bh=fCYn1jo8fL71UwAZ7WXwWebXkZwsEfOg50aMXcy3BAQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=STczY2GuracFCDMJktEpYZeJlLoc9ds/HgDMs5l3ZoaUCJ0JOI4a/IgALzcnuJRK88pdc5Z0DYkPg9SF+oWOSjkhYwrsjgO2VD9nT0yGyua7YVK2ESAPLURHinsuZdVneEL0oVNVVqpQ0DNndV9zpoaCvvReCshY0PeF60a06lg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e9oGhLoDFhhLlHeL8Gx1eZULAUZcQSmQRgL6H4j0qgEvEML1rOYBU9gDcHw84gnpy1zuAIqKU4RegEeSuyWVCQrv+koT7qhatv++57yd36kj9XGCeEqXO9wC5Ck4I2nRb1qI1sCHyQ22j4tUvF0V4+cZyMByBjYCsyRxO2ghl8gGwybKbj6GtQwef5r5HJWAMo7fLKJ3biAF/Qi9calOuPGBAfVi83Ip6nvElgnrC4tvAdg4ZZlIYdGkcIqRbYREenVLeyYmOszVH++8O0VCldEZ2VoVgQgfR+Xw2TiipHdb8eTPpd8YbsUO2CgV57Zm9r53Ihb8V4KXsxeKEvXYgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fCYn1jo8fL71UwAZ7WXwWebXkZwsEfOg50aMXcy3BAQ=;
- b=H226Jp8AAgW19jQrXzpCywWQKrdR5yXyrHhC7XpVlr902XA1sUcF5wmFKDJL0MyKgofTExhFQkuYcpncekWYRSg7chVaSGRhfeUNpIro73QgfI/PSYb83qFQ0xPthTnlLYKD5YnYZxgHIp33RCLU73wvWtlbGu3mr8kTAsZGeLCbzhGw+wZ5ieTe0N+JRuyzuFX1B7n16HBEHZIxgpoFUjHgpZv+gtCtAHlB9k9PoKx1RFbEgolyrB3OyAuqglIOVGTHGR77QJLhKr+YMW0Hu4MmKoRXTX/ynOB8HVPsR09eZPGtgksKj7bgwxDYg46wl1+DArrfXQTX30g2GYRvKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) by SHXPR01MB0592.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1d::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.32; Fri, 19 Jan
- 2024 12:57:22 +0000
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- ([fe80::148c:e1dd:302a:196b]) by
- SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::148c:e1dd:302a:196b%6])
- with mapi id 15.20.7135.033; Fri, 19 Jan 2024 12:57:22 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-CC: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Emil
- Renner Berthing <kernel@esmil.dk>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jack
- Zhu <jack.zhu@starfivetech.com>, "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-Subject:
- =?gb2312?B?u9i4tDogW1BBVENIIHYxIDEvMl0gZHQtYmluZGluZ3M6IG1lZGlhOiBzdGFy?=
- =?gb2312?Q?five:_Match_driver_and_yaml_property_names?=
-Thread-Topic: [PATCH v1 1/2] dt-bindings: media: starfive: Match driver and
- yaml property names
-Thread-Index: AQHaSr81E8nk9BtrhUGN5g0sexXYkLDg67gAgAAseFA=
-Date: Fri, 19 Jan 2024 12:57:22 +0000
-Message-ID:
- <SHXPR01MB0671E2150D9A2707F12E0901F270A@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
-References: <20240119100639.84029-1-changhuang.liang@starfivetech.com>
- <20240119100639.84029-2-changhuang.liang@starfivetech.com>
- <20240119-despair-festival-59ab2d4d896b@wendy>
-In-Reply-To: <20240119-despair-festival-59ab2d4d896b@wendy>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SHXPR01MB0671:EE_|SHXPR01MB0592:EE_
-x-ms-office365-filtering-correlation-id: d9c0a395-4373-44c3-e2d6-08dc18ee2d50
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- BADrTlC6Y9HiwsgZSnmoXhQqIeguAakJ5yrbuJJsqj8TOy7BPPLVlMHWxWD/NwrHMHlv6QhEsObqNLKSJcbxiORT3dVH7Z0JwTqZUpS0Ujn42dcCSBage84b0km/xeIQRiVYqFO54EwbgUm3dKDuO6egVoLV9dCH7XX39FyPqPVQtNl/m7eSVW+vKJCNRSAFFJSxiEw8uUrAC818tWmgrLGhP9Z1IzahxgUw0R8T93FIH2YIqKII7tjwUHhroOHFc3tXBHhZ+M5o00BImoANUaVeWsvjGYaDRTpyZc8zjhkKtpOweRTuSYuGaT4JzQRWRkqL9AjBFY8ObAwRChwpXwLGRb6cjA0/7KbxN+aJG6XmXvxaRpsHY3Dnv0qYvcolU4/GATSCP7o3KpmujN8ueb7N8OEaGl+cDRshx5gWrYTYNQ+v+nuj5q3vyH74aEtY4SO4w9wSemYagB2BX+BcdbemdmBo+3R0hZcXVb9VrgfJXEzi/cW7EqvIqaJGkIR2fbAAAzLKDGCRq0zXIoXZ22c0DC8QBeBqIobkHydfAYkx046XLtLYtFiuc7zNa+2u
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(39830400003)(366004)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(38100700002)(55016003)(66946007)(76116006)(41320700001)(71200400001)(9686003)(508600001)(41300700001)(38070700009)(66556008)(44832011)(5660300002)(86362001)(54906003)(64756008)(66476007)(66446008)(4326008)(26005)(6916009)(8936002)(7696005)(83380400001)(122000001)(7416002)(33656002)(4744005)(2906002)(40180700001)(40160700002)(224303003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?gb2312?B?aTFCZDBnT0paMnl1UTdhU2xoYVpBNUc1eWxnZFZBUEdjYllORGdBd1dBeElK?=
- =?gb2312?B?a1F1dk5qYnhOblFncUxma0w4cUpPWThuc2hoQjZWNGlLVUZ0Ykl6c0ZNYWlp?=
- =?gb2312?B?OTVCQXRCNnlVaWVFTG1uTUlwOW94c0hNVlF3Q2ZZTU1RNEhubTFQSFR1dXRX?=
- =?gb2312?B?RXAvQ093bExPWUNxYnhGeXlUYzZMQTgzakVWTUlaekloYzRVYnlKRTh5dHA3?=
- =?gb2312?B?MHBNSy84RGtxMU5JVlBoZ0NnSU5oSTFHbVVqTXMzV0xJYktQangwTEJESk9T?=
- =?gb2312?B?VFptdGk1dmxFRHFlakdYSUw3TityRkNZYU1QL3pzSnppZitMem5JSzVmTWI0?=
- =?gb2312?B?WG4rV3BjaW45dzRJaHVZNDBQVHpmWlFBZzQ2cWoydTUwNml0UlprM2NjRmh2?=
- =?gb2312?B?bi94Sk5KSUN1QStxOC9QYzUzTDA4L1JHK1J5VytyYlA1QWJxTk16eEVGWmpD?=
- =?gb2312?B?NCs4MG5UdFd4NVRBNEJIMkE1UERUVEZuZEdWL1Y2ZWVnR2JPVW9WY3VLeU8w?=
- =?gb2312?B?OUFpOXNVazJnTURML3dqTjVOMUVhTXFCQjNpUHVUa2taejluZXFucklRUGti?=
- =?gb2312?B?Y3Z3UWNnQU1LaG1PQkR4RzBsbnpLeWFaeGdsbXNzWXFPVkIwUDdlYktLcnNQ?=
- =?gb2312?B?V0hhcFRXSDM0aXFLb1E2Nk8ycGpHR0ZibzFIc01Rd3FHZlBOOXpHZHdGSzlC?=
- =?gb2312?B?N2NGMXhWTElnYUZaUDYxN1o3NzhuWDJ0L2l0alZrWnVHZG4xMWRoSU13eko2?=
- =?gb2312?B?WS80aFFRd21VcmJ1VUpyRnMyUFdPZDZLakFiaXVyUkJMbkRDdGFVR3F2WGNG?=
- =?gb2312?B?RU1YeHNoTUhFMGk2Vy9uMEtGSEdadVpycVl1dE1Da0FvWGo3Z0FremNUL3h5?=
- =?gb2312?B?VEdrcXg5YUxCaDZDK29xR3ZMYml6ODNMeUJxWnNRelNoRkpyQzhRbEthQWdH?=
- =?gb2312?B?enJzUWRMSnB4eklXdCthcWMrR1FWdnF2TGhvOVorTXBXVFpsVHJxeERwVlMy?=
- =?gb2312?B?OFJ1QmYyS0ZWVUdSZGFrWlZwMkVnSzVrdFpLMk8xcXRVQkJqbUxWOEQ5QXNU?=
- =?gb2312?B?TUVvSkRkMmF5S3YwZFhDMUhXNC9BZ2lOaFZEaTQrRlZZdHNtTWkwWFA5RGRM?=
- =?gb2312?B?ZDhVSzFIRDdFTlZQODN2S1RjZTFyZWlHTUdVdXRvemRBa1hmOGJFRHkyWVN2?=
- =?gb2312?B?bWtnakVKbE5HcVJHVUFTd0p2a1dtd2FIODRTZC9KL1N6a3FFUWpvYXFZOGxL?=
- =?gb2312?B?YThQcnUwMS9rYjhyam5yM0tpRlgvQ2swVGs3QW9QUWEwUzNmNWM3SS9ZdVpP?=
- =?gb2312?B?M3VRYXNJQzFnVjJqZkxpdUNHVGFObWxkdDROWDlBZVNKaFVPQWF4aERpajVi?=
- =?gb2312?B?aWFxWWxHbDY2WEt2TVo1MWJBVUoyWndwakZVM2Z4YWFWQXJqWTJ6K0tRVmJZ?=
- =?gb2312?B?USt2YWthWmVBdE1MMmxJS0xzb2p1N3FVcm1rQ3dmSGo4T0J1SU83K0pUa1g4?=
- =?gb2312?B?bmd0OUV4MzJuQzNxMW53Z3hoa0t3dFYvenNhaHhrdXJuV0xub0tFYW9kMG1o?=
- =?gb2312?B?cERnR3B2MWtsT0lxeHIrOTA1VVkweHhtek1JdzNjdHRCbWJDTjcvK0tla0Nt?=
- =?gb2312?B?SGZ6czFsR1ZnTGphOVFoc3o4OEZzTWNCakpzWFVqcGNaRWQzelB3cVBuMU95?=
- =?gb2312?B?QWp1bXUzeXdKT1k1enVhbTFSRm00dE92UWpUNmtsSDlrZ3FhcXhvL21jMFNC?=
- =?gb2312?B?K1ZRR0NQblNvL1JPMVU2eHlia0FiRlNmWFJUOTlXQXNEZzNHRnQzeVVMZVZr?=
- =?gb2312?B?aERFcVZkNXBNWExlQktiMStBOVRlNm50MU1xUE9scVFHZzhhZlV3cFpYaEcw?=
- =?gb2312?B?UlpJb0szbUR2UndnOGtGRytoa2NJc2NHNkV3bERCQ0c5Yi96cWdJK1FaM01M?=
- =?gb2312?B?OG5pSm8zMGRQalRVdENIUDh0T1RFVVRkK3lyL2NTbGRDaVlDNEhyS0Zob1di?=
- =?gb2312?B?Q3R4UVpiZ3d5UkRSdG9MYmxselhPbXJKMjA0RXlURm5XcnAwYlBhQkxKSkdL?=
- =?gb2312?B?Rmt6MTJNR1luTmFHcDcxRFRPejcvZ2ltTjU3NE5iVGRCQnZXdnBwamFMemNQ?=
- =?gb2312?B?cm84TXk2RklDZW1XY0xFaDYxVXVwODZxUFNhK01WT2dWZzhtRGpMS1QyMWNi?=
- =?gb2312?B?NEE9PQ==?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8C9524C8;
+	Fri, 19 Jan 2024 14:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705674843; cv=none; b=dEMWmvj6kiBd7NJQoxG0TYJ+JvIVgyO9vyTwXbPoesezekppb6ZDi5cIj1c/2Vu7Ch7sXbswqJArXxb7w1wWkdz9WKQV5FPupz2DqupbX9UCPy1BwlA7mf6GP57coMcYXQte7s6Q+TG8XNH3q+ZWLJjuVlckOpOSUmEoBO2Sny0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705674843; c=relaxed/simple;
+	bh=ApAURFbaKwhO/5kE7JG5AbjfTYMpGMLoDzJEXbOZb18=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dnVCFW59pAz3fV3Ib2IPoDAAmaSw9sQfSM9GY6zalWwx6xkqDCiAGF0/tLX+eGt1/yp6bzO2RcS/ifpAxciVgV1Ly7rEyLdy9J5+7hWAj1+xlviZVn3cdYx+kV5zUZPUQOMK9gGIm9UYbBvkoPcv3/k0p/HK2Q/37AqGfUZnolk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=iC3gOgtT; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iC3gOgtT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=NRMxyhyKCnq4lJJfksQu/hh6wttVDZUbD6dXln6VFMc=; b=iC3gOgtTcOXBmFznTlxc02zoHj
+	nn7DiZRggcMRGUJqDF8CATRQGXr0nQ8JQCwWkzNLVsEDTBO3CcDXHLZNledGDrofl2rgo0Anme3cu
+	EwsHAlzDEXmvgx1tBh9BO//p1AS8eR+VYmTAxtCu+HzNN/8qw8nsHyC7qxu8+pXEV0JCa1eMMhiCW
+	NHcwLnwFAxJ0qCRS/SqVQ97OeMt4rN7u+qiVKLl3b3qO67zlz0HpA8FxniWAHRi8FBOn5K+tC5bpH
+	FparWwQYOYFO8OB8NfLFguMHoLEs/W6wYn2VDKPqdJ/3CW3gMztilcbkeTXhLhYkUdkqaQk/Ndk6v
+	Be19dZ8A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57676)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rQpwD-0006oA-1P;
+	Fri, 19 Jan 2024 14:33:41 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rQpwB-0006jZ-L6; Fri, 19 Jan 2024 14:33:39 +0000
+Date: Fri, 19 Jan 2024 14:33:39 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Josua Mayer <josua@solid-run.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Yazan Shhady <yazan.shhady@solid-run.com>,
+	Jon Nettleton <jon@solid-run.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-hummingboard: Add rtc0 and rtc1
+ aliases to fix hctosys
+Message-ID: <ZaqIQ7X4/iI3jxtU@shell.armlinux.org.uk>
+References: <20240118-imx6-hb-primary-rtc-v1-1-81b87935c557@solid-run.com>
+ <ZalMsJZKrpwncEDp@shell.armlinux.org.uk>
+ <79f9bd25-a05f-43b2-8d93-5d51adae1824@solid-run.com>
+ <24c24b0b-da49-4452-b6ad-64c4c2d20e11@solid-run.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9c0a395-4373-44c3-e2d6-08dc18ee2d50
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2024 12:57:22.1037
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VFddcfI2auLcxVREpGuhz0Sd3rF20u4xn0SdxdRH9KJaby8PyTevFpMOXjq14d1B7cBd/LO7wDgrzuykWnvnzUlnMyojY5Ey4ocxKE+afQASa2djCZHyWvBB3AMQcRzh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0592
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <24c24b0b-da49-4452-b6ad-64c4c2d20e11@solid-run.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-SGkgLCBDb25vcg0KDQo+INb3zOI6IFJlOiBbUEFUQ0ggdjEgMS8yXSBkdC1iaW5kaW5nczogbWVk
-aWE6IHN0YXJmaXZlOiBNYXRjaCBkcml2ZXIgYW5kIHlhbWwNCj4gcHJvcGVydHkgbmFtZXMNCj4g
-DQo+IE9uIEZyaSwgSmFuIDE5LCAyMDI0IGF0IDAyOjA2OjM4QU0gLTA4MDAsIENoYW5naHVhbmcg
-TGlhbmcgd3JvdGU6DQo+ID4gRHJvcCBzb21lIHVudXNlZCBwcm9wZXJ0aWVzIGZvciBjbG9ja3Ms
-IHJlc2V0cyBhbmQgaW50ZXJydXB0cyBmb3INCj4gPiBTdGFyRml2ZSBKSDcxMTAgY2FtZXJhIHN1
-YnN5c3RlbS4NCj4gDQo+IFdoYXQgZG8geW91IG1lYW4gInVudXNlZCI/DQo+IA0KPiBEbyB0aGVz
-ZSBjbG9ja3MgZXRjIGV4aXN0IGJ1dCBhcmUgbm90IHVzZWQgYnkgdGhlIGRyaXZlcj8NCj4gDQo+
-IE9yIGRvIHRoZXkgbm90IGV4aXN0IGF0IGFsbD8NCj4gDQo+IFRoZSB0d28gYXJlIHZlcnkgZGlm
-ZmVyZW50IQ0KPiANCj4gVGhhbmtzLA0KPiBDb25vci4NCj4gDQoNClRoZXNlIGNsb2NrcyBldGMg
-ZXhpc3QgYnV0IGFyZSBub3QgdXNlZCBieSB0aGUgZHJpdmVyLg0KDQoNCg==
+On Fri, Jan 19, 2024 at 01:46:26PM +0000, Josua Mayer wrote:
+> Am 19.01.24 um 13:07 schrieb Josua Mayer:
+> > Am 18.01.24 um 17:07 schrieb Russell King (Oracle):
+> >> On Thu, Jan 18, 2024 at 04:01:10PM +0100, Josua Mayer wrote:
+> >>> HummingBoard has two RTCs, first integrated within SoC that can be used to
+> >>> wake up from sleep - and a second on the carrier board including back-up
+> >>> battery which is intended for keeping time during power-off.
+> >>>
+> >>> Add aliases for both, ensuring that the battery-backed clock is primary
+> >>> rtc and used by default during boot for restoring system time.
+> >> Given that the snvs RTC isn't battery backed, should we even be enabling
+> >> that in DT?
+> > In imx6qdl.dtsi it is not disabled.
+> > According to Jon it is useful because it can wake up the soc from sleep,
+> > whereas the external rtc can't.
+> >> Also, have you seen any issues such as:
+> >>
+> >> [    0.933249] rtc-pcf8523 0-0068: failed to set xtal load capacitance: -11
+> >> [    0.933505] rtc-pcf8523: probe of 0-0068 failed with error -11
+> >>
+> >> which seems to be exhibiting itself on my SolidSense board?
+> > Not on my HummingBoard Gate Rev. 1.4., but indeed on my solidsense
+> > unit too, which is probably same age as yours.
+> > Only tested imx6dl-hummingboard2-emmc-som-v15.dtb,
+> > but solidsense one should make no difference.
+> 
+> I was reading control registers 1-3:
+> debian@sr-imx6:~$ sudo i2cget -y -a -f 0 0x68 0x00
+> 0x00
+> debian@sr-imx6:~$ sudo i2cget -y -a -f 0 0x68 0x01
+> 0x00
+> debian@sr-imx6:~$ sudo i2cget -y -a -f 0 0x68 0x02
+> 0x04
+> 
+> ^^ This means low voltage on back up battery
+
+Interesting - in my case, the solidsense has been powered on for months
+(it's my internet router on the boat).
+
+I've rebooted it again today, and this time it seems to have been
+successful, and is using the time from it.
+
+> After a few power-cycles that error went away.
+> Why pcf8523_load_capacitance would ever return EAGAIN I don't see.
+> 
+> In any case now that probe succeeded, I read these values:
+> 0x80
+> 0x00
+> 0x04
+
+For me, after the last reboot, they contain:
+0x80
+0x00
+0x08
+
+> Long story short I don't think the EAGAIN during probe is related
+> to adding aliases.
+> HOWEVER imo pcf8523_probe should return an error when
+> pcf8523_load_capacitance fails.
+
+I think the real question is where is the EAGAIN coming from and
+why.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
