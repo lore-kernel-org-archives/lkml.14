@@ -1,184 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DD451C4A
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 12:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1933A51C4D
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 12:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705669145; cv=none; b=TR7gmsTXq9EZqCNRYkKIhcIRnzyPPD2B9L/GtrL4Db4tBOAKWFlu80YOWtLp3hm3i4YULgoXu+MzMkNWOXxJZuyNjUkZWFzxKbU3JlRPzkvmrzX4wTOyFYh8iZN7uQ6/E8kTQMeKHuiIafCCIbbI5iZBtEyX7H485/ESVFXeNtY=
+	t=1705669170; cv=none; b=ZFKzixJEaMBzndZ3Pn2bQ0sOaiNB6vBRe9W2MeAdy1DgHDdFIFCErRRTbLkFPLhyAAxarh7hSOJ8kuAUhcNLTvxrkjfeKhjAaq1aB3MCPYb7defdnyQtUwzdqHOUc4uFB4TaTSnhY1kpD9glC5pW653sYMvDBHA6oo0csoEp+tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705669145; c=relaxed/simple;
-	bh=YpmJGXZOBTbVX/5WlQIuqyYaYOZi7bO6T+1xRd2oqa4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DoN0VfikOLAXfOPPft89Fl/nDcUG4R7lVommPbwj6gWsDcTAK+PHRffmT0iNhxIMiiSw81kYYzFZysE19RkfeFBm9wy5GDr4YQDcr8bV/4aBns9Z1YpxAhSHXjiqERZ6kXBCZXmpyMjpK+y0dT9wX2Hxu1M0Fz1VGdXeAGFYzRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OxB8v8q7; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OxB8v8q7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705669144; x=1737205144;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=YpmJGXZOBTbVX/5WlQIuqyYaYOZi7bO6T+1xRd2oqa4=;
-  b=OxB8v8q71MZ6Fpy5B+upZz9tLnU6oj1E9D+SCl4RVtuXuTXEjnoqgyDu
-   GU0RaFyWRpL/6D4sOlY+Lii+9LeEUBEd1Y51JtyfILClzczzNVGDf5P5s
-   NfB3uPJOvyEMqsIlDkv5jszPT6SzAAaHs04yYYJ2oHdCMwSt8NEn25ikm
-   2tvIHdjUbpMjSTAKYKaNfuxJAhQsQd/y9hIYmeGOtbEViTBJK0eHfFLqv
-   9oy2MYaDIOUv8QlAmG5cT5LwOuqJ3KIzTyf5QytBlLaJAscUHFTmDFGdy
-   PSyP1pIIzsiuLkopGjj2xKfm39fPCOHeWIBEvrByXuqQO2jTSVGd5sXjx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="7439998"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="7439998"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 04:59:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="785067920"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="785067920"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 19 Jan 2024 04:59:00 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQoSY-00043k-1u;
-	Fri, 19 Jan 2024 12:58:58 +0000
-Date: Fri, 19 Jan 2024 20:58:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mark Pearson <markpearson@lenovo.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: drivers/platform/x86/think-lmi.c:758:51: warning: '%s' directive
- argument is null
-Message-ID: <202401192058.imSFFV22-lkp@intel.com>
+	s=arc-20240116; t=1705669170; c=relaxed/simple;
+	bh=a9evNIQTQ4v07c3j6jPq8pkzsYOuV1SjMhA90sc661c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VCasajjGBMoEKAtCqIdCqBOhPGG1OzaWBhG7yCmM/QIM7hFa8RNQ18jQW+54UBgUJ/zTou8z2FN2V32joAinOij/Ys7TJ8cVyDCliGN2KqtjPZxxsLu1V9VqLvwjCxB7sJfyqvMIbu/VhMXoHLEI6Imn5cKG1+vIgQ0vZFaINOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TGfmz0QQ3zsVs0;
+	Fri, 19 Jan 2024 20:58:27 +0800 (CST)
+Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7D9CD140153;
+	Fri, 19 Jan 2024 20:59:23 +0800 (CST)
+Received: from [10.174.177.243] (10.174.177.243) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 19 Jan 2024 20:59:23 +0800
+Message-ID: <14ae628d-a9ef-42f3-9201-e90c5c88c133@huawei.com>
+Date: Fri, 19 Jan 2024 20:59:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Mark,
-
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9d1694dc91ce7b80bc96d6d8eaf1a1eca668d847
-commit: b49f72e7f96d4ed147447428f2ae5b4cea598ca7 platform/x86: think-lmi: Certificate authentication support
-date:   1 year, 10 months ago
-config: x86_64-randconfig-x063-20230716 (https://download.01.org/0day-ci/archive/20240119/202401192058.imSFFV22-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240119/202401192058.imSFFV22-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401192058.imSFFV22-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/platform/x86/think-lmi.c: In function 'certificate_store':
->> drivers/platform/x86/think-lmi.c:758:51: warning: '%s' directive argument is null [-Wformat-overflow=]
-     758 |                 auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-         |                                                   ^~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for DRM_I915_DEBUG_GEM
-   Depends on [n]: HAS_IOMEM [=y] && DRM_I915 [=y] && EXPERT [=y] && DRM_I915_WERROR [=n]
-   Selected by [y]:
-   - DRM_I915_DEBUG [=y] && HAS_IOMEM [=y] && DRM_I915 [=y] && EXPERT [=y] && !COMPILE_TEST [=n]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: memory: move mem_cgroup_charge() into
+ alloc_anon_folio()
+Content-Language: en-US
+To: Michal Hocko <mhocko@suse.com>
+CC: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <ryan.roberts@arm.com>, Matthew Wilcox
+	<willy@infradead.org>, David Hildenbrand <david@redhat.com>
+References: <20240117103954.2756050-1-wangkefeng.wang@huawei.com>
+ <ZalK3suIskEyaR7m@tiehlicka>
+ <c7b1cc8e-c434-4c86-972e-4a105524646c@huawei.com>
+ <ZaosK59cRa27K9zW@tiehlicka>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+In-Reply-To: <ZaosK59cRa27K9zW@tiehlicka>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
 
 
-vim +758 drivers/platform/x86/think-lmi.c
 
-   727	
-   728	static ssize_t certificate_store(struct kobject *kobj,
-   729					  struct kobj_attribute *attr,
-   730					  const char *buf, size_t count)
-   731	{
-   732		struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
-   733		char *auth_str, *new_cert;
-   734		char *guid;
-   735		int ret;
-   736	
-   737		if (!capable(CAP_SYS_ADMIN))
-   738			return -EPERM;
-   739	
-   740		if (!tlmi_priv.certificate_support)
-   741			return -EOPNOTSUPP;
-   742	
-   743		new_cert = kstrdup(buf, GFP_KERNEL);
-   744		if (!new_cert)
-   745			return -ENOMEM;
-   746		/* Strip out CR if one is present */
-   747		strip_cr(new_cert);
-   748	
-   749		/* If empty then clear installed certificate */
-   750		if (new_cert[0] == '\0') { /* Clear installed certificate */
-   751			kfree(new_cert);
-   752	
-   753			/* Check that signature is set */
-   754			if (!setting->signature || !setting->signature[0])
-   755				return -EACCES;
-   756	
-   757			/* Format: 'serial#, signature' */
- > 758			auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-   759					dmi_get_system_info(DMI_PRODUCT_SERIAL),
-   760					setting->signature);
-   761			if (!auth_str)
-   762				return -ENOMEM;
-   763	
-   764			ret = tlmi_simple_call(LENOVO_CLEAR_BIOS_CERT_GUID, auth_str);
-   765			kfree(auth_str);
-   766			if (ret)
-   767				return ret;
-   768	
-   769			kfree(setting->certificate);
-   770			setting->certificate = NULL;
-   771			return count;
-   772		}
-   773	
-   774		if (setting->cert_installed) {
-   775			/* Certificate is installed so this is an update */
-   776			if (!setting->signature || !setting->signature[0]) {
-   777				kfree(new_cert);
-   778				return -EACCES;
-   779			}
-   780			guid = LENOVO_UPDATE_BIOS_CERT_GUID;
-   781			/* Format: 'Certificate,Signature' */
-   782			auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-   783					new_cert, setting->signature);
-   784		} else {
-   785			/* This is a fresh install */
-   786			if (!setting->valid || !setting->password[0]) {
-   787				kfree(new_cert);
-   788				return -EACCES;
-   789			}
-   790			guid = LENOVO_SET_BIOS_CERT_GUID;
-   791			/* Format: 'Certificate,Admin-password' */
-   792			auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-   793					new_cert, setting->password);
-   794		}
-   795		if (!auth_str) {
-   796			kfree(new_cert);
-   797			return -ENOMEM;
-   798		}
-   799	
-   800		ret = tlmi_simple_call(guid, auth_str);
-   801		kfree(auth_str);
-   802		if (ret) {
-   803			kfree(new_cert);
-   804			return ret;
-   805		}
-   806	
-   807		kfree(setting->certificate);
-   808		setting->certificate = new_cert;
-   809		return count;
-   810	}
-   811	
+On 2024/1/19 16:00, Michal Hocko wrote:
+> On Fri 19-01-24 10:05:15, Kefeng Wang wrote:
+>>
+>>
+>> On 2024/1/18 23:59, Michal Hocko wrote:
+>>> On Wed 17-01-24 18:39:54, Kefeng Wang wrote:
+>>>> mem_cgroup_charge() uses the GFP flags in a fairly sophisticated way.
+>>>> In addition to checking gfpflags_allow_blocking(), it pays attention
+>>>> to __GFP_NORETRY and __GFP_RETRY_MAYFAIL to ensure that processes within
+>>>> this memcg do not exceed their quotas. Using the same GFP flags ensures
+>>>> that we handle large anonymous folios correctly, including falling back
+>>>> to smaller orders when there is plenty of memory available in the system
+>>>> but this memcg is close to its limits.
+>>>
+>>> The changelog is not really clear in the actual problem you are trying
+>>> to fix. Is this pure consistency fix or have you actually seen any
+>>> misbehavior. From the patch I suspect you are interested in THPs much
+>>> more than regular order-0 pages because those are GFP_KERNEL like when
+>>> it comes to charging. THPs have a variety of options on how aggressive
+>>> the allocation should try. From that perspective NORETRY and
+>>> RETRY_MAYFAIL are not all that interesting because costly allocations
+>>> (which THPs are) already do imply MAYFAIL and NORETRY.
+>>
+>> I don't meet actual issue, it founds from code inspection.
+>>
+>> mTHP is introduced by Ryan（19eaf44954df "mm: thp: support allocation of
+>> anonymous multi-size THP")，so we have similar check for mTHP like PMD THP
+>> in alloc_anon_folio(), it will try to allocate large order folio below
+>> PMD_ORDER, and fallback to order-0 folio if fails, meanwhile,
+>> it get GFP flags from vma_thp_gfp_mask() according to user configuration
+>> like PMD THP allocation, so
+>>
+>> 1) the memory charge failure check should be moved into fallback
+>> logical, because it will make us to allocated as much as possible large
+>> order folio, although the memcg's memory usage is close to its limits.
+>>
+>> 2) using seem GFP flags for allocate/mem charge, be consistent with PMD
+>> THP firstly, in addition, according to GFP flag returned for
+>> vma_thp_gfp_mask(), GFP_TRANSHUGE_LIGHT could make us skip direct reclaim,
+>> _GFP_NORETRY will make us skip mem_cgroup_oom and won't kill
+>> any progress from large order folio charging.
+> 
+> OK, makes sense. Please turn that into the changelog.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sure.
+
+> 
+>>> GFP_TRANSHUGE_LIGHT is more interesting though because those do not dive
+>>> into the direct reclaim at all. With the current code they will reclaim
+>>> charges to free up the space for the allocated THP page and that defeats
+>>> the light mode. I have a vague recollection of preparing a patch to
+>>
+>> We are interesting to GFP_TRANSHUGE_LIGHT and _GFP_NORETRY as mentioned
+>> above.
+> 
+> if mTHP can be smaller than COSTLY_ORDER then you are correct and
+> NORETRY makes a difference. Please mention that in the changelog as
+> well.
+> 
+
+For memory cgroup charge, _GFP_NORETRY checked to make us directly skip
+mem_cgroup_oom(), it has no concern with folio order or COSTLY_ORDER 
+when check _GFP_NORETRY in try_charge_memcg(), so I think NORETRY should
+always make difference for all large order folio.
+
+	
