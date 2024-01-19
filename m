@@ -1,119 +1,114 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0673C06A;
-	Fri, 19 Jan 2024 10:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5584C3D0
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 10:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705660949; cv=none; b=sbzWM0ANsjY41IRGWw+Yh6LvQ7fN0iger1/AQOQ4m0sovijh16oSWtvi5efetMyoOCFxKtKL03/4SmuRtJpcJvbTXoTBjCj56udRnkoeYNFWub1E7S8YDyE4SUtYKaG5yuRPRHFqzksYRD9p0evwnvYZM80/0680XSM1AY6Z6pM=
+	t=1705661134; cv=none; b=hQnTIxbt4yefFHROGXbnYBZWF8f719dTy9v/g3D2s6iJe1KKkSLbh3pbJvpQwYxKnvBoC9ADxCVohCDZ61+a1xNw/Lb1VSHnuDsTF8jllpilqGytmaI+oo5c+XXXdzmPmv6o376d4rLYRpRKjD5poEQ0yGwz7/VNZprK5HnSRps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705660949; c=relaxed/simple;
-	bh=cO3V1vzVt/XdQPd4h52EbfomnaIJyRP7lYScOtdsYfA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uRvMyepLazMTC95RyOREfe1HucQzNnaf+fyE9y9BexWRRcggeHggE+iMxLv5MeyDwLBl075/loGRMzWXs0MNQuQQxVvKd4Ov77gnUZEL3P2kzwRn3oxuhZXTUCK73OCvetKLblRUXs5agqkWnL3c42KpF56aeChGxqXRBYLhob8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=aUMfllpX; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1705661134; c=relaxed/simple;
+	bh=37jpLv6HsDjfq58UT+g6uG00C2Y7+aRvCtuRbHaslLY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Xni/gs+BM/4DaVO/cFwdG5BkKJGsfqFeIhOMDed7wljbfXUtvuWkFKo/41EjjTtu5tRZ/gnOINrcWWB4JaicEM5rbOFHI0lWrMpbURdnD2pREbub4vXRLXpMuLLWpKif9J/dNm2/+gEPouKwNu4nxFIgI/FHookXfiolRfggpsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M8PDrjNL; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="aUMfllpX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1705660854; x=1706265654; i=markus.elfring@web.de;
-	bh=cO3V1vzVt/XdQPd4h52EbfomnaIJyRP7lYScOtdsYfA=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=aUMfllpXhQp96ch+72qMDLSmcLyDdYTI95M+i9y/KrwZRGGMot0eTY+0rwXCxNP1
-	 sdtxYWf+w/xQEMObBPPZEGZ2Bxs0PACvQhN9EjN2YBb5Znd733txOgj7sZL/YpnkD
-	 vaIebkxOArHMSUG70Yz4IYTZWfVvSgEX6deyqWAcJ2IrarpPQyGXepDZvUbwXrvzn
-	 ZI15Q2evZc1Cc25/KsDRbED7Fjw6NMuzXi8CTg8S0ep7lLH+DgSK9a4Z3nmBLRa6W
-	 7eMHYqrbVE4wFqXuEypmjD7JKIxRDBwgD2pOOO4vqL9AR5brc2F6nnyPPNDz6NMhV
-	 LpQ1qPF6+/MEXWj4pg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MXGK4-1rcI6C0CUA-00Z3qK; Fri, 19
- Jan 2024 11:40:54 +0100
-Message-ID: <91af4a8c-d2e2-416f-b02e-5d69553c5998@web.de>
-Date: Fri, 19 Jan 2024 11:40:48 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M8PDrjNL"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40e60e135a7so5639815e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 02:45:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705661131; x=1706265931; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H74QYBuoWbNPw1IrHpaPtV5Fr/Jo8QfnPV+pn460u7Q=;
+        b=M8PDrjNLebLy9eSHsN/cvhQ311/guZHaF8bjFlOIRwXxQKwsyXEMETqssTV61V/RS0
+         qm7SwmDz8dzpqMG0mIm8vnlJNo1GYSlkePKjkvxIDCrvcDvsfmT8u38AKclWqPuIVr8n
+         5kH1R4gZl+YhxNTH2zqIlWXy46HhW3+GDcmkGKB1+2W3WAKLfrDJn/JndgWoY3AMVmzm
+         HdDdpYgrciw22SFl5612fNrP+dqIi/MSg+GOZEdTNQYJt/VUxviYyF3UeeMHsHJrVnLL
+         kOQDSMtqc8Sx2SIkUPXcTxt8xf6hvI+0qdtqXhOqOoz1+sLsRqM9pZidz8vTMYDIdytt
+         nXdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705661131; x=1706265931;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H74QYBuoWbNPw1IrHpaPtV5Fr/Jo8QfnPV+pn460u7Q=;
+        b=ma4gkNONQgr7B7gnhu4pfpBda9nw6GVU/cL0LWU8gM4NT2KRZYsz3YExHsXXTbsNWa
+         nLCIQrWbyvs9YdOVejHzBtqwA2nAtH98JSdv2ATUi5xg5LF0pLMHePAoChMtX3ghMKD9
+         4M9QOzh6/QVFbp/7ha3Ma0NMlt7z5FcJKd4E780aYCEBFm/GBlvYvbhZqL1+R6+p2i1j
+         Di2nDbVzeRFgRWtXJnDWp5NrOLk3mabi0crlT/1zdRURdlX6WwWXZqWNRm2uFwB9JiNQ
+         Elx07ASJEGXlv3iKhsAJFjsEEQUYJrEq+48jiQKNo4CCHwD4PeYlqO4t3Q1KDSPUH+/d
+         z/cg==
+X-Gm-Message-State: AOJu0YxyKO/NFEIMlMzN2PtQ68jmvM4bU5xf5BInSr+25IOTjpK07JsO
+	WcL1O96c7J0rY3ZNx2f5ea93l9tl7DIZlugXkaJ9Rq2aktka9ZiDwqPKM9Ed7AU=
+X-Google-Smtp-Source: AGHT+IGe2DxncF/tdHEyEyQetNG3qty4lJaRlXD9UVpv8DePV8y20R67SD2hJpbDmH4wko4vUgqtqQ==
+X-Received: by 2002:a05:600c:2152:b0:40e:6587:edc8 with SMTP id v18-20020a05600c215200b0040e6587edc8mr1512939wml.91.1705661130766;
+        Fri, 19 Jan 2024 02:45:30 -0800 (PST)
+Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id fm16-20020a05600c0c1000b0040ea10178f3sm77470wmb.21.2024.01.19.02.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jan 2024 02:45:30 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: alim.akhtar@samsung.com,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	andre.draszik@linaro.org,
+	kernel-team@android.com,
+	peter.griffin@linaro.org,
+	semen.protsenko@linaro.org,
+	willmcvicker@google.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 02/19] dt-bindings: serial: samsung: do not allow reg-io-width for gs101
+Date: Fri, 19 Jan 2024 10:45:09 +0000
+Message-ID: <20240119104526.1221243-3-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+In-Reply-To: <20240119104526.1221243-1-tudor.ambarus@linaro.org>
+References: <20240119104526.1221243-1-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] x86/xen: Add some null pointer checking to smp.c
-Content-Language: en-GB
-To: Kunwu Chan <chentao@kylinos.cn>, xen-devel@lists.xenproject.org,
- kernel-janitors@vger.kernel.org, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Ingo Molnar <mingo@redhat.com>, =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
- <jgross@suse.com>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Cc: kernel test robot <lkp@intel.com>, LKML <linux-kernel@vger.kernel.org>
-References: <20240119094948.275390-1-chentao@kylinos.cn>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240119094948.275390-1-chentao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ghWwRZ/xa5RiEzFG9SbB0YwItzwhscPRgB036myKdl26mgHPgKw
- VQbfwMEIvEYjgoBwMzGbrC86u73mQWUAltu6JjfaeKhE0StOY0nu7+cgBg/EHNLAO0/X+BM
- EBxxa3DUjgyyfYOV5m3vCuXn9YLNj9tZuWEYayV5ptyDsZtJkANo7xydQln4MmP7NONjqa4
- EUy/959xDksIDzQKmvvUA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Jdxt2uu7/7Y=;HuDpAVrdHwPdL9vQoUbqKiGrS40
- jrr9+Shr1pVnJD5Of/QXY9RNn0QLS8cUxdkrkEY3hPpLtU4ONu5yTqk4gf0qoqVTuGJnOD1Sn
- 4UrF12BONo5rcPNaYyf5k0IW3lMsXl5nF472p1Jtx1Go5zQ8wxkQHDivMIkKwGG2AWoMX61ZU
- Hi4/FpxLFYz/LiUddzOcuuxVbJiBPGiaonoQF43MXTxrNGoKyQZ7xsGD3X4KTDkUorVbhbSwZ
- sXHkWnKRV+yASAqYr2MNrkdkuIrgCUTG8vs0YqBg1T+nivDDbNM7kt67VU8jgqMmGR3S+oITw
- q3J23UQ7mfv84Xmg0Q2kWQfRbTDcl7VIbhnpBCsug4ijQ6BcJcxT6r77xDu/Gp19LaRutvHWq
- ikMASjzuT7OfjYcHxu0yiz3NQK20GUuaE4ehx8Ka/Pk0uihwglrabOKlYTwTeEqP9tn+SGyY6
- Iu/nz7+UgqBi2yurZd2IxhwOZ+BezJKN25qru5qAzKFwxuhOdUyCunv7h3r8teyCJ+t2WLjc6
- GAbxLzJ97GbfWnuP423Zs8y/UjUP75u+nPGqSNd5Gpf3fV3/ezW04pzkB3Q7PZYMZtWHB85C2
- HIlKfL63hLkXUDWriYv4ejxh2C4YQPKfxsEXRZDF0wFEsC98DVews10fJgSqVfyOIcyLTApZj
- 3I8uM37B4H+d5Gerjo+2NgOB0h5sSMUhhs5syKmsoEgYRKZsVa0/Aj69GIawSRHt9uxDtDWlR
- R2okc37C8jVAGB6hu0wheHhb/K1G8n7ct3UDPNeBm1F/Yua2vuhBObIWg9vSt6OXXWf5nBNaG
- dpEBLuKRz4narT4kDT5Bwag9mpo6h9E2tybPq5PIodGIqJYy5QV7t297S77lifFtdLwEYnr5U
- Ww7jgUT4o5p/aTeMKxVvbdVh+CL/k3q5PrpQ0Bpd58eTxWYJUwx3KS3VhhpciBGDK15c6dp1V
- HIfFig==
+Content-Transfer-Encoding: 8bit
 
-> kasprintf() returns a pointer to dynamically allocated memory
-> which can be NULL upon failure. Ensure the allocation was successful
-> by checking the pointer validity.
-=E2=80=A6
-> ---
-> Changes in v3:
->     - Remove rc initialization
->     - Simply error paths by adding a new label 'fail_mem'
-=E2=80=A6
+All gs101 serial ports are restricted to 32-bit register accesses.
+This requirement will be inferred from the compatible. Do not allow
+the reg-io-width property for the google,gs101-uart compatible.
 
-I became curious if you would like to simplify further source code places.
+Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ Documentation/devicetree/bindings/serial/samsung_uart.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+index 133259ed3a34..0f0131026911 100644
+--- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
++++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+@@ -143,6 +143,8 @@ allOf:
+     then:
+       required:
+         - samsung,uart-fifosize
++      properties:
++        reg-io-width: false
+ 
+ unevaluatedProperties: false
+ 
+-- 
+2.43.0.429.g432eaa2c6b-goog
 
-> +++ b/arch/x86/xen/smp.c
-> @@ -65,6 +65,8 @@ int xen_smp_intr_init(unsigned int cpu)
->  	char *resched_name, *callfunc_name, *debug_name;
->
->  	resched_name =3D kasprintf(GFP_KERNEL, "resched%d", cpu);
-> +	if (!resched_name)
-> +		goto fail_mem;
-
-Would you like to add a blank line after such a statement?
-
-
->  	per_cpu(xen_resched_irq, cpu).name =3D resched_name;
-=E2=80=A6
-
-Please compare with your subsequent suggestion.
-
-=E2=80=A6
-> @@ -101,6 +108,9 @@ int xen_smp_intr_init(unsigned int cpu)
->  	}
->
->  	callfunc_name =3D kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
-> +	if (!callfunc_name)
-> +		goto fail_mem;
-> +
->  	per_cpu(xen_callfuncsingle_irq, cpu).name =3D callfunc_name;
-=E2=80=A6
-
-Regards,
-Markus
