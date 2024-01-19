@@ -1,119 +1,217 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A2752F84;
-	Fri, 19 Jan 2024 16:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B421C54BE3;
+	Fri, 19 Jan 2024 16:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705680879; cv=none; b=PZhxs1GtTcgCn06MQT7SEYPMQyss9VoV2remSPHUGkgoHTHFA7bZkr9Mpg3WBQ7BdXnp+Yh6y+k6qv2yiGkelTjfqa6lRNB+kBqZpaAHKB8YJM84YE4dnnlTRxgXFwv91j22RaTmaj6npV3ApF0IiSYw2TOJUg0KvgwPEz8OolY=
+	t=1705681080; cv=none; b=EoaLIURQDe5QSVjA5JIDy3C2MxulT4vgextsG4mECPyc/3xGyfc3Ec5VHtPUiD62USWbVLmt37KIK1pD1CUygNxQhrt6okMvH5XfOW5U2b8eUdeXiRkrkKNVihjXTuVicYVtFRZ29Wpx9RTDcFdDaDmQDeXK4F6UWwMx/G4jogU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705680879; c=relaxed/simple;
-	bh=B7zL9FKEcp0/CRVmWRJ5gFi5msLCspc37+NygTzDgY0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jIbfP/aYotjH4xerXVw1PZHaeQmle6kiZJkPSVpNcBsSxW8Ht+xZZgKHlHt/MAssUVUvEAjBLf4kob8H6VdSHGVWRvpW2pre7UaRu3q2LQmN26TuHH7tTS6slVp/QaIqjK3VpZ9iKiQK+1VGE/igL5znhZmkJuwUnLVdO1JzXoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QcdvfmmW; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705681080; c=relaxed/simple;
+	bh=lPPXDt+XvoN6YBh8qHhnZqlV9+3Kqzv4OYpbBiFulr8=;
+	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=D1FvECUUpX7fQIDzuUquD8KMNk0yriBdPZOTOa74pW+dpYzKgkaZ+sFCmWrG+optNad7bu9NI/+94fR/4aON8ZgO48aOdxkfTmmEOdsy+fYbhuq+OT5UTepG8GP+xjC/V2R53dwjGx0dJ63vwNn/IygaozVJNEDxD23abqlHlAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z9jYM9sE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DHlg99wG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1KKtT2jX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bmYrSuuO; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QcdvfmmW"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cceb5f0918so10728961fa.2;
-        Fri, 19 Jan 2024 08:14:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705680876; x=1706285676; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MZS8+douymIyp/G1h1ov9Y1Rdr9Hj7ajOnwayf3/aT4=;
-        b=QcdvfmmWnWT5SWNEH4cP5iREbv7+7NCWtkapfyv8jthPS8j6pccMPtsCA6t5vQd2/E
-         uO7FGzjqqih9qUTh/6W3ADQLlQUKAmRXBNqYjsCwtPLuNLsliivi/dxXCtaTdaeJ67vP
-         bPG2/eR4+VWAnKEQcAI1R8974g+H8XCExAcGTVWBR/6ondAoodYgU8Y2FFne6f1gXTzb
-         QOIikTiSLHNqguW84maKn9TVoe/OLfLVcYuwm4OiOntS5rU2dJnAIqZV9mlXX4i/J6mG
-         rY7/0NcRQ9SJQyrwM76MegJro2IivCTxMXVVQFtQ6qTWsTu2G0zwBUk2ZZUYvHceIkKe
-         Z1Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705680876; x=1706285676;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MZS8+douymIyp/G1h1ov9Y1Rdr9Hj7ajOnwayf3/aT4=;
-        b=jPGzuB6on8DKfuK5DZodh/An3kHmi2jNc3GZVIlsWMeKpBeVBe4VwlpnzJND/HpJcf
-         O3cg/D3wi8uDDNZxVNrG0mNKqsQS8gALgpmdhYkt+HpFKrUEav7Y5r5rYv9BtVlgqjNq
-         iUacDy4AxxddKL6aKXr/BgB7PEoiWvHKNtUof0gGSaNSi6J+gU+9dcGH0gqnty+DskBN
-         +IuNlh452J9MJIYYBqEOWtAzk4HBIgzOUK6VFi+Dk1wQc9I4Vl2t7puVJcgiemjihleZ
-         f7KvdAbSTtUgfk5AAUsLmCkuZlPgqHwpAQxfupvCvia5j+cb4SnLaWTZvUI9w687c68c
-         FWOA==
-X-Gm-Message-State: AOJu0YwPR/CdJZb83fyXxWn2HjAoP7sO65Slob+sOLxll9+bgsBHRzll
-	OHd5PD2c+13walH1SlbySRSZCgeFpWlh7geAotaT437aiIMQhPCAbKjWwlGiWiZXM6bKzesvso9
-	6OxXlavGDLbQrrv9AD82x8Vj0j84=
-X-Google-Smtp-Source: AGHT+IG4AWmyvk46hSLjREkIbqUt4PdjznNPm5PSf/hR21IX91v4MVnC382ND6Wc/ywvktNtzGzpa2ROJvpEuxdLURM=
-X-Received: by 2002:ac2:446e:0:b0:50e:7be8:46fd with SMTP id
- y14-20020ac2446e000000b0050e7be846fdmr519933lfl.208.1705680875590; Fri, 19
- Jan 2024 08:14:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z9jYM9sE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DHlg99wG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1KKtT2jX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bmYrSuuO"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A58A91FD15;
+	Fri, 19 Jan 2024 16:17:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1705681076; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CP2uValOwWCAjeFRvYWAW6amhd5cd0jqCsima+LQWHA=;
+	b=Z9jYM9sEwC8NnxC1Y7RlVqKpUJ85lv11QlK04sOxZbsXFLPJdcyBmjedWPWtwQsGQPE8kK
+	YA1vOzI3l9Q+c9v6eeXij7rjA4nzMpRp6hPpeWdctATL07y3dF6616kVXRtC7y3ePztBAO
+	Qw/bTGPf31AhIJ9hpPnUH6mCaY6frng=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1705681076;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CP2uValOwWCAjeFRvYWAW6amhd5cd0jqCsima+LQWHA=;
+	b=DHlg99wGOdciqTLupx/BLRbD6WF7/PAKbQ66rr2pyG5W4aLIXxawegsBc0Ps9iA2ZLkHkJ
+	6esHcdE5BW36oMCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1705681075; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CP2uValOwWCAjeFRvYWAW6amhd5cd0jqCsima+LQWHA=;
+	b=1KKtT2jXaq45AJYVdez6FOU5AivLF1Lryzi5CfaLCpN8oEEz/DC7e8LOD4EMtQ9bNMx+3M
+	wI9NzBfvehCAo3n++zf9gsUQzUlOzKkwbitMsDcCLonHr4UER5DJ+rtbqw5IR8iRz/JrE+
+	+vK1QsTWp9l5HUO9RYNlnZrpNyyXtPU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1705681075;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CP2uValOwWCAjeFRvYWAW6amhd5cd0jqCsima+LQWHA=;
+	b=bmYrSuuO5+eAh1qyU1YU7+c7WConmWYvwZX3eacx6ooc6x87skSpYTH2fr61vHIgVCVLZv
+	fRl18ZvueFhzM7DQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 74DB81388C;
+	Fri, 19 Jan 2024 16:17:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hBEBG7OgqmWoVQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 19 Jan 2024 16:17:55 +0000
+Date: Fri, 19 Jan 2024 17:17:55 +0100
+Message-ID: <875xzps3f0.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 6.8-rc1
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
- <20230804104602.395892-7-ckeepax@opensource.cirrus.com> <Zali4qxdegY7H6eY@surfacebook.localdomain>
- <aec96f5a-b759-48c7-a5ec-bafe3bfa5357@sirena.org.uk> <CAHp75Vd6JtW4ddbSPXUp6WgEdBJizjwnS-XZzwLcXWWLxFWp-w@mail.gmail.com>
- <b1889bb0-2b9f-477c-80d3-a636b9017ea4@sirena.org.uk>
-In-Reply-To: <b1889bb0-2b9f-477c-80d3-a636b9017ea4@sirena.org.uk>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 19 Jan 2024 18:13:59 +0200
-Message-ID: <CAHp75Ve=SR_M5NGtu50Eu1Gw_g8mGfk1RAub22QZn3rwGNw+ug@mail.gmail.com>
-Subject: Re: [PATCH v7 6/6] ASoC: cs42l43: Add support for the cs42l43
-To: Mark Brown <broonie@kernel.org>
-Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, lee@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com, 
-	yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com, 
-	pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, 
-	patches@opensource.cirrus.com, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=1KKtT2jX;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=bmYrSuuO
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 TO_DN_ALL(0.00)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -3.51
+X-Rspamd-Queue-Id: A58A91FD15
+X-Spam-Flag: NO
 
-On Fri, Jan 19, 2024 at 12:07=E2=80=AFAM Mark Brown <broonie@kernel.org> wr=
-ote:
-> On Thu, Jan 18, 2024 at 10:46:28PM +0200, Andy Shevchenko wrote:
-> > On Thu, Jan 18, 2024 at 8:11=E2=80=AFPM Mark Brown <broonie@kernel.org>=
- wrote:
-> > > On Thu, Jan 18, 2024 at 07:41:54PM +0200, andy.shevchenko@gmail.com w=
-rote:
-> > > > Fri, Aug 04, 2023 at 11:46:02AM +0100, Charles Keepax kirjoitti:
->
-> > > > > +   unsigned int hs2 =3D 0x2 << CS42L43_HSDET_MODE_SHIFT;
->
-> > > > BIT(1) ?
->
-> > > Given that this is writing a value into a register field called "MODE=
-"
-> > > it seems very likely that it's an enumeration value rather than a
-> > > bitmask (and similarly for all the other places where you're making
-> > > similar comments).  Please think a bit more about the code being
-> > > commented on when making these minor stylistic comments.
->
-> > I read a bit further and have given a comment about this as you put it
-> > above that they are plain values.
-> > Please, read my comments in full.
->
-> I did eventually find that while going through the other comments but
-> given that the earlier ones hadn't been revised and it was all a bunch
-> of different fields it still seemed useful to highlight, if nothing else
-> it was a little unclear that your later comment applied to all the
-> fields you were asking for updates to.
+Linus,
 
-Yeah, I was thinking about that during the review, that's why I first
-commented and then concluded that those comments are kinda bogus.
+please pull sound fixes for v6.8-rc1 from:
 
-> In general in a case like this where the code is already in tree it does
-> seem like it'd be better to just write patche for the stylistic issues.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-6.8-rc1
 
-Sure. I believe Charles will address some of them, if not all.
+The topmost commit is fb3c007fde80d9d3b4207943e74c150c9116cead
 
---=20
-With Best Regards,
-Andy Shevchenko
+----------------------------------------------------------------
+
+sound fixes for 6.8-rc1
+
+A collection of small fixes:
+- Lots of ASoC SOF fixes and related reworks
+- ASoC TAS codec fixes including DT updates
+- A few HD-audio quirks and regression fixes
+- Minor fixes for aloop, oxygen and scarlett2 mixer
+
+----------------------------------------------------------------
+
+Amadeusz Sławiński (1):
+      ALSA: hda: Properly setup HDMI stream
+
+AngeloGioacchino Del Regno (2):
+      ASoC: mediatek: mt8195: Remove afe-dai component and rework codec link
+      ASoC: mediatek: sof-common: Add NULL check for normal_link string
+
+Bin Li (1):
+      ALSA: hda/realtek: Enable headset mic on Lenovo M70 Gen5
+
+Chancel Liu (1):
+      ALSA: aloop: Introduce a function to get if access is interleaved mode
+
+ChiYuan Huang (2):
+      ASoC: codecs: rtq9128: Fix PM_RUNTIME usage
+      ASoC: codecs: rtq9128: Fix TDM enable and DAI format control flow
+
+Heiner Kallweit (1):
+      ALSA: hda: generic: Remove obsolete call to ledtrig_audio_get
+
+Kai Vehmanen (1):
+      ASoC: SOF: ipc4-loader: remove the CPC check warnings
+
+Kuninori Morimoto (1):
+      ASoC: audio-graph-card2: fix index check on graph_parse_node_multi_nm()
+
+Nícolas F. R. A. Prado (1):
+      ASoC: mediatek: mt8192: Check existence of dai_name before dereferencing
+
+Peter Ujfalusi (3):
+      ASoC: Intel: bxt_da7219_max98357a: Fix kernel ops due to COMP_DUMMY change
+      ASoC: Intel: bxt_rt298: Fix kernel ops due to COMP_DUMMY change
+      ASoC: SOF: icp3-dtrace: Revert "Fix wrong kfree() usage"
+
+Rander Wang (1):
+      ASoC: SOF: ipc4-pcm: remove log message for LLP
+
+Shenghao Ding (4):
+      ASoC: dt-bindings: move tas2563 from tas2562.yaml to tas2781.yaml
+      ASoC: tas2562: move tas2563 from tas2562 driver to tas2781 driver
+      ASoC: tas2781: Add tas2563 into header file for DSP mode
+      ASoC: tas2781: Add tas2563 into driver
+
+Takashi Iwai (2):
+      ALSA: oxygen: Fix right channel of capture volume mixer
+      ALSA: scarlett2: Fix yet more -Wformat-truncation warnings
+
+Yo-Jung Lin (1):
+      ALSA: hda/realtek: Enable mute/micmute LEDs and limit mic boost on HP ZBook
+
+Çağhan Demir (1):
+      ALSA: hda/relatek: Enable Mute LED on HP Laptop 15s-fq2xxx
+
+---
+ .../devicetree/bindings/sound/tas2562.yaml         |  2 -
+ .../devicetree/bindings/sound/ti,tas2781.yaml      | 78 +++++++++++++++++-----
+ include/sound/tas2781.h                            |  9 +--
+ sound/drivers/aloop.c                              | 23 +++++--
+ sound/pci/hda/hda_generic.c                        |  1 -
+ sound/pci/hda/patch_hdmi.c                         |  6 ++
+ sound/pci/hda/patch_realtek.c                      |  3 +
+ sound/pci/oxygen/oxygen_mixer.c                    |  2 +-
+ sound/soc/codecs/rtq9128.c                         | 73 +++++++++++---------
+ sound/soc/codecs/tas2562.c                         |  3 -
+ sound/soc/codecs/tas2781-i2c.c                     |  8 ++-
+ sound/soc/generic/audio-graph-card2.c              |  2 +-
+ sound/soc/intel/boards/bxt_da7219_max98357a.c      |  6 ++
+ sound/soc/intel/boards/bxt_rt298.c                 |  3 +-
+ sound/soc/mediatek/common/mtk-dsp-sof-common.c     |  2 +-
+ .../mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c  |  3 +-
+ sound/soc/mediatek/mt8195/mt8195-afe-pcm.c         | 33 +--------
+ sound/soc/mediatek/mt8195/mt8195-mt6359.c          | 41 ++++++++----
+ sound/soc/sof/ipc3-dtrace.c                        |  3 +-
+ sound/soc/sof/ipc4-loader.c                        | 11 ++-
+ sound/soc/sof/ipc4-pcm.c                           |  4 +-
+ sound/usb/mixer_scarlett2.c                        | 42 ++++++------
+ 22 files changed, 209 insertions(+), 149 deletions(-)
+
