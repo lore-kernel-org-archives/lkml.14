@@ -1,75 +1,42 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A7328E8
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7520246AD;
+	Fri, 19 Jan 2024 05:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705642589; cv=none; b=ml4Shao5oFeiGtPH580Y83GL8/oO3P6zZD86RLSifGOjMKziPh0mdkFyXTqxbgm98bPeWHmQHCsRbcy/nx9TQ5qFEBZehIPGADiVJHWkD3tmNEJ+3hz+9EC6gJg4T/vZk7snapY6KEB9/mIWytyBWCn5Q3m3ZexfK1ZmLGsHuTI=
+	t=1705642824; cv=none; b=f0jioxxvao2Ac68QJ591Mh5hf3rtSv+pH7fVE0y4fa+/GXY8MKE9/VnCQo1tzrHS+i5eoisl+4lOmCcdIAJKBXmxQiaNFbSBFUwDHQ5JUznaH2X3rq3gV1h+sLLMYxv9VCbA6AmTfbV3Gb+hoWXpwSUNytyT4Mqgool2UZghK/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705642589; c=relaxed/simple;
-	bh=UovGzvb+o3TQm+lhjDvRfALrmTsObXHmB90BgTkj5mI=;
+	s=arc-20240116; t=1705642824; c=relaxed/simple;
+	bh=5U2+txbxsG7CqjIgj3CsUOtH+mIhI/wUdDud2EcvgxA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eHtRIV1Se+z0nS7mkF4kFtWBZ32NYCimGYvKNxtpILtJz00qYznEsP2s4I4V+Og8s4p8xgx/12XkHHDgFmRe8M8H5UFLfNozJWTXMyKBGOQuaJoL1dyBk1yxuYxiUP76jgk/y3da3CBjkgNkEe6rKYYk0zaFKtly5/emXt2/pB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M8nWbyiV; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=QBgKDFlEuoJAYrneKli9B9juANXQPDYtumj5hWfpT/QvVQPWQhbvpI+Mfu5PsorRe4VYGYIkurVVhZsG57T5/loMU/K3x/CMI1y3jGJH92avoNvpwZd0/pqZx9G1/uMYeKl2QkQkLpJaVpzk1+WAQO5XtKe50TrKWcGPvzdUlzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xt7BvpKP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M8nWbyiV"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40e8801221cso3557955e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 21:36:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705642586; x=1706247386; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2ojAQrKurCVDTpDyr9Ud8UUA59iisRxNip7GO8MCjIo=;
-        b=M8nWbyiV3JVQFiqHOTnAgiA21RbmosLbk4Oz6t9/b6rgOIJUcDuiQXUW1/URtYWkY3
-         BBQfoWsGSNLEf8LJ3mom1/sMPIxVsP4O+JL/KE1EWV/zqxbzNIgv+pb33TE6i/S0Y60d
-         xwBRV5QQn0VBWp8v6T3H6f5jRS6i9ps55M4wB4zEoiJ7zhIzTT3YSoyau7aEhMJCzipd
-         59TDAyJrTvgZ9Oewgo6Pg4MTomCoiJULVDaieGqUAmH56+X3Ylznom42CSzKgYorqK4j
-         kXUCbwbAT0ZV8KMvJfpN/vjD2NipIqw+58jsDnepOo1BzPakL0VKz9U2RRnu3ONLE/yG
-         7tvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705642586; x=1706247386;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2ojAQrKurCVDTpDyr9Ud8UUA59iisRxNip7GO8MCjIo=;
-        b=cBnzBAa+qArSj9dw9Y9yTgPWvPUKLzX0N5/KZPXwD1FzI8wBC+6aIpblnK5zjy8TRJ
-         RDM92EQbdsLxKXCY2nRF83SAO5dMALjqrY4cfNwFan2TLxSB7FYIqbN7OfveOreVfTai
-         3FJgoP5NzrmcZpH8Hxn3BfkZGHXSQl8BBN/5ulMkhRlJp4BKgTLhN0tsFNH8Npk7m2kS
-         KyhOWL2slLJEXB9m0+Ui/Yo237RZ8uK2BvkofPO5R4Ivcmq/esFjp+7bLOtBcIq+uCLC
-         2mgf466e80O/Gon+D/PpIUvw8d0bxrHxKGgGytNqH+65KyY5tB/+0jwmfUpYYYU+FUl4
-         oWig==
-X-Gm-Message-State: AOJu0YwxSYFIoxmnX9kacmpQxD7w51sYs7xVEfAgHAcrP9nZif/+kFxD
-	kvHjhuc1f6IBBOqImQoKx0n0Y5ug/MOkmfX40KR2GZQ4WcfSUoN4N1HO2IYTTB8=
-X-Google-Smtp-Source: AGHT+IHrVI4oY2pMxT9TBfDrffE6L2KwXvHH72Vz5VkiemXhVD26PJJFGqJUEoXqdWldgAqugJlPlw==
-X-Received: by 2002:a05:600c:1990:b0:40e:50ac:d24e with SMTP id t16-20020a05600c199000b0040e50acd24emr1438421wmq.13.1705642586217;
-        Thu, 18 Jan 2024 21:36:26 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id l6-20020a7bc346000000b0040d81ca11casm27067641wmj.28.2024.01.18.21.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 21:36:25 -0800 (PST)
-Date: Fri, 19 Jan 2024 08:36:21 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: dregan@broadcom.com
-Cc: dregan@mail.com, miquel.raynal@bootlin.com, richard@nod.at,
-	vigneshr@ti.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	computersforpeace@gmail.com, kdasu.kdev@gmail.com,
-	linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, joel.peshkin@broadcom.com,
-	tomer.yacoby@broadcom.com, dan.beygelman@broadcom.com,
-	william.zhang@broadcom.com, anand.gore@broadcom.com,
-	kursad.oney@broadcom.com, florian.fainelli@broadcom.com,
-	rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com,
-	andre.przywara@arm.com, baruch@tkos.co.il,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 05/10] mtd: rawnand: brcmnand: Add BCMBCA read data
- bus interface
-Message-ID: <4b3f4316-0da4-4fde-a806-7b579948db50@moroto.mountain>
-References: <20240118195356.133391-1-dregan@broadcom.com>
- <20240118195356.133391-6-dregan@broadcom.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xt7BvpKP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C20C433F1;
+	Fri, 19 Jan 2024 05:40:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705642823;
+	bh=5U2+txbxsG7CqjIgj3CsUOtH+mIhI/wUdDud2EcvgxA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=xt7BvpKPfLtDTQX4t585RAz5DMjC7A/r8gycZSxmPZ8usGD8X8DiPiizaf7n7VBIW
+	 OaxVOHd5rpEOQ+EhxIb02KB4mKzBuLId19K61uv1j/f+gIeEscHRK7wZqCfCGpIPFb
+	 SH4DGjUZ8Bll9yJN6XYabGV04/JFqWCVT1SGQWN0=
+Date: Fri, 19 Jan 2024 06:40:20 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: stable@vger.kernel.org, Stefan Wiehler <stefan.wiehler@nokia.com>,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com
+Subject: Re: [PATCH 6.1 000/100] 6.1.74-rc1 review
+Message-ID: <2024011902-unplanted-dice-2873@gregkh>
+References: <20240118104310.892180084@linuxfoundation.org>
+ <96dc2b0b-ad51-42f9-a305-744d9d97272e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,54 +45,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240118195356.133391-6-dregan@broadcom.com>
+In-Reply-To: <96dc2b0b-ad51-42f9-a305-744d9d97272e@gmail.com>
 
-On Thu, Jan 18, 2024 at 11:53:51AM -0800, dregan@broadcom.com wrote:
-> diff --git a/drivers/mtd/nand/raw/brcmnand/bcmbca_nand.c b/drivers/mtd/nand/raw/brcmnand/bcmbca_nand.c
-> index 3e2f3b79788d..e97e13ae246c 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/bcmbca_nand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/bcmbca_nand.c
-> @@ -26,6 +26,18 @@ enum {
->  	BCMBCA_CTLRDY		= BIT(4),
->  };
->  
-> +#if defined(CONFIG_ARM64)
-> +#define ALIGN_REQ		8
-> +#else
-> +#define ALIGN_REQ		4
-> +#endif
-> +
-> +static inline bool bcmbca_nand_is_buf_aligned(void *flash_cache,  void *buffer)
-> +{
-> +	return IS_ALIGNED((uintptr_t)buffer, ALIGN_REQ) &&
-> +				IS_ALIGNED((uintptr_t)flash_cache, ALIGN_REQ);
-> +}
-> +
->  static bool bcmbca_nand_intc_ack(struct brcmnand_soc *soc)
->  {
->  	struct bcmbca_nand_soc *priv =
-> @@ -56,6 +68,20 @@ static void bcmbca_nand_intc_set(struct brcmnand_soc *soc, bool en)
->  	brcmnand_writel(val, mmio);
->  }
->  
-> +static void bcmbca_read_data_bus(struct brcmnand_soc *soc,
-> +				 void __iomem *flash_cache,  u32 *buffer, int fc_words)
-> +{
-> +	/*
-> +	 * memcpy can do unaligned aligned access depending on source
-> +	 * and dest address, which is incompatible with nand cache. Fallback
-> +	 * to the memcpy for io version
-> +	 */
-> +	if (bcmbca_nand_is_buf_aligned((void *)flash_cache, buffer))
-> +		memcpy((void *)buffer, (void *)flash_cache, fc_words * 4);
-> +	else
-> +		memcpy_fromio((void *)buffer, flash_cache, fc_words * 4);
-> +}
+On Thu, Jan 18, 2024 at 11:10:31AM -0800, Florian Fainelli wrote:
+> +Stefan,
+> 
+> On 1/18/24 02:48, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.1.74 release.
+> > There are 100 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat, 20 Jan 2024 10:42:49 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.74-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> ARM and ARM64 builds worked fine and passed tests, however BMIPS_GENERIC
+> fails to build with:
+> 
+> arch/mips/kernel/smp.c: In function 'start_secondary':
+> arch/mips/kernel/smp.c:340:2: error: implicit declaration of function
+> 'rcutree_report_cpu_starting'; did you mean 'rcu_cpu_starting'?
+> [-Werror=implicit-function-declaration]
+>   rcutree_report_cpu_starting(cpu);
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   rcu_cpu_starting
+> cc1: all warnings being treated as errors
+> host-make[5]: *** [scripts/Makefile.build:250: arch/mips/kernel/smp.o] Error
+> 1
+> host-make[4]: *** [scripts/Makefile.build:500: arch/mips/kernel] Error 2
+> host-make[3]: *** [scripts/Makefile.build:500: arch/mips] Error 2
+> host-make[3]: *** Waiting for unfinished jobs....
+> 
+> which is caused by 7c20a4cc189eff36d5aeb586008a540d8024fbff ("mips/smp: Call
+> rcutree_report_cpu_starting() earlier").
+> 
+> It looks like rcutree_report_cpu_starting() has been introduced
+> 448e9f34d91d1a4799fdb06a93c2c24b34b6fd9d ("rcu: Standardize explicit
+> CPU-hotplug calls") which is in v6.7.
+> 
+> For MIPS, it would like an adequate fix would be to
+> 's/rcutree_report_cpu_starting/rcu_cpu_starting/' for the 6.1 and 6.6
+> branches.
+> 
+> Stefan, do you agree?
 
-This comment is confusing or maybe the if statement is reversed...
-We're falling back to memcpy_fromio() for the unaligned accesses but the
-comment says we're falling back to memcpy().
+The offending commit has been dropped from the queue, sorry, I didn't
+push out a new -rc yet.
 
-regards,
-dan carpenter
-
+greg k-h
